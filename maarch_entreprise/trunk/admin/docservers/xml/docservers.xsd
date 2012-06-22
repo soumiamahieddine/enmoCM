@@ -30,11 +30,11 @@ Parent key fields (xpath) and child key fields must be in same order
   <xsd:include schemaLocation='core/xml/datatypes.xsd' />
   
   <!-- ROOT : DOCSERVERS -->
-  <xsd:element name='docservers_list'>
+  <xsd:element name='docservers_list' das:label="_DOCSERVERS_LIST">
     <xsd:complexType>
       <xsd:sequence>
         <!-- ROWS -->
-        <xsd:element ref='docservers' minOccurs="0" maxOccurs='unbounded'/>
+        <xsd:element ref='docservers' das:label="_DOCSERVERS" minOccurs="0" maxOccurs='unbounded'/>
         <!--<xsd:element name='entity_types' type='typentity' das:xml='/modules/entities/xml/typentity.xml' das:xpath="/root/TYPE" minOccurs="0" maxOccurs='unbounded'/>-->
       </xsd:sequence>
     </xsd:complexType>
@@ -46,16 +46,16 @@ Parent key fields (xpath) and child key fields must be in same order
   </xsd:element>
   
   <!-- ROW : DOCSERVER -->
-  <xsd:element name='docservers' type='docserver' das:source='database' das:key-columns="docserver_id"/>
+  <xsd:element name='docservers' type='docserver' das:label="zone de stockage" das:source='database' das:key-columns="docserver_id" das:filter-columns="docserver_id docserver_type_id device_label"/>
   
   <!-- TYPE : DOCSERVER -->
   <xsd:complexType name='docserver'>
     <xsd:sequence>
-      <xsd:element name="docserver_id" type="varchar32" nillable="false" default="1"/>
-      <xsd:element name="docserver_type_id" type="varchar32" nillable="false"/>
-      <xsd:element name="device_label" type="varchar255" />
-      <xsd:element name="is_readonly" type="boolean" nillable="false" default="N" />
-      <xsd:element name="enabled" type="boolean" nillable="false" default="Y" />
+      <xsd:element name="docserver_id" das:label="_DOCSERVER_ID" type="varchar32" nillable="false" default="1"/>
+      <xsd:element name="docserver_type_id" das:label="_DOCSERVER_TYPE_ID" type="varchar32" nillable="false"/>
+      <xsd:element name="device_label" das:label="_DEVICE_LABEL" type="varchar255" />
+      <xsd:element name="is_readonly" das:label="_IS_READONLY" type="boolean" nillable="false" default="N" />
+      <xsd:element name="enabled" das:label="_ENABLED" type="boolean" nillable="false" default="Y" />
       <xsd:element name="size_limit_number" type="bigint" />
       <xsd:element name="actual_size_number" type="bigint" />
       <xsd:element name="path_template" type="varchar255" />

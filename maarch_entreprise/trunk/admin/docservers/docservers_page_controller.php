@@ -46,11 +46,11 @@ $showCols = array(
         'functionFormat' => '',
         'cssStyle'       => ''
     ),
-    'is_readonly' => array(
+    'is_readonly'        => array(
         'functionFormat' => 'standard#isBoolean',
         'cssStyle'       => 'text-align: center;'
     ),
-    'enabled' => array(
+    'enabled'            => array(
         'functionFormat' => 'standard#isBoolean',
         'cssStyle'       => 'text-align: center;'
     ),
@@ -66,4 +66,4 @@ include_once 'apps/' . $_SESSION['config']['app_id'] . '/admin/'
     . 'admin_standard_page_controller.php';
 
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/admin/' 
-    . 'docservers/docservers_view.php';
+    . 'docservers/new_docservers_view.php';

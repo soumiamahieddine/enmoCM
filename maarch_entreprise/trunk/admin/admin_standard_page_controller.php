@@ -262,316 +262,6 @@ function clearSession($objectName)
 
 function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
 {
-    $pagePath = $_SERVER['REQUEST_URI'];
-    //tri alphabetique
-    $noWhatUrl = str_replace('&what='.str_replace(' ', '%20', $_REQUEST['what']), '', $pagePath);
-    $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $str_search = '<table width="100%">';
-        $str_search .= '<tr>';
-            $str_search .= '<td style="text-align: left;">';
-                $str_search .= 'Liste alphabétique : ';
-                for ($i=0; $i<strlen($alphabet); $i++) {
-                    $str_search .= '<span>';
-                        $str_search .= '<a href="'.$noWhatUrl.'&what='.substr($alphabet, $i, 1).'|">';
-                            $str_search .= substr($alphabet, $i, 1);
-                        $str_search .= '</a>';
-                    $str_search .= '</span>';
-                    $str_search .= '&nbsp;';
-                }
-                $str_search .= '&nbsp;-&nbsp;';
-                $str_search .= '<span>';
-                    $str_search .= '<a href="'.$noWhatUrl.'">';
-                        $str_search .= 'Tout afficher';
-                    $str_search .= '</a>';
-                $str_search .= '</span>';
-            $str_search .= '</td>';
-            //tri recherche
-            $str_search  .= '<td style="text-align: right;">';
-                    $str_search .= '<input name="what" id="what" type="text" size="15" autocomplete="off" onKeyPress="if (window.event.keyCode == 13 && $(\'what\').value != \'\') window.location.href=\''.$noWhatUrl.'&what=|\'+$(\'what\').value+\'|\'"/>';
-                    $str_search .= '<div id="whatList" class="autocomplete" style="display: none;"></div>';
-                    $str_search .= '<script type="text/javascript">';
-                        $str_search .= 'initList(\'what\', \'whatList\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&admin=docservers&page=docservers_list_by_id\', \'what\', \'1\');';
-                    $str_search .= '</script>';
-                    $str_search .= '<input class="button" type="button" value="Rechercher" onClick="if($(\'what\').value != \'\') {window.location.href=\''.$noWhatUrl.'&what=|\'+$(\'what\').value+\'|\'} else {window.location.href=\''.$noWhatUrl.'\'}"/>';
-            $str_search .= '</td>';
-        $str_search .= '</tr>';
-    $str_search .= '</table>';
-    
-    //pagination
-    $nbLine  = $_SESSION['config']['nblinetoshow'];
-    if (isset($_REQUEST['nbLine']) && !empty($_REQUEST['nbLine'])) {
-        $nbLine = $_REQUEST['nbLine'];
-    }
-    $nbEnd   = $pageNb * $nbLine - 1;
-    $nbStart = $nbEnd - $nbLine + 1;
-    $nbMax = count($objectList);
-    $nbPageMax = ceil($nbMax/$nbLine);
-    $actualURL = str_replace('&pageNb='.$pageNb, '', $pagePath);
-    $nextLink = $actualURL . '&pageNb=' . ($pageNb + 1);
-    $previousLink = $actualURL . '&pageNb=' . ($pageNb - 1);
-    //$str_pagination
-    $str_pagination  = '';
-    if ($nbPageMax > 1) {
-        $str_pagination .= '<table width="100%">';
-            $str_pagination .= '<tr>';
-                $str_pagination .= '<td width="100px">';
-                    if ($pageNb > 1) {
-                        $str_pagination .= '<a href="' . $previousLink . '">';
-                            $str_pagination .= '< Précédente';
-                        $str_pagination .= '</a>';
-                    }
-                $str_pagination .= '</td>';
-                $str_pagination .= '<td style="text-align: center;">';
-                    $str_pagination .= 'Aller à la page : ';
-                    $str_pagination .= '<select onchange="window.location.href=this.value;">';
-                        for($k=1; $k<=$nbPageMax; $k++) {
-                            $selected = '';
-                            if ($k == $pageNb) {
-                                $selected = 'selected ';
-                            }
-                            $str_pagination .= '<option value="' . $actualURL . '&pageNb=' . $k . '" ' . $selected . '>' . $k . '</option>';
-                        }
-                    $str_pagination .= '</select>';
-                    $str_pagination .= ' sur '.$nbPageMax;
-                $str_pagination .= '</td>';
-                $str_pagination .= '<td width="100px" style="text-align: right;">';
-                    if ($pageNb < $nbPageMax) {
-                        $str_pagination .= '<a href="' . $nextLink . '">';
-                            $str_pagination .= ' Suivante >';
-                        $str_pagination .= '</a>';
-                    }
-                $str_pagination .= '</td>';
-            $str_pagination .= '</tr>';
-        $str_pagination .= '</table>';
-    }
-    //actionsUrl
-    $actionsURL = array();
-    if (is_array($actions)) {
-        for ($i=0; $i<count($actions); $i++) {
-            $actionsURL[$actions[$i]] = str_replace('&mode=list', '', $pagePath) . '&mode=' . $actions[$i];
-        }
-    }
-    //HTML list
-    $str_tableStart .= '<table width="100%" cellpadding="4" cellspacing="0">';
-        $str_tableStart .= '<tbody>';
-            $i=0;
-            foreach ($objectList as $object) {
-                if (!($i < $nbStart || $i > $nbEnd)) {
-                    $cssClass_tr = 'style="background-color: #DEEDF3;" ';
-                    if (($i-$nbStart)%2 == 0) {
-                        $cssClass_tr = 'style="background-color: #93D1E4;" ';
-                    }
-                    $str_adminList .= '<tr ' . $cssClass_tr . '>';
-                    $j=0;
-                    
-                    foreach($object as $childName => $childObject) {
-                        /*
-                        if ((!is_scalar($value) && $value) || (!array_key_exists($key, $showCols))) {
-                            if (!array_key_exists($key, $showCols)) {
-                                $json[$key] = $value;
-                            }
-                            continue;
-                        }
-                        */
-                        
-                        if (!$childObject->isDataObjectProperty) {
-                            continue;
-                        }
-                        
-                        $key = $childName;
-                        $value = (string)$childObject;
-                        
-                        $json[$key] = $value;
-                        if (!array_key_exists($key, $showCols)) {
-                            continue;
-                        }
-                        
-                        $header[$j] = $key;
-                        $json[$key] = $value;
-                        
-                        if (!isset($showCols[$key]['cssStyle'])) {
-                            $showCols[$key]['cssStyle'] = '';
-                        }
-                        if (isset($showCols[$key]['functionFormat']) && !empty($showCols[$key]['functionFormat'])) {
-                            $explode_functionFormat = explode('#', $showCols[$key]['functionFormat']);
-                            if ($explode_functionFormat[0] == 'standard') {
-                                $formatFunctionName =  $explode_functionFormat[1];
-                            } elseif ($explode_functionFormat[0] == 'custom') {
-                                $className = '';
-                                $formatFunctionName = $explode_functionFormat[1];
-                            }
-                            
-                            if (isset($formatFunctionName)) {
-                                $value = call_user_func($formatFunctionName, $value);
-                            }
-                        } elseif (substr($_REQUEST['what'], 0, 1) == '|') {
-                            $surligneWhat = strtoupper(str_replace('|', '', $_REQUEST['what']));
-                            $value = str_ireplace($surligneWhat, '<span title="Recherche: \''.$surligneWhat.'\'" style="background-color: rgba(84, 131, 246, 0.7); font-weight: 900; border-radius: 5px; padding: 2px; color: white; box-shadow: inset 0px 0px 15px rgba(0, 0, 0, 0.6);">'.$surligneWhat.'</span>', $value);
-                        }
-                        
-                        $str_adminList .= '<td class="' . $key . '" style="' . $showCols[$key]['cssStyle'] . '" onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
-                            $str_adminList .= $value;
-                        $str_adminList .= '</td>';
-                        
-                        $j++;
-                    }
-                    
-                    $encodeJSON = '{';
-                        $encodeJSON .= "'identifierDetailFrame'";
-                        $encodeJSON .= ' : ';
-                        $encodeJSON .= "'".$i."'";
-                        $encodeJSON .= ', ';
-                        if (count($json) > 0) {
-                            foreach($json as $keyJSON => $valueJSON) {
-                                $encodeJSON .= "'".$keyJSON." '";
-                                $encodeJSON .= ' : ';
-                                if (DIRECTORY_SEPARATOR != '/') {
-                                    $valueJSON = str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, $valueJSON);
-                                }
-                                $encodeJSON .= "'".$valueJSON." '";
-                                $encodeJSON .= ', ';
-                            }
-                        }
-                        $encodeJSON = substr($encodeJSON, 0, -2);
-                    $encodeJSON .= '}';
-                    $str_adminList .= '<td onMouseOver="previsualiseAdminRead(event, '.$encodeJSON.');" style="background-image: url(static.php?filename=showFrameAdminList.png); background-repeat: no-repeat; background-position: center; width: 20px; cursor: help;"></td>';
-                    if (!in_array('    ', $header)) {
-                        array_push($header, '    ');
-                    }
-                        
-                    if (in_array('read', $actions)) {
-                        if (!in_array(' ', $header)) {
-                            array_push($header, ' ');
-                        }
-                        $encodeJSON .= '}';
-                        $str_adminList .= '<td onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
-                            $str_adminList .= '<a href="' . $actionsURL['read'] . '&objectId=' . $object->$keyName . '">';
-                                $str_adminList .= '<img src="static.php?filename=icon_read.png" />';
-                            $str_adminList .= '</a>';
-                        $str_adminList .= '</td>';
-                    }
-                    if (in_array('update', $actions)) {
-                        if (!in_array('  ', $header)) {
-                            array_push($header, '  ');
-                        }
-                        $str_adminList .= '<td onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
-                            $str_adminList .= '<a title="mettre à jour" href="' . $actionsURL['update'] . '&objectId=' . $object->$keyName . '">';
-                                $str_adminList .= '<img src="static.php?filename=picto_change.gif" />';
-                            $str_adminList .= '</a>';
-                        $str_adminList .= '</td>';
-                    }
-                    if (in_array('delete', $actions)) {
-                        if (!in_array('   ', $header)) {
-                            array_push($header, '   ');
-                        }
-                        $str_adminList .= '<td onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
-                            $str_adminList .= '<a title="supprimer" href="' . $actionsURL['delete'] . '">';
-                                $str_adminList .= '<img src="static.php?filename=picto_delete.gif" />';
-                            $str_adminList .= '</a>';
-                        $str_adminList .= '</td>';
-                    }
-
-                    $str_adminList .= '</tr>';
-                }
-                $i++;
-            }
-        $str_tableEnd .= '</tbody>';
-    $str_tableEnd .= '</table>';
-    //footer
-    $urlNo_nbLine = str_replace('&nbLine='.$_REQUEST['nbLine'], '', $pagePath);
-    $urlNo_nbLine = str_replace('&pageNb='.$_REQUEST['pageNb'], '', $urlNo_nbLine);
-    $str_nbLine .= '<table>';
-        $str_nbLine .= '<tr>';
-            $str_nbLine .= '<td>';
-                $str_nbLine .= 'Éléments affichés: ';
-                $str_nbLine .= '<select onChange="window.location.href=\''.$urlNo_nbLine.'&nbLine=\'+this.value">';
-                    $nbLineSelect = array(10, 25, 50, 100, 250);
-                    if (!in_array($_SESSION['config']['nblinetoshow'], $nbLineSelect)) {
-                        array_push($nbLineSelect, $_SESSION['config']['nblinetoshow']);
-                    }
-                    sort($nbLineSelect);
-                    for ($j=0; $j<count($nbLineSelect); $j++) {
-                        if ($nbLineSelect[$j] >= $i) {
-                            break;
-                        }
-                        $default_nbLineSelect = '';
-                        if ($nbLineSelect[$j] == $nbLine) {
-                            $default_nbLineSelect = 'selected="selected" ';
-                        }
-                        $str_nbLine .= '<option value="' . $nbLineSelect[$j] . '" '.$default_nbLineSelect.'>' . $nbLineSelect[$j] . '</option>';
-                    }
-                    $default_nbLineSelect = '';
-                    if ($i == $nbLine || $i < $nbLine) {
-                        $default_nbLineSelect = 'selected="selected" ';
-                    }
-                    $str_nbLine .= '<option value="' . $i . '" '.$default_nbLineSelect.'>tous ('.$i.')</option>';
-                $str_nbLine .= '</select>';
-            $str_nbLine .= '</td>';
-        $str_nbLine .= '</tr>';
-    $str_nbLine .= '</table>';
-    //footer
-    //$str_footer = '<br />';
-    $str_footer .= '<table width="100%" onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
-        $str_footer .= '<tr>';
-            $str_footer .= '<td style="text-align: right;">';
-                if (in_array('create', $actions)) {
-                    $str_footer .= '<a href="' . $actionsURL['create'] . '">';
-                        $str_footer .= 'créer';
-                    $str_footer .= '</a>';
-                }
-            $str_footer .= '</td>';
-        $str_footer .= '</tr>';
-    $str_footer .= '</table>';
-    //header
-    $urlNoTri = str_replace('&order='.$_REQUEST['order'], '', $pagePath);
-    $urlNoTri = str_replace('&orderField='.$_REQUEST['orderField'], '', $urlNoTri);
-    
-    $str_header .= '<tr style="background-color: #f6bf36; color: rgba(255, 255, 255, 1);">';
-        for($j=0; $j<count($header); $j++) {
-            $str_header .= '<td style="' . $showCols[$header[$j]]['cssStyle'] . 'color: #459ed1;" onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
-                $str_header .= '<b>';
-                    $trimHeader = trim($header[$j]);
-                    $str_header .= $header[$j];
-                $str_header .= '</b>';
-                $str_header .= '&nbsp;&nbsp;';
-                if (!empty($trimHeader)) {
-                    //tri ASC
-                    $str_header .= '<a href="' . $urlNoTri . '&orderField=' . $trimHeader . '&order=asc">';
-                        $order_asc = '<img src="static.php?filename=order_asc.png" />';
-                        if ($_REQUEST['order'] == 'asc' && $_REQUEST['orderField'] == $trimHeader) {
-                            $order_asc = '<img src="static.php?filename=order_asc_select.png" />';
-                        }
-                        $str_header .= $order_asc;
-                    $str_header .= '</a>';
-                    $str_header .= '&nbsp;';
-                    //tri DESC
-                    $str_header .= '<a href="' . $urlNoTri . '&orderField=' . $trimHeader . '&order=desc">';
-                        $order_desc = '<img src="static.php?filename=order_desc.png" />';
-                        if ($_REQUEST['order'] == 'desc' && $_REQUEST['orderField'] == $trimHeader) {
-                            $order_desc = '<img src="static.php?filename=order_desc_select.png" />';
-                        }
-                        $str_header .= $order_desc;
-                    $str_header .= '</a>';
-                    $str_header .= '&nbsp;&nbsp;';
-                }
-            $str_header .= '</td>';
-        }
-    $str_header .= '</tr>';
-    // previsualisation
-    $str_previsualise  = '<div id="return_previsualise" style="display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
-    $str_previsualise .= '</div>';
-    //retour html
-    $listContent = '<br />';
-    $listContent .= $str_nbLine;
-    $listContent .= $str_search;
-    $listContent .= $str_pagination;
-    $listContent .= $str_tableStart;
-    $listContent .= $str_header;
-    $listContent .= $str_adminList;
-    $listContent .= $str_tableEnd;
-    $listContent .= $str_footer;
-    $listContent .= $str_previsualise;
-    return $listContent;
 }
 
 /**
@@ -616,8 +306,16 @@ function isBoolean($string)
 function fixObject (&$object)
 {
   if (!is_object ($object) && gettype ($object) == 'object')
-    return ($object = unserialize (serialize ($object)));
-    return $object;
+    $object = unserialize (serialize ($object));
+}
+
+function getLabel($constant) 
+{
+    if (!defined($constant)) {
+        return $constant;
+    } else {
+        return constant($constant);
+    }
 }
 
 $coreTools = new core_tools();
@@ -709,6 +407,13 @@ if (isset($_REQUEST['submit'])) {
         case 'delete' :
             doDelete($params['objectId']);
             break;
+        //TODO: PROCESS IT LIKE PARTICULAR CASES OF UPDATE
+        case 'allow' :
+            doEnable($docserverId);
+            break;
+        case 'ban' :
+            doDisable($docserverId);
+            break;
         case 'list' :
             $dataObjectList = $DataObjectController->createDataObject(
                 $params['objectName'] . '_list'
@@ -721,25 +426,318 @@ if (isset($_REQUEST['submit'])) {
                 );
             }
             if (isset($params['what']) && !empty($params['what'])) {
-                $whereClause = str_replace('|', '%', $params['what']);
+                $DataObjectController->setFilter($params['objectName'], str_replace('|', '%', $params['what']));
             }
             
             $DataObjectController->loadDataObject($dataObjectList);
             
             $keyName = $DataObjectController->getKey($params['objectName']);
+            $objectList = $dataObjectList->$params['objectName'];
+            $pageNb     = $params['pageNb'];
+            $pagePath = $_SERVER['REQUEST_URI'];
+            //tri alphabetique
+            $noWhatUrl = str_replace('&what='.str_replace(' ', '%20', $_REQUEST['what']), '', $pagePath);
+            $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            $str_search = '<table width="100%">';
+                $str_search .= '<tr>';
+                    $str_search .= '<td style="text-align: left;">';
+                        $str_search .= 'Liste alphabétique : ';
+                        for ($i=0; $i<strlen($alphabet); $i++) {
+                            $str_search .= '<span>';
+                                $str_search .= '<a href="'.$noWhatUrl.'&what='.substr($alphabet, $i, 1).'|">';
+                                    $str_search .= substr($alphabet, $i, 1);
+                                $str_search .= '</a>';
+                            $str_search .= '</span>';
+                            $str_search .= '&nbsp;';
+                        }
+                        $str_search .= '&nbsp;-&nbsp;';
+                        $str_search .= '<span>';
+                            $str_search .= '<a href="'.$noWhatUrl.'">';
+                                $str_search .= 'Tout afficher';
+                            $str_search .= '</a>';
+                        $str_search .= '</span>';
+                    $str_search .= '</td>';
+                    //tri recherche
+                    $str_search  .= '<td style="text-align: right;">';
+                            $str_search .= '<input name="what" id="what" type="text" size="15" autocomplete="off" onKeyPress="if (window.event.keyCode == 13 && $(\'what\').value != \'\') window.location.href=\''.$noWhatUrl.'&what=|\'+$(\'what\').value+\'|\'"/>';
+                            $str_search .= '<div id="whatList" class="autocomplete" style="display: none;"></div>';
+                            $str_search .= '<script type="text/javascript">';
+                                $str_search .= 'initList(\'what\', \'whatList\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&admin=docservers&page=docservers_list_by_id\', \'what\', \'1\');';
+                            $str_search .= '</script>';
+                            $str_search .= '<input class="button" type="button" value="Rechercher" onClick="if($(\'what\').value != \'\') {window.location.href=\''.$noWhatUrl.'&what=|\'+$(\'what\').value+\'|\'} else {window.location.href=\''.$noWhatUrl.'\'}"/>';
+                    $str_search .= '</td>';
+                $str_search .= '</tr>';
+            $str_search .= '</table>';
             
-            $listContent = displayList(
-                $dataObjectList->$params['objectName'], 
-                $actions,
-                $showCols,
-                $params['pageNb'],
-                $keyName
-            );
+            //pagination
+            $nbLine  = $_SESSION['config']['nblinetoshow'];
+            if (isset($_REQUEST['nbLine']) && !empty($_REQUEST['nbLine'])) {
+                $nbLine = $_REQUEST['nbLine'];
+            }
+            $nbEnd   = $pageNb * $nbLine - 1;
+            $nbStart = $nbEnd - $nbLine + 1;
+            $nbMax = count($objectList);
+            $nbPageMax = ceil($nbMax/$nbLine);
+            $actualURL = str_replace('&pageNb='.$pageNb, '', $pagePath);
+            $nextLink = $actualURL . '&pageNb=' . ($pageNb + 1);
+            $previousLink = $actualURL . '&pageNb=' . ($pageNb - 1);
+            //$str_pagination
+            $str_pagination  = '';
+            if ($nbPageMax > 1) {
+                $str_pagination .= '<table width="100%">';
+                    $str_pagination .= '<tr>';
+                        $str_pagination .= '<td width="100px">';
+                            if ($pageNb > 1) {
+                                $str_pagination .= '<a href="' . $previousLink . '">';
+                                    $str_pagination .= '< Précédente';
+                                $str_pagination .= '</a>';
+                            }
+                        $str_pagination .= '</td>';
+                        $str_pagination .= '<td style="text-align: center;">';
+                            $str_pagination .= 'Aller à la page : ';
+                            $str_pagination .= '<select onchange="window.location.href=this.value;">';
+                                for($k=1; $k<=$nbPageMax; $k++) {
+                                    $selected = '';
+                                    if ($k == $pageNb) {
+                                        $selected = 'selected ';
+                                    }
+                                    $str_pagination .= '<option value="' . $actualURL . '&pageNb=' . $k . '" ' . $selected . '>' . $k . '</option>';
+                                }
+                            $str_pagination .= '</select>';
+                            $str_pagination .= ' sur '.$nbPageMax;
+                        $str_pagination .= '</td>';
+                        $str_pagination .= '<td width="100px" style="text-align: right;">';
+                            if ($pageNb < $nbPageMax) {
+                                $str_pagination .= '<a href="' . $nextLink . '">';
+                                    $str_pagination .= ' Suivante >';
+                                $str_pagination .= '</a>';
+                            }
+                        $str_pagination .= '</td>';
+                    $str_pagination .= '</tr>';
+                $str_pagination .= '</table>';
+            }
+            //actionsUrl
+            $actionsURL = array();
+            if (is_array($actions)) {
+                for ($i=0; $i<count($actions); $i++) {
+                    $actionsURL[$actions[$i]] = str_replace('&mode=list', '', $pagePath) . '&mode=' . $actions[$i];
+                }
+            }
+            //HTML list
+            $str_tableStart .= '<table width="100%" cellpadding="4" cellspacing="0">';
+                $str_tableStart .= '<tbody>';
+                    $i=0;
+                    foreach ($objectList as $object) {
+                        if (!($i < $nbStart || $i > $nbEnd)) {
+                            $cssClass_tr = 'style="background-color: #DEEDF3;" ';
+                            if (($i-$nbStart)%2 == 0) {
+                                $cssClass_tr = 'style="background-color: #93D1E4;" ';
+                            }
+                            $str_adminList .= '<tr ' . $cssClass_tr . '>';
+                            $j=0;
+                            
+                            foreach($object as $childName => $childObject) {
+                                if (!$childObject->isDataObjectProperty) {
+                                    continue;
+                                }
+                                
+                                $key = $childName;
+                                $value = (string)$childObject;
+                                
+                                $json[$key] = $value;
+                                if (!array_key_exists($key, $showCols)) {
+                                    continue;
+                                }
+                                
+                                if (!isset($header[$j])) {
+                                    $header[$j] = $key;
+                                }
+                                $json[$key] = $value;
+                                
+                                if (!isset($showCols[$key]['cssStyle'])) {
+                                    $showCols[$key]['cssStyle'] = '';
+                                }
+                                if (isset($showCols[$key]['functionFormat']) && !empty($showCols[$key]['functionFormat'])) {
+                                    $explode_functionFormat = explode('#', $showCols[$key]['functionFormat']);
+                                    if ($explode_functionFormat[0] == 'standard') {
+                                        $formatFunctionName =  $explode_functionFormat[1];
+                                    } elseif ($explode_functionFormat[0] == 'custom') {
+                                        $className = '';
+                                        $formatFunctionName = $explode_functionFormat[1];
+                                    }
+                                    
+                                    if (isset($formatFunctionName)) {
+                                        $value = call_user_func($formatFunctionName, $value);
+                                    }
+                                } elseif (substr($_REQUEST['what'], 0, 1) == '|') {
+                                    $surligneWhat = strtoupper(str_replace('|', '', $_REQUEST['what']));
+                                    $value = str_ireplace($surligneWhat, '<span title="Recherche: \''.$surligneWhat.'\'" style="background-color: rgba(84, 131, 246, 0.7); font-weight: 900; border-radius: 5px; padding: 2px; color: white; box-shadow: inset 0px 0px 15px rgba(0, 0, 0, 0.6);">'.$surligneWhat.'</span>', $value);
+                                }
+                                
+                                $str_adminList .= '<td class="' . $key . '" style="' . $showCols[$key]['cssStyle'] . '" onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
+                                    $str_adminList .= $value;
+                                $str_adminList .= '</td>';
+                                
+                                $j++;
+                            }
+                            
+                            $encodeJSON = '{';
+                                $encodeJSON .= "'identifierDetailFrame'";
+                                $encodeJSON .= ' : ';
+                                $encodeJSON .= "'".$i."'";
+                                $encodeJSON .= ', ';
+                                if (count($json) > 0) {
+                                    foreach($json as $keyJSON => $valueJSON) {
+                                        $encodeJSON .= "'".$keyJSON." '";
+                                        $encodeJSON .= ' : ';
+                                        if (DIRECTORY_SEPARATOR != '/') {
+                                            $valueJSON = str_replace(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, $valueJSON);
+                                        }
+                                        $encodeJSON .= "'".$valueJSON." '";
+                                        $encodeJSON .= ', ';
+                                    }
+                                }
+                                $encodeJSON = substr($encodeJSON, 0, -2);
+                            $encodeJSON .= '}';
+                            $str_adminList .= '<td onMouseOver="previsualiseAdminRead(event, '.$encodeJSON.');" style="background-image: url(static.php?filename=showFrameAdminList.png); background-repeat: no-repeat; background-position: center; width: 20px; cursor: help;"></td>';
+                            if (!in_array('    ', $header)) {
+                                array_push($header, '    ');
+                            }
+                                
+                            if (in_array('read', $actions)) {
+                                if (!in_array(' ', $header)) {
+                                    array_push($header, ' ');
+                                }
+                                $encodeJSON .= '}';
+                                $str_adminList .= '<td onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
+                                    $str_adminList .= '<a href="' . $actionsURL['read'] . '&objectId=' . $object->$keyName . '">';
+                                        $str_adminList .= '<img src="static.php?filename=icon_read.png" />';
+                                    $str_adminList .= '</a>';
+                                $str_adminList .= '</td>';
+                            }
+                            if (in_array('update', $actions)) {
+                                if (!in_array('  ', $header)) {
+                                    array_push($header, '  ');
+                                }
+                                $str_adminList .= '<td onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
+                                    $str_adminList .= '<a title="mettre à jour" href="' . $actionsURL['update'] . '&objectId=' . $object->$keyName . '">';
+                                        $str_adminList .= '<img src="static.php?filename=picto_change.gif" />';
+                                    $str_adminList .= '</a>';
+                                $str_adminList .= '</td>';
+                            }
+                            if (in_array('delete', $actions)) {
+                                if (!in_array('   ', $header)) {
+                                    array_push($header, '   ');
+                                }
+                                $str_adminList .= '<td onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
+                                    $str_adminList .= '<a title="supprimer" href="' . $actionsURL['delete'] . '">';
+                                        $str_adminList .= '<img src="static.php?filename=picto_delete.gif" />';
+                                    $str_adminList .= '</a>';
+                                $str_adminList .= '</td>';
+                            }
+        
+                            $str_adminList .= '</tr>';
+                        }
+                        $i++;
+                    }
+                $str_tableEnd .= '</tbody>';
+            $str_tableEnd .= '</table>';
+            //footer
+            $urlNo_nbLine = str_replace('&nbLine='.$_REQUEST['nbLine'], '', $pagePath);
+            $urlNo_nbLine = str_replace('&pageNb='.$_REQUEST['pageNb'], '', $urlNo_nbLine);
+            $str_nbLine .= '<table>';
+                $str_nbLine .= '<tr>';
+                    $str_nbLine .= '<td>';
+                        $str_nbLine .= 'Éléments affichés: ';
+                        $str_nbLine .= '<select onChange="window.location.href=\''.$urlNo_nbLine.'&nbLine=\'+this.value">';
+                            $nbLineSelect = array(10, 25, 50, 100, 250);
+                            if (!in_array($_SESSION['config']['nblinetoshow'], $nbLineSelect)) {
+                                array_push($nbLineSelect, $_SESSION['config']['nblinetoshow']);
+                            }
+                            sort($nbLineSelect);
+                            for ($j=0; $j<count($nbLineSelect); $j++) {
+                                if ($nbLineSelect[$j] >= $i) {
+                                    //break;
+                                }
+                                $default_nbLineSelect = '';
+                                if ($nbLineSelect[$j] == $nbLine) {
+                                    $default_nbLineSelect = 'selected="selected" ';
+                                }
+                                $str_nbLine .= '<option value="' . $nbLineSelect[$j] . '" '.$default_nbLineSelect.'>' . $nbLineSelect[$j] . '</option>';
+                            }
+                            $default_nbLineSelect = '';
+                            if ($i == $nbLine || $i < $nbLine) {
+                                $default_nbLineSelect = 'selected="selected" ';
+                            }
+                            $str_nbLine .= '<option value="' . $i . '" '.$default_nbLineSelect.'>tous ('.$i.')</option>';
+                        $str_nbLine .= '</select>';
+                    $str_nbLine .= '</td>';
+                $str_nbLine .= '</tr>';
+            $str_nbLine .= '</table>';
+            //footer
+            //$str_footer = '<br />';
+            $str_footer .= '<table width="100%" onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
+                $str_footer .= '<tr>';
+                    $str_footer .= '<td style="text-align: right;">';
+                        if (in_array('create', $actions)) {
+                            $str_footer .= '<a href="' . $actionsURL['create'] . '">';
+                                $str_footer .= 'créer';
+                            $str_footer .= '</a>';
+                        }
+                    $str_footer .= '</td>';
+                $str_footer .= '</tr>';
+            $str_footer .= '</table>';
+            //header
+            $urlNoTri = str_replace('&order='.$_REQUEST['order'], '', $pagePath);
+            $urlNoTri = str_replace('&orderField='.$_REQUEST['orderField'], '', $urlNoTri);
+            
+            $headerLabels = $DataObjectController->getContentLabels($params['objectName']);
+            $str_header .= '<tr style="background-color: #f6bf36; color: rgba(255, 255, 255, 1);">';
+                for($j=0; $j<count($header); $j++) {
+                    $str_header .= '<td style="' . $showCols[$header[$j]]['cssStyle'] . 'color: #459ed1;" onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); $(\'return_previsualise\').style.display=\'none\'">';
+                        $str_header .= '<b>';
+                            $trimHeader = trim($header[$j]);
+                            $str_header .= @constant($headerLabels[$header[$j]]);
+                        $str_header .= '</b>';
+                        $str_header .= '&nbsp;&nbsp;';
+                        if (!empty($trimHeader)) {
+                            //tri ASC
+                            $str_header .= '<a href="' . $urlNoTri . '&orderField=' . $trimHeader . '&order=asc">';
+                                $order_asc = '<img src="static.php?filename=order_asc.png" />';
+                                if ($_REQUEST['order'] == 'asc' && $_REQUEST['orderField'] == $trimHeader) {
+                                    $order_asc = '<img src="static.php?filename=order_asc_select.png" />';
+                                }
+                                $str_header .= $order_asc;
+                            $str_header .= '</a>';
+                            $str_header .= '&nbsp;';
+                            //tri DESC
+                            $str_header .= '<a href="' . $urlNoTri . '&orderField=' . $trimHeader . '&order=desc">';
+                                $order_desc = '<img src="static.php?filename=order_desc.png" />';
+                                if ($_REQUEST['order'] == 'desc' && $_REQUEST['orderField'] == $trimHeader) {
+                                    $order_desc = '<img src="static.php?filename=order_desc_select.png" />';
+                                }
+                                $str_header .= $order_desc;
+                            $str_header .= '</a>';
+                            $str_header .= '&nbsp;&nbsp;';
+                        }
+                    $str_header .= '</td>';
+                }
+            $str_header .= '</tr>';
+            // previsualisation
+            $str_previsualise  = '<div id="return_previsualise" style="display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
+            $str_previsualise .= '</div>';
+            //retour html
+            $listContent = '<br />';
+            $listContent .= $str_nbLine;
+            $listContent .= $str_search;
+            $listContent .= $str_pagination;
+            $listContent .= $str_tableStart;
+            $listContent .= $str_header;
+            $listContent .= $str_adminList;
+            $listContent .= $str_tableEnd;
+            $listContent .= $str_footer;
+            $listContent .= $str_previsualise;
+            
             break;
-        //TODO: PROCESS IT LIKE PARTICULAR CASES OF UPDATE
-        case 'allow' :
-            doEnable($docserverId);
-        case 'ban' :
-            doDisable($docserverId);
     }
 }
