@@ -190,15 +190,19 @@ class dataObjectController extends DOMDocument
         }
     }
     
-    public function setQuery($objectName, $queryExpression) 
+    public function setFilter($objectName, $filterValue) 
     {
-        $objectSchema = $this->schema->getObjectSchema($elementName);
+        $objectSchema = $this->schema->getObjectSchema($objectName);
+        $dasSource = $objectSchema->{'das:source'};
+        switch($dasSource) {
+        case 'database':
+            echo "<br/>Setting filter $filterValue for $objectSchema->name";
+            $this->dataAccessService_Database->setFilter($objectSchema->name, $filterValue);
+            break;
+        case 'xml':
+            break;
+        }
         
-        //$DasType = $this->getDasType($objectSchema);
-        //switch($DasType) {
-        //case 'database':
-        //    $this->Queries[$elementName]['queryExpressions'][] = $queryExpression;
-        //}
     }
     
     //*************************************************************************
@@ -317,6 +321,10 @@ class dataObjectController extends DOMDocument
             $dasTable->addPrimaryKey(
                 $objectSchema->{'das:key-columns'}
             );
+            $dasTable->addFilter(
+                $objectSchema->{'das:filter-columns'}
+            );
+            
             // Relation with parent
             $relationElements = $objectSchema->getRelationElements();
             for($i=0; $i<$relationElements->length; $i++) {

@@ -34,17 +34,26 @@ class DataAccessService_Database
         $this->relations[$name] = $newRelation;
     }
     
-    public function setKey($tableName, $key)
+    public function setKey($tableName, $keyValue)
     {
         $table = $this->tables[$tableName];
-        $table->setKey($key);
+        $table->setKey($keyValue);
     }
+    
+    public function setFilter($tableName, $filterValue)
+    {
+        $table = $this->tables[$tableName];
+        $table->setFilter($filterValue);
+    }
+    
     
     public function setOrder($tableName, $orderElements, $orderMode)
     {
         $table = $this->tables[$tableName];
         $table->setOrder($orderElements, $orderMode);  
     }
+    
+    
     
     public function getData($dataObject) 
     {
@@ -62,6 +71,10 @@ class DataAccessService_Database
         $keyExpression = $table->makeSelectKeyExpression();
         if($keyExpression) {
             $whereExpressionParts[] = $keyExpression;
+        }
+        $filterExpression = $table->makeFilterExpression();
+        if($filterExpression) {
+            $whereExpressionParts[] = $filterExpression;
         }
         $whereExpression = implode(' and ', $whereExpressionParts);
         
@@ -180,12 +193,13 @@ class DataAccessService_Database_Table
 {
     public $name;
     public $columns = array();
-    public $primaryKey = false;
+    public $primaryKey;
     public $foreignKeys = array();
     public $indexes = array();
-    public $relation;
-    public $key;
+    public $filter;
+    public $keyValue;
     public $order;
+    public $filterValue;
 
     public function DataAccessService_Database_Table($name)
     {
@@ -205,15 +219,25 @@ class DataAccessService_Database_Table
         return $newColumn;
     }
     
-    public function setKey($key)
+    public function addFilter($columns) 
     {
-        $this->key = $key;
+        $this->filter = $columns;
+    }
+    
+    public function setKey($keyValue)
+    {
+        $this->keyValue = $keyValue;
     }
     
     public function setOrder($orderElements, $orderMode)
     {
         $orderElementsComa = implode(', ', explode(' ', $orderElements));
         $this->order = $orderElementsComa . ' ' . $orderMode;
+    }
+    
+    public function setFilter($filterValue)
+    {
+        $this->filterValue = $filterValue;
     }
     
     public function makeSelectExpression() 
@@ -259,17 +283,34 @@ class DataAccessService_Database_Table
     {
         $selectKeyExpressionParts = array();
         if(isset($this->primaryKey) && !is_null($this->primaryKey)
-            && isset($this->key) && !is_null($this->key)) {
+            && isset($this->keyValue) && !is_null($this->keyValue)) {
             $keyColumns = $this->primaryKey->getColumns();
-            $keyValues = explode(' ', $this->key);
+            $keyValues = explode(' ', $this->keyValue);
             for($i=0; $i<count($keyColumns); $i++) {
                 $keyColumnName = $keyColumns[$i];
-                $keyColumn = $this->columns[$keyColumn];
+                $keyColumn = $this->columns[$keyColumnName];
                 $keyValue = DataAccessService_Database::enclose($keyValues[$i], $keyColumn->type);  
                 $selectKeyExpressionParts[] = $this->name . '.' . $keyColumnName . '=' . $keyValue;
             }
             $selectKeyExpression = implode(' and ', $selectKeyExpressionParts);
             return $selectKeyExpression;
+        }
+    }
+    
+    public function makeFilterExpression()
+    {
+        $filterExpressionParts = array();
+        if(isset($this->filter) && !is_null($this->filter)
+            && isset($this->filterValue) && !is_null($this->filterValue)) {       
+            $filterColumns = explode(' ', $this->filter);
+            $filterValue = DataAccessService_Database::enclose($this->filterValue, $filterColumn->type);  
+            for($i=0; $i<count($filterColumns); $i++) {
+                $filterColumnName = $filterColumns[$i];
+                $filterColumn = $this->columns[$filterColumnName];
+                $filterExpressionParts[] = "upper(" . $this->name . '.' . $filterColumnName . ') like upper(' . $filterValue . ')';
+            }
+            $filterExpression = implode(' or ', $filterExpressionParts);
+            return $filterExpression;
         }
     }
     
