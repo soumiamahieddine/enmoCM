@@ -205,19 +205,30 @@ class dataObjectController extends DOMDocument
         return $keyColumnNames;
     }
     
-    public function getLabels($objectName)
+    public function getLabel($objectName)
     {
-        $labels = array();
+        $objectSchema = $this->schema->getObjectSchema($objectName);
+        if($objectSchema->{'das:label'}) return $objectSchema->{'das:label'};
+        elseif($objectSchema->name) return $objectSchema->name;
+        elseif($objectSchema->ref) {
+            $objectSchema = $objectSchema->getRefElement();
+            return $this->getLabel($objectSchema->name);
+        }
+    }
+    
+    public function getContentLabels($objectName) {
         $objectSchema = $this->schema->getObjectSchema($objectName);
         $childElements = $objectSchema->getChildElements();
         for($i=0; $i<$childElements->length;$i++) {
-            $inlineChildElement = $childElements->item($i);
-            $childElement = $inlineChildElement->getRefElement();
-            $childName = $childElement->name;
-            if($inlineChildElement->{'das:label'}) $label = $inlineChildElement->{'das:label'};
-            elseif($childElement->{'das:label'}) $label = $childElement->{'das:label'};
-            else $label = $childName;
-            $labels[$childName] = $label;
+            $childElement = $childElements->item($i);
+            if($childElement->{'das:label'}) $label = $childElement->{'das:label'};
+            elseif($childElement->name) $label = $childElement->name;
+            elseif($childElement->ref) {
+                $childElement = $childElement->getRefElement();
+                if($childElement->{'das:label'}) $label = $childElement->{'das:label'};
+                else $label = $childElement->name;
+            }
+            $labels[$childElement->name] = $label;
         }
         return $labels;
     }
