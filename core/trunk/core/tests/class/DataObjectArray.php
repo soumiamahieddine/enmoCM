@@ -1,16 +1,21 @@
 <?php
 
-class DataObjectArray extends ArrayObject 
+class DataObjectArray 
+    extends ArrayObject
 {
     private $name;
+    private $label;
+    private $comment;
     private $schemaPath;
-    private $DasSource;
     private $parentObject;
-   
-    public function DataObjectArray($name, $schemaPath) 
+    
+    public function DataObjectArray($name, $schemaPath, $label=false, $comment=false) 
     {
         $this->name = $name;
         $this->schemaPath = $schemaPath;
+        $this->label = $label;
+        $this->comment = $comment;
+        
         $this->setFlags(ArrayObject::ARRAY_AS_PROPS);
         $this->setFlags(ArrayObject::STD_PROP_LIST);
     }
@@ -42,6 +47,16 @@ class DataObjectArray extends ArrayObject
         }
         if($name === 'name') {
             return $this->name;
+        }
+        if($name === 'label') {
+            if($this->label) {
+                return $this->label;
+            } else {
+                return $this->name;
+            }
+        }       
+        if($name === 'comment') {
+            return $this->comment;
         }
     }
     

@@ -220,7 +220,7 @@ class dataObjectController extends DOMDocument
     **
     ** @return (object) new DataObject / DataObjectArray
     */
-    private function instanciateDataObject($schemaPath, $isDataObjectArray=false)
+    private function instanciateDataObject($schemaPath, $inlineChildElement=false)
     {
         //echo "<br/><br/><b>instanciateDataObject() for $schemaPath</b>";
         if(!isset($this->prototypes[$schemaPath])) {
@@ -228,9 +228,14 @@ class dataObjectController extends DOMDocument
             $this->prototypeDataObject($schemaPath);
         }
         
-        if($isDataObjectArray) { 
+        if($inlineChildElement && $inlineChildElement->isDataObjectArray()) {
             $objectSchema = $this->schema->getSchemaElement($schemaPath);
-            $dataObject = new DataObjectArray($objectSchema->name, $schemaPath);
+            $dataObject = new DataObjectArray(
+                $objectSchema->name, 
+                $schemaPath,
+                $inlineChildElement->{'das:label'},
+                $inlineChildElement->{'das:comment'}
+            );
         } else {
             $dataObject = unserialize(serialize($this->prototypes[$schemaPath]));
         }
@@ -246,7 +251,12 @@ class dataObjectController extends DOMDocument
             if(!$objectSchema) die ("Referenced element named '" . $objectSchema->ref . "' not found in schema");
         }*/
         //echo "<br/>Create prototype object with $objectSchema->name";
-        $prototypeDataObject = new DataObject($objectSchema->name, $schemaPath);
+        $prototypeDataObject = new DataObject(
+            $objectSchema->name, 
+            $schemaPath,
+            $objectSchema->{'das:label'},
+            $objectSchema->{'das:comment'}
+        );
         
         // Set Das parameters
         $this->setDasSource($objectSchema);
@@ -257,7 +267,6 @@ class dataObjectController extends DOMDocument
         //echo "<br/>   Object has $childElements->length properties/children";
         for($i=0; $i<$childElements->length;$i++) {
             $inlineChildElement = $childElements->item($i);
-            $isDataObjectArray = $inlineChildElement->isDataObjectArray();
             $childElement = $inlineChildElement->getRefElement();
             $childPath = $childElement->getNodePath();
             $childName = $childElement->name;
@@ -274,13 +283,19 @@ class dataObjectController extends DOMDocument
                     $childValue = false;
                 }
                 //echo "<br/>    Adding property '$childName'";
-                $dataObjectProperty = new DataObjectProperty($childName, $childPath, $childValue);
+                $dataObjectProperty = new DataObjectProperty(
+                    $childName, 
+                    $childPath, 
+                    $childValue,
+                    $childElement->{'das:label'},
+                    $childElement->{'das:comment'}
+                );
                 $prototypeDataObject->$childName = $dataObjectProperty;
                 
                 $this->setDasProperty($objectSchema, $childElement);
             }
             if ($childType->tagName == 'xsd:complexType') {
-                $childDataObject = $this->instanciateDataObject($childPath, $isDataObjectArray);
+                $childDataObject = $this->instanciateDataObject($childPath, $inlineChildElement);
                 $prototypeDataObject->$childName = $childDataObject;
             }
         }
@@ -324,7 +339,14 @@ class dataObjectController extends DOMDocument
             $dasTable->addFilter(
                 $objectSchema->{'das:filter-columns'}
             );
-            
+            if($propertyElement->{'das:label'}) {
+                $dasColumn->{'label'} = $propertyElement->{'das:label'};
+            } else {
+                $dasColumn->{'label'} = $propertyElement->name;
+            }
+            if($propertyElement->{'das:comment'}) {
+                $dasColumn->{'comment'} = $propertyElement->{'das:comment'};
+            }
             // Relation with parent
             $relationElements = $objectSchema->getRelationElements();
             for($i=0; $i<$relationElements->length; $i++) {
@@ -348,15 +370,13 @@ class dataObjectController extends DOMDocument
     
     private function setDasProperty($objectSchema, $propertyElement)
     {
-        $objectName = $objectSchema->name;
-        $propertyName = $propertyElement->name;
         $propertyType = $propertyElement->getType();
         
         $dasSource = $objectSchema->{'das:source'};
         switch($dasSource) {
         case 'database':
             ////echo "<br/> Add column $propertyName to $objectName";
-            $dasColumn = $this->dataAccessService_Database->addColumn($objectName, $propertyName, $propertyType->name);
+            $dasColumn = $this->dataAccessService_Database->addColumn($objectSchema->name, $propertyElement->name, $propertyType->name);
             if($propertyElement->{'default'}) {
                 $dasColumn->{'default'} = $propertyElement->{'default'};
             }

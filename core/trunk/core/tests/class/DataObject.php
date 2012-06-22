@@ -1,19 +1,22 @@
 <?php
 
-class DataObject implements IteratorAggregate
+class DataObject 
+    implements IteratorAggregate
 {
     
     private $name;
+    private $label;
+    private $comment;
     private $schemaPath;
-    private $DasSource;
     private $parentObject;
     private $storage;
     
-    
-    public function DataObject($name, $schemaPath) 
+    public function DataObject($name, $schemaPath, $label=false, $comment=false) 
     {
         $this->name = $name;
         $this->schemaPath = $schemaPath;
+        $this->label = $label;
+        $this->comment = $comment;
     }
     
     public function getSchemaPath() 
@@ -65,6 +68,16 @@ class DataObject implements IteratorAggregate
         }
         if($name === 'name') {
             return $this->name;
+        }
+        if($name === 'label') {
+            if($this->label) {
+                return $this->label;
+            } else {
+                return $this->name;
+            }
+        }       
+        if($name === 'comment') {
+            return $this->comment;
         }
     }
     

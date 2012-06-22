@@ -1,17 +1,22 @@
 <?php 
 
-class DataObjectProperty {
+class DataObjectProperty 
+{
 	
     private $name;
+    private $label;
+    private $comment;
     private $schemaPath;
     private $parentObject;
     private $storage;
 	
-	public function DataObjectProperty($name, $schemaPath, $value=false)
+	public function DataObjectProperty($name, $schemaPath, $value=false, $label=false, $comment=false)
 	{
 		$this->schemaPath = $schemaPath;
         $this->name = $name;
         $this->storage = $value;
+        $this->label = $label;
+        $this->comment = $comment;
 	}
 	
     public function getParentObject() 
@@ -39,6 +44,16 @@ class DataObjectProperty {
         if($name === 'value') {
             return $this->storage;
         }   
+        if($name === 'label') {
+            if($this->label) {
+                return $this->label;
+            } else {
+                return $this->name;
+            }
+        }
+        if($name === 'comment') {
+            return $this->comment;
+        }
     }
     
     
