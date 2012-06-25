@@ -9,7 +9,6 @@ class DataObjectChangeLog
     
 	public function DataObjectChangeLog()
 	{
-        require_once 'core/tests/class/DataObjectChange.php';
         $this->active = true;
 	}
 	

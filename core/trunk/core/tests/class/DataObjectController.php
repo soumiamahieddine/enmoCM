@@ -16,6 +16,7 @@ class dataObjectController extends DOMDocument
         require_once 'core/tests/class/DataObject.php';
         require_once 'core/tests/class/DataObjectProperty.php';
         require_once 'core/tests/class/DataObjectChangeLog.php';
+        require_once 'core/tests/class/DataObjectChange.php';
         
         require_once 'core/tests/class/DataAccessService_Database.php';
         $this->dataAccessService_Database = new dataAccessService_Database();
