@@ -62,6 +62,12 @@ class DataObjectSchema extends DOMDocument {
         return $this->xpath->query($query, $contextElement);
     }
     
+    public function getObjectSchemas() 
+    {
+        return $this->xpath('/xsd:schema/xsd:element');
+    
+    }
+    
     public function getSchemaElement($schemaPath)
     {
         //echo "<br/>getSchemaElement($schemaPath)";

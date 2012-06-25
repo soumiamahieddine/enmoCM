@@ -4,8 +4,8 @@ class dataObjectController extends DOMDocument
 {
 
     private $schema;
-    private $prototypes = array();
-    private $dataAccessService_Database;
+    public $prototypes = array();
+    public $dataAccessService_Database;
     private $dataAccessService_XML;
     private $dataObjectValidator;
     
@@ -15,12 +15,10 @@ class dataObjectController extends DOMDocument
         require_once 'core/tests/class/DataObjectArray.php';
         require_once 'core/tests/class/DataObject.php';
         require_once 'core/tests/class/DataObjectProperty.php';
-        
-        require_once 'core/tests/class/DataObjectChange.php';
+        require_once 'core/tests/class/DataObjectChangeLog.php';
         
         require_once 'core/tests/class/DataAccessService_Database.php';
         $this->dataAccessService_Database = new dataAccessService_Database();
-        
         require_once 'core/tests/class/DataAccessService_XML.php';
                 
         require_once 'core/tests/class/DataObjectValidator.php';
@@ -32,106 +30,60 @@ class dataObjectController extends DOMDocument
     {
         $this->schema = new DataObjectSchema();
         $this->schema->loadSchema($xsdFile);
+        
+        $objectSchemas = $this->schema->getObjectSchemas();
+        for($i=0; $i<$objectSchemas->length; $i++) {
+            $objectSchema = $objectSchemas->item($i);
+            $this->prototypeDataObject($objectSchema);
+        }
+        
     }
     
     //*************************************************************************
     // PUBLIC OBJECT HANDLING FUNCTIONS
     //*************************************************************************
     /**************************************************************************
-    ** createRootDataObject
+    ** public create
     **
     ** @description : 
-    ** Creates the root object of DataObjectController
-    **   Instanciate empty DataObjects (root + children)
-    **   Load Das parameters (source, properties)
+    ** Creates a new empty DataObject from a root element name
     **
-    ** @param (string) $rootTypeName : Name of a schema root element
-    **
-    ** @return (object) empty RootDataObject
-    */
-    public function createRootDataObject($rootTypeName) 
-    {
-        $this->RootDataObject = $this->createDataObject($rootTypeName);
-        
-        return $this->RootDataObject;
-    }
-    
-    /**************************************************************************
-    ** public createDataObject
-    **
-    ** @description : 
-    ** Creates a new DataObject or DataObjectArray from a root element name
-    **  - DataObjectProperties
-    **  - Children (instance of data objects or array data object)
-    **
-    ** @param (string) $rootTypeName : Name of a root element definition
+    ** @param (string) $objectName : Name of a root element definition
     **
     ** @return (object) new DataObject / DataObjectArray
     */
-    public function createDataObject($rootTypeName) 
+    public function create($objectName) 
     {
         //echo "<br/><br/><b> createDataObject($rootTypeName)</b>"; 
-        $objectSchema = $this->schema->getObjectSchema($rootTypeName);
+        $objectSchema = $this->schema->getObjectSchema($objectName);
         if(!$objectSchema) die("<br/><b>Unable to find root element named $rootTypeName</b>");
-        
-        $dataObject = $this->instanciateDataObject($objectSchema->getNodePath());
-    
+        $dataObject = $this->instanciateDataObject($objectSchema);
+        $dataObject->beginLogging();
+        $dataObject->logCreation();
         return $dataObject;      
     }
     
     /**************************************************************************
-    ** loadRootDataObject
+    ** public read
     **
     ** @description : 
-    ** Loads the root object with data 
+    ** Read a DataObject from with a data source
     **
-    ** @param 
+    ** @param (string) $objectName : Name of a root element definition
     **
-    ** @return (object) RootDataObject
+    ** @return (object) loaded DataObject / DataObjectArray
     */
-    public function loadRootDataObject() 
+    public function read($objectName)
     {
-        //echo "<br/>Load RootDataObject";
-        $this->loadDataObject($this->RootDataObject);
-        return $this->RootDataObject;
+        $objectSchema = $this->schema->getObjectSchema($objectName);
+        if(!$objectSchema) die("<br/><b>Unable to find root element named $rootTypeName</b>");
+        $dataObject = $this->instanciateDataObject($objectSchema);
+        $this->loadDataObject($dataObject);
+        $dataObject->beginLogging();
+        return $dataObject;
     }
     
-    /**************************************************************************
-    ** public createDataObject
-    **
-    ** @description : 
-    ** Creates a new DataObject or DataObjectArray from a root element name
-    **  - DataObjectProperties
-    **  - Children (instance of data objects or array data object)
-    **
-    ** @param (string) $rootTypeName : Name of a root element definition
-    **
-    ** @return (object) new DataObject / DataObjectArray
-    */
-    public function loadDataObject($dataObject) 
-    {      
-        $objectDatas = $this->getData($dataObject);
-        //echo "<br/><br/><b>loadDataObject() from schema element $schemaPath = ".count($objectDatas)." results</b>"; 
-        if($dataObject->isDataObject) {
-            $objectData = $objectDatas[0];
-            //echo "<br/> Result has " . count($result) . " properties for object";
-            $this->loadProperties($dataObject, $objectData);
-            $this->loadChildren($dataObject);
-        }
-        if($dataObject->isDataObjectArray) {
-            $schemaPath = $dataObject->schemaPath;
-            for($i=0; $i<count($objectDatas); $i++) {
-                $objectData = $objectDatas[$i];
-                $itemDataObject = $this->instanciateDataObject($schemaPath);
-                $dataObject->append($itemDataObject, $silent=true);          
-                //echo "<br/> Result has " . count($objectData) . " properties for object #$i of array";
-                $this->loadProperties($itemDataObject, $objectData);
-                $this->loadChildren($itemDataObject);
-            }
-        }
-    }
-    
-    public function validateDataObject($dataObject) 
+    public function validate($dataObject) 
     {
         return $this->dataObjectValidator->validateDataObject($dataObject, $this->schema);
     }
@@ -141,7 +93,7 @@ class dataObjectController extends DOMDocument
         return $this->dataObjectValidator->getErrors();
     }
     
-    public function saveDataObject($dataObject) 
+    public function save($dataObject) 
     {
         $schemaPath = $dataObject->schemaPath;
         $objectSchema = $this->schema->getSchemaElement($schemaPath);
@@ -155,7 +107,35 @@ class dataObjectController extends DOMDocument
         }
     }
     
+    public function delete($dataObject)
+    {
+    
+    }
+    
+    public function copy($dataObject)
+    {
+        $dataObject = unserialize(serialize($dataObject));
 
+        $key = $this->getKey($dataObject->name);
+        $keyNames = explode(' ', $key);
+        for($i=0; $i<count($keyNames); $i++) {
+            $keyName = $keyNames[$i];
+            $dataObject->{$keyName}->clear();
+        }
+        
+        $children = $dataObject->children;
+        for($i=0; $i<count($children); $i++) {
+            $children[$i]->clear();
+        }
+        
+        $dataObject->beginLogging();
+        $dataObject->logCreation();
+                
+        return $dataObject;    
+    
+    }
+    
+ 
     //*************************************************************************
     // PUBLIC DAS FUNCTIONS 
     //*************************************************************************
@@ -243,21 +223,15 @@ class dataObjectController extends DOMDocument
     **  - DataObjectProperties
     **  - Children (instance of data objects or array data object)
     **
-    ** @param (string) $objectSchema : Online element definition
+    ** @param (string) $schemaPath : Path to object in schema
     **
     ** @return (object) new DataObject / DataObjectArray
     */
-    private function instanciateDataObject($schemaPath, $inlineChildElement=false)
+    private function instanciateDataObject($objectSchema, $inlineObjectSchema=false)
     {
-        //echo "<br/><br/><b>instanciateDataObject() for $schemaPath</b>";
-        if(!isset($this->prototypes[$schemaPath])) {
-            //echo "<br/>Create prototype object";
-            $this->prototypeDataObject($schemaPath);
-        }
-        
-        if($inlineChildElement && $inlineChildElement->isDataObjectArray()) {
-            $objectSchema = $this->schema->getSchemaElement($schemaPath);
-            $arraySchemaPath = $inlineChildElement->getNodePath();
+        $schemaPath = $objectSchema->getNodePath();
+        if($inlineObjectSchema && $inlineObjectSchema->isDataObjectArray()) {
+            $arraySchemaPath = $inlineObjectSchema->getNodePath();
             $dataObject = new DataObjectArray($objectSchema->name, $schemaPath, $arraySchemaPath);
         } else {
             $dataObject = unserialize(serialize($this->prototypes[$schemaPath]));
@@ -265,10 +239,10 @@ class dataObjectController extends DOMDocument
         return $dataObject;
     }
      
-    private function prototypeDataObject($schemaPath)
+    private function prototypeDataObject($objectSchema)
     {
-        $objectSchema = $this->schema->getSchemaElement($schemaPath);
-
+        //$objectSchema = $this->schema->getSchemaElement($schemaPath);
+        $schemaPath = $objectSchema->getNodePath();
         //echo "<br/>Create prototype object with $objectSchema->name";
         $prototypeDataObject = new DataObject($objectSchema->name, $schemaPath);
         
@@ -303,16 +277,50 @@ class dataObjectController extends DOMDocument
                 $this->setDasProperty($objectSchema, $childElement);
             }
             if ($childType->tagName == 'xsd:complexType') {
-                $childDataObject = $this->instanciateDataObject($childPath, $inlineChildElement);
+                $childDataObject = $this->instanciateDataObject($childElement, $inlineChildElement);
                 $prototypeDataObject->$childName = $childDataObject;
             }
         }
         $this->prototypes[$schemaPath] = $prototypeDataObject;
     }
     
+    /**************************************************************************
+    ** public createDataObject
+    **
+    ** @description : 
+    ** Creates a new DataObject or DataObjectArray from a root element name
+    **  - DataObjectProperties
+    **  - Children (instance of data objects or array data object)
+    **
+    ** @param (string) $rootTypeName : Name of a root element definition
+    **
+    ** @return (object) new DataObject / DataObjectArray
+    */
+    private function loadDataObject($dataObject) 
+    {      
+        $objectDatas = $this->getData($dataObject);
+        $objectData = $objectDatas[0];
+        $this->loadProperties($dataObject, $objectData);
+        $this->loadChildren($dataObject);
+    }
+    
+    private function loadDataObjectArray($arrayDataObject)
+    {
+        $objectDatas = $this->getData($arrayDataObject);
+        $schemaPath = $arrayDataObject->schemaPath;
+        $objectSchema = $this->schema->getSchemaElement($schemaPath);
+        for($i=0; $i<count($objectDatas); $i++) {
+            $objectData = $objectDatas[$i];
+            $dataObject = $this->instanciateDataObject($objectSchema);
+            $arrayDataObject->append($dataObject);          
+            $this->loadProperties($dataObject, $objectData);
+            $this->loadChildren($dataObject);
+        }
+    }
+     
     private function loadProperties($dataObject, $objectData)
     {
-        $propertiesObjects = $dataObject->getProperties();
+        $propertiesObjects = $dataObject->properties;
         for($i=0; $i<count($propertiesObjects); $i++) {
             $propertyObject = $propertiesObjects[$i];
             $propertyName = $propertyObject->name;
@@ -323,13 +331,17 @@ class dataObjectController extends DOMDocument
     
     private function loadChildren($dataObject) 
     {
-        $childrenObjects = $dataObject->getChildren();
+        $childrenObjects = $dataObject->children;
         for($i=0; $i<count($childrenObjects); $i++) {
             $childObject = $childrenObjects[$i];
-            $this->loadDataObject($childObject);
+            if($childObject->isDataObjectArray) {
+                $this->loadDataObjectArray($childObject);
+            } else {
+                $this->loadDataObject($childObject);
+            }
         }
     }
-
+    
     //*************************************************************************
     // PRIVATE DAS FUNCTIONS
     //*************************************************************************
@@ -414,6 +426,7 @@ class dataObjectController extends DOMDocument
     {
         $schemaPath = $dataObject->schemaPath;
         $objectSchema = $this->schema->getSchemaElement($schemaPath);
+        //echo "<br/>Get data from $objectSchema->name$objectSchema->ref ($schemaPath)";
         switch($objectSchema->{'das:source'}) {
         case 'database':
             return $this->dataAccessService_Database->getData($dataObject);

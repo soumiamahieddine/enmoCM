@@ -6,10 +6,12 @@ class DataAccessService_Database
     public $schema;
     public $tables = array();
     public $relations = array();
+    private $limit;
     
-    public function DataAccessService_Database($schema='public') 
+    public function DataAccessService_Database($schema='public', $limit=500) 
     {
-        $this->schema=$schema;
+        $this->schema = $schema;
+        $this->limit = $limit;
     }
     
     public function addTable($tableName) 
@@ -53,13 +55,12 @@ class DataAccessService_Database
         $table->setOrder($orderElements, $orderMode);  
     }
     
-    
-    
     public function getData($dataObject) 
     {
         $parentObject = $dataObject->parentObject;
        
         $tableName = $dataObject->name;
+              
         $table = $this->tables[$tableName];
         
         // Where
@@ -85,7 +86,7 @@ class DataAccessService_Database
         $query .= " FROM  " . $tableName;
         $query .= " WHERE " . $whereExpression;
         $query .= " ORDER BY " . $orderExpression;
-        $query .= " LIMIT 1000";
+        $query .= " LIMIT " . $this->limit;
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
         //echo "<pre>QUERY = " . $query . "</pre>";
@@ -100,6 +101,45 @@ class DataAccessService_Database
     }
     
     public function saveData($dataObject)
+    {
+        if($dataObject->isCreated) {
+            $this->insertData($dataObject);
+        } elseif ($dataObject->isUpdated) {
+            $this->updateData($dataObject);
+        }
+        
+    }
+    
+    
+    
+    //*************************************************************************
+    // PRIVATE FUNCTIONS
+    //*************************************************************************
+    private function insertData($dataObject)
+    {
+        $parentObject = $dataObject->parentObject;
+       
+        $tableName = $dataObject->name;
+        $table = $this->tables[$tableName];
+        
+        //UPDATE
+        $columnsExpression = $table->makeColumnsExpression();
+        $insertExpression = $table->makeInsertExpression($dataObject);
+    
+        $query  = "INSERT INTO " . $tableName;
+        $query .= " (" . $columnsExpression . ")";
+        $query .= " VALUES (" . $insertExpression . ")";
+        
+        //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
+        //echo "<pre>QUERY = " . $query . "</pre>";
+        $db = new dbquery();
+        $db->query($query);
+        
+        $this->saveChildObjects($dataObject);
+    
+    }
+    
+    private function updateData($dataObject)
     {
         $parentObject = $dataObject->parentObject;
        
@@ -119,11 +159,27 @@ class DataAccessService_Database
         //echo "<pre>QUERY = " . $query . "</pre>";
         $db = new dbquery();
         $db->query($query);
+        
+        $this->saveChildObjects($dataObject);
+        
     }
     
-    //*************************************************************************
-    // PRIVATE FUNCTIONS
-    //*************************************************************************
+    private function saveChildObjects($dataObject) 
+    {
+        $children = $dataObject->children;
+        for($i=0; $i<count($children); $i++) {
+            $childObject = $children[$i];
+            if($childObject->isDataObjectArray) {
+                //echo "<br/>Save data of array $childObject->name";
+                $this->saveChildObjects($childObject);
+            } else {
+                //echo "<br/>Save data of $childObject->name";
+                $this->saveData($childObject);
+            }
+        }
+    
+    }
+    
     private function getRelation($parentName, $childName) 
     {
         foreach($this->relations as $relationName => $relation) {
@@ -240,6 +296,32 @@ class DataAccessService_Database_Table
         $this->filterValue = $filterValue;
     }
     
+    public function makeColumnsExpression()
+    {
+        $columnsExpressionParts = array();
+        foreach ($this->columns as $columnName => $column) {
+            if(!$column->readonly) {
+                $columnsExpressionParts[] = $columnName;
+            }
+        }
+        return implode(', ', $columnsExpressionParts);
+    }
+    
+    public function makeInsertExpression($dataObject) {
+        $insertExpressionParts = array();
+        foreach ($this->columns as $columnName => $column) {
+            if($column->readonly) continue;
+            $columnValue = DataAccessService_Database::enclose($dataObject->{$columnName}, $column->type);
+            if($column->fixed) {
+                $fixedValue = $this->enclose($column->fixed, $column->type);
+                $insertExpressionParts[] = $fixedValue;
+            } else {
+                $insertExpressionParts[] = $columnValue;
+            }
+        }
+        return implode(', ', $insertExpressionParts);
+    }
+    
     public function makeSelectExpression() 
     {
         $selectExpressionParts = array();
@@ -261,13 +343,14 @@ class DataAccessService_Database_Table
     
     public function makeUpdateExpression($dataObject)
     {
-        $updateExpressionParts = array();
-        
-        $keyColumns = $this->primaryKey->getColumns();
-        
-        foreach ($this->columns as $columnName => $column) {
-            if(in_array($columnName, $keyColumns)) continue;
-            $columnValue = DataAccessService_Database::enclose($dataObject->{$columnName}, $column->type); 
+        $updates = $dataObject->updates;
+        for($i=0; $i<count($updates); $i++) {
+            $update = $updates[$i];
+            $propertyName = $update->name;
+            if(!isset($this->columns[$propertyName])) Die("Property $propertyName not defined in DAS");
+            
+            $column = $this->columns[$propertyName];
+            $columnValue = DataAccessService_Database::enclose($update->valueAfter, $column->type); 
             if($column->{'default'}) {
                 $defaultValue = DataAccessService_Database::enclose($column->{'default'}, $column->type);
                 $updateExpressionPart = $column->name . " = COALESCE(" . $columnValue . ", " . $defaultValue . ")";

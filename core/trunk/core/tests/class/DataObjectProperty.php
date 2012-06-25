@@ -14,29 +14,32 @@ class DataObjectProperty
         $this->storage = $value;
 	}
     
-    public function setParentObject($parentObject) 
-    {
-        $this->parentObject = $parentObject;
+    public function __get($name) {
+        switch($name) {
+        case 'isDataObjectProperty' : return true;
+        case 'name'                 : return $this->name;
+        case 'schemaPath'           : return $this->schemaPath;
+        case 'parentObject'         : return $this->parentObject;
+        }
     }
     
-    public function __get($name) {
-        if($name === 'isDataObjectProperty') {
-            return true;
-        }
-        if($name === 'name') {
-            return $this->name;
-        }
-        if($name === 'schemaPath') {
-            return $this->schemaPath;
-        }
-        if($name === 'parentObject') {
-            return $this->parentObject;
+    public function __set($name, $value) 
+    {
+        switch($name) {
+        case 'parentObject'    :
+            $this->parentObject = $value;
+            break;
         }
     }
     
     public function setValue($value) 
     {      
-        $this->storage = $value;  
+        $this->storage = $value;        
+    }
+    
+    public function clear()
+    {
+        $this->storage = null;
     }
     
     public function __toString() 

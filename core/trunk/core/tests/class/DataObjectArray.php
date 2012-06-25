@@ -7,7 +7,7 @@ class DataObjectArray
     private $schemaPath;
     private $arraySchemaPath;
     private $parentObject;
-    private $changes;
+    private $changeLog;
     
     public function DataObjectArray($name, $schemaPath, $arraySchemaPath) 
     {
@@ -16,64 +16,76 @@ class DataObjectArray
         $this->arraySchemaPath = $arraySchemaPath;
         $this->setFlags(ArrayObject::ARRAY_AS_PROPS);
         $this->setFlags(ArrayObject::STD_PROP_LIST);
-        $this->changes[] = new DataObjectChange(DataObjectChange::CREATE);
     }
     
-    public function setParentObject($parentObject) 
-    {
-        $this->parentObject = $parentObject;
-    }
-    
-    public function append($childObject, $silent=false) 
+    public function append($childObject) 
     {
         $this->offsetSet(null, $childObject);
-        $childObject->setParentObject($this->parentObject);
-        if(!$silent) {
-            $this->changes[] = new DataObjectChange(DataObjectChange::CREATE, $childObject->name, null, serialize($childObject));
-        }
+        $childObject->parentObject = $this->parentObject;
     }
     
     public function remove($offset)
     {
         $objectBefore = $this->offsetGet($offset);
         $this->offsetUnset($offset);
-        if(!$silent) {
-            $this->changes[] = new DataObjectChange(DataObjectChange::DELETE, $objectBefore->name, serialize($objectBefore));
+        if($this->changeLog && $this->changeLog->active) {
+            $this->changeLog->logChange(DataObjectChange::DELETE, $objectBefore->name, serialize($objectBefore));
+        }
+    }
+    
+    public function clear()
+    {
+        if(count($this) == 0) return;
+        foreach($this as $offset => $childObject) {
+            $this->offsetUnset($offset);
+        }
+    }
+    
+    
+    public function __set($name, $value)
+    {
+        switch($name) {
+        case 'parentObject'     : 
+            $this->parentObject = $value;
+            break;
+        
         }
     }
     
     public function __get($name) {
-        if($name === 'isDataObjectArray') {
-            return true;
-        }
-        if($name === 'name') {
-            return $this->name;
-        }
-        if($name === 'schemaPath') {
-            return $this->schemaPath;
-        }
-        if($name === 'arraySchemaPath') {
-            return $this->arraySchemaPath;
-        }
-        if($name === 'parentObject') {
-            return $this->parentObject;
-        }
-    }
-    
-    public function getChildren() 
-    {
-        $return = array();
-        for($i=0; $i<count($this->storage); $i++) {
-            $child = $this->storage[$i];
-            if(is_object($child) && ($child->isDataObject || $child->isDataObjectArray)) {
-                $return[] = $this->storage[$i];
+        switch($name) {
+        case 'isDataObjectArray': return true;
+        case 'name'             : return $this->name;
+        case 'schemaPath'       : return $this->schemaPath;
+        case 'arraySchemaPath'  : return $this->arraySchemaPath;
+        case 'parentObject'     : return $this->parentObject;
+        case 'children'         :
+            if(count($this) == 0) return array();
+            foreach($this as $i => $childObject) {
+                if(is_object($childObject) 
+                    && ($childObject->isDataObject 
+                        || $childObject->isDataObjectArray)) {
+                    $children[] = $childObject;
+                }
             }
+            return $children;
+        case 'changes'          : return $this->changes;
         }
-        return $return;
     }
     
-    public function getChanges()
+    public function beginLogging()
     {
-        return $this->changes;
+        $this->changeLog = new DataObjectChangeLog();
+        $childObjects = $this->children;
+        for($i=0; $i<count($childObjects); $i++) {
+            $childObject = $childObjects[$i];
+            $childObject->beginLogging();
+        }   
     }
+    
+    public function logCreation()
+    {
+        $this->changeLog->logCreation();
+    }
+    
 }

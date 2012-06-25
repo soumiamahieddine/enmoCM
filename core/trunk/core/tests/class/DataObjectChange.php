@@ -9,17 +9,17 @@ class DataObjectChange
     const READ      = 2;
     const UPDATE    = 3;
     const DELETE    = 4;
-    
+   
     private $timestamp;
     private $type;
     private $name;
-	private $ValueBefore;
+	private $valueBefore;
 	private $valueAfter;
 	
     public function DataObjectChange($type, $name=false, $valueBefore=false, $valueAfter=false)
     {
+        $this->timestamp = date('d-m-y h:i:s');
         $this->type = $type;
-        $this->timestamp = date('d-m-y h:i:s') ;
         $this->name = $name;
         $this->valueBefore = $valueBefore;
         $this->valueAfter = $valueAfter;
@@ -30,4 +30,8 @@ class DataObjectChange
         return $this->$name;
     }
     
+    public function __toString()
+    {
+        return print_r($this, true);
+    }
 } 
