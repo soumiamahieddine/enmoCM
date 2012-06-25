@@ -40,4 +40,12 @@
 		<use_rss>false</use_rss>
 		<use_attachment>false</use_attachment>
 	</diffusion_type>
+	<diffusion_type>
+		<id>note_dest_user</id>
+		<label>_NOTE_DEST_USER</label>
+		<script>modules/notifications/diffusion_types/note_dest_user.php</script>
+		<use_email>true</use_email>
+		<use_rss>false</use_rss>
+		<use_attachment>false</use_attachment>
+	</diffusion_type>
 </root>
