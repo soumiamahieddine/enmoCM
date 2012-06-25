@@ -194,10 +194,14 @@ if (!defined('_NOTIFICATIONS_DEST_USER_DIFF_TYPE'))
     define('_NOTIFICATIONS_DEST_USER_DIFF_TYPE', 'Envoi au destinataire principal du document');
 if (!defined('_DEST_USER'))
     define('_DEST_USER', 'Destinataire principal');
+if (!defined('_NOTE_DEST_USER'))
+    define('_NOTE_DEST_USER', 'Destinataire principal du document annot&eacute;');
 if (!defined('_NOTIFICATIONS_COPY_LIST_DIFF_TYPE'))
     define('_NOTIFICATIONS_COPY_LIST_DIFF_TYPE', 'Envoi aux utilisateurs en copie du document');
 if (!defined('_COPYLIST'))
     define('_COPYLIST', 'Utilisateurs en copie');
+if (!defined('_NOTE_COPY_LIST'))
+    define('_NOTE_COPY_LIST', 'Destinataires en copie du document annot&eacute;');
 if (!defined('_NOTIFICATIONS_GROUP_DIFF_TYPE'))
     define('_NOTIFICATIONS_GROUP_DIFF_TYPE', 'Envoi aux utilisateurs du(des) groupe(s) sp&eacute;cifi&eacute;(s)');
 if (!defined('_NOTIFICATIONS_ENTITY_DIFF_TYPE'))
