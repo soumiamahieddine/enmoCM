@@ -616,17 +616,17 @@ class dataObjectController extends DOMDocument
     
     private function childrenToXml($dataObject, $parentXml) 
     {
-        //echo "<br/><b>Adding ".count($dataObject)." children elements to $parentName</b>";
+        echo "<br/><b>Adding ".count($dataObject)." children elements to $parentXml->tagName</b>";
         foreach($dataObject as $childObject) {
             if(!is_object($childObject)) Die("Non object value are forbidden");
             if($childObject->isDataObjectProperty) {
-                //echo "<br/>Adding property element $childName => $childObject";
+                echo "<br/>Adding property element $childObject->name => $childObject";
                 $this->propertyToXml($childObject, $parentXml);
             } elseif($childObject->isDataObject) {
-                //echo "<br/><b>Adding child object $childName</b>";
+                echo "<br/><b>Adding child object $childObject->name</b>";
                 $this->objectToXml($childObject, $parentXml);
             } elseif($childObject->isDataObjectArray) {
-                //echo "<br/><b>Adding array of $childName</b>";
+                echo "<br/><b>Adding array of $childObject->name</b>";
                 $this->arrayToXml($childObject, $parentXml);
             }
         }
@@ -643,15 +643,15 @@ class dataObjectController extends DOMDocument
     {
         for($i=0; $i<count($dataObjectArray); $i++) {
             $childObject = $dataObjectArray[$i];
-            //echo "<br/>Adding array item #$i";
+            echo "<br/>Adding array item #$i";
             $this->objectToXml($childObject, $parentXml);
         }
     }
     
     private function propertyToXml($dataObjectProperty, $parentXml) 
     {
-        if(strlen($dataObjectProperty->value) > 0) {
-            $propertyXml = $parentXml->ownerDocument->createElement($dataObjectProperty->name, $dataObjectProperty->value);
+        if(strlen((string)$dataObjectProperty) > 0) {
+            $propertyXml = $parentXml->ownerDocument->createElement($dataObjectProperty->name, (string)$dataObjectProperty);
         } else {
             $propertyXml = $parentXml->ownerDocument->createElement($dataObjectProperty->name);
         }
