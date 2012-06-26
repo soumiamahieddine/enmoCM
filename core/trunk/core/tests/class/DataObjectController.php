@@ -2,12 +2,18 @@
 
 class dataObjectController extends DOMDocument
 {
-
+    const NONE      = 0;
+    const CREATE    = 1;
+    const READ      = 2;
+    const UPDATE    = 3;
+    const DELETE    = 4;
+    
+    
     private $schema;
-    public $prototypes = array();
-    public $dataAccessService_Database;
+    private $prototypes = array();
+    private $dataAccessService_Database;
     private $dataAccessService_XML;
-    private $dataObjectValidator;
+    private $errors = array();
     
     public function dataObjectController() 
     {
@@ -26,7 +32,7 @@ class dataObjectController extends DOMDocument
         require_once 'core/tests/class/DataAccessService_XML.php';
         
         // Validator classes
-        require_once 'core/tests/class/DataObjectValidator.php';
+        require_once 'core/tests/class/error.php';
         
     }
     
@@ -42,9 +48,7 @@ class dataObjectController extends DOMDocument
             $objectSchema = $objectSchemas->item($i);
             $this->prototypeDataObject($objectSchema);
         }
-        
-        $this->dataObjectValidator = new DataObjectValidator();
-        
+              
     }
     
     //*************************************************************************
@@ -64,7 +68,6 @@ class dataObjectController extends DOMDocument
     {
         //echo "<br/><br/><b> createDataObject($rootTypeName)</b>"; 
         $objectSchema = $this->schema->getObjectSchema($objectName);
-        if(!$objectSchema) die("<br/><b>Unable to find root element named $rootTypeName</b>");
         $dataObject = $this->instanciateDataObject($objectSchema);
         $dataObject->beginLogging();
         $dataObject->logCreation();
@@ -84,7 +87,6 @@ class dataObjectController extends DOMDocument
     public function read($objectName)
     {
         $objectSchema = $this->schema->getObjectSchema($objectName);
-        if(!$objectSchema) die("<br/><b>Unable to find root element named $rootTypeName</b>");
         $dataObject = $this->instanciateDataObject($objectSchema);
         $this->loadDataObject($dataObject);
         $dataObject->beginLogging();
@@ -94,12 +96,30 @@ class dataObjectController extends DOMDocument
     
     public function validate($dataObject) 
     {
+        $XmlDocument = $this->getXmlDocument($dataObject);
+        $XsdString = $this->schema->saveXML();
+        libxml_use_internal_errors(true);
+        if($XmlDocument->schemaValidateSource($XsdString)) {
+            return true;
+        } else {
+            $this->errors = libxml_get_errors();
+            /*foreach ($libXMLErrors as $libXMLError) {
+                $level = $libXMLError->level;
+                $code = $libXMLError->code;
+                $message = $libXMLError->message;
+                $this->errors[] = new error($level, $code, $message);
+            }*/
+            return false;
+        } 
+        libxml_clear_errors();
+        
+        
         return $this->dataObjectValidator->validateDataObject($dataObject, $this->schema);
     }
     
     public function getValidationErrors()
     {
-        return $this->dataObjectValidator->getErrors();
+        return $this->errors;
     }
     
     public function save($dataObject) 
@@ -155,7 +175,7 @@ class dataObjectController extends DOMDocument
     {
         return unserialize($serializedDataObject);
     }
- 
+    
     //*************************************************************************
     // PUBLIC DAS FUNCTIONS 
     //*************************************************************************
@@ -458,5 +478,222 @@ class dataObjectController extends DOMDocument
             break;
         }
     }
+    
+    //*************************************************************************
+    // Web Service Object (properties/children - no method)
+    //*************************************************************************
+    public function getStdObject($dataObject)
+    {
+        $stdObject = new StdClass();
+        $this->childrenToStdObject($dataObject, $stdObject); 
+        
+        return $stdObject;
+    }
+    
+    public function loadStdObject($stdObject, $objectName, $mode)
+    {
+        $objectSchema = $this->schema->getObjectSchema($objectName);
+        $dataObject = $this->instanciateDataObject($objectSchema);
+        $this->loadDataObjectFromStdObject($dataObject, $stdObject, $mode);
+        $dataObject->beginLogging();
+        if($mode == self::CREATE) $dataObject->logCreation();
+        if($mode== self::READ) $dataObject->logRead();
+        return $dataObject;
+    }
+    
+    private function loadDataObjectFromStdObject($dataObject, $stdObject, $mode) 
+    {      
+        $this->loadPropertiesFromStdObject($dataObject, $stdObject);
+        $this->loadChildrenFromStdObject($dataObject, $stdObject, $mode);
+    }
+    
+    private function loadDataObjectArrayFromStdObject($arrayDataObject, $stdArray, $mode)
+    {
+        $schemaPath = $arrayDataObject->schemaPath;
+        $objectSchema = $this->schema->getSchemaElement($schemaPath);
+        for($i=0; $i<count($stdArray); $i++) {
+            $stdObject = $stdArray[$i];
+            $dataObject = $this->instanciateDataObject($objectSchema);
+            $dataObject->beginLogging();
+            if($mode == self::CREATE) $dataObject->logCreation();
+            if($mode== self::READ) $dataObject->logRead();
+            $arrayDataObject->append($dataObject);          
+            $this->loadPropertiesFromStdObject($dataObject, $stdObject);
+            $this->loadChildrenFromStdObject($dataObject, $stdObject, $mode);
+        }
+    }
+     
+    private function loadPropertiesFromStdObject($dataObject, $stdObject)
+    {
+        $propertiesObjects = $dataObject->properties;
+        for($i=0; $i<count($propertiesObjects); $i++) {
+            $propertyObject = $propertiesObjects[$i];
+            $propertyName = $propertyObject->name;
+            $propertyValue = $stdObject->{$propertyName};
+            $propertyObject->setValue($propertyValue);
+        }
+    }
+    
+    private function loadChildrenFromStdObject($dataObject, $stdObject, $mode) 
+    {
+        $childrenObjects = $dataObject->children;
+        for($i=0; $i<count($childrenObjects); $i++) {
+            $childObject = $childrenObjects[$i];
+            $childName = $childObject->name;
+            $childStdObject = $stdObject->{$childName};
+            if($childObject->isDataObjectArray) {
+                $this->loadDataObjectArrayFromStdObject($childObject, $childStdObject, $mode);
+            } else {
+                $this->loadDataObjectFromStdObject($childObject, $childStdObject, $mode);
+            }
+        }
+    }
+    
+    private function childrenToStdObject($dataObject, $stdObject)
+    {
+        foreach($dataObject as $childObject) {
+            if(!is_object($childObject)) Die("Non object value are forbidden");
+            if($childObject->isDataObjectProperty) {
+                //echo "<br/>Adding property element $childName => $childObject";
+                $this->propertyToStdObject($childObject, $stdObject);
+            } elseif($childObject->isDataObject) {
+                //echo "<br/><b>Adding child object $childName</b>";
+                $this->objectToStdObject($childObject, $stdObject);
+            } elseif($childObject->isDataObjectArray) {
+                //echo "<br/><b>Adding array of $childName</b>";
+                $this->arrayToStdObject($childObject, $stdObject);
+            }
+        }
+    }
+    
+    private function objectToStdObject($dataObject, $stdObject) 
+    {
+        $objectName = $dataObject->name;
+        $childStdObject = new stdClass();
+        $stdObject->{$objectName} = $childStdObject;
+        $this->childrenToStdObject($dataObject, $childStdObject);
+    }
+    
+    private function arrayToStdObject($dataObjectArray, $stdObject)
+    {
+        $arrayName = $dataObjectArray->name;
+        $array = Array();
+        for($i=0; $i<count($dataObjectArray); $i++) {
+            $childObject = $dataObjectArray[$i];
+            $childStdObject = new stdClass();
+            $array[] = $childStdObject;
+            $this->childrenToStdObject($childObject, $childStdObject);
+        }
+        $stdObject->{$arrayName} = $array;
+    }
+    
+    private function propertyToStdObject($dataObjectProperty, $stdObject) 
+    {
+        $propertyName = $dataObjectProperty->name;
+        $stdObject->{$propertyName} = (string)$dataObjectProperty;
+    }
+    
+    //*************************************************************************
+    // XML
+    //*************************************************************************
+    public function getXmlDocument($dataObject) 
+    {
+        $Document = new DOMDocument();
+        $this->objectToXml($dataObject, $Document); 
+        
+        return $Document;
+    }
+    
+    public function getXmlString($dataObject)
+    {
+        $XmlDocument = $this->asXmlDocument();
+        $XmlString = $XmlDocument->saveXML();
+        $XmlPrettyString = $this->formatXmlString($XmlString);
+        return $XmlPrettyString;
+    }
+    
+    private function childrenToXml($dataObject, $parentXml) 
+    {
+        //echo "<br/><b>Adding ".count($dataObject)." children elements to $parentName</b>";
+        foreach($dataObject as $childObject) {
+            if(!is_object($childObject)) Die("Non object value are forbidden");
+            if($childObject->isDataObjectProperty) {
+                //echo "<br/>Adding property element $childName => $childObject";
+                $this->propertyToXml($childObject, $parentXml);
+            } elseif($childObject->isDataObject) {
+                //echo "<br/><b>Adding child object $childName</b>";
+                $this->objectToXml($childObject, $parentXml);
+            } elseif($childObject->isDataObjectArray) {
+                //echo "<br/><b>Adding array of $childName</b>";
+                $this->arrayToXml($childObject, $parentXml);
+            }
+        }
+    }
+    
+    private function objectToXml($dataObject, $parentXml) 
+    {
+        $objectXml = $parentXml->ownerDocument->createElement($dataObject->name);
+        $parentXml->appendChild($objectXml);
+        $this->childrenToXml($dataObject, $objectXml);
+    }
+    
+    private function arrayToXml($dataObjectArray, $parentXml)
+    {
+        for($i=0; $i<count($dataObjectArray); $i++) {
+            $childObject = $dataObjectArray[$i];
+            //echo "<br/>Adding array item #$i";
+            $this->objectToXml($childObject, $parentXml);
+        }
+    }
+    
+    private function propertyToXml($dataObjectProperty, $parentXml) 
+    {
+        if(strlen($dataObjectProperty->value) > 0) {
+            $propertyXml = $parentXml->ownerDocument->createElement($dataObjectProperty->name, $dataObjectProperty->value);
+        } else {
+            $propertyXml = $parentXml->ownerDocument->createElement($dataObjectProperty->name);
+        }
+        $parentXml->appendChild($propertyXml);
+    }
+    
+    private function formatXmlString($xml) 
+    {  
+        // add marker linefeeds to aid the pretty-tokeniser (adds a linefeed between all tag-end boundaries)
+        $xml = preg_replace('/(>)(<)(\/*)/', "$1\n$2$3", $xml);
+        
+        // now indent the tags
+        $token      = strtok($xml, "\n");
+        $result     = ''; // holds formatted version as it is built
+        $pad        = 0; // initial indent
+        $matches    = array(); // returns from preg_matches()
+        
+        // scan each line and adjust indent based on opening/closing tags
+        while ($token !== false) {
+            // 1. open and closing tags on same line - no change
+            if (preg_match('/.+<\/\w[^>]*>$/', $token, $matches)) { 
+                $indent = 0;
+            // 2. closing tag - outdent now
+            } elseif (preg_match('/^<\/\w/', $token, $matches)) {
+                $indent = 0;
+                $pad--;
+            // 3. opening tag - don't pad this one, only subsequent tags
+            } elseif (preg_match('/^<\w[^>]*[^\/]>.*$/', $token, $matches)) {
+                $indent = 1;
+            // 4. no indentation needed
+            } else {
+                $indent = 0; 
+            }
+            
+            // pad the line with the required number of leading spaces
+            $line    = str_pad($token, strlen($token)+($pad*4), ' ', STR_PAD_LEFT);
+            $result .= $line . "\n"; // add to the cumulative result, with linefeed
+            $token   = strtok("\n"); // get the next token
+            $pad    += $indent; // update the pad size for subsequent lines    
+        } 
+        
+        return $result;
+    }
+
+    
     
 }

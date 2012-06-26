@@ -1,5 +1,7 @@
 <?php
-class DataObjectSchema extends DOMDocument {
+class DataObjectSchema 
+    extends DOMDocument 
+{
     
     private $includes = array();
     private $xpath;
@@ -81,11 +83,16 @@ class DataObjectSchema extends DOMDocument {
     {
         //echo "<br/>getSchemaElement($schemaPath)";
         return $this->xpath($schemaPath)->item(0);
+        
     }
     
     public function getObjectSchema($objectName)
     {
-        return $this->xpath("/xsd:schema/xsd:element[@name='".$objectName."']")->item(0);
+        $objectSchemas = $this->xpath("/xsd:schema/xsd:element[@name='".$objectName."']");
+        
+        if($objectSchemas->length == 0) die("<br/><b>Unable to find root element named $rootTypeName</b>");
+        
+        return $objectSchemas->item(0);
     }
      
     public function getDasSource($schemaPath)
