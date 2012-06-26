@@ -146,6 +146,15 @@ class dataObjectController extends DOMDocument
     
     }
     
+    public function serialize($dataObject)
+    {
+        return serialize($dataObject);
+    }
+    
+    public function unserialize($serializedDataObject)
+    {
+        return unserialize($serializedDataObject);
+    }
  
     //*************************************************************************
     // PUBLIC DAS FUNCTIONS 
