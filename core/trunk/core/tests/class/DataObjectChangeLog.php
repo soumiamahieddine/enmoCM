@@ -23,6 +23,11 @@ class DataObjectChangeLog
         $this->logChange(DataObjectChange::CREATE, $name);
     }
     
+    public function logRead($name) 
+    {
+        $this->logChange(DataObjectChange::READ, $name);
+    }
+    
     public function __get($name)
     {
         switch($name) {

@@ -76,11 +76,6 @@ class DataObjectArray
     public function beginLogging()
     {
         $this->changeLog = new DataObjectChangeLog();
-        $childObjects = $this->children;
-        for($i=0; $i<count($childObjects); $i++) {
-            $childObject = $childObjects[$i];
-            $childObject->beginLogging();
-        }   
     }
     
     public function logCreation()

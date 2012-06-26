@@ -1,5 +1,6 @@
 <?php
 class DataAccessService_Database 
+    
 {
 	
     private $connection;
@@ -7,11 +8,13 @@ class DataAccessService_Database
     public $tables = array();
     public $relations = array();
     private $limit;
+    private $db;
     
     public function DataAccessService_Database($schema='public', $limit=500) 
     {
         $this->schema = $schema;
         $this->limit = $limit;
+        $this->db = new dbquery();
     }
     
     public function addTable($tableName) 
@@ -90,11 +93,10 @@ class DataAccessService_Database
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
         //echo "<pre>QUERY = " . $query . "</pre>";
-        $db = new dbquery();
-        $db->query($query);
+        $this->db->query($query);
         
         $results = array();
-        while($result = $db->fetch_assoc()) {
+        while($result = $this->db->fetch_assoc()) {
             $results[] = $result;
         }
         return $results;
@@ -131,9 +133,8 @@ class DataAccessService_Database
         $query .= " VALUES (" . $insertExpression . ")";
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        //echo "<pre>QUERY = " . $query . "</pre>";
-        $db = new dbquery();
-        $db->query($query);
+        echo "<pre>QUERY = " . $query . "</pre>";
+        //$this->db->query($query);
         
         $this->saveChildObjects($dataObject);
     
@@ -156,9 +157,8 @@ class DataAccessService_Database
         $query .= " WHERE " . $keyExpression;
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        //echo "<pre>QUERY = " . $query . "</pre>";
-        $db = new dbquery();
-        $db->query($query);
+        echo "<pre>QUERY = " . $query . "</pre>";
+        //$this->db->query($query);
         
         $this->saveChildObjects($dataObject);
         

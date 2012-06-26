@@ -62,6 +62,15 @@ class DataObjectSchema extends DOMDocument {
         return $this->xpath->query($query, $contextElement);
     }
     
+    public function getDataSources()
+    {
+        $DSnodes = $this->xpath('/xsd:schema/xsd:annotation/xsd:appinfo/das:datasource');
+        for($i=0; $i<$DSnodes->length; $i++) {
+            $DS[] = $DSnodes->item($i);
+        }
+        return $DS;
+    }
+    
     public function getObjectSchemas() 
     {
         return $this->xpath('/xsd:schema/xsd:element');

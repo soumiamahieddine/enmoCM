@@ -11,19 +11,22 @@ class dataObjectController extends DOMDocument
     
     public function dataObjectController() 
     {
+        // DataObject classes
         require_once 'core/tests/class/DataObjectSchema.php';
         require_once 'core/tests/class/DataObjectArray.php';
         require_once 'core/tests/class/DataObject.php';
         require_once 'core/tests/class/DataObjectProperty.php';
+        
+        // ChangeLog classes
         require_once 'core/tests/class/DataObjectChangeLog.php';
         require_once 'core/tests/class/DataObjectChange.php';
         
+        // DataAccessService / PDO classes
         require_once 'core/tests/class/DataAccessService_Database.php';
-        $this->dataAccessService_Database = new dataAccessService_Database();
         require_once 'core/tests/class/DataAccessService_XML.php';
-                
+        
+        // Validator classes
         require_once 'core/tests/class/DataObjectValidator.php';
-        $this->dataObjectValidator = new DataObjectValidator();
         
     }
     
@@ -32,11 +35,15 @@ class dataObjectController extends DOMDocument
         $this->schema = new DataObjectSchema();
         $this->schema->loadSchema($xsdFile);
         
+        $this->dataAccessService_Database = new dataAccessService_Database();
+        
         $objectSchemas = $this->schema->getObjectSchemas();
         for($i=0; $i<$objectSchemas->length; $i++) {
             $objectSchema = $objectSchemas->item($i);
             $this->prototypeDataObject($objectSchema);
         }
+        
+        $this->dataObjectValidator = new DataObjectValidator();
         
     }
     
@@ -81,6 +88,7 @@ class dataObjectController extends DOMDocument
         $dataObject = $this->instanciateDataObject($objectSchema);
         $this->loadDataObject($dataObject);
         $dataObject->beginLogging();
+        $dataObject->logRead();
         return $dataObject;
     }
     
@@ -113,7 +121,7 @@ class dataObjectController extends DOMDocument
     
     }
     
-    public function copy($dataObject)
+    public function copy($dataObject, $keepParent=true)
     {
         $dataObject = unserialize(serialize($dataObject));
 
@@ -128,6 +136,8 @@ class dataObjectController extends DOMDocument
         for($i=0; $i<count($children); $i++) {
             $children[$i]->clear();
         }
+        
+        if(!$keepParent) $dataObject->parentObject = false;
         
         $dataObject->beginLogging();
         $dataObject->logCreation();
@@ -313,6 +323,8 @@ class dataObjectController extends DOMDocument
         for($i=0; $i<count($objectDatas); $i++) {
             $objectData = $objectDatas[$i];
             $dataObject = $this->instanciateDataObject($objectSchema);
+            $dataObject->beginLogging();
+            $dataObject->logRead();
             $arrayDataObject->append($dataObject);          
             $this->loadProperties($dataObject, $objectData);
             $this->loadChildren($dataObject);

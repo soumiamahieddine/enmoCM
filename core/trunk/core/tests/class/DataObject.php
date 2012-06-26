@@ -135,16 +135,16 @@ class DataObject
     public function beginLogging()
     {
         $this->changeLog = new DataObjectChangeLog();
-        $childObjects = $this->children;
-        for($i=0; $i<count($childObjects); $i++) {
-            $childObject = $childObjects[$i];
-            $childObject->beginLogging();
-        }
     }
     
     public function logCreation()
     {
         $this->changeLog->logCreation($this->name);
+    }
+    
+    public function logRead() 
+    {
+        $this->changeLog->logRead($this->name);
     }
     
     //*************************************************************************
@@ -211,7 +211,6 @@ class DataObject
     }
     
     private function formatXmlString($xml) {  
-      
         // add marker linefeeds to aid the pretty-tokeniser (adds a linefeed between all tag-end boundaries)
         $xml = preg_replace('/(>)(<)(\/*)/', "$1\n$2$3", $xml);
         
