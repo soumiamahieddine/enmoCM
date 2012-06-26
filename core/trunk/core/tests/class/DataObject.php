@@ -46,6 +46,7 @@ class DataObject
             } 
             // Set property value
             if(is_scalar($value) || !$value || is_null($value)) {
+                if((string)$this->storage[$name] == $value) return;
                 if(isset($this->changeLog) && $this->changeLog->active) {
                     $this->changeLog->logChange(DataObjectChange::UPDATE, $name, (string)$this->storage[$name], $value);
                 }
