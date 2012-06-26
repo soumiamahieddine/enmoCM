@@ -599,7 +599,9 @@ class dataObjectController extends DOMDocument
     public function getXmlDocument($dataObject) 
     {
         $Document = new DOMDocument();
-        $this->objectToXml($dataObject, $Document); 
+        $rootXml = $Document->createElement($dataObject->name);
+        $Document->appendChild($rootXml);
+        $this->childrenToXml($dataObject, $rootXml); 
         
         return $Document;
     }
