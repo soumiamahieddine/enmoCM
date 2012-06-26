@@ -124,14 +124,14 @@
         );
         
         $formButtons = array(
-            'cancel'   => array(
-                'show' => false,
-                'jsEvent' => 'onClick="window.location.href=\''.str_replace(array('&objectId='.$_REQUEST['objectId'], '&mode='.$_REQUEST['mode']), array('', ''), $_SERVER['REQUEST_URI']).'\'"; ',
-                
-            ),
             'save'     => array(
                 'show' => false,
                 'jsEvent' => 'saveWithXSD',
+                
+            ),
+            'cancel'   => array(
+                'show' => false,
+                'jsEvent' => 'onClick="window.location.href=\''.str_replace(array('&objectId='.$_REQUEST['objectId'], '&mode='.$_REQUEST['mode']), array('', ''), $_SERVER['REQUEST_URI']).'\'"; ',
                 
             ),
             'back'       => array(
@@ -223,6 +223,7 @@
                                   $str_return .= 'id="'.$key.'" ';
                                   $str_return .= 'name="'.$key.'" ';
                                   $str_return .= 'type="text" ';
+                                  $str_return .= 'size="35" ';
                                   $str_return .= 'value="'.$objectFieldValue.'" ';
                                   $str_return .= $readonlyInput;
                                   $str_return .= $jsEvent;
@@ -434,7 +435,7 @@
                         for(var i=0; i < response.failFields.length; i++) {
                             $(response.failFields[i]).style.backgroundColor = '#f6bf36';
                             $(response.failFields[i]).style.color = '#459ed1';
-                            $(response.failFields[i]).style.fontWeight = '900';
+                            //$(response.failFields[i]).style.fontWeight = '900';
                         }
                     }
                 }
