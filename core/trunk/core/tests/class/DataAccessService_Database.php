@@ -106,10 +106,10 @@ class DataAccessService_Database
     {
         if($dataObject->isCreated) {
             $this->insertData($dataObject);
-        } elseif ($dataObject->isUpdated) {
+        } elseif ($dataObject->isUpdated && count($dataObject->updates) > 0) {
             $this->updateData($dataObject);
         }
-        
+        return true;
     }
     
     
@@ -133,8 +133,8 @@ class DataAccessService_Database
         $query .= " VALUES (" . $insertExpression . ")";
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        echo "<pre>QUERY = " . $query . "</pre>";
-        //$this->db->query($query);
+        //echo "<pre>QUERY = " . $query . "</pre>";
+        $this->db->query($query);
         
         $this->saveChildObjects($dataObject);
     
@@ -149,6 +149,7 @@ class DataAccessService_Database
         
         //UPDATE
         $updateExpression = $table->makeUpdateExpression($dataObject);
+        
         // Key
         $keyExpression = $table->makeUpdateKeyExpression($dataObject);
     
@@ -157,8 +158,8 @@ class DataAccessService_Database
         $query .= " WHERE " . $keyExpression;
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        echo "<pre>QUERY = " . $query . "</pre>";
-        //$this->db->query($query);
+        //echo "<pre>QUERY = " . $query . "</pre>";
+        $this->db->query($query);
         
         $this->saveChildObjects($dataObject);
         
