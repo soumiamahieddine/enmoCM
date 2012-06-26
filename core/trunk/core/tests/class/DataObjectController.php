@@ -606,7 +606,7 @@ class dataObjectController extends DOMDocument
     
     public function getXmlString($dataObject)
     {
-        $XmlDocument = $this->asXmlDocument($dataObject);
+        $XmlDocument = $this->getXmlDocument($dataObject);
         $XmlString = $XmlDocument->saveXML();
         $XmlPrettyString = $this->formatXmlString($XmlString);
         return $XmlPrettyString;
