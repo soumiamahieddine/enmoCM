@@ -887,6 +887,9 @@ if (isset($_REQUEST['submit'])) {
                                       $str_htmlList .= 'float: right; ';
                                       $str_htmlList .= 'cursor: pointer; ';
                                      $str_htmlList .= '" ';
+                                     $str_htmlList .= 'onClick="';
+                                      $str_htmlList .= 'goTo(\''.$actionsURL['create'].'\') ';
+                                     $str_htmlList .= '" ';
                                     $str_htmlList .= '>';
                                         $str_htmlList .= '<span ';
                                          $str_htmlList .= 'style="';
@@ -1089,10 +1092,15 @@ if (isset($_REQUEST['submit'])) {
                             if (in_array('create', $actions)) {
                                 $str_htmlList .= '<span ';
                                  $str_htmlList .= 'style="';
-                                  $str_htmlList .= 'height: 35px; ';
-                                  $str_htmlList .= 'width: 55px; ';
-                                  $str_htmlList .= 'background-color: rgba(255, 0 ,0 ,1); ';
+                                  $str_htmlList .= 'height: 40px; ';
+                                  $str_htmlList .= 'width: 100%; ';
+                                  $str_htmlList .= 'background-color: rgba(255, 255 ,255 ,0.5); ';
+                                  $str_htmlList .= 'border-radius: 10px; ';
                                   $str_htmlList .= 'float: right; ';
+                                  $str_htmlList .= 'cursor: pointer; ';
+                                 $str_htmlList .= '" ';
+                                 $str_htmlList .= 'onClick="';
+                                  $str_htmlList .= 'goTo(\''.$actionsURL['create'].'\') ';
                                  $str_htmlList .= '" ';
                                 $str_htmlList .= '>';
                                     $str_htmlList .= 'Ajouter';
