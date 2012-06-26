@@ -40,21 +40,21 @@ if ($params['mode'] == 'list') {
         echo loadHiddenFields($params);
         ?>
         <input type="hidden" name="size_limit_hidden"  value="<?php
-        if (isset($_SESSION['m_admin']['docservers']->size_limit_number)) {
-            echo $_SESSION['m_admin']['docservers']->size_limit_number;
+        if (isset($dataObject->size_limit_number)) {
+            echo $dataObject->size_limit_number;
         }
         ?>" id="size_limit_hidden"/>
         <input type="hidden" name="actual_size_hidden"  value="<?php
-        if (isset($_SESSION['m_admin']['docservers']->actual_size_number)) {
-            echo $_SESSION['m_admin']['docservers']->actual_size_number;
+        if (isset($dataObject->actual_size_number)) {
+            echo $dataObject->actual_size_number;
         }
         ?>" id="actual_size_hidden"/>
         <p>
-            <label for="id"><?php echo _DOCSERVER_ID; ?> (*): </label>
-            <input name="id" type="text"  id="id" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']->docserver_id)) {
+            <label for="docserver_id"><?php echo _DOCSERVER_ID; ?> (*): </label>
+            <input name="docserver_id" type="text"  id="docserver_id" value="<?php
+        if (isset($dataObject->docserver_id)) {
             echo $func->show_str(
-                $_SESSION['m_admin']['docservers']->docserver_id
+                $dataObject->docserver_id
             );
         }
         ?>" <?php
@@ -66,8 +66,8 @@ if ($params['mode'] == 'list') {
         <p>
             <label for="docserver_type_id"><?php echo _DOCSERVER_TYPES;?> (*): </label>
             <?php
-            if ((isset($_SESSION['m_admin']['docservers']->docserver_type_id)
-                    && $_SESSION['m_admin']['docservers']->docserver_type_id == 'TEMPLATES')
+            if ((isset($dataObject->docserver_type_id)
+                    && $dataObject->docserver_type_id == 'TEMPLATES')
                 || $params['mode'] == 'read'
             ) {
                 ?>
@@ -77,18 +77,18 @@ if ($params['mode'] == 'list') {
                 for ($cptTypes = 0; $cptTypes < count($docserverTypesArray);
                     $cptTypes ++
                 ) {
-                    if (isset($_SESSION['m_admin']['docservers']->docserver_type_id)
-                        && $_SESSION['m_admin']['docservers']->docserver_type_id == $docserverTypesArray[$cptTypes]
+                    if (isset($dataObject->docserver_type_id)
+                        && $dataObject->docserver_type_id == $docserverTypesArray[$cptTypes]
                     ) {
                         $docserverTypeTxt = $docserverTypesArray[$cptTypes];
                     }
                 }
-                if (isset($_SESSION['m_admin']['docservers']->link_exists) 
-                    && $_SESSION['m_admin']['docservers']->link_exists
+                if (isset($dataObject->link_exists) 
+                    && $dataObject->link_exists
                 ) {
                     ?>
                     <input type="hidden" name="docserver_type_id" value="<?php 
-                        echo $_SESSION['m_admin']['docservers']->docserver_type_id;?>" />
+                        echo $dataObject->docserver_type_id;?>" />
                     <input name="docserver_type_id_txt" type="text"  id="docserver_type_id_txt" value="<?php
                         echo $docserverTypeTxt;
                     ?>" readonly class="readonly"/>
@@ -103,8 +103,8 @@ if ($params['mode'] == 'list') {
                     ) {
                         ?>
                         <option value="<?php echo $docserverTypesArray[$cptTypes];?>" <?php
-                        if (isset($_SESSION['m_admin']['docservers']->docserver_type_id)
-                            && $_SESSION['m_admin']['docservers']->docserver_type_id == $docserverTypesArray[$cptTypes]
+                        if (isset($dataObject->docserver_type_id)
+                            && $dataObject->docserver_type_id == $docserverTypesArray[$cptTypes]
                         ) {
                             echo 'selected="selected"';
                         }
@@ -121,9 +121,9 @@ if ($params['mode'] == 'list') {
         <p>
             <label for="device_label"><?php echo _DEVICE_LABEL; ?> (*): </label>
             <input name="device_label" type="text"  id="device_label" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']->device_label)) {
+        if (isset($dataObject->device_label)) {
             echo $func->show_str(
-                $_SESSION['m_admin']['docservers']->device_label
+                $dataObject->device_label
             );
         }
         ?>" <?php
@@ -135,16 +135,16 @@ if ($params['mode'] == 'list') {
         <p>
             <label><?php echo _IS_READONLY; ?> : </label>
             <input type="radio" class="check" name="is_readonly" value="true" <?php
-        if (isset($_SESSION['m_admin']['docservers']->is_readonly)
-            && $_SESSION['m_admin']['docservers']->is_readonly == "Y"
+        if (isset($dataObject->is_readonly)
+            && $dataObject->is_readonly == "Y"
         ) {
             ?> checked="checked"<?php
         }
         ?> /><?php echo _YES;?>
             <input type="radio" class="check" name="is_readonly" value="false" <?php
-        if (!isset($_SESSION['m_admin']['docservers']->is_readonly)
-            || (!($_SESSION['m_admin']['docservers']->is_readonly == "Y")
-            || $_SESSION['m_admin']['docservers']->is_readonly == '')
+        if (!isset($dataObject->is_readonly)
+            || (!($dataObject->is_readonly == "Y")
+            || $dataObject->is_readonly == '')
         ) {
             ?> checked="checked"<?php
         }
@@ -161,9 +161,9 @@ if ($params['mode'] == 'list') {
         <p>
             <label for="size_limit_number"><?php echo _SIZE_LIMIT; ?> : </label>
             <input name="size_limit_number" type="text" id="size_limit_number" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']->size_limit_number)) {
+        if (isset($dataObject->size_limit_number)) {
             echo $func->show_str(
-                $_SESSION['m_admin']['docservers']->size_limit_number
+                $dataObject->size_limit_number
             );
         }
         ?>" onChange="javascript:saveSizeInBytes();" <?php
@@ -180,9 +180,9 @@ if ($params['mode'] == 'list') {
             echo _ACTUAL_SIZE;
             ?> : </label>
                 <input name="actual_size_number" type="text" id="actual_size_number" value="<?php
-            if (isset($_SESSION['m_admin']['docservers']->actual_size_number)) {
+            if (isset($dataObject->actual_size_number)) {
                 echo $func->show_str(
-                    $_SESSION['m_admin']['docservers']->actual_size_number
+                    $dataObject->actual_size_number
                 );
             }
             ?>" readonly class="readonly" />
@@ -192,13 +192,13 @@ if ($params['mode'] == 'list') {
             echo _PERCENTAGE_FULL;
             ?> : </label>
                 <input name="percentage_full" type="text" id="percentage_full" value="<?php
-            if (isset($_SESSION['m_admin']['docservers']->actual_size_number)
-                && isset($_SESSION['m_admin']['docservers']->size_limit_number)
-                && ($_SESSION['m_admin']['docservers']->actual_size_number <> 0
-                && $_SESSION['m_admin']['docservers']->size_limit_number <> 0)
+            if (isset($dataObject->actual_size_number)
+                && isset($dataObject->size_limit_number)
+                && ($dataObject->actual_size_number <> 0
+                && $dataObject->size_limit_number <> 0)
             ) {
                 echo $func->show_str(
-                    (100 * $_SESSION['m_admin']['docservers']->actual_size_number) / $_SESSION['m_admin']['docservers']->size_limit_number
+                    (100 * $dataObject->actual_size_number) / $dataObject->size_limit_number
                 );
             }
             ?>%" readonly class="readonly"/>
@@ -209,8 +209,8 @@ if ($params['mode'] == 'list') {
         <p>
             <label for="path_template"><?php echo _PATH_TEMPLATE; ?> : </label>
             <input name="path_template" type="text"  id="path_template" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']->path_template)) {
-            echo $_SESSION['m_admin']['docservers']->path_template;
+        if (isset($dataObject->path_template)) {
+            echo $dataObject->path_template;
         }
         ?>" <?php
         if ($params['mode'] == 'read') {
@@ -225,27 +225,27 @@ if ($params['mode'] == 'list') {
                 $_SESSION['collections']
             ); $cptCollection ++
             ) {
-                if (isset($_SESSION['m_admin']['docservers']->coll_id)
-                    && $_SESSION['m_admin']['docservers']->coll_id == $_SESSION['collections'][$cptCollection]['id']
+                if (isset($dataObject->coll_id)
+                    && $dataObject->coll_id == $_SESSION['collections'][$cptCollection]['id']
                 ) {
                     $collTxt = $_SESSION['collections'][$cptCollection]['id'] . " : "
                     . $_SESSION['collections'][$cptCollection]['label'];
                 }
             }
-            if ((isset($_SESSION['m_admin']['docservers']->link_exists) 
-                && $_SESSION['m_admin']['docservers']->link_exists)
+            if ((isset($dataObject->link_exists) 
+                && $dataObject->link_exists)
                 || $params['mode'] == 'read'
             ) {
                 ?>
                 <input type="hidden" name="coll_id" value="<?php 
-                    echo $_SESSION['m_admin']['docservers']->coll_id;?>" />
+                    echo $dataObject->coll_id;?>" />
                 <input name="coll_id_txt" type="text"  id="coll_id_txt" value="<?php
                     echo $collTxt;
                 ?>" readonly class="readonly"/>
                 <?php
             } else {
-                if (isset($_SESSION['m_admin']['docservers']->coll_id)
-                    && $_SESSION['m_admin']['docservers']->coll_id == 'templates'
+                if (isset($dataObject->coll_id)
+                    && $dataObject->coll_id == 'templates'
                 ) {
                     ?>
                     <input name="coll_id" type="text"  id="coll_id" value="templates" readonly="readonly" class="readonly"/>
@@ -263,8 +263,8 @@ if ($params['mode'] == 'list') {
                         <option value="<?php
                         echo $_SESSION['collections'][$cptCollection]['id'];
                         ?>" <?php
-                        if (isset($_SESSION['m_admin']['docservers']->coll_id)
-                            && $_SESSION['m_admin']['docservers']->coll_id == $_SESSION['collections'][$cptCollection]['id']
+                        if (isset($dataObject->coll_id)
+                            && $dataObject->coll_id == $_SESSION['collections'][$cptCollection]['id']
                         ) {
                             echo 'selected="selected"';
                         }
@@ -284,9 +284,9 @@ if ($params['mode'] == 'list') {
         <p>
             <label for="priority_number"><?php echo _PRIORITY; ?> : </label>
             <input name="priority_number" type="text"  id="priority_number" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']->priority_number)) {
+        if (isset($dataObject->priority_number)) {
             echo $func->show_str(
-                $_SESSION['m_admin']['docservers']->priority_number
+                $dataObject->priority_number
             );
         }
         ?>" <?php
@@ -303,7 +303,7 @@ if ($params['mode'] == 'list') {
         if ($params['mode'] == 'read') {
                 ?>
                 <input name="docserver_location_id" type="text"  id="docserver_location_id" value="<?php
-                echo $_SESSION['m_admin']['docservers']->docserver_location_id;
+                echo $dataObject->docserver_location_id;
                 ?>" readonly="readonly" class="readonly"/>
                 <?php
             } else {
@@ -318,8 +318,8 @@ if ($params['mode'] == 'list') {
                         <option value="<?php
                         echo $docserverLocationsArray[$cptLocation];
                         ?>" <?php
-                        if (isset($_SESSION['m_admin']['docservers']->docserver_location_id)
-                            && $_SESSION['m_admin']['docservers']->docserver_location_id == $docserverLocationsArray[$cptLocation]
+                        if (isset($dataObject->docserver_location_id)
+                            && $dataObject->docserver_location_id == $docserverLocationsArray[$cptLocation]
                         ) {
                             echo 'selected="selected"';
                         }
@@ -337,9 +337,9 @@ if ($params['mode'] == 'list') {
         echo _ADR_PRIORITY;
         ?> : (*)</label>
             <input name="adr_priority_number" type="text"  id="adr_priority_number" value="<?php
-        if (isset($_SESSION['m_admin']['docservers']->adr_priority_number)) {
+        if (isset($dataObject->adr_priority_number)) {
             echo $func->show_str(
-                $_SESSION['m_admin']['docservers']->adr_priority_number
+                $dataObject->adr_priority_number
             );
         }
         ?>" <?php

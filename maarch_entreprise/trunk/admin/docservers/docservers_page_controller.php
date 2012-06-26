@@ -47,11 +47,11 @@ $showCols = array(
         'cssStyle'       => ''
     ),
     'is_readonly'        => array(
-        'functionFormat' => 'standard#isBoolean',
+        'functionFormat' => 'isBoolean',
         'cssStyle'       => 'text-align: center;'
     ),
     'enabled'            => array(
-        'functionFormat' => 'standard#isBoolean',
+        'functionFormat' => 'isBoolean',
         'cssStyle'       => 'text-align: center;'
     ),
 );

@@ -56,18 +56,18 @@ Parent key fields (xpath) and child key fields must be in same order
       <xsd:element name="device_label" das:label="_DEVICE_LABEL" type="varchar255" />
       <xsd:element name="is_readonly" das:label="_IS_READONLY" type="boolean" nillable="false" default="N" />
       <xsd:element name="enabled" das:label="_ENABLED" type="boolean" nillable="false" default="Y" />
-      <xsd:element name="size_limit_number" type="bigint" />
-      <xsd:element name="actual_size_number" type="bigint" />
-      <xsd:element name="path_template" type="varchar255" />
-      <xsd:element name="ext_docserver_info" type="varchar255" />
-      <xsd:element name="chain_before" type="varchar32" />
-      <xsd:element name="chain_after" type="varchar32" />
-      <xsd:element name="creation_date" type="datetime" />
-      <xsd:element name="closing_date" type="datetime" />
-      <xsd:element name="coll_id" type="varchar32" nillable="false"/>
-      <xsd:element name="priority_number" type="bigint" nillable="false" default="10"/>
-      <xsd:element name="docserver_location_id" type="varchar32" nillable="false"/>
-      <xsd:element name="adr_priority_number" type="bigint" nillable="false" default="1"/>
+      <xsd:element name="size_limit_number" das:label="_SIZE_LIMIT_NUMBER" type="bigint" />
+      <xsd:element name="actual_size_number" das:label="_ACTUAL_SIZE_NUMBER" type="bigint" />
+      <xsd:element name="path_template" das:label="_PATH_TEMPLATE" type="varchar255" />
+      <xsd:element name="ext_docserver_info" das:label="_EXT_DOCSERVER_INFO" type="varchar255" />
+      <xsd:element name="chain_before" das:label="_CHAIN_BEFORE" type="varchar32" />
+      <xsd:element name="chain_after" das:label="_CHAIN_AFTER" type="varchar32" />
+      <xsd:element name="creation_date" das:label="_CREATION_DATE" type="datetime" />
+      <xsd:element name="closing_date" das:label="_CLOSING_DATE" type="datetime" />
+      <xsd:element name="coll_id" das:label="_COLL_ID" type="varchar32" nillable="false"/>
+      <xsd:element name="priority_number" das:label="_PRIORITY_NUMBER" type="bigint" nillable="false" default="10"/>
+      <xsd:element name="docserver_location_id" das:label="_DOCSERVER_LOCATION_ID" type="varchar32" nillable="false"/>
+      <xsd:element name="adr_priority_number" das:label="_ADR_PRIORITY_NUMBER" type="bigint" nillable="false" default="1"/>
     </xsd:sequence>
   </xsd:complexType>
     

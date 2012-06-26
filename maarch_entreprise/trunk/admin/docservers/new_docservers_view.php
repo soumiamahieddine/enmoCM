@@ -131,7 +131,7 @@
             ),
             'save'     => array(
                 'show' => false,
-                'jsEvent' => 'onClick="saveWithXSD();"',
+                'jsEvent' => 'saveWithXSD',
                 
             ),
             'back'       => array(
@@ -177,7 +177,7 @@
         } elseif ($modeCreate) {
             $formButtons['save']['show'] = true;
             $formButtons['cancel']['show'] = true;            
-            $str_returnShow = makeForm($formFields, $formButtons);
+            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath);
             
         } elseif ($modeRead) {
             foreach($formFields as $key => $value) {
@@ -186,18 +186,19 @@
             
             $formButtons['back']['show'] = true;
             
-            $str_returnShow = makeForm($formFields, $formButtons);
+            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath);
             
         } elseif ($modeUpdate) {
+            $formFields['docserver_id']['readonly'] = true;
             $formButtons['save']['show'] = true;
             $formButtons['cancel']['show'] = true;
             
-            $str_returnShow = makeForm($formFields, $formButtons);
+            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath);
         }
         
     //function to create the form
-        function makeForm($formFields, $formButtons) {
-            $str_return .= '<table width="80%" align="center">';
+        function makeForm($formFields, $formButtons, $dataObject, $schemaPath) {
+            $str_return .= '<table width="70%" align="center" >';
                 foreach($formFields as $key => $value) {
                     if ($formFields[$key]['show']) {
                         $readonlyInput = '';
@@ -216,8 +217,7 @@
                                 $str_return .= '<td style="width: 20px; text-align: center;" />';
                                 $str_return .= '<td>';
                             }
-                            $objectFieldValue = '';
-                            $objectFieldValue = $_SESSION['m_admin']['docservers']->$key;
+                            $objectFieldValue = $dataObject->$key;
                             if ($formFields[$key]['input'] == 'text') {
                                 $str_return .= '<input ';
                                   $str_return .= 'id="'.$key.'" ';
@@ -262,6 +262,7 @@
                                       $str_return .= 'type="radio" ';
                                       $str_return .= 'value="'.$valueRadio.'" ';
                                       $str_return .= 'name="'.$key.'" ';
+                                      $str_return .= 'id="'.$key.'" ';
                                       $str_return .= $selected;
                                       $str_return .= $jsEvent;
                                       $str_return .= '>';
@@ -289,7 +290,36 @@
                             $jsEvent = '';
                             if (isset($formButtons[$keyButton]['jsEvent'])) {
                                 $jsEvent = $formButtons[$keyButton]['jsEvent'];
+                                if ($jsEvent == 'saveWithXSD') {
+                                    $json = '{';
+                                    foreach($formFields as $keyField => $valueField) {
+                                        if ($formFields[$keyField]['show']) {
+                                            if ($formFields[$keyField]['input'] == 'radio') {
+                                                /*$json .= '\''.$keyField.'\' : function() {document.getElementsByName(\''.$keyField.'\')';
+                                                $json .= 'for (var i=0; i < nodeList.length, i++) {';
+                                                    $json .= 'if (nodeList[i].checked) { return nodeList[i].value} ';
+                                                $json .= '}';*/
+                                                
+                                                $json .= '\''.$keyField.'\' : getCheckedValue(document.getElementsByName(\''.$keyField.'\')), ';
+                                            } else {
+                                                $json .= '\''.$keyField.'\' : $(\''.$keyField.'\').value, ';
+                                            }
+                                        }
+                                    }
+                                    
+                                    $json .= "'schemaPathAjax':'".$schemaPath."', ";
+                                    $json .= "'objectNameAjax':'".$_REQUEST['objectName']."'";
+                                    
+                                    $json .= '}';
+                                    
+                                    $jsEvent = 'onClick="';
+                                     $jsEvent .= 'saveWithXSD(';
+                                      $jsEvent .= $json;
+                                     $jsEvent .= ');';
+                                    $jsEvent .= '" ';
+                                }
                             }
+                            
                             if ($formButtons[$keyButton]['show']) {
                                 $str_return .= '<input ';
                                   $str_return .= 'type="button" ';
@@ -355,23 +385,71 @@
         $('pourcentage_size').setValue(percent + ' %');
     }
     
-    function saveWithXSD() {
+    function getCheckedValue(radioObj) {
+        if(!radioObj)
+            return "";
+        var radioLength = radioObj.length;
+        if(radioLength == undefined)
+            if(radioObj.checked) {
+                return radioObj.value;
+            } else {
+                return "";
+            }
+        for(var i = 0; i < radioLength; i++) {
+            if(radioObj[i].checked) {
+                return radioObj[i].value;
+            }
+        }
+        return "";
+    }
+    
+    function saveWithXSD(object) {
         var returnConfirm = false;
         returnConfirm = confirm('Êtes-vous sûr ?');
         
         if (returnConfirm) {
-            alert('super');
-        } else {
-            alert('tanpis');
+        
+            for(i in object) {
+                if ($(i)) {
+                    $(i).style.backgroundColor = 'white';
+                    $(i).style.color = 'black';
+                    $(i).style.fontWeight = 'normal';
+                }
+            }
+            
+            var path_php = 'index.php?display=true&page=admin_standard_ajax&dir=admin';
+            
+            new Ajax.Request(path_php,
+            {
+                method:'post',
+                parameters: object,
+                onSuccess: function(answer){
+                    eval("response = "+answer.responseText);
+                    if (response.status == 1) {
+                        alert('ok !');
+                    } else {
+                        //alert(response.messages);
+                        $('returnAjax').update(response.messages);
+                        $('returnAjax').innerHtml;
+                        for(var i=0; i < response.failFields.length; i++) {
+                            $(response.failFields[i]).style.backgroundColor = '#f6bf36';
+                            $(response.failFields[i]).style.color = '#459ed1';
+                            $(response.failFields[i]).style.fontWeight = '900';
+                        }
+                    }
+                }
+            });
+            
         }
+        return;
     }
 </script>
 <h1>
-    <img 
-      src="<?php echo $titleImageSource; ?>" 
-      alt="" 
-    />
+    <img src="<?php echo $titleImageSource; ?>" />
     <?php echo $titleText; ?>
 </h1>
-<?php echo $str_returnShow; ?>
+<div class="<?php echo $params['objectName'] ?>">
+    <div id="returnAjax"><br /><br /></div>
+    <?php echo $str_returnShow; ?>
+</div>
 <?php echo $str_defaultJs; ?>

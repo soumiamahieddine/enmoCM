@@ -2208,16 +2208,16 @@ function loadRepList(id)
     var path_manage_script = 'index.php?page=loadRepList&display=true';
 
     new Ajax.Request(path_manage_script,
-        {
-            method:'post',
-            parameters: { res_id_master : id},
-            onSuccess: function(answer){
-                eval("response = "+answer.responseText);
+    {
+        method:'post',
+        parameters: { res_id_master : id},
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
 
-                $('divRepList_'+id).innerHTML = response.toShow;
+            $('divRepList_'+id).innerHTML = response.toShow;
 
-            }
-        });
+        }
+    });
 
 }
 
@@ -2308,6 +2308,11 @@ function previsualiseAdminRead(e, json){
     
     $('return_previsualise').style.display='block';
     
+}
+
+function goTo(where) 
+{
+    window.location.href=where;
 }
 
 function f_filterResults(n_win, n_docel, n_body) {
