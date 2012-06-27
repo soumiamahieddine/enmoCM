@@ -8,6 +8,8 @@ function updateObject($request, $object)
     }
 }
 
+$errors = array();
+
 require_once 'core/class/class_core_tools.php';
 $coreTools = new core_tools();
 $coreTools->load_lang();
@@ -16,10 +18,11 @@ require_once('core/tests/class/DataObjectController.php');
 $DataObjectController = new DataObjectController();
 $DataObjectController->loadSchema($_REQUEST['schemaPathAjax']);
 
-
-//specifique test
-
-
+//specific test
+$specificAjaxPage = $_REQUEST['viewLocationAjax'] . '/' . $_REQUEST['objectNameAjax'] . '_ajax.php';
+if (file_exists($specificAjaxPage)) {
+    require_once($specificAjaxPage);
+}
 $dataObject = $DataObjectController->unserialize(
     $_SESSION['m_admin'][$_REQUEST['objectNameAjax']]
 );
@@ -31,18 +34,25 @@ $validateObject = $DataObjectController->validate(
 );
 
 if ($validateObject) {
-    $DataObjectController->save($dataObject);
-    $return['status'] = 1;
+    if (count($errors) == 0) {
+        $DataObjectController->save($dataObject);
+        $return['status'] = 1;
+    } else {
+        $return['status'] = 0;
+    }
 } else {
-    $failFields = array();
+    
     foreach($DataObjectController->getValidationErrors() as $error) {
         $errors[] = $error->message;
-        $fail = explode('\'', $error->message);
-        array_push($failFields, $fail[1]);
     }
-    
+}
+
+if ($return['status'] == 0) {
+    $failFields = array();
     $messages = '<br /><br /><table cellspacing="0" cellpadding="5" width="70%" align="center">';
     for ($i=0; $i<count($errors); $i++) {
+        $fail = explode('\'', $errors[$i]);
+        array_push($failFields, $fail[1]);
         $messages .= '<tr>';
             $messages .= '<td style="text-align: left;">';
                 $messages .= '<b>';
