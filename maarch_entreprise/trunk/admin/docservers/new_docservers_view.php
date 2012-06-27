@@ -445,7 +445,7 @@
         }
         return;
     }
-    
+<?php if ($modeList) { ?>
     function show_goToTop() {
         var scrollHeight = f_filterResults (
             window.pageYOffset ? window.pageYOffset : 0,
@@ -485,6 +485,7 @@
     Event.observe(window, 'scroll', function() {
         show_goToTop();
     });
+<?php } ?>
 </script>
 <h1>
     <img src="<?php echo $titleImageSource; ?>" />
