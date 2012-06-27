@@ -64,7 +64,6 @@ class events_controler
     {
         $pattern = '/^' . str_replace(array('%', '\*', '\?', '\[', '\]'), array('.*', '.*', '.', '[', ']+'), preg_quote($pattern)) . '$/is';
         $result = preg_match($pattern, $str);
-        echo "<br/>pattern = $pattern vs $str = $result";
         return $result;
     }
     
