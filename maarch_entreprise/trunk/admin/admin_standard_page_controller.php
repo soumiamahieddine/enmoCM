@@ -316,26 +316,28 @@ function getLabel($constant)
     }
 }
 
+//getDependantUri
+function getDependantUri($get, $uri)
+{
+    $toSearch = $get.'='.$_REQUEST[$get];
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    $sourceArray = array(
+        '?'.$toSearch . '&',
+        '&'.$toSearch,
+    );
+    $targetArray = array(
+        '?',
+        '',
+    );
+    
+    $return = str_replace(
+        $sourceArray,
+        $targetArray,
+        $uri
+    );
+    
+    return $return;
+}
 
 $coreTools = new core_tools();
 $coreTools->load_lang();
@@ -363,8 +365,6 @@ $schemaPath = $params['viewLocation'] . '/xml/' . $params['objectName'] . '.xsd'
 require_once('core/tests/class/DataObjectController.php');
 $DataObjectController = new DataObjectController();
 $DataObjectController->loadSchema($schemaPath);
-
-
 
 if (isset($_REQUEST['submit'])) {
 
@@ -437,29 +437,6 @@ if (isset($_REQUEST['submit'])) {
         case 'list' :
             clearSession($params['objectName']);
             
-            //getDependantUri
-            function getDependantUri($get, $uri)
-            {
-                $toSearch = $get.'='.$_REQUEST[$get];
-            
-                $sourceArray = array(
-                    '?'.$toSearch . '&',
-                    '&'.$toSearch,
-                );
-                $targetArray = array(
-                    '?',
-                    '',
-                );
-                
-                $return = str_replace(
-                    $sourceArray,
-                    $targetArray,
-                    $uri
-                );
-                
-                return $return;
-            }
-            
             //setOrder
             if (isset($params['orderField']) && !empty($params['orderField'])) {
                 $DataObjectController->setOrder(
@@ -496,6 +473,7 @@ if (isset($_REQUEST['submit'])) {
             $str_filter     = '';
             $str_pagination = '';
             $str_htmlList   = '';
+            $str_goToTop    = '';;
             
             //REQUEST_URI
             $requestUri = $_SERVER['REQUEST_URI'];
@@ -882,7 +860,7 @@ if (isset($_REQUEST['submit'])) {
                                      $str_htmlList .= 'style="';
                                       $str_htmlList .= 'height: 40px; ';
                                       $str_htmlList .= 'width: 100%; ';
-                                      $str_htmlList .= 'background-color: rgba(255, 255 ,255 ,0.5); ';
+                                      $str_htmlList .= 'background-color: rgba(255, 255 ,255 ,0.6); ';
                                       $str_htmlList .= 'border-radius: 10px; ';
                                       $str_htmlList .= 'float: right; ';
                                       $str_htmlList .= 'cursor: pointer; ';
@@ -1097,13 +1075,8 @@ if (isset($_REQUEST['submit'])) {
                                   $str_htmlList .= 'background-color: rgba(255, 255 ,255 ,0.5); ';
                                   $str_htmlList .= 'border-radius: 10px; ';
                                   $str_htmlList .= 'float: right; ';
-                                  $str_htmlList .= 'cursor: pointer; ';
-                                 $str_htmlList .= '" ';
-                                 $str_htmlList .= 'onClick="';
-                                  $str_htmlList .= 'goTo(\''.$actionsURL['create'].'\') ';
                                  $str_htmlList .= '" ';
                                 $str_htmlList .= '>';
-                                    $str_htmlList .= 'Ajouter';
                                 $str_htmlList .= '</span>';
                             }
                         $str_htmlList .= '</td>';
@@ -1130,12 +1103,29 @@ if (isset($_REQUEST['submit'])) {
                 $str_previsualise .= '>';
                 $str_previsualise .= '</div>';
                 
-                //echo htmlentities($str_htmlList);exit;
+            //div goToTop
+                $str_goToTop .= '<div ';
+                 $str_goToTop .= 'id="goToTop" ';
+                 $str_goToTop .= 'style="';
+                  $str_goToTop .= 'display: none; ';
+                  $str_goToTop .= 'width: 50px; ';
+                  $str_goToTop .= 'height: 50px; ';
+                  //$str_goToTop .= 'background-color: black; ';
+                  $str_goToTop .= 'background-image: url(static.php?filename=goToTop.png); ';
+                  $str_goToTop .= 'position: fixed; ';
+                  $str_goToTop .= 'cursor: pointer; ';
+                 $str_goToTop .= '" ';
+                 $str_goToTop .= 'onClick="';
+                  $str_goToTop .= 'goTo(\'#\'); ';
+                 $str_goToTop .= '" ';
+                $str_goToTop .= '>';
+                $str_goToTop .= '</div>';
             
                 echo $str_filter;
                 echo $str_pagination;
                 echo $str_htmlList;
                 echo $str_previsualise;
+                echo $str_goToTop;
             
             break;
     }

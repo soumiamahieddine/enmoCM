@@ -444,6 +444,46 @@
         }
         return;
     }
+    
+    function show_goToTop() {
+        var scrollHeight = f_filterResults (
+            window.pageYOffset ? window.pageYOffset : 0,
+            document.documentElement ? document.documentElement.scrollTop : 0,
+            document.body ? document.body.scrollTop : 0
+        );
+        
+        var innerHeight = window.innerHeight;
+        var innerWidth  = window.innerWidth;
+        var half_innerWidth  = (innerWidth / 2);
+        
+        var goToTopHeight = $('goToTop').getHeight();
+        var goToTopWidth  = $('goToTop').getWidth();
+        var half_goToTopWidth  = (goToTopWidth / 2);
+        
+        var top  = (innerHeight - (2 * goToTopHeight));
+        var left = (half_innerWidth + 500 + 10);
+        
+        var opacity = (scrollHeight / innerHeight);
+    
+        if (opacity < 0.1) {
+            $('goToTop').style.top     = '0px';
+            $('goToTop').style.left    = '0px';
+            $('goToTop').style.display = 'none';
+            return ;
+        } else if (opacity > 1) {
+            opacity = 1;
+        }
+        
+        $('goToTop').style.top     = top + 'px';
+        $('goToTop').style.left    = left + 'px';
+        $('goToTop').style.display = 'block';
+        $('goToTop').style.opacity = opacity;
+        return;
+    }
+    
+    Event.observe(window, 'scroll', function() {
+        show_goToTop();
+    });
 </script>
 <h1>
     <img src="<?php echo $titleImageSource; ?>" />

@@ -56,7 +56,7 @@ $showCols = array(
     ),
 );
 if (isset($_REQUEST['orderField'])) {
-    $showCols[$_REQUEST['orderField']]['cssStyle'] .= 'background-image: url(static.php?filename=black_0.1.png);';
+    $showCols[$_REQUEST['orderField']]['cssStyle'] .= 'background-image: url(static.php?filename=black_0.1.png); ';
 }
 
 //actions to show in the list

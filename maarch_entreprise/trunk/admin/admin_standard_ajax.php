@@ -1,11 +1,4 @@
 <?php
-/*
-    $return['status']   = 0;
-    $return['messages'] = 'ici les erreurs';
-    echo json_encode($return);
-    exit;
-*/
-    
 function updateObject($request, $object)
 {
     foreach($object as $key => $value) {
