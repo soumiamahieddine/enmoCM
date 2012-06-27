@@ -59,24 +59,35 @@ class events_controler
 		return $events;
 	}
 	
+  
+    function wildcard_match($pattern, $str)
+    {
+        $pattern = '/^' . str_replace(array('%', '\*', '\?', '\[', '\]'), array('.*', '.*', '.', '[', ']+'), preg_quote($pattern)) . '$/is';
+        $result = preg_match($pattern, $str);
+        echo "<br/>pattern = $pattern vs $str = $result";
+        return $result;
+    }
+    
 	public function fill_event_stack($event_id, $table_name, $record_id, $user, $info) {
 		if ($record_id == '') return;
-	    $db = new dbquery();
+	    
+        $query = "SELECT * "
+            ."FROM " . _NOTIFICATIONS_TABLE_NAME . " ";
+        $db = new dbquery();
 		$db->connect();
-        $db->query(
-            "SELECT * "
-            ."FROM " . _NOTIFICATIONS_TABLE_NAME . " "
-            ."WHERE '".$event_id."' like event_id"
-        );
+        $db->query($query);
 		if($db->nb_result() === 0) {
 			return;
 		}
-		
-		$notifications = array();
-		while ($notifObj = $db->fetch_object()) {
-			$notifications[] = $notifObj;
-		}
-		
+        
+        while($notification = $db->fetch_object()) {
+            $event_ids = explode(',' , $notification->event_id);
+            if($event_id == $notification->event_id
+                || $this->wildcard_match($notification->event_id, $event_id)
+                || in_array($event_id, $event_ids)) {
+                $notifications[] = $notification;
+            }
+        }
         foreach ($notifications as $notification) {
 			$db->query(
 				"INSERT INTO "
