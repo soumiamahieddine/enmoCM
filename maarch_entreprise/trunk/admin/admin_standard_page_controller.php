@@ -1104,6 +1104,7 @@ if (isset($_REQUEST['submit'])) {
                   $str_previsualise .= 'border: 3px solid #459ed1;';
                  $str_previsualise .= '" ';
                 $str_previsualise .= '>';
+                    $str_previsualise .= '<input type="hidden" id="identifierDetailFrame" value="" />';
                 $str_previsualise .= '</div>';
                 
             //div goToTop
