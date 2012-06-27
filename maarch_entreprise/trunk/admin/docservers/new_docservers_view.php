@@ -177,7 +177,7 @@
         } elseif ($modeCreate) {
             $formButtons['save']['show'] = true;
             $formButtons['cancel']['show'] = true;            
-            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath);
+            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params);
             
         } elseif ($modeRead) {
             foreach($formFields as $key => $value) {
@@ -186,18 +186,18 @@
             
             $formButtons['back']['show'] = true;
             
-            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath);
+            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params);
             
         } elseif ($modeUpdate) {
             $formFields['docserver_id']['readonly'] = true;
             $formButtons['save']['show'] = true;
             $formButtons['cancel']['show'] = true;
             
-            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath);
+            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params);
         }
         
     //function to create the form
-        function makeForm($formFields, $formButtons, $dataObject, $schemaPath) {
+        function makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params) {
             $str_return .= '<table width="70%" align="center" >';
                 foreach($formFields as $key => $value) {
                     if ($formFields[$key]['show']) {
@@ -309,6 +309,7 @@
                                     }
                                     
                                     $json .= "'schemaPathAjax':'".$schemaPath."', ";
+                                    $json .= "'viewLocation':'".$params['viewLocation']."', ";
                                     $json .= "'objectNameAjax':'".$_REQUEST['objectName']."'";
                                     
                                     $json .= '}';
