@@ -87,6 +87,7 @@ class events_controler
                 $notifications[] = $notification;
             }
         }
+        if (count($notifications) == 0) return;
         foreach ($notifications as $notification) {
 			$db->query(
 				"INSERT INTO "
