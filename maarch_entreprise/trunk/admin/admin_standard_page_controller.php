@@ -481,7 +481,10 @@ if (isset($_REQUEST['submit'])) {
             //filter
                 $noWhatUri = getDependantUri(
                     'what',
-                    $requestUri
+                    getDependantUri(
+                        'pageNb',
+                        $requestUri
+                    )
                 );
                 
                 $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -707,7 +710,7 @@ if (isset($_REQUEST['submit'])) {
                                                     }
                                                     $str_pagination .= '<option ';
                                                      $str_pagination .= 'value="';
-                                                      $str_pagination .= $actualURL . '&pageNb=' . $cpt_pageNb . '';
+                                                      $str_pagination .= $noPageNbUri . '&pageNb=' . $cpt_pageNb . '';
                                                      $str_pagination .= '" ';
                                                      $str_pagination .= $selected ;
                                                     $str_pagination .= '>';
@@ -860,7 +863,7 @@ if (isset($_REQUEST['submit'])) {
                                      $str_htmlList .= 'style="';
                                       $str_htmlList .= 'height: 40px; ';
                                       $str_htmlList .= 'width: 100%; ';
-                                      $str_htmlList .= 'background-color: rgba(255, 255 ,255 ,0.6); ';
+                                      $str_htmlList .= 'background-color: rgba(255, 255 ,255 ,0.7); ';
                                       $str_htmlList .= 'border-radius: 10px; ';
                                       $str_htmlList .= 'float: right; ';
                                       $str_htmlList .= 'cursor: pointer; ';
@@ -1070,7 +1073,7 @@ if (isset($_REQUEST['submit'])) {
                             if (in_array('create', $actions)) {
                                 $str_htmlList .= '<span ';
                                  $str_htmlList .= 'style="';
-                                  $str_htmlList .= 'height: 40px; ';
+                                  $str_htmlList .= 'height: 1px; ';
                                   $str_htmlList .= 'width: 100%; ';
                                   $str_htmlList .= 'background-color: rgba(255, 255 ,255 ,0.5); ';
                                   $str_htmlList .= 'border-radius: 10px; ';

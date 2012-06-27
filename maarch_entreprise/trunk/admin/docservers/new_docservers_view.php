@@ -460,7 +460,7 @@
         var goToTopWidth  = $('goToTop').getWidth();
         var half_goToTopWidth  = (goToTopWidth / 2);
         
-        var top  = (innerHeight - (2 * goToTopHeight));
+        var top  = (innerHeight - (goToTopHeight + 15));
         var left = (half_innerWidth + 500 + 10);
         
         var opacity = (scrollHeight / innerHeight);
