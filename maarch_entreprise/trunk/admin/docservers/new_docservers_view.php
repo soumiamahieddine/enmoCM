@@ -309,7 +309,7 @@
                                     }
                                     
                                     $json .= "'schemaPathAjax':'".$schemaPath."', ";
-                                    $json .= "'viewLocation':'".$params['viewLocation']."', ";
+                                    $json .= "'viewLocationAjax':'".$params['viewLocation']."', ";
                                     $json .= "'objectNameAjax':'".$_REQUEST['objectName']."'";
                                     
                                     $json .= '}';
