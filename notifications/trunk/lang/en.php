@@ -224,4 +224,5 @@ if (!defined('_SYSTEM'))
     define('_SYSTEM', 'System');
 if (!defined('_ENTITY'))
     define('_ENTITY', 'Entity');
-?>
+if (!defined('_NOTIFICATIONS_CONTACT_DIFF_TYPE'))
+    define('_NOTIFICATIONS_CONTACT_DIFF_TYPE', 'Send to the mail sender');

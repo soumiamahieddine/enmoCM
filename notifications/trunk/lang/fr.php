@@ -228,5 +228,5 @@ if (!defined('_SYSTEM'))
     define('_SYSTEM', 'Syst&egrave;me');
 if (!defined('_ENTITY'))
     define('_ENTITY', 'Entit&eacute;');
-
-?>
+if (!defined('_NOTIFICATIONS_CONTACT_DIFF_TYPE'))
+    define('_NOTIFICATIONS_CONTACT_DIFF_TYPE', 'Envoi &agrave; l\'exp&eacute;diteur du courrier');
