@@ -210,7 +210,7 @@ class DataAccessService_Database_Table
     
     public function getKey()
     {
-        return $this->key->columns;
+        return $this->primaryKey->columns;
     }
     
     public function setOrder($orderElements, $orderMode)
