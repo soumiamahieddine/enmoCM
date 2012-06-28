@@ -438,7 +438,7 @@ INSERT INTO parameters (id, param_value_string, param_value_int) VALUES
 ('ar_index_pparker_internal', NULL, 3),
 ('ar_index_pparker_market_document', NULL, 3),
 ('postindexing_workbatch', NULL, 40),
-('database_version', NULL, 130);
+('database_version', NULL, 131);
 
 
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
