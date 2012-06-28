@@ -33,7 +33,10 @@ while ($state <> 'END') {
 		$logger->write("Loading configuration for notification id " . $notificationId, 'INFO');
 		$notification = $notifications_controler->getByNotificationId($notificationId);
 		if ($notification === FALSE) {
-			Bt_exitBatch(1, "Template association for notification '".$notificationId."' not found");
+			Bt_exitBatch(1, "Notification '".$notificationId."' not found");
+        }
+		if ($notification->is_enabled === 'N') {
+			Bt_exitBatch(100, "Notification '".$notificationId."' is disabled");
         }
 		$state = 'LOAD_EVENTS';
         break;
