@@ -137,8 +137,8 @@ class dataObjectController extends DOMDocument
                 $messageLang = $_SESSION['config']['lang'];
                 $message = $this->messageController->sendMessage(
                     $messageId,
-                    $messageParams,
-                    $messageLang
+                    $messageLang,
+                    $messageParams
                 );
                 $this->messages[] = $message;
             }

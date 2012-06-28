@@ -57,18 +57,20 @@ class MessageController
     
     public function getMessageText(
         $messageId,
-        $messageParams = array(),
-        $messageLang = 'fr'
+        $messageLang = false,
+        $messageParams = array()
         )
     {
+        if(!$messageLang) $messageLang = $_SESSION['config']['lang'];
+        
         // Get message definition
         $messageDefinition = $this->getMessageDefinition($messageId);
         
         // Get Text
         $messageText = $this->makeMessageText(
             $messageDefinition,
-            $messageParams,
-            $messageLang
+            $messageLang,
+            $messageParams
         );
         
         return $messageText;
@@ -76,8 +78,9 @@ class MessageController
     
     private function makeMessageText(
         $messageDefinition,
-        $messageParams = array(),
-        $messageLang = 'fr'
+        $messageLang,
+        $messageParams = array()
+        
         )
     {
         // Get message text in requested language
@@ -92,18 +95,20 @@ class MessageController
     
     public function sendMessage(
         $messageId,
-        $messageParams = array(),
-        $messageLang = 'fr'
+        $messageLang = false,
+        $messageParams = array()
         )
     {
+        if(!$messageLang) $messageLang = $_SESSION['config']['lang'];
+        
         // Get message definition
         $messageDefinition = $this->getMessageDefinition($messageId);
         
         // Make Text
         $messageText = $this->makeMessageText(
             $messageDefinition,
-            $messageParams,
-            $messageLang
+            $messageLang,
+            $messageParams           
         );
 
         // Get backtrace
