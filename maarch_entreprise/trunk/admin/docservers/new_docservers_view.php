@@ -173,6 +173,10 @@
         }
         
     //make list or form
+        $columnsLabels = $messageController->getTexts(
+            $params['objectName'] . '.'
+        );
+                
         if ($modeList) {
             /* just show the list */
             $str_returnShow = $listContent;
@@ -180,7 +184,7 @@
         } elseif ($modeCreate) {
             $formButtons['save']['show'] = true;
             $formButtons['cancel']['show'] = true;            
-            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri);
+            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri, $columnsLabels);
             
         } elseif ($modeRead) {
             foreach($formFields as $key => $value) {
@@ -189,18 +193,18 @@
             
             $formButtons['back']['show'] = true;
             
-            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri);
+            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri, $columnsLabels);
             
         } elseif ($modeUpdate) {
             $formFields['docserver_id']['readonly'] = true;
             $formButtons['save']['show'] = true;
             $formButtons['cancel']['show'] = true;
             
-            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri);
+            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri, $columnsLabels);
         }
         
     //function to create the form
-        function makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri) {
+        function makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri, $columnsLabels) {
             $str_return .= '<table width="70%" align="center" >';
                 foreach($formFields as $key => $value) {
                     if ($formFields[$key]['show']) {
@@ -215,7 +219,16 @@
                         $str_return .= '<tr>';
                             if ($formFields[$key]['input'] != 'hidden') {
                                 $str_return .= '<td>';
-                                    $str_return .= $key;
+                                    if (!empty($columnsLabels[$params['objectName'] . '.' . $key])) {
+                                        $str_return .= $columnsLabels[$params['objectName'] . '.' . $key];
+                                    } else {
+                                        $str_return .= '<span ';
+                                         $str_return .= 'style="';
+                                          $str_return .= 'color: red; ';
+                                         $str_return .= '">';
+                                            $str_return .= '##_'.$key.'_##';
+                                        $str_return .= '</span>';
+                                    }
                                 $str_return .= '</td>';
                                 $str_return .= '<td style="width: 20px; text-align: center;" />';
                                 $str_return .= '<td>';

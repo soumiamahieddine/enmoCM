@@ -31,6 +31,8 @@
 */
 
 require_once 'core/class/class_core_tools.php';
+require_once 'core/tests/class/MessageController.php';
+$messageController = new MessageController();
 
 /**
  * Management of the location bar
@@ -327,7 +329,6 @@ $coreTools->load_lang();
 
 //tests and retrieve params of the controller page
 $params = testParams($_REQUEST);
-
 if ($params['status'] == 'KO') {
     echo $params['error'];
     exit; 
@@ -348,6 +349,7 @@ $pagePath = locationBarManagement(
 );
 //load the object
 $schemaPath = $params['viewLocation'] . '/xml/' . $params['objectName'] . '.xsd';
+$messageController->loadMessageFile($params['viewLocation'] . '/xml/' . $params['objectName'] . '_Messages.xml');
 
 require_once('core/tests/class/DataObjectController.php');
 $DataObjectController = new DataObjectController();
@@ -742,9 +744,12 @@ if (isset($_REQUEST['submit'])) {
                 }
             
             //liste
-                $columnsLabels = $DataObjectController->getContentLabels(
-                    $params['objectName']
+                $columnsLabels = $messageController->getTexts(
+                    $params['objectName'] . '.'
                 );
+                
+                //echo '<pre>'.print_r($columnsLabels, true).'</pre>';exit;
+                
                 
                 $noOrderUri = getDependantUri(
                     'orderField', 
@@ -773,7 +778,9 @@ if (isset($_REQUEST['submit'])) {
                       $str_htmlList .= 'color: #459ed1; ';
                      $str_htmlList .= '" ';
                     $str_htmlList .= '>';
-                        foreach($columnsLabels as $keyColumn => $labelColumn) {
+                        foreach($columnsLabels as $labelId => $labelColumn) {
+                            $prefixLength = strlen($params['objectName']) + 1;
+                            $keyColumn = substr($labelId, $prefixLength);
                             if (!array_key_exists($keyColumn, $showCols)) {
                                 continue;
                             }
@@ -787,7 +794,7 @@ if (isset($_REQUEST['submit'])) {
                              $str_htmlList .= '" ';
                             $str_htmlList .= '>';
                                 $str_htmlList .= '<b>';
-                                    $str_htmlList .= getLabel($columnsLabels[$keyColumn]);
+                                    $str_htmlList .= $columnsLabels[$labelId];
                                 $str_htmlList .= '</b>';
                                 $str_htmlList .= '<div>';
                                     $str_htmlList .= '<a ';
@@ -850,21 +857,29 @@ if (isset($_REQUEST['submit'])) {
                                 $str_htmlList .= '<b>';
                                     $str_htmlList .= '<span ';
                                      $str_htmlList .= 'style="';
-                                      $str_htmlList .= 'height: 40px; ';
+                                      $str_htmlList .= 'height: 32px; ';
                                       $str_htmlList .= 'width: 100%; ';
-                                      $str_htmlList .= 'background-color: rgba(255, 255 ,255 ,0.7); ';
+                                      $str_htmlList .= 'background-color: rgba(255, 255 ,255 ,0.4); ';
                                       $str_htmlList .= 'border-radius: 10px; ';
+                                      $str_htmlList .= 'border: 3px solid; ';
+                                      $str_htmlList .= 'border-color: #459ed1; ';
                                       $str_htmlList .= 'float: right; ';
                                       $str_htmlList .= 'cursor: pointer; ';
                                      $str_htmlList .= '" ';
                                      $str_htmlList .= 'onClick="';
-                                      $str_htmlList .= 'goTo(\''.$actionsURL['create'].'\') ';
+                                      $str_htmlList .= 'goTo(\''.$actionsURL['create'].'\'); ';
+                                     $str_htmlList .= '" ';
+                                     $str_htmlList .= 'onMouseOver="';
+                                      $str_htmlList .= 'this.style.backgroundColor=\'rgba(255, 255, 255, 0.8)\'';
+                                     $str_htmlList .= '" ';
+                                     $str_htmlList .= 'onMouseOut="';
+                                      $str_htmlList .= 'this.style.backgroundColor=\'rgba(255, 255, 255, 0.4)\'';
                                      $str_htmlList .= '" ';
                                     $str_htmlList .= '>';
                                         $str_htmlList .= '<span ';
                                          $str_htmlList .= 'style="';
                                           $str_htmlList .= 'position: relative; ';
-                                          $str_htmlList .= 'top: 13px; ';
+                                          $str_htmlList .= 'top: 9px; ';
                                          $str_htmlList .= '" ';
                                         $str_htmlList .= '>';
                                             $str_htmlList .= 'Ajouter';
@@ -894,7 +909,7 @@ if (isset($_REQUEST['submit'])) {
                                         continue;
                                     }
                                     $childObject = (string)$childObject;
-                                    $json[getLabel($columnsLabels[$childName])] = $childObject;
+                                    $json[$columnsLabels[$params['objectName'] . '.' . $childName]] = $childObject;
                                     if (!array_key_exists($childName, $showCols)) {
                                         continue;
                                     }
@@ -1103,7 +1118,9 @@ if (isset($_REQUEST['submit'])) {
                   $str_goToTop .= 'display: none; ';
                   $str_goToTop .= 'width: 50px; ';
                   $str_goToTop .= 'height: 50px; ';
-                  //$str_goToTop .= 'background-color: black; ';
+                  $str_goToTop .= 'border-radius: 12px; ';
+                  $str_goToTop .= 'border: 3px solid; ';
+                  $str_goToTop .= 'border-color: #459ed1; ';
                   $str_goToTop .= 'background-image: url(static.php?filename=goToTop.png); ';
                   $str_goToTop .= 'position: fixed; ';
                   $str_goToTop .= 'cursor: pointer; ';

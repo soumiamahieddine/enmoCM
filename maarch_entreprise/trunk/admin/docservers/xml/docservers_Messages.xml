@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messages>
+  <message id='docservers_list' level='0'>
+    <text lang='fr'>Liste des zones de stockage : %1$d zone(s) de stockage</text>
+    <text lang='en'>Docservers list : %1$d docserver(s)</text>
+  </message>
+  <message id='docservers_create' level='0'>
+    <text lang='fr'>Création d'une zone de stockage</text>
+    <text lang='en'>Docserver creation</text>
+  </message>
+  <message id='docservers_read' level='0'>
+    <text lang='fr'>Détail d'une zone de stockage</text>
+    <text lang='en'>Docserver detail</text>
+  </message>
+  <message id='docservers_update' level='0'>
+    <text lang='fr'>Modification d'une zone de stockage</text>
+    <text lang='en'>Docserver update</text>
+  </message>
+  
+  <message id='docservers.docserver_id' level='0'>
+    <text lang='fr'>Identifiant</text>
+  </message>
+  <message id='docservers.docserver_type_id' level='0'>
+    <text lang='fr'>Identifiant du type de zone de stockage</text>
+  </message>
+  <message id='docservers.device_label' level='0'>
+    <text lang='fr'>Label du dispositif</text>
+  </message>
+  <message id='docservers.is_readonly' level='0'>
+    <text lang='fr'>En lecture seule</text>
+  </message>
+  <message id='docservers.enabled' level='0'>
+    <text lang='fr'>Autorisé</text>
+  </message>
+  <message id='docservers.size_limit_number' level='0'>
+  </message>
+  <message id='docservers.actual_size_number' level='0'>
+  </message>
+  <message id='docservers.path_template' level='0'>
+  </message>
+  <message id='docservers.ext_docserver_info' level='0'>
+  </message>
+  <message id='docservers.chain_before' level='0'>
+  </message>
+  <message id='docservers.chain_after' level='0'>
+  </message>
+  <message id='docservers.creation_date' level='0'>
+    <text lang='fr'>Date de création</text>
+  </message>
+  <message id='docservers.closing_date' level='0'>
+    <text lang='fr'>Date de clôture</text>
+  </message>
+  <message id='docservers.coll_id' level='0'>
+  </message>
+  <message id='docservers.priority_number' level='0'>
+    <text lang='fr'>Priorité de la zone de stockage</text>
+  </message>
+  <message id='docservers.docserver_location_id' level='0'>
+  </message>
+  <message id='docservers.adr_priority_number' level='0'>
+  </message>
+  
+  <message id='docservers.size_format' level='0'>
+    <text lang='fr'>Unité</text>
+  </message>
+  <message id='docservers.size_limit_number_inForm' level='0'>
+    <text lang='fr'>Capacité maximale</text>
+  </message>
+  <message id='docservers.actual_size_number_inForm' level='0'>
+    <text lang='fr'>Remplissage actuel</text>
+  </message>
+  <message id='docservers.pourcentage_size' level='0'>
+    <text lang='fr'>Taux de remplissage</text>
+  </message>
+  
+</messages>
