@@ -67,8 +67,9 @@ class MessageController
         
         for($i=0; $i<$messageDefinitions->length; $i++) {
             $messageDefinition = $messageDefinitions->item($i);
-            $messageText = $this->makeMessageText($messageDefinition, $messageLang);
             $messageId = $messageDefinition->id;
+            $messageText = $this->makeMessageText($messageDefinition, $messageLang);
+            if(!$messageText) $messageText = $messageId;
             $messagesTexts[$messageId] = $messageText;
         }
         return $messagesTexts;
