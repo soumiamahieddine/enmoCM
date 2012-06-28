@@ -323,6 +323,7 @@ function validate_notif_submit() {
     $notifObj->event_id = $_REQUEST['event_id'];
 	$notifObj->rss_url_template = $_REQUEST['rss_url_template'];
     $notifObj->template_id = $_REQUEST['template_id'];
+    $notifObj->is_enabled = $_REQUEST['is_enabled'];
     $notifObj->diffusion_type = $_REQUEST['diffusion_type'];
     $notifObj->attachfor_type = $_REQUEST['attachfor_type'];
     
@@ -406,6 +407,7 @@ function init_session()
         'notification_mode'		=> '',
         'rss_url_template' 	 	=> '',
         'template_id'    	 	=> '',
+        'is_enabled'            => 'Y',
         'diffusion_type'    	=> '',
         'diffusion_properties'  => '',
 		//'diffusion_content'   => '',

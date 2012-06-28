@@ -83,6 +83,24 @@ if ($mode == 'list') {
                     $_SESSION['m_admin']['notification']['description']
                 ); ?></textarea>
         </p>
+         <p>
+            <label><?php echo _ENABLED; ?> : </label>
+            <input type="radio" class="check" name="is_enabled" value="true" <?php
+            if (isset($_SESSION['m_admin']['notification']['is_enabled'])
+                && $_SESSION['m_admin']['notification']['is_enabled'] == "Y"
+            ) {
+                ?> checked="checked"<?php
+            }
+            ?> /><?php echo _YES;?>
+                <input type="radio" class="check" name="is_enabled" value="false" <?php
+            if (!isset($_SESSION['m_admin']['notification']['is_enabled'])
+                || (!($_SESSION['m_admin']['notification']['is_enabled'] == "Y")
+                || $_SESSION['m_admin']['notification']['is_enabled'] == '')
+            ) {
+                ?> checked="checked"<?php
+            }
+            ?> /><?php echo _NO;?>
+        </p>
         <p>
             <label for="label"><?php echo _EVENT; ?> : </label>
             <select name="event_id" id="event_id">
@@ -166,6 +184,7 @@ if ($mode == 'list') {
 			?></textarea>
 			</p>
 		</div>
+       
         <p>
             <label for="status"><?php echo _DIFFUSION_TYPE; ?> : </label>
             <select name="diffusion_type"
