@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messages>
+  <message id='libxml1824' level='1'>
+    <text lang='fr'>Erreur de validation : %1$s</text>
+    <!--text lang='fr'>Format de %1$s invalide</text-->
+  </message>
+<message id='libxml1840' level='1'>
+    <text lang='fr'>Erreur de validation : %1$s</text>
+    <!--text lang='fr'>Format de %1$s invalide</text-->
+  </message>
+</messages>
