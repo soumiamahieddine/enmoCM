@@ -454,6 +454,7 @@ if (isset($_REQUEST['submit'])) {
             $keyName = $DataObjectController->getKey(
                 $params['objectName']
             );
+            
             $objectList = $dataObjectList->$params['objectName'];
             
             //prevent PHP NOTICE
@@ -759,6 +760,7 @@ if (isset($_REQUEST['submit'])) {
                 );
                 
                 $str_htmlList .= '<table ';
+                 $str_htmlList .= 'id="'.$params['objectName'].'_list" ';
                  $str_htmlList .= 'width="100%" ';
                  $str_htmlList .= 'cellpadding="4" ';
                  $str_htmlList .= 'cellspacing="0" ';

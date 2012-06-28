@@ -7,13 +7,13 @@
   <xsd:annotation>
     <xsd:appinfo>
       <das:source 
-        name='maarch_entreprise' 
+        name='database' 
         type='database' 
         driver='pgsql' 
         host='localhost' 
-        port='5433' 
-        dbname='maarch_trunk' 
-        user='postgres' 
+        port='5432' 
+        dbname='MEP_trunk' 
+        user='ave' 
         password='maarch' />
     </xsd:appinfo>
   </xsd:annotation>

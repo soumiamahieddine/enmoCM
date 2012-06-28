@@ -23,6 +23,7 @@ $specificAjaxPage = $_REQUEST['viewLocationAjax'] . '/' . $_REQUEST['objectNameA
 if (file_exists($specificAjaxPage)) {
     require_once($specificAjaxPage);
 }
+
 $dataObject = $DataObjectController->unserialize(
     $_SESSION['m_admin'][$_REQUEST['objectNameAjax']]
 );
@@ -41,9 +42,8 @@ if ($validateObject) {
         $return['status'] = 0;
     }
 } else {
-    
-    foreach($DataObjectController->getValidationErrors() as $error) {
-        $errors[] = $error->message;
+    foreach($DataObjectController->getMessages() as $error) {
+        $errors[] = $error->text;
     }
 }
 

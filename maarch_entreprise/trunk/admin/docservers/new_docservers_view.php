@@ -1,8 +1,14 @@
 <?php
 //CONTROLLER
-    define('objectRead', 'Détail de: %1$s');
-    
     //INIT
+        $noModeUri = getDependantUri(
+            'objectId',
+            getDependantUri(
+                'mode',
+                $_SERVER['REQUEST_URI']
+            )
+        );
+    
         $modeList   = false;
         $modeCreate = false;
         $modeRead   = false;
@@ -131,12 +137,12 @@
             ),
             'cancel'   => array(
                 'show' => false,
-                'jsEvent' => 'onClick="window.location.href=\''.str_replace(array('&objectId='.$_REQUEST['objectId'], '&mode='.$_REQUEST['mode']), array('', ''), $_SERVER['REQUEST_URI']).'\'"; ',
+                'jsEvent' => 'onClick="window.location.href=\''.$noModeUri.'\'"; ',
                 
             ),
             'back'       => array(
                 'show'   => false,
-                'jsEvent' => 'onClick="window.location.href=\''.str_replace(array('&objectId='.$_REQUEST['objectId'], '&mode='.$_REQUEST['mode']), array('', ''), $_SERVER['REQUEST_URI']).'\'"; ',
+                'jsEvent' => 'onClick="window.location.href=\''.$noModeUri.'\'"; ',
                 
             ),
             
@@ -144,28 +150,25 @@
     
     //Titre de la page
         $titleImageSource = $_SESSION['config']['businessappurl'].'static.php?filename=favicon.png';
-        $objectLabel = $DataObjectController->getLabel($params['objectName']);
-
+        $messageController = new MessageController();
+        $messageController->loadMessageFile($params['viewLocation'] . '/xml/' . $params['objectName'] . '_Messages.xml');
         
         if ($params['mode'] == 'list') {
             $modeList = true;
-            $listLabel = $DataObjectController->getLabel($params['objectName'].'_list');
-            $itemLabels = $DataObjectController->getContentLabels($params['objectName'].'_list');
-            //echo '<pre>'.print_r($itemLabels, true).'</pre>';
-            $titleText = getLabel($listLabel).' : '.count($dataObjectList->$params['objectName']).' '.getLabel($itemLabels[$params['objectName']]);
+            $titleText = $messageController->getMessageText('docservers_list', false, array(count($dataObjectList->$params['objectName'])));
             
         } elseif ($params['mode'] == 'create') {
             $modeCreate = true;
-            $titleText = getLabel($objectLabel).' '.getLabel(_ADDITION);
+            $titleText = $messageController->getMessageText('docservers_create');
                 
         } elseif ($params['mode'] == 'read') {
             $modeRead = true;
             //$titleText = getLabel(_READ).' '.getLabel($objectLabel);
-            $titleText = sprintf(objectRead, getLabel($objectLabel));
+            $titleText = $messageController->getMessageText('docservers_read');
                 
         } elseif ($params['mode'] == 'update') {
             $modeUpdate = true;
-            $titleText = _DOCSERVER_MODIFICATION;
+            $titleText = $messageController->getMessageText('docservers_update');
             
         }
         
@@ -177,7 +180,7 @@
         } elseif ($modeCreate) {
             $formButtons['save']['show'] = true;
             $formButtons['cancel']['show'] = true;            
-            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params);
+            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri);
             
         } elseif ($modeRead) {
             foreach($formFields as $key => $value) {
@@ -186,18 +189,18 @@
             
             $formButtons['back']['show'] = true;
             
-            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params);
+            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri);
             
         } elseif ($modeUpdate) {
             $formFields['docserver_id']['readonly'] = true;
             $formButtons['save']['show'] = true;
             $formButtons['cancel']['show'] = true;
             
-            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params);
+            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri);
         }
         
     //function to create the form
-        function makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params) {
+        function makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri) {
             $str_return .= '<table width="70%" align="center" >';
                 foreach($formFields as $key => $value) {
                     if ($formFields[$key]['show']) {
@@ -310,6 +313,7 @@
                                     
                                     $json .= "'schemaPathAjax':'".$schemaPath."', ";
                                     $json .= "'viewLocationAjax':'".$params['viewLocation']."', ";
+                                    $json .= "'noModeUriAjax':'".$noModeUri."', ";
                                     $json .= "'objectNameAjax':'".$_REQUEST['objectName']."'";
                                     
                                     $json .= '}';
@@ -428,7 +432,7 @@
                 onSuccess: function(answer){
                     eval("response = "+answer.responseText);
                     if (response.status == 1) {
-                        alert('ok !');
+                        goTo('<?php echo $noModeUri; ?>');
                     } else {
                         //alert(response.messages);
                         $('returnAjax').update(response.messages);
@@ -453,20 +457,21 @@
             document.body ? document.body.scrollTop : 0
         );
         
+        var listHeight = $('<?php echo $params['objectName'] ?>_list').getHeight();
+        
         var innerHeight = window.innerHeight;
         var innerWidth  = window.innerWidth;
         var half_innerWidth  = (innerWidth / 2);
         
         var goToTopHeight = $('goToTop').getHeight();
         var goToTopWidth  = $('goToTop').getWidth();
-        var half_goToTopWidth  = (goToTopWidth / 2);
         
-        var top  = (innerHeight - (goToTopHeight + 15));
+        var top  = (innerHeight - (goToTopHeight + 68));
         var left = (half_innerWidth + 500 + 10);
         
-        var opacity = (scrollHeight / innerHeight);
+        var opacity = (scrollHeight / (listHeight - innerHeight));
     
-        if (opacity < 0.1) {
+        if (opacity < 0.01) {
             $('goToTop').style.top     = '0px';
             $('goToTop').style.left    = '0px';
             $('goToTop').style.display = 'none';
