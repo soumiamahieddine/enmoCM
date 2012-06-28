@@ -77,6 +77,7 @@ class MessageController
             );
         
         $_SESSION['messages'][] = (array)$message;
+        return $message;
     }
     
 }
