@@ -135,17 +135,11 @@ class dataObjectController extends DOMDocument
                 $messageId = 'libxml' . $libXMLError->code;
                 $messageParams = array($libXMLError->message);
                 $messageLang = $_SESSION['config']['lang'];
-                $message = $this->messageController->getMessageText(
-                    $messageId,
-                    $messageLang,
-                    $messageParams
-                );
-                /*
                 $message = $this->messageController->sendMessage(
                     $messageId,
                     $messageLang,
                     $messageParams
-                );*/
+                );
                 $this->messages[] = $message;
             }
             return false;

@@ -64,7 +64,7 @@ class MessageController
         if(!$messageLang) $messageLang = $_SESSION['config']['lang'];
         
         // Get message definition
-        $messageDefinition = $this->getMessageDefinition($messageId))
+        $messageDefinition = $this->getMessageDefinition($messageId);
         
         // Get Text
         $messageText = $this->makeMessageText(
@@ -72,7 +72,7 @@ class MessageController
             $messageLang,
             $messageParams
         );
-        if(!$messageText) return "##" . $messageId . "##";
+        if(!$messageText) return $messageId;
         
         return $messageText;
     }
