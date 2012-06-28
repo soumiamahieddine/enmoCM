@@ -55,6 +55,25 @@ class MessageController
         return $messageDefinition;
     }
     
+    public function getTexts(
+        $messageIdPrefix, 
+        $messageLang = false
+        )
+    {
+        if(!$messageLang) $messageLang = $_SESSION['config']['lang'];
+        
+        $messagesTexts = array();
+        $messageDefinitions = $this-xpath("//message[starts-with(@id, '".$messageIdPrefix."')]")
+        
+        for($i=0; $i<$messageDefinitions->length; $i++) {
+            $messageDefinition = $messageDefinitions->item($i);
+            $messageText = $this->makeMessageText($messageDefinition, $messageLang);
+            $messageId = $messageDefinition->id;
+            $messagesTexts[$messageId] = $messageText;
+        }
+        return $messagesTexts;
+    }
+    
     public function getMessageText(
         $messageId,
         $messageLang = false,
@@ -86,7 +105,10 @@ class MessageController
     {
         // Get message text in requested language
         $messageTexts = $this->xpath("./text[@lang='".$messageLang."']", $messageDefinition);
-        if($messageTexts->length === 0) $messageText = $this->xpath("./text", $messageDefinition)->item(0)->nodeValue;
+        // No text defined for language, return id
+        if($messageTexts->length === 0) {
+            return $messageDefinition->messageId;
+        }
         $messageText = $messageTexts->item(0)->nodeValue;
         $messageText = @vsprintf($messageText, $messageParams);         
         return $messageText;
