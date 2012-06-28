@@ -364,7 +364,7 @@ INSERT INTO parameters (id, param_value_string, param_value_int) VALUES
 ('ar_index_pparker_internal', NULL, 3),
 ('ar_index_pparker_market_document', NULL, 3),
 ('postindexing_workbatch', NULL, 40),
-('database_version', NULL, 130);
+('database_version', NULL, 131);
 
 INSERT INTO templates (template_id, template_label, template_comment, template_content) VALUES (2, 'AR_MAARCH', 'Accusé de réception Maarch', '<p style="TEXT-ALIGN: left"><img src="img/default_maarch.gif" alt="" width="278" height="80" />&nbsp;</p>
 <p><em><font face="Arial Black" size="2" color="#3366ff">La gestion de courriers Open source !</font></em><br />Mail : info@maarch.org<br />Web : http://www.maarch.org</p>
