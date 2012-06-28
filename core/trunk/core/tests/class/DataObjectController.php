@@ -12,6 +12,7 @@ class dataObjectController extends DOMDocument
     public $prototypes = array();
     public $dataAccessServices = array();
     private $messageController;
+    private $messages = array();
     
     public function dataObjectController() 
     {
@@ -133,13 +134,13 @@ class dataObjectController extends DOMDocument
                 $messageParams = array($libXMLError->message);
                 $messageLang = $_SESSION['config']['lang'];
                 $messageFunc = 'dataObjectController::validate';
-                $this->messageController->sendMessage(
+                $message = $this->messageController->sendMessage(
                     $messageId,
                     $messageParams,
                     $messageLang,                    
                     $messageFunc
                 );
-                
+                $this->messages[] = $message;
             }
             return false;
         } 
@@ -148,7 +149,9 @@ class dataObjectController extends DOMDocument
     
     public function getMessages()
     {
-        return $this->messages;
+        $message = $this->messages;
+        $this->messages = array();
+        return $messages;
     }
     
     public function save($dataObject) 
