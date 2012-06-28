@@ -149,7 +149,7 @@ class dataObjectController extends DOMDocument
     
     public function getMessages()
     {
-        $message = $this->messages;
+        $messages = $this->messages;
         $this->messages = array();
         return $messages;
     }
