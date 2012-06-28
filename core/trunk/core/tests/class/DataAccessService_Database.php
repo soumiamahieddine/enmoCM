@@ -333,7 +333,7 @@ class DataAccessService_Database_Table
             $keyColumns = $this->primaryKey->getColumns();
             for($i=0; $i<count($keyColumns); $i++) {
                 $keyColumnName = $keyColumns[$i];
-                $keyColumn = $this->columns[$keyColumn];
+                $keyColumn = $this->columns[$keyColumnName];
                 $keyValue = $keyColumn->makeValueExpression($dataObject->{$keyColumnName});
                 $updateKeyExpressionParts[] = $keyColumnName . ' = ' . $keyValue;
             }
