@@ -158,9 +158,10 @@ class DataObjectSchema
             $baseTypeName = $propertyType->name;
         } else {
             $typeContents = $this->xpath("./*[name()='xsd:restriction' or name()='xsd:list' or name()='xsd:union']", $propertyType)->item(0);
-            
             if(substr($typeContents->base, 0, 4) == 'xsd:') {
                 $baseTypeName = $typeContents->base;
+            } elseif(substr($typeContents->{'das:base'}, 0, 4) == 'xsd:') {
+                $baseTypeName = $typeContents->{'das:base'};
             } else {
                 $baseType = $this->xpath("//xsd:simpleType[@name='".$typeContents->base."']")->item(0);
                 $baseTypeName = $this->getBaseTypeName($baseType);
