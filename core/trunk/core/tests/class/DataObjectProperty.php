@@ -14,7 +14,8 @@ class DataObjectProperty
         $this->storage = $value;
 	}
     
-    public function __get($name) {
+    public function __get($name) 
+    {
         switch($name) {
         case 'isDataObjectProperty' : return true;
         case 'name'                 : return $this->name;
@@ -45,6 +46,27 @@ class DataObjectProperty
     public function __toString() 
     {
         return (string)$this->storage;
+    }
+    
+    //*************************************************************************
+    // XML INTERFACE
+    //*************************************************************************
+    public function asXmlElement($XmlDocument) 
+    {
+        if(strlen($this->storage) > 0) {
+            $propertyElement = $XmlDocument->createElement($this->name, (string)$this->storage);
+        } else {
+            $propertyElement = $XmlDocument->createElement($this->name);
+        }
+        return $propertyElement;
+    }
+
+    //*************************************************************************
+    // Web Service Object (properties/children - no method)
+    //*************************************************************************    
+    public function asObject() 
+    {
+        return $this->storage;
     }
     
 }

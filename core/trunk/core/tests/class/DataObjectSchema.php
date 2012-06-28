@@ -64,13 +64,22 @@ class DataObjectSchema
         return $this->xpath->query($query, $contextElement);
     }
     
-    public function getDataSources()
+    public function getDataAccessServiceSources()
     {
-        $DSnodes = $this->xpath('/xsd:schema/xsd:annotation/xsd:appinfo/das:datasource');
+        $DSnodes = $this->xpath('/xsd:schema/xsd:annotation/xsd:appinfo/das:source');
         for($i=0; $i<$DSnodes->length; $i++) {
             $DS[] = $DSnodes->item($i);
         }
         return $DS;
+    }
+    
+    public function getDataAccessServiceSourceOptions($datasource)
+    {
+        $optionNodes = $this->xpath('./das:option', $datasource);
+        for($i=0; $i<$optionNodes->length; $i++) {
+            $options[] = $optionNodes->item($i);
+        }
+        return $options;
     }
     
     public function getObjectSchemas() 
@@ -113,29 +122,51 @@ class DataObjectSchema
     //*************************************************************************
     // OLD FUNCTIONS
     //*************************************************************************
-    private function getSimpleTypeBaseTypeName($simpleType) 
+    public function isEnclosedType($propertyType) 
     {
-        if(substr($simpleType->name, 0, 4) == 'xsd:') {
-            $simpleTypeBaseName = $simpleType->name;
-        } else {
-            $simpleTypeBase = $this->getSimpleTypeBaseType($simpleType);
-            $simpleTypeBaseName = $simpleTypeBase->name;
+        $baseTypeName = $this->getBaseTypeName($propertyType);
+        if(!in_array(
+            $baseTypeName,
+            array(
+                'xsd:boolean',
+                'xsd:double', 
+                'xsd:decimal',
+                    'xsd:integer',
+                        'xsd:nonPositiveInteger',
+                            'xsd:negativeInteger',
+                        'xsd:long',
+                            'xsd:int', 
+                            'xsd:short', 
+                            'xsd:byte',
+                        'xsd:nonNegativeInteger',
+                            'xsd:positiveInteger',
+                            'xsd:unsignedLong',
+                                'xsd:unsignedInt',
+                                    'xsd:unsignedShort',
+                                        'xsd:unsignedByte',
+                'xsd:float',
+                )
+            )
+        ) {
+            return true;
         }
-        return $simpleTypeBaseName;
     }
     
-    private function getSimpleTypeBaseType($simpleType) 
+    private function getBaseTypeName($propertyType) 
     {
-        $typeContents = $this->xpath("./*[name()='xsd:restriction' or name()='xsd:list' or name()='xsd:union']", $simpleType)->item(0);
-        $baseTypeName = $typeContents->base;
-        if(substr($baseTypeName, 0, 4) == 'xsd:') {
-            $simpleTypeBase = $this->schema->createElement('xsd:simpleType');
-            $simpleTypeBase->name = $baseTypeName;
+        if(substr($propertyType->name, 0, 4) == 'xsd:') {
+            $baseTypeName = $propertyType->name;
         } else {
-            $baseType = $this->xpath("//xsd:simpleType[@name='".$baseTypeName."']")->item(0);
-            $simpleTypeBase = $this->getSimpleTypeBaseType($baseType);
+            $typeContents = $this->xpath("./*[name()='xsd:restriction' or name()='xsd:list' or name()='xsd:union']", $propertyType)->item(0);
+            
+            if(substr($typeContents->base, 0, 4) == 'xsd:') {
+                $baseTypeName = $typeContents->base;
+            } else {
+                $baseType = $this->xpath("//xsd:simpleType[@name='".$typeContents->base."']")->item(0);
+                $baseTypeName = $this->getBaseTypeName($baseType);
+            }
         }
-        return $simpleTypeBase;
+        return $baseTypeName;
     }
     
     private function xPathOnSchema($xPath, $contextElement) 

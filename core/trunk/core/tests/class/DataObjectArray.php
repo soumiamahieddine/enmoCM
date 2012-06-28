@@ -7,6 +7,7 @@ class DataObjectArray
     private $schemaPath;
     private $arraySchemaPath;
     private $parentObject;
+    private $dataAccessService;
     private $changeLog;
     
     public function DataObjectArray($name, $schemaPath, $arraySchemaPath) 
@@ -48,7 +49,9 @@ class DataObjectArray
         case 'parentObject'     : 
             $this->parentObject = $value;
             break;
-        
+        case 'dataAccessService' :
+            $this->dataAccessService = $value;
+            break;
         }
     }
     
@@ -73,6 +76,31 @@ class DataObjectArray
         }
     }
     
+    public function removeDataAccessService()
+    {
+        $this->dataAccessService = null;
+    }
+    
+    public function load()
+    {
+        $objectDatas = $this->dataAccessService->getData($this);
+        $schemaPath = $arrayDataObject->schemaPath;
+        $objectSchema = $this->schema->getSchemaElement($schemaPath);
+        for($i=0; $i<count($objectDatas); $i++) {
+            $objectData = $objectDatas[$i];
+            $dataObject = $this->instanciateDataObject($objectSchema);
+            $dataObject->beginLogging();
+            $dataObject->logRead();
+            $arrayDataObject->append($dataObject);          
+            $dataObject->loadData($objectData);
+            $this->loadChildren($dataObject);
+        }
+    
+    }
+    
+    //*************************************************************************
+    // CHANGELOG
+    //*************************************************************************    
     public function beginLogging()
     {
         $this->changeLog = new DataObjectChangeLog();
@@ -83,4 +111,35 @@ class DataObjectArray
         $this->changeLog->logCreation();
     }
     
+    //*************************************************************************
+    // XML INTERFACE
+    //*************************************************************************
+    public function asXmlNodeList($XmlDocument)
+    {
+        $childElements = $XmlDocument->createElement($this->name);
+        if(count($this) == 0) {
+            $childElement = $XmlDocument->createElement($this->name);
+            $childElements->appendChild($childElement);
+        } 
+        for($i=0; $i<count($this); $i++) {
+            $childDataObject = $this->offsetGet($i);
+            $childElement = $childDataObject->asXmlElement($XmlDocument);
+            $childElements->appendChild($childElement);
+        }
+        return $childElements->childNodes;
+    }
+    
+    //*************************************************************************
+    // Web Service Object (properties/children - no method)
+    //*************************************************************************    
+    public function asObject() 
+    {
+        $array = Array();
+        for($i=0; $i<count($this); $i++) {
+            $childDataObject = $this->offsetGet($i);
+            $childObject = $childDataObject->asObject();
+            $array[] = $childObject;
+        }
+        return $array;
+    }
 }

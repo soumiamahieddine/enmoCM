@@ -8,12 +8,10 @@ class dataObjectController extends DOMDocument
     const UPDATE    = 3;
     const DELETE    = 4;
     
-    
     private $schema;
-    private $prototypes = array();
-    private $dataAccessService_Database;
-    private $dataAccessService_XML;
-    private $errors = array();
+    public $prototypes = array();
+    public $dataAccessServices = array();
+    private $messageController;
     
     public function dataObjectController() 
     {
@@ -23,16 +21,21 @@ class dataObjectController extends DOMDocument
         require_once 'core/tests/class/DataObject.php';
         require_once 'core/tests/class/DataObjectProperty.php';
         
+        require_once 'core/tests/class/DataAccessService_Database.php';
+        require_once 'core/tests/class/DataAccessService_XML.php';
+        
         // ChangeLog classes
         require_once 'core/tests/class/DataObjectChangeLog.php';
         require_once 'core/tests/class/DataObjectChange.php';
         
-        // DataAccessService / PDO classes
-        require_once 'core/tests/class/DataAccessService_Database.php';
-        require_once 'core/tests/class/DataAccessService_XML.php';
-        
         // Validator classes
-        require_once 'core/tests/class/error.php';
+        require_once 'core/tests/class/MessageController.php';
+        $this->messageController = new MessageController();
+        $this->messageController->logLevel = Message::INFO;
+        $this->messageController->debug = true;
+        $this->messageController->caller = __FILE__;
+        
+        $this->messageController->loadMessageFile($_SESSION['config']['corepath'] . '/core/xml/DataObjectController_Messages.xml');
         
     }
     
@@ -41,14 +44,35 @@ class dataObjectController extends DOMDocument
         $this->schema = new DataObjectSchema();
         $this->schema->loadSchema($xsdFile);
         
-        $this->dataAccessService_Database = new dataAccessService_Database();
+        $dasSources = $this->schema->getDataAccessServiceSources();
+        for($i=0; $i<count($dasSources); $i++) {
+            $dasSource = $dasSources[$i];
+            switch($dasSource->type) {
+            case 'database':
+                $dsn = sprintf(
+                    '%s:host=%s;dbname=%s;port=%s', 
+                    $dasSource->driver, 
+                    $dasSource->host, 
+                    $dasSource->dbname, 
+                    $dasSource->port
+                );
+                $options = $this->schema->getDataAccessServiceSourceOptions($dasSource);
+                $this->dataAccessServices[$dasSource->name] = 
+                    new dataAccessService_Database(
+                        $dsn, 
+                        $dasSource->user, 
+                        $dasSource->password, 
+                        $options
+                    );
+            }
+        }
         
         $objectSchemas = $this->schema->getObjectSchemas();
         for($i=0; $i<$objectSchemas->length; $i++) {
             $objectSchema = $objectSchemas->item($i);
             $this->prototypeDataObject($objectSchema);
         }
-              
+       
     }
     
     //*************************************************************************
@@ -96,44 +120,44 @@ class dataObjectController extends DOMDocument
     
     public function validate($dataObject) 
     {
-        $XmlDocument = $this->getXmlDocument($dataObject);
+        $XmlDocument = $dataObject->asXmlDocument();
         $XsdString = $this->schema->saveXML();
         libxml_use_internal_errors(true);
         if($XmlDocument->schemaValidateSource($XsdString)) {
             return true;
         } else {
-            $this->errors = libxml_get_errors();
-            /*foreach ($libXMLErrors as $libXMLError) {
-                $level = $libXMLError->level;
-                $code = $libXMLError->code;
-                $message = $libXMLError->message;
-                $this->errors[] = new error($level, $code, $message);
-            }*/
+
+            $libXMLErrors = libxml_get_errors();
+            foreach ($libXMLErrors as $libXMLError) {
+                $messageId = 'libxml' . $libXMLError->code;
+                $messageParams = array($libXMLError->message);
+                $messageLang = $_SESSION['config']['lang'];
+                $messageFunc = 'dataObjectController::validate';
+                $this->messageController->sendMessage(
+                    $messageId,
+                    $messageParams,
+                    $messageLang,                    
+                    $messageFunc
+                );
+                
+            }
             return false;
         } 
         libxml_clear_errors();
-        
-        
-        return $this->dataObjectValidator->validateDataObject($dataObject, $this->schema);
     }
     
-    public function getValidationErrors()
+    public function getMessages()
     {
-        return $this->errors;
+        return $this->messages;
     }
     
     public function save($dataObject) 
     {
         $schemaPath = $dataObject->schemaPath;
         $objectSchema = $this->schema->getSchemaElement($schemaPath);
-        switch($objectSchema->{'das:source'}) {
-        case 'database':
-            $this->dataAccessService_Database->saveData($dataObject);
-            break;
-            
-        case 'xml':
-            break;
-        }
+        $dataSourceName = $objectSchema->{'das:source'};
+        $dataSource = $this->dataAccessServices[$dataSourceName];
+        $dataSource->saveData($dataObject);
     }
     
     public function delete($dataObject)
@@ -173,7 +197,14 @@ class dataObjectController extends DOMDocument
     
     public function unserialize($serializedDataObject)
     {
-        return unserialize($serializedDataObject);
+        $dataObject = unserialize($serializedDataObject);
+        /*
+        $schemaPath = $dataObject->schemaPath;
+        $objectSchema = $this->schema->getSchemaElement($schemaPath);
+        $dasSource = $this->getDas($objectSchema);
+        $dataObject->dataAccessService = $dasSource;
+        */
+        return $dataObject;
     }
     
     //*************************************************************************
@@ -182,50 +213,37 @@ class dataObjectController extends DOMDocument
     public function setKey($objectName, $key) 
     {
         $objectSchema = $this->schema->getObjectSchema($objectName);
-        $dasSource = $objectSchema->{'das:source'};
-        switch($dasSource) {
-        case 'database':
-            $this->dataAccessService_Database->setKey($objectSchema->name, $key);
-            break;
-            
-        case 'xml':
-            break;
-        }
+        $dasSource = $this->getDas($objectSchema);
+        if(!$dasSource) return;
+        $dasTable = $dasSource->getTable($objectName);
+        $dasTable->setKey($key);
     }
     
     public function setOrder($objectName, $orderElements, $orderMode='ASC') 
     {
         $objectSchema = $this->schema->getObjectSchema($objectName);
-        $dasSource = $objectSchema->{'das:source'};
-        switch($dasSource) {
-        case 'database':
-            $this->dataAccessService_Database->setOrder($objectSchema->name, $orderElements, $orderMode);
-            break;
-        case 'xml':
-            break;
-        }
+        $dasSource = $this->getDas($objectSchema);
+        if(!$dasSource) return;
+        $dasTable = $dasSource->getTable($objectName);
+        $dasTable->setOrder($orderElements, $orderMode);
     }
     
     public function setFilter($objectName, $filterValue) 
     {
         $objectSchema = $this->schema->getObjectSchema($objectName);
-        $dasSource = $objectSchema->{'das:source'};
-        switch($dasSource) {
-        case 'database':
-            //echo "<br/>Setting filter $filterValue for $objectSchema->name";
-            $this->dataAccessService_Database->setFilter($objectSchema->name, $filterValue);
-            break;
-        case 'xml':
-            break;
-        }
-        
+        $dasSource = $this->getDas($objectSchema);
+        if(!$dasSource) return;
+        $dasTable = $dasSource->getTable($objectName);
+        $dasTable->setFilter($filterValue);
     }
 
     public function getKey($objectName) 
     {
         $objectSchema = $this->schema->getObjectSchema($objectName);
-        $keyColumnNames = $objectSchema->{'das:key-columns'};
-        return $keyColumnNames;
+        $dasSource = $this->getDas($objectSchema);
+        if(!$dasSource) return;
+        $dasTable = $dasSource->getTable($objectName);
+        return $dasTable->getKey();
     }
     
     public function getLabel($objectName)
@@ -274,7 +292,8 @@ class dataObjectController extends DOMDocument
             $arraySchemaPath = $inlineObjectSchema->getNodePath();
             $dataObject = new DataObjectArray($objectSchema->name, $schemaPath, $arraySchemaPath);
         } else {
-            $dataObject = unserialize(serialize($this->prototypes[$schemaPath]));
+            $serializedDataObject = $this->serialize($this->prototypes[$schemaPath]);
+            $dataObject = $this->unserialize($serializedDataObject);
         }
         return $dataObject;
     }
@@ -286,9 +305,38 @@ class dataObjectController extends DOMDocument
         //echo "<br/>Create prototype object with $objectSchema->name";
         $prototypeDataObject = new DataObject($objectSchema->name, $schemaPath);
         
-        // Set Das parameters
-        $this->setDasSource($objectSchema);
-        
+        // Set Das Source
+        //*********************************************************************
+        $dasSource = $this->getDas($objectSchema);
+        if($dasSource) {
+            $dasTable = $dasSource->addTable($objectSchema->name);
+            $dasTable->addPrimaryKey(
+                $objectSchema->{'das:key-columns'}
+            );
+            $dasTable->addFilter(
+                $objectSchema->{'das:filter-columns'}
+            );
+            if($propertyElement->{'das:label'}) {
+                $dasColumn->{'label'} = $propertyElement->{'das:label'};
+            } else {
+                $dasColumn->{'label'} = $propertyElement->name;
+            }
+            if($propertyElement->{'das:comment'}) {
+                $dasColumn->{'comment'} = $propertyElement->{'das:comment'};
+            }
+            // Relation with parent
+            $relationElements = $objectSchema->getRelationElements();
+            for($i=0; $i<$relationElements->length; $i++) {
+                $relationElement = $relationElements->item(0);
+                //echo "<br/> Add relation between " .$relationElement->{'parent'} ." and ". $relationElement->{'child'};
+                $dasSource->addRelation(
+                    $relationElement->{'parent'},
+                    $relationElement->{'child'}, 
+                    $relationElement->{'parent-keys'}, 
+                    $relationElement->{'child-keys'}
+                );
+            }
+        }
         // Create Properties and children
         // ******************************************************************** 
         $childElements = $objectSchema->getChildElements();
@@ -314,7 +362,21 @@ class dataObjectController extends DOMDocument
                 $dataObjectProperty = new DataObjectProperty($childName, $childPath, $childValue);
                 $prototypeDataObject->$childName = $dataObjectProperty;
                 
-                $this->setDasProperty($objectSchema, $childElement);
+                // Set Das property
+                //*************************************************************
+                if($dasSource) {
+                    $enclose = $this->schema->isEnclosedType($childType);
+                    $dasColumn = $dasTable->addColumn($childName, $childType->name, $enclose);
+                    if($childElement->{'default'}) {
+                        $dasColumn->{'default'} = $childElement->{'default'};
+                    }
+                    if($childElement->{'fixed'}) {
+                        $dasColumn->{'fixed'} = $childElement->{'fixed'};
+                    }
+                    if(strtolower($childElement->{'nillable'}) === 'true') {
+                        $dasColumn->nillable = true;
+                    }
+                }
             }
             if ($childType->tagName == 'xsd:complexType') {
                 $childDataObject = $this->instanciateDataObject($childElement, $inlineChildElement);
@@ -350,26 +412,31 @@ class dataObjectController extends DOMDocument
         $schemaPath = $arrayDataObject->schemaPath;
         $objectSchema = $this->schema->getSchemaElement($schemaPath);
         for($i=0; $i<count($objectDatas); $i++) {
-            $objectData = $objectDatas[$i];
             $dataObject = $this->instanciateDataObject($objectSchema);
             $dataObject->beginLogging();
             $dataObject->logRead();
-            $arrayDataObject->append($dataObject);          
+            $arrayDataObject->append($dataObject);  
+            $objectData = $objectDatas[$i];            
             $this->loadProperties($dataObject, $objectData);
             $this->loadChildren($dataObject);
         }
     }
-     
+    
     private function loadProperties($dataObject, $objectData)
     {
-        $propertiesObjects = $dataObject->properties;
-        for($i=0; $i<count($propertiesObjects); $i++) {
-            $propertyObject = $propertiesObjects[$i];
-            $propertyName = $propertyObject->name;
-            $propertyValue = $objectData[$propertyName];
-            $propertyObject->setValue($propertyValue);
+        $properties = $dataObject->properties;
+        for($i=0; $i<count($properties); $i++) {
+            $property = $properties[$i];
+            $propertyName = $property->name;
+            if(is_array($objectData)) {
+                $propertyValue = $objectData[$propertyName];
+            } elseif(is_object($objectData)) {
+                $propertyValue = $objectData->$propertyName;
+            }
+            $property->setValue($propertyValue);
         }
     }
+    
     
     private function loadChildren($dataObject) 
     {
@@ -387,81 +454,12 @@ class dataObjectController extends DOMDocument
     //*************************************************************************
     // PRIVATE DAS FUNCTIONS
     //*************************************************************************
-    private function setDasSource($objectSchema)
+    private function getDas($objectSchema) 
     {
         $dasSource = $objectSchema->{'das:source'};
-        switch($dasSource) {
-        case 'database':
-            // Main source
-            //echo "<br/> Add table $objectSchema->name";
-            $dasTable = $this->dataAccessService_Database->addTable($objectSchema->name);
-            $dasTable->addPrimaryKey(
-                $objectSchema->{'das:key-columns'}
-            );
-            $dasTable->addFilter(
-                $objectSchema->{'das:filter-columns'}
-            );
-            if($propertyElement->{'das:label'}) {
-                $dasColumn->{'label'} = $propertyElement->{'das:label'};
-            } else {
-                $dasColumn->{'label'} = $propertyElement->name;
-            }
-            if($propertyElement->{'das:comment'}) {
-                $dasColumn->{'comment'} = $propertyElement->{'das:comment'};
-            }
-            // Relation with parent
-            $relationElements = $objectSchema->getRelationElements();
-            for($i=0; $i<$relationElements->length; $i++) {
-                $relationElement = $relationElements->item(0);
-                //echo "<br/> Add relation between " .$relationElement->{'parent'} ." and ". $relationElement->{'child'};
-                $this->dataAccessService_Database->addRelation(
-                    $relationElement->{'parent'},
-                    $relationElement->{'child'}, 
-                    $relationElement->{'parent-keys'}, 
-                    $relationElement->{'child-keys'}
-                );
-            }
-            
-            break;
-            
-        case 'xml':
-            break;
-        }
-
-    }
-    
-    private function setDasProperty($objectSchema, $propertyElement)
-    {
-        $propertyType = $propertyElement->getType();
-        
-        $dasSource = $objectSchema->{'das:source'};
-        switch($dasSource) {
-        case 'database':
-            ////echo "<br/> Add column $propertyName to $objectName";
-            $dasColumn = $this->dataAccessService_Database->addColumn($objectSchema->name, $propertyElement->name, $propertyType->name);
-            if($propertyElement->{'default'}) {
-                $dasColumn->{'default'} = $propertyElement->{'default'};
-            }
-            if($propertyElement->{'fixed'}) {
-                $dasColumn->{'fixed'} = $propertyElement->{'fixed'};
-            }
-            if(strtolower($propertyElement->{'nillable'}) === 'true') {
-                $dasColumn->nillable = true;
-            }
-            break;
-        case 'xml':
-            break;
-        }
-    }   
-
-    private function setDasOrder($objectSchema, $orderElements, $orderMode)
-    {
-        $dasSource = $objectSchema->{'das:source'};
-        switch($dasSource) {
-        case 'database':
-            $this->dataAccessService_Database->setOrder($objectSchema->name, $orderElements, $orderMode);
-            break;
-        }
+        if(!$dasSource) return;
+        $Das = $this->dataAccessServices[$dasSource];
+        return $Das;
     }
     
     private function getData($dataObject) 
@@ -469,32 +467,19 @@ class dataObjectController extends DOMDocument
         $schemaPath = $dataObject->schemaPath;
         $objectSchema = $this->schema->getSchemaElement($schemaPath);
         //echo "<br/>Get data from $objectSchema->name$objectSchema->ref ($schemaPath)";
-        switch($objectSchema->{'das:source'}) {
-        case 'database':
-            return $this->dataAccessService_Database->getData($dataObject);
-            break;
-            
-        case 'xml':
-            break;
-        }
+        $dasSource = $this->getDas($objectSchema);
+        if(!$dasSource) return;
+        return $dasSource->getData($dataObject);
     }
     
     //*************************************************************************
     // Web Service Object (properties/children - no method)
     //*************************************************************************
-    public function getStdObject($dataObject)
-    {
-        $stdObject = new StdClass();
-        $this->childrenToStdObject($dataObject, $stdObject); 
-        
-        return $stdObject;
-    }
-    
-    public function loadStdObject($stdObject, $objectName, $mode)
+    public function loadFromObject($stdObject, $objectName, $mode)
     {
         $objectSchema = $this->schema->getObjectSchema($objectName);
         $dataObject = $this->instanciateDataObject($objectSchema);
-        $this->loadDataObjectFromStdObject($dataObject, $stdObject, $mode);
+        $this->loadDataObjectFromObject($dataObject, $stdObject, $mode);
         $dataObject->beginLogging();
         if($mode == self::CREATE) $dataObject->logCreation();
         if($mode== self::READ) $dataObject->logRead();
@@ -548,154 +533,5 @@ class dataObjectController extends DOMDocument
             }
         }
     }
-    
-    private function childrenToStdObject($dataObject, $stdObject)
-    {
-        foreach($dataObject as $childObject) {
-            if(!is_object($childObject)) Die("Non object value are forbidden");
-            if($childObject->isDataObjectProperty) {
-                //echo "<br/>Adding property element $childName => $childObject";
-                $this->propertyToStdObject($childObject, $stdObject);
-            } elseif($childObject->isDataObject) {
-                //echo "<br/><b>Adding child object $childName</b>";
-                $this->objectToStdObject($childObject, $stdObject);
-            } elseif($childObject->isDataObjectArray) {
-                //echo "<br/><b>Adding array of $childName</b>";
-                $this->arrayToStdObject($childObject, $stdObject);
-            }
-        }
-    }
-    
-    private function objectToStdObject($dataObject, $stdObject) 
-    {
-        $objectName = $dataObject->name;
-        $childStdObject = new stdClass();
-        $stdObject->{$objectName} = $childStdObject;
-        $this->childrenToStdObject($dataObject, $childStdObject);
-    }
-    
-    private function arrayToStdObject($dataObjectArray, $stdObject)
-    {
-        $arrayName = $dataObjectArray->name;
-        $array = Array();
-        for($i=0; $i<count($dataObjectArray); $i++) {
-            $childObject = $dataObjectArray[$i];
-            $childStdObject = new stdClass();
-            $array[] = $childStdObject;
-            $this->childrenToStdObject($childObject, $childStdObject);
-        }
-        $stdObject->{$arrayName} = $array;
-    }
-    
-    private function propertyToStdObject($dataObjectProperty, $stdObject) 
-    {
-        $propertyName = $dataObjectProperty->name;
-        $stdObject->{$propertyName} = (string)$dataObjectProperty;
-    }
-    
-    //*************************************************************************
-    // XML
-    //*************************************************************************
-    public function getXmlDocument($dataObject) 
-    {
-        $Document = new DOMDocument();
-        $rootXml = $Document->createElement($dataObject->name);
-        $Document->appendChild($rootXml);
-        $this->childrenToXml($dataObject, $rootXml); 
-        
-        return $Document;
-    }
-    
-    public function getXmlString($dataObject)
-    {
-        $XmlDocument = $this->getXmlDocument($dataObject);
-        $XmlString = $XmlDocument->saveXML();
-        $XmlPrettyString = $this->formatXmlString($XmlString);
-        return $XmlPrettyString;
-    }
-    
-    private function childrenToXml($dataObject, $parentXml) 
-    {
-        //echo "<br/><b>Adding ".count($dataObject)." children elements to $parentXml->tagName</b>";
-        foreach($dataObject as $childObject) {
-            if(!is_object($childObject)) Die("Non object value are forbidden");
-            if($childObject->isDataObjectProperty) {
-                //echo "<br/>Adding property element $childObject->name => $childObject";
-                $this->propertyToXml($childObject, $parentXml);
-            } elseif($childObject->isDataObject) {
-                //echo "<br/><b>Adding child object $childObject->name</b>";
-                $this->objectToXml($childObject, $parentXml);
-            } elseif($childObject->isDataObjectArray) {
-                //echo "<br/><b>Adding array of $childObject->name</b>";
-                $this->arrayToXml($childObject, $parentXml);
-            }
-        }
-    }
-    
-    private function objectToXml($dataObject, $parentXml) 
-    {
-        $objectXml = $parentXml->ownerDocument->createElement($dataObject->name);
-        $parentXml->appendChild($objectXml);
-        $this->childrenToXml($dataObject, $objectXml);
-    }
-    
-    private function arrayToXml($dataObjectArray, $parentXml)
-    {
-        for($i=0; $i<count($dataObjectArray); $i++) {
-            $childObject = $dataObjectArray[$i];
-            //echo "<br/>Adding array item #$i";
-            $this->objectToXml($childObject, $parentXml);
-        }
-    }
-    
-    private function propertyToXml($dataObjectProperty, $parentXml) 
-    {
-        if(strlen((string)$dataObjectProperty) > 0) {
-            $propertyXml = $parentXml->ownerDocument->createElement($dataObjectProperty->name, (string)$dataObjectProperty);
-        } else {
-            $propertyXml = $parentXml->ownerDocument->createElement($dataObjectProperty->name);
-        }
-        $parentXml->appendChild($propertyXml);
-    }
-    
-    private function formatXmlString($xml) 
-    {  
-        // add marker linefeeds to aid the pretty-tokeniser (adds a linefeed between all tag-end boundaries)
-        $xml = preg_replace('/(>)(<)(\/*)/', "$1\n$2$3", $xml);
-        
-        // now indent the tags
-        $token      = strtok($xml, "\n");
-        $result     = ''; // holds formatted version as it is built
-        $pad        = 0; // initial indent
-        $matches    = array(); // returns from preg_matches()
-        
-        // scan each line and adjust indent based on opening/closing tags
-        while ($token !== false) {
-            // 1. open and closing tags on same line - no change
-            if (preg_match('/.+<\/\w[^>]*>$/', $token, $matches)) { 
-                $indent = 0;
-            // 2. closing tag - outdent now
-            } elseif (preg_match('/^<\/\w/', $token, $matches)) {
-                $indent = 0;
-                $pad--;
-            // 3. opening tag - don't pad this one, only subsequent tags
-            } elseif (preg_match('/^<\w[^>]*[^\/]>.*$/', $token, $matches)) {
-                $indent = 1;
-            // 4. no indentation needed
-            } else {
-                $indent = 0; 
-            }
-            
-            // pad the line with the required number of leading spaces
-            $line    = str_pad($token, strlen($token)+($pad*4), ' ', STR_PAD_LEFT);
-            $result .= $line . "\n"; // add to the cumulative result, with linefeed
-            $token   = strtok("\n"); // get the next token
-            $pad    += $indent; // update the pad size for subsequent lines    
-        } 
-        
-        return $result;
-    }
-
-    
-    
+      
 }
