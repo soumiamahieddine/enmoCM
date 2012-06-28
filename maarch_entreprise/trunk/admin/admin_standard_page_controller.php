@@ -220,23 +220,6 @@ function displayRead($objectName, $object)
 function displayUpdate($objectName, $object)
 {
     putInSession($objectName, $object);
-    //TODO: SPECIFIC SAMPLE !!!
-/*
-    if ($docserversControler->resxLinkExists(
-        $docservers->docserver_id,
-        $docservers->coll_id
-    )
-    ) {
-        $_SESSION['m_admin']['docservers']['link_exists'] = true;
-    }
-    if ($docserversControler->adrxLinkExists(
-        $docservers->docserver_id,
-        $docservers->coll_id
-    )
-    ) {
-        $_SESSION['m_admin']['docservers']['link_exists'] = true;
-    }
-*/
 }
 
 /**
@@ -351,7 +334,11 @@ if ($params['status'] == 'KO') {
 }
 
 //test if the user is allowed to acces the admin service
-$coreTools->test_admin('admin_' . $params['objectName'], 'apps');
+if ($isApps) {
+    $coreTools->test_admin('admin_' . $params['objectName'], 'apps');
+} else {
+    $coreTools->test_admin('admin_' . $params['objectName'], 'entities');
+}
 
 $pagePath = locationBarManagement(
     $params['pageName'], 
