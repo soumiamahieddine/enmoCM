@@ -34,9 +34,11 @@ class dataObjectController extends DOMDocument
         $this->messageController = new MessageController();
         $this->messageController->logLevel = Message::INFO;
         $this->messageController->debug = true;
-        $this->messageController->caller = __FILE__;
         
-        $this->messageController->loadMessageFile($_SESSION['config']['corepath'] . '/core/xml/DataObjectController_Messages.xml');
+        $this->messageController->loadMessageFile(
+            $_SESSION['config']['corepath'] 
+                . '/core/xml/DataObjectController_Messages.xml'
+        );
         
     }
     
@@ -45,7 +47,7 @@ class dataObjectController extends DOMDocument
         $this->schema = new DataObjectSchema();
         $this->schema->loadSchema($xsdFile);
         
-        $dasSources = $this->schema->getDataAccessServiceSources();
+        $dasSources = $this->schema->getSources();
         for($i=0; $i<count($dasSources); $i++) {
             $dasSource = $dasSources[$i];
             switch($dasSource->type) {
@@ -57,7 +59,7 @@ class dataObjectController extends DOMDocument
                     $dasSource->dbname, 
                     $dasSource->port
                 );
-                $options = $this->schema->getDataAccessServiceSourceOptions($dasSource);
+                $options = $this->schema->getSourceOptions($dasSource);
                 $this->dataAccessServices[$dasSource->name] = 
                     new dataAccessService_Database(
                         $dsn, 
@@ -133,12 +135,10 @@ class dataObjectController extends DOMDocument
                 $messageId = 'libxml' . $libXMLError->code;
                 $messageParams = array($libXMLError->message);
                 $messageLang = $_SESSION['config']['lang'];
-                $messageFunc = 'dataObjectController::validate';
                 $message = $this->messageController->sendMessage(
                     $messageId,
                     $messageParams,
-                    $messageLang,                    
-                    $messageFunc
+                    $messageLang
                 );
                 $this->messages[] = $message;
             }
@@ -252,8 +252,11 @@ class dataObjectController extends DOMDocument
     public function getLabel($objectName)
     {
         $objectSchema = $this->schema->getObjectSchema($objectName);
-        if($objectSchema->{'das:label'}) return $objectSchema->{'das:label'};
-        else return $objectSchema->name;
+        if($objectSchema->{'das:label'}) {
+            return $objectSchema->{'das:label'};
+        } else {
+            return $objectSchema->name;
+        }
     }
     
     public function getContentLabels($objectName) 

@@ -64,7 +64,7 @@ class DataObjectSchema
         return $this->xpath->query($query, $contextElement);
     }
     
-    public function getDataAccessServiceSources()
+    public function getSources()
     {
         $DSnodes = $this->xpath('/xsd:schema/xsd:annotation/xsd:appinfo/das:source');
         for($i=0; $i<$DSnodes->length; $i++) {
@@ -73,7 +73,7 @@ class DataObjectSchema
         return $DS;
     }
     
-    public function getDataAccessServiceSourceOptions($datasource)
+    public function getSourceOptions($datasource)
     {
         $optionNodes = $this->xpath('./das:option', $datasource);
         for($i=0; $i<$optionNodes->length; $i++) {

@@ -4,8 +4,6 @@ class MessageController
     extends DOMDocument
 {
 	
-    
-    private $caller;
     private $logLevel;
     private $debug;
     private $xpath;
@@ -13,7 +11,6 @@ class MessageController
     public function __set($name, $value)
     {
         switch($name) {
-            case 'caller' : $this->caller = $value;
             case 'logLevel' : $this->logLevel = $value;
             case 'debug' : $this->debug = $value;
         }
@@ -49,31 +46,77 @@ class MessageController
         return $this->xpath->query($query, $contextElement);
     }
     
-    public function sendMessage(
-        $messageId,
-        $messageParams = array(),
-        $messageLang = 'fr',                    
-        $messageFunc = false
-        )
+    
+    public function getMessageDefinition($messageId)
     {
-        // Get message definition
         $messageDefinitions = $this->xpath("//message[@id='".$messageId."']");
         if($messageDefinitions->length === 0) return false;
         $messageDefinition = $messageDefinitions->item(0);
+        return $messageDefinition;
+    }
+    
+    public function getMessageText(
+        $messageId,
+        $messageParams = array(),
+        $messageLang = 'fr'
+        )
+    {
+        // Get message definition
+        $messageDefinition = $this->getMessageDefinition($messageId);
         
+        // Get Text
+        $messageText = $this->makeMessageText(
+            $messageDefinition,
+            $messageParams,
+            $messageLang
+        );
+        
+        return $messageText;
+    }
+    
+    private function makeMessageText(
+        $messageDefinition,
+        $messageParams = array(),
+        $messageLang = 'fr'
+        )
+    {
         // Get message text in requested language
         $messageTexts = $this->xpath("./text[@lang='".$messageLang."']", $messageDefinition);
         if($messageTexts->length === 0) $messageText = $this->xpath("./text", $messageDefinition)->item(0)->nodeValue;
         $messageText = $messageTexts->item(0)->nodeValue;
         $messageText = vsprintf($messageText, $messageParams);
         
+        return $messageText;
+    
+    }
+    
+    public function sendMessage(
+        $messageId,
+        $messageParams = array(),
+        $messageLang = 'fr'
+        )
+    {
+        // Get message definition
+        $messageDefinition = $this->getMessageDefinition($messageId);
+        
+        // Make Text
+        $messageText = $this->makeMessageText(
+            $messageDefinition,
+            $messageParams,
+            $messageLang
+        );
+
+        // Get backtrace
+        $backtrace = debug_backtrace();
+        $messageBacktrace = $backtrace[1];
+        
         // Create message object
         $message = new Message(
             $messageDefinition->level, 
             $messageDefinition->id, 
             $messageText,
-            $this->caller,
-            $messageFunc
+            $messageLang,
+            $messageBacktrace
             );
         
         $_SESSION['messages'][] = $message;
@@ -107,18 +150,25 @@ class Message
     public $level;
     public $id;
     public $text;
-    public $file;
-    public $func;
-    public $debug;
-        
-    function Message($level, $id, $text, $file, $func)
+    public $lang;
+    public $file; 
+    public $line; 
+    public $class;
+    public $func; 
+    
+    
+            
+    function Message($level, $id, $text, $lang, $backtrace)
     {
         $this->timestamp = date('Y-m-d H-i-s.u');
         $this->level = $level;
         $this->id = $id;
-        $this->text = $text;
-        $this->file = $file;
-        $this->func = $func;
+        $this->text = trim($text);
+        $this->lang = $lang;
+        $this->file = $backtrace['file'];
+        $this->line = $backtrace['line'];
+        $this->class = $backtrace['class'];
+        $this->func = $backtrace['function'];
     }
 
 }
