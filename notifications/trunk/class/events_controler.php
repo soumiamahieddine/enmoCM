@@ -71,7 +71,8 @@ class events_controler
 		if ($record_id == '') return;
 	    
         $query = "SELECT * "
-            ."FROM " . _NOTIFICATIONS_TABLE_NAME . " ";
+            ."FROM " . _NOTIFICATIONS_TABLE_NAME 
+            ." WHERE is_enabled = 'Y'";
         $db = new dbquery();
 		$db->connect();
         $db->query($query);

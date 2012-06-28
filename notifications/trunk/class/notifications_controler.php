@@ -73,7 +73,8 @@ class notifications_controler extends ObjectControler implements ObjectControler
 
 	public function getByNotificationId($notificationId) {
         $query = "select * from " . _NOTIFICATIONS_TABLE_NAME 
-			. " where notification_id = '".$notificationId."'"; 
+			. " where notification_id = '".$notificationId."'"
+            . " and is_enabled = 'Y'"; 
 		$db = new dbquery();
 		$db->query($query);
 		$notifObj = $db->fetch_object();
@@ -260,6 +261,12 @@ class notifications_controler extends ObjectControler implements ObjectControler
         $notification->description = $f->protect_string_db(
             $f->wash($notification->description, 'no', _DESC, 'yes', 0, 50)
         );
+        if ($notification->is_enabled == 'false') {
+            $notification->is_enabled = false;
+        } else {
+            $notification->is_enabled = true;
+        }
+        
         $notification->diffusion_type = $f->protect_string_db(
             $f->wash($notification->diffusion_type, 'no', _DIFFUSION_TYPE)
         );
