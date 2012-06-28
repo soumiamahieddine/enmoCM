@@ -7,7 +7,6 @@ class DataObjectArray
     private $schemaPath;
     private $arraySchemaPath;
     private $parentObject;
-    private $dataAccessService;
     private $changeLog;
     
     public function DataObjectArray($name, $schemaPath, $arraySchemaPath) 
@@ -48,9 +47,6 @@ class DataObjectArray
         switch($name) {
         case 'parentObject'     : 
             $this->parentObject = $value;
-            break;
-        case 'dataAccessService' :
-            $this->dataAccessService = $value;
             break;
         }
     }

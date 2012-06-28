@@ -8,7 +8,6 @@ class DataObject
     private $schemaPath;
     private $parentObject;
     private $changeLog;
-    private $validationLog;
     private $storage;
     
     public function DataObject($name, $schemaPath) 
