@@ -63,7 +63,7 @@ class MessageController
         if(!$messageLang) $messageLang = $_SESSION['config']['lang'];
         
         $messagesTexts = array();
-        $messageDefinitions = $this-xpath("//message[starts-with(@id, '".$messageIdPrefix."')]")
+        $messageDefinitions = $this-xpath("//message[starts-with(@id, '".$messageIdPrefix."')]");
         
         for($i=0; $i<$messageDefinitions->length; $i++) {
             $messageDefinition = $messageDefinitions->item($i);
