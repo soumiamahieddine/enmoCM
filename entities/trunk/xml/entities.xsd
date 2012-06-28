@@ -27,115 +27,44 @@ Parent key fields (xpath) and child key fields must be in same order
   xmlns:das="maarch:DataAccessService"  
   elementFormDefault="qualified">
   
-  <xsd:include schemaLocation='core/xml/datatypes.xsd' />
+  <xsd:include schemaLocation='modules/entities/xml/entities.xsd' />
   
-  <!-- ROOT : ENTITIES -->
-  <xsd:element name='entities_root'>
+  <!-- ROOT : DOCSERVERS -->
+  <xsd:element name='entities_list' das:label="_ENTITIES_LIST">
     <xsd:complexType>
       <xsd:sequence>
         <!-- ROWS -->
-        <xsd:element ref='entities' minOccurs="0" maxOccurs='unbounded'/>
-        <xsd:element name='entity_types' type='typentity' das:xml='/modules/entities/xml/typentity.xml' das:xpath="/root/TYPE" minOccurs="0" maxOccurs='unbounded'/>
+        <xsd:element ref='entities' das:label="_ENTITIES" minOccurs="0" maxOccurs='unbounded'/>
+        <!--<xsd:element name='entity_types' type='typentity' das:xml='/modules/entities/xml/typentity.xml' das:xpath="/root/TYPE" minOccurs="0" maxOccurs='unbounded'/>-->
       </xsd:sequence>
     </xsd:complexType>
-    <!-- PRIMARY KEY : ENTITY-->
+    <!-- PRIMARY KEY : ENTITIES-->
     <xsd:key name='entities_pk'>
       <xsd:selector xpath='./entities' />
       <xsd:field xpath='entity_id'/>
     </xsd:key>
-    <!-- PRIMARY KEY : ENTITY TYPE-->
-    <xsd:key name='entity_type_pk'>
-      <xsd:selector xpath='./entity_types' />
-      <xsd:field xpath='id'/>
-    </xsd:key>
   </xsd:element>
-  
   
   <!-- ROW : ENTITY -->
-  <xsd:element name='entities' type='entity' das:table='entities' das:query="enabled='Y'">
-    <!-- PRIMARY KEY : USER_ENTITIES -->
-    <xsd:key name='users_entities_pk'>
-      <xsd:selector xpath='./users_entities' />
-      <xsd:field xpath='entity_id' />
-      <xsd:field xpath='user_id' />
-    </xsd:key>
-  </xsd:element>
+  <xsd:element name='entities' type='entity' das:label="entités" das:source='database' das:key-columns="entity_id" das:filter-columns="entity_id entity_label short_label"/>
   
   <!-- TYPE : ENTITY -->
-  <xsd:complexType name='entity'>
+  <xsd:complexType name='ENTITY'>
     <xsd:sequence>
-      <xsd:element name="entity_id" type="varchar32" />
-      <xsd:element name="entity_label" type="varchar255" />
-      <xsd:element name="entity_type" type="varchar64" />
-      <xsd:element name="enabled" type="boolean" />
-      <xsd:element name="adrs_1" type="varchar255" />
-      <xsd:element name="adrs_2" type="varchar255" />
-      <xsd:element name="users_entities" type="users_entities" minOccurs='0' maxOccurs='unbounded'>
-        <xsd:annotation>
-          <xsd:appinfo>
-            <das:relation parent-key='entity_id' child-key='entity_id' />
-          </xsd:appinfo>
-        </xsd:annotation>
-        <!--xsd:keyref name='users_entities_fk' refer='entities_pk'>
-          <xsd:selector xpath='.' />
-          <xsd:field xpath='entity_id' />
-        </xsd:keyref-->
-      </xsd:element>
+      <xsd:element name="entity_id" das:label="_ENTITY_ID" type="varchar32" nillable="false" />
+      <xsd:element name="entity_label" das:label="_ENTITY_LABEL" type="varchar255" />
+      <xsd:element name="short_label" das:label="_ENTITY_SHORT_LABEL" type="varchar50" />
+      <xsd:element name="enabled" das:label="_ENABLED" type="boolean" nillable="false" default="Y" />
+      <xsd:element name="adrs_1" das:label="_ENTITY_ADRS_1" type="varchar255" />
+      <xsd:element name="adrs_2" das:label="_ENTITY_ADRS_2" type="varchar255" />
+      <xsd:element name="adrs_3" das:label="_ENTITY_ADRS_3" type="varchar255" />
+      <xsd:element name="zipcode" das:label="_ENTITY_ZIP_CODE" type="varchar32" />
+      <xsd:element name="city" das:label="_ENTITY_CITY" type="varchar255" />
+      <xsd:element name="country" das:label="_ENTITY_COUNTRY" type="varchar255" />
+      <xsd:element name="email" das:label="_ENTITY_EMAIL" type="varchar255" />
+      <xsd:element name="business_id" das:label="_ENTITY_BUSINESS_ID" type="varchar32" />
+      <xsd:element name="parent_entity_id" das:label="ENTITY_PARENT_ENTITY_ID" type="varchar32" />
+      <xsd:element name="entity_type" das:label="_ENTITY_TYPE" type="varchar64" />
     </xsd:sequence>
   </xsd:complexType>
-  
-  
-  <!-- USERS_ENTITIES -->
-  <xsd:element name='users_entities' type='users_entities' />
-
-  <xsd:complexType name='users_entities'>
-    <xsd:sequence>
-      <xsd:element name="entity_id" type="varchar32" />
-      <xsd:element name="user_id" type="varchar128" />
-      <xsd:element name="user_role" type="varchar255" />
-      <xsd:element name="primary_entity" type="boolean" />
-      <xsd:element name="user" das:table='users'>
-        <xsd:annotation>
-          <xsd:appinfo>
-            <das:relation parent-key='user_id' child-key='user_id' />
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element name="user_id" type="varchar128" />
-            <xsd:element name="firstname" type="varchar255" />
-            <xsd:element name="lastname" type="varchar255" />
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
-    </xsd:sequence>
-  </xsd:complexType>
-  
-  <!-- typentity.xml -->
-  <xsd:complexType name='typentity'>
-    <xsd:sequence>
-      <xsd:element name="id" type="xsd:string" />
-      <xsd:element name="label" type="xsd:string" />
-      <xsd:element name="typelevel" type="xsd:string" />
-      <xsd:element name='entities_with_type' das:table='entities' minOccurs="0" maxOccurs='unbounded'>
-        <xsd:annotation>
-          <xsd:appinfo>
-            <das:relation parent-key='id' child-key='entity_type' />
-          </xsd:appinfo>
-        </xsd:annotation>
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element name="entity_id" type="varchar32" />
-            <xsd:element name="entity_label" type="varchar255" />
-            <xsd:element name="entity_type" type="varchar64" />
-          </xsd:sequence>
-        </xsd:complexType>
-        <!--xsd:keyref name='entity_type_fk' refer='entity_type_pk'>
-          <xsd:selector xpath='.' />
-          <xsd:field xpath='entity_type' />
-        </xsd:keyref-->
-      </xsd:element>
-    </xsd:sequence>
-  </xsd:complexType>
-    
 </xsd:schema>

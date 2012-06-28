@@ -15,6 +15,20 @@
        </WHEREAMIUSED>
     </SERVICE>
     <SERVICE>
+        <id>admin_entities</id>
+        <name>_ENTITIES</name>
+        <comment>_MANAGE_ENTITIES_DESC</comment>
+        <servicepage>index.php?page=entities_page_controller&amp;module=entities&amp;objectName=entities</servicepage>
+        <servicetype>admin</servicetype>
+        <system_service>false</system_service>
+        <style>ent_manage_entities</style>
+        <enabled>true</enabled>
+         <WHEREAMIUSED>
+         <page>admin.php</page>
+         <nature>listelement</nature>
+       </WHEREAMIUSED>
+    </SERVICE>
+    <SERVICE>
         <id>choose_entity</id>
         <name>_CHOOSE_ENTITY</name>
         <servicepage>choose_entity</servicepage>
