@@ -73,8 +73,7 @@ class notifications_controler extends ObjectControler implements ObjectControler
 
 	public function getByNotificationId($notificationId) {
         $query = "select * from " . _NOTIFICATIONS_TABLE_NAME 
-			. " where notification_id = '".$notificationId."'"
-            . " and is_enabled = 'Y'"; 
+			. " where notification_id = '".$notificationId."'"; 
 		$db = new dbquery();
 		$db->query($query);
 		$notifObj = $db->fetch_object();
