@@ -28,6 +28,7 @@ Parent key fields (xpath) and child key fields must be in same order
   elementFormDefault="qualified">
   
   <xsd:include schemaLocation='core/xml/datatypes.xsd' />
+  <xsd:include schemaLocation='apps/maarch_entreprise/xml/datasources.xsd' />
   
   <!-- ROOT : DOCSERVERS -->
   <xsd:element name='docservers_list' das:label="_DOCSERVERS_LIST">
