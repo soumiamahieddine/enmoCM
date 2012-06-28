@@ -64,7 +64,7 @@ class MessageController
         if(!$messageLang) $messageLang = $_SESSION['config']['lang'];
         
         // Get message definition
-        $messageDefinition = $this->getMessageDefinition($messageId);
+        $messageDefinition = $this->getMessageDefinition($messageId))
         
         // Get Text
         $messageText = $this->makeMessageText(
@@ -72,6 +72,7 @@ class MessageController
             $messageLang,
             $messageParams
         );
+        if(!$messageText) return "##" . $messageId . "##";
         
         return $messageText;
     }
@@ -87,8 +88,7 @@ class MessageController
         $messageTexts = $this->xpath("./text[@lang='".$messageLang."']", $messageDefinition);
         if($messageTexts->length === 0) $messageText = $this->xpath("./text", $messageDefinition)->item(0)->nodeValue;
         $messageText = $messageTexts->item(0)->nodeValue;
-        $messageText = vsprintf($messageText, $messageParams);
-        
+        $messageText = @vsprintf($messageText, $messageParams);         
         return $messageText;
     
     }
