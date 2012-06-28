@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema 
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:das="maarch:DataAccessService" 
   elementFormDefault="qualified"  
   >
   
@@ -77,7 +78,7 @@
   
   <!-- Datetime --> 
   <xsd:simpleType name="datetime">
-    <xsd:union memberTypes="xsd:date xsd:time xsd:string"/>
+    <xsd:union memberTypes="xsd:date xsd:time xsd:string" das:baseType="xsd:string"/>
   </xsd:simpleType>
 
 </xsd:schema>
