@@ -10,6 +10,7 @@ CREATE TABLE notifications
   notification_sid bigint NOT NULL DEFAULT nextval('notifications_seq'::regclass),
   notification_id character varying(50) NOT NULL,
   description character varying(255),
+  is_enabled character varying(1) default 'Y'::bpchar,
   event_id character varying(255) NOT NULL,
   notification_mode character varying(30) NOT NULL,
   template_id bigint,
