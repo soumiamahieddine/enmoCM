@@ -6,7 +6,7 @@
   >
 
   <!-- Character varying(10) --> 
-  <xsd:simpleType name="varchar10" enclosed='true'>
+  <xsd:simpleType name="varchar10" das:enclosed='true'>
     <xsd:annotation>
       <xsd:appinfo>
         <das:sqltype driver='pgsql'>character varying(10)</das:sqltype>
@@ -18,7 +18,7 @@
   </xsd:simpleType> 
  
   <!-- Character varying(32) --> 
-  <xsd:simpleType name="varchar32" enclosed='true'>
+  <xsd:simpleType name="varchar32" das:enclosed='true'>
     <xsd:annotation>
       <xsd:appinfo>
         <das:sqltype driver='pgsql'>character varying(32)</das:sqltype>
@@ -30,7 +30,7 @@
   </xsd:simpleType> 
 
   <!-- Character varying(50) --> 
-  <xsd:simpleType name="varchar50" enclosed='true'>
+  <xsd:simpleType name="varchar50" das:enclosed='true'>
     <xsd:annotation>
       <xsd:appinfo>
         <das:sqltype driver='pgsql'>character varying(50)</das:sqltype>
@@ -42,7 +42,7 @@
   </xsd:simpleType> 
   
     <!-- Character varying(64) --> 
-  <xsd:simpleType name="varchar64" enclosed='true'>
+  <xsd:simpleType name="varchar64" das:enclosed='true'>
     <xsd:annotation>
       <xsd:appinfo>
         <das:sqltype driver='pgsql'>character varying(64)</das:sqltype>
@@ -54,7 +54,7 @@
   </xsd:simpleType>
   
   <!-- Character varying(100) --> 
-  <xsd:simpleType name="varchar100" enclosed='true'>
+  <xsd:simpleType name="varchar100" das:enclosed='true'>
     <xsd:annotation>
       <xsd:appinfo>
         <das:sqltype driver='pgsql'>character varying(100)</das:sqltype>
@@ -66,7 +66,7 @@
   </xsd:simpleType> 
 
   <!-- Character varying(128) --> 
-  <xsd:simpleType name="varchar128" enclosed='true'>
+  <xsd:simpleType name="varchar128" das:enclosed='true'>
     <xsd:annotation>
       <xsd:appinfo>
         <das:sqltype driver='pgsql'>character varying(128)</das:sqltype>
@@ -78,7 +78,7 @@
   </xsd:simpleType> 
   
   <!-- Character varying(255) --> 
-  <xsd:simpleType name="varchar255" enclosed='true'>
+  <xsd:simpleType name="varchar255" das:enclosed='true'>
     <xsd:annotation>
       <xsd:appinfo>
         <das:sqltype driver='pgsql'>character varying(255)</das:sqltype>
@@ -90,7 +90,7 @@
   </xsd:simpleType> 
   
   <!-- Boolean -->
-  <xsd:simpleType name="boolean" enclosed='true'>
+  <xsd:simpleType name="boolean" das:enclosed='true'>
     <xsd:annotation>
       <xsd:appinfo>
         <das:sqltype driver='pgsql'>character varying(1)</das:sqltype>
@@ -103,7 +103,7 @@
   </xsd:simpleType> 
   
     
-  <xsd:simpleType name="bigint" enclosed='false'>
+  <xsd:simpleType name="bigint" das:enclosed='false'>
     <xsd:annotation>
       <xsd:appinfo>
         <das:sqltype driver='pgsql'>bigint</das:sqltype>
@@ -115,7 +115,7 @@
   </xsd:simpleType> 
   
   <!-- Datetime --> 
-  <xsd:simpleType name="datetime" enclosed='true'>
+  <xsd:simpleType name="datetime" das:enclosed='true'>
     <xsd:annotation>
       <xsd:appinfo>
         <das:sqltype driver='pgsql'>timestamp</das:sqltype>
