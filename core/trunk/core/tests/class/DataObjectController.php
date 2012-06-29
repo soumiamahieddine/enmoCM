@@ -170,7 +170,7 @@ class DataObjectController extends DOMDocument
             }
         } 
         libxml_clear_errors();
-        
+        print_r($this->messages);
         if(count($this->messages) > 0) return false;
         return true;
     }
