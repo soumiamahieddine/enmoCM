@@ -20,11 +20,11 @@ class MessageController
     {
         if(!$this->documentElement) {
             $this->registerNodeClass('DOMElement', 'MessageDefinition');
-            $messageDefinitions = $this->CreateElement('messageDefinitions');
-            $this->appendChild($messageDefinitions);
+            $definitions = $this->CreateElement('messageDefinitions');
+            $this->appendChild($definitions);
             $this->xpath = new DOMXPath($this);
         } else {
-            $messageDefinitions = $this->documentElement;
+            $definitions = $this->documentElement;
         }
         
         $MessageFileXml = new DOMDocument();
@@ -35,7 +35,7 @@ class MessageController
         $Messages = $xPath->query('/messages/message');
         for($i=0; $i<$Messages->length; $i++) {
            $importedMessage = $this->importNode($Messages->item($i), true);
-           $messageDefinitions->appendChild($importedMessage);
+           $definitions->appendChild($importedMessage);
         }
     
     }
@@ -46,109 +46,98 @@ class MessageController
         return $this->xpath->query($query, $contextElement);
     }
     
-    
-    public function getMessageDefinition($messageId)
+    public function getMessageDefinition($id)
     {
-        $messageDefinitions = $this->xpath("//message[@id='".$messageId."']");
-        if($messageDefinitions->length === 0) return false;
-        $messageDefinition = $messageDefinitions->item(0);
-        return $messageDefinition;
+        $definitions = $this->xpath("//message[@id='".$id."']");
+        if($definitions->length === 0) return false;
+        $definition = $definitions->item(0);
+        return $definition;
     }
     
     public function getTexts(
-        $messageIdPrefix, 
-        $messageLang = false
+        $idPrefix, 
+        $lang = false
         )
     {
-        if(!$messageLang) $messageLang = $_SESSION['config']['lang'];
+        $texts = array();
+        $definitions = $this->xpath("//message[starts-with(@id, '".$idPrefix."')]");
         
-        $messagesTexts = array();
-        $messageDefinitions = $this->xpath("//message[starts-with(@id, '".$messageIdPrefix."')]");
-        
-        for($i=0; $i<$messageDefinitions->length; $i++) {
-            $messageDefinition = $messageDefinitions->item($i);
-            $messageId = $messageDefinition->id;
-            $messageText = $this->makeMessageText($messageDefinition, $messageLang);
-            if(!$messageText) $messageText = $messageId;
-            $messagesTexts[$messageId] = $messageText;
+        for($i=0; $i<$definitions->length; $i++) {
+            $definition = $definitions->item($i);
+            $text = $this->makeMessageText($definition, $lang);
+            if(!$text) $text = $definition->id;
+            $texts[$definition->id] = $text;
         }
-        return $messagesTexts;
+        return $texts;
     }
     
     public function getMessageText(
-        $messageId,
-        $messageLang = false,
-        $messageParams = array()
+        $id,
+        $lang = false,
+        $params = array()
         )
     {
-        if(!$messageLang) $messageLang = $_SESSION['config']['lang'];
-        
         // Get message definition
-        $messageDefinition = $this->getMessageDefinition($messageId);
+        $definition = $this->getMessageDefinition($id);
+        if(!$definition) return $id;
         
-        // Get Text
-        $messageText = $this->makeMessageText(
-            $messageDefinition,
-            $messageLang,
-            $messageParams
+        $text = $this->makeMessageText(
+            $definition,
+            $lang,
+            $params
         );
-        if(!$messageText) return $messageId;
-        
-        return $messageText;
+        return $text;
     }
     
     private function makeMessageText(
-        $messageDefinition,
-        $messageLang,
-        $messageParams = array()
+        $definition,
+        $lang,
+        $params = array()
         
         )
     {
         // Get message text in requested language
-        $messageTexts = $this->xpath("./text[@lang='".$messageLang."']", $messageDefinition);
+        if(!$lang) $lang = $_SESSION['config']['lang'];
+        $texts = $this->xpath("./text[@lang='".$lang."']", $definition);
+        
         // No text defined for language, return id
-        if($messageTexts->length === 0) {
-            return $messageDefinition->messageId;
+        if($texts->length === 0) {
+            return $definition->id;
         }
-        $messageText = $messageTexts->item(0)->nodeValue;
-        $messageText = @vsprintf($messageText, $messageParams);         
-        return $messageText;
-    
+        
+        // Get template text
+        $text = $texts->item(0)->nodeValue;
+        // Merge params (if fail return template)
+        $text = @vsprintf($text, $params);   
+        
+        return $text;
     }
     
-    public function sendMessage(
-        $messageId,
-        $messageLang = false,
-        $messageParams = array()
+    public function createMessage(
+        $id,
+        $lang = false,
+        $params = array()
         )
     {
-        if(!$messageLang) $messageLang = $_SESSION['config']['lang'];
-        
         // Get message definition
-        $messageDefinition = $this->getMessageDefinition($messageId);
+        $definition = $this->getMessageDefinition($id);
         
         // Make Text
-        $messageText = $this->makeMessageText(
-            $messageDefinition,
-            $messageLang,
-            $messageParams           
+        $text = $this->makeMessageText(
+            $definition,
+            $lang,
+            $params           
         );
 
-        // Get backtrace
-        $backtrace = debug_backtrace();
-        $messageBacktrace = $backtrace[1];
-        
+
         // Create message object
         $message = new Message(
-            $messageDefinition->level, 
-            $messageDefinition->id, 
-            $messageText,
-            $messageLang,
-            $messageBacktrace
-            );
+            $id, 
+            $text,
+            $definition->level
+        );
         
-        $_SESSION['messages'][] = $message;
-        return $message;
+        return $message;        
     }
     
 }
@@ -164,39 +153,5 @@ class MessageDefinition
         }
     }
     
-
-}
-
-class Message
-{
-    const INFO      = 0;
-    const WARNING   = 1;
-    const ERROR     = 2;
-    const FATAL     = 3;
-   
-    public $timestamp;
-    public $level;
-    public $id;
-    public $text;
-    public $lang;
-    public $file; 
-    public $line; 
-    public $class;
-    public $func; 
-    
-    
-            
-    function Message($level, $id, $text, $lang, $backtrace)
-    {
-        $this->timestamp = date('Y-m-d H-i-s.u');
-        $this->level = $level;
-        $this->id = $id;
-        $this->text = trim($text);
-        $this->lang = $lang;
-        $this->file = $backtrace['file'];
-        $this->line = $backtrace['line'];
-        $this->class = $backtrace['class'];
-        $this->func = $backtrace['function'];
-    }
 
 }

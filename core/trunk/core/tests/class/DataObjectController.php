@@ -1,6 +1,6 @@
 <?php
 
-class dataObjectController extends DOMDocument
+class DataObjectController extends DOMDocument
 {
     const NONE      = 0;
     const CREATE    = 1;
@@ -31,6 +31,8 @@ class dataObjectController extends DOMDocument
         
         // Validator classes
         require_once 'core/tests/class/MessageController.php';
+        require_once 'core/tests/class/Message.php';
+        require_once 'core/tests/class/Exception.php';
         $this->messageController = new MessageController();
         $this->messageController->logLevel = Message::INFO;
         $this->messageController->debug = true;
@@ -47,26 +49,37 @@ class dataObjectController extends DOMDocument
         $this->schema = new DataObjectSchema();
         $this->schema->loadSchema($xsdFile);
         
+        // Data types
+        $dasTypes = $this->schema->getDatatypes();
+        
+        // Data sources
         $dasSources = $this->schema->getSources();
         for($i=0; $i<count($dasSources); $i++) {
             $dasSource = $dasSources[$i];
             switch($dasSource->type) {
             case 'database':
-                $dsn = sprintf(
-                    '%s:host=%s;dbname=%s;port=%s', 
-                    $dasSource->driver, 
-                    $dasSource->host, 
-                    $dasSource->dbname, 
-                    $dasSource->port
-                );
-                $options = $this->schema->getSourceOptions($dasSource);
+                $options = $this->schema->getSourceOptions($dasSource, $dasSource->driver);
                 $this->dataAccessServices[$dasSource->name] = 
                     new dataAccessService_Database(
-                        $dsn, 
+                        $dasSource->driver, 
+                        $dasSource->host,  
+                        $dasSource->port, 
+                        $dasSource->dbname,
                         $dasSource->user, 
                         $dasSource->password, 
                         $options
                     );
+                
+                for($i=0; $i<count($dasTypes); $i++) {
+                    $dasType = $dasTypes[$i];
+                    $dasTypeSqltype = $this->schema->getDatatypeSqltype($dasType, $dasSource->driver);
+                    if($dasTypeSqltype) {
+                        $this->dataAccessServices[$dasSource->name]->addDatatype(
+                            $dasType->name,
+                            $dasTypeSqltype->nodeValue,
+                            $dasType->{'das:enclosed'});
+                    }
+                }
             }
         }
         
@@ -98,6 +111,7 @@ class dataObjectController extends DOMDocument
         $dataObject = $this->instanciateDataObject($objectSchema);
         $dataObject->beginLogging();
         $dataObject->logCreation();
+        
         return $dataObject;      
     }
     
@@ -123,6 +137,16 @@ class dataObjectController extends DOMDocument
     
     public function validate($dataObject) 
     {
+        $this->messages = array();
+        // Validate with specific business script
+        //*********************************************************************
+        $objectSchema = $this->schema->getSchemaElement($dataObject->schemaPath);
+        if($objectSchema->{'das:validation'}) {
+            include_once $objectSchema->{'das:validation'};
+        }
+        
+        // Validate against schema
+        //*********************************************************************
         $XmlDocument = $dataObject->asXmlDocument();
         $XsdString = $this->schema->saveXML();
         libxml_use_internal_errors(true);
@@ -132,19 +156,18 @@ class dataObjectController extends DOMDocument
 
             $libXMLErrors = libxml_get_errors();
             foreach ($libXMLErrors as $libXMLError) {
-                $messageId = 'libxml' . $libXMLError->code;
-                $messageParams = array($libXMLError->message);
-                $messageLang = $_SESSION['config']['lang'];
-                $message = $this->messageController->sendMessage(
-                    $messageId,
-                    $messageLang,
-                    $messageParams
+                $message = $this->messageController->createMessage(
+                    'libxml::' . $libXMLError->code,
+                    $_SESSION['config']['lang'],
+                    array($libXMLError->message)
                 );
                 $this->messages[] = $message;
             }
-            return false;
         } 
         libxml_clear_errors();
+        
+        if(count($this->messages) > 0) return false;
+        return true;
     }
     
     public function getMessages()
@@ -160,7 +183,11 @@ class dataObjectController extends DOMDocument
         $objectSchema = $this->schema->getSchemaElement($schemaPath);
         $dataSourceName = $objectSchema->{'das:source'};
         $dataSource = $this->dataAccessServices[$dataSourceName];
-        $dataSource->saveData($dataObject);
+        try {
+            $dataSource->saveData($dataObject);
+        } catch (maarch\Exception $e) {
+            throw $e;
+        }
     }
     
     public function delete($dataObject)
@@ -201,12 +228,6 @@ class dataObjectController extends DOMDocument
     public function unserialize($serializedDataObject)
     {
         $dataObject = unserialize($serializedDataObject);
-        /*
-        $schemaPath = $dataObject->schemaPath;
-        $objectSchema = $this->schema->getSchemaElement($schemaPath);
-        $dasSource = $this->getDas($objectSchema);
-        $dataObject->dataAccessService = $dasSource;
-        */
         return $dataObject;
     }
     
@@ -406,15 +427,25 @@ class dataObjectController extends DOMDocument
     */
     private function loadDataObject($dataObject) 
     {      
-        $objectDatas = $this->getData($dataObject);
+        try {
+            $objectDatas = $this->getData($dataObject);
+        } catch (maarch\Exception $e) {
+            throw $e;
+        }
+        
         $objectData = $objectDatas[0];
         $this->loadProperties($dataObject, $objectData);
         $this->loadChildren($dataObject);
+        
     }
     
     private function loadDataObjectArray($arrayDataObject)
     {
-        $objectDatas = $this->getData($arrayDataObject);
+        try {
+            $objectDatas = $this->getData($arrayDataObject);
+        } catch (maarch\Exception $e) {
+            throw $e;
+        }
         $schemaPath = $arrayDataObject->schemaPath;
         $objectSchema = $this->schema->getSchemaElement($schemaPath);
         for($i=0; $i<count($objectDatas); $i++) {

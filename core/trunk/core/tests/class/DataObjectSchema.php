@@ -72,14 +72,31 @@ class DataObjectSchema
         }
         return $DS;
     }
-    
-    public function getSourceOptions($datasource)
+   
+    public function getSourceOptions($datasource, $driver)
     {
-        $optionNodes = $this->xpath('./das:option', $datasource);
+        $optionNodes = $this->xpath("./das:option[@driver='".$driver."']", $datasource);
         for($i=0; $i<$optionNodes->length; $i++) {
             $options[] = $optionNodes->item($i);
         }
         return $options;
+    }
+    
+    public function getDatatypes()
+    {
+        $DTnodes = $this->xpath('//xsd:simpleType');
+        for($i=0; $i<$DTnodes->length; $i++) {
+            $DT[] = $DTnodes->item($i);
+        }
+        return $DT;
+    }
+    
+    public function getDatatypeSqltype($datatype, $driver) 
+    {
+        $sqltypesNodes = $this->xpath("./xsd:annotation/xsd:appinfo/das:sqltype[@driver='".$driver."']", $datatype);
+        if($sqltypesNodes->length > 0) {
+            return $sqltypesNodes->item(0);
+        }
     }
     
     public function getObjectSchemas() 
