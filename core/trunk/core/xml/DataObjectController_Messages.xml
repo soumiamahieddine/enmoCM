@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <messages>
-  <message id='libxml1824' level='2'>
+  <message id='libxml::1824' level='2'>
     <text lang='fr'>Erreur de validation : %1$s</text>
   </message>
-  <message id='libxml1840' level='2'>
+  <message id='libxml::1840' level='2'>
     <text lang='fr'>Erreur de validation : %1$s</text>
   </message>
   <message id='DataObjectController::read' level='0'>
@@ -12,7 +12,13 @@
   <message id='DataObjectController::create' level='0'>
     <text lang='fr'>Object %1$s créé</text>
   </message>
-  <message id='DataObjectController::validate' level='2'>
+  <message id='DataObjectController::validate_error' level='2'>
     <text lang='fr'>Objet %1$s non valide : la valeur %3$s n'est pas autorisée pour %2$s</text>
+  </message>
+  <message id='DataObjectController::save_error' level='0'>
+    <text lang='fr'>Objet %1$s sauvegardé</text>
+  </message>
+  <message id='DataObjectController::save_error' level='2'>
+    <text lang='fr'>Objet %1$s non sauvegardé</text>
   </message>
 </messages>
