@@ -155,10 +155,7 @@ class DataObjectController extends DOMDocument
         $XmlDocument = $dataObject->asXmlDocument();
         $XsdString = $this->schema->saveXML();
         libxml_use_internal_errors(true);
-        if($XmlDocument->schemaValidateSource($XsdString)) {
-            return true;
-        } else {
-
+        if(!$XmlDocument->schemaValidateSource($XsdString)) {
             $libXMLErrors = libxml_get_errors();
             foreach ($libXMLErrors as $libXMLError) {
                 $message = $messageController->createMessage(
@@ -170,7 +167,6 @@ class DataObjectController extends DOMDocument
             }
         } 
         libxml_clear_errors();
-        print_r($this->messages);
         if(count($this->messages) > 0) return false;
         return true;
     }
