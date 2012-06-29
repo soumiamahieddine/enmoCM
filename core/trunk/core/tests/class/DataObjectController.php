@@ -137,6 +137,11 @@ class DataObjectController extends DOMDocument
     
     public function validate($dataObject) 
     {
+        $messageController = new MessageController();
+        $messageController->loadMessageFile(
+            $_SESSION['config']['corepath'] 
+                . '/core/xml/DataObjectController_Messages.xml'
+        );
         $this->messages = array();
         // Validate with specific business script
         //*********************************************************************
@@ -156,7 +161,7 @@ class DataObjectController extends DOMDocument
 
             $libXMLErrors = libxml_get_errors();
             foreach ($libXMLErrors as $libXMLError) {
-                $message = $this->messageController->createMessage(
+                $message = $messageController->createMessage(
                     'libxml::' . $libXMLError->code,
                     $_SESSION['config']['lang'],
                     array($libXMLError->message)
