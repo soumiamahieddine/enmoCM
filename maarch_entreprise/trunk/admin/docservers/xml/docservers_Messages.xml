@@ -73,4 +73,16 @@
     <text lang='fr'>Taux de remplissage</text>
   </message>
   
+  <message id='docservers.error.path_template.unapproachable' level='3'>
+    <text lang='fr'>'path_template' Chemin inexistant</text>
+  </message>
+  <message id='docservers.error.path_template.no_rights' level='3'>
+    <text lang='fr'>'path_template' Droits insuffisants sur le répertoire</text>
+  </message>
+  <message id='docservers.error.adr_priority_number.duplicate' level='3'>
+    <text lang='fr'>'adr_priority_number' La priorité d'adressage %1$s existe déjà pour ce type de zone de stockage</text>
+  </message>
+  <message id='docservers.error.priority_number.duplicate' level='3'>
+    <text lang='fr'>'priority_number' La priorité %1$d existe déjà pour ce type de zone de stockage</text>
+  </message>
 </messages>

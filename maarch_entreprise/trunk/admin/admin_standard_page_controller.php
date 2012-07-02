@@ -363,7 +363,6 @@ if (isset($_REQUEST['submit'])) {
     
     //fill the object with the request
     updateObject($_REQUEST, $dataObject);
-    //var_dump($_SESSION['m_admin'][$params['objectName']]);
     //validate the object
     $validateObject = $DataObjectController->validate($dataObject);
     
@@ -463,7 +462,7 @@ if (isset($_REQUEST['submit'])) {
             $str_filter     = '';
             $str_pagination = '';
             $str_htmlList   = '';
-            $str_goToTop    = '';;
+            $str_goToTop    = '';
             
             //REQUEST_URI
             $requestUri = $_SERVER['REQUEST_URI'];
@@ -607,8 +606,6 @@ if (isset($_REQUEST['submit'])) {
                 }
                 sort($nbLineSelect);
             
-            //echo '<pre>'.print_r($nbLineSelect, true).'</pre>'; exit;
-            
                 $str_pagination .= '<table ';
                  $str_pagination .= 'width="100%" ';
                 $str_pagination .= '>';
@@ -747,9 +744,6 @@ if (isset($_REQUEST['submit'])) {
                 $columnsLabels = $messageController->getTexts(
                     $params['objectName'] . '.'
                 );
-                
-                //echo '<pre>'.print_r($columnsLabels, true).'</pre>';exit;
-                
                 
                 $noOrderUri = getDependantUri(
                     'orderField', 
@@ -998,7 +992,7 @@ if (isset($_REQUEST['submit'])) {
                                   $str_htmlList .= 'background-image: url(static.php?filename=showFrameAdminList.png); ';
                                   $str_htmlList .= 'background-repeat: no-repeat; ';
                                   $str_htmlList .= 'background-position: center; ';
-                                  $str_htmlList .= 'width: 20px; ';
+                                  $str_htmlList .= 'width: 35px; ';
                                   $str_htmlList .= 'cursor: help; ';
                                  $str_htmlList .= '" ';
                                 $str_htmlList .= '>';
@@ -1116,12 +1110,14 @@ if (isset($_REQUEST['submit'])) {
                  $str_goToTop .= 'id="goToTop" ';
                  $str_goToTop .= 'style="';
                   $str_goToTop .= 'display: none; ';
-                  $str_goToTop .= 'width: 50px; ';
-                  $str_goToTop .= 'height: 50px; ';
+                  $str_goToTop .= 'width: 48px; ';
+                  $str_goToTop .= 'height: 48px; ';
                   $str_goToTop .= 'border-radius: 12px; ';
                   $str_goToTop .= 'border: 3px solid; ';
                   $str_goToTop .= 'border-color: #459ed1; ';
                   $str_goToTop .= 'background-image: url(static.php?filename=goToTop.png); ';
+                  $str_goToTop .= 'background-repeat: no-repeat; ';
+                  $str_goToTop .= 'background-position: center; ';
                   $str_goToTop .= 'position: fixed; ';
                   $str_goToTop .= 'cursor: pointer; ';
                  $str_goToTop .= '" ';

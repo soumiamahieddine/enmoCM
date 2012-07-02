@@ -64,6 +64,7 @@
             'size_limit_number_inForm' => array(
                 'show'          => true,
                 'input'         => 'text',
+                'jsEvent'       => 'onKeyUp="update_conversion();" ',
                 
             ),
             'actual_size_number' => array(
@@ -74,6 +75,7 @@
             'actual_size_number_inForm' => array(
                 'show'                 => true,
                 'input'                => 'text',
+                'readonly'             => true,
                 
             ),
             'pourcentage_size' => array(
@@ -134,6 +136,10 @@
                 'show' => false,
                 'jsEvent' => 'saveWithXSD',
                 
+            ),'add'     => array(
+                'show' => false,
+                'jsEvent' => 'saveWithXSD',
+                
             ),
             'cancel'   => array(
                 'show' => false,
@@ -182,7 +188,7 @@
             $str_returnShow = $listContent;
             
         } elseif ($modeCreate) {
-            $formButtons['save']['show'] = true;
+            $formButtons['add']['show'] = true;
             $formButtons['cancel']['show'] = true;            
             $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri, $columnsLabels);
             
@@ -240,9 +246,9 @@
                                   $str_return .= 'name="'.$key.'" ';
                                   $str_return .= 'type="text" ';
                                   $str_return .= 'size="35" ';
+                                  $str_return .= $jsEvent;
                                   $str_return .= 'value="'.$objectFieldValue.'" ';
                                   $str_return .= $readonlyInput;
-                                  $str_return .= $jsEvent;
                                 $str_return .= '/>';
                             } elseif ($formFields[$key]['input'] == 'hidden') {
                                 $str_return .= '<input ';
@@ -280,8 +286,8 @@
                                       $str_return .= 'value="'.$valueRadio.'" ';
                                       $str_return .= 'name="'.$key.'" ';
                                       $str_return .= 'id="'.$key.'" ';
-                                      $str_return .= $selected;
                                       $str_return .= $jsEvent;
+                                      $str_return .= $selected;
                                       $str_return .= '>';
                                     $str_return .= $keyRadio;
                                     $str_return .= '  ';
@@ -312,11 +318,6 @@
                                     foreach($formFields as $keyField => $valueField) {
                                         if ($formFields[$keyField]['show']) {
                                             if ($formFields[$keyField]['input'] == 'radio') {
-                                                /*$json .= '\''.$keyField.'\' : function() {document.getElementsByName(\''.$keyField.'\')';
-                                                $json .= 'for (var i=0; i < nodeList.length, i++) {';
-                                                    $json .= 'if (nodeList[i].checked) { return nodeList[i].value} ';
-                                                $json .= '}';*/
-                                                
                                                 $json .= '\''.$keyField.'\' : getCheckedValue(document.getElementsByName(\''.$keyField.'\')), ';
                                             } else {
                                                 $json .= '\''.$keyField.'\' : $(\''.$keyField.'\').value, ';
@@ -324,6 +325,7 @@
                                         }
                                     }
                                     
+                                    $json .= "'modeAjax':'".$_REQUEST['mode']."', ";
                                     $json .= "'schemaPathAjax':'".$schemaPath."', ";
                                     $json .= "'viewLocationAjax':'".$params['viewLocation']."', ";
                                     $json .= "'noModeUriAjax':'".$noModeUri."', ";
@@ -377,7 +379,7 @@
             size_limit_number_inForm = (size_limit_numberinOctet / (1000 * 1000 * 1000 * 1000));
         }
         
-        $('size_limit_number_inForm').setValue(size_limit_number_inForm + ' ' + targetUnit);
+        $('size_limit_number_inForm').setValue(size_limit_number_inForm);
         
         
         var actual_size_number_inForm = false;
@@ -390,8 +392,27 @@
             actual_size_number_inForm = (actual_size_numberinOctet / (1000 * 1000 * 1000 * 1000));
         }
         
-        $('actual_size_number_inForm').setValue(actual_size_number_inForm + ' ' + targetUnit);
+        $('actual_size_number_inForm').setValue(actual_size_number_inForm);
         
+    }
+    
+    function update_conversion()
+    {
+        var actualUnit = $('size_format').value;
+        var size_limit_numberinOctet = false;
+        var size_limit_number_inForm = $('size_limit_number_inForm').value;
+        
+        if (actualUnit == 'Mo') {
+            size_limit_numberinOctet = (size_limit_number_inForm * (1000 * 1000));
+        } else if (actualUnit == 'Go') {
+            size_limit_numberinOctet = (size_limit_number_inForm * (1000 * 1000 * 1000));
+        } else if (actualUnit == 'To') {
+            size_limit_numberinOctet = (size_limit_number_inForm * (1000 * 1000 * 1000 * 1000));
+        }
+        
+        $('size_limit_number').setValue(size_limit_numberinOctet);
+        
+        showPercent();
     }
     
     function showPercent() {
@@ -399,9 +420,14 @@
         var actual_size = $('actual_size_number').value;
         
         var percent = false;
-        percent = Math.round((actual_size / size_limit) * 100);
+        var ratio = false;
+        
+        ratio = actual_size / size_limit;
+        
+        percent = ratio * 100;
         
         $('pourcentage_size').setValue(percent + ' %');
+        $('pourcentage_size').style.backgroundColor = 'rgba(200, 35, 45, ' + ratio + ')';
     }
     
     function getCheckedValue(radioObj) {
@@ -432,7 +458,6 @@
                 if ($(i)) {
                     $(i).style.backgroundColor = 'white';
                     $(i).style.color = 'black';
-                    $(i).style.fontWeight = 'normal';
                 }
             }
             
@@ -453,7 +478,10 @@
                         for(var i=0; i < response.failFields.length; i++) {
                             $(response.failFields[i]).style.backgroundColor = '#f6bf36';
                             $(response.failFields[i]).style.color = '#459ed1';
-                            //$(response.failFields[i]).style.fontWeight = '900';
+                        }
+                        if (response.alert.length > 0) {
+
+                            alert(response.alert);
                         }
                     }
                 }
@@ -462,7 +490,9 @@
         }
         return;
     }
+    
 <?php if ($modeList) { ?>
+
     function show_goToTop() {
         var scrollHeight = f_filterResults (
             window.pageYOffset ? window.pageYOffset : 0,
@@ -503,7 +533,9 @@
     Event.observe(window, 'scroll', function() {
         show_goToTop();
     });
+    
 <?php } ?>
+
 </script>
 <h1>
     <img src="<?php echo $titleImageSource; ?>" />

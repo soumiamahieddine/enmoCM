@@ -13,7 +13,10 @@ require_once 'core/core_tables.php';
 */
 function adrPriorityNumberControl($docserverId, $docserverTypeId, $adrPriorityNumber)
 {
-    $adrPriorityNumber = (int) $adrPriorityNumber;
+    echo '"'.$adrPriorityNumber . "' \n";
+    $adrPriorityNumber = (int)$adrPriorityNumber;
+    echo '"'.$adrPriorityNumber . "' \n";
+    
     $func = new functions();
     if (!isset($docserverId)
         || empty($docserverId)
@@ -30,6 +33,8 @@ function adrPriorityNumberControl($docserverId, $docserverTypeId, $adrPriorityNu
            . $func->protect_string_db($docserverTypeId) . "'"
            . " AND docserver_id <> '"
            . $func->protect_string_db($docserverId) . "'";
+    echo $query;
+    exit;
     $db->query($query);
     if ($db->nb_result() > 0) {
         $db->disconnect();
@@ -73,33 +78,49 @@ function priorityNumberControl($docserverId, $docserverTypeId, $priorityNumber)
     return true;
 }
 
-if (!is_dir($_REQUEST['path_template'])) {
-    $errors[] = "'path_template' " . _PATH_OF_DOCSERVER_UNAPPROACHABLE;
+//////////////
+$messageController->loadMessageFile(
+    'apps/maarch_entreprise/admin/docservers/xml/docservers_Messages.xml'
+);
+
+if (!is_dir($dataObject->path_template)) {
+    $this->messages[] = $messageController->createMessage(
+        'docservers.error.path_template.unapproachable'
+    );
 } else {
-    if (!is_writable($_REQUEST['path_template'])
-        || !is_readable($_REQUEST['path_template'])
+    if (!is_writable($dataObject->path_template)
+        || !is_readable($dataObject->path_template)
     ) {
-        $errors[] = "'path_template' " 
-            . _THE_DOCSERVER_DOES_NOT_HAVE_THE_ADEQUATE_RIGHTS;
+        $this->messages[] = $messageController->createMessage(
+            'docservers.error.path_template.no_rights'
+        );
     }
 }
 
 if (!adrPriorityNumberControl(
-    $_REQUEST['docserver_id'], 
-    $_REQUEST['docserver_type_id'], 
-    $_REQUEST['adr_priority_number'])
+    $dataObject->docserver_id, 
+    $dataObject->docserver_type_id, 
+    $dataObject->adr_priority_number)
 ) {
-    $errors[] = "'adr_priority_number' " 
-            . _ADR_PRIORITY . ' ' . $_REQUEST['adr_priority_number'] . ' '
-            . _ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER;
+    $this->messages[] = $messageController->createMessage(
+        'docservers.error.adr_priority_number.duplicate',
+        false,
+        array(
+            $dataObject->adr_priority_number
+        )
+    );
 }
 
 if (!priorityNumberControl(
-    $_REQUEST['docserver_id'], 
-    $_REQUEST['docserver_type_id'], 
-    $_REQUEST['priority_number'])
+    $dataObject->docserver_id, 
+    $dataObject->docserver_type_id, 
+    $dataObject->priority_number)
 ) {
-    $errors[] = "'priority_number' " 
-            . _PRIORITY . ' ' . $_REQUEST['priority_number'] . ' '
-            . _ALREADY_EXISTS_FOR_THIS_TYPE_OF_DOCSERVER;
+    $this->messages[] = $messageController->createMessage(
+        'docservers.error.priority_number.duplicate',
+        false,
+        array(
+            $dataObject->priority_number
+        )
+    );
 }

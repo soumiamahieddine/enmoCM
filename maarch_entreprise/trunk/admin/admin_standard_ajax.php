@@ -18,32 +18,34 @@ require_once('core/tests/class/DataObjectController.php');
 $DataObjectController = new DataObjectController();
 $DataObjectController->loadSchema($_REQUEST['schemaPathAjax']);
 
-//specific test
-$specificAjaxPage = $_REQUEST['viewLocationAjax'] . '/' . $_REQUEST['objectNameAjax'] . '_ajax.php';
-if (file_exists($specificAjaxPage)) {
-    require_once($specificAjaxPage);
+if ($_REQUEST['modeAjax'] == 'update') {
+    $dataObject = $DataObjectController->unserialize(
+        $_SESSION['m_admin'][$_REQUEST['objectNameAjax']]
+    );
+} elseif ($_REQUEST['modeAjax'] == 'create') {
+    $dataObject = $DataObjectController->create(
+        $_REQUEST['objectNameAjax']
+    );
 }
-
-$dataObject = $DataObjectController->unserialize(
-    $_SESSION['m_admin'][$_REQUEST['objectNameAjax']]
-);
-
-updateObject($_REQUEST, $dataObject);
+updateObject($_REQUEST, $dataObject);    
 
 $validateObject = $DataObjectController->validate(
     $dataObject
 );
 
 if ($validateObject) {
-    if (count($errors) == 0) {
-        $DataObjectController->save($dataObject);
+    try {
+        $DataObjectController->save(
+            $dataObject
+        );
         $return['status'] = 1;
-    } else {
+    } catch(maarch\Exception $e) {
         $return['status'] = 0;
+        $return['alert']  = $e->getMessage();
     }
 } else {
     foreach($DataObjectController->getMessages() as $error) {
-        $errors[] = $error->text;
+        $errors[] = $error->message;
     }
 }
 
