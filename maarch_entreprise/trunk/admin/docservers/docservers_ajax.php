@@ -13,14 +13,9 @@ require_once 'core/core_tables.php';
 */
 function adrPriorityNumberControl($docserverId, $docserverTypeId, $adrPriorityNumber)
 {
-    echo '"'.$adrPriorityNumber . "' \n";
-    $adrPriorityNumber = (int)$adrPriorityNumber;
-    echo '"'.$adrPriorityNumber . "' \n";
-    
     $func = new functions();
     if (!isset($docserverId)
         || empty($docserverId)
-        || !is_int($adrPriorityNumber)
     ) {
         return false;
     }
@@ -33,8 +28,6 @@ function adrPriorityNumberControl($docserverId, $docserverTypeId, $adrPriorityNu
            . $func->protect_string_db($docserverTypeId) . "'"
            . " AND docserver_id <> '"
            . $func->protect_string_db($docserverId) . "'";
-    echo $query;
-    exit;
     $db->query($query);
     if ($db->nb_result() > 0) {
         $db->disconnect();
