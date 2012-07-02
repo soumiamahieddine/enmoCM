@@ -129,7 +129,6 @@ class MessageController
             $params           
         );
 
-
         // Create message object
         $message = new Message(
             $id, 

@@ -389,12 +389,21 @@ class DataAccessService_Database
     
     private function throwQueryException($query)
     {
+        require_once 'core/tests/class/MessageController.php';
+        require_once 'core/tests/class/Message.php';
+        require_once 'core/tests/class/Exception.php';
         $messageController = new MessageController();
         $messageController->loadMessageFile('core/xml/DataAccessService_Messages.xml');
+        $sqlError = $this->pdo->errorInfo();
         $message = $messageController->createMessage(
             __CLASS__ . '::queryError',
             false,
-            array($query)
+            array(
+                $sqlError[0],
+                $sqlError[1],
+                $sqlError[2],
+                $query
+            )
         );
         throw new maarch\Exception($message);
     }
