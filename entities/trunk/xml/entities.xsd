@@ -26,8 +26,8 @@ Parent key fields (xpath) and child key fields must be in same order
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:das="maarch:DataAccessService"  
   elementFormDefault="qualified">
-  
-  <xsd:include schemaLocation='modules/entities/xml/entities.xsd' />
+
+  <xsd:include schemaLocation='core/xml/datatypes.xsd' />
   <xsd:include schemaLocation='apps/maarch_entreprise/xml/datasources.xsd' />
 
   <!-- ROOT : ENTITIES -->
@@ -38,11 +38,6 @@ Parent key fields (xpath) and child key fields must be in same order
         <!--<xsd:element name='entity_types' type='typentity' das:xml='/modules/entities/xml/typentity.xml' das:xpath="/root/TYPE" minOccurs="0" maxOccurs='unbounded'/>-->
       </xsd:sequence>
     </xsd:complexType>
-    <!-- PRIMARY KEY : ENTITIES-->
-    <xsd:key name='entities_pk'>
-      <xsd:selector xpath='./entities' />
-      <xsd:field xpath='entity_id'/>
-    </xsd:key>
   </xsd:element>
   
   
