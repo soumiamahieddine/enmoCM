@@ -187,6 +187,8 @@ public class MaarchCM extends JApplet {
         boolean isMac = os.indexOf("mac") >= 0;
         //this.userLocalDirTmp = System.getProperty("user.home");
         this.userLocalDirTmp = "c:\\maarch";
+        fileManager fM = new fileManager();
+        fM.createUserLocalDirTmp(this.userLocalDirTmp);
         if (isWindows) {
             System.out.println("This is Windows");
             this.userLocalDirTmp = this.userLocalDirTmp + "\\maarchTmp\\";
@@ -207,7 +209,7 @@ public class MaarchCM extends JApplet {
         }
         System.out.println("APP PATH: " + this.appPath);
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
-        fileManager fM = new fileManager();
+        
         fM.createUserLocalDirTmp(this.userLocalDirTmp);
         System.out.println("----------END LOCAL DIR TMP IF NOT EXISTS----------");
         
