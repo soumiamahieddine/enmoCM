@@ -54,7 +54,9 @@ $noDelete = false;
 $redirect_groupbasket = false;
 
 if (isset($_SESSION['current_basket']) && count($_SESSION['current_basket']) > 0) {
-    $redirect_groupbasket = current($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']]);
+    if(is_array($_SESSION['user']['redirect_groupbasket']) && count($_SESSION['user']['redirect_groupbasket']) > 0) {
+        $redirect_groupbasket = $_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']];
+    }
     if(empty($redirect_groupbasket['entities'])) {
         $redirect_groupbasket['entities'] = $db->empty_list();
     }
