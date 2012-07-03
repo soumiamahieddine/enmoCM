@@ -185,7 +185,8 @@ public class MaarchCM extends JApplet {
         boolean isUnix = os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0;
         boolean isWindows = os.indexOf("win") >= 0;
         boolean isMac = os.indexOf("mac") >= 0;
-        this.userLocalDirTmp = System.getProperty("user.home");
+        //this.userLocalDirTmp = System.getProperty("user.home");
+        this.userLocalDirTmp = "c:\\maarch";
         if (isWindows) {
             System.out.println("This is Windows");
             this.userLocalDirTmp = this.userLocalDirTmp + "\\maarchTmp\\";
