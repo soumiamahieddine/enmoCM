@@ -182,7 +182,7 @@ class diffusion_list extends dbquery
         //print_r($diffList);exit;
         $this->connect();
         
-        require_once '/core/class/class_history.php';
+        require_once 'core/class/class_history.php';
         $hist = new history();
         
         //print_r($_SESSION['m_admin']['entity']['listmodel']);
