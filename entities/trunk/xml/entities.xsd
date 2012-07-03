@@ -28,13 +28,13 @@ Parent key fields (xpath) and child key fields must be in same order
   elementFormDefault="qualified">
   
   <xsd:include schemaLocation='modules/entities/xml/entities.xsd' />
-  
-  <!-- ROOT : DOCSERVERS -->
-  <xsd:element name='entities_list' das:label="_ENTITIES_LIST">
+  <xsd:include schemaLocation='apps/maarch_entreprise/xml/datasources.xsd' />
+
+  <!-- ROOT : ENTITIES -->
+  <xsd:element name='entities_list'>
     <xsd:complexType>
       <xsd:sequence>
-        <!-- ROWS -->
-        <xsd:element ref='entities' das:label="_ENTITIES" minOccurs="0" maxOccurs='unbounded'/>
+        <xsd:element ref='entities' minOccurs="0" maxOccurs='unbounded' />
         <!--<xsd:element name='entity_types' type='typentity' das:xml='/modules/entities/xml/typentity.xml' das:xpath="/root/TYPE" minOccurs="0" maxOccurs='unbounded'/>-->
       </xsd:sequence>
     </xsd:complexType>
@@ -45,26 +45,69 @@ Parent key fields (xpath) and child key fields must be in same order
     </xsd:key>
   </xsd:element>
   
-  <!-- ROW : ENTITY -->
-  <xsd:element name='entities' type='entity' das:label="entités" das:source='database' das:key-columns="entity_id" das:filter-columns="entity_id entity_label short_label"/>
   
-  <!-- TYPE : ENTITY -->
-  <xsd:complexType name='ENTITY'>
+  <!-- ROW : ENTITY -->
+  <xsd:element name='entities' type='entities' 
+    das:source='maarch_entreprise' 
+    das:key-columns='entity_id' 
+    das:filter-columns='entity_id entity_label adrs_1' 
+    das:validation='apps/maarch_entreprise/XSD/entities_validation.php'
+  />
+  
+  <xsd:complexType name='entities' >
     <xsd:sequence>
-      <xsd:element name="entity_id" das:label="_ENTITY_ID" type="varchar32" nillable="false" />
-      <xsd:element name="entity_label" das:label="_ENTITY_LABEL" type="varchar255" />
-      <xsd:element name="short_label" das:label="_ENTITY_SHORT_LABEL" type="varchar50" />
-      <xsd:element name="enabled" das:label="_ENABLED" type="boolean" nillable="false" default="Y" />
-      <xsd:element name="adrs_1" das:label="_ENTITY_ADRS_1" type="varchar255" />
-      <xsd:element name="adrs_2" das:label="_ENTITY_ADRS_2" type="varchar255" />
-      <xsd:element name="adrs_3" das:label="_ENTITY_ADRS_3" type="varchar255" />
-      <xsd:element name="zipcode" das:label="_ENTITY_ZIP_CODE" type="varchar32" />
-      <xsd:element name="city" das:label="_ENTITY_CITY" type="varchar255" />
-      <xsd:element name="country" das:label="_ENTITY_COUNTRY" type="varchar255" />
-      <xsd:element name="email" das:label="_ENTITY_EMAIL" type="varchar255" />
-      <xsd:element name="business_id" das:label="_ENTITY_BUSINESS_ID" type="varchar32" />
-      <xsd:element name="parent_entity_id" das:label="ENTITY_PARENT_ENTITY_ID" type="varchar32" />
-      <xsd:element name="entity_type" das:label="_ENTITY_TYPE" type="varchar64" />
+      <xsd:element name="entity_id" type="varchar32" nillable="false" />
+      <xsd:element name="entity_label" type="varchar255" />
+      <xsd:element name="short_label" type="varchar50" />
+      <xsd:element name="enabled" type="boolean" nillable="false" default="Y" />
+      <xsd:element name="adrs_1" type="varchar255" />
+      <xsd:element name="adrs_2" type="varchar255" />
+      <xsd:element name="adrs_3" type="varchar255" />
+      <xsd:element name="zipcode" type="varchar32" />
+      <xsd:element name="city" type="varchar255" />
+      <xsd:element name="country" type="varchar255" />
+      <xsd:element name="email" type="varchar255" />
+      <xsd:element name="business_id" type="varchar32" />
+      <xsd:element name="parent_entity_id"  type="varchar32" />
+      <xsd:element name="entity_type" type="varchar64" />
     </xsd:sequence>
   </xsd:complexType>
+  
+  <xsd:annotation>
+    <xsd:appinfo>
+      <das:relation name='entities_users_entities' parent='entities' child='users_entities' parent-keys='entity_id' child-keys='entity_id' />
+    </xsd:appinfo>
+  </xsd:annotation>
+  
+  <!-- USERS_ENTITIES -->
+  <xsd:element name='users_entities' 
+    type='users_entities' 
+    das:source='maarch_entreprise' 
+    das:key-columns='entity_id user_id' 
+    das:relation='entities_users_entities'>
+  </xsd:element>
+
+  <xsd:complexType name='users_entities'>
+    <xsd:sequence>
+      <xsd:element name="entity_id" type="varchar32" />
+      <xsd:element name="user_id" type="varchar128" />
+      <xsd:element name="user_role" type="varchar255" />
+      <xsd:element name="primary_entity" type="boolean" />
+      <!--xsd:element name="user" das:table='users'>
+        <xsd:annotation>
+          <xsd:appinfo>
+            <das:relation parent-key='user_id' child-key='user_id' />
+          </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="user_id" type="varchar128" />
+            <xsd:element name="firstname" type="varchar255" />
+            <xsd:element name="lastname" type="varchar255" />
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element-->
+    </xsd:sequence>
+  </xsd:complexType>
+    
 </xsd:schema>
