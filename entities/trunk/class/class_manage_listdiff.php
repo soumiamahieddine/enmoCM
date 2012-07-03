@@ -181,6 +181,10 @@ class diffusion_list extends dbquery
     {
         //print_r($diffList);exit;
         $this->connect();
+        
+        require_once '/core/class/class_history.php';
+        $hist = new history();
+        
         //print_r($_SESSION['m_admin']['entity']['listmodel']);
         //echo "<br>";
         //print_r($params);
@@ -291,7 +295,8 @@ class diffusion_list extends dbquery
                     //$this->show();
                 }
             }
-        } else if ($params['mode'] == 'listinstance') {
+        } 
+        else if ($params['mode'] == 'listinstance') {
             $creatorUser = '';
             $creatorEntity = '';
             if (! isset($params['concat_list'])) {
@@ -388,6 +393,16 @@ class diffusion_list extends dbquery
                         . $this->protect_string_db(trim($creatorEntity)) . "')"
                     );
                 }
+                $listinstance_id = $this->last_insert_id('listinstance_id_seq');
+                $hist->add(
+                    $params['table'],
+                    $listinstance_id,
+                    'ADD',
+                    'diffdestuser',
+                    'Diffusion of document '.$params['res_id'],
+                    $_SESSION['config']['databasetype'],
+                    'apps'
+                );                
                 //$this->show();
             }
             $maxSeq = 0;
@@ -473,6 +488,16 @@ class diffusion_list extends dbquery
                             . "' )"
                         );
                     }
+                    $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
+                    $hist->add(
+                        $params['table'],
+                        $listinstance_id,
+                        'ADD',
+                        'diffcopyuser',
+                        'Diffusion of document '.$params['res_id'],
+                        $_SESSION['config']['databasetype'],
+                        'apps'
+                    ); 
                     //$this->show();
                 }
             }
@@ -566,6 +591,16 @@ class diffusion_list extends dbquery
                         . $creatorEntity . "')"
                     );
                     //$this->show();
+                    $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
+                    $hist->add(
+                        $params['table'],
+                        $listinstance_id,
+                        'ADD',
+                        'diffcopyentity',
+                        'Diffusion of document '.$params['res_id'],
+                        $_SESSION['config']['databasetype'],
+                        'apps'
+                    ); 
                 }
                 //$this->show();
             }
@@ -738,4 +773,5 @@ class diffusion_list extends dbquery
             );
         }
     }
+
 }
