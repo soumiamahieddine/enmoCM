@@ -19,8 +19,16 @@ CREATE TABLE entities
 )
 WITH (OIDS=FALSE);
 
+CREATE SEQUENCE listinstance_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
 CREATE TABLE listinstance
 (
+  listinstance_id BIGINT NOT NULL DEFAULT nextval('listinstance_id_seq'::regclass),
   coll_id character varying(50) NOT NULL,
   res_id bigint NOT NULL,
   listinstance_type character varying(50) DEFAULT 'DOC'::character varying,
@@ -30,7 +38,8 @@ CREATE TABLE listinstance
   item_mode character varying(50) NOT NULL,
   added_by_user character varying(128) NOT NULL,
   added_by_entity character varying(50) NOT NULL,
-  viewed bigint
+  viewed bigint,
+  CONSTRAINT listinstance_pkey PRIMARY KEY (listinstance_id)
 )
 WITH (OIDS=FALSE);
 
