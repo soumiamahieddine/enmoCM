@@ -16,7 +16,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-import netscape.javascript.JSException;
 import netscape.javascript.JSObject;
 
 /**

@@ -54,7 +54,11 @@ public class fileManager {
         AccessController.doPrivileged(new PrivilegedExceptionAction() {
                 public Object run() throws IOException {
                     if ("win".equals(os)) {
-                        out.write("start /WAIT /D \"" + pathToFileToLaunch + "\" " + fileToLaunch);
+                        if (fileToLaunch.contains(".odt") || fileToLaunch.contains(".ods")) {
+                            out.write("start /WAIT SOFFICE.exe -env:UserInstallation=file:///" + pathToFileToLaunch.replace("\\", "/")  + " \"" + pathToFileToLaunch + fileToLaunch + "\"");
+                        } else {
+                            out.write("start /WAIT /D \"" + pathToFileToLaunch + "\" " + fileToLaunch);
+                        }
                     } else if ("mac".equals(os)) {
                         out.write("open -W " + pathToFileToLaunch + fileToLaunch);
                     } else if ("linux".equals(os)) {

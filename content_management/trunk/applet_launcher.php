@@ -123,10 +123,10 @@ $_SESSION['error'] = '';
 
 ?>
 <div id="maarchcm">
-    <h1><?php echo _MAARCH_CM_APPLET;?></h1>
+    <h3><?php echo _MAARCH_CM_APPLET;?></h3>
     <img alt="<?php echo _LOADING;?>" src="<?php echo 
         $_SESSION['config']['businessappurl'];
-        ?>static.php?filename=loading_big.gif" border="0" alt="" />
+        ?>static.php?filename=loading_big.gif" border="0" alt="" width="200px" height="200px" />
     <div id="maarchcm_error" class="error"></div>
     <applet ARCHIVE="<?php 
             echo $_SESSION['config']['coreurl'];?>modules/content_management/dist/maarchCM.jar" 
