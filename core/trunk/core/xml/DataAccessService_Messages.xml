@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <messages>
   <message id='DataAccessService_Database::queryError' level='3'>
-    <text lang='fr'>Erreur à la requête : %1$s</text>
+    <text lang='fr'>Erreur sql %1$s (%2$s) : %3$s. Requête = [%4$s]</text>
   </message>
 </messages>
