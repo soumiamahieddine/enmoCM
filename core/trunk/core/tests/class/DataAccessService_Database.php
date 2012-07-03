@@ -393,7 +393,7 @@ class DataAccessService_Database
         require_once 'core/tests/class/Message.php';
         require_once 'core/tests/class/Exception.php';
         $messageController = new MessageController();
-        $messageController->loadMessageFile('core/xml/DataAccessService_Messages.xml');
+        $messageController->loadMessageFile('core/xml/DataObjectController_Messages.xml');
         $sqlError = $this->pdo->errorInfo();
         $message = $messageController->createMessage(
             __CLASS__ . '::queryError',

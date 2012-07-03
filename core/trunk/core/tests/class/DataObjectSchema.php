@@ -236,7 +236,7 @@ class SchemaElement extends DOMElement {
         $xpath = new DOMXpath($this->ownerDocument);
         if($this->type) {
             $typeName = $this->type;
-            if(substr($typeName, 0, 4) == 'xsd:') {
+            if(substr($typeName, 0, 4) == 'xsd:') {           
                 $elementType = $this->ownerDocument->createElement('xsd:simpleType');
                 $elementType->name = $typeName;
             } else {
@@ -245,7 +245,7 @@ class SchemaElement extends DOMElement {
         } else { 
             $elementType = $this->xpath("./*[(name()='xsd:complexType' or name()='xsd:simpleType')]", $this)->item(0);
         }
-        if(!$elementType) die("Unable to find type for element $element->name");
+        if(!$elementType) die("Unable to find type for element $this->name");
         return $elementType;
     }
     

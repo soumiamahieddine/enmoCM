@@ -375,7 +375,6 @@ class DataObjectController extends DOMDocument
             $childPath = $childElement->getNodePath();
             $childName = $childElement->name;
             $childType = $childElement->getType();
-            if(!$childType) die("Unable to find data type for property " . $childElement->name);
             if ($childType->tagName == 'xsd:simpleType') {
                 // DEFAULT and FIXED
                 if($childElement->{'default'}) {
