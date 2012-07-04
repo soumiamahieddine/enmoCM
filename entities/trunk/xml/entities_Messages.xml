@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<messages>
+    <message id='entities_list' level='0'>
+        <text lang='fr'>Liste des entités : %1$d entités</text>
+        <text lang='en'>Entities list : %1$d entities</text>
+    </message>
+    <message id='entities_create' level='0'>
+        <text lang='fr'>Création d'une entité</text>
+        <text lang='en'>Entity creation</text>
+    </message>
+    <message id='entities_read' level='0'>
+        <text lang='fr'>Détail d'une entité</text>
+        <text lang='en'>Entity read</text>
+    </message>
+    <message id='entities_update' level='0'>
+        <text lang='fr'>Modification d'une entité</text>
+        <text lang='en'>Entity update</text>
+    </message>
+    <message id='entities.entity_id' level='0'>
+        <text lang='fr'>Identifiant</text>
+        <text lang='en'>Id</text>
+    </message>
+    <message id='entities.entity_label' level='0'>
+        <text lang='fr'>Nom</text>
+        <text lang='en'>Name</text>
+    </message>
+    <message id='entities.short_label' level='0'>
+        <text lang='fr'>Nom court</text>
+        <text lang='en'>Short name</text>
+    </message>
+    <message id='entities.enabled' level='0'>
+        <text lang='fr'>Autorisé</text>
+        <text lang='en'>Enabled</text>
+    </message>
+    <message id='entities.adrs_1' level='0'>
+        <text lang='fr'>Adresse 1</text>
+        <text lang='en'>Adress 1</text>
+    </message>
+    <message id='entities.adrs_2' level='0'>
+        <text lang='fr'>Adresse 2</text>
+        <text lang='en'>Adress 2</text>
+    </message>
+    <message id='entities.adrs_3' level='0'>
+        <text lang='fr'>Adresse 3</text>
+        <text lang='en'>Adress 3</text>
+    </message>
+    <message id='entities.zip_code' level='0'>
+        <text lang='fr'>Code postal</text>
+        <text lang='en'>Zipcode</text>
+    </message>
+    <message id='entities.city' level='0'>
+        <text lang='fr'>Ville</text>
+        <text lang='en'>City</text>
+    </message>
+    <message id='entities.country' level='0'>
+        <text lang='fr'>Pays</text>
+        <text lang='en'>Country</text>
+    </message>
+    <message id='entities.email' level='0'>
+        <text lang='fr'>Email</text>
+        <text lang='en'>Email</text>
+    </message>
+    <message id='entities.business_id' level='0'>
+        <text lang='fr'>Identifiant légal (SIREN, ...)</text>
+        <text lang='en'>Business ID</text>
+    </message>
+    <message id='entities.parent_id' level='0'>
+        <text lang='fr'>Entité parente</text>
+        <text lang='en'>Parent Entity</text>
+    </message>
+    <message id='entities.entity_type' level='0'>
+        <text lang='fr'>Type d'entité</text>
+        <text lang='en'>Entity type</text>
+    </message>
+    <message id='entities.error.path_template.unapproachable' level='3'>
+        <text lang='fr'>'path_template' Chemin inexistant</text>
+    </message>
+    <message id='entities.error.path_template.no_rights' level='3'>
+        <text lang='fr'>'path_template' Droits insuffisants sur le répertoire</text>
+    </message>
+    <message id='entities.error.adr_priority_number.duplicate' level='3'>
+        <text lang='fr'>'adr_priority_number' La priorité d'adressage %1$s existe déjà pour ce type de zone de stockage</text>
+    </message>
+    <message id='entities.error.priority_number.duplicate' level='3'>
+        <text lang='fr'>'priority_number' La priorité %1$d existe déjà pour ce type de zone de stockage</text>
+    </message>
+</messages>

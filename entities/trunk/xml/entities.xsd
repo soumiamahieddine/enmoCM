@@ -49,7 +49,7 @@ Parent key fields (xpath) and child key fields must be in same order
     das:validation='apps/maarch_entreprise/XSD/entities_validation.php'
   />
   
-  <xsd:complexType name='entities' >
+  <xsd:complexType name='entities'>
     <xsd:sequence>
       <xsd:element name="entity_id" type="varchar32" nillable="false" />
       <xsd:element name="entity_label" type="varchar255" />
@@ -68,26 +68,26 @@ Parent key fields (xpath) and child key fields must be in same order
     </xsd:sequence>
   </xsd:complexType>
   
-  <xsd:annotation>
+  <!--<xsd:annotation>
     <xsd:appinfo>
       <das:relation name='entities_users_entities' parent='entities' child='users_entities' parent-keys='entity_id' child-keys='entity_id' />
     </xsd:appinfo>
-  </xsd:annotation>
+  </xsd:annotation>-->
   
   <!-- USERS_ENTITIES -->
-  <xsd:element name='users_entities' 
+  <!--<xsd:element name='users_entities' 
     type='users_entities' 
     das:source='maarch_entreprise' 
     das:key-columns='entity_id user_id' 
     das:relation='entities_users_entities'>
-  </xsd:element>
+  </xsd:element>-->
 
-  <xsd:complexType name='users_entities'>
+  <!--<xsd:complexType name='users_entities'>
     <xsd:sequence>
       <xsd:element name="entity_id" type="varchar32" />
       <xsd:element name="user_id" type="varchar128" />
       <xsd:element name="user_role" type="varchar255" />
-      <xsd:element name="primary_entity" type="boolean" />
+      <xsd:element name="primary_entity" type="boolean" />-->
       <!--xsd:element name="user" das:table='users'>
         <xsd:annotation>
           <xsd:appinfo>
@@ -102,7 +102,7 @@ Parent key fields (xpath) and child key fields must be in same order
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element-->
-    </xsd:sequence>
-  </xsd:complexType>
+    <!--</xsd:sequence>
+  </xsd:complexType>-->
     
 </xsd:schema>

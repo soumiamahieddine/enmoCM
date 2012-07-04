@@ -52,7 +52,8 @@ $showCols = array(
     ),
 );
 if (isset($_REQUEST['orderField'])) {
-    $showCols[$_REQUEST['orderField']]['cssStyle'] .= 'background-image: url(static.php?filename=black_0.1.png); ';
+    $showCols[$_REQUEST['orderField']]['cssStyle'] 
+        .= 'background-image: url(static.php?filename=black_0.1.png); ';
 }
 
 //actions to show in the list
@@ -61,4 +62,4 @@ $actions = array('create', 'read', 'update', 'delete');
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/admin/' 
     . 'admin_standard_page_controller.php';
 
-//include_once 'modules/docservers/entities_view.php';
+include_once 'modules/entities/entities_view.php';
