@@ -11,7 +11,7 @@ class DataAccessService_Database
     public $tables = array();
     public $relations = array();
     private $limit;
-    private $pdo;
+    private $databaseObject;
     
     public function DataAccessService_Database(
         $driver,
@@ -19,27 +19,28 @@ class DataAccessService_Database
         $port,
         $dbname,
         $user, 
-        $password, 
-        $options
+        $password
     ) 
     {
         $this->type = 'database';
         $this->driver = $driver;
         $this->host = $host;
-        $this->dbname = $dbname;
         $this->port = $port;
+        $this->dbname = $dbname;
         $this->user = $user;
         $this->password = $password;
         
-        $dsn = sprintf(
-            '%s:host=%s;dbname=%s;port=%s', 
-            $driver, 
-            $host, 
-            $dbname, 
-            $port
+        $params = array(
+            'server' => $this->host,
+            'databasetype' => strtoupper($this->driver),
+            'user' => $this->user,
+            'pass' => $this->password,
+            'port' => $this->port,
+            'base' => $this->dbname
         );
         
-        $this->pdo = new pdo($dsn, $user, $password, $options);
+        $this->databaseObject = new dbquery($params);
+        $this->databaseObject->connect();
         $this->limit = 500;
     }
     
@@ -112,14 +113,16 @@ class DataAccessService_Database
         $query .= " LIMIT " . $this->limit;
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        //echo "<pre>QUERY = " . $query . "</pre>";
-        $statement = $this->pdo->query($query);
-        if(!$statement) {
-            $this->throwQueryException($query);
+        print_r($this);
+        echo "<pre>QUERY = " . $query . "</pre>";
+        try {
+            $this->databaseObject->query($query);
+        } catch (Exception $e) {
+            throw $e;
         }
 
         $results = array();
-        while($result = $statement->fetch(PDO::FETCH_ASSOC)) {
+        while($result = $this->databaseObject->fetch_assoc()) {
             $results[] = $result;
         }
         return $results;
@@ -133,7 +136,7 @@ class DataAccessService_Database
             } elseif ($dataObject->isUpdated && count($dataObject->updates) > 0) {
                 $this->updateData($dataObject);
             }
-        } catch (maarch\Exception $e) {
+        } catch (Exception $e) {
             throw $e;
         }
         return true;
@@ -215,7 +218,7 @@ class DataAccessService_Database
             for($i=0; $i<count($filterColumns); $i++) {
                 $filterColumnName = $filterColumns[$i];
                 $filterColumn = $table->columns[$filterColumnName];
-                $filterExpressionParts[] = "upper(" . $this->name . '.' . $filterColumnName . ') like upper(' . $filterValue . ')';
+                $filterExpressionParts[] = "upper(" . $table->name . '.' . $filterColumnName . ') like upper(' . $filterValue . ')';
             }
             $filterExpression = implode(' or ', $filterExpressionParts);
             return $filterExpression;
@@ -328,9 +331,10 @@ class DataAccessService_Database
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
         //echo "<pre>QUERY = " . $query . "</pre>";
-        $result = $this->pdo->query($query);
-        if(!$result) {
-            $this->throwQueryException($query);
+        try {
+            $this->databaseObject->query($query);
+        } catch (Exception $e) {
+            throw $e;
         }
         
         $this->saveChildObjects($dataObject);
@@ -359,9 +363,10 @@ class DataAccessService_Database
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
         //echo "<pre>QUERY = " . $query . "</pre>";
-        $result = $this->pdo->query($query);
-        if(!$result) {
-            $this->throwQueryException($query);
+        try {
+            $this->databaseObject->query($query);
+        } catch (Exception $e) {
+            throw $e;
         }
         
         $this->saveChildObjects($dataObject);
@@ -393,7 +398,7 @@ class DataAccessService_Database
         require_once 'core/tests/class/Message.php';
         require_once 'core/tests/class/Exception.php';
         $messageController = new MessageController();
-        $messageController->loadMessageFile('core/xml/DataObjectController_Messages.xml');
+        $messageController->loadMessageFile('core/xml/DataAccessService_Messages.xml');
         $sqlError = $this->pdo->errorInfo();
         $message = $messageController->createMessage(
             __CLASS__ . '::queryError',

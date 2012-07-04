@@ -51,14 +51,13 @@ class DataObjectController extends DOMDocument
         
         // Data types
         $dasTypes = $this->schema->getDatatypes();
-        
         // Data sources
         $dasSources = $this->schema->getSources();
         for($i=0; $i<count($dasSources); $i++) {
             $dasSource = $dasSources[$i];
             switch($dasSource->type) {
             case 'database':
-                $options = $this->schema->getSourceOptions($dasSource, $dasSource->driver);
+                //$options = $this->schema->getSourceOptions($dasSource, $dasSource->driver);
                 $this->dataAccessServices[$dasSource->name] = 
                     new dataAccessService_Database(
                         $dasSource->driver, 
@@ -66,8 +65,7 @@ class DataObjectController extends DOMDocument
                         $dasSource->port, 
                         $dasSource->dbname,
                         $dasSource->user, 
-                        $dasSource->password, 
-                        $options
+                        $dasSource->password
                     );
                 
                 for($i=0; $i<count($dasTypes); $i++) {
