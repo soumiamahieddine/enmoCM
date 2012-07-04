@@ -314,9 +314,16 @@ class DataObjectController extends DOMDocument
     private function instanciateDataObject($objectSchema, $inlineObjectSchema=false)
     {
         $schemaPath = $objectSchema->getNodePath();
-        if($inlineObjectSchema && $inlineObjectSchema->isDataObjectArray()) {
-            $arraySchemaPath = $inlineObjectSchema->getNodePath();
-            $dataObject = new DataObjectArray($objectSchema->name, $schemaPath, $arraySchemaPath);
+        
+        if($inlineObjectSchema) {
+            if($inlineObjectSchema->isDataObjectArray()) {
+                $arraySchemaPath = $inlineObjectSchema->getNodePath();
+                $dataObject = new DataObjectArray($objectSchema->name, $schemaPath, $arraySchemaPath);
+            } else {
+                $this->prototypeDataObject($objectSchema);
+                $serializedDataObject = $this->serialize($this->prototypes[$schemaPath]);
+                $dataObject = $this->unserialize($serializedDataObject);
+            }
         } else {
             $serializedDataObject = $this->serialize($this->prototypes[$schemaPath]);
             $dataObject = $this->unserialize($serializedDataObject);

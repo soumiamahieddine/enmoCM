@@ -113,8 +113,7 @@ class DataAccessService_Database
         $query .= " LIMIT " . $this->limit;
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        print_r($this);
-        echo "<pre>QUERY = " . $query . "</pre>";
+        //echo "<pre>QUERY = " . print_r($query,true) . "</pre>";
         try {
             $this->databaseObject->query($query);
         } catch (Exception $e) {
