@@ -241,4 +241,8 @@
         <moduleid>tags</moduleid>
         <comment>_TAGS_COMMENT</comment>
     </MODULES>
+    <MODULES>
+        <moduleid>records_management</moduleid>
+        <comment>_RECORDS_MANAGEMENT_COMMENT</comment>
+    </MODULES>
 </ROOT>
