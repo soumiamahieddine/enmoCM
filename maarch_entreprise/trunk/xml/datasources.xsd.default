@@ -9,7 +9,7 @@
       <das:source 
         name='database' 
         type='database' 
-        driver='pgsql' 
+        driver='postgresql' 
         host='localhost' 
         port='5432' 
         dbname='maarch_entreprise_trunk' 
