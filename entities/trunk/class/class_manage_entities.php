@@ -869,7 +869,7 @@ class entity extends dbquery
 
                     if($_SESSION['history']['entityadd'] == "true")
                     {
-                        require("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+                        require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
                         $hist = new history();
                         $hist->add(ENT_ENTITIES, $_SESSION['m_admin']['entity']['entityId'] ,"ADD",'entityadd',_ADD_ENTITY." : ".$_SESSION['m_admin']['entity']['entityId'] , $_SESSION['config']['databasetype'], 'entities');
                     }
@@ -889,7 +889,7 @@ class entity extends dbquery
                 $_SESSION['service_tag'] = '';
                 if($_SESSION['history']['entityup'] == "true")
                 {
-                    require('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
+                    require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
                     $hist = new history();
                     $hist->add(ENT_ENTITIES, $_SESSION['m_admin']['entity']['entityId'] ,'UP','entityup',_ENTITY_UPDATED.' : '.$_SESSION['m_admin']['entity']['entityId'] , $_SESSION['config']['databasetype'], 'folder');
                 }
