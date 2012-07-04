@@ -1,27 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
-
-LIST
-  root element
-  complexType with sequence of 1 element iteration ==> list
-  key to define uniqueness and for update
-
-OBJECT
-  child of root
-  @das:table to declare database table
-  complexType with sequence of element iteration ==> properties / children
-
-PROPERTY
-  child of object simpleType
-  
-CHILD
-  child of object complexType
-  
-KEY = on table element and object elements containing sub-elements
-KEYREF = on child element, refering to parent keys
-Parent key fields (xpath) and child key fields must be in same order
-
--->
 <xsd:schema 
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:das="maarch:DataAccessService"  
@@ -65,8 +42,30 @@ Parent key fields (xpath) and child key fields must be in same order
       <xsd:element name="business_id" type="varchar32" />
       <xsd:element name="parent_entity_id"  type="varchar32" />
       <xsd:element name="entity_type" type="varchar64" />
+      <xsd:element ref="rm_organizations" minOccurs="0" />
     </xsd:sequence>
   </xsd:complexType>
+  
+  <xsd:element name='rm_organizations' 
+    type='rm_organizations' 
+    das:source='maarch_entreprise' 
+    das:key-columns='entity_id'>
+    <xsd:annotation>
+      <xsd:appinfo>
+        <das:relation parent='entities' child='rm_organizations' parent-keys='entity_id' child-keys='entity_id' />
+      </xsd:appinfo>
+    </xsd:annotation>
+  </xsd:element>
+
+  <xsd:complexType name='rm_organizations'>
+    <xsd:sequence>
+      <xsd:element name="entity_id" type="varchar32" />
+      <xsd:element name="is_archival" type="boolean" default="N"/>
+      <xsd:element name="is_transferring" type="boolean" default="N"/>
+      <xsd:element name="is_originating" type="boolean" default="N"/>
+    </xsd:sequence>
+  </xsd:complexType>
+  
   
   <!--<xsd:annotation>
     <xsd:appinfo>
