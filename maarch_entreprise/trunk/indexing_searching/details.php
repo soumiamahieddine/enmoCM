@@ -867,7 +867,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <br/>
                     <div align="center">
                         <?php if ($printDetails) {
-                            if (
+                            /*if (
                               isset($_SESSION['custom_override_id'])
                               && $_SESSION['custom_override_id'] <> ''
                             ) {
@@ -876,9 +876,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 . $_SESSION['custom_override_id']
                                 . '/apps/'
                                 . $_SESSION['config']['app_id'];
-                            } else {
+                            } else {*/
                               $path = $_SESSION['config']['businessappurl'];
-                            }
+                            //}
                             ?>
                             <input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $path . "/tmp/export_details_".$_SESSION['user']['UserId']."_export.html";?>', '_blank');" />
                             <?php
