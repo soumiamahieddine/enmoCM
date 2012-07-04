@@ -576,7 +576,8 @@ class dbquery extends functions
                 $this->_sqlError = 4;
                 $this->error();
             }
-        
+            break;
+            
         default :
 
         }
@@ -594,7 +595,7 @@ class dbquery extends functions
         
         // Connexion error
         if ($this->_sqlError == 1) {
-            $trace->add("", 0, "CONNECT", "DBERROR", _CONNECTION_DB_FAILED." : ".$this->_user."@".$this->_server.":".$this->_port, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_FATAL);
+            //$trace->add("", 0, "CONNECT", "DBERROR", _CONNECTION_DB_FAILED." : ".$this->_user."@".$this->_server.":".$this->_port, $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_FATAL);
             // Shows the connexion data (server, port, user, pass)
             echo '- <b>' . _DB_CONNEXION_ERROR . '</b>';
             if ($_SESSION['config']['debug'] == 'true') {
@@ -621,6 +622,47 @@ class dbquery extends functions
 
         // Query error
         if ($this->_sqlError == 3) {
+            
+            switch($this->_databasetype) {
+            case 'MYSQL':
+                $sqlError = @mysqli_errno($this->_sqlLink);
+                break;
+                
+            case 'SQLSERVER' : 
+                $sqlError = @mssql_get_last_message();
+                break;
+                
+            case 'POSTGRESQL':
+                @pg_send_query($this->_sqlLink, $this->_debugQuery);
+                $res = @pg_get_result($this->_sqlLink);
+                $sqlError .= @pg_result_error($res);
+                break;
+                
+            case 'ORACLE' :
+                $res = @oci_error($this->statement);
+                $sqlError = $res['message'];
+                break;
+                
+            default :
+
+            }
+            $trace->add(
+                "", 
+                0, 
+                "QUERY", 
+                "DBERROR", 
+                _QUERY_DB_FAILED . ": '" . $sqlError . "' " 
+                . _QUERY . ": [" . $this->protect_string_db($this->_debugQuery)."]",
+                $_SESSION['config']['databasetype'], 
+                "database", 
+                true, 
+                _KO, 
+                _LEVEL_ERROR
+            );
+            
+            throw new Exception (_QUERY_DB_FAILED.": '".$sqlError."' "._QUERY.": [".$this->protect_string_db($this->_debugQuery)."]");
+            
+            /*
             $sqlErrorToView = '<b>' . _QUERY_ERROR . '</b><br />';
             $sqlError = '';
             if ($this->_databasetype == 'MYSQL') {
@@ -643,8 +685,7 @@ class dbquery extends functions
                 echo '<br/>' . _QUERY . ' : <textarea cols="70" rows="10">'
                     . $this->_debugQuery . '</textarea>';
                 exit();
-            }
-            $trace->add("", 0, "QUERY", "DBERROR", _QUERY_DB_FAILED.": '".$sqlError."' "._QUERY.": [".$this->protect_string_db($this->_debugQuery)."]", $_SESSION['config']['databasetype'], "database", true, _KO, _LEVEL_ERROR);
+            }*/
             //exit();
         }
 
