@@ -12,8 +12,8 @@
         driver='pgsql' 
         host='localhost' 
         port='5432' 
-        dbname='MEP_trunk' 
-        user='ave' 
+        dbname='maarch_entreprise_trunk' 
+        user='postgres' 
         password='maarch' />
     </xsd:appinfo>
   </xsd:annotation>
