@@ -462,7 +462,7 @@ if(isset($_REQUEST['nodetails']))
 </table>
 <table align="center" border="0" width="100%">
 <?php
-            if($core_tools->is_module_loaded("basket") == true && $_REQUEST['mode'] != 'popup') { ?>
+            if($core_tools->is_module_loaded("basket") == true) { ?>
              <tr>
                 <td colspan="2" ><h2><?php echo _SEARCH_SCOPE; ?></h2></td>
             </tr>
@@ -477,9 +477,11 @@ if(isset($_REQUEST['nodetails']))
                                 <select name="baskets_clause" id="baskets_clause">
                                     <option id="false" value="false"><?php echo _NO;?></option>
                                     <option id="true" value="true"><?php echo _ALL_BASKETS;?></option>
-                                    <?php for($i=0; $i< count($_SESSION['user']['baskets']);$i++) {
+                                    <?php if($_REQUEST['mode'] != 'popup') {
+                                        for($i=0; $i< count($_SESSION['user']['baskets']);$i++) {
                                         ?><option id="<?php echo $_SESSION['user']['baskets'][$i]['id'];?>" value="<?php echo $_SESSION['user']['baskets'][$i]['id'];?>" ><?php echo $_SESSION['user']['baskets'][$i]['desc'];?></option>
-                                    <?php } ?>
+                                    <?php }
+                                        } ?>
                                 </select>
                             </td>
                             <td><em><?php echo _SEARCH_SCOPE_HELP; ?></em></td>
