@@ -32,6 +32,8 @@
 
 require_once 'core/class/class_core_tools.php';
 require_once 'core/tests/class/MessageController.php';
+require_once 'apps/' . $_SESSION['config']['app_id'] 
+    . '/admin/admin_form_standard_tools.php';
 $messageController = new MessageController();
 
 /**
