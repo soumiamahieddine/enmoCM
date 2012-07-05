@@ -1,19 +1,18 @@
 <?php
 class DataAccessService_Database  
+    extends DataAccessService
 {
-    public $type;
+    
     public $host;
     public $port;
     public $dbname;
     public $user;
     private $password;
-    public $datatypes = array();
-    public $tables = array();
-    public $relations = array();
     private $limit;
     private $databaseObject;
     
     public function DataAccessService_Database(
+        $name,
         $driver,
         $host, 
         $port,
@@ -62,11 +61,6 @@ class DataAccessService_Database
         return $newTable;
     }
     
-    public function getTable($tableName)
-    {
-        return $this->tables[$tableName];
-    }
-    
     public function addRelation($parentName, $childName, $parentColumns, $childColumns, $name=false) 
     {
         if(!$name) {
@@ -78,53 +72,12 @@ class DataAccessService_Database
     
     public function getData($dataObject) 
     {
-        $parentObject = $dataObject->parentObject;
-        $table = $this->tables[$dataObject->name];
-        
-        // Select 
-        $selectExpression = $this->makeSelectExpression($table);
-        
-        // FROM
-        $tableName = $table->name;
-        
-        // Where
-        $whereExpressionParts = array('1=1');
-        $relation = $this->getRelation($parentObject->name, $table->name);
-        if($relation) {
-            $whereExpressionParts[] = $this->makeRelationExpression($relation, $table, $parentObject);
-        }
-        $keyExpression = $this->makeSelectKeyExpression($table);
-        if($keyExpression) {
-            $whereExpressionParts[] = $keyExpression;
-        }
-        $filterExpression = $this->makeFilterExpression($table);
-        if($filterExpression) {
-            $whereExpressionParts[] = $filterExpression;
-        }
-        $whereExpression = implode(' and ', $whereExpressionParts);
-        
-        // Order
-        $orderByExpression = $this->makeOrderByExpression($table);
-        
-        $query  = "SELECT " . $selectExpression;
-        $query .= " FROM  " . $tableName;
-        $query .= " WHERE " . $whereExpression;
-        $query .= " ORDER BY " . $orderByExpression;
-        $query .= " LIMIT " . $this->limit;
-        
-        //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        //echo "<pre>QUERY = " . print_r($query,true) . "</pre>";
         try {
-            $this->databaseObject->query($query);
+            $results = $this->selectData($dataObject);
+            return $results;
         } catch (Exception $e) {
             throw $e;
         }
-
-        $results = array();
-        while($result = $this->databaseObject->fetch_assoc()) {
-            $results[] = $result;
-        }
-        return $results;
     }
     
     public function saveData($dataObject)
@@ -298,19 +251,60 @@ class DataAccessService_Database
         }
     }
      
-    private function getRelation($parentName, $childName) 
-    {
-        foreach($this->relations as $relationName => $relation) {
-            if($relation->parentName == $parentName && $relation->childName == $childName) {
-                return $relation;
-            }
-        }
-    }
-    
-    
     //*************************************************************************
     // PRIVATE SQL QUERY EXECUTION FUNCTIONS
     //*************************************************************************
+    private function selectData($dataObject)
+    {
+        $parentObject = $dataObject->parentObject;
+        $table = $this->tables[$dataObject->name];
+        
+        // Select 
+        $selectExpression = $this->makeSelectExpression($table);
+        
+        // FROM
+        $tableName = $table->name;
+        
+        // Where
+        $whereExpressionParts = array('1=1');
+        $relation = $this->getRelation($parentObject->name, $table->name);
+        if($relation) {
+            $whereExpressionParts[] = $this->makeRelationExpression($relation, $table, $parentObject);
+        }
+        $keyExpression = $this->makeSelectKeyExpression($table);
+        if($keyExpression) {
+            $whereExpressionParts[] = $keyExpression;
+        }
+        $filterExpression = $this->makeFilterExpression($table);
+        if($filterExpression) {
+            $whereExpressionParts[] = $filterExpression;
+        }
+        $whereExpression = implode(' and ', $whereExpressionParts);
+        
+        // Order
+        $orderByExpression = $this->makeOrderByExpression($table);
+        
+        $query  = "SELECT " . $selectExpression;
+        $query .= " FROM  " . $tableName;
+        $query .= " WHERE " . $whereExpression;
+        $query .= " ORDER BY " . $orderByExpression;
+        $query .= " LIMIT " . $this->limit;
+        
+        //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
+        echo "<pre>QUERY = " . print_r($query,true) . "</pre>";
+        try {
+            $this->databaseObject->query($query);
+        } catch (Exception $e) {
+            throw $e;
+        }
+
+        $results = array();
+        while($result = $this->databaseObject->fetch_assoc()) {
+            $results[] = $result;
+        }
+        return $results;
+    }
+    
     private function insertData($dataObject)
     {
         $parentObject = $dataObject->parentObject;
@@ -374,24 +368,7 @@ class DataAccessService_Database
         
     }
     
-    private function saveChildObjects($dataObject) 
-    {
-        $children = $dataObject->children;
-        for($i=0; $i<count($children); $i++) {
-            $childObject = $children[$i];
-            if($childObject->isDataObjectArray) {
-                //echo "<br/>Save data of array $childObject->name";
-                $this->saveChildObjects($childObject);
-            } else {
-                //echo "<br/>Save data of $childObject->name";
-                $this->saveData($childObject);
-            }
-            if(!$result) return false;
-        }
-        return true;
-    }
-    
-    private function throwQueryException($query)
+    private function throwDatabaseException($query)
     {
         require_once 'core/tests/class/MessageController.php';
         require_once 'core/tests/class/Message.php';
@@ -414,8 +391,9 @@ class DataAccessService_Database
     
 }
 class DataAccessService_Database_Datatype
+    extends DataAccessService_Datatype
 {
-    public $name;
+    
     public $sqltype;
     public $enclosed;
     
@@ -429,112 +407,48 @@ class DataAccessService_Database_Datatype
 }
 
 class DataAccessService_Database_Table
+    extends DataAccessService_Table
 {
-    public $name;
-    public $columns = array();
-    public $primaryKey;
-    public $foreignKeys = array();
-    public $indexes = array();
-    public $filter;
-    public $keyValue;
-    public $order;
-    public $filterValue;
 
-    public function DataAccessService_Database_Table($name)
-    {
-        $this->name = $name;
-    }
-    
+    public $order;
+
     public function addPrimaryKey($columns, $name=false)
     {
         if(!$name) $name = $this->name . '_pkey';
-        $this->primaryKey = new DataAccessService_Database_Table_PrimaryKey($columns, $name);
+        $this->primaryKey = new DataAccessService_Database_PrimaryKey($columns, $name);
     }
     
     public function addColumn($columnName, $columnType)
     {
-        $newColumn = new DataAccessService_Database_Table_Column($columnName, $columnType);
+        $newColumn = new DataAccessService_Database_Column($columnName, $columnType);
         $this->columns[$columnName] = $newColumn;
         return $newColumn;
-    }
-    
-    public function addFilter($columns) 
-    {
-        $this->filter = $columns;
-    }
-    
-    public function setKey($keyValue)
-    {
-        $this->keyValue = $keyValue;
-    }
-    
-    public function getKey()
-    {
-        return $this->primaryKey->columns;
     }
     
     public function setOrder($orderElements, $orderMode)
     {
         $orderElementsComa = implode(', ', explode(' ', $orderElements));
+        if($orderMode == 'ascending') $orderMode = 'ASC';
+        else $orderMode = 'DESC';
         $this->order = $orderElementsComa . ' ' . $orderMode;
     }
-    
-    public function setFilter($filterValue)
-    {
-        $this->filterValue = $filterValue;
-    }
-    
+        
 }
 
-class DataAccessService_Database_Table_PrimaryKey
+class DataAccessService_Database_PrimaryKey
+    extends DataAccessService_PrimaryKey
 {
-    public $name;
-    public $columns;
-    
-    public function DataAccessService_Database_Table_PrimaryKey($columns, $name)
-    {
-        $this->name = $name;
-        $this->columns = $columns;
-    }
-    
-    public function getColumns() 
-    {
-        return explode(' ', $this->columns);
-    }    
-  
+
 }
 
-class DataAccessService_Database_Table_Column
+class DataAccessService_Database_Column
+    extends DataAccessService_Column
 {
-    public $name;
-    public $type;
-    public $default;
-    public $nillable;
-    public $fixed;
-    
-    public function DataAccessService_Database_Table_Column($name, $type)
-    {
-        $this->name = $name;
-        $this->type = $type;
-    }
-    
+   
 }
 
 class DataAccessService_Database_Relation
-{
-    public $name;
-    public $parentName;
-    public $childName;
-    public $parentColumns;
-    public $childColumns;
-    
-    function DataAccessService_Database_Relation($parentName, $childName, $parentColumns, $childColumns, $name) 
-    {
-        $this->name = $name;
-        $this->parentName = $parentName;
-        $this->childName = $childName;
-        $this->parentColumns = $parentColumns;
-        $this->childColumns = $childColumns;
-    } 
+    extends DataAccessService_Relation
+{ 
 
 }

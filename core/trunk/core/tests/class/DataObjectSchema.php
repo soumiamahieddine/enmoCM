@@ -49,28 +49,30 @@ class DataObjectSchema
         }
     }
     
-    /**************************************************************************
-    ** xpath
-    **
-    ** @description : 
-    ** Executes xpath queries on xsd
-    **
-    ** @param (string) $query : xpath query
-    ** @param (DOMElement) $contextElement : current element to query from
-    */
     private function xpath($query, $contextElement=false) 
     {
         if(!$contextElement) $contextElement = $this->documentElement;
-        return $this->xpath->query($query, $contextElement);
+        $result = @$this->xpath->query($query, $contextElement);
+        if(!$result) {
+            die("Schema Query error : " . $query);
+        }
+        return $result;
     }
     
+    // Get all sources
     public function getSources()
     {
-        $DSnodes = $this->xpath('/xsd:schema/xsd:annotation/xsd:appinfo/das:source');
+        $dasSources = array();
+        $DSnodes = $this->xpath('//xsd:annotation/xsd:appinfo/das:source');
         for($i=0; $i<$DSnodes->length; $i++) {
-            $DS[] = $DSnodes->item($i);
+            $dasSource = $DSnodes->item($i);
+            if($dasSource->parentNode->parentNode->parentNode->tagName != 'xsd:schema') {
+                $parentName = $dasSource->parentNode->parentNode->parentNode->name;
+                $dasSource->name = $parentName;
+            }
+            $dasSources[] = $dasSource;
         }
-        return $DS;
+        return $dasSources;
     }
    
     public function getSourceOptions($datasource, $driver)
@@ -82,13 +84,20 @@ class DataObjectSchema
         return $options;
     }
     
+    // Get all types
     public function getDatatypes()
     {
+        $datatypes = array();
         $DTnodes = $this->xpath('//xsd:simpleType');
         for($i=0; $i<$DTnodes->length; $i++) {
-            $DT[] = $DTnodes->item($i);
+            $datatype = $DTnodes->item($i);
+            if($datatype->parentNode->tagName != 'xsd:schema') {
+                $parentName = $datatype->parentNode->name;
+                $datatype->name = $parentName;
+            }
+            $datatypes[] = $datatype;
         }
-        return $DT;
+        return $datatypes;
     }
     
     public function getDatatypeSqltype($datatype, $driver) 
@@ -99,12 +108,29 @@ class DataObjectSchema
         }
     }
     
+    // get all relations
+    public function getRelations()
+    {
+        $relations = array();
+        $Rnodes = $this->xpath('//xsd:annotation/xsd:appinfo/das:relation');
+        for($i=0; $i<$Rnodes->length; $i++) {
+            $relation = $Rnodes->item($i);
+            if($relation->parentNode->parentNode->parentNode->tagName != 'xsd:schema') {
+                $parentName = $relation->parentNode->parentNode->parentNode->name;
+                $relation->name = $parentName;
+            }
+            $relations[] = $relation;
+        }
+        return $relations;
+    }
+    
+    // Get all object elements at root
     public function getObjectSchemas() 
     {
         return $this->xpath('/xsd:schema/xsd:element');
-    
     }
     
+    //
     public function getSchemaElement($schemaPath)
     {
         //echo "<br/>getSchemaElement($schemaPath)";
@@ -121,13 +147,6 @@ class DataObjectSchema
         return $objectSchemas->item(0);
     }
      
-    public function getDasSource($schemaPath)
-    {
-        $objectElement = $this->getSchemaElement($schemaPath);
-        $dasSource = $objectElement->{'das:source'};
-        return $dasSource;
-    }
-    
     public function getDasKey($elementName)
     {
         $objectElement = $this->getRootElement($elementName);
@@ -281,20 +300,13 @@ class SchemaElement extends DOMElement {
         }
     }
     
-    public function getRelationElements()
+    public function getSourceName()
     {
-        if($this->{'das:relation'}) {
-            $relationElements = $this->xpath("/xsd:schema/xsd:annotation/xsd:appinfo/das:relation[@name='".$this->{'das:relation'}."']");
+        if($this->{'das:source'}) {
+            return $this->{'das:source'};
         } else {
-            $relationElements = $this->xpath("./xsd:annotation/xsd:appinfo/das:relation", $this);
+            return $this->name;
         }
-        return $relationElements;
-    }
-    
-    public function getDasSource()
-    {
-        $dasSource = $objectElement->{'das:source'};
-        return $dasSource;
     }
 }
 

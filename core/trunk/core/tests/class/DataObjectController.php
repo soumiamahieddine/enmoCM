@@ -22,6 +22,7 @@ class DataObjectController extends DOMDocument
         require_once 'core/tests/class/DataObject.php';
         require_once 'core/tests/class/DataObjectProperty.php';
         
+        require_once 'core/tests/class/DataAccessService_Abstract.php';
         require_once 'core/tests/class/DataAccessService_Database.php';
         require_once 'core/tests/class/DataAccessService_XML.php';
         
@@ -51,6 +52,7 @@ class DataObjectController extends DOMDocument
         
         // Data types
         $dasTypes = $this->schema->getDatatypes();
+        
         // Data sources
         $dasSources = $this->schema->getSources();
         for($i=0; $i<count($dasSources); $i++) {
@@ -59,7 +61,8 @@ class DataObjectController extends DOMDocument
             case 'database':
                 //$options = $this->schema->getSourceOptions($dasSource, $dasSource->driver);
                 $this->dataAccessServices[$dasSource->name] = 
-                    new dataAccessService_Database(
+                    new DataAccessService_Database(
+                        $dasSource->name,
                         $dasSource->driver, 
                         $dasSource->host,  
                         $dasSource->port, 
@@ -78,9 +81,33 @@ class DataObjectController extends DOMDocument
                             $dasType->{'das:enclosed'});
                     }
                 }
+                break;
+            
+            case 'xml':
+                $this->dataAccessServices[$dasSource->name] = 
+                    new DataAccessService_XML(
+                        $dasSource->name,
+                        $dasSource->file
+                    );
             }
+            
         }
         
+        // Relations
+        $dasRelations = $this->schema->getRelations();
+        for($i=0; $i<count($dasRelations); $i++) {
+            $dasRelation = $dasRelations[$i];
+            //echo "<br/> Add relation between " .$dasRelation->{'parent'} ." and ". $dasRelation->{'child'};
+            $this->dataAccessServices[$dasSource->name]->addRelation(
+                $dasRelation->{'parent'},
+                $dasRelation->{'child'}, 
+                $dasRelation->{'parent-keys'}, 
+                $dasRelation->{'child-keys'},
+                $dasRelation->name
+            );
+        }
+        
+        // Make prototypes of root objects
         $objectSchemas = $this->schema->getObjectSchemas();
         for($i=0; $i<$objectSchemas->length; $i++) {
             $objectSchema = $objectSchemas->item($i);
@@ -236,66 +263,39 @@ class DataObjectController extends DOMDocument
     public function setKey($objectName, $key) 
     {
         $objectSchema = $this->schema->getObjectSchema($objectName);
-        $dasSource = $this->getDas($objectSchema);
-        if(!$dasSource) return;
-        $dasTable = $dasSource->getTable($objectName);
+        $das = $this->getDataAccessService($objectSchema);
+        if(!$das) return;
+        $dasTable = $das->getTable($objectName);
         $dasTable->setKey($key);
     }
     
-    public function setOrder($objectName, $orderElements, $orderMode='ASC') 
+    public function setOrder($objectName, $orderElements, $orderMode='ascending') 
     {
         $objectSchema = $this->schema->getObjectSchema($objectName);
-        $dasSource = $this->getDas($objectSchema);
-        if(!$dasSource) return;
-        $dasTable = $dasSource->getTable($objectName);
+        $das = $this->getDataAccessService($objectSchema);
+        if(!$das) return;
+        $dasTable = $das->getTable($objectName);
         $dasTable->setOrder($orderElements, $orderMode);
     }
     
     public function setFilter($objectName, $filterValue) 
     {
         $objectSchema = $this->schema->getObjectSchema($objectName);
-        $dasSource = $this->getDas($objectSchema);
-        if(!$dasSource) return;
-        $dasTable = $dasSource->getTable($objectName);
+        $das = $this->getDataAccessService($objectSchema);
+        if(!$das) return;
+        $dasTable = $das->getTable($objectName);
         $dasTable->setFilter($filterValue);
     }
 
     public function getKey($objectName) 
     {
         $objectSchema = $this->schema->getObjectSchema($objectName);
-        $dasSource = $this->getDas($objectSchema);
-        if(!$dasSource) return;
-        $dasTable = $dasSource->getTable($objectName);
+        $das = $this->getDataAccessService($objectSchema);
+        if(!$das) return;
+        $dasTable = $das->getTable($objectName);
         return $dasTable->getKey();
     }
-    
-    public function getLabel($objectName)
-    {
-        $objectSchema = $this->schema->getObjectSchema($objectName);
-        if($objectSchema->{'das:label'}) {
-            return $objectSchema->{'das:label'};
-        } else {
-            return $objectSchema->name;
-        }
-    }
-    
-    public function getContentLabels($objectName) 
-    {
-        $objectSchema = $this->schema->getObjectSchema($objectName);
-        $childElements = $objectSchema->getChildElements();
-        for($i=0; $i<$childElements->length;$i++) {
-            $childElement = $childElements->item($i);
-            if($childElement->{'das:label'}) $label = $childElement->{'das:label'};
-            elseif($childElement->ref) $label = $childElement->ref;
-            else $label = $childElement->name;
-            
-            if($childElement->ref) $childName = $childElement->ref;
-            else $childName = $childElement->name;
-            $labels[$childName] = $label;
-        }
-        return $labels;
-    }
-    
+        
     //*************************************************************************
     // PRIVATE OBJECT HANDLING FUNCTIONS
     //*************************************************************************
@@ -340,33 +340,17 @@ class DataObjectController extends DOMDocument
         
         // Set Das Source
         //*********************************************************************
-        $dasSource = $this->getDas($objectSchema);
-        if($dasSource) {
-            $dasTable = $dasSource->addTable($objectSchema->name);
-            $dasTable->addPrimaryKey(
-                $objectSchema->{'das:key-columns'}
-            );
-            $dasTable->addFilter(
-                $objectSchema->{'das:filter-columns'}
-            );
-            if($propertyElement->{'das:label'}) {
-                $dasColumn->{'label'} = $propertyElement->{'das:label'};
-            } else {
-                $dasColumn->{'label'} = $propertyElement->name;
+        $das = $this->getDataAccessService($objectSchema);
+        if($das) {
+            $dasTable = $das->addTable($objectSchema->name);
+            if($objectSchema->{'das:key-columns'}) {
+                $dasTable->addPrimaryKey(
+                    $objectSchema->{'das:key-columns'}
+                );
             }
-            if($propertyElement->{'das:comment'}) {
-                $dasColumn->{'comment'} = $propertyElement->{'das:comment'};
-            }
-            // Relation with parent
-            $relationElements = $objectSchema->getRelationElements();
-            for($i=0; $i<$relationElements->length; $i++) {
-                $relationElement = $relationElements->item(0);
-                //echo "<br/> Add relation between " .$relationElement->{'parent'} ." and ". $relationElement->{'child'};
-                $dasSource->addRelation(
-                    $relationElement->{'parent'},
-                    $relationElement->{'child'}, 
-                    $relationElement->{'parent-keys'}, 
-                    $relationElement->{'child-keys'}
+            if($objectSchema->{'das:filter-columns'}) {
+                $dasTable->addFilter(
+                    $objectSchema->{'das:filter-columns'}
                 );
             }
         }
@@ -396,7 +380,7 @@ class DataObjectController extends DOMDocument
                 
                 // Set Das property
                 //*************************************************************
-                if($dasSource) {
+                if($das) {
                     $enclose = $this->schema->isEnclosedType($childType);
                     $dasColumn = $dasTable->addColumn($childName, $childType->name, $enclose);
                     if($childElement->{'default'}) {
@@ -496,11 +480,11 @@ class DataObjectController extends DOMDocument
     //*************************************************************************
     // PRIVATE DAS FUNCTIONS
     //*************************************************************************
-    private function getDas($objectSchema) 
+    private function getDataAccessService($objectSchema) 
     {
-        $dasSource = $objectSchema->{'das:source'};
-        if(!$dasSource) return;
-        $Das = $this->dataAccessServices[$dasSource];
+        $dasSourceName = $objectSchema->getSourceName();
+        if(!$dasSourceName) return;
+        $Das = $this->dataAccessServices[$dasSourceName];
         return $Das;
     }
     
@@ -508,10 +492,9 @@ class DataObjectController extends DOMDocument
     {
         $schemaPath = $dataObject->schemaPath;
         $objectSchema = $this->schema->getSchemaElement($schemaPath);
-        //echo "<br/>Get data from $objectSchema->name$objectSchema->ref ($schemaPath)";
-        $dasSource = $this->getDas($objectSchema);
-        if(!$dasSource) return;
-        return $dasSource->getData($dataObject);
+        $das = $this->getDataAccessService($objectSchema);
+        if(!$das) return;
+        return $das->getData($dataObject);
     }
     
     //*************************************************************************
