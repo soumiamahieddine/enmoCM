@@ -93,19 +93,6 @@ class DataObjectController extends DOMDocument
             
         }
         
-        // Relations
-        $dasRelations = $this->schema->getRelations();
-        for($i=0; $i<count($dasRelations); $i++) {
-            $dasRelation = $dasRelations[$i];
-            //echo "<br/> Add relation between " .$dasRelation->{'parent'} ." and ". $dasRelation->{'child'};
-            $this->dataAccessServices[$dasSource->name]->addRelation(
-                $dasRelation->{'parent'},
-                $dasRelation->{'child'}, 
-                $dasRelation->{'parent-keys'}, 
-                $dasRelation->{'child-keys'},
-                $dasRelation->name
-            );
-        }
         
         // Make prototypes of root objects
         $objectSchemas = $this->schema->getObjectSchemas();
@@ -265,7 +252,7 @@ class DataObjectController extends DOMDocument
         $objectSchema = $this->schema->getObjectSchema($objectName);
         $das = $this->getDataAccessService($objectSchema);
         if(!$das) return;
-        $dasTable = $das->getTable($objectName);
+        $dasTable = $das->getTable($objectName, $objectSchema->{'das:schema'});
         $dasTable->setKey($key);
     }
     
@@ -274,7 +261,7 @@ class DataObjectController extends DOMDocument
         $objectSchema = $this->schema->getObjectSchema($objectName);
         $das = $this->getDataAccessService($objectSchema);
         if(!$das) return;
-        $dasTable = $das->getTable($objectName);
+        $dasTable = $das->getTable($objectName, $objectSchema->{'das:schema'});
         $dasTable->setOrder($orderElements, $orderMode);
     }
     
@@ -283,7 +270,7 @@ class DataObjectController extends DOMDocument
         $objectSchema = $this->schema->getObjectSchema($objectName);
         $das = $this->getDataAccessService($objectSchema);
         if(!$das) return;
-        $dasTable = $das->getTable($objectName);
+        $dasTable = $das->getTable($objectName, $objectSchema->{'das:schema'});
         $dasTable->setFilter($filterValue);
     }
 
@@ -292,7 +279,7 @@ class DataObjectController extends DOMDocument
         $objectSchema = $this->schema->getObjectSchema($objectName);
         $das = $this->getDataAccessService($objectSchema);
         if(!$das) return;
-        $dasTable = $das->getTable($objectName);
+        $dasTable = $das->getTable($objectName, $objectSchema->{'das:schema'});
         return $dasTable->getKey();
     }
         
@@ -342,7 +329,7 @@ class DataObjectController extends DOMDocument
         //*********************************************************************
         $das = $this->getDataAccessService($objectSchema);
         if($das) {
-            $dasTable = $das->addTable($objectSchema->name);
+            $dasTable = $das->addTable($objectSchema->name, $objectSchema->{'das:schema'});
             if($objectSchema->{'das:key-columns'}) {
                 $dasTable->addPrimaryKey(
                     $objectSchema->{'das:key-columns'}
@@ -353,7 +340,21 @@ class DataObjectController extends DOMDocument
                     $objectSchema->{'das:filter-columns'}
                 );
             }
+            
+            $dasRelation = $objectSchema->getRelation();
+            if($dasRelation) {
+                //echo "<br/> Add relation between " .$dasRelation->{'parent'} ." and ". $dasRelation->{'child'};
+                $das->addRelation(
+                    $dasRelation->{'parent'},
+                    $dasRelation->{'child'}, 
+                    $dasRelation->{'parent-keys'}, 
+                    $dasRelation->{'child-keys'},
+                    $dasRelation->name
+                );
+            }
+
         }
+       
         // Create Properties and children
         // ******************************************************************** 
         $childElements = $objectSchema->getChildElements();
@@ -393,6 +394,7 @@ class DataObjectController extends DOMDocument
                         $dasColumn->nillable = true;
                     }
                 }
+                                
             }
             if ($childType->tagName == 'xsd:complexType') {
                 $childDataObject = $this->instanciateDataObject($childElement, $inlineChildElement);
@@ -416,36 +418,43 @@ class DataObjectController extends DOMDocument
     */
     private function loadDataObject($dataObject) 
     {      
+        $objectSchema = $this->schema->getSchemaElement($dataObject->schemaPath);
         try {
-            $objectDatas = $this->getData($dataObject);
+            $das = $this->getDataAccessService($objectSchema);
+            if($das) {
+                $objectDatas = $das->getData($dataObject, $objectSchema->{'das:schema'});
+                $objectData = $objectDatas[0];
+                $this->loadProperties($dataObject, $objectData);
+            }
+            $this->loadChildren($dataObject);
         } catch (maarch\Exception $e) {
             throw $e;
         }
-        
-        $objectData = $objectDatas[0];
-        $this->loadProperties($dataObject, $objectData);
-        $this->loadChildren($dataObject);
-        
+
     }
     
     private function loadDataObjectArray($arrayDataObject)
     {
+        $objectSchema = $this->schema->getSchemaElement($arrayDataObject->schemaPath);
         try {
-            $objectDatas = $this->getData($arrayDataObject);
+            $das = $this->getDataAccessService($objectSchema);
+            if($das) {
+                $objectDatas = $das->getData($arrayDataObject, $objectSchema->{'das:schema'});
+                for($i=0; $i<count($objectDatas); $i++) {
+                    $dataObject = $this->instanciateDataObject($objectSchema);
+                    $dataObject->beginLogging();
+                    $dataObject->logRead();
+                    $arrayDataObject->append($dataObject);  
+                    $objectData = $objectDatas[$i];            
+                    $this->loadProperties($dataObject, $objectData);
+                    $this->loadChildren($dataObject);
+                }
+            }
+            
         } catch (maarch\Exception $e) {
             throw $e;
         }
-        $schemaPath = $arrayDataObject->schemaPath;
-        $objectSchema = $this->schema->getSchemaElement($schemaPath);
-        for($i=0; $i<count($objectDatas); $i++) {
-            $dataObject = $this->instanciateDataObject($objectSchema);
-            $dataObject->beginLogging();
-            $dataObject->logRead();
-            $arrayDataObject->append($dataObject);  
-            $objectData = $objectDatas[$i];            
-            $this->loadProperties($dataObject, $objectData);
-            $this->loadChildren($dataObject);
-        }
+        
     }
     
     private function loadProperties($dataObject, $objectData)
@@ -494,7 +503,7 @@ class DataObjectController extends DOMDocument
         $objectSchema = $this->schema->getSchemaElement($schemaPath);
         $das = $this->getDataAccessService($objectSchema);
         if(!$das) return;
-        return $das->getData($dataObject);
+        return $das->getData($dataObject, $objectSchema->{'das:schema'});
     }
     
     //*************************************************************************

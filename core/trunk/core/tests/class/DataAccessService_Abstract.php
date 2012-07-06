@@ -8,11 +8,7 @@ abstract class DataAccessService
     public $tables = array();
     public $relations = array();
     
-    public function getTable($tableName)
-    {
-        return $this->tables[$tableName];
-    }
-    
+
     public function getRelation($parentName, $childName) 
     {
         foreach($this->relations as $relationName => $relation) {

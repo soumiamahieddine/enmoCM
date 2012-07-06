@@ -70,6 +70,11 @@ class DataAccessService_Database
         $this->relations[$name] = $newRelation;
     }
     
+    public function getTable($tableName)
+    {
+        return $this->tables[$tableName];
+    }
+    
     public function getData($dataObject) 
     {
         try {
@@ -257,13 +262,13 @@ class DataAccessService_Database
     private function selectData($dataObject)
     {
         $parentObject = $dataObject->parentObject;
-        $table = $this->tables[$dataObject->name];
+        
+        $tableName = $dataObject->name;
+        
+        $table = $this->tables[$tableName];
         
         // Select 
         $selectExpression = $this->makeSelectExpression($table);
-        
-        // FROM
-        $tableName = $table->name;
         
         // Where
         $whereExpressionParts = array('1=1');
@@ -308,11 +313,11 @@ class DataAccessService_Database
     private function insertData($dataObject)
     {
         $parentObject = $dataObject->parentObject;
-       
-        $table = $this->tables[$dataObject->name];
         
-        // INSERT INTO
         $tableName = $dataObject->name;
+        
+        $table = $this->tables[$tableName];
+        
         // COLUMNS
         $columnsExpression = $this->makeColumnsExpression($table);
         // VALUES
@@ -339,11 +344,12 @@ class DataAccessService_Database
     private function updateData($dataObject)
     {
         $parentObject = $dataObject->parentObject;  
-        $table = $this->tables[$dataObject->name];
         
-        //UPDATE
         $tableName = $dataObject->name;
         
+        $table = $this->tables[$tableName];
+        
+     
         // COLUMNS / VALUES
         $updateExpression = $this->makeUpdateExpression($table, $dataObject);
 

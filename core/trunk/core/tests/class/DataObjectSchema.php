@@ -142,7 +142,7 @@ class DataObjectSchema
     {
         $objectSchemas = $this->xpath("/xsd:schema/xsd:element[@name='".$objectName."']");
         
-        if($objectSchemas->length == 0) die("<br/><b>Unable to find root element named $rootTypeName</b>");
+        if($objectSchemas->length == 0) die("<br/><b>Unable to find root element named $objectName</b>");
         
         return $objectSchemas->item(0);
     }
@@ -307,6 +307,18 @@ class SchemaElement extends DOMElement {
         } else {
             return $this->name;
         }
+    }
+    
+    public function getRelation() 
+    {
+        if($this->{'das:relation'}) {
+            $relationNode = $this->xpath('//das:relation[@name="'.$this->{'das:relation'}.'"]');
+            if($relationNode->length == 0) Die('Relation named ' . $this->{'das:relation'} . ' is not defined for element $this->name');
+        } else {
+            $relationNode = $this->xpath('./xsd:annotation/xsd:appinfo/das:relation', $this);
+        }
+        if($relationNode->length == 0) return false;
+        return $relationNode->item(0);
     }
 }
 

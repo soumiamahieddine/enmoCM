@@ -4,12 +4,11 @@ class DataAccessService_XML
 {
     public $file;
     public $DOMDocument;
-    public $DOMXPath;
     public $XSLT;
     
     public function DataAccessService_XML(
         $name,
-        $file
+        $file       
     ) 
     {
         $this->name = $name;
@@ -17,8 +16,6 @@ class DataAccessService_XML
         $this->type = 'xml';
         $this->DOMDocument = new DOMDocument();
         $this->DOMDocument->load($file);
-        $this->DOMXPath = new DOMXPath($this->DOMDocument);
-        $this->DOMXPath->registerPhpFunctions();
         $this->XSLT = new XSLTProcessor();
     }
     
@@ -27,6 +24,11 @@ class DataAccessService_XML
         $newTable = new DataAccessService_XML_Table($tableName);
         $this->tables[$tableName] = $newTable;
         return $newTable;
+    }
+    
+    public function getTable($tableName)
+    {
+        return $this->tables[$tableName];
     }
     
     public function addRelation($parentName, $childName, $parentColumns, $childColumns, $name=false) 
@@ -55,23 +57,39 @@ class DataAccessService_XML
     {
         $selectExpressionParts = array();
         foreach ($table->columns as $columnName => $column) {
-            $selectExpressionParts[] = '<xsl:copy-of select="./'.$columnName.'" />';
-            
-            // DEFAULT, FIXED
-            /*
-            if($column->fixed) {
-                $fixedValue = $this->makeValueExpression($column, $column->fixed);
-                $selectExpressionPart = $fixedValue;
-            } elseif($column->{'default'}) {
-                $defaultValue = $this->makeValueExpression($column, $column->{'default'});
-                $selectExpressionPart = "COALESCE(" . $table->name . "." . $column->name . ", " . $defaultValue . ") AS " . $column->name;
-            } else {
-                $selectExpressionPart = $table->name . "." . $column->name;
-            }
-            $selectExpressionParts[] = $selectExpressionPart;*/
+            $selectExpressionParts[] = "name()='" .$columnName."'";
         }
-        return implode(' ', $selectExpressionParts);
+        return implode(' or ', $selectExpressionParts);
     
+    }
+    
+    private function makeValueExpression($table)
+    {
+        $valueExpressionParts = array();
+        foreach ($table->columns as $columnName => $column) {
+            $valueExpressionPart = 
+                '<xsl:template match="'.$columnName.'">
+                  <xsl:copy>';
+            if($column->fixed) {
+                $valueExpressionPart .= $column->fixed;
+            } elseif($column->{'default'}) {
+                $valueExpressionPart .= 
+                    '<xsl:choose>
+                      <xsl:when test="string-length(.) &gt; 0">
+                        <xsl:value-of select="node()" />
+                      </xsl:when>
+                      <xsl:otherwise>'.$column->{'default'}.'</xsl:otherwise>
+                    </xsl:choose>';
+            } else {
+                $valueExpressionPart .= 
+                    '<xsl:value-of select="node()" />';
+            }
+            $valueExpressionPart .= 
+                    '</xsl:copy>
+                </xsl:template>';
+            $valueExpressionParts[] = $valueExpressionPart;
+        }
+        return implode('', $valueExpressionParts);
     }
     
     private function makeSelectKeyExpression($table) 
@@ -109,6 +127,22 @@ class DataAccessService_XML
         }
     }
     
+    private function makeRelationExpression($relation, $table, $parentObject)
+    {
+        $relationExpressionParts = array();
+        $childColumns = explode(' ', $relation->childColumns);
+        $parentColumns = explode(' ', $relation->parentColumns);
+        for($i=0; $i<count($childColumns); $i++) {
+            $childColumnName = $childColumns[$i];
+            $parentColumnName = $parentColumns[$i];
+            $childColumn = $table->columns[$childColumnName];
+            $parentColumnValue = "'" . $parentObject->{$parentColumnName} . "'";
+            $relationExpressionParts[] = "./" . $childColumnName . " = " . $parentColumnValue;
+        }
+        $relationExpression = implode(' and ', $relationExpressionParts);
+        return $relationExpression;
+    }
+    
     private function makeSortExpression($table)
     {
         if($table->order) {
@@ -130,18 +164,23 @@ class DataAccessService_XML
     private function queryData($dataObject)
     {
         $parentObject = $dataObject->parentObject;
-        $table = $this->tables[$dataObject->name];
+        
+        $tableName = $dataObject->name;
+        
+        $table = $this->tables[$tableName];
         
         // Select 
         $selectExpression = $this->makeSelectExpression($table);
         
+        // Values
+        $valueExpression = $this->makeValueExpression($table);
+        
         // Where
         $whereExpressionParts = array('.');
-        /*
         $relation = $this->getRelation($parentObject->name, $table->name);
         if($relation) {
             $whereExpressionParts[] = $this->makeRelationExpression($relation, $table, $parentObject);
-        }*/
+        }
         $keyExpression = $this->makeSelectKeyExpression($table);
         if($keyExpression) {
             $whereExpressionParts[] = $keyExpression;
@@ -151,7 +190,6 @@ class DataAccessService_XML
             $whereExpressionParts[] = $filterExpression;
         }
         $whereExpression = implode(' and ', $whereExpressionParts);
-        
         $tableQuery = $table->name . "[" . $whereExpression . "]";
         
         // Order
@@ -160,64 +198,48 @@ class DataAccessService_XML
         $xslString = 
             '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
                 <xsl:template match="/">
-                  <xsl:apply-templates select="'.$tableQuery.'">
-                    '. $sortExpression .'
-                  </xsl:apply-templates>
+                  <root>
+                      <xsl:apply-templates select="'.$tableQuery.'">
+                        '. $sortExpression .'
+                      </xsl:apply-templates>
+                  </root>
                 </xsl:template>
-                <xsl:template match="*">
+                <xsl:template match="'.$table->name.'">
                   <xsl:copy>
-                    '.$selectExpression.'
+                    <xsl:apply-templates select="*['.$selectExpression.']" />
                   </xsl:copy>
                 </xsl:template>
-            </xsl:stylesheet>';
+                '.$valueExpression.'
+              </xsl:stylesheet>';
         
-        echo "<pre>XSL = " . htmlspecialchars($xslString) . "</pre>";
-
-        
-        
+        //echo "<pre>XSL = " . htmlspecialchars($xslString) . "</pre>";
+     
         $XSL = new DOMDocument();
+        $XSL->formatOutput = true;
         $XSL->loadXML($xslString);
         $this->XSLT->importStylesheet( $XSL );
 
         $root = $this->DOMDocument->documentElement;
         
-        $DOMResult = $this->XSLT->transformToDoc($root);
-        echo htmlspecialchars($DOMResult->saveXML());exit;
-        return $results;
-        
-        
-        //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        //echo "<pre>TABLE QUERY = " . print_r($tableQuery,true) . "</pre>";
-        //echo "<pre>COLUMN QUERY = " . print_r($columnQuery,true) . "</pre>";
-        /*
-        try {
-            $rowNodeList = $this->DOMXPath->query($tableQuery);
-        } catch (Exception $e) {
-            throw $e;
-        }
+        $DOMDocument = $this->XSLT->transformToDoc($root);
+        //echo htmlspecialchars($DOMDocument->saveXML());
         $results = array();
-        //echo "<br/>Found $rowNodeList->length table results<br/>";
-        for($i=0; $i<$rowNodeList->length; $i++) {
-            $rowNode = $rowNodeList->item($i);
-            foreach ($table->columns as $columnName => $column) {
-                $columnNodes = $this->DOMXPath->query('./' . $columnName, $rowNode);
-                if($columnNodes->length == 0) { 
-                    // throw Exception
-                } 
-                $columnNode = $columnNodes->item(0);
-                $columnValue = $columnNode->nodeValue;
-                
-                if($column->fixed) {
-                    $columnValue = $column->fixed;
-                } elseif($column->{'default'} && $columnValue == '') {
-                    $columnValue = $column->{'default'};    
-                }
-                
-                $result[$columnName] = $columnValue;             
+        $DOMTable = $DOMDocument->documentElement->childNodes;
+        for($i=0; $i<$DOMTable->length; $i++) {
+            $result = array();
+            $DOMRow = $DOMTable->item($i);
+            $DOMColumns = $DOMRow->childNodes;
+            for($j=0; $j<$DOMColumns->length; $j++) {
+                $DOMColumn = $DOMColumns->item($j);
+                $columnName = $DOMColumn->tagName;
+                $columnValue = $DOMColumn->nodeValue;
+                $result[$columnName] = $columnValue;
             }
             $results[] = $result;
         }
-        */
+        
+        return $results;
+        
     }
     
 }
