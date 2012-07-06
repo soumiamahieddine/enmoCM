@@ -29,6 +29,9 @@ public class MaarchCM extends JApplet {
     protected String objectTable;
     protected String objectId;
     protected String userLocalDirTmp;
+    protected String userMaarch;
+    protected String userMaarchPwd;
+    protected String psExecMode;
     
     protected String messageStatus;
     
@@ -55,12 +58,17 @@ public class MaarchCM extends JApplet {
         this.objectType = this.getParameter("objectType");
         this.objectTable = this.getParameter("objectTable");
         this.objectId = this.getParameter("objectId");
-        this.userLocalDirTmp = this.getParameter("userLocalDirTmp");
+        this.userMaarch = this.getParameter("userMaarch");
+        this.userMaarchPwd = this.getParameter("userMaarchPwd");
+        this.psExecMode = this.getParameter("psExecMode");
+        
         System.out.println("URL : " + this.url);
         System.out.println("OBJECT TYPE : " + this.objectType);
         System.out.println("OBJECT TABLE : " + this.objectTable);
         System.out.println("OBJECT ID : " + this.objectId);
-        System.out.println("USER LOCAL DIR TMP : " + this.userLocalDirTmp);
+        System.out.println("USER MAARCH : " + this.userMaarch);
+        System.out.println("PSEXEC MODE : " + this.psExecMode);
+        
         System.out.println("----------END PARAMETERS----------");
         try {
             this.editObject();
@@ -80,12 +88,18 @@ public class MaarchCM extends JApplet {
         this.objectType = args[1];
         this.objectTable = args[2];
         this.objectId = args[3];
-        this.userLocalDirTmp = args[4];
+        this.userMaarch = args[4];
+        this.userMaarchPwd = args[5];
+        this.psExecMode = args[6];
+        
         System.out.println("URL : " + this.url);
         System.out.println("OBJECT TYPE : " + this.objectType);
         System.out.println("OBJECT TABLE : " + this.objectTable);
         System.out.println("OBJECT ID : " + this.objectId);
-        System.out.println("USER LOCAL DIR TMP : " + this.userLocalDirTmp);
+        System.out.println("USER MAARCH : " + this.userMaarch);
+        System.out.println("USER MAARCHPWD : " + this.userMaarchPwd);
+        System.out.println("PSEXEC MODE : " + this.psExecMode);
+        
         System.out.println("----------END PARAMETERS----------");
         try {
             this.editObject();
@@ -121,7 +135,7 @@ public class MaarchCM extends JApplet {
     public void processReturn(Hashtable result) {
         Iterator itValue = result.values().iterator(); 
         Iterator itKey = result.keySet().iterator();
-        while(itValue.hasNext()){
+        while(itValue.hasNext()) {
             String value = (String)itValue.next();
             String key = (String)itKey.next();
             this.logger.log(key + " : " + value, Level.INFO);
@@ -185,8 +199,8 @@ public class MaarchCM extends JApplet {
         boolean isUnix = os.indexOf("nix") >= 0 || os.indexOf("nux") >= 0;
         boolean isWindows = os.indexOf("win") >= 0;
         boolean isMac = os.indexOf("mac") >= 0;
-        //this.userLocalDirTmp = System.getProperty("user.home");
-        this.userLocalDirTmp = "c:\\maarch";
+        this.userLocalDirTmp = System.getProperty("user.home");
+        //this.userLocalDirTmp = "c:\\maarch";
         fileManager fM = new fileManager();
         fM.createUserLocalDirTmp(this.userLocalDirTmp);
         if (isWindows) {
@@ -215,8 +229,28 @@ public class MaarchCM extends JApplet {
         
         System.out.println("Create the logger");
         this.logger = new myLogger(this.userLocalDirTmp);
+        
+        if (this.psExecMode.equals("OK")) {
+            this.logger.log("----------BEGIN PSEXEC MODE----------", Level.INFO);
+            boolean isPsExecExists = fM.isPsExecFileExists(this.userLocalDirTmp + "PsExec.exe");
+            if (!isPsExecExists) {
+                this.logger.log("----------BEGIN TRANSFER OF PSEXEC----------", Level.INFO);
+                String urlToSend = this.url + "?action=sendPsExec&objectType=" + this.objectType
+                        + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId;
+                sendHttpRequest(urlToSend, "none");
+                this.logger.log("MESSAGE STATUS : " + this.messageStatus.toString(), Level.INFO);
+                this.logger.log("MESSAGE RESULT : ", Level.INFO);
+                this.processReturn(this.messageResult);
+                this.logger.log("CREATE THE FILE : " + this.userLocalDirTmp + "PsExec.exe", Level.INFO);
+                fM.createFile(this.fileContent, this.userLocalDirTmp + "PsExec.exe");
+                this.fileContent = "";
+                this.logger.log("----------END TRANSFER OF PSEXEC----------", Level.INFO);
+            }
+            this.logger.log("----------END PSEXEC MODE----------", Level.INFO);
+        }
+        
         this.logger.log("----------BEGIN OPEN REQUEST----------", Level.INFO);
-        String urlToSend = this.url + "?action=editObject&objectType=" + this.objectType 
+        String urlToSend = this.url + "?action=editObject&objectType=" + this.objectType
                         + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId;
         sendHttpRequest(urlToSend, "none");
         this.logger.log("MESSAGE STATUS : " + this.messageStatus.toString(), Level.INFO);
@@ -225,12 +259,20 @@ public class MaarchCM extends JApplet {
         this.logger.log("----------END OPEN REQUEST----------", Level.INFO);
         
         String fileToEdit = "thefile." + this.fileExtension;
-        //if ("start".equals(this.appPath)) {
-            this.logger.log("----------BEGIN CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
-            this.logger.log("create the file : "  + this.appPath, Level.INFO);
-            fM.createBatFile(this.appPath, this.userLocalDirTmp, fileToEdit, this.os);
-            this.logger.log("----------END CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
-        //}
+        
+        this.logger.log("----------BEGIN CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
+        this.logger.log("create the file : "  + this.appPath, Level.INFO);
+        fM.createBatFile(
+            this.appPath, 
+            this.userLocalDirTmp, 
+            fileToEdit, 
+            this.os,
+            this.userMaarch,
+            this.userMaarchPwd,
+            this.psExecMode,
+            this.userLocalDirTmp
+        );
+        this.logger.log("----------END CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
         
         if ("ok".equals(this.status)) {
             this.logger.log("RESPONSE OK", Level.INFO);
@@ -238,7 +280,6 @@ public class MaarchCM extends JApplet {
             this.logger.log("----------BEGIN EXECUTION OF THE EDITOR----------", Level.INFO);
             this.logger.log("CREATE FILE IN LOCAL PATH", Level.INFO);
             fM.createFile(this.fileContent, this.userLocalDirTmp + fileToEdit);
-            //final String exec = this.appPath + " " + this.userLocalDirTmp + fileToEdit;
             final String exec = this.appPath;
             this.logger.log("EXEC PATH : " + exec, Level.INFO);
             Process proc = fM.launchApp(exec);

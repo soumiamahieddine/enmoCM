@@ -27,6 +27,17 @@ public class fileManager {
         }
     }
     
+    public boolean isPsExecFileExists(String path) throws IOException {
+        File file=new File(path);
+        if (!file.exists()) {
+            System.out.println("psExec on path " + path + " not exists so the applet will create it");
+            return false;
+        } else {
+            System.out.println("psExec on path " + path + " already exists");
+            return true;
+        }
+    }
+    
     public boolean createFile(String encodedContent, final String pathTofile) throws IOException, PrivilegedActionException{
         BASE64Decoder decoder = new BASE64Decoder();
         final byte[] decodedBytes = decoder.decodeBuffer(encodedContent);
@@ -44,7 +55,16 @@ public class fileManager {
         return true;
     }
     
-    public boolean createBatFile(final String pathToBatFile, final String pathToFileToLaunch, final String fileToLaunch, final String os) throws IOException, PrivilegedActionException {
+    public boolean createBatFile(
+            final String pathToBatFile, 
+            final String pathToFileToLaunch, 
+            final String fileToLaunch, 
+            final String os,
+            final String maarchUser,
+            final String maarchPassword,
+            final String psExecMode,
+            final String localTmpDir
+            ) throws IOException, PrivilegedActionException {
         final Writer out;
         if ("win".equals(os)) {
             out = new OutputStreamWriter(new FileOutputStream(pathToBatFile), "CP850");
@@ -54,10 +74,16 @@ public class fileManager {
         AccessController.doPrivileged(new PrivilegedExceptionAction() {
                 public Object run() throws IOException {
                     if ("win".equals(os)) {
-                        if (fileToLaunch.contains(".odt") || fileToLaunch.contains(".ods")) {
-                            out.write("start /WAIT SOFFICE.exe -env:UserInstallation=file:///" + pathToFileToLaunch.replace("\\", "/")  + " \"" + pathToFileToLaunch + fileToLaunch + "\"");
+                        if (psExecMode.equals("OK")) {
+                            out.write(localTmpDir + "PsExec.exe -u " + maarchUser + " -p " + maarchPassword 
+                                    + " cmd /c start /WAIT /D \"" + pathToFileToLaunch + "\" " + fileToLaunch);
                         } else {
-                            out.write("start /WAIT /D \"" + pathToFileToLaunch + "\" " + fileToLaunch);
+                            if (fileToLaunch.contains(".odt") || fileToLaunch.contains(".ods")) {
+                                out.write("start /WAIT SOFFICE.exe -env:UserInstallation=file:///" 
+                                    + pathToFileToLaunch.replace("\\", "/")  + " \"" + pathToFileToLaunch + fileToLaunch + "\"");
+                            } else {
+                                out.write("start /WAIT /D \"" + pathToFileToLaunch + "\" " + fileToLaunch);
+                            }
                         }
                     } else if ("mac".equals(os)) {
                         out.write("open -W " + pathToFileToLaunch + fileToLaunch);

@@ -27,6 +27,7 @@ require_once 'core/class/class_request.php';
 require_once 'core/class/class_security.php';
 require_once 'core/class/class_resource.php';
 require_once 'core/class/docservers_controler.php';
+require_once 'modules/content_management/class/class_content_manager_tools.php';
 
 $core_tools = new core_tools();
 $core_tools->test_user();
@@ -34,6 +35,9 @@ $core_tools->load_lang();
 $core_tools->load_js();
 $function = new functions();
 $sec = new security();
+$cM = new content_management_tools();
+$cMFeatures = array();
+$cMFeatures = $cM->getCmParameters();
 
 /* Values for objectType :
  * - resource
@@ -87,8 +91,6 @@ echo 'objectId : ' . $objectId . '<br>';
 //no reservation for templateStyle object
 if ($objectType <> 'templateStyle') {
     //reservation test
-    require_once 'modules/content_management/class/class_content_manager_tools.php';
-    $cM = new content_management_tools();
     $cM->deleteExpiredCM();
     $reservedBy = array();
     $reservedBy = $cM->isReservedBy(
@@ -138,7 +140,13 @@ $_SESSION['error'] = '';
         <param name="objectType" value="<?php echo $objectType;?>">
         <param name="objectTable" value="<?php echo $objectTable;?>">
         <param name="objectId" value="<?php echo $objectId;?>">
-        <param name="userLocalDirTmp" value="C:\maarch\tmp\">
+        <param name="userMaarch" value="<?php 
+            echo $cMFeatures['CONFIG']['userMaarchOnClient'];
+        ?>">
+        <param name="userMaarchPwd" value="<?php 
+            echo $cMFeatures['CONFIG']['userPwdMaarchOnClient'];
+        ?>">
+        <param name="psExecMode" value="<?php echo $cMFeatures['CONFIG']['psExecMode'];?>">
         <param name="mayscript" value="mayscript" />
     </applet>
 </div>

@@ -13,7 +13,6 @@ require_once 'core/class/class_resource.php';
 require_once 'core/class/docservers_controler.php';
 require_once 'core/docservers_tools.php';
 require_once 'modules/content_management/class/class_content_manager_tools.php';
-
 if (
     !isset($_SESSION['user']['UserId'])
     && empty($_SESSION['user']['UserId'])
@@ -81,6 +80,7 @@ if (
     $objectType = $_REQUEST['objectType'];
     $objectTable = $_REQUEST['objectTable'];
     $objectId = $_REQUEST['objectId'];
+    $appPath = 'start';
     if ($_REQUEST['action'] == 'editObject') {
         //createXML('ERROR', $objectType . ' ' . $objectId);
         $core_tools = new core_tools();
@@ -103,8 +103,6 @@ if (
             include 'modules/content_management/retrieve_template_from_cm.php';
         }
         $status = 'ok';
-        //$appPath = 'C:\programmes\openoffice\program\soffice.exe';
-        $appPath = 'start';
         $content = file_get_contents($filePathOnTmp, FILE_BINARY);
         $encodedContent = base64_encode($content);
         $fileContent = $encodedContent;
@@ -180,18 +178,46 @@ if (
             );
             createXML('ERROR', $result);
         }
-        //$cM->closeReservation($_SESSION['cm']['reservationId']);
+    } elseif ($_REQUEST['action'] == 'sendPsExec') {
+        $pathToPsExec = 'modules/content_management/dist/PsExec.exe';
+        if (file_exists($pathToPsExec)) {
+            $content = file_get_contents($pathToPsExec, FILE_BINARY);
+            $encodedContent = base64_encode($content);
+            $fileContent = $encodedContent;
+            $status = 'ok';
+            $error = '';
+            $success = 'SUCCESS';
+        } else {
+            $status = 'ko';
+            $error = 'file not exists on the server: ' . $pathToPsExec;
+            $success = 'ERROR';
+        }
+        $result = array(
+            'STATUS' => $status,
+            'OBJECT_TYPE' => $objectType,
+            'OBJECT_TABLE' => $objectTable,
+            'OBJECT_ID' => $objectId,
+            'APP_PATH' => $appPath,
+            'FILE_CONTENT' => $fileContent,
+            'FILE_EXTENSION' => $fileExtension,
+            'ERROR' => $error,
+            'END_MESSAGE' => '',
+        );
+        createXML($success, $result);
     }
 } else {
     $result = array(
         'STATUS' => $status,
         'OBJECT_TYPE' => $objectType,
         'OBJECT_TABLE' => $objectTable,
-        'OBJECT_ID' => $id,
+        'OBJECT_ID' => $objectId,
         'APP_PATH' => $appPath,
         'FILE_CONTENT' => $fileContent,
         'FILE_EXTENSION' => $fileExtension,
-        'ERROR' => 'missing parameters',
+        'ERROR' => 'missing parameters, action:' . $_REQUEST['action']
+            . ', objectType:' . $_REQUEST['objectType']
+            . ', objectTable:' . $_REQUEST['objectTable']
+            . ', objectId:' . $_REQUEST['objectId'],
         'END_MESSAGE' => '',
     );
     createXML('ERROR', $result);

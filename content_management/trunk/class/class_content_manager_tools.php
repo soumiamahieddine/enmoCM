@@ -58,7 +58,36 @@ class content_management_tools
             mkdir('modules/content_management/tmp/');
         }
     }
-
+    
+    public function getCmParameters()
+    {
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom/'
+            . $_SESSION['custom_override_id'] 
+            . '/modules/content_management/xml/content_management_features.xml'
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom/'
+                . $_SESSION['custom_override_id'] 
+                . '/modules/content_management/xml/content_management_features.xml';
+        } else {
+            $path = $_SESSION['config']['corepath'] 
+                . 'modules/content_management/xml/content_management_features.xml';
+        }
+        $cMFeatures = array();
+        if (file_exists($path)) {
+            $func = new functions();
+            $cMFeatures = $func->object2array(
+                simplexml_load_file($path)
+            );
+        } else {
+            $cMFeatures['CONFIG']['psExecMode'] = 'KO';
+            $cMFeatures['CONFIG']['userMaarchOnClient'] = '';
+            $cMFeatures['CONFIG']['userPwdMaarchOnClient'] = '';
+        }
+        return $cMFeatures;
+    }
+    
     public function get_application($userId, $format)
     {
         $xml_programs = DOMDocument::load($this->programs_xml_path);
