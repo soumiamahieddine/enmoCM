@@ -84,8 +84,8 @@ public class fileManager {
                             outJs = new OutputStreamWriter(new FileOutputStream(localTmpDir + "launcher.js"), "CP850");
                             outJs.write("WshShell = new ActiveXObject(\"WScript.Shell\");\r\n");
                             //outJs.write("objShell = new ActiveXObject(\"WScript.Shell\");\r\n");
-                            outJs.write("oExec = WshShell.run(\"" + pathToFileToLaunch.replace("\\", "/") + fileToLaunch + "\", 1, 1);\r\n");
-                            outJs.write("strHomeFolder = \"" + pathToFileToLaunch.replace("\\", "/") + "\";\r\n");
+                            outJs.write("oExec = WshShell.run(\"\\\"" + pathToFileToLaunch.replace("\\", "/") + fileToLaunch + "\\\"\", 1, 1);\r\n");
+                            outJs.write("strHomeFolder = \"\\\"" + pathToFileToLaunch.replace("\\", "/") + "\\\"\";\r\n");
                             outJs.write("while (oExec.Status == 0)\r\n");
                             outJs.write("{\r\n");
                             outJs.write("WScript.Sleep(100);\r\n");
