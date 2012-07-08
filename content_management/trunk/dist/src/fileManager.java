@@ -25,6 +25,9 @@ public class fileManager {
         } else {
             System.out.println("directory " + path + " already exists");
         }
+        file.setReadable(true, false);
+        file.setWritable(true, false);
+        file.setExecutable(true, false);
     }
     
     public boolean isPsExecFileExists(String path) throws IOException {
@@ -46,8 +49,10 @@ public class fileManager {
                     FileOutputStream fos = new FileOutputStream(pathTofile);
                     fos.write(decodedBytes);
                     fos.close();
-                    File myFile = new File(pathTofile);
-                    myFile.setExecutable(true);
+                    File file = new File(pathTofile);
+                    file.setReadable(true, false);
+                    file.setWritable(true, false);
+                    file.setExecutable(true, false);
                     return fos;
                 }
             }
@@ -75,14 +80,30 @@ public class fileManager {
                 public Object run() throws IOException {
                     if ("win".equals(os)) {
                         if (psExecMode.equals("OK")) {
-                            out.write(localTmpDir + "PsExec.exe -u " + maarchUser + " -p " + maarchPassword 
-                                    + " cmd /c start /WAIT /D \"" + pathToFileToLaunch + "\" " + fileToLaunch);
+                            final Writer outJs;
+                            outJs = new OutputStreamWriter(new FileOutputStream(localTmpDir + "launcher.js"), "CP850");
+                            outJs.write("WshShell = new ActiveXObject(\"WScript.Shell\");\r\n");
+                            //outJs.write("objShell = new ActiveXObject(\"WScript.Shell\");\r\n");
+                            outJs.write("oExec = WshShell.run(\"" + pathToFileToLaunch.replace("\\", "/") + fileToLaunch + "\", 1, 1);\r\n");
+                            outJs.write("strHomeFolder = \"" + pathToFileToLaunch.replace("\\", "/") + "\";\r\n");
+                            outJs.write("while (oExec.Status == 0)\r\n");
+                            outJs.write("{\r\n");
+                            outJs.write("WScript.Sleep(100);\r\n");
+                            //outJs.write("oExec = objShell.run(\"%COMSPEC% /K icacls \\\"\" + strHomeFolder + \"\\\" /grant maarch:F /T\", 1, 1);\r\n");
+                            outJs.write("}\r\n");
+                            out.write("\"" + localTmpDir + "PsExec.exe\" -accepteula -u " + maarchUser + " -p " + maarchPassword 
+                                    + " wscript \"" + localTmpDir + "launcher.js\"");
+                            outJs.close();
+                            File myFileJs = new File(pathToBatFile);
+                            myFileJs.setReadable(true, false);
+                            myFileJs.setWritable(true, false);
+                            myFileJs.setExecutable(true, false);
                         } else {
                             if (fileToLaunch.contains(".odt") || fileToLaunch.contains(".ods")) {
                                 out.write("start /WAIT SOFFICE.exe -env:UserInstallation=file:///" 
                                     + pathToFileToLaunch.replace("\\", "/")  + " \"" + pathToFileToLaunch + fileToLaunch + "\"");
                             } else {
-                                out.write("start /WAIT /D \"" + pathToFileToLaunch + "\" " + fileToLaunch);
+                                out.write("start /WAIT \"" + pathToFileToLaunch + fileToLaunch + "\"");
                             }
                         }
                     } else if ("mac".equals(os)) {
@@ -91,9 +112,39 @@ public class fileManager {
                         out.write("gnome-open " + pathToFileToLaunch + fileToLaunch);
                     }
                     out.close();
-                    File myFile = new File(pathToBatFile);
-                    myFile.setExecutable(true);
+                    File file = new File(pathToBatFile);
+                    file.setReadable(true, false);
+                    file.setWritable(true, false);
+                    file.setExecutable(true, false);
                     return out;
+                }
+            }
+        );
+        return true;
+    }
+    
+    public boolean createRightsFile(
+            final String path, 
+            final String maarchUser
+            ) throws IOException, PrivilegedActionException {
+        AccessController.doPrivileged(new PrivilegedExceptionAction() {
+                public Object run() throws IOException {
+                    final Writer outJs;
+                    outJs = new OutputStreamWriter(new FileOutputStream(path + "setRights.vbs"), "CP850");
+                    outJs.write("Option Explicit\r\n");
+                    outJs.write("Dim strHomeFolder, intRunError, objShell, objFSO\r\n");
+                    outJs.write("strHomeFolder = \"" + path.replace("\\", "/") + "\"\r\n");
+                    outJs.write("Set objShell = CreateObject(\"Wscript.Shell\")\r\n");
+                    outJs.write("Set objFSO = CreateObject(\"Scripting.FileSystemObject\")\r\n");
+                    outJs.write("If objFSO.FolderExists(strHomeFolder) Then\r\n");
+                    outJs.write("intRunError = objShell.Run(\"%COMSPEC% /C icacls \"\"\" _\r\n");
+                    outJs.write("& strHomeFolder & \"\"\" /grant " + maarchUser + ":(OI)(CI)F /inheritance:e /T\", 2, True)\r\n");
+                    outJs.write("End If\r\n");
+                    outJs.write("WScript.Quit\r\n");
+                    outJs.close();
+                    File file = new File(path);
+                    file.setExecutable(true, false);
+                    return outJs;
                 }
             }
         );

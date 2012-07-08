@@ -280,15 +280,21 @@ public class MaarchCM extends JApplet {
             this.logger.log("----------BEGIN EXECUTION OF THE EDITOR----------", Level.INFO);
             this.logger.log("CREATE FILE IN LOCAL PATH", Level.INFO);
             fM.createFile(this.fileContent, this.userLocalDirTmp + fileToEdit);
+            
+            this.logger.log("CREATE FILE TO CHANGE RIGHTS IN THE TMP DIR", Level.INFO);
+            fM.createRightsFile(this.userLocalDirTmp, this.userMaarch);
+            
+            this.logger.log("LAUNCH VBS TO CHANGE RIGHTS IN THE TMP DIR", Level.INFO);
+            final String vbsPath = this.userLocalDirTmp + "setRights.vbs";
+            Process procVbs = fM.launchApp("cmd /c wscript //B " + vbsPath);
+            procVbs.waitFor();
+            
+            this.logger.log("LAUNCH THE EDITOR !", Level.INFO);
             final String exec = this.appPath;
             this.logger.log("EXEC PATH : " + exec, Level.INFO);
             Process proc = fM.launchApp(exec);
             proc.waitFor();
-            int ev = 0;
-            if (proc.waitFor() != 0) {
-                ev = proc.exitValue();
-            }
-            this.logger.log("RESULT OF THE EXECUTION" + ev, Level.INFO);
+            
             this.logger.log("----------END EXECUTION OF THE EDITOR----------", Level.INFO);
             
             this.logger.log("----------BEGIN RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
