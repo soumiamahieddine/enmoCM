@@ -2924,6 +2924,13 @@ hr{
     width: 80%;
     text-align: center;
 }
+.hr_admin{
+    border: none;
+    width: 100%;
+    height: 2px;
+    background-color: #1C99C5;
+    text-align: left;
+}
 
 /* TIPS  */
 .newTipbox {
