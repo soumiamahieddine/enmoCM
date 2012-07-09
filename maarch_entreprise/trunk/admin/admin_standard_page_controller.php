@@ -459,7 +459,7 @@ if (isset($_REQUEST['submit'])) {
             );
             
             $objectList = $dataObjectList->$params['objectName'];
-            
+            //var_dump($objectList);exit;
             //prevent PHP NOTICE
             $str_filter     = '';
             $str_pagination = '';
@@ -540,7 +540,8 @@ if (isset($_REQUEST['submit'])) {
                                 $str_filter .= 'initList(';
                                     $str_filter .= '\'what\', ';
                                     $str_filter .= '\'whatList\', ';
-                                    $str_filter .= '\''.$_SESSION['config']['businessappurl'].'index.php?display=true&admin=docservers&page=docservers_list_by_id\', ';
+                                    $str_filter .= '\''.$_SESSION['config']['businessappurl']
+                                        .'index.php?display=true&admin=docservers&page=docservers_list_by_id\', ';
                                     $str_filter .= '\'what\', ';
                                     $str_filter .= '\'1\'';
                                 $str_filter .= '); ';
@@ -966,7 +967,7 @@ if (isset($_REQUEST['submit'])) {
                                     $encodeJSON .= ', ';
                                     if (count($json) > 0) {
                                         foreach($json as $keyJSON => $valueJSON) {
-                                            $encodeJSON .= "'".$keyJSON." '";
+                                            $encodeJSON .= "'".str_replace("'", "\'", $keyJSON)." '";
                                             $encodeJSON .= ' : ';
                                             if (DIRECTORY_SEPARATOR != '/') {
                                                 $valueJSON = str_replace(
@@ -975,7 +976,7 @@ if (isset($_REQUEST['submit'])) {
                                                     $valueJSON
                                                 );
                                             }
-                                            $encodeJSON .= "'".$valueJSON." '";
+                                            $encodeJSON .= "'".str_replace("'", "\'", $valueJSON)." '";
                                             $encodeJSON .= ', ';
                                         }
                                     }

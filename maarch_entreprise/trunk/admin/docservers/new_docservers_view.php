@@ -208,6 +208,7 @@
             
             $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri, $columnsLabels);
         }
+    
         
     //default JS
         $str_defaultJs .= '<script>';

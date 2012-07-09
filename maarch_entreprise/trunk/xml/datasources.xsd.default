@@ -7,7 +7,7 @@
   <xsd:annotation>
     <xsd:appinfo>
       <das:source 
-        name='database' 
+        name='maarch_entreprise' 
         type='database' 
         driver='postgresql' 
         host='localhost' 
