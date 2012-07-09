@@ -18,77 +18,143 @@
             'entity_id' => array(
                 'show'     => true,
                 'input'    => 'text',
-                
+                'tag'      => _STANDARD,
+                'tagStart' => true,
+                'tagAlreadyOpen' => true,
             ),
             'entity_label' => array(
-                'show'          => true,
-                'input'         => 'text',
-                
-            ),
-            'short_label' => array(
                 'show'     => true,
                 'input'    => 'text',
-                
+                'tag'      => _STANDARD,
             ),
-            'enabled'   => array(
-                'show'  => false,
-                
-            ),
-            'adrs_1' => array(
+            'short_label'  => array(
                 'show'     => true,
                 'input'    => 'text',
-                
+                'tag'      => _STANDARD,
             ),
-            'adrs_2' => array(
+            'enabled'      => array(
+                'show'     => false,
+                'tag'      => _STANDARD,
+            ),
+            'adrs_1'       => array(
                 'show'     => true,
                 'input'    => 'text',
-                
+                'tag'      => _STANDARD,
             ),
-            'adrs_3' => array(
+            'adrs_2'       => array(
                 'show'     => true,
                 'input'    => 'text',
-                
+                'tag'      => _STANDARD,
             ),
-            'zipcode' => array(
+            'adrs_3'       => array(
                 'show'     => true,
                 'input'    => 'text',
-                
+                'tag'      => _STANDARD,
             ),
-            'city' => array(
+            'zipcode'      => array(
                 'show'     => true,
                 'input'    => 'text',
-                
+                'tag'      => _STANDARD,
             ),
-            'country' => array(
+            'city'         => array(
                 'show'     => true,
                 'input'    => 'text',
-                
+                'tag'      => _STANDARD,
             ),
-            'email' => array(
+            'country'      => array(
                 'show'     => true,
                 'input'    => 'text',
-                
+                'tag'      => _STANDARD,
             ),
-            'business_id' => array(
+            'email'        => array(
                 'show'     => true,
                 'input'    => 'text',
-                
+                'tag'      => _STANDARD,
+            ),
+            'business_id'  => array(
+                'show'     => true,
+                'input'    => 'text',
+                'tag'      => _STANDARD,
             ),
             'parent_entity_id' => array(
                 'show'     => true,
                 'input'    => 'text',
-                
+                'tag'      => _STANDARD,
             ),
-            'entity_type'        => array(
-                'show'           => true,
+            'entity_type'  => array(
+                'show'     => true,
                     'input'          => 'select',
                     'selectValues'   => array(
                         'Bureau' => 'Bureau',
                         'Service' => 'Service',
                         'Direction' => 'Direction',
                     ),
-                
-            ),  
+                'tag'      => _STANDARD,
+            ),
+            'is_archival'  => array(
+                'show'     => true,
+                'input'    => 'radio',
+                'tag'      => _ARCHIVAL,
+                'tagAlreadyOpen' => true,
+                'tagStart' => true,
+                'radioValues'   => array(
+                        _YES => 'Y',
+                        _NO => 'N',
+                    ),
+            ),
+            'is_originating' => array(
+                'show'     => true,
+                'input'    => 'radio',
+                'tag'      => _ARCHIVAL,
+                'radioValues'   => array(
+                        _YES => 'Y',
+                        _NO => 'N',
+                    ),
+            ),
+            'is_transferring' => array(
+                'show'     => true,
+                'input'    => 'radio',
+                'tag'      => _ARCHIVAL,
+                'radioValues'   => array(
+                        _YES => 'Y',
+                        _NO => 'N',
+                    ),
+            ),
+            'is_control'   => array(
+                'show'     => true,
+                'input'    => 'radio',
+                'tag'      => _ARCHIVAL,
+                'radioValues'   => array(
+                        _YES => 'Y',
+                        _NO => 'N',
+                    ),
+            ),
+            'entityType'   => array(
+                'show'     => true,
+                'input'    => 'text',
+                'tag'      => _IDENTIFICATION,
+            ),
+            'nameEntry'    => array(
+                'show'     => true,
+                'input'    => 'text',
+                'tag'      => _IDENTIFICATION,
+            ),
+            'nameEntryParallel' => array(
+                'show'     => true,
+                'input'    => 'textarea',
+                'tag'      => _IDENTIFICATION,
+                'tagStart' => true,
+            ),
+            'authorizedForm' => array(
+                'show'     => true,
+                'input'    => 'textarea',
+                'tag'      => _IDENTIFICATION,
+            ),
+            'entityId' => array(
+                'show'     => true,
+                'input'    => 'text',
+                'tag'      => _IDENTIFICATION,
+            ),
         );
         
         $formButtons = array(
@@ -156,7 +222,7 @@
             
             $formButtons['back']['show'] = true;
             
-            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri, $columnsLabels);
+            $str_returnShow = makeAdvForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri, $columnsLabels);
             
         } elseif ($modeUpdate) {
             $formFields['entity_id']['readonly'] = true;
@@ -165,14 +231,14 @@
             
             $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri, $columnsLabels);
         }
-        
+
     //default JS
-        $str_defaultJs .= '<script>';
+        /*$str_defaultJs .= '<script>';
             if ($modeCreate || $modeRead || $modeUpdate) {
                 $str_defaultJs .= 'convertSizeMoGoTo(\'Mo\');';
                 $str_defaultJs .= 'showPercent();';
             }
-        $str_defaultJs .= '</script>';
+        $str_defaultJs .= '</script>';*/
 ?>
 
 <!--VIEW-->
