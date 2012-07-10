@@ -33,18 +33,22 @@ include_once 'modules/tags/templates/init.php';
 
 if (!$core_tools)
 {
-	$core_tools = new core_tools();
+    $core_tools = new core_tools();
 }
 
 
 $tags = new tag_controler();
-$tags->load_sessiontag($res_id,$coll_id);	
+$tags->load_sessiontag($res_id,$coll_id);   
 
 
 //--------------------------------------
 
-$frm_str .= '<h3 onclick="new Effect.toggle(\'tag_div\', \'blind\', {delay:0.2});return false;"  class="tag" style="width:90%;">';
-$frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_tags" />&nbsp;<b>'._TAGS.' :</b>';
+
+
+$frm_str .= '<h3 onclick="new Effect.toggle(\'tag_div\', \'blind\', {delay:0.2});';
+$frm_str .= 'whatIsTheDivStatus(\'tag_div\', \'divStatus_tag_div\');return false;" class="tag" style="width:90%;">';
+$frm_str .= ' <span id="divStatus_tag_div" style="color:#1C99C5;"><<</span>';
+$frm_str .= '&nbsp;<b>'._TAGS.' :</b>';
 $frm_str .= '<span class="lb1-details">&nbsp;</span>';
 $frm_str .= '</h3>';
 $frm_str .= '<div id="tag_div"  style="display:none">';
@@ -54,7 +58,7 @@ $frm_str .= '<table width="98%" align="center" border="0" align="center">';
 
 $tag_customsize = '200px';
 $tag_customcols = '26';
-include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS	
+include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS 
 
 $frm_str .= '<tr id="tag_tr" style="display:'.$display_value.';">';
 //$frm_str .= '<td><label for="tag" class="tag_title" ></label></td>';
