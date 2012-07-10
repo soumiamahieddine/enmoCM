@@ -190,11 +190,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '<input type="hidden" name="coll_id" id="coll_id" value="' . $coll_id . '" />';
                 $frm_str .= '<input type="hidden" name="module" id="module" value="' . $module . '" />';
                 $frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
-                $frm_str .= '<h3 onclick="new Effect.toggle(\'general_datas_div\', \'blind\', {delay:0.2});return false;" '
-                          . 'class="categorie" style="width:90%;">';
-                    $frm_str .= '<img src="'
-                        . $_SESSION['config']['businessappurl']
-                        . 'static.php?filename=plus.png" alt="" id="img_general_data" />&nbsp;<b>'
+                $frm_str .= '<h3 onclick="new Effect.toggle(\'general_datas_div\', \'blind\', {delay:0.2});'
+                    . 'whatIsTheDivStatus(\'general_datas_div\', \'divStatus_general_datas_div\');return false;" class="categorie" style="width:90%;">';
+                $frm_str .= ' <span id="divStatus_general_datas_div" style="color:#1C99C5;">>></span>&nbsp;<b>'
                         . _GENERAL_INFO . ' :</b>';
             $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
@@ -214,11 +212,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             . '" value="' . $data[$key]['show_value']
                             . '" readonly="readonly" class="readonly" style="border:none;" />';
                     } elseif ($data[$key]['display'] == 'textarea') {
-						$frm_str .= '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" '
-									.'title="'.$data[$key]['show_value'].'" style="width: 150px; max-width: 150px; border: none; color: #666666;">'
-										.$data[$key]['show_value']
-									.'</textarea>';
-						if (isset($data[$key]['addon'])) {
+                        $frm_str .= '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" '
+                                    .'title="'.$data[$key]['show_value'].'" style="width: 150px; max-width: 150px; border: none; color: #666666;">'
+                                        .$data[$key]['show_value']
+                                    .'</textarea>';
+                        if (isset($data[$key]['addon'])) {
                             $frm_str .= $data[$key]['addon'];
                         }
                     }
@@ -326,9 +324,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
 
     $frm_str .= '<h3 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});'
-              . 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});return false;" style="width:90%;">';
-    $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
-              . 'static.php?filename=plus.png" alt="" />&nbsp;<b>' . _PJ . ', ' . _DONE_ANSWERS . ' (' . $answer .'<span id="nb_attach">'. $nb_attach . '</span>) :</b>';
+              . 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});'
+              . 'whatIsTheDivStatus(\'done_answers_div\', \'divStatus_done_answers_div\');return false;" style="width:90%;">';
+    $frm_str .= ' <span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span>';
+    $frm_str .= '&nbsp;<b>' . _PJ . ', ' . _DONE_ANSWERS . ' (' . $answer .'<span id="nb_attach">'. $nb_attach . '</span>) :</b>';
     $frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</h3>';
     $frm_str .= '<div class="desc" id="done_answers_div" style="display:none;width:90%;">';
@@ -415,47 +414,62 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         require_once('modules/entities/class/class_manage_listdiff.php');
         $diff_list = new diffusion_list();
         $_SESSION['process']['diff_list'] = $diff_list->get_listinstance($res_id);
-        $frm_str .= '<h3 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});return false;" '
-            . 'class="categorie" style="width:90%;">';
-                    $frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" '
-                        . 'alt="" id="img_diff_list" />&nbsp;<b>'._DIFF_LIST_COPY.' :</b>';
+        $frm_str .= '<h3 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');return false;" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_diff_list_div" style="color:#1C99C5;"><<</span>';
+            $frm_str .= '&nbsp;<b>'._DIFF_LIST_COPY.' :</b>';
             $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
         $frm_str .= '<br>';
     }
 
     // HISTORY
-    $frm_str .= '<h3 onclick="new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});return false;" class="categorie" style="width:90%;">';
-        $frm_str .= '<img src="'.$_SESSION['config']['businessappurl']
-            . 'static.php?filename=plus.png" alt="" />&nbsp;<b>'. _DOC_HISTORY.' :</b>';
+    $frm_str .= '<h3 onclick="new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');return false;" class="categorie" style="width:90%;">';
+    $frm_str .= ' <span id="divStatus_history_div" style="color:#1C99C5;"><<</span>';
+        $frm_str .= '&nbsp;<b>'. _DOC_HISTORY.' :</b>';
         $frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</h3>';
     $frm_str .= '<br>';
 
     //NOTES
     if ($core_tools->is_module_loaded('notes')) {
-		$not_nbr = 0;
-		$dbId = new dbquery();
+        $not_nbr = 0;
+        $dbId = new dbquery();
         $dbId->connect();
-		$db = new dbquery();
+        $db = new dbquery();
         $db->connect();
         $dbId->query("select id, identifier, user_id, date_note, note_text from "
-							. $_SESSION['tablename']['not_notes'] 
-							. " where identifier = " . $res_id 
-							. " and coll_id ='"
-							. $_SESSION['collection_id_choice'] . "' order by date_note desc");
+                            . $_SESSION['tablename']['not_notes'] 
+                            . " where identifier = " . $res_id 
+                            . " and coll_id ='"
+                            . $_SESSION['collection_id_choice'] . "' order by date_note desc");
          
        while ($res = $dbId->fetch_object())
        {
-			 $db->query( "select id from notes where id in ("
-				. "select note_id from note_entities where (item_id = '" 
-				. $_SESSION['user']['primaryentity']['id'] . "' and note_id = " . $res->id . "))"
-				. "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')");
-			
-				if($db->nb_result()<>0)
-				$not_nbr++;
-		}
-		
+           $dbNotesEntities = new dbquery();
+           $dbNotesEntities->connect();
+           $query = "select id from note_entities where "
+           . "note_id = " .$res->id;
+                    
+           $dbNotesEntities->query($query);
+                        
+           if($dbNotesEntities->nb_result()==0)
+           $not_nbr++;
+           else
+           {
+             $db->query( "select id from notes where id in ("
+                . "select note_id from note_entities where (item_id = '" 
+                . $_SESSION['user']['primaryentity']['id'] . "' and note_id = " . $res->id . "))"
+                . "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')");
+
+            
+                if($db->nb_result()<>0)
+                $not_nbr++;
+
+
+            }
+        }
          // Displays the notes
         $select_notes[$_SESSION['tablename']['not_notes']] = array();
         array_push(
@@ -474,11 +488,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $_SESSION['config']['databasetype'],
             '500'
         );
-        $frm_str .= '<h3 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});';
-        $frm_str .= 'return false;" class="categorie" style="width:90%;">';
-        $frm_str .= '<img src="'
-            . $_SESSION['config']['businessappurl']
-            . 'static.php?filename=plus.png" alt="" />&nbsp;<b>'
+        $frm_str .= '<h3 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_notes_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
             . _NOTES . ' ('
             . $not_nbr . ') :</b>';
         $frm_str .= '<span class="lb1-details">&nbsp;</span>';
@@ -497,9 +509,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $case_properties = '';
         }
         $frm_str .= '<h3 onclick="new Effect.toggle(\'cases_div\', \'blind\', {delay:0.2});'
-        . 'return false;"  class="categorie" style="width:90%;">';
-        $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
-            . 'static.php?filename=plus.png" alt="" id="img_cases" />&nbsp;<b>' . _CASE . ' :</b>';
+            . 'whatIsTheDivStatus(\'cases_div\', \'divStatus_cases_div\');return false;" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_cases_div" style="color:#1C99C5;"><<</span>&nbsp;<b>' . _CASE . ' :</b>';
         $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
         $frm_str .= '<br>';
@@ -514,9 +525,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         'all'
     );
     $frm_str .= '<h3 onclick="new Effect.toggle(\'links_div\', \'blind\', {delay:0.2});'
-    . 'return false;"  class="categorie" style="width:90%;">';
-    $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
-        . 'static.php?filename=plus.png" alt="" id="img_cases" />&nbsp;<b>' . _LINK_TAB . ' (<span id="nbLinks">'.$nbLink.'</span>) :</b>';
+        . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" class="categorie" style="width:90%;">';
+    $frm_str .= ' <span id="divStatus_links_div" style="color:#1C99C5;"><<</span>&nbsp;<b>' . _LINK_TAB . ' (<span id="nbLinks">'.$nbLink.'</span>) :</b>';
     $frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</h3>';
     $frm_str .= '<br>';
@@ -527,10 +537,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $arr_tmp = get_folder_data($coll_id, $res_id);
         $project = $arr_tmp['project'];
         $market = $arr_tmp['market'];
-        $frm_str .= '<h3 onclick="new Effect.toggle(\'folder_div\', \'blind\', {delay:0.2});return false;" '
-            . 'class="categorie" style="width:90%;">';
-                    $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
-                        . 'static.php?filename=plus.png" alt="" id="img_folder" />&nbsp;<b>' . _FOLDER_ATTACH . ' :</b>';
+        $frm_str .= '<h3 onclick="new Effect.toggle(\'folder_div\', \'blind\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'folder_div\', \'divStatus_folder_div\');return false;" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_folder_div" style="color:#1C99C5;"><<</span>&nbsp;<b>' . _FOLDER_ATTACH . ' :</b>';
             $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
         $frm_str .= '<div id="folder_div"  style="display:none">';
@@ -593,9 +602,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
         $_SESSION['cm']['resMaster'] = '';
         $frm_str .= '<h3 onclick="new Effect.toggle(\'versions_div\', \'blind\', ';
-        $frm_str .= '{delay:0.2});return false;" class="categorie" style="width:90%;">';
-            $frm_str .= '<img src="' . $_SESSION['config']['businessappurl']
-                . 'static.php?filename=plus.png" alt="" />&nbsp;<b>'
+        $frm_str .= '{delay:0.2});'
+            . 'whatIsTheDivStatus(\'versions_div\', \'divStatus_versions_div\');return false;" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_versions_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
                 . _VERSIONS . ' (<span id="nbVersions">'
                 . $extend_title_for_versions . '</span>) :</b>';
             $frm_str .= '<span class="lb1-details">&nbsp;</span>';
@@ -650,6 +659,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<div>';
                 $frm_str .= '<div id="processframe" name="processframe">';
                     $frm_str .= '<center><h2 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});';
+                    $frm_str .= 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});;';
+                    $frm_str .= 'whatIsTheDivStatus(\'done_answers_div\', \'divStatus_done_answers_div\');';
                     $frm_str .= 'return false;">' . _ATTACHMENTS . ', ' . _DONE_ANSWERS . '</h2></center>';
                     $req = new request;
                     $req->connect();
@@ -730,6 +741,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<div id="diff_list_div" style="display:none">';
             $frm_str .= '<div>';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});';
+                $frm_str .= 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');';
                 $frm_str .= 'return false;">' . _DIFF_LIST_COPY . '</h2></center>';
                 if ($core_tools->test_service('add_copy_in_process', 'entities', false)) {
                     $frm_str .= '<a href="#" onclick="window.open(\''
@@ -810,6 +822,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<div class="desc" id="notes_div" style="display:none;">';
             $frm_str .= '<div class="ref-unit">';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});';
+                $frm_str .= 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');';
                 $frm_str .= 'return false;">' . _NOTES. '</h2></center>';
                 $frm_str .= '<div style="text-align:center;">';
                     $frm_str .= '<img src="'.$_SESSION['config']['businessappurl']
@@ -836,6 +849,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<div id="cases_div" style="display:none">';
             $frm_str .= '<div>';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'cases_div\', \'blind\', {delay:0.2});';
+                $frm_str .= 'whatIsTheDivStatus(\'cases_div\', \'divStatus_cases_div\');';
                 $frm_str .= 'return false;">' . _CASE . '</h2></center>';
                 $frm_str .= '<form name="cases" method="post" id="cases" action="#" class="forms addforms2" style="text-align:center;">';
                     $frm_str .= '<table width="98%" align="center" border="0">';
@@ -890,8 +904,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<div id="links_div" style="display:none">';
         $frm_str .= '<div style="text-align: left;">';
             $frm_str .= '<h2 onclick="new Effect.toggle(\'links_div\', \'blind\', {delay:0.2});';
+            $frm_str .= 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');';
                 $frm_str .= 'return false;">';
-                $frm_str .= _LINK_TAB;
+                $frm_str .= '<center>' . _LINK_TAB . '</center>';
             $frm_str .= '</h2>';
             $frm_str .= '<div id="loadLinks">';
                 $nbLinkDesc = $Class_LinkController->nbDirectLink(
@@ -944,7 +959,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     $frm_str .= '<div id="versions_div" style="display:none">';
         $frm_str .= '<div>';
-                $frm_str .= '<center><h2>' . _VERSIONS . '</h2></center>';
+                //$frm_str .= '<center><h2>' . _VERSIONS . '</h2></center>';
+                $frm_str .= '<h2 onclick="new Effect.toggle(\'versions_div\', \'blind\', {delay:0.2});';
+                $frm_str .= 'whatIsTheDivStatus(\'versions_div\', \'divStatus_versions_div\');';
+                    $frm_str .= 'return false;">';
+                    $frm_str .= '<center>' . _VERSIONS . '</center>';
+                $frm_str .= '</h2>';
                 $frm_str .= '<div class="error" id="divError" name="divError"></div>';
                 $frm_str .= '<div style="text-align:center;">';
                     $frm_str .= '<a href="';

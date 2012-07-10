@@ -41,6 +41,15 @@ function makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, 
                           $str_return .= 'value="'.$objectFieldValue.'" ';
                           $str_return .= $readonlyInput;
                         $str_return .= '/>';
+                    } elseif ($formFields[$key]['input'] == 'textarea') {
+                        $str_return .= '<textarea ';
+                          $str_return .= 'id="'.$key.'" ';
+                          $str_return .= 'name="'.$key.'" ';
+                          $str_return .= $jsEvent;
+                          $str_return .= $readonlyInput;
+                          $str_return .= '>';
+                          $str_return .= $objectFieldValue;
+                          $str_return .= '</textarea>';
                     } elseif ($formFields[$key]['input'] == 'hidden') {
                         $str_return .= '<input ';
                           $str_return .= 'id="'.$key.'" ';
@@ -166,8 +175,17 @@ function makeAdvForm($formFields, $formButtons, $dataObject, $schemaPath, $param
                         $str_return .= '<br/>';
                     }
                     $newTag = $formFields[$key]['tag'];
-                    $str_return .= '<h3 style="color:#FFC200;" onclick="new Effect.toggle(\'div' . $cptTag . '\', \'blind\', {delay:0.2});">'
-                        . $formFields[$key]['tag'] . ' <span style="color:#1C99C5;">>></span></h3>';
+                    if ($formFields[$key]['tagAlreadyOpen']) {
+                        $divStatusContent = '>>';
+                    } else {
+                        $divStatusContent = '<<';
+                    }
+                    $str_return .= '<h3 style="color:#FFC200;" onclick="new Effect.toggle(\'div' 
+                        . $cptTag . '\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'div' 
+                        . $cptTag . '\', \'divStatus' . $cptTag . '\');">'
+                        . $formFields[$key]['tag']
+                        . ' <span id="divStatus' . $cptTag 
+                        . '" style="color:#1C99C5;">' . $divStatusContent . '</span></h3>';
                     $str_return .= '<hr class="hr_admin"/>';
                     $str_return .= '<br/>';
                     if ($formFields[$key]['tagAlreadyOpen']) {

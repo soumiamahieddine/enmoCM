@@ -1,6 +1,15 @@
 
 var isAlreadyClick = false;
 
+function whatIsTheDivStatus(theDiv, divStatus)
+{
+    if ($(theDiv).style.display == 'none') {
+        $(divStatus).innerHTML = '>>';
+    } else {
+        $(divStatus).innerHTML = '<<';
+    }
+}
+
 function repost(php_file,update_divs,fields,action,timeout)
     {
         //alert('php file : '+php_file);
