@@ -2,7 +2,7 @@
 function loadApplet(url, value)
 {
     if (value != '') {
-        console.log('value : '+value);
+        //console.log('value : '+value);
         displayModal(url, 'CMApplet', 300, 300);
     }
 }
