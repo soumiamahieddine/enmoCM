@@ -262,3 +262,17 @@ if (!defined('_VALIDATE_PUT_IN_COPY'))
     define('_VALIDATE_PUT_IN_COPY', 'Valider l&rsquo;ajout en copie');
 if (!defined('_ALL_LIST'))
     define('_ALL_LIST', 'Afficher toute la liste');    
+
+/******************** RM ENTITIES ************/
+if (!defined('_STANDARD'))
+    define('_STANDARD', 'Standard');
+if (!defined('_5_ARCHIVAL'))
+    define('_5_ARCHIVAL', '5 Archivistique');
+if (!defined('_51_IDENTIFICATION'))
+    define('_51_IDENTIFICATION', '5.1 Identification');
+if (!defined('_52_DESCRIPTION'))
+    define('_52_DESCRIPTION', '5.2 Description');
+if (!defined('_53_RELATIONS'))
+    define('_53_RELATIONS', '5.3 Relations');
+if (!defined('_54_CONTROL'))
+    define('_54_CONTROL', '5.4 Contr&ocirc;le');

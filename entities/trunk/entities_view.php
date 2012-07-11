@@ -94,7 +94,7 @@
             'is_archival'  => array(
                 'show'     => true,
                 'input'    => 'radio',
-                'tag'      => _ARCHIVAL,
+                'tag'      => _5_ARCHIVAL,
                 'tagAlreadyOpen' => true,
                 'tagStart' => true,
                 'radioValues'   => array(
@@ -105,7 +105,7 @@
             'is_originating' => array(
                 'show'     => true,
                 'input'    => 'radio',
-                'tag'      => _ARCHIVAL,
+                'tag'      => _5_ARCHIVAL,
                 'radioValues'   => array(
                         _YES => 'Y',
                         _NO => 'N',
@@ -114,7 +114,7 @@
             'is_transferring' => array(
                 'show'     => true,
                 'input'    => 'radio',
-                'tag'      => _ARCHIVAL,
+                'tag'      => _5_ARCHIVAL,
                 'radioValues'   => array(
                         _YES => 'Y',
                         _NO => 'N',
@@ -123,37 +123,137 @@
             'is_control'   => array(
                 'show'     => true,
                 'input'    => 'radio',
-                'tag'      => _ARCHIVAL,
+                'tag'      => _5_ARCHIVAL,
                 'radioValues'   => array(
                         _YES => 'Y',
                         _NO => 'N',
                     ),
             ),
-            'entityType'   => array(
+            'entity_typeBis'   => array(
                 'show'     => true,
                 'input'    => 'text',
-                'tag'      => _IDENTIFICATION,
+                'tag'      => _51_IDENTIFICATION,
+                'readonly'      => true,
             ),
-            'nameEntry'    => array(
+            'entity_labelBis'    => array(
                 'show'     => true,
                 'input'    => 'text',
-                'tag'      => _IDENTIFICATION,
+                'tag'      => _51_IDENTIFICATION,
+                'readonly' => true,
             ),
-            'nameEntryParallel' => array(
+            'parallel_forms_of_names' => array(
                 'show'     => true,
                 'input'    => 'textarea',
-                'tag'      => _IDENTIFICATION,
+                'tag'      => _51_IDENTIFICATION,
                 'tagStart' => true,
             ),
-            'authorizedForm' => array(
+            'other_normalized_names' => array(
                 'show'     => true,
                 'input'    => 'textarea',
-                'tag'      => _IDENTIFICATION,
+                'tag'      => _51_IDENTIFICATION,
             ),
-            'entityId' => array(
+            'other_names' => array(
+                'show'     => true,
+                'input'    => 'textarea',
+                'tag'      => _51_IDENTIFICATION,
+            ),
+            'entity_IdBis' => array(
                 'show'     => true,
                 'input'    => 'text',
-                'tag'      => _IDENTIFICATION,
+                'tag'      => _51_IDENTIFICATION,
+                'readonly' => true,
+            ),
+            'oldest_date' => array(
+                'show'     => true,
+                'input'    => 'date',
+                'tag'      => _52_DESCRIPTION,
+            ),
+            'latest_date' => array(
+                'show'     => true,
+                'input'    => 'date',
+                'tag'      => _52_DESCRIPTION,
+            ),
+            'history' => array(
+                'show'     => true,
+                'input'    => 'textarea',
+                'tag'      => _52_DESCRIPTION,
+                'tagStart' => true,
+            ),
+            'places' => array(
+                'show'     => true,
+                'input'    => 'textarea',
+                'tag'      => _52_DESCRIPTION,
+            ),
+            'legal_status' => array(
+                'show'     => true,
+                'input'    => 'textarea',
+                'tag'      => _52_DESCRIPTION,
+            ),
+            'activities' => array(
+                'show'     => true,
+                'input'    => 'textarea',
+                'tag'      => _52_DESCRIPTION,
+            ),
+            'mandates' => array(
+                'show'     => true,
+                'input'    => 'textarea',
+                'tag'      => _52_DESCRIPTION,
+            ),
+            'structure' => array(
+                'show'     => true,
+                'input'    => 'textarea',
+                'tag'      => _52_DESCRIPTION,
+            ),
+            'context' => array(
+                'show'     => true,
+                'input'    => 'textarea',
+                'tag'      => _52_DESCRIPTION,
+            ),
+            'record_id' => array(
+                'show'     => true,
+                'input'    => 'text',
+                'tag'      => _54_CONTROL,
+            ),
+            'institution_id' => array(
+                'show'     => true,
+                'input'    => 'text',
+                'tag'      => _54_CONTROL,
+                'tagStart' => true,
+            ),
+            'rules' => array(
+                'show'     => true,
+                'input'    => 'textarea',
+                'tag'      => _54_CONTROL,
+            ),
+            'status' => array(
+                'show'     => true,
+                'input'    => 'text',
+                'tag'      => _54_CONTROL,
+            ),
+            'detail_level' => array(
+                'show'     => true,
+                'input'    => 'text',
+                'tag'      => _54_CONTROL,
+            ),
+            'maintenance_dates' => array(
+                'show'     => true,
+                'input'    => 'textarea',
+                'tag'      => _54_CONTROL,
+            ),
+            'language' => array(
+                'show'     => true,
+                'input'    => 'text',
+                'tag'      => _54_CONTROL,
+            ),
+            'sources' => array(
+                'show'     => true,
+                'input'    => 'textarea',
+                'tag'      => _54_CONTROL,
+            ),
+            'maintenance_notes' => array(
+                'show'     => true,
+                'input'    => 'textarea',
+                'tag'      => _54_CONTROL,
             ),
         );
         
