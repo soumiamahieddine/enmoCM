@@ -84,7 +84,7 @@
         <text lang='fr'>Service versant</text>
         <text lang='en'>Transferring entity</text>
     </message>
-    <message id='entities.is_control' level='0'>
+    <message id='entities.is_controlling' level='0'>
         <text lang='fr'>Service de contrôle</text>
         <text lang='en'>Control entity</text>
     </message>

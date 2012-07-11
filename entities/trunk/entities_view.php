@@ -120,7 +120,7 @@
                         _NO => 'N',
                     ),
             ),
-            'is_control'   => array(
+            'is_controlling'   => array(
                 'show'     => true,
                 'input'    => 'radio',
                 'tag'      => _5_ARCHIVAL,
