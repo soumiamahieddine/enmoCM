@@ -7,7 +7,7 @@ function makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, 
             if ($formFields[$key]['show']) {
                 $readonlyInput = '';
                 if ($formFields[$key]['readonly']) {
-                    $readonlyInput = 'readonly="readonly"';
+                    $readonlyInput = 'readonly="readonly" class="readonly" ';
                 }
                 $jsEvent = '';
                 if (isset($formFields[$key]['jsEvent'])) {
@@ -37,6 +37,17 @@ function makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, 
                           $str_return .= 'name="'.$key.'" ';
                           $str_return .= 'type="text" ';
                           $str_return .= 'size="35" ';
+                          $str_return .= $jsEvent;
+                          $str_return .= 'value="'.$objectFieldValue.'" ';
+                          $str_return .= $readonlyInput;
+                        $str_return .= '/>';
+                    } elseif ($formFields[$key]['input'] == 'date') {
+                        $str_return .= '<input ';
+                          $str_return .= 'id="'.$key.'" ';
+                          $str_return .= 'name="'.$key.'" ';
+                          $str_return .= 'type="text" ';
+                          $str_return .= 'size="35" ';
+                          $str_return .= 'onclick="showCalender(this);" ';
                           $str_return .= $jsEvent;
                           $str_return .= 'value="'.$objectFieldValue.'" ';
                           $str_return .= $readonlyInput;
@@ -202,7 +213,7 @@ function makeAdvForm($formFields, $formButtons, $dataObject, $schemaPath, $param
             if ($formFields[$key]['show']) {
                 $readonlyInput = '';
                 if ($formFields[$key]['readonly']) {
-                    $readonlyInput = 'readonly="readonly"';
+                    $readonlyInput = 'readonly="readonly" class="readonly" ';
                 }
                 $jsEvent = '';
                 if (isset($formFields[$key]['jsEvent'])) {
@@ -230,6 +241,17 @@ function makeAdvForm($formFields, $formButtons, $dataObject, $schemaPath, $param
                           $str_return .= 'name="'.$key.'" ';
                           $str_return .= 'type="text" ';
                           $str_return .= 'size="35" ';
+                          $str_return .= $jsEvent;
+                          $str_return .= 'value="'.$objectFieldValue.'" ';
+                          $str_return .= $readonlyInput;
+                        $str_return .= '/>';
+                    } elseif ($formFields[$key]['input'] == 'date') {
+                        $str_return .= '<input ';
+                          $str_return .= 'id="'.$key.'" ';
+                          $str_return .= 'name="'.$key.'" ';
+                          $str_return .= 'type="text" ';
+                          $str_return .= 'size="35" ';
+                          $str_return .= 'onclick="showCalender(this);" ';
                           $str_return .= $jsEvent;
                           $str_return .= 'value="'.$objectFieldValue.'" ';
                           $str_return .= $readonlyInput;
