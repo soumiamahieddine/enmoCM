@@ -15,6 +15,7 @@ class DataObjectChangeLog
 	public function logChange($type, $name=false, $valueBefore=false, $valueAfter=false) 
     {
         $newChange = new DataObjectChange($type, $name, $valueBefore, $valueAfter);
+        //echo "<br/>DataObjectChange($type, $name, $valueBefore, $valueAfter)";
         $this->offsetSet(null, $newChange);
     }
     

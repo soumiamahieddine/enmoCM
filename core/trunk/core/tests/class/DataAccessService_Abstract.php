@@ -109,6 +109,7 @@ abstract class DataAccessService_Sort
 abstract class DataAccessService_Column
 {
     public $name;
+    public $alias;
     public $type;
     public $default;
     public $nillable;

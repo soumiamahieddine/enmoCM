@@ -40,11 +40,10 @@ class DataAccessService_XML
         $this->relations[$name] = $newRelation;
     }
     
-    public function getData($dataObject) 
+    public function loadData($objectSchema, $parentObject, $key=false) 
     {
         try {
-            $results = $this->queryData($dataObject);
-            return $results;
+            $this->queryData($objectSchema, $parentObject, $key);
         } catch (Exception $e) {
             throw $e;
         }
@@ -92,13 +91,12 @@ class DataAccessService_XML
         return implode('', $valueExpressionParts);
     }
     
-    private function makeSelectKeyExpression($table) 
+    private function makeSelectKeyExpression($table, $key) 
     {
         $selectKeyExpressionParts = array();
-        if(isset($table->primaryKey) && !is_null($table->primaryKey)
-            && isset($table->keyValue) && !is_null($table->keyValue)) {
+        if(isset($table->primaryKey) && !is_null($table->primaryKey)) {
             $keyColumns = $table->primaryKey->getColumns();
-            $keyValues = explode(' ', $table->keyValue);
+            $keyValues = explode(' ', $key);
             for($i=0; $i<count($keyColumns); $i++) {
                 $keyColumnName = $keyColumns[$i];
                 $keyColumn = $table->columns[$keyColumnName];
@@ -149,11 +147,12 @@ class DataAccessService_XML
             return '<xsl:sort select="*['.$table->order->select.']" order="'.$table->order->mode.'"/>';
         } elseif(isset($table->primaryKey) && !is_null($table->primaryKey))  {
             $orderElements = $table->primaryKey->getColumns();
-            foreach($orderElements as $orderElement) {
-                $orderElement = "name()='".$orderElement."'";
+            print_r($orderElements);
+            for($i=0; $i<count($orderElements); $i++) {
+                $orderElements[$i] = "name()='".$orderElements[$i]."'";
             }
-            $order->select = implode(' or ' . $orderElements);
-            $order->mode = $orderMode;
+            $order->select = implode(' or ' , $orderElements);
+            $order->mode = 'ascending';
             return '<xsl:sort select="*['.$order->select.']" order="'.$order->mode.'"/>';
         }
     }
@@ -161,11 +160,15 @@ class DataAccessService_XML
     //*************************************************************************
     // PRIVATE XPATH QUERY EXECUTION FUNCTIONS
     //*************************************************************************
-    private function queryData($dataObject)
+    private function queryData($objectSchema, $parentObject, $key=false)
     {
-        $parentObject = $dataObject->parentObject;
+        if(@$parentObject->ownerDocument) {
+            $document = $parentObject->ownerDocument;
+        } else {
+            $document = $parentObject;
+        }
         
-        $tableName = $dataObject->name;
+        $tableName = $objectSchema->getTableName();
         
         $table = $this->tables[$tableName];
         
@@ -177,12 +180,13 @@ class DataAccessService_XML
         
         // Where
         $whereExpressionParts = array('.');
-        $relation = $this->getRelation($parentObject->name, $table->name);
-        if($relation) {
+        if($parentObject 
+            && $parentObject != $document 
+            && $relation = $this->getRelation($parentObject->tagName, $tableName)) {
+            echo "<br/>relation " . print_r($relation, true);
             $whereExpressionParts[] = $this->makeRelationExpression($relation, $table, $parentObject);
         }
-        $keyExpression = $this->makeSelectKeyExpression($table);
-        if($keyExpression) {
+        if($key && $keyExpression = $this->makeSelectKeyExpression($table, $key)) {
             $whereExpressionParts[] = $keyExpression;
         }
         $filterExpression = $this->makeFilterExpression($table);
@@ -190,6 +194,8 @@ class DataAccessService_XML
             $whereExpressionParts[] = $filterExpression;
         }
         $whereExpression = implode(' and ', $whereExpressionParts);
+        // === database ?
+        
         $tableQuery = $table->name . "[" . $whereExpression . "]";
         
         // Order
@@ -199,12 +205,12 @@ class DataAccessService_XML
             '<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
                 <xsl:template match="/">
                   <root>
-                      <xsl:apply-templates select="'.$tableQuery.'">
+                      <xsl:apply-templates select="//'.$tableQuery.'">
                         '. $sortExpression .'
                       </xsl:apply-templates>
                   </root>
                 </xsl:template>
-                <xsl:template match="'.$table->name.'">
+                <xsl:template match="'.$tableName.'">
                   <xsl:copy>
                     <xsl:apply-templates select="*['.$selectExpression.']" />
                   </xsl:copy>
@@ -212,7 +218,7 @@ class DataAccessService_XML
                 '.$valueExpression.'
               </xsl:stylesheet>';
         
-        //echo "<pre>XSL = " . htmlspecialchars($xslString) . "</pre>";
+        echo "<pre>XSL = " . htmlspecialchars($xslString) . "</pre>";
      
         $XSL = new DOMDocument();
         $XSL->formatOutput = true;
@@ -222,26 +228,24 @@ class DataAccessService_XML
         $root = $this->DOMDocument->documentElement;
         
         $DOMDocument = $this->XSLT->transformToDoc($root);
-        //echo htmlspecialchars($DOMDocument->saveXML());
+        echo htmlspecialchars($DOMDocument->saveXML());
         $results = array();
         $DOMTable = $DOMDocument->documentElement->childNodes;
         for($i=0; $i<$DOMTable->length; $i++) {
-            $result = array();
+            $dataObject = $document->createElement($objectSchema->name);
+            $parentObject->appendChild($dataObject);
+            
             $DOMRow = $DOMTable->item($i);
             $DOMColumns = $DOMRow->childNodes;
             for($j=0; $j<$DOMColumns->length; $j++) {
                 $DOMColumn = $DOMColumns->item($j);
                 $columnName = $DOMColumn->tagName;
                 $columnValue = $DOMColumn->nodeValue;
-                $result[$columnName] = $columnValue;
+                $columnNode = $document->createElement($columnName, $columnValue);
+                $dataObject->appendChild($columnNode);
             }
-            $results[] = $result;
         }
-        
-        return $results;
-        
     }
-    
 }
 
 class DataAccessService_XML_Table

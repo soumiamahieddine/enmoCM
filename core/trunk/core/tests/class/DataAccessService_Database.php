@@ -21,6 +21,7 @@ class DataAccessService_Database
         $password
     ) 
     {
+        $this->name = $name;
         $this->type = 'database';
         $this->driver = $driver;
         $this->host = $host;
@@ -75,11 +76,10 @@ class DataAccessService_Database
         return $this->tables[$tableName];
     }
     
-    public function getData($dataObject) 
+    public function loadData($objectSchema, $parentObject, $key=false) 
     {
         try {
-            $results = $this->selectData($dataObject);
-            return $results;
+            $this->selectData($objectSchema, $parentObject, $key);
         } catch (Exception $e) {
             throw $e;
         }
@@ -107,14 +107,19 @@ class DataAccessService_Database
         $selectExpressionParts = array();
         foreach ($table->columns as $columnName => $column) {
             // DEFAULT, FIXED
+            if($column->alias) {
+                $columnAlias = ' AS ' . $column->alias;
+            } else {
+                $columnAlias = ' AS ' . $column->name;
+            }
             if($column->fixed) {
                 $fixedValue = $this->makeValueExpression($column, $column->fixed);
-                $selectExpressionPart = $fixedValue;
+                $selectExpressionPart = $fixedValue . $columnAlias;
             } elseif($column->{'default'}) {
                 $defaultValue = $this->makeValueExpression($column, $column->{'default'});
-                $selectExpressionPart = "COALESCE(" . $table->name . "." . $column->name . ", " . $defaultValue . ") AS " . $column->name;
+                $selectExpressionPart = "COALESCE(" . $table->name . "." . $column->name . ", " . $defaultValue . ")" . $columnAlias;
             } else {
-                $selectExpressionPart = $table->name . "." . $column->name;
+                $selectExpressionPart = $table->name . "." . $column->name . $columnAlias;
             }
             $selectExpressionParts[] = $selectExpressionPart;
         }
@@ -140,6 +145,7 @@ class DataAccessService_Database
             $childColumnName = $childColumns[$i];
             $parentColumnName = $parentColumns[$i];
             $childColumn = $table->columns[$childColumnName];
+            //echo "<br/>Relation between $relation->parentName and $relation->childName uses $childColumnName / $parentColumnName => ". $parentObject->{$parentColumnName};
             $parentColumnValue = $this->makeValueExpression($childColumn, $parentObject->{$parentColumnName});
             $relationExpressionParts[] = $childColumnName . " = " . $parentColumnValue;
         }
@@ -147,13 +153,12 @@ class DataAccessService_Database
         return $relationExpression;
     }
     
-    private function makeSelectKeyExpression($table) 
+    private function makeSelectKeyExpression($table, $key) 
     {
         $selectKeyExpressionParts = array();
-        if(isset($table->primaryKey) && !is_null($table->primaryKey)
-            && isset($table->keyValue) && !is_null($table->keyValue)) {
+        if(isset($table->primaryKey) && !is_null($table->primaryKey)) {
             $keyColumns = $table->primaryKey->getColumns();
-            $keyValues = explode(' ', $table->keyValue);
+            $keyValues = explode(' ', $key);
             for($i=0; $i<count($keyColumns); $i++) {
                 $keyColumnName = $keyColumns[$i];
                 $keyColumn = $table->columns[$keyColumnName];
@@ -259,11 +264,15 @@ class DataAccessService_Database
     //*************************************************************************
     // PRIVATE SQL QUERY EXECUTION FUNCTIONS
     //*************************************************************************
-    private function selectData($dataObject)
+    private function selectData($objectSchema, $parentObject, $key=false)
     {
-        $parentObject = $dataObject->parentObject;
+        if(@$parentObject->ownerDocument) {
+            $document = $parentObject->ownerDocument;
+        } else {
+            $document = $parentObject;
+        }
         
-        $tableName = $dataObject->name;
+        $tableName = $objectSchema->getTableName();
         
         $table = $this->tables[$tableName];
         
@@ -272,12 +281,12 @@ class DataAccessService_Database
         
         // Where
         $whereExpressionParts = array('1=1');
-        $relation = $this->getRelation($parentObject->name, $table->name);
-        if($relation) {
+        if($parentObject 
+            && $parentObject != $document 
+            && $relation = $this->getRelation($parentObject->tagName, $tableName)) {
             $whereExpressionParts[] = $this->makeRelationExpression($relation, $table, $parentObject);
         }
-        $keyExpression = $this->makeSelectKeyExpression($table);
-        if($keyExpression) {
+        if($key && $keyExpression = $this->makeSelectKeyExpression($table, $key)) {
             $whereExpressionParts[] = $keyExpression;
         }
         $filterExpression = $this->makeFilterExpression($table);
@@ -290,24 +299,27 @@ class DataAccessService_Database
         $orderByExpression = $this->makeOrderByExpression($table);
         
         $query  = "SELECT " . $selectExpression;
-        $query .= " FROM  " . $tableName;
+        $query .= " FROM " . $tableName;
         $query .= " WHERE " . $whereExpression;
         $query .= " ORDER BY " . $orderByExpression;
         $query .= " LIMIT " . $this->limit;
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        echo "<pre>QUERY = " . print_r($query,true) . "</pre>";
+        //echo "<pre>QUERY = " . print_r($query,true) . "</pre>";
         try {
             $this->databaseObject->query($query);
         } catch (Exception $e) {
             throw $e;
         }
-
-        $results = array();
-        while($result = $this->databaseObject->fetch_assoc()) {
-            $results[] = $result;
+        while($recordSet = $this->databaseObject->fetch_object()) {
+            $dataObject = $document->createElement($objectSchema->name);
+            $parentObject->appendChild($dataObject);
+            foreach($recordSet as $columnName => $columnValue) {
+                $columnNode = $document->createElement($columnName, $columnValue);
+                $dataObject->appendChild($columnNode);
+            }
         }
-        return $results;
+        
     }
     
     private function insertData($dataObject)

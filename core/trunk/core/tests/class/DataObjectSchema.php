@@ -10,7 +10,20 @@ class DataObjectSchema
     {
         $this->load($XsdFile);
         $this->xpath = new DOMXPath($this);
+        
+        
         $this->processInclusions($this);
+        /*
+        $this->registerNodeClass('DOMElement', 'SchemaElement');
+        $sxe = simplexml_import_dom($this);
+        $namespaces = $sxe->getNamespaces(true); 
+        foreach ($namespaces as $prefix => $URI) {
+            //$xpath->registerNamespace($prefix, $URI);
+            $this->xpath->registerNamespace($prefix, $URI);
+        }
+        $this->xinclude();*/
+        //echo htmlspecialchars($this->saveXML());
+        
     }
     
     public function processInclusions($Schema) 
@@ -20,8 +33,17 @@ class DataObjectSchema
         $Schema->Schema->preserveWhiteSpace = true;
         
         $xpath = new DOMXPath($Schema);
-        $schema = $xpath->query('/xsd:schema')->item(0);
-        $includes = $xpath->query('./xsd:include', $schema);
+        
+        $sxe = simplexml_import_dom($Schema);
+        $namespaces = $sxe->getNamespaces(true); 
+        foreach ($namespaces as $prefix => $URI) {
+            $xpath->registerNamespace($prefix, $URI);
+            $this->xpath->registerNamespace($prefix, $URI);
+        }
+        
+        $schemaNode = $xpath->query('/xsd:schema')->item(0);
+        
+        $includes = $xpath->query('./xsd:include', $schemaNode);
         for($i=0; $i<$includes->length; $i++) {
             $include = $includes->item($i);
             $schemaLocation = $include->schemaLocation;
@@ -38,7 +60,7 @@ class DataObjectSchema
                 }
                 $this->includes[] = $schemaLocation;
             }
-            $schema->removeChild($include);
+            $schemaNode->removeChild($include);
         }
     }
     
@@ -130,82 +152,22 @@ class DataObjectSchema
         return $this->xpath('/xsd:schema/xsd:element');
     }
     
-    //
-    public function getSchemaElement($schemaPath)
-    {
-        //echo "<br/>getSchemaElement($schemaPath)";
-        return $this->xpath($schemaPath)->item(0);
-        
-    }
-    
     public function getObjectSchema($objectName)
     {
         $objectSchemas = $this->xpath("/xsd:schema/xsd:element[@name='".$objectName."']");
-        
-        if($objectSchemas->length == 0) die("<br/><b>Unable to find root element named $objectName</b>");
-        
+        if($objectSchemas->length == 0) die("Unable to find root element named $objectName</b>");
         return $objectSchemas->item(0);
     }
      
-    public function getDasKey($elementName)
+    public function getDasKey($objectName)
     {
-        $objectElement = $this->getRootElement($elementName);
-        $keyColumnNames = $objectElement->{'das:key-columns'};
+        $objectSchema = $this->getObjectSchema($objectName);
+        $keyColumnNames = $objectSchema->{'das:key-columns'};
         return $keyColumnNames;
     }
-    
  
+    //OLD
     //*************************************************************************
-    // OLD FUNCTIONS
-    //*************************************************************************
-    public function isEnclosedType($propertyType) 
-    {
-        $baseTypeName = $this->getBaseTypeName($propertyType);
-        if(!in_array(
-            $baseTypeName,
-            array(
-                'xsd:boolean',
-                'xsd:double', 
-                'xsd:decimal',
-                    'xsd:integer',
-                        'xsd:nonPositiveInteger',
-                            'xsd:negativeInteger',
-                        'xsd:long',
-                            'xsd:int', 
-                            'xsd:short', 
-                            'xsd:byte',
-                        'xsd:nonNegativeInteger',
-                            'xsd:positiveInteger',
-                            'xsd:unsignedLong',
-                                'xsd:unsignedInt',
-                                    'xsd:unsignedShort',
-                                        'xsd:unsignedByte',
-                'xsd:float',
-                )
-            )
-        ) {
-            return true;
-        }
-    }
-    
-    private function getBaseTypeName($propertyType) 
-    {
-        if(substr($propertyType->name, 0, 4) == 'xsd:') {
-            $baseTypeName = $propertyType->name;
-        } else {
-            $typeContents = $this->xpath("./*[name()='xsd:restriction' or name()='xsd:list' or name()='xsd:union']", $propertyType)->item(0);
-            if($typeContents->base && substr($typeContents->base, 0, 4) == 'xsd:') {
-                $baseTypeName = $typeContents->base;
-            } elseif($typeContents->{'das:baseType'} && substr($typeContents->{'das:baseType'}, 0, 4) == 'xsd:') {
-                $baseTypeName = $typeContents->{'das:baseType'};
-            } else {
-                $baseType = $this->xpath("//xsd:simpleType[@name='".$typeContents->base."']")->item(0);
-                $baseTypeName = $this->getBaseTypeName($baseType);
-            }
-        }
-        return $baseTypeName;
-    }
-    
     private function xPathOnSchema($xPath, $contextElement) 
     {
         $xPathParts = explode('/', $xPath);
@@ -268,31 +230,54 @@ class SchemaElement extends DOMElement {
         return $elementType;
     }
     
-    public function getChildElements()
+    public function getColumnElements()
+    {
+        $typeElements = $this->xpath("./*[name()='xsd:sequence' or name()='xsd:all']/xsd:element", $this);
+        $columnElements = array();
+        for($i=0; $i<$typeElements->length; $i++) {
+            $typeElement = $typeElements->item($i);
+            $typeElement = $typeElement->getRefElement();
+            $ElementType = $typeElement->getType();
+            if($ElementType->tagName == 'xsd:simpleType') {
+                $columnElements[] = $typeElement;
+            }
+        }
+        return $columnElements;
+    }
+    
+    public function getChildSchemas()
     {
         $objectType = $this->getType();
-        $childElements = $this->xpath("./*[name()='xsd:sequence' or name()='xsd:all']/xsd:element", $objectType);
-        return $childElements;
-    }
-    
-    public function isDataObjectArray() 
-    {
-        if($this->minOccurs > 1 
-            || ($this->maxOccurs > 1 
-                || $this->maxOccurs == 'unbounded')) {
-            return true;
+        $typeElements = $this->xpath("./*[name()='xsd:sequence' or name()='xsd:all']/xsd:element", $objectType);
+        $childSchemas = array();
+        for($i=0; $i<$typeElements->length; $i++) {
+            $typeElement = $typeElements->item($i);
+            $typeElement = $typeElement->getRefElement();
+            $ElementType = $typeElement->getType();
+            if($ElementType->tagName == 'xsd:complexType') {
+                $childSchemas[] = $typeElement;
+            }
         }
+        return $childSchemas;
     }
     
-    public function getRootElement($elementName)
+    public function getSubElements()
     {
-        return $this->xpath("/xsd:schema/xsd:element[@name='".$elementName."']")->item(0);
+        $objectType = $this->getType();
+        $typeElements = $this->xpath("./*[name()='xsd:sequence' or name()='xsd:all']/xsd:element", $objectType);
+        $subElements = array();
+        for($i=0; $i<$typeElements->length; $i++) {
+            $typeElement = $typeElements->item($i);
+            $typeElement = $typeElement->getRefElement();
+            $subElements[] = $typeElement;
+        }
+        return $subElements;
     }
     
     public function getRefElement() 
     {
         if($this->ref) {
-            $refObjectElement = $this->getRootElement($this->ref);
+            $refObjectElement = $this->xpath("//xsd:element[@name='".$this->ref."']")->item(0);
             if(!$refObjectElement) die ("Referenced element named " . $this->ref . " not found in schema");
             return $refObjectElement;
         } else {
@@ -309,6 +294,24 @@ class SchemaElement extends DOMElement {
         }
     }
     
+    public function getTableName()
+    {
+        if($this->{'das:table'}) {
+            return $this->{'das:table'};
+        } else {
+            return $this->name;
+        }
+    }
+    
+    public function getColumnName()
+    {
+        if($this->{'das:column'}) {
+            return $this->{'das:column'};
+        } else {
+            return $this->name;
+        }
+    }
+    
     public function getRelation() 
     {
         if($this->{'das:relation'}) {
@@ -319,6 +322,56 @@ class SchemaElement extends DOMElement {
         }
         if($relationNode->length == 0) return false;
         return $relationNode->item(0);
+    }
+    
+        // OLD
+    //*************************************************************************
+    private function getBaseTypeName() 
+    {
+        if(substr($this->name, 0, 4) == 'xsd:') {
+            $baseTypeName = $this->name;
+        } else {
+            $typeContents = $this->xpath("./*[name()='xsd:restriction' or name()='xsd:list' or name()='xsd:union']", $this)->item(0);
+            if($typeContents->base && substr($typeContents->base, 0, 4) == 'xsd:') {
+                $baseTypeName = $typeContents->base;
+            } elseif($typeContents->{'das:baseType'} && substr($typeContents->{'das:baseType'}, 0, 4) == 'xsd:') {
+                $baseTypeName = $typeContents->{'das:baseType'};
+            } else {
+                $baseType = $this->xpath("//xsd:simpleType[@name='".$typeContents->base."']")->item(0);
+                $baseTypeName = $baseType->getBaseTypeName();
+            }
+        }
+        return $baseTypeName;
+    }
+    
+    public function isEnclosedType() 
+    {
+        $baseTypeName = $this->getBaseTypeName();
+        if(!in_array(
+            $baseTypeName,
+            array(
+                'xsd:boolean',
+                'xsd:double', 
+                'xsd:decimal',
+                    'xsd:integer',
+                        'xsd:nonPositiveInteger',
+                            'xsd:negativeInteger',
+                        'xsd:long',
+                            'xsd:int', 
+                            'xsd:short', 
+                            'xsd:byte',
+                        'xsd:nonNegativeInteger',
+                            'xsd:positiveInteger',
+                            'xsd:unsignedLong',
+                                'xsd:unsignedInt',
+                                    'xsd:unsignedShort',
+                                        'xsd:unsignedByte',
+                'xsd:float',
+                )
+            )
+        ) {
+            return true;
+        }
     }
 }
 

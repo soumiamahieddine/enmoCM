@@ -1,55 +1,40 @@
 <?php
 
 class DataObject 
-    implements IteratorAggregate
+    extends DOMElement
+    implements IteratorAggregate, ArrayAccess
 {
     
-    private $name;
-    private $schemaPath;
-    private $parentObject;
-    private $changeLog;
-    private $storage;
+    public $changeLog = array();
     
-    public function DataObject($name, $schemaPath) 
+    private function xpath($query) 
     {
-        $this->name = $name;
-        $this->schemaPath = $schemaPath;
+        $xpath = new DOMXpath($this->ownerDocument);
+        return $xpath->query($query, $this);
     }
     
-    public function getIterator() 
-    {
-        return new ArrayIterator($this->storage);
-    }
-    
+    //*************************************************************************
+    // MAGIC METHODS
+    //*************************************************************************
     public function __set($name, $value) 
     {
-        switch($name) {
-        case 'parentObject'    :
-            $this->parentObject = $value;
-            break;
-        case 'logChanges'    :
-            $this->logChanges = $value;
-            break;
-        default:    
-            // Add child object
-            if(is_object($value)) { 
-                if(get_class($value) == 'DataObject' 
-                    || get_class($value) == 'DataObjectArray'
-                    || get_class($value) == 'DataObjectProperty') {
-                    $value->parentObject = $this;
-                    $this->storage[$name] = $value;
-                } else {
-                    Die("<br/><b>Permission denied</b>");
+        if(is_scalar($value) || !$value || is_null($value)) {
+            $resultNodes = $this->xpath('./' . $name);
+            switch ((string)$resultNodes->length) {
+            case '0' :
+                $resultNode = $this->ownerDocument->createElement($name, $value);
+                $this->appendChild($resultNode);
+                break;
+            case '1' :
+                $resultNode = $resultNodes->item(0);
+                if((string)$resultNode->nodeValue == $value) {
+                    return;
                 }
-                return;
-            } 
-            // Set property value
-            if(is_scalar($value) || !$value || is_null($value)) {
-                if((string)$this->storage[$name] == $value) return;
                 if(isset($this->changeLog) && $this->changeLog->active) {
-                    $this->changeLog->logChange(DataObjectChange::UPDATE, $name, (string)$this->storage[$name], $value);
+                    $this->changeLog->logChange(DataObjectChange::UPDATE, $name, (string)$resultNode->nodeValue, $value);
                 }
-                $this->storage[$name]->setValue($value);
+                $resultNode->nodeValue = $value;
+                break;
             }
         }
     }
@@ -57,137 +42,103 @@ class DataObject
     public function __get($name) 
     {
         switch($name) {
-        case 'isDataObject'     : return true;
-        case 'name'             : return $this->name;
-        case 'schemaPath'       : return $this->schemaPath;
-        case 'parentObject'     : return $this->parentObject;
-        case 'properties'       :
-            if(count($this->storage) == 0) return array();
-            foreach($this->storage as $childObject) {
-                if(is_object($childObject) 
-                    && $childObject->isDataObjectProperty) {
-                    $properties[] = $childObject;
-                }
+        case 'childrenObjects':
+            $resultNodes = $this->xpath('./*');
+            $dataObjectArray = array();
+            for($i=0; $i<$resultNodes->length; $i++) {
+                $dataObject = $resultNodes->item($i);
+                $dataObjectArray[] = $dataObject;
             }
-            return $properties;
-        case 'children'         :
-            if(count($this->storage) == 0) return array();
-            foreach($this->storage as $childObject) {
-                if(is_object($childObject) 
-                    && ($childObject->isDataObject 
-                        || $childObject->isDataObjectArray)) {
-                    $children[] = $childObject;
-                }
-            }
-            return $children;
-        case 'isCreated'        :
-            if(isset($this->changeLog)
-                && $this->changeLog->creation) {
-                return true;
-            } 
-            break;
+            return $dataObjectArray;
             
-        case 'isUpdated'        :
-            if(isset($this->changeLog)
-                && count($this->updates) > 0) {
-                return true;
-            } 
-            break;
-        case 'updates'          :
-            if(isset($this->changeLog)) {
-                return $this->changeLog->updates;
-            }
-            break;
         default:
-            if(isset($this->storage[$name])) {
-                return $this->storage[$name];
+            $resultNodes = $this->xpath('./'.$name);
+            switch ((string)$resultNodes->length) {
+            case '0' :
+                return false;
+            case '1' :
+                return (string)$resultNodes->item(0)->nodeValue;
+            default :
+                $dataObjectArray = array();
+                for($i=0; $i<$resultNodes->length; $i++) {
+                    $dataObjectArray[] = $resultNodes->item($i);
+                }
+                return $dataObjectArray;
             }
         }
-
     }
     
     public function __isset($name)
     {
-        if(isset($this->storage[$name])) {
-            return true;
-        }
+        $resultNodes = $this->xpath('./'.$name);
+        if($resultNodes->length > 0) return true;
     }
     
-    public function clear()
+    public function __toString()
     {
-        $properties = $this->properties;
-        for($i=0; $i<count($properties); $i++) {
-            $property = $properties[$i];
-            $property->clearValue();
-        }
-        $children = $this->children;
-        for($i=0; $i<count($children); $i++) {
-            $childObject = $children[$i];
-            $childObject->clear();
-        }
-   
+        return $this->nodeValue;
     }
     
+    //*************************************************************************
+    // ITERATOR METHODS
+    //*************************************************************************
+    public function getIterator() {
+        $childNodes = $this->childNodes;
+        $childArray = array();
+        for($i=0; $i<$childNodes->length; $i++) {
+            $childNode = $childNodes->item($i);
+            $childName = $childNode->tagName;
+            $childValue = $childNode->nodeValue;
+            $childArray[$childName] = $childValue;
+        } 
+        return new ArrayIterator($childArray);
+    }
+    
+    //*************************************************************************
+    // ARRAYACCESS METHODS
+    //*************************************************************************
+    public function offsetSet($offset, $value) 
+    {
+        $this->appendChild($value);
+    }
+    
+    public function offsetExists($offset) 
+    {
+        
+    }
+    
+    public function offsetUnset($offset) 
+    {
+
+    }
+    
+    public function offsetGet($offset) 
+    {
+    
+    }
+   
     //*************************************************************************
     // CHANGELOG
     //*************************************************************************
-    public function beginLogging()
+    public function logCreate()
     {
         $this->changeLog = new DataObjectChangeLog();
-    }
-    
-    public function logCreation()
-    {
-        $this->changeLog->logCreation($this->name);
+        $this->changeLog->logCreation($this->tagName);
     }
     
     public function logRead() 
     {
-        $this->changeLog->logRead($this->name);
+        $this->changeLog = new DataObjectChangeLog();
+        $this->changeLog->logRead($this->tagName);
     }
     
     //*************************************************************************
     // XML INTERFACE
     //*************************************************************************
-    public function asXmlDocument() 
-    {
-        $Document = new DOMDocument();
-        $rootElement = $this->asXmlElement($Document);
-        $Document->appendChild($rootElement);
-        return $Document;
-    }
-    
-    public function getXmlString()
-    {
-        $XmlDocument = $this->asXmlDocument();
-        $XmlString = $XmlDocument->saveXML();
-        $XmlPrettyString = $this->formatXmlString($XmlString);
-        return $XmlPrettyString;
-    }
-    
-    public function asXmlElement($XmlDocument) 
-    {
-        $objectElement = $XmlDocument->createElement($this->name);
-        foreach($this as $childDataObject) {
-            if($childDataObject->isDataObjectArray) {
-                //echo "<br/><b>Adding array of $childDataObject->name</b>";
-                $childElements = $childDataObject->asXmlNodeList($XmlDocument);
-                while($childElement = $childElements->item(0)) {
-                    $childElement = $childElements->item($i);
-                    $objectElement->appendChild($childElement);
-                }
-            } else {
-                $childElement = $childDataObject->asXmlElement($XmlDocument);
-                $objectElement->appendChild($childElement);
-            }
-        }
-        return $objectElement;
-    }
-    
-    private function formatXmlString($xml) 
+    public function asXmlString() 
     {  
         // add marker linefeeds to aid the pretty-tokeniser (adds a linefeed between all tag-end boundaries)
-        $xml = preg_replace('/(>)(<)(\/*)/', "$1\n$2$3", $xml);
+        $xml = preg_replace('/(>)(<)(\/*)/', "$1\n$2$3", $this->ownerDocument->documentElement->C14N());
         
         // now indent the tags
         $token      = strtok($xml, "\n");
@@ -228,10 +179,22 @@ class DataObject
     public function asObject()
     {
         $object = new StdClass();
-        foreach($this as $childDataObject) {
-            $childName = $childDataObject->name;
-            $childObject = $childDataObject->asObject();
-            $object->$childName = $childObject;
+        for($i=0; $i<$this->childNodes->length;$i++) {
+            $childNode = $this->childNodes->item($i);
+            // Property
+            if($childNode->nodeType == XML_TEXT_NODE) {
+                return $childNode->asObject();
+            // Array
+            } else {
+                $childName = $childNode->tagName;
+                if($this->xpath('./'.$childName)->length > 1) {
+                    echo "<br/>$childName is an array";
+                    $object->{$childName}[] = $childNode->asObject();
+                } else {
+                    echo "<br/>$childName is an extension";
+                    $object->$childName = $childNode->asObject();
+                }
+            }
         }
         
         return $object;
