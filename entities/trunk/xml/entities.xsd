@@ -24,8 +24,7 @@
     das:source='maarch_entreprise'
     das:table='entities'
     das:key-columns='entity_id' 
-    das:filter-columns='entity_id entity_label adrs_1' 
-    das:validation='apps/maarch_entreprise/XSD/entities_validation.php'
+    das:filter-columns='entity_id entity_label adrs_1'
   />
   
   <xsd:complexType name='entities'>
