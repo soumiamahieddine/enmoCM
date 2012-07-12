@@ -38,7 +38,24 @@ class DataObjectDocument
     
     public function __set($name, $value) 
     {
-        $this->documentElement->appendChild($value);
+        switch($name) {
+        default:
+            $resultNodes = $this->xpath('./'.$name);
+            switch ((string)$resultNodes->length) {
+            case '0' :
+                $resultNode = $this->ownerDocument->createElement($name, $value);
+                $this->appendChild($resultNode);
+                break;
+            case '1' :
+                $resultNode = $resultNodes->item(0);
+                if((string)$resultNode->nodeValue == $value) {
+                    return;
+                }
+                $this->logChange(DataObjectChange::UPDATE, $name, (string)$resultNode->nodeValue, $value);
+                $resultNode->nodeValue = $value;
+                break;
+            }
+        }
     }
     
     //*************************************************************************

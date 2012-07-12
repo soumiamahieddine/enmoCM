@@ -248,7 +248,6 @@ class DataObjectController
     {      
         try {
             if($das = $this->getDataAccessService($objectSchema)) {
-                echo "<br/>Load data of " . $objectSchema->getAttribute('name');
                 $das->loadData($objectSchema, $parentObject, $key);
                 $this->document->logChange(DataObjectChange::READ, $parentObject);
             } 
