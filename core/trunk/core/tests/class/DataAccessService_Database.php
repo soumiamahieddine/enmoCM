@@ -312,7 +312,7 @@ class DataAccessService_Database
             throw $e;
         }
         while($recordSet = $this->databaseObject->fetch_object()) {
-            $dataObject = $document->createElement($objectSchema->name);
+            $dataObject = $document->createElement($objectSchema->getAttribute('name'));
             $parentObject->appendChild($dataObject);
             foreach($recordSet as $columnName => $columnValue) {
                 $columnNode = $document->createElement($columnName, $columnValue);
