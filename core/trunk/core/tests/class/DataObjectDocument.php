@@ -5,6 +5,8 @@ class DataObjectDocument
     implements ArrayAccess
 {
 	
+    public $changeLog = array();
+    
 	public function DataObjectDocument()
 	{
 		parent::__construct();
@@ -59,7 +61,9 @@ class DataObjectDocument
     //*************************************************************************
     public function offsetSet($offset, $value) 
     {
+        $elementsWithTagName = $this->xpath('./' . $value->tagName)->length;
         $this->appendChild($value);
+        return $elementsWithTagName;
     }
     
     public function offsetExists($offset) 
@@ -75,6 +79,28 @@ class DataObjectDocument
     public function offsetGet($offset) 
     {
         return isset($this->container[$offset]) ? $this->container[$offset] : null;
+    }
+    
+    //*************************************************************************
+    // CHANGELOG
+    //*************************************************************************
+    public function logChange($type, $dataObject, $valueBefore=false, $valueAfter=false) 
+    {
+        $newChange = new DataObjectChange($type, $dataObject, $valueBefore, $valueAfter);
+        //echo "<br/>DataObjectChange($type, $name, $valueBefore, $valueAfter)";
+        $this->changeLog[] = $newChange;
+    }
+    
+    public function logCreate()
+    {
+        $this->changeLog = new DataObjectChangeLog();
+        $this->changeLog->logCreation($this->tagName);
+    }
+    
+    public function logRead() 
+    {
+        $this->changeLog = new DataObjectChangeLog();
+        $this->changeLog->logRead($this->tagName);
     }
     
 }

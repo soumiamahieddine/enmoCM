@@ -59,23 +59,23 @@ class DataObjectController
     //*************************************************************************
     // PUBLIC OBJECT HANDLING FUNCTIONS
     //*************************************************************************
+    public function createDocument() {
+        $this->document = new DataObjectDocument();
+    }
+    
     public function create($objectName) 
     {
-        if(!$this->document) {
-            $this->document = new DataObjectDocument();
-            $append = true;
-        }
+        if(!$this->document) $this->createDocument();
         $objectSchema = $this->schema->getObjectSchema($objectName);
         $dataObject = $this->createDataObject($objectSchema);
-        if($append) {
-            $this->document->appendChild($dataObject);
-        }
+        $this->document->appendChild($dataObject);
+        $this->document->logChange(DataObjectChange::CREATE, $dataObject);
         return $dataObject;      
     }
     
     public function enumerate($listName) 
     {
-        $this->document = new DataObjectDocument();
+        $this->createDocument();
         $listSchema = $this->schema->getObjectSchema($listName);
                 
         $listDataObject = $this->createDataObject($listSchema);
@@ -92,7 +92,7 @@ class DataObjectController
     
     public function read($objectName, $key)
     {
-        $this->document = new DataObjectDocument();
+        $this->createDocument();
         $objectSchema = $this->schema->getObjectSchema($objectName);        
         $dataObject = $this->loadDataObject($objectSchema, $this->document, $key);
         return $dataObject;
@@ -258,6 +258,7 @@ class DataObjectController
         try {
             if($das = $this->getDataAccessService($objectSchema)) {
                 $das->loadData($objectSchema, $parentObject, $key);
+                $this->document->logChange(DataObjectChange::READ, $parentObject);
             } 
             $dataObjects = $parentObject->childNodes;
             $childSchemas = $objectSchema->getChildSchemas();
@@ -266,6 +267,7 @@ class DataObjectController
                 for($i=0; $i<$dataObjects->length; $i++) {
                     $dataObject = $dataObjects->item($i);
                     $this->loadDataObject($childSchema, $dataObject);
+                    $this->document->logChange(DataObjectChange::READ, $dataObject);
                 }
             }
             
@@ -410,5 +412,6 @@ class DataObjectController
         if(!$dasSourceName) return;
         $Das = $this->dataAccessServices[$dasSourceName];
         return $Das;
-    }      
+    }  
+    
 }

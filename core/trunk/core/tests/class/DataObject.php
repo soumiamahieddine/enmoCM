@@ -30,9 +30,7 @@ class DataObject
                 if((string)$resultNode->nodeValue == $value) {
                     return;
                 }
-                if(isset($this->changeLog) && $this->changeLog->active) {
-                    $this->changeLog->logChange(DataObjectChange::UPDATE, $name, (string)$resultNode->nodeValue, $value);
-                }
+                $this->logChange(DataObjectChange::UPDATE, $name, (string)$resultNode->nodeValue, $value);
                 $resultNode->nodeValue = $value;
                 break;
             }
@@ -117,21 +115,6 @@ class DataObject
     
     }
    
-    //*************************************************************************
-    // CHANGELOG
-    //*************************************************************************
-    public function logCreate()
-    {
-        $this->changeLog = new DataObjectChangeLog();
-        $this->changeLog->logCreation($this->tagName);
-    }
-    
-    public function logRead() 
-    {
-        $this->changeLog = new DataObjectChangeLog();
-        $this->changeLog->logRead($this->tagName);
-    }
-    
     //*************************************************************************
     // XML INTERFACE
     //*************************************************************************

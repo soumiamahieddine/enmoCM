@@ -12,15 +12,15 @@ class DataObjectChange
    
     private $timestamp;
     private $type;
-    private $name;
+    private $object;
 	private $valueBefore;
 	private $valueAfter;
 	
-    public function DataObjectChange($type, $name=false, $valueBefore=false, $valueAfter=false)
+    public function DataObjectChange($type, $object, $valueBefore=false, $valueAfter=false)
     {
         $this->timestamp = date('d-m-y h:i:s');
         $this->type = $type;
-        $this->name = $name;
+        $this->object = $object;
         $this->valueBefore = $valueBefore;
         $this->valueAfter = $valueAfter;
     }
