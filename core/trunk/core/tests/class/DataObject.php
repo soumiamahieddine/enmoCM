@@ -30,7 +30,6 @@ class DataObject
                 if((string)$resultNode->nodeValue == $value) {
                     return;
                 }
-                $this->logChange(DataObjectChange::UPDATE, $name, (string)$resultNode->nodeValue, $value);
                 $resultNode->nodeValue = $value;
                 break;
             }
