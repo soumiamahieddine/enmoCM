@@ -117,7 +117,7 @@ class DataObject
     //*************************************************************************
     // XML INTERFACE
     //*************************************************************************
-    public function asXmlString() 
+    public function asXml() 
     {  
         // add marker linefeeds to aid the pretty-tokeniser (adds a linefeed between all tag-end boundaries)
         $xml = preg_replace('/(>)(<)(\/*)/', "$1\n$2$3", $this->ownerDocument->documentElement->C14N());
