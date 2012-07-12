@@ -313,7 +313,7 @@
         } elseif ($modeCreate) {
             $formButtons['add']['show'] = true;
             $formButtons['cancel']['show'] = true;            
-            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri, $columnsLabels);
+            $str_returnShow = makeAdvForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri, $columnsLabels);
             
         } elseif ($modeRead) {
             foreach($formFields as $key => $value) {
@@ -329,7 +329,7 @@
             $formButtons['save']['show'] = true;
             $formButtons['cancel']['show'] = true;
             
-            $str_returnShow = makeForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri, $columnsLabels);
+            $str_returnShow = makeAdvForm($formFields, $formButtons, $dataObject, $schemaPath, $params, $noModeUri, $columnsLabels);
         }
 
     //default JS
