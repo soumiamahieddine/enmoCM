@@ -9,10 +9,10 @@
   <!--xsd:include schemaLocation='modules/entities/xml/eac-cpf.xsd' /-->
 
   <!-- ROOT : ENTITIES -->
-  <xsd:element name='entities'>
+  <xsd:element name='entities_list'>
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:element ref='entity' minOccurs="0" maxOccurs='unbounded' />
+        <xsd:element ref='entities' minOccurs="0" maxOccurs='unbounded' />
         <!--xsd:element ref='TYPE' minOccurs="0" maxOccurs='unbounded'/-->
       </xsd:sequence>
     </xsd:complexType>
@@ -20,7 +20,7 @@
   
   
   <!-- ROW : ENTITY -->
-  <xsd:element name='entity' type='entity' 
+  <xsd:element name='entities' type='entities' 
     das:source='maarch_entreprise'
     das:table='entities'
     das:key-columns='entity_id' 
@@ -28,7 +28,7 @@
     das:validation='apps/maarch_entreprise/XSD/entities_validation.php'
   />
   
-  <xsd:complexType name='entity'>
+  <xsd:complexType name='entities'>
     <xsd:sequence>
       <xsd:element name="entity_id" type="varchar32" nillable="false" />
       <xsd:element name="entity_label" type="varchar255" nillable="false"/>
@@ -44,31 +44,52 @@
       <xsd:element name="business_id" type="varchar32" />
       <xsd:element name="parent_entity_id"  type="varchar32" />
       <xsd:element name="entity_type" type="varchar64" />
-      <xsd:element ref="rm_organizations" minOccurs="0" />
+      <xsd:element ref="rm_entities" minOccurs="0" />
     </xsd:sequence>
   </xsd:complexType>
   
-  <xsd:element name='rm_organizations' 
-    type='rm_organizations' 
+  <xsd:element name='rm_entities' 
+    type='rm_entities' 
     das:source='maarch_entreprise'
-    das:table='rm_organizations'
+    das:table='rm_entities'
     das:key-columns='entity_id'>
     <xsd:annotation>
       <xsd:appinfo>
-        <das:relation parent='entity' child='rm_organizations' parent-keys='entity_id' child-keys='entity_id' />
+        <das:relation parent='entities' child='rm_entities' parent-keys='entity_id' child-keys='entity_id' />
       </xsd:appinfo>
     </xsd:annotation>
   </xsd:element>
 
-  <xsd:complexType name='rm_organizations'>
+  <xsd:complexType name='rm_entities'>
     <xsd:sequence>
+      <xsd:element name="rm_entity_id" type="bigint" nillable="false" />
       <xsd:element name="entity_id" type="varchar32" nillable="false" />
-      <xsd:element name="organization_id" type="varchar255" nillable="false"/>
-      <xsd:element name="is_archival" type="boolean" default="N"/>
-      <xsd:element name="is_transferring" type="boolean" default="N"/>
-      <xsd:element name="is_originating" type="boolean" default="N"/>
-      <xsd:element name="path" type="varchar255" nillable="false"/>
-      <xsd:element name="filename" type="varchar255"  nillable="false"/>
+      <xsd:element name="is_archival" type="boolean" default="N" />
+      <xsd:element name="is_originating" type="boolean" default="N" />
+      <xsd:element name="is_transferring" type="boolean" default="N" />
+      <xsd:element name="is_controlling" type="boolean" default="N" />
+      <xsd:element name="rm_type" type="varchar50" />
+      <xsd:element name="parallel_forms_of_names" type="text" />
+      <xsd:element name="other_normalized_names" type="text" />
+      <xsd:element name="other_names" type="text" />
+      <xsd:element name="oldest_date" type="datetime" />
+      <xsd:element name="latest_date" type="datetime" />
+      <xsd:element name="history" type="text" />
+      <xsd:element name="places" type="text" />
+      <xsd:element name="legal_status" type="text" />
+      <xsd:element name="activities" type="text" />
+      <xsd:element name="mandates" type="text" />
+      <xsd:element name="structure" type="text" />
+      <xsd:element name="context" type="text" />
+      <xsd:element name="record_id" type="varchar100" />
+      <xsd:element name="institution_id" type="varchar255" />
+      <xsd:element name="rules" type="text" />
+      <xsd:element name="status" type="varchar255" />
+      <xsd:element name="detail_level" type="varchar255" />
+      <xsd:element name="maintenance_dates" type="datetime" />
+      <xsd:element name="description_language" type="varchar100" />
+      <xsd:element name="sources" type="text" />
+      <xsd:element name="maintenance_notes" type="text" />
       <!--xsd:element ref="/eac-cpf" /-->
     </xsd:sequence>
   </xsd:complexType>
@@ -77,7 +98,7 @@
     <xsd:annotation>
       <xsd:appinfo>
         <das:source type='xinclude' parse='xml' />
-        <das:relation name="rm_organization_eac_xml" parent='rm_organizations' child='/eac-cpf' parent-keys='path filename' child-keys='path filename' />
+        <das:relation name="rm_organization_eac_xml" parent='rm_entities' child='/eac-cpf' parent-keys='path filename' child-keys='path filename' />
       </xsd:appinfo>
     </xsd:annotation>
   </xsd:element-->
