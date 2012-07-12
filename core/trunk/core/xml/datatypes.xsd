@@ -89,6 +89,18 @@
     </xsd:restriction>
   </xsd:simpleType> 
   
+  <!-- Character text --> 
+  <xsd:simpleType name="text" das:enclosed='true'>
+    <xsd:annotation>
+      <xsd:appinfo>
+        <das:sqltype driver='postgresql'>text</das:sqltype>
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:minLength value="0"/>
+    </xsd:restriction>
+  </xsd:simpleType> 
+  
   <!-- Boolean -->
   <xsd:simpleType name="boolean" das:enclosed='true'>
     <xsd:annotation>
