@@ -6,30 +6,32 @@
 
   <xsd:include schemaLocation='core/xml/datatypes.xsd' />
   <xsd:include schemaLocation='apps/maarch_entreprise/xml/datasources.xsd' />
+  <!--xsd:include schemaLocation='modules/entities/xml/eac-cpf.xsd' /-->
 
   <!-- ROOT : ENTITIES -->
-  <xsd:element name='entities_list'>
+  <xsd:element name='entities'>
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:element ref='entities' minOccurs="0" maxOccurs='unbounded' />
-        <!--<xsd:element name='entity_types' type='typentity' das:xml='/modules/entities/xml/typentity.xml' das:xpath="/root/TYPE" minOccurs="0" maxOccurs='unbounded'/>-->
+        <xsd:element ref='entity' minOccurs="0" maxOccurs='unbounded' />
+        <!--xsd:element ref='TYPE' minOccurs="0" maxOccurs='unbounded'/-->
       </xsd:sequence>
     </xsd:complexType>
   </xsd:element>
   
   
   <!-- ROW : ENTITY -->
-  <xsd:element name='entities' type='entities' 
-    das:source='maarch_entreprise' 
+  <xsd:element name='entity' type='entity' 
+    das:source='maarch_entreprise'
+    das:table='entities'
     das:key-columns='entity_id' 
     das:filter-columns='entity_id entity_label adrs_1' 
     das:validation='apps/maarch_entreprise/XSD/entities_validation.php'
   />
   
-  <xsd:complexType name='entities'>
+  <xsd:complexType name='entity'>
     <xsd:sequence>
       <xsd:element name="entity_id" type="varchar32" nillable="false" />
-      <xsd:element name="entity_label" type="varchar255" />
+      <xsd:element name="entity_label" type="varchar255" nillable="false"/>
       <xsd:element name="short_label" type="varchar50" />
       <xsd:element name="enabled" type="boolean" nillable="false" default="Y" />
       <xsd:element name="adrs_1" type="varchar255" />
@@ -48,21 +50,52 @@
   
   <xsd:element name='rm_organizations' 
     type='rm_organizations' 
-    das:source='maarch_entreprise' 
+    das:source='maarch_entreprise'
+    das:table='rm_organizations'
     das:key-columns='entity_id'>
     <xsd:annotation>
       <xsd:appinfo>
-        <das:relation parent='entities' child='rm_organizations' parent-keys='entity_id' child-keys='entity_id' />
+        <das:relation parent='entity' child='rm_organizations' parent-keys='entity_id' child-keys='entity_id' />
       </xsd:appinfo>
     </xsd:annotation>
   </xsd:element>
 
   <xsd:complexType name='rm_organizations'>
     <xsd:sequence>
-      <xsd:element name="entity_id" type="varchar32" />
+      <xsd:element name="entity_id" type="varchar32" nillable="false" />
+      <xsd:element name="organization_id" type="varchar255" nillable="false"/>
       <xsd:element name="is_archival" type="boolean" default="N"/>
       <xsd:element name="is_transferring" type="boolean" default="N"/>
       <xsd:element name="is_originating" type="boolean" default="N"/>
+      <xsd:element name="path" type="varchar255" nillable="false"/>
+      <xsd:element name="filename" type="varchar255"  nillable="false"/>
+      <!--xsd:element ref="/eac-cpf" /-->
+    </xsd:sequence>
+  </xsd:complexType>
+  
+  <!--xsd:element name="/eac-cpf" das:import="">
+    <xsd:annotation>
+      <xsd:appinfo>
+        <das:source type='xinclude' parse='xml' />
+        <das:relation name="rm_organization_eac_xml" parent='rm_organizations' child='/eac-cpf' parent-keys='path filename' child-keys='path filename' />
+      </xsd:appinfo>
+    </xsd:annotation>
+  </xsd:element-->
+  
+  
+  <xsd:element name='TYPE' type='entity_type' das:key-columns='id' das:filter-columns='id label'>
+    <xsd:annotation>
+      <xsd:appinfo>
+        <das:source type='xml' file='modules/entities/xml/typentity.xml' />
+        <das:relation name="entity_type_rel" parent='entity' child='TYPE' parent-keys='entity_type' child-keys='id' />
+      </xsd:appinfo>
+    </xsd:annotation>
+  </xsd:element>
+  
+  <xsd:complexType name='entity_type'>
+    <xsd:sequence>
+      <xsd:element name="id" type="xsd:string" />
+      <xsd:element name="label" type="xsd:string" default='Default'/>
     </xsd:sequence>
   </xsd:complexType>
   
