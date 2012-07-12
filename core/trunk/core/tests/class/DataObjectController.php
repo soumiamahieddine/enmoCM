@@ -114,7 +114,8 @@ class DataObjectController
     public function load($serializedDataObject)
     {
         if(!$this->document) $this->createDocument();
-        $dataObject = $this->document->importNode(unserialize($serializedDataObject),true);
+        $unserializedDataObject = unserialize($serializedDataObject);
+        $dataObject = $this->document->importNode($unserializedDataObject,true);
         $this->document->appendChild($dataObject);
         return $dataObject;
     }
