@@ -234,7 +234,7 @@ function displayUpdate($objectName, $object)
  */
 function putInSession($objectName, $object)
 {
-    $_SESSION['m_admin'][$objectName] = serialize($object);
+    $_SESSION['m_admin'][$objectName] = $object->asXml();
 }
 
 /**
@@ -287,11 +287,6 @@ function isBoolean($string)
         $return = '<img src="static.php?filename=picto_stat_disabled.gif" />';
     }
     return $return;
-}
-
-function fixObject ($object)
-{
-    $object = unserialize ($object);
 }
 
 function getLabel($constant) 
@@ -359,7 +354,7 @@ $DataObjectController->loadSchema($schemaPath);
 
 if (isset($_REQUEST['submit'])) {
 
-    $dataObject = $DataObjectController->unserialize(
+    $dataObject = $DataObjectController->load(
         $_SESSION['m_admin'][$params['objectName']]
     );
     
@@ -379,9 +374,7 @@ if (isset($_REQUEST['submit'])) {
         $url = $_SERVER['REQUEST_URI'];
         $url = str_replace(array('?display=true&', '&display=true'), array('?', ''), $url);
         
-        $_SESSION['m_admin'][$params['objectName']] = $DataObjectController->serialize(
-            $dataObject
-        );
+        $_SESSION['m_admin'][$params['objectName']] = $dataObject->asXml();
         
         header("Location: ".$url);
     }
@@ -396,20 +389,18 @@ if (isset($_REQUEST['submit'])) {
         case 'read' :
             $DataObjectController->setKey($params['objectName'], $params['objectId']);
             $dataObject = $DataObjectController->read(
-                $params['objectName']
+                $params['objectName'], $params['objectId']
             );
             break;
         case 'update' :
             if (!$_SESSION['m_admin'][$params['objectName']]) {
                 $DataObjectController->setKey($params['objectName'], $params['objectId']);
                 $dataObject = $DataObjectController->read(
-                    $params['objectName']
+                    $params['objectName'], $params['objectId']
                 );
-                $_SESSION['m_admin'][$params['objectName']] = $DataObjectController->serialize(
-                    $dataObject
-                );
+                $_SESSION['m_admin'][$params['objectName']] = $dataObject->asXml();
             } else {
-                $dataObject = $DataObjectController->unserialize(
+                $dataObject = $DataObjectController->load(
                     $_SESSION['m_admin'][$params['objectName']]
                 );
             }
@@ -452,6 +443,7 @@ if (isset($_REQUEST['submit'])) {
             $dataObjectList = $DataObjectController->enumerate(
                 $params['objectName'] . '_list'
             );
+            //echo htmlspecialchars($dataObjectList->asXmlString());
             
             //getKey
             $keyName = $DataObjectController->getKey(
@@ -902,9 +894,6 @@ if (isset($_REQUEST['submit'])) {
                              $str_htmlList .= $cssClass_tr;
                             $str_htmlList .= '>';
                                 foreach($object as $childName => $childObject) {
-                                    if (!$childObject->isDataObjectProperty) {
-                                        continue;
-                                    }
                                     $childObject = (string)$childObject;
                                     $json[$columnsLabels[$params['objectName'] . '.' . $childName]] = $childObject;
                                     if (!array_key_exists($childName, $showCols)) {

@@ -19,9 +19,7 @@ $DataObjectController = new DataObjectController();
 $DataObjectController->loadSchema($_REQUEST['schemaPathAjax']);
 
 if ($_REQUEST['modeAjax'] == 'update') {
-    $dataObject = $DataObjectController->unserialize(
-        $_SESSION['m_admin'][$_REQUEST['objectNameAjax']]
-    );
+    $dataObject = $DataObjectController->load($_SESSION['m_admin'][$_REQUEST['objectNameAjax']]);
 } elseif ($_REQUEST['modeAjax'] == 'create') {
     $dataObject = $DataObjectController->create(
         $_REQUEST['objectNameAjax']
