@@ -111,15 +111,13 @@ class DataObjectController
         }
     }
     
-    public function load($serializedDataObject)
+    public function load($xml)
     {
         if(!$this->document) $this->createDocument();
-        $unserializedDataObject = unserialize($serializedDataObject);
-        $dataObject = $this->document->importNode($unserializedDataObject,true);
-        $this->document->appendChild($dataObject);
-        return $dataObject;
+        $this->document->loadXML($xml);
+        return $this->document->documentElement;
     }
-    
+        
     public function validate($dataObject) 
     {
         $messageController = new MessageController();
