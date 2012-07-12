@@ -87,7 +87,7 @@ class DataObjectController
             $childSchema = $childSchemas[$j];
             $this->loadDataObject($childSchema, $listDataObject);
         }
-        return $listDataObject;
+        return $this->document;
     
     }
     
@@ -96,7 +96,7 @@ class DataObjectController
         $this->createDocument();
         $objectSchema = $this->schema->getObjectSchema($objectName);        
         $dataObject = $this->loadDataObject($objectSchema, $this->document, $key);
-        return $dataObject;
+        return $this->document;
     }
     
     public function save($dataObject) 
@@ -110,6 +110,8 @@ class DataObjectController
             throw $e;
         }
     }
+    
+    
     
     public function validate($dataObject) 
     {
@@ -246,6 +248,7 @@ class DataObjectController
     {      
         try {
             if($das = $this->getDataAccessService($objectSchema)) {
+                echo "<br/>Load data of " . $objectSchema->getAttribute('name');
                 $das->loadData($objectSchema, $parentObject, $key);
                 $this->document->logChange(DataObjectChange::READ, $parentObject);
             } 
@@ -419,6 +422,9 @@ class DataObjectController
         for($i=0; $i<count($childSchemas);$i++) {
             $childSchema = $childSchemas[$i]; 
             $childName = $childSchema->getAttribute('name');
+            $childNode = $this->prototype->createElement($childName);
+            $protoDataObject->appendChild($childNode);
+            
             $prototypeXpath = new DOMXPath($this->prototype);
             if($prototypeXpath->query('//' . $childName)->length == 0) {
                 $this->parseObjectSchema($childSchema);
