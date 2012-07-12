@@ -87,7 +87,7 @@ class DataObjectController
             $childSchema = $childSchemas[$j];
             $this->loadDataObject($childSchema, $listDataObject);
         }
-        return $this->document;
+        return $listDataObject;
     
     }
     
@@ -96,7 +96,7 @@ class DataObjectController
         $this->createDocument();
         $objectSchema = $this->schema->getObjectSchema($objectName);        
         $dataObject = $this->loadDataObject($objectSchema, $this->document, $key);
-        return $this->document;
+        return $dataObject;
     }
     
     public function save($dataObject) 
@@ -111,7 +111,12 @@ class DataObjectController
         }
     }
     
-    
+    public function load($dataObject)
+    {
+        if(!$this->document) $this->createDocument();
+        $newDataObject = $this->document->importNode($dataObject,true);
+        $this->document->appendChild($newDataObject);
+    }
     
     public function validate($dataObject) 
     {
