@@ -449,7 +449,7 @@ if (isset($_REQUEST['submit'])) {
             }
             
             //loadDataObject
-            $dataObjectList = $DataObjectController->read(
+            $dataObjectList = $DataObjectController->enumerate(
                 $params['objectName'] . '_list'
             );
             
