@@ -111,11 +111,12 @@ class DataObjectController
         }
     }
     
-    public function load($dataObject)
+    public function load($serializedDataObject)
     {
         if(!$this->document) $this->createDocument();
-        $newDataObject = $this->document->importNode($dataObject,true);
-        $this->document->appendChild($newDataObject);
+        $dataObject = $this->document->importNode(unserialize($serializedDataObject),true);
+        $this->document->appendChild($dataObject);
+        return $dataObject;
     }
     
     public function validate($dataObject) 
