@@ -135,10 +135,9 @@ class DataObjectController
         
         // Validate against schema
         //*********************************************************************
-        $XmlDocument = $dataObject->asXmlDocument();
         $XsdString = $this->schema->saveXML();
         libxml_use_internal_errors(true);
-        if(!$XmlDocument->schemaValidateSource($XsdString)) {
+        if(!$this->document->schemaValidateSource($XsdString)) {
             $libXMLErrors = libxml_get_errors();
             foreach ($libXMLErrors as $libXMLError) {
                 $message = $messageController->createMessage(
