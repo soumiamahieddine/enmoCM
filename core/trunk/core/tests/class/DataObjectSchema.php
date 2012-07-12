@@ -46,7 +46,7 @@ class DataObjectSchema
         $includes = $xpath->query('./xsd:include', $schemaNode);
         for($i=0; $i<$includes->length; $i++) {
             $include = $includes->item($i);
-            $schemaLocation = $include->schemaLocation;
+            $schemaLocation = $include->getAttribute('schemaLocation');
             if(!$this->isIncluded($schemaLocation)) {
                 $includeSchema = new DataObjectSchema();
                 $includeSchema->load($_SESSION['config']['corepath'] . $schemaLocation);
@@ -71,7 +71,7 @@ class DataObjectSchema
         }
     }
     
-    private function xpath($query, $contextElement=false) 
+    public function xpath($query, $contextElement=false) 
     {
         if(!$contextElement) $contextElement = $this->documentElement;
         $result = @$this->xpath->query($query, $contextElement);
@@ -89,8 +89,8 @@ class DataObjectSchema
         for($i=0; $i<$DSnodes->length; $i++) {
             $dasSource = $DSnodes->item($i);
             if($dasSource->parentNode->parentNode->parentNode->tagName != 'xsd:schema') {
-                $parentName = $dasSource->parentNode->parentNode->parentNode->name;
-                $dasSource->name = $parentName;
+                $parentName = $dasSource->parentNode->parentNode->parentNode->getAttribute('name');
+                $dasSource->setAttribute('name', $parentName);
             }
             $dasSources[] = $dasSource;
         }
@@ -114,8 +114,8 @@ class DataObjectSchema
         for($i=0; $i<$DTnodes->length; $i++) {
             $datatype = $DTnodes->item($i);
             if($datatype->parentNode->tagName != 'xsd:schema') {
-                $parentName = $datatype->parentNode->name;
-                $datatype->name = $parentName;
+                $parentName = $datatype->parentNode->getAttribute('name');
+                $datatype->setAttribute('name', $parentName);
             }
             $datatypes[] = $datatype;
         }
@@ -138,8 +138,8 @@ class DataObjectSchema
         for($i=0; $i<$Rnodes->length; $i++) {
             $relation = $Rnodes->item($i);
             if($relation->parentNode->parentNode->parentNode->tagName != 'xsd:schema') {
-                $parentName = $relation->parentNode->parentNode->parentNode->name;
-                $relation->name = $parentName;
+                $parentName = $relation->parentNode->parentNode->parentNode->getAttribute('name');
+                $relation->setAttribute('name', $parentName);
             }
             $relations[] = $relation;
         }
@@ -162,7 +162,7 @@ class DataObjectSchema
     public function getDasKey($objectName)
     {
         $objectSchema = $this->getObjectSchema($objectName);
-        $keyColumnNames = $objectSchema->{'das:key-columns'};
+        $keyColumnNames = $objectSchema->getAttribute('das:key-columns');
         return $keyColumnNames;
     }
  
@@ -195,31 +195,19 @@ class SchemaElement extends DOMElement {
     
     private function xpath($query, $contextElement=false) 
     {
-        $xpath = new DOMXpath($this->ownerDocument);
-        if(!$contextElement) $contextElement = $this->ownerDocument->documentElement;
-        return $xpath->query($query, $contextElement);
+        return $this->ownerDocument->xpath($query, $contextElement);
     }
     
-    function __get($name) 
-    {
-        if($this->hasAttribute($name)) {
-            return $this->getAttribute($name);
-        }
-    }
-    
-    function __set($name, $value) 
-    {
-        $this->setAttribute($name, $value);
-    }
-    
+    //*************************************************************************
+    // ELEMENT : BOTH
+    //*************************************************************************
     public function getType() 
     {
-        $xpath = new DOMXpath($this->ownerDocument);
-        if($this->type) {
-            $typeName = $this->type;
+        if($this->hasAttribute('type')) {
+            $typeName = $this->getAttribute('type');
             if(substr($typeName, 0, 4) == 'xsd:') {           
                 $elementType = $this->ownerDocument->createElement('xsd:simpleType');
-                $elementType->name = $typeName;
+                $elementType->setAttribute('name', $typeName);
             } else {
                 $elementType = $this->xpath("//*[(name()='xsd:complexType' or name()='xsd:simpleType') and @name='".$typeName."']")->item(0);
             }
@@ -230,21 +218,25 @@ class SchemaElement extends DOMElement {
         return $elementType;
     }
     
-    public function getColumnElements()
+    public function getRefElement() 
     {
-        $typeElements = $this->xpath("./*[name()='xsd:sequence' or name()='xsd:all']/xsd:element", $this);
-        $columnElements = array();
-        for($i=0; $i<$typeElements->length; $i++) {
-            $typeElement = $typeElements->item($i);
-            $typeElement = $typeElement->getRefElement();
-            $ElementType = $typeElement->getType();
-            if($ElementType->tagName == 'xsd:simpleType') {
-                $columnElements[] = $typeElement;
-            }
+        if($this->hasAttribute('ref')) {
+            $refObjectElement = $this->xpath("//xsd:element[@name='".$this->getAttribute('ref')."']")->item(0);
+            if(!$refObjectElement) die ("Referenced element named " . $this->getAttribute('ref') . " not found in schema");
+            return $refObjectElement;
+        } else {
+            return $this;
         }
-        return $columnElements;
     }
     
+    public function getName()
+    {
+        return $this->getAttribute('name');
+    }
+    
+    //*************************************************************************
+    // ELEMENT : TABLE
+    //*************************************************************************
     public function getChildSchemas()
     {
         $objectType = $this->getType();
@@ -274,49 +266,11 @@ class SchemaElement extends DOMElement {
         return $subElements;
     }
     
-    public function getRefElement() 
-    {
-        if($this->ref) {
-            $refObjectElement = $this->xpath("//xsd:element[@name='".$this->ref."']")->item(0);
-            if(!$refObjectElement) die ("Referenced element named " . $this->ref . " not found in schema");
-            return $refObjectElement;
-        } else {
-            return $this;
-        }
-    }
-    
-    public function getSourceName()
-    {
-        if($this->{'das:source'}) {
-            return $this->{'das:source'};
-        } else {
-            return $this->name;
-        }
-    }
-    
-    public function getTableName()
-    {
-        if($this->{'das:table'}) {
-            return $this->{'das:table'};
-        } else {
-            return $this->name;
-        }
-    }
-    
-    public function getColumnName()
-    {
-        if($this->{'das:column'}) {
-            return $this->{'das:column'};
-        } else {
-            return $this->name;
-        }
-    }
-    
     public function getRelation() 
     {
-        if($this->{'das:relation'}) {
-            $relationNode = $this->xpath('//das:relation[@name="'.$this->{'das:relation'}.'"]');
-            if($relationNode->length == 0) Die('Relation named ' . $this->{'das:relation'} . ' is not defined for element $this->name');
+        if($this->hasAttribute('das:relation')) {
+            $relationNode = $this->xpath('//das:relation[@name="'.$this->getAttribute('das:relation').'"]');
+            if($relationNode->length == 0) Die('Relation named ' . $this->getAttribute('das:relation') . ' is not defined for element $this->name');
         } else {
             $relationNode = $this->xpath('./xsd:annotation/xsd:appinfo/das:relation', $this);
         }
@@ -324,7 +278,56 @@ class SchemaElement extends DOMElement {
         return $relationNode->item(0);
     }
     
-        // OLD
+    public function getSourceName()
+    {
+        if($this->hasAttribute('das:source')) {
+            return $this->getAttribute('das:source');
+        } else {
+            return $this->getAttribute('name');
+        }
+    }
+    
+    public function getTableName()
+    {
+        if($this->hasAttribute('das:table')) {
+            return $this->getAttribute('das:table');
+        } else {
+            return $this->getAttribute('name');
+        }
+    }
+    
+    //*************************************************************************
+    // ELEMENT : COLUMN
+    //*************************************************************************
+    
+    public function getColumnName()
+    {
+        if($this->hasAttribute('das:column')) {
+            return $this->getAttribute('das:column');
+        } else {
+            return $this->getAttribute('name');
+        }
+    }
+    
+    //*************************************************************************
+    // TYPE
+    //*************************************************************************
+    public function getColumnElements()
+    {
+        $typeElements = $this->xpath("./*[name()='xsd:sequence' or name()='xsd:all']/xsd:element", $this);
+        $columnElements = array();
+        for($i=0; $i<$typeElements->length; $i++) {
+            $typeElement = $typeElements->item($i);
+            $typeElement = $typeElement->getRefElement();
+            $ElementType = $typeElement->getType();
+            if($ElementType->tagName == 'xsd:simpleType') {
+                $columnElements[] = $typeElement;
+            }
+        }
+        return $columnElements;
+    }
+    
+    // OLD
     //*************************************************************************
     private function getBaseTypeName() 
     {
