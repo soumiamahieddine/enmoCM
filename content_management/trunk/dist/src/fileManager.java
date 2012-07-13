@@ -103,7 +103,7 @@ public class fileManager {
                                 out.write("start /WAIT SOFFICE.exe -env:UserInstallation=file:///" 
                                     + pathToFileToLaunch.replace("\\", "/")  + " \"" + pathToFileToLaunch + fileToLaunch + "\"");
                             } else {
-                                out.write("start /WAIT \"" + pathToFileToLaunch + fileToLaunch + "\"");
+                                out.write("start /WAIT \"\" \"" + pathToFileToLaunch + fileToLaunch + "\"");
                             }
                         }
                     } else if ("mac".equals(os)) {
