@@ -17,6 +17,18 @@
     </xsd:restriction>
   </xsd:simpleType> 
  
+  <!-- Character varying(20) --> 
+  <xsd:simpleType name="varchar20" das:enclosed='true'>
+    <xsd:annotation>
+      <xsd:appinfo>
+        <das:sqltype driver='postgresql'>character varying(20)</das:sqltype>
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="20"/>
+    </xsd:restriction>
+  </xsd:simpleType> 
+ 
   <!-- Character varying(32) --> 
   <xsd:simpleType name="varchar32" das:enclosed='true'>
     <xsd:annotation>
@@ -114,6 +126,16 @@
     </xsd:restriction>
   </xsd:simpleType> 
   
+  <xsd:simpleType name="integer" das:enclosed='false'>
+    <xsd:annotation>
+      <xsd:appinfo>
+        <das:sqltype driver='postgresql'>integer</das:sqltype>
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:integer">
+        <xsd:minInclusive value="0"/>
+    </xsd:restriction>
+  </xsd:simpleType> 
     
   <xsd:simpleType name="bigint" das:enclosed='false'>
     <xsd:annotation>
