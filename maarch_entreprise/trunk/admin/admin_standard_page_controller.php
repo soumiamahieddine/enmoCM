@@ -443,8 +443,7 @@ if (isset($_REQUEST['submit'])) {
             $dataObjectList = $DataObjectController->enumerate(
                 $params['objectName'] . '_list'
             );
-            //echo htmlspecialchars($dataObjectList->asXmlString());
-            
+            //var_dump($dataObjectList);exit;
             //getKey
             $keyName = $DataObjectController->getKey(
                 $params['objectName']
@@ -462,668 +461,668 @@ if (isset($_REQUEST['submit'])) {
             $requestUri = $_SERVER['REQUEST_URI'];
             
             //filter
-                $noWhatUri = getDependantUri(
-                    'what',
-                    getDependantUri(
-                        'pageNb',
-                        $requestUri
-                    )
-                );
-                
-                $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                
-                $str_filter .= '<table ';
-                 $str_filter .= 'width="100%" ';
-                $str_filter .= '>';
-                    $str_filter .= '<tr>';
-                        $str_filter .= '<td ';
-                         $str_filter .= 'style="';
-                          $str_filter .= 'text-align: left; ';
-                         $str_filter .= '" ';
-                        $str_filter .= '>';
-                            $str_filter .= 'Liste alphab&eacute;tique: ';
-                            for($cpt_alphabet=0; $cpt_alphabet<strlen($alphabet); $cpt_alphabet++) {
-                                $str_filter .= '<span>';
-                                    $str_filter .= '<a ';
-                                     $str_filter .= 'href="';
-                                      $str_filter .= $noWhatUri . '&what=' . substr($alphabet, $cpt_alphabet, 1) . '|';
-                                     $str_filter .= '" ';
-                                    $str_filter .= '>';
-                                        $str_filter .= substr($alphabet, $cpt_alphabet, 1);
-                                    $str_filter .= '</a>';
-                                $str_filter .= '</span>';
-                                $str_filter .= '&nbsp;';
-                            }
-                            $str_filter .= ' - ';
-                            $str_filter .= '<a ';
-                             $str_filter .= 'href="' . $noWhatUri . '" ';
-                            $str_filter .= '>';
-                                $str_filter .= 'Tout afficher';
-                            $str_filter .= '</a>';
-                        $str_filter .= '</td>';
-                        
-                        $str_filter .= '<td ';
-                         $str_filter .= 'style="';
-                          $str_filter .= 'text-align: right; ';
-                         $str_filter .= '"';
-                        $str_filter .= ' >';
-                            $str_filter .= '<input ';
-                             $str_filter .= 'name="what" ';
-                             $str_filter .= 'id="what" ';
-                             $str_filter .= 'type="text" ';
-                             $str_filter .= 'size="15" ';
-                             $str_filter .= 'autocomplete="off" ';
-                             $str_filter .= 'onKeyPress="'; 
-                              $str_filter .= 'if(window.event.keyCode == 13 && $(\'what\').value != \'\')';
-                               $str_filter .= 'goTo(\''.$noWhatUri.'&what=|\'+$(\'what\').value+\'|\'); ';
-                             $str_filter .= '" ';
-                            $str_filter .= '/>';
-                            $str_filter .= '<div ';
-                             $str_filter .= 'id="whatList" ';
-                             $str_filter .= 'class="autocomplete" ';
-                             $str_filter .= 'style="';
-                              $str_filter .= 'display: none; ';
-                             $str_filter .= '" ';
-                            $str_filter .= '>';
-                            $str_filter .= '</div>';
-                            $str_filter .= '<script ';
-                             $str_filter .= 'type="text/javascript" ';
-                            $str_filter .= '>';
-                                $str_filter .= 'initList(';
-                                    $str_filter .= '\'what\', ';
-                                    $str_filter .= '\'whatList\', ';
-                                    $str_filter .= '\''.$_SESSION['config']['businessappurl']
-                                        .'index.php?display=true&admin=docservers&page=docservers_list_by_id\', ';
-                                    $str_filter .= '\'what\', ';
-                                    $str_filter .= '\'1\'';
-                                $str_filter .= '); ';
-                            $str_filter .= '</script>';
-                            $str_filter .= '<input ';
-                             $str_filter .= 'class="button" ';
-                             $str_filter .= 'type="button" ';
-                             $str_filter .= 'value="Filtrer" ';
-                             $str_filter .= 'onClick="';
-                              $str_filter .= 'if ($(\'what\').value != \'\') ';
-                               $str_filter .= '{';
-                                $str_filter .= 'goTo(';
-                                 $str_filter .= '\''.$noWhatUri.'&what=|\'+$(\'what\').value+\'|\'';
-                                $str_filter .= ')';
-                               $str_filter .= '} ';
-                              $str_filter .= 'else ';
-                               $str_filter .= '{';
-                                $str_filter .= 'goTo(';
-                                 $str_filter .= '\''.$noWhatUri.'\'';
-                                $str_filter .= ')';
-                               $str_filter .= '}';
-                             $str_filter .= '" ';
-                            $str_filter .= '/>';
-                        $str_filter .= '</td>';
-                    $str_filter .= '</tr>';
-                $str_filter .= '</table>';
-            
-            //pagination
-                $nbLine = $_SESSION['config']['nblinetoshow'];
-                if (isset($_REQUEST['nbLine']) && !empty($_REQUEST['nbLine'])) {
-                    $nbLine = $_REQUEST['nbLine'];
-                }
-                $nbEnd = $params['pageNb'] * $nbLine - 1;
-                $nbStart = $nbEnd - $nbLine + 1;
-                $nbMax = count(
-                    $objectList
-                );
-                $nbPageMax = ceil(
-                    $nbMax/$nbLine
-                );
-                $noPageNbUri = getDependantUri(
+            $noWhatUri = getDependantUri(
+                'what',
+                getDependantUri(
                     'pageNb',
                     $requestUri
-                );
-                $previousLink = $noPageNbUri . '&pageNb=' . ($params['pageNb'] - 1);
-                $nextLink = $noPageNbUri . '&pageNb=' . ($params['pageNb'] + 1);
+                )
+            );
                 
-                $noNbLineUrl = getDependantUri(
-                    'nbLine',
-                    getDependantUri(
-                        'pageNb',
-                        $requestUri
-                    )
-                );
-                $nbLineSelect = array(
-                    10,
-                    25,
-                    50,
-                    100,
-                    250,
-                    500
-                );
-                if (!in_array($_SESSION['config']['nblinetoshow'], $nbLineSelect)) {
-                    array_push($nbLineSelect, $_SESSION['config']['nblinetoshow']);
-                }
-                sort($nbLineSelect);
+            $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             
-                $str_pagination .= '<table ';
-                 $str_pagination .= 'width="100%" ';
-                $str_pagination .= '>';
-                    $str_pagination .= '<tr>';
-                        $str_pagination .= '<td ';
-                         $str_pagination .= 'width="100px" ';
-                         $str_pagination .= 'style="';
-                          $str_pagination .= 'text-align: left; ';
-                         $str_pagination .= '" ';
-                        $str_pagination .= '>';
-                            if ($params['pageNb'] > 1) {
-                                $str_pagination .= '<a ';
-                                 $str_pagination .= 'href="' . $previousLink . '" ';
-                                $str_pagination .= '>';
-                                    $str_pagination .= '< Précédente';
-                                $str_pagination .= '</a>';
-                            }
-                        $str_pagination .= '</td>';
-                        $str_pagination .= '<td ';
-                         $str_pagination .= 'style="';
-                          $str_pagination .= 'text-align: center; ';
-                         $str_pagination .= '" ';
-                        $str_pagination .= '>';
-                            $str_pagination .= '<table ';
-                             $str_pagination .= 'width="100%" ';
+            $str_filter .= '<table ';
+             $str_filter .= 'width="100%" ';
+            $str_filter .= '>';
+                $str_filter .= '<tr>';
+                    $str_filter .= '<td ';
+                     $str_filter .= 'style="';
+                      $str_filter .= 'text-align: left; ';
+                     $str_filter .= '" ';
+                    $str_filter .= '>';
+                        $str_filter .= 'Liste alphab&eacute;tique: ';
+                        for($cpt_alphabet=0; $cpt_alphabet<strlen($alphabet); $cpt_alphabet++) {
+                            $str_filter .= '<span>';
+                                $str_filter .= '<a ';
+                                 $str_filter .= 'href="';
+                                  $str_filter .= $noWhatUri . '&what=' . substr($alphabet, $cpt_alphabet, 1) . '|';
+                                 $str_filter .= '" ';
+                                $str_filter .= '>';
+                                    $str_filter .= substr($alphabet, $cpt_alphabet, 1);
+                                $str_filter .= '</a>';
+                            $str_filter .= '</span>';
+                            $str_filter .= '&nbsp;';
+                        }
+                        $str_filter .= ' - ';
+                        $str_filter .= '<a ';
+                         $str_filter .= 'href="' . $noWhatUri . '" ';
+                        $str_filter .= '>';
+                            $str_filter .= 'Tout afficher';
+                        $str_filter .= '</a>';
+                    $str_filter .= '</td>';
+                    
+                    $str_filter .= '<td ';
+                     $str_filter .= 'style="';
+                      $str_filter .= 'text-align: right; ';
+                     $str_filter .= '"';
+                    $str_filter .= ' >';
+                        $str_filter .= '<input ';
+                         $str_filter .= 'name="what" ';
+                         $str_filter .= 'id="what" ';
+                         $str_filter .= 'type="text" ';
+                         $str_filter .= 'size="15" ';
+                         $str_filter .= 'autocomplete="off" ';
+                         $str_filter .= 'onKeyPress="'; 
+                          $str_filter .= 'if(window.event.keyCode == 13 && $(\'what\').value != \'\')';
+                           $str_filter .= 'goTo(\''.$noWhatUri.'&what=|\'+$(\'what\').value+\'|\'); ';
+                         $str_filter .= '" ';
+                        $str_filter .= '/>';
+                        $str_filter .= '<div ';
+                         $str_filter .= 'id="whatList" ';
+                         $str_filter .= 'class="autocomplete" ';
+                         $str_filter .= 'style="';
+                          $str_filter .= 'display: none; ';
+                         $str_filter .= '" ';
+                        $str_filter .= '>';
+                        $str_filter .= '</div>';
+                        $str_filter .= '<script ';
+                         $str_filter .= 'type="text/javascript" ';
+                        $str_filter .= '>';
+                            $str_filter .= 'initList(';
+                                $str_filter .= '\'what\', ';
+                                $str_filter .= '\'whatList\', ';
+                                $str_filter .= '\''.$_SESSION['config']['businessappurl']
+                                    .'index.php?display=true&admin=docservers&page=docservers_list_by_id\', ';
+                                $str_filter .= '\'what\', ';
+                                $str_filter .= '\'1\'';
+                            $str_filter .= '); ';
+                        $str_filter .= '</script>';
+                        $str_filter .= '<input ';
+                         $str_filter .= 'class="button" ';
+                         $str_filter .= 'type="button" ';
+                         $str_filter .= 'value="Filtrer" ';
+                         $str_filter .= 'onClick="';
+                          $str_filter .= 'if ($(\'what\').value != \'\') ';
+                           $str_filter .= '{';
+                            $str_filter .= 'goTo(';
+                             $str_filter .= '\''.$noWhatUri.'&what=|\'+$(\'what\').value+\'|\'';
+                            $str_filter .= ')';
+                           $str_filter .= '} ';
+                          $str_filter .= 'else ';
+                           $str_filter .= '{';
+                            $str_filter .= 'goTo(';
+                             $str_filter .= '\''.$noWhatUri.'\'';
+                            $str_filter .= ')';
+                           $str_filter .= '}';
+                         $str_filter .= '" ';
+                        $str_filter .= '/>';
+                    $str_filter .= '</td>';
+                $str_filter .= '</tr>';
+            $str_filter .= '</table>';
+            
+            //pagination
+            $nbLine = $_SESSION['config']['nblinetoshow'];
+            if (isset($_REQUEST['nbLine']) && !empty($_REQUEST['nbLine'])) {
+                $nbLine = $_REQUEST['nbLine'];
+            }
+            $nbEnd = $params['pageNb'] * $nbLine - 1;
+            $nbStart = $nbEnd - $nbLine + 1;
+            $nbMax = count(
+                $objectList
+            );
+            $nbPageMax = ceil(
+                $nbMax/$nbLine
+            );
+            $noPageNbUri = getDependantUri(
+                'pageNb',
+                $requestUri
+            );
+            $previousLink = $noPageNbUri . '&pageNb=' . ($params['pageNb'] - 1);
+            $nextLink = $noPageNbUri . '&pageNb=' . ($params['pageNb'] + 1);
+            
+            $noNbLineUrl = getDependantUri(
+                'nbLine',
+                getDependantUri(
+                    'pageNb',
+                    $requestUri
+                )
+            );
+            $nbLineSelect = array(
+                10,
+                25,
+                50,
+                100,
+                250,
+                500
+            );
+            if (!in_array($_SESSION['config']['nblinetoshow'], $nbLineSelect)) {
+                array_push($nbLineSelect, $_SESSION['config']['nblinetoshow']);
+            }
+            sort($nbLineSelect);
+        
+            $str_pagination .= '<table ';
+             $str_pagination .= 'width="100%" ';
+            $str_pagination .= '>';
+                $str_pagination .= '<tr>';
+                    $str_pagination .= '<td ';
+                     $str_pagination .= 'width="100px" ';
+                     $str_pagination .= 'style="';
+                      $str_pagination .= 'text-align: left; ';
+                     $str_pagination .= '" ';
+                    $str_pagination .= '>';
+                        if ($params['pageNb'] > 1) {
+                            $str_pagination .= '<a ';
+                             $str_pagination .= 'href="' . $previousLink . '" ';
                             $str_pagination .= '>';
-                                $str_pagination .= '<tr>';
-                                    $str_pagination .= '<td ';
-                                     $str_pagination .= 'width="50%" ';
-                                     $str_pagination .= 'style="';
-                                        $str_pagination .= 'text-align: center; ';
+                                $str_pagination .= '< Précédente';
+                            $str_pagination .= '</a>';
+                        }
+                    $str_pagination .= '</td>';
+                    $str_pagination .= '<td ';
+                     $str_pagination .= 'style="';
+                      $str_pagination .= 'text-align: center; ';
+                     $str_pagination .= '" ';
+                    $str_pagination .= '>';
+                        $str_pagination .= '<table ';
+                         $str_pagination .= 'width="100%" ';
+                        $str_pagination .= '>';
+                            $str_pagination .= '<tr>';
+                                $str_pagination .= '<td ';
+                                 $str_pagination .= 'width="50%" ';
+                                 $str_pagination .= 'style="';
+                                    $str_pagination .= 'text-align: center; ';
+                                 $str_pagination .= '" ';
+                                $str_pagination .= '>';
+                                    //nombre d'éléménts par page
+                                    $str_pagination .= 'Afficher ';
+                                    $str_pagination .= '<select ';
+                                     $str_pagination .= 'onChange="';
+                                      $str_pagination .= 'goTo(';
+                                        $str_pagination .= '\''.$noNbLineUrl.'&nbLine=\'+this.value';
+                                      $str_pagination .= ');';
                                      $str_pagination .= '" ';
                                     $str_pagination .= '>';
-                                        //nombre d'éléménts par page
-                                        $str_pagination .= 'Afficher ';
-                                        $str_pagination .= '<select ';
-                                         $str_pagination .= 'onChange="';
-                                          $str_pagination .= 'goTo(';
-                                            $str_pagination .= '\''.$noNbLineUrl.'&nbLine=\'+this.value';
-                                          $str_pagination .= ');';
-                                         $str_pagination .= '" ';
-                                        $str_pagination .= '>';
-                                            for ($cpt_nbElement=0; $cpt_nbElement<count($nbLineSelect); $cpt_nbElement++) {
-                                                if ($nbLineSelect[$cpt_nbElement] >= $nbMax) {
-                                                    break;
-                                                }
-                                                $default_nbLineSelect = '';
-                                                if ($nbLineSelect[$cpt_nbElement] == $nbLine) {
-                                                    $default_nbLineSelect = 'selected="selected" ';
-                                                }
-                                                $str_pagination .= '<option ';
-                                                 $str_pagination .= 'value="' . $nbLineSelect[$cpt_nbElement] . '" ';
-                                                 $str_pagination .= $default_nbLineSelect; 
-                                                $str_pagination .= '>';
-                                                    $str_pagination .= $nbLineSelect[$cpt_nbElement]; 
-                                                $str_pagination .= '</option>';
+                                        for ($cpt_nbElement=0; $cpt_nbElement<count($nbLineSelect); $cpt_nbElement++) {
+                                            if ($nbLineSelect[$cpt_nbElement] >= $nbMax) {
+                                                break;
                                             }
                                             $default_nbLineSelect = '';
-                                            if ($nbMax == $nbLine || $nbMax < $nbLine) {
+                                            if ($nbLineSelect[$cpt_nbElement] == $nbLine) {
                                                 $default_nbLineSelect = 'selected="selected" ';
                                             }
                                             $str_pagination .= '<option ';
-                                             $str_pagination .= 'value="' . $nbMax . '" ';
-                                             $str_pagination .= $default_nbLineSelect;
+                                             $str_pagination .= 'value="' . $nbLineSelect[$cpt_nbElement] . '" ';
+                                             $str_pagination .= $default_nbLineSelect; 
                                             $str_pagination .= '>';
-                                                $str_pagination .= 'tous ('.$nbMax.')';
+                                                $str_pagination .= $nbLineSelect[$cpt_nbElement]; 
                                             $str_pagination .= '</option>';
-                                        $str_pagination .= '</select>';
-                                        $str_pagination .= ' éléments';
-                                    $str_pagination .= '</td>';
-                                    $str_pagination .= '<td ';
-                                     $str_pagination .= 'width="50%" ';
-                                     $str_pagination .= 'style="';
-                                        $str_pagination .= 'text-align: center; ';
-                                     $str_pagination .= '" ';
-                                    $str_pagination .= '>';
-                                        //aller a la page
-                                        if ($nbPageMax > 1) {
-                                            $str_pagination .= 'Aller &agrave; la page ';
-                                            $str_pagination .= '<select ';
-                                             $str_pagination .= 'onChange="';
-                                              $str_pagination .= 'goTo(this.value);';
-                                             $str_pagination .= '" ';
-                                            $str_pagination .= '>';
-                                                for($cpt_pageNb=1; $cpt_pageNb<=$nbPageMax; $cpt_pageNb++) {
-                                                    $selected = '';
-                                                    if ($cpt_pageNb == $params['pageNb']) {
-                                                        $selected = 'selected="selected" ';
-                                                    }
-                                                    $str_pagination .= '<option ';
-                                                     $str_pagination .= 'value="';
-                                                      $str_pagination .= $noPageNbUri . '&pageNb=' . $cpt_pageNb . '';
-                                                     $str_pagination .= '" ';
-                                                     $str_pagination .= $selected ;
-                                                    $str_pagination .= '>';
-                                                        $str_pagination .= $cpt_pageNb;
-                                                    $str_pagination .= '</option>';
-                                                }
-                                            $str_pagination .= '</select>';
-                                            $str_pagination .= ' sur '.$nbPageMax;
                                         }
-                                    $str_pagination .= '</td>';
-                                $str_pagination .= '</tr>';
-                            $str_pagination .= '</table>';
-                        $str_pagination .= '</td>';
-                        $str_pagination .= '<td ';
-                         $str_pagination .= 'width="100px" ';
-                         $str_pagination .= 'style="';
-                          $str_pagination .= 'text-align: right; ';
-                         $str_pagination .= '" ';
-                        $str_pagination .= '>';
-                            if ($params['pageNb'] < $nbPageMax) {
-                                $str_pagination .= '<a ';
-                                 $str_pagination .= 'href="' . $nextLink . '" ';
+                                        $default_nbLineSelect = '';
+                                        if ($nbMax == $nbLine || $nbMax < $nbLine) {
+                                            $default_nbLineSelect = 'selected="selected" ';
+                                        }
+                                        $str_pagination .= '<option ';
+                                         $str_pagination .= 'value="' . $nbMax . '" ';
+                                         $str_pagination .= $default_nbLineSelect;
+                                        $str_pagination .= '>';
+                                            $str_pagination .= 'tous ('.$nbMax.')';
+                                        $str_pagination .= '</option>';
+                                    $str_pagination .= '</select>';
+                                    $str_pagination .= ' éléments';
+                                $str_pagination .= '</td>';
+                                $str_pagination .= '<td ';
+                                 $str_pagination .= 'width="50%" ';
+                                 $str_pagination .= 'style="';
+                                    $str_pagination .= 'text-align: center; ';
+                                 $str_pagination .= '" ';
                                 $str_pagination .= '>';
-                                    $str_pagination .= 'Suivante >';
-                                $str_pagination .= '</a>';
-                            }
-                        $str_pagination .= '</td>';
-                    $str_pagination .= '</tr>';
-                $str_pagination .= '</table>';
+                                    //aller a la page
+                                    if ($nbPageMax > 1) {
+                                        $str_pagination .= 'Aller &agrave; la page ';
+                                        $str_pagination .= '<select ';
+                                         $str_pagination .= 'onChange="';
+                                          $str_pagination .= 'goTo(this.value);';
+                                         $str_pagination .= '" ';
+                                        $str_pagination .= '>';
+                                            for($cpt_pageNb=1; $cpt_pageNb<=$nbPageMax; $cpt_pageNb++) {
+                                                $selected = '';
+                                                if ($cpt_pageNb == $params['pageNb']) {
+                                                    $selected = 'selected="selected" ';
+                                                }
+                                                $str_pagination .= '<option ';
+                                                 $str_pagination .= 'value="';
+                                                  $str_pagination .= $noPageNbUri . '&pageNb=' . $cpt_pageNb . '';
+                                                 $str_pagination .= '" ';
+                                                 $str_pagination .= $selected ;
+                                                $str_pagination .= '>';
+                                                    $str_pagination .= $cpt_pageNb;
+                                                $str_pagination .= '</option>';
+                                            }
+                                        $str_pagination .= '</select>';
+                                        $str_pagination .= ' sur '.$nbPageMax;
+                                    }
+                                $str_pagination .= '</td>';
+                            $str_pagination .= '</tr>';
+                        $str_pagination .= '</table>';
+                    $str_pagination .= '</td>';
+                    $str_pagination .= '<td ';
+                     $str_pagination .= 'width="100px" ';
+                     $str_pagination .= 'style="';
+                      $str_pagination .= 'text-align: right; ';
+                     $str_pagination .= '" ';
+                    $str_pagination .= '>';
+                        if ($params['pageNb'] < $nbPageMax) {
+                            $str_pagination .= '<a ';
+                             $str_pagination .= 'href="' . $nextLink . '" ';
+                            $str_pagination .= '>';
+                                $str_pagination .= 'Suivante >';
+                            $str_pagination .= '</a>';
+                        }
+                    $str_pagination .= '</td>';
+                $str_pagination .= '</tr>';
+            $str_pagination .= '</table>';
             
             //actions
-                $actionsURL = array();
-                if (is_array($actions)) {
-                    for ($cpt_actions=0; $cpt_actions<count($actions); $cpt_actions++) {
-                        $actionsURL[$actions[$cpt_actions]] = getDependantUri(
-                            'mode', 
-                            $requestUri
-                        );
-                        $actionsURL[$actions[$cpt_actions]] .= '&mode=' . $actions[$cpt_actions];
-                    }
+            $actionsURL = array();
+            if (is_array($actions)) {
+                for ($cpt_actions=0; $cpt_actions<count($actions); $cpt_actions++) {
+                    $actionsURL[$actions[$cpt_actions]] = getDependantUri(
+                        'mode', 
+                        $requestUri
+                    );
+                    $actionsURL[$actions[$cpt_actions]] .= '&mode=' . $actions[$cpt_actions];
                 }
+            }
             
             //liste
-                $columnsLabels = $messageController->getTexts(
-                    $params['objectName'] . '.'
-                );
-                
-                $noOrderUri = getDependantUri(
-                    'orderField', 
-                    getDependantUri(
-                        'order', 
-                        $requestUri
-                    )
-                );
-                
-                $noModeUri = getDependantUri(
-                    'mode', 
+            $columnsLabels = $messageController->getTexts(
+                $params['objectName'] . '.'
+            );
+
+            $noOrderUri = getDependantUri(
+                'orderField', 
+                getDependantUri(
+                    'order', 
                     $requestUri
-                );
-                
-                $str_htmlList .= '<table ';
-                 $str_htmlList .= 'id="'.$params['objectName'].'_list" ';
-                 $str_htmlList .= 'width="100%" ';
-                 $str_htmlList .= 'cellpadding="4" ';
-                 $str_htmlList .= 'cellspacing="0" ';
+                )
+            );
+            
+            $noModeUri = getDependantUri(
+                'mode', 
+                $requestUri
+            );
+            
+            $str_htmlList .= '<table ';
+             $str_htmlList .= 'id="'.$params['objectName'].'_list" ';
+             $str_htmlList .= 'width="100%" ';
+             $str_htmlList .= 'cellpadding="4" ';
+             $str_htmlList .= 'cellspacing="0" ';
+            $str_htmlList .= '>';
+                $cpt_line = 0;
+                //header
+                $str_htmlList .= '<tr ';
+                 $str_htmlList .= 'style="';
+                  $str_htmlList .= 'background-color: #f6bf36; ';
+                  $str_htmlList .= 'color: #459ed1; ';
+                 $str_htmlList .= '" ';
                 $str_htmlList .= '>';
-                    $cpt_line = 0;
-                    //header
-                    $str_htmlList .= '<tr ';
+                    foreach($columnsLabels as $labelId => $labelColumn) {
+                        $prefixLength = strlen($params['objectName']) + 1;
+                        $keyColumn = substr($labelId, $prefixLength);
+                        if (!array_key_exists($keyColumn, $showCols)) {
+                            continue;
+                        }
+                        $cssHeaderColumn = '';
+                        if (isset($showCols[$keyColumn]['cssStyle'])) {
+                            $cssHeaderColumn = $showCols[$keyColumn]['cssStyle'];
+                        }
+                        $str_htmlList .= '<td ';
+                         $str_htmlList .= 'style="';
+                          $str_htmlList .= $cssHeaderColumn;
+                         $str_htmlList .= '" ';
+                        $str_htmlList .= '>';
+                            $str_htmlList .= '<b>';
+                                $str_htmlList .= $columnsLabels[$labelId];
+                            $str_htmlList .= '</b>';
+                            $str_htmlList .= '<div>';
+                                $str_htmlList .= '<a ';
+                                 $str_htmlList .= 'href="' . $noOrderUri . '&orderField=' . $keyColumn . '&order=asc" ';
+                                $str_htmlList .= '>';
+                                    if ($params['orderField'] == $keyColumn && $params['order'] == 'asc') {
+                                        $str_htmlList .= '<img ';
+                                         $str_htmlList .= 'src="static.php?filename=order_asc_select.png" ';
+                                        $str_htmlList .= '/>';
+                                    } else {
+                                        $str_htmlList .= '<img ';
+                                         $str_htmlList .= 'src="static.php?filename=order_asc.png" ';
+                                        $str_htmlList .= '/>';
+                                    }
+                                $str_htmlList .= '</a>';
+                                $str_htmlList .= '&nbsp;';
+                                $str_htmlList .= '<a ';
+                                 $str_htmlList .= 'href="' . $noOrderUri . '&orderField=' . $keyColumn . '&order=desc" ';
+                                $str_htmlList .= '>';
+                                    if ($params['orderField'] == $keyColumn && $params['order'] == 'desc') {
+                                        $str_htmlList .= '<img ';
+                                         $str_htmlList .= 'src="static.php?filename=order_desc_select.png" ';
+                                        $str_htmlList .= '/>';
+                                    } else {
+                                        $str_htmlList .= '<img ';
+                                         $str_htmlList .= 'src="static.php?filename=order_desc.png" ';
+                                        $str_htmlList .= '/>';
+                                    }
+                                $str_htmlList .= '</a>';
+                            $str_htmlList .= '</div>';
+                        $str_htmlList .= '</td>';
+                    }
+                    //cell for previsualise
+                    $colspanTd = 1;
+                    
+                    if (in_array('read', $actions)) {
+                        //cell for action read
+                        $colspanTd++;
+                    }
+                    if (in_array('update', $actions)) {
+                        //cell for action read
+                        $colspanTd++;
+                    }
+                    if (in_array('delete', $actions)) {
+                        //cell for action read
+                        $colspanTd++;
+                    }
+                    
+                    $str_htmlList .= '<td ';
+                    $str_htmlList .= 'colspan="'.$colspanTd.'" ';
+                     $str_htmlList .= 'onMouseOver="';
+                      $str_htmlList .= '$(\'identifierDetailFrame\').setValue(\'\'); ';
+                      $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
+                     $str_htmlList .= '" ';
                      $str_htmlList .= 'style="';
-                      $str_htmlList .= 'background-color: #f6bf36; ';
-                      $str_htmlList .= 'color: #459ed1; ';
+                      $str_htmlList .= 'text-align: center; ';
                      $str_htmlList .= '" ';
                     $str_htmlList .= '>';
-                        foreach($columnsLabels as $labelId => $labelColumn) {
-                            $prefixLength = strlen($params['objectName']) + 1;
-                            $keyColumn = substr($labelId, $prefixLength);
-                            if (!array_key_exists($keyColumn, $showCols)) {
-                                continue;
-                            }
-                            $cssHeaderColumn = '';
-                            if (isset($showCols[$keyColumn]['cssStyle'])) {
-                                $cssHeaderColumn = $showCols[$keyColumn]['cssStyle'];
-                            }
-                            $str_htmlList .= '<td ';
-                             $str_htmlList .= 'style="';
-                              $str_htmlList .= $cssHeaderColumn;
-                             $str_htmlList .= '" ';
-                            $str_htmlList .= '>';
-                                $str_htmlList .= '<b>';
-                                    $str_htmlList .= $columnsLabels[$labelId];
-                                $str_htmlList .= '</b>';
-                                $str_htmlList .= '<div>';
-                                    $str_htmlList .= '<a ';
-                                     $str_htmlList .= 'href="' . $noOrderUri . '&orderField=' . $keyColumn . '&order=asc" ';
-                                    $str_htmlList .= '>';
-                                        if ($params['orderField'] == $keyColumn && $params['order'] == 'asc') {
-                                            $str_htmlList .= '<img ';
-                                             $str_htmlList .= 'src="static.php?filename=order_asc_select.png" ';
-                                            $str_htmlList .= '/>';
-                                        } else {
-                                            $str_htmlList .= '<img ';
-                                             $str_htmlList .= 'src="static.php?filename=order_asc.png" ';
-                                            $str_htmlList .= '/>';
-                                        }
-                                    $str_htmlList .= '</a>';
-                                    $str_htmlList .= '&nbsp;';
-                                    $str_htmlList .= '<a ';
-                                     $str_htmlList .= 'href="' . $noOrderUri . '&orderField=' . $keyColumn . '&order=desc" ';
-                                    $str_htmlList .= '>';
-                                        if ($params['orderField'] == $keyColumn && $params['order'] == 'desc') {
-                                            $str_htmlList .= '<img ';
-                                             $str_htmlList .= 'src="static.php?filename=order_desc_select.png" ';
-                                            $str_htmlList .= '/>';
-                                        } else {
-                                            $str_htmlList .= '<img ';
-                                             $str_htmlList .= 'src="static.php?filename=order_desc.png" ';
-                                            $str_htmlList .= '/>';
-                                        }
-                                    $str_htmlList .= '</a>';
-                                $str_htmlList .= '</div>';
-                            $str_htmlList .= '</td>';
-                        }
-                        //cell for previsualise
-                        $colspanTd = 1;
-                        
-                        if (in_array('read', $actions)) {
-                            //cell for action read
-                            $colspanTd++;
-                        }
-                        if (in_array('update', $actions)) {
-                            //cell for action read
-                            $colspanTd++;
-                        }
-                        if (in_array('delete', $actions)) {
-                            //cell for action read
-                            $colspanTd++;
-                        }
-                        
-                        $str_htmlList .= '<td ';
-                        $str_htmlList .= 'colspan="'.$colspanTd.'" ';
-                         $str_htmlList .= 'onMouseOver="';
-                          $str_htmlList .= '$(\'identifierDetailFrame\').setValue(\'\'); ';
-                          $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
-                         $str_htmlList .= '" ';
-                         $str_htmlList .= 'style="';
-                          $str_htmlList .= 'text-align: center; ';
-                         $str_htmlList .= '" ';
-                        $str_htmlList .= '>';
-                            if (in_array('create', $actions)) {
-                                $str_htmlList .= '<b>';
-                                    $str_htmlList .= '<span ';
-                                     $str_htmlList .= 'style="';
-                                      $str_htmlList .= 'height: 32px; ';
-                                      $str_htmlList .= 'width: 100%; ';
-                                      $str_htmlList .= 'background-color: rgba(255, 255 ,255 ,0.4); ';
-                                      $str_htmlList .= 'border-radius: 10px; ';
-                                      $str_htmlList .= 'border: 3px solid; ';
-                                      $str_htmlList .= 'border-color: #459ed1; ';
-                                      $str_htmlList .= 'float: right; ';
-                                      $str_htmlList .= 'cursor: pointer; ';
-                                     $str_htmlList .= '" ';
-                                     $str_htmlList .= 'onClick="';
-                                      $str_htmlList .= 'goTo(\''.$actionsURL['create'].'\'); ';
-                                     $str_htmlList .= '" ';
-                                     $str_htmlList .= 'onMouseOver="';
-                                      $str_htmlList .= 'this.style.backgroundColor=\'rgba(255, 255, 255, 0.8)\'';
-                                     $str_htmlList .= '" ';
-                                     $str_htmlList .= 'onMouseOut="';
-                                      $str_htmlList .= 'this.style.backgroundColor=\'rgba(255, 255, 255, 0.4)\'';
-                                     $str_htmlList .= '" ';
-                                    $str_htmlList .= '>';
-                                        $str_htmlList .= '<span ';
-                                         $str_htmlList .= 'style="';
-                                          $str_htmlList .= 'position: relative; ';
-                                          $str_htmlList .= 'top: 9px; ';
-                                         $str_htmlList .= '" ';
-                                        $str_htmlList .= '>';
-                                            $str_htmlList .= 'Ajouter';
-                                        $str_htmlList .= '</span>';
-                                    $str_htmlList .= '</span>';
-                                $str_htmlList .= '</b>';
-                            }
-                        $str_htmlList .= '</td>';
-                        
-                    $str_htmlList .= '</tr>';
-                    //liste
-                    foreach($objectList as $object) {
-                        if (!($cpt_line < $nbStart || $cpt_line > $nbEnd)) {
-                            $cssClass_tr = 'style="';
-                             $cssClass_tr .= 'background-color: #DEEDF3; ';
-                            $cssClass_tr .= '" ';
-                            if (($cpt_line-$nbStart)%2 == 0) {
-                                $cssClass_tr = 'style="';
-                                 $cssClass_tr .= 'background-color: #93D1E4;';
-                                $cssClass_tr .= '" ';
-                            }
-                            $str_htmlList .= '<tr ';
-                             $str_htmlList .= $cssClass_tr;
-                            $str_htmlList .= '>';
-                                foreach($object as $childName => $childObject) {
-                                    $childObject = (string)$childObject;
-                                    $json[$columnsLabels[$params['objectName'] . '.' . $childName]] = $childObject;
-                                    if (!array_key_exists($childName, $showCols)) {
-                                        continue;
-                                    }
-                                    $cssColumn = '';
-                                    if (isset($showCols[$childName]['cssStyle'])) {
-                                        $cssColumn = $showCols[$childName]['cssStyle'];
-                                    }
-                                    if (isset($showCols[$childName]['functionFormat']) && !empty($showCols[$childName]['functionFormat'])) {
-                                        $functionFormat = $showCols[$childName]['functionFormat'];
-                                        $childObject = call_user_func($functionFormat, $childObject);
-                                    } elseif (substr($_REQUEST['what'], 0, 1) == '|') {
-                                        $surligneWhat = strtoupper(
-                                            str_replace(
-                                                '|', 
-                                                '', 
-                                                $_REQUEST['what']
-                                            )
-                                        );
-                                        $replaceWith = '<span ';
-                                         $replaceWith .= 'title="Recherche: \''.$surligneWhat.'\'" ';
-                                         $replaceWith .= 'style="';
-                                          $replaceWith .= 'background-color: rgba(84, 131, 246, 0.7); ';
-                                          $replaceWith .= 'font-weight: 900; ';
-                                          $replaceWith .= 'border-radius: 5px; ';
-                                          $replaceWith .= 'padding: 2px; ';
-                                          $replaceWith .= 'color: white; ';
-                                          $replaceWith .= 'box-shadow: inset 0px 0px 15px rgba(0, 0, 0, 0.6); ';
-                                         $replaceWith .= '" ';
-                                        $replaceWith .= '>';
-                                            $replaceWith .= $surligneWhat;
-                                        $replaceWith .= '</span>';
-                                        
-                                        $childObject = str_ireplace(
-                                            $surligneWhat, 
-                                            $replaceWith, 
-                                            $childObject
-                                        );
-                                    }
-                                    $str_htmlList .= '<td ';
-                                     $str_htmlList .= 'class="'.$childName.'" ';
-                                     $str_htmlList .= 'style="';
-                                      $str_htmlList .= $cssColumn;
-                                     $str_htmlList .= '"';
-                                     $str_htmlList .= 'onMouseOver="';
-                                      $str_htmlList .= '$(\'identifierDetailFrame\').setValue(\'\'); ';
-                                      $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
-                                     $str_htmlList .= '"';
-                                    $str_htmlList .= '>';
-                                        $str_htmlList .= $childObject;
-                                    $str_htmlList .= '</td>';
-                                }
-                                
-                                //previsualize area
-                                $encodeJSON = '{';
-                                    $encodeJSON .= "'identifierDetailFrame'";
-                                    $encodeJSON .= ' : ';
-                                    $encodeJSON .= "'".$cpt_line."'";
-                                    $encodeJSON .= ', ';
-                                    if (count($json) > 0) {
-                                        foreach($json as $keyJSON => $valueJSON) {
-                                            $encodeJSON .= "'".str_replace("'", "\'", $keyJSON)." '";
-                                            $encodeJSON .= ' : ';
-                                            if (DIRECTORY_SEPARATOR != '/') {
-                                                $valueJSON = str_replace(
-                                                    DIRECTORY_SEPARATOR, 
-                                                    DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, 
-                                                    $valueJSON
-                                                );
-                                            }
-                                            $encodeJSON .= "'".str_replace("'", "\'", $valueJSON)." '";
-                                            $encodeJSON .= ', ';
-                                        }
-                                    }
-                                    $encodeJSON = substr(
-                                        $encodeJSON, 
-                                        0, 
-                                        -2
-                                    );
-                                $encodeJSON .= '}';
-                                
-                                $str_htmlList .= '<td ';
-                                 $str_htmlList .= 'onMouseOver="';
-                                  $str_htmlList .= 'previsualiseAdminRead(event, '.$encodeJSON.');';
-                                 $str_htmlList .= '" ';
-                                 $str_htmlList .= 'style="';
-                                  $str_htmlList .= 'background-image: url(static.php?filename=showFrameAdminList.png); ';
-                                  $str_htmlList .= 'background-repeat: no-repeat; ';
-                                  $str_htmlList .= 'background-position: center; ';
-                                  $str_htmlList .= 'width: 35px; ';
-                                  $str_htmlList .= 'cursor: help; ';
-                                 $str_htmlList .= '" ';
-                                $str_htmlList .= '>';
-                                    $str_htmlList .= '';
-                                $str_htmlList .= '</td>';
-                                
-                                //action read
-                                if (in_array('read', $actions)) {
-                                    $str_htmlList .= '<td ';
-                                     $str_htmlList .= 'onMouseOver="';
-                                      $str_htmlList .= '$(\'identifierDetailFrame\').setValue(\'\'); ';
-                                      $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
-                                     $str_htmlList .= '" ';
-                                    $str_htmlList .= '>';
-                                        $str_htmlList .= '<a ';
-                                         $str_htmlList .= 'href="' . $actionsURL['read'] . '&objectId=' . $object->$keyName . '"';
-                                        $str_htmlList .= '>';
-                                            $str_htmlList .= '<img ';
-                                             $str_htmlList .= 'src="static.php?filename=icon_read.png" ';
-                                            $str_htmlList .= '/>';
-                                        $str_htmlList .= '</a>';
-                                    $str_htmlList .= '</td>';
-                                }
-                                //action update
-                                if (in_array('update', $actions)) {
-                                    $str_htmlList .= '<td ';
-                                     $str_htmlList .= 'onMouseOver="';
-                                      $str_htmlList .= '$(\'identifierDetailFrame\').setValue(\'\'); ';
-                                      $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
-                                     $str_htmlList .= '" ';
-                                    $str_htmlList .= '>';
-                                        $str_htmlList .= '<a ';
-                                         $str_htmlList .= 'href="' . $actionsURL['update'] . '&objectId=' . $object->$keyName . '"';
-                                        $str_htmlList .= '>';
-                                            $str_htmlList .= '<img ';
-                                             $str_htmlList .= 'src="static.php?filename=picto_change.gif" ';
-                                            $str_htmlList .= '/>';
-                                        $str_htmlList .= '</a>';
-                                    $str_htmlList .= '</td>';
-                                }
-                                //action delete
-                                if (in_array('delete', $actions)) {
-                                    $str_htmlList .= '<td ';
-                                     $str_htmlList .= 'onMouseOver="';
-                                      $str_htmlList .= '$(\'identifierDetailFrame\').setValue(\'\'); ';
-                                      $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
-                                     $str_htmlList .= '" ';
-                                    $str_htmlList .= '>';
-                                        $str_htmlList .= '<a ';
-                                         $str_htmlList .= 'href="' . $actionsURL['delete'] . '&objectId=' . $object->$keyName . '"';
-                                        $str_htmlList .= '>';
-                                            $str_htmlList .= '<img ';
-                                             $str_htmlList .= 'src="static.php?filename=picto_delete.gif" ';
-                                            $str_htmlList .= '/>';
-                                        $str_htmlList .= '</a>';
-                                    $str_htmlList .= '</td>';
-                                }
-                            $str_htmlList .= '</tr>';
-                        }
-                        $cpt_line++;
-                    }
-                $str_htmlList .= '</table>';
-                $str_htmlList .= '<table ';
-                 $str_htmlList .= 'width="100%" ';
-                $str_htmlList .= '>';
-                    $str_htmlList .= '<tr>';
-                        $str_htmlList .= '<td ';
-                         $str_htmlList .= 'onMouseOver="';
-                          $str_htmlList .= '$(\'identifierDetailFrame\').setValue(\'\'); ';
-                          $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
-                         $str_htmlList .= '" ';
-                         $str_htmlList .= 'style="';
-                          $str_htmlList .= 'text-align: right; ';
-                         $str_htmlList .= '" ';
-                        $str_htmlList .= '>';
-                            if (in_array('create', $actions)) {
+                        if (in_array('create', $actions)) {
+                            $str_htmlList .= '<b>';
                                 $str_htmlList .= '<span ';
                                  $str_htmlList .= 'style="';
-                                  $str_htmlList .= 'height: 1px; ';
+                                  $str_htmlList .= 'height: 32px; ';
                                   $str_htmlList .= 'width: 100%; ';
-                                  $str_htmlList .= 'background-color: rgba(255, 255 ,255 ,0.5); ';
+                                  $str_htmlList .= 'background-color: rgba(255, 255 ,255 ,0.4); ';
                                   $str_htmlList .= 'border-radius: 10px; ';
+                                  $str_htmlList .= 'border: 3px solid; ';
+                                  $str_htmlList .= 'border-color: #459ed1; ';
                                   $str_htmlList .= 'float: right; ';
+                                  $str_htmlList .= 'cursor: pointer; ';
+                                 $str_htmlList .= '" ';
+                                 $str_htmlList .= 'onClick="';
+                                  $str_htmlList .= 'goTo(\''.$actionsURL['create'].'\'); ';
+                                 $str_htmlList .= '" ';
+                                 $str_htmlList .= 'onMouseOver="';
+                                  $str_htmlList .= 'this.style.backgroundColor=\'rgba(255, 255, 255, 0.8)\'';
+                                 $str_htmlList .= '" ';
+                                 $str_htmlList .= 'onMouseOut="';
+                                  $str_htmlList .= 'this.style.backgroundColor=\'rgba(255, 255, 255, 0.4)\'';
                                  $str_htmlList .= '" ';
                                 $str_htmlList .= '>';
+                                    $str_htmlList .= '<span ';
+                                     $str_htmlList .= 'style="';
+                                      $str_htmlList .= 'position: relative; ';
+                                      $str_htmlList .= 'top: 9px; ';
+                                     $str_htmlList .= '" ';
+                                    $str_htmlList .= '>';
+                                        $str_htmlList .= 'Ajouter';
+                                    $str_htmlList .= '</span>';
                                 $str_htmlList .= '</span>';
+                            $str_htmlList .= '</b>';
+                        }
+                    $str_htmlList .= '</td>';
+                    
+                $str_htmlList .= '</tr>';
+                //liste
+                foreach($objectList as $object) {
+                    if (!($cpt_line < $nbStart || $cpt_line > $nbEnd)) {
+                        $cssClass_tr = 'style="';
+                         $cssClass_tr .= 'background-color: #DEEDF3; ';
+                        $cssClass_tr .= '" ';
+                        if (($cpt_line-$nbStart)%2 == 0) {
+                            $cssClass_tr = 'style="';
+                             $cssClass_tr .= 'background-color: #93D1E4;';
+                            $cssClass_tr .= '" ';
+                        }
+                        $str_htmlList .= '<tr ';
+                         $str_htmlList .= $cssClass_tr;
+                        $str_htmlList .= '>';
+                            foreach($object as $childName => $childObject) {
+                                $childObject = (string)$childObject;
+                                $json[$columnsLabels[$params['objectName'] . '.' . $childName]] = $childObject;
+                                if (!array_key_exists($childName, $showCols)) {
+                                    continue;
+                                }
+                                $cssColumn = '';
+                                if (isset($showCols[$childName]['cssStyle'])) {
+                                    $cssColumn = $showCols[$childName]['cssStyle'];
+                                }
+                                if (isset($showCols[$childName]['functionFormat']) && !empty($showCols[$childName]['functionFormat'])) {
+                                    $functionFormat = $showCols[$childName]['functionFormat'];
+                                    $childObject = call_user_func($functionFormat, $childObject);
+                                } elseif (substr($_REQUEST['what'], 0, 1) == '|') {
+                                    $surligneWhat = strtoupper(
+                                        str_replace(
+                                            '|', 
+                                            '', 
+                                            $_REQUEST['what']
+                                        )
+                                    );
+                                    $replaceWith = '<span ';
+                                     $replaceWith .= 'title="Recherche: \''.$surligneWhat.'\'" ';
+                                     $replaceWith .= 'style="';
+                                      $replaceWith .= 'background-color: rgba(84, 131, 246, 0.7); ';
+                                      $replaceWith .= 'font-weight: 900; ';
+                                      $replaceWith .= 'border-radius: 5px; ';
+                                      $replaceWith .= 'padding: 2px; ';
+                                      $replaceWith .= 'color: white; ';
+                                      $replaceWith .= 'box-shadow: inset 0px 0px 15px rgba(0, 0, 0, 0.6); ';
+                                     $replaceWith .= '" ';
+                                    $replaceWith .= '>';
+                                        $replaceWith .= $surligneWhat;
+                                    $replaceWith .= '</span>';
+                                    
+                                    $childObject = str_ireplace(
+                                        $surligneWhat, 
+                                        $replaceWith, 
+                                        $childObject
+                                    );
+                                }
+                                $str_htmlList .= '<td ';
+                                 $str_htmlList .= 'class="'.$childName.'" ';
+                                 $str_htmlList .= 'style="';
+                                  $str_htmlList .= $cssColumn;
+                                 $str_htmlList .= '"';
+                                 $str_htmlList .= 'onMouseOver="';
+                                  $str_htmlList .= '$(\'identifierDetailFrame\').setValue(\'\'); ';
+                                  $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
+                                 $str_htmlList .= '"';
+                                $str_htmlList .= '>';
+                                    $str_htmlList .= $childObject;
+                                $str_htmlList .= '</td>';
                             }
-                        $str_htmlList .= '</td>';
-                    $str_htmlList .= '</tr>';
-                $str_htmlList .= '</table>';
+                            
+                            //previsualize area
+                            $encodeJSON = '{';
+                                $encodeJSON .= "'identifierDetailFrame'";
+                                $encodeJSON .= ' : ';
+                                $encodeJSON .= "'".$cpt_line."'";
+                                $encodeJSON .= ', ';
+                                if (count($json) > 0) {
+                                    foreach($json as $keyJSON => $valueJSON) {
+                                        $encodeJSON .= "'".str_replace("'", "\'", $keyJSON)." '";
+                                        $encodeJSON .= ' : ';
+                                        if (DIRECTORY_SEPARATOR != '/') {
+                                            $valueJSON = str_replace(
+                                                DIRECTORY_SEPARATOR, 
+                                                DIRECTORY_SEPARATOR.DIRECTORY_SEPARATOR, 
+                                                $valueJSON
+                                            );
+                                        }
+                                        $encodeJSON .= "'".str_replace("'", "\'", $valueJSON)." '";
+                                        $encodeJSON .= ', ';
+                                    }
+                                }
+                                $encodeJSON = substr(
+                                    $encodeJSON, 
+                                    0, 
+                                    -2
+                                );
+                            $encodeJSON .= '}';
+                            
+                            $str_htmlList .= '<td ';
+                             $str_htmlList .= 'onMouseOver="';
+                              $str_htmlList .= 'previsualiseAdminRead(event, '.$encodeJSON.');';
+                             $str_htmlList .= '" ';
+                             $str_htmlList .= 'style="';
+                              $str_htmlList .= 'background-image: url(static.php?filename=showFrameAdminList.png); ';
+                              $str_htmlList .= 'background-repeat: no-repeat; ';
+                              $str_htmlList .= 'background-position: center; ';
+                              $str_htmlList .= 'width: 35px; ';
+                              $str_htmlList .= 'cursor: help; ';
+                             $str_htmlList .= '" ';
+                            $str_htmlList .= '>';
+                                $str_htmlList .= '';
+                            $str_htmlList .= '</td>';
+                            
+                            //action read
+                            if (in_array('read', $actions)) {
+                                $str_htmlList .= '<td ';
+                                 $str_htmlList .= 'onMouseOver="';
+                                  $str_htmlList .= '$(\'identifierDetailFrame\').setValue(\'\'); ';
+                                  $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
+                                 $str_htmlList .= '" ';
+                                $str_htmlList .= '>';
+                                    $str_htmlList .= '<a ';
+                                     $str_htmlList .= 'href="' . $actionsURL['read'] . '&objectId=' . $object->$keyName . '"';
+                                    $str_htmlList .= '>';
+                                        $str_htmlList .= '<img ';
+                                         $str_htmlList .= 'src="static.php?filename=icon_read.png" ';
+                                        $str_htmlList .= '/>';
+                                    $str_htmlList .= '</a>';
+                                $str_htmlList .= '</td>';
+                            }
+                            //action update
+                            if (in_array('update', $actions)) {
+                                $str_htmlList .= '<td ';
+                                 $str_htmlList .= 'onMouseOver="';
+                                  $str_htmlList .= '$(\'identifierDetailFrame\').setValue(\'\'); ';
+                                  $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
+                                 $str_htmlList .= '" ';
+                                $str_htmlList .= '>';
+                                    $str_htmlList .= '<a ';
+                                     $str_htmlList .= 'href="' . $actionsURL['update'] . '&objectId=' . $object->$keyName . '"';
+                                    $str_htmlList .= '>';
+                                        $str_htmlList .= '<img ';
+                                         $str_htmlList .= 'src="static.php?filename=picto_change.gif" ';
+                                        $str_htmlList .= '/>';
+                                    $str_htmlList .= '</a>';
+                                $str_htmlList .= '</td>';
+                            }
+                            //action delete
+                            if (in_array('delete', $actions)) {
+                                $str_htmlList .= '<td ';
+                                 $str_htmlList .= 'onMouseOver="';
+                                  $str_htmlList .= '$(\'identifierDetailFrame\').setValue(\'\'); ';
+                                  $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
+                                 $str_htmlList .= '" ';
+                                $str_htmlList .= '>';
+                                    $str_htmlList .= '<a ';
+                                     $str_htmlList .= 'href="' . $actionsURL['delete'] . '&objectId=' . $object->$keyName . '"';
+                                    $str_htmlList .= '>';
+                                        $str_htmlList .= '<img ';
+                                         $str_htmlList .= 'src="static.php?filename=picto_delete.gif" ';
+                                        $str_htmlList .= '/>';
+                                    $str_htmlList .= '</a>';
+                                $str_htmlList .= '</td>';
+                            }
+                        $str_htmlList .= '</tr>';
+                    }
+                    $cpt_line++;
+                }
+            $str_htmlList .= '</table>';
+            $str_htmlList .= '<table ';
+             $str_htmlList .= 'width="100%" ';
+            $str_htmlList .= '>';
+                $str_htmlList .= '<tr>';
+                    $str_htmlList .= '<td ';
+                     $str_htmlList .= 'onMouseOver="';
+                      $str_htmlList .= '$(\'identifierDetailFrame\').setValue(\'\'); ';
+                      $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
+                     $str_htmlList .= '" ';
+                     $str_htmlList .= 'style="';
+                      $str_htmlList .= 'text-align: right; ';
+                     $str_htmlList .= '" ';
+                    $str_htmlList .= '>';
+                        if (in_array('create', $actions)) {
+                            $str_htmlList .= '<span ';
+                             $str_htmlList .= 'style="';
+                              $str_htmlList .= 'height: 1px; ';
+                              $str_htmlList .= 'width: 100%; ';
+                              $str_htmlList .= 'background-color: rgba(255, 255 ,255 ,0.5); ';
+                              $str_htmlList .= 'border-radius: 10px; ';
+                              $str_htmlList .= 'float: right; ';
+                             $str_htmlList .= '" ';
+                            $str_htmlList .= '>';
+                            $str_htmlList .= '</span>';
+                        }
+                    $str_htmlList .= '</td>';
+                $str_htmlList .= '</tr>';
+            $str_htmlList .= '</table>';
                 
             //div previsualize
-                $str_previsualise  .= '<div ';
-                 $str_previsualise .= 'id="return_previsualise" ';
-                 $str_previsualise .= 'style="';
-                  $str_previsualise .= 'display: none; ';
-                  $str_previsualise .= 'border-radius: 10px; ';
-                  $str_previsualise .= 'box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); ';
-                  $str_previsualise .= 'padding: 10px; ';
-                  $str_previsualise .= 'width: auto; ';
-                  $str_previsualise .= 'height: auto; ';
-                  $str_previsualise .= 'position: absolute; ';
-                  $str_previsualise .= 'top: 0; ';
-                  $str_previsualise .= 'left: 0; ';
-                  $str_previsualise .= 'z-index: 999; ';
-                  $str_previsualise .= 'background-color: rgba(255, 255, 255, 0.9); ';
-                  $str_previsualise .= 'border: 3px solid #459ed1;';
-                 $str_previsualise .= '" ';
-                $str_previsualise .= '>';
-                    $str_previsualise .= '<input type="hidden" id="identifierDetailFrame" value="" />';
-                $str_previsualise .= '</div>';
-                
-            //div goToTop
-                $str_goToTop .= '<div ';
-                 $str_goToTop .= 'id="goToTop" ';
-                 $str_goToTop .= 'style="';
-                  $str_goToTop .= 'display: none; ';
-                  $str_goToTop .= 'width: 48px; ';
-                  $str_goToTop .= 'height: 48px; ';
-                  $str_goToTop .= 'border-radius: 12px; ';
-                  $str_goToTop .= 'border: 3px solid; ';
-                  $str_goToTop .= 'border-color: #459ed1; ';
-                  $str_goToTop .= 'background-image: url(static.php?filename=goToTop.png); ';
-                  $str_goToTop .= 'background-repeat: no-repeat; ';
-                  $str_goToTop .= 'background-position: center; ';
-                  $str_goToTop .= 'position: fixed; ';
-                  $str_goToTop .= 'cursor: pointer; ';
-                 $str_goToTop .= '" ';
-                 $str_goToTop .= 'onClick="';
-                  $str_goToTop .= 'goTo(\'#\'); ';
-                 $str_goToTop .= '" ';
-                $str_goToTop .= '>';
-                $str_goToTop .= '</div>';
+            $str_previsualise  .= '<div ';
+             $str_previsualise .= 'id="return_previsualise" ';
+             $str_previsualise .= 'style="';
+              $str_previsualise .= 'display: none; ';
+              $str_previsualise .= 'border-radius: 10px; ';
+              $str_previsualise .= 'box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); ';
+              $str_previsualise .= 'padding: 10px; ';
+              $str_previsualise .= 'width: auto; ';
+              $str_previsualise .= 'height: auto; ';
+              $str_previsualise .= 'position: absolute; ';
+              $str_previsualise .= 'top: 0; ';
+              $str_previsualise .= 'left: 0; ';
+              $str_previsualise .= 'z-index: 999; ';
+              $str_previsualise .= 'background-color: rgba(255, 255, 255, 0.9); ';
+              $str_previsualise .= 'border: 3px solid #459ed1;';
+             $str_previsualise .= '" ';
+            $str_previsualise .= '>';
+                $str_previsualise .= '<input type="hidden" id="identifierDetailFrame" value="" />';
+            $str_previsualise .= '</div>';
             
-                echo $str_filter;
-                echo $str_pagination;
-                echo $str_htmlList;
-                echo $str_previsualise;
-                echo $str_goToTop;
+        //div goToTop
+            $str_goToTop .= '<div ';
+             $str_goToTop .= 'id="goToTop" ';
+             $str_goToTop .= 'style="';
+              $str_goToTop .= 'display: none; ';
+              $str_goToTop .= 'width: 48px; ';
+              $str_goToTop .= 'height: 48px; ';
+              $str_goToTop .= 'border-radius: 12px; ';
+              $str_goToTop .= 'border: 3px solid; ';
+              $str_goToTop .= 'border-color: #459ed1; ';
+              $str_goToTop .= 'background-image: url(static.php?filename=goToTop.png); ';
+              $str_goToTop .= 'background-repeat: no-repeat; ';
+              $str_goToTop .= 'background-position: center; ';
+              $str_goToTop .= 'position: fixed; ';
+              $str_goToTop .= 'cursor: pointer; ';
+             $str_goToTop .= '" ';
+             $str_goToTop .= 'onClick="';
+              $str_goToTop .= 'goTo(\'#\'); ';
+             $str_goToTop .= '" ';
+            $str_goToTop .= '>';
+            $str_goToTop .= '</div>';
+        
+            echo $str_filter;
+            echo $str_pagination;
+            echo $str_htmlList;
+            echo $str_previsualise;
+            echo $str_goToTop;
             
             break;
     }
