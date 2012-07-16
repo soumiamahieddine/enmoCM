@@ -191,7 +191,7 @@ function makeAdvForm($formFields, $formButtons, $dataObject, $schemaPath, $param
                     } else {
                         $divStatusContent = '<<';
                     }
-                    $str_return .= '<h3 style="color:#FFC200;" onclick="new Effect.toggle(\'div' 
+                    $str_return .= '<h3 class="h3_admin" onclick="new Effect.toggle(\'div' 
                         . $cptTag . '\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'div' 
                         . $cptTag . '\', \'divStatus' . $cptTag . '\');">'
                         . $formFields[$key]['tag']

@@ -47,6 +47,12 @@ h3
     font-size: 14px;
 }
 
+.h3_admin
+{
+    cursor: pointer;
+    color:#FFC200;
+}
+
 .small_text
 {
     font-size: 10px;
@@ -2930,6 +2936,8 @@ hr{
     height: 2px;
     background-color: #1C99C5;
     text-align: left;
+    padding: 0;
+    margin: 0;
 }
 
 /* TIPS  */
