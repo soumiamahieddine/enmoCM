@@ -105,7 +105,7 @@ while ($GLOBALS['state'] <> "END") {
                    . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
             Bt_doQuery($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() == 0) {
-                Bt_exitBatch(107, 'WARNING stack empty for your request');
+                Bt_exitBatch(107, 'stack empty for your request');
                 break;
             }
             Bt_updateWorkBatch();
