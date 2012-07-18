@@ -147,13 +147,15 @@ $_ENV['categories']['incoming']['process_limit_date_use'] = array (
     ),
     'modify' => false
 );
+
 $_ENV['categories']['incoming']['other_cases']['process_limit_date'] = array (
     'type_form' => 'date',
     'type_field' => 'date',
     'label' => _PROCESS_LIMIT_DATE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_limit.gif',
-    'modify' => false
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arriv.gif',
+    'modify' => true,
+    'form_show' => 'date'
 );
 $_ENV['categories']['incoming']['type_contact'] = array (
     'type_form' => 'radio',
@@ -945,7 +947,10 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     'show_value' => '',
                     'label' => $_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['label'],
                     'display' => 'textinput',
-                    'img' => $_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['img']
+                    'img' => $_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['img'],
+                    'modify' => true,
+                    'form_show' => 'date',
+                    'field_type' => 'date'
                 );
             } else {
                 $data['process_limit_date'] = array (
@@ -955,7 +960,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     'display' => 'textinput'
                 );
             }
-            $data['process_limit_date']['readonly'] = true;
+            $data['process_limit_date']['readonly'] = false;
             if (isset($_ENV['categories'][$cat_id]['process_limit_date']['modify'])
                 && $mode == 'form' && $_ENV['categories'][$cat_id]['process_limit_date']['modify']
             ) {

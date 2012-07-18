@@ -261,6 +261,25 @@ class indexing_searching_app extends dbquery
         }
 
         ///////////////////////// Other cases
+        //process date
+        if(
+            isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']) 
+            && !empty($post['process_limit_date']) 
+            && preg_match($_ENV['date_pattern'], $post['process_limit_date'])== 0)
+        {
+            $_SESSION['error'] .= $_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['label']." "._WRONG_FORMAT." <br/>";
+        }
+        if (!empty($post['process_limit_date'])) {
+            array_push(
+                $data_ext, 
+                array(
+                    'column' => 'process_limit_date', 
+                    'value' => $func->format_date_db($post['process_limit_date']), 
+                    'type' => "date"
+                )
+            );
+        }
+        
         if($core->is_module_loaded('folder'))
         {
             $request->connect();
