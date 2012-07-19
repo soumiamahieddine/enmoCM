@@ -208,14 +208,7 @@ class DataObjectController
     //*************************************************************************
     private function createDataObject($typeName)
     {
-        $Xsl = new DOMDocument();
-        $Xslt = new XSLTProcessor();
-        $Xsl->load('core/tests/class/XSL/DataObject_Create.xsl');
-        $Xslt->importStylesheet($Xsl);
-        $Xslt->setParameter('', 'typeName', $typeName);
-        $dataObjectPrototype = $Xslt->transformToDoc($this->schema);
-        $dataObject = $this->dataObjectDocument->importNode($dataObjectPrototype->documentElement,true);
-        
+                
         return $dataObject;
     }
     
