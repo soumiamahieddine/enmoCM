@@ -89,7 +89,7 @@ class DataObjectController
             $keyName = str_replace("@", "", $keyField->getAttribute('xpath'));
             $return[] = $keyName;  
         }
-        return $return
+        return $return;
     }
     
     public function createRoot($moduleName) 
