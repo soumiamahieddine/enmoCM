@@ -101,7 +101,7 @@ class DataObjectController
     {
         $this->dataObjectDocument = new DataObjectDocument();
         $rootNode = $this->query('/xsd:schema/xsd:element[@das:module != ""]')->item(0);
-        $rootObject = $this->createElement($rootNode->getAttribute('name'));
+        $rootObject = $this->dataObjectDocument->createElement($rootNode->getAttribute('name'));
         $this->dataObjectDocument->appendChild($rootObject);
         
         $objectNode = $this->query('/xsd:schema/xsd:element[@name = "'.$objectName.'"]')->item(0);
