@@ -1,17 +1,15 @@
 <?php
 class DataAccessService_XML 
-    extends DataAccessService
+    extends SchemaController
 {
     public $file;
     public $DOMDocument;
     public $XSLT;
     
     public function DataAccessService_XML(
-        $name,
         $file       
     ) 
     {
-        $this->name = $name;
         $this->file = $file;
         $this->type = 'xml';
         $this->DOMDocument = new DOMDocument();
@@ -19,27 +17,7 @@ class DataAccessService_XML
         $this->XSLT = new XSLTProcessor();
     }
     
-    public function addTable($tableName) 
-    {
-        $newTable = new DataAccessService_XML_Table($tableName);
-        $this->tables[$tableName] = $newTable;
-        return $newTable;
-    }
-    
-    public function getTable($tableName)
-    {
-        return $this->tables[$tableName];
-    }
-    
-    public function addRelation($parentName, $childName, $parentColumns, $childColumns, $name=false) 
-    {
-        if(!$name) {
-            $name = $parentName . '_' . $childName . '_FK';
-        }
-        $newRelation = new DataAccessService_XML_Relation($parentName, $childName, $parentColumns, $childColumns, $name);
-        $this->relations[$name] = $newRelation;
-    }
-    
+      
     public function loadData($objectSchema, $parentObject, $key=false) 
     {
         try {
@@ -183,7 +161,7 @@ class DataAccessService_XML
         if($parentObject 
             && $parentObject != $document 
             && $relation = $this->getRelation($parentObject->tagName, $tableName)) {
-            echo "<br/>relation " . print_r($relation, true);
+            //echo "<br/>relation " . print_r($relation, true);
             $whereExpressionParts[] = $this->makeRelationExpression($relation, $table, $parentObject);
         }
         if($key && $keyExpression = $this->makeSelectKeyExpression($table, $key)) {
@@ -246,57 +224,4 @@ class DataAccessService_XML
             }
         }
     }
-}
-
-class DataAccessService_XML_Table
-    extends DataAccessService_Table
-{
-
-    public function addPrimaryKey($columns, $name=false)
-    {
-        if(!$name) $name = $this->name . '_pkey';
-        $this->primaryKey = new DataAccessService_XML_PrimaryKey($columns, $name);
-    }
-    
-    public function addColumn($columnName, $columnType)
-    {
-        $newColumn = new DataAccessService_XML_Column($columnName, $columnType);
-        $this->columns[$columnName] = $newColumn;
-        return $newColumn;
-    }
-    
-    public function setOrder($orderElements, $orderMode)
-    {
-        $orderElementsArray = explode(' ', $orderElements);
-        for($i=0; $i<count($orderElementsArray); $i++) {
-            $orderElementsArray[$i] = "name()='".$orderElementsArray[$i]."'";
-        }
-        $this->order->select = implode(' or ', $orderElementsArray);
-        $this->order->mode = $orderMode;
-    }
-    
-}
-
-class DataAccessService_XML_PrimaryKey
-    extends DataAccessService_PrimaryKey
-{
-
-}
-
-class DataAccessService_XML_Sort
-    extends DataAccessService_Sort
-{
-    
-}
-
-class DataAccessService_XML_Column
-    extends DataAccessService_Column
-{
-   
-}
-
-class DataAccessService_XML_Relation
-    extends DataAccessService_Relation
-{ 
-
 }

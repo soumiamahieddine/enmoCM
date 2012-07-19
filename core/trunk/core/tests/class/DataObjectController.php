@@ -1,5 +1,6 @@
 <?php
 class DataObjectController 
+    extends SchemaController
 {
     const NONE      = 0;
     const CREATE    = 1;
@@ -7,25 +8,22 @@ class DataObjectController
     const UPDATE    = 3;
     const DELETE    = 4;
     
-    private $schema;
-    public $document;
-    public $prototype;
+    public $schema;
+    public $dataObjectDocument;
     public $changeLog = array();
     public $dataAccessServices = array();
+    public $dataObjectTypes = array();
     private $messageController;
     private $messages = array();
+    public $tmpdir;
     
-    public function dataObjectController() 
+    public function DataObjectController($xsdFile) 
     {
-        // Schema
-        require_once 'core/tests/class/DataObjectSchema.php';
-        
         // Document & objects
         require_once 'core/tests/class/DataObjectDocument.php';
         require_once 'core/tests/class/DataObject.php';
         
         // Data access services
-        require_once 'core/tests/class/DataAccessService_Abstract.php';
         require_once 'core/tests/class/DataAccessService_Database.php';
         require_once 'core/tests/class/DataAccessService_XML.php';
         
@@ -47,75 +45,88 @@ class DataObjectController
                 . '/core/xml/DataObjectController_Messages.xml'
         );
         
+        $this->schema = new DOMDocument();
+        $this->schema->load($xsdFile);
+        $this->processInclusions($this->schema);
+        
+        parent::__construct($this->schema);
+  
     }
     
-    public function loadSchema($xsdFile) 
+    public function processInclusions($Schema) 
     {
-        $this->schema = new DataObjectSchema();
-        $this->schema->loadSchema($xsdFile);
-        $this->parseSchema();
+        $includes = $Schema->getElementsByTagName('include');
+        while($includes->length > 0) {
+            $include = $includes->item(0);
+            $schemaLocation = $include->getAttribute('schemaLocation');
+            
+            $includeSchema = new DOMDocument();
+            $includeSchema->load($_SESSION['config']['corepath'] . $schemaLocation);
+            $this->processInclusions($includeSchema);
+            $schemaContents = $includeSchema->documentElement->childNodes;
+            for($j=0; $j<$schemaContents->length; $j++) {
+                $importNode = $schemaContents->item($j);
+                $importedNode = $this->schema->importNode($importNode, true);
+                $this->schema->documentElement->appendChild($importedNode);
+            }
+
+            $include->parentNode->removeChild($include);
+        }
     }
     
     //*************************************************************************
     // PUBLIC OBJECT HANDLING FUNCTIONS
     //*************************************************************************
-    public function createDocument() 
+    public function createRoot($moduleName) 
     {
-        $this->document = new DataObjectDocument();
+        $this->dataObjectDocument = new DataObjectDocument();
+        $rootNodeName = $this->query('/xsd:schema/xsd:element[@das:module = "'.$moduleName.'"]/@name')->item(0)->nodeValue;
+        $root = $this->dataObjectDocument->createElement($rootNodeName);
+        $this->dataObjectDocument->appendChild($root);
+        return $this->dataObjectDocument;
     }
     
     public function create($objectName) 
     {
-        if(!$this->document) $this->createDocument();
-        $objectSchema = $this->schema->getObjectSchema($objectName);
-        $dataObject = $this->createDataObject($objectSchema);
-        $this->document->appendChild($dataObject);
-        $this->document->logChange(DataObjectChange::CREATE, $dataObject);
+        $dataObject = $this->createDataObject($objectName);
         return $dataObject;      
     }
     
     public function enumerate($listName) 
     {
-        $this->createDocument();
-        $listSchema = $this->schema->getObjectSchema($listName);
-                
-        $listDataObject = $this->createDataObject($listSchema);
-        $this->document->appendChild($listDataObject);
+        $this->dataObjectDocument = new DataObjectDocument();
+        $dataObjectList = $this->createDataObject($listName);
+        $this->dataObjectDocument->appendChild($dataObjectList);
         
-        $childSchemas = $listSchema->getChildSchemas();
-        for($j=0; $j<count($childSchemas);$j++) {
-            $childSchema = $childSchemas[$j];
-            $this->loadDataObject($childSchema, $listDataObject);
+        $documentXPath = new DOMXpath($this->dataObjectDocument);
+        
+        $childObjects = $documentXPath->query('./*[count(*)>0]', $dataObjectList);
+        for($i=0; $i<$childObjects->length;$i++) {
+            $childObject = $childObjects->item($i);
+            $this->loadDataObject($childObject);
         }
         return $listDataObject;
     
     }
     
-    public function read($objectName, $key)
+    public function readRoot($objectName, $key)
     {
-        $this->createDocument();
-        $objectSchema = $this->schema->getObjectSchema($objectName);        
-        $dataObject = $this->loadDataObject($objectSchema, $this->document, $key);
-        return $dataObject;
+        $this->dataObjectDocument = new DataObjectDocument();
+        $objectNode = $this->query('/xsd:schema/xsd:element[@name = "'.$objectName.'"]')->item(0);
+        $this->loadDataObject($objectNode, $this->dataObjectDocument, $key);
+        return $this->dataObjectDocument->documentElement;
     }
     
     public function save($dataObject) 
     {
-        $objectSchema = $this->schema->getObjectSchema($dataObject->tagName);
-        $das = $this->getDataAccessService($objectSchema);
-        if(!$das) return;
-        try {
-            $das->saveData($dataObject);
-        } catch (maarch\Exception $e) {
-            throw $e;
-        }
+        
     }
     
     public function load($xml)
     {
-        if(!$this->document) $this->createDocument();
-        $this->document->loadXML($xml);
-        return $this->document->documentElement;
+        if(!$this->dataObjectDocument) $this->createDocument();
+        $this->dataObjectDocument->loadXML($xml);
+        return $this->dataObjectDocument->documentElement;
     }
         
     public function validate($dataObject) 
@@ -135,7 +146,7 @@ class DataObjectController
         
         // Validate against schema
         //*********************************************************************
-        $XsdString = $this->schema->saveXML();
+        $XsdString = $this->document->saveXML();
         libxml_use_internal_errors(true);
         if(!$this->document->schemaValidateSource($XsdString)) {
             $libXMLErrors = libxml_get_errors();
@@ -189,258 +200,98 @@ class DataObjectController
         return $dataObject;    
     
     }
-
-    //*************************************************************************
-    // PUBLIC DAS FUNCTIONS 
-    //*************************************************************************
-    public function setKey($objectName, $key) 
-    {
-        $objectSchema = $this->schema->getObjectSchema($objectName);
-        $das = $this->getDataAccessService($objectSchema);
-        if(!$das) return;
-        $dasTable = $das->getTable($objectName);
-        $dasTable->setKey($key);
-    }
     
-    public function setOrder($objectName, $orderElements, $orderMode='ascending') 
-    {
-        $objectSchema = $this->schema->getObjectSchema($objectName);
-        $das = $this->getDataAccessService($objectSchema);
-        if(!$das) return;
-        $dasTable = $das->getTable($objectName);
-        $dasTable->setOrder($orderElements, $orderMode);
-    }
-    
-    public function setFilter($objectName, $filterValue) 
-    {
-        $objectSchema = $this->schema->getObjectSchema($objectName);
-        $das = $this->getDataAccessService($objectSchema);
-        if(!$das) return;
-        $dasTable = $das->getTable($objectName);
-        $dasTable->setFilter($filterValue);
-    }
-
-    public function getKey($objectName) 
-    {
-        $objectSchema = $this->schema->getObjectSchema($objectName);
-        $das = $this->getDataAccessService($objectSchema);
-        if(!$das) return;
-        $dasTable = $das->getTable($objectName);
-        return $dasTable->getKey();
-    }
-        
     //*************************************************************************
     // PRIVATE OBJECT HANDLING FUNCTIONS
     //*************************************************************************
-    private function createDataObject($objectSchema)
+    private function createDataObject($typeName)
     {
-        $prototypeXpath = new DOMXPath($this->prototype);
-        $objectName = $objectSchema->getAttribute('name');
-        $dataObjectPrototype = $prototypeXpath->query('//' . $objectName)->item(0);
-        $dataObject = $this->document->importNode($dataObjectPrototype,true);
+        $Xsl = new DOMDocument();
+        $Xslt = new XSLTProcessor();
+        $Xsl->load('core/tests/class/XSL/DataObject_Create.xsl');
+        $Xslt->importStylesheet($Xsl);
+        $Xslt->setParameter('', 'typeName', $typeName);
+        $dataObjectPrototype = $Xslt->transformToDoc($this->schema);
+        $dataObject = $this->dataObjectDocument->importNode($dataObjectPrototype->documentElement,true);
         
         return $dataObject;
     }
     
     private function loadDataObject(
-        $objectSchema, 
-        $parentObject, 
-        $key=false, 
-        $filter=false, 
-        $order=false, 
-        $limit=500) 
+        $objectNode,
+        $parentObject,
+        $key=false
+        ) 
     {      
         try {
-            if($das = $this->getDataAccessService($objectSchema)) {
-                $das->loadData($objectSchema, $parentObject, $key);
-                $this->document->logChange(DataObjectChange::READ, $parentObject);
-            } 
-            $dataObjects = $parentObject->childNodes;
-            $childSchemas = $objectSchema->getChildSchemas();
-            for($j=0; $j<count($childSchemas);$j++) {
-                $childSchema = $childSchemas[$j];
-                for($i=0; $i<$dataObjects->length; $i++) {
-                    $dataObject = $dataObjects->item($i);
-                    $this->loadDataObject($childSchema, $dataObject);
-                    $this->document->logChange(DataObjectChange::READ, $dataObject);
-                }
-            }
             
-        } catch (maarch\Exception $e) {
+            //echo "<br/>Loading " . $objectNode->getAttribute('name');
+            
+            ////echo "<br/>Getting source";             
+            $dataAccessService = $this->getDataAccessService($objectNode);
+            //////echo "<br/>Source = " . print_r($dataAccessService,true);
+
+            if($dataAccessService) {
+                $dataAccessService->loadData($objectNode, $parentObject, $key);
+                //$this->document->logChange(DataObjectChange::READ, $parentObject);
+            } else {
+                $dataObject = $this->createDataObject($objectName);
+                $parentObject->appendChild($dataObject);
+            }
+            ////echo "<br/>Result = " . htmlspecialchars($parentObject->saveXML());
+            
+            $childNodes = $this->getChildObjects($objectNode);
+            $childNodesLength = count($childNodes);
+            //echo "<br/>Found " . $childNodesLength. " child nodes";
+            
+            // Get children sources
+            for($i=0; $i<$childNodesLength; $i++) {
+                $childNode = $childNodes[$i];
+                $newObjects = $parentObject->childNodes;
+                $newObjectsLength = $newObjects->length;
+                for($j=0; $j<$newObjectsLength; $j++) {
+                    $newObject = $newObjects->item($j);
+                    $this->loadDataObject($childNode, $newObject);
+                }    
+            }
+        } catch (maarch\Exception $e) {   
             throw $e;
         }
-        return $dataObject;
-    }
-    
-    //*************************************************************************
-    // PRIVATE DAS FUNCTIONS
-    //*************************************************************************
-    private function parseSchema()
-    {
-        // Data types
-        $dasTypes = $this->schema->getDatatypes();
-        // Data sources
-        $dasSources = $this->schema->getSources();
-        for($i=0; $i<count($dasSources); $i++) {
-            $dasSource = $dasSources[$i];
-            $dasName = $dasSource->getAttribute('name');
-            $dasType = $dasSource->getAttribute('type');
-            
-            switch($dasType) {
-            case 'database':
-                //$options = $this->schema->getSourceOptions($dasSource, $dasSource->driver);
-                $this->dataAccessServices[$dasName] = 
-                    new DataAccessService_Database(
-                        $dasSource->getAttribute('name'),
-                        $dasSource->getAttribute('driver'), 
-                        $dasSource->getAttribute('host'),  
-                        $dasSource->getAttribute('port'), 
-                        $dasSource->getAttribute('dbname'),
-                        $dasSource->getAttribute('user'), 
-                        $dasSource->getAttribute('password')
-                    );
-                
-                for($i=0; $i<count($dasTypes); $i++) {
-                    $dasType = $dasTypes[$i];
-                    $dasTypeName = $dasType->getAttribute('name');
-                    $dasTypeSqltype = $this->schema->getDatatypeSqltype($dasType, $dasSource->getAttribute('driver'));
-                    if($dasTypeSqltype) {
-                        $this->dataAccessServices[$dasName]->addDatatype(
-                            $dasTypeName,
-                            $dasTypeSqltype->nodeValue,
-                            $dasType->getAttribute('das:enclosed'));
-                    }
-                }
-                break;
-            
-            case 'xml':
-                $this->dataAccessServices[$dasName] = 
-                    new DataAccessService_XML(
-                        $dasName,
-                        $dasSource->getAttribute('file')
-                    );
-                break;
-            
-            case 'include':
-                $this->dataAccessServices[$dasName] = 
-                    new DataAccessService_Include(
-                        $dasName,
-                        $dasSource->getAttribute('parse')
-                    );
-                break;
-            }
-            
-        }
-        
-        // Fill DataAccessServices for object definitions and make prototypes
-        $this->prototype = new DOMDocument();
-        $prototype = $this->prototype->createElement('prototype');
-        $this->prototype->appendChild($prototype);
-        
-        $objectSchemas = $this->schema->getObjectSchemas();
-        for($i=0; $i<$objectSchemas->length; $i++) {
-            $objectSchema = $objectSchemas->item($i);
-            $this->parseObjectSchema($objectSchema);
-        }
-    }
-    
-    private function parseObjectSchema($objectSchema)
-    {
-        // Create prototype
-        //*********************************************************************
-        $objectName = $objectSchema->getAttribute('name');
-        $protoDataObject = $this->prototype->createElement($objectName);
-        $this->prototype->documentElement->appendChild($protoDataObject);
-        
-        // Load associated Das
-        //*********************************************************************
-        $das = $this->getDataAccessService($objectSchema);
-        if(!$das) return;
-        
-        // Add table
-        //*********************************************************************
-        $tableName = $objectSchema->getTableName();
-        $dasTable = $das->addTable($tableName);
-        if($objectSchema->hasAttribute('das:key-columns')) {
-            $dasTable->addPrimaryKey(
-                $objectSchema->getAttribute('das:key-columns')
-            );
-        }
-        if($objectSchema->hasAttribute('das:filter-columns')) {
-            $dasTable->addFilter(
-                $objectSchema->getAttribute('das:filter-columns')
-            );
-        }
-        
-        // Add Relations
-        //*********************************************************************
-        $dasRelation = $objectSchema->getRelation();
-        if($dasRelation) {
-            //echo "<br/> Add relation between " .$dasRelation->{'parent'} ." and ". $dasRelation->{'child'};
-            $das->addRelation(
-                $dasRelation->getAttribute('parent'),
-                $dasRelation->getAttribute('child'), 
-                $dasRelation->getAttribute('parent-keys'), 
-                $dasRelation->getAttribute('child-keys'),
-                $dasRelation->getAttribute('name')
-            );
-        }
-        
-        // Add columns
-        //*********************************************************************
-        $objectType = $objectSchema->getType();
-        $columnElements = $objectType->getColumnElements();
-        for($i=0; $i<count($columnElements);$i++) {
-            $columnElement = $columnElements[$i];
-            $columnType = $columnElement->getType();
-            $columnName = $columnElement->getColumnName();
-            $columnValue = false;
-            $dasColumn = $dasTable->addColumn($columnName, $columnType->getAttribute('name'));
-            if($columnName != $columnElement->getAttribute('name')) {
-                $dasColumn->alias = $columnElement->getAttribute('name');
-            }
-            if($columnElement->hasAttribute('default')) {
-                $defaultValue = $columnElement->getAttribute('default');
-                $dasColumn->{'default'} = $defaultValue;
-                $columnValue = $defaultValue;
-            }
-            if($columnElement->hasAttribute('fixed')) {
-                $fixedValue = $columnElement->getAttribute('fixed');
-                $dasColumn->{'fixed'} = $fixedValue;
-                $columnValue = $fixedValue;
-            }
-            if(strtolower($columnElement->getAttribute('nillable')) === 'false') {
-                $dasColumn->nillable = false;
-            } else {
-                $dasColumn->nillable = true;
-            }
-            
-            $columnNode = $this->prototype->createElement($columnName, $columnValue);
-            $protoDataObject->appendChild($columnNode);
-        }
 
-        // Process children
-        //*********************************************************************
-        $childSchemas = $objectSchema->getChildSchemas();
-        for($i=0; $i<count($childSchemas);$i++) {
-            $childSchema = $childSchemas[$i]; 
-            $childName = $childSchema->getAttribute('name');
-            $childNode = $this->prototype->createElement($childName);
-            $protoDataObject->appendChild($childNode);
-            
-            $prototypeXpath = new DOMXPath($this->prototype);
-            if($prototypeXpath->query('//' . $childName)->length == 0) {
-                $this->parseObjectSchema($childSchema);
-            }
-        }
     }
     
-    private function getDataAccessService($objectSchema) 
+    //*************************************************************************
+    // PRIVATE SCHEMA QUERY FUNCTIONS
+    //*************************************************************************
+    private function getDataAccessService($objectNode)
     {
-        $dasSourceName = $objectSchema->getSourceName();
-        if(!$dasSourceName) return;
-        $Das = $this->dataAccessServices[$dasSourceName];
-        return $Das;
-    }  
+        if($objectNode->hasAttribute('das:source')) {
+            $sourceName = $objectNode->getAttribute('das:source');
+            if(!isset($this->dataAccessServices[$sourceName])) {
+                $sourceNode = $this->query('//das:source[@name="'.$sourceName.'"]')->item(0);
+                $this->createDataAccessService($sourceName, $sourceNode);
+            }
+        } elseif($sourceNode = $this->query('./xsd:annotation/xsd:appinfo/das:source', $objectNode)->item(0)) {
+            $sourceName = $objectNode->getAttribute('name');
+            if(!isset($this->dataAccessServices[$sourceName])) {
+                $this->createDataAccessService($sourceName, $sourceNode);
+            }
+        }
+        
+        return $this->dataAccessServices[$sourceName];
+
+    }
     
+    private function createDataAccessService($sourceName, $sourceNode) 
+    {
+        switch($sourceNode->getAttribute('type')) {
+        case 'database':
+            $this->dataAccessServices[$sourceName] = new DataAccessService_Database($this->document);
+            $this->dataAccessServices[$sourceName]->connect($sourceNode);
+            break;
+        case 'xml':
+            break;
+        } 
+    }
+
 }
