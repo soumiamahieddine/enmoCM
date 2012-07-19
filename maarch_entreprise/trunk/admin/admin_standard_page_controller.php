@@ -348,9 +348,10 @@ $pagePath = locationBarManagement(
 $schemaPath = $params['viewLocation'] . '/xml/' . $params['objectName'] . '.xsd';
 $messageController->loadMessageFile($params['viewLocation'] . '/xml/' . $params['objectName'] . '_Messages.xml');
 
+require_once('core/tests/class/SchemaController.php');
 require_once('core/tests/class/DataObjectController.php');
-$DataObjectController = new DataObjectController();
-$DataObjectController->loadSchema($schemaPath);
+$DataObjectController = new DataObjectController($schemaPath);
+//$DataObjectController->loadSchema($schemaPath);
 
 if (isset($_REQUEST['submit'])) {
 
@@ -387,16 +388,16 @@ if (isset($_REQUEST['submit'])) {
             displayCreate($params['objectName']);
             break;
         case 'read' :
-            $DataObjectController->setKey($params['objectName'], $params['objectId']);
+            //$DataObjectController->setKey($params['objectName'], $params['objectId']);
             $dataObject = $DataObjectController->read(
-                $params['objectName'], $params['objectId']
+                $params['objectName'], array($params['objectId'])
             );
             break;
         case 'update' :
             if (!$_SESSION['m_admin'][$params['objectName']]) {
-                $DataObjectController->setKey($params['objectName'], $params['objectId']);
+                //$DataObjectController->setKey($params['objectName'], $params['objectId']);
                 $dataObject = $DataObjectController->read(
-                    $params['objectName'], $params['objectId']
+                    $params['objectName'], array($params['objectId'])
                 );
                 $_SESSION['m_admin'][$params['objectName']] = $dataObject->asXml();
             } else {
@@ -441,13 +442,14 @@ if (isset($_REQUEST['submit'])) {
             
             //loadDataObject
             $dataObjectList = $DataObjectController->enumerate(
-                $params['objectName'] . '_list'
+                $params['objectName']
             );
             //var_dump($dataObjectList);exit;
             //getKey
-            $keyName = $DataObjectController->getKey(
+            $keyName = $DataObjectController->getKeyFields(
                 $params['objectName']
             );
+            //var_dump($keyName);
             
             $objectList = $dataObjectList->$params['objectName'];
             //var_dump($objectList);exit;
@@ -999,7 +1001,7 @@ if (isset($_REQUEST['submit'])) {
                                  $str_htmlList .= '" ';
                                 $str_htmlList .= '>';
                                     $str_htmlList .= '<a ';
-                                     $str_htmlList .= 'href="' . $actionsURL['read'] . '&objectId=' . $object->$keyName . '"';
+                                     $str_htmlList .= 'href="' . $actionsURL['read'] . '&objectId=' . $object->$keyName[0] . '"';
                                     $str_htmlList .= '>';
                                         $str_htmlList .= '<img ';
                                          $str_htmlList .= 'src="static.php?filename=icon_read.png" ';
@@ -1016,7 +1018,7 @@ if (isset($_REQUEST['submit'])) {
                                  $str_htmlList .= '" ';
                                 $str_htmlList .= '>';
                                     $str_htmlList .= '<a ';
-                                     $str_htmlList .= 'href="' . $actionsURL['update'] . '&objectId=' . $object->$keyName . '"';
+                                     $str_htmlList .= 'href="' . $actionsURL['update'] . '&objectId=' . $object->$keyName[0] . '"';
                                     $str_htmlList .= '>';
                                         $str_htmlList .= '<img ';
                                          $str_htmlList .= 'src="static.php?filename=picto_change.gif" ';
@@ -1033,7 +1035,7 @@ if (isset($_REQUEST['submit'])) {
                                  $str_htmlList .= '" ';
                                 $str_htmlList .= '>';
                                     $str_htmlList .= '<a ';
-                                     $str_htmlList .= 'href="' . $actionsURL['delete'] . '&objectId=' . $object->$keyName . '"';
+                                     $str_htmlList .= 'href="' . $actionsURL['delete'] . '&objectId=' . $object->$keyName[0] . '"';
                                     $str_htmlList .= '>';
                                         $str_htmlList .= '<img ';
                                          $str_htmlList .= 'src="static.php?filename=picto_delete.gif" ';
