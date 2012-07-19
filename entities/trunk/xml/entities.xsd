@@ -9,23 +9,23 @@
   <!--xsd:include schemaLocation='modules/entities/xml/eac-cpf.xsd' /-->
 
   <!-- ROOT : ENTITIES -->
-  <xsd:element name='entities_list'>
+  <xsd:element name='entities_root'
+    das:module="entities">
     <xsd:complexType>
       <xsd:sequence>
-        <xsd:element ref='entities' minOccurs="0" maxOccurs='unbounded' />
-        <!--xsd:element ref='TYPE' minOccurs="0" maxOccurs='unbounded'/-->
+        <xsd:element ref='entities' minOccurs="0" maxOccurs='unbounded'/>
       </xsd:sequence>
     </xsd:complexType>
   </xsd:element>
   
-  
-  <!-- ROW : ENTITY -->
   <xsd:element name='entities' type='entities' 
     das:source='maarch_entreprise'
-    das:table='entities'
-    das:key-columns='entity_id' 
-    das:filter-columns='entity_id entity_label adrs_1'
-  />
+    das:filter-columns='entity_id entity_label adrs_1'>
+    <xsd:key name="entities_pkey">
+      <xsd:selector xpath="."/>
+      <xsd:field xpath="entity_id" das:enclosed='true'/>
+    </xsd:key>
+  </xsd:element>
   
   <xsd:complexType name='entities'>
     <xsd:sequence>
@@ -47,18 +47,22 @@
     </xsd:sequence>
   </xsd:complexType>
   
-  <xsd:element name='rm_entities' 
-    type='rm_entities' 
+  <xsd:element name='rm_entities' type='rm_entities' 
     das:source='maarch_entreprise'
-    das:table='rm_entities'
-    das:key-columns='entity_id'>
+    das:key='rm_entities_pkey'>
     <xsd:annotation>
       <xsd:appinfo>
-        <das:relation parent='entities' child='rm_entities' parent-keys='entity_id' child-keys='entity_id' />
+        <das:relation name='entities_rm_entities' parent='entities' child='rm_entities'>
+          <das:foreign-key parent-key="entity_id" child-key="entity_id" enclosed='true'/>
+        </das:relation> 
       </xsd:appinfo>
     </xsd:annotation>
+    <xsd:key name="rm_entities_pkey">
+      <xsd:selector xpath="."/>
+      <xsd:field xpath="rm_entity_id"/>
+    </xsd:key>
   </xsd:element>
-
+    
   <xsd:complexType name='rm_entities'>
     <xsd:sequence>
       <xsd:element name="rm_entity_id" type="bigint" nillable="false" />
@@ -103,7 +107,7 @@
   </xsd:element-->
   
   
-  <xsd:element name='TYPE' type='entity_type' das:key-columns='id' das:filter-columns='id label'>
+  <xsd:element name='TYPE' type='entity_type' das:table='/root/TYPE' das:key-columns='id' das:filter-columns='id label'>
     <xsd:annotation>
       <xsd:appinfo>
         <das:source type='xml' file='modules/entities/xml/typentity.xml' />
