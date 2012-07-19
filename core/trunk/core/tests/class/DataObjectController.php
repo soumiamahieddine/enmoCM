@@ -74,9 +74,24 @@ class DataObjectController
         }
     }
     
+   
     //*************************************************************************
     // PUBLIC OBJECT HANDLING FUNCTIONS
     //*************************************************************************
+    public function getKeyFields($objectName)
+    {
+        $objectNode = $this->query('/xsd:schema/xsd:element[@name = "'.$objectName.'"]')->item(0);
+        $key = $this->getKey($objectNode);
+        $keyFields = $this->query('./xsd:field', $key);
+        $return = array();
+        for($i=0; $i<$keyFields->length; $i++) {
+            $keyField = $keyFields->item($i);
+            $keyName = str_replace("@", "", $keyField->getAttribute('xpath'));
+            $return[] = $keyName;  
+        }
+        return $return
+    }
+    
     public function createRoot($moduleName) 
     {
         $this->dataObjectDocument = new DataObjectDocument();
