@@ -126,7 +126,7 @@ class DataObjectController
     
     }
     
-    public function readRoot($objectName, $key)
+    public function read($objectName, $key)
     {
         $this->dataObjectDocument = new DataObjectDocument();
         $objectNode = $this->query('/xsd:schema/xsd:element[@name = "'.$objectName.'"]')->item(0);
