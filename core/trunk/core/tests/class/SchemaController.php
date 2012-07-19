@@ -51,6 +51,12 @@ class SchemaController
         return $key;
     }
     
+    public function getFields($keyNode) 
+    {
+        $keyFields = $this->query('./xsd:field', $keyNode);
+        return $keyFields;
+    }
+    
     public function getRelation($objectNode, $parentName)
     {
         $relation = $this->query('./xsd:annotation/xsd:appinfo/das:relation[@parent="'.$parentName.'"]', $objectNode)->item(0);
@@ -62,7 +68,7 @@ class SchemaController
         $objectType = $this->getType($objectNode);
         $children = array();
         
-        $complexTypeSequence = $this->query('./xsd:sequence', $objectType)->item(0);
+        $complexTypeSequence = $this->getSequence($objectType);
         $children = array_merge($children, $this->getSequenceChildObjects($complexTypeSequence));
         
         
@@ -77,7 +83,19 @@ class SchemaController
         $complexTypeAnyAttribute = $this->query('./xsd:anyAttribute', $objectType);*/
         return $children;
     }
-
+    
+    public function getSequence($parentNode)
+    {
+        $sequence = $this->query('./xsd:sequence', $parentNode)->item(0);
+        return $sequence;
+    }
+    
+    public function getElements($parentNode)
+    {
+        $elements = $this->query('./xsd:element', $parentNode);
+        return $elements;
+    }
+    
     private function getSequenceChildObjects($sequence)
     {
         $children = array();
@@ -88,7 +106,7 @@ class SchemaController
         $sequenceGroup = $this->query('./xsd:group', $sequence);
         $sequenceSequence = $this->query('./xsd:sequence', $sequence);*/
         
-        $sequenceElements = $this->query('./xsd:element', $sequence);
+        $sequenceElements = $this->getElements($sequence);
         $children = array_merge($children, $this->getElementsChildObjects($sequenceElements));
         //echo "<br/>getSequenceChildObjects found " . count($children);
         return $children;

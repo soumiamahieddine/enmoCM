@@ -129,16 +129,15 @@ class DataAccessService_Database
     
     private function createSelectExpression($objectNode)
     {
-        ////echo "<br/>Getting object type";
+        //echo "<br/>Getting object type";
         $objectType = $this->getType($objectNode);
-        ////echo $objectType->getAttribute('name');
+        //echo $objectType->getAttribute('name');
         $parts = array();
         
-        ////echo "<br/>Getting type contents for select expression ";
+        //echo "<br/>Getting type contents for select expression ";
         //simpleContent, complexContent, group, all, choice, sequence, attribute, attributeGroup, anyAttribute
-        $complexTypeSequence = $this->query('./xsd:sequence', $objectType)->item(0);
+        $complexTypeSequence = $this->getSequence($objectType);
         $parts[] = $this->createSequenceSelectExpression($complexTypeSequence);
-        
         
         /*$complexTypeSimpleContent = $this->query('./xsd:simpleContent', $objectType);
         $complexTypeComplexContent = $this->query('./xsd:complexContent', $objectType);
@@ -156,7 +155,7 @@ class DataAccessService_Database
     
     private function createSequenceSelectExpression($sequence)
     {
-        ////echo "<br/>createSequenceSelectExpression()";
+        //echo "<br/>createSequenceSelectExpression()";
         $parts = array();
         //any, choice, element, group, sequence
         /*$sequenceAny = $this->query('./xsd:any', $sequence);
@@ -164,8 +163,8 @@ class DataAccessService_Database
         $sequenceGroup = $this->query('./xsd:group', $sequence);
         $sequenceSequence = $this->query('./xsd:sequence', $sequence);*/
         
-        $sequenceElements = $this->query('./xsd:element', $sequence);
-        ////echo "<br/>Found $sequenceElements->length elements in sequence";
+        $sequenceElements = $this->getElements($sequence);
+        //echo "<br/>Found $sequenceElements->length elements in sequence";
         $parts[] = $this->createElementsSelectExpression($sequenceElements);
         return implode(', ', $parts);
     
@@ -173,7 +172,7 @@ class DataAccessService_Database
     
     private function createElementsSelectExpression($elements) 
     {
-        ////echo "<br/>createElementsSelectExpression for $elements->length elements";
+        //echo "<br/>createElementsSelectExpression for $elements->length elements";
         $elementsLength = $elements->length;
         $parts = array();
         for($i=0; $i<$elementsLength; $i++) {
@@ -191,7 +190,7 @@ class DataAccessService_Database
     
     private function createElementSelectExpression($element)
     {
-        ////echo "<br/>createElementSelectExpression for " . $element->getAttribute('name');
+        //echo "<br/>createElementSelectExpression for " . $element->getAttribute('name');
         $elementType = $this->getType($element);
         if($elementType->tagName == 'xsd:simpleType') {
             $columnAlias = $element->getAttribute('name');
@@ -237,8 +236,6 @@ class DataAccessService_Database
         return $expr;
     }
     
-
-    
     // KEY 
     //*************************************************************************
     private function getKeyExpression($objectNode)
@@ -253,7 +250,7 @@ class DataAccessService_Database
     private function createKeyExpression($objectNode)
     {
         $key = $this->getKey($objectNode);
-        $keyFields = $this->query('./xsd:field', $key);
+        $keyFields = $this->getFields($key);
         $keyExpression = $this->createKeyFieldsExpression($keyFields);
         return $keyExpression;
     }
@@ -338,8 +335,8 @@ class DataAccessService_Database
         $query .= " (" . $columnsExpression . ")";
         $query .= " VALUES (" . $insertExpression . ")";
         
-        //////echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        //////echo "<pre>QUERY = " . $query . "</pre>";
+        //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
+        //echo "<pre>QUERY = " . $query . "</pre>";
         try {
             $this->databaseObject->query($query);
         } catch (Exception $e) {
@@ -371,8 +368,8 @@ class DataAccessService_Database
         $query .= " SET  " . $updateExpression;
         $query .= " WHERE " . $keyExpression;
         
-        //////echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        //////echo "<pre>QUERY = " . $query . "</pre>";
+        //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
+        //echo "<pre>QUERY = " . $query . "</pre>";
         try {
             $this->databaseObject->query($query);
         } catch (Exception $e) {

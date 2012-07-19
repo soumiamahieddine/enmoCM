@@ -141,7 +141,7 @@ class DataObjectController
     
     public function load($xml)
     {
-        if(!$this->dataObjectDocument) $this->createDocument();
+        if(!$this->dataObjectDocument) $this->dataObjectDocument = new DataObjectDocument();
         $this->dataObjectDocument->loadXML($xml);
         return $this->dataObjectDocument->documentElement;
     }
