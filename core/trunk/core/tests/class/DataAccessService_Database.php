@@ -77,7 +77,7 @@ class DataAccessService_Database
         }
         
         $selectQuery = implode(' ', $selectParts);
-        echo "<br/>Select query = " . $selectQuery;
+        //echo "<br/>Select query = " . $selectQuery;
        
         try {
             $this->databaseObject->query($selectQuery);
