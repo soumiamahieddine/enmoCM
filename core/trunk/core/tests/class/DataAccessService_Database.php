@@ -25,9 +25,9 @@ class DataAccessService_Database
     public function loadData(
         $objectNode, 
         $parentObject, 
-        $key = array(), 
-        $filter = false, 
-        $sort = array(), 
+        $key, 
+        $filter, 
+        $sort, 
         $order = 'ASC', 
         $limit=500) 
     {
@@ -44,30 +44,32 @@ class DataAccessService_Database
         // CREATE SELECT QUERY
         $selectParts = array();
         $selectExpression = $this->getSelectExpression($objectNode);
-        //////echo "<br/>selectExpression = " . $selectExpression;
+        //echo "<br/>selectExpression = " . $selectExpression;
         $selectParts[] = "SELECT " . $selectExpression;
         
         $tableExpression = $this->getTableExpression($objectNode);
-        //////echo "<br/>tableExpression = " . $tableExpression;
+        //echo "<br/>tableExpression = " . $tableExpression;
         $selectParts[] = "FROM " . $tableExpression;
         
         $whereParts = array();
-        if($key) {
+        if(count($key) > 0) {
             $keyExpression = $this->getKeyExpression($objectNode);
             foreach($key as $i => $keyValue) {
                 $keyExpression = str_replace('$'.$i, $keyValue, $keyExpression);
             }
-            ////echo "<br/>keyExpression = " . $keyExpression;
+            //echo "<br/>keyExpression = " . $keyExpression;
             $whereParts[] = $keyExpression;
         }
         
         if(get_class($parentObject) != 'DataObjectDocument') {
             $relationExpression = $this->getRelationExpression($objectNode, $parentObject->tagName);
-            foreach($parentObject as $name => $value) {
-                $relationExpression = str_replace('$'.$name, $value, $relationExpression);
+            if($relationExpression) {
+                foreach($parentObject as $name => $value) {
+                    $relationExpression = str_replace('$'.$name, $value, $relationExpression);
+                }
+                //echo "<br/>relationExpression = " . $relationExpression;
+                $whereParts[] = $relationExpression;
             }
-            ////echo "<br/>relationExpression = " . $relationExpression;
-            $whereParts[] = $relationExpression;
         }
         
         if(count($whereParts) > 0) {
@@ -75,7 +77,7 @@ class DataAccessService_Database
         }
         
         $selectQuery = implode(' ', $selectParts);
-        //echo "<br/>Select query = " . $selectQuery;
+        echo "<br/>Select query = " . $selectQuery;
        
         try {
             $this->databaseObject->query($selectQuery);

@@ -92,20 +92,22 @@ class DataObjectController
         return $dataObject;      
     }
     
-    public function enumerate($listName) 
+    public function enumerate(
+        $objectName, 
+        $filter=false, 
+        $sort=array(), 
+        $order=false
+        ) 
     {
         $this->dataObjectDocument = new DataObjectDocument();
-        $dataObjectList = $this->createDataObject($listName);
-        $this->dataObjectDocument->appendChild($dataObjectList);
+        $rootNode = $this->query('/xsd:schema/xsd:element[@das:module != ""]')->item(0);
+        $rootObject = $this->createDataObject($rootNode->getAttribute('name'));
+        $this->dataObjectDocument->appendChild($rootObject);
         
-        $documentXPath = new DOMXpath($this->dataObjectDocument);
+        $objectNode = $this->query('/xsd:schema/xsd:element[@name = "'.$objectName.'"]')->item(0);
+        $this->loadDataObject($objectNode, $rootObject, array(), $filter, $sort, $order);
         
-        $childObjects = $documentXPath->query('./*[count(*)>0]', $dataObjectList);
-        for($i=0; $i<$childObjects->length;$i++) {
-            $childObject = $childObjects->item($i);
-            $this->loadDataObject($childObject);
-        }
-        return $listDataObject;
+        return $this->dataObjectDocument->documentElement;
     
     }
     
@@ -220,25 +222,35 @@ class DataObjectController
     private function loadDataObject(
         $objectNode,
         $parentObject,
-        $key=false
+        $key=array(), 
+        $filter=false, 
+        $sort=array(),
+        $order=false
         ) 
     {      
         try {
             
             //echo "<br/>Loading " . $objectNode->getAttribute('name');
             
-            ////echo "<br/>Getting source";             
+            //echo "<br/>Getting source";             
             $dataAccessService = $this->getDataAccessService($objectNode);
-            //////echo "<br/>Source = " . print_r($dataAccessService,true);
+            //echo "<br/>Source = " . print_r($dataAccessService,true);
 
             if($dataAccessService) {
-                $dataAccessService->loadData($objectNode, $parentObject, $key);
+                $dataAccessService->loadData(
+                    $objectNode, 
+                    $parentObject, 
+                    $key,
+                    $filter, 
+                    $sort,
+                    $order
+                    );
                 //$this->document->logChange(DataObjectChange::READ, $parentObject);
             } else {
                 $dataObject = $this->createDataObject($objectName);
                 $parentObject->appendChild($dataObject);
             }
-            ////echo "<br/>Result = " . htmlspecialchars($parentObject->saveXML());
+            //echo "<br/>Result = " . htmlspecialchars($parentObject->saveXML());
             
             $childNodes = $this->getChildObjects($objectNode);
             $childNodesLength = count($childNodes);
