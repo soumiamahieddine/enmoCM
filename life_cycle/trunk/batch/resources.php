@@ -299,7 +299,7 @@ function esign($resId)
                     30,
                     'problem with esign proof of resource :' . $resId
                         . ' Dictao return code:'
-                        . $signatureExResponse->signatureExResult->opStatus
+                        . $signatureExResponse->getArchiveExResult->opStatus
                 );
             } else {
                 //opStatus
