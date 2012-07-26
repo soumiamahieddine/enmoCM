@@ -23,7 +23,7 @@ class DataAccessService_Database
     }
     
     public function loadData(
-        $objectNode, 
+        $objectElement, 
         $parentObject, 
         $key, 
         $filter, 
@@ -31,7 +31,7 @@ class DataAccessService_Database
         $order = 'ASC', 
         $limit=500) 
     {
-        $objectName = $objectNode->getAttribute('name');
+        $objectName = $objectElement->getAttribute('name');
         
         if(get_class($parentObject) == 'DataObjectDocument') {
             // Result will be document element == no data parent
@@ -43,17 +43,17 @@ class DataAccessService_Database
         
         // CREATE SELECT QUERY
         $selectParts = array();
-        $selectExpression = $this->getSelectExpression($objectNode);
+        $selectExpression = $this->getSelectColumnsExpression($objectElement);
         //echo "<br/>selectExpression = " . $selectExpression;
         $selectParts[] = "SELECT " . $selectExpression;
         
-        $tableExpression = $this->getTableExpression($objectNode);
+        $tableExpression = $this->getTableExpression($objectElement);
         //echo "<br/>tableExpression = " . $tableExpression;
         $selectParts[] = "FROM " . $tableExpression;
         
         $whereParts = array();
         if(count($key) > 0) {
-            $keyExpression = $this->getKeyExpression($objectNode);
+            $keyExpression = $this->getSelectKeyExpression($objectElement);
             foreach($key as $i => $keyValue) {
                 $keyExpression = str_replace('$'.$i, $keyValue, $keyExpression);
             }
@@ -62,12 +62,15 @@ class DataAccessService_Database
         }
         
         if(get_class($parentObject) != 'DataObjectDocument') {
-            $relationExpression = $this->getRelationExpression($objectNode, $parentObject->tagName);
+            $relationExpression = $this->getRelationExpression($objectElement, $parentObject->tagName);
+            //echo "<br/>relationExpression = " . $relationExpression;
             if($relationExpression) {
-                foreach($parentObject as $name => $value) {
-                    $relationExpression = str_replace('$'.$name, $value, $relationExpression);
+                preg_match('/\$\w+/', $relationExpression, $params);
+                foreach($params as $paramName) {
+                    $attrName = substr($paramName, 1);
+                    $value = $parentObject->$attrName;
+                    $relationExpression = str_replace($paramName, $value, $relationExpression);
                 }
-                //echo "<br/>relationExpression = " . $relationExpression;
                 $whereParts[] = $relationExpression;
             }
         }
@@ -77,7 +80,7 @@ class DataAccessService_Database
         }
         
         $selectQuery = implode(' ', $selectParts);
-        //echo "<br/>Select query = " . $selectQuery;
+        echo "<br/>Select query = " . $selectQuery;
        
         try {
             $this->databaseObject->query($selectQuery);
@@ -86,24 +89,22 @@ class DataAccessService_Database
         }
         
         //echo "<br/>Create child object $objectName";
-        
         while($recordSet = $this->databaseObject->fetch_object()) {
-            
-            $dataObject = $dataObjectDocument->createElement($objectName);
-            $parentObject->appendChild($dataObject);
+            $dataObject = $dataObjectDocument->createDataObject($objectName);
+            $parentObject[] = $dataObject;
             foreach($recordSet as $columnName => $columnValue) {
-                $columnNode = $dataObjectDocument->createElement($columnName, $columnValue);
-                $dataObject->appendChild($columnNode);
+                $dataObject->$columnName = $columnValue;
             } 
+            $dataObject->logRead();
         }
     }
     
     public function saveData($dataObject)
     {
         try {
-            if($dataObject->isCreated) {
+            if($dataObject->isCreated()) {
                 $this->insertData($dataObject);
-            } elseif ($dataObject->isUpdated && count($dataObject->updates) > 0) {
+            } elseif ($dataObject->isUpdated() && count($dataObject->getUpdates()) > 0) {
                 $this->updateData($dataObject);
             }
         } catch (Exception $e) {
@@ -113,240 +114,38 @@ class DataAccessService_Database
     }
     
     //*************************************************************************
-    // PRIVATE QUERY CREATION FUNCTIONS
-    //*************************************************************************
-    
-    // SELECT COLUMNS 
-    //*************************************************************************
-    private function getSelectExpression($objectNode)
-    {
-        $objectName = $objectNode->getAttribute('name');
-        if(!isset($this->selectExpressions[$objectName])) {
-            $this->selectExpressions[$objectName] = $this->createSelectExpression($objectNode);
-        }
-        return $this->selectExpressions[$objectName];
-    }
-    
-    private function createSelectExpression($objectNode)
-    {
-        //echo "<br/>Getting object type";
-        $objectType = $this->getType($objectNode);
-        //echo $objectType->getAttribute('name');
-        $parts = array();
-        
-        //echo "<br/>Getting type contents for select expression ";
-        //simpleContent, complexContent, group, all, choice, sequence, attribute, attributeGroup, anyAttribute
-        $complexTypeSequence = $this->getSequence($objectType);
-        $parts[] = $this->createSequenceSelectExpression($complexTypeSequence);
-        
-        /*$complexTypeSimpleContent = $this->query('./xsd:simpleContent', $objectType);
-        $complexTypeComplexContent = $this->query('./xsd:complexContent', $objectType);
-        $complexTypeGroup = $this->query('./xsd:group', $objectType);
-        $complexTypeAll = $this->query('./xsd:all', $objectType);
-        $complexTyp//echoice = $this->query('./xsd:choice', $objectType);
-        $complexTypeAttributes = $this->query('./xsd:attribute', $objectType);
-
-        $complexTypeAttributeGroup = $this->query('./xsd:attributeGroup', $objectType);
-        $complexTypeAnyAttribute = $this->query('./xsd:anyAttribute', $objectType);*/
-        
-        return implode(', ', $parts);
-        
-    }
-    
-    private function createSequenceSelectExpression($sequence)
-    {
-        //echo "<br/>createSequenceSelectExpression()";
-        $parts = array();
-        //any, choice, element, group, sequence
-        /*$sequenceAny = $this->query('./xsd:any', $sequence);
-        $sequenc//echoice = $this->query('./xsd:choice', $sequence);
-        $sequenceGroup = $this->query('./xsd:group', $sequence);
-        $sequenceSequence = $this->query('./xsd:sequence', $sequence);*/
-        
-        $sequenceElements = $this->getElements($sequence);
-        //echo "<br/>Found $sequenceElements->length elements in sequence";
-        $parts[] = $this->createElementsSelectExpression($sequenceElements);
-        return implode(', ', $parts);
-    
-    }
-    
-    private function createElementsSelectExpression($elements) 
-    {
-        //echo "<br/>createElementsSelectExpression for $elements->length elements";
-        $elementsLength = $elements->length;
-        $parts = array();
-        for($i=0; $i<$elementsLength; $i++) {
-            $element = $elements->item($i);
-            if($element->hasAttribute('ref')) {
-                $element = $this->getRefElement($element->getAttribute('ref'));
-            } 
-            if($part = $this->createElementSelectExpression($element)) {
-                $parts[] = $part;
-            }
-        }
-        
-        return implode(', ', $parts);
-    }
-    
-    private function createElementSelectExpression($element)
-    {
-        //echo "<br/>createElementSelectExpression for " . $element->getAttribute('name');
-        $elementType = $this->getType($element);
-        if($elementType->tagName == 'xsd:simpleType') {
-            $columnAlias = $element->getAttribute('name');
-            if($element->hasAttribute('das:column')) {
-                $columnName = $element->getAttribute('das:column');
-            } else {
-                $columnName = $columnAlias;
-            }
-            
-            if($elementType->getAttribute('das:enclosed') == 'true') {
-                $enclosure = "'";
-            }
-            
-            if($element->hasAttribute('fixed')) {
-                $expr = $enclosure . $element->getAttribute('fixed') . $enclosure . " AS " . $columnAlias; 
-            } elseif($element->hasAttribute('default')) {
-                $expr = "COALESCE (" . $columnName . ", " . $enclosure . $element->getAttribute('default') . $enclosure . ") AS " . $columnAlias; 
-            } else {
-                $expr = $columnName . " AS " . $columnAlias; 
-            }
-            return $expr;
-        }
-    }
-
-    // TABLE 
-    //*************************************************************************
-    private function getTableExpression($objectNode)
-    {
-        $objectName = $objectNode->getAttribute('name');
-        if(!isset($this->tableExpressions[$objectName])) {
-            $this->tableExpressions[$objectName] = $this->createTableExpression($objectNode);
-        }
-        return $this->tableExpressions[$objectName];
-    }
-    
-    private function createTableExpression($objectNode)
-    {
-        if($objectNode->hasAttribute('das:view')) {
-            $expr = '';
-        } else {
-            $expr = $this->getTableName($objectNode);
-        }
-        return $expr;
-    }
-    
-    // KEY 
-    //*************************************************************************
-    private function getKeyExpression($objectNode)
-    {
-        $objectName = $objectNode->getAttribute('name');
-        if(!isset($this->keyExpressions[$objectName])) {
-            $this->keyExpressions[$objectName] = $this->createKeyExpression($objectNode);
-        }
-        return $this->keyExpressions[$objectName];
-    }
-    
-    private function createKeyExpression($objectNode)
-    {
-        $key = $this->getKey($objectNode);
-        $keyFields = $this->getFields($key);
-        $keyExpression = $this->createKeyFieldsExpression($keyFields);
-        return $keyExpression;
-    }
-    
-    private function createKeyFieldsExpression($keyFields)
-    {
-        $keyFieldsLength = $keyFields->length;
-        $parts = array();
-        for($i=0; $i<$keyFieldsLength; $i++) {
-            $keyField = $keyFields->item($i);
-            $keyAlias = str_replace("@", "", $keyField->getAttribute('xpath'));
-            if($keyField->hasAttribute('das:column')) {
-                $keyName = $keyField->getAttribute('das:column');
-            } else {
-                $keyName = $keyAlias;
-            }
-            if($keyField->getAttribute('das:enclosed') == 'true') {
-                $enclosure = "'";
-            }
-            $parts[] = $keyName . " = " . $enclosure . '$' . $i . $enclosure;  
-        }
-        return implode(' and ', $parts);
-    }
-
-    // RELATION 
-    //*************************************************************************
-    private function getRelationExpression($objectNode, $parentName)
-    {
-        $objectName = $objectNode->getAttribute('name');
-        if(!isset($this->relationExpressions[$objectName][$parentName])) {
-            $this->relationExpressions[$objectName][$parentName] = $this->createRelationExpression($objectNode, $parentName);
-        }
-        return $this->relationExpressions[$objectName][$parentName];
-    }
-    
-    private function createRelationExpression($objectNode, $parentName) {
-        $relation = $this->getRelation($objectNode, $parentName);
-        $fkeyFields = $this->query('./das:foreign-key', $relation);
-        $relationExpression = $this->createRelationKeysExpression($fkeyFields);
-        return $relationExpression;
-    }
-     
-    private function createRelationKeysExpression($fkeyFields)
-    {
-        $fkeyFieldsLength = $fkeyFields->length;
-        $parts = array();
-        for($i=0; $i<$fkeyFieldsLength; $i++) {
-            $fkeyField = $fkeyFields->item($i);
-            $fkeyAlias = str_replace("@", "", $fkeyField->getAttribute('child-key'));
-            if($fkeyField->hasAttribute('column')) {
-                $fkeyName = $fkeyField->getAttribute('column');
-            } else {
-                $fkeyName = $fkeyAlias;
-            }
-            if($fkeyField->getAttribute('enclosed') == 'true') {
-                $enclosure = "'";
-            }
-            $pkeyName = $fkeyField->getAttribute('parent-key');
-            $parts[] = $fkeyName . " = " . $enclosure . '$' . $pkeyName . $enclosure;  
-        }
-        return implode(' and ', $parts);
-    } 
-     
-    //*************************************************************************
     // PRIVATE SQL QUERY EXECUTION FUNCTIONS
     //*************************************************************************
     
     private function insertData($dataObject)
     {
-        $parentObject = $dataObject->parentObject;
+        $objectName = $dataObject->tagName;
+        $objectElement = $this->getObjectElement($objectName);
+
+        $dataObjectDocument = $dataObject->ownerDocument;
         
-        $tableName = $dataObject->name;
+        // CREATE INSERT QUERY
+        $insertParts = array();
+        $tableExpression = $this->getTableExpression($objectElement);
+        $insertParts[] = "INSERT INTO " . $tableExpression;
+                
+        $insertColumnsExpression = $this->getInsertColumnsExpression($objectElement, $dataObject);
+        //echo "<br/>selectExpression = " . $selectExpression;
+        $insertParts[] = "(" . $insertColumnsExpression . ")";
         
-        $table = $this->tables[$tableName];
+        $insertValuesExpression = $this->createInsertValuesExpression($objectElement, $dataObject);
+        $insertParts[] = "VALUES (" . $insertValuesExpression . ")";
         
-        // COLUMNS
-        $columnsExpression = $this->createColumnsExpression($table);
-        // VALUES
-        $insertExpression = $this->createInsertExpression($table, $dataObject);
+        $insertQuery = implode(' ', $insertParts);
         
-        $query  = "INSERT INTO " . $tableName;
-        $query .= " (" . $columnsExpression . ")";
-        $query .= " VALUES (" . $insertExpression . ")";
+        echo "<br/>INSERT QUERY = $insertQuery";
         
-        //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        //echo "<pre>QUERY = " . $query . "</pre>";
-        try {
-            $this->databaseObject->query($query);
+        /*try {
+            $this->databaseObject->query($insertQuery);
         } catch (Exception $e) {
             throw $e;
-        }
-        
-        $this->saveChildObjects($dataObject);
-
-        return true;
-        
+        }*/
+       
     }
     
     private function updateData($dataObject)
@@ -369,7 +168,7 @@ class DataAccessService_Database
         $query .= " WHERE " . $keyExpression;
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        //echo "<pre>QUERY = " . $query . "</pre>";
+        echo "<pre>QUERY = " . $query . "</pre>";exit;
         try {
             $this->databaseObject->query($query);
         } catch (Exception $e) {
@@ -382,6 +181,198 @@ class DataAccessService_Database
         
     }
     
+    //*************************************************************************
+    // PRIVATE QUERY CREATION FUNCTIONS
+    //*************************************************************************
+    
+    // SELECT COLUMNS 
+    //*************************************************************************
+    private function getSelectColumnsExpression($objectElement)
+    {
+        $objectName = $objectElement->getAttribute('name');
+        if(!isset($this->selectColumnsExpressions[$objectName])) {
+            $this->selectColumnsExpressions[$objectName] = $this->createSelectColumnsExpression($objectElement);
+        }
+        return $this->selectColumnsExpressions[$objectName];
+    }
+    
+    private function createSelectColumnsExpression($objectElement)
+    {
+        //$objectType = $this->getType($objectElement);
+        $selectColumns = array();
+        
+        $properties = $this->getProperties($objectElement);
+        
+        for($i=0; $i< count($properties); $i++) {
+            $property = $properties[$i];
+            $columnAlias = $property->getAttribute('name');
+            if($property->hasAttribute('das:column')) {
+                $columnName = $property->getAttribute('das:column');
+            } else {
+                $columnName = $columnAlias;
+            }
+            $propertyType = $this->getType($property);
+            if($propertyType->getAttribute('das:enclosed') == 'true') {
+                $enclosure = "'";
+            }
+            
+            if($property->hasAttribute('fixed')) {
+                $selectColumn = $enclosure . $property->getAttribute('fixed') . $enclosure . " AS " . $columnAlias; 
+            } elseif($property->hasAttribute('default')) {
+                $selectColumn = "COALESCE (" . $columnName . ", " . $enclosure . $property->getAttribute('default') . $enclosure . ") AS " . $columnAlias; 
+            } else {
+                $selectColumn = $columnName . " AS " . $columnAlias; 
+            }
+            $selectColumns[] =  $selectColumn;
+        }
+        return implode(', ', $selectColumns);
+    }
+    
+    // TABLE 
+    //*************************************************************************
+    private function getTableExpression($objectElement)
+    {
+        $objectName = $objectElement->getAttribute('name');
+        if(!isset($this->tableExpressions[$objectName])) {
+            $this->tableExpressions[$objectName] = $this->createTableExpression($objectElement);
+        }
+        return $this->tableExpressions[$objectName];
+    }
+    
+    private function createTableExpression($objectElement)
+    {
+        if($objectElement->hasAttribute('das:view')) {
+            $table = '';
+        } else {
+            $table = $this->getTableName($objectElement);
+        }
+        return $table;
+    }
+    
+    // KEY 
+    //*************************************************************************
+    private function getSelectKeyExpression($objectElement)
+    {
+        $objectName = $objectElement->getAttribute('name');
+        if(!isset($this->selectKeyExpressions[$objectName])) {
+            $this->selectKeyExpressions[$objectName] = $this->createSelectKeyExpression($objectElement);
+        }
+        return $this->selectKeyExpressions[$objectName];
+    }
+    
+    private function createSelectKeyExpression($objectElement)
+    {
+        $key = $this->getKey($objectElement);
+        $keyFields = $this->getKeyFields($key);
+        $keyExpression = $this->createSelectKeyFieldsExpression($keyFields);
+        return $keyExpression;
+    }
+    
+    private function createSelectKeyFieldsExpression($keyFields)
+    {
+        $keyFieldsLength = $keyFields->length;
+        $selectKeyFields = array();
+        for($i=0; $i<$keyFieldsLength; $i++) {
+            $keyField = $keyFields->item($i);
+            $keyAlias = str_replace("@", "", $keyField->getAttribute('xpath'));
+            if($keyField->hasAttribute('das:column')) {
+                $keyName = $keyField->getAttribute('das:column');
+            } else {
+                $keyName = $keyAlias;
+            }
+            if($keyField->getAttribute('das:enclosed') == 'true') {
+                $enclosure = "'";
+            }
+            $selectKeyFields[] = $keyName . " = " . $enclosure . '$' . $i . $enclosure;  
+        }
+        return implode(' and ', $selectKeyFields);
+    }
+
+    // RELATION 
+    //*************************************************************************
+    private function getRelationExpression($objectElement, $parentName)
+    {
+        $objectName = $objectElement->getAttribute('name');
+        if(!isset($this->relationExpressions[$objectName][$parentName])) {
+            $this->relationExpressions[$objectName][$parentName] = $this->createRelationExpression($objectElement, $parentName);
+        }
+        return $this->relationExpressions[$objectName][$parentName];
+    }
+    
+    private function createRelationExpression($objectElement, $parentName) {
+        $relation = $this->getRelation($objectElement, $parentName);
+        $fkeyFields = $this->query('./das:foreign-key', $relation);
+        $relationExpression = $this->createRelationKeysExpression($fkeyFields);
+        return $relationExpression;
+    }
+     
+    private function createRelationKeysExpression($fkeyFields)
+    {
+        $fkeyFieldsLength = $fkeyFields->length;
+        $relationKeys = array();
+        for($i=0; $i<$fkeyFieldsLength; $i++) {
+            $fkeyField = $fkeyFields->item($i);
+            $fkeyAlias = str_replace("@", "", $fkeyField->getAttribute('child-key'));
+            if($fkeyField->hasAttribute('column')) {
+                $fkeyName = $fkeyField->getAttribute('column');
+            } else {
+                $fkeyName = $fkeyAlias;
+            }
+            if($fkeyField->getAttribute('enclosed') == 'true') {
+                $enclosure = "'";
+            }
+            $pkeyName = $fkeyField->getAttribute('parent-key');
+            $relationKeys[] = $fkeyName . " = " . $enclosure . '$' . $pkeyName . $enclosure;  
+        }
+        return implode(' and ', $relationKeys);
+    } 
+     
+    // INSERT COLUMNS 
+    //************************************************************************* 
+    private function getInsertColumnsExpression($objectElement, $dataObject)
+    {
+        $objectName = $objectElement->getAttribute('name');
+        if(!isset($this->insertColumnsExpressions[$objectName])) {
+            $this->insertColumnsExpressions[$objectName] = $this->createInsertColumnsExpression($objectElement, $dataObject);
+        }
+        return $this->insertColumnsExpressions[$objectName];
+    }
+    
+    private function createInsertColumnsExpression($objectElement, $dataObject)
+    {
+        $insertColumns = array();
+        $properties = $this->getProperties($objectElement); 
+        for($i=0; $i< count($properties); $i++) {
+            $property = $properties[$i];
+            if($property->hasAttribute('das:column')) {
+                $columnName = $property->getAttribute('das:column');
+            } else {
+                $columnName = $property->getAttribute('name');
+            }
+            $insertColumns[] =  $columnName;
+        }
+        return implode(', ', $insertColumns);
+    }
+    
+    // INSERT VALUES
+    //************************************************************************* 
+    private function createInsertValuesExpression($objectElement, $dataObject)
+    {
+        $insertValues = array();
+        $properties = $this->getProperties($objectElement);
+        for($i=0; $i< count($properties); $i++) {
+            $property = $properties[$i];
+            $propertyName = $property->getAttribute('name');
+            $propertyType = $this->getType($property);
+            if($propertyType->getAttribute('das:enclosed') == 'true') {
+                $enclosure = "'";
+            }
+            $propertyValue = $enclosure . $dataObject->$propertyName . $enclosure; 
+            $insertValues[] = $propertyValue;
+        }
+        return implode(', ', $insertValues);
+    }
+        
     private function throwDatabaseException($query)
     {
         require_once 'core/tests/class/MessageController.php';

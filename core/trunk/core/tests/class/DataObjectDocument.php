@@ -5,13 +5,39 @@ class DataObjectDocument
     implements ArrayAccess
 {
 	
-    public $changeLog = array();
-    
+    //*************************************************************************
+    // DOM METHODS
+    //************************************************************************* 
 	public function DataObjectDocument()
 	{
 		parent::__construct();
 		$this->registerNodeClass('DOMElement', 'DataObject');
+        $this->registerNodeClass('DOMAttr', 'DataObjectProperty');
+        $this->registerNodeClass('DOMComment', 'DataObjectLog');
 	}
+    
+    public function createDataObject($objectName)
+    {
+        $dataObject = parent::createElement($objectName);
+        return $dataObject;
+    }
+    
+    public function createDataObjectProperty($propertyName, $propertyValue)
+    {
+        $dataObjectProperty = parent::createAttribute($propertyName);
+        $dataObjectProperty->nodeValue = $propertyValue;
+        return $dataObjectProperty;
+    }
+    
+    public function createDataObjectLog($operation, $level=DataObjectLog::INFO, $detail=false)
+    {
+        $messageStrings[] = 'log';
+        $messageStrings[] = 'operation="' . $operation . '"';
+        $messageStrings[] = 'level="' . (string)$level . '"';
+        if($detail) $messageStrings[] = $detail;
+        $DataObjectLog = $this->createComment(implode(" ", $messageStrings));
+        return $DataObjectLog;
+    }
     
     private function xpath($query) 
     {
@@ -19,6 +45,9 @@ class DataObjectDocument
         return $xpath->query($query, $this->documentElement);
     }
     
+    //*************************************************************************
+    // MAGIC METHODS
+    //************************************************************************* 
     public function __get($name) 
     {
         switch($name) {
@@ -39,6 +68,9 @@ class DataObjectDocument
     public function __set($name, $value) 
     {
         switch($name) {
+        case '' :
+            $this->appendChild($value);
+            break;
         default:
             $resultNodes = $this->xpath('./'.$name);
             switch ((string)$resultNodes->length) {
@@ -51,7 +83,7 @@ class DataObjectDocument
                 if((string)$resultNode->nodeValue == $value) {
                     return;
                 }
-                $this->logChange(DataObjectChange::UPDATE, $name, (string)$resultNode->nodeValue, $value);
+                //$this->logChange(DataObjectChange::UPDATE, $name, (string)$resultNode->nodeValue, $value);
                 $resultNode->nodeValue = $value;
                 break;
             }
@@ -78,9 +110,7 @@ class DataObjectDocument
     //*************************************************************************
     public function offsetSet($offset, $value) 
     {
-        $elementsWithTagName = $this->xpath('./' . $value->tagName)->length;
         $this->appendChild($value);
-        return $elementsWithTagName;
     }
     
     public function offsetExists($offset) 
@@ -96,28 +126,6 @@ class DataObjectDocument
     public function offsetGet($offset) 
     {
         return isset($this->container[$offset]) ? $this->container[$offset] : null;
-    }
-    
-    //*************************************************************************
-    // CHANGELOG
-    //*************************************************************************
-    public function logChange($type, $dataObject, $valueBefore=false, $valueAfter=false) 
-    {
-        $newChange = new DataObjectChange($type, $dataObject, $valueBefore, $valueAfter);
-        //echo "<br/>DataObjectChange($type, $name, $valueBefore, $valueAfter)";
-        $this->changeLog[] = $newChange;
-    }
-    
-    public function logCreate()
-    {
-        $this->changeLog = new DataObjectChangeLog();
-        $this->changeLog->logCreation($this->tagName);
-    }
-    
-    public function logRead() 
-    {
-        $this->changeLog = new DataObjectChangeLog();
-        $this->changeLog->logRead($this->tagName);
     }
     
 }

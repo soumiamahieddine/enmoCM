@@ -12,7 +12,6 @@ class DataObjectController
     public $dataObjectDocument;
     public $changeLog = array();
     public $dataAccessServices = array();
-    public $dataObjectTypes = array();
     private $messageController;
     private $messages = array();
     public $tmpdir;
@@ -22,16 +21,15 @@ class DataObjectController
         // Document & objects
         require_once 'core/tests/class/DataObjectDocument.php';
         require_once 'core/tests/class/DataObject.php';
+        require_once 'core/tests/class/DataObjectProperty.php';
         
         // Data access services
         require_once 'core/tests/class/DataAccessService_Database.php';
         require_once 'core/tests/class/DataAccessService_XML.php';
         
         // ChangeLog
-        require_once 'core/tests/class/DataObjectChangeLog.php';
-        require_once 'core/tests/class/DataObjectChange.php';
-        $this->changeLog = new DataObjectChangeLog();
-        
+        require_once 'core/tests/class/DataObjectLog.php';
+       
         // Messages
         require_once 'core/tests/class/MessageController.php';
         require_once 'core/tests/class/Message.php';
@@ -53,9 +51,9 @@ class DataObjectController
   
     }
     
-    public function processInclusions($Schema) 
+    public function processInclusions($schema) 
     {
-        $includes = $Schema->getElementsByTagName('include');
+        $includes = $schema->getElementsByTagName('include');
         while($includes->length > 0) {
             $include = $includes->item(0);
             $schemaLocation = $include->getAttribute('schemaLocation');
@@ -78,11 +76,11 @@ class DataObjectController
     //*************************************************************************
     // PUBLIC OBJECT HANDLING FUNCTIONS
     //*************************************************************************
-    public function getKeyFields($objectName)
+    public function getKeyProperties($objectName)
     {
-        $objectNode = $this->query('/xsd:schema/xsd:element[@name = "'.$objectName.'"]')->item(0);
-        $key = $this->getKey($objectNode);
-        $keyFields = $this->query('./xsd:field', $key);
+        $objectElement = $this->getObjectElement($objectName);
+        $key = $this->getKey($objectElement);
+        $keyFields = $this->getKeyFields($key);
         $return = array();
         for($i=0; $i<$keyFields->length; $i++) {
             $keyField = $keyFields->item($i);
@@ -92,19 +90,20 @@ class DataObjectController
         return $return;
     }
     
-    public function createRoot($moduleName) 
+    public function createRoot($objectName) 
     {
         $this->dataObjectDocument = new DataObjectDocument();
-        $rootNodeName = $this->query('/xsd:schema/xsd:element[@das:module = "'.$moduleName.'"]/@name')->item(0)->nodeValue;
-        $root = $this->dataObjectDocument->createElement($rootNodeName);
-        $this->dataObjectDocument->appendChild($root);
-        return $this->dataObjectDocument;
+        $rootObject = $this->create($objectName);
+        $this->dataObjectDocument->appendChild($rootObject);
+        return $rootObject;
     }
     
     public function create($objectName) 
     {
-        $dataObject = $this->createDataObject($objectName);
-        return $dataObject;      
+        $objectElement = $this->getObjectElement($objectName);
+        $dataObject = $this->getDataObjectPrototype($objectElement)->cloneNode(true);
+        $dataObject->logCreate();
+        return $dataObject;
     }
     
     public function enumerate(
@@ -116,11 +115,19 @@ class DataObjectController
     {
         $this->dataObjectDocument = new DataObjectDocument();
         $rootNode = $this->query('/xsd:schema/xsd:element[@das:module != ""]')->item(0);
-        $rootObject = $this->dataObjectDocument->createElement($rootNode->getAttribute('name'));
+        $rootObject = $this->dataObjectDocument->createDataObject($rootNode->getAttribute('name'));
         $this->dataObjectDocument->appendChild($rootObject);
         
-        $objectNode = $this->query('/xsd:schema/xsd:element[@name = "'.$objectName.'"]')->item(0);
-        $this->loadDataObject($objectNode, $rootObject, array(), $filter, $sort, $order);
+        $objectElement = $this->getObjectElement($objectName);
+        
+        $this->readDataObject(
+            $objectElement, 
+            $rootObject, 
+            $key = array(), 
+            $filter, 
+            $sort, 
+            $order
+        );
         
         return $this->dataObjectDocument->documentElement;
     
@@ -129,14 +136,15 @@ class DataObjectController
     public function read($objectName, $key)
     {
         $this->dataObjectDocument = new DataObjectDocument();
-        $objectNode = $this->query('/xsd:schema/xsd:element[@name = "'.$objectName.'"]')->item(0);
-        $this->loadDataObject($objectNode, $this->dataObjectDocument, $key);
+        $objectElement = $this->getObjectElement($objectName);
+        $this->readDataObject($objectElement, $this->dataObjectDocument, $key);
         return $this->dataObjectDocument->documentElement;
     }
     
-    public function save($dataObject) 
+    public function save($dataObjectDocument=false)
     {
-        
+        $rootDataObject = $this->dataObjectDocument->documentElement;
+        $this->saveDataObject($rootDataObject);   
     }
     
     public function load($xml)
@@ -145,49 +153,7 @@ class DataObjectController
         $this->dataObjectDocument->loadXML($xml);
         return $this->dataObjectDocument->documentElement;
     }
-        
-    public function validate($dataObject) 
-    {
-        $messageController = new MessageController();
-        $messageController->loadMessageFile(
-            $_SESSION['config']['corepath'] 
-                . '/core/xml/DataObjectController_Messages.xml'
-        );
-        $this->messages = array();
-        // Validate with specific business script
-        //*********************************************************************
-        $objectSchema = $this->schema->getObjectSchema($dataObject->tagName);
-        if($objectSchema->hasAttribute('das:validation')) {
-            include_once $objectSchema->getAttribute('das:validation');
-        }
-        
-        // Validate against schema
-        //*********************************************************************
-        $XsdString = $this->document->saveXML();
-        libxml_use_internal_errors(true);
-        if(!$this->document->schemaValidateSource($XsdString)) {
-            $libXMLErrors = libxml_get_errors();
-            foreach ($libXMLErrors as $libXMLError) {
-                $message = $messageController->createMessage(
-                    'libxml::' . $libXMLError->code,
-                    $_SESSION['config']['lang'],
-                    array($libXMLError->message)
-                );
-                $this->messages[] = $message;
-            }
-        } 
-        libxml_clear_errors();
-        if(count($this->messages) > 0) return false;
-        return true;
-    }
-    
-    public function getMessages()
-    {
-        $messages = $this->messages;
-        $this->messages = array();
-        return $messages;
-    }
-    
+  
     public function delete($dataObject)
     {
     
@@ -218,17 +184,87 @@ class DataObjectController
     
     }
     
+    public function validate($dataObjectDocument=false) 
+    {
+        $messageController = new MessageController();
+        $messageController->loadMessageFile(
+            $_SESSION['config']['corepath'] 
+                . '/core/xml/DataObjectController_Messages.xml'
+        );
+        $this->messages = array();
+        // Validate with specific business script
+        //*********************************************************************
+        /*$objectSchema = $this->schema->getObjectSchema($dataObject->tagName);
+        if($objectSchema->hasAttribute('das:validation')) {
+            include_once $objectSchema->getAttribute('das:validation');
+        }*/
+        
+        // Validate against schema
+        //*********************************************************************
+        $XsdString = $this->schema->saveXML();
+        libxml_use_internal_errors(true);
+        if(!$this->dataObjectDocument->schemaValidateSource($XsdString)) {
+            $libXMLErrors = libxml_get_errors();
+            foreach ($libXMLErrors as $libXMLError) {
+                $message = $messageController->createMessage(
+                    'libxml::' . $libXMLError->code,
+                    $_SESSION['config']['lang'],
+                    array($libXMLError->message)
+                );
+                $this->messages[] = $message;
+            }
+        } 
+        libxml_clear_errors();
+        if(count($this->messages) > 0) return $this->messages;
+        return true;
+    }
+    
+    
     //*************************************************************************
     // PRIVATE OBJECT HANDLING FUNCTIONS
     //*************************************************************************
-    private function createDataObject($typeName)
+    private function getDataObjectPrototype($objectElement)
     {
-                
+        $objectName = $objectElement->getAttribute('name');
+        if(!isset($this->dataObjectPrototypes[$objectName])) {
+            $this->dataObjectPrototypes[$objectName] = $this->createDataObjectPrototype($objectElement);
+        }
+        return $this->dataObjectPrototypes[$objectName];
+    }
+    
+    private function createDataObjectPrototype($objectElement)
+    {
+        $objectName = $objectElement->getAttribute('name');
+        $dataObject = $this->dataObjectDocument->createDataObject($objectName);
+        
+        // Add properties
+        $properties = $this->getProperties($objectElement, $excludeOptional=true);
+        for($i=0; $i<count($properties); $i++) {
+            $property = $properties[$i];
+            $propertyName = $property->getAttribute('name');
+            $propertyValue = null;
+            if($property->hasAttribute('fixed')) {
+                $propertyValue = $property->getAttribute('fixed');
+            } elseif($property->hasAttribute('default')) {
+                $propertyValue = $property->getAttribute('default');
+            }
+            $dataObject->$propertyName = $propertyValue;
+        }
+        
+        // Add child objects
+        $children = $this->getChildren($objectElement, $excludeOptional=true);
+        $childrenLength = count($children);
+        for($i=0; $i<$childrenLength; $i++) {
+            $child = $children[$i];
+            $childObject = $this->getDataObjectPrototype($child);
+            $dataObject[] = $childObject;
+        }
+        
         return $dataObject;
     }
     
-    private function loadDataObject(
-        $objectNode,
+    private function readDataObject(
+        $objectElement,
         $parentObject,
         $key=array(), 
         $filter=false, 
@@ -237,41 +273,34 @@ class DataObjectController
         ) 
     {      
         try {
+            $dataAccessService = $this->getDataAccessService($objectElement);
             
-            //echo "<br/>Loading " . $objectNode->getAttribute('name');
-            
-            //echo "<br/>Getting source";             
-            $dataAccessService = $this->getDataAccessService($objectNode);
-            //echo "<br/>Source = " . print_r($dataAccessService,true);
-
+            // Process Properties
             if($dataAccessService) {
                 $dataAccessService->loadData(
-                    $objectNode, 
+                    $objectElement, 
                     $parentObject, 
                     $key,
                     $filter, 
                     $sort,
                     $order
                     );
-                //$this->document->logChange(DataObjectChange::READ, $parentObject);
             } else {
                 $dataObject = $this->createDataObject($objectName);
-                $parentObject->appendChild($dataObject);
+                $dataObject->logRead();
+                $parentObject[] = $dataObject;
             }
-            //echo "<br/>Result = " . htmlspecialchars($parentObject->saveXML());
-            
-            $childNodes = $this->getChildObjects($objectNode);
-            $childNodesLength = count($childNodes);
-            //echo "<br/>Found " . $childNodesLength. " child nodes";
-            
-            // Get children sources
-            for($i=0; $i<$childNodesLength; $i++) {
-                $childNode = $childNodes[$i];
+
+            // Process child objects
+            $children = $this->getChildren($objectElement, $excludeOptional=false);
+            $childrenLength = count($children);
+            for($i=0; $i<$childrenLength; $i++) {
+                $child = $children[$i];
                 $newObjects = $parentObject->childNodes;
                 $newObjectsLength = $newObjects->length;
                 for($j=0; $j<$newObjectsLength; $j++) {
                     $newObject = $newObjects->item($j);
-                    $this->loadDataObject($childNode, $newObject);
+                    $this->readDataObject($child, $newObject);
                 }    
             }
         } catch (maarch\Exception $e) {   
@@ -280,19 +309,46 @@ class DataObjectController
 
     }
     
+    private function saveDataObject($dataObject)
+    {
+        $objectName = $dataObject->tagName;
+        $objectElement = $this->getObjectElement($objectName);
+        $dataAccessService = $this->getDataAccessService($objectElement);
+        
+        if($dataAccessService) {
+            $dataAccessService->saveData($dataObject);
+        } 
+
+        $children = $this->getChildren($objectElement, $excludeOptional=false);
+        $childrenLength = count($children);
+        for($i=0; $i<$childrenLength; $i++) {
+            $child = $children[$i];
+            $childName = $child->getAttribute('name');
+            $childObjects = $dataObject->$childName;
+            $childObjectsLength = count($childObjects);
+            //echo "<br/>Found $childObjectsLength children of $dataObject->tagName named $childName";
+            for($j=0; $j<$childObjectsLength; $j++) {
+                $childObject = $childObjects[$j];
+                //echo "<br/>Processing child of $dataObject->tagName named $childName (".$childObject->tagName.") #$j";
+                $this->saveDataObject($childObject);
+            }
+        }
+        
+    }
+    
     //*************************************************************************
     // PRIVATE SCHEMA QUERY FUNCTIONS
     //*************************************************************************
-    private function getDataAccessService($objectNode)
+    private function getDataAccessService($objectElement)
     {
-        if($objectNode->hasAttribute('das:source')) {
-            $sourceName = $objectNode->getAttribute('das:source');
+        if($objectElement->hasAttribute('das:source')) {
+            $sourceName = $objectElement->getAttribute('das:source');
             if(!isset($this->dataAccessServices[$sourceName])) {
                 $sourceNode = $this->query('//das:source[@name="'.$sourceName.'"]')->item(0);
                 $this->createDataAccessService($sourceName, $sourceNode);
             }
-        } elseif($sourceNode = $this->query('./xsd:annotation/xsd:appinfo/das:source', $objectNode)->item(0)) {
-            $sourceName = $objectNode->getAttribute('name');
+        } elseif($sourceNode = $this->query('./xsd:annotation/xsd:appinfo/das:source', $objectElement)->item(0)) {
+            $sourceName = $objectElement->getAttribute('name');
             if(!isset($this->dataAccessServices[$sourceName])) {
                 $this->createDataAccessService($sourceName, $sourceNode);
             }

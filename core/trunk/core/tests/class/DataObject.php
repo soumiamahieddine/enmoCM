@@ -5,8 +5,6 @@ class DataObject
     implements IteratorAggregate, ArrayAccess
 {
     
-    public $changeLog = array();
-    
     private function xpath($query) 
     {
         $xpath = new DOMXpath($this->ownerDocument);
@@ -19,49 +17,31 @@ class DataObject
     public function __set($name, $value) 
     {
         if(is_scalar($value) || !$value || is_null($value)) {
-            $resultNodes = $this->xpath('./' . $name);
-            switch ((string)$resultNodes->length) {
-            case '0' :
-                $resultNode = $this->ownerDocument->createElement($name, $value);
-                $this->appendChild($resultNode);
-                break;
-            case '1' :
-                $resultNode = $resultNodes->item(0);
-                if((string)$resultNode->nodeValue == $value) {
-                    return;
-                }
-                $resultNode->nodeValue = $value;
-                break;
-            }
+            // Property
+            $this->setAttribute($name, $value); 
+        } 
+        if(is_object($value) && get_class($value) == 'DataObject') { 
+            // Child Element
+            $this->appendChild($value);
+            return;
         }
     }
     
     public function __get($name) 
     {
-        switch($name) {
-        case 'childrenObjects':
-            $resultNodes = $this->xpath('./*');
-            $dataObjectArray = array();
-            for($i=0; $i<$resultNodes->length; $i++) {
-                $dataObject = $resultNodes->item($i);
-                $dataObjectArray[] = $dataObject;
+        // Property
+        $propertyNodes = $this->xpath('./@'.$name);
+        if($propertyNodes->length > 0) {
+            return $propertyNodes->item(0)->nodeValue;
+        }
+        // Child
+        $childNodes = $this->xpath('./'.$name);
+        $childrenLength = $childNodes->length;
+        if($childrenLength > 0) {
+            for($i=0; $i<$childrenLength; $i++) {
+                $return[] = $childNodes->item($i);
             }
-            return $dataObjectArray;
-            
-        default:
-            $resultNodes = $this->xpath('./'.$name);
-            switch ((string)$resultNodes->length) {
-            case '0' :
-                return false;
-            case '1' :
-                return (string)$resultNodes->item(0)->nodeValue;
-            default :
-                $dataObjectArray = array();
-                for($i=0; $i<$resultNodes->length; $i++) {
-                    $dataObjectArray[] = $resultNodes->item($i);
-                }
-                return $dataObjectArray;
-            }
+            return $return;
         }
     }
     
@@ -73,22 +53,29 @@ class DataObject
     
     public function __toString()
     {
-        return $this->nodeValue;
+        return (string)$this->textContent;
     }
     
     //*************************************************************************
     // ITERATOR METHODS
     //*************************************************************************
     public function getIterator() {
-        $childNodes = $this->childNodes;
-        $childArray = array();
+        $returnArray = array();
+        $attrNodes = $this->xpath('./@*');
+        for($i=0; $i<$attrNodes->length; $i++) {
+            $attrNode = $attrNodes->item($i);
+            $childName = $attrNode->name;
+            $childValue = $attrNode->value;
+            $returnArray[$childName] = $childValue;
+        } 
+        $childNodes = $this->xpath('./*');
         for($i=0; $i<$childNodes->length; $i++) {
             $childNode = $childNodes->item($i);
             $childName = $childNode->tagName;
             $childValue = $childNode->nodeValue;
-            $childArray[$childName] = $childValue;
+            $returnArray[$childName] = $childValue;
         } 
-        return new ArrayIterator($childArray);
+        return new ArrayIterator($returnArray);
     }
     
     //*************************************************************************
@@ -111,16 +98,52 @@ class DataObject
     
     public function offsetGet($offset) 
     {
-    
+        
     }
    
+    //*************************************************************************
+    // MESSAGES INTERFACE
+    //*************************************************************************  
+    public function logCreate()
+    {
+        $message = $this->ownerDocument->createDataObjectLog(DataObjectLog::CREATE, DataObjectLog::INFO);
+        $this->appendChild($message);
+    }    
+    
+    public function logRead()
+    {
+        $message = $this->ownerDocument->createDataObjectLog(DataObjectLog::READ, DataObjectLog::INFO);
+        $this->appendChild($message);
+    }
+    
+    public function logUpdate($propertyName, $propertyValue)
+    {
+        $messageDetail = 'property-name="' . $propertyName . '" property-value="' . $propertyValue . '"';
+        $message = $this->ownerDocument->createDataObjectLog(DataObjectLog::UPDATE, DataObjectLog::INFO, $messageDetail);
+        $this->appendChild($message);
+    }
+    
+    public function isCreated()
+    {
+        $createOperation = $this->xpath("./comment()[contains(., 'operation=\"1\"')]")->item(0);
+        if($createOperation) return true;
+    }
+    
+    public function isUpdated()
+    {
+        $updateOperations = $this->xpath('./comment()[contains(., "operation=3")]');
+        if($updateOperations->length > 0) return true;
+    }
+    
+    
+    
     //*************************************************************************
     // XML INTERFACE
     //*************************************************************************
     public function asXml() 
     {  
         // add marker linefeeds to aid the pretty-tokeniser (adds a linefeed between all tag-end boundaries)
-        $xml = preg_replace('/(>)(<)(\/*)/', "$1\n$2$3", $this->ownerDocument->documentElement->C14N());
+        $xml = preg_replace('/(>)(<)(\/*)/', "$1\n$2$3", $this->C14N());
         
         // now indent the tags
         $token      = strtok($xml, "\n");
@@ -145,6 +168,8 @@ class DataObject
                 $indent = 0; 
             }
             
+            $token = $this->attrAsXml($token, $pad);
+            
             // pad the line with the required number of leading spaces
             $line    = str_pad($token, strlen($token)+($pad*4), ' ', STR_PAD_LEFT);
             $result .= $line . "\n"; // add to the cumulative result, with linefeed
@@ -153,6 +178,25 @@ class DataObject
         } 
         
         return $result;
+    }
+    
+    private function attrAsXml($token, $pad)
+    {
+        $return = '';
+        $array = preg_split("/\s(\w+=)/", $token, -1, PREG_SPLIT_DELIM_CAPTURE);
+        for($i=0; $i<count($array); $i++) {
+            $item = $array[$i];
+            if(preg_match('/^\w+=$/', $item)) {
+                if($i>0 && $i<count($array)) $attrpad = $pad + 1;
+                else $attrpad = $pad;
+                $attrname = str_pad($item, strlen($item)+($attrpad*4), ' ', STR_PAD_LEFT);
+                $return .= $attrname;
+            } else {
+                $return .= $item;
+                if($i<count($array)-1) $return .= "\n";
+            }
+        }
+        return $return;
     }
     
     //*************************************************************************
@@ -170,10 +214,10 @@ class DataObject
             } else {
                 $childName = $childNode->tagName;
                 if($this->xpath('./'.$childName)->length > 1) {
-                    echo "<br/>$childName is an array";
+                    //echo "<br/>$childName is an array";
                     $object->{$childName}[] = $childNode->asObject();
                 } else {
-                    echo "<br/>$childName is an extension";
+                    //echo "<br/>$childName is an extension";
                     $object->$childName = $childNode->asObject();
                 }
             }
