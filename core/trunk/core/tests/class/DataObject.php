@@ -153,7 +153,7 @@ class DataObject
     public function asXml() 
     {  
         // add marker linefeeds to aid the pretty-tokeniser (adds a linefeed between all tag-end boundaries)
-        $xml = preg_replace('/(>)(<)(\/*)/', "$1\n$2$3", $this->C14N());
+        $xml = preg_replace('/(>)(<)(\/*)/', "$1\n$2$3", $this->C14N(false,true));
         
         // now indent the tags
         $token      = strtok($xml, "\n");
@@ -163,6 +163,7 @@ class DataObject
         
         // scan each line and adjust indent based on opening/closing tags
         while ($token !== false) {
+            $comment = false;
             // 1. open and closing tags on same line - no change
             if (preg_match('/.+<\/\w[^>]*>$/', $token, $matches)) { 
                 $indent = 0;
@@ -177,11 +178,13 @@ class DataObject
             } else {
                 $indent = 0; 
             }
-            
-            $token = $this->attrAsXml($token, $pad);
-            
+            if(preg_match('/<\!\-\-\w[^>]*\-\->/', $token, $matches)) {
+                // nothing
+            } else {
+                $token = $this->attrAsXml($token, $pad);
+            }
             // pad the line with the required number of leading spaces
-            $line    = str_pad($token, strlen($token)+($pad*4), ' ', STR_PAD_LEFT);
+            $line    = str_pad($token, strlen($token)+($pad*2), ' ', STR_PAD_LEFT);
             $result .= $line . "\n"; // add to the cumulative result, with linefeed
             $token   = strtok("\n"); // get the next token
             $pad    += $indent; // update the pad size for subsequent lines    
@@ -199,7 +202,7 @@ class DataObject
             if(preg_match('/^\w+=$/', $item)) {
                 if($i>0 && $i<count($array)) $attrpad = $pad + 1;
                 else $attrpad = $pad;
-                $attrname = str_pad($item, strlen($item)+($attrpad*4), ' ', STR_PAD_LEFT);
+                $attrname = str_pad($item, strlen($item)+($attrpad*2), ' ', STR_PAD_LEFT);
                 $return .= $attrname;
             } else {
                 $return .= $item;
@@ -212,7 +215,7 @@ class DataObject
     public function show()
     {
         echo "<pre>";
-        echo htmlspecialchars($this->C14N());
+        echo htmlspecialchars($this->asXml());
         echo "</pre>";
     }
     
