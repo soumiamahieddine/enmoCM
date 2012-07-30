@@ -24,7 +24,7 @@ class DataObjectController
     extends DOMXPath
 {
  
-    public $dataObjectDocument;
+    public $dataObjectDocuments = array();
     public $dataAccessServices = array();
     protected $messageController;
     protected $messages = array();
@@ -104,10 +104,11 @@ class DataObjectController
         $order=false
         ) 
     {
-        $this->dataObjectDocument = new DataObjectDocument();
+        $dataObjectDocument = new DataObjectDocument();
+        $this->dataObjectDocuments[] = $dataObjectDocument;
         $rootNode = $this->query('/xsd:schema/xsd:element[@das:module != ""]')->item(0);
-        $rootObject = $this->dataObjectDocument->createDataObject($rootNode->getAttribute('name'));
-        $this->dataObjectDocument[] = $rootObject;
+        $rootObject = $dataObjectDocument->createDataObject($rootNode->getAttribute('name'));
+        $dataObjectDocument[] = $rootObject;
         
         $objectElement = $this->getObjectElement($objectName);
         
@@ -120,34 +121,35 @@ class DataObjectController
             $order
         );
         
-        return $this->dataObjectDocument->documentElement;
+        return $dataObjectDocument->documentElement;
     
     }
     
     public function read($objectName, $key)
     {
-        $this->dataObjectDocument = new DataObjectDocument();
+        $dataObjectDocument = new DataObjectDocument();
+        $this->dataObjectDocuments[] = $dataObjectDocument;
         $objectElement = $this->getObjectElement($objectName);
-        $this->readDataObject($objectElement, $this->dataObjectDocument, $key);
-        return $this->dataObjectDocument->documentElement;
+        $this->readDataObject($objectElement, $dataObjectDocument, $key);
+        return $dataObjectDocument->documentElement;
     }
     
-    public function save($dataObjectDocument=false)
+    public function save($dataObject)
     {
-        $rootDataObject = $this->dataObjectDocument->documentElement;
-        $this->saveDataObject($rootDataObject);   
+        $this->saveDataObject($dataObject);   
     }
     
     public function load($xml)
     {
-        if(!$this->dataObjectDocument) $this->dataObjectDocument = new DataObjectDocument();
-        $this->dataObjectDocument->loadXML($xml);
-        return $this->dataObjectDocument->documentElement;
+        $dataObjectDocument = new DataObjectDocument();
+        $this->dataObjectDocuments[] = $dataObjectDocument;
+        $dataObjectDocument->loadXML($xml);
+        return $dataObjectDocument->documentElement;
     }
   
     public function delete($dataObject)
     {
-    
+        
     }
     
     public function copy($dataObject, $keepParent=true)

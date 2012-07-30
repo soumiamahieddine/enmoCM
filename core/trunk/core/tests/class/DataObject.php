@@ -43,17 +43,15 @@ class DataObject
         // Child
         $childNodes = $this->xpath('./'.$name);
         $childrenLength = $childNodes->length;
-        if($childrenLength > 0) {
-            for($i=0; $i<$childrenLength; $i++) {
-                $return[] = $childNodes->item($i);
-            }
-            return $return;
+        for($i=0; $i<$childrenLength; $i++) {
+            $childOjects[] = $childNodes->item($i);
         }
+        return $childOjects;
     }
     
     public function __isset($name)
     {
-        $resultNodes = $this->xpath('./'.$name);
+        $resultNodes = $this->xpath('./@'.$name . ' | ./' . $name);
         if($resultNodes->length > 0) return true;
     }
     
