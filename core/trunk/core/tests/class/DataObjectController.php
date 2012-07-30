@@ -565,8 +565,8 @@ class DataObjectController
             $attribute = $attributes->item($i);
             if($excludeOptional 
                 && $attribute->hasAttribute('use') 
-                && ($attribute->getAttribute('use') == 'optional' 
-                    ||$attribute->getAttribute('use') == 'prohibited')) {
+                && (($attribute->getAttribute('use') == 'optional' && !$attribute->hasAttribute('default'))
+                    || $attribute->getAttribute('use') == 'prohibited')) {
                 continue;
             }
             if($attribute->hasAttribute('ref')) {
