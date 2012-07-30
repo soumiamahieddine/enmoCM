@@ -85,10 +85,13 @@ class DataObjectController
     {
         $dataObjectDocument = new DataObjectDocument();
         $this->dataObjectDocuments[] = $dataObjectDocument;
+        
         $objectElement = $this->getObjectElement($objectName);
         $dataObjectPrototype = $this->getDataObjectPrototype($objectElement);
         $dataObject = $dataObjectDocument->importNode($dataObjectPrototype, true);
+        $dataObject->logCreate();
         $dataObjectDocument->appendChild($dataObject);
+        
         return $dataObject;
     }
     
