@@ -27,8 +27,8 @@ class DataAccessService_Database
         $parentObject, 
         $key, 
         $filter, 
-        $sort, 
-        $order = 'ASC', 
+        $sortFields, 
+        $sortOrder, 
         $limit=500) 
     {
         $objectName = $objectElement->getAttribute('name');
@@ -87,8 +87,17 @@ class DataAccessService_Database
             $selectParts[] = "WHERE " . implode(' and ', $whereParts);
         }
         
-        $selectOrderExpression = $this->getSelectOrderExpression($objectElement, $sort);
-        $selectParts[] = "ORDER BY " . $selectOrderExpression . " " . $order;
+        $selectSortFieldsExpression = $this->getSelectSortFieldsExpression($objectElement, $sortFields);
+        switch($sortOrder) {
+        case 'descending' : 
+            $sortOrder = 'DESC';
+            break;
+        case 'ascending' : 
+        default : 
+            $sortOrder = 'ASC';
+        }
+        
+        $selectParts[] = "ORDER BY " . $selectSortFieldsExpression . " " . $sortOrder;
         
         $selectQuery = implode(' ', $selectParts);
         //echo "<br/>Select query = " . $selectQuery;
@@ -316,37 +325,37 @@ class DataAccessService_Database
     
     // ORDER 
     //*************************************************************************
-    private function getSelectOrderExpression($objectElement, $sort=false)
+    private function getSelectSortFieldsExpression($objectElement, $sortFields=false)
     {
         // No sort fields given, sort on key
-        if(!$sort) {
-            if(!$selectOrderExpression = $this->XRefs->getXRefData($objectElement, 'selectOrderExpression')) {
+        if(!$sortFields) {
+            if(!$selectSortFieldsExpression = $this->XRefs->getXRefData($objectElement, 'selectSortFieldsExpression')) {
                 $key = $this->getKey($objectElement);
                 $keyFields = $this->getKeyFields($key);
                 for($i=0; $i<$keyFields->length; $i++) {
-                    $sortFields[] = str_replace("@", "", $keyFields->item($i)->getAttribute('xpath'));
+                    $sortFieldsArray[] = str_replace("@", "", $keyFields->item($i)->getAttribute('xpath'));
                 }
-                $selectOrderExpression = $this->createSelectOrderExpression($objectElement, $sortFields);
-                $this->XRefs->addXRefData($objectElement, 'selectOrderExpression', $selectOrderExpression);
+                $selectSortFieldsExpression = $this->createSelectSortFieldsExpression($objectElement, $sortFieldsArray);
+                $this->XRefs->addXRefData($objectElement, 'selectSortFieldsExpression', $selectSortFieldsExpression);
             }
         } else {
-            $sortFields = explode(' ', $sort);
-            $selectOrderExpression = $this->createSelectOrderExpression($objectElement, $sortFields);
+            $sortFieldArray = explode(' ', $sortFields);
+            $selectSortFieldsExpression = $this->createSelectSortFieldsExpression($objectElement, $sortFieldArray);
         }
-        return $selectOrderExpression;
+        return $selectSortFieldsExpression;
     }
     
-    private function createSelectOrderExpression($objectElement, $sortFields) {
-        $sortFieldsLength = count($sortFields);
-        $sortExpressions = array();
+    private function createSelectSortFieldsExpression($objectElement, $sortFieldArray) {
+        $sortFieldsLength = count($sortFieldArray);
+        $sortFieldsExpressions = array();
         for($i=0; $i<$sortFieldsLength; $i++) {
-            $sortField = $sortFields[$i];
+            $sortField = $sortFieldArray[$i];
             
             // Get column name
             
-            $sortExpressions[] = $sortField;  
+            $sortFieldsExpressions[] = $sortField;  
         }
-        return implode(', ', $sortExpressions);
+        return implode(', ', $sortFieldsExpressions);
     }
 
 

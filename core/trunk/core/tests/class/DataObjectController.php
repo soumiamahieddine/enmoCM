@@ -114,7 +114,7 @@ class DataObjectController
         $this->readDataObject(
             $objectElement, 
             $rootObject, 
-            $key = array(), 
+            $key=false,
             $filter, 
             $sort, 
             $order
@@ -260,7 +260,7 @@ class DataObjectController
         $key=false, 
         $filter=false, 
         $sort=false,
-        $order=false
+        $order='ascending'
         ) 
     {      
         try {
