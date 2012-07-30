@@ -152,6 +152,14 @@ class DataObject
         if($updateOperations->length > 0) return true;
     }
     
+    public function getUpdatedProperties()
+    {
+        $updateOperations = $this->xpath('./comment()[contains(., "operation=3")]');
+        for($i=0; $i<$updateOperations->length; $i++) {
+            $updateOperation = $updateOperations->item($i);
+            
+        }
+    }
     
     
     //*************************************************************************

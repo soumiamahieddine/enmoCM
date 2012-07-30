@@ -83,13 +83,15 @@ class DataObjectController
     //*************************************************************************
     public function createRoot($objectName) 
     {
-        $this->dataObjectDocument = new DataObjectDocument();
-        $rootObject = $this->create($objectName);
-        $this->dataObjectDocument->appendChild($rootObject);
-        return $rootObject;
+        $dataObjectDocument = new DataObjectDocument();
+        $this->dataObjectDocuments[] = $dataObjectDocument;
+        $dataObjectPrototype = $this->getDataObjectPrototype($objectElement);
+        $dataObject = $dataObjectDocument->importNode($dataObjectPrototype, true);
+        $dataObjectDocument->appendChild($dataObject);
+        return $dataObject;
     }
     
-    public function create($objectName) 
+    public function create($dataObjectDocument, $objectName) 
     {
         $objectElement = $this->getObjectElement($objectName);
         $dataObject = $this->getDataObjectPrototype($objectElement)->cloneNode(true);

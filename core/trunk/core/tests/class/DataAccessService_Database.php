@@ -149,7 +149,7 @@ class DataAccessService_Database
         $tableExpression = $this->getTableExpression($objectElement);
         $insertParts[] = "INSERT INTO " . $tableExpression;
                 
-        $insertColumnsExpression = $this->getInsertColumnsExpression($objectElement, $dataObject);
+        $insertColumnsExpression = $this->getInsertColumnsExpression($objectElement);
         //echo "<br/>selectExpression = " . $selectExpression;
         $insertParts[] = "(" . $insertColumnsExpression . ")";
         
@@ -160,34 +160,36 @@ class DataAccessService_Database
         
         //echo "<br/>INSERT QUERY = $insertQuery";
         
-        /*try {
+        try {
             $this->databaseObject->query($insertQuery);
         } catch (Exception $e) {
             throw $e;
-        }*/
+        }
        
     }
     
     private function updateData($dataObject)
     {
-        $parentObject = $dataObject->parentObject;  
+        $objectName = $dataObject->tagName;
+        $objectElement = $this->getObjectElement($objectName);
         
-        $tableName = $dataObject->name;
+        $dataObjectDocument = $dataObject->ownerDocument;
         
-        $table = $this->tables[$tableName];
+        $updateParts = array();
+        $tableExpression = $this->getTableExpression($objectElement);
+        $updateParts[] = "UPDATE " . $tableExpression;
         
-     
         // COLUMNS / VALUES
-        $updateExpression = $this->createUpdateExpression($table, $dataObject);
-
-        // Key
-        $keyExpression = $this->createUpdateKeyExpression($table, $dataObject);
-    
-        $query  = "UPDATE " . $tableName;
-        $query .= " SET  " . $updateExpression;
-        $query .= " WHERE " . $keyExpression;
+        $updateExpression = $this->createUpdateExpression($objectElement);
+        $updateParts[] = "SET " . $updateExpression; 
         
-        //echo "<pre>QUERY = " . $query . "</pre>";
+        // Key
+        $keyExpression = $this->createUpdateKeyExpression($objectElement, $dataObject);
+        
+        
+        $updateQuery = implode(' ', $updateParts);
+        
+        echo "<pre>QUERY = " . $query . "</pre>";
         
         /*try {
             $this->databaseObject->query($query);
@@ -395,16 +397,16 @@ class DataAccessService_Database
     
     // INSERT COLUMNS 
     //************************************************************************* 
-    private function getInsertColumnsExpression($objectElement, $dataObject)
+    private function getInsertColumnsExpression($objectElement)
     {
-        $objectName = $objectElement->getAttribute('name');
-        if(!isset($this->insertColumnsExpressions[$objectName])) {
-            $this->insertColumnsExpressions[$objectName] = $this->createInsertColumnsExpression($objectElement, $dataObject);
+        if(!$insertColumnsExpression = $this->XRefs->getXRefData($objectElement, 'insertColumnsExpression')) {
+            $insertColumnsExpression = $this->createInsertColumnsExpression($objectElement);
+            $this->XRefs->addXRefData($objectElement, 'insertColumnsExpression', $insertColumnsExpression);
         }
-        return $this->insertColumnsExpressions[$objectName];
+        return $insertColumnsExpression;
     }
     
-    private function createInsertColumnsExpression($objectElement, $dataObject)
+    private function createInsertColumnsExpression($objectElement)
     {
         $insertColumns = array();
         $properties = $this->getProperties($objectElement); 
@@ -438,7 +440,28 @@ class DataAccessService_Database
         }
         return implode(', ', $insertValues);
     }
-        
+    
+    // UPDATE COLUMNS 
+    //************************************************************************* 
+    private function createUpdateExpression($objectElement, $dataObject)
+    {
+        $updateColumns = array();
+        $properties = $this->getProperties($objectElement); 
+        for($i=0; $i< count($properties); $i++) {
+            $property = $properties[$i];
+            if($property->hasAttribute('das:column')) {
+                $columnName = $property->getAttribute('das:column');
+            } else {
+                $columnName = $property->getAttribute('name');
+            }
+            $insertColumns[] =  $columnName;
+        }
+        return implode(', ', $insertColumns);
+    }
+    
+    
+    // EXCEPTIONS 
+    //************************************************************************* 
     private function throwDatabaseException($query)
     {
         require_once 'core/tests/class/MessageController.php';
@@ -459,6 +482,9 @@ class DataAccessService_Database
         );
         throw new maarch\Exception($message);
     }
+    
+
+    
     
 }
 
