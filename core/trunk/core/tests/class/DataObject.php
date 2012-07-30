@@ -133,6 +133,13 @@ class DataObject
         $this->appendChild($message);
     }
     
+    public function logValidate($level, $message)
+    {
+        $messageDetail = 'validation-message="' . $message . '"';
+        $message = $this->ownerDocument->createDataObjectLog(DataObjectLog::VALIDATE, $level, $messageDetail);
+        $this->appendChild($message);
+    }
+    
     public function isCreated()
     {
         $createOperation = $this->xpath("./comment()[contains(., 'operation=\"1\"')]")->item(0);

@@ -200,17 +200,32 @@ class DataObjectController
         if(!$dataObjectDocument->schemaValidateSource($XsdString)) {
             $libXMLErrors = libxml_get_errors();
             foreach ($libXMLErrors as $libXMLError) {
-                $message = $messageController->createMessage(
+                /*$message = $messageController->createMessage(
                     'libxml::' . $libXMLError->code,
                     $_SESSION['config']['lang'],
                     array($libXMLError->message)
-                );
-                $this->messages[] = $message;
+                );*/
+                switch ($libXMLError->level) {
+                    case LIBXML_ERR_WARNING:
+                        $level = DataObjectLog::WARNING;
+                        break;
+                     case LIBXML_ERR_ERROR:
+                        $level = DataObjectLog::ERROR;
+                        break;
+                    case LIBXML_ERR_FATAL:
+                        $level = DataObjectLog::FATAL;
+                        break;
+                }
+                $dataObject->logValidate($level, $libXMLError->message);
             }
-        } 
-        libxml_clear_errors();
-        if(count($this->messages) > 0) return $this->messages;
-        return true;
+            libxml_clear_errors();
+            return false;
+        } else {
+            $dataObject->logValidate(DataObjectLog::INFO, 'Valid');
+            libxml_clear_errors();
+            return true;
+        }
+
     }
         
     //*************************************************************************
