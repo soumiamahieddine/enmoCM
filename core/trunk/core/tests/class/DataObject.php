@@ -209,6 +209,13 @@ class DataObject
         return $return;
     }
     
+    public function show()
+    {
+        echo "<pre>";
+        echo htmlspecialchars($this->C14N());
+        echo "</pre>";
+    }
+    
     //*************************************************************************
     // Web Service Object (properties/children - no method)
     //*************************************************************************

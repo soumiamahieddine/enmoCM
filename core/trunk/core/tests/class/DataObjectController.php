@@ -177,7 +177,7 @@ class DataObjectController
     
     }
     
-    public function validate($dataObjectDocument=false) 
+    public function validate($dataObject) 
     {
         $messageController = new MessageController();
         $messageController->loadMessageFile(
@@ -196,7 +196,8 @@ class DataObjectController
         //*********************************************************************
         $XsdString = $this->schema->saveXML();
         libxml_use_internal_errors(true);
-        if(!$this->dataObjectDocument->schemaValidateSource($XsdString)) {
+        $dataObjectDocument = $dataObject->ownerDocument;
+        if(!$dataObjectDocument->schemaValidateSource($XsdString)) {
             $libXMLErrors = libxml_get_errors();
             foreach ($libXMLErrors as $libXMLError) {
                 $message = $messageController->createMessage(
@@ -211,8 +212,7 @@ class DataObjectController
         if(count($this->messages) > 0) return $this->messages;
         return true;
     }
-    
-    
+        
     //*************************************************************************
     // protected OBJECT HANDLING FUNCTIONS
     //*************************************************************************
