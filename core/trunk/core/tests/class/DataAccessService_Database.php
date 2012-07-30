@@ -31,8 +31,6 @@ class DataAccessService_Database
         $order = 'ASC', 
         $limit=500) 
     {
-        echo "<br/>Read with " . $objectElement->getAttribute('name') . " order $order";
-        
         $objectName = $objectElement->getAttribute('name');
         
         if(get_class($parentObject) == 'DataObjectDocument') {
@@ -67,7 +65,7 @@ class DataAccessService_Database
         if($filter) {
             $filterExpression = $this->getSelectFilterExpression($objectElement);
             $filterExpression = str_replace('$filter', $filter, $filterExpression);
-            echo "<br/>filterExpression = " . $filterExpression;
+            //echo "<br/>filterExpression = " . $filterExpression;
             $whereParts[] = $filterExpression;
         }
         
@@ -93,7 +91,7 @@ class DataAccessService_Database
         $selectParts[] = "ORDER BY " . $selectOrderExpression . " " . $order;
         
         $selectQuery = implode(' ', $selectParts);
-        echo "<br/>Select query = " . $selectQuery;
+        //echo "<br/>Select query = " . $selectQuery;
        
         try {
             $this->databaseObject->query($selectQuery);
@@ -151,7 +149,7 @@ class DataAccessService_Database
         
         $insertQuery = implode(' ', $insertParts);
         
-        echo "<br/>INSERT QUERY = $insertQuery";
+        //echo "<br/>INSERT QUERY = $insertQuery";
         
         /*try {
             $this->databaseObject->query($insertQuery);
@@ -180,8 +178,7 @@ class DataAccessService_Database
         $query .= " SET  " . $updateExpression;
         $query .= " WHERE " . $keyExpression;
         
-        //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        echo "<pre>QUERY = " . $query . "</pre>";
+        //echo "<pre>QUERY = " . $query . "</pre>";
         
         /*try {
             $this->databaseObject->query($query);
