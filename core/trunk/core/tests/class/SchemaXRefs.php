@@ -68,5 +68,24 @@ class SchemaXRefs
         $XRefNode->appendChild($XData);
     }
     
+    public function getXRefElement($refNode, $reqName)
+    {
+        $XElement = $this->xpath('//XRef[@path="'.$refNode->getNodePath().'"]/*[@name="'.$reqName.'"]/*');
+        if($XElement->length == 0) {
+            return null;  
+        } else {
+            return $XElement->item(0);
+        }
+    }
+    
+    public function addXRefElement($refNode, $targetName, $targetElement)
+    {
+        $XRefNode = $this->getXRefNode($refNode);
+        $XData = $this->createElement('XData');
+        $XData->setAttribute('name', $targetName);
+        $XData->appendChild($targetElement);
+        $XRefNode->appendChild($XData);
+    }
+    
     
 }

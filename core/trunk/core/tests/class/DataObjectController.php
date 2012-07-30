@@ -85,6 +85,7 @@ class DataObjectController
     {
         $dataObjectDocument = new DataObjectDocument();
         $this->dataObjectDocuments[] = $dataObjectDocument;
+        $objectElement = $this->getObjectElement($objectName);
         $dataObjectPrototype = $this->getDataObjectPrototype($objectElement);
         $dataObject = $dataObjectDocument->importNode($dataObjectPrototype, true);
         $dataObjectDocument->appendChild($dataObject);
@@ -235,17 +236,17 @@ class DataObjectController
     //*************************************************************************
     protected function getDataObjectPrototype($objectElement)
     {
-        $objectName = $objectElement->getAttribute('name');
-        if(!isset($this->dataObjectPrototypes[$objectName])) {
-            $this->dataObjectPrototypes[$objectName] = $this->createDataObjectPrototype($objectElement);
+        if(!$dataObjectPrototype = $this->XRefs->getXRefData($objectElement, 'dataObjectPrototype')) {
+            $dataObjectPrototype = $this->createDataObjectPrototype($objectElement);
+            $this->XRefs->addXRefElement($objectElement, 'dataObjectPrototype', $dataObjectPrototype);
         }
-        return $this->dataObjectPrototypes[$objectName];
+        return $dataObjectPrototype;
     }
     
     protected function createDataObjectPrototype($objectElement)
     {
         $objectName = $objectElement->getAttribute('name');
-        $dataObject = $this->dataObjectDocument->createDataObject($objectName);
+        $dataObject = $this->XRefs->createElement($objectName);
         
         // Add properties
         $properties = $this->getProperties($objectElement, $excludeOptional=true);
@@ -258,7 +259,7 @@ class DataObjectController
             } elseif($property->hasAttribute('default')) {
                 $propertyValue = $property->getAttribute('default');
             }
-            $dataObject->$propertyName = $propertyValue;
+            $dataObject->setAttribute($propertyName, $propertyValue);
         }
         
         // Add child objects
@@ -267,7 +268,7 @@ class DataObjectController
         for($i=0; $i<$childrenLength; $i++) {
             $child = $children[$i];
             $childObject = $this->getDataObjectPrototype($child);
-            $dataObject[] = $childObject;
+            $dataObject->appendChild($childObject);
         }
         
         return $dataObject;
