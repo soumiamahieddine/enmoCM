@@ -20,7 +20,7 @@
   
   <xsd:element name='entities' type='entities' 
     das:source='maarch_entreprise'
-    das:filter-columns='entity_id entity_label adrs_1'>
+    das:filter='entity_id entity_label adrs_1'>
     <xsd:key name="entities_pkey">
       <xsd:selector xpath=".."/>
       <xsd:field xpath="@entity_id" das:enclosed='true'/>
@@ -43,6 +43,7 @@
     <xsd:attribute name="parent_entity_id" type="varchar32" />
     <xsd:attribute name="entity_type" type="varchar64" />
     <xsd:sequence>
+      <!--xsd:element name="adrs_1" type="varchar255" das:source='maarch_entreprise' das:table='entities'/-->
       <xsd:element ref="rm_entities" minOccurs="0" />
     </xsd:sequence>
   </xsd:complexType>
