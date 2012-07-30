@@ -1,6 +1,6 @@
 <?php
 class DataAccessService_XML 
-    extends SchemaController
+    extends DataObjectController
 {
     public $file;
     public $DOMDocument;

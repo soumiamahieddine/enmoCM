@@ -5,16 +5,27 @@ class DataObjectDocument
     implements ArrayAccess
 {
 	
+    private $xpath;
+
     //*************************************************************************
-    // DOM METHODS
+    // CONSTRUCTOR
     //************************************************************************* 
-	public function DataObjectDocument()
+    public function DataObjectDocument()
 	{
 		parent::__construct();
 		$this->registerNodeClass('DOMElement', 'DataObject');
         $this->registerNodeClass('DOMAttr', 'DataObjectProperty');
         $this->registerNodeClass('DOMComment', 'DataObjectLog');
 	}
+    
+    //*************************************************************************
+    // DOM METHODS
+    //************************************************************************* 
+    private function xpath($query) 
+    {
+        if(!$this->xpath) $this->xpath = new DOMXpath($this);
+        return $this->xpath->query($query, $this->documentElement);
+    }
     
     public function createDataObject($objectName)
     {
@@ -39,12 +50,7 @@ class DataObjectDocument
         return $DataObjectLog;
     }
     
-    private function xpath($query) 
-    {
-        $xpath = new DOMXpath($this);
-        return $xpath->query($query, $this->documentElement);
-    }
-    
+  
     //*************************************************************************
     // MAGIC METHODS
     //************************************************************************* 

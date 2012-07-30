@@ -1,6 +1,6 @@
 <?php
 class DataAccessService_Database  
-    extends SchemaController
+    extends DataObjectController
 {
 
     private $databaseObject;
@@ -31,6 +31,8 @@ class DataAccessService_Database
         $order = 'ASC', 
         $limit=500) 
     {
+        echo "<br/>Read with " . $objectElement->getAttribute('name') . " order $order";
+        
         $objectName = $objectElement->getAttribute('name');
         
         if(get_class($parentObject) == 'DataObjectDocument') {
@@ -52,13 +54,21 @@ class DataAccessService_Database
         $selectParts[] = "FROM " . $tableExpression;
         
         $whereParts = array();
-        if(count($key) > 0) {
+        if($key) {
             $keyExpression = $this->getSelectKeyExpression($objectElement);
-            foreach($key as $i => $keyValue) {
+            $keyValues = explode(' ', $key);
+            foreach($keyValues as $i => $keyValue) {
                 $keyExpression = str_replace('$'.$i, $keyValue, $keyExpression);
             }
             //echo "<br/>keyExpression = " . $keyExpression;
             $whereParts[] = $keyExpression;
+        }
+        
+        if($filter) {
+            $filterExpression = $this->getSelectFilterExpression($objectElement);
+            $filterExpression = str_replace('$filter', $filter, $filterExpression);
+            echo "<br/>filterExpression = " . $filterExpression;
+            $whereParts[] = $filterExpression;
         }
         
         if(get_class($parentObject) != 'DataObjectDocument') {
@@ -79,6 +89,9 @@ class DataAccessService_Database
             $selectParts[] = "WHERE " . implode(' and ', $whereParts);
         }
         
+        $selectOrderExpression = $this->getSelectOrderExpression($objectElement, $sort);
+        $selectParts[] = "ORDER BY " . $selectOrderExpression . " " . $order;
+        
         $selectQuery = implode(' ', $selectParts);
         echo "<br/>Select query = " . $selectQuery;
        
@@ -88,12 +101,12 @@ class DataAccessService_Database
             throw $e;
         }
         
-        //echo "<br/>Create child object $objectName";
+        //echo "<br/>Create object $objectName";
         while($recordSet = $this->databaseObject->fetch_object()) {
             $dataObject = $dataObjectDocument->createDataObject($objectName);
             $parentObject[] = $dataObject;
             foreach($recordSet as $columnName => $columnValue) {
-                $dataObject->$columnName = $columnValue;
+                $dataObject->setAttribute($columnName, $columnValue);
             } 
             $dataObject->logRead();
         }
@@ -168,17 +181,14 @@ class DataAccessService_Database
         $query .= " WHERE " . $keyExpression;
         
         //echo "<pre>DAS = " . print_r($this,true) . "</pre>";
-        echo "<pre>QUERY = " . $query . "</pre>";exit;
-        try {
+        echo "<pre>QUERY = " . $query . "</pre>";
+        
+        /*try {
             $this->databaseObject->query($query);
         } catch (Exception $e) {
             throw $e;
-        }
-        
-        $this->saveChildObjects($dataObject);
+        }*/
 
-        return true;
-        
     }
     
     //*************************************************************************
@@ -189,20 +199,17 @@ class DataAccessService_Database
     //*************************************************************************
     private function getSelectColumnsExpression($objectElement)
     {
-        $objectName = $objectElement->getAttribute('name');
-        if(!isset($this->selectColumnsExpressions[$objectName])) {
-            $this->selectColumnsExpressions[$objectName] = $this->createSelectColumnsExpression($objectElement);
+        if(!$selectColumnsExpression = $this->XRefs->getXRefData($objectElement, 'SelectColumnsExpression')) {
+            $selectColumnsExpression = $this->createSelectColumnsExpression($objectElement);
+            $this->XRefs->addXRefData($objectElement, 'SelectColumnsExpression', $selectColumnsExpression);
         }
-        return $this->selectColumnsExpressions[$objectName];
+        return $selectColumnsExpression;
     }
     
     private function createSelectColumnsExpression($objectElement)
     {
-        //$objectType = $this->getType($objectElement);
         $selectColumns = array();
-        
         $properties = $this->getProperties($objectElement);
-        
         for($i=0; $i< count($properties); $i++) {
             $property = $properties[$i];
             $columnAlias = $property->getAttribute('name');
@@ -211,11 +218,10 @@ class DataAccessService_Database
             } else {
                 $columnName = $columnAlias;
             }
-            $propertyType = $this->getType($property);
+            $propertyType = $this->getSimpleType($property);
             if($propertyType->getAttribute('das:enclosed') == 'true') {
                 $enclosure = "'";
             }
-            
             if($property->hasAttribute('fixed')) {
                 $selectColumn = $enclosure . $property->getAttribute('fixed') . $enclosure . " AS " . $columnAlias; 
             } elseif($property->hasAttribute('default')) {
@@ -232,11 +238,11 @@ class DataAccessService_Database
     //*************************************************************************
     private function getTableExpression($objectElement)
     {
-        $objectName = $objectElement->getAttribute('name');
-        if(!isset($this->tableExpressions[$objectName])) {
-            $this->tableExpressions[$objectName] = $this->createTableExpression($objectElement);
-        }
-        return $this->tableExpressions[$objectName];
+        if(!$tableExpression = $this->XRefs->getXRefData($objectElement, 'tableExpression')) {
+            $tableExpression = $this->createTableExpression($objectElement);
+            $this->XRefs->addXRefData($objectElement, 'tableExpression', $tableExpression);
+        } 
+        return $tableExpression;
     }
     
     private function createTableExpression($objectElement)
@@ -253,23 +259,18 @@ class DataAccessService_Database
     //*************************************************************************
     private function getSelectKeyExpression($objectElement)
     {
-        $objectName = $objectElement->getAttribute('name');
-        if(!isset($this->selectKeyExpressions[$objectName])) {
-            $this->selectKeyExpressions[$objectName] = $this->createSelectKeyExpression($objectElement);
+        if(!$selectKeyExpression = $this->XRefs->getXRefData($objectElement, 'selectKeyExpression')) {
+            $selectKeyExpression = $this->createSelectKeyExpression($objectElement);
+            $this->XRefs->addXRefData($objectElement, 'selectKeyExpression', $selectKeyExpression);
         }
-        return $this->selectKeyExpressions[$objectName];
+        return $selectKeyExpression;
     }
     
     private function createSelectKeyExpression($objectElement)
     {
         $key = $this->getKey($objectElement);
         $keyFields = $this->getKeyFields($key);
-        $keyExpression = $this->createSelectKeyFieldsExpression($keyFields);
-        return $keyExpression;
-    }
-    
-    private function createSelectKeyFieldsExpression($keyFields)
-    {
+        //$objectProperties = $this->getProperties($objectElement);
         $keyFieldsLength = $keyFields->length;
         $selectKeyFields = array();
         for($i=0; $i<$keyFieldsLength; $i++) {
@@ -288,26 +289,85 @@ class DataAccessService_Database
         return implode(' and ', $selectKeyFields);
     }
 
+    // FILTER 
+    //*************************************************************************
+    private function getSelectFilterExpression($objectElement)
+    {
+        if(!$selectFilterExpression = $this->XRefs->getXRefData($objectElement, 'selectFilterExpression')) {
+            $selectFilterExpression = $this->createSelectFilterExpression($objectElement);
+            $this->XRefs->addXRefData($objectElement, 'selectFilterExpression', $selectFilterExpression);
+        }
+        return $selectFilterExpression;
+    }
+    
+    private function createSelectFilterExpression($objectElement) {
+        if($filter = $this->getFilter($objectElement)) {
+            $filterFields = explode(' ', $filter);
+            $filterFieldsLength = count($filterFields);
+            $filterExpressions = array();
+            for($i=0; $i<$filterFieldsLength; $i++) {
+                $filterField = $filterFields[$i];
+                
+                // get attribute or element + type
+                
+                $enclosure = "'";
+                $filterExpressions[] = "UPPER(". $filterField . ") LIKE UPPER(" . $enclosure . '$filter%' . $enclosure . ")";  
+            }
+            return implode(' or ', $filterExpressions);
+        }
+    }
+    
+    // ORDER 
+    //*************************************************************************
+    private function getSelectOrderExpression($objectElement, $sort=false)
+    {
+        // No sort fields given, sort on key
+        if(!$sort) {
+            if(!$selectOrderExpression = $this->XRefs->getXRefData($objectElement, 'selectOrderExpression')) {
+                $key = $this->getKey($objectElement);
+                $keyFields = $this->getKeyFields($key);
+                for($i=0; $i<$keyFields->length; $i++) {
+                    $sortFields[] = str_replace("@", "", $keyFields->item($i)->getAttribute('xpath'));
+                }
+                $selectOrderExpression = $this->createSelectOrderExpression($objectElement, $sortFields);
+                $this->XRefs->addXRefData($objectElement, 'selectOrderExpression', $selectOrderExpression);
+            }
+        } else {
+            $sortFields = explode(' ', $sort);
+            $selectOrderExpression = $this->createSelectOrderExpression($objectElement, $sortFields);
+        }
+        return $selectOrderExpression;
+    }
+    
+    private function createSelectOrderExpression($objectElement, $sortFields) {
+        $sortFieldsLength = count($sortFields);
+        $sortExpressions = array();
+        for($i=0; $i<$sortFieldsLength; $i++) {
+            $sortField = $sortFields[$i];
+            
+            // Get column name
+            
+            $sortExpressions[] = $sortField;  
+        }
+        return implode(', ', $sortExpressions);
+    }
+
+
+    
     // RELATION 
     //*************************************************************************
     private function getRelationExpression($objectElement, $parentName)
     {
-        $objectName = $objectElement->getAttribute('name');
-        if(!isset($this->relationExpressions[$objectName][$parentName])) {
-            $this->relationExpressions[$objectName][$parentName] = $this->createRelationExpression($objectElement, $parentName);
+        if(!$relationExpression = $this->XRefs->getXRefData($objectElement, 'relationExpression')) {
+            $relationExpression = $this->createRelationExpression($objectElement, $parentName);
+            $this->XRefs->addXRefData($objectElement, 'relationExpressions', $relationExpression);
         }
-        return $this->relationExpressions[$objectName][$parentName];
+        return $relationExpression;
     }
     
     private function createRelationExpression($objectElement, $parentName) {
         $relation = $this->getRelation($objectElement, $parentName);
         $fkeyFields = $this->query('./das:foreign-key', $relation);
-        $relationExpression = $this->createRelationKeysExpression($fkeyFields);
-        return $relationExpression;
-    }
-     
-    private function createRelationKeysExpression($fkeyFields)
-    {
         $fkeyFieldsLength = $fkeyFields->length;
         $relationKeys = array();
         for($i=0; $i<$fkeyFieldsLength; $i++) {
@@ -325,8 +385,8 @@ class DataAccessService_Database
             $relationKeys[] = $fkeyName . " = " . $enclosure . '$' . $pkeyName . $enclosure;  
         }
         return implode(' and ', $relationKeys);
-    } 
-     
+    }
+    
     // INSERT COLUMNS 
     //************************************************************************* 
     private function getInsertColumnsExpression($objectElement, $dataObject)
@@ -363,7 +423,7 @@ class DataAccessService_Database
         for($i=0; $i< count($properties); $i++) {
             $property = $properties[$i];
             $propertyName = $property->getAttribute('name');
-            $propertyType = $this->getType($property);
+            $propertyType = $this->getSimpleType($property);
             if($propertyType->getAttribute('das:enclosed') == 'true') {
                 $enclosure = "'";
             }

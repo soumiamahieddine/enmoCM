@@ -5,10 +5,15 @@ class DataObject
     implements IteratorAggregate, ArrayAccess
 {
     
+    private $xpath;
+    
+    //*************************************************************************
+    // DOM METHODS
+    //*************************************************************************
     private function xpath($query) 
     {
-        $xpath = new DOMXpath($this->ownerDocument);
-        return $xpath->query($query, $this);
+        if(!$this->xpath) $this->xpath = new DOMXpath($this->ownerDocument);
+        return $this->xpath->query($query, $this);
     }
     
     //*************************************************************************
@@ -19,6 +24,7 @@ class DataObject
         if(is_scalar($value) || !$value || is_null($value)) {
             // Property
             $this->setAttribute($name, $value); 
+            $this->logUpdate($name, $value);
         } 
         if(is_object($value) && get_class($value) == 'DataObject') { 
             // Child Element
@@ -60,22 +66,28 @@ class DataObject
     // ITERATOR METHODS
     //*************************************************************************
     public function getIterator() {
+        $returnArray = $this->asArray('*');
+        return new ArrayIterator($returnArray);
+    }
+    
+    private function asArray($name)
+    {
         $returnArray = array();
-        $attrNodes = $this->xpath('./@*');
+        $attrNodes = $this->xpath('./@'. $name);
         for($i=0; $i<$attrNodes->length; $i++) {
             $attrNode = $attrNodes->item($i);
             $childName = $attrNode->name;
             $childValue = $attrNode->value;
             $returnArray[$childName] = $childValue;
         } 
-        $childNodes = $this->xpath('./*');
+        $childNodes = $this->xpath('./'. $name);
         for($i=0; $i<$childNodes->length; $i++) {
             $childNode = $childNodes->item($i);
             $childName = $childNode->tagName;
             $childValue = $childNode->nodeValue;
-            $returnArray[$childName] = $childValue;
+            $returnArray[$i] = $childValue;
         } 
-        return new ArrayIterator($returnArray);
+        return $returnArray;
     }
     
     //*************************************************************************
