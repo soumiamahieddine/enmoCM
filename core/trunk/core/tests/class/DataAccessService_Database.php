@@ -93,7 +93,7 @@ class DataAccessService_Database
         $selectParts[] = $sortOrder;
         
         $selectQuery = implode(' ', $selectParts);
-        echo "<pre>Select query = " . $selectQuery . "</pre>";
+        //echo "<pre>Select query = " . $selectQuery . "</pre>";
        
         try {
             $this->databaseObject->query($selectQuery);
@@ -149,13 +149,13 @@ class DataAccessService_Database
         
         $insertQuery = implode(' ', $insertParts);
         
-        echo "<br/>INSERT QUERY = $insertQuery";
+        //echo "<br/>INSERT QUERY = $insertQuery";
         
-        /*try {
+        try {
             $this->databaseObject->query($insertQuery);
         } catch (Exception $e) {
             throw $e;
-        }*/
+        }
        
     }
     
@@ -179,13 +179,13 @@ class DataAccessService_Database
         
         $updateQuery = implode(' ', $updateParts);
         
-        echo "<pre>UPDATE QUERY = " . $updateQuery . "</pre>";
+        //echo "<pre>UPDATE QUERY = " . $updateQuery . "</pre>";
         
-        /*try {
+        try {
             $this->databaseObject->query($query);
         } catch (Exception $e) {
             throw $e;
-        }*/
+        }
 
     }
     
