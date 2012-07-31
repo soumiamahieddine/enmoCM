@@ -1,27 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
-
-LIST
-  root element
-  complexType with sequence of 1 element iteration ==> list
-  key to define uniqueness and for update
-
-OBJECT
-  child of root
-  @das:table to declare database table
-  complexType with sequence of element iteration ==> properties / children
-
-PROPERTY
-  child of object simpleType
-  
-CHILD
-  child of object complexType
-  
-KEY = on table element and object elements containing sub-elements
-KEYREF = on child element, refering to parent keys
-Parent key fields (xpath) and child key fields must be in same order
-
--->
 <xsd:schema 
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:das="maarch:DataAccessService"  
@@ -31,52 +8,67 @@ Parent key fields (xpath) and child key fields must be in same order
   <xsd:include schemaLocation='apps/maarch_entreprise/xml/datasources.xsd' />
   
   <!-- ROOT : DOCSERVERS -->
-  <xsd:element name='docservers_list'>
+  <xsd:element name='docservers_root'
+    das:module="docservers">
     <xsd:complexType>
       <xsd:sequence>
-        <!-- ROWS -->
         <xsd:element ref='docservers' minOccurs="0" maxOccurs='unbounded'/>
-        <!--<xsd:element name='entity_types' type='typentity' das:xml='/modules/entities/xml/typentity.xml' das:xpath="/root/TYPE" minOccurs="0" maxOccurs='unbounded'/>-->
       </xsd:sequence>
     </xsd:complexType>
-    <!-- PRIMARY KEY : DOCSERVER-->
-    <xsd:key name='docservers_pk'>
-      <xsd:selector xpath='./docservers' />
-      <xsd:field xpath='docserver_id'/>
-    </xsd:key>
   </xsd:element>
   
   <!-- ROW : DOCSERVER -->
   <xsd:element 
     name='docservers' 
     type='docserver' 
-    das:source='database' 
-    das:key-columns="docserver_id" 
-    das:filter-columns="docserver_id docserver_type_id device_label" 
-    das:validation="apps/maarch_entreprise/admin/docservers/docservers_ajax.php"
-  />
+    das:source='maarch_entreprise'
+    das:filter='docserver_id'>
+    <xsd:key name="docserver_pkey">
+      <xsd:selector xpath="."/>
+      <xsd:field xpath="@docserver_id" das:enclosed='true'/>
+    </xsd:key>
+  </xsd:element>
   
   <!-- TYPE : DOCSERVER -->
   <xsd:complexType name='docserver'>
-    <xsd:sequence>
-      <xsd:element name="docserver_id" type="varchar32" nillable="false" default="1"/>
-      <xsd:element name="docserver_type_id" type="varchar32" nillable="false"/>
-      <xsd:element name="device_label" type="varchar255" />
-      <xsd:element name="is_readonly" type="boolean" nillable="false" default="N" />
-      <xsd:element name="enabled" type="boolean" nillable="false" default="Y" />
-      <xsd:element name="size_limit_number" type="bigint" />
-      <xsd:element name="actual_size_number" type="bigint" default="0"/>
-      <xsd:element name="path_template" type="varchar255" />
-      <xsd:element name="ext_docserver_info" type="varchar255" />
-      <xsd:element name="chain_before" type="varchar32" />
-      <xsd:element name="chain_after" type="varchar32" />
-      <xsd:element name="creation_date" type="datetime" />
-      <xsd:element name="closing_date" type="datetime" />
-      <xsd:element name="coll_id" type="varchar32" nillable="false"/>
-      <xsd:element name="priority_number" type="bigint" nillable="false" default="10"/>
-      <xsd:element name="docserver_location_id" type="varchar32" nillable="false"/>
-      <xsd:element name="adr_priority_number" type="bigint" nillable="false" default="1"/>
-    </xsd:sequence>
+    <xsd:attribute name="docserver_id" type="varchar32" default="1" />
+    <xsd:attribute name="docserver_type_id" type="varchar32" />
+    <xsd:attribute name="device_label" type="varchar255" />
+    <xsd:attribute name="is_readonly" type="boolean" default="N" />
+    <xsd:attribute name="enabled" type="boolean" default="Y" />
+    <xsd:attribute name="size_limit_number" type="bigint" />
+    <xsd:attribute name="actual_size_number" type="bigint" default="0"/>
+    <xsd:attribute name="path_template" type="varchar255" />
+    <xsd:attribute name="ext_docserver_info" type="varchar255" />
+    <xsd:attribute name="chain_before" type="varchar32" />
+    <xsd:attribute name="chain_after" type="varchar32" />
+    <xsd:attribute name="creation_date" type="datetime" />
+    <xsd:attribute name="closing_date" type="datetime" />
+    <xsd:attribute name="coll_id" type="varchar32" />
+    <xsd:attribute name="priority_number" type="bigint" default="10"/>
+    <xsd:attribute name="docserver_location_id" type="varchar32" />
+    <xsd:attribute name="adr_priority_number" type="bigint" default="1"/>
   </xsd:complexType>
-    
+  
+  
+  <!--xsd:complexType name='docserver'>
+    <xsd:attribute name="docserver_id" type="varchar32" nillable="false" default="1" />
+    <xsd:attribute name="docserver_type_id" type="varchar32" nillable="false"/>
+    <xsd:attribute name="device_label" type="varchar255" />
+    <xsd:attribute name="is_readonly" type="boolean" nillable="false" default="N" />
+    <xsd:attribute name="enabled" type="boolean" nillable="false" default="Y" />
+    <xsd:attribute name="size_limit_number" type="bigint" />
+    <xsd:attribute name="actual_size_number" type="bigint" default="0"/>
+    <xsd:attribute name="path_template" type="varchar255" />
+    <xsd:attribute name="ext_docserver_info" type="varchar255" />
+    <xsd:attribute name="chain_before" type="varchar32" />
+    <xsd:attribute name="chain_after" type="varchar32" />
+    <xsd:attribute name="creation_date" type="datetime" />
+    <xsd:attribute name="closing_date" type="datetime" />
+    <xsd:attribute name="coll_id" type="varchar32" nillable="false"/>
+    <xsd:attribute name="priority_number" type="bigint" nillable="false" default="10"/>
+    <xsd:attribute name="docserver_location_id" type="varchar32" nillable="false"/>
+    <xsd:attribute name="adr_priority_number" type="bigint" nillable="false" default="1"/>
+  </xsd:complexType-->
+  
 </xsd:schema>

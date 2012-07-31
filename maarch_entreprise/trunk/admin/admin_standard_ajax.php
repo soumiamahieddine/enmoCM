@@ -2,7 +2,7 @@
 function updateObject($request, $object)
 {
     foreach($object as $key => $value) {
-        if (isset($request[$key])) {
+        if (isset($request[$key]) && $request[$key] != $value) {
             $object->$key = $request[$key];
         }
     }
@@ -16,15 +16,16 @@ $coreTools->load_lang();
 
 require_once('core/tests/class/DataObjectController.php');
 $DataObjectController = new DataObjectController();
-$DataObjectController->loadSchema($_REQUEST['schemaPathAjax']);
+$DataObjectController->loadXSD($_REQUEST['schemaPathAjax']);
 
 if ($_REQUEST['modeAjax'] == 'update') {
     $dataObject = $DataObjectController->load($_SESSION['m_admin'][$_REQUEST['objectNameAjax']]);
 } elseif ($_REQUEST['modeAjax'] == 'create') {
-    $dataObject = $DataObjectController->create(
+    $dataObject = $DataObjectController->createRoot(
         $_REQUEST['objectNameAjax']
     );
 }
+//exit($dataObject->show());
 updateObject($_REQUEST, $dataObject);    
 
 $validateObject = $DataObjectController->validate(
@@ -42,9 +43,12 @@ if ($validateObject) {
         $return['alert']  = $e->getMessage();
     }
 } else {
+    /*
     foreach($DataObjectController->getMessages() as $error) {
         $errors[] = $error->message;
     }
+    */
+    exit($dataObject->asXml());
 }
 
 if ($return['status'] == 0) {

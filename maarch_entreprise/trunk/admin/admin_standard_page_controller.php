@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
 *   Copyright 2008-2012 Maarch
 *
 *   This file is part of Maarch Framework.
@@ -246,7 +246,7 @@ function clearSession($objectName)
     $_SESSION['m_admin'][$objectName] = false;
 }
 
-function displayList($objectList, $actions, $showCols, $pageNb, $keyName)
+function displayList($objectList, $actions, $showCols, $pageNb, $keyProperties)
 {
 }
 
@@ -348,10 +348,9 @@ $pagePath = locationBarManagement(
 $schemaPath = $params['viewLocation'] . '/xml/' . $params['objectName'] . '.xsd';
 $messageController->loadMessageFile($params['viewLocation'] . '/xml/' . $params['objectName'] . '_Messages.xml');
 
-require_once('core/tests/class/SchemaController.php');
 require_once('core/tests/class/DataObjectController.php');
-$DataObjectController = new DataObjectController($schemaPath);
-//$DataObjectController->loadSchema($schemaPath);
+$DataObjectController = new DataObjectController();
+$DataObjectController->loadXSD($schemaPath);
 
 if (isset($_REQUEST['submit'])) {
 
@@ -390,14 +389,14 @@ if (isset($_REQUEST['submit'])) {
         case 'read' :
             //$DataObjectController->setKey($params['objectName'], $params['objectId']);
             $dataObject = $DataObjectController->read(
-                $params['objectName'], array($params['objectId'])
+                $params['objectName'], $params['objectId']
             );
             break;
         case 'update' :
             if (!$_SESSION['m_admin'][$params['objectName']]) {
                 //$DataObjectController->setKey($params['objectName'], $params['objectId']);
                 $dataObject = $DataObjectController->read(
-                    $params['objectName'], array($params['objectId'])
+                    $params['objectName'], $params['objectId']
                 );
                 $_SESSION['m_admin'][$params['objectName']] = $dataObject->asXml();
             } else {
@@ -421,35 +420,38 @@ if (isset($_REQUEST['submit'])) {
             
             //setOrder
             if (isset($params['orderField']) && !empty($params['orderField'])) {
+                
+                /*
                 $DataObjectController->setOrder(
                     $params['objectName'], 
                     $params['orderField'],
                     $params['order']
                 );
+                */
             }
             
             //setFilter
             if (isset($params['what']) && !empty($params['what'])) {
-                $DataObjectController->setFilter(
-                    $params['objectName'], 
-                    str_replace(
-                        '|', 
-                        '%', 
-                        $params['what']
-                    )
+                $filter = str_replace(
+                    '|', 
+                    '%', 
+                    $params['what']
                 );
             }
             
             //loadDataObject
             $dataObjectList = $DataObjectController->enumerate(
-                $params['objectName']
+                $params['objectName'],
+                $filter,
+                $sortFields = $params['orderField'],
+                $order = $params['order']
             );
             //var_dump($dataObjectList);exit;
             //getKey
-            $keyName = $DataObjectController->getKeyFields(
+            $keyProperties = $DataObjectController->getKeyProperties(
                 $params['objectName']
             );
-            //var_dump($keyName);
+            //var_dump($keyProperties);
             
             $objectList = $dataObjectList->$params['objectName'];
             //var_dump($objectList);exit;
@@ -788,9 +790,9 @@ if (isset($_REQUEST['submit'])) {
                             $str_htmlList .= '</b>';
                             $str_htmlList .= '<div>';
                                 $str_htmlList .= '<a ';
-                                 $str_htmlList .= 'href="' . $noOrderUri . '&orderField=' . $keyColumn . '&order=asc" ';
+                                 $str_htmlList .= 'href="' . $noOrderUri . '&orderField=' . $keyColumn . '&order=ascending" ';
                                 $str_htmlList .= '>';
-                                    if ($params['orderField'] == $keyColumn && $params['order'] == 'asc') {
+                                    if ($params['orderField'] == $keyColumn && $params['order'] == 'ascending') {
                                         $str_htmlList .= '<img ';
                                          $str_htmlList .= 'src="static.php?filename=order_asc_select.png" ';
                                         $str_htmlList .= '/>';
@@ -802,9 +804,9 @@ if (isset($_REQUEST['submit'])) {
                                 $str_htmlList .= '</a>';
                                 $str_htmlList .= '&nbsp;';
                                 $str_htmlList .= '<a ';
-                                 $str_htmlList .= 'href="' . $noOrderUri . '&orderField=' . $keyColumn . '&order=desc" ';
+                                 $str_htmlList .= 'href="' . $noOrderUri . '&orderField=' . $keyColumn . '&order=descending" ';
                                 $str_htmlList .= '>';
-                                    if ($params['orderField'] == $keyColumn && $params['order'] == 'desc') {
+                                    if ($params['orderField'] == $keyColumn && $params['order'] == 'descending') {
                                         $str_htmlList .= '<img ';
                                          $str_htmlList .= 'src="static.php?filename=order_desc_select.png" ';
                                         $str_htmlList .= '/>';
@@ -992,6 +994,14 @@ if (isset($_REQUEST['submit'])) {
                                 $str_htmlList .= '';
                             $str_htmlList .= '</td>';
                             
+                            //fill key array
+                            $keyValues = array(); 
+                            for($i=0; $i<count($keyProperties); $i++) {
+                                $keyName = $keyProperties[$i];
+                                $keyValues[] = $object->$keyName;
+                            }
+                            $key = implode(' ', $keyValues);
+                            
                             //action read
                             if (in_array('read', $actions)) {
                                 $str_htmlList .= '<td ';
@@ -1001,7 +1011,7 @@ if (isset($_REQUEST['submit'])) {
                                  $str_htmlList .= '" ';
                                 $str_htmlList .= '>';
                                     $str_htmlList .= '<a ';
-                                     $str_htmlList .= 'href="' . $actionsURL['read'] . '&objectId=' . $object->$keyName[0] . '"';
+                                     $str_htmlList .= 'href="' . $actionsURL['read'] . '&objectId=' . $key . '"';
                                     $str_htmlList .= '>';
                                         $str_htmlList .= '<img ';
                                          $str_htmlList .= 'src="static.php?filename=icon_read.png" ';
@@ -1018,7 +1028,7 @@ if (isset($_REQUEST['submit'])) {
                                  $str_htmlList .= '" ';
                                 $str_htmlList .= '>';
                                     $str_htmlList .= '<a ';
-                                     $str_htmlList .= 'href="' . $actionsURL['update'] . '&objectId=' . $object->$keyName[0] . '"';
+                                     $str_htmlList .= 'href="' . $actionsURL['update'] . '&objectId=' . $key . '"';
                                     $str_htmlList .= '>';
                                         $str_htmlList .= '<img ';
                                          $str_htmlList .= 'src="static.php?filename=picto_change.gif" ';
@@ -1035,7 +1045,7 @@ if (isset($_REQUEST['submit'])) {
                                  $str_htmlList .= '" ';
                                 $str_htmlList .= '>';
                                     $str_htmlList .= '<a ';
-                                     $str_htmlList .= 'href="' . $actionsURL['delete'] . '&objectId=' . $object->$keyName[0] . '"';
+                                     $str_htmlList .= 'href="' . $actionsURL['delete'] . '&objectId=' . $key . '"';
                                     $str_htmlList .= '>';
                                         $str_htmlList .= '<img ';
                                          $str_htmlList .= 'src="static.php?filename=picto_delete.gif" ';
