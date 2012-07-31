@@ -274,8 +274,7 @@ class DataObjectController
         $dataObjectPrototype = $this->XRefs->createElement($objectName);
         
         // Add properties
-        $objectType = $this->getObjectType($objectElement);
-        $objectProperties = $this->getObjectProperties($objectType);
+        $objectProperties = $this->getObjectProperties($objectElement);
         for($i=0; $i<count($objectProperties); $i++) {
             $propertyElement = $objectProperties[$i];
             $propertyName = $propertyElement->getAttribute('name');
