@@ -121,7 +121,8 @@ class DataObjectController
         $objectName, 
         $filter=false, 
         $sort=false, 
-        $order=false
+        $order=false,
+        $limit=false
         ) 
     {
         $dataObjectDocument = new DataObjectDocument();
@@ -141,7 +142,8 @@ class DataObjectController
             $key=false,
             $filter, 
             $sort, 
-            $order
+            $order,
+            $limit
         );
         
         return $dataObjectDocument->documentElement;
@@ -184,9 +186,10 @@ class DataObjectController
         return $dataObject;
     }
   
-    public function delete($dataObject)
+    public function delete($objectName, $key)
     {
-        
+        $objectElement = $this->getObjectElement($objectName);
+        $this->deleteDataObject($objectElement, $key);
     }
     
     public function copy($dataObject, $keepParent=true)
@@ -297,7 +300,8 @@ class DataObjectController
         $key=false, 
         $filter=false, 
         $sort=false,
-        $order='ascending'
+        $order='ascending',
+        $limit=false
         ) 
     {      
      
@@ -311,7 +315,8 @@ class DataObjectController
                     $key,
                     $filter, 
                     $sort,
-                    $order
+                    $order,
+                    $limit
                     );
             } else {
                 $objectName = $this->getObjectName($objectElement);
@@ -362,6 +367,14 @@ class DataObjectController
             }
         }
         
+    }
+    
+    protected function deleteDataObject($objectElement, $key)
+    {
+        $dataAccessService = $this->getDataAccessService($objectElement);
+        if($dataAccessService) {
+            $dataAccessService->deleteData($objectElement, $key);
+        } 
     }
     
     //*************************************************************************
