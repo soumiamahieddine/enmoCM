@@ -88,8 +88,8 @@ class DataObjectController
     //*************************************************************************
     public function getKeyProperties($objectName)
     {
-        $this->getObjectSchema($objectName);
-        $key = $this->getKey();
+        $objectElement = $this->getObjectElement($objectName);
+        $key = $this->getKey($objectElement);
         $keyFields = $this->getKeyFields($key);
         $return = array();
         for($i=0; $i<$keyFields->length; $i++) {
@@ -125,7 +125,8 @@ class DataObjectController
         ) 
     {
         $dataObjectDocument = new DataObjectDocument();
-        //$this->dataObjectDocuments[] = $dataObjectDocument;
+        $this->dataObjectDocuments[] = $dataObjectDocument;
+        
         $rootElement = $this->query('/xsd:schema/xsd:element[@das:module != ""]')->item(0);
         $rootName = $this->getObjectName($rootElement);
         $rootDataObject = $dataObjectDocument->createDataObject($rootName);
@@ -150,6 +151,7 @@ class DataObjectController
     {
         $dataObjectDocument = new DataObjectDocument();
         $this->dataObjectDocuments[] = $dataObjectDocument;
+        
         $objectElement = $this->getObjectElement($objectName);
         $dataObject = $dataObjectDocument;
         $this->readDataObject(
