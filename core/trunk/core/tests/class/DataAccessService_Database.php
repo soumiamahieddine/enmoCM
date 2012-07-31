@@ -391,7 +391,7 @@ class DataAccessService_Database
         for($i=0; $i< count($objectProperties); $i++) {
             $propertyElement = $objectProperties[$i];
             $propertyName = $propertyElement->getAttribute('name');
-            $this->getSimpleType();
+            $propertyType = $this->getPropertyType($propertyElement);
             $enclosure = false;
             if($propertyType->getAttribute('das:enclosed') == 'true') {
                 $enclosure = "'";
