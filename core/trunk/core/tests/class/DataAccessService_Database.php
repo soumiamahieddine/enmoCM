@@ -129,7 +129,27 @@ class DataAccessService_Database
     
     public function deleteData($objectElement, $key)
     {
+        $tableExpression = $this->getTableExpression($objectElement);
+        $deleteParts[] = "DELETE FROM";
+        $deleteParts[] = $tableExpression;
+
+        $keyExpression = $this->getSelectKeyExpression($objectElement);
+        $keyValues = explode(' ', $key);
+        foreach($keyValues as $i => $keyValue) {
+            $keyExpression = str_replace('$'.$i, $keyValue, $keyExpression);
+        }
+        $deleteParts[] = "WHERE";
+        $deleteParts[] = $keyExpression;
+       
+        $deleteQuery = implode(' ', $deleteParts);
         
+        //echo "<br/>INSERT QUERY = $insertQuery";
+        
+        try {
+            $this->databaseObject->query($deleteQuery);
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
     
     //*************************************************************************
