@@ -22,16 +22,20 @@
     das:source='maarch_entreprise'
     das:filter='entity_id entity_label adrs_1'>
     <xsd:key name="entities_pkey">
-      <xsd:selector xpath=".."/>
+      <xsd:selector xpath="."/>
       <xsd:field xpath="@entity_id" das:enclosed='true'/>
     </xsd:key>
   </xsd:element>
   
   <xsd:complexType name='entities'>
+    <xsd:sequence>
+      <!--xsd:element name="adrs_1" type="varchar255" das:source='maarch_entreprise' das:table='entities'/-->
+      <xsd:element ref="rm_entities" minOccurs="0" />
+    </xsd:sequence>
     <xsd:attribute name="entity_id" type="varchar32" use="required" />
     <xsd:attribute name="entity_label" type="varchar255" use="required"/>
     <xsd:attribute name="short_label" type="varchar50" />
-    <xsd:attribute name="enabled" type="boolean" use="required" default="Y" />
+    <xsd:attribute name="enabled" type="boolean" use="optional" default="Y" />
     <xsd:attribute name="adrs_1" type="varchar255" />
     <xsd:attribute name="adrs_2" type="varchar255" />
     <xsd:attribute name="adrs_3" type="varchar255" />
@@ -42,10 +46,6 @@
     <xsd:attribute name="business_id" type="varchar32" />
     <xsd:attribute name="parent_entity_id" type="varchar32" />
     <xsd:attribute name="entity_type" type="varchar64" />
-    <xsd:sequence>
-      <!--xsd:element name="adrs_1" type="varchar255" das:source='maarch_entreprise' das:table='entities'/-->
-      <xsd:element ref="rm_entities" minOccurs="0" />
-    </xsd:sequence>
   </xsd:complexType>
   
   <xsd:element name='rm_entities' type='rm_entities' 
