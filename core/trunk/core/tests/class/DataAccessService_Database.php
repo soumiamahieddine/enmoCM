@@ -182,7 +182,7 @@ class DataAccessService_Database
         //echo "<pre>UPDATE QUERY = " . $updateQuery . "</pre>";
         
         try {
-            $this->databaseObject->query($query);
+            $this->databaseObject->query($updateQuery);
         } catch (Exception $e) {
             throw $e;
         }
