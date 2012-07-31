@@ -21,7 +21,7 @@ $DataObjectController->loadXSD($_REQUEST['schemaPathAjax']);
 if ($_REQUEST['modeAjax'] == 'update') {
     $dataObject = $DataObjectController->load($_SESSION['m_admin'][$_REQUEST['objectNameAjax']]);
 } elseif ($_REQUEST['modeAjax'] == 'create') {
-    $dataObject = $DataObjectController->createRoot(
+    $dataObject = $DataObjectController->create(
         $_REQUEST['objectNameAjax']
     );
 }

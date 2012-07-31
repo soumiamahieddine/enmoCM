@@ -50,25 +50,4 @@
     <xsd:attribute name="adr_priority_number" type="bigint" default="1"/>
   </xsd:complexType>
   
-  
-  <!--xsd:complexType name='docserver'>
-    <xsd:attribute name="docserver_id" type="varchar32" nillable="false" default="1" />
-    <xsd:attribute name="docserver_type_id" type="varchar32" nillable="false"/>
-    <xsd:attribute name="device_label" type="varchar255" />
-    <xsd:attribute name="is_readonly" type="boolean" nillable="false" default="N" />
-    <xsd:attribute name="enabled" type="boolean" nillable="false" default="Y" />
-    <xsd:attribute name="size_limit_number" type="bigint" />
-    <xsd:attribute name="actual_size_number" type="bigint" default="0"/>
-    <xsd:attribute name="path_template" type="varchar255" />
-    <xsd:attribute name="ext_docserver_info" type="varchar255" />
-    <xsd:attribute name="chain_before" type="varchar32" />
-    <xsd:attribute name="chain_after" type="varchar32" />
-    <xsd:attribute name="creation_date" type="datetime" />
-    <xsd:attribute name="closing_date" type="datetime" />
-    <xsd:attribute name="coll_id" type="varchar32" nillable="false"/>
-    <xsd:attribute name="priority_number" type="bigint" nillable="false" default="10"/>
-    <xsd:attribute name="docserver_location_id" type="varchar32" nillable="false"/>
-    <xsd:attribute name="adr_priority_number" type="bigint" nillable="false" default="1"/>
-  </xsd:complexType-->
-  
 </xsd:schema>

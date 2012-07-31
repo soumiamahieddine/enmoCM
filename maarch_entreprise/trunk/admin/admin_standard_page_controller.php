@@ -406,7 +406,7 @@ if (isset($_REQUEST['submit'])) {
             }
             break;
         case 'delete' :
-            doDelete($params['objectId']);
+            $DataObjectController->delete($params['objectName'], $params['objectId']);
             break;
         //TODO: PROCESS IT LIKE PARTICULAR CASES OF UPDATE
         case 'allow' :
@@ -1045,7 +1045,7 @@ if (isset($_REQUEST['submit'])) {
                                  $str_htmlList .= '" ';
                                 $str_htmlList .= '>';
                                     $str_htmlList .= '<a ';
-                                     $str_htmlList .= 'href="' . $actionsURL['delete'] . '&objectId=' . $key . '"';
+                                     $str_htmlList .= 'href="' . $actionsURL['delete'] . '&objectId=' . $key . '"&display=true';
                                     $str_htmlList .= '>';
                                         $str_htmlList .= '<img ';
                                          $str_htmlList .= 'src="static.php?filename=picto_delete.gif" ';
