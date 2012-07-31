@@ -329,7 +329,6 @@ class DataObjectController
                 $childDataObjectsLength = $childDataObjects->length;
                 for($j=0; $j<$childDataObjectsLength; $j++) {
                     $childDataObject = $childDataObjects->item($j);
-                    echo "<br/>read children " . $childElement->getAttribute('name') ." of " .$childDataObject->tagName;
                     $this->readDataObject(
                         $childElement, 
                         $childDataObject, 
