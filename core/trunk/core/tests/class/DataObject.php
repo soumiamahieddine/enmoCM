@@ -93,7 +93,8 @@ class DataObject
     //*************************************************************************
     public function offsetSet($offset, $value) 
     {
-        $this->appendChild($value);
+        $childDataObject = $this->ownerDocument->importNode($value,true);
+        $this->appendChild($childDataObject);
     }
     
     public function offsetExists($offset) 
@@ -148,17 +149,19 @@ class DataObject
     
     public function isUpdated()
     {
-        $updateOperations = $this->xpath('./comment()[contains(., "operation=3")]');
+        $updateOperations = $this->xpath("./comment()[contains(., 'operation=\"3\"')]");
         if($updateOperations->length > 0) return true;
     }
     
     public function getUpdatedProperties()
     {
-        $updateOperations = $this->xpath('./comment()[contains(., "operation=3")]');
+        $updateOperations = $this->xpath("./comment()[contains(., 'operation=\"3\"')]");
+        $updatedProperties = array();
         for($i=0; $i<$updateOperations->length; $i++) {
             $updateOperation = $updateOperations->item($i);
-            
+            $updatedProperties[] = $updateOperation->getAttribute('property-name');
         }
+        return $updatedProperties;
     }
     
     
@@ -193,7 +196,7 @@ class DataObject
             } else {
                 $indent = 0; 
             }
-            if(preg_match('/<\!\-\-\w[^>]*\-\->/', $token, $matches)) {
+            if(preg_match('/<\!\-\-\s*\w[^>]*\s*\-\->/', $token, $matches)) {
                 // nothing
             } else {
                 $token = $this->attrAsXml($token, $pad);

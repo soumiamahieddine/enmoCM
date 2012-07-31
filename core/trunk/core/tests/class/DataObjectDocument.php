@@ -42,7 +42,7 @@ class DataObjectDocument
     
     public function createDataObjectLog($operation, $level=DataObjectLog::INFO, $detail=false)
     {
-        $messageStrings[] = 'log';
+        $messageStrings[] = 'DataObjectLog';
         $messageStrings[] = 'operation="' . $operation . '"';
         $messageStrings[] = 'level="' . (string)$level . '"';
         if($detail) $messageStrings[] = $detail;
@@ -116,7 +116,7 @@ class DataObjectDocument
     //*************************************************************************
     public function offsetSet($offset, $value) 
     {
-        $this->appendChild($value);
+        $this->appendChild($this->importNode($value,true));
     }
     
     public function offsetExists($offset) 

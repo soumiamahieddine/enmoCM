@@ -83,7 +83,7 @@ class SchemaXRefs
         $XRefNode = $this->getXRefNode($refNode);
         $XData = $this->createElement('XData');
         $XData->setAttribute('name', $targetName);
-        $XData->appendChild($targetElement);
+        $XData->appendChild($this->importNode($targetElement,true));
         $XRefNode->appendChild($XData);
     }
     
