@@ -19,7 +19,6 @@ class DataAccessService_Database
         
         $this->databaseObject = new dbquery($params);
         $this->databaseObject->connect();
-        $this->limit = 500;
     }
     
     public function loadData(
@@ -30,7 +29,8 @@ class DataAccessService_Database
         $filter, 
         $sortFields, 
         $sortOrder, 
-        $limit=500) 
+        $limit
+        ) 
     {
         
         
@@ -125,6 +125,11 @@ class DataAccessService_Database
             throw $e;
         }
         return true;
+    }
+    
+    public function deleteData($objectElement, $key)
+    {
+        
     }
     
     //*************************************************************************
@@ -319,7 +324,7 @@ class DataAccessService_Database
             }
         } else {
             $sortFieldArray = explode(' ', $sortFields);
-            for($i=0; $i<$keyFields->length; $i++) {
+            for($i=0; $i<count($sortFieldArray); $i++) {
                 // Get column name and type, enclosed ?
                 
                 $sortFieldsExpressions[] = $sortFieldArray[$i];
