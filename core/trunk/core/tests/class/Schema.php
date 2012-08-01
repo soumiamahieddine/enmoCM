@@ -4,6 +4,14 @@ class Schema
 	extends DOMDocument
 {
 	
+    public function Schema()
+    {     
+        parent::__construct();
+        $this->registerNodeClass('DOMNode', 'SchemaNode');
+        $this->registerNodeClass('DOMElement', 'SchemaElement');
+        $this->registerNodeClass('DOMAttr', 'SchemaAttribute');
+    }
+    
     public function loadXSD($xsdFile)
     {
         $this->load($xsdFile);
@@ -29,5 +37,79 @@ class Schema
             $include->parentNode->removeChild($include);
         }
     }
+
+}
+
+class SchemaNode
+    extends DOMNode
+{
+
+}
+
+
+class SchemaElement
+    extends DOMElement
+{
+    
+    public function hasDatasource()
+    {
+        if($this->hasAttribute('das:source')) return true;
+    }
+    
+    public function getName()
+    {
+        return $this->getAttribute('name');
+    }
+    
+    public function getTable()
+    {
+        if($this->hasAttribute('das:table')) {
+            return $this->getAttribute('das:table');
+        } else {
+            return $this->getAttribute('name');
+        }
+    }
+    
+    public function getColumn()
+    {
+        if($this->hasAttribute('das:column')) {
+            return $this->getAttribute('das:column');
+        } else {
+            return $this->getAttribute('name');
+        }
+    }
+    
+    public function getTypeName()
+    {
+        return $this->getAttribute('type');
+    }
+    
+    public function getFilter()
+    {
+        return $this->getAttribute('das:filter');
+    }
+    
+    public function getRef()
+    {
+        return $this->getAttribute('ref');
+    }
+    
+    public function getEnclosure()
+    {
+        if($this->getAttribute('das:enclosed') == 'true' 
+            || $this->getAttribute('enclosed') == 'true') 
+        {
+            return "'";
+        } else {
+            return "";
+        }
+    }
+    
+    
+}
+
+class SchemaAttribute
+    extends DOMAttr
+{
 
 }

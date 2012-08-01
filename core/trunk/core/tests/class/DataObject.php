@@ -23,13 +23,28 @@ class DataObject
     {
         if(is_scalar($value) || !$value || is_null($value)) {
             // Property
-            $this->setAttribute($name, $value); 
-            $this->logUpdate($name, $value);
+            $propertyNodes = $this->xpath('./@'.$name . ' | ./' . $name);
+            if($propertyNodes->length > 0) {
+                $propertyNode = $propertyNodes->item(0);
+                switch($propertyNode->nodeType) {
+                case XML_ATTRIBUTE_NODE:
+                    if($propertyNode->nodeValue != $value) {
+                        $propertyNode->nodeValue = $value;
+                        $this->logUpdate($name, $value);
+                    }
+                    break;
+                case XML_ELEMENT_NODE:
+                    if($this->getAttribute($name) != $value) {
+                        $this->setAttribute($name, $value); 
+                        $this->logUpdate($name, $value);
+                    }
+                    break;
+                }
+            }
         } 
         if(is_object($value) && get_class($value) == 'DataObject') { 
             // Child Element
             $this->appendChild($value);
-            return;
         }
     }
     
@@ -127,9 +142,9 @@ class DataObject
         $this->appendChild($message);
     }
     
-    public function logUpdate($propertyName, $propertyValue)
+    public function logUpdate($name, $valueBefore, $valueAfter)
     {
-        $messageDetail = 'property-name="' . $propertyName . '" property-value="' . $propertyValue . '"';
+        $messageDetail = 'name="' . $name . '" value-before="' . $valueBefore . '" value-after="' . $valueAfter . '"';
         $message = $this->ownerDocument->createDataObjectLog(DataObjectLog::UPDATE, DataObjectLog::INFO, $messageDetail);
         $this->appendChild($message);
     }
@@ -159,7 +174,7 @@ class DataObject
         $updatedProperties = array();
         for($i=0; $i<$updateOperations->length; $i++) {
             $updateOperation = $updateOperations->item($i);
-            $updatedProperties[] = $updateOperation->getAttribute('property-name');
+            $updatedProperties[] = $updateOperation->getAttribute('name');
         }
         return $updatedProperties;
     }

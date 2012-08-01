@@ -27,9 +27,10 @@ class DataObjectDocument
         return $this->xpath->query($query, $this->documentElement);
     }
     
-    public function createDataObject($objectName)
+    public function createDataObject($objectName, $objectValue=false)
     {
         $dataObject = parent::createElement($objectName);
+        if($objectValue) $dataObject->nodeValue = $objectValue;
         return $dataObject;
     }
     
@@ -116,7 +117,8 @@ class DataObjectDocument
     //*************************************************************************
     public function offsetSet($offset, $value) 
     {
-        $this->appendChild($this->importNode($value,true));
+        $rootDataObject = $this->importNode($value,true);
+        $this->appendChild($rootDataObject);
     }
     
     public function offsetExists($offset) 

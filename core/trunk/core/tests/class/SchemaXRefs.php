@@ -47,7 +47,9 @@ class SchemaXRefs
     public function addXRefPath($refNode, $targetNode)
     {
         $XRefNode = $this->getXRefNode($refNode);
-        $XRefNode->setAttribute($targetNode->tagName, $targetNode->getNodePath());
+        $reqName = $targetNode->tagName;
+        if($reqName == 'complexType' || $reqName == 'simpleType') $reqName = 'type';
+        $XRefNode->setAttribute($reqName, $targetNode->getNodePath());
     }
     
     public function getXRefData($refNode, $reqName)

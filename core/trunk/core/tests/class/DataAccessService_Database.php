@@ -93,7 +93,7 @@ class DataAccessService_Database
         $selectParts[] = $sortOrder;
         
         $selectQuery = implode(' ', $selectParts);
-        //echo "<pre>Select query = " . $selectQuery . "</pre>";
+        echo "<pre>Select query = " . $selectQuery . "</pre>";
        
         try {
             $this->databaseObject->query($selectQuery);
@@ -102,13 +102,19 @@ class DataAccessService_Database
         }
         
         //echo "<br/>Create object $objectName";
-        $objectName = $this->getObjectName($objectElement);
+        $objectName = $objectElement->getName();
         while($recordSet = $this->databaseObject->fetch_object()) {
             $childDataObject = $dataObjectDocument->createDataObject($objectName);
             $parentObject[] = $childDataObject;
             $childDataObject->logRead();
             foreach($recordSet as $columnName => $columnValue) {
-                $childDataObject->setAttribute($columnName, $columnValue);
+                if($columnName[0] == "@") {
+                    $columnName = substr($columnName, 1);
+                    $childDataObject->setAttribute($columnName, $columnValue);
+                } else {
+                    $property = $dataObjectDocument->createDataObject($columnName, $columnValue);
+                    $childDataObject->appendChild($property);
+                }
             } 
         }
     }
@@ -174,7 +180,7 @@ class DataAccessService_Database
         
         $insertQuery = implode(' ', $insertParts);
         
-        //echo "<br/>INSERT QUERY = $insertQuery";
+        echo "<br/>INSERT QUERY = $insertQuery";
         
         try {
             $this->databaseObject->query($insertQuery);
@@ -204,7 +210,7 @@ class DataAccessService_Database
         
         $updateQuery = implode(' ', $updateParts);
         
-        //echo "<pre>UPDATE QUERY = " . $updateQuery . "</pre>";
+        echo "<pre>UPDATE QUERY = " . $updateQuery . "</pre>";
         
         try {
             $this->databaseObject->query($updateQuery);
@@ -225,25 +231,24 @@ class DataAccessService_Database
         if(!$selectColumnsExpression = $this->XRefs->getXRefData($objectElement, 'SelectColumnsExpression')) {
             $selectColumns = array();
             $objectProperties = $this->getObjectProperties($objectElement);
-            for($i=0; $i< count($objectProperties); $i++) {
-                $propertyElement = $objectProperties[$i];
-                $columnAlias = $propertyElement->getAttribute('name');
-                if($propertyElement->hasAttribute('das:column')) {
-                    $columnName = $propertyElement->getAttribute('das:column');
+            $objectPropertiesLength = $objectProperties->length;
+            for($i=0; $i<$objectPropertiesLength; $i++) {
+                $propertyNode = $objectProperties->item($i);
+                if($propertyNode->tagName == 'xsd:attribute') {
+                    $propertyName = '"@' . $propertyNode->getName() . '"';
                 } else {
-                    $columnName = $columnAlias;
+                    $propertyName = '"' . $propertyNode->getName() . '"';
                 }
-                $propertyType = $this->getPropertyType($propertyElement);
-                $enclosure = false;
-                if($propertyType->getAttribute('das:enclosed') == 'true') {
-                    $enclosure = "'";
-                }
-                if($propertyElement->hasAttribute('fixed')) {
-                    $selectColumn = $enclosure . $propertyElement->getAttribute('fixed') . $enclosure . " AS " . $columnAlias; 
-                } elseif($propertyElement->hasAttribute('default')) {
-                    $selectColumn = "COALESCE (" . $columnName . ", " . $enclosure . $propertyElement->getAttribute('default') . $enclosure . ") AS " . $columnAlias; 
+                $columnName = $propertyNode->getColumn();
+                $propertyType = $this->getType($propertyNode);
+                $enclosure = $propertyType->getEnclosure();
+                
+                if($propertyNode->hasAttribute('fixed')) {
+                    $selectColumn = $enclosure . $propertyNode->getAttribute('fixed') . $enclosure . " AS " . $propertyName; 
+                } elseif($propertyNode->hasAttribute('default')) {
+                    $selectColumn = "COALESCE (" . $columnName . ", " . $enclosure . $propertyNode->getAttribute('default') . $enclosure . ") AS " . $propertyName; 
                 } else {
-                    $selectColumn = $columnName . " AS " . $columnAlias; 
+                    $selectColumn = $columnName . " AS " . $propertyName; 
                 }
                 $selectColumns[] =  $selectColumn;
             }
@@ -261,7 +266,7 @@ class DataAccessService_Database
             if($objectElement->hasAttribute('das:view')) {
                 $tableExpression = '';
             } else {
-                $tableExpression = $this->getObjectTable($objectElement);
+                $tableExpression = $objectElement->getTable();
             }
             $this->XRefs->addXRefData($objectElement, 'tableExpression', $tableExpression);
         } 
@@ -286,10 +291,7 @@ class DataAccessService_Database
                 } else {
                     $keyName = $keyAlias;
                 }
-                $enclosure = false;
-                if($keyField->getAttribute('das:enclosed') == 'true') {
-                    $enclosure = "'";
-                }
+                $enclosure = $keyField->getEnclosure();
                 $selectKeyFields[] = $keyName . " = " . $enclosure . '$' . $i . $enclosure;  
             }
             $selectKeyExpression =  implode(' and ', $selectKeyFields);
@@ -304,7 +306,7 @@ class DataAccessService_Database
     {
         if(!$selectFilterExpression = $this->XRefs->getXRefData($objectElement, 'selectFilterExpression')) {
             $filterExpressions = array();
-            if($filter = $this->getFilter($objectElement)) {
+            if($filter = $objectElement->getFilter()) {
                 $filterFields = explode(' ', $filter);
                 $filterFieldsLength = count($filterFields);
                 for($i=0; $i<$filterFieldsLength; $i++) {
@@ -371,10 +373,7 @@ class DataAccessService_Database
                 } else {
                     $fkeyName = $fkeyAlias;
                 }
-                $enclosure = false;
-                if($fkeyField->getAttribute('enclosed') == 'true') {
-                    $enclosure = "'";
-                }
+                $enclosure = $fkeyFiled->getEnclosure();
                 $pkeyName = $fkeyField->getAttribute('parent-key');
                 $relationKeys[] = $fkeyName . " = " . $enclosure . '$' . $pkeyName . $enclosure;  
             }
@@ -391,14 +390,11 @@ class DataAccessService_Database
         
         if(!$insertColumnsExpression = $this->XRefs->getXRefData($objectElement, 'insertColumnsExpression')) {
             $insertColumns = array();
-            $objectProperties = $this->getObjectProperties($objectElement); 
-            for($i=0; $i< count($objectProperties); $i++) {
-                $propertyElement = $objectProperties[$i];
-                if($propertyElement->hasAttribute('das:column')) {
-                    $columnName = $propertyElement->getAttribute('das:column');
-                } else {
-                    $columnName = $propertyElement->getAttribute('name');
-                }
+            $objectProperties = $this->getObjectProperties($objectElement);
+            $objectPropertiesLength = $objectProperties->length;
+            for($i=0; $i<$objectPropertiesLength; $i++) {
+                $propertyElement = $objectProperties->item($i);
+                $columnName = $propertyNode->getColumn();
                 $insertColumns[] =  $columnName;
             }
             $insertColumnsExpression = implode(', ', $insertColumns);
@@ -413,14 +409,12 @@ class DataAccessService_Database
     {
         $insertValues = array();
         $objectProperties = $this->getObjectProperties($objectElement);
-        for($i=0; $i< count($objectProperties); $i++) {
-            $propertyElement = $objectProperties[$i];
-            $propertyName = $propertyElement->getAttribute('name');
-            $propertyType = $this->getPropertyType($propertyElement);
-            $enclosure = false;
-            if($propertyType->getAttribute('das:enclosed') == 'true') {
-                $enclosure = "'";
-            }
+        $objectPropertiesLength = $objectProperties->length;
+        for($i=0; $i<$objectPropertiesLength; $i++) {
+            $propertyElement = $objectProperties->item($i);
+            $propertyName = $propertyElement->getName();
+            $propertyType = $this->getType($propertyElement);
+            $enclosure = $propertyType->getEnclosure();
             $propertyValue = $enclosure . $dataObject->$propertyName . $enclosure; 
             $insertValues[] = $propertyValue;
         }
@@ -432,22 +426,17 @@ class DataAccessService_Database
     private function createUpdateExpression($objectElement, $dataObject)
     {
         $updatedProperties = $dataObject->getUpdatedProperties();
-        $objectProperties = $this->getObjectProperties($objectElement);
         $updateColumns = array();
-        for($i=0; $i< count($objectProperties); $i++) {
-            $propertyElement = $objectProperties[$i];
-            $propertyName = $propertyElement->getAttribute('name');
+        
+        $objectProperties = $this->getObjectProperties($objectElement);
+        $objectPropertiesLength = $objectProperties->length;
+        for($i=0; $i<$objectPropertiesLength; $i++) {
+            $propertyNode = $objectProperties->item($i);
+            $propertyName = $propertyNode->getName();
             if(in_array($propertyName, $updatedProperties)) {
-                $propertyType = $this->getPropertyType($propertyElement);
-                $enclosure = false;
-                if($propertyType->getAttribute('das:enclosed') == 'true') {
-                    $enclosure = "'";
-                }
-                if($propertyElement->hasAttribute('das:column')) {
-                    $columnName = $propertyElement->getAttribute('das:column');
-                } else {
-                    $columnName = $propertyName;
-                }
+                $propertyType = $this->getType($propertyNode);
+                $enclosure = $propertyType->getEnclosure();
+                $columnName = $propertyNode->getColumn();
                 $updateColumns[] =  $columnName . " = " . $enclosure . $dataObject->$propertyName . $enclosure; 
             }
         }
@@ -471,10 +460,7 @@ class DataAccessService_Database
             } else {
                 $keyName = $keyAlias;
             }
-            $enclosure = false;
-            if($keyField->getAttribute('das:enclosed') == 'true') {
-                $enclosure = "'";
-            }
+            $enclosure = $keyField->getEnclosure();
             $updateKeyFields[] = $keyName . " = " . $enclosure . $dataObject->$keyAlias . $enclosure;  
         }
         return implode(' and ', $updateKeyFields);
