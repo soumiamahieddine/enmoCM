@@ -74,6 +74,8 @@ class SchemaElement
     {
         if($this->hasAttribute('das:column')) {
             return $this->getAttribute('das:column');
+        } elseif($this->hasAttribute('column')) {
+            return $this->getAttribute('column');
         } else {
             return $this->getAttribute('name');
         }

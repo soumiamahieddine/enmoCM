@@ -95,13 +95,25 @@ class DataObjectController
     public function getKeyProperties($objectName)
     {
         $objectElement = $this->getObjectElement($objectName);
-        $key = $this->getKey($objectElement);
-        $keyFields = $this->getKeyFields($key);
+        $keyFields = $this->getKeyFields($objectElement);
         $return = array();
         for($i=0; $i<$keyFields->length; $i++) {
             $keyField = $keyFields->item($i);
             $keyName = str_replace("@", "", $keyField->getAttribute('xpath'));
             $return[] = $keyName;  
+        }
+        return $return;
+    }
+    
+    public function getFilterProperties($objectName)
+    {
+        $objectElement = $this->getObjectElement($objectName);
+        $filters = explode(' ', $objectElement->getFilter());
+        $return = array();
+        for($i=0; $i<count($filters); $i++) {
+            $filter = $filters[$i];
+            $propertyName = str_replace("@", "", $filter->getAttribute('xpath'));
+            $return[] = $propertyName;  
         }
         return $return;
     }
@@ -145,8 +157,8 @@ class DataObjectController
             $objectElement,
             $rootDataObject,
             $dataObjectDocument,
-            $key=false,
-            $filter, 
+            $key,
+            $filter,
             $sort, 
             $order,
             $limit
@@ -155,7 +167,10 @@ class DataObjectController
         return $dataObjectDocument->documentElement;
     }
     
-    public function read($objectName, $key)
+    public function read(
+        $objectName, 
+        $key
+    )
     {
         $dataObjectDocument = new DataObjectDocument();
         $this->dataObjectDocuments[] = $dataObjectDocument;
@@ -304,11 +319,11 @@ class DataObjectController
         $objectElement,
         $parentObject,
         $dataObjectDocument,
-        $key=false, 
-        $filter=false, 
+        $key=false,
+        $filter=false,
         $sort=false,
         $order='ascending',
-        $limit=false
+        $limit=99999999
         ) 
     {      
      
@@ -320,7 +335,7 @@ class DataObjectController
                     $parentObject,
                     $dataObjectDocument,
                     $key,
-                    $filter, 
+                    $filter,
                     $sort,
                     $order,
                     $limit
@@ -352,7 +367,11 @@ class DataObjectController
         }
     }
     
-    protected function saveDataObject($objectElement, $dataObject, $dataObjectDocument)
+    protected function saveDataObject(
+        $objectElement, 
+        $dataObject, 
+        $dataObjectDocument
+    )
     {
         
         $dataAccessService = $this->getDataAccessService($objectElement);
@@ -522,10 +541,12 @@ class DataObjectController
         return $key->item(0);
     }
     
-    protected function getKeyFields($keyNode) 
+    protected function getKeyFields($objectElement) 
     {
-        $keyFields = $this->query('./xsd:field', $keyNode);
-        return $keyFields;
+        if($keyNode = $this->getKey($objectElement)) {
+            $keyFields = $this->query('./xsd:field', $keyNode);
+            return $keyFields;
+        }
     }
     
     protected function getFilter($objectElement)

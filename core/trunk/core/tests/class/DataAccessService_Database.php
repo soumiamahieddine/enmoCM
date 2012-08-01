@@ -25,15 +25,14 @@ class DataAccessService_Database
         $objectElement,
         $parentObject,
         $dataObjectDocument,
-        $key, 
-        $filter, 
+        $key,
+        $filter,
         $sortFields, 
         $sortOrder, 
         $limit
         ) 
     {
-        
-        
+
         // CREATE SELECT QUERY
         $selectParts = array();
         
@@ -46,6 +45,72 @@ class DataAccessService_Database
         $selectParts[] = $tableExpression;
         
         $whereParts = array();
+        /*
+        $objectProperties = $this->getObjectProperties($objectElement);
+        for($i=0; $i<count($query); $i++) {
+            $predicat = $query[$i];
+            switch($predicat['operator']) {
+            case 'starts-with':
+                for($j=0; $j<$objectProperties->length; $j++) {
+                    $propertyNode = $objectProperties->item($j);
+                    $propertyName = str_replace("@", "", $propertyNode->getName());
+                    if($propertyName == $predicat['operand']) {
+                        $columnName = $propertyNode->getColumn();
+                        $propertyType = $this->getType($propertyNode);
+                        $enclosure = $propertyType->getEnclosure();
+                        $whereParts[] = 
+                            "UPPER(" 
+                            . $columnName 
+                            . ") LIKE UPPER(" 
+                            . $enclosure 
+                            . $predicat['expression'] 
+                            . '%' 
+                            . $enclosure 
+                            . ")"; 
+                    }
+                } 
+                break;
+            case 'contains':
+                for($j=0; $j<$objectProperties->length; $j++) {
+                    $propertyNode = $objectProperties->item($j);
+                    $propertyName = str_replace("@", "", $propertyNode->getName());
+                    if($propertyName == $predicat['operand']) {
+                        $columnName = $propertyNode->getColumn();
+                        $propertyType = $this->getType($propertyNode);
+                        $enclosure = $propertyType->getEnclosure();
+                        $whereParts[] = 
+                            "UPPER(" 
+                            . $columnName 
+                            . ") LIKE UPPER(" 
+                            . $enclosure 
+                            . '%' 
+                            . $predicat['expression'] 
+                            . '%' 
+                            . $enclosure 
+                            . ")"; 
+                    }
+                } 
+                break;
+            case '=':
+            default :
+                for($j=0; $j<$objectProperties->length; $j++) {
+                    $propertyNode = $objectProperties->item($j);
+                    $propertyName = str_replace("@", "", $propertyNode->getName());
+                    if($propertyName == $predicat['operand']) {
+                        $columnName = $propertyNode->getColumn();
+                        $propertyType = $this->getType($propertyNode);
+                        $enclosure = $propertyType->getEnclosure();
+                        $whereParts[] = 
+                            $columnName 
+                            . " = " 
+                            . $enclosure 
+                            . $predicat['expression'] 
+                            . $enclosure;
+                    }
+                } 
+            }
+        }*/
+        
         if($key) {
             $keyExpression = $this->getSelectKeyExpression($objectElement);
             $keyValues = explode(' ', $key);
@@ -278,8 +343,7 @@ class DataAccessService_Database
     private function getSelectKeyExpression($objectElement)
     {
         if(!$selectKeyExpression = $this->XRefs->getXRefData($objectElement, 'selectKeyExpression')) {
-            $key = $this->getKey($objectElement);
-            $keyFields = $this->getKeyFields($key);
+            $keyFields = $this->getKeyFields($objectElement);
             //$objectProperties = $this->getProperties($objectElement);
             $keyFieldsLength = $keyFields->length;
             $selectKeyFields = array();
@@ -315,7 +379,7 @@ class DataAccessService_Database
                     // get attribute or element + type
                     
                     $enclosure = "'";
-                    $filterExpressions[] = "UPPER(". $filterField . ") LIKE UPPER(" . $enclosure . '$filter%' . $enclosure . ")";  
+                    $filterExpressions[] = "UPPER(". $filterField . ") LIKE UPPER(" . $enclosure . '$filter' . $enclosure . ")";  
                 }
             }
             $selectFilterExpression = implode(' or ', $filterExpressions);
@@ -332,8 +396,7 @@ class DataAccessService_Database
         if(!$sortFields) {
             if(!$selectSortFieldsExpression = $this->XRefs->getXRefData($objectElement, 'selectSortFieldsExpression')) {
                 $sortFieldsExpressions = array();
-                $key = $this->getKey($objectElement);
-                $keyFields = $this->getKeyFields($key);
+                $keyFields = $this->getKeyFields($objectElement);
                 for($i=0; $i<$keyFields->length; $i++) {
                     $sortField = str_replace("@", "", $keyFields->item($i)->getAttribute('xpath'));
                     
@@ -361,23 +424,25 @@ class DataAccessService_Database
     private function getRelationExpression($objectElement, $dataObject)
     {
         if(!$relationExpression = $this->XRefs->getXRefData($objectElement, 'relationExpression')) {
-            $relation = $this->getRelation($objectElement, $dataObject);
-            $fkeyFields = $this->query('./das:foreign-key', $relation);
-            $fkeyFieldsLength = $fkeyFields->length;
-            $relationKeys = array();
-            for($i=0; $i<$fkeyFieldsLength; $i++) {
-                $fkeyField = $fkeyFields->item($i);
-                $fkeyAlias = str_replace("@", "", $fkeyField->getAttribute('child-key'));
-                if($fkeyField->hasAttribute('column')) {
-                    $fkeyName = $fkeyField->getAttribute('column');
-                } else {
-                    $fkeyName = $fkeyAlias;
+            echo "<br/>Get relation between " . $objectElement->getAttribute('name') . " and " . $dataObject->tagName;
+            if($relation = $this->getRelation($objectElement, $dataObject)) {
+                $fkeyFields = $this->query('./das:foreign-key', $relation);
+                $fkeyFieldsLength = $fkeyFields->length;
+                $relationKeys = array();
+                for($i=0; $i<$fkeyFieldsLength; $i++) {
+                    $fkeyField = $fkeyFields->item($i);
+                    $fkeyAlias = str_replace("@", "", $fkeyField->getAttribute('child-key'));
+                    if($fkeyField->hasAttribute('column')) {
+                        $fkeyName = $fkeyField->getAttribute('column');
+                    } else {
+                        $fkeyName = $fkeyAlias;
+                    }
+                    $enclosure = $fkeyFiled->getEnclosure();
+                    $pkeyName = $fkeyField->getAttribute('parent-key');
+                    $relationKeys[] = $fkeyName . " = " . $enclosure . '$' . $pkeyName . $enclosure;  
                 }
-                $enclosure = $fkeyFiled->getEnclosure();
-                $pkeyName = $fkeyField->getAttribute('parent-key');
-                $relationKeys[] = $fkeyName . " = " . $enclosure . '$' . $pkeyName . $enclosure;  
+                $relationExpression = implode(' and ', $relationKeys);
             }
-            $relationExpression = implode(' and ', $relationKeys);
             $this->XRefs->addXRefData($objectElement, 'relationExpressions', $relationExpression);
         }
         return $relationExpression;
@@ -447,8 +512,7 @@ class DataAccessService_Database
     //************************************************************************* 
     private function createUpdateKeyExpression($objectElement, $dataObject)
     {
-        $key = $this->getKey($objectElement);
-        $keyFields = $this->getKeyFields($key);
+        $keyFields = $this->getKeyFields($objectElement);
         
         $keyFieldsLength = $keyFields->length;
         $updateKeyFields = array();
