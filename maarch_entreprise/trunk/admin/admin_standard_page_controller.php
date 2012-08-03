@@ -384,6 +384,7 @@ if (isset($_REQUEST['submit'])) {
     //CRUDL CASES
     switch ($params['mode']) {
         case 'create' :
+        	$dataObject = $DataObjectController->create($params['objectName']);
             displayCreate($params['objectName']);
             break;
         case 'read' :
