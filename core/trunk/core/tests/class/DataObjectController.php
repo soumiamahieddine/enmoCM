@@ -6,10 +6,7 @@ require_once 'core/tests/class/Schema.php';
 require_once 'core/tests/class/SchemaXRefs.php';
 
 // Document & objects
-require_once 'core/tests/class/DataObjectDocument.php';
 require_once 'core/tests/class/DataObject.php';
-require_once 'core/tests/class/DataObjectProperty.php';
-require_once 'core/tests/class/DataObjectLog.php';
 
 // Data access services
 require_once 'core/tests/class/DataAccessService_Database.php';
@@ -99,7 +96,11 @@ class DataObjectController
         $return = array();
         for($i=0; $i<$keyFields->length; $i++) {
             $keyField = $keyFields->item($i);
-            $keyName = str_replace("@", "", $keyField->getAttribute('xpath'));
+            $keyName = str_replace(
+                "@",
+                "",
+                $keyField->getAttribute('xpath')
+            );
             $return[] = $keyName;  
         }
         return $return;
@@ -112,7 +113,11 @@ class DataObjectController
         $return = array();
         for($i=0; $i<count($filters); $i++) {
             $filter = $filters[$i];
-            $propertyName = str_replace("@", "", $filter->getAttribute('xpath'));
+            $propertyName = str_replace(
+                "@", 
+                "", 
+                $filter->getAttribute('xpath')
+            );
             $return[] = $propertyName;  
         }
         return $return;
@@ -128,7 +133,9 @@ class DataObjectController
         
         $objectElement = $this->getObjectElement($objectName);
         $dataObjectPrototype = $this->getDataObjectPrototype($objectElement);
-        $dataObject = $dataObjectDocument->importNode($dataObjectPrototype, true);
+        $dataObject = $dataObjectDocument->importDataObject(
+            $dataObjectPrototype
+        );
         $dataObject->logCreate();
         $dataObjectDocument[] = $dataObject;
         
@@ -146,9 +153,11 @@ class DataObjectController
         $dataObjectDocument = new DataObjectDocument();
         $this->dataObjectDocuments[] = $dataObjectDocument;
         
-        $rootElement = $this->query('/xsd:schema/xsd:element[@das:module != ""]')->item(0);
+        $rootElement = $this->query(
+            '/xsd:schema/xsd:element[@das:module != ""]'
+            )->item(0);
         $rootName = $rootElement->getName();
-        $rootDataObject = $dataObjectDocument->createDataObject($rootName);
+        $rootDataObject = $dataObjectDocument->createElement($rootName);
         $dataObjectDocument[] = $rootDataObject;
         
         $objectElement = $this->getObjectElement($objectName);
@@ -190,7 +199,11 @@ class DataObjectController
     {
         $objectElement = $this->getObjectElement($dataObject->tagName);
         $dataObjectDocument = $dataObject->ownerDocument;
-        $this->saveDataObject($objectElement, $dataObject, $dataObjectDocument);   
+        $this->saveDataObject(
+            $objectElement, 
+            $dataObject, 
+            $dataObjectDocument
+        );   
     }
     
     public function load($xml)
@@ -301,15 +314,22 @@ class DataObjectController
         $objectProperties = $this->getObjectProperties($objectElement);
         $objectPropertiesLength = $objectProperties->length;
         for($i=0; $i<$objectPropertiesLength; $i++) {
-            $propertyElement = $objectProperties->item($i);
-            $propertyName = $propertyElement->getAttribute('name');
-            $propertyValue = null;
-            if($propertyElement->hasAttribute('fixed')) {
-                $propertyValue = $propertyElement->getAttribute('fixed');
-            } elseif($propertyElement->hasAttribute('default')) {
-                $propertyValue = $propertyElement->getAttribute('default');
+            $propertyNode = $objectProperties->item($i);
+            $propertyName = $propertyNode->getName();
+            $propertyValue = null;            
+            if($propertyNode->hasAttribute('fixed')) {
+                $propertyValue = $propertyNode->getAttribute('fixed');
+            } elseif($propertyNode->hasAttribute('default')) {
+                $propertyValue = $propertyNode->getAttribute('default');
             }
-            $dataObjectPrototype->setAttribute($propertyName, $propertyValue);
+            switch($propertyNode->tagName) {
+            case 'xsd:attribute':
+                $dataObjectPrototype->setAttribute($propertyName, $propertyValue);
+                break;
+            case 'xsd:element':
+                $property = $this->XRefs->createElement($propertyName, $columnValue);
+                $dataObjectPrototype->appendChild($property);
+            }            
         }
         
         return $dataObjectPrototype;
@@ -328,8 +348,11 @@ class DataObjectController
     {      
      
         try {
-            // Process Properties
-            if($dataAccessService = $this->getDataAccessService($objectElement)) {
+            // Process object & Properties
+            $objectName = $objectElement->getName();
+            if($dataAccessService = 
+                $this->getDataAccessService($objectElement)
+            ) {
                 $dataAccessService->loadData(
                     $objectElement,
                     $parentObject,
@@ -341,23 +364,23 @@ class DataObjectController
                     $limit
                     );
             } else {
-                $objectName = $objectElement->getName();
-                $childDataObject = $dataObjectDocument->createDataObject($objectName);
-                $childDataObject->logRead();
-                $parentObject[] = $childDataObject;
+                $dataObject = 
+                    $dataObjectDocument->createElement($objectName);
+                $dataObject->logRead();
+                $parentObject->appendChild($dataObject);
             }
             // Process child objects
             $objectChildren = $this->getObjectChildren($objectElement);
             $objectChildrenLength = $objectChildren->length;
-            for($i=0; $i<$childrenLength; $i++) {
+            for($i=0; $i<$objectChildrenLength; $i++) {
                 $childElement = $objectChildren->item($i);
-                $childDataObjects = $parentObject->childNodes;
-                $childDataObjectsLength = $childDataObjects->length;
-                for($j=0; $j<$childDataObjectsLength; $j++) {
-                    $childDataObject = $childDataObjects->item($j);
+                $dataObjects = $parentObject->getChildren($objectName);
+                $dataObjectsLength = count($dataObjects);
+                for($j=0; $j<$dataObjectsLength; $j++) {
+                    $dataObject = $dataObjects[$j];
                     $this->readDataObject(
                         $childElement, 
-                        $childDataObject, 
+                        $dataObject, 
                         $dataObjectDocument
                     );
                 }    
@@ -377,7 +400,11 @@ class DataObjectController
         $dataAccessService = $this->getDataAccessService($objectElement);
         
         if($dataAccessService) {
-            $dataAccessService->saveData($objectElement, $dataObject, $dataObjectDocument);
+            $dataAccessService->saveData(
+                $objectElement, 
+                $dataObject, 
+                $dataObjectDocument
+            );
         } 
         
         $objectChildren = $this->getObjectChildren($objectElement);
@@ -389,7 +416,11 @@ class DataObjectController
             $childObjectsLength = count($childObjects);
             for($j=0; $j<$childObjectsLength; $j++) {
                 $dataObject = $childObjects[$j];
-                $this->saveDataObject($childElement, $dataObject, $dataObjectDocument);
+                $this->saveDataObject(
+                    $childElement, 
+                    $dataObject, 
+                    $dataObjectDocument
+                );
             }
         }
         
@@ -424,9 +455,10 @@ class DataObjectController
     {
         if($node->hasDatasource() 
             || $this->query(
-                './xsd:annotation/xsd:appinfo/das:source', $node )->length > 0
-                ) 
-        {
+                    './xsd:annotation/xsd:appinfo/das:source', 
+                    $node 
+                )->length > 0
+        ){
             return true;
         }
     
@@ -437,10 +469,18 @@ class DataObjectController
         if($node->hasAttribute('das:source')) {
             $sourceName = $node->getAttribute('das:source');
             if(!isset($this->dataAccessServices[$sourceName])) {
-                $sourceNode = $this->query('//das:source[@name="'.$sourceName.'"]')->item(0);
+                $sourceNode = $this->query(
+                    '//das:source[@name="'
+                    . $sourceName
+                    . '"]'
+                )->item(0);
                 $this->createDataAccessService($sourceName, $sourceNode);
             }
-        } elseif($sourceNode = $this->query('./xsd:annotation/xsd:appinfo/das:source', $node)->item(0)) {
+        } elseif($sourceNode = $this->query(
+                './xsd:annotation/xsd:appinfo/das:source', 
+                $node
+            )->item(0)
+        ) {
             $sourceName = $node->getAttribute('name');
             if(!isset($this->dataAccessServices[$sourceName])) {
                 $this->createDataAccessService($sourceName, $sourceNode);
@@ -454,7 +494,8 @@ class DataObjectController
     {
         switch($sourceNode->getAttribute('type')) {
         case 'database':
-            $this->dataAccessServices[$sourceName] = new DataAccessService_Database();
+            $this->dataAccessServices[$sourceName] = 
+                new DataAccessService_Database();
             $this->dataAccessServices[$sourceName]->loadSchema($this->schema);
             $this->dataAccessServices[$sourceName]->connect($sourceNode);
             break;
@@ -465,7 +506,11 @@ class DataObjectController
 
     protected function getObjectElement($objectName)
     {
-        $objectElement = $this->query('/xsd:schema/xsd:element[@name = "'.$objectName.'"]')->item(0);
+        $objectElement = $this->query(
+            '/xsd:schema/xsd:element[@name = "'
+            . $objectName
+            . '"]'
+        )->item(0);
         if(!$objectElement) Die("Object $objectName is unknown");
         return $objectElement;
     }
@@ -477,15 +522,25 @@ class DataObjectController
                 if(substr($typeName, 0, 3) == 'xsd') {
                     $this->addBuiltInType($typeName);
                 }
-                $types = $this->query('//xsd:complexType[@name="'.$typeName.'"] | //xsd:simpleType[@name="'.$typeName.'"]');
+                $types = $this->query(
+                    '//xsd:complexType[@name="'
+                    . $typeName
+                    . '"] | //xsd:simpleType[@name="'
+                    . $typeName
+                    . '"]'
+                );
             } else {
-                $types = $this->query('./xsd:complexType | ./xsd:simpleType', $node);
+                $typeName = "defined online";
+                $types = $this->query(
+                    './xsd:complexType | ./xsd:simpleType',
+                    $node
+                );
             }
-            @$this->XRefs->addXRefPath($node, $types->item(0));
+            $this->XRefs->addXRefPath($node, $types->item(0));
         } else {
             $types = $this->query($typePath);
         }
-        if($types->length == 0) return false;
+        if($types->length == 0)  die("Type $typeName not found for " . $node->tagName . " " . $node->getAttribute('name') );
         return $types->item(0);
     }
     
@@ -496,24 +551,51 @@ class DataObjectController
         
         // Define if enclosed or not
         $nonEnclosedTypes = array(
-            'xsd:boolean',
-                'xsd:double', 
-                'xsd:decimal',
-                    'xsd:integer',
-                        'xsd:nonPositiveInteger',
-                            'xsd:negativeInteger',
-                        'xsd:long',
-                            'xsd:int', 
+            'xsd:float',
+            'xsd:double', 
+            'xsd:decimal',
+                'xsd:integer',
+                    'xsd:nonPositiveInteger',
+                        'xsd:negativeInteger',
+                    'xsd:long',
+                        'xsd:int', 
                             'xsd:short', 
-                            'xsd:byte',
-                        'xsd:nonNegativeInteger',
-                            'xsd:positiveInteger',
-                            'xsd:unsignedLong',
-                                'xsd:unsignedInt',
-                                    'xsd:unsignedShort',
-                                        'xsd:unsignedByte',
-                'xsd:float',
+                                'xsd:byte',
+                    'xsd:nonNegativeInteger',
+                        'xsd:positiveInteger',
+                        'xsd:unsignedLong',
+                            'xsd:unsignedInt',
+                                'xsd:unsignedShort',
+                                    'xsd:unsignedByte',
+            'xsd:boolean',
         );
+        $enclosedTypes = array(
+            'xsd:string',
+                'xsd:normalizedString',
+                    'xsd:token',
+                        'xsd:language',
+                        'xsd:name',
+                            'xsd:NCName',
+                                'xsd:ID',
+                                'xsd:IDREF',
+                                'xsd:ENTITY',
+                        'xsd:NMTOKEN',
+            'xsd:QNAME',
+            'xsd:NOTATION',
+            'xsd:date',
+            'xsd:time',
+            'xsd:datetime',
+            'xsd:gYear',
+            'xsd:gYearMonth',
+            'xsd:gMonth',
+            'xsd:gMonthDay',
+            'xsd:gDay',
+            'xsd:duration',
+            'xsd:base64binary',
+            'xsd:hexBinary',
+            'xsd:anyURI',
+        );
+        
         if(!in_array($typeName, $nonEnclosedTypes)) {
             $builtInType->setAttribute('das:enclosed', 'true');
         }
@@ -522,15 +604,23 @@ class DataObjectController
     
     protected function getRefElement($refName)
     {
-        $elements = $this->query('/xsd:schema/xsd:element[@name="'.$refName.'"]');
-        if($elements->length == 0) return false;
+        $elements = $this->query(
+            '/xsd:schema/xsd:element[@name="'
+            . $refName
+            . '"]'
+        );
+        if($elements->length == 0) die("Referenced element $refName not found");
         return $elements->item(0);
     }
     
     protected function getRefAttribute($refName)
     {
-        $attributes = $this->query('/xsd:schema/xsd:attribute[@name="'.$refName.'"]');
-        if($attributes->length == 0) return false;
+        $attributes = $this->query(
+            '/xsd:schema/xsd:attribute[@name="'
+            . $refName
+            . '"]'
+        );
+        if($attributes->length == 0) die("Referenced attribute $refName not found");
         return $attributes->item(0);
     }
     
@@ -554,9 +644,16 @@ class DataObjectController
         return $objectElement->getFilter();
     }
     
-    protected function getRelation($objectElement, $dataObject)
-    {
-        $relations = $this->query('//xsd:annotation/xsd:appinfo/das:relation[@parent="'.$dataObject->tagName.'" and @child="'.$objectElement->getAttribute('name').'"]');
+    protected function getRelation(
+        $objectElement, 
+        $dataObject
+    ) {
+        $relations = $this->query(
+            '//xsd:annotation/xsd:appinfo/das:relation['
+            . '@parent="' . $dataObject->tagName
+            . '" and @child="' . $objectElement->getName()
+            . '"]'
+        );
         if($relations->length == 0) return false;
         return $relations->item(0);
     }
@@ -594,20 +691,47 @@ class DataObjectController
         
         $sequenceChildElements = $this->getElements($sequence);
         for($i=0; $i<$sequenceChildElements->length; $i++) {
-            $sequenceChildElement = $sequenceChildElements->item($i)->cloneNode(true);
+            $sequenceChildElement = 
+                $sequenceChildElements->item($i)->cloneNode(true);
+            $sequenceChildElement->setAttribute(
+                'xpath', 
+                $sequenceChildElements->item($i)->getNodePath()
+            );
             $sequenceElements->appendChild($sequenceChildElement);
         }
         return $sequenceElements->childNodes;
     }    
-     
+    
+    protected function getQuery($node) 
+    {
+        if($node->hasAttribute('das:query')) {
+            $queryName = $node->getAttribute('das:query');
+            $queryNode = $this->query(         
+                '//das:query[@name="'
+                . $queryName
+                . '"]'
+            )->item(0);
+            return $queryNode;
+        } elseif(
+            $queryNode = $this->query(
+                './xsd:annotation/xsd:appinfo/das:query'
+                , $node
+            )->item(0)
+        ) {
+            return $queryNode;
+        }
+    }
      
     //*************************************************************************
     // GET OBJECT PROPERTIES (ATTRIBUTES / ELEMENT WITH SAME SOURCE)
     //*************************************************************************
     protected function getObjectProperties($objectElement)
     {
-        if(!$objectProperties = $this->XRefs->getXRefData($objectElement, 'objectProperties')) {
-            $objectProperties = $this->schema->createElement('objectProperties');
+        if(!$objectProperties = 
+            $this->XRefs->getXRefElement($objectElement, 'objectProperties')
+        ) {
+            $objectProperties = 
+                $this->schema->createElement('objectProperties');
             
             $objectType = $this->getType($objectElement);
             
@@ -630,7 +754,7 @@ class DataObjectController
             $complexTypeChoice = $this->query('./xsd:choice', $objectType);
             $complexTypeAttributeGroup = $this->query('./xsd:attributeGroup', $objectType);
             $complexTypeAnyAttribute = $this->query('./xsd:anyAttribute', $objectType);*/
-
+            $this->XRefs->addXRefElement($objectElement, $objectProperties);
         }
         return $objectProperties->childNodes;
     }
@@ -641,11 +765,14 @@ class DataObjectController
         for($i=0; $i<$nodeListLength; $i++) {
             $node = $nodeList->item($i);
             if($ref = $node->getRef()) {
-                if($node->tagName == 'xsd:attribute') $node = $this->getRefAttribute($ref);
-                if($node->tagName == 'xsd:element') $node = $this->getRefElement($ref);
+                if($node->tagName == 'xsd:attribute') 
+                    $node = $this->getRefAttribute($ref);
+                if($node->tagName == 'xsd:element') 
+                    $node = $this->getRefElement($ref);
             }
             if(!$node->hasDatasource()) {
                 $propertyNode = $node->cloneNode(true);
+                $propertyNode->setAttribute('xpath', $node->getNodePath());
                 $mergeNode->appendChild($propertyNode);
             }
         }
@@ -657,7 +784,9 @@ class DataObjectController
     //*************************************************************************
     protected function getObjectChildren($objectElement)
     {
-        if(!$objectChildren = $this->XRefs->getXRefData($objectElement, 'children')) {
+        if(!$objectChildren = 
+            $this->XRefs->getXRefElement($objectElement, 'objectChildren')
+        ) {
             $objectChildren = $this->schema->createElement('objectChildren');
             
             $objectType = $this->getType($objectElement);
@@ -677,24 +806,25 @@ class DataObjectController
 
             $complexTypeAttributeGroup = $this->query('./xsd:attributeGroup', $objectType);
             $complexTypeAnyAttribute = $this->query('./xsd:anyAttribute', $objectType);*/
-            
+            $this->XRefs->addXRefElement($objectElement, $objectChildren);
         }
         return $objectChildren->childNodes;
     }
    
-
-    
     protected function selectChildren($nodeList, $mergeNode) 
     {
         $nodeListLength = $nodeList->length;
         for($i=0; $i<$nodeListLength; $i++) {
             $node = $nodeList->item($i);
             if($ref = $node->getRef()) {
-                if($node->tagName == 'xsd:attribute') $node = $this->getRefAttribute($ref);
-                if($node->tagName == 'xsd:element') $node = $this->getRefElement($ref);
+                if($node->tagName == 'xsd:attribute') 
+                    $node = $this->getRefAttribute($ref);
+                if($node->tagName == 'xsd:element') 
+                    $node = $this->getRefElement($ref);
             } 
             if($node->hasDatasource()) {
                 $childNode = $node->cloneNode(true);
+                $childNode->setAttribute('xpath', $node->getNodePath());
                 $mergeNode->appendChild($childNode);
             }
         }

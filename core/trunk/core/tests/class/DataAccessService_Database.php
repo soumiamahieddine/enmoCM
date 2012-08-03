@@ -126,12 +126,13 @@ class DataAccessService_Database
             $whereParts[] = $filterExpression;
         }
         
-        if(get_class($parentObject) != 'DataObjectDocument') {
+        if(is_object($parentObject) && get_class($parentObject) != 'DataObjectDocument') {
             $relationExpression = $this->getRelationExpression($objectElement, $parentObject);
             if($relationExpression) {
                 preg_match('/\$\w+/', $relationExpression, $params);
                 foreach($params as $paramName) {
                     $attrName = substr($paramName, 1);
+                    //echo "<br/>key is $paramName value of $attrName is " . get_class($parentObject) . " ". $parentObject->$attrName;
                     $value = $parentObject->$attrName;
                     $relationExpression = str_replace($paramName, $value, $relationExpression);
                 }
@@ -139,24 +140,28 @@ class DataAccessService_Database
             }
         }
         
+        if($query = $this->getQuery($objectElement)) {
+            $whereParts[] = $query->nodeValue;
+        }
+        
         if(count($whereParts) > 0) {
             $selectParts[] = "WHERE";
             $selectParts[] = implode(' and ', $whereParts);
         }
         
-        $selectSortFieldsExpression = $this->getSelectSortFieldsExpression($objectElement, $sortFields);
-        switch($sortOrder) {
-        case 'descending' : 
-            $sortOrder = 'DESC';
-            break;
-        case 'ascending' : 
-        default : 
-            $sortOrder = 'ASC';
+        if($selectSortFieldsExpression = $this->getSelectSortFieldsExpression($objectElement, $sortFields)) {
+            switch($sortOrder) {
+            case 'descending' : 
+                $sortOrder = 'DESC';
+                break;
+            case 'ascending' : 
+            default : 
+                $sortOrder = 'ASC';
+            }
+            $selectParts[] = "ORDER BY";
+            $selectParts[] = $selectSortFieldsExpression;
+            $selectParts[] = $sortOrder;
         }
-        $selectParts[] = "ORDER BY";
-        $selectParts[] = $selectSortFieldsExpression;
-        $selectParts[] = $sortOrder;
-        
         $selectQuery = implode(' ', $selectParts);
         echo "<pre>Select query = " . $selectQuery . "</pre>";
        
@@ -166,21 +171,25 @@ class DataAccessService_Database
             throw $e;
         }
         
-        //echo "<br/>Create object $objectName";
         $objectName = $objectElement->getName();
         while($recordSet = $this->databaseObject->fetch_object()) {
-            $childDataObject = $dataObjectDocument->createDataObject($objectName);
-            $parentObject[] = $childDataObject;
-            $childDataObject->logRead();
+            $dataObject = $dataObjectDocument->createElement($objectName);
+            //echo "<br/>Create object $objectName";
+            $parentObject->appendChild($dataObject);
+            $dataObject->logRead();
             foreach($recordSet as $columnName => $columnValue) {
                 if($columnName[0] == "@") {
                     $columnName = substr($columnName, 1);
-                    $childDataObject->setAttribute($columnName, $columnValue);
+                    $dataObject->setAttribute($columnName, $columnValue);
+                    //echo "<br/>Add attribute $columnName = $columnValue";
                 } else {
-                    $property = $dataObjectDocument->createDataObject($columnName, $columnValue);
-                    $childDataObject->appendChild($property);
+                    $property = $dataObjectDocument->createElement($columnName, $columnValue);
+                    $dataObject->appendChild($property);
+                    //echo "<br/>Add element $columnName = $columnValue";
                 }
+               
             } 
+            
         }
     }
     
@@ -245,7 +254,7 @@ class DataAccessService_Database
         
         $insertQuery = implode(' ', $insertParts);
         
-        echo "<br/>INSERT QUERY = $insertQuery";
+        //echo "<br/>INSERT QUERY = $insertQuery";
         
         try {
             $this->databaseObject->query($insertQuery);
@@ -275,7 +284,7 @@ class DataAccessService_Database
         
         $updateQuery = implode(' ', $updateParts);
         
-        echo "<pre>UPDATE QUERY = " . $updateQuery . "</pre>";
+        //echo "<pre>UPDATE QUERY = " . $updateQuery . "</pre>";
         
         try {
             $this->databaseObject->query($updateQuery);
@@ -396,22 +405,22 @@ class DataAccessService_Database
         if(!$sortFields) {
             if(!$selectSortFieldsExpression = $this->XRefs->getXRefData($objectElement, 'selectSortFieldsExpression')) {
                 $sortFieldsExpressions = array();
-                $keyFields = $this->getKeyFields($objectElement);
-                for($i=0; $i<$keyFields->length; $i++) {
-                    $sortField = str_replace("@", "", $keyFields->item($i)->getAttribute('xpath'));
-                    
-                    // Get column name
-                    
-                    $sortFieldsExpressions[] = $sortField;
+                if($keyFields = $this->getKeyFields($objectElement)) {
+                    for($i=0; $i<$keyFields->length; $i++) {
+                        $sortField = str_replace("@", "", $keyFields->item($i)->getAttribute('xpath'));
+                        
+                        // Get column name
+                        
+                        $sortFieldsExpressions[] = $sortField;
+                    }
+                    $selectSortFieldsExpression = implode(', ', $sortFieldsExpressions);
                 }
-                $selectSortFieldsExpression = implode(', ', $sortFieldsExpressions);
                 $this->XRefs->addXRefData($objectElement, 'selectSortFieldsExpression', $selectSortFieldsExpression);
             }
         } else {
             $sortFieldArray = explode(' ', $sortFields);
             for($i=0; $i<count($sortFieldArray); $i++) {
                 // Get column name and type, enclosed ?
-                
                 $sortFieldsExpressions[] = $sortFieldArray[$i];
                 $selectSortFieldsExpression = implode(', ', $sortFieldsExpressions);
             }
@@ -424,7 +433,6 @@ class DataAccessService_Database
     private function getRelationExpression($objectElement, $dataObject)
     {
         if(!$relationExpression = $this->XRefs->getXRefData($objectElement, 'relationExpression')) {
-            echo "<br/>Get relation between " . $objectElement->getAttribute('name') . " and " . $dataObject->tagName;
             if($relation = $this->getRelation($objectElement, $dataObject)) {
                 $fkeyFields = $this->query('./das:foreign-key', $relation);
                 $fkeyFieldsLength = $fkeyFields->length;
@@ -437,7 +445,7 @@ class DataAccessService_Database
                     } else {
                         $fkeyName = $fkeyAlias;
                     }
-                    $enclosure = $fkeyFiled->getEnclosure();
+                    $enclosure = $fkeyField->getEnclosure();
                     $pkeyName = $fkeyField->getAttribute('parent-key');
                     $relationKeys[] = $fkeyName . " = " . $enclosure . '$' . $pkeyName . $enclosure;  
                 }
@@ -513,7 +521,6 @@ class DataAccessService_Database
     private function createUpdateKeyExpression($objectElement, $dataObject)
     {
         $keyFields = $this->getKeyFields($objectElement);
-        
         $keyFieldsLength = $keyFields->length;
         $updateKeyFields = array();
         for($i=0; $i<$keyFieldsLength; $i++) {

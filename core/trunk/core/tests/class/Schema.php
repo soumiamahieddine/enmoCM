@@ -50,7 +50,7 @@ class SchemaNode
 class SchemaElement
     extends DOMElement
 {
-    
+    // On xsd:element / xsd:attribute
     public function hasDatasource()
     {
         if($this->hasAttribute('das:source')) return true;
@@ -96,6 +96,7 @@ class SchemaElement
         return $this->getAttribute('ref');
     }
     
+    // On xsd:complexType / xsd:simpleType or das:foreign-key
     public function getEnclosure()
     {
         if($this->getAttribute('das:enclosed') == 'true' 
@@ -106,7 +107,6 @@ class SchemaElement
             return "";
         }
     }
-    
     
 }
 

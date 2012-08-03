@@ -13,6 +13,7 @@ class SchemaXRefs
         $this->appendChild($XRefs);
         
         $this->xpath = new DOMXpath($this);
+        $this->xpath->registerNamespace('xsd', 'xsd');
     }
     
 	public function xpath($query) 
@@ -20,23 +21,24 @@ class SchemaXRefs
         return $this->xpath->query($query, $this->documentElement);
     }
     
+    // Get root reference node
     public function getXRefNode($refNode)
     {
-        $XRefs = $this->xpath('./XRefs/XRef[@path="'.$refNode->getNodePath().'"]');
+        $XRefs = $this->xpath('/XRefs/'.$refNode->tagName.'[@name="'.$refNode->getAttribute('name').'"]');
         if($XRefs->length == 0) {
-            $XRefNode = $this->createElement('XRef');
-            $XRefNode->setAttribute('path', $refNode->getNodePath());
-            $XRefNode->setAttribute('name', $refNode->tagName);
+            $XRefNode = $this->createElement($refNode->tagName);
+            $XRefNode->setAttribute('name', $refNode->getAttribute('name'));
             $this->documentElement->appendChild($XRefNode);
         } else {
            $XRefNode = $XRefs->item(0);
         }
         return $XRefNode;
     }
-        
+    
+    // Get xpath of a reference in schema
     public function getXRefPath($refNode, $reqName)
     {
-        $XRefPath = $this->xpath('//XRef[@path="'.$refNode->getNodePath().'"]/@'.$reqName);
+        $XRefPath = $this->xpath('//'.$refNode->tagName.'[@name="'.$refNode->getAttribute('name').'"]/@'.$reqName);
         if($XRefPath->length == 0) {
             return null;  
         } else {
@@ -49,12 +51,13 @@ class SchemaXRefs
         $XRefNode = $this->getXRefNode($refNode);
         $reqName = $targetNode->tagName;
         if($reqName == 'complexType' || $reqName == 'simpleType') $reqName = 'type';
-        $XRefNode->setAttribute($reqName, $targetNode->getNodePath());
+        if($targetNode) $XRefNode->setAttribute($reqName, $targetNode->getNodePath());
     }
     
+    // Get a string data
     public function getXRefData($refNode, $reqName)
     {
-        $XData = $this->xpath('//XRef[@path="'.$refNode->getNodePath().'"]/*[@name="'.$reqName.'"]');
+        $XData = $this->xpath('//'.$refNode->tagName.'[@name="'.$refNode->getAttribute('name').'"]/'.$reqName);
         if($XData->length == 0) {
             return null;  
         } else {
@@ -65,14 +68,14 @@ class SchemaXRefs
     public function addXRefData($refNode, $targetName, $targetData)
     {
         $XRefNode = $this->getXRefNode($refNode);
-        $XData = $this->createElement('XData', $targetData);
-        $XData->setAttribute('name', $targetName);
+        $XData = $this->createElement($targetName, $targetData);
         $XRefNode->appendChild($XData);
     }
     
+    // Get an xml node tree
     public function getXRefElement($refNode, $reqName)
     {
-        $XElement = $this->xpath('//XRef[@path="'.$refNode->getNodePath().'"]/*[@name="'.$reqName.'"]/*');
+        $XElement = $this->xpath('//'.$refNode->tagName.'[@name="'.$refNode->getAttribute('name').'"]/'.$reqName.'/*');
         if($XElement->length == 0) {
             return null;  
         } else {
@@ -80,13 +83,10 @@ class SchemaXRefs
         }
     }
     
-    public function addXRefElement($refNode, $targetName, $targetElement)
+    public function addXRefElement($refNode, $targetElement)
     {
         $XRefNode = $this->getXRefNode($refNode);
-        $XData = $this->createElement('XData');
-        $XData->setAttribute('name', $targetName);
-        $XData->appendChild($this->importNode($targetElement,true));
-        $XRefNode->appendChild($XData);
+        $XRefNode->appendChild($this->importNode($targetElement,true));
     }
     
     
