@@ -1,7 +1,7 @@
 <?php
 
 class ViewController
-    extends DOMDocument()
+    extends DOMDocument
 {
     
     function ViewController()
@@ -41,6 +41,11 @@ class ViewElement
     function getSource()
     {
         return $this->C14N();
+    }
+    
+    function show() 
+    { 
+        echo $this->getSource();
     }
     
     function setId($id) 
