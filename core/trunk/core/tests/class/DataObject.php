@@ -169,7 +169,7 @@ class DataObjectElement
         );
         for($i=0; $i<$nodes->length; $i++) {
             $node = $nodes->item($i);
-            $propertyName = $node->tagName;
+            $propertyName = $node->nodeName;
             $propertyValue = $node->nodeValue;
             switch($node->nodeType) {
             case XML_ATTRIBUTE_NODE:
@@ -179,6 +179,7 @@ class DataObjectElement
                 if($node->getElementsByTagName('*')->length == 0) {
                     $propertiesArray[$propertyName] = $propertyValue;
                 }
+                break;
             }
         }
         return $propertiesArray;
@@ -276,7 +277,7 @@ class DataObjectElement
     
     public function __toString()
     {
-        return (string)$this->textContent;
+        return (string)$this->nodeValue;
     }
     
     // ITERATOR METHODS
@@ -296,7 +297,7 @@ class DataObjectElement
         );
         for($i=0; $i<$nodes->length; $i++) {
             $node = $nodes->item($i);
-            $returnArray[] = $node->nodeValue;
+            $returnArray[] = $node;
         } 
         return $returnArray;
     }
@@ -456,18 +457,10 @@ class DataObjectElement
 class DataObjectAttribute
     extends DOMAttr
 {
-    private $type;
-    
-    // OBJECT METHODS
-    //*************************************************************************
-    public function setType($type)
+
+    public function __toString()
     {
-        $this->type = $type;
-    }
-    
-    public function getType()
-    {
-        return $this->type;
+        return (string)$this->nodeValue;
     }
     
 }

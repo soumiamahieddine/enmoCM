@@ -36,7 +36,7 @@ class DataAccessService_Database
         // CREATE SELECT QUERY
         $selectParts = array();
         
-        $selectExpression = $this->getSelectColumnsExpression($objectElement);
+        $selectExpression = $this->getSelectExpression($objectElement);
         $selectParts[] = "SELECT";
         $selectParts[] = $selectExpression;
         
@@ -300,36 +300,48 @@ class DataAccessService_Database
     
     // SELECT COLUMNS 
     //*************************************************************************
-    private function getSelectColumnsExpression($objectElement)
+    private function getSelectExpression($objectElement)
     {
-        if(!$selectColumnsExpression = $this->XRefs->getXRefData($objectElement, 'SelectColumnsExpression')) {
+        if(!$selectExpression = $this->XRefs->getXRefData($objectElement, 'SelectExpression')) {
             $selectColumns = array();
             $objectProperties = $this->getObjectProperties($objectElement);
             $objectPropertiesLength = $objectProperties->length;
             for($i=0; $i<$objectPropertiesLength; $i++) {
                 $propertyNode = $objectProperties->item($i);
-                if($propertyNode->tagName == 'xsd:attribute') {
+                switch($propertyNode->tagName) {
+                case 'xsd:attribute':
                     $propertyName = '"@' . $propertyNode->getName() . '"';
-                } else {
+                    $selectColumns[] = $this->getSelectColumn($propertyNode, $propertyName);
+                    break;
+                case 'xsd:element':
                     $propertyName = '"' . $propertyNode->getName() . '"';
+                    $selectColumns[] = $this->getSelectColumn($propertyNode, $propertyName);
+                    break;
+                case 'xsd:any':
+                    $selectColumns[] = '*';
+                    break;
                 }
-                $columnName = $propertyNode->getColumn();
-                $propertyType = $this->getType($propertyNode);
-                $enclosure = $propertyType->getEnclosure();
-                
-                if($propertyNode->hasAttribute('fixed')) {
-                    $selectColumn = $enclosure . $propertyNode->getAttribute('fixed') . $enclosure . " AS " . $propertyName; 
-                } elseif($propertyNode->hasAttribute('default')) {
-                    $selectColumn = "COALESCE (" . $columnName . ", " . $enclosure . $propertyNode->getAttribute('default') . $enclosure . ") AS " . $propertyName; 
-                } else {
-                    $selectColumn = $columnName . " AS " . $propertyName; 
-                }
-                $selectColumns[] =  $selectColumn;
             }
-            $selectColumnsExpression = implode(', ', $selectColumns);
-            $this->XRefs->addXRefData($objectElement, 'SelectColumnsExpression', $selectColumnsExpression);
+            $selectExpression = implode(', ', $selectColumns);
+            $this->XRefs->addXRefData($objectElement, 'SelectExpression', $selectExpression);
         }
-        return $selectColumnsExpression;
+        return $selectExpression;
+    }
+    
+    private function getSelectColumn($propertyNode, $propertyName)
+    {
+        $columnName = $propertyNode->getColumn();
+        $propertyType = $this->getType($propertyNode);
+        $enclosure = $propertyType->getEnclosure();
+        
+        if($propertyNode->hasAttribute('fixed')) {
+            $selectColumn = $enclosure . $propertyNode->getAttribute('fixed') . $enclosure . " AS " . $propertyName; 
+        } elseif($propertyNode->hasAttribute('default')) {
+            $selectColumn = "COALESCE (" . $columnName . ", " . $enclosure . $propertyNode->getAttribute('default') . $enclosure . ") AS " . $propertyName; 
+        } else {
+            $selectColumn = $columnName . " AS " . $propertyName; 
+        }
+        return $selectColumn;
     }
     
     // TABLE 
@@ -337,14 +349,60 @@ class DataAccessService_Database
     private function getTableExpression($objectElement)
     {
         if(!$tableExpression = $this->XRefs->getXRefData($objectElement, 'tableExpression')) {
-            if($objectElement->hasAttribute('das:view')) {
-                $tableExpression = '';
-            } else {
-                $tableExpression = $objectElement->getTable();
-            }
+            $tableExpressionParts = array();
+            $tableExpressionParts[] = $objectElement->getTable();
+            if($view = $this->getView($objectElement)) {
+                $joinExpressions = array();
+                $joins = $this->query('./das:join', $view);
+                for($i=0; $i<$joins->length; $i++) {
+                    $join = $joins->item($i);
+                    $joinExpressions[] = $this->getJoinExpression($join);
+                }
+                $tableExpressionParts[] = implode(' ', $joinExpressions);  
+            } 
+            $tableExpression = implode(' ', $tableExpressionParts);
             $this->XRefs->addXRefData($objectElement, 'tableExpression', $tableExpression);
         } 
         return $tableExpression;
+    }
+    
+    private function getJoinExpression($join)
+    {
+        $joinExpressionParts = array();
+        $parentElement = $this->getElementByName($join->getAttribute('parent'));
+        $parentTable = $parentElement->getTable();
+        $childElement = $this->getElementByName($join->getAttribute('child'));
+        $childTable = $childElement->getTable();
+        
+        if($join->hasAttribute('join-mode')) {
+            $joinExpressionParts[] = $join->getAttribute('join-mode');
+        }
+        $joinExpressionParts[] = 'JOIN';
+        $joinExpressionParts[] = $childTable;
+        $joinExpressionParts[] = 'ON';
+        $joinKeys = $this->query('./das:foreign-key', $join);
+        
+        $joinKeyColumns = array();
+        for($i=0; $i<$joinKeys->length; $i++) {
+            $joinKey = $joinKeys->item($i);
+            $childKeyName = $joinKey->getAttribute('child-key');
+            $childKeyProperty = $this->getPropertyByName($childKeyName);
+            $childKey = $childKeyProperty->getColumn();
+
+            $parentKeyName = $joinKey->getAttribute('parent-key');
+            $parentKeyProperty = $this->getPropertyByName($parentKeyName);
+            $parentKey = $parentKeyProperty->getColumn();
+            
+            $joinKeyColumns[] = $parentTable . "." . $parentKey . " = " . $childTable . "." . $childKey;  
+        }
+        $joinExpressionParts[] = implode(' and ', $joinKeyColumns);
+        return implode(' ', $joinExpressionParts);
+    }
+    
+    private function getJoinKeyColumn($property, $propertyName)
+    {
+        
+    
     }
     
     // KEY 
@@ -352,20 +410,18 @@ class DataAccessService_Database
     private function getSelectKeyExpression($objectElement)
     {
         if(!$selectKeyExpression = $this->XRefs->getXRefData($objectElement, 'selectKeyExpression')) {
+            $table = $objectElement->getTable();
             $keyFields = $this->getKeyFields($objectElement);
-            //$objectProperties = $this->getProperties($objectElement);
             $keyFieldsLength = $keyFields->length;
             $selectKeyFields = array();
             for($i=0; $i<$keyFieldsLength; $i++) {
                 $keyField = $keyFields->item($i);
-                $keyAlias = str_replace("@", "", $keyField->getAttribute('xpath'));
-                if($keyField->hasAttribute('das:column')) {
-                    $keyName = $keyField->getAttribute('das:column');
-                } else {
-                    $keyName = $keyAlias;
-                }
-                $enclosure = $keyField->getEnclosure();
-                $selectKeyFields[] = $keyName . " = " . $enclosure . '$' . $i . $enclosure;  
+                $keyName = str_replace("@", "", $keyField->getAttribute('xpath'));
+                $keyProperty = $this->getPropertyByName($keyName);
+                $keyColumn = $keyProperty->getColumn();
+                $keyType = $this->getType($keyProperty);
+                $enclosure = $keyType->getEnclosure();
+                $selectKeyFields[] = $table . "." . $keyName . " = " . $enclosure . '$' . $i . $enclosure;  
             }
             $selectKeyExpression =  implode(' and ', $selectKeyFields);
             $this->XRefs->addXRefData($objectElement, 'selectKeyExpression', $selectKeyExpression);
@@ -434,20 +490,20 @@ class DataAccessService_Database
     {
         if(!$relationExpression = $this->XRefs->getXRefData($objectElement, 'relationExpression')) {
             if($relation = $this->getRelation($objectElement, $dataObject)) {
-                $fkeyFields = $this->query('./das:foreign-key', $relation);
-                $fkeyFieldsLength = $fkeyFields->length;
+                $childTable = $objectElement->getTable();
+                
+                $fkeys = $this->query('./das:foreign-key', $relation);
+                $fkeysLength = $fkeys->length;
                 $relationKeys = array();
-                for($i=0; $i<$fkeyFieldsLength; $i++) {
-                    $fkeyField = $fkeyFields->item($i);
-                    $fkeyAlias = str_replace("@", "", $fkeyField->getAttribute('child-key'));
-                    if($fkeyField->hasAttribute('column')) {
-                        $fkeyName = $fkeyField->getAttribute('column');
-                    } else {
-                        $fkeyName = $fkeyAlias;
-                    }
-                    $enclosure = $fkeyField->getEnclosure();
-                    $pkeyName = $fkeyField->getAttribute('parent-key');
-                    $relationKeys[] = $fkeyName . " = " . $enclosure . '$' . $pkeyName . $enclosure;  
+                for($i=0; $i<$fkeysLength; $i++) {
+                    $fkey = $fkeys->item($i);
+                    $childKeyName = str_replace("@", "", $fkey->getAttribute('child-key'));
+                    $childKeyElement = $this->getPropertyByName($childKeyName);
+                    $childKeyColumn = $childKeyElement->getColumn();
+                    $childKeyType = $this->getType($childKeyElement);
+                    $enclosure = $childKeyType->getEnclosure();
+                    $parentKeyName = $fkey->getAttribute('parent-key');
+                    $relationKeys[] = $childTable . "." . $childKeyColumn . " = " . $enclosure . '$' . $parentKeyName . $enclosure;  
                 }
                 $relationExpression = implode(' and ', $relationKeys);
             }

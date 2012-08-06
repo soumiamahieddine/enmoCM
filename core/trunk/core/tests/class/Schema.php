@@ -70,6 +70,11 @@ class SchemaElement
         }
     }
     
+    public function getRightTable()
+    {
+        return $this->getAttribute('right-table');
+    }
+    
     public function getColumn()
     {
         if($this->hasAttribute('das:column')) {
