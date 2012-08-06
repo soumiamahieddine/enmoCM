@@ -13,6 +13,7 @@ class ViewController
     function createSelect()
     {
         $select = $this->createElement('select');
+        $this->appendChild($select);
         return $select;
     }
     
