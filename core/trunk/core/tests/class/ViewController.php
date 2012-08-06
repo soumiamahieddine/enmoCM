@@ -19,14 +19,14 @@ class ViewController
     function createOption($value, $label)
     {
         $option = $this->createElement('option', $label);
-        $this->setAttribute('value', $value);
+        $option->setAttribute('value', $value);
         return $option;
     }
     
     function createOptionGroup($label)
     {
         $optionGroup = $this->createElement('optgroup');
-        $this->setAttribute('label', $label);
+        $optionGroup->setAttribute('label', $label);
         return $optionGroup;
     }
 }
