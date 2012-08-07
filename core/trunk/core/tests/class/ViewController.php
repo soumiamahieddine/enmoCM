@@ -17,9 +17,13 @@ class ViewController
         $view->loadView($viewFile);
         
         parent::__construct($view);
-        $this->view = $this->document;
         return $view;
     }
+    
+    function showView()
+    {
+        print $this->document;
+    }  
     
     function getElementById($id)
     {
