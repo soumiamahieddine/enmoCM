@@ -42,6 +42,7 @@ class View
     //*************************************************************************
     function View($viewController) 
     {
+        parent::__construct();
         $this->viewController = $viewController;
     }
     
