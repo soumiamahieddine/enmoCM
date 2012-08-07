@@ -163,7 +163,7 @@ class DataAccessService_Database
             $selectParts[] = $sortOrder;
         }
         $selectQuery = implode(' ', $selectParts);
-        echo "<pre>Select query = " . $selectQuery . "</pre>";
+        //echo "<pre>Select query = " . $selectQuery . "</pre>";
        
         try {
             $this->databaseObject->query($selectQuery);
