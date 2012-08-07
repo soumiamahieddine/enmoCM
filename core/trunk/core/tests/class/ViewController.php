@@ -23,7 +23,7 @@ class ViewController
     
     function showView()
     {
-        print $this->document;
+        print $this->document->saveHTML();
     }  
     
     function getElementById($id)
