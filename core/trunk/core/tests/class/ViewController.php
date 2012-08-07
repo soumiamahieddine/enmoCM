@@ -11,7 +11,7 @@ class ViewController
         
     }
     
-    function loadView($ViewFile)
+    function loadView($viewFile)
     {
         $view = new View($this);
         $view->loadView($viewFile);
