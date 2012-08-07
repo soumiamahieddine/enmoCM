@@ -222,16 +222,19 @@ class DataObjectElement
             if($propertyNodes->length > 0) {
                 $propertyNode = $propertyNodes->item(0);
                 switch($propertyNode->nodeType) {
-                case XML_ATTRIBUTE_NODE:
-                    if($propertyNode->nodeValue != $value) {
+                case XML_ELEMENT_NODE:
+                    $valueBefore = $propertyNode->nodeValue;
+                    if($valueBefore != $value) {
+                        $this->logUpdate($name, $valueBefore, $value);
                         $propertyNode->nodeValue = $value;
-                        $this->logUpdate($name, $value);
+                        
                     }
                     break;
-                case XML_ELEMENT_NODE:
-                    if($this->getAttribute($name) != $value) {
+                case XML_ATTRIBUTE_NODE:
+                    $valueBefore = $this->getAttribute($name);
+                    if($valueBefore != $value) {
+                        $this->logUpdate($name, $valueBefore, $value);
                         $this->setAttribute($name, $value); 
-                        $this->logUpdate($name, $value);
                     }
                     break;
                 }
