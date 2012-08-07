@@ -36,7 +36,6 @@ class ViewController
     function getLabelFor($for)
     {     
         $labels = $this->query("//label[@for='$for']");
-        echo "<br/>Get label //label[@for='$for'] found $labels->length";
         if($labels->length == 0) return false;
         return $labels->item(0);
     }
@@ -45,7 +44,6 @@ class ViewController
     {
         $label = $this->getlabelFor($for);
         if($label) $label->nodeValue = htmlentities($text);
-        echo "<br/>Set label with $text " . htmlentities($text);
     }
     
 }
