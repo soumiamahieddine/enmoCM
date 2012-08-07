@@ -308,6 +308,7 @@ class DataAccessService_Database
             $objectPropertiesLength = $objectProperties->length;
             for($i=0; $i<$objectPropertiesLength; $i++) {
                 $propertyNode = $objectProperties->item($i);
+                //echo "<br/>Property " . $objectElement->getAttribute('name') .".". $propertyNode->getName(); 
                 switch($propertyNode->tagName) {
                 case 'xsd:attribute':
                     $propertyName = '"@' . $propertyNode->getName() . '"';
