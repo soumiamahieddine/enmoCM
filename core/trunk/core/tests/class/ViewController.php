@@ -43,7 +43,7 @@ class ViewController
     function setLabelFor($for, $text)
     {
         $label = $this->getlabelFor($for);
-        if($label) $label->nodeValue = htmlentities($text, 0, 'UTF-8');
+        if($label) $label->nodeValue = htmlentities($text, 0, $this->document->encoding);
     }
     
     function getLabels()
@@ -74,6 +74,7 @@ class View
     
     function loadView($viewFile) {
         $this->load($viewFile);
+        if(!$this->encoding) $this->encoding = 'UTF-8';
     }
 
     //*************************************************************************
@@ -146,7 +147,7 @@ class ViewElement
     //*************************************************************************
     function setDataAttribute($name, $value)
     {
-        $this->setAttribute('data-' . $name, $value);
+        $this->setAttribute('data-' . $name, htmlentities($value, 0, $this->encoding));
     }
     
     //*************************************************************************
