@@ -19,26 +19,13 @@ class ViewController
         return $view;
     }
     
-    function createSelect()
+    function getElementById($id)
     {
-        $select = $this->document->createElement('select');
-        $this->appendChild($select);
-        return $select;
+        $elements = $this->query("//*[@id='$id']");
+        if($elements->length == 0) return false;
+        return $elements->item(0);
     }
     
-    function createOption($value, $label)
-    {
-        $option = $this->document->createElement('option', $label);
-        $option->setAttribute('value', $value);
-        return $option;
-    }
-    
-    function createOptionGroup($label)
-    {
-        $optionGroup = $this->document->createElement('optgroup');
-        $optionGroup->setAttribute('label', $label);
-        return $optionGroup;
-    }
 }
 
 //*****************************************************************************
@@ -50,6 +37,9 @@ class View
     
     public $viewController;
     
+    //*************************************************************************
+    // Constructor
+    //*************************************************************************
     function View($viewController) 
     {
         $this->viewController = $viewController;
@@ -62,6 +52,29 @@ class View
         $this->registerNodeClass('DOMText', 'ViewText');
     }
 
+    //*************************************************************************
+    // Create tags
+    //*************************************************************************
+    function createSelect()
+    {
+        $select = $this->createElement('select');
+        $this->appendChild($select);
+        return $select;
+    }
+    
+    function createOption($value, $label)
+    {
+        $option = $this->createElement('option', $label);
+        $option->setAttribute('value', $value);
+        return $option;
+    }
+    
+    function createOptionGroup($label)
+    {
+        $optionGroup = $this->document->createElement('optgroup');
+        $optionGroup->setAttribute('label', $label);
+        return $optionGroup;
+    }
 }
 
 
@@ -99,6 +112,11 @@ class ViewElement
         $this->setAttribute('name', $name);
     }
     
+    function setValue($value)
+    {
+        $this->setAttribute('value', $value);
+    }
+    
     //*************************************************************************
     // Text
     //*************************************************************************
@@ -111,7 +129,7 @@ class ViewElement
         $option = $this->ownerDocument->createOption($value, $label);
         $this->appendChild($option);
     }
-    
+        
     function disable()
     {
         $this->setAttribute('disabled', 'disabled');
