@@ -43,7 +43,7 @@ class ViewController
     function setLabelFor($for, $text)
     {
         $label = $this->getlabelFor($for);
-        if($label) $label->nodeValue = htmlentities($text);
+        if($label) $label->nodeValue = htmlentities($text, ENT_XHTML, 'UTF-8');
     }
     
 }
