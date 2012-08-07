@@ -46,6 +46,11 @@ class ViewController
         if($label) $label->nodeValue = htmlentities($text, 0, 'UTF-8');
     }
     
+    function getLabels()
+    {
+        $labels = $this->query("//label");
+    }
+    
 }
 
 //*****************************************************************************
