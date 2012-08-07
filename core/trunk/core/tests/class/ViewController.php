@@ -1,43 +1,76 @@
 <?php
 
 class ViewController
-    extends DOMDocument
+    extends DOMXPath
 {
-    
+    //*************************************************************************
+    // Constructor
+    //*************************************************************************
     function ViewController()
     {
-        parent::__construct();
-        $this->registerNodeClass('DOMElement', 'ViewElement');
+        
+    }
+    
+    function loadView($ViewFile)
+    {
+        $view = new View($this);
+        $view->load($viewFile);
+        parent::__construct($view);
+        return $view;
     }
     
     function createSelect()
     {
-        $select = $this->createElement('select');
+        $select = $this->document->createElement('select');
         $this->appendChild($select);
         return $select;
     }
     
     function createOption($value, $label)
     {
-        $option = $this->createElement('option', $label);
+        $option = $this->document->createElement('option', $label);
         $option->setAttribute('value', $value);
         return $option;
     }
     
     function createOptionGroup($label)
     {
-        $optionGroup = $this->createElement('optgroup');
+        $optionGroup = $this->document->createElement('optgroup');
         $optionGroup->setAttribute('label', $label);
         return $optionGroup;
     }
 }
 
+//*****************************************************************************
+// HTML PAGE / FRAGMENT
+//*****************************************************************************
+class View
+    extends DOMDocument
+{
+    
+    public $viewController;
+    
+    function View($viewController) 
+    {
+        $this->registerNodeClass('DOMElement', 'ViewElement');
+        $this->registerNodeClass('DOMAttr', 'ViewAttribute');
+        $this->registerNodeClass('DOMText', 'ViewText');
+        $this->viewController = $viewController;
+    }
+    
+
+}
+
+
+//*****************************************************************************
+// HTML TAGS
+//*****************************************************************************
 class ViewElement   
     extends DOMElement
 {
     
     //*************************************************************************
-    // Standard
+    // Retrieve / display
     //*************************************************************************
     function getSource()
     {
@@ -49,6 +82,10 @@ class ViewElement
         echo $this->getSource();
     }
     
+    //*************************************************************************
+    // Standard attributes
+    //*************************************************************************
+    // class dir id lang title style 
     function setId($id) 
     {
         $this->setAttribute('id', $id);
@@ -59,6 +96,14 @@ class ViewElement
         $this->setAttribute('name', $name);
     }
     
+    //*************************************************************************
+    // Text
+    //*************************************************************************
+    function setValue
+    
+    //*************************************************************************
+    // Inputs
+    //*************************************************************************
     function addOption($value, $label)
     {
         $option = $this->ownerDocument->createOption($value, $label);
@@ -85,4 +130,22 @@ class ViewElement
         $this->removeAttribute('selected');
     }
     
+}
+
+//*****************************************************************************
+// ATTRIBUTES
+//*****************************************************************************
+class ViewAttribute
+    extends DOMAttr
+{
+
+}
+
+//*****************************************************************************
+// TEXT
+//*****************************************************************************
+class ViewText
+    extends DOMText
+{
+
 }
