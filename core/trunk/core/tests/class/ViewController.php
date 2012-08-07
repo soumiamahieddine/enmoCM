@@ -49,6 +49,7 @@ class ViewController
     function getLabels()
     {
         $labels = $this->query("//label");
+        return $labels;
     }
     
 }
