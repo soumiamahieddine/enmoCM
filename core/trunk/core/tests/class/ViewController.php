@@ -13,9 +13,11 @@ class ViewController
     
     function loadView($viewFile)
     {
-        $view = new View($this);
+        $view = new View();
         $view->loadView($viewFile);
+        
         parent::__construct($view);
+        $this->view = $this->document;
         return $view;
     }
     
@@ -35,22 +37,19 @@ class View
     extends DOMDocument
 {
     
-    public $viewController;
-    
     //*************************************************************************
     // Constructor
     //*************************************************************************
-    function View($viewController) 
+    function View() 
     {
         parent::__construct();
-        $this->viewController = $viewController;
+        $this->registerNodeClass('DOMElement', 'ViewElement');
+        $this->registerNodeClass('DOMAttr', 'ViewAttribute');
+        $this->registerNodeClass('DOMText', 'ViewText');
     }
     
     function loadView($viewFile) {
         $this->load($viewFile);
-        $this->registerNodeClass('DOMElement', 'ViewElement');
-        $this->registerNodeClass('DOMAttr', 'ViewAttribute');
-        $this->registerNodeClass('DOMText', 'ViewText');
     }
 
     //*************************************************************************
