@@ -142,8 +142,12 @@ class ViewElement
     }
     
     //*************************************************************************
-    // Text
+    // Custom HTML5 attributes
     //*************************************************************************
+    function setDataAttribute($name, $value)
+    {
+        $this->setAttribute('data-' . $name, $value);
+    }
     
     //*************************************************************************
     // Inputs
@@ -152,6 +156,7 @@ class ViewElement
     {
         $option = $this->ownerDocument->createOption($value, $label);
         $this->appendChild($option);
+        return $option;
     }
             
     function disable()
