@@ -89,7 +89,7 @@ class View
     
     function createOptionGroup($label)
     {
-        $optionGroup = $this->document->createElement('optgroup');
+        $optionGroup = $this->createElement('optgroup');
         $optionGroup->setAttribute('label', $label);
         return $optionGroup;
     }
@@ -147,7 +147,7 @@ class ViewElement
         $option = $this->ownerDocument->createOption($value, $label);
         $this->appendChild($option);
     }
-        
+            
     function disable()
     {
         $this->setAttribute('disabled', 'disabled');
