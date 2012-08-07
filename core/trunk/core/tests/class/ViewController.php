@@ -33,6 +33,19 @@ class ViewController
         return $elements->item(0);
     }
     
+    function getLabelFor($for)
+    {
+        $labels = $this->query("//label[@for='$for']");
+        if($labels->length == 0) return false;
+        return $labels->item(0);
+    }
+    
+    function setLabelFor($for, $text)
+    {
+        $label = $this->getlabelFor($for);
+        $label->nodeValue = htmlentities($text);
+    }
+    
 }
 
 //*****************************************************************************
