@@ -68,7 +68,7 @@ class DataObjectController
     public function loadXSD($XSDFile)
     {
         // Construct Schema and load XSD with includes
-        $schema = new Schema($this);
+        $schema = new Schema();
         $schema->loadXSD($XSDFile);
         
         // Construct SchemaController
@@ -544,7 +544,8 @@ class DataObjectController
     
     protected function getType($node)
     {
-        if(!$type = $this->XRefs->getXRefElement($node, 'type')) {
+        //echo "<br/>Get type of $node->tagName " . $node->getAttribute('name');
+        if(!$type = $this->XRefs->getXRefElement($node, '*[name() = "xsd:complexType" or name() = "xsd:simpleType"]')) {
             if($typeName = $node->getTypeName()) { 
                 if(substr($typeName, 0, 3) == 'xsd') {
                     $this->addBuiltInType($typeName);
