@@ -14,7 +14,7 @@ class ViewController
     function loadView($ViewFile)
     {
         $view = new View($this);
-        $view->load($viewFile);
+        $view->loadView($viewFile);
         parent::__construct($view);
         return $view;
     }
@@ -52,12 +52,15 @@ class View
     
     function View($viewController) 
     {
-        $this->registerNodeClass('DOMElement', 'ViewElement');
-        $this->registerNodeClass('DOMAttr', 'ViewAttribute');
-        $this->registerNodeClass('DOMText', 'ViewText');
         $this->viewController = $viewController;
     }
     
+    function loadView($viewFile) {
+        $this->load($viewFile);
+        $this->registerNodeClass('DOMElement', 'ViewElement');
+        $this->registerNodeClass('DOMAttr', 'ViewAttribute');
+        $this->registerNodeClass('DOMText', 'ViewText');
+    }
 
 }
 
