@@ -51,7 +51,7 @@ class ViewController
     
     function getTableHeaderCols()
     {
-        $th = $this->query("//th[@id]");
+        $th = $this->query("//th[@axis]");
         if($th->length == 0) return false;
         return $th;
     }
