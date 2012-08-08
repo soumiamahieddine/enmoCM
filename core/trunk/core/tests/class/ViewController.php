@@ -18,7 +18,7 @@ class ViewController
         
         parent::__construct($view);
         $this->view = $this->document;
-        return $view;
+        return $this->view;
     }
     
     function showView()
@@ -70,11 +70,10 @@ class View
         $this->registerNodeClass('DOMElement', 'ViewElement');
         $this->registerNodeClass('DOMAttr', 'ViewAttribute');
         $this->registerNodeClass('DOMText', 'ViewText');
-        $this->validateOnParse = true;
     }
     
     function loadView($viewFile) {
-        $this->load($viewFile);
+        $this->loadHTMLFile($viewFile);
         if(!$this->encoding) $this->encoding = 'UTF-8';
     }
 
