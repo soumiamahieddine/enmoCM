@@ -70,6 +70,7 @@ class View
         $this->registerNodeClass('DOMElement', 'ViewElement');
         $this->registerNodeClass('DOMAttr', 'ViewAttribute');
         $this->registerNodeClass('DOMText', 'ViewText');
+        $this->validateOnParse = true;
     }
     
     function loadView($viewFile) {
