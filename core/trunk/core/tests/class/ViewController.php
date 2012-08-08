@@ -26,6 +26,9 @@ class ViewController
         print $this->document->saveHTML();
     }  
     
+    //*************************************************************************
+    // Get tags
+    //*************************************************************************
     function getElementById($id)
     {
         $elements = $this->query("//*[@id='$id']");
@@ -40,17 +43,29 @@ class ViewController
         return $labels->item(0);
     }
     
+    function getLabels()
+    {
+        $labels = $this->query("//label");
+        return $labels;
+    }
+    
+    function getTableHeaderCols()
+    {
+        $th = $this->query("//th[@id]");
+        if($th->length == 0) return false;
+        return $th;
+    }
+    
+    //*************************************************************************
+    // Update tags
+    //*************************************************************************
     function setLabelFor($for, $text)
     {
         $label = $this->getlabelFor($for);
         if($label) $label->nodeValue = htmlentities($text, 0, $this->document->encoding);
     }
     
-    function getLabels()
-    {
-        $labels = $this->query("//label");
-        return $labels;
-    }
+
     
 }
 
@@ -100,6 +115,8 @@ class View
         $optionGroup->setAttribute('label', $label);
         return $optionGroup;
     }
+    
+    
 }
 
 
