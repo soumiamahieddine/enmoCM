@@ -14,6 +14,7 @@
     <xsd:complexType>
       <xsd:sequence>
         <xsd:element ref='entities' minOccurs="0" maxOccurs='unbounded'/>
+        <xsd:element ref='entities_tree' minOccurs="0" maxOccurs='unbounded'/>
       </xsd:sequence>
     </xsd:complexType>
   </xsd:element>
@@ -21,14 +22,9 @@
   <xsd:element name='entities' type='entities' 
     das:source='maarch_entreprise'
     das:filter='entity_id entity_label adrs_1'>
-    <xsd:annotation>
-      <xsd:appinfo>
-        <das:query name='enabled_entities' parser='sql'>enabled = 'Y'</das:query> 
-      </xsd:appinfo>
-    </xsd:annotation>
     <xsd:key name="entities_pkey">
       <xsd:selector xpath=".."/>
-      <xsd:field xpath="@entity_id" das:enclosed='true'/>
+      <xsd:field xpath="@entity_id"/>
     </xsd:key>
   </xsd:element>
   
@@ -49,6 +45,7 @@
       <xsd:element name="parent_entity_id" type="varchar32" />
       <xsd:element name="entity_type" type="varchar64" />
       <xsd:element ref="rm_entities" minOccurs="0" />
+      <xsd:element ref="entities" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
   
@@ -58,7 +55,7 @@
     <xsd:annotation>
       <xsd:appinfo>
         <das:relation name='entities_rm_entities' parent='entities' child='rm_entities'>
-          <das:foreign-key parent-key="entity_id" child-key="entity_id" enclosed='true'/>
+          <das:foreign-key parent-key="entity_id" child-key="entity_id"/>
         </das:relation> 
       </xsd:appinfo>
     </xsd:annotation>
@@ -101,6 +98,41 @@
     </xsd:sequence>
   </xsd:complexType>
   
+  
+   <xsd:element name='entities_tree_roots' type='entities_tree' 
+    das:source='maarch_entreprise' das:table="entities">
+    <xsd:annotation>
+      <xsd:appinfo>
+        <das:query parser='sql'>parent_entity_id = ''</das:query>
+      </xsd:appinfo>
+    </xsd:annotation>
+  </xsd:element>
+  
+  
+  <xsd:element name='entities_tree' type='entities_tree' 
+    das:source='maarch_entreprise' das:table="entities">
+    <xsd:annotation>
+      <xsd:appinfo>
+        <das:relation parent='entities_tree_roots' child='entities_tree'>
+          <das:foreign-key parent-key="entity_id" child-key="parent_entity_id"/>
+        </das:relation> 
+        <das:relation parent='entities_tree' child='entities_tree'>
+          <das:foreign-key parent-key="entity_id" child-key="parent_entity_id"/>
+        </das:relation> 
+      </xsd:appinfo>
+    </xsd:annotation>
+  </xsd:element>
+  
+  <xsd:complexType name='entities_tree'>
+    <xsd:attribute name="enabled" type="boolean" use="required" default="Y" />
+    <xsd:sequence>
+      <xsd:element name="entity_id" type="varchar32" nillable="false" />
+      <xsd:element name="entity_label" type="varchar255" nillable="false"/>
+      <xsd:element name="short_label" type="varchar50" />
+      <xsd:element name="entity_type" type="varchar64" />
+      <xsd:element ref="entities_tree" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
   
   <!--xsd:element name='TYPE' type='entity_type' das:table='/root/TYPE' das:key-columns='id' das:filter-columns='id label'>
     <xsd:annotation>
