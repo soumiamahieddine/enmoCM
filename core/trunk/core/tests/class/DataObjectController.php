@@ -101,6 +101,12 @@ class DataObjectController
         return $return;
     }
     
+    public function getProperties($objectName) 
+    {
+        $objectElement = $this->getElementByName($objectName);
+        return $this->getObjectProperties($objectElement);    
+    }
+    
     //*************************************************************************
     // PUBLIC OBJECT HANDLING FUNCTIONS
     //*************************************************************************
