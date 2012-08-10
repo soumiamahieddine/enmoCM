@@ -11,15 +11,26 @@ class ViewController
         
     }
     
-    function loadView($viewFile)
+    function loadHTML($viewFile)
     {
         $view = new View();
-        $view->loadView($viewFile);
+        $view->loadHTML($viewFile);
         
         parent::__construct($view);
         $this->view = $this->document;
         return $this->view;
     }
+    
+    function loadView($viewString)
+    {
+        $view = new View();
+        $view->loadView($viewString);
+        
+        parent::__construct($view);
+        $this->view = $this->document;
+        return $this->view;
+    }
+    
     
     function showView()
     {
