@@ -197,14 +197,14 @@ class DataAccessService_Database
     {
         try {
             if($dataObject->isCreated()) {
-                $this->insertData($objectElement, $dataObject, $dataObjectDocument);
+                $keys = $this->insertData($objectElement, $dataObject, $dataObjectDocument);
             } elseif ($dataObject->isUpdated()) {
-                $this->updateData($objectElement, $dataObject, $dataObjectDocument);
+                $keys = $this->updateData($objectElement, $dataObject, $dataObjectDocument);
             }
         } catch (Exception $e) {
             throw $e;
         }
-        return true;
+        return $keys;
     }
     
     public function deleteData($objectElement, $key)
@@ -252,6 +252,9 @@ class DataAccessService_Database
         $insertParts[] = "VALUES";
         $insertParts[] = "(" . $insertValuesExpression . ")";
         
+        $insertParts[] = "RETURNING";
+        $insertParts[] = $this->createReturnKeyExpression($objectElement);
+        
         $insertQuery = implode(' ', $insertParts);
         
         //echo "<br/>INSERT QUERY = $insertQuery";
@@ -261,7 +264,9 @@ class DataAccessService_Database
         } catch (Exception $e) {
             throw $e;
         }
-       
+        
+        $keys = $this->databaseObject->fetch_assoc();
+        return $keys;
     }
     
     private function updateData($objectElement, $dataObject, $dataObjectDocument)
@@ -282,6 +287,9 @@ class DataAccessService_Database
         $updateParts[] = "WHERE";
         $updateParts[] = $keyExpression; 
         
+        $updateParts[] = "RETURNING";
+        $updateParts[] = $this->createReturnKeyExpression($objectElement);
+        
         $updateQuery = implode(' ', $updateParts);
         
         //echo "<pre>UPDATE QUERY = " . $updateQuery . "</pre>";
@@ -291,6 +299,9 @@ class DataAccessService_Database
         } catch (Exception $e) {
             throw $e;
         }
+        
+        $keys = $this->databaseObject->fetch_assoc();
+        return $keys;
 
     }
     
@@ -576,17 +587,40 @@ class DataAccessService_Database
         $updateKeyFields = array();
         for($i=0; $i<$keyFieldsLength; $i++) {
             $keyField = $keyFields->item($i);
-            $keyAlias = str_replace("@", "", $keyField->getAttribute('xpath'));
-            if($keyField->hasAttribute('das:column')) {
-                $keyName = $keyField->getAttribute('das:column');
+            $keyName = str_replace("@", "", $keyField->getAttribute('xpath'));
+            $keyElement = $this->getPropertyByName($keyName);
+            
+            if($keyElement->hasAttribute('das:column')) {
+                $keyColumn = $keyElement->getAttribute('das:column');
             } else {
-                $keyName = $keyAlias;
+                $keyColumn = $keyName;
             }
-            $enclosure = $keyField->getEnclosure();
-            $updateKeyFields[] = $keyName . " = " . $enclosure . $dataObject->$keyAlias . $enclosure;  
+            $keyType = $this->getType($keyElement);
+            $enclosure = $keyType->getEnclosure();
+            $updateKeyFields[] = $keyColumn . " = " . $enclosure . $dataObject->$keyName . $enclosure;  
         }
         return implode(' and ', $updateKeyFields);
+    }
     
+    // RETURN CREATE KEY
+    //************************************************************************* 
+    private function createReturnKeyExpression($objectElement)
+    {
+        $keyFields = $this->getKeyFields($objectElement);
+        $keyFieldsLength = $keyFields->length;
+        $insertKeyFields = array();
+        for($i=0; $i<$keyFieldsLength; $i++) {
+            $keyField = $keyFields->item($i);
+            $keyName = str_replace("@", "", $keyField->getAttribute('xpath'));
+            $keyElement = $this->getPropertyByName($keyName);
+            if($keyElement->hasAttribute('das:column')) {
+                $keyColumn = $keyElement->getAttribute('das:column');
+            } else {
+                $keyColumn = $keyName;
+            }
+            $insertKeyFields[] = $keyColumn . " AS " . $keyName;  
+        }
+        return implode(', ', $insertKeyFields);
     }
     
     // EXCEPTIONS 

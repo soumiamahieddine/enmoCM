@@ -180,11 +180,13 @@ class DataObjectController
     {
         $objectElement = $this->getElementByName($dataObject->tagName);
         $dataObjectDocument = $dataObject->ownerDocument;
-        $this->saveDataObject(
+        $keys = $this->saveDataObject(
             $objectElement, 
             $dataObject, 
             $dataObjectDocument
         );   
+        
+        return $keys;
     }
     
     public function load($xml)
@@ -373,14 +375,17 @@ class DataObjectController
     )
     {
         
+        $returnKeys = array();
+        $objectName = $objectElement->getName();
         $dataAccessService = $this->getDataAccessService($objectElement);
         
         if($dataAccessService) {
-            $dataAccessService->saveData(
+            $keys = $dataAccessService->saveData(
                 $objectElement, 
                 $dataObject, 
                 $dataObjectDocument
             );
+            $returnKeys[$objectName][] = $keys;
         } 
         
         $objectChildren = $this->getObjectChildren($objectElement);
@@ -392,14 +397,15 @@ class DataObjectController
             $childObjectsLength = count($childObjects);
             for($j=0; $j<$childObjectsLength; $j++) {
                 $dataObject = $childObjects[$j];
-                $this->saveDataObject(
+                $childReturnKeys = $this->saveDataObject(
                     $childElement, 
                     $dataObject, 
                     $dataObjectDocument
                 );
+                $returnKeys = array_merge($returnKeys, $childReturnKeys);
             }
         }
-        
+        return $returnKeys;
     }
     
     protected function deleteDataObject($objectElement, $key)

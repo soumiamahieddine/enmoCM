@@ -28,7 +28,7 @@ class DataObjectDocument
     //************************************************************************* 
     public function xpath($query) 
     {
-        return $this->xpath->query($query, $this->documentElement);
+        return $this->xpath->query($query);
     }
     
     public function createDataObjectLog($operation, $level=DataObjectLog::INFO, $detail=false)
@@ -163,9 +163,9 @@ class DataObjectElement
     public function getProperties()
     {
         $nodes = $this->xpath(
-            $this->getnodePath() . '/@*'
+            $this->getNodePath() . '/@*'
             . ' | '
-            . $this->getnodePath(). '/*'
+            . $this->getNodePath(). '/*'
         );
         for($i=0; $i<$nodes->length; $i++) {
             $node = $nodes->item($i);
@@ -196,8 +196,9 @@ class DataObjectElement
     public function getChildren($name=false)
     {
         if(!$name) $name = '*';
-        $nodes = $this->ownerDocument->xpath(
-            $this->getnodePath() . '/' . $name
+        $XPath = new DOMXPath($this->ownerDocument);
+        $nodes = $XPath->query(
+            './' . $name, $this
         );
         for($i=0; $i<$nodes->length; $i++) {
             $node = $nodes->item($i);
@@ -213,30 +214,27 @@ class DataObjectElement
     public function __set($name, $value) 
     {
         if(is_scalar($value) || !$value || is_null($value)) {
-            // Property
-            $propertyNodes = $this->ownerDocument->xpath(
-                $this->getnodePath() . '/@'.$name 
-                . ' | ' 
-                . $this->getnodePath() . '/' . $name
+            // Attribute == property
+            if($this->hasAttribute($name)) {
+                $valueBefore = $this->getAttribute($name);
+                if($valueBefore != $value) {
+                    $this->logUpdate($name, $valueBefore, $value);
+                    $this->setAttribute($name, $value); 
+                }
+                return;
+            }
+            $XPath = new DOMXPath($this->ownerDocument);
+            $propertyNodes = $XPath->query(
+                './' . $name, $this
             );
-            if($propertyNodes->length > 0) {
+            if($propertyNodes->length == 1 
+                && $propertyNodes->item(0)->getElementsByTagName('*')->length == 0) {
                 $propertyNode = $propertyNodes->item(0);
-                switch($propertyNode->nodeType) {
-                case XML_ELEMENT_NODE:
-                    $valueBefore = $propertyNode->nodeValue;
-                    if($valueBefore != $value) {
-                        $this->logUpdate($name, $valueBefore, $value);
-                        $propertyNode->nodeValue = $value;
-                        
-                    }
-                    break;
-                case XML_ATTRIBUTE_NODE:
-                    $valueBefore = $this->getAttribute($name);
-                    if($valueBefore != $value) {
-                        $this->logUpdate($name, $valueBefore, $value);
-                        $this->setAttribute($name, $value); 
-                    }
-                    break;
+                $valueBefore = $propertyNode->nodeValue;
+                if($valueBefore != $value) {
+                    $this->logUpdate($name, $valueBefore, $value);
+                    $propertyNode->nodeValue = $value;
+                    
                 }
             }
         } 
@@ -253,12 +251,14 @@ class DataObjectElement
             return $this->getAttribute($name);
         }
         // Element 
-        $nodes = $this->ownerDocument->xpath(
-            $this->getnodePath() . '/' . $name
+        $XPath = new DOMXPath($this->ownerDocument);
+        $nodes = $XPath->query(
+            $this->getNodePath() . '/' . $name
         );
-        $testNode = $nodes->item(0);
-        if($testNode->firstChild->nodeType == XML_TEXT_NODE) {
-            return $testNode->nodeValue;
+        
+        if($nodes->length == 1 
+            && $nodes->item(0)->getElementsByTagName('*')->length == 0) {
+            return $nodes->item(0)->nodeValue;  
         } else {
             $nodesArray = array();
             for($i=0; $i<$nodes->length; $i++) {
@@ -270,12 +270,16 @@ class DataObjectElement
     
     public function __isset($name)
     {
-        $resultNodes = $this->ownerDocument->xpath(
-            $this->getnodePath() . '/@'.$name 
-            . ' | ' 
-            . $this->getnodePath() . '/' . $name
+        // Attribute == property
+        if($this->hasAttribute($name)) {
+            return true;
+        }
+        // Element 
+        $XPath = new DOMXPath($this->ownerDocument);
+        $nodes = $XPath->query(
+            './' . $name, $this
         );
-        if($resultNodes->length > 0) return true;
+        if($nodes->length > 0) return true;
     }
     
     public function __toString()
@@ -294,9 +298,9 @@ class DataObjectElement
     {
         $returnArray = array();
         $nodes = $this->ownerDocument->xpath(
-            $this->getnodePath() . '/@'. $name 
+            $this->getNodePath() . '/@'. $name 
             . ' | ' 
-            . $this->getnodePath() . '/'. $name 
+            . $this->getNodePath() . '/'. $name 
         );
         for($i=0; $i<$nodes->length; $i++) {
             $node = $nodes->item($i);
