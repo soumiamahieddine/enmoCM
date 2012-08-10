@@ -87,9 +87,14 @@ class View
         $this->registerNodeClass('DOMText', 'ViewText');
     }
     
-    function loadView($viewFile) {
+    function loadHTML($viewFile) {
         $this->loadHTMLFile($viewFile);
         if(!$this->encoding) $this->encoding = 'UTF-8';
+    }
+    
+    function loadView($viewString)
+    {
+        $this->loadHTML($viewString);
     }
 
     //*************************************************************************
