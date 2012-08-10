@@ -525,12 +525,25 @@ class DataAccessService_Database
         
         if(!$insertColumnsExpression = $this->getXRefs($objectElement, 'insertColumnsExpression')) {
             $insertColumns = array();
+            
+            $keyFields = $this->getKeyFields($objectElement);
+            $keyFieldsLength = $keyFields->length;
+            $ignoreKeyFields = array();
+            for($i=0; $i<$keyFieldsLength; $i++) {
+                $keyField = $keyFields->item($i);
+                $keyName = str_replace("@", "", $keyField->getAttribute('xpath'));
+                $ignoreKeyFields[] = $keyName;
+            }
+            
             $objectProperties = $this->getObjectProperties($objectElement);
             $objectPropertiesLength = count($objectProperties);
             for($i=0; $i<$objectPropertiesLength; $i++) {
                 $propertyNode = $objectProperties[$i];
+                $propertyName = $propertyNode->getName();
                 $columnName = $propertyNode->getColumn();
-                $insertColumns[] =  $columnName;
+                if(!in_array($propertyName, $ignoreKeyFields)) { 
+                    $insertColumns[] =  $columnName;
+                }
             }
             $insertColumnsExpression = implode(', ', $insertColumns);
             $this->addXRefs($objectElement, 'insertColumnsExpression', $insertColumnsExpression);
@@ -543,15 +556,27 @@ class DataAccessService_Database
     private function createInsertValuesExpression($objectElement, $dataObject)
     {
         $insertValues = array();
+        
+        $keyFields = $this->getKeyFields($objectElement);
+        $keyFieldsLength = $keyFields->length;
+        $ignoreKeyFields = array();
+        for($i=0; $i<$keyFieldsLength; $i++) {
+            $keyField = $keyFields->item($i);
+            $keyName = str_replace("@", "", $keyField->getAttribute('xpath'));
+            $ignoreKeyFields[] = $keyName;
+        }
+        
         $objectProperties = $this->getObjectProperties($objectElement);
         $objectPropertiesLength = count($objectProperties);
         for($i=0; $i<$objectPropertiesLength; $i++) {
             $propertyNode = $objectProperties[$i];
             $propertyName = $propertyNode->getName();
-            $propertyType = $this->getType($propertyNode);
-            $enclosure = $propertyType->getEnclosure();
-            $propertyValue = $enclosure . $dataObject->$propertyName . $enclosure; 
-            $insertValues[] = $propertyValue;
+            if(!in_array($propertyName, $ignoreKeyFields)) { 
+                $propertyType = $this->getType($propertyNode);
+                $enclosure = $propertyType->getEnclosure();
+                $propertyValue = $enclosure . $dataObject->$propertyName . $enclosure; 
+                $insertValues[] = $propertyValue;
+            }
         }
         return implode(', ', $insertValues);
     }
@@ -562,7 +587,6 @@ class DataAccessService_Database
     {
         $updatedProperties = $dataObject->getUpdatedProperties();
         $updateColumns = array();
-        
         $objectProperties = $this->getObjectProperties($objectElement);
         $objectPropertiesLength = count($objectProperties);
         for($i=0; $i<$objectPropertiesLength; $i++) {

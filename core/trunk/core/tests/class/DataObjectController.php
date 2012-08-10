@@ -305,7 +305,7 @@ class DataObjectController
                 $dataObject->setAttribute($propertyName, $propertyValue);
                 break;
             case 'xsd:element':
-                $property = $dataObjectDocument->createElement($propertyName, $columnValue);
+                $property = $dataObjectDocument->createElement($propertyName, $propertyValue);
                 $dataObject->appendChild($property);
             }            
         }
