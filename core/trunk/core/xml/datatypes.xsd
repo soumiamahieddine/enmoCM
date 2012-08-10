@@ -125,17 +125,6 @@
       <xsd:enumeration value="N"/>
     </xsd:restriction>
   </xsd:simpleType> 
-  
-  <xsd:simpleType name="integer" das:enclosed='false'>
-    <xsd:annotation>
-      <xsd:appinfo>
-        <das:sqltype driver='postgresql'>integer</das:sqltype>
-      </xsd:appinfo>
-    </xsd:annotation>
-    <xsd:restriction base="xsd:integer">
-        <xsd:minInclusive value="0"/>
-    </xsd:restriction>
-  </xsd:simpleType> 
     
   <xsd:simpleType name="bigint" das:enclosed='false'>
     <xsd:annotation>
@@ -145,6 +134,19 @@
     </xsd:annotation>
     <xsd:restriction base="xsd:unsignedLong">
         <xsd:minInclusive value="0"/>
+        <xsd:maxInclusive value="9223372036854775807"/>
+    </xsd:restriction>
+  </xsd:simpleType> 
+  
+  <xsd:simpleType name="integer" das:enclosed='false'>
+    <xsd:annotation>
+      <xsd:appinfo>
+        <das:sqltype driver='postgresql'>integer</das:sqltype>
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:unsignedLong">
+        <xsd:minInclusive value="0"/>
+        <xsd:maxInclusive value="2147483647"/>
     </xsd:restriction>
   </xsd:simpleType> 
   
