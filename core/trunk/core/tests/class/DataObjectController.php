@@ -294,11 +294,11 @@ class DataObjectController
             }
             switch($propertyNode->tagName) {
             case 'xsd:attribute':
-                $dataObjectPrototype->setAttribute($propertyName, $propertyValue);
+                $dataObject->setAttribute($propertyName, $propertyValue);
                 break;
             case 'xsd:element':
                 $property = $this->XRefs->createElement($propertyName, $columnValue);
-                $dataObjectPrototype->appendChild($property);
+                $dataObject->appendChild($property);
             }            
         }
         
