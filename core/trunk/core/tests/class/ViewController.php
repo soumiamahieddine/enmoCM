@@ -11,20 +11,22 @@ class ViewController
         
     }
     
-    function loadHTML($viewFile)
+    function loadHTMLFile($viewFile)
     {
         $view = new View();
-        $view->loadHTML($viewFile);
+        $view->loadHTMLFile($viewFile);
+        if(!$view->encoding) $view->encoding = 'UTF-8';
         
         parent::__construct($view);
         $this->view = $this->document;
         return $this->view;
     }
     
-    function loadView($viewString)
+    function loadHTML($viewString)
     {
         $view = new View();
-        $view->loadView($viewString);
+        $view->loadHTML($viewString);
+        if(!$view->encoding) $view->encoding = 'UTF-8';
         
         parent::__construct($view);
         $this->view = $this->document;
@@ -98,16 +100,6 @@ class View
         $this->registerNodeClass('DOMText', 'ViewText');
     }
     
-    function loadHTML($viewFile) {
-        $this->loadHTMLFile($viewFile);
-        if(!$this->encoding) $this->encoding = 'UTF-8';
-    }
-    
-    function loadView($viewString)
-    {
-        $this->loadHTML($viewString);
-    }
-
     //*************************************************************************
     // Create tags
     //*************************************************************************
