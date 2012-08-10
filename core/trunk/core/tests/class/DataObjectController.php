@@ -110,10 +110,14 @@ class DataObjectController
     //*************************************************************************
     // PUBLIC OBJECT HANDLING FUNCTIONS
     //*************************************************************************
-    public function create($objectName) 
+    public function create($objectName, $parentDataObject=false) 
     {
-        $dataObjectDocument = new DataObjectDocument();
-        $this->dataObjectDocuments[] = $dataObjectDocument;
+        if(!$parentDataObject) {
+            $dataObjectDocument = new DataObjectDocument();
+            $this->dataObjectDocuments[] = $dataObjectDocument;
+        } else {
+            $dataObjectDocument = $parentDataObject->ownerDocument;
+        }
         
         $objectElement = $this->getElementByName($objectName);
         $dataObject = $this->createDataObject($objectElement, $dataObjectDocument);

@@ -119,26 +119,25 @@ class DataObjectDocument
     public function offsetSet($offset, $value) 
     {
         if($value->ownerDocument != $this) {
-            $rootDataObject = $this->importDataObject($value);
+            $dataObject = $this->importNode($value);
         } else {
-            $rootDataObject = $value;
+            $dataObject = $value;
         }
-        $this->appendChild($rootDataObject);
+        $this->appendChild($dataObject);
     }
     
     public function offsetExists($offset) 
     {
-        return isset($this->container[$offset]);
+      
     }
     
     public function offsetUnset($offset) 
     {
-        unset($this->container[$offset]);
     }
     
     public function offsetGet($offset) 
     {
-        return isset($this->container[$offset]) ? $this->container[$offset] : null;
+
     }
     
 }
@@ -215,7 +214,7 @@ class DataObjectElement
     {
         if(is_scalar($value) || !$value || is_null($value)) {
             // Attribute == property
-            if($this->hasAttribute($name)) {
+            if($this->hasAttribute($name)) {          
                 $valueBefore = $this->getAttribute($name);
                 if($valueBefore != $value) {
                     $this->logUpdate($name, $valueBefore, $value);
@@ -313,8 +312,12 @@ class DataObjectElement
     //*************************************************************************
     public function offsetSet($offset, $value) 
     {
-        $childDataObject = $this->ownerDocument->importNode($value,true);
-        $this->appendChild($childDataObject);
+        if($value->ownerDocument != $this->onwerDocument) {
+            $dataObject = $this->ownerDocument->importNode($value);
+        } else {
+            $dataObject = $value;
+        }
+        $this->appendChild($dataObject);
     }
     
     public function offsetExists($offset) 

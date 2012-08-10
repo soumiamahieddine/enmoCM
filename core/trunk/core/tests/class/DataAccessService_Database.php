@@ -134,6 +134,7 @@ class DataAccessService_Database
                     $attrName = substr($paramName, 1);
                     //echo "<br/>key is $paramName value of $attrName is " . get_class($parentObject) . " ". $parentObject->$attrName;
                     $value = $parentObject->$attrName;
+                    if(!$value || $value == '') $value = "99999999";
                     $relationExpression = str_replace($paramName, $value, $relationExpression);
                 }
                 $whereParts[] = $relationExpression;
@@ -532,7 +533,10 @@ class DataAccessService_Database
             for($i=0; $i<$keyFieldsLength; $i++) {
                 $keyField = $keyFields->item($i);
                 $keyName = str_replace("@", "", $keyField->getAttribute('xpath'));
-                $ignoreKeyFields[] = $keyName;
+                $keyElement = $this->getPropertyByName($keyName);
+                if($keyElement->hasAttribute('das:serial')) {
+                    $ignoreKeyFields[] = $keyName;
+                }
             }
             
             $objectProperties = $this->getObjectProperties($objectElement);
