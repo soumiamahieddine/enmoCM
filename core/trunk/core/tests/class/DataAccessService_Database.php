@@ -302,12 +302,12 @@ class DataAccessService_Database
     //*************************************************************************
     private function getSelectExpression($objectElement)
     {
-        if(!$selectExpression = $this->XRefs->getXRefData($objectElement, 'SelectExpression')) {
+        if(!$selectExpression = $this->getXRefs($objectElement, 'SelectExpression')) {
             $selectColumns = array();
             $objectProperties = $this->getObjectProperties($objectElement);
-            $objectPropertiesLength = $objectProperties->length;
+            $objectPropertiesLength = count($objectProperties);
             for($i=0; $i<$objectPropertiesLength; $i++) {
-                $propertyNode = $objectProperties->item($i);
+                $propertyNode = $objectProperties[$i];
                 //echo "<br/>Property " . $objectElement->getAttribute('name') .".". $propertyNode->getName(); 
                 switch($propertyNode->tagName) {
                 case 'xsd:attribute':
@@ -324,7 +324,7 @@ class DataAccessService_Database
                 }
             }
             $selectExpression = implode(', ', $selectColumns);
-            $this->XRefs->addXRefData($objectElement, 'SelectExpression', $selectExpression);
+            $this->addXRefs($objectElement, 'SelectExpression', $selectExpression);
         }
         return $selectExpression;
     }
@@ -349,7 +349,7 @@ class DataAccessService_Database
     //*************************************************************************
     private function getTableExpression($objectElement)
     {
-        if(!$tableExpression = $this->XRefs->getXRefData($objectElement, 'tableExpression')) {
+        if(!$tableExpression = $this->getXRefs($objectElement, 'tableExpression')) {
             $tableExpressionParts = array();
             $tableExpressionParts[] = $objectElement->getTable();
             if($view = $this->getView($objectElement)) {
@@ -362,7 +362,7 @@ class DataAccessService_Database
                 $tableExpressionParts[] = implode(' ', $joinExpressions);  
             } 
             $tableExpression = implode(' ', $tableExpressionParts);
-            $this->XRefs->addXRefData($objectElement, 'tableExpression', $tableExpression);
+            $this->addXRefs($objectElement, 'tableExpression', $tableExpression);
         } 
         return $tableExpression;
     }
@@ -399,18 +399,12 @@ class DataAccessService_Database
         $joinExpressionParts[] = implode(' and ', $joinKeyColumns);
         return implode(' ', $joinExpressionParts);
     }
-    
-    private function getJoinKeyColumn($property, $propertyName)
-    {
-        
-    
-    }
-    
+     
     // KEY 
     //*************************************************************************
     private function getSelectKeyExpression($objectElement)
     {
-        if(!$selectKeyExpression = $this->XRefs->getXRefData($objectElement, 'selectKeyExpression')) {
+        if(!$selectKeyExpression = $this->getXRefs($objectElement, 'selectKeyExpression')) {
             $table = $objectElement->getTable();
             $keyFields = $this->getKeyFields($objectElement);
             $keyFieldsLength = $keyFields->length;
@@ -425,7 +419,7 @@ class DataAccessService_Database
                 $selectKeyFields[] = $table . "." . $keyName . " = " . $enclosure . '$' . $i . $enclosure;  
             }
             $selectKeyExpression =  implode(' and ', $selectKeyFields);
-            $this->XRefs->addXRefData($objectElement, 'selectKeyExpression', $selectKeyExpression);
+            $this->addXRefs($objectElement, 'selectKeyExpression', $selectKeyExpression);
         }
         return $selectKeyExpression;
     }
@@ -434,7 +428,7 @@ class DataAccessService_Database
     //*************************************************************************
     private function getSelectFilterExpression($objectElement)
     {
-        if(!$selectFilterExpression = $this->XRefs->getXRefData($objectElement, 'selectFilterExpression')) {
+        if(!$selectFilterExpression = $this->getXRefs($objectElement, 'selectFilterExpression')) {
             $filterExpressions = array();
             if($filter = $objectElement->getFilter()) {
                 $filterFields = explode(' ', $filter);
@@ -449,7 +443,7 @@ class DataAccessService_Database
                 }
             }
             $selectFilterExpression = implode(' or ', $filterExpressions);
-            $this->XRefs->addXRefData($objectElement, 'selectFilterExpression', $selectFilterExpression);
+            $this->addXRefs($objectElement, 'selectFilterExpression', $selectFilterExpression);
         }
         return $selectFilterExpression;
     }
@@ -460,7 +454,7 @@ class DataAccessService_Database
     {
         // No sort fields given, sort on key
         if(!$sortFields) {
-            if(!$selectSortFieldsExpression = $this->XRefs->getXRefData($objectElement, 'selectSortFieldsExpression')) {
+            if(!$selectSortFieldsExpression = $this->getXRefs($objectElement, 'selectSortFieldsExpression')) {
                 $sortFieldsExpressions = array();
                 if($keyFields = $this->getKeyFields($objectElement)) {
                     for($i=0; $i<$keyFields->length; $i++) {
@@ -472,7 +466,7 @@ class DataAccessService_Database
                     }
                     $selectSortFieldsExpression = implode(', ', $sortFieldsExpressions);
                 }
-                $this->XRefs->addXRefData($objectElement, 'selectSortFieldsExpression', $selectSortFieldsExpression);
+                $this->addXRefs($objectElement, 'selectSortFieldsExpression', $selectSortFieldsExpression);
             }
         } else {
             $sortFieldArray = explode(' ', $sortFields);
@@ -489,7 +483,7 @@ class DataAccessService_Database
     //*************************************************************************
     private function getRelationExpression($objectElement, $dataObject)
     {
-        if(!$relationExpression = $this->XRefs->getXRefData($objectElement, 'relationExpression')) {
+        if(!$relationExpression = $this->getXRefs($objectElement, 'relationExpression')) {
             if($relation = $this->getRelation($objectElement, $dataObject)) {
                 $childTable = $objectElement->getTable();
                 
@@ -508,7 +502,7 @@ class DataAccessService_Database
                 }
                 $relationExpression = implode(' and ', $relationKeys);
             }
-            $this->XRefs->addXRefData($objectElement, 'relationExpressions', $relationExpression);
+            $this->addXRefs($objectElement, 'relationExpressions', $relationExpression);
         }
         return $relationExpression;
     }
@@ -518,17 +512,17 @@ class DataAccessService_Database
     private function getInsertColumnsExpression($objectElement)
     {
         
-        if(!$insertColumnsExpression = $this->XRefs->getXRefData($objectElement, 'insertColumnsExpression')) {
+        if(!$insertColumnsExpression = $this->getXRefs($objectElement, 'insertColumnsExpression')) {
             $insertColumns = array();
             $objectProperties = $this->getObjectProperties($objectElement);
-            $objectPropertiesLength = $objectProperties->length;
+            $objectPropertiesLength = count($objectProperties);
             for($i=0; $i<$objectPropertiesLength; $i++) {
-                $propertyElement = $objectProperties->item($i);
+                $propertyNode = $objectProperties[$i];
                 $columnName = $propertyNode->getColumn();
                 $insertColumns[] =  $columnName;
             }
             $insertColumnsExpression = implode(', ', $insertColumns);
-            $this->XRefs->addXRefData($objectElement, 'insertColumnsExpression', $insertColumnsExpression);
+            $this->addXRefs($objectElement, 'insertColumnsExpression', $insertColumnsExpression);
         }
         return $insertColumnsExpression;
     }
@@ -539,11 +533,11 @@ class DataAccessService_Database
     {
         $insertValues = array();
         $objectProperties = $this->getObjectProperties($objectElement);
-        $objectPropertiesLength = $objectProperties->length;
+        $objectPropertiesLength = count($objectProperties);
         for($i=0; $i<$objectPropertiesLength; $i++) {
-            $propertyElement = $objectProperties->item($i);
-            $propertyName = $propertyElement->getName();
-            $propertyType = $this->getType($propertyElement);
+            $propertyNode = $objectProperties[$i];
+            $propertyName = $propertyNode->getName();
+            $propertyType = $this->getType($propertyNode);
             $enclosure = $propertyType->getEnclosure();
             $propertyValue = $enclosure . $dataObject->$propertyName . $enclosure; 
             $insertValues[] = $propertyValue;
@@ -559,9 +553,9 @@ class DataAccessService_Database
         $updateColumns = array();
         
         $objectProperties = $this->getObjectProperties($objectElement);
-        $objectPropertiesLength = $objectProperties->length;
+        $objectPropertiesLength = count($objectProperties);
         for($i=0; $i<$objectPropertiesLength; $i++) {
-            $propertyNode = $objectProperties->item($i);
+            $propertyNode = $objectProperties[$i];
             $propertyName = $propertyNode->getName();
             if(in_array($propertyName, $updatedProperties)) {
                 $propertyType = $this->getType($propertyNode);

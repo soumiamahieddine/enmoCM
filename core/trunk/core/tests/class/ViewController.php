@@ -115,8 +115,7 @@ class View
         $optionGroup->setAttribute('label', $label);
         return $optionGroup;
     }
-    
-    
+
 }
 
 
