@@ -297,7 +297,7 @@ class DataObjectController
                 $dataObject->setAttribute($propertyName, $propertyValue);
                 break;
             case 'xsd:element':
-                $property = $this->XRefs->createElement($propertyName, $columnValue);
+                $property = $dataObjectDocument->createElement($propertyName, $columnValue);
                 $dataObject->appendChild($property);
             }            
         }
