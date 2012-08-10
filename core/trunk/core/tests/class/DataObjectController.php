@@ -852,7 +852,7 @@ class DataObjectController
 
             $this->addXRefs($objectElement, 'objectChildren', $objectChildren);
         }
-        echo "<br/>getObjectChildren() => " . count($objectChildren);
+        //echo "<br/>getObjectChildren() => " . count($objectChildren);
         return $objectChildren;
     }
    
