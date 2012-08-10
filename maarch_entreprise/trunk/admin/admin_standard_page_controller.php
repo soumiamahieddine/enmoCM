@@ -32,9 +32,11 @@
 
 require_once 'core/class/class_core_tools.php';
 require_once 'core/tests/class/MessageController.php';
+require_once 'core/tests/class/ViewController.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] 
     . '/admin/admin_form_standard_tools.php';
 $messageController = new MessageController();
+$viewController = new ViewController();
 
 /**
  * Management of the location bar
@@ -447,7 +449,7 @@ if (isset($_REQUEST['submit'])) {
                 $sortFields = $params['orderField'],
                 $order = $params['order']
             );
-            //var_dump($dataObjectList);exit;
+            
             //getKey
             $keyProperties = $DataObjectController->getKeyProperties(
                 $params['objectName']
@@ -455,7 +457,7 @@ if (isset($_REQUEST['submit'])) {
             //var_dump($keyProperties);
             
             $objectList = $dataObjectList->$params['objectName'];
-            //var_dump($objectList);exit;
+            
             //prevent PHP NOTICE
             $str_filter     = '';
             $str_pagination = '';
@@ -740,9 +742,11 @@ if (isset($_REQUEST['submit'])) {
             }
             
             //liste
-            $columnsLabels = $messageController->getTexts(
-                $params['objectName'] . '.'
-            );
+            foreach ($showCols as $propertyName => $colParams) {
+	            $columnsLabels[$propertyName] = $messageController->getMessageText(
+	                $params['objectName'] . '.' . $propertyName
+	            );
+	        }
 
             $noOrderUri = getDependantUri(
                 'orderField', 
@@ -772,11 +776,7 @@ if (isset($_REQUEST['submit'])) {
                  $str_htmlList .= '" ';
                 $str_htmlList .= '>';
                     foreach($columnsLabels as $labelId => $labelColumn) {
-                        $prefixLength = strlen($params['objectName']) + 1;
-                        $keyColumn = substr($labelId, $prefixLength);
-                        if (!array_key_exists($keyColumn, $showCols)) {
-                            continue;
-                        }
+                        $keyColumn = $labelId;
                         $cssHeaderColumn = '';
                         if (isset($showCols[$keyColumn]['cssStyle'])) {
                             $cssHeaderColumn = $showCols[$keyColumn]['cssStyle'];
@@ -897,19 +897,20 @@ if (isset($_REQUEST['submit'])) {
                         $str_htmlList .= '<tr ';
                          $str_htmlList .= $cssClass_tr;
                         $str_htmlList .= '>';
-                            foreach($object as $childName => $childObject) {
-                                $childObject = (string)$childObject;
-                                $json[$columnsLabels[$params['objectName'] . '.' . $childName]] = $childObject;
-                                if (!array_key_exists($childName, $showCols)) {
-                                    continue;
+                        	foreach($object->getProperties() as $propertyName => $propertyValue) {
+	                        	$json[$propertyName] = $propertyValue;
+                        	}
+                            
+                            foreach ($showCols as $propertyName => $colParams) {
+	                            $propertyValue = (string)$object->$propertyName;
+	                            
+	                            $cssColumn = '';
+                                if (isset($colParams['cssStyle'])) {
+                                    $cssColumn = $colParams['cssStyle'];
                                 }
-                                $cssColumn = '';
-                                if (isset($showCols[$childName]['cssStyle'])) {
-                                    $cssColumn = $showCols[$childName]['cssStyle'];
-                                }
-                                if (isset($showCols[$childName]['functionFormat']) && !empty($showCols[$childName]['functionFormat'])) {
-                                    $functionFormat = $showCols[$childName]['functionFormat'];
-                                    $childObject = call_user_func($functionFormat, $childObject);
+                                if (isset($colParams['functionFormat']) && !empty($colParams['functionFormat'])) {
+                                    $functionFormat = $colParams['functionFormat'];
+                                    $propertyValue = call_user_func($functionFormat, $propertyValue);
                                 } elseif (substr($_REQUEST['what'], 0, 1) == '|') {
                                     $surligneWhat = strtoupper(
                                         str_replace(
@@ -932,14 +933,14 @@ if (isset($_REQUEST['submit'])) {
                                         $replaceWith .= $surligneWhat;
                                     $replaceWith .= '</span>';
                                     
-                                    $childObject = str_ireplace(
+                                    $propertyValue = str_ireplace(
                                         $surligneWhat, 
                                         $replaceWith, 
-                                        $childObject
+                                        $propertyValue
                                     );
                                 }
                                 $str_htmlList .= '<td ';
-                                 $str_htmlList .= 'class="'.$childName.'" ';
+                                 $str_htmlList .= 'class="'.$propertyName.'" ';
                                  $str_htmlList .= 'style="';
                                   $str_htmlList .= $cssColumn;
                                  $str_htmlList .= '"';
@@ -948,7 +949,7 @@ if (isset($_REQUEST['submit'])) {
                                   $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
                                  $str_htmlList .= '"';
                                 $str_htmlList .= '>';
-                                    $str_htmlList .= $childObject;
+                                    $str_htmlList .= $propertyValue;
                                 $str_htmlList .= '</td>';
                             }
                             
