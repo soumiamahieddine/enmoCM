@@ -860,6 +860,7 @@ class DataObjectController
             $objectType = $this->getType($objectElement);
             
             // type/sequence/element
+            $sequenceChildren = array();
             if($sequence = $this->getSequence($objectType)) {
                 $sequenceElements = $this->getSequenceElements($sequence);
                 $sequenceChildren = $this->selectChildren($sequenceElements);
