@@ -194,13 +194,13 @@ class DataAccessService_Database
         }
     }
     
-    public function saveData($objectElement, $dataObject, $dataObjectDocument)
+    public function saveData($objectElement, $dataObject)
     {
         try {
             if($dataObject->isCreated()) {
-                $keys = $this->insertData($objectElement, $dataObject, $dataObjectDocument);
+                $keys = $this->insertData($objectElement, $dataObject);
             } elseif ($dataObject->isUpdated()) {
-                $keys = $this->updateData($objectElement, $dataObject, $dataObjectDocument);
+                $keys = $this->updateData($objectElement, $dataObject);
             }
         } catch (Exception $e) {
             throw $e;
@@ -237,7 +237,7 @@ class DataAccessService_Database
     // PRIVATE SQL QUERY EXECUTION FUNCTIONS
     //*************************************************************************
     
-    private function insertData($objectElement, $dataObject, $dataObjectDocument)
+    private function insertData($objectElement, $dataObject)
     {
         // CREATE INSERT QUERY
         $insertParts = array();
@@ -266,11 +266,11 @@ class DataAccessService_Database
             throw $e;
         }
         
-        $keys = $this->databaseObject->fetch_assoc();
+        $keys = $this->databaseObject->fetch_object();
         return $keys;
     }
     
-    private function updateData($objectElement, $dataObject, $dataObjectDocument)
+    private function updateData($objectElement, $dataObject)
     {
         $updateParts = array();
         
@@ -301,7 +301,7 @@ class DataAccessService_Database
             throw $e;
         }
         
-        $keys = $this->databaseObject->fetch_assoc();
+        $keys = $this->databaseObject->fetch_object();
         return $keys;
 
     }
@@ -533,8 +533,7 @@ class DataAccessService_Database
             for($i=0; $i<$keyFieldsLength; $i++) {
                 $keyField = $keyFields->item($i);
                 $keyName = str_replace("@", "", $keyField->getAttribute('xpath'));
-                $keyElement = $this->getPropertyByName($keyName);
-                if($keyElement->hasAttribute('das:serial')) {
+                if($keyField->hasAttribute('das:serial')) {
                     $ignoreKeyFields[] = $keyName;
                 }
             }

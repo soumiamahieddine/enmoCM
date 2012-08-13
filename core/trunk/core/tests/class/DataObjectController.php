@@ -21,7 +21,7 @@ class DataObjectController
  
     public $dataObjectDocuments = array();
     public $dataAccessServices = array();
-    private $XRefs = array();
+    protected $XRefs = array();
     protected $messageController;
     protected $messages = array();
     
@@ -386,10 +386,8 @@ class DataObjectController
         if($dataAccessService) {
             $keys = $dataAccessService->saveData(
                 $objectElement, 
-                $dataObject, 
-                $dataObjectDocument
+                $dataObject
             );
-            $returnKeys[$objectName][] = $keys;
         } 
         
         $objectChildren = $this->getObjectChildren($objectElement);
@@ -400,16 +398,28 @@ class DataObjectController
             $childObjects = $dataObject->$childName;
             $childObjectsLength = count($childObjects);
             for($j=0; $j<$childObjectsLength; $j++) {
-                $dataObject = $childObjects[$j];
-                $childReturnKeys = $this->saveDataObject(
+                $childDataObject = $childObjects[$j];
+                // Set parent key as returned if serial
+                if($relation = 
+                    $this->getRelation($childElement, $dataObject)
+                ) {
+                    $childTable = $objectElement->getTable();
+                    $fkeys = $this->query('./das:foreign-key', $relation);
+                    $fkeysLength = $fkeys->length;
+                    for($i=0; $i<$fkeysLength; $i++) {
+                        $fkey = $fkeys->item($i);
+                        $parentKeyName = $fkey->getAttribute('parent-key');
+                        $childKeyName = $fkey->getAttribute('child-key');
+                        $childDataObject->$childKeyName = $keys->$parentKeyName;
+                    }
+                }
+                $this->saveDataObject(
                     $childElement, 
-                    $dataObject, 
-                    $dataObjectDocument
+                    $childDataObject
                 );
-                $returnKeys = array_merge($returnKeys, $childReturnKeys);
             }
         }
-        return $returnKeys;
+        return $keys;
     }
     
     protected function deleteDataObject($objectElement, $key)
@@ -435,21 +445,8 @@ class DataObjectController
     }
     
     //*************************************************************************
-    // SCHEMA QUERY FUNCTIONS
+    // DATA ACCESS SERVICE FUNCTIONS
     //*************************************************************************
-    protected function hasDatasource($node)
-    {
-        if($node->hasDatasource() 
-            || $this->query(
-                    './xsd:annotation/xsd:appinfo/das:source', 
-                    $node 
-                )->length > 0
-        ){
-            return true;
-        }
-    
-    }
-    
     protected function getDataAccessService($node)
     {
         if($node->hasAttribute('das:source')) {
@@ -484,12 +481,16 @@ class DataObjectController
                 new DataAccessService_Database();
             $this->dataAccessServices[$sourceName]->loadSchema($this->schema);
             $this->dataAccessServices[$sourceName]->connect($sourceNode);
+            $this->dataAccessServices[$sourceName]->XRefs = &$this->XRefs;
             break;
         case 'xml':
             break;
         } 
     }
-
+   
+    //*************************************************************************
+    // SCHEMA QUERY FUNCTIONS
+    //*************************************************************************
     protected function getElementByName($name)
     {
         $element = $this->query(
@@ -499,6 +500,19 @@ class DataObjectController
         )->item(0);
         if(!$element) Die("Element $name is unknown");
         return $element;
+    }
+    
+    protected function hasDatasource($node)
+    {
+        if($node->hasDatasource() 
+            || $this->query(
+                    './xsd:annotation/xsd:appinfo/das:source', 
+                    $node 
+                )->length > 0
+        ){
+            return true;
+        }
+    
     }
     
     protected function getAttributeByName($name)
@@ -755,7 +769,6 @@ class DataObjectController
     {
         $XRefs = $this->XRefs[$element->tagName][$element->getName()][$queryTag];
         return $XRefs;
-        
     }
     
     protected function addXRefs($element, $queryTag, $XRefsArray) 
