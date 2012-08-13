@@ -308,7 +308,7 @@ class dbquery extends functions
         
         }
     }
-
+    
     /**
     * Execution the sql query
     *
@@ -501,7 +501,6 @@ class dbquery extends functions
         default         : return false;
         }
     }
-    
     
     /**
     * Returns the query results in a row
@@ -804,6 +803,27 @@ class dbquery extends functions
         }
     }
     
+    public function escape_string($string)
+    {
+        switch ($this->_databasetype)
+        {
+        case "SQLSERVER" : 
+            $string = str_replace("'", "''", $string);
+            $string = str_replace("\\", "", $string);
+            break;
+        case "ORACLE" :
+            $string = str_replace("'", "''", $string);
+            $string = str_replace("\\", "", $string);
+            break;
+        case "MYSQL": 
+            $string = mysql_escape_string($string);
+            break;
+        case "POSTGRESQL":
+            $string = pg_escape_string($string);
+        }
+        return $string;
+        
+    }
     
     /*************************************************************************
     * Returns the difference between 2 dates in days
