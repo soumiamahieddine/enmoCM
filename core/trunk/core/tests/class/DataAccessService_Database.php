@@ -413,15 +413,15 @@ class DataAccessService_Database
                     for($j=0; $j<$m; $j++) {
                         $joinKey = $joinKeys->item($j);
                         $childKeyName = $joinKey->getAttribute('child-key');
-                        $childKeyProperty = $this->getPropertyByName($childKeyName);
+                        $childKeyProperty = $this->getPropertyByName($objectElement, $childKeyName);
                         $childKeyColumn = $childKeyProperty->getColumn();
-                        if(strpos(".", $childKeyColumn)) $childKeyExpression = $childKeyColumn;
+                        if(strpos($childKeyColumn, ".")) $childKeyExpression = $childKeyColumn;
                         else $childKeyExpression = $childTable . "." . $childKeyColumn;
 
                         $parentKeyName = $joinKey->getAttribute('parent-key');
-                        $parentKeyProperty = $this->getPropertyByName($parentKeyName);
+                        $parentKeyProperty = $this->getPropertyByName($parentElement, $parentKeyName);
                         $parentKeyColumn = $parentKeyProperty->getColumn();
-                        if(strpos(".", $parentKeyColumn)) $parentKeyExpression = $parentKeyColumn;
+                        if(strpos($parentKeyColumn, ".")) $parentKeyExpression = $parentKeyColumn;
                         else $parentKeyExpression = $parentTable . "." . $parentKeyColumn;
                         
                         $joinKeyColumns[] =
@@ -457,7 +457,7 @@ class DataAccessService_Database
             for($i=0; $i<$l; $i++) {
                 $keyField = $keyFields->item($i);
                 $keyName = str_replace("@", "", $keyField->getAttribute('xpath'));
-                $keyProperty = $this->getPropertyByName($keyName);
+                $keyProperty = $this->getPropertyByName($objectElement, $keyName);
                 $keyColumn = $keyProperty->getColumn();
                 $keyType = $this->getType($keyProperty);
                 $enclosure = $keyType->getEnclosure();
@@ -491,7 +491,7 @@ class DataAccessService_Database
                 $l = count($filterFields);
                 for($i=0; $i<$l; $i++) {
                     $filterName = $filterFields[$i];
-                    $filterProperty = $this->getPropertyByName($filterName);
+                    $filterProperty = $this->getPropertyByName($objectElement, $filterName);
                     $filterColumn = $filterProperty->getColumn();
                     $filterType = $this->getType($filterProperty);
                     $enclosure = $filterType->getEnclosure();
@@ -541,7 +541,7 @@ class DataAccessService_Database
             }
             for($i=0; $i<count($sortFieldsArray); $i++) {
                 $sortField = $sortFieldsArray[$i];
-                $sortProperty = $this->getPropertyByName($sortField);
+                $sortProperty = $this->getPropertyByName($objectElement, $sortField);
                 $sortColumn = $sortProperty->getColumn();
                 $sortColumns[] = $sortColumn;
             }
@@ -587,12 +587,12 @@ class DataAccessService_Database
                 for($i=0; $i<$fkeysLength; $i++) {
                     $fkey = $fkeys->item($i);
                     $childKeyName = str_replace("@", "", $fkey->getAttribute('child-key'));
-                    $childKeyElement = $this->getPropertyByName($childKeyName);
+                    $childKeyElement = $this->getPropertyByName($objectElement, $childKeyName);
                     $childKeyColumn = $childKeyElement->getColumn();
                     $childKeyType = $this->getType($childKeyElement);
                     $enclosure = $childKeyType->getEnclosure();
                     
-                    if(strpos(".", $childKeyColumn)) $childKeyExpression = $childKeyColumn;
+                    if(strpos($childKeyColumn, ".")) $childKeyExpression = $childKeyColumn;
                     else $childKeyExpression = $childTable . "." . $childKeyColumn;
                     
                     $parentKeyName = $fkey->getAttribute('parent-key');
@@ -740,7 +740,7 @@ class DataAccessService_Database
             $keyField = $keyFields->item($i);
             $keyName = 
                 str_replace("@", "", $keyField->getAttribute('xpath'));
-            $keyElement = $this->getPropertyByName($keyName);
+            $keyElement = $this->getPropertyByName($objectElement, $keyName);
             
             if($keyElement->hasAttribute('das:column')) {
                 $keyColumn = $keyElement->getAttribute('das:column');
@@ -770,7 +770,7 @@ class DataAccessService_Database
             $keyField = $keyFields->item($i);
             $keyName = 
                 str_replace("@", "", $keyField->getAttribute('xpath'));
-            $keyElement = $this->getPropertyByName($keyName);
+            $keyElement = $this->getPropertyByName($objectElement, $keyName);
             if($keyElement->hasAttribute('das:column')) {
                 $keyColumn = $keyElement->getAttribute('das:column');
             } else {

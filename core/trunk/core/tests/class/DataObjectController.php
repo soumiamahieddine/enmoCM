@@ -530,20 +530,15 @@ class DataObjectController
         return $attribute;
     }
     
-    protected function getPropertyByName($name)
+    protected function getPropertyByName($objectElement, $name)
     {
-        $property = $this->query(
-            '//xsd:attribute[@name = "'
-            . $name
-            . '"]'
-            . ' | '
-            . '//xsd:element[@name = "'
-            . $name
-            . '"]'
-        )->item(0);
-        if(!$property) Die("Property $name is unknown");
-        return $property;
-    
+        $objectProperties = $this->getObjectProperties($objectElement); 
+        for($i=0; $i<count($objectProperties); $i++) {
+            if($objectProperties[$i]->getName() == $name) {
+                return $objectProperties[$i];
+            }
+        }
+        Die("Property $name is unknown");
     }
     
     protected function getType($node)
