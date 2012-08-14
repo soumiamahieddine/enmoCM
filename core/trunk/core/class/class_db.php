@@ -396,7 +396,59 @@ class dbquery extends functions
             return false;
         }
     }
-
+    
+    public function start_transaction()
+    {
+        switch($this->_databasetype) 
+        {
+        case 'MYSQL'        : 
+            @mysqli_query($this->_sqlLink, 'BEGIN');
+            break;
+        case 'SQLSERVER'    : 
+            break;
+        case 'POSTGRESQL'   : 
+            @pg_query('BEGIN');
+            break;
+        case 'ORACLE'       : 
+            break;
+        }
+    }
+    
+    public function rollback()
+    {
+        switch($this->_databasetype) 
+        {
+        case 'MYSQL'        : 
+            @mysqli_query($this->_sqlLink, 'ROLLBACK');
+            break;
+        case 'SQLSERVER'    : 
+            break;
+        case 'POSTGRESQL'   : 
+            @pg_query('ROLLBACK');
+            break;
+        case 'ORACLE'       : 
+            break;
+        }
+    }
+    
+    public function commit()
+    {
+        switch($this->_databasetype) 
+        {
+        case 'MYSQL'        : 
+            @mysqli_query($this->_sqlLink, 'COMMIT');
+            break;
+        case 'SQLSERVER'    : 
+            break;
+        case 'POSTGRESQL'   : 
+            @pg_query('COMMIT');
+            break;
+        case 'ORACLE'       : 
+            break;
+        }
+    }
+    
+    
     /**
     * Returns the query results in an object
     *
