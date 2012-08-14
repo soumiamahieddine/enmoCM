@@ -413,7 +413,7 @@ class DataAccessService_Database
                     for($j=0; $j<$m; $j++) {
                         $joinKey = $joinKeys->item($j);
                         $childKeyName = $joinKey->getAttribute('child-key');
-                        $childKeyProperty = $this->getPropertyByName($objectElement, $childKeyName);
+                        $childKeyProperty = $this->getPropertyByName($childElement, $childKeyName);
                         $childKeyColumn = $childKeyProperty->getColumn();
                         if(strpos($childKeyColumn, ".")) $childKeyExpression = $childKeyColumn;
                         else $childKeyExpression = $childTable . "." . $childKeyColumn;
