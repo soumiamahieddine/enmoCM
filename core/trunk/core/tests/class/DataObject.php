@@ -33,7 +33,7 @@ class DataObjectDocument
     
     public function createDataObjectLog($operation, $level=DataObjectLog::INFO, $detail=false)
     {
-        $messageStrings[] = 'DataObjectLog';
+        $messageStrings[] = 'log';
         $messageStrings[] = 'operation="' . $operation . '"';
         $messageStrings[] = 'level="' . (string)$level . '"';
         if($detail) $messageStrings[] = $detail;
@@ -83,7 +83,7 @@ class DataObjectDocument
             $resultNodes = $this->xpath('/'.$name);
             switch ((string)$resultNodes->length) {
             case '0' :
-                $resultNode = $this->ownerDocument->createElement($name, $value);
+                $resultNode = $this->createElement($name, $value);
                 $this->appendChild($resultNode);
                 break;
             case '1' :
@@ -119,7 +119,7 @@ class DataObjectDocument
     public function offsetSet($offset, $value) 
     {
         if($value->ownerDocument != $this) {
-            $dataObject = $this->importNode($value);
+            $dataObject = $this->importNode($value, true);
         } else {
             $dataObject = $value;
         }
@@ -247,7 +247,7 @@ class DataObjectElement
     {
         // Attribute == property
         if($this->hasAttribute($name)) {
-            return $this->getAttribute($name);
+            return (string)$this->getAttribute($name);
         }
         // Element 
         $XPath = new DOMXPath($this->ownerDocument);
@@ -257,8 +257,9 @@ class DataObjectElement
         
         if($nodes->length == 1 
             && $nodes->item(0)->getElementsByTagName('*')->length == 0) {
-            return $nodes->item(0)->nodeValue;  
-        } else {
+            return (string)$nodes->item(0)->nodeValue;  
+        } 
+        if($nodes->length > 0) {
             $nodesArray = array();
             for($i=0; $i<$nodes->length; $i++) {
                 $nodesArray[] = $nodes->item($i);
@@ -313,7 +314,7 @@ class DataObjectElement
     public function offsetSet($offset, $value) 
     {
         if($value->ownerDocument != $this->onwerDocument) {
-            $dataObject = $this->ownerDocument->importNode($value);
+            $dataObject = $this->ownerDocument->importNode($value, true);
         } else {
             $dataObject = $value;
         }
@@ -339,51 +340,109 @@ class DataObjectElement
     //*************************************************************************  
     public function logCreate()
     {
-        $message = $this->ownerDocument->createDataObjectLog(DataObjectLog::CREATE, DataObjectLog::INFO);
+        $message = 
+            $this->ownerDocument->createDataObjectLog(
+                DataObjectLog::CREATE, 
+                DataObjectLog::INFO
+            );
         $this->appendChild($message);
     }    
     
     public function logRead()
     {
-        $message = $this->ownerDocument->createDataObjectLog(DataObjectLog::READ, DataObjectLog::INFO);
+        $message = 
+            $this->ownerDocument->createDataObjectLog(
+                DataObjectLog::READ, 
+                DataObjectLog::INFO
+            );
         $this->appendChild($message);
     }
     
     public function logUpdate($name, $valueBefore, $valueAfter)
     {
-        $messageDetail = 'name="' . $name . '" value-before="' . $valueBefore . '" value-after="' . $valueAfter . '"';
-        $message = $this->ownerDocument->createDataObjectLog(DataObjectLog::UPDATE, DataObjectLog::INFO, $messageDetail);
+        $messageDetail = 
+            'name="' . $name 
+            . '" value-before="' . $valueBefore 
+            . '" value-after="' . $valueAfter . '"';
+        $message = 
+            $this->ownerDocument->createDataObjectLog(
+                DataObjectLog::UPDATE, 
+                DataObjectLog::INFO, 
+                $messageDetail
+            );
         $this->appendChild($message);
     }
     
     public function logValidate($level, $message)
     {
-        $messageDetail = 'validation-message="' . $message . '"';
-        $message = $this->ownerDocument->createDataObjectLog(DataObjectLog::VALIDATE, $level, $messageDetail);
+        $messageDetail = 'message="' . $message . '"';
+        $message = 
+            $this->ownerDocument->createDataObjectLog(
+                DataObjectLog::VALIDATE, 
+                $level, 
+                $messageDetail
+            );
         $this->appendChild($message);
+    }
+    
+    public function firstLog()
+    {
+        $xpath = new DOMXPath($this->ownerDocument);
+        $firstOperation = 
+            $xpath->query(
+                $this->getNodePath() 
+                . "/comment()"
+            )->item(0);
+        return $firstOperation;
     }
     
     public function isCreated()
     {
-        $createOperation = $this->xpath("./comment()[contains(., 'operation=\"1\"')]")->item(0);
-        if($createOperation) return true;
+        $firstLog = $this->firstLog();
+        if($firstLog->getAttribute('operation') == DataObjectLog::CREATE) return true;
     }
     
     public function isUpdated()
     {
-        $updateOperations = $this->xpath("./comment()[contains(., 'operation=\"3\"')]");
+        $updateOperations = 
+            $this->ownerDocument->xpath(
+                $this->getNodePath() 
+                . "/comment()[contains(., 'operation=\"".DataObjectLog::UPDATE."\"')]"
+            );
         if($updateOperations->length > 0) return true;
     }
     
     public function getUpdatedProperties()
     {
-        $updateOperations = $this->xpath("./comment()[contains(., 'operation=\"3\"')]");
+        $updateOperations = 
+            $this->ownerDocument->xpath(
+                $this->getNodePath() 
+                . "/comment()[contains(., 'operation=\"".DataObjectLog::UPDATE."\"')]"
+            );
         $updatedProperties = array();
         for($i=0; $i<$updateOperations->length; $i++) {
             $updateOperation = $updateOperations->item($i);
             $updatedProperties[] = $updateOperation->getAttribute('name');
         }
         return $updatedProperties;
+    }
+    
+    public function getValidationErrors()
+    {
+        $validateOperations = 
+            $this->ownerDocument->xpath(
+                $this->getNodePath() 
+                . "/comment()[contains(., 'operation=\"".DataObjectLog::VALIDATE."\"')]"
+            );
+        $validationErrors = array();
+        for($i=0; $i<$validateOperations->length; $i++) {
+            $validateOperation = $validateOperations->item($i);
+            $validationErrors[] = array(
+                'level'=> $validateOperation->getAttribute('level'),
+                'message' => $validateOperation->getAttribute('message')
+                );
+        }
+        return $validationErrors;
     }
     
     
@@ -481,12 +540,12 @@ class DataObjectAttribute
 class DataObjectLog
     extends DOMComment
 {
-    const NONE    = 0;
-    const CREATE  = 1;
-    const READ    = 2;
-    const UPDATE  = 3;
-    const DELETE  = 4;
-    const VALIDATE= 5;
+    const NONE      = 'NONE';
+    const CREATE    = 'CREATE';
+    const READ      = 'READ';
+    const UPDATE    = 'UPDATE';
+    const DELETE    = 'DELETE';
+    const VALIDATE  = 'VALIDATE';
     
     const INFO      = 0;
     const WARNING   = 1;
@@ -504,7 +563,7 @@ class DataObjectLog
         if ($hasAttributes) {
             foreach ($matches as $attribute) {
                 $attribute_array[$attribute[1]] =
-                        substr($attribute[2], 1, -1);
+                    substr($attribute[2], 1, -1);
             }
         }
         return $attribute_array[$name];

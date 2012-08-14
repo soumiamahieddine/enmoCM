@@ -184,13 +184,12 @@ class DataObjectController
     {
         $objectElement = $this->getElementByName($dataObject->tagName);
         $dataObjectDocument = $dataObject->ownerDocument;
-        $keys = $this->saveDataObject(
+        $key = $this->saveDataObject(
             $objectElement, 
-            $dataObject, 
-            $dataObjectDocument
+            $dataObject
         );   
         
-        return $keys;
+        return $key;
     }
     
     public function load($xml)
@@ -240,7 +239,7 @@ class DataObjectController
             $_SESSION['config']['corepath'] 
                 . '/core/xml/DataObjectController_Messages.xml'
         );
-        $this->messages = array();
+        
         // Validate with specific business script
         //*********************************************************************
         /*$objectSchema = $this->schema->getObjectSchema($dataObject->tagName);
@@ -254,6 +253,7 @@ class DataObjectController
         libxml_use_internal_errors(true);
         $dataObjectDocument = $dataObject->ownerDocument;
         if(!$dataObjectDocument->schemaValidateSource($XsdString)) {
+            $blockingErrors = 0;
             $libXMLErrors = libxml_get_errors();
             foreach ($libXMLErrors as $libXMLError) {
                 /*$message = $messageController->createMessage(
@@ -267,15 +267,21 @@ class DataObjectController
                         break;
                      case LIBXML_ERR_ERROR:
                         $level = DataObjectLog::ERROR;
+                        $blockingErrors++;
                         break;
                     case LIBXML_ERR_FATAL:
                         $level = DataObjectLog::FATAL;
+                        $blockingErrors++;
                         break;
                 }
                 $dataObject->logValidate($level, $libXMLError->message);
             }
             libxml_clear_errors();
-            return false;
+            if($blockingErrors > 0) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
             $dataObject->logValidate(DataObjectLog::INFO, 'Valid');
             libxml_clear_errors();
@@ -287,8 +293,10 @@ class DataObjectController
     //*************************************************************************
     // protected OBJECT HANDLING FUNCTIONS
     //*************************************************************************
-    protected function createDataObject($objectElement, $dataObjectDocument)
-    {
+    protected function createDataObject(
+        $objectElement, 
+        $dataObjectDocument
+    ) {
         $objectName = $objectElement->getName();
         $dataObject = $dataObjectDocument->createElement($objectName);
         
@@ -311,7 +319,7 @@ class DataObjectController
             case 'xsd:element':
                 $property = $dataObjectDocument->createElement($propertyName, $propertyValue);
                 $dataObject->appendChild($property);
-            }            
+            }
         }
         
         return $dataObject;
@@ -326,8 +334,7 @@ class DataObjectController
         $sort=false,
         $order='ascending',
         $limit=99999999
-        ) 
-    {      
+    ) {      
      
         try {
             // Process object & Properties
@@ -374,22 +381,19 @@ class DataObjectController
     
     protected function saveDataObject(
         $objectElement, 
-        $dataObject, 
-        $dataObjectDocument
-    )
-    {
+        $dataObject
+    ) {
         
-        $returnKeys = array();
         $objectName = $objectElement->getName();
         $dataAccessService = $this->getDataAccessService($objectElement);
         
         if($dataAccessService) {
-            $keys = $dataAccessService->saveData(
+            $key = $dataAccessService->saveData(
                 $objectElement, 
                 $dataObject
             );
         } 
-        
+
         $objectChildren = $this->getObjectChildren($objectElement);
         $objectChildrenLength = count($objectChildren);
         for($i=0; $i<$objectChildrenLength; $i++) {
@@ -400,17 +404,15 @@ class DataObjectController
             for($j=0; $j<$childObjectsLength; $j++) {
                 $childDataObject = $childObjects[$j];
                 // Set parent key as returned if serial
-                if($relation = 
-                    $this->getRelation($childElement, $dataObject)
-                ) {
-                    $childTable = $objectElement->getTable();
-                    $fkeys = $this->query('./das:foreign-key', $relation);
-                    $fkeysLength = $fkeys->length;
-                    for($i=0; $i<$fkeysLength; $i++) {
-                        $fkey = $fkeys->item($i);
-                        $parentKeyName = $fkey->getAttribute('parent-key');
-                        $childKeyName = $fkey->getAttribute('child-key');
-                        $childDataObject->$childKeyName = $keys->$parentKeyName;
+                $relation = $this->getRelation($childElement, $dataObject);
+                $fkeys = $this->query('./das:foreign-key', $relation);
+                $fkeysLength = $fkeys->length;
+                for($k=0; $k<$fkeysLength; $k++) {
+                    $fkey = $fkeys->item($k);
+                    $parentKeyName = $fkey->getAttribute('parent-key');
+                    $childKeyName = $fkey->getAttribute('child-key');
+                    if(mb_strlen(trim($childDataObject->$childKeyName)) == 0) {
+                        $childDataObject->$childKeyName = $key->$parentKeyName;
                     }
                 }
                 $this->saveDataObject(
@@ -419,11 +421,13 @@ class DataObjectController
                 );
             }
         }
-        return $keys;
+        return $key;
     }
     
-    protected function deleteDataObject($objectElement, $key)
-    {
+    protected function deleteDataObject(
+        $objectElement, 
+        $key
+    ) {
         $dataAccessService = $this->getDataAccessService($objectElement);
         if($dataAccessService) {
             $dataAccessService->deleteData($objectElement, $key);
@@ -708,6 +712,13 @@ class DataObjectController
         return $attributes;
     }
     
+    protected function getGroup($node) 
+    {
+        $groups = $this->query('./xsd:group', $node);
+        if($groups->length == 0) return false;
+        return $groups->item(0);
+    }
+    
     protected function getSequence($node)
     {
         $sequences = $this->query('./xsd:sequence', $node);
@@ -715,20 +726,79 @@ class DataObjectController
         return $sequences->item(0);
     }
     
+    protected function getAll($node)
+    {
+        $alls = $this->query('./xsd:all', $node);
+        if($alls->length == 0) return false;
+        return $alls->item(0);
+    }
+    
+    protected function getAny($node)
+    {
+        $anys = $this->query('./xsd:any', $node);
+        if($anys->length == 0) return false;
+        return $anys->item(0);
+    }
+    
     protected function getElements($node)
     {
         $elements = $this->query('./xsd:element', $node);
-        if($elements->length == 0) return false;
         return $elements;
+    }
+    
+    //*************************************************************************
+    // LISTS OF NODES
+    //*************************************************************************
+    protected function selectSequenceElements($sequence, $selectedElements)
+    {
+        //any, choice, element, group, sequence
+        $sequenceChildren = $sequence->childNodes;
+        $l = $sequenceChildren->length;
+        for($i=0; $i<$l; $i++) {
+            $sequenceChild = $sequenceChildren->item($i);
+            switch($sequenceChild->tagName) {
+                case 'xsd:element':
+                    $this->selectProperty($sequenceChild, $selectedElements);
+                    break;
+                case 'xsd:sequence':
+                    $this->selectSequenceElements($typeChild, $selectedElements, 'properties');
+                    break;
+            
+            
+            
+            }
+        }
+        return $selectedElements;
+    }
+    
+    
+    
+    protected function getGroupElements($group)
+    {
+        $groupElements = array();
+        //All
+        $allProperties = array();
+        if($all = $this->getAll($group)) {
+            $allElements = $this->getAllElements($all);
+            $allProperties = $this->selectProperties($allElements);
+        }
+        
+        // Sequence
+        $sequenceProperties = array();
+        if($sequence = $this->getSequence($group)) {
+            $sequenceElements = $this->getSequenceElements($sequence);
+            $sequenceProperties = $this->selectProperties($sequenceElements);
+        }
+        
+        // Choice
     }
     
     protected function getSequenceElements($sequence)
     {
         $sequenceElements = array();
         //any, choice, element, group, sequence
-        $sequenceAny = $this->query('./xsd:any', $sequence);
-        if($sequenceAny->length == 1) {
-            $sequenceElements[] = $sequenceAny->item(0);   
+        if($sequenceAny = $this->getAny($sequence)) {
+            $sequenceElements[] = $sequenceAny;   
         }
         /*$sequencechoice = $this->query('./xsd:choice', $sequence);
         $sequenceGroup = $this->query('./xsd:group', $sequence);
@@ -740,6 +810,16 @@ class DataObjectController
         }
         return $sequenceElements;
     }    
+    
+    protected function getAllElements($all)
+    {
+        $allElements = array();
+        $allChildElements = $this->getElements($all);
+        for($i=0; $i<$allChildElements->length; $i++) {
+            $allElements[] = $allChildElements->item($i);
+        }
+        return $allElements;
+    }
     
     protected function getQuery($node) 
     {
@@ -796,11 +876,51 @@ class DataObjectController
         ) {
             $objectProperties = array();
             $objectType = $this->getType($objectElement);
+            /*
+            $typeChildren = $objectType->childNodes;
+            $l = $typeChildren->length;
+            for($i=0; $i<$l; $i++) {
+                $typeChild = $typeChildren->item($i);
+                switch($typeChild->tagName) {
+                    case 'xsd:attribute':
+                        $objectProperties = 
+                            $this->selectProperty(
+                                $typeChild, 
+                                $objectProperties
+                            );
+                        break;
+                    case 'xsd:sequence':
+                        $objectProperties = 
+                            $this->selectSequenceElements(
+                                $typeChild, 
+                                $objectProperties, 
+                                'properties'
+                            );
+                        break;
+                }
+            }
+            */
+            
+            
             // Attributes
             $attributeProperties = array();
             if($typeAttributes = $this->getAttributes($objectType)) {
                 $attributes = $this->nodeListAsArray($typeAttributes);
                 $attributeProperties = $this->selectProperties($attributes);
+            }
+            
+            // Group
+            $groupProperties = array();
+            if($group = $this->getGroup($objectType)) {
+                $groupElements = $this->getGroupElements($group);
+                $groupProperties = $this->selectProperties($groupElements);
+            }
+            
+            //All
+            $allProperties = array();
+            if($all = $this->getAll($objectType)) {
+                $allElements = $this->getAllElements($all);
+                $allProperties = $this->selectProperties($allElements);
             }
             
             // Sequence
@@ -813,7 +933,7 @@ class DataObjectController
             /*$complexTypeSimpleContent = $this->query('./xsd:simpleContent', $objectType);
             $complexTypeComplexContent = $this->query('./xsd:complexContent', $objectType);
             $complexTypeGroup = $this->query('./xsd:group', $objectType);
-            $complexTypeAll = $this->query('./xsd:all', $objectType);
+            
             $complexTypeSequence = $this->getSequence($objectType);
             $complexTypeChoice = $this->query('./xsd:choice', $objectType);
             $complexTypeAttributeGroup = $this->query('./xsd:attributeGroup', $objectType);
@@ -821,11 +941,26 @@ class DataObjectController
             
             $objectProperties = array_merge(
                 $attributeProperties,
+                $allProperties,
                 $sequenceProperties
             );
             $this->addXRefs($objectElement, 'objectProperties', $objectProperties);
         } 
         return $objectProperties;
+    }
+    
+    protected function selectProperty($node, $selectedProperties)
+    {
+        if($ref = $node->getRef()) {
+            if($node->tagName == 'xsd:attribute') 
+                $node = $this->getRefAttribute($ref);
+            if($node->tagName == 'xsd:element') 
+                $node = $this->getRefElement($ref);
+        }
+        if(!$node->hasDatasource()) {
+            $selectedProperties[] = $node;
+        }
+        return $selectedProperties;
     }
     
     protected function selectProperties($nodeArray)

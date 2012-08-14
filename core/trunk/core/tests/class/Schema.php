@@ -4,6 +4,8 @@ class Schema
 	extends DOMDocument
 {
 	
+    public $includedSchemaLocations = array();
+    
     public function Schema()
     {     
         parent::__construct();
@@ -12,28 +14,33 @@ class Schema
         $this->registerNodeClass('DOMAttr', 'SchemaAttribute');
     }
     
-    public function loadXSD($xsdFile)
+    public function loadXSD($xsdFile, $rootSchema=false)
     {
         $this->load($xsdFile);
-        $this->processIncludes($this);
+        if(!$rootSchema) $rootSchema = $this;
+        $this->processIncludes($this, $rootSchema);
     }
     
-	public function processIncludes($schema) 
+	public function processIncludes($schema, $rootSchema) 
     {
         $includes = $schema->getElementsByTagName('include');
         while($includes->length > 0) {
             $include = $includes->item(0);
             $schemaLocation = $include->getAttribute('schemaLocation');
-            $includeSchema = new Schema();
-            $includeSchema->loadXSD($schemaLocation);
-
-            $schemaContents = $includeSchema->documentElement->childNodes;
-            for($j=0; $j<$schemaContents->length; $j++) {
-                $importNode = $schemaContents->item($j);
-                $importedNode = $schema->importNode($importNode, true);
-                $schema->documentElement->appendChild($importedNode);
+            if(!in_array(
+                $schemaLocation, 
+                $rootSchema->includedSchemaLocations)
+            ) {
+                $includeSchema = new Schema();
+                $includeSchema->loadXSD($schemaLocation, $rootSchema);
+                $schemaContents = $includeSchema->documentElement->childNodes;
+                for($j=0; $j<$schemaContents->length; $j++) {
+                    $importNode = $schemaContents->item($j);
+                    $importedNode = $schema->importNode($importNode, true);
+                    $schema->documentElement->appendChild($importedNode);
+                }
+                $rootSchema->includedSchemaLocations[] = $schemaLocation;
             }
-
             $include->parentNode->removeChild($include);
         }
     }
@@ -79,10 +86,17 @@ class SchemaElement
     {
         if($this->hasAttribute('das:column')) {
             return $this->getAttribute('das:column');
-        } elseif($this->hasAttribute('column')) {
-            return $this->getAttribute('column');
         } else {
             return $this->getAttribute('name');
+        }
+    }
+    
+    public function isRequired()
+    {
+        if($this->getAttribute('use') == "required"
+            || strtolower($this->getAttribute('nillable')) == "false"
+        ) {
+            return true;
         }
     }
     
@@ -99,6 +113,16 @@ class SchemaElement
     public function getRef()
     {
         return $this->getAttribute('ref');
+    }
+    
+    public function hasDefault()
+    {
+        if($this->hasAttribute('default')) return true;
+    }
+    
+    public function hasFixed()
+    {
+        if($this->hasAttribute('fixed')) return true;
     }
     
     // On xsd:complexType / xsd:simpleType or das:foreign-key
