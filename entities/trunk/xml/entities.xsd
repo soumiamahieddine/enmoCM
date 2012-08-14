@@ -14,7 +14,6 @@
     <xsd:complexType>
       <xsd:sequence>
         <xsd:element ref='entities' minOccurs="0" maxOccurs='unbounded'/>
-        <xsd:element ref='entities_tree' minOccurs="0" maxOccurs='unbounded'/>
       </xsd:sequence>
     </xsd:complexType>
   </xsd:element>
@@ -23,13 +22,12 @@
     das:source='maarch_entreprise'
     das:filter='entity_id entity_label adrs_1'>
     <xsd:key name="entities_pkey">
-      <xsd:selector xpath=".."/>
+      <xsd:selector xpath="."/>
       <xsd:field xpath="@entity_id"/>
     </xsd:key>
   </xsd:element>
   
   <xsd:complexType name='entities'>
-    <xsd:attribute name="enabled" type="boolean" use="required" default="Y" />
     <xsd:sequence>
       <xsd:element name="entity_id" type="varchar32" nillable="false" />
       <xsd:element name="entity_label" type="varchar255" nillable="false"/>
@@ -45,8 +43,8 @@
       <xsd:element name="parent_entity_id" type="varchar32" />
       <xsd:element name="entity_type" type="varchar64" />
       <xsd:element ref="rm_entities" minOccurs="0" />
-      <xsd:element ref="entities" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
+    <xsd:attribute name="enabled" type="boolean" default="Y" />
   </xsd:complexType>
   
   <xsd:element name='rm_entities' type='rm_entities' 
@@ -61,13 +59,11 @@
     </xsd:annotation>
     <xsd:key name="rm_entities_pkey">
       <xsd:selector xpath="."/>
-      <xsd:field xpath="rm_entity_id"/>
+      <xsd:field xpath="@rm_entity_id" das:serial="true"/>
     </xsd:key>
   </xsd:element>
     
   <xsd:complexType name='rm_entities'>
-    <xsd:attribute name="rm_entity_id" type="bigint" use="required" />
-    <xsd:attribute name="entity_id" type="varchar32" use="required" />
     <xsd:sequence>
       <xsd:element name="is_archival" type="boolean" default="N" />
       <xsd:element name="is_originating" type="boolean" default="N" />
@@ -96,43 +92,10 @@
       <xsd:element name="sources" type="text" />
       <xsd:element name="maintenance_notes" type="text" />
     </xsd:sequence>
+    <xsd:attribute name="rm_entity_id" type="bigint" use="required" />
+    <xsd:attribute name="entity_id" type="varchar32" use="required" />
   </xsd:complexType>
   
-  
-   <xsd:element name='entities_tree_roots' type='entities_tree' 
-    das:source='maarch_entreprise' das:table="entities">
-    <xsd:annotation>
-      <xsd:appinfo>
-        <das:query parser='sql'>parent_entity_id = ''</das:query>
-      </xsd:appinfo>
-    </xsd:annotation>
-  </xsd:element>
-  
-  
-  <xsd:element name='entities_tree' type='entities_tree' 
-    das:source='maarch_entreprise' das:table="entities">
-    <xsd:annotation>
-      <xsd:appinfo>
-        <das:relation parent='entities_tree_roots' child='entities_tree'>
-          <das:foreign-key parent-key="entity_id" child-key="parent_entity_id"/>
-        </das:relation> 
-        <das:relation parent='entities_tree' child='entities_tree'>
-          <das:foreign-key parent-key="entity_id" child-key="parent_entity_id"/>
-        </das:relation> 
-      </xsd:appinfo>
-    </xsd:annotation>
-  </xsd:element>
-  
-  <xsd:complexType name='entities_tree'>
-    <xsd:attribute name="enabled" type="boolean" use="required" default="Y" />
-    <xsd:sequence>
-      <xsd:element name="entity_id" type="varchar32" nillable="false" />
-      <xsd:element name="entity_label" type="varchar255" nillable="false"/>
-      <xsd:element name="short_label" type="varchar50" />
-      <xsd:element name="entity_type" type="varchar64" />
-      <xsd:element ref="entities_tree" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
   
   <!--xsd:element name='TYPE' type='entity_type' das:table='/root/TYPE' das:key-columns='id' das:filter-columns='id label'>
     <xsd:annotation>
