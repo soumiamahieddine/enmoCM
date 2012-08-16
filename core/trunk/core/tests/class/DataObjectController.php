@@ -503,7 +503,7 @@ class DataObjectController
             . $name
             . '"]'
         )->item(0);
-        if(!$element) Die("Element $name is unknown");
+        if(!$element) Die("Element $name is not defined");
         return $element;
     }
     
@@ -527,7 +527,7 @@ class DataObjectController
             . $name
             . '"]'
         )->item(0);
-        if(!$attribute) Die("Attribute $name is unknown");
+        if(!$attribute) Die("Attribute $name is not defined");
         return $attribute;
     }
     
@@ -539,7 +539,7 @@ class DataObjectController
                 return $objectProperties[$i];
             }
         }
-        Die("Property $name is unknown");
+        Die("Property $name of object " . $objectElement->getName() . " is not defined");
     }
     
     protected function getType($node)
