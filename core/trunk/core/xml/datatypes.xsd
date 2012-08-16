@@ -132,9 +132,8 @@
         <das:sqltype driver='postgresql'>bigint</das:sqltype>
       </xsd:appinfo>
     </xsd:annotation>
-    <xsd:restriction base="xsd:unsignedLong">
-        <xsd:minInclusive value="0"/>
-        <xsd:maxInclusive value="9223372036854775807"/>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="([0-9]{0,16}|null)"/>
     </xsd:restriction>
   </xsd:simpleType> 
   
@@ -145,8 +144,7 @@
       </xsd:appinfo>
     </xsd:annotation>
     <xsd:restriction base="xsd:unsignedLong">
-        <xsd:minInclusive value="0"/>
-        <xsd:maxInclusive value="2147483647"/>
+      <xsd:pattern value="([0-9]{0,8}|null)"/>
     </xsd:restriction>
   </xsd:simpleType> 
   
