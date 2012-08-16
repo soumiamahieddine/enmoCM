@@ -184,26 +184,36 @@ class webService {
      * launch the web service engine required
      */
     function launchWs() {
-        require_once("core" . DIRECTORY_SEPARATOR . "class"
-            . DIRECTORY_SEPARATOR . "web_service" . DIRECTORY_SEPARATOR . "class_soap_server.php");
-        require_once("core" . DIRECTORY_SEPARATOR . "class"
-        . DIRECTORY_SEPARATOR . "web_service" . DIRECTORY_SEPARATOR . "class_xmlrpc_server.php");
+        require_once('core/class/web_service/class_rest_server.php');
+        require_once('core/class/web_service/class_soap_server.php');
+        require_once('core/class/web_service/class_xmlrpc_server.php');
+        $restServer = new MyRestServer();
         $soapServer = new MySoapServer();
         $xmlRPC = new MyXmlRPCServer();
-        //if WSDL
+        $wsMode = explode('/', $_SERVER['QUERY_STRING']);
+        if (isset($wsMode[0]) && !empty($wsMode[0])) {
+            $wsMode = $wsMode[0];
+        }
         if (
-            isset($_SERVER['QUERY_STRING'])
-            && strcasecmp($_SERVER['QUERY_STRING'],'wsdl') == 0
+            isset($wsMode)
+            && strcasecmp($wsMode,'wsdl') == 0
         ) {
+            //WSDL
             $soapServer->makeWSDL();
         } elseif (
-            isset($_SERVER['QUERY_STRING'])
-            && strcasecmp($_SERVER['QUERY_STRING'],'xmlrpc') == 0
+            isset($wsMode)
+            && strcasecmp($wsMode,'xmlrpc') == 0
         ) {
             //XMLRPC
             $xmlRPC->makeXMLRPCServer();
+        } elseif (
+            isset($wsMode)
+            && strcasecmp($wsMode,'rest') == 0
+        ) {
+            //REST
+            $restServer->makeRESTServer();
         } else {
-            //if Soap
+            //SOAP BY DEFAULT
             if (
                 isset($_SERVER['REQUEST_METHOD'])
                 && $_SERVER['REQUEST_METHOD']=='POST'
@@ -224,8 +234,7 @@ class webService {
      */
     function parseRequestedMethod($method, $methods) {
         if (is_array($methods)) {
-            require_once("core" . DIRECTORY_SEPARATOR . "class"
-                . DIRECTORY_SEPARATOR . "class_functions.php");
+            require_once('core/class/class_functions.php');
             $arrayMethods = array();
             $func = new functions();
             //var_dump($methods);
