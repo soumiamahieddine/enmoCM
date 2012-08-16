@@ -14,7 +14,7 @@ class DataObjectDocument
 	{
 		parent::__construct();
         $this->formatOutput = false;
-        //$this->preserveWhiteSpace = false;
+        $this->preserveWhiteSpace = false;
         $this->registerNodeClass('DOMAttr', 'DataObjectAttribute');
         $this->registerNodeClass('DOMElement', 'DataObjectElement');
         $this->registerNodeClass('DOMComment', 'DataObjectLog');
@@ -489,7 +489,7 @@ class DataObjectElement
                 }
             }
             // pad the line with the required number of leading spaces
-            $line    = str_pad($token, strlen($token)+($pad*2), ' ', STR_PAD_LEFT);
+            $line    = str_pad($token, strlen($token)+($pad*4), ' ', STR_PAD_LEFT);
             $result .= $line . "\n"; // add to the cumulative result, with linefeed
             $token   = strtok("\n"); // get the next token
             $pad    += $indent; // update the pad size for subsequent lines    
