@@ -13,6 +13,8 @@ class DataObjectDocument
     public function DataObjectDocument()
 	{
 		parent::__construct();
+        $this->formatOutput = false;
+        //$this->preserveWhiteSpace = false;
         $this->registerNodeClass('DOMAttr', 'DataObjectAttribute');
         $this->registerNodeClass('DOMElement', 'DataObjectElement');
         $this->registerNodeClass('DOMComment', 'DataObjectLog');
@@ -446,10 +448,15 @@ class DataObjectElement
     
     // XML INTERFACE
     //*************************************************************************
-    public function asXml() 
+    public function asXML() 
     {  
+        return $this->C14N(false,true);
+    }
+    
+    public function show($withComments=true, $prettyAttrs=false)
+    {
         // add marker linefeeds to aid the pretty-tokeniser (adds a linefeed between all tag-end boundaries)
-        $xml = preg_replace('/(>)(<)(\/*)/', "$1\n$2$3", $this->C14N(false,true));
+        $xml = preg_replace('/(>)(<)(\/*)/', "$1\n$2$3", $this->C14N(false, $withComments));
         
         // now indent the tags
         $token      = strtok($xml, "\n");
@@ -474,11 +481,13 @@ class DataObjectElement
             } else {
                 $indent = 0; 
             }
-            /*if(preg_match('/<\!\-\-\s*\w[^>]*\s*\-\->/', $token, $matches)) {
-                // nothing
-            } else {
-                $token = $this->attrAsXml($token, $pad);
-            }*/
+            if($prettyAttrs) {
+                if(preg_match('/<\!\-\-\s*\w[^>]*\s*\-\->/', $token, $matches)) {
+                    // nothing
+                } else {
+                    $token = $this->showAttr($token, $pad);
+                }
+            }
             // pad the line with the required number of leading spaces
             $line    = str_pad($token, strlen($token)+($pad*2), ' ', STR_PAD_LEFT);
             $result .= $line . "\n"; // add to the cumulative result, with linefeed
@@ -486,10 +495,12 @@ class DataObjectElement
             $pad    += $indent; // update the pad size for subsequent lines    
         } 
         
-        return $result;
+        echo "<pre>";
+        echo htmlspecialchars($result);
+        echo "</pre>";
     }
     
-    private function attrAsXml($token, $pad)
+    private function showAttr($token, $pad)
     {
         $return = '';
         $array = preg_split("/\s(\w+=)/", $token, -1, PREG_SPLIT_DELIM_CAPTURE);
@@ -506,13 +517,6 @@ class DataObjectElement
             }
         }
         return $return;
-    }
-    
-    public function show()
-    {
-        echo "<pre>";
-        echo htmlspecialchars($this->asXml());
-        echo "</pre>";
     }
     
 }
