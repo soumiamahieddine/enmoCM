@@ -186,7 +186,7 @@ class ViewElement
             
     function disable()
     {
-        $this->setAttribute('disabled', 'disabled');
+        $this->setAttribute('disabled', 'true');
     }
     
     function enable() 
@@ -196,7 +196,7 @@ class ViewElement
     
     function select()
     {
-        $this->setAttribute('selected', 'selected');
+        $this->setAttribute('selected', 'true');
     }
     
     function unselect()
