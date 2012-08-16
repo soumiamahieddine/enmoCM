@@ -143,7 +143,7 @@
         <das:sqltype driver='postgresql'>integer</das:sqltype>
       </xsd:appinfo>
     </xsd:annotation>
-    <xsd:restriction base="xsd:unsignedLong">
+    <xsd:restriction base="xsd:string">
       <xsd:pattern value="([0-9]{0,8}|null)"/>
     </xsd:restriction>
   </xsd:simpleType> 
