@@ -306,7 +306,7 @@ class DataObjectController
         for($i=0; $i<$objectPropertiesLength; $i++) {
             $propertyNode = $objectProperties[$i];
             $propertyName = $propertyNode->getName();
-            $propertyValue = null;            
+            $propertyValue = false;            
             if($propertyNode->hasAttribute('fixed')) {
                 $propertyValue = $propertyNode->getAttribute('fixed');
             } elseif($propertyNode->hasAttribute('default')) {
@@ -317,7 +317,8 @@ class DataObjectController
                 $dataObject->setAttribute($propertyName, $propertyValue);
                 break;
             case 'xsd:element':
-                $property = $dataObjectDocument->createElement($propertyName, $propertyValue);
+                $property = $dataObjectDocument->createElement($propertyName);
+                if($propertyValue) $property->nodeValue = $propertyValue;
                 $dataObject->appendChild($property);
             }
         }
