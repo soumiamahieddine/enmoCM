@@ -13,7 +13,8 @@ class DataObjectDocument
     public function DataObjectDocument()
 	{
 		parent::__construct();
-		
+		$this->formatOutput = false;
+        $this->preserveWhiteSpace = false;
         $this->registerNodeClass('DOMAttr', 'DataObjectAttribute');
         $this->registerNodeClass('DOMElement', 'DataObjectElement');
         $this->registerNodeClass('DOMComment', 'DataObjectLog');
