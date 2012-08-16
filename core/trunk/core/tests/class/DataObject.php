@@ -429,18 +429,18 @@ class DataObjectElement
     
     public function getValidationErrors()
     {
+        $xpath = new DOMXPath($this->ownerDocument);
         $validateOperations = 
-            $this->ownerDocument->xpath(
+            $xpath->query(
                 $this->getNodePath() 
                 . "/comment()[contains(., 'operation=\"".DataObjectLog::VALIDATE."\"')]"
             );
         $validationErrors = array();
         for($i=0; $i<$validateOperations->length; $i++) {
             $validateOperation = $validateOperations->item($i);
-            $validationErrors[] = array(
-                'level'=> $validateOperation->getAttribute('level'),
-                'message' => $validateOperation->getAttribute('message')
-                );
+            $validationErrors[] = 
+                "[" . $validateOperation->getAttribute('level') . "] "
+                . $validateOperation->getAttribute('message');
         }
         return $validationErrors;
     }
