@@ -2,6 +2,7 @@
 global $SOAP_dispatch_map;
 global $XMLRPC_dispatch_map;
 global $SOAP_typedef;
+global $REST_dispatch_map;
 
 $XMLRPC_dispatch_map['addContact'] = Array(
                             'function' => 'addContact',
@@ -53,3 +54,7 @@ $SOAP_dispatch_map['listContacts'] = Array(
                                      'out' => Array('out'=> '{urn:MySoapServer}complexContactOut'),
                                      'method' => "apps#contacts::listContacts"
                                      );
+
+$REST_dispatch_map['res'] = Array(
+    'pathToController' => "apps/maarch_entreprise/class/cmis_res_controller.php"
+);
