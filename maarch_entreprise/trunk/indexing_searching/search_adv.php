@@ -243,24 +243,24 @@ if($_SESSION['features']['search_notes'] == 'true')
 //tags 
 if($core_tools->is_module_loaded('tags'))
 {
-	$arr_tmptag = array();
-	require_once 'modules/tags/class/TagControler.php' ;
-	require_once 'modules/tags/tags_tables_definition.php';
-	$tag = new tag_controler;
+    $arr_tmptag = array();
+    require_once 'modules/tags/class/TagControler.php' ;
+    require_once 'modules/tags/tags_tables_definition.php';
+    $tag = new tag_controler;
     $tag_return_value = $tag -> get_all_tags();
  
-	if ($tag_return_value){
-		foreach($tag_return_value as $tagelem)
-		{
-			array_push($arr_tmptag, array('VALUE' => $tagelem['tag_label'], 'LABEL' => $tagelem['tag_label']));
-		}
-	}
-	else
-	{
-		array_push($arr_tmptag, array('VALUE' => '', 'LABEL' => _TAGNONE));
-	}
+    if ($tag_return_value){
+        foreach($tag_return_value as $tagelem)
+        {
+            array_push($arr_tmptag, array('VALUE' => $tagelem['tag_label'], 'LABEL' => $tagelem['tag_label']));
+        }
+    }
+    else
+    {
+        array_push($arr_tmptag, array('VALUE' => '', 'LABEL' => _TAGNONE));
+    }
     $param['tag_mu'] = array('label' => _TAG_SEARCH, 'type' => 'select_multiple', 'param' => array('field_label' => _TAG_SEARCH, 'label_title' => _CHOOSE_TAG,
-	'id' => 'tags','options' => $arr_tmptag));
+    'id' => 'tags','options' => $arr_tmptag));
 
 }
 
@@ -475,8 +475,8 @@ if(isset($_REQUEST['nodetails']))
                                 <label for="baskets" class="bold" ><?php echo _SPREAD_SEARCH_TO_BASKETS;?>:</label>
                                 <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple" />
                                 <select name="baskets_clause" id="baskets_clause">
-                                    <option id="false" value="false"><?php echo _NO;?></option>
                                     <option id="true" value="true"><?php echo _ALL_BASKETS;?></option>
+                                    <option id="false" value="false"><?php echo _NO;?></option>
                                     <?php if($_REQUEST['mode'] != 'popup') {
                                         for($i=0; $i< count($_SESSION['user']['baskets']);$i++) {
                                         ?><option id="<?php echo $_SESSION['user']['baskets'][$i]['id'];?>" value="<?php echo $_SESSION['user']['baskets'][$i]['id'];?>" ><?php echo $_SESSION['user']['baskets'][$i]['desc'];?></option>
