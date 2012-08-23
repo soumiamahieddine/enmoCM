@@ -1423,7 +1423,7 @@ class functions
         $isEmpty = true;
         while(($entry = readdir($dir)) !== false)
         {
-            if($entry !== '.' && $entry !== '..')
+            if($entry !== '.' && $entry !== '..'  && $entry !== '.svn')
             {
                 $isEmpty = false;
                 break;
@@ -1431,6 +1431,26 @@ class functions
         }
         closedir($dir);
         return $isEmpty;
+    }
+    
+    /**
+    * Returns array of files in a folder
+    *
+    * @param  $dir string The directory to check
+    * @return array list of files
+    */
+    function getFilesInFolder($dir)
+    {
+        $dir = opendir($dir);
+        $isEmpty = true;
+        $filesArray = array();
+        while (($entry = readdir($dir)) !== false) {
+            if ($entry !== '.' && $entry !== '..'  && $entry !== '.svn') {
+                array_push($filesArray, $entry);
+            }
+        }
+        closedir($dir);
+        return $filesArray;
     }
 
     /**
