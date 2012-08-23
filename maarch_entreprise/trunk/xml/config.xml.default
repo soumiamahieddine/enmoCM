@@ -67,7 +67,7 @@
         <script_search_result>list_results_invoices.php</script_search_result>
         <script_details>details_invoices.php</script_details>
         <extensions>
-            <table></table>
+            <table>rm_ext_x</table>
         </extensions>
         <path_to_lucene_index>C:\Maarch\indexes\sample\res_coll\</path_to_lucene_index>
     </COLLECTION>
