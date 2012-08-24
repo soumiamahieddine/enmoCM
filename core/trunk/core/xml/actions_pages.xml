@@ -126,4 +126,13 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>index_rm_seda</ID>
+        <LABEL>_INDEX_ARCHIVE</LABEL>
+        <NAME>index_rm_seda</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>records_management</MODULE>
+        <KEYWORD>indexing</KEYWORD>
+        <FLAG_CREATE>true</FLAG_CREATE>
+    </ACTIONPAGE>
 </ROOT>
