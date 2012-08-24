@@ -67,9 +67,26 @@
         <script_search_result>list_results_invoices.php</script_search_result>
         <script_details>details_invoices.php</script_details>
         <extensions>
-            <table>rm_ext_x</table>
+            <table></table>
         </extensions>
         <path_to_lucene_index>C:\Maarch\indexes\sample\res_coll\</path_to_lucene_index>
+    </COLLECTION>
+    <COLLECTION>
+        <id>rm_seda_coll</id>
+        <label>_RM_SEDA</label>
+        <table>res_rm_seda</table>
+        <version_table></version_table>
+        <view>res_view_rm_seda</view>
+        <adr>adr_rm_seda</adr>
+        <index_file>index_rm_seda.xml</index_file>
+        <script_add>index_rm_seda.php</script_add>
+        <script_search>search_rm_seda.php</script_search>
+        <script_search_result>list_results_rm_seda.php</script_search_result>
+        <script_details>details_rm_seda.php</script_details>
+        <extensions>
+            <table>rm_ext_seda</table>
+        </extensions>
+        <path_to_lucene_index></path_to_lucene_index>
     </COLLECTION>
     <COLLECTION>
         <id>apa_coll</id>
