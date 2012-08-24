@@ -291,7 +291,13 @@ function getLabel($constant)
 //getDependantUri
 function getDependantUri($get, $uri)
 {
-    $toSearch = $get . '=' . $_REQUEST[$get];
+    $getValue = str_replace(
+        ' ',
+        '%20',
+        $_REQUEST[$get]
+    );
+    
+    $toSearch = $get . '=' . $getValue;
 
     $sourceArray = array(
         '?'.$toSearch . '&',
