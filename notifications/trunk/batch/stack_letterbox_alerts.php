@@ -57,7 +57,8 @@ while ($state <> 'END') {
 			. " FROM " . $collView
 			. " WHERE closing_date IS null"
 			. " AND status NOT IN ('CLO', 'DEL')"
-			. " AND (flag_alarm1 = 'N' OR flag_alarm2 = 'N')";
+			. " AND (flag_alarm1 = 'N' OR flag_alarm2 = 'N')"
+            . " AND process_limit_date != '' AND process_limit_date IS NOT NULL";
 		Bt_doQuery($GLOBALS['db'], $query);
 		$totalDocsToProcess = $GLOBALS['db']->nb_result();
 		$currentDoc = 0;
@@ -90,7 +91,7 @@ while ($state <> 'END') {
 			// Alert 1 = limit - n days
 			$query = "SELECT 'true' as alarm1 FROM parameters "
 				. " WHERE " . $db->get_date_diff($db->current_datetime(), "'".$myDoc->process_limit_date."'") 
-				. " <= " . $myDoctype->delay1;
+				. " <= " . (integer)$myDoctype->delay1;
 			Bt_doQuery($db, $query);	
 			$result = $db->fetch_object();
 			if($result->alarm1 === 'true') {
@@ -116,7 +117,8 @@ while ($state <> 'END') {
 			
 			// Alert 2 = limit + n days
 			$query = "SELECT 'true' as alarm2 FROM parameters "
-				. " WHERE " . $db->get_date_diff("'".$myDoc->process_limit_date."'", $db->current_datetime()) . " >= " . $myDoctype->delay2;
+				. " WHERE " . $db->get_date_diff("'".$myDoc->process_limit_date."'", $db->current_datetime()) 
+                . " >= " . (integer)$myDoctype->delay2;
 			Bt_doQuery($db, $query);	
 			$result = $db->fetch_object();
 			if($result->alarm2 === 'true') {
