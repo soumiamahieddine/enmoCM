@@ -130,7 +130,7 @@ while ($state <> 'END') {
 							. " VALUES(" . $notification_sid . ", '" 
 							. $collView . "', '" . $myDoc->res_id . "', 'superadmin', '" . $info . "', " 
 							. $db->current_datetime() . ")";
-						$db->query($query, false, true);
+						Bt_doQuery($db, $query);
 					}
 				}
 				$query = "UPDATE " . $collExt
