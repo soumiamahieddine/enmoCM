@@ -58,7 +58,7 @@ while ($state <> 'END') {
 			. " WHERE closing_date IS null"
 			. " AND status NOT IN ('CLO', 'DEL')"
 			. " AND (flag_alarm1 = 'N' OR flag_alarm2 = 'N')"
-            . " AND process_limit_date != '' AND process_limit_date IS NOT NULL";
+            . " AND process_limit_date IS NOT NULL";
 		Bt_doQuery($GLOBALS['db'], $query);
 		$totalDocsToProcess = $GLOBALS['db']->nb_result();
 		$currentDoc = 0;
