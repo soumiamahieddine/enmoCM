@@ -93,8 +93,11 @@ class SchemaElement
     
     public function isRequired()
     {
-        if($this->getAttribute('use') == "required"
+        if(
+            $this->getAttribute('use') == "required"
             || strtolower($this->getAttribute('nillable')) == "false"
+            || !$this->hasAttribute('minOccurs') 
+            || (integer)$this->getAttribute('minOccurs') > 0
         ) {
             return true;
         }
