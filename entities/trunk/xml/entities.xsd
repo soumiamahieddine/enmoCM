@@ -47,56 +47,6 @@
     <xsd:attribute name="enabled" type="boolean" default="Y" />
   </xsd:complexType>
   
-  <xsd:element name='rm_entities' type='rm_entities' 
-    das:source='maarch_entreprise'
-    das:key='rm_entities_pkey'>
-    <xsd:annotation>
-      <xsd:appinfo>
-        <das:relation name='entities_rm_entities' parent='entities' child='rm_entities'>
-          <das:foreign-key parent-key="entity_id" child-key="entity_id"/>
-        </das:relation> 
-      </xsd:appinfo>
-    </xsd:annotation>
-    <xsd:key name="rm_entities_pkey">
-      <xsd:selector xpath="."/>
-      <xsd:field xpath="@rm_entity_id" das:serial="true"/>
-    </xsd:key>
-  </xsd:element>
-    
-  <xsd:complexType name='rm_entities'>
-    <xsd:sequence>
-      <xsd:element name="is_archival" type="boolean" default="N" />
-      <xsd:element name="is_originating" type="boolean" default="N" />
-      <xsd:element name="is_transferring" type="boolean" default="N" />
-      <xsd:element name="is_controlling" type="boolean" default="N" />
-      <xsd:element name="rm_type" type="varchar50" default='Collectivité'/>
-      <xsd:element name="parallel_forms_of_names" type="text" />
-      <xsd:element name="other_normalized_names" type="text" />
-      <xsd:element name="other_names" type="text" />
-      <xsd:element name="oldest_date" type="datetime" />
-      <xsd:element name="latest_date" type="datetime" />
-      <xsd:element name="history" type="text" />
-      <xsd:element name="places" type="text" />
-      <xsd:element name="legal_status" type="text" />
-      <xsd:element name="activities" type="text" />
-      <xsd:element name="mandates" type="text" />
-      <xsd:element name="structure" type="text" />
-      <xsd:element name="context" type="text" />
-      <xsd:element name="record_id" type="varchar100" />
-      <xsd:element name="institution_id" type="varchar255" />
-      <xsd:element name="rules" type="text" />
-      <xsd:element name="status" type="varchar255" />
-      <xsd:element name="detail_level" type="varchar255" />
-      <xsd:element name="maintenance_dates" type="datetime" />
-      <xsd:element name="description_language" type="varchar100" />
-      <xsd:element name="sources" type="text" />
-      <xsd:element name="maintenance_notes" type="text" />
-    </xsd:sequence>
-    <xsd:attribute name="rm_entity_id" type="bigint" use="required" />
-    <xsd:attribute name="entity_id" type="varchar32" use="required" />
-  </xsd:complexType>
-  
-  
   <!--xsd:element name='TYPE' type='entity_type' das:table='/root/TYPE' das:key-columns='id' das:filter-columns='id label'>
     <xsd:annotation>
       <xsd:appinfo>
