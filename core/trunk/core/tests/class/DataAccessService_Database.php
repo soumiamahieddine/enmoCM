@@ -643,13 +643,9 @@ class DataAccessService_Database
             $propertyName = $propertyNode->getName();
             $columnName = $propertyNode->getColumn();
             if(!in_array($propertyName, $ignoreKeyFields)
-                && (
-                    ( 
-                        isset($dataObject->$propertyName) 
-                        && mb_strlen(trim($dataObject->$propertyName)) > 0
-                    )
-                    || $propertyNode->isRequired() 
-                )
+                && ( ( isset($dataObject->$propertyName) 
+                    && mb_strlen(trim($dataObject->$propertyName)) > 0 )
+                    || $propertyNode->isRequired() )
             ) { 
                 $insertColumns[] = $columnName;
             }
@@ -681,13 +677,9 @@ class DataAccessService_Database
             $propertyNode = $objectProperties[$i];
             $propertyName = $propertyNode->getName();
             if(!in_array($propertyName, $ignoreKeyFields)
-                && (
-                    ( 
-                        isset($dataObject->$propertyName) 
-                        && mb_strlen(trim($dataObject->$propertyName)) > 0
-                    )
-                    || $propertyNode->isRequired() 
-                )
+                && ( ( isset($dataObject->$propertyName) 
+                        && mb_strlen(trim($dataObject->$propertyName)) > 0 )
+                    || $propertyNode->isRequired() )
             ) { 
                 $propertyType = $this->getType($propertyNode);
                 $enclosure = $propertyType->getEnclosure();

@@ -14,9 +14,9 @@ class Schema
         $this->registerNodeClass('DOMAttr', 'SchemaAttribute');
     }
     
-    public function loadXSD($xsdFile, $rootSchema=false)
+    public function loadXSD($schemaLocation, $rootSchema=false)
     {
-        $this->load($xsdFile);
+        $this->load($schemaLocation);
         if(!$rootSchema) $rootSchema = $this;
         $this->processIncludes($this, $rootSchema);
     }
@@ -93,11 +93,15 @@ class SchemaElement
     
     public function isRequired()
     {
-        if(
-            $this->getAttribute('use') == "required"
-            || strtolower($this->getAttribute('nillable')) == "false"
-            || !$this->hasAttribute('minOccurs') 
-            || (integer)$this->getAttribute('minOccurs') > 0
+        if($this->tagName == 'xsd:attribute' 
+            && $this->getAttribute('use') == "required")
+        { 
+            return true;
+        }
+        if($this->tagName == 'xsd:element' 
+            && ( strtolower($this->getAttribute('nillable')) == "false"
+                || !$this->hasAttribute('minOccurs') 
+                || (integer)$this->getAttribute('minOccurs') > 0)
         ) {
             return true;
         }

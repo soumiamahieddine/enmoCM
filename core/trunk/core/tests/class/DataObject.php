@@ -222,6 +222,7 @@ class DataObjectElement
                 }
                 return;
             }
+            // Element
             $XPath = new DOMXPath($this->ownerDocument);
             $propertyNodes = $XPath->query(
                 './' . $name, $this
@@ -233,7 +234,6 @@ class DataObjectElement
                 if($valueBefore != $value) {
                     $this->logUpdate($name, $valueBefore, $value);
                     $propertyNode->nodeValue = $value;
-                    
                 }
             }
         } 
@@ -254,7 +254,6 @@ class DataObjectElement
         $nodes = $XPath->query(
             $this->getNodePath() . '/' . $name
         );
-        
         if($nodes->length == 1 
             && $nodes->item(0)->getElementsByTagName('*')->length == 0) {
             return (string)$nodes->item(0)->nodeValue;  
