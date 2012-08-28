@@ -2233,8 +2233,8 @@ function loadRepList(id)
 function checkBeforeOpenBlank (url, value)
 {
     if (value != '') {
-        console.log('value : '+value);
-        window.open(url, 'target=_blank');
+        //console.log('value : '+value);
+        window.open(url);
     }
 }
 
