@@ -137,9 +137,15 @@ function testParams()
             . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
             . 'admin' . DIRECTORY_SEPARATOR
             . $_REQUEST['admin'];
+		$params['schemaPath'] = $params['viewLocation'] . DIRECTORY_SEPARATOR
+			. 'xml' . DIRECTORY_SEPARATOR
+			. $_REQUEST['admin'] . '.xsd';
     } elseif (isset($_REQUEST['module']) && !empty($_REQUEST['module'])) {
         $params['viewLocation'] = 'modules' . DIRECTORY_SEPARATOR
             . $_REQUEST['module'];
+		$params['schemaPath'] = $params['viewLocation'] . DIRECTORY_SEPARATOR
+			. 'xml' . DIRECTORY_SEPARATOR
+			. $_REQUEST['module'] . '.xsd';
     }
     
     if (isset($_REQUEST['order']) && !empty($_REQUEST['order']))
@@ -343,7 +349,6 @@ $pagePath = locationBarManagement(
 );
 
 //load the object
-$schemaPath  = $params['viewLocation'] . '/xml/' . $params['objectName'] . '.xsd';
 $messagePath = $params['viewLocation'] . '/xml/' . $params['objectName'] . '_Messages.xml';
 $messageController->loadMessageFile(
     $messagePath
@@ -351,7 +356,7 @@ $messageController->loadMessageFile(
 
 require_once('core/tests/class/DataObjectController.php');
 $DataObjectController = new DataObjectController();
-$DataObjectController->loadXSD($schemaPath);
+$DataObjectController->loadXSD($params['schemaPath']);
 
 if (isset($_REQUEST['submit'])) {
     $dataObject = $DataObjectController->load(
@@ -1121,7 +1126,7 @@ if (isset($_REQUEST['submit'])) {
                       $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
                      $str_htmlList .= '" ';
                      $str_htmlList .= 'style="';
-                      $str_htmlList .= 'text-align: right; ';
+                      $str_htmlList .= 'text-align: right; height: 20px;';
                      $str_htmlList .= '" ';
                     $str_htmlList .= '>';
                         if (in_array('create', $actions)) {
