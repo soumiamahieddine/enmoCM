@@ -114,6 +114,13 @@ class diffusion_type_controler
 		require($attachforType->script);
 		return $attach;
 	}
+    
+    public function getResId($notification, $event) {
+        $diffusionType = $this->get($notification->diffusion_type);
+        $request = 'res_id';
+		require($diffusionType->script);
+		return $res_id;
+    }
 
 }
 
