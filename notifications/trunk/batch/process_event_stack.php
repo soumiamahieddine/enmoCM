@@ -68,6 +68,16 @@ while ($state <> 'END') {
 			// Diffusion type specific recipients
 			$recipients = array();
 			$recipients = $diffusion_type_controler->getRecipients($notification, $event);
+            // Diffusion type specific res_id
+            $logger->write("Getting document ids using diffusion type '" .$notification->diffusion_type . "'", 'INFO');
+            $res_id = false;
+            if($event->table_name == $coll_table || $event->table_name == $coll_view) {
+                $res_id = $event->record_id;
+            } else {
+                $res_id = $diffusion_type_controler->getResId($notification, $event);
+            } 
+            $event->res_id = $res_id;
+            
 			$nbRecipients = count($recipients);
 			if ($nbRecipients === 0) {
 				$logger->write('No recipient found' , 'WARNING');
@@ -139,15 +149,13 @@ while ($state <> 'END') {
 				$logger->write('Adding attachments', 'INFO');
 				foreach($tmpNotif['events'] as $event) {
 					// Check if event is related to document in collection
-					$logger->write('Checking table/view of event VS config:' 
-						. $event->table_name . ' ?= ' . $coll_view . ' or ' . $coll_table, 'INFO');
-					if($event->table_name == $coll_table || $event->table_name == $coll_view) {
-						$query = "SELECT "
+                    if($event->res_id != '') {
+                        $query = "SELECT "
 							. "ds.path_template ,"
 							. "mlb.path, "
 							. "mlb.filename " 
 							. "FROM ".$coll_view." mlb LEFT JOIN docservers ds ON mlb.docserver_id = ds.docserver_id "
-							. "WHERE mlb.res_id = " . $event->record_id;
+							. "WHERE mlb.res_id = " . $event->res_id;
 						Bt_doQuery($db, $query);
 						$path_parts = $db->fetch_object();
 						$path = $path_parts->path_template . str_replace('#', '/', $path_parts->path) . $path_parts->filename;
