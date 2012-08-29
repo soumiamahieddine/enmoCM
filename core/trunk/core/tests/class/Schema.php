@@ -26,12 +26,13 @@ class Schema
         $includes = $schema->getElementsByTagName('include');
         while($includes->length > 0) {
             $include = $includes->item(0);
-            $schemaLocation = $include->getAttribute('schemaLocation');
+            $includeSchemaLocation = $include->getAttribute('schemaLocation');
             if(!in_array(
-                $schemaLocation, 
+                $includeSchemaLocation, 
                 $rootSchema->includedSchemaLocations)
             ) {
-                $includeSchema = new Schema();
+                $this->includeXSD($schema, $includeSchemaLocation, $rootSchema);
+                /*$includeSchema = new Schema();
                 $includeSchema->loadXSD($schemaLocation, $rootSchema);
                 $schemaContents = $includeSchema->documentElement->childNodes;
                 for($j=0; $j<$schemaContents->length; $j++) {
@@ -39,10 +40,23 @@ class Schema
                     $importedNode = $schema->importNode($importNode, true);
                     $schema->documentElement->appendChild($importedNode);
                 }
-                $rootSchema->includedSchemaLocations[] = $schemaLocation;
+                $rootSchema->includedSchemaLocations[] = $schemaLocation;*/
             }
             $include->parentNode->removeChild($include);
         }
+    }
+    
+    public function includeXSD($schema, $includeSchemaLocation, $rootSchema)
+    {
+        $includeSchema = new Schema();
+        $includeSchema->loadXSD($includeSchemaLocation, $rootSchema);
+        $schemaContents = $includeSchema->documentElement->childNodes;
+        for($j=0; $j<$schemaContents->length; $j++) {
+            $importNode = $schemaContents->item($j);
+            $importedNode = $schema->importNode($importNode, true);
+            $schema->documentElement->appendChild($importedNode);
+        }
+        $rootSchema->includedSchemaLocations[] = $includeSchemaLocation;
     }
 
 }

@@ -18,7 +18,7 @@ require_once 'core/tests/class/Exception.php';
 class DataObjectController 
     extends DOMXPath
 {
- 
+
     public $dataObjectDocuments = array();
     public $dataAccessServices = array();
     protected $XRefs = array();
@@ -52,10 +52,19 @@ class DataObjectController
         // Construct SchemaController
         parent::__construct($schema);
         $this->schema = $this->document;
-
     }
     
-    // Load schema from Schema document
+    // Include XSD file content to master schema
+    public function includeXSD($XSDFile)
+    {
+        $this->schema->includeXSD(
+            $this->schema, 
+            $XSDFile, 
+            $this->schema
+        );
+    }
+    
+    // Load schema from Schema object
     public function loadSchema($schemaXML)
     {
         // Construct SchemaController
