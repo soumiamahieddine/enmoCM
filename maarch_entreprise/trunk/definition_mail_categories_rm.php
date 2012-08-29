@@ -1,9 +1,9 @@
 <?php
 
 /*
-*    Copyright 2008,2009 Maarch
+*   Copyright 2008-2012 Maarch
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -72,11 +72,11 @@ $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 /**************************** Categories descriptions******************************/
 $_ENV['categories'] = array ();
 
-///////////////////////////// INCOMING ////////////////////////////////////////////////
-$_ENV['categories']['incoming'] = array ();
-$_ENV['categories']['incoming']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_incoming.gif';
-$_ENV['categories']['incoming']['other_cases'] = array ();
-$_ENV['categories']['incoming']['priority'] = array (
+///////////////////////////// RM_ARCHIVE ////////////////////////////////////////////////
+$_ENV['categories']['rm_archive'] = array ();
+$_ENV['categories']['rm_archive']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_incoming.gif';
+$_ENV['categories']['rm_archive']['other_cases'] = array ();
+$_ENV['categories']['rm_archive']['priority'] = array (
     'type_form' => 'integer',
     'type_field' => 'integer',
     'mandatory' => false,
@@ -86,711 +86,105 @@ $_ENV['categories']['incoming']['priority'] = array (
     'modify' => true,
     'form_show' => 'select'
 );
-$_ENV['categories']['incoming']['type_id'] = array (
+$_ENV['categories']['rm_archive']['type_id'] = array (
     'type_form' => 'integer',
     'type_field' => 'integer',
     'mandatory' => true,
-    'label' => _DOCTYPE_MAIL,
+    'label' => _TYPE_DARCHIVE,
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
     'modify' => true,
     'form_show' => 'select'
 );
-$_ENV['categories']['incoming']['doc_date'] = array (
+$_ENV['categories']['rm_archive']['originating_entity'] = array (
+        'type_form' => 'string',
+        'type_field' => 'string',
+        'mandatory' => true,
+        'label' => _ENTITE_PRODUCTRICE,
+        'table' => 'coll_ext',
+        'img' => $_SESSION['config']['businessappurl'] 
+            . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'modify' => false,
+        'form_show' => 'select'
+);
+$_ENV['categories']['rm_archive']['originating_subentity'] = array (
+        'type_form' => 'string',
+        'type_field' => 'string',
+        'mandatory' => true,
+        'label' => _SERVICE_PRODUCTEUR,
+        'table' => 'coll_ext',
+        'img' => $_SESSION['config']['businessappurl'] 
+            . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'modify' => false,
+        'form_show' => 'select'
+);
+$_ENV['categories']['rm_archive']['requesting_entity'] = array (
+        'type_form' => 'string',
+        'type_field' => 'string',
+        'mandatory' => true,
+        'label' => _SERVICE_VERSANT,
+        'table' => 'coll_ext',
+        'img' => $_SESSION['config']['businessappurl'] 
+            . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'modify' => false,
+        'form_show' => 'select'
+);
+$_ENV['categories']['rm_archive']['appraisal_code'] = array (
+        'type_form' => 'string',
+        'type_field' => 'string',
+        'mandatory' => true,
+        'label' => _REGLE_GESTION,
+        'table' => 'coll_ext',
+        'img' => $_SESSION['config']['businessappurl'] 
+            . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'modify' => false,
+        'form_show' => 'select'
+);
+$_ENV['categories']['rm_archive']['apparaisal_duration'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => true,
+    'label' => _DUA,
+    'table' => 'coll_ext',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'modify' => true,
+    'form_show' => 'textfield'
+);
+$_ENV['categories']['rm_archive']['item_name'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => true,
+    'label' => _INTITULE_ANALYSE,
+    'table' => 'coll_ext',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'modify' => true,
+    'form_show' => 'textarea'
+);
+$_ENV['categories']['rm_archive']['io_date'] = array (
     'type_form' => 'date',
     'type_field' => 'date',
     'mandatory' => true,
-    'label' => _MAIL_DATE,
-    'table' => 'res',
+    'label' => _DATE_DE_LA_PIECE,
+    'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
     'modify' => true,
     'form_show' => 'date'
-);
-$_ENV['categories']['incoming']['admission_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'mandatory' => true,
-    'label' => _RECEIVING_DATE,
-    'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arriv.gif',
-    'modify' => true,
-    'form_show' => 'date'
-);
-$_ENV['categories']['incoming']['nature_id'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _NATURE,
-    'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['incoming']['subject'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _SUBJECT,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
-    'modify' => true,
-    'form_show' => 'textarea'
-);
-$_ENV['categories']['incoming']['process_limit_date_use'] = array (
-    'type_form' => 'radio',
-    'mandatory' => true,
-    'label' => _PROCESS_LIMIT_DATE_USE,
-    'table' => 'none',
-    'values' => array (
-        'Y',
-        'N'
-    ),
-    'modify' => false
-);
-
-$_ENV['categories']['incoming']['other_cases']['process_limit_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'label' => _PROCESS_LIMIT_DATE,
-    'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arriv.gif',
-    'modify' => true,
-    'form_show' => 'date'
-);
-$_ENV['categories']['incoming']['type_contact'] = array (
-    'type_form' => 'radio',
-    'mandatory' => true,
-    'label' => _SHIPPER_TYPE,
-    'table' => 'none',
-    'values' => array (
-        'internal',
-        'external'
-    ),
-    'modify' => false
-);
-$_ENV['categories']['incoming']['other_cases']['contact'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _SHIPPER,
-    'table' => 'coll_ext',
-    'special' => 'exp_user_id,exp_contact_id',
-    'modify' => false
-);
-
-///////////////////////////// OUTGOING ////////////////////////////////////////////////
-$_ENV['categories']['outgoing'] = array ();
-$_ENV['categories']['outgoing']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_outgoing.gif';
-$_ENV['categories']['outgoing']['other_cases'] = array ();
-$_ENV['categories']['outgoing']['priority'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => false,
-    'label' => _PRIORITY,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['outgoing']['type_id'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => true,
-    'label' => _DOCTYPE_MAIL,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['outgoing']['doc_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'mandatory' => true,
-    'label' => _MAIL_DATE,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=small_calend.gif',
-    'modify' => true,
-    'form_show' => 'date'
-);
-$_ENV['categories']['outgoing']['nature_id'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _NATURE,
-    'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['outgoing']['subject'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _SUBJECT,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
-    'modify' => true,
-    'form_show' => 'textarea'
-);
-$_ENV['categories']['outgoing']['other_cases']['chrono_number'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => true,
-    'label' => _CHRONO_NUMBER,
-    'table' => 'none',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
-    'modify' => false,
-    'form_show' => 'textfield'
-);
-$_ENV['categories']['outgoing']['process_limit_date_use'] = array (
-    'type_form' => 'radio',
-    'mandatory' => true,
-    'label' => _PROCESS_LIMIT_DATE_USE,
-    'table' => 'none',
-    'values' => array (
-        'Y',
-        'N'
-    ),
-    'modify' => false
-);
-$_ENV['categories']['outgoing']['other_cases']['process_limit_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'label' => _PROCESS_LIMIT_DATE,
-    'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_limit.gif',
-    'modify' => false,
-    'form_show' => 'date'
-);
-$_ENV['categories']['outgoing']['type_contact'] = array (
-    'type_form' => 'radio',
-    'mandatory' => true,
-    'label' => _DEST_TYPE,
-    'table' => 'none',
-    'values' => array (
-        'internal',
-        'external'
-    ),
-    'modify' => false
-);
-$_ENV['categories']['outgoing']['other_cases']['contact'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _DEST,
-    'table' => 'coll_ext',
-    'special' => 'dest_user_id,dest_contact_id',
-    'modify' => false
-);
-
-///////////////////////////// INTERNAL ////////////////////////////////////////////////
-$_ENV['categories']['internal'] = array ();
-$_ENV['categories']['internal']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_internal.gif';
-$_ENV['categories']['internal']['other_cases'] = array ();
-$_ENV['categories']['internal']['priority'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => false,
-    'label' => _PRIORITY,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['internal']['type_id'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => true,
-    'label' => _DOCTYPE_MAIL,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['internal']['doc_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'mandatory' => true,
-    'label' => _MAIL_DATE,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
-    'modify' => true,
-    'form_show' => 'date'
-);
-$_ENV['categories']['internal']['nature_id'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _NATURE,
-    'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['internal']['subject'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _SUBJECT,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
-    'modify' => true,
-    'form_show' => 'taextarea'
-);
-$_ENV['categories']['internal']['process_limit_date_use'] = array (
-    'type_form' => 'radio',
-    'mandatory' => true,
-    'label' => _PROCESS_LIMIT_DATE_USE,
-    'table' => 'none',
-    'values' => array (
-        'Y',
-        'N'
-    ),
-    'modify' => false
-);
-$_ENV['categories']['internal']['other_cases']['process_limit_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'label' => _PROCESS_LIMIT_DATE,
-    'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_limit.gif',
-    'modify' => false
-);
-$_ENV['categories']['internal']['type_contact'] = array (
-    'type_form' => 'radio',
-    'mandatory' => true,
-    'label' => _DEST_TYPE,
-    'table' => 'none',
-    'values' => array (
-        'internal',
-        'external'
-    ),
-    'modify' => false
-);
-$_ENV['categories']['internal']['other_cases']['contact'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _DEST,
-    'table' => 'coll_ext',
-    'special' => 'dest_user_id,dest_contact_id',
-    'modify' => false
-);
-
-/////////////////////////////MARKET DOCUMENT////////////////////////////////////////////////
-$_ENV['categories']['market_document'] = array ();
-$_ENV['categories']['market_document']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_market.gif';
-$_ENV['categories']['market_document']['other_cases'] = array ();
-$_ENV['categories']['market_document']['type_id'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => true,
-    'label' => _DOCTYPE,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['market_document']['doc_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'mandatory' => true,
-    'label' => _DOC_DATE,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=small_calend.gif',
-    'modify' => true,
-    'form_show' => 'date'
-);
-$_ENV['categories']['market_document']['subject'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _SUBJECT,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
-    'modify' => true,
-    'form_show' => 'textarea'
-);
-$_ENV['categories']['market_document']['author'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _AUTHOR,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=author.gif',
-    'modify' => true,
-    'form_show' => 'textfield'
-);
-
-/////////////////////////////POSTINDEXING DOCUMENT////////////////////////////////////////////////
-$_ENV['categories']['postindexing_document'] = array ();
-$_ENV['categories']['postindexing_document']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_market.gif';
-$_ENV['categories']['postindexing_document']['other_cases'] = array ();
-$_ENV['categories']['postindexing_document']['type_id'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => true,
-    'label' => _DOCTYPE,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['postindexing_document']['priority'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => false,
-    'label' => _PRIORITY,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['postindexing_document']['admission_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'mandatory' => true,
-    'label' => _RECEIVING_DATE,
-    'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arriv.gif',
-    'modify' => true,
-    'form_show' => 'date'
-);
-$_ENV['categories']['postindexing_document']['nature_id'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _NATURE,
-    'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['postindexing_document']['doc_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'mandatory' => true,
-    'label' => _DOC_DATE,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=small_calend.gif',
-    'modify' => true,
-    'form_show' => 'date'
-);
-$_ENV['categories']['postindexing_document']['subject'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _SUBJECT,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
-    'modify' => true,
-    'form_show' => 'textarea'
-);
-$_ENV['categories']['postindexing_document']['type_contact'] = array (
-    'type_form' => 'radio',
-    'mandatory' => true,
-    'label' => _SHIPPER_TYPE,
-    'table' => 'none',
-    'values' => array (
-        'internal',
-        'external'
-    ),
-    'modify' => false
-);
-$_ENV['categories']['postindexing_document']['other_cases']['contact'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _SHIPPER,
-    'table' => 'coll_ext',
-    'special' => 'exp_user_id,exp_contact_id',
-    'modify' => false
-);
-/////////////////////////////EMPTY////////////////////////////////////////////////
-$_ENV['categories']['empty'] = array ();
-$_ENV['categories']['empty']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_market.gif';
-$_ENV['categories']['empty']['other_cases'] = array ();
-$_ENV['categories']['empty']['type_id'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => true,
-    'label' => _DOCTYPE,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['empty']['doc_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'mandatory' => true,
-    'label' => _DOC_DATE,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=small_calend.gif',
-    'modify' => true,
-    'form_show' => 'date'
-);
-$_ENV['categories']['empty']['title'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _INVOICE_NUMBER,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=title.gif',
-    'modify' => true,
-    'form_show' => 'textfield'
-);
-$_ENV['categories']['empty']['identifier'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _INVOICE_NUMBER,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=identifier.gif',
-    'modify' => true,
-    'form_show' => 'textfield'
 );
 
 /////////////////////////////MODULES SPECIFIC////////////////////////////////////////////////
 $core = new core_tools();
-if ($core->is_module_loaded('entities')) {
-    //Entities module (incoming)
-    $_ENV['categories']['incoming']['destination'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => true,
-        'label' => _DEPARTMENT_DEST,
-        'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
-        'modify' => false,
-        'form_show' => 'select'
-    );
-    $_ENV['categories']['incoming']['other_cases']['diff_list'] = array (
-        'type' => 'special',
-        'mandatory' => true,
-        'label' => _DIFF_LIST,
-        'table' => 'special'
-    );
 
-    // Entities module (outgoing)
-    $_ENV['categories']['outgoing']['destination'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => true,
-        'label' => _DEPARTMENT_EXP,
-        'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
-        'modify' => false,
-        'form_show' => 'select'
-    );
-    $_ENV['categories']['outgoing']['other_cases']['diff_list'] = array (
-        'type' => 'special',
-        'mandatory' => true,
-        'label' => _DIFF_LIST,
-        'table' => 'special'
-    );
+$_ENV['categories']['rm_archive']['other_cases']['project'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _PROJECT,
+    'table' => 'none',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
+    'modify' => true,
+    'form_show' => 'autocomplete'
+);
 
-    // Entities module (internal)
-    $_ENV['categories']['internal']['destination'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => true,
-        'label' => _DEPARTMENT_DEST,
-        'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
-        'modify' => false,
-        'form_show' => 'select'
-    );
-    $_ENV['categories']['internal']['other_cases']['diff_list'] = array (
-        'type' => 'special',
-        'mandatory' => true,
-        'label' => _DIFF_LIST,
-        'table' => 'special'
-    );
-
-    // Entities module (postindexing_document)
-    $_ENV['categories']['postindexing_document']['destination'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => true,
-        'label' => _DEPARTMENT_DEST,
-        'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
-        'modify' => false,
-        'form_show' => 'select'
-    );
-    $_ENV['categories']['postindexing_document']['other_cases']['diff_list'] = array (
-        'type' => 'special',
-        'mandatory' => true,
-        'label' => _DIFF_LIST,
-        'table' => 'special'
-    );
-}
-if ($core->is_module_loaded('physical_archive')) {
-    //Physical Archive (incoming)
-    $_ENV['categories']['incoming']['other_cases']['arbox_id'] = array (
-        'type_form' => 'interger',
-        'type_field' => 'integer',
-        'mandatory' => true,
-        'label' => _BOX_ID,
-        'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
-        'modify' => false,
-        'form_show' => 'select'
-    );
-    // Physical Archive (outgoing)
-    $_ENV['categories']['outgoing']['other_cases']['arbox_id'] = array (
-        'type_form' => 'interger',
-        'type_field' => 'integer',
-        'mandatory' => true,
-        'label' => _BOX_ID,
-        'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
-        'modify' => false,
-        'form_show' => 'select'
-    );
-    // Physical Archive (internal)
-    $_ENV['categories']['internal']['other_cases']['arbox_id'] = array (
-        'type_form' => 'interger',
-        'type_field' => 'integer',
-        'mandatory' => true,
-        'label' => _BOX_ID,
-        'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
-        'modify' => false,
-        'form_show' => 'select'
-    );
-    // Physical Archive (market_document)
-    $_ENV['categories']['market_document']['other_cases']['arbox_id'] = array (
-        'type_form' => 'interger',
-        'type_field' => 'integer',
-        'mandatory' => true,
-        'label' => _BOX_ID,
-        'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
-        'modify' => false,
-        'form_show' => 'select'
-    );
-    // Physical Archive (postindexing_document)
-    $_ENV['categories']['postindexing_document']['other_cases']['arbox_id'] = array (
-        'type_form' => 'interger',
-        'type_field' => 'integer',
-        'mandatory' => true,
-        'label' => _BOX_ID,
-        'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
-        'modify' => false,
-        'form_show' => 'select'
-    );
-}
-
-if ($core->is_module_loaded('folder')) {
-    //Folder (incoming)
-    $_ENV['categories']['incoming']['other_cases']['market'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _MARKET,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=market.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    $_ENV['categories']['incoming']['other_cases']['project'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _PROJECT,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    //Folder (outgoing)
-    $_ENV['categories']['outgoing']['other_cases']['market'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _MARKET,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=market.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    $_ENV['categories']['outgoing']['other_cases']['project'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _PROJECT,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    //Folder (internal)
-    $_ENV['categories']['internal']['other_cases']['market'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _MARKET,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=market.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    $_ENV['categories']['internal']['other_cases']['project'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _PROJECT,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    //Folder (market_document)
-    $_ENV['categories']['market_document']['other_cases']['market'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _MARKET,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=market.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    $_ENV['categories']['market_document']['other_cases']['project'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _PROJECT,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    //Folder (postindexing_document)
-    $_ENV['categories']['postindexing_document']['other_cases']['market'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _MARKET,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=market.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    $_ENV['categories']['postindexing_document']['other_cases']['project'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _PROJECT,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-}
 
 /************************* END *************************************************************/
 

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
 	<categories>
+        <category> <!-- DO NOT MODIFY CATEGORY ID -->
+			<id>rm_archive</id>
+			<label>_RM_ARCHIVE</label>
+		</category>
 		<category> <!-- DO NOT MODIFY CATEGORY ID -->
 			<id>incoming</id>
 			<label>_INCOMING</label>

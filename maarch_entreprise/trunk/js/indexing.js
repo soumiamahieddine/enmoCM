@@ -11,7 +11,6 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
 {
     var tmp_res_id = id_res || null;
     var tmp_coll_id = id_coll || null;
-
     if(doctype_id != null && doctype_id != '' && doctype_id != NaN)
     {
         new Ajax.Request(path_manage_script,
@@ -139,8 +138,33 @@ function activate_process_date(activate, display_value_tr)
  **/
 function change_category(cat_id, display_value_tr, path_manage_script,get_js_script, params_cat)
 {
+    //Category = RM
+    if(cat_id == 'rm_archive')
+    {
+        var category = [
+        {id:'doctype_mail', type:'label', state:'display'},
+        {id:'doctype_res', type:'label', state:'hide'},
+        {id:'io_date_label', type:'label', state:'hide'},
+        {id:'originating_entity_tr', type:'tr', state:'display'},
+        {id:'originating_subentity_tr', type:'tr', state:'display'},
+        {id:'requesting_entity_tr', type:'tr', state:'display'},
+        {id:'appraisal_code_tr', type:'tr', state:'display'},
+        {id:'apparaisal_duration_tr', type:'tr', state:'display'},
+        {id:'folder_id_tr', type:'tr', state:'display'},
+        {id:'category_id_mandatory', type:'label', state:'display'},
+        {id:'type_id_mandatory', type:'label', state:'display'},
+        {id:'io_date_mandatory', type:'label', state:'display'},
+        {id:'item_name_mandatory', type:'label', state:'display'},
+        {id:'originating_entity_mandatory', type:'label', state:'display'},
+        {id:'originating_subentity_mandatory', type:'label', state:'hide'},
+        {id:'requesting_entity_mandatory', type:'label', state:'display'},
+        {id:'appraisal_code_mandatory', type:'label', state:'display'},
+        {id:'apparaisal_duration_mandatory', type:'label', state:'display'},
+        {id:'folder_id_mandatory', type:'label', state:'hide'}
+        ];
+    }
     //Category = INCOMING
-    if(cat_id == 'incoming')
+    else if(cat_id == 'incoming')
     {
         var category = [
         {id:'doctype_mail', type:'label', state:'display'},
