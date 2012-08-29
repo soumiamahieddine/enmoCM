@@ -233,7 +233,13 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'numged' && !empty($_REQUEST['numged']))
             {
                 $json_txt .= " 'numged' : ['".addslashes(trim($_REQUEST['numged']))."'],";
-                $where_request .= "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
+                require_once('core/class/class_security.php');
+                $sec = new security();
+                $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
+                if ($view <> '') {
+                    $view .= '.';
+                }
+                $where_request .= $view . "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
             }
             // DEST_USER
             elseif ($tab_id_fields[$j] == 'destinataire_chosen' && !empty($_REQUEST['destinataire_chosen']))
