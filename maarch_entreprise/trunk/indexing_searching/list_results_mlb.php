@@ -110,7 +110,7 @@ if($core_tools->is_module_loaded("cases") == true)
     array_push($select[$view], "case_id", "case_label", "case_description");
 }
 
-$status = $status_obj->get_not_searchable_status();
+/*$status = $status_obj->get_not_searchable_status();
 if(count($status) > 0) {
 	$status_str = '';
 	for($i=0; $i<count($status);$i++)
@@ -119,7 +119,7 @@ if(count($status) > 0) {
 	}
 	$status_str = preg_replace('/,$/', '', $status_str);
 	$where_request.= "  status not in (".$status_str.") ";
-}
+}*/
 if ($_REQUEST['mode'] == 'popup' && isset($_SESSION['excludeId'])) {
     $where_request .= 'AND res_id <> '.$_SESSION['excludeId'].' AND (res_id not in ((SELECT res_parent FROM res_linked WHERE res_child = '.$_SESSION['excludeId'].' )) and res_id not in ((SELECT res_child FROM res_linked WHERE res_parent = '.$_SESSION['excludeId'].')))';
     unset($_SESSION['excludeId']);
@@ -127,6 +127,7 @@ if ($_REQUEST['mode'] == 'popup' && isset($_SESSION['excludeId'])) {
 
 if(isset($_SESSION['searching']['comp_query']) && trim($_SESSION['searching']['comp_query']) <> '')
 {
+    $where_request .= " 1=1 ";
     $add_security = false;
     $where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
     if(trim($where_request) <> '')
@@ -140,6 +141,17 @@ if(isset($_SESSION['searching']['comp_query']) && trim($_SESSION['searching']['c
 }
 else
 {
+    $status = $status_obj->get_not_searchable_status();   
+    if(count($status) > 0) {    
+        $status_str = '';
+        for($i=0; $i<count($status);$i++)
+        {
+                $status_str .=  "'".$status[$i]['ID']."',";
+        }
+        $status_str = preg_replace('/,$/', '', $status_str);
+        $where_request.= "  status not in (".$status_str.") ";
+    }
+
     $add_security = true;
 }
 $where_request = str_replace(" ()", "(1=-1)", $where_request);
