@@ -117,7 +117,7 @@ $_ENV['categories']['rm_archive']['type_id'] = array (
     'label' => _TYPE_DARCHIVE,
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
-    'modify' => true,
+    'modify' => false,
     'form_show' => 'select'
 );
 $_ENV['categories']['rm_archive']['appraisal_code'] = array (
@@ -137,8 +137,29 @@ $_ENV['categories']['rm_archive']['appraisal_duration'] = array (
     'label' => _DUA,
     'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
-    'modify' => true,
+    'modify' => false,
     'form_show' => 'textfield'
+);
+
+$_ENV['categories']['rm_archive']['doc_date'] = array (
+    'type_form' => 'date',
+    'type_field' => 'date',
+    'mandatory' => false,
+    'label' => _DATE_DE_LA_PIECE,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
+    'modify' => false,
+    'form_show' => 'date'
+);
+$_ENV['categories']['rm_archive']['other_cases']['project'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _PROJECT,
+    'table' => 'none',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
+    'modify' => true,
+    'form_show' => 'autocomplete'
 );
 $_ENV['categories']['rm_archive']['item_name'] = array (
     'type_form' => 'string',
@@ -150,28 +171,6 @@ $_ENV['categories']['rm_archive']['item_name'] = array (
     'modify' => true,
     'form_show' => 'textarea'
 );
-$_ENV['categories']['rm_archive']['doc_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'mandatory' => true,
-    'label' => _DATE_DE_LA_PIECE,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
-    'modify' => true,
-    'form_show' => 'date'
-);
-/////////////////////////////MODULES SPECIFIC////////////////////////////////////////////////
-$_ENV['categories']['rm_archive']['other_cases']['project'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => false,
-    'label' => _PROJECT,
-    'table' => 'none',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
-    'modify' => true,
-    'form_show' => 'autocomplete'
-);
-
 /************************* END *************************************************************/
 
 /**
@@ -267,7 +266,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     );
                 }
                 array_push($arr, $field);
-                if ($field == 'subject') {
+                if ($field == 'item_name') {
                     $data[$field]['display'] = 'textarea';
                 }
                 $data[$field]['readonly'] = true;
