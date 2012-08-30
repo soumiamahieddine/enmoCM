@@ -96,7 +96,7 @@ $_ENV['categories']['rm_archive']['type_id'] = array (
     'modify' => true,
     'form_show' => 'select'
 );
-$_ENV['categories']['rm_archive']['originating_entity'] = array (
+$_ENV['categories']['rm_archive']['originating_entity_id'] = array (
         'type_form' => 'string',
         'type_field' => 'string',
         'mandatory' => true,
@@ -107,7 +107,7 @@ $_ENV['categories']['rm_archive']['originating_entity'] = array (
         'modify' => false,
         'form_show' => 'select'
 );
-$_ENV['categories']['rm_archive']['originating_subentity'] = array (
+$_ENV['categories']['rm_archive']['originating_user_id'] = array (
         'type_form' => 'string',
         'type_field' => 'string',
         'mandatory' => true,
@@ -118,12 +118,12 @@ $_ENV['categories']['rm_archive']['originating_subentity'] = array (
         'modify' => false,
         'form_show' => 'select'
 );
-$_ENV['categories']['rm_archive']['requesting_entity'] = array (
+$_ENV['categories']['rm_archive']['destination'] = array (
         'type_form' => 'string',
         'type_field' => 'string',
         'mandatory' => true,
         'label' => _SERVICE_VERSANT,
-        'table' => 'coll_ext',
+        'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] 
             . 'static.php?module=entities&filename=manage_entities_b_small.gif',
         'modify' => false,
@@ -140,7 +140,7 @@ $_ENV['categories']['rm_archive']['appraisal_code'] = array (
         'modify' => false,
         'form_show' => 'select'
 );
-$_ENV['categories']['rm_archive']['apparaisal_duration'] = array (
+$_ENV['categories']['rm_archive']['appraisal_duration'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
     'mandatory' => true,
@@ -160,12 +160,12 @@ $_ENV['categories']['rm_archive']['item_name'] = array (
     'modify' => true,
     'form_show' => 'textarea'
 );
-$_ENV['categories']['rm_archive']['io_date'] = array (
+$_ENV['categories']['rm_archive']['doc_date'] = array (
     'type_form' => 'date',
     'type_field' => 'date',
     'mandatory' => true,
     'label' => _DATE_DE_LA_PIECE,
-    'table' => 'coll_ext',
+    'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
     'modify' => true,
     'form_show' => 'date'

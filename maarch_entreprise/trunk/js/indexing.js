@@ -144,7 +144,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         var category = [
         {id:'doctype_mail', type:'label', state:'display'},
         {id:'doctype_res', type:'label', state:'hide'},
-        {id:'io_date_label', type:'label', state:'hide'},
+        {id:'doc_date_label', type:'label', state:'display'},
         {id:'originating_entity_tr', type:'tr', state:'display'},
         {id:'originating_subentity_tr', type:'tr', state:'display'},
         {id:'requesting_entity_tr', type:'tr', state:'display'},
@@ -153,7 +153,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'folder_id_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
-        {id:'io_date_mandatory', type:'label', state:'display'},
+        {id:'doc_date_mandatory', type:'label', state:'display'},
         {id:'item_name_mandatory', type:'label', state:'display'},
         {id:'originating_entity_mandatory', type:'label', state:'display'},
         {id:'originating_subentity_mandatory', type:'label', state:'hide'},
