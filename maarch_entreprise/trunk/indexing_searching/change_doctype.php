@@ -74,11 +74,13 @@ if ($core->service_is_enabled('param_mlb_doctypes')) {
         . $_REQUEST['type_id']
     );
     //$db->show();
+/*
     if ($db->nb_result() == 0) {
         $_SESSION['error'] = _NO_DOCTYPE_IN_DB;
         echo "{status : 2, error_txt : '".addslashes($_SESSION['error'])."'}";
         exit();
     }
+*/
 
     $res = $db->fetch_object();
     $delay = $res->process_delay;
