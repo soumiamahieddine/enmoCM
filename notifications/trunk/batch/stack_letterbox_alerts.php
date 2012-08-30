@@ -118,7 +118,7 @@ while ($state <> 'END') {
 			// Alert 2 = limit + n days
 			$query = "SELECT 'true' as alarm2 FROM parameters "
 				. " WHERE " . $db->get_date_diff("'".$myDoc->process_limit_date."'", $db->current_datetime()) 
-                . " >= " . (integer)$myDoctype->delay2;
+                . " <= " . (integer)$myDoctype->delay2;
 			Bt_doQuery($db, $query);	
 			$result = $db->fetch_object();
 			if($result->alarm2 === 'true') {
