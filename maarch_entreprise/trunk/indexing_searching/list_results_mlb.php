@@ -121,7 +121,7 @@ if(count($status) > 0) {
 	$where_request.= "  status not in (".$status_str.") ";
 }*/
 if ($_REQUEST['mode'] == 'popup' && isset($_SESSION['excludeId'])) {
-    $where_request .= 'AND res_id <> '.$_SESSION['excludeId'].' AND (res_id not in ((SELECT res_parent FROM res_linked WHERE res_child = '.$_SESSION['excludeId'].' )) and res_id not in ((SELECT res_child FROM res_linked WHERE res_parent = '.$_SESSION['excludeId'].')))';
+    $where_request .= ' res_id <> '.$_SESSION['excludeId'].' AND (res_id not in ((SELECT res_parent FROM res_linked WHERE res_child = '.$_SESSION['excludeId'].' )) and res_id not in ((SELECT res_child FROM res_linked WHERE res_parent = '.$_SESSION['excludeId'].'))) and ';
     unset($_SESSION['excludeId']);
 }
 
