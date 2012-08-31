@@ -477,11 +477,21 @@ if(isset($_REQUEST['nodetails']))
                                 <select name="baskets_clause" id="baskets_clause">
                                     <option id="true" value="true"><?php echo _ALL_BASKETS;?></option>
                                     <option id="false" value="false"><?php echo _NO;?></option>
-                                    <?php if($_REQUEST['mode'] != 'popup') {
+                                    <?php 
+                                    if($_REQUEST['mode'] != 'popup') {
                                         for($i=0; $i< count($_SESSION['user']['baskets']);$i++) {
-                                        ?><option id="<?php echo $_SESSION['user']['baskets'][$i]['id'];?>" value="<?php echo $_SESSION['user']['baskets'][$i]['id'];?>" ><?php echo $_SESSION['user']['baskets'][$i]['desc'];?></option>
-                                    <?php }
-                                        } ?>
+                                            if ($_SESSION['user']['baskets'][$i]['coll_id'] == 'letterbox_coll') {
+                                                ?><option id="<?php 
+                                                    echo $_SESSION['user']['baskets'][$i]['id'];
+                                                    ?>" value="<?php 
+                                                    echo $_SESSION['user']['baskets'][$i]['id'];
+                                                    ?>" ><?php 
+                                                    echo $_SESSION['user']['baskets'][$i]['desc'];
+                                                ?></option>
+                                                <?php
+                                            }
+                                        }
+                                    } ?>
                                 </select>
                             </td>
                             <td><em><?php echo _SEARCH_SCOPE_HELP; ?></em></td>
