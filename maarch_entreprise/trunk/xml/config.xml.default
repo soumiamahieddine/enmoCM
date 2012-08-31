@@ -89,6 +89,23 @@
         <path_to_lucene_index></path_to_lucene_index>
     </COLLECTION>
     <COLLECTION>
+        <id>br_coll</id>
+        <label>_BR_COLL</label>
+        <table>rm_ios</table>
+        <version_table></version_table>
+        <view>rm_ios</view>
+        <adr></adr>
+        <index_file></index_file>
+        <script_add></script_add>
+        <script_search></script_search>
+        <script_search_result></script_search_result>
+        <script_details></script_details>
+        <extensions>
+            <table></table>
+        </extensions>
+        <path_to_lucene_index></path_to_lucene_index>
+    </COLLECTION>
+    <COLLECTION>
         <id>apa_coll</id>
         <label>_APA_COLL</label>
         <table>res_apa</table>
