@@ -56,4 +56,11 @@
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
     </BASKETPAGE>
+    <BASKETPAGE>
+        <ID>io_basket_list</ID>
+        <LABEL>_IO_BASKET_LIST</LABEL>
+        <NAME>io_basket_list</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>records_management</MODULE>
+    </BASKETPAGE>
 </ROOT>
