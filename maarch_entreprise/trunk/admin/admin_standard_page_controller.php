@@ -414,6 +414,16 @@ if (isset($_REQUEST['submit'])) {
             
             break;
             
+        case 'details' :
+            /* ------
+            - DETAILS
+            ------ */
+            $dataObject = $DataObjectController->read(
+                $params['objectName'], $params['objectId']
+            );
+            
+            break;
+            
         case 'read' :
             /* ---
             - READ
