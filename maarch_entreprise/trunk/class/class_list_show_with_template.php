@@ -223,6 +223,17 @@ class list_show_with_template extends list_show
 
     }
 
+    //Load view_doc if this parameters is loaded in list_show and list_show_with_template
+    public function tmplt_func_bool_detail_io($actual_string, $theline, $result, $key)
+    {
+        $key = 'io_id';
+        if ($this->bool_detail == true) {
+            $return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=rm_ios_page_controller&amp;module=records_management&amp;objectName=rm_ios&amp;mode=details&amp;objectId=".$result[$theline][0][$key]."' title='". _DETAILS."'>
+            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'   border='0' /></a>";
+            return $return;
+        }
+    }
+
     //Show img.eye if attachments on the doc
     public function tmplt_func_bool_see_attachments($actual_string, $theline, $result, $key)
     {
@@ -250,6 +261,30 @@ class list_show_with_template extends list_show
         return $return;
     }
 
+    public function tmplt_func_bool_see_items($actual_string, $theline, $result, $key)
+    {
+        $return = '';
+        if ($result[$theline][0]['aDesReps']) {
+            $return .= '<img ';
+            $return .= 'src="';
+              $return .= 'static.php?filename=voir_rep.gif';
+            $return .= '" ';
+            $return .= 'height="';
+                $return .= '27px';
+            $return .= '" ';
+            $return .= 'style="';
+                $return .= 'cursor: pointer;';
+            $return .= '" ';
+            $return .= 'onclick=" ';
+              $return .= 'loadItemList(';
+                $return .= $result[$theline][0]['value'];
+              $return .= ');';
+            $return .= '" ';
+            $return .= '/>';
+        }
+        return $return;
+    }
+    
     public function tmplt_func_see_persistent($actual_string, $theline, $result, $key)
     {
         if (isset($result[$theline][0]['isPersistent']) && $result[$theline][0]['isPersistent']) {
@@ -480,6 +515,10 @@ class list_show_with_template extends list_show
         {
             $my_var = $this->tmplt_func_bool_detail_doc($actual_string, $theline, $result, $key);
         }
+        elseif (preg_match("/^func_bool_detail_io$/", $actual_string))
+        {
+            $my_var = $this->tmplt_func_bool_detail_io($actual_string, $theline, $result, $key);
+        }
         elseif (preg_match("/^func_click_form$/", $actual_string))
         {
             $my_var = $this->tmplt_func_click_form($actual_string, $theline, $result, $key);
@@ -499,6 +538,10 @@ class list_show_with_template extends list_show
         elseif (preg_match("/^func_bool_see_attachments$/", $actual_string))
         {
             $my_var = $this->tmplt_func_bool_see_attachments($actual_string, $theline, $result, $key,$include_by_module);
+        }
+        elseif (preg_match("/^func_bool_see_items$/", $actual_string))
+        {
+            $my_var = $this->tmplt_func_bool_see_items($actual_string, $theline, $result, $key,$include_by_module);
         }
         elseif (preg_match("/^func_see_persitent$/", $actual_string))
         {
