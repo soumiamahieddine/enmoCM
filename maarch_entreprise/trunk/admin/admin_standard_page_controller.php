@@ -355,11 +355,11 @@ $messageController->loadMessageFile(
 );
 
 require_once('core/tests/class/DataObjectController.php');
-$DataObjectController = new DataObjectController();
-$DataObjectController->loadXSD($params['schemaPath']);
+$dataObjectController = new DataObjectController();
+$dataObjectController->loadXSD($params['schemaPath']);
 
 if (isset($_REQUEST['submit'])) {
-    $dataObject = $DataObjectController->load(
+    $dataObject = $dataObjectController->load(
         $_SESSION['m_admin'][$params['objectName']]
     );
     
@@ -370,16 +370,16 @@ if (isset($_REQUEST['submit'])) {
     );
     
     //validate the object
-    $validateObject = $DataObjectController->validate(
+    $validateObject = $dataObjectController->validate(
         $dataObject
     );
     
     if ($validateObject) {
-        $DataObjectController->save(
+        $dataObjectController->save(
             $dataObject
         );
     } else {
-        foreach($DataObjectController->getValidationErrors() as $error) {
+        foreach($dataObjectController->getValidationErrors() as $error) {
             $errors[] = $error->message;
         }
         $_SESSION['error'] = implode('<br />', $errors);
@@ -409,7 +409,7 @@ if (isset($_REQUEST['submit'])) {
             /* -----
             - CREATE
             ----- */
-        	$dataObject = $DataObjectController->create($params['objectName']);
+        	$dataObject = $dataObjectController->create($params['objectName']);
             displayCreate($params['objectName']);
             
             break;
@@ -428,7 +428,7 @@ if (isset($_REQUEST['submit'])) {
             /* ---
             - READ
             --- */
-            $dataObject = $DataObjectController->read(
+            $dataObject = $dataObjectController->read(
                 $params['objectName'], $params['objectId']
             );
             
@@ -439,13 +439,13 @@ if (isset($_REQUEST['submit'])) {
             - UPDATE
             ----- */
             if (!$_SESSION['m_admin'][$params['objectName']]) {
-                $dataObject = $DataObjectController->read(
+                $dataObject = $dataObjectController->read(
                     $params['objectName'], 
                     $params['objectId']
                 );
                 $_SESSION['m_admin'][$params['objectName']] = $dataObject->asXml();
             } else {
-                $dataObject = $DataObjectController->load(
+                $dataObject = $dataObjectController->load(
                     $_SESSION['m_admin'][$params['objectName']]
                 );
             }
@@ -456,7 +456,7 @@ if (isset($_REQUEST['submit'])) {
             /* -----
             - DELETE
             ----- */
-            $DataObjectController->delete(
+            $dataObjectController->delete(
                 $params['objectName'], 
                 $params['objectId']
             );
@@ -489,7 +489,7 @@ if (isset($_REQUEST['submit'])) {
             /* --------------
             - load dataObject
             -------------- */
-            $dataObjectList = $DataObjectController->enumerate(
+            $dataObjectList = $dataObjectController->enumerate(
                 $params['objectName'],
                 $filter,
                 $sortFields = $params['orderField'],
@@ -499,7 +499,7 @@ if (isset($_REQUEST['submit'])) {
             /* ------
             - get key
             ------ */
-            $keyProperties = $DataObjectController->getKeyProperties(
+            $keyProperties = $dataObjectController->getKeyProperties(
                 $params['objectName']
             );
             
