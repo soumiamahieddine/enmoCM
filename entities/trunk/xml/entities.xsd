@@ -3,12 +3,18 @@
   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
   xmlns:das="maarch:DataAccessService"  
   elementFormDefault="qualified">
+<!-- ==================================================================== -->
+<!-- ====                                                            ==== -->
+<!-- ====                 ENTITIES MODULE ROOT SCHEMA                ==== -->
+<!-- ====                                                            ==== -->
+<!-- ==================================================================== -->
 
   <xsd:include schemaLocation='core/xml/datatypes.xsd' />
   <xsd:include schemaLocation='apps/maarch_entreprise/xml/datasources.xsd' />
-  <!-- xsd:include schemaLocation='modules/entities/xml/eac-cpf.xsd' /-->
 
-  <!-- ROOT : ENTITIES -->
+  <!-- ==================================================================== -->
+  <!-- ====                     ENTITIES ROOT                          ==== -->
+  <!-- ==================================================================== -->
   <xsd:element name='entities_root'
     das:module="entities">
     <xsd:complexType>
@@ -17,31 +23,31 @@
       </xsd:sequence>
     </xsd:complexType>
   </xsd:element>
-  
+
+  <!-- ==================================================================== -->
+  <!-- ====                     ENTITIES OBJECT                        ==== -->
+  <!-- ==================================================================== -->  
   <xsd:element name='entities' type='entities' 
     das:source='maarch_entreprise'
-    das:filter='entity_id entity_label adrs_1'>
-    <xsd:key name="entities_pkey">
-      <xsd:selector xpath="."/>
-      <xsd:field xpath="@entity_id"/>
-    </xsd:key>
+    das:filter='entity_id entity_label adrs_1'
+    das:key='entity_id'>
   </xsd:element>
   
   <xsd:complexType name='entities'>
     <xsd:sequence>
-      <xsd:element name="entity_id" type="varchar32" nillable="false" />
-      <xsd:element name="entity_label" type="varchar255" nillable="false"/>
-      <xsd:element name="short_label" type="varchar50" />
-      <xsd:element name="adrs_1" type="varchar255"/>
-      <xsd:element name="adrs_2" type="varchar255" />
-      <xsd:element name="adrs_3" type="varchar255" />
-      <xsd:element name="zipcode" type="varchar32" />
-      <xsd:element name="city" type="varchar255" />
-      <xsd:element name="country" type="varchar255" />
-      <xsd:element name="email" type="varchar255" />
-      <xsd:element name="business_id" type="varchar32" />
-      <xsd:element name="parent_entity_id" type="varchar32" />
-      <xsd:element name="entity_type" type="varchar64" />
+      <xsd:element name="entity_id" type="varchar32" />
+      <xsd:element name="entity_label" type="varchar255"/>
+      <xsd:element name="short_label" type="varchar50" minOccurs="0" />
+      <xsd:element name="adrs_1" type="varchar255" minOccurs="0"/>
+      <xsd:element name="adrs_2" type="varchar255" minOccurs="0"/>
+      <xsd:element name="adrs_3" type="varchar255" minOccurs="0"/>
+      <xsd:element name="zipcode" type="varchar32" minOccurs="0"/>
+      <xsd:element name="city" type="varchar255" minOccurs="0"/>
+      <xsd:element name="country" type="varchar255" minOccurs="0"/>
+      <xsd:element name="email" type="varchar255" minOccurs="0"/>
+      <xsd:element name="business_id" type="varchar32" minOccurs="0"/>
+      <xsd:element name="parent_entity_id" type="varchar32" minOccurs="0"/>
+      <xsd:element name="entity_type" type="varchar64" minOccurs="0"/>
       <xsd:element ref="rm_entities" minOccurs="0" />
     </xsd:sequence>
     <xsd:attribute name="enabled" type="boolean" default="Y" />
