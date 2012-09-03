@@ -17,7 +17,7 @@ class DataObjectDocument
         $this->preserveWhiteSpace = false;
         $this->registerNodeClass('DOMAttr', 'DataObjectAttribute');
         $this->registerNodeClass('DOMElement', 'DataObjectElement');
-        $this->registerNodeClass('DOMComment', 'DataObjectLog');
+        $this->registerNodeClass('DOMComment', 'DataObjectComment');
         
         $this->xpath = new DOMXpath($this);
 	}
@@ -31,9 +31,25 @@ class DataObjectDocument
         return $this->xpath->query($query);
     }
     
-    public function createDataObjectLog($operation, $level=DataObjectLog::INFO, $detail=false)
+    public function createProperty($name)
     {
-        $messageStrings[] = 'log';
+        $propertyStrings[] = 'dataObjectProperty';
+        $propertyStrings[] = 'name="' . $name . '"';
+        $DataObjectProperty = $this->createComment(implode(" ", $propertyStrings));
+        return $DataObjectProperty;
+    }
+    
+    public function createDataObject($name)
+    {
+        $childStrings[] = 'dataObject';
+        $childStrings[] = 'name="' . $name . '"';
+        $DataObjectChild = $this->createComment(implode(" ", $childStrings));
+        return $DataObjectChild;
+    }
+    
+    public function createLog($operation, $level=DataObjectLog::INFO, $detail=false)
+    {
+        $messageStrings[] = 'dataObjectLog';
         $messageStrings[] = 'operation="' . $operation . '"';
         $messageStrings[] = 'level="' . (string)$level . '"';
         if($detail) $messageStrings[] = $detail;
@@ -50,17 +66,36 @@ class DataObjectDocument
         return $dataObject;
     }
     
-    public function getChildren($name=false)
+    public function getChildNodesByTagName($name=false)
     {
         if(!$name) $name = '*';
-        $nodes = $this->xpath('/' . $name);
-        for($i=0; $i<$nodes->length; $i++) {
-            $node = $nodes->item($i);
-            if($node->getElementsByTagName('*')->length > 0) {
-                $childrenArray[] = $node;
+        $XPath = new DOMXPath($this);
+        $nodes = $XPath->query(
+            '/' . $name
+        );
+        return $nodes;
+    }
+    
+    public function getCommentDataObjects()
+    {
+        $xpath = new DOMXPath($this);
+        $dataObjects = 
+            $xpath->query(
+                "/comment()[starts-with(., 'dataObject ')]",
+                $this
+            );
+        return $dataObjects;
+    }
+    
+    public function getCommentDataObject($name) 
+    {
+        $dataObjects = $this->getCommentDataObjects();
+        for($i=0; $i<$dataObjects->length; $i++) {
+            $dataObject = $dataObjects->item($i);
+            if($dataObject->getAttribute('name') == $name) {
+                return $dataObject;
             }
         }
-        return $childrenArray;
     }
     
     //*************************************************************************
@@ -152,19 +187,27 @@ class DataObjectElement
    
     // DOM METHODS
     //*************************************************************************
-    private function xpath($query) 
+    public function query($query) 
     {
-        return $this->ownerDocument->xpath($query, $this);
+        $xpath = new DOMXPath($this->ownerDocument);
+        return $xpath->query($query, $this);
     }
     
     // OBJECT METHODS
     //*************************************************************************  
+    public function getName()
+    {
+        return $this->tagName;
+    }
+    
     public function getProperties()
     {
-        $nodes = $this->xpath(
-            $this->getNodePath() . '/@*'
+        $XPath = new DOMXPath($this->ownerDocument);
+        $nodes = $XPath->query(
+            './@*'
             . ' | '
-            . $this->getNodePath(). '/*'
+            . './*',
+            $this
         );
         for($i=0; $i<$nodes->length; $i++) {
             $node = $nodes->item($i);
@@ -184,87 +227,141 @@ class DataObjectElement
         return $propertiesArray;
     }
     
-    public function getProperty($name)
+    public function getContents()
     {
-        $nodes = $this->xpath('./@' . $name . ' | ./' . $name);
-        if($nodes->length > 0) {
-            return $nodes->item($i)->nodeValue;
-        }
+        $XPath = new DOMXPath($this->ownerDocument);
+        $contents = $XPath->query(
+            './@* | ./*', 
+            $this
+        );
+        return $contents;
+    
     }
     
-    public function getChildren($name=false)
+    public function getAttributes()
+    {
+        $XPath = new DOMXPath($this->ownerDocument);
+        $attributes = $XPath->query(
+            './@*', 
+            $this
+        );
+        return $attributes;
+    }
+    
+    public function getElements()
+    {
+        $XPath = new DOMXPath($this->ownerDocument);
+        $elements = $XPath->query(
+            './*', 
+            $this
+        );
+        return $elements;
+    }
+    
+    public function getChildNodesByTagName($name=false)
     {
         if(!$name) $name = '*';
         $XPath = new DOMXPath($this->ownerDocument);
         $nodes = $XPath->query(
-            './' . $name, $this
+            './' . $name, 
+            $this
         );
-        for($i=0; $i<$nodes->length; $i++) {
-            $node = $nodes->item($i);
-            if($node->getElementsByTagName('*')->length > 0) {
-                $childrenArray[] = $node;
-            }
-        }
-        return $childrenArray;
+        return $nodes;
     }
     
     // MAGIC METHODS
     //*************************************************************************
     public function __set($name, $value) 
     {
-        if(is_scalar($value) || !$value || is_null($value)) {
-            // Attribute == property
-            if($this->hasAttribute($name)) {          
-                $valueBefore = $this->getAttribute($name);
-                if($valueBefore != $value) {
-                    $this->logUpdate($name, $valueBefore, $value);
-                    $this->setAttribute($name, $value); 
-                }
-                return;
+        // Property storage is an attribute
+        if($this->hasAttribute($name)) {
+            $valueBefore = $this->getAttribute($name);
+            if(is_null($value)) {
+                //echo "<br/>1 - Property $name is attribute, old value was '$valueBefore', new value is null ==> remove attribute";
+                $this->removeAttribute($name);
+            } else if(
+                (is_scalar($value) || !$value) 
+                && $valueBefore != $value
+            ) {
+                //echo "<br/>2 - Property $name is attribute, old value was '$valueBefore', new value is string or false => set attribute";
+                $this->setAttribute($name, $value);  
             }
-            // Element
-            $XPath = new DOMXPath($this->ownerDocument);
-            $propertyNodes = $XPath->query(
-                './' . $name, $this
-            );
-            if($propertyNodes->length == 1 
-                && $propertyNodes->item(0)->getElementsByTagName('*')->length == 0) {
-                $propertyNode = $propertyNodes->item(0);
-                $valueBefore = $propertyNode->nodeValue;
-                if($valueBefore != $value) {
-                    $this->logUpdate($name, $valueBefore, $value);
-                    $propertyNode->nodeValue = $value;
-                }
-            }
+            $this->logUpdate($name, $valueBefore, $value);
+            return;
         } 
-        if(is_object($value) && get_class($value) == 'DataObject') { 
-            // Child Element
-            $this->appendChild($value);
+        
+        // Property storage is an existing element
+        $XPath = new DOMXPath($this->ownerDocument);
+        $propertyNodes = $XPath->query('./' . $name, $this);
+        if($propertyNodes->length > 0) { 
+            $propertyNode = $propertyNodes->item(0);
+            $valueBefore = $propertyNode->nodeValue;
+            if(is_null($value)) {
+                //echo "<br/>3 - Property $name is element, old value was '$valueBefore', new value is null => comment element";
+                $commentedProperty = 
+                    $this->ownerDocument->createProperty($name);
+                $this->replaceChild($commentedProperty, $propertyNode);
+            } elseif(
+                (is_scalar($value) || !$value) 
+                && $valueBefore != $value
+            ) {
+                //echo "<br/>4 - Property $name is element, old value was '$valueBefore', new value is string or false => set element";
+                $propertyNode->nodeValue = $value;
+            }
+            $this->logUpdate($name, $valueBefore, $value);
+            return;
         }
+        
+        // Property storage is a commented element
+        if($commentedProperty= $this->getCommentProperty($name)) { 
+            if(is_null($value)) {
+                //echo "<br/>5 - Property $name is a commented element, new value is null => no action";
+            } elseif(is_scalar($value) || !$value) {
+                //echo "<br/>6 - Property $name is a commented element, new value is string or false => set element";
+                $propertyNode = 
+                    $this->ownerDocument->createElement($name, $value);
+                $this->replaceChild($propertyNode, $commentedProperty);
+                $this->logUpdate($name, 'null', $value);
+            }
+            return;
+        }
+        
+        // Property storage not found = add attribute
+        if(is_scalar($value) || !$value) {
+            //echo "<br/>7 - Property $name not found, new value is string or false, adding attribute";
+            $this->setAttribute($name, $value);
+            $this->logUpdate($name, 'null', $value);
+            return;
+        }
+        
     }
     
     public function __get($name) 
     {
-        // Attribute == property
+        if(!$name) return false;
+        // Storage is an attribute
         if($this->hasAttribute($name)) {
             return (string)$this->getAttribute($name);
         }
-        // Element 
+        
+        // Storage is an element
         $XPath = new DOMXPath($this->ownerDocument);
         $nodes = $XPath->query(
-            $this->getNodePath() . '/' . $name
+            './' . $name,
+            $this
         );
-        if($nodes->length == 1 
-            && $nodes->item(0)->getElementsByTagName('*')->length == 0) {
-            return (string)$nodes->item(0)->nodeValue;  
-        } 
-        if($nodes->length > 0) {
+        
+        // Storage is a dataObject -> return array of objects
+        if($commentDataObject = $this->getCommentDataObject($name)) {
             $nodesArray = array();
             for($i=0; $i<$nodes->length; $i++) {
                 $nodesArray[] = $nodes->item($i);
             }
             return $nodesArray;
         }
+        
+        // Storage is a property element -> return value
+        return (string)$nodes->item(0)->nodeValue;  
     }
     
     public function __isset($name)
@@ -276,14 +373,15 @@ class DataObjectElement
         // Element 
         $XPath = new DOMXPath($this->ownerDocument);
         $nodes = $XPath->query(
-            './' . $name, $this
+            './' . $name, 
+            $this
         );
         if($nodes->length > 0) return true;
     }
     
     public function __toString()
     {
-        return (string)$this->nodeValue;
+        return $this->C14N();
     }
     
     // ITERATOR METHODS
@@ -317,7 +415,21 @@ class DataObjectElement
         } else {
             $dataObject = $value;
         }
-        $this->appendChild($dataObject);
+        $objectName = $dataObject->getName();
+        $refDataObject = $this->getCommentDataObject($objectName);
+        if(is_null($offset)) $offset = 999999;
+        for($i=0; $i<$offset; $i++) {
+            if($refDataObject->nextSibling->getName() == $objectName) {
+                $refDataObject = $refDataObject->nextSibling;
+            } else {
+                break;
+            }
+        }
+        $this->insertBefore(
+            $dataObject, 
+            $refDataObject->nextSibling
+            );
+        return;
     }
     
     public function offsetExists($offset) 
@@ -332,29 +444,86 @@ class DataObjectElement
     
     public function offsetGet($offset) 
     {
-        
+
+    }
+    
+    // DATA OBJECT COMMENT METHODS
+    //*************************************************************************  
+    public function getCommentProperties()
+    {
+        $xpath = new DOMXPath($this->ownerDocument);
+        $properties = 
+            $xpath->query(
+                "./comment()[starts-with(., 'dataObjectProperty')]",
+                $this
+            );
+        return $properties;
+    }
+    
+    public function getCommentProperty($name) 
+    {
+        $properties = $this->getCommentProperties();
+        for($i=0; $i<$properties->length; $i++) {
+            $property = $properties->item($i);
+            if($property->getAttribute('name') == $name) {
+                return $property;
+            }
+        }
+    }
+    
+    public function getCommentDataObjects()
+    {
+        $xpath = new DOMXPath($this->ownerDocument);
+        $dataObjects = 
+            $xpath->query(
+                "./comment()[starts-with(., 'dataObject ')]",
+                $this
+            );
+        return $dataObjects;
+    }
+    
+    public function getCommentDataObject($name) 
+    {
+        $dataObjects = $this->getCommentDataObjects();
+        for($i=0; $i<$dataObjects->length; $i++) {
+            $dataObject = $dataObjects->item($i);
+            if($dataObject->getAttribute('name') == $name) {
+                return $dataObject;
+            }
+        }
     }
    
-    // MESSAGES INTERFACE
+    // DATA OBJECT LOGS
     //*************************************************************************  
     public function logCreate()
     {
-        $message = 
-            $this->ownerDocument->createDataObjectLog(
+        $log = 
+            $this->ownerDocument->createLog(
                 DataObjectLog::CREATE, 
                 DataObjectLog::INFO
             );
-        $this->appendChild($message);
+        $this->appendChild($log);
     }    
     
     public function logRead()
     {
-        $message = 
-            $this->ownerDocument->createDataObjectLog(
+        $this->clearLogs();
+        $log = 
+            $this->ownerDocument->createLog(
                 DataObjectLog::READ, 
                 DataObjectLog::INFO
             );
-        $this->appendChild($message);
+        $this->appendChild($log);
+    }
+    
+    public function logDelete()
+    {
+        $log = 
+            $this->ownerDocument->createLog(
+                DataObjectLog::DELETE, 
+                DataObjectLog::INFO
+            );
+        $this->appendChild($log);
     }
     
     public function logUpdate($name, $valueBefore, $valueAfter)
@@ -364,7 +533,7 @@ class DataObjectElement
             . '" value-before="' . $valueBefore 
             . '" value-after="' . $valueAfter . '"';
         $message = 
-            $this->ownerDocument->createDataObjectLog(
+            $this->ownerDocument->createLog(
                 DataObjectLog::UPDATE, 
                 DataObjectLog::INFO, 
                 $messageDetail
@@ -376,7 +545,7 @@ class DataObjectElement
     {
         $messageDetail = 'message="' . $message . '"';
         $message = 
-            $this->ownerDocument->createDataObjectLog(
+            $this->ownerDocument->createLog(
                 DataObjectLog::VALIDATE, 
                 $level, 
                 $messageDetail
@@ -384,62 +553,88 @@ class DataObjectElement
         $this->appendChild($message);
     }
     
-    public function firstLog()
+    public function getLogs()
     {
         $xpath = new DOMXPath($this->ownerDocument);
-        $firstOperation = 
+        $logs = 
             $xpath->query(
-                $this->getNodePath() 
-                . "/comment()"
-            )->item(0);
-        return $firstOperation;
+                "./comment()[starts-with(., 'dataObjectLog')]",
+                $this
+            );
+        return $logs;
+    }
+    
+    public function firstLog() 
+    {
+        $xpath = new DOMXPath($this->ownerDocument);
+        $logs = 
+            $xpath->query(
+                "./comment()[starts-with(., 'dataObjectLog')]",
+                $this
+            );
+        return $logs->item(0);
+    }
+    
+    public function clearLogs()
+    {
+        $logs = $this->getLogs();
+        for($i=0; $i<$logs->length; $i++) {
+            $log = $logs->item($i);
+            $this->removeChild($log);
+        }
     }
     
     public function isCreated()
     {
         $firstLog = $this->firstLog();
-        if($firstLog->getAttribute('operation') == DataObjectLog::CREATE) return true;
+        if($firstLog->getAttribute('operation') 
+            == DataObjectLog::CREATE) return true;
     }
     
-    public function isUpdated()
+    public function isDeleted()
     {
-        $updateOperations = 
-            $this->ownerDocument->xpath(
-                $this->getNodePath() 
-                . "/comment()[contains(., 'operation=\"".DataObjectLog::UPDATE."\"')]"
-            );
-        if($updateOperations->length > 0) return true;
+        $logs = $this->getLogs();
+        $l = $logs->length;
+        for($i=$l-1; $i>=0; $i--) {
+            $log = $logs->item($i);
+            if($log->getAttribute('operation') == DataObjectLog::DELETE) {
+                return true;
+            }
+        }
     }
     
+    public function isRead()
+    {
+        $firstLog = $this->firstLog();
+        if($firstLog->getAttribute('operation') == DataObjectLog::READ) {
+            return true;
+        }
+    }
+        
     public function getUpdatedProperties()
     {
-        $updateOperations = 
-            $this->ownerDocument->xpath(
-                $this->getNodePath() 
-                . "/comment()[contains(., 'operation=\"".DataObjectLog::UPDATE."\"')]"
-            );
         $updatedProperties = array();
-        for($i=0; $i<$updateOperations->length; $i++) {
-            $updateOperation = $updateOperations->item($i);
-            $updatedProperties[] = $updateOperation->getAttribute('name');
+        $logs = $this->getLogs();
+        for($i=0; $i<$logs->length; $i++) {
+            $log = $logs->item($i);
+            if($log->getAttribute('operation') == DataObjectLog::UPDATE) {
+                $updatedProperties[] = $log->getAttribute('name');
+            }
         }
         return $updatedProperties;
     }
     
     public function getValidationErrors()
     {
-        $xpath = new DOMXPath($this->ownerDocument);
-        $validateOperations = 
-            $xpath->query(
-                $this->getNodePath() 
-                . "/comment()[contains(., 'operation=\"".DataObjectLog::VALIDATE."\"')]"
-            );
         $validationErrors = array();
-        for($i=0; $i<$validateOperations->length; $i++) {
-            $validateOperation = $validateOperations->item($i);
-            $validationErrors[] = 
-                "[" . $validateOperation->getAttribute('level') . "] "
-                . $validateOperation->getAttribute('message');
+        $logs = $this->getLogs();
+        for($i=0; $i<$logs->length; $i++) {
+            $log = $logs->item($i);
+            if($log->getAttribute('operation') == DataObjectLog::VALIDATE) {
+                $validationErrors[] = 
+                    "[" . $log->getAttribute('level') . "] "
+                    . $log->getAttribute('message');
+            }
         }
         return $validationErrors;
     }
@@ -520,14 +715,18 @@ class DataObjectElement
     
 }
 
-
 //*****************************************************************************
 // DATA OBJECT ATTRIBUTE
 //*****************************************************************************
 class DataObjectAttribute
     extends DOMAttr
 {
-
+    
+    public function getName()
+    {
+        return $this->name;
+    }
+    
     public function __toString()
     {
         return (string)$this->nodeValue;
@@ -536,24 +735,11 @@ class DataObjectAttribute
 }
 
 //*****************************************************************************
-// DATA OBJECT LOG
+// DATA OBJECT COMMENT
 //*****************************************************************************
-class DataObjectLog
+class DataObjectComment
     extends DOMComment
 {
-    const NONE      = 'NONE';
-    const CREATE    = 'CREATE';
-    const READ      = 'READ';
-    const UPDATE    = 'UPDATE';
-    const DELETE    = 'DELETE';
-    const VALIDATE  = 'VALIDATE';
-    
-    const INFO      = 0;
-    const WARNING   = 1;
-    const ERROR     = 2;
-    const FATAL     = 3;
-    
-    
     public function getAttribute($name) 
     {
         $attribute_array = array();
@@ -570,6 +756,18 @@ class DataObjectLog
         return $attribute_array[$name];
     }
     
+    public function getName()
+    {
+        $contents = split(' ', $this);
+        for($i=0; $i<count($contents); $i++) {
+            $content = $contents[$i];
+            if(mb_strlen(trim($content)) > 0) {
+                return $content;
+            }
+        }
+    
+    }
+    
     public function __get($name)
     {
         if($name == 'tagName') {
@@ -583,3 +781,21 @@ class DataObjectLog
         return (string)$this->nodeValue;
     }
 } 
+
+class DataObjectLog 
+    extends DataObjectComment
+{
+    const NONE      = 'NONE';
+    const CREATE    = 'CREATE';
+    const READ      = 'READ';
+    const UPDATE    = 'UPDATE';
+    const DELETE    = 'DELETE';
+    const ENUMERATE = 'LIST';
+    const VALIDATE  = 'VALIDATE';
+    
+    const INFO      = 0;
+    const WARNING   = 1;
+    const ERROR     = 2;
+    const FATAL     = 3;
+
+}
