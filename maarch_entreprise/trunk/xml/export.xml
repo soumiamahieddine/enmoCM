@@ -3,15 +3,23 @@
 	<letterbox_coll>
 		<FIELD>
 			<LIBELLE>Num GED</LIBELLE>
-			<DATABASE_FIELD>res_id</DATABASE_FIELD>
+			<DATABASE_FIELD>res_view_letterbox.res_id</DATABASE_FIELD>
 		</FIELD>
 		<FIELD>
 			<LIBELLE>Date d'arrivee</LIBELLE>
 			<DATABASE_FIELD>doc_date</DATABASE_FIELD>
 		</FIELD>
 		<FIELD>
+			<LIBELLE>Prenom de l'expediteur</LIBELLE>
+			<DATABASE_FIELD>contact_firstname</DATABASE_FIELD>
+		</FIELD>
+        <FIELD>
 			<LIBELLE>Nom de l'expediteur</LIBELLE>
-			<DATABASE_FIELD>typist</DATABASE_FIELD>
+			<DATABASE_FIELD>contact_lastname</DATABASE_FIELD>
+		</FIELD>
+        <FIELD>
+			<LIBELLE>Societe de l'expediteur</LIBELLE>
+			<DATABASE_FIELD>contact_society</DATABASE_FIELD>
 		</FIELD>
 		<FIELD>
 			<LIBELLE>Service destinataire</LIBELLE>
