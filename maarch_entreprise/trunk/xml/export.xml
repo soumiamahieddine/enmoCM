@@ -1,81 +1,81 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <ROOT>
-	<letterbox_coll>
-		<FIELD>
-			<LIBELLE>Num GED</LIBELLE>
-			<DATABASE_FIELD>res_view_letterbox.res_id</DATABASE_FIELD>
-		</FIELD>
-		<FIELD>
-			<LIBELLE>Date d'arrivee</LIBELLE>
-			<DATABASE_FIELD>doc_date</DATABASE_FIELD>
-		</FIELD>
-		<FIELD>
-			<LIBELLE>Prenom de l'expediteur</LIBELLE>
-			<DATABASE_FIELD>contact_firstname</DATABASE_FIELD>
-		</FIELD>
+    <letterbox_coll>
         <FIELD>
-			<LIBELLE>Nom de l'expediteur</LIBELLE>
-			<DATABASE_FIELD>contact_lastname</DATABASE_FIELD>
-		</FIELD>
+            <LIBELLE>Num GED</LIBELLE>
+            <DATABASE_FIELD>res_view_letterbox.res_id</DATABASE_FIELD>
+        </FIELD>
         <FIELD>
-			<LIBELLE>Societe de l'expediteur</LIBELLE>
-			<DATABASE_FIELD>contact_society</DATABASE_FIELD>
-		</FIELD>
-		<FIELD>
-			<LIBELLE>Service destinataire</LIBELLE>
-			<DATABASE_FIELD>destination</DATABASE_FIELD>
-		</FIELD>
-		<FIELD>
-			<LIBELLE>Objet</LIBELLE>
-			<DATABASE_FIELD>subject</DATABASE_FIELD>
-		</FIELD>
-		<FIELD>
-			<LIBELLE>Type de courrier</LIBELLE>
-			<DATABASE_FIELD>type_label</DATABASE_FIELD>
-		</FIELD>
-		<FUNCTIONS>
-			<COPIES>Services en copies</COPIES>
-			<LINK>Page detail</LINK>
-		</FUNCTIONS>
-		<FIXE>Commentaire</FIXE>
-		
-	</letterbox_coll>
-	<res_coll>
-		<FIELD>
-			<LIBELLE>identifiant</LIBELLE>
-			<DATABASE_FIELD>res_id</DATABASE_FIELD>
-		</FIELD>
-		<FIELD>
-			<LIBELLE>Reference</LIBELLE>
-			<DATABASE_FIELD>doc_custom_t1</DATABASE_FIELD>
-		</FIELD>
-		<FIELD>
-			<LIBELLE>Contact facture</LIBELLE>
-			<DATABASE_FIELD>doc_custom_t2</DATABASE_FIELD>
-		</FIELD>
-		<FIELD>
-			<LIBELLE>Pays</LIBELLE>
-			<DATABASE_FIELD>doc_custom_t3</DATABASE_FIELD>
-		</FIELD>
-		<FIELD>
-			<LIBELLE>Montant</LIBELLE>
-			<DATABASE_FIELD>doc_custom_n1</DATABASE_FIELD>
-		</FIELD>
-		<FIELD>
-			<LIBELLE>Client facture</LIBELLE>
-			<DATABASE_FIELD>doc_custom_t4</DATABASE_FIELD>
-		</FIELD>
-		<FIELD>
-			<LIBELLE>BDC facture</LIBELLE>
-			<DATABASE_FIELD>doc_custom_t5</DATABASE_FIELD>
-		</FIELD>
-		<FIELD>
-			<LIBELLE>Date d'enregistrement</LIBELLE>
-			<DATABASE_FIELD>doc_custom_d1</DATABASE_FIELD>
-		</FIELD>
-		<!-- <FUNCTIONS>
-			<COPIES>Services en copies</COPIES>
-		</FUNCTIONS> -->
-		<FIXE>Commentaire</FIXE>
-	</res_coll>
+            <LIBELLE>Date d'arrivee</LIBELLE>
+            <DATABASE_FIELD>doc_date</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Prenom de l'expediteur</LIBELLE>
+            <DATABASE_FIELD>contact_firstname</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Nom de l'expediteur</LIBELLE>
+            <DATABASE_FIELD>contact_lastname</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Societe de l'expediteur</LIBELLE>
+            <DATABASE_FIELD>contact_society</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Service destinataire</LIBELLE>
+            <DATABASE_FIELD>destination</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Objet</LIBELLE>
+            <DATABASE_FIELD>subject</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Type de courrier</LIBELLE>
+            <DATABASE_FIELD>type_label</DATABASE_FIELD>
+        </FIELD>
+        <FUNCTIONS>
+            <COPIES>Services en copies</COPIES>
+            <LINK>Page detail</LINK>
+        </FUNCTIONS>
+        <FIXE>Commentaire</FIXE>
+        
+    </letterbox_coll>
+    <res_coll>
+        <FIELD>
+            <LIBELLE>identifiant</LIBELLE>
+            <DATABASE_FIELD>res_id</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Reference</LIBELLE>
+            <DATABASE_FIELD>doc_custom_t1</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Contact facture</LIBELLE>
+            <DATABASE_FIELD>doc_custom_t2</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Pays</LIBELLE>
+            <DATABASE_FIELD>doc_custom_t3</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Montant</LIBELLE>
+            <DATABASE_FIELD>doc_custom_n1</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Client facture</LIBELLE>
+            <DATABASE_FIELD>doc_custom_t4</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>BDC facture</LIBELLE>
+            <DATABASE_FIELD>doc_custom_t5</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Date d'enregistrement</LIBELLE>
+            <DATABASE_FIELD>doc_custom_d1</DATABASE_FIELD>
+        </FIELD>
+        <!-- <FUNCTIONS>
+            <COPIES>Services en copies</COPIES>
+        </FUNCTIONS> -->
+        <FIXE>Commentaire</FIXE>
+    </res_coll>
 </ROOT>
