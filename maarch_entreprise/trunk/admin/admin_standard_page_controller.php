@@ -418,7 +418,7 @@ if (isset($_REQUEST['submit'])) {
             /* ------
             - DETAILS
             ------ */
-            $dataObject = $DataObjectController->read(
+            $dataObject = $dataObjectController->read(
                 $params['objectName'], $params['objectId']
             );
             
