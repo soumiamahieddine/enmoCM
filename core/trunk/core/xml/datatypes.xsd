@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <xsd:schema 
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
   xmlns:das="maarch:DataAccessService" 
   elementFormDefault="qualified"  
   >
+<!-- ==================================================================== -->
+<!-- ====                                                            ==== -->
+<!-- ====                         DATA TYPES                         ==== -->
+<!-- ====                                                            ==== -->
+<!-- ==================================================================== -->  
 
+  <!-- ==================================================================== -->
+  <!-- ====                    CHARACTER DATA TYPES                    ==== -->
+  <!-- ==================================================================== -->
   <!-- Character varying(10) --> 
   <xsd:simpleType name="varchar10" das:enclosed='true'>
     <xsd:annotation>
@@ -125,17 +134,21 @@
       <xsd:enumeration value="N"/>
     </xsd:restriction>
   </xsd:simpleType> 
-    
+  
+  
+  <!-- ==================================================================== -->
+  <!-- ====                    NUMERIC DATA TYPES                      ==== -->
+  <!-- ==================================================================== -->  
   <xsd:simpleType name="bigint" das:enclosed='false'>
     <xsd:annotation>
       <xsd:appinfo>
         <das:sqltype driver='postgresql'>bigint</das:sqltype>
       </xsd:appinfo>
     </xsd:annotation>
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="(\+|\-)?\d{0,16}"/>
+    <xsd:restriction base="xsd:nonNegativeInteger">
+      <xsd:minInclusive value="0"/>
     </xsd:restriction>
-  </xsd:simpleType> 
+  </xsd:simpleType>
   
   <xsd:simpleType name="integer" das:enclosed='false'>
     <xsd:annotation>
@@ -143,11 +156,14 @@
         <das:sqltype driver='postgresql'>integer</das:sqltype>
       </xsd:appinfo>
     </xsd:annotation>
-    <xsd:restriction base="xsd:string">
-      <xsd:pattern value="(\+|\-)?\d{0,5}"/>
+    <xsd:restriction base="xsd:nonNegativeInteger">
+      <xsd:minInclusive value="0"/>
     </xsd:restriction>
   </xsd:simpleType> 
   
+  <!-- ==================================================================== -->
+  <!-- ====                 DATE AND TIME DATA TYPES                   ==== -->
+  <!-- ==================================================================== -->
   <!-- Datetime --> 
   <xsd:simpleType name="datetime" das:enclosed='true'>
     <xsd:annotation>
