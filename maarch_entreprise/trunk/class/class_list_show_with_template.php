@@ -267,14 +267,14 @@ class list_show_with_template extends list_show
         if ($result[$theline][0]['aDesReps']) {
             $return .= '<img ';
             $return .= 'src="';
-              $return .= 'static.php?filename=voir_rep.gif';
+              $return .= 'static.php?filename=view_archives.png&module=records_management';
             $return .= '" ';
             $return .= 'height="';
-                $return .= '27px';
+                $return .= '20px';
             $return .= '" ';
             $return .= 'style="';
                 $return .= 'cursor: pointer;';
-            $return .= '" ';
+            $return .= '" title=" ' . _VIEW_ARCHIVES . '"';
             $return .= 'onclick=" ';
               $return .= 'loadItemList(';
                 $return .= $result[$theline][0]['value'];

@@ -93,7 +93,7 @@
         <label>_BR_COLL</label>
         <table>rm_ios</table>
         <version_table></version_table>
-        <view>rm_ios</view>
+        <view>view_ios</view>
         <adr></adr>
         <index_file></index_file>
         <script_add></script_add>
