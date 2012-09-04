@@ -182,7 +182,7 @@ class DataObjectController
         $rootElement = $this->query(
             '/xsd:schema/xsd:element[@das:module != ""]'
             )->item(0);
-        //$rootName = $rootElement->getName();
+
         $rootDataObject = 
             $this->createDataObject(
                 $rootElement, 
@@ -190,7 +190,7 @@ class DataObjectController
             );
         $dataObjectDocument->appendChild($rootDataObject);
 
-        $objectElement = $this->getContentByName($rootElement, $objectName);
+        $objectElement = $this->getElementByName($objectName);
         if(!$objectElement->isListable()) Die("Object $objectName can not be listed");
         $refElement = $this->getRefNode($objectElement);
         
@@ -239,6 +239,17 @@ class DataObjectController
         );   
         
         return $key;
+    }
+    
+    public function readChildren($dataObject) {
+        $objectName = $dataObject->getName();
+        $objectElement = $this->getElementByName($objectName);
+        $this->readChildDataObjects(
+            $objectElement,
+            $dataObject,
+            $dataObject->ownerDocument
+        );
+        return $dataObject;
     }
     
     public function load($xml)
@@ -456,29 +467,37 @@ class DataObjectController
                 $dataObject->logRead();
             }
             
-            // Process child objects
+            // Process newly created child objects
+            $childObjects = 
+                $parentObject->getChildNodesByTagName(
+                    $objectElement->getName()
+                );
+            $m = $childObjects->length;
+            for($j=0; $j<$m; $j++) {
+                $childObject = $childObjects->item($j);
+                $this->readChildDataObjects(
+                    $objectElement,
+                    $childObject, 
+                    $dataObjectDocument
+                );
+            }
+            /*
             $this->readChildDataObjects(
                 $objectElement,
                 $parentObject,
                 $dataObjectDocument
-            );
+            );*/
 
         } catch (maarch\Exception $e) {   
             throw $e;
         }
     }
     
-    public function readChildDataObjects(
-        $objectElement, 
-        $parentObject,
+    public function readChildDataObjects( 
+        $objectElement,
+        $dataObject,
         $dataObjectDocument)
     {
-        // Get list of new objects of given name
-        $childObjects = 
-            $parentObject->getChildNodesByTagName(
-                $objectElement->getName()
-            );
-        $m = $childObjects->length;
         // Get list of childElements
         $objectContents = $this->getObjectContents($objectElement);
         $l = count($objectContents);
@@ -487,14 +506,14 @@ class DataObjectController
             if(!$objectNode->isReadable()) continue;
             $refNode = $this->getRefNode($objectNode);
             if(!$refNode->hasDatasource()) continue;
-            for($j=0; $j<$m; $j++) {
-                $childObject = $childObjects->item($j);
+            //for($j=0; $j<$m; $j++) {
+            //    $childObject = $childObjects->item($j);
                 $this->readDataObject(
                     $refNode, 
-                    $childObject, 
+                    $dataObject, 
                     $dataObjectDocument
                 );
-            }
+            //}
         }
     }
     

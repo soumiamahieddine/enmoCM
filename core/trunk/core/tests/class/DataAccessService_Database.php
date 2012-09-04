@@ -130,6 +130,7 @@ class DataAccessService_Database
         //*********************************************************************
         if(is_object($parentObject) 
             && get_class($parentObject) != 'DataObjectDocument'
+            && $relation = $this->getRelation($objectElement, $parentObject)
         ) {
             if(!$relationExpression = 
                 $this->getXRefs($objectElement, 'relationExpression')
@@ -137,7 +138,7 @@ class DataAccessService_Database
                 $relationExpression = 
                     $this->createRelationExpression(
                         $objectElement, 
-                        $parentObject
+                        $relation
                     );
                 $this->addXRefs(
                     $objectElement, 
@@ -197,7 +198,8 @@ class DataAccessService_Database
         // MERGE QUERY PARTS / EXECUTE
         //*********************************************************************
         $selectQuery = implode(' ', $selectParts);
-        //echo "<pre>SELECT QUERY = " . $selectQuery . "</pre>";
+        
+        //echo "<pre>SELECT QUERY = " . $selectQuery . " with key $key</pre>";
        
         try {
             $this->databaseObject->query($selectQuery);
@@ -589,39 +591,37 @@ class DataAccessService_Database
 
     // RELATION 
     //*************************************************************************
-    private function createRelationExpression($objectElement, $dataObject)
+    private function createRelationExpression($objectElement, $relation)
     {
-        if($relation = $this->getRelation($objectElement, $dataObject)) {
-            $childTable = $objectElement->getTable();
-                          
-            $fkeys = $this->query('./das:foreign-key', $relation);
-            $fkeysLength = $fkeys->length;
-            $relationKeys = array();
-            for($i=0; $i<$fkeysLength; $i++) {
-                $fkey = $fkeys->item($i);
-                $childKeyName = $fkey->getAttribute('child-key');
-                $childKeyElement = 
-                    $this->getContentByName(
-                        $objectElement, 
-                        $childKeyName
-                    );
-                $childKeyColumn = $childKeyElement->getColumn();
-                $childKeyType = $this->getType($childKeyElement);
-                $enclosure = $childKeyType->getEnclosure();
-                
-                if(strpos($childKeyColumn, ".")) $childKeyExpression = $childKeyColumn;
-                else $childKeyExpression = $childTable . "." . $childKeyColumn;
-                
-                $parentKeyName = $fkey->getAttribute('parent-key');
-                $relationKeys[] = 
-                    $childKeyExpression
-                    . " = " 
-                    . $enclosure 
-                    . '$' . $parentKeyName
-                    . $enclosure;  
-            }
-            return implode(' and ', $relationKeys);
+        $childTable = $objectElement->getTable();
+                      
+        $fkeys = $this->query('./das:foreign-key', $relation);
+        $fkeysLength = $fkeys->length;
+        $relationKeys = array();
+        for($i=0; $i<$fkeysLength; $i++) {
+            $fkey = $fkeys->item($i);
+            $childKeyName = $fkey->getAttribute('child-key');
+            $childKeyElement = 
+                $this->getContentByName(
+                    $objectElement, 
+                    $childKeyName
+                );
+            $childKeyColumn = $childKeyElement->getColumn();
+            $childKeyType = $this->getType($childKeyElement);
+            $enclosure = $childKeyType->getEnclosure();
+            
+            if(strpos($childKeyColumn, ".")) $childKeyExpression = $childKeyColumn;
+            else $childKeyExpression = $childTable . "." . $childKeyColumn;
+            
+            $parentKeyName = $fkey->getAttribute('parent-key');
+            $relationKeys[] = 
+                $childKeyExpression
+                . " = " 
+                . $enclosure 
+                . '$' . $parentKeyName
+                . $enclosure;  
         }
+        return implode(' and ', $relationKeys);
     }
     
     // INSERT COLUMNS 
