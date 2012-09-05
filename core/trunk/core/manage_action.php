@@ -136,18 +136,23 @@ elseif(trim($_POST['req']) == 'change_status' && !empty($_POST['values']) && !em
     $arr_id = explode(',', $_POST['values']);
     $result = '';
     $db->connect();
-    for($i=0; $i<count($arr_id );$i++)
-    {
+    for ($i=0; $i<count($arr_id );$i++) {
         $arr_id[$i] = str_replace('#', '', $arr_id[$i]);
         $result .= $arr_id[$i].'#';
-        $query_str = "update ".$_POST['table']. " set status = '".$_POST['new_status']."' where res_id = ".$arr_id[$i];
-    //  echo $query_str;
-        $req = $db->query($query_str, true);
-        if(!$req)
-        {
-            $_SESSION['action_error'] = _SQL_ERROR.' : '.$query_str;
-            echo "{status : 1, error_txt : '".addslashes(_ERROR_WITH_STATUS)." ".$query_str."'}";
-            exit();
+        if (trim($_POST['new_status']) <> '') {
+            if ($_POST['table'] == 'rm_ios') {
+                $query_str = "update " . $_POST['table'] .  " set status = '" 
+                    . $_POST['new_status'] . "' where io_id = " . $arr_id[$i];
+            } else {
+                $query_str = "update " . $_POST['table'] .  " set status = '" 
+                    . $_POST['new_status'] . "' where res_id = " . $arr_id[$i];
+            }
+            $req = $db->query($query_str, true);
+            if (!$req) {
+                $_SESSION['action_error'] = _SQL_ERROR.' : '.$query_str;
+                echo "{status : 1, error_txt : '".addslashes(_ERROR_WITH_STATUS)." ".$query_str."'}";
+                exit();
+            }
         }
     }
     echo "{status : 0, error_txt : '".addslashes(_STATUS_UPDATED.' : '.$_POST['new_status'])."'}";
@@ -207,17 +212,23 @@ else
 
         // Update the status
         $result = '';
-        for($i=0; $i<count($arr_id );$i++)
-        {
+        for ($i=0;$i<count($arr_id );$i++) {
             $arr_id[$i] = str_replace('#', '', $arr_id[$i]);
             $result .= $arr_id[$i].'#';
-            $query_str = "update ".$_POST['table']. " set status = '".$status."' where res_id = ".$arr_id[$i];
-            $req = $db->query($query_str, true);
-            if(!$req)
-            {
-                $_SESSION['action_error'] = _SQL_ERROR.' : '.$query_str;
-                echo "{status : 7, error_txt : '".addslashes($label_action.' : '.$_SESSION['action_error'])."'}";
-                exit();
+            if (trim($status) <> '') {
+                if ($_POST['table'] == 'rm_ios') {
+                    $query_str = "update " . $_POST['table'] .  " set status = '" 
+                        . $status . "' where io_id = " . $arr_id[$i];
+                } else {
+                    $query_str = "update " . $_POST['table'] .  " set status = '" 
+                        . $status . "' where res_id = " . $arr_id[$i];
+                }
+                $req = $db->query($query_str, true);
+                if (!$req) {
+                    $_SESSION['action_error'] = _SQL_ERROR . ' : ' . $query_str;
+                    echo "{status : 7, error_txt : '" . addslashes($label_action . ' : ' . $_SESSION['action_error']) . "'}";
+                    exit();
+                }
             }
         }
         $res_action = array('result' => $result, 'history_msg' => '');

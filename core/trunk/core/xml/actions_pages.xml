@@ -135,4 +135,12 @@ An action page is described in a ACTIONPAGE tag :
         <KEYWORD>indexing</KEYWORD>
         <FLAG_CREATE>true</FLAG_CREATE>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>process_rm</ID>
+        <LABEL>_PROCESS_ARCHIVE</LABEL>
+        <NAME>process_rm</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>records_management</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
 </ROOT>
