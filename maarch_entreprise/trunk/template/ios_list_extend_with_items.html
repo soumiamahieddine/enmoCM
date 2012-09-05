@@ -64,6 +64,9 @@ Defines :
                 ##define_lang|_DESCRIPTION##
                 <a href="##order_link|description|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|description|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
                 &nbsp;
+                ##define_lang|_REQUESTING_NUMBER_ARCHIVE##
+                <a href="##order_link|archival_entity_item_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|archival_entity_item_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
+                &nbsp;
                 ##define_lang|_REQUESTING_NUMBER##
                 <a href="##order_link|transferring_entity_item_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|transferring_entity_item_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
                 &nbsp;
@@ -109,11 +112,14 @@ Defines :
             <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                 <tr>
                     <td style="font-size:10px; width ="30px" alt="##define_lang|_IO_DATE##" title="##define_lang|_IO_DATE##" ##func_click_form##></td>
-                    <td style="font-size:10px; width ="100px" ##func_click_form##>
+                    <td style="font-size:10px; width ="50px" ##func_click_form##>
                         <img src="##load_img|date_arriv.gif##">&nbsp;##load_value|io_date##
                     </td>
-                    <td style="font-size:10px; width ="110px">
-                        <img src="##load_img|key.png##">&nbsp;##load_value|transferring_entity_item_id##
+                    <td style="font-size:10px; width ="50px">
+                        <img src="##load_img|key.png##" title="##define_lang|_REQUESTING_NUMBER_ARCHIVE##">&nbsp;##load_value|archival_entity_item_id##
+                    </td>
+                    <td style="font-size:10px; width ="50px">
+                        <img src="##load_img|key.png##" title="##define_lang|_REQUESTING_NUMBER##">&nbsp;##load_value|transferring_entity_item_id##
                     </td>
                     <td style="font-size:10px; width ="60px">##func_bool_see_items##</td>
                     <td style="font-size:10px; width ="60px">##func_bool_detail_io##</td>
