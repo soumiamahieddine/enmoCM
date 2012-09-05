@@ -289,8 +289,7 @@ class DataAccessService_Database
         
         $insertQuery = implode(' ', $insertParts);
         
-        echo "<br/>INSERT QUERY = $insertQuery";
-        return;
+        //echo "<br/>INSERT QUERY = $insertQuery";
         
         try {
             $this->databaseObject->query($insertQuery);
@@ -325,8 +324,7 @@ class DataAccessService_Database
         
         $updateQuery = implode(' ', $updateParts);
         
-        echo "<pre>UPDATE QUERY = " . $updateQuery . "</pre>";
-        return;
+        //echo "<pre>UPDATE QUERY = " . $updateQuery . "</pre>";
         
         try {
             $this->databaseObject->query($updateQuery);
