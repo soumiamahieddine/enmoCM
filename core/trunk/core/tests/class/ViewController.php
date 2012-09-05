@@ -171,7 +171,8 @@ class ViewElement
     //*************************************************************************
     function setDataAttribute($name, $value)
     {
-        $this->setAttribute('data-' . $name, htmlentities($value, 0, $this->encoding));
+        //$this->setAttribute('data-' . $name, htmlentities($value, 0, $this->encoding));
+        $this->setAttribute('data-' . $name, $value);
     }
     
     //*************************************************************************
