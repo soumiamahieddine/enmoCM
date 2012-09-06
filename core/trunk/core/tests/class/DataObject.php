@@ -419,7 +419,8 @@ class DataObjectElement
         $refDataObject = $this->getCommentDataObject($objectName);
         if(is_null($offset)) $offset = 999999;
         for($i=0; $i<$offset; $i++) {
-            if($refDataObject->nextSibling->getName() == $objectName) {
+            if($refDataObject->nextSibling 
+                && $refDataObject->nextSibling->getName() == $objectName) {
                 $refDataObject = $refDataObject->nextSibling;
             } else {
                 break;
