@@ -184,6 +184,13 @@ class ViewElement
         $this->appendChild($option);
         return $option;
     }
+    
+    function addOptionGroup($label)
+    {
+        $optionGroup = $this->ownerDocument->createOptionGroup($label);
+        $this->appendChild($optionGroup);
+        return $optionGroup;
+    }
             
     function disable()
     {
