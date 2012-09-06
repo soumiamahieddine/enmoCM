@@ -215,6 +215,8 @@ class DataAccessService_Database
                 $objectElement, 
                 $dataObjectDocument
             );
+            $parentObject[] = $dataObject;
+            /*
             $commentDataObject = 
                 $parentObject->getCommentDataObject(
                     $objectElement->getName()
@@ -222,7 +224,7 @@ class DataAccessService_Database
             $parentObject->insertBefore(
                 $dataObject, 
                 $commentDataObject->nextSibling
-            );
+            );*/
             foreach($recordSet as $columnName => $columnValue) {
                 $dataObject->$columnName = $columnValue;
             } 
