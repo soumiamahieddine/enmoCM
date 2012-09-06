@@ -113,7 +113,7 @@ class DataObjectController
         return $objectProperties;
     }
     
-    public function getPropertyTypeEnumeration($typeName)
+    public function getTypeEnumeration($typeName)
     {
         $simpleType = $this->getTypeByName($typeName);
         $enumerations = $this->query('.//xsd:enumeration', $simpleType);
