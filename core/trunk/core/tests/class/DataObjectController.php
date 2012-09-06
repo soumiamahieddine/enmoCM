@@ -123,18 +123,17 @@ class DataObjectController
             $value = $enumeration->getAttribute('value');
             $nameNode = 
                 $this->query(
-                    './/das:name[@xml:lang = "'.$lang.'"]',
+                    './/*[(local-name()="name" or local-name()="Name") and @xml:lang = "'.$lang.'"]',
                     $enumeration
                 )->item(0);
             if(!$nameNode) {
                 $nameNode = 
                     $this->query(
-                        './/das:name',
+                        './/*[local-name()="name" or local-name()="Name"]',
                         $enumeration
                     )->item(0);
             }
-            $name = $nameNode->nodeValue;
-            $values[] = array('value' => $value, 'name' => $name);
+            $values[] = array('value' => $value, 'name' => $nameNode->nodeValue);
         }
         return $values;
     }
