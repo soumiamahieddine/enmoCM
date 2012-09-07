@@ -150,7 +150,7 @@ class DataAccessService_Database
                 preg_match('/\$\w+/', $relationExpression, $params);
                 foreach($params as $paramName) {
                     $attrName = substr($paramName, 1);
-                    //echo "<br/>key is $paramName value of $attrName is " . get_class($parentObject) . " ". $parentObject->$attrName;
+                    //echo "<br/>Relation between " . $parentObject->getName() . " and " . $objectElement->getName() . " ==> key is $paramName value of $attrName is " . get_class($parentObject) . " ". $parentObject->$attrName;
                     $value = $parentObject->$attrName;
                     if(!$value || $value == '') $value = "99999999";
                     $relationExpression = str_replace($paramName, $value, $relationExpression);
@@ -199,8 +199,8 @@ class DataAccessService_Database
         //*********************************************************************
         $selectQuery = implode(' ', $selectParts);
         
-        //echo "<pre>SELECT QUERY = " . $selectQuery . " with key $key</pre>";
-       
+        //echo "<pre>SELECT QUERY = " . $selectQuery . "</pre>";
+        
         try {
             $this->databaseObject->query($selectQuery);
         } catch (Exception $e) {
@@ -283,7 +283,7 @@ class DataAccessService_Database
         $insertQuery = implode(' ', $insertParts);
         
         //echo "<br/>INSERT QUERY = $insertQuery";
-        
+
         try {
             $this->databaseObject->query($insertQuery);
         } catch (Exception $e) {

@@ -480,12 +480,6 @@ class DataObjectController
                     $dataObjectDocument
                 );
             }
-            /*
-            $this->readChildDataObjects(
-                $objectElement,
-                $parentObject,
-                $dataObjectDocument
-            );*/
 
         } catch (maarch\Exception $e) {   
             throw $e;
@@ -542,10 +536,12 @@ class DataObjectController
             ) {
                 if(count($dataObject->getUpdatedProperties()) > 0
                 && $objectElement->isUpdatable()) {
-                    $dataAccessService->updateData(
+                    $key = $dataAccessService->updateData(
                         $objectElement, 
                         $dataObject
                     );
+                } else {
+                    $key = true;
                 }
                 $this->saveChildDataObjects(
                     $objectElement,
@@ -582,6 +578,7 @@ class DataObjectController
             if(!$refNode->hasDatasource()) continue;
             
             // Get relation between dataObject and child
+            //echo "<br/>Relation between " . $refNode->getName() . " and " . $dataObject->getName();
             $relation = $this->getRelation($refNode, $dataObject);
             $fkeys = $this->query('./das:foreign-key', $relation);
             $n = $fkeys->length;
