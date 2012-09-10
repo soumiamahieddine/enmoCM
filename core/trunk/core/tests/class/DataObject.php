@@ -546,9 +546,9 @@ class DataObjectElement
         $this->appendChild($message);
     }
     
-    public function logValidate($level, $message)
+    public function logValidate($id, $message, $level)
     {
-        $messageDetail = 'message="' . $message . '"';
+        $messageDetail = 'id="' . $id . '" message="' . $message . '"';
         $message = 
             $this->ownerDocument->createLog(
                 DataObjectLog::VALIDATE, 
@@ -637,8 +637,11 @@ class DataObjectElement
             $log = $logs->item($i);
             if($log->getAttribute('operation') == DataObjectLog::VALIDATE) {
                 $validationErrors[] = 
-                    "[" . $log->getAttribute('level') . "] "
-                    . $log->getAttribute('message');
+                    new Message(
+                        $log->getAttribute('id'),
+                        $log->getAttribute('message'),
+                        $log->getAttribute('level')
+                    );
             }
         }
         return $validationErrors;

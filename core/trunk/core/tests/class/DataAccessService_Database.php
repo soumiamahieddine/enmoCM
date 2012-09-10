@@ -223,30 +223,13 @@ class DataAccessService_Database
         }
     }
     
-    public function deleteData($objectElement, $key)
+    public function deleteData($objectElement, $dataObject)
     {
         $tableExpression = $this->createFromExpression($objectElement);
         $deleteParts[] = "DELETE FROM";
         $deleteParts[] = $tableExpression;
 
-        if(!$keyExpression = 
-            $this->getXRefs(
-                $objectElement, 
-                'keyExpression'
-            )
-        ) {
-            $keyExpression = 
-                $this->createKeyExpression($objectElement);
-            $this->addXRefs(
-                $objectElement,
-                'keyExpression',
-                $keyExpression
-            );
-        }
-        $keyValues = explode(' ', $key);
-        foreach($keyValues as $i => $keyValue) {
-            $keyExpression = str_replace('$'.$i, $keyValue, $keyExpression);
-        }
+        $keyExpression = $this->createUpdateKeyExpression($objectElement, $dataObject);
         $deleteParts[] = "WHERE";
         $deleteParts[] = $keyExpression;
        
@@ -474,7 +457,7 @@ class DataAccessService_Database
         if(!$key) return false;
         $keyFields = explode(' ', $key);
         $l = count($keyFields);
-        $selectKeyColumns = array();
+        $keyColumns = array();
         for($i=0; $i<$l; $i++) {
             $keyField = $keyFields[$i];
             $keyNode = 
@@ -486,14 +469,14 @@ class DataAccessService_Database
             $keyColumn = $keyRefNode->getColumn();
             $keyType = $this->getType($keyRefNode);
             $enclosure = $keyType->getEnclosure();
-            $selectKeyColumns[] = 
+            $keyColumns[] = 
                 $keyColumn 
                 . " = " 
                 . $enclosure 
                 . '$' . $i 
                 . $enclosure;  
         }
-        return implode(' and ', $selectKeyColumns);
+        return implode(' and ', $keyColumns);
     }
 
     // FILTER 

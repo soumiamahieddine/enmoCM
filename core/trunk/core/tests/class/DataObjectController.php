@@ -298,19 +298,15 @@ class DataObjectController
                     array($libXMLError->message)
                 );*/
                 switch ($libXMLError->level) {
-                    case LIBXML_ERR_WARNING:
-                        $level = DataObjectLog::WARNING;
-                        break;
-                     case LIBXML_ERR_ERROR:
-                        $level = DataObjectLog::ERROR;
-                        $blockingErrors++;
-                        break;
+                    case LIBXML_ERR_ERROR:
                     case LIBXML_ERR_FATAL:
-                        $level = DataObjectLog::FATAL;
                         $blockingErrors++;
                         break;
                 }
-                $dataObject->logValidate($level, $libXMLError->message);
+                $dataObject->logValidate(
+                    $libXMLError->code,
+                    $libXMLError->message,
+                    $libXMLError->level);
             }
             libxml_clear_errors();
             if($blockingErrors > 0) {
@@ -319,7 +315,7 @@ class DataObjectController
                 return true;
             }
         } else {
-            $dataObject->logValidate(DataObjectLog::INFO, 'Valid');
+            $dataObject->logValidate('0000', DataObjectLog::INFO, 'Valid');
             libxml_clear_errors();
             return true;
         }
