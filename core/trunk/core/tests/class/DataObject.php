@@ -279,14 +279,16 @@ class DataObjectElement
             if(is_null($value)) {
                 //echo "<br/>1 - Property $name is attribute, old value was '$valueBefore', new value is null ==> remove attribute";
                 $this->removeAttribute($name);
+                $this->logUpdate($name, $valueBefore, 'null');
             } else if(
                 (is_scalar($value) || !$value) 
                 && $valueBefore != $value
             ) {
                 //echo "<br/>2 - Property $name is attribute, old value was '$valueBefore', new value is string or false => set attribute";
-                $this->setAttribute($name, $value);  
+                $this->setAttribute($name, $value);
+                $this->logUpdate($name, $valueBefore, $value);
             }
-            $this->logUpdate($name, $valueBefore, $value);
+            
             return;
         } 
         
@@ -301,14 +303,16 @@ class DataObjectElement
                 $commentedProperty = 
                     $this->ownerDocument->createProperty($name);
                 $this->replaceChild($commentedProperty, $propertyNode);
+                $this->logUpdate($name, $valueBefore, 'null');
             } elseif(
                 (is_scalar($value) || !$value) 
                 && $valueBefore != $value
             ) {
                 //echo "<br/>4 - Property $name is element, old value was '$valueBefore', new value is string or false => set element";
                 $propertyNode->nodeValue = $value;
+                $this->logUpdate($name, $valueBefore, $value);
             }
-            $this->logUpdate($name, $valueBefore, $value);
+            
             return;
         }
         

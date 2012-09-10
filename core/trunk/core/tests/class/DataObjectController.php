@@ -113,29 +113,30 @@ class DataObjectController
         return $objectProperties;
     }
     
-    public function getTypeEnumeration($typeName)
-    {
+    public function getTypeEnumeration(
+        $typeName, 
+        $infoQueries = array('name' => './/xsd:documentation[@xml:lang = "fr"]//*[local-name()="name"]')
+    ) {
+        $typeEnumeration = array();
+        
         $simpleType = $this->getTypeByName($typeName);
         $enumerations = $this->query('.//xsd:enumeration', $simpleType);
         $l = $enumerations->length;
         for($i=0; $i<$l; $i++) {
             $enumeration = $enumerations->item($i);
-            $value = $enumeration->getAttribute('value');
-            $nameNode = 
-                $this->query(
-                    './/*[(local-name()="name" or local-name()="Name") and @xml:lang = "'.$lang.'"]',
-                    $enumeration
-                )->item(0);
-            if(!$nameNode) {
-                $nameNode = 
-                    $this->query(
-                        './/*[local-name()="name" or local-name()="Name"]',
-                        $enumeration
-                    )->item(0);
+            $item = array();
+            $item['value'] = $enumeration->getAttribute('value');
+            if(count($infoQueries) > 0)  {
+                foreach($infoQueries as $infoName => $infoQuery) {
+                    $infoNode = $this->query($infoQuery, $enumeration)->item(0);
+                    if($infoNode) {
+                        $item[$infoName] = $infoNode->nodeValue;
+                    }
+                }
             }
-            $values[] = array('value' => $value, 'name' => $nameNode->nodeValue);
+            $typeEnumeration[] = $item;
         }
-        return $values;
+        return $typeEnumeration;
     }
      
     //*************************************************************************
@@ -532,7 +533,7 @@ class DataObjectController
                     $key
                 );
             } elseif ($dataObject->isRead()
-                && $dataObject->isDeleted()
+                && !$dataObject->isDeleted()
             ) {
                 if(count($dataObject->getUpdatedProperties()) > 0
                 && $objectElement->isUpdatable()) {
