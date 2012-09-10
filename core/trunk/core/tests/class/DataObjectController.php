@@ -542,11 +542,12 @@ class DataObjectController
                         $dataObject
                     );
                 } else {
-                    $key = true;
+                    $key = $dataObject;
                 }
                 $this->saveChildDataObjects(
                     $objectElement,
-                    $dataObject
+                    $dataObject,
+                    $key
                 );
             } elseif ($dataObject->isDeleted()) {
                 if($objectElement->isDeletable()) {
