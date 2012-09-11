@@ -669,7 +669,7 @@ class diffusion_list extends dbquery
         if (! $modeCc) {
             $this->query(
                 "select l.item_id, u.firstname, u.lastname, e.entity_id, "
-                . "e.entity_label from " . ENT_LISTINSTANCE . " l, "
+                . "e.entity_label, viewed from " . ENT_LISTINSTANCE . " l, "
                 . USERS_TABLE . " u, " . ENT_ENTITIES . " e, "
                 . ENT_USERS_ENTITIES . " ue where l.coll_id = '"
                 . $this->protect_string_db(trim($collId))
@@ -684,14 +684,17 @@ class diffusion_list extends dbquery
             $listinstance['dest']['user_id'] = $this->show_string(
                 $res->item_id
             );
-            $listinstance['dest']['lastname'] = $this->show_string($res->lastname);
-            $listinstance['dest']['firstname'] = $this->show_string($res->firstname);
-            $listinstance['dest']['entity_id'] = $this->show_string($res->entity_id);
-            $listinstance['dest']['entity_label'] = $this->show_string($res->entity_label);
+            $listinstance['dest'] = array(
+                'lastname' => $this->show_string($res->lastname),
+                'firstname' => $this->show_string($res->firstname),
+                'entity_id' => $this->show_string($res->entity_id),
+                'entity_label' => $this->show_string($res->entity_label),
+                'viewed' => $this->show_string($res->viewed)
+            );
         }
         $this->query(
             "select l.item_id, u.firstname, u.lastname, e.entity_id, "
-            . "e.entity_label from " . ENT_LISTINSTANCE . " l, " . USERS_TABLE
+            . "e.entity_label, viewed from " . ENT_LISTINSTANCE . " l, " . USERS_TABLE
             . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
             . " ue where l.coll_id = '" . $collId
             . "' and l.listinstance_type = 'DOC' and l.item_mode = 'cc' "
@@ -709,13 +712,14 @@ class diffusion_list extends dbquery
                     'lastname' => $this->show_string($res->lastname),
                     'firstname' => $this->show_string($res->firstname),
                     'entity_id' => $this->show_string($res->entity_id),
-                    'entity_label' => $this->show_string($res->entity_label)
+                    'entity_label' => $this->show_string($res->entity_label),
+                    'viewed' => $this->show_string($res->viewed)
                 )
             );
         }
 
         $this->query(
-            "select l.item_id,  e.entity_label from " . ENT_LISTINSTANCE
+            "select l.item_id,  e.entity_label, viewed from " . ENT_LISTINSTANCE
             . " l, " . ENT_ENTITIES . " e where l.coll_id = 'letterbox_coll' "
             . "and l.listinstance_type = 'DOC' and l.item_mode = 'cc' "
             . "and l.item_type = 'entity_id' and l.item_id = e.entity_id "
@@ -727,7 +731,8 @@ class diffusion_list extends dbquery
                 $listinstance['copy']['entities'],
                 array(
                     'entity_id' => $this->show_string($res->item_id),
-                    'entity_label' => $this->show_string($res->entity_label)
+                    'entity_label' => $this->show_string($res->entity_label),
+                    'viewed' => $this->show_string($res->viewed)
                 )
             );
         }
