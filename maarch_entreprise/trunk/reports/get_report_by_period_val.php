@@ -226,7 +226,7 @@ if($id_report == 'process_delay')
 		}
 		if($report_type == 'graph')
 		{
-			array_push($_SESSION['labels1'], $db->show_string($doctypes[$i]['LABEL']));
+			array_push($_SESSION['labels1'], utf8_decode($db->show_string($doctypes[$i]['LABEL'])));
 		}
 	}
 
@@ -489,7 +489,7 @@ else if($id_report == 'mail_typology')
 		$res = $db2->fetch_object();
 		if($report_type == 'graph')
 		{
-			array_push($_SESSION['labels1'], (string) $line->type_label);
+			array_push($_SESSION['labels1'], (string)utf8_decode($line->type_label));
 			array_push($vol_an, $res->total);
 		}
 		elseif($report_type == 'array')
@@ -557,7 +557,7 @@ else if($id_report == 'mail_vol_by_cat')
 		$res = $db->fetch_object();
 		if($report_type == 'graph')
 		{
-			array_push($_SESSION['labels1'], $db->wash_html($_SESSION['mail_categories'][$key], 'NO_ACCENT'));
+			array_push($_SESSION['labels1'], utf8_decode($db->wash_html($_SESSION['mail_categories'][$key], 'NO_ACCENT')));
 			array_push($vol_an, $res->total);
 		}
 		elseif($report_type == 'array')
