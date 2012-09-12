@@ -194,7 +194,7 @@ while($res = $db->fetch_object())
 	
 	if($report_type == 'graph')
 	{
-		array_push($_SESSION['labels1'], $db->wash_html($res->entity_label, 'NO_ACCENT'));
+		array_push($_SESSION['labels1'], utf8_decode($db->wash_html($res->entity_label, 'NO_ACCENT')));
 		array_push($vol_an, $res->total);
 	}
 	elseif($report_type == 'array')
