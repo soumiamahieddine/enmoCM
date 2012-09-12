@@ -2315,6 +2315,9 @@ function previsualiseAdminRead(e, json){
     $('return_previsualise').style.top=topPosition+'px';
     $('return_previsualise').style.left=leftPosition+'px';
     
+    $('return_previsualise').style.maxWidth='600px';
+    $('return_previsualise').style.maxHeight='600px';
+    $('return_previsualise').style.overflowY='scroll';
     $('return_previsualise').style.display='block';
     
 }
