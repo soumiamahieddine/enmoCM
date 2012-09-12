@@ -229,13 +229,14 @@ class DataObjectController
         return $dataObjectDocument->documentElement;
     }
     
-    public function save($dataObject)
+    public function save($dataObject, $saveChildren=true)
     {
         $objectElement = $this->getElementByName($dataObject->tagName);
         $dataObjectDocument = $dataObject->ownerDocument;
         $key = $this->saveDataObject(
             $objectElement, 
-            $dataObject
+            $dataObject,
+            $saveChildren
         );   
         
         return $key;
@@ -509,42 +510,49 @@ class DataObjectController
     
     protected function saveDataObject(
         $objectElement, 
-        $dataObject
+        $dataObject,
+        $saveChildren=true
     ) {
-
+        
+        $refElement = $this->getRefNode($objectElement);
+        
         if($dataAccessService = 
-            $this->getDataAccessService($objectElement)
+            $this->getDataAccessService($refElement)
         ) {
             if($dataObject->isCreated() 
                 && !$dataObject->isDeleted()
             ) {
-                $key = 
-                    $dataAccessService->insertData(
-                        $objectElement, 
+                $key = $dataAccessService->insertData(
+                        $refElement, 
                         $dataObject
                     );
-                $this->saveChildDataObjects(
-                    $objectElement,
-                    $dataObject,
-                    $key
-                );
+                if($saveChildren) {
+                    $this->saveChildDataObjects(
+                        $objectElement,
+                        $dataObject,
+                        $key
+                    );
+                }
             } elseif ($dataObject->isRead()
                 && !$dataObject->isDeleted()
             ) {
-                if(count($dataObject->getUpdatedProperties()) > 0
-                && $objectElement->isUpdatable()) {
-                    $key = $dataAccessService->updateData(
-                        $objectElement, 
-                        $dataObject
-                    );
-                } else {
-                    $key = $dataObject;
+                if($objectElement->isUpdatable()) {
+                    if(count($dataObject->getUpdatedProperties()) > 0) {
+                        $key = $dataAccessService->updateData(
+                            $refElement, 
+                            $dataObject
+                        );
+                    } else {
+                        $key = $dataObject;
+                    }
                 }
-                $this->saveChildDataObjects(
-                    $objectElement,
-                    $dataObject,
-                    $key
-                );
+                if($saveChildren) {
+                    $this->saveChildDataObjects(
+                        $objectElement,
+                        $dataObject,
+                        $key
+                    );
+                }
             } elseif ($dataObject->isDeleted()) {
                 if($objectElement->isDeletable()) {
                     $this->saveChildDataObjects(
@@ -552,9 +560,8 @@ class DataObjectController
                         $dataObject
                     );
                 }
-                $key = 
-                    $dataAccessService->deleteData(
-                        $objectElement, 
+                $key = $dataAccessService->deleteData(
+                        $refElement, 
                         $dataObject
                     );
             } 
@@ -572,6 +579,7 @@ class DataObjectController
         $l = count($objectContents);
         for($i=0; $i<$l; $i++) {
             $objectNode = $objectContents[$i];
+            
             $refNode = $this->getRefNode($objectNode);
             if(!$refNode->hasDatasource()) continue;
             
@@ -584,7 +592,7 @@ class DataObjectController
             // List children elements of given type
             $childObjects = 
                 $dataObject->getChildNodesByTagName(
-                    $refNode->getName()
+                    $objectNode->getName()
                 );
             $m = $childObjects->length;
             for($j=0; $j<$m; $j++) {
@@ -605,7 +613,7 @@ class DataObjectController
                 }
                 
                 $this->saveDataObject(
-                    $refNode, 
+                    $objectNode, 
                     $childObject
                 );
             }
