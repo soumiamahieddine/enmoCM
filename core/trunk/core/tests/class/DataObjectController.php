@@ -723,7 +723,6 @@ class DataObjectController
             . '"]'
         )->item(0);
         if(!$element) {
-            $element[1]->toto();
             Die("Element $name is not defined");
         }
         return $element;

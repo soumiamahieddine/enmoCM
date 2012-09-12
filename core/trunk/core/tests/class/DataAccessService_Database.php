@@ -202,24 +202,31 @@ class DataAccessService_Database
         //echo "<pre>SELECT QUERY = " . $selectQuery . "</pre>";
         
         try {
-            $this->databaseObject->query($selectQuery);
+            $this->databaseObject->connect();
+            $result = $this->databaseObject->query(
+                $selectQuery, 
+                $catchErrors=true
+            );
         } catch (Exception $e) {
             throw $e;
         }
-        
-        //*********************************************************************
-        // CREATE / FILL OBJECTS
-        //*********************************************************************
-        while($recordSet = $this->databaseObject->fetch_object()) {
-            $dataObject = $this->createDataObject(
-                $objectElement, 
-                $dataObjectDocument
-            );
-            $parentObject[] = $dataObject;
-            foreach($recordSet as $columnName => $columnValue) {
-                $dataObject->$columnName = $columnValue;
-            } 
-            $dataObject->logRead();
+        if(!$result) {
+            $this->throwDatabaseException($selectQuery);
+        } else {
+            //*********************************************************************
+            // CREATE / FILL OBJECTS
+            //*********************************************************************
+            while($recordSet = $this->databaseObject->fetch_object()) {
+                $dataObject = $this->createDataObject(
+                    $objectElement, 
+                    $dataObjectDocument
+                );
+                $parentObject[] = $dataObject;
+                foreach($recordSet as $columnName => $columnValue) {
+                    $dataObject->$columnName = $columnValue;
+                } 
+                $dataObject->logRead();
+            }
         }
     }
     
@@ -238,10 +245,22 @@ class DataAccessService_Database
         //echo "<br/>DELETE QUERY = $deleteQuery";
         
         try {
-            $this->databaseObject->query($deleteQuery);
+            $this->databaseObject->connect();
+            $result = $this->databaseObject->query(
+                $deleteQuery, 
+                $catchErrors=true
+            );
         } catch (Exception $e) {
             throw $e;
         }
+        
+        if(!$result) {
+            $this->throwDatabaseException($deleteQuery);
+        } else {
+            $keys = $this->databaseObject->fetch_object();
+            return $keys;
+        }
+        
     }
     
     public function insertData($objectElement, $dataObject)
@@ -268,13 +287,20 @@ class DataAccessService_Database
         //echo "<br/>INSERT QUERY = $insertQuery";
 
         try {
-            $this->databaseObject->query($insertQuery);
+            $this->databaseObject->connect();
+            $result = $this->databaseObject->query(
+                $insertQuery, 
+                $catchErrors=true
+            );
         } catch (Exception $e) {
             throw $e;
         }
-        
-        $keys = $this->databaseObject->fetch_object();
-        return $keys;
+        if(!$result) {
+            $this->throwDatabaseException($insertQuery);
+        } else {
+            $keys = $this->databaseObject->fetch_object();
+            return $keys;
+        }
     }
     
     public function updateData($objectElement, $dataObject)
@@ -303,16 +329,25 @@ class DataAccessService_Database
         //echo "<pre>UPDATE QUERY = " . $updateQuery . "</pre>";
         
         try {
-            $this->databaseObject->query($updateQuery);
+            $this->databaseObject->connect();
+            $result = $this->databaseObject->query(
+                $updateQuery, 
+                $catchErrors=true
+            );
         } catch (Exception $e) {
             throw $e;
         }
         
-        $keys = $this->databaseObject->fetch_object();
-        return $keys;
+        if(!$result) {
+            $this->throwDatabaseException($updateQuery);
+        } else {
+            $keys = $this->databaseObject->fetch_object();
+            return $keys;
+        }
 
     }
     
+  
     //*************************************************************************
     // PRIVATE QUERY CREATION FUNCTIONS
     //*************************************************************************
@@ -681,17 +716,15 @@ class DataAccessService_Database
                     );
                 $contentNode = $this->getRefNode($contentNode);
                 if($contentNode->hasDatasource()) continue;
-                //if(!in_array($contentName, $serialKeyFields)) {
-                    $contentType = $this->getType($contentNode);
-                    $enclosure = $contentType->getEnclosure();
-                    $columnName = $contentNode->getColumn();
-                    $updateColumns[] =
-                        $columnName . " = " 
-                        . $enclosure 
-                        . $this->databaseObject->escape_string(
-                            $dataObject->$contentName) 
-                        . $enclosure; 
-                //}
+                $contentType = $this->getType($contentNode);
+                $enclosure = $contentType->getEnclosure();
+                $columnName = $contentNode->getColumn();
+                $updateColumns[] =
+                    $columnName . " = " 
+                    . $enclosure 
+                    . $this->databaseObject->escape_string(
+                        $dataObject->$contentName) 
+                    . $enclosure; 
             }
         }
 
@@ -760,18 +793,16 @@ class DataAccessService_Database
         require_once 'core/tests/class/Exception.php';
         $messageController = new MessageController();
         $messageController->loadMessageFile('core/xml/DataAccessService_Messages.xml');
-        $sqlError = $this->pdo->errorInfo();
+        $sqlError = $this->databaseObject->getError();
         $message = $messageController->createMessage(
             __CLASS__ . '::queryError',
             false,
             array(
-                $sqlError[0],
-                $sqlError[1],
-                $sqlError[2],
+                $sqlError,
                 $query
             )
         );
-        throw new maarch\Exception($message);
+        throw new maarch\Exception($message->message);
     }
 
 }
