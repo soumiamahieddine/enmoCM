@@ -669,7 +669,7 @@ class diffusion_list extends dbquery
         if (! $modeCc) {
             $this->query(
                 "select l.item_id, u.firstname, u.lastname, e.entity_id, "
-                . "e.entity_label, viewed from " . ENT_LISTINSTANCE . " l, "
+                . "e.entity_label, l.viewed from " . ENT_LISTINSTANCE . " l, "
                 . USERS_TABLE . " u, " . ENT_ENTITIES . " e, "
                 . ENT_USERS_ENTITIES . " ue where l.coll_id = '"
                 . $this->protect_string_db(trim($collId))
@@ -694,7 +694,7 @@ class diffusion_list extends dbquery
         }
         $this->query(
             "select l.item_id, u.firstname, u.lastname, e.entity_id, "
-            . "e.entity_label, viewed from " . ENT_LISTINSTANCE . " l, " . USERS_TABLE
+            . "e.entity_label, l.viewed from " . ENT_LISTINSTANCE . " l, " . USERS_TABLE
             . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
             . " ue where l.coll_id = '" . $collId
             . "' and l.listinstance_type = 'DOC' and l.item_mode = 'cc' "
@@ -719,7 +719,7 @@ class diffusion_list extends dbquery
         }
 
         $this->query(
-            "select l.item_id,  e.entity_label, viewed from " . ENT_LISTINSTANCE
+            "select l.item_id,  e.entity_label, l.viewed from " . ENT_LISTINSTANCE
             . " l, " . ENT_ENTITIES . " e where l.coll_id = 'letterbox_coll' "
             . "and l.listinstance_type = 'DOC' and l.item_mode = 'cc' "
             . "and l.item_type = 'entity_id' and l.item_id = e.entity_id "
