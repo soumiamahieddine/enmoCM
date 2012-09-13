@@ -89,8 +89,8 @@
         <path_to_lucene_index></path_to_lucene_index>
     </COLLECTION>
     <COLLECTION>
-        <id>br_coll</id>
-        <label>_BR_COLL</label>
+        <id>io_coll</id>
+        <label>_IO_COLL</label>
         <table>rm_ios</table>
         <version_table></version_table>
         <view>view_ios</view>
