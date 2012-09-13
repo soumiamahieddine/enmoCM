@@ -279,9 +279,9 @@ class DataObjectController
         
         // Validate with specific business script
         //*********************************************************************
-        /*$objectSchema = $this->schema->getObjectSchema($dataObject->tagName);
-        if($objectSchema->hasAttribute('das:validation')) {
-            include_once $objectSchema->getAttribute('das:validation');
+        /*$objectElement = $this->getElementByName($dataObject->tagName);
+        if($objectElement->hasAttribute('das:validation')) {
+            include_once $objectElement->getAttribute('das:validation');
         }*/
         
         // Validate against schema
@@ -293,11 +293,6 @@ class DataObjectController
             $blockingErrors = 0;
             $libXMLErrors = libxml_get_errors();
             foreach ($libXMLErrors as $libXMLError) {
-                /*$message = $messageController->createMessage(
-                    'libxml::' . $libXMLError->code,
-                    $_SESSION['config']['lang'],
-                    array($libXMLError->message)
-                );*/
                 switch ($libXMLError->level) {
                     case LIBXML_ERR_ERROR:
                     case LIBXML_ERR_FATAL:
