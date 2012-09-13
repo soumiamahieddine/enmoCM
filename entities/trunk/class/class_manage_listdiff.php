@@ -681,10 +681,9 @@ class diffusion_list extends dbquery
             );
 
             $res = $this->fetch_object();
-            $listinstance['dest']['user_id'] = $this->show_string(
-                $res->item_id
-            );
+            
             $listinstance['dest'] = array(
+                'user_id' => $this->show_string($res->item_id),
                 'lastname' => $this->show_string($res->lastname),
                 'firstname' => $this->show_string($res->firstname),
                 'entity_id' => $this->show_string($res->entity_id),
