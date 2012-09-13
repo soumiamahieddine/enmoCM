@@ -794,7 +794,7 @@ class DataAccessService_Database
         $messageController = new MessageController();
         $messageController->loadMessageFile('core/xml/DataAccessService_Messages.xml');
         $sqlError = $this->databaseObject->getError();
-        $message = $messageController->createMessage(
+        $exception = $messageController->getMessageText(
             __CLASS__ . '::queryError',
             false,
             array(
@@ -802,7 +802,7 @@ class DataAccessService_Database
                 $query
             )
         );
-        throw new maarch\Exception($message->message);
+        throw new maarch\Exception($exception);
     }
 
 }
