@@ -147,6 +147,7 @@
     </xsd:annotation>
     <xsd:restriction base="xsd:nonNegativeInteger">
       <xsd:minInclusive value="0"/>
+      <xsd:maxInclusive value="9223372036854775807"/>
     </xsd:restriction>
   </xsd:simpleType>
   
@@ -158,6 +159,7 @@
     </xsd:annotation>
     <xsd:restriction base="xsd:nonNegativeInteger">
       <xsd:minInclusive value="0"/>
+      <xsd:maxInclusive value="2147483648"/>
     </xsd:restriction>
   </xsd:simpleType> 
   
