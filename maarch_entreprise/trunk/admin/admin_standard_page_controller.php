@@ -507,7 +507,7 @@ if (isset($_REQUEST['submit'])) {
             - objectList
             --------- */
             $objectList = $dataObjectList->$params['objectName'];
-            
+            //$dataObjectList->show();
             /* -----------------
             - prevent PHP NOTICE
             ----------------- */
