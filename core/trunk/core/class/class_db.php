@@ -448,6 +448,33 @@ class dbquery extends functions
         }
     }
     
+    public function getError()
+    {
+        switch($this->_databasetype) {
+            case 'MYSQL':
+                $sqlError = @mysqli_errno($this->_sqlLink);
+                break;
+                
+            case 'SQLSERVER' : 
+                $sqlError = @mssql_get_last_message();
+                break;
+                
+            case 'POSTGRESQL':
+                @pg_send_query($this->_sqlLink, $this->_debugQuery);
+                $res = @pg_get_result($this->_sqlLink);
+                $sqlError .= @pg_result_error($res);
+                break;
+                
+            case 'ORACLE' :
+                $res = @oci_error($this->statement);
+                $sqlError = $res['message'];
+                break;
+                
+            default :
+
+            }
+        return $sqlError;
+    }
     
     /**
     * Returns the query results in an object
@@ -674,29 +701,8 @@ class dbquery extends functions
         // Query error
         if ($this->_sqlError == 3) {
             
-            switch($this->_databasetype) {
-            case 'MYSQL':
-                $sqlError = @mysqli_errno($this->_sqlLink);
-                break;
-                
-            case 'SQLSERVER' : 
-                $sqlError = @mssql_get_last_message();
-                break;
-                
-            case 'POSTGRESQL':
-                @pg_send_query($this->_sqlLink, $this->_debugQuery);
-                $res = @pg_get_result($this->_sqlLink);
-                $sqlError .= @pg_result_error($res);
-                break;
-                
-            case 'ORACLE' :
-                $res = @oci_error($this->statement);
-                $sqlError = $res['message'];
-                break;
-                
-            default :
-
-            }
+            $sqlError = $this->getError();
+            
             $trace->add(
                 "", 
                 0, 
@@ -861,11 +867,11 @@ class dbquery extends functions
         {
         case "SQLSERVER" : 
             $string = str_replace("'", "''", $string);
-            $string = str_replace("\\", "", $string);
+            $string = str_replace("\\", "\\\\", $string);
             break;
         case "ORACLE" :
             $string = str_replace("'", "''", $string);
-            $string = str_replace("\\", "", $string);
+            $string = str_replace("\\", "\\\\", $string);
             break;
         case "MYSQL": 
             $string = mysql_escape_string($string);
