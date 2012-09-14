@@ -41,7 +41,7 @@ $core_tools->load_header('', true, false );
 	}
 	else
 	{
-		$where = " lower(folder_id) like lower('T_%') and status <> 'DEL'";}
+		$where = " lower(folder_id) like lower('T_%') and status <> 'DEL'";//}
 	}
 	$request= new request;
 	$tab=$request->select($select,$where,"",$_SESSION['config']['databasetype']);
