@@ -355,7 +355,7 @@ class DataObjectElement
             $this
         );
         
-        // Storage is a dataObject -> return array of objects
+        // Storage is a commentDataObject -> return array of instance
         if($commentDataObject = $this->getCommentDataObject($name)) {
             $nodesArray = array();
             for($i=0; $i<$nodes->length; $i++) {
@@ -363,7 +363,7 @@ class DataObjectElement
             }
             return $nodesArray;
         }
-        
+
         // Storage is a property element -> return value
         return (string)$nodes->item(0)->nodeValue;  
     }

@@ -719,12 +719,21 @@ class DataAccessService_Database
                 $contentType = $this->getType($contentNode);
                 $enclosure = $contentType->getEnclosure();
                 $columnName = $contentNode->getColumn();
+                $propertyValue = $dataObject->$contentName;
+                if($propertyValue === '') {
+                    $columnValue = 'null';
+                } else {
+                    $columnValue = 
+                        $enclosure 
+                        . $this->databaseObject->escape_string(
+                            $propertyValue) 
+                        . $enclosure;
+                }
                 $updateColumns[] =
-                    $columnName . " = " 
-                    . $enclosure 
-                    . $this->databaseObject->escape_string(
-                        $dataObject->$contentName) 
-                    . $enclosure; 
+                    $columnName 
+                    . " = " 
+                    . $columnValue;
+                
             }
         }
 

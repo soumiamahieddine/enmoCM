@@ -305,6 +305,7 @@ class DataObjectController
                     $libXMLError->level);
             }
             libxml_clear_errors();
+            libxml_use_internal_errors(false);
             if($blockingErrors > 0) {
                 return false;
             } else {
@@ -313,6 +314,7 @@ class DataObjectController
         } else {
             $dataObject->logValidate('0000', DataObjectLog::INFO, 'Valid');
             libxml_clear_errors();
+            libxml_use_internal_errors(false);
             return true;
         }
 
@@ -1103,6 +1105,6 @@ class DataObjectController
         //echo "<br/>add XRefs[" . $element->tagName . "][".$element->getName()."][$queryTag] => " . count($XRefs);
         $this->XRefs[$element->tagName][$element->getName()][$queryTag] = $XRefs;
     }
-
+   
 
 }
