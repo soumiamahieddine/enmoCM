@@ -63,7 +63,6 @@ class Query{
 			//res properties
 			'cmis:objectId' => 'res_id',
 			'maarch:type' => 'type_label',
-			//'maarch:contact' => 'contact_society , contact_firstname , contact_lastname',
 			'maarch:entity ' => 'entity_label',
 			'maarch:dest_user' => 'dest_user',
 			'maarch:doc_date' => 'doc_date',
@@ -156,7 +155,7 @@ class Query{
 		}
 		
 		
-		//not supported : contains(...), score(...), in_tree(...)                 in_folder(...)		
+		//not supported : contains(...), score(...), in_tree(...), in_folder(...)		
 		$supportedTmpStatement = true;
 		foreach ($this->notSupported as $notSupportedClause){
 			$supportedTmpStatement = ($supportedTmpStatement && (stripos($tmpStatement, $notSupportedClause) === false));
@@ -165,9 +164,6 @@ class Query{
 				return null;
 			}
 		}		
-		
-		
-		//in_folder(...)
 		
 		
 		//
@@ -340,83 +336,7 @@ class Query{
 			$this->sqlStatement = null;
 		}
 		
-		//var_dump($this->sqlStatement);
-		
 		return $this->sqlStatement;
 	}
-	
-	
-	
-	public function execQuery(){//TODO fct a supprimer 
-	
-	
-		//
-		$tmpStatement = $this->statement;
-			
-	
-		//not supported : contains(...), score(...), in_tree(...)                 in_folder(...)
-		$supportedTmpStatement = true;
-		foreach ($this->notSupported as $notSupportedClause){
-			$supportedTmpStatement = ($supportedTmpStatement && (strpos($tmpStatement, $notSupportedClause) === false));
-			if(!$supportedTmpStatement){
-				return null;
-			}
-		}
-	
-	
-		//in_folder(...)
-	
-	
-		//
-		$tmpStatement = str_replace(array_keys($this->maarchColumn), $this->maarchColumn, $tmpStatement);
-		$tmpStatement = str_replace(array_keys($this->maarchTable ), $this->maarchTable, $tmpStatement);
-	
-	
-		echo $tmpStatement.'<br />';
-		$resArray;
-	
-		/*
-			if ($this->parseStatement()){
-		$select = $this->sqlStatement["simpletable"]["select"];
-		$from = $this->sqlStatement["simpletable"]["from"];
-		$where = $this->sqlStatement["simpletable"]["where"];
-		$orderby = $this->sqlStatement["orderby"];
-			
-		//verifier si les proprietes sont queryable
-		$selectedProperties = array('objectId', 'type');
-			
-		//remplacement des queryName par le nom de colonne dans maarch
-			
-		//construction de la requete sql
-			
-		//execusion de la requete
-		/*require_once('core/class/class_db.php');
-		$db = new dbquery();
-		$db->connect();
-		$db->query("....................");
-		//si plusieurs lignes
-		$resArray= array();
-		while ($recordset = $db->fetch_object()) {
-		$row = array();
-	
-		var_dump($recordset);
-	
-		foreach($selectedProperties as $key=>$selectedProperty){
-		$row[$key] =  ;
-		}
-		array_push($resArray, array('res_id' => $recordset->res_id, 'type_label'=> $recordset->type_label));
-		}
-		*/
-			
-		//resultat de requete ds $resArray
-		//}
-	
-	
-		return $resArray;
-	
-	}
-	
-	
-	
 	
 }

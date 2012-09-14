@@ -23,7 +23,7 @@ class resCMIS extends objectCMIS
     //properties
     private $name; 
     private $isImmutable;
-    /*     version : not supported            
+    /*   //  version : not supported            
     private $isLatestVersion;           
     private $isMajorVersion;            
     private $isLatestMajorVersion;       
@@ -53,20 +53,14 @@ class resCMIS extends objectCMIS
     
     public function entryMethod ($atomFileContent, $requestedResourceId)
     {
-        //faire des verifications pour savoir si on veut consulter un document ou faire une recherche avancee
-        //si on n'a qu'un atomFileContent alors on fait une recherche
-        //si on n'a pas de fichier atomFileContent mais un id alors on retourne un document
-        $str = "";
         
         if(isset($atomFileContent) && !isset($requestedResourceId)){
-        	$str = 'AtomFileContent ';
-        	//$this->DocumentCmis();
+        	
         	//new xml parser
         	$xmlParser = new xmlParser();
         	
         	//build a query from xml file
         	$query = $xmlParser->parseQuery($atomFileContent);
-        	//echo $query->to_String();
         	
         	//get the list of documents : execute query        	
         	if($documents = $query->executeQuery()){
@@ -74,30 +68,31 @@ class resCMIS extends objectCMIS
         		$title = 'Result for '.$query->getStatement();
         		$resAtom = resCMIS::getFeed($documents, trim($title));
 	        	
-	        	echo '<br />'.$resAtom->saveXML().'<br /><br />';
+	        	echo $resAtom->saveXML();
 	        }
 	        else{
         		//TODO throw constraintException or runtime
+	    		echo "<br />ERREUR : constraintException or runtime.<br />";    		
 	        }
         }
         elseif(!isset($atomFileContent) && isset($requestedResourceId)){
-        	$str = 'id ';
         	
         	//retrieve the document whose id is $requestedResourceId
         	if( $res = $this->getDocument(intval($requestedResourceId))){
         		$resAtom = $res->toAtomXml();
-        		echo '<br />'.$resAtom->saveXML().'<br /><br />';
+        		echo $resAtom->saveXML();
         	}
         	else{
-        		//TODO throw objectNotFound        		
+        		//TODO throw objectNotFound     
+	    		echo "<br />ERREUR : objectNotFound.<br />";     		
         	}
         }
         else{
-        		//TODO throw notSupported or invalidArgument
-        	$str = "Error : atomFileContent and requestedRessourceId set or unset at the same time";
+        	//TODO throw notSupported or invalidArgument
+	    	echo "<br />ERREUR : notSupported.<br />";  
         }
         
-        return $str . $this->strReturn . $requestedResourceId . ' ' . $atomFileContent;
+       //return $requestedResourceId . ' ' . $atomFileContent;
     }
     
    
@@ -288,7 +283,7 @@ class resCMIS extends objectCMIS
     }
     
     public function getDocument($id){
-    	//appel fct maarch pour extraire le document
+    	
     	require_once('core/class/class_db.php');
     	$db = new dbquery();
     	$db->connect();
@@ -301,11 +296,11 @@ class resCMIS extends objectCMIS
     	//TODO
     	if($result === false){
         	//TODO throw objectNotFound or invalidArgument or runtime
-    		echo "<br />ERREUR : requête non exécutée.<br />";
+    		echo "<br />ERREUR : requête non exécutée runtime.<br />";
     		return null;
     	}
     	
-    	//si plusieurs lignes
+    	
     	if ($recordset = $db->fetch_object()) {
     		$resArray = array(
     				'res_id' => $recordset->res_id,
@@ -324,7 +319,7 @@ class resCMIS extends objectCMIS
     		$documentCmis->DocumentCmis();
     		$documentCmis->setRes($resArray);
     		
-    		//rechercher un courrier, recuperer contenu d un document 
+    		
 	    	require_once('core/class/docservers_controler.php');
 	    	$dsController = new docservers_controler();
 	    	$theFileArray = array();
@@ -346,7 +341,7 @@ class resCMIS extends objectCMIS
     }
     
     public function setRes($document){
-    	//retourne un res cmis correspondant au document en bd
+    	
     	$this->objectId->setValue($document['res_id']);
     	$this->type->setValue($document['type_label'])   ;
     	$this->contact->setValue($document['contact_society'].' '.$document['contact_firstname'].' '.$document['contact_lastname'])   ;
@@ -371,292 +366,20 @@ class resCMIS extends objectCMIS
     	return ($found) ?  $property : null;
     }
     
-    //TODO fct a supprimer
-    public function _toAtomXml(){
-    	//creer un document atom xml
-    
-    	//CMIS Services GET: getObject, getObjectOfLatestVersion (getObject)
-    	//Media Type: application/atom+xml;type=entry
-    	
-    	$doc = new DOMDocument('1.0', 'utf-8');
-    	$doc->xmlStandalone = true;
-    	$doc->formatOutput = true;
-    	
-    	//atom:entry
-    	$root = $doc->createElementNS('http://www.w3.org/2005/Atom', 'atom:entry');
-    	$doc->appendChild($root);
-    	
-    	//atom:author
-    	$eAuthor = $doc->createElement('atom:author');
-    	$root->appendChild($eAuthor);
-    	$uri = 'uri';
-    	$name = $this->contact->getValue();  //'name';
-    	$email = 'email';
-    	$eUri = $doc->createElement('atom:uri', $uri);
-    	$eName = $doc->createElement('atom:name', $name);
-    	$eEmail = $doc->createElement('atom:email', $email);
-    	$eAuthor->appendChild($eName);
-    	$eAuthor->appendChild($eUri);
-    	$eAuthor->appendChild($eEmail);
-    
-    	
-    	//atom:content
-    	$attSrcContent = 'src';
-    	$eContent = $doc->createElement('atom:content');
-    	$root->appendChild($eContent);
-    	$eContent->setAttribute('src', $attSrcContent);
-    	
-    	
-    	//atom:id
-    	//derived from cmis:objectId. This id MUST be compliant with atom's specification and be a valid IRI
-    	$id = $this->objectId->getValue();  //'id';
-    	$eId = $doc->createElement('atom:id', $id);
-    	$root->appendChild($eId);
-    
-    
-    	//atom:title
-    	//cmis:name property
-    	$title = $this->name->getValue();   //'title';
-    	$attTypeTitle = 'text';
-    	$eTitle = $doc->createElement('atom:title', $title);
-    	$root->appendChild($eTitle);
-    	$eTitle->setAttribute('type', $attTypeTitle);
-    	
-    
-    	//atom:updated
-    	//cmis:lastModificationDate
-    	$updated = $this->lastModificationDate->getValue();   //'updated';
-    	$eUpdated = $doc->createElement('atom:updated', $updated);
-    	$root->appendChild($eUpdated);
-    
-    	
-    	//atom:published
-    	//cmis:creationDate
-    	$published = $this->creationDate->getValue(); //'published';
-    	$ePublished = $doc->createElement('atom:published', $published);
-    	$root->appendChild($ePublished);
-    
-    
-    	//atom:summary
-    	$summary = 'summary'; //$this->getSummary();
-    	$attTypeSummary = 'text';
-    	$eSummary = $doc->createElement('atom:summary', $summary);
-    	$root->appendChild($eSummary);
-    	$eTitle->setAttribute('type', $attTypeSummary);
-    
-    
-    	//atom:link rel="self"
-    	//points to an URI that returns the atom entry for this document
-    	$attHrefLinkSelf = 'href link self';
-    	$eLinkSelf = $doc->createElement('atom:link');
-    	$root->appendChild($eSummary);
-    	$eLinkSelf->setAttribute('rel', 'self');
-    	$eLinkSelf->setAttribute('href', $attHrefLinkSelf);
-    
-    
-    	//atom:link rel="edit"
-    	//points to an URI that accepts PUT of atom entry
-    	/*$attHrefLinkEdit = 'href link edit';
-    	$eLinkEdit = $doc->createElement('atom:link');
-    	$root->appendChild($eSummary);
-    	$eLinkEdit->setAttribute('rel', 'edit');
-    	$eLinkEdit->setAttribute('href', $attHrefLinkEdit);*/
-    
-    
-    	//atom:link rel="http://docs.oasis-open.org/ns/cmis/link/200908/allowableactions"
-    	//points to the allowable actions document for this object
-    	 
-    
-    	//atom:link rel="describedby"
-    	//points to the type definition as an atom entry for the type of this document entry
-    	$attHrefLinkDesc = 'href link described by';
-    	$eLinkDesc = $doc->createElement('atom:link');
-    	$root->appendChild($eLinkDesc);
-    	$eLinkDesc->setAttribute('rel', 'describedby');
-    	$eLinkDesc->setAttribute('type', 'application/atom+xml;type=entry');
-    	$eLinkDesc->setAttribute('href', $attHrefLinkDesc);
-    
-    
-    	//atom:link rel="working-copy"
-    	//points to the private working copy if it exists
-    
-    	//atom:link rel="service"
-    	//points to service document containing the CMIS repository.
-    	//The service document MUST contain only one workspace element
-    	//Media Type: application/atomsvc+xml
-    	$attHrefLinkService = 'href link service';
-    	$eLinkService = $doc->createElement('atom:link');
-    	$root->appendChild($eLinkService);
-    	$eLinkService->setAttribute('rel', 'service');
-    	$eLinkService->setAttribute('type', 'application/atomsvc+xml');
-    	$eLinkService->setAttribute('href', $attHrefLinkService);
-    
-    
-    	//atom:link rel="edit-media"
-    	//Same as setContentStream
-    	$attHrefLinkEditMedia = 'href link edit media';
-    	$eLinkEditMedia = $doc->createElement('atom:link');
-    	$root->appendChild($eLinkEditMedia);
-    	$eLinkEditMedia->setAttribute('rel', 'edit-media');
-    	$eLinkEditMedia->setAttribute('href', $attHrefLinkService);
-    	
-    
-    	//atom:link rel="alternate"
-    	//used to identify the renditions available for the specified object
-    	$attHrefAlternate = 'href link alternate';
-    	$eLinkAlternate = $doc->createElement('atom:link');
-    	$root->appendChild($eLinkAlternate);
-    	$eLinkAlternate->setAttribute('rel', 'alternate');
-    	$eLinkAlternate->setAttribute('href', $attHrefAlternate);
-    	 
-    
-    	//atom:link type="application/atom+xml;type=feed" rel="up"
-    	//points to the atom feed containing the set of parents
-    	//If there is only one parent, the repository MAY point this link relation directly to the atom entry of the parent
-    	$attHrefLinkUp = 'href link up';
-    	$eLinkUp = $doc->createElement('atom:link');
-    	$root->appendChild($eLinkUp);
-    	$eLinkUp->setAttribute('rel', 'up');
-    	$eLinkUp->setAttribute('type', 'application/atom+xml;type=feed');
-    	$eLinkUp->setAttribute('href', $attHrefLinkUp);
-    	
-    
-    	//atom:link type="application/atom+xml;type=feed" rel="version-history"
-    	//points to atom feed containing the versions of this document
-   //If the document is not versionable, this link relation may not be on the resource
-    	/*if($this->versionable){
-	    	$attHrefLinkVersHist = 'href link version-history';
-	    	$eLinkVersHist = $doc->createElement('atom:link');
-	    	$root->appendChild($eLinkVersHist);
-	    	$eLinkVersHist->setAttribute('rel', 'version-history');
-	    	$eLinkVersHist->setAttribute('type', 'application/atom+xml;type=feed');
-	    	$eLinkVersHist->setAttribute('href', $attHrefLinkVersHist);
-    	}
-    	*/
-    
-    
-    	//atom:link type="application/atom+xml;type=entry" rel="current-version"
-    	//points to the latest version of the document
-    	//Uses query parameter 'returnVersion' and enumReturnVersion
-    	//If this version is the current-version, this link relation may not be on the resource
-    
-    
-    	//atom:link type="application/atom+xml;type=feed" rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships"
-    	//points to the relationships feed for this object
-    	$attRel = 'rel link relationships';
-    	$eLinkRel = $doc->createElement('atom:link');
-    	$root->appendChild($eLinkRel);
-    	$eLinkRel->setAttribute('rel', $attRel);
-    	$eLinkRel->setAttribute('type', 'application/atom+xml;type=feed');
-    
-    
-    	//atom:link type="application/atom+xml;type=feed" rel="http://docs.oasis-open.org/ns/cmis/link/200908/policies"
-    	//points to the policy feed for this object
-    	$attPol = 'rel link policies';
-    	$eLinkPol = $doc->createElement('atom:link');
-    	$root->appendChild($eLinkPol);
-    	$eLinkPol->setAttribute('rel', $attPol);
-    	$eLinkPol->setAttribute('type', 'application/atom+xml;type=feed');
-    
-    
-    	//atom:link type="application/cmisacl+xml" rel="http://docs.oasis-open.org/ns/cmis/link/200908/acl"
-    	//points to ACL document for this object
-    	$attAcl = 'rel link acl';
-    	$eLinkAcl = $doc->createElement('atom:link');
-    	$root->appendChild($eLinkAcl);
-    	$eLinkAcl->setAttribute('rel', $attAcl);
-    	$eLinkAcl->setAttribute('type', 'application/atom+xml;type=feed');
-   
-    	 
-    	//cmisra:object   
-    	$eObject = $doc->createElement('cmisra:object');
-    	$root->appendChild($eObject);
-    	
-    	//  cmis:properties    
-    	$eProperties = $doc->createElement('cmis:properties');
-    	$eObject->appendChild($eProperties);
-    	
-    	
-    	//    cmis:property 
-    	//      cmis:value    
-    	foreach($this->propertiesInXml as $property){
-    		$propertyValue = $property->getValue();
-    		if($propertyValue!=null && $property->valueIsSet()){
-    			$eProperty = $doc->createElement('cmis:property'.$property->getPropertyType());
-    			$eProperties->appendChild($eProperty);
-    			$eProperty->setAttribute('localName', $property->getLocalName());
-    			$eProperty->setAttribute('propertyDefinitionId', $property->getId());
-    			 
-    			if(strcmp($property->getCardinality(), 'Single')==0 ){
-    				$eValue = $doc->createElement('cmis:value', $propertyValue);
-    				$eProperty->appendChild($eValue);
-    			}
-    			else{
-    				//au moins une valeur non nulle
-    				foreach($propertyValue as $value){
-    					if($value != null){
-    						$eValue = $doc->createElement('cmis:value', $value);
-    						$eProperty->appendChild($eValue);
-    					}
-    				}
-    			}
-    		}
-    	}
-    
-    	
-    	echo '<br />'.$doc->saveXML().'<br /><br />';
-    	 
-    
-    }
     
     public function toAtomXml(){
-    	//creer un document atom xml
     	
-    	//CMIS Services GET: getObject, getObjectOfLatestVersion (getObject)
-    	//Media Type: application/atom+xml;type=entry
     	
     	$doc = new DOMDocument('1.0', 'utf-8');
     	$doc->xmlStandalone = true;
     	$doc->formatOutput = true;
     	    	
     	$this->getAtomXmlEntry(&$doc);
-    	//echo '<br />'.$doc->saveXML().'<br /><br />';
     	
     	return $doc;
     }
     
     
-    //TODO fonction a supprimer est ds objectCMIS
-    public static function _getFeed($documents, $title=null){
-    	$doc = new DOMDocument('1.0', 'utf-8');
-    	$doc->formatOutput = true;
-    	
-    	//TODO add xmlns
-    	$root = $doc->createElementNS('http://www.w3.org/2005/Atom', 'feed');
-    	$doc->appendChild($root);
-    	
-    	$eAuthor = $doc->createElement('author');
-    	$root->appendChild($eAuthor);
-    	$name = $_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName'];  //'name';
-    	$eName = $doc->createElement('name', $name);
-    	$eAuthor->appendChild($eName);
-    	
-    	//<title>Result set for SELECT * FROM sc:whitepaper</title>
-    	if(isset($title) && !empty($title)){
-    		$eTitle = $doc->createElement('title', $title);
-    		$root->appendChild($eTitle);
-    	}
-    	
-    	//<cmisra:numItems>2</cmisra:numItems>
-    	$eNumItems = $doc->createElement('cmisra:numItems', count($documents));
-    	$root->appendChild($eNumItems);
-    	
-    	foreach($documents as $document){
-    		$document->getAtomXmlEntry($doc, $root);
-    	}
-    	
-    	return $doc;
-    }
     
     public function getAtomXmlEntry(&$doc, &$feed){
     	    	 
@@ -675,69 +398,75 @@ class resCMIS extends objectCMIS
     	//atom:author
     	$eAuthor = $doc->createElement('atom:author');
     	$root->appendChild($eAuthor);
-    	$uri = 'uri';
+    	//$uri = 'uri';
     	$name = $this->contact->getValue();  //'name';
-    	$email = 'email';
-    	$eUri = $doc->createElement('atom:uri', $uri);
+    	//$email = 'email';
+    	//$eUri = $doc->createElement('atom:uri', $uri);
     	$eName = $doc->createElement('atom:name', $name);
-    	$eEmail = $doc->createElement('atom:email', $email);
+    	//$eEmail = $doc->createElement('atom:email', $email);
     	$eAuthor->appendChild($eName);
-    	$eAuthor->appendChild($eUri);
-    	$eAuthor->appendChild($eEmail);
+    	//$eAuthor->appendChild($eUri);
+    	//$eAuthor->appendChild($eEmail);
     
     	 
     	//atom:content
     	$attSrcContent = 'src';
     	$eContent = $doc->createElement('atom:content');
     	$root->appendChild($eContent);
-    	$eContent->setAttribute('src', $attSrcContent);
+    	//$eContent->setAttribute('src', $attSrcContent);
     	 
     	 
     	//atom:id
-    	//derived from cmis:objectId. This id MUST be compliant with atom's specification and be a valid IRI
-    	$id = $this->objectId->getValue();  //'id';
-    	$eId = $doc->createElement('atom:id', $id);
-    	$root->appendChild($eId);
+    	//derived from cmis:objectId. This id MUST be compliant with atom's specification and be a valid URI
+    	if($this->objectId->valueIsSet()){
+	    	$id = $this->objectId->getValue();  //'id';
+	    	$eId = $doc->createElement('atom:id', $id);
+	    	$root->appendChild($eId);
+    	}
     
     
     	//atom:title
     	//cmis:name property
-    	$title = $this->name->getValue();   //'title';
-    	$attTypeTitle = 'text';
-    	$eTitle = $doc->createElement('atom:title', $title);
-    	$root->appendChild($eTitle);
-    	$eTitle->setAttribute('type', $attTypeTitle);
-    	 
+    	if($this->name->valueIsSet()){
+	    	$title = $this->name->getValue();   //'title';
+	    	$attTypeTitle = 'text';
+	    	$eTitle = $doc->createElement('atom:title', $title);
+	    	$root->appendChild($eTitle);
+	    	$eTitle->setAttribute('type', $attTypeTitle);
+    	}
     
     	//atom:updated
     	//cmis:lastModificationDate
-    	$updated = $this->lastModificationDate->getValue();   //'updated';
-    	$eUpdated = $doc->createElement('atom:updated', $updated);
-    	$root->appendChild($eUpdated);
+    	if($this->lastModificationDate->valueIsSet()){
+	    	$updated = $this->lastModificationDate->getValue();   //'updated';
+	    	$eUpdated = $doc->createElement('atom:updated', $updated);
+	    	$root->appendChild($eUpdated);
+    	}
     
     	 
     	//atom:published
     	//cmis:creationDate
-    	$published = $this->creationDate->getValue(); //'published';
-    	$ePublished = $doc->createElement('atom:published', $published);
-    	$root->appendChild($ePublished);
-    
+    	if($this->creationDate->valueIsSet()){
+	    	$published = $this->creationDate->getValue(); //'published';
+	    	$ePublished = $doc->createElement('atom:published', $published);
+	    	$root->appendChild($ePublished);
+    	}
     
     	//atom:summary
-    	$summary = 'summary'; //$this->getSummary();
+    	/*$summary = 'summary'; //$this->getSummary();
     	$attTypeSummary = 'text';
     	$eSummary = $doc->createElement('atom:summary', $summary);
     	$root->appendChild($eSummary);
-    	$eTitle->setAttribute('type', $attTypeSummary);
+    	$eSummary->setAttribute('type', $attTypeSummary);*/
     
     
     	//atom:link rel="self"
     	//points to an URI that returns the atom entry for this document
-    	$attHrefLinkSelf = 'href link self';
+    	/*$attHrefLinkSelf = 'href link self';
     	$eLinkSelf = $doc->createElement('atom:link');
     	$root->appendChild($eSummary);
     	$eLinkSelf->setAttribute('rel', 'self');
-    	$eLinkSelf->setAttribute('href', $attHrefLinkSelf);
+    	$eLinkSelf->setAttribute('href', $attHrefLinkSelf);*/
     
     
     	//atom:link rel="edit"
@@ -755,12 +484,12 @@ class resCMIS extends objectCMIS
     
     	//atom:link rel="describedby"
     	//points to the type definition as an atom entry for the type of this document entry
-    	$attHrefLinkDesc = 'href link described by';
+    	/*$attHrefLinkDesc = 'href link described by';
     	$eLinkDesc = $doc->createElement('atom:link');
     	$root->appendChild($eLinkDesc);
     	$eLinkDesc->setAttribute('rel', 'describedby');
     	$eLinkDesc->setAttribute('type', 'application/atom+xml;type=entry');
-    	$eLinkDesc->setAttribute('href', $attHrefLinkDesc);
+    	$eLinkDesc->setAttribute('href', $attHrefLinkDesc);*/
     
     
     	//atom:link rel="working-copy"
@@ -770,41 +499,41 @@ class resCMIS extends objectCMIS
     	//points to service document containing the CMIS repository.
     	//The service document MUST contain only one workspace element
     	//Media Type: application/atomsvc+xml
-    	$attHrefLinkService = 'href link service';
+    	/*$attHrefLinkService = 'href link service';
     	$eLinkService = $doc->createElement('atom:link');
     	$root->appendChild($eLinkService);
     	$eLinkService->setAttribute('rel', 'service');
     	$eLinkService->setAttribute('type', 'application/atomsvc+xml');
-    	$eLinkService->setAttribute('href', $attHrefLinkService);
+    	$eLinkService->setAttribute('href', $attHrefLinkService);*/
     
     
     	//atom:link rel="edit-media"
     	//Same as setContentStream
-    	$attHrefLinkEditMedia = 'href link edit media';
+    	/*$attHrefLinkEditMedia = 'href link edit media';
     	$eLinkEditMedia = $doc->createElement('atom:link');
     	$root->appendChild($eLinkEditMedia);
     	$eLinkEditMedia->setAttribute('rel', 'edit-media');
-    	$eLinkEditMedia->setAttribute('href', $attHrefLinkService);
+    	$eLinkEditMedia->setAttribute('href', $attHrefLinkService);*/
     	 
     
     	//atom:link rel="alternate"
     	//used to identify the renditions available for the specified object
-    	$attHrefAlternate = 'href link alternate';
+    	/*$attHrefAlternate = 'href link alternate';
     	$eLinkAlternate = $doc->createElement('atom:link');
     	$root->appendChild($eLinkAlternate);
     	$eLinkAlternate->setAttribute('rel', 'alternate');
-    	$eLinkAlternate->setAttribute('href', $attHrefAlternate);
+    	$eLinkAlternate->setAttribute('href', $attHrefAlternate);*/
     
     
     	//atom:link type="application/atom+xml;type=feed" rel="up"
     	//points to the atom feed containing the set of parents
     	//If there is only one parent, the repository MAY point this link relation directly to the atom entry of the parent
-    	$attHrefLinkUp = 'href link up';
+    	/*$attHrefLinkUp = 'href link up';
     	$eLinkUp = $doc->createElement('atom:link');
     	$root->appendChild($eLinkUp);
     	$eLinkUp->setAttribute('rel', 'up');
     	$eLinkUp->setAttribute('type', 'application/atom+xml;type=feed');
-    	$eLinkUp->setAttribute('href', $attHrefLinkUp);
+    	$eLinkUp->setAttribute('href', $attHrefLinkUp);*/
     	 
     
     	//atom:link type="application/atom+xml;type=feed" rel="version-history"
@@ -829,29 +558,29 @@ class resCMIS extends objectCMIS
     
     	//atom:link type="application/atom+xml;type=feed" rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships"
     	//points to the relationships feed for this object
-    	$attRel = 'rel link relationships';
+    	/*$attRel = 'rel link relationships';
     	$eLinkRel = $doc->createElement('atom:link');
     	$root->appendChild($eLinkRel);
     	$eLinkRel->setAttribute('rel', $attRel);
-    	$eLinkRel->setAttribute('type', 'application/atom+xml;type=feed');
+    	$eLinkRel->setAttribute('type', 'application/atom+xml;type=feed');*/
     
     
     	//atom:link type="application/atom+xml;type=feed" rel="http://docs.oasis-open.org/ns/cmis/link/200908/policies"
     	//points to the policy feed for this object
-    	$attPol = 'rel link policies';
+    	/*$attPol = 'rel link policies';
     	$eLinkPol = $doc->createElement('atom:link');
     	$root->appendChild($eLinkPol);
     	$eLinkPol->setAttribute('rel', $attPol);
-    	$eLinkPol->setAttribute('type', 'application/atom+xml;type=feed');
+    	$eLinkPol->setAttribute('type', 'application/atom+xml;type=feed');*/
     
     
     	//atom:link type="application/cmisacl+xml" rel="http://docs.oasis-open.org/ns/cmis/link/200908/acl"
     	//points to ACL document for this object
-    	$attAcl = 'rel link acl';
+    	/*$attAcl = 'rel link acl';
     	$eLinkAcl = $doc->createElement('atom:link');
     	$root->appendChild($eLinkAcl);
     	$eLinkAcl->setAttribute('rel', $attAcl);
-    	$eLinkAcl->setAttribute('type', 'application/atom+xml;type=feed');
+    	$eLinkAcl->setAttribute('type', 'application/atom+xml;type=feed');*/
     	 
     
     	//cmisra:object
@@ -867,7 +596,7 @@ class resCMIS extends objectCMIS
     	//      cmis:value
     	foreach($this->propertiesInXml as $property){
     		$propertyValue = $property->getValue();
-    		if($propertyValue!=null && $property->valueIsSet()){
+    		if($property->valueIsSet()){
     			$eProperty = $doc->createElement('cmis:property'.$property->getPropertyType());
     			$eProperties->appendChild($eProperty);
     			$eProperty->setAttribute('localName', $property->getLocalName());

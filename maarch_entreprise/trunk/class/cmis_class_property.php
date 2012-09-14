@@ -19,11 +19,7 @@ abstract class propertyCMIS{
 	protected $orderable;          
 	protected $choices;            
 	protected $openChoice;         
-	protected $defaultValue;       
-	
-	//protected $maximumLength;      
-	//protected $schemaURI;           
-	//protected $encoding;            
+	protected $defaultValue;           
 	
 	public function propertyCMIS(){
 		$this->value = 'notset';
@@ -143,19 +139,18 @@ abstract class propertyCMIS{
 		$isSuitable = false;
 	
 		if(is_string($value) && strcmp('notset',$value)==0) {
-			//echo '<br />value not set';
 			return true;
 		}
 	
 		
 		if($this->openChoice === true || strcmp('NotApplicable',$this->openChoice)==0){
 			$isSuitable = true;
-			//echo '<br />OpenChoice is true or NotApplicable: --'.$value.'--';
+			//OpenChoice is true or NotApplicable: ;
 		}
 		else if($this->openChoice === false){
 			if((strcmp('Single',$this->cardinality)==0) && in_array($value, $this->choices, true)){
 				$isSuitable = true;
-				//echo '<br />Cardinality = Single and value in choices';
+				//Cardinality = Single and value in choices;
 			}
 			else if((strcmp('Multi',$this->cardinality)==0)){
 				$valueOk = true;
@@ -164,11 +159,11 @@ abstract class propertyCMIS{
 					$valueOk = in_array($item, $this->choices, true);
 				}
 				$isSuitable = $valueOk;
-				//echo $isSuitable ? ('<br />Cardinality = Multi and value in choices') : ('<br />Cardinality = Multi but value not in choices');
+				//IF isSuitable : Cardinality = Multi and value in choices
+				//ELSE : Cardinality = Multi but value not in choices
 			}
 		}
 		
-	
 		return $isSuitable;
 	}
 	
@@ -448,7 +443,6 @@ class PropertyString extends propertyCMIS{
 			}
 		}
 	}
-	
 	
 }
 
