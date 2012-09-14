@@ -8,7 +8,6 @@ require_once 'apps/maarch_entreprise/class/cmis_class_property.php';
 
 class folderCMIS extends objectCMIS
 {
-    var $strReturn = 'THE RESULT IS A FOLDER WITH ';
     
     //properties
     protected $name ;  
@@ -117,11 +116,16 @@ class folderCMIS extends objectCMIS
     
     public function setFolderIdValue($id){
     	$this->folderId->setValue($id);
+    	$this->objectId->setValue($id);
     }
     
     public function setCreationDateValue($creationDate){
     	$this->creationDate->setValue($creationDate);
     } 
+    
+    public function setLastModificationDateValue($modificationDate){
+    	$this->lastModificationDate->setValue($modificationDate);
+    }
     
     public function setTypistValue($typist){
     	$this->typist->setValue($typist);
@@ -193,11 +197,7 @@ class folderCMIS extends objectCMIS
     
     public function entryMethod ($atomFileContent, $requestedResourceId)
     {
-        //faire des verifications pour savoir si on veut creer ou consulter un dossier
-        //si on a un atomFileContent alors on creer un dossier
-        //si on n'a pas de fichier atomFileContent mais un Id alors on consulte un folder
-       
-        $str = "";
+        
         if(isset($atomFileContent) && !isset($requestedResourceId)){
         	$str = 'AtomFileContent create folder ';
         	
@@ -209,8 +209,6 @@ class folderCMIS extends objectCMIS
         	//build a new folder from atom xml file (the folder is a cmis folder)
         	$newCmisFolder = $xmlParser->getCmisFolderFromXml($atomFileContent);
         	
-        	//var_dump($newCmisFolder->folderId);
-        	//var_dump($newCmisFolder->name);
         	
         	if( $this->creatable){
         		if($newCmisFolder->folderId->valueIsSet() && $newCmisFolder->name->valueIsSet() ){
@@ -218,46 +216,36 @@ class folderCMIS extends objectCMIS
         		}
         		else{
         			//TODO throw constraintException
-        			$str = "Error : folderId or name property not set";
+        			echo "<br />ERREUR : constraintException.<br />";    		
         		}
         	}
         	else{
         		//TODO throw constraintException
-        		$str = "Error : folderId or name property not set<br />";
+        		echo "<br />ERREUR : constraintException.<br />"; 
         	}
         	
         }
 		elseif(!isset($atomFileContent) && isset($requestedResourceId)){
-			$str = 'Id retrieve folder ';
 			//get the folder whose Id is $requestedResourceId (whith its documents)
 			if($folder = $this->getFolderByFolderId($requestedResourceId)){ 
-				//TODO atomxml
-				//$folderXml = $folder->toAtomXml();
 				
 				$documents = $folder->getDocumentsInFolder($requestedResourceId);
 				$title = trim('Documents in folder '.$requestedResourceId);
-				$folderXml = resCMIS::getFeed($documents, $title);
-					
-				/*if($documents = $folder->getDocumentsInFolder($requestedResourceId)){
-					$title = trim('Documents in folder '.$requestedResourceId);
-					$folderXml = resCMIS::getFeed($documents, $title);
-					//foreach ($documents as $document){
-						////$folderXml->appendChild($document->getAtomXmlEntry($folderXml));
-						//$document->getAtomXmlEntry($folderXml);
-					//}
-				}*/
-				echo '<br />'.$folderXml->saveXML().'<br /><br />';
+				$folderXml = resCMIS::getFeed($documents, $title, $folder);
+				
+				echo $folderXml->saveXML();
 			}
 			else{
         	//TODO throw objectNotFound
+	    		echo "<br />ERREUR : objectNotFound.<br />";    		
 	        }
 		}
         else{
         	//TODO throw notSupported or invalidArgument
-        	$str = "Error : atomFileContent and requestedRessourceId set or unset at the same time";
+	    		echo "<br />ERREUR : notSupported or invalidArgument.<br />";    
         }
         
-        return $str . $this->strReturn . $requestedResourceId . ' ' . $atomFileContent;
+        //return $requestedResourceId . ' ' . $atomFileContent;
     }
     
     
@@ -273,7 +261,7 @@ class folderCMIS extends objectCMIS
     	
     	if($result === false){
         	//TODO throw objectNotFound or invalidArgument or runtime
-    		echo "<br />ERREUR : requête non exécutée.<br />";
+    		echo "<br />ERREUR : requête non exécutée runtime.<br />";
     		return null;
     	}
     	
@@ -285,15 +273,14 @@ class folderCMIS extends objectCMIS
 			$folder->setFolderIdValue($recordset->folder_id);
 			$folder->setNameValue($recordset->folder_name);
 			$folder->setCreationDateValue($recordset->creation_date);
+			$folder->setLastModificationDateValue($recordset->last_modified_date);
 			$folder->setTypistValue($recordset->typist);			
 		}
 		else{			
 			//TODO throw objectNotFound
-			echo "<br />ERREUR : fichier inexistant.<br />";
+			echo "<br />ERREUR : fichier inexistant objectNotFound.<br />";
 			return null;
 		}
-		
-		//var_dump($folder);
 		
 		return $folder;		
     }
@@ -313,7 +300,7 @@ class folderCMIS extends objectCMIS
     	//TODO gerer les cas d erreurs
     	if($result === false){
         	//TODO throw objectNotFound or invalidArgument or runtime
-    		echo "<br />ERREUR : requete non réalisée.<br />";
+    		echo "<br />ERREUR : requete non réalisée runtime.<br />";
     	}
     	
     	$resArray = array();
@@ -367,7 +354,7 @@ class folderCMIS extends objectCMIS
     	//TODO gerer les cas d erreurs
     	if($result === false){
     		//TODO throw storageException
-    		echo "<br />ERREUR : création du fichier non réalisée.<br />";
+    		echo "<br />ERREUR : création du fichier non réalisée storageException.<br />";
     	}
     	
     }
@@ -388,9 +375,6 @@ class folderCMIS extends objectCMIS
     
     public function toAtomXml(){
     	//creer un document atom xml
-    	
-    	//CMIS Services GET: getObject, getObjectOfLatestVersion (getObject)
-    	//Media Type: application/atom+xml;type=entry
     	$doc = new DOMDocument('1.0', 'utf-8');
     	$doc->xmlStandalone = true;
     	$doc->formatOutput = true;
@@ -417,68 +401,78 @@ class folderCMIS extends objectCMIS
     	//MUST be the CMIS property cmis:createdBy
     	$eAuthor = $doc->createElement('atom:author');
     	$root->appendChild($eAuthor);
-    	$uri = 'uri';
-    	$name = 'name';
-    	$email = 'email';
-    	$eUri = $doc->createElement('atom:uri', $uri);
+    	//$uri = 'uri';
+    	$name = $_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName'];
+    	//$email = 'email';
+    	//$eUri = $doc->createElement('atom:uri', $uri);
     	$eName = $doc->createElement('atom:name', $name);
-    	$eEmail = $doc->createElement('atom:email', $email);
+    	//$eEmail = $doc->createElement('atom:email', $email);
     	$eAuthor->appendChild($eName);
-    	$eAuthor->appendChild($eUri);
-    	$eAuthor->appendChild($eEmail);
+    	//$eAuthor->appendChild($eUri);
+    	//$eAuthor->appendChild($eEmail);
     
     
     	//atom:content
     	$attSrcContent = 'src';
     	$eContent = $doc->createElement('atom:content');
     	$root->appendChild($eContent);
-    	$eContent->setAttribute('src', $attSrcContent);
+    	//$eContent->setAttribute('src', $attSrcContent);
     
     	//atom:Id
     	//SHOULD be derived from cmis:objectId.
     	//This Id MUST be compliant with atom's specification and be a valId URI
-    	$Id = 'Id';
-    	$eId = $doc->createElement('atom:Id', $Id);
-    	$root->appendChild($eId);
+    	if($this->objectId->valueIsSet()){
+	    	$Id = $this->objectId->getValue();
+	    	$eId = $doc->createElement('atom:Id', $Id);
+	    	$root->appendChild($eId);
+    	}
     
     
     	//atom:title
     	//MUST be the CMIS property cmis:name
-    	$title = 'title'; //$this->name->getValue();
-    	$attTypeTitle = 'text';
-    	$eTitle = $doc->createElement('atom:title', $title);
-    	$root->appendChild($eTitle);
-    	$eTitle->setAttribute('type', $attTypeTitle);
+    	if($this->name->valueIsSet()){
+	    	$title = $this->name->getValue();
+	    	$attTypeTitle = 'text';
+	    	$eTitle = $doc->createElement('atom:title', $title);
+	    	$root->appendChild($eTitle);
+	    	$eTitle->setAttribute('type', $attTypeTitle);
+    	}
     
     
     	//atom:updated
     	//SHOULD be the latest time the folder or its contents was updated
     	//If unknown by the underlying repository, it MUST be the current time
-    	$updated = 'updated'; //$this->lastModificationDate->getValue();
-    	$eUpdated = $doc->createElement('atom:updated', $updated);
-    	$root->appendChild($eUpdated);
+    	if($this->lastModificationDate->valueIsSet()){
+	    	$updated = $this->lastModificationDate->getValue();
+	    	$eUpdated = $doc->createElement('atom:updated', $updated);
+	    	$root->appendChild($eUpdated);
+    	}
     
     
     	//atom:published
-    	$published = $this->creationDate->getValue();
-    	$ePublished = $doc->createElement('atom:published', $published);
-    	$root->appendChild($ePublished);
+    	if($this->creationDate->valueIsSet()){
+	    	$published = $this->creationDate->getValue();
+	    	$ePublished = $doc->createElement('atom:published', $published);
+	    	$root->appendChild($ePublished);
+    	}
     
     	//atom:summary
-    	$summary = 'summary'; //$this->getSummary();
-    	$attTypeSummary = 'text';
-    	$eSummary = $doc->createElement('atom:summary', $summary);
-    	$root->appendChild($eSummary);
-    	$eTitle->setAttribute('type', $attTypeSummary);
+    	//$summary = 'summary'; 
+    	//$attTypeSummary = 'text';
+    	//$eSummary = $doc->createElement('atom:summary', $summary);
+    	//$root->appendChild($eSummary);
+    	//$eSummary->setAttribute('type', $attTypeSummary);
     
     
     	//atom:link rel="self"
     	//points to the URI to retrieve this atom entry
+    	/* 
     	$attHrefLinkSelf = 'href link self';
     	$eLinkSelf = $doc->createElement('atom:link');
     	$root->appendChild($eSummary);
     	$eLinkSelf->setAttribute('rel', 'self');
     	$eLinkSelf->setAttribute('href', $attHrefLinkSelf);
+    	*/
     
     
     	//atom:link rel="edit"
@@ -496,45 +490,46 @@ class folderCMIS extends objectCMIS
     
     	//atom:link rel="describedby"
     	//points to the type definition as an atom entry for the type of this folder entry
-    	$attHrefLinkDesc = 'href link described by';
+    	/*$attHrefLinkDesc = 'href link described by';
     	$eLinkDesc = $doc->createElement('atom:link');
     	$root->appendChild($eLinkDesc);
     	$eLinkDesc->setAttribute('rel', 'describedby');
     	$eLinkDesc->setAttribute('type', 'application/atom+xml;type=entry');
     	$eLinkDesc->setAttribute('href', $attHrefLinkDesc);
+    	 */
     
     
     	//atom:link rel="service"
     	//points to service document containing the CMIS repository.
     	//The service document MUST contain only one workspace element
     	//Media Type: application/atomsvc+xml
-    	$attHrefLinkService = 'href link service';
+    	/*$attHrefLinkService = 'href link service';
     	$eLinkService = $doc->createElement('atom:link');
     	$root->appendChild($eLinkService);
     	$eLinkService->setAttribute('rel', 'service');
     	$eLinkService->setAttribute('type', 'application/atomsvc+xml');
-    	$eLinkService->setAttribute('href', $attHrefLinkService);
+    	$eLinkService->setAttribute('href', $attHrefLinkService);*/
     
     
     	//atom:link rel="alternate"
     	//this is used to identify the renditions available for the specified object
-    	$attHrefAlternate = 'href link alternate';
+    	/*$attHrefAlternate = 'href link alternate';
     	$eLinkAlternate = $doc->createElement('atom:link');
     	$root->appendChild($eLinkAlternate);
     	$eLinkAlternate->setAttribute('rel', 'alternate');
-    	$eLinkAlternate->setAttribute('href', $attHrefAlternate);
+    	$eLinkAlternate->setAttribute('href', $attHrefAlternate);*/
     	 
     
     
     	//atom:link type="application/atom+xml;type=feed" rel="up"
     	//points to the atom entry for the parent
     	//if the root folder, this link will not be present
-    	$attHrefLinkUp = 'href link up';
+    	/*$attHrefLinkUp = 'href link up';
     	$eLinkUp = $doc->createElement('atom:link');
     	$root->appendChild($eLinkUp);
     	$eLinkUp->setAttribute('rel', 'up');
     	$eLinkUp->setAttribute('type', 'application/atom+xml;type=feed');
-    	$eLinkUp->setAttribute('href', $attHrefLinkUp);
+    	$eLinkUp->setAttribute('href', $attHrefLinkUp);*/
     
     
     	//atom:link type="application/atom+xml;type=feed" rel="down"
@@ -550,29 +545,29 @@ class folderCMIS extends objectCMIS
     
     	//atom:link type="application/atom+xml;type=feed" rel="http://docs.oasis-open.org/ns/cmis/link/200908/relationships" href="http://.../relationships"
     	//points to the relationships feed for this object
-    	$attRel = 'rel link relationships';
+    	/*$attRel = 'rel link relationships';
     	$eLinkRel = $doc->createElement('atom:link');
     	$root->appendChild($eLinkRel);
     	$eLinkRel->setAttribute('rel', $attRel);
-    	$eLinkRel->setAttribute('type', 'application/atom+xml;type=feed');
+    	$eLinkRel->setAttribute('type', 'application/atom+xml;type=feed');*/
     
     
     	//atom:link type="application/atom+xml;type=feed" rel="http://docs.oasis-open.org/ns/cmis/link/200908/policies" href="http://.../policies"
     	//points to the policy feed for this object
-    	$attPol = 'rel link policies';
+    	/*$attPol = 'rel link policies';
     	$eLinkPol = $doc->createElement('atom:link');
     	$root->appendChild($eLinkPol);
     	$eLinkPol->setAttribute('rel', $attPol);
-    	$eLinkPol->setAttribute('type', 'application/atom+xml;type=feed');
+    	$eLinkPol->setAttribute('type', 'application/atom+xml;type=feed');*/
     
     
     	//atom:link type="application/cmisacl+xml" rel="http://docs.oasis-open.org/ns/cmis/link/200908/acl" href="http://.../acl"
     	//points to ACL document for this object
-    	$attAcl = 'rel link acl';
+    	/*$attAcl = 'rel link acl';
     	$eLinkAcl = $doc->createElement('atom:link');
     	$root->appendChild($eLinkAcl);
     	$eLinkAcl->setAttribute('rel', $attAcl);
-    	$eLinkAcl->setAttribute('type', 'application/atom+xml;type=feed');
+    	$eLinkAcl->setAttribute('type', 'application/atom+xml;type=feed');*/
     
     
     	//cmisra:object
