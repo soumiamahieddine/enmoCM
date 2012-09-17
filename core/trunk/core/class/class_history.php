@@ -68,21 +68,12 @@ require_once(
     .DIRECTORY_SEPARATOR."class"
     .DIRECTORY_SEPARATOR."class_functions.php"
 );
-/*
 require_once(
     "apps"
-    .DIRECTORY_SEPARATOR.$_SESSION['config']['app_id']
+    .DIRECTORY_SEPARATOR."maarch_entreprise"
     .DIRECTORY_SEPARATOR."tools"
     .DIRECTORY_SEPARATOR."log4php"
     .DIRECTORY_SEPARATOR."Logger.php"
-);
-*/
-require_once(
-	"apps"
-	.DIRECTORY_SEPARATOR."maarch_entreprise"
-	.DIRECTORY_SEPARATOR."tools"
-	.DIRECTORY_SEPARATOR."log4php"
-	.DIRECTORY_SEPARATOR."Logger.php"
 );
 
 class history extends dbquery
@@ -197,14 +188,14 @@ class history extends dbquery
 
         $core = new core_tools();
         if ($core->is_module_loaded("notifications")) {
-			require_once(
+            require_once(
                 "modules"
                 .DIRECTORY_SEPARATOR."notifications"
                 .DIRECTORY_SEPARATOR."class"
-				.DIRECTORY_SEPARATOR."events_controler.php"
+                .DIRECTORY_SEPARATOR."events_controler.php"
             );
-			$eventsCtrl = new events_controler();
-			$eventsCtrl->fill_event_stack($event_id, $table_name, $record_id, $user, $info);
+            $eventsCtrl = new events_controler();
+            $eventsCtrl->fill_event_stack($event_id, $table_name, $record_id, $user, $info);
         }
     }
 
