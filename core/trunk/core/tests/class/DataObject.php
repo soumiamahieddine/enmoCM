@@ -363,7 +363,11 @@ class DataObjectElement
             }
             return $nodesArray;
         }
-
+        
+        if($commentProperty = $this->getCommentProperty($name)) {
+            return null;
+        }
+        
         // Storage is a property element -> return value
         return (string)$nodes->item(0)->nodeValue;  
     }

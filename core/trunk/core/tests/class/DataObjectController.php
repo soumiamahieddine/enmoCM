@@ -601,8 +601,8 @@ class DataObjectController
                         $fkey = $fkeys->item($k);
                         $parentKey = $fkey->getAttribute('parent-key');
                         $childKey = $fkey->getAttribute('child-key');
-                        if(!isset($childObject->$childKeyName) 
-                            || mb_strlen(trim($childObject->$childKeyName)) == 0
+                        if(!isset($childObject->$childKey) 
+                            || mb_strlen(trim($childObject->$childKey)) == 0
                         ) {
                             $childObject->$childKey = $returnKey->$parentKey;
                         }
