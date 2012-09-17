@@ -17,6 +17,15 @@ if ($mode == "list") {
     );
 } elseif ($mode == "up" || $mode == "add") {
     $func = new functions();
+    $isModuleDocserver = true;
+    if (isset($_SESSION['m_admin']['docservers']['coll_id'])) {
+        foreach($_SESSION['collections'] as $collection) {
+            if ($_SESSION['m_admin']['docservers']['coll_id'] == $collection['id']) {
+                $isModuleDocserver = false;
+            }
+        }
+    }
+
     ?>
     <h1><img src="<?php
     echo $_SESSION['config']['businessappurl'];
@@ -93,11 +102,11 @@ if ($mode == "list") {
         <p>
             <label for="docserver_type_id"><?php echo _DOCSERVER_TYPES;?> (*): </label>
             <?php
-            if (isset($_SESSION['m_admin']['docservers']['docserver_type_id'])
-                    && $_SESSION['m_admin']['docservers']['docserver_type_id'] == 'TEMPLATES'
-            ) {
+            /*if (isset($_SESSION['m_admin']['docservers']['docserver_type_id'])
+                    && $_SESSION['m_admin']['docservers']['docserver_type_id'] == 'TEMPLATES' */
+            if($isModuleDocserver) {
                 ?>
-                <input name="docserver_type_id" type="text"  id="docserver_type_id" value="TEMPLATES" readonly="readonly" class="readonly"/>
+                <input name="docserver_type_id" type="text"  id="docserver_type_id" value="<?php echo $_SESSION['m_admin']['docservers']['docserver_type_id']; ?>" readonly="readonly" class="readonly"/>
                 <?php
             } else {
                 for ($cptTypes = 0; $cptTypes < count($docserverTypesArray);
@@ -373,11 +382,11 @@ if ($mode == "list") {
                 ?>" readonly class="readonly"/>
                 <?php
             } else {
-                if (isset($_SESSION['m_admin']['docservers']['coll_id'])
-                    && $_SESSION['m_admin']['docservers']['coll_id'] == 'templates'
-                ) {
+                //if (isset($_SESSION['m_admin']['docservers']['coll_id'])
+                //    && $_SESSION['m_admin']['docservers']['coll_id'] == 'templates'
+                if($isModuleDocserver) {
                     ?>
-                    <input name="coll_id" type="text"  id="coll_id" value="templates" readonly="readonly" class="readonly"/>
+                    <input name="coll_id" type="text"  id="coll_id" value="<?php echo $_SESSION['m_admin']['docservers']['coll_id']; ?>" readonly="readonly" class="readonly"/>
                     <?php
                 } else {
                     ?>
