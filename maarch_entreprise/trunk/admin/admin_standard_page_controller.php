@@ -33,6 +33,7 @@
 require_once 'core/class/class_core_tools.php';
 require_once 'core/tests/class/MessageController.php';
 require_once 'core/tests/class/ViewController.php';
+require_once 'core/class/class_history.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] 
     . '/admin/admin_form_standard_tools.php';
 $messageController = new MessageController();
@@ -348,15 +349,19 @@ $pagePath = locationBarManagement(
     $params['isApps']
 );
 
-//load the object
+//load the message object
 $messagePath = $params['viewLocation'] . '/xml/' . $params['objectName'] . '_Messages.xml';
 $messageController->loadMessageFile(
     $messagePath
 );
 
-require_once('core/tests/class/DataObjectController.php');
+require_once(
+    'core/tests/class/DataObjectController.php'
+);
 $dataObjectController = new DataObjectController();
-$dataObjectController->loadXSD($params['schemaPath']);
+$dataObjectController->loadXSD(
+    $params['schemaPath']
+);
 
 if (isset($_REQUEST['submit'])) {
     $dataObject = $dataObjectController->load(
@@ -456,31 +461,6 @@ if (isset($_REQUEST['submit'])) {
             /* -----
             - DELETE
             ----- */
-            
-            $object = $dataObjectController->read(
-                $params['objectName'], 
-                $params['objectId']
-            );
-            $dataObjectController->delete(
-                $object
-            );
-            $dataObjectController->save(
-                $object
-            );
-            
-            $requestUri = $_SERVER['REQUEST_URI'];
-            $targetUri = getDependantUri(
-                'mode', 
-                getDependantUri(
-                    'objectId', 
-                    getDependantUri(
-                        'display', 
-                        $requestUri
-                    )
-                )
-            );
-            
-            header("Location: " . $targetUri);
             break;
             
         //TODO: PROCESS IT LIKE PARTICULAR CASES OF UPDATE
@@ -527,7 +507,7 @@ if (isset($_REQUEST['submit'])) {
             - objectList
             --------- */
             $objectList = $dataObjectList->$params['objectName'];
-            //$dataObjectList->show();
+            
             /* -----------------
             - prevent PHP NOTICE
             ----------------- */
