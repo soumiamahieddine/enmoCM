@@ -69,6 +69,11 @@ require_once(
     .DIRECTORY_SEPARATOR."class_functions.php"
 );
 require_once(
+    "core"
+    .DIRECTORY_SEPARATOR."class"
+    .DIRECTORY_SEPARATOR."class_db.php"
+);
+require_once(
     "apps"
     .DIRECTORY_SEPARATOR."maarch_entreprise"
     .DIRECTORY_SEPARATOR."tools"
