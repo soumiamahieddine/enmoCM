@@ -414,11 +414,78 @@
                 ------ */
                 $filters = $view->getElementById('filters');
                 
-                
                 /* ---------
                 - pagination
                 --------- */
+                $nbLine = $_SESSION['config']['nblinetoshow'];
+                if (!empty($_REQUEST['nbLine']))
+                    $nbLine = $_REQUEST['nbLine'];
                 
+                $nbMax = count($objectList);
+                $nbPageMax = ceil($nbMax/$nbLine);
+                
+                $nbStart = ($params['pageNb'] - 1) * $nbLine;
+                if ($nbStart < 0)
+                    $nbStart = 0;
+                
+                $nbEnd = $nbStart + ($nbLine - 1);
+                if ($nbEnd > ($nbMax-1))
+                    $nbEnd = $nbMax -1;
+                
+                $noPageNbUri = getDependantUri(
+                    'pageNb',
+                    $requestUri
+                );
+                $previousLink = $noPageNbUri . '&pageNb=' . ($params['pageNb'] - 1);
+                $nextLink = $noPageNbUri . '&pageNb=' . ($params['pageNb'] + 1);
+                $noNbLineUrl = getDependantUri(
+                    'nbLine',
+                    getDependantUri(
+                        'pageNb',
+                        $requestUri
+                    )
+                );
+                $nbLineSelect = array(
+                    10,
+                    25,
+                    50,
+                    100,
+                    250,
+                    500
+                );
+                if (!in_array($_SESSION['config']['nblinetoshow'], $nbLineSelect)) {
+                    $nbLineSelect[] = $_SESSION['config']['nblinetoshow'];
+                }
+                sort($nbLineSelect);
+                
+                $paginationShow = $view->getElementById('pagination.show');
+                $i_max = count($nbLineSelect);
+                for ($i=0; $i<$i_max; $i++) {
+                    if ($nbLineSelect[$i]>=count($objectList)) {
+                        $option = $paginationShow->addOption($nbLineSelect[$i], 'tous (' . count($objectList) . ')');
+                        break;
+                    }
+                    $option = $paginationShow->addOption($nbLineSelect[$i], $nbLineSelect[$i]);
+                }
+                
+                $paginationGoToPage = $view->getElementById('pagination.goToPage');
+                for ($i=1; $i<=$nbPageMax; $i++) {
+                    $option = $paginationGoToPage->addOption($i, $i);
+                    if ($i == $params['pageNb'])
+                        $option->setAttribute('selected', 'selected');
+                }
+                
+                $paginationPrevious = $view->getElementById('pagination.previous');
+                if ($params['pageNb'] > 1) {
+                    $paginationPrevious->removeAttribute('style');
+                    $paginationPrevious->setAttribute('href', $previousLink);
+                }
+                
+                $paginationNext = $view->getElementById('pagination.next');
+                if ($params['pageNb'] < $nbPageMax) {
+                    $paginationNext->removeAttribute('style');
+                    $paginationNext->setAttribute('href', $nextLink);
+                }
                 
                 /* ----
                 - liste
@@ -439,8 +506,7 @@
                 $tableRow = $rowTemplate->cloneNode(true);
                 $tableRow->removeAttribute('id');
                 $tableRow->removeAttribute('style');
-                $i_max = count($objectList);
-                for ($i=0; $i<$i_max; $i++) {
+                for ($i=$nbStart; $i<=$nbEnd; $i++) {
                     $object = $objectList[$i];
                     
                     /* ---
@@ -478,7 +544,10 @@
                         $name = $td->getAttribute('name');
                         if ($name) {
                             $propertyName = end(explode('.', $name));
-                            $td->nodeValue = $object->$propertyName;
+                            if ($object->$propertyName)
+                                $td->nodeValue = $object->$propertyName;
+                            else
+                                $td->setDataAttribute('key', $key);
                         }
                     }
                     $liste->appendChild($row);
@@ -487,31 +556,52 @@
                 /* ------
                 - actions
                 ------ */
+                $previsualizes = $viewController->query("//*[@name='previsualize']");
+                $i_max = $previsualizes->length;
+                for ($i=0; $i<$i_max; $i++) {
+                    $previsualize = $previsualizes->item($i);
+                    $previsualize->setAttribute(
+                        'onclick',
+                        'alert(\'en dev\');'
+                    );
+                }
                 $adds = $viewController->query("//*[@name='add']");
                 $i_max = $adds->length;
                 for ($i=0; $i<$i_max; $i++) {
                     $add = $adds->item($i);
                     $add->setAttribute(
-                        'href',
-                        $requestUri . '&mode=create'
+                        'onclick',
+                        'goTo(\'' . $actionsURL['create'] . '\');'
                     );
                 }
                 $reads = $viewController->query("//*[@name='read']");
                 $i_max = $reads->length;
                 for ($i=0; $i<$i_max; $i++) {
                     $read = $reads->item($i);
+                    $key = $read->getAttribute('data-key');
                     $read->setAttribute(
-                        'href',
-                        $actionsURL['read'] . '&objectId=' . $key
+                        'onclick',
+                        'goTo(\'' . $actionsURL['read'] . '&objectId=' . $key . '\');'
                     );
                 }
                 $updates = $viewController->query("//*[@name='update']");
                 $i_max = $updates->length;
                 for ($i=0; $i<$i_max; $i++) {
                     $update = $updates->item($i);
+                    $key = $update->getAttribute('data-key');
                     $update->setAttribute(
-                        'href',
-                        $actionsURL['update'] . '&objectId=' . $key
+                        'onclick',
+                        'goTo(\'' . $actionsURL['update'] . '&objectId=' . $key . '\');'
+                    );
+                }
+                $deletes = $viewController->query("//*[@name='delete']");
+                $i_max = $deletes->length;
+                for ($i=0; $i<$i_max; $i++) {
+                    $delete = $deletes->item($i);
+                    $key = $delete->getAttribute('data-key');
+                    $delete->setAttribute(
+                        'onclick',
+                        'goTo(\'' . $actionsURL['update'] . '&objectId=' . $key . '\');'
                     );
                 }
                 
