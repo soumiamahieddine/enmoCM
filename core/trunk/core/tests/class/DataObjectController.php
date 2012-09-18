@@ -523,6 +523,11 @@ class DataObjectController
                         $refElement, 
                         $dataObject
                     );
+                $this->setDataObjectKey(
+                    $refElement, 
+                    $dataObject,
+                    $key
+                );
                 if($saveChildren) {
                     $this->saveChildDataObjects(
                         $objectElement,
@@ -565,6 +570,25 @@ class DataObjectController
         } 
         
         return $key;
+    }
+    
+    protected function setDataObjectKey(
+        $objectElement, 
+        $dataObject, 
+        $returnKey = false
+    ) {
+        $key = $objectElement->getAttribute('das:key');
+        if(!$key) return false;
+        $keyFields = explode(' ', $key);
+        $l = count($keyFields);
+        for($i=0; $i<$l; $i++) {
+            $keyField = $keyFields[$i];
+            if(!isset($dataObject->$keyField) 
+                || mb_strlen(trim($dataObject->$keyField)) == 0
+            ) {
+                $dataObject->$keyField = $returnKey->$keyField;
+            }
+        }
     }
     
     protected function saveChildDataObjects(
