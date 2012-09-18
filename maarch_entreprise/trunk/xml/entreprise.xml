@@ -99,6 +99,14 @@
 			<id>title7</id>
 			<label>Ecole</label>
 		</title>
+		<title>
+			<id>title8</id>
+			<label>Madame et Monsieur</label>
+		</title>
+		<title>
+			<id>title9</id>
+			<label>Messieurs</label>
+		</title>
 		<default_title>title1</default_title>
 	</titles>
 </ROOT>

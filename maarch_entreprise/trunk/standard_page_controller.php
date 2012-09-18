@@ -1,513 +1,531 @@
 <?php
-
-/**
-*   Copyright 2008-2012 Maarch
-*
-*   This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/**
-* @brief Contains the admin standard controller page
-*
-* @file
-* @author Arnaud Veber
-* @author Laurent Giovannoni
-* @date $date$
-* @version $Revision$
-* @ingroup core
-*/
-
-require_once 'core/class/class_core_tools.php';
-require_once 'core/tests/class/MessageController.php';
-require_once 'core/tests/class/ViewController.php';
-require_once 'core/class/class_history.php';
-require_once 'apps/' . $_SESSION['config']['app_id'] 
-    . '/admin/admin_form_standard_tools.php';
-$messageController = new MessageController();
-$viewController = new ViewController();
-
-/**
- * Management of the location bar
- * @param string $pageName
- * @param string $mode
- * @param string $objectName
- * @param string $path
- * @return string $pagePath the current page path
- */
-function locationBarManagement($pageName, $mode, $objectName, $isApps)
-{
-    $pageLabels = array(
-        'add'   => _ADDITION,
-        'up'    => _MODIFICATION,
-        'list'  => _LIST,
-    );
-    $pageIds = array(
-        'add'   => $objectName . '_add',
-        'up'    => $objectName . '_up',
-        'list'  => $objectName . '_list',
-    );
-    
-    $init = false;
-    if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true')
-        $init = true;
-    
-    $level = '';
-    $allowedLevels = array(
-        1, 
-        2, 
-        3, 
-        4
-    );
-    if (isset($_REQUEST['level']) && in_array($_REQUEST['level'], $allowedLevels))
-        $level = $_REQUEST['level'];
-    
-    if($isApps) {
-        $pagePath = $_SESSION['config']['businessappurl'] . 'index.php'
-            . '?page=' . $pageName 
-            . '&admin=' . $objectName 
-            . '&objectName=' . $objectName 
-            . '&mode='  . $mode;
-    } else {
-        $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?'
-            . 'page='    . $pageName 
-            . '&module=' . $objectName 
-            . '&objectName=' . $objectName 
-            . '&mode='   . $mode;
-    }
-    
-    $pageLabel = $pageLabels[$mode];
-    
-    $pageId = $pageIds[$mode];
-    
-    $coreTools = new core_tools();
-    $coreTools->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
-    
-    return $pagePath;
-}
-
-/* -----------------------
-- test and retrieve params
------------------------ */
-function testParams()
-{
-    /* -----------------------------------
-    - Initialise array with default values
-    ----------------------------------- */
-    $params = array(
-        'status' => 'OK',
-        'mode' => 'list',
-        'pageNb' => 1,
-        'isApps' => false,
-    );
-    
-    $error = false;
-    
-    /* ------------------
-    - Test some $_REQUEST
-    ------------------ */
-    if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode']))
-        $params['mode'] = $_REQUEST['mode'];
-    
-    if (isset($_REQUEST['objectName']) && !empty($_REQUEST['objectName']))
-        $params['objectName'] = $_REQUEST['objectName'];
-    else
-        $error .= _OBJECT_NAME_MANDATORY . '<br />';
-    
-    if (isset($_REQUEST['objectId']) && !empty($_REQUEST['objectId']))
-        $params['objectId'] = $_REQUEST['objectId'];
-    
-    if (isset($_REQUEST['pageNb']) && !empty($_REQUEST['pageNb']))
-        $params['pageNb'] = $_REQUEST['pageNb'];
-    
-    if (isset($_REQUEST['admin']) && !empty($_REQUEST['admin'])) {
-        $params['isApps'] = true;
-        $params['viewLocation'] = 'apps' . DIRECTORY_SEPARATOR
-            . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
-            . 'admin' . DIRECTORY_SEPARATOR
-            . $_REQUEST['admin'];
-		$params['schemaPath'] = $params['viewLocation'] . DIRECTORY_SEPARATOR
-			. 'xml' . DIRECTORY_SEPARATOR
-			. $_REQUEST['admin'] . '.xsd';
-    } elseif (isset($_REQUEST['module']) && !empty($_REQUEST['module'])) {
-        $params['viewLocation'] = 'modules' . DIRECTORY_SEPARATOR
-            . $_REQUEST['module'];
-		$params['schemaPath'] = $params['viewLocation'] . DIRECTORY_SEPARATOR
-			. 'xml' . DIRECTORY_SEPARATOR
-			. $_REQUEST['module'] . '.xsd';
-    }
-    
-    if (isset($_REQUEST['order']) && !empty($_REQUEST['order']))
-        $params['order'] = $_REQUEST['order'];
-    
-    if (isset($_REQUEST['orderField']) && !empty($_REQUEST['orderField']))
-        $params['orderField'] = $_REQUEST['orderField'];
-    
-    if (isset($_REQUEST['what']) && !empty($_REQUEST['what']))
-        $params['what'] = $_REQUEST['what'];
-    
-    /* -----
-    - return
-    ----- */
-    if ($error)
-        exit($error);
-    else
-        return $params;
-}
-
-/**
- * Initialize session variables
- * @param string $objectName
- */
-function initSession($objectName)
-{
-    $_SESSION['m_admin'][$objectName] = false;
-}
-
-/**
- * Initialize session Object with form values
- * @param string $objectName
- */
-function updateObject($request, $object)
-{
-    foreach($object as $key => $value) {
-        $object->$key = $request[$key];
-    }
-}
-
-/**
- * Initialize session parameters for add display with given objectName
- * @param string $objectName
- */
-function displayAdd($objectName)
-{
-    if (!isset($_SESSION['m_admin'][$objectName]))
-        initSession();
-}
-
-/**
- * Destroy session parameters for create display
- * @param $objectName
- */
-function displayCreate($objectName)
-{
-    clearSession($objectName);
-}
-
-/**
- * Initialize session parameters for read display
- * @param $objectId
- */
-function displayRead($objectName, $object)
-{
-    putInSession($objectName, $object);
-}
-
-/**
- * Initialize session parameters for update display
- * @param $objectId
- */
-function displayUpdate($objectName, $object)
-{
-    putInSession($objectName, $object);
-}
-
-/**
- * Put given object in session, according with given object
- * NOTE: given object needs to be at least hashable
- * @param string $objectName
- * @param object $object
- */
-function putInSession($objectName, $object)
-{
-    $_SESSION['m_admin'][$objectName] = $object->asXml();
-}
-
-/**
- * Clear the object in session
- * @param string $objectName
- */
-function clearSession($objectName)
-{
-    $_SESSION['m_admin'][$objectName] = false;
-}
-
-function displayList($objectList, $actions, $showCols, $pageNb, $keyProperties)
-{
-}
-
-/**
- * Load hidden fields in the CRUD form
- * @param string $objectName
- * @param string $hiddenFields
- */
-function loadHiddenFields($params)
-{
-    $hiddenFields = '<input type="hidden" name="display" value="value" />';
-    $hiddenFields .= '<input type="hidden" name="admin" value="' 
-        . $params['objectName'] . '" />';
-    $hiddenFields .= '<input type="hidden" name="page" value="' 
-        . $params['page'] . '" />';
-    $hiddenFields .= '<input type="hidden" name="mode" value="' 
-        . $params['mode'] . '" />';
-    if (isset($params['order'])) {
-        $hiddenFields .= '<input type="hidden" name="order" value="'
-        . $params['order'] . '" />';
-    }
-    if (isset($params['orderField'])) {
-        $hiddenFields .= '<input type="hidden" name="orderField" value="'
-        . $params['orderField'] . '" />';
-    }
-    if (isset($params['what'])) {
-        $hiddenFields .= '<input type="hidden" name="what" value="'
-        . $params['what'] . '" />';
-    }
-    return $hiddenFields;
-}
-
-function isBoolean($string)
-{
-    if ($string == 'Y') {
-        $return = '<img src="static.php?filename=picto_stat_enabled.gif" />';
-    } elseif($string == 'N') {
-        $return = '<img src="static.php?filename=picto_stat_disabled.gif" />';
-    }
-    return $return;
-}
-
-function getLabel($constant) 
-{
-    if (!defined($constant))
-        return $constant;
-    else
-        return constant($constant);
-}
-
-//getDependantUri
-function getDependantUri($get, $uri)
-{
-    $getValue = str_replace(
-        ' ',
-        '%20',
-        $_REQUEST[$get]
-    );
-    
-    $toSearch = $get . '=' . $getValue;
-
-    $sourceArray = array(
-        '?'.$toSearch . '&',
-        '&'.$toSearch,
-    );
-    $targetArray = array(
-        '?',
-        '',
-    );
-    
-    $return = str_replace(
-        $sourceArray,
-        $targetArray,
-        $uri
-    );
-    
-    return $return;
-}
-
-$coreTools = new core_tools();
-$coreTools->load_lang();
-
-//tests and retrieve params of the controller page
-$params = testParams();
-
-//test if the user is allowed to acces the admin service
-if ($isApps)
-    $coreTools->test_admin(
-        'admin_' . $params['objectName'], 
-        'apps'
-    );
-else
-    $coreTools->test_admin(
-        'admin_' . $params['objectName'], 
-        'entities'
-    );
-
-$pagePath = locationBarManagement(
-    $params['pageName'], 
-    $params['mode'], 
-    $params['objectName'], 
-    $params['isApps']
-);
-
-//load the message object
-$messagePath = $params['viewLocation'] . '/xml/' . $params['objectName'] . '_Messages.xml';
-$messageController->loadMessageFile(
-    $messagePath
-);
-
-require_once(
-    'core/tests/class/DataObjectController.php'
-);
-$dataObjectController = new DataObjectController();
-$dataObjectController->loadXSD(
-    $params['schemaPath']
-);
-
-if (isset($_REQUEST['submit'])) {
-    $dataObject = $dataObjectController->load(
-        $_SESSION['m_admin'][$params['objectName']]
-    );
-    
-    //fill the object with the request
-    updateObject(
-        $_REQUEST, 
-        $dataObject
-    );
-    
-    //validate the object
-    $validateObject = $dataObjectController->validate(
-        $dataObject
-    );
-    
-    if ($validateObject) {
-        $dataObjectController->save(
-            $dataObject
+/* -----------------------------------------------------------------------------
+- standard page controller
+----------------------------------------------------------------------------- */
+//require
+    //require the class core_tools
+        require_once(
+            'core/class/class_core_tools.php'
         );
-    } else {
-        foreach($dataObjectController->getValidationErrors() as $error) {
-            $errors[] = $error->message;
+    //require the class ViewController
+        require_once(
+            'core/class/class_history.php'
+        );
+    //require the class MessageController
+        require_once(
+            'core/tests/class/MessageController.php'
+        );
+    //require the class ViewController
+        require_once(
+            'core/tests/class/ViewController.php'
+        );
+    //require the DataObjectController
+        require_once(
+            'core/tests/class/DataObjectController.php'
+        );
+
+//object instanciation
+    //object core_tools
+        $core_tools = new core_tools();
+    //object MessageController
+        $messageController = new MessageController();
+    //object ViewController
+        $viewController = new ViewController();
+    //object DataObjectController
+        $dataObjectController = new DataObjectController();
+
+//functions
+    //testParams
+        function testParams()
+        {
+            $error = false;
+            
+            $params = array();
+            $params['status'] = 'OK';
+            $params['mode']   = 'list';
+            $params['pageNb'] = 1;
+            $params['isApps'] = false;
+            
+            if (!empty($_REQUEST['mode']))
+                $params['mode'] = $_REQUEST['mode'];
+            
+            if (!empty($_REQUEST['objectName']))
+                $params['objectName'] = $_REQUEST['objectName'];
+            else
+                $error .= _OBJECT_NAME_MANDATORY . '<br />';
+            
+            if (!empty($_REQUEST['objectId']))
+                $params['objectId'] = $_REQUEST['objectId'];
+            
+            if (!empty($_REQUEST['pageNb']))
+                $params['pageNb'] = $_REQUEST['pageNb'];
+            
+            if (!empty($_REQUEST['admin'])) {
+                $params['isApps'] = true;
+                
+                $params['viewLocation'] = 'apps/' 
+                    . $_SESSION['config']['app_id'] . '/' 
+                    . 'admin/' 
+                    . $_REQUEST['admin'];
+                    
+                $params['schemaPath'] = $params['viewLocation'] . '/'
+                    . 'xml/'
+                    . $_REQUEST['admin'] . '.xsd';
+                    
+            } elseif (!empty($_REQUEST['module'])) {
+                $params['viewLocation'] = 'modules/'
+                    . $_REQUEST['module'];
+                    
+                $params['schemaPath'] = $params['viewLocation'] . '/'
+                    . 'xml/'
+                    . $_REQUEST['module'] . '.xsd';
+                    
+            }
+            
+            if (!empty($_REQUEST['order']))
+                $params['order'] = $_REQUEST['order'];
+            
+            if (!empty($_REQUEST['orderField']))
+                $params['orderField'] = $_REQUEST['orderField'];
+            
+            if (!empty($_REQUEST['what']))
+                $params['what'] = $_REQUEST['what'];
+            
+            return $params;
         }
-        $_SESSION['error'] = implode('<br />', $errors);
+    
+    //locationBarManagement
+        function locationBarManagement($pageName, $mode, $objectName, $isApps)
+        {
+            $pageLabels = array();
+            $pageLabels['add']  = _ADDITION;
+            $pageLabels['up']   = _MODIFICATION;
+            $pageLabels['list'] = _LIST;
+            
+            $pageIds = array();
+            $pageIds['add']  = $objectName . '_add';
+            $pageIds['up']   = $objectName . '_up';
+            $pageIds['list'] = $objectNAme . '_list';
+            
+            $init = false;
+            if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true')
+                $init = true;
+            
+            $level = '';
+            if (isset($_REQUEST['level']))
+                $level = $_REQUEST['level'];
+            
+            if ($isApps) {
+                $pagePath = $_SESSION['config']['businessappurl'] . 'index.php'
+                          . '?page='       . $pageName
+                          . '&admin='      . $objectName
+                          . '&objectName=' . $objectName
+                          . '&mode='       . $mode;
+            } else {
+                $pagePath = $_SESSION['config']['businessappurl'] . 'index.php'
+                          . '?page='       . $pageName
+                          . '&module='     . $objectName
+                          . '&objectName=' . $objectName
+                          . '&mode='       . $mode;
+            }
+            
+            $pageLabel = $pageLabels[$mode];
+            $pageId    = $pageIds[$mode];
+            
+            $coreTools = new core_tools();
+            $coreTools->manage_location_bar(
+                $pagePath, 
+                $pageLabel, 
+                $pageId, 
+                $init, 
+                $level
+            );
+            
+            return $pagePath;
+        }
         
-        $url = $_SERVER['REQUEST_URI'];
-        $url = str_replace(
-            array(
-                '?display=true&', 
-                '&display=true'
-            ), 
-            array(
-                '?', 
-                ''
-            ), 
-            $url
+    //initSession
+        function initSession($objectName)
+        {
+            $_SESSION['m_admin'][$objectName] = false;
+        }
+        
+    //updateObject
+        function updateObject($request, $object)
+        {
+            foreach ($object as $key => $value) {
+                $object->$key = $request[$key];
+            }
+        }
+    
+    //displayAdd
+        function displayAdd($objectName)
+        {
+            if (!isset($_SESSION['m_admin'][$objectName]))
+                initSession();
+        }
+    
+    //displayCreate
+        function displayCreate($objectName)
+        {
+            clearSession($objectName);
+        }
+    
+    //displayRead
+        function displayRead($objectName, $object)
+        {
+            putInSession($objectName, $object);
+        }
+    
+    //displayUpdate
+        function displayUpdate($objectName, $object)
+        {
+            putInSession($objectName, $object);
+        }
+    
+    //putInSession
+        function putInSession($objectName, $object)
+        {
+            $_SESSION['m_admin'][$objectName] = $object->asXml();
+        }
+    
+    //clearSession
+        function clearSession($objectName)
+        {
+            $_SESSION['m_admin'][$objectName] = false;
+        }
+    
+    //loadHiddenFields
+        function loadHiddenFields($params)
+        {
+            $hiddenFields  = '';
+            $hiddenFields .= '<input ';
+             $hiddenFields .= 'type="hidden" ';
+             $hiddenFields .= 'name="display" ';
+             $hiddenFields .= 'type="value" ';
+            $hiddenFields .= '/>';
+            
+            $hiddenFields  = '';
+            $hiddenFields .= '<input ';
+             $hiddenFields .= 'type="hidden" ';
+             $hiddenFields .= 'name="admin" ';
+             $hiddenFields .= 'type="' . $params['objectName'] . '" ';
+            $hiddenFields .= '/>';
+            
+            $hiddenFields  = '';
+            $hiddenFields .= '<input ';
+             $hiddenFields .= 'type="hidden" ';
+             $hiddenFields .= 'name="page" ';
+             $hiddenFields .= 'type="' . $params['page'] . '" ';
+            $hiddenFields .= '/>';
+            
+            if (isset($params['order'])) {
+                $hiddenFields  = '';
+                $hiddenFields .= '<input ';
+                 $hiddenFields .= 'type="hidden" ';
+                 $hiddenFields .= 'name="order" ';
+                 $hiddenFields .= 'type="' . $params['order'] . '" ';
+                $hiddenFields .= '/>';
+            }
+            
+            if (isset($params['orderField'])) {
+                $hiddenFields  = '';
+                $hiddenFields .= '<input ';
+                 $hiddenFields .= 'type="hidden" ';
+                 $hiddenFields .= 'name="orderField" ';
+                 $hiddenFields .= 'type="' . $params['orderField'] . '" ';
+                $hiddenFields .= '/>';
+            }
+            
+            if (isset($params['what'])) {
+                $hiddenFields  = '';
+                $hiddenFields .= '<input ';
+                 $hiddenFields .= 'type="hidden" ';
+                 $hiddenFields .= 'name="what" ';
+                 $hiddenFields .= 'type="' . $params['what'] . '" ';
+                $hiddenFields .= '/>';
+            }
+            
+            return $hiddenFields;
+        }
+    
+    //isBoolean
+        function isBoolean($string)
+        {
+            $return = '';
+            
+            if ($string == 'Y') {
+                $return .= '<img ';
+                 $return .= 'src="static.php?filename=picto_stat_enabled.gif" ';
+                $return .= '/>';
+            } else {
+                $return .= '<img ';
+                 $return .= 'src="static.php?filename=picto_stat_disabled.gif" ';
+                $return .= '/>';
+            }
+            
+            return $return;
+        }
+    
+    //getLabel
+        function getLabel($constant)
+        {
+            if (!defined($constant))
+                return $constant;
+            else
+                return constant($constant);
+        }
+    
+    //getDependantUri
+        function getDependantUri($get, $uri)
+        {
+            $getValue = str_replace(
+                ' ',
+                '%20',
+                $_REQUEST[$get]
+            );
+            
+            $toSearch = $get . '=' . $getValue;
+            
+            $source = array();
+            $source[] = '?' . $toSearch . '&';
+            $source[] = '&' . $toSearch;
+            
+            $target = array();
+            $target[] = '?';
+            $target[] = '';
+            
+            return str_replace($source, $target, $uri);
+        }
+
+//process
+    //load_lang
+        $core_tools->load_lang();
+    
+    //retrieve parameters
+        $params = testParams();
+    
+    //test access
+        if ($isApps)
+            $core_tools->test_admin('admin_' . $params['objectName'], 'apps');
+        else
+            $core_tools->test_admin('admin_' . $params['objectName'], 'entities');
+    
+    //pagePath
+        $pagePath = locationBarManagement(
+            $params['pageName'],
+            $params['mode'],
+            $params['objectName'],
+            $params['isApps']
         );
-        
-        $_SESSION['m_admin'][$params['objectName']] = $dataObject->asXml();
-        
-        header("Location: ".$url);
-    }
-    exit;
-} else {
-    //CRUDL CASES
-    switch ($params['mode']) {
-        case 'create' :
-            /* -----
-            - CREATE
-            ----- */
-        	$dataObject = $dataObjectController->create($params['objectName']);
-            displayCreate($params['objectName']);
+    
+    //load message file
+        $messagePath = $params['viewLocation'] . '/'
+            . 'xml/' 
+            . $params['objectName'] . '_Messages.xml';
+        $messageController->loadMessageFile($messagePath);
+    
+    //load xsd file
+        $dataObjectController->loadXSD($params['schemaPath']);
+    
+    //CRUDL cases
+        switch($params['mode'])
+        {
+            case 'create' :
+                $dataObject = $dataObjectController->create(
+                    $params['objectName']
+                );
+                displayCreate($params['objectName']);
+                break;
             
-            break;
-            
-        case 'details' :
-            /* ------
-            - DETAILS
-            ------ */
-            $dataObject = $dataObjectController->read(
-                $params['objectName'], $params['objectId']
-            );
-            
-            break;
-            
-        case 'read' :
-            /* ---
-            - READ
-            --- */
-            $dataObject = $dataObjectController->read(
-                $params['objectName'], $params['objectId']
-            );
-            
-            break;
-            
-        case 'update' :
-            /* -----
-            - UPDATE
-            ----- */
-            if (!$_SESSION['m_admin'][$params['objectName']]) {
+            case 'details' :
                 $dataObject = $dataObjectController->read(
                     $params['objectName'], 
                     $params['objectId']
                 );
-                $_SESSION['m_admin'][$params['objectName']] = $dataObject->asXml();
-            } else {
-                $dataObject = $dataObjectController->load(
-                    $_SESSION['m_admin'][$params['objectName']]
+                break;
+            
+            case 'read' :
+                $dataObject = $dataObjectController->read(
+                    $params['objectName'], 
+                    $params['objectId']
                 );
-            }
+                break;
             
-            break;
+            case 'update' :
+                if (!$_SESSION['m_admin'][$params['objectName']]) {
+                    $dataObject = $dataObjectController->read(
+                        $params['objectName'], 
+                        $params['objectId']
+                    );
+                    $_SESSION['m_admin'][$params['objectName']] = $dataObject->asXml();
+                } else {
+                    $dataObject = $dataObjectController->load(
+                        $_SESSION['m_admin'][$params['objectName']]
+                    );
+                }
+                break;
             
-        case 'delete' :
-            /* -----
-            - DELETE
-            ----- */
-            break;
+            case 'delete' :
+                break;
             
-        //TODO: PROCESS IT LIKE PARTICULAR CASES OF UPDATE
-        case 'allow' :
-            doEnable($docserverId);
-            break;
-        case 'ban' :
-            doDisable($docserverId);
-            break;
+            case 'allow' :
+                break;
+            
+            case 'ban' :
+                break;
+            
+            case 'list' :
+                clearSession($params['objectName']);
+                
+                $requestUri = $_SERVER['REQUEST_URI'];
+                
+                if (!empty($params['what']))
+                    $filter = str_replace('|', '%', $params['what']);
+                
+                $dataObjectList = $dataObjectController->enumerate(
+                    $params['objectName'],
+                    $filter,
+                    $sortFields = $params['orderField'],
+                    $order = $params['order']
+                );
+                $objectList = $dataObjectList->$params['objectName'];
+                
+                $keyProperties = $dataObjectController->getKeyProperties(
+                    $params['objectName']
+                );
+                
+                $viewController->loadHTMLFile(
+                    'modules/'
+                    . 'records_management/' 
+                    . $params['objectName'] . '_list.html'
+                );
+                $view = $viewController->view;
+                
+                $dataTranslates = $viewController->getDataTranslate();
+                $i_max = $dataTranslates->length;
+                for($i=0; $i<$i_max; $i++) {
+                    $dataTranslate = $dataTranslates->item($i);
+                    $translate = $dataTranslate->getAttribute('data-translate');
+                    $dataTranslate->nodeValue = $messageController->getMessageText($translate);
+                }
+                /* ------
+                - filters
+                ------ */
+                $filters = $view->getElementById('filters');
+                
+                
+                /* ---------
+                - pagination
+                --------- */
+                
+                
+                /* ----
+                - liste
+                ---- */
+                $actionsURL = array();
+                if (is_array($actions)) {
+                    for ($cpt_actions=0; $cpt_actions<count($actions); $cpt_actions++) {
+                        $actionsURL[$actions[$cpt_actions]] = getDependantUri(
+                            'mode', 
+                            $requestUri
+                        );
+                        $actionsURL[$actions[$cpt_actions]] .= '&mode=' . $actions[$cpt_actions];
+                    }
+                }
+                
+                $liste = $view->getElementById('list');
+                $rowTemplate = $view->getElementById('rowTemplate');
+                $tableRow = $rowTemplate->cloneNode(true);
+                $tableRow->removeAttribute('id');
+                $tableRow->removeAttribute('style');
+                $i_max = count($objectList);
+                for ($i=0; $i<$i_max; $i++) {
+                    $object = $objectList[$i];
+                    
+                    /* ---
+                    - $key
+                    --- */
+                    $keyValues = array(); 
+                    for($j=0; $j<count($keyProperties); $j++) {
+                        $keyName = $keyProperties[$j];
+                        $keyValues[] = $object->$keyName;
+                    }
+                    $key = implode(' ', $keyValues);
+                    
+                    /* ----
+                    - lines
+                    ---- */
+                    $row = $tableRow->cloneNode(true);
+                    
+                    /* ----
+                    - class
+                    ---- */
+                    $row->setAttribute('id', 'row_' . $i);
+                    if ($i%2==0)
+                        $row->setAttribute('class', 'rowOdd');
+                    else
+                        $row->setAttribute('class', 'rowEven');
+                    
+                    /* ----
+                    - cells
+                    ---- */
+                    $tds = $row->getElementsByTagName('td');
+                    
+                    $j_max = $tds->length;
+                    for ($j=0; $j<$j_max; $j++) {
+                        $td = $tds->item($j);
+                        $name = $td->getAttribute('name');
+                        if ($name) {
+                            $propertyName = end(explode('.', $name));
+                            $td->nodeValue = $object->$propertyName;
+                        }
+                    }
+                    $liste->appendChild($row);
+                }
+                
+                /* ------
+                - actions
+                ------ */
+                $adds = $viewController->query("//*[@name='add']");
+                $i_max = $adds->length;
+                for ($i=0; $i<$i_max; $i++) {
+                    $add = $adds->item($i);
+                    $add->setAttribute(
+                        'href',
+                        $requestUri . '&mode=create'
+                    );
+                }
+                $reads = $viewController->query("//*[@name='read']");
+                $i_max = $reads->length;
+                for ($i=0; $i<$i_max; $i++) {
+                    $read = $reads->item($i);
+                    $read->setAttribute(
+                        'href',
+                        $actionsURL['read'] . '&objectId=' . $key
+                    );
+                }
+                $updates = $viewController->query("//*[@name='update']");
+                $i_max = $updates->length;
+                for ($i=0; $i<$i_max; $i++) {
+                    $update = $updates->item($i);
+                    $update->setAttribute(
+                        'href',
+                        $actionsURL['update'] . '&objectId=' . $key
+                    );
+                }
+                
+                $viewController->showView();
+                break;
+        }
+    
+/* -----------------------------------------------------------------------------
+- old
+----------------------------------------------------------------------------- */
+
+    //CRUDL CASES
+    switch ($params['mode']) {
         case 'list' :
-            /* ---
-            - LIST
-            --- */
-            clearSession($params['objectName']);
-            
-            /* ---------
-            - set filter
-            --------- */
-            if (isset($params['what']) && !empty($params['what']))
-                $filter = str_replace(
-                    '|', 
-                    '%', 
-                    $params['what']
-                );
-            
-            /* --------------
-            - load dataObject
-            -------------- */
-            $dataObjectList = $dataObjectController->enumerate(
-                $params['objectName'],
-                $filter,
-                $sortFields = $params['orderField'],
-                $order = $params['order']
-            );
-            
-            /* ------
-            - get key
-            ------ */
-            $keyProperties = $dataObjectController->getKeyProperties(
-                $params['objectName']
-            );
-            
-            /* ---------
-            - objectList
-            --------- */
-            $objectList = $dataObjectList->$params['objectName'];
-            
             /* -----------------
             - prevent PHP NOTICE
             ----------------- */
@@ -963,14 +981,14 @@ if (isset($_REQUEST['submit'])) {
                         $str_htmlList .= '<tr ';
                          $str_htmlList .= $cssClass_tr;
                         $str_htmlList .= '>';
-                        	foreach($object->getProperties() as $propertyName => $propertyValue) {
-	                        	$json[$propertyName] = $propertyValue;
-                        	}
+                            foreach($object->getProperties() as $propertyName => $propertyValue) {
+                                $json[$propertyName] = $propertyValue;
+                            }
                             
                             foreach ($showCols as $propertyName => $colParams) {
-	                            $propertyValue = (string)$object->$propertyName;
-	                            
-	                            $cssColumn = '';
+                                $propertyValue = (string)$object->$propertyName;
+                                
+                                $cssColumn = '';
                                 if (isset($colParams['cssStyle'])) {
                                     $cssColumn = $colParams['cssStyle'];
                                 }
@@ -1196,13 +1214,13 @@ if (isset($_REQUEST['submit'])) {
              $str_goToTop .= '" ';
             $str_goToTop .= '>';
             $str_goToTop .= '</div>';
-        
+            
+            /*
             echo $str_filter;
             echo $str_pagination;
             echo $str_htmlList;
             echo $str_previsualise;
             echo $str_goToTop;
-            
+            */
             break;
     }
-}
