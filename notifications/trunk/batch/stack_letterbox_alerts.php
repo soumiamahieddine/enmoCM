@@ -53,7 +53,7 @@ while ($state <> 'END') {
     /* List the resources to proccess for alarms						  */
     /**********************************************************************/
     case 'LIST_DOCS' :
-		$query = "SELECT res_id, type_id, process_limit_date" 
+		$query = "SELECT res_id, type_id, process_limit_date, flag_alarm1, flag_alarm2" 
 			. " FROM " . $collView
 			. " WHERE closing_date IS null"
 			. " AND status NOT IN ('CLO', 'DEL')"
@@ -89,58 +89,61 @@ while ($state <> 'END') {
 			$logger->write("Document type id is #" . $myDoc->type_id, 'INFO');
 			
 			// Alert 1 = limit - n days
-			$query = "SELECT 'true' as alarm1 FROM parameters "
-				. " WHERE " . $db->get_date_diff($db->current_datetime(), "'".$myDoc->process_limit_date."'") 
-				. " <= " . (integer)$myDoctype->delay1;
-			Bt_doQuery($db, $query);	
-			$result = $db->fetch_object();
-			if($result->alarm1 === 'true') {
-				$logger->write("Alarm 1 will be sent", 'INFO');
-				$info = 'Relance 1 pour traitement du document No' . $myDoc->res_id . ' avant date limite.';  
-				if(count($GLOBALS['alert_notifs']['alert1']) > 0) {
-					foreach($GLOBALS['alert_notifs']['alert1'] as $notification_sid) {
-						$query = "INSERT INTO " . _NOTIF_EVENT_STACK_TABLE_NAME
-							. " (notification_sid, table_name, record_id, user_id, event_info"
-							. ", event_date)" 
-							. " VALUES(" . $notification_sid . ", '" 
-							. $collView . "', '" . $myDoc->res_id . "', 'superadmin', '" . $info . "', " 
-							. $db->current_datetime() . ")";
-						Bt_doQuery($db, $query);
-					}
-				}
-				
-				$query = "UPDATE " . $collExt
-					. " SET flag_alarm1 = 'Y', alarm1_date = " . $db->current_datetime()
-					. " WHERE res_id = " . $myDoc->res_id;
-				Bt_doQuery($db, $query);
+			if($myDoc->flag_alarm1 != 'Y' && $myDoc->flag_alarm2 != 'Y') {
+                $query = "SELECT 'true' as alarm1 FROM parameters "
+                    . " WHERE " . $db->get_date_diff("'".$myDoc->process_limit_date."'", $db->current_datetime()) 
+                    . " <= " . (integer)$myDoctype->delay1;
+                Bt_doQuery($db, $query);	
+                $result = $db->fetch_object();
+                if($result->alarm1 === 'true') {
+                    $logger->write("Alarm 1 will be sent", 'INFO');
+                    $info = 'Relance 1 pour traitement du document No' . $myDoc->res_id . ' avant date limite.';  
+                    if(count($GLOBALS['alert_notifs']['alert1']) > 0) {
+                        foreach($GLOBALS['alert_notifs']['alert1'] as $notification_sid) {
+                            $query = "INSERT INTO " . _NOTIF_EVENT_STACK_TABLE_NAME
+                                . " (notification_sid, table_name, record_id, user_id, event_info"
+                                . ", event_date)" 
+                                . " VALUES(" . $notification_sid . ", '" 
+                                . $collView . "', '" . $myDoc->res_id . "', 'superadmin', '" . $info . "', " 
+                                . $db->current_datetime() . ")";
+                            Bt_doQuery($db, $query);
+                        }
+                    }
+                    
+                    $query = "UPDATE " . $collExt
+                        . " SET flag_alarm1 = 'Y', alarm1_date = " . $db->current_datetime()
+                        . " WHERE res_id = " . $myDoc->res_id;
+                    Bt_doQuery($db, $query);
+                }
 			}
-			
 			// Alert 2 = limit + n days
-			$query = "SELECT 'true' as alarm2 FROM parameters "
-				. " WHERE " . $db->get_date_diff("'".$myDoc->process_limit_date."'", $db->current_datetime()) 
-                . " <= " . (integer)$myDoctype->delay2;
-			Bt_doQuery($db, $query);	
-			$result = $db->fetch_object();
-			if($result->alarm2 === 'true') {
-				$logger->write("Alarm 2 will be sent", 'INFO');
-				$info = 'Relance 2 pour traitement du document No' . $myDoc->res_id . ' apres date limite.';  
-				if(count($GLOBALS['alert_notifs']['alert2']) > 0) {
-					foreach($GLOBALS['alert_notifs']['alert2'] as $notification_sid) {
-						$query = "INSERT INTO " . _NOTIF_EVENT_STACK_TABLE_NAME
-							. " (notification_sid, table_name, record_id, user_id, event_info"
-							. ", event_date)" 
-							. " VALUES(" . $notification_sid . ", '" 
-							. $collView . "', '" . $myDoc->res_id . "', 'superadmin', '" . $info . "', " 
-							. $db->current_datetime() . ")";
-						Bt_doQuery($db, $query);
-					}
-				}
-				$query = "UPDATE " . $collExt
-					. " SET flag_alarm1 = 'Y', flag_alarm2 = 'Y', alarm2_date = " . $db->current_datetime()
-					. " WHERE res_id = " . $myDoc->res_id;
-				Bt_doQuery($db, $query);
-		
-			}
+			if($myDoc->flag_alarm2 != 'Y') {
+                $query = "SELECT 'true' as alarm2 FROM parameters "
+                    . " WHERE " . $db->get_date_diff($db->current_datetime(), "'".$myDoc->process_limit_date."'") 
+                    . " >= " . (integer)$myDoctype->delay2;
+                Bt_doQuery($db, $query);	
+                $result = $db->fetch_object();
+                if($result->alarm2 === 'true') {
+                    $logger->write("Alarm 2 will be sent", 'INFO');
+                    $info = 'Relance 2 pour traitement du document No' . $myDoc->res_id . ' apres date limite.';  
+                    if(count($GLOBALS['alert_notifs']['alert2']) > 0) {
+                        foreach($GLOBALS['alert_notifs']['alert2'] as $notification_sid) {
+                            $query = "INSERT INTO " . _NOTIF_EVENT_STACK_TABLE_NAME
+                                . " (notification_sid, table_name, record_id, user_id, event_info"
+                                . ", event_date)" 
+                                . " VALUES(" . $notification_sid . ", '" 
+                                . $collView . "', '" . $myDoc->res_id . "', 'superadmin', '" . $info . "', " 
+                                . $db->current_datetime() . ")";
+                            Bt_doQuery($db, $query);
+                        }
+                    }
+                    $query = "UPDATE " . $collExt
+                        . " SET flag_alarm1 = 'Y', flag_alarm2 = 'Y', alarm2_date = " . $db->current_datetime()
+                        . " WHERE res_id = " . $myDoc->res_id;
+                    Bt_doQuery($db, $query);
+            
+                }
+            }
 			$currentDoc++;
 			$state = 'A_DOC';
 		} else {
