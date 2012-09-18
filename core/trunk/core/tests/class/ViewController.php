@@ -69,6 +69,13 @@ class ViewController
         return $th;
     }
     
+    function getDataTranslate()
+    {
+        $dataTranslate = $this->query("//*[@data-translate]");
+        if($dataTranslate->length == 0) return false;
+        return $dataTranslate;
+    }
+    
     //*************************************************************************
     // Update tags
     //*************************************************************************
