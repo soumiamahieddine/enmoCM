@@ -16,16 +16,21 @@ case 'recipients':
         break;
     
     case 'res_letterbox':
-        $from .= " JOIN res_letterbox lb ON AND lb.res_id = li.res_id";
+    case 'res_view_letterbox':
+        $from .= " JOIN res_letterbox lb ON lb.res_id = li.res_id";
         $where .= " AND lb.res_id = " . $event->record_id;
-    
+        break;
     
     case 'listinstance':
     default:
-        $where .= " listinstance_id = " . $event->record_id;
+        $where .= " AND listinstance_id = " . $event->record_id;
     }
         
     $query = $select . $from . $where;
+    
+    if($GLOBALS['logger']) {
+        $GLOBALS['logger']->write($query , 'DEBUG');
+    }
     
 	$dbRecipients = new dbquery();
     $dbRecipients->connect();
@@ -51,18 +56,23 @@ case 'res_id':
         $from .= " JOIN notes ON notes.coll_id = li.coll_id AND notes.identifier = li.res_id";
 		$where .= " AND notes.id = " . $event->record_id . " AND li.item_id != notes.user_id";
         break;
-    
+        
     case 'res_letterbox':
-        $from .= " JOIN res_letterbox lb ON AND lb.res_id = li.res_id";
+    case 'res_view_letterbox':
+        $from .= " JOIN res_letterbox lb ON lb.res_id = li.res_id";
         $where .= " AND lb.res_id = " . $event->record_id;
-    
+        break;
     
     case 'listinstance':
     default:
-        $where .= " listinstance_id = " . $event->record_id;
+        $where .= " AND listinstance_id = " . $event->record_id;
     }
     
     $query = $query = $select . $from . $where;
+    
+    if($GLOBALS['logger']) {
+        $GLOBALS['logger']->write($query , 'DEBUG');
+    }
     
 	$dbResId = new dbquery();
     $dbResId->connect();
