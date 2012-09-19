@@ -24,12 +24,12 @@ foreach($events as $event) {
 	
     $select = "SELECT lb.*";
 	$from = " FROM ".$res_view." lb ";
-    $where = " WHERE 1=1 ";
+    $where = " WHERE ";
     
     switch($event->table_name) {
     case 'notes':
         $from .= " JOIN notes ON notes.identifier = lb.res_id";
-		$where .= " AND notes.id = " . $event->record_id;
+		$where .= " notes.id = " . $event->record_id;
         break;
     
     case 'listinstance':
@@ -39,7 +39,7 @@ foreach($events as $event) {
     case 'res_letterbox':
     case 'res_view_letterbox':
     default:
-        $where .= " AND lb.res_id = " . $event->record_id;
+        $where .= " lb.res_id = " . $event->record_id;
     }
 
     $query = $select . $from . $where;
