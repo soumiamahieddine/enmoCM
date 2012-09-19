@@ -374,14 +374,14 @@ class resCMIS extends objectCMIS
     	$doc->xmlStandalone = true;
     	$doc->formatOutput = true;
     	    	
-    	$this->getAtomXmlEntry(&$doc);
+    	$this->getAtomXmlEntry($doc);
     	
     	return $doc;
     }
     
     
     
-    public function getAtomXmlEntry(&$doc, &$feed){
+    public function getAtomXmlEntry($doc, $feed){
     	    	 
     	if(isset($feed)){
 	    	$root = $doc->createElement('atom:entry');
