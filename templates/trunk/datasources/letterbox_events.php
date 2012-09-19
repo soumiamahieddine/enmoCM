@@ -35,7 +35,8 @@ foreach($events as $event) {
     case 'listinstance':
         $from .= " JOIN listinstance li ON lb.res_id = li.res_id";
         $where .= " li.coll_id = '".$coll_id."' AND li.listinstance_type='DOC' AND listinstance_id = " . $event->record_id;
-    
+        break;
+        
     case 'res_letterbox':
     case 'res_view_letterbox':
     default:
