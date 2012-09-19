@@ -128,3 +128,9 @@ if (!defined('_ANSWER_TITLE'))
     define('_ANSWER_TITLE', 'Titre de la pi&egrave;ce jointe');
 if (!defined('_VALID_TEXT'))
     define('_VALID_TEXT', 'Valider texte');
+
+if (!defined('_NO_DATASOURCE'))
+    define('_NO_DATASOURCE', 'Aucune source de donn&eacute;es');
+
+if (!defined('_ALREADY_RESERVED'))
+    define('_ALREADY_RESERVED', 'Document en cours de modification');

@@ -132,3 +132,8 @@ if (!defined('_ANSWER_TITLE'))
 if (!defined('_VALID_TEXT'))
     define('_VALID_TEXT', 'Save text');
 
+if (!defined('_NO_DATASOURCE'))
+    define('_NO_DATASOURCE', 'No datasource');
+
+if (!defined('_ALREADY_RESERVED'))
+    define('_ALREADY_RESERVED', 'Already reserved');

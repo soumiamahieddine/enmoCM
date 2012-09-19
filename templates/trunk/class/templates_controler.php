@@ -711,7 +711,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             } elseif (is_dir($dir . $folder . $filescan)) {
                 $this->getTemplatesStyles($dir . $folder . $filescan . '/', $this->stylesArray);
             } else {
-                $filePath = $dir . $folder . $filescan;
+                $filePath = $dir . $folder . '/' . $filescan;
                 $info = pathinfo($filePath);
                 array_push(
                     $this->stylesArray, 

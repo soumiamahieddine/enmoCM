@@ -247,8 +247,14 @@ function display_up($templateId)
     $state=true;
     $templatesControler = new templates_controler();
     $stylesArray = array();
+    if (is_dir('custom/' . $_SESSION['custom_override_id'] . '/modules/templates/templates/styles')) {
+       $dir = 'custom/' . $_SESSION['custom_override_id'] . '/modules/templates/templates/styles';
+    } else {
+        $dir = 'modules/templates/templates/styles/';
+    }
     $stylesArray = $templatesControler->getTemplatesStyles(
-        'modules/templates/templates/styles/', 
+
+        $dir, 
         $stylesArray
     );
 	$datasourcesArray = array();
@@ -289,11 +295,18 @@ function display_add()
     }
     $templatesControler = new templates_controler();
     $stylesArray = array();
+    //echo 'custom/' . $_SESSION['custom_override_id'] . '/modules/templates/templates/styles';exit;
+    if (is_dir('custom/' . $_SESSION['custom_override_id'] . '/modules/templates/templates/styles')) {
+       $dir = 'custom/' . $_SESSION['custom_override_id'] . '/modules/templates/templates/styles';
+    } else {
+        $dir = 'modules/templates/templates/styles/';
+    }
     $stylesArray = $templatesControler->getTemplatesStyles(
-        'modules/templates/templates/styles/', 
+
+        $dir, 
         $stylesArray
     );
-	$datasourcesArray = array();
+    $datasourcesArray = array();
     $datasourcesArray = $templatesControler->getTemplatesDatasources(
 		'modules/templates/xml/datasources.xml'
 	);
