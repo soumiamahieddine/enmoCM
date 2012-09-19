@@ -96,6 +96,8 @@ class htmlMimeMail
     */
     var $smtp_params;
 
+    var $sendmail_path;
+
     /**
     * Constructor function. Sets the headers
     * if supplied.
@@ -108,6 +110,7 @@ class htmlMimeMail
         $this->html_images = array();
         $this->headers     = array();
         $this->is_built    = false;
+        $this->sendmail_path = '/usr/lib/sendmail -ti';
 
         /**
         * If you want the auto load functionality
@@ -208,6 +211,14 @@ class htmlMimeMail
         if (!is_null($user)) $this->smtp_params['user'] = $user;
         if (!is_null($pass)) $this->smtp_params['pass'] = $pass;
     }
+
+    /**
+    * Sets sendmail path and options (optionally) (when directly piping to sendmail)
+   */
+	    function setSendmailPath($path)
+	    {
+	        $this->sendmail_path = $path;
+	    }
 
     /**
     * Accessor function to set the text encoding
@@ -672,7 +683,7 @@ class htmlMimeMail
     function send($recipients, $type = 'mail')
     {
         if (!defined('CRLF')) {
-            $this->setCrlf($type == 'mail' ? "\n" : "\r\n");
+            $this->setCrlf( ($type == 'mail' OR $type == 'sendmail') ? "\n" : "\r\n");
         }
 
         if (!$this->is_built) {
@@ -708,6 +719,28 @@ class htmlMimeMail
                 // Return
                 return $result;
                 break;
+
+            case 'sendmail':
+	                // Get flat representation of headers
+	                foreach ($this->headers as $name => $value) {
+	                    $headers[] = $name . ': ' . $this->_encodeHeader($value, $this->build_params['head_charset']);
+	                }
+	 
+	                // Encode To:
+	                $headers[] = 'To: ' . $this->_encodeHeader(implode(', ', $recipients), $this->build_params['head_charset']);
+	 
+	                // Get return path arg for sendmail command if necessary
+	                $returnPath = '';
+	                if (!empty($this->return_path)) {
+	                    $returnPath = '-f' . $this->return_path;
+	                }
+	 
+	                $pipe = popen($this->sendmail_path . " " . $returnPath, 'w');
+	                    $bytes = fputs($pipe, implode(CRLF, $headers) . CRLF . CRLF . $this->output);
+	                $r = pclose($pipe);
+	 
+	                return $r;
+	                break;
 
             case 'smtp':
                 require_once(dirname(__FILE__) . '/smtp.php');

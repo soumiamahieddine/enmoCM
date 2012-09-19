@@ -270,7 +270,7 @@ if (file_exists($GLOBALS['errorLckFile'])) {
     exit(13);
 }
 
-if (file_exists($GLOBALS['lckFile'])) {
+/*if (file_exists($GLOBALS['lckFile'])) {
     $logger->write(
         'An instance of the batch is already in progress',
         'ERROR', 109
@@ -279,6 +279,6 @@ if (file_exists($GLOBALS['lckFile'])) {
 }
 $semaphore = fopen($GLOBALS['lckFile'], 'a');
 fwrite($semaphore, '1');
-fclose($semaphore);
+fclose($semaphore);*/
 
 Bt_getWorkBatch();

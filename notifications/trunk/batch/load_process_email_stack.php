@@ -183,6 +183,7 @@ try {
     Bt_myInclude(
         $GLOBALS['maarchDirectory'] . $path_to_mailer
     );  
+
 } catch (IncludeFileError $e) {
     $GLOBALS['logger']->write(
         'Problem with the php include path:' .$e .' '. get_include_path(), 
@@ -213,7 +214,7 @@ if (file_exists($GLOBALS['errorLckFile'])) {
     exit(13);
 }
 
-if (file_exists($GLOBALS['lckFile'])) {
+/*if (file_exists($GLOBALS['lckFile'])) {
     $GLOBALS['logger']->write(
         'An instance of the batch is already in progress',
         'ERROR', 109
@@ -222,6 +223,6 @@ if (file_exists($GLOBALS['lckFile'])) {
 }
 $semaphore = fopen($GLOBALS['lckFile'], 'a');
 fwrite($semaphore, '1');
-fclose($semaphore);
+fclose($semaphore);*/
 
 Bt_getWorkBatch();

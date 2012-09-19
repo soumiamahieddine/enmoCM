@@ -229,6 +229,6 @@ Bt_logInDataBase(
     $totalEventsToProcess, 0, 'process without error'
 );	
 $db->disconnect();
-unlink($GLOBALS['lckFile']);
+//unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);
 ?>

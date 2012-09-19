@@ -76,9 +76,8 @@ while ($state <> 'END') {
 					}
 				}
 			}
-			
-			$return = $GLOBALS['mailer']->send(array($email->recipient), 'smtp');
-			if($return) {
+			$return = $GLOBALS['mailer']->send(array($email->recipient), (string)$mailerParams->type);
+			if($return || $return == 0) {
 				$exec_result = 'SENT';
 			} else {
 				$GLOBALS['logger']->write("Errors when sending message through SMTP :" . implode(', ', $GLOBALS['mailer']->errors), 'ERROR');
@@ -103,6 +102,6 @@ Bt_logInDataBase(
     $totalEmailsToProcess, 0, 'process without error'
 );
 $GLOBALS['db']->disconnect();
-unlink($GLOBALS['lckFile']);
+//unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);
 ?>
