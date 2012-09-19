@@ -9,11 +9,11 @@ $curl = curl_init();
 
 //BASIC AUTHENTICATION
 curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-//curl_setopt($curl, CURLOPT_USERPWD, 'bblier:maarch');
-curl_setopt($curl, CURLOPT_USERPWD, 'pparker:maarch');
+curl_setopt($curl, CURLOPT_USERPWD, 'bblier:maarch');
+//curl_setopt($curl, CURLOPT_USERPWD, 'pparker:maarch');
 
 //WS URL
-$url = 'http://127.0.0.1/maarch_entreprise_trunk/ws_server.php?REST';
+$url = 'http://127.0.0.1/maarch_entreprise/ws_server.php?REST';
 if (isset($_REQUEST['resource']) && !empty($_REQUEST['resource'])) {
     $url .= '/' . $_REQUEST['resource'];
 }
