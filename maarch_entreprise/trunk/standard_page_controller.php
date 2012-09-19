@@ -381,7 +381,7 @@
                 $requestUri = $_SERVER['REQUEST_URI'];
                 
                 if (!empty($params['what']))
-                    $filter = str_replace('|', '%', $params['what']);
+                    $filter = str_replace('.', '%', $params['what']);
                 
                 $dataObjectList = $dataObjectController->enumerate(
                     $params['objectName'],
@@ -412,13 +412,29 @@
                 /* ------
                 - filters
                 ------ */
-                $filters = $view->getElementById('filters');
+                $noWhatUri = getDependantUri('what', getDependantUri('pageNb', $requestUri));
+                $alphabetFilter = $view->getElementById('filter.alphabetique');
+                $alphabetFilter->setDataAttribute('baseurl', $noWhatUri);
+                $alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                $i_max = strlen($alphabet);
+                for ($i=0; $i<$i_max; $i++) {
+                    $letter = substr($alphabet, $i, 1);
+                    $filter = $view->createElement('span');
+                    $filter->setDataAttribute('filter', $letter . '.');
+                    $filter->setAttribute('class', 'action');
+                    $filter->setAttribute('onClick', 'filter(this)');
+                    $filter->nodeValue = ' ' . $letter;
+                    $alphabetFilter->appendChild($filter);
+                }
                 
                 /* ---------
                 - pagination
                 --------- */
+                $noPageNbUri = getDependantUri('pageNb', $requestUri);
+                $noNbLineUrl = getDependantUri('nbLine', getDependantUri('pageNb', $requestUri));
+                
                 $nbLine = $_SESSION['config']['nblinetoshow'];
-                if (!empty($_REQUEST['nbLine']))
+                if (!empty($_REQUEST['nbLine'])) 
                     $nbLine = $_REQUEST['nbLine'];
                 
                 $nbMax = count($objectList);
@@ -432,43 +448,29 @@
                 if ($nbEnd > ($nbMax-1))
                     $nbEnd = $nbMax -1;
                 
-                $noPageNbUri = getDependantUri(
-                    'pageNb',
-                    $requestUri
-                );
                 $previousLink = $noPageNbUri . '&pageNb=' . ($params['pageNb'] - 1);
                 $nextLink = $noPageNbUri . '&pageNb=' . ($params['pageNb'] + 1);
-                $noNbLineUrl = getDependantUri(
-                    'nbLine',
-                    getDependantUri(
-                        'pageNb',
-                        $requestUri
-                    )
-                );
-                $nbLineSelect = array(
-                    10,
-                    25,
-                    50,
-                    100,
-                    250,
-                    500
-                );
-                if (!in_array($_SESSION['config']['nblinetoshow'], $nbLineSelect)) {
+                
+                $nbLineSelect = array(10, 25, 50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000);
+                if (!in_array($_SESSION['config']['nblinetoshow'], $nbLineSelect))
                     $nbLineSelect[] = $_SESSION['config']['nblinetoshow'];
-                }
                 sort($nbLineSelect);
                 
                 $paginationShow = $view->getElementById('pagination.show');
+                $paginationShow->setDataAttribute('baseurl', $noNbLineUrl);
                 $i_max = count($nbLineSelect);
                 for ($i=0; $i<$i_max; $i++) {
                     if ($nbLineSelect[$i]>=count($objectList)) {
-                        $option = $paginationShow->addOption($nbLineSelect[$i], 'tous (' . count($objectList) . ')');
+                        $option = $paginationShow->addOption(count($objectList), 'tous (' . count($objectList) . ')');
+                        if (count($objectList) == $nbLine)
+                            $option->setAttribute('selected', 'selected');
                         break;
                     }
                     $option = $paginationShow->addOption($nbLineSelect[$i], $nbLineSelect[$i]);
                 }
                 
                 $paginationGoToPage = $view->getElementById('pagination.goToPage');
+                $paginationGoToPage->setDataAttribute('baseurl', $noPageNbUri);
                 for ($i=1; $i<=$nbPageMax; $i++) {
                     $option = $paginationGoToPage->addOption($i, $i);
                     if ($i == $params['pageNb'])
@@ -486,6 +488,12 @@
                     $paginationNext->removeAttribute('style');
                     $paginationNext->setAttribute('href', $nextLink);
                 }
+                /* ----
+                - order
+                ---- */
+                $noOrderUri = getDependantUri('orderField', getDependantUri('order', $requestUri));
+                $listHeader = $view->getElementById('listHeader');
+                $listHeader->setDataAttribute('baseurl', $noOrderUri);
                 
                 /* ----
                 - liste
@@ -500,6 +508,10 @@
                         $actionsURL[$actions[$cpt_actions]] .= '&mode=' . $actions[$cpt_actions];
                     }
                 }
+                
+                $whatFilter = false;
+                if (!empty($_REQUEST['what']))
+                    $whatFilter = str_replace('.', '', $_REQUEST['what']);
                 
                 $liste = $view->getElementById('list');
                 $rowTemplate = $view->getElementById('rowTemplate');
@@ -528,7 +540,7 @@
                     - class
                     ---- */
                     $row->setAttribute('id', 'row_' . $i);
-                    if ($i%2==0)
+                    if (($i-$nbStart)%2==0)
                         $row->setAttribute('class', 'rowOdd');
                     else
                         $row->setAttribute('class', 'rowEven');
@@ -544,10 +556,21 @@
                         $name = $td->getAttribute('name');
                         if ($name) {
                             $propertyName = end(explode('.', $name));
-                            if ($object->$propertyName)
-                                $td->nodeValue = $object->$propertyName;
-                            else
+                            if ($object->$propertyName) {
+                                if ($whatFilter && strlen($whatFilter) > 2)
+                                    $td->nodeValue = str_ireplace(
+                                        $whatFilter, 
+                                        '[[TODO[' . strtoupper($whatFilter) . ']TODO]]', 
+                                        $object->$propertyName
+                                    );
+                                else
+                                    $td->nodeValue = $object->$propertyName;
+                            } else {
                                 $td->setDataAttribute('key', $key);
+                            }
+                            
+                            if ($propertyName == $params['orderField'])
+                                $td->setAttribute('style', 'background-image: url(static.php?filename=black_0.1.png);');
                         }
                     }
                     $liste->appendChild($row);
@@ -562,13 +585,20 @@
                     $action = $actions->item($i);
                     $type = $action->getAttribute('data-action');
                     switch($type) {
-                        case 'add' :
+                        case 'create' :
                             $action->setAttribute(
                                 'onclick',
                                 'goTo(\'' . $actionsURL['create'] . '\');'
                             );
                             break;
                         case 'previsualize' :
+                            $action->setAttribute(
+                                'onclick',
+                                'alert(\'en dev\');'
+                            );
+                            break;
+                        case 'delete' :
+                            $key = $action->getAttribute('data-key');
                             $action->setAttribute(
                                 'onclick',
                                 'alert(\'en dev\');'
