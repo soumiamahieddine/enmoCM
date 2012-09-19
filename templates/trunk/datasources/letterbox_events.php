@@ -22,14 +22,40 @@ $datasources['res_letterbox'] = array();
 foreach($events as $event) {
 	$res = array();
 	
+    $select = "SELECT lb.*";
+	$from = " FROM ".$res_view." lb ";
+    $where = " WHERE 1=1 ";
+    
+    switch($event->table_name) {
+    case 'notes':
+        $from .= " JOIN notes ON notes.identifier = lb.res_id";
+		$where .= " AND notes.id = " . $event->record_id;
+        break;
+    
+    case 'listinstance':
+        $from .= " JOIN listinstance li ON lb.res_id = li.res_id";
+        $where .= " li.coll_id = '".$coll_id."' AND li.listinstance_type='DOC' AND listinstance_id = " . $event->record_id;
+    
+    case 'res_letterbox':
+    case 'res_view_letterbox':
+    default:
+        $where .= " AND lb.res_id = " . $event->record_id;
+    }
+
+    $query = $select . $from . $where;
+    
+    if($GLOBALS['logger']) {
+        $GLOBALS['logger']->write($query , 'DEBUG');
+    }
+    
 	// Main document resource from view
-	$dbDatasource->query("SELECT * FROM " . $res_view . " WHERE res_id = " . $event->record_id . "");
+	$dbDatasource->query($query);
 	$res = $dbDatasource->fetch_assoc();
 	
 	// Lien vers la page détail
 	$urlToApp = $maarchUrl . '/apps/' . $maarchApps . '/index.php?';
-	$res['linktodoc'] = $urlToApp . 'display=true&page=view_resource_controler&dir=indexing_searching&id=' . $event->record_id;
-	$res['linktodetail'] = $urlToApp . 'page=details&dir=indexing_searching&id=' . $event->record_id;
+	$res['linktodoc'] = $urlToApp . 'display=true&page=view_resource_controler&dir=indexing_searching&id=' . $res->res_id;
+	$res['linktodetail'] = $urlToApp . 'page=details&dir=indexing_searching&id=' . $res->res_id;
 
 	// Insertion
 	$datasources['res_letterbox'][] = $res;
