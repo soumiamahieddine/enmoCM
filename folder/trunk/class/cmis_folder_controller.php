@@ -380,7 +380,7 @@ class folderCMIS extends objectCMIS
     	$doc->formatOutput = true;
     	
     	/**/
-    	$this->getAtomXmlEntry(&$doc);
+    	$this->getAtomXmlEntry($doc);
     	
     	return $doc;
     }
