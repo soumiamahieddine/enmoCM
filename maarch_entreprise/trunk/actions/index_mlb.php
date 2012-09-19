@@ -705,17 +705,17 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     }
 
 
-	/*** Tags ***/
-	if ($core->is_module_loaded('tags') 
-		&& ($core->test_service('tag_view', 'tags',false) == 1)
-		&& ($core->test_service('add_tag_to_res', 'tags',false) == 1)
-	   ) 
-	{
-		include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR.
-		"templates/index_mlb/index.php");
-	}
-	
-	
+    /*** Tags ***/
+    if ($core->is_module_loaded('tags') 
+        && ($core->test_service('tag_view', 'tags',false) == 1)
+        && ($core->test_service('add_tag_to_res', 'tags',false) == 1)
+       ) 
+    {
+        include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR.
+        "templates/index_mlb/index.php");
+    }
+    
+    
     // Fin
     $frmStr .= '</table>';
 
@@ -746,7 +746,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . 'onclick="valid_action_form(\'index_file\', \''
                 . $pathManageAction . '\', \'' . $actionId . '\', \'' . $resId
                 . '\', \'' . $table . '\', \'' . $module . '\', \'' . $collId
-                . '\', \'' . $mode . '\', false);"/> ';
+                . '\', \'' . $mode . '\', true);"/> ';
     }
     $frmStr .= '<input name="close" id="close" type="button" value="'
             . _CANCEL . '" class="button" '
@@ -1857,9 +1857,9 @@ $collId, $table, $formValues )
             //  echo 'entities '.$resId. " ";
         }
         if ($core->is_module_loaded('tags')) {
-				include_once("modules".DIRECTORY_SEPARATOR."tags"
-				.DIRECTORY_SEPARATOR."tags_update.php");
-		}
+                include_once("modules".DIRECTORY_SEPARATOR."tags"
+                .DIRECTORY_SEPARATOR."tags_update.php");
+        }
     } else {
         $_SESSION['action_error'] = _ERROR_RES_ID;
         return false;
@@ -1894,9 +1894,9 @@ $collId, $table, $formValues )
 
     }
     if ($core->is_module_loaded('tags')) {
-		include_once("modules".DIRECTORY_SEPARATOR."tags"
-		.DIRECTORY_SEPARATOR."tags_update.php");
-	}
+        include_once("modules".DIRECTORY_SEPARATOR."tags"
+        .DIRECTORY_SEPARATOR."tags_update.php");
+    }
 
     //$_SESSION['indexing'] = array();
     unset($_SESSION['upfile']);

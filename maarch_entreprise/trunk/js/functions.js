@@ -852,7 +852,14 @@ function createModal(txt, id_mod,height, width, mode_frm){
 
     if( mode_frm == 'fullscreen')
     {
-        fenetre.style.width = (document.getElementsByTagName('html')[0].offsetWidth - 30)+"px";
+        navName = BrowserDetect.browser;
+        if (navName == 'Explorer') {
+            if (width == '1080px') {
+                fenetre.style.width = (document.getElementsByTagName('html')[0].offsetWidth - 55)+"px";
+            }
+        } else {
+            fenetre.style.width = (document.getElementsByTagName('html')[0].offsetWidth - 30)+"px";
+        }
         fenetre.style.height = (document.getElementsByTagName('body')[0].offsetHeight - 20)+"px";
     }
 
