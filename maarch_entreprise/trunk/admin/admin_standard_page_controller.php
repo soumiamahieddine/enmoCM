@@ -1112,7 +1112,7 @@ if (isset($_REQUEST['submit'])) {
                                   $str_htmlList .= '$(\'return_previsualise\').style.display=\'none\';';
                                  $str_htmlList .= '" ';
                                  $str_htmlList .= 'onClick=" ';
-                                  $str_htmlList .= 'if (confirm(\'Supprimer ?\')) goTo(\'' . $actionsURL['delete'] . '&objectId=' . $key . '&display=true\');';
+                                  $str_htmlList .= 'if (confirm(\'Voulez vous supprimer ?\')) goTo(\'' . $actionsURL['delete'] . '&objectId=' . $key . '&display=true\');';
                                  $str_htmlList .= '" ';
                                 $str_htmlList .= '>';
                                     $str_htmlList .= '<img ';
