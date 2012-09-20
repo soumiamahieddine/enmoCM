@@ -49,6 +49,17 @@ $viewController = new ViewController();
  */
 function locationBarManagement($pageName, $mode, $objectName, $isApps)
 {
+    /*
+    $test = array();
+    $test['pageName'] = $pageName;
+    $test['mode'] = $mode;
+    $test['objectName'] = $objectName;
+    $test['isApps'] = $isApps;
+    
+    echo '<pre>' . print_r($test, true) . '</pre>';
+    echo '<pre>' . var_dump($test) . '</pre>';
+    */
+    
     $pageLabels = array(
         'add'   => _ADDITION,
         'up'    => _MODIFICATION,
@@ -65,12 +76,7 @@ function locationBarManagement($pageName, $mode, $objectName, $isApps)
         $init = true;
     
     $level = '';
-    $allowedLevels = array(
-        1, 
-        2, 
-        3, 
-        4
-    );
+    $allowedLevels = array(1, 2, 3, 4);
     if (isset($_REQUEST['level']) && in_array($_REQUEST['level'], $allowedLevels))
         $level = $_REQUEST['level'];
     
@@ -91,6 +97,18 @@ function locationBarManagement($pageName, $mode, $objectName, $isApps)
     $pageLabel = $pageLabels[$mode];
     
     $pageId = $pageIds[$mode];
+    
+    /*
+    $test = array();
+    $test['$pagePath'] = $pagePath;
+    $test['$pageLabel'] = $pageLabel;
+    $test['$pageId'] = $pageId;
+    $test['$init'] = $init;
+    $test['$level'] = $level;
+    
+    echo '<pre>' . print_r($test, true) . '</pre>';
+    echo '<pre>' . var_dump($test) . '</pre>';
+    */
     
     $coreTools = new core_tools();
     $coreTools->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
@@ -125,6 +143,11 @@ function testParams()
         $params['objectName'] = $_REQUEST['objectName'];
     else
         $error .= _OBJECT_NAME_MANDATORY . '<br />';
+        
+    if (isset($_REQUEST['page']) && !empty($_REQUEST['page']))
+        $params['pageName'] = $_REQUEST['page'];
+    else
+        $error .= _PAGE_NAME_MANDATORY . '<br />';
     
     if (isset($_REQUEST['objectId']) && !empty($_REQUEST['objectId']))
         $params['objectId'] = $_REQUEST['objectId'];
