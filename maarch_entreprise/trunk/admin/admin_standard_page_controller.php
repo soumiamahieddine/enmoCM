@@ -512,8 +512,14 @@ if (isset($_REQUEST['submit'])) {
             /* --------------
             - load dataObject
             -------------- */
+            
+            if ($enumerateInView === true)
+                $toEnumerate = $params['objectName'] . '_view';
+            else
+                $toEnumerate = $params['objectName'];
+            
             $dataObjectList = $dataObjectController->enumerate(
-                $params['objectName'],
+                $toEnumerate,
                 $filter,
                 $sortFields = $params['orderField'],
                 $order = $params['order']
@@ -523,13 +529,13 @@ if (isset($_REQUEST['submit'])) {
             - get key
             ------ */
             $keyProperties = $dataObjectController->getKeyProperties(
-                $params['objectName']
+                $toEnumerate
             );
             
             /* ---------
             - objectList
             --------- */
-            $objectList = $dataObjectList->$params['objectName'];
+            $objectList = $dataObjectList->$toEnumerate;
             
             /* -----------------
             - prevent PHP NOTICE
