@@ -5,6 +5,10 @@ case 'form_content':
 	break;
 
 case 'recipients':
+    $recipients = array();
+    $dbRecipients = new dbquery();
+    $dbRecipients->connect();
+    
     $select = "SELECT distinct us.*";
 	$from = " FROM listinstance li JOIN users us ON li.item_id = us.user_id";
     $where = " WHERE li.coll_id = 'letterbox_coll' AND li.listinstance_type='DOC' AND li.item_mode = 'dest'";
@@ -25,18 +29,15 @@ case 'recipients':
     default:
         $where .= " AND listinstance_id = " . $event->record_id;
     }
-        
+
     $query = $select . $from . $where;
     
     if($GLOBALS['logger']) {
         $GLOBALS['logger']->write($query , 'DEBUG');
     }
     
-	$dbRecipients = new dbquery();
-    $dbRecipients->connect();
 	$dbRecipients->query($query);
 	
-	$recipients = array();
 	while($recipient = $dbRecipients->fetch_object()) {
 		$recipients[] = $recipient;
 	}
