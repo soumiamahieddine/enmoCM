@@ -369,7 +369,21 @@ class DataObjectElement
         }
         
         // Storage is a property element -> return value
-        return (string)$nodes->item(0)->nodeValue;  
+        if($nodes->length === 1 
+            && $nodes->item(0)->getElementsByTagName('*')->length === 0
+        ) {
+            return (string)$nodes->item(0)->nodeValue;
+        }
+        
+        if($nodes->length > 0 
+            && $nodes->item(0)->getElementsByTagName('*')->length > 0
+        ) {
+            $nodesArray = array();
+            for($i=0; $i<$nodes->length; $i++) {
+                $nodesArray[] = $nodes->item($i);
+            }
+            return $nodesArray;
+        }
     }
     
     public function __isset($name)

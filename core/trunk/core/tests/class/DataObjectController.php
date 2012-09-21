@@ -253,11 +253,20 @@ class DataObjectController
         return $dataObject;
     }
     
-    public function load($xml)
+    public function loadXML($xml)
     {
         $dataObjectDocument = new DataObjectDocument();
         $this->dataObjectDocuments[] = $dataObjectDocument;
         $dataObjectDocument->loadXML($xml);
+        $dataObject = $dataObjectDocument->documentElement;
+        return $dataObject;
+    }
+    
+    public function load($XmlFile) 
+    {
+        $dataObjectDocument = new DataObjectDocument();
+        $this->dataObjectDocuments[] = $dataObjectDocument;
+        $dataObjectDocument->load($XmlFile);
         $dataObject = $dataObjectDocument->documentElement;
         return $dataObject;
     }
@@ -345,7 +354,7 @@ class DataObjectController
             
             switch($refNode->tagName) {
             case 'xsd:attribute':
-                if($required) {
+                if($contentValue != '') {
                     $dataObject->setAttribute(
                         $contentName, 
                         $contentValue
