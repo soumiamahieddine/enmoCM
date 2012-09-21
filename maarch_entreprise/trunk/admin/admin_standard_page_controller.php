@@ -387,7 +387,7 @@ $dataObjectController->loadXSD(
 );
 
 if (isset($_REQUEST['submit'])) {
-    $dataObject = $dataObjectController->load(
+    $dataObject = $dataObjectController->loadXML(
         $_SESSION['m_admin'][$params['objectName']]
     );
     
@@ -473,7 +473,7 @@ if (isset($_REQUEST['submit'])) {
                 );
                 $_SESSION['m_admin'][$params['objectName']] = $dataObject->asXml();
             } else {
-                $dataObject = $dataObjectController->load(
+                $dataObject = $dataObjectController->loadXML(
                     $_SESSION['m_admin'][$params['objectName']]
                 );
             }
