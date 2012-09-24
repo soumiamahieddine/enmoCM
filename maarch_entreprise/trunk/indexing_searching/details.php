@@ -267,7 +267,7 @@ if (empty($_SESSION['error']) || $_SESSION['indexation']) {
         "select status, format, typist, creation_date, fingerprint, filesize, "
         . "res_id, work_batch, page_count, is_paper, scan_date, scan_user, "
         . "scan_location, scan_wkstation, scan_batch, source, doc_language, "
-        . "description, closing_date, alt_identifier " . $comp_fields
+        . "description, closing_date, alt_identifier, entity_label " . $comp_fields
         . $case_sql_complementary . " from " . $table . " where res_id = "
         . $s_id
     );
@@ -349,7 +349,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             $doc_language = $res->doc_language;
             $closing_date = $db->format_date_db($res->closing_date, false);
             $indexes = $type->get_indexes($type_id, $coll_id);
-
+            $entityLabel = $res->entity_label;
+            
             if ($core->is_module_loaded('cases') == true) {
                 require_once('modules/cases/class/class_modules_tools.php');
                 $case = new cases();
