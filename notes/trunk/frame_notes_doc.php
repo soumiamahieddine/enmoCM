@@ -116,7 +116,7 @@ for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
                 $tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
                 $tabNotes[$indNotes1][$indNotes2]["align"] = "left";
                 $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-                $tabNotes[$indNotes1][$indNotes2]["show"] = true;
+                $tabNotes[$indNotes1][$indNotes2]["show"] = false;
                 $indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
             }
             if ($tabNotes[$indNotes1][$indNotes2][$value] == "user_id") {
