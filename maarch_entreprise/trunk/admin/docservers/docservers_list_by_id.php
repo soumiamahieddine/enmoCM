@@ -3,7 +3,7 @@
 /*
 *   Copyright 2010 Maarch
 *
-*  	This file is part of Maarch Framework.
+*      This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -30,30 +30,47 @@
 * @ingroup admin
 */
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("core".DIRECTORY_SEPARATOR."core_tables.php");
+require_once(
+    'core/class/class_request.php'
+);
+require_once(
+    'core/core_tables.php'
+);
+
+$query = 'SELECT ';
+    $query .= 'docserver_id as tag ';
+$query .= 'FROM ';
+    $query .= _DOCSERVERS_TABLE_NAME . ' ';
+$query .= 'WHERE ';
+        $query .= "lower(docserver_id) ";
+    $query .= "like ";
+        $query .= "lower('" . $_REQUEST['what'] . "%') ";
+$query .= 'ORDER BY ';
+    $query .= 'docserver_id';
+
 $db = new dbquery();
 $db->connect();
-$db->query("select docserver_id as tag from "._DOCSERVERS_TABLE_NAME." where lower(docserver_id) like lower('".$_REQUEST['what']."%') order by docserver_id");
+$db->query($query);
 
 $listArray = array();
 while($line = $db->fetch_object()) {
-	array_push($listArray, $line->tag);
+    array_push($listArray, $line->tag);
 }
-echo "<ul>\n";
+
+echo '<ul style="z-index: 9998;">';
 $authViewList = 0;
 $flagAuthView = false;
 foreach($listArray as $what) {
-	if($authViewList >= 10) {
-		$flagAuthView = true;
-	}
+    if($authViewList >= 10)
+        $flagAuthView = true;
+    
     if(stripos($what, $_REQUEST['what']) === 0) {
-        echo "<li>".$what."</li>\n";
-		if($flagAuthView) {
-			echo "<li>...</li>\n";
-			break;
-		}
-		$authViewList++;
+        echo '<li style="z-index: 9999;">' . $what . '</li>';
+        if($flagAuthView) {
+            echo '<li style="z-index: 9999;">...</li>';
+            break;
+        }
+        $authViewList++;
     }
 }
-echo "</ul>";
+echo '</ul>';

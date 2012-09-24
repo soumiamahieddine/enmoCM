@@ -157,19 +157,23 @@ function testParams()
     
     if (isset($_REQUEST['admin']) && !empty($_REQUEST['admin'])) {
         $params['isApps'] = true;
-        $params['viewLocation'] = 'apps' . DIRECTORY_SEPARATOR
-            . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
-            . 'admin' . DIRECTORY_SEPARATOR
+        $params['viewLocation'] = 'apps/maarch_entreprise/admin/' 
             . $_REQUEST['admin'];
-		$params['schemaPath'] = $params['viewLocation'] . DIRECTORY_SEPARATOR
-			. 'xml' . DIRECTORY_SEPARATOR
-			. $_REQUEST['admin'] . '.xsd';
+        $params['schemaPath'] = $params['viewLocation'] . DIRECTORY_SEPARATOR
+            . 'xml' . DIRECTORY_SEPARATOR
+            . $_REQUEST['admin'] . '.xsd';
+        $params['autocompletePath'] = $_SESSION['config']['businessappurl'] 
+            . 'index.php?display=true&admin=' . $_REQUEST['admin'] 
+            . '&page=' . $params['objectName'] . '_list_autocomplete';
     } elseif (isset($_REQUEST['module']) && !empty($_REQUEST['module'])) {
         $params['viewLocation'] = 'modules' . DIRECTORY_SEPARATOR
             . $_REQUEST['module'];
-		$params['schemaPath'] = $params['viewLocation'] . DIRECTORY_SEPARATOR
-			. 'xml' . DIRECTORY_SEPARATOR
-			. $_REQUEST['module'] . '.xsd';
+        $params['schemaPath'] = $params['viewLocation'] . DIRECTORY_SEPARATOR
+            . 'xml' . DIRECTORY_SEPARATOR
+            . $_REQUEST['module'] . '.xsd';
+        $params['autocompletePath'] = $_SESSION['config']['businessappurl'] 
+            . 'index.php?display=true&module=' . $_REQUEST['module'] 
+            . '&page=' . $params['objectName'] . '_list_autocomplete';
     }
     
     if (isset($_REQUEST['order']) && !empty($_REQUEST['order']))
@@ -437,7 +441,7 @@ if (isset($_REQUEST['submit'])) {
             /* -----
             - CREATE
             ----- */
-        	$dataObject = $dataObjectController->create($params['objectName']);
+            $dataObject = $dataObjectController->create($params['objectName']);
             displayCreate($params['objectName']);
             
             break;
@@ -626,8 +630,7 @@ if (isset($_REQUEST['submit'])) {
                             $str_filter .= 'initList(';
                                 $str_filter .= '\'what\', ';
                                 $str_filter .= '\'whatList\', ';
-                                $str_filter .= '\''.$_SESSION['config']['businessappurl']
-                                    .'index.php?display=true&admin=docservers&page=docservers_list_by_id\', ';
+                                $str_filter .= '\'' . $params['autocompletePath'] . '\', ';
                                 $str_filter .= '\'what\', ';
                                 $str_filter .= '\'1\'';
                             $str_filter .= '); ';
@@ -992,14 +995,14 @@ if (isset($_REQUEST['submit'])) {
                         $str_htmlList .= '<tr ';
                          $str_htmlList .= $cssClass_tr;
                         $str_htmlList .= '>';
-                        	foreach($object->getProperties() as $propertyName => $propertyValue) {
-	                        	$json[$propertyName] = $propertyValue;
-                        	}
+                            foreach($object->getProperties() as $propertyName => $propertyValue) {
+                                $json[$propertyName] = $propertyValue;
+                            }
                             
                             foreach ($showCols as $propertyName => $colParams) {
-	                            $propertyValue = (string)$object->$propertyName;
-	                            
-	                            $cssColumn = '';
+                                $propertyValue = (string)$object->$propertyName;
+                                
+                                $cssColumn = '';
                                 if (isset($colParams['cssStyle'])) {
                                     $cssColumn = $colParams['cssStyle'];
                                 }
