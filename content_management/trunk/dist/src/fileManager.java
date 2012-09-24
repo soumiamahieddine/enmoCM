@@ -100,8 +100,9 @@ public class fileManager {
                             myFileJs.setExecutable(true, false);
                         } else {
                             if (fileToLaunch.contains(".odt") || fileToLaunch.contains(".ods")) {
-                                out.write("start /WAIT SOFFICE.exe -env:UserInstallation=file:///" 
-                                    + pathToFileToLaunch.replace("\\", "/")  + " \"" + pathToFileToLaunch + fileToLaunch + "\"");
+                                //out.write("start /WAIT SOFFICE.exe -env:UserInstallation=file:///" 
+                                //    + pathToFileToLaunch.replace("\\", "/")  + " \"" + pathToFileToLaunch + fileToLaunch + "\"");
+                                out.write("start /WAIT SOFFICE.exe -env:UserInstallation=$SYSUSERCONFIG \"" + pathToFileToLaunch + fileToLaunch + "\"");
                             } else {
                                 out.write("start /WAIT \"\" \"" + pathToFileToLaunch + fileToLaunch + "\"");
                             }

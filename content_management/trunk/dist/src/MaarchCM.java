@@ -13,6 +13,7 @@ import javax.swing.JApplet;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import netscape.javascript.JSException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -51,7 +52,7 @@ public class MaarchCM extends JApplet {
     
     public myLogger logger;
     
-    public void init()
+    public void init() throws JSException
     {
         System.out.println("----------BEGIN PARAMETERS----------");
         this.url = this.getParameter("url");
@@ -192,7 +193,7 @@ public class MaarchCM extends JApplet {
        }
     }
     
-    public String editObject() throws Exception {
+    public String editObject() throws Exception, InterruptedException, JSException {
         System.out.println("----------BEGIN EDIT OBJECT----------");
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
         String os = System.getProperty("os.name").toLowerCase();
@@ -308,7 +309,14 @@ public class MaarchCM extends JApplet {
             this.logger.log("MESSAGE STATUS : " + this.messageStatus.toString(), Level.INFO);
             this.logger.log("MESSAGE RESULT : ", Level.INFO);
             this.processReturn(this.messageResult);
-            this.sendJsEnd();
+            //try {
+                this.sendJsEnd();
+            /*} catch (InterruptedException e) {
+                this.logger.log("CATCH INTERRUPTED ERROR" + e.getMessage(), Level.INFO);
+                this.destroy();
+                this.stop();
+                System.exit(0);
+            }*/
             this.logger.log("----------END SEND OF THE OBJECT----------", Level.INFO);
         } else {
             this.logger.log("RESPONSE KO", Level.WARNING);
@@ -317,18 +325,27 @@ public class MaarchCM extends JApplet {
         return "ok";
     }
     
-    public void sendJsMessage(String message)
+    public void sendJsMessage(String message) throws JSException
     {
         JSObject jso;
         jso = JSObject.getWindow(this);
+        this.logger.log("----------JS CALL sendAppletMsg TO MAARCH----------", Level.INFO);
         jso.call("sendAppletMsg", new String[] {String.valueOf(message)});
     }
     
-    public void sendJsEnd()
+    public void sendJsEnd() throws InterruptedException, JSException
     {
         JSObject jso;
         jso = JSObject.getWindow(this);
-        jso.call("endOfApplet", new String[] {String.valueOf(this.objectType), this.endMessage});
+        this.logger.log("----------JS CALL endOfApplet TO MAARCH----------", Level.INFO);
+        //try{
+            jso.call("endOfApplet", new String[] {String.valueOf(this.objectType), this.endMessage});
+            /*this.destroy();
+            this.stop();
+            System.exit(0);*/
+        //}catch (JSException e) {
+        //    this.logger.log("CATCH JS ERROR" + e.getMessage(), Level.INFO);
+        //}
     }
     
     public void sendHttpRequest(String theUrl, String postRequest) throws Exception {
