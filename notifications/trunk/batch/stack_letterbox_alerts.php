@@ -56,7 +56,7 @@ while ($state <> 'END') {
 		$query = "SELECT res_id, type_id, process_limit_date, flag_alarm1, flag_alarm2" 
 			. " FROM " . $collView
 			. " WHERE closing_date IS null"
-			. " AND status NOT IN ('CLO', 'DEL')"
+			. " AND status NOT IN ('CLO', 'DEL', 'END')"
 			. " AND (flag_alarm1 = 'N' OR flag_alarm2 = 'N')"
             . " AND process_limit_date IS NOT NULL";
 		Bt_doQuery($GLOBALS['db'], $query);
@@ -158,7 +158,7 @@ $GLOBALS['logger']->write('End of process', 'INFO');
 Bt_logInDataBase(
     $totalDocsToProcess, 0, 'process without error'
 );
-$GLOBALS['db']->disconnect();
+//$GLOBALS['db']->disconnect();
 unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);
 ?>
