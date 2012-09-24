@@ -79,6 +79,8 @@ if (isset($_GET['size']) && $_GET['size'] == "full") {
     $extendUrl = "";
 }
 
+$arrayToUnset = array();
+
 for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
     for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
         foreach (array_keys($tabNotes[$indNotes1][$indNotes2]) as $value) {
@@ -91,21 +93,29 @@ for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
                 $tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
                 $tabNotes[$indNotes1][$indNotes2]["show"] = true;
                 $indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
+                //echo $tabNotes[$indNotes1][$indNotes2]['value'] . '<br>';
                 if (!$notes_tools->getUserNotes(
                     $tabNotes[$indNotes1][$indNotes2]['value'], 
                     $_SESSION['user']['UserId'], 
                     $_SESSION['user']['primaryentity']['id']
                     )
                 ) {
-                    unset($tabNotes[$indNotes1]);
+                    //unset($tabNotes[$indNotes1]);
+                    //echo 'sort ' . $indNotes1 . '<br>';
+                    array_push($arrayToUnset, $indNotes1);
+                } else {
+                    //echo 'garde ' . $indNotes1 . '<br>';
                 }
             }
         }
     }
 }
 
+for ($cptUnset=0;$cptUnset<count($arrayToUnset);$cptUnset++ ) {
+    unset($tabNotes[$arrayToUnset[$cptUnset]]);
+}
 array_multisort($tabNotes);
-
+//$request->show_array($tabNotes);
 for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
     for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
         foreach (array_keys($tabNotes[$indNotes1][$indNotes2]) as $value) {

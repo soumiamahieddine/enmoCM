@@ -40,5 +40,4 @@ if (!defined('_NOTES_COMMENT'))
 if (!defined('_OF'))
     define('_OF', 'de');
 if (!defined('_THIS_NOTE_IS_VISIBLE_BY'))
-    define('_THIS_NOTE_IS_VISIBLE_BY', 'Restreindre cette note aux entit&eacute;s suivantes');
-?>
+    define('_THIS_NOTE_IS_VISIBLE_BY', 'Restreindre cette note aux entit&eacute;s suivantes (si vide alors la note est publique)');
