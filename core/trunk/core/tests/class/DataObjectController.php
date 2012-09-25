@@ -23,8 +23,7 @@ class DataObjectController
     public $dataAccessServices = array();
     protected $XRefs = array();
     protected $messageController;
-    protected $messages = array();
-    
+   
      
     //*************************************************************************
     // CONSTRUCTOR
@@ -32,13 +31,10 @@ class DataObjectController
     public function DataObjectController() 
     {
         //$this->XRefs = new SchemaXRefs();
-        
         $this->messageController = new MessageController();
-        $this->messageController->logLevel = Message::INFO;
-        $this->messageController->debug = true;
         $this->messageController->loadMessageFile(
             $_SESSION['config']['corepath'] 
-                . '/core/xml/DataObjectController_Messages.xml'
+                . 'core/xml/DataObjectController_Messages.xml'
         );
     }
     
@@ -154,7 +150,7 @@ class DataObjectController
         }
         $objectElement = $this->getElementByName($objectName);
         
-        if(!$objectElement->isCreatable()) Die("Object $objectName can not be created");
+        if(!$objectElement->isCreatable()) throw new maarch\Exception("Object $objectName can not be created");
 
         $dataObject = 
             $this->createDataObject(
@@ -191,7 +187,7 @@ class DataObjectController
         $dataObjectDocument->appendChild($rootDataObject);
 
         $objectElement = $this->getElementByName($objectName);
-        if(!$objectElement->isListable()) Die("Object $objectName can not be listed");
+        if(!$objectElement->isListable()) throw new maarch\Exception("Object $objectName can not be listed");
         $refElement = $this->getRefNode($objectElement);
         
         $this->listDataObject(
@@ -217,7 +213,7 @@ class DataObjectController
         
         $objectElement = $this->getElementByName($objectName);
         
-        if(!$objectElement->isReadable()) Die("Object $objectName can not be read");
+        if(!$objectElement->isReadable()) throw new maarch\Exception("Object $objectName can not be read");
         
         $dataObject = $dataObjectDocument;
         $this->readDataObject(
@@ -274,7 +270,7 @@ class DataObjectController
     public function delete($dataObject)
     {
         $objectElement = $this->getElementByName($dataObject->tagName);
-        if(!$objectElement->isDeletable()) Die("Object $objectName can not be deleted");
+        if(!$objectElement->isDeletable()) throw new maarch\Exception("Object $objectName can not be deleted");
         $this->deleteDataObject($objectElement, $dataObject);
     }
     
@@ -519,66 +515,72 @@ class DataObjectController
         $dataObject,
         $saveChildren=true
     ) {
-        
-        $refElement = $this->getRefNode($objectElement);
-        
-        if($dataAccessService = 
-            $this->getDataAccessService($refElement)
-        ) {
-            if($dataObject->isCreated() 
-                && !$dataObject->isDeleted()
+        try { 
+            $refElement = $this->getRefNode($objectElement);
+            
+            if($dataAccessService = 
+                $this->getDataAccessService($refElement)
             ) {
-                $key = $dataAccessService->insertData(
-                        $refElement, 
-                        $dataObject
-                    );
-                $this->setDataObjectKey(
-                    $refElement, 
-                    $dataObject,
-                    $key
-                );
-                if($saveChildren) {
-                    $this->saveChildDataObjects(
-                        $objectElement,
-                        $dataObject,
-                        $key
-                    );
-                }
-            } elseif ($dataObject->isRead()
-                && !$dataObject->isDeleted()
-            ) {
-                if($objectElement->isUpdatable()) {
-                    if(count($dataObject->getUpdatedProperties()) > 0) {
-                        $key = $dataAccessService->updateData(
+                $dataAccessService->startTransaction();
+                
+                if($dataObject->isCreated() 
+                    && !$dataObject->isDeleted()
+                ) {
+                    $key = $dataAccessService->insertData(
                             $refElement, 
                             $dataObject
                         );
-                    } else {
-                        $key = $dataObject;
-                    }
-                }
-                if($saveChildren) {
-                    $this->saveChildDataObjects(
-                        $objectElement,
+                    $this->setDataObjectKey(
+                        $refElement, 
                         $dataObject,
                         $key
                     );
-                }
-            } elseif ($dataObject->isDeleted()) {
-                if($objectElement->isDeletable()) {
-                    $this->saveChildDataObjects(
-                        $objectElement,
-                        $dataObject
-                    );
-                }
-                $key = $dataAccessService->deleteData(
-                        $refElement, 
-                        $dataObject
-                    );
+                    if($saveChildren) {
+                        $this->saveChildDataObjects(
+                            $objectElement,
+                            $dataObject,
+                            $key
+                        );
+                    }
+                } elseif ($dataObject->isRead()
+                    && !$dataObject->isDeleted()
+                ) {
+                    if($objectElement->isUpdatable()) {
+                        if(count($dataObject->getUpdatedProperties()) > 0) {
+                            $key = $dataAccessService->updateData(
+                                $refElement, 
+                                $dataObject
+                            );
+                        } else {
+                            $key = $dataObject;
+                        }
+                    }
+                    if($saveChildren) {
+                        $this->saveChildDataObjects(
+                            $objectElement,
+                            $dataObject,
+                            $key
+                        );
+                    }
+                } elseif ($dataObject->isDeleted()) {
+                    if($objectElement->isDeletable()) {
+                        $this->saveChildDataObjects(
+                            $objectElement,
+                            $dataObject
+                        );
+                    }
+                    $key = $dataAccessService->deleteData(
+                            $refElement, 
+                            $dataObject
+                        );
+                } 
             } 
-        } 
-        
-        return $key;
+            $dataAccessService->commit();
+            return $key;
+        } catch (maarch\Exception $e) {   
+            $dataAccessService->rollback();
+            throw $e;
+        }
     }
     
     protected function setDataObjectKey(
@@ -741,7 +743,37 @@ class DataObjectController
             break;
         } 
     }
-   
+    
+    public function startTransaction()
+    {
+        for($i=0; $i<count($this->dataAccessServices); $i++) {
+            $dataAccessService = $dataAccessServices[$i];
+            if(method_exists($dataAccessService, 'startTransaction')) {
+                $dataAccessService->startTransaction();
+            }
+        }
+    }
+    
+    public function commit()
+    {
+        for($i=0; $i<count($this->dataAccessServices); $i++) {
+            $dataAccessService = $dataAccessServices[$i];
+            if(method_exists($dataAccessService, 'commit')) {
+                $dataAccessService->commit();
+            }
+        }
+    }
+    
+    public function rollback()
+    {
+        for($i=0; $i<count($this->dataAccessServices); $i++) {
+            $dataAccessService = $dataAccessServices[$i];
+            if(method_exists($dataAccessService, 'rollback')) {
+                $dataAccessService->rollback();
+            }
+        }
+    }
+    
     //*************************************************************************
     // SCHEMA QUERY FUNCTIONS
     //*************************************************************************
@@ -753,7 +785,7 @@ class DataObjectController
             . '"]'
         )->item(0);
         if(!$element) {
-            Die("Element $name is not defined");
+            throw new maarch\Exception("Element $name is not defined");
         }
         return $element;
     }
@@ -765,7 +797,7 @@ class DataObjectController
             . $name
             . '"]'
         )->item(0);
-        if(!$attribute) Die("Attribute $name is not defined");
+        if(!$attribute) throw new maarch\Exception("Attribute $name is not defined");
         return $attribute;
     }
     
@@ -781,7 +813,7 @@ class DataObjectController
             . $typeName
             . '"]'
         )->item(0);
-        if(!$type) Die("Type $typeName is not defined");
+        if(!$type) throw new maarch\Exception("Type $typeName is not defined");
         return $type;
     }
        
@@ -809,7 +841,7 @@ class DataObjectController
             }
         }
         
-        Die("Content $name of object name " . $objectElement->getName() . " is not defined");
+        throw new maarch\Exception("Content $name of object name " . $objectElement->getName() . " is not defined");
     }
     
     protected function getRefNode($node)
@@ -821,7 +853,7 @@ class DataObjectController
                 . '"]'
             )->item(0);
             if(!$refNode) 
-                Die("Referenced node " 
+                throw new maarch\Exception("Referenced node " 
                     . $node->getAttribute('ref') 
                     . " is not defined"
                 );
@@ -864,7 +896,7 @@ class DataObjectController
                     $node
                 );
             }
-            if($types->length == 0) die("Type $typeName not found for " . $node->tagName . " " . $node->getAttribute('name'));
+            if($types->length == 0) throw new maarch\Exception("Type $typeName not found for " . $node->tagName . " " . $node->getAttribute('name'));
             $type = $types->item(0);
             $this->addXRefs($node, 'type', $type);
         } 
@@ -938,7 +970,7 @@ class DataObjectController
                 $this->query('//xsd:annotation/xsd:appinfo/das:view[@name="'
                     . $viewName
                     . '"]');
-            if($views->length == 0) die("Referenced view $viewName not found");
+            if($views->length == 0) throw new maarch\Exception("Referenced view $viewName not found");
             return $views->item(0);
         } elseif($views = $this->query('./xsd:annotation/xsd:appinfo/das:view', $element)) {
             return $views->item(0);

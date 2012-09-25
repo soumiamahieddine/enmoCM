@@ -17,7 +17,7 @@ class Schema
     public function loadXSD($schemaLocation, $rootSchema=false)
     {
         if(!is_file($schemaLocation)) {
-            die("Failed to load schema definition file $schemaLocation");
+            throw new maarch\Exception("Failed to load schema definition file $schemaLocation");
         }
         $this->load($schemaLocation);
         if(!$rootSchema) $rootSchema = $this;
@@ -35,15 +35,6 @@ class Schema
                 $rootSchema->includedSchemaLocations)
             ) {
                 $this->includeXSD($schema, $includeSchemaLocation, $rootSchema);
-                /*$includeSchema = new Schema();
-                $includeSchema->loadXSD($schemaLocation, $rootSchema);
-                $schemaContents = $includeSchema->documentElement->childNodes;
-                for($j=0; $j<$schemaContents->length; $j++) {
-                    $importNode = $schemaContents->item($j);
-                    $importedNode = $schema->importNode($importNode, true);
-                    $schema->documentElement->appendChild($importedNode);
-                }
-                $rootSchema->includedSchemaLocations[] = $schemaLocation;*/
             }
             $include->parentNode->removeChild($include);
         }

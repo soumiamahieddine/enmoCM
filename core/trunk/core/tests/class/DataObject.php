@@ -317,7 +317,7 @@ class DataObjectElement
         }
         
         // Property storage is a commented element
-        if($commentedProperty= $this->getCommentProperty($name)) { 
+        if($commentedProperty = $this->getCommentProperty($name)) { 
             if(is_null($value)) {
                 //echo "<br/>5 - Property $name is a commented element, new value is null => no action";
             } elseif(is_scalar($value) || !$value) {

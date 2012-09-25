@@ -4,6 +4,7 @@ class DataAccessService_Database
 {
 
     private $databaseObject;
+    public $inTransaction;
     
     public function connect($sourceNode) 
     {
@@ -19,6 +20,31 @@ class DataAccessService_Database
         
         $this->databaseObject = new dbquery($params);
         $this->databaseObject->connect();
+    }
+    
+    public function startTransaction()
+    {
+        $this->databaseObject->connect();
+        if(!$this->inTransaction) {
+            $this->databaseObject->query('START TRANSACTION');
+            $this->inTransaction = true;
+        }
+    }
+    
+    public function commit()
+    {
+        if($this->inTransaction) {
+            $this->databaseObject->query('COMMIT');
+            $this->inTransaction = false;
+        }
+    }
+    
+    public function rollback()
+    {
+        if($this->inTransaction) {
+            $this->databaseObject->query('ROLLBACK');
+            $this->inTransaction = false;
+        }
     }
     
     public function loadData(
