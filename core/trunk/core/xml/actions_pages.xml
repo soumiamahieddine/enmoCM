@@ -143,4 +143,12 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE>records_management</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>prepare_transfer_rm</ID>
+        <LABEL>_PREPARE_TRANSFER_ARCHIVE</LABEL>
+        <NAME>prepare_transfer_rm</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>records_management</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
 </ROOT>
