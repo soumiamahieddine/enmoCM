@@ -63,4 +63,11 @@
         <ORIGIN>module</ORIGIN>
         <MODULE>records_management</MODULE>
     </BASKETPAGE>
+    <BASKETPAGE>
+        <ID>item_basket_list</ID>
+        <LABEL>_ITEM_BASKET_LIST</LABEL>
+        <NAME>item_basket_list</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>records_management</MODULE>
+    </BASKETPAGE>
 </ROOT>
