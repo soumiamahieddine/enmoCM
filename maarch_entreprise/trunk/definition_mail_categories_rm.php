@@ -171,6 +171,16 @@ $_ENV['categories']['rm_archive']['item_name'] = array (
     'modify' => true,
     'form_show' => 'textarea'
 );
+$_ENV['categories']['rm_archive']['item_type'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _ITEM_TYPE,
+    'table' => 'coll_ext',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'modify' => false,
+    'form_show' => 'textfield'
+);
 /************************* END *************************************************************/
 
 /**
