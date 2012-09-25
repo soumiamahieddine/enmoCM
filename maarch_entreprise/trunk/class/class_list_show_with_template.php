@@ -222,6 +222,20 @@ class list_show_with_template extends list_show
         }
 
     }
+    
+    //Load view_doc if this parameters is loaded in list_show and list_show_with_template
+    public function tmplt_func_bool_detail_rm($actual_string, $theline, $result, $key)
+    {
+
+        if ($this->bool_detail == true)
+        {
+            $return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=details_rm&amp;module=records_management&amp;id=".$result[$theline][0][$key]."' title='". _DETAILS."'>
+            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'   border='0' /></a>";
+
+            return $return;
+        }
+
+    }
 
     //Load view_doc if this parameters is loaded in list_show and list_show_with_template
     public function tmplt_func_bool_detail_io($actual_string, $theline, $result, $key)
@@ -514,6 +528,10 @@ class list_show_with_template extends list_show
         elseif (preg_match("/^func_bool_detail_doc$/", $actual_string))
         {
             $my_var = $this->tmplt_func_bool_detail_doc($actual_string, $theline, $result, $key);
+        }
+        elseif (preg_match("/^func_bool_detail_rm$/", $actual_string))
+        {
+            $my_var = $this->tmplt_func_bool_detail_rm($actual_string, $theline, $result, $key);
         }
         elseif (preg_match("/^func_bool_detail_io$/", $actual_string))
         {
