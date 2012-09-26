@@ -144,9 +144,9 @@ An action page is described in a ACTIONPAGE tag :
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>rm_item_transfer</ID>
-        <LABEL>_RM_ITEM_TRANSFER</LABEL>
-        <NAME>rm_item_transfer</NAME>
+        <ID>rm_items_transfer</ID>
+        <LABEL>_RM_ITEMS_TRANSFER</LABEL>
+        <NAME>rm_items_transfer</NAME>
         <ORIGIN>module</ORIGIN>
         <MODULE>records_management</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
