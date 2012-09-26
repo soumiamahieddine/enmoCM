@@ -84,25 +84,29 @@ while ($state <> 'END') {
 			for($i=0; $i<$nbRecipients; $i++) {
                 $recipient = $recipients[$i];
                 $user_id = $recipient->user_id;              
-                
+                $logger->write('Recipient ' . $user_id, 'INFO');
                 if($recipient->enabled == 'N') {
+                    $logger->write($user_id .' is disabled', 'INFO');
                     unset($recipients[$i]);
                     continue;
                 }
                 
                 if($recipient->status == 'ABS') {
+                    $logger->write($user_id .' is absent, routing to replacent', 'INFO');
                     unset($recipients[$i]);
                     $query = "select us.* FROM users us"
                         . " JOIN user_abs abs ON us.user_id = abs.new_user "
-                        . " WHERE abs.user_abs = '".$user_id."'";
+                        . " WHERE abs.user_abs = '".$user_id."' AND us.enabled='Y'";
                     $dbAbs = new dbquery();
                     $dbAbs->connect();
                     $dbAbs->query($query);
                     if($dbAbs->nb_result() > 0) {
                         $recipient = $dbAbs->fetch_object();
                         $user_id = $recipient->user_id;
+                        $logger->write($user_id .' is the replacent', 'INFO');
                         $recipients[] = $recipient;
                     } else {
+                        $logger->write('No replacent found (probably disabled)', 'INFO');
                         continue;
                     }
                 }
