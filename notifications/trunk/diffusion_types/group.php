@@ -41,8 +41,7 @@ case 'recipients':
 	$query = "SELECT distinct us.*" 
 		. " FROM usergroup_content ug "
 		. "	LEFT JOIN users us ON us.user_id = ug.user_id" 
-		. " WHERE ug.group_id in (".$groups.")"
-		. "	AND us.enabled = 'Y'";
+		. " WHERE ug.group_id in (".$groups.")";
 	$dbRecipients = new dbquery();
 	$dbRecipients->connect();
 	$dbRecipients->query($query);

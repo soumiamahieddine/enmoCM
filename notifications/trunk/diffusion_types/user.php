@@ -45,8 +45,7 @@ case 'recipients':
 	$users = "'". str_replace(",", "','", $notification->diffusion_properties) . "'";
 	$query = "SELECT us.*" 
 		. " FROM users us"
-		. " WHERE us.user_id in (".$users.")"
-		. " AND us.enabled = 'Y'";
+		. " WHERE us.user_id in (".$users.")";
 	$dbRecipients = new dbquery();
 	$dbRecipients->connect();
 	$dbRecipients->query($query);

@@ -43,8 +43,7 @@ case 'recipients':
 	$query = "SELECT distinct us.*" 
 		. " FROM users_entities ue "
 		. " LEFT JOIN users us ON us.user_id = ue.user_id "
-		. " WHERE ue.entity_id in (".$entities.")"
-		. " AND us.enabled = 'Y'";
+		. " WHERE ue.entity_id in (".$entities.")";
 	$dbRecipients = new dbquery();
 	$dbRecipients->connect();
 	$dbRecipients->query($query);
