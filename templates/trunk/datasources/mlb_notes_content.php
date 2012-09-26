@@ -33,7 +33,19 @@ foreach($events as $event) {
 		. "AND li.item_mode = 'dest' "
 		. "AND li.item_type = 'user_id' "
 		. "AND li.res_id = " . $event->record_id;
-		
+	/*
+	$query = "SELECT mlb.*, "
+		. "notes.*, "
+		. "users.* " 
+		. "FROM listinstance li JOIN " . $res_view . " mlb ON mlb.res_id = li.res_id "
+		. "JOIN notes on li.coll_id=notes.coll_id AND notes.identifier = li.res_id "
+		. "JOIN users on users.user_id = notes.user_id "
+		. "WHERE li.coll_id = '" . $coll_id . "' "
+		. "AND li.item_id = '" . $recipient->user_id . "' "
+		. "AND li.item_mode = 'dest' "
+		. "AND li.item_type = 'user_id' "
+		. "AND notes.id = " . $event->record_id;
+	*/
 	$dbDatasource->query($query);
 	$note = $dbDatasource->fetch_object();
 
@@ -41,7 +53,7 @@ foreach($events as $event) {
 	$datasources['notes'][] = $note;
 }
 
-$datasources['images'][0]['imgdetail'] = $maarchUrl . '/apps/' . $maarchApps . '/img/object.gif';
-$datasources['images'][0]['imgdoc'] = $maarchUrl . '/apps/' . $maarchApps . '/img/picto_dld.gif';
+$datasources['images'][0]['imgdetail'] = str_replace('//', '/', $maarchUrl . '/apps/' . $maarchApps . '/img/object.gif');
+$datasources['images'][0]['imgdoc'] = str_replace('//', '/', $maarchUrl . '/apps/' . $maarchApps . '/img/picto_dld.gif');
 
 ?>

@@ -54,7 +54,7 @@ foreach($events as $event) {
     $res = $dbDatasource->fetch_assoc();
     
     // Lien vers la page détail
-    $urlToApp = $maarchUrl . '/apps/' . $maarchApps . '/index.php?';
+    $urlToApp = str_replace('//', '/', $maarchUrl . '/apps/' . $maarchApps . '/index.php?');
     $res['linktodoc'] = $urlToApp . 'display=true&page=view_resource_controler&dir=indexing_searching&id=' . $res['res_id'];
     $res['linktodetail'] = $urlToApp . 'page=details&dir=indexing_searching&id=' . $res['res_id'];
 
