@@ -81,7 +81,7 @@ while ($state <> 'END') {
 			$nbRecipients = count($recipients);
 			
 			$logger->write($nbRecipients .' recipients found, checking active and absences', 'INFO');
-			for($i=0; $i<$nbRecipients; $i+) {
+			for($i=0; $i<$nbRecipients; $i++) {
                 $recipient = $recipients[$i];
                 $user_id = $recipient->user_id;              
                 
