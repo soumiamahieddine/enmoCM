@@ -57,6 +57,7 @@ foreach($events as $event) {
     $urlToApp = str_replace('//', '/', $maarchUrl . '/apps/' . $maarchApps . '/index.php?');
     $res['linktodoc'] = $urlToApp . 'display=true&page=view_resource_controler&dir=indexing_searching&id=' . $res['res_id'];
     $res['linktodetail'] = $urlToApp . 'page=details&dir=indexing_searching&id=' . $res['res_id'];
+    $res['linktoprocess'] = $urlToApp . 'page=view_baskets&module=basket&baskets=MyBasket&directLinkToAction&resid=' . $res['res_id'];
 
     // Insertion
     $datasources['res_letterbox'][] = $res;
