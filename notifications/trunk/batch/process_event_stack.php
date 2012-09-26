@@ -17,7 +17,6 @@
 /* begin */
 // load the config and prepare to process
 include('load_process_event_stack.php');
-
 $state = 'LOAD_NOTIFICATIONS';
 while ($state <> 'END') {
     if (isset($logger)) {
@@ -68,6 +67,7 @@ while ($state <> 'END') {
 			// Diffusion type specific recipients
 			$recipients = array();
 			$recipients = $diffusion_type_controler->getRecipients($notification, $event);
+            
             // Diffusion type specific res_id
             $logger->write("Getting document ids using diffusion type '" .$notification->diffusion_type . "'", 'INFO');
             $res_id = false;
@@ -79,21 +79,45 @@ while ($state <> 'END') {
             $event->res_id = $res_id;
             
 			$nbRecipients = count($recipients);
-			if ($nbRecipients === 0) {
+			
+			$logger->write($nbRecipients .' recipients found, checking active and absences', 'INFO');
+			for($i=0; $i<$nbRecipients; $i+) {
+                $recipient = $recipients[$i];
+                $user_id = $recipient->user_id;              
+                
+                if($recipient->enabled == 'N') {
+                    unset($recipients[$i]);
+                    continue;
+                }
+                
+                if($recipient->status == 'ABS') {
+                    unset($recipients[$i]);
+                    $query = "select us.* FROM users us"
+                        . " JOIN user_abs abs ON us.user_id = abs.new_user "
+                        . " WHERE abs.user_abs = '".$user_id."'";
+                    $dbAbs = new dbquery();
+                    $dbAbs->connect();
+                    $dbAbs->query($query);
+                    if($dbAbs->nb_result() > 0) {
+                        $recipient = $dbAbs->fetch_object();
+                        $user_id = $recipient->user_id;
+                        $recipients[] = $recipient;
+                    } else {
+                        continue;
+                    }
+                }
+				if(!isset($tmpNotifs[$user_id])) {
+					$tmpNotifs[$user_id]['recipient'] = $recipient;
+					$tmpNotifs[$user_id]['attach'] = $diffusion_type_controler->getAttachFor($notification, $user_id);
+					$logger->write('Checking if attachment required for ' . $user_id . ': ' . $tmpNotifs[$user_id]['attach'], 'INFO');
+				}
+				$tmpNotifs[$user_id]['events'][] = $event;
+			}
+			
+            if (count($recipients) === 0) {
 				$logger->write('No recipient found' , 'WARNING');
 				$events_controler->commitEvent($event->event_stack_sid, "FAILED: no recipient found");
-			} else {
-				$logger->write($nbRecipients .' recipients found', 'INFO');
-				foreach ($recipients as $recipient) {
-					$user_id = $recipient->user_id;
-					if(!isset($tmpNotifs[$user_id])) {
-						$tmpNotifs[$user_id]['recipient'] = $recipient;
-						$tmpNotifs[$user_id]['attach'] = $diffusion_type_controler->getAttachFor($notification, $user_id);
-						$logger->write('Checking if attachment required for ' . $user_id . ': ' . $tmpNotifs[$user_id]['attach'], 'INFO');
-					}
-					$tmpNotifs[$user_id]['events'][] = $event;
-				}
-			}		
+			}            
 		} 
 		$totalNotificationsToProcess = count($tmpNotifs);
 		$logger->write($totalNotificationsToProcess .' notifications to process', 'INFO');
@@ -228,7 +252,7 @@ $logger->write('End of process', 'INFO');
 Bt_logInDataBase(
     $totalEventsToProcess, 0, 'process without error'
 );	
-$db->disconnect();
+//$db->disconnect();
 //unlink($GLOBALS['lckFile']);
 exit($GLOBALS['exitCode']);
 ?>
