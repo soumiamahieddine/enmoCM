@@ -830,7 +830,7 @@ class DataAccessService_Database
         $messageController->loadMessageFile('core/xml/DataAccessService_Messages.xml');
         $sqlError = $this->databaseObject->getError();
         $exception = $messageController->getMessageText(
-            __CLASS__ . '::queryError',
+            'query_error',
             false,
             array(
                 $sqlError,

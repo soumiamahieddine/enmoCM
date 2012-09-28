@@ -206,7 +206,8 @@ class DataObjectController
     
     public function read(
         $objectName, 
-        $key
+        $key,
+        $readChildren=true
     ) {
         $dataObjectDocument = new DataObjectDocument();
         $this->dataObjectDocuments[] = $dataObjectDocument;
@@ -220,7 +221,8 @@ class DataObjectController
             $objectElement, 
             $dataObject, 
             $dataObjectDocument,
-            $key
+            $key,
+            $readChildren
         );
         return $dataObjectDocument->documentElement;
     }
@@ -440,7 +442,8 @@ class DataObjectController
         $objectElement,
         $parentObject,
         $dataObjectDocument,
-        $key=false
+        $key=false,
+        $readChildren=true
     ) {      
      
         try {
@@ -466,19 +469,21 @@ class DataObjectController
                 $dataObject->logRead();
             }
             
-            // Process newly created child objects
-            $childObjects = 
-                $parentObject->getChildNodesByTagName(
-                    $objectElement->getName()
-                );
-            $m = $childObjects->length;
-            for($j=0; $j<$m; $j++) {
-                $childObject = $childObjects->item($j);
-                $this->readChildDataObjects(
-                    $objectElement,
-                    $childObject, 
-                    $dataObjectDocument
-                );
+            if($readChildren) {
+                // Process newly created child objects
+                $childObjects = 
+                    $parentObject->getChildNodesByTagName(
+                        $objectElement->getName()
+                    );
+                $m = $childObjects->length;
+                for($j=0; $j<$m; $j++) {
+                    $childObject = $childObjects->item($j);
+                    $this->readChildDataObjects(
+                        $objectElement,
+                        $childObject, 
+                        $dataObjectDocument
+                    );
+                }
             }
 
         } catch (maarch\Exception $e) {   
@@ -489,8 +494,8 @@ class DataObjectController
     public function readChildDataObjects( 
         $objectElement,
         $dataObject,
-        $dataObjectDocument)
-    {
+        $dataObjectDocument
+    ) {
         // Get list of childElements
         $objectContents = $this->getObjectContents($objectElement);
         $l = count($objectContents);
@@ -636,11 +641,7 @@ class DataObjectController
                         $fkey = $fkeys->item($k);
                         $parentKey = $fkey->getAttribute('parent-key');
                         $childKey = $fkey->getAttribute('child-key');
-                        if(!isset($childObject->$childKey) 
-                            || mb_strlen(trim($childObject->$childKey)) == 0
-                        ) {
-                            $childObject->$childKey = $returnKey->$parentKey;
-                        }
+                        $childObject->$childKey = $returnKey->$parentKey;
                     }
                 }
                 
