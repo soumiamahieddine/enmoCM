@@ -24,16 +24,11 @@ foreach($events as $event) {
 	// Query
     switch($event->table_name) {
     case 'notes':
-        $query = "SELECT mlb.*, "
-            . "notes.*, "
-            . "users.* " 
-            . "FROM listinstance li JOIN " . $res_view . " mlb ON mlb.res_id = li.res_id "
-            . "JOIN notes on li.coll_id=notes.coll_id AND notes.identifier = li.res_id "
+        $query = "SELECT mlb.*, notes.*, users.* "
+            . "FROM " . $res_view . " mlb "
+            . "JOIN notes on notes.identifier = mlb.res_id "
             . "JOIN users on users.user_id = notes.user_id "
-            . "WHERE li.coll_id = '" . $coll_id . "' "
-            . "AND li.item_id = '" . $recipient->user_id . "' "
-            . "AND li.item_mode = 'dest' "
-            . "AND li.item_type = 'user_id' "
+            . "WHERE notes.coll_id = '" . $coll_id . "' "
             . "AND notes.id = " . $event->record_id;
         break;
     
@@ -53,14 +48,18 @@ foreach($events as $event) {
         break;
     }
     
+    if($GLOBALS['logger']) {
+        $GLOBALS['logger']->write($query , 'DEBUG');
+    }
+    
 	$dbDatasource->query($query);
-	$note = $dbDatasource->fetch_object();
+	$note = $dbDatasource->fetch_assoc();
     
     // Lien vers la page détail
     $urlToApp = str_replace('//', '/', $maarchUrl . '/apps/' . $maarchApps . '/index.php?');
-    $note['linktodoc'] = $urlToApp . 'display=true&page=view_resource_controler&dir=indexing_searching&id=' . $note->res_id;
-    $note['linktodetail'] = $urlToApp . 'page=details&dir=indexing_searching&id=' . $note->res_id;
-    $note['linktoprocess'] = $urlToApp . 'page=view_baskets&module=basket&baskets=MyBasket&directLinkToAction&resid=' . $note->res_id;
+    $note['linktodoc'] = $urlToApp . 'display=true&page=view_resource_controler&dir=indexing_searching&id=' . $note['res_id'];
+    $note['linktodetail'] = $urlToApp . 'page=details&dir=indexing_searching&id=' . $note['res_id'];
+    $note['linktoprocess'] = $urlToApp . 'page=view_baskets&module=basket&baskets=MyBasket&directLinkToAction&resid=' . $note['res_id'];
     
 	// Insertion
 	$datasources['notes'][] = $note;
