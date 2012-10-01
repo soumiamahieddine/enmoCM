@@ -581,13 +581,40 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</tr>';
         }
 
-		if ($core_tools->is_module_loaded('tags') && 
-					($core_tools->test_service('tag_view', 'tags',false) == 1))
-		{
-			include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR
-			."templates/validate_mail/index.php");	
-		}
+        if ($core_tools->is_module_loaded('tags') && 
+                    ($core_tools->test_service('tag_view', 'tags',false) == 1))
+        {
+            include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR
+            ."templates/validate_mail/index.php");  
+        }
 
+        if($core_tools->is_module_loaded('notes'))
+        {
+             // Displays the notes
+            $select_notes[$_SESSION['tablename']['users']] = array();
+            array_push($select_notes[$_SESSION['tablename']['users']],"user_id","lastname","firstname");
+            $select_notes[$_SESSION['tablename']['not_notes']] = array();
+            array_push($select_notes[$_SESSION['tablename']['not_notes']],"id", "date_note", "note_text", "user_id");
+            $where_notes = " identifier = ".$res_id." ";
+            $_SESSION['doc_id'] = $res_id;
+            $request_notes = new request;
+            $tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date_note desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
+            $frm_str .= '<h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
+            $frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" />&nbsp;<b><small>'._NOTES." (".count($tab_notes).")".' :</small></b>';
+            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+            $frm_str .= '</h2>';
+            $frm_str .= '<div class="desc" id="notes_div" style="display:none;">';
+                    $frm_str .= '<div class="ref-unit">';
+                    $frm_str .= '<div style="text-align:center;">';
+                    $frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
+                                        $frm_str .= '<a href="javascript://" onclick="ouvreFenetre(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=note_add&identifier='.$res_id.'&coll_id='.$_SESSION['collection_id_choice'].'\', 450, 300)" >';
+                                            $frm_str .= _ADD_NOTE;
+                                        $frm_str .= '</a>';
+                        $frm_str .= '</div>';
+                    $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=frame_notes_doc" frameborder="0" width="430px" height="150px"></iframe>';
+            $frm_str .= '</div>';
+            $frm_str .= '</div>';
+        }
 
         $frm_str .= '</table>';
         $frm_str .= '<div id="comp_indexes" style="display:block;">';
@@ -1202,10 +1229,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 
     $attach = get_value_fields($values_form, 'attach');
 
-	if ($core->is_module_loaded('tags')) {
-		include_once("modules".DIRECTORY_SEPARATOR."tags"
-		.DIRECTORY_SEPARATOR."tags_update.php");
-	}
+    if ($core->is_module_loaded('tags')) {
+        include_once("modules".DIRECTORY_SEPARATOR."tags"
+        .DIRECTORY_SEPARATOR."tags_update.php");
+    }
 
     if($attach == false)
     {
