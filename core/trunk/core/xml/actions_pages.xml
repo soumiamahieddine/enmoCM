@@ -136,9 +136,9 @@ An action page is described in a ACTIONPAGE tag :
         <FLAG_CREATE>true</FLAG_CREATE>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>process_rm</ID>
-        <LABEL>_PROCESS_ARCHIVE</LABEL>
-        <NAME>process_rm</NAME>
+        <ID>rm_io_process</ID>
+        <LABEL>_PROCESS_IO</LABEL>
+        <NAME>rm_io_process</NAME>
         <ORIGIN>module</ORIGIN>
         <MODULE>records_management</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
