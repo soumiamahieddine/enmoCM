@@ -22,30 +22,37 @@ foreach($events as $event) {
 	$note = array();
 	
 	// Query
-	$query = "SELECT mlb.*, "
-		. "notes.*, "
-		. "users.* " 
-		. "FROM listinstance li JOIN " . $res_view . " mlb ON mlb.res_id = li.res_id "
-		. "JOIN notes on li.coll_id=notes.coll_id AND notes.identifier = li.res_id "
-		. "JOIN users on users.user_id = notes.user_id "
-		. "WHERE li.coll_id = '" . $coll_id . "' "
-		. "AND li.item_id = '" . $recipient->user_id . "' "
-		. "AND li.item_mode = 'dest' "
-		. "AND li.item_type = 'user_id' "
-		. "AND li.res_id = " . $event->record_id;
-	/*
-	$query = "SELECT mlb.*, "
-		. "notes.*, "
-		. "users.* " 
-		. "FROM listinstance li JOIN " . $res_view . " mlb ON mlb.res_id = li.res_id "
-		. "JOIN notes on li.coll_id=notes.coll_id AND notes.identifier = li.res_id "
-		. "JOIN users on users.user_id = notes.user_id "
-		. "WHERE li.coll_id = '" . $coll_id . "' "
-		. "AND li.item_id = '" . $recipient->user_id . "' "
-		. "AND li.item_mode = 'dest' "
-		. "AND li.item_type = 'user_id' "
-		. "AND notes.id = " . $event->record_id;
-	*/
+    switch($event->table_name) {
+    case 'notes':
+        $query = "SELECT mlb.*, "
+            . "notes.*, "
+            . "users.* " 
+            . "FROM listinstance li JOIN " . $res_view . " mlb ON mlb.res_id = li.res_id "
+            . "JOIN notes on li.coll_id=notes.coll_id AND notes.identifier = li.res_id "
+            . "JOIN users on users.user_id = notes.user_id "
+            . "WHERE li.coll_id = '" . $coll_id . "' "
+            . "AND li.item_id = '" . $recipient->user_id . "' "
+            . "AND li.item_mode = 'dest' "
+            . "AND li.item_type = 'user_id' "
+            . "AND notes.id = " . $event->record_id;
+        break;
+    
+    case "res_letterbox" :
+    case "res_view_letterbox" :
+        $query = "SELECT mlb.*, "
+            . "notes.*, "
+            . "users.* " 
+            . "FROM listinstance li JOIN " . $res_view . " mlb ON mlb.res_id = li.res_id "
+            . "JOIN notes on li.coll_id=notes.coll_id AND notes.identifier = li.res_id "
+            . "JOIN users on users.user_id = notes.user_id "
+            . "WHERE li.coll_id = '" . $coll_id . "' "
+            . "AND li.item_id = '" . $recipient->user_id . "' "
+            . "AND li.item_mode = 'dest' "
+            . "AND li.item_type = 'user_id' "
+            . "AND li.res_id = " . $event->record_id;
+        break;
+    }
+    
 	$dbDatasource->query($query);
 	$note = $dbDatasource->fetch_object();
 
