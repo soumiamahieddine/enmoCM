@@ -55,7 +55,13 @@ foreach($events as $event) {
     
 	$dbDatasource->query($query);
 	$note = $dbDatasource->fetch_object();
-
+    
+    // Lien vers la page détail
+    $urlToApp = str_replace('//', '/', $maarchUrl . '/apps/' . $maarchApps . '/index.php?');
+    $note['linktodoc'] = $urlToApp . 'display=true&page=view_resource_controler&dir=indexing_searching&id=' . $note->res_id;
+    $note['linktodetail'] = $urlToApp . 'page=details&dir=indexing_searching&id=' . $note->res_id;
+    $note['linktoprocess'] = $urlToApp . 'page=view_baskets&module=basket&baskets=MyBasket&directLinkToAction&resid=' . $note->res_id;
+    
 	// Insertion
 	$datasources['notes'][] = $note;
 }
