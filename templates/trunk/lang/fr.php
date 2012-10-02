@@ -71,7 +71,7 @@ if (!defined('_MODIFY_TEMPLATE'))
 if (!defined('_TEMPLATE_ADDED'))
     define('_TEMPLATE_ADDED', 'Nouveau mod&egrave;le cr&eacute;&eacute;');
 if (!defined('_TEMPLATE_UPDATED'))
-    define('_TEMPLATE_UPDATED', 'Md&egrave;le modifi&eacute;');
+    define('_TEMPLATE_UPDATED', 'Mod&egrave;le modifi&eacute;');
 if (!defined('_CHOOSE_ENTITY_TEMPLATE'))
     define('_CHOOSE_ENTITY_TEMPLATE', 'Choisissez le(s) service(s) au(x)quel(s) vous souhaitez associer ce mod&egrave;le');
 if (!defined('_REALLY_DEL_TEMPLATE'))
