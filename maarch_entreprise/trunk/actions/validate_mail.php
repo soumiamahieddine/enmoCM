@@ -141,6 +141,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
     require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
     require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_types.php");
+    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
     $sec =new security();
     $core_tools =new core_tools();
@@ -615,7 +616,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</div>';
             $frm_str .= '</div>';
         }
-
+        
         $frm_str .= '</table>';
         $frm_str .= '<div id="comp_indexes" style="display:block;">';
         $frm_str .= '</div>';
