@@ -350,7 +350,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             $closing_date = $db->format_date_db($res->closing_date, false);
             $indexes = $type->get_indexes($type_id, $coll_id);
             $entityLabel = $res->entity_label;
-            
+
             if ($core->is_module_loaded('cases') == true) {
                 require_once('modules/cases/class/class_modules_tools.php');
                 $case = new cases();
@@ -547,12 +547,12 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
                                     <?php
                                 }
-								elseif ($data[$key]['display'] == 'textarea') 
-								{
-									echo '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" style="width: 200px; max-width: 200px;">'
-										.$data[$key]['show_value']
-									.'</textarea>';
-								}
+                                elseif ($data[$key]['display'] == 'textarea') 
+                                {
+                                    echo '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" style="width: 200px; max-width: 200px;">'
+                                        .$data[$key]['show_value']
+                                    .'</textarea>';
+                                }
                                 else
                                 {
                                     ?>
@@ -572,12 +572,12 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
                                     <?php
                                 }
-								elseif ($data[$key]['display'] == 'textarea') 
-								{
-									echo '<textarea name="'.$key.'" id="'.$key.'" rows="3" style="width: 200px; max-width: 200px;">'
-										.$data[$key]['show_value']
-									.'</textarea>';
-								}
+                                elseif ($data[$key]['display'] == 'textarea') 
+                                {
+                                    echo '<textarea name="'.$key.'" id="'.$key.'" rows="3" style="width: 200px; max-width: 200px;">'
+                                        .$data[$key]['show_value']
+                                    .'</textarea>';
+                                }
                                 else if ($data[$key]['field_type'] == 'date')
                                 {
                                     ?>
@@ -1194,35 +1194,46 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=hist_doc&id=<?php echo $s_id;?>&mode=normal" name="hist_doc_process" width="100%" height="580" align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>
                 </dd>
                 <?php
-                if ($core->is_module_loaded('notes')) {			
-						$selectNotes = "select id, identifier, user_id, date_note, note_text from "
-							. $_SESSION['tablename']['not_notes']
-							. " where identifier = " . $s_id 
-							. " and coll_id ='"
-							. $_SESSION['collection_id_choice'] . "' order by date_note desc";
+                if ($core->is_module_loaded('notes')) {         
+                        $selectNotes = "select id, identifier, user_id, date_note, note_text from "
+                            . $_SESSION['tablename']['not_notes']
+                            . " where identifier = " . $s_id 
+                            . " and coll_id ='"
+                            . $_SESSION['collection_id_choice'] . "' order by date_note desc";
 
                     $dbNotes = new dbquery();
                     $dbNotes->connect();
                     $dbNotes->query($selectNotes);
-					//$dbNotes->show();
-					$not_res = 0;
-					while ($res=$dbNotes->fetch_object())
-					{
-						$dbUser = new dbquery();
-						$dbUser->connect();
+                    //$dbNotes->show();
+                    $not_res = 0;
+                    while ($res=$dbNotes->fetch_object())
+                    {
+                        $dbNotesEntities = new dbquery();
+                        $dbNotesEntities->connect();
+                        $query = "select id from note_entities where "
+                        . "note_id = " .$res->id;
+                    
+                        $dbNotesEntities->query($query);
+                        
+                        if($dbNotesEntities->nb_result()==0)
+                            $not_res++;
+                        else
+                        {
+                            $dbUser = new dbquery();
+                            $dbUser->connect();
 
-						$query = "select id from notes where id in ("
-						. "select note_id from note_entities where (item_id = '" 
-						. $_SESSION['user']['primaryentity']['id'] . "' and note_id = " . $res->id . "))"
-						. "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')";
+                            $query = "select id from notes where id in ("
+                            . "select note_id from note_entities where (item_id = '" 
+                            . $_SESSION['user']['primaryentity']['id'] . "' and note_id = " . $res->id . "))"
+                            . "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')";
 
-						$dbUser->query($query);
-						//$dbUser->show();
-						if($dbUser->nb_result()<>0)
-						$not_res++;
-						
-					}
-					$not_res_title = " (".$not_res.") ";
+                            $dbUser->query($query);
+                            //$dbUser->show();
+                            if($dbUser->nb_result()<>0)
+                            $not_res++;
+                        }   
+                    }
+                    $not_res_title = " (".$not_res.") ";
                     $nb_notes_for_title  = $dbNotes->nb_result();
                     
                     if ($nb_notes_for_title == 0) {
@@ -1260,7 +1271,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         $where_notes = " identifier = ".$s_id." ";
                         $request_notes = new request;
                         $tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date_note desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
-						//$request_notes->show();
+                        //$request_notes->show();
 
                         ?>
                         <div style="text-align:center;">
@@ -1434,20 +1445,20 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     echo $Links;
                     
                     if ($core->is_module_loaded('tags') &&
-						($core->test_service('tag_view', 'tags', false) == 1)) {
-						?>
-						<dt>
-							<?php
-							echo _TAGS;
-							?>
-						</dt>
-						<dd>
-							<?php
-							include_once('modules/tags/templates/details/index.php');
-							?>
-						</dd>
-						<?php
-					}
+                        ($core->test_service('tag_view', 'tags', false) == 1)) {
+                        ?>
+                        <dt>
+                            <?php
+                            echo _TAGS;
+                            ?>
+                        </dt>
+                        <dd>
+                            <?php
+                            include_once('modules/tags/templates/details/index.php');
+                            ?>
+                        </dd>
+                        <?php
+                    }
                 ?>
             </dl>
     <?php

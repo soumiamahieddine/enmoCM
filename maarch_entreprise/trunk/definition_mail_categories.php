@@ -147,7 +147,6 @@ $_ENV['categories']['incoming']['process_limit_date_use'] = array (
     ),
     'modify' => false
 );
-
 $_ENV['categories']['incoming']['other_cases']['process_limit_date'] = array (
     'type_form' => 'date',
     'type_field' => 'date',
@@ -335,7 +334,7 @@ $_ENV['categories']['internal']['subject'] = array (
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
     'modify' => true,
-    'form_show' => 'taextarea'
+    'form_show' => 'textarea'
 );
 $_ENV['categories']['internal']['process_limit_date_use'] = array (
     'type_form' => 'radio',
