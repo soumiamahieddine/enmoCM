@@ -556,10 +556,9 @@ class DataObjectController
                                 $refElement, 
                                 $dataObject
                             );
-                        } else {
-                            $key = $dataObject;
-                        }
+                        } 
                     }
+                    $key = $dataObject;
                     if($saveChildren) {
                         $this->saveChildDataObjects(
                             $objectElement,
