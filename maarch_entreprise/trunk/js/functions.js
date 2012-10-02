@@ -624,66 +624,72 @@ function resize_frame_process(id_modal, id_frame, resize_width, resize_height)
 {
     var modal = $(id_modal);
     if (modal) {
-        var newwith = modal.getWidth();
-        //alert(newwith);
-        var newheight = modal.getHeight() - 30;
-        //console.log('modal width '+newwith);
+        
+        //console.log('modal width '+newwidth);
         var frame2 = $(id_frame);
-        var div_left = $('validleft');
-        var windowSize = new Array();
-        if (resize_width == true && frame2 != null) {
+        var windowHeigth = document.body.clientHeight;
+        var windowWidth = document.body.clientWidth;
+        if(!windowWidth) {
             windowSize = getWindowSize();
-            //console.log('window '+windowSize);
+            windowWidth = windowSize[0];
+            windowHeigth = windowSize[1];
+        }
+        //alert('window size:' + windowWidth + ' x ' + windowHeigth);
+        
+        modal.style.width = windowWidth - 30 + 'px';
+        //alert('modal width:' + modal.getWidth());
+        //alert('modal height:' + modal.getHeight());
+        
+        var newwidth = modal.getWidth();
+        var newheight = modal.getHeight();
+        newheight = newheight - 30;
+        
+        if (resize_width == true && frame2 != null) {         
             navName = BrowserDetect.browser;
             navVersion = BrowserDetect.version;
 
             if (id_frame == 'file_iframe') {
-                //~ var div_right = $('validright');
-                //~ if(div_right && div_left)
-                //~ {
-                    //~ Element.setStyle(div_right, {width : ((newwith - div_left.getWidth()) -50) +'px' });
-                    //~ //div_right.style.width=((newwith - div_left.getWidth()) -50) +'px';
-                    //~ newwith = (newwith - div_left.getWidth())- 30;
-                //~ }
                 if (navName == 'Explorer') {
                     if (navVersion < 7) {
-                        newwith = (windowSize[0] - 800) - 10;
+                        newwidth = (windowWidth - 800) - 10;
                     } else {
-                        newwith = (windowSize[0] - 520) - 10;
+                        newwidth = (windowWidth - 520) - 10;
                     }
                 } else if (navName == 'Firefox' || navName == 'Mozilla') {
-                     newwith = (windowSize[0] - 550) - 10;
+                     newwidth = (windowWidth - 550) - 10;
                 } else {
-                    newwith = (windowSize[0] - 550) - 10;
+                    newwidth = (windowWidth - 550) - 10;
                 }
             } else if (id_frame == 'viewframe') {
                 if (navName == 'Explorer') {
                     if (navVersion < 7) {
-                        newwith = (windowSize[0] - 390);
+                        newwidth = (windowWidth - 390);
                     } else {
-                        newwith = (windowSize[0] - 390);
+                        newwidth = (windowWidth - 390);
                     }
 
                 } else if (navName == 'Firefox') {
-                    newwith = (windowSize[0] - 390);
+                    newwidth = (windowWidth - 360);
                 } else {
-                    newwith = (windowSize[0] - 390);
+                    newwidth = (windowWidth - 360);
                 }
             } else if (id_frame == 'viewframevalid') {
                 if (navName == 'Explorer') {
-                    newwith = (windowSize[0] - 520) - 10;
+                    newwidth = (windowWidth - 520) - 10;
                 } else if (navName == 'Firefox') {
-                    newwith = (windowSize[0] - 550) - 10;
+                    newwidth = (windowWidth - 550) - 10;
                 } else {
-                    newwith = (windowSize[0] - 550) - 10;
+                    newwidth = (windowWidth - 550) - 10;
                 }
             } else {
-                newwith = (windowSize[0] - 600);
+                newwidth = (windowWidth - 600);
             }
-            frame2.style.width =  newwith +"px";
+            frame2.style.width =  newwidth +"px";
+            //alert('frame width:' + frame2.getWidth());
         }
         if (resize_height == true && frame2 != null) {
             frame2.style.height = newheight +"px";
+            //alert('frame height:' + frame2.getHeight());
         }
     }
 }
