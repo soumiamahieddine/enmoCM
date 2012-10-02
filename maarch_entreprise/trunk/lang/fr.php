@@ -19,7 +19,7 @@
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('_MEP_VERSION')) define('_MEP_VERSION', 'Maarch Entreprise v1.3');
+if (!defined('_MEP_VERSION')) define('_MEP_VERSION', 'Maarch Entreprise v1.4');
 
 /************** Administration **************/
 if (!defined('_ADMIN_USERS'))    define( '_ADMIN_USERS', 'Utilisateurs');
