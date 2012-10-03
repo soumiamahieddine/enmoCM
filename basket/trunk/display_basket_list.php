@@ -52,6 +52,7 @@ $db->connect();
 <?php 
 if ($core_tools->test_service('display_basket_list','basket', false)) {
         if (isset($_SESSION['user']['baskets']) && count($_SESSION['user']['baskets']) > 0) {
+            //exit('<pre>' . print_r($_SESSION['user']['baskets'], true) . '</pre>');
             ?>
             <div class="block">
             <h2><?php echo _MY_BASKETS; ?> : </h2>
@@ -61,30 +62,31 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
             ?> <ul class="basket_elem"><?php
             $abs_basket = false;
             for ($i=0;$i<count($_SESSION['user']['baskets']);$i++) {
-				if ($_SESSION['user']['baskets'][$i]['is_visible'] === 'Y') { 
-					if ($_SESSION['user']['baskets'][$i]['abs_basket'] == true && !$abs_basket) {
-						echo '</ul><h3>'._OTHER_BASKETS.' :</h3><ul class="basket_elem">';
-						$abs_basket = true;
-					}
-					$nb = '';
-					if (preg_match('/^CopyMailBasket/', $_SESSION['user']['baskets'][$i]['id']) && !empty($_SESSION['user']['baskets'][$i]['view'])) {
-						$db->query('select res_id from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause']);
-						$nb = $db->nb_result();
-					} elseif (!empty($_SESSION['user']['baskets'][$i]['table'])) {
-						if ( trim($_SESSION['user']['baskets'][$i]['clause']) <> '') {
-							$db->query('select res_id from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause'], true);
-							$nb = $db->nb_result();
-						}
-					}
-					if ($nb <> 0) {
-						$nb = "(".$nb.")";
-					} else {
-						$nb = '';
-					}
-					if (!preg_match('/^IndexingBasket/', $_SESSION['user']['baskets'][$i]['id'])) {
-						echo '<li><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=view_baskets&amp;module=basket&amp;baskets='.$_SESSION['user']['baskets'][$i]['id'].'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_baskets_off.gif&amp;module=basket" alt=""/> '.$_SESSION['user']['baskets'][$i]['name'].'  <b>'.$nb.'</b> </a></li>';
-					}
-				}
+                if ($_SESSION['user']['baskets'][$i]['is_visible'] === 'Y') { 
+                    if ($_SESSION['user']['baskets'][$i]['abs_basket'] == true && !$abs_basket) {
+                        echo '</ul><h3>'._OTHER_BASKETS.' :</h3><ul class="basket_elem">';
+                        $abs_basket = true;
+                    }
+                    $nb = '';
+                    if (preg_match('/^CopyMailBasket/', $_SESSION['user']['baskets'][$i]['id']) && !empty($_SESSION['user']['baskets'][$i]['view'])) {
+                        $db->query('select res_id from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause']);
+                        $nb = $db->nb_result();
+                    } elseif (!empty($_SESSION['user']['baskets'][$i]['table'])) {
+                        if ( trim($_SESSION['user']['baskets'][$i]['clause']) <> '') {
+                            $db->query('select * from '.$_SESSION['user']['baskets'][$i]['view']." where ".$_SESSION['user']['baskets'][$i]['clause'], true);
+                            $nb = $db->nb_result();
+                        }
+                    }
+                    
+                    if ($nb <> 0) {
+                        $nb = "(".$nb.")";
+                    } else {
+                        $nb = '';
+                    }
+                    if (!preg_match('/^IndexingBasket/', $_SESSION['user']['baskets'][$i]['id'])) {
+                        echo '<li><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=view_baskets&amp;module=basket&amp;baskets='.$_SESSION['user']['baskets'][$i]['id'].'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_baskets_off.gif&amp;module=basket" alt=""/> '.$_SESSION['user']['baskets'][$i]['name'].'  <b>'.$nb.'</b> </a></li>';
+                    }
+                }
             }
             ?>
             </ul>
