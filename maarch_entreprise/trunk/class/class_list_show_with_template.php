@@ -288,8 +288,8 @@ class list_show_with_template extends list_show
             $return .= '" ';
             $return .= 'style="';
                 $return .= 'cursor: pointer;';
-            $return .= '" title=" ' . _VIEW_ARCHIVES . '"';
-            $return .= 'onclick=" ';
+            $return .= '" title="' . _VIEW_ARCHIVES . '"';
+            $return .= 'onclick="';
               $return .= 'loadItemList(';
                 $return .= $result[$theline][0]['value'];
               $return .= ');';
