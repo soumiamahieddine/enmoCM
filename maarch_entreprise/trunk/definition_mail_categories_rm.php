@@ -99,6 +99,7 @@ $_ENV['categories']['rm_archive']['originating_user_id'] = array (
     'modify' => false,
     'form_show' => 'select'
 );
+/*
 $_ENV['categories']['rm_archive']['destination'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
@@ -110,6 +111,7 @@ $_ENV['categories']['rm_archive']['destination'] = array (
     'modify' => false,
     'form_show' => 'select'
 );
+*/
 $_ENV['categories']['rm_archive']['type_id'] = array (
     'type_form' => 'integer',
     'type_field' => 'integer',
