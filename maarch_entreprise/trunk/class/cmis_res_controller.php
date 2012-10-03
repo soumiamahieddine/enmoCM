@@ -381,7 +381,7 @@ class resCMIS extends objectCMIS
     
     
     
-    public function getAtomXmlEntry($doc, $feed){
+    public function getAtomXmlEntry(&$doc, &$feed){
     	    	 
     	if(isset($feed)){
 	    	$root = $doc->createElement('atom:entry');
