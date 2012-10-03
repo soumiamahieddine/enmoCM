@@ -5,6 +5,7 @@ class DataAccessService_Database
 
     private $databaseObject;
     public $inTransaction;
+    private $queries = array();
     
     public function connect($sourceNode) 
     {
@@ -225,6 +226,7 @@ class DataAccessService_Database
         //*********************************************************************
         $selectQuery = implode(' ', $selectParts);
         
+        $this->queries[] = $selectQuery;
         //echo "<pre>SELECT QUERY = " . $selectQuery . "</pre>";
         
         try {
@@ -268,6 +270,7 @@ class DataAccessService_Database
        
         $deleteQuery = implode(' ', $deleteParts);
         
+        $this->queries[] = $deleteQuery;
         //echo "<br/>DELETE QUERY = $deleteQuery";
         
         try {
@@ -309,6 +312,8 @@ class DataAccessService_Database
         $insertParts[] = $this->createReturnKeyExpression($objectElement);
         
         $insertQuery = implode(' ', $insertParts);
+        
+        $this->queries[] = $insertQuery;
         
         //echo "<br/>INSERT QUERY = $insertQuery";
 
@@ -352,6 +357,7 @@ class DataAccessService_Database
         
         $updateQuery = implode(' ', $updateParts);
         
+        $this->queries[] = $updateQuery;
         //echo "<pre>UPDATE QUERY = " . $updateQuery . "</pre>";
         
         try {
@@ -373,7 +379,10 @@ class DataAccessService_Database
 
     }
     
-  
+    public function lastQuery()
+    {
+        return end($this->queries);
+    }
     //*************************************************************************
     // PRIVATE QUERY CREATION FUNCTIONS
     //*************************************************************************

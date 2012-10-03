@@ -4,9 +4,10 @@ class Exception
 	extends \Exception
 {
 	
-    protected $id;
-	protected $level;
-	
+    public $id;
+	public $level;
+	public $message;
+    
 	public function Exception($message, $code=false)
 	{
 		if(is_object($message) && get_class($message) == 'Message') {
