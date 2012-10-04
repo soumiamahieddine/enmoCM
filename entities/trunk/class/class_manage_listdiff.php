@@ -536,6 +536,8 @@ class diffusion_list extends dbquery
                     //$this->show();
                 }
             }*/
+
+
             $maxSeq = 0;
             if ($concat) {
                 $this->query(
@@ -681,7 +683,7 @@ class diffusion_list extends dbquery
             );
 
             $res = $this->fetch_object();
-            
+           
             $listinstance['dest'] = array(
                 'user_id' => $this->show_string($res->item_id),
                 'lastname' => $this->show_string($res->lastname),
@@ -690,6 +692,10 @@ class diffusion_list extends dbquery
                 'entity_label' => $this->show_string($res->entity_label),
                 'viewed' => $this->show_string($res->viewed)
             );
+
+
+
+
         }
         $this->query(
             "select l.item_id, u.firstname, u.lastname, e.entity_id, "
