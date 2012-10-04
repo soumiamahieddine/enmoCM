@@ -74,7 +74,8 @@ if (isset($_REQUEST['tmp_file'])) {
 //print_r($_SESSION['FILE']);
 //print_r($_SESSION['upfile']);exit;
 
-require_once "core/class/class_request.php";
+require_once 'core/class/class_request.php';
+require_once 'core/class/class_db.php';
 $core = new core_tools();
 $core->test_user();
 $core->load_lang();
@@ -115,17 +116,54 @@ if (
     isset($_REQUEST['directLinkToAction']) 
     && isset($_REQUEST['resid']) && !empty($_REQUEST['resid'])
 ) {
-    echo '<script language="javascript">';
-    echo 'action_send_first_request(\'' 
-        . $_SESSION['config']['businessappurl'] 
-        . 'index.php?display=true&page=manage_action&module=core\''
-        . ', \'mass\''
-        . ',' . $_SESSION['current_basket']['default_action'] 
-        . ',' . $_REQUEST['resid'] 
-        . ',\'' . $_SESSION['current_basket']['table'] . '\''
-        . ',\'basket\'' 
-        . ',\'' . $_SESSION['current_basket']['coll_id'] . '\');';
-    echo '</script>';
+    //var_dump($_SESSION['user']['baskets']);exit;
+    $foundBasketInUserSession = false;
+    for (
+        $ind_bask = 0;
+        $ind_bask < count($_SESSION['user']['baskets']);
+        $ind_bask++
+    ) {
+        if (
+            $_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets']
+        ) {
+            if(
+                isset($_SESSION['user']['baskets'][$ind_bask]['clause']) 
+                && trim($_SESSION['user']['baskets'][$ind_bask]['clause']
+            ) <> '') {
+                $basketQuery = '(' 
+                    . $_SESSION['user']['baskets'][$ind_bask]['clause'] 
+                    . ')';
+                $query = "select res_id from " 
+                    . $_SESSION['user']['baskets'][$ind_bask]['view']
+                    . " where (" . $basketQuery . ") and res_id = " . $_REQUEST['resid'];
+                //echo $query;exit;
+                $db = new dbquery();
+                $db->connect();
+                $db->query($query);
+                if ($db->nb_result() < 1) {
+                    //return false;
+                } else {
+                    $foundBasketInUserSession = true;
+                }
+            }
+            break;
+         }
+    }
+    if ($foundBasketInUserSession) {
+        echo '<script language="javascript">';
+        echo 'action_send_first_request(\'' 
+            . $_SESSION['config']['businessappurl'] 
+            . 'index.php?display=true&page=manage_action&module=core\''
+            . ', \'mass\''
+            . ',' . $_SESSION['current_basket']['default_action'] 
+            . ',' . $_REQUEST['resid'] 
+            . ',\'' . $_SESSION['current_basket']['table'] . '\''
+            . ',\'basket\'' 
+            . ',\'' . $_SESSION['current_basket']['coll_id'] . '\');';
+        echo '</script>';
+    } else {
+        
+    }
 }
 ?><h1> <?php
 if (count($_SESSION['user']['baskets']) > 0) {
