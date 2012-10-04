@@ -171,15 +171,16 @@ if(isset($_SESSION['auth_dep']['bask_chosen_status']) && !empty($_SESSION['auth_
     {
         if($where_concat <> "")
         {
-            $where_concat .= " and ( process_limit_date is not null and ".$request->current_datetime()." > ".$request->extract_date('process_limit_date')." )";
+            $where_concat .= " and ( process_limit_date is not null and ".$request->current_datetime()." > ".$request->extract_date('process_limit_date')." ) and status <> 'END'";
         }
         else
         {
             if(!empty($where))
             {
-                $where_concat = "(".$where.") and (process_limit_date is not null and ".$request->current_datetime()." > ".$request->extract_date('process_limit_date').")";
+                $where_concat = "(".$where.") and (process_limit_date is not null and ".$request->current_datetime()." > ".$request->extract_date('process_limit_date').") and status <> 'END'";
             }
         }
+        //echo $where_concat;exit;
     }
     else
     {
