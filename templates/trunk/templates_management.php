@@ -22,7 +22,7 @@ if ($mode == 'list') {
         _ALL_TEMPLATES,
         _TEMPLATES,
         $_SESSION['config']['businessappurl']
-            . 'static.php?filename=manage_types_b.gif',
+            . 'static.php?filename=manage_architecture_b.gif',
         true,
         true,
         false,
@@ -139,7 +139,7 @@ if ($mode == 'list') {
                     <label for="template_datasource"><?php echo _TEMPLATE_DATASOURCE; ?> : </label>
                     <select name="template_datasource" id="template_datasource">
                         <option value="" ><?php echo _NO_DATASOURCE ?></option>
-						<?php
+                        <?php
                         for (
                             $cptDatasource = 0;
                             $cptDatasource < count($_SESSION['m_admin']['templatesDatasources']);
@@ -238,7 +238,7 @@ if ($mode == 'list') {
                     <p>
                         <label><?php echo _EDIT_TEMPLATE;?> :</label>
                         <div style="text-align:center;">
-                            <a href="#" onClick="loadApplet('<?php
+                            <!--<a href="#" onClick="loadApplet('<?php
                                 echo $_SESSION['config']['coreurl'];
                                 ?>modules/content_management/applet_launcher.php?objectType=<?php
                                     echo $objectType;
@@ -246,7 +246,20 @@ if ($mode == 'list') {
                                     echo $objectId;
                                 ?>&objectTable=<?php
                                     echo $objectTable;
-                                ?>');">
+                                ?>');">-->
+                                <?php
+                                $strAction .= 'window.open(\''
+                                    . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+                                    . '&module=content_management&page=applet_popup_launcher&objectType='
+                                    . $objectType
+                                    . '&objectId='
+                                    . $objectId
+                                    . '&objectTable='
+                                    . $objectTable
+                                    . '\', \'\', \'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no\');';
+                                ?>
+                                <a href="#" onClick="<?php echo $strAction;?>">
+                                
                                 <img alt="<?php echo _EDIT_TEMPLATE;?>" src="<?php echo
                                     $_SESSION['config']['businessappurl'];
                                     ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" />
@@ -257,7 +270,7 @@ if ($mode == 'list') {
                 </div>
                     <table align="center" width="100%" id="template_entities" >
                     <tr>
-                        <td colspan="3"><?php  echo _CHOOSE_ENTITY_TEMPLATE;?> :</td>
+                        <td colspan="3"><?php echo _CHOOSE_ENTITY_TEMPLATE;?> :</td>
                     </tr>
                     <tr>
                         <td width="40%" align="center">

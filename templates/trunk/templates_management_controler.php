@@ -253,7 +253,6 @@ function display_up($templateId)
         $dir = 'modules/templates/templates/styles/';
     }
     $stylesArray = $templatesControler->getTemplatesStyles(
-
         $dir, 
         $stylesArray
     );
@@ -302,7 +301,6 @@ function display_add()
         $dir = 'modules/templates/templates/styles/';
     }
     $stylesArray = $templatesControler->getTemplatesStyles(
-
         $dir, 
         $stylesArray
     );
