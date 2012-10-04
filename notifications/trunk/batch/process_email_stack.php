@@ -4,7 +4,6 @@
 /* begin */
 // load the config and prepare to process
 include('load_process_email_stack.php');
-
 $state = 'LOAD_EMAILS';
 while ($state <> 'END') {
     if (isset($GLOBALS['logger'])) {

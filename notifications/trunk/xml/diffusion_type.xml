@@ -49,6 +49,14 @@
         <use_attachment>false</use_attachment>
     </diffusion_type>
     <diffusion_type>
+        <id>note_copy_list</id>
+        <label>_NOTE_COPY_LIST</label>
+        <script>modules/notifications/diffusion_types/note_copy_list.php</script>
+        <use_email>true</use_email>
+        <use_rss>false</use_rss>
+        <use_attachment>false</use_attachment>
+    </diffusion_type>
+    <diffusion_type>
         <id>contact</id>
         <label>_CONTACT</label>
         <script>modules/notifications/diffusion_types/contact.php</script>
