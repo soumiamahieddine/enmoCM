@@ -117,7 +117,7 @@ if (! empty($_SESSION['error'])) {
             $query = 'select * from ' . USERS_TABLE
                        . " where user_id like '"
                        . $this->protect_string_db($login) . "' ";
-					   
+
             $db->query($query);
             if ($db->fetch_object()) {
                 $_SESSION['error'] = '';
@@ -185,7 +185,7 @@ if (! empty($_SESSION['error'])) {
     }
     else {
         if (empty($login) || empty($password)) {
-            $_SESSION['error'] = _BAD_LOGIN_OR_PSW . ' ici1 ...';
+            $_SESSION['error'] = _BAD_LOGIN_OR_PSW . '...';
             header(
                 'location: ' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&page=login&coreurl='

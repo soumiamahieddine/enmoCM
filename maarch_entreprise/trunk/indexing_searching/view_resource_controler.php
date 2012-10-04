@@ -107,6 +107,25 @@ if ($s_id == '') {
     $versionTable = $sec->retrieve_version_table_from_coll_id(
         $_SESSION['collection_id_choice']
     );
+    //SECURITY PATCH
+    require_once 'core/class/class_security.php';
+    $security = new security();
+    $right = $security->test_right_doc(
+        $_SESSION['collection_id_choice'], 
+        $s_id
+    );
+    //$_SESSION['error'] = 'coll '.$coll_id.', res_id : '.$s_id;
+    $_SESSION['origin'] = '';
+    if (!$right) {
+        ?>
+        <script type="text/javascript">
+        window.top.location.href = '<?php
+            echo $_SESSION['config']['businessappurl'];
+            ?>index.php?page=no_right';
+        </script>
+        <?php
+        exit();
+    }
     if (
         $versionTable <> '' 
         && !isset($_REQUEST['original'])

@@ -582,7 +582,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<tr id="diff_list_tr" style="display:none;">';
         $frmStr .= '<td colspan="3">';
         $frmStr .= '<div id="diff_list_div" class="scroll_div" '
-                . 'style="height:200px; border: 1px solid;"></div>';
+                . 'style="height:200px; width:420px; border: 1px solid;"></div>';
         $frmStr .= '</td>';
         $frmStr .= '</tr>';
     }

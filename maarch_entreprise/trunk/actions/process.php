@@ -676,16 +676,18 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     if ($core_tools->is_module_loaded('templates')) {
                         $objectTable = $sec->retrieve_table_from_coll($coll_id);
                         $frm_str .= _GENERATE_ATTACHMENT_FROM . ' <select name="templateOffice" id="templateOffice" style="width:150px" onchange="';
-                        $frm_str .= 'loadApplet(\''
-                            . $_SESSION['config']['coreurl']
-                            . 'modules/content_management/applet_launcher.php?objectType=attachmentFromTemplate'
+                        //$frm_str .= 'loadApplet(\''
+                        $frm_str .= 'window.open(\''
+                            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+                            . '&module=content_management&page=applet_popup_launcher&objectType=attachmentFromTemplate'
                             . '&objectId='
                             . '\' + $(\'templateOffice\').value + \''
                             . '&objectTable='
                             . $objectTable
                             . '&resMaster='
                             . $res_id
-                            . '\', $(\'templateOffice\').value);">';
+                            //. '\', $(\'templateOffice\').value);">';
+                            . '\', \'\', \'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no\');">';
                             $frm_str .= '<option value="">' . _OFFICE . '</option>';
                                 for ($i=0;$i<count($templates);$i++) {
                                     if ($templates[$i]['TYPE'] == 'OFFICE') {
@@ -727,8 +729,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     }
                     $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'
                     . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal" '
-                    . 'frameborder="0" width="100%" height="300px"></iframe>';
+                    . 'index.php?display=true&module=attachments&page=frame_list_attachments" '
+                    . 'frameborder="0" width="100%" height="450px"></iframe>';
                     $frm_str .= '</div>';
                 $frm_str .= '</div>';
                 //$frm_str .= '<hr class="hr_process"/>';
@@ -837,8 +839,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '</div>';
                 $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'
                     . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=notes&page=frame_notes_doc&size=full" '
-                    . 'frameborder="0" width="100%" height="200px"></iframe>';
+                    . 'index.php?display=true&module=notes&page=frame_notes_doc&size=middle" '
+                    . 'frameborder="0" width="100%" height="1000px"></iframe>';
                 //$frm_str .= '<hr class="hr_process"/>';
             $frm_str .= '</div>';
         $frm_str .= '</div>';

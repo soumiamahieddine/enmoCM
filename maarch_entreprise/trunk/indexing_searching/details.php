@@ -157,7 +157,6 @@ if ($db->nb_result() <= 0) {
 $_SESSION['doc_id'] = $s_id;
 $right = $security->test_right_doc($coll_id, $s_id);
 //$_SESSION['error'] = 'coll '.$coll_id.', res_id : '.$s_id;
-
 if (!$right) {
     ?>
     <script type="text/javascript">

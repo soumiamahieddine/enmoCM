@@ -1057,7 +1057,8 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
         frm_values = frm_values.replace(/\r\n/g, ' ');
         frm_values = frm_values.replace(/\r/g, ' ');
         frm_values = frm_values.replace(/\n/g, ' ');
-    }
+    }    
+
     var chosen_action_id = get_chosen_action(current_form_id);
 //  console.log('values : '+values+', table : '+table+', module : '+module+', coll_id : '+coll_id+', chosen_action_id : '+chosen_action_id+', frm_values : '+frm_values);
     if(values &&  table && module && coll_id && chosen_action_id != '')
