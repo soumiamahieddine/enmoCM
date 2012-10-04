@@ -11,15 +11,17 @@ function loadApplet(url, value)
 function sendAppletMsg(theMsg)
 {
     if (theMsg != '' && theMsg != ' ') {
-        $('maarchcm').innerHTML = '<h2>' + theMsg + '</h2>';
-        $('divError').innerHTML = theMsg;
+        if (window.opener.$('divError')) {
+            window.opener.$('divError').innerHTML = theMsg;
+        } else if ($('divError')) {
+            $('divError').innerHTML = theMsg;
+        }
     }
 }
 
 //destroy the modal of the applet and launch an ajax script
 function endOfApplet(objectType, theMsg)
 {
-    //window.alert('endOfApplet');
     $('divError').innerHTML = theMsg;
     if (objectType == 'template' || objectType == 'templateStyle') {
         endTemplate();
@@ -30,15 +32,16 @@ function endOfApplet(objectType, theMsg)
     } else if (objectType == 'attachment') {
         endAttachment();
     }
-    destroyModal('CMApplet');
+    //destroyModal('CMApplet');
 }
 
 function endAttachmentFromTemplate()
 {
     //window.alert('template ?');
-    if($('list_attach')) {
-        $('list_attach').src = $('list_attach').src;
+    if(window.opener.$('list_attach')) {
+        window.opener.$('list_attach').src = window.opener.$('list_attach').src;
     }
+    window.close();
 }
 
 function endAttachment()
@@ -49,21 +52,49 @@ function endAttachment()
 function endTemplate()
 {
     //window.alert('template ?');
+    window.close();
 }
 
 //reload the list div and the document if necessary
 function endResource()
 {
     //window.alert('resource ?');
-    showDiv(
+    showDivEnd(
         'loadVersions',
         'nbVersions',
         'createVersion',
         '../../modules/content_management/list_versions.php'
     );
-    if($('viewframe')) {
-        $('viewframe').src = $('viewframe').src;
+    if (window.opener.$('viewframe')) {
+        window.opener.$('viewframe').src = window.opener.$('viewframe').src;
     }
+    window.close();
+}
+
+function showDivEnd(divName, spanNb, divCreate, path_manage_script)
+{
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: {res_id : 'test'},
+            onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            if(response.status == 0 || response.status == 1) {
+                if(response.status == 0) {
+                    window.opener.$(divName).innerHTML = response.list;
+                    window.opener.$(spanNb).innerHTML = response.nb;
+                    window.opener.$(divCreate).innerHTML = response.create;
+                } else {
+                    //
+                }
+            } else {
+                try {
+                    //window.opener.$(divName).innerHTML = response.error_txt;
+                }
+                catch(e){}
+            }
+        }
+    });
 }
 
 function showDiv(divName, spanNb, divCreate, path_manage_script)
@@ -76,9 +107,15 @@ function showDiv(divName, spanNb, divCreate, path_manage_script)
             eval("response = "+answer.responseText);
             if(response.status == 0 || response.status == 1) {
                 if(response.status == 0) {
-                    $(divName).innerHTML = response.list;
-                    $(spanNb).innerHTML = response.nb;
-                    $(divCreate).innerHTML = response.create;
+                    if ($(divName)) {
+                        $(divName).innerHTML = response.list;
+                        $(spanNb).innerHTML = response.nb;
+                        $(divCreate).innerHTML = response.create;
+                    } else {
+                        window.opener.$(divName).innerHTML = response.list;
+                        window.opener.$(spanNb).innerHTML = response.nb;
+                        window.opener.$(divCreate).innerHTML = response.create;
+                    }
                 } else {
                     //
                 }

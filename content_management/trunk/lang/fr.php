@@ -33,3 +33,5 @@ if (!defined('_VERSION'))
     define('_VERSION','Version');
 if (!defined('_NEW_VERSION_ADDED'))
     define('_NEW_VERSION_ADDED','Nouvelle version ajout&eacute;e');
+if (!defined('_DONT_CLOSE'))
+    define('_DONT_CLOSE','Ne pas fermer cette fen&ecirc;tre !');

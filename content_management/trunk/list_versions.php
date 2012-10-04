@@ -97,15 +97,16 @@ if ($tabVersions[0][0]['res_id'] == '') {
     $objectId = $tabVersions[0][0]['res_id'];
 }
 
-$createDiv = '<a href="#" onClick="loadApplet(\''
-    . $_SESSION['config']['coreurl']
-    . 'modules/content_management/applet_launcher.php?objectType=resource&objectId='
+$createDiv = '<a href="#" onClick="window.open(\''
+    . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+    . '&module=content_management&page=applet_popup_launcher&objectType=resource'
+    . '&objectId='
     . $objectId
     . '&objectTable='
     . $objectTable
     . '&resMaster='
-    .  $_SESSION['doc_id']
-    . '\');">'
+    . $_SESSION['doc_id']
+    . '\', \'\', \'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no\');">'
     . '<img alt="' . _CREATE_NEW_VERSION . '" src="'
     . $_SESSION['config']['businessappurl']
     . 'static.php?filename=modif_note.png&module=notes" border="0" alt="" />'

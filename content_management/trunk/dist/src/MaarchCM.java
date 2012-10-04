@@ -307,16 +307,13 @@ public class MaarchCM extends JApplet {
                             + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId;
             sendHttpRequest(urlToSave, this.fileContentTosend);
             this.logger.log("MESSAGE STATUS : " + this.messageStatus.toString(), Level.INFO);
-            this.logger.log("MESSAGE RESULT : ", Level.INFO);
+            this.logger.log("LAST MESSAGE RESULT : ", Level.INFO);
             this.processReturn(this.messageResult);
-            //try {
-                this.sendJsEnd();
-            /*} catch (InterruptedException e) {
-                this.logger.log("CATCH INTERRUPTED ERROR" + e.getMessage(), Level.INFO);
-                this.destroy();
-                this.stop();
-                System.exit(0);
-            }*/
+            //send message to Maarch at the end
+            if (!this.endMessage.isEmpty()) {
+                this.sendJsMessage(this.endMessage.toString());
+            }
+            this.sendJsEnd();
             this.logger.log("----------END SEND OF THE OBJECT----------", Level.INFO);
         } else {
             this.logger.log("RESPONSE KO", Level.WARNING);
@@ -338,14 +335,7 @@ public class MaarchCM extends JApplet {
         JSObject jso;
         jso = JSObject.getWindow(this);
         this.logger.log("----------JS CALL endOfApplet TO MAARCH----------", Level.INFO);
-        //try{
-            jso.call("endOfApplet", new String[] {String.valueOf(this.objectType), this.endMessage});
-            /*this.destroy();
-            this.stop();
-            System.exit(0);*/
-        //}catch (JSException e) {
-        //    this.logger.log("CATCH JS ERROR" + e.getMessage(), Level.INFO);
-        //}
+        jso.call("endOfApplet", new String[] {String.valueOf(this.objectType), this.endMessage});    
     }
     
     public void sendHttpRequest(String theUrl, String postRequest) throws Exception {

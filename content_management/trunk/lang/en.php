@@ -33,3 +33,5 @@ if (!defined('_VERSION'))
     define('_VERSION','Version');
 if (!defined('_NEW_VERSION_ADDED'))
     define('_NEW_VERSION_ADDED','New version added');
+if (!defined('_DONT_CLOSE'))
+    define('_DONT_CLOSE','Do not close this popup !');
