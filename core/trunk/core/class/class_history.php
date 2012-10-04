@@ -193,14 +193,14 @@ class history extends dbquery
 
         $core = new core_tools();
         if ($core->is_module_loaded("notifications")) {
-            require_once(
+			require_once(
                 "modules"
                 .DIRECTORY_SEPARATOR."notifications"
                 .DIRECTORY_SEPARATOR."class"
-                .DIRECTORY_SEPARATOR."events_controler.php"
+				.DIRECTORY_SEPARATOR."events_controler.php"
             );
-            $eventsCtrl = new events_controler();
-            $eventsCtrl->fill_event_stack($event_id, $table_name, $record_id, $user, $info);
+			$eventsCtrl = new events_controler();
+			$eventsCtrl->fill_event_stack($event_id, $table_name, $record_id, $user, $info);
         }
     }
 
