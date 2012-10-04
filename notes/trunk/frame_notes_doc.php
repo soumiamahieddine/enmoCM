@@ -69,6 +69,14 @@ if (isset($_GET['size']) && $_GET['size'] == "full") {
     $body = "";
     $cutString = 300;
     $extendUrl = "&size=full";
+} elseif (isset($_GET['size']) && $_GET['size'] == "middle") {
+    $sizeMedium = "15";
+    $sizeSmall = "10";
+    $sizeFull = "50";
+    $css = "listingsmall spec";
+    $body = "";
+    $cutString = 100;
+    $extendUrl = "&size=middle";
 } else {
     $sizeMedium = "18";
     $sizeSmall = "10";

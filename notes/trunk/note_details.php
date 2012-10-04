@@ -17,7 +17,7 @@ require_once "modules/entities/class/EntityControler.php";
 require_once 'core/core_tables.php';
 require_once 'modules/notes/notes_tables.php';
 require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
-	. "class" . DIRECTORY_SEPARATOR
+    . "class" . DIRECTORY_SEPARATOR
     . "class_modules_tools.php";
 $core = new core_tools();
 $core->load_lang();
@@ -62,64 +62,64 @@ if (isset($_REQUEST['modify'])) {
         );
         //$db->show();exit();
         echo "<pre>";
-		//print_r($_REQUEST['entities_chosen']);
+        //print_r($_REQUEST['entities_chosen']);
         //print_r($_SESSION['notes']['entities']);
         echo "</pre>";
         
         if (isset($_REQUEST['entities_chosen']) && !empty($_REQUEST['entities_chosen']))
-		{
-			for ($i=0; $i<count($_REQUEST['entities_chosen']); $i++) 
-			{
-				$db->query(
-					"SELECT id FROM " .NOTE_ENTITIES_TABLE. " WHERE item_id = '"
-					.$_REQUEST['entities_chosen'][$i]."' and note_id = "
-					.$id
-				);
-				$result = $db->fetch_object();
-				$note_entity_id = $result->id;
-				
-				if ($db->nb_result() == 0) 
-				{
-					$db->query(
-						"INSERT INTO " . NOTE_ENTITIES_TABLE . "(note_id, item_id) VALUES"
-						. " (".$id . ", '"
-						. $db->protect_string_db($_REQUEST['entities_chosen'][$i])."')"
-					);
-				}
-				else
-				{
-					$db->query(
-						"UPDATE ".NOTE_ENTITIES_TABLE." SET item_id = '". $db->protect_string_db($_REQUEST['entities_chosen'][$i])
-						. "' WHERE id = "
-						. $note_entity_id
-					);
-				}
-				
+        {
+            for ($i=0; $i<count($_REQUEST['entities_chosen']); $i++) 
+            {
+                $db->query(
+                    "SELECT id FROM " .NOTE_ENTITIES_TABLE. " WHERE item_id = '"
+                    .$_REQUEST['entities_chosen'][$i]."' and note_id = "
+                    .$id
+                );
+                $result = $db->fetch_object();
+                $note_entity_id = $result->id;
+                
+                if ($db->nb_result() == 0) 
+                {
+                    $db->query(
+                        "INSERT INTO " . NOTE_ENTITIES_TABLE . "(note_id, item_id) VALUES"
+                        . " (".$id . ", '"
+                        . $db->protect_string_db($_REQUEST['entities_chosen'][$i])."')"
+                    );
+                }
+                else
+                {
+                    $db->query(
+                        "UPDATE ".NOTE_ENTITIES_TABLE." SET item_id = '". $db->protect_string_db($_REQUEST['entities_chosen'][$i])
+                        . "' WHERE id = "
+                        . $note_entity_id
+                    );
+                }
+                
 
 
 /*
-				for ($j=0; $j<count($_SESSION['notes']['entities']); $j++) 
-				{
-					$old_entities = array();
-					$old_entities = $notes_mod_tools->getNotesEntities($id);
-					
-					if (in_array($_SESSION['notes']['entities'][$j], $old_entities))
-					{
-						$db->query(
-							"DELETE FROM " . NOTE_ENTITIES_TABLE . " where id = " . $note_entity_id);
-					}
-				}
+                for ($j=0; $j<count($_SESSION['notes']['entities']); $j++) 
+                {
+                    $old_entities = array();
+                    $old_entities = $notes_mod_tools->getNotesEntities($id);
+                    
+                    if (in_array($_SESSION['notes']['entities'][$j], $old_entities))
+                    {
+                        $db->query(
+                            "DELETE FROM " . NOTE_ENTITIES_TABLE . " where id = " . $note_entity_id);
+                    }
+                }
 */
 
 
-			}
-		}
-		elseif (empty($_REQUEST['entities_chosen']))
-		{
-			$db->query(
-					"DELETE FROM " . NOTE_ENTITIES_TABLE . " where note_id = " . $id
-			);
-		}
+            }
+        }
+        elseif (empty($_REQUEST['entities_chosen']))
+        {
+            $db->query(
+                    "DELETE FROM " . NOTE_ENTITIES_TABLE . " where note_id = " . $id
+            );
+        }
         if ($_SESSION['history']['noteup']) {
             $hist = new history();
             $hist->add(
@@ -152,7 +152,7 @@ if (isset($_REQUEST['delete'])) {
     $id = $_REQUEST['id'];
     $identifier = $_REQUEST['identifier'];
 
-	$db->query("delete from " . NOTE_ENTITIES_TABLE . " where note_id = " . $id);
+    $db->query("delete from " . NOTE_ENTITIES_TABLE . " where note_id = " . $id);
     $db->query("delete from " . NOTES_TABLE . " where id = " . $id);
 
     if ($_SESSION['history']['notedel']) {
@@ -286,97 +286,95 @@ echo _CLOSE_WINDOW;
 ?>" onclick="javascript:self.close();" class="button"/>
     </p>
     <?php
-if ($canModify) {
-	?>
-	<div>
-		<h3 class="sstit"><?php echo _THIS_NOTE_IS_VISIBLE_BY; ?></h3>
-	</div>
-	<table>
-		<tr>
-			<td>
-				<div  id="config_entities" class ="scrollbox" style=" width: 700px; margin-left:auto; margin-right: auto; height:140px; border: 1px solid #999;">
-					<table align="center" width="100%" id="template_entities" >
-						<tr>
-							<td width="10%" align="center">
-							<?php 
-								$notesEntities = array();
-								$entitiesList = array();
-								$_SESSION['notes']['entities'] = array();
-								$_SESSION['notes']['entities'] = $notes_mod_tools->getNotesEntities($sId);
-								//$notesEntities = $notes_mod_tools->getNotesEntities($sId);
-								$entitiesList = $ent->getAllEntities();
-								echo "<pre>";
-								//print_r($notesEntities);
-								//print_r($entitiesList);
-								echo "</pre>";
 
-							?>
-								<select name="entitieslist[]" id="entitieslist" size="7" 
-										ondblclick='moveclick($(entitieslist), $(entities_chosen));' multiple="multiple" >
-								<?php
-									
-									for ($j=0;$j<count($entitiesList);$j++) {
-											$state_entity = false;
-											
-											if (in_array($entitiesList[$j], $_SESSION['notes']['entities']))
-												$state_entity = true;							
-											else
-												$state_entity = false;
-											
-										if ($state_entity == false) {
-									?>
-											<option value="<?php 
-												echo $entitiesList[$j]->entity_id;
-												?>"><?php 
-												echo $entitiesList[$j]->entity_label;
-												?></option>
-										<?php
-										}
-									}
-										?>	
-								</select>
-								<br/>
-							</td>
-							<td width="10%" align="center">
-								<input type="button" class="button" value="<?php 
-									echo _ADD; 
-									?> &gt;&gt;" onclick='Move($(entitieslist), $(entities_chosen));' />
-								<br />
-								<br />
-								<input type="button" class="button" value="&lt;&lt; <?php 
-									echo _REMOVE;
-									?>" onclick='Move($(entities_chosen), $(entitieslist));' />
-							</td>
-							<td width="10%" align="center">
-								<select name="entities_chosen[]" id="entities_chosen" size="7" 
-										ondblclick='moveclick($(entities_chosen), $(entitieslist));' multiple="multiple">
-									<?php
-										for ($i=0;$i<count($_SESSION['notes']['entities']);$i++) {
-											$state_entity = false;
-											if ($state_entity == false) {
-										?>
-												<option value="<?php 
-													echo $_SESSION['notes']['entities'][$i]->entity_id;
-												?>" selected="selected" ><?php 
-													echo $_SESSION['notes']['entities'][$i]->entity_label; 
-												?></option>
-										<?php
-											}
-										}
-									?>
-								</select>
-							</td>
-						</tr>
-					</table>
-				</div>
-			</td>
-		</tr>
-	</table>
-	<?php
-	
-}
     ?>
-
+    <div>
+        <h3 class="sstit"><?php echo _THIS_NOTE_IS_VISIBLE_BY; ?></h3>
+    </div>
+    <table>
+        <tr>
+            <td>
+                <div  id="config_entities" class ="scrollbox" style=" width: 700px; margin-left:auto; margin-right: auto; height:140px; border: 1px solid #999;">
+                    <table align="center" width="100%" id="template_entities" >
+                        <tr>
+                            <td width="10%" align="center">
+                            <?php 
+                                $notesEntities = array();
+                                $entitiesList = array();
+                                $_SESSION['notes']['entities'] = array();
+                                $_SESSION['notes']['entities'] = $notes_mod_tools->getNotesEntities($sId);
+                                //$notesEntities = $notes_mod_tools->getNotesEntities($sId);
+                                $entitiesList = $ent->getAllEntities();
+                                echo "<pre>";
+                                //print_r($notesEntities);
+                                //print_r($entitiesList);
+                                echo "</pre>";
+if ($canModify) {
+                            ?>
+                                <select name="entitieslist[]" id="entitieslist" size="7" 
+                                        ondblclick='moveclick($(entitieslist), $(entities_chosen));' multiple="multiple" >
+                                <?php
+                                    
+                                    for ($j=0;$j<count($entitiesList);$j++) {
+                                            $state_entity = false;
+                                            
+                                            if (in_array($entitiesList[$j], $_SESSION['notes']['entities']))
+                                                $state_entity = true;                           
+                                            else
+                                                $state_entity = false;
+                                            
+                                        if ($state_entity == false) {
+                                    ?>
+                                            <option value="<?php 
+                                                echo $entitiesList[$j]->entity_id;
+                                                ?>"><?php 
+                                                echo $entitiesList[$j]->entity_label;
+                                                ?></option>
+                                        <?php
+                                        }
+                                    }
+                                        ?>  
+                                </select>
+                                <br/>
+                            </td>
+                            <td width="10%" align="center">
+                                <input type="button" class="button" value="<?php 
+                                    echo _ADD; 
+                                    ?> &gt;&gt;" onclick='Move($(entitieslist), $(entities_chosen));' />
+                                <br />
+                                <br />
+                                <input type="button" class="button" value="&lt;&lt; <?php 
+                                    echo _REMOVE;
+                                    ?>" onclick='Move($(entities_chosen), $(entitieslist));' />
+                            </td>
+    <?php
+}
+?>
+                            <td width="10%" align="center">
+                                <select name="entities_chosen[]" id="entities_chosen" size="7" 
+                                        ondblclick='moveclick($(entities_chosen), $(entitieslist));' multiple="multiple">
+                                    <?php
+                                        for ($i=0;$i<count($_SESSION['notes']['entities']);$i++) {
+                                            $state_entity = false;
+                                            if ($state_entity == false) {
+                                        ?>
+                                                <option value="<?php 
+                                                    echo $_SESSION['notes']['entities'][$i]->entity_id;
+                                                ?>" selected="selected" ><?php 
+                                                    echo $_SESSION['notes']['entities'][$i]->entity_label; 
+                                                ?></option>
+                                        <?php
+                                            }
+                                        }
+                                    ?>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </td>
+        </tr>
+    </table>
       </form>
     </div>
     <div class="block_end">&nbsp;</div>

@@ -105,11 +105,6 @@ if (isset($_REQUEST['notes']) && ! empty($_REQUEST['notes'])) {
                 . $identifier . ' (' . $id . ') ',
                 $_SESSION['config']['databasetype'], 'notes'
             );
-            /*$hist->add(
-                $view, $identifier, "UP", 'resup',  _ADDITION_NOTE . _ON_DOC_NUM
-                . $identifier . ' (' . $id . ') : "' . substr($db->protect_string_db($_REQUEST['notes']), 0, 254) .'"',
-                $_SESSION['config']['databasetype'], 'notes'
-            );*/
         }
 
         $hist->add(
