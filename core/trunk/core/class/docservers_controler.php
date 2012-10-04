@@ -1456,7 +1456,10 @@ class docservers_controler
     ) {
         $history = new history();
         $coreTools = new core_tools();
-        $whereClause = '';
+        //$whereClause = '';
+        //THE TEST HAVE TO BE DONE BEFORE !!!
+        $whereClause = ' and 1=1';
+/*
         if (isset($_SESSION['origin']) && ($_SESSION['origin'] <> 'basket'
             && $_SESSION['origin'] <> 'workflow')
         ) {
@@ -1475,6 +1478,7 @@ class docservers_controler
         } else {
             $whereClause = ' and 1=1';
         }
+*/
         $adr = array();
         $resource = new resource();
         $adr = $resource->getResourceAdr(
