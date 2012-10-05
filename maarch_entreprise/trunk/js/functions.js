@@ -624,7 +624,9 @@ function resize_frame_process(id_modal, id_frame, resize_width, resize_height)
 {
     var modal = $(id_modal);
     if (modal) {
-        
+    if ($('list_doc')) {
+            $('list_doc').style.display = 'none';
+        }
         //console.log('modal width '+newwidth);
         var frame2 = $(id_frame);
         var windowHeigth = document.body.clientHeight;
@@ -708,6 +710,9 @@ function resize_frame_view(id_modal, id_frame, resize_width, resize_height)
     var modal = $(id_modal);
     if(modal)
     {
+        if ($('list_doc')) {
+            $('list_doc').style.display = 'none';
+        }
         var newwidth = modal.getWidth();
         var newheight = modal.getHeight() - 30;
         var frame2 = $(id_frame);
@@ -882,6 +887,9 @@ function createModal(txt, id_mod,height, width, mode_frm){
  * @param id_mod String Modal identifier
  */
 function destroyModal(id_mod){
+    if ($('list_doc')) {
+        $('list_doc').style.display = 'block';
+    }
     if(id_mod == undefined || id_mod=='')
     {
         id_mod = 'modal';
