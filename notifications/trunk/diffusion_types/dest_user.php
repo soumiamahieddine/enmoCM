@@ -16,7 +16,11 @@ case 'recipients':
     switch($event->table_name) {
     case 'notes':
         $from .= " JOIN notes ON notes.coll_id = li.coll_id AND notes.identifier = li.res_id";
-		$where .= " AND notes.id = " . $event->record_id . " AND li.item_id != notes.user_id";
+		$where .= " AND notes.id = " . $event->record_id . " AND li.item_id != notes.user_id"
+            . " AND ("
+                . " notes.id not in (SELECT DISTINCT note_id FROM note_entities) "
+                . " OR us.user_id IN (SELECT ue.user_id FROM note_entities ne JOIN users_entities ue ON ne.item_id = ue.entity_id)"
+            . ")";
         break;
     
     case 'res_letterbox':
