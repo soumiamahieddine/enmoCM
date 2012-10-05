@@ -18,7 +18,7 @@
  *   You should have received a copy of the GNU General Public License
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 if (!defined('MUST_BE_LESS_THAN')) define('MUST_BE_LESS_THAN', 'must not be longer than');
 if (!defined('_ACCESS_LIST_EXTEND')) define('_ACCESS_LIST_EXTEND', 'Display extended lists');
 if (!defined('_ACCESS_LIST_STANDARD')) define('_ACCESS_LIST_STANDARD', 'Display simple lists');
@@ -606,6 +606,7 @@ if (!defined('_MANDATORY')) define('_MANDATORY', 'Mandatory');
 if (!defined('_MANDATORY_FIELDS_IN_INDEX')) define('_MANDATORY_FIELDS_IN_INDEX', 'Mandatory fields for indexing');
 if (!defined('_MANDATORY_FOR_COMPLETE')) define('_MANDATORY_FOR_COMPLETE', 'Mandatory for a file to be complete');
 if (!defined('_MARCH')) define('_MARCH', 'March');
+if (!defined('_MAARCH_INFO')) define('_MAARCH_INFO', 'Contact us');
 if (!defined('_MARKET')) define('_MARKET', 'Sub-folder');
 if (!defined('_MARKET_DOCUMENT')) define('_MARKET_DOCUMENT', 'Document to file');
 if (!defined('_MASK'))  define('_MASK', 'Mask');
@@ -649,6 +650,7 @@ if (!defined('_MUST_CORRECT_ERRORS')) define('_MUST_CORRECT_ERRORS', 'Please cor
 if (!defined('_MUST_DEFINE_ANSWER_TYPE')) define('_MUST_DEFINE_ANSWER_TYPE', 'You must set the type of the answer');
 if (!defined('_MUST_MAKE_AT_LEAST')) define('_MUST_MAKE_AT_LEAST', 'must contain at least' );
 if (!defined('_MY_CONTACTS')) define('_MY_CONTACTS', 'My contacts');
+if (!defined('_MY_COLLEAGUES')) define( '_MY_COLLEAGUES', 'Mes collegues');
 if (!defined('_MY_INFO')) define('_MY_INFO', 'My account');
 if (!defined('_MY_SEARCHES')) define('_MY_SEARCHES', 'My searches');
 if (!defined('_NATURE')) define( '_NATURE', 'Nature');
@@ -709,6 +711,7 @@ if (!defined('_NUM')) define('_NUM', '#');
 if (!defined('_NUM2')) define('_NUM2', 'nb');
 if (!defined('_NUM_BETWEEN')) define('_NUM_BETWEEN', 'Between');
 if (!defined('_NUM_GED')) define('_NUM_GED', 'DMS #');
+if (!defined('_NUMBER')) define( '_NUMBER', 'Number');
 if (!defined('_N_DAYS')) define('_N_DAYS','NB on days');
 if (!defined('_N_GED')) define('_N_GED','DMS nb. ');
 if (!defined('_N_GED_HELP')) define('_N_GED_HELP', '');
@@ -739,7 +742,7 @@ if (!defined('_PATH_OF_DOCSERVER_UNAPPROACHABLE'))  define('_PATH_OF_DOCSERVER_U
 if (!defined('_PATH_TEMPLATE'))  define('_PATH_TEMPLATE', 'Path template');
 if (!defined('_PB_WITH_FINGERPRINT_OF_DOCUMENT')) define( '_PB_WITH_FINGERPRINT_OF_DOCUMENT', 'Document checksum does not fit ! Issue with document integrity');
 if (!defined('_PERCENTAGE_FULL'))  define('_PERCENTAGE_FULL', 'Filling percentage');
-if (!defined('_PHONE')) define('_PHONE', 'Telephone');
+if (!defined('_PHONE')) define('_PHONE', 'Phone');
 if (!defined('_PHONE_NUMBER')) define('_PHONE_NUMBER', 'Phone number');
 if (!defined('_PIECE_TYPE')) define('_PIECE_TYPE', 'type of file');
 if (!defined('_PJ'))    define('_PJ', 'Attachments');
@@ -1055,3 +1058,4 @@ if (!defined('_YOUR_FIRST_CONNEXION')) define('_YOUR_FIRST_CONNEXION', 'Welcome 
 if (!defined('_YOU_CANNOT_DELETE')) define( '_YOU_CANNOT_DELETE', 'Impossible ti delete');
 if (!defined('_YOU_CANNOT_DISABLE')) define( '_YOU_CANNOT_DISABLE', 'Impossible to disable');
 if (!defined('_YOU_MUST_SELECT_CONTACT')) define('_YOU_MUST_SELECT_CONTACT', 'You must select a contact ');
+if (!defined('_IS_PRIVATE')) define( '_IS_PRIVATE', 'Confidential');

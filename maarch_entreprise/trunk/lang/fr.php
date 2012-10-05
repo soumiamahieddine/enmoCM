@@ -19,7 +19,14 @@
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('_MEP_VERSION')) define('_MEP_VERSION', 'Maarch Entreprise v1.4');
+if (!defined('_MEP_VERSION')) define('_MEP_VERSION', 'Maarch Entreprise v1.3');
+
+///// Ajout RAGOT Alexis
+
+
+
+
+
 
 /************** Administration **************/
 if (!defined('_ADMIN_USERS'))    define( '_ADMIN_USERS', 'Utilisateurs');
@@ -118,8 +125,10 @@ if (!defined('_FIRSTNAME'))    define( '_FIRSTNAME', 'Pr&eacute;nom');
 if (!defined('_STATUS'))    define( '_STATUS', 'Statut');
 if (!defined('_DEPARTMENT'))    define( '_DEPARTMENT', 'D&eacute;partement');
 if (!defined('_FUNCTION'))    define( '_FUNCTION', 'Fonction');
+if (!defined('_NUMBER')) define( '_NUMBER', 'Numero');
 if (!defined('_PHONE_NUMBER'))    define( '_PHONE_NUMBER', 'Num&eacute;ro de t&eacute;l&eacute;phone');
 if (!defined('_MAIL'))    define( '_MAIL', 'Courriel');
+if (!defined('_EMAIL')) define( '_EMAIL', 'Courriel');
 if (!defined('_DOCTYPE'))    define( '_DOCTYPE', 'Type de document');
 if (!defined('_TYPE'))    define( '_TYPE', 'Type');
 if (!defined('_SELECT_ALL'))    define( '_SELECT_ALL', 'S&eacute;lectionner tout');
@@ -681,7 +690,6 @@ if (!defined('_PROCESS_LIMIT_DATE_USE')) define( '_PROCESS_LIMIT_DATE_USE', 'Act
 if (!defined('_DEPARTMENT_DEST')) define( '_DEPARTMENT_DEST', 'Service traitant');
 if (!defined('_DEPARTMENT_EXP')) define( '_DEPARTMENT_EXP', 'Service exp&eacute;diteur');
 
-
 // Mail Categories
 if (!defined('_INCOMING')) define( '_INCOMING', 'Courrier Arriv&eacute;e');
 if (!defined('_OUTGOING')) define( '_OUTGOING', 'Courrier D&eacute;part');
@@ -832,6 +840,7 @@ if (!defined('_CONTACT_MODIFIED')) define( '_CONTACT_MODIFIED', 'Contact modifi&
 if (!defined('_CONTACT_DELETED')) define( '_CONTACT_DELETED', 'Contact supprim&eacute;');
 if (!defined('_MODIFY_CONTACT')) define( '_MODIFY_CONTACT', 'Modifier un contact');
 if (!defined('_IS_CORPORATE_PERSON')) define( '_IS_CORPORATE_PERSON', 'Personne morale');
+if (!defined('_IS_PRIVATE')) define( '_IS_PRIVATE', 'Coordonnées confidentielles');
 if (!defined('_TITLE2')) define( '_TITLE2', 'Civilit&eacute;');
 if (!defined('_WARNING_MESSAGE_DEL_CONTACT'))  define('_WARNING_MESSAGE_DEL_CONTACT', 'Avertissement :<br> La suppression d&rsquo;un contact entraine la r&eacute;affectation des documents &agrave un nouveau contact quelque soit le statut des documents (courriers).');
 if (!defined('_CONTACT_DELETION'))  define('_CONTACT_DELETION', 'Suppression de contact');
@@ -866,6 +875,8 @@ if (!defined('_CREATION_DATE')) define( '_CREATION_DATE', 'Date de cr&eacute;ati
 if (!defined('_NO_RESULTS')) define( '_NO_RESULTS', 'Aucun r&eacute;sultat');
 if (!defined('_FOUND_DOCS')) define( '_FOUND_DOCS', 'document(s) trouv&eacute;(s)');
 if (!defined('_MY_CONTACTS')) define( '_MY_CONTACTS', 'Mes contacts');
+if (!defined('_MAARCH_INFO')) define( '_MAARCH_INFO', 'Nous Contacter');
+if (!defined('_MY_COLLEAGUES')) define( '_MY_COLLEAGUES', 'Mes collegues');
 if (!defined('_DETAILLED_PROPERTIES')) define( '_DETAILLED_PROPERTIES', 'Propri&eacute;t&eacute;s d&eacute;taill&eacute;es');
 if (!defined('_PROPERTIES')) define( '_PROPERTIES', 'D&eacute;tails');
 if (!defined('_VIEW_DOC_NUM')) define( '_VIEW_DOC_NUM', 'Visualisation du document n&deg;');
@@ -1311,3 +1322,5 @@ if (!defined('_QUALIFY_FIRST'))    define('_QUALIFY_FIRST', 'La fiche d&eacute;t
 /******************** persistent mode ************/
 if (!defined('_SET_PERSISTENT_MODE_ON'))    define('_SET_PERSISTENT_MODE_ON', 'Activer la persistance');
 if (!defined('_SET_PERSISTENT_MODE_OFF'))    define('_SET_PERSISTENT_MODE_OFF', 'Désactiver la persistance');
+
+/******************** persistent mode ************/
