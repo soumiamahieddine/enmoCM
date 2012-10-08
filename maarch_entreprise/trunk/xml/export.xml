@@ -1,24 +1,35 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <ROOT>
+    <!-- 
+        options 
+    -->
+    <CSVOPTIONS>
+        <DELIMITER>;</DELIMITER> <!-- 1 charcater, default for MSExcel ';' && default other ',' -->
+        <ENCLOSURE>"</ENCLOSURE> <!-- 1 charcater, default for all '"' -->
+        <!-- ENCODING>UTF-8</ENCODING -->
+    </CSVOPTIONS>
+    <!--
+        letterbox_coll
+    -->
     <letterbox_coll>
         <FIELD>
             <LIBELLE>Num GED</LIBELLE>
             <DATABASE_FIELD>res_view_letterbox.res_id</DATABASE_FIELD>
         </FIELD>
         <FIELD>
-            <LIBELLE>Date d'arrivee</LIBELLE>
+            <LIBELLE>Date d'arrivée</LIBELLE>
             <DATABASE_FIELD>doc_date</DATABASE_FIELD>
         </FIELD>
         <FIELD>
-            <LIBELLE>Prenom de l'expediteur</LIBELLE>
+            <LIBELLE>Prénom de l'expéditeur</LIBELLE>
             <DATABASE_FIELD>contact_firstname</DATABASE_FIELD>
         </FIELD>
         <FIELD>
-            <LIBELLE>Nom de l'expediteur</LIBELLE>
+            <LIBELLE>Nom de l'expéditeur</LIBELLE>
             <DATABASE_FIELD>contact_lastname</DATABASE_FIELD>
         </FIELD>
         <FIELD>
-            <LIBELLE>Societe de l'expediteur</LIBELLE>
+            <LIBELLE>Société de l'expéditeur</LIBELLE>
             <DATABASE_FIELD>contact_society</DATABASE_FIELD>
         </FIELD>
         <FIELD>
@@ -34,12 +45,25 @@
             <DATABASE_FIELD>type_label</DATABASE_FIELD>
         </FIELD>
         <FUNCTIONS>
-            <COPIES>Services en copies</COPIES>
-            <LINK>Page detail</LINK>
+            <FUNCTION>
+                <LIBELLE>Services en copie</LIBELLE>
+                <CALL>retrieve_copies</CALL>
+            </FUNCTION>
+            <FUNCTION>
+                <LIBELLE>Page détail</LIBELLE>
+                <CALL>makeLink_detail</CALL>
+            </FUNCTION>
         </FUNCTIONS>
-        <FIXE>Commentaire</FIXE>
-        
+        <EMPTYS>
+            <EMPTY>
+                <LIBELLE>Commentaire</LIBELLE>
+                <COLNAME>comments</COLNAME> <!-- no spaces in the COLNAME -->
+            </EMPTY>
+        </EMPTYS>
     </letterbox_coll>
+    <!--
+        res_coll
+    -->
     <res_coll>
         <FIELD>
             <LIBELLE>identifiant</LIBELLE>
@@ -73,9 +97,17 @@
             <LIBELLE>Date d'enregistrement</LIBELLE>
             <DATABASE_FIELD>doc_custom_d1</DATABASE_FIELD>
         </FIELD>
-        <!-- <FUNCTIONS>
-            <COPIES>Services en copies</COPIES>
-        </FUNCTIONS> -->
-        <FIXE>Commentaire</FIXE>
+        <FUNCTIONS>
+            <!-- FUNCTION>
+                <LIBELLE>Services en copie</LIBELLE>
+                <CALL>retrieve_copies</CALL>
+            </FUNCTION -->
+        </FUNCTIONS>
+        <EMPTYS>
+            <EMPTY>
+                <LIBELLE>Commentaire</LIBELLE>
+                <COLNAME>comments</COLNAME> <!-- no spaces in the COLNAME -->
+            </EMPTY>
+        </EMPTYS>
     </res_coll>
 </ROOT>
