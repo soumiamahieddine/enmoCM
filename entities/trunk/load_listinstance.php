@@ -62,7 +62,7 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
 ) {
     if (! $onlyCC) {
         $content .= '<p class="sstit">' . _RECIPIENT . '</p>';
-        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
+        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">';
         $content .= '<tr class="col">';
         $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
                  . 'static.php?filename=manage_users_entities_b_small.gif'
@@ -83,7 +83,7 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
         if (! $onlyCC) {
             $content .= '<p class="sstit">' . _TO_CC . '</p>';
         }
-        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
+        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">';
         $color = ' class="col"';
         for ($i = 0; $i < count(
             $_SESSION[$origin]['diff_list']['copy']['entities']
