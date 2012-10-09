@@ -422,9 +422,13 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <?php
                     if (! isset($_POST['up_res_id']) || ! $_POST['up_res_id']) {
                         if ($_SESSION['indexation'] == false) {
-                            ?>
-                            <a href="#" onclick="history.go(-2);" class="back"><?php  echo _BACK; ?></a>
-                            <?php
+                            echo '<a href="#" onclick="history.go(';
+                            if ($_SESSION['origin'] == 'basket') {
+                                echo '-2';
+                            } else {
+                                echo '-1';
+                            }
+                            echo ');" class="back">' .  _BACK . '</a>';
                         }
                     }
                     ?>
