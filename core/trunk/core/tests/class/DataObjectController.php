@@ -148,13 +148,14 @@ class DataObjectController
             $dataObjectDocument = new DataObjectDocument();
             $this->dataObjectDocuments[] = $dataObjectDocument;
         }
-        $objectElement = $this->getElementByName($objectName);
+        $schemaElement = $this->getElementByName($objectName);
         
-        if(!$objectElement->isCreatable()) throw new maarch\Exception("Object $objectName can not be created");
+        if(!$schemaElement->isCreatable()) 
+            throw new maarch\Exception("Object $objectName can not be created");
 
         $dataObject = 
             $this->createDataObject(
-                $objectElement, 
+                $schemaElement, 
                 $dataObjectDocument,
                 $includeChildren = true
             );
@@ -186,9 +187,11 @@ class DataObjectController
             );
         $dataObjectDocument->appendChild($rootDataObject);
 
-        $objectElement = $this->getElementByName($objectName);
-        if(!$objectElement->isListable()) throw new maarch\Exception("Object $objectName can not be listed");
-        $refElement = $this->getRefNode($objectElement);
+        $schemaElement = $this->getElementByName($objectName);
+        if(!$schemaElement->isListable()) 
+            throw new maarch\Exception("Object $objectName can not be listed");
+        
+        $refElement = $this->getRefNode($schemaElement);
         
         $this->listDataObject(
             $refElement,
@@ -201,7 +204,11 @@ class DataObjectController
             $limit
         );
         
-        return $dataObjectDocument->documentElement;
+        $dataObjectsNodeList = $rootDataObject->query("./" . $objectName);
+        
+        $dataObjectList = new DataObjectList($dataObjectsNodeList);
+        
+        return $dataObjectList;
     }
     
     public function read(

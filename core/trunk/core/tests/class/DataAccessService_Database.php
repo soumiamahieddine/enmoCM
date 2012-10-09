@@ -60,7 +60,9 @@ class DataAccessService_Database
         $query=false
         ) 
     {
-              
+        
+        $objectName = $objectElement->getName();
+        
         $selectParts = array();
         
         //*********************************************************************
@@ -245,14 +247,23 @@ class DataAccessService_Database
             // CREATE / FILL OBJECTS
             //*********************************************************************
             while($recordSet = $this->databaseObject->fetch_object()) {
-                $dataObject = $this->createDataObject(
-                    $objectElement, 
-                    $dataObjectDocument
-                );
+                $propertyCount = count($recordSet);
+                /*if($propertyCount === 1) {
+                    $dataObject = 
+                        $dataObjectDocument->createElement(
+                            $objectName,
+                            $recordSet->$objectName
+                        );
+                } else {*/
+                    $dataObject = $this->createDataObject(
+                        $objectElement, 
+                        $dataObjectDocument
+                    );
+                    foreach($recordSet as $columnName => $columnValue) {
+                        $dataObject->$columnName = $columnValue;
+                    } 
+                //}
                 $parentObject[] = $dataObject;
-                foreach($recordSet as $columnName => $columnValue) {
-                    $dataObject->$columnName = $columnValue;
-                } 
                 $dataObject->logRead();
             }
         }

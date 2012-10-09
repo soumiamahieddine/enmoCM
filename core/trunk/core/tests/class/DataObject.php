@@ -177,9 +177,11 @@ class DataObjectDocument
     
 }
 
-//*****************************************************************************
-// DATA OBJECT
-//*****************************************************************************
+/*****************************************************************************
+**                                                                          **
+**                          DATA OBJECT ELEMENT                             **
+**                                                                          **
+*****************************************************************************/
 class DataObjectElement
     extends DOMElement
     implements IteratorAggregate, ArrayAccess
@@ -741,9 +743,11 @@ class DataObjectElement
     
 }
 
-//*****************************************************************************
-// DATA OBJECT ATTRIBUTE
-//*****************************************************************************
+/*****************************************************************************
+**                                                                          **
+**                          DATA OBJECT ATTRIBUTE                           **
+**                                                                          **
+*****************************************************************************/
 class DataObjectAttribute
     extends DOMAttr
 {
@@ -760,9 +764,11 @@ class DataObjectAttribute
     
 }
 
-//*****************************************************************************
-// DATA OBJECT COMMENT
-//*****************************************************************************
+/*****************************************************************************
+**                                                                          **
+**                          DATA OBJECT COMMENT                             **
+**                                                                          **
+*****************************************************************************/
 class DataObjectComment
     extends DOMComment
 {
@@ -808,6 +814,12 @@ class DataObjectComment
     }
 } 
 
+/*****************************************************************************
+**                                                                          **
+**                          DATA OBJECT LOG                                 **
+**                                                                          **
+*****************************************************************************/
+
 class DataObjectLog 
     extends DataObjectComment
 {
@@ -823,5 +835,79 @@ class DataObjectLog
     const WARNING   = 1;
     const ERROR     = 2;
     const FATAL     = 3;
+
+}
+
+/*****************************************************************************
+**                                                                          **
+**                          DATA OBJECT LIST                                **
+**                                                                          **
+*****************************************************************************/
+class DataObjectList
+    implements IteratorAggregate, ArrayAccess
+{
+    
+    private $storage = array();
+    
+    public function DataObjectList($nodeList)
+    {
+        $l = $nodeList->length;
+        for($i=0; $i<$l; $i++) {
+            $this->storage[$i] = $nodeList->item($i);
+        }   
+    }
+
+    //*************************************************************************
+    // DOM NODELITS EMULATION
+    //*************************************************************************    
+    public function item($offset)
+    {
+        return $this->storage[$offset];
+    }
+    
+    //*************************************************************************
+    // DOM ELEMENT EMULATION
+    //*************************************************************************    
+    public function query($query)
+    {
+        if($firstObject = $this->storage[0]) {
+            $dataObjectDocument = $firstObject->ownerDocument;
+            $xpath = new DOMXPath($dataObjectDocument);
+            return $xpath->query($query, $firstObject);
+        } else {
+            return false;
+        }
+    }
+    
+    //*************************************************************************
+    // ITERATOR METHODS
+    //*************************************************************************
+    public function getIterator() {
+        return new ArrayIterator($this->storage);
+    }
+
+    //*************************************************************************
+    // ARRAYACCESS METHODS
+    //*************************************************************************
+    public function offsetSet($offset, $value) 
+    {
+        $this->storage[$offset] = $value;
+    }
+    
+    public function offsetExists($offset) 
+    {
+        return isset($this->storage[$offset]);
+    }
+    
+    public function offsetUnset($offset) 
+    {
+        unset($this->storage[$offset]);
+    }
+    
+    public function offsetGet($offset) 
+    {
+        return $this->storage[$offset];
+    }
+
 
 }
