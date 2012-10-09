@@ -468,6 +468,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                         <?php
                         $i=0;
+                        if (!$modify_doc) {
+                            $data['process_limit_date']['readonly'] = true;
+                        }
                         foreach(array_keys($data) as $key)
                         {
 
