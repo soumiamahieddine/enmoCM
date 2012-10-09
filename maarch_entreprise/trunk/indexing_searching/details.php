@@ -423,7 +423,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     if (! isset($_POST['up_res_id']) || ! $_POST['up_res_id']) {
                         if ($_SESSION['indexation'] == false) {
                             ?>
-                            <a href="#" onclick="history.go(-1);" class="back"><?php  echo _BACK; ?></a>
+                            <a href="#" onclick="history.go(-2);" class="back"><?php  echo _BACK; ?></a>
                             <?php
                         }
                     }
