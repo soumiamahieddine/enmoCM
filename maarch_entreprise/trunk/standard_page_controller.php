@@ -360,7 +360,7 @@
                     );
                     $_SESSION['m_admin'][$params['objectName']] = $dataObject->asXml();
                 } else {
-                    $dataObject = $dataObjectController->load(
+                    $dataObject = $dataObjectController->loadXML(
                         $_SESSION['m_admin'][$params['objectName']]
                     );
                 }
@@ -383,13 +383,12 @@
                 if (!empty($params['what']))
                     $filter = str_replace('.', '%', $params['what']);
                 
-                $dataObjectList = $dataObjectController->enumerate(
+                $objectList = $dataObjectController->enumerate(
                     $params['objectName'],
                     $filter,
                     $sortFields = $params['orderField'],
                     $order = $params['order']
                 );
-                $objectList = $dataObjectList->$params['objectName'];
                 
                 $keyProperties = $dataObjectController->getKeyProperties(
                     $params['objectName']
