@@ -522,25 +522,19 @@ if (isset($_REQUEST['submit'])) {
             else
                 $toEnumerate = $params['objectName'];
             
-            $dataObjectList = $dataObjectController->enumerate(
+            $objectList = $dataObjectController->enumerate(
                 $toEnumerate,
                 $filter,
                 $sortFields = $params['orderField'],
                 $order = $params['order']
             );
-            
             /* ------
             - get key
             ------ */
             $keyProperties = $dataObjectController->getKeyProperties(
                 $toEnumerate
             );
-            
-            /* ---------
-            - objectList
-            --------- */
-            $objectList = $dataObjectList->$toEnumerate;
-            
+                      
             /* -----------------
             - prevent PHP NOTICE
             ----------------- */
