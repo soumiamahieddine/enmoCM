@@ -125,7 +125,11 @@ if (isset($_SESSION['HTTP_REQUEST']['withRA_CODE']) && empty($_SESSION['HTTP_REQ
 }
 ?>
 <?php $core->load_js();?>
-<body id="bodylogin" onload="session_expirate(<?php echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');">
+<body id="bodylogin" onload="session_expirate(<?php echo $time;?>, '<?php 
+    echo $_SESSION['config']['businessappurl'];
+    ?>index.php?display=true&page=logout&coreurl=<?php 
+    echo $_SESSION['config']['coreurl'];
+    ?>&logout=true');">
     <div id="loginpage">
         <p id="logo"><img src="<?php
             echo $_SESSION['config']['businessappurl'];

@@ -809,7 +809,7 @@ function show_timer()
 function session_expirate(expiration, url)
 {
     //setInterval('show_timer()', 1000); //show a timer in the console
-    setTimeout('redirect_to_url(\''+url+'index.php?display=true&page=logout&logout=true\')', ((expiration*60)-1)*1000);
+    setTimeout('redirect_to_url(\'' + url + '\')', ((expiration*60))*1000);
 }
 
 /*************** Tabs functions *****************/
