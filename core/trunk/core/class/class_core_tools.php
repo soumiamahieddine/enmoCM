@@ -1853,14 +1853,14 @@ class core_tools extends functions
     public function get_session_time_expire()
     {
         $time = 0;
-        if(ini_get('session.cache_expire') > $_SESSION['config']['cookietime'])
-        {
-            $time = $_SESSION['config']['cookietime'];
-        }
+        $ini_time = ((ini_get('session.gc_maxlifetime') / 60) - 1);
+        $maarch_time = $_SESSION['config']['cookietime'];
+        
+        if ($maarch_time <= $ini_time)
+            $time = $maarch_time;
         else
-        {
-            $time = ini_get('session.cache_expire');
-        }
+            $time = $ini_time;
+        
         return $time;
     }
 
