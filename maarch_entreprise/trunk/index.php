@@ -123,7 +123,7 @@ $core->load_header();
 $time = $core->get_session_time_expire();
 
 ?>
-<body onload="session_expirate(<?php  echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');" id="maarch_body">
+<body onload="session_expirate(<?php echo $time;?>, '<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=login&logout=true');" id="maarch_body">
 <div id="header">
         <div id="nav">
             <div id="menu" onmouseover="ShowHideMenu('menunav','on');" onmouseout="ShowHideMenu('menunav','off');" class="off">

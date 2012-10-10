@@ -760,9 +760,56 @@ function redirect_to_url(url)
  * @param expiration Integer Expiration time (in minutes))
  * @param url String Url to redirect to
  */
+ 
+var H=0; // heure
+var i=0; // seconde
+var s=0; // minute
+function show_timer()
+{
+    s++;
+    if (s == 60) {
+        s = 0;
+        i++;
+    }
+    if (s == 0)
+        var second = '           ';
+    else if (s == 1)
+        var second = '0' + s + ' seconde ';
+    else if (s < 10)
+        var second = '0' + s + ' secondes';
+    else
+        var second = s + ' secondes';
+        
+    if (i == 60) {
+        i = 0;
+        H++;
+    }
+    if (i == 0)
+        var minute = '           ';
+    else if (i == 1)
+        var minute = '0' + i + ' minute  ';
+    else if (i < 10)
+        var minute = '0' + i + ' minutes ';
+    else
+        var minute = i + ' minutes ';
+    
+    if (H == 0)
+        var hour = '           ';
+    else if (H == 1)
+        var hour = '0' + H + ' heure  ';
+    else if (H < 10)
+        var hour = '0' + H + ' heures ';
+    else
+        var hour = H + ' heures ';
+    
+    if (console)
+        console.log(hour + minute + second);
+}
+ 
 function session_expirate(expiration, url)
 {
-    var chronoExpiration=setTimeout('redirect_to_url(\''+url+'\')', expiration*60*1000);
+    //setInterval('show_timer()', 1000); //show a timer in the console
+    setTimeout('redirect_to_url(\''+url+'index.php?display=true&page=login&logout=true\')', ((expiration*60)-1)*1000);
 }
 
 /*************** Tabs functions *****************/
