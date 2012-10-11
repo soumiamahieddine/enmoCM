@@ -1,7 +1,6 @@
 <?php
 /*
 *   Copyright 2012 Maarch
-*
 *   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
