@@ -21,6 +21,12 @@ if (isset($_GET['abs_mode'])) {
     $_SESSION['error'] .= ', ' . _ABS_LOG_OUT;
 }
 
+if ($core->is_module_loaded('content_management')) {
+    require_once 'modules/content_management/class/class_content_manager_tools.php';
+    $cM = new content_management_tools();
+    $cM->deleteUserCM();
+}
+
 if ($_SESSION['history']['userlogout'] == "true"
     && isset($_SESSION['user']['UserId'])
 ) {

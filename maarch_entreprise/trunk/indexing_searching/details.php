@@ -78,6 +78,12 @@ if ($core->test_service('add_new_version', 'apps', false)) {
     $addNewVersion = true;
 }
 
+//test service view_emails_notifs
+$viewEmailsNotifs = false;
+if ($core->test_service('view_emails_notifs', 'notifications', false)) {
+    $viewEmailsNotifs = true;
+}
+
 if (!isset($_REQUEST['coll_id'])) {
     $_REQUEST['coll_id'] = '';
 }
@@ -907,6 +913,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     </div>
                     </form>
                     <?php
+                    if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
+                            include_once('modules/tags/templates/details/index.php');
+                    }
         }
         ?>
                 </dd>
@@ -1380,6 +1389,21 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             ?>content_management/list_versions.php");
                     </script>
                 </dd>
+                <?php 
+                //############# NOTIFICATIONS ##############
+                $extend_title_for_notifications = 0;
+                ?>
+                <dt>
+                    <?php
+                    echo _NOTIFS . ' (' . $extend_title_for_notifications . ')';
+                    ?>
+                </dt>
+                <dd>
+                    <div class="error" id="divError" name="divError"></div>
+                    <div style="text-align:center;">
+                        test
+                    </div>
+                </dd>
                 <?php $Class_LinkController = new LinkController(); ?>
                 <?php
                     $nbLink = $Class_LinkController->nbDirectLink(
@@ -1446,22 +1470,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     //}
 
                     echo $Links;
-                    
-                    if ($core->is_module_loaded('tags') &&
-                        ($core->test_service('tag_view', 'tags', false) == 1)) {
-                        ?>
-                        <dt>
-                            <?php
-                            echo _TAGS;
-                            ?>
-                        </dt>
-                        <dd>
-                            <?php
-                            include_once('modules/tags/templates/details/index.php');
-                            ?>
-                        </dd>
-                        <?php
-                    }
                 ?>
             </dl>
     <?php
