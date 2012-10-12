@@ -537,10 +537,10 @@ class foldertype extends dbquery
                 $this->query(
                 	"UPDATE " . $_SESSION['tablename']['fold_foldertypes']
                 	. " set foldertype_label = '"
-                	. $this->show_string(
+                	. $this->protect_string_db(
                 		$_SESSION['m_admin']['foldertype']['desc']
                 	) . "' , maarch_comment = '"
-                	. $this->show_string(
+                	. $this->protect_string_db(
                 		$_SESSION['m_admin']['foldertype']['comment']
                 	) . "' , coll_id = '" 
                 	. $_SESSION['m_admin']['foldertype']['COLL_ID']
