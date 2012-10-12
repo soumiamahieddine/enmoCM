@@ -230,6 +230,19 @@ class content_management_tools
             . " and id like '" . $this->parameter_id . "%'"
         );
     }
+    
+    /**
+    * Delete the resource for the disconnected user
+    *
+    * @return nothing
+    */
+    public function deleteUserCM()
+    {
+        $this->db->query("delete from " . PARAM_TABLE
+            . " where id like 'content_management_reservation#" 
+            . $_SESSION['user']['UserId'] . "%'"
+        );
+    }
 
     /**
     * Delete the content_management tmp if necessary
