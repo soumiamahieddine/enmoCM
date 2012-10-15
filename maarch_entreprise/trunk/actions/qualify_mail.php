@@ -406,7 +406,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				   {
 					  $frm_str .= ' value="'.$data['contact'].'" ';
 					}
-				   $frm_str .=  ' /><div id="show_contacts" class="autocomplete"></div></td>';
+				   $frm_str .=  ' /><div id="show_contacts" class="autocomplete autocompleteIndex"></div></td>';
 				   $frm_str .= '<td><span class="red_asterisk" id="contact_mandatory" style="display:inline;">*</span>&nbsp;</td>';
 				     $frm_str .= '</tr>';
 				/*** Nature ***/

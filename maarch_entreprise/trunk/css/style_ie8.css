@@ -262,3 +262,43 @@ top:19px;
     /*margin: 0 0 1em 2em;*/
     position: relative;
 }
+
+/*Automplete*/
+div.autocomplete {
+  position: absolute;
+  width: 500px;
+  background-color: white;
+  border: 1px solid #888;
+  padding: 0px;
+}
+
+div.autocompleteIndex {
+  margin-left: -13px;
+  margin-top: -13px;
+}
+
+div.autocomplete ul {
+  list-style-type: none;
+  margin: 0px;
+  padding: 0px;
+  min-height: 1px;
+  max-height: 800px;
+  overflow: none;
+}
+
+div.autocomplete ul li.selected {
+    background-color: #93D1E4;
+}
+
+div.autocomplete ul li {
+  list-style-type:none;
+  display: block;
+  margin: 0;
+  padding: 2px;
+  cursor: pointer;
+  text-align: left;
+}
+
+div.autocomplete ul li span.informal {
+    color: grey;
+}

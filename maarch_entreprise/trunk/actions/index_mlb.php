@@ -516,7 +516,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td class="indexing_field"><input type="text" name="contact" '
             . 'id="contact" onblur="clear_error(\'frm_error_' . $actionId . '\');'
             . 'display_contact_card(\'visible\');" /><div id="show_contacts" '
-            . 'class="autocomplete"></div></td>';
+            . 'class="autocomplete autocompleteIndex"></div></td>';
     $frmStr .= '<td><span class="red_asterisk" id="contact_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';

@@ -2888,7 +2888,6 @@ div.autocomplete ul li.selected {
 }
 
 div.autocomplete ul li {
-  /*background-color: #DEEDF3;*/
   list-style-type:none;
   display: block;
   margin: 0;
