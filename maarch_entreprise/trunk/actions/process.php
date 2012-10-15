@@ -675,7 +675,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<center>';
                     if ($core_tools->is_module_loaded('templates')) {
                         $objectTable = $sec->retrieve_table_from_coll($coll_id);
-                        $frm_str .= _GENERATE_ATTACHMENT_FROM . ' <select name="templateOffice" id="templateOffice" style="width:150px" onchange="';
+                        $frm_str .= _GENERATE_ATTACHMENT_FROM . ' <br><select name="templateOffice" id="templateOffice" style="width:250px" onchange="';
                         //$frm_str .= 'loadApplet(\''
                         $frm_str .= 'window.open(\''
                             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
@@ -694,13 +694,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                         $frm_str .= '<option value="';
                                             $frm_str .= $templates[$i]['ID'];
                                             $frm_str .= '">';
-                                            $frm_str .= $templates[$i]['TYPE'] . ' : ';
+                                            //$frm_str .= $templates[$i]['TYPE'] . ' : ';
                                             $frm_str .= $templates[$i]['LABEL'];
                                         }
                                     $frm_str .= '</option>';
                                 }
                         $frm_str .= '</select>&nbsp;|&nbsp;';
-                        $frm_str .= '<select name="templateHtml" id="templateHtml" style="width:150px" '
+                        $frm_str .= '<select name="templateHtml" id="templateHtml" style="width:250px" '
                             //. 'onchange="window.alert(\'\' + $(\'templateHtml\').value + \'\');">';
                             . 'onchange="checkBeforeOpenBlank(\''
                             . $_SESSION['config']['businessappurl']
@@ -715,7 +715,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                         $frm_str .= '<option value="';
                                             $frm_str .= $templates[$i]['ID'];
                                             $frm_str .= '">';
-                                            $frm_str .= $templates[$i]['TYPE'] . ' : ';
+                                            //$frm_str .= $templates[$i]['TYPE'] . ' : ';
                                             $frm_str .= $templates[$i]['LABEL'];
                                         }
                                     $frm_str .= '</option>';
