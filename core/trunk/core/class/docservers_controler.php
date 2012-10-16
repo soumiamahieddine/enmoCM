@@ -1620,6 +1620,7 @@ class docservers_controler
                     //if fingerprint from db = 0 we do not control fingerprint
                     if ($fingerprintFromDb == '0'
                         || ($fingerprintFromDb == $fingerprintFromDocserver)
+                        || $docserverTypeObject->fingerprint_mode == 'NONE'
                     ) {
                         if ($type_state <> false) {
                             if ($_SESSION['history']['resview'] == 'true') {
