@@ -7,8 +7,10 @@ class Maarch_SOAP_DISCO_Server extends SOAP_DISCO_Server
 {
     public function __construct() 
     {
-        call_user_func_array(array(parent, 'SOAP_DISCO_Server'), 
-                             func_get_args());
+        $funcGetArgs = func_get_args();
+        call_user_func_array(array(parent, 'SOAP_DISCO_Server'),
+                             $funcGetArgs);
+
         $this->host = array_key_exists('HTTP_X_FORWARDED_HOST', $_SERVER) 
                            ? $_SERVER['HTTP_X_FORWARDED_HOST']
                            : $_SERVER['HTTP_HOST'];
