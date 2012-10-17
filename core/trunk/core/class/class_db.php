@@ -241,7 +241,7 @@ class dbquery extends functions
                 $this->_sqlLink = oci_connect(
                     $this->_user, 
                     $this->_password, 
-                    $this->database, 
+                    $this->_database, 
                     'UTF8'
                 );
             }
