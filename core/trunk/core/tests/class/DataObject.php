@@ -189,10 +189,10 @@ class DataObjectElement
    
     // DOM METHODS
     //*************************************************************************
-    public function query($query) 
+    public function query($query, $contextElement=$this) 
     {
         $xpath = new DOMXPath($this->ownerDocument);
-        return $xpath->query($query, $this);
+        return $xpath->query($query, $contextElement);
     }
     
     // OBJECT METHODS
