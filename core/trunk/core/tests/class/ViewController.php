@@ -62,6 +62,12 @@ class ViewController
         return $labels;
     }
     
+    function getImgs()
+    {
+        $imgs = $this->query("//img");
+        return $imgs;
+    }
+    
     function getTableHeaderCols()
     {
         $th = $this->query("//th[@axis]");
