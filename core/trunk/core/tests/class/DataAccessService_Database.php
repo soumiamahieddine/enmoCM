@@ -27,7 +27,8 @@ class DataAccessService_Database
     {
         $this->databaseObject->connect();
         if(!$this->inTransaction) {
-            $this->databaseObject->query('START TRANSACTION');
+            //echo "<br/>DB Start transaction";
+            $this->databaseObject->start_transaction();
             $this->inTransaction = true;
         }
     }
@@ -35,7 +36,8 @@ class DataAccessService_Database
     public function commit()
     {
         if($this->inTransaction) {
-            $this->databaseObject->query('COMMIT');
+            //echo "<br/>DB Commit";
+            $this->databaseObject->commit();
             $this->inTransaction = false;
         }
     }
@@ -43,7 +45,8 @@ class DataAccessService_Database
     public function rollback()
     {
         if($this->inTransaction) {
-            $this->databaseObject->query('ROLLBACK');
+            //echo "<br/>DB Rollback";
+            $this->databaseObject->rollback();
             $this->inTransaction = false;
         }
     }
@@ -151,6 +154,7 @@ class DataAccessService_Database
                     $selectFilterExpression
                 );
             }
+            //echo "<br/>filter expression $filterExpression";
             $filterExpression = str_replace('$filter', $filter, $filterExpression);
             $whereParts[] = $filterExpression;
         }
@@ -161,29 +165,32 @@ class DataAccessService_Database
             && get_class($parentObject) != 'DataObjectDocument'
             && $relation = $this->getRelation($objectElement, $parentObject)
         ) {
-            if(!$relationExpression = 
+            //echo "<br/>Found relation between " . $objectElement->getName() . " and " . $parentObject->nodeName;
+            /*if(!$relationExpression = 
                 $this->getXRefs($objectElement, 'relationExpression')
-            ) {
+            ) {*/
                 $relationExpression = 
                     $this->createRelationExpression(
                         $objectElement, 
                         $relation
                     );
-                $this->addXRefs(
+            /*    $this->addXRefs(
                     $objectElement, 
                     'relationExpression', 
                     $relationExpression
                 );
-            }
+            }*/
+            
             if($relationExpression) {
-                preg_match('/\$\w+/', $relationExpression, $params);
-                foreach($params as $paramName) {
+                preg_match_all('/\$\w+/', $relationExpression, $params);
+                foreach($params[0] as $paramName) {
                     $attrName = substr($paramName, 1);
                     //echo "<br/>Relation between " . $parentObject->getName() . " and " . $objectElement->getName() . " ==> key is $paramName value of $attrName is " . get_class($parentObject) . " ". $parentObject->$attrName;
                     $value = $parentObject->$attrName;
                     if(!$value || $value == '') $value = "99999999";
                     $relationExpression = str_replace($paramName, $value, $relationExpression);
                 }
+                //echo "<br/>Relation expression is '$relationExpression'"; 
                 $whereParts[] = $relationExpression;
             }
         }
@@ -229,7 +236,7 @@ class DataAccessService_Database
         $selectQuery = implode(' ', $selectParts);
         
         $this->queries[] = $selectQuery;
-        //echo "<pre>SELECT QUERY = " . $selectQuery . "</pre>";
+        //  echo "<pre>SELECT QUERY = " . $selectQuery . "</pre>";
         
         try {
             $this->databaseObject->connect();
@@ -260,7 +267,9 @@ class DataAccessService_Database
                         $dataObjectDocument
                     );
                     foreach($recordSet as $columnName => $columnValue) {
-                        $dataObject->$columnName = $columnValue;
+                        if($columnValue != '') {
+                            $dataObject->$columnName = $columnValue;
+                        }
                     } 
                 //}
                 $parentObject[] = $dataObject;

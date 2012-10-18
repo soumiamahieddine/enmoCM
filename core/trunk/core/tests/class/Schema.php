@@ -43,7 +43,12 @@ class Schema
     public function includeXSD($schema, $includeSchemaLocation, $rootSchema)
     {
         $includeSchema = new Schema();
-        $includeSchema->loadXSD($includeSchemaLocation, $rootSchema);
+        if(file_exists('custom' . DIRECTORY_SEPARATOR . $includeSchemaLocation)) {
+            $includeSchemaPath = 'custom' . DIRECTORY_SEPARATOR . $includeSchemaLocation;
+        } else {
+            $includeSchemaPath = $includeSchemaLocation;
+        }
+        $includeSchema->loadXSD($includeSchemaPath, $rootSchema);
         $schemaContents = $includeSchema->documentElement->childNodes;
         for($j=0; $j<$schemaContents->length; $j++) {
             $importNode = $schemaContents->item($j);

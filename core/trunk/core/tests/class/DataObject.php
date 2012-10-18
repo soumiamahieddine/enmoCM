@@ -432,13 +432,11 @@ class DataObjectElement
     
     // ARRAYACCESS METHODS
     //*************************************************************************
-    public function offsetSet($offset, $value) 
+    public function offsetSet($offset, $dataObject) 
     {
-        if($value->ownerDocument != $this->onwerDocument) {
-            $dataObject = $this->ownerDocument->importNode($value, true);
-        } else {
-            $dataObject = $value;
-        }
+        if($dataObject->ownerDocument != $this->onwerDocument) {
+            $dataObject = $this->ownerDocument->importNode($dataObject, true);
+        } 
         $objectName = $dataObject->getName();
         $refDataObject = $this->getCommentDataObject($objectName);
         if(is_null($offset)) $offset = 999999;
@@ -454,7 +452,6 @@ class DataObjectElement
             $dataObject, 
             $refDataObject->nextSibling
             );
-        return;
     }
     
     public function offsetExists($offset) 
@@ -675,7 +672,7 @@ class DataObjectElement
         return $this->C14N(false,true);
     }
     
-    public function show($withComments=true, $prettyAttrs=false)
+    public function show($withComments=true, $prettyAttrs=false, $returnValue=false)
     {
         // add marker linefeeds to aid the pretty-tokeniser (adds a linefeed between all tag-end boundaries)
         $xml = preg_replace('/(>)(<)(\/*)/', "$1\n$2$3", $this->C14N(false, $withComments));
@@ -716,10 +713,13 @@ class DataObjectElement
             $token   = strtok("\n"); // get the next token
             $pad    += $indent; // update the pad size for subsequent lines    
         } 
-        
-        echo "<pre>";
-        echo htmlspecialchars($result);
-        echo "</pre>";
+        if($returnValue) {
+            return $result;
+        } else {
+            echo "<pre>";
+            echo htmlspecialchars($result);
+            echo "</pre>";
+        }
     }
     
     private function showAttr($token, $pad)
@@ -844,19 +844,44 @@ class DataObjectLog
 **                                                                          **
 *****************************************************************************/
 class DataObjectList
-    implements IteratorAggregate, ArrayAccess
+    implements IteratorAggregate, ArrayAccess, Countable
 {
     
     private $storage = array();
+    public $length;
     
-    public function DataObjectList($nodeList)
+    public function DataObjectList($nodeList=false)
     {
-        $l = $nodeList->length;
-        for($i=0; $i<$l; $i++) {
-            $this->storage[$i] = $nodeList->item($i);
-        }   
+        if($nodeList) {
+            $l = $nodeList->length;
+            for($i=0; $i<$l; $i++) {
+                $this->storage[$i] = $nodeList->item($i);
+            } 
+        }
+        $this->length = count($this->storage);
     }
-
+    
+    public function show() 
+    {
+        $showArray = array();
+        for($i=0; $i<count($this->storage); $i++) {
+            $showArray[] = htmlspecialchars($this->storage[$i]->show(true, false, true));
+        }
+        echo "<pre>";
+        print_r($showArray);
+        echo "</pre>";
+        
+    }
+    
+    //*************************************************************************
+    // MAGIC METHODS
+    //*************************************************************************
+    public function __get($name)
+    {
+        if($name == 'length') return count($this->storage);
+    }
+    
+    
     //*************************************************************************
     // DOM NODELITS EMULATION
     //*************************************************************************    
@@ -887,11 +912,20 @@ class DataObjectList
     }
 
     //*************************************************************************
+    // COUNTABLE METHODS
+    //*************************************************************************
+    public function count()
+    {
+        return count($this->storage);
+    } 
+    
+    //*************************************************************************
     // ARRAYACCESS METHODS
     //*************************************************************************
     public function offsetSet($offset, $value) 
     {
         $this->storage[$offset] = $value;
+        $this->length = count($this->storage);
     }
     
     public function offsetExists($offset) 
@@ -902,6 +936,7 @@ class DataObjectList
     public function offsetUnset($offset) 
     {
         unset($this->storage[$offset]);
+        $this->length = count($this->storage);
     }
     
     public function offsetGet($offset) 

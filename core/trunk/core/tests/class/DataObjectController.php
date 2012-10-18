@@ -23,8 +23,9 @@ class DataObjectController
     public $dataAccessServices = array();
     protected $XRefs = array();
     protected $messageController;
-   
-     
+    public $inTransaction;
+    public $transactionControl;
+       
     //*************************************************************************
     // CONSTRUCTOR
     //*************************************************************************
@@ -223,10 +224,9 @@ class DataObjectController
         
         if(!$objectElement->isReadable()) throw new maarch\Exception("Object $objectName can not be read");
         
-        $dataObject = $dataObjectDocument;
         $this->readDataObject(
             $objectElement, 
-            $dataObject, 
+            $dataObjectDocument, 
             $dataObjectDocument,
             $key,
             $readChildren
@@ -234,20 +234,34 @@ class DataObjectController
         return $dataObjectDocument->documentElement;
     }
     
-    public function save($dataObject, $saveChildren=true)
-    {
+    public function save(
+        $dataObject, 
+        $saveChildren = true
+    ) {
         $objectElement = $this->getElementByName($dataObject->tagName);
         $dataObjectDocument = $dataObject->ownerDocument;
-        $key = $this->saveDataObject(
-            $objectElement, 
-            $dataObject,
-            $saveChildren
-        );   
-        
-        return $key;
+        if(!$this->inTransaction) {
+            $this->startTransaction('controller');
+        }
+        try {
+            $key = $this->saveDataObject(
+                $objectElement, 
+                $dataObject,
+                $saveChildren
+            );
+            if($this->transactionControl == 'controller') {
+                $this->commit();
+            }
+            return $key;
+        } catch (maarch\Exception $e) {
+            $this->rollback();
+            throw $e;
+        }
     }
     
-    public function readChildren($dataObject) {
+    public function readChildren(
+        $dataObject
+    ) {
         $objectName = $dataObject->getName();
         $objectElement = $this->getElementByName($objectName);
         $this->readChildDataObjects(
@@ -281,6 +295,26 @@ class DataObjectController
         $objectElement = $this->getElementByName($dataObject->tagName);
         if(!$objectElement->isDeletable()) throw new maarch\Exception("Object $objectName can not be deleted");
         $this->deleteDataObject($objectElement, $dataObject);
+    }
+    
+    public function copy(
+        $dataObject, 
+        $newName=false
+    ){
+        if(!$newName) $newName = $dataObject->nodeName;
+        $newObject = $dataObject->ownerDocument->createElement($newName);
+        if ($dataObject->attributes->length) {
+            foreach ($dataObject->attributes as $attribute) {
+                $newObject->setAttribute($attribute->nodeName, $attribute->nodeValue);
+            }
+        }
+        while ($dataObject->firstChild) {
+            $newObject->appendChild($dataObject->firstChild);
+        }
+        $newObject->clearLogs();
+        $newObject->logCreate();
+        //$dataObject->parentNode->replaceChild($newObject, $dataObject);
+        return $newObject;
     }
     
     public function validate($dataObject) 
@@ -452,7 +486,6 @@ class DataObjectController
         $key=false,
         $readChildren=true
     ) {      
-     
         try {
             if($dataAccessService = 
                 $this->getDataAccessService($objectElement)
@@ -478,16 +511,16 @@ class DataObjectController
             
             if($readChildren) {
                 // Process newly created child objects
-                $childObjects = 
+                $newObjects = 
                     $parentObject->getChildNodesByTagName(
                         $objectElement->getName()
                     );
-                $m = $childObjects->length;
+                $m = $newObjects->length;
                 for($j=0; $j<$m; $j++) {
-                    $childObject = $childObjects->item($j);
+                    $newObject = $newObjects->item($j);
                     $this->readChildDataObjects(
                         $objectElement,
-                        $childObject, 
+                        $newObject, 
                         $dataObjectDocument
                     );
                 }
@@ -511,14 +544,13 @@ class DataObjectController
             if(!$objectNode->isReadable()) continue;
             $refNode = $this->getRefNode($objectNode);
             if(!$refNode->hasDatasource()) continue;
-            //for($j=0; $j<$m; $j++) {
-            //    $childObject = $childObjects->item($j);
-                $this->readDataObject(
-                    $refNode, 
-                    $dataObject, 
-                    $dataObjectDocument
-                );
-            //}
+            //echo "<br/>Read child of " . $objectElement->getName() . " named " . $refNode->getName();
+            $this->readDataObject(
+                $refNode, 
+                $dataObject, 
+                $dataObjectDocument
+            );
+            
         }
     }
     
@@ -529,12 +561,10 @@ class DataObjectController
     ) {
         try { 
             $refElement = $this->getRefNode($objectElement);
-            
+            //echo "<br>Save " . $refElement->getName();
             if($dataAccessService = 
                 $this->getDataAccessService($refElement)
             ) {
-                $dataAccessService->startTransaction();
-                
                 if($dataObject->isCreated() 
                     && !$dataObject->isDeleted()
                 ) {
@@ -550,8 +580,7 @@ class DataObjectController
                     if($saveChildren) {
                         $this->saveChildDataObjects(
                             $objectElement,
-                            $dataObject,
-                            $key
+                            $dataObject
                         );
                     }
                 } elseif ($dataObject->isRead()
@@ -569,8 +598,7 @@ class DataObjectController
                     if($saveChildren) {
                         $this->saveChildDataObjects(
                             $objectElement,
-                            $dataObject,
-                            $key
+                            $dataObject
                         );
                     }
                 } elseif ($dataObject->isDeleted()) {
@@ -586,10 +614,8 @@ class DataObjectController
                         );
                 } 
             } 
-            $dataAccessService->commit();
             return $key;
         } catch (maarch\Exception $e) {   
-            $dataAccessService->rollback();
             throw $e;
         }
     }
@@ -615,8 +641,7 @@ class DataObjectController
     
     protected function saveChildDataObjects(
         $objectElement, 
-        $dataObject, 
-        $returnKey = false
+        $dataObject
     ) {
         $objectContents = $this->getObjectContents($objectElement);
         $l = count($objectContents);
@@ -627,8 +652,15 @@ class DataObjectController
             if(!$refNode->hasDatasource()) continue;
             
             // Get relation between dataObject and child
-            //echo "<br/>Relation between " . $refNode->getName() . " and " . $dataObject->getName();
+            //echo "<br/>Relation between child " . $refNode->getName() . " and parent " . $dataObject->getName();
             $relation = $this->getRelation($refNode, $dataObject);
+            if(!$relation) {
+                throw new maarch\Exception(
+                    "No relation defined in schema between " . $refNode->getName() 
+                    . " and " . $dataObject->nodeName 
+                    . "! Rolling back transaction"
+                );
+            }
             $fkeys = $this->query('./das:foreign-key', $relation);
             $n = $fkeys->length;
             
@@ -642,13 +674,13 @@ class DataObjectController
                 $childObject = $childObjects->item($j);
                 
                 // Assign key values to child if needed
-                if($returnKey) {
-                    for($k=0; $k<$n; $k++) {
-                        $fkey = $fkeys->item($k);
-                        $parentKey = $fkey->getAttribute('parent-key');
-                        $childKey = $fkey->getAttribute('child-key');
-                        $childObject->$childKey = $returnKey->$parentKey;
-                    }
+                for($k=0; $k<$n; $k++) {
+                    $fkey = $fkeys->item($k);
+                    $parentKey = $fkey->getAttribute('parent-key');
+                    $childKey = $fkey->getAttribute('child-key');
+                    //echo "<br/>parentkey is $parentKey, childkey is $childKey";
+                    $childObject->$childKey = $dataObject->$parentKey;
+                    //echo " --> childkey set to :" . $childObject->$childKey;
                 }
                 
                 $this->saveDataObject(
@@ -751,20 +783,22 @@ class DataObjectController
         } 
     }
     
-    public function startTransaction()
+    public function startTransaction($transactionControl='caller')
     {
-        for($i=0; $i<count($this->dataAccessServices); $i++) {
-            $dataAccessService = $dataAccessServices[$i];
+        //echo "<br/>Starting transaction for control " . $transactionControl;
+        $this->transactionControl = $transactionControl;
+        foreach($this->dataAccessServices as $dataAccessService) {
             if(method_exists($dataAccessService, 'startTransaction')) {
                 $dataAccessService->startTransaction();
             }
         }
+        $this->inTransaction = true;
     }
     
     public function commit()
     {
-        for($i=0; $i<count($this->dataAccessServices); $i++) {
-            $dataAccessService = $dataAccessServices[$i];
+        //echo "<br/>Commit transaction for control " . $this->transactionControl;
+        foreach($this->dataAccessServices as $dataAccessService) {
             if(method_exists($dataAccessService, 'commit')) {
                 $dataAccessService->commit();
             }
@@ -773,8 +807,8 @@ class DataObjectController
     
     public function rollback()
     {
-        for($i=0; $i<count($this->dataAccessServices); $i++) {
-            $dataAccessService = $dataAccessServices[$i];
+        //echo "<br/>Rollbak transaction for control " . $this->transactionControl;
+        foreach($this->dataAccessServices as $dataAccessService) {
             if(method_exists($dataAccessService, 'rollback')) {
                 $dataAccessService->rollback();
             }
