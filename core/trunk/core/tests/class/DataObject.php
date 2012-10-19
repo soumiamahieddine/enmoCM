@@ -189,8 +189,9 @@ class DataObjectElement
    
     // DOM METHODS
     //*************************************************************************
-    public function query($query, $contextElement=$this) 
+    public function query($query, $contextElement=false) 
     {
+        if(!$contextElement) $contextElement = $this;
         $xpath = new DOMXPath($this->ownerDocument);
         return $xpath->query($query, $contextElement);
     }
@@ -924,6 +925,7 @@ class DataObjectList
     //*************************************************************************
     public function offsetSet($offset, $value) 
     {
+        if(!$offset) $offset = 0;
         $this->storage[$offset] = $value;
         $this->length = count($this->storage);
     }

@@ -49,6 +49,12 @@ class ViewController
         return $elements->item(0);
     }
     
+    function getIds()
+    {
+        $ids = $this->query("//@id");
+        return $ids;
+    }
+    
     function getLabelFor($for)
     {     
         $labels = $this->query("//label[@for='$for']");
@@ -64,8 +70,14 @@ class ViewController
     
     function getImgs()
     {
-        $imgs = $this->query("//img");
+        $imgs = $this->query("//img | //IMG");
         return $imgs;
+    }
+    
+    function getScripts()
+    {
+        $scripts = $this->query("//script | //SCRIPT");
+        return $scripts;
     }
     
     function getTableHeaderCols()
@@ -91,7 +103,92 @@ class ViewController
         if($label) $label->nodeValue = htmlentities($text, 0, $this->document->encoding);
     }
     
-
+    function setUniqueIds(
+        $RefData = false
+    ) {
+        if($RefData && method_exists($RefData, 'getNodePath')) {
+            $uniqueId = $RefData->getNodePath();
+        } else {
+            $uniqueId = uniqid();
+        }
+        
+        // Add uniqueId prefix to ids
+        $ids = $this->getIds();
+        for ($i=0; $i<$ids->length; $i++) {
+            $id = $ids->item($i);
+            $localId = $id->nodeValue;
+            
+            if(strpos($localId, $uniqueId) === 0) continue; 
+            
+            $prefix = '';
+            if($localId && $RefData->hasAttribute($localId)) {
+                $prefix = '@';
+            }
+            $newId = $uniqueId;
+            if($localId) {
+                $newId .= '/' . $prefix . $localId;
+            }
+            $id->nodeValue = $newId;
+        }
+        
+        // Add uniqueId to label fors
+        $labels = $this->getLabels();
+        for ($i=0; $i<$labels->length; $i++) {
+            $label = $labels->item($i);
+            $localLabelFor = $label->getAttribute('for');
+            if(strpos($localLabelFor, $uniqueId) === 0) continue; 
+            
+            $prefix = '';
+            if($localLabelFor && $RefData->hasAttribute($localLabelFor)) {
+                $prefix = '@';
+            }
+            $newLabelFor = $uniqueId;
+            if($localLabelFor) {
+                $newLabelFor .= '/' . $prefix . $localLabelFor;
+            }
+            $label->setAttribute(
+                'for',
+                $newLabelFor
+            );
+        }
+    }
+    
+    function populateWithXML(
+        $XMLElement,
+        $create=false
+    ) {
+        /***************************************************************************
+        **  Attributes
+        ***************************************************************************/
+        foreach($XMLElement->attributes as $attribute) {
+            if($input = 
+                $this->getElementById(
+                    $attribute->nodeName
+                )
+            ) {
+                $input->setValue($attribute->nodeValue);
+            }
+        }
+           
+        /***************************************************************************
+        **  Elements
+        ***************************************************************************/
+        $childElements = $XMLElement->childNodes;
+        $childCount = $childElements->length;
+        for($i=0; $i<$childCount; $i++) {
+            $childElement = $childElements->item($i);
+            if($childElement->nodeType === 1 
+                && $childElement->nodeValue != '' 
+                && $input = $this->getElementById(
+                        $childElement->tagName
+                    )
+            ) {
+                $input->setValue($childElement->nodeValue);
+            }
+        }
+    
+    }
+    
     
 }
 
@@ -137,7 +234,33 @@ class View
         $optionGroup->setAttribute('label', $label);
         return $optionGroup;
     }
-
+    
+    function appendViewNode($ViewNode, $parentNode)
+    {
+        $parentNode->appendChild($this->importNode($ViewNode, true));
+    }
+    
+    function replaceViewNode($ViewNode, $replaceNode) {
+        $replaceNode->parentNode->replaceChild(
+            $this->importNode($ViewNode, true),
+            $replaceNode
+        );
+    }
+    
+    //*************************************************************************
+    // Outputs
+    //*************************************************************************
+    public function show()
+    {
+        echo $this->saveHTML();
+    }
+    
+    public function getHTML()
+    {
+        return $this->saveHTML();
+    }
+    
+    
 }
 
 
