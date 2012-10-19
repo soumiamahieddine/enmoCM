@@ -42,9 +42,10 @@ class ViewController
     //*************************************************************************
     // Get tags
     //*************************************************************************
-    function getElementById($id)
+    function getElementById($id, $contextNode=false)
     {
-        $elements = $this->query("//*[@id='$id']");
+        if(!$contextNode) $contextNode = $this->view->documentElement;
+        $elements = $this->query("//*[@id='$id']", $contextNode);
         if($elements->length == 0) return false;
         return $elements->item(0);
     }
