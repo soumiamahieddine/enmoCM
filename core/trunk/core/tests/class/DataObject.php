@@ -925,7 +925,7 @@ class DataObjectList
     //*************************************************************************
     public function offsetSet($offset, $value) 
     {
-        if(!$offset) $offset = 0;
+        if(!$offset) $offset = count($this->storage);
         $this->storage[$offset] = $value;
         $this->length = count($this->storage);
     }
