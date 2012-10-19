@@ -43,19 +43,33 @@ class Schema
     public function includeXSD($schema, $includeSchemaLocation, $rootSchema)
     {
         $includeSchema = new Schema();
-        if(file_exists('custom' . DIRECTORY_SEPARATOR . $includeSchemaLocation)) {
-            $includeSchemaPath = 'custom' . DIRECTORY_SEPARATOR . $includeSchemaLocation;
+        
+        $customFilePath = 
+            $_SESSION['config']['corepath'] . DIRECTORY_SEPARATOR 
+            . 'custom' . DIRECTORY_SEPARATOR 
+            . $includeSchemaLocation;
+            
+        $relativeFilePath = 
+            $_SESSION['config']['corepath'] . DIRECTORY_SEPARATOR 
+            . $includeSchemaLocation;
+        
+        if(is_file($customFilePath)) {
+            $loadFile = $customFilePath;
+        } elseif(is_file($relativeFilePath)) {
+            $loadFile = $relativeFilePath;
+        } elseif(is_file($includeSchemaLocation)) {
+            $loadFile = $includeSchemaLocation;
         } else {
-            $includeSchemaPath = $includeSchemaLocation;
+            throw new maarch\Exception("Failed to load schema definition file $includeSchemaLocation");
         }
-        $includeSchema->loadXSD($includeSchemaPath, $rootSchema);
+        $includeSchema->loadXSD($loadFile, $rootSchema);
         $schemaContents = $includeSchema->documentElement->childNodes;
         for($j=0; $j<$schemaContents->length; $j++) {
             $importNode = $schemaContents->item($j);
             $importedNode = $schema->importNode($importNode, true);
             $schema->documentElement->appendChild($importedNode);
         }
-        $rootSchema->includedSchemaLocations[] = $includeSchemaLocation;
+        $rootSchema->includedSchemaLocations[] = $loadFile;
     }
 
 }

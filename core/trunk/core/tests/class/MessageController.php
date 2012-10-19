@@ -18,6 +18,26 @@ class MessageController
     
     public function loadMessageFile($messageFile)
     {
+        $customFilePath = 
+            $_SESSION['config']['corepath'] . DIRECTORY_SEPARATOR 
+            . 'custom' . DIRECTORY_SEPARATOR 
+            . $messageFile;
+            
+        $relativeFilePath = 
+            $_SESSION['config']['corepath'] . DIRECTORY_SEPARATOR 
+            . $messageFile;
+        
+        if(is_file($customFilePath)) {
+            $loadMessageFile = $customFilePath;
+        } elseif(is_file($relativeFilePath)) {
+            $loadMessageFile = $relativeFilePath;
+        } elseif(is_file($messageFile)) {
+            $loadMessageFile = $messageFile;
+        } else {
+            throw new maarch\Exception("Failed to load message definition file $messageFile");
+        }
+        
+               
         if(!$this->documentElement) {
             $this->registerNodeClass('DOMElement', 'MessageDefinition');
             $definitions = $this->CreateElement('messageDefinitions');
@@ -28,7 +48,7 @@ class MessageController
         }
         
         $MessageFileXml = new DOMDocument();
-        $MessageFileXml->load($messageFile);
+        $MessageFileXml->load($loadMessageFile);
         
         $xPath = new DOMXPath($MessageFileXml);
         

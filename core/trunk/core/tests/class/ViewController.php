@@ -1,5 +1,9 @@
 <?php
 
+require_once(
+    'core/tests/class/MessageController.php'
+);
+
 class ViewController
     extends DOMXPath
 {
@@ -185,6 +189,52 @@ class ViewController
                     )
             ) {
                 $input->setValue($childElement->nodeValue);
+            }
+        }
+    
+    }
+    
+    function translate($MessageController)
+    {
+      
+        $labels = $this->getLabels();
+        for ($i=0; $i<$labels->length; $i++) {
+            $label = $labels->item($i);
+            $labelFor = $label->getAttribute('for');
+            $labelText = $MessageController->getMessageText(
+                $labelFor
+            );
+            if($labelText == $labelFor) continue;
+            $label->nodeValue = $labelText;
+        }
+        
+        $buttons = $this->query('//input[@type="button"]');
+        for($i=0; $i<$buttons->length; $i++) {
+            $button = $buttons->item($i);
+            if($button->hasAttribute('value')) {
+                $button->setValue(
+                    $MessageController->getMessageText(
+                        $button->getAttribute('value')
+                    )
+                );
+            }
+        }
+        
+        $translates = $this->query('//*[@data-translate != ""]');
+        for($i=0; $i<$translates->length; $i++) {
+            $translate = $translates->item($i);
+            $message = $translate->getAttribute('data-translate');
+            $translation = 
+                $MessageController->getMessageText(
+                    $message
+                );
+            if($translate->hasAttribute('value')) {
+                $translate->setAttribute(
+                    'value', 
+                    $translation
+                );
+            } else {
+                $translate->nodeValue = $translation;
             }
         }
     
