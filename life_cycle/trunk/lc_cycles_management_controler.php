@@ -247,7 +247,7 @@ function display_list() {
         $field = trim($_REQUEST['order_field']);
     }
     $listShow = new list_show();
-    $orderstr = $listShow->define_order($order, $field);
+    $orderstr = $listShow->define_order($order, 'lc_policies.' . $field);
     $request = new request();
     $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
     //$request->show();
