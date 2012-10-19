@@ -611,10 +611,14 @@ class dbquery extends functions
         case 'POSTGRESQL'   : return @pg_num_rows($this->query);
         case 'SQLSERVER'    : return @mssql_num_rows($this->query);
         case 'ORACLE'       : 
-            $db = new dbquery();
-            $db->connect();
-            $db->query("SELECT COUNT(*) FROM  (" . $this->_debugQuery . ")");
-            $row = $db->fetch_array();
+        if (file_exists($GLOBALS['configFile'])) {
+                    $dbNbResult = new dbquery($GLOBALS['configFile']);
+        } else {
+                $dbNbResult = new dbquery();
+        }
+            $dbNbResult->connect();
+            $dbNbResult->query("SELECT COUNT(*) FROM  (" . $this->_debugQuery . ")");
+            $row = $dbNbResult->fetch_array();
             return $row[0]; 
         default             : return false;
         }
