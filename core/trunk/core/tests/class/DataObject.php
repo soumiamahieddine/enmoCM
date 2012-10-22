@@ -175,6 +175,82 @@ class DataObjectDocument
 
     }
     
+    // XML INTERFACE
+    //*************************************************************************
+    public function asXML() 
+    {  
+        return $this->C14N(false,true);
+    }
+    
+    public function show($withComments=true, $prettyAttrs=false, $returnValue=false)
+    {
+        // add marker linefeeds to aid the pretty-tokeniser (adds a linefeed between all tag-end boundaries)
+        $xml = preg_replace('/(>)(<)(\/*)/', "$1\n$2$3", $this->C14N(false, $withComments));
+        
+        // now indent the tags
+        $token      = strtok($xml, "\n");
+        $result     = ''; // holds formatted version as it is built
+        $pad        = 0; // initial indent
+        $matches    = array(); // returns from preg_matches()
+        
+        // scan each line and adjust indent based on opening/closing tags
+        while ($token !== false) {
+            $comment = false;
+            // 1. open and closing tags on same line - no change
+            if (preg_match('/.+<\/\w[^>]*>$/', $token, $matches)) { 
+                $indent = 0;
+            // 2. closing tag - outdent now
+            } elseif (preg_match('/^<\/\w/', $token, $matches)) {
+                $indent = 0;
+                $pad--;
+            // 3. opening tag - don't pad this one, only subsequent tags
+            } elseif (preg_match('/^<\w[^>]*[^\/]>.*$/', $token, $matches)) {
+                $indent = 1;
+            // 4. no indentation needed
+            } else {
+                $indent = 0; 
+            }
+            if($prettyAttrs) {
+                if(preg_match('/<\!\-\-\s*\w[^>]*\s*\-\->/', $token, $matches)) {
+                    // nothing
+                } else {
+                    $token = $this->showAttr($token, $pad);
+                }
+            }
+            // pad the line with the required number of leading spaces
+            $line    = str_pad($token, strlen($token)+($pad*4), ' ', STR_PAD_LEFT);
+            $result .= $line . "\n"; // add to the cumulative result, with linefeed
+            $token   = strtok("\n"); // get the next token
+            $pad    += $indent; // update the pad size for subsequent lines    
+        } 
+        if($returnValue) {
+            return $result;
+        } else {
+            echo "<pre>";
+            echo htmlspecialchars($result);
+            echo "</pre>";
+        }
+    }
+    
+    private function showAttr($token, $pad)
+    {
+        $return = '';
+        $array = preg_split("/\s(\w+=)/", $token, -1, PREG_SPLIT_DELIM_CAPTURE);
+        for($i=0; $i<count($array); $i++) {
+            $item = $array[$i];
+            if(preg_match('/^\w+=$/', $item)) {
+                if($i>0 && $i<count($array)) $attrpad = $pad + 1;
+                else $attrpad = $pad;
+                $attrname = str_pad($item, strlen($item)+($attrpad*2), ' ', STR_PAD_LEFT);
+                $return .= $attrname;
+            } else {
+                $return .= $item;
+                if($i<count($array)-1) $return .= "\n";
+            }
+        }
+        return $return;
+    }
+    
 }
 
 /*****************************************************************************
@@ -348,6 +424,7 @@ class DataObjectElement
         if(!$name) return false;
         // Storage is an attribute
         if($this->hasAttribute($name)) {
+            //echo "<br/>$name is an attribute";
             return (string)$this->getAttribute($name);
         }
         
@@ -360,11 +437,8 @@ class DataObjectElement
         
         // Storage is a commentDataObject -> return array of instance
         if($commentDataObject = $this->getCommentDataObject($name)) {
-            $nodesArray = array();
-            for($i=0; $i<$nodes->length; $i++) {
-                $nodesArray[] = $nodes->item($i);
-            }
-            return $nodesArray;
+            $dataObjectList = new DataObjectList($nodes);
+            return $dataObjectList;
         }
         
         if($commentProperty = $this->getCommentProperty($name)) {
@@ -381,11 +455,8 @@ class DataObjectElement
         if($nodes->length > 0 
             && $nodes->item(0)->getElementsByTagName('*')->length > 0
         ) {
-            $nodesArray = array();
-            for($i=0; $i<$nodes->length; $i++) {
-                $nodesArray[] = $nodes->item($i);
-            }
-            return $nodesArray;
+            $dataObjectList = new DataObjectList($nodes);
+            return $dataObjectList;
         }
     }
     
@@ -874,6 +945,11 @@ class DataObjectList
         
     }
     
+    public function last() 
+    {
+        return end($this->storage);
+    }
+    
     //*************************************************************************
     // MAGIC METHODS
     //*************************************************************************
@@ -944,6 +1020,11 @@ class DataObjectList
     public function offsetGet($offset) 
     {
         return $this->storage[$offset];
+    }
+    
+    public function end()
+    {
+        return end($this->storage);
     }
 
 

@@ -299,21 +299,33 @@ class DataObjectController
     
     public function copy(
         $dataObject, 
-        $newName=false
+        $newName=false,
+        $parentDataObject=false
     ){
+        if($parentDataObject) {
+            $dataObjectDocument = $parentDataObject->ownerDocument; 
+        } else {
+            $dataObjectDocument = new DataObjectDocument();
+            $this->dataObjectDocuments[] = $dataObjectDocument;
+        }
+        
         if(!$newName) $newName = $dataObject->nodeName;
-        $newObject = $dataObject->ownerDocument->createElement($newName);
+        $newObject = $dataObjectDocument->createElement($newName);
         if ($dataObject->attributes->length) {
             foreach ($dataObject->attributes as $attribute) {
                 $newObject->setAttribute($attribute->nodeName, $attribute->nodeValue);
             }
         }
-        while ($dataObject->firstChild) {
-            $newObject->appendChild($dataObject->firstChild);
+        $childNodes = $dataObject->childNodes;
+        $childNodesLength = $childNodes->length;
+        for ($i=0; $i<$childNodesLength; $i++) {
+            $childNode = $childNodes->item($i);
+            $newNode = $dataObjectDocument->importNode($childNode, true); 
+            $newObject->appendChild($newNode);
         }
         $newObject->clearLogs();
         $newObject->logCreate();
-        //$dataObject->parentNode->replaceChild($newObject, $dataObject);
+        $dataObjectDocument[] = $newObject;
         return $newObject;
     }
     
@@ -387,7 +399,6 @@ class DataObjectController
             $contentNode = $objectContents[$i];
             $contentName = $contentNode->getName();
             $required = $contentNode->isRequired();
-            
             $refNode = $this->getRefNode($contentNode);
             $contentValue = $this->getValue($refNode);
             
@@ -434,11 +445,11 @@ class DataObjectController
                             );
                     }
                     $dataObject->appendChild($property);
-                    
                 }
                 break;
             }
-        }        
+        }     
+        
         return $dataObject;
     }
 
