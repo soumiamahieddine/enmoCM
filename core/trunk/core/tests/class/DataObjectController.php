@@ -612,7 +612,8 @@ class DataObjectController
                             $dataObject
                         );
                     }
-                } elseif ($dataObject->isDeleted()) {
+                } elseif ($dataObject->isRead() 
+                    && $dataObject->isDeleted()) {
                     if($objectElement->isDeletable()) {
                         $this->saveChildDataObjects(
                             $objectElement,
@@ -623,7 +624,12 @@ class DataObjectController
                             $refElement, 
                             $dataObject
                         );
-                } 
+                } elseif (
+                    $dataObject->isCreated() 
+                    && $dataObject->isDeleted()
+                ) {
+                    // NOTHING
+                }
             } 
             return $key;
         } catch (maarch\Exception $e) {   
