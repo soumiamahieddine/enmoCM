@@ -125,10 +125,10 @@ class ViewController
             
             if(strpos($localId, $uniqueId) === 0) continue; 
             
-            $prefix = '';
+            /*$prefix = '';
             if($localId && $RefData->hasAttribute($localId)) {
                 $prefix = '@';
-            }
+            }*/
             $newId = $uniqueId;
             if($localId) {
                 $newId .= '/' . $prefix . $localId;
@@ -143,19 +143,32 @@ class ViewController
             $localLabelFor = $label->getAttribute('for');
             if(strpos($localLabelFor, $uniqueId) === 0) continue; 
             
-            $prefix = '';
+            /*$prefix = '';
             if($localLabelFor && $RefData->hasAttribute($localLabelFor)) {
                 $prefix = '@';
-            }
+            }*/
             $newLabelFor = $uniqueId;
             if($localLabelFor) {
-                $newLabelFor .= '/' . $prefix . $localLabelFor;
+                $newLabelFor .= '/' . $localLabelFor;
             }
             $label->setAttribute(
                 'for',
                 $newLabelFor
             );
         }
+    }
+    
+    function setSrcBaseUrl($tagName, $baseUrl)
+    {
+        $tags = $this->view->getElementsByTagName($tagName);
+        $tagsLength = $tags->length;
+        for ($i=0; $i<$tagsLength; $i++) {
+            $tag = $tags->item($i);
+            $tag->setAttribute(
+                'src',
+                $baseUrl . $tag->getAttribute('src')
+            );
+        }  
     }
     
     function populateWithXML(
