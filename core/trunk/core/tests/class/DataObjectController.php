@@ -20,7 +20,7 @@ class DataObjectController
 {
 
     public $dataObjectDocuments = array();
-    public $dataAccessServices = array();
+    protected $dataAccessServices = array();
     protected $XRefs = array();
     protected $messageController;
     public $inTransaction;
@@ -271,6 +271,24 @@ class DataObjectController
         );
         return $dataObject;
     }
+    
+    public function loadXMLArray($XMLArray)
+    {
+        $dataObjectDocument = new DataObjectDocument();
+        $this->dataObjectDocuments[] = $dataObjectDocument;
+        
+        $rootNode = $dataObjectDocument->createElement('root');
+        $dataObjectDocument->appendChild($rootNode);
+        
+        $dataObjectList = new DataObjectList();
+        for($i=0; $i<count($XMLArray); $i++) {
+            $dataObject = $this->loadXML($XMLArray[$i]);
+            $rootNode->appendChild($dataObjectDocument->importNode($dataObject,true));
+            $dataObjectList[] = $dataObject;
+        }
+        return $dataObjectList;
+    }
+    
     
     public function loadXML($xml)
     {
@@ -759,6 +777,24 @@ class DataObjectController
     //*************************************************************************
     // DATA ACCESS SERVICE FUNCTIONS
     //*************************************************************************
+    protected function createDataAccessServices()
+    {
+        $das = $this->query('//das:source');
+        for($i=0; $i<$das->length; $i++) {
+            $dasNode = $das->item($i);
+            $parentElement = $dasNode->parentNode->parentNode->parentNode;
+            // xsd:?????/xsd:annotation/xsd:appinfo
+            if ($parentElement == $this->schema->documentElement) {
+                $dasName = $dasNode->getAttribute('name');
+            } else {
+                $dasName = $parentElement->getName();
+            }
+            $this->createDataAccessService(
+                $dasName, $dasNode
+            );
+        }
+    }
+    
     protected function getDataAccessService($node)
     {
         if($node->hasAttribute('das:source')) {
@@ -804,7 +840,9 @@ class DataObjectController
     {
         //echo "<br/>Starting transaction for control " . $transactionControl;
         $this->transactionControl = $transactionControl;
-        foreach($this->dataAccessServices as $dataAccessService) {
+        $this->createDataAccessServices();
+        foreach($this->dataAccessServices as $dasName => $dataAccessService) {
+            //echo "<br/>Start transaction for ". $dasName;
             if(method_exists($dataAccessService, 'startTransaction')) {
                 $dataAccessService->startTransaction();
             }
@@ -814,7 +852,7 @@ class DataObjectController
     
     public function commit()
     {
-        //echo "<br/>Commit transaction for control " . $this->transactionControl;
+        echo "<br/>Commit transaction for control " . $this->transactionControl;
         foreach($this->dataAccessServices as $dataAccessService) {
             if(method_exists($dataAccessService, 'commit')) {
                 $dataAccessService->commit();
@@ -934,7 +972,7 @@ class DataObjectController
     protected function getType($node)
     {
         //echo "<br/>Get type of $node->tagName " . $node->getAttribute('name');
-        if(!$type = $this->getXRefs($node, 'type')) {
+        //if(!$type = $this->getXRefs($node, 'type')) {
             if($node->hasAttribute('type')) { 
                 $typeName = $node->getAttribute('type');
                 if(substr($typeName, 0, 3) == 'xsd') {
@@ -956,8 +994,8 @@ class DataObjectController
             }
             if($types->length == 0) throw new maarch\Exception("Type $typeName not found for " . $node->tagName . " " . $node->getAttribute('name'));
             $type = $types->item(0);
-            $this->addXRefs($node, 'type', $type);
-        } 
+        //    $this->addXRefs($node, 'type', $type);
+        //} 
         
         return $type;
     }

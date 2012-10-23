@@ -933,6 +933,15 @@ class DataObjectList
         $this->length = count($this->storage);
     }
     
+    public function asXMLArray()
+    {
+        $XMLArray = array();
+        for($i=0; $i<count($this->storage); $i++) {
+            $XMLArray[] = $this->storage[$i]->asXML();
+        }
+        return $XMLArray;
+    }
+    
     public function show() 
     {
         $showArray = array();
