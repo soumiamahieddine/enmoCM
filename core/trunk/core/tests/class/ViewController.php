@@ -36,8 +36,7 @@ class ViewController
         $this->view = $this->document;
         return $this->view;
     }
-    
-    
+
     function showView()
     {
         print $this->document->saveHTML();
@@ -231,6 +230,15 @@ class ViewController
                     )
                 );
             }
+        }
+        
+        $titles = $this->query('//@title');
+        for($i=0; $i<$titles->length; $i++) {
+            $title = $titles->item($i);
+            $title->nodeValue = 
+                $MessageController->getMessageText(
+                    $title->nodeValue
+                );
         }
         
         $translates = $this->query('//*[@data-translate != ""]');

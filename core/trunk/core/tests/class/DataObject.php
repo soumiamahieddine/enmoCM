@@ -352,6 +352,16 @@ class DataObjectElement
     //*************************************************************************
     public function __set($name, $value) 
     {
+        /*
+        <!ENTITY ndash   "&#8211;"> <!-- en dash, U+2013 ISOpub -->
+        <!ENTITY mdash   "&#8212;"> <!-- em dash, U+2014 ISOpub -->
+        <!ENTITY lsquo   "&#8216;"> <!-- left single quotation mark, U+2018 ISOnum -->
+        <!ENTITY rsquo   "&#8217;"> <!-- right single quotation mark, U+2019 ISOnum -->
+        <!ENTITY sbquo   "&#8218;"> <!-- single low-9 quotation mark, U+201A NEW -->
+        <!ENTITY ldquo   "amp;“"> <!-- left double quotation mark, U+201C ISOnum -->
+        <!ENTITY rdquo   "&#8221;"> <!-- right double quotation mark, U+201D ISOnum -->
+        */
+               
         // Property storage is an attribute
         if($this->hasAttribute($name)) {
             $valueBefore = $this->getAttribute($name);
