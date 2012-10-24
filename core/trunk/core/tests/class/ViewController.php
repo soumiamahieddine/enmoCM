@@ -318,7 +318,7 @@ class View
             $replaceNode
         );
     }
-    
+       
     //*************************************************************************
     // Outputs
     //*************************************************************************
@@ -357,9 +357,22 @@ class ViewElement
     }
     
     //*************************************************************************
+    // Search
+    //*************************************************************************
+    function getAncestorsByTagName($tagName)
+    {
+        $xpath = new DOMXPath($this->ownerDocument);
+        $ancestors = 
+            $xpath->query(
+                "./ancestor::*[name()='".$tagName."']", 
+                $this
+            );
+        return $ancestors;
+    }
+    
+    //*************************************************************************
     // Standard attributes
     //*************************************************************************
-    // class dir id lang title style 
     function setId($id) 
     {
         $this->setAttribute('id', $id);
@@ -421,6 +434,29 @@ class ViewElement
         $this->removeAttribute('selected');
     }
     
+    //*************************************************************************
+    // Style
+    //*************************************************************************       
+    function setStyle($name, $value) {
+        //echo "<br/>Set style $name = $value";
+        if($this->hasAttribute('style')) {
+            //echo "<br/>Has attribute 'style'";
+            $style = $this->getAttribute('style');
+            if(preg_match("/".$name.":[\.|\s]*[^;]*/i", $style)) {
+                $style = preg_replace(
+                    "/".$name.":[\.|\s]*[^;]*/i", 
+                    $name.": " . $value,
+                    $style
+                );
+            } else {
+                $style .= $name . ": " . $value . ";";
+            }
+        } else {
+            //echo "<br/>no attribute 'style'";
+            $style = $name . ": " . $value . ";";
+        }
+        $this->setAttribute('style', $style);
+    }
 }
 
 //*****************************************************************************
