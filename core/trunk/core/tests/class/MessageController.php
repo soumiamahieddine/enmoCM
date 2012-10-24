@@ -63,15 +63,23 @@ class MessageController
     private function xpath($query, $contextElement=false) 
     {
         if(!$contextElement) $contextElement = $this->documentElement;
-        return $this->xpath->query($query, $contextElement);
+        $result = $this->xpath->query($query, $contextElement);
+        if($result) return $result;
+        else {
+            throw new maarch\Exception('XPath Error: ' . $query);
+        }
     }
     
     public function getMessageDefinition($id)
     {
-        $definitions = $this->xpath("//message[@id='".$id."']");
-        if($definitions->length === 0) return false;
-        $definition = $definitions->item(0);
-        return $definition;
+        try {
+            $definitions = $this->xpath("//message[@id='".$id."']");
+            if($definitions && $definitions->length === 0) return false;
+            $definition = $definitions->item(0);
+            return $definition;
+        } catch (maarch\Exception $e) {
+            throw $e;
+        }
     }
     
     public function getTexts(
@@ -98,15 +106,19 @@ class MessageController
         )
     {
         // Get message definition
-        $definition = $this->getMessageDefinition($id);
-        if(!$definition) return $id;
-        
-        $text = $this->makeMessageText(
-            $definition,
-            $lang,
-            $params
-        );
-        return $text;
+        try {
+            $definition = $this->getMessageDefinition($id);
+            if(!$definition) return $id;
+            
+            $text = $this->makeMessageText(
+                $definition,
+                $lang,
+                $params
+            );
+            return $text;
+        } catch (maarch\Exception $e) {
+            throw $e;
+        }
     }
     
     private function makeMessageText(

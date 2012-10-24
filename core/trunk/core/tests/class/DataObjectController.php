@@ -111,27 +111,21 @@ class DataObjectController
     }
     
     public function getTypeEnumeration(
-        $typeName, 
-        $infoQueries = array('name' => './/xsd:documentation[@xml:lang = "fr"]//*[local-name()="name"]')
+        $typeName
     ) {
-        $typeEnumeration = array();
+        $typeEnumeration = new DataObjectList();
+        
+        $dataObjectDocument = new DataObjectDocument();
+        $this->dataObjectDocuments[] = $dataObjectDocument;
         
         $simpleType = $this->getTypeByName($typeName);
         $enumerations = $this->query('.//xsd:enumeration', $simpleType);
         $l = $enumerations->length;
         for($i=0; $i<$l; $i++) {
             $enumeration = $enumerations->item($i);
-            $item = array();
-            $item['value'] = $enumeration->getAttribute('value');
-            if(count($infoQueries) > 0)  {
-                foreach($infoQueries as $infoName => $infoQuery) {
-                    $infoNode = $this->query($infoQuery, $enumeration)->item(0);
-                    if($infoNode) {
-                        $item[$infoName] = $infoNode->nodeValue;
-                    }
-                }
-            }
-            $typeEnumeration[] = $item;
+            $dataObject = $dataObjectDocument->importNode($enumeration, true);
+            $dataObjectDocument->appendChild($dataObject);
+            $typeEnumeration[] = $dataObject;
         }
         return $typeEnumeration;
     }
