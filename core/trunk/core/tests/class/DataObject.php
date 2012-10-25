@@ -336,7 +336,7 @@ class DataObjectElement
         );
         return $elements;
     }
-    
+        
     public function getChildNodesByTagName($name=false)
     {
         if(!$name) $name = '*';

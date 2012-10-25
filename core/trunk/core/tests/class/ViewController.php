@@ -306,12 +306,7 @@ class View
         $optionGroup->setAttribute('label', $label);
         return $optionGroup;
     }
-    
-    function appendViewNode($ViewNode, $parentNode)
-    {
-        $parentNode->appendChild($this->importNode($ViewNode, true));
-    }
-    
+        
     function replaceViewNode($ViewNode, $replaceNode) {
         $replaceNode->parentNode->replaceChild(
             $this->importNode($ViewNode, true),
@@ -354,6 +349,14 @@ class ViewElement
     function show() 
     { 
         echo $this->getSource();
+    }
+    
+    //*************************************************************************
+    // Structure
+    //*************************************************************************
+    function appendViewNode($ViewNode)
+    {
+        $this->appendChild($this->ownerDocument->importNode($ViewNode, true));
     }
     
     //*************************************************************************
