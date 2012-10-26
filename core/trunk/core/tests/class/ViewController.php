@@ -170,6 +170,19 @@ class ViewController
         }  
     }
     
+    function setHRefBaseUrl($tagName, $baseUrl)
+    {
+        $tags = $this->view->getElementsByTagName($tagName);
+        $tagsLength = $tags->length;
+        for ($i=0; $i<$tagsLength; $i++) {
+            $tag = $tags->item($i);
+            $tag->setAttribute(
+                'href',
+                $baseUrl . $tag->getAttribute('href')
+            );
+        }  
+    }
+    
     function populateWithXML(
         $XMLElement,
         $create=false
