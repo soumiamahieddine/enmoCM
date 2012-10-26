@@ -112,6 +112,10 @@ class ViewController
     ) {
         if($RefData && method_exists($RefData, 'getNodePath')) {
             $uniqueId = $RefData->getNodePath();
+            if(substr($uniqueId, -3) == '[1]') {
+                $uniqueId = substr($uniqueId, 0, -3);
+                echo $uniqueId;
+            }
         } else {
             $uniqueId = uniqid();
         }

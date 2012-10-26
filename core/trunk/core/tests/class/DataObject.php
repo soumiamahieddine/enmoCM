@@ -348,6 +348,15 @@ class DataObjectElement
         return $nodes;
     }
     
+    public function getnodePath()
+    {
+        $nodePath = parent::getNodePath();
+        if(substr($nodePath, -3) == '[1]') {
+            $nodePath = substr($nodePath, 0, -3);
+        }
+        return $nodePath;  
+    }
+    
     // MAGIC METHODS
     //*************************************************************************
     public function __set($name, $value) 

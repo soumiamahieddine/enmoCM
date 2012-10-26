@@ -584,7 +584,6 @@ class DataObjectController
     ) {
         try { 
             $refElement = $this->getRefNode($objectElement);
-            //echo "<br>Save " . $refElement->getName();
             if($dataAccessService = 
                 $this->getDataAccessService($refElement)
             ) {
@@ -643,6 +642,8 @@ class DataObjectController
                     // NOTHING
                 }
             } 
+            $dataObject->clearLogs();
+            $dataObject->logRead();
             return $key;
         } catch (maarch\Exception $e) {   
             throw $e;
@@ -846,7 +847,7 @@ class DataObjectController
     
     public function commit()
     {
-        echo "<br/>Commit transaction for control " . $this->transactionControl;
+        //echo "<br/>Commit transaction for control " . $this->transactionControl;
         foreach($this->dataAccessServices as $dataAccessService) {
             if(method_exists($dataAccessService, 'commit')) {
                 $dataAccessService->commit();
