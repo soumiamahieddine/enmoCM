@@ -587,13 +587,19 @@ class DataAccessService_Database
                 $filterColumn = $filterProperty->getColumn();
                 $filterType = $this->getType($filterProperty);
                 $enclosure = $filterType->getEnclosure();
-                $filterExpressions[] = 
-                      "UPPER(". $filterColumn . ") " 
-                    . "LIKE UPPER(" 
-                        . $enclosure 
-                        . '$filter' 
-                        . $enclosure 
-                    . ")";  
+                if($enclosure) {
+                    $filterExpressions[] = 
+                          "UPPER(". $filterColumn . ") " 
+                        . "LIKE UPPER(" 
+                            . $enclosure 
+                            . '$filter' 
+                            . $enclosure 
+                        . ")"; 
+                } else {
+                    $filterExpressions[] = 
+                          $filterColumn 
+                        . ' = $filter '; 
+                }
             }
         }
         return implode(' or ', $filterExpressions);
