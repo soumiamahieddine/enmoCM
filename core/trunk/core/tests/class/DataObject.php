@@ -5,8 +5,6 @@ class DataObjectDocument
     implements ArrayAccess
 {
     
-    private $xpath;
-
     //*************************************************************************
     // CONSTRUCTOR
     //************************************************************************* 
@@ -18,18 +16,18 @@ class DataObjectDocument
         $this->registerNodeClass('DOMAttr', 'DataObjectAttribute');
         $this->registerNodeClass('DOMElement', 'DataObjectElement');
         $this->registerNodeClass('DOMComment', 'DataObjectComment');
-        
-        $this->xpath = new DOMXpath($this);
 	}
 
     
     //*************************************************************************
     // DOM METHODS
     //************************************************************************* 
-    public function xpath($query) 
+    public function query($query) 
     {
-        return $this->xpath->query($query);
+        $xpath = new DOMXPath($this);
+        return $xpath->query($query);
     }
+    
     
     public function createProperty($name)
     {
@@ -104,7 +102,7 @@ class DataObjectDocument
     public function __get($name) 
     {
         // Element
-        $nodes = $this->xpath('/' . $name);
+        $nodes = $this->query('/' . $name);
         return array($nodes->item(0));
     }
     
@@ -115,7 +113,7 @@ class DataObjectDocument
             $this->appendChild($value);
             break;
         default:
-            $resultNodes = $this->xpath('/'.$name);
+            $resultNodes = $this->query('/'.$name);
             switch ((string)$resultNodes->length) {
             case '0' :
                 $resultNode = $this->createElement($name, $value);
@@ -509,7 +507,7 @@ class DataObjectElement
     private function asArray($name)
     {
         $returnArray = array();
-        $nodes = $this->ownerDocument->xpath(
+        $nodes = $this->ownerDocument->query(
             $this->getNodePath() . '/@'. $name 
             . ' | ' 
             . $this->getNodePath() . '/'. $name 
@@ -941,6 +939,7 @@ class DataObjectList
     private $storage = array();
     public $length;
     
+  
     public function DataObjectList($nodeList=false)
     {
         if($nodeList) {
@@ -1003,7 +1002,7 @@ class DataObjectList
         if($firstObject = $this->storage[0]) {
             $dataObjectDocument = $firstObject->ownerDocument;
             $xpath = new DOMXPath($dataObjectDocument);
-            return $xpath->query($query, $firstObject);
+            return $xpath->query($query);
         } else {
             return false;
         }

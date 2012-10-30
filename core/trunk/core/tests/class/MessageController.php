@@ -21,6 +21,7 @@ class MessageController
         $customFilePath = 
             $_SESSION['config']['corepath'] . DIRECTORY_SEPARATOR 
             . 'custom' . DIRECTORY_SEPARATOR 
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
             . $messageFile;
             
         $relativeFilePath = 

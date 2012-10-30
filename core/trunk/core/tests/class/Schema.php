@@ -16,10 +16,11 @@ class Schema
     
     public function loadXSD($schemaLocation, $rootSchema=false)
     {
-        if(!is_file($schemaLocation)) {
-            throw new maarch\Exception("Failed to load schema definition file $schemaLocation");
-        }
-        $this->load($schemaLocation);
+        $schemaFullPath = $this->getFullPath(
+            $schemaLocation
+        );
+
+        $this->load($schemaFullPath);
         if(!$rootSchema) $rootSchema = $this;
         $this->processIncludes($this, $rootSchema);
     }
@@ -44,34 +45,44 @@ class Schema
     {
         $includeSchema = new Schema();
         
-        $customFilePath = 
-            $_SESSION['config']['corepath'] . DIRECTORY_SEPARATOR 
-            . 'custom' . DIRECTORY_SEPARATOR 
-            . $includeSchemaLocation;
-            
-        $relativeFilePath = 
-            $_SESSION['config']['corepath'] . DIRECTORY_SEPARATOR 
-            . $includeSchemaLocation;
+        $schemaFullPath = $this->getFullPath(
+            $includeSchemaLocation
+        );
         
-        if(is_file($customFilePath)) {
-            $loadFile = $customFilePath;
-        } elseif(is_file($relativeFilePath)) {
-            $loadFile = $relativeFilePath;
-        } elseif(is_file($includeSchemaLocation)) {
-            $loadFile = $includeSchemaLocation;
-        } else {
-            throw new maarch\Exception("Failed to load schema definition file $includeSchemaLocation");
-        }
-        $includeSchema->loadXSD($loadFile, $rootSchema);
+        $includeSchema->loadXSD($schemaFullPath, $rootSchema);
         $schemaContents = $includeSchema->documentElement->childNodes;
         for($j=0; $j<$schemaContents->length; $j++) {
             $importNode = $schemaContents->item($j);
             $importedNode = $schema->importNode($importNode, true);
             $schema->documentElement->appendChild($importedNode);
         }
-        $rootSchema->includedSchemaLocations[] = $loadFile;
+        $rootSchema->includedSchemaLocations[] = $includeSchemaLocation;
     }
 
+    protected function getFullPath($schemaLocation) 
+    {
+        $customFilePath = 
+            $_SESSION['config']['corepath'] . DIRECTORY_SEPARATOR 
+            . 'custom' . DIRECTORY_SEPARATOR 
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
+            . $schemaLocation;
+            
+        $relativeFilePath = 
+            $_SESSION['config']['corepath'] . DIRECTORY_SEPARATOR 
+            . $schemaLocation;
+        
+        if(is_file($customFilePath)) {
+            return $customFilePath;
+        } elseif(is_file($relativeFilePath)) {
+            return $relativeFilePath;
+        } elseif(is_file($schemaLocation)) {
+            return $schemaLocation;
+        } else {
+            throw new maarch\Exception("Failed to load schema definition file $schemaLocation or $customFilePath or $relativeFilePath");
+        }
+    
+    }
+    
 }
 
 class SchemaNode

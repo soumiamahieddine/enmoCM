@@ -16,9 +16,29 @@ class ViewController
     }
     
     function loadHTMLFile($viewFile)
-    {
+    {     
+        $customFilePath = 
+            $_SESSION['config']['corepath'] . DIRECTORY_SEPARATOR 
+            . 'custom' . DIRECTORY_SEPARATOR 
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
+            . $viewFile;
+            
+        $relativeFilePath = 
+            $_SESSION['config']['corepath'] . DIRECTORY_SEPARATOR 
+            . $viewFile;
+        
+        if(is_file($customFilePath)) {
+            $loadFile = $customFilePath;
+        } elseif(is_file($relativeFilePath)) {
+            $loadFile = $relativeFilePath;
+        } elseif(is_file($viewFile)) {
+            $loadFile = $viewFile;
+        } else {
+            throw new maarch\Exception("Failed to load view file $viewFile");
+        }
+
         $view = new View();
-        $view->loadHTMLFile($viewFile);
+        $view->loadHTMLFile($loadFile);
         if(!$view->encoding) $view->encoding = 'UTF-8';
         
         parent::__construct($view);
@@ -187,7 +207,7 @@ class ViewController
         }  
     }
     
-    function populateWithXML(
+    function loadDataObject(
         $XMLElement,
         $create=false
     ) {
@@ -453,6 +473,17 @@ class ViewElement
     {
         $this->removeAttribute('selected');
     }
+    
+    function check()
+    {
+        $this->setAttribute('checked', 'checked');
+    }
+    
+    function uncheck() 
+    {
+        $this->removeAttribute('checked');
+    }
+    
     
     //*************************************************************************
     // Style
