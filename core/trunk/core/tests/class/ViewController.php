@@ -61,6 +61,15 @@ class ViewController
     {
         print $this->document->saveHTML();
     }  
+    
+    function createView()
+    {
+        $view = new View();
+        $view->encoding = 'UTF-8';
+        parent::__construct($view);
+        $this->view = $this->document;
+        return $this->view;
+    }
         
     //*************************************************************************
     // Get tags
@@ -321,6 +330,18 @@ class View
     }
     
     //*************************************************************************
+    // DOM
+    //*************************************************************************
+    function createElement($tagName, $nodeValue=false)
+    {
+        $element = parent::createElement($tagName, $nodeValue);
+        if(!$this->documentElement) {
+            $this->appendChild($element);
+        }
+        return $element;
+    }
+    
+    //*************************************************************************
     // Create tags
     //*************************************************************************
     function createSelect()
@@ -344,11 +365,63 @@ class View
         return $optionGroup;
     }
         
-    function replaceViewNode($ViewNode, $replaceNode) {
+    function replaceViewNode($ViewNode, $replaceNode) 
+    {
         $replaceNode->parentNode->replaceChild(
             $this->importNode($ViewNode, true),
             $replaceNode
         );
+    }
+    
+    function createList($tag='ul') 
+    {
+        $list = $this->createElement($tag);
+        return $list;
+    }
+    
+    function createTable(
+        $rows=0, 
+        $columns=0, 
+        $header=false
+    ) {
+        $table = $this->createElement('table');
+        // Create header
+        if($header) {
+            $thead = $this->createElement('thead');
+            $table->appendChild($thead);
+            $headerRow = 
+                $this->createRow($columns, $header=true);
+            
+        }
+        // Create body
+        $tbody = $this->createElement('tbody');
+        $table->appendChild($tbody);
+        for($i=0; $i<$rows; $i++) {
+            $row = $this->createRow($columns, $header=false);
+            $tbody->appendChild($row);
+        }
+        return $table;
+    }
+    
+    function createRow(
+        $columns=0,
+        $header=false
+    ) {
+        $row = $this->createElement('tr');
+        for($i=0; $i<$columns; $i++) {
+            $column = $this->createColumn($header);
+            $row->appendChild($column);
+        }
+        return $row;
+    }
+    
+    function createColumn(
+       $header=false
+    ) {
+        if($header) $tag = 'th';
+        else $tag = 'td';
+        $column = $this->createElement($tag);
+        return $column;
     }
        
     //*************************************************************************
@@ -438,6 +511,78 @@ class ViewElement
     }
     
     //*************************************************************************
+    // Lists
+    //*************************************************************************
+    function addList($type) 
+    {
+        $list = $this->ownerDocument->createList($type);
+        $this->appendChild($list);
+        return $list;
+    }
+    
+    function addListItem($value, $definition=false) {
+        switch($this->tagName) {
+        case 'ul':
+        case 'ol':
+            $item = $this->ownerDocument->createElement('li', $value);
+            $this->appendChild($item);
+            return $item;
+            break;
+        
+        case 'dl':
+            $dt = $this->ownerDocument->createElement('dt', $value);
+            $this->appendChild($dt);
+            $dd = $this->ownerDocument->createElement('dd', $definition);
+            $this->appendChild($dd);
+            return $this->childNodes;
+            break;
+        }
+ 
+    }
+    
+    //*************************************************************************
+    // Table
+    //*************************************************************************
+    function addTable(
+        $rows=0, 
+        $columns=0, 
+        $header=false
+    ) {
+        $table = 
+            $this->ownerDocument->createTable(
+                $rows, 
+                $columns, 
+                $header
+            );
+        $this->appendChild($table);
+        return $table;
+    }
+    
+    function addRow(
+        $columns=0,
+        $header=false
+    ) {
+        $row = 
+            $this->ownerDocument->createRow(
+                $columns, 
+                $header
+            );
+        $this->appendChild($row);
+        return $row;
+    }
+    
+    function addColumn(
+        $header=false
+    ) {
+        $column = 
+            $this->ownerDocument->createColumn(
+                $header
+            );
+        $this->appendChild($column);
+        return $column;
+    }
+    
+    //*************************************************************************
     // Inputs
     //*************************************************************************
     function addOption($value, $label)
@@ -508,6 +653,8 @@ class ViewElement
         }
         $this->setAttribute('style', $style);
     }
+
+    
 }
 
 //*****************************************************************************

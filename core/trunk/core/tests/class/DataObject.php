@@ -349,9 +349,7 @@ class DataObjectElement
     public function getnodePath()
     {
         $nodePath = parent::getNodePath();
-        if(substr($nodePath, -3) == '[1]') {
-            $nodePath = substr($nodePath, 0, -3);
-        }
+        $nodePath = str_replace('[1]', '', $nodePath);
         return $nodePath;  
     }
     
