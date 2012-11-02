@@ -312,35 +312,23 @@ class DataObjectController
     public function copy(
         $dataObject, 
         $newName=false,
+        $resetKey=true,
         $parentDataObject=false
     ){
-        if($parentDataObject) {
-            $dataObjectDocument = $parentDataObject->ownerDocument; 
-        } else {
-            $dataObjectDocument = new DataObjectDocument();
-            $this->dataObjectDocuments[] = $dataObjectDocument;
-        }
+
+        $objectElement = $this->getElementByName($dataObject->tagName);
         
-        if(!$newName) $newName = $dataObject->nodeName;
-        $newObject = $dataObjectDocument->createElement($newName);
-        if ($dataObject->attributes->length) {
-            foreach ($dataObject->attributes as $attribute) {
-                $newObject->setAttribute($attribute->nodeName, $attribute->nodeValue);
-            }
-        }
-        $childNodes = $dataObject->childNodes;
-        $childNodesLength = $childNodes->length;
-        for ($i=0; $i<$childNodesLength; $i++) {
-            $childNode = $childNodes->item($i);
-            $newNode = $dataObjectDocument->importNode($childNode, true); 
-            $newObject->appendChild($newNode);
-        }
-        $newObject->clearLogs();
-        $newObject->logCreate();
-        $dataObjectDocument[] = $newObject;
+        $newObject = 
+            $this->copyDataObject(
+                $dataObject,
+                $parentDataObject,
+                $newName,
+                $resetKey
+            );
+
         return $newObject;
     }
-    
+        
     public function validate($dataObject) 
     {
         $messageController = new MessageController();
@@ -533,7 +521,7 @@ class DataObjectController
             }
             
             if($readChildren) {
-                // Process newly created child objects
+                // Process read object(s) child objects
                 $newObjects = 
                     $parentObject->getChildNodesByTagName(
                         $objectElement->getName()
@@ -567,13 +555,15 @@ class DataObjectController
             if(!$objectNode->isReadable()) continue;
             $refNode = $this->getRefNode($objectNode);
             if(!$refNode->hasDatasource()) continue;
+            //echo "<br/>Read relation between " . $dataObject->tagName . " and child " . $objectNode->getName();
+            $relation = $this->getRelation($objectNode, $dataObject);
+            if(!$relation) continue;
             //echo "<br/>Read child of " . $objectElement->getName() . " named " . $refNode->getName();
             $this->readDataObject(
                 $refNode, 
                 $dataObject, 
                 $dataObjectDocument
             );
-            
         }
     }
     
@@ -635,11 +625,12 @@ class DataObjectController
                             $refElement, 
                             $dataObject
                         );
+                    $dataObject->parentNode->removeChild($dataObject);
                 } elseif (
                     $dataObject->isCreated() 
                     && $dataObject->isDeleted()
                 ) {
-                    // NOTHING
+                    $dataObject->parentNode->removeChild($dataObject);
                 }
             } 
             $dataObject->clearLogs();
@@ -684,16 +675,10 @@ class DataObjectController
             // Get relation between dataObject and child
             //echo "<br/>Relation between child " . $refNode->getName() . " and parent " . $dataObject->getName();
             $relation = $this->getRelation($refNode, $dataObject);
-            if(!$relation) {
-                throw new maarch\Exception(
-                    "No relation defined in schema between " . $refNode->getName() 
-                    . " and " . $dataObject->nodeName 
-                    . "! Rolling back transaction"
-                );
+            if($relation) {
+                $fkeys = $this->query('./das:foreign-key', $relation);
+                $n = $fkeys->length;
             }
-            $fkeys = $this->query('./das:foreign-key', $relation);
-            $n = $fkeys->length;
-            
             // List children elements of given type
             $childObjects = 
                 $dataObject->getChildNodesByTagName(
@@ -704,13 +689,15 @@ class DataObjectController
                 $childObject = $childObjects->item($j);
                 
                 // Assign key values to child if needed
-                for($k=0; $k<$n; $k++) {
-                    $fkey = $fkeys->item($k);
-                    $parentKey = $fkey->getAttribute('parent-key');
-                    $childKey = $fkey->getAttribute('child-key');
-                    //echo "<br/>parentkey is $parentKey, childkey is $childKey";
-                    $childObject->$childKey = $dataObject->$parentKey;
-                    //echo " --> childkey set to :" . $childObject->$childKey;
+                if($relation) {
+                    for($k=0; $k<$n; $k++) {
+                        $fkey = $fkeys->item($k);
+                        $parentKey = $fkey->getAttribute('parent-key');
+                        $childKey = $fkey->getAttribute('child-key');
+                        //echo "<br/>parentkey is $parentKey, childkey is $childKey";
+                        $childObject->$childKey = $dataObject->$parentKey;
+                        //echo " --> childkey set to :" . $childObject->$childKey;
+                    }
                 }
                 
                 $this->saveDataObject(
@@ -753,6 +740,46 @@ class DataObjectController
                 );
             }
         }
+    }
+    
+    protected function copyDataObject(
+        $dataObject,
+        $parentDataObject = false,
+        $newName = false,
+        $resetKey = true
+    ) {
+        if($parentDataObject) {
+            $dataObjectDocument = $parentDataObject->ownerDocument; 
+        } else {
+            $dataObjectDocument = new DataObjectDocument();
+            $this->dataObjectDocuments[] = $dataObjectDocument;
+        }
+        $keyProperties = $this->getKeyProperties($dataObject->tagName);
+        
+        if(!$newName) $newName = $dataObject->nodeName;
+        $newObject = $dataObjectDocument->createElement($newName);
+        if ($dataObject->attributes->length) {
+            foreach ($dataObject->attributes as $attribute) {
+                if($resetKey && 
+                    in_array($attribute->nodeName, $keyProperties)
+                ) continue;
+                $newObject->setAttribute($attribute->nodeName, $attribute->nodeValue);
+            }
+        }
+        $childNodes = $dataObject->childNodes;
+        $childNodesLength = $childNodes->length;
+        for ($i=0; $i<$childNodesLength; $i++) {
+            $childNode = $childNodes->item($i);
+            if($resetKey && 
+                in_array($childNode->tagName, $keyProperties)
+            ) continue;
+            $newNode = $dataObjectDocument->importNode($childNode, true); 
+            $newObject->appendChild($newNode);
+        }
+        $dataObjectDocument->appendChild($newObject);
+        $newObject->clearLogs();
+        $newObject->logCreate();
+        return $newObject;
     }
     
     //*************************************************************************
