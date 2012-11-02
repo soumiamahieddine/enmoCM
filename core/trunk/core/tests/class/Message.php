@@ -7,13 +7,13 @@ class Message
     const ERROR     = 2;
     const FATAL     = 3;
    
-    public $id;
+    public $code;
     public $message;
     public $level;
     
-    public function Message($id, $message, $level)
+    public function Message($code, $message, $level)
     {
-        $this->id = $id;
+        $this->code = $code;
         $this->message = trim($message);
         $this->level = $level;
     }

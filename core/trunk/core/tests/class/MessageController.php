@@ -71,10 +71,10 @@ class MessageController
         }
     }
     
-    public function getMessageDefinition($id)
+    public function getMessageDefinition($code)
     {
         try {
-            $definitions = $this->xpath("//message[@id='".$id."']");
+            $definitions = $this->xpath("//message[@code='".$code."']");
             if($definitions && $definitions->length === 0) return false;
             $definition = $definitions->item(0);
             return $definition;
@@ -84,32 +84,32 @@ class MessageController
     }
     
     public function getTexts(
-        $idPrefix, 
+        $codePrefix, 
         $lang = false
         )
     {
         $texts = array();
-        $definitions = $this->xpath("//message[starts-with(@id, '".$idPrefix."')]");
+        $definitions = $this->xpath("//message[starts-with(@code, '".$codePrefix."')]");
         
         for($i=0; $i<$definitions->length; $i++) {
             $definition = $definitions->item($i);
             $text = $this->makeMessageText($definition, $lang);
-            if(!$text) $text = $definition->id;
-            $texts[$definition->id] = $text;
+            if(!$text) $text = $definition->code;
+            $texts[$definition->code] = $text;
         }
         return $texts;
     }
     
     public function getMessageText(
-        $id,
+        $code,
         $lang = false,
         $params = array()
         )
     {
         // Get message definition
         try {
-            $definition = $this->getMessageDefinition($id);
-            if(!$definition) return $id;
+            $definition = $this->getMessageDefinition($code);
+            if(!$definition) return $code;
             
             $text = $this->makeMessageText(
                 $definition,
@@ -133,9 +133,9 @@ class MessageController
         if(!$lang) $lang = $_SESSION['config']['lang'];
         $texts = $this->xpath("./text[@lang='".$lang."']", $definition);
         
-        // No text defined for language, return id
+        // No text defined for language, return code
         if($texts->length === 0) {
-            return $definition->id;
+            return $definition->code;
         }
         
         // Get template text
@@ -147,13 +147,13 @@ class MessageController
     }
     
     public function createMessage(
-        $id,
+        $code,
         $lang = false,
         $params = array()
         )
     {
         // Get message definition
-        $definition = $this->getMessageDefinition($id);
+        $definition = $this->getMessageDefinition($code);
         
         // Make Text
         $text = $this->makeMessageText(
@@ -164,7 +164,7 @@ class MessageController
 
         // Create message object
         $message = new Message(
-            $id, 
+            $code, 
             $text,
             $definition->level
         );

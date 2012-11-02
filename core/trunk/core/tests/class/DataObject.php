@@ -650,9 +650,9 @@ class DataObjectElement
         $this->appendChild($message);
     }
     
-    public function logValidate($id, $message, $level)
+    public function logValidate($code, $message, $level)
     {
-        $messageDetail = 'id="' . $id . '" message="' . $message . '"';
+        $messageDetail = 'code="' . $code . '" message="' . $message . '"';
         $message = 
             $this->ownerDocument->createLog(
                 DataObjectLog::VALIDATE, 
@@ -742,7 +742,7 @@ class DataObjectElement
             if($log->getAttribute('operation') == DataObjectLog::VALIDATE) {
                 $validationErrors[] = 
                     new Message(
-                        $log->getAttribute('id'),
+                        $log->getAttribute('code'),
                         $log->getAttribute('message'),
                         $log->getAttribute('level')
                     );
