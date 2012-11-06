@@ -808,6 +808,7 @@ class LibXMLError_parser
             $value = next($args);
             $type = next($args);
             break;
+            
         case '1840':
             // Element '$1': [facet '$2'] The value '$3' is not an element of the set {$4, $5, $6... $n}.
             // Element '$1', attribute '$2': [facet '$3'] The value '$4' is not an element of the set {$5, $6, $7... $n}.
@@ -817,6 +818,12 @@ class LibXMLError_parser
             $value = next($args);
             while($setItem = next($args)) $set[] = $setItem;
             break;
+            
+        case '1845':
+            // Element 'ArchiveTransfer': No matching global declaration available for the validation root.
+            $element = current($args);
+            break;
+            
         case '1866':
             // Element '$1', attribute '$2': The attribute '$3' is not allowed.
             $element = current($args);
@@ -831,6 +838,8 @@ class LibXMLError_parser
         case '3033':
             // Element '{http://www.w3.org/2001/XMLSchema}complexType': The content is not valid. Expected is (annotation?, (simpleContent | complexContent | ((group | all | choice | sequence)?, ((attribute | attributeGroup)*, anyAttribute?)))).
             $element = current($args);
+            break;
+            
         default:
             
         }

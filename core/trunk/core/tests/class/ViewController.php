@@ -7,14 +7,25 @@ require_once(
 class ViewController
     extends DOMXPath
 {
+    public $baseUrl;
+    public $staticUrl;
+    public $scriptUrl;
+    public $fragments = array();
+    
     //*************************************************************************
     // Constructor
     //*************************************************************************
     function ViewController()
     {
-        
+        $this->basePath = $_SESSION['config']['corepath'];
+        $this->baseUrl = $_SESSION['config']['coreurl'];
+        $this->staticUrl = $_SESSION['config']['businessappurl'] 
+                . 'static.php?filename=';
     }
     
+    //*************************************************************************
+    // HTML Source management
+    //*************************************************************************
     function loadHTMLFile($viewFile)
     {     
         $customFilePath = 
@@ -70,7 +81,105 @@ class ViewController
         $this->view = $this->document;
         return $this->view;
     }
+    
+    function loadFragmentFile($fragmentFile) 
+    {
+        $fragmentView = new View();
+        $fragmentView->loadHTMLFile($loadFile);
+        if(!$fragmentView->encoding) $fragmentView->encoding = 'UTF-8';
         
+        $this->fragments[] = $fragmentView;
+
+        $fragment = $this->view->createDocumentFragment();
+        $fragment->appendChild($fragmentView->documentElement);
+        
+        return $fragment;    
+    }
+    
+    /***************************************************************************
+    **  Make object view
+    ***************************************************************************/
+    function getView(
+        $DataObject,
+        $action
+    ) {
+        $DataObjectPath = $DataObject->getNodePath();
+        
+        /***************************************************************************
+        **  Populate form with object properties
+        ***************************************************************************/
+        $this->loadDataObject($DataObject);
+        
+        /***************************************************************************
+        **  Link CSS
+        ***************************************************************************/
+        $this->setHRefBaseUrl(
+            'link',
+            $this->baseUrl
+        );
+
+        /***************************************************************************
+        **  Script
+        ***************************************************************************/
+        $this->setSrcBaseUrl(
+            'script',
+            $this->baseUrl
+        );
+                
+        /***************************************************************************
+        **  Images
+        ***************************************************************************/
+        
+        $this->setSrcBaseUrl(
+            'img',
+            $this->staticUrl
+        );
+        
+        /***************************************************************************
+        **  Translate
+        ***************************************************************************/
+        $MessageController = new MessageController();
+        $MessageController->loadMessageFile(
+            $this->basePath . 'lang/'.$DataObject->tagName.'.xml'
+        );
+        $this->translate(
+            $MessageController
+        );
+        
+        /***************************************************************************
+        **  Set Ids
+        ***************************************************************************/
+        $this->setUniqueIds($DataObject);
+        
+        /***************************************************************************
+        **  Set Toggler
+        ***************************************************************************/
+        $Toggler = $this->query("//span[@class='smallTitle']")->item(0);
+        if($Toggler) {
+            $TogglerTarget = 
+                str_replace(
+                    '__title',
+                    '__form', 
+                    $Toggler->getAttribute('id')
+                );
+            $Toggler->setAttribute(
+                'onclick', 
+                "toggle_element('" . $TogglerTarget . "', this);"
+            );
+        }
+        
+        /***************************************************************************
+        **  Return standard view
+        ***************************************************************************/
+        $DataObjectPath = $DataObject->getNodePath();
+       
+        $View = $this->getElementById(
+            $DataObjectPath
+        );
+        
+        return $View;
+    }
+    
     //*************************************************************************
     // Get tags
     //*************************************************************************
@@ -217,43 +326,67 @@ class ViewController
     }
     
     function loadDataObject(
-        $XMLElement,
-        $create=false
+        $DataObject,
+        $mode='input'
     ) {
-        /***************************************************************************
-        **  Attributes
-        ***************************************************************************/
-        foreach($XMLElement->attributes as $attribute) {
-            if($input = 
-                $this->getElementById(
-                    $attribute->nodeName
-                )
-            ) {
-                $input->setValue($attribute->nodeValue);
+        $contents = $DataObject->query('./* | ./@*');
+        $contentsCount = $contents->length;
+        for($i=0; $i<$contentsCount; $i++) {
+            $content = $contents->item($i);
+            switch($content->nodeType) {
+            case '1':
+                if($content->getElementsByTagName('*')->length == 0) {
+                    $name = $content->tagName;
+                } else {
+                    continue 2;
+                }
+                break;
+            case '2':
+                $name = $content->name;
+                break;
             }
-        }
-           
-        /***************************************************************************
-        **  Elements
-        ***************************************************************************/
-        $childElements = $XMLElement->childNodes;
-        $childCount = $childElements->length;
-        for($i=0; $i<$childCount; $i++) {
-            $childElement = $childElements->item($i);
-            if($childElement->nodeType === 1 
-                && $childElement->nodeValue != '' 
-                && $input = $this->getElementById(
-                        $childElement->tagName
-                    )
-            ) {
-                $input->setValue($childElement->nodeValue);
+            $node = 
+                $this->getElementById(
+                    $name
+                );
+            if($node && $content->nodeValue) {
+                $this->loadProperty(
+                    $node,
+                    $content->nodeValue
+                );
             }
         }
     
     }
     
-    function translate($MessageController)
-    {
+    function loadProperty(
+        $node,
+        $value
+    ) {
+        switch($node->tagName) {
+        case 'input':
+            
+            switch($node->getAttribute('type')) {
+            case 'checkbox':
+                if($node->getAttribute('value') == $value) 
+                    $node->check();
+                break;
+            default:
+                $node->setValue($value);
+            }
+            break;
+            
+        case 'td':
+        case 'textarea':
+        default:
+            $node->nodeValue = $value;
+        }
+    
+    }
+    
+    function translate(
+        $MessageController
+    ) {
       
         $labels = $this->getLabels();
         for ($i=0; $i<$labels->length; $i++) {
@@ -287,7 +420,7 @@ class ViewController
                 );
         }
         
-        $translates = $this->query('//*[@data-translate != ""]');
+        $translates = $this->query('//*[@data-translate]');
         for($i=0; $i<$translates->length; $i++) {
             $translate = $translates->item($i);
             $message = $translate->getAttribute('data-translate');
@@ -340,7 +473,7 @@ class View
         }
         return $element;
     }
-    
+        
     //*************************************************************************
     // Create tags
     //*************************************************************************
@@ -466,7 +599,9 @@ class ViewElement
     //*************************************************************************
     function appendViewNode($ViewNode)
     {
-        $this->appendChild($this->ownerDocument->importNode($ViewNode, true));
+        $this->appendChild(
+            $this->ownerDocument->importNode($ViewNode, true)
+        );
     }
     
     //*************************************************************************
