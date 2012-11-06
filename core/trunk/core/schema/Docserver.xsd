@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:das="maarch:DataAccessService"  
+  elementFormDefault="qualified">
+
+  <!-- ==== Archive/ContentDescription/OtherMetadata                    ==== -->
+  <!-- ==== ArchiveObject/ContentDescription/OtherMetadata              ==== -->
+  <xsd:element name='docserver' type='docserver' 
+    das:source='maarch_entreprise'
+    das:table='docservers'
+    das:key='docserver_id'
+    das:operations="CRUDL">
+  </xsd:element> 
+  
+  <xsd:complexType name='docserver'>
+    <xsd:sequence>
+      <xsd:element name="device_label" type="varchar255" />
+      <xsd:element name="path_template" type="varchar255" />
+    </xsd:sequence>
+    <xsd:attribute name="docserver_id" type="varchar32" use="optional" default='1'/>
+    <xsd:attribute name="docserver_type_id" type="varchar32" use="required"/>
+    <xsd:attribute name="is_readonly" type="boolean" use="optional" default="N"/>
+    <xsd:attribute name="enabled" type="boolean" use="optional" default="Y"/>
+    <xsd:attribute name="coll_id" type="varchar32" use="required" />
+    <xsd:attribute name="docserver_location_id" type="varchar32" use="required" />
+  </xsd:complexType>
+  
+</xsd:schema>
