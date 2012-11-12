@@ -598,13 +598,13 @@ class DataObjectController
                 } elseif ($dataObject->isRead()
                     && !$dataObject->isDeleted()
                 ) {
-                    if($objectElement->isUpdatable()) {
-                        if(count($dataObject->getUpdatedProperties()) > 0) {
-                            $key = $dataAccessService->updateData(
-                                $refElement, 
-                                $dataObject
-                            );
-                        } 
+                    if($refElement->isUpdatable()
+                        && count($dataObject->getUpdatedProperties()) > 0
+                    ) {
+                        $key = $dataAccessService->updateData(
+                            $refElement, 
+                            $dataObject
+                        );
                     }
                     $key = $dataObject;
                     if($saveChildren) {
@@ -615,7 +615,7 @@ class DataObjectController
                     }
                 } elseif ($dataObject->isRead() 
                     && $dataObject->isDeleted()) {
-                    if($objectElement->isDeletable()) {
+                    if($refElement->isDeletable()) {
                         $this->saveChildDataObjects(
                             $objectElement,
                             $dataObject

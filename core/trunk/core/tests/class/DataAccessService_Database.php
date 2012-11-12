@@ -864,6 +864,7 @@ class DataAccessService_Database
         $messageController = new MessageController();
         $messageController->loadMessageFile('core/xml/DataAccessService_Messages.xml');
         $sqlError = $this->databaseObject->getError();
+        if(!$sqlError) $sqlError = "@";
         $exception = $messageController->getMessageText(
             'query_error',
             false,
@@ -872,8 +873,18 @@ class DataAccessService_Database
                 $query
             )
         );
-        throw new maarch\Exception($exception);
+        throw new maarch\Exception($sqlError . ' [' .$query . ']');
     }
-
+    
+    private function enclose_reserved($columnName) {
+        $reserved_words = array(
+            'when',
+        );
+        
+        if(in_array($columnName, $reserved_words))
+            return '"' . $columnName . "'";
+        else return $columnName;
+    }
+    
 }
 

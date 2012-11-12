@@ -70,7 +70,12 @@ class ViewController
 
     function showView()
     {
-        print $this->document->saveHTML();
+        print $this->view->saveHTML();
+    }  
+    
+    function getView()
+    {
+        return $this->view->documentElement;
     }  
     
     function createView()
@@ -96,19 +101,17 @@ class ViewController
         return $fragment;    
     }
     
-    /***************************************************************************
-    **  Make object view
-    ***************************************************************************/
-    function getView(
-        $DataObject,
-        $action
+    function getDataObjectListView(
+        $dataObjectList
     ) {
-        $DataObjectPath = $DataObject->getNodePath();
-        
-        /***************************************************************************
-        **  Populate form with object properties
-        ***************************************************************************/
-        $this->loadDataObject($DataObject);
+    
+    }
+    
+    function getDataObjectView(
+        $dataObject,
+        $mode
+    ) {
+        $dataObjectPath = $dataObject->getNodePath();
         
         /***************************************************************************
         **  Link CSS
@@ -123,61 +126,37 @@ class ViewController
         ***************************************************************************/
         $this->setSrcBaseUrl(
             'script',
-            $this->baseUrl
+            $this->baseUrl . 'js/'
         );
                 
         /***************************************************************************
         **  Images
         ***************************************************************************/
-        
         $this->setSrcBaseUrl(
             'img',
             $this->staticUrl
         );
         
         /***************************************************************************
-        **  Translate
+        **  Ids
         ***************************************************************************/
-        $MessageController = new MessageController();
-        $MessageController->loadMessageFile(
-            $this->basePath . 'lang/'.$DataObject->tagName.'.xml'
-        );
-        $this->translate(
-            $MessageController
+        $this->setUniqueIds(
+            $dataObject
         );
         
         /***************************************************************************
-        **  Set Ids
+        **  Data
         ***************************************************************************/
-        $this->setUniqueIds($DataObject);
+        $this->loadDataObject(
+            $dataObject
+        );
         
-        /***************************************************************************
-        **  Set Toggler
-        ***************************************************************************/
-        $Toggler = $this->query("//span[@class='smallTitle']")->item(0);
-        if($Toggler) {
-            $TogglerTarget = 
-                str_replace(
-                    '__title',
-                    '__form', 
-                    $Toggler->getAttribute('id')
-                );
-            $Toggler->setAttribute(
-                'onclick', 
-                "toggle_element('" . $TogglerTarget . "', this);"
+        $dataObjectView =
+            $this->getElementById(
+                $dataObjectPath
             );
-        }
-        
-        /***************************************************************************
-        **  Return standard view
-        ***************************************************************************/
-        $DataObjectPath = $DataObject->getNodePath();
-       
-        $View = $this->getElementById(
-            $DataObjectPath
-        );
-        
-        return $View;
+        return $dataObjectView;
+    
     }
     
     //*************************************************************************
@@ -326,33 +305,40 @@ class ViewController
     }
     
     function loadDataObject(
-        $DataObject,
-        $mode='input'
+        $DataObject
     ) {
-        $contents = $DataObject->query('./* | ./@*');
-        $contentsCount = $contents->length;
-        for($i=0; $i<$contentsCount; $i++) {
-            $content = $contents->item($i);
-            switch($content->nodeType) {
-            case '1':
-                if($content->getElementsByTagName('*')->length == 0) {
-                    $name = $content->tagName;
+        $DataObjectPath = $DataObject->getNodePath();
+        $nodes = $DataObject->query('./* | ./@*');
+        $nodeCount = $nodes->length;
+        for($i=0; $i<$nodeCount; $i++) {
+            $node = $nodes->item($i);
+            switch($node->nodeType) {
+            case XML_ELEMENT_NODE:
+                if($node->getElementsByTagName('*')->length == 0) {
+                    // DataObjectProperty
+                    $nodeName = $node->tagName;
                 } else {
+                    // DataObject
+                    $this->loadDataObject(
+                        $node
+                    );
                     continue 2;
                 }
                 break;
-            case '2':
-                $name = $content->name;
+            case XML_ATTRIBUTE_NODE:
+                $nodeName = $node->name;
                 break;
             }
-            $node = 
+            $nodeValue = $node->nodeValue;
+            $viewElement = 
                 $this->getElementById(
-                    $name
+                    $DataObjectPath . '/' . $nodeName
                 );
-            if($node && $content->nodeValue) {
+
+            if($viewElement && $nodeValue) {
                 $this->loadProperty(
-                    $node,
-                    $content->nodeValue
+                    $viewElement,
+                    $nodeValue
                 );
             }
         }
@@ -360,26 +346,40 @@ class ViewController
     }
     
     function loadProperty(
-        $node,
+        $viewElement,
         $value
     ) {
-        switch($node->tagName) {
+        switch($viewElement->tagName) {
         case 'input':
-            
-            switch($node->getAttribute('type')) {
+            switch($viewElement->getAttribute('type')) {
             case 'checkbox':
-                if($node->getAttribute('value') == $value) 
-                    $node->check();
+                if($viewElement->getAttribute('value') == $value) 
+                    $viewElement->check();
                 break;
+            
             default:
-                $node->setValue($value);
+                $viewElement->setValue($value);
             }
+            break;
+            
+        case 'select':
+            $option = 
+                $this->query(
+                    './/option[@value="'.$value.'"]',
+                    $viewElement
+                )->item(0);
+            if($option) {
+                $option->select();
+                if($option->parentNode->tagName == 'optgroup')
+                    $option->parentNode->enable();
+            }
+            
             break;
             
         case 'td':
         case 'textarea':
         default:
-            $node->nodeValue = $value;
+            $viewElement->nodeValue = $value;
         }
     
     }
