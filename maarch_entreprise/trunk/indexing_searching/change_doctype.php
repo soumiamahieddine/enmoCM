@@ -140,7 +140,7 @@ if(count($indexes) > 0)
                         . $key . '" value="';
                     if (isset($values_fields->$key)) {
                         $opt_indexes .= $db->format_date_db(
-                            $values_fields->key, true
+                            $values_fields->$key, true
                         );
                     } elseif ($indexes[$key]['default_value'] <> false) {
                         $opt_indexes .= $db->format_date_db(
@@ -154,7 +154,7 @@ if(count($indexes) > 0)
                         . $key . '" value="';
                     if (isset($values_fields->$key)) {
                         $opt_indexes .= $db->show_string(
-                            $values_fields->key, true
+                            $values_fields->$key, true
                         );
                     } else if ($indexes[$key]['default_value'] <> false) {
                         $opt_indexes .= $db->show_string(
