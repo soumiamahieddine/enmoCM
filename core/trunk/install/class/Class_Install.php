@@ -274,12 +274,11 @@ class Install extends functions
         $databasename
     )
     {
-
         $connect  = 'host='.$_SESSION['config']['databaseserver'] . ' ';
         $connect .= 'port='.$_SESSION['config']['databaseserverport'] . ' ';
         $connect .= 'user='.$_SESSION['config']['databaseuser'] . ' ';
-        $connect .= 'password='.$_SESSION['config']['databasepassword'];
-
+        $connect .= 'password='.$_SESSION['config']['databasepassword'] . ' ';
+        $connect .= 'dbname=postgres';
 
         if (!@pg_connect($connect)) {
             return false;
@@ -295,9 +294,9 @@ class Install extends functions
             return false;
             exit;
         }
-		
-		@pg_query('ALTER DATABASE "'.$databasename.'" SET DateStyle =iso, dmy');
-		
+        
+        @pg_query('ALTER DATABASE "'.$databasename.'" SET DateStyle =iso, dmy');
+        
         pg_close();
 
         $db = new dbquery();
