@@ -257,8 +257,8 @@ class Install extends functions
         $connect  = 'host='.$databaseserver . ' ';
         $connect .= 'port='.$databaseserverport . ' ';
         $connect .= 'user='.$databaseuser . ' ';
-        $connect .= 'password='.$databasepassword;
-
+        $connect .= 'password='.$databasepassword . ' ';
+        $connect .= 'dbname=postgres';
 
         if (!@pg_connect($connect)) {
             return false;
