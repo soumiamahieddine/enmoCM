@@ -160,7 +160,7 @@ function testParams()
         $params['viewLocation'] = 'apps/maarch_entreprise/admin/' 
             . $_REQUEST['admin'];
         $params['schemaPath'] = $params['viewLocation'] . DIRECTORY_SEPARATOR
-            . 'xml' . DIRECTORY_SEPARATOR
+            . 'schema' . DIRECTORY_SEPARATOR
             . $_REQUEST['admin'] . '.xsd';
         $params['autocompletePath'] = $_SESSION['config']['businessappurl'] 
             . 'index.php?display=true&admin=' . $_REQUEST['admin'] 
@@ -169,7 +169,7 @@ function testParams()
         $params['viewLocation'] = 'modules' . DIRECTORY_SEPARATOR
             . $_REQUEST['module'];
         $params['schemaPath'] = $params['viewLocation'] . DIRECTORY_SEPARATOR
-            . 'xml' . DIRECTORY_SEPARATOR
+            . 'schema' . DIRECTORY_SEPARATOR
             . $_REQUEST['module'] . '.xsd';
         $params['autocompletePath'] = $_SESSION['config']['businessappurl'] 
             . 'index.php?display=true&module=' . $_REQUEST['module'] 
@@ -377,7 +377,7 @@ $pagePath = locationBarManagement(
 );
 
 //load the message object
-$messagePath = $params['viewLocation'] . '/xml/' . $params['objectName'] . '_Messages.xml';
+$messagePath = $params['viewLocation'] . '/lang/' . $params['objectName'] . '.xml';
 $messageController->loadMessageFile(
     $messagePath
 );
@@ -528,6 +528,7 @@ if (isset($_REQUEST['submit'])) {
                 $sortFields = $params['orderField'],
                 $order = $params['order']
             );
+            //$objectList->show();
             /* ------
             - get key
             ------ */
@@ -835,7 +836,7 @@ if (isset($_REQUEST['submit'])) {
             --- */
             foreach ($showCols as $propertyName => $colParams) {
                 $columnsLabels[$propertyName] = $messageController->getMessageText(
-                    $params['objectName'] . '.' . $propertyName
+                    $propertyName
                 );
             }
             
