@@ -1,5 +1,6 @@
 <?php
 
+include_once ('../../../init.php');
 if (!isset($_REQUEST['resource'])) {
     $_REQUEST['resource']  = 'folder';
 }
@@ -13,7 +14,7 @@ curl_setopt($curl, CURLOPT_USERPWD, 'bblier:maarch');
 //curl_setopt($curl, CURLOPT_USERPWD, 'pparker:maarch');
 
 //WS URL
-$url = 'http://127.0.0.1/maarch_entreprise/ws_server.php?REST';
+$url = $_SESSION['config']['coreurl'] . 'ws_server.php?REST';
 if (isset($_REQUEST['resource']) && !empty($_REQUEST['resource'])) {
     $url .= '/' . $_REQUEST['resource'];
 }
@@ -23,13 +24,13 @@ if (isset($_REQUEST['idResource']) && !empty($_REQUEST['idResource'])) {
 curl_setopt($curl, CURLOPT_URL, $url . '/');
 
 if (($_REQUEST['method'] == 'post' || !isset($_REQUEST['method']))&& isset($_REQUEST['xmlFile'])) {
-	$xmlAtomFileContent = file_get_contents($_REQUEST['xmlFile']);
-	curl_setopt($curl, CURLOPT_POSTFIELDS, 'atomFileContent=' . $xmlAtomFileContent);
-	curl_setopt($curl, CURLOPT_POST, 1);
+    $xmlAtomFileContent = file_get_contents($_REQUEST['xmlFile']);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, 'atomFileContent=' . $xmlAtomFileContent);
+    curl_setopt($curl, CURLOPT_POST, 1);
 }
 else {
-	//GET, PUT, DELETE METHOD
-	curl_setopt($curl, CURLOPT_CUSTOMREQUEST, strtoupper($_REQUEST['method']));
+    //GET, PUT, DELETE METHOD
+    curl_setopt($curl, CURLOPT_CUSTOMREQUEST, strtoupper($_REQUEST['method']));
 }
 
 //POST CONTENT

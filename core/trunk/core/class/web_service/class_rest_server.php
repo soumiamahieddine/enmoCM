@@ -117,4 +117,22 @@ class MyRestServer extends webService
         echo 'requested resource id : ' . $this->requestedResourceId . '<br>';
         echo 'result of the function call : ' . $this->call();
     }
+    
+    /**
+     * generate REST server
+     */
+    function makeCMISCatalog()
+    {
+        /*echo '<pre>';
+        var_dump($_SERVER);
+        var_dump($this->dispatchMap);
+        echo '</pre>';*/
+        //echo 'method ? ' . $this->crudMethod . '<br>';
+        /*echo 'requested resource : ' . $this->requestedResource . '<br>';
+        echo 'requested resource id : ' . $this->requestedResourceId . '<br>';
+        echo 'result of the function call : ' . $this->call();*/
+        //$cmis = new Maarch_SOAP_DISCO_Server($server, 'MySoapServer');
+        header("Content-type: text/xml");
+        readfile('core/class/web_service/cmisCatalog.xml');
+    }
 }
