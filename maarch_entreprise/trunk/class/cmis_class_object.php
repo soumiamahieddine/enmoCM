@@ -34,7 +34,8 @@ abstract class objectCMIS
         //TODO add xmlns
         $root = $doc->createElementNS('http://www.w3.org/2005/Atom', 'feed');
         $root->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:cmisra', 'http://docs.oasis-open.org/ns/cmis/restatom/200908/');
-            $root->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:cmis', 'http://docs.oasis-open.org/ns/cmis/core/200908/');
+        $root->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:cmis', 'http://docs.oasis-open.org/ns/cmis/core/200909/');
+        $root->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:maarch', 'http://www.maarch.org');
         $doc->appendChild($root);
     
         $eAuthor = $doc->createElement('author');
