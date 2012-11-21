@@ -305,7 +305,8 @@ class ViewController
     }
     
     function loadDataObject(
-        $DataObject
+        $DataObject,
+        $loadChildren = true
     ) {
         $DataObjectPath = $DataObject->getNodePath();
         $nodes = $DataObject->query('./* | ./@*');
@@ -319,9 +320,12 @@ class ViewController
                     $nodeName = $node->tagName;
                 } else {
                     // DataObject
-                    $this->loadDataObject(
-                        $node
-                    );
+                    if($loadChildren) {
+                        $this->loadDataObject(
+                            $node,
+                            $loadChildren
+                        );
+                    }
                     continue 2;
                 }
                 break;
@@ -330,11 +334,18 @@ class ViewController
                 break;
             }
             $nodeValue = $node->nodeValue;
+            // Name of property
             $viewElement = 
                 $this->getElementById(
-                    $DataObjectPath . '/' . $nodeName
+                    $nodeName
                 );
-
+            // Path of Object / Name of property
+            if(!$viewElement) {
+                $viewElement = 
+                    $this->getElementById(
+                        $DataObjectPath . '/' . $nodeName
+                    );
+            }
             if($viewElement && $nodeValue) {
                 $this->loadProperty(
                     $viewElement,
@@ -440,6 +451,16 @@ class ViewController
     
     }
     
+    function disableInputs()
+    {
+        $inputs = 
+            $this->query(
+                '//input | //textarea | //select'
+            );
+        for($i=0; $i<$inputs->length; $i++) {
+            $inputs->item($i)->disable();
+        }   
+    }
     
 }
 

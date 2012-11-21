@@ -499,7 +499,8 @@ class DataObjectElement
     
     // ITERATOR METHODS
     //*************************************************************************
-    public function getIterator() {
+    public function getIterator() 
+    {
         $returnArray = $this->asArray('*');
         return new ArrayIterator($returnArray);
     }

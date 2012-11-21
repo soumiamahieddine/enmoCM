@@ -236,7 +236,7 @@ class DataAccessService_Database
         $selectQuery = implode(' ', $selectParts);
         
         $this->queries[] = $selectQuery;
-        //  echo "<pre>SELECT QUERY = " . $selectQuery . "</pre>";
+        //echo "<pre>SELECT QUERY = " . $selectQuery . "</pre>";
         
         try {
             $this->databaseObject->connect();
@@ -876,7 +876,8 @@ class DataAccessService_Database
         throw new maarch\Exception($sqlError . ' [' .$query . ']');
     }
     
-    private function enclose_reserved($columnName) {
+    private function enclose_reserved($columnName) 
+    {
         $reserved_words = array(
             'when',
         );

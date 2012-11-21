@@ -110,6 +110,21 @@ class DataObjectController
         return $objectProperties;
     }
     
+    public function getObjectChildren($objectName)
+    {
+        $objectChildren = array();
+        $objectElement = $this->getElementByName($objectName);
+        $objectContents = $this->getObjectContents($objectElement);
+        $l = count($objectContents);
+        for($i=0; $i<$l; $i++) {
+            $contentNode = $objectContents[$i];
+            $contentNode = $this->getRefNode($contentNode);
+            if(!$contentNode->hasDatasource()) continue;
+            $objectChildren[] = $contentNode;
+        }
+        return $objectChildren;
+    }
+    
     public function getTypeEnumeration(
         $typeName
     ) {
@@ -311,19 +326,19 @@ class DataObjectController
     
     public function copy(
         $dataObject, 
-        $newName=false,
-        $resetKey=true,
-        $parentDataObject=false
+        $newName = false,
+        $resetKey = true,
+        $copyChildren = false,
+        $parentDataObject = false
     ){
 
-        $objectElement = $this->getElementByName($dataObject->tagName);
-        
         $newObject = 
             $this->copyDataObject(
                 $dataObject,
                 $parentDataObject,
                 $newName,
-                $resetKey
+                $resetKey,
+                $copyChildren
             );
 
         return $newObject;
@@ -746,37 +761,61 @@ class DataObjectController
         $dataObject,
         $parentDataObject = false,
         $newName = false,
-        $resetKey = true
+        $resetKey = true,
+        $copyChildren = false
     ) {
+       
         if($parentDataObject) {
             $dataObjectDocument = $parentDataObject->ownerDocument; 
         } else {
             $dataObjectDocument = new DataObjectDocument();
             $this->dataObjectDocuments[] = $dataObjectDocument;
         }
-        $keyProperties = $this->getKeyProperties($dataObject->tagName);
         
-        if(!$newName) $newName = $dataObject->nodeName;
-        $newObject = $dataObjectDocument->createElement($newName);
-        if ($dataObject->attributes->length) {
-            foreach ($dataObject->attributes as $attribute) {
-                if($resetKey && 
-                    in_array($attribute->nodeName, $keyProperties)
-                ) continue;
-                $newObject->setAttribute($attribute->nodeName, $attribute->nodeValue);
+        if(!$newName) $newName = $dataObject->tagName;
+        
+        $keyProperties = $this->getKeyProperties($newName);
+
+        $newObject = 
+            $this->create(
+                $newName,
+                $parentDataObject
+            );
+        // Copy Properties except keys if not required
+        $objectProperties = $this->getObjectProperties($newName);
+        foreach($objectProperties as $propertyNode) {
+            $propertyName = $propertyNode->getName();
+            if($resetKey && 
+                in_array($propertyName, $keyProperties)
+            ) {
+                continue;
+            } 
+            if($dataObject->$propertyName) {
+                $newObject->$propertyName = $dataObject->$propertyName; 
             }
         }
-        $childNodes = $dataObject->childNodes;
-        $childNodesLength = $childNodes->length;
-        for ($i=0; $i<$childNodesLength; $i++) {
-            $childNode = $childNodes->item($i);
-            if($resetKey && 
-                in_array($childNode->tagName, $keyProperties)
-            ) continue;
-            $newNode = $dataObjectDocument->importNode($childNode, true); 
-            $newObject->appendChild($newNode);
+
+        // Copy Children objects if requested
+        if($copyChildren) {
+            $objectChildren = $this->getObjectChildren($newName);
+            foreach($objectChildren as $childNode) {
+                $objectName = $childNode->getName();
+                $childObjects = $dataObject->$objectName;
+                for($i=0; $i<$childObjects->length; $i++) {
+                    $childObject = $childObjects->item($i);
+                    $newChildObject = 
+                        $this->copyDataObject(
+                            $childObject,
+                            $dataObject,
+                            $newName = false,
+                            $resetKey,
+                            $copyChildren                        
+                        );
+                    $newObject[] = $newChildObject;
+                }
+            }
         }
-        $dataObjectDocument->appendChild($newObject);
+        
         $newObject->clearLogs();
         $newObject->logCreate();
         return $newObject;
