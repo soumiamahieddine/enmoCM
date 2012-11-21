@@ -24,7 +24,7 @@ if (isset($_REQUEST['idResource']) && !empty($_REQUEST['idResource'])) {
 curl_setopt($curl, CURLOPT_URL, $url . '/');
 
 if (($_REQUEST['method'] == 'post' || !isset($_REQUEST['method']))&& isset($_REQUEST['xmlFile'])) {
-    $xmlAtomFileContent = file_get_contents($_REQUEST['xmlFile']);
+    $xmlAtomFileContent = file_get_contents('core/class/web_service/cmis_test/' . $_REQUEST['xmlFile']);
     curl_setopt($curl, CURLOPT_POSTFIELDS, 'atomFileContent=' . $xmlAtomFileContent);
     curl_setopt($curl, CURLOPT_POST, 1);
 }
