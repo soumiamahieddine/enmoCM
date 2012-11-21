@@ -210,14 +210,19 @@ class webService {
             isset($wsMode)
             && strcasecmp($wsMode,'rest') == 0
         ) {
-            //CMIS
+            //REST
             $restServer->makeRESTServer();
         } elseif (
             isset($wsMode)
             && strcasecmp($wsMode,'cmis') == 0
         ) {
-            //REST
-            $restServer->makeCMISCatalog();
+            //CMIS
+            $restRequest = explode('/', $_SERVER['QUERY_STRING']);
+            if (count($restRequest) > 1) {
+                $restServer->makeRESTServer();
+            } else {
+                $restServer->makeCMISCatalog();
+            }
         } else {
             //SOAP BY DEFAULT
             if (

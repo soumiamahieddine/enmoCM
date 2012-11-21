@@ -14,7 +14,7 @@ curl_setopt($curl, CURLOPT_USERPWD, 'bblier:maarch');
 //curl_setopt($curl, CURLOPT_USERPWD, 'pparker:maarch');
 
 //WS URL
-$url = $_SESSION['config']['coreurl'] . 'ws_server.php?REST';
+$url = $_SESSION['config']['coreurl'] . 'ws_server.php?CMIS';
 if (isset($_REQUEST['resource']) && !empty($_REQUEST['resource'])) {
     $url .= '/' . $_REQUEST['resource'];
 }
