@@ -394,6 +394,8 @@ class resCMIS extends objectCMIS
         else{
             //atom:entry
             $root = $doc->createElementNS('http://www.w3.org/2005/Atom', 'atom:entry');
+            $root->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:cmisra', 'http://docs.oasis-open.org/ns/cmis/restatom/200908/');
+            $root->setAttributeNS('http://www.w3.org/2000/xmlns/' ,'xmlns:cmis', 'http://docs.oasis-open.org/ns/cmis/core/200908/');
             $doc->appendChild($root);
         }
         
