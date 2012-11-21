@@ -136,17 +136,33 @@ An action page is described in a ACTIONPAGE tag :
         <FLAG_CREATE>true</FLAG_CREATE>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>rm_io_process</ID>
-        <LABEL>_PROCESS_IO</LABEL>
-        <NAME>rm_io_process</NAME>
+        <ID>ArchiveTransferCreation</ID>
+        <LABEL>ArchiveTransferCreation</LABEL>
+        <NAME>ArchiveTransferCreation</NAME>
         <ORIGIN>module</ORIGIN>
         <MODULE>records_management</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>rm_items_transfer</ID>
+        <ID>ArchiveTransferUpdate</ID>
+        <LABEL>ArchiveTransferUpdate</LABEL>
+        <NAME>ArchiveTransferUpdate</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>records_management</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>ArchiveTransferValidation</ID>
+        <LABEL>ArchiveTransferValidation</LABEL>
+        <NAME>ArchiveTransferValidation</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>records_management</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>ArchiveObjectsTransfer</ID>
         <LABEL>_RM_ITEMS_TRANSFER</LABEL>
-        <NAME>rm_items_transfer</NAME>
+        <NAME>ArchiveObjectsTransfer</NAME>
         <ORIGIN>module</ORIGIN>
         <MODULE>records_management</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
