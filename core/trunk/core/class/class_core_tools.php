@@ -1291,6 +1291,10 @@ class core_tools extends functions
             <meta http-equiv="Content-Language" content="<?php  echo $_SESSION['config']['lang'];?>" />
             <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
             <link rel="icon" type="image/png" href="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=favicon.png"/>
+            <link href="index.php?display&page=generate_search_xml" title="Maarch <?php 
+                echo $_SESSION['config']['applicationname'] . ' ' 
+                    . _GLOBAL_SEARCH
+                ;?>" type="application/opensearchdescription+xml" rel="search">
             <?php
             if($load_css)
             {
