@@ -1,9 +1,9 @@
 <?php
 
 /*
-*    Copyright 2008 - 2012 Maarch
+*   Copyright 2008 - 2012 Maarch
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -325,9 +325,23 @@ if (count($_REQUEST['meta']) > 0) {
                 {
                     $where_multifield_request .= "(res_id = ".$func->protect_string_db($_REQUEST['welcome'].") or ");
                 }
-                  $where_multifield_request .= "( lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
+                $where_multifield_request .= "( lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
                     ."or lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
                     ."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%')) ";
+                //scan the baskets
+                //$whereBasketsClause = 'or (';
+                $cptBasketClause = 0;
+                for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
+                    if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == 'letterbox_coll') {
+                        if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
+                            $whereBasketsClause .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
+                            $cptBasketClause++;
+                        }
+                     }
+                }
+                if ($cptBasketClause > 0) {
+                    $where_multifield_request .= $whereBasketsClause;
+                }
                 $welcome = $func->store_html($_REQUEST['welcome']);
                 $json_txt .= " 'welcome' : ['" 
                     . addslashes(trim($welcome)) . "'],";
