@@ -140,7 +140,7 @@ $time = $core_tools->get_session_time_expire();
             </select>
         </p>
         <p>&nbsp;</p>
-        <div id="allowed_basket_actions" style="height:160px;">
+        <div id="allowed_basket_actions" style="height:300px;">
             <div align="center">
                 <h3 class="sstit"><?php echo _ASSOCIATED_ACTIONS;?> :</h3>
             </div>
