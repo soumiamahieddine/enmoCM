@@ -803,7 +803,10 @@ class dbquery extends functions
             $line = @pg_fetch_object($this->query);
             return $line->lastinsertid;
         case 'SQLSERVER'    : return '';
-        case 'ORACLE'       : return '';
+        case 'ORACLE'       : 
+            $this->query("select " . $sequenceName . ".currval as lastinsertid from dual");
+            $line = $this->fetch_object($this->query);
+            return $line->lastinsertid;
         default             : return false;
         }       
     }
