@@ -28,7 +28,7 @@ try {
 class notes extends dbquery
 {
 
-	/**
+    /**
     * Dbquery object used to connnect to the database
     */
     private static $db;
@@ -75,81 +75,81 @@ class notes extends dbquery
         self::$db->disconnect();
     }
     
-	/**
-	* Build Maarch module tables into sessions vars with a xml configuration
-	* file
-	*/
-	public function build_modules_tables()
-	{
-		if (file_exists(
-		    $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-		    . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . "modules"
-		    . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR . "xml"
-		    . DIRECTORY_SEPARATOR . "config.xml"
-		)
-		) {
-			$path = $_SESSION['config']['corepath'] . 'custom'
-			      . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
-			      . DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR
-			      . "notes" . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
-			      . "config.xml";
-		} else {
-			$path = "modules" . DIRECTORY_SEPARATOR . "notes"
-			      . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
-			      . "config.xml";
-		}
-		$xmlconfig = simplexml_load_file($path);
-		foreach ($xmlconfig->TABLENAME as $tableName) {
-			$_SESSION['tablename']['not_notes'] = (string) $tableName->not_notes;
-			$_SESSION['tablename']['note_entities'] = (string) $tableName->note_entities;
-		}
-		$hist = $xmlconfig->HISTORY;
-		$_SESSION['history']['noteadd'] = (string) $hist->noteadd;
-		$_SESSION['history']['noteup'] = (string) $hist->noteup;
-		$_SESSION['history']['notedel'] = (string) $hist->notedel;
-	}
-	
-	/**
-	 * Function to get all the entities 
-	 * 
-	 */
+    /**
+    * Build Maarch module tables into sessions vars with a xml configuration
+    * file
+    */
+    public function build_modules_tables()
+    {
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . "modules"
+            . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR . "xml"
+            . DIRECTORY_SEPARATOR . "config.xml"
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom'
+                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                  . DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR
+                  . "notes" . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
+                  . "config.xml";
+        } else {
+            $path = "modules" . DIRECTORY_SEPARATOR . "notes"
+                  . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
+                  . "config.xml";
+        }
+        $xmlconfig = simplexml_load_file($path);
+        foreach ($xmlconfig->TABLENAME as $tableName) {
+            $_SESSION['tablename']['not_notes'] = (string) $tableName->not_notes;
+            $_SESSION['tablename']['note_entities'] = (string) $tableName->note_entities;
+        }
+        $hist = $xmlconfig->HISTORY;
+        $_SESSION['history']['noteadd'] = (string) $hist->noteadd;
+        $_SESSION['history']['noteup'] = (string) $hist->noteup;
+        $_SESSION['history']['notedel'] = (string) $hist->notedel;
+    }
+    
+    /**
+     * Function to get all the entities 
+     * 
+     */
 /*
-	public function getentities()
-	{
-		$entitiesOrg = array();
-		require_once 'modules/entities/class/EntityControler.php';
-		$entityControler = new EntityControler();
-		$entitiesOrg = $entityControler->getAllEntities();
-		 return $entitiesOrg;
-	}
+    public function getentities()
+    {
+        $entitiesOrg = array();
+        require_once 'modules/entities/class/EntityControler.php';
+        $entityControler = new EntityControler();
+        $entitiesOrg = $entityControler->getAllEntities();
+         return $entitiesOrg;
+    }
 */
-	
-	/**
-	 * 
-	 * 
-	 * 
-	 */
-	 public function insertEntities($id)
-	 {
-		 //echo "RES_ID : ".$id;
-	 } 
-	
-	
-	/**
-	 * Function to get which user can see a note
-	 * @id note identifier
-	 */
-	public function getNotesEntities($id)
-	{
-		self::connect();
-		$ent = new EntityControler();
-		
-		
-		$query = "select entity_id, entity_label from ".self::$notes_entities_table." , ".self::$entities_table
-		." WHERE item_id LIKE entity_id and note_id = " .$id;
-		
-		
-		try{
+    
+    /**
+     * 
+     * 
+     * 
+     */
+     public function insertEntities($id)
+     {
+         //echo "RES_ID : ".$id;
+     } 
+    
+    
+    /**
+     * Function to get which user can see a note
+     * @id note identifier
+     */
+    public function getNotesEntities($id)
+    {
+        self::connect();
+        $ent = new EntityControler();
+        
+        
+        $query = "select entity_id, entity_label from ".self::$notes_entities_table." , ".self::$entities_table
+        ." WHERE item_id LIKE entity_id and note_id = " .$id;
+        
+        
+        try{
             if($_ENV['DEBUG'])
                 echo $query.' // ';
             self::$db->query($query);
@@ -163,34 +163,35 @@ class notes extends dbquery
 
         while($res = self::$db->fetch_object())
         {
-			array_push($entitiesChosen, $ent->get($res->entity_id));
+            array_push($entitiesChosen, $ent->get($res->entity_id));
         }
         
         //self::disconnect();
-		return $entitiesChosen;
-	}
-	
-	public function getUserNotes($noteId, $userId, $userPrimaryEntity)
-	{
-		$query = "select id from notes where id in ("
-			. "select note_id from note_entities where (item_id = '" 
-			. $userPrimaryEntity . "' and note_id = " . $noteId . "))"
-			. "or (id = " . $noteId . " and user_id = '" . $userId . "')";
-		$this->connect();
-		$this->query($query);
-		//$this->show();
-		if ($this->nb_result() > 0) {
-			return true;
-		 } else {
-			// test if public
-			$query = "select note_id from note_entities where note_id = " . $noteId;
-			$this->query($query);
-			if ($this->nb_result() == 0) {
-				return true;
-			} else {
-				return false;
-			}
-		 }
-	}
+        return $entitiesChosen;
+    }
+    
+    public function getUserNotes($noteId, $userId, $userPrimaryEntity)
+    {
+        $query = "select id from notes where id in ("
+            . "select note_id from note_entities where (item_id = '" 
+            . $userPrimaryEntity . "' and note_id = " . $noteId . "))"
+            . "or (id = " . $noteId . " and user_id = '" . $userId . "')";
+        $db = new dbquery();
+        $db->connect();
+        $db->query($query);
+        //$db->show();exit;
+        if ($db->nb_result() > 0) {
+            return true;
+         } else {
+            // test if public
+            $query = "select note_id from note_entities where note_id = " . $noteId;
+            $db->query($query);
+            if ($db->nb_result() == 0) {
+                return true;
+            } else {
+                return false;
+            }
+         }
+    }
 }
 
