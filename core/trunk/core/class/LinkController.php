@@ -162,7 +162,7 @@ class LinkController
         if ($result) {
             $i = 0;
             $links = '';
-            while ($row = pg_fetch_assoc($result)) {
+            while ($row = $db->fetch_assoc($result)) {
                 $links .= $row['res_child'].'||';
                 $i++;
             }
@@ -185,7 +185,7 @@ class LinkController
         if ($result) {
             $i = 0;
             $links = '';
-            while ($row = pg_fetch_assoc($result)) {
+            while ($row = $db->fetch_assoc($result)) {
                 $links .= $row['res_child'].'||';
                 $i++;
             }
@@ -208,7 +208,7 @@ class LinkController
         if ($result) {
             $i = 0;
             $links = '';
-            while ($row = pg_fetch_assoc($result)) {
+            while ($row = $db->fetch_assoc($result)) {
                 $links .= $row['res_parent'].'||';
                 $i++;
             }
@@ -235,7 +235,7 @@ class LinkController
         $result = $db->query($query);
         if ($result) {
             $i = 0;
-            while ($row = pg_fetch_assoc($result)) {
+            while ($row = $db->fetch_assoc($result)) {
                 $return = $row;
                 $i++;
             }
@@ -252,7 +252,7 @@ class LinkController
         $result = $db->query($query);
         if ($result) {
             $i = 0;
-            while ($row = pg_fetch_assoc($result)) {
+            while ($row = $db->fetch_assoc($result)) {
                 $return = $row['label_status'];
                 $i++;
             }
@@ -270,7 +270,7 @@ class LinkController
             $query = "SELECT res_child FROM res_linked WHERE coll_id='" . $collection . "' AND res_parent=" . $id;
             $result = $db->query($query);
             if ($result) {
-                while ($row = pg_fetch_assoc($result)) {
+                while ($row = $db->fetch_assoc($result)) {
                     $i++;
                 }
             }
@@ -280,7 +280,7 @@ class LinkController
             $query = "SELECT res_parent FROM res_linked WHERE coll_id='" . $collection . "' AND res_child=" . $id;
             $result = $db->query($query);
             if ($result) {
-                while ($row = pg_fetch_assoc($result)) {
+                while ($row = $db->fetch_assoc($result)) {
                     $i++;
                 }
             }
