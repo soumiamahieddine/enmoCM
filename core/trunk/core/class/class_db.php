@@ -862,7 +862,8 @@ class dbquery extends functions
             case 'hour'     : return " to_char(".$date_field.", 'HH24')";
             case 'minute'   : return " to_char(".$date_field.", 'MI')";
             case 'second'   : return " to_char(".$date_field.", 'SS')";
-            default         : return " to_char(".$date_field.", 'DD/MM/YYYY')";
+            //default         : return " to_char(".$date_field.", 'DD/MM/YYYY')";
+            default         : return $date_field;
             }
     
         }
