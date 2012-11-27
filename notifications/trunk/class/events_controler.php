@@ -32,8 +32,8 @@
 
 //Loads the required class
 try {
-	require_once 'modules/notifications/class/events.php';
-	require_once 'modules/notifications/notifications_tables_definition.php';
+    require_once 'modules/notifications/class/events.php';
+    require_once 'modules/notifications/notifications_tables_definition.php';
     require_once 'core/class/ObjectControlerAbstract.php';
 } catch (Exception $e) {
     echo $e->getMessage() . ' // ';
@@ -45,20 +45,21 @@ try {
 class events_controler
     extends ObjectControler
 {
-	public function getEventsByNotificationSid($notification_sid) 
-	{
-		$query = "SELECT * FROM " . _NOTIF_EVENT_STACK_TABLE_NAME
-			. " WHERE exec_date is NULL "
-			. " AND notification_sid = " . $notification_sid ;
-		$db = new dbquery();
-		$db->query($query);
-		$events = array();
-		while ($eventRecordset = $db->fetch_object()) {
+    public function getEventsByNotificationSid($notification_sid) 
+    {
+        $query = "SELECT * FROM " . _NOTIF_EVENT_STACK_TABLE_NAME
+            . " WHERE exec_date is NULL "
+            . " AND notification_sid = " . $notification_sid ;
+        $dbConn = new dbquery();
+        $dbConn->connect();
+        $dbConn->query($query);
+        $events = array();
+        while ($eventRecordset = $dbConn->fetch_object()) {
             $events[] = $eventRecordset;
-		}
-		return $events;
-	}
-	
+        }
+        return $events;
+    }
+    
   
     function wildcard_match($pattern, $str)
     {
@@ -67,20 +68,20 @@ class events_controler
         return $result;
     }
     
-	public function fill_event_stack($event_id, $table_name, $record_id, $user, $info) {
-		if ($record_id == '') return;
-	    
+    public function fill_event_stack($event_id, $table_name, $record_id, $user, $info) {
+        if ($record_id == '') return;
+        
         $query = "SELECT * "
             ."FROM " . _NOTIFICATIONS_TABLE_NAME 
             ." WHERE is_enabled = 'Y'";
-        $db = new dbquery();
-		$db->connect();
-        $db->query($query);
-		if($db->nb_result() === 0) {
-			return;
-		}
+        $dbConn = new dbquery();
+        $dbConn->connect();
+        $dbConn->query($query);
+        if($dbConn->nb_result() === 0) {
+            return;
+        }
         
-        while($notification = $db->fetch_object()) {
+        while($notification = $dbConn->fetch_object()) {
             $event_ids = explode(',' , $notification->event_id);
             if($event_id == $notification->event_id
                 || $this->wildcard_match($notification->event_id, $event_id)
@@ -90,43 +91,43 @@ class events_controler
         }
         if (count($notifications) == 0) return;
         foreach ($notifications as $notification) {
-			$db->query(
-				"INSERT INTO "
-					._NOTIF_EVENT_STACK_TABLE_NAME." ("
-						."notification_sid, "
-						."table_name, "
-						."record_id, "
-						."user_id, "
-						."event_info, "
-						."event_date"
-					.") "
-				."VALUES("
-					.$notification->notification_sid.", "
-					."'".$table_name."', "
-					."'".$record_id."', "
-					."'".$user."', "
-					."'".$info."', "
-					.$db->current_datetime()
-				.")",
-				false,
-				true
-			);
+            $dbConn->query(
+                "INSERT INTO "
+                    ._NOTIF_EVENT_STACK_TABLE_NAME." ("
+                        ."notification_sid, "
+                        ."table_name, "
+                        ."record_id, "
+                        ."user_id, "
+                        ."event_info, "
+                        ."event_date"
+                    .") "
+                ."VALUES("
+                    .$notification->notification_sid.", "
+                    ."'".$table_name."', "
+                    ."'".$record_id."', "
+                    ."'".$user."', "
+                    ."'".$info."', "
+                    .$dbConn->current_datetime()
+                .")",
+                false,
+                true
+            );
 
         }
 
-	}
-	
-	
-	public function commitEvent($eventId, $result) {
-		$db = new dbquery();
-		$db->connect();
-		$query = "UPDATE " . _NOTIF_EVENT_STACK_TABLE_NAME 
-			. " SET exec_date = ".$db->current_datetime().", exec_result = '".$result."'" 
-			. " WHERE event_stack_sid = ".$eventId;
-		$db->query($query);
-	}
-	
-	
-	
+    }
+    
+    
+    public function commitEvent($eventId, $result) {
+        $dbConn = new dbquery();
+        $dbConn->connect();
+        $query = "UPDATE " . _NOTIF_EVENT_STACK_TABLE_NAME 
+            . " SET exec_date = ".$dbConn->current_datetime().", exec_result = '".$result."'" 
+            . " WHERE event_stack_sid = ".$eventId;
+        $dbConn->query($query);
+    }
+    
+    
+    
 }
 

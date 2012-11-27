@@ -61,7 +61,7 @@ class notifications_controler extends ObjectControler implements ObjectControler
     */
     public function get($notification_sid) {
         
-		$this->set_specific_id('notification_sid');
+        $this->set_specific_id('notification_sid');
         $notification = $this->advanced_get($notification_sid, _NOTIFICATIONS_TABLE_NAME);
         
         if (get_class($notification) <> "notifications") {
@@ -71,28 +71,30 @@ class notifications_controler extends ObjectControler implements ObjectControler
         }
     }
 
-	public function getByNotificationId($notificationId) {
+    public function getByNotificationId($notificationId) {
         $query = "select * from " . _NOTIFICATIONS_TABLE_NAME 
-			. " where notification_id = '".$notificationId."'"; 
-		$db = new dbquery();
-		$db->query($query);
-		$notifObj = $db->fetch_object();
+            . " where notification_id = '".$notificationId."'"; 
+        $dbConn = new dbquery();
+        $dbConn->connect();
+        $dbConn->query($query);
+        $notifObj = $dbConn->fetch_object();
         return $notifObj;
     }
     
-	public function getWithFilter($whereClause='1=1', $orderByClause='notification_sid') {
+    public function getWithFilter($whereClause='1=1', $orderByClause='notification_sid') {
         $query = "select * from " . _NOTIFICATIONS_TABLE_NAME 
-			. " where " . $whereClause
-			. " order by " . $orderByClause; 
-		$db = new dbquery();
-		$db->query($query);
-		while($notifObj = $db->fetch_object()) {
-			$notifObjs[] = $notifObj;
-		}
+            . " where " . $whereClause
+            . " order by " . $orderByClause; 
+        $dbConn = new dbquery();
+        $dbConn->connect();
+        $dbConn->query($query);
+        while($notifObj = $dbConn->fetch_object()) {
+            $notifObjs[] = $notifObj;
+        }
         return $notifObjs;
     }
-	
-	
+    
+    
     /**
     * Deletes in the database (lc_policies related tables) a given lc_policies (policy_id)
     *
@@ -149,7 +151,7 @@ class notifications_controler extends ObjectControler implements ObjectControler
         $this->set_foolish_ids(
             array(
                 'notification_id',
-				'event_id'
+                'event_id'
             )
         );
         // If notification not defined or empty, return an error
