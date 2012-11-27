@@ -671,7 +671,7 @@ class dbquery extends functions
     */
     private function error() {
         
-		require_once('core' . DIRECTORY_SEPARATOR . 'class' 
+        require_once('core' . DIRECTORY_SEPARATOR . 'class' 
             . DIRECTORY_SEPARATOR . 'class_history.php');
         $trace = new history();
         
@@ -908,7 +908,14 @@ class dbquery extends functions
         case 'MYSQL'        : return 'datediff('.$date1.', '.$date2.')';
         case 'POSTGRESQL'   : return $this->extract_date($date1).' - '.$this->extract_date($date2);
         case 'SQLSERVER'    : return '';
-        case 'ORACLE'       : return $this->extract_date($date1).' - '.$this->extract_date($date2);
+        case 'ORACLE'       : 
+            if ($date1 <> 'SYSDATE') {
+                $date1 = "to_date(" . $date1 . ", 'DD/MM/YYYY')";
+            }
+            elseif ($date2 <> 'SYSDATE') {
+                $date2 = "to_date(" . $date2 . ", 'DD/MM/YYYY')";
+            }
+            return $date1 . " - " . $date2;
         default             : return false;
         }       
     }
