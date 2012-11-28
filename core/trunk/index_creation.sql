@@ -17,11 +17,11 @@ CREATE INDEX exp_contact_id_idx ON mlb_coll_ext (exp_contact_id);
 CREATE INDEX exp_user_id_idx ON mlb_coll_ext (exp_user_id);
 CREATE INDEX dest_contact_id_idx ON mlb_coll_ext (dest_contact_id);
 CREATE INDEX dest_user_id_idx ON mlb_coll_ext (dest_user_id);
-CREATE INDEX nature_idx ON mlb_coll_ext (nature);
 CREATE INDEX admission_date_idx ON mlb_coll_ext (admission_date);
 CREATE INDEX process_limit_date_idx ON mlb_coll_ext (process_limit_date);
 
 -- listinstance
+CREATE INDEX res_id_listinstance_idx ON listinstance (res_id);
 CREATE INDEX sequence_idx ON listinstance (sequence);
 CREATE INDEX item_id_idx ON listinstance (item_id);
 CREATE INDEX item_type_idx ON listinstance (item_type);
@@ -55,7 +55,7 @@ CREATE INDEX user_id_idx ON history (user_id);
 
 -- notes
 CREATE INDEX identifier_idx ON notes (identifier);
-CREATE INDEX user_id_idx ON notes (user_id);
+CREATE INDEX notes_user_id_idx ON notes (user_id);
 
 -- saved_queries
 CREATE INDEX user_id_queries_idx ON saved_queries (user_id);
