@@ -296,7 +296,7 @@ try {
         $resStr .= "{'id' : 'folder::" . $searchCustomerResults[$i]['folder_id']
                 . "', 'label' :'<b>" . addslashes(
                     $searchCustomerResults[$i]['folder_id']
-                ) . "</b> <small>(" . $searchCustomerResults[$i]['folder_name']
+                ) . "</b> <small>(" . addslashes($searchCustomerResults[$i]['folder_name'])
                 . ")</small>', 'toolTip' : '"
                  . $searchCustomerResults[$i]['folder_id']
                  . "', 'classes' : ['default_style'], 'open' : true, children: [";
