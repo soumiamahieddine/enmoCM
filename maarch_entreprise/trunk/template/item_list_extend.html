@@ -62,19 +62,16 @@ Defines :
                 <a href="##order_link|status|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|status|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
                 &nbsp;
                 ##define_lang|_ORIGINATING_ENTITY##
-                <a href="##order_link|originating_entity_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|originating_entity_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
+                <a href="##order_link|originating_agency_entity_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|originating_agency_entity_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
                 &nbsp;
                 ##define_lang|_REQUESTING_NUMBER_ARCHIVE##
-                <a href="##order_link|archival_entity_item_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|archival_entity_item_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
+                <a href="##order_link|transferring_agency_item_identifier|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|archival_agency_item_identifier|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
                 &nbsp;
                 ##define_lang|_ITEM_NAME##
-                <a href="##order_link|item_name|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|item_name|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
+                <a href="##order_link|name|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|name|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
                 &nbsp;
                 ##define_lang|_TYPE_DARCHIVE##
                 <a href="##order_link|type_label|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|type_label|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
-                &nbsp;
-                ##define_lang|_REQUESTING_ENTITY##
-                <a href="##order_link|requesting_entity_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|requesting_entity_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
                 &nbsp;
             </div>
         </th>
@@ -92,7 +89,7 @@ Defines :
             <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                     <tr>
                         <td width="50%" style="font-size:12px;" ##func_click_form##>
-                            ##load_value|item_name##
+                            ##load_value|name##
                         </td>
                         <td width="50%">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -100,7 +97,7 @@ Defines :
                                 <tr>
                                     <td style="text-align:right; vertical-align:top" ##func_click_form##>
                                         ##define_lang|_REQUESTING_ENTITY## :</td>
-                                    <td  style="text-align:right">##load_value|requesting_entity_id##</td>
+                                    <td  style="text-align:right">##load_value|requesting_agency_entity_id##</td>
                                 </tr>
                             </table>
                         </td>
@@ -118,11 +115,11 @@ Defines :
                         <img src="##load_img|mini_type.gif##">&nbsp;##load_value|type_label##
                     </td>
                     <td style="font-size:10px; width ="50px">
-                        <img src="##load_img|key.png##" title="##define_lang|_REQUESTING_NUMBER_ARCHIVE##">&nbsp;##load_value|archival_entity_item_id##
+                        <img src="##load_img|key.png##" title="##define_lang|_REQUESTING_NUMBER_ARCHIVE##">&nbsp;##load_value|transferring_agency_item_identifier##
                     </td>
                     <td style="font-size:10px; width ="50px">
                             ##define_lang|_ORIGINATING_ENTITY## :
-                            <em>##load_value|originating_entity_id##</em>
+                            <em>##load_value|originating_agency_entity_id##</em>
                     </td>
                     <td style="font-size:10px; width ="60px">##func_bool_detail_rm##</td>
                 </tr>

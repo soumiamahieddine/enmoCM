@@ -59,19 +59,16 @@ Defines :
                 <a href="##order_link|io_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|io_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
                 &nbsp;
                 ##define_lang|_STATUS##
-                <a href="##order_link|status|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|status|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
+                <a href="##order_link|io_status|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|status|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
                 &nbsp;
                 ##define_lang|_DESCRIPTION##
-                <a href="##order_link|description|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|description|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
+                <a href="##order_link|comment|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|description|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
                 &nbsp;
                 ##define_lang|_REQUESTING_NUMBER_ARCHIVE##
-                <a href="##order_link|archival_entity_item_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|archival_entity_item_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
-                &nbsp;
-                ##define_lang|_REQUESTING_NUMBER##
-                <a href="##order_link|transferring_entity_item_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|transferring_entity_item_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
+                <a href="##order_link|identifier|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|archival_entity_item_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
                 &nbsp;
                 ##define_lang|_IO_DATE##
-                <a href="##order_link|io_date|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|io_date|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
+                <a href="##order_link|date|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|io_date|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
                 &nbsp;
                 ##define_lang|_REQUESTING_ENTITY##
                 <a href="##order_link|requesting_entity_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|requesting_entity_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
@@ -86,19 +83,29 @@ Defines :
 <!-- ------------------------------------------------------------------------->
     <tr  class="##css_line|col|white ##" >
         <td width="10%" ##func_click_form##>
-            <div align="center">##load_value|status## </div>
+            <div align="center">##load_value|io_status## </div>
         </td>
         <td width="90%" align="center" style="padding : 0px; vertical-align:top" colspan="3"  ##func_click_form##>
             <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                     <tr>
-                        <td width="50%" style="font-size:12px;" ##func_click_form##></b><em>##load_value|description##</em> </td>
-                        <td width="50%">
+                        <td width="40%" style="font-size:12px;" ##func_click_form##></b><em>##load_value|comment##</em> </td>
+                        <td width="30%">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr><td ##func_click_form##> </td><td ##func_click_form##></td></tr>
+                                <tr>
+                                    <td style="text-align:right; vertical-align:top" ##func_click_form##>
+                                        ##define_lang|_ARCHIVAL_ENTITY## :</td>
+                                    <td  style="text-align:right">##load_value|archival_agency_entity_id##</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td width="30%">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                 <tr><td ##func_click_form##> </td><td ##func_click_form##></td></tr>
                                 <tr>
                                     <td style="text-align:right; vertical-align:top" ##func_click_form##>
                                         ##define_lang|_REQUESTING_ENTITY## :</td>
-                                    <td  style="text-align:right">##load_value|requesting_entity_id##</td>
+                                    <td  style="text-align:right">##load_value|requesting_agency_entity_id##</td>
                                 </tr>
                             </table>
                         </td>
@@ -111,18 +118,15 @@ Defines :
         <td style="text-align:center">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                 <tr>
-                    <td style="font-size:10px; width ="30px" alt="##define_lang|_IO_DATE##" title="##define_lang|_IO_DATE##" ##func_click_form##></td>
-                    <td style="font-size:10px; width ="50px" ##func_click_form##>
-                        <img src="##load_img|date_arriv.gif##">&nbsp;##load_value|io_date##
+                    <td style="font-size:10px;" width ="30px" alt="##define_lang|_IO_DATE##" title="##define_lang|_IO_DATE##" ##func_click_form##></td>
+                    <td style="font-size:10px;" width ="50px" ##func_click_form##>
+                        <img src="##load_img|date_arriv.gif##">&nbsp;##load_value|date##
                     </td>
-                    <td style="font-size:10px; width ="50px">
-                        <img src="##load_img|key.png##" title="##define_lang|_REQUESTING_NUMBER_ARCHIVE##">&nbsp;##load_value|archival_entity_item_id##
+                    <td style="font-size:10px;" width ="50px">
+                        <img src="##load_img|key.png##" title="##define_lang|_REQUESTING_NUMBER##">&nbsp;##load_value|identifier##
                     </td>
-                    <td style="font-size:10px; width ="50px">
-                        <img src="##load_img|key.png##" title="##define_lang|_REQUESTING_NUMBER##">&nbsp;##load_value|transferring_entity_item_id##
-                    </td>
-                    <td style="font-size:10px; width ="60px">##func_bool_see_items## &nbsp;##load_value|nb_archive_objects## articles</td>
-                    <td style="font-size:10px; width ="60px">##func_bool_detail_io##</td>
+                    <td style="font-size:10px;" width ="60px">##func_bool_see_items## &nbsp;##load_value|nb_archive_objects## articles</td>
+                    <td style="font-size:10px;" width ="60px">##func_bool_detail_io##</td>
                 </tr>
             </table>
         </td>
