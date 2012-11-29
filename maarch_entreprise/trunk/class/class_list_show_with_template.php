@@ -242,7 +242,7 @@ class list_show_with_template extends list_show
     {
         $key = 'io_id';
         if ($this->bool_detail == true) {
-            $return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=rm_ios_page_controller&amp;module=records_management&amp;objectName=rm_ios&amp;mode=details&amp;objectId=".$result[$theline][0][$key]."' title='". _DETAILS."'>
+            $return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=ArchiveTransfer__detail&amp;module=records_management&amp;objectId=".$result[$theline][0][$key]."' title='". _DETAILS."'>
             <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'   border='0' /></a>";
             return $return;
         }
@@ -278,7 +278,7 @@ class list_show_with_template extends list_show
     public function tmplt_func_bool_see_items($actual_string, $theline, $result, $key)
     {
         $return = '';
-        if ($result[$theline][0]['aDesReps']) {
+        //if ($result[$theline][0]['aDesReps']) {
             $return .= '<img ';
             $return .= 'src="';
               $return .= 'static.php?filename=view_archives.png&module=records_management';
@@ -290,12 +290,12 @@ class list_show_with_template extends list_show
                 $return .= 'cursor: pointer;';
             $return .= '" title="' . _VIEW_ARCHIVES . '"';
             $return .= 'onclick="';
-              $return .= 'loadItemList(';
+              $return .= 'ArchiveTransferBasket__loadItemList(';
                 $return .= $result[$theline][0]['value'];
               $return .= ');';
             $return .= '" ';
             $return .= '/>';
-        }
+        //}
         return $return;
     }
     
