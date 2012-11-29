@@ -648,6 +648,7 @@ class DataObjectController
                     $dataObject->parentNode->removeChild($dataObject);
                 }
             } 
+
             $dataObject->clearLogs();
             $dataObject->logRead();
             return $key;

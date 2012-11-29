@@ -333,7 +333,7 @@ class ViewController
                 $nodeName = $node->name;
                 break;
             }
-            $nodeValue = $node->nodeValue;
+            $nodeValue = (string)$node->nodeValue;
             // Name of property
             $viewElement = 
                 $this->getElementById(
@@ -346,7 +346,7 @@ class ViewController
                         $DataObjectPath . '/' . $nodeName
                     );
             }
-            if($viewElement && $nodeValue) {
+            if($viewElement && isset($nodeValue)) {
                 $this->loadProperty(
                     $viewElement,
                     $nodeValue

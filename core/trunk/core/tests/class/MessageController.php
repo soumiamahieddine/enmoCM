@@ -35,7 +35,7 @@ class MessageController
         } elseif(is_file($messageFile)) {
             $loadMessageFile = $messageFile;
         } else {
-            throw new maarch\Exception("Failed to load message definition file $messageFile");
+            throw new maarch\Exception("Failed to load message definition file $messageFile in $customFilePath or $relativeFilePath");
         }
         
                
