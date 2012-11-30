@@ -203,33 +203,45 @@ $SOAP_dispatch_map['storeResource'] = array(
     'method' => "core#resources::storeResource",
 );
 
+$SOAP_dispatch_map['storeAttachmentResource'] = array(
+    'in'  => array(
+        'resId' => 'integer',
+        'collId' => 'string',
+        'encodedContent' => 'string',
+        'fileFormat' => 'string',
+        'fileName' => 'string',
+),
+    'out' => array('out' => '{urn:MySoapServer}returnArray'),
+    'method' => "core#resources::storeAttachmentResource",
+);
+
 $SOAP_typedef['searchParams'] = array(
-	'country' => 'string',
-	'docDate' => 'date',
+    'country' => 'string',
+    'docDate' => 'date',
 );
 
 $SOAP_typedef['listOfResources'] = array(
-	'resid' => 'long',
-	'identifier' => 'string',
-	'contactName' => 'string',
-	'country' => 'integer',
-	'amount' => 'string',
-	'customer' => 'string',
-	'docDate' => 'string',
+    'resid' => 'long',
+    'identifier' => 'string',
+    'contactName' => 'string',
+    'country' => 'integer',
+    'amount' => 'string',
+    'customer' => 'string',
+    'docDate' => 'string',
 );
 
 $SOAP_typedef['docListReturnArray'] = array(
-	'status'=>'string',
-	'value'=>'{urn:MySoapServer}listOfResources',
-	'error'=>'string',
+    'status'=>'string',
+    'value'=>'{urn:MySoapServer}listOfResources',
+    'error'=>'string',
 );
 
 $SOAP_dispatch_map['Demo_searchResources'] = array(
-	'in' => array(
-		'searchParams' => '{urn:MySoapServer}searchParams',
-	),
-	'out' => array(
-		'out' => '{urn:MySoapServer}docListReturnArray',
-	),
-	'method' => "core#resources::Demo_searchResources",
+    'in' => array(
+        'searchParams' => '{urn:MySoapServer}searchParams',
+    ),
+    'out' => array(
+        'out' => '{urn:MySoapServer}docListReturnArray',
+    ),
+    'method' => "core#resources::Demo_searchResources",
 );

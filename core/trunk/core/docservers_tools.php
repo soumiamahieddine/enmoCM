@@ -72,9 +72,10 @@ function Ds_copyOnDocserver(
         $docserverSourceFingerprint
     );
     if ($fingerprintControl['status'] == 'ko') {
-		$storeInfos = array('error' => $fingerprintControl['error']);
-		return $storeInfos;
-	}
+        $storeInfos = array('error' => $fingerprintControl['error']);
+        return $storeInfos;
+    }
+
     /*$ofile = fopen($destinationDir.$fileDestinationName, 'r');
     if (Ds_isCompleteFile($ofile)) {
         fclose($ofile);
@@ -549,6 +550,13 @@ function Ds_isFileTypeAllowed($filePath)
         $filePath
     );
     $ext = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
+    if ($ext == 'html' && $mimeType == "text/plain") {
+        $arrayReturn = array(
+            'status' => true,
+            'mime_type' => "text/html",
+        );
+        return $arrayReturn;
+    }
     if (file_exists($_SESSION['config']['corepath'] . 'custom'
         . DIRECTORY_SEPARATOR.$_SESSION['custom_override_id']
         . DIRECTORY_SEPARATOR
@@ -578,9 +586,10 @@ function Ds_isFileTypeAllowed($filePath)
     $type_state = false;
     for ($i=0;$i<count($ext_list);$i++) {
         if (
-			$ext_list[$i]['mime'] == $mimeType 
-			&& strtolower($ext_list[$i]['name']) == $ext
-		) {
+            $ext_list[$i]['mime'] == $mimeType 
+            && strtolower($ext_list[$i]['name']) == $ext
+        ) {
+
             $type_state = true;
             break;
         }
