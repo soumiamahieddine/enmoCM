@@ -406,13 +406,23 @@ class SecurityControler
     */
     public function process_where_clause($whereClause, $userId)
     {
-        $where = $whereClause;
         if (preg_match('/@user/', $whereClause)) {
-            $where = str_replace(
+            $whereClause = str_replace(
                 "@user", "'" . trim($userId) . "'", $whereClause
             );
         }
-        return $where;
+        $db = new dbquery();
+        $db->connect();
+        $query = "select mail from " . USERS_TABLE . " where user_id = '"
+               . $userId . "'";
+        $db->query($query);
+        $userObj = $db->fetch_object();
+        if (preg_match('/@email/', $whereClause)) {
+            $whereClause = str_replace(
+                "@email", "'" . trim($userObj->mail) . "'", $whereClause
+            );
+        }
+        return $whereClause;
     }
 
     /**
