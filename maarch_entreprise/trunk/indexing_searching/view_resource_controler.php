@@ -192,6 +192,11 @@ if ($s_id == '') {
             //...
         } else {
             //$core_tools->show_array($viewResourceArr);
+            if (strtoupper($viewResourceArr['ext']) == 'HTML' 
+                && $viewResourceArr['mime_type'] == "text/plain"
+            ) {
+                $viewResourceArr['mime_type'] = "text/html";
+            }
             if ($viewResourceArr['called_by_ws']) {
                 $fileContent = base64_decode($viewResourceArr['file_content']);
                 $fileNameOnTmp = 'tmp_file_' . rand() . '_' 

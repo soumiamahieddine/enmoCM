@@ -1324,3 +1324,10 @@ if (!defined('_SET_PERSISTENT_MODE_ON'))    define('_SET_PERSISTENT_MODE_ON', 'A
 if (!defined('_SET_PERSISTENT_MODE_OFF'))    define('_SET_PERSISTENT_MODE_OFF', 'Désactiver la persistance');
 
 /******************** persistent mode ************/
+
+//EMAIL INDEXES
+if (!defined('_EMAIL_FROM_ADDRESS')) define('_EMAIL_FROM_ADDRESS', 'Email de');
+if (!defined('_EMAIL_TO_ADDRESS')) define('_EMAIL_TO_ADDRESS', 'Email pour');
+if (!defined('_EMAIL_CC_ADDRESS')) define('_EMAIL_CC_ADDRESS', 'Email copie');
+if (!defined('_EMAIL_ID')) define('_EMAIL_ID', 'Email ID');
+if (!defined('_EMAIL_ACCOUNT')) define('_EMAIL_ACCOUNT', 'Email compte');

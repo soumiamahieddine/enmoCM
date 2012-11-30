@@ -1059,3 +1059,10 @@ if (!defined('_YOU_CANNOT_DELETE')) define( '_YOU_CANNOT_DELETE', 'Impossible ti
 if (!defined('_YOU_CANNOT_DISABLE')) define( '_YOU_CANNOT_DISABLE', 'Impossible to disable');
 if (!defined('_YOU_MUST_SELECT_CONTACT')) define('_YOU_MUST_SELECT_CONTACT', 'You must select a contact ');
 if (!defined('_IS_PRIVATE')) define( '_IS_PRIVATE', 'Confidential');
+
+//EMAIL INDEXES
+if (!defined('_EMAIL_FROM_ADDRESS')) define('_EMAIL_FROM_ADDRESS', 'Email from address');
+if (!defined('_EMAIL_TO_ADDRESS')) define('_EMAIL_TO_ADDRESS', 'Email to address');
+if (!defined('_EMAIL_CC_ADDRESS')) define('_EMAIL_CC_ADDRESS', 'Email cc address');
+if (!defined('_EMAIL_ID')) define('_EMAIL_ID', 'Email ID');
+if (!defined('_EMAIL_ACCOUNT')) define('_EMAIL_ACCOUNT', 'Email account');

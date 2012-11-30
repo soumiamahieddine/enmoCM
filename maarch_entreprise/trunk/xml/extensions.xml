@@ -132,6 +132,16 @@
     </FORMAT>
     <FORMAT>
         <name>HTML</name>
+        <mime>text/html</mime>
+        <index_frame_show>true</index_frame_show>
+    </FORMAT>
+    <FORMAT>
+        <name>HTML</name>
+        <mime>text/plain</mime>
+        <index_frame_show>true</index_frame_show>
+    </FORMAT>
+    <FORMAT>
+        <name>HTML</name>
         <mime>text/rtf</mime>
         <index_frame_show>true</index_frame_show>
     </FORMAT>

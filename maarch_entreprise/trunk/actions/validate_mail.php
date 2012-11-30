@@ -1486,5 +1486,3 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         }
     }
 }
-
-?>
