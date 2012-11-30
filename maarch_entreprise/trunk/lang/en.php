@@ -1066,3 +1066,4 @@ if (!defined('_EMAIL_TO_ADDRESS')) define('_EMAIL_TO_ADDRESS', 'Email to address
 if (!defined('_EMAIL_CC_ADDRESS')) define('_EMAIL_CC_ADDRESS', 'Email cc address');
 if (!defined('_EMAIL_ID')) define('_EMAIL_ID', 'Email ID');
 if (!defined('_EMAIL_ACCOUNT')) define('_EMAIL_ACCOUNT', 'Email account');
+if (!defined('_HELP_KEYWORD_EMAIL')) define('_HELP_KEYWORD_EMAIL', 'Email of the connected user');

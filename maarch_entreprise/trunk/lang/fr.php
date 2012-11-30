@@ -1331,3 +1331,5 @@ if (!defined('_EMAIL_TO_ADDRESS')) define('_EMAIL_TO_ADDRESS', 'Email pour');
 if (!defined('_EMAIL_CC_ADDRESS')) define('_EMAIL_CC_ADDRESS', 'Email copie');
 if (!defined('_EMAIL_ID')) define('_EMAIL_ID', 'Email ID');
 if (!defined('_EMAIL_ACCOUNT')) define('_EMAIL_ACCOUNT', 'Email compte');
+if (!defined('_HELP_KEYWORD_EMAIL')) define('_HELP_KEYWORD_EMAIL', 'Email de l&rsquo;utilisateur connect&eacute;');
+
