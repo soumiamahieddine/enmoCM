@@ -181,10 +181,18 @@ class Install extends functions
 
     public function isIniErrorRepportingRequirements()
     {
-        if (ini_get('error_reporting') <> 22519) {
-            return false;
+        if (version_compare(PHP_VERSION, '5.4') < 0) {
+            if (ini_get('error_reporting') <> 22519) {
+                return false;
+            } else {
+                return true;
+            }
         } else {
-            return true;
+            if (ini_get('error_reporting') <> 24567) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 

@@ -71,6 +71,9 @@ if (!defined('_GD')) {
 if (!defined('_SVN')) {
     define('_SVN', "librairie svn");
 }
+if (!defined('_IMAP')) {
+    define('_IMAP', "librairie imap");
+}
 if (!defined('_PEAR')) {
     define('_PEAR', "PEAR");
 }

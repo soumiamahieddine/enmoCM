@@ -125,6 +125,19 @@
                     </td>
                 </tr>
                 <tr>
+                    <td class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
+                            $Class_Install->isPhpRequirements(
+                                'imap'
+                            ),
+                            true
+                        ); ?>
+                    </td>
+                    <td>
+                        <?php echo _IMAP; ?>
+                    </td>
+                </tr>
+                <tr>
                     <td>&nbsp;
 
                     </td>
