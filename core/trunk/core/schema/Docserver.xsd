@@ -4,16 +4,17 @@
   xmlns:das="maarch:DataAccessService"  
   elementFormDefault="qualified">
 
-  <!-- ==== Archive/ContentDescription/OtherMetadata                    ==== -->
-  <!-- ==== ArchiveObject/ContentDescription/OtherMetadata              ==== -->
-  <xsd:element name='docserver' type='docserver' 
+  <xsd:include schemaLocation='core/xml/datatypes.xsd' />
+  <xsd:include schemaLocation='apps/maarch_entreprise/xml/datasources.xsd' />
+
+  <xsd:element name='Docserver' type='Docserver' 
     das:source='maarch_entreprise'
     das:table='docservers'
     das:key='docserver_id'
     das:operations="CRUDL">
   </xsd:element> 
   
-  <xsd:complexType name='docserver'>
+  <xsd:complexType name='Docserver'>
     <xsd:sequence>
       <xsd:element name="device_label" type="varchar255" />
       <xsd:element name="path_template" type="varchar255" />
