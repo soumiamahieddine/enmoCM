@@ -237,6 +237,7 @@ INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, ca
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('RET', 'Sent back to mailroom', 'N', '', 'apps', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('CHG', 'Postindexing ok', 'Y', 'mail_end.gif', 'apps', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('BAD', 'Rejected postindexing', 'Y', 'mail.gif', 'apps', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched) VALUES ('MAQUAL', 'Email to qualify', 'N', '', 'apps', 'Y');
 
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('apa_coll', 'APA_reservation', 'Reserved archives', 'Reserved archives', 'res_view_apa.status = ''RSV'' and (ORIGIN= @my_primary_entity or ORIGIN in (@subentities[@my_primary_entity]))', 'NO', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('apa_coll', 'APA_picking', 'Picked-up archives', 'Picked-up archives', 'res_view_apa.status = ''OUT'' and (ORIGIN= @my_primary_entity or ORIGIN in (@subentities[@my_primary_entity]))', 'NO', 'Y');
@@ -249,6 +250,8 @@ INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'ValidationBasket', 'Documents to validate', 'Documents to validate', 'status = ''VAL'' and destination<>''COU''', 'N', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'DepartmentBasket', 'Department supervision', 'Department supervision', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'')', 'N', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'PostindexingBasket', 'Postindexing', 'Postindexing', '(status = ''VAL'')', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'MyEmailsToQualify', 'My emails to qualify', 'My emails to qualify', 'status=''MAQUAL'' and (dest_user = @user or doc_custom_t14 = @email)', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'EmailsToQualify', 'Emails to qualify', 'Emails to qualify', 'status=''MAQUAL'' and (dest_user = '''' or dest_user is null)', 'N', 'Y');
 
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'IndexingBasket', 1, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('EMPLOYEES', 'MyBasket', 1, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
@@ -265,6 +268,10 @@ INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, r
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'APA_picking', 3, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'QualificationBasket', 8, NULL, NULL, 'documents_list', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'PostindexingBasket', 1, NULL, NULL, 'postindexing_documents_list', 'Y', 'N', 'N');
+
+INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('MANAGERS', 'MyEmailsToQualify', 9, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('EMPLOYEES', 'MyEmailsToQualify', 10, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('TYPISTS', 'EmailsToQualify', 11, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (22, '', 'TYPISTS', 'IndexingBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (21, '', 'TYPISTS', 'IndexingBasket', 'N', 'N', 'Y');
@@ -293,6 +300,9 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (28, '', 'TYPISTS', 'CopyMailBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (28, '', 'MANAGERS', 'CopyMailBasket', 'Y', 'N', 'N');
 
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (23, '', 'EMPLOYEES', 'MyEmailsToQualify', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (23, '', 'MANAGERS', 'MyEmailsToQualify', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (23, '', 'TYPISTS', 'EmailsToQualify', 'N', 'N', 'Y');
 
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (1, 'TYPISTS', 'IndexingBasket', 21, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (2, 'MANAGERS', 'MyBasket', 1, '', 'ALL_ENTITIES', 'ENTITY');
@@ -303,6 +313,10 @@ INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, ent
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (7, 'TYPISTS', 'QualificationBasket', 23, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (8, 'EMPLOYEES', 'MyBasket', 1, '', 'ENTITIES_JUST_BELOW', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (9, 'TYPISTS', 'PostindexingBasket', 26, '', 'ALL_ENTITIES', 'ENTITY');
+
+INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (10, 'TYPISTS', 'EmailsToQualify', 23, '', 'ALL_ENTITIES', 'ENTITY');
+INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (11, 'MANAGERS', 'MyEmailsToQualify', 23, '', 'ALL_ENTITIES', 'ENTITY');
+INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (12, 'EMPLOYEES', 'MyEmailsToQualify', 23, '', 'ENTITIES_JUST_BELOW', 'ENTITY');
 
 INSERT INTO listmodels (coll_id, object_id, object_type, "sequence", item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DIR', 'entity_id', 0, 'eerina', 'user_id', 'dest', 'DOC');
 INSERT INTO listmodels (coll_id, object_id, object_type, "sequence", item_id, item_type, item_mode, listmodel_type) VALUES ('letterbox_coll', 'DIR', 'entity_id', 0, 'ppetit', 'user_id', 'cc', 'DOC');
@@ -348,6 +362,8 @@ INSERT INTO foldertypes_doctypes_level1 (foldertype_id, doctypes_first_level_id)
 INSERT INTO foldertypes_doctypes_level1 (foldertype_id, doctypes_first_level_id) VALUES (2, 2);
 INSERT INTO foldertypes_doctypes_level1 (foldertype_id, doctypes_first_level_id) VALUES (3, 3);
 
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 1, 'Email', 'Y', 1, 13, NULL, NULL);
+
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 5, 'Phone call', 'Y', 1, 13, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 10, 'Misc mail', 'Y', 1, 13, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 15, 'Change request', 'Y', 1, 11, NULL, NULL);
@@ -368,6 +384,11 @@ INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_lev
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('res_coll', 70, 'Customer invoice', 'Y', 2, 54, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 71, 'Supplier invoice', 'Y', 1, 13, NULL, NULL);
 
+INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (1, 'letterbox_coll', 'custom_t10', 'N');
+INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (1, 'letterbox_coll', 'custom_t11', 'N');
+INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (1, 'letterbox_coll', 'custom_t12', 'N');
+INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (1, 'letterbox_coll', 'custom_t13', 'N');
+INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (1, 'letterbox_coll', 'custom_t14', 'N');
 
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (70, 'res_coll', 'custom_t1', 'N');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (70, 'res_coll', 'custom_t2', 'N');
@@ -384,6 +405,8 @@ INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (7
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (71, 'letterbox_coll', 'custom_t5', 'N');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (71, 'letterbox_coll', 'custom_n1', 'N');
 INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (71, 'letterbox_coll', 'custom_d1', 'N');
+
+INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (1, 21, 14, 1);
 
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (5, 21, 14, 1);
 INSERT INTO mlb_doctype_ext(type_id, process_delay, delay1, delay2) VALUES (10, 21, 14, 1);
@@ -454,35 +477,10 @@ VALUES (3, 'PhoneCall', 'Phone Call',
 <p><font size="\\&quot;2\\&quot;">Notes : </font></p>',
 'HTML', NULL, NULL, '', '');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
-VALUES (1, 'Document distribution', 'Notification for document distribution', 
-'<p><font face="verdana,geneva" size="2">Hello [recipient.firstname] [recipient.lastname],</font></p>
-<p><font face="verdana,geneva" size="2"> </font></p>
-<p><font face="verdana,geneva" size="2">Here are the new documents for you :</font></p>
-<table style="width: 800px### height: 44px###" border="0" cellspacing="1" cellpadding="1">
-<tbody>
-<tr>
-<td style="width: 20px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Num</strong></font></td>
-<td style="width: 150px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Date</strong></font></td>
-<td style="width: 200px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Object</strong></font></td>
-<td style="width: 150px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Type</strong></font></td>
-<td style="width: 80px### background-color: #0099ff###"><font color="#FFFFFF"><font size="2"><strong>Contact</strong></font></font></td>
-<td style="width: 20px### background-color: #0099ff###"><font size="2" color="#FFFFFF"><strong>Liens</strong></font></td>
-</tr>
-<tr>
-<td><font face="verdana,geneva" size="2">[res_letterbox.# ###frm=0000]</font></td>
-<td><font face="verdana,geneva" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
-<td><font face="verdana,geneva" size="2">[res_letterbox.subject]</font></td>
-<td><font face="verdana,geneva" size="2">[res_letterbox.type_label]</font></td>
-<td><font face="verdana,geneva" size="2">[res_letterbox.contact_society][res_letterbox.contact_firstname][res_letterbox.contact_lastname]</font></td>
-<td><a href="[res_letterbox.linktodetail]" name="detail"><img src="[images.imgdetail]" alt="detail" width="16" height="15" /></a><a href="[res_letterbox.linktodoc]" name="doc"><img src="[images.imgdoc]" alt="doc" width="16" height="15" /></a></td>
-</tr>
-</tbody>
-</table>', 'HTML', NULL, NULL, '', 'letterbox_events');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
-VALUES (2, 'Notifications for events', 'Notifications for events', 
+VALUES (2, 'System events notifications', 'System events notifications', 
 '<p><font face="verdana,geneva" size="1">Hello [recipient.firstname] [recipient.lastname],</font></p>
 <p><font face="verdana,geneva" size="1"> </font></p>
-<p><font face="verdana,geneva" size="1">Event list :  ([notification.description]) :</font></p>
+<p><font face="verdana,geneva" size="1">Here are the new system events([notification.description]) :</font></p>
 <table style="width: 800px### height: 36px###" border="0" cellspacing="1" cellpadding="1">
 <tbody>
 <tr>
@@ -498,12 +496,172 @@ VALUES (2, 'Notifications for events', 'Notifications for events',
 </tbody>
 </table>', 
 'HTML', NULL, NULL, '', 'notif_events');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+VALUES (4, '[notification] Letters in copy', '[notification] Letters in copy', '<p><font face="arial,helvetica,sans-serif" size="2">Hello [recipient.firstname] [recipient.lastname],</font></p>
+<p> </p>
+<p><font face="arial,helvetica,sans-serif" size="2">Here are your new letters copy :</font></p>
+<table style="border: 1pt solid #000000### width: 1582px### height: 77px###" border="1" cellspacing="1" cellpadding="5" frame="box">
+<tbody>
+<tr>
+<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Identifier</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Origin</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Contact</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Date</strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Object</strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Type</strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#FFFFFF"><strong>Links</strong></font></td>
+</tr>
+<tr>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.res_id]</font></td>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.typist]</font></td>
+<td>
+<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society][res_letterbox.contact_firstname][res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
+</td>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
+<td><font face="arial,helvetica,sans-serif" color="#FF0000"><strong><font size="2">[res_letterbox.subject]</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.type_label]</font></td>
+<td><font face="arial,helvetica,sans-serif"><a href="[res_letterbox.linktodetail]" name="detail">detail</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
+</tr>
+</tbody>
+</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+VALUES (5, '[notification] Alert 2', '[notification] Alert 2', '<p><font face="arial,helvetica,sans-serif" size="2">Hello [recipient.firstname] [recipient.lastname],</font></p>
+<p> </p>
+<p><font face="arial,helvetica,sans-serif" size="2">Here are your lated letters to process :n</font></p>
+<table style="border: 1pt solid #000000### width: 1582px### height: 77px###" border="1" cellspacing="1" cellpadding="5" frame="box">
+<tbody>
+<tr>
+<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Identifier</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Origin</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Contact</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Date</strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Object</strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Type</strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#FFFFFF"><strong>Links</strong></font></td>
+</tr>
+<tr>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.res_id]</font></td>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.typist]</font></td>
+<td>
+<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society][res_letterbox.contact_firstname][res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
+<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.tag_label]</font></p>
+</td>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
+<td><font face="arial,helvetica,sans-serif" color="#FF0000"><strong><font size="2">[res_letterbox.subject]</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.type_label]</font></td>
+<td><font face="arial,helvetica,sans-serif"><a href="res_letterbox.linktoprocess" name="traiter">traiter</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
+</tr>
+</tbody>
+</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+VALUES (6, '[notification] Alert 1', '[notification] Alert 1', '<p><font face="arial,helvetica,sans-serif" size="2">Hello [recipient.firstname] [recipient.lastname],</font></p>
+<p> </p>
+<p><font face="arial,helvetica,sans-serif" size="2"> </font></p>
+<p> </p>
+<p><font face="arial,helvetica,sans-serif" size="2">Here are your letters to process :</font></p>
+<p> </p>
+<table style="border: 1pt solid #000000### width: 1582px### height: 77px###" border="1" cellspacing="1" cellpadding="5" frame="box">
+<tbody>
+<tr>
+<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Identifier</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Origin</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Contact</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Date</strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Object</strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Type</strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#FFFFFF"><strong>Links</strong></font></td>
+</tr>
+<tr>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.res_id]</font></td>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.typist]</font></td>
+<td>
+<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society][res_letterbox.contact_firstname][res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
+<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.tag_label]</font></p>
+</td>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
+<td><font face="arial,helvetica,sans-serif" color="#FF0000"><strong><font size="2">[res_letterbox.subject]</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.type_label]</font></td>
+<td><font face="arial,helvetica,sans-serif"><a href="res_letterbox.linktoprocess" name="traiter">traiter</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
+</tr>
+</tbody>
+</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+VALUES (7, '[notification] Letter diffusion', '[notification] Letter to process', '<p><font face="arial,helvetica,sans-serif" size="2">Hello [recipient.firstname] [recipient.lastname],</font></p>
+<p> </p>
+<p><font face="arial,helvetica,sans-serif" size="2"> </font></p>
+<p> </p>
+<p><font face="arial,helvetica,sans-serif" size="2">Here are your letters to process :</font></p>
+<p> </p>
+<table style="border: 1pt solid #000000### width: 1582px### height: 77px###" border="1" cellspacing="1" cellpadding="5" frame="box">
+<tbody>
+<tr>
+<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Identifier</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Origin</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif"><strong><font size="2">Contact</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Date</strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Object</strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#000000"><strong>Type</strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2" color="#FFFFFF"><strong>Links</strong></font></td>
+</tr>
+<tr>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.res_id]</font></td>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.typist]</font></td>
+<td>
+<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society][res_letterbox.contact_firstname][res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
+</td>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
+<td><font face="arial,helvetica,sans-serif" color="#FF0000"><strong><font size="2">[res_letterbox.subject]</font></strong></font></td>
+<td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.type_label]</font></td>
+<td><font face="arial,helvetica,sans-serif"><a href="[res_letterbox.linktodetail]" name="detail">detail</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
+</tr>
+</tbody>
+</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+VALUES (8, '[notification] New notes on letter', '[notification] New notes on letter', '<p><font face="verdana,geneva" size="2">Hello [recipient.firstname] [recipient.lastname], [recipient.text]</font></p>
+<p>&nbsp###</p>
+<p><font face="verdana,geneva" size="2"> </font></p>
+<p>&nbsp###</p>
+<p><font face="verdana,geneva" size="2">Here are the new notes for the following letters :</font></p>
+<p>&nbsp###</p>
+<table style="width: 982px### height: 77px###" border="1" cellspacing="3" cellpadding="3" frame="box">
+<tbody>
+<tr>
+<td><strong>Identifier</strong></td>
+<td><strong>Number</strong></td>
+<td><strong>Date</strong></td>
+<td><strong>Object</strong></td>
+<td><strong>Note</strong></td>
+<td><strong>Added by</strong></td>
+<td><strong>Contact</strong></td>
+<td><strong>Links</strong></td>
+</tr>
+<tr>
+<td>[notes.identifier]</td>
+<td>[notes.# ###frm=0000]</td>
+<td>[notes.doc_date###block=tr###frm=dd/mm/yyyy]</td>
+<td>[notes.subject]</td>
+<td>[notes.note_text]</td>
+<td>[notes.user_id]</td>
+<td>[notes.contact_society][notes.contact_firstname][notes.contact_lastname]</td>
+<td><a href="notes.linktodetail" name="detail">d&eacute###tail</a> <a href="notes.linktodoc" name="doc">doc</a></td>
+</tr>
+</tbody>
+</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes');
 
-
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, rss_url_template) VALUES (1, 'INDEX_DEST', 'New document creation', '21', 'EMAIL', 1, 'dest_user', '', '', '', '			http://localhost/maarch_trunk/apps/maarch_entreprise/index.php?page=users_management_controler&mode=up&admin=users&id=$1');
-INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, rss_url_template) VALUES (2, 'USERS', 'Actions on application users', 'users%', 'EMAIL', 2, 'user', 'superadmin', '', '', '			http://localhost/maarch_trunk');
-
-
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, rss_url_template) 
+VALUES (2, 'USERS', 'Actions on users (admin)', 'users%', 'EMAIL', 2, 'user', 'superadmin', '', '', 'http://localhost/maarch_trunk');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) 
+VALUES (3, 'NCC', 'New letters in copy', 'diffcopy%', 'EMAIL', 4, '', 'copy_list', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) 
+VALUES (4, 'RET2', '2nd alert on lated letters', 'alert2', 'EMAIL', 5, '', 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) 
+VALUES (5, 'RET1', '1st alert on letters', 'alert1', 'EMAIL', 6, '', 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) 
+VALUES (6, 'NCT', 'New letters to process', 'diffdest%', 'EMAIL', 7, '', 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) 
+VALUES (7, 'ANC', 'New notes on copy letters', 'noteadd', 'EMAIL', 8, '', 'copy_list', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) 
+VALUES (8, 'AND', 'New notes on process letters', 'noteadd', 'EMAIL', 8, '', 'dest_user', '', '', '', 'Y');
 
 --
 -- TOC entry 2326 (class 0 OID 39180)
