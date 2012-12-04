@@ -156,7 +156,7 @@ class DataAccessService_Database
             }
             //echo "<br/>filter expression $filterExpression";
             $filterExpression = str_replace('$filter', $filter, $filterExpression);
-            $whereParts[] = $filterExpression;
+            $whereParts[] = '(' . $filterExpression .')';
         }
         
         // WHERE RELATION EXPRESSION 
