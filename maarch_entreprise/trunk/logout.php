@@ -56,8 +56,8 @@ if (isset($_GET['logout']) && $_GET['logout']) {
     $logoutExtension = "";
 }
 header(
-	"location: " . $appUrl . "index.php?display=true&page=login"
-    . $logoutExtension . "&coreurl=" . $_GET['coreurl']
+    "location: " . $appUrl . "index.php?display=true&page=login"
+    . $logoutExtension
 );
 exit();
 
