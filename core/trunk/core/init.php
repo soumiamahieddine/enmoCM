@@ -1,18 +1,16 @@
 <?php
 
 require_once dirname(__file__) . '/class/Url.php';
-
-session_name('maarch_entreprise_trunk');
+//dynamic session name
+session_name(base64_encode(dirname(__file__)));
 session_start();
 
-if (!isset($_SESSION['config'])) {
+if (!isset($_SESSION['config']) || !isset($_SESSION['businessapps'][0]['appid'])) {
     require_once('class/class_portal.php');
     $portal = new portal();
     $portal->unset_session();
     $portal->build_config();
 }
-
-
 if (isset($_SESSION['config']['default_timezone'])
     && ! empty($_SESSION['config']['default_timezone'])
 ) {
@@ -42,7 +40,7 @@ if (isset($_SESSION['custom_override_id'])
         . PATH_SEPARATOR . get_include_path()
     );
 } else if (isset($_SESSION['config']['corepath'])
-	&& ! empty($_SESSION['config']['corepath'])
+    && ! empty($_SESSION['config']['corepath'])
 ) {
     set_include_path(
         $_SESSION['config']['corepath'] . PATH_SEPARATOR . get_include_path()

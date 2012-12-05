@@ -40,10 +40,9 @@ if (!file_exists('installed.lck') && is_dir('install')) {
     header('location: install/index.php');
     exit;
 }
-if(isset($_GET['origin']) && $_GET['origin'] == 'scan')
-{
+if (isset($_GET['origin']) && $_GET['origin'] == 'scan') {
     header('location: apps/'.$_SESSION['businessapps'][0]['appid'].'/reopen.php');
-} elseif(count($_SESSION['businessapps'])== 1) {
+} else {
     $_SESSION['config']['app_id'] = $_SESSION['businessapps'][0]['appid'];
     /*header('location: apps/'.$_SESSION['config']['app_id']
         . '/index.php?display=true&page=login&coreurl='

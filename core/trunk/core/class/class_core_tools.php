@@ -1288,7 +1288,7 @@ class core_tools extends functions
         <head>
             <title><?php  echo $title;?></title>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-            <meta http-equiv="Content-Language" content="<?php  echo $_SESSION['config']['lang'];?>" />
+            <meta http-equiv="Content-Language" content="<?php echo $_SESSION['config']['lang'];?>" />
             <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
             <link rel="icon" type="image/png" href="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=favicon.png"/>
             <link href="index.php?display&page=generate_search_xml" title="Maarch <?php 
@@ -1316,7 +1316,7 @@ class core_tools extends functions
     {
         ?>
         <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php'; ?>" media="screen" />
-        <!--[if lt IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie'; ?>" media="screen" />  <![endif]-->
+        <!--[if lt  IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie'; ?>" media="screen" />  <![endif]-->
         <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie7'; ?>" media="screen" />  <![endif]-->
         <!--[if IE 8.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie8'; ?>" media="screen" />  <![endif]-->
         <!--[if gte IE 9.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie9'; ?>" media="screen" />  <![endif]-->
@@ -1857,14 +1857,14 @@ class core_tools extends functions
     public function get_session_time_expire()
     {
         $time = 0;
-        $ini_time = ((ini_get('session.gc_maxlifetime') / 60) - 1);
+        $ini_time = (ini_get('session.gc_maxlifetime') - 1) / 60;
         $maarch_time = $_SESSION['config']['cookietime'];
         
-        if ($maarch_time <= $ini_time)
+        if ($maarch_time <= $ini_time) {
             $time = $maarch_time;
-        else
+        } else {
             $time = $ini_time;
-        
+        }
         return $time;
     }
 
