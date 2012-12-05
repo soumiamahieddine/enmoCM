@@ -792,7 +792,7 @@ class ViewElement
     function setStyle($name, $value) {
         //echo "<br/>Set style $name = $value";
         if($this->hasAttribute('style')) {
-            //echo "<br/>Has attribute 'style'";
+            //echo "<br/>" . $this->tagName . " Has attribute 'style'";
             $style = $this->getAttribute('style');
             if(preg_match("/".$name.":[\.|\s]*[^;]*/i", $style)) {
                 $style = preg_replace(
