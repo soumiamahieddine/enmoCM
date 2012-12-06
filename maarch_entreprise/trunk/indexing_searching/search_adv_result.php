@@ -691,7 +691,7 @@ if (count($_REQUEST['meta']) > 0) {
                     break;
                 
                 default:
-                    
+                    $json_txt .= " 'baskets_clause' : ['".addslashes(trim($_REQUEST['baskets_clause']))."'],";
                     for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
                         if($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']) {
                             if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
