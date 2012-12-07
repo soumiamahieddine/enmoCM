@@ -360,6 +360,9 @@ class ViewController
         $viewElement,
         $value
     ) {
+        // Replace CR/LF by <br/>
+        $value = preg_replace("/(\r\n|\n|&#xD;)/", '<br/>', $value);
+        
         switch($viewElement->tagName) {
         case 'input':
             switch($viewElement->getAttribute('type')) {
