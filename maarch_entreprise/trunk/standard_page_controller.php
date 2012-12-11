@@ -69,7 +69,7 @@
                     . $_REQUEST['admin'];
                     
                 $params['schemaPath'] = $params['viewLocation'] . '/'
-                    . 'xml/'
+                    . 'schema/'
                     . $_REQUEST['admin'] . '.xsd';
                     
             } elseif (!empty($_REQUEST['module'])) {
@@ -77,7 +77,7 @@
                     . $_REQUEST['module'];
                     
                 $params['schemaPath'] = $params['viewLocation'] . '/'
-                    . 'xml/'
+                    . 'schema/'
                     . $_REQUEST['module'] . '.xsd';
                     
             }
@@ -321,8 +321,8 @@
     
     //load message file
         $messagePath = $params['viewLocation'] . '/'
-            . 'xml/' 
-            . $params['objectName'] . '_Messages.xml';
+            . 'lang/' 
+            . $params['objectName'] . '.xml';
         $messageController->loadMessageFile($messagePath);
     
     //load xsd file
