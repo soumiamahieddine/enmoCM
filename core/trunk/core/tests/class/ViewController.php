@@ -333,7 +333,7 @@ class ViewController
                 $nodeName = $node->name;
                 break;
             }
-            $nodeValue = (string)$node->nodeValue;
+            $nodeValue = $node->nodeValue;
             // Name of property
             $viewElement = 
                 $this->getElementById(
@@ -359,10 +359,7 @@ class ViewController
     function loadProperty(
         $viewElement,
         $value
-    ) {
-        // Replace CR/LF by <br/>
-        $value = preg_replace("/(\r\n|\n|&#xD;)/", '<br/>', $value);
-        
+    ) {       
         switch($viewElement->tagName) {
         case 'input':
             switch($viewElement->getAttribute('type')) {
