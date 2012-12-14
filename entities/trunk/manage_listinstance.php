@@ -427,7 +427,8 @@ echo $link;
 <?php
 if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
     || (isset($_GET['what_services']) && !empty($_GET['what_services']))
-    || ( !empty($_SESSION[$origin]['diff_list']['dest']['user_id']) && !$onlyCc)
+    //|| ( !empty($_SESSION[$origin]['diff_list']['dest']['user_id']) && !$onlyCc)
+    || (  !$onlyCc)
     || ( $onlyCc
         && (count($_SESSION[$origin]['diff_list']['copy']['users']) > 0
             || count($_SESSION[$origin]['diff_list']['copy']['entities']) > 0)
