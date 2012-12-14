@@ -3,12 +3,12 @@
 // Group - Basket Form : actions params
 require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . 'apps_tables.php';
-	
+    
 if($_SESSION['service_tag'] == 'group_basket')
 {
     $current_groupbasket = $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']];
-	$current_compteur = $_SESSION['m_admin']['compteur'];
-	// This param is only for the actions with the keyword : indexing
+    $current_compteur = $_SESSION['m_admin']['compteur'];
+    // This param is only for the actions with the keyword : indexing
     if( trim($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['KEYWORD']) == 'indexing') // Indexing case
     {
         $_SESSION['m_admin']['show_where_clause'] = false;
@@ -43,20 +43,20 @@ if($_SESSION['service_tag'] == 'group_basket')
                             }
                         }
                     } else {
-						for ($k = 0; $k < count($current_groupbasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST']); $k ++)
-						{
-							if ($_SESSION['m_admin']['statuses'][$i]['id'] == $current_groupbasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST'][$k]['ID']) {
-								$state_status = true;
-							}
-						}
-					}
-					if($state_status == false)
-					{
-						?>
-						<option value="<?php  echo $_SESSION['m_admin']['statuses'][$i]['id']; ?>"><?php  echo $_SESSION['m_admin']['statuses'][$i]['label']; ?></option>
-					<?php
-					}
-				}
+                        for ($k = 0; $k < count($current_groupbasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST']); $k ++)
+                        {
+                            if ($_SESSION['m_admin']['statuses'][$i]['id'] == $current_groupbasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST'][$k]['ID']) {
+                                $state_status = true;
+                            }
+                        }
+                    }
+                    if($state_status == false)
+                    {
+                        ?>
+                        <option value="<?php  echo $_SESSION['m_admin']['statuses'][$i]['id']; ?>"><?php  echo $_SESSION['m_admin']['statuses'][$i]['label']; ?></option>
+                    <?php
+                    }
+                }
                 ?>
                 </select>
                 <br/>
@@ -118,11 +118,12 @@ if($_SESSION['service_tag'] == 'group_basket')
 elseif($_SESSION['service_tag'] == 'manage_groupbasket')
 {
     $db = new dbquery();
-	/*
+    $db->connect();
+    /*
     echo 'before<br>';
     echo 'param status';
     $db->show_array($_SESSION['m_admin']['basket']['groups']);
-	*/
+    */
     $groupe = $_REQUEST['group'];
     if(isset($_REQUEST['old_group']) && !empty($_REQUEST['old_group']))
     {
@@ -139,9 +140,9 @@ elseif($_SESSION['service_tag'] == 'manage_groupbasket')
                 if (isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen']) && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen']) > 0) {
                     for ($k=0; $k < count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen']); $k++) {
                         $statusId = $_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen'][$k];
-						$db->query("SELECT label_status FROM " .$_SESSION['tablename']['status']. " WHERE id = '" . $statusId . "'");
-						$res = $db->fetch_object();
-						$label = $res->label_status;
+                        $db->query("SELECT label_status FROM " .$_SESSION['tablename']['status']. " WHERE id = '" . $statusId . "'");
+                        $res = $db->fetch_object();
+                        $label = $res->label_status;
                         array_push($chosen_statuses , array( 'ID' => $statusId, 'LABEL' => $label));
                     }
                 }
@@ -167,26 +168,26 @@ elseif($_SESSION['service_tag'] == 'manage_groupbasket')
         if (isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_statuses_chosen']) && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_statuses_chosen']) > 0) {
             for ($l=0; $l < count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_statuses_chosen']); $l++) {
                 $statusId = $_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_statuses_chosen'][$l];
-				$db->query("SELECT label_status FROM " .$_SESSION['tablename']['status']. " WHERE id = '" . $statusId . "'");
-				$res = $db->fetch_object();
-				$label = $res->label_status;
+                $db->query("SELECT label_status FROM " .$_SESSION['tablename']['status']. " WHERE id = '" . $statusId . "'");
+                $res = $db->fetch_object();
+                $label = $res->label_status;
                 array_push($_SESSION['m_admin']['basket']['groups'][$ind]['PARAM_DEFAULT_ACTION']['STATUSES_LIST'] , array( 'ID' =>$statusId, 'LABEL' => $label));
             }
         }
     }
     $_SESSION['m_admin']['load_groupbasket'] = false;
-	/*
+    /*
     echo 'after<br>';
     echo 'param status';
     $ent->show_array($_SESSION['m_admin']['basket']['groups']);
     exit;
-	*/
+    */
 }
 elseif($_SESSION['service_tag'] == 'load_basket_session')
 {
     $db = new dbquery();
-	$db->connect();
-	
+    $db->connect();
+    
     for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'] ); $i++)
     {
         //$_SESSION['m_admin']['basket']['groups'][$i]['PARAM_DEFAULT_ACTION'] = array();
@@ -194,30 +195,30 @@ elseif($_SESSION['service_tag'] == 'load_basket_session')
         if(!empty($_SESSION['m_admin']['basket']['groups'][$i]['DEFAULT_ACTION'] ))
         {
             $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status'] 
-				. " on status_id = id "
-				. " where basket_id= '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
-				. "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']))
-				. "' and action_id = " . $_SESSION['m_admin']['basket']['groups'][$i]['DEFAULT_ACTION'];
-			$db->query($query);
-			$array = array();
-			while($status = $db->fetch_object()) {
-				$array[] = array('ID' => $status->status_id, 'LABEL' => $status->label_status);
-			}
-			$_SESSION['m_admin']['basket']['groups'][$i]['PARAM_DEFAULT_ACTION']['STATUSES_LIST'] = $array;
+                . " on status_id = id "
+                . " where basket_id= '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
+                . "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']))
+                . "' and action_id = " . $_SESSION['m_admin']['basket']['groups'][$i]['DEFAULT_ACTION'];
+            $db->query($query);
+            $array = array();
+            while($status = $db->fetch_object()) {
+                $array[] = array('ID' => $status->status_id, 'LABEL' => $status->label_status);
+            }
+            $_SESSION['m_admin']['basket']['groups'][$i]['PARAM_DEFAULT_ACTION']['STATUSES_LIST'] = $array;
         }
         for($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS']);$j++)
         {
             
-			$query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status'] 
+            $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status'] 
                 . " on status_id = id "
-				. " where basket_id= '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
-				. "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']))
-				. "' and action_id = " . $_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'];
-			$db->query($query);
-			$array = array();
-			while($status = $db->fetch_object()) {
-				$array[] = array('ID' => $status->status_id, 'LABEL' => $status->label_status);
-			}
+                . " where basket_id= '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
+                . "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']))
+                . "' and action_id = " . $_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'];
+            $db->query($query);
+            $array = array();
+            while($status = $db->fetch_object()) {
+                $array[] = array('ID' => $status->status_id, 'LABEL' => $status->label_status);
+            }
             $_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['STATUSES_LIST'] = $array;
         }
     }
@@ -225,7 +226,7 @@ elseif($_SESSION['service_tag'] == 'load_basket_session')
 elseif($_SESSION['service_tag'] == 'load_basket_db')
 {
     $db = new dbquery();
-	$db->connect();
+    $db->connect();
     $indexing_actions = array();
     for($i=0; $i<count($_SESSION['m_admin']['basket']['all_actions']);$i++ )
     {
@@ -238,50 +239,50 @@ elseif($_SESSION['service_tag'] == 'load_basket_db')
     for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'] ); $i++)
     {
         $GroupBasket = $_SESSION['m_admin']['basket']['groups'][$i];
-		if(!empty($GroupBasket['DEFAULT_ACTION']) && in_array($GroupBasket['DEFAULT_ACTION'], $indexing_actions))
-        {	
-			//$ent->update_redirect_groupbasket_db($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'],  $_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$i]['DEFAULT_ACTION'],$_SESSION['m_admin']['basket']['groups'][$i]['PARAM_DEFAULT_ACTION']['STATUSES_LIST']);
-			$db->query(
-        	"DELETE FROM " . GROUPBASKET_STATUS
+        if(!empty($GroupBasket['DEFAULT_ACTION']) && in_array($GroupBasket['DEFAULT_ACTION'], $indexing_actions))
+        {   
+            //$ent->update_redirect_groupbasket_db($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'],  $_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$i]['DEFAULT_ACTION'],$_SESSION['m_admin']['basket']['groups'][$i]['PARAM_DEFAULT_ACTION']['STATUSES_LIST']);
+            $db->query(
+            "DELETE FROM " . GROUPBASKET_STATUS
             . " where basket_id= '" . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
             . "' and group_id = '" . $db->protect_string_db(trim($GroupBasket['GROUP_ID']))
             . "' and action_id = " . $GroupBasket['DEFAULT_ACTION']);
-			
-			for ($k = 0; $k < count($GroupBasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST']); $k++) {
-				$Status = $GroupBasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST'][$k];
-				$db->query(
-					"INSERT INTO " . GROUPBASKET_STATUS
-					. " (group_id, basket_id, action_id, status_id) values ('" 
-					. $db->protect_string_db(trim($GroupBasket['GROUP_ID'])) . "', '" 
-					. $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId'])) . "', "
-					. $GroupBasket['DEFAULT_ACTION'] . ", '" 
-					. $Status['ID']. "')"
-				);
-			}
-		}
+            
+            for ($k = 0; $k < count($GroupBasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST']); $k++) {
+                $Status = $GroupBasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST'][$k];
+                $db->query(
+                    "INSERT INTO " . GROUPBASKET_STATUS
+                    . " (group_id, basket_id, action_id, status_id) values ('" 
+                    . $db->protect_string_db(trim($GroupBasket['GROUP_ID'])) . "', '" 
+                    . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId'])) . "', "
+                    . $GroupBasket['DEFAULT_ACTION'] . ", '" 
+                    . $Status['ID']. "')"
+                );
+            }
+        }
         for($j=0;$j<count($GroupBasket['ACTIONS']);$j++)
         {
             $GroupBasketAction = $GroupBasket['ACTIONS'][$j];
-			if(in_array($GroupBasketAction['ID_ACTION'], $indexing_actions)) {
+            if(in_array($GroupBasketAction['ID_ACTION'], $indexing_actions)) {
                 //$ent->update_redirect_groupbasket_db($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'],  $_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'],$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['STATUSES_LIST']);
-				$db->query(
-				"DELETE FROM " . GROUPBASKET_STATUS
-				. " where basket_id= '" . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
-				. "' and group_id = '" . $db->protect_string_db(trim($GroupBasket['GROUP_ID']))
-				. "' and action_id = " . $GroupBasketAction['ID_ACTION']);
+                $db->query(
+                "DELETE FROM " . GROUPBASKET_STATUS
+                . " where basket_id= '" . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
+                . "' and group_id = '" . $db->protect_string_db(trim($GroupBasket['GROUP_ID']))
+                . "' and action_id = " . $GroupBasketAction['ID_ACTION']);
 
-				for ($k = 0; $k < count($GroupBasketAction['ID_ACTION']['STATUSES_LIST']); $k++) {
-					$Status = $GroupBasketAction['ID_ACTION']['STATUSES_LIST'][$k];
-					$db->query(
-						"INSERT INTO " . GROUPBASKET_STATUS
-						. " (group_id, basket_id, action_id, status_id) values ('" 
-						. $db->protect_string_db(trim($GroupBasket['GROUP_ID'])) . "', '" 
-						. $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId'])) . "', "
-						. $GroupBasketAction['ID_ACTION'] . ", '" 
-						. $Status['ID']. "')"
-					);
-				}
-			}
+                for ($k = 0; $k < count($GroupBasketAction['ID_ACTION']['STATUSES_LIST']); $k++) {
+                    $Status = $GroupBasketAction['ID_ACTION']['STATUSES_LIST'][$k];
+                    $db->query(
+                        "INSERT INTO " . GROUPBASKET_STATUS
+                        . " (group_id, basket_id, action_id, status_id) values ('" 
+                        . $db->protect_string_db(trim($GroupBasket['GROUP_ID'])) . "', '" 
+                        . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId'])) . "', "
+                        . $GroupBasketAction['ID_ACTION'] . ", '" 
+                        . $Status['ID']. "')"
+                    );
+                }
+            }
         }
     }
 }
