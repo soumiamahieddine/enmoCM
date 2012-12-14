@@ -74,6 +74,9 @@ if (!defined('_SVN')) {
 if (!defined('_IMAP')) {
     define('_IMAP', "librairie imap");
 }
+if (!defined('_MBSTRING')) {
+    define('_MBSTRING', "librairie mbstring");
+}
 if (!defined('_PEAR')) {
     define('_PEAR', "PEAR");
 }

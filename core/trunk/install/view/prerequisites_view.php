@@ -138,8 +138,19 @@
                     </td>
                 </tr>
                 <tr>
+                    <td class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
+                            $Class_Install->isPhpRequirements(
+                                'mbstring'
+                            )
+                        ); ?>
+                    </td>
+                    <td>
+                        <?php echo _MBSTRING; ?>
+                    </td>
+                </tr>
+                <tr>
                     <td>&nbsp;
-
                     </td>
                     <td>&nbsp;
 

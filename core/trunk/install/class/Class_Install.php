@@ -114,6 +114,9 @@ class Install extends functions
         if (!$this->isPhpRequirements('pgsql')) {
             return false;
         }
+        if (!$this->isPhpRequirements('mbstring')) {
+            return false;
+        }
         if (!$this->isMaarchPathWritable()) {
             return false;
         }
