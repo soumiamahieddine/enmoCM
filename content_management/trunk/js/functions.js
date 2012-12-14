@@ -68,7 +68,7 @@ function endResource()
     if (window.opener.$('viewframe')) {
         window.opener.$('viewframe').src = window.opener.$('viewframe').src;
     }
-    window.close();
+    //window.close();
 }
 
 function showDivEnd(divName, spanNb, divCreate, path_manage_script)
@@ -84,10 +84,12 @@ function showDivEnd(divName, spanNb, divCreate, path_manage_script)
                     window.opener.$(divName).innerHTML = response.list;
                     window.opener.$(spanNb).innerHTML = response.nb;
                     window.opener.$(divCreate).innerHTML = response.create;
+                    window.close();
                 } else {
-                    //
+                    window.opener.$(divName).innerHTML = 'error = 1 : ' . response.error_txt;
                 }
             } else {
+                window.opener.$(divName).innerHTML = 'error > 1 : ' . response.error_txt;
                 try {
                     //window.opener.$(divName).innerHTML = response.error_txt;
                 }
