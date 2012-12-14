@@ -282,6 +282,7 @@ else
     $tab = $request->select($select, $where_concat, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false,"", "", "", false, false, 'distinct');
 
     $db = new dbquery();
+    $db->connect();
     $persistentQuery = "SELECT distinct(res_id) FROM basket_persistent_mode WHERE user_id = '".$_SESSION['user']['UserId']."' and is_persistent = 'Y'";
     if (!$db->query($persistentQuery, true)) {
         $_SESSION['error'] = 'Erreur SQL => '.$persistentQuery;
