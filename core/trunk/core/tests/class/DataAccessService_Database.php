@@ -196,7 +196,7 @@ class DataAccessService_Database
         }
         
         if($objectQuery = $this->getQuery($objectElement)) {
-            $whereParts[] = $objectQuery->nodeValue;
+            $whereParts[] = '(' . $objectQuery->nodeValue . ')';
         }
         
         if(count($whereParts) > 0) {
