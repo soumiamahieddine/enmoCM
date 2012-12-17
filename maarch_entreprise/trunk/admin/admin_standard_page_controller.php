@@ -59,11 +59,13 @@ function locationBarManagement($pageName, $mode, $objectName, $isApps)
     echo '<pre>' . print_r($test, true) . '</pre>';
     echo '<pre>' . var_dump($test) . '</pre>';
     */
+    $objectLabel = @constant(strtoupper($objectName));
+    if(!$objectLabel) $objectLabel = _LIST;
     
     $pageLabels = array(
         'create'   => _ADDITION,
         'update'    => _MODIFICATION,
-        'list'  => @constant(strtoupper($objectName)) //_LIST,
+        'list'  => $objectLabel //_LIST,
     );
     $pageIds = array(
         'add'   => $objectName . '_add',
@@ -76,11 +78,10 @@ function locationBarManagement($pageName, $mode, $objectName, $isApps)
         $init = true;
     
     $level = '';
-    $allowedLevels = array(1, 2, 3, 4, 5, 6);
+    $allowedLevels = array(1, 2, 3, 4);
     if (isset($_REQUEST['level']) && in_array($_REQUEST['level'], $allowedLevels))
         $level = $_REQUEST['level'];
-    //else $level = 'level' . count($_SESSION['location_bar']) -1;
-    
+
     if($isApps) {
         $pagePath = $_SESSION['config']['businessappurl'] . 'index.php'
             . '?page=' . $pageName 
@@ -369,14 +370,14 @@ else
         'admin_' . $params['objectName'], 
         'entities'
     );
-/*
+
 $pagePath = locationBarManagement(
     $params['pageName'], 
     $params['mode'], 
     $params['objectName'], 
     $params['isApps']
 );
-*/
+
 //load the message object
 $messagePath = $params['viewLocation'] . '/lang/' . $params['objectName'] . '.xml';
 $messageController->loadMessageFile(
