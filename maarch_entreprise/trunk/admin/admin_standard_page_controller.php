@@ -530,7 +530,6 @@ if (isset($_REQUEST['submit'])) {
                 $sortFields = $params['orderField'],
                 $order = $params['order']
             );
-            //$objectList->show();
             /* ------
             - get key
             ------ */
