@@ -256,8 +256,12 @@ if (count($_SESSION['user']['baskets']) > 0) {
         }
         ?>
     </div>
-    <input type="button" onclick="createModal(form_txt);window.location.href='#top';" value="<?php echo _SAVE_QUERY;?>" class="button"/>
     <?php
+    if ($_REQUEST['origin'] == 'searching') {
+        ?>
+        <input type="button" onclick="createModal(form_txt);window.location.href='#top';" value="<?php echo _SAVE_QUERY;?>" class="button"/>
+        <?php
+    }
 } else {
     ?>
     <img src="<?php
