@@ -1288,6 +1288,7 @@ if (!defined('_UNCHECK_ALL'))    define( '_UNCHECK_ALL', '/ d&eacute;cocher');
 if (!defined('_EXPORT_LIST'))    define( '_EXPORT_LIST', 'Exporter');
 
 /******************** Action put in copy ************/
+if (!defined('_ADD_LINKS'))    define('_ADD_LINKS', 'Ajouter des liaisons');
 if (!defined('_PUT_IN_COPY'))    define('_PUT_IN_COPY', 'Ajouter en copie');
 if (!defined('_POWERED_BY'))    define('_POWERED_BY', 'Powered by Maarch&trade;.');
 if (!defined('_LINK_TO_DOC'))    define('_LINK_TO_DOC', 'Lier &agrave; un courrier existant');
