@@ -74,10 +74,10 @@
     <COLLECTION>
         <id>rm_coll</id>
         <label>_RM_COLL</label>
-        <table>res_rm</table>
+        <table>res_documents</table>
         <version_table></version_table>
-        <view>res_view_rm</view>
-        <adr>adr_rm</adr>
+        <view>rm_documents_view</view>
+        <adr>adr_documents</adr>
         <index_file>index_rm.xml</index_file>
         <script_add>index_rm.php</script_add>
         <script_search>search_rm.php</script_search>
