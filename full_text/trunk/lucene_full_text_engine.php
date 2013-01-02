@@ -1,8 +1,8 @@
 <?php
 /*
-*    Copyright 2008 - 2012 Maarch
+*   Copyright 2008 - 2013 Maarch
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -155,14 +155,22 @@ function isDirEmpty($dir)
 * @return integer  user exit code stored in fulltext_result column of the
 * document in "res_x"
 */
-Function indexFullText($pathToFile, $indexFileDirectory, $format, $Id)
+function indexFullText($pathToFile, $indexFileDirectory, $format, $Id)
 {
     $result = -1;
     if (is_file($pathToFile)) {
         switch (strtoupper($format)) {
             case "PDF":
                 writeLog("it's a PDF file");
-                $result = indexFullTextPdf($pathToFile, $indexFileDirectory, $Id);
+                $result = prepareIndexFullTextPdf($pathToFile, $indexFileDirectory, $Id);
+                break;
+            case "HTML":
+                writeLog("it's A HTML file");
+                $result = prepareIndexFullTextHtml($pathToFile, $indexFileDirectory, $Id);
+                break;
+            case "MAARCH":
+                writeLog("it's A MAARCH file");
+                $result = prepareIndexFullTextHtml($pathToFile, $indexFileDirectory, $Id);
                 break;
             default:
             $result = -2;
@@ -171,17 +179,8 @@ Function indexFullText($pathToFile, $indexFileDirectory, $format, $Id)
     return $result;
 }
 
-/**
-* Retrieve the text of a pdftext and launch the lucene engine
-* @param  $pathToFile string path of the file to index
-* @param  $indexFileDirectory string directory of the lucene index
-* @param  $id integer id of the document to index
-* @return integer user exit code is stored in fulltext_result column of the
-* document in "res_x"
-*/
-Function indexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
+function prepareIndexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
 {
-    $result = -1;
     if (is_file($pathToFile)) {
         $tmpFile = $_ENV["base_directory"] . DIRECTORY_SEPARATOR . "tmp"
             . DIRECTORY_SEPARATOR . basename($pathToFile) . ".ftx";
@@ -202,45 +201,71 @@ Function indexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
         }
         $fileContent = trim(readFileF($tmpFile));
         if (is_file($tmpFile)) unlink($tmpFile);
-        if (strlen($fileContent) > 50) {
-            // Storing text in lucene index
-            set_include_path($_ENV['maarch_tools_path'] . DIRECTORY_SEPARATOR
-                . PATH_SEPARATOR . get_include_path()
-            );
-            require_once('Zend/Search/Lucene.php');
-            if (!is_dir($indexFileDirectory)) {
-                writeLog($indexFileDirectory . " not exists !");
+        $result = launchIndexFullText($fileContent, $indexFileDirectory, $Id);
+    } else {
+        $result = 2;
+    }
+    return $result;
+}
+
+function prepareIndexFullTextHtml($pathToFile, $indexFileDirectory, $Id)
+{
+    if (is_file($pathToFile)) {
+        $fileContent = trim(readFileF($pathToFile));
+        //remove html tags
+        $fileContent = strip_tags($fileContent);
+        $result = launchIndexFullText($fileContent, $indexFileDirectory, $Id);
+    } else {
+        $result = 2;
+    }
+    return $result;
+}
+
+/**
+* Retrieve the text of a pdftext and launch the lucene engine
+* @param  $pathToFile string path of the file to index
+* @param  $indexFileDirectory string directory of the lucene index
+* @param  $id integer id of the document to index
+* @return integer user exit code is stored in fulltext_result column of the
+* document in "res_x"
+*/
+function launchIndexFullText($fileContent, $indexFileDirectory, $Id)
+{
+    $result = -1;
+    if (strlen($fileContent) > 50) {
+        // Storing text in lucene index
+        set_include_path($_ENV['maarch_tools_path'] . DIRECTORY_SEPARATOR
+            . PATH_SEPARATOR . get_include_path()
+        );
+        require_once('Zend/Search/Lucene.php');
+        if (!is_dir($indexFileDirectory)) {
+            writeLog($indexFileDirectory . " not exists !");
+            $index = Zend_Search_Lucene::create($indexFileDirectory);
+        } else {
+            if (isDirEmpty($indexFileDirectory)) {
+                writeLog($indexFileDirectory . " empty !");
                 $index = Zend_Search_Lucene::create($indexFileDirectory);
             } else {
-                if (isDirEmpty($indexFileDirectory)) {
-                    writeLog($indexFileDirectory . " empty !");
-                    $index = Zend_Search_Lucene::create($indexFileDirectory);
-                } else {
-                    $index = Zend_Search_Lucene::open($indexFileDirectory);
-                }
+                $index = Zend_Search_Lucene::open($indexFileDirectory);
             }
-            Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-                new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
-            );
-            $term = new Zend_Search_Lucene_Index_Term($Id, 'Id');
-            foreach ($index->termDocs($term) as $id) {
-                $index->delete($id);
-            }
-            $doc = new Zend_Search_Lucene_Document();
-            $doc->addField(Zend_Search_Lucene_Field::UnIndexed('Id', $Id));
-            $doc->addField(Zend_Search_Lucene_Field::UnStored(
-                'contents', $fileContent)
-            );
-            $index->addDocument($doc);
-            $index->commit();
-            $result = 1;
         }
-        else
-        {
-            $result = 2;
+        Zend_Search_Lucene_Analysis_Analyzer::setDefault(
+            new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
+        );
+        $term = new Zend_Search_Lucene_Index_Term($Id, 'Id');
+        foreach ($index->termDocs($term) as $id) {
+            $index->delete($id);
         }
+        $doc = new Zend_Search_Lucene_Document();
+        $doc->addField(Zend_Search_Lucene_Field::UnIndexed('Id', $Id));
+        $doc->addField(Zend_Search_Lucene_Field::UnStored(
+            'contents', $fileContent)
+        );
+        $index->addDocument($doc);
+        $index->commit();
+        $result = 1;
     }
-  return $result;
+    return $result;
 }
 
 /**
@@ -248,7 +273,7 @@ Function indexFullTextPdf($pathToFile, $indexFileDirectory, $Id)
 * @param  $file string path of the file to read
 * @return string contents of the file
 */
-Function readFileF($file)
+function readFileF($file)
 {
     $result = "";
     if (is_file($file)) {
