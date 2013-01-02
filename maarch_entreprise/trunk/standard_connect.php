@@ -49,10 +49,10 @@ elseif(isset($_REQUEST['confirmAskRACode']) && $_REQUEST['confirmAskRACode'] == 
     
     $db = new dbquery();
     $db->connect();
-    $db->query("UPDATE users set ra_code = '".md5($raCodeGenerated)."' WHERE user_id = '".$_SESSION['user']['UserId']."'");
-    $db->query("UPDATE users set ra_expiration_date = '".$expiration_date."' WHERE user_id = '".$_SESSION['user']['UserId']."'");
+    $db->query("UPDATE users set ra_code = '".md5($raCodeGenerated)."' WHERE user_id = '".$_SESSION['user']['UserId']."'", false, true);
+    $db->query("UPDATE users set ra_expiration_date = '".$expiration_date."' WHERE user_id = '".$_SESSION['user']['UserId']."'", false, true);
     
-    $mailDest = $db->query("SELECT mail FROM users WHERE user_id = '".$_SESSION['user']['UserId']."' ;");
+    $mailDest = $db->query("SELECT mail FROM users WHERE user_id = '".$_SESSION['user']['UserId']."' ;", false, true);
     
     $mailToSend = '<html>';
         $mailToSend .= '<body>';
@@ -119,11 +119,11 @@ echo '<form id="formlogin" method="post" action="'
                         echo '<br /><p class="buttons">';
                             echo '<a href="';
                                 echo $_SESSION['config']['businessappurl'].'index.php?display=true&askRACode=true&page=login&coreurl='.$_SESSION['config']['coreurl'];
-                            echo '">';
-                                echo '<input type="button" class="button" name="submit" value="';
+                            echo '"><b>';
+                                //echo '<input type="button" class="button" name="submit" value="';
                                 echo _ASK_AN_RA_CODE;
-                                echo '" />';
-                            echo '</a>';
+                                //echo '" />';
+                            echo '</b></a>';
                             echo '&nbsp;&nbsp;';
                         echo '</p>';
                     } else {
