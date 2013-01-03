@@ -47,7 +47,7 @@ if (isset($_REQUEST['template_content']) && !empty($_REQUEST['template_content']
             <?php echo $_SESSION['template_content'];?>
         </textarea>
         <p>
-            <input type="submit" class="button" name="valid" id="valid" value="<?php echo _VALID_TEXT;?>" />
+            <!--<input type="submit" class="button" name="valid" id="valid" value="<?php echo _VALID_TEXT;?>" />-->
         </p>
     </form>
 </body>
