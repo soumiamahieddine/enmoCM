@@ -364,58 +364,66 @@ class business_app_tools extends dbquery
 
         $categories = $xmlfile->categories;
         $_SESSION['mail_categories'] = array();
-        foreach ($categories->category as $cat) {
-            $label = (string) $cat->label;
-            if (!empty($label) && defined($label)
-                && constant($label) <> NULL
-             ) {
-                $label = constant($label);
+        if (count($categories) > 0) {
+            foreach ($categories->category as $cat) {
+                $label = (string) $cat->label;
+                if (!empty($label) && defined($label)
+                    && constant($label) <> NULL
+                 ) {
+                    $label = constant($label);
+                }
+                $_SESSION['mail_categories'][(string) $cat->id] = $label;
             }
-            $_SESSION['mail_categories'][(string) $cat->id] = $label;
+            $_SESSION['default_category'] = (string) $categories->default_category;
         }
-        $_SESSION['default_category'] = (string) $categories->default_category;
-
+        
         $_SESSION['mail_natures'] = array();
         $mailNatures = $xmlfile->mail_natures;
-        foreach ($mailNatures->nature as $nature ) {
-            $label = (string) $nature->label;
-            if (!empty($label) && defined($label)
-                && constant($label) <> NULL
-             ) {
-                $label = constant($label);
+        if (count($mailNatures) > 0) {
+            foreach ($mailNatures->nature as $nature ) {
+                $label = (string) $nature->label;
+                if (!empty($label) && defined($label)
+                    && constant($label) <> NULL
+                 ) {
+                    $label = constant($label);
+                }
+                $_SESSION['mail_natures'][(string) $nature->id] = $label;
             }
-            $_SESSION['mail_natures'][(string) $nature->id] = $label;
+            $_SESSION['default_mail_nature'] = (string) $mailNatures->default_nature;
         }
-        $_SESSION['default_mail_nature'] = (string) $mailNatures->default_nature;
-
+        
         $_SESSION['mail_priorities'] = array();
         $mailPriorities = $xmlfile->priorities;
-        $i = 0;
-        foreach ($mailPriorities->priority as $priority ) {
-            $label = (string) $priority;
-            if (!empty($label) && defined($label)
-                && constant($label) <> NULL
-            ) {
-                $label = constant($label);
+        if (count($mailPriorities) > 0) {
+            $i = 0;
+            foreach ($mailPriorities->priority as $priority ) {
+                $label = (string) $priority;
+                if (!empty($label) && defined($label)
+                    && constant($label) <> NULL
+                ) {
+                    $label = constant($label);
+                }
+                $_SESSION['mail_priorities'][$i] = $label;
+                $i++;
             }
-            $_SESSION['mail_priorities'][$i] = $label;
-            $i++;
+            $_SESSION['default_mail_priority'] = (string) $mailPriorities->default_priority;
         }
-        $_SESSION['default_mail_priority'] = (string) $mailPriorities->default_priority;
-
+        
         $_SESSION['mail_titles'] = array();
         $mailTitles = $xmlfile->titles;
-        $i = 0;
-        foreach ($mailTitles->title as $title ) {
-            $label = (string) $title->label;
-            if (!empty($label) && defined($label)
-                && constant($label) <> NULL
-            ) {
-                $label = constant($label);
+        if (count($mailTitles) > 0) {
+            $i = 0;
+            foreach ($mailTitles->title as $title ) {
+                $label = (string) $title->label;
+                if (!empty($label) && defined($label)
+                    && constant($label) <> NULL
+                ) {
+                    $label = constant($label);
+                }
+                $_SESSION['mail_titles'][(string)$title->id] = $label;
             }
-            $_SESSION['mail_titles'][(string)$title->id] = $label;
+            $_SESSION['default_mail_title'] = (string) $mailTitles->default_title;
         }
-        $_SESSION['default_mail_title'] = (string) $mailTitles->default_title;
     }
 
     public function compare_base_version($xmlVersionBase)
