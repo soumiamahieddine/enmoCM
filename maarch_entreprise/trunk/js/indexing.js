@@ -850,3 +850,27 @@ function changeCycle(path_manage_script) {
         //}
     //}
 }
+
+function getIframeContent(path_manage_script) {
+    var iframe = document.getElementById("file_iframe");
+    var iframeContent = iframe.contentDocument;
+    var templateContent2 = iframeContent.getElementById("template_content_ifr");
+    //window.alert(templateContent2);
+    if (templateContent2) {
+        var templateContent = templateContent2.contentDocument;
+        if (templateContent) {
+            var templateContentBody = templateContent.getElementById("tinymce");
+            //window.alert(templateContentBody.innerHTML);
+            new Ajax.Request(path_manage_script,
+            {
+                method:'post',
+                parameters: { template_content : templateContentBody.innerHTML
+                },
+                onSuccess: function(answer){
+                    eval("response = "+answer.responseText);
+                    //alert(answer.responseText);
+                }
+            });
+        }
+    }
+}

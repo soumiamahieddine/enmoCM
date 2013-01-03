@@ -743,10 +743,12 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '</select> ';
         $frmStr .= '<input type="button" name="send" id="send" value="'
                 . _VALIDATE . '" class="button" '
-                . 'onclick="valid_action_form(\'index_file\', \''
+                . 'onclick="getIframeContent(\''
+                . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+                . '&page=getIframeTemplateContent\');valid_action_form(\'index_file\', \''
                 . $pathManageAction . '\', \'' . $actionId . '\', \'' . $resId
                 . '\', \'' . $table . '\', \'' . $module . '\', \'' . $collId
-                . '\', \'' . $mode . '\', true);"/> ';
+                . '\', \'' . $mode . '\', false);"/> ';
     }
     $frmStr .= '<input name="close" id="close" type="button" value="'
             . _CANCEL . '" class="button" '
