@@ -35,14 +35,14 @@ require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
 $notes_tools = new notes();
 
 $func = new functions();
-$select[USERS_TABLE] = array();
-array_push(
-    $select[USERS_TABLE], "user_id", "lastname", "firstname"
-);
 $select[NOTES_TABLE] = array();
 array_push(
     $select[NOTES_TABLE], "id", "date_note",
     "note_text", "user_id"
+);
+$select[USERS_TABLE] = array();
+array_push(
+    $select[USERS_TABLE], "user_id", "lastname", "firstname"
 );
 
 $where = " identifier = " . $_SESSION['doc_id'];
@@ -122,7 +122,7 @@ for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
 for ($cptUnset=0;$cptUnset<count($arrayToUnset);$cptUnset++ ) {
     unset($tabNotes[$arrayToUnset[$cptUnset]]);
 }
-array_multisort($tabNotes);
+array_multisort($tabNotes, SORT_DESC);
 //$request->show_array($tabNotes);
 for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
     for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
