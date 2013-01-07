@@ -6,6 +6,13 @@ require_once('core/class/class_functions.php');
 require_once('core/class/class_db.php');
 require_once('core/class/class_history.php');
 
+class EmptyObject {
+    function __construct()
+    {
+        $test = '';
+    }
+}
+
 /*------------------------------------------------------------------------------
 - ExportControler
 ------------------------------------------------------------------------------*/
@@ -80,6 +87,7 @@ class ExportControler extends ExportFunctions
             $db->connect();
             $result = $db->query($query);
             $i = 0;
+            $this->object_export = new EmptyObject();
             while($line = $db->fetch_object()) {
                 if ($i == 0) {
                     $this->object_export->$i = $this->retrieve_header();
