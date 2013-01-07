@@ -301,8 +301,14 @@ if (count($_REQUEST['meta']) > 0) {
                             )
                         );*/
                         $Liste_Ids = "0";
+                        $cptIds = 0;
                         foreach ($hits as $hit) {
-                            $Liste_Ids .= ", '". $hit->Id ."'";
+                            if ($cptIds < 500) {
+                                $Liste_Ids .= ", '". $hit->Id ."'";
+                            } else {
+                                break;
+                            }
+                            $cptIds ++;
                         }
                         $where_request .= " res_id IN ($Liste_Ids) and ";
                     }
@@ -362,8 +368,14 @@ if (count($_REQUEST['meta']) > 0) {
                         $hits = $index->find($welcome);
               
                         $Liste_Ids = "0";
+                        $cptIds = 0;
                         foreach ($hits as $hit) {
-                            $Liste_Ids .= ", '". $hit->Id ."'";
+                            if ($cptIds < 500) {
+                                $Liste_Ids .= ", '". $hit->Id ."'";
+                            } else {
+                                break;
+                            }
+                            $cptIds ++;
                         }
                         $where_request_welcome .= " res_id IN ($Liste_Ids) or ".$where_multifield_request. " and ";
                     }
