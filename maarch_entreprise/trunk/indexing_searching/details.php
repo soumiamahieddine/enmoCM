@@ -1145,10 +1145,10 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             $detailsExport .= "<td><label for='process_notes'>"._PROCESS_NOTES." : </label></td>";
                             $detailsExport .= $db->show_string($process_data['process_notes'])."</td></tr>";*/
                             ?>
-                            <tr>
+                            <!--<tr>
                                 <td><label for="process_notes"><?php echo _PROCESS_NOTES;?> : </label></td>
                                 <td><textarea name="process_notes" id="process_notes" readonly="readonly" style="width:500px;"><?php echo $db->show_string($process_data['process_notes']);?></textarea></td>
-                            </tr>
+                            </tr>-->
                             <?php
                             if (isset($closing_date) && !empty($closing_date))
                             {

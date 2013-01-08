@@ -387,10 +387,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
                     $frm_str .= '</tr>';
                     $frm_str .= '<tr>';
-                    $frm_str .= '<td><label for="process_notes">'
+                    /*$frm_str .= '<td><label for="process_notes">'
                         . _PROCESS_NOTES
                         . ' : </label><br/><textarea name="process_notes" id="process_notes" style="display:block;" rows="8" cols="30">'
-                        . $process_data['process_notes'].'</textarea></td>';
+                        . $process_data['process_notes'].'</textarea></td>';*/
                 $frm_str .= '</tr>';
             $frm_str .= '</table>';
         $frm_str .= '</div>';
