@@ -269,7 +269,7 @@ if (empty($_SESSION['error']) || $_SESSION['indexation']) {
         "select status, format, typist, creation_date, fingerprint, filesize, "
         . "res_id, work_batch, page_count, is_paper, scan_date, scan_user, "
         . "scan_location, scan_wkstation, scan_batch, source, doc_language, "
-        . "description, closing_date, alt_identifier, entity_label " . $comp_fields
+        . "description, closing_date, alt_identifier, initiator, entity_label " . $comp_fields
         . $case_sql_complementary . " from " . $table . " where res_id = "
         . $s_id
     );
@@ -339,6 +339,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             $filesize = $res->filesize;
             $creation_date = $db->format_date_db($res->creation_date, false);
             $chrono_number = $res->alt_identifier;
+            $initiator = $res->initiator;
             $fingerprint = $res->fingerprint;
             $work_batch = $res->work_batch;
             $page_count = $res->page_count;
@@ -700,8 +701,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             <td>
                                 <input type="text" class="readonly" readonly="readonly" value="<?php  echo $res_status['LABEL']; ?>" size="40"  />
                             </td>
-                        </tr>
-                        <tr class="col">
+                        <!--</tr>
+                        <tr class="col">-->
                             <th align="left" class="picto">
                                 <img alt="<?php echo _CHRONO_NUMBER; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=chrono.gif" />
                             </th>
@@ -711,7 +712,17 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             <td>
                                 <input type="text" class="readonly" readonly="readonly" value="<?php  echo $chrono_number; ?>" size="40" title="<?php  echo $chrono_number; ?>" alt="<?php  echo $chrono_number; ?>" />
                             </td>
-
+                        </tr>
+                        <tr class="col">
+                            <th align="left" class="picto">
+                                <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?module=entities&filename=manage_entities_b_small.gif" title="<?php echo _INITIATOR; ?>" alt="<?php  echo _INITIATOR; ?>"/>
+                            </th>
+                            <td align="left" width="200px">
+                                <?php  echo _INITIATOR; ?> :
+                            </td>
+                            <td>
+                                <input type="text" class="readonly" readonly="readonly" value="<?php  echo $initiator; ?>" size="40"  />
+                            </td>
                         </tr>
 
                     </table>

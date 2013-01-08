@@ -1469,8 +1469,7 @@ function get_value_fields($values, $field)
  *          $data['history_msg'] : Log complement (empty by default)
  *          $data['page_result'] : Page to load when action is done and modal closed
  **/
-function manage_form($arrId, $history, $actionId, $label_action, $status,
-$collId, $table, $formValues )
+function manage_form($arrId, $history, $actionId, $label_action, $status, $collId, $table, $formValues )
 {
     if (empty($formValues) || count($arrId) < 1 || empty($collId)) {
         $_SESSION['action_error'] = _ERROR_MANAGE_FORM_ARGS;
@@ -1512,6 +1511,17 @@ $collId, $table, $formValues )
             array(
                 'column' => 'format',
                 'value' => $_SESSION['upfile']['format'],
+                'type' => 'string',
+            )
+        );
+    }
+    //store the initiator entity
+    if (isset($_SESSION['user']['primaryentity']['id'])) {
+        array_push(
+            $_SESSION['data'],
+            array(
+                'column' => 'initiator',
+                'value' => $_SESSION['user']['primaryentity']['id'],
                 'type' => 'string',
             )
         );

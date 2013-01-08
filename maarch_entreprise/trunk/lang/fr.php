@@ -1334,3 +1334,4 @@ if (!defined('_EMAIL_ID')) define('_EMAIL_ID', 'Email ID');
 if (!defined('_EMAIL_ACCOUNT')) define('_EMAIL_ACCOUNT', 'Email compte');
 if (!defined('_HELP_KEYWORD_EMAIL')) define('_HELP_KEYWORD_EMAIL', 'Email de l&rsquo;utilisateur connect&eacute;');
 
+if (!defined('_INITIATOR')) define('_INITIATOR', 'Service initiateur');

@@ -1411,6 +1411,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             $pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
             $query_res .= ", arbatch_id = ".$pa_return_value."";
         }
+        $query_res .= ", initiator= '" . $_SESSION['user']['primaryentity']['id'] . "'";
         $query_res = preg_replace('/set ,/', 'set ', $query_res);
         //$query_res = substr($query_res, strpos($query_string, ','));
         $_SESSION['arbox_id'] = "";
