@@ -191,7 +191,8 @@ array_push($template_list, array( "name"=>"search_adv", "img"=>"extend_list.gif"
 if($core_tools->is_module_loaded('cases'))
     array_push($template_list, array( "name"=>"group_case", "img"=>"case_list.gif", "label"=> _ACCESS_LIST_CASE));
 if ( ! isset($_REQUEST['template']) || ! $_REQUEST['template']) {
-    $template_to_use = $template_list[0]["name"];
+    //$template_to_use = $template_list[0]["name"];
+    $template_to_use = 'document_list_extend_with_attachments';
 }
 if (isset($_REQUEST['template']) && empty($_REQUEST['template'])) {
     $template_to_use = '';
@@ -199,12 +200,13 @@ if (isset($_REQUEST['template']) && empty($_REQUEST['template'])) {
 if (isset($_REQUEST['template']) && $_REQUEST['template']) {
     $template_to_use = $_REQUEST['template'];
 }
+
 //For status icon
 $extension_icon = '';
 if($template_to_use <> '')
 $extension_icon = "_big";
 //###################
-
+$attachments = true;
 //#########################
 //build the tab with right format for list_doc function
 if (count($tab) > 0)
@@ -234,6 +236,23 @@ if (count($tab) > 0)
                     $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
                     $tab[$i][$j]["order"]='res_id';
                     $_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
+                    if ($attachments) {
+                        $db = new dbquery();
+                        $db->connect();
+                        $query = "SELECT * FROM res_attachments WHERE status <> 'DEL' and res_id_master = ".$tab[$i][$j]['value'];
+                        //$tab[$i][$j]['aDesReps'] = $query;
+                        $db->query($query);
+                        $cptAttach=0;
+                        $idAttach = '';
+                        while ($returnAttach = $db->fetch_object()) {
+                            $cptAttach++;
+                        }
+                        if ($cptAttach > 0) {
+                            $tab[$i][$j]['aDesReps'] = true;
+                        } else {
+                            $tab[$i][$j]['aDesReps'] = false;
+                        }
+                    }
                 }
                 if($tab[$i][$j][$value]=="type_label")
                 {
