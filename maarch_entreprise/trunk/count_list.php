@@ -93,11 +93,11 @@ if(!empty($where))
 }
 if($_SESSION['current_basket']['id'] == "DepartmentBasket")
 {
-    $db->query("select distinct(".$table.".destination) as entity_id, count(distinct ".$table.".res_id) as total, e.entity_label from ".$table." join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = ".$table.".destination ".$where_tmp." group by e.entity_label, ".$table.".destination order by e.entity_label");
+    $db->query("select distinct(".$table.".destination) as entity_id, count(distinct ".$table.".res_id) as total, e.entity_label from ".$table." join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = ".$table.".destination ".$where_tmp." group by e.entity_label, ".$table.".destination");
 }
 else
 {
-    $db->query("select distinct(".$table.".destination) as entity_id, count(distinct ".$table.".res_id) as total, e.entity_label from ".$table." join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = ".$table.".destination ".$where_tmp." group by e.entity_label, ".$table.".destination order by e.entity_label");
+    $db->query("select distinct(".$table.".destination) as entity_id, count(distinct ".$table.".res_id) as total, e.entity_label from ".$table." join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = ".$table.".destination ".$where_tmp." group by e.entity_label, ".$table.".destination");
 }
 while($res = $db->fetch_object())
 {
@@ -105,6 +105,18 @@ while($res = $db->fetch_object())
     $res2 = $db2->fetch_object();
     array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res2->entity_label, 'SHORT_LABEL' => $res2->short_label, 'IN_ENTITY' => $ent->is_user_in_entity($_SESSION['user']['UserId'], $res->entity_id), 'TOTAL' => $res->total));
 }
+
+function arrayCompare($a, $b)
+{
+    return strcmp($a['LABEL'], $b['LABEL']);
+}
+ 
+usort($entities, 'arrayCompare');
+
+$db->query(
+    "select * from " . STATUS_TABLE . " order by label_status"
+);
+
 $db->query("select * from ".$_SESSION['tablename']['status']." order by label_status");
 $arr_status = array();
 while($res = $db->fetch_object())

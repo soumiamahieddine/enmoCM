@@ -54,29 +54,29 @@ $ent = new entity();
 $bask = new basket();
 $_SESSION['auth_dep'] = array();
 if (! empty($_REQUEST['clear'])) {
-	$_SESSION['auth_dep'] = array();
+    $_SESSION['auth_dep'] = array();
 }
 if (! empty($_REQUEST['id'])) {
-	$bask->load_current_basket(trim($_REQUEST['id']), 'frame');
+    $bask->load_current_basket(trim($_REQUEST['id']), 'frame');
 }
 ?>
 <?php
 if (! empty($_SESSION['current_basket']['view'])) {
-	$table = $_SESSION['current_basket']['view'];
+    $table = $_SESSION['current_basket']['view'];
 } else {
-	$table = $_SESSION['current_basket']['table'];
+    $table = $_SESSION['current_basket']['table'];
 }
 if (! empty($_REQUEST['entity_id'])) {
-	$_SESSION['auth_dep']['bask_chosen_entity'] = $_REQUEST['entity_id'];
+    $_SESSION['auth_dep']['bask_chosen_entity'] = $_REQUEST['entity_id'];
 }
 if (! empty($_REQUEST['bask_chosen_category'])) {
-	$_SESSION['auth_dep']['bask_chosen_category'] = $_REQUEST['category_id'];
+    $_SESSION['auth_dep']['bask_chosen_category'] = $_REQUEST['category_id'];
 }
 if (! empty($_REQUEST['status_id'])) {
-	$_SESSION['auth_dep']['bask_chosen_status'] = $_REQUEST['status_id'];
+    $_SESSION['auth_dep']['bask_chosen_status'] = $_REQUEST['status_id'];
 }
 if (! empty($_REQUEST['contact_id'])) {
-	$_SESSION['auth_dep']['bask_chosen_contact'] = $_REQUEST['contact_id'];
+    $_SESSION['auth_dep']['bask_chosen_contact'] = $_REQUEST['contact_id'];
 }
 $entity = '';
 $str = '';
@@ -85,45 +85,53 @@ $whereTmp = '';
 $where = $_SESSION['current_basket']['clause'];
 $where = str_replace("and status <> 'VAL'", " ", $where);
 if (! empty($where)) {
-	$whereTmp = ' where '.$where;
+    $whereTmp = ' where '.$where;
 }
 if ($_SESSION['current_basket']['id'] == "DepartmentBasket") {
-	$db->query(
-		"select distinct(r.destination) as entity_id, count(distinct r.res_id)"
-		. " as total, e.entity_label from " . $table . " r join " . ENT_ENTITIES
-		. " e on e.entity_id = r.destination " . $whereTmp
-		. " group by e.entity_label, r.destination order by e.entity_label"
+    $db->query(
+        "select distinct(r.destination) as entity_id, count(distinct r.res_id)"
+        . " as total, e.entity_label from " . $table . " r join " . ENT_ENTITIES
+        . " e on e.entity_id = r.destination " . $whereTmp
+        . " group by e.entity_label, r.destination"
     );
 } else {
-	$db->query(
-		"select distinct(r.destination) as entity_id, count(distinct r.res_id) "
-	    . "as total, e.entity_label from " . $table . " r join " . ENT_ENTITIES
-	    . " e on e.entity_id = r.destination " . $whereTmp
-	    . " group by e.entity_label, r.destination order by e.entity_label"
-	);
+    $db->query(
+        "select distinct(r.destination) as entity_id, count(distinct r.res_id) "
+        . "as total, e.entity_label from " . $table . " r join " . ENT_ENTITIES
+        . " e on e.entity_id = r.destination " . $whereTmp
+        . " group by e.entity_label, r.destination"
+    );
 }
 while ($res = $db->fetch_object()) {
-	$db2->query(
-		"select entity_label, short_label from " . ENT_ENTITIES
-	    . " e where e.entity_id = '" . $res->entity_id . "'"
-	);
-	$res2 = $db2->fetch_object();
-	array_push(
-	    $entities,
-	    array(
-	    	'ID' => $res->entity_id,
-	    	'LABEL' => $res2->entity_label,
-	    	'SHORT_LABEL' => $res2->short_label,
-	    	'IN_ENTITY' => $ent->is_user_in_entity(
-	            $_SESSION['user']['UserId'], $res->entity_id
-	        ),
-	        'TOTAL' => $res->total
-	    )
-	);
+    $db2->query(
+        "select entity_label, short_label from " . ENT_ENTITIES
+        . " e where e.entity_id = '" . $res->entity_id . "'"
+    );
+    $res2 = $db2->fetch_object();
+    array_push(
+        $entities,
+        array(
+            'ID' => $res->entity_id,
+            'LABEL' => $res2->entity_label,
+            'SHORT_LABEL' => $res2->short_label,
+            'IN_ENTITY' => $ent->is_user_in_entity(
+                $_SESSION['user']['UserId'], $res->entity_id
+            ),
+            'TOTAL' => $res->total
+        )
+    );
 }
+
+function arrayCompare($a, $b)
+{
+    return strcmp($a['LABEL'], $b['LABEL']);
+}
+ 
+usort($entities, 'arrayCompare');
 $db->query(
-	"select * from " . STATUS_TABLE . " order by label_status"
+    "select * from " . STATUS_TABLE . " order by label_status"
 );
+
 $statusArr = array();
 while ($res = $db->fetch_object()) {
     if (isset($res->module)) {
@@ -131,400 +139,400 @@ while ($res = $db->fetch_object()) {
     } else {
         $tmpModule = '';
     }
-	array_push(
-	    $statusArr ,
-	    array(
-	    	'id' => $res->id,
-	    	'label' => $res->label_status,
-	    	'is_system' => $res->is_system,
-	    	'img_filename' => $res->img_filename,
-			'module' => $tmpModule,
-			'can_be_searched' => $res->can_be_searched,
-			'can_be_modified' => $res->can_be_modified,
-	    )
-	);
+    array_push(
+        $statusArr ,
+        array(
+            'id' => $res->id,
+            'label' => $res->label_status,
+            'is_system' => $res->is_system,
+            'img_filename' => $res->img_filename,
+            'module' => $tmpModule,
+            'can_be_searched' => $res->can_be_searched,
+            'can_be_modified' => $res->can_be_modified,
+        )
+    );
 }
 array_push(
     $statusArr ,
     array(
-    	'id' => 'late',
-    	'label' => _LATE,
+        'id' => 'late',
+        'label' => _LATE,
     )
 );
 ?>
 <div align="center">
-	<script type="text/javascript">
+    <script type="text/javascript">
 function change_list_entity(id_entity, path_script)
 {
-			//Defines template allowed for this list
-			<?php
+            //Defines template allowed for this list
+            <?php
 if (!isset($_REQUEST['template']) || ! $_REQUEST['template']) {
     ?>
-	var templateVal = 'document_list_extend'; <?php
+    var templateVal = 'document_list_extend'; <?php
 }
 if (isset($_REQUEST['template']) && empty($_REQUEST['template'])) {
-	?>
-	var templateVal = ''; <?php
+    ?>
+    var templateVal = ''; <?php
 }
 if (isset($_REQUEST['template']) && $_REQUEST['template']) {
-	?>
-	var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
+    ?>
+    var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
 }
 ?>
     //###################
-	//console.log(id_entity);
-	var startVal = '<?php
+    //console.log(id_entity);
+    var startVal = '<?php
 if (isset($_REQUEST['start'])) {
     echo $_REQUEST['start'];
 } else {
     echo '0';
 }
 ?>';
-	var orderVal = '<?php
+    var orderVal = '<?php
 if (isset($_REQUEST['order'])) {
     echo $_REQUEST['order'];
 }
 ?>';
-	var order_fieldVal = '<?php
+    var order_fieldVal = '<?php
 if (isset($_REQUEST['order_field'])) {
     echo $_REQUEST['order_field'];
 }
 ?>';
     if (id_entity && path_script) {
-	   new Ajax.Request(path_script,
-	   {
-	       method:'post',
-		   parameters: {
+       new Ajax.Request(path_script,
+       {
+           method:'post',
+           parameters: {
                entity_id : id_entity,
                start : startVal,
                order : orderVal,
                order_field : order_fieldVal,
                template : templateVal
            },
-		   onSuccess: function(answer){
+           onSuccess: function(answer){
                //console.log(answer.responseText);
-			   var item = $('list_doc');
-			   if (item != null) {
-			       item.update(answer.responseText);
-			   }
-		   },
-		   onFailure: function(){ }
-		});
-	}
+               var item = $('list_doc');
+               if (item != null) {
+                   item.update(answer.responseText);
+               }
+           },
+           onFailure: function(){ }
+        });
+    }
 }
 
 function change_list_category(id_category, path_script)
 {
     //Defines template allowed for this list
-	<?php
+    <?php
 if (!isset($_REQUEST['template']) || ! $_REQUEST['template']) {
     ?>
-	var templateVal = 'document_list_extend'; <?php
+    var templateVal = 'document_list_extend'; <?php
 }
 if (isset($_REQUEST['template']) && empty($_REQUEST['template'])) {
-	?>
-	var templateVal = ''; <?php
+    ?>
+    var templateVal = ''; <?php
 }
 if (isset($_REQUEST['template']) && $_REQUEST['template']) {
     ?>
-	var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
+    var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
 }
 ?>
-	//###################
-	//console.log(id_category);
-	var startVal = '<?php
+    //###################
+    //console.log(id_category);
+    var startVal = '<?php
 if (isset($_REQUEST['start'])) {
     echo $_REQUEST['start'];
 } else {
     echo '0';
 }
 ?>';
-	var orderVal = '<?php
+    var orderVal = '<?php
 if (isset($_REQUEST['order'])) {
     echo $_REQUEST['order'];
 }
 ?>';
-	var order_fieldVal = '<?php
+    var order_fieldVal = '<?php
 if (isset($_REQUEST['order_field'])) {
     echo $_REQUEST['order_field'];
 }
 ?>';
-	if (id_category && path_script) {
-	   new Ajax.Request(path_script,
-	   {
-	       method:'post',
-		   parameters: {
+    if (id_category && path_script) {
+       new Ajax.Request(path_script,
+       {
+           method:'post',
+           parameters: {
                category_id : id_category,
                start : startVal,
                order : orderVal,
                order_field : order_fieldVal,
                template : templateVal
            },
-		   onSuccess: function(answer){
-		       //console.log(answer.responseText);
-			   var item = $('list_doc');
-			   if (item != null) {
-			       item.update(answer.responseText);
-			   }
-		   },
-		   onFailure: function(){ }
-		});
-	}
+           onSuccess: function(answer){
+               //console.log(answer.responseText);
+               var item = $('list_doc');
+               if (item != null) {
+                   item.update(answer.responseText);
+               }
+           },
+           onFailure: function(){ }
+        });
+    }
 }
 
 function change_list_status(id_status, path_script)
 {
-	//Defines template allowed for this list
-	<?php
+    //Defines template allowed for this list
+    <?php
 if (!isset($_REQUEST['template']) || ! $_REQUEST['template']) {
-	?>
-	var templateVal = 'document_list_extend'; <?php
+    ?>
+    var templateVal = 'document_list_extend'; <?php
 }
 if (isset($_REQUEST['template']) && empty($_REQUEST['template'])) {
-	?>
-	var templateVal = ''; <?php
+    ?>
+    var templateVal = ''; <?php
 }
 if (isset($_REQUEST['template']) && $_REQUEST['template']) {
-	?>
-	var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
+    ?>
+    var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
 }
-	?>
-	//###################
-	//console.log(id_status);
-	var startVal = '<?php
+    ?>
+    //###################
+    //console.log(id_status);
+    var startVal = '<?php
 if (isset($_REQUEST['start'])) {
     echo $_REQUEST['start'];
 } else {
     echo '0';
 }
 ?>';
-	var orderVal = '<?php
+    var orderVal = '<?php
 if (isset($_REQUEST['order'])) {
     echo $_REQUEST['order'];
 }
 ?>';
-	var order_fieldVal = '<?php
+    var order_fieldVal = '<?php
 if (isset($_REQUEST['order_field'])) {
     echo $_REQUEST['order_field'];
 }
 ?>';
-	if (id_status && path_script) {
-	   new Ajax.Request(path_script,
-	   {
-	       method:'post',
-		   parameters: {
+    if (id_status && path_script) {
+       new Ajax.Request(path_script,
+       {
+           method:'post',
+           parameters: {
                status_id : id_status,
                start : startVal,
                order : orderVal,
                order_field : order_fieldVal,
                template : templateVal
            },
-		   onSuccess: function(answer){
-				//console.log(answer.responseText);
-				var item = $('list_doc');
-				if (item != null) {
-					item.update(answer.responseText);
-				}
-		   },
-		   onFailure: function(){ }
-		});
-	}
+           onSuccess: function(answer){
+                //console.log(answer.responseText);
+                var item = $('list_doc');
+                if (item != null) {
+                    item.update(answer.responseText);
+                }
+           },
+           onFailure: function(){ }
+        });
+    }
 }
 
 function change_contact(id_contact, path_script)
 {
-	<?php
-	//Defines template allowed for this list
+    <?php
+    //Defines template allowed for this list
 if (!isset($_REQUEST['template'])  ||  ! $_REQUEST['template']) {
     ?>
-	var templateVal = 'document_list_extend'; <?php
+    var templateVal = 'document_list_extend'; <?php
 }
 if (isset($_REQUEST['template']) && empty($_REQUEST['template'])) {
-	?>
-	var templateVal = ''; <?php
+    ?>
+    var templateVal = ''; <?php
 }
 if (isset($_REQUEST['template']) && $_REQUEST['template']) {
-	?>
-	var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
+    ?>
+    var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
 }
-	?>
-	//###################
-	//console.log(id_status);
-	var startVal = '<?php
+    ?>
+    //###################
+    //console.log(id_status);
+    var startVal = '<?php
 if (isset($_REQUEST['start'])) {
     echo $_REQUEST['start'];
 } else {
     echo '0';
 }
 ?>';
-	var orderVal = '<?php
+    var orderVal = '<?php
 if (isset($_REQUEST['order'])) {
     echo $_REQUEST['order'];
 }
 ?>';
-	var order_fieldVal = '<?php
+    var order_fieldVal = '<?php
 if (isset($_REQUEST['order_field'])) {
     echo $_REQUEST['order_field'];
 }
 ?>';
-	if (id_contact && path_script) {
-	    new Ajax.Request(path_script,
-	    {
-		    method:'post',
-			parameters: {
+    if (id_contact && path_script) {
+        new Ajax.Request(path_script,
+        {
+            method:'post',
+            parameters: {
                 contact_id : id_contact,
                 start : startVal,
                 order : orderVal,
                 order_field : order_fieldVal,
                 template : templateVal
             },
-			onSuccess: function(answer){
-				//console.log(answer.responseText);
-				var item = $('list_doc');
-				if (item != null) {
-					item.update(answer.responseText);
-				}
-			},
-			onFailure: function(){ }
-		});
-	}
+            onSuccess: function(answer){
+                //console.log(answer.responseText);
+                var item = $('list_doc');
+                if (item != null) {
+                    item.update(answer.responseText);
+                }
+            },
+            onFailure: function(){ }
+        });
+    }
 }
-	</script>
-	<?php
+    </script>
+    <?php
 if (empty($_SESSION['auth_dep']['bask_chosen_entity'])
     && empty($_SESSION['auth_dep']['bask_chosen_category'])
     && empty($_SESSION['auth_dep']['bask_chosen_status'])
     && empty($_SESSION['auth_dep']['bask_chosen_contact'])
 ) {
     ?>
-	<script type="text/javascript">
-	//Defines template allowed for this list
-	<?php
+    <script type="text/javascript">
+    //Defines template allowed for this list
+    <?php
     if (!isset($_REQUEST['template'])  ||  ! $_REQUEST['template']) {
-	    ?>
-	    var templateVal = 'document_list_extend'; <?php
+        ?>
+        var templateVal = 'document_list_extend'; <?php
     }
     if (isset($_REQUEST['template']) && empty($_REQUEST['template'])) {
-	    ?>
-	    var templateVal = ''; <?php
+        ?>
+        var templateVal = ''; <?php
     }
     if (isset($_REQUEST['template']) && $_REQUEST['template']) {
-	    ?>
-	    var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
+        ?>
+        var templateVal = '<?php echo $_REQUEST['template']; ?>'; <?php
     }
-	?>
-	//###################
-	//console.log(id_status);
-	var startVal = '<?php
+    ?>
+    //###################
+    //console.log(id_status);
+    var startVal = '<?php
     if (isset($_REQUEST['start'])) {
         echo $_REQUEST['start'];
     } else {
         echo '0';
     }
     ?>';
-	var orderVal = '<?php
+    var orderVal = '<?php
     if (isset($_REQUEST['order'])) {
         echo $_REQUEST['order'];
     }
     ?>';
-	var order_fieldVal = '<?php
+    var order_fieldVal = '<?php
     if (isset($_REQUEST['order_field'])) {
         echo $_REQUEST['order_field'];
     }
     ?>';
-	new Ajax.Request(
+    new Ajax.Request(
         '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin'];?>',
-		{
-		  method: 'post',
-		  parameters: {
+        {
+          method: 'post',
+          parameters: {
               start : startVal,
               order : orderVal,
               order_field : order_fieldVal,
               template : templateVal
         },
-		onSuccess: function(answer){
-		    //console.log(answer.responseText);
-			var item = $('list_doc');
-			if (item != null) {
-				item.update(answer.responseText);
-			}
-		},
-		onFailure: function(){ }
-	});
-	</script>
-	<?php
+        onSuccess: function(answer){
+            //console.log(answer.responseText);
+            var item = $('list_doc');
+            if (item != null) {
+                item.update(answer.responseText);
+            }
+        },
+        onFailure: function(){ }
+    });
+    </script>
+    <?php
 }
 ?>
-	<form name="filter_by_entity" action="#" method="post">
-		<?php echo _FILTER_BY;?> :
-		<select name="entity" id="entity" onchange="change_list_entity(this.options[this.selectedIndex].value, '<?php
+    <form name="filter_by_entity" action="#" method="post">
+        <?php echo _FILTER_BY;?> :
+        <select name="entity" id="entity" onchange="change_list_entity(this.options[this.selectedIndex].value, '<?php
 echo $_SESSION['config']['businessappurl'];
 ?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');">
-			<option value="none"><?php echo _CHOOSE_ENTITY;?></option>
-			<?php
+            <option value="none"><?php echo _CHOOSE_ENTITY;?></option>
+            <?php
 for ($i = 0; $i < count($entities); $i ++) {
-	?>
-	<option value="<?php echo $entities[$i]['ID'];?>"<?php
-	if (isset($_SESSION['auth_dep']['bask_chosen_entity'])
-		&& $_SESSION['auth_dep']['bask_chosen_entity'] == $entities[$i]['ID']
-	) {
-	    echo ' selected="selected"';
-	}
-	if ($entities[$i]['IN_ENTITY']) {
-	    echo ' style="font-weight:bold;"';
-	}
-	?>><?php
-	echo $entities[$i]['SHORT_LABEL'] . ' (' . $entities[$i]['TOTAL'] . ')';
-	?></option>
-	<?php
+    ?>
+    <option value="<?php echo $entities[$i]['ID'];?>"<?php
+    if (isset($_SESSION['auth_dep']['bask_chosen_entity'])
+        && $_SESSION['auth_dep']['bask_chosen_entity'] == $entities[$i]['ID']
+    ) {
+        echo ' selected="selected"';
+    }
+    if ($entities[$i]['IN_ENTITY']) {
+        echo ' style="font-weight:bold;"';
+    }
+    ?>><?php
+    echo $entities[$i]['SHORT_LABEL'] . ' (' . $entities[$i]['TOTAL'] . ')';
+    ?></option>
+    <?php
 }
-			?>
-		</select>
-		<select name="category" id="category" onchange="change_list_category(this.options[this.selectedIndex].value, '<?php
+            ?>
+        </select>
+        <select name="category" id="category" onchange="change_list_category(this.options[this.selectedIndex].value, '<?php
 echo $_SESSION['config']['businessappurl'];
 ?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');">
-			<option value="none"><?php echo _CHOOSE_CATEGORY;?></option>
-			<?php
+            <option value="none"><?php echo _CHOOSE_CATEGORY;?></option>
+            <?php
 foreach (array_keys($_SESSION['mail_categories']) as $value) {
-	?>
-	<option value="<?php echo $value;?>"<?php
-	if (isset($_SESSION['auth_dep']['bask_chosen_category'])
-	    && $_SESSION['auth_dep']['bask_chosen_category'] == $value
-	) {
-	    echo ' selected="selected"';
-	}
-	?>><?php echo $_SESSION['mail_categories'][$value];?></option>
-	<?php
+    ?>
+    <option value="<?php echo $value;?>"<?php
+    if (isset($_SESSION['auth_dep']['bask_chosen_category'])
+        && $_SESSION['auth_dep']['bask_chosen_category'] == $value
+    ) {
+        echo ' selected="selected"';
+    }
+    ?>><?php echo $_SESSION['mail_categories'][$value];?></option>
+    <?php
 }
 ?>
-		</select>
-		<?php
+        </select>
+        <?php
 if ($_SESSION['current_basket']['id'] == "DepartmentBasket") {
     ?>
-	<select name="status" id="status" onchange="change_list_status(this.options[this.selectedIndex].value, '<?php
-	echo $_SESSION['config']['businessappurl'];
-	?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');">
-		<option value="none"><?php echo _CHOOSE_STATUS;?></option>
-		<?php
-	for ($cptStatus = 0; $cptStatus < count($statusArr); $cptStatus ++) {
-	    ?>
-		<option value="<?php echo $statusArr[$cptStatus]['id'];?>"<?php
-		if ($_SESSION['auth_dep']['bask_chosen_status'] == $statusArr[$cptStatus]['id']) {
-		    echo ' selected="selected"';
-		}
-		?>><?php echo $statusArr[$cptStatus]['label'];?></option>
-		<?php
-	}
-	?>
-	</select>
-	<?php
+    <select name="status" id="status" onchange="change_list_status(this.options[this.selectedIndex].value, '<?php
+    echo $_SESSION['config']['businessappurl'];
+    ?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');">
+        <option value="none"><?php echo _CHOOSE_STATUS;?></option>
+        <?php
+    for ($cptStatus = 0; $cptStatus < count($statusArr); $cptStatus ++) {
+        ?>
+        <option value="<?php echo $statusArr[$cptStatus]['id'];?>"<?php
+        if ($_SESSION['auth_dep']['bask_chosen_status'] == $statusArr[$cptStatus]['id']) {
+            echo ' selected="selected"';
+        }
+        ?>><?php echo $statusArr[$cptStatus]['label'];?></option>
+        <?php
+    }
+    ?>
+    </select>
+    <?php
 }
     ?>
     <input type="text" name="contact_id" id="contact_id" value="<?php
 if (! empty($_SESSION['auth_dep']['bask_chosen_contact'])) {
-	echo $_SESSION['auth_dep']['bask_chosen_contact'];
+    echo $_SESSION['auth_dep']['bask_chosen_contact'];
 } else {
-	echo '['._CONTACT.']';
+    echo '['._CONTACT.']';
 }
  ?>" <?php
 if (empty($_SESSION['auth_dep']['bask_chosen_contact'])) {
@@ -536,12 +544,12 @@ echo $_SESSION['config']['businessappurl'];
 echo $_SESSION['config']['businessappurl'];
 ?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');"  />
     <div id="contactListByName" class="autocomplete"></div>
-	<script type="text/javascript">
-		initList('contact_id', 'contactListByName', '<?php
+    <script type="text/javascript">
+        initList('contact_id', 'contactListByName', '<?php
 echo $_SESSION['config']['businessappurl'];
 ?>index.php?display=true&page=contact_list_by_name', 'what', '2');
-	</script>
-	<input type="button" class="button" value="<?php
+    </script>
+    <input type="button" class="button" value="<?php
 echo _CLEAR_SEARCH;
 ?>" onclick="javascript:window.location.href='<?php
 echo $_SESSION['config']['businessappurl'] . "index.php?page=view_baskets"
@@ -554,53 +562,53 @@ if (isset($_SESSION['auth_dep']['bask_chosen_entity'])
     && ! empty($_SESSION['auth_dep']['bask_chosen_entity'])
 ) {
     ?>
-	<script type="text/javascript">
-		change_list_entity('<?php
-	echo $_SESSION['auth_dep']['bask_chosen_entity'];
-	?>', '<?php
-	echo $_SESSION['config']['businessappurl'];
-	?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');
-	</script>
-	<?php
+    <script type="text/javascript">
+        change_list_entity('<?php
+    echo $_SESSION['auth_dep']['bask_chosen_entity'];
+    ?>', '<?php
+    echo $_SESSION['config']['businessappurl'];
+    ?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');
+    </script>
+    <?php
 }
 if (isset($_SESSION['auth_dep']['bask_chosen_category'])
     && ! empty($_SESSION['auth_dep']['bask_chosen_category'])
 ) {
     ?>
-	<script type="text/javascript">
-		change_list_category('<?php
-	echo $_SESSION['auth_dep']['bask_chosen_category'];
-	?>', '<?php
-	echo $_SESSION['config']['businessappurl'];
-	?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');
-	</script>
-	<?php
+    <script type="text/javascript">
+        change_list_category('<?php
+    echo $_SESSION['auth_dep']['bask_chosen_category'];
+    ?>', '<?php
+    echo $_SESSION['config']['businessappurl'];
+    ?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');
+    </script>
+    <?php
 }
 if (isset($_SESSION['auth_dep']['bask_chosen_status'])
     && ! empty($_SESSION['auth_dep']['bask_chosen_status'])
 ) {
-	?>
-	<script type="text/javascript">
-		change_list_status('<?php
-	echo $_SESSION['auth_dep']['bask_chosen_status'];
-	?>', '<?php
-	echo $_SESSION['config']['businessappurl'];
-	?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');
-	</script>
-	<?php
+    ?>
+    <script type="text/javascript">
+        change_list_status('<?php
+    echo $_SESSION['auth_dep']['bask_chosen_status'];
+    ?>', '<?php
+    echo $_SESSION['config']['businessappurl'];
+    ?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');
+    </script>
+    <?php
 }
 if (isset($_SESSION['auth_dep']['bask_chosen_contact'])
     && ! empty($_SESSION['auth_dep']['bask_chosen_contact'])
 ) {
-	?>
-	<script type="text/javascript">
-		change_contact('<?php
-	echo $_SESSION['auth_dep']['bask_chosen_contact'];
-	?>', '<?php
-	echo $_SESSION['config']['businessappurl'];
-	?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');
-	</script>
-	<?php
+    ?>
+    <script type="text/javascript">
+        change_contact('<?php
+    echo $_SESSION['auth_dep']['bask_chosen_contact'];
+    ?>', '<?php
+    echo $_SESSION['config']['businessappurl'];
+    ?>index.php?display=true&page=manage_filter&origin=<?php echo $_REQUEST['origin']?>');
+    </script>
+    <?php
 }
 ?>
 </div>

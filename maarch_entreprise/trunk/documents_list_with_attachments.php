@@ -92,14 +92,14 @@ if ($_SESSION['current_basket']['id'] == "DepartmentBasket") {
         "select distinct(r.destination) as entity_id, count(distinct r.res_id)"
         . " as total, e.entity_label from " . $table . " r join " . ENT_ENTITIES
         . " e on e.entity_id = r.destination " . $whereTmp
-        . " group by e.entity_label, r.destination order by e.entity_label"
+        . " group by e.entity_label, r.destination"
     );
 } else {
     $db->query(
         "select distinct(r.destination) as entity_id, count(distinct r.res_id) "
         . "as total, e.entity_label from " . $table . " r join " . ENT_ENTITIES
         . " e on e.entity_id = r.destination " . $whereTmp
-        . " group by e.entity_label, r.destination order by e.entity_label"
+        . " group by e.entity_label, r.destination"
     );
 }
 while ($res = $db->fetch_object()) {
@@ -121,6 +121,14 @@ while ($res = $db->fetch_object()) {
         )
     );
 }
+
+function arrayCompare($a, $b)
+{
+    return strcmp($a['LABEL'], $b['LABEL']);
+}
+ 
+usort($entities, 'arrayCompare');
+
 $db->query(
     "select * from " . STATUS_TABLE . " order by label_status"
 );
