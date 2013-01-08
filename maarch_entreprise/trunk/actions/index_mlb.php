@@ -1806,7 +1806,9 @@ $collId, $table, $formValues )
             'arbox_id' => $cBoxId,
             'type_id' => $cTypeId,
             'category_id' => $catId,
+            'folder_id' => $folderId,
         );
+        $_SESSION['folderId'] = $folderId;
         $myForm = array(
             'chrono_out' => $cChronoOut,
         );
