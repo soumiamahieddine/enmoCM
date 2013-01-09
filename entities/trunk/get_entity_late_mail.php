@@ -78,7 +78,7 @@ for($i=0; $i<count($entities);$i++)
 */
 
 
-        $db->query("SELECT count(res_id) AS total FROM ".$view." WHERE  status in ".$str_status." ".$where_clause." and destination = '".$entities[$i]['ID']."' and date(alarm1_date) <= date(now()) ");
+        $db->query("SELECT count(res_id) AS total FROM ".$view." WHERE  status in ".$str_status." ".$where_clause." and destination = '".$entities[$i]['ID']."' and date(process_limit_date) <= date(now()) ");
         if( $db->nb_result() > 0)
         {
             $tmp = 0;
