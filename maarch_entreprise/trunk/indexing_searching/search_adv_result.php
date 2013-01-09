@@ -97,6 +97,10 @@ if (count($_REQUEST['meta']) > 0) {
     for ($i=0;$i<count($_REQUEST['meta']);$i++) {
         //echo $_REQUEST['meta'][$i]."<br>";
         $tab = explode('#', $_REQUEST['meta'][$i]);
+        if ($tab[0] == 'welcome') {
+            $tab[0] = 'multifield';
+            $tab[2] = 'input_text';
+        }
         $id_val = $tab[0];
         $json_txt .= "'".$tab[0]."' : { 'type' : '".$tab[2]."', 'fields' : {";
         $tab_id_fields = explode(',', $tab[1]);
@@ -327,6 +331,8 @@ if (count($_REQUEST['meta']) > 0) {
             //WELCOME PAGE
             elseif ($tab_id_fields[$j] == 'welcome'  && (!empty($_REQUEST['welcome'])))
             {
+                $welcome = $func->store_html($_REQUEST['welcome']);
+                $json_txt .= "'multifield' : ['".addslashes(trim($welcome))."'],";
                 if (is_numeric($_REQUEST['welcome']))
                 {
                     $where_multifield_request .= "(res_id = ".$func->protect_string_db($_REQUEST['welcome'].") or ");
@@ -349,8 +355,6 @@ if (count($_REQUEST['meta']) > 0) {
                     $where_multifield_request .= $whereBasketsClause;
                 }
                 $welcome = $func->store_html($_REQUEST['welcome']);
-                $json_txt .= " 'welcome' : ['" 
-                    . addslashes(trim($welcome)) . "'],";
                 set_include_path('apps' . DIRECTORY_SEPARATOR 
                     . $_SESSION['config']['app_id'] 
                     . DIRECTORY_SEPARATOR . 'tools' 
