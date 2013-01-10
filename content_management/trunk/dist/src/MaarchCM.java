@@ -347,6 +347,10 @@ public class MaarchCM extends JApplet {
             OutputStreamWriter writer = new OutputStreamWriter(HttpOpenRequest.getOutputStream());
             writer.write("fileContent=" + this.fileContentTosend + "&fileExtension=" + this.fileExtension);
             writer.flush();
+        } else {
+            OutputStreamWriter writer = new OutputStreamWriter(HttpOpenRequest.getOutputStream());
+            writer.write("foo=bar");
+            writer.flush();
         }
         this.parse_xml(HttpOpenRequest.getInputStream());
         HttpOpenRequest.disconnect();
