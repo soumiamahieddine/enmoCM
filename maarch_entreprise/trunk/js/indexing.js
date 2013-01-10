@@ -704,6 +704,7 @@ function create_contact(path_create, id_action)
         new Ajax.Request(path_create,
         {
             method:'post',
+            asynchronous:false,
             parameters: {
                 is_corporate : corporate,
                 title : title_val,
