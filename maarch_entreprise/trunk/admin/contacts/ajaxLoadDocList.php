@@ -44,8 +44,9 @@ if (isset($_REQUEST['contact_id'])) {
                     . $_REQUEST['contact_id'] .") and status <> 'DEL'";
 
                 $db->query($query);
-
+                $cptDocs = 0;
                 while ($return_db = $db->fetch_object()) {
+                    if ($cptDocs < 10) {
                     $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
@@ -117,6 +118,11 @@ if (isset($_REQUEST['contact_id'])) {
                             $return .= '</a>';
                         $return .= '</td>';
                     $return .= '</tr>';
+                    } else {
+                        $return .= '<tr><td>...<tr></td>';
+                        break;
+                    }
+                    $cptDocs++;
                 }
 
             $return .= '</table>';
