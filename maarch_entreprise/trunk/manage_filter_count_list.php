@@ -118,7 +118,7 @@ elseif($_SESSION['auth_dep']['bask_chosen_contact'] <> "")
     $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
 }
 $where = trim($_SESSION['current_basket']['clause']);
-$where = str_replace("and status <> 'VAL'", " ", $where);
+//$where = str_replace("and status <> 'VAL'", " ", $where);
 $where_concat = $where;
 if(isset($_SESSION['auth_dep']['bask_chosen_entity']) && !empty($_SESSION['auth_dep']['bask_chosen_entity']))
 {
