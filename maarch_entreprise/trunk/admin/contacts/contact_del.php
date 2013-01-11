@@ -34,7 +34,6 @@ $core_tools->load_lang();
 $core_tools->test_admin('admin_contacts', 'apps');
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts.php");
 
-
  /****************Management of the location bar  ************/
 $init = false;
 if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
@@ -64,57 +63,64 @@ else
 {
     $s_id = "";
 }
+
 if(isset($_REQUEST['valid']))
 {
         
-	if(!empty($_REQUEST['contact']))
-    {	
+    if(!empty($_REQUEST['contact']))
+    {
 
-		if (preg_match('/:/', $_REQUEST['contact']) == 0) 
-		{
-			$_SESSION['error'] = _CONTACT. ' ' . _WRONG_FORMAT . '.<br/>'
+        if (preg_match('/:/', $_REQUEST['contact']) == 0) 
+        {
+            $_SESSION['error'] = _CONTACT. ' ' . _WRONG_FORMAT . '.<br/>'
                                    . _USE_AUTOCOMPLETION;
             
-			$contact->delcontact($s_id);
-			exit;
+            $contact->delcontact($s_id);
+            exit;
         } 
         else
         {
-			$contactTmp = str_replace(')', '', substr($_REQUEST['contact'], strrpos($_REQUEST['contact'],'(')+1));
-			$find1 = strpos($contactTmp, ':');
-			$find2 =  $find1 + 1;
-			$contact_type = substr($contactTmp, 0, $find1);
-			$new_contact = substr($contactTmp, $find2, strlen($contactTmp));
-		
+            $contactTmp = str_replace(')', '', substr($_REQUEST['contact'], strrpos($_REQUEST['contact'],'(')+1));
+            $find1 = strpos($contactTmp, ':');
+            $find2 =  $find1 + 1;
+            $contact_type = substr($contactTmp, 0, $find1);
+            $new_contact = substr($contactTmp, $find2, strlen($contactTmp));
+        
 /*
-			for($i=0;$i<count($_SESSION['collections']);$i++)
-			{
-				if(isset($_SESSION['collections'][$i]['table']) && !empty($_SESSION['collections'][$i]['view']))
-				{
-					
+            for($i=0;$i<count($_SESSION['collections']);$i++)
+            {
+                if(isset($_SESSION['collections'][$i]['table']) && !empty($_SESSION['collections'][$i]['view']))
+                {
+                    
 */
-					$i=0;
-					$db->query("update ".$_SESSION['collections'][$i]['extensions'][$i]." set exp_contact_id = '".$db->protect_string_db($new_contact)."' where exp_contact_id = '".$db->protect_string_db($s_id)."'");
-					$db->query("update ".$_SESSION['tablename']['contacts']." set enabled = 'N' where contact_id = ".$db->protect_string_db($s_id));
-					if($_SESSION['history']['contactdel'])
-					{
-						require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
-						$hist = new history();
-						$hist->add($_SESSION['tablename']['contacts'], $s_id,"DEL","contactdel",_CONTACT_DELETED.' : '.$s_id, $_SESSION['config']['databasetype']);
-					}
-					?>
-					<script type="text/javascript">
-						window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts&admin=contacts&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
-					</script>
-					<?php
+                    $i=0;
+                    $db->query("update ".$_SESSION['collections'][$i]['extensions'][$i] 
+                        . " set exp_contact_id = '".$db->protect_string_db($new_contact) 
+                        . "' where exp_contact_id = '".$db->protect_string_db($s_id) . "'");
+                    $db->query("update ".$_SESSION['collections'][$i]['extensions'][$i] 
+                        . " set dest_contact_id = '".$db->protect_string_db($new_contact) 
+                        . "' where dest_contact_id = '".$db->protect_string_db($s_id) . "'");
+                    $db->query("delete from " . $_SESSION['tablename']['contacts']
+                        . " where contact_id = ".$db->protect_string_db($s_id));
+                    if($_SESSION['history']['contactdel'])
+                    {
+                        require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
+                        $hist = new history();
+                        $hist->add($_SESSION['tablename']['contacts'], $s_id,"DEL","contactdel",_CONTACT_DELETED.' : '.$s_id, $_SESSION['config']['databasetype']);
+                    }
+                    ?>
+                    <script type="text/javascript">
+                        window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts&admin=contacts&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
+                    </script>
+                    <?php
 /*
-				
-				}
-			}
+                
+                }
+            }
 */
-		}
-	}
-	elseif(empty($_REQUEST['contact']))
+        }
+    }
+    elseif(empty($_REQUEST['contact']))
     {
         $_SESSION['error'] .= _CONTACT_MANDATORY_FOR_REDIRECTION."<br>";
         //$documents = false;
@@ -123,7 +129,7 @@ if(isset($_REQUEST['valid']))
 else
 {
 
-	//$contact = new contacts();
-	$contact->delcontact($s_id);
+    //$contact = new contacts();
+    $contact->delcontact($s_id);
 }
 ?>

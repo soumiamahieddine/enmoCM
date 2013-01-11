@@ -632,10 +632,10 @@ class contacts extends dbquery
         $this->query('select * from '.$_SESSION['tablename']['contacts']);
         while($res = $this->fetch_object())
         {
-			if($res->lastname <> '')
-				array_push($contacts, "'".$res->lastname.", ".$res->firstname."[".$res->contact_id."]'");
-			else
-				array_push($contacts, "'".$res->society."[".$res->contact_id."]'");
+            if($res->lastname <> '')
+                array_push($contacts, "'".$res->lastname.", ".$res->firstname."[".$res->contact_id."]'");
+            else
+                array_push($contacts, "'".$res->society."[".$res->contact_id."]'");
         }
   
         return $contacts;
@@ -649,30 +649,32 @@ class contacts extends dbquery
     */
     public function delcontact($id, $admin = true)
     {
-		$element_found = false;
-		$nb_docs = 0;
-		$tables = array();
-		$_SESSION['m_admin']['contact'] = array();
-		$func = new functions();
-		$contact_list = $this->loadContacts();
-		$this->connect();
-		if(!empty($id))
+        $element_found = false;
+        $nb_docs = 0;
+        $tables = array();
+        $_SESSION['m_admin']['contact'] = array();
+        $func = new functions();
+        $contact_list = $this->loadContacts();
+        $this->connect();
+        if(!empty($id))
         {
-			$this->query("select res_id from ".$_SESSION['collections'][0]['view']." where exp_contact_id = '".$this->protect_string_db($id)."'");
+            $this->query("select res_id from ".$_SESSION['collections'][0]['view'] 
+                . " where exp_contact_id = '".$this->protect_string_db($id) 
+                . "' or dest_contact_id = '".$this->protect_string_db($id) . "'");
        
             if($this->nb_result() > 0)
-				$nb_docs = $nb_docs + $this->nb_result();          
+                $nb_docs = $nb_docs + $this->nb_result();          
         }
         
 /*
         $query = "select * from ".$_SESSION['tablename']['contacts']." where enabled = 'Y'";
         if(!$admin)
-			$query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
+            $query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
        
         $this->query($query);
 */
         
-		echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
+        echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
         $_SESSION['error'] = "";
         
         if (empty($nb_docs))
@@ -690,7 +692,7 @@ class contacts extends dbquery
                 //header("location: ".$path_contacts);
                 ?>
                 <script type="text/javascript">
-					window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts&admin=contacts&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
+                    window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts&admin=contacts&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
                 </script>
                 <?php
                 exit;
@@ -712,77 +714,77 @@ class contacts extends dbquery
         }
         else
         {
-			?>
-				
-			<br>
-				<div id="main_error">
-					<b><?php
-						echo _WARNING_MESSAGE_DEL_CONTACT;
-					?></b>
-				</div>
-				<br>
-				<br>
-				
-				<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_contact_b.gif" alt="" />
-					<?php echo _CONTACT_DELETION;?>
-				</h1>
-				
-				<form name="entity_del" id="entity_del" method="post" class="forms">
-					<input type="hidden" value="<?php echo $id;?>" name="id">
-					<h2 class="tit"><?php echo _CONTACT_REAFFECT." : <i>".$label."</i>";?></h2>
-					<?php
-					if($nb_docs > 0)
-					{
-						echo "<br><b> - ".$nb_docs."</b> "._DOC_SENDED_BY_CONTACT;
-						
-						?>
-						<br>
-						<br>
-						<input type="hidden" value="documents" name="documents">
-						<td>
-							<label for="contact"><?php echo _NEW_CONTACT; ?> : </label>
-						</td>
-						<td class="indexing_field"><input name="contact" type="text"  id="contact" value=""/>
-							<div id="show_contact" class="autocomplete">
-								<script type="text/javascript">
-									initList('contact', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_list_by_name', 'what', '2');
-								</script>
-							</div>
-						</td>
-							
-						<br/>
-					  
-					<br/>
-					<p class="buttons">
-						<input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick="return(confirm('<?php  echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"/>
-						<input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts&admin=contacts&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';"" class="button" />
-					</p>
-					  <?php
-					}
-					?>
-				</form>
-				<?php
-			}
-			$order = $_REQUEST['order'];
-			$order_field = $_REQUEST['order_field'];
-			$start = $_REQUEST['start'];
-			$what = $_REQUEST['what'];
-			$path_contacts = $_SESSION['config']['businessappurl']."index.php?page=contacts&admin=contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
-			if(!$admin)
-			{
-				$path_contacts = $_SESSION['config']['businessappurl']."index.php?page=my_contacts&dir=my_contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
-			}
+            ?>
+                
+            <br>
+                <div id="main_error">
+                    <b><?php
+                        echo _WARNING_MESSAGE_DEL_CONTACT;
+                    ?></b>
+                </div>
+                <br>
+                <br>
+                
+                <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_contact_b.gif" alt="" />
+                    <?php echo _CONTACT_DELETION;?>
+                </h1>
+                
+                <form name="entity_del" id="entity_del" method="post" class="forms">
+                    <input type="hidden" value="<?php echo $id;?>" name="id">
+                    <h2 class="tit"><?php echo _CONTACT_REAFFECT." : <i>".$label."</i>";?></h2>
+                    <?php
+                    if($nb_docs > 0)
+                    {
+                        echo "<br><b> - ".$nb_docs."</b> "._DOC_SENDED_BY_CONTACT;
+                        
+                        ?>
+                        <br>
+                        <br>
+                        <input type="hidden" value="documents" name="documents">
+                        <td>
+                            <label for="contact"><?php echo _NEW_CONTACT; ?> : </label>
+                        </td>
+                        <td class="indexing_field"><input name="contact" type="text"  id="contact" value=""/>
+                            <div id="show_contact" class="autocomplete">
+                                <script type="text/javascript">
+                                    initList('contact', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_list_by_name', 'what', '2');
+                                </script>
+                            </div>
+                        </td>
+                            
+                        <br/>
+                      
+                    <br/>
+                    <p class="buttons">
+                        <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick="return(confirm('<?php  echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"/>
+                        <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts&admin=contacts&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';"" class="button" />
+                    </p>
+                      <?php
+                    }
+                    ?>
+                </form>
+                <?php
+            }
+            $order = $_REQUEST['order'];
+            $order_field = $_REQUEST['order_field'];
+            $start = $_REQUEST['start'];
+            $what = $_REQUEST['what'];
+            $path_contacts = $_SESSION['config']['businessappurl']."index.php?page=contacts&admin=contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
+            if(!$admin)
+            {
+                $path_contacts = $_SESSION['config']['businessappurl']."index.php?page=my_contacts&dir=my_contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
+            }
 
-			if(!empty($_SESSION['error']))
-			{
-				?>
+            if(!empty($_SESSION['error']))
+            {
+                ?>
                 <script type="text/javascript">
-					window.location.href="<?php echo $path_contacts;?>";
+                    window.location.href="<?php echo $path_contacts;?>";
                 </script>
                 <?php
-				//header("location: ".$path_contacts);
-				exit;
-			}
+                //header("location: ".$path_contacts);
+                exit;
+            }
 
     }
 

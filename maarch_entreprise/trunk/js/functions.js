@@ -2352,3 +2352,62 @@ function f_filterResults(n_win, n_docel, n_body) {
     return n_body && (!n_result || (n_result > n_body)) ? n_body : n_result;
 }
 
+function loadDocList(id)
+{
+    new Effect.toggle('docList_'+id, 'appear' , {delay:0.2});
+
+    var path_manage_script = 'index.php?admin=contacts&page=ajaxLoadDocList&display=true';
+
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: { contact_id : id},
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            $('divDocList_'+id).innerHTML = response.toShow;
+        }
+    });
+}
+
+function loadDeleteContactDiv(id, society, lastnameFirstname)
+{
+    new Effect.toggle('deleteContactDiv_'+id, 'appear' , {delay:0.2});
+    //new Effect.toggle('docList_'+id, 'blind' , {delay:0.2});
+    var path_manage_script = 'index.php?admin=contacts&page=ajaxLoadDeleteContactDiv&display=true';
+
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: { contact_id : id, society_label : society, name : lastnameFirstname},
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            $('divDeleteContact_'+id).innerHTML = response.toShow;
+        }
+    });
+}
+
+
+
+function deleteContact(id, replaced_contact_id)
+{
+    //alert(id+' '+replaced_contact_id);
+    var path_manage_script = 'index.php?admin=contacts&page=ajaxDeleteContact&display=true';
+
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: { contactId : id, replacedContactId : replaced_contact_id},
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            //alert(response.status);
+            if(response.status == 0) {
+                new Effect.toggle('divDeleteContact_'+id, 'blind' , {delay:0.2});
+                new Effect.toggle('deleteContactDiv_'+id, 'blind' , {delay:0.2});
+                new Effect.toggle('divDocList_'+id, 'blind' , {delay:0.2});
+                new Effect.toggle('tr_'+id, 'blind' , {delay:0.2});
+            } else {
+                alert('choose replaced contact first!!');
+            }
+        }
+    });
+}

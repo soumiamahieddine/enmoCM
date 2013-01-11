@@ -48,6 +48,14 @@ $page_label = _CONTACTS_LIST;
 $page_id = "contacts";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
+?>
+<a href="<?php 
+    echo $_SESSION['config']['businessappurl']
+    ;?>index.php?admin=contacts&page=manage_doubloons"><h2><img src="<?php 
+    echo $_SESSION['config']['businessappurl'];
+    ?>static.php?filename=manage_doubloons.png" alt="" /><?php 
+    echo _MANAGE_DOUBLOONS;?></h2></a>
+<?php
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $select[$_SESSION['tablename']['contacts']] = array();
@@ -57,15 +65,16 @@ $what = "";
 $where ="  enabled = 'Y' ";
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
-	$what = $func->protect_string_db($func->wash($_REQUEST['what'], "alphanum", "", "no"));
-	$contact_id = str_replace(')', '', substr($_REQUEST['what'], strrpos($_REQUEST['what'],'(')+1));
-	$contact_id = str_replace('contact:', '', $contact_id);
-	if($contact_id != substr($_REQUEST['what'], strrpos($_REQUEST['what'],'(')+1)){
-		$where .= " and contact_id = " . $contact_id;
-	}
+    $what = $func->protect_string_db($func->wash($_REQUEST['what'], "alphanum", "", "no"));
+    $contact_id = str_replace(')', '', substr($_REQUEST['what'], strrpos($_REQUEST['what'],'(')+1));
+    $contact_id = str_replace('contact:', '', $contact_id);
+    if($contact_id != substr($_REQUEST['what'], strrpos($_REQUEST['what'],'(')+1)){
+        $where .= " and contact_id = " . $contact_id;
+    }
+
     else {
-		$where .= " and (lower(lastname) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') "
-			. "or lower(society) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ) ";
+        $where .= " and (lower(lastname) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') "
+            . "or lower(society) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ) ";
     }
 }
 $list = new list_show();
@@ -182,4 +191,4 @@ $_SESSION['m_admin']['contacts']['email'] = "";
 $_SESSION['m_admin']['contacts']['phone'] = "";
 $_SESSION['m_admin']['contacts']['other_data'] = "";
 $_SESSION['m_admin']['contacts']['is_corporate_person'] = "";
-?>
+
