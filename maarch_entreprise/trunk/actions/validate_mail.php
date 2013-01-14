@@ -646,19 +646,22 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_mandatory" style="display:inline;">*</span>&nbsp;</td>';
         $frm_str .= '</tr>';
 
-                /*** Chrono number ***/
-    /*  $frm_str .= '<tr id="chrono_number_tr" style="display:'.$display_value.';">';
+        /*** Chrono number ***/
+        $view = $sec->retrieve_view_from_coll_id($coll_id);
+        $db->query("select alt_identifier from " 
+            . $view 
+            . " where res_id = " . $res_id);
+        $resChrono = $db->fetch_object();
+        $chrono_number = explode('/', $resChrono->alt_identifier);
+        $chrono_number = $chrono_number[1];
+        $frm_str .= '<tr id="chrono_number_tr" style="display:'.$display_value.';">';
             $frm_str .='<td><label for="chrono_number" class="form_title" >'._CHRONO_NUMBER.'</label></td>';
             $frm_str .='<td>&nbsp;</td>';
-            $frm_str .='<td class="indexing_field"><input type="text" name="chrono_number" id="chrono_number" onchange="clear_error(\'frm_error_'.$id_action.'\');"/></td>';
+            $frm_str .='<td class="indexing_field"><input type="text" name="chrono_number" value="' 
+                . $chrono_number . '" id="chrono_number" onchange="clear_error(\'frm_error_'.$id_action.'\');"/></td>';
             $frm_str .='<td><span class="red_asterisk" id="chrono_number_mandatory" style="display:inline;">*</span>&nbsp;</td>';
-        $frm_str .= '</tr>';*/
-
-
-
-
-
-
+        $frm_str .= '</tr>';
+        
         /*** Folder : Market & Project ***/
         if($core_tools->is_module_loaded('folder'))
         {
@@ -1253,8 +1256,8 @@ function process_category_check($cat_id, $values)
         }
     }
 
-        //For specific case => chrono number
-/*  $chrono_out = get_value_fields($values, 'chrono_number');
+    //For specific case => chrono number
+    $chrono_out = get_value_fields($values, 'chrono_number');
     if(isset($_ENV['categories'][$cat_id]['other_cases']['chrono_number']) && $_ENV['categories'][$cat_id]['other_cases']['arbox_id']['mandatory'] == true)
     {
         if($chrono_out == false)
@@ -1273,7 +1276,7 @@ function process_category_check($cat_id, $values)
             $_SESSION['action_error'] = _ERROR_TO_INDEX_NEW_BATCH_WITH_PHYSICAL_ARCHIVE;
             return false;
         }
-    }*/
+    }
 
     return true;
 }
@@ -1559,6 +1562,33 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 
     }
     
+    //Create chrono number
+    //######
+    if ($cat_id == 'outgoing') {
+        require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
+        $cBoxId = get_value_fields($values_form, 'arbox_id');
+        $cTypeId = get_value_fields($values_form, 'type_id');
+        $cEntity = get_value_fields($values_form, 'destination');
+        $cChronoOut = get_value_fields($values_form, 'chrono_number');
+        $chronoX = new chrono();
+        $myVars = array(
+            'entity_id' => $cEntity,
+            'arbox_id' => $cBoxId,
+            'type_id' => $cTypeId,
+            'category_id' => $catId,
+        );
+        $myForm = array(
+            'chrono_out' => $cChronoOut,
+        );
+        $myChrono = $chronoX->generate_chrono($cat_id, $myVars, $myForm);
+        //echo $myChrono;exit;
+        if ($myChrono <> '' && $cChronoOut <> '') {
+            $db->query("update " . $table_ext ." set alt_identifier = '" 
+                . $db->protect_string_db($myChrono) . "' where res_id = " . $res_id);
+        }
+    }
+
     //$_SESSION['indexing'] = array();
     unset($_SESSION['upfile']);
 
