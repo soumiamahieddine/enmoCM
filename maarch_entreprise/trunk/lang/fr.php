@@ -695,6 +695,7 @@ if (!defined('_INCOMING')) define( '_INCOMING', 'Courrier Arriv&eacute;e');
 if (!defined('_OUTGOING')) define( '_OUTGOING', 'Courrier D&eacute;part');
 if (!defined('_INTERNAL')) define( '_INTERNAL', 'Courrier Interne');
 if (!defined('_MARKET_DOCUMENT')) define( '_MARKET_DOCUMENT', 'Document de Sous-dossier');
+if (!defined('_EMPTY')) define( '_EMPTY', 'Vide');
 
 // Mail Natures
 if (!defined('_CHOOSE_NATURE')) define( '_CHOOSE_NATURE', 'Choisir');

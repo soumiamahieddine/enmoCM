@@ -381,6 +381,7 @@ if (!defined('_DUPLICATION')) define('_DUPLICATION', 'Duplication');
 if (!defined('_DURING_NEXT_CONNEXION')) define('_DURING_NEXT_CONNEXION', 'on the next login ');
 if (!defined('_EDIT_WITH_ASSISTANT')) define('_EDIT_WITH_ASSISTANT', 'Click here to edit the WHERE clause in assistant mode');
 if (!defined('_EMAIL')) define('_EMAIL', 'Email');
+if (!defined('_EMPTY')) define('_EMPTY', 'Empty');
 if (!defined('_ENABLED')) define('_ENABLED', 'Enabled');
 if (!defined('_END')) define('_END', 'End');
 if (!defined('_END_DATE')) define('_END_DATE', 'End date');
