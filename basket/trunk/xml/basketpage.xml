@@ -36,13 +36,6 @@
         <MODULE>advanced_physical_archive</MODULE>
     </BASKETPAGE>
     <BASKETPAGE>
-        <ID>auth_dep</ID>
-        <LABEL>_DOCUMENTS_LIST_WITH_FILTERS</LABEL>
-        <NAME>documents_list_with_filter</NAME>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-    </BASKETPAGE>
-    <BASKETPAGE>
         <ID>list_with_attachments</ID>
         <LABEL>_DOCUMENTS_LIST_WITH_ATTACHMENTS</LABEL>
         <NAME>documents_list_with_attachments</NAME>
