@@ -1582,7 +1582,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             'entity_id' => $cEntity,
             'arbox_id' => $cBoxId,
             'type_id' => $cTypeId,
-            'category_id' => $catId,
+            'category_id' => $cat_id,
         );
         $myForm = array(
             'chrono_out' => $cChronoOut,
@@ -1592,6 +1592,35 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         if ($myChrono <> '' && $cChronoOut <> '') {
             $db->query("update " . $table_ext ." set alt_identifier = '" 
                 . $db->protect_string_db($myChrono) . "' where res_id = " . $res_id);
+        }
+    } elseif ($cat_id == 'incoming') {
+        $queryChrono = "select alt_identifier from " . $table_ext 
+            . " where res_id = " . $res_id;
+        $resultChrono = $db->fetch_array();
+        if ($resultChrono->alt_identifier == '') {
+            require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
+            $cBoxId = get_value_fields($values_form, 'arbox_id');
+            $cTypeId = get_value_fields($values_form, 'type_id');
+            $cEntity = get_value_fields($values_form, 'destination');
+            $cChronoOut = get_value_fields($values_form, 'chrono_number');
+            $chronoX = new chrono();
+            $myVars = array(
+                'entity_id' => $cEntity,
+                'arbox_id' => $cBoxId,
+                'type_id' => $cTypeId,
+                'category_id' => $cat_id,
+            );
+            //print_r($myVars);
+            $myForm = array(
+                'chrono_out' => $cChronoOut,
+            );
+            $myChrono = $chronoX->generate_chrono($cat_id, $myVars, $myForm);
+            //echo $myChrono;exit;
+            if ($myChrono <> '') {
+                $db->query("update " . $table_ext ." set alt_identifier = '" 
+                    . $db->protect_string_db($myChrono) . "' where res_id = " . $res_id);
+            }
         }
     }
 
