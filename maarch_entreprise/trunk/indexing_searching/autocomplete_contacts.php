@@ -48,14 +48,14 @@ if($table == 'users')
 
 	$other = 'order by lastname, firstname';
 
-	$res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
+	$res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 31,false,"","","", false);
 
 	echo "<ul>\n";
-	for($i=0; $i< min(count($res), 10)  ;$i++)
+	for($i=0; $i< min(count($res), 30)  ;$i++)
 	{
 		echo "<li>".$req->show_string($res[$i][0]['value']).', '.$req->show_string($res[$i][1]['value']).' ('.$res[$i][2]['value'].")</li>\n";
 	}
-	if(count($res) == 11)
+	if(count($res) == 31)
 	{
 			echo "<li>...</li>\n";
 	}
@@ -66,16 +66,16 @@ elseif($table == 'contacts')
 	$select = array();
 	$select[$_SESSION['tablename']['contacts']]= array('is_corporate_person','society', 'lastname', 'firstname', 'contact_id');
 	$where = " (lower(lastname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
-		."or lower(firstname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
+		//."or lower(firstname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
 		."or lower(society) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%')) ";
 	
 	$where .= " and (user_id = '' or user_id is null or user_id = '".$req->protect_string_db($_SESSION['user']['UserId'])."' ) and enabled = 'Y'";
 	$other = 'order by society, lastname, firstname';
 
-	$res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
+	$res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 31,false,"","","", false);
 
 	echo "<ul>\n";
-	for($i=0; $i< min(count($res), 10)  ;$i++)
+	for($i=0; $i< min(count($res), 30)  ;$i++)
 	{
 		if($res[$i][0]['value'] == 'Y')
 		{
@@ -94,7 +94,7 @@ elseif($table == 'contacts')
 		}
 
 	}
-	if(count($res) == 11)
+	if(count($res) == 31)
 	{
 			echo "<li>...</li>\n";
 	}

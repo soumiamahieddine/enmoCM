@@ -43,7 +43,7 @@ while($line = $db->fetch_object())
 }
 $db->query("select is_corporate_person, society, lastname, firstname, contact_id from ".$_SESSION['tablename']['contacts']
 	." where (lower(lastname) like lower('%".$db->protect_string_db($_REQUEST['what'])."%') "
-	." or lower(firstname) like lower('".$db->protect_string_db($_REQUEST['what'])."%') "
+	//." or lower(firstname) like lower('".$db->protect_string_db($_REQUEST['what'])."%') "
 	." or lower(society) like lower('%".$db->protect_string_db($_REQUEST['what'])."%')) and enabled = 'Y' order by society, lastname, firstname");
 
 //$db->show();
@@ -62,7 +62,7 @@ echo "<ul>\n";
 $authViewList = 0;
 foreach($listArray as $what)
 {
-	if($authViewList >= 10)
+	if($authViewList >= 30)
 	{
 		$flagAuthView = true;
 	}
