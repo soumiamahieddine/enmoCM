@@ -408,34 +408,34 @@ INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, red
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'WaitingBillBasket', 3, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'LateMailBasket', 5, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'UnsignedBasket', 6, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'CopyMailBasket', 8, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'CopyMailBasket', 8, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'MyBasket', 9, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'IndexingBasket', 10, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'ValidInvoicesBaskets', 16, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'ValidBillBasket', 17, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'RejectBillBasket', 18, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'ValidInvoicesBaskets', 16, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'ValidBillBasket', 17, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'RejectBillBasket', 18, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 
 
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'SignedBasket', 14, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'LateMailBasket', 1, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'UnsignedBasket', 9, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'CopyMailBasket', 3, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'CopyMailBasket', 3, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'MyBasket', 21, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'ContribBasket', 27, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'IndexingBasket', 29, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'ValidInvoicesBaskets', 30, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'ValidInvoicesBaskets', 30, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 
 
 
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'SignedBasket', 13, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'DepartmentBasket', 14, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'CopyMailBasket', 3, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'DepartmentBasket', 14, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'CopyMailBasket', 3, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'SigningBasket', 15, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'MyBasket', 17, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'ContribBasket', 23, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'ContribBasket', 23, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'UnsignedBasket', 9, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'IndexingBasket', 24, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'ValidInvoicesBaskets', 27, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'ValidInvoicesBaskets', 27, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 
 
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESP_COURRIER', 'SigningBasket', 4, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
@@ -453,11 +453,11 @@ INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, red
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'APA_reservation', 1, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'APA_picking', 2, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
 
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ELU', 'DepartmentBasket', 1, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ELU', 'DepartmentBasket', 1, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ELU', 'CopyMailBasket', 2, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ELU', 'MyBasket', 4, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ELU', 'IndexingBasket', 5, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ELU', 'ValidInvoicesBaskets', 27, NULL, NULL, 'auth_dep', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ELU', 'ValidInvoicesBaskets', 27, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'MyEmailsToQualify', 31, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, "sequence", redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'MyEmailsToQualify', 32, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
