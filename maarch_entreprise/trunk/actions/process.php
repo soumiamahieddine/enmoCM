@@ -129,6 +129,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     require_once('core/class/class_security.php');
     require_once('modules/basket/class/class_modules_tools.php');
     require_once('core/class/class_request.php');
+    require_once('core/class/class_db.php');
     require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php');
     require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_indexing_searching_app.php');
     require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_chrono.php');
@@ -139,6 +140,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $b = new basket();
     $is = new indexing_searching_app();
     $cr = new chrono();
+    $db = new dbquery();
+    $db->connect();
     $data = array();
     $params_data = array('show_market' => false, 'show_project' => false);
     $data = get_general_data($coll_id, $res_id, 'full', $params_data);
@@ -196,26 +199,152 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         . _GENERAL_INFO . ' :</b>';
             $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
-
+        
         //GENERAL DATAS
         $frm_str .= '<div id="general_datas_div" style="display:block">';
             $frm_str .= '<div>';
               $frm_str .= '<table width="95%" align="left" border="0">';
               // Displays the document indexes
+              //exit(print_r($data));
             foreach (array_keys($data) as $key) {
+                if ($key == 'contributor') {
+                    $contributors = explode('*', $data[$key]['value']);
+                    //exit(print_r($contributors));
+                    for ($i = 0; $i<count($contributors); $i++) {
+                        if (!$contributors[$i])
+                            continue;
+                        
+                        
+                        $contribQuery = "SELECT firstname, lastname from users where user_id = '".$contributors[$i]."'";
+                        $db->query($contribQuery);
+                        $contrib = $db->fetch_object();
+                        $frm_str .= '<tr>';
+                            $frm_str .= '<td align="left" valign="top" class="form_title_process">';
+                                $frm_str .= $data[$key]['label'] . ' ('. ($i + 1) .')';
+                            $frm_str .= '</td>';
+                            $frm_str .= '<td>';
+                                $frm_str .= '<input ';
+                                  $frm_str .= 'type="text" ';
+                                  $frm_str .= 'name="'.$key.'" ';
+                                  $frm_str .= 'id="'.$key.'" ';
+                                  $frm_str .= 'value="'.$contrib->firstname.' '.$contrib->lastname.'" ';
+                                  if (!$data[$key]['modifyInProcess']) {
+                                      $frm_str .= 'readonly="readonly" ';
+                                      $frm_str .= 'class="readonly" ';
+                                  }
+                                  $frm_str .= 'style="';
+                                    if (!$data[$key]['modifyInProcess']) {
+                                        $frm_str .= 'border:none; ';
+                                    }
+                                    $frm_str .= 'width: 100%; ';
+                                    $frm_str .= 'max-width: 100%; ';
+                                    $frm_str .= 'min-width: 100%; ';
+                                  $frm_str .= '"';
+                                $frm_str .= '/>';
+                            $frm_str .= '</td>';
+                        $frm_str .= '</tr>';
+                    }
+                    continue;
+                }
+                
+                if ($key == 'doc_date') {
+                    $frm_str .= '<tr>';
+                        $frm_str .= '<td align="left" valign="top" class="form_title_process">';
+                            $frm_str .= $data[$key]['label'];
+                        $frm_str .= '</td>';
+                        $frm_str .= '<td>';
+                            $frm_str .= '<input ';
+                              $frm_str .= 'type="text" ';
+                              $frm_str .= 'id="amf_process_doc_date" ';
+                              $frm_str .= 'name="'.$key.'" ';
+                              $frm_str .= 'id="'.$key.'" ';
+                              $frm_str .= 'value="'.$data[$key]['show_value'].'" ';
+                              $frm_str .= 'style="';
+                                $frm_str .= 'width: 166px; ';
+                                $frm_str .= 'max-width: 166px; ';
+                                $frm_str .= 'min-width: 166px; ';
+                              $frm_str .= '"';
+                              $frm_str .= 'onclick="showCalender(this);" ';
+                            $frm_str .= '/>';
+                        $frm_str .= '</td>';
+                    $frm_str .= '</tr>';
+                    
+                    continue;
+                }
+                
+                if ($key == 'subject') {
+                    $frm_str .= '<tr>';
+                        $frm_str .= '<td align="left" valign="top" class="form_title_process">';
+                            $frm_str .= $data[$key]['label'];
+                        $frm_str .= '</td>';
+                        $frm_str .= '<td>';
+                            $frm_str .= '<textarea ';
+                              $frm_str .= 'name="'.$key.'" ';
+                              $frm_str .= 'id="amf_process_subject" ';
+                              $frm_str .= 'rows="3" ';
+                              $frm_str .= 'style="';
+                                $frm_str .= 'width: 166px; ';
+                                $frm_str .= 'max-width: 166px; ';
+                                $frm_str .= 'min-width: 166px; ';
+                                $frm_str .= 'color: #666666;';
+                              $frm_str .= '"';
+                            $frm_str .= '>';
+                                $frm_str .= $data[$key]['show_value'];
+                            $frm_str .= '</textarea>';
+                        $frm_str .= '</td>';
+                    $frm_str .= '</tr>';
+                    
+                    continue;
+                }
+                
+                if (!$data[$key]['show_value'])
+                    continue;
+                
                 $frm_str .= '<tr>';
-                    $frm_str .= '<td width="50%" align="left"><span class="form_title_process">'
-                        . $data[$key]['label'] . ' :</span></td>';
+                    $frm_str .= '<td align="left" valign="top" class="form_title_process">';
+                        $frm_str .= $data[$key]['label'];
+                    $frm_str .= '</td>';
                     $frm_str .= '<td>';
                     if ($data[$key]['display'] == 'textinput') {
-                        $frm_str .= '<input type="text" name="' . $key . '" id="' . $key
-                            . '" value="' . $data[$key]['show_value']
-                            . '" readonly="readonly" class="readonly" style="border:none;" />';
+                        $frm_str .= '<input ';
+                          $frm_str .= 'type="text" ';
+                          $frm_str .= 'name="'.$key.'" ';
+                          $frm_str .= 'id="'.$key.'" ';
+                          $frm_str .= 'value="'.$data[$key]['show_value'].'" ';
+                          if (!$data[$key]['modifyInProcess']) {
+                              $frm_str .= 'readonly="readonly" ';
+                              $frm_str .= 'class="readonly" ';
+                          }
+                          $frm_str .= 'style="';
+                            if (!$data[$key]['modifyInProcess']) {
+                                $frm_str .= 'border:none; ';
+                            }
+                            $frm_str .= 'width: 166px; ';
+                            $frm_str .= 'max-width: 166px; ';
+                            $frm_str .= 'min-width: 166px; ';
+                          $frm_str .= '"';
+                        $frm_str .= '/>';
                     } elseif ($data[$key]['display'] == 'textarea') {
-                        $frm_str .= '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" '
-                                    .'title="'.$data[$key]['show_value'].'" style="width: 150px; max-width: 150px; border: none; color: #666666;">'
-                                        .$data[$key]['show_value']
-                                    .'</textarea>';
+                        $frm_str .= '<textarea ';
+                          $frm_str .= 'name="'.$key.'" ';
+                          $frm_str .= 'id="'.$key.'" ';
+                          $frm_str .= 'rows="3" ';
+                          if (!$data[$key]['modifyInProcess']) {
+                              $frm_str .= 'readonly="readonly" ';
+                              $frm_str .= 'class="readonly" ';
+                          }
+                          $frm_str .= 'style="';
+                            $frm_str .= 'width: 166px; ';
+                            $frm_str .= 'max-width: 166px; ';
+                            $frm_str .= 'min-width: 166px; ';
+                            if (!$data[$key]['modifyInProcess']) {
+                                $frm_str .= 'border: none; ';
+                            }
+                            $frm_str .= 'color: #666666;';
+                          $frm_str .= '"';
+                        $frm_str .= '>';
+                            $frm_str .= $data[$key]['show_value'];
+                        $frm_str .= '</textarea>';
                         if (isset($data[$key]['addon'])) {
                             $frm_str .= $data[$key]['addon'];
                         }
@@ -323,12 +452,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $answer .= ': ';
     }
 
-    $frm_str .= '<h3 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});'
-              . 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});'
+    $frm_str .= '<h3 onclick="new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});'
+              //. 'new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});'
               . 'whatIsTheDivStatus(\'done_answers_div\', \'divStatus_done_answers_div\');return false;" style="width:90%;">';
-    $frm_str .= ' <span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span>';
-    $frm_str .= '&nbsp;<b>' . _PJ . ', ' . _DONE_ANSWERS . ' (' . $answer .'<span id="nb_attach">'. $nb_attach . '</span>) :</b>';
-    $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+		$frm_str .= ' <span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span>';
+		$frm_str .= '&nbsp;<b>' . _PJ . ', ' . _DONE_ANSWERS . ' (' . $answer .'<span id="nb_attach">'. $nb_attach . '</span>) :</b>';
+		$frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</h3>';
     $frm_str .= '<div class="desc" id="done_answers_div" style="display:none;width:90%;">';
         $frm_str .= '<div class="ref-unit" style="width:95%;">';
@@ -509,7 +638,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $case_properties = array();
         }
         $frm_str .= '<h3 onclick="new Effect.toggle(\'cases_div\', \'blind\', {delay:0.2});'
-            . 'whatIsTheDivStatus(\'cases_div\', \'divStatus_cases_div\');return false;" class="categorie" style="width:90%;">';
+            . 'whatIsTheDivStatus(\'cases_div\', \'divStatus_cases_div\');return false;" class="categorie" style="width:90%; display: none;">';
         $frm_str .= ' <span id="divStatus_cases_div" style="color:#1C99C5;"><<</span>&nbsp;<b>' . _CASE . ' :</b>';
         $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
@@ -525,7 +654,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         'all'
     );
     $frm_str .= '<h3 onclick="new Effect.toggle(\'links_div\', \'blind\', {delay:0.2});'
-        . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" class="categorie" style="width:90%;">';
+        . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" class="categorie" style="width:90%; display: none;">';
     $frm_str .= ' <span id="divStatus_links_div" style="color:#1C99C5;"><<</span>&nbsp;<b>' . _LINK_TAB . ' (<span id="nbLinks">'.$nbLink.'</span>) :</b>';
     $frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</h3>';
@@ -628,12 +757,30 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '>'.$actions[$ind_act]['LABEL'].'</option>';
                 }
             $frm_str .='</select><br>';
-            $frm_str .= '<input type="button" name="send" id="send" value="'
-                . _VALIDATE
-                . '" class="button" onclick="valid_action_form(\'process\', \''
-                . $path_manage_action . '\', \'' . $id_action.'\', \''
-                . $res_id . '\', \'' . $table . '\', \'' . $module . '\', \''
-                . $coll_id . '\', \'' . $mode . '\');"/> ';
+            $frm_str .= '<input ';
+              $frm_str .= 'type="button" ';
+              $frm_str .= 'name="send" ';
+              $frm_str .= 'id="send" ';
+              $frm_str .= 'value="' . _VALIDATE . '" ';
+              $frm_str .= 'class="button" ';
+              $frm_str .= 'onclick="';
+                $frm_str .= 'save_amf_process(';
+                  $frm_str .= $res_id . ', ';
+                  $frm_str .= "'" . $_SESSION['config']['coreurl'] . 'apps/' . $_SESSION['config']['app_id'] . "/'";
+                $frm_str .= ');';
+                $frm_str .= 'valid_action_form(';
+                  $frm_str .= '\'process\', ';
+                  $frm_str .= '\'' . $path_manage_action . '\', ';
+                  $frm_str .= '\'' . $id_action.'\', ';
+                  $frm_str .= '\'' . $res_id . '\', ';
+                  $frm_str .= '\'' . $table . '\', ';
+                  $frm_str .= '\'' . $module . '\', ';
+                  $frm_str .= '\'' . $coll_id . '\', ';
+                  $frm_str .= '\'' . $mode . '\'';
+                $frm_str .= ');';
+              $frm_str .= '"';
+            $frm_str .= '/>';
+            $frm_str .= '&nbsp;';
         }
         $frm_str .= '<input name="close" id="close" type="button" value="'
             . _CANCEL . '" class="button" onclick="javascript:var tmp_bask=$(\'baskets\');';
@@ -766,6 +913,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 ) {
                     $frm_str .= '<br><br>' . _NO_COPY . '<br><br>';
                 } else {
+                    $frm_str .= '<br>' . _TO_CC;
                     $frm_str .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">';
                     $color = ' class="col"';
                     for ($i=0;$i<count($_SESSION['process']['diff_list']['copy']['entities']);$i++) {
@@ -801,6 +949,35 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     }
                     $frm_str .= '</table>';
                 }
+                // AMF contributeurs
+                if (
+                    count($_SESSION['process']['diff_list']['contrib']['users']) == 0
+                    && count($_SESSION['process']['diff_list']['contrib']['entities']) == 0
+                ) {
+                    //$frm_str .= '<br><br>' . _NO_CONTRIB . '<br><br>';
+                } else {
+                    $frm_str .= '<br>' . _TO_CONTRIB;
+                    $frm_str .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">';
+                    $color = ' class="col"';
+                    for ($i=0;$i<count($_SESSION['process']['diff_list']['contrib']['users']);$i++) {
+                        if ($color == ' class="col"') {
+                            $color = '';
+                        } else {
+                            $color = ' class="col"';
+                        }
+                        $frm_str .= '<tr ' . $color . '>';
+                            $frm_str .= '<td><img src="'
+                                . $_SESSION['config']['businessappurl']
+                                . 'static.php?module=entities&filename=manage_users_entities_b_small.gif" alt="'
+                                . _USER . '" title="' . _USER . '" /></td>';
+                            $frm_str .= '<td>' . $_SESSION['process']['diff_list']['contrib']['users'][$i]['firstname'] . '</td>';
+                            $frm_str .= '<td>' . $_SESSION['process']['diff_list']['contrib']['users'][$i]['lastname'] . '</td>';
+                            $frm_str .= '<td>' . $_SESSION['process']['diff_list']['contrib']['users'][$i]['entity_label'] . '</td>';
+                        $frm_str .= '</tr>';
+                    }
+                    $frm_str .= '</table>';
+                }
+                
                 $frm_str .= '<br>';
                 //$frm_str .= '<hr class="hr_process"/>';
             $frm_str .= '</div>';
@@ -1136,7 +1313,6 @@ function check_form($form_id,$values)
             if (!empty($market_id)) {
                 $db->query("select foldertype_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id);
             } else  {
-                //!empty($project_id)
                 $db->query("select foldertype_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$project_id);
             }
             $res = $db->fetch_object();
