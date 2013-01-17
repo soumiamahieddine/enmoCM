@@ -170,6 +170,9 @@ if (! isset($_SESSION[$origin]['diff_list']['copy']['users'])) {
 if (! isset($_SESSION[$origin]['diff_list']['copy']['entities'])) {
     $_SESSION[$origin]['diff_list']['copy']['entities'] = array();
 }
+if (! isset($_SESSION[$origin]['diff_list']['contrib']['users'])) {
+    $_SESSION[$origin]['diff_list']['contrib']['users'] = array();
+}
 if (isset($_GET['action']) && $_GET['action'] == "add_entity") {
 
     if (isset($_GET['id']) && ! empty($_GET['id'])) {
@@ -331,7 +334,50 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity") {
         );
     }
     usort($_SESSION[$origin]['diff_list']['copy']['users'], "cmpUsers");
-}
+} 
+// AMF
+elseif (isset($_GET['action']) && $_GET['action'] == "add_contrib") {
+    if (isset($_GET['id']) && ! empty($_GET['id'])) {
+        $id = $_GET['id'];
+        $find = false;
+        for ($i = 0; $i < count(
+            $_SESSION[$origin]['diff_list']['contrib']['users']
+        ); $i ++
+        ) {
+            if ($id == $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['user_id']) {
+                $find = true;
+                break;
+            }
+        }
+        if ($find == false)
+        {
+            $db->query(
+                "SELECT u.firstname, u.lastname, u.department, e.entity_id, "
+                . "e.entity_label FROM " . USERS_TABLE . " u,  " . ENT_ENTITIES
+                . " e, " . ENT_USERS_ENTITIES . " ue WHERE  u.user_id='"
+                . $db->protect_string_db($id) . "' and "
+                . " e.entity_id = ue.entity_id and u.user_id = ue.user_id"
+            );
+            $line = $db->fetch_object();
+            $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['user_id'] = $db->show_string($id);
+            $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['firstname'] = $db->show_string($line->firstname);
+            $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['lastname'] = $db->show_string($line->lastname);
+            $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['entity_id'] = $db->show_string($line->entity_id);
+            $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['entity_label'] = $db->show_string($line->entity_label);
+        } 
+    }
+} elseif (isset($_GET['action']) && $_GET['action'] == "remove_contrib") {
+    $rank = $_GET['rank'];
+    if (isset($_GET['id']) && ! empty($_GET['id'])) {
+        $id = $_GET['id'];
+        if ($_SESSION[$origin]['diff_list']['contrib']['users'][$rank]['user_id'] == $id) {
+            unset($_SESSION[$origin]['diff_list']['contrib']['users'][$rank]);
+            $_SESSION[$origin]['diff_list']['contrib']['users'] = array_values(
+                $_SESSION[$origin]['diff_list']['contrib']['users']
+            );
+        }
+    }
+} 
 
 $core->load_html();
 $core->load_header(_USER_ENTITIES_TITLE);
@@ -433,6 +479,7 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
         && (count($_SESSION[$origin]['diff_list']['copy']['users']) > 0
             || count($_SESSION[$origin]['diff_list']['copy']['entities']) > 0)
         )
+    || !empty($_SESSION[$origin]['diff_list']['contrib']['user_id'])
 ) {
     ?>
         <div id="diff_list" align="center">
@@ -619,6 +666,76 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
     }
     ?>
     <br/>
+    
+    <?php
+    // AMF
+    if (count($_SESSION[$origin]['diff_list']['contrib']) > 0) 
+    {
+    ?>
+        <h2 class="sstit"><?php echo _TO_CONTRIB;?></h2>
+        <table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec">
+        <?php
+        $color = ' class="col"';
+        for ($i = 0; $i < count(
+            $_SESSION[$origin]['diff_list']['contrib']['users']
+        ); $i ++
+        ) {
+            if ($color == ' class="col"') {
+                $color = '';
+            } else {
+                $color = ' class="col"';
+            }
+            ?>
+            <tr <?php echo $color; ?> >
+                <td><img src="<?php
+            echo $_SESSION['config']['businessappurl'] . 'static.php?filename='
+               . 'manage_users_entities_b.gif&module=entities';
+            ?>" alt="<?php
+            echo _USER;
+            ?>" title="<?php
+            echo _USER;
+            ?>" /></td>
+                <td ><?php
+            echo $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['lastname'];
+            ?></td>
+                <td ><?php
+            echo $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['firstname'];
+            ?></td>
+                <td><?php
+            echo $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['entity_label'];
+            ?></td>
+                <td class="action_entities">
+                    <?php
+                    if (!$noDelete) {
+                        ?>
+                        <a href="<?php
+                        echo $link;
+                        ?>&what_users=<?php
+                        echo $whatUsers;
+                        ?>&what_services=<?php
+                        echo $whatServices;
+                        ?>&action=remove_contrib&rank=<?php
+                        echo $i;
+                        ?>&id=<?php
+                        echo $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['user_id']
+                        ;?>" class="delete"><?php
+                        echo _DELETE;
+                        ?></a>
+                        <?php
+                    }
+                    ?>
+                    </td>
+                <td class="action_entities">&nbsp;</td>
+            </tr>
+            <?php
+        }
+        ?>
+            </table>
+            <br/>
+
+    <?php
+    }
+    ?>
     <form name="pop_diff" method="post" >
         <div align="center">
             <?php
@@ -685,6 +802,16 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
                 echo $users[$j]['ID'];
                 ?>" class="change"><?php
                 echo _ADD;
+                ?></a>&nbsp;<a href="<?php
+                echo $link;
+                ?>&what_users=<?php
+                echo $whatUsers;
+                ?>&what_services=<?php
+                echo $whatServices;
+                ?>&action=add_contrib&id=<?php
+                echo $users[$j]['ID'];
+                ?>" class="change"><?php
+                echo _ADD_CONTRIB;
                 ?></a></td>
                     </tr>
                     <?php

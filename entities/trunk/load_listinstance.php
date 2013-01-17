@@ -80,7 +80,7 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
     if (count($_SESSION[$origin]['diff_list']['copy']['users']) > 0
         || count($_SESSION[$origin]['diff_list']['copy']['entities']) > 0
     ) {
-        if (! $onlyCC) {
+        if (! $onlyCC || count($_SESSION[$origin]['diff_list']['contrib']['users']) > 0) {
             $content .= '<p class="sstit">' . _TO_CC . '</p>';
         }
         $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">';
@@ -133,6 +133,44 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
         }
         $content .= '</table>';
     }
+    // AMF contrib
+    if (count($_SESSION[$origin]['diff_list']['contrib']['users']) > 0
+        || count($_SESSION[$origin]['diff_list']['contrib']['entities']) > 0
+    ) {
+        if (! $onlyCC || count($_SESSION[$origin]['diff_list']['contrib']['users']) > 0) {
+            $content .= '<br/><p class="sstit">' . _TO_CONTRIB . '</p>';
+        }
+        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
+        $color = ' class="col"';
+        for ($i = 0; $i < count(
+            $_SESSION[$origin]['diff_list']['contrib']['users']
+        ); $i ++
+        ) {
+            if ($color == ' class="col"') {
+                $color = '';
+            } else {
+                $color = ' class="col"';
+            }
+            $content .= '<tr ' . $color . ' >';
+            $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
+                     . 'static.php?filename=manage_users_entities_b_small.gif'
+                     . '&module=entities" alt="' . _USER . '" title="' . _USER
+                     . '" /></td>';
+            $content .= '<td >'
+                     . $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['firstname']
+                     . '</td>';
+            $content .= '<td >'
+                     . $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['lastname']
+                     . '</td>';
+            $content .= '<td>'
+                     . $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['entity_label']
+                     . '</td>';
+            $content .= '</tr>';
+        }
+        $content .= '</table>';
+    }
+    
+    
     $labelButton = _MODIFY_LIST;
     $arg = '&mode=up';
 } else {
