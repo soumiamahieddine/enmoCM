@@ -1082,6 +1082,45 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 </table>
                                 <?php
                             }
+                            // AMF contributors
+                             if (count($_SESSION['details']['diff_list']['contrib']['users']) > 0)
+                            {
+                                //$detailsExport .= "<p class='sstit'>"._TO_CC."</p>";
+                                //$detailsExport .= "<table cellpadding='0' cellspacing='0' border='0' class='listing'>";
+                                ?>
+                                <p class="sstit"><?php echo _TO_CONTRIB;?></p>
+                                <table cellpadding="0" cellspacing="0" border="0" class="listing">
+                                <?php $color = ' class="col"';
+                                for($i=0;$i<count($_SESSION['details']['diff_list']['contrib']['users']);$i++)
+                                {
+                                    if ($color == ' class="col"')
+                                    {
+                                        $color = '';
+                                    }
+                                    else
+                                    {
+                                        $color = ' class="col"';
+                                    }
+                                    /*$detailsExport .= "<tr ".$color.">";
+                                    $detailsExport .= "<td><img src='".$_SESSION['config']['businessappurl']."static.php?filename=manage_users_entities_b_small.gif&module=entities' alt='"._USER."' title='"._USER."' /></td>";
+                                    $detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['users'][$i]['firstname']."</td>";
+                                    $detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['users'][$i]['lastname']."</td>";
+                                    $detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['users'][$i]['entity_label']."</td>";
+                                    $detailsExport .= "</tr>";*/
+                                    ?>
+                                    <tr <?php echo $color;?> >
+                                        <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
+                                        <td ><?php echo $_SESSION['details']['diff_list']['contrib']['users'][$i]['firstname'];?></td>
+                                        <td ><?php echo $_SESSION['details']['diff_list']['contrib']['users'][$i]['lastname'];?></td>
+                                        <td><?php echo $_SESSION['details']['diff_list']['contrib']['users'][$i]['entity_label'];?></td>
+                                    </tr><?php
+                                }
+                                //$detailsExport .= "</table>";
+                                ?>
+                                </table>
+                                <?php
+                            }
+                            
                             if ($core->test_service('update_list_diff_in_details', 'entities', false)) {
                                 echo '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_listinstance&origin=details\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" title="'._UPDATE_LIST_DIFF.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._UPDATE_LIST_DIFF.'" />'._UPDATE_LIST_DIFF.'</a>';
                             }
