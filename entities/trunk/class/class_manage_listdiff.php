@@ -501,6 +501,89 @@ class diffusion_list extends dbquery
                     //$this->show();
                 }
             }
+            
+            // AMF Contributors
+            for ($i = 0; $i < count($diffList['contrib']['users']); $i ++) {
+                $insert = true;
+                if ($concat) {
+                    $this->query(
+                        "select res_id from " . $params['table']
+                        . " where coll_id = '"
+                        . $this->protect_string_db(trim($params['coll_id']))
+                        . "' and res_id = " . $params['res_id']
+                        . " and listinstance_type = '"
+                        . $this->protect_string_db(trim($listType))
+                        . "'  and item_id = '"
+                        . $this->protect_string_db(
+                            trim($diffList['contrib']['users'][$i]['user_id'])
+                        ) . "' and item_type = 'user_id' and item_mode= 'contrib'"
+                    );
+                    //$this->show();
+                    if ($this->nb_result() == 0) {
+                        $insert = true;
+                    } else {
+                        $insert = false;
+                    }
+                }
+                if ($insert
+                    && $diffList['dest']['user_id'] <> $diffList['contrib']['users'][$i]['user_id']
+                ) {
+                    $seq = $i + $maxSeq;
+                    if (isset($diffList['contrib']['users'][$i]['viewed'])
+                        && $diffList['contrib']['users'][$i]['viewed'] <> ""
+                    ) {
+                        $this->query(
+                            "insert into " . $params['table'] . " (coll_id, "
+                            . "res_id, listinstance_type,  sequence, item_id, "
+                            . "item_type, item_mode, added_by_user, "
+                            . "added_by_entity, viewed) values ('"
+                            . $this->protect_string_db(trim($params['coll_id']))
+                            . "', " . $params['res_id'] . " , '"
+                            . $this->protect_string_db(trim($listType)) . "', "
+                            . $seq . ", '"
+                            . $this->protect_string_db(
+                                trim($diffList['contrib']['users'][$i]['user_id'])
+                            ) . "', 'user_id' , 'contrib', '"
+                            . $this->protect_string_db(trim($creatorUser))
+                            . "', '"
+                            . $this->protect_string_db(trim($creatorEntity))
+                            . "', " . $diffList['contrib']['users'][$i]['viewed']
+                            . " )"
+                        );
+                    } else {
+                        $this->query(
+                            "insert into " . $params['table'] . " (coll_id, "
+                            . "res_id, listinstance_type, sequence, item_id, "
+                            . "item_type, item_mode, added_by_user, "
+                            . "added_by_entity ) values ('"
+                            . $this->protect_string_db(trim($params['coll_id']))
+                            . "', " . $params['res_id'] . " , '"
+                            . $this->protect_string_db(trim($listType)) . "', "
+                            . $seq . ", '"
+                            . $this->protect_string_db(
+                                trim($diffList['contrib']['users'][$i]['user_id'])
+                            ) . "', 'user_id' , 'contrib', '"
+                            . $this->protect_string_db(trim($creatorUser))
+                            . "', '"
+                            . $this->protect_string_db(trim($creatorEntity))
+                            . "' )"
+                        );
+                    }
+                    $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
+                    $hist->add(
+                        $params['table'],
+                        $listinstance_id,
+                        'ADD',
+                        'diffcontribuser',
+                        'Diffusion of document '.$params['res_id'],
+                        $_SESSION['config']['databasetype'],
+                        'apps'
+                    ); 
+                    //$this->show();
+                }
+            }
+            
+            
             //found copies to delete if alreay in copy
             /*$this->query(
                 "select res_id, item_id from " . $params['table']
@@ -663,6 +746,8 @@ class diffusion_list extends dbquery
         $listinstance['copy'] = array();
         $listinstance['copy']['users'] = array();
         $listinstance['copy']['entities'] = array();
+        $listinstance['contrib'] = array();
+        $listinstance['contrib']['users'] = array();
         if (empty($resId) || empty($collId)) {
             return $listinstance;
         }
@@ -736,6 +821,33 @@ class diffusion_list extends dbquery
                 $listinstance['copy']['entities'],
                 array(
                     'entity_id' => $this->show_string($res->item_id),
+                    'entity_label' => $this->show_string($res->entity_label),
+                    'viewed' => $this->show_string($res->viewed)
+                )
+            );
+        }
+        
+        // AMF Contributors
+        $this->query(
+            "select l.item_id, u.firstname, u.lastname, e.entity_id, "
+            . "e.entity_label, l.viewed from " . ENT_LISTINSTANCE . " l, " . USERS_TABLE
+            . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
+            . " ue where l.coll_id = '" . $collId
+            . "' and l.listinstance_type = 'DOC' and l.item_mode = 'contrib' "
+            . "and l.item_type = 'user_id'  and l.item_id = u.user_id "
+            . "and l.item_id = ue.user_id and ue.user_id=u.user_id "
+            . "and e.entity_id = ue.entity_id and l.res_id = " . $resId
+            . " and ue.primary_entity = 'Y' order by u.lastname "
+        );
+        //$this->show();
+        while ($res = $this->fetch_object()) {
+            array_push(
+                $listinstance['contrib']['users'],
+                array(
+                    'user_id' => $this->show_string($res->item_id),
+                    'lastname' => $this->show_string($res->lastname),
+                    'firstname' => $this->show_string($res->firstname),
+                    'entity_id' => $this->show_string($res->entity_id),
                     'entity_label' => $this->show_string($res->entity_label),
                     'viewed' => $this->show_string($res->viewed)
                 )
