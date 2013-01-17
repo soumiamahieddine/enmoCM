@@ -276,3 +276,8 @@ if (!defined('_53_RELATIONS'))
     define('_53_RELATIONS', '5.3 Relations');
 if (!defined('_54_CONTROL'))
     define('_54_CONTROL', '5.4 Contr&ocirc;le');
+    
+if (!defined('_TO_CONTRIB'))    
+    define('_TO_CONTRIB', 'Contributeurs');
+if (!defined('_ADD_CONTRIB')) 
+    define('_ADD_CONTRIB', 'Contributeur');
