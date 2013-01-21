@@ -505,10 +505,12 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . 'modif_liste.png" alt="' . _CREATE_CONTACT . '"/></a>';
     }
     $frmStr .= '</label></td>';
+    $contact_mode = "view";
+    if($core->test_service('update_contacts','apps', false)) $contact_mode = 'up';
     $frmStr .= '<td><a href="#" id="contact_card" title="' . _CONTACT_CARD
             . '" onclick="open_contact_card(\''
             . $_SESSION ['config']['businessappurl'] . 'index.php?display=true'
-            . '&page=contact_info\', \'' . $_SESSION ['config']['businessappurl']
+            . '&page=contact_info&mode='.$contact_mode.'\', \'' . $_SESSION ['config']['businessappurl']
             . 'index.php?display=true&page=user_info\');" '
             . 'style="visibility:hidden;" ><img src="'
             . $_SESSION['config']['businessappurl'] . 'static.php?filename='
