@@ -199,6 +199,14 @@
    <enabled>true</enabled>
  </SERVICE>
  <SERVICE>
+   <id>update_contacts</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
+   <name>_UPDATE_CONTACTS</name>
+   <comment>_UPDATE_CONTACTS</comment>
+   <servicetype>use</servicetype>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
+ </SERVICE>
+ <SERVICE>
    <id>reopen_mail</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
    <name>_REOPEN_MAIL</name>
    <comment>_REOPEN_MAIL_DESC</comment>
@@ -312,4 +320,14 @@
         <nature>include</nature>
     </WHEREAMIUSED>
  </SERVICE>
+ <!--SERVICE>
+   <id>admin_parameters</id>
+   <name>_ADMIN_PARAMETERS</name>
+   <comment>_ADMIN_PARAMETERS_DESC</comment>
+   <servicepage>index.php?page=parameters_management_controler&amp;mode=list&amp;admin=parameters</servicepage>
+   <servicetype>admin</servicetype>
+   <style>admin_parameters</style>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
+ </SERVICE-->
 </root>
