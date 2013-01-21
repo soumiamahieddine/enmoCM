@@ -424,6 +424,37 @@ class business_app_tools extends dbquery
             }
             $_SESSION['default_mail_title'] = (string) $mailTitles->default_title;
         }
+        
+        // 1.4 : listinstance custom lists
+        $diffusion_lists = $xmlfile->diffusion_lists;
+        $_SESSION['diffusion_lists'] = array();
+        foreach ($diffusion_lists->diffusion_list as $diffusion_list) {
+            $list_label = (string) $diffusion_list->list_label;
+            if (!empty($list_label) && defined($list_label)
+                && constant($list_label) <> NULL
+             ) {
+                $list_label = constant($list_label);
+            }
+            $item_label = (string) $diffusion_list->item_label;
+            if (!empty($item_label) && defined($item_label)
+                && constant($item_label) <> NULL
+             ) {
+                $item_label = constant($item_label);
+            }
+            $allow_entities = (string) $diffusion_list->allow_entities;
+            if (!empty($allow_entities) && $allow_entities == 'true') {
+                $allow_entities = true;
+            } else {
+                $allow_entities = false;
+            }
+            
+            $_SESSION['diffusion_lists'][(string) $diffusion_list->id] = 
+                array(
+                    'list_label' => $list_label,
+                    'item_label' => $item_label,
+                    'allow_entities' => $allow_entities
+                );
+        }
     }
 
     public function compare_base_version($xmlVersionBase)
