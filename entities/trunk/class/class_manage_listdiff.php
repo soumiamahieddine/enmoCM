@@ -326,10 +326,13 @@ class diffusion_list extends dbquery
                     . " and listinstance_type = '"
                     . $this->protect_string_db(trim($listType)) . "'"
                     . " and res_id = " . $params['res_id']
-                    . " and item_mode = 'cc'"
+                    . " and item_mode != 'dest'"
                 );
                 //$this->show();
             }
+            
+            // DEST
+            //***********************************************************************************************
             if (isset($diffList['dest']['user_id'])
                 && ! empty($diffList['dest']['user_id']) && ! $onlyCc
             ) {
@@ -351,7 +354,7 @@ class diffusion_list extends dbquery
                         . " and listinstance_type = '"
                         . $this->protect_string_db(trim($listType)) . "' "
                         . "and res_id = " . trim($params['res_id'])
-                        . " and item_mode = 'cc' and item_type = 'user_id' "
+                        . " and item_mode != 'dest' and item_type = 'user_id' "
                         . "and item_id = '"
                         . $this->protect_string_db(
                             trim($diffList['dest']['user_id'])
@@ -422,6 +425,9 @@ class diffusion_list extends dbquery
                     $maxSeq = (int) $res->max_seq + 1;
                 }
             }
+            
+            // COPIES TO USERS
+            //***********************************************************************************************
             for ($i = 0; $i < count($diffList['copy']['users']); $i ++) {
                 $insert = true;
                 if ($concat) {
@@ -502,125 +508,8 @@ class diffusion_list extends dbquery
                 }
             }
             
-            // AMF Contributors
-            for ($i = 0; $i < count($diffList['contrib']['users']); $i ++) {
-                $insert = true;
-                if ($concat) {
-                    $this->query(
-                        "select res_id from " . $params['table']
-                        . " where coll_id = '"
-                        . $this->protect_string_db(trim($params['coll_id']))
-                        . "' and res_id = " . $params['res_id']
-                        . " and listinstance_type = '"
-                        . $this->protect_string_db(trim($listType))
-                        . "'  and item_id = '"
-                        . $this->protect_string_db(
-                            trim($diffList['contrib']['users'][$i]['user_id'])
-                        ) . "' and item_type = 'user_id' and item_mode= 'contrib'"
-                    );
-                    //$this->show();
-                    if ($this->nb_result() == 0) {
-                        $insert = true;
-                    } else {
-                        $insert = false;
-                    }
-                }
-                if ($insert
-                    && $diffList['dest']['user_id'] <> $diffList['contrib']['users'][$i]['user_id']
-                ) {
-                    $seq = $i + $maxSeq;
-                    if (isset($diffList['contrib']['users'][$i]['viewed'])
-                        && $diffList['contrib']['users'][$i]['viewed'] <> ""
-                    ) {
-                        $this->query(
-                            "insert into " . $params['table'] . " (coll_id, "
-                            . "res_id, listinstance_type,  sequence, item_id, "
-                            . "item_type, item_mode, added_by_user, "
-                            . "added_by_entity, viewed) values ('"
-                            . $this->protect_string_db(trim($params['coll_id']))
-                            . "', " . $params['res_id'] . " , '"
-                            . $this->protect_string_db(trim($listType)) . "', "
-                            . $seq . ", '"
-                            . $this->protect_string_db(
-                                trim($diffList['contrib']['users'][$i]['user_id'])
-                            ) . "', 'user_id' , 'contrib', '"
-                            . $this->protect_string_db(trim($creatorUser))
-                            . "', '"
-                            . $this->protect_string_db(trim($creatorEntity))
-                            . "', " . $diffList['contrib']['users'][$i]['viewed']
-                            . " )"
-                        );
-                    } else {
-                        $this->query(
-                            "insert into " . $params['table'] . " (coll_id, "
-                            . "res_id, listinstance_type, sequence, item_id, "
-                            . "item_type, item_mode, added_by_user, "
-                            . "added_by_entity ) values ('"
-                            . $this->protect_string_db(trim($params['coll_id']))
-                            . "', " . $params['res_id'] . " , '"
-                            . $this->protect_string_db(trim($listType)) . "', "
-                            . $seq . ", '"
-                            . $this->protect_string_db(
-                                trim($diffList['contrib']['users'][$i]['user_id'])
-                            ) . "', 'user_id' , 'contrib', '"
-                            . $this->protect_string_db(trim($creatorUser))
-                            . "', '"
-                            . $this->protect_string_db(trim($creatorEntity))
-                            . "' )"
-                        );
-                    }
-                    $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
-                    $hist->add(
-                        $params['table'],
-                        $listinstance_id,
-                        'ADD',
-                        'diffcontribuser',
-                        'Diffusion of document '.$params['res_id'],
-                        $_SESSION['config']['databasetype'],
-                        'apps'
-                    ); 
-                    //$this->show();
-                }
-            }
-            
-            
-            //found copies to delete if alreay in copy
-            /*$this->query(
-                "select res_id, item_id from " . $params['table']
-                . " where coll_id = '"
-                . $this->protect_string_db(trim($params['coll_id'])) ."' "
-                . "and res_id = " . $params['res_id'] . " "
-                . "and listinstance_type = '"
-                . $this->protect_string_db(trim($listType)) . "' "
-                . "and item_mode= 'cc'"
-            );
-            //$this->show();
-            while ($resToDelete = $this->fetch_object()) {
-                $toDelete = true;
-                for ($cptCopies = 0; $cptCopies < count(
-                    $diffList['copy']['users']
-                ); $cptCopies ++
-                ) {
-                    if ($resToDelete->item_id == $diffList['copy']['users'][$cptCopies]['user_id']) {
-                        $toDelete = false;
-                    }
-                }
-                if ($toDelete) {
-                    //echo $toDelete." ".$resToDelete->item_id;
-                    $this->query(
-                        "delete from " . $params['table'] . " where coll_id = '"
-                        . $this->protect_string_db(trim($params['coll_id']))
-                        . "' and listinstance_type = '"
-                        . $this->protect_string_db(trim($listType)) . "' "
-                        . "and res_id = " . trim($params['res_id']) . " "
-                        . "and item_mode = 'cc' and item_id = '"
-                        . $resToDelete->item_id . "'"
-                    );
-                    //$this->show();
-                }
-            }*/
-
-
+            // COPY TO ENTITIES
+            //**********************************************************************************
             $maxSeq = 0;
             if ($concat) {
                 $this->query(
@@ -689,6 +578,166 @@ class diffusion_list extends dbquery
                 }
                 //$this->show();
             }
+            
+            // 1.4 custom diffusion_lists
+            //**********************************************************************************
+            if(count($_SESSION['diffusion_lists']) > 0) {
+                foreach($_SESSION['diffusion_lists'] as $list_id => $list_config) {
+                    // USERS
+                    for ($i=0, $l=count($diffList[$list_id]['users']); $i<$l ; $i++) {
+                        $insert = true;
+                        if ($concat) {
+                            $this->query(
+                                "select res_id from " . $params['table']
+                                . " where coll_id = '"
+                                . $this->protect_string_db(trim($params['coll_id']))
+                                . "' and res_id = " . $params['res_id']
+                                . " and listinstance_type = '"
+                                . $this->protect_string_db(trim($listType))
+                                . "'  and item_id = '"
+                                . $this->protect_string_db(
+                                    trim($diffList['copy']['users'][$i]['user_id'])
+                                ) . "' and item_type = 'user_id' and item_mode= '".$list_id."'"
+                            );
+                            //$this->show();
+                            if ($this->nb_result() == 0) {
+                                $insert = true;
+                            } else {
+                                $insert = false;
+                            }
+                        }
+                        if ($insert
+                            && $diffList['dest']['user_id'] <> $diffList[$list_id]['users'][$i]['user_id']
+                        ) {
+                            $seq = $i + $maxSeq;
+                            if (isset($diffList[$list_id]['users'][$i]['viewed'])
+                                && $diffList[$list_id]['users'][$i]['viewed'] <> ""
+                            ) {
+                                $this->query(
+                                    "insert into " . $params['table'] . " (coll_id, "
+                                    . "res_id, listinstance_type,  sequence, item_id, "
+                                    . "item_type, item_mode, added_by_user, "
+                                    . "added_by_entity, viewed) values ('"
+                                    . $this->protect_string_db(trim($params['coll_id']))
+                                    . "', " . $params['res_id'] . " , '"
+                                    . $this->protect_string_db(trim($listType)) . "', "
+                                    . $seq . ", '"
+                                    . $this->protect_string_db(
+                                        trim($diffList[$list_id]['users'][$i]['user_id'])
+                                    ) . "', 'user_id' , '".$list_id."', '"
+                                    . $this->protect_string_db(trim($creatorUser))
+                                    . "', '"
+                                    . $this->protect_string_db(trim($creatorEntity))
+                                    . "', " . $diffList[$list_id]['users'][$i]['viewed']
+                                    . " )"
+                                );
+                            } else {
+                                $this->query(
+                                    "insert into " . $params['table'] . " (coll_id, "
+                                    . "res_id, listinstance_type, sequence, item_id, "
+                                    . "item_type, item_mode, added_by_user, "
+                                    . "added_by_entity ) values ('"
+                                    . $this->protect_string_db(trim($params['coll_id']))
+                                    . "', " . $params['res_id'] . " , '"
+                                    . $this->protect_string_db(trim($listType)) . "', "
+                                    . $seq . ", '"
+                                    . $this->protect_string_db(
+                                        trim($diffList[$list_id]['users'][$i]['user_id'])
+                                    ) . "', 'user_id' , '".$list_id."', '"
+                                    . $this->protect_string_db(trim($creatorUser))
+                                    . "', '"
+                                    . $this->protect_string_db(trim($creatorEntity))
+                                    . "' )"
+                                );
+                            }
+                            $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
+                            $hist->add(
+                                $params['table'],
+                                $listinstance_id,
+                                'ADD',
+                                'diff'.$list_id.'user',
+                                'Diffusion of document '.$params['res_id'].' to ' . $list_config['item_label'],
+                                $_SESSION['config']['databasetype'],
+                                'apps'
+                            ); 
+                            //$this->show();
+                        }
+                    }
+                    
+                    // ENTITIES
+                    $maxSeq = 0;
+                    if ($concat) {
+                        $this->query(
+                            "select max(sequence) as max_seq from " . $params['table']
+                            . " where coll_id = '"
+                            . $this->protect_string_db(trim($params['coll_id']))
+                            . "' and res_id = " . $params['res_id']
+                            . " and listinstance_type = '"
+                            . $this->protect_string_db(trim($listType))
+                            . "' and item_type = 'entity_id' and item_mode= '".$list_id."'"
+                        );
+                        //$this->show();
+                        $res = $this->fetch_object();
+                        if ($res->max_seq > - 1) {
+                            $maxSeq = (int) $res->max_seq + 1;
+                        }
+                    }
+                    for ($i = 0; $i < count($diffList[$list_id]['entities']); $i ++) {
+                        $insert = true;
+                        if ($concat) {
+                            $this->query(
+                                "select res_id from " . $params['table']
+                                . " where coll_id = '"
+                                . $this->protect_string_db(trim($params['coll_id']))
+                                . "' and res_id = " . $params['res_id']
+                                . " and listinstance_type = '"
+                                . $this->protect_string_db(trim($listType))
+                                . "' and item_id = '"
+                                . $this->protect_string_db(
+                                    trim($diffList[$list_id]['entities'][$i]['entity_id'])
+                                ) . "' and item_type = 'entity_id' and item_mode= '".$list_id."'"
+                            );
+                            //$this->show();
+                            if ($this->nb_result() == 0) {
+                                $insert = true;
+                            } else {
+                                $insert = false;
+                            }
+                        }
+                        if ($insert) {
+                            $seq = $i + $maxSeq;
+                            $this->query(
+                                "insert into " . $params['table'] . " (coll_id, res_id,"
+                                . " listinstance_type, sequence, item_id, item_type, "
+                                . "item_mode ,added_by_user, added_by_entity) values ('"
+                                . $this->protect_string_db(trim($params['coll_id']))
+                                . "', " . $params['res_id'] . " ,'"
+                                . $this->protect_string_db(trim($listType)) . "', "
+                                . $seq . ", '"
+                                . $this->protect_string_db(
+                                    trim($diffList[$list_id]['entities'][$i]['entity_id'])
+                                ) . "', 'entity_id' , '".$list_id."',  '" . $creatorUser . "', '"
+                                . $creatorEntity . "')"
+                            );
+                            //$this->show();
+                            $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
+                            $hist->add(
+                                $params['table'],
+                                $listinstance_id,
+                                'ADD',
+                                'diff'.$list_id.'user',
+                                'Diffusion of document '.$params['res_id'].' to ' . $list_config['item_label'],
+                                $_SESSION['config']['databasetype'],
+                                'apps'
+                            ); 
+                        }
+                        //$this->show();
+                    }
+                }
+            }
+            
+            
+            
         }
         if ($params['mode'] == 'listinstance') {
             // Deletes the dest user if he is in copy to avoid duplicate entry
@@ -746,8 +795,16 @@ class diffusion_list extends dbquery
         $listinstance['copy'] = array();
         $listinstance['copy']['users'] = array();
         $listinstance['copy']['entities'] = array();
-        $listinstance['contrib'] = array();
-        $listinstance['contrib']['users'] = array();
+        
+        // 1.4 custom listinstance modes
+        if(count($_SESSION['diffusion_lists']) > 0) {
+            foreach($_SESSION['diffusion_lists'] as $list_id => $list_config) {
+                $listinstance[$list_id] = array();
+                $listinstance[$list_id]['users'] = array();
+                $listinstance[$list_id]['entities'] = array();
+            }
+        }
+        
         if (empty($resId) || empty($collId)) {
             return $listinstance;
         }
@@ -777,17 +834,13 @@ class diffusion_list extends dbquery
                 'entity_label' => $this->show_string($res->entity_label),
                 'viewed' => $this->show_string($res->viewed)
             );
-
-
-
-
         }
         $this->query(
             "select l.item_id, u.firstname, u.lastname, e.entity_id, "
-            . "e.entity_label, l.viewed from " . ENT_LISTINSTANCE . " l, " . USERS_TABLE
+            . "e.entity_label, l.viewed, l.item_mode from " . ENT_LISTINSTANCE . " l, " . USERS_TABLE
             . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
             . " ue where l.coll_id = '" . $collId
-            . "' and l.listinstance_type = 'DOC' and l.item_mode = 'cc' "
+            . "' and l.listinstance_type = 'DOC' and l.item_mode != 'dest' "
             . "and l.item_type = 'user_id'  and l.item_id = u.user_id "
             . "and l.item_id = ue.user_id and ue.user_id=u.user_id "
             . "and e.entity_id = ue.entity_id and l.res_id = " . $resId
@@ -795,8 +848,9 @@ class diffusion_list extends dbquery
         );
         //$this->show();
         while ($res = $this->fetch_object()) {
+            $list_id = $res->item_mode;
             array_push(
-                $listinstance['copy']['users'],
+                $listinstance[$list_id]['users'],
                 array(
                     'user_id' => $this->show_string($res->item_id),
                     'lastname' => $this->show_string($res->lastname),
@@ -809,16 +863,17 @@ class diffusion_list extends dbquery
         }
 
         $this->query(
-            "select l.item_id,  e.entity_label, l.viewed from " . ENT_LISTINSTANCE
+            "select l.item_id,  e.entity_label, l.viewed, l.item_mode from " . ENT_LISTINSTANCE
             . " l, " . ENT_ENTITIES . " e where l.coll_id = 'letterbox_coll' "
-            . "and l.listinstance_type = 'DOC' and l.item_mode = 'cc' "
+            . "and l.listinstance_type = 'DOC' and l.item_mode != 'dest' "
             . "and l.item_type = 'entity_id' and l.item_id = e.entity_id "
             . "and l.res_id = " . $resId . " order by e.entity_label "
         );
 
         while ($res = $this->fetch_object()) {
+            $list_id = $res->item_mode;
             array_push(
-                $listinstance['copy']['entities'],
+                $listinstance[$list_id]['entities'],
                 array(
                     'entity_id' => $this->show_string($res->item_id),
                     'entity_label' => $this->show_string($res->entity_label),
@@ -827,33 +882,6 @@ class diffusion_list extends dbquery
             );
         }
         
-        // AMF Contributors
-        $this->query(
-            "select l.item_id, u.firstname, u.lastname, e.entity_id, "
-            . "e.entity_label, l.viewed from " . ENT_LISTINSTANCE . " l, " . USERS_TABLE
-            . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
-            . " ue where l.coll_id = '" . $collId
-            . "' and l.listinstance_type = 'DOC' and l.item_mode = 'contrib' "
-            . "and l.item_type = 'user_id'  and l.item_id = u.user_id "
-            . "and l.item_id = ue.user_id and ue.user_id=u.user_id "
-            . "and e.entity_id = ue.entity_id and l.res_id = " . $resId
-            . " and ue.primary_entity = 'Y' order by u.lastname "
-        );
-        //$this->show();
-        while ($res = $this->fetch_object()) {
-            array_push(
-                $listinstance['contrib']['users'],
-                array(
-                    'user_id' => $this->show_string($res->item_id),
-                    'lastname' => $this->show_string($res->lastname),
-                    'firstname' => $this->show_string($res->firstname),
-                    'entity_id' => $this->show_string($res->entity_id),
-                    'entity_label' => $this->show_string($res->entity_label),
-                    'viewed' => $this->show_string($res->viewed)
-                )
-            );
-        }
-
         return $listinstance;
     }
 
