@@ -668,7 +668,7 @@ function open_contact_card(path_contact_card,path_user_card)
         }
         else if(arr[0] == 'external')
         {
-            window.open(path_contact_card+'&mode=view&id='+contact_id, 'contact_info', 'height=600, width=600,scrollbars=yes,resizable=yes');
+            window.open(path_contact_card+'&id='+contact_id, 'contact_info', 'height=600, width=600,scrollbars=yes,resizable=yes');
         }
     }
 }
