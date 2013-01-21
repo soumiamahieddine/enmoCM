@@ -1760,11 +1760,11 @@ function show_admin_contacts( is_corporate, display)
         }
         if(lastname_mandatory)
         {
-            lastname_mandatory.style.visibility = 'hidden';
+            lastname_mandatory.style.display = 'none';
         }
         if(society_mandatory)
         {
-            society_mandatory.style.visibility = 'visible';
+            society_mandatory.style.display = 'inline';
         }
     }
     else
@@ -1787,11 +1787,11 @@ function show_admin_contacts( is_corporate, display)
         }
         if(lastname_mandatory)
         {
-            lastname_mandatory.style.visibility = 'visible';
+            lastname_mandatory.style.display = 'inline';
         }
         if(society_mandatory)
         {
-            society_mandatory.style.visibility = 'hidden';
+            society_mandatory.style.display = 'none';
         }
     }
 }
