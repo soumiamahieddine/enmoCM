@@ -109,4 +109,12 @@
 		</title>
 		<default_title>title1</default_title>
 	</titles>
+  <diffusion_lists>
+		<diffusion_list>
+      <id>contrib</id>
+      <item_label>Contributeur</item_label>
+			<list_label>Contributeurs</list_label>
+      <allow_entities>true</allow_entities>
+    </diffusion_list>
+	</diffusion_lists>
 </ROOT>
