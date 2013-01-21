@@ -738,6 +738,7 @@ if (!defined('_CHOOSE_STATUS')) define( '_CHOOSE_STATUS','Choisissez un statut')
 if (!defined('_PROCESS_RECEIPT')) define( '_PROCESS_RECEIPT','Destinataire(s) pour traitement');
 if (!defined('_CHOOSE_RECEIPT')) define( '_CHOOSE_RECEIPT','Choisissez un destinataire');
 if (!defined('_TO_CC')) define( '_TO_CC','En copie');
+if (!defined('_ADD_CC')) define( '_ADD_CC','En copie');
 if (!defined('_ADD_COPIES')) define( '_ADD_COPIES','Ajouter des personnes en copie');
 //if (!defined('_ANSWER_TYPE')) define( '_ANSWER_TYPE','Type(s) de r&eacute;ponse');
 if (!defined('_PROCESS_NOTES')) define( '_PROCESS_NOTES','Notes de traitement');
@@ -827,6 +828,7 @@ if (!defined('_CONTACT')) define( '_CONTACT', 'Contact');
 if (!defined('_NEW_CONTACT')) define( '_NEW_CONTACT', 'Nouveau contact');
 if (!defined('_ALL_CONTACTS')) define( '_ALL_CONTACTS', 'Tous les contacts');
 if (!defined('_ADD_CONTACT')) define( '_ADD_CONTACT', 'Ajout d&rsquo;un contact');
+if (!defined('_UPDATE_CONTACT')) define( '_UPDATE_CONTACT', 'Modification des contacts');
 if (!defined('_PHONE')) define( '_PHONE', 'T&eacute;l&eacute;phone');
 if (!defined('_ADDRESS')) define( '_ADDRESS', 'Adresse');
 if (!defined('_STREET')) define( '_STREET', 'Rue');
@@ -953,6 +955,7 @@ if (!defined('_MAX_SIZE_UPLOAD_REACHED')) define( '_MAX_SIZE_UPLOAD_REACHED', 'T
 if (!defined('_NOT_ALLOWED')) define( '_NOT_ALLOWED', 'interdit');
 if (!defined('_CHOOSE_TITLE')) define( '_CHOOSE_TITLE', 'Choisissez une civilit&eacute;');
 if (!defined('_INDEXING_STATUSES')) define( '_INDEXING_STATUSES', 'Indexer vers les status');
+if (!defined('_UNCHANGED')) define( '_UNCHANGED', 'Inchang&eacute;');
 if (!defined('_LOAD_STATUSES_SESSION')) define( '_LOAD_STATUSES_SESSION', 'Chargement des status en session');
 if (!defined('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS')) define( '_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Param&eacute;trage des status d\'indexation');
 /////////////////// Reports
