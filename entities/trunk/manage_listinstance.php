@@ -164,149 +164,150 @@ while ($line = $db->fetch_object()) {
 $origin = $_REQUEST['origin'];
 $id = '';
 $desc = '';
+
+
 if (! isset($_SESSION[$origin]['diff_list']['copy']['users'])) {
     $_SESSION[$origin]['diff_list']['copy']['users'] = array();
 }
 if (! isset($_SESSION[$origin]['diff_list']['copy']['entities'])) {
     $_SESSION[$origin]['diff_list']['copy']['entities'] = array();
 }
-if (! isset($_SESSION[$origin]['diff_list']['contrib']['users'])) {
-    $_SESSION[$origin]['diff_list']['contrib']['users'] = array();
-}
-if (isset($_GET['action']) && $_GET['action'] == "add_entity") {
 
-    if (isset($_GET['id']) && ! empty($_GET['id'])) {
-        $id = $_GET['id'];
-        $find = false;
-        for ($i = 0; $i < count(
-            $_SESSION[$origin]['diff_list']['copy']['entities']
-        ); $i ++
-        ) {
-            if ($id == $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_id']) {
-                $find = true;
-                break;
-            }
-        }
-        if ($find == false) {
-            $db->query(
-                "SELECT  e.entity_id,  e.entity_label FROM " . ENT_ENTITIES
-                . " e WHERE   e.entity_id = '" . $db->protect_string_db($id)
-                . "'"
-            );
-            $line = $db->fetch_object();
-            array_push(
-                $_SESSION[$origin]['diff_list']['copy']['entities'],
-                array(
-                    'entity_id'    => $db->show_string($id),
-                    'entity_label' => $db->show_string($line->entity_label)
-                )
-            );
-        }
-        usort($_SESSION[$origin]['diff_list']['copy']['entities'], "cmpEntity");
+// 1.4 custom listinstance modes
+if(count($_SESSION['diffusion_lists']) > 0) {
+    foreach($_SESSION['diffusion_lists'] as $list_id => $list_config) {
+        if(! isset($_SESSION[$origin]['diff_list'][$list_id]['users']))
+            $_SESSION[$origin]['diff_list'][$list_id]['users'] = array();
+        if($list_config['allow_entities'] && ! isset($_SESSION[$origin]['diff_list'][$list_id]['entities']))
+            $_SESSION[$origin]['diff_list'][$list_id]['entities'] = array();
     }
-} elseif (isset($_GET['action']) && $_GET['action'] == "add_user") {
-    if (isset($_GET['id']) && ! empty($_GET['id'])) {
-        $id = $_GET['id'];
-        $find = false;
-        if (isset($_SESSION[$origin]['diff_list']['dest']['user_id']) &&
-            $id == $_SESSION[$origin]['diff_list']['dest']['user_id']
-        ) {
-            $find = true;
-        } elseif (empty( $_SESSION[$origin]['diff_list']['dest']['user_id'])
-            || ! isset( $_SESSION[$origin]['diff_list']['dest']['user_id'])
-        ) {
-            $db->query(
-                "SELECT u.firstname, u.lastname, u.department, e.entity_id, "
-                . "e.entity_label FROM " . USERS_TABLE . " u,  " . ENT_ENTITIES
-                . " e, " . ENT_USERS_ENTITIES . " ue WHERE  u.user_id='"
-                . $db->protect_string_db($id) . "' and "
-                . " e.entity_id = ue.entity_id and u.user_id = ue.user_id"
-            );
-            $line = $db->fetch_object();
-            $_SESSION[$origin]['diff_list']['dest']['user_id'] = $db->show_string($id);
-            $_SESSION[$origin]['diff_list']['dest']['firstname'] = $db->show_string($line->firstname);
-            $_SESSION[$origin]['diff_list']['dest']['lastname'] = $db->show_string($line->lastname);
-            $_SESSION[$origin]['diff_list']['dest']['entity_id'] = $db->show_string($line->entity_id);
-            $_SESSION[$origin]['diff_list']['dest']['entity_label'] = $db->show_string($line->entity_label);
-        } else {
-            for ($i = 0; $i < count(
-                $_SESSION[$origin]['diff_list']['copy']['users']
-            ); $i ++
-            ) {
-                if ($id == $_SESSION[$origin]['diff_list']['copy']['users'][$i]['user_id']) {
-                    $find = true;
-                    break;
-                }
-            }
-            if ($find == false) {
-                $db->query(
-                    "SELECT u.firstname, u.lastname, u.department, e.entity_id,"
-                    . " e.entity_label FROM " . USERS_TABLE . " u,  "
-                    . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
-                    . " ue WHERE  u.user_id='" . $db->protect_string_db($id)
-                    . "' and  e.entity_id = ue.entity_id "
-                    . "and u.user_id = ue.user_id"
-                );
-                $line = $db->fetch_object();
-                array_push(
-                    $_SESSION[$origin]['diff_list']['copy']['users'],
-                    array(
-                        'user_id' => $db->show_string($id),
-                        'firstname' => $db->show_string($line->firstname),
-                        'lastname' => $db->show_string($line->lastname),
-                        'entity_id' => $db->show_string($line->entity_id),
-                        'entity_label' => $db->show_string($line->entity_label),
-                    )
-                );
-            }
-        }
-        usort($_SESSION[$origin]['diff_list']['copy']['users'], "cmpUsers");
-    }
-} elseif (isset($_GET['action']) && $_GET['action'] == "remove_dest") {
-    unset( $_SESSION[$origin]['diff_list']['dest']);
-} elseif (isset($_GET['action']) && $_GET['action'] == "remove_entity") {
+}
+
+// Action ?
+if (isset($_GET['action']))
+    $action = $_GET['action'];
+else  
+    $action = false;
+
+// Id ?
+if(isset($_GET['id']))
+    $id = $_GET['id'];
+else  
+    $id = false;
+
+// Rank for remove/move ?
+if(isset($_GET['rank']))
     $rank = $_GET['rank'];
-    if (isset($_GET['id']) && ! empty($_GET['id'])) {
-        $id = $_GET['id'];
-        if ($_SESSION[$origin]['diff_list']['copy']['entities'][$rank]['entity_id'] == $id) {
-            unset($_SESSION[$origin]['diff_list']['copy']['entities'][$rank]);
-            $_SESSION[$origin]['diff_list']['copy']['entities'] = array_values(
-                $_SESSION[$origin]['diff_list']['copy']['entities']
-            );
-        }
-    }
-} elseif (isset($_GET['action']) && $_GET['action'] == "remove_user") {
-    $rank = $_GET['rank'];
-    if (isset($_GET['id']) && ! empty($_GET['id'])) {
-        $id = $_GET['id'];
-        if ($_SESSION[$origin]['diff_list']['copy']['users'][$rank]['user_id'] == $id) {
-            unset($_SESSION[$origin]['diff_list']['copy']['users'][$rank]);
-            $_SESSION[$origin]['diff_list']['copy']['users'] = array_values(
-                $_SESSION[$origin]['diff_list']['copy']['users']
-            );
-        }
-    }
-} elseif (isset($_GET['action']) && $_GET['action'] == "dest_to_copy") {
-    if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
-        && ! empty($_SESSION[$origin]['diff_list']['dest']['user_id'])
-    ) {
+else
+    $rank = false;
+
+// Mode (dest/copy or custom copy mode)
+if(isset($_GET['diffusion_list']))
+    $diffusion_list_name = $_GET['diffusion_list'];
+else 
+    $diffusion_list_name = 'copy';
+
+// Dest user    
+if(isset($_SESSION[$origin]['diff_list']['dest']['user_id']) 
+    && !empty($_SESSION[$origin]['diff_list']['dest']['user_id']))
+    $dest_is_set = true;
+else
+    $dest_is_set = false;
+    
+//echo "<br/>Action=$action rank=$rank id=$id list=$diffusion_list_name";
+/****************************************************************************************
+** SWITCH ON ACTION REQUEST
+****************************************************************************************/ 
+switch($action) {
+// ADDS
+//***************************************************************************************
+// Add USER AS dest/copy/custom mode
+case "add_user":
+    $db->query(
+        "SELECT u.firstname, u.lastname, u.department, e.entity_id, e.entity_label "
+        . " FROM " . USERS_TABLE . " u "
+        . " LEFT JOIN " . ENT_USERS_ENTITIES . " ue ON u.user_id = ue.entity_id "
+        . " LEFT JOIN " . ENT_ENTITIES . " e ON ue.entity_id = e.entity_id" 
+        . " WHERE u.user_id='" . $db->protect_string_db($id) . "'"
+    );
+    $line = $db->fetch_object();
+    
+    if ($diffusion_list_name == 'copy' && !$dest_is_set) {
+        // Dest not set => add as dest
+        $_SESSION[$origin]['diff_list']['dest']['user_id'] = $db->show_string($id);
+        $_SESSION[$origin]['diff_list']['dest']['firstname'] = $db->show_string($line->firstname);
+        $_SESSION[$origin]['diff_list']['dest']['lastname'] = $db->show_string($line->lastname);
+        $_SESSION[$origin]['diff_list']['dest']['entity_id'] = $db->show_string($line->entity_id);
+        $_SESSION[$origin]['diff_list']['dest']['entity_label'] = $db->show_string($line->entity_label);
+    } else {
+        // Dest already set => add to listinstance mode (copy/custom)
         array_push(
-            $_SESSION[$origin]['diff_list']['copy']['users'],
+            $_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'],
             array(
-                'user_id' => $_SESSION[$origin]['diff_list']['dest']['user_id'],
-                'firstname' => $_SESSION[$origin]['diff_list']['dest']['firstname'],
-                'lastname' => $_SESSION[$origin]['diff_list']['dest']['lastname'],
-                'entity_id' => $_SESSION[$origin]['diff_list']['dest']['entity_id'],
-                'entity_label' => $_SESSION[$origin]['diff_list']['dest']['entity_label'],
+                'user_id' => $db->show_string($id),
+                'firstname' => $db->show_string($line->firstname),
+                'lastname' => $db->show_string($line->lastname),
+                'entity_id' => $db->show_string($line->entity_id),
+                'entity_label' => $db->show_string($line->entity_label),
             )
-        );
-        unset( $_SESSION[$origin]['diff_list']['dest']);
-        usort($_SESSION[$origin]['diff_list']['copy']['users'], "cmpUsers");
+        ); 
     }
-} elseif (isset($_GET['action']) && $_GET['action'] == "copy_to_dest") {
-    if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
-        && ! empty($_SESSION[$origin]['diff_list']['dest']['user_id'])
+    usort($_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'], "cmpUsers");
+    break;
+
+// ADD ENTITY AS copy/custom mode
+case 'add_entity':
+    $db->query(
+        "SELECT entity_id, entity_label FROM " . ENT_ENTITIES
+        . " WHERE entity_id = '" . $db->protect_string_db($id) . "'"
+    );
+    $line = $db->fetch_object();
+    
+    array_push(
+        $_SESSION[$origin]['diff_list'][$diffusion_list_name]['entities'],
+        array(
+            'entity_id'    => $db->show_string($id),
+            'entity_label' => $db->show_string($line->entity_label)
+        )
+    );
+    usort($_SESSION[$origin]['diff_list'][$diffusion_list_name]['entities'], "cmpEntity");   
+    break;    
+
+// REMOVE
+//***************************************************************************************
+// Remove DEST
+case 'remove_dest':
+    unset($_SESSION[$origin]['diff_list']['dest']);
+    break;
+
+// Remove USER
+case 'remove_user':
+    if($rank !== false && $id && $diffusion_list_name
+        && $_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'][$rank]['user_id'] == $id
     ) {
+        unset($_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'][$rank]);
+        $_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'] = array_values(
+            $_SESSION[$origin]['diff_list'][$diffusion_list_name]['users']
+        );
+    }
+    break;
+
+// Remove ENTITY
+case 'remove_entity':
+    if($rank !== false && $id && $diffusion_list_name
+        && $_SESSION[$origin]['diff_list'][$diffusion_list_name]['entities'][$rank]['entity_id'] == $id
+    ) {
+        unset($_SESSION[$origin]['diff_list'][$diffusion_list_name]['entities'][$rank]);
+        $_SESSION[$origin]['diff_list'][$diffusion_list_name]['entities'] = array_values(
+            $_SESSION[$origin]['diff_list'][$diffusion_list_name]['entities']
+        );
+    }
+    break;
+
+// MOVE
+//***************************************************************************************    
+case 'dest_to_copy':
+    if ($dest_is_set) {
         array_push(
             $_SESSION[$origin]['diff_list']['copy']['users'],
             array(
@@ -318,66 +319,67 @@ if (isset($_GET['action']) && $_GET['action'] == "add_entity") {
             )
         );
         unset($_SESSION[$origin]['diff_list']['dest']);
+        usort($_SESSION[$origin]['diff_list']['copy']['users'], "cmpUsers");
     }
-    $rank = $_GET['rank'];
-    if (isset($_SESSION[$origin]['diff_list']['copy']['users'][$rank]['user_id'])
-        && ! empty($_SESSION[$origin]['diff_list']['copy']['users'][$rank]['user_id'])
+    break;
+
+case 'copy_to_dest':
+    if ($dest_is_set) {
+        array_push(
+            $_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'],
+            array(
+                'user_id' => $_SESSION[$origin]['diff_list']['dest']['user_id'],
+                'firstname' => $_SESSION[$origin]['diff_list']['dest']['firstname'],
+                'lastname' => $_SESSION[$origin]['diff_list']['dest']['lastname'],
+                'entity_id' => $_SESSION[$origin]['diff_list']['dest']['entity_id'],
+                'entity_label' => $_SESSION[$origin]['diff_list']['dest']['entity_label'],
+            )
+        );
+        unset($_SESSION[$origin]['diff_list']['dest']);
+    }
+    if (isset($_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'][$rank]['user_id'])
+        && !empty($_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'][$rank]['user_id'])
     ) {
-        $_SESSION[$origin]['diff_list']['dest']['user_id'] = $_SESSION[$origin]['diff_list']['copy']['users'][$rank]['user_id'];
-        $_SESSION[$origin]['diff_list']['dest']['firstname'] = $_SESSION[$origin]['diff_list']['copy']['users'][$rank]['firstname'];
-        $_SESSION[$origin]['diff_list']['dest']['lastname'] = $_SESSION[$origin]['diff_list']['copy']['users'][$rank]['lastname'];
-        $_SESSION[$origin]['diff_list']['dest']['entity_id'] = $_SESSION[$origin]['diff_list']['copy']['users'][$rank]['entity_id'];
-        $_SESSION[$origin]['diff_list']['dest']['entity_label'] = $_SESSION[$origin]['diff_list']['copy']['users'][$rank]['entity_label'];
-        unset( $_SESSION[$origin]['diff_list']['copy']['users'][$rank]);
-        $_SESSION[$origin]['diff_list']['copy']['users'] = array_values(
-            $_SESSION[$origin]['diff_list']['copy']['users']
+        $_SESSION[$origin]['diff_list']['dest']['user_id'] = $_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'][$rank]['user_id'];
+        $_SESSION[$origin]['diff_list']['dest']['firstname'] = $_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'][$rank]['firstname'];
+        $_SESSION[$origin]['diff_list']['dest']['lastname'] = $_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'][$rank]['lastname'];
+        $_SESSION[$origin]['diff_list']['dest']['entity_id'] = $_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'][$rank]['entity_id'];
+        $_SESSION[$origin]['diff_list']['dest']['entity_label'] = $_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'][$rank]['entity_label'];
+        unset( $_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'][$rank]);
+        $_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'] = array_values(
+            $_SESSION[$origin]['diff_list'][$diffusion_list_name]['users']
         );
     }
-    usort($_SESSION[$origin]['diff_list']['copy']['users'], "cmpUsers");
-} 
-// AMF
-elseif (isset($_GET['action']) && $_GET['action'] == "add_contrib") {
-    if (isset($_GET['id']) && ! empty($_GET['id'])) {
-        $id = $_GET['id'];
-        $find = false;
-        for ($i = 0; $i < count(
-            $_SESSION[$origin]['diff_list']['contrib']['users']
-        ); $i ++
-        ) {
-            if ($id == $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['user_id']) {
-                $find = true;
-                break;
-            }
+    usort($_SESSION[$origin]['diff_list'][$diffusion_list_name]['users'], "cmpUsers");
+    break;    
+}
+ 
+// 1.4 create indexed array of existing diffusion to search for users/entities easily
+$indexed_diff_list = array();
+if(isset($_SESSION[$origin]['diff_list']['dest']['user_id'])) {
+    $user_id = $_SESSION[$origin]['diff_list']['dest']['user_id'];
+    $indexed_diff_list['users'][$user_id] = _PRINCIPAL_RECIPIENT;
+}
+for($i=0, $l=count($_SESSION[$origin]['diff_list']['copy']['users']); $i<$l; $i++) {
+    $user_id = $_SESSION[$origin]['diff_list']['copy']['users'][$i]['user_id'];
+    $indexed_diff_list['users'][$user_id] = _TO_CC;
+}
+for($i=0, $l=count($_SESSION[$origin]['diff_list']['copy']['entities']); $i<$l; $i++) {
+    $entity_id = $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_id'];
+    $indexed_diff_list['entities'][$entity_id] = _TO_CC;
+}
+if(count($_SESSION['diffusion_lists']) > 0) {
+    foreach($_SESSION['diffusion_lists'] as $list_id => $list_config) {
+        for($i=0, $l=count($_SESSION[$origin]['diff_list'][$list_id]['users']); $i<$l; $i++) {
+            $user_id = $_SESSION[$origin]['diff_list'][$list_id]['users'][$i]['user_id'];
+            $indexed_diff_list['users'][$user_id] = $list_config['item_label'];
         }
-        if ($find == false)
-        {
-            $db->query(
-                "SELECT u.firstname, u.lastname, u.department, e.entity_id, "
-                . "e.entity_label FROM " . USERS_TABLE . " u,  " . ENT_ENTITIES
-                . " e, " . ENT_USERS_ENTITIES . " ue WHERE  u.user_id='"
-                . $db->protect_string_db($id) . "' and "
-                . " e.entity_id = ue.entity_id and u.user_id = ue.user_id"
-            );
-            $line = $db->fetch_object();
-            $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['user_id'] = $db->show_string($id);
-            $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['firstname'] = $db->show_string($line->firstname);
-            $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['lastname'] = $db->show_string($line->lastname);
-            $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['entity_id'] = $db->show_string($line->entity_id);
-            $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['entity_label'] = $db->show_string($line->entity_label);
-        } 
-    }
-} elseif (isset($_GET['action']) && $_GET['action'] == "remove_contrib") {
-    $rank = $_GET['rank'];
-    if (isset($_GET['id']) && ! empty($_GET['id'])) {
-        $id = $_GET['id'];
-        if ($_SESSION[$origin]['diff_list']['contrib']['users'][$rank]['user_id'] == $id) {
-            unset($_SESSION[$origin]['diff_list']['contrib']['users'][$rank]);
-            $_SESSION[$origin]['diff_list']['contrib']['users'] = array_values(
-                $_SESSION[$origin]['diff_list']['contrib']['users']
-            );
+        for($i=0, $l=count($_SESSION[$origin]['diff_list'][$list_id]['entities']); $i<$l; $i++) {
+            $entity_id = $_SESSION[$origin]['diff_list'][$list_id]['entities'][$i]['entity_id'];
+            $indexed_diff_list['entities'][$entity_id] = $list_config['item_label'];
         }
     }
-} 
+}
 
 $core->load_html();
 $core->load_header(_USER_ENTITIES_TITLE);
@@ -418,9 +420,7 @@ echo _SEARCH_DIFF_LIST;
     <input type="hidden" name="display" value="true" />
     <input type="hidden" name="module" value="entities" />
     <input type="hidden" name="page" value="manage_listinstance" />
-    <input type="hidden" name="origin" id="origin" value="<?php
-echo $_REQUEST['origin'];
-?>" />
+    <input type="hidden" name="origin" id="origin" value="<?php echo $origin; ?>" />
     <center>
         <label for="all_list" class="bold">
             <a href="<?php
@@ -473,8 +473,7 @@ echo $link;
 <?php
 if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
     || (isset($_GET['what_services']) && !empty($_GET['what_services']))
-    //|| ( !empty($_SESSION[$origin]['diff_list']['dest']['user_id']) && !$onlyCc)
-    || (  !$onlyCc)
+    || ( !empty($_SESSION[$origin]['diff_list']['dest']['user_id']) && !$onlyCc)
     || ( $onlyCc
         && (count($_SESSION[$origin]['diff_list']['copy']['users']) > 0
             || count($_SESSION[$origin]['diff_list']['copy']['entities']) > 0)
@@ -482,46 +481,28 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
     || !empty($_SESSION[$origin]['diff_list']['contrib']['user_id'])
 ) {
     ?>
-        <div id="diff_list" align="center">
-        <h2 class="tit"><?php echo _DIFFUSION_LIST;?></h2>
-        <?php
+    <div id="diff_list" align="center">
+    <h2 class="tit"><?php echo _DIFFUSION_LIST;?></h2>
+    <?php
     if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
         && ! empty($_SESSION[$origin]['diff_list']['dest']['user_id'])
         && ! $onlyCc
     ) {
-        ?>
-            <h2 class="sstit"><?php
-        echo _PRINCIPAL_RECIPIENT;
-        ?></h2>
-            <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
-             <tr >
-             <td><img src="<?php
-        echo $_SESSION['config']['businessappurl'] . 'static.php?filename='
-            . 'manage_users_entities_b.gif&module=entities';
-        ?>" alt="<?php
-        echo _USER;
-        ?>" title="<?php
-        echo _USER;
-        ?>" /></td>
-                 <td ><?php
-        echo $_SESSION[$origin]['diff_list']['dest']['lastname'];
-        ?></td>
-                 <td ><?php
-        echo $_SESSION[$origin]['diff_list']['dest']['firstname'];
-        ?></td>
-                <td><?php
-        echo $_SESSION[$origin]['diff_list']['dest']['entity_label'];
-        ?></td>
-                <td class="action_entities"><a href="<?php
-        echo $link;
-        ?>&action=remove_dest" class="delete"><?php echo _DELETE;?></a></td>
-                <td class="action_entities"><a href="<?php
-        echo $link;
-        ?>&what_users=<?php
-        echo $whatUsers;
-        ?>&what_services=<?php
-        echo $whatServices;
-        ?>&action=dest_to_copy" class="down"><?php echo _TO_CC;?></a></td>
+        ?><h2 class="sstit"><?php echo _PRINCIPAL_RECIPIENT;?></h2>
+        <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
+        <tr >
+            <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b.gif&module=entities" alt="<?php
+                echo _USER; ?>" title="<?php echo _USER;?>" />
+            </td>
+            <td><?php echo $_SESSION[$origin]['diff_list']['dest']['lastname']; ?></td>
+            <td><?php echo $_SESSION[$origin]['diff_list']['dest']['firstname'];?></td>
+            <td><?php echo $_SESSION[$origin]['diff_list']['dest']['entity_label'];?></td>
+            <td class="action_entities">
+                <a href="<?php echo $link;?>&action=remove_dest" class="delete"><?php echo _DELETE;?></a>
+            </td>
+            <td class="action_entities"><a href="<?php echo $link; ?>&what_users=<?php echo $whatUsers; ?>&what_services=<?php echo $whatServices; 
+                ?>&action=dest_to_copy" class="down"><?php echo _TO_CC;?></a>
+            </td>
          </tr>
         </table>
     <?php
@@ -534,207 +515,203 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
     ) {
         ?>
         <h2 class="sstit"><?php echo _TO_CC;?></h2>
-        <table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec">
-        <?php
+        <table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php
         $color = ' class="col"';
-        for ($i = 0; $i < count(
-            $_SESSION[$origin]['diff_list']['copy']['entities']
-        ); $i ++
-        ) {
-            if ($color == ' class="col"') {
-                $color = '';
-            } else {
-                $color = ' class="col"';
-            }
+        for ($i=0, $l=count($_SESSION[$origin]['diff_list']['copy']['entities']); $i<$l; $i++) {
+            if ($color == ' class="col"') $color = '';
+            else $color = ' class="col"'; ?>
+            <tr <?php echo $color; ?> >
+                <td><img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_entities_b.gif&module=entities" alt="<?php
+                    echo _ENTITY; ?>" title="<?php echo _ENTITY; ?>" />
+                </td>
+                <td>
+                    <?php echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_id'];?>
+                </td>
+                <td colspan="2">
+                    <?php echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_label'];?>
+                </td>
+                <td class="action_entities">
+                <?php if (!$noDelete) { ?>
+                    <a href="<?php echo $link; ?>&what_users=<?php echo $whatUsers; ?>&what_services=<?php echo $whatServices; 
+                        ?>&action=remove_entity&diffusion_list=copy&rank=<?php echo $i; ?>&id=<?php
+                        echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_id']; ?>" class="delete"><?php echo _DELETE; ?>
+                    </a>
+                <?php } ?>
+                </td>
+                <td>&nbsp;</td>
+            </tr>
+        <?php }
+        for ($i=0, $l=count($_SESSION[$origin]['diff_list']['copy']['users']); $i<$l; $i++) {
+            if ($color == ' class="col"') $color = '';
+            else $color = ' class="col"';
             ?>
             <tr <?php echo $color; ?> >
-                <td><img src="<?php
-            echo $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'manage_entities_b.gif&module=entities';
-            ?>" alt="<?php
-            echo _ENTITY;
-            ?>" title="<?php
-            echo _ENTITY;
-            ?>" /></td>
-                <td ><?php
-            echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_id'];
-            ?></td>
-                <td colspan="2"><?php
-            echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_label'];
-            ?></td>
-                <td class="action_entities">
-                    <?php
-                    if (!$noDelete) {
-                        ?>
-                        <a href="<?php
-                        echo $link;
-                        ?>&what_users=<?php
-                        echo $whatUsers;
-                        ?>&what_services=<?php
-                        echo $whatServices;
-                        ?>&action=remove_entity&rank=<?php
-                        echo $i;
-                        ?>&id=<?php
-                        echo $_SESSION[$origin]['diff_list']['copy']['entities'][$i]['entity_id'];
-                        ?>" class="delete"><?php
-                        echo _DELETE;
-                        ?></a>
-                        <?php
-                    }
-                    ?>
+                <td>
+                    <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_users_entities_b.gif&module=entities" alt="<?php
+                        echo _USER; ?>" title="<?php echo _USER; ?>" />
                 </td>
-                <td  >&nbsp;</td>
+                <td >
+                    <?php echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['lastname']; ?>
+                </td>
+                <td >
+                    <?php echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['firstname']; ?>
+                </td>
+                <td>
+                    <?php echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['entity_label']; ?>
+                </td>
+                <td class="action_entities">
+                <?php
+                if (!$noDelete) {
+                    ?>
+                    <a href="<?php echo $link; ?>&what_users=<?php echo $whatUsers; ?>&what_services=<?php echo $whatServices; 
+                        ?>&action=remove_user&diffusion_list=copy&rank=<?php echo $i; ?>&id=<?php echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['user_id'];
+                        ?>" class="delete">
+                        <?php echo _DELETE;?>
+                    </a>
+                <?php } ?>
+                </td>
+                <td class="action_entities"><?php
+                if (! $onlyCc) {
+                    ?><a href="<?php echo $link; ?>&what_users=<?php echo $whatUsers; ?>&what_services=<?php echo $whatServices; 
+                        ?>&action=copy_to_dest&rank=<?php echo $i;?>" class="up">
+                        <?php echo _TO_DEST;?>
+                    </a>
+                <?php } ?>&nbsp;
+                </td>
             </tr>
         <?php
-        }
-        for ($i = 0; $i < count(
-            $_SESSION[$origin]['diff_list']['copy']['users']
-        ); $i ++
-        ) {
-            if ($color == ' class="col"') {
-                $color = '';
-            } else {
-                $color = ' class="col"';
-            }
-            ?>
-            <tr <?php echo $color; ?> >
-                <td><img src="<?php
-            echo $_SESSION['config']['businessappurl'] . 'static.php?filename='
-               . 'manage_users_entities_b.gif&module=entities';
-            ?>" alt="<?php
-            echo _USER;
-            ?>" title="<?php
-            echo _USER;
-            ?>" /></td>
-                <td ><?php
-            echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['lastname'];
-            ?></td>
-                <td ><?php
-            echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['firstname'];
-            ?></td>
-                <td><?php
-            echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['entity_label'];
-            ?></td>
-                <td class="action_entities">
-                    <?php
-                    if (!$noDelete) {
-                        ?>
-                        <a href="<?php
-                        echo $link;
-                        ?>&what_users=<?php
-                        echo $whatUsers;
-                        ?>&what_services=<?php
-                        echo $whatServices;
-                        ?>&action=remove_user&rank=<?php
-                        echo $i;
-                        ?>&id=<?php
-                        echo $_SESSION[$origin]['diff_list']['copy']['users'][$i]['user_id']
-                        ;?>" class="delete"><?php
-                        echo _DELETE;
-                        ?></a>
-                        <?php
-                    }
-                    ?>
-                    </td>
-                <td class="action_entities"><?php
-            if (! $onlyCc) {
-                ?><a href="<?php
-                echo $link;
-                ?>&what_users=<?php
-                echo $whatUsers;
-                ?>&what_services=<?php
-                echo $whatServices;
-                ?>&action=copy_to_dest&rank=<?php
-                echo $i;
-                ?>" class="up"><?php
-                echo _TO_DEST;
-                ?></a><?php
-            }
-            ?>&nbsp;</td>
-            </tr>
-            <?php
         }
         ?>
             </table>
             <br/>
 
     <?php
-    } else {
-        ?>
-            <h2 class="sstit"><?php echo _NO_LINKED_DIFF_LIST;?></h2>
-        <?php
-    }
+    } 
     ?>
     <br/>
     
     <?php
-    // AMF
-    if (count($_SESSION[$origin]['diff_list']['contrib']) > 0) 
-    {
-    ?>
-        <h2 class="sstit"><?php echo _TO_CONTRIB;?></h2>
-        <table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec">
-        <?php
-        $color = ' class="col"';
-        for ($i = 0; $i < count(
-            $_SESSION[$origin]['diff_list']['contrib']['users']
-        ); $i ++
-        ) {
-            if ($color == ' class="col"') {
-                $color = '';
-            } else {
+    // 1.4 custom listinstance modes
+    if(count($_SESSION['diffusion_lists']) > 0) {
+        foreach($_SESSION['diffusion_lists'] as $list_id => $mode_config) {
+            if (count($_SESSION[$origin]['diff_list'][$list_id]['users']) > 0
+             || count($_SESSION[$origin]['diff_list'][$list_id]['entities']) > 0) 
+            { ?><h2 class="sstit"><?php echo $mode_config['list_label'];?></h2>
+                <table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec">
+                <?php
                 $color = ' class="col"';
-            }
-            ?>
-            <tr <?php echo $color; ?> >
-                <td><img src="<?php
-            echo $_SESSION['config']['businessappurl'] . 'static.php?filename='
-               . 'manage_users_entities_b.gif&module=entities';
-            ?>" alt="<?php
-            echo _USER;
-            ?>" title="<?php
-            echo _USER;
-            ?>" /></td>
-                <td ><?php
-            echo $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['lastname'];
-            ?></td>
-                <td ><?php
-            echo $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['firstname'];
-            ?></td>
-                <td><?php
-            echo $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['entity_label'];
-            ?></td>
-                <td class="action_entities">
-                    <?php
-                    if (!$noDelete) {
-                        ?>
-                        <a href="<?php
-                        echo $link;
-                        ?>&what_users=<?php
-                        echo $whatUsers;
-                        ?>&what_services=<?php
-                        echo $whatServices;
-                        ?>&action=remove_contrib&rank=<?php
-                        echo $i;
-                        ?>&id=<?php
-                        echo $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['user_id']
-                        ;?>" class="delete"><?php
-                        echo _DELETE;
-                        ?></a>
-                        <?php
+                for ($i = 0; $i < count(
+                    $_SESSION[$origin]['diff_list'][$list_id]['users']
+                ); $i ++
+                ) {
+                    if ($color == ' class="col"') {
+                        $color = '';
+                    } else {
+                        $color = ' class="col"';
                     }
                     ?>
+                    <tr <?php echo $color; ?> >
+                        <td><img src="<?php
+                    echo $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                       . 'manage_users_entities_b.gif&module=entities';
+                    ?>" alt="<?php
+                    echo _USER . " " . $list_config['item_label'] ;
+                    ?>" title="<?php
+                    echo _USER . " " . $list_config['item_label'] ;
+                    ?>" /></td>
+                        <td ><?php
+                    echo $_SESSION[$origin]['diff_list'][$list_id]['users'][$i]['lastname'];
+                    ?></td>
+                        <td ><?php
+                    echo $_SESSION[$origin]['diff_list'][$list_id]['users'][$i]['firstname'];
+                    ?></td>
+                        <td><?php
+                    echo $_SESSION[$origin]['diff_list'][$list_id]['users'][$i]['entity_label'];
+                    ?></td>
+                    <td class="action_entities">
+                        <?php
+                        if (!$noDelete) {
+                            ?>
+                            <a href="<?php
+                            echo $link;
+                            ?>&what_users=<?php
+                            echo $whatUsers;
+                            ?>&what_services=<?php
+                            echo $whatServices;
+                            ?>&action=remove_user_mode&diffusion_list=<?php echo $list_id ?>&rank=<?php
+                            echo $i;
+                            ?>&id=<?php
+                            echo $_SESSION[$origin]['diff_list'][$list_id]['users'][$i]['user_id']
+                            ;?>" class="delete"><?php
+                            echo _DELETE;
+                            ?></a>
+                            <?php
+                        }
+                        ?>
+                        </td>
+                    </tr>
+                    <?php
+                }
+                for ($i = 0; $i < count(
+                    $_SESSION[$origin]['diff_list'][$list_id]['entities']
+                ); $i ++
+                ) {
+                    if ($color == ' class="col"') {
+                        $color = '';
+                    } else {
+                        $color = ' class="col"';
+                    }
+                    ?>
+                    <tr <?php echo $color; ?> >
+                        <td><img src="<?php
+                    echo $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                       . 'manage_users_entities_b.gif&module=entities';
+                    ?>" alt="<?php
+                    echo _ENTITY . " " . $list_config['item_label'] ;
+                    ?>" title="<?php
+                    echo _ENTITY . " " . $list_config['item_label'] ;
+                    ?>" /></td>
+                        <td ><?php
+                    echo $_SESSION[$origin]['diff_list'][$list_id]['entities'][$i]['entity_id'];
+                    ?></td>
+                        <td ><?php
+                    echo $_SESSION[$origin]['diff_list'][$list_id]['entities'][$i]['entity_label'];
+                    ?></td>
+                        <td>&nbsp;</td>
+                    <td class="action_entities">
+                        <?php
+                        if (!$noDelete) {
+                            ?>
+                            <a href="<?php
+                            echo $link;
+                            ?>&what_users=<?php
+                            echo $whatUsers;
+                            ?>&what_services=<?php
+                            echo $whatServices;
+                            ?>&action=remove_user&diffusion_list=<?php echo $list_id ?>&rank=<?php
+                            echo $i;
+                            ?>&id=<?php
+                            echo $_SESSION[$origin]['diff_list'][$list_id]['entities'][$i]['entity_id']
+                            ;?>" class="delete"><?php
+                            echo _DELETE;
+                            ?></a>
+                            <?php
+                        }
+                        ?>
                     </td>
-                <td class="action_entities">&nbsp;</td>
-            </tr>
-            <?php
-        }
-        ?>
-            </table>
-            <br/>
+                    <td class="action_entities">&nbsp;</td>
+                </tr>
+                <?php
+                }
+                ?>
+                    </table>
+                    <br/>
 
-    <?php
+            <?php
+            }
+        }
     }
+    
     ?>
     <form name="pop_diff" method="post" >
         <div align="center">
@@ -771,7 +748,6 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
         <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
             <thead>
                 <tr>
-                    <th><?php echo _ID;?></th>
                     <th ><?php echo _LASTNAME;?> </th>
                     <th ><?php echo _FIRSTNAME;?></th>
                     <th><?php echo _DEPARTMENT;?></th>
@@ -780,40 +756,55 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
             </thead>
             <?php
             $color = ' class="col"';
-            for ($j = 0; $j < count($users); $j ++) {
-                if ($color == ' class="col"') {
-                    $color = '';
-                } else {
-                    $color = ' class="col"';
-                }
+            for ($j=0, $m=count($users); $j<$m ; $j++) {
+                $user_id = $users[$j]['ID'];
+                if(isset($indexed_diff_list['users'][$user_id]))
+                    $already_in_list_as = $indexed_diff_list['users'][$user_id];
+                else 
+                    $already_in_list_as = false;
+                    
+                if ($color == ' class="col"') $color = '';
+                else $color = ' class="col"';
                 ?>
                     <tr <?php echo $color; ?>>
-                    <td><?php echo $users[$j]['ID'];?></td>
                     <td><?php echo $users[$j]['NOM']; ?></td>
                     <td><?php echo $users[$j]['PRENOM']; ?></td>
                     <td><?php echo $users[$j]['DEP'];?></td>
-                    <td class="action_entities"><a href="<?php
-                echo $link;
-                ?>&what_users=<?php
-                echo $whatUsers;
-                ?>&what_services=<?php
-                echo $whatServices;
-                ?>&action=add_user&id=<?php
-                echo $users[$j]['ID'];
-                ?>" class="change"><?php
-                echo _ADD;
-                ?></a>&nbsp;<a href="<?php
-                echo $link;
-                ?>&what_users=<?php
-                echo $whatUsers;
-                ?>&what_services=<?php
-                echo $whatServices;
-                ?>&action=add_contrib&id=<?php
-                echo $users[$j]['ID'];
-                ?>" class="change"><?php
-                echo _ADD_CONTRIB;
-                ?></a></td>
-                    </tr>
+                    <td class="action_entities"><?php
+                    if($already_in_list_as) {
+                        echo $already_in_list_as;
+                    } else { ?>
+                        <a href="<?php
+                        echo $link;
+                        ?>&what_users=<?php
+                        echo $whatUsers;
+                        ?>&what_services=<?php
+                        echo $whatServices;
+                        ?>&action=add_user&id=<?php
+                        echo $users[$j]['ID'];
+                        ?>" class="change"><?php
+                        echo _ADD;
+                        ?></a><?php
+                        if(count($_SESSION['diffusion_lists']) > 0) {
+                            foreach($_SESSION['diffusion_lists'] as $list_id => $list_config) {                            
+                                ?>&nbsp;<a href="<?php
+                                echo $link;
+                                ?>&what_users=<?php
+                                echo $whatUsers;
+                                ?>&what_services=<?php
+                                echo $whatServices;
+                                ?>&action=add_user&diffusion_list=<?php
+                                echo $list_id;
+                                ?>&id=<?php
+                                echo $users[$j]['ID'];
+                                ?>" class="change"><?php
+                                echo $list_config['item_label'];
+                                ?></a><?php
+                            }
+                        }
+                    }?>
+                    </td>
+                </tr>
                     <?php
             }
             ?>
@@ -824,33 +815,61 @@ if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
             <thead>
                 <tr>
                     <th><?php echo _ID;?></th>
-                    <th><?php echo _DEPARTMENT;?></th>
+                    <th><?php echo _LABEL;?></th>
                     <th>&nbsp;</th>
                 </tr>
             </thead>
             <?php
             $color = ' class="col"';
-            for ($j = 0; $j < count($entities); $j ++) {
-                if ($color == ' class="col"') {
-                    $color = '';
-                } else {
-                    $color = ' class="col"';
-                }
+            for ($j=0, $m=count($entities); $j<$m ; $j++) {
+                $entity_id = $entities[$j]['ID'];
+                if(isset($indexed_diff_list['entities'][$entity_id]))
+                    $already_in_list_as = $indexed_diff_list['entities'][$entity_id];
+                else 
+                    $already_in_list_as = false;
+                
+                if ($color == ' class="col"') $color = '';
+                else $color = ' class="col"';
                 ?>
-                        <tr <?php echo $color; ?>>
-                            <td><?php echo $entities[$j]['ID'];?></td>
-                            <td><?php echo $entities[$j]['DEP']; ?></td>
-                            <td class="action_entities"><a href="<?php
-                echo $link;
-                ?>&what_users=<?php
-                echo $whatUsers;
-                ?>&what_services=<?php
-                echo $whatServices;
-                ?>&action=add_entity&id=<?php
-                echo $entities[$j]['ID'];
-                ?>" class="change"><?php
-                echo _ADD_CC;
-                ?></a></td>
+                <tr <?php echo $color; ?>>
+                    <td><?php echo $entities[$j]['ID'];?></td>
+                    <td><?php echo $entities[$j]['DEP']; ?></td>
+                    <td class="action_entities"><?php
+                    if($already_in_list_as) {
+                        echo $already_in_list_as;
+                    } else { 
+                    ?><a href="<?php
+                    echo $link;
+                    ?>&what_users=<?php
+                    echo $whatUsers;
+                    ?>&what_services=<?php
+                    echo $whatServices;
+                    ?>&action=add_entity&id=<?php
+                    echo $entities[$j]['ID'];
+                    ?>" class="change"><?php
+                    echo _ADD_CC;
+                    ?></a><?php
+                    if(count($_SESSION['diffusion_lists']) > 0) {
+                        foreach($_SESSION['diffusion_lists'] as $list_id => $list_config) {
+                            if ($mode_config['allow_entities']) {
+                                ?>&nbsp;<a href="<?php
+                                echo $link;
+                                ?>&what_users=<?php
+                                echo $whatUsers;
+                                ?>&what_services=<?php
+                                echo $whatServices;
+                                ?>&action=add_entity&diffusion_list=<?php
+                                echo $list_id;
+                                ?>&id=<?php
+                                echo $entities[$j]['ID'];
+                                ?>" class="change"><?php
+                                echo $list_config['item_label'];
+                                ?></a><?php
+                            }
+                        }
+                    
+                    }
+                }?></td>
                 </tr>
                 <?php
             }

@@ -62,7 +62,7 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
 ) {
     if (! $onlyCC) {
         $content .= '<p class="sstit">' . _RECIPIENT . '</p>';
-        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">';
+        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
         $content .= '<tr class="col">';
         $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
                  . 'static.php?filename=manage_users_entities_b_small.gif'
@@ -83,7 +83,7 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
         if (! $onlyCC || count($_SESSION[$origin]['diff_list']['contrib']['users']) > 0) {
             $content .= '<p class="sstit">' . _TO_CC . '</p>';
         }
-        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">';
+        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
         $color = ' class="col"';
         for ($i = 0; $i < count(
             $_SESSION[$origin]['diff_list']['copy']['entities']
@@ -133,41 +133,62 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
         }
         $content .= '</table>';
     }
+    // 1.4 custom listinstance modes
+    if(count($_SESSION['diffusion_lists']) > 0) {
+        foreach($_SESSION['diffusion_lists'] as $list_id => $list_config) {
+            if(count($_SESSION[$origin]['diff_list'][$list_id]['users']) > 0 
+                || count($_SESSION[$origin]['diff_list'][$list_id]['entities']) > 0
+            ) {
+                if (! $onlyCC || count($_SESSION[$origin]['diff_list']['contrib']['users']) > 0) {
+                    $content .= '<br/><p class="sstit">' . $list_config['list_label'] . '</p>';
+                }
+                $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
+                $color = ' class="col"';
+                for ($i=0, $l=count($_SESSION[$origin]['diff_list'][$list_id]['entities']); $i<$l; $i++) {
+                    if ($color == ' class="col"') $color = '';
+                    else $color = ' class="col"';
+                    $content .= '<tr ' . $color . ' >';
+                    $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
+                             . 'static.php?filename=manage_entities_b_small.gif&module='
+                             . 'entities" alt="' . _ENTITY . " " .$list_config['item_label'] . '" title="' . _ENTITY . " " .$list_config['item_label']
+                             . '" /></td>';
+                    $content .= '<td >' . $_SESSION[$origin]['diff_list'][$list_id]['entities'][$i]['entity_id']
+                             .'</td>';
+                    $content .= '<td colspan="2">'
+                             . $_SESSION[$origin]['diff_list'][$list_id]['entities'][$i]['entity_label']
+                             .'</td>';
+                    $content .= '</tr>';
+                }
+                for ($i=0, $l=count($_SESSION[$origin]['diff_list'][$list_id]['users']); $i<$l ; $i++) {
+                    if ($color == ' class="col"') $color = '';
+                    else $color = ' class="col"';
+                    
+                    $content .= '<tr ' . $color . ' >';
+                    $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
+                             . 'static.php?filename=manage_users_entities_b_small.gif'
+                             . '&module=entities" alt="' . _USER . " " .$list_config['item_label'] . '" title="' . _USER . " " .$list_config['item_label'] 
+                             . '" /></td>';
+                    $content .= '<td >'
+                             . $_SESSION[$origin]['diff_list'][$list_id]['users'][$i]['firstname']
+                             . '</td>';
+                    $content .= '<td >'
+                             . $_SESSION[$origin]['diff_list'][$list_id]['users'][$i]['lastname']
+                             . '</td>';
+                    $content .= '<td>'
+                             . $_SESSION[$origin]['diff_list'][$list_id]['users'][$i]['entity_label']
+                             . '</td>';
+                    $content .= '</tr>';
+                }
+                $content .= '</table>';            
+            }
+        }
+    }
+    
     // AMF contrib
     if (count($_SESSION[$origin]['diff_list']['contrib']['users']) > 0
         || count($_SESSION[$origin]['diff_list']['contrib']['entities']) > 0
     ) {
-        if (! $onlyCC || count($_SESSION[$origin]['diff_list']['contrib']['users']) > 0) {
-            $content .= '<br/><p class="sstit">' . _TO_CONTRIB . '</p>';
-        }
-        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
-        $color = ' class="col"';
-        for ($i = 0; $i < count(
-            $_SESSION[$origin]['diff_list']['contrib']['users']
-        ); $i ++
-        ) {
-            if ($color == ' class="col"') {
-                $color = '';
-            } else {
-                $color = ' class="col"';
-            }
-            $content .= '<tr ' . $color . ' >';
-            $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
-                     . 'static.php?filename=manage_users_entities_b_small.gif'
-                     . '&module=entities" alt="' . _USER . '" title="' . _USER
-                     . '" /></td>';
-            $content .= '<td >'
-                     . $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['firstname']
-                     . '</td>';
-            $content .= '<td >'
-                     . $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['lastname']
-                     . '</td>';
-            $content .= '<td>'
-                     . $_SESSION[$origin]['diff_list']['contrib']['users'][$i]['entity_label']
-                     . '</td>';
-            $content .= '</tr>';
-        }
-        $content .= '</table>';
+        
     }
     
     
