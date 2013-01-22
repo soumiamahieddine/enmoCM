@@ -109,7 +109,7 @@ if($_SESSION['service_tag_form'] == 'formentity')
 							{
 							 	if($color == ' class="col"')
 								{
-									$color = '';
+									$color = ' ';
 								}
 								else
 								{
@@ -125,9 +125,57 @@ if($_SESSION['service_tag_form'] == 'formentity')
 								<?php
 							}
 							?>
-						</table>
+						</table><br/>
 					<?php
 				}
+                
+                // 1.4 custom listinstance modes
+                if(count($_SESSION['diffusion_lists']) > 0) {
+                    foreach($_SESSION['diffusion_lists'] as $list_id => $mode_config) {
+                        if (count($_SESSION['m_admin']['entity']['listmodel'][$list_id]['users']) > 0
+                         || count($_SESSION['m_admin']['entity']['listmodel'][$list_id]['entities']) > 0) 
+                        { ?><h2 class="sstit"><?php echo $mode_config['list_label'];?></h2>
+                            <table cellpadding="0" cellspacing="0" border="0" class="listingsmall liste_diff spec">
+                            <?php
+                            $color = ' class="col"';
+                            for ($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$list_id]['users']) ; $i<$l ; $i++) {
+                                if ($color == ' class="col"') $color = ' ';
+                                else $color = ' class="col"'; 
+                                ?>
+                                <tr <?php echo $color; ?> >
+                                    <td>
+                                        <img src="<?php echo $_SESSION['config']['businessappurl'] ?>static.php?filename=manage_users_entities_b.gif&module=entities" alt="<?php echo _USER . " " . $list_config['item_label'] ;?>" title="<?php echo _USER . " " . $list_config['item_label'] ; ?>" />
+                                    </td>
+                                    <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$list_id]['users'][$i]['lastname']; ?></td>
+                                    <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$list_id]['users'][$i]['firstname'];?></td>
+                                    <td><?php echo $_SESSION['m_admin']['entity']['listmodel'][$list_id]['users'][$i]['entity_label']; ?></td>
+                                </tr> <?php
+                            }
+                            for ($i = 0; $i < count(
+                                $_SESSION['m_admin']['entity']['listmodel'][$list_id]['entities']
+                            ); $i ++
+                            ) {
+                                if ($color == ' class="col"') $color = '';
+                                else $color = ' class="col"';
+                                ?>
+                                <tr <?php echo $color; ?> >
+                                    <td>
+                                        <img src="<?php echo $_SESSION['config']['businessappurl'] ?>static.php?filename=manage_entities_b.gif&module=entities" alt="<?php echo _ENTITY . " " . $list_config['item_label'] ;?>" title="<?php echo _ENTITY . " " . $list_config['item_label'] ; ?>" />
+                                    </td>
+                                    <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$list_id]['entities'][$i]['entity_id']; ?></td>
+                                    <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$list_id]['entities'][$i]['entity_label']; ?></td>
+                                    <td>&nbsp;</td>
+                                </tr>
+                            <?php
+                            }
+                            ?>
+                            </table>
+                            <br/>
+
+                        <?php
+                        }
+                    }
+                }
 				/// TO DO : use modal instead of popup
 				?>
 				<p class="buttons">
