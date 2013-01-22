@@ -408,6 +408,9 @@ class diffusion_list extends dbquery
                 );                
                 //$this->show();
             }
+            
+            // COPIES TO USERS
+            //***********************************************************************************************
             $maxSeq = 0;
             if ($concat) {
                 $this->query(
@@ -425,9 +428,6 @@ class diffusion_list extends dbquery
                     $maxSeq = (int) $res->max_seq + 1;
                 }
             }
-            
-            // COPIES TO USERS
-            //***********************************************************************************************
             for ($i = 0; $i < count($diffList['copy']['users']); $i ++) {
                 $insert = true;
                 if ($concat) {
