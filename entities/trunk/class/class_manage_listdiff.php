@@ -596,7 +596,7 @@ class diffusion_list extends dbquery
                                 . $this->protect_string_db(trim($listType))
                                 . "'  and item_id = '"
                                 . $this->protect_string_db(
-                                    trim($diffList['copy']['users'][$i]['user_id'])
+                                    trim($diffList[$list_id]['users'][$i]['user_id'])
                                 ) . "' and item_type = 'user_id' and item_mode= '".$list_id."'"
                             );
                             //$this->show();
@@ -849,6 +849,7 @@ class diffusion_list extends dbquery
         //$this->show();
         while ($res = $this->fetch_object()) {
             $list_id = $res->item_mode;
+            if($list_id=='cc') $list_id = 'copy';
             array_push(
                 $listinstance[$list_id]['users'],
                 array(
@@ -872,6 +873,7 @@ class diffusion_list extends dbquery
 
         while ($res = $this->fetch_object()) {
             $list_id = $res->item_mode;
+            if($list_id=='cc') $list_id = 'copy';
             array_push(
                 $listinstance[$list_id]['entities'],
                 array(
