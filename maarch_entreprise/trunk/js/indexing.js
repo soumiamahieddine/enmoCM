@@ -864,7 +864,7 @@ function getIframeContent(path_manage_script) {
             //window.alert(templateContentBody.innerHTML);
             new Ajax.Request(path_manage_script,
             {
-                method:'post',
+                method:'post', asynchronous:false,
                 parameters: { template_content : templateContentBody.innerHTML
                 },
                 onSuccess: function(answer){
