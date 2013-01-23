@@ -107,8 +107,7 @@ $mode_form = 'fullscreen';
  * @param $mode String Action mode 'mass' or 'page'
  * @return String The form content text
  **/
-function get_form_txt($values, $pathManageAction,  $actionId, $table,
-$module, $collId, $mode )
+function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $collId, $mode )
 {
     if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
         $ieBrowser = true;
@@ -142,9 +141,11 @@ $module, $collId, $mode )
     $defaultTitle = $tmp['default_title'];
     if ($core->is_module_loaded('entities')) {
         $services = array();
+        $EntitiesIdExclusion = array();
         $db = new dbquery();
         $db->connect();
 
+/*
         if (count($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$actionId]['entities']) > 0) {
             $db->query(
                 "select entity_id, entity_label, short_label from "
@@ -164,7 +165,36 @@ $module, $collId, $mode )
                 );
             }
         }
+*/
+        if (count($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$actionId]['entities']) > 0) {
+            $db->query(
+                "select entity_id from "
+                . ENT_ENTITIES . " where entity_id not in ("
+                . $_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$actionId]['entities']
+                . ") and enabled= 'Y' order by entity_id"
+            );
+            //$db->show();
+            while ($res = $db->fetch_object()) {
+                array_push($EntitiesIdExclusion, $res->entity_id);
+            }
+        }
     }
+    //var_dump($EntitiesIdExclusion);
+    require_once 'modules' . DIRECTORY_SEPARATOR . 'entities'
+        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+        . 'class_manage_entities.php';
+    $ent = new entity();
+    $allEntitiesTree= array();
+    $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
+        $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
+    );
+
+/*
+    echo '<pre>';
+    print_r($allEntitiesTree);
+    echo '</pre>';exit;
+*/
+
 
     if ($core->is_module_loaded('physical_archive')) {
         $boxes = array();
@@ -256,11 +286,11 @@ $module, $collId, $mode )
         $frmStr .= '<iframe src="' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&dir=indexing_searching&page='
                 . 'choose_file" name="choose_file" id="choose_file" '
-                . 'frameborder="0" scrolling="no" width="100%" height="40">'
+                . 'frameborder="0" scrolling="no" width="100%" height="25">'
                 . '</iframe>';
         $frmStr .= '</div>';
     }
-
+    $frmStr .= '<hr />';
     if ($core->test_service('index_attachment', 'attachments', false)) {
         $frmStr .= '<table width="100%" align="center" border="0" >';
         $frmStr .= '<tr id="attachment_tr" style="display:' . $displayValue
@@ -572,10 +602,19 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . '\'diff_list_div\', \'indexing\', \'' . $displayValue
                 . '\');">';
         $frmStr .= '<option value="">' . _CHOOSE_DEPARTMENT . '</option>';
-        for ($i = 0; $i < count($services); $i ++) {
-            $frmStr .= '<option value="' . $services[$i]['ID'] . '" >'
-                    . $db->show_string($services[$i]['SHORT_LABEL'])
+        $countAllEntities = count($allEntitiesTree);
+        for ($cptEntities = 0;$cptEntities < $countAllEntities;$cptEntities++) {
+            if (!$allEntitiesTree[$cptEntities]['KEYWORD']) {
+                $frmStr .= '<option value="' . $allEntitiesTree[$cptEntities]['ID'] . '"';
+                if ($allEntitiesTree[$cptEntities]['DISABLED']) {
+                    $frmStr .= ' disabled="disabled" class="disabled_entity"';
+                } else {
+                     //$frmStr .= ' style="font-weight:bold;"';
+                }
+                $frmStr .=  '>' 
+                    .  $db->show_string($allEntitiesTree[$cptEntities]['SHORT_LABEL']) 
                     . '</option>';
+            }
         }
         $frmStr .= '</select></td>';
         $frmStr .= '<td><span class="red_asterisk" id="destination_mandatory" '
@@ -750,7 +789,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . '&page=getIframeTemplateContent\');valid_action_form(\'index_file\', \''
                 . $pathManageAction . '\', \'' . $actionId . '\', \'' . $resId
                 . '\', \'' . $table . '\', \'' . $module . '\', \'' . $collId
-                . '\', \'' . $mode . '\', false);"/> ';
+                . '\', \'' . $mode . '\', true);"/> ';
     }
     $frmStr .= '<input name="close" id="close" type="button" value="'
             . _CANCEL . '" class="button" '

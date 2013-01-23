@@ -8,6 +8,16 @@
     font-size: 12px;
 }
 
+/*option[disabled]*/
+.disabled_entity
+{
+    color: #93D1E4;
+    font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    font-style: normal;
+    font-size: 10px;
+}
+
 .blue_style_big, .blue_style_big[selected=selected]
 {
     color: #0000FF;
