@@ -367,6 +367,69 @@ class entity extends dbquery
         }
         return $entities;
     }
+    
+    /**
+    * Gets all children of an entity in an array
+    *
+    * @param string $parent the root of the tree
+    * @param string $selected identifier of the selected entity
+    * @param string $tabspace margin of separation of tree's branches
+    * @param array  $except array of entity_id ( elements of the tree that should not appear )
+    */
+
+    public function getEntityChildrenTreeAdvanced($entities, $parent = '', $tabspace = '', $except = array(), $where = '')
+    {
+        $this->connect();
+        if ($this->protect_string_db(trim($parent)) == "") {
+            $this->query('select entity_id, entity_label, short_label from ' 
+                . ENT_ENTITIES 
+                . " where enabled = 'Y' and (parent_entity_id ='' or parent_entity_id is null) " . $where);
+        } else {
+            $this->query('select entity_id, entity_label, short_label from ' 
+            . ENT_ENTITIES . " where enabled = 'Y' and parent_entity_id = '" 
+            . $this->protect_string_db(trim($parent)) . "'" . $where);
+        }
+        //$this->show();
+        if ($this->nb_result() > 0) {
+            $espace = $tabspace.'&emsp;';
+            while ($line = $this->fetch_object()) {
+                if (!in_array($line->entity_id, $except)) {
+                     array_push(
+                        $entities, 
+                        array(
+                            'ID' =>$line->entity_id, 
+                            'LABEL' =>  $espace . $this->show_string($line->entity_label),
+                             'SHORT_LABEL' =>$espace . $this->show_string($line->short_label), 
+                             'KEYWORD' => false,
+                             'DISABLED' => false,
+                        )
+                    );
+                } else {
+                    array_push(
+                        $entities, 
+                        array(
+                            'ID' =>$line->entity_id, 
+                            'LABEL' =>  $espace . $this->show_string($line->entity_label),
+                             'SHORT_LABEL' =>$espace . $this->show_string($line->short_label), 
+                             'KEYWORD' => false,
+                             'DISABLED' => true,
+                        )
+                    );
+                }
+                $db2 = new entity();
+                $db2->connect();
+                $db2->query('select entity_id from ' . ENT_ENTITIES 
+                    . " where enabled = 'Y' and parent_entity_id = '" 
+                    . $this->protect_string_db(trim($line->entity_id)) . "'" . $where);
+                $tmp = array();
+                if ($db2->nb_result() > 0) {
+                    $tmp = $db2->getEntityChildrenTreeAdvanced($tmp,$line->entity_id,  $espace, $except);
+                    $entities = array_merge($entities, $tmp);
+                }
+            }
+        }
+        return $entities;
+    }
 
 
     /**
@@ -430,6 +493,74 @@ class entity extends dbquery
         return $entities;
     }
 
+    /**
+    * Gets all entities in an array
+    *
+    * @param string $parent the root of the tree
+    * @param string $selected identifier of the selected entity
+    * @param string $tabspace margin of separation of tree's branches
+    * @param array  $except array of entity_id ( elements of the tree that should not appear )
+    */
+    public function getShortEntityTreeAdvanced($entities, $parent = 'all',  $tabspace = '', $except = array(), $entity_type = '', $root=true)
+    {
+        $tab_entity_type = array();
+        $my_tab_entity_type = array();
+        $where = '';
+        if ($entity_type == '') {
+            if ($_SESSION['user']['UserId'] == 'superadmin') {
+                $entity_type = "all";
+            } else {
+                $entity_type = $this->get_entity_type_level($_SESSION['user']['primaryentity']['id']);
+            }
+        }
+        $tab_entity_type = $this->load_entities_types_for_user($entity_type);
+
+        foreach ($tab_entity_type as $theType) {
+            $my_tab_entity_type[] = "'".$theType['id']."'";
+        }
+
+        if (count($my_tab_entity_type)>0) {
+            $where = " and entity_type in(" . join(",", $my_tab_entity_type).")";
+        }
+
+        if (is_array($parent)) {
+            //print_r($parent);
+            for ($i=0;$i<count($parent);$i++) {
+                $tmp = array();
+                if ($entity = $this->isEnabledEntity($parent[$i]['ENTITY_ID'])) {
+                    if ($root) {
+                        array_push(
+                            $entities, 
+                            array(
+                                'ID' =>$parent[$i]['ENTITY_ID'], 'LABEL' => 
+                                $this->show_string($parent[$i]['ENTITY_LABEL']), 
+                                'SHORT_LABEL' => $this->show_string($parent[$i]['SHORT_LABEL']), 
+                                'KEYWORD' => false,
+                                'DISABLED' => false,
+                            )
+                        );
+                    }
+                    $tmp = $this->getEntityChildrenTreeAdvanced(
+                        $tmp, 
+                        $parent[$i]['ENTITY_ID'], 
+                        $tabspace, 
+                        $except, 
+                        $where
+                    );
+                    $entities = array_merge($entities, $tmp);
+                }
+            }
+        } elseif ($parent == 'all') {
+            $entities = $this->getEntityChildrenTreeAdvanced(
+                $entities,
+                '',  
+                $tabspace, 
+                $except, 
+                $where
+            );
+        }
+        return $entities;
+    }
 
 
     /**
