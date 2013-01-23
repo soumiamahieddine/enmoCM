@@ -201,7 +201,7 @@ class list_show_with_template extends list_show
                 || (isset($this->do_actions_arr)
                 && $this->do_actions_arr[$theline] == true))
         ) {
-            $return = '//onclick="valid_form( \'page\', \''.$result[$theline][0]['value'].'\', \''.$this->id_action.'\');"';
+            $return = '//onclick="valid_form( \'page\', \''.$result[$theline][0]['value'].'\', \''.$this->id_action.'\');" onmouseover="this.style.cursor=\'pointer\';"';
             return $return;
         }
 
