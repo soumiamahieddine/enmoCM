@@ -463,11 +463,13 @@ class admin_basket extends dbquery
                 'error' => ''
             );
         } else {// Launches the query in quiet mode
-            $this->connect();
-            $res = $this->query(
-                "select count(*) from " . $_SESSION['collections'][$ind]['view']
-                . " " . $where, true
-            );
+			if (! empty ($where)) {
+				$this->connect();
+				$res = $this->query(
+					"select count(*) from " . $_SESSION['collections'][$ind]['view']
+					. " " . $where, true
+				);
+			}
         }
         if (!isset($res) || !$res) {
             $_SESSION['error'] .= " " . $_SESSION['m_admin']['basket']['coll_id'];
