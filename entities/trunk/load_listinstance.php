@@ -1,8 +1,8 @@
 <?php
 /**
-* File : change_doctype.php
+* File : load_listinstance.php
 *
-* Script called by an ajax object to process the document type change during
+* Script called by an ajax object to process the document listinstance change during
 * indexing (index_mlb.php)
 *
 * @package  maarch
@@ -49,11 +49,11 @@ if ($_REQUEST['load_from_model'] == 'true') {
 }
 
 $content = '';
-if (! $onlyCC) {
+if (!$onlyCC) {
     if (isset($_SESSION['validStep']) && $_SESSION['validStep'] == 'ok') {
-        $content .= "";
+        $content .= '';
     } else {
-        $content .= '<h2>' . _LINKED_DIFF_LIST . ' : </h2>';
+        //$content .= '<h2>' . _LINKED_DIFF_LIST . ' : </h2>';
     }
 }
 
@@ -61,8 +61,8 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
     && ! empty($_SESSION[$origin]['diff_list']['dest']['user_id'])
 ) {
     if (! $onlyCC) {
-        $content .= '<p class="sstit">' . _RECIPIENT . '</p>';
-        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
+        $content .= '<span class="sstit">' . _RECIPIENT . '</span>';
+        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listingIndex spec">';
         $content .= '<tr class="col">';
         $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
                  . 'static.php?filename=manage_users_entities_b_small.gif'
@@ -75,15 +75,24 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
         $content .= '<td>' . $_SESSION[$origin]['diff_list']['dest']['entity_label']
                  .'</td>';
         $content .= '</tr>';
-        $content .= '</table><br/>';
+        $content .= '</table>';
     }
     if (count($_SESSION[$origin]['diff_list']['copy']['users']) > 0
         || count($_SESSION[$origin]['diff_list']['copy']['entities']) > 0
     ) {
         if (! $onlyCC || count($_SESSION[$origin]['diff_list']['contrib']['users']) > 0) {
-            $content .= '<p class="sstit">' . _TO_CC . '</p>';
+            $content .= '<h4 onclick="new Effect.toggle(\'copiesDiv\', \'blind\', {delay:0.2});'
+                . 'whatIsTheDivStatus(\'copiesDiv\', \'divStatus_copiesDiv\');" '
+                . 'class="categorie" style="width:405px;" onmouseover="this.style.cursor=\'pointer\';">';
+            $content .= '<small><span id="divStatus_copiesDiv" style="color:#1B99C4;"><<</span>&nbsp;' 
+                . _TO_CC;
+            //$content .=  _TO_CC;
+            $content .= '</small></h4>';
+            $content .= '<div id="copiesDiv"  style="display:none">';
+            $content .= '<div>';
+            //$content .= '<span class="sstit">' . _TO_CC . '</span>';
         }
-        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
+        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listingIndex spec">';
         $color = ' class="col"';
         for ($i = 0; $i < count(
             $_SESSION[$origin]['diff_list']['copy']['entities']
@@ -132,6 +141,8 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
             $content .= '</tr>';
         }
         $content .= '</table>';
+        $content .= '</div>';
+        $content .= '</div>';
     }
     // 1.4 custom listinstance modes
     if(count($_SESSION['diffusion_lists']) > 0) {
@@ -140,9 +151,17 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
                 || count($_SESSION[$origin]['diff_list'][$list_id]['entities']) > 0
             ) {
                 if (! $onlyCC || count($_SESSION[$origin]['diff_list']['contrib']['users']) > 0) {
-                    $content .= '<br/><p class="sstit">' . $list_config['list_label'] . '</p>';
+                    $content .= '<h4 onclick="new Effect.toggle(\'' . $list_id . '\', \'blind\', {delay:0.2});'
+                        . 'whatIsTheDivStatus(\'' . $list_id . '\', \'divStatus_' . $list_id . '\');" '
+                        . 'class="categorie" style="width:405px;" onmouseover="this.style.cursor=\'pointer\';">';
+                    $content .= '<small><span id="divStatus_' . $list_id . '" style="color:#1B99C4;"><<</span>&nbsp;' 
+                        . $list_config['list_label'];
+                    //$content .=  _TO_CC;
+                    $content .= '</small></h4>';
+                    $content .= '<div id="' . $list_id . '"  style="display:none">';
+                    $content .= '<div>';
                 }
-                $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
+                $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listingIndex spec">';
                 $color = ' class="col"';
                 for ($i=0, $l=count($_SESSION[$origin]['diff_list'][$list_id]['entities']); $i<$l; $i++) {
                     if ($color == ' class="col"') $color = '';
@@ -179,7 +198,9 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
                              . '</td>';
                     $content .= '</tr>';
                 }
-                $content .= '</table>';            
+                $content .= '</table>';
+                $content .= '</div>';
+                $content .= '</div>';
             }
         }
     }
@@ -191,7 +212,6 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
         
     }
     
-    
     $labelButton = _MODIFY_LIST;
     $arg = '&mode=up';
 } else {
@@ -202,17 +222,17 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
 if ($onlyCC) {
     $arg .= '&only_cc';
 }
-$content_standard = '<center><h2>' . _DIFF_LIST . '</h2></center>';
-$content_standard .= '<p class="button" >';
+$content_standard = '<center><b>' . _DIFF_LIST . '</b> | ';
+$content_standard .= '<span class="button" >';
 $content_standard .= '<img src="' . $_SESSION['config']['businessappurl']
          . 'static.php?filename=modif_liste.png&module=entities" alt="" />'
          . '<a href="javascript://" onclick="window.open(\''
          . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
          . '&module=entities&page=manage_listinstance&origin=' . $origin . $arg
          . '\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,'
-         . 'resizable=yes,width=1280,height=800,location=no\');">'
-         . $labelButton . '</a>';
-$content_standard .= '</p>';
+         . 'resizable=yes,width=1280,height=800,location=no\');"><small>'
+         . $labelButton . '</small></a>';
+$content_standard .= '</span></center>';
 
 echo "{status : 0, div_content : '" . addslashes($content_standard . $content . '<br>') 
     . "', div_content_action : '" . addslashes($content) . "'}";
