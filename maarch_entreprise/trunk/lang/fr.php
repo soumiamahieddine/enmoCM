@@ -1305,7 +1305,7 @@ if (!defined('_EXPORT_LIST'))    define( '_EXPORT_LIST', 'Exporter');
 if (!defined('_ADD_LINKS'))    define('_ADD_LINKS', 'Ajouter des liaisons');
 if (!defined('_PUT_IN_COPY'))    define('_PUT_IN_COPY', 'Ajouter en copie');
 if (!defined('_POWERED_BY'))    define('_POWERED_BY', 'Powered by Maarch&trade;.');
-if (!defined('_LINK_TO_DOC'))    define('_LINK_TO_DOC', 'Lier &agrave; un courrier existant');
+if (!defined('_LINK_TO_DOC'))    define('_LINK_TO_DOC', 'Lier &agrave; un courrier');
 if (!defined('_LINK_REFERENCE'))    define('_LINK_REFERENCE', 'Pour lier vous devez choisir un courrier existant');
 if (!defined('_LINKED_TO'))    define('_LINKED_TO', 'Li&eacute; au document ');
 if (!defined('_NOW_LINK_WITH_THIS_ONE'))    define('_NOW_LINK_WITH_THIS_ONE', ' est maintenant li&eacute; &agrave; ce documents');

@@ -630,7 +630,7 @@ if ($core->is_module_loaded('physical_archive')) {
     $_ENV['categories']['incoming']['other_cases']['arbox_id'] = array (
         'type_form' => 'interger',
         'type_field' => 'integer',
-        'mandatory' => true,
+        'mandatory' => false,
         'label' => _BOX_ID,
         'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
@@ -641,7 +641,7 @@ if ($core->is_module_loaded('physical_archive')) {
     $_ENV['categories']['outgoing']['other_cases']['arbox_id'] = array (
         'type_form' => 'interger',
         'type_field' => 'integer',
-        'mandatory' => true,
+        'mandatory' => false,
         'label' => _BOX_ID,
         'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
@@ -652,7 +652,7 @@ if ($core->is_module_loaded('physical_archive')) {
     $_ENV['categories']['internal']['other_cases']['arbox_id'] = array (
         'type_form' => 'interger',
         'type_field' => 'integer',
-        'mandatory' => true,
+        'mandatory' => false,
         'label' => _BOX_ID,
         'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
@@ -663,7 +663,7 @@ if ($core->is_module_loaded('physical_archive')) {
     $_ENV['categories']['market_document']['other_cases']['arbox_id'] = array (
         'type_form' => 'interger',
         'type_field' => 'integer',
-        'mandatory' => true,
+        'mandatory' => false,
         'label' => _BOX_ID,
         'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
@@ -674,7 +674,7 @@ if ($core->is_module_loaded('physical_archive')) {
     $_ENV['categories']['postindexing_document']['other_cases']['arbox_id'] = array (
         'type_form' => 'interger',
         'type_field' => 'integer',
-        'mandatory' => true,
+        'mandatory' => false,
         'label' => _BOX_ID,
         'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',

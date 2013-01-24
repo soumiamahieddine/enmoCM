@@ -1,7 +1,7 @@
 <?php
 
 /*
-*   Copyright 2008-2012 Maarch
+*   Copyright 2008-2013 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -48,7 +48,7 @@ $core_tools->load_header('', true, false);
                 var test = window.top.document.getElementById('file_iframe');
                 if (test != null)
                 {
-                    test.src = '<?php 
+                    test.src = '<?php
                         echo $_SESSION['config']['businessappurl'];
                         ?>index.php?display=true&dir=indexing_searching&page=file_iframe&#navpanes=0';
                 }
@@ -59,19 +59,19 @@ $core_tools->load_header('', true, false);
         $extension = explode(".",$_FILES['file']['name']);
         $count_level = count($extension)-1;
         $the_ext = $extension[$count_level];
-        $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId'] 
+        $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
             . '_' . rand() . '.' . strtolower($the_ext);
         $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
         //$md5 = md5_file($_FILES['file']['tmp_name']);
         if (!is_uploaded_file($_FILES['file']['tmp_name'])) {
-                $_SESSION['error'] = _FILE_NOT_SEND . ". " . _TRY_AGAIN 
-                    . ". " . _MORE_INFOS . " (<a href=\"mailto:" 
-                    . $_SESSION['config']['adminmail'] . "\">" 
+                $_SESSION['error'] = _FILE_NOT_SEND . ". " . _TRY_AGAIN
+                    . ". " . _MORE_INFOS . " (<a href=\"mailto:"
+                    . $_SESSION['config']['adminmail'] . "\">"
                     . $_SESSION['config']['adminname'] . "</a>)";
         } elseif (!@move_uploaded_file($_FILES['file']['tmp_name'], $filePathOnTmp)) {
-            $_SESSION['error'] = _FILE_NOT_SEND . ". " . _TRY_AGAIN . ". " 
-                . _MORE_INFOS . " (<a href=\"mailto:" 
-                . $_SESSION['config']['adminmail'] . "\">" 
+            $_SESSION['error'] = _FILE_NOT_SEND . ". " . _TRY_AGAIN . ". "
+                . _MORE_INFOS . " (<a href=\"mailto:"
+                . $_SESSION['config']['adminmail'] . "\">"
                 . $_SESSION['config']['adminname'] . "</a>)";
         } else {
             $_SESSION['upfile']['size'] = $_FILES['file']['size'];
@@ -91,13 +91,13 @@ $core_tools->load_header('', true, false);
         ?>
         <script language="javascript" type="text/javascript">
             function refreshFrame(frameId) {
-                frameId.src = '<?php 
+                frameId.src = '<?php
                     echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&dir=indexing_searching&page=file_iframe';
             }
 
             var test = window.top.document.getElementById('file_iframe');
-            if (test.src == '<?php 
+            if (test.src == '<?php
                 echo $_SESSION['config']['businessappurl'];
                 ?>index.php?display=true&dir=indexing_searching&page=file_iframe&#navpanes=0') {
                 //test.location.refresh();
@@ -107,7 +107,7 @@ $core_tools->load_header('', true, false);
 
             if (test != null) {
                 //fix pb with toolbar of pdf
-                test.src = '<?php 
+                test.src = '<?php
                     echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&dir=indexing_searching&page=file_iframe&#navpanes=0';
             }
@@ -115,36 +115,37 @@ $core_tools->load_header('', true, false);
         <?php
     }
     ?>
-    <form name="select_file_form" id="select_file_form" method="get" enctype="multipart/form-data" action="<?php 
+    <form name="select_file_form" id="select_file_form" method="get" enctype="multipart/form-data" action="<?php
         echo $_SESSION['config']['businessappurl'];
         ?>index.php?display=true&dir=indexing_searching&page=choose_file" class="forms">
         <input type="hidden" name="display" value="true" />
         <input type="hidden" name="dir" value="indexing_searching" />
         <input type="hidden" name="page" value="choose_file" />
         <p>
-            <label for="file" ><?php  echo _CHOOSE_FILE; ?> </label>
-            <input type="file" name="file" id="file" onchange="this.form.method = 'post';this.form.submit();" value="<?php 
-                if (isset($_SESSION['file_path'])) { 
-                    echo $_SESSION['file_path'];
-                } ?>" style="width:200px;margin-left:33px;" />
-                <?php
-            if (
-                !empty($_SESSION['upfile']['local_path']) 
+            <label for="file" >
+            <?php
+             if (
+                !empty($_SESSION['upfile']['local_path'])
                 && empty($_SESSION['error'])
             ) {
-                ?><img src="<?php 
+                ?><img src="<?php
                     echo $_SESSION['config']['businessappurl'];
-                    ?>static.php?filename=picto_stat_enabled.gif" alt="" class="img_upload_doc" />
+                    ?>static.php?filename=picto_stat_enabled.gif" />
                 <?php
-                echo "<br/><center><small>" . _DOWNLOADED_FILE 
-                    . " : " . $_SESSION['upfile']['name'];"</small></center><br/>";
+                echo  _DOWNLOADED_FILE;
             } else {
-                ?><img src="<?php 
+                ?><img src="<?php
                     echo $_SESSION['config']['businessappurl'];
-                    ?>static.php?filename=picto_stat_disabled.gif" class="img_upload_doc" alt=""/>
+                    ?>static.php?filename=picto_stat_disabled.gif" />
                     <?php
+                    echo _CHOOSE_FILE;
             }
             ?>
+            </label>
+            <input type="file" name="file" id="file" onchange="this.form.method = 'post';this.form.submit();" value="<?php
+                if (isset($_SESSION['file_path'])) {
+                    echo $_SESSION['file_path'];
+                } ?>" style="width:200px;margin-left:33px;" />
         </p>
     </form>
     <?php $core_tools->load_js();?>

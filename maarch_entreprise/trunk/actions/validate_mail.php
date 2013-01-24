@@ -1516,11 +1516,13 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     {
         // Arbox_id + Arbatch_id
         $box_id = get_value_fields($values_form, 'arbox_id');
-        $query_res .= ", arbox_id = ".$box_id."";
-        require_once('modules'.DIRECTORY_SEPARATOR.'physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
-        $physical_archive = new physical_archive();
-        $pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
-        $query_res .= ", arbatch_id = ".$pa_return_value."";
+        if ($box_id <> '') {
+            $query_res .= ", arbox_id = ".$box_id."";
+            require_once('modules'.DIRECTORY_SEPARATOR.'physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+            $physical_archive = new physical_archive();
+            $pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
+            $query_res .= ", arbatch_id = ".$pa_return_value."";
+        }
     }
     $query_res = preg_replace('/set ,/', 'set ', $query_res);
     //$query_res = substr($query_res, strpos($query_string, ','));

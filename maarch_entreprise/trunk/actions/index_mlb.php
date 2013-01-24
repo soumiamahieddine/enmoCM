@@ -1,7 +1,7 @@
 <?php
 
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008, 2013 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -296,7 +296,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $frmStr .= '<tr id="attachment_tr" style="display:' . $displayValue
                 . ';">';
         $frmStr .= '<td><label for="attachment" class="form_title" >'
-                . _LINK_TO_DOC . ' : </label></td>';
+                . _LINK_TO_DOC . ' </label></td>';
         $frmStr .= '<td>&nbsp;</td>';
         $frmStr .= '<td class="indexing_field"><input type="radio" '
                 . 'name="attachment" id="attach" value="true" '
@@ -623,33 +623,11 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<tr id="diff_list_tr" style="display:none;">';
         $frmStr .= '<td colspan="3">';
         $frmStr .= '<div id="diff_list_div" class="scroll_div" '
-                . 'style="height:200px; width:420px; border: 1px solid;"></div>';
+                //. 'style="height:200px; width:420px; border: 1px solid;"></div>';
+                . 'style="width:420px; border: 1px solid;"></div>';
         $frmStr .= '</td>';
         $frmStr .= '</tr>';
     }
-    /*** Physical_archive : Arbox ***/
-    if ($core->is_module_loaded('physical_archive')) {
-        $frmStr .= '<tr id="box_id_tr" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td><label for="arbox_id" class="form_title" id="label_box"'
-                . ' style="display:inline;" >' . _BOX_ID . '</label></td>';
-        $frmStr .= '<td>&nbsp;</td>';
-        $frmStr .= '<td class="indexing_field"><select name="arbox_id" '
-                . 'id="arbox_id" onchange="clear_error(\'frm_error_' . $actionId
-                . '\');" >';
-        $frmStr .= '<option value="">' . _CHOOSE_BOX . '</option>';
-        for ($i = 0; $i < count($boxes); $i ++) {
-            $frmStr .= '<option value="' . $boxes[$i]['ID'] . '" >'
-                    . $db->show_string($boxes[$i]['LABEL']) . '</option>';
-        }
-        $frmStr .= '</select></td>';
-        $frmStr .= '<td><span class="red_asterisk" id="arbox_id_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
-        $frmStr .= '</tr>';
-    }
-    
-    
-   
-    
     
     /*** Process limit date ***/
     $frmStr .= '<tr id="process_limit_date_use_tr" style="display:'
@@ -683,12 +661,33 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td><span class="red_asterisk" id="process_limit_date_mandatory"'
             . ' style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
-
+    
+    $frmStr .= '</table>';
+    
+    /*** CUSTOM INDEXES ***/
+    $frmStr .= '<div id="comp_indexes" style="display:block;">';
+    $frmStr .= '</div>';
+    
+    /*** Complementary fields ***/
+    $frmStr .= '<hr />';
+    
+    $frmStr .= '<h4 onclick="new Effect.toggle(\'complementary_fields\', \'blind\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'complementary_fields\', \'divStatus_complementary_fields\');" '
+        . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
+    $frmStr .= ' <span id="divStatus_complementary_fields" style="color:#1C99C5;"><<</span>&nbsp;' 
+        . _OPT_INDEXES;
+    $frmStr .= '</h4>';
+    $frmStr .= '<div id="complementary_fields"  style="display:none">';
+    $frmStr .= '<div>';
+    
+    $frmStr .= '<table width="100%" align="center" border="0" '
+            . 'id="indexing_fields" style="display:block;">';
+    
     /*** Chrono number ***/
     $frmStr .= '<tr id="chrono_number_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td><label for="chrono_number" class="form_title" >'
             . _CHRONO_NUMBER . '</label></td>';
-    $frmStr .= '<td>&nbsp;</td>';
+    $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><input type="text" '
             . 'name="chrono_number" id="chrono_number" '
             . 'onchange="clear_error(\'frm_error_' . $actionId . '\');"/></td>';
@@ -696,13 +695,32 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
     
+    /*** Physical_archive : Arbox ***/
+    if ($core->is_module_loaded('physical_archive')) {
+        $frmStr .= '<tr id="box_id_tr" style="display:' . $displayValue . ';">';
+        $frmStr .= '<td><label for="arbox_id" class="form_title" id="label_box"'
+                . ' style="display:inline;" >' . _BOX_ID . '</label></td>';
+        $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+        $frmStr .= '<td class="indexing_field"><select name="arbox_id" '
+                . 'id="arbox_id" onchange="clear_error(\'frm_error_' . $actionId
+                . '\');" >';
+        $frmStr .= '<option value="">' . _CHOOSE_BOX . '</option>';
+        for ($i = 0; $i < count($boxes); $i ++) {
+            $frmStr .= '<option value="' . $boxes[$i]['ID'] . '" >'
+                    . $db->show_string($boxes[$i]['LABEL']) . '</option>';
+        }
+        $frmStr .= '</select></td>';
+        $frmStr .= '<td><span class="red_asterisk" id="arbox_id_mandatory" '
+                . 'style="display:inline;">*</span>&nbsp;</td>';
+        $frmStr .= '</tr>';
+    }
 
     /*** Folder : Market & Project ***/
     if ($core->is_module_loaded('folder')) {
         $frmStr .= '<tr id="project_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td><label for="project" class="form_title" >' . _PROJECT
                 . '</label></td>';
-        $frmStr .= '<td>&nbsp;</td>';
+        $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
         $frmStr .= '<td class="indexing_field"><input type="text" '
                 . 'name="project" id="project" onblur="clear_error(\'frm_error_'
                 . $actionId . '\');return false;" /><div id="show_project" '
@@ -713,7 +731,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<tr id="market_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td><label for="market" class="form_title" >' . _MARKET
                 . '</label></td>';
-        $frmStr .= '<td>&nbsp;</td>';
+        $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
         $frmStr .= '<td class="indexing_field"><input type="text" name="market"'
                 . ' id="market" onblur="clear_error(\'frm_error_' . $actionId
                 . '\');fill_project(\'' . $_SESSION['config']['businessappurl']
@@ -729,7 +747,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<tr id="status" style="display:' . $displayValue . ';">';
         $frmStr .= '<td><label for="status" class="form_title" >' . _STATUS
                 . '</label></td>';
-        $frmStr .= '<td>&nbsp;</td>';
+        $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
         $frmStr .= '<td class="indexing_field"><select name="status" '
                 . 'id="status" onchange="clear_error(\'frm_error_' . $actionId
                 . '\');">';
@@ -745,23 +763,20 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '</tr>';
     }
 
-
     /*** Tags ***/
     if ($core->is_module_loaded('tags') 
         && ($core->test_service('tag_view', 'tags',false) == 1)
         && ($core->test_service('add_tag_to_res', 'tags',false) == 1)
-       ) 
-    {
-        include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR.
-        "templates/index_mlb/index.php");
+    ) {
+        include_once('modules/tags/templates/index_mlb/index.php');
     }
-    
     
     // Fin
     $frmStr .= '</table>';
 
-    $frmStr .= '<div id="comp_indexes" style="display:block;">';
     $frmStr .= '</div>';
+    $frmStr .= '</div>';
+
     $frmStr .= '</div>';
     /*** Actions ***/
     $frmStr .= '<hr width="90%"/>';
@@ -1457,20 +1472,10 @@ function process_category_check($catId, $values)
     //For specific case => chrono number
     $chronoOut = get_value_fields($values, 'chrono_number');
     if (isset($_ENV['categories'][$catId]['other_cases']['chrono_number'])
-        && $_ENV['categories'][$catId]['other_cases']['arbox_id']['mandatory'] == true
+        && $_ENV['categories'][$catId]['other_cases']['chrono_number']['mandatory'] == true
     ) {
         if ($chronoOut == false) {
             $_SESSION['action_error'] = _NO_CHRONO_NUMBER_DEFINED . ' ';
-            return false;
-        }
-    }
-    if ($chronoOut != false && preg_match('/^[0-9]+$/', $chronoOut)) {
-        $physicalArchive = new physical_archive();
-        $paReturnValue = $physicalArchive->load_box_db(
-            $boxId, $catId, $_SESSION['user']['UserId']
-        );
-        if ($paReturnValue == false) {
-            $_SESSION['action_error'] = _ERROR_TO_INDEX_NEW_BATCH_WITH_PHYSICAL_ARCHIVE;
             return false;
         }
     }
@@ -1813,26 +1818,28 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     if ($core->is_module_loaded('physical_archive')) {
         // Arbox_id + Arbatch_id
         $boxId = get_value_fields($formValues, 'arbox_id');
-        array_push(
-            $_SESSION['data'],
-            array(
-                'column' => 'arbox_id',
-                'value' => $boxId,
-                'type' => 'integer',
-            )
-        );
-        $physicalArchive = new physical_archive();
-        $paReturnValue = $physicalArchive->load_box_db(
-            $boxId, $catId, $_SESSION['user']['UserId']
-        );
-        array_push(
-            $_SESSION['data'],
-            array(
-                'column' => 'arbatch_id',
-                'value' => $paReturnValue,
-                'type' => 'integer',
-            )
-        );
+        if ($boxId <> '') {
+            array_push(
+                $_SESSION['data'],
+                array(
+                    'column' => 'arbox_id',
+                    'value' => $boxId,
+                    'type' => 'integer',
+                )
+            );
+            $physicalArchive = new physical_archive();
+            $paReturnValue = $physicalArchive->load_box_db(
+                $boxId, $catId, $_SESSION['user']['UserId']
+            );
+            array_push(
+                $_SESSION['data'],
+                array(
+                    'column' => 'arbatch_id',
+                    'value' => $paReturnValue,
+                    'type' => 'integer',
+                )
+            );
+        }
     }
     //print_r($_SESSION['data']);
     $resId = $resource->load_into_db(

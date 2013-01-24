@@ -602,6 +602,11 @@ input.button {
     width: 990px;
 }
 
+.listingIndex {
+    margin: 0px 0px 0;
+    width: 400px;
+}
+
 .detailtabricatordebug{
     width: 90%;
 }
@@ -674,6 +679,9 @@ width: 770px;
 .listing th {
     color: #16ADEB;
 }
+.listingIndex th {
+    color: #16ADEB;
+}
 .listingsmall th {
     color: #16ADEB;
 }
@@ -688,7 +696,9 @@ width: 770px;
 .listing th .add {
     font-weight: normal;
 }
-
+.listingIndex th .add {
+    font-weight: normal;
+}
 .listing2 th .add {
     font-weight: normal;
 }
@@ -702,6 +712,12 @@ width: 770px;
 }
 
 .listing th, .listing td {
+    text-align: left;
+    padding: 5px 10px 6px 20px;
+    vertical-align: middle;
+}
+
+.listingIndex th, .listingIndex td {
     text-align: left;
     padding: 5px 10px 6px 20px;
     vertical-align: middle;
@@ -757,6 +773,10 @@ width: 770px;
     background-color: #93D1E4;
 }
 
+.listingIndex td {
+    background-color: #93D1E4;
+}
+
 .listing2 td {
     background-color: #DEEDF3;
 }
@@ -772,6 +792,11 @@ width: 770px;
 .listing .col td {
     background-color: #DEEDF3;
 }
+
+.listingIndex .col td {
+    background-color: #DEEDF3;
+}
+
 .listing .white td {
     background-color: #FFFFFF;
 }
