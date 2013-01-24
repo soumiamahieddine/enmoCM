@@ -46,7 +46,8 @@ $tags->load_sessiontag($res_id,$coll_id);
 
 
 $frm_str .= '<h3 onclick="new Effect.toggle(\'tag_div\', \'blind\', {delay:0.2});';
-$frm_str .= 'whatIsTheDivStatus(\'tag_div\', \'divStatus_tag_div\');return false;" class="tag" style="width:90%;">';
+$frm_str .= 'whatIsTheDivStatus(\'tag_div\', \'divStatus_tag_div\');return false;" '
+    . 'onmouseover="this.style.cursor=\'pointer\';" class="tag" style="width:90%;">';
 $frm_str .= ' <span id="divStatus_tag_div" style="color:#1C99C5;"><<</span>';
 $frm_str .= '&nbsp;<b>'._TAGS.' :</b>';
 $frm_str .= '<span class="lb1-details">&nbsp;</span>';
