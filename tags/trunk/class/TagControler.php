@@ -377,6 +377,8 @@ class tag_controler
 		/*
 		 * Add in the memory [Session] the tag value for one ressource
 		 */
+		$new_tag_label = $this->control_label($new_tag_label);
+		
 		$db = new dbquery();
 		$db->connect();
 		
@@ -523,6 +525,7 @@ class tag_controler
 		$label  = str_replace('\'', ' ', $label);
 		$label  = str_replace('"', ' ', $label);
 		$label  = str_replace('\\', ' ', $label);
+		$label  = str_replace(' ', '', $label);
 		
 		
 		//On découpe la chaine composée de virgules
