@@ -616,6 +616,7 @@ if (!defined('_COLLECTION')) define( '_COLLECTION', 'Collection');
 if (!defined('_RM_COLL')) define('_RM_COLL', 'Collection des archives');
 if (!defined('_EVENT')) define( '_EVENT', 'Ev&egrave;nement');
 if (!defined('_LINK')) define( '_LINK', 'Lien');
+if (!defined('_LOG_COLL')) define( '_LOG_COLL', 'Collection des logs');
 
 
 //BITMASK

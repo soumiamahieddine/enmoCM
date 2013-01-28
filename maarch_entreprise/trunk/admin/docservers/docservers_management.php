@@ -17,15 +17,18 @@ if ($mode == "list") {
     );
 } elseif ($mode == "up" || $mode == "add") {
     $func = new functions();
-    $isModuleDocserver = true;
-    if (isset($_SESSION['m_admin']['docservers']['coll_id'])) {
-        foreach($_SESSION['collections'] as $collection) {
-            if ($_SESSION['m_admin']['docservers']['coll_id'] == $collection['id']) {
-                $isModuleDocserver = false;
+    if ($mode == "add" ) {
+        $isModuleDocserver = false;
+    } elseif ($mode == "up" ) {
+        $isModuleDocserver = true;
+        if (isset($_SESSION['m_admin']['docservers']['coll_id'])) {
+            foreach($_SESSION['collections'] as $collection) {
+                if ($_SESSION['m_admin']['docservers']['coll_id'] == $collection['id']) {
+                    $isModuleDocserver = false;
+                }
             }
         }
     }
-
     ?>
     <h1><img src="<?php
     echo $_SESSION['config']['businessappurl'];
@@ -492,7 +495,9 @@ if ($mode == "list") {
             <script type="text/javascript">
                 //on load in GB
                 $('size_limit_number').value = $('size_limit_number').value / (1000 * 1000 * 1000)
-                $('actual_size_number').value = $('actual_size_number').value / (1000 * 1000 * 1000)
+                if ($('actual_size_number')) {
+                    $('actual_size_number').value = $('actual_size_number').value / (1000 * 1000 * 1000)
+                }
             </script>
             <?php
     }

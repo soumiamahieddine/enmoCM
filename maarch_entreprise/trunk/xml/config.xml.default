@@ -89,6 +89,23 @@
         <path_to_lucene_index/>
     </COLLECTION>
     <COLLECTION>
+        <id>log_coll</id>
+        <label>_LOG_COLL</label>
+        <table>res_log</table>
+        <version_table/>
+        <view>res_log_view</view>
+        <adr>adr_log</adr>
+        <index_file>index_log.xml</index_file>
+        <script_add/>
+        <script_search/>
+        <script_search_result/>
+        <script_details/>
+        <extensions>
+            <table/>
+        </extensions>
+        <path_to_lucene_index/>
+    </COLLECTION>
+    <COLLECTION>
         <id>io_coll</id>
         <label>_IO_COLL</label>
         <table>rm_ios</table>

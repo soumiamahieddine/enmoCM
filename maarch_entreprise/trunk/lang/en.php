@@ -554,6 +554,7 @@ if (!defined('_LINK_TO_DOC'))     define('_LINK_TO_DOC', 'Link to an existing do
 if (!defined('_LINK_TO_THE_DOCUMENT'))     define('_LINK_TO_THE_DOCUMENT', 'Link to document ');
 if (!defined('_LOADING_INFORMATIONS'))     define( '_LOADING_INFORMATIONS', 'Loading informations');
 if (!defined('_LOAD_QUERY')) define('_LOAD_QUERY', 'Load custom search');
+if (!defined('_LOG_COLL')) define( '_LOG_COLL', 'Logs Collection');
 if (!defined('_LOGIN')) define('_LOGIN', 'Connection');
 if (!defined('_LOGIN_HISTORY'))     define('_LOGIN_HISTORY', 'Login of user');
 if (!defined('_LOGIN_MODE')) define( '_LOGIN_MODE', 'Login process type');
