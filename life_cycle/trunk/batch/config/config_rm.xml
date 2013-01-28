@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+    <CONFIG>
+        <Lang>fr</Lang> <!-- fr, en-->
+        <MaarchDirectory>C:\xampp\htdocs\maarch_entreprise_trunk\</MaarchDirectory>
+        <TmpDirectory>C:\xampp\htdocs\maarch_entreprise_trunk\modules\life_cycle\batch\tmp\</TmpDirectory>
+        <PathToCompressTool>C:\Program Files\7-Zip\7z.exe</PathToCompressTool>
+        <MaarchApps>maarch_entreprise</MaarchApps>
+        <LogLevel>INFO</LogLevel>  <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
+        <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
+        <StackSizeLimit>10000</StackSizeLimit>
+        <CustomPath></CustomPath> <!-- path to the custom file to create pdi, ex : c:\xampp\htdocs\maarch_entreprise_trunk\custom\main_lagi\modules\life_cycle\batch\custom.php -->
+        <CustomLang></CustomLang><!-- path to the custom language file, ex : /var/www/dggn/custom/DGGN/fr.php -->
+        <ApacheUserAndGroup>www-data:www-data</ApacheUserAndGroup>
+    </CONFIG>
+    <CONFIG_BASE>
+        <databaseserver>127.0.0.1</databaseserver>
+        <databaseserverport>5432</databaseserverport>
+        <databasetype>POSTGRESQL</databasetype>
+        <databasename>sictiam_archivage</databasename>
+        <databaseuser>postgres</databaseuser>
+        <databasepassword>maarch</databasepassword>
+    </CONFIG_BASE>
+    <COLLECTION>
+        <Id>rm_coll</Id>
+        <Table>rm_documents</Table>
+        <View>rm_documents_view</View>
+        <Adr>adr_rm</Adr>
+    </COLLECTION>
+    <LOG4PHP>
+        <enabled>true</enabled>
+        <Log4PhpLogger>loggerTechnique</Log4PhpLogger>
+        <Log4PhpBusinessCode>MaarchEntrepriseDemo</Log4PhpBusinessCode>
+        <Log4PhpConfigPath>/var/www/maarch_entreprise_trunk/apps/maarch_entreprise/xml/log4php.xml</Log4PhpConfigPath>
+    </LOG4PHP>
+    <ESIGN>
+        <enabledEsign>false</enabledEsign>
+        <configEsign>c:\xampp\htdocs\maarch_entreprise_trunk\modules\esign\xml\config_esign_from_lc.xml</configEsign>
+        <targetCycleEsign>OAIS_CACHED</targetCycleEsign>
+    </ESIGN>
+</ROOT>

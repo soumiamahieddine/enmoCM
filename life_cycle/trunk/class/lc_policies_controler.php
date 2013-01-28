@@ -84,7 +84,15 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
                     //history
                     if ($_SESSION['history']['lcadd'] == "true") {
                         $history = new history();
-                        $history->add(_LC_POLICIES_TABLE_NAME, $policy->policy_id, "UP", _LC_POLICY_UPDATED." : ".$policy->policy_id, $_SESSION['config']['databasetype']);
+                        $history->add(
+                            _LC_POLICIES_TABLE_NAME, 
+                            $policy->policy_id, 
+                            'UP', 
+                            'lcaup', 
+                            _LC_POLICY_UPDATED." : ".$policy->policy_id, 
+                            $_SESSION['config']['databasetype'],
+                            'life_cycle'
+                        );
                     }
                 } else {
                     $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_POLICY);
@@ -100,7 +108,15 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
                     //history
                     if ($_SESSION['history']['lcadd'] == "true") {
                         $history = new history();
-                        $history->add(_LC_POLICIES_TABLE_NAME, $policy->policy_id, "ADD", _LC_POLICY_ADDED." : ".$policy->policy_id, $_SESSION['config']['databasetype']);
+                        $history->add(
+                            _LC_POLICIES_TABLE_NAME, 
+                            $policy->policy_id, 
+                            'ADD', 
+                            'lcadd', 
+                            _LC_POLICY_ADDED." : ".$policy->policy_id, 
+                            $_SESSION['config']['databasetype'],
+                            'life_cycle'
+                        );
                     }
                 } else {
                     $control = array("status" => "ko", "value" => "", "error" => _PB_WITH_POLICY);
@@ -233,7 +249,14 @@ class lc_policies_controler extends ObjectControler implements ObjectControlerIF
         if ($_SESSION['history']['lcdel'] == "true") {
             require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
             $history = new history();
-            $history->add(_LC_POLICIES_TABLE_NAME, $policy->policy_id, "DEL", 'lcdel', _LC_POLICY_DELETED." : ".$policy->policy_id, $_SESSION['config']['databasetype']);
+            $history->add(
+                _LC_POLICIES_TABLE_NAME, 
+                $policy->policy_id, 
+                'DEL', 
+                'lcdel', 
+                _LC_POLICY_DELETED." : ".$policy->policy_id, 
+                $_SESSION['config']['databasetype']
+            );
         }
         return $control;
     }
