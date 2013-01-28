@@ -74,36 +74,36 @@
     <COLLECTION>
         <id>rm_coll</id>
         <label>_RM_COLL</label>
-        <table>res_documents</table>
-        <version_table></version_table>
+        <table>rm_documents</table>
+        <version_table />
         <view>rm_documents_view</view>
-        <adr>adr_documents</adr>
+        <adr>adr_rm</adr>
         <index_file>index_rm.xml</index_file>
-        <script_add>index_rm.php</script_add>
-        <script_search>search_rm.php</script_search>
-        <script_search_result>list_results_rm.php</script_search_result>
-        <script_details>details_rm.php</script_details>
+        <script_add/>
+        <script_search/>
+        <script_search_result/>
+        <script_details/>
         <extensions>
-            <table>rm_items</table>
+            <table/>
         </extensions>
-        <path_to_lucene_index></path_to_lucene_index>
+        <path_to_lucene_index/>
     </COLLECTION>
     <COLLECTION>
         <id>io_coll</id>
         <label>_IO_COLL</label>
         <table>rm_ios</table>
-        <version_table></version_table>
-        <view>view_ios</view>
-        <adr></adr>
-        <index_file></index_file>
-        <script_add></script_add>
-        <script_search></script_search>
-        <script_search_result></script_search_result>
-        <script_details></script_details>
+        <version_table/>
+        <view>rm_ios_view</view>
+        <adr/>
+        <index_file/>
+        <script_add/>
+        <script_search/>
+        <script_search_result/>
+        <script_details/>
         <extensions>
-            <table></table>
+            <table/>
         </extensions>
-        <path_to_lucene_index></path_to_lucene_index>
+        <path_to_lucene_index/>
     </COLLECTION>
     <COLLECTION>
         <id>apa_coll</id>
@@ -112,14 +112,14 @@
         <view>res_view_apa</view>
         <adr>adr_apa</adr>
         <index_file>index.xml</index_file>
-        <script_add></script_add>
-        <script_search></script_search>
-        <script_search_result></script_search_result>
-        <script_details></script_details>
+        <script_add/>
+        <script_search/>
+        <script_search_result/>
+        <script_details/>
         <extensions>
-            <table></table>
+            <table/>
         </extensions>
-        <path_to_lucene_index></path_to_lucene_index>
+        <path_to_lucene_index/>
     </COLLECTION>
     <HISTORY>
         <usersdel>true</usersdel>
