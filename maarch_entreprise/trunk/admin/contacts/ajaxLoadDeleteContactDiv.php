@@ -15,7 +15,7 @@ if ($_REQUEST['society_label'] <> '') {
         . "SELECT lower(society) FROM contacts GROUP BY lower(society) "
         . "     HAVING Count(*) > 1 and lower(society) <> '') and contact_id <> "
         . $_REQUEST['contact_id'] . " and lower(society) = '" 
-        . strtolower($db->protect_string_db($_REQUEST['society_label'])) . "' "
+        . mb_strtolower($db->protect_string_db($_REQUEST['society_label']), 'utf-8') . "' "
         . "order by lower(society)";
 }
 if ($_REQUEST['name'] <> '') {
@@ -27,7 +27,7 @@ if ($_REQUEST['name'] <> '') {
         . "SELECT lower(lastname||' '||firstname) as lastname_firstname FROM contacts GROUP BY lastname_firstname "
         . "     HAVING Count(*) > 1 and lower(lastname||' '||firstname) <> ' ') and contact_id <> "
         . $_REQUEST['contact_id'] . " and lower(lastname||' '||firstname) = '" 
-        . strtolower($db->protect_string_db($_REQUEST['name'])) . "' "
+        . mb_strtolower($db->protect_string_db($_REQUEST['name']), 'utf-8') . "' "
         . "order by lower(lastname||' '||firstname)";
 }
 if (isset($_REQUEST['contact_id'])) {
