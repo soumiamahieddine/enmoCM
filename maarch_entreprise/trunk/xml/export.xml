@@ -110,4 +110,20 @@
             </EMPTY>
         </EMPTYS>
     </res_coll>
+    <log_coll>
+        <FIELD>
+            <LIBELLE>identifiant</LIBELLE>
+            <DATABASE_FIELD>res_id</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Date d'enregistrement</LIBELLE>
+            <DATABASE_FIELD>creation_date</DATABASE_FIELD>
+        </FIELD>
+        <EMPTYS>
+            <EMPTY>
+                <LIBELLE>Commentaire</LIBELLE>
+                <COLNAME>comments</COLNAME>
+            </EMPTY>
+        </EMPTYS>
+    </log_coll>
 </ROOT>

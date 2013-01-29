@@ -791,6 +791,7 @@ if (!defined('_CHOOSE_MAIL_NATURE')) define( '_CHOOSE_MAIL_NATURE', 'Choisissez 
 if (!defined('_ERROR_DOCTYPE')) define( '_ERROR_DOCTYPE', 'Type de document non valide');
 if (!defined('_ADMISSION_DATE')) define( '_ADMISSION_DATE', 'Date d&rsquo;arriv&eacute;e');
 if (!defined('_FOUND_DOC')) define( '_FOUND_DOC', 'document(s) trouv&eacute;(s)');
+if (!defined('_FOUND_LOGS')) define( '_FOUND_LOGS', 'fichier(s) de logs trouv&eacute;(s)');
 if (!defined('_PROCESS')) define( '_PROCESS', 'Traitement ');
 if (!defined('_DOC_NUM')) define( '_DOC_NUM', 'document n&deg; ');
 if (!defined('_GENERAL_INFO')) define( '_GENERAL_INFO', 'Informations g&eacute;n&eacute;rales');
@@ -817,6 +818,7 @@ if (!defined('_LETTERBOX')) define( '_LETTERBOX', 'Collection Courrier');
 if (!defined('_APA_COLL')) define( '_APA_COLL', 'APA - ne pas utiliser');
 if (!defined('_REDIRECT_TO_ACTION')) define( '_REDIRECT_TO_ACTION', 'Rediriger vers une action');
 if (!defined('_DOCUMENTS_LIST')) define( '_DOCUMENTS_LIST', 'Liste');
+if (!defined('_LOGS_LIST')) define( '_LOGS_LIST', 'Liste des logs');
 
 
 /********* Contacts ************/
