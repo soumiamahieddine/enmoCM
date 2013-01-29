@@ -63,4 +63,11 @@
         <ORIGIN>module</ORIGIN>
         <MODULE>records_management</MODULE>
     </BASKETPAGE>
+    <BASKETPAGE>
+        <ID>logs_list</ID>
+        <LABEL>_LOGS_LIST</LABEL>
+        <NAME>logs_list</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+    </BASKETPAGE>
 </ROOT>
