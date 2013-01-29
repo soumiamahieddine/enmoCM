@@ -93,7 +93,7 @@
         <label>_LOG_COLL</label>
         <table>res_log</table>
         <version_table/>
-        <view>res_log_view</view>
+        <view>res_view_log</view>
         <adr>adr_log</adr>
         <index_file>index_log.xml</index_file>
         <script_add/>
