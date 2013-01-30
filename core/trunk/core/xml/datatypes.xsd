@@ -185,4 +185,16 @@
     </xsd:annotation>
     <xsd:union memberTypes="xsd:date" das:baseType="xsd:string"/>
   </xsd:simpleType>
+
+<xsd:simpleType name="fingerprint" das:enclosed='true'>
+    <xsd:annotation>
+      <xsd:appinfo>
+        <das:sqltype driver='postgresql'>character varying(64)</das:sqltype>
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:maxLength value="64"/>
+      <xsd:minLength value="1"/>
+    </xsd:restriction>
+  </xsd:simpleType>
 </xsd:schema>
