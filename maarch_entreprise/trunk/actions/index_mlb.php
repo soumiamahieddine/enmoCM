@@ -662,6 +662,27 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . ' style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
     
+    /*** Status ***/
+    if(count($statuses) > 0) {
+        $frmStr .= '<tr id="status" style="display:' . $displayValue . ';">';
+        $frmStr .= '<td><label for="status" class="form_title" >' . _STATUS
+                . '</label></td>';
+        $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+        $frmStr .= '<td class="indexing_field"><select name="status" '
+                . 'id="status" onchange="clear_error(\'frm_error_' . $actionId
+                . '\');">';
+        $frmStr .= '<option value="">' . _CHOOSE_STATUS . '</option>';
+        for ($i = 0; $i < count($statuses); $i ++) {
+            $frmStr .= '<option value="' . $statuses[$i]['ID'] . '" ';
+            if ($statuses[$i]['ID'] == 'NEW') {
+                $frmStr .= 'selected="selected"';
+            }
+            $frmStr .= '>' . $statuses[$i]['LABEL'] . '</option>';
+        }
+        $frmStr .= '</select></td>';
+        $frmStr .= '</tr>';
+    }
+    
     $frmStr .= '</table>';
     
     /*** CUSTOM INDEXES ***/
@@ -740,26 +761,6 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . '</div></td>';
         $frmStr .= '<td><span class="red_asterisk" id="market_mandatory" '
                 . 'style="display:inline;">*</span>&nbsp;</td>';
-        $frmStr .= '</tr>';
-    }
-    /*** Status ***/
-    if(count($statuses) > 0) {
-        $frmStr .= '<tr id="status" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td><label for="status" class="form_title" >' . _STATUS
-                . '</label></td>';
-        $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
-        $frmStr .= '<td class="indexing_field"><select name="status" '
-                . 'id="status" onchange="clear_error(\'frm_error_' . $actionId
-                . '\');">';
-        $frmStr .= '<option value="">' . _CHOOSE_STATUS . '</option>';
-        for ($i = 0; $i < count($statuses); $i ++) {
-            $frmStr .= '<option value="' . $statuses[$i]['ID'] . '" ';
-            if ($statuses[$i]['ID'] == 'NEW') {
-                $frmStr .= 'selected="selected"';
-            }
-            $frmStr .= '>' . $statuses[$i]['LABEL'] . '</option>';
-        }
-        $frmStr .= '</select></td>';
         $frmStr .= '</tr>';
     }
 

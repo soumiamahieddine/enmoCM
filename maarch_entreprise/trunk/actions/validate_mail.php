@@ -643,6 +643,46 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_mandatory" style="display:inline;">*</span>&nbsp;</td>';
         $frm_str .= '</tr>';
         
+        /*** Status ***/
+        // Select statuses from groupbasket
+        $statuses = array();
+        $db = new dbquery();
+        $db->connect();
+        $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status']
+            . " on status_id = id "
+            . " where basket_id= '" . $_SESSION['current_basket']['id']
+            . "' and group_id = '" . $_SESSION['user']['primarygroup']
+            . "' and action_id = " . $id_action;
+        $db->query($query);
+
+        if($db->nb_result() > 0) {
+            while($status = $db->fetch_object()) {
+                $statuses[] = array(
+                    'ID' => $status->status_id,
+                    'LABEL' => $db->show_string($status->label_status)
+                );
+            }
+        }
+        if(count($statuses) > 0) {
+            $frm_str .= '<tr id="status" style="display:' . $displayValue . ';">';
+            $frm_str .= '<td><label for="status" class="form_title" >' . _STATUS
+                    . '</label></td>';
+            $frm_str .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+            $frm_str .= '<td class="indexing_field"><select name="status" '
+                    . 'id="status" onchange="clear_error(\'frm_error_' . $actionId
+                    . '\');">';
+            $frm_str .= '<option value="">' . _CHOOSE_STATUS . '</option>';
+            for ($i = 0; $i < count($statuses); $i ++) {
+                $frm_str .= '<option value="' . $statuses[$i]['ID'] . '" ';
+                if ($statuses[$i]['ID'] == 'NEW') {
+                    $frm_str .= 'selected="selected"';
+                }
+                $frm_str .= '>' . $statuses[$i]['LABEL'] . '</option>';
+            }
+            $frm_str .= '</select></td>';
+            $frm_str .= '</tr>';
+        }
+        
         $frm_str .= '</table>';
         
         /*** CUSTOM INDEXES ***/
@@ -1402,6 +1442,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             }
         }
     }
+    
+    $status_id = get_value_fields($values_form, 'status');
+    if(empty($status_id) || $status_id === "") $status_id = 'BAD';
+    $query_res .= ", status = '" . $status_id . "'";
 
     ///////////////////////// Other cases
     require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_types.php');
@@ -1419,7 +1463,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 
 
     // Process limit Date
-
     if(isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']))
     {
         $process_limit_date = get_value_fields($values_form, 'process_limit_date');
@@ -1531,6 +1574,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             $query_res .= ", arbatch_id = ".$pa_return_value."";
         }
     }
+    
+    
     $query_res = preg_replace('/set ,/', 'set ', $query_res);
     //$query_res = substr($query_res, strpos($query_string, ','));
     $_SESSION['arbox_id'] = "";
