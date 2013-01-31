@@ -207,9 +207,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     check_category($coll_id, $res_id);
     $data = get_general_data($coll_id, $res_id, 'minimal');
-    /*echo '<pre>';
+/*
+    echo '<pre>';
     print_r($data);
-    echo '</pre>';exit;*/
+    echo '</pre>';exit;
+*/
     $frm_str .= '<div id="validleft">';
     $frm_str .= '<div id="valid_div" style="display:none;";>';
         $frm_str .= '<h1 class="tit" id="action_title"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=file_index_b.gif"  align="middle" alt="" />'._VALIDATE_MAIL.' '._NUM.$res_id;
@@ -409,7 +411,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                   $frm_str .= '<tr id="type_id_tr" style="display:'.$display_value.';">';
                     $frm_str .='<td class="indexing_label"><label for="type_id"><span class="form_title" id="doctype_res" style="display:none;">'._DOCTYPE.'</span><span class="form_title" id="doctype_mail" style="display:inline;" >'._DOCTYPE_MAIL.'</span></label></td>';
                     $frm_str .='<td>&nbsp;</td>';
-                    $frm_str .='<td class="indexing_field"><select name="type_id" id="type_id" onchange="clear_error(\'frm_error_'.$id_action.'\');change_doctype(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\','.$res_id.', \''.$coll_id.'\');">';
+                    $frm_str .='<td class="indexing_field"><select name="type_id" id="type_id" onchange="clear_error(\'frm_error_'.$id_action.'\');change_doctype(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\','.$res_id.', \''.$coll_id.'\', true);">';
                             $frm_str .='<option value="">'._CHOOSE_TYPE.'</option>';
                             if ($_SESSION['features']['show_types_tree'] == 'true') {
                                 for ($i = 0; $i < count($doctypes); $i ++) {
@@ -998,7 +1000,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&page=get_content_js\');$(\'baskets\').style.visibility=\'hidden\';var item = $(\'valid_div\'); if(item){item.style.display=\'block\';}';
         $frm_str .='var type_id = $(\'type_id\');';
-        $frm_str .='if(type_id){change_doctype(type_id.options[type_id.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\', '.$res_id.', \''. $coll_id.'\' );}';
+        $frm_str .='if(type_id){change_doctype(type_id.options[type_id.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\', '.$res_id.', \''. $coll_id.'\', true);}';
         if($core_tools->is_module_loaded('entities') )
         {
             $frm_str .='change_entity(\''.$data['destination'].'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\'';
