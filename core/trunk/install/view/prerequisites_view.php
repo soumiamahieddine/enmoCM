@@ -59,7 +59,7 @@
                         ); ?>
                     </td>
                     <td>
-                        <?php echo _PHP_VERSION; ?>
+                        <?php echo _PHP_VERSION . ' -> ' . PHP_VERSION; ?>
                     </td>
                 </tr>
                 <tr>
@@ -147,6 +147,18 @@
                     </td>
                     <td>
                         <?php echo _MBSTRING; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
+                            $Class_Install->isPhpRequirements(
+                                'xsl'
+                            )
+                        ); ?>
+                    </td>
+                    <td>
+                        <?php echo _XSL; ?>
                     </td>
                 </tr>
                 <tr>

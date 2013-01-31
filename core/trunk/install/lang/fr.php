@@ -77,6 +77,9 @@ if (!defined('_IMAP')) {
 if (!defined('_MBSTRING')) {
     define('_MBSTRING', "librairie mbstring");
 }
+if (!defined('_XSL')) {
+    define('_XSL', "librairie xsl");
+}
 if (!defined('_PEAR')) {
     define('_PEAR', "PEAR");
 }
@@ -87,7 +90,8 @@ if (!defined('_CLITOOLS')) {
     define('_CLITOOLS', "CLITools");
 }
 if (!defined('_ERROR_REPORTING')) {
-    define('_ERROR_REPORTING', "error_reporting (E_ALL & ~E_NOTICE & ~E_DEPRECATED)");
+    define('_ERROR_REPORTING', "error_reporting si php version < 5.4 alors E_ALL & ~E_NOTICE & ~E_DEPRECATED "
+        . "sinon E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT");
 }
 if (!defined('_DISPLAY_ERRORS')) {
     define('_DISPLAY_ERRORS', "display_errors (On)");
@@ -184,7 +188,7 @@ if (!defined('_BAD_INFORMATIONS_FOR_CONNECTION')) {
     define('_BAD_INFORMATIONS_FOR_CONNECTION', "Les informations de connexion sont invalides");
 }
 if (!defined('_UNABLE_TO_CREATE_DATABASE')) {
-    define('_UNABLE_TO_CREATE_DATABASE', "Impossible de créer la base de données, essayer un autre nom");
+    define('_UNABLE_TO_CREATE_DATABASE', "Impossible de créer la base de données, essayer un autre nom ou v&eacute;rifier le script structure.sql");
 }
 if (!defined('_UNABLE_TO_LOAD_DATAS')) {
     define('_UNABLE_TO_LOAD_DATAS', "Impossible d'importer les datas");

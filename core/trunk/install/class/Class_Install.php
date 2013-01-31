@@ -184,7 +184,7 @@ class Install extends functions
 
     public function isIniErrorRepportingRequirements()
     {
-        if (version_compare(PHP_VERSION, '5.4') < 0) {
+        if (version_compare(PHP_VERSION, '5.4') >= 0) {
             if (ini_get('error_reporting') <> 22519) {
                 return false;
             } else {
@@ -388,7 +388,7 @@ class Install extends functions
         $fileContent = fread(fopen($filePath, 'r'), filesize($filePath));
         $db = new dbquery();
         $db->connect();
-        $execute = $db->query($fileContent, false, true);
+        $execute = $db->query($fileContent, true, true);
 
         if (!$execute) {
             return false;

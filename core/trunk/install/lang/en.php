@@ -79,6 +79,9 @@ if (!defined('_IMAP')) {
 if (!defined('_MBSTRING')) {
     define('_MBSTRING', "mbstring library");
 }
+if (!defined('_XSL')) {
+    define('_XSL', "xsl library");
+}
 if (!defined('_PEAR')) {
     define('_PEAR', "PEAR");
 }
@@ -89,7 +92,8 @@ if (!defined('_CLITOOLS')) {
     define('_CLITOOLS', "CLITools");
 }
 if (!defined('_ERROR_REPORTING')) {
-    define('_ERROR_REPORTING', "error_reporting (E_ALL & ~E_NOTICE & ~E_DEPRECATED)");
+    define('_ERROR_REPORTING', "error_reporting if php version < 5.4  so E_ALL & ~E_NOTICE & ~E_DEPRECATED"
+        . " else E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT");
 }
 if (!defined('_DISPLAY_ERRORS')) {
     define('_DISPLAY_ERRORS', "display_errors (On)");
@@ -186,7 +190,7 @@ if (!defined('_BAD_INFORMATIONS_FOR_CONNECTION')) {
     define('_BAD_INFORMATIONS_FOR_CONNECTION', "Bad informations");
 }
 if (!defined('_UNABLE_TO_CREATE_DATABASE')) {
-    define('_UNABLE_TO_CREATE_DATABASE', "Unable to create database, try another name");
+    define('_UNABLE_TO_CREATE_DATABASE', "Unable to create database, try another name or check the script structure.sql");
 }
 if (!defined('_UNABLE_TO_LOAD_DATAS')) {
     define('_UNABLE_TO_LOAD_DATAS', "Unable to load dataset");
