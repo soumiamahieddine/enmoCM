@@ -237,14 +237,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             );
             $Links = '';
             
-            $Links .= '<h2 onclick="new Effect.toggle(\'links_div\', \'blind\', '
-                . '{delay:0.2});return false;"  class="categorie" style="width:90%;">';
-            $Links .= '<img src="' 
-                . $_SESSION['config']['businessappurl'] 
-                . 'static.php?filename=plus.png" alt="" />&nbsp;<b><small>'
-                . _LINK_TAB." (" . $nbLink . ")".' :</small></b>';
-            $Links .= '</h2>';
-            $Links .= '<div class="desc" id="links_div" style="display:none;">';
+            $Links .= '<h4 onclick="new Effect.toggle(\'links_div\', \'blind\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');" '
+            . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
+            $Links .= ' <span id="divStatus_links_div" style="color:#1C99C5;"><<</span>&nbsp;' 
+                . _LINK_TAB." (" . $nbLink . ")";
+            $Links .= '</h4>';
+            $Links .= '<div id="links_div"  style="display:none">';
                 $Links .= '<div class="ref-unit">';
                 $Links .= '<div style="text-align:center;">';
                 $Links .= '<div id="loadLinks">';
@@ -351,6 +350,39 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</div>';
         $frm_str .= '</div>';
     }
+    
+    if ($core_tools->is_module_loaded('notes')) {
+         // Displays the notes
+        $select_notes[$_SESSION['tablename']['users']] = array();
+        array_push($select_notes[$_SESSION['tablename']['users']],"user_id","lastname","firstname");
+        $select_notes[$_SESSION['tablename']['not_notes']] = array();
+        array_push($select_notes[$_SESSION['tablename']['not_notes']],"id", "date_note", "note_text", "user_id");
+        $where_notes = " identifier = ".$res_id." ";
+        $_SESSION['doc_id'] = $res_id;
+        $request_notes = new request;
+        $tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date_note desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
+        
+        $frm_str .= '<h4 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');" '
+        . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
+        $frm_str .= ' <span id="divStatus_notes_div" style="color:#1C99C5;"><<</span>&nbsp;' 
+            ._NOTES . " (" . count($tab_notes) . ")";
+        $frm_str .= '</h4>';
+        $frm_str .= '<div id="notes_div"  style="display:none">';
+                $frm_str .= '<div class="ref-unit">';
+                $frm_str .= '<div style="text-align:center;">';
+                $frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
+                                    $frm_str .= '<a href="javascript://" onclick="ouvreFenetre(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=note_add&identifier='.$res_id.'&coll_id='.$_SESSION['collection_id_choice'].'\', 450, 300)" >';
+                                        $frm_str .= _ADD_NOTE;
+                                    $frm_str .= '</a>';
+                    $frm_str .= '</div>';
+                $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=frame_notes_doc" frameborder="0" width="430px" height="150px"></iframe>';
+        $frm_str .= '</div>';
+        $frm_str .= '</div>';
+    }
+    
+    $frm_str .= '<hr width="90%" align="center"/>';
+    
                   $frm_str .= '<table width="100%" align="center" border="0"  id="indexing_fields" style="display:block;">';
                   /*** Category ***/
                   $frm_str .= '<tr id="category_tr" style="display:'.$display_value.';">';
@@ -574,58 +606,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .='</select></td>';
                     $frm_str .= '<td><span class="red_asterisk" id="destination_mandatory" style="display:inline;">*</span>&nbsp;</td>';
                   $frm_str .= '</tr>';
-                  $frm_str .= '<tr id="diff_list_tr" style="display:none;">';
+                    $frm_str .= '<tr id="diff_list_tr" style="display:none;">';
                         $frm_str .= '<td colspan="3">';
-                        $frm_str .= '<h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
-                                $frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" id="img_diff_list" />&nbsp;<b><small>'._DIFF_LIST_COPY.' :</small></b>';
-                        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-                    $frm_str .= '</h2>';
-                    $frm_str .= '<div id="diff_list_div"  style="display:none">';
-                        $frm_str .= '<div>ici</div>';
-                        $frm_str .= '<div id="diff_list_div" class="scroll_div" style="height:200px;border: 1px solid;"></div>';
+                        $frm_str .= '<div id="diff_list_div" class="scroll_div" '
+                            . 'style="width:420px; border: 1px solid;"></div>';
                         $frm_str .= '</td>';
-                  $frm_str .= '</tr>';
+                    $frm_str .= '</tr>';
                 }
-
-
-
-                /*** Physical_archive : Arbox ***/
-                if($core_tools->is_module_loaded('physical_archive'))
-                {
-                    $frm_str .= '<tr id="box_id_tr" style="display:'.$display_value.';">';
-                    $frm_str .='<td class="indexing_label"><label for="arbox_id" class="form_title" id="label_box" style="display:inline;" >'._BOX_ID.'</label></td>';
-                    $frm_str .='<td>&nbsp;</td>';
-                    $frm_str .='<td class="indexing_field"><select name="arbox_id" id="arbox_id" onchange="clear_error(\'frm_error_'.$id_action.'\');" ';
-
-
-                    //if($data['arbox_id'] <> "" && $data['arbox_id'] <> 1 )
-                    if($data['arbox_id'] <> "" )
-                    {
-                        $frm_str .='disabled="disabled">';
-                        $frm_str .='<option value="'.$data['arbox_id'].'">'.$data['arbox_id'].'</option>';
-                    }
-                    else
-                    {
-                        $frm_str .='>';
-                        $frm_str .='<option value="">'._CHOOSE_BOX.'</option>';
-                    }
-
-
-
-                    for($i=0; $i < count($boxes); $i++)
-                    {
-                        $frm_str .='<option value="'.$boxes[$i]['ID'].'"';
-                        if(isset($data['arbox_id'])&& $data['arbox_id'] == $boxes[$i]['ID'])
-                        {
-                            $frm_str .= ' selected="selected" ';
-                        }
-                        $frm_str .= ' >'.$db->show_string($boxes[$i]['LABEL']).'</option>';
-                    }
-                    $frm_str .='</select></td>';
-                    $frm_str .= '<td><span class="red_asterisk" id="arbox_id_mandatory" style="display:inline;">*</span>&nbsp;</td>';
-                  $frm_str .= '</tr>';
-                }
-        /*** Process limit date ***/
+                
+                /*** Process limit date ***/
         $frm_str .= '<tr id="process_limit_date_use_tr" style="display:'.$display_value.';">';
             $frm_str .='<td class="indexing_label"><label for="process_limit_date_use" class="form_title" >'._PROCESS_LIMIT_DATE_USE.'</label></td>';
             $frm_str .='<td>&nbsp;</td>';
@@ -653,6 +642,27 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .='"/></td>';
             $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_mandatory" style="display:inline;">*</span>&nbsp;</td>';
         $frm_str .= '</tr>';
+        
+        $frm_str .= '</table>';
+        
+        /*** CUSTOM INDEXES ***/
+        $frm_str .= '<div id="comp_indexes" style="display:block;">';
+        $frm_str .= '</div>';
+        
+        /*** Complementary fields ***/
+        $frm_str .= '<hr />';
+        
+        $frm_str .= '<h4 onclick="new Effect.toggle(\'complementary_fields\', \'blind\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'complementary_fields\', \'divStatus_complementary_fields\');" '
+            . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
+        $frm_str .= ' <span id="divStatus_complementary_fields" style="color:#1C99C5;"><<</span>&nbsp;' 
+            . _OPT_INDEXES;
+        $frm_str .= '</h4>';
+        $frm_str .= '<div id="complementary_fields"  style="display:none">';
+        $frm_str .= '<div>';
+        
+        $frm_str .= '<table width="100%" align="center" border="0" '
+            . 'id="indexing_fields" style="display:block;">';
 
         /*** Chrono number ***/
         $view = $sec->retrieve_view_from_coll_id($coll_id);
@@ -669,10 +679,37 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . $chrono_number . '" id="chrono_number" onchange="clear_error(\'frm_error_'.$id_action.'\');"/></td>';
             $frm_str .='<td><span class="red_asterisk" id="chrono_number_mandatory" style="display:inline;">*</span>&nbsp;</td>';
         $frm_str .= '</tr>';
+    
+        /*** Physical_archive : Arbox ***/
+        if ($core_tools->is_module_loaded('physical_archive')) {
+            $frm_str .= '<tr id="box_id_tr" style="display:'.$display_value.';">';
+            $frm_str .='<td class="indexing_label"><label for="arbox_id" class="form_title" id="label_box" style="display:inline;" >'._BOX_ID.'</label></td>';
+            $frm_str .='<td>&nbsp;</td>';
+            $frm_str .='<td class="indexing_field"><select name="arbox_id" id="arbox_id" onchange="clear_error(\'frm_error_'.$id_action.'\');" ';
+
+
+            //if($data['arbox_id'] <> "" && $data['arbox_id'] <> 1 )
+            if ($data['arbox_id'] <> "" ) {
+                $frm_str .='disabled="disabled">';
+                $frm_str .='<option value="'.$data['arbox_id'].'">'.$data['arbox_id'].'</option>';
+            } else {
+                $frm_str .='>';
+                $frm_str .='<option value="">'._CHOOSE_BOX.'</option>';
+            }
+            for ($i=0; $i < count($boxes); $i++) {
+                $frm_str .='<option value="'.$boxes[$i]['ID'].'"';
+                if (isset($data['arbox_id'])&& $data['arbox_id'] == $boxes[$i]['ID']) {
+                    $frm_str .= ' selected="selected" ';
+                }
+                $frm_str .= ' >'.$db->show_string($boxes[$i]['LABEL']).'</option>';
+            }
+            $frm_str .='</select></td>';
+            $frm_str .= '<td><span class="red_asterisk" id="arbox_id_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+          $frm_str .= '</tr>';
+        }
         
         /*** Folder : Market & Project ***/
-        if($core_tools->is_module_loaded('folder'))
-        {
+        if ($core_tools->is_module_loaded('folder')) {
             $frm_str .= '<tr id="project_tr" style="display:'.$display_value.';">';
                 $frm_str .= '<td class="indexing_label"><label for="project" class="form_title" >'._PROJECT.'</label></td>';
                 $frm_str .= '<td>&nbsp;</td>';
@@ -688,8 +725,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '<td class="indexing_label"><label for="market" class="form_title" >'._MARKET.'</label></td>';
                 $frm_str .= '<td>&nbsp;</td>';
                  $frm_str .='<td class="indexing_field"><input type="text" name="market" id="market" onblur="clear_error(\'frm_error_'.$id_action.'\');fill_project(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=ajax_get_project\');" value=\'';
-                 if(isset($data['market'])&& !empty($data['market']))
-                {
+                 if (isset($data['market'])&& !empty($data['market'])) {
                     $frm_str .= $data['market'];
                 }
                  $frm_str .= '\' /><div id="show_market" class="autocomplete"></div></td>';
@@ -698,42 +734,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
 
         if ($core_tools->is_module_loaded('tags') &&
-                    ($core_tools->test_service('tag_view', 'tags',false) == 1))
-        {
+                    ($core_tools->test_service('tag_view', 'tags',false) == 1)) {
             include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR
             ."templates/validate_mail/index.php");
         }
 
-        if($core_tools->is_module_loaded('notes'))
-        {
-             // Displays the notes
-            $select_notes[$_SESSION['tablename']['users']] = array();
-            array_push($select_notes[$_SESSION['tablename']['users']],"user_id","lastname","firstname");
-            $select_notes[$_SESSION['tablename']['not_notes']] = array();
-            array_push($select_notes[$_SESSION['tablename']['not_notes']],"id", "date_note", "note_text", "user_id");
-            $where_notes = " identifier = ".$res_id." ";
-            $_SESSION['doc_id'] = $res_id;
-            $request_notes = new request;
-            $tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date_note desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
-            $frm_str .= '<h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});return false;"  class="categorie" style="width:90%;">';
-            $frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.png" alt="" />&nbsp;<b><small>'._NOTES." (".count($tab_notes).")".' :</small></b>';
-            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-            $frm_str .= '</h2>';
-            $frm_str .= '<div class="desc" id="notes_div" style="display:none;">';
-                    $frm_str .= '<div class="ref-unit">';
-                    $frm_str .= '<div style="text-align:center;">';
-                    $frm_str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
-                                        $frm_str .= '<a href="javascript://" onclick="ouvreFenetre(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=note_add&identifier='.$res_id.'&coll_id='.$_SESSION['collection_id_choice'].'\', 450, 300)" >';
-                                            $frm_str .= _ADD_NOTE;
-                                        $frm_str .= '</a>';
-                        $frm_str .= '</div>';
-                    $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=frame_notes_doc" frameborder="0" width="430px" height="150px"></iframe>';
-            $frm_str .= '</div>';
-            $frm_str .= '</div>';
-        }
-
         $frm_str .= '</table>';
-        $frm_str .= '<div id="comp_indexes" style="display:block;">';
+        
         $frm_str .= '</div>';
         $frm_str .= '</div>';
         /*** Actions ***/
