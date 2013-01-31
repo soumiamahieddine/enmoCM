@@ -239,7 +239,7 @@ if (!defined('_CONTACT_CARD')) define('_CONTACT_CARD', 'Fiche sheet');
 if (!defined('_CONTACT_DELETED')) define('_CONTACT_DELETED', 'Contact deleted');
 if (!defined('_CONTACT_DELETION'))  define('_CONTACT_DELETION', 'Contact deletion');
 if (!defined('_CONTACT_INFO')) define('_CONTACT_INFO', 'Contact sheet');
-if (!defined('_UPDATE_CONTACTS')) define('_UPDATE_CONTACTS', 'Update contacts');
+if (!defined('_UPDATE_CONTACTS')) define('_UPDATE_CONTACTS', 'Update contacts from indexation/qualification');
 if (!defined('_CONTACT_MODIFIED')) define('_CONTACT_MODIFIED', 'Contact mofifyed');
 if (!defined('_CONTACT_NAME')) define( '_CONTACT_NAME', 'Invoice contact');
 if (!defined('_CONTACT_OWNER_COMMENT')) define('_CONTACT_OWNER_COMMENT', 'Leave this field empty to make this contact public.');

@@ -851,6 +851,7 @@ if (!defined('_TITLE2')) define( '_TITLE2', 'Civilit&eacute;');
 if (!defined('_WARNING_MESSAGE_DEL_CONTACT'))  define('_WARNING_MESSAGE_DEL_CONTACT', 'Avertissement :<br> La suppression d&rsquo;un contact entraine la r&eacute;affectation des documents &agrave un nouveau contact quelque soit le statut des documents (courriers).');
 if (!defined('_CONTACT_DELETION'))  define('_CONTACT_DELETION', 'Suppression de contact');
 if (!defined('_CONTACT_REAFFECT'))  define('_CONTACT_REAFFECT', 'R&eacute;affectation des documents');
+if (!defined('_UPDATE_CONTACTS')) define( '_UPDATE_CONTACTS', 'Mise &agrave; jour contact depuis indexation/qualification');
 
 if (!defined('_MANAGE_DOUBLOONS'))  define('_MANAGE_DOUBLOONS', 'Gestion des doublons');
 if (!defined('_DOUBLOONS_BY_SOCIETY'))  define('_DOUBLOONS_BY_SOCIETY', 'Doublons par organisme/soci&eacute;t&eacute;');
