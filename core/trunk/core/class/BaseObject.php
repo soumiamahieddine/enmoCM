@@ -99,11 +99,19 @@ class BaseObject {
 			return $this->data;
 	}
 	
+    /**
+    * Sets an array in the current object
+    */
 	public function setArray($array) 
 	{
 		$this->data = $array;
 	}
-	
+    
+	/**
+    * Get label of a given property 
+    *
+    * @return String label
+    */
 	public function getLabel($name){
 		if(in_array($name, array_keys($data))){
 			return eval("_".strtoupper($name));
@@ -111,6 +119,15 @@ class BaseObject {
 			return "";
 		}
 	}
-
+    
+    /**
+	* Delete a given property in the current object
+	* 
+	* @param string $name Name of property to delete
+	*/
+    public function __unset($name)
+	{
+        unset($this->data[$name]);
+    }
 }
 ?>
