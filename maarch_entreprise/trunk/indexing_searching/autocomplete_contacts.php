@@ -48,14 +48,14 @@ if($table == 'users')
 
 	$other = 'order by lastname, firstname';
 
-	$res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 31,false,"","","", false);
+	$res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
 
 	echo "<ul>\n";
-	for($i=0; $i< min(count($res), 30)  ;$i++)
+	for($i=0; $i< min(count($res), 10)  ;$i++)
 	{
 		echo "<li>".$req->show_string($res[$i][0]['value']).', '.$req->show_string($res[$i][1]['value']).' ('.$res[$i][2]['value'].")</li>\n";
 	}
-	if(count($res) == 31)
+	if(count($res) == 11)
 	{
 			echo "<li>...</li>\n";
 	}
@@ -63,19 +63,19 @@ if($table == 'users')
 }
 elseif($table == 'contacts')
 {
-	$select = array();
+	/*$select = array();
 	$select[$_SESSION['tablename']['contacts']]= array('is_corporate_person','society', 'lastname', 'firstname', 'contact_id');
 	$where = " (lower(lastname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
-		//."or lower(firstname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
+		."or lower(firstname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
 		."or lower(society) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%')) ";
 	
 	$where .= " and (user_id = '' or user_id is null or user_id = '".$req->protect_string_db($_SESSION['user']['UserId'])."' ) and enabled = 'Y'";
 	$other = 'order by society, lastname, firstname';
 
-	$res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 31,false,"","","", false);
+	$res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
 
 	echo "<ul>\n";
-	for($i=0; $i< min(count($res), 30)  ;$i++)
+	for($i=0; $i< min(count($res), 10)  ;$i++)
 	{
 		if($res[$i][0]['value'] == 'Y')
 		{
@@ -94,9 +94,85 @@ elseif($table == 'contacts')
 		}
 
 	}
-	if(count($res) == 31)
+	if(count($res) == 11)
 	{
 			echo "<li>...</li>\n";
 	}
-	echo "</ul>";
+	echo "</ul>";*/
+    $timestart=microtime(true);
+   
+    $searchParts = explode(' ', $_REQUEST['Input']);
+    $nb_search = count($searchParts);
+    if($nb_search == 0) return "<ul></ul>"; 
+       
+    $query = "SELECT result, COUNT(*) AS score FROM (";
+    $queryParts = array();
+    
+    foreach($searchParts as $search) {
+        $search = $req->protect_string_db($search);
+        $queryParts[] .= "SELECT "
+            . "(CASE is_corporate_person"
+            . " WHEN 'Y' THEN society"
+            . " WHEN 'N' THEN UPPER(lastname) || ' ' || firstname "
+            . " END)"
+            . " || '(' || contact_id || ')' AS result, user_id, enabled"
+            . " FROM contacts"
+            . " WHERE ("
+                . " LOWER(lastname) LIKE LOWER('%$search%')"
+                . " or LOWER(firstname) LIKE LOWER('%$search%')"
+                . " or LOWER(society) LIKE LOWER('%$search%')"
+            .")";
+        $queryParts[] .= "SELECT "
+            . "(CASE is_corporate_person"
+            . " WHEN 'Y' THEN society"
+            . " WHEN 'N' THEN UPPER(lastname) || ' ' || firstname "
+            . " END)"
+            . " || '(' || contact_id || ')' AS result, user_id, enabled"
+            . " FROM contacts"
+            . " WHERE ("
+                . " LOWER(lastname) LIKE LOWER('%$search')"
+                . " or LOWER(firstname) LIKE LOWER('%$search')"
+                . " or LOWER(society) LIKE LOWER('%$search')"
+            .")";
+        $queryParts[] .= "SELECT "
+            . "(CASE is_corporate_person"
+            . " WHEN 'Y' THEN society"
+            . " WHEN 'N' THEN UPPER(lastname) || ' ' || firstname "
+            . " END)"
+            . " || '(' || contact_id || ')' AS result, user_id, enabled"
+            . " FROM contacts"
+            . " WHERE ("
+                . " LOWER(lastname) = LOWER('$search')"
+                . " or LOWER(firstname) = LOWER('$search')"
+                . " or LOWER(society) = LOWER('$search')"
+            .")";
+    }
+    $query .= implode (' UNION ALL ', $queryParts);
+    $query .= ") as matches" 
+        . " WHERE (user_id = '' OR user_id IS NULL OR user_id = '".$req->protect_string_db($_SESSION['user']['UserId'])."' ) "
+        . " AND enabled = 'Y' "
+        . " GROUP BY result "
+        . " ORDER BY score DESC";
+    
+    $req->query($query);
+    $nb = $req->nb_result();
+    if($nb >= 30) $l = 30;
+    else $l = $nb;
+    
+    $timeend=microtime(true);
+    $time = number_format(($timeend-$timestart), 3);
+
+    
+    $found = false;
+    echo "<ul title=".$time.">";
+    for($i=0; $i<$l; $i++) {
+        $res = $req->fetch_object();
+        $score = round($res->score / $nb_search * 100 / 3);
+        if($score == 100) $found = true;
+        if($found == $score < 100) break;
+        echo "<li title='confiance:".$score."%'>". $res->result ."</li>";
+    }
+    if($nb >= 30)
+        echo "<li>...</li>";    
+    echo "</ul>";
 }
