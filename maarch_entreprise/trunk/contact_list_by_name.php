@@ -86,7 +86,7 @@ echo "</ul>";*/
     $queryParts = array();
     
     foreach($searchParts as $search) {
-        $search = $req->protect_string_db($search);
+        $search = $db->protect_string_db($search);
         $queryParts[] .= "SELECT "
             . "(CASE is_corporate_person"
             . " WHEN 'Y' THEN society"
@@ -126,13 +126,13 @@ echo "</ul>";*/
     }
     $query .= implode (' UNION ALL ', $queryParts);
     $query .= ") as matches" 
-        . " WHERE (user_id = '' OR user_id IS NULL OR user_id = '".$req->protect_string_db($_SESSION['user']['UserId'])."' ) "
+        . " WHERE (user_id = '' OR user_id IS NULL OR user_id = '".$db->protect_string_db($_SESSION['user']['UserId'])."' ) "
         . " AND enabled = 'Y' "
         . " GROUP BY result "
         . " ORDER BY score DESC";
     
-    $req->query($query);
-    $nb = $req->nb_result();
+    $db->query($query);
+    $nb = $db->nb_result();
     if($nb >= 30) $l = 30;
     else $l = $nb;
     
@@ -144,9 +144,8 @@ echo "</ul>";*/
     foreach($listArray as $what) {
         echo "<li>". $what ."</li>";
     }
-    
     for($i=0; $i<$l; $i++) {
-        $res = $req->fetch_object();
+        $res = $db->fetch_object();
         $score = round($res->score / $nb_search * 100 / 3);
         if($score == 100) $found = true;
         if($found == $score < 100) break;
