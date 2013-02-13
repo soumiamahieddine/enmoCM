@@ -830,6 +830,19 @@ CREATE TABLE listmodels
 )
 WITH (OIDS=FALSE);
 
+CREATE TABLE listinstance_roles 
+(
+  role_id character varying(50) NOT NULL,
+  role_label character varying(100) NOT NULL,
+  list_label character varying(100) NOT NULL,
+  list_img character varying(100) DEFAULT 'manage_users_entities_b_small.gif',
+  allow_entities character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
+  CONSTRAINT "entities_roles_pkey" PRIMARY KEY (role_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
 CREATE TABLE users_entities
 (
   user_id character varying(128) NOT NULL,
