@@ -286,6 +286,8 @@ if (!defined('_LISTINSTANCE_ROLE'))
     define('_LISTINSTANCE_ROLE', 'Rôle');     
 if (!defined('_LISTINSTANCE_ROLES'))
     define('_LISTINSTANCE_ROLES', 'Rôle(s)'); 
+    if (!defined('_LISTINSTANCE_ROLES_DESC'))
+    define('_LISTINSTANCE_ROLES_DESC', 'Gérer les rôles des utilisateurs et entités dans la circulation'); 
 if (!defined('_SUBMIT'))
     define('_SUBMIT', 'Valider'); 
 if (!defined('_CANCEL'))
