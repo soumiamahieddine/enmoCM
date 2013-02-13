@@ -1,8 +1,8 @@
 <?php
 /**
-* File : load_listinstance.php
+* File : change_doctype.php
 *
-* Script called by an ajax object to process the document listinstance change during
+* Script called by an ajax object to process the document type change during
 * indexing (index_mlb.php)
 *
 * @package  maarch
@@ -49,11 +49,11 @@ if ($_REQUEST['load_from_model'] == 'true') {
 }
 
 $content = '';
-if (!$onlyCC) {
+if (! $onlyCC) {
     if (isset($_SESSION['validStep']) && $_SESSION['validStep'] == 'ok') {
-        $content .= '';
+        $content .= "";
     } else {
-        //$content .= '<h2>' . _LINKED_DIFF_LIST . ' : </h2>';
+        $content .= '<h2>' . _LINKED_DIFF_LIST . ' : </h2>';
     }
 }
 
@@ -62,7 +62,7 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
 ) {
     if (! $onlyCC) {
         $content .= '<span class="sstit">' . _RECIPIENT . '</span>';
-        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listingIndex spec">';
+        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
         $content .= '<tr class="col">';
         $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
                  . 'static.php?filename=manage_users_entities_b_small.gif'
@@ -75,13 +75,13 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
         $content .= '<td>' . $_SESSION[$origin]['diff_list']['dest']['entity_label']
                  .'</td>';
         $content .= '</tr>';
-        $content .= '</table>';
+        $content .= '</table><br/>';
     }
     if (count($_SESSION[$origin]['diff_list']['copy']['users']) > 0
         || count($_SESSION[$origin]['diff_list']['copy']['entities']) > 0
     ) {
         if (! $onlyCC || count($_SESSION[$origin]['diff_list']['contrib']['users']) > 0) {
-            $content .= '<h4 onclick="new Effect.toggle(\'copiesDiv\', \'blind\', {delay:0.2});'
+			$content .= '<h4 onclick="new Effect.toggle(\'copiesDiv\', \'blind\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'copiesDiv\', \'divStatus_copiesDiv\');" '
                 . 'class="categorie" style="width:405px;" onmouseover="this.style.cursor=\'pointer\';">';
             $content .= '<small><span id="divStatus_copiesDiv" style="color:#1B99C4;"><<</span>&nbsp;' 
@@ -90,9 +90,8 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
             $content .= '</small></h4>';
             $content .= '<div id="copiesDiv"  style="display:none">';
             $content .= '<div>';
-            //$content .= '<span class="sstit">' . _TO_CC . '</span>';
         }
-        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listingIndex spec">';
+        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
         $color = ' class="col"';
         for ($i = 0; $i < count(
             $_SESSION[$origin]['diff_list']['copy']['entities']
@@ -141,14 +140,14 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
             $content .= '</tr>';
         }
         $content .= '</table>';
-        $content .= '</div>';
+		$content .= '</div>';
         $content .= '</div>';
     }
     // 1.4 custom listinstance modes
-    if(count($_SESSION['diffusion_lists']) > 0) {
-        foreach($_SESSION['diffusion_lists'] as $list_id => $list_config) {
-            if(count($_SESSION[$origin]['diff_list'][$list_id]['users']) > 0 
-                || count($_SESSION[$origin]['diff_list'][$list_id]['entities']) > 0
+    if(count($_SESSION['listinstance_roles']) > 0) {
+        foreach($_SESSION['listinstance_roles'] as $role_id => $role_config) {
+            if(count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0 
+                || count($_SESSION[$origin]['diff_list'][$role_id]['entities']) > 0
             ) {
                 if (! $onlyCC || count($_SESSION[$origin]['diff_list']['contrib']['users']) > 0) {
                     $content .= '<h4 onclick="new Effect.toggle(\'' . $list_id . '\', \'blind\', {delay:0.2});'
@@ -161,45 +160,45 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
                     $content .= '<div id="' . $list_id . '"  style="display:none">';
                     $content .= '<div>';
                 }
-                $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listingIndex spec">';
+                $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
                 $color = ' class="col"';
-                for ($i=0, $l=count($_SESSION[$origin]['diff_list'][$list_id]['entities']); $i<$l; $i++) {
+                for ($i=0, $l=count($_SESSION[$origin]['diff_list'][$role_id]['entities']); $i<$l; $i++) {
                     if ($color == ' class="col"') $color = '';
                     else $color = ' class="col"';
                     $content .= '<tr ' . $color . ' >';
                     $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
                              . 'static.php?filename=manage_entities_b_small.gif&module='
-                             . 'entities" alt="' . _ENTITY . " " .$list_config['item_label'] . '" title="' . _ENTITY . " " .$list_config['item_label']
+                             . 'entities" alt="' . _ENTITY . " " .$role_config['role_label'] . '" title="' . _ENTITY . " " .$role_config['role_label']
                              . '" /></td>';
-                    $content .= '<td >' . $_SESSION[$origin]['diff_list'][$list_id]['entities'][$i]['entity_id']
+                    $content .= '<td >' . $_SESSION[$origin]['diff_list'][$role_id]['entities'][$i]['entity_id']
                              .'</td>';
                     $content .= '<td colspan="2">'
-                             . $_SESSION[$origin]['diff_list'][$list_id]['entities'][$i]['entity_label']
+                             . $_SESSION[$origin]['diff_list'][$role_id]['entities'][$i]['entity_label']
                              .'</td>';
                     $content .= '</tr>';
                 }
-                for ($i=0, $l=count($_SESSION[$origin]['diff_list'][$list_id]['users']); $i<$l ; $i++) {
+                for ($i=0, $l=count($_SESSION[$origin]['diff_list'][$role_id]['users']); $i<$l ; $i++) {
                     if ($color == ' class="col"') $color = '';
                     else $color = ' class="col"';
                     
                     $content .= '<tr ' . $color . ' >';
                     $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
                              . 'static.php?filename=manage_users_entities_b_small.gif'
-                             . '&module=entities" alt="' . _USER . " " .$list_config['item_label'] . '" title="' . _USER . " " .$list_config['item_label'] 
+                             . '&module=entities" alt="' . _USER . " " .$role_config['role_label'] . '" title="' . _USER . " " .$role_config['role_label'] 
                              . '" /></td>';
                     $content .= '<td >'
-                             . $_SESSION[$origin]['diff_list'][$list_id]['users'][$i]['firstname']
+                             . $_SESSION[$origin]['diff_list'][$role_id]['users'][$i]['firstname']
                              . '</td>';
                     $content .= '<td >'
-                             . $_SESSION[$origin]['diff_list'][$list_id]['users'][$i]['lastname']
+                             . $_SESSION[$origin]['diff_list'][$role_id]['users'][$i]['lastname']
                              . '</td>';
                     $content .= '<td>'
-                             . $_SESSION[$origin]['diff_list'][$list_id]['users'][$i]['entity_label']
+                             . $_SESSION[$origin]['diff_list'][$role_id]['users'][$i]['entity_label']
                              . '</td>';
                     $content .= '</tr>';
                 }
-                $content .= '</table>';
-                $content .= '</div>';
+                $content .= '</table>';            
+				$content .= '</div>';
                 $content .= '</div>';
             }
         }
@@ -211,6 +210,7 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
     ) {
         
     }
+    
     
     $labelButton = _MODIFY_LIST;
     $arg = '&mode=up';
