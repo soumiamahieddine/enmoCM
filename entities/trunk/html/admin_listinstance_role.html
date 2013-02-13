@@ -1,0 +1,32 @@
+<div id="listinstance_role">
+  <div id="listinstance_role_messages" style="color:red;">
+  </div>
+  <div id="listinstance_role_form" method="POST" class="forms">
+    <input name="mode" id="mode" type="hidden" />
+    <p/>
+    <p>
+      <label for="role_id">_ROLE_ID</label>
+      <input name="role_id" id="role_id" type="text" /><span class="red_asterisk">*</span>
+    </p>
+    <p>
+      <label for="role_label">_ROLE_LABEL</label>
+      <input name="role_label" id="role_label" type="text" /><span class="red_asterisk">*</span>
+    </p>
+    <p>
+      <label for="list_label">_LIST_LABEL</label>
+      <input name="list_label" id="list_label" type="text" /><span class="red_asterisk">*</span>
+    </p>
+    <p>
+      <label for="list_img">_LIST_IMG</label>
+      <input name="list_img" id="list_img" type="text" />
+    </p>
+    <p>
+      <label for="allow_entities">_ALLOW_ENTITIES</label>
+      <input type="checkbox" name="allow_entities" id="allow_entities" value="Y" />
+    </p>
+    <p class="buttons">
+        <input type="button" value="_SUBMIT" class="button" onclick="validate_listinstance_role()" />&nbsp;
+        <input type="button" value="_CANCEL" id="cancel" class="button" />
+    </p>
+  </div>
+</div>
