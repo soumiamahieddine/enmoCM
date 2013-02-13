@@ -16,6 +16,10 @@
 	background:  url(static.php?filename=manage_users_entities.gif&module=entities) no-repeat 2px top;
 }
 
+#admin_listinstance_roles {
+	background:  url(static.php?filename=manage_users_entities.gif&module=entities) no-repeat 2px top;
+}
+
 .entities_list
 {
 	width: 310px;
