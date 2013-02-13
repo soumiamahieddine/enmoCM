@@ -44,3 +44,6 @@ if (! defined('ENT_LISTINSTANCE')) {
 if (! defined('ENT_GROUPBASKET_REDIRECT')) {
     define('ENT_GROUPBASKET_REDIRECT', 'groupbasket_redirect');
 }
+if (! defined('ENT_LISTINSTANCE_ROLES')) {
+    define('ENT_LISTINSTANCE_ROLES', 'listinstance_roles');
+}

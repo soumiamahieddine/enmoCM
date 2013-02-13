@@ -117,3 +117,31 @@ function change_diff_list(path_manage_script, display_value_tr, difflist_div, di
             }
         });
 }
+
+function validate_listinstance_role() {
+  
+  $('listinstance_role_messages').innerHTML = '';
+  new Ajax.Request(
+    'index.php?module=entities&page=admin_listinstance_role_validate&display=true',
+    { 
+      method: 'post',
+      parameters: 
+      {
+        mode : $('mode').value,
+        role_id : $('role_id').value,
+        role_label : $('role_label').value,
+        list_label : $('list_label').value,
+        list_img : $('list_img').value,
+        allow_entities : $('allow_entities').checked
+      },
+      onSuccess: function(transport) {
+          var responseText = transport.responseText.replace(new RegExp("(\r|\n)", "g"), "");
+          if(responseText)
+            $('listinstance_role_messages').innerHTML += responseText;
+          else  
+            goTo('index.php?module=entities&page=admin_listinstance_roles');
+        }
+    }
+  );
+  
+}
