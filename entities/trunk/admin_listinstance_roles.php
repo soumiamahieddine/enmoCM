@@ -124,7 +124,10 @@ for ($i=0;$i<count($tab);$i++)
 
             if($tab[$i][$j][$value]=="allow_entities")
             {
-                $tab[$i][$j]["allow_entities"]=$tab[$i][$j]['value'];
+                if($tab[$i][$j]['value'] == 'Y')
+                    $tab[$i][$j]["value"]= "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_enabled.gif'/>";
+                else
+                    $tab[$i][$j]["value"]= "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_disabled.gif'/>";
                 $tab[$i][$j]["label"]=_ALLOW_ENTITIES;
                 $tab[$i][$j]["size"]="10";
                 $tab[$i][$j]["label_align"]="center";
