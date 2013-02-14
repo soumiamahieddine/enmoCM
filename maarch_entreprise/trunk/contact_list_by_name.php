@@ -41,116 +41,73 @@ while($line = $db->fetch_object())
 	array_push($listArray, $db->show_string($line->lastname)." ".$db->show_string($line->firstname)." (user:".$line->user_id.")");
 	//array_push($listArray, "user : [".$db->show_string($line->lastname)." ".$db->show_string($line->firstname))."]";
 }
-/*
-$db->query("select is_corporate_person, society, lastname, firstname, contact_id from ".$_SESSION['tablename']['contacts']
-	." where (lower(lastname) like lower('%".$db->protect_string_db($_REQUEST['what'])."%') "
-	//." or lower(firstname) like lower('".$db->protect_string_db($_REQUEST['what'])."%') "
-	." or lower(society) like lower('%".$db->protect_string_db($_REQUEST['what'])."%')) and enabled = 'Y' order by society, lastname, firstname");
-
-//$db->show();
-while($line = $db->fetch_object())
-{
-	if($line->is_corporate_person == "Y")
-	{
-		array_push($listArray, $db->show_string($line->society).", ".$db->show_string($line->lastname)." ".$db->show_string($line->firstname)." (contact:".$line->contact_id.")");
-	}
-	else
-	{
-		array_push($listArray, $db->show_string($line->society).", ".$db->show_string($line->lastname)." ".$db->show_string($line->firstname)." (contact:".$line->contact_id.")");
-	}
-}
-echo "<ul>\n";
-$authViewList = 0;
-foreach($listArray as $what)
-{
-	if($authViewList >= 30)
-	{
-		$flagAuthView = true;
-	}
-	echo "<li>".$what."</li>\n";
-	if(isset($flagAuthView) && $flagAuthView)
-	{
-		echo "<li>...</li>\n";
-		break;
-	}
-		$authViewList++;
-}
-echo "</ul>";*/
     $timestart=microtime(true);
    
-    $searchParts = explode(' ', $_REQUEST['what']);
-    $nb_search = count($searchParts);
-    if($nb_search == 0) return "<ul></ul>"; 
+    $args = explode(' ', $_REQUEST['what']);
+    $args[] = $_REQUEST['Input'];
+    $num_args = count($args);
+    if($num_args == 0) return "<ul></ul>"; 
        
-    $query = "SELECT result, COUNT(*) AS score FROM (";
-    $queryParts = array();
+    $query = "SELECT result, SUM(confidence) AS score, count(1) as num FROM (";
     
-    foreach($searchParts as $search) {
-        $search = $db->protect_string_db($search);
-        $queryParts[] .= "SELECT "
+    $subQuery = 
+        "SELECT "
             . "(CASE is_corporate_person"
-            . " WHEN 'Y' THEN society"
-            . " WHEN 'N' THEN UPPER(lastname) || ' ' || firstname "
-            . " END)"
-            . " || '(contact:' || contact_id || ')' AS result, user_id, enabled"
-            . " FROM contacts"
-            . " WHERE ("
-                . " LOWER(lastname) LIKE LOWER('%$search%')"
-                . " or LOWER(firstname) LIKE LOWER('%$search%')"
-                . " or LOWER(society) LIKE LOWER('%$search%')"
+                . " WHEN 'Y' THEN society"
+                . " WHEN 'N' THEN UPPER(lastname) || ' ' || firstname "
+            . " END) || ' (contact:' || contact_id || ')' AS result, "
+            . ' %d as confidence'
+        . " FROM contacts"
+        . " WHERE (user_id = '' OR user_id IS NULL OR user_id = '".$db->protect_string_db($_SESSION['user']['UserId'])."' ) "
+            . " AND enabled = 'Y' "
+            . " AND ("
+                . " LOWER(lastname) LIKE LOWER('%s')"
+                . " or LOWER(firstname) LIKE LOWER('%s')"
+                . " or LOWER(society) LIKE LOWER('%s')"
             .")";
-        $queryParts[] .= "SELECT "
-            . "(CASE is_corporate_person"
-            . " WHEN 'Y' THEN society"
-            . " WHEN 'N' THEN UPPER(lastname) || ' ' || firstname "
-            . " END)"
-            . " || '(contact:' || contact_id || ')' AS result, user_id, enabled"
-            . " FROM contacts"
-            . " WHERE ("
-                . " LOWER(lastname) LIKE LOWER('%$search')"
-                . " or LOWER(firstname) LIKE LOWER('%$search')"
-                . " or LOWER(society) LIKE LOWER('%$search')"
-            .")";
-        $queryParts[] .= "SELECT "
-            . "(CASE is_corporate_person"
-            . " WHEN 'Y' THEN society"
-            . " WHEN 'N' THEN UPPER(lastname) || ' ' || firstname "
-            . " END)"
-            . " || '(contact:' || contact_id || ')' AS result, user_id, enabled"
-            . " FROM contacts"
-            . " WHERE ("
-                . " LOWER(lastname) = LOWER('$search')"
-                . " or LOWER(firstname) = LOWER('$search')"
-                . " or LOWER(society) = LOWER('$search')"
-            .")";
+    
+    $queryParts = array();
+    foreach($args as $arg) {
+        $arg = $db->protect_string_db($arg);
+        # Full match of one given arg
+        $expr = $arg;
+        $conf = 100;
+        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr); 
+
+        # Partial match (starts with)
+        $expr = $arg . "%"; ;
+        $conf = 34; # If found, partial match contains will also be so score is sum of both confidences, i.e. 67)
+        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr); 
+      
+        # Partial match (contains)
+        $expr = "%" . $arg . "%";
+        $conf = 33;
+        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr); 
     }
     $query .= implode (' UNION ALL ', $queryParts);
     $query .= ") as matches" 
-        . " WHERE (user_id = '' OR user_id IS NULL OR user_id = '".$db->protect_string_db($_SESSION['user']['UserId'])."' ) "
-        . " AND enabled = 'Y' "
         . " GROUP BY result "
-        . " ORDER BY score DESC";
+        . " ORDER BY score DESC, result ASC";
     
     $db->query($query);
     $nb = $db->nb_result();
-    if($nb >= 30) $l = 30;
+    $m = 30;
+    if($nb >= $m) $l = $m;
     else $l = $nb;
     
     $timeend=microtime(true);
     $time = number_format(($timeend-$timestart), 3);
 
     $found = false;
-    echo "<ul title=".$time.">";
-    foreach($listArray as $what) {
-        echo "<li>". $what ."</li>";
-    }
+    echo "<ul title='$l contacts found in " . $time."sec'>";
     for($i=0; $i<$l; $i++) {
         $res = $db->fetch_object();
-        $score = round($res->score / $nb_search * 100 / 3);
-        if($score == 100) $found = true;
-        if($found == $score < 100) break;
-        echo "<li title='confiance:".$score."%'>". $res->result ."</li>";
+        $score = round($res->score / $num_args);
+        if($i%2==1) $color = 'LightYellow';
+        else $color = 'white';
+        echo "<li style='font-size: 8pt; background-color:$color;' title='confiance:".$score."%'>". $res->result ."</li>";
     }
-    if($nb >= 30)
-        echo "<li>...</li>";    
+    
     echo "</ul>";
+    if($nb > $m)
+        echo "<p align='left' style='background-color:LemonChiffon;' title=\"La liste n'a pas pu être affichée intégralement, veuillez compléter votre recherche.\" >...</p>";  
