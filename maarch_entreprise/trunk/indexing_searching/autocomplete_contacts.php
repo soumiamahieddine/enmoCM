@@ -131,8 +131,7 @@ elseif($table == 'contacts')
         echo "<li style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'>". $res->result ."</li>";
     }
     echo "</ul>";
-    if($nb > $m) {
+    if($nb > $m)
         echo "<p align='left' style='background-color:LemonChiffon;' title=\"La liste n'a pas pu être affichée intégralement, veuillez compléter votre recherche.\" >...</p>";
-    }
     
 }
