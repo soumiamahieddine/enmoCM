@@ -37,8 +37,7 @@ while($note = $dbDatasource->fetch_array()) {
 
 // Attachments
 $datasources['attachments'] = array();
-$dbDatasource->query("SELECT * FROM res_attachments WHERE coll_id = '".$coll_id."' AND res_id_master = ".$res_id."");
-while($attachment = $dbDatasource->fetch_array()) {
+$dbDatasource->query("SELECT *, (res_id + 1) as chrono FROM res_attachments WHERE coll_id = '".$coll_id."' AND res_id_master = ".$res_id." order by res_id desc");
+while ($attachment = $dbDatasource->fetch_array()) {
     $datasources['attachments'][] = $attachment;
 }
-?>
