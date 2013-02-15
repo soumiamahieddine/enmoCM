@@ -2271,3 +2271,700 @@ CREATE TABLE groupbasket_status
 WITH (
   OIDS=FALSE
 );
+
+-- ************************************************************************* --
+--                                                                           --
+--                  RECORDS MANAGEMENT V1.0 DATABASE SCHEMA                  --
+--                                                                           --
+-- ************************************************************************* --
+
+-- ************************************************************************* --
+--                               DATA TABLES                                 --
+-- ************************************************************************* --
+
+-- ************************************************************************* --
+--                             MESSAGES - IOS                                --
+-- ************************************************************************* --
+-- Records Management Messages
+DROP TABLE IF EXISTS rm_ios CASCADE;
+CREATE TABLE rm_ios
+(
+  io_id SERIAL NOT NULL,
+  io_type character varying(100) NOT NULL,
+  io_status character varying(10) NOT NULL,
+  docserver_id character varying(32) NOT NULL DEFAULT 'IOS',
+  io_path character varying(512),
+  io_filename character varying(255),
+  
+  date timestamp without time zone NOT NULL,
+  reply_code character varying(50),
+  operation_date timestamp without time zone default null,
+  related_identifier character varying(100),
+  identifier character varying(100) NOT NULL,
+  reference_identifier character varying(100),
+    
+  CONSTRAINT "rm_ios_pkey" PRIMARY KEY (io_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+-- Message comments
+DROP TABLE IF EXISTS rm_comments CASCADE; 
+CREATE TABLE rm_comments
+(
+  comment_id SERIAL,
+  io_id bigint NOT NULL,
+  
+  comment text NOT NULL,
+  date timestamp without time zone,
+  author character varying(255),
+  
+  CONSTRAINT "rm_comments_pkey" PRIMARY KEY (comment_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+-- ************************************************************************* --
+--                           ARCHIVES AND OBJECTS                            --
+-- ************************************************************************* --
+-- Archives and ArchiveObjects
+DROP TABLE IF EXISTS rm_items CASCADE;
+CREATE TABLE rm_items
+(
+  item_id SERIAL,
+  item_type character varying(50),
+  parent_item_id bigint,
+  schedule_id bigint,
+  
+  archival_agency_item_identifier character varying(100),
+  archival_agreement character varying(100),
+  archival_profile character varying(100),
+  description_language text NOT NULL default 'fra',
+  name text NOT NULL,
+  originating_agency_item_identifier character varying(100),
+  service_level text,
+  transferring_agency_item_identifier character varying(100),
+  
+  CONSTRAINT "rm_items_pkey" PRIMARY KEY (item_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+-- Archives and ArchiveObjects ContentDescription
+DROP TABLE IF EXISTS rm_content_descriptions CASCADE;
+CREATE TABLE rm_content_descriptions
+(
+  item_id bigint NOT NULL,
+  
+  description text,
+  description_level character varying(50) NOT NULL DEFAULT 'recordgrp',
+  file_plan_position text,
+  language text NOT NULL DEFAULT 'fra',
+  latest_date date,
+  oldest_date date,
+  other_descriptive_data text,
+  
+  CONSTRAINT "rm_content_descriptions_pkey" PRIMARY KEY (item_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+-- ContentDescription CustodialHistory
+DROP TABLE IF EXISTS rm_custodial_history CASCADE;
+CREATE TABLE rm_custodial_history
+(
+  item_id bigint NOT NULL,
+  "when" date,
+  custodial_history_item text NOT NULL,
+  
+  CONSTRAINT "rm_custodial_history_pkey" PRIMARY KEY (item_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+
+-- Archives and ArchiveObjects Appraisal Rules
+DROP TABLE IF EXISTS rm_appraisal_rules CASCADE;
+CREATE TABLE rm_appraisal_rules
+(
+  appraisal_rule_id SERIAL,
+  parent_id bigint NOT NULL,
+  parent_type character varying(50) NOT NULL,
+  
+  code character varying(50),
+  duration integer,
+  start_date date,
+  
+  CONSTRAINT "rm_appraisal_rules_pkey" PRIMARY KEY (appraisal_rule_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+-- Archives and ArchiveObjects Access Restriction Rules
+DROP TABLE IF EXISTS rm_access_restriction_rules CASCADE;
+CREATE TABLE rm_access_restriction_rules
+(
+  access_restriction_rule_id SERIAL,
+  parent_id bigint NOT NULL,
+  parent_type character varying(50) NOT NULL,
+  
+  code character varying(50),
+  start_date date,
+  
+  CONSTRAINT "rm_access_restriction_rules_pkey" PRIMARY KEY (access_restriction_rule_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+-- Documents
+DROP TABLE IF EXISTS rm_documents CASCADE;
+CREATE TABLE rm_documents
+(
+  res_id SERIAL,
+  coll_id character varying(32),
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL,
+  filename character varying(255) DEFAULT NULL,
+  type_id bigint NOT NULL,
+  item_id bigint,
+  format character varying(50) NOT NULL,
+  typist character varying(128) NOT NULL,
+  offset_doc character varying(255) DEFAULT NULL,
+  logical_adr character varying(255) DEFAULT NULL,
+  policy_id character varying(32) DEFAULT NULL,
+  cycle_id character varying(32) DEFAULT NULL,
+  cycle_date timestamp without time zone,
+  is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_frozen character(1) NOT NULL DEFAULT 'N'::bpchar,
+  publisher character varying(255) DEFAULT NULL::character varying,
+  contributor character varying(255) DEFAULT NULL::character varying,
+  author character varying(255) DEFAULT NULL::character varying,
+  author_name text,
+  identifier character varying(255) DEFAULT NULL::character varying,
+  source character varying(255) DEFAULT NULL::character varying,
+  coverage character varying(255) DEFAULT NULL::character varying,
+  destination character varying(50) DEFAULT NULL::character varying,
+  approver character varying(50) DEFAULT NULL::character varying,
+  
+  archival_agency_document_identifier character varying(100),
+  copy character varying(1),
+  creation_date timestamp without time zone,
+  description text, 
+  fingerprint character varying(64),
+  issue timestamp without time zone,
+  doc_language text not null default 'fra'::bpchar,
+  originating_agency_document_identifier character varying(100),
+  subject text,
+  receipt timestamp without time zone,
+  response timestamp without time zone,
+  filesize bigint default 0,
+  unit_code character varying(10) default 'A99',
+  status character varying(50),
+  submission timestamp without time zone,
+  transferring_agency_document_identifier character varying(100),
+  content_type character varying(10) DEFAULT 'CDO',
+  
+  CONSTRAINT "rm_documents_pkey" PRIMARY KEY (res_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+DROP TABLE IF EXISTS adr_rm CASCADE;
+CREATE TABLE adr_rm
+(
+  res_id bigint NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL::character varying,
+  filename character varying(255) DEFAULT NULL::character varying,
+  offset_doc character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  adr_priority integer NOT NULL,
+  CONSTRAINT adr_rm_pkey PRIMARY KEY (res_id, docserver_id)
+)
+WITH (OIDS=FALSE);
+
+-- Archives and ArchiveObjects Keywords
+DROP TABLE IF EXISTS rm_keywords CASCADE;
+CREATE TABLE rm_keywords
+(
+  keyword_id SERIAL,
+  item_id bigint,
+  
+  keyword_content text NOT NULL,
+  role character varying(50),
+  keyword_reference character varying(50),
+  keyword_type character varying(50),
+  
+  CONSTRAINT "rm_keywords_pkey" PRIMARY KEY (keyword_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+-- ************************************************************************* --
+--                            ORGANIZATIONS                                  --
+-- ************************************************************************* --
+-- Organizations
+DROP TABLE IF EXISTS rm_organizations CASCADE;
+CREATE TABLE rm_organizations
+(
+    organization_id SERIAL,
+    parent_id bigint NOT NULL, -- Id of parent
+    parent_type character varying(50) NOT NULL, -- ArchiveTransfer, Archive, ArchiveObject, ArchiveTransferReply
+    role character varying(50) NOT NULL,  -- TransferringAgency, ArchivalAgency, OriginatingAgency, Repository, ControlAuthority
+    entity_id character varying(32), -- Entity_id if related to maarch entity
+    
+    business_type character varying(50),
+    description character varying(255),
+    identification character varying(100) NOT NULL,
+    legal_classification character varying(50),
+    name text,
+    CONSTRAINT "rm_organizations_pkey" PRIMARY KEY (organization_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+-- Addresses
+DROP TABLE IF EXISTS rm_addresses CASCADE;
+CREATE TABLE rm_addresses
+(
+    address_id SERIAL,
+    parent_id bigint NOT NULL, 
+    parent_type character varying(50), -- TransferringAgency, Contact...
+    entity_id character varying(32), -- Used if refAddress
+    user_id character varying(128), -- Used if refAddress
+    
+    block_name character varying(255),
+    building_name character varying(255),
+    building_number character varying(255),
+    city_name character varying(255),
+    city_sub_division_name character varying(255),
+    country character varying(50),
+    floor_identification character varying(255),
+    postcode character varying(50),
+    post_office_box character varying(255),
+    room_identification character varying(255),
+    street_name character varying(255),
+
+    CONSTRAINT "rm_addresses_pkey" PRIMARY KEY (address_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+-- Contacts
+DROP TABLE IF EXISTS rm_contacts CASCADE;
+CREATE TABLE rm_contacts
+(
+    contact_id SERIAL,
+    organization_id bigint NOT NULL,
+    user_id character varying(128), -- User_id of related to Maarch user
+    
+    department_name character varying(255),
+    identification character varying(100),
+    person_name character varying(255),
+    responsibility character varying(255),
+    
+    CONSTRAINT "rm_contacts_pkey" PRIMARY KEY (contact_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+-- ************************************************************************* --
+--                                RELATIONS                                  --
+-- ************************************************************************* --
+-- Relation between ios and archives
+DROP TABLE IF EXISTS rm_io_archives_relations CASCADE;
+CREATE TABLE rm_io_archives_relations
+(
+    io_id bigint NOT NULL,
+    item_id bigint NOT NULL,
+    
+    CONSTRAINT "rm_io_archives_relations_pkey" PRIMARY KEY (io_id, item_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+
+-- ************************************************************************* --
+--                                ENTITIES                                   --
+-- ************************************************************************* --
+DROP TABLE IF EXISTS rm_entities CASCADE;
+CREATE TABLE rm_entities
+(
+  entity_id character varying(32) NOT NULL,
+  is_archival_agency character varying(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_originating_agency character varying(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_transferring_agency character varying(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_repository character varying(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_control_authority character varying(1) NOT NULL DEFAULT 'N'::bpchar,
+  rm_entity_type character varying(50) NOT NULL DEFAULT 'Collectivité'::bpchar,
+  parallel_forms_of_names text,
+  other_normalized_names text,
+  other_names text,
+  oldest_date date,
+  latest_date date,
+  history text,
+  places text,
+  legal_status text,
+  activities text,
+  mandates text,
+  structure text,
+  context text,
+  record_id character varying(100),
+  institution_id character varying(255),
+  rules text,
+  status character varying(255),
+  detail_level character varying(255),
+  maintenance_dates text,
+  description_language character varying(100),
+  sources text,
+  maintenance_notes text,
+  CONSTRAINT "rm_entities_pkey" PRIMARY KEY (entity_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+-- ************************************************************************* --
+--                             AGREEMENTS                                    --
+-- ************************************************************************* --
+DROP TABLE IF EXISTS rm_agreements CASCADE;
+CREATE TABLE rm_agreements 
+(
+  agreement_id SERIAL,
+  identifier character varying(100) NOT NULL,
+  description character varying(255) NOT NULL,
+  comment TEXT,
+  archival_profile character varying(50) NOT NULL,
+  archival_entity_id character varying(100) NOT NULL,
+  transferring_entity_id character varying(100) NOT NULL,
+  begin_date date NOT NULL,
+  end_date date NOT NULL,
+  coll_id character varying(50) NOT NULL,
+  allowed_file_types TEXT NOT NULL,
+  transfer_max_size bigint NOT NULL DEFAULT 100000,
+  transfer_max_item integer NOT NULL DEFAULT 300,
+  transfer_count integer,
+  transfer_count_period character varying(20) DEFAULT 'MONTH'::bpchar,
+  transfer_total_size bigint NOT NULL DEFAULT 100000000,
+  is_enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
+  CONSTRAINT "rm_agreements_pkey" PRIMARY KEY (agreement_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+-- ************************************************************************* --
+--                             SCHEDULE                                    --
+-- ************************************************************************* --
+DROP TABLE IF EXISTS rm_schedule CASCADE;
+CREATE TABLE rm_schedule 
+(
+  type_id bigint not null,
+  appraisal_code character varying(50) NOT NULL,
+  appraisal_duration integer NOT NULL,
+  access_restriction_code character varying(50) NOT NULL,
+  service_level character varying(50),
+  notes text,
+  CONSTRAINT "rm_schedule_pkey" PRIMARY KEY (type_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
+-- ************************************************************************* --
+--                                  VUES                                     --
+-- ************************************************************************* --
+
+-- Entities to organizations
+DROP VIEW IF EXISTS rm_ref_organizations CASCADE;
+CREATE OR REPLACE VIEW rm_ref_organizations AS
+SELECT 
+    entities.entity_id,
+    null as business_type,
+    null as description,
+    business_id as identification,
+    null as legal_classification,
+    entity_label as name,
+    null as organization_id,
+    null as parent_id,
+    null as parent_type,
+    'TransferringAgency' as role
+FROM entities 
+JOIN rm_entities ON entities.entity_id = rm_entities.entity_id
+WHERE business_id != '' AND is_transferring_agency = 'Y'
+UNION 
+SELECT 
+    entities.entity_id,
+    null as business_type,
+    null as description,
+    business_id as identification,
+    null as legal_classification,
+    entity_label as name,
+    null as organization_id,
+    null as parent_id,
+    null as parent_type,
+    'ArchivalAgency' as role
+FROM entities 
+JOIN rm_entities ON entities.entity_id = rm_entities.entity_id
+WHERE business_id != '' AND is_archival_agency = 'Y'
+UNION 
+SELECT 
+    entities.entity_id,
+    null as business_type,
+    null as description,
+    business_id as identification,
+    null as legal_classification,
+    entity_label as name,
+    null as organization_id,
+    null as parent_id,
+    null as parent_type,
+    'OriginatingAgency' as role
+FROM entities 
+JOIN rm_entities ON entities.entity_id = rm_entities.entity_id
+WHERE business_id != '' AND business_id != '' AND is_originating_agency = 'Y'
+UNION 
+SELECT 
+    entities.entity_id,
+    null as business_type,
+    null as description,
+    business_id as identification,
+    null as legal_classification,
+    entity_label as name,
+    null as organization_id,
+    null as parent_id,
+    null as parent_type,
+    'Repository' as role
+FROM entities 
+JOIN rm_entities ON entities.entity_id = rm_entities.entity_id
+WHERE business_id != '' AND is_repository = 'Y'
+UNION 
+SELECT 
+    entities.entity_id,
+    null as business_type,
+    null as description,
+    business_id as identification,
+    null as legal_classification,
+    entity_label as name,
+    null as organization_id,
+    null as parent_id,
+    null as parent_type,
+    'ControlAuthority' as role
+FROM entities 
+JOIN rm_entities ON entities.entity_id = rm_entities.entity_id
+WHERE business_id != '' AND is_control_authority = 'Y';
+
+-- Entities/contacts to addresses
+DROP VIEW IF EXISTS rm_ref_addresses CASCADE;
+CREATE OR REPLACE VIEW rm_ref_addresses AS
+SELECT 
+    null as address_id,
+    null as parent_id,
+    null as parent_type,
+    entity_id,
+    '*' as user_id,
+    adrs_1 as street_name,
+    adrs_2 as block_name,
+    adrs_3 as post_office_box,
+    zipcode as postcode,
+    city as city_name,
+
+    null as building_name,
+    null as building_number,
+    null as city_sub_division_name,
+    null as country,
+    null as floor_identification, 
+    null as room_identification
+FROM entities
+WHERE adrs_1 != '' OR adrs_1 != '' OR adrs_2 != '' OR adrs_3 != '' OR city != ''
+UNION 
+SELECT 
+    null as address_id,
+    null as parent_id,
+    null as parent_type,
+    entities.entity_id,
+    users.user_id,
+    adrs_1 as street_name,
+    adrs_2 as block_name,
+    adrs_3 as post_office_box,
+    zipcode as postcode,
+    city as city_name,
+    entity_label as room_identification, 
+    
+    null as building_name,
+    null as building_number,
+    null as city_sub_division_name,
+    null as country,
+    null as floor_identification
+FROM users
+LEFT JOIN users_entities ON users.user_id = users_entities.user_id
+LEFT JOIN entities ON users_entities.entity_id = entities.entity_id
+WHERE adrs_1 != '' OR adrs_1 != '' OR adrs_2 != '' OR adrs_3 != '' OR city != '';
+
+-- Users to Contacts
+DROP VIEW IF EXISTS rm_ref_contacts;
+CREATE OR REPLACE VIEW rm_ref_contacts AS 
+ SELECT 
+    users.user_id, 
+    NULL::bpchar AS contact_id, 
+    NULL::bpchar AS organization_id, 
+    NULL::bpchar AS identification, 
+    entities.entity_label AS department_name, 
+    users_entities.user_role AS responsibility, 
+    (users.firstname::text || ' '::text) || users.lastname::text AS person_name
+ FROM users
+    JOIN users_entities ON users.user_id::text = users_entities.user_id::text
+    JOIN entities ON users_entities.entity_id::text = entities.entity_id::text;
+
+-- RM_IOS
+DROP VIEW IF EXISTS rm_ios_view;
+CREATE OR REPLACE VIEW rm_ios_view AS 
+SELECT
+    rm_ios.*,
+    ArchivalAgency.entity_id AS archival_agency_entity_id,
+    ArchivalContact.user_id AS archival_user_id,
+    RequestingAgency.entity_id AS requesting_agency_entity_id,
+    RequestingContact.user_id AS requesting_user_id,
+    rm_comments.comment AS comment,
+    Archives.name as archive_name,
+    count(ArchiveObjects) as nb_archive_objects
+FROM rm_ios
+    LEFT JOIN rm_organizations AS ArchivalAgency ON ArchivalAgency.parent_id = rm_ios.io_id AND ArchivalAgency.role = 'ArchivalAgency'
+    LEFT JOIN rm_contacts AS ArchivalContact ON ArchivalContact.organization_id = 
+        ( 
+        SELECT organization_id 
+        FROM rm_contacts 
+        WHERE rm_contacts.organization_id = ArchivalAgency.organization_id 
+        ORDER BY contact_id
+        LIMIT 1
+        )
+    LEFT JOIN rm_organizations AS RequestingAgency ON RequestingAgency.parent_id = rm_ios.io_id AND RequestingAgency.role IN ('TransferringAgency', 'RequestingAgency')
+    LEFT JOIN rm_contacts AS RequestingContact ON RequestingContact.organization_id = 
+        ( 
+        SELECT organization_id 
+        FROM rm_contacts 
+        WHERE rm_contacts.organization_id = RequestingAgency.organization_id 
+        ORDER BY contact_id
+        LIMIT 1
+        )
+    
+    LEFT JOIN rm_io_archives_relations IOArchives ON IOArchives.io_id = rm_ios.io_id
+    LEFT JOIN rm_items AS Archives ON Archives.item_id = IOArchives.item_id
+    LEFT JOIN rm_items AS ArchiveObjects ON ArchiveObjects.parent_item_id = Archives.item_id
+    LEFT JOIN rm_comments ON rm_comments.io_id = 
+        ( 
+        SELECT io_id 
+        FROM rm_comments 
+        WHERE rm_comments.io_id = rm_ios.io_id
+        ORDER BY comment_id 
+        LIMIT 1
+        )
+GROUP BY 
+    rm_ios.io_id, 
+    rm_ios.io_type,
+    rm_ios.io_status,
+    rm_ios.docserver_id,
+    rm_ios.io_path,
+    rm_ios.io_filename,
+    rm_ios.date,
+    rm_ios.reply_code,
+    rm_ios.operation_date,
+    rm_ios.related_identifier,
+    rm_ios.identifier,
+    rm_ios.reference_identifier,
+    ArchivalAgency.entity_id, 
+    RequestingAgency.entity_id, 
+    ArchivalContact.user_id, 
+    RequestingContact.user_id, 
+    Archives.Name,
+    rm_comments.comment;
+
+
+-- RES_VIEW_RM
+DROP VIEW IF EXISTS rm_documents_view;
+CREATE OR REPLACE VIEW rm_documents_view AS 
+SELECT 
+    rm_documents.*,
+
+    rm_items.archival_agency_item_identifier,
+    rm_items.description_language,
+    rm_items.name,
+    rm_items.originating_agency_item_identifier,
+    rm_items.service_level,
+    rm_items.transferring_agency_item_identifier,
+    
+    rm_content_descriptions.description as content_description,
+    rm_content_descriptions.description_level,
+    rm_content_descriptions.file_plan_position,
+    rm_content_descriptions.language,
+    rm_content_descriptions.latest_date,
+    rm_content_descriptions.oldest_date,
+    rm_content_descriptions.other_descriptive_data,
+
+    rm_custodial_history.custodial_history_item,
+    
+    doctypes.description as type_label,
+    
+    doctypes_first_level.doctypes_first_level_id, 
+    doctypes_first_level.doctypes_first_level_label, 
+    doctypes_first_level.css_style as doctype_first_level_style, 
+    
+    doctypes_second_level.doctypes_second_level_id, 
+    doctypes_second_level.doctypes_second_level_label, 
+    doctypes_second_level.css_style as doctype_second_level_style,
+    
+    file_plan_position.folders_system_id,
+    
+    originating_agency.identification as originating_agency_identification,
+    originating_agency.entity_id as originating_agency_entity_id,
+    originating_agency.name as originating_agency_name,
+    
+    rm_contacts.department_name as dest_user,
+    
+    rm_appraisal_rules.code as appraisal_code,
+    rm_appraisal_rules.duration as appraisal_duration,
+    rm_appraisal_rules.start_date as appraisal_start_date,
+    
+    rm_access_restriction_rules.code as access_restriction_code,
+    rm_access_restriction_rules.start_date as access_restriction_start_date
+    
+FROM rm_documents
+    LEFT JOIN rm_items on rm_items.item_id = rm_documents.item_id
+    LEFT JOIN rm_content_descriptions on rm_items.item_id = rm_content_descriptions.item_id
+    LEFT JOIN rm_custodial_history on rm_items.item_id = rm_custodial_history.item_id
+    LEFT JOIN doctypes on rm_documents.type_id = doctypes.type_id
+    LEFT JOIN doctypes_first_level ON doctypes.doctypes_first_level_id = doctypes_first_level.doctypes_first_level_id
+    LEFT JOIN doctypes_second_level ON doctypes.doctypes_second_level_id = doctypes_second_level.doctypes_second_level_id
+    LEFT JOIN rm_organizations AS originating_agency ON originating_agency.organization_id = 
+        ( 
+        SELECT organization_id 
+        FROM rm_organizations 
+        WHERE rm_organizations.parent_id = rm_items.item_id AND rm_organizations.role = 'OriginatingAgency'
+        ORDER BY organization_id
+        LIMIT 1
+        )
+    LEFT JOIN rm_contacts on originating_agency.organization_id = rm_contacts.organization_id and contact_id = 
+        ( 
+        SELECT contact_id 
+        FROM rm_contacts 
+        WHERE rm_contacts.organization_id = originating_agency.organization_id
+        ORDER BY contact_id
+        LIMIT 1
+        )
+    LEFT JOIN rm_appraisal_rules ON rm_appraisal_rules.parent_id = rm_items.item_id
+    LEFT JOIN rm_access_restriction_rules ON rm_access_restriction_rules.parent_id = rm_items.item_id
+    LEFT JOIN folders file_plan_position ON rm_content_descriptions.file_plan_position = file_plan_position.folder_id AND foldertype_id = '101'
+    LEFT JOIN folders schedule ON rm_items.schedule_id = schedule.folders_system_id
+WHERE item_type = 'ArchiveObject';
