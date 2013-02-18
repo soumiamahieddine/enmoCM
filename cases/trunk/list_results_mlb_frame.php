@@ -319,7 +319,7 @@ if (count($tab) > 0) {
                         $tab[$i][$j]["valign"] = "bottom";
                         $tab[$i][$j]["show"] = true;
                         $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["value"] = $_SESSION['mail_categories'][$tab[$i][$j]['value']];
+                        $tab[$i][$j]["value"] = $_SESSION['coll_categories']['letterbox_coll'][$tab[$i][$j]['value']];
                         $tab[$i][$j]["order"] = "category_id";
                     }
                     if ($tab[$i][$j][$value] == "category_img") {

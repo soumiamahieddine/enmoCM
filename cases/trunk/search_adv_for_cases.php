@@ -441,12 +441,12 @@ array_push(
     	'LABEL' => _CHOOSE_CATEGORY
     )
 );
-foreach (array_keys($_SESSION['mail_categories']) as $cat_id) {
+foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $cat_id) {
     array_push(
         $arrTmp,
         array(
         	'VALUE' => $cat_id,
-        	'LABEL' => $_SESSION['mail_categories'][$cat_id]
+        	'LABEL' => $_SESSION['coll_categories']['letterbox_coll'][$cat_id]
         )
     );
 }

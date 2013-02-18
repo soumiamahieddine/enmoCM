@@ -88,7 +88,7 @@ if($db_external->nb_result() >0)
 		}
 		$external .='<td width="8%" >&nbsp;</td>';
 		$external .='<td width="40px"><img src="'.$res_status['IMG_SRC'].'" alt = "'.$res_status['LABEL'].'" title = "'.$res_status['LABEL'].'"></td>';
-		$external .='<td width="40px"><p><img src="'. get_img_cat($ext_result->category_id, $extension_icon).'" title="'.$_SESSION['mail_categories'][$ext_result->category_id].'" alt="'.$_SESSION['mail_categories'][$ext_result->category_id].'"></p></td>';
+		$external .='<td width="40px"><p><img src="'. get_img_cat($ext_result->category_id, $extension_icon).'" title="'.$_SESSION['coll_categories']['letterbox_coll'][$ext_result->category_id].'" alt="'.$_SESSION['coll_categories']['letterbox_coll'][$ext_result->category_id].'"></p></td>';
 		$external .='<td width="40px" ><b><p align="center" title="'._GED_NUM.' : '.$ext_result->res_id.'" alt="'._GED_NUM.' : '.$ext_result->res_id.'">'.$func->cut_string($ext_result->res_id,50).'</td></b></p>';
 		$external .='<td ><p title="'. _SUBJECT . ' : '.$request->show_string($ext_result->subject).'" alt="'._SUBJECT.' : '.$request->show_string($ext_result->subject).'">'.$func->cut_string($request->show_string($ext_result->subject),70).'</p></td>';
 		//$external .='<td width="100px"><p>'.$ext_result->dest_user.'</td></p>';
