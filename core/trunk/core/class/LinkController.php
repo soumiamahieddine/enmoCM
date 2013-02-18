@@ -67,7 +67,7 @@ class LinkController
                         $return .= '<td class="barreLinks" width="2">';
                         $return .= '</td>';
                         $return .= '<td align="center">';
-                            $return .= $_SESSION['mail_categories'][$infos['category_id']];
+                            $return .= $_SESSION['coll_categories']['letterbox_coll'][$infos['category_id']];
                         $return .= '</td>';
                         $return .= '<td class="barreLinks" width="2">';
                         $return .= '</td>';
