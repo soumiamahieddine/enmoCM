@@ -120,7 +120,7 @@ class business_app_tools extends dbquery
             $_SESSION['tablename']['contacts'] = (string) $tablename->contacts;
             
             $_SESSION['config']['tmppath'] = $_SESSION['config']['corepath'] . 'apps' 
-				. DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
                 . DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR;
             
             $i = 0;
@@ -138,12 +138,14 @@ class business_app_tools extends dbquery
                     . 'lang' . DIRECTORY_SEPARATOR . $_SESSION['config']['lang']
                     . '.php';
             $_SESSION['collections'] = array();
+            $_SESSION['coll_categories'] = array();
             foreach ($xmlconfig->COLLECTION as $col) {
                 $tmp = (string) $col->label;
                 if (!empty($tmp) && defined($tmp) && constant($tmp) <> NULL) {
                     $tmp = constant($tmp);
                 }
                 $extensions = $col->extensions;
+                $collId = (string) $col->id;
                 $tab = array();
 
                 if ($extensions->count()) {
@@ -172,6 +174,21 @@ class business_app_tools extends dbquery
                         'path_to_lucene_index' => (string) $col->path_to_lucene_index,
                         'extensions' => $tab,
                     );
+                    
+                    $categories = $col->categories;
+                    
+                    if (count($categories) > 0) {
+                        foreach ($categories->category as $cat) {
+                            $label = (string) $cat->label;
+                            if (!empty($label) && defined($label)
+                                && constant($label) <> NULL
+                             ) {
+                                $label = constant($label);
+                            }
+                            $_SESSION['coll_categories'][$collId][(string) $cat->id] = $label;
+                        }
+                        $_SESSION['coll_categories'][$collId]['default_category'] = (string) $categories->default_category;
+                    }
                     $i++;
                 } else {
                     $_SESSION['collections'][$i] = array(
@@ -361,21 +378,6 @@ class business_app_tools extends dbquery
         $langPath = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
                   . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
                   . $_SESSION['config']['lang'] . '.php';
-
-        $categories = $xmlfile->categories;
-        $_SESSION['mail_categories'] = array();
-        if (count($categories) > 0) {
-            foreach ($categories->category as $cat) {
-                $label = (string) $cat->label;
-                if (!empty($label) && defined($label)
-                    && constant($label) <> NULL
-                 ) {
-                    $label = constant($label);
-                }
-                $_SESSION['mail_categories'][(string) $cat->id] = $label;
-            }
-            $_SESSION['default_category'] = (string) $categories->default_category;
-        }
         
         $_SESSION['mail_natures'] = array();
         $mailNatures = $xmlfile->mail_natures;

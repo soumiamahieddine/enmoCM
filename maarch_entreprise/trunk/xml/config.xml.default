@@ -53,29 +53,59 @@
             <table>mlb_coll_ext</table>
         </extensions>
         <path_to_lucene_index>C:\Maarch\indexes\entreprise\letterbox_coll\</path_to_lucene_index>
+        <categories>
+            <category>
+                <id>incoming</id>
+                <label>_INCOMING</label>
+            </category>
+            <category>
+                <id>outgoing</id>
+                <label>_OUTGOING</label>
+            </category>
+            <category>
+                <id>internal</id>
+                <label>_INTERNAL</label>
+            </category>
+            <default_category>incoming</default_category>
+        </categories>
     </COLLECTION>
     <COLLECTION>
-        <id>res_coll</id>
-        <label>_INVOICES</label>
-        <table>res_x</table>
-        <version_table>res_version_x</version_table>
-        <view>res_view</view>
-        <adr>adr_x</adr>
-        <index_file>index_invoices.xml</index_file>
-        <script_add>index_invoices.php</script_add>
-        <script_search>search_invoices.php</script_search>
-        <script_search_result>list_results_invoices.php</script_search_result>
-        <script_details>details_invoices.php</script_details>
+        <id>business_coll</id>
+        <label>_BUSINESS</label>
+        <table>res_business</table>
+        <version_table>res_version_business</version_table>
+        <view>res_view_business</view>
+        <adr>adr_business</adr>
+        <index_file>index_business.xml</index_file>
+        <script_add>index_business.php</script_add>
+        <script_search>search_business.php</script_search>
+        <script_search_result>list_results_business.php</script_search_result>
+        <script_details>details_business.php</script_details>
         <extensions>
-            <table></table>
+            <table>business_coll_ext</table>
         </extensions>
-        <path_to_lucene_index>C:\Maarch\indexes\sample\res_coll\</path_to_lucene_index>
+        <path_to_lucene_index>C:\Maarch\indexes\entreprise\business_coll\</path_to_lucene_index>
+        <categories>
+            <category>
+                <id>document</id>
+                <label>_DOCUMENT</label>
+            </category>
+            <category>
+                <id>invoice_incoming</id>
+                <label>_INVOICE_INCOMING</label>
+            </category>
+            <category>
+                <id>invoice_outgoing</id>
+                <label>_INVOICE_OUTGOING</label>
+            </category>
+            <default_category>document</default_category>
+        </categories>
     </COLLECTION>
     <COLLECTION>
         <id>rm_coll</id>
         <label>_RM_COLL</label>
         <table>rm_documents</table>
-        <version_table />
+        <version_table/>
         <view>rm_documents_view</view>
         <adr>adr_rm</adr>
         <index_file>index_rm.xml</index_file>
@@ -87,6 +117,13 @@
             <table/>
         </extensions>
         <path_to_lucene_index/>
+        <categories>
+            <category>
+                <id>rm_archive</id>
+                <label>_RM_ARCHIVE</label>
+            </category>
+            <default_category>rm_archive</default_category>
+        </categories>
     </COLLECTION>
     <COLLECTION>
         <id>log_coll</id>
@@ -137,6 +174,23 @@
             <table/>
         </extensions>
         <path_to_lucene_index/>
+    </COLLECTION>
+    <COLLECTION>
+        <id>res_coll</id>
+        <label>_SAMPLE</label>
+        <table>res_x</table>
+        <version_table>res_version_x</version_table>
+        <view>res_view</view>
+        <adr>adr_x</adr>
+        <index_file>index_invoices.xml</index_file>
+        <script_add>index_invoices.php</script_add>
+        <script_search>search_invoices.php</script_search>
+        <script_search_result>list_results_invoices.php</script_search_result>
+        <script_details>details_invoices.php</script_details>
+        <extensions>
+            <table/>
+        </extensions>
+        <path_to_lucene_index>C:\Maarch\indexes\sample\res_coll\</path_to_lucene_index>
     </COLLECTION>
     <HISTORY>
         <usersdel>true</usersdel>

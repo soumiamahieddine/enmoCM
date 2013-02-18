@@ -429,10 +429,10 @@ array_push($arr_status , array('id' => 'late', 'label' => _LATE));
         <select name="category" id="category" onchange="change_list_category(this.options[this.selectedIndex].value, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=manage_filter_count_list&origin=<?php echo $_REQUEST['origin']?>');">
             <option value="none"><?php echo _CHOOSE_CATEGORY;?></option>
             <?php
-            foreach(array_keys($_SESSION['mail_categories']) as $value)
+            foreach(array_keys($_SESSION['coll_categories']['letterbox_coll']) as $value)
             {
                 ?>
-                <option value="<?php echo $value;?>"<?php if($_SESSION['auth_dep']['bask_chosen_category'] == $value){echo ' selected="selected"';}?>><?php echo $_SESSION['mail_categories'][$value];?></option>
+                <option value="<?php echo $value;?>"<?php if($_SESSION['auth_dep']['bask_chosen_category'] == $value){echo ' selected="selected"';}?>><?php echo $_SESSION['coll_categories']['letterbox_coll'][$value];?></option>
                 <?php
             }
             ?>

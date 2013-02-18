@@ -611,13 +611,15 @@ if (!defined('_INDEX')) define( '_INDEX', 'Index');
 if (!defined('_MAILS')) define( '_MAILS', 'Courriers');
 if (!defined('_DOCUMENTS')) define( '_DOCUMENTS', 'Prets immobiliers');
 if (!defined('_INVOICES')) define( '_INVOICES', 'Factures');
+if (!defined('_SAMPLE')) define( '_SAMPLE', 'Collection exemple');
 if (!defined('_CHOOSE_COLLECTION')) define( '_CHOOSE_COLLECTION', 'Choisir une collection');
 if (!defined('_COLLECTION')) define( '_COLLECTION', 'Collection');
 if (!defined('_RM_COLL')) define('_RM_COLL', 'Collection des archives');
 if (!defined('_EVENT')) define( '_EVENT', 'Ev&egrave;nement');
 if (!defined('_LINK')) define( '_LINK', 'Lien');
 if (!defined('_LOG_COLL')) define( '_LOG_COLL', 'Collection des logs');
-
+if (!defined('_IO_COLL')) define('_IO_COLL', 'Collection des bordereaux de versement');
+if (!defined('_BUSINESS')) define('_BUSINESS', 'Collection des documents business');
 
 //BITMASK
 if (!defined('_BITMASK_VALUE_ALREADY_EXIST')) define( '_BITMASK_VALUE_ALREADY_EXIST' , 'Bitmask d&eacute;j&agrave; utilis&eacute; dans un autre type');

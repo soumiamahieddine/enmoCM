@@ -346,7 +346,7 @@ $arr_tmp = array();
 array_push($arr_tmp, array('VALUE' => '', 'LABEL' => _CHOOSE_CATEGORY));
 foreach(array_keys($_SESSION['mail_categories']) as $cat_id)
 {
-    array_push($arr_tmp, array('VALUE' => $cat_id, 'LABEL' => $_SESSION['mail_categories'][$cat_id]));
+    array_push($arr_tmp, array('VALUE' => $cat_id, 'LABEL' => $_SESSION['coll_categories']['letterbox_coll'][$cat_id]));
 }
 $arr_tmp2 = array('label' => _CATEGORY, 'type' => 'select_simple', 'param' => array('field_label' => _CATEGORY,'default_label' => '', 'options' => $arr_tmp));
 $param['category'] = $arr_tmp2;//Arbox_id ; for physical_archive

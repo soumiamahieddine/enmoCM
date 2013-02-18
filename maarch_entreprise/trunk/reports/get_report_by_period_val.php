@@ -551,18 +551,18 @@ else if($id_report == 'mail_vol_by_cat')
 		$data = array();
 	}
 
-	foreach(array_keys($_SESSION['mail_categories']) as $key)
+	foreach(array_keys($_SESSION['coll_categories']['letterbox_coll']) as $key)
 	{
 		$db->query("select count(*) as total from ".$view." where status in ".$str_status."  and ".$where_date." and category_id = '".$key."'");
 		$res = $db->fetch_object();
 		if($report_type == 'graph')
 		{
-			array_push($_SESSION['labels1'], utf8_decode($db->wash_html($_SESSION['mail_categories'][$key], 'NO_ACCENT')));
+			array_push($_SESSION['labels1'], utf8_decode($db->wash_html($_SESSION['coll_categories']['letterbox_coll'][$key], 'NO_ACCENT')));
 			array_push($vol_an, $res->total);
 		}
 		elseif($report_type == 'array')
 		{
-			array_push($data, array('LABEL' => $_SESSION['mail_categories'][$key], 'VALUE' => $res->total ));
+			array_push($data, array('LABEL' => $_SESSION['coll_categories']['letterbox_coll'][$key], 'VALUE' => $res->total ));
 		}
 
 		if($res->total > 0)

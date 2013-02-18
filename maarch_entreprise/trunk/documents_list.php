@@ -174,7 +174,7 @@ for ($i=0;$i<count($tab);$i++)
 			if($tab[$i][$j][$value]=="category_id")
 			{
 				$_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]["value"];
-				$tab[$i][$j]["value"] = $_SESSION['mail_categories'][$tab[$i][$j]["value"]];
+				$tab[$i][$j]["value"] = $$_SESSION['coll_categories']['letterbox_coll'][$tab[$i][$j]["value"]];
 				$tab[$i][$j]["label"]=_CATEGORY;
 				$tab[$i][$j]["size"]="10";
 				$tab[$i][$j]["label_align"]="left";
@@ -208,7 +208,7 @@ for ($i=0;$i<count($tab);$i++)
             if($tab[$i][$j][$value]=="category_id")
             {
                 $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]["value"];
-                $tab[$i][$j]["value"] = $_SESSION['mail_categories'][$tab[$i][$j]["value"]];
+                $tab[$i][$j]["value"] = $_SESSION['coll_categories']['letterbox_coll'][$tab[$i][$j]["value"]];
                 $tab[$i][$j]["label"]=_CATEGORY;
                 $tab[$i][$j]["size"]="10";
                 $tab[$i][$j]["label_align"]="left";

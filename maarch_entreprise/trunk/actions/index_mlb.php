@@ -368,16 +368,16 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . 'change_category\',  \'' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&page=get_content_js\');">';
     $frmStr .= '<option value="">' . _CHOOSE_CATEGORY . '</option>';
-    foreach (array_keys($_SESSION['mail_categories']) as $catId) {
+    foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $catId) {
         $frmStr .= '<option value="' . $catId . '"';
-        if ($_SESSION['default_category'] == $catId
+        if ($_SESSION['coll_categories']['letterbox_coll']['default_category'] == $catId
             || (isset($_SESSION['indexing']['category_id'])
                 && $_SESSION['indexing']['category_id'] == $catId)
         ) {
             $frmStr .= 'selected="selected"';
         }
 
-        $frmStr .= '>' . $_SESSION['mail_categories'][$catId] . '</option>';
+        $frmStr .= '>' . $_SESSION['coll_categories']['letterbox_coll'][$catId] . '</option>';
     }
     $frmStr .= '</select></td>';
     $frmStr .= '<td><span class="red_asterisk" id="category_id_mandatory" '
@@ -1023,7 +1023,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<script type="text/javascript">resize_frame_process(\'modal_'
             . $actionId . '\', \'file_iframe\', true, true); ' . $strJs
             . 'window.scrollTo(0,0);change_category(\''
-            . $_SESSION['default_category'] . '\', \'' . $displayValue
+            . $_SESSION['coll_categories']['letterbox_coll']['default_category'] . '\', \'' . $displayValue
             . '\', \'' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&dir=indexing_searching&page='
             . 'change_category\',  \'' . $_SESSION['config']['businessappurl']

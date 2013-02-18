@@ -236,7 +236,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
         if ($params['img_category_id'] == true) {
             $data['category_id'] = array (
                 'value' => $cat_id,
-                'show_value' => $_SESSION['mail_categories'][$cat_id],
+                'show_value' => $_SESSION['coll_categories']['rm_coll'][$cat_id],
                 'label' => _CATEGORY,
                 'display' => 'textinput',
                 'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=picto_change.gif'
@@ -244,7 +244,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
         } else {
             $data['category_id'] = array (
                 'value' => $cat_id,
-                'show_value' => $_SESSION['mail_categories'][$cat_id],
+                'show_value' => $_SESSION['coll_categories']['rm_coll'][$cat_id],
                 'label' => _CATEGORY,
                 'display' => 'textinput'
             );

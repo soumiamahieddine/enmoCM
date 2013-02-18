@@ -101,7 +101,7 @@ function check_category($coll_id, $res_id)
     {
         $ind_coll = $sec->get_ind_collection($coll_id);
         $table_ext = $_SESSION['collections'][$ind_coll]['extensions'][0];
-        $db->query("insert into ".$table_ext." (res_id, category_id) VALUES (".$res_id.", '".$_SESSION['default_category']."')");
+        $db->query("insert into ".$table_ext." (res_id, category_id) VALUES (".$res_id.", '".$_SESSION['coll_categories']['letterbox_coll']['default_category']."')");
         //$db->show();
     }
 }
@@ -392,17 +392,17 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .='<td>&nbsp;</td>';
                     $frm_str .='<td class="indexing_field"><select name="category_id" id="category_id" onchange="clear_error(\'frm_error_'.$id_action.'\');change_category(this.options[this.selectedIndex].value, \''.$display_value.'\',  \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_category\',  \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\');">';
                                 $frm_str .='<option value="">'._CHOOSE_CATEGORY.'</option>';
-                            foreach (array_keys($_SESSION['mail_categories']) as $cat_id) {
+                            foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $cat_id) {
                                 $frm_str .='<option value="'.$cat_id.'"';
                                 if (
                                     (isset($data['category_id']['value']) && $data['category_id']['value'] == $cat_id)
-                                    || $_SESSION['default_category'] == $cat_id
+                                    || $_SESSION['coll_categories']['letterbox_coll']['default_category'] == $cat_id
                                     || $_SESSION['indexing']['category_id'] == $cat_id
                                 ) {
                                     $frm_str .='selected="selected"';
                                 }
 
-                                $frm_str .='>'.$_SESSION['mail_categories'][$cat_id].'</option>';
+                                $frm_str .='>'.$_SESSION['coll_categories']['letterbox_coll'][$cat_id].'</option>';
                             }
                         $frm_str.='</select></td>';
                         $frm_str .= '<td><span class="red_asterisk" id="category_id_mandatory" style="display:inline;">*</span>&nbsp;</td>';
