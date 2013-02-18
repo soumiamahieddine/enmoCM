@@ -216,7 +216,7 @@ if (!defined('_HELP_KEYWORDS'))
 if (!defined('_HELP_KEYWORD_EXEMPLE_TITLE'))
     define('_HELP_KEYWORD_EXEMPLE_TITLE', 'Example of security clause ("where clause"): granting access to ressources of the primary department of the user and its sub-departments.');
 if (!defined('_HELP_KEYWORD_EXEMPLE'))
-    define('_HELP_KEYWORD_EXEMPLE', 'where_clause : (DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])');
+    define('_HELP_KEYWORD_EXEMPLE', 'where_clause : (DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity]))');
 if (!defined('_HELP_BY_ENTITY'))
     define('_HELP_BY_ENTITY', 'Keywords defined by module "Entity"');
 

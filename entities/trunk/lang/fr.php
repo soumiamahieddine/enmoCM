@@ -225,7 +225,7 @@ if (!defined('_HELP_KEYWORDS'))
 if (!defined('_HELP_KEYWORD_EXEMPLE_TITLE'))
     define('_HELP_KEYWORD_EXEMPLE_TITLE', 'Exemple dans la d&eacute;finition de la s&eacute;curit&eacute; d&rsquo;un groupe ("where clause") : acc&egrave;s sur les ressources concernant le service d&rsquo;appartenance principal de l&rsquo;utilisateur connect&eacute;, ou les sous-services de ce service.');
 if (!defined('_HELP_KEYWORD_EXEMPLE'))
-    define('_HELP_KEYWORD_EXEMPLE', 'where_clause : (DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])');
+    define('_HELP_KEYWORD_EXEMPLE', 'where_clause : (DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity]))');
 if (!defined('_HELP_BY_ENTITY'))
     define('_HELP_BY_ENTITY', 'Mots cl&eacute;s du module Entit&eacute;s');
 if (!defined('_BASKET_REDIRECTIONS_OCCURS_LINKED_TO'))
