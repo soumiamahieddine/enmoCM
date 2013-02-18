@@ -344,7 +344,7 @@ $param['doctype'] = $arr_tmp2;
 //category
 $arr_tmp = array();
 array_push($arr_tmp, array('VALUE' => '', 'LABEL' => _CHOOSE_CATEGORY));
-foreach(array_keys($_SESSION['mail_categories']) as $cat_id)
+foreach(array_keys($_SESSION['coll_categories']['letterbox_coll']) as $cat_id)
 {
     array_push($arr_tmp, array('VALUE' => $cat_id, 'LABEL' => $_SESSION['coll_categories']['letterbox_coll'][$cat_id]));
 }
