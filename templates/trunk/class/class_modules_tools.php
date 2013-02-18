@@ -261,7 +261,7 @@ class templates extends dbquery
                         $value = $res->field;
                         if($var_name == '[CAT_ID]')
                         {
-                            $value = $_SESSION['mail_categories'][$value];
+                            $value = $_SESSION['coll_categories']['letterbox_coll'][$value];
                         }
                         elseif($var_name == '[NATURE]')
                         {

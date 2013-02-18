@@ -925,7 +925,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
                         $res = $db->fetch_object();
                         $value = $res->field;
                         if ($var_name == '[CAT_ID]') {
-                            $value = $_SESSION['mail_categories'][$value];
+                            $value = $_SESSION['coll_categories']['letterbox_coll'][$value];
                         } elseif ($var_name == '[NATURE]') {
                             $value = $_SESSION['mail_natures'][$value];
                         } elseif ($var_name == '[CONTACT_TITLE]') {
