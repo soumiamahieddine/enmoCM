@@ -1,156 +1,75 @@
-<?php  /**
-* File : frame_notes_doc.php
+<?php
+/*
 *
-* Frame, shows the notes of a document
+*    Copyright 2008,2012 Maarch
 *
-* @package Maarch LetterBox 2.3
-* @version 1.0
-* @since 06/2006
-* @license GPL
-* @author  Claire Figueras  <dev@maarch.org>
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-$core = new core_tools();
-//here we loading the lang vars
-$core->load_lang();
-$core->test_service('manage_notes_doc', 'notes');
-$func = new functions();
-//$db = new dbquery();
-//$db->connect();
-if (empty($_SESSION['collection_id_choice'])) {
-	$_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
+/**
+* @brief    Folder frame notes
+*
+* @file     frame_notes_folder.php
+* @author   Yves Christian Kpakpo <dev@maarch.org>
+* @date     $date$
+* @version  $Revision$
+* @ingroup  folder
+*/
+
+require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php";
+require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
+            ."class".DIRECTORY_SEPARATOR."class_lists.php";
+            
+$core_tools = new core_tools();
+$request    = new request();
+$list       = new lists();
+
+//
+$core_tools->load_lang();
+$core_tools->load_html();
+$core_tools->load_header('', true, false);
+
+$body = "";
+$extendUrl = "&size=full";
+if (!isset($_REQUEST['size']) || $_REQUEST['size'] <> "full") {
+	$body = 'id="iframe"';
+    $extendUrl = "";
 }
 
-require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
-    . "class_request.php";
-require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
-    . "class_list_show.php";
-require_once 'core/core_tables.php';
-require_once 'modules/notes/notes_tables.php';
-
-$func = new functions();
-$select[USERS_TABLE] = array();
-array_push($select[USERS_TABLE], "user_id", "lastname", "firstname");
-$select[NOTES_TABLE] = array();
-array_push($select[NOTES_TABLE], "id", "date_note", "note_text", "user_id");
-$where = " identifier = " . $_SESSION['current_folder_id'] . " ";
-$request = new request;
-$tabNotes = $request->select(
-    $select, $where, "order by " . NOTES_TABLE . ".date_note desc",
-    $_SESSION['config']['databasetype'], "500", true, NOTES_TABLE, USERS_TABLE,
-    "user_id"
-);
-$indNotes1d = '';
-
-
-if ($_GET['size'] == "full") {
-	$sizeMedium = "15";
-	$sizeSmall = "15";
-	$sizeFull = "70";
-	$css = "listing spec detailtabricatordebug";
-	$body = "";
-	$cutString = 100;
-	$extendUrl = "&size=full";
-} else {
-	$sizeMedium = "18";
-	$sizeSmall = "10";
-	$sizeFull = "30";
-	$css = "listingsmall";
-	$body = "iframe";
-	$cutString = 20;
-	$extendUrl = "";
+if (!isset($_REQUEST['coll_id']) && !empty($_REQUEST['coll_id'])) {
+    $extendUrl = "&coll_id=".$_REQUEST['coll_id'];
 }
 
-for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++) {
-	for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
-		foreach (array_keys($tabNotes[$indNotes1][$indNotes2]) as $value) {
-			if ($tabNotes[$indNotes1][$indNotes2][$value] == "id") {
-				$tabNotes[$indNotes1][$indNotes2]["id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
-				$tabNotes[$indNotes1][$indNotes2]["label"] = 'ID';
-				$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
-				$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
-				$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
-				$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-				$tabNotes[$indNotes1][$indNotes2]["show"] = true;
-				$indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
-			}
-			if ($tabNotes[$indNotes1][$indNotes2][$value] == "user_id") {
-				$tabNotes[$indNotes1][$indNotes2]["user_id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
-				$tabNotes[$indNotes1][$indNotes2]["label"] = _ID;
-				$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
-				$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
-				$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
-				$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-				$tabNotes[$indNotes1][$indNotes2]["show"] = false;
-			}
-			if ($tabNotes[$indNotes1][$indNotes2][$value] == "lastname") {
-				$tabNotes[$indNotes1][$indNotes2]['value'] = $request->show_string(
-				    $tabNotes[$indNotes1][$indNotes2]['value']
-				);
-				$tabNotes[$indNotes1][$indNotes2]["lastname"] = $tabNotes[$indNotes1][$indNotes2]['value'];
-				$tabNotes[$indNotes1][$indNotes2]["label"] = _LASTNAME;
-				$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall ;
-				$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
-				$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
-				$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-				$tabNotes[$indNotes1][$indNotes2]["show"] = true;
-			}
-			if ($tabNotes[$indNotes1][$indNotes2][$value] == "date_note") {
-				$tabNotes[$indNotes1][$indNotes2]["date_note"] = $tabNotes[$indNotes1][$indNotes2]['value'];
-				$tabNotes[$indNotes1][$indNotes2]["label"] = _DATE;
-				$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
-				$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
-				$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
-				$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-				$tabNotes[$indNotes1][$indNotes2]["show"] = true;
-			}
-			if ($tabNotes[$indNotes1][$indNotes2][$value] == "firstname") {
-				$tabNotes[$indNotes1][$indNotes2]["firstname"] = $tabNotes[$indNotes1][$indNotes2]['value'];
-				$tabNotes[$indNotes1][$indNotes2]["label"] = _FIRSTNAME;
-				$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
-				$tabNotes[$indNotes1][$indNotes2]["label_align"] = "center";
-				$tabNotes[$indNotes1][$indNotes2]["align"] = "center";
-				$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-				$tabNotes[$indNotes1][$indNotes2]["show"] = true;
-			}
-			if ($tabNotes[$indNotes1][$indNotes2][$value] == "note_text") {
-				$tabNotes[$indNotes1][$indNotes2]['value'] = '<a href="javascript://"'
-					.' onclick="ouvreFenetre(\''
-					. $_SESSION['config']['businessappurl']
-					. 'index.php?display=true&module=notes&page=note_details&id='
-					. $indNotes1d . '&amp;resid=' . $_SESSION['current_folder_id']
-					. '&amp;coll_id=' . $_SESSION['collection_folders']
-					. $extendUrl . '\', 450, 300)">'
-					. $func->cut_string(
-					    $request->show_string(
-					        $tabNotes[$indNotes1][$indNotes2]['value']
-					    ), $cutString
-					) . '<span class="sstit"> > ' . _READ . '</span>';
-				$tabNotes[$indNotes1][$indNotes2]["note_text"] = $tabNotes[$indNotes1][$indNotes2]['value'];
-				$tabNotes[$indNotes1][$indNotes2]["label"] = _NOTES;
-				$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeFull;
-				$tabNotes[$indNotes1][$indNotes2]["label_align"] = "center";
-				$tabNotes[$indNotes1][$indNotes2]["align"] = "center";
-				$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-				$tabNotes[$indNotes1][$indNotes2]["show"] = true;
-			}
-		}
-	}
-}
-//$request->show_array($tabNotes);
-$core->load_html();
-//here we building the header
-$core->load_header('', true, false);
 ?>
-<body id="<?php echo $body; ?>">
+<body <?php echo $body; ?>>
+<h2><?php echo _NOTES;?></h2>
 <?php
-$title = '';
-$listNotes = new list_show();
-$listNotes->list_simple(
-    $tabNotes, count($tabNotes), $title, 'id', 'id', false, '', $css
-);
-$core->load_js();
+$core_tools->load_js();
+
+//Load list
+if (isset($_SESSION['current_folder_id']) 
+	&& ! empty($_SESSION['current_folder_id'])
+) {
+    $target = $_SESSION['config']['businessappurl']
+        .'index.php?module=notes&page=notes_list&id='
+        .$_SESSION['current_folder_id'].$extendUrl;
+    
+    $listContent = $list->loadList($target);
+    echo $listContent;
+}
 ?>
 </body>
 </html>
