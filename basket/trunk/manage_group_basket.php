@@ -67,8 +67,22 @@ else
 {
 	$_SESSION['error'] .= _NO_RESULT_PAGE_SELECTED.".";
 }
-
-
+    //Lock list
+    $list_whrere_clause = $sublist_whrere_clause ='';
+    if (isset($_REQUEST['lock_list']) && $_REQUEST['lock_list'] == 'Y') {
+        if (!empty($_REQUEST['list_whrere_clause'])) {
+            $list_whrere_clause = trim($_REQUEST['list_whrere_clause']);
+            $_SESSION['m_admin']['basket_popup']['list_whrere_clause'] = trim($_REQUEST['list_whrere_clause']);
+        }
+        if (!empty($_REQUEST['sublist_whrere_clause'])) {
+            $sublist_whrere_clause = trim($_REQUEST['sublist_whrere_clause']);
+            $_SESSION['m_admin']['basket_popup']['sublist_whrere_clause'] = trim($_REQUEST['sublist_whrere_clause']);
+        }
+        if (strlen(trim($list_whrere_clause)) == 0 && strlen(trim($sublist_whrere_clause)) == 0) {
+            $_SESSION['error'] .= _SYNTAX_ERROR_LOCK_CLAUSE.".";
+        }
+    }
+    
 	$old_group = "";
 	$seq = "";
 
@@ -139,7 +153,15 @@ else
 	{
 		$db->query("select group_desc from ".$_SESSION['tablename']['usergroups']." where group_id = '".$groupe."'");
 		$res = $db->fetch_object();
-		$tab = array("GROUP_ID" => $groupe, 'GROUP_LABEL' => $res->group_desc, "SEQUENCE" => $seq, "RESULT_PAGE" => $respage, 'DEFAULT_ACTION' => $default_action_page,  'ACTIONS' => $actions);
+		$tab = array(
+                "GROUP_ID"          => $groupe, 
+                "GROUP_LABEL"       => $res->group_desc, 
+                "SEQUENCE"          => $seq, 
+                "RESULT_PAGE"       => $respage, 
+                "LOCK_LIST"         => $list_whrere_clause, 
+                "LOCK_SUBLIST"      => $sublist_whrere_clause, 
+                "DEFAULT_ACTION"    => $default_action_page,  
+                "ACTIONS" => $actions);
 		$find = false;
 		for($i=0; $i < count($_SESSION['m_admin']['basket']['groups']); $i++)
 		{

@@ -124,7 +124,39 @@ $time = $core_tools->get_session_time_expire();
             }
             ?>
             </select>
+            <input type="checkbox" id="lock_list" name="lock_list" value="Y" onclick="new Effect.toggle('lock_rules_div', 'blind', {delay:0.2});" 
+            <?php if(strlen(trim($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['LOCK_LIST'])) >0 
+                    || strlen(trim($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['LOCK_SUBLIST'])) >0) { 
+                     echo 'checked="checked"';}?>>
+                     <span onclick="new Effect.toggle('lock_rules_div', 'blind', {delay:0.2});" 
+                     style="cursor:pointer; color:#1B91BA; text-decoration:underline;"><?php echo _LOCK_LIST;?></span>
         </p>
+        <div id="lock_rules_div" style="display:none;">
+        <table border="0" width="60%" align="center"> 
+            <tr>
+                <td><?php echo _PRINCIPAL_LIST;?> :</td>
+                <td height="1%">
+                    <textarea name="list_whrere_clause" id="list_whrere_clause"  rows="4"><?php echo $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['LOCK_LIST'];?></textarea>
+                </td>
+                <td rowspan="2">
+                    <div class="block small_text" >
+                    <h3><img src ="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_detail_b.gif" />
+                    <?php echo _HELP_LIST_KEYWORDS; ?></h3>
+                        <p align="justify">
+                        <?php echo _HELP_LIST_KEYWORD_EXEMPLE_TITLE;?><br/>
+                        <em><?php echo _HELP_LIST_KEYWORD1;?></em><br/>
+                        <em><?php echo _HELP_LIST_KEYWORD2;?></em><br/>
+                        <div style="border:1px black solid; padding:3px;"><b><?php echo _HELP_LIST_KEYWORD_EXEMPLE;?></b></div>
+                        </p>
+                    </div>
+                    <div class='block_end'>&nbsp;</div>
+                </td>
+            </tr>
+            <tr><td valign="top"><?php echo _SUBLIST;?> :<td valign="top">
+                <textarea name="sublist_whrere_clause" id="sublist_whrere_clause" rows="4"><?php echo $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['LOCK_SUBLIST'];?></textarea>
+            </td></tr>
+        </table>
+        </div>
         <p>&nbsp;</p>
         <p>
             <label><?php echo _DEFAULT_ACTION_LIST;?> :</label>

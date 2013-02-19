@@ -54,7 +54,9 @@ class admin_basket extends dbquery
         $db = new dbquery();
         $db->connect();
 
-        $this->query("select gb.group_id,  gb.sequence, gb.result_page, u.group_desc from ".$_SESSION['tablename']['bask_groupbasket']." gb, ".$_SESSION['tablename']['usergroups']." u where gb.basket_id = '".$id."' and gb.group_id = u.group_id order by u.group_desc");
+        $this->query("select gb.group_id,  gb.sequence, gb.result_page, gb.list_lock_clause, gb.sublist_lock_clause, u.group_desc from "
+            .$_SESSION['tablename']['bask_groupbasket']." gb, ".$_SESSION['tablename']['usergroups']
+            ." u where gb.basket_id = '".$id."' and gb.group_id = u.group_id order by u.group_desc");
         while($line2 = $this->fetch_object())
         {
             $db->query("select agb.group_id, agb.basket_id, agb.id_action, agb.where_clause,  ba.label_action, agb.used_in_basketlist as mass, agb.used_in_action_page as page, agb.default_action_list from ".$_SESSION['tablename']['bask_actions_groupbaskets']." agb, ".$_SESSION['tablename']['actions']." ba
@@ -75,7 +77,15 @@ class admin_basket extends dbquery
                 }
             }
 
-            $_SESSION['m_admin']['basket']['groups'][$i] = array("GROUP_ID" => $line2->group_id , "GROUP_LABEL" => $this->show_string($line2->group_desc), "SEQUENCE" => $line2->sequence,  "RESULT_PAGE" => $line2->result_page, 'DEFAULT_ACTION' => $default_action_list,  'ACTIONS' => $actions);
+            $_SESSION['m_admin']['basket']['groups'][$i] = array(
+                "GROUP_ID"          =>  $line2->group_id , 
+                "GROUP_LABEL"       =>  $this->show_string($line2->group_desc), 
+                "SEQUENCE"          =>  $line2->sequence,  
+                "RESULT_PAGE"       =>  $line2->result_page, 
+                "LOCK_LIST"         =>  $line2->list_lock_clause, 
+                "LOCK_SUBLIST"      =>  $line2->sublist_lock_clause, 
+                "DEFAULT_ACTION"    =>  $default_action_list,  
+                "ACTIONS"           =>  $actions);
             $i++;
         }
 
@@ -118,6 +128,7 @@ class admin_basket extends dbquery
                     $_SESSION['m_admin']['basket']['clause'] = $this->show_string($line->basket_clause);
                     $_SESSION['m_admin']['basket']['is_generic'] = $this->show_string($line->is_generic);
                     $_SESSION['m_admin']['basket']['is_visible'] = $this->show_string($line->is_visible);
+                    $_SESSION['m_admin']['basket']['is_folder_basket'] = $this->show_string($line->is_folder_basket);
                     $_SESSION['m_admin']['basket']['coll_id'] = $this->show_string($line->coll_id);
                     if (! isset($_SESSION['m_admin']['load_groupbasket']) || $_SESSION['m_admin']['load_groupbasket'] == true)
                     {
@@ -215,7 +226,17 @@ class admin_basket extends dbquery
                 <p>
                     <label><?php echo _BASKET_VISIBLE;?> : </label>
                     <input type='checkbox' name="is_visible" id="is_visible" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_visible'] === 'Y' || $_SESSION['m_admin']['basket']['is_visible']=== '') echo 'checked="checked"'; ?>/>
+                </p>                              
+                <?php
+                if ($core_tools->is_module_loaded('folder')) {
+                ?>
+                <p>
+                    <label><?php echo _IS_FOLDER_BASKET;?> : </label>
+                    <input type='checkbox' name="is_folder_basket" id="is_folder_basket" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_folder_basket'] === 'Y') echo 'checked="checked"'; ?>/>
                 </p>
+                <?php
+                }
+                ?>
                 <p></p>
                 <p class="buttons">
                     &nbsp;<input type="submit" name="Submit" value="<?php echo _VALIDATE; ?>" class="button" />&nbsp;
@@ -268,6 +289,11 @@ class admin_basket extends dbquery
             $_SESSION['m_admin']['basket']['is_visible'] = $_REQUEST['is_visible'];
         } else {
             $_SESSION['m_admin']['basket']['is_visible'] = "N";
+        }
+        if ( isset($_REQUEST['is_folder_basket']) && !empty($_REQUEST['is_folder_basket'])) {
+            $_SESSION['m_admin']['basket']['is_folder_basket'] = $_REQUEST['is_folder_basket'];
+        } else {
+            $_SESSION['m_admin']['basket']['is_folder_basket'] = "N";
         }
         $_SESSION['m_admin']['basket']['order'] = $_REQUEST['order'];
         $_SESSION['m_admin']['basket']['order_field'] = $_REQUEST['order_field'];
@@ -338,13 +364,14 @@ class admin_basket extends dbquery
                         exit();
                     }
                     $this->query(
-                        "INSERT INTO ".$_SESSION['tablename']['bask_baskets']." ( coll_id, basket_id, basket_name, basket_desc , basket_clause, is_visible ) "
+                        "INSERT INTO ".$_SESSION['tablename']['bask_baskets']." ( coll_id, basket_id, basket_name, basket_desc , basket_clause, is_visible, is_folder_basket ) "
                         ."VALUES ( '".$_SESSION['m_admin']['basket']['coll_id']."', '"
                             .$_SESSION['m_admin']['basket']['basketId']."', '"
                             .$this->protect_string_db($_SESSION['m_admin']['basket']['name'])."', '"
                             .$this->protect_string_db($_SESSION['m_admin']['basket']['desc'])."','"
                             .$tmp."', '"
-                            .$_SESSION['m_admin']['basket']['is_visible']."')"
+                            .$_SESSION['m_admin']['basket']['is_visible']."', '"
+                            .$_SESSION['m_admin']['basket']['is_folder_basket']."')"
                         , "no");
                     $this->load_db();
 
@@ -388,6 +415,7 @@ class admin_basket extends dbquery
                     ."coll_id = '".$_SESSION['m_admin']['basket']['coll_id']."', "
                     ."basket_desc = '".$this->protect_string_db($_SESSION['m_admin']['basket']['desc'])."', "
                     ."basket_clause ='". $tmp."', "
+                    ."is_folder_basket = '".$_SESSION['m_admin']['basket']['is_folder_basket']."', "
                     ."is_visible = '".$_SESSION['m_admin']['basket']['is_visible']."' "
                     ."where basket_id = '".$_SESSION['m_admin']['basket']['basketId']."'");
                 $this->load_db();
@@ -431,52 +459,71 @@ class admin_basket extends dbquery
                 'error' => ''
             );
         if (! empty ($where_clause)) {
-            require_once 'core/class/SecurityControler.php';
-            $secCtrl = new SecurityControler();
-            if ($secCtrl->isUnsecureRequest($where_clause)) {
-                $return = array(
-                    'status' => false,
-                    'error' => _WHERE_CLAUSE_NOT_SECURE
-                );
-                return $return;
-            } else {
-                $where = $secCtrl->process_security_where_clause(
-                    $where_clause, $_SESSION['user']['UserId']
-                );
-            }
-         }
-        // Gets the basket collection
-        $ind = -1;
-        for ($i = 0; $i < count($_SESSION['collections']); $i ++)
-        {
-            if ($_SESSION['m_admin']['basket']['coll_id']
-                == $_SESSION['collections'][$i]['id']) {
-                $ind = $i;
-                break;
-            }
+                require_once 'core/class/SecurityControler.php';
+                $secCtrl = new SecurityControler();
+                if ($secCtrl->isUnsecureRequest($where_clause)) {
+                    $return = array(
+                        'status' => false,
+                        'error' => _WHERE_CLAUSE_NOT_SECURE
+                    );
+                    return $return;
+                } else {
+                    $where = $secCtrl->process_security_where_clause(
+                        $where_clause, $_SESSION['user']['UserId']
+                    );
+                }
         }
 
-        if ($ind == -1) {
-            $_SESSION['error'] .= ' ' . $_SESSION['m_admin']['basket']['coll_id'];
-            $return = array(
-                'status' => false,
-                'error' => ''
-            );
-        } else {// Launches the query in quiet mode
-			if (! empty ($where)) {
-				$this->connect();
-				$res = $this->query(
-					"select count(*) from " . $_SESSION['collections'][$ind]['view']
-					. " " . $where, true
-				);
-			}
-        }
-        if (!isset($res) || !$res) {
-            $_SESSION['error'] .= " " . $_SESSION['m_admin']['basket']['coll_id'];
-            $return = array(
-                'status' => false,
-                'error' => ''
-            );
+        //Folder basket
+        if ($_SESSION['m_admin']['basket']['is_folder_basket'] == 'Y' && ! empty ($where_clause)) {
+            $core_tools = new core_tools();
+            if ($core_tools->is_module_loaded('folder')) {
+                $this->connect();
+                    $res = $this->query(
+                        "select count(*) from " . $_SESSION['view']['view_folders']
+                        . " " . $where, true
+                    );
+                if (!isset($res) || !$res) {
+                    $_SESSION['error'] .= " " . $_SESSION['view']['view_folders'];
+                    $return = array(
+                        'status' => false,
+                        'error' => ''
+                    );
+                }
+            }
+            
+        } else {
+            // Gets the basket collection
+            $ind = -1;
+            for ($i = 0; $i < count($_SESSION['collections']); $i ++)
+            {
+                if ($_SESSION['m_admin']['basket']['coll_id']
+                    == $_SESSION['collections'][$i]['id']) {
+                    $ind = $i;
+                    break;
+                }
+            }
+
+            if ($ind == -1) {
+                $_SESSION['error'] .= ' ' . $_SESSION['m_admin']['basket']['coll_id'];
+                $return = array(
+                    'status' => false,
+                    'error' => ''
+                );
+            } else {// Launches the query in quiet mode
+                $this->connect();
+                $res = $this->query(
+                    "select count(*) from " . $_SESSION['collections'][$ind]['view']
+                    . " " . $where, true
+                );
+            }
+            if (!isset($res) || !$res) {
+                $_SESSION['error'] .= " " . $_SESSION['m_admin']['basket']['coll_id'];
+                $return = array(
+                    'status' => false,
+                    'error' => ''
+                );
+            }
         }
         return $return;
     }
@@ -496,9 +543,13 @@ class admin_basket extends dbquery
         for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'] ); $i++)
         {
             // Update groupbasket table
-            $this->query("INSERT INTO ".$_SESSION['tablename']['bask_groupbasket']." (group_id, basket_id, sequence,  result_page)
-            VALUES ('".$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'])."', '".$this->protect_string_db($_SESSION['m_admin']['basket']['basketId'])."',
-            ".$_SESSION['m_admin']['basket']['groups'][$i]['SEQUENCE']." , '".$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['RESULT_PAGE'])."' )");
+            $this->query("INSERT INTO ".$_SESSION['tablename']['bask_groupbasket']." (group_id, basket_id, sequence,  result_page, list_lock_clause, sublist_lock_clause)
+            VALUES ('".$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'])
+                ."', '".$this->protect_string_db($_SESSION['m_admin']['basket']['basketId'])."',"
+                .$_SESSION['m_admin']['basket']['groups'][$i]['SEQUENCE']." , '"
+                .$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['RESULT_PAGE'])."', '"
+                .$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['LOCK_LIST'])."', '"
+                .$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['LOCK_SUBLIST'])."')");
 
             // Browses the actions array for the current basket - group couple and inserts the action in actions_groupbasket table  if needed
             for($j=0; $j < count($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS']); $j++)
@@ -510,8 +561,6 @@ class admin_basket extends dbquery
                     '".$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['MASS_USE'])."',
                     '".$this->protect_string_db($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['PAGE_USE'])."', ".$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].")");
             }
-
-
 
             // Inserts in actions_groupbasket table the default action if set
             if(isset($_SESSION['m_admin']['basket']['groups'][$i]['DEFAULT_ACTION']) && !empty($_SESSION['m_admin']['basket']['groups'][$i]['DEFAULT_ACTION']))
@@ -603,7 +652,7 @@ class admin_basket extends dbquery
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
                     $core = new core_tools();
                     echo $core->execute_modules_services($_SESSION['modules_services'], 'del_basket', "include");
-                    echo $core->execute_app_services($_SESSION['app_services'], 'del_basket', "include");
+                    echo $core_tools->execute_app_services($_SESSION['app_services'], 'del_basket', "include");
 
                     // Log in database if needed
                     if($_SESSION['history']['basketdel'] == "true")

@@ -70,4 +70,11 @@
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
     </BASKETPAGE>
+	<BASKETPAGE>
+		<ID>list_folders</ID>
+		<LABEL>_FOLDERS_LIST</LABEL>
+		<NAME>folders_list</NAME>
+		<ORIGIN>module</ORIGIN>
+		<MODULE>folder</MODULE>
+    </BASKETPAGE>
 </ROOT>

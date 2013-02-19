@@ -324,13 +324,13 @@ class basket extends dbquery
         $this->query(
             "select agb.id_action, agb.where_clause, agb.used_in_basketlist, "
             . "agb.used_in_action_page, a.label_action, a.id_status, "
-            . "a.action_page from " . ACTIONS_TABLE . " a, "
+            . "a.action_page, a.is_folder_action from " . ACTIONS_TABLE . " a, "
             . ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action and "
             . "agb.group_id = '" . $groupId . "' and agb.basket_id = '"
             . $basketId . "' and a.enabled = 'Y' and "
             . "agb.default_action_list ='N'"
         );
-        $core = new core_tools();
+
         while ($res = $this->fetch_object()) {
             array_push(
                 $actions,
@@ -342,6 +342,7 @@ class basket extends dbquery
                     'PAGE_USE' => $res->used_in_action_page,
                     'ID_STATUS' => $res->id_status,
                     'ACTION_PAGE' => $res->action_page,
+                    'IS_FOLDER_ACTION' => $res->is_folder_action
                 )
             );
         }
@@ -407,6 +408,9 @@ class basket extends dbquery
            // $_SESSION['current_basket']['redirect_users'] = $_SESSION['user']['baskets'][$ind]['redirect_users'];
             $_SESSION['current_basket']['basket_owner'] = $_SESSION['user']['baskets'][$ind]['basket_owner'];
             $_SESSION['current_basket']['abs_basket'] = $_SESSION['user']['baskets'][$ind]['abs_basket'];
+            $_SESSION['current_basket']['is_folder_basket'] = $_SESSION['user']['baskets'][$ind]['is_folder_basket'];
+            $_SESSION['current_basket']['lock_list'] = $_SESSION['user']['baskets'][$ind]['lock_list'];
+            $_SESSION['current_basket']['lock_sublist'] = $_SESSION['user']['baskets'][$ind]['lock_suvlist'];
         }
     }
 
@@ -773,21 +777,27 @@ class basket extends dbquery
         $secCtrl = new SecurityControler();
         $this->query(
             "select basket_id, coll_id, basket_name, basket_desc, "
-            . "basket_clause, is_visible, is_generic from " . BASKET_TABLE
-            . " where basket_id = '" . $this->protect_string_db($basketId)
-            . "' and enabled = 'Y'"
+            . "basket_clause, is_visible, is_generic, is_folder_basket from "
+            . BASKET_TABLE . " where basket_id = '" . $this->protect_string_db(
+            $basketId) . "' and enabled = 'Y'"
         );
-
         $res = $this->fetch_object();
         $tab['id'] = $res->basket_id;
         $tab['coll_id'] = $res->coll_id;
-        $tab['table'] = $sec->retrieve_table_from_coll($tab['coll_id']);
-        $tab['view'] = $sec->retrieve_view_from_coll_id($tab['coll_id']);
+        $core = new core_tools();
+        if ($core->is_module_loaded('folder') === true && $res->is_folder_basket == 'Y') {
+            $tab['table'] = 'folders';
+            $tab['view'] = 'view_folders';
+        } else {
+            $tab['table'] =  $sec->retrieve_table_from_coll($tab['coll_id']);
+            $tab['view'] = $sec->retrieve_view_from_coll_id($tab['coll_id']);
+        }
         $tab['is_generic'] = $res->is_generic;
         $tab['desc'] = $this->show_string($res->basket_desc);
         $tab['name'] = $this->show_string($res->basket_name);
         $tab['clause'] = $res->basket_clause;
         $tab['is_visible'] = $res->is_visible;
+        $tab['is_folder_basket'] = $res->is_folder_basket;
         $isVirtual = 'N';
         $basketOwner = '';
         $absBasket = false;
@@ -808,47 +818,55 @@ class basket extends dbquery
            // {
             //    $primaryGroup = $_SESSION['user']['primarygroup'];
            // }
-         $this->query(
-             "select sequence, can_redirect, can_delete, can_insert, "
-             . "result_page, redirect_basketlist, redirect_grouplist from "
-             . GROUPBASKET_TABLE . " where group_id = '" . $primaryGroup
-             . "' and basket_id = '" . $basketId . "' "
-         );
-         $res = $this->fetch_object();
+        $this->query(
+            "select sequence, can_redirect, can_delete, can_insert, "
+            . "result_page, list_lock_clause, sublist_lock_clause, "
+            ."redirect_basketlist, redirect_grouplist from "
+            . GROUPBASKET_TABLE . " where group_id = '" . $primaryGroup
+            . "' and basket_id = '" . $basketId . "' "
+        );
+        $res = $this->fetch_object();
 
-         $basketIdPage = $res->result_page;
-         $tab['id_page'] = $basketIdPage;
-         // Retrieves the basket url (frame and no_frame modes)
-         $basketPathPageNoFrame = $this->retrieve_path_page(
-             $basketIdPage, 'no_frame'
-         );
-         $basketPathPageFrame = $this->retrieve_path_page(
-             $basketIdPage, 'frame'
-         );
-         $basketPathPageInclude = $this->retrieve_path_page(
-             $basketIdPage, 'include'
-         );
-         $tab['page_no_frame'] = $basketPathPageNoFrame;
-         $tab['page_frame'] = $basketPathPageFrame;
-         $tab['page_include'] = $basketPathPageInclude;
-         // Gets actions of the basket
-         // #TODO : make one method to get all actions : merge _getDefaultAction and _getActionsFromGroupbaket
-         $tab['default_action'] = $this->_getDefaultAction(
-             $basketId, $primaryGroup
-         );
-         $tab['actions'] = $this->_getActionsFromGroupbaket(
-             $basketId, $primaryGroup
-         );
+        $basketIdPage = $res->result_page;
+        $tab['id_page'] = $basketIdPage;
+        // Retrieves the basket url (frame and no_frame modes)
+        $basketPathPageNoFrame = $this->retrieve_path_page(
+            $basketIdPage, 'no_frame'
+        );
+        $basketPathPageFrame = $this->retrieve_path_page(
+            $basketIdPage, 'frame'
+        );
+        $basketPathPageInclude = $this->retrieve_path_page(
+            $basketIdPage, 'include'
+        );
+        $tab['page_no_frame'] = $basketPathPageNoFrame;
+        $tab['page_frame'] = $basketPathPageFrame;
+        $tab['page_include'] = $basketPathPageInclude;
+        // Gets actions of the basket
+        // #TODO : make one method to get all actions : merge _getDefaultAction and _getActionsFromGroupbaket
+        $tab['default_action'] = $this->_getDefaultAction(
+            $basketId, $primaryGroup
+        );
+        $tab['actions'] = $this->_getActionsFromGroupbaket(
+            $basketId, $primaryGroup
+        );
 
-         $tab['abs_basket'] = $absBasket;
-         $tab['is_virtual'] = $isVirtual;
-         $tab['basket_owner'] = $basketOwner;
-         $tab['clause'] = $secCtrl->process_security_where_clause(
-             $tab['clause'], $userId
-         );
-         $tab['clause'] = str_replace('where', '', $tab['clause']);
-
-         return $tab;
+        $tab['abs_basket'] = $absBasket;
+        $tab['is_virtual'] = $isVirtual;
+        $tab['basket_owner'] = $basketOwner;
+        $tab['clause'] = $secCtrl->process_security_where_clause(
+            $tab['clause'], $userId
+        );
+        $tab['clause'] = str_replace('where', '', $tab['clause']);
+        
+        $tab['lock_list'] = $secCtrl->process_security_where_clause(
+            $res->list_lock_clause, $userId
+        );
+        $tab['lock_sublist'] = $secCtrl->process_security_where_clause(
+            $res->sublist_lock_clause, $userId
+        );
+          
+        return $tab;
     }
 
     /**
@@ -866,7 +884,7 @@ class basket extends dbquery
         $secCtrl = new SecurityControler();
         $this->query(
             "select basket_id, coll_id, basket_name, basket_desc, basket_clause, is_visible"
-            . " from " . BASKET_TABLE . " where basket_id = '" . $basketId
+            . ", is_folder_basket from " . BASKET_TABLE . " where basket_id = '" . $basketId
             . "' and enabled = 'Y'"
         );
 
@@ -881,6 +899,7 @@ class basket extends dbquery
         $tab['name'] = $res->basket_name;
         $tab['clause'] = $res->basket_clause;
         $tab['is_visible'] = $res->is_visible;
+        $tab['is_folder_basket'] = $res->is_folder_basket;
         $this->query(
             "select user_abs, is_virtual, basket_owner from " . USER_ABS_TABLE
             . " where basket_id = '" . $basketId . "' and new_user = '"
@@ -937,7 +956,8 @@ class basket extends dbquery
         }
         $this->query(
             "select  sequence, can_redirect, can_delete, can_insert, "
-            . "result_page, redirect_basketlist, redirect_grouplist from "
+            . "result_page, redirect_basketlist, list_lock_clause, "
+            ."sublist_lock_clause, redirect_grouplist from "
             . GROUPBASKET_TABLE . " where group_id = '" . $primaryGroup
             . "' and basket_id = '" . $basketId . "' "
         );
@@ -979,7 +999,14 @@ class basket extends dbquery
             $tab['clause'], $basketOwner
         );
         $tab['clause'] = str_replace('where', '', $tab['clause']);
-
+        
+        $tab['lock_list'] = $secCtrl->process_security_where_clause(
+            $res->list_lock_clause, $userId
+        );
+        $tab['lock_sublist'] = $secCtrl->process_security_where_clause(
+            $res->sublist_lock_clause, $userId
+        );
+        
         return $tab;
     }
 
@@ -1211,6 +1238,23 @@ class basket extends dbquery
                 . ", video_user = '" . $userId . "' where res_id = " . $resId
             );
             return true;
+        }
+    }
+    
+    public function is_redirect_to_action_basket($basketId, $primaryGroup) {
+        $this->connect();
+        $this->query(
+                "select result_page from " . GROUPBASKET_TABLE 
+                . " where group_id = '" . $primaryGroup
+                . "' and basket_id = '" . $basketId . "' "
+            );
+        $res = $this->fetch_object();
+
+        $basketIdPage = $res->result_page;
+        if ($basketIdPage == 'redirect_to_action') {
+            return true;
+        } else {
+            return false;
         }
     }
 }
