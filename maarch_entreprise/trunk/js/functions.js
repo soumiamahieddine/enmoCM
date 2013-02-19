@@ -2411,3 +2411,99 @@ function deleteContact(id, replaced_contact_id)
         }
     });
 }
+
+/************************************ LISTS ****************************************/
+var globalEval =  function(script){
+  if(window.execScript){
+    return window.execScript(script);
+  } else if(navigator.userAgent.indexOf('KHTML') != -1){ //safari, konqueror..
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.innerHTML = script;
+      document.getElementsByTagName('head')[0].appendChild(s);
+  } else {
+    return window.eval(script);
+  }
+}
+
+//
+function evalMyScripts(targetId) {
+	var myScripts = document.getElementById(targetId).getElementsByTagName('script');
+	for (var i=0; i<myScripts.length; i++) {
+        // alert(myScripts[i].innerHTML);
+		globalEval(myScripts[i].innerHTML);
+	}
+}
+
+function loadList(path, inDiv, modeReturn, init) {
+
+// alert (modeReturn);
+    if(typeof(inDiv)==='undefined'){
+        var div = 'divList';
+    } else {
+        var div = inDiv;
+    }
+    if(typeof(modeReturn)==='undefined'){
+        var modeReturn = false;
+    }
+    if(typeof(init)==='undefined'){
+        window.top.$('main_error').innerHTML = '';
+        window.top.$('main_info').innerHTML = '';
+    }
+    new Ajax.Request(path,
+    {
+        method:'post',
+        parameters: { url : path
+                    },   
+        onLoading: function(answer) {
+                //show loading image in toolbar
+                $('loading').style.display='block';
+        },                        
+        onSuccess: function(answer){
+                if (modeReturn !== false) {
+                    eval("response = "+answer.responseText);
+                    if(response.status == 0){
+                       
+                        $(div).innerHTML = response.content;
+                        evalMyScripts(div);
+                    } else {
+                        window.top.$('main_error').innerHTML = response.error;
+                    }
+                } else {
+                    $(div).innerHTML = answer.responseText;
+                    evalMyScripts(div);
+                }
+                $('loading').style.display='none';
+        }
+    });
+}
+
+function loadValueInDiv(theId, url) {
+    
+    new Effect.toggle('subList_' + theId, 'appear' , {delay:0.2});
+    
+    new Ajax.Request(url,
+    {
+        method:'post',
+        parameters: { id : theId},
+        onSuccess: function(answer){
+         // alert(answer.responseText);
+            eval("response = "+answer.responseText);
+            if(response.status == 0){
+                    $('div_' + theId).innerHTML =response.content;
+                    evalMyScripts('div_' + theId);
+            } else {
+                    window.top.$('main_error').innerHTML = response.error;
+            }
+        }
+    });
+}
+
+function CheckUncheckAll(id) {
+
+    if ($(id).checked) {
+        checkAll();
+    } else {
+        uncheckAll();
+    }
+}

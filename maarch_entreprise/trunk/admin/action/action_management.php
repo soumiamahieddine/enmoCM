@@ -114,6 +114,24 @@ elseif($mode == 'up' || $mode == 'add'){
                     echo 'checked="checked"';
                 }?>/><?php echo _NO;?>
             </p>
+            <?php
+            $core_tools = new core_tools();
+            if ($core_tools->is_module_loaded('folder')) {
+            ?>
+                <p>
+                    <label ><?php echo _IS_FOLDER_ACTION; ?> : </label>
+                    <input type="radio"  class="check" name="is_folder_action" value="Y"
+                    <?php
+                    if ($_SESSION['m_admin']['action']['IS_FOLDER_ACTION'] == 'Y') {
+                        ?> checked="checked"<?php
+                    } ?> /><?php echo _YES;?>
+                    <input type="radio" name="is_folder_action" class="check"  value="N"
+                    <?php
+                    if ($_SESSION['m_admin']['action']['IS_FOLDER_ACTION'] == 'N') {
+                       ?> checked="checked"<?php
+                    } ?> /><?php echo _NO;?>
+                </p>
+            <?php } ?>
             <p class="buttons">
         <?php
             if($mode == 'up'){

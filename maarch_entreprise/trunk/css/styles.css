@@ -2713,6 +2713,18 @@ padding-bottom : 12px;
 background-color: #deedf3;
 }
 
+.block_bottom 
+{
+background-image:url("static.php?filename=border_bottom.gif");
+background-repeat:repeat-x;
+background-position:bottom center;
+padding-top : 5px;
+padding-left : 5px;
+padding-right : 5px;
+padding-bottom : 5px;
+background-color: #deedf3;
+}
+
 .block_end{
 background-image:url("static.php?filename=border_bottom.gif");
 /*background-repeat:repeat_x;*/
@@ -3657,3 +3669,37 @@ a.legend hr
     width: 2px;
 }
 
+.listletter {
+    padding: 4px 0 4px 0px;
+}
+
+.selectedLetter {
+    background:#16ADEB;
+    color:#FFFFFF;
+    padding: 2px;
+}
+
+.highlighted {
+    background:#FFFF99;
+    color:#000000;
+}
+
+.listing .disabled td {
+    background-color: #E1E1E1;
+    color:#FFFFFF;
+}
+
+table.listing  {
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.selectedIcon{
+    border:2px solid #FBC110;
+}
+.separator1{
+    color:#999999;
+}
+.separator2 {
+    border-top: 1px solid #999999;
+}

@@ -1344,7 +1344,32 @@ if (!defined('_QUALIFY_FIRST'))    define('_QUALIFY_FIRST', 'La fiche d&eacute;t
 if (!defined('_SET_PERSISTENT_MODE_ON'))    define('_SET_PERSISTENT_MODE_ON', 'Activer la persistance');
 if (!defined('_SET_PERSISTENT_MODE_OFF'))    define('_SET_PERSISTENT_MODE_OFF', 'Désactiver la persistance');
 
-/******************** persistent mode ************/
+/************************ Lists ************************/
+if (!defined('_ADMIN_LISTS'))                       define('_ADMIN_LISTS', 'Gestions des listes');
+if (!defined('_ADMIN_LISTS_DESC'))                  define('_ADMIN_LISTS_DESC', 'D&eacute;finir les listes de resultats.');
+if (!defined('_LISTS_LIST'))                        define('_LISTS_LIST', 'Listes');
+if (!defined('_LISTS_COMMENT'))                     define('_LISTS_COMMENT', 'Gestion des listes');
+if (!defined('_LOCK_LIST'))                         define('_LOCK_LIST', 'Verrouillage de liste');
+if (!defined('_LOCKED'))                            define('_LOCKED', 'Verrouill&eacute;');
+if (!defined('_PRINCIPAL_LIST'))                    define('_PRINCIPAL_LIST', 'Liste principale');
+if (!defined('_SUBLIST'))                           define('_SUBLIST', 'Sous-liste');
+if (!defined('_TOGGLE'))                            define('_TOGGLE', 'Afficher / Masquer');
+if (!defined('_HELP_LIST_KEYWORDS'))                define('_HELP_LIST_KEYWORDS', 'Aide sur les clauses de verouillage');
+if (!defined('_HELP_LIST_KEYWORD1'))                define('_HELP_LIST_KEYWORD1', '<b>Les op&eacute;rateurs de comparaison</b> permettent de comparer deux valeurs: a == b :Egal, a <> b ou a != b :Diff&eacute;rent, a < b : Plus petit que, a > b : Plus grand.');
+if (!defined('_HELP_LIST_KEYWORD2'))                define('_HELP_LIST_KEYWORD2', '<b>Les op&eacute;rateurs logiques</b>: a && b: ET ( And )	Vrai si a ET b sont vrais, a || b OU ( Or )	Vrai si a OU b est vrai.');
+if (!defined('_HELP_LIST_KEYWORD_EXEMPLE_TITLE'))   define('_HELP_LIST_KEYWORD_EXEMPLE_TITLE', 'Condition de verouillage des lignes la liste/sous-liste.<br><br>L\'ajout du param&egrave;tre <b>@@nom_du_champ@@</b> permet de faire r&eacute;f&eacute;rence &agrave; la valeur du champ de crit&egrave;re. Il est possible de mettre plusieurs @@nom_du_champ@@ diff&eacute;rents dans la d&eacute;claration.');
+if (!defined('_HELP_LIST_KEYWORD_EXEMPLE'))         define('_HELP_LIST_KEYWORD_EXEMPLE', 'Ex: @@status@@ <> \'NEW\' || \'@@type_id@@ <> \'10\'<br><br>Ex: (@@doctype_secon_level ==\'50\' && @@dest_user@@==\'bblier\') || doctype_secon_level == \'10\'');
+if (!defined('_SYNTAX_ERROR_LOCK_CLAUSE'))          define('_SYNTAX_ERROR_LOCK_CLAUSE', 'Erreur dans la syntaxe de la clause de verouillage');
+if (!defined('_DOCUMENTS_LIST_WITH_FILTERS'))       define('_DOCUMENTS_LIST_WITH_FILTERS', 'Liste avec filtres'); //liste
+if (!defined('_DOCUMENTS_LIST_WITH_ATTACHMENTS'))   define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtre et r&eacute;ponses'); //liste
+if (!defined('_DOCUMENTS_LIST_COPIES'))             define('_DOCUMENTS_LIST_COPIES', 'Liste des copies'); //liste + template
+if (!defined('_DOCUMENTS_LIST_EXTEND'))             define('_DOCUMENTS_LIST_EXTEND', 'Liste &eacute;tendue'); //liste + template
+if (!defined('_DOCUMENTS_LIST'))                    define('_DOCUMENTS_LIST', 'Liste simple'); //template
+if (!defined('_CASES_LIST'))                        define('_CASES_LIST', 'Liste des affaires'); //template
+if (!defined('_DOCUMENTS_LIST_SEARCH'))             define('_DOCUMENTS_LIST_SEARCH', 'Liste &eacute;tendue'); //template
+if (!defined('_CLICK_ICON_TO_TOGGLE'))              define('_CLICK_ICON_TO_TOGGLE', 'Cliquez sur l&quot;icone pour Afficher / Masquer');
+if (!defined('_SHOW'))                              define('_SHOW', 'Afficher');
+if (!defined('_LINES'))                             define('_LINES', ' lignes');
 
 //EMAIL INDEXES
 if (!defined('_EMAIL_FROM_ADDRESS')) define('_EMAIL_FROM_ADDRESS', 'Email de');

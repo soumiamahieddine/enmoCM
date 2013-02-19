@@ -82,6 +82,7 @@ function init_session()
     $_SESSION['m_admin']['action']['ACTION_PAGE'] = '';
     $_SESSION['m_admin']['action']['KEYWORD'] = '';
     $_SESSION['m_admin']['action']['HISTORY'] = 'Y';
+    $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'] = 'N';
 }
 
 if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
@@ -116,6 +117,9 @@ if (isset($_REQUEST['action_submit'])) {
 
     $_SESSION['m_admin']['action']['HISTORY'] = 
         functions::wash($_REQUEST['history'], 'no', _HISTORY . ' ');
+
+    $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'] = 
+        functions::wash($_REQUEST['is_folder_action'], 'no', _IS_FOLDER_ACTION . ' ');
 
     $_SESSION['m_admin']['action']['order'] = $_REQUEST['order'];
     $_SESSION['m_admin']['action']['order_field'] = $_REQUEST['order_field'];
@@ -159,6 +163,7 @@ if (isset($_REQUEST['action_submit'])) {
             'keyword' => $_SESSION['m_admin']['action']['KEYWORD'],
             'create_id' => $_SESSION['m_admin']['action']['FLAG_CREATE'],
             'history' => $_SESSION['m_admin']['action']['HISTORY'],
+            'is_folder_action' => $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'],
             'action_page' => $_SESSION['m_admin']['action']['ACTION_PAGE'],
             'id_status' => $_SESSION['m_admin']['action']['ID_STATUS']
         );
@@ -223,7 +228,9 @@ if ($mode == 'up') {
         $_SESSION['m_admin']['action']['ACTION_PAGE'] = 
             functions::show_string($action->__get('action_page'));
         $_SESSION['m_admin']['action']['HISTORY'] = 
-            functions::show_string($action->__get('history'));
+            functions::show_string($action->__get('history'));        
+        $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'] = 
+            functions::show_string($action->__get('is_folder_action'));
         $_SESSION['m_admin']['action']['KEYWORD'] = 
             functions::show_string($action->__get('keyword'));
     }
@@ -237,7 +244,7 @@ if ($mode == 'up') {
 
     $select[$_SESSION['tablename']['actions']] = array();
     array_push($select[$_SESSION['tablename']['actions']], 'id', 'label_action',
-        'is_system'
+        'is_folder_action ', 'is_system'
     );
     $what = '';
     $where = " enabled = 'Y' ";
@@ -270,7 +277,7 @@ if ($mode == 'up') {
 
                     $tab[$i][$j]['id'] = $tab[$i][$j]['value'];
                     $tab[$i][$j]['label'] = _ID;
-                    $tab[$i][$j]['size'] = '18';
+                    $tab[$i][$j]['size'] = '10';
                     $tab[$i][$j]['label_align'] = 'left';
                     $tab[$i][$j]['align'] = 'left';
                     $tab[$i][$j]['valign'] = 'bottom';
@@ -282,7 +289,7 @@ if ($mode == 'up') {
                         functions::show_string($tab[$i][$j]['value']);
                     $tab[$i][$j]['label_action'] = $tab[$i][$j]['value'];
                     $tab[$i][$j]['label'] = _DESC;
-                    $tab[$i][$j]['size'] = '15';
+                    $tab[$i][$j]['size'] = '30';
                     $tab[$i][$j]['label_align'] = 'left';
                     $tab[$i][$j]['align'] = 'left';
                     $tab[$i][$j]['valign'] = 'bottom';
@@ -305,12 +312,25 @@ if ($mode == 'up') {
                     }
                     $tab[$i][$j]['is_system'] = $tab[$i][$j]['value'];
                     $tab[$i][$j]['label'] =_IS_SYSTEM;
-                    $tab[$i][$j]['size'] = '5';
+                    $tab[$i][$j]['size'] = '10';
                     $tab[$i][$j]['label_align'] = 'left';
                     $tab[$i][$j]['align'] = 'left';
                     $tab[$i][$j]['valign'] = 'bottom';
                     $tab[$i][$j]['show'] = true;
                     $tab[$i][$j]['order'] = 'is_system';
+                }
+                if (core_tools::is_module_loaded('folder')) {
+                    if ($tab[$i][$j][$value] == 'is_folder_action') {
+                        ($tab[$i][$j]['value'] == 'Y')? $tab[$i][$j]['value'] = _YES : $tab[$i][$j]['value'] = _NO;
+                        $tab[$i][$j]['is_system'] = $tab[$i][$j]['value'];
+                        $tab[$i][$j]['label'] =_IS_FOLDER_ACTION;
+                        $tab[$i][$j]['size'] = '10';
+                        $tab[$i][$j]['label_align'] = 'left';
+                        $tab[$i][$j]['align'] = 'left';
+                        $tab[$i][$j]['valign'] = 'bottom';
+                        $tab[$i][$j]['show'] = true;
+                        $tab[$i][$j]['order'] = 'is_system';
+                    }
                 }
             }
         }

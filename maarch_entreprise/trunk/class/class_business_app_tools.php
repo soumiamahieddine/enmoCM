@@ -544,6 +544,9 @@ class business_app_tools extends dbquery
             'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
             . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'features.xml'
         );
+        
+        $this->_loadListsConfig();
+         
         if (file_exists(
             $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
             . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
@@ -694,5 +697,192 @@ class business_app_tools extends dbquery
             }
         }
         return '';
+    }
+    
+    private function _loadListsConfig() {
+
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+            . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+            . 'lists_parameters.xml'
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom'
+                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                  . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
+                  . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR .'xml'
+                  . DIRECTORY_SEPARATOR . 'lists_parameters.xml';
+        } else {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+            . 'lists_parameters.xml';
+        }
+		$xmlfile = simplexml_load_file($path);
+        
+        //Load filters
+        $_SESSION['filters'] = array();
+        foreach ($xmlfile->FILTERS as $filtersObject) {
+        
+            foreach ($filtersObject as $filter) {
+            
+                $desc = (string) $filter->LABEL;
+                if (!empty($desc) && defined($desc) && constant($desc) <> NULL) {
+                    $desc = constant($desc);
+                }
+                $id = (string) $filter->ID;
+                $enabled = (string) $filter->ENABLED;
+                if( trim($enabled) == 'true') {
+                    $_SESSION['filters'][$id] = array(
+                        'ID'                => $id,
+                        'LABEL'             => $desc,
+                        'ENABLED'           => $enabled,
+                        'VALUE'             => '',
+                        'CLAUSE'            => ''
+                    );
+                }
+            }
+        }
+        
+        //Init
+        $_SESSION['html_templates'] = array();
+        
+        //Default list (no template)
+        $_SESSION['html_templates']['none'] = array(
+            'ID'        =>  'none',
+            'LABEL'     =>  _DOCUMENTS_LIST,
+            'IMG'       =>  'list.gif',
+            'ENABLED'   =>  'true',
+            'PATH'      =>  '',
+            'GOTOLIST'  =>  ''
+        );
+        
+        //Load templates
+        foreach ($xmlfile->TEMPLATES as $templatesObject) {
+        
+            foreach ($templatesObject as $template) {
+            
+                $desc = (string) $template->LABEL;
+                if (!empty($desc) && defined($desc) && constant($desc) <> NULL) {
+                    $desc = constant($desc);
+                }
+                $id = (string) $template->ID;
+                $enabled = (string) $template->ENABLED;
+                $name = (string) $template->NAME;
+                $origin = (string) $template->ORIGIN;
+                $module = (string) $template->MODULE;
+                $listObject = $template->GOTOLIST;
+
+                $pathToList = '';
+                if (!empty($listObject)) {
+                    foreach ($listObject as $list) {
+                        $listId = (string) $list->ID;
+                        $listName = (string) $list->NAME;
+                        $listOrigin = (string) $list->ORIGIN;
+                        $listModule = (string) $list->MODULE;
+                        
+                        // The page is in the apps
+                        if (strtoupper($listOrigin) == 'APPS'
+                        ) {
+                            if( file_exists(
+                                $_SESSION['config']['corepath'].'custom' . DIRECTORY_SEPARATOR 
+                                . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps' 
+                                . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] 
+                                . DIRECTORY_SEPARATOR . $listName . '.php'
+                            ) ||
+                                file_exists('apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                                . DIRECTORY_SEPARATOR . $listName.'.php'
+                            )
+                            )
+                            {
+                                $pathToList = $_SESSION['config']['businessappurl']
+                                            . 'index.php?display=true&page='. $listName;
+                            }
+                        } else if (strtoupper(
+                            $listOrigin
+                        ) == "MODULE"
+                        ) { 
+                            // The page is in a module
+                            $core = new core_tools();
+                            // Error : The module name is empty or the module is not loaded
+                            if (empty($listModule)
+                                || ! $core->is_module_loaded(
+                                    $listModule
+                                )
+                            ) {
+                                $pathToList = '';
+                            } else {
+                                if (
+                                    file_exists(
+                                    $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+                                    . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+                                    . DIRECTORY_SEPARATOR . $listModule . DIRECTORY_SEPARATOR . $listName . '.php'
+                                ) ||
+                                    file_exists('modules' . DIRECTORY_SEPARATOR . $listModule
+                                        . DIRECTORY_SEPARATOR . $listName . '.php'
+                                )
+                                ) {
+                                    $pathToList = $_SESSION['config']['businessappurl']
+                                        . 'index.php?display=true&page=' . $listName
+                                        . '&module=' . $listModule;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                //Path to template
+                if ($origin == "apps") { //Origin apps
+                    if(file_exists(
+                        $_SESSION['config']['corepath'].'custom' . DIRECTORY_SEPARATOR 
+                        . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps' 
+                        . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] 
+                        . DIRECTORY_SEPARATOR . "template" . DIRECTORY_SEPARATOR 
+                        . $name . '.html'
+                    )
+                    ) {
+                        $path = $_SESSION['config']['corepath'] . 'custom' 
+                        . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                        . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
+                        . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
+                        . "template" . DIRECTORY_SEPARATOR . $name . '.html';
+                    } else {
+                        $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                        . DIRECTORY_SEPARATOR . "template" . DIRECTORY_SEPARATOR . $name.'.html';
+                    }
+                } else if ($origin == "module") { //Origin module
+                    if (file_exists(
+                        $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+                        . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+                        . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . 'template'
+                        . DIRECTORY_SEPARATOR .  $name . '.html'
+                    )
+                    ) {
+                        $path = $_SESSION['config']['corepath'] . 'custom'
+                        . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                        . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR
+                        . $module . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR
+                        .  $name . '.html';
+                    } else {
+                        $path = 'modules' . DIRECTORY_SEPARATOR . $module
+                        . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR
+                        .  $name . '.html';
+                    }
+                }
+                
+                //Values of html_templates array
+                if( trim($enabled) == 'true') {
+                    $_SESSION['html_templates'][$id] = array(
+                        'ID'                => $id,
+                        'LABEL'             => $desc,
+                        'IMG'               => (string) $template->IMG,
+                        'ENABLED'           => $enabled,
+                        'PATH'              => $path,
+                        'GOTOLIST'          => $pathToList
+                    );
+                }
+            }
+        }
     }
 }

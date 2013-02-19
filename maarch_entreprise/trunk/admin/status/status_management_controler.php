@@ -300,6 +300,10 @@ function validate_status_submit()
     if (isset($_REQUEST['can_be_modified'])) {
         $statusObj->can_be_modified = $_REQUEST['can_be_modified'];
     }
+    $statusObj->is_folder_status = 'N';
+    if (isset($_REQUEST['is_folder_status'])) {
+        $statusObj->is_folder_status = $_REQUEST['is_folder_status'];
+    }
 
     $status = array();
     $status['order'] = $_REQUEST['order'];
@@ -372,6 +376,7 @@ function init_session()
         'module'          => 'apps',
         'can_be_searched' => 'Y',
         'can_be_modified' => 'Y',
+        'is_folder_status'=> 'N'
     );
 }
 

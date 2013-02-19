@@ -78,6 +78,7 @@ class AdminActions extends dbquery
         }
 
         $_SESSION['m_admin']['action']['HISTORY'] = $func->wash($_REQUEST['history'], "no", _HISTORY." ");
+        $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'] = $func->wash($_REQUEST['is_folder_action'], "no", _IS_FOLDER_ACTION." ");
 
         $_SESSION['m_admin']['action']['order'] = $_REQUEST['order'];
         $_SESSION['m_admin']['action']['order_field'] = $_REQUEST['order_field'];
@@ -126,10 +127,15 @@ class AdminActions extends dbquery
 
             if($mode == "add")
             {
-                $this->query("INSERT INTO ".$_SESSION['tablename']['actions']." ( label_action, id_status, action_page, history, keyword, create_id)
-                VALUES (  '".$this->protect_string_db($_SESSION['m_admin']['action']['LABEL'])."',
-                '".$this->protect_string_db($_SESSION['m_admin']['action']['ID_STATUS'])."', '".$this->protect_string_db($_SESSION['m_admin']['action']['ACTION_PAGE'])."',
-                '".$this->protect_string_db($_SESSION['m_admin']['action']['HISTORY'])."', '".$this->protect_string_db($_SESSION['m_admin']['action']['KEYWORD'])."', '".$this->protect_string_db($_SESSION['m_admin']['action']['FLAG_CREATE'])."' )");
+                $this->query("INSERT INTO ".$_SESSION['tablename']['actions']
+                    ." ( label_action, id_status, action_page, history, keyword, create_id, is_folder_action)
+                    VALUES (  '".$this->protect_string_db($_SESSION['m_admin']['action']['LABEL'])."',
+                    '".$this->protect_string_db($_SESSION['m_admin']['action']['ID_STATUS'])
+                    ."', '".$this->protect_string_db($_SESSION['m_admin']['action']['ACTION_PAGE'])
+                    ."', '".$this->protect_string_db($_SESSION['m_admin']['action']['HISTORY'])
+                    ."', '".$this->protect_string_db($_SESSION['m_admin']['action']['KEYWORD'])
+                    ."', '".$this->protect_string_db($_SESSION['m_admin']['action']['FLAG_CREATE'])
+                    ."', '".$this->protect_string_db($_SESSION['m_admin']['action']['IS_FOLDER_ACTION'])."')");
 
                 if($_SESSION['history']['actionadd'])
                 {
@@ -148,7 +154,15 @@ class AdminActions extends dbquery
             }
             elseif($mode == "up")
             {
-                $this->query("update ".$_SESSION['tablename']['actions']." set label_action = '".$this->protect_string_db($_SESSION['m_admin']['action']['LABEL'])."', id_status = '".$this->protect_string_db($_SESSION['m_admin']['action']['ID_STATUS'])."', action_page = '".$this->protect_string_db($_SESSION['m_admin']['action']['ACTION_PAGE'])."', history = '".$this->protect_string_db($_SESSION['m_admin']['action']['HISTORY'])."', keyword = '".$this->protect_string_db($_SESSION['m_admin']['action']['KEYWORD'])."', create_id = '".$this->protect_string_db($_SESSION['m_admin']['action']['FLAG_CREATE'])."' where id = ".$_SESSION['m_admin']['action']['ID']."");
+                $this->query("update ".$_SESSION['tablename']['actions']
+                    ." set label_action = '".$this->protect_string_db($_SESSION['m_admin']['action']['LABEL'])
+                    ."', id_status = '".$this->protect_string_db($_SESSION['m_admin']['action']['ID_STATUS'])
+                    ."', action_page = '".$this->protect_string_db($_SESSION['m_admin']['action']['ACTION_PAGE'])
+                    ."', history = '".$this->protect_string_db($_SESSION['m_admin']['action']['HISTORY'])
+                    ."', is_folder_action = '".$this->protect_string_db($_SESSION['m_admin']['action']['IS_FOLDER_ACTION'])
+                    ."', keyword = '".$this->protect_string_db($_SESSION['m_admin']['action']['KEYWORD'])
+                    ."', create_id = '".$this->protect_string_db($_SESSION['m_admin']['action']['FLAG_CREATE'])
+                    ."' where id = ".$_SESSION['m_admin']['action']['ID']."");
 
                 if($_SESSION['history']['actionup'])
                 {
@@ -204,6 +218,7 @@ class AdminActions extends dbquery
                 $_SESSION['m_admin']['action']['IS_SYSTEM'] = $this->show_string($line->is_system);
                 $_SESSION['m_admin']['action']['ACTION_PAGE'] = $this->show_string($line->action_page);
                 $_SESSION['m_admin']['action']['HISTORY'] = $this->show_string($line->history);
+                $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'] = $this->show_string($line->is_folder_action);
                 $_SESSION['m_admin']['action']['KEYWORD'] = $line->keyword;
             }
         }
@@ -211,6 +226,7 @@ class AdminActions extends dbquery
         {
             $_SESSION['m_admin']['action']['IS_SYSTEM'] = 'N';
             $_SESSION['m_admin']['action']['HISTORY'] = 'Y';
+            $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'] = 'N';
         }
 
         $this->connect();
@@ -350,6 +366,7 @@ class AdminActions extends dbquery
         $_SESSION['m_admin']['action']['ID_STATUS'] = '';
         $_SESSION['m_admin']['action']['ACTION_PAGE'] = '';
         $_SESSION['m_admin']['action']['HISTORY'] = 'Y';
+        $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'] = 'N';
     }
 
     /**

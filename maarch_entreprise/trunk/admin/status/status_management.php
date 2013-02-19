@@ -109,7 +109,24 @@ if ($mode == 'list') {
                ?> checked="checked"<?php
             } ?> /><?php echo _NO;?>
         </p>
-
+        <?php
+        $core_tools = new core_tools();
+        if ($core_tools->is_module_loaded('folder')) {
+        ?>
+            <p>
+                <label ><?php echo _IS_FOLDER_STATUS; ?> : </label>
+                <input type="radio"  class="check" name="is_folder_status" value="Y"
+                <?php
+                if ($_SESSION['m_admin']['status']['is_folder_status'] == 'Y') {
+                    ?> checked="checked"<?php
+                } ?> /><?php echo _YES;?>
+                <input type="radio" name="is_folder_status" class="check"  value="N"
+                <?php
+                if ($_SESSION['m_admin']['status']['is_folder_status'] == 'N') {
+                   ?> checked="checked"<?php
+                } ?> /><?php echo _NO;?>
+            </p>
+        <?php } ?>
         <p class="buttons">
             <?php
         if ($mode == 'up') {?>
