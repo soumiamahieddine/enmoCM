@@ -27,6 +27,7 @@ CREATE TABLE actions
   label_action character varying(255),
   id_status character varying(10),
   is_system character(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_folder_action character(1) NOT NULL DEFAULT 'N'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   action_page character varying(255),
   history character(1) NOT NULL DEFAULT 'N'::bpchar,
@@ -235,6 +236,7 @@ CREATE TABLE status
   id character varying(10) NOT NULL,
   label_status character varying(50) NOT NULL,
   is_system character(1) NOT NULL DEFAULT 'Y'::bpchar,
+  is_folder_status character(1) NOT NULL default 'N'::bpchar,
   img_filename character varying(255),
   maarch_module character varying(255) NOT NULL DEFAULT 'apps'::character varying,
   can_be_searched character(1) NOT NULL DEFAULT 'Y'::bpchar,
@@ -683,6 +685,7 @@ CREATE TABLE baskets
   basket_clause text NOT NULL,
   is_generic character varying(6) NOT NULL DEFAULT 'N'::character varying,
   is_visible character(1) NOT NULL DEFAULT 'Y'::bpchar,
+  is_folder_basket character (1) NOT NULL default 'N'::bpchar,
   enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
   CONSTRAINT baskets_pkey PRIMARY KEY (coll_id, basket_id)
 )
@@ -709,6 +712,8 @@ CREATE TABLE groupbasket
   can_redirect character(1) NOT NULL DEFAULT 'N'::bpchar,
   can_delete character(1) NOT NULL DEFAULT 'N'::bpchar,
   can_insert character(1) NOT NULL DEFAULT 'N'::bpchar,
+  list_lock_clause text,
+  sublist_lock_clause text,
   CONSTRAINT groupbasket_pkey PRIMARY KEY (group_id, basket_id)
 )
 WITH (OIDS=FALSE);
@@ -894,9 +899,11 @@ CREATE TABLE folders
   description character varying(255) DEFAULT NULL::character varying,
   author character varying(255) DEFAULT NULL::character varying,
   typist character varying(255) DEFAULT NULL::character varying,
-  status character varying(50) NOT NULL DEFAULT 'NEW'::character varying,
+  status character varying(50) NOT NULL DEFAULT 'FOLDNEW'::character varying,
   folder_level smallint DEFAULT (1)::smallint,
   creation_date timestamp without time zone NOT NULL,
+  destination character varying(50) DEFAULT NULL,
+  dest_user character varying(128) DEFAULT NULL,
   folder_out_id bigint,
   video_status character varying(10) DEFAULT NULL,
   video_user character varying(128) DEFAULT NULL,

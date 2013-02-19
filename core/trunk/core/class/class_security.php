@@ -761,7 +761,9 @@ class security extends dbquery
                     if(
                         isset($_SESSION['user']['baskets'][$ind_bask]['clause']) 
                         && trim($_SESSION['user']['baskets'][$ind_bask]['clause']
-                    ) <> '') {
+                        ) <> '' 
+                        && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N'
+                    ) {
                         $basketQuery .= ' or (' 
                             . $_SESSION['user']['baskets'][$ind_bask]['clause'] 
                             . ')';

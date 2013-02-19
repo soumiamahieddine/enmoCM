@@ -90,7 +90,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'c
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_copy_in_process');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'admin_templates');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_versions');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'search_customer');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_technical_infos');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_links');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'update_case');
@@ -113,7 +113,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_cas
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'create_folder');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_new_version');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'search_customer');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_technical_infos');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_links');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_case');
@@ -136,7 +136,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'upda
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'reports');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_new_version');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'admin');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'search_customer');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'admin_architecture');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'my_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'put_in_validation');
@@ -171,7 +171,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'tag_view'
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'add_tag_to_res');
 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'search_customer');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'view_technical_infos');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'add_links');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'view_baskets');
@@ -203,7 +203,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_list_diff_in_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'reports');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'admin');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'search_customer');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'my_contacts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_baskets');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'join_res_case');

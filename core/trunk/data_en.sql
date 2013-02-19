@@ -141,7 +141,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', 'ph
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', 'physical_archive_batch_manage');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ARCHIVISTS', '_print_sep');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'search_customer');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'my_alerts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'use_alerts_on_doc');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'use_alerts_on_folder');
@@ -156,7 +156,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'clo
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'print_details');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('EMPLOYEES', 'view_technical_infos');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'search_customer');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'view_folder_tree');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'my_alerts');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'use_alerts_on_doc');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('MANAGERS', 'use_alerts_on_folder');

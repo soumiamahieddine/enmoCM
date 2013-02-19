@@ -159,4 +159,20 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE>records_management</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>confirm_folder_status</ID>
+        <LABEL>_CONFIRM_FOLDER_STATUS</LABEL>
+        <NAME>confirm_folder_status</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>folder</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>redirect_folder</ID>
+        <LABEL>_REDIRECT_FOLDER</LABEL>
+        <NAME>redirect_folder</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>folder</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
 </ROOT>

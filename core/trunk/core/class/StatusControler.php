@@ -257,6 +257,12 @@ class Maarch_Core_Class_StatusControler
                 && $status->can_be_modified != 'N')) {
           $status->can_be_modified = 'Y';
         }
+        
+        if (!isset($status->is_folder_status)
+            || ($status->is_folder_status != 'N'
+                && $status->is_folder_status != 'Y')) {
+          $status->is_folder_status = 'N';
+        }
 
         $_SESSION['service_tag'] = 'status_check';
         $core = new core_tools();

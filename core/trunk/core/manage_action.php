@@ -140,7 +140,10 @@ elseif(trim($_POST['req']) == 'change_status' && !empty($_POST['values']) && !em
         $arr_id[$i] = str_replace('#', '', $arr_id[$i]);
         $result .= $arr_id[$i].'#';
         if (trim($_POST['new_status']) <> '') {
-            if ($_POST['table'] == 'rm_ios') {
+            if ($_POST['table'] == 'folders') {
+                $query_str = "update " . $_POST['table'] .  " set status = '" 
+                    . $_POST['new_status'] . "' where folders_system_id = " . $arr_id[$i];
+            } else if ($_POST['table'] == 'rm_ios') {
                 $query_str = "update " . $_POST['table'] .  " set status = '" 
                     . $_POST['new_status'] . "' where io_id = " . $arr_id[$i];
             } else {
@@ -216,7 +219,10 @@ else
             $arr_id[$i] = str_replace('#', '', $arr_id[$i]);
             $result .= $arr_id[$i].'#';
             if (trim($status) <> '') {
-                if ($_POST['table'] == 'rm_ios') {
+                if ($_POST['table'] == 'folders') {
+                    $query_str = "update " . $_POST['table'] .  " set status = '" 
+                    . $status . "' where folders_system_id = " . $arr_id[$i];
+                } else if ($_POST['table'] == 'rm_ios') {
                     $query_str = "update " . $_POST['table'] .  " set status = '" 
                         . $status . "' where io_id = " . $arr_id[$i];
                 } else {
