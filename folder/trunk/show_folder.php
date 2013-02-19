@@ -11,16 +11,36 @@
 * @author  Claire Figueras  <dev@maarch.org>
 */
 
-require_once "core/class/class_request.php";
-require_once "core/class/class_security.php";
 $core = new core_tools();
 if (!$core->is_module_loaded("folder")) {
     echo "Folder module missing !<br/>Please install this module.";
     exit();
 }
-// $core->test_service('salary_sheet', 'folder');
+
+require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php";
+require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php";
+require_once "modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR
+    ."class".DIRECTORY_SEPARATOR."class_modules_tools.php";
+require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
+            ."class".DIRECTORY_SEPARATOR."class_lists.php";
+require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php";
+require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
+    . "class" . DIRECTORY_SEPARATOR
+    . "class_modules_tools.php";
+
+$folderObject   = new folder();
+$request        = new request;
+$func           = new functions();
+$hist           = new history();
+$sec            = new security();
+$notes_tools    = new notes();
+$hist->connect();
+
+if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
+    $s_id = addslashes($func->wash($_REQUEST['id'], 'num', _THE_FOLDER));
+}
+
 /****************Management of the location bar  ************/
-$sec = new security();
 $init = false;
 if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
     $init = true;
@@ -33,20 +53,12 @@ if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2
     $level = $_REQUEST['level'];
 }
 $pagePath = $_SESSION['config']['businessappurl']
-	. 'index.php?page=show_folder&module=folder&folder_id=' . $_REQUEST['id'];
+	. 'index.php?page=show_folder&module=folder&folder_id=' . $s_id;
 $pageLabel = _SHOW_FOLDER;
 $pageId = "fold_show_folder";
 $core->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
-require_once "modules/folder/class/class_modules_tools.php";
-require_once "apps/" . $_SESSION['config']['app_id'] 
-	. "/class/class_list_show.php";
-require_once "core/class/class_history.php";
-$folderObject = new folder();
-$request = new request;
-$func = new functions();
-$hist = new history();
-$hist->connect();
+
 $status = '';
 $_SESSION['current_foldertype'] = '';
 $_SESSION['origin'] = "show_folder";
@@ -58,11 +70,11 @@ $deleteRight = $core->test_service('delete_folder', 'folder', false);
 
 //update folder index
 if (isset($_POST['update_folder'])) {
-    $folderObject->update_folder($_REQUEST, $_REQUEST['id']);
+    $folderObject->update_folder($_REQUEST, $s_id);
 }
 //delete the folder
 if (isset($_POST['delete_folder'])) {
-    $folderObject->delete_folder($_REQUEST['id'], $_REQUEST['foldertype_id']);
+    $folderObject->delete_folder($s_id, $_REQUEST['foldertype_id']);
     ?>
         <script type="text/javascript">window.top.location.href='<?php  
     echo $_SESSION['config']['businessappurl']
@@ -74,23 +86,25 @@ if (isset($_POST['delete_folder'])) {
 
 ?>
 <div id="details_div" style="display:none;">
-	<h1><img src="<?php  
-echo $_SESSION['config']['businessappurl'];
-?>static.php?filename=manage_structures.gif" alt="<?php 
-echo _FOLDER
-;?>" width="35px" height="30px"/> <?php  
-echo _SHOW_FOLDER;
-?></h1>
-	<div id="inner_content">
-		<div class="viewfolder">
+
+    <h1 class="titdetail">
+        <img src="<?php
+            echo $_SESSION['config']['businessappurl'];
+            ?>static.php?filename=picto_detail_b.gif" alt="" /><?php
+            echo _DETAILS . " : " . _FOLDER . ' ' . strtolower(_NUM);
+            ?><?php
+            echo $s_id;
+            ?> <span>(<?php
+            echo  $sec->retrieve_coll_label_from_coll_id($coll_id);
+            ?>)</span>
+    </h1>
+    <div id="inner_content" class="clearfix">
+
     <?php
-if ($_REQUEST['id'] <> "") {
-	?>
-    	
-        <?php
-    if ($_REQUEST['id'] <> "") {
+    if (empty($_SESSION['error'])) {
+
     	$folderObject->load_folder(
-    		$_REQUEST['id'], $_SESSION['tablename']['fold_folders']
+    		$s_id, $_SESSION['tablename']['fold_folders']
     	);
         $status = $folderObject->get_field('status');
         $_SESSION['current_foldertype_coll_id'] = $folderObject->get_field('coll_id');
@@ -118,13 +132,11 @@ if ($_REQUEST['id'] <> "") {
             }
         }
     }
-}
         ?>
         	<div class="block">
-            	<h4><a href="#" onclick="history.go(-1);" class="back"></a></h4>
+            	<h4><a href="#" onclick="history.go(-1);" class="back"><?php echo _BACK;?></a></h4>
         	</div>
-        	<div class=blank_space>&nbsp;</div>
-        </div>
+        <br/>
         <dl id="tabricator2">
             <dt><?php  echo _FOLDER_DETAILLED_PROPERTIES;?></dt>
             <dd>
@@ -152,8 +164,8 @@ if ($_REQUEST['id'] <> "") {
                     </tr>
                 </table>
                 <?php 
-if (count($folderArray['index']) > 0) {
-	?>
+            if (count($folderArray['index']) > 0) {
+            ?>
     		    <br/>
                 <h2>
                 	<span class="date">
@@ -290,103 +302,140 @@ if (count($folderArray['index']) > 0) {
                 </p>
                 </form>
             </dd>
-            <dt><?php  echo _ARCHIVED_DOC;?></dt>
+            <?php
+            if (trim($_SESSION['current_folder_id']) <> '' && ! empty($view)) {
+                $select2 = array();
+                $select2[$view] = array();
+                $tab2 = array();
+                array_push($select2[$view], "res_id", "type_label");
+                $tab2 = $request->select(
+                    $select2, "folders_system_id = '" . $_SESSION['current_folder_id']
+                    . "' and status <> 'DEL'", " order by type_label ",
+                    $_SESSION['config']['databasetype'], "500", false
+                );
+                for ($i = 0; $i < count($tab2); $i ++) {
+                    for ($j = 0; $j < count($tab2[$i]); $j ++) {
+                        foreach (array_keys($tab2[$i][$j]) as $value) {
+                            if ($tab2[$i][$j][$value] == 'res_id') {
+                                $tab2[$i][$j]['res_id'] = $tab2[$i][$j]['value'];
+                                $tab2[$i][$j]["label"] = _GED_NUM;
+                                $tab2[$i][$j]["size"] = "10";
+                                $tab2[$i][$j]["label_align"] = "left";
+                                $tab2[$i][$j]["align"] = "right";
+                                $tab2[$i][$j]["valign"] = "bottom";
+                                $tab2[$i][$j]["show"] = false;
+                            }
+                            if ($tab2[$i][$j][$value] == "type_label") {
+                                $tab2[$i][$j]["value"] = $request->show_string(
+                                    $tab2[$i][$j]["value"]
+                                );
+                                $tab2[$i][$j]["label"] = _TYPE;
+                                $tab2[$i][$j]["size"] = "40";
+                                $tab2[$i][$j]["label_align"] = "left";
+                                $tab2[$i][$j]["align"] = "left";
+                                $tab2[$i][$j]["valign"] = "bottom";
+                                $tab2[$i][$j]["show"] = true;
+                            }
+                        }
+                    }
+                }
+            }
+             if (count($tab2) > 0 ) $nbr_docs = ' ('.count($tab2).')';  else $nbr_docs = '';
+            ?>
+            <dt><?php  echo _ARCHIVED_DOC.$nbr_docs;?></dt>
             <dd>
                 <table width="100%" border="0">
                     <tr>
-                        <td valign="top">
+                        <td width="50%"valign="top">
                             <div align="left">
-                                <?php
-if (trim($_SESSION['current_folder_id']) <> '' && ! empty($view)) {
-	$select2 = array();
-    $select2[$view] = array();
-    $tab2 = array();
-    array_push($select2[$view], "res_id", "type_label");
-    $tab2 = $request->select(
-    	$select2, "folders_system_id = '" . $_SESSION['current_folder_id']
-    	. "' and status <> 'DEL'", " order by type_label ",
-    	$_SESSION['config']['databasetype'], "500", false
-    );
-    for ($i = 0; $i < count($tab2); $i ++) {
-    	for ($j = 0; $j < count($tab2[$i]); $j ++) {
-        	foreach (array_keys($tab2[$i][$j]) as $value) {
-            	if ($tab2[$i][$j][$value] == 'res_id') {
-                	$tab2[$i][$j]['res_id'] = $tab2[$i][$j]['value'];
-                    $tab2[$i][$j]["label"] = _GED_NUM;
-                    $tab2[$i][$j]["size"] = "10";
-                    $tab2[$i][$j]["label_align"] = "left";
-                    $tab2[$i][$j]["align"] = "right";
-                    $tab2[$i][$j]["valign"] = "bottom";
-                    $tab2[$i][$j]["show"] = false;
+                <?php
+                if (count($tab2) > 0 ) {
+                
+                    $_SESSION['FILLING_RES']['PARAM']['RESULT'] = array();
+                    $_SESSION['FILLING_RES']['PARAM']['RESULT'] = $tab2;
+                    $_SESSION['FILLING_RES']['PARAM']['NB_TOTAL'] = count($tab2);
+                    $_SESSION['FILLING_RES']['PARAM']['TITLE'] =  count($tab2) . " " . _FOUND_DOC;
+                    $_SESSION['FILLING_RES']['PARAM']['WHAT'] = 'res_id';
+                    $_SESSION['FILLING_RES']['PARAM']['NAME'] = "filling_res";
+                    $_SESSION['FILLING_RES']['PARAM']['KEY'] = 'res_id';
+                    $details_page = $sec->get_script_from_coll($folderArray['coll_id'], 'script_details');
+                    $_SESSION['FILLING_RES']['PARAM']['DETAIL_DESTINATION'] = $details_page."";
+                    $_SESSION['FILLING_RES']['PARAM']['BOOL_VIEW_DOCUMENT'] = true;
+                    $_SESSION['FILLING_RES']['PARAM']['BOOL_RADIO_FORM'] = false;
+                    $_SESSION['FILLING_RES']['PARAM']['METHOD'] = "";
+                    $_SESSION['FILLING_RES']['PARAM']['ACTION'] = "";
+                    $_SESSION['FILLING_RES']['PARAM']['BUTTON_LABEL'] = "";
+                    $_SESSION['FILLING_RES']['PARAM']['BOOL_DETAIL'] = true;
+                    $_SESSION['FILLING_RES']['PARAM']['BOOL_ORDER'] = false;
+                    $_SESSION['FILLING_RES']['PARAM']['BOOL_FRAME'] = true;
+                
+                    ?>
+                    <iframe name="filling_res" id="filling_res" src="<?php  
+                    echo $_SESSION['config']['businessappurl']
+                        . "index.php?display=true&module=folder&page=filling_res";
+                        ?>" frameborder="0" scrolling="auto" width="400px" height="580px"></iframe>
+                    <?php
                 }
-                if ($tab2[$i][$j][$value] == "type_label") {
-                    $tab2[$i][$j]["value"] = $request->show_string(
-                    	$tab2[$i][$j]["value"]
-                    );
-                    $tab2[$i][$j]["label"] = _TYPE;
-                    $tab2[$i][$j]["size"] = "40";
-                    $tab2[$i][$j]["label_align"] = "left";
-                    $tab2[$i][$j]["align"] = "left";
-                    $tab2[$i][$j]["valign"] = "bottom";
-                    $tab2[$i][$j]["show"] = true;
+                else
+                {
+                    echo "&nbsp;";
                 }
-            }
-        }
-    }
-    $_SESSION['FILLING_RES']['PARAM']['RESULT'] = array();
-    $_SESSION['FILLING_RES']['PARAM']['RESULT'] = $tab2;
-    $_SESSION['FILLING_RES']['PARAM']['NB_TOTAL'] = $i;
-    $_SESSION['FILLING_RES']['PARAM']['TITLE'] =  $i . " " . _FOUND_DOC;
-    $_SESSION['FILLING_RES']['PARAM']['WHAT'] = 'res_id';
-    $_SESSION['FILLING_RES']['PARAM']['NAME'] = "filling_res";
-    $_SESSION['FILLING_RES']['PARAM']['KEY'] = 'res_id';
-    $details_page = $sec->get_script_from_coll($folderArray['coll_id'], 'script_details');
-    $_SESSION['FILLING_RES']['PARAM']['DETAIL_DESTINATION'] = $details_page."";
-    $_SESSION['FILLING_RES']['PARAM']['BOOL_VIEW_DOCUMENT'] = true;
-    $_SESSION['FILLING_RES']['PARAM']['BOOL_RADIO_FORM'] = false;
-    $_SESSION['FILLING_RES']['PARAM']['METHOD'] = "";
-    $_SESSION['FILLING_RES']['PARAM']['ACTION'] = "";
-    $_SESSION['FILLING_RES']['PARAM']['BUTTON_LABEL'] = "";
-    $_SESSION['FILLING_RES']['PARAM']['BOOL_DETAIL'] = true;
-    $_SESSION['FILLING_RES']['PARAM']['BOOL_ORDER'] = false;
-    $_SESSION['FILLING_RES']['PARAM']['BOOL_FRAME'] = true;
-
-    ?>
-    <iframe name="filling_res" id="filling_res" src="<?php  
-    echo $_SESSION['config']['businessappurl']
-    	. "index.php?display=true&module=folder&page=filling_res";
-    ?>" frameborder="0" scrolling="auto" width="400px" height="580px"></iframe>
-    <?php
-                                    }
-                                    else
-                                    {
-                                        echo "&nbsp;";
-                                    }
-                                    ?>
-                                </div>
-                            </td>
-                            <td valign="top">
-                                <table>
-                                    <tr valign="top">
-                                        <td>
-                                        <iframe name="view_doc" id="view_doc" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=list_doc";?>" frameborder="0" scrolling="no" width="570px" height="580px"></iframe>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
+                ?>
+                        </div>
+                    </td>
+                    <td valign="top" style="border-left: 1px solid #CCCCCC;">
+                        <iframe name="view_doc" id="view_doc" src="<?php  echo $_SESSION['config']['businessappurl']
+                            ."index.php?display=true&module=folder&page=list_doc";
+                            ?>" frameborder="0" scrolling="no" width="570px" height="580px"></iframe>
+                    </td>
+                </tr>
+            </table>
             </dd>
+            
+            <?php
+            if($core->is_module_loaded('notes'))
+            {
+                //Count notes
+                $nbr_notes = $notes_tools->countUserNotes($_SESSION['current_folder_id'], $_SESSION['current_foldertype_coll_id']);
+                if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
+                //Notes iframe
+                ?>
+                <dt><?php  echo _NOTES.$nbr_notes;?></dt>
+                <dd>
+                    <!--<div style="text-align:center;">
+                        <img src="<?php
+                            echo $_SESSION['config']['businessappurl'];
+                            ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" /><?php
+                            if ($status <> 'END') {
+                                ?><a href="javascript://" onclick="ouvreFenetre('<?php
+                                echo $_SESSION['config']['businessappurl'];
+                                ?>index.php?display=true&module=notes&page=note_add&size=full&identifier=<?php
+                                echo $_SESSION['current_folder_id'];
+                                ?>&coll_id=<?php
+                                echo $_SESSION['current_foldertype_coll_id'];
+                                ?>&table=folders<?php
+                                ?>', 800, 480)" ><?php
+                                echo _ADD_NOTE;
+                                ?></a><?php
+                            } ?>
+                    </div>-->
+                    <iframe name="list_notes_folder" id="list_notes_folder" src="<?php
+                        echo $_SESSION['config']['businessappurl'];
+                        ?>index.php?display=true&module=notes&page=frame_notes_folder&size=full" 
+                        frameborder="0" scrolling="no" width="100%" height="560px"></iframe>
+                </dd> 
+                <?php
+            }
+            ?>            
             <dt><?php  echo _FOLDER_HISTORY;?></dt>
             <dd>
-                <?php  echo $core->execute_modules_services($_SESSION['modules_services'], 'index.php?page=show_folder', "include", "show_history_folder", "folder");?>
+                <iframe name="show_history" id="show_history" src="<?php
+                    echo $_SESSION['config']['businessappurl'];
+                    ?>index.php?display=true&module=folder&page=folder_history"
+                    frameborder="0" scrolling="no" width="100%" height="590px"></iframe>
             </dd>
-            <!--<dt><?php  echo _MISSING_DOC;?></dt>
-            <dd>
-                <?php  //echo $core->execute_modules_services($_SESSION['modules_services'], 'index.php?page=show_folder', "include","show_missing_doc_in_folder", "folder");?>
-            </dd>-->
         </dl>
-	</div>
+    </div>
 </div>
 
 <script type="text/javascript">

@@ -304,4 +304,28 @@ if (!defined('_REALLY_FREEZE_THIS_FOLDER'))
     define('_REALLY_FREEZE_THIS_FOLDER', 'Voulez-vous vraiment geler ce dossier');
 if (!defined('_REALLY_CLOSE_THIS_FOLDER'))
     define('_REALLY_CLOSE_THIS_FOLDER', 'Voulez-vous vraiment cloturer ce dossier');
+if (!defined('_SUBFOLDER'))                         
+    define('_SUBFOLDER', 'Sous-dossier');
+if (!defined('_VIEW_FOLDER_TREE'))                  
+    define('_VIEW_FOLDER_TREE', 'Consultation Dossiers Sous-dossiers');
+if (!defined('_SEARCH_FOLDER_TREE'))                
+    define('_SEARCH_FOLDER_TREE', 'Recherche Dossiers Sous-dossiers');
+if (!defined('_NB_DOCS_IN_FOLDER'))                 
+    define('_NB_DOCS_IN_FOLDER', 'Nombre de documents');
+if (!defined('_IS_FOLDER_BASKET'))                  
+    define('_IS_FOLDER_BASKET', 'Corbeille de dossier');
+if (!defined('_IS_FOLDER_STATUS'))                  
+    define('_IS_FOLDER_STATUS', 'Statut de dossier');
+if (!defined('_IS_FOLDER_ACTION'))                  
+    define('_IS_FOLDER_ACTION', 'Action de dossier');
+if (!defined('_CONFIRM_FOLDER_STATUS'))             
+    define('_CONFIRM_FOLDER_STATUS', 'Confirmation simple (dossiers)');
+if (!defined('_REDIRECT_FOLDER'))                   
+    define('_REDIRECT_FOLDER', 'Redirection du dossier');
+if (!defined('_REDIRECT_ALL_DOCUMENTS_IN_FOLDER'))  
+    define('_REDIRECT_ALL_DOCUMENTS_IN_FOLDER', 'Rediriger tous les documents du dossier');
+if (!defined('_CHOOSE_ONE_FOLDER'))                 
+    define('_CHOOSE_ONE_FOLDER', 'Choisissez au moins un dossier');
+if (!defined('_MUST_CHOOSE_DEP_OR_USER'))           
+    define('_MUST_CHOOSE_DEP_OR_USER', 'Vous devez s&eacute;lectionner un service ou un utilisateur!');
 

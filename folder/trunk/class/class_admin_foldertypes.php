@@ -1077,7 +1077,7 @@ class foldertype extends dbquery
             ) {
                 $found = false;
                 for ($i = 0; $i < count($indexes[$key]['values']); $i ++) {
-                    if ($values[$key] == $indexes[$key]['values'][$i]['id']) {
+                    if ($values[$key] == $indexes[$key]['values'][$i]['id'] || $values[$key] == "") {
                         $found = true;
                         break;
                     }
@@ -1208,8 +1208,10 @@ class foldertype extends dbquery
     }
 
 
-    public function search_checks($indexes, $fieldName, $val )
+    public function search_checks($indexes, $fieldName, $val, $table_or_view = '' )
     {
+		if (empty($table_or_view)) { $table_or_view = $_SESSION['tablename']['fold_folders']; }
+		
         $whereRequest = '';
         $datePattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
         foreach (array_keys($indexes) as $key) {
@@ -1218,14 +1220,14 @@ class foldertype extends dbquery
                     $whereRequest .= " lower(" . $_SESSION['tablename']['fold_folders']
                         . "." . $key . ") like lower('%" 
                         . $this->protect_string_db($val) . "%') and ";
-                    }
+                }
                 break;
             } else if ($key.'_from' == $fieldName || $key.'_to' == $fieldName) { 
             	// type == 'date'
                 if (preg_match($datePattern, $val) == false) {
                     $_SESSION['error'] .= _WRONG_DATE_FORMAT . ' : ' . $val;
                 } else {
-                    $whereRequest .= " (" . $_SESSION['tablename']['fold_folders']
+                    $whereRequest .= " (" . $table_or_view
                     	. "." . $key . " >= '" . $this->format_date_db($val)
                     	. "') and ";
                 }
@@ -1246,7 +1248,7 @@ class foldertype extends dbquery
                         );
                     }
                     if (empty($_SESSION['error'])) {
-                        $whereRequest .= " (" . $_SESSION['tablename']['fold_folders']
+                        $whereRequest .= " (" . $table_or_view
                         	. "." . $key . " >= " . $checkedVal . ") and ";
                     }
                 }
@@ -1255,5 +1257,4 @@ class foldertype extends dbquery
         }
         return  $whereRequest;
     }
-
 }

@@ -2,7 +2,7 @@
 /**
 * File : autocomplete_folders.php
 *
-* Autocompletion list on market or project
+* Autocompletion list on folder or subfolder
 *
 * @package  maarch
 * @version 1
@@ -13,38 +13,42 @@
 require('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_request.php');
 $req = new request();
 $req->connect();
-if($_REQUEST['mode']<> 'market' && $_REQUEST['mode'] <> 'project')
-{
+
+//If no mode
+if($_REQUEST['mode']<> 'folder' && $_REQUEST['mode'] <> 'subfolder') {
 	exit();
+} else {
+    $mode = $_REQUEST['mode'];
 }
 
-$mode = $_REQUEST['mode'];
-$table = $_SESSION['tablename']['fold_folders'];
-$where = '';
+//Build query
 $select = array();
-$select[$table]= array( 'folder_id', 'folder_name',  'folders_system_id');
-if($mode == 'market')
-{
-	$where = " folder_level = 2 and ";
+    //Table
+    $table = $_SESSION['tablename']['fold_folders'];
+    //Fields
+    $select[$table]= array( 'folder_id', 'folder_name',  'folders_system_id');
+    //Where
+    $where = '';
+    if($mode == 'subfolder') {
+        $where = " folder_level = 2 and ";
+    } else {
+        $where = " folder_level = 1 and ";
+    }
+    $where .= " (lower(folder_name) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') or lower(folder_id) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') ) and status <> 'DEL'";
+    //Order
+    $order = 'order by subject, folder_name';
 
-}
-else
-{
-	$where = " folder_level = 1 and ";
-}
-$where .= " (lower(folder_name) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') or lower(folder_id) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') ) and status <> 'DEL'";
+//Query
+$res = $req->select($select, $where, $order, $_SESSION['config']['databasetype'], 11,false,"","","", false);
 
-$other = 'order by subject, folder_name';
-
-$res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
-
+//Autocompletion output
 echo "<ul>\n";
-for($i=0; $i< min(count($res), 10)  ;$i++)
-{
+for($i=0; $i< min(count($res), 10)  ;$i++) {
 	echo "<li>".$req->show_string($res[$i][0]['value']).', '.$req->show_string($res[$i][1]['value']).' ('.$res[$i][2]['value'].")</li>\n";
 }
-if(count($res) == 11)
-{
+
+//Show only ten item
+if(count($res) == 11) {
 		echo "<li>...</li>\n";
 }
 echo "</ul>";

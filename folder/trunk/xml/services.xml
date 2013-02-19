@@ -9,6 +9,13 @@
    <enabled>true</enabled>
  </SERVICE>
  <SERVICE>
+   <id>view_folder_tree</id>
+   <name>_VIEW_FOLDER_TREE</name>
+   <servicetype>menu</servicetype>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
+ </SERVICE>
+ <SERVICE>
    <id>select_folder</id>
    <name>_SELECT_FOLDER</name>
    <comment>_SELECT_FOLDER</comment>
@@ -22,18 +29,6 @@
      <tab_label>_STEP_ONE</tab_label>
 	 <tab_order>1</tab_order>
    </WHEREAMIUSED>
-  <!-- <WHEREAMIUSED>
-     <page>index_documents.php</page>
-     <nature>tab</nature>
-	 <tab_label>_FOLDER</tab_label>
-	 <tab_order>1</tab_order>
-   </WHEREAMIUSED>
-   <PROCESSINBACKGROUND>
-     <page>file_index.php</page>
-	 <preprocess>select_folder_result_preprocess.php</preprocess>
-	 <postprocess>select_folder_result_postprocess.php</postprocess>
-	 <processorder>1</processorder>
-   </PROCESSINBACKGROUND>-->
  </SERVICE>
  <!-- <SERVICE>
    <id>show_missing_doc_in_folder</id>

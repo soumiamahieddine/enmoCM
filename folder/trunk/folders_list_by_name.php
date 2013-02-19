@@ -16,13 +16,13 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 $db = new dbquery();
 $db->connect();
 
-$db->query("select folder_name from ".$_SESSION['tablename']['fold_folders']." where lower(folder_name) like lower('".$_REQUEST['folder']."%') order by folder_name");
+$db->query("select folder_id, folder_name, folders_system_id from ".$_SESSION['tablename']['fold_folders']." where lower(folder_name) like lower('".$_REQUEST['folder']."%') order by folder_name");
 
 //$db->show();
 $folders = array();
 while($line = $db->fetch_object())
 {
-	array_push($folders, $line->folder_name);
+	array_push($folders, $line->folder_name." (".$line->folder_id.")");
 }
 echo "<ul>\n";
 $authViewList = 0;

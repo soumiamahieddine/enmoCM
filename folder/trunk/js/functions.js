@@ -73,15 +73,15 @@ function launch_autocompleter_folders(path_script, mode)
 }
 
 /**
- * Fill the project field in indexing page (basing on the market field value)
+ * Fill the Folder field in indexing page (basing on the subfolder field value)
  *
  * @param path_to_script String Path to the Ajax script
  **/
 function fill_project(path_to_script)
 {
-	var market_value = $('market').value;
-	var market_id = market_value.substring(market_value.indexOf('(')+1, market_value.indexOf(')'));
-	//console.log(market_id);
+	var subfolder_value = $('subfolder').value;
+	var subfolder_id = subfolder_value.substring(subfolder_value.indexOf('(')+1, subfolder_value.indexOf(')'));
+	//console.log(subfolder_id);
 	if(path_to_script)
 	{
 		new Ajax.Request(path_to_script,
@@ -89,14 +89,14 @@ function fill_project(path_to_script)
 			method:'post',
 			parameters:
 			{
-				id_market : market_id
+				id_subfolder : subfolder_id
 			},
 			 onSuccess: function(answer){
 				eval("response = "+answer.responseText);
 				//alert(answer.responseText);
 				if(response.status == 0 )
 				{
-					$('project').value = response.value;
+					$('folder').value = response.value;
 				}
 				else
 				{

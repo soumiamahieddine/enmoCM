@@ -1,7 +1,7 @@
 <?php
 /*
 *
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008,2012 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -19,105 +19,200 @@
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-/*
-* Deprecated file : to adapt to the new basket modifications
+/**
+* @brief   Displays the folders list in the following baskets
+*
+* @file
+* @author Yves Christian Kpakpo <dev@maarch.org>
+* @date $date$
+* @version $Revision$
+* @ingroup folder
 */
 
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
+require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php";
+require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php";
+require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
+            ."class".DIRECTORY_SEPARATOR."class_lists.php";
 
+$status_obj = new manage_status();
 $core_tools = new core_tools();
+$request    = new request();
+$func       = new functions();
+$list       = new lists();
 
-if(!$core_tools->is_module_loaded("folder"))
-{
-	echo "Folder module missing !<br/>Please install this module.";
-	exit();
+//Basket information
+if(!empty($_SESSION['current_basket']['view'])) {
+	$table = $_SESSION['current_basket']['view'];
+} else {
+	$table = $_SESSION['current_basket']['table'];
 }
 
-$core_tools->load_lang();
-$core_tools->load_html();
-$core_tools->load_header('', true, false);
- ?>
-<body>
-<br/><br/>
-<?php
+//Table or view
+    $select[$table]= array();
 
-	$select[$_SESSION['current_basket']['table']]= array();
-	$where = " status <> 'DEL' and status <> 'IMP' and ".$_SESSION['current_basket']['clause'];
+//Fields
+    array_push($select[$table],"folders_system_id", "status", "foldertype_label", 
+        "custom_t2", "folder_id", "folder_name", "creation_date", "count_document");
 
-	array_push($select[$_SESSION['current_basket']['table']],"folders_system_id","folder_id","fold_custom_t1","fold_custom_t2");
-	$request= new request;
-	$tab=$request->select($select,$where,"",$_SESSION['config']['databasetype']);
+//Where
+    $where_tab = array();
+    if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause
+    $where = implode(' and ', $where_tab);
 
+//Order
+    $order = $order_field = '';
+    $order = $list->getOrder();
+    $order_field = $list->getOrderField();
+    if (!empty($order_field) && !empty($order)) 
+        $orderstr = "order by ".$order_field." ".$order;
+    else  {
+        $list->setOrder();
+        $list->setOrderField('folder_name');
+        $orderstr = "order by folder_name desc";
+    }
+
+//Query
+	$tab = $request->select($select,$where,$orderstr,$_SESSION['config']['databasetype'], '1000');
+	// $request->show();
+
+//Result Array
 	for ($i=0;$i<count($tab);$i++)
 	{
 		for ($j=0;$j<count($tab[$i]);$j++)
 		{
 			foreach(array_keys($tab[$i][$j]) as $value)
 			{
-				if($tab[$i][$j][$value]=="folders_system_id")
+				if($tab[$i][$j][$value]=='folders_system_id')
 				{
-					$tab[$i][$j]["folders_system_id"]=$tab[$i][$j]['value'];
-					$tab[$i][$j]["label"]=_GED_NUM;
+					$tab[$i][$j]['folders_system_id']=$tab[$i][$j]['value'];
+					$tab[$i][$j]["label"]='';
 					$tab[$i][$j]["size"]="4";
+					$tab[$i][$j]["label_align"]="left";
+					$tab[$i][$j]["align"]="center";
+					$tab[$i][$j]["valign"]="bottom";
+					$tab[$i][$j]["show"]=false;
+					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+					$tab[$i][$j]["order"]='folders_system_id';
+				}
+				if ($tab[$i][$j][$value] == "foldertype_label")
+				{
+					$tab[$i][$j]["label"]=_FOLDERTYPE_LABEL;
+					$tab[$i][$j]["size"]="20";
 					$tab[$i][$j]["label_align"]="left";
 					$tab[$i][$j]["align"]="left";
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=false;
-
+					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+					$tab[$i][$j]['value']=$tab[$i][$j]['value'];
+					$tab[$i][$j]["order"]="foldertype_label";
 				}
-				if($tab[$i][$j][$value]=="folder_id")
+                if($tab[$i][$j][$value]=="status")
+                {
+                    $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
+                    $statusCmp = $tab[$i][$j]['value'];
+                    $tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
+                    $tab[$i][$j]["label"]=_STATUS;
+                    $tab[$i][$j]["size"]="4";
+                    $tab[$i][$j]["label_align"]="left";
+                    $tab[$i][$j]["align"]="left";
+                    $tab[$i][$j]["valign"]="bottom";
+                    $tab[$i][$j]["show"]=true;
+                    $tab[$i][$j]["order"]='status';
+                }
+                if ($tab[$i][$j][$value] == "custom_t2")
+                {
+                    $tab[$i][$j]["label"]=_FOLDERTYPE;
+                    $tab[$i][$j]["size"]="5";
+                    $tab[$i][$j]["label_align"]="left";
+                    $tab[$i][$j]["align"]="left";
+                    $tab[$i][$j]["valign"]="bottom";
+                    $tab[$i][$j]["show"]=true;
+                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]['value']=$tab[$i][$j]['value'];
+                    $tab[$i][$j]["order"]="custom_t2";
+                }
+				if ($tab[$i][$j][$value] == "folder_id")
 				{
-					$tab[$i][$j]['res_id']=$tab[$i][$j]['value'];
-					$tab[$i][$j]["label"]=_FOLDER_NUM;
-					$tab[$i][$j]["size"]="25";
+					$tab[$i][$j]["label"]=_FOLDERID;
+					$tab[$i][$j]["size"]="20";
 					$tab[$i][$j]["label_align"]="left";
 					$tab[$i][$j]["align"]="left";
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=true;
+					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+					$tab[$i][$j]['value']=$tab[$i][$j]['value'];
+					$tab[$i][$j]["order"]="folder_id";
 				}
-				if($tab[$i][$j][$value]=="fold_custom_t1")
+				if ($tab[$i][$j][$value] == "folder_name")
 				{
-					$tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
-					$tab[$i][$j]["label"]=_LASTNAME;
-					$tab[$i][$j]["size"]="25";
+					$tab[$i][$j]["label"]=_FOLDERNAME;
+					$tab[$i][$j]["size"]="20";
 					$tab[$i][$j]["label_align"]="left";
 					$tab[$i][$j]["align"]="left";
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=true;
+					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+					$tab[$i][$j]['value']=$tab[$i][$j]['value'];
+					$tab[$i][$j]["order"]="folder_name";
 				}
-				if($tab[$i][$j][$value]=="fold_custom_t2")
+				if($tab[$i][$j][$value]=="creation_date")
 				{
-					$tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
-					$tab[$i][$j]["label"]=_FIRSTNAME;
-					$tab[$i][$j]["size"]="25";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="left";
+					$tab[$i][$j]["label"]=_FOLDERDATE;
+					$tab[$i][$j]["value"] = $func->format_date($tab[$i][$j]["value"]);
+					$tab[$i][$j]["size"]="15";
+					$tab[$i][$j]["label_align"]="right";
+					$tab[$i][$j]["align"]="right";
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=true;
+					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+					$tab[$i][$j]["order"]="creation_date";
 				}
-
+				if($tab[$i][$j][$value]=="count_document")
+				{
+					$tab[$i][$j]["label"]=_ARCHIVED_DOC;
+					$tab[$i][$j]["size"]="15";
+					$tab[$i][$j]["label_align"]="right";
+					$tab[$i][$j]["align"]="right";
+					$tab[$i][$j]["valign"]="bottom";
+					$tab[$i][$j]["show"]=true;
+					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+					$tab[$i][$j]["order"]="count_document";
+				}
 			}
 		}
 	}
-	$title = "";
+    
+//Clé de la liste
+$listKey = 'folders_system_id';
 
-	if($_SESSION['current_basket']['id'] == "CompleteFolders")
-	{
-		$title = _PROCESS_FOLDER_LIST." : ".$i." "._FOUND_FOLDERS;
-	}
-	else if($_SESSION['current_basket']['id'] == "IncompleteFolders")
-	{
-		$title = _INCOMPLETE_FOLDERS_LIST." : ".$i." "._FOUND_FOLDERS;
-	}
-	else
-	{
-		$title = _RESULTS." : ".$i." "._FOUND_FOLDERS;
-	}
-	$list=new list_show();
-	$list->list_doc($tab,$i,$title,"folder_system_id","folders_list","folder_system_id","folder_detail",false,true,"get",$_SESSION['config']['businessappurl']."index.php?display=true&module=folder&page=res_folders_list",_CHOOSE, false, false, true, false, false, false,  false, false, '', '', false, '', '', 'listing spec', '', false, false, array(), '<input type="hidden" name="display" value="true"/><input type="hidden" name="module" value="folder" /><input type="hidden" name="page" value="res_folders_list" />');
-	$core_tools->load_js();
+//Initialiser le tableau de paramètres
+$paramsTab = array();
+$paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_FOLDER;        //Titre de la page
+$paramsTab['bool_sortColumn'] = true;                                           //Affichage Tri
+$paramsTab['bool_bigPageTitle'] = false;                                        //Affichage de l'icone de la page de details
+$paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id'];     //Parametres d'url supplementaires
+
+// $paramsTab['bool_checkBox'] = true;                                          //Affichage Case à cocher
+$paramsTab['bool_radioButton'] = true;                                          //Affichage Bouttons radion
+
+//Sublist 
+$paramsTab['bool_showSublist'] = true;                                          //Affichage de sous liste
+$paramsTab['sublistUrl'] = 'index.php?display=true&page='
+        .'documents_list_in_folder&module=folder&coll_id='
+        .$_SESSION['current_basket']['coll_id'];                                //
+
+//Action icons array
+$paramsTab['actionIcons'] = array();
+$details = array(
+		"script"    => "window.top.location='".$_SESSION['config']['businessappurl']."index.php?page=show_folder&module=folder&id=@@folders_system_id@@'",
+        "icon"      => $_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif",
+        "tooltip"   => _DETAILS
+        );
+array_push($paramsTab['actionIcons'], $details);          
+ 
+//Afficher la liste
+$status = 0;
+$content = $list->showList($tab, $paramsTab, $listKey, $_SESSION['current_basket']);
+// $debug = $list->debug();
+echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
 ?>
-</body>
-</html>

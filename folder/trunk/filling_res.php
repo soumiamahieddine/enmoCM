@@ -34,9 +34,13 @@ $core->load_html();
 $core->load_header('', true, false);
 ?>
 <body id="filling_res_frame">
+<h2><?php echo _ARCHIVED_DOC;?></h2><br/>
+
 <?php
 $_SESSION['array_struct_final'] = array();
 $db = new dbquery();
+$db2 = new dbquery();
+$db2->connect();
 $db->connect();
 $arrayStruct = array();
 
@@ -59,7 +63,7 @@ if (empty($collIdTest)) {
 		"select distinct doctypes_first_level_id, doctypes_first_level_label, "
 		. "doctype_first_level_style, doctypes_second_level_id, "
 		. "doctypes_second_level_label, doctype_second_level_style, type_id, "
-		. "type_label, res_id from  " . $view
+		. "type_label, res_id, subject from  " . $view
 		. " where folders_system_id = '" . $_SESSION['current_folder_id']
 		. "' and type_id <> 0 and doctypes_first_level_id <> 0 "
 		. "and doctypes_second_level_id <> 0 and status<>'DEL' " . $whereClause
@@ -101,7 +105,7 @@ if (empty($collIdTest)) {
 	    )
 	    ) {
 	    	$arrayStruct['level1'][$res->doctypes_first_level_id]['level2'][$res->doctypes_second_level_id]['level3'][$res->type_id] = array(
-	    		'label' => $func->show_string($res->type_label),
+	    		'label' => $func->show_string($res->type_label).' - '.$res->subject,
 	    		'level4' => array(),
 	    	);
 	    }
@@ -210,10 +214,13 @@ if (empty($collIdTest)) {
 											{
 												$res_id_list = $arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['label'].",";
 												echo 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-													<a href=javascript:view_doc('".$res_id_list."');><img src='".$_SESSION['config']['businessappurl']."static.php?module=folder&filename=page.gif' alt='' />".$arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['label']." - ".$arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['label']."</a><br>";
+													<a href=javascript:view_doc('".$res_id_list."');><img src='".$_SESSION['config']['businessappurl']
+                                                    ."static.php?module=folder&filename=page.gif' alt='' />"
+                                                    .$arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['label']
+                                                    ." - ".$arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['label']
+                                                    ."</a><br>";
 											}
-
-																						?>
+											?>
 											</div>
 										</div>
 										<?php

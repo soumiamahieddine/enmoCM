@@ -1,63 +1,60 @@
 <?php
-/**
-* File : folder_history.php
+/*
 *
-* Show the history of a folder (indexing and salary sheet)
+*    Copyright 2008,2012 Maarch
 *
-* @package  Maarch PeopleBox 1.0
-* @version 2.0
-* @since 06/2006
-* @license GPL
-* @author  Claire Figueras  <dev@maarch.org>
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once "core/class/class_request.php";
-require_once "modules/folder/class/class_modules_tools.php";
-$func = new functions;
-$core = new core_tools();
-$core->load_lang();
-$hist = array();
+/**
+* @brief    Displays folder history
+*
+* @file     folder_history.php
+* @author   Yves Christian Kpakpo <dev@maarch.org>
+* @date     $date$
+* @version  $Revision$
+* @ingroup  folder
+*/
+
+require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php";
+require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
+            ."class".DIRECTORY_SEPARATOR."class_lists.php";
+            
+$core_tools = new core_tools();
+$request    = new request();
+$list       = new lists();
+
+//
+$core_tools->load_lang();
+$core_tools->load_html();
+$core_tools->load_header('', true, false);
+
+?><body><?php
+echo '<h2>' . _HISTORY . '</h2>';
+
+$core_tools->load_js();
+
+//Load list
 if (isset($_SESSION['current_folder_id']) 
 	&& ! empty($_SESSION['current_folder_id'])
 ) {
-	$folder = new folder();
-	$folder->load_folder(
-		$_SESSION['current_folder_id'], $_SESSION['tablename']['fold_folders'] 
-	);
-	$hist = $folder->get_history();
+    $target = $_SESSION['config']['businessappurl'].'index.php?module=folder&page=history_list&id='.$_SESSION['current_folder_id'];
+    $listContent = $list->loadList($target);
+    echo $listContent;
 }
-
-if (count($hist) < 1) {
-	echo _PLEASE_SELECT_FOLDER . ".";
-} else {
-	?>
-	<table width="100%" class="listing" border="0" cellspacing="0">
-    	<thead>
-        	<tr>
-            	<th><?php  echo _DATE;?></th>
-                <th><?php  echo _USER;?></th>
-                <th><?php  echo _EVENT;?></th>
-            </tr>
-        </thead>
-        <tbody>
-	<?php
-	$color = "";
-	for ($i = 0; $i < count($hist); $i ++) {
-		if ($color == ' class="col"') {
-			$color = '';
-		} else {
-			$color = ' class="col"';
-		}
-		?>
-			<tr <?php  echo $color; ?> >
-				<td><?php  echo $func->dateformat($hist[$i]['DATE']); ?></td>
-                <td><?php  echo $func->show_string($hist[$i]['USER']); ?></td>
-				<td><?php  echo $func->show_string($hist[$i]['EVENT']); ?></td>
-			</tr>
-			<?php
-	}
-	?></tbody>
-	</table>
-	<?php
-}
-
+?>
+</body>
+</html>
