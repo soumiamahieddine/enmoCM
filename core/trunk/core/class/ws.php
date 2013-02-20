@@ -63,7 +63,7 @@ $SOAP_dispatch_map['docserverGet'] = array(
                                         'method' => "core#docservers::getWs"
                                     );
 $SOAP_dispatch_map['viewResource'] = array(
-                                        'in'  => Array('gedId' => 'integer', 'tableName' => 'string', 'adrTableName' => 'string', 'calledByWS' => 'boolean'),
+                                        'in'  => Array('gedId' => 'int', 'tableName' => 'string', 'adrTableName' => 'string', 'calledByWS' => 'boolean'),
                                         'out' => Array('out' => '{urn:MySoapServer}returnViewResource'),
                                         'method' => "core#docservers::viewResource"
                                     );
@@ -106,7 +106,7 @@ $SOAP_dispatch_map['docserverLocationGet'] = array(
 $SOAP_typedef['docserverTypes'] = array(    'docserver_type_id'=>'string',
                                             'docserver_type_label'=>'string',
                                             'is_container'=>'string',
-                                            'container_max_number'=>'integer',
+                                            'container_max_number'=>'int',
                                             'is_compressed'=>'string',
                                             'compression_mode'=>'string',
                                             'is_meta'=>'string',
@@ -205,7 +205,7 @@ $SOAP_dispatch_map['storeResource'] = array(
 
 $SOAP_dispatch_map['storeAttachmentResource'] = array(
     'in'  => array(
-        'resId' => 'integer',
+        'resId' => 'int',
         'collId' => 'string',
         'encodedContent' => 'string',
         'fileFormat' => 'string',
@@ -224,7 +224,7 @@ $SOAP_typedef['listOfResources'] = array(
     'resid' => 'long',
     'identifier' => 'string',
     'contactName' => 'string',
-    'country' => 'integer',
+    'country' => 'int',
     'amount' => 'string',
     'customer' => 'string',
     'docDate' => 'string',
