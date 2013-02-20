@@ -144,6 +144,7 @@ class lists extends dbquery
     private $tmplt_CurrentCssLine;    
     private $modeReturn;    
     private $divListId;  
+    private $collId;  
     
     function __construct(){
         $this->order = $_REQUEST['order'];
@@ -152,6 +153,7 @@ class lists extends dbquery
         $this->whatSearch = $_REQUEST['what'];
         $this->_manageFilters();
         if (isset($_REQUEST['template'])) $this->template = $_REQUEST['template'];
+        if (isset($_REQUEST['coll_id'])) $this->collId = $_REQUEST['coll_id'];
     }
     
     private function _buildFilter($filter) {
@@ -221,11 +223,13 @@ class lists extends dbquery
                          .'&filter=category&value=\' + document.filters.category_id.value, \''
                          .$this->divListId.'\', '.$this->modeReturn.');">';
                 $filters .='<option value="none">'._CHOOSE_CATEGORY.'</option>';
-                foreach (array_keys($_SESSION['mail_categories']) as $value) {
-                    if (isset($_SESSION['filters']['category']['VALUE']) 
-                        && $_SESSION['filters']['category']['VALUE'] == $value
+                foreach (array_keys($_SESSION['coll_categories'][$this->collId]) as $catId) {
+                    if ($catId <> 'default_category') {
+                        if (isset($_SESSION['filters']['category']['VALUE']) 
+                            && $_SESSION['filters']['category']['VALUE'] == $catId
                         ) $selected = 'selected="selected"'; else $selected =  '';
-                    $filters .='<option value="'.$value.'" '.$selected.'>'.$_SESSION['mail_categories'][$value].'</option>';
+                        $filters .='<option value="'.$catId.'" '.$selected.'>'.$_SESSION['coll_categories'][$this->collId][$catId].'</option>';
+                    }
                 }
                 $filters .='</select>&nbsp;';
             break;
@@ -2546,6 +2550,7 @@ class lists extends dbquery
         $this->haveAction = false;
         $this->countResult = count($resultArray);
         if(count($currentBasket) > 0) $this->currentBasket =  $currentBasket;
+        if (isset($this->params['collId'] && !empty($this->params['collId']) $this->collId = $this->params['collId'];
         
          //Selected template or default template
         if(empty($this->template)) {
@@ -2791,5 +2796,9 @@ class lists extends dbquery
     
     public function setTemplate($template) {
         $this->template = $template;        
+    }
+    
+    public function setCollection($collId) {
+        $this->collId = $collId;        
     }
 }
