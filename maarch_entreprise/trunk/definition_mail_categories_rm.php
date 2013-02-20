@@ -153,13 +153,13 @@ $_ENV['categories']['rm_archive']['doc_date'] = array (
     'modify' => false,
     'form_show' => 'date'
 );
-$_ENV['categories']['rm_archive']['other_cases']['project'] = array (
+$_ENV['categories']['rm_archive']['other_cases']['folder'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
     'mandatory' => false,
-    'label' => _PROJECT,
+    'label' => _FOLDER,
     'table' => 'none',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_folder.gif',
     'modify' => true,
     'form_show' => 'autocomplete'
 );
@@ -327,39 +327,36 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
     }
     // Special cases :  fields are put in a string to make a query
     
-    // Project
-    if (isset ($_ENV['categories'][$cat_id]['other_cases']['project']) && count($_ENV['categories'][$cat_id]['other_cases']['project']) > 0 && (!isset ($params['show_project']) || $params['show_project'] == true)) {
-        //echo 'project';
-        if (!isset ($_ENV['categories'][$cat_id]['other_cases']['market']) || count($_ENV['categories'][$cat_id]['other_cases']['market']) == 0) {
+    // Folder
+    if (isset ($_ENV['categories'][$cat_id]['other_cases']['folder']) && count($_ENV['categories'][$cat_id]['other_cases']['folder']) > 0 && (!isset ($params['show_folder']) || $params['show_folder'] == true)) {
+        //echo 'folder';
+        $fields .= 'folders_system_id,';
 
-            $fields .= 'folders_system_id,';
-            //array_push($arr, 'project');
-        }
-        array_push($arr, 'project');
+        array_push($arr, 'folder');
         if ($mode == 'full' || $mode == 'form') {
-            if ($params['img_project'] == true) {
-                $data['project'] = array(
+            if ($params['img_folder'] == true) {
+                $data['folder'] = array(
                     'value' => '',
                     'show_value' => '',
-                    'label' => $_ENV['categories'][$cat_id]['other_cases']['project']['label'],
+                    'label' => $_ENV['categories'][$cat_id]['other_cases']['folder']['label'],
                     'display' => 'textinput',
-                    'img' => $_ENV['categories'][$cat_id]['other_cases']['project']['img']
+                    'img' => $_ENV['categories'][$cat_id]['other_cases']['folder']['img']
                 );
             } else {
-                $data['project'] = array(
+                $data['folder'] = array(
                     'value' => '',
                     'show_value' => '',
-                    'label' => $_ENV['categories'][$cat_id]['other_cases']['project']['label'],
+                    'label' => $_ENV['categories'][$cat_id]['other_cases']['folder']['label'],
                     'display' => 'textinput'
                 );
             }
-            $data['project']['readonly'] = true;
-            if ($mode == 'form' && $_ENV['categories'][$cat_id]['other_cases']['project']['modify']) {
-                $data['project']['field_type'] = $_ENV['categories'][$cat_id]['other_cases']['project']['form_show'];
-                $data['project']['readonly'] = false;
+            $data['folder']['readonly'] = true;
+            if ($mode == 'form' && $_ENV['categories'][$cat_id]['other_cases']['folder']['modify']) {
+                $data['folder']['field_type'] = $_ENV['categories'][$cat_id]['other_cases']['folder']['form_show'];
+                $data['folder']['readonly'] = false;
             }
         } else {
-            $data['project'] = '';
+            $data['folder'] = '';
         }
     }
 
@@ -380,7 +377,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             if (isset($line-> $arr[$i])) {
                 $data[$arr[$i]]['value'] = $line-> $arr[$i];
             }
-            if ($arr[$i] <> 'project') {
+            if ($arr[$i] <> 'folder') {
                 $data[$arr[$i]]['show_value'] = $db->show_string($data[$arr[$i]]['value']);
             }
             if (isset($_ENV['categories'][$cat_id][$arr[$i]]['type_field'])
@@ -406,16 +403,16 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             } elseif ($arr[$i] == 'type_id') {
                 $data[$arr[$i]]['show_value'] = $db->show_string($line->type_label);
             }
-            // Folder : project
-            elseif ($arr[$i] == 'project' && $line->folders_system_id <> '' 
-                && isset ($line->folders_system_id) && empty ($data['market']['show_value'])) {
-                $db2->query('select folder_name, subject, folders_system_id, parent_id from ' 
-                    . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " 
+            // Folder 
+            elseif ($arr[$i] == 'folder' && $line->folders_system_id <> '' 
+                && isset ($line->folders_system_id)) {
+                $db2->query('select folder_id, folder_name, subject, folders_system_id, parent_id from ' 
+                    . $_SESSION['tablename']['fold_folders'] . " where status <> 'FOLDDEL' and folders_system_id = " 
                     . $line->folders_system_id . " and folder_level = 1");
 
                 if ($db2->nb_result() > 0) {
                     $res = $db2->fetch_object();
-                    $data['project']['show_value'] = $res->folder_name . ', ' . $res->subject . ' (' . $res->folders_system_id . ')';
+                    $data['folder']['show_value'] = $res->folder_id . ', ' . $res->folder_name . ' (' . $res->folders_system_id . ')';
                 }
             }
         } else {
@@ -429,14 +426,14 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                 $data[$arr[$i]] = $db->show_string($line-> $arr[$i], true);
             }
             // special cases :
-            // Folder : project
-            elseif ($arr[$i] == 'project' && $line->folders_system_id <> '' && isset ($line->folders_system_id) && empty ($data['market'])) {
-                $db2->query('select folder_name, subject, folders_system_id, parent_id from ' 
-                    . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " 
+            // Folder
+            elseif ($arr[$i] == 'folder' && $line->folders_system_id <> '' && isset ($line->folders_system_id)) {
+                $db2->query('select folder_id, folder_name, subject, folders_system_id, parent_id from ' 
+                    . $_SESSION['tablename']['fold_folders'] . " where status <> 'FOLDDEL' and folders_system_id = " 
                     . $line->folders_system_id . " and folder_level = 1");
                 //$db2->show();
                 $res = $db2->fetch_object();
-                $data['project'] = $res->folder_name . ', ' . $res->subject . ' (' . $res->folders_system_id . ')';
+                $data['folder'] = $res->folder_id . ', ' . $res->folder_name . ' (' . $res->folders_system_id . ')';
             }
         }
     }

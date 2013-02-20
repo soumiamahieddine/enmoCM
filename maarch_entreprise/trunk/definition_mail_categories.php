@@ -1117,7 +1117,10 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             }
             // Folder
             elseif ($arr[$i] == 'folder' && $line->folders_system_id <> '' && isset ($line->folders_system_id)) {
-                $db2->query('select folder_id, folder_name, subject, folders_system_id, parent_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'FOLDDEL' and folders_system_id = " . $line->folders_system_id);
+                $db2->query('select folder_id, folder_name, subject, folders_system_id, parent_id from ' 
+                    . $_SESSION['tablename']['fold_folders'] 
+                    . " where status <> 'FOLDDEL' and folders_system_id = " 
+                    . $line->folders_system_id);
 
                 if ($db2->nb_result() > 0) {
                     $res = $db2->fetch_object();
@@ -1168,7 +1171,10 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             }
             // Folder
             elseif ($arr[$i] == 'folder' && $line->folders_system_id <> '' && isset ($line->folders_system_id)) {
-                $db2->query('select folder_id, folder_name, subject, folders_system_id, parent_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'FOLDDEL' and folders_system_id = " . $line->folders_system_id);
+                $db2->query('select folder_id, folder_name, subject, folders_system_id, parent_id from ' 
+                . $_SESSION['tablename']['fold_folders'] 
+                . " where status <> 'FOLDDEL' and folders_system_id = " 
+                . $line->folders_system_id);
                 //$db2->show();
                 $res = $db2->fetch_object();
                 $data['folder'] = $res->folder_id . ', ' . $res->folder_name . ' (' . $res->folders_system_id . ')';
