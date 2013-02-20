@@ -621,6 +621,12 @@ if (!defined('_LOG_COLL')) define( '_LOG_COLL', 'Collection des logs');
 if (!defined('_IO_COLL')) define('_IO_COLL', 'Collection des bordereaux de versement');
 if (!defined('_BUSINESS')) define('_BUSINESS', 'Collection des documents business');
 
+//BUSINESS CATEGORIES
+if (!defined('_PURCHASE')) define('_PURCHASE', 'Achats');
+if (!defined('_SELL')) define('_SELL', 'Ventes');
+if (!defined('_ENTERPRISE_DOCUMENT')) define('_ENTERPRISE_DOCUMENT', 'Documents de l&rsquo;Entreprise');
+if (!defined('_HR')) define('_HR', 'Ressources humaines');
+
 //BITMASK
 if (!defined('_BITMASK_VALUE_ALREADY_EXIST')) define( '_BITMASK_VALUE_ALREADY_EXIST' , 'Bitmask d&eacute;j&agrave; utilis&eacute; dans un autre type');
 

@@ -87,18 +87,22 @@
         <path_to_lucene_index>C:\Maarch\indexes\entreprise\business_coll\</path_to_lucene_index>
         <categories>
             <category>
-                <id>document</id>
-                <label>_DOCUMENT</label>
+                <id>purchase</id>
+                <label>_PURCHASE</label>
             </category>
             <category>
-                <id>invoice_incoming</id>
-                <label>_INVOICE_INCOMING</label>
+                <id>sell</id>
+                <label>_SELL</label>
             </category>
             <category>
-                <id>invoice_outgoing</id>
-                <label>_INVOICE_OUTGOING</label>
+                <id>enterprise_document</id>
+                <label>_ENTERPRISE_DOCUMENT</label>
             </category>
-            <default_category>document</default_category>
+            <category>
+                <id>human_resources</id>
+                <label>_HR</label>
+            </category>
+            <default_category>purchase</default_category>
         </categories>
     </COLLECTION>
     <COLLECTION>

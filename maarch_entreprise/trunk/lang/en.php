@@ -1112,3 +1112,9 @@ if (!defined('_DOCUMENTS_LIST_SEARCH'))             define('_DOCUMENTS_LIST_SEAR
 if (!defined('_CLICK_ICON_TO_TOGGLE'))              define('_CLICK_ICON_TO_TOGGLE', 'Cliquez sur l&quot;icone pour Afficher / Masquer');
 if (!defined('_SHOW'))                              define('_SHOW', 'Afficher');
 if (!defined('_LINES'))                             define('_LINES', ' lignes');
+
+//BUSINESS CATEGORIES
+if (!defined('_PURCHASE')) define('_PURCHASE', 'Purchases');
+if (!defined('_SELL')) define('_SELL', 'Sales');
+if (!defined('_ENTERPRISE_DOCUMENT')) define('_ENTERPRISE_DOCUMENT', 'Enterprise documents');
+if (!defined('_HR')) define('_HR', 'human Resources');

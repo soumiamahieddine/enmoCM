@@ -402,7 +402,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                     ) {
                                         $frm_str .='selected="selected"';
                                     }
-
                                     $frm_str .='>'.$_SESSION['coll_categories']['letterbox_coll'][$cat_id].'</option>';
                                 }
                             }
