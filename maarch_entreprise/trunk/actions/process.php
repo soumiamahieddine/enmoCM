@@ -62,36 +62,29 @@ include('apps/' . $_SESSION['config']['app_id']. '/definition_mail_categories.ph
  *
  * @param $coll_id string Collection identifier
  * @param $res_id string Resource identifier
- * @return Array Folder data (market + project)
+ * @return Array Folder data (folder + subfolder)
  **/
 function get_folder_data($coll_id, $res_id)
 {
     require_once('core/class/class_security.php');
-    $sec =new security();
+    $sec = new security();
     $view = $sec->retrieve_view_from_coll_id($coll_id);
     if (empty($view)) {
         $view = $sec->retrieve_table_from_coll($coll_id);
     }
     $db = new dbquery();
     $db->connect();
-    $market = '';
-    $project = '';
-    $db->query("select folders_system_id, folder_name, fold_parent_id, fold_subject, folder_level from "
+    $folder = '';
+    $db->query("select folders_system_id, folder_id, folder_name, fold_parent_id, fold_subject, folder_level from "
         . $view . " where res_id = " . $res_id);
-    $res = $db->fetch_object();
-    if ($res->folder_level == 2) {
-        $market = $res->folder_name . ', ' . $res->fold_subject . ' (' . $res->folders_system_id . ')';
-        $parent_id = $res->fold_parent_id;
-        $db->query("select folder_name, parent_id, subject from ".$_SESSION['tablename']['fold_folders']
-            . " where folders_system_id = ".$parent_id);
-        if ($db->nb_result() == 1) {
-            $res = $db->fetch_object();
-            $project = $res->folder_name.', '.$res->fold_subject.' ('.$parent_id.')';
-        }
-    } else if ($res->folder_level == 1) {
-        $project = $res->folder_name.', '.$res->fold_subject.' ('.$res->folders_system_id.')';
+
+    if ($db->nb_result() == 1) {
+        $res = $db->fetch_object();
+        // $folder = $res->folder_name.', '.$res->fold_subject.' ('.$res->folders_system_id.')';
+        $folder = $res->folder_id.', '.$res->folder_name.' ('.$res->folders_system_id.')';
     }
-    return array('project' => $project, 'market' => $market);
+
+    return $folder;
 }
 
 
@@ -140,7 +133,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $is = new indexing_searching_app();
     $cr = new chrono();
     $data = array();
-    $params_data = array('show_market' => false, 'show_project' => false);
+    $params_data = array('show_folder' => false);
     $data = get_general_data($coll_id, $res_id, 'full', $params_data);
     $process_data = $is->get_process_data($coll_id, $res_id);
     $chrono_number = $cr->get_chrono_number($res_id, $sec->retrieve_view_from_table($table));
@@ -541,9 +534,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //FOLDERS
     if ($core_tools->is_module_loaded('folder')) {
          // Displays the folder data
-        $arr_tmp = get_folder_data($coll_id, $res_id);
-        $project = $arr_tmp['project'];
-        $market = $arr_tmp['market'];
+        $folder = get_folder_data($coll_id, $res_id);
+
         $frm_str .= '<h3 onclick="new Effect.toggle(\'folder_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'folder_div\', \'divStatus_folder_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
@@ -553,19 +545,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<div id="folder_div"  style="display:none">';
             $frm_str .= '<div>';
                 $frm_str .= '<table width="98%" align="center" border="0">';
-                        $frm_str .= '<tr id="project_tr" style="display:'.$display_value.';">';
-                    $frm_str .= '<td><label for="project" class="form_title_process" >' . _PROJECT . '</label></td>';
+                        $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
+                    $frm_str .= '<td><label for="folder" class="form_title_process" >' . _FOLDER_OR_SUBFOLDER . '</label></td>';
                     $frm_str .= '<td>&nbsp;</td>';
-                     $frm_str .='<td><input type="text" name="project" id="project" value="'
-                        . $project . '"  onblur=""/><div id="show_project" class="autocomplete"></div>';
-                $frm_str .= '</tr>';
-                $frm_str .= '<tr id="market_tr" style="display:'.$display_value.';">';
-                    $frm_str .= '<td><label for="market" class="form_title_process" >' . _MARKET . '</label></td>';
-                    $frm_str .= '<td>&nbsp;</td>';
-                     $frm_str .='<td><input type="text" name="market" id="market" onblur="fill_project(\''
-                        . $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&module=folder&page=ajax_get_project\');" value="'
-                        . $market . '" /><div id="show_market" class="autocomplete"></div>';
+                     $frm_str .='<td><input type="text" name="folder" id="folder" value="'
+                        . $folder . '" onblur=""/><div id="show_folder" class="autocomplete"></div>';
                 $frm_str .= '</tr>';
                 $frm_str .= '</table>';
             $frm_str .= '</div>';
@@ -1051,10 +1035,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'
         . $id_action . '", "viewframe", true, true);window.scrollTo(0,0);';
         if ($core_tools->is_module_loaded('folder')) {
-            $frm_str .= 'launch_autocompleter_folders(\'' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&module=folder&page=autocomplete_folders&mode=project\', \'project\');'
-                . 'launch_autocompleter_folders(\'' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&module=folder&page=autocomplete_folders&mode=market\', \'market\');';
+            $frm_str .= ' initList(\'folder\', \'show_folder\',\''
+                . $_SESSION['config']['businessappurl'] . 'index.php?display='
+                . 'true&module=folder&page=autocomplete_folders&mode=folder\','
+                . ' \'Input\', \'2\');';
         }
         $frm_str .= '$(\'entity\').style.visibility=\'hidden\';';
         $frm_str .= '$(\'category\').style.visibility=\'hidden\';';
@@ -1078,8 +1062,7 @@ function check_form($form_id,$values)
     $check = false;
     $other_checked = false;
     $other_txt = '';
-    $market = '';
-    $project = '';
+    $folder = '';
     $core = new core_tools();
     //print_r($values);
     for ($i=0; $i<count($values); $i++) {
@@ -1109,11 +1092,8 @@ function check_form($form_id,$values)
         if ($values[$i]['ID'] == "other_answer"  && trim($values[$i]['VALUE']) <> html_entity_decode('['._DEFINE.']', ENT_NOQUOTES, 'UTF-8')) {
             $other_txt = $values[$i]['VALUE'];
         }
-        if ($values[$i]['ID'] == "market") {
-            $market = $values[$i]['VALUE'];
-        }
-        if ($values[$i]['ID'] == "project") {
-            $project = $values[$i]['VALUE'];
+        if ($values[$i]['ID'] == "folder") {
+            $folder = $values[$i]['VALUE'];
         }
         if ($values[$i]['ID'] == "coll_id") {
             $coll_id = $values[$i]['VALUE'];
@@ -1125,50 +1105,22 @@ function check_form($form_id,$values)
     if ($core->is_module_loaded('folder')) {
         $db = new dbquery();
         $db->connect();
-        $project_id = '';
-        $market_id = '';
-        /*if (empty($market))
-        {
-            $_SESSION['action_error'] = _MARKET.' '._IS_EMPTY;
-            return false;
-        }*/
-        if (!empty($market)) {
-            if (!preg_match('/\([0-9]+\)$/', $market)) {
-                $_SESSION['action_error'] = _MARKET." "._WRONG_FORMAT."";
-                    return false;
+        $folder_id = '';
+
+        if (!empty($folder)) {
+            if (!preg_match('/\([0-9]+\)$/', $folder)) {
+                $_SESSION['action_error'] = _FOLDER." "._WRONG_FORMAT."";
+                return false;
             }
-            $market_id = str_replace(')', '', substr($market, strrpos($market,'(')+1));
-            $db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id);
+            $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
+            $db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folder_id);
             if ($db->nb_result() == 0) {
-                $_SESSION['action_error'] = _MARKET.' '.$market_id.' '._UNKNOWN;
+                $_SESSION['action_error'] = _FOLDER.' '.$folder_id.' '._UNKNOWN;
                 return false;
             }
         }
-        /*if (empty($project))
-        {
-            $_SESSION['action_error'] = _PROJECT.' '._IS_EMPTY;
-            return false;
-        }*/
-        if (!empty($project)) {
-            if (!preg_match('/\([0-9]+\)$/', $project)) {
-                $_SESSION['action_error'] = _PROJECT." "._WRONG_FORMAT."";
-                return false;
-            }
-            $project_id = str_replace(')', '', substr($project, strrpos($project,'(')+1));
-            $db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$project_id);
-            if ($db->nb_result() == 0) {
-                $_SESSION['action_error'] = _PROJECT.' '.$project_id.' '._UNKNOWN;
-                return false;
-            }
-        }
-        if (!empty($project_id) && !empty($market_id)) {
-            $db->query("select folders_system_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id." and parent_id = ".$project_id);
-            if ($db->nb_result() == 0) {
-                $_SESSION['action_error'] = _INCOMPATIBILITY_MARKET_PROJECT;
-                return false;
-            }
-        }
-        if (!empty($res_id) && !empty($coll_id) && (!empty($project_id) || !empty($market_id))) {
+
+        if (!empty($res_id) && !empty($coll_id) && !empty($folder_id)) {
             require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
             $sec = new security();
             $table = $sec->retrieve_table_from_coll($coll_id);
@@ -1180,15 +1132,13 @@ function check_form($form_id,$values)
             $res = $db->fetch_object();
             $type_id = $res->type_id;
             $foldertype_id = '';
-            if (!empty($market_id)) {
-                $db->query("select foldertype_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$market_id);
-            } else  {
-                //!empty($project_id)
-                $db->query("select foldertype_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$project_id);
-            }
+            $db->query("select foldertype_id from ".$_SESSION['tablename']['fold_folders']." where folders_system_id = ".$folder_id);
             $res = $db->fetch_object();
             $foldertype_id = $res->foldertype_id;
-            $db->query("select fdl.foldertype_id from ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']." fdl, ".$_SESSION['tablename']['doctypes']." d where d.doctypes_first_level_id = fdl.doctypes_first_level_id and fdl.foldertype_id = ".$foldertype_id." and d.type_id = ".$type_id);
+            $db->query("select fdl.foldertype_id from ".$_SESSION['tablename']['fold_foldertypes_doctypes_level1']
+                ." fdl, ".$_SESSION['tablename']['doctypes']
+                ." d where d.doctypes_first_level_id = fdl.doctypes_first_level_id and fdl.foldertype_id = "
+                .$foldertype_id." and d.type_id = ".$type_id);
             if ($db->nb_result() == 0) {
                 $_SESSION['action_error'] .= _ERROR_COMPATIBILITY_FOLDER;
                 return false;
@@ -1243,8 +1193,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     $no_answer = '0';
     $other_txt = '';
     $process_notes = '';
-    $project = '';
-    $market = '';
+    $folder = '';
     for ($j=0; $j<count($values_form); $j++) {
         if ($values_form[$j]['ID'] == "simple_mail" && $values_form[$j]['VALUE'] == "true") {
             $simple_mail = '1';
@@ -1273,11 +1222,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         if ($values_form[$j]['ID'] == "process_notes") {
             $process_notes = $values_form[$j]['VALUE'];
         }
-        if ($values_form[$j]['ID'] == "market") {
-            $market = $values_form[$j]['VALUE'];
-        }
-        if ($values_form[$j]['ID'] == "project") {
-            $project = $values_form[$j]['VALUE'];
+        if ($values_form[$j]['ID'] == "folder") {
+            $folder = $values_form[$j]['VALUE'];
         }
     }
     if ($no_answer == '1') {
@@ -1291,17 +1237,14 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
                     DIRECTORY_SEPARATOR."tags_update.php");
     }
 
-    if ($core->is_module_loaded('folder') && (!empty($market) || !empty($project))) {
+    if ($core->is_module_loaded('folder') && !empty($folder)) {
         $folder_id = '';
         $db->connect();
         $db->query("select folders_system_id from ".$res_table." where res_id = ".$arr_id[0]);
         $res = $db->fetch_object();
         $old_folder_id = $res->folders_system_id;
-        if (!empty($market)) {
-            $folder_id = str_replace(')', '', substr($market, strrpos($market,'(')+1));
-        } else if (!empty($project)) {
-            $folder_id = str_replace(')', '', substr($project, strrpos($project,'(')+1));
-        }
+        $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
+
         if ($folder_id <> $old_folder_id && $_SESSION['history']['folderup']) {
             require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
             $hist = new history();

@@ -376,11 +376,11 @@ $_ENV['categories']['internal']['other_cases']['contact'] = array (
     'modify' => false
 );
 
-/////////////////////////////MARKET DOCUMENT////////////////////////////////////////////////
-$_ENV['categories']['market_document'] = array ();
-$_ENV['categories']['market_document']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_market.gif';
-$_ENV['categories']['market_document']['other_cases'] = array ();
-$_ENV['categories']['market_document']['type_id'] = array (
+/////////////////////////////FOLDER DOCUMENT////////////////////////////////////////////////
+$_ENV['categories']['folder_document'] = array ();
+$_ENV['categories']['folder_document']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_folder.gif';
+$_ENV['categories']['folder_document']['other_cases'] = array ();
+$_ENV['categories']['folder_document']['type_id'] = array (
     'type_form' => 'integer',
     'type_field' => 'integer',
     'mandatory' => true,
@@ -390,7 +390,7 @@ $_ENV['categories']['market_document']['type_id'] = array (
     'modify' => true,
     'form_show' => 'select'
 );
-$_ENV['categories']['market_document']['doc_date'] = array (
+$_ENV['categories']['folder_document']['doc_date'] = array (
     'type_form' => 'date',
     'type_field' => 'date',
     'mandatory' => true,
@@ -400,7 +400,7 @@ $_ENV['categories']['market_document']['doc_date'] = array (
     'modify' => true,
     'form_show' => 'date'
 );
-$_ENV['categories']['market_document']['subject'] = array (
+$_ENV['categories']['folder_document']['subject'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
     'mandatory' => true,
@@ -410,7 +410,7 @@ $_ENV['categories']['market_document']['subject'] = array (
     'modify' => true,
     'form_show' => 'textarea'
 );
-$_ENV['categories']['market_document']['author'] = array (
+$_ENV['categories']['folder_document']['author'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
     'mandatory' => true,
@@ -423,7 +423,7 @@ $_ENV['categories']['market_document']['author'] = array (
 
 /////////////////////////////POSTINDEXING DOCUMENT////////////////////////////////////////////////
 $_ENV['categories']['postindexing_document'] = array ();
-$_ENV['categories']['postindexing_document']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_market.gif';
+$_ENV['categories']['postindexing_document']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_postindexing.gif';
 $_ENV['categories']['postindexing_document']['other_cases'] = array ();
 $_ENV['categories']['postindexing_document']['type_id'] = array (
     'type_form' => 'integer',
@@ -507,7 +507,7 @@ $_ENV['categories']['postindexing_document']['other_cases']['contact'] = array (
 );
 /////////////////////////////EMPTY////////////////////////////////////////////////
 $_ENV['categories']['empty'] = array ();
-$_ENV['categories']['empty']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_market.gif';
+$_ENV['categories']['empty']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_folder.gif';
 $_ENV['categories']['empty']['other_cases'] = array ();
 $_ENV['categories']['empty']['type_id'] = array (
     'type_form' => 'integer',
@@ -659,8 +659,8 @@ if ($core->is_module_loaded('physical_archive')) {
         'modify' => false,
         'form_show' => 'select'
     );
-    // Physical Archive (market_document)
-    $_ENV['categories']['market_document']['other_cases']['arbox_id'] = array (
+    // Physical Archive (folder_document)
+    $_ENV['categories']['folder_document']['other_cases']['arbox_id'] = array (
         'type_form' => 'interger',
         'type_field' => 'integer',
         'mandatory' => false,
@@ -685,107 +685,57 @@ if ($core->is_module_loaded('physical_archive')) {
 
 if ($core->is_module_loaded('folder')) {
     //Folder (incoming)
-    $_ENV['categories']['incoming']['other_cases']['market'] = array (
+    $_ENV['categories']['incoming']['other_cases']['folder'] = array (
         'type_form' => 'string',
         'type_field' => 'string',
         'mandatory' => false,
-        'label' => _MARKET,
+        'label' => _FOLDER,
         'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=market.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    $_ENV['categories']['incoming']['other_cases']['project'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _PROJECT,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_folder.gif',
         'modify' => true,
         'form_show' => 'autocomplete'
     );
     //Folder (outgoing)
-    $_ENV['categories']['outgoing']['other_cases']['market'] = array (
+    $_ENV['categories']['outgoing']['other_cases']['folder'] = array (
         'type_form' => 'string',
         'type_field' => 'string',
         'mandatory' => false,
-        'label' => _MARKET,
+        'label' => _FOLDER,
         'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=market.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    $_ENV['categories']['outgoing']['other_cases']['project'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _PROJECT,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_folder.gif',
         'modify' => true,
         'form_show' => 'autocomplete'
     );
     //Folder (internal)
-    $_ENV['categories']['internal']['other_cases']['market'] = array (
+    $_ENV['categories']['internal']['other_cases']['folder'] = array (
         'type_form' => 'string',
         'type_field' => 'string',
         'mandatory' => false,
-        'label' => _MARKET,
+        'label' => _FOLDER,
         'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=market.gif',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_folder.gif',
         'modify' => true,
         'form_show' => 'autocomplete'
     );
-    $_ENV['categories']['internal']['other_cases']['project'] = array (
+    //Folder (folder_document)
+    $_ENV['categories']['folder_document']['other_cases']['folder'] = array (
         'type_form' => 'string',
         'type_field' => 'string',
         'mandatory' => false,
-        'label' => _PROJECT,
+        'label' => _FOLDER,
         'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    //Folder (market_document)
-    $_ENV['categories']['market_document']['other_cases']['market'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _MARKET,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=market.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    $_ENV['categories']['market_document']['other_cases']['project'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _PROJECT,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_folder.gif',
         'modify' => true,
         'form_show' => 'autocomplete'
     );
     //Folder (postindexing_document)
-    $_ENV['categories']['postindexing_document']['other_cases']['market'] = array (
+    $_ENV['categories']['postindexing_document']['other_cases']['folder'] = array (
         'type_form' => 'string',
         'type_field' => 'string',
         'mandatory' => false,
-        'label' => _MARKET,
+        'label' => _FOLDER,
         'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=market.gif',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    $_ENV['categories']['postindexing_document']['other_cases']['project'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _PROJECT,
-        'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_project.gif',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_folder.gif',
         'modify' => true,
         'form_show' => 'autocomplete'
     );
@@ -1006,92 +956,36 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
         }
 
     }
-    // Market
-    if (isset ($_ENV['categories'][$cat_id]['other_cases']['market']) && count($_ENV['categories'][$cat_id]['other_cases']['market']) > 0 && (!isset ($params['show_market']) || $params['show_market'] == true)) {
-        //echo 'market ';
+    // Folder
+    if (isset ($_ENV['categories'][$cat_id]['other_cases']['folder']) && count($_ENV['categories'][$cat_id]['other_cases']['folder']) > 0 && (!isset ($params['show_folder']) || $params['show_folder'] == true)) {
+        //echo 'folder';
         $fields .= 'folders_system_id,';
-        if ($mode == 'full' || $mode == 'form') {
-            if (isset($params['img_project']) && $params['img_project'] == true) {
-                $data['project'] = array (
-                    'value' => '',
-                    'show_value' => '',
-                    'label' => $_ENV['categories'][$cat_id]['other_cases']['project']['label'],
-                    'display' => 'textinput',
-                    'img' => $_ENV['categories'][$cat_id]['other_cases']['project']['img']
-                );
-            } else {
-                $data['project'] = array (
-                    'value' => '',
-                    'show_value' => '',
-                    'label' => $_ENV['categories'][$cat_id]['other_cases']['project']['label'],
-                    'display' => 'textinput'
-                );
-            }
-            if (isset($params['img_market']) && $params['img_market'] == true) {
-                $data['market'] = array (
-                    'value' => '',
-                    'show_value' => '',
-                    'label' => $_ENV['categories'][$cat_id]['other_cases']['market']['label'],
-                    'display' => 'textinput',
-                    'img' => $_ENV['categories'][$cat_id]['other_cases']['market']['img']
-                );
-            } else {
-                $data['market'] = array (
-                    'value' => '',
-                    'show_value' => '',
-                    'label' => $_ENV['categories'][$cat_id]['other_cases']['market']['label'],
-                    'display' => 'textinput'
-                );
-            }
-            $data['market']['readonly'] = true;
-            if ($mode == 'form' && $_ENV['categories'][$cat_id]['other_cases']['market']['modify']) {
-                $data['market']['field_type'] = $_ENV['categories'][$cat_id]['other_cases']['market']['form_show'];
-                $data['market']['readonly'] = false;
-            }
-            $data['project']['readonly'] = true;
-            if ($mode == 'form' && $_ENV['categories'][$cat_id]['other_cases']['project']['modify']) {
-                $data['project']['field_type'] = $_ENV['categories'][$cat_id]['other_cases']['project']['form_show'];
-                $data['project']['readonly'] = false;
-            }
-        } else {
-            $data['market'] = '';
-            $data['project'] = '';
-        }
-        array_push($arr, 'market');
-    }
-    // Project
-    if (isset ($_ENV['categories'][$cat_id]['other_cases']['project']) && count($_ENV['categories'][$cat_id]['other_cases']['project']) > 0 && (!isset ($params['show_project']) || $params['show_project'] == true)) {
-        //echo 'project';
-        if (!isset ($_ENV['categories'][$cat_id]['other_cases']['market']) || count($_ENV['categories'][$cat_id]['other_cases']['market']) == 0) {
 
-            $fields .= 'folders_system_id,';
-            //array_push($arr, 'project');
-        }
-        array_push($arr, 'project');
+        array_push($arr, 'folder');
         if ($mode == 'full' || $mode == 'form') {
-            if ($params['img_project'] == true) {
-                $data['project'] = array(
+            if ($params['img_folder'] == true) {
+                $data['folder'] = array(
                     'value' => '',
                     'show_value' => '',
-                    'label' => $_ENV['categories'][$cat_id]['other_cases']['project']['label'],
+                    'label' => $_ENV['categories'][$cat_id]['other_cases']['folder']['label'],
                     'display' => 'textinput',
-                    'img' => $_ENV['categories'][$cat_id]['other_cases']['project']['img']
+                    'img' => $_ENV['categories'][$cat_id]['other_cases']['folder']['img']
                 );
             } else {
-                $data['project'] = array(
+                $data['folder'] = array(
                     'value' => '',
                     'show_value' => '',
-                    'label' => $_ENV['categories'][$cat_id]['other_cases']['project']['label'],
+                    'label' => $_ENV['categories'][$cat_id]['other_cases']['folder']['label'],
                     'display' => 'textinput'
                 );
             }
-            $data['project']['readonly'] = true;
-            if ($mode == 'form' && $_ENV['categories'][$cat_id]['other_cases']['project']['modify']) {
-                $data['project']['field_type'] = $_ENV['categories'][$cat_id]['other_cases']['project']['form_show'];
-                $data['project']['readonly'] = false;
+            $data['folder']['readonly'] = true;
+            if ($mode == 'form' && $_ENV['categories'][$cat_id]['other_cases']['folder']['modify']) {
+                $data['folder']['field_type'] = $_ENV['categories'][$cat_id]['other_cases']['folder']['form_show'];
+                $data['folder']['readonly'] = false;
             }
         } else {
-            $data['project'] = '';
+            $data['folder'] = '';
         }
     }
     // Arboxes
@@ -1151,7 +1045,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             if (isset($line-> $arr[$i])) {
                 $data[$arr[$i]]['value'] = $line-> $arr[$i];
             }
-            if ($arr[$i] <> 'project') {
+            if ($arr[$i] <> 'folder') {
                 $data[$arr[$i]]['show_value'] = $db->show_string($data[$arr[$i]]['value']);
             }
             if (isset($_ENV['categories'][$cat_id][$arr[$i]]['type_field'])
@@ -1221,30 +1115,13 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     unset ($data[$arr[$i]]);
                 }
             }
-            // Folder : market
-            elseif ($arr[$i] == 'market' && isset ($line->folders_system_id) && !empty ($line->folders_system_id)) {
-                $db2->query('select folder_name, subject, folders_system_id, parent_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " . $line->folders_system_id . " and folder_level = 2");
+            // Folder
+            elseif ($arr[$i] == 'folder' && $line->folders_system_id <> '' && isset ($line->folders_system_id)) {
+                $db2->query('select folder_id, folder_name, subject, folders_system_id, parent_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'FOLDDEL' and folders_system_id = " . $line->folders_system_id);
 
                 if ($db2->nb_result() > 0) {
                     $res = $db2->fetch_object();
-                    $data['market']['show_value'] = $res->folder_name . ', ' . $res->subject . ' (' . $res->folders_system_id . ')';
-                    $folder_id = $res->parent_id;
-                    if (isset ($folder_id) && !empty ($folder_id)) {
-                        $db2->query('select folder_name, subject, folders_system_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " . $folder_id . " and folder_level = 1");
-                        //  $db2->show();
-                        $res = $db2->fetch_object();
-                        $data['project']['show_value'] = $res->folder_name . ', ' . $res->subject . ' (' . $res->folders_system_id . ')';
-                        //$db2->show_array($data['project']);
-                    }
-                }
-            }
-            // Folder : project
-            elseif ($arr[$i] == 'project' && $line->folders_system_id <> '' && isset ($line->folders_system_id) && empty ($data['market']['show_value'])) {
-                $db2->query('select folder_name, subject, folders_system_id, parent_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " . $line->folders_system_id . " and folder_level = 1");
-
-                if ($db2->nb_result() > 0) {
-                    $res = $db2->fetch_object();
-                    $data['project']['show_value'] = $res->folder_name . ', ' . $res->subject . ' (' . $res->folders_system_id . ')';
+                    $data['folder']['show_value'] = $res->folder_id . ', ' . $res->folder_name . ' (' . $res->folders_system_id . ')';
                 }
             }
         } else // 'mimimal' mode
@@ -1289,31 +1166,12 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                 }
                 unset ($data[$arr[$i]]);
             }
-            // Folder : market
-            elseif ($arr[$i] == 'market' && isset ($line->folders_system_id) && !empty ($line->folders_system_id)) {
-                $db2->query('select folder_name, subject, folders_system_id, parent_id, folder_level from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " . $line->folders_system_id . " ");
-                if ($db2->nb_result() > 0) {
-                    $res = $db2->fetch_object();
-                    if ($res->folder_level == 2) {
-                        $data['market'] = $res->folder_name . ', ' . $res->subject . ' (' . $res->folders_system_id . ')';
-                        $folder_id = $res->parent_id;
-                        if (isset ($folder_id) && !empty ($folder_id)) {
-                            $db2->query('select folder_name, subject, folders_system_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " . $folder_id . " and folder_level = 1");
-                            $res = $db2->fetch_object();
-                            $data['project'] = $res->folder_name . ', ' . $res->subject . ' (' . $res->folders_system_id . ')';
-                        }
-                    } else {
-                        $data['project'] = $res->folder_name . ', ' . $res->subject . ' (' . $res->folders_system_id . ')';
-                    }
-                }
-
-            }
-            // Folder : project
-            elseif ($arr[$i] == 'project' && $line->folders_system_id <> '' && isset ($line->folders_system_id) && empty ($data['market'])) {
-                $db2->query('select folder_name, subject, folders_system_id, parent_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " . $line->folders_system_id . " and folder_level = 1");
+            // Folder
+            elseif ($arr[$i] == 'folder' && $line->folders_system_id <> '' && isset ($line->folders_system_id)) {
+                $db2->query('select folder_id, folder_name, subject, folders_system_id, parent_id from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'FOLDDEL' and folders_system_id = " . $line->folders_system_id);
                 //$db2->show();
                 $res = $db2->fetch_object();
-                $data['project'] = $res->folder_name . ', ' . $res->subject . ' (' . $res->folders_system_id . ')';
+                $data['folder'] = $res->folder_id . ', ' . $res->folder_name . ' (' . $res->folders_system_id . ')';
             }
         }
     }

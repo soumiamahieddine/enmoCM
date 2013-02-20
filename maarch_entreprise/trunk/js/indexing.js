@@ -192,8 +192,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'exp_contact', type:'label', state:'display'},
         {id:'type_contact_internal', type:'radiobutton', state:'not_checked'},
         {id:'type_contact_external', type:'radiobutton', state:'checked'},
-        {id:'market_tr', type:'tr', state:'display'},
-        {id:'project_tr', type:'tr', state:'display'},
+        {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
         {id:'priority_mandatory', type:'label', state:'display'},
@@ -208,11 +207,10 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'arbox_id_mandatory', type:'label', state:'hide'},
         {id:'process_limit_date_use_mandatory', type:'label', state:'display'},
         {id:'process_limit_date_mandatory', type:'label', state:'display'},
-        {id:'market_mandatory', type:'label', state:'hide'},
         {id:'chrono_number', type:'label', state:'hide'},
         {id:'chrono_number_mandatory', type:'label', state:'hide'},
         {id:'chrono_number_tr', type:'tr', state:'hide'},
-        {id:'project_mandatory', type:'label', state:'hide'}
+        {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }
     //Category = OUTGOING
@@ -241,8 +239,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'exp_contact', type:'label', state:'hide'},
         {id:'type_contact_internal', type:'radiobutton', state:'not_checked'},
         {id:'type_contact_external', type:'radiobutton', state:'checked'},
-        {id:'market_tr', type:'tr', state:'display'},
-        {id:'project_tr', type:'tr', state:'display'},
+        {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
         {id:'priority_mandatory', type:'label', state:'display'},
@@ -257,11 +254,10 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'arbox_id_mandatory', type:'label', state:'hide'},
         {id:'process_limit_date_use_mandatory', type:'label', state:'display'},
         {id:'process_limit_date_mandatory', type:'label', state:'display'},
-        {id:'market_mandatory', type:'label', state:'hide'},
         {id:'chrono_number', type:'label', state:'display'},
         {id:'chrono_number_tr', type:'tr', state:'display'},
         {id:'chrono_number_mandatory', type:'label', state:'display'},
-        {id:'project_mandatory', type:'label', state:'hide'}
+        {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }
     //Category = INTERNAL
@@ -290,8 +286,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'exp_contact', type:'label', state:'display'},
         {id:'type_contact_internal', type:'radiobutton', state:'checked'},
         {id:'type_contact_external', type:'radiobutton', state:'not_checked'},
-        {id:'market_tr', type:'tr', state:'display'},
-        {id:'project_tr', type:'tr', state:'display'},
+        {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
         {id:'priority_mandatory', type:'label', state:'display'},
@@ -306,15 +301,14 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'arbox_id_mandatory', type:'label', state:'hide'},
         {id:'process_limit_date_use_mandatory', type:'label', state:'display'},
         {id:'process_limit_date_mandatory', type:'label', state:'display'},
-        {id:'market_mandatory', type:'label', state:'hide'},
         {id:'chrono_number', type:'label', state:'hide'},
         {id:'chrono_number_tr', type:'tr', state:'hide'},
         {id:'chrono_number_mandatory', type:'label', state:'hide'},
-        {id:'project_mandatory', type:'label', state:'hide'}
+        {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }
-    //Category = MARKET_DOCUMENT
-    else if(cat_id == 'market_document')
+    //Category = FOLDER_DOCUMENT
+    else if(cat_id == 'folder_document')
     {
         var category = [
         {id:'doctype_mail', type:'label', state:'hide'},
@@ -332,8 +326,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'box_id_tr', type:'tr', state:'display'},
         {id:'contact_choose_tr', type:'tr', state:'hide'},
         {id:'contact_id_tr', type:'tr', state:'hide'},
-        {id:'market_tr', type:'tr', state:'display'},
-        {id:'project_tr', type:'tr', state:'display'},
+        {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
         {id:'priority_mandatory', type:'label', state:'hide'},
@@ -348,11 +341,10 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'arbox_id_mandatory', type:'label', state:'hide'},
         {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
         {id:'process_limit_date_mandatory', type:'label', state:'hide'},
-        {id:'market_mandatory', type:'label', state:'hide'},
         {id:'chrono_number', type:'label', state:'hide'},
         {id:'chrono_number_tr', type:'tr', state:'hide'},
         {id:'chrono_number_mandatory', type:'label', state:'hide'},
-        {id:'project_mandatory', type:'label', state:'hide'}
+        {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }//Category = POSTINDEXING DOCUMENT
     else if(cat_id == 'postindexing_document')
@@ -383,8 +375,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'exp_contact', type:'label', state:'display'},
         {id:'type_contact_internal', type:'radiobutton', state:'not_checked'},
         {id:'type_contact_external', type:'radiobutton', state:'checked'},
-        {id:'market_tr', type:'tr', state:'display'},
-        {id:'project_tr', type:'tr', state:'display'},
+        {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
         {id:'priority_mandatory', type:'label', state:'display'},
@@ -400,11 +391,10 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'arbox_id_mandatory', type:'label', state:'hide'},
         {id:'process_limit_date_use_mandatory', type:'label', state:'display'},
         {id:'process_limit_date_mandatory', type:'label', state:'display'},
-        {id:'market_mandatory', type:'label', state:'hide'},
         {id:'chrono_number', type:'label', state:'hide'},
         {id:'chrono_number_mandatory', type:'label', state:'hide'},
         {id:'chrono_number_tr', type:'tr', state:'hide'},
-        {id:'project_mandatory', type:'label', state:'hide'}
+        {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }
     if(params_cat)
@@ -800,7 +790,6 @@ function init_validation(path_autocomplete_contact, display_value_tr, path_manag
     change_contact_type(path_autocomplete_contact, false);
     $('contact').onchange();
     //$('destination').onchange();
-    //$('market').onchange();
 }
 
 function clear_error(id_error)
