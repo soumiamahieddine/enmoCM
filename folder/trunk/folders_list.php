@@ -214,5 +214,5 @@ array_push($paramsTab['actionIcons'], $details);
 $status = 0;
 $content = $list->showList($tab, $paramsTab, $listKey, $_SESSION['current_basket']);
 // $debug = $list->debug();
-echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
+// echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
 ?>
