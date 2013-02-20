@@ -627,6 +627,17 @@ if (!defined('_SELL')) define('_SELL', 'Ventes');
 if (!defined('_ENTERPRISE_DOCUMENT')) define('_ENTERPRISE_DOCUMENT', 'Documents de l&rsquo;Entreprise');
 if (!defined('_HR')) define('_HR', 'Ressources humaines');
 
+//PURCHASE/SELL CATEGORY
+if (!defined('_SUPPLIER')) define('_SUPPLIER', 'Fournisseur');
+if (!defined('_CURRENCY')) define('_CURRENCY', 'Devise');
+if (!defined('_NET_SUM')) define('_NET_SUM', 'Montant HT');
+if (!defined('_TAX_SUM')) define('_TAX_SUM', 'Montant TVA');
+if (!defined('_TOTAL_SUM')) define('_TOTAL_SUM', 'Montant TTC');
+if (!defined('_PURCHASER')) define('_PURCHASER', 'Purchaser');
+
+//HR CATEGORY
+if (!defined('_EMPLOYEE')) define('_EMPLOYEE', 'Employ&eacute;');
+
 //INVOICE DOCTYPE
 if (!defined('_INVOICE_TYPE_ID')) define('_INVOICE_TYPE_ID', 'Type de facture');
 if (!defined('_VOUCHER_IDENTIFIER')) define('_VOUCHER_IDENTIFIER', 'N&deg; de pi&eagrave;ce comptable');

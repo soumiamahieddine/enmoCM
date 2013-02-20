@@ -1119,6 +1119,17 @@ if (!defined('_SELL')) define('_SELL', 'Sales');
 if (!defined('_ENTERPRISE_DOCUMENT')) define('_ENTERPRISE_DOCUMENT', 'Enterprise documents');
 if (!defined('_HR')) define('_HR', 'human Resources');
 
+//PURCHASE/SELL CATEGORY
+if (!defined('_SUPPLIER')) define('_SUPPLIER', 'Supplier');
+if (!defined('_CURRENCY')) define('_CURRENCY', 'Currency');
+if (!defined('_NET_SUM')) define('_NET_SUM', 'Net sum');
+if (!defined('_TAX_SUM')) define('_TAX_SUM', 'Tax sum');
+if (!defined('_TOTAL_SUM')) define('_TOTAL_SUM', 'Total sum');
+if (!defined('_PURCHASER')) define('_PURCHASER', 'Purchaser');
+
+//HR CATEGORY
+if (!defined('_EMPLOYEE')) define('_EMPLOYEE', 'Employee');
+
 //INVOICE DOCTYPE
 if (!defined('_INVOICE_TYPE_ID')) define('_INVOICE_TYPE_ID', 'Invoice Type');
 if (!defined('_VOUCHER_IDENTIFIER')) define('_VOUCHER_IDENTIFIER', 'Voucher ID');
