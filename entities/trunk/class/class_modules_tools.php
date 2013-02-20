@@ -144,21 +144,7 @@ class entities extends dbquery
 	            );
             }
         }
-        
-        // 1.4 : listinstance custom lists
-        $this->query('select * from ' . ENT_LISTINSTANCE_ROLES);
-        while ($role = $this->fetch_object()) { 
-            if ($role->allow_entities == 'Y') $ent = true;
-            else $ent = false;
-            $_SESSION['listinstance_roles'][(string) $role->role_id] = 
-                array(
-                    'list_label' => (string) $role->list_label,
-                    'role_label' => (string) $role->role_label,
-                    'list_img' => (string) $role->list_img,
-                    'allow_entities' => $ent
-                );
-        }
-        
+
     }
 
     public function process_where_clause($whereClause, $userId)

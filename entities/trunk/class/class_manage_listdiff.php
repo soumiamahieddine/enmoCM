@@ -955,5 +955,28 @@ class diffusion_list extends dbquery
             );
         }
     }
+    
+    #  Get list of available roles for list models and diffusion lists definition
+    public function get_listinstance_roles()
+    {
+        $this->connect();
+        $this->query('select * from ' . ENT_LISTINSTANCE_ROLES);
+        
+        $roles = array();
+        
+        while ($role = $this->fetch_object()) { 
+            if ($role->allow_entities == 'Y') $ent = true;
+            else $ent = false;
+            $roles[(string) $role->role_id] = 
+                array(
+                    'list_label' => (string) $role->list_label,
+                    'role_label' => (string) $role->role_label,
+                    'list_img' => (string) $role->list_img,
+                    'allow_entities' => $ent
+                );
+        }
+        return $roles;
+    }
 
+    
 }
