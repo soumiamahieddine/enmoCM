@@ -48,22 +48,22 @@ while($line = $db->fetch_object())
     $num_args = count($args);
     if($num_args == 0) return "<ul></ul>"; 
        
-    $query = "SELECT result, SUM(confidence) AS score, count(1) as num FROM (";
+    $query = "SELECT result, SUM(confidence) AS score, count(1) AS num FROM (";
     
     $subQuery = 
         "SELECT "
-            . "(CASE is_corporate_person"
-                . " WHEN 'Y' THEN society"
-                . " WHEN 'N' THEN UPPER(lastname) || ' ' || firstname "
+            . "(CASE "
+                . " WHEN is_corporate_person = 'Y' THEN society"
+                . " WHEN is_corporate_person = 'N' THEN UPPER(lastname) || ' ' || firstname "
             . " END) || ' (contact:' || contact_id || ')' AS result, "
-            . ' %d as confidence'
+            . ' %d AS confidence'
         . " FROM contacts"
         . " WHERE (user_id = '' OR user_id IS NULL OR user_id = '".$db->protect_string_db($_SESSION['user']['UserId'])."' ) "
             . " AND enabled = 'Y' "
             . " AND ("
                 . " LOWER(lastname) LIKE LOWER('%s')"
-                . " or LOWER(firstname) LIKE LOWER('%s')"
-                . " or LOWER(society) LIKE LOWER('%s')"
+                . " OR LOWER(firstname) LIKE LOWER('%s')"
+                . " OR LOWER(society) LIKE LOWER('%s')"
             .")";
     
     $queryParts = array();
@@ -85,7 +85,7 @@ while($line = $db->fetch_object())
         $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr); 
     }
     $query .= implode (' UNION ALL ', $queryParts);
-    $query .= ") as matches" 
+    $query .= ") matches" 
         . " GROUP BY result "
         . " ORDER BY score DESC, result ASC";
     
