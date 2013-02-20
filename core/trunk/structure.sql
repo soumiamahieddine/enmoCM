@@ -2184,9 +2184,11 @@ CREATE VIEW res_view_letterbox AS
     cont.firstname AS contact_firstname, cont.lastname AS contact_lastname,
     cont.society AS contact_society, u.lastname AS user_lastname,
     u.firstname AS user_firstname, list.item_id AS dest_user_from_listinstance,
-    r.is_frozen as res_is_frozen
+    r.is_frozen as res_is_frozen, COALESCE(att.count_attachment, 0::bigint) AS count_attachment 
     FROM doctypes d, doctypes_first_level dfl, doctypes_second_level dsl,
-    ((((((((((ar_batch a RIGHT JOIN res_letterbox r ON ((r.arbatch_id = a.arbatch_id)))
+    (((((((((((ar_batch a RIGHT JOIN res_letterbox r ON ((r.arbatch_id = a.arbatch_id)))
+    LEFT JOIN (SELECT res_attachments.res_id_master, count(res_attachments.res_id_master) AS count_attachment
+        FROM res_attachments GROUP BY res_attachments.res_id_master) att ON (r.res_id = att.res_id_master))
     LEFT JOIN entities en ON (((r.destination)::text = (en.entity_id)::text)))
     LEFT JOIN folders f ON ((r.folders_system_id = f.folders_system_id)))
     LEFT JOIN cases_res cr ON ((r.res_id = cr.res_id)))
@@ -2203,7 +2205,6 @@ CREATE VIEW res_view_letterbox AS
     WHERE (((r.type_id = d.type_id) AND
     (d.doctypes_first_level_id = dfl.doctypes_first_level_id))
     AND (d.doctypes_second_level_id = dsl.doctypes_second_level_id));
-
 
 
 CREATE OR REPLACE VIEW res_view_apa AS
@@ -2249,14 +2250,17 @@ CREATE OR REPLACE VIEW af_view_customer_target_view AS
  SELECT af.level1, af.level1_id, af.level1 as level1_label, af.level2, af.level2_id, af.level2 as level2_label, af.level3, af.level3_id, af.level3 as level3_label
    FROM af_view_customer_target af ;
 
--- Views for postindexing
- CREATE OR REPLACE VIEW view_folders AS
- SELECT folders.folders_system_id, folders.folder_id, folders.foldertype_id, foldertypes.foldertype_label, (folders.folder_id::text || ' - '::text) || folders.folder_name::text AS folder_full_label, folders.parent_id, folders.folder_name, folders.subject, folders.description, folders.author, folders.typist, folders.status, folders.folder_level, folders.creation_date, folders.folder_out_id, folders.custom_t1, folders.custom_n1, folders.custom_f1, folders.custom_d1, folders.custom_t2, folders.custom_n2, folders.custom_f2, folders.custom_d2, folders.custom_t3, folders.custom_n3, folders.custom_f3, folders.custom_d3, folders.custom_t4, folders.custom_n4, folders.custom_f4, folders.custom_d4, folders.custom_t5, folders.custom_n5, folders.custom_f5, folders.custom_d5, folders.custom_t6, folders.custom_d6, folders.custom_t7, folders.custom_d7, folders.custom_t8, folders.custom_d8, folders.custom_t9, folders.custom_d9, folders.custom_t10, folders.custom_d10, folders.custom_t11, folders.custom_d11, folders.custom_t12, folders.custom_d12, folders.custom_t13, folders.custom_d13, folders.custom_t14, folders.custom_d14, folders.custom_t15, folders.is_complete, folders.is_folder_out, folders.last_modified_date, count(res_view_letterbox.folders_system_id) AS count_document, folders.video_status
+-- View folders
+DROP VIEW IF EXISTS view_folders;
+CREATE OR REPLACE VIEW view_folders AS 
+ SELECT folders.folders_system_id, folders.folder_id, folders.foldertype_id, foldertypes.foldertype_label, (folders.folder_id::text || ':'::text) || folders.folder_name::text AS folder_full_label, folders.parent_id, folders.folder_name, folders.subject, folders.description, folders.author, folders.typist, folders.status, folders.folder_level, folders.creation_date, folders.destination, folders.dest_user, folders.folder_out_id, folders.custom_t1, folders.custom_n1, folders.custom_f1, folders.custom_d1, folders.custom_t2, folders.custom_n2, folders.custom_f2, folders.custom_d2, folders.custom_t3, folders.custom_n3, folders.custom_f3, folders.custom_d3, folders.custom_t4, folders.custom_n4, folders.custom_f4, folders.custom_d4, folders.custom_t5, folders.custom_n5, folders.custom_f5, folders.custom_d5, folders.custom_t6, folders.custom_d6, folders.custom_t7, folders.custom_d7, folders.custom_t8, folders.custom_d8, folders.custom_t9, folders.custom_d9, folders.custom_t10, folders.custom_d10, folders.custom_t11, folders.custom_d11, folders.custom_t12, folders.custom_d12, folders.custom_t13, folders.custom_d13, folders.custom_t14, folders.custom_d14, folders.custom_t15, folders.is_complete, folders.is_folder_out, folders.last_modified_date, folders.video_status, COALESCE(r.count_document, 0::bigint) AS count_document
    FROM foldertypes, folders
-   LEFT JOIN res_view_letterbox ON res_view_letterbox.folders_system_id = folders.folders_system_id
-  WHERE folders.foldertype_id = foldertypes.foldertype_id
-  GROUP BY folders.folders_system_id, folders.folder_id, folders.foldertype_id, foldertypes.foldertype_label, folder_full_label, folders.parent_id, folders.folder_name, folders.subject, folders.description, folders.author, folders.typist, folders.status, folders.folder_level, folders.creation_date, folders.folder_out_id, folders.custom_t1, folders.custom_n1, folders.custom_f1, folders.custom_d1, folders.custom_t2, folders.custom_n2, folders.custom_f2, folders.custom_d2, folders.custom_t3, folders.custom_n3, folders.custom_f3, folders.custom_d3, folders.custom_t4, folders.custom_n4, folders.custom_f4, folders.custom_d4, folders.custom_t5, folders.custom_n5, folders.custom_f5, folders.custom_d5, folders.custom_t6, folders.custom_d6, folders.custom_t7, folders.custom_d7, folders.custom_t8, folders.custom_d8, folders.custom_t9, folders.custom_d9, folders.custom_t10, folders.custom_d10, folders.custom_t11, folders.custom_d11, folders.custom_t12, folders.custom_d12, folders.custom_t13, folders.custom_d13, folders.custom_t14, folders.custom_d14, folders.custom_t15, folders.is_complete, folders.is_folder_out, folders.last_modified_date, folders.video_status;
-
+   LEFT JOIN ( SELECT res_letterbox.folders_system_id, count(res_letterbox.folders_system_id) AS count_document
+           FROM res_letterbox
+          GROUP BY res_letterbox.folders_system_id) r ON r.folders_system_id = folders.folders_system_id
+  WHERE folders.foldertype_id = foldertypes.foldertype_id;
+  
+-- View for postindexing
   CREATE OR REPLACE VIEW view_postindexing AS
  SELECT res_view_letterbox.video_user, (users.firstname::text || ' '::text) || users.lastname::text AS user_name, res_view_letterbox.video_batch, res_view_letterbox.video_time, count(res_view_letterbox.res_id) AS count_documents, res_view_letterbox.folders_system_id, (folders.folder_id::text || ' / '::text) || folders.folder_name::text AS folder_full_label, folders.video_status
    FROM res_view_letterbox
