@@ -265,6 +265,8 @@ if (!defined('_MAX'))
     define('_MAX', 'maximum');
 if (!defined('_MIN'))
     define('_MIN', 'minimum');
+if (!defined('_FOLDER_OR_SUBFOLDER'))
+    define('_FOLDER_OR_SUBFOLDER', 'Folder/Sub-folder');
 if (!defined('_ERROR_COMPATIBILITY_FOLDER'))
     define('_ERROR_COMPATIBILITY_FOLDER', 'These folder and document type are not vompatible');
 if (!defined('_ADDED_TO_FOLDER'))

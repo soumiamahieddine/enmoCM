@@ -266,6 +266,8 @@ if (!defined('_MAX'))
     define('_MAX', 'maximum');
 if (!defined('_MIN'))
     define('_MIN', 'minimum');
+if (!defined('_FOLDER_OR_SUBFOLDER'))
+    define('_FOLDER_OR_SUBFOLDER', 'Dossier/Sous-dossier');
 if (!defined('_ERROR_COMPATIBILITY_FOLDER'))
     define('_ERROR_COMPATIBILITY_FOLDER', 'Probl&egrave;me de compatibilit&eacute; entre<br/>le dossier et le type de document');
 if (!defined('_ADDED_TO_FOLDER'))
@@ -280,8 +282,6 @@ if (!defined('_FOLDER_PARENT_DESC'))
     define('_FOLDER_PARENT_DESC', 'Vous pouvez choisir de cr&eacute;er un sous-dossier en le rattachant &agrave; un dossier du m&ecirc;me type. Il y a seulement 2 niveaux : dossier et sous-dossier.');
 if (!defined('_THIS_FOLDER'))
     define('_THIS_FOLDER', 'ce dossier');
-if (!defined('_LABEL'))
-    define('_LABEL', 'Libelle');
 if (!defined('_ALL_FOLDERS'))
     define('_ALL_FOLDERS', 'Tous les dossiers');
 if (!defined('_FOLDER_DELETED'))

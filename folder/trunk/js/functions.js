@@ -1,83 +1,9 @@
-/** Declaration of the autocompleter object used for the folders*/
-var project_autocompleter;
-var market_autocompleter;
-
-/**
- * Launch the Ajax autocomplete object to activate autocompletion on folders (market or project)
- *
- * @param path_script String Path to the Ajax script
- * @param mode String Mode : market or project
- **/
-function launch_autocompleter_folders(path_script, mode)
-{
-	if(mode == 'market')
-	{
-		var input =  'market';
-		var div  =  'show_market';
-	}
-	else if(mode == 'project')
-	{
-		var input =  'project';
-		var div  =  'show_project';
-	}
-	else
-	{
-		if(console)
-		{
-			console.log('Error launch_autocompleter_folder');
-		}
-	}
-	// If the object already exists, we delete it to avoid conflict
-	try
-	{
-		if(mode == 'market')
-		{
-			delete market_autocompleter;
-		}
-		else if(mode == 'project')
-		{
-			delete project_autocompleter;
-		}
-	}
-	catch(e){ }
-
-	if( path_script)
-	{
-		// Ajax autocompleter object creation
-		if(mode == 'market')
-		{
-			market_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
-			 method:'get',
-			 paramName:'Input',
-			 parameters: 'mode=market',
-			 minChars: 2
-			 });
-		}
-		else if(mode == 'project')
-		{
-			project_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
-			 method:'get',
-			 paramName:'Input',
-			 parameters: 'mode=project',
-			 minChars: 2
-			 });
-		}
-	}
-	else
-	{
-		if(console)
-		{
-			console.log('error parameters launch_autocompleter_folder function');
-		}
-	}
-}
-
 /**
  * Fill the Folder field in indexing page (basing on the subfolder field value)
  *
  * @param path_to_script String Path to the Ajax script
  **/
-function fill_project(path_to_script)
+function fill_folder(path_to_script)
 {
 	var subfolder_value = $('subfolder').value;
 	var subfolder_id = subfolder_value.substring(subfolder_value.indexOf('(')+1, subfolder_value.indexOf(')'));
@@ -112,7 +38,7 @@ function fill_project(path_to_script)
 	{
 		if(console)
 		{
-			console.log('Error fill_project ');
+			console.log('Error fill_folder ');
 		}
 	}
 }
