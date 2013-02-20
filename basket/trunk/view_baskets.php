@@ -281,7 +281,23 @@ if (isset($_SESSION['current_basket']['page_include'])
     && ! empty($_SESSION['current_basket']['page_include'])
 ) {
     //$bask->show_array($_SESSION['current_basket']);
-    include($_SESSION['current_basket']['page_include']);
+    // include($_SESSION['current_basket']['page_include']);
+    $redirect_to_action = $bask->is_redirect_to_action_basket(
+        $_SESSION['current_basket']['id'],  
+        $_SESSION['user']['primarygroup'] 
+    );
+    
+    if ($redirect_to_action) {
+        // Redirect to action
+        include($_SESSION['current_basket']['page_include']);
+    } else {
+        //show list
+        require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
+                ."class".DIRECTORY_SEPARATOR."class_lists.php";
+        $list = new lists();
+        $listContent = $list->loadList($_SESSION['current_basket']['page_no_frame']);
+        echo $listContent;
+    }
 } else {
     if (count($_SESSION['user']['baskets']) > 0) {
         $core->execute_modules_services(

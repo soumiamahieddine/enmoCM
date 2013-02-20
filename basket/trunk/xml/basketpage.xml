@@ -1,26 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
-    <!-- <BASKETPAGE>
-        <ID>invoices_list</ID>
-        <LABEL>_INVOICE_LIST_TO_VAL</LABEL>
-        <NAME>invoices_list</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>basket</MODULE>
-    </BASKETPAGE>-->
-    <BASKETPAGE>
-        <ID>postindexing_documents_list</ID>
-        <LABEL>_POSTINDEXING_LIST</LABEL>
-        <NAME>postindexing_documents_list</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>postindexing</MODULE>
-    </BASKETPAGE>
-    <BASKETPAGE>
-        <ID>documents_list</ID>
-        <LABEL>_DOCUMENTS_LIST</LABEL>
-        <NAME>documents_list</NAME>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-    </BASKETPAGE>
     <BASKETPAGE>
         <ID>redirect_to_action</ID>
         <LABEL>_REDIRECT_TO_ACTION</LABEL>
@@ -29,11 +8,25 @@
         <MODULE></MODULE>
     </BASKETPAGE>
     <BASKETPAGE>
-        <ID>apa_basket_list</ID>
-        <LABEL>_ARCHIVE_LIST</LABEL>
-        <NAME>apa_basket_list</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>advanced_physical_archive</MODULE>
+        <ID>list</ID>
+        <LABEL>_DOCUMENTS_LIST</LABEL>
+        <NAME>documents_list</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+    </BASKETPAGE>
+    <BASKETPAGE>
+        <ID>list_extend</ID>
+        <LABEL>_DOCUMENTS_LIST_EXTEND</LABEL>
+        <NAME>documents_list_extend</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+    </BASKETPAGE>
+    <BASKETPAGE>
+        <ID>list_with_filters</ID>
+        <LABEL>_DOCUMENTS_LIST_WITH_FILTERS</LABEL>
+        <NAME>documents_list_with_filters</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
     </BASKETPAGE>
     <BASKETPAGE>
         <ID>list_with_attachments</ID>
@@ -43,11 +36,18 @@
         <MODULE></MODULE>
     </BASKETPAGE>
     <BASKETPAGE>
-        <ID>count_list</ID>
-        <LABEL>_COUNT_LIST</LABEL>
-        <NAME>count_list</NAME>
+        <ID>list_copies</ID>
+        <LABEL>_DOCUMENTS_LIST_COPIES</LABEL>
+        <NAME>documents_list_copies</NAME>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
+    </BASKETPAGE>
+	<BASKETPAGE>
+		<ID>list_cases</ID>
+		<LABEL>_CASES_LIST</LABEL>
+		<NAME>cases_list</NAME>
+		<ORIGIN>module</ORIGIN>
+		<MODULE>cases</MODULE>
     </BASKETPAGE>
     <BASKETPAGE>
         <ID>io_basket_list</ID>
