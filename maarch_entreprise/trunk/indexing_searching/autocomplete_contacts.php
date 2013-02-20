@@ -133,5 +133,4 @@ elseif($table == 'contacts')
     echo "</ul>";
     if($nb > $m)
         echo "<p align='left' style='background-color:LemonChiffon;' title=\"La liste n'a pas pu être affichée intégralement, veuillez compléter votre recherche.\" >...</p>";
-    echo $query;
 }
