@@ -1388,6 +1388,7 @@ if (!defined('_DOCUMENTS_LIST_SEARCH'))             define('_DOCUMENTS_LIST_SEAR
 if (!defined('_CLICK_ICON_TO_TOGGLE'))              define('_CLICK_ICON_TO_TOGGLE', 'Cliquez sur l&quot;icone pour Afficher / Masquer');
 if (!defined('_SHOW'))                              define('_SHOW', 'Afficher');
 if (!defined('_LINES'))                             define('_LINES', ' lignes');
+if (!defined('_NO_TEMPLATE_FILE_AVAILABLE'))        define('_NO_TEMPLATE_FILE_AVAILABLE', 'Template non disponible');
 
 //EMAIL INDEXES
 if (!defined('_EMAIL_FROM_ADDRESS')) define('_EMAIL_FROM_ADDRESS', 'Email de');

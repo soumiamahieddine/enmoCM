@@ -1,0 +1,146 @@
+<!--
+
+* basket_list and search_adv_list template
+*
+*
+* @package  Maarch LetterBox 3.0
+* @version 3.0
+* @since 10/2005
+* @license GPL
+* @author  Loïc Vinet  <dev@maarch.org>
+*
+
+
+
+
+Parts :
+    ##HEAD< : Begining of the head part
+    ##HEAD> : End of the head part
+
+    ##RESULT< : Begining of result list
+    ##RESULT> : End fo result list
+
+Functions :
+
+
+    ##cssLine|arg1|arg2##                   : load css style for line. arg1,arg2 : switch beetwin style on line one or line two
+    ##cssLineReload##                       : reload last css style loaded by cssLine
+    ##sortColumn|arg##                      : sort list. arg = sort;
+    ##defineLang|arg##                      : show label. arg = constant define in lang.php;
+    ##loadImage|arg1|arg2##                 : show loaded image; arg1= name of img file, arg2 = name of the module (if image in module)
+    ##loadValue|arg##                       : load value in the db; arg= column's value  identifier
+    ##showActionIcon|arg1|arg2|arg3|arg4##  : action icon. arg1 = label, arg2  = image , arg3 = action (javascript), arg4 = disabled rule
+    ##includeFile|arg1|arg2##               : include file. arg1 = name of the file, arg2  = name of the module (if file in module)
+    ##setListParameter|arg1|arg2##          : set parameter's value for actual list. arg1 = name of parameter, arg2  = new value
+    ##getListParameter|arg##                : get parameter's value for actual list. arg1 = name of parameter
+    ##ifStatement|arg1|arg2|arg3##          : allow conditional execution. arg1=condition, arg2= statement 1, arg3 = statement 2
+    ##isModuleLoaded|arg##                  : test if module is loaded. arg = module id
+
+Mods 
+
+
+    ##radioButton##         : display radio
+    ##checkBox##            : display checkbox
+    ##checkUncheckAll##     : display checkbox for check/uncheck All
+    ##clickOnLine##         : action on click under the line
+    ##showIconDocument##    : view document icon
+    ##showIconDetails##     : view detail's page icon
+    ##getBusinessAppUrl##   : get business app url
+		
+ 		
+		
+ 		 
+-->
+
+
+#!#TABLE
+<!-- ------------------------------------------------------------------------->
+    <table border="0" cellspacing="0" class="listing spec  zero_padding" id="extended_list" style ="padding: 0px;">
+
+#!#HEAD
+<!-- ------------------------------------------------------------------------->
+        <thead border ="1">
+            <tr>
+                <th width="100%" colspan="2">
+                    <div align="center" style="border:1px solid; height:20px;margin-bottom:10px;padding-top:10px;vertical-align:middle;font-size:8px;">
+                        ##checkUncheckAll##&nbsp;
+                        ##defineLang|_SORT_BY## :
+						##defineLang|_NUM_GED##            ##sortColumn|res_id##&nbsp;
+						##defineLang|_TYPE##               ##sortColumn|type_label##&nbsp;
+						##defineLang|_SUBJECT##            ##sortColumn|subject##&nbsp;
+						##defineLang|_DEST_USER##          ##sortColumn|dest_user##&nbsp;
+						##defineLang|_REG_DATE##           ##sortColumn|creation_date##&nbsp;
+						##defineLang|_PROCESS_LIMIT_DATE## ##sortColumn|process_limit_date##&nbsp;
+						##defineLang|_ENTITY##             ##sortColumn|entity_label##&nbsp;
+						##defineLang|_CATEGORY##           ##sortColumn|category_id##&nbsp;
+						##defineLang|_VIEWED##             ##sortColumn|viewed##
+                        ##ifStatement|#isModuleLoaded|cases#===true|&nbsp;#defineLang|_CASE# #sortColumn|case_label#| ##
+                    </div>
+                </th>
+            </tr>
+        </thead>
+
+        <tbody>
+        
+#!#RESULT
+<!-- ------------------------------------------------------------------------->
+                <tr  class="##cssLine|col|white##" >
+
+                    <td width="10%" ##clickOnLine##>
+                        <div align="center">##loadValue|status## </div>
+                    </td>
+                    <td width="90%" align="center" style="padding : 0px; vertical-align:top" ##clickOnLine##>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                                <tr>
+                                    <td width="65%"   style="font-size:12px;"><b></b><em>##loadValue|subject##</em> </td>
+                                    <td width="35%">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td width="50%" style="text-align:right">##defineLang|_CONTACT## :</td><td style="text-align:right">##loadValue|exp_user_id##</td>
+                                            </tr>
+
+                                            <tr><td ##clickOnLine##> </td><td ##clickOnLine##></td></tr>
+                                            <tr>
+                                                <td style="text-align:right; vertical-align:top">##defineLang|_ENTITY## :</td><td style="text-align:right">##loadValue|entity_label##</td>
+                                            </tr>
+                                            ##ifStatement|#isModuleLoaded|cases#===true|<tr><td style="text-align:right"><b>#defineLang|_CASE# :</b></td><td  style="text-align:right"><b>#loadValue|case_label#</b></td></tr>| ##
+                                        </table>
+                                    </td>
+                                </tr>
+                        </table>
+                    </td>
+                    
+                </tr>
+                <tr class="##cssLineReload##">
+                
+                    <td style="text-align:center" style="font-size:13px;" ##clickOnLine##>##checkBox##<b>##loadValue|res_id##</b></td>
+                    
+                    <td style="text-align:center">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                                <tr>
+                                    <td style="font-size:10px;">##loadValue|priority##</td>
+                                    <td style="font-size:10px;" width ="30px" alt="##defineLang|_CATEGORY##" title="##defineLang|_CATEGORY##" ##clickOnLine##>##loadValue|category_img##</td>
+                                    <td style="font-size:10px;" width ="150px" >##loadValue|category_id##</td>
+                                    <td style="font-size:10px;" width ="30px" alt="##defineLang|_CREATION_DATE##" title="##defineLang|_CREATION_DATE##" ##clickOnLine##><img src="##loadImage|date_arriv.gif##"> </td>
+                                    <td style="font-size:10px;" width ="100px" >##loadValue|creation_date##</td>
+                                    <td style="font-size:10px;" width ="30px" alt="##defineLang|_PROCESS_LIMIT_DATE##" title="##defineLang|_PROCESS_LIMIT_DATE##" ##clickOnLine##><img src="##loadImage|date_limit.gif##"> </td>
+                                    <td style="font-size:10px;" width ="100px" >##loadValue|process_limit_date##</td>
+                                    <td style="font-size:10px;text-align:right" width ="30px" alt="##defineLang|_DEST_USER##" title="##defineLang|_DEST_USER##" ##clickOnLine##><img src="##loadImage|manage_users_entities_b_small.gif##"></td>
+                                    <td style="font-size:10px;" width ="110px" > ##loadValue|dest_user##</td>
+                                    <td style="font-size:10px;text-align:right" width ="30px" alt="##defineLang|_TYPE##" title="##defineLang|_TYPE##" ##clickOnLine##><img src="##loadImage|mini_type.gif##">
+                                    <td style="font-size:10px;text-align:left" ##clickOnLine##>##loadValue|type_label##</td>
+                                    <td width ="30px"><img src="##ifStatement|#loadValue|is_persistent#==true|#loadImage|persistentLock.gif#|#loadImage|persistentUnlock.gif#|##" width="27" height="27"></td>
+                                    <td style="font-size:10px;" width ="30px">##showIconDetails## ##loadValue|viewed##</td>
+                               </tr>                         
+                        </table>
+                    </td>
+                    
+                </tr>
+                
+                <tr><td colspan="2" style="background-color: white;" ##clickOnLine##></td></tr>
+
+ #!#FOOTER
+ <!--   ------------------------------------------------------------------------->
+        </tbody>
+    </table>
+

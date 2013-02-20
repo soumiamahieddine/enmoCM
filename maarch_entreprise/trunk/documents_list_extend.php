@@ -35,7 +35,7 @@ require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
 require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php";
 require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
             ."class".DIRECTORY_SEPARATOR."class_lists.php";
-            
+
 $status_obj = new manage_status();
 $security   = new security();
 $core_tools = new core_tools();
@@ -96,12 +96,8 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];//Col
         $orderstr = "order by creation_date desc";
     }
 
-//Request
-    $tab=$request->select($select, $where, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
-    // $request->show();
-
 //Templates
-    $defaultTemplate = 'documents_list_with_attachments';
+    $defaultTemplate = 'documents_list_extend';
     $selectedTemplate = $list->getTemplate();
     if  (empty($selectedTemplate)) {
         if (!empty($defaultTemplate)) {
@@ -110,11 +106,15 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];//Col
         }
     }
     $template_list = array();
-    array_push($template_list, 'documents_list_with_attachments');
+    array_push($template_list, 'documents_list_extend');
     
     //For status icon
     $extension_icon = '';
     if($selectedTemplate <> 'none') $extension_icon = "_big"; 
+    
+//Request
+    $tab=$request->select($select, $where, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
+    // $request->show();
 
 //Result Array
     for ($i=0;$i<count($tab);$i++)
@@ -353,14 +353,14 @@ $paramsTab['bool_sortColumn'] = true;                                           
 $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
 $paramsTab['bool_showIconDocument'] = true;                                         //Affichage de l'icone du document
 $paramsTab['bool_showIconDetails'] = true;                                          //Affichage de l'icone de la page de details
+$paramsTab['bool_showAttachment'] = true;                                           //Affichage du nombre de document attaché (mode étendu)
 $paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id'];         //Parametres d'url supplementaires
-$paramsTab['filters'] = array('entity', 'category', 'contact');                     //Filtres    
-if (count($template_list) > 0 ) {                                                   //Templates
+if (count($template_list) >0 ) {                                                    //Templates
     $paramsTab['templates'] = array();
     $paramsTab['templates'] = $template_list;
 }
-$paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
 $paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
+$paramsTab['bool_showTemplateDefaultList'] = true;                                          //Default list (no template)
 $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
 $export = array(
         "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
@@ -373,6 +373,6 @@ array_push($paramsTab['tools'],$export);
 //Afficher la liste
 $status = 0;
 $content = $list->showList($tab, $paramsTab, $listKey, $_SESSION['current_basket']);
-// $debug = $list->debug(false);
-echo "{'status' : " . $status . ", 'content' : '" . addslashes($debug.$content) . "', 'error' : '" . addslashes($error) . "'}";
+// $debug = $list->debug();
+echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
 ?>

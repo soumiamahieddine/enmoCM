@@ -101,7 +101,7 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];//Col
     // $request->show();
 
 //Templates
-    $defaultTemplate = 'documents_list_with_attachments';
+    $defaultTemplate = 'none';
     $selectedTemplate = $list->getTemplate();
     if  (empty($selectedTemplate)) {
         if (!empty($defaultTemplate)) {
@@ -110,12 +110,21 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];//Col
         }
     }
     $template_list = array();
-    array_push($template_list, 'documents_list_with_attachments');
-    
+    array_push($template_list, 'documents_list_extend');
+    if($core_tools->is_module_loaded('cases')) array_push($template_list, 'cases_list');
+        
     //For status icon
     $extension_icon = '';
     if($selectedTemplate <> 'none') $extension_icon = "_big"; 
-
+    
+//URL extra Parameters  
+    $parameters = '';
+    $start = $list->getStart();
+    if (!empty($order_field) && !empty($order)) $parameters .= '&order='.$order.'&order_field='.$order_field;
+    if (!empty($what)) $parameters .= '&what='.$what;
+    if (!empty($selectedTemplate)) $parameters .= '&template='.$selectedTemplate;
+    if (!empty($start)) $parameters .= '&start='.$start;
+    
 //Result Array
     for ($i=0;$i<count($tab);$i++)
     {
@@ -283,7 +292,7 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];//Col
                 {
                     $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
                     $statusCmp = $tab[$i][$j]['value'];
-                    $tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
+                    // $tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
                     $tab[$i][$j]["label"]=_STATUS;
                     $tab[$i][$j]["size"]="4";
                     $tab[$i][$j]["label_align"]="left";
@@ -351,28 +360,50 @@ $paramsTab = array();
 $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_DOCS;              //Titre de la page
 $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
 $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
-$paramsTab['bool_showIconDocument'] = true;                                         //Affichage de l'icone du document
+// $paramsTab['bool_showIconDocument'] = true;                                         //Affichage de l'icone du document
 $paramsTab['bool_showIconDetails'] = true;                                          //Affichage de l'icone de la page de details
 $paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id'];         //Parametres d'url supplementaires
 $paramsTab['filters'] = array('entity', 'category', 'contact');                     //Filtres    
-if (count($template_list) > 0 ) {                                                   //Templates
+if (count($template_list) >0 ) {                                                    //Templates
     $paramsTab['templates'] = array();
     $paramsTab['templates'] = $template_list;
 }
 $paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
 $paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
 $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
-$export = array(
-        "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
-        "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_export.gif",
-        "tooltip"       =>  _EXPORT_LIST,
-        "disabledRules" =>  count($tab)." == 0"
-        );
-array_push($paramsTab['tools'],$export);
+    //Labels
+    if($core_tools->is_module_loaded('labels')
+    && (
+        isset($_SESSION['user']['services']['labels'])
+        && $_SESSION['user']['services']['labels'] === true
+        )
+    ) {
+        $label = array(
+            "script"        =>  "showLabelsList('".$_SESSION['config']['businessappurl']  
+                                    . "index.php?display=true&module=labels&page=labels_script"
+                                    . "&mode=tag&origin=basket&coll_id=".$_SESSION['collection_id_choice']
+                                    . $parameters."', 'formList', '320px', '430px', '"
+                                    . _CHOOSE_ONE_DOC."')",
+            "icon"          =>  $_SESSION['config']['businessappurl']."static.php?module=labels&filename=tool_labels.gif",
+            "tooltip"       =>  _LABELS,
+            "disabledRules" =>  count($tab)." == 0 || ".$selectedTemplate." != 'none'"
+            );      
+        array_push($paramsTab['tools'],$label);
+    }
+    $export = array(
+            "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
+            "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_export.gif",
+            "tooltip"       =>  _EXPORT_LIST,
+            "disabledRules" =>  count($tab)." == 0"
+            );
+    array_push($paramsTab['tools'],$export);   
+
+  //Process instructions
+    $paramsTab['processInstructions'] = _CLICK_LINE_TO_VIEW;
 
 //Afficher la liste
 $status = 0;
 $content = $list->showList($tab, $paramsTab, $listKey, $_SESSION['current_basket']);
-// $debug = $list->debug(false);
-echo "{'status' : " . $status . ", 'content' : '" . addslashes($debug.$content) . "', 'error' : '" . addslashes($error) . "'}";
+// $debug = $list->debug();
+echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
 ?>

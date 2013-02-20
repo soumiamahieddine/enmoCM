@@ -35,18 +35,19 @@ require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
 require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php";
 require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
             ."class".DIRECTORY_SEPARATOR."class_lists.php";
-            
+
 $status_obj = new manage_status();
 $security   = new security();
 $core_tools = new core_tools();
 $request    = new request();
 $contact    = new contacts();
 $list       = new lists();
+$db         = new dbquery();
 
 //Include definition fields
 include_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'definition_mail_categories.php');
 
-//Basket information
+//Create sql request
 if(!empty($_SESSION['current_basket']['view'])) {
 	$table = $_SESSION['current_basket']['view'];
 } else {
@@ -55,35 +56,75 @@ if(!empty($_SESSION['current_basket']['view'])) {
 $_SESSION['origin'] = 'basket';
 $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];//Collection
 
+$db->connect();
 
-//Table
+//Ressource table
     $select[$table]= array(); 
-
-//Fields
-    array_push($select[$table],"res_id", "status", "category_id", "category_id as category_img", 
+    //Ressource fields
+    array_push($select[$table],"res_id", "res_id as is_persistent", "status", "category_id", "category_id as category_img", 
                             "contact_firstname", "contact_lastname", "contact_society", "user_lastname", 
                             "user_firstname", "priority", "creation_date", "admission_date", "subject", 
                             "process_limit_date", "entity_label", "dest_user", "type_label", 
                             "exp_user_id", "count_attachment");
-                            
+    //Additionnal fields                        
     if($core_tools->is_module_loaded("cases") == true) {
         array_push($select[$table], "case_id", "case_label", "case_description");
     }
 
+//Listinstance table and fields
+    // $select[$_SESSION['tablename']['ent_listinstance']] = array();
+    // array_push($select[$_SESSION['tablename']['ent_listinstance']], "viewed");
+
 //Where clause
     $where_tab = array();
+    
     //From basket
     if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause
+    
     //From filters
     $filterClause = $list->getFilters(); 
     if (!empty($filterClause)) $where_tab[] = $filterClause;//Filter clause
+    
+    //Get entities limitation 
+    /*
+    if($_SESSION['current_basket']['basket_owner'] <> "") {
+        $db->query("select entity_id from ".$_SESSION['tablename']['ent_users_entities']
+                    ." where user_id = '".$this->protect_string_db(trim($_SESSION['current_basket']['basket_owner']))."'");
+        $entitiesArray = array();
+        while($res = $db->fetch_object()) {
+            array_push($entitiesArray,  "'".$res->entity_id."'");
+        }
+        for($cptEnt=0; $cptEnt<count($_SESSION['user']['entities']); $cptEnt++) {
+            array_push($entitiesArray,  "'" . $_SESSION['user']['entities'][$cptEnt]['ENTITY_ID'] . "'");
+        }
+
+        $where_tab[] =  $table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id";
+        
+        $where_tab[] =  "(".$_SESSION['tablename']['ent_listinstance']
+                        .".item_id = '".$_SESSION['current_basket']['basket_owner']
+                        ."' or ".$_SESSION['tablename']['ent_listinstance']
+                        .".item_id in (" . (implode(', ', $entitiesArray)) . "))";
+    } else {
+        $entitiesArray = array();
+        for($cptEnt=0; $cptEnt<count($_SESSION['user']['entities']); $cptEnt++) {
+             array_push($entitiesArray,  "'" . $_SESSION['user']['entities'][$cptEnt]['ENTITY_ID'] . "'");
+        }
+        $where_tab[] =  $table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id";
+        
+        $where_tab[] =  "(".$_SESSION['tablename']['ent_listinstance']
+                        .".item_id = '".$_SESSION['user']['UserId']
+                        ."' or ".$_SESSION['tablename']['ent_listinstance']
+                        .".item_id in (" . (implode(', ', $entitiesArray)) . "))";
+    }
+    */
     //Build where
     $where = implode(' and ', $where_tab);
+    
     //Keep where clause
     if(isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') {
         $where = $_SESSION['searching']['where_request'] . ' '. $where;
     }
-
+    
 //Order
     $order = $order_field = '';
     $order = $list->getOrder();
@@ -92,15 +133,30 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];//Col
         $orderstr = "order by ".$order_field." ".$order;
     else  {
         $list->setOrder();
-        $list->setOrderField('creation_date');
-        $orderstr = "order by creation_date desc";
+        $list->setOrderField('priority, creation_date, res_id');
+        $orderstr = "order by priority, creation_date, res_id desc";
     }
-
+//Templates
+    $defaultTemplate = 'documents_list_copies';
+    $selectedTemplate = $list->getTemplate();
+    if  (empty($selectedTemplate)) {
+        if (!empty($defaultTemplate)) {
+            $list->setTemplate($defaultTemplate);
+            $selectedTemplate = $list->getTemplate();
+        }
+    }
+    $template_list = array();
+    array_push($template_list, 'documents_list_copies');
+    
+    //For status icon
+    $extension_icon = '';
+    if($selectedTemplate <> 'none') $extension_icon = "_big"; 
+    
 //Request
-$tab=$request->select($select, $where, $orderstr, $_SESSION['config']['databasetype'], 
-        $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
-// $request->show();
+    $tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false,"", "", "", false, false, 'distinct');
+    // $request->show();
 
+ //Result array
 for ($i=0;$i<count($tab);$i++)
 {
 	for ($j=0;$j<count($tab[$i]);$j++)
@@ -118,6 +174,26 @@ for ($i=0;$i<count($tab);$i++)
 				$tab[$i][$j]["show"]=true;
 				$tab[$i][$j]["order"]='res_id';
 				$_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
+			}
+            if($tab[$i][$j][$value]=="is_persistent")
+			{
+                $db->query("SELECT distinct(res_id) FROM basket_persistent_mode WHERE res_id = "
+                        .$tab[$i][$j]['value']." and user_id = '"
+                        .$_SESSION['user']['UserId']."' and is_persistent = 'Y'");
+                $nb = $db->nb_result();
+               
+                if ($nb > 0) {
+                   $tab[$i][$j]["value"]= true;
+                } else {
+                     $tab[$i][$j]["value"] = false;
+                }
+				$tab[$i][$j]["label"]=_IS_PERSISTENT;
+				$tab[$i][$j]["size"]="4";
+				$tab[$i][$j]["label_align"]="left";
+				$tab[$i][$j]["align"]="left";
+				$tab[$i][$j]["valign"]="bottom";
+				$tab[$i][$j]["show"]=false;
+				$tab[$i][$j]["order"]='is_persistent';
 			}
             if($tab[$i][$j][$value]=="creation_date")
             {
@@ -150,13 +226,11 @@ for ($i=0;$i<count($tab);$i++)
 					$compareDate = $core_tools->compare_date($tab[$i][$j]["value"], date("d-m-Y"));
 					if($compareDate == "date2")
 					{
-						$tab[$i][$j]["value"] = "<span style='color:red;'><b>".$tab[$i][$j]["value"]
-                            ."<br><small>(".$core_tools->nbDaysBetween2Dates($tab[$i][$j]["value"], date("d-m-Y"))." "._DAYS.")<small></b></span>";
+						$tab[$i][$j]["value"] = "<span style='color:red;'><b>".$tab[$i][$j]["value"]."<br><small>(".$core_tools->nbDaysBetween2Dates($tab[$i][$j]["value"], date("d-m-Y"))." "._DAYS.")<small></b></span>";
 					}
 					elseif($compareDate == "date1")
 					{
-						$tab[$i][$j]["value"] = $tab[$i][$j]["value"]."<br><small>("
-                            .$core_tools->nbDaysBetween2Dates(date("d-m-Y"), $tab[$i][$j]["value"])." "._DAYS.")<small>";
+						$tab[$i][$j]["value"] = $tab[$i][$j]["value"]."<br><small>(".$core_tools->nbDaysBetween2Dates(date("d-m-Y"), $tab[$i][$j]["value"])." "._DAYS.")<small>";
 					}
 					elseif($compareDate == "equal")
 					{
@@ -251,9 +325,7 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=false;
                 $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                $tab[$i][$j]["value"] = $contact->get_contact_information_from_view(
-                    $_SESSION['mlb_search_current_category_id'], $contact_lastname, 
-                    $contact_firstname, $contact_society, $user_lastname, $user_firstname);
+                $tab[$i][$j]["value"] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
                 $tab[$i][$j]["order"]=false;
             }
 			if($tab[$i][$j][$value]=="type_label")
@@ -313,8 +385,7 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=false;
                 $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                $tab[$i][$j]["value"] = "<a href='".$_SESSION['config']['businessappurl']
-                    ."index.php?page=details_cases&module=cases&id=".$tab[$i][$j]['value']."'>".$tab[$i][$j]['value']."</a>";
+                $tab[$i][$j]["value"] = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=details_cases&module=cases&id=".$tab[$i][$j]['value']."'>".$tab[$i][$j]['value']."</a>";
                 $tab[$i][$j]["order"]="case_id";
             }
             if($tab[$i][$j][$value]=="case_label" && $core_tools->is_module_loaded("cases") == true)
@@ -328,6 +399,16 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["order"]="case_label";
             }
+            if($tab[$i][$j][$value]=="viewed")
+            {
+                $tab[$i][$j]["label"]=_VIEWED;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='viewed';
+            }
 		}
 	}
 }
@@ -338,16 +419,23 @@ $listKey = 'res_id';
 //Initialiser le tableau de paramètres
 $paramsTab = array();
 $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_DOCS;              //Titre de la page
-$paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
+// $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
 $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
 $paramsTab['bool_showIconDocument'] = true;                                         //Affichage de l'icone du document
 $paramsTab['bool_showIconDetails'] = true;                                          //Affichage de l'icone de la page de details
 $paramsTab['bool_showAttachment'] = true;                                           //Affichage du nombre de document attaché (mode étendu)
 $paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id'];         //Parametres d'url supplementaires
+$paramsTab['filters'] = array('entity', 'category', 'isViewed', 'contact');         //Filtres    
+if (count($template_list) > 0 ) {                                                    //Templates
+    $paramsTab['templates'] = array();
+    $paramsTab['templates'] = $template_list;
+}
+$paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
+$paramsTab['bool_showTemplateDefaultList'] = true;                                          //Default list (no template)
 $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
 $export = array(
         "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
-        "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_export.gif",
+        "icon"          =>  $_SESSION['config']['businessappurl']."static.php?&filename=tool_export.gif",
         "tooltip"       =>  _EXPORT_LIST,
         "disabledRules" =>  count($tab)." == 0"
         );

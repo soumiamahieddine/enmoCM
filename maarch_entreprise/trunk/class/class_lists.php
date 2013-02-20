@@ -1652,31 +1652,40 @@ class lists extends dbquery
                 !empty($tools) || 
                 !empty($filters) ||
                 $this->params['bool_changeLinesToShow']
-                ) {
-                //if no result caused by filters,
-                if ($this->_haveFilter() === true) {
-                    //reset templates (no need if no result)
+                )
+            {
+                $showToolbar = true;
+                //if no result
+                if ($this->countResult == 0) {
+                    //reset templates and tools (no need if no result)
                     $templates = '&nbsp;';
-
+                    $tools = '&nbsp;';
+                    //if not caused by filters => list is empty
+                    if($this->_haveFilter() !== true) { 
+                        $filters = '';
+                        $showToolbar = false;
+                    }
                 }
                 //Toolbar
-                $toolbar .= '<div class="block" style="height:'.$height.';" align="center" >';
-                $toolbar .= '<table width="100%" border="0"><tr>';
-                $toolbar .= '<td align="left" width="20px" nowrap>'.$loading.'</td>';
-                $toolbar .= '<td align="center" width="15%" nowrap><b>&nbsp;</b></td>';
-                $toolbar .= '<td align="center" width="15%" nowrap><b>&nbsp;</b></td>';
-                $toolbar .= '<td width="10px" class="separator1">|</td>';
-                $toolbar .= '<td align="center" width="15%" nowrap>'.$pageDropdownList.'</td>';
-                $toolbar .= '<td width="10px" class="separator1">|</td>';
-                $toolbar .= '<td align="center" width="15%" nowrap>'.$linesDropdownList.'</td>';                
-                $toolbar .= '<td width="10px" class="separator1">|</td>';
-                $toolbar .= '<td width="210px"align="right">'.$tools.'</td>';
-                $toolbar .= '<td width="5px" class="separator1">|</td>';
-                $toolbar .= '<td align="right" nowrap>'.$templates.'</td>';
-                $toolbar .= '</tr>';
-                $toolbar .= $filters;
-                $toolbar .= '</table>';
-                $toolbar .= '</div>';
+                if ($showToolbar) {
+                    $toolbar .= '<div class="block" style="height:'.$height.';" align="center" >';
+                    $toolbar .= '<table width="100%" border="0"><tr>';
+                    $toolbar .= '<td align="left" width="20px" nowrap>'.$loading.'</td>';
+                    $toolbar .= '<td align="center" width="15%" nowrap><b>&nbsp;</b></td>';
+                    $toolbar .= '<td align="center" width="15%" nowrap><b>&nbsp;</b></td>';
+                    $toolbar .= '<td width="10px" class="separator1">|</td>';
+                    $toolbar .= '<td align="center" width="15%" nowrap>'.$pageDropdownList.'</td>';
+                    $toolbar .= '<td width="10px" class="separator1">|</td>';
+                    $toolbar .= '<td align="center" width="15%" nowrap>'.$linesDropdownList.'</td>';                
+                    $toolbar .= '<td width="10px" class="separator1">|</td>';
+                    $toolbar .= '<td width="210px"align="right">'.$tools.'</td>';
+                    $toolbar .= '<td width="5px" class="separator1">|</td>';
+                    $toolbar .= '<td align="right" nowrap>'.$templates.'</td>';
+                    $toolbar .= '</tr>';
+                    $toolbar .= $filters;
+                    $toolbar .= '</table>';
+                    $toolbar .= '</div>';
+                }
             }
 		}
         
@@ -2550,9 +2559,13 @@ class lists extends dbquery
         $this->haveAction = false;
         $this->countResult = count($resultArray);
         if(count($currentBasket) > 0) $this->currentBasket =  $currentBasket;
-        if (isset($this->params['collId'] && !empty($this->params['collId']) $this->collId = $this->params['collId'];
+        if ((isset($this->params['collId']) && !empty($this->params['collId']))) {
+            $this->collId = $this->params['collId'];
+        } else if ((isset($currentBasket['coll_id']) && !empty($currentBasket['coll_id']))) {
+            $this->collId = $currentBasket['coll_id'];
+        }
         
-         //Selected template or default template
+        //Selected template or default template
         if(empty($this->template)) {
            
             if(isset($this->params['defaultTemplate']) && !empty($this->params['defaultTemplate']))  {
