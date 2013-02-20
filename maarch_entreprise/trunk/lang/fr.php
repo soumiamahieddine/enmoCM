@@ -627,6 +627,18 @@ if (!defined('_SELL')) define('_SELL', 'Ventes');
 if (!defined('_ENTERPRISE_DOCUMENT')) define('_ENTERPRISE_DOCUMENT', 'Documents de l&rsquo;Entreprise');
 if (!defined('_HR')) define('_HR', 'Ressources humaines');
 
+//INVOICE DOCTYPE
+if (!defined('_INVOICE_TYPE_ID')) define('_INVOICE_TYPE_ID', 'Type de facture');
+if (!defined('_VOUCHER_IDENTIFIER')) define('_VOUCHER_IDENTIFIER', 'N&deg; de pi&eagrave;ce comptable');
+if (!defined('_LAST_DATE')) define('_LAST_DATE', 'Date d&rsquo;&eacute;ch&eacute;ance');
+if (!defined('_ACCOUNTING_PERIOD')) define('_ACCOUNTING_PERIOD', 'P&eacute;riode de comptabilisation');
+if (!defined('_ORDER_IDENTIFIER')) define('_ORDER_IDENTIFIER', 'R&eacute;f&eacute;rence de commande');
+if (!defined('_ACCOUNTIG_DATE')) define('_ACCOUNTIG_DATE', 'Date comptabilisation');
+if (!defined('_REF_IDENTIFIER')) define('_REF_IDENTIFIER', 'Identifiant de r&eacute;f&eacute;rence');
+if (!defined('_CONTRACT_IDENTIFIER')) define('_CONTRACT_IDENTIFIER', 'N&deg; de contrat');
+if (!defined('_PAYMENT_DATE')) define('_PAYMENT_DATE', 'Date de paiement');
+if (!defined('_DELIVERY_NOTE_IDENTIFIER')) define('_DELIVERY_NOTE_IDENTIFIER', 'N&deg; de BL');
+
 //BITMASK
 if (!defined('_BITMASK_VALUE_ALREADY_EXIST')) define( '_BITMASK_VALUE_ALREADY_EXIST' , 'Bitmask d&eacute;j&agrave; utilis&eacute; dans un autre type');
 

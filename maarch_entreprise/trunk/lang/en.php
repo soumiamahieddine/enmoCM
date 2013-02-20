@@ -1118,3 +1118,15 @@ if (!defined('_PURCHASE')) define('_PURCHASE', 'Purchases');
 if (!defined('_SELL')) define('_SELL', 'Sales');
 if (!defined('_ENTERPRISE_DOCUMENT')) define('_ENTERPRISE_DOCUMENT', 'Enterprise documents');
 if (!defined('_HR')) define('_HR', 'human Resources');
+
+//INVOICE DOCTYPE
+if (!defined('_INVOICE_TYPE_ID')) define('_INVOICE_TYPE_ID', 'Invoice Type');
+if (!defined('_VOUCHER_IDENTIFIER')) define('_VOUCHER_IDENTIFIER', 'Voucher ID');
+if (!defined('_LAST_DATE')) define('_LAST_DATE', 'Last date');
+if (!defined('_ACCOUNTING_PERIOD')) define('_ACCOUNTING_PERIOD', 'Accounting period');
+if (!defined('_ORDER_IDENTIFIER')) define('_ORDER_IDENTIFIER', 'Order ID');
+if (!defined('_ACCOUNTIG_DATE')) define('_ACCOUNTIG_DATE', 'Accouting date');
+if (!defined('_REF_IDENTIFIER')) define('_REF_IDENTIFIER', 'Ref ID');
+if (!defined('_CONTRACT_IDENTIFIER')) define('_CONTRACT_IDENTIFIER', 'Contract ID');
+if (!defined('_PAYMENT_DATE')) define('_PAYMENT_DATE', 'Payment date');
+if (!defined('_DELIVERY_NOTE_IDENTIFIER')) define('_DELIVERY_NOTE_IDENTIFIER', 'Delivery note ID');
