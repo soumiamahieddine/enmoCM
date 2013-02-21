@@ -82,9 +82,9 @@ $_ENV['categories']['purchase']['type_id'] = array (
     'type_form' => 'integer',
     'type_field' => 'integer',
     'mandatory' => true,
-    'label' => _DOCTYPE,
+    'label' => _FILING,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=document.png',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -95,7 +95,7 @@ $_ENV['categories']['purchase']['subject'] = array (
     'mandatory' => true,
     'label' => _SUBJECT,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=subject.png',
     'modify' => true,
     'form_show' => 'textarea'
 );
@@ -117,9 +117,20 @@ $_ENV['categories']['purchase']['identifier'] = array (
     'mandatory' => true,
     'label' => _IDENTIFIER,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=identifier.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=identifier.png',
     'modify' => true,
     'form_show' => 'textfield'
+);
+
+$_ENV['categories']['purchase']['doc_date'] = array (
+    'type_form' => 'date',
+    'type_field' => 'date',
+    'mandatory' => true,
+    'label' => _DOC_DATE,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date.png',
+    'modify' => true,
+    'form_show' => 'date'
 );
 
 $_ENV['categories']['purchase']['currency'] = array (
@@ -196,9 +207,9 @@ $_ENV['categories']['sell']['type_id'] = array (
     'type_form' => 'integer',
     'type_field' => 'integer',
     'mandatory' => true,
-    'label' => _DOCTYPE,
+    'label' => _FILING,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=document.png',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -209,7 +220,7 @@ $_ENV['categories']['sell']['subject'] = array (
     'mandatory' => true,
     'label' => _SUBJECT,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=subject.png',
     'modify' => true,
     'form_show' => 'textarea'
 );
@@ -231,9 +242,20 @@ $_ENV['categories']['sell']['identifier'] = array (
     'mandatory' => true,
     'label' => _IDENTIFIER,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=identifier.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=identifier.png',
     'modify' => true,
     'form_show' => 'textfield'
+);
+
+$_ENV['categories']['sell']['doc_date'] = array (
+    'type_form' => 'date',
+    'type_field' => 'date',
+    'mandatory' => true,
+    'label' => _DOC_DATE,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date.png',
+    'modify' => true,
+    'form_show' => 'date'
 );
 
 $_ENV['categories']['sell']['currency'] = array (
@@ -310,9 +332,9 @@ $_ENV['categories']['enterprise_document']['type_id'] = array (
     'type_form' => 'integer',
     'type_field' => 'integer',
     'mandatory' => true,
-    'label' => _DOCTYPE,
+    'label' => _FILING,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=document.png',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -323,7 +345,7 @@ $_ENV['categories']['enterprise_document']['subject'] = array (
     'mandatory' => true,
     'label' => _SUBJECT,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=subject.png',
     'modify' => true,
     'form_show' => 'textarea'
 );
@@ -334,7 +356,7 @@ $_ENV['categories']['enterprise_document']['contact_id'] = array (
     'mandatory' => false,
     'label' => _CONTACT,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=supplier.png',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif',
     'modify' => true,
     'form_show' => 'textfield'
 );
@@ -345,9 +367,20 @@ $_ENV['categories']['enterprise_document']['identifier'] = array (
     'mandatory' => true,
     'label' => _IDENTIFIER,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=identifier.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=identifier.png',
     'modify' => true,
     'form_show' => 'textfield'
+);
+
+$_ENV['categories']['enterprise_document']['doc_date'] = array (
+    'type_form' => 'date',
+    'type_field' => 'date',
+    'mandatory' => true,
+    'label' => _DOC_DATE,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date.png',
+    'modify' => true,
+    'form_show' => 'date'
 );
 
 ///////////////////////////// HUMAN RESOURCES ////////////////////////////////////////////////
@@ -359,9 +392,9 @@ $_ENV['categories']['human_resources']['type_id'] = array (
     'type_form' => 'integer',
     'type_field' => 'integer',
     'mandatory' => true,
-    'label' => _DOCTYPE,
+    'label' => _FILING,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=document.png',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -372,7 +405,7 @@ $_ENV['categories']['human_resources']['subject'] = array (
     'mandatory' => true,
     'label' => _SUBJECT,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=subject.png',
     'modify' => true,
     'form_show' => 'textarea'
 );
@@ -394,9 +427,20 @@ $_ENV['categories']['human_resources']['identifier'] = array (
     'mandatory' => true,
     'label' => _IDENTIFIER,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=identifier.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=identifier.png',
     'modify' => true,
     'form_show' => 'textfield'
+);
+
+$_ENV['categories']['human_resources']['doc_date'] = array (
+    'type_form' => 'date',
+    'type_field' => 'date',
+    'mandatory' => true,
+    'label' => _DOC_DATE,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date.png',
+    'modify' => true,
+    'form_show' => 'date'
 );
 
 /////////////////////////////MODULES SPECIFIC////////////////////////////////////////////////

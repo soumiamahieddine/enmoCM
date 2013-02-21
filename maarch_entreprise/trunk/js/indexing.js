@@ -7,7 +7,7 @@
  * @param error_empty_type String Error label displayed when the document type is empty
  * @param action_id String Action identifier
  **/
-function change_doctype(doctype_id, path_manage_script, error_empty_type, action_id, get_js_script,display_value_tr, id_res, id_coll, from_valid_qualif=false)
+function change_doctype(doctype_id, path_manage_script, error_empty_type, action_id, get_js_script,display_value_tr, id_res, id_coll, from_valid_qualif)
 {
     var tmp_res_id = id_res || null;
     var tmp_coll_id = id_coll || null;
@@ -394,6 +394,198 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'chrono_number', type:'label', state:'hide'},
         {id:'chrono_number_mandatory', type:'label', state:'hide'},
         {id:'chrono_number_tr', type:'tr', state:'hide'},
+        {id:'folder_mandatory', type:'label', state:'hide'}
+        ];
+    }
+    //Category = PURCHASE
+    else if(cat_id == 'purchase')
+    {
+        var category = [
+        {id:'category_img_purchase', type:'label', state:'display'},
+        {id:'category_img_sell', type:'label', state:'hide'},
+        {id:'category_img_enterprise_document', type:'label', state:'hide'},
+        {id:'category_img_human_resources', type:'label', state:'hide'},
+        
+        {id:'doctype_tr', type:'tr', state:'display'},
+        {id:'subject_tr', type:'tr', state:'display'},
+        
+        {id:'contact_id_tr', type:'tr', state:'display'},
+        {id:'contact_label_purchase', type:'label', state:'display'},
+        {id:'contact_label_sell', type:'label', state:'hide'},
+        {id:'contact_label_enterprise_document', type:'label', state:'hide'},
+        {id:'contact_label_human_resources', type:'label', state:'hide'},
+        {id:'contact_purchase_img', type:'label', state:'display'},
+        {id:'contact_sell_img', type:'label', state:'hide'},
+        {id:'contact_enterprise_document_img', type:'label', state:'hide'},
+        {id:'contact_human_resources_img', type:'label', state:'hide'},
+        
+        {id:'identifier_tr', type:'tr', state:'display'},
+        {id:'doc_date_tr', type:'tr', state:'display'},
+        {id:'currency_tr', type:'tr', state:'display'},
+        {id:'net_sum_tr', type:'tr', state:'display'},
+        {id:'tax_sum_tr', type:'tr', state:'display'},
+        {id:'total_sum_tr', type:'tr', state:'display'},
+        {id:'process_limit_date_use_tr', type:'tr', state:'display'},
+        {id:'process_limit_date_tr', type:'tr', state:'display'},
+        {id:'department_tr', type:'tr', state:'display'},
+        {id:'folder_tr', type:'tr', state:'display'},
+        
+        {id:'category_id_mandatory', type:'label', state:'display'},
+        {id:'type_id_mandatory', type:'label', state:'display'},
+        {id:'subject_mandatory', type:'label', state:'hide'},
+        {id:'contact_mandatory', type:'label', state:'display'},
+        {id:'identifier_mandatory', type:'label', state:'display'},
+        {id:'doc_date_mandatory', type:'label', state:'display'},
+        {id:'currency_mandatory', type:'label', state:'display'},
+        {id:'tax_sum_mandatory', type:'label', state:'display'},
+        {id:'total_sum_mandatory', type:'label', state:'display'},
+        {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
+        {id:'process_limit_date_mandatory', type:'label', state:'hide'},
+        {id:'destination_mandatory', type:'label', state:'display'},
+        {id:'folder_mandatory', type:'label', state:'hide'}
+        ];
+    }
+    //Category = SELL
+    else if(cat_id == 'sell')
+    {
+        var category = [
+        {id:'category_img_purchase', type:'label', state:'hide'},
+        {id:'category_img_sell', type:'label', state:'display'},
+        {id:'category_img_enterprise_document', type:'label', state:'hide'},
+        {id:'category_img_human_resources', type:'label', state:'hide'},
+        
+        {id:'doctype_tr', type:'tr', state:'display'},
+        {id:'subject_tr', type:'tr', state:'display'},
+        
+        {id:'contact_id_tr', type:'tr', state:'display'},
+        {id:'contact_label_purchase', type:'label', state:'hide'},
+        {id:'contact_label_sell', type:'label', state:'display'},
+        {id:'contact_label_enterprise_document', type:'label', state:'hide'},
+        {id:'contact_label_human_resources', type:'label', state:'hide'},
+        {id:'contact_purchase_img', type:'label', state:'hide'},
+        {id:'contact_sell_img', type:'label', state:'display'},
+        {id:'contact_enterprise_document_img', type:'label', state:'hide'},
+        {id:'contact_human_resources_img', type:'label', state:'hide'},
+        
+        {id:'identifier_tr', type:'tr', state:'display'},
+        {id:'doc_date_tr', type:'tr', state:'display'},
+        {id:'currency_tr', type:'tr', state:'display'},
+        {id:'net_sum_tr', type:'tr', state:'display'},
+        {id:'tax_sum_tr', type:'tr', state:'display'},
+        {id:'total_sum_tr', type:'tr', state:'display'},
+        {id:'process_limit_date_use_tr', type:'tr', state:'display'},
+        {id:'process_limit_date_tr', type:'tr', state:'display'},
+        {id:'department_tr', type:'tr', state:'display'},
+        {id:'folder_tr', type:'tr', state:'display'},
+        
+        {id:'category_id_mandatory', type:'label', state:'display'},
+        {id:'type_id_mandatory', type:'label', state:'display'},
+        {id:'subject_mandatory', type:'label', state:'display'},
+        {id:'contact_mandatory', type:'label', state:'display'},
+        {id:'identifier_mandatory', type:'label', state:'display'},
+        {id:'doc_date_mandatory', type:'label', state:'display'},
+        {id:'currency_mandatory', type:'label', state:'display'},
+        {id:'tax_sum_mandatory', type:'label', state:'display'},
+        {id:'total_sum_mandatory', type:'label', state:'display'},
+        {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
+        {id:'process_limit_date_mandatory', type:'label', state:'hide'},
+        {id:'destination_mandatory', type:'label', state:'display'},
+        {id:'folder_mandatory', type:'label', state:'hide'}
+        ];
+    }
+    //Category = ENTERPRISE_DOCUMENT
+    else if(cat_id == 'enterprise_document')
+    {
+        var category = [
+        {id:'category_img_purchase', type:'label', state:'hide'},
+        {id:'category_img_sell', type:'label', state:'hide'},
+        {id:'category_img_enterprise_document', type:'label', state:'display'},
+        {id:'category_img_human_resources', type:'label', state:'hide'},
+        
+        {id:'doctype_tr', type:'tr', state:'display'},
+        {id:'subject_tr', type:'tr', state:'display'},
+        
+        {id:'contact_id_tr', type:'tr', state:'display'},
+        {id:'contact_label_purchase', type:'label', state:'hide'},
+        {id:'contact_label_sell', type:'label', state:'hide'},
+        {id:'contact_label_enterprise_document', type:'label', state:'display'},
+        {id:'contact_label_human_resources', type:'label', state:'hide'},
+        {id:'contact_purchase_img', type:'label', state:'hide'},
+        {id:'contact_sell_img', type:'label', state:'hide'},
+        {id:'contact_enterprise_document_img', type:'label', state:'display'},
+        {id:'contact_human_resources_img', type:'label', state:'hide'},
+        
+        {id:'identifier_tr', type:'tr', state:'display'},
+        {id:'doc_date_tr', type:'tr', state:'display'},
+        {id:'currency_tr', type:'tr', state:'hide'},
+        {id:'net_sum_tr', type:'tr', state:'hide'},
+        {id:'tax_sum_tr', type:'tr', state:'hide'},
+        {id:'total_sum_tr', type:'tr', state:'hide'},
+        {id:'process_limit_date_use_tr', type:'tr', state:'display'},
+        {id:'process_limit_date_tr', type:'tr', state:'display'},
+        {id:'department_tr', type:'tr', state:'display'},
+        {id:'folder_tr', type:'tr', state:'display'},
+        
+        {id:'category_id_mandatory', type:'label', state:'display'},
+        {id:'type_id_mandatory', type:'label', state:'display'},
+        {id:'subject_mandatory', type:'label', state:'display'},
+        {id:'contact_mandatory', type:'label', state:'hide'},
+        {id:'identifier_mandatory', type:'label', state:'hide'},
+        {id:'doc_date_mandatory', type:'label', state:'hide'},
+        {id:'currency_mandatory', type:'label', state:'hide'},
+        {id:'tax_sum_mandatory', type:'label', state:'hide'},
+        {id:'total_sum_mandatory', type:'label', state:'hide'},
+        {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
+        {id:'process_limit_date_mandatory', type:'label', state:'hide'},
+        {id:'destination_mandatory', type:'label', state:'display'},
+        {id:'folder_mandatory', type:'label', state:'hide'}
+        ];
+    }
+    //Category = HUMAN_RESOURCES
+    else if(cat_id == 'human_resources')
+    {
+        var category = [
+        {id:'category_img_purchase', type:'label', state:'hide'},
+        {id:'category_img_sell', type:'label', state:'hide'},
+        {id:'category_img_enterprise_document', type:'label', state:'hide'},
+        {id:'category_img_human_resources', type:'label', state:'display'},
+        
+        {id:'doctype_tr', type:'tr', state:'display'},
+        {id:'subject_tr', type:'tr', state:'hide'},
+        
+        {id:'contact_id_tr', type:'tr', state:'display'},
+        {id:'contact_label_purchase', type:'label', state:'hide'},
+        {id:'contact_label_sell', type:'label', state:'hide'},
+        {id:'contact_label_enterprise_document', type:'label', state:'hide'},
+        {id:'contact_label_human_resources', type:'label', state:'display'},
+        {id:'contact_purchase_img', type:'label', state:'hide'},
+        {id:'contact_sell_img', type:'label', state:'hide'},
+        {id:'contact_enterprise_document_img', type:'label', state:'hide'},
+        {id:'contact_human_resources_img', type:'label', state:'display'},
+        
+        {id:'identifier_tr', type:'tr', state:'hide'},
+        {id:'doc_date_tr', type:'tr', state:'display'},
+        {id:'currency_tr', type:'tr', state:'hide'},
+        {id:'net_sum_tr', type:'tr', state:'hide'},
+        {id:'tax_sum_tr', type:'tr', state:'hide'},
+        {id:'total_sum_tr', type:'tr', state:'hide'},
+        {id:'process_limit_date_use_tr', type:'tr', state:'display'},
+        {id:'process_limit_date_tr', type:'tr', state:'display'},
+        {id:'department_tr', type:'tr', state:'display'},
+        {id:'folder_tr', type:'tr', state:'display'},
+        
+        {id:'category_id_mandatory', type:'label', state:'display'},
+        {id:'type_id_mandatory', type:'label', state:'display'},
+        {id:'subject_mandatory', type:'label', state:'hide'},
+        {id:'contact_mandatory', type:'label', state:'display'},
+        {id:'identifier_mandatory', type:'label', state:'hide'},
+        {id:'doc_date_mandatory', type:'label', state:'display'},
+        {id:'currency_mandatory', type:'label', state:'hide'},
+        {id:'tax_sum_mandatory', type:'label', state:'hide'},
+        {id:'total_sum_mandatory', type:'label', state:'hide'},
+        {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
+        {id:'process_limit_date_mandatory', type:'label', state:'hide'},
+        {id:'destination_mandatory', type:'label', state:'display'},
         {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }

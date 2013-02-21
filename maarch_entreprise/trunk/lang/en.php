@@ -1141,3 +1141,6 @@ if (!defined('_REF_IDENTIFIER')) define('_REF_IDENTIFIER', 'Ref ID');
 if (!defined('_CONTRACT_IDENTIFIER')) define('_CONTRACT_IDENTIFIER', 'Contract ID');
 if (!defined('_PAYMENT_DATE')) define('_PAYMENT_DATE', 'Payment date');
 if (!defined('_DELIVERY_NOTE_IDENTIFIER')) define('_DELIVERY_NOTE_IDENTIFIER', 'Delivery note ID');
+
+if (!defined('_INDEX_BUSINESS_FILE')) define('_INDEX_BUSINESS_FILE', 'Index business collection file');
+if (!defined('_FILING')) define('_FILING', 'Filing');

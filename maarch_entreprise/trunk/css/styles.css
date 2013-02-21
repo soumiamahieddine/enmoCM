@@ -389,6 +389,10 @@ form, fieldset {
     width: 450px;
 }
 
+.indexingformBusiness{
+    width: 450px;
+}
+
 .physicalform{
     width: 900px;
 }
@@ -2102,7 +2106,19 @@ height:auto;
     width: 150px;
 }
 
+.indexingformBusiness .form_title
+{
+    font-weight:normal;
+    width: 165px;
+}
+
 .indexingform .form_title_process
+{
+    font-weight:normal;
+    width: 100px;
+}
+
+.indexingformBusiness .form_title_process
 {
     font-weight:normal;
     width: 100px;
@@ -2113,6 +2129,10 @@ height:auto;
     text-align: right;
 }
 
+.indexingformBusiness .indexing_field
+{
+    text-align: right;
+}
 
 #rep
 {
@@ -2599,7 +2619,18 @@ text-align:right;
 {
     width: 220px;
 }
+
+.indexingformBusiness input, .indexingform textarea
+{
+    width: 220px;
+}
+
 .indexingform select
+{
+    width: 226px;
+}
+
+.indexingformBusiness select
 {
     width: 226px;
 }

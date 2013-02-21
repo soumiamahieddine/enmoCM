@@ -633,7 +633,7 @@ if (!defined('_CURRENCY')) define('_CURRENCY', 'Devise');
 if (!defined('_NET_SUM')) define('_NET_SUM', 'Montant HT');
 if (!defined('_TAX_SUM')) define('_TAX_SUM', 'Montant TVA');
 if (!defined('_TOTAL_SUM')) define('_TOTAL_SUM', 'Montant TTC');
-if (!defined('_PURCHASER')) define('_PURCHASER', 'Purchaser');
+if (!defined('_PURCHASER')) define('_PURCHASER', 'Acheteur');
 
 //HR CATEGORY
 if (!defined('_EMPLOYEE')) define('_EMPLOYEE', 'Employ&eacute;');
@@ -649,6 +649,9 @@ if (!defined('_REF_IDENTIFIER')) define('_REF_IDENTIFIER', 'Identifiant de r&eac
 if (!defined('_CONTRACT_IDENTIFIER')) define('_CONTRACT_IDENTIFIER', 'N&deg; de contrat');
 if (!defined('_PAYMENT_DATE')) define('_PAYMENT_DATE', 'Date de paiement');
 if (!defined('_DELIVERY_NOTE_IDENTIFIER')) define('_DELIVERY_NOTE_IDENTIFIER', 'N&deg; de BL');
+
+if (!defined('_INDEX_BUSINESS_FILE')) define('_INDEX_BUSINESS_FILE', 'Enregistrement des documents de la collection business');
+if (!defined('_FILING')) define('_FILING', 'Classement');
 
 //BITMASK
 if (!defined('_BITMASK_VALUE_ALREADY_EXIST')) define( '_BITMASK_VALUE_ALREADY_EXIST' , 'Bitmask d&eacute;j&agrave; utilis&eacute; dans un autre type');
@@ -1340,13 +1343,13 @@ if (!defined('_EXPORT_LIST'))    define( '_EXPORT_LIST', 'Exporter');
 if (!defined('_ADD_LINKS'))    define('_ADD_LINKS', 'Ajouter des liaisons');
 if (!defined('_PUT_IN_COPY'))    define('_PUT_IN_COPY', 'Ajouter en copie');
 if (!defined('_POWERED_BY'))    define('_POWERED_BY', 'Powered by Maarch&trade;.');
-if (!defined('_LINK_TO_DOC'))    define('_LINK_TO_DOC', 'Lier &agrave; un courrier');
-if (!defined('_LINK_REFERENCE'))    define('_LINK_REFERENCE', 'Pour lier vous devez choisir un courrier existant');
+if (!defined('_LINK_TO_DOC'))    define('_LINK_TO_DOC', 'Lier &agrave; un document');
+if (!defined('_LINK_REFERENCE'))    define('_LINK_REFERENCE', 'Pour lier vous devez choisir un document existant');
 if (!defined('_LINKED_TO'))    define('_LINKED_TO', 'Li&eacute; au document ');
 if (!defined('_NOW_LINK_WITH_THIS_ONE'))    define('_NOW_LINK_WITH_THIS_ONE', ' est maintenant li&eacute; &agrave; ce documents');
 if (!defined('_LINK_TAB'))    define('_LINK_TAB', 'Liaisons');
-if (!defined('_LINK_DESC_FOR'))    define('_LINK_DESC_FOR', 'Courrier(s) li&eacute;s &agrave; ce document');
-if (!defined('_LINK_ASC_FOR'))    define('_LINK_ASC_FOR', 'Courriers au(x)quel(s) est li&eacute; ce document');
+if (!defined('_LINK_DESC_FOR'))    define('_LINK_DESC_FOR', 'Document(s) li&eacute;s &agrave; ce document');
+if (!defined('_LINK_ASC_FOR'))    define('_LINK_ASC_FOR', 'Document(s) au(x)quel(s) est li&eacute; ce document');
 if (!defined('_ADD_A_LINK'))    define('_ADD_A_LINK', 'Ajouter une liaison');
 if (!defined('_LINK_ACTION'))    define('_LINK_ACTION', 'Lier');
 if (!defined('_LINK_ALREADY_EXISTS'))    define('_LINK_ALREADY_EXISTS', 'Cette liaison existe d&eacute;j&agrave;');
@@ -1367,7 +1370,7 @@ if (!defined('_PJ'))    define('_PJ', 'Pièces jointes');
 /******************** Liste avec réponses ************/
 if (!defined('_CONSULT'))    define('_CONSULT', 'Consulter');
 if (!defined('_DOCUMENTS_LIST_WITH_ATTACHMENTS'))    define('_DOCUMENTS_LIST_WITH_ATTACHMENTS', 'Liste avec filtre et r&eacute;ponses');
-if (!defined('_QUALIFY_FIRST'))    define('_QUALIFY_FIRST', 'La fiche d&eacute;tails est vide car le courrier doit &ecirc;tre qualifi&eacute;');
+if (!defined('_QUALIFY_FIRST'))    define('_QUALIFY_FIRST', 'La fiche d&eacute;tails est vide car le document doit &ecirc;tre qualifi&eacute;');
 
 /******************** persistent mode ************/
 if (!defined('_SET_PERSISTENT_MODE_ON'))    define('_SET_PERSISTENT_MODE_ON', 'Activer la persistance');
