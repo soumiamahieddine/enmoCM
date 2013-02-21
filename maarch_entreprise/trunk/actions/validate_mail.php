@@ -1486,9 +1486,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         $folder = get_value_fields($values_form, 'folder');
         $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
         
-        if(!empty($folder_id))
-        {
+        if(!empty($folder_id)) {
             $query_res .= ", folders_system_id = ".$folder_id."";
+        } else if(empty($folder_id) && !empty($old_folder_id)) {
+            $query_res .= ", folders_system_id = NULL";
         }
 
         if($folder_id <> $old_folder_id && $_SESSION['history']['folderup'])

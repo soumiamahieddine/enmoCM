@@ -80,8 +80,10 @@ function get_folder_data($coll_id, $res_id)
 
     if ($db->nb_result() == 1) {
         $res = $db->fetch_object();
+        if (!empty($res->folders_system_id)) {
         // $folder = $res->folder_name.', '.$res->fold_subject.' ('.$res->folders_system_id.')';
-        $folder = $res->folder_id.', '.$res->folder_name.' ('.$res->folders_system_id.')';
+            $folder = $res->folder_id.', '.$res->folder_name.' ('.$res->folders_system_id.')';
+        }
     }
 
     return $folder;
@@ -1236,25 +1238,31 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         include_once("modules".DIRECTORY_SEPARATOR."tags".
                     DIRECTORY_SEPARATOR."tags_update.php");
     }
-
-    if ($core->is_module_loaded('folder') && !empty($folder)) {
+    if ($core->is_module_loaded('folder')) {
         $folder_id = '';
+        $old_folder_id = '';
+        //get old folder ID
         $db->connect();
         $db->query("select folders_system_id from ".$res_table." where res_id = ".$arr_id[0]);
         $res = $db->fetch_object();
         $old_folder_id = $res->folders_system_id;
-        $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
+            
+        if (!empty($folder)) {    
+            $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
 
-        if ($folder_id <> $old_folder_id && $_SESSION['history']['folderup']) {
-            require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
-            $hist = new history();
-            $hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", 'folderup', _DOC_NUM.$arr_id[0]._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
-            if (isset($old_folder_id) && !empty($old_folder_id)) {
-                $hist->add($_SESSION['tablename']['fold_folders'], $old_folder_id, "UP", 'folderup', _DOC_NUM.$arr_id[0]._DELETED_FROM_FOLDER, $_SESSION['config']['databasetype'],'apps');
+            if ($folder_id <> $old_folder_id && $_SESSION['history']['folderup']) {
+                require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+                $hist = new history();
+                $hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", 'folderup', _DOC_NUM.$arr_id[0]._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
+                if (isset($old_folder_id) && !empty($old_folder_id)) {
+                    $hist->add($_SESSION['tablename']['fold_folders'], $old_folder_id, "UP", 'folderup', _DOC_NUM.$arr_id[0]._DELETED_FROM_FOLDER, $_SESSION['config']['databasetype'],'apps');
+                }
             }
+
+            $db->query("update ".$res_table." set folders_system_id =".$folder_id." where res_id =".$arr_id[0]);
+        } else if(empty($folder) && !empty($old_folder_id)) { //Delete folder reference in res_X
+            $db->query("update ".$res_table." set folders_system_id = NULL where res_id =".$arr_id[0]);
         }
-        $db->connect();
-        $db->query("update ".$res_table." set folders_system_id =".$folder_id." where res_id =".$arr_id[0]);
     }
     if ($core->is_module_loaded('entities')) {
         require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');

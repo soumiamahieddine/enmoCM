@@ -269,7 +269,6 @@ if($core_tools->is_module_loaded('tags'))
 //destination (department)
 if($core_tools->is_module_loaded('entities'))
 {
-    $coll_id = 'letterbox_coll';
     $where = $sec->get_where_clause_from_coll_id($coll_id);
     $table = $sec->retrieve_view_from_coll_id($coll_id);
     if(empty($table))
@@ -487,7 +486,7 @@ if(isset($_REQUEST['nodetails']))
                                     <?php 
                                     if($_REQUEST['mode'] != 'popup') {
                                         for($i=0; $i< count($_SESSION['user']['baskets']);$i++) {
-                                            if ($_SESSION['user']['baskets'][$i]['coll_id'] == 'letterbox_coll') {
+                                            if ($_SESSION['user']['baskets'][$i]['coll_id'] == $coll_id && $_SESSION['user']['baskets'][$i]['is_folder_basket'] == 'N') {
                                                 ?><option id="<?php 
                                                     echo $_SESSION['user']['baskets'][$i]['id'];
                                                     ?>" value="<?php 

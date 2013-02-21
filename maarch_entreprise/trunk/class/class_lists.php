@@ -257,7 +257,7 @@ class lists extends dbquery
                 }
                 $filters .='<input type="text" name="folder_id" id="folder_id" value="'.$folder.'" size="40" '
                             .'onfocus="if(this.value==\'['._FOLDER.']\'){this.value=\'\';}'
-                            .'onKeyPress="if(event.keyCode == 9) loadList(\''.$this->link
+                            .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13) loadList(\''.$this->link
                             .'&filter=folder&value=\' + this.value, \''.$this->divListId.'\', '
                             .$this->modeReturn.');" />&nbsp;';
                 //Autocompletion script and div            
@@ -275,7 +275,7 @@ class lists extends dbquery
                 }
                 $filters .='<input type="text" name="contact_id" id="contact_id" value="'.$contact.'" size="40" '
                             .'onfocus="if(this.value==\'['._CONTACT.']\'){this.value=\'\';}" '
-                            .'onKeyPress="if(event.keyCode == 9)loadList(\''.$this->link
+                            .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
                             .'&filter=contact&value=\' + this.value, \''.$this->divListId.'\', '
                             .$this->modeReturn.');" />&nbsp;';
                 //Autocompletion script and div 
@@ -317,7 +317,7 @@ class lists extends dbquery
                 }
                 $filters .='<input type="text" name="user_id" id="user_id" value="'.$user.'" size="40" '
                             .'onfocus="if(this.value==\'['._USER.']\'){this.value=\'\';}" '
-                            .'onKeyPress="if(event.keyCode == 9)loadList(\''.$this->link
+                            .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
                             .'&filter=user&value=\' + this.value, \''.$this->divListId.'\', '
                             .$this->modeReturn.');" />&nbsp;';
                 //Autocompletion script and div 
@@ -353,7 +353,7 @@ class lists extends dbquery
                 }
                 $filters .= '&nbsp;&nbsp;'._SINCE.': <input type="text" name="date_start" '
                     .'id="date_start" onclick="showCalender(this);" '
-                    .'onKeyPress="if(event.keyCode == 9)loadList(\''.$this->link
+                    .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
                     .'&filter=history_date_start&value=\' + this.value, \''.$this->divListId.'\', '
                     .$this->modeReturn.');" value="'.$date_start.'" size="15" />';
                   
@@ -362,7 +362,7 @@ class lists extends dbquery
                 }
                 $filters .= '&nbsp;&nbsp;'._FOR.': <input type="text" name="date_end" '
                     .'id="date_end" onclick="showCalender(this);" '
-                    .'onKeyPress="if(event.keyCode == 9)loadList(\''.$this->link
+                    .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
                     .'&filter=history_date_end&value=\' + this.value, \''.$this->divListId.'\', '
                     .$this->modeReturn.');" value="'.$date_end.'" size="15" />&nbsp;';
             break;
@@ -1998,13 +1998,15 @@ class lists extends dbquery
             }
             if ($found) {
                 //Display filter
-                $filters .='<div style="padding-bottom: 15px;"><form name="filters" id="filters" action="#" method="post">'._FILTER_BY.': ';
+                $filters .='<div style="padding-bottom: 15px;"><form name="filters" id="filters" '
+                        .'onsubmit="return false;" action="#" method="post">'._FILTER_BY.': ';
                 $filters .= $filtersControl;
                 //Clear icon
-                $filters .='&nbsp;&nbsp;<a href="javascript://"  title="'._CLEAR_SEARCH.'" onclick="javascript:loadList(\''.$this->link
-                         .'&filter=reset\', \''.$this->divListId.'\', '
-                         .$this->modeReturn.');"><img src="'.$_SESSION['config']['businessappurl']
-                         .'static.php?filename=reset.gif" alt="'._CLEAR_SEARCH.'" style="vertical-align: middle;"/></a>';
+                $filters .='&nbsp;&nbsp;<a href="javascript://"  title="'._CLEAR_SEARCH.'" onfocus="this.blur()" '
+                            .'onclick="javascript:loadList(\''.$this->link
+                            .'&filter=reset\', \''.$this->divListId.'\', '
+                            .$this->modeReturn.');"><img src="'.$_SESSION['config']['businessappurl']
+                            .'static.php?filename=reset.gif" alt="'._CLEAR_SEARCH.'" style="vertical-align: middle;"/></a>';
                 $filters .='</form></div>';
             } else {
                 $filters = _NO_CORRESPONDING_FILTERS;
