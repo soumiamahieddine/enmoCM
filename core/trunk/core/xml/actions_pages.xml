@@ -175,4 +175,14 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE>folder</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
+    <!-- maarch for business -->
+    <ACTIONPAGE>
+        <ID>index_business</ID>
+        <LABEL>_INDEX_BUSINESS_FILE</LABEL>
+        <NAME>index_business</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <KEYWORD>indexing</KEYWORD>
+        <FLAG_CREATE>true</FLAG_CREATE>
+    </ACTIONPAGE>
 </ROOT>
