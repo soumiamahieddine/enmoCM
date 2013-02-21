@@ -111,7 +111,8 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];//Col
     }
     $template_list = array();
     array_push($template_list, 'documents_list_with_attachments');
-    
+    if($core_tools->is_module_loaded('cases')) array_push($template_list, 'cases_list');
+
     //For status icon
     $extension_icon = '';
     if($selectedTemplate <> 'none') $extension_icon = "_big"; 
