@@ -328,7 +328,7 @@ $paramsTab['bool_bigPageTitle'] = false;                                        
 $paramsTab['urlParameters'] = 'coll_id='.$_SESSION['collId'].'&display=true';      //Parametres d'url supplementaires
 $paramsTab['defaultTemplate'] = 'folder_documents_list';                            //Default template
 $paramsTab['divListId'] = 'div_sublist_'.$_SESSION['folderId'];                     //Id du Div de retour ajax
-$paramsTab['listHeight'] = '200px';                                                 //Hauteur de la liste
+$paramsTab['listHeight'] = '100%';                                                 //Hauteur de la liste
 $paramsTab['bool_showSmallToolbar'] = true;                                         //
 $paramsTab['linesToShow'] = 10;                                                     //
 // $paramsTab['bool_checkBox'] = true;                                                 //Affichage Case à cocher
