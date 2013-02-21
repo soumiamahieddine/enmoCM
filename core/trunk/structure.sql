@@ -817,6 +817,7 @@ CREATE TABLE listinstance
   item_mode character varying(50) NOT NULL,
   added_by_user character varying(128) NOT NULL,
   added_by_entity character varying(50) NOT NULL,
+  visible character varying(50) NOT NULL DEFAULT 'Y'::bpchar,
   viewed bigint,
   CONSTRAINT listinstance_pkey PRIMARY KEY (listinstance_id)
 )
