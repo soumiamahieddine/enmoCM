@@ -67,25 +67,21 @@ class diffusion_list extends dbquery
     */
     public function get_listmodel_from_entity($entityId, $collId = 'letterbox_coll')
     {
+        $this->connect();
+        $roles = $this->get_listinstance_roles();
+        
         $listmodel = array();
         $listmodel['dest'] = array();
-        $listmodel['copy'] = array();
-        $listmodel['copy']['users'] = array();
-        $listmodel['copy']['entities'] = array();
         
-        // 1.4 custom listinstance modes
-        if(count($_SESSION['listinstance_roles']) > 0) {
-            foreach($_SESSION['listinstance_roles'] as $role_id => $role_config) {
-                $listmodel[$role_id] = array();
-                $listmodel[$role_id]['users'] = array();
-                $listmodel[$role_id]['entities'] = array();
-            }
+        foreach($roles as $role_id => $role_config) {
+            $listmodel[$role_id] = array();
+            $listmodel[$role_id]['users'] = array();
+            $listmodel[$role_id]['entities'] = array();
         }
         
-        
-        if (empty($entityId)) {
+        if (empty($entityId)) 
             return $listmodel;
-        }
+
         $entityId = $this->protect_string_db($entityId);
         $this->connect();
         
@@ -124,12 +120,12 @@ class diffusion_list extends dbquery
             . "and l.object_id = '" . $this->protect_string_db(trim($entityId))
             . "' and l.item_id = u.user_id and l.item_id = ue.user_id "
             . "and e.entity_id = ue.entity_id and ue.primary_entity='Y' "
-            . "order by u.lastname "
+            . "order by l.sequence "
         );
 
         while ($res = $this->fetch_object()) {
             $role_id = $res->item_mode;
-            if($role_id=='cc') $role_id = 'copy';
+            if($role_id =='cc') $role_id = 'copy';
             if(!isset($listmodel[$role_id]['users']))
                 $listmodel[$role_id]['users'] = array();
             array_push(
@@ -152,12 +148,12 @@ class diffusion_list extends dbquery
             . "and l.listmodel_type = 'DOC' and l.item_mode != 'dest' "
             . "and l.item_type = 'entity_id' and l.object_type = 'entity_id' "
             . "and l.object_id = '" . $this->protect_string_db(trim($entityId))
-            . "' and l.item_id = e.entity_id order by e.entity_label "
+            . "' and l.item_id = e.entity_id order by l.sequence "
         );
 
         while ($res = $this->fetch_object()) {
-            $role_id = $res->item_mode;
-            if($role_id=='cc') $role_id = 'copy';
+            $role_mode = $res->item_mode;
+            if($role_mode=='cc') $role_id = 'copy';
             if(!isset($listmodel[$role_id]['entities']))
                 $listmodel[$role_id]['entities'] = array();
             array_push(
@@ -170,7 +166,94 @@ class diffusion_list extends dbquery
         }
         return $listmodel;
     }
+    
+    public function save_listmodel_from_entity($diffList, $params, $listType = 'DOC', $objectType = 'entity_id') 
+    {
+        $this->connect();
+        $roles = $this->get_listinstance_roles();
+        
+        require_once 'core/class/class_history.php';
+        $hist = new history();
+        
+        $coll_id = $this->protect_string_db(trim($params['coll_id']));
+        $objectType = $this->protect_string_db(trim($objectType));
+        $objectId = $this->protect_string_db(trim($params['object_id']));
+        $listType = $this->protect_string_db(trim($listType));
 
+        # Delete all and replace full list
+        #**********************************************************************
+        $this->query(
+            "delete from " . $params['table'] 
+            . " where coll_id = '" . $coll_id . "' "
+                . "and object_type = '" . $objectType . "' "
+                . "and object_id = '" . $object_id . "' "
+                . "and listmodel_type = '" . $listType . "'"
+        );
+        # Dest user
+        #**********************************************************************
+        $dest_user_id = $this->protect_string_db(trim($diffList['dest']['user_id']));
+        $this->query(
+            "insert into " . $params['table'] 
+                . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type ) "
+            . " values ("
+                . "'" . $coll_id . "', "
+                . "'" . $object_id . "' , " 
+                . "'" . $objectType . "', "
+                . "0, "
+                . "'" . $dest_user_id . "', "
+                . "'user_id', "
+                . "'dest', "
+                . "'" . $listType . "'"
+            .")"
+        );
+                   
+        # Roles
+        #**********************************************************************
+        foreach($roles as $role_id => $role_config) {
+            # users
+            #**********************************************************************
+            for ($i=0, $l=count($diffList[$role_id]['users']);
+                $i<$l; 
+                $i++
+            ) {
+                $user_id = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['user_id']));
+                $this->query(
+                    "insert into " . $params['table'] 
+                        . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type ) "
+                    . " values ("
+                        . "'" . $coll_id . "', "
+                        . "'" . $object_id . "' , " 
+                        . "'" . $objectType . "', "
+                        . $i . ", "
+                        . "'" . $user_id . "', "
+                        . "'user_id', "
+                        . "'".$role_config['role_mode']."', "
+                        . "'" . $listType . "'"
+                    . ")"
+                );
+            }
+            # Entities
+            #**********************************************************************
+            for ($i=0, $l=count($diffList[$role_id]['entities']); $i<$l ; $i++) {
+                $entity_id = $this->protect_string_db(trim($diffList[$role_id]['entities'][$i]['entity_id']));
+                $this->query(
+                    "insert into " . $params['table'] 
+                        . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type ) "
+                    . " values ("
+                        . "'" . $coll_id . "', "
+                        . "'" . $object_id . "' , " 
+                        . "'" . $objectType . "', "
+                        . $i . ", "
+                        . "'" . $entity_id . "', "
+                        . "'entity_id', "
+                        . "'".$role_config['role_mode']."', "
+                        . "'" . $listType . "'"
+                    . ")"
+                );
+            }
+        }
+    }
+    
     /**
     * Loads a diffusion list into database (listinstance or listmodel table)
     *
@@ -203,595 +286,179 @@ class diffusion_list extends dbquery
     **/
     function load_list_db($diffList, $params, $listType = 'DOC', $objectType = 'entity_id')
     {
-        //print_r($diffList);exit;
         $this->connect();
-        
+
         require_once 'core/class/class_history.php';
         $hist = new history();
         
-        //print_r($_SESSION['m_admin']['entity']['listmodel']);
-        //echo "<br>";
-        //print_r($params);
-        if ($params['mode'] == 'listmodel' && isset($params['object_id'])
-            && ! empty($params['object_id'])
-        ) {
-            $this->query(
-                "delete from " . $params['table'] . " where coll_id = '"
-                . $this->protect_string_db(trim($params['coll_id'])) . "' "
-                . "and object_type = '"
-                . $this->protect_string_db(trim($objectType)) . "' "
-                . "and object_id = '"
-                . $this->protect_string_db(trim($params['object_id'])) . "' "
-                . "and listmodel_type = '"
-                . $this->protect_string_db(trim($listType)) . "'"
-            );
-            //$this->show();
-            if (isset($diffList['dest']['user_id'])
-                && !empty($diffList['dest']['user_id'])
-            ) {
-                # Dest user
-                $this->query(
-                    "insert into " . $params['table'] . " (coll_id, "
-                    . "object_id, object_type, sequence, item_id, "
-                    . "item_type, item_mode, listmodel_type ) values ('"
-                    . $this->protect_string_db(trim($params['coll_id']))
-                    . "', '"
-                    . $this->protect_string_db(trim($params['object_id']))
-                    . "' , '" . $this->protect_string_db(trim($objectType))
-                    . "', 0, '"
-                    . $this->protect_string_db(trim($diffList['dest']['user_id']))
-                    . "', 'user_id' , 'dest', '"
-                    . $this->protect_string_db(trim($listType)) . "')"
-                );
-                
-                # Copy users
-                for ($i = 0; $i < count($diffList['copy']['users']); $i ++) {
-                    $this->query(
-                        "insert into " . $params['table'] . " (coll_id, "
-                        . "object_id, object_type, sequence, item_id, "
-                        . "item_type, item_mode, listmodel_type ) values ('"
-                        . $this->protect_string_db(trim($params['coll_id']))
-                        . "', '"
-                        . $this->protect_string_db(trim($params['object_id']))
-                        . "' , '"
-                        . $this->protect_string_db(trim($objectType))
-                        . "', " . $i . ", '"
-                        . $this->protect_string_db(
-                            trim($diffList['copy']['users'][$i]['user_id'])
-                        ) . "', 'user_id' , 'cc', '"
-                        . $this->protect_string_db(trim($listType)) . "')"
-                    );
-                }
-                # Copy entities
-                for ($i = 0; $i < count($diffList['copy']['entities']); $i ++) {
-                    $this->query(
-                        "insert into " . $params['table'] . " (coll_id, "
-                        . "object_id, object_type, sequence, item_id, "
-                        . "item_type, item_mode, listmodel_type ) values ('"
-                        . $this->protect_string_db(trim($params['coll_id']))
-                        . "', '"
-                        . $this->protect_string_db(trim($params['object_id']))
-                        . "' , '" . $this->protect_string_db(trim($objectType))
-                        . "', " . $i . ", '"
-                        . $this->protect_string_db(
-                            trim($diffList['copy']['entities'][$i]['entity_id'])
-                        ) . "', 'entity_id' , 'cc', '"
-                        . $this->protect_string_db(trim($listType)) . "')"
-                    );
-                    //$this->show();
-                }
-                # 1.4 custom listinstance roles
-                if(count($_SESSION['listinstance_roles']) > 0) {
-                    foreach($_SESSION['listinstance_roles'] as $role_id => $role_config) {
-                        # users
-                        for ($i=0, $l=count($diffList[$role_id]['users']); $i<$l ; $i++) {
-                            $this->query(
-                                "insert into " . $params['table'] . " (coll_id, "
-                                . "object_id, object_type, sequence, item_id, "
-                                . "item_type, item_mode, listmodel_type ) values ('"
-                                . $this->protect_string_db(trim($params['coll_id']))
-                                . "', '"
-                                . $this->protect_string_db(trim($params['object_id']))
-                                . "' , '" . $this->protect_string_db(trim($objectType))
-                                . "', " . $i . ", '"
-                                . $this->protect_string_db(
-                                    trim($diffList[$role_id]['users'][$i]['user_id'])
-                                ) . "', 'user_id' , '".$role_id."', '"
-                                . $this->protect_string_db(trim($listType)) . "')"
-                            );
-                        }
-                        # Entities
-                        for ($i=0, $l=count($diffList[$role_id]['entities']); $i<$l ; $i++) {
-                            $this->query(
-                                "insert into " . $params['table'] . " (coll_id, "
-                                . "object_id, object_type, sequence, item_id, "
-                                . "item_type, item_mode, listmodel_type ) values ('"
-                                . $this->protect_string_db(trim($params['coll_id']))
-                                . "', '"
-                                . $this->protect_string_db(trim($params['object_id']))
-                                . "' , '" . $this->protect_string_db(trim($objectType))
-                                . "', " . $i . ", '"
-                                . $this->protect_string_db(
-                                    trim($diffList[$role_id]['entities'][$i]['entity_id'])
-                                ) . "', 'entity_id' , '".$role_id."', '"
-                                . $this->protect_string_db(trim($listType)) . "')"
-                            );
-                        }
-                    }
-                }
-                
-            }
-        } 
-        else if ($params['mode'] == 'listinstance') {
+        $coll_id = $this->protect_string_db(trim($params['coll_id']));
+        $objectType = $this->protect_string_db(trim($objectType));
+        $objectId = $this->protect_string_db(trim($params['object_id']));
+        $listType = $this->protect_string_db(trim($listType));
+        
+        if (! isset($params['concat_list'])) 
+            $concat = false;
+        else 
+            $concat = $params['concat_list'];
+
+        if (! isset($params['only_cc'])) 
+            $onlyCc = false;
+        else 
+            $onlyCc = $params['only_cc'];
+        
+        if (isset($params['user_id']) && ! empty($params['user_id'])) {
+            require_once 'modules/entities/class/class_manage_entities.php';
+            $ent = new entity();
+            $creatorUser = $this->protect_string_db(trim($params['user_id']));
+            $primary = $ent->get_primary_entity($creatorUser);
+            $creatorEntity = $this->protect_string_db(trim($primary['ID']));
+        } else {
             $creatorUser = '';
             $creatorEntity = '';
-            if (! isset($params['concat_list'])) {
-                $concat = false;
-            } else {
-                $concat = $params['concat_list'];
-            }
-            if (! isset($params['only_cc'])) {
-                $onlyCc = false;
-            } else {
-                $onlyCc = $params['only_cc'];
-            }
-            if (isset($params['user_id']) && ! empty($params['user_id'])) {
-                require_once 'modules' . DIRECTORY_SEPARATOR . 'entities'
-                    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-                    . 'class_manage_entities.php';
-                $ent = new entity();
-                $creatorUser = $params['user_id'];
-                $primary = $ent->get_primary_entity($creatorUser);
-                $creatorEntity = $primary['ID'];
-            }
-            // If not in concat mode, deletes all copies
-            if (! $concat) {
-                $this->query(
-                    "delete from " . $params['table'] . " where coll_id = '"
-                    . $this->protect_string_db(trim($params['coll_id'])) . "' "
-                    . " and listinstance_type = '"
-                    . $this->protect_string_db(trim($listType)) . "'"
-                    . " and res_id = " . $params['res_id']
-                    . " and item_mode != 'dest'"
-                );
-                //$this->show();
-            }
-            
-            // DEST
-            //***********************************************************************************************
-            if (isset($diffList['dest']['user_id'])
-                && ! empty($diffList['dest']['user_id']) && ! $onlyCc
-            ) {
-                // If dest_user is set, deletes the dest_user (concat or not concat)
-                $this->query(
-                    "delete from " . $params['table'] . " where coll_id = '"
-                    . $this->protect_string_db(trim($params['coll_id'])) . "'"
-                    . " and listinstance_type = '"
-                    . $this->protect_string_db(trim($listType)) . "'"
+        }
+        
+        # DEST USER (only if not in onlyCC & dest changed)
+        # *****************************************************************
+        if (isset($diffList['dest']['user_id'])
+            && !empty($diffList['dest']['user_id'])
+            && !$onlyCc
+            && $diffList['dest']['user_id'] != $oldDiffList['dest']['user_id']
+        ) {
+            $this->query(
+                "delete from " . $params['table'] 
+                . " where coll_id = '" . $coll_id . "'"
+                    . " and listinstance_type = '" . $listType . "'"
                     . " and res_id = " . $params['res_id']
                     . " and item_mode = 'dest'"
+            );
+            $user_id = $this->protect_string_db(trim($diffList['dest']['user_id']));
+            $viewed = (integer)$diffList['dest']['viewed'];
+            $this->query(
+                "insert into " . $params['table'] 
+                    . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed) "
+                . "values ("
+                    . "'" . $coll_id . "', " 
+                    . $params['res_id'] . ", "
+                    . "'" . $listType . "', "
+                    . "0, "
+                    . "'" . $user_id . "', "
+                    . "'user_id' ,"
+                    . "'dest', "
+                    . "'" . $creatorUser . "', "
+                    . "'" . $creatorEntity . "', "
+                    . "'Y', "
+                    . $viewed 
+                . " )"
+            );
+            
+            $listinstance_id = $this->last_insert_id('listinstance_id_seq');
+            $hist->add(
+                $params['table'],
+                $listinstance_id,
+                'ADD',
+                'diffdestuser',
+                'Diffusion of document '.$params['res_id'] . ' to ' . $user_id,
+                $_SESSION['config']['databasetype'],
+                'apps'
+            );
+            
+        } # End of dest user
+                   
+        # LISTINSTANCE ROLES
+        #**********************************************************************************
+        $this->query(
+            "delete from " . $params['table'] 
+            . " where coll_id = '" . $coll_id . "'"
+                . " and listinstance_type = '" . $listType . "'"
+                . " and res_id = " . $params['res_id']
+                . " and item_mode != 'dest'"
+        );
+        $roles = $this->get_listinstance_roles();
+        foreach($roles as $role_id => $role_config) {
+            # CUSTOM USER ROLES IN NEW LIST
+            for ($i=0, $l=count($diffList[$role_id]['users']);
+                $i<$l;
+                $i++
+            ) {
+                $user_id = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['user_id']));
+                $visible = $diffList[$role_id]['users'][$i]['visible'];
+                $viewed = (integer)$diffList[$role_id]['users'][$i]['viewed'];
+                $this->query(
+                    "insert into " . $params['table'] 
+                        . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed) "
+                    . "values ("
+                        . "'" . $coll_id . "', "
+                        . $params['res_id'] . ", "
+                        . "'" . $listType . "', "
+                        . $i . ", "
+                        . "'" . $user_id . "', " 
+                        . "'user_id' , "
+                        . "'".$role_config['role_mode']."', "
+                        . "'" . $creatorUser . "', "
+                        . "'" . $creatorEntity. "', "
+                        . "'" . $visible . "', "
+                        . $viewed
+                    . " )"
                 );
-                //$this->show();
-                if ($concat) {
-                    // Deletes the dest user if he is in copy to avoid duplicate entry
-                    $this->query(
-                        "delete from " . $params['table'] . " where coll_id = '"
-                        . $this->protect_string_db(trim($params['coll_id']))."'"
-                        . " and listinstance_type = '"
-                        . $this->protect_string_db(trim($listType)) . "' "
-                        . "and res_id = " . trim($params['res_id'])
-                        . " and item_mode != 'dest' and item_type = 'user_id' "
-                        . "and item_id = '"
-                        . $this->protect_string_db(
-                            trim($diffList['dest']['user_id'])
-                        ) . "'"
-                    );
-                    //$this->show();
-                }
-                if (isset($diffList['dest']['viewed'])
-                    && $diffList['dest']['viewed'] <> ""
-                ) {
-                    $this->query(
-                        "insert into " . $params['table'] . " (coll_id, res_id,"
-                        . " listinstance_type, sequence, item_id, item_type, "
-                        . "item_mode, added_by_user, added_by_entity, viewed) "
-                        . "values ('"
-                        . $this->protect_string_db(trim($params['coll_id']))
-                        . "', " . $params['res_id'] . " , '"
-                        . $this->protect_string_db(trim($listType)) . "', 0, '"
-                        . $this->protect_string_db(
-                            trim($diffList['dest']['user_id'])
-                        ) . "', 'user_id' , 'dest', '"
-                        . $this->protect_string_db(trim($creatorUser)) . "', '"
-                        . $this->protect_string_db(trim($creatorEntity)) . "', "
-                        . $diffList['dest']['viewed'] . " )"
-                    );
-                } else {
-                    $this->query(
-                        "insert into " . $params['table'] . " (coll_id, res_id,"
-                        . " listinstance_type, sequence, item_id, item_type, "
-                        . "item_mode, added_by_user, added_by_entity ) values "
-                        . "('"
-                        . $this->protect_string_db(trim($params['coll_id']))
-                        . "', " . $params['res_id'] . " , '"
-                        . $this->protect_string_db(trim($listType)) . "', 0, '"
-                        . $this->protect_string_db(
-                            trim($diffList['dest']['user_id'])
-                        ) . "', 'user_id' , 'dest', '"
-                        . $this->protect_string_db(trim($creatorUser)) . "', '"
-                        . $this->protect_string_db(trim($creatorEntity)) . "')"
-                    );
-                }
-                $listinstance_id = $this->last_insert_id('listinstance_id_seq');
+                
+                # History
+                $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
                 $hist->add(
                     $params['table'],
                     $listinstance_id,
                     'ADD',
-                    'diffdestuser',
-                    'Diffusion of document '.$params['res_id'],
+                    'diff'.$role_id.'user',
+                    'Diffusion of document '.$params['res_id'].' to '. $user_id . ' as ' . $role_id,
                     $_SESSION['config']['databasetype'],
                     'apps'
-                );                
-                //$this->show();
-            }
-            
-            // COPIES TO USERS
-            //***********************************************************************************************
-            $maxSeq = 0;
-            if ($concat) {
-                $this->query(
-                    "select max(sequence) as max_seq from " . $params['table']
-                    . " where coll_id = '"
-                    . $this->protect_string_db(trim($params['coll_id']))
-                    . "' and res_id = " . $params['res_id']
-                    . " and listinstance_type = '"
-                    . $this->protect_string_db(trim($listType))
-                    . "' and item_type = 'user_id' and item_mode= 'cc'"
-                );
-                //$this->show();
-                $res = $this->fetch_object();
-                if ($res->max_seq > - 1) {
-                    $maxSeq = (int) $res->max_seq + 1;
-                }
-            }
-            for ($i = 0; $i < count($diffList['copy']['users']); $i ++) {
-                $insert = true;
-                if ($concat) {
-                    $this->query(
-                        "select res_id from " . $params['table']
-                        . " where coll_id = '"
-                        . $this->protect_string_db(trim($params['coll_id']))
-                        . "' and res_id = " . $params['res_id']
-                        . " and listinstance_type = '"
-                        . $this->protect_string_db(trim($listType))
-                        . "'  and item_id = '"
-                        . $this->protect_string_db(
-                            trim($diffList['copy']['users'][$i]['user_id'])
-                        ) . "' and item_type = 'user_id' and item_mode= 'cc'"
-                    );
-                    //$this->show();
-                    if ($this->nb_result() == 0) {
-                        $insert = true;
-                    } else {
-                        $insert = false;
-                    }
-                }
-                if ($insert
-                    && $diffList['dest']['user_id'] <> $diffList['copy']['users'][$i]['user_id']
-                ) {
-                    $seq = $i + $maxSeq;
-                    if (isset($diffList['copy']['users'][$i]['viewed'])
-                        && $diffList['copy']['users'][$i]['viewed'] <> ""
-                    ) {
-                        $this->query(
-                            "insert into " . $params['table'] . " (coll_id, "
-                            . "res_id, listinstance_type,  sequence, item_id, "
-                            . "item_type, item_mode, added_by_user, "
-                            . "added_by_entity, viewed) values ('"
-                            . $this->protect_string_db(trim($params['coll_id']))
-                            . "', " . $params['res_id'] . " , '"
-                            . $this->protect_string_db(trim($listType)) . "', "
-                            . $seq . ", '"
-                            . $this->protect_string_db(
-                                trim($diffList['copy']['users'][$i]['user_id'])
-                            ) . "', 'user_id' , 'cc', '"
-                            . $this->protect_string_db(trim($creatorUser))
-                            . "', '"
-                            . $this->protect_string_db(trim($creatorEntity))
-                            . "', " . $diffList['copy']['users'][$i]['viewed']
-                            . " )"
-                        );
-                    } else {
-                        $this->query(
-                            "insert into " . $params['table'] . " (coll_id, "
-                            . "res_id, listinstance_type, sequence, item_id, "
-                            . "item_type, item_mode, added_by_user, "
-                            . "added_by_entity ) values ('"
-                            . $this->protect_string_db(trim($params['coll_id']))
-                            . "', " . $params['res_id'] . " , '"
-                            . $this->protect_string_db(trim($listType)) . "', "
-                            . $seq . ", '"
-                            . $this->protect_string_db(
-                                trim($diffList['copy']['users'][$i]['user_id'])
-                            ) . "', 'user_id' , 'cc', '"
-                            . $this->protect_string_db(trim($creatorUser))
-                            . "', '"
-                            . $this->protect_string_db(trim($creatorEntity))
-                            . "' )"
-                        );
-                    }
-                    $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
-                    $hist->add(
-                        $params['table'],
-                        $listinstance_id,
-                        'ADD',
-                        'diffcopyuser',
-                        'Diffusion of document '.$params['res_id'],
-                        $_SESSION['config']['databasetype'],
-                        'apps'
-                    ); 
-                    //$this->show();
-                }
-            }
-            
-            // COPY TO ENTITIES
-            //**********************************************************************************
-            $maxSeq = 0;
-            if ($concat) {
-                $this->query(
-                    "select max(sequence) as max_seq from " . $params['table']
-                    . " where coll_id = '"
-                    . $this->protect_string_db(trim($params['coll_id']))
-                    . "' and res_id = " . $params['res_id']
-                    . " and listinstance_type = '"
-                    . $this->protect_string_db(trim($listType))
-                    . "' and item_type = 'entity_id' and item_mode= 'cc'"
-                );
-                //$this->show();
-                $res = $this->fetch_object();
-                if ($res->max_seq > - 1) {
-                    $maxSeq = (int) $res->max_seq + 1;
-                }
-            }
-            for ($i = 0; $i < count($diffList['copy']['entities']); $i ++) {
-                $insert = true;
-                if ($concat) {
-                    $this->query(
-                        "select res_id from " . $params['table']
-                        . " where coll_id = '"
-                        . $this->protect_string_db(trim($params['coll_id']))
-                        . "' and res_id = " . $params['res_id']
-                        . " and listinstance_type = '"
-                        . $this->protect_string_db(trim($listType))
-                        . "' and item_id = '"
-                        . $this->protect_string_db(
-                            trim($diffList['copy']['entities'][$i]['entity_id'])
-                        ) . "' and item_type = 'entity_id' and item_mode= 'cc'"
-                    );
-                    //$this->show();
-                    if ($this->nb_result() == 0) {
-                        $insert = true;
-                    } else {
-                        $insert = false;
-                    }
-                }
-                if ($insert) {
-                    $seq = $i + $maxSeq;
-                    $this->query(
-                        "insert into " . $params['table'] . " (coll_id, res_id,"
-                        . " listinstance_type, sequence, item_id, item_type, "
-                        . "item_mode ,added_by_user, added_by_entity) values ('"
-                        . $this->protect_string_db(trim($params['coll_id']))
-                        . "', " . $params['res_id'] . " ,'"
-                        . $this->protect_string_db(trim($listType)) . "', "
-                        . $seq . ", '"
-                        . $this->protect_string_db(
-                            trim($diffList['copy']['entities'][$i]['entity_id'])
-                        ) . "', 'entity_id' , 'cc',  '" . $creatorUser . "', '"
-                        . $creatorEntity . "')"
-                    );
-                    //$this->show();
-                    $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
-                    $hist->add(
-                        $params['table'],
-                        $listinstance_id,
-                        'ADD',
-                        'diffcopyentity',
-                        'Diffusion of document '.$params['res_id'],
-                        $_SESSION['config']['databasetype'],
-                        'apps'
-                    ); 
-                }
-                //$this->show();
-            }
-            
-            // 1.4 custom listinstance_roles
-            //**********************************************************************************
-            if(count($_SESSION['listinstance_roles']) > 0) {
-                foreach($_SESSION['listinstance_roles'] as $role_id => $role_config) {
-                    // Users
-                    for ($i=0, $l=count($diffList[$role_id]['users']); $i<$l ; $i++) {
-                        $insert = true;
-                        if ($concat) {
-                            $this->query(
-                                "select res_id from " . $params['table']
-                                . " where coll_id = '"
-                                . $this->protect_string_db(trim($params['coll_id']))
-                                . "' and res_id = " . $params['res_id']
-                                . " and listinstance_type = '"
-                                . $this->protect_string_db(trim($listType))
-                                . "'  and item_id = '"
-                                . $this->protect_string_db(
-                                    trim($diffList[$role_id]['users'][$i]['user_id'])
-                                ) . "' and item_type = 'user_id' and item_mode= '".$role_id."'"
-                            );
-                            //$this->show();
-                            if ($this->nb_result() == 0) {
-                                $insert = true;
-                            } else {
-                                $insert = false;
-                            }
-                        }
-                        if ($insert
-                            && $diffList['dest']['user_id'] <> $diffList[$role_id]['users'][$i]['user_id']
-                        ) {
-                            $seq = $i + $maxSeq;
-                            if (isset($diffList[$role_id]['users'][$i]['viewed'])
-                                && $diffList[$role_id]['users'][$i]['viewed'] <> ""
-                            ) {
-                                $this->query(
-                                    "insert into " . $params['table'] . " (coll_id, "
-                                    . "res_id, listinstance_type,  sequence, item_id, "
-                                    . "item_type, item_mode, added_by_user, "
-                                    . "added_by_entity, viewed) values ('"
-                                    . $this->protect_string_db(trim($params['coll_id']))
-                                    . "', " . $params['res_id'] . " , '"
-                                    . $this->protect_string_db(trim($listType)) . "', "
-                                    . $seq . ", '"
-                                    . $this->protect_string_db(
-                                        trim($diffList[$role_id]['users'][$i]['user_id'])
-                                    ) . "', 'user_id' , '".$role_id."', '"
-                                    . $this->protect_string_db(trim($creatorUser))
-                                    . "', '"
-                                    . $this->protect_string_db(trim($creatorEntity))
-                                    . "', " . $diffList[$role_id]['users'][$i]['viewed']
-                                    . " )"
-                                );
-                            } else {
-                                $this->query(
-                                    "insert into " . $params['table'] . " (coll_id, "
-                                    . "res_id, listinstance_type, sequence, item_id, "
-                                    . "item_type, item_mode, added_by_user, "
-                                    . "added_by_entity ) values ('"
-                                    . $this->protect_string_db(trim($params['coll_id']))
-                                    . "', " . $params['res_id'] . " , '"
-                                    . $this->protect_string_db(trim($listType)) . "', "
-                                    . $seq . ", '"
-                                    . $this->protect_string_db(
-                                        trim($diffList[$role_id]['users'][$i]['user_id'])
-                                    ) . "', 'user_id' , '".$role_id."', '"
-                                    . $this->protect_string_db(trim($creatorUser))
-                                    . "', '"
-                                    . $this->protect_string_db(trim($creatorEntity))
-                                    . "' )"
-                                );
-                            }
-                            $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
-                            $hist->add(
-                                $params['table'],
-                                $listinstance_id,
-                                'ADD',
-                                'diff'.$role_id.'user',
-                                'Diffusion of document '.$params['res_id'].' to ' . $role_config['item_label'],
-                                $_SESSION['config']['databasetype'],
-                                'apps'
-                            ); 
-                            //$this->show();
-                        }
-                    }
-                    
-                    // ENTITIES
-                    $maxSeq = 0;
-                    if ($concat) {
-                        $this->query(
-                            "select max(sequence) as max_seq from " . $params['table']
-                            . " where coll_id = '"
-                            . $this->protect_string_db(trim($params['coll_id']))
-                            . "' and res_id = " . $params['res_id']
-                            . " and listinstance_type = '"
-                            . $this->protect_string_db(trim($listType))
-                            . "' and item_type = 'entity_id' and item_mode= '".$role_id."'"
-                        );
-                        //$this->show();
-                        $res = $this->fetch_object();
-                        if ($res->max_seq > - 1) {
-                            $maxSeq = (int) $res->max_seq + 1;
-                        }
-                    }
-                    for ($i = 0; $i < count($diffList[$role_id]['entities']); $i ++) {
-                        $insert = true;
-                        if ($concat) {
-                            $this->query(
-                                "select res_id from " . $params['table']
-                                . " where coll_id = '"
-                                . $this->protect_string_db(trim($params['coll_id']))
-                                . "' and res_id = " . $params['res_id']
-                                . " and listinstance_type = '"
-                                . $this->protect_string_db(trim($listType))
-                                . "' and item_id = '"
-                                . $this->protect_string_db(
-                                    trim($diffList[$role_id]['entities'][$i]['entity_id'])
-                                ) . "' and item_type = 'entity_id' and item_mode= '".$role_id."'"
-                            );
-                            //$this->show();
-                            if ($this->nb_result() == 0) {
-                                $insert = true;
-                            } else {
-                                $insert = false;
-                            }
-                        }
-                        if ($insert) {
-                            $seq = $i + $maxSeq;
-                            $this->query(
-                                "insert into " . $params['table'] . " (coll_id, res_id,"
-                                . " listinstance_type, sequence, item_id, item_type, "
-                                . "item_mode ,added_by_user, added_by_entity) values ('"
-                                . $this->protect_string_db(trim($params['coll_id']))
-                                . "', " . $params['res_id'] . " ,'"
-                                . $this->protect_string_db(trim($listType)) . "', "
-                                . $seq . ", '"
-                                . $this->protect_string_db(
-                                    trim($diffList[$role_id]['entities'][$i]['entity_id'])
-                                ) . "', 'entity_id' , '".$role_id."',  '" . $creatorUser . "', '"
-                                . $creatorEntity . "')"
-                            );
-                            //$this->show();
-                            $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
-                            $hist->add(
-                                $params['table'],
-                                $listinstance_id,
-                                'ADD',
-                                'diff'.$role_id.'user',
-                                'Diffusion of document '.$params['res_id'].' to ' . $role_config['item_label'],
-                                $_SESSION['config']['databasetype'],
-                                'apps'
-                            ); 
-                        }
-                        //$this->show();
-                    }
-                }
-            }
-            
-            
-            
-        }
-        if ($params['mode'] == 'listinstance') {
-            // Deletes the dest user if he is in copy to avoid duplicate entry
-            $this->query(
-                "select item_id from " . $params['table'] . " where coll_id = '"
-                . $this->protect_string_db(trim($params['coll_id']))
-                . "' and res_id = " . $params['res_id']
-                . " and listinstance_type = '"
-                . $this->protect_string_db(trim($listType))
-                . "' and item_type = 'user_id' and item_mode= 'dest'"
-            );
-            //$this->show();
-            $result = $this->fetch_object();
-            $itemId = $result->item_id;
-            $this->query(
-                "delete from " . $params['table'] . " where coll_id = '"
-                . $this->protect_string_db(trim($params['coll_id']))
-                . "' and listinstance_type = '"
-                . $this->protect_string_db(trim($listType))
-                . "' and res_id = " . trim($params['res_id'])
-                . " and item_mode = 'cc' and item_type = 'user_id' "
-                . "and item_id = '" . $itemId . "'"
-            );
-            //$this->show();
-        }
-        //exit;
-    }
+                ); 
 
+                
+            } # End of foreach role users
+            
+            # CUSTOM ENTITY ROLES
+            for ($i=0, $l=count($diffList[$role_id]['entities']);
+                $i<$l;
+                $i++
+            ) {
+                $entity_id = $this->protect_string_db(trim($diffList[$role_id]['entities'][$i]['entity_id']));
+                $visible = $diffList[$role_id]['entities'][$i]['visible'];
+                $viewed = (integer)$diffList[$role_id]['entities'][$i]['viewed'];
+                
+                $this->query(
+                    "insert into " . $params['table'] 
+                        . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed) "
+                    . "values ("
+                        . "'" . $coll_id . "', "
+                        . $params['res_id'] . ", "
+                        . "'" . $listType . "', "
+                        . $i . ", "
+                        . "'" . $entity_id . "', " 
+                        . "'entity_id' , "
+                        . "'".$role_config['role_mode']."', "
+                        . "'" . $creatorUser . "', "
+                        . "'" . $creatorEntity . "', "
+                        . "'" . $visible . "',"
+                        . $viewed
+                    . " )"
+                );
+                
+                # History
+                $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
+                $hist->add(
+                    $params['table'],
+                    $listinstance_id,
+                    'ADD',
+                    'diff'.$role_id.'user',
+                    'Diffusion of document '.$params['res_id'].' to '. $entity_id . ' as ' . $role_id,
+                    $_SESSION['config']['databasetype'],
+                    'apps'
+                ); 
+
+            } # End of foreach role entities
+        } # End of foreach roles
+    }
+    
     /**
     * Gets a diffusion list for a given resource identifier
     *
@@ -816,30 +483,29 @@ class diffusion_list extends dbquery
     **/
     public function get_listinstance($resId, $modeCc = false, $collId = 'letterbox_coll')
     {
+        $this->connect();
+        $roles = $this->get_listinstance_roles();
+        
         $listinstance = array();
         $listinstance['dest'] = array();
-        $listinstance['copy'] = array();
-        $listinstance['copy']['users'] = array();
-        $listinstance['copy']['entities'] = array();
         
-        // 1.4 custom listinstance modes
-        if(count($_SESSION['listinstance_roles']) > 0) {
-            foreach($_SESSION['listinstance_roles'] as $role_id => $role_config) {
-                $listinstance[$role_id] = array();
-                $listinstance[$role_id]['users'] = array();
-                $listinstance[$role_id]['entities'] = array();
-            }
+        foreach($roles as $role_id => $role_config) {
+            $listinstance[$role_id] = array();
+            $listinstance[$role_id]['users'] = array();
+            $listinstance[$role_id]['entities'] = array();
         }
+        
         
         if (empty($resId) || empty($collId)) {
             return $listinstance;
         }
 
         $this->connect();
+        # DEST USER
         if (! $modeCc) {
             $this->query(
                 "select l.item_id, u.firstname, u.lastname, e.entity_id, "
-                . "e.entity_label, l.viewed from " . ENT_LISTINSTANCE . " l, "
+                . "e.entity_label, l.visible, l.viewed from " . ENT_LISTINSTANCE . " l, "
                 . USERS_TABLE . " u, " . ENT_ENTITIES . " e, "
                 . ENT_USERS_ENTITIES . " ue where l.coll_id = '"
                 . $this->protect_string_db(trim($collId))
@@ -858,24 +524,29 @@ class diffusion_list extends dbquery
                 'firstname' => $this->show_string($res->firstname),
                 'entity_id' => $this->show_string($res->entity_id),
                 'entity_label' => $this->show_string($res->entity_label),
+                'visible' => $this->show_string($res->visible),
                 'viewed' => $this->show_string($res->viewed)
             );
         }
+        
+        # OTHER ROLES USERS
+        #**********************************************************************
         $this->query(
             "select l.item_id, u.firstname, u.lastname, e.entity_id, "
-            . "e.entity_label, l.viewed, l.item_mode from " . ENT_LISTINSTANCE . " l, " . USERS_TABLE
+            . "e.entity_label, l.visible, l.viewed, l.item_mode from "
+            . ENT_LISTINSTANCE . " l, " . USERS_TABLE
             . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
             . " ue where l.coll_id = '" . $collId
             . "' and l.listinstance_type = 'DOC' and l.item_mode != 'dest' "
             . "and l.item_type = 'user_id'  and l.item_id = u.user_id "
             . "and l.item_id = ue.user_id and ue.user_id=u.user_id "
             . "and e.entity_id = ue.entity_id and l.res_id = " . $resId
-            . " and ue.primary_entity = 'Y' order by u.lastname "
+            . " and ue.primary_entity = 'Y' order by l.sequence "
         );
         //$this->show();
         while ($res = $this->fetch_object()) {
             $role_id = $res->item_mode;
-            if($role_id=='cc') $role_id = 'copy';
+            if($role_id =='cc') $role_id = 'copy';
             if(!isset($listinstance[$role_id]['users']))
                 $listinstance[$role_id]['users'] = array();
             array_push(
@@ -886,17 +557,20 @@ class diffusion_list extends dbquery
                     'firstname' => $this->show_string($res->firstname),
                     'entity_id' => $this->show_string($res->entity_id),
                     'entity_label' => $this->show_string($res->entity_label),
+                    'visible' => $this->show_string($res->visible),
                     'viewed' => $this->show_string($res->viewed)
                 )
             );
         }
 
+        # OTHER ROLES ENTITIES
+        #**********************************************************************
         $this->query(
-            "select l.item_id,  e.entity_label, l.viewed, l.item_mode from " . ENT_LISTINSTANCE
+            "select l.item_id,  e.entity_label, l.visible, l.viewed, l.item_mode from " . ENT_LISTINSTANCE
             . " l, " . ENT_ENTITIES . " e where l.coll_id = 'letterbox_coll' "
             . "and l.listinstance_type = 'DOC' and l.item_mode != 'dest' "
             . "and l.item_type = 'entity_id' and l.item_id = e.entity_id "
-            . "and l.res_id = " . $resId . " order by e.entity_label "
+            . "and l.res_id = " . $resId . " order by l.sequence "
         );
 
         while ($res = $this->fetch_object()) {
@@ -909,6 +583,7 @@ class diffusion_list extends dbquery
                 array(
                     'entity_id' => $this->show_string($res->item_id),
                     'entity_label' => $this->show_string($res->entity_label),
+                    'visible' => $this->show_string($res->visible),
                     'viewed' => $this->show_string($res->viewed)
                 )
             );
@@ -964,13 +639,26 @@ class diffusion_list extends dbquery
         
         $roles = array();
         
+        # Default list : copy/cc
+        $roles['copy'] = 
+                array(
+                    'role_mode' => 'cc',
+                    'list_label' => _TO_CC,
+                    'role_label' => _TO_CC,
+                    'workflow_mode' => 'collaborative',
+                    'list_img' => 'manage_entities_b_small.gif&module=entities',
+                    'allow_entities' => true
+                );
+        
         while ($role = $this->fetch_object()) { 
             if ($role->allow_entities == 'Y') $ent = true;
             else $ent = false;
             $roles[(string) $role->role_id] = 
                 array(
+                    'role_mode' => (string)$role->role_id,
                     'list_label' => (string) $role->list_label,
                     'role_label' => (string) $role->role_label,
+                    'workflow_mode' => (string) $role->workflow_mode,
                     'list_img' => (string) $role->list_img,
                     'allow_entities' => $ent
                 );

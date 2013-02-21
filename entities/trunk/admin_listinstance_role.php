@@ -105,6 +105,11 @@ case 'up':
     $role_id->setAttribute('readonly', 'true');
     $role_id->setAttribute('disabled', 'true');
     
+    # Workflow mode
+    $workflow_mode = $view->getElementById("workflow_mode");
+    $option = $xview->query('./option[@value="'.$role->workflow_mode.'"]', $workflow_mode)->item(0);
+    $option->setAttribute('selected', 'true');
+    
     # Role Label
     $role_label = $view->getElementById("role_label");
     $role_label->setAttribute('value', $role->role_label);

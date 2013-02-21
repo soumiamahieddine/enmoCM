@@ -109,12 +109,13 @@ while ($line = $db->fetch_object()) {
     );
 }
 
+$origin = $_REQUEST['origin'];
 $id = '';
 $desc = '';
 # *****************************************************************************
 # Create empty lists
 # *****************************************************************************
-$roles = $listdiff->get_listinstance_roles();
+$roles = $difflist->get_listinstance_roles();
 
 if (! isset($_SESSION['m_admin']['entity']['listmodel']['copy']['users'])) {
     $_SESSION['m_admin']['entity']['listmodel']['copy']['users'] = array();
@@ -155,10 +156,10 @@ else
     $rank = false;
 
 // Mode (dest/copy or custom copy mode)
-if(isset($_GET['listinstance_role']) && !empty($_GET['listinstance_role']))
-    $role_id = $_GET['listinstance_role'];
+if(isset($_GET['role']) && !empty($_GET['role']))
+    $role_id = $_GET['role'];
 else 
-    $role_id = 'copy';
+    $role_id = 'dest';
 
 // Dest user    
 if(isset($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']) 
@@ -183,16 +184,16 @@ case "add_user":
         . " WHERE u.user_id='" . $db->protect_string_db($id) . "'"
     );
     $line = $db->fetch_object();
-    
-    if ($role_id == 'copy' && !$dest_is_set) {
-        // Dest not set => add as dest
+    # IF DEST, set unique dest
+    if($role_id == 'dest') {
         $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'] = $db->show_string($id);
         $_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'] = $db->show_string($line->firstname);
         $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'] = $db->show_string($line->lastname);
         $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_id'] = $db->show_string($line->entity_id);
         $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label'] = $db->show_string($line->entity_label);
+        $dest_is_set = true;
     } else {
-        // Dest already set => add to listinstance mode (copy/custom)
+    # OTHER ROLES
         array_push(
             $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'],
             array(
@@ -213,7 +214,6 @@ case 'add_entity':
         . " WHERE entity_id = '" . $db->protect_string_db($id) . "'"
     );
     $line = $db->fetch_object();
-    
     array_push(
         $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'],
         array(
@@ -228,6 +228,7 @@ case 'add_entity':
 // Remove DEST
 case 'remove_dest':
     unset($_SESSION['m_admin']['entity']['listmodel']['dest']);
+    $dest_is_set = false;
     break;
 
 // Remove USER
@@ -269,6 +270,7 @@ case 'dest_to_copy':
             )
         );
         unset($_SESSION['m_admin']['entity']['listmodel']['dest']);
+        $dest_is_set = false;
     }
     break;
 
@@ -285,6 +287,7 @@ case 'copy_to_dest':
             )
         );
         unset($_SESSION['m_admin']['entity']['listmodel']['dest']);
+        
     }
     if (isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['user_id'])
         && !empty($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['user_id'])
@@ -298,6 +301,7 @@ case 'copy_to_dest':
         $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'] = array_values(
             $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']
         );
+        $dest_is_set = true;
     }
     break;    
 
@@ -321,6 +325,7 @@ case 'move_user_down':
         $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][($rank+1)] = $downUser[0];
     }
     break;
+
 case 'move_entity_down':
     $downEntity = 
         array_splice(
@@ -349,24 +354,14 @@ if(isset($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'])) {
     $user_id = $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'];
     $indexed_diff_list['users'][$user_id] = _PRINCIPAL_RECIPIENT;
 }
-for($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel']['copy']['users']); $i<$l; $i++) {
-    $user_id = $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$i]['user_id'];
-    $indexed_diff_list['users'][$user_id] = _TO_CC;
-}
-for($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']); $i<$l; $i++) {
-    $entity_id = $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'][$i]['entity_id'];
-    $indexed_diff_list['entities'][$entity_id] = _TO_CC;
-}
-if(count($roles) > 0) {
-    foreach($roles as $role_id => $role_config) {
-        for($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']); $i<$l; $i++) {
-            $user_id = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['user_id'];
-            $indexed_diff_list['users'][$user_id] = $role_config['role_label'];
-        }
-        for($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']); $i<$l; $i++) {
-            $entity_id = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i]['entity_id'];
-            $indexed_diff_list['entities'][$entity_id] = $role_config['role_label'];
-        }
+foreach($roles as $role_id => $role_config) {
+    for($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']); $i<$l; $i++) {
+        $user_id = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['user_id'];
+        $indexed_diff_list['users'][$user_id] = $role_config['role_label'];
+    }
+    for($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']); $i<$l; $i++) {
+        $entity_id = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i]['entity_id'];
+        $indexed_diff_list['entities'][$entity_id] = $role_config['role_label'];
     }
 }
 
@@ -383,14 +378,13 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
     <script type="text/javascript">
         function add_user(id) {
             user_id = $('user_id_' + id).value;
-            listinstance_role = $('user_role_' + id).value;
-            goTo('<?php echo $linkwithwhat; ?>&action=add_user&id='+user_id+'&listinstance_role='+listinstance_role);        
+            role = $('user_role_' + id).value;
+            goTo('<?php echo $linkwithwhat; ?>&action=add_user&id='+user_id+'&role='+role);        
         }
-        
         function add_entity(id) {
             entity_id = $('entity_id_' + id).value;
-            listinstance_role = $('entity_role_' + id).value;
-            goTo('<?php echo $linkwithwhat; ?>&action=add_entity&id='+entity_id+'&listinstance_role='+listinstance_role);        
+            role = $('entity_role_' + id).value;
+            goTo('<?php echo $linkwithwhat; ?>&action=add_entity&id='+entity_id+'&role='+role);        
         }
     </script>
     <br/>
@@ -417,152 +411,87 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                 <td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'];?></td>
                 <td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label']; ?></td>
                 <td class="action_entities"><!-- Remove dest -->
-                    <a href="<?php echo $linkwithdest; ?>&action=remove_dest" class="delete"><?php echo _DELETE;?></a>
+                    <a href="<?php echo $linkwithwhat; ?>&action=remove_dest" class="delete"><?php echo _DELETE;?></a>
                 </td>
                 <td class="action_entities"><!-- Move dest to copy -->
-                    <a href="<?php echo $linkwithdest; ?>&action=dest_to_copy" class="down"><?php echo _TO_CC;?></a>
+                    <a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy" class="down"><?php echo _TO_CC;?></a>
                 </td>
             </tr>
         </table><?php 
         } ?>
         <br/> <?php 
         #**************************************************************************
-        # CC COPY ENTITIES / USERS
+        # OTHER ROLES
         #**************************************************************************
-        if( count($_SESSION['m_admin']['entity']['listmodel']['copy']['users']) > 0 
-            || count($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']) > 0
-        ) { ?>
-            <h2 class="sstit"><?php echo _TO_CC;?></h2>
-            <table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php 
-            #**************************************************************************
-            # CC COPY ENTITIES
-            #**************************************************************************
-            $color = ' class="col"';
-            for($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']);
-                $i<$l;
-                $i++
-            ) {
-                if($color == ' class="col"') $color = '';
-                else $color = ' class="col"';  ?>
-                <tr <?php echo $color; ?> >
-                    <td>
-                        <img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_entities_b.gif&module=entities';?>" alt="<?php echo _ENTITY;?>" title="<?php echo _ENTITY;?>" />
-                    </td>
-                    <td><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'][$i]['entity_id'];?></td>
-                    <td colspan="2"><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'][$i]['entity_label'];?></td>
-                    <td class="action_entities"><!-- Remove entity -->
-                        <a href="<?php echo $linkwithwhat;?>&action=remove_entity&rank=<?php echo $i;?>&id=<?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'][$i]['entity_id'];?>" class="delete"><?php echo _DELETE;?></a>
-                    </td>
-                    <td>&nbsp;</td>
-                    <td class="action_entities"><!-- Move down in list --><?php 
-                    if($l>1 && $i<($l-1)) { ?>
-                        <a href="<?php echo $linkwithwhat;?>&action=move_entity_down&rank=<?php echo $i;?>" class="down"></a><?php 
-                    } ?>
-                    </td>
-                </tr><?php 
-            }
-            #**************************************************************************
-            # CC COPY USERS
-            #**************************************************************************
-            for($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel']['copy']['users']);
-                $i<$l;
-                $i++
-            ) {
-                if($color == ' class="col"') $color = '';
-                else $color = ' class="col"';?>
-                <tr <?php echo $color; ?> >
-                    <td>
-                        <img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b.gif&module=entities';?>" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" />
-                    </td>
-                    <td><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$i]['lastname'];?></td>
-                    <td><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$i]['firstname'];?></td>
-                    <td><?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$i]['entity_label']; ?></td>
-                    <td class="action_entities"><!-- Remove user -->
-                        <a href="<?php echo $linkwithwhat;?>&action=remove_user&rank=<?php echo $i;?>&id=<?php echo $_SESSION['m_admin']['entity']['listmodel']['copy']['users'][$i]['user_id'];?>" class="delete"><?php echo _DELETE;?></a>
-                    </td>
-                    <td class="action_entities"><!-- Switch copy to dest -->
-                        <a href="<?php echo $linkwithwhat;?>&action=copy_to_dest&rank=<?php echo $i;?>" class="up"><?php echo _TO_DEST;?></a>
-                    </td>
-                    <td class="action_entities"><!-- Move down in list --><?php 
-                    if($l>1 && $i<($l-1)) { ?>
-                        <a href="<?php echo $linkwithwhat;?>&action=move_user_down&rank=<?php echo $i;?>" class="down"></a><?php 
-                    } ?>
-                    </td>
-                </tr><?php 
-            } ?>
-            </table>
-            <br/> <?php 
-        } 
-        #**************************************************************************
-        # CUSTOM ROLES
-        #**************************************************************************
-        if(count($roles) > 0) {
-            foreach($roles as $role_id => $role_config) {
-                if (count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']) > 0
-                 || count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']) > 0
-                ) { ?>
-                    <h2 class="sstit"><?php echo $role_config['list_label'];?></h2>
-                    <table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php
-                    #**************************************************************************
-                    # CUSTOM ROLE USERS
-                    #**************************************************************************
-                    $color = ' class="col"';
-                    for ($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']) ; $i<$l ; $i++) {
-                        if ($color == ' class="col"') $color = '';
-                        else $color = ' class="col"'; ?>
-                        <tr <?php echo $color; ?> >
-                            <td>
-                                <img src="<?php echo $_SESSION['config']['businessappurl'] ?>static.php?filename=manage_users_entities_b.gif&module=entities" alt="<?php echo _USER . " " . $role_config['role_label'] ;?>" title="<?php echo _USER . " " . $role_config['role_label'] ; ?>" />
-                            </td>
-                            <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['lastname']; ?></td>
-                            <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['firstname'];?></td>
-                            <td><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['entity_label']; ?></td>
-                            <td class="action_entities"><!-- Remove user -->
-                                <a href="<?php echo $linkwithwhat; ?>&action=remove_user&listinstance_role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['user_id'];?>" class="delete"><?php echo _DELETE; ?></a>
-                            </td>
-                            <td>&nbsp;</td>
-                            <td class="action_entities"><!-- Move down in list --><?php 
-                            if($l>1 && $i<($l-1)) { ?>
-                                <a href="<?php echo $linkwithwhat;?>&action=move_user_down&listinstance_role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php 
-                            } ?>
-                            </td>
-                        </tr> <?php
-                    }
-                    #**************************************************************************
-                    # CUSTOM ROLE ENTITIES
-                    #**************************************************************************
-                    for($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']); 
-                        $i<$l;
-                        $i++
-                    ) {
-                        if ($color == ' class="col"') $color = '';
-                        else $color = ' class="col"'; ?>
-                        <tr <?php echo $color; ?> >
-                            <td>
-                                <img src="<?php echo $_SESSION['config']['businessappurl'] ?>static.php?filename=manage_entities_b.gif&module=entities" alt="<?php echo _ENTITY . " " . $role_config['role_label'] ;?>" title="<?php echo _ENTITY . " " . $role_config['role_label'] ; ?>" />
-                            </td>
-                            <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i]['entity_id']; ?></td>
-                            <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i]['entity_label']; ?></td>
-                            <td>&nbsp;</td>
-                            <td class="action_entities">
-                                <a href="<?php echo $linkwithwhat; ?>&action=remove_entity&listinstance_role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i]['entity_id'];?>" class="delete">
-                                    <?php echo _DELETE; ?>
-                                </a>
-                            </td>
-                            <td class="action_entities">&nbsp;</td>
-                            <td class="action_entities"><!-- Move down in list --><?php 
-                            if($l>1 && $i<($l-1)) { ?>
-                                <a href="<?php echo $linkwithwhat;?>&action=move_entity_down&listinstance_role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php 
-                            } ?>
-                            </td>
-                        </tr><?php
-                    } ?>
-                    </table>
-                    <br/><?php
+        foreach($roles as $role_id => $role_config) {
+            if (count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']) > 0
+             || count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']) > 0
+            ) { ?>
+                <h2 class="sstit"><?php echo $role_config['list_label'];?></h2>
+                <table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php
+                #**************************************************************************
+                # OTHER ROLE USERS
+                #**************************************************************************
+                $color = ' class="col"';
+                for ($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']) ; $i<$l ; $i++) {
+                    if ($color == ' class="col"') $color = '';
+                    else $color = ' class="col"'; ?>
+                    <tr <?php echo $color; ?> >
+                        <td>
+                            <img src="<?php echo $_SESSION['config']['businessappurl'] ?>static.php?filename=manage_users_entities_b.gif&module=entities" alt="<?php echo _USER . " " . $role_config['role_label'] ;?>" title="<?php echo _USER . " " . $role_config['role_label'] ; ?>" />
+                        </td>
+                        <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['lastname']; ?></td>
+                        <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['firstname'];?></td>
+                        <td><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['entity_label']; ?></td>
+                        <td class="action_entities"><!-- Remove user -->
+                            <a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['user_id'];?>" class="delete"><?php echo _DELETE; ?></a>
+                        </td>
+                        <td class="action_entities"><!-- Switch copy to dest --><?php
+                        if($role_id == 'copy') { ?>
+                            <a href="<?php echo $linkwithwhat;?>&action=copy_to_dest&role=copy&rank=<?php echo $i;?>" class="up"><?php echo _TO_DEST;?></a><?php
+                        } ?>
+                        </td>
+                        <td class="action_entities"><!-- Move down in list --><?php 
+                        if($l>1 && $i<($l-1)) { ?>
+                            <a href="<?php echo $linkwithwhat;?>&action=move_user_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php 
+                        } ?>
+                        </td>
+                    </tr> <?php
                 }
+                #**************************************************************************
+                # OTHER ROLE ENTITIES
+                #**************************************************************************
+                for($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']); 
+                    $i<$l;
+                    $i++
+                ) {
+                    if ($color == ' class="col"') $color = '';
+                    else $color = ' class="col"'; ?>
+                    <tr <?php echo $color; ?> >
+                        <td>
+                            <img src="<?php echo $_SESSION['config']['businessappurl'] ?>static.php?filename=manage_entities_b.gif&module=entities" alt="<?php echo _ENTITY . " " . $role_config['role_label'] ;?>" title="<?php echo _ENTITY . " " . $role_config['role_label'] ; ?>" />
+                        </td>
+                        <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i]['entity_id']; ?></td>
+                        <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i]['entity_label']; ?></td>
+                        <td>&nbsp;</td>
+                        <td class="action_entities">
+                            <a href="<?php echo $linkwithwhat; ?>&action=remove_entity&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i]['entity_id'];?>" class="delete">
+                                <?php echo _DELETE; ?>
+                            </a>
+                        </td>
+                        <td class="action_entities">&nbsp;</td>
+                        <td class="action_entities"><!-- Move down in list --><?php 
+                        if($l>1 && $i<($l-1)) { ?>
+                            <a href="<?php echo $linkwithwhat;?>&action=move_entity_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php 
+                        } ?>
+                        </td>
+                    </tr><?php
+                } ?>
+                </table>
+                <br/><?php
             }
         }
-        
+
         #******************************************************************************
         # LIST OF AVAILABLE ENTITIES / USERS
         #******************************************************************************
@@ -586,6 +515,7 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                 <input type="hidden" name="display" value="true" />
                 <input type="hidden" name="module" value="entities" />
                 <input type="hidden" name="page" value="creation_listmodel" />
+                <input type="hidden" name="origin" id="origin" value="<?php echo $origin; ?>" />
                 <table cellpadding="2" cellspacing="2" border="0">
                     <tr>
                         <th>
@@ -638,7 +568,7 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                             
                         if ($color == ' class="col"') $color = '';
                         else $color = ' class="col"'; ?>
-                        <tr <?php echo $color; ?>>
+                        <tr <?php echo $color; ?> id="user_<?php echo $j; ?>">
                         <td><?php echo $users[$j]['NOM']; ?></td>
                         <td><?php echo $users[$j]['PRENOM']; ?></td>
                         <td><?php echo $users[$j]['DEP'];?></td>
@@ -649,11 +579,16 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                             <a href="<?php echo $linkwithwhat; ?>&action=add_user&id=<?php echo $users[$j]['ID']; ?>" class="change"><?php echo _ADD; ?></a><?php
                         } else if(count($roles) > 0) { ?>
                             <input type="hidden" id="user_id_<?php echo $j; ?>" value="<?php echo $users[$j]['ID'];?>" />
-                            <select name="listinstance_role" id="user_role_<?php echo $j; ?>">
-                                <option value=""><?php echo _DEST_OR_COPY; ?></option><?php 
-                                foreach($roles as $role_id => $role_config) { ?>
-                                    <option value="<?php echo $role_id; ?>"><?php echo $role_config['role_label']; ?></option><?php 
-                                } ?>
+                            <select name="role" id="user_role_<?php echo $j; ?>"><?php
+                            if(!$dest_is_set) { ?>
+                                <option value="dest"><?php echo _DEST; ?></option><?php
+                            }
+                            foreach($roles as $role_id => $role_config) { ?>
+                                <option value="<?php echo $role_id; ?>"><?php echo $role_config['role_label']; ?></option><?php 
+                            } 
+                            if($dest_is_set) { ?>
+                                <option value="dest"><?php echo _DEST; ?></option><?php
+                            } ?>
                             </select>&nbsp;
                             <span onclick="add_user(<?php echo $j; ?>);" class="change"/> 
                                 <?php echo _ADD;?>
@@ -674,12 +609,12 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                     <thead>
                         <tr>
                             <th><?php echo _ID;?></th>
-                            <th><?php echo _DEPARTMENT;?></th>
+                            <th><?php echo _LABEL;?></th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead><?php 
                 $color = ' class="col"';
-                for($j=0; $j < count($entities); $j++) {
+                for ($j=0, $m=count($entities); $j<$m ; $j++) {
                     $entity_id = $entities[$j]['ID'];
                     if(isset($indexed_diff_list['entities'][$entity_id]))
                         $already_in_list_as = $indexed_diff_list['entities'][$entity_id];
@@ -698,13 +633,12 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                             <a href="<?php echo $linkwithwhat; ?>&action=add_entity&id=<?php echo $entities[$j]['ID']; ?>" class="change"><?php echo _ADD_CC; ?></a><?php
                         } else if(count($roles) > 0) { ?>
                             <input type="hidden" id="entity_id_<?php echo $j; ?>" value="<?php echo $entities[$j]['ID'];?>" />
-                            <select name="listinstance_role" id="entity_role_<?php echo $j; ?>">
-                                <option value=""><?php echo _TO_CC; ?></option><?php 
-                                foreach($roles as $role_id => $role_config) { 
-                                    if($role_config['allow_entities']) { ?>
-                                        <option value="<?php echo $role_id; ?>"><?php echo $role_config['role_label']; ?></option><?php 
-                                    }
-                                } ?>
+                            <select name="role" id="entity_role_<?php echo $j; ?>"><?php 
+                            foreach($roles as $role_id => $role_config) { 
+                                if($role_config['allow_entities']) { ?>
+                                    <option value="<?php echo $role_id; ?>"><?php echo $role_config['role_label']; ?></option><?php 
+                                }
+                            } ?>
                             </select>&nbsp;
                             <span onclick="add_entity(<?php echo $j; ?>);" class="change"/> 
                                 <?php echo _ADD;?>

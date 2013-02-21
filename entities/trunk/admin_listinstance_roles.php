@@ -73,7 +73,7 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 $orderstr = $list->define_order($order, $field);
 
 $select[ENT_LISTINSTANCE_ROLES] = array();
-array_push($select[ENT_LISTINSTANCE_ROLES], "role_id", "role_label", "allow_entities");
+array_push($select[ENT_LISTINSTANCE_ROLES], "role_id", "role_label", "workflow_mode", "allow_entities");
 
 $tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databasetype']);
 //$request->show();
@@ -122,6 +122,19 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["show"]=true;
             }
 
+            if($tab[$i][$j][$value]=="workflow_mode")
+            {
+                $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["list_label"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_WORKFLOW_MODE;
+                $tab[$i][$j]["size"]="15";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["order"]=$tab[$i][$j][$value];
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+            }
+            
             if($tab[$i][$j][$value]=="allow_entities")
             {
                 if($tab[$i][$j]['value'] == 'Y') $img = 'picto_stat_enabled.gif';

@@ -13,7 +13,6 @@ function change_entity(entity_id, path_manage_script, diff_list_id, origin_keywo
     {
         var isMandatory = "none";
     }
-    //alert(isMandatory);
     if(entity_id != null)
     {
         new Ajax.Request(path_manage_script,
@@ -131,6 +130,7 @@ function validate_listinstance_role() {
         role_id : $('role_id').value,
         role_label : $('role_label').value,
         list_label : $('list_label').value,
+		workflow_mode : $('workflow_mode').value,
         list_img : $('list_img').value,
         allow_entities : $('allow_entities').checked
       },

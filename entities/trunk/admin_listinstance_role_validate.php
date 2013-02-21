@@ -15,6 +15,7 @@ $request->connect();
 $role_id        = $request->protect_string_db($_REQUEST['role_id']); 
 $role_label     = $request->protect_string_db($_REQUEST['role_label']);
 $list_label     = $request->protect_string_db($_REQUEST['list_label']);
+$workflow_mode  = $request->protect_string_db($_REQUEST['workflow_mode']);
 $list_img       = $request->protect_string_db($_REQUEST['list_img']);
 if($_REQUEST['allow_entities'] == 'true')
     $allow_entities = 'Y';
@@ -55,11 +56,12 @@ switch($_REQUEST['mode']) {
 case 'add':
     $res = $request->query(
         "insert into " . ENT_LISTINSTANCE_ROLES
-            . " (role_id, role_label, list_label, list_img, allow_entities)"
+            . " (role_id, role_label, list_label, workflow_mode, list_img, allow_entities)"
             . " values (" 
                 . "'" . $role_id . "',"
                 . "'" . $role_label . "',"
                 . "'" . $list_label . "',"
+                . "'" . $workflow_mode . "',"
                 . "'" . $list_img . "',"
                 . "'" . $allow_entities. "')"
     );
@@ -72,6 +74,7 @@ case 'up':
                 . " role_label = '" . $role_label . "',"
                 . " list_label = '" . $list_label . "',"
                 . " list_img = '" . $list_img . "',"
+                . " workflow_mode = '" . $workflow_mode . "',"
                 . " allow_entities = '" . $allow_entities. "'"
             . " where role_id = '" . $role_id . "'"
     );

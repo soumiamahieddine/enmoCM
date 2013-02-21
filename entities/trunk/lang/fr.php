@@ -292,6 +292,8 @@ if (!defined('_SUBMIT'))
     define('_SUBMIT', 'Valider'); 
 if (!defined('_CANCEL'))
     define('_CANCEL', 'Annuler');     
+if (!defined('_WORKFLOW_MODE'))
+    define('_WORKFLOW_MODE', 'Type de flux');    
 /******************** RM ENTITIES ************/
 if (!defined('_STANDARD'))
     define('_STANDARD', 'Standard');
