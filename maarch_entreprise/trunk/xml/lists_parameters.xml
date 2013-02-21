@@ -104,8 +104,8 @@
             		<ID>list_cases</ID>
                     <LABEL>_CASES_LIST</LABEL>
                     <NAME>cases_list</NAME>
-                    <ORIGIN>apps</ORIGIN>
-                    <MODULE></MODULE>
+                    <ORIGIN>module</ORIGIN>
+                    <MODULE>cases</MODULE>
             </GOTOLIST>
             <ENABLED>true</ENABLED>
         </TEMPLATE>
@@ -120,8 +120,8 @@
             		<ID>list_cases</ID>
                     <LABEL>_CASES_LIST</LABEL>
                     <NAME>cases_list_search_adv</NAME>
-                    <ORIGIN>apps</ORIGIN>
-                    <MODULE></MODULE>
+                    <ORIGIN>module</ORIGIN>
+                    <MODULE>cases</MODULE>
             </GOTOLIST>
             <ENABLED>true</ENABLED>
         </TEMPLATE>
