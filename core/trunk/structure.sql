@@ -851,6 +851,16 @@ WITH (
     OIDS=FALSE
 );
 
+CREATE TABLE listmodel_types 
+(
+  listmodeltype_id character varying(50) NOT NULL,
+  listmodeltype_label character varying(100) NOT NULL,
+  CONSTRAINT "listmodel_types_pkey" PRIMARY KEY (listmodeltype_id)
+)
+WITH (
+    OIDS=FALSE
+);
+
 CREATE TABLE users_entities
 (
   user_id character varying(128) NOT NULL,
