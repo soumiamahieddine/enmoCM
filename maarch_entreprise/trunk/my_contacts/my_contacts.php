@@ -64,15 +64,13 @@ $list       = new lists();
     $page_id = "my_contacts";
     $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
     /***********************************************************/
-    ?><div class="error" id="main_error"><?php  echo $_SESSION['error'];?></div>
+    ?>
     <div id="inner_content">
     <?php    
     //Load list
     $target = $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&dir=my_contacts'.$parameters;
     $listContent = $list->loadList($target, true, 'divList', 'false');
     echo $listContent;
-    //Reset error
-    $_SESSION['error'] = "";
     ?>
     </div>
     <?php
@@ -82,7 +80,7 @@ $list       = new lists();
     $select[$table]= array(); 
     
 //Fields
-    array_push($select[$table],"contact_id", "society", "lastname", "firstname", "enabled");
+    array_push($select[$table],"contact_id", "is_corporate_person", "society", "lastname", "firstname", "enabled");
     
 //Where clause
     $where_tab = array();
@@ -132,6 +130,17 @@ $list       = new lists();
                     $tab[$i][$j]["valign"]="bottom";
                     $tab[$i][$j]["show"]=true;
                     $tab[$i][$j]["order"]= "contact_id";
+                }
+                if($tab[$i][$j][$value]=="is_corporate_person")
+                {
+                    $tab[$i][$j]['value']= ($tab[$i][$j]['value'] == 'Y')? _YES : _NO;
+                    $tab[$i][$j]["label"]=_IS_CORPORATE_PERSON;
+                    $tab[$i][$j]["size"]="5";
+                    $tab[$i][$j]["label_align"]="center";
+                    $tab[$i][$j]["align"]="center";
+                    $tab[$i][$j]["valign"]="bottom";
+                    $tab[$i][$j]["show"]=true;
+                    $tab[$i][$j]["order"]= "is_corporate_person";
                 }
                 if($tab[$i][$j][$value]=="society")
                 {

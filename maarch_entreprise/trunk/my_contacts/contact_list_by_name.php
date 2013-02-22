@@ -31,19 +31,20 @@
 
 $db = new dbquery();
 $db->connect();
+$what = $db->protect_string_db($_REQUEST['what']);
 $db->query("select society as tag1, lastname as tag2 from ".$_SESSION['tablename']['contacts']
 	." where (lower(lastname) like lower('"
-    .$_REQUEST['what']."%')  or lower(society) like lower('"
-    .$_REQUEST['what']."%')) and user_id = '"
+    .$what."%')  or lower(society) like lower('"
+    .$what."%')) and user_id = '"
     .$_SESSION['user']['UserId']."' order by lastname, society");
 
 $listArray = array();
 while($line = $db->fetch_object())
 {
-    if (empty($line->tag1))
-        array_push($listArray, $line->tag2);
-    else
+    if (empty($line->tag2))
         array_push($listArray, $line->tag1);
+    else
+        array_push($listArray, $line->tag2);
 }
 echo "<ul>\n";
 $authViewList = 0;

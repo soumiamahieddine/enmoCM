@@ -189,15 +189,15 @@ class contacts extends dbquery
                                  . 'index.php?page=contact_up&admin=contacts';
         if (! $admin) {
             $path_contacts = $_SESSION['config']['businessappurl']
-                           . 'index.php?page=my_contacts&dir=my_contacts&order='
+                           . 'index.php?page=my_contacts&dir=my_contacts&load&order='
                            . $order . '&order_field=' . $order_field . '&start='
                            . $start . '&what=' . $what;
             $path_contacts_add_errors = $_SESSION['config']['businessappurl']
                                       . 'index.php?page=my_contact_add&dir='
-                                      . 'my_contacts';
+                                      . 'my_contacts&load';
             $path_contacts_up_errors = $_SESSION['config']['businessappurl']
                                      . 'index.php?page=my_contact_up&dir='
-                                     . 'my_contacts';
+                                     . 'my_contacts&load';
         }
         if (! empty($_SESSION['error'])) {
             if ($mode == 'up') {
@@ -280,7 +280,7 @@ class contacts extends dbquery
                     $hist->add($_SESSION['tablename']['contacts'], $id,"ADD",'contactadd',$msg, $_SESSION['config']['databasetype']);
                 }
                 $this->clearcontactinfos();
-                $_SESSION['error'] = _CONTACT_ADDED;
+                $_SESSION['info'] = _CONTACT_ADDED;
                 header("location: ".$path_contacts);
                 exit;
             }
@@ -312,7 +312,7 @@ class contacts extends dbquery
                     $hist->add($_SESSION['tablename']['contacts'], $_SESSION['m_admin']['contact']['ID'],"UP",'contactup',$msg, $_SESSION['config']['databasetype']);
                 }
                 $this->clearcontactinfos();
-                $_SESSION['error'] = _CONTACT_MODIFIED;
+                $_SESSION['info'] = _CONTACT_MODIFIED;
                 header("location: ".$path_contacts);
                 exit();
             }
@@ -593,7 +593,7 @@ class contacts extends dbquery
                     $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=contacts&amp;admin=contacts';
                     if(!$admin)
                     {
-                        $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&amp;dir=my_contacts';
+                        $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&amp;dir=my_contacts&amp;load';
                     }
                     ?>
                     <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $cancel_target;?>';" />
@@ -653,70 +653,55 @@ class contacts extends dbquery
         $nb_docs = 0;
         $tables = array();
         $_SESSION['m_admin']['contact'] = array();
-        $func = new functions();
-        $contact_list = $this->loadContacts();
         $this->connect();
+        $order = $_REQUEST['order'];
+        $order_field = $_REQUEST['order_field'];
+        $start = $_REQUEST['start'];
+        $what = $_REQUEST['what'];
+        $path_contacts = $_SESSION['config']['businessappurl']."index.php?page=contacts&admin=contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
+        if(!$admin)
+        {
+            $path_contacts = $_SESSION['config']['businessappurl']."index.php?page=my_contacts&dir=my_contacts&load&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
+        }
+        
         if(!empty($id))
         {
             $this->query("select res_id from ".$_SESSION['collections'][0]['view'] 
                 . " where exp_contact_id = '".$this->protect_string_db($id) 
                 . "' or dest_contact_id = '".$this->protect_string_db($id) . "'");
-       
-            if($this->nb_result() > 0)
-                $nb_docs = $nb_docs + $this->nb_result();          
-        }
-        
-/*
-        $query = "select * from ".$_SESSION['tablename']['contacts']." where enabled = 'Y'";
-        if(!$admin)
-            $query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
-       
-        $this->query($query);
-*/
-        
-        echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
-        $_SESSION['error'] = "";
-        
-        if (empty($nb_docs))
-        {
-            $this->connect();
-            $query = "select contact_id from ".$_SESSION['tablename']['contacts']." where enabled ='Y' and contact_id = ".$id;
-            if(!$admin)
+            // $this->show();
+            if($this->nb_result() > 0)$nb_docs = $nb_docs + $this->nb_result(); 
+                         
+            if ($nb_docs == 0)
             {
-                $query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
-            }
-            $this->query($query);
-            if($this->nb_result() == 0)
-            {
-                $_SESSION['error'] = _CONTACT.' '._UNKNOWN;
-                //header("location: ".$path_contacts);
-                ?>
-                <script type="text/javascript">
-                    window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts&admin=contacts&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
-                </script>
-                <?php
-                exit;
+                $this->connect();
+                $query = "select contact_id from ".$_SESSION['tablename']['contacts']." where enabled ='Y' and contact_id = ".$id;
+                if(!$admin)
+                {
+                    $query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
+                }
+                $this->query($query);
+                if($this->nb_result() == 0)
+                {
+                    $_SESSION['error'] = _CONTACT.' '._UNKNOWN;
+                }
+                else
+                {
+                    $res = $this->fetch_object();
+                    $this->query("update ".$_SESSION['tablename']['contacts']." set enabled = 'N' where contact_id = ".$id);
+                    if($_SESSION['history']['contactdel'])
+                    {
+                        require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
+                        $hist = new history();
+                        $hist->add($_SESSION['tablename']['contacts'], $id,"DEL","contactdel",_CONTACT_DELETED.' : '.$id, $_SESSION['config']['databasetype']);
+                    }
+                    $_SESSION['info'] = _CONTACT_DELETED;
+                }
             }
             else
             {
-                $res = $this->fetch_object();
-                $this->query("update ".$_SESSION['tablename']['contacts']." set enabled = 'N' where contact_id = ".$id);
-                if($_SESSION['history']['contactdel'])
-                {
-                    require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
-                    $hist = new history();
-                    $hist->add($_SESSION['tablename']['contacts'], $id,"DEL","contactdel",_CONTACT_DELETED.' : '.$id, $_SESSION['config']['databasetype']);
-                }
-                $_SESSION['error'] = _CONTACT_DELETED;
-                //header("location: ".$path_contacts);
-                //exit;
-            }
-        }
-        else
-        {
-            ?>
-                
-            <br>
+                ?> 
+                <br>
                 <div id="main_error">
                     <b><?php
                         echo _WARNING_MESSAGE_DEL_CONTACT;
@@ -757,35 +742,25 @@ class contacts extends dbquery
                     <br/>
                     <p class="buttons">
                         <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick="return(confirm('<?php  echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"/>
-                        <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts&admin=contacts&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';"" class="button" />
+                        <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $path_contacts;?>';"" class="button" />
                     </p>
                       <?php
                     }
                     ?>
                 </form>
                 <?php
-            }
-            $order = $_REQUEST['order'];
-            $order_field = $_REQUEST['order_field'];
-            $start = $_REQUEST['start'];
-            $what = $_REQUEST['what'];
-            $path_contacts = $_SESSION['config']['businessappurl']."index.php?page=contacts&admin=contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
-            if(!$admin)
-            {
-                $path_contacts = $_SESSION['config']['businessappurl']."index.php?page=my_contacts&dir=my_contacts&order=".$order."&order_field=".$order_field."&start=".$start."&what=".$what;
-            }
-
-            if(!empty($_SESSION['error']))
-            {
-                ?>
-                <script type="text/javascript">
-                    window.location.href="<?php echo $path_contacts;?>";
-                </script>
-                <?php
-                //header("location: ".$path_contacts);
                 exit;
             }
-
+        } else {
+            $_SESSION['error'] = _CONTACT.' '._EMPTY;
+        }
+        
+        ?>
+        <script type="text/javascript">
+            window.location.href="<?php echo $path_contacts;?>";
+        </script>
+        <?php
+        exit;
     }
 
     function get_contact_information($res_id, $category_id,$view )

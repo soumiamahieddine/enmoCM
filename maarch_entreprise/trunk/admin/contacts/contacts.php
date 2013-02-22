@@ -59,7 +59,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 $select[$_SESSION['tablename']['contacts']] = array();
-array_push($select[$_SESSION['tablename']['contacts']],"contact_id", "society","lastname","firstname", 'user_id');
+array_push($select[$_SESSION['tablename']['contacts']],"contact_id", "is_corporate_person", "society","lastname","firstname", 'user_id');
 $what = "";
 //$where =" (user_id is null or user_id = '') and enabled = 'Y' ";
 $where ="  enabled = 'Y' ";
@@ -103,12 +103,23 @@ for ($i=0;$i<count($tab);$i++)
             {
                 $tab[$i][$j]["contact_id"]=$tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]= _ID;
-                $tab[$i][$j]["size"]="18";
+                $tab[$i][$j]["size"]="5";
                 $tab[$i][$j]["label_align"]="left";
                 $tab[$i][$j]["align"]="left";
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]= "contact_id";
+            }
+            if($tab[$i][$j][$value]=="is_corporate_person")
+            {
+                $tab[$i][$j]['value']= ($tab[$i][$j]['value'] == 'Y')? _YES : _NO;
+                $tab[$i][$j]["label"]=_IS_CORPORATE_PERSON;
+                $tab[$i][$j]["size"]="5";
+                $tab[$i][$j]["label_align"]="center";
+                $tab[$i][$j]["align"]="center";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]= "is_corporate_person";
             }
             if($tab[$i][$j][$value]=="society")
             {
