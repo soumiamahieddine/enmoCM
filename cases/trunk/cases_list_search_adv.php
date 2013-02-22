@@ -207,9 +207,9 @@ if (count($tab) > 0) {
     $paramsTab['bool_modeReturn'] = false;                                                  //Desactivation du mode return (vs echo)
     $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_CASE;                  //Titre de la page
     $paramsTab['bool_sortColumn'] = true;                                                   //Affichage Tri
-    $paramsTab['templates'] = array('documents_list_search_adv', 'cases_list_search_adv');  //Templates
+    $paramsTab['templates'] = array('cases_list_search_adv');                               //Templates
     $paramsTab['defaultTemplate'] = 'cases_list_search_adv';                                //Default template
-    $paramsTab['bool_showTemplateDefaultList'] = true;                                              //Default list (no template)
+    $paramsTab['bool_showTemplateDefaultList'] = true;                                      //Default list (no template)
     $paramsTab['tools'] = array();                                                          //Icones dans la barre d'outils
     $export = array(
             "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
