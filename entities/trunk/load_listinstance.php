@@ -42,7 +42,8 @@ if (isset($_REQUEST['only_cc'])) {
 
 $origin = $_REQUEST['origin'];
 if ($_REQUEST['load_from_model'] == 'true') {
-    $_SESSION[$origin]['diff_list'] = $diffList->get_listmodel_from_entity(
+    $_SESSION[$origin]['diff_list'] = $diffList->get_listmodel(
+        'entity_id',
         $_REQUEST['id_entity']
     );
 }

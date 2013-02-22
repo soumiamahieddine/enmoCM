@@ -65,43 +65,43 @@ class diffusion_list extends dbquery
     *                                       ['entity_id'] : entity identifier of the entity in copy
     *                                       ['entity_label'] : entity label of the entity in copy
     */
-    public function get_listmodel_from_entity($entityId, $collId = 'letterbox_coll')
-    {
+    public function get_listmodel(
+        $objectType='entity_id', 
+        $objectId, 
+        $collId = 'letterbox_coll'
+    ) {
+        $objectId = $this->protect_string_db($objectId);
+        $objectType = $this->protect_string_db($objectType);
+        $collId = $this->protect_string_db(trim($collId));
+        
         $this->connect();
         $roles = $this->get_listinstance_roles();
         
         $listmodel = array();
-        $listmodel['dest'] = array();
         
-        foreach($roles as $role_id => $role_config) {
-            $listmodel[$role_id] = array();
-            $listmodel[$role_id]['users'] = array();
-            $listmodel[$role_id]['entities'] = array();
-        }
-        
-        if (empty($entityId)) 
+        if (empty($objectId) || empty($objectType)) 
             return $listmodel;
-
-        $entityId = $this->protect_string_db($entityId);
-        $this->connect();
         
         # Dest user
         $this->query(
-            "select l.item_id, u.firstname, u.lastname, e.entity_id, "
-            . "e.entity_label  from " . ENT_LISTMODELS . " l, " . USERS_TABLE
-            . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
-            . " ue where l.coll_id = '" . $this->protect_string_db(trim($collId))
-            . "' and l.listmodel_type = 'DOC' and l.item_mode = 'dest' "
-            . "and l.item_type = 'user_id' and l.object_type = 'entity_id' "
-            . "and l.sequence = 0 and l.object_id = '"
-            . $this->protect_string_db(trim($entityId)) . "' "
-            . "and l.item_id = u.user_id and u.user_id = ue.user_id "
-            . "and e.entity_id = ue.entity_id and ue.primary_entity = 'Y'"
+            "SELECT l.item_id, u.firstname, u.lastname, e.entity_id, e.entity_label "
+            . " FROM " . ENT_LISTMODELS . " l "
+                . " JOIN " . USERS_TABLE . " u ON l.item_id = u.user_id " 
+                . " JOIN " . ENT_USERS_ENTITIES . " ue ON u.user_id = ue.user_id " 
+                . " JOIN " . ENT_ENTITIES . " e ON ue.entity_id = e.entity_id"
+            . " WHERE "
+                . "l.listmodel_type = 'DOC' and ue.primary_entity = 'Y' "
+                . "and l.item_mode = 'dest' "
+                . "and l.item_type = 'user_id' " 
+                . "and l.object_type = '". $objectType ."' "
+                . "and l.object_id = '" . $objectId . "'"
+                . "and l.coll_id = '" . $collId . "' "
         );
 
         $res = $this->fetch_object();
 
         if ($this->nb_result() > 0 && isset($res)) {
+            $listmodel['dest'] = array();
             $listmodel['dest']['user_id'] = $this->show_str($res->item_id);
             $listmodel['dest']['lastname'] = $this->show_str($res->lastname);
             $listmodel['dest']['firstname'] = $this->show_str($res->firstname);
@@ -111,21 +111,26 @@ class diffusion_list extends dbquery
         
         # Users in copy and other roles
         $this->query(
-            "select  l.item_id, u.firstname, u.lastname, e.entity_id, "
-            . "e.entity_label, l.item_mode from " . ENT_LISTMODELS . " l, " . USERS_TABLE
-            . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
-            . " ue where l.coll_id = '" . $this->protect_string_db(trim($collId))
-            . "' and l.listmodel_type = 'DOC' and l.item_mode != 'dest' "
-            . "and l.item_type = 'user_id' and l.object_type = 'entity_id' "
-            . "and l.object_id = '" . $this->protect_string_db(trim($entityId))
-            . "' and l.item_id = u.user_id and l.item_id = ue.user_id "
-            . "and e.entity_id = ue.entity_id and ue.primary_entity='Y' "
-            . "order by l.sequence "
+            "SELECT l.item_id, l.item_mode, u.firstname, u.lastname, e.entity_id, e.entity_label "
+            . " FROM " . ENT_LISTMODELS . " l "
+                . " JOIN " . USERS_TABLE . " u ON l.item_id = u.user_id " 
+                . " JOIN " . ENT_USERS_ENTITIES . " ue ON u.user_id = ue.user_id " 
+                . " JOIN " . ENT_ENTITIES . " e ON ue.entity_id = e.entity_id"
+            . " WHERE "
+                . "l.listmodel_type = 'DOC' and ue.primary_entity = 'Y' "
+                . "and l.item_mode != 'dest' "
+                . "and l.item_type = 'user_id' " 
+                . "and l.object_type = '". $objectType ."' "
+                . "and l.object_id = '" . $objectId . "'"
+                . "and l.coll_id = '" . $collId . "' "
+            . "ORDER BY l.sequence"
         );
 
         while ($res = $this->fetch_object()) {
             $role_id = $res->item_mode;
             if($role_id =='cc') $role_id = 'copy';
+            if(!isset($listmodel[$role_id]))
+                $listmodel[$role_id] = array();
             if(!isset($listmodel[$role_id]['users']))
                 $listmodel[$role_id]['users'] = array();
             array_push(
@@ -142,18 +147,23 @@ class diffusion_list extends dbquery
         
         # Users in copy and other roles
         $this->query(
-            "select l.item_id,  e.entity_label, l.item_mode  from " . ENT_LISTMODELS . " l, "
-            . ENT_ENTITIES . " e where l.coll_id = '"
-            . $this->protect_string_db(trim($collId)) . "' "
-            . "and l.listmodel_type = 'DOC' and l.item_mode != 'dest' "
-            . "and l.item_type = 'entity_id' and l.object_type = 'entity_id' "
-            . "and l.object_id = '" . $this->protect_string_db(trim($entityId))
-            . "' and l.item_id = e.entity_id order by l.sequence "
+            "SELECT l.item_id, e.entity_label, l.item_mode "
+            . "FROM " . ENT_LISTMODELS . " l "
+                . "JOIN " . ENT_ENTITIES . " e ON l.item_id = e.entity_id "
+            . "WHERE l.listmodel_type = 'DOC' "
+                . "and l.item_mode != 'dest' "
+                . "and l.item_type = 'entity_id' "
+                . "and l.object_type = '" . $objectType . "' "
+                . "and l.object_id = '" . $objectId . "' "
+                . "and l.coll_id = '" . $collId . "' "
+            . "ORDER BY l.sequence "
         );
 
         while ($res = $this->fetch_object()) {
             $role_mode = $res->item_mode;
             if($role_mode=='cc') $role_id = 'copy';
+            if(!isset($listmodel[$role_id]))
+                $listmodel[$role_id] = array();
             if(!isset($listmodel[$role_id]['entities']))
                 $listmodel[$role_id]['entities'] = array();
             array_push(
@@ -166,46 +176,51 @@ class diffusion_list extends dbquery
         }
         return $listmodel;
     }
-    
-    public function save_listmodel_from_entity($diffList, $params, $listType = 'DOC', $objectType = 'entity_id') 
-    {
+        
+    public function save_listmodel(
+        $diffList, 
+        $collId = 'letterbox_coll',
+        $listType = 'DOC', 
+        $objectType = 'entity_id',
+        $objectId
+    ) {
         $this->connect();
         $roles = $this->get_listinstance_roles();
         
         require_once 'core/class/class_history.php';
         $hist = new history();
         
-        $coll_id = $this->protect_string_db(trim($params['coll_id']));
+        $collId = $this->protect_string_db($collId);
         $objectType = $this->protect_string_db(trim($objectType));
-        $objectId = $this->protect_string_db(trim($params['object_id']));
+        $objectId = $this->protect_string_db(trim($objectId));
         $listType = $this->protect_string_db(trim($listType));
 
         # Delete all and replace full list
         #**********************************************************************
         $this->query(
-            "delete from " . $params['table'] 
-            . " where coll_id = '" . $coll_id . "' "
+            "delete from " . ENT_LISTMODELS 
+            . " where coll_id = '" . $collId . "' "
                 . "and object_type = '" . $objectType . "' "
-                . "and object_id = '" . $object_id . "' "
+                . "and object_id = '" . $objectId . "' "
                 . "and listmodel_type = '" . $listType . "'"
         );
         # Dest user
         #**********************************************************************
-        $dest_user_id = $this->protect_string_db(trim($diffList['dest']['user_id']));
-        $this->query(
-            "insert into " . $params['table'] 
-                . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type ) "
-            . " values ("
-                . "'" . $coll_id . "', "
-                . "'" . $object_id . "' , " 
-                . "'" . $objectType . "', "
-                . "0, "
-                . "'" . $dest_user_id . "', "
-                . "'user_id', "
-                . "'dest', "
-                . "'" . $listType . "'"
-            .")"
-        );
+        if($dest_user_id = $this->protect_string_db(trim($diffList['dest']['user_id'])))
+            $this->query(
+                "insert into " . ENT_LISTMODELS
+                    . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type ) "
+                . " values ("
+                    . "'" . $collId . "', "
+                    . "'" . $objectId . "' , " 
+                    . "'" . $objectType . "', "
+                    . "0, "
+                    . "'" . $dest_user_id . "', "
+                    . "'user_id', "
+                    . "'dest', "
+                    . "'" . $listType . "'"
+                .")"
+            );
                    
         # Roles
         #**********************************************************************
@@ -218,11 +233,11 @@ class diffusion_list extends dbquery
             ) {
                 $user_id = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['user_id']));
                 $this->query(
-                    "insert into " . $params['table'] 
+                    "insert into " . ENT_LISTMODELS
                         . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type ) "
                     . " values ("
-                        . "'" . $coll_id . "', "
-                        . "'" . $object_id . "' , " 
+                        . "'" . $collId . "', "
+                        . "'" . $objectId . "' , " 
                         . "'" . $objectType . "', "
                         . $i . ", "
                         . "'" . $user_id . "', "
@@ -237,11 +252,11 @@ class diffusion_list extends dbquery
             for ($i=0, $l=count($diffList[$role_id]['entities']); $i<$l ; $i++) {
                 $entity_id = $this->protect_string_db(trim($diffList[$role_id]['entities'][$i]['entity_id']));
                 $this->query(
-                    "insert into " . $params['table'] 
+                    "insert into " . ENT_LISTMODELS
                         . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type ) "
                     . " values ("
-                        . "'" . $coll_id . "', "
-                        . "'" . $object_id . "' , " 
+                        . "'" . $collId . "', "
+                        . "'" . $objectId . "' , " 
                         . "'" . $objectType . "', "
                         . $i . ", "
                         . "'" . $entity_id . "', "
@@ -664,6 +679,24 @@ class diffusion_list extends dbquery
                 );
         }
         return $roles;
+    }
+
+    #  Get list of available list model types
+    public function get_listmodel_types()
+    {
+        $this->connect();
+        $this->query('select * from ' . ENT_LISTMODEL_TYPES);
+        
+        $types = array();
+        
+        $types['entity_id'] = _ENTITY;
+        $types['type_id'] = _DOCTYPE;
+        $types['foldertype_id'] = _FOLDER;
+                
+        while ($type = $this->fetch_object()) { 
+            $types[(string) $type->listmodel_type_id] = $type->listmodel_type_label;
+        }
+        return $types;
     }
 
     

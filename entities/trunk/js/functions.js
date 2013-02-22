@@ -145,3 +145,90 @@ function validate_listinstance_role() {
   );
   
 }
+
+function getObjectIdInput()
+{
+    var objectType = $('objectType').value;
+    var objectId_input = $('objectId_input');
+    
+    new Ajax.Request(
+        'index.php?display=true&module=entities&page=admin_listmodel_objectId_input&objectType='+objectType,
+        {
+            method:'post',
+            parameters: { },
+            onSuccess: function(answer){
+                objectId_input.innerHTML = answer.responseText;
+                objectId_input.style.display = 'block';
+            }
+        }
+    );
+
+}
+
+function saveListmodel()
+{
+    var main_error = $('main_error'); 
+    main_error.innerHTML = '';
+    
+    new Ajax.Request(
+        'index.php?display=true&module=entities&page=admin_listmodel_validate',
+        {
+            method:'post',
+            parameters: { },
+            onSuccess: function(answer){
+                if(answer.responseText)
+                    main_error.innerHTML = answer.responseText;
+                else {
+                    goTo('index.php?module=entities&page=admin_listmodels');
+                }
+            }
+        }
+    );        
+}
+
+function isIdToken(value)
+{
+    var token = value.match(/[\w_]+/g);
+    if(!token)
+        return false;
+    if(token[0] != value)
+        return false;
+    else 
+        return true;
+    
+}
+
+function validate_listmodel_type() {
+  var main_error = $('main_error'); 
+  main_error.innerHTML = '';
+  
+  var listmodel_type_id = $('listmodel_type_id').value;
+  var listmodel_type_label = $('listmodel_type_label').value;
+  var idValid = isIdToken(listmodel_type_id);
+  if(idValid == false) {
+      main_error.innerHTML = 'Identifiant invalide (A-Z, a-z, 0-9 et _)';
+      return;
+  }
+  main_error.innerHTML = '';
+    
+  new Ajax.Request(
+    'index.php?module=entities&page=admin_listmodel_type_validate&display=true',
+    { 
+      method: 'post',
+      parameters: 
+      {
+        mode : $('mode').value,
+		listmodel_type_id : listmodel_type_id,
+        listmodel_type_label : listmodel_type_label
+      },
+      onSuccess: function(transport) {
+          var responseText = transport.responseText.replace(new RegExp("(\r|\n)", "g"), "");
+          if(responseText)
+            $('listmodel_type_messages').innerHTML += responseText;
+          else  
+            goTo('index.php?module=entities&page=admin_listmodel_types');
+        }
+    }
+  );
+  
+}

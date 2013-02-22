@@ -28,7 +28,21 @@
          <nature>listelement</nature>
        </WHEREAMIUSED>
     </SERVICE>
-        <SERVICE>
+    <SERVICE>
+        <id>admin_listmodel_types</id>
+        <name>_ADMIN_LISTMODEL_TYPES</name>
+        <comment>_ADMIN_LISTMODEL_TYPES_DESC</comment>
+        <servicepage>index.php?page=admin_listmodel_types&amp;module=entities</servicepage>
+        <servicetype>use</servicetype>
+        <system_service>true</system_service>
+        <style>ent_manage_entities</style>
+        <enabled>true</enabled>
+         <WHEREAMIUSED>
+         <page>admin.php</page>
+         <nature>listelement</nature>
+       </WHEREAMIUSED>
+    </SERVICE>
+    <SERVICE>
         <id>admin_listmodels</id>
         <name>_ADMIN_LISTMODELS</name>
         <comment>_ADMIN_LISTMODELS_DESC</comment>

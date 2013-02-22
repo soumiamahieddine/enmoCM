@@ -185,7 +185,7 @@ if (!defined('_DIFF_LIST'))
 if (!defined('_NO_USER'))
     define('_NO_USER', 'Pas d&rsquo;utilisateur');
 if (!defined('_MUST_CHOOSE_DEST'))
-    define('_MUST_CHOOSE_DEST', 'Vous devez s&eacute;lectionner un destinataire principal');
+    define('_MUST_CHOOSE_DEST', 'Vous devez s&eacute;lectionner au moins un destinataire');
 if (!defined('_ENTITIES__DEL'))
     define('_ENTITIES__DEL', 'Suppression');
 if (!defined('_ENTITY_DELETION'))
@@ -294,6 +294,56 @@ if (!defined('_CANCEL'))
     define('_CANCEL', 'Annuler');     
 if (!defined('_WORKFLOW_MODE'))
     define('_WORKFLOW_MODE', 'Type de flux');    
+
+ /******************** Listmodels types ***********/       
+ if (!defined('_ALL_LISTMODEL_TYPES'))
+    define('_ALL_LISTMODEL_TYPES', 'Tous les types');
+if (!defined('_LISTMODEL_TYPES_DESC'))
+    define('_LISTMODEL_TYPES_DESC', 'Types listes de diffusion');     
+if (!defined('_LISTMODEL_TYPES'))
+    define('_LISTMODEL_TYPES', 'Types de listes de diffusion');   
+if (!defined('_LISTMODEL_TYPE'))
+    define('_LISTMODEL_TYPE', 'Type(s) de liste');
+if (!defined('_ADD_LISTMODEL_TYPE'))
+   define('_ADD_LISTMODEL_TYPE', 'Ajouter un type');
+if (!defined('_LISTMODEL_TYPE_ID'))
+   define('_LISTMODEL_TYPE_ID', 'Identifiant');   
+if (!defined('_LISTMODEL_TYPE_LABEL'))
+   define('_LISTMODEL_TYPE_LABEL', 'Description');   
+   
+   
+ /******************** Listmodels ***********/   
+if (!defined('_ALL_LISTMODELS'))
+    define('_ALL_LISTMODELS', 'Toutes les listes');
+if (!defined('_LISTMODELS_DESC'))
+    define('_LISTMODELS_DESC', 'Modèles de listes de diffusion des documents et dossiers');     
+if (!defined('_LISTMODELS'))
+    define('_LISTMODELS', 'Modèles de listes de diffusion');   
+if (!defined('_LISTMODEL'))
+    define('_LISTMODEL', 'Modèle(s) de liste');
+if (!defined('_ADD_LISTMODEL'))
+    define('_ADD_LISTMODEL', 'Nouveau modèle');  
+if (!defined('_ADMIN_LISTMODEL'))
+    define('_ADMIN_LISTMODEL', 'Modèle de liste de diffusion'); 
+if (!defined('_ADMIN_LISTMODEL_TITLE'))
+    define('_ADMIN_LISTMODEL_TITLE', 'Identification du modèle de liste:');   
+if (!defined('_OBJECT_TYPE'))
+    define('_OBJECT_TYPE', 'Type de modèle de liste'); 
+if (!defined('_SELECT_OBJECT_TYPE'))
+    define('_SELECT_OBJECT_TYPE', 'Sélectionnez un type...'); 
+if (!defined('_SELECT_OBJECT_ID'))
+    define('_SELECT_OBJECT_ID', 'Sélectionnez un lien...');
+if (!defined('_USER_DEFINED_ID'))
+    define('_USER_DEFINED_ID', 'Libre');    
+if (!defined('_ALL_OBJECTS_ARE_LINKED'))
+    define('_ALL_OBJECTS_ARE_LINKED', 'Toutes les listes sont déjà définies');
+if (!defined('_SELECT_OBJECT_TYPE_AND_ID'))
+    define('_SELECT_OBJECT_TYPE_AND_ID', 'Vous devez spécifier un type de liste et un identifiant!');
+if (!defined('_SAVE_LISTMODEL'))
+    define('_SAVE_LISTMODEL', 'Valider');
+if (!defined('_OBJECT_ID_IS_NOT_VALID_ID'))
+    define('_OBJECT_ID_IS_NOT_VALID_ID', 'Identifiant invalide: il ne doit contenir que des caractères alphabétiques, numériques ou des tiret bas (A-Z, a-z, 0-9, _)');    
+    
 /******************** RM ENTITIES ************/
 if (!defined('_STANDARD'))
     define('_STANDARD', 'Standard');

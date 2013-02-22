@@ -70,9 +70,14 @@ unset($_SESSION['m_admin']);
                 <strong><?php  echo _LISTINSTANCE_ROLES;?></strong>
          </div>
     </div>
-    <!--div class="admin_item" id="admin_listmodels" title="<?php  echo _LISTMODELS_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin_listmodels&amp;module=entities';">
+    <div class="admin_item" id="admin_listmodel_types" title="<?php  echo _LISTMODEL_TYPES_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin_listmodel_types&amp;module=entities';">
+        <div class="sum_margin">
+                <strong><?php  echo _LISTMODEL_TYPES;?></strong>
+         </div>
+    </div>
+    <div class="admin_item" id="admin_listmodels" title="<?php  echo _LISTMODELS_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin_listmodels&amp;module=entities';">
         <div class="sum_margin">
                 <strong><?php  echo _LISTMODELS;?></strong>
          </div>
-    </div-->
+    </div>
 </div>

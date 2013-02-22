@@ -11,9 +11,9 @@
 * @author  Claire Figueras  <dev@maarch.org>
 * @author  Cyril Vazquez  <dev@maarch.org>
 */
-require 'modules/entities/class/class_manage_listdiff.php';
-require 'modules/entities/entities_tables.php';
-require 'core/core_tables.php';
+require_once 'modules/entities/class/class_manage_listdiff.php';
+require_once 'modules/entities/entities_tables.php';
+require_once 'core/core_tables.php';
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
@@ -25,7 +25,7 @@ $db->connect();
 $difflist = new diffusion_list();
 if (isset($_POST['valid'])) {
     $_SESSION['popup_suite'] = true;
-    ?>
+    # Reload caller with new list in session ?>
     <script type="text/javascript">
         window.parent.opener.location.reload();
         self.close();
@@ -110,33 +110,21 @@ while ($line = $db->fetch_object()) {
 }
 
 $origin = $_REQUEST['origin'];
-$id = '';
-$desc = '';
-# *****************************************************************************
-# Create empty lists
-# *****************************************************************************
+
 $roles = $difflist->get_listinstance_roles();
-
-if (! isset($_SESSION['m_admin']['entity']['listmodel']['copy']['users'])) {
-    $_SESSION['m_admin']['entity']['listmodel']['copy']['users'] = array();
-}
-if (! isset($_SESSION['m_admin']['entity']['listmodel']['copy']['entities'])) {
-    $_SESSION['m_admin']['entity']['listmodel']['copy']['entities'] = array();
-}
-
-// 1.4 custom listinstance modes
-if(count($roles) > 0) {
-    foreach($roles as $role_id => $role_config) {
-        if(! isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']))
-            $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'] = array();
-        if($role_config['allow_entities'] && ! isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']))
-            $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'] = array();
-    }
-}
 
 # *****************************************************************************
 # Manage request paramaters
 # *****************************************************************************
+// Object type
+$objectType = $_REQUEST['objectType'];
+$_SESSION['m_admin']['entity']['listmodel_objectType'] = $objectType;
+
+   
+// Object id
+$objectId = $_REQUEST['objectId'];
+$_SESSION['m_admin']['entity']['listmodel_objectId'] = $objectId;
+
 // Action ?
 if (isset($_GET['action']))
     $action = $_GET['action'];
@@ -161,6 +149,9 @@ if(isset($_GET['role']) && !empty($_GET['role']))
 else 
     $role_id = 'dest';
 
+// Workflow mode    
+$role_workflow_mode = $roles[$role_id]['workflow_mode'];     
+    
 // Dest user    
 if(isset($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']) 
     && !empty($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']))
@@ -186,6 +177,8 @@ case "add_user":
     $line = $db->fetch_object();
     # IF DEST, set unique dest
     if($role_id == 'dest') {
+        if(! isset($_SESSION['m_admin']['entity']['listmodel']['dest']))
+            $_SESSION['m_admin']['entity']['listmodel']['dest'] = array();
         $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'] = $db->show_string($id);
         $_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'] = $db->show_string($line->firstname);
         $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'] = $db->show_string($line->lastname);
@@ -194,6 +187,8 @@ case "add_user":
         $dest_is_set = true;
     } else {
     # OTHER ROLES
+        if(! isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']))
+            $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'] = array();
         array_push(
             $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'],
             array(
@@ -214,6 +209,8 @@ case 'add_entity':
         . " WHERE entity_id = '" . $db->protect_string_db($id) . "'"
     );
     $line = $db->fetch_object();
+    if(! isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']))
+        $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'] = array();
     array_push(
         $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'],
         array(
@@ -259,6 +256,8 @@ case 'remove_entity':
 //***************************************************************************************    
 case 'dest_to_copy':
     if ($dest_is_set) {
+        if(! isset($_SESSION['m_admin']['entity']['listmodel']['copy']['users']))
+            $_SESSION['m_admin']['entity']['listmodel']['copy']['users'] = array();
         array_push(
             $_SESSION['m_admin']['entity']['listmodel']['copy']['users'],
             array(
@@ -276,6 +275,8 @@ case 'dest_to_copy':
 
 case 'copy_to_dest':
     if ($dest_is_set) {
+        if(! isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']))
+            $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'] = array();
         array_push(
             $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'],
             array(
@@ -369,7 +370,12 @@ $core_tools->load_html();
 $core_tools->load_header(_USER_ENTITIES_TITLE);
 $time = $core_tools->get_session_time_expire();
 $link = $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=creation_listmodel";
-$linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $whatServices;
+$linkwithwhat =  
+    $link 
+    . '&what_users=' . $whatUsers 
+    . '&what_services=' . $whatServices 
+    . '&objectType=' . $objectType 
+    . '&objectId=' . $objectId;
 #******************************************************************************
 # DISPLAY EXISTING LIST
 #******************************************************************************
@@ -388,13 +394,16 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
         }
     </script>
     <br/>
-    <?php 
-    if((isset($_GET['what_users']) && !empty($_GET['what_users'])) 
-        || (isset($_GET['what_services']) && !empty($_GET['what_services'])) 
-        || ( !empty($indexed_diff_list))
-    ) { ?>
     <div id="diff_list" align="center">
-        <h2 class="tit"><?php echo _DIFFUSION_LIST;?></h2><?php 
+        <h2 class="tit"><?php echo _DIFFUSION_LIST . ' - '; 
+        
+            switch($objectType) {
+            case "entity_id"     : echo _ENTITY;    break;
+            case "type_id"       : echo _DOCTYPE;   break;
+            case "foldertype_id" : echo _FOLDERTYPE;break;
+            }
+            echo ' ' . $objectId;
+        ?></h2><?php 
         #**************************************************************************
         # DEST USER
         #**************************************************************************
@@ -424,6 +433,7 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
         # OTHER ROLES
         #**************************************************************************
         foreach($roles as $role_id => $role_config) {
+            $workflow_mode = $role_config['workflow_mode'];
             if (count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']) > 0
              || count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']) > 0
             ) { ?>
@@ -451,8 +461,13 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                             <a href="<?php echo $linkwithwhat;?>&action=copy_to_dest&role=copy&rank=<?php echo $i;?>" class="up"><?php echo _TO_DEST;?></a><?php
                         } ?>
                         </td>
+                        <td class="action_entities"><!-- Move up in list --><?php 
+                        if($l>1 && $i>0 && $workflow_mode == 'sequential') { ?>
+                            <a href="<?php echo $linkwithwhat;?>&action=move_user_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php 
+                        } ?>
+                        </td>
                         <td class="action_entities"><!-- Move down in list --><?php 
-                        if($l>1 && $i<($l-1)) { ?>
+                        if($l>1 && $i<($l-1) && $workflow_mode == 'sequential') { ?>
                             <a href="<?php echo $linkwithwhat;?>&action=move_user_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php 
                         } ?>
                         </td>
@@ -480,8 +495,13 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                             </a>
                         </td>
                         <td class="action_entities">&nbsp;</td>
+                        <td class="action_entities"><!-- Move up in list --><?php 
+                        if($l>1 && $i>0 && $workflow_mode == 'sequential') { ?>
+                            <a href="<?php echo $linkwithwhat;?>&action=move_entity_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php 
+                        } ?>
+                        </td>
                         <td class="action_entities"><!-- Move down in list --><?php 
-                        if($l>1 && $i<($l-1)) { ?>
+                        if($l>1 && $i<($l-1) && $workflow_mode == 'sequential') { ?>
                             <a href="<?php echo $linkwithwhat;?>&action=move_entity_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php 
                         } ?>
                         </td>
@@ -491,24 +511,32 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                 <br/><?php
             }
         }
-
         #******************************************************************************
-        # LIST OF AVAILABLE ENTITIES / USERS
-        #******************************************************************************
-        ?>       
+        # LIST LINK WITH OBJECT + VALIDATION
+        #******************************************************************************?>      
         <form name="pop_diff" method="post" >
             <div align="center"> <?php
-                if(isset($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']) 
-                    && !empty($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'])
+                # Mode dest + copy but no dest : can't save
+                if((empty($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'])
+                    && (count($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']) > 0
+                        || count($_SESSION['m_admin']['entity']['listmodel']['copy']['users']) > 0)
+                    )
+                    || count($_SESSION['m_admin']['entity']['listmodel']) == 0
                 ) { ?>
-                    <input align="middle" type="submit" value="<?php echo _VALIDATE;?>" class="button" name="valid"  /><?php 
+                    <div class="error"><?php echo _MUST_CHOOSE_DEST; ?></div>
+                    <?php 
                 }
-                else echo '<div class="error">'._MUST_CHOOSE_DEST.'</div>'; ?>
+                else { ?>
+                    <input align="middle" type="submit" value="<?php echo _VALIDATE;?>" class="button" name="valid"  /><?php
+                } ?>
                 <input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>
             </div>
         </form>
         <br/>
-        <br/>
+        <br/><?php
+        #******************************************************************************
+        # LIST OF AVAILABLE ENTITIES / USERS
+        #******************************************************************************?>
         <hr align="center" color="#6633CC" size="5" width="60%">
         <div align="center">
             <form action="#" name="search_diff_list" >
@@ -575,9 +603,7 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                         <td class="action_entities"><?php
                         if($already_in_list_as) {
                             echo $already_in_list_as;
-                        } elseif(count($roles) == 0) { ?>
-                            <a href="<?php echo $linkwithwhat; ?>&action=add_user&id=<?php echo $users[$j]['ID']; ?>" class="change"><?php echo _ADD; ?></a><?php
-                        } else if(count($roles) > 0) { ?>
+                        } else { ?>
                             <input type="hidden" id="user_id_<?php echo $j; ?>" value="<?php echo $users[$j]['ID'];?>" />
                             <select name="role" id="user_role_<?php echo $j; ?>"><?php
                             if(!$dest_is_set) { ?>
@@ -629,9 +655,7 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                         <td class="action_entities"><?php
                         if($already_in_list_as) {
                             echo $already_in_list_as;
-                        } else if(count($roles) == 0) { ?>
-                            <a href="<?php echo $linkwithwhat; ?>&action=add_entity&id=<?php echo $entities[$j]['ID']; ?>" class="change"><?php echo _ADD_CC; ?></a><?php
-                        } else if(count($roles) > 0) { ?>
+                        } else { ?>
                             <input type="hidden" id="entity_id_<?php echo $j; ?>" value="<?php echo $entities[$j]['ID'];?>" />
                             <select name="role" id="entity_role_<?php echo $j; ?>"><?php 
                             foreach($roles as $role_id => $role_config) { 
@@ -651,23 +675,6 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                 </table>
             </div>
         </div>  
-    </div> <?php
-} else { ?>
-    <div id="diff_list" align="center">
-        <br/>
-        <h2 class="tit"><?php echo _MANAGE_MODEL_LIST_TITLE;?> </h2>
-        <table width="79%" border="0">
-            <tr>
-                <td><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=separateur_1.jpg" width="800" height="1" alt="" /><br/><?php echo _WELCOME_MODEL_LIST_TITLE;?>.<br/><br/>
-                <?php //echo _MODEL_LIST_EXPLANATION1;?>.</p>
-                <!-- <p align="center"><?php echo _ADD_USER_TO_LIST_EXPLANATION.', '._CLICK_ON;?> : <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_change.gif" width="21" height="21" alt="" />.</p>
-                    <p align="center"><?php echo _REMOVE_USER_FROM_LIST_EXPLANATION.', '._CLICK_ON;?> : <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_delete.gif" width="19" height="19" alt="" />.</p>
-                    <p align="center"><?php echo _TO_MODIFY_LIST_ORDER_EXPLANATION;?> <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=arrow_down.gif" width="16" height="16" alt="" /> <?php echo _AND;?> <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=arrow_up.gif" width="16" height="16" alt=""/>. <br/><br/><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=separateur_1.jpg" width="800" height="1" alt=""/></p>-->
-                </td>
-            </tr>
-        </table>
-        <input align="middle" type="button" value="<?php echo _CANCEL;?>" class="button"  onclick="self.close();"/>
-    </div><?php 
-}?>
+    </div>
 </body>
 </html>

@@ -47,3 +47,6 @@ if (! defined('ENT_GROUPBASKET_REDIRECT')) {
 if (! defined('ENT_LISTINSTANCE_ROLES')) {
     define('ENT_LISTINSTANCE_ROLES', 'listinstance_roles');
 }
+if (! defined('ENT_LISTMODEL_TYPES')) {
+    define('ENT_LISTMODEL_TYPES', 'listmodel_types');
+}
