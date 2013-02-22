@@ -163,14 +163,13 @@ if($mode == 'normal') {
         .'&page=search_adv_error';
     $url_search = $_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching'
-        .'&page=search_adv&mode='.$mode.$urlParameters;
+        .'&page=search_adv&load&mode='.$mode.$urlParameters;
     
-    //error
+    //Displayed error text
     $_SESSION['error_search'] = '<p class="error"><img src="'
         .$_SESSION['config']['businessappurl'].'static.php?filename=noresult.gif" /><br />'
         ._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="javascript://" '
         .' onclick = "window.top.location.href=\''.$url_search.'\'">'._MAKE_NEW_SEARCH.'</a></strong></div>';
-
 }
 
 /************Construction de la requete*******************/
@@ -319,7 +318,7 @@ if($mode == 'normal') {
                 {
                     $tab[$i][$j]["label"]=_STATUS;
                     $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
-                    // $tab[$i][$j]['value'] = '<img src = "'.$res_status['IMG_SRC'].'" alt = "'.$res_status['LABEL'].'" title = "'.$res_status['LABEL'].'">';
+                    $tab[$i][$j]['value'] = '<img src = "'.$res_status['IMG_SRC'].'" alt = "'.$res_status['LABEL'].'" title = "'.$res_status['LABEL'].'">';
                     $tab[$i][$j]["size"]="5";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
@@ -383,6 +382,7 @@ if($mode == 'normal') {
                 if($tab[$i][$j][$value]=="category_id")
                 {
                     $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]['value'];
+                    $tab[$i][$j]["value"] = $_SESSION['coll_categories']['letterbox_coll'][$tab[$i][$j]['value']];
                     $tab[$i][$j]["label"]=_CATEGORY;
                     $tab[$i][$j]["size"]="10";
                     $tab[$i][$j]["label_align"]="left";
@@ -390,7 +390,6 @@ if($mode == 'normal') {
                     $tab[$i][$j]["valign"]="bottom";
                     $tab[$i][$j]["show"]=true;
                     $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["value"] = $_SESSION['mail_categories'][$tab[$i][$j]['value']];
                     $tab[$i][$j]["order"]="category_id";
                 }
                 
@@ -497,15 +496,15 @@ if (count($tab) > 0) {
     //Initialiser le tableau de paramètres
     $paramsTab = array();
     $paramsTab['bool_modeReturn'] = false;                                              //Desactivation du mode return (vs echo)
-    $paramsTab['urlParameters'] =  $urlParameters;                                      //
+    $paramsTab['urlParameters'] =  $urlParameters.'&dir=indexing_searching';            //Parametres supplémentaires
     $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_DOCS;              //Titre de la page
     $paramsTab['pagePicto'] =  $_SESSION['config']['businessappurl']
         ."static.php?filename=picto_search_b.gif";                                      //Image de la page
-    $paramsTab['bool_bigPageTitle'] = $bigPageTitle;                                    //
+    $paramsTab['bool_bigPageTitle'] = $bigPageTitle;                                    //Titre de la page en grand
     $paramsTab['bool_showIconDocument'] =  true;                                        //Affichage de l'icone du document
     $paramsTab['bool_showIconDetails'] =  $showIconDetails;                             //Affichage de l'icone de la page de details
     $paramsTab['bool_showAttachment'] = true;                                           //Affichage du nombre de document attaché (mode étendu)
-    if ($radioButton) {                                                                 //
+    if ($radioButton) {                                                                 //Boutton radio
         $paramsTab['bool_radioButton'] = $radioButton;
     }                                 
     $paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
@@ -644,5 +643,4 @@ if (count($tab) > 0) {
     
     echo '<script type="text/javascript">window.top.location.href=\''.$url_error.'\';</script>';
     exit();
-
 }

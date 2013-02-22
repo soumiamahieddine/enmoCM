@@ -344,7 +344,8 @@ if (count($_REQUEST['meta']) > 0) {
                 //$whereBasketsClause = 'or (';
                 $cptBasketClause = 0;
                 for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                    if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == 'letterbox_coll') {
+                    if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id 
+                        && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N') {
                         if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
                             $whereBasketsClause .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
                             $cptBasketClause++;
@@ -695,7 +696,8 @@ if (count($_REQUEST['meta']) > 0) {
                     
                 case 'true':
                     for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                        if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == 'letterbox_coll') {
+                       if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id 
+                        && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N') {
                             if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
                                 $_SESSION['searching']['comp_query'] .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
                             }
@@ -709,7 +711,8 @@ if (count($_REQUEST['meta']) > 0) {
                 default:
                     $json_txt .= " 'baskets_clause' : ['".addslashes(trim($_REQUEST['baskets_clause']))."'],";
                     for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                        if($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']) {
+                        if($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']
+                            && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N') {
                             if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
                                 $where_request .= ' ' . $_SESSION['user']['baskets'][$ind_bask]['clause'] . ' and ' ;
                             } 
@@ -767,7 +770,7 @@ if (isset($_REQUEST['specific_case'])
 ) {
     $page = 'list_results_mlb_frame';
     ?>
-    <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page='.$page.'&searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'].'&template='.$_REQUEST['template'];?>';</script>
+    <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page='.$page.'&load&searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'].'&template='.$_REQUEST['template'];?>';</script>
     <?php
     exit();
 }
@@ -786,7 +789,7 @@ if (empty($_SESSION['error_search'])) {
     //##################
     $page = 'list_results_mlb';
     ?>
-    <script type="text/javascript">window.top.location.href='<?php if ($mode == 'normal'){ echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching'.$extend_link_case;} elseif ($mode=='frame' || $mode == 'popup'){echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page='.$page.'&mode='.$mode.'&action_form='.$_REQUEST['action_form'].'&modulename='.$_REQUEST['modulename'];} if (isset($_REQUEST['nodetails'])){echo '&nodetails';}?>';</script>
+    <script type="text/javascript">window.top.location.href='<?php if ($mode == 'normal'){ echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching&load'.$extend_link_case;} elseif ($mode=='frame' || $mode == 'popup'){echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page='.$page.'&mode='.$mode.'&action_form='.$_REQUEST['action_form'].'&modulename='.$_REQUEST['modulename'];} if (isset($_REQUEST['nodetails'])){echo '&nodetails';}?>';</script>
     <?php
     exit();
 }
