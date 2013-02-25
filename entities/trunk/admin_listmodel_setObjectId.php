@@ -1,14 +1,17 @@
 <?php
-# loadListmodelObjects
 # AJAX script to list objects to be linked with list model
 
 function asSelect(
-    $items
+    $items,
+    $objectId=false
 ) {
     $return = "<select id='objectId' style='width:300px;'>";
     
     foreach($items as $id => $label) {
-        $return .= "<option value='".$id."'>".$id . ' - ' .$label."</option>";
+        $return .= "<option ";
+        if($id == $objectId) 
+            $return .= 'selected="true"';
+        $return .= " value='".$id."'>".$id . ' - ' .$label."</option>";
     }
     $return .= "</select>";
     return $return;
@@ -21,7 +24,16 @@ $core->load_lang();
 require_once 'modules/entities/class/class_manage_listdiff.php';
 $difflist = new diffusion_list();
 
-switch($_REQUEST['objectType']) {
+$mode = $_REQUEST['mode'];
+$objectType = $_REQUEST['objectType'];
+$objectId = $_REQUEST['objectId'];
+
+if(!$objectType) {
+    echo ""; 
+    return;
+}
+
+switch($objectType) {
 case 'entity_id':   
     require_once 'modules/entities/class/class_manage_entities.php';
     $ent = new entity();
@@ -37,12 +49,12 @@ case 'entity_id':
                 'entity_id',
                 $entity_id
             );
-        if(count($existinglist) == 0) {
+        if(count($existinglist) == 0 || ($mode == 'up' && $entity_id == $objectId)) {
             $entities[$entity_id] = $ent->getentitylabel($entity_id); 
         }
     }
     if(count($entities) > 0)
-        echo asSelect($entities);
+        echo asSelect($entities, $objectId);
     else {   
         echo asSelect(array("" => _ALL_OBJECTS_ARE_LINKED));
     }    
@@ -61,12 +73,12 @@ case 'type_id':
                 'type_id',
                 $type_id
             );
-        if(count($existinglist) == 0) {
+        if(count($existinglist) == 0 || ($mode == 'up' && $type_id == $objectId)) {
             $doctypes[$type_id] = $doctype->description; 
         }
     }
     if(count($doctypes) > 0)
-        echo asSelect($doctypes);
+        echo asSelect($doctypes, $objectId);
     else    
         echo asSelect(array("" => _ALL_OBJECTS_ARE_LINKED));
     
@@ -85,19 +97,19 @@ case 'foldertype_id':
                 'foldertype_id',
                 $foldertype_id
             );
-        if(count($existinglist) == 0) {
+        if(count($existinglist) == 0 || ($mode == 'up' && $foldertype_id == $objectId)) {
             $foldertypes[$foldertype_id] = $foldertype->foldertype_label; 
         }
     }
     if(count($foldertypes) > 0)
-        echo asSelect($foldertypes);
+        echo asSelect($foldertypes, $objectId);
     else    
         echo asSelect(array("" => _ALL_OBJECTS_ARE_LINKED));
     break;
     
 case 'user_defined_id':
 default:
-    echo "<input type='text' id='objectId' style='width:300px;' />";
+    echo "<input type='text' id='objectId' style='width:300px;' value='$objectId' />";
     break;
 }
 

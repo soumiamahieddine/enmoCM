@@ -23,17 +23,6 @@ $db = new dbquery();
 $db->connect();
 
 $difflist = new diffusion_list();
-if (isset($_POST['valid'])) {
-    $_SESSION['popup_suite'] = true;
-    # Reload caller with new list in session ?>
-    <script type="text/javascript">
-        window.parent.opener.location.reload();
-        self.close();
-    </script>
-    <?php
-    exit;
-}
-
 # *****************************************************************************
 # Search functions / filter users and entities avilable for list composition
 # *****************************************************************************
@@ -112,18 +101,26 @@ while ($line = $db->fetch_object()) {
 $origin = $_REQUEST['origin'];
 
 $roles = $difflist->get_listinstance_roles();
-
+$listmodel_types = $difflist->get_listmodel_types();
 # *****************************************************************************
 # Manage request paramaters
 # *****************************************************************************
 // Object type
 $objectType = $_REQUEST['objectType'];
 $_SESSION['m_admin']['entity']['listmodel_objectType'] = $objectType;
-
+$objectTypeLabel = $listmodel_types[$objectType];
    
 // Object id
 $objectId = $_REQUEST['objectId'];
 $_SESSION['m_admin']['entity']['listmodel_objectId'] = $objectId;
+
+// Coll id
+$collId = $_REQUEST['collId'];
+$_SESSION['m_admin']['entity']['listmodel_collId'] = $collId;
+
+// Res Type
+$resType = $_REQUEST['resType'];
+$_SESSION['m_admin']['entity']['listmodel_resType'] = $resType;
 
 // Action ?
 if (isset($_GET['action']))
@@ -159,6 +156,20 @@ if(isset($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'])
 else
     $dest_is_set = false;
 
+#****************************************************************************************
+# RELOAD PARENT ID VALIDATION OF LIST
+#****************************************************************************************     
+if (isset($_POST['valid'])) {
+    $_SESSION['popup_suite'] = true;
+    # Reload caller with new list in session ?>
+    <script type="text/javascript">
+        window.parent.opener.location.reload();
+        self.close();
+    </script>
+    <?php
+    exit;
+}
+    
 #****************************************************************************************
 # SWITCH ON ACTION REQUEST
 #**************************************************************************************** 
@@ -375,7 +386,9 @@ $linkwithwhat =
     . '&what_users=' . $whatUsers 
     . '&what_services=' . $whatServices 
     . '&objectType=' . $objectType 
-    . '&objectId=' . $objectId;
+    . '&objectId=' . $objectId 
+    . '&collId=' . $collId
+    . '&resType=' . $resType;
 #******************************************************************************
 # DISPLAY EXISTING LIST
 #******************************************************************************
@@ -395,13 +408,9 @@ $linkwithwhat =
     </script>
     <br/>
     <div id="diff_list" align="center">
-        <h2 class="tit"><?php echo _DIFFUSION_LIST . ' - '; 
-        
-            switch($objectType) {
-            case "entity_id"     : echo _ENTITY;    break;
-            case "type_id"       : echo _DOCTYPE;   break;
-            case "foldertype_id" : echo _FOLDERTYPE;break;
-            }
+        <h2 class="tit"><?php 
+            echo _DIFFUSION_LIST . ' - '; 
+            echo $objectTypeLabel;
             echo ' ' . $objectId;
         ?></h2><?php 
         #**************************************************************************

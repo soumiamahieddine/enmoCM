@@ -146,46 +146,6 @@ function validate_listinstance_role() {
   
 }
 
-function getObjectIdInput()
-{
-    var objectType = $('objectType').value;
-    var objectId_input = $('objectId_input');
-    
-    new Ajax.Request(
-        'index.php?display=true&module=entities&page=admin_listmodel_objectId_input&objectType='+objectType,
-        {
-            method:'post',
-            parameters: { },
-            onSuccess: function(answer){
-                objectId_input.innerHTML = answer.responseText;
-                objectId_input.style.display = 'block';
-            }
-        }
-    );
-
-}
-
-function saveListmodel()
-{
-    var main_error = $('main_error'); 
-    main_error.innerHTML = '';
-    
-    new Ajax.Request(
-        'index.php?display=true&module=entities&page=admin_listmodel_validate',
-        {
-            method:'post',
-            parameters: { },
-            onSuccess: function(answer){
-                if(answer.responseText)
-                    main_error.innerHTML = answer.responseText;
-                else {
-                    goTo('index.php?module=entities&page=admin_listmodels');
-                }
-            }
-        }
-    );        
-}
-
 function isIdToken(value)
 {
     var token = value.match(/[\w_]+/g);

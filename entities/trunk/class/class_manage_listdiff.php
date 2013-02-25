@@ -269,6 +269,31 @@ class diffusion_list extends dbquery
         }
     }
     
+    public function delete_listmodel(
+        $collId = 'letterbox_coll',
+        $listType = 'DOC', 
+        $objectType = 'entity_id',
+        $objectId
+    ) {
+        $this->connect();
+       
+        $collId = $this->protect_string_db($collId);
+        $objectType = $this->protect_string_db(trim($objectType));
+        $objectId = $this->protect_string_db(trim($objectId));
+        $listType = $this->protect_string_db(trim($listType));
+
+        # Delete all and replace full list
+        #**********************************************************************
+        $this->query(
+            "delete from " . ENT_LISTMODELS 
+            . " where coll_id = '" . $collId . "' "
+                . "and object_type = '" . $objectType . "' "
+                . "and object_id = '" . $objectId . "' "
+                . "and listmodel_type = '" . $listType . "'"
+        );
+    
+    }
+    
     /**
     * Loads a diffusion list into database (listinstance or listmodel table)
     *

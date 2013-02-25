@@ -342,7 +342,11 @@ if (!defined('_SELECT_OBJECT_TYPE_AND_ID'))
 if (!defined('_SAVE_LISTMODEL'))
     define('_SAVE_LISTMODEL', 'Valider');
 if (!defined('_OBJECT_ID_IS_NOT_VALID_ID'))
-    define('_OBJECT_ID_IS_NOT_VALID_ID', 'Identifiant invalide: il ne doit contenir que des caractères alphabétiques, numériques ou des tiret bas (A-Z, a-z, 0-9, _)');    
+    define('_OBJECT_ID_IS_NOT_VALID_ID', 'Identifiant invalide: il ne doit contenir que des caractères alphabétiques, numériques ou des tiret bas (A-Z, a-z, 0-9, _)');  
+if (!defined('_LISTMODEL_ID_ALREADY_USED'))
+    define('_LISTMODEL_ID_ALREADY_USED', 'Cet identifiant est déjà utilisé!');    
+if (!defined('_CONFIRM_LISTMODEL_SAVE'))
+    define('_CONFIRM_LISTMODEL_SAVE', 'Sauvegarder la liste ?'); 
     
 /******************** RM ENTITIES ************/
 if (!defined('_STANDARD'))
