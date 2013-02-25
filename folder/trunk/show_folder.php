@@ -415,8 +415,8 @@ if (isset($_POST['delete_folder'])) {
             <dd>
                 <iframe name="history_folder" id="history_folder" src="<?php
                     echo $_SESSION['config']['businessappurl'];
-                    ?>index.php?display=true&module=folder&page=folder_history"
-                    frameborder="0" scrolling="no" width="100%" height="590px"></iframe>
+                    ?>index.php?display=true&module=folder&page=folder_history&load&size=full&id=<?php 
+                    echo $_SESSION['current_folder_id'];?>" frameborder="0" scrolling="no" width="100%" height="590px"></iframe>
             </dd>
         </dl>
     </div>
