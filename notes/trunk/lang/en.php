@@ -39,6 +39,8 @@ if (!defined('_NOTES_COMMENT'))
     define('_NOTES_COMMENT', 'Notes');
 if (!defined('_OF'))
     define('_OF', 'of');
+if (!defined('_NOTE_DONT_EXIST'))
+    define('_NOTE_DONT_EXIST', 'This note dont exists');
 if (!defined('_THIS_NOTE_IS_VISIBLE_BY'))
     define('_THIS_NOTE_IS_VISIBLE_BY', 'This note is visible by');
 

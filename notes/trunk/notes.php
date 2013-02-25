@@ -20,13 +20,13 @@
 */
 
 /**
-* @brief    Displays notes list in details folder
+* @brief    Notes
 *
-* @file     notes_list.php
+* @file     notes.php
 * @author   Yves Christian Kpakpo <dev@maarch.org>
 * @date     $date$
 * @version  $Revision$
-* @ingroup  folder
+* @ingroup  notes
 */
 
 require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php";
@@ -36,31 +36,71 @@ require_once "modules".DIRECTORY_SEPARATOR."notes".DIRECTORY_SEPARATOR."notes_ta
 
 $core_tools = new core_tools();
 $request    = new request();
-$list       = new lists();
+$list       = new lists();   
 
-if(isset($_REQUEST['identifier']) && $_REQUEST['identifier'] <> "") {
+$identifier = '';
+$origin = '';
+$parameters = '';
 
-    $identifier = $_REQUEST['identifier'];
+//Collection ID
+if(isset($_REQUEST['coll_id']) && !empty($_REQUEST['coll_id'])) $parameters = "&coll_id=".$_REQUEST['coll_id'];
+
+//Identifier
+if (isset($_REQUEST['identifier']) && !empty($_REQUEST['identifier'])) $identifier = $_REQUEST['identifier'];
+
+//Origin
+if (isset($_REQUEST['origin']) && !empty($_REQUEST['origin'])) $origin = $_REQUEST['origin'];
+ 
+//Extra parameters
+if (isset($_REQUEST['size']) && !empty($_REQUEST['size'])) $parameters .= '&size='.$_REQUEST['size'];
+if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) $parameters .= '&order='.$_REQUEST['order'];
+if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) $parameters .= '&order_field='.$_REQUEST['order_field'];
+if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what='.$_REQUEST['what'];
+if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
+
+ if (isset($_REQUEST['load'])) {
+    $core_tools->load_html();
+    $core_tools->load_header('', true, false);
+    ?>
+    <body id="iframe">
+    <div id="container">
+    <h2><?php echo _NOTES;?></h2>
+    <?php
+    $core_tools->load_js();
+
+    //Load list
+    if (!empty($identifier) && !empty($origin)) {
     
-    if(isset($_REQUEST['coll_id']) && !empty($_REQUEST['coll_id'])) {
-         $extendUrl = "&coll_id=".$_REQUEST['coll_id'];
+        $target = $_SESSION['config']['businessappurl']
+            .'index.php?module=notes&page=notes&identifier='
+            .$identifier.'&origin='.$origin.$parameters;
+        
+        $listContent = $list->loadList($target);
+        echo $listContent;
+    } else {
+        echo '<span class="error">'._ERROR_IN_PARAMETERS.'</span>';
     }
-    
+    ?>
+    </div>
+    </body>
+    </html>
+    <?php
+} else {
     //If size is full change some parameters
-    if ($_REQUEST['size'] == "full") {
+    if (isset($_REQUEST['size']) 
+        && ($_REQUEST['size'] == "full")
+    ) {
         $sizeSmall = "15";
         $sizeFull = "30";
         $css = "listing spec";
         $cutString = 100;
-        $extendUrl = "&size=full";
     } else {
         $sizeSmall = "10";
         $sizeFull = "10";
         $css = "listingsmall";
         $cutString = 20;
-        $extendUrl = "";
     }
-
+    
     //Table or view
         $select[NOTES_TABLE] = array(); //Notes
         $select[USERS_TABLE] = array(); //Users
@@ -185,7 +225,8 @@ if(isset($_REQUEST['identifier']) && $_REQUEST['identifier'] <> "") {
         $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
         $paramsTab['pageTitle'] ='';                                                        //Titre de la page
         $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
-        $paramsTab['urlParameters'] = 'identifier='.$identifier.'&display=true'.$extendUrl; //Parametres d'url supplementaires
+        $paramsTab['urlParameters'] = 'identifier='.$identifier
+                ."&origin=".$origin.'&display=true'.$parameters;                            //Parametres d'url supplementaires
         $paramsTab['filters'] = array('user');                                              //Filtres    
         $paramsTab['listHeight'] = '540px';                                                 //Hauteur de la liste
         // $paramsTab['bool_showSmallToolbar'] = true;                                         //Mini barre d'outils
@@ -196,8 +237,8 @@ if(isset($_REQUEST['identifier']) && $_REQUEST['identifier'] <> "") {
         $add = array(
                 "script"        =>  "showNotesForm('".$_SESSION['config']['businessappurl']  
                                         . "index.php?display=true&module=notes&page=notes_ajax_content"
-                                        . "&mode=add&identifier=".$identifier."&origin=folder"
-                                        . $extendUrl."')",
+                                        . "&mode=add&identifier=".$identifier."&origin=".$origin
+                                        . $parameters."')",
                 "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_note.gif&module=notes",
                 "tooltip"       =>  _ADD_NOTE,
                 "alwaysVisible" =>  true
@@ -218,12 +259,12 @@ if(isset($_REQUEST['identifier']) && $_REQUEST['identifier'] <> "") {
         $read = array(
             "script"        => "showNotesForm('".$_SESSION['config']['businessappurl']
                                     ."index.php?display=true&module=notes&page=notes_ajax_content"
-                                    ."&mode=up&id=@@id@@&identifier=".$identifier."&origin=folder"
-                                    . $extendUrl."');",
+                                    ."&mode=up&id=@@id@@&identifier=".$identifier."&origin=".$origin
+                                    . $parameters."');",
             "class"         =>  "read",
-            "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=picto_view.gif",
-            "label"         =>  _READ,
-            "tooltip"       =>  _READ,
+            "icon"          =>  $_SESSION['config']['businessappurl']."static.php?module=notes&filename=modif_note_small.gif",
+            // "label"         =>  _UPDATE.'/'._DELETE,
+            "tooltip"       =>  _UPDATE.'/'._DELETION,
             "disabledRules" => "@@user_id@@ != '".$_SESSION['user']['UserId']."'"
             );
         array_push($paramsTab['actionIcons'], $read);     
@@ -232,7 +273,7 @@ if(isset($_REQUEST['identifier']) && $_REQUEST['identifier'] <> "") {
         $status = 0;
         $content = $list->showList($tab, $paramsTab, $listKey);
         // $debug = $list->debug();
+
+    echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
 }
 
-echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
-?>

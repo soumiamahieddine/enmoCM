@@ -39,5 +39,7 @@ if (!defined('_NOTES_COMMENT'))
     define('_NOTES_COMMENT', 'Notes');
 if (!defined('_OF'))
     define('_OF', 'de');
+if (!defined('_NOTE_DONT_EXIST'))
+    define('_NOTE_DONT_EXIST', 'Cette note n\'existe pas');
 if (!defined('_THIS_NOTE_IS_VISIBLE_BY'))
     define('_THIS_NOTE_IS_VISIBLE_BY', 'Restreindre cette note aux entit&eacute;s suivantes (si vide alors la note est publique)');

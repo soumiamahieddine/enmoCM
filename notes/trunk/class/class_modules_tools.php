@@ -205,7 +205,7 @@ class notes extends dbquery
                             . " where identifier = " . $id 
                             . " and coll_id ='"
                             . $coll_id . "' order by date_note desc");
-         
+        // $dbId->show(); 
        while ($res = $dbId->fetch_object())
        {
            $dbNotesEntities = new dbquery();
