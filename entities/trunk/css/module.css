@@ -20,6 +20,13 @@
 	background:  url(static.php?filename=manage_users_entities.gif&module=entities) no-repeat 2px top;
 }
 
+#admin_listmodel_types{
+	background:  url(static.php?filename=manage_groupe.gif) no-repeat 2px top;
+}
+#admin_listmodels{
+	background:  url(static.php?filename=manage_groupe.gif) no-repeat 2px top;
+}
+
 .entities_list
 {
 	width: 310px;

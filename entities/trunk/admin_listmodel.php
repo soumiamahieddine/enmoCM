@@ -34,12 +34,12 @@ $params ['mode']        : 'listmodel' or 'listinstance' (mandatory)
         ['concat_list'] : True or false (can be set only in 'listinstance' mode )*/
 
 # Load listmodel into session
-
+/*
 var_dump($_SESSION['m_admin']['entity']['listmodel']);
 var_dump($_SESSION['m_admin']['entity']['listmodel_objectType']);
 var_dump($_SESSION['m_admin']['entity']['listmodel_objectId']);
 var_dump($_SESSION['m_admin']['entity']['listmodel_collId']);
-var_dump($_SESSION['m_admin']['entity']['listmodel_resType']);
+var_dump($_SESSION['m_admin']['entity']['listmodel_resType']);*/
 
 if(!isset($_SESSION['m_admin']['entity']['listmodel'])) {
     # Listmodel to be loaded (up action on list or reload in add mode)
