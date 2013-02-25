@@ -1,6 +1,7 @@
 <?php
 /*
-*    Copyright 2008-2012 Maarch
+*
+*    Copyright 2008,2012 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -19,133 +20,196 @@
 */
 
 /**
-* @brief  Displays a document logs
+* @brief    Display document history
 *
-* @file hist_doc.php
-* @author Claire Figueras <dev@maarch.org>
-* @date $date$
-* @version $Revision$
-* @ingroup indexing_searching_mlb
+* @file     document_history.php
+* @author   Yves Christian Kpakpo <dev@maarch.org>
+* @date     $date$
+* @version  $Revision$
+* @ingroup  indexing_searching
 */
 
-require_once('core/class/class_security.php');
+require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php";
+require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php";
+require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
+            ."class".DIRECTORY_SEPARATOR."class_lists.php";
+            
 $core_tools = new core_tools();
-$core_tools->test_user();
-//here we loading the lang vars
-$core_tools->load_lang();
-//here we loading the html
-$core_tools->load_html();
-//here we building the header
-$core_tools->load_header('', true, false);
-$sec = new security();
-$mode = 'small';
-if(isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'normal')
-{
-    $mode = 'normal';
+$request    = new request();
+$sec        = new security();
+$list       = new lists();
+
+$parameters = '';
+
+//Ressource ID
+if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
+    $id = $_REQUEST['id'];
+} else {
+    echo '<span class="error">'._ID.' '._IS_EMPTY.'</span>';
+    exit();
 }
-?>
-<body <?php  if($_SESSION['req'] == 'action') {
-        ?>id="hist_action_frame"<?php
-    } elseif ($mode =='small') {
-        ?>id="hist_courrier_frame"<?php 
-    }
-?>>
-<?php
-$func = new functions();
-$db_hist = new dbquery();
-$db_hist->connect();
-$db_hist2 = new dbquery();
-$db_hist2->connect();
-$couleur=0;
-if(isset($_SESSION['collection_id_choice']) && !empty($_SESSION['collection_id_choice']))
-{
-    $table = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice']);
-    $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
+
+//Collection ID
+if(isset($_REQUEST['coll_id']) && !empty($_REQUEST['coll_id'])) {
+    $table = $sec->retrieve_table_from_coll($_REQUEST['coll_id']);
+    $view = $sec->retrieve_view_from_coll_id($_REQUEST['coll_id']);
+    $parameters = "&coll_id=".$_REQUEST['coll_id'];
+} else {
+    echo '<span class="error">'._COLLECTION.' '._IS_EMPTY.'</span>';
+    exit();
 }
-else
-{
-    $table = $_SESSION['collections'][0]['table'];
-    $view = $_SESSION['collections'][0]['view'];
-}
-if(isset($_GET['id']))
-{
-    $s_id = $_GET['id'];
-}
-else
-{
-    $s_id = "";
-}
-if((empty($table)|| !$table) && (!empty($view) && $view <> false))
-{
-    $query = "select info, event_date, user_id  from " 
-        . $_SESSION['tablename']['history'] 
-        . " WHERE table_name= '" . $view 
-        . "' AND record_id= '" . $s_id . "' ORDER  BY event_date desc";
-}
-elseif((empty($view) || !$view) && (!empty($table)&& $table <> false))
-{
-    $query = "select info, event_date, user_id  from " 
-        . $_SESSION['tablename']['history'] 
-        . " WHERE table_name= '" . $table 
-        . "' AND record_id= '" . $s_id . "' ORDER  BY event_date desc";
-}
-elseif(!empty($view) && !empty($table)&& $view <> false && $table <> false)
-{
-    $query = "select info, event_date, user_id  from " 
-        . $_SESSION['tablename']['history'] 
-        . " WHERE (table_name= '" . $table 
-        . "' OR table_name = '" . $view . "') AND record_id= '" 
-        . $s_id . "' ORDER  BY event_date desc";
-}
-$db_hist->query($query);
-//$db_hist->show();
-echo '<center><h2>' . _HISTORY . '</h2></center>';
-?>
-<table cellpadding="0" cellspacing="0" border="0" class="<?php 
-    if($mode == 'normal') {
-        echo 'listing spec detailtabricatordebug';
-    } else {
-        echo'listing2';
-    }?>">
-    <thead>
-        <tr>
-            <th><?php  echo _DATE;?></th>
-            <th><?php  echo _USER;?></th>
-            <th><?php  echo _DONE;?></th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php
-        $color = ' class="col"';
-        while($res_hist=$db_hist->fetch_object())
-        {
-            if($color == ' class="col"')
+
+//Extra parameters
+if (isset($_REQUEST['size']) && !empty($_REQUEST['size'])) $parameters .= '&size='.$_REQUEST['size'];
+
+ if (isset($_REQUEST['load'])) {
+    //
+    $core_tools->load_lang();
+    $core_tools->load_html();
+    $core_tools->load_header('', true, false);
+
+    ?><body><?php
+    echo '<h2>' . _HISTORY . '</h2>';
+
+    $core_tools->load_js();
+
+    //Load list
+    $target = $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&&id='.$id.$parameters;
+    $listContent = $list->loadList($target);
+    echo $listContent;
+
+    ?>
+    </body>
+    </html>
+   <?php
+} else {
+    //Order
+            $order = $order_field = '';
+            $order = $list->getOrder();
+            $order_field = $list->getOrderField();
+            if (!empty($order_field) && !empty($order)) 
+                $orderstr = "order by ".$order_field." ".$order;
+            else  {
+                $list->setOrder();
+                $list->setOrderField('event_date');
+                $orderstr = "order by event_date desc";
+            }
+            
+    //From filters
+        $where = "";
+        $filterClause = $list->getFilters(); 
+        if (!empty($filterClause)) $where = ' and '.$filterClause;//Filter clause
+        
+        //Query
+            if((empty($table)|| !$table) && (!empty($view) && $view <> false)) {
+                $whereTableOrView = "h.table_name= '" . $view. "'";
+            }
+            elseif((empty($view) || !$view) && (!empty($table)&& $table <> false))  {
+                $whereTableOrView = "h.table_name= '" . $table. "'";
+            }
+            elseif(!empty($view) && !empty($table)&& $view <> false && $table <> false) {
+                $whereTableOrView = "(h.table_name= '" . $table . "' OR h.table_name = '" . $view . "')";
+            }
+            
+            $request->query("select h.event_date, ".$_SESSION['tablename']['users'].".user_id, "
+                .$_SESSION['tablename']['users'].".firstname, ".$_SESSION['tablename']['users']
+                .".lastname, h.info from " .$_SESSION['tablename']['history']
+                ." h, ".$_SESSION['tablename']['users'] ." where "
+                .$whereTableOrView." and h.record_id = '".$id
+                ."' and h.user_id = ".$_SESSION['tablename']['users']
+                .".user_id".$where." ".$orderstr);
+            // $request->show();
+            
+            $tab=array();
+            while($line = $request->fetch_array())
             {
-                $color = '';
+                $temp= array();
+                foreach (array_keys($line) as $resval)
+                {
+                    if (!is_int($resval))
+                    {
+                        array_push($temp,array('column'=>$resval,'value'=>$line[$resval]));
+                    }
+                }
+                array_push($tab, $temp);
             }
-            else
+
+        //Result Array
+            for ($i=0;$i<count($tab);$i++)
             {
-                $color = ' class="col"';
+                for ($j=0;$j<count($tab[$i]);$j++)
+                {
+                    foreach(array_keys($tab[$i][$j]) as $value)
+                    {
+                        if($tab[$i][$j][$value]=="id")
+                        {
+                            $tab[$i][$j]["id"]=$tab[$i][$j]['value'];
+                            $tab[$i][$j]["label"]=_ID;
+                            $tab[$i][$j]["size"]="1";
+                            $tab[$i][$j]["label_align"]="left";
+                            $tab[$i][$j]["align"]="left";
+                            $tab[$i][$j]["valign"]="bottom";
+                            $tab[$i][$j]["show"]=true;
+                            $tab[$i][$j]["order"]='id';
+                        }
+                        if($tab[$i][$j][$value]=="event_date")
+                        {
+                            $tab[$i][$j]["value"]=$request->dateformat($tab[$i][$j]["value"]);
+                            $tab[$i][$j]["label"]=_DATE;
+                            $tab[$i][$j]["size"]="10";
+                            $tab[$i][$j]["label_align"]="left";
+                            $tab[$i][$j]["align"]="left";
+                            $tab[$i][$j]["valign"]="bottom";
+                            $tab[$i][$j]["show"]=true;
+                            $tab[$i][$j]["order"]='event_date';
+                        }
+                        if($tab[$i][$j][$value]=="firstname")
+                        {
+                            $firstname =  $request->show_string($tab[$i][$j]["value"]);
+                        }
+                        if($tab[$i][$j][$value]=="lastname")
+                        {
+                            $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]). ' ' .$firstname ;
+                            $tab[$i][$j]["label"]=_USER;
+                            $tab[$i][$j]["size"]="15";
+                            $tab[$i][$j]["label_align"]="left";
+                            $tab[$i][$j]["align"]="left";
+                            $tab[$i][$j]["valign"]="bottom";
+                            $tab[$i][$j]["show"]=true;
+                            $tab[$i][$j]["order"]='lastname';
+                        }
+                        if($tab[$i][$j][$value]=="info")
+                        {
+                            $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
+                            $tab[$i][$j]["label"]=_EVENT;
+                            $tab[$i][$j]["size"]="35";
+                            $tab[$i][$j]["label_align"]="left";
+                            $tab[$i][$j]["align"]="left";
+                            $tab[$i][$j]["valign"]="bottom";
+                            $tab[$i][$j]["show"]=true;
+                            $tab[$i][$j]["order"]='info';
+                        }
+                    }
+                }
             }
-            $db_hist2->query("select lastname, firstname from " 
-                . $_SESSION['tablename']['users'] 
-                . " where user_id = '".$res_hist->user_id."'");
-            $res_hist2 = $db_hist2->fetch_object();
-            if (isset($res_hist2->lastname)) {
-                $nom = $res_hist2->lastname;
-                $prenom = $res_hist2->firstname;
-            }
-            ?>
-            <tr <?php  echo $color; ?>>
-                <td><span><?php  echo $func->dateformat($res_hist->event_date);?></span></td>
-                <td><span><?php  echo $prenom." ".$nom." "; ?></span></td>
-                <td><span><?php  echo $res_hist->info; ?></span></td>
-            </tr>
-            <?php
-        }
-        ?>
-    </tbody>
-</table>
-<?php $core_tools->load_js();?>
-</body>
-</html>
+
+        //List
+            $listKey = 'id';                                                            //Clé de la liste
+            $paramsTab = array();                                                       //Initialiser le tableau de paramètres
+            $paramsTab['bool_sortColumn'] = true;                                       //Affichage Tri
+            $paramsTab['pageTitle'] ='';                                                //Titre de la page
+            $paramsTab['bool_bigPageTitle'] = false;                                    //Affichage du titre en grand
+            $paramsTab['urlParameters'] = 'dir=indexing_searching&id='
+                .$id.'&display=true'.$parameters;                                       //Parametres d'url supplementaires
+            $paramsTab['filters'] = array('user', 'history_action', 'history_date');    //Filtres    
+            $paramsTab['listHeight'] = '475px';                                         //Hauteur de la liste
+            // $paramsTab['bool_showSmallToolbar'] = true;                                 //Mini barre d'outils
+            $paramsTab['linesToShow'] = 20;                                             //Nombre de ligne a afficher
+            
+            //Output
+            $status = 0;
+            $content = $list->showList($tab, $paramsTab, $listKey);
+            // $debug = $list->debug();
+
+    echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
+}
