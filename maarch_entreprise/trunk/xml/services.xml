@@ -313,14 +313,14 @@
         <nature>include</nature>
     </WHEREAMIUSED>
  </SERVICE>
- <!--SERVICE>
+ <SERVICE>
    <id>admin_parameters</id>
    <name>_ADMIN_PARAMETERS</name>
    <comment>_ADMIN_PARAMETERS_DESC</comment>
-   <servicepage>index.php?page=parameters_management_controler&amp;mode=list&amp;admin=parameters</servicepage>
+   <servicepage>index.php?page=admin_parameters&amp;admin=parameters</servicepage>
    <servicetype>admin</servicetype>
    <style>admin_parameters</style>
    <system_service>false</system_service>
    <enabled>true</enabled>
- </SERVICE-->
+ </SERVICE>
 </root>
