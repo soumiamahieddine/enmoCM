@@ -329,9 +329,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 'img_author' => true,
                 'img_destination' => true,
                 'img_arbox_id' => true,
-                'img_market' => true,
-                'img_project' => true
-            );
+                'img_folder' => true
+                );
 
             $res = $db->fetch_object();
             $typist = $res->typist;
@@ -493,7 +492,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <?php
                             }
                             $folder_id = "";
-                            if (($key == "market" || $key == "project") && $data[$key]['show_value'] <> "")
+                            if ($key == "folder" && $data[$key]['show_value'] <> "")
                             {
                                 $folderTmp = $data[$key]['show_value'];
                                 $find1 = strpos($folderTmp, '(');
@@ -640,17 +639,13 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 }
                                 else if ($data[$key]['field_type'] == 'autocomplete')
                                 {
-                                    if ($key == 'project')
+                                    if ($key == 'folder')
                                     {
-                                        //$('market').value='';return false;
-                                    ?><input type="text" name="project" id="project" onblur="" value="<?php echo $data['project']['show_value']; ?>" /><div id="show_project" class="autocomplete"></div><script type="text/javascript">launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=autocomplete_folders&mode=project', 'project');</script>
-                                    <?php
-                                    }
-                                    else if ($key == 'market')
-                                    {
-                                    ?><input type="text" name="market" id="market" onblur="fill_project('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=ajax_get_project');return false;"  value="<?php echo $data['market']['show_value']; ?>"/><div id="show_market" class="autocomplete"></div>
-                                    <script type="text/javascript">launch_autocompleter_folders('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=folder&page=autocomplete_folders&mode=market', 'market');</script>
-                                    <?php
+                                        ?><input type="text" name="folder" id="folder" onblur="" value="<?php echo $data['folder']['show_value']; 
+                                        ?>" /><div id="show_folder" class="autocomplete"></div><script type="text/javascript">launch_autocompleter_folders('<?php 
+                                        echo $_SESSION['config']['businessappurl'];
+                                        ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder', 'folder');</script>
+                                        <?php
                                     }
                                 }
                             }
@@ -1245,109 +1240,31 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 </dd>
                 <dt><?php echo _DOC_HISTORY;?></dt>
                 <dd>
-                    <iframe src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=hist_doc&id=<?php echo $s_id;?>&mode=normal" name="hist_doc_process" width="100%" height="580" align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>
+                    <iframe src="<?php echo $_SESSION['config']['businessappurl'];
+                    ?>index.php?display=true&dir=indexing_searching&page=document_history&id=<?php
+                    echo $s_id;?>&mode=normal" name="hist_doc_process" width="100%" height="580" 
+                    align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>
                 </dd>
                 <?php
-                if ($core->is_module_loaded('notes')) {         
-                        $selectNotes = "select id, identifier, user_id, date_note, note_text from "
-                            . $_SESSION['tablename']['not_notes']
-                            . " where identifier = " . $s_id 
-                            . " and coll_id ='"
-                            . $_SESSION['collection_id_choice'] . "' order by date_note desc";
-
-                    $dbNotes = new dbquery();
-                    $dbNotes->connect();
-                    $dbNotes->query($selectNotes);
-                    //$dbNotes->show();
-                    $not_res = 0;
-                    while ($res=$dbNotes->fetch_object())
-                    {
-                        $dbNotesEntities = new dbquery();
-                        $dbNotesEntities->connect();
-                        $query = "select id from note_entities where "
-                        . "note_id = " .$res->id;
+                if ($core->is_module_loaded('notes')) {
+                    require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
+                        . "class" . DIRECTORY_SEPARATOR
+                        . "class_modules_tools.php";
+                    $notes_tools    = new notes();
                     
-                        $dbNotesEntities->query($query);
-                        
-                        if($dbNotesEntities->nb_result()==0)
-                            $not_res++;
-                        else
-                        {
-                            $dbUser = new dbquery();
-                            $dbUser->connect();
-
-                            $query = "select id from notes where id in ("
-                            . "select note_id from note_entities where (item_id = '" 
-                            . $_SESSION['user']['primaryentity']['id'] . "' and note_id = " . $res->id . "))"
-                            . "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')";
-
-                            $dbUser->query($query);
-                            //$dbUser->show();
-                            if($dbUser->nb_result()<>0)
-                            $not_res++;
-                        }   
-                    }
-                    $not_res_title = " (".$not_res.") ";
-                    $nb_notes_for_title  = $dbNotes->nb_result();
-                    
-                    if ($nb_notes_for_title == 0) {
-                        $extend_title_for_notes = '';
-                    } else {
-                        $extend_title_for_notes = " (".$nb_notes_for_title.") ";
-                    }
+                    //Count notes
+                    $nbr_notes = $notes_tools->countUserNotes($s_id, $coll_id);
+                    if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
+                    //Notes iframe
                     ?>
-                    <!--<dt><?php  echo _NOTES.$extend_title_for_notes;?></dt>-->
-                    <dt><?php  echo _NOTES.$not_res_title;?></dt>
+                    <dt><?php  echo _NOTES.$nbr_notes;?></dt>
                     <dd>
-                    <?php
-                        /*$detailsExport .= "<h3>"._NOTES." : </h3>";
-                        $detailsExport .= "<table width='100%'>";
-                        $detailsExport .= "<tr>";
-                        $detailsExport .= "<td>"._ID."</td>";
-                        $detailsExport .= "<td>"._DATE."</td>";
-                        $detailsExport .= "<td>"._NOTES."</td>";
-                        $detailsExport .= "<td>"._USER."</td>";
-                        $detailsExport .= "</tr>";
-                        while($resNotes = $dbNotes->fetch_object())
-                        {
-                            $detailsExport .= "<tr>";
-                            $detailsExport .= "<td>".$resNotes->id."</td>";
-                            $detailsExport .= "<td>".$resNotes->date_note."</td>";
-                            $detailsExport .= "<td>".$resNotes->note_text."</td>";
-                            $detailsExport .= "<td>".$resNotes->user_id."</td>";
-                            $detailsExport .= "</tr>";
-                        }
-                        $detailsExport .= "</table>";*/
-                        $select_notes[$_SESSION['tablename']['users']] = array();
-                        array_push($select_notes[$_SESSION['tablename']['users']],"user_id","lastname","firstname");
-                        $select_notes[$_SESSION['tablename']['not_notes']] = array();
-                        array_push($select_notes[$_SESSION['tablename']['not_notes']],"id", "date_note", "note_text", "user_id");
-                        $where_notes = " identifier = ".$s_id." ";
-                        $request_notes = new request;
-                        $tab_notes=$request_notes->select($select_notes,$where_notes,"order by ".$_SESSION['tablename']['not_notes'].".date_note desc",$_SESSION['config']['databasetype'], "500", true,$_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id" );
-                        //$request_notes->show();
-
-                        ?>
-                        <div style="text-align:center;">
-                            <img src="<?php
-                                echo $_SESSION['config']['businessappurl'];
-                                ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" /><?php
-                                if ($status <> 'END') {
-                                    ?><a href="javascript://" onclick="ouvreFenetre('<?php
-                                    echo $_SESSION['config']['businessappurl'];
-                                    ?>index.php?display=true&module=notes&page=note_add&size=full&identifier=<?php
-                                    echo $s_id;
-                                    ?>&coll_id=<?php
-                                    echo $coll_id;
-                                    ?>', 1024, 650)" ><?php
-                                    echo _ADD_NOTE;
-                                    ?></a><?php
-                                } ?>
-                        </div>
                         <iframe name="list_notes_doc" id="list_notes_doc" src="<?php
                             echo $_SESSION['config']['businessappurl'];
-                            ?>index.php?display=true&module=notes&page=frame_notes_doc&size=full" frameborder="0" width="100%" height="520px"></iframe>
-                    </dd>
+                            ?>index.php?display=true&module=notes&page=notes&identifier=<?php 
+                            echo $s_id;?>&origin=document&coll_id=<?php echo $coll_id;?>&load&size=full" 
+                            frameborder="0" scrolling="no" width="100%" height="560px"></iframe>
+                    </dd> 
                     <?php
                 }
                 if ($core->is_module_loaded('cases') == true)

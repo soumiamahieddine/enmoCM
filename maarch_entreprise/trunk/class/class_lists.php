@@ -347,6 +347,22 @@ class lists extends dbquery
                             .$options.'</select>&nbsp;';
             break;
             
+            case 'history_action':
+                for ($i=0;$i<count($_SESSION['history_keywords']);$i++) {
+                
+                    if (isset($_SESSION['filters']['history_action']['VALUE']) 
+                        && $_SESSION['filters']['history_action']['VALUE'] == $_SESSION['history_keywords'][$i]['id']
+                    ) $selected = 'selected="selected"'; else $selected =  '';
+                    $options .='<option value="'.$_SESSION['history_keywords'][$i]['id'].'" '
+                        .$selected.'>'.$_SESSION['history_keywords'][$i]['label'].'</option>';
+                }
+                $filters .='<select name="history_action_id" id="history_action_id" onChange="loadList(\''.$this->link
+                            .'&filter=history_action&value=\' + document.filters.history_action_id.value, \''
+                            .$this->divListId.'\', '.$this->modeReturn.');">'
+                            .'<option value="none">'._CHOOSE_ACTION.'</option>'
+                            .$options.'</select>&nbsp;';
+            break;
+            
             case 'history_date':
                 if(isset($_SESSION['filters']['history_date_start']['VALUE']) && !empty($_SESSION['filters']['history_date_start']['VALUE'])) {
                     $date_start = $_SESSION['filters']['history_date_start']['VALUE'];
@@ -477,16 +493,23 @@ class lists extends dbquery
                     
                         $_SESSION['filters']['action']['CLAUSE'] = "event_type = '".$_SESSION['filters']['action']['VALUE']."'";
                          
+                    } else if ($_REQUEST['filter'] == 'history_action') {
+                    
+                        $_SESSION['filters']['history_action']['CLAUSE'] = "event_type = '".$_SESSION['filters']['history_action']['VALUE']."'";
+                         
                     } else if ($_REQUEST['filter'] == 'history_date_start' || $_REQUEST['filter'] == 'history_date_end') {
+                    
                         //Pattern
                         $pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
+                        //Keep the date
+                        $history_date = array();
                         //date start
                         if (preg_match($pattern, $_SESSION['filters']['history_date_start']['VALUE']) == false) {
                         
                             $_SESSION['error'] = _DATE.' '._WRONG_FORMAT;
                         } else {
                         
-                            $dateStart = "(".$this->extract_date("event_date")." >= '"
+                            $history_date['start'] = "(event_date >= '"
                                 .$_SESSION['filters']['history_date_start']['VALUE']."')";
                         }
                         //date end
@@ -495,11 +518,11 @@ class lists extends dbquery
                             $_SESSION['error'] = _DATE.' '._WRONG_FORMAT;
                         } else {
                         
-                            $dateEnd = "(".$this->extract_date("event_date")." <= '"
+                            $history_date['end'] = "(event_date <= '"
                                 .$_SESSION['filters']['history_date_end']['VALUE']."')";
                         }
                         
-                        $_SESSION['filters']['history_date']['CLAUSE'] = '';
+                        $_SESSION['filters']['history_date']['CLAUSE'] = join(' and ', $history_date);
                     }
                 }
             }
@@ -1413,16 +1436,19 @@ class lists extends dbquery
 		return $header;
 	}
     
-    private function _getTools($resultFirstRow) {
+    private function _getTools($resultFirstRow, $countResult) {
     
         //ADD ALWAYS VISISBLE PARAMETERS
         $tools = $urlParameters = '';
         if (isset($this->params['tools']) && count($this->params['tools']) > 0) {
+
             for($i=0; $i < count($this->params['tools']); $i++) {
             
+                if (!isset($this->params['tools'][$i]['alwaysVisible'])) $this->params['tools'][$i]['alwaysVisible'] = false;
+                
                 $toolIsDisabled = $this->_checkDisabledRules($this->params['tools'][$i]['disabledRules']);
                 
-                if ($toolIsDisabled === false) {
+                if (($toolIsDisabled === false && $countResult >0) || $this->params['tools'][$i]['alwaysVisible'] === true) {
                 
                     if(isset($this->params['tools'][$i]['script']) && !empty($this->params['tools'][$i]['script'])) {
   
@@ -1541,7 +1567,7 @@ class lists extends dbquery
 		if($end > $this->countResult) $end = $this->countResult;
         
         //Get list of tools (icon and link)
-        $tools = $this->_getTools($resultFirstRow);
+        $tools = $this->_getTools($resultFirstRow, $this->countResult);
         
         //Get templates
         $templates = $this->_getTemplates();
@@ -1651,23 +1677,23 @@ class lists extends dbquery
                 !empty($templates) || 
                 !empty($tools) || 
                 !empty($filters) ||
-                $this->params['bool_changeLinesToShow']
+                ($this->params['bool_changeLinesToShow'] && $this->countResult > 0)
                 )
             {
-                $showToolbar = true;
+                // $showToolbar = true;
                 //if no result
                 if ($this->countResult == 0) {
                     //reset templates and tools (no need if no result)
-                    $templates = '&nbsp;';
-                    $tools = '&nbsp;';
+                    // $templates = '&nbsp;';
+                    // $tools = '&nbsp;';
                     //if not caused by filters => list is empty
                     if($this->_haveFilter() !== true) { 
                         $filters = '';
-                        $showToolbar = false;
+                        // $showToolbar = false;
                     }
                 }
                 //Toolbar
-                if ($showToolbar) {
+                // if ($showToolbar) {
                     $toolbar .= '<div class="block" style="height:'.$height.';" align="center" >';
                     $toolbar .= '<table width="100%" border="0"><tr>';
                     $toolbar .= '<td align="left" width="20px" nowrap>'.$loading.'</td>';
@@ -1685,7 +1711,7 @@ class lists extends dbquery
                     $toolbar .= $filters;
                     $toolbar .= '</table>';
                     $toolbar .= '</div>';
-                }
+                // }
             }
 		}
         
@@ -1721,9 +1747,8 @@ class lists extends dbquery
 		$end = $start + $this->params['linesToShow'];
 		if($end > $this->countResult) $end = $this->countResult;
         
-       
         //Get list of tools (icon and link)
-        $tools = $this->_getTools($resultFirstRow);
+        $tools = $this->_getTools($resultFirstRow, $this->countResult);
         
         //Get templates
         $templates = $this->_getTemplates();
@@ -2281,7 +2306,7 @@ class lists extends dbquery
             if (!isset($actualButton['content']) || empty($actualButton['content'])) {
                 $content = $this->_buildPreviewContent($actualLine, $listKey);
             } else {
-                 $content = $actualButton['content'];
+                 $content = $this->_buildMyLink($actualButton['content'], $actualLine);
             }
             // $icon .= $content;
             $icon .= '<a href="javascript://"';

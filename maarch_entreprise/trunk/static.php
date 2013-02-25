@@ -50,7 +50,10 @@ if(isset($_GET['filename']) && !empty($_GET['filename']))
         default :
             $mime_type = '';
     }
-
+    if(isset($_GET['dir']) && !empty($_GET['dir']))
+    {
+        $dir = trim($_GET['dir']).DIRECTORY_SEPARATOR;
+    }
     if(!empty($module) && $module <> 'core')
     {
 

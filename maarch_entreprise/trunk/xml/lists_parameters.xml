@@ -43,6 +43,11 @@
         </FILTER>
         <FILTER>
             <ID>action</ID>
+            <LABEL>_ACTION</LABEL>
+            <ENABLED>true</ENABLED>
+        </FILTER>
+        <FILTER>
+            <ID>history_action</ID>
             <LABEL>_EVENT</LABEL>
             <ENABLED>true</ENABLED>
         </FILTER>
