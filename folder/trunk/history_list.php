@@ -149,7 +149,7 @@ if(isset($_REQUEST['id']) && $_REQUEST['id'] <> "") {
         $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
         $paramsTab['urlParameters'] = 'id='.$_REQUEST['id'].'&display=true';                //Parametres d'url supplementaires
         $paramsTab['filters'] = array('user', 'history_action', 'history_date');     //Filtres    
-        $paramsTab['listHeight'] = '490px';                                                 //Hauteur de la liste
+        $paramsTab['listHeight'] = '475px';                                                 //Hauteur de la liste
         // $paramsTab['bool_showSmallToolbar'] = true;                                         //Mini barre d'outils
         $paramsTab['linesToShow'] = 20;                                                     //Nombre de ligne a afficher
         

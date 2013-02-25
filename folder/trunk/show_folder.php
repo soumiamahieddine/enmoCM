@@ -24,16 +24,13 @@ require_once "modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR
 require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
             ."class".DIRECTORY_SEPARATOR."class_lists.php";
 require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php";
-require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
-    . "class" . DIRECTORY_SEPARATOR
-    . "class_modules_tools.php";
 
 $folderObject   = new folder();
 $request        = new request;
 $func           = new functions();
 $hist           = new history();
 $sec            = new security();
-$notes_tools    = new notes();
+
 $hist->connect();
 
 if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
@@ -94,9 +91,7 @@ if (isset($_POST['delete_folder'])) {
             echo _DETAILS . " : " . _FOLDER . ' ' . strtolower(_NUM);
             ?><?php
             echo $s_id;
-            ?> <span>(<?php
-            echo  $sec->retrieve_coll_label_from_coll_id($coll_id);
-            ?>)</span>
+            ?>
     </h1>
     <div id="inner_content" class="clearfix">
 
@@ -395,33 +390,22 @@ if (isset($_POST['delete_folder'])) {
             <?php
             if($core->is_module_loaded('notes'))
             {
+                require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
+                    . "class" . DIRECTORY_SEPARATOR
+                    . "class_modules_tools.php";
+                $notes_tools    = new notes();
+                
                 //Count notes
-                $nbr_notes = $notes_tools->countUserNotes($_SESSION['current_folder_id'], $_SESSION['current_foldertype_coll_id']);
+                $nbr_notes = $notes_tools->countUserNotes($_SESSION['current_folder_id'], 'folders');
                 if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
                 //Notes iframe
                 ?>
                 <dt><?php  echo _NOTES.$nbr_notes;?></dt>
                 <dd>
-                    <!--<div style="text-align:center;">
-                        <img src="<?php
-                            echo $_SESSION['config']['businessappurl'];
-                            ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" /><?php
-                            if ($status <> 'END') {
-                                ?><a href="javascript://" onclick="ouvreFenetre('<?php
-                                echo $_SESSION['config']['businessappurl'];
-                                ?>index.php?display=true&module=notes&page=note_add&size=full&identifier=<?php
-                                echo $_SESSION['current_folder_id'];
-                                ?>&coll_id=<?php
-                                echo $_SESSION['current_foldertype_coll_id'];
-                                ?>&table=folders<?php
-                                ?>', 800, 480)" ><?php
-                                echo _ADD_NOTE;
-                                ?></a><?php
-                            } ?>
-                    </div>-->
-                    <iframe name="list_notes_folder" id="list_notes_folder" src="<?php
+                    <iframe name="notes_folder" id="notes_folder" src="<?php
                         echo $_SESSION['config']['businessappurl'];
-                        ?>index.php?display=true&module=notes&page=frame_notes_folder&size=full" 
+                        ?>index.php?display=true&module=notes&page=notes&identifier=<?php 
+                        echo $_SESSION['current_folder_id'];?>&origin=folder&load&size=full" 
                         frameborder="0" scrolling="no" width="100%" height="560px"></iframe>
                 </dd> 
                 <?php
@@ -429,7 +413,7 @@ if (isset($_POST['delete_folder'])) {
             ?>            
             <dt><?php  echo _FOLDER_HISTORY;?></dt>
             <dd>
-                <iframe name="show_history" id="show_history" src="<?php
+                <iframe name="history_folder" id="history_folder" src="<?php
                     echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&module=folder&page=folder_history"
                     frameborder="0" scrolling="no" width="100%" height="590px"></iframe>
