@@ -35,12 +35,12 @@
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
     </BASKETPAGE>
-	<BASKETPAGE>
-		<ID>list_cases</ID>
-		<LABEL>_CASES_LIST</LABEL>
-		<NAME>cases_list</NAME>
-		<ORIGIN>module</ORIGIN>
-		<MODULE>cases</MODULE>
+    <BASKETPAGE>
+        <ID>list_cases</ID>
+        <LABEL>_CASES_LIST</LABEL>
+        <NAME>cases_list</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>cases</MODULE>
     </BASKETPAGE>
     <BASKETPAGE>
         <ID>io_basket_list</ID>
@@ -63,11 +63,19 @@
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
     </BASKETPAGE>
-	<BASKETPAGE>
-		<ID>list_folders</ID>
-		<LABEL>_FOLDERS_LIST</LABEL>
-		<NAME>folders_list</NAME>
-		<ORIGIN>module</ORIGIN>
-		<MODULE>folder</MODULE>
+    <BASKETPAGE>
+        <ID>list_folders</ID>
+        <LABEL>_FOLDERS_LIST</LABEL>
+        <NAME>folders_list</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>folder</MODULE>
+    </BASKETPAGE>
+    <!-- maarch for business -->
+    <BASKETPAGE>
+        <ID>documents_business_list</ID>
+        <LABEL>_BUSINESS_LIST</LABEL>
+        <NAME>documents_business_list</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
     </BASKETPAGE>
 </ROOT>
