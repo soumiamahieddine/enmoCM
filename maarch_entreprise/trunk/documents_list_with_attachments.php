@@ -30,9 +30,9 @@
 */
 require_once 'core/class/class_request.php';
 require_once 'core/class/class_security.php';
-require_once 'apps/' . $_SESSION['config']['app_id'] . 'class/class_contacts.php';
+require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_contacts.php';
 require_once 'core/class/class_manage_status.php';
-require_once 'apps/' . $_SESSION['config']['app_id'] . 'class/class_lists.php';
+require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_lists.php';
             
 $status_obj = new manage_status();
 $security   = new security();
