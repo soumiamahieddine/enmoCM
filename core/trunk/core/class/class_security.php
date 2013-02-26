@@ -426,6 +426,22 @@ class security extends dbquery
     }
     
     /**
+    * Returns the collection extension table from a collId
+    *
+    * @param  $collId string collection ID
+    * @return string version table or empty string if not found
+    */
+    public function retrieve_extension_table_from_coll_id($collId)
+    {
+        for ($i=0;$i<count($_SESSION['collections']);$i++) {
+            if ($_SESSION['collections'][$i]['id'] == $collId) {
+                return $_SESSION['collections'][$i]['extensions'][0];
+            }
+        }
+        return '';
+    }
+    
+    /**
     * Returns the adr table from a table
     *
     * @param  $table string Tablename
