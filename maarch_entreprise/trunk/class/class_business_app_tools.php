@@ -719,7 +719,7 @@ class business_app_tools extends dbquery
             . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
             . 'lists_parameters.xml';
         }
-		$xmlfile = simplexml_load_file($path);
+        $xmlfile = simplexml_load_file($path);
         
         //Load filters
         $_SESSION['filters'] = array();

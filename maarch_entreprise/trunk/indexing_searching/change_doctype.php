@@ -87,7 +87,7 @@ if ($core->service_is_enabled('param_mlb_doctypes')) {
 }
 $mandatory_indexes = $type->get_mandatory_indexes($_REQUEST['type_id'], $coll_id);
 $indexes = $type->get_indexes($_REQUEST['type_id'], $coll_id);
-
+//var_dump($coll_id);exit;
 $opt_indexes = '';
 if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
     $browser_ie = true;
@@ -122,6 +122,18 @@ if(count($indexes) > 0)
             $values_fields = $db->fetch_object();
         }
     }
+    $opt_indexes .= '<hr />';
+
+    $opt_indexes .= '<h4 onclick="new Effect.toggle(\'doctype_fields\', \'blind\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'doctype_fields\', \'divStatus_doctype_fields\');" '
+        . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
+    $opt_indexes .= ' <span id="divStatus_doctype_fields" style="color:#1C99C5;">>></span>&nbsp;' 
+        . _DOCTYPE_INDEXES;
+    $opt_indexes .= '</h4>';
+
+    $opt_indexes .= '<div id="doctype_fields"  style="display:inline">';
+    $opt_indexes .= '<div>';
+    
     $opt_indexes .= '<table width="100%" align="center" border="0">';
     foreach (array_keys($indexes) as $key) {
         //echo $key.' ';
@@ -200,7 +212,10 @@ if(count($indexes) > 0)
         $opt_indexes .= '</tr>';
     }
     $opt_indexes .= '</table>';
+    
+    $opt_indexes .= '</div></div>';
 }
+
 
 
 $services = '[';

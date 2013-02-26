@@ -9,8 +9,13 @@
  **/
 function change_doctype(doctype_id, path_manage_script, error_empty_type, action_id, get_js_script,display_value_tr, id_res, id_coll, from_valid_qualif)
 {
+    var theCollId = path_manage_script.split('coll_id=');
     var tmp_res_id = id_res || null;
-    var tmp_coll_id = id_coll || null;
+    if (theCollId[1] != '') {
+        tmp_coll_id = theCollId[1];
+    } else {
+        var tmp_coll_id = id_coll || null;
+    }
     if(doctype_id != null && doctype_id != '' && doctype_id != NaN)
     {
         new Ajax.Request(path_manage_script,
@@ -23,7 +28,7 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
                         },
                 onSuccess: function(answer){
                 eval("response = "+answer.responseText);
-            //  alert(answer.responseText);
+                //alert(answer.responseText);
                 if(response.status == 0  || response.status == 1)
                 {
                     if(response.status == 0)
@@ -756,38 +761,54 @@ function launch_autocompleter_contacts(path_script, id_text, id_div)
 }
 
 /**
+ * Get the type of the contact with the category_id
+ *
+ * @return String category_id
+ **/
+function get_contact_type (category_id)
+{
+     if (category_id == 'purchase') {
+        return 'supplier';
+    } else if (category_id == 'sell') {
+        return 'purchaser';
+    } else if (category_id == 'enterprise_document') {
+        return 'contact';
+    } else if (category_id == 'human_resources') {
+        return 'employee';
+    } else {
+        return 'letter';
+    }
+}
+
+/**
  * Gets the parameters for the contacts : the table which must be use in the ajax script
  *
  * @return String parameters
  **/
 function get_contacts_params(name_radio)
 {
+    //console.log($('category_id').value);
     var check = name_radio || 'type_contact';
     var arr = get_checked_values(check);
     var params = '';
-    if(arr.length == 0)
-    {
-        if(console != null)
-        {
-            console.log('Erreur get_contacts_params, no items checked');
-        }
-        else
-        {
-            alert('Erreur get_contacts_params, no items checked');
-        }
-    }
-    else
-    {
-        if(arr[0] == 'internal')
-        {
+    if (arr.length == 0) {
+        //~ if(console != null)
+        //~ {
+            //~ console.log('Erreur get_contacts_params, no items checked');
+        //~ }
+        //~ else
+        //~ {
+            //~ alert('Erreur get_contacts_params, no items checked');
+        //~ }
+        var contact_type = get_contact_type($('category_id').value);
+        //console.log(contact_type);
+       params = 'table=contacts&contact_type=' + contact_type;
+    } else {
+        if (arr[0] == 'internal') {
             params = 'table=users';
-        }
-        else if(arr[0] == 'external')
-        {
+        } else if(arr[0] == 'external') {
             params = 'table=contacts';
-        }
-        else
-        {
+        } else {
             params = 'table=contacts';
         }
     }
@@ -832,27 +853,18 @@ function open_contact_card(path_contact_card,path_user_card)
 {
     var contact_value = $('contact').value;
     var arr = get_checked_values('type_contact');
-    if(arr.length == 0)
-    {
-        if(console != null)
-        {
-            console.log('Erreur launch_autocompleter_contacts, no items checked');
-        }
-        else
-        {
-            alert('Erreur launch_autocompleter_contacts, no items checked');
-        }
-    }
-    else
-    {
-        var contact_id = contact_value.substring(contact_value.indexOf('(')+1, contact_value.indexOf(')'));
-
-        if(arr[0] == 'internal')
-        {
+    var contact_id = contact_value.substring(contact_value.indexOf('(')+1, contact_value.indexOf(')'));
+    if (arr.length == 0) {
+        //~ if (console != null) {
+            //~ console.log('Erreur launch_autocompleter_contacts, no items checked');
+        //~ } else {
+            //~ alert('Erreur launch_autocompleter_contacts, no items checked');
+        //~ }
+        window.open(path_contact_card+'&id='+contact_id, 'contact_info', 'height=600, width=600,scrollbars=yes,resizable=yes');
+    } else {
+        if (arr[0] == 'internal') {
             window.open(path_user_card+'&id='+contact_id, 'contact_info', 'height=450, width=600,scrollbars=no,resizable=yes');
-        }
-        else if(arr[0] == 'external')
-        {
+        } else if(arr[0] == 'external') {
             window.open(path_contact_card+'&id='+contact_id, 'contact_info', 'height=600, width=600,scrollbars=yes,resizable=yes');
         }
     }
@@ -860,15 +872,16 @@ function open_contact_card(path_contact_card,path_user_card)
 
 function create_contact(path_create, id_action)
 {
-    $('type_contact_external').checked = true;
-    $('type_contact_external').onclick();
-
+    if ($('type_contact_external')) {
+        $('type_contact_external').checked = true;
+        $('type_contact_external').onclick();
+    }
+    
     var contact_frm = $('indexingfrmcontact');
-    if(contact_frm)
-    {
+    var contact_type = get_contact_type($('category_id').value);
+    if (contact_frm) {
         var corporate = 'Y' ;
-        if($('is_corporate_N').checked == true)
-        {
+        if ($('is_corporate_N').checked == true) {
             corporate = 'N' ;
         }
         var title_val = $('title').value;
@@ -905,24 +918,21 @@ function create_contact(path_create, id_action)
                 comp_data : comp_data_val,
                 lastname : lastname_val,
                 firstname : firstname_val,
-                func : func_val
+                func : func_val,
+                contactType : contact_type
                 },
                     onSuccess: function(answer){
                     eval("response = "+answer.responseText);
-                //  alert(answer.responseText);
-                    if(response.status == 0 )
-                    {
+                    //alert(answer.responseText);
+                    if (response.status == 0 ) {
                         var contact = $('contact');
-                        if(contact)
-                        {
+                        if (contact) {
                             contact.value = response.value;
-                            $('contact_card').style.visibility = 'visible';
+                            //$('contact_card').style.visibility = 'visible';
                             new Effect.toggle('create_contact_div', 'blind', {delay:0.2});
                             clear_form('indexingfrmcontact');
                         }
-                    }
-                    else
-                    {
+                    } else {
                         try{
                             $('frm_error_'+id_action).innerHTML = response.error_txt;
                             }

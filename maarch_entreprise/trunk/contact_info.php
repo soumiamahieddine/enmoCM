@@ -13,8 +13,8 @@
 */
 
 require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-	. DIRECTORY_SEPARATOR  . 'class' . DIRECTORY_SEPARATOR 
-	. 'class_business_app_tools.php';
+    . DIRECTORY_SEPARATOR  . 'class' . DIRECTORY_SEPARATOR 
+    . 'class_business_app_tools.php';
 $core = new core_tools();
 $business = new business_app_tools();
 $core->load_lang();
@@ -37,7 +37,7 @@ $contact = false;
 if (!empty($_REQUEST['submit'])) {
     if ($_REQUEST['id'] <> '') {
         $contact['ID'] = $func->wash(
-        	$_REQUEST['id'], "no", _ID." "
+            $_REQUEST['id'], "no", _ID." "
         );
     } else {
         $contact['ID'] = '';
@@ -47,13 +47,13 @@ if (!empty($_REQUEST['submit'])) {
     
     if ($contact['IS_CORPORATE_PERSON'] == 'Y') {
         $contact['SOCIETY'] = $func->wash(
-        	$_REQUEST['society'], "no", _SOCIETY." "
+            $_REQUEST['society'], "no", _SOCIETY." "
         );
         $contact['LASTNAME'] = '';
         $contact['FIRSTNAME'] = '';
     } else {
         $contact['LASTNAME'] = $func->wash(
-        	$_REQUEST['lastname'], "no", _LASTNAME
+            $_REQUEST['lastname'], "no", _LASTNAME
         );
         if ($_REQUEST['firstname'] <> '') {
             $contact['FIRSTNAME'] = $func->wash(
@@ -63,7 +63,7 @@ if (!empty($_REQUEST['submit'])) {
             $contact['FIRSTNAME'] = '';
         if ($_REQUEST['society'] <> '') {
             $contact['SOCIETY'] = $func->wash(
-            	$_REQUEST['society'], "no", _SOCIETY." "
+                $_REQUEST['society'], "no", _SOCIETY." "
             );
         } else {
             $contact['SOCIETY'] = '';
@@ -71,14 +71,14 @@ if (!empty($_REQUEST['submit'])) {
     }
     if ($_REQUEST['title'] <> '') {
         $contact['TITLE'] = $func->wash(
-        	$_REQUEST['title'], "no", _TITLE2." "
+            $_REQUEST['title'], "no", _TITLE2." "
         );
     } else {
         $contact['TITLE'] = '';
     }
     if ($_REQUEST['function'] <> '') {
         $contact['FUNCTION'] = $func->wash(
-        	$_REQUEST['function'], "no", _FUNCTION." "
+            $_REQUEST['function'], "no", _FUNCTION." "
         );
     } else {
         $contact['FUNCTION'] = '';
@@ -90,14 +90,14 @@ if (!empty($_REQUEST['submit'])) {
     }
     if ($_REQUEST['street'] <> '') {
         $contact['ADD_STREET'] = $func->wash(
-        	$_REQUEST['street'], "no", _STREET." "
+            $_REQUEST['street'], "no", _STREET." "
         );
     } else {
         $contact['ADD_STREET'] = '';
     }
     if ($_REQUEST['add_comp'] <> '') {
         $contact['ADD_COMP'] = $func->wash(
-        	$_REQUEST['add_comp'], "no", ADD_COMP." "
+            $_REQUEST['add_comp'], "no", ADD_COMP." "
         );
     } else {
         $contact['ADD_COMP'] = '';
@@ -114,7 +114,7 @@ if (!empty($_REQUEST['submit'])) {
     }
     if ($_REQUEST['country'] <> '') {
         $contact['ADD_COUNTRY'] = $func->wash(
-        	$_REQUEST['country'], "no", _COUNTRY
+            $_REQUEST['country'], "no", _COUNTRY
         );
     } else {
         $contact['ADD_COUNTRY'] = '';
@@ -131,10 +131,15 @@ if (!empty($_REQUEST['submit'])) {
     }
     if ($_REQUEST['comp_data'] <> '') {
         $contact['OTHER_DATA'] = $func->wash(
-        	$_REQUEST['comp_data'], "no", _COMP_DATA
+            $_REQUEST['comp_data'], "no", _COMP_DATA
         );
     } else {
         $contact['OTHER_DATA'] = '';
+    }
+    if ($_REQUEST['contact_type'] <> '') {
+        $contact['CONTACT_TYPE'] = $_REQUEST['contact_type'];
+    } else {
+        $contact['CONTACT_TYPE'] = 'letter';
     }
     if (! empty($_SESSION['error'])) {
         echo $_SESSION['error'];
@@ -146,7 +151,7 @@ if (!empty($_REQUEST['submit'])) {
                 . " (lastname , firstname , society , function , phone , email,"
                 . " address_num, address_street, address_complement, "
                 . "address_town, address_postal_code, address_country,"
-                . " other_data, title, is_corporate_person, user_id) values ('"
+                . " other_data, title, is_corporate_person, user_id, contact_type) values ('"
                 . $func->protect_string_db($contact['LASTNAME']) . "', '"
                 . $func->protect_string_db($contact['FIRSTNAME']) . "', '"
                 . $func->protect_string_db($contact['SOCIETY']) . "', '"
@@ -162,7 +167,8 @@ if (!empty($_REQUEST['submit'])) {
                 . $func->protect_string_db($contact['OTHER_DATA']) . "','"
                 . $func->protect_string_db($contact['TITLE']) . "','"
                 . $func->protect_string_db($contact['IS_CORPORATE_PERSON']) 
-                . "','" . $func->protect_string_db($_SESSION['user']['UserId'])
+                . $func->protect_string_db($_SESSION['user']['UserId']) 
+                . "','" . $func->protect_string_db($contact['CONTACT_TYPE'])
                 . "')"
             );
         } else if ($_REQUEST['mode'] == 'up') {
@@ -192,10 +198,10 @@ if (!empty($_REQUEST['submit'])) {
 
         if ($contact['IS_CORPORATE_PERSON'] == 'N') {
             $db->query(
-            	"select contact_id, lastname, firstname, society from "
-            	. $_SESSION['tablename']['contacts'] . " where lastname = '"
-            	. $func->protect_string_db($contact['LASTNAME'])
-            	. "' and enabled = 'Y' order by contact_id desc"
+                "select contact_id, lastname, firstname, society from "
+                . $_SESSION['tablename']['contacts'] . " where lastname = '"
+                . $func->protect_string_db($contact['LASTNAME'])
+                . "' and enabled = 'Y' order by contact_id desc"
             );
             $res = $db->fetch_object();
             if (empty($res->society)) {
@@ -257,6 +263,7 @@ else if($_REQUEST['id'] && ($_REQUEST['mode']== 'view' || $_REQUEST['mode']== 'u
         $contact['MAIL'] = $func->show_string($line->email);
         $contact['OTHER_DATA'] = $func->show_string($line->other_data);
         $contact['IS_CORPORATE_PERSON'] = $func->show_string($line->is_corporate_person);
+        $contact['CONTACT_TYPE'] = $func->show_string($line->contact_type);
     }    
 } 
 
@@ -369,6 +376,10 @@ $core->load_js();
          <p>
             <label for="label"><?php echo _COMP_DATA; ?>  </label>
             <textarea name="comp_data"   id="comp_data" <?php if($readonly){ echo 'readonly="readonly"';}?>><?php echo $func->show_str($contact['OTHER_DATA']); ?></textarea>
+         </p>
+         <p>
+            <label for="label"><?php echo _CONTACT_TYPE; ?>  </label>
+            <input name="contact_type" type="text"  id="contact_type" value="<?php echo $func->show_str($contact['CONTACT_TYPE']); ?>" <?php if($readonly){ echo 'readonly="readonly"';}?>/>
          </p>
         <p class="buttons">
         <?php if(!$readonly) { ?>

@@ -245,6 +245,7 @@ if (!defined('_CONTACT_MODIFIED')) define('_CONTACT_MODIFIED', 'Contact mofifyed
 if (!defined('_CONTACT_NAME')) define( '_CONTACT_NAME', 'Invoice contact');
 if (!defined('_CONTACT_OWNER_COMMENT')) define('_CONTACT_OWNER_COMMENT', 'Leave this field empty to make this contact public.');
 if (!defined('_CONTACT_REAFFECT'))  define('_CONTACT_REAFFECT', 'Re-attribute documents');
+if (!defined('_CONTACT_TYPE')) define( '_CONTACT_TYPE', 'Contact type');
 if (!defined('_CONTAINER'))  define('_CONTAINER', 'A Container');
 if (!defined('_CONTAINER_MAX_NUMBER'))  define('_CONTAINER_MAX_NUMBER', 'Container max number');
 if (!defined('_CONTINUE')) define('_CONTINUE', 'Continue');
@@ -355,6 +356,7 @@ if (!defined('_DOCTYPES_LIST_SHORT')) define('_DOCTYPES_LIST_SHORT', 'Type list'
 if (!defined('_DOCTYPE_ADDED')) define('_DOCTYPE_ADDED', 'New document type added');
 if (!defined('_DOCTYPE_CREATION')) define('_DOCTYPE_CREATION', 'Add a document type');
 if (!defined('_DOCTYPE_DELETION')) define('_DOCTYPE_DELETION', 'delete a document type');
+if (!defined('_DOCTYPE_INDEXES')) define('_DOCTYPE_INDEXES', 'Doctype indexes');
 if (!defined('_DOCTYPE_MAIL')) define('_DOCTYPE_MAIL', 'Mail type');
 if (!defined('_DOCTYPE_MANDATORY')) define('_DOCTYPE_MANDATORY', 'Document type is mandatory');
 if (!defined('_DOCTYPE_MODIFICATION')) define('_DOCTYPE_MODIFICATION', 'Modify a document type');
@@ -1144,3 +1146,5 @@ if (!defined('_DELIVERY_NOTE_IDENTIFIER')) define('_DELIVERY_NOTE_IDENTIFIER', '
 
 if (!defined('_INDEX_BUSINESS_FILE')) define('_INDEX_BUSINESS_FILE', 'Index business collection file');
 if (!defined('_FILING')) define('_FILING', 'Filing');
+if (!defined('_VALIDATE_QUALIF_BUSINESS')) define('_VALIDATE_QUALIF_BUSINESS', 'Validation/qualification of business documents');
+if (!defined('_BUSINESS_LIST')) define('_BUSINESS_LIST', 'Documents business list');

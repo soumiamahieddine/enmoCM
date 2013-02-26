@@ -75,7 +75,7 @@ $_ENV['categories'] = array ();
 
 ///////////////////////////// PURCHASE ////////////////////////////////////////////////
 $_ENV['categories']['purchase'] = array ();
-$_ENV['categories']['purchase']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_purchase.gif';
+$_ENV['categories']['purchase']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_purchase.png';
 $_ENV['categories']['purchase']['other_cases'] = array ();
 
 $_ENV['categories']['purchase']['type_id'] = array (
@@ -193,14 +193,14 @@ $_ENV['categories']['purchase']['other_cases']['process_limit_date'] = array (
     'type_field' => 'date',
     'label' => _PROCESS_LIMIT_DATE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arriv.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=process_limit_date.png',
     'modify' => true,
     'form_show' => 'date'
 );
 
 ///////////////////////////// SELL ////////////////////////////////////////////////
 $_ENV['categories']['sell'] = array ();
-$_ENV['categories']['sell']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_sell.gif';
+$_ENV['categories']['sell']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_sell.png';
 $_ENV['categories']['sell']['other_cases'] = array ();
 
 $_ENV['categories']['sell']['type_id'] = array (
@@ -318,14 +318,14 @@ $_ENV['categories']['sell']['other_cases']['process_limit_date'] = array (
     'type_field' => 'date',
     'label' => _PROCESS_LIMIT_DATE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arriv.gif',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=process_limit_date.png',
     'modify' => true,
     'form_show' => 'date'
 );
 
 ///////////////////////////// ENTERPRISE DOCUMENT ////////////////////////////////////////////////
 $_ENV['categories']['enterprise_document'] = array ();
-$_ENV['categories']['enterprise_document']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_enterprise_document.gif';
+$_ENV['categories']['enterprise_document']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_enterprise_document.png';
 $_ENV['categories']['enterprise_document']['other_cases'] = array ();
 
 $_ENV['categories']['enterprise_document']['type_id'] = array (
@@ -385,7 +385,7 @@ $_ENV['categories']['enterprise_document']['doc_date'] = array (
 
 ///////////////////////////// HUMAN RESOURCES ////////////////////////////////////////////////
 $_ENV['categories']['human_resources'] = array ();
-$_ENV['categories']['human_resources']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_human_resources.gif';
+$_ENV['categories']['human_resources']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_human_resources.png';
 $_ENV['categories']['human_resources']['other_cases'] = array ();
 
 $_ENV['categories']['human_resources']['type_id'] = array (
@@ -452,7 +452,7 @@ if ($core->is_module_loaded('entities')) {
         'mandatory' => true,
         'label' => _DEPARTMENT_DEST,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=department.png',
         'modify' => false,
         'form_show' => 'select'
     );
@@ -469,7 +469,7 @@ if ($core->is_module_loaded('entities')) {
         'mandatory' => true,
         'label' => _DEPARTMENT_DEST,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=department.png',
         'modify' => false,
         'form_show' => 'select'
     );
@@ -486,7 +486,7 @@ if ($core->is_module_loaded('entities')) {
         'mandatory' => true,
         'label' => _DEPARTMENT_DEST,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=department.png',
         'modify' => false,
         'form_show' => 'select'
     );
@@ -503,7 +503,7 @@ if ($core->is_module_loaded('entities')) {
         'mandatory' => true,
         'label' => _DEPARTMENT_DEST,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=department.png',
         'modify' => false,
         'form_show' => 'select'
     );
@@ -512,6 +512,49 @@ if ($core->is_module_loaded('entities')) {
         'mandatory' => true,
         'label' => _DIFF_LIST,
         'table' => 'special'
+    );
+}
+
+if ($core->is_module_loaded('folder')) {
+    $_ENV['categories']['purchase']['other_cases']['folder'] = array (
+        'type_form' => 'string',
+        'type_field' => 'string',
+        'mandatory' => false,
+        'label' => _FOLDER,
+        'table' => 'none',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=folder&filename=folders.gif',
+        'modify' => true,
+        'form_show' => 'autocomplete'
+    );
+    $_ENV['categories']['sell']['other_cases']['folder'] = array (
+        'type_form' => 'string',
+        'type_field' => 'string',
+        'mandatory' => false,
+        'label' => _FOLDER,
+        'table' => 'none',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=folder&filename=folders.gif',
+        'modify' => true,
+        'form_show' => 'autocomplete'
+    );
+    $_ENV['categories']['enterprise_document']['other_cases']['folder'] = array (
+        'type_form' => 'string',
+        'type_field' => 'string',
+        'mandatory' => false,
+        'label' => _FOLDER,
+        'table' => 'none',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=folder&filename=folders.gif',
+        'modify' => true,
+        'form_show' => 'autocomplete'
+    );
+    $_ENV['categories']['human_resources']['other_cases']['folder'] = array (
+        'type_form' => 'string',
+        'type_field' => 'string',
+        'mandatory' => false,
+        'label' => _FOLDER,
+        'table' => 'none',
+        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=folder&filename=folders.gif',
+        'modify' => true,
+        'form_show' => 'autocomplete'
     );
 }
 
@@ -548,7 +591,7 @@ if ($core->is_module_loaded('entities')) {
 *                                                   ['label'] : option text
 */
 function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
-    require_once ("core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_security.php");
+    require_once ('core/class/class_security.php');
     $sec = new security();
     $view = $sec->retrieve_view_from_coll_id($coll_id);
     if (empty ($view)) {
@@ -573,7 +616,8 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                 'show_value' => $_SESSION['coll_categories']['business_coll'][$res->category_id],
                 'label' => _CATEGORY,
                 'display' => 'textinput',
-                'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=picto_change.gif'
+                //'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=picto_change.gif'
+                'img' => $_ENV['categories'][$res->category_id]['img_cat']
             );
         } else {
             $data['category_id'] = array (
@@ -918,17 +962,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                 }
             }
             // Contact
-            elseif ($arr[$i] == 'dest_user_id' || $arr[$i] == 'exp_user_id') {
-                if (!empty ($line-> $arr[$i])) {
-                    $db2->query('select lastname, firstname from ' . $_SESSION['tablename']['users'] . " where user_id = '" . $line-> $arr[$i] . "'");
-                    $res = $db2->fetch_object();
-                    $data[$arr[$i]]['show_value'] = $res->lastname . ', ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=user_info&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=450, width=600,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
-                } else {
-                    unset ($data[$arr[$i]]);
-                }
-            }
-            elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
+            elseif ($arr[$i] == 'contact_id') {
                 if (!empty ($line-> $arr[$i])) {
                     $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts'] . " where  contact_id = " . $line-> $arr[$i] . "");
                     $res = $db2->fetch_object();
@@ -940,7 +974,10 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                             $data[$arr[$i]]['show_value'] .= ' (' . $res->society . ')';
                         }
                     }
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=contact_info&mode=view&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=600, width=600,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
+                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' 
+                        . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=contact_info&mode=view&id=' 
+                        . $line-> $arr[$i] . '\', \'contact_info\', \'height=600, width=600,scrollbars=yes,resizable=yes\');" ><img src="' 
+                        . $_ENV['categories'][$cat_id]['contact_id']['img'] . '" alt="' . _CONTACT_CARD . '" /></a>';
                 } else {
                     unset ($data[$arr[$i]]);
                 }
@@ -986,17 +1023,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             }
             // special cases :
             // Contact
-            if ($arr[$i] == 'dest_user_id' || $arr[$i] == 'exp_user_id') {
-                $data['type_contact'] = 'internal';
-                if (!empty ($line-> $arr[$i])) {
-                    $db2->query('select lastname, firstname from ' . $_SESSION['tablename']['users'] . " where user_id = '" . $line-> $arr[$i] . "'");
-                    $res = $db2->fetch_object();
-                    $data['contact'] = $res->lastname . ', ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
-                }
-                unset ($data[$arr[$i]]);
-
-            }
-            elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
+            elseif ($arr[$i] == 'contact_id') {
                 $data['type_contact'] = 'external';
                 if (!empty ($line-> $arr[$i])) {
                     $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts'] . " where enabled = 'Y' and contact_id = " . $line-> $arr[$i] . "");

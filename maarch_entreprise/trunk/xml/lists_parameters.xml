@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
-	<FILTERS>
+    <FILTERS>
         <FILTER>
             <ID>status</ID>
             <LABEL>_STATUS</LABEL>
@@ -32,6 +32,11 @@
             <ENABLED>true</ENABLED>
         </FILTER>
         <FILTER>
+            <ID>contactBusiness</ID>
+            <LABEL>_CONTACT</LABEL>
+            <ENABLED>true</ENABLED>
+        </FILTER>
+        <FILTER>
             <ID>isViewed</ID>
             <LABEL>_VIEWED</LABEL>
             <ENABLED>true</ENABLED>
@@ -56,7 +61,7 @@
             <LABEL>_DATE</LABEL>
             <ENABLED>true</ENABLED>
         </FILTER>
-	</FILTERS>
+    </FILTERS>
     <TEMPLATES>
         <TEMPLATE>
             <ID>documents_list_search_adv</ID>
@@ -106,7 +111,7 @@
             <ORIGIN>module</ORIGIN>
             <MODULE>cases</MODULE>
             <GOTOLIST>
-            		<ID>list_cases</ID>
+                    <ID>list_cases</ID>
                     <LABEL>_CASES_LIST</LABEL>
                     <NAME>cases_list</NAME>
                     <ORIGIN>module</ORIGIN>
@@ -122,7 +127,7 @@
             <ORIGIN>module</ORIGIN>
             <MODULE>cases</MODULE>
             <GOTOLIST>
-            		<ID>list_cases</ID>
+                    <ID>list_cases</ID>
                     <LABEL>_CASES_LIST</LABEL>
                     <NAME>cases_list_search_adv</NAME>
                     <ORIGIN>module</ORIGIN>
@@ -139,6 +144,17 @@
             <MODULE>folder</MODULE>
             <ENABLED>true</ENABLED>
             <GOTOLIST></GOTOLIST>
-        </TEMPLATE>    
+        </TEMPLATE>
+        <!-- maarch for business -->
+    <TEMPLATE>
+            <ID>documents_business_list</ID>
+            <LABEL>_BUSINESS_LIST</LABEL>
+            <IMG>extend_list2.gif</IMG>
+            <NAME>documents_business_list</NAME>
+            <ORIGIN>apps</ORIGIN>
+            <MODULE></MODULE>
+            <ENABLED>true</ENABLED>
+            <GOTOLIST></GOTOLIST>
+        </TEMPLATE>
     </TEMPLATES>
 </root>

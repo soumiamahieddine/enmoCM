@@ -33,7 +33,7 @@
 */
 
 //$_SESSION['validStep'] = "ko";
-include_once 'apps/' . $_SESSION['config']['app_id'] . '/definition_mail_categories.php';
+include_once 'apps/' . $_SESSION['config']['app_id'] . '/definition_mail_categories_business.php';
 require_once 'core/class/class_security.php';
 require_once 'core/core_tables.php';
 require_once 'core/class/class_request.php';
@@ -148,7 +148,8 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $statuses = array();
     $db = new dbquery();
     $db->connect();
-    $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status']
+    $query = "SELECT status_id, label_status FROM " 
+        . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status']
         . " on status_id = id "
         . " where basket_id= '" . $_SESSION['current_basket']['id']
         . "' and group_id = '" . $_SESSION['user']['primarygroup']
@@ -288,7 +289,9 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . $displayValue . '\',  \'' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&dir=indexing_searching&page='
             . 'change_category\',  \'' . $_SESSION['config']['businessappurl']
-            . 'index.php?display=true&page=get_content_js\');">';
+            . 'index.php?display=true&page=get_content_js\');launch_autocompleter_contacts(\''
+            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+            . '&dir=indexing_searching&page=autocomplete_contacts\');$(\'contact\').value=\'\'">';
     $frmStr .= '<option value="">' . _CHOOSE_CATEGORY . '</option>';
     foreach (array_keys($_SESSION['coll_categories']['business_coll']) as $catId) {
         if ($catId <> 'default_category') {
@@ -318,7 +321,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . 'onchange="clear_error(\'frm_error_' . $actionId . '\');'
             . 'change_doctype(this.options[this.selectedIndex].value, \''
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-            . '&dir=indexing_searching&page=change_doctype\', \''
+            . '&dir=indexing_searching&page=change_doctype&coll_id=' . $collId . '\', \''
             . _ERROR_DOCTYPE . '\', \'' . $actionId . '\', \''
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
             . '&page=get_content_js\', \'' . $displayValue . '\');">';
@@ -375,8 +378,16 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
     /*** Contact ***/
+    $contact_mode = "view";
+    if($core->test_service('update_contacts','apps', false)) $contact_mode = 'up';
     $frmStr .= '<tr id="contact_id_tr" style="display:' . $displayValue . ';">';
-    $frmStr .= '<td style="width:30px;align:center;"><span id="contact_purchase_img" style="display:' 
+    $frmStr .= '<td style="width:30px;align:center;">'
+            . '<a href="#" id="contact_card" title="' . _CONTACT_CARD
+            . '" onclick="open_contact_card(\''
+            . $_SESSION ['config']['businessappurl'] . 'index.php?display=true'
+            . '&page=contact_info&mode=' . $contact_mode 
+            . '\', \'' . $_SESSION ['config']['businessappurl']
+            . 'index.php?display=true&page=user_info\');"><span id="contact_purchase_img" style="display:' 
         . $displayValue . ';"><img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?filename='
                 . 'supplier.png" alt="' . _SUPPLIER . '"/></span>'
@@ -400,7 +411,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '<span id="contact_label_enterprise_document" style="display:' 
                 . $displayValue . ';">' . _CONTACT . '</span>'
             . '<span id="contact_label_human_resources" style="display:' 
-                . $displayValue . ';">' . _EMPLOYEE . '</span>';
+                . $displayValue . ';">' . _EMPLOYEE . '</span></a>';
     if ($_SESSION['features']['personal_contact'] == "true"
        // && $core->test_service('my_contacts', 'apps', false)
     ) {
@@ -412,16 +423,6 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . 'modif_liste.png" alt="' . _CREATE_CONTACT . '"/></a>';
     }
     $frmStr .= '</label></td>';
-    $contact_mode = "view";
-    if($core->test_service('update_contacts','apps', false)) $contact_mode = 'up';
-    /*frmStr .= '<a href="#" id="contact_card" title="' . _CONTACT_CARD
-            . '" onclick="open_contact_card(\''
-            . $_SESSION ['config']['businessappurl'] . 'index.php?display=true'
-            . '&page=contact_info&mode='.$contact_mode.'\', \'' . $_SESSION ['config']['businessappurl']
-            . 'index.php?display=true&page=user_info\');" '
-            . 'style="visibility:hidden;" ><img src="'
-            . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-            . 'my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>&nbsp;';*/
     $frmStr .= '<td class="indexing_field"><input type="text" name="contact" '
             . 'id="contact" onblur="clear_error(\'frm_error_' . $actionId . '\');'
             . 'display_contact_card(\'visible\');" /><div id="show_contacts" '
@@ -518,11 +519,12 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     if ($core->is_module_loaded('entities')) {
         $frmStr .= '<tr id="department_tr" style="display:' . $displayValue
                 . ';">';
-        $frmStr .= '<td style="width:30px;align:center;">&nbsp;</td><td><label for="department" class="form_title" '
+        $frmStr .= '<td style="width:30px;align:center;"><img src="'
+                . $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename='
+                . 'department.png" alt="' . _DEPARTMENT_DEST 
+                . '"/></td><td><label for="department" class="form_title" '
                 . 'id="label_dep_dest" style="display:inline;" >'
-                . _DEPARTMENT_DEST . '</label><label for="department" '
-                . 'class="form_title" id="label_dep_exp" style="display:none;" >'
-                . _DEPARTMENT_EXP . '</label></td>';
+                . _DEPARTMENT_DEST . '</label></td>';
         //$frmStr .= '<td>&nbsp;</td>';
         $frmStr .= '<td class="indexing_field"><select name="destination" '
                 . 'id="destination" onchange="clear_error(\'frm_error_'
@@ -582,7 +584,10 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</tr>';
     $frmStr .= '<tr id="process_limit_date_tr" style="display:' . $displayValue
             . ';">';
-    $frmStr .= '<td style="width:30px;align:center;">&nbsp;</td><td><label for="process_limit_date" class="form_title" >'
+    $frmStr .= '<td style="width:30px;align:center;"><img src="'
+                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                . 'process_limit_date.png" alt="' . _PROCESS_LIMIT_DATE 
+                . '"/></td><td><label for="process_limit_date" class="form_title" >'
             . _PROCESS_LIMIT_DATE . '</label></td>';
     //$frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><input name="process_limit_date" '
@@ -638,9 +643,11 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     /*** Folder ***/
     if ($core->is_module_loaded('folder')) {
         $frmStr .= '<tr id="folder_tr" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td><label for="folder" class="form_title" >' . _FOLDER_OR_SUBFOLDER
+        $frmStr .= '<td style="width:30px;align:center;"><img src="'
+                . $_SESSION['config']['businessappurl'] . 'static.php?module=folder&filename='
+                . 'folders.gif" alt="' . _FOLDER 
+                . '"/></td><td><label for="folder" class="form_title" >' . _FOLDER
                 . '</label></td>';
-        $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
         $frmStr .= '<td class="indexing_field"><input type="text" '
                 . 'name="folder" id="folder" onblur="clear_error(\'frm_error_'
                 . $actionId . '\');return false;" /><div id="show_folder" '
@@ -1082,14 +1089,16 @@ function process_category_check($catId, $values)
     //print_r($values);
     $core = new core_tools();
     // If No category : Error
+/*
     if (! isset($_ENV['categories'][$catId])) {
         $_SESSION['action_error'] = _CATEGORY . ' ' . _UNKNOWN . ': ' . $catId;
         return false;
     }
+*/
 
     // Simple cases
     for ($i = 0; $i < count($values); $i ++) {
-
+        //var_dump($_ENV['categories'][$catId][$tmpId]);
         if (! isset($values[$i]['ID'])) {
             $tmpId = 'none';
         } else {
@@ -1117,9 +1126,10 @@ function process_category_check($catId, $values)
             && $_ENV['categories'][$catId][$tmpId]['type_form'] == 'integer'
             && ! empty($values[$i]['VALUE'])
             && preg_match("/^[0-9]*$/", $values[$i]['VALUE']) == 0
+            && (is_int($values[$i]['VALUE']) || is_float($values[$i]['VALUE']))
         ) {
             $_SESSION['action_error'] = $_ENV['categories'][$catId][$tmpId]['label']
-                                      . ' ' . _WRONG_FORMAT;
+                                      . ' ' . _WRONG_FORMAT . ' ' . $values[$i]['VALUE'];
             return false;
         }
         if (isset($_ENV['categories'][$catId][$tmpId]['type_form'])
@@ -1135,9 +1145,7 @@ function process_category_check($catId, $values)
         }
     }
     ///// Checks the complementary indexes depending on the doctype
-    require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-        . 'class_types.php';
+    require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php';
     $type = new types();
     $typeId = get_value_fields($values, 'type_id');
     $collId = get_value_fields($values, 'coll_id');
@@ -1164,35 +1172,26 @@ function process_category_check($catId, $values)
             $values, 'process_limit_date_use_no'
         );
         if ($processLimitDateUseYes == 'yes') {
-            $_SESSION['store_process_limit_date'] = "ok";
+            $_SESSION['store_process_limit_date'] = 'ok';
             $processLimitDate = get_value_fields($values, 'process_limit_date');
             if (trim($processLimitDate) == ""
                 || preg_match($_ENV['date_pattern'], $processLimitDate) == 0
             ) {
                 $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['process_limit_date']['label']
-                    . " " . _WRONG_FORMAT;
+                    . ' ' . _WRONG_FORMAT;
                 return false;
             }
         } else if ($processLimitDateUseNo == 'no') {
-            $_SESSION['store_process_limit_date'] = "ko";
+            $_SESSION['store_process_limit_date'] = 'ko';
         }
     }
 
     // Contact
-    if (isset($_ENV['categories'][$catId]['other_cases']['contact'])) {
-        $contactType = get_value_fields($values, 'type_contact_external');
-        if (! $contactType) {
-            $contactType = get_value_fields($values, 'type_contact_internal');
-        }
-        if (! $contactType) {
-            $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['type_contact']['label']
-                . " " . _MANDATORY;
-            return false;
-        }
+    if (isset($_ENV['categories'][$catId]['contact_id'])) {
         $contact = get_value_fields($values, 'contact');
-        if ($_ENV['categories'][$catId]['other_cases']['contact']['mandatory'] == true) {
+        if ($_ENV['categories'][$catId]['contact_id']['mandatory'] == true) {
             if (empty($contact)) {
-                $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
+                $_SESSION['action_error'] = $_ENV['categories'][$catId]['contact_id']['label']
                     . ' ' . _IS_EMPTY;
                 return false;
             }
@@ -1201,14 +1200,14 @@ function process_category_check($catId, $values)
             if ($contactType == 'external'
                 && preg_match('/\([0-9]+\)$/', $contact) == 0
             ) {
-                $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
-                    . " " . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;
+                $_SESSION['action_error'] = $_ENV['categories'][$catId]['contact_id']['label']
+                    . ' ' . _WRONG_FORMAT . '.<br/>'. _USE_AUTOCOMPLETION;
                 return false;
             } else if ($contactType == 'internal'
                 && preg_match('/\((.|\s|\d|\h|\w)+\)$/i', $contact) == 0
             ) {
-                $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
-                    . " " . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;
+                $_SESSION['action_error'] = $_ENV['categories'][$catId]['contact_id']['label']
+                    . ' ' . _WRONG_FORMAT . '.<br/>' . _USE_AUTOCOMPLETION;
                 return false;
             }
         }
@@ -1287,16 +1286,6 @@ function process_category_check($catId, $values)
         }
     }
 
-    //For specific case => chrono number
-    $chronoOut = get_value_fields($values, 'chrono_number');
-    if (isset($_ENV['categories'][$catId]['other_cases']['chrono_number'])
-        && $_ENV['categories'][$catId]['other_cases']['chrono_number']['mandatory'] == true
-    ) {
-        if ($chronoOut == false) {
-            $_SESSION['action_error'] = _NO_CHRONO_NUMBER_DEFINED . ' ';
-            return false;
-        }
-    }
     return true;
 }
 
@@ -1452,22 +1441,24 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             && $_ENV['categories'][$catId][$tmpId]['type_field'] == 'integer'
             && $_ENV['categories'][$catId][$tmpId]['table'] <> 'none'
         ) {
-            if (isset($_ENV['categories'][$catId][$tmpId]['table'])
-                && $_ENV['categories'][$catId][$tmpId]['table'] == 'res'
-            ) {
-                array_push(
-                    $_SESSION['data'],
-                    array(
-                        'column' => $tmpId,
-                        'value'  => $formValues[$i]['VALUE'],
-                        'type'   => 'integer',
-                    )
-                );
-            } else if (isset($_ENV['categories'][$catId][$tmpId]['table'])
-                && $_ENV['categories'][$catId][$tmpId]['table'] == 'coll_ext'
-            ) {
-                $queryExtFields .= $tmpId . ',';
-                $queryExtValues .= $formValues[$i]['VALUE'] . ',';
+            if ($formValues[$i]['VALUE'] <> 0 || $formValues[$i]['VALUE'] <> '') {
+                if (isset($_ENV['categories'][$catId][$tmpId]['table'])
+                    && $_ENV['categories'][$catId][$tmpId]['table'] == 'res'
+                ) {
+                        array_push(
+                            $_SESSION['data'],
+                            array(
+                                'column' => $tmpId,
+                                'value'  => str_replace(",", ".", $formValues[$i]['VALUE']),
+                                'type'   => 'integer',
+                            )
+                        );
+                } else if (isset($_ENV['categories'][$catId][$tmpId]['table'])
+                    && $_ENV['categories'][$catId][$tmpId]['table'] == 'coll_ext'
+                ) {
+                    $queryExtFields .= $tmpId . ',';
+                    $queryExtValues .= str_replace(",", ".", $formValues[$i]['VALUE']) . ',';
+                }
             }
         } else if (isset($_ENV['categories'][$catId][$tmpId]['type_field'])
             && isset($_ENV['categories'][$catId][$tmpId]['table'])
@@ -1552,39 +1543,15 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     }
 
     // Contact
-    if (isset($_ENV['categories'][$catId]['other_cases']['contact'])) {
+    if (isset($_ENV['categories'][$catId]['contact_id'])) {
         $contact = get_value_fields($formValues, 'contact');
-        $contactType = get_value_fields(
-            $formValues, 'type_contact_external'
-        );
-        if (! $contactType) {
-            $contactType = get_value_fields(
-                $formValues, 'type_contact_internal'
-            );
-        }
         //echo 'contact '.$contact.', type '.$contactType;
         $contactId = str_replace(
             ')', '', substr($contact, strrpos($contact, '(') + 1)
         );
-        if ($contactType == 'internal') {
-            if ($catId == 'incoming') {
-                $queryExtFields .= 'exp_user_id,';
-                $queryExtValues .= "'" . $db->protect_string_db($contactId)
-                                . "',";
-            } else if ($catId == 'outgoing' || $catId == 'internal') {
-                $queryExtFields .= 'dest_user_id,';
-                $queryExtValues .= "'" . $db->protect_string_db($contactId)
-                                . "',";
-            }
-        } else if ($contactType == 'external') {
-            if ($catId == 'incoming') {
-                $queryExtFields .= 'exp_contact_id,';
-                $queryExtValues .= $contactId . ",";
-            } else if ($catId == 'outgoing' || $catId == 'internal') {
-                $queryExtFields .= 'dest_contact_id,';
-                $queryExtValues .= $contactId . ",";
-            }
-        }
+        $queryExtFields .= 'contact_id,';
+        $queryExtValues .= "'" . $db->protect_string_db($contactId)
+                        . "',";
     }
     if ($core->is_module_loaded('folder')) {
         $folderId = '';
@@ -1642,23 +1609,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         $cTypeId = get_value_fields($formValues, 'type_id');
         $cEntity = get_value_fields($formValues, 'destination');
 
-        $cChronoOut = get_value_fields($formValues, 'chrono_number');
-        $chronoX = new chrono();
-        $myVars = array(
-            'entity_id' => $cEntity,
-            'arbox_id' => $cBoxId,
-            'type_id' => $cTypeId,
-            'category_id' => $catId,
-            'folder_id' => $folderId,
-        );
-        $_SESSION['folderId'] = $folderId;
-        $myForm = array(
-            'chrono_out' => $cChronoOut,
-        );
-        $myChrono = $chronoX->generate_chrono($catId, $myVars, $myForm);
-
-        $queryExtFields .= 'alt_identifier,';
-        $queryExtValues .= "'" . $db->protect_string_db($myChrono) . "',";
         //######
         //echo $resId. " ";
         $queryExtFields = preg_replace('/,$/', ',res_id)', $queryExtFields);
@@ -1686,9 +1636,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         if ($core->is_module_loaded('entities')) {
             //  echo 'entities '.$resId. " ";
             if ($loadListDiff) {
-                require_once 'modules' . DIRECTORY_SEPARATOR . 'entities'
-                    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-                    . 'class_manage_listdiff.php';
+                require_once 'modules/entities/class/class_manage_listdiff.php';
                 $diffList = new diffusion_list();
                 $params = array(
                     'mode' => 'listinstance',
@@ -1704,8 +1652,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             //  echo 'entities '.$resId. " ";
         }
         if ($core->is_module_loaded('tags')) {
-                include_once("modules".DIRECTORY_SEPARATOR."tags"
-                .DIRECTORY_SEPARATOR."tags_update.php");
+                include_once('modules/tags/tags_update.php');
         }
     } else {
         $_SESSION['action_error'] = _ERROR_RES_ID;
@@ -1741,10 +1688,8 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
 
     }
     if ($core->is_module_loaded('tags')) {
-        include_once("modules".DIRECTORY_SEPARATOR."tags"
-        .DIRECTORY_SEPARATOR."tags_update.php");
+        include_once('modules/tags/tags_update.php');
     }
-
     //$_SESSION['indexing'] = array();
     unset($_SESSION['upfile']);
     unset($_SESSION['data']);
@@ -1754,8 +1699,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         'result' => $resId . '#',
         'history_msg' => '',
         'page_result' => $_SESSION['config']['businessappurl']
-                         . 'index.php?page=details&dir=indexing_searching'
+                         . 'index.php?page=details_business&dir=indexing_searching'
                          . '&coll_id=' . $collId . '&id=' . $resId
     );
-
 }

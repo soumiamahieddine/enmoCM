@@ -640,7 +640,7 @@ if (!defined('_EMPLOYEE')) define('_EMPLOYEE', 'Employ&eacute;');
 
 //INVOICE DOCTYPE
 if (!defined('_INVOICE_TYPE_ID')) define('_INVOICE_TYPE_ID', 'Type de facture');
-if (!defined('_VOUCHER_IDENTIFIER')) define('_VOUCHER_IDENTIFIER', 'N&deg; de pi&eagrave;ce comptable');
+if (!defined('_VOUCHER_IDENTIFIER')) define('_VOUCHER_IDENTIFIER', 'N&deg; de pi&egrave;ce comptable');
 if (!defined('_LAST_DATE')) define('_LAST_DATE', 'Date d&rsquo;&eacute;ch&eacute;ance');
 if (!defined('_ACCOUNTING_PERIOD')) define('_ACCOUNTING_PERIOD', 'P&eacute;riode de comptabilisation');
 if (!defined('_ORDER_IDENTIFIER')) define('_ORDER_IDENTIFIER', 'R&eacute;f&eacute;rence de commande');
@@ -820,6 +820,7 @@ if (!defined('_ERROR_IE_SEARCH')) define( '_ERROR_IE_SEARCH', 'Cet &eacute;l&eac
 
 if (!defined('_DEST_USER')) define( '_DEST_USER','Destinataire');
 if (!defined('_DOCTYPES')) define( '_DOCTYPES','Type(s) de document');
+if (!defined('_DOCTYPE_INDEXES')) define('_DOCTYPE_INDEXES', 'Index du type de document');
 if (!defined('_MAIL_NATURE')) define( '_MAIL_NATURE', 'Nature de l&rsquo;envoi');
 if (!defined('_CHOOSE_MAIL_NATURE')) define( '_CHOOSE_MAIL_NATURE', 'Choisissez la nature de l&rsquo;envoi');
 if (!defined('_ERROR_DOCTYPE')) define( '_ERROR_DOCTYPE', 'Type de document non valide');
@@ -886,6 +887,7 @@ if (!defined('_WARNING_MESSAGE_DEL_CONTACT'))  define('_WARNING_MESSAGE_DEL_CONT
 if (!defined('_CONTACT_DELETION'))  define('_CONTACT_DELETION', 'Suppression de contact');
 if (!defined('_CONTACT_REAFFECT'))  define('_CONTACT_REAFFECT', 'R&eacute;affectation des documents');
 if (!defined('_UPDATE_CONTACTS')) define( '_UPDATE_CONTACTS', 'Mise &agrave; jour contact depuis indexation/qualification');
+if (!defined('_CONTACT_TYPE')) define( '_CONTACT_TYPE', 'Type de contact');
 
 if (!defined('_MANAGE_DOUBLOONS'))  define('_MANAGE_DOUBLOONS', 'Gestion des doublons');
 if (!defined('_DOUBLOONS_BY_SOCIETY'))  define('_DOUBLOONS_BY_SOCIETY', 'Doublons par organisme/soci&eacute;t&eacute;');
@@ -1413,6 +1415,9 @@ if (!defined('_EMAIL_ACCOUNT')) define('_EMAIL_ACCOUNT', 'Email compte');
 if (!defined('_HELP_KEYWORD_EMAIL')) define('_HELP_KEYWORD_EMAIL', 'Email de l&rsquo;utilisateur connect&eacute;');
 
 if (!defined('_INITIATOR')) define('_INITIATOR', 'Service initiateur');
+
+if (!defined('_VALIDATE_QUALIF_BUSINESS')) define('_VALIDATE_QUALIF_BUSINESS', 'Validation/qualification des documents de la collection business');
+if (!defined('_BUSINESS_LIST')) define('_BUSINESS_LIST', 'Liste de documents business');
 
 /********************Parameters **************/
 if (!defined('_PARAMETERS')) define('_PARAMETERS', 'Paramètres');

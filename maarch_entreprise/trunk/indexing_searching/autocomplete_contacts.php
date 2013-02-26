@@ -1,8 +1,8 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*   Copyright 2008, 2013 Maarch
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -27,48 +27,43 @@
 * @version $Revision$
 * @ingroup indexing_searching_mlb
 */
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once('core/class/class_request.php');
 
 $req = new request();
 $req->connect();
 
-if(empty($_REQUEST['table']))
-{
-	exit();
+if (empty($_REQUEST['table'])) {
+    exit();
 }
 $table = $_REQUEST['table'];
 
-if($table == 'users')
-{
-	$select = array();
-	$select[$_SESSION['tablename']['users']]= array('lastname', 'firstname', 'user_id');
-	$where = " (lower(lastname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
-		."or lower(firstname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
-		."or user_id like '%".$req->protect_string_db($_REQUEST['Input'])."%') and (status = 'OK' or status = 'ABS') and enabled = 'Y'";
-
-	$other = 'order by lastname, firstname';
-
-	$res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
-
-	echo "<ul>\n";
-	for($i=0; $i< min(count($res), 10)  ;$i++)
-	{
-		echo "<li>".$req->show_string($res[$i][0]['value']).', '.$req->show_string($res[$i][1]['value']).' ('.$res[$i][2]['value'].")</li>\n";
-	}
-	if(count($res) == 11)
-	{
-			echo "<li>...</li>\n";
-	}
-	echo "</ul>";
-}
-elseif($table == 'contacts')
-{
+if ($table == 'users') {
+    $select = array();
+    $select[$_SESSION['tablename']['users']]= array('lastname', 'firstname', 'user_id');
+    $where = " (lower(lastname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
+        ."or lower(firstname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
+        ."or user_id like '%".$req->protect_string_db($_REQUEST['Input'])."%') and (status = 'OK' or status = 'ABS') and enabled = 'Y'";
+    $other = 'order by lastname, firstname';
+    $res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
+    echo "<ul>\n";
+    for ($i=0; $i< min(count($res), 10)  ;$i++) {
+        echo "<li>".$req->show_string($res[$i][0]['value']).', '.$req->show_string($res[$i][1]['value']).' ('.$res[$i][2]['value'].")</li>\n";
+    }
+    if (count($res) == 11) {
+            echo "<li>...</li>\n";
+    }
+    echo "</ul>";
+} elseif ($table == 'contacts') {
     $timestart=microtime(true);
+   
+   if (isset($_REQUEST['contact_type']) && $_REQUEST['contact_type'] <> '') {
+       $contactTypeRequest = " AND contact_type = '" . $_REQUEST['contact_type'] . "'";
+   }
    
     $args = explode(' ', $_REQUEST['Input']);
     $args[] = $_REQUEST['Input'];
     $num_args = count($args);
-    if($num_args == 0) return "<ul></ul>"; 
+    if ($num_args == 0) return "<ul></ul>"; 
        
     $query = "SELECT result, SUM(confidence) AS score, count(1) AS num FROM (";
     
@@ -82,6 +77,7 @@ elseif($table == 'contacts')
         . " FROM contacts"
         . " WHERE (user_id = '' OR user_id IS NULL OR user_id = '".$req->protect_string_db($_SESSION['user']['UserId'])."' ) "
             . " AND enabled = 'Y' "
+            . $contactTypeRequest
             . " AND ("
                 . " LOWER(lastname) LIKE LOWER('%s')"
                 . " OR LOWER(firstname) LIKE LOWER('%s')"
@@ -115,7 +111,7 @@ elseif($table == 'contacts')
     $nb = $req->nb_result();
     
     $m = 30;
-    if($nb >= $m) $l = $m;
+    if ($nb >= $m) $l = $m;
     else $l = $nb;
     
     $timeend=microtime(true);
@@ -123,14 +119,14 @@ elseif($table == 'contacts')
 
     $found = false;
     echo "<ul id=\"autocomplete_contacts_ul\" title='$nb contacts'>";
-    for($i=0; $i<$l; $i++) {
+    for ($i=0; $i<$l; $i++) {
         $res = $req->fetch_object();
         $score = round($res->score / $num_args);
-        if($i%2==1) $color = 'LightYellow';
+        if ($i%2==1) $color = 'LightYellow';
         else $color = 'white';
         echo "<li style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'>". $res->result ."</li>";
     }
     echo "</ul>";
-    if($nb > $m)
+    if ($nb > $m)
         echo "<p align='left' style='background-color:LemonChiffon;' title=\"La liste n'a pas pu être affichée intégralement, veuillez compléter votre recherche.\" >...</p>";
 }

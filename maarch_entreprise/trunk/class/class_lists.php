@@ -1,6 +1,6 @@
 <?php
 /*
- *    Copyright 2008,2012 Maarch
+ *    Copyright 2008,2013 Maarch
  *
  *  This file is part of Maarch Framework.
  *
@@ -284,7 +284,23 @@ class lists extends dbquery
                             .$_SESSION['config']['businessappurl'].'index.php?display=true&page='
                             .'contact_list_by_name\', \'what\', \'2\');</script>';
             break;
-            
+            case 'contactBusiness':
+                if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
+                    $contact = $_SESSION['filters']['contact']['VALUE'];
+                } else {
+                    $contact = '['._CONTACT.']';
+                }
+                $filters .='<input type="text" name="contact_id" id="contact_id" value="'.$contact.'" size="40" '
+                            .'onfocus="if(this.value==\'['._CONTACT.']\'){this.value=\'\';}" '
+                            .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
+                            .'&filter=contactBusiness&value=\' + this.value, \''.$this->divListId.'\', '
+                            .$this->modeReturn.');" />&nbsp;';
+                //Autocompletion script and div 
+                $filters .='<div id="contactListByName" class="autocomplete"></div>';
+                $filters .='<script type="text/javascript">initList(\'contact_id\', \'contactListByName\', \''
+                            .$_SESSION['config']['businessappurl'].'index.php?display=true&page='
+                            .'contact_list_by_name\', \'what\', \'2\');</script>';
+            break;
             case 'type':
                 require_once 'core' . DIRECTORY_SEPARATOR . 'core_tables.php';
                 
@@ -462,7 +478,15 @@ class lists extends dbquery
                         } else if($contactType == "contact") {
                             $_SESSION['filters']['contact']['CLAUSE'] = "(exp_contact_id = '".$contactId."' or dest_contact_id = '".$contactId."')";
                         }
-                        
+                    } else if ($_REQUEST['filter'] == 'contactBusiness') {
+                    
+                        $contactTmp = str_replace(')', '', 
+                            substr($_SESSION['filters']['contactBusiness']['VALUE'], 
+                            strrpos($_SESSION['filters']['contactBusiness']['VALUE'],'(')+1));
+                        $find1 = strpos($contactTmp, ':');
+                        $find2 =  $find1 + 1;
+                        $contactId = $this->protect_string_db(substr($contactTmp, $find2, strlen($contactTmp)));
+                        $_SESSION['filters']['contact']['CLAUSE'] = "(contact_id = " . $contactId . ")";
                     } else if ($_REQUEST['filter'] == 'folder') {
                         
                         $folderId = $this->protect_string_db(str_replace(')', '', 
@@ -603,39 +627,39 @@ class lists extends dbquery
         return $templates;
     }
     
-	private function _loadTemplate($templateFile) {
+    private function _loadTemplate($templateFile) {
         $templateContent = '';
         
-		//Get tge filecontent
-		$templateContent = file_get_contents ($templateFile);
-		
+        //Get tge filecontent
+        $templateContent = file_get_contents ($templateFile);
+        
         //Delete all comments
-		$templateContent = preg_replace("/(<!--.*?-->)/s","", $templateContent);
+        $templateContent = preg_replace("/(<!--.*?-->)/s","", $templateContent);
 
-		return $templateContent;
-	}
+        return $templateContent;
+    }
     
-	private function _tmplt_defineLang($parameter) {
-		$my_explode= explode ("|", $parameter);
+    private function _tmplt_defineLang($parameter) {
+        $my_explode= explode ("|", $parameter);
 
-		if (!$my_explode[1]) {
-			return _WRONG_PARAM_FOR_LOAD_VALUE;
-		} else  {
+        if (!$my_explode[1]) {
+            return _WRONG_PARAM_FOR_LOAD_VALUE;
+        } else  {
             if (defined($my_explode[1]) && constant($my_explode[1]) <> NULL)
                 return constant($my_explode[1]);
             else
                 return $my_explode[1];
-		}
-	}
+        }
+    }
     
-	private function _tmplt_sortColumn($parameter) {
+    private function _tmplt_sortColumn($parameter) {
 
-		$my_explode= explode ("|", $parameter);
-		
-		if (!isset($my_explode[1])) {
-			return  _WRONG_PARAM_FOR_LOAD_VALUE;
-		} else {
-			$column = $my_explode[1];
+        $my_explode= explode ("|", $parameter);
+        
+        if (!isset($my_explode[1])) {
+            return  _WRONG_PARAM_FOR_LOAD_VALUE;
+        } else {
+            $column = $my_explode[1];
             ($this->order == 'desc' && (strpos($this->orderField, $column) !== false))? $sortImgDown = 'tri_down_on.gif' : $sortImgDown = 'tri_down.gif';
             ($this->order == 'asc' && (strpos($this->orderField, $column) !== false))? $sortImgUp = 'tri_up_on.gif' : $sortImgUp = 'tri_up.gif';
 
@@ -643,75 +667,75 @@ class lists extends dbquery
                         .'&order=desc&order_field='.$column.'\', \''.$this->divListId.'\', '.$this->modeReturn.');" title="'
                         ._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl']
                         .'static.php?filename='.$sortImgDown.'" border="0" alt="'._DESC_SORT.'" /></a>';
-			$return .= '<a href="javascript://" onClick="loadList(\''.$this->link
+            $return .= '<a href="javascript://" onClick="loadList(\''.$this->link
                         .'&order=asc&order_field='.$column.'\', \''.$this->divListId.'\', '.$this->modeReturn.');" title="'
                         ._ASC_SORT.'"><img src="'.$_SESSION['config']['businessappurl']
                         .'static.php?filename='.$sortImgUp.'" border="0" alt="'._ASC_SORT.'" /></a>';
         }
-		return $return;
-	}
+        return $return;
+    }
     
-	private function _tmplt_cssLineReload() {
+    private function _tmplt_cssLineReload() {
         //Get last css parameter defined for the result list
-		return $this->tmplt_CurrentCssLine;
-	}
+        return $this->tmplt_CurrentCssLine;
+    }
     
     private  function _tmplt_cssLine($parameter) {
-		$my_explode= explode ("|", $parameter);
+        $my_explode= explode ("|", $parameter);
 
-		if (!$my_explode[1]) {
-			return _WRONG_PARAM_FOR_LOAD_VALUE;
-		} else {
+        if (!$my_explode[1]) {
+            return _WRONG_PARAM_FOR_LOAD_VALUE;
+        } else {
             //Treat
-			if (count($my_explode) == 2 ) {
-				return $my_explode[1];
-			} else if (count($my_explode) == 3) {
-				if ($this->tmplt_CurrentCssLine == '')	{
-					$this->tmplt_CurrentCssLine = $my_explode[1];
-					return $this->tmplt_CurrentCssLine;
-				} else if ($this->tmplt_CurrentCssLine == $my_explode[1]) {
-					$this->tmplt_CurrentCssLine = $my_explode[2];
-					return $this->tmplt_CurrentCssLine;
-				} else if ($this->tmplt_CurrentCssLine == $my_explode[2]) {
-					$this->tmplt_CurrentCssLine = $my_explode[1];
-					return $this->tmplt_CurrentCssLine;
-				} else {
-					return _WRONG_PARAM_FOR_LOAD_VALUE;
-				}
-			} else {
-				return _WRONG_PARAM_FOR_LOAD_VALUE;
-			}
-		}
-	}
+            if (count($my_explode) == 2 ) {
+                return $my_explode[1];
+            } else if (count($my_explode) == 3) {
+                if ($this->tmplt_CurrentCssLine == '')  {
+                    $this->tmplt_CurrentCssLine = $my_explode[1];
+                    return $this->tmplt_CurrentCssLine;
+                } else if ($this->tmplt_CurrentCssLine == $my_explode[1]) {
+                    $this->tmplt_CurrentCssLine = $my_explode[2];
+                    return $this->tmplt_CurrentCssLine;
+                } else if ($this->tmplt_CurrentCssLine == $my_explode[2]) {
+                    $this->tmplt_CurrentCssLine = $my_explode[1];
+                    return $this->tmplt_CurrentCssLine;
+                } else {
+                    return _WRONG_PARAM_FOR_LOAD_VALUE;
+                }
+            } else {
+                return _WRONG_PARAM_FOR_LOAD_VALUE;
+            }
+        }
+    }
     
     private function _tmplt_loadImage($parameter) {
     
         $my_explode= explode ("|", $parameter);
         
-		if (!$my_explode[1]) {
-			return _WRONG_PARAM_FOR_LOAD_VALUE;
-		} else {
-			if (count($my_explode) == 2 ) {
+        if (!$my_explode[1]) {
+            return _WRONG_PARAM_FOR_LOAD_VALUE;
+        } else {
+            if (count($my_explode) == 2 ) {
                 return $_SESSION['config']['businessappurl'].'static.php?filename='.$my_explode[1];
-			} else if (count($my_explode) >= 3) {
+            } else if (count($my_explode) >= 3) {
                  return $_SESSION['config']['businessappurl'].'static.php?module='.$my_explode[2].'&filename='.$my_explode[1];
             } else {
-				return _WRONG_PARAM_FOR_LOAD_VALUE;
-			}
+                return _WRONG_PARAM_FOR_LOAD_VALUE;
+            }
         }
     }
     
     private function _tmplt_loadValue($parameter, $resultTheLine) {
-		
+        
         $my_explode= explode ("|", $parameter);
-		
+        
         if (!$my_explode[1]){
-			return _WRONG_PARAM_FOR_LOAD_VALUE;
-		} else {
+            return _WRONG_PARAM_FOR_LOAD_VALUE;
+        } else {
             
-			$column = $my_explode[1];
-			for($i= 0; $i <= count($resultTheLine); $i++ ) {
-				if($resultTheLine[$i]['column'] == $column) {
+            $column = $my_explode[1];
+            for($i= 0; $i <= count($resultTheLine); $i++ ) {
+                if($resultTheLine[$i]['column'] == $column) {
                    
                     if(is_bool($resultTheLine[$i]['value'])) {
                         //If boolean (convert to string)
@@ -723,10 +747,10 @@ class lists extends dbquery
                         // return $this->_highlightWords($resultTheLine[$i]['value'], $this->whatSearch); //highlight mode
                         return $resultTheLine[$i]['value'];
                     }
-				}
-			}
-		}
-	}
+                }
+            }
+        }
+    }
     
     private function _tmplt_showSmallToolbar () {
         
@@ -740,10 +764,10 @@ class lists extends dbquery
         //Get the ListKey value
         $keyValue = '';
         for($i= 0; $i <= count($resultTheLine); $i++ ) {
-			if($resultTheLine[$i]['column'] == $listKey) {
-				$keyValue = $resultTheLine[$i]['value'];
-			}
-		}
+            if($resultTheLine[$i]['column'] == $listKey) {
+                $keyValue = $resultTheLine[$i]['value'];
+            }
+        }
         
          //If checkbox is activated (is it important if template???)
         if ($this->params['bool_checkBox'] === true) {
@@ -759,7 +783,7 @@ class lists extends dbquery
             }
         }
         return $return;
-	}
+    }
     
     private function _tmplt_checkUncheckAll() {
      
@@ -777,10 +801,10 @@ class lists extends dbquery
         //Get the ListKey value
          $keyValue = '';
         for($i= 0; $i <= count($resultTheLine); $i++ ) {
-			if($resultTheLine[$i]['column'] == $listKey) {
-				$keyValue = $resultTheLine[$i]['value'];
-			}
-		}
+            if($resultTheLine[$i]['column'] == $listKey) {
+                $keyValue = $resultTheLine[$i]['value'];
+            }
+        }
         //If radio button is activated (is it important if template???)
         if ($this->params['bool_radioButton'] === true) {
             //If disable or radio button
@@ -794,7 +818,7 @@ class lists extends dbquery
             }
         }    
         return $return;
-	}
+    }
     
     private function _tmplt_showIconDocument($resultTheLine, $listKey) {
         
@@ -828,10 +852,10 @@ class lists extends dbquery
     
         $my_explode= explode ("|", $parameter);
         
-		if (!$my_explode[1]) {
-			return _WRONG_PARAM_FOR_LOAD_VALUE;
-		} else {
-			if (count($my_explode) >= 4 ) {
+        if (!$my_explode[1]) {
+            return _WRONG_PARAM_FOR_LOAD_VALUE;
+        } else {
+            if (count($my_explode) >= 4 ) {
                 //Init
                 $actionIsDisabled = false;
                 
@@ -840,7 +864,7 @@ class lists extends dbquery
                     $actionIsDisabled = $this->_checkDisabledRules($my_explode[4], $resultTheLine);
                 }
                 //If disabled, return blank
-            	if ($actionIsDisabled) {
+                if ($actionIsDisabled) {
                     return '&nbsp;';
                 } else {
                     //return action icon
@@ -849,8 +873,8 @@ class lists extends dbquery
                         .'" alt="'.$my_explode[1].'" border="0"/></a>';
                 }
             } else {
-				return _WRONG_PARAM_FOR_LOAD_VALUE;
-			}
+                return _WRONG_PARAM_FOR_LOAD_VALUE;
+            }
         }
     }
     
@@ -880,10 +904,10 @@ class lists extends dbquery
     private function _tmplt_includeFile($parameter) {
 
         $my_explode= explode ("|", $parameter);
-		
+        
         if (!$my_explode[1]){
-			return _WRONG_PARAM_FOR_LOAD_VALUE;
-		} else {
+            return _WRONG_PARAM_FOR_LOAD_VALUE;
+        } else {
             //File
             $file = $my_explode[1];
             
@@ -905,9 +929,9 @@ class lists extends dbquery
     
         $my_explode= explode ("|", $parameter);
         
-		if (!$my_explode[1]) {
-			return _WRONG_PARAM_FOR_LOAD_VALUE;
-		} else {
+        if (!$my_explode[1]) {
+            return _WRONG_PARAM_FOR_LOAD_VALUE;
+        } else {
 
             return  $this->params[$my_explode[1]];
         }
@@ -917,9 +941,9 @@ class lists extends dbquery
     
         $my_explode= explode ("|", $parameter);
         
-		if (!$my_explode[1]) {
-			return _WRONG_PARAM_FOR_LOAD_VALUE;
-		} else {
+        if (!$my_explode[1]) {
+            return _WRONG_PARAM_FOR_LOAD_VALUE;
+        } else {
             if (count($my_explode) == 3) {
                 if ($my_explode[2] == 'true') {
                     $this->params[$my_explode[1]] = true;
@@ -938,9 +962,9 @@ class lists extends dbquery
     
         $my_explode= explode ("|", $parameter);
         
-		if (!$my_explode[1]) {
-			return _WRONG_PARAM_FOR_LOAD_VALUE;
-		} else {
+        if (!$my_explode[1]) {
+            return _WRONG_PARAM_FOR_LOAD_VALUE;
+        } else {
             if (count($my_explode) >= 4) {
                 
                 $condition = "return($my_explode[1]);";
@@ -961,9 +985,9 @@ class lists extends dbquery
     
         $my_explode= explode ("|", $parameter);
         
-		if (!$my_explode[1]) {
-			return _WRONG_PARAM_FOR_LOAD_VALUE;
-		} else {
+        if (!$my_explode[1]) {
+            return _WRONG_PARAM_FOR_LOAD_VALUE;
+        } else {
             $core_tools = new core_tools();
 
             if($core_tools->is_module_loaded($my_explode[1]) === true) {
@@ -977,34 +1001,34 @@ class lists extends dbquery
     private function _tmplt_loadVarSys($parameter, $resultTheLine=array(), $listKey='', $lineIsDisabled=false) {
         ##loadValue|arg1##: load value in the db; arg1= column's value identifier
         if (preg_match("/^loadValue\|/", $parameter)){
-			$var = $this->_tmplt_loadValue($parameter, $resultTheLine);
+            $var = $this->_tmplt_loadValue($parameter, $resultTheLine);
         ##sortColumn|arg1## : cretate sort in header; arg1 = name of the column
-		} else if (preg_match("/^sortColumn\|/", $parameter)) {
-			$var = $this->_tmplt_sortColumn($parameter);
-		##defineLang|arg1## : define constant by the lang file; arg1 = constant of lang.php
-		} else if (preg_match("/^defineLang\|/", $parameter)){
-			$var = $this->_tmplt_defineLang($parameter);
+        } else if (preg_match("/^sortColumn\|/", $parameter)) {
+            $var = $this->_tmplt_sortColumn($parameter);
+        ##defineLang|arg1## : define constant by the lang file; arg1 = constant of lang.php
+        } else if (preg_match("/^defineLang\|/", $parameter)){
+            $var = $this->_tmplt_defineLang($parameter);
         ##cssLineReload## : reload css style for next line
         } else if (preg_match("/^cssLineReload$/", $parameter)) {
             $var = $this->_tmplt_cssLineReload($parameter);
         ##cssLine|coll|nonecoll## : load css style for line arg1,arg2 : switch beetwin style on line one or line two
-		} else if (preg_match("/^cssLine\|/", $parameter)) {
-			$var = $this->_tmplt_cssLine($parameter);
-		##loadImage|arg1|arg2## :load image; arg1= image name, arg2 = module name (if image in module)
-		} else if (preg_match("/^loadImage\|/", $parameter)) {
-			$var = $this->_tmplt_loadImage($parameter);
-		##showSmallToolbar: swhow small bar for navigation
-		} else if (preg_match("/^showSmallToolbar$/", $parameter)) {
-			$var = $this->_tmplt_showSmallToolbar();
-		##checkBox## : show checkbox
-		} elseif (preg_match("/^checkBox$/", $parameter)) {
-			$var = $this->_tmplt_checkBox($resultTheLine, $listKey, $lineIsDisabled);
-		##checkUncheckAll## : show checkbox check All /uncheck All
-		} elseif (preg_match("/^checkUncheckAll$/", $parameter)) {
-			$var = $this->_tmplt_checkUncheckAll();
-		##radioButton## : show radio button
-		} elseif (preg_match("/^radioButton$/", $parameter)) {
-			$var = $this->_tmplt_radioButton($resultTheLine, $listKey, $lineIsDisabled);
+        } else if (preg_match("/^cssLine\|/", $parameter)) {
+            $var = $this->_tmplt_cssLine($parameter);
+        ##loadImage|arg1|arg2## :load image; arg1= image name, arg2 = module name (if image in module)
+        } else if (preg_match("/^loadImage\|/", $parameter)) {
+            $var = $this->_tmplt_loadImage($parameter);
+        ##showSmallToolbar: swhow small bar for navigation
+        } else if (preg_match("/^showSmallToolbar$/", $parameter)) {
+            $var = $this->_tmplt_showSmallToolbar();
+        ##checkBox## : show checkbox
+        } elseif (preg_match("/^checkBox$/", $parameter)) {
+            $var = $this->_tmplt_checkBox($resultTheLine, $listKey, $lineIsDisabled);
+        ##checkUncheckAll## : show checkbox check All /uncheck All
+        } elseif (preg_match("/^checkUncheckAll$/", $parameter)) {
+            $var = $this->_tmplt_checkUncheckAll();
+        ##radioButton## : show radio button
+        } elseif (preg_match("/^radioButton$/", $parameter)) {
+            $var = $this->_tmplt_radioButton($resultTheLine, $listKey, $lineIsDisabled);
         ##showIconDocument## : show document icon and link
         } elseif (preg_match("/^showIconDocument$/", $parameter)) {
             $var = $this->_tmplt_showIconDocument($resultTheLine, $listKey);
@@ -1016,29 +1040,29 @@ class lists extends dbquery
             $var = $this->_tmplt_showActionIcon($parameter, $resultTheLine);
         ##clickOnLine## : Action on click under the line
         } elseif (preg_match("/^clickOnLine$/", $parameter)) {
-			$var = $this->_tmplt_clickOnLine($resultTheLine, $listKey, $lineIsDisabled);
-		##includeFile## : Action on click under the line
+            $var = $this->_tmplt_clickOnLine($resultTheLine, $listKey, $lineIsDisabled);
+        ##includeFile## : Action on click under the line
         } elseif (preg_match("/^includeFile\|/", $parameter)) {
-			$var = $this->_tmplt_includeFile($parameter);
-		##getBusinessAppUrl## : Action on click under the line
+            $var = $this->_tmplt_includeFile($parameter);
+        ##getBusinessAppUrl## : Action on click under the line
         } elseif (preg_match("/^getBusinessAppUrl$/", $parameter)) {
-			$var = $this->_tmplt_getBusinessAppUrl();
-		##getListParameter## : 
+            $var = $this->_tmplt_getBusinessAppUrl();
+        ##getListParameter## : 
         } elseif (preg_match("/^getListParameter\|/", $parameter)) {
-			$var = $this->_tmplt_getListParameter($parameter);
-		##setListParameter## : 
+            $var = $this->_tmplt_getListParameter($parameter);
+        ##setListParameter## : 
         } elseif (preg_match("/^setListParameter\|/", $parameter)) {
-			$var = $this->_tmplt_setListParameter($parameter);	
-		##isModuleLoaded## : 
+            $var = $this->_tmplt_setListParameter($parameter);  
+        ##isModuleLoaded## : 
         } elseif (preg_match("/^isModuleLoaded\|/", $parameter)) {
-			$var = $this->_tmplt_isModuleLoaded($parameter);	
-		##ifStatement## : 
+            $var = $this->_tmplt_isModuleLoaded($parameter);    
+        ##ifStatement## : 
         } elseif (preg_match("/^ifStatement\|/", $parameter)) {
-			$var = $this->_tmplt_ifStatement($parameter);	
-		} else {
-			$var = _WRONG_FUNCTION_OR_WRONG_PARAMETERS;
-		}
-		return $var;
+            $var = $this->_tmplt_ifStatement($parameter);   
+        } else {
+            $var = _WRONG_FUNCTION_OR_WRONG_PARAMETERS;
+        }
+        return $var;
     }
     
     private function _buildTemplate($templateFile, $resultArray, $listKey) {
@@ -1073,7 +1097,7 @@ class lists extends dbquery
                     $trueHead = $head;
                     preg_match_all('/##(.*?)##/', $trueHead, $output);
 
-                    for($i=0;$i<count($output[0]);$i++)	{
+                    for($i=0;$i<count($output[0]);$i++) {
                     
                         //If template function is called under template function
                         $_trueHead = $output[1][$i];
@@ -1163,28 +1187,28 @@ class lists extends dbquery
             // $output = preg_replace("/(>|^)([^<]+)(?=<|$)/esx", "'\\1' . str_replace('" . $keyword . "', '<span class=\"highlighted\">" . $keyword . "</span>', '\\2')", $input);
             // $output = preg_replace("/(?<!\[)(\b{$keyword}\b)(?!\])/i", '<span class="highlighted">\\1</span>', $input);
             $keywordArray = explode(" ", $keyword);
-			for($i = 0; $i < count($keywordArray); $i++) {
-				$save_keywordArray = "";
-				$pos = stripos($input, $keywordArray[$i]);
-				
-				if($pos !== false) {
-					$save_keywordArray = substr($input, $pos, strlen($keywordArray[$i]));
-				}
-				$output = preg_replace("/(".$keywordArray[$i].")/i","<span class=\"highlighted\">".$save_keywordArray."</span>",$input);
-			}
+            for($i = 0; $i < count($keywordArray); $i++) {
+                $save_keywordArray = "";
+                $pos = stripos($input, $keywordArray[$i]);
+                
+                if($pos !== false) {
+                    $save_keywordArray = substr($input, $pos, strlen($keywordArray[$i]));
+                }
+                $output = preg_replace("/(".$keywordArray[$i].")/i","<span class=\"highlighted\">".$save_keywordArray."</span>",$input);
+            }
         }
-		return $output;
-	}
+        return $output;
+    }
     
     private function _buildMyLink($link, $resultTheLine, $listKey='') {    
     
-    	//If you want to use different key for action link
-		if (strpos($link, "@@") !== false) {
-        	foreach(array_keys($resultTheLine) as $column) { // for every column
-				$key = "@@".$resultTheLine[$column]['column']."@@"; //build the alias
-				$val = $resultTheLine[$column]['value']; //get the real value
-				$link = str_replace($key, $val, $link); //replace alias by real value
-			}
+        //If you want to use different key for action link
+        if (strpos($link, "@@") !== false) {
+            foreach(array_keys($resultTheLine) as $column) { // for every column
+                $key = "@@".$resultTheLine[$column]['column']."@@"; //build the alias
+                $val = $resultTheLine[$column]['value']; //get the real value
+                $link = str_replace($key, $val, $link); //replace alias by real value
+            }
         }
         
         //Use standard id (based on list key)
@@ -1220,45 +1244,45 @@ class lists extends dbquery
         
         //Url parameters
         if (isset($this->params['urlParameters'])) {
-			$pos = strpos($this->params['urlParameters'], '&');
-			//if my urlParameters string have '&'
-			if ($pos !== false) {
-				//at the firt position
-				if ($pos <> 0) {
-					//And page is called by index page
-					if ($this->params['bool_pageInModule']) {
-						//Add '&' 
-						$this->params['urlParameters'] = '&'.$this->params['urlParameters'];
-					}
-				}
-			} else {//my urlParameters string dont have '&' at all
-				//And page is called by index page
-				if ($this->params['bool_pageInModule']) {
-					//Add '&' 
-					$this->params['urlParameters'] = '&'.$this->params['urlParameters'];
-				}
-			}				
-		}
-		
-		//Page pageName
-		if (isset($this->params['pageName'])){
-			if ($this->params['bool_pageInModule'] && isset($this->params['moduleName'])) { //If page is called in a module by index page
-				$link = $_SESSION['config']['businessappurl'].'index.php?page='.$this->params['pageName']."&module="
+            $pos = strpos($this->params['urlParameters'], '&');
+            //if my urlParameters string have '&'
+            if ($pos !== false) {
+                //at the firt position
+                if ($pos <> 0) {
+                    //And page is called by index page
+                    if ($this->params['bool_pageInModule']) {
+                        //Add '&' 
+                        $this->params['urlParameters'] = '&'.$this->params['urlParameters'];
+                    }
+                }
+            } else {//my urlParameters string dont have '&' at all
+                //And page is called by index page
+                if ($this->params['bool_pageInModule']) {
+                    //Add '&' 
+                    $this->params['urlParameters'] = '&'.$this->params['urlParameters'];
+                }
+            }               
+        }
+        
+        //Page pageName
+        if (isset($this->params['pageName'])){
+            if ($this->params['bool_pageInModule'] && isset($this->params['moduleName'])) { //If page is called in a module by index page
+                $link = $_SESSION['config']['businessappurl'].'index.php?page='.$this->params['pageName']."&module="
                     .$this->params['moduleName'].$this->params['urlParameters'];
-			} elseif(isset($this->params['moduleName']) && !$this->params['bool_pageInModule']) { //Else if page is called inside the module
-				$link = $_SESSION['urltomodules'].$this->params['moduleName']."/".$this->params['pageName'].".php?".$this->params['urlParameters'];
-			} else {
-				$link = $_SESSION['config']['businessappurl'].'index.php?page='.$this->params['pageName'].$this->params['urlParameters'];
-			}
-		} else { //Default link (anchor) to prevent error in link if no pageName or module name
-			$link = "#";
-		}
-		
-		//String searched in list
-		if(!empty($this->whatSearch)) {
+            } elseif(isset($this->params['moduleName']) && !$this->params['bool_pageInModule']) { //Else if page is called inside the module
+                $link = $_SESSION['urltomodules'].$this->params['moduleName']."/".$this->params['pageName'].".php?".$this->params['urlParameters'];
+            } else {
+                $link = $_SESSION['config']['businessappurl'].'index.php?page='.$this->params['pageName'].$this->params['urlParameters'];
+            }
+        } else { //Default link (anchor) to prevent error in link if no pageName or module name
+            $link = "#";
+        }
+        
+        //String searched in list
+        if(!empty($this->whatSearch)) {
             $link = $this->_removeUrlVar($link,'what');
-			$link.= '&what='.$this->whatSearch;
-		}
+            $link.= '&what='.$this->whatSearch;
+        }
         
         //Column order
         if(!empty($_REQUEST['order']) && !empty($_REQUEST['order_field'])) {
@@ -1285,10 +1309,10 @@ class lists extends dbquery
         }
         
         //Number of lines to show
-		if(isset($_REQUEST['lines']) && !empty($_REQUEST['lines'])) {
+        if(isset($_REQUEST['lines']) && !empty($_REQUEST['lines'])) {
             $link = $this->_removeUrlVar($link, 'lines');
-			$link.= '&lines='.$_REQUEST['lines'];
-		}
+            $link.= '&lines='.$_REQUEST['lines'];
+        }
         
         //Display = true
         if (isset($_REQUEST['display']) && !empty($_REQUEST['display'])) {
@@ -1312,7 +1336,7 @@ class lists extends dbquery
                 }
             }
             //Eval disabled rule
-            if (!empty($disabledRules))	{
+            if (!empty($disabledRules)) {
                 $rules = "return($disabledRules);";
                 //echo $rules."<br>\n";
                 if(@eval($rules)) {
@@ -1325,59 +1349,59 @@ class lists extends dbquery
     }
     
     private function _createHeader($resultFirstRow, $listColumn, $showColumn, $sortColumn) {
-		$count_td = 0;
+        $count_td = 0;
 
         $column = '<tr>';
 
         //If sublist
         if($this->params['bool_showSublist'] && !empty($this->params['sublistUrl'])){
             $column .= '<th width="1%">&nbsp;</th>';
-			$count_td ++;
+            $count_td ++;
         }
         
-		//If checkbox 
-		if( $this->params['bool_checkBox'] === true) {
+        //If checkbox 
+        if( $this->params['bool_checkBox'] === true) {
             $column .= '<th width="1%" alt="' . _CHECK_ALL 
                     . ' / ' . _UNCHECK_ALL 
                     . '"><div align="center"><input type="checkbox" '
                     . 'id="checkUncheck" name="checkUncheck" value="" onclick="CheckUncheckAll(this);"></div></th>';
-			$count_td ++;
+            $count_td ++;
         //If radio button
-		} else if( $this->params['bool_radioButton'] === true) {
-			$column .= '<th width="1%">&nbsp;</th>';
-			$count_td ++;
-		}
+        } else if( $this->params['bool_radioButton'] === true) {
+            $column .= '<th width="1%">&nbsp;</th>';
+            $count_td ++;
+        }
 
-		//If view document
-		if($this->params['bool_showIconDocument']) {
-			$column .= '<th width="1%">&nbsp;</th>';
-			$count_td ++;
-		}
+        //If view document
+        if($this->params['bool_showIconDocument']) {
+            $column .= '<th width="1%">&nbsp;</th>';
+            $count_td ++;
+        }
 
-		//Print column header
-		for($actualColumn = 0;$actualColumn < count($listColumn);$actualColumn++) {
+        //Print column header
+        for($actualColumn = 0;$actualColumn < count($listColumn);$actualColumn++) {
             //Show column
-			if($showColumn[$actualColumn] === true) {
+            if($showColumn[$actualColumn] === true) {
             
                 //Different background on ordered column
                 (strpos($this->orderField, $sortColumn[$actualColumn]) !== false)? 
                     $columnStyle = ' style="background-image: url(static.php?filename=black_0.1.png);"' : $columnStyle = '';
-				
+                
                 //column
                 $column .= '<th'.$columnStyle.' width="'.$resultFirstRow[$actualColumn]['size']
                         .'%" valign="'.$resultFirstRow[$actualColumn]['valign']
                         .'"><div align="'.$resultFirstRow[$actualColumn]['label_align'].'">'
                         .$listColumn[$actualColumn]; 
-				
-				//Show sort icon
-				if($this->params['bool_sortColumn']) {
-					if( $sortColumn[$actualColumn] !== false) {
+                
+                //Show sort icon
+                if($this->params['bool_sortColumn']) {
+                    if( $sortColumn[$actualColumn] !== false) {
                         //Change color of sort icon
                         ($this->order == 'desc' && (strpos($this->orderField, $sortColumn[$actualColumn]) !== false))? 
                             $sortImgDown = 'tri_down_on.gif' : $sortImgDown = 'tri_down.gif';
                         ($this->order == 'asc' && (strpos($this->orderField, $sortColumn[$actualColumn]) !== false))? 
                             $sortImgUp = 'tri_up_on.gif' : $sortImgUp = 'tri_up.gif';
-						$column .= '<br/><br/>';
+                        $column .= '<br/><br/>';
 
                         //Build header
                         $column .= '<a href="javascript://" onClick="loadList(\''.$this->link
@@ -1385,35 +1409,35 @@ class lists extends dbquery
                         .$this->divListId.'\', '.$this->modeReturn.');" title="'
                         ._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl']
                         .'static.php?filename='.$sortImgDown.'" border="0" alt="'._DESC_SORT.'" /></a>';
-						$column .= '<a href="javascript://" onClick="loadList(\''.$this->link
+                        $column .= '<a href="javascript://" onClick="loadList(\''.$this->link
                         .'&order=asc&order_field='.$sortColumn[$actualColumn].'\', \''
                         .$this->divListId.'\', '.$this->modeReturn.');" title="'
                         ._ASC_SORT.'"><img src="'.$_SESSION['config']['businessappurl']
                         .'static.php?filename='.$sortImgUp.'" border="0" alt="'._ASC_SORT.'" /></a>';
-					}
-				}
-				$column .= '</div></th>';
+                    }
+                }
+                $column .= '</div></th>';
                 
-				$count_td ++;
-			}
-		}
+                $count_td ++;
+            }
+        }
 
-		//Reserve space for action buttons 
-		for($i = 0;$i < count($this->actionButtons);$i++) {
-			$column .= '<th width="1%" valign="bottom">&nbsp;</th>';
-			$count_td ++;
-		}
+        //Reserve space for action buttons 
+        for($i = 0;$i < count($this->actionButtons);$i++) {
+            $column .= '<th width="1%" valign="bottom">&nbsp;</th>';
+            $count_td ++;
+        }
 
-		//Reserve space for details button
-		if($this->params['bool_showIconDetails']) {
-			$column .= '<th width="1%" valign="bottom">&nbsp;</th>';
-			$count_td ++;
-		}
+        //Reserve space for details button
+        if($this->params['bool_showIconDetails']) {
+            $column .= '<th width="1%" valign="bottom">&nbsp;</th>';
+            $count_td ++;
+        }
         
         $column .= '</tr>';
         
         //Count the number of columns
-		$this->countTd = $count_td;
+        $this->countTd = $count_td;
         
         //Small toolbar
         $toolbar = '';
@@ -1431,10 +1455,10 @@ class lists extends dbquery
         }
         
         //Header
-		$header = '<thead>'.$toolbar.$column.'</thead>'.$footer;
+        $header = '<thead>'.$toolbar.$column.'</thead>'.$footer;
         
-		return $header;
-	}
+        return $header;
+    }
     
     private function _getTools($resultFirstRow, $countResult) {
     
@@ -1496,7 +1520,7 @@ class lists extends dbquery
                     }
                     $tools .= '</a>&nbsp;';
                 }
-			}
+            }
         }
         return $tools;
     }
@@ -1520,26 +1544,26 @@ class lists extends dbquery
             //Search box
             $searchTools .= '<td width="35%" align="right">&nbsp;';
             if ($this->params['bool_showSearchBox']) {
-				$searchTools .= '<form id="frmletters" name="frmletters" method="post" action="#"><div>';
+                $searchTools .= '<form id="frmletters" name="frmletters" method="post" action="#"><div>';
                 (strlen($this->whatSearch) > 1)? $what = $this->whatSearch : $what ='';
-				$searchTools .= '<input type="text" name="what" id="what" size="15" value="'.$what.'" />&nbsp;';
-				if(isset($this->params['searchBoxAutoCompletionUrl']) && !empty($this->params['searchBoxAutoCompletionUrl'])) {
-					$searchTools .= '<div id="whatList" class="autocomplete"></div>';
-					$searchTools .= '<script type="text/javascript">initList(\'what\', \'whatList\', \''
+                $searchTools .= '<input type="text" name="what" id="what" size="15" value="'.$what.'" />&nbsp;';
+                if(isset($this->params['searchBoxAutoCompletionUrl']) && !empty($this->params['searchBoxAutoCompletionUrl'])) {
+                    $searchTools .= '<div id="whatList" class="autocomplete"></div>';
+                    $searchTools .= '<script type="text/javascript">initList(\'what\', \'whatList\', \''
                         .$this->params['searchBoxAutoCompletionUrl'].'\', \''
                         .$this->params['searchBoxAutoCompletionParamName'].'\', \''
                         .$this->params['searchBoxAutoCompletionMinChars'].'\');</script>';
-				}
-				$searchTools .= '<input name="submit" class="button" type="button" value="'
+                }
+                $searchTools .= '<input name="submit" class="button" type="button" value="'
                     ._SEARCH.'" onClick="loadList(\''
                     .$this->link.'&what=\' + document.getElementById(\'what\').value, \''
                     .$this->divListId.'\', '.$this->modeReturn.');"/><div></form>';
-			}
+            }
             $searchTools .= '</td>';
             $searchTools .= '</tr></table></div>';
         }
         return $searchTools;
-	}
+    }
     
     private function _createToolbar($resultFirstRow) {
         //Init
@@ -1558,13 +1582,13 @@ class lists extends dbquery
             $nbLines = $this->params['linesToShow'] = strip_tags($_REQUEST['lines']);
         }
 
-		//Number of pages
-		$nb_pages = ceil($this->countResult/$this->params['linesToShow']);
-		// $debug .='NB total '.$this->countResult.' / NB show: '.$this->params['linesToShow'].' / Pages: '.$nb_pages.' /';
-		
+        //Number of pages
+        $nb_pages = ceil($this->countResult/$this->params['linesToShow']);
+        // $debug .='NB total '.$this->countResult.' / NB show: '.$this->params['linesToShow'].' / Pages: '.$nb_pages.' /';
+        
         if(isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $start = strip_tags($_REQUEST['start']);
-		$end = $start + $this->params['linesToShow'];
-		if($end > $this->countResult) $end = $this->countResult;
+        $end = $start + $this->params['linesToShow'];
+        if($end > $this->countResult) $end = $this->countResult;
         
         //Get list of tools (icon and link)
         $tools = $this->_getTools($resultFirstRow, $this->countResult);
@@ -1596,7 +1620,7 @@ class lists extends dbquery
             }
             sort($nbLinesSelect);
             
-			$linesDropdownList .= _SHOW.' <select name="nbLines" onChange="loadList(\''.$this->link
+            $linesDropdownList .= _SHOW.' <select name="nbLines" onChange="loadList(\''.$this->link
                                 .'&order='.$this->order.'&order_field='
                                 .$this->orderField.'&lines=\' + this.value, \''
                                 .$this->divListId.'\', '.$this->modeReturn.');">';
@@ -1611,67 +1635,67 @@ class lists extends dbquery
             //Extra value
             ($this->countResult == $nbLines || $this->countResult < $nbLines)? $selected = 'selected="selected" ' :  $selected = '';
             $linesDropdownList .= '<option value="' . $this->countResult . '" '.$selected.'>'._ALL.'('.$this->countResult.')</option>';
-			$linesDropdownList .= '</select>';
+            $linesDropdownList .= '</select>';
         }
         
         //If there are more than 1 page, pagination
-		if($nb_pages > 1) {
+        if($nb_pages > 1) {
             //Build dropdown navigation object
-			$next_start = 0;
-			$pageDropdownList .= _GO_TO_PAGE.' <select name="startpage" onChange="loadList(\''.$this->link
+            $next_start = 0;
+            $pageDropdownList .= _GO_TO_PAGE.' <select name="startpage" onChange="loadList(\''.$this->link
                                 .'&order='.$this->order.'&order_field='
                                 .$this->orderField.'&start=\' + this.value, \''
                                 .$this->divListId.'\', '.$this->modeReturn.');">';
-			$lastpage = 0;
-			for($i = 0;$i <> $nb_pages; $i++){
-				$the_line = $i + 1;
-				if($start == $next_start)
-					$pageDropdownList .= '<option value="'.$next_start.'" selected="selected">'.($i+1).'</option>';
+            $lastpage = 0;
+            for($i = 0;$i <> $nb_pages; $i++){
+                $the_line = $i + 1;
+                if($start == $next_start)
+                    $pageDropdownList .= '<option value="'.$next_start.'" selected="selected">'.($i+1).'</option>';
                 else
-					$pageDropdownList .= '<option value="'.$next_start.'">'.($i+1).'</option>';
-				
-				$next_start = $next_start + $this->params['linesToShow'];
-				$lastpage = $next_start;
-			}
-			$pageDropdownList .= '</select>';
+                    $pageDropdownList .= '<option value="'.$next_start.'">'.($i+1).'</option>';
+                
+                $next_start = $next_start + $this->params['linesToShow'];
+                $lastpage = $next_start;
+            }
+            $pageDropdownList .= '</select>';
             
             //
-			$lastpage = $lastpage - $this->params['linesToShow'];
-			$previous = "&nbsp;";
-			$next = "";
+            $lastpage = $lastpage - $this->params['linesToShow'];
+            $previous = "&nbsp;";
+            $next = "";
             //Previous
-			if($start > 0) {
-				$start_prev = $start - $this->params['linesToShow'];
+            if($start > 0) {
+                $start_prev = $start - $this->params['linesToShow'];
                 $previous = '&lt; <a href="javascript://" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='.$start_prev
                     .'\', \''.$this->divListId.'\', '.$this->modeReturn.');">'._PREVIOUS.'</a>';
 
             }
-			//Next link
-			if($start <> $lastpage) {
-				$start_next = $start + $this->params['linesToShow'];
-				$next = ' <a href="javascript://" onClick="loadList(\''.$this->link.'&order='
+            //Next link
+            if($start <> $lastpage) {
+                $start_next = $start + $this->params['linesToShow'];
+                $next = ' <a href="javascript://" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='
                     .$start_next.'\', \''.$this->divListId.'\', '.$this->modeReturn.');">'._NEXT.'</a> >';
-			}
-			$toolbar .= '<div class="block" style="height:'.$height.';" align="center" >';
-			$toolbar .= '<table width="100%" border="0"><tr>';
-			$toolbar .= '<td align="left" width="20px" nowrap>'.$loading.'</td>';
-			$toolbar .= '<td align="center" width="15%" nowrap><b>'.$previous.'</b></td>';
-			$toolbar .= '<td align="center" width="15%" nowrap><b>'.$next.'</b></td>';
-			$toolbar .= '<td width="10px" class="separator1">|</td>';
-			$toolbar .= '<td align="center" width="15%" nowrap>'.$pageDropdownList.'</td>';
-			$toolbar .= '<td width="10px" class="separator1">|</td>';
+            }
+            $toolbar .= '<div class="block" style="height:'.$height.';" align="center" >';
+            $toolbar .= '<table width="100%" border="0"><tr>';
+            $toolbar .= '<td align="left" width="20px" nowrap>'.$loading.'</td>';
+            $toolbar .= '<td align="center" width="15%" nowrap><b>'.$previous.'</b></td>';
+            $toolbar .= '<td align="center" width="15%" nowrap><b>'.$next.'</b></td>';
+            $toolbar .= '<td width="10px" class="separator1">|</td>';
+            $toolbar .= '<td align="center" width="15%" nowrap>'.$pageDropdownList.'</td>';
+            $toolbar .= '<td width="10px" class="separator1">|</td>';
             $toolbar .= '<td align="center" width="15%" nowrap>'.$linesDropdownList.'</td>';
-			$toolbar .= '<td width="10px" class="separator1">|</td>';
-			$toolbar .= '<td width="210px" align="right" nowrap>'.$tools.'</td>';
+            $toolbar .= '<td width="10px" class="separator1">|</td>';
+            $toolbar .= '<td width="210px" align="right" nowrap>'.$tools.'</td>';
             $toolbar .= '<td width="5px" class="separator1">|</td>';
-			$toolbar .= '<td align="right" nowrap>'.$templates.'</td>';
+            $toolbar .= '<td align="right" nowrap>'.$templates.'</td>';
             $toolbar .= '</tr>';
-			$toolbar .= $filters;
-			$toolbar .= '</table>';
-			$toolbar .= '</div>';
-		} else {
+            $toolbar .= $filters;
+            $toolbar .= '</table>';
+            $toolbar .= '</div>';
+        } else {
             //Show toolbar if templates, tools or filters
             if (
                 !empty($templates) || 
@@ -1713,7 +1737,7 @@ class lists extends dbquery
                     $toolbar .= '</div>';
                 // }
             }
-		}
+        }
         
         $this->start = $start;
         $this->end = $end;
@@ -1740,12 +1764,12 @@ class lists extends dbquery
         }
         
         //Number of pages
-		$nb_pages = ceil($this->countResult/$this->params['linesToShow']);
-		// $debug .='NB total '.$this->countResult.' / NB show: '.$this->params['linesToShow'].' / Pages: '.$nb_pages.' /';
-		
+        $nb_pages = ceil($this->countResult/$this->params['linesToShow']);
+        // $debug .='NB total '.$this->countResult.' / NB show: '.$this->params['linesToShow'].' / Pages: '.$nb_pages.' /';
+        
         if(isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $start = strip_tags($_REQUEST['start']);
-		$end = $start + $this->params['linesToShow'];
-		if($end > $this->countResult) $end = $this->countResult;
+        $end = $start + $this->params['linesToShow'];
+        if($end > $this->countResult) $end = $this->countResult;
         
         //Get list of tools (icon and link)
         $tools = $this->_getTools($resultFirstRow, $this->countResult);
@@ -1775,7 +1799,7 @@ class lists extends dbquery
             }
             sort($nbLinesSelect);
             
-			$linesDropdownList .= _SHOW.' <select name="nbLines" onChange="loadList(\''.$this->link
+            $linesDropdownList .= _SHOW.' <select name="nbLines" onChange="loadList(\''.$this->link
                                 .'&order='.$this->order.'&order_field='
                                 .$this->orderField.'&lines=\' + this.value, \''
                                 .$this->divListId.'\', '.$this->modeReturn.');">';
@@ -1790,70 +1814,70 @@ class lists extends dbquery
             //Extra value
             ($this->countResult == $nbLines || $this->countResult < $nbLines)? $selected = 'selected="selected" ' :  $selected = '';
             $linesDropdownList .= '<option value="' . $this->countResult . '" '.$selected.'>'._ALL.'('.$this->countResult.')</option>';
-			$linesDropdownList .= '</select>';
+            $linesDropdownList .= '</select>';
         }
         
         //If there are more than 1 page, pagination
-		if($nb_pages > 1) {
+        if($nb_pages > 1) {
         
             //Build dropdown navigation object
-			$next_start = 0;
-			$pageDropdownList .= _GO_TO_PAGE.' <select name="startpage" onChange="loadList(\''.$this->link
+            $next_start = 0;
+            $pageDropdownList .= _GO_TO_PAGE.' <select name="startpage" onChange="loadList(\''.$this->link
                                 .'&order='.$this->order.'&order_field='
                                 .$this->orderField.'&start=\' + this.value, \''
                                 .$this->divListId.'\', '.$this->modeReturn.');">';
-			$lastpage = 0;
-			for($i = 0;$i <> $nb_pages; $i++){
-				$the_line = $i + 1;
-				if($start == $next_start)
-					$pageDropdownList .= '<option value="'.$next_start.'" selected="selected">'.($i+1).'</option>';
+            $lastpage = 0;
+            for($i = 0;$i <> $nb_pages; $i++){
+                $the_line = $i + 1;
+                if($start == $next_start)
+                    $pageDropdownList .= '<option value="'.$next_start.'" selected="selected">'.($i+1).'</option>';
                 else
-					$pageDropdownList .= '<option value="'.$next_start.'">'.($i+1).'</option>';
-				
-				$next_start = $next_start + $this->params['linesToShow'];
-				$lastpage = $next_start;
-			}
-			$pageDropdownList .= '</select>' ;
+                    $pageDropdownList .= '<option value="'.$next_start.'">'.($i+1).'</option>';
+                
+                $next_start = $next_start + $this->params['linesToShow'];
+                $lastpage = $next_start;
+            }
+            $pageDropdownList .= '</select>' ;
             
             //
-			$lastpage = $lastpage - $this->params['linesToShow'];
-			$previous = "&nbsp;";
-			$next = "";
+            $lastpage = $lastpage - $this->params['linesToShow'];
+            $previous = "&nbsp;";
+            $next = "";
             //Previous
-			if($start > 0) {
-				$start_prev = $start - $this->params['linesToShow'];
+            if($start > 0) {
+                $start_prev = $start - $this->params['linesToShow'];
                 $previous = '&lt; <a href="javascript://" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='.$start_prev
                     .'\', \''.$this->divListId.'\', '.$this->modeReturn.');">'._PREVIOUS.'</a>';
             }
             
-			//Next link
-			if($start <> $lastpage) {
-				$start_next = $start + $this->params['linesToShow'];
-				$next = ' <a href="javascript://" onClick="loadList(\''.$this->link.'&order='
+            //Next link
+            if($start <> $lastpage) {
+                $start_next = $start + $this->params['linesToShow'];
+                $next = ' <a href="javascript://" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='
                     .$start_next.'\', \''.$this->divListId.'\', '.$this->modeReturn.');">'._NEXT.'</a> >';
-			}
+            }
 
             //Toolbar
             $bottomToolbar .= '<br/>';
             $bottomToolbar .= '<div class="block_bottom" align="center" >';
             $bottomToolbar .= '<table width="100%" border="0"><tr>';
-			$bottomToolbar .= '<td align="left" width="20px" nowrap>'.$loading.'</td>';
-			$bottomToolbar .= '<td align="center" width="15%" nowrap><b>'.$previous.'</b></td>';
-			$bottomToolbar .= '<td align="center" width="15%" nowrap><b>'.$next.'</b></td>';
-			$bottomToolbar .= '<td width="10px" class="separator1">|</td>';
-			$bottomToolbar .= '<td align="center" width="15%" nowrap>'.$pageDropdownList.'</td>';
-			$bottomToolbar .= '<td width="10px" class="separator1">|</td>';
+            $bottomToolbar .= '<td align="left" width="20px" nowrap>'.$loading.'</td>';
+            $bottomToolbar .= '<td align="center" width="15%" nowrap><b>'.$previous.'</b></td>';
+            $bottomToolbar .= '<td align="center" width="15%" nowrap><b>'.$next.'</b></td>';
+            $bottomToolbar .= '<td width="10px" class="separator1">|</td>';
+            $bottomToolbar .= '<td align="center" width="15%" nowrap>'.$pageDropdownList.'</td>';
+            $bottomToolbar .= '<td width="10px" class="separator1">|</td>';
             $bottomToolbar .= '<td align="center" width="15%" nowrap>'.$linesDropdownList.'</td>';
-			$bottomToolbar .= '<td width="10px" class="separator1">|</td>';
-			$bottomToolbar .= '<td width="210px" align="right" nowrap>'.$tools.'</td>';
+            $bottomToolbar .= '<td width="10px" class="separator1">|</td>';
+            $bottomToolbar .= '<td width="210px" align="right" nowrap>'.$tools.'</td>';
             $bottomToolbar .= '<td width="5px" class="separator1">|</td>';
-			$bottomToolbar .= '<td align="right" nowrap>'.$templates.'</td>';
+            $bottomToolbar .= '<td align="right" nowrap>'.$templates.'</td>';
             $bottomToolbar .= '<td width="5px" class="separator1">|</td>';
-			$bottomToolbar .= '<td align="right" width="20px">'.$goToTop.'</td>';
+            $bottomToolbar .= '<td align="right" width="20px">'.$goToTop.'</td>';
             $bottomToolbar .= '</tr>';
-			$bottomToolbar .= '</table>';
+            $bottomToolbar .= '</table>';
             $bottomToolbar .= '</div>';
         } else {
             //Show toolbar if templates or tools
@@ -1883,7 +1907,7 @@ class lists extends dbquery
                 $bottomToolbar .= '</table>';
                 $bottomToolbar .= '</div>';
             }
-		}
+        }
         
         $this->start = $start;
         $this->end = $end;
@@ -1902,11 +1926,11 @@ class lists extends dbquery
         }
         
         //Number of pages
-		$nb_pages = ceil($this->countResult/$this->params['linesToShow']);
+        $nb_pages = ceil($this->countResult/$this->params['linesToShow']);
         
         if(isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $start = strip_tags($_REQUEST['start']);
-		$end = $start + $this->params['linesToShow'];
-		if($end > $this->countResult) {
+        $end = $start + $this->params['linesToShow'];
+        if($end > $this->countResult) {
             $end = $this->countResult;
         }
         
@@ -1947,46 +1971,46 @@ class lists extends dbquery
         }
         
         //If there are more than 1 page, pagination
-		if($nb_pages > 1) {
+        if($nb_pages > 1) {
             //Build dropdown navigation object
-			$next_start = 0;
-			$pageDropdownList = ''
+            $next_start = 0;
+            $pageDropdownList = ''
                                 .'<select name="startpage" id="startpage" class ="small" onChange="loadList(\''.$this->link
                                 .'&order='.$this->order.'&order_field='
                                 .$this->orderField.'&start=\' + document.'.$this->formId.'.startpage.value, \''
                                 .$this->divListId.'\', '.$this->modeReturn.');">';
-			$lastpage = 0;
-			for($i = 0;$i <> $nb_pages; $i++){
-				$the_line = $i + 1;
-				if($start == $next_start)
-					$pageDropdownList .= '<option value="'.$next_start.'" selected="selected">'.($i+1).'</option>';
+            $lastpage = 0;
+            for($i = 0;$i <> $nb_pages; $i++){
+                $the_line = $i + 1;
+                if($start == $next_start)
+                    $pageDropdownList .= '<option value="'.$next_start.'" selected="selected">'.($i+1).'</option>';
                 else
-					$pageDropdownList .= '<option value="'.$next_start.'">'.($i+1).'</option>';
-				
-				$next_start = $next_start + $this->params['linesToShow'];
-				$lastpage = $next_start;
-			}
-			$pageDropdownList .= "</select>" ;
-			
-			$lastpage = $lastpage - $this->params['linesToShow'];
-			$previous = "&nbsp;";
-			$next = "";
+                    $pageDropdownList .= '<option value="'.$next_start.'">'.($i+1).'</option>';
+                
+                $next_start = $next_start + $this->params['linesToShow'];
+                $lastpage = $next_start;
+            }
+            $pageDropdownList .= "</select>" ;
+            
+            $lastpage = $lastpage - $this->params['linesToShow'];
+            $previous = "&nbsp;";
+            $next = "";
             
             //Previous
-			if($start > 0) {
-				$start_prev = $start - $this->params['linesToShow'];
+            if($start > 0) {
+                $start_prev = $start - $this->params['linesToShow'];
                 $previous .= '<a href="javascript://" alt="'._PREVIOUS.'" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='.$start_prev
                     .'\', \''.$this->divListId.'\', '.$this->modeReturn.');">&nbsp;&lt;</a>';
             }
             
-			//Next
-			if($start <> $lastpage) {
-				$start_next = $start + $this->params['linesToShow'];
-				$next = ' <a href="javascript://" alt="'._NEXT.'" onClick="loadList(\''.$this->link.'&order='
+            //Next
+            if($start <> $lastpage) {
+                $start_next = $start + $this->params['linesToShow'];
+                $next = ' <a href="javascript://" alt="'._NEXT.'" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='
                     .$start_next.'\', \''.$this->divListId.'\', '.$this->modeReturn.');">&nbsp;></a>';
-			}
+            }
             
             //Loading image
             $loading = '<div id="loading" style="display:none;"><img src="'
@@ -1998,10 +2022,10 @@ class lists extends dbquery
             //Small toolbar
             $toolbar .= '<table width="100%" border="0" cellspacing="0" class="zero_padding"><tr>';
             $toolbar .= '<td align="left" width="15px" nowrap>'.$loading.'</td>';
-			$toolbar .= '<td align="left" width="10px" nowrap><b>'.$previous.'</b></td>';
-			$toolbar .= '<td align="center" width="10px" nowrap><b>'.$next.'</b></td>';
-			$toolbar .= '<td width="1%" class="separator1">|</td>';
-			$toolbar .= '<td align="left" width="94%">'.$pageDropdownList.'</td>';
+            $toolbar .= '<td align="left" width="10px" nowrap><b>'.$previous.'</b></td>';
+            $toolbar .= '<td align="center" width="10px" nowrap><b>'.$next.'</b></td>';
+            $toolbar .= '<td width="1%" class="separator1">|</td>';
+            $toolbar .= '<td align="left" width="94%">'.$pageDropdownList.'</td>';
             $toolbar .= '</tr></table>';
         }
         
@@ -2054,16 +2078,16 @@ class lists extends dbquery
         //Regular hidden fields
         if(isset($this->params['hiddenFormFields']) && count($this->params['hiddenFormFields']) > 0) {
             for ($i =0; $i<count($this->params['hiddenFormFields']); $i++) {
-					$hiddenFields .= '<input type="hidden" id="'
+                    $hiddenFields .= '<input type="hidden" id="'
                     .$this->params['hiddenFormFields'][$i]['ID']
                     .'" name="'.$this->params['hiddenFormFields'][$i]['NAME']
                     .'" value="'.$this->params['hiddenFormFields'][$i]['VALUE'].'">';
-			}
-		}
+            }
+        }
         return $hiddenFields;
     }
     
-	private function _displayAddButton() {
+    private function _displayAddButton() {
         $addButton = '';
         $addButton .= '<tr><td class="price" colspan="'.$this->countTd.'"><span class="add clearfix">';
         if(isset($this->params['addButtonScript']) && !empty($this->params['addButtonScript'])) { //Script
@@ -2079,8 +2103,8 @@ class lists extends dbquery
         $addButton .= '<a href="'.$addButtonLink.'" '.$addButtonScript.'><span>'.$this->params['addButtonLabel'].'</span></a></span>';
         $addButton .= '</td></tr>';
         
-		return $addButton;
-	}
+        return $addButton;
+    }
     
     private function _createExtraJavascript() {
         $str .= '<script type="text/javascript">';
@@ -2194,7 +2218,7 @@ class lists extends dbquery
                 && $this->params['bool_standaloneForm'] === false
             ) {
                 $this->params['bool_checkBox'] = true;
-			}
+            }
             
             //Enable action management
             $this->haveAction = true;
@@ -2274,11 +2298,11 @@ class lists extends dbquery
         //Get the ListKey value
         $keyValue = '';
         for($i= 0; $i <= count($resultTheLine); $i++ ) {
-			if($resultTheLine[$i]['column'] == $listKey) {
-				$keyValue = $resultTheLine[$i]['value'];
+            if($resultTheLine[$i]['column'] == $listKey) {
+                $keyValue = $resultTheLine[$i]['value'];
                 break;
-			}
-		}
+            }
+        }
         
         foreach(array_keys($resultTheLine) as $column) { // for every column
             $contentArray[$jsonIdentifier] = $keyValue;
@@ -2287,12 +2311,12 @@ class lists extends dbquery
         
         /*
         //If you want to use different key for action link
-		if (strpos($link, "@@") !== false) {
-        	
-				$key = "@@".$resultTheLine[$column]['column']."@@"; //build the alias
-				$val = $resultTheLine[$column]['value']; //get the real value
-				$link = str_replace($key, $val, $link); //replace alias by real value
-			}
+        if (strpos($link, "@@") !== false) {
+            
+                $key = "@@".$resultTheLine[$column]['column']."@@"; //build the alias
+                $val = $resultTheLine[$column]['value']; //get the real value
+                $link = str_replace($key, $val, $link); //replace alias by real value
+            }
         }
         */
         
@@ -2343,8 +2367,8 @@ class lists extends dbquery
             }
         }
         //Style
-        if(isset($actualButton['class']))	{ 
-            $icon .= ' class="'.$actualButton['class'].'">';	
+        if(isset($actualButton['class']))   { 
+            $icon .= ' class="'.$actualButton['class'].'">';    
         } else { 
             $icon .= '>'; 
         }
@@ -2448,7 +2472,7 @@ class lists extends dbquery
                     //Different background on ordered column
                     (strpos($this->orderField, $resultTheLine[$column]['order']) !== false)? 
                         $columnStyle = ' style="background-image: url(static.php?filename=black_0.1.png);"' : $columnStyle = '';
-				
+                
                     //If there is action on line click
                     if($this->params['bool_actionOnLineClick'] && 
                         isset($this->params['defaultAction']) && 
@@ -2471,7 +2495,7 @@ class lists extends dbquery
             //Show action buttons
             for($button = 0; $button < count($this->actionButtons); $button++) {
                 $actionIsDisabled = $this->_checkDisabledRules($this->actionButtons[$button]['disabledRules'], $resultTheLine);
-            	if ($actionIsDisabled) {
+                if ($actionIsDisabled) {
                     $content .= '<td width="1%">&nbsp;</td>';
                 } else {
                     $content .= '<td width="1%" nowrap><div style="font-size:10px;">';
@@ -2611,7 +2635,7 @@ class lists extends dbquery
         }
         
         //Page picto
-        if(isset($parameters['pagePicto']))	$picto_path = '<img src="'.$parameters['pagePicto'].'" alt="" class="title_img" /> ';
+        if(isset($parameters['pagePicto'])) $picto_path = '<img src="'.$parameters['pagePicto'].'" alt="" class="title_img" /> ';
         
         //Top anchor
         $grid .= '<div id="topOfTheList"></div>';
@@ -2619,7 +2643,7 @@ class lists extends dbquery
         $grid .= $this->_createPreviewDiv();
         
         //Page title
-        if(isset($parameters['pageTitle'])) {			
+        if(isset($parameters['pageTitle'])) {           
             if($parameters['bool_bigPageTitle'])
                 $grid .= '<h1>'.$picto_path.$parameters['pageTitle'].'</h1>';
             else
