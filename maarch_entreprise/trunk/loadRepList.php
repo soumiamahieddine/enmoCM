@@ -34,7 +34,8 @@ if (isset($_REQUEST['res_id_master'])) {
                 $db = new dbquery();
                 $db->connect();
 
-                $query = "SELECT * FROM res_attachments WHERE res_id_master = ".$_REQUEST['res_id_master']." AND status <> 'DEL'";
+                $query = "SELECT * FROM res_attachments WHERE res_id_master = "
+                    . $_REQUEST['res_id_master']." AND status <> 'DEL' and coll_id = '" . $_SESSION['collection_id_choice'] . "'";
 
                 $db->query($query);
 

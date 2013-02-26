@@ -7,11 +7,8 @@
 * @version 1.4
 * @since 11/2012
 * @license GPL
-* @author  Yves Christian Kpakpo  <dev@maarch.org>
+* @author  Laurent Giovannoni  <dev@maarch.org>
 *
-
-
-
 
 Parts :
     ##HEAD< : Begining of the head part
@@ -50,7 +47,6 @@ Mods
          
 -->
 
-
 #!#TABLE
 <!-- ------------------------------------------------------------------------->
     <table border="0" cellspacing="0" class="listing spec  zero_padding" id="extended_list" style ="padding: 0px;">
@@ -66,11 +62,10 @@ Mods
                         ##defineLang|_TYPE##               ##sortColumn|type_label##&nbsp;
                         ##defineLang|_SUBJECT##            ##sortColumn|subject##&nbsp;
                         ##defineLang|_DEST_USER##          ##sortColumn|dest_user##&nbsp;
-                        ##defineLang|_REG_DATE##           ##sortColumn|creation_date##&nbsp;
+                        ##defineLang|_DOC_DATE##           ##sortColumn|doc_date##&nbsp;
                         ##defineLang|_PROCESS_LIMIT_DATE## ##sortColumn|process_limit_date##&nbsp;
                         ##defineLang|_ENTITY##             ##sortColumn|entity_label##&nbsp;
                         ##defineLang|_CATEGORY##           ##sortColumn|category_id##
-                        ##ifStatement|#isModuleLoaded|cases#===true|&nbsp;#defineLang|_CASE# #sortColumn|case_label#| ##
                     </div>
                 </th>
             </tr>
@@ -89,16 +84,28 @@ Mods
                     <td width="90%" align="center" style="padding : 0px; vertical-align:top" ##clickOnLine##>
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                                 <tr>
-                                    <td width="65%"   style="font-size:12px;"><b></b><em>##loadValue|subject##</em> </td>
-                                    <td width="35%">
+                                    <td width="33%" style="font-size:12px;"><img src="##loadImage|subject.png##" title="##defineLang|_SUBJECT##">&nbsp;<em>##loadValue|subject##</em></td>
+                                    <td width="17%">
                                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                             <tr>
-                                                <td width="50%" style="text-align:right">##defineLang|_CONTACT## :</td><td style="text-align:right">##loadValue|exp_user_id##</td>
+                                                <td style="text-align:right"><img src="##loadImage|identifier.png##"  title="##defineLang|_IDENTIFIER##"></td>
+                                                <td width="56%" style="text-align:left">##loadValue|identifier##</td>
                                             </tr>
-
-                                            <tr><td> </td><td></td></tr>
                                             <tr>
-                                                <td style="text-align:right; vertical-align:top">##defineLang|_ENTITY## :</td><td style="text-align:right">##loadValue|entity_label##</td>
+                                                <td style="text-align:right; vertical-align:top"><img src="##loadImage|amount.png##"  title="##defineLang|_TOTAL_SUM##"></td>
+                                                <td width="65%" style="text-align:left">##loadValue|total_sum##</td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td width="50%">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <tr>
+                                                <td style="text-align:right">##loadValue|contact_img##</td>
+                                                <td width="56%" style="text-align:left">##loadValue|contact_id##</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="text-align:right; vertical-align:top"><img src="##loadImage|department.png|entities##"  title="##defineLang|_DESTINATION##"></td>
+                                                <td width="65%" style="text-align:left">##loadValue|entity_label##</td>
                                             </tr>
                                         </table>
                                     </td>
@@ -113,15 +120,17 @@ Mods
                                     <tr>
                                         <td style="font-size:10px;">##loadValue|priority##</td>
                                         <td style="font-size:10px;" width ="30px" alt="##defineLang|_CATEGORY##" title="##defineLang|_CATEGORY##" ##clickOnLine##>##loadValue|category_img##</td>
-                                        <td style="font-size:10px;" width ="150px" >##loadValue|category_id##</td>
-                                        <td style="font-size:10px;" width ="30px" alt="##defineLang|_CREATION_DATE##" title="##defineLang|_CREATION_DATE##" ##clickOnLine##><img src="##loadImage|date_arriv.gif##"> </td>
-                                        <td style="font-size:10px;" width ="100px" >##loadValue|creation_date##</td>
+                                        <td style="font-size:10px;" width ="100px" >##loadValue|category_id##</td>
+                                        <td style="font-size:10px;" width ="30px" alt="##defineLang|_DOC_DATE##" title="##defineLang|_DOC_DATE##" ##clickOnLine##><img src="##loadImage|date_arriv.gif##"> </td>
+                                        <td style="font-size:10px;" width ="100px" >##loadValue|doc_date##</td>
                                         <td style="font-size:10px;" width ="30px" alt="##defineLang|_PROCESS_LIMIT_DATE##" title="##defineLang|_PROCESS_LIMIT_DATE##" ##clickOnLine##><img src="##loadImage|date_limit.gif##"> </td>
                                         <td style="font-size:10px;" width ="100px" >##loadValue|process_limit_date##</td>
                                         <td style="font-size:10px;text-align:right" width ="30px" alt="##defineLang|_DEST_USER##" title="##defineLang|_DEST_USER##" ##clickOnLine##><img src="##loadImage|manage_users_entities_b_small.gif##"></td>
                                         <td style="font-size:10px;" width ="110px" > ##loadValue|dest_user##</td>
                                         <td style="font-size:10px;text-align:right" width ="30px"  alt="##defineLang|_TYPE##" title="##defineLang|_TYPE##" ##clickOnLine##><img src="##loadImage|mini_type.gif##">
                                         <td style="font-size:10px;text-align:left"  ##clickOnLine##>##loadValue|type_label##</td>
+                                        <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_ATTACHMENTS#|#loadImage|picto_attachment.gif#|loadRepList('#loadValue|res_id#')|#loadValue|count_attachment# == 0##</td>
+                                        <td style="font-size:10px;" width ="30px">##showIconDocument##</td>
                                         <td style="font-size:10px;" width ="30px">##showIconDetails##</td>
                                     </tr>                         
                             </table>

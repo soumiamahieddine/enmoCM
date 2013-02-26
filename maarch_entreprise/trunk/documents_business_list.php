@@ -58,7 +58,7 @@ $select[$table]= array();
 
 //Fields
 array_push($select[$table], 'res_id', 'status', 'category_id', 'category_id as category_img', 'type_label', 'subject',
-    'contact_id', 'contact_firstname', 'contact_lastname', 'contact_society', 'identifier', 'doc_date', 'creation_date', 
+    'contact_firstname', 'contact_lastname', 'contact_society', 'contact_id', 'contact_id as contact_img', 'identifier', 'doc_date', 'creation_date', 
     'total_sum', 'process_limit_date', 'entity_label', 'dest_user', 'count_attachment'
 );
 
@@ -123,6 +123,7 @@ if ($selectedTemplate <> 'none') $extension_icon = "_big";
 
 //Result Array
 for ($i=0;$i<count($tab);$i++) {
+    $catId = '';
     for ($j=0;$j<count($tab[$i]);$j++) {
         foreach(array_keys($tab[$i][$j]) as $value) {
             if ($tab[$i][$j][$value]=="res_id") {
@@ -150,18 +151,8 @@ for ($i=0;$i<count($tab);$i++) {
             }
             if ($tab[$i][$j][$value]=="category_id") {
                 $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]["value"];
-                // $tab[$i][$j]["value"] = $_SESSION['mail_categories'][$tab[$i][$j]["value"]];
-                $tab[$i][$j]["label"]=_CATEGORY;
-                $tab[$i][$j]["size"]="10";
-                $tab[$i][$j]["label_align"]="left";
-                $tab[$i][$j]["align"]="left";
-                $tab[$i][$j]["valign"]="bottom";
-                $tab[$i][$j]["show"]=true;
-                $tab[$i][$j]["order"]='category_id';
-            }
-            if ($tab[$i][$j][$value]=="category_id") {
-                $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]["value"];
-                $tab[$i][$j]["value"] = $_SESSION['mail_categories'][$tab[$i][$j]["value"]];
+                $catId = $tab[$i][$j]["value"];
+                $tab[$i][$j]["value"] = $_SESSION['coll_categories']['business_coll'][$tab[$i][$j]["value"]];
                 $tab[$i][$j]["label"]=_CATEGORY;
                 $tab[$i][$j]["size"]="10";
                 $tab[$i][$j]["label_align"]="left";
@@ -194,7 +185,7 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["order"]='type_label';
             }
             if ($tab[$i][$j][$value]=="subject") {
-                $tab[$i][$j]["value"] = $request->cut_string($request->show_string($tab[$i][$j]["value"]), 250);
+                $tab[$i][$j]["value"] = $request->cut_string($request->show_string($tab[$i][$j]["value"]), 100);
                 $tab[$i][$j]["label"]=_SUBJECT;
                 $tab[$i][$j]["size"]="12";
                 $tab[$i][$j]["label_align"]="left";
@@ -231,6 +222,34 @@ for ($i=0;$i<count($tab);$i++) {
                     $user_lastname, 
                     $user_firstname
                 );
+                $tab[$i][$j]["order"]=false;
+            }
+            if ($tab[$i][$j][$value]=="contact_img") {
+                $tab[$i][$j]["label"]=_CONTACT;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=false;
+                if ($catId == 'purchase') {
+                    $contactImg = '<img src="'
+                        . $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                        . 'supplier.png" alt="' . _SUPPLIER . '" title="' . _SUPPLIER . '"/>';
+                } elseif ($catId == 'sell') {
+                    $contactImg = '<img src="'
+                        . $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                        . 'purchaser.png" alt="' . _PURCHASER . '" title="' . _PURCHASER . '"/>';
+                } elseif ($catId == 'enterprise_document') {
+                    $contactImg = '<img src="'
+                        . $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                        . 'my_contacts_off.gif" alt="' . _CONTACT . '" title="' . _CONTACT . '"/>';
+                } elseif ($catId == 'human_resources') {
+                    $contactImg = '<img src="'
+                        . $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                        . 'employee.png" alt="' . _EMPLOYEE . '" title="' . _EMPLOYEE . '"/>';
+                }
+                $tab[$i][$j]['value'] = $contactImg;
+                $tab[$i][$j]["value"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["order"]=false;
             }
             if ($tab[$i][$j][$value]=="identifier") {
