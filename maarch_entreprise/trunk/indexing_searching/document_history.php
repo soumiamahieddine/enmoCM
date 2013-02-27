@@ -69,8 +69,6 @@ if (isset($_REQUEST['size']) && !empty($_REQUEST['size'])) $parameters .= '&size
     $core_tools->load_header('', true, false);
 
     ?><body><?php
-    echo '<h2>' . _HISTORY . '</h2>';
-
     $core_tools->load_js();
 
     //Load list

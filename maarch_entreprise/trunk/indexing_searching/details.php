@@ -1240,6 +1240,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 </dd>
                 <dt><?php echo _DOC_HISTORY;?></dt>
                 <dd>
+                    <h2><?php echo _HISTORY;?></h2>
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&dir=indexing_searching&page=document_history&id=<?php
                     echo $s_id;?>&coll_id=<?php echo $coll_id;?>&load&size=full" name="history_document" width="100%" 
@@ -1259,6 +1260,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     ?>
                     <dt><?php  echo _NOTES.$nbr_notes;?></dt>
                     <dd>
+                        <h2><?php echo _NOTES;?></h2>
                         <iframe name="list_notes_doc" id="list_notes_doc" src="<?php
                             echo $_SESSION['config']['businessappurl'];
                             ?>index.php?display=true&module=notes&page=notes&identifier=<?php 

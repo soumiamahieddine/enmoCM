@@ -2670,6 +2670,10 @@ class lists extends dbquery
             $this->params['bool_showSmallToolbar'] === false 
             && $this->params['bool_showBottomToolbar'] === true
             && $this->params['linesToShow'] > $_SESSION['config']['nblinetoshow']
+            && (
+                $this->countResult > $this->params['linesToShow'] 
+                || $this->countResult > $_SESSION['config']['nblinetoshow']
+                )
             ) 
         {
             $bottomToolbar = $this->_createBottomToolbar($resultArray[0]);

@@ -433,66 +433,22 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //NOTES
     if ($core_tools->is_module_loaded('notes')) {
-        $not_nbr = 0;
-        $dbId = new dbquery();
-        $dbId->connect();
-        $db = new dbquery();
-        $db->connect();
-        $dbId->query("select id, identifier, user_id, date_note, note_text from "
-                            . $_SESSION['tablename']['not_notes'] 
-                            . " where identifier = " . $res_id 
-                            . " and coll_id ='"
-                            . $_SESSION['collection_id_choice'] . "' order by date_note desc");
-         
-       while ($res = $dbId->fetch_object())
-       {
-           $dbNotesEntities = new dbquery();
-           $dbNotesEntities->connect();
-           $query = "select id from note_entities where "
-           . "note_id = " .$res->id;
-                    
-           $dbNotesEntities->query($query);
-                        
-           if($dbNotesEntities->nb_result()==0)
-           $not_nbr++;
-           else
-           {
-             $db->query( "select id from notes where id in ("
-                . "select note_id from note_entities where (item_id = '" 
-                . $_SESSION['user']['primaryentity']['id'] . "' and note_id = " . $res->id . "))"
-                . "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')");
+    
+        require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
+                . "class" . DIRECTORY_SEPARATOR
+                . "class_modules_tools.php";
+        $notes_tools    = new notes();
+        
+        //Count notes
+        $nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
+        $nbr_notes = ' ('.$nbr_notes.')';
 
-            
-                if($db->nb_result()<>0)
-                $not_nbr++;
-
-
-            }
-        }
-         // Displays the notes
-        $select_notes[$_SESSION['tablename']['not_notes']] = array();
-        array_push(
-            $select_notes[$_SESSION['tablename']['not_notes']],
-            'id',
-            'date_note',
-            'note_text',
-            'user_id'
-        );
-        $where_notes = ' identifier = ' . $res_id . ' ';
-        $request_notes = new request;
-        $tab_notes=$request_notes->select(
-            $select_notes,
-            $where_notes,
-            'order by ' . $_SESSION['tablename']['not_notes'] . '.date_note desc',
-            $_SESSION['config']['databasetype'],
-            '500'
-        );
+        // Displays the notes
         $frm_str .= '<h3 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= ' <span id="divStatus_notes_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
-            . _NOTES . ' ('
-            . $not_nbr . ') :</b>';
+            . _NOTES . $nbr_notes.' :</b>';
         $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
         $frm_str .= '<br>';
@@ -842,38 +798,47 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //HISTORY FRAME
     $frm_str .= '<div class="desc" id="history_div" style="display:none">';
-        $frm_str .= '<div class="ref-unit">';
-            $frm_str .= '<iframe src="'
-                . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&dir=indexing_searching&page=hist_doc&id='
-                . $res_id . '" name="hist_doc_process" width="100%" height="300px" align="center" '
-                . 'scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>';
-            //$frm_str .= '<hr class="hr_process"/>';
-        $frm_str .= '</div>';
+    $frm_str .= '<div class="ref-unit">';
+    $frm_str .= '<center><h2 onclick="new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});';
+    $frm_str .= 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');';
+    $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _HISTORY. '</h2></center>';
+    $frm_str .= '<iframe src="'
+        . $_SESSION['config']['businessappurl']
+        . 'index.php?display=true&dir=indexing_searching&page=document_history&id='
+        . $res_id . '&coll_id=' . $coll_id . '&load&size=medium" '
+        . 'name="hist_doc_process" width="100%" height="690px" align="center" '
+        . 'scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>';
+    //$frm_str .= '<hr class="hr_process"/>';
+    $frm_str .= '</div>';
     $frm_str .= '</div>';
 
     //NOTES FRAME
     if ($core_tools->is_module_loaded('notes')) {
-        $frm_str .= '<div class="desc" id="notes_div" style="display:none;" onmouseover="this.style.cursor=\'pointer\';">';
+        $frm_str .= '<div class="desc" id="notes_div" style="display:none;">';
             $frm_str .= '<div class="ref-unit">';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});';
                 $frm_str .= 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');';
-                $frm_str .= 'return false;">' . _NOTES. '</h2></center>';
-                $frm_str .= '<div style="text-align:center;">';
-                    $frm_str .= '<img src="'.$_SESSION['config']['businessappurl']
-                        . 'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
-                            $frm_str .= '<a href="javascript://" onclick="ouvreFenetre(\''
-                                . $_SESSION['config']['businessappurl']
-                                . 'index.php?display=true&module=notes&page=note_add&identifier='
-                                . $_SESSION['doc_id'] . '&coll_id='
-                                . $_SESSION['collection_id_choice'].'\', 1024, 650)" >';
-                                $frm_str .= _ADD_NOTE;
-                            $frm_str .= '</a>';
-                $frm_str .= '</div>';
+                $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _NOTES. '</h2></center>';
+                // $frm_str .= '<div style="text-align:center;">';
+                    // $frm_str .= '<img src="'.$_SESSION['config']['businessappurl']
+                        // . 'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
+                            // $frm_str .= '<a href="javascript://" onclick="ouvreFenetre(\''
+                                // . $_SESSION['config']['businessappurl']
+                                // . 'index.php?display=true&module=notes&page=note_add&identifier='
+                                // . $_SESSION['doc_id'] . '&coll_id='
+                                // . $_SESSION['collection_id_choice'].'\', 1024, 650)" >';
+                                // $frm_str .= _ADD_NOTE;
+                            // $frm_str .= '</a>';
+                // $frm_str .= '</div>';
+                // $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'
+                    // . $_SESSION['config']['businessappurl']
+                    // . 'index.php?display=true&module=notes&page=frame_notes_doc&size=middle" '
+                    // . 'frameborder="0" width="100%" height="1000px"></iframe>';
                 $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'
                     . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=notes&page=frame_notes_doc&size=middle" '
-                    . 'frameborder="0" width="100%" height="1000px"></iframe>';
+                    . 'index.php?display=true&module=notes&page=notes&identifier='
+                    . $res_id . '&origin=document&coll_id=' . $coll_id . '&load&size=medium"'
+                    . ' frameborder="0" width="100%" height="1000px"></iframe>';
                 //$frm_str .= '<hr class="hr_process"/>';
             $frm_str .= '</div>';
         $frm_str .= '</div>';
