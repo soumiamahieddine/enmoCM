@@ -46,7 +46,12 @@ $parameters = '';
 if(isset($_REQUEST['coll_id']) && !empty($_REQUEST['coll_id'])) $parameters = "&coll_id=".$_REQUEST['coll_id'];
 
 //Identifier
-if (isset($_REQUEST['identifier']) && !empty($_REQUEST['identifier'])) $identifier = $_REQUEST['identifier'];
+if (isset($_REQUEST['identifier']) && !empty($_REQUEST['identifier'])) {
+    $identifier = $_REQUEST['identifier'];
+} else {
+    echo '<span class="error">'._IDENTIFIER.' '._IS_EMPTY.'</span>';
+    exit();
+}
 
 //Origin
 if (isset($_REQUEST['origin']) && !empty($_REQUEST['origin'])) $origin = $_REQUEST['origin'];
@@ -64,7 +69,6 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
     ?>
     <body id="iframe">
     <div id="container">
-    <h2><?php echo _NOTES;?></h2>
     <?php
     $core_tools->load_js();
 
@@ -90,13 +94,20 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
     if (isset($_REQUEST['size']) 
         && ($_REQUEST['size'] == "full")
     ) {
-        $sizeSmall = "15";
-        $sizeFull = "30";
+        $sizeUser = "15";
+        $sizeNotes = "50";
+        $css = "listing spec";
+        $cutString = 200;
+    } else if (isset($_REQUEST['size']) 
+        && ($_REQUEST['size'] == "medium")
+    ) {
+        $sizeUser = "15";
+        $sizeNotes = "30";
         $css = "listing spec";
         $cutString = 100;
     } else {
-        $sizeSmall = "10";
-        $sizeFull = "10";
+        $sizeUser = "10";
+        $sizeNotes = "10";
         $css = "listingsmall";
         $cutString = 20;
     }
@@ -186,7 +197,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                     {
                         $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]). ' ' .$firstname ;
                         $tab[$i][$j]["label"]=_USER;
-                        $tab[$i][$j]["size"]="20";
+                        $tab[$i][$j]["size"]=$sizeUser;
                         $tab[$i][$j]["label_align"]="left";
                         $tab[$i][$j]["align"]="left";
                         $tab[$i][$j]["valign"]="bottom";
@@ -197,7 +208,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                     {
                         $tab[$i][$j]["value"] = $request->cut_string( $request->show_string($tab[$i][$j]["value"]), $cutString);
                         $tab[$i][$j]["label"]=_NOTES;
-                        $tab[$i][$j]["size"]=$sizeFull;
+                        $tab[$i][$j]["size"]=$sizeNotes;
                         $tab[$i][$j]["label_align"]="left";
                         $tab[$i][$j]["align"]="left";
                         $tab[$i][$j]["valign"]="bottom";
@@ -208,7 +219,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                     {
                         $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
                         $tab[$i][$j]["label"]=_NOTES;
-                        $tab[$i][$j]["size"]=$sizeFull;
+                        $tab[$i][$j]["size"]=$sizeNotes;
                         $tab[$i][$j]["label_align"]="left";
                         $tab[$i][$j]["align"]="left";
                         $tab[$i][$j]["valign"]="bottom";
