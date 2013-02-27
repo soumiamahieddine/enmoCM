@@ -22,6 +22,8 @@
 //communs
 if (!defined('_NOTIFICATIONS'))
     define('_NOTIFICATIONS', 'Notifications');
+if (!defined('_NOTIFS'))
+    define('_NOTIFS', 'Notifications');    
 if (!defined('_NOTIF'))
     define('_NOTIF', 'notif.');
 if (!defined('_MAIL_TO_PROCESS'))
