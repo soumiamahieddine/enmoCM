@@ -402,6 +402,7 @@ if (isset($_POST['delete_folder'])) {
                 ?>
                 <dt><?php  echo _NOTES.$nbr_notes;?></dt>
                 <dd>
+                    <h2><?php echo _NOTES;?></h2>
                     <iframe name="notes_folder" id="notes_folder" src="<?php
                         echo $_SESSION['config']['businessappurl'];
                         ?>index.php?display=true&module=notes&page=notes&identifier=<?php 
@@ -413,6 +414,7 @@ if (isset($_POST['delete_folder'])) {
             ?>            
             <dt><?php  echo _FOLDER_HISTORY;?></dt>
             <dd>
+                <h2><?php echo _HISTORY;?></h2>
                 <iframe name="history_folder" id="history_folder" src="<?php
                     echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&module=folder&page=folder_history&load&size=full&id=<?php 
