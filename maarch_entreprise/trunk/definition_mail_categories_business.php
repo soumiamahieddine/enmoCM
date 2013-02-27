@@ -402,7 +402,7 @@ $_ENV['categories']['human_resources']['type_id'] = array (
 $_ENV['categories']['human_resources']['subject'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
-    'mandatory' => true,
+    'mandatory' => false,
     'label' => _SUBJECT,
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=subject.png',
@@ -424,7 +424,7 @@ $_ENV['categories']['human_resources']['contact_id'] = array (
 $_ENV['categories']['human_resources']['identifier'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
-    'mandatory' => true,
+    'mandatory' => false,
     'label' => _IDENTIFIER,
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=identifier.png',
@@ -741,13 +741,13 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
         array_push($arr, 'process_limit_date');
     }
     // Contact
-    if (isset ($_ENV['categories'][$cat_id]['other_cases']['contact']) && count($_ENV['categories'][$cat_id]['other_cases']['contact']) > 0 && (!isset ($params['show_contact']) || $params['show_contact'] == true)) {
-        $fields .= $_ENV['categories'][$cat_id]['other_cases']['contact']['special'] . ',';
-        if (preg_match('/,/', $_ENV['categories'][$cat_id]['other_cases']['contact']['special'])) {
-            $arr_tmp = preg_split('/,/', $_ENV['categories'][$cat_id]['other_cases']['contact']['special']);
+    if (isset ($_ENV['categories'][$cat_id]['contact']) && count($_ENV['categories'][$cat_id]['contact']) > 0 && (!isset ($params['show_contact']) || $params['show_contact'] == true)) {
+        $fields .= $_ENV['categories'][$cat_id]['contact']['special'] . ',';
+        if (preg_match('/,/', $_ENV['categories'][$cat_id]['contact']['special'])) {
+            $arr_tmp = preg_split('/,/', $_ENV['categories'][$cat_id]['contact']['special']);
         } else {
             $arr_tmp = array (
-                $_ENV['categories'][$cat_id]['other_cases']['contact']['special']
+                $_ENV['categories'][$cat_id]['contact']['special']
             );
         }
         for ($i = 0; $i < count($arr_tmp); $i++) {
@@ -755,7 +755,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                 $data[$arr_tmp[$i]] = array (
                     'value' => '',
                     'show_value' => '',
-                    'label' => $_ENV['categories'][$cat_id]['other_cases']['contact']['label'],
+                    'label' => $_ENV['categories'][$cat_id]['contact']['label'],
                     'display' => 'textinput'
                 );
                 $data[$arr_tmp[$i]]['readonly'] = true;
@@ -909,7 +909,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
     // Query
     $db->query("select category_id," . $fields . " from " . $view . " where res_id = " . $res_id);
     //$db->show();
-    //$db->show_array($arr);
+    //$db->show_array($arr);exit;
 
     $line = $db->fetch_object();
     // We fill the array with the query result
@@ -1012,7 +1012,25 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             {
             // Normal cases
             $data[$arr[$i]] = $line-> $arr[$i];
-            if ($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'date') {
+            if ($arr[$i] == 'contact_id') {
+                $data['type_contact'] = 'external';
+                if (!empty ($line-> $arr[$i])) {
+                    $db2->query('select is_corporate_person, lastname, firstname, society from ' 
+                        . $_SESSION['tablename']['contacts'] . " where enabled = 'Y' and contact_id = " . $line-> $arr[$i] . "");
+                    $res = $db2->fetch_object();
+                    if ($res->is_corporate_person == 'Y') {
+                        $data['contact_id'] = $res->society . ' (' . $line-> $arr[$i] . ')';
+                    } else {
+                        if (!empty ($res->society)) {
+                            $data['contact_id'] = $res->society . ', ' . $res->lastname . ' ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
+                        } else {
+                            $data['contact_id'] = $res->lastname . ', ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
+                        }
+                    }
+                }
+                //unset ($data[$arr[$i]]);
+            } 
+            elseif ($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'date') {
                 $data[$arr[$i]] = $db->format_date_db($line-> $arr[$i], false);
             }
             elseif ($_ENV['categories'][$cat_id]['other_cases'][$arr[$i]]['type_field'] == 'date') {
@@ -1022,24 +1040,6 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                 $data[$arr[$i]] = $db->show_string($line-> $arr[$i], true);
             }
             // special cases :
-            // Contact
-            elseif ($arr[$i] == 'contact_id') {
-                $data['type_contact'] = 'external';
-                if (!empty ($line-> $arr[$i])) {
-                    $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts'] . " where enabled = 'Y' and contact_id = " . $line-> $arr[$i] . "");
-                    $res = $db2->fetch_object();
-                    if ($res->is_corporate_person == 'Y') {
-                        $data['contact'] = $res->society . ' (' . $line-> $arr[$i] . ')';
-                    } else {
-                        if (!empty ($res->society)) {
-                            $data['contact'] = $res->society . ', ' . $res->lastname . ' ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
-                        } else {
-                            $data['contact'] = $res->lastname . ', ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
-                        }
-                    }
-                }
-                unset ($data[$arr[$i]]);
-            }
             // Folder : market
             elseif ($arr[$i] == 'market' && isset ($line->folders_system_id) && !empty ($line->folders_system_id)) {
                 $db2->query('select folder_name, subject, folders_system_id, parent_id, folder_level from ' . $_SESSION['tablename']['fold_folders'] . " where status <> 'DEL' and folders_system_id = " . $line->folders_system_id . " ");

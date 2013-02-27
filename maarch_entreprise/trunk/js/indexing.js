@@ -556,7 +556,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'category_img_human_resources', type:'label', state:'display'},
         
         {id:'doctype_tr', type:'tr', state:'display'},
-        {id:'subject_tr', type:'tr', state:'hide'},
+        {id:'subject_tr', type:'tr', state:'display'},
         
         {id:'contact_id_tr', type:'tr', state:'display'},
         {id:'contact_label_purchase', type:'label', state:'hide'},
@@ -568,7 +568,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'contact_enterprise_document_img', type:'label', state:'hide'},
         {id:'contact_human_resources_img', type:'label', state:'display'},
         
-        {id:'identifier_tr', type:'tr', state:'hide'},
+        {id:'identifier_tr', type:'tr', state:'display'},
         {id:'doc_date_tr', type:'tr', state:'display'},
         {id:'currency_tr', type:'tr', state:'hide'},
         {id:'net_sum_tr', type:'tr', state:'hide'},
@@ -724,7 +724,7 @@ var contact_autocompleter;
  *
  * @param path_script String Path to the Ajax script
  **/
-function launch_autocompleter_contacts(path_script, id_text, id_div)
+function launch_autocompleter_contacts(path_script, id_text, id_div, cat_id)
 {
     var input = id_text || 'contact';
     var div  = id_div || 'show_contacts';
@@ -801,7 +801,6 @@ function get_contacts_params(name_radio)
             //~ alert('Erreur get_contacts_params, no items checked');
         //~ }
         var contact_type = get_contact_type($('category_id').value);
-        //console.log(contact_type);
        params = 'table=contacts&contact_type=' + contact_type;
     } else {
         if (arr[0] == 'internal') {

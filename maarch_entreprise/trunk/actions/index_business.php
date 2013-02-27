@@ -204,67 +204,19 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $frmStr .= '</div>';
     }
     $frmStr .= '<hr />';
-    if ($core->test_service('index_attachment', 'attachments', false)) {
-        $frmStr .= '<table width="100%" align="center" border="0" >';
-        $frmStr .= '<tr id="attachment_tr" style="display:' . $displayValue
-                . ';">';
-        $frmStr .= '<td style="width:24px;align:left;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'link.png" alt="' . _LINK_TO_DOC . '"/>'
-            . '</td><td style="width:200px;align:left;"><label for="attachment" class="form_title" >'
-                . _LINK_TO_DOC . ' </label></td>';
-        //$frmStr .= '<td>&nbsp;</td>';
-        $frmStr .= '<td class="indexing_field"><input type="radio" '
-                . 'name="attachment" id="attach" value="true" '
-                . 'onclick="show_attach(\'true\');"'
-                . ' /> '
-                . _YES . ' <input type="radio" name="attachment" id="no_attach"'
-                . ' value="false" checked="checked" '
-                . 'onclick="show_attach(\'false\');"'
-                . ' /> '
-                . _NO . '</td>';
-        $frmStr .= ' <td><span class="red_asterisk" id="attachment_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
-        $frmStr .= '</tr>';
-        $frmStr .= '<tr id="attach_show" style="display:none;">';
-            $frmStr .= '<td>&nbsp;</td>';
-            $frmStr .= '<td style="text-align: right;">';
-                $frmStr .= '<a ';
-                  $frmStr .= 'href="javascript://" ';
-                  $frmStr .= 'onclick="window.open(';
-                    $frmStr .= '\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv&mode=popup&action_form=show_res_id&modulename=attachments&init_search&nodetails\', ';
-                    $frmStr .= '\'search_doc_for_attachment\', ';
-                    $frmStr .= '\'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775\'';
-                  $frmStr .= ');"';
-                  $frmStr .= ' title="' . _SEARCH . '"';
-                $frmStr .= '>';
-                    $frmStr .= '<span style="font-weight: bold;">';
-                        $frmStr .= '<img ';
-                          $frmStr .= 'src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=folder_search.gif" ';
-                          $frmStr .= 'width="20px" ';
-                          $frmStr .= 'height="20px" ';
-                        $frmStr .= '/>';
-                    $frmStr .= '</span>';
-                $frmStr .= '</a>';
-            $frmStr .= '</td>';
-            $frmStr .= '<td style="text-align: right;">';
-                $frmStr .= '<input ';
-                  $frmStr .= 'type="text" ';
-                  $frmStr .= 'name="res_id" ';
-                  $frmStr .= 'id="res_id" ';
-                  $frmStr .= 'class="readonly" ';
-                  $frmStr .= 'readonly="readonly" ';
-                  $frmStr .= 'value="" ';
-                $frmStr .= '/>';
-            $frmStr .= '</td>';
-            $frmStr .= '<td>';
-                $frmStr .= '<span class="red_asterisk" id="category_id_mandatory" style="display:inline;">';
-                    $frmStr .= '*';
-                $frmStr .= '</span>';
-            $frmStr .= '</td>';
-        $frmStr .= '</tr>';
-        $frmStr .= '</table>';
-    }
+    
+    $frmStr .= '<h4 onclick="new Effect.toggle(\'general_infos_div\', \'blind\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'general_infos_div\', \'divStatus_general_infos_div\');" '
+        . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
+    $frmStr .= ' <span id="divStatus_general_infos_div" style="color:#1C99C5;">>></span>&nbsp;' 
+        ._GENERAL_INFO;
+    $frmStr .= '</h4>';
+    $frmStr .= '<div id="general_infos_div"  style="display:inline">';
+    $frmStr .= '<div class="ref-unit">';
+    
+    $frmStr .= '<table width="100%" align="center" '
+        . 'border="0"  id="indexing_fields" style="display:block;">';
+    
     $frmStr .= '<table width="100%" align="center" border="0" '
             . 'id="indexing_fields" style="display:block;">';
     /*** category ***/
@@ -372,7 +324,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '</label></td>';
     //$frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><textarea name="subject" '
-            . 'id="subject"  rows="2" onchange="clear_error(\'frm_error_'
+            . 'id="subject"  rows="4" onchange="clear_error(\'frm_error_'
             . $actionId . '\');" ></textarea></td>';
     $frmStr .= '<td><span class="red_asterisk" id="subject_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
@@ -601,9 +553,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     /*** Status ***/
     if(count($statuses) > 0) {
         $frmStr .= '<tr id="status" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td style="width:30px;align:center;"></td><td><label for="status" class="form_title" >' . _STATUS
+        $frmStr .= '<td style="width:30px;align:center;">&nbsp;</td><td><label for="status" class="form_title" >' . _STATUS
                 . '</label></td>';
-        $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
         $frmStr .= '<td class="indexing_field"><select name="status" '
                 . 'id="status" onchange="clear_error(\'frm_error_' . $actionId
                 . '\');">';
@@ -620,6 +571,9 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     }
     
     $frmStr .= '</table>';
+    
+    $frmStr .= '</div>';
+    $frmStr .= '</div>';
     
     /*** CUSTOM INDEXES ***/
     $frmStr .= '<div id="comp_indexes" style="display:block;">';
@@ -665,9 +619,71 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         include_once('modules/tags/templates/index_mlb/index.php');
     }
     
-    // Fin
     $frmStr .= '</table>';
 
+    if ($core->test_service('index_attachment', 'attachments', false)) {
+        $frmStr .= '<table width="100%" align="center" border="0" >';
+        $frmStr .= '<tr id="attachment_tr" style="display:' . $displayValue
+                . ';">';
+        $frmStr .= '<td style="width:24px;align:left;"><img src="'
+                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                . 'link.png" alt="' . _LINK_TO_DOC . '"  title="' . _LINK_TO_DOC . '"/>'
+            . '</td><td style="width:200px;align:left;"><label for="attachment" class="form_title" >'
+                . _LINK_TO_DOC . ' </label></td>';
+        $frmStr .= '<td class="indexing_field"><input type="radio" '
+                . 'name="attachment" id="attach" value="true" '
+                . 'onclick="show_attach(\'true\');"'
+                . ' /> '
+                . _YES . ' <input type="radio" name="attachment" id="no_attach"'
+                . ' value="false" checked="checked" '
+                . 'onclick="show_attach(\'false\');"'
+                . ' /> '
+                . _NO . '</td>';
+        $frmStr .= ' <td><span class="red_asterisk" id="attachment_mandatory" '
+                . 'style="display:inline;">*</span>&nbsp;</td>';
+        $frmStr .= '</tr>';
+        $frmStr .= '<tr id="attach_show" style="display:none;">';
+            $frmStr .= '<td>&nbsp;</td>';
+            $frmStr .= '<td style="text-align: right;">';
+                $frmStr .= '<a ';
+                  $frmStr .= 'href="javascript://" ';
+                  $frmStr .= 'onclick="window.open(';
+                    $frmStr .= '\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv&mode=popup&action_form=show_res_id&modulename=attachments&init_search&nodetails\', ';
+                    $frmStr .= '\'search_doc_for_attachment\', ';
+                    $frmStr .= '\'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775\'';
+                  $frmStr .= ');"';
+                  $frmStr .= ' title="' . _SEARCH . '"';
+                $frmStr .= '>';
+                    $frmStr .= '<span style="font-weight: bold;">';
+                        $frmStr .= '<img ';
+                          $frmStr .= 'src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=folder_search.gif" ';
+                          $frmStr .= 'width="20px" ';
+                          $frmStr .= 'height="20px" ';
+                        $frmStr .= '/>';
+                    $frmStr .= '</span>';
+                $frmStr .= '</a>';
+            $frmStr .= '</td>';
+            $frmStr .= '<td style="text-align: right;">';
+                $frmStr .= '<input ';
+                  $frmStr .= 'type="text" ';
+                  $frmStr .= 'name="res_id" ';
+                  $frmStr .= 'id="res_id" ';
+                  $frmStr .= 'class="readonly" ';
+                  $frmStr .= 'readonly="readonly" ';
+                  $frmStr .= 'value="" ';
+                $frmStr .= '/>';
+            $frmStr .= '</td>';
+            $frmStr .= '<td>';
+                $frmStr .= '<span class="red_asterisk" id="category_id_mandatory" style="display:inline;">';
+                    $frmStr .= '*';
+                $frmStr .= '</span>';
+            $frmStr .= '</td>';
+        $frmStr .= '</tr>';
+        $frmStr .= '</table>';
+    }
+    
+    // Fin
+    
     $frmStr .= '</div>';
     $frmStr .= '</div>';
 
