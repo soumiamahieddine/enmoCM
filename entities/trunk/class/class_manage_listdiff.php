@@ -607,7 +607,7 @@ class diffusion_list extends dbquery
         #**********************************************************************
         $this->query(
             "select l.item_id,  e.entity_label, l.visible, l.viewed, l.item_mode from " . ENT_LISTINSTANCE
-            . " l, " . ENT_ENTITIES . " e where l.coll_id = 'letterbox_coll' "
+            . " l, " . ENT_ENTITIES . " e where l.coll_id =  '" . $collId . "' "
             . "and l.listinstance_type = 'DOC' and l.item_mode != 'dest' "
             . "and l.item_type = 'entity_id' and l.item_id = e.entity_id "
             . "and l.res_id = " . $resId . " order by l.sequence "
