@@ -219,8 +219,8 @@ class lists extends dbquery
             break;
             
             case 'category':
-                $filters .='<select name="category_id" id="category_id" onChange="loadList(\''.$this->link
-                         .'&filter=category&value=\' + document.filters.category_id.value, \''
+                $filters .='<select name="category_id_list" id="category_id_list" onChange="loadList(\''.$this->link
+                         .'&filter=category&value=\' + document.filters.category_id_list.value, \''
                          .$this->divListId.'\', '.$this->modeReturn.');">';
                 $filters .='<option value="none">'._CHOOSE_CATEGORY.'</option>';
                 foreach (array_keys($_SESSION['coll_categories'][$this->collId]) as $catId) {
