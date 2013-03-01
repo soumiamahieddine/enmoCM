@@ -441,10 +441,15 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</tr>';
     /*** tax_sum ***/
     $frmStr .= '<tr id="tax_sum_tr" style="display:' . $displayValue . ';">';
-    $frmStr .= '<td style="width:30px;align:center;"><img src="'
+    $frmStr .= '<td style="width:30px;align:center;">'
+/*
+                . '<img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?filename='
                 . 'amount.png" alt="' . _TAX_SUM 
-                . '"/></td><td><label for="tax_sum" class="form_title" >' . _TAX_SUM
+                . '"/>'
+*/
+                . '&nbsp;'
+                . '</td><td><label for="tax_sum" class="form_title" >' . _TAX_SUM
             . '</label></td>';
     //$frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><input name="tax_sum" type="text" '
@@ -455,10 +460,15 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</tr>';
     /*** total_sum ***/
     $frmStr .= '<tr id="total_sum_tr" style="display:' . $displayValue . ';">';
-    $frmStr .= '<td style="width:30px;align:center;"><img src="'
+    $frmStr .= '<td style="width:30px;align:center;">'
+/*
+                . '<img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?filename='
                 . 'amount.png" alt="' . _TOTAL_SUM 
-                . '"/></td><td><label for="total_sum" class="form_title" >' . _TOTAL_SUM
+                . '"/>'
+*/
+                 . '&nbsp;'
+                . '</td><td><label for="total_sum" class="form_title" >' . _TOTAL_SUM
             . '</label></td>';
     //$frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><input name="total_sum" type="text" '
@@ -1102,16 +1112,7 @@ function check_docserver($collId) {
  **/
 function process_category_check($catId, $values)
 {
-    //print_r($values);
     $core = new core_tools();
-    // If No category : Error
-/*
-    if (! isset($_ENV['categories'][$catId])) {
-        $_SESSION['action_error'] = _CATEGORY . ' ' . _UNKNOWN . ': ' . $catId;
-        return false;
-    }
-*/
-
     // Simple cases
     for ($i = 0; $i < count($values); $i ++) {
         //var_dump($_ENV['categories'][$catId][$tmpId]);
@@ -1212,18 +1213,10 @@ function process_category_check($catId, $values)
                 return false;
             }
         }
-        if (! empty($contact)) {
-            if ($contactType == 'external'
-                && preg_match('/\([0-9]+\)$/', $contact) == 0
-            ) {
+        if (!empty($contact)) {
+            if (preg_match('/\([0-9]+\)$/', $contact) == 0) {
                 $_SESSION['action_error'] = $_ENV['categories'][$catId]['contact_id']['label']
                     . ' ' . _WRONG_FORMAT . '.<br/>'. _USE_AUTOCOMPLETION;
-                return false;
-            } else if ($contactType == 'internal'
-                && preg_match('/\((.|\s|\d|\h|\w)+\)$/i', $contact) == 0
-            ) {
-                $_SESSION['action_error'] = $_ENV['categories'][$catId]['contact_id']['label']
-                    . ' ' . _WRONG_FORMAT . '.<br/>' . _USE_AUTOCOMPLETION;
                 return false;
             }
         }
@@ -1301,7 +1294,6 @@ function process_category_check($catId, $values)
             }
         }
     }
-
     return true;
 }
 

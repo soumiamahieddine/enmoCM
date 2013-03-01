@@ -21,13 +21,6 @@
 
 if (!defined('_MEP_VERSION')) define('_MEP_VERSION', 'Maarch Entreprise v1.4');
 
-///// Ajout RAGOT Alexis
-
-
-
-
-
-
 /************** Administration **************/
 if (!defined('_ADMIN_USERS'))    define( '_ADMIN_USERS', 'Utilisateurs');
 if (!defined('_ADMIN_DOCSERVERS'))    define( '_ADMIN_DOCSERVERS', 'Zones de stockage');
@@ -1417,6 +1410,7 @@ if (!defined('_HELP_KEYWORD_EMAIL')) define('_HELP_KEYWORD_EMAIL', 'Email de l&r
 if (!defined('_INITIATOR')) define('_INITIATOR', 'Service initiateur');
 
 if (!defined('_VALIDATE_QUALIF_BUSINESS')) define('_VALIDATE_QUALIF_BUSINESS', 'Validation/qualification des documents de la collection business');
+if (!defined('_PROCESS_BUSINESS')) define('_PROCESS_BUSINESS', 'Traitement des documents de la collection business');
 if (!defined('_BUSINESS_LIST')) define('_BUSINESS_LIST', 'Liste de documents business');
 
 /********************Parameters **************/
