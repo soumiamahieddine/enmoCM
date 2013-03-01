@@ -2435,6 +2435,30 @@ function evalMyScripts(targetId) {
 	}
 }
 
+/*
+*  Converts \n newline chars into <br> chars s.t. they are visible
+*  inside HTML
+*/
+function convertToHTMLVisibleNewline(value) {
+    if (value != null && value != "") {
+        return value.replace(/\\n /g, "<br/>");
+    } else {
+        return value;
+    }
+}
+
+/*
+*  Converts \\n chars into \n newline chars s.t. they are visible
+*  inside text edit boxes
+*/
+function convertToTextVisibleNewLine(value) {
+    if (value != null && value != "") {
+        return value.replace(/\\n /g, "\n");
+    } else {
+        return value;
+    }
+}
+
 function loadList(path, inDiv, modeReturn, init) {
 
 // alert (modeReturn);
@@ -2464,7 +2488,7 @@ function loadList(path, inDiv, modeReturn, init) {
                     eval("response = "+answer.responseText);
                     if(response.status == 0){
                        
-                        $(div).innerHTML = response.content;
+                        $(div).innerHTML = convertToHTMLVisibleNewline(response.content);
                         evalMyScripts(div);
                     } else {
                         window.top.$('main_error').innerHTML = response.error;

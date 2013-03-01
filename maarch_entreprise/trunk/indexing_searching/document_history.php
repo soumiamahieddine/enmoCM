@@ -81,6 +81,32 @@ if (isset($_REQUEST['size']) && !empty($_REQUEST['size'])) $parameters .= '&size
     </html>
    <?php
 } else {
+
+    //If size is full change some parameters
+    if (isset($_REQUEST['size']) 
+        && ($_REQUEST['size'] == "full")
+    ) {
+        $sizeUser = "15";
+        $sizeText = "30";
+        $css = "listing spec";
+        $cutString = 200;
+        $linesToShow  = 15;
+    } else if (isset($_REQUEST['size']) 
+        && ($_REQUEST['size'] == "medium")
+    ) {
+        $sizeUser = "15";
+        $sizeText = "30";
+        $css = "listing2 spec";
+        $cutString = 100;
+        $linesToShow  = 15;
+    } else {
+        $sizeUser = "10";
+        $sizeText = "10";
+        $css = "listingsmall";
+        $cutString = 20;
+        $linesToShow  = 15;
+    }
+    
     //Order
             $order = $order_field = '';
             $order = $list->getOrder();
@@ -169,7 +195,7 @@ if (isset($_REQUEST['size']) && !empty($_REQUEST['size'])) $parameters .= '&size
                         {
                             $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]). ' ' .$firstname ;
                             $tab[$i][$j]["label"]=_USER;
-                            $tab[$i][$j]["size"]="15";
+                            $tab[$i][$j]["size"]=$sizeUser;
                             $tab[$i][$j]["label_align"]="left";
                             $tab[$i][$j]["align"]="left";
                             $tab[$i][$j]["valign"]="bottom";
@@ -180,7 +206,7 @@ if (isset($_REQUEST['size']) && !empty($_REQUEST['size'])) $parameters .= '&size
                         {
                             $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
                             $tab[$i][$j]["label"]=_EVENT;
-                            $tab[$i][$j]["size"]="35";
+                            $tab[$i][$j]["size"]=$sizeText;
                             $tab[$i][$j]["label_align"]="left";
                             $tab[$i][$j]["align"]="left";
                             $tab[$i][$j]["valign"]="bottom";
@@ -200,9 +226,9 @@ if (isset($_REQUEST['size']) && !empty($_REQUEST['size'])) $parameters .= '&size
             $paramsTab['urlParameters'] = 'dir=indexing_searching&id='
                 .$id.'&display=true'.$parameters;                                       //Parametres d'url supplementaires
             $paramsTab['filters'] = array('user', 'history_action', 'history_date');    //Filtres    
-            $paramsTab['listHeight'] = '475px';                                         //Hauteur de la liste
+            $paramsTab['listHeight'] = '100%';                                         //Hauteur de la liste
             // $paramsTab['bool_showSmallToolbar'] = true;                                 //Mini barre d'outils
-            $paramsTab['linesToShow'] = 20;                                             //Nombre de ligne a afficher
+            $paramsTab['linesToShow'] = $linesToShow;                                             //Nombre de ligne a afficher
             
             //Output
             $status = 0;

@@ -806,8 +806,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&dir=indexing_searching&page=document_history&id='
         . $res_id . '&coll_id=' . $coll_id . '&load&size=medium" '
-        . 'name="hist_doc_process" width="100%" height="690px" align="center" '
-        . 'scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>';
+        . 'name="hist_doc_process" id="hist_doc_process" width="100%" height="650px" align="center" '
+        . 'scrolling="auto" frameborder="0"></iframe>';
     //$frm_str .= '<hr class="hr_process"/>';
     $frm_str .= '</div>';
     $frm_str .= '</div>';
@@ -815,32 +815,18 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //NOTES FRAME
     if ($core_tools->is_module_loaded('notes')) {
         $frm_str .= '<div class="desc" id="notes_div" style="display:none;">';
-            $frm_str .= '<div class="ref-unit">';
-                $frm_str .= '<center><h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});';
-                $frm_str .= 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');';
-                $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _NOTES. '</h2></center>';
-                // $frm_str .= '<div style="text-align:center;">';
-                    // $frm_str .= '<img src="'.$_SESSION['config']['businessappurl']
-                        // . 'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
-                            // $frm_str .= '<a href="javascript://" onclick="ouvreFenetre(\''
-                                // . $_SESSION['config']['businessappurl']
-                                // . 'index.php?display=true&module=notes&page=note_add&identifier='
-                                // . $_SESSION['doc_id'] . '&coll_id='
-                                // . $_SESSION['collection_id_choice'].'\', 1024, 650)" >';
-                                // $frm_str .= _ADD_NOTE;
-                            // $frm_str .= '</a>';
-                // $frm_str .= '</div>';
-                // $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'
-                    // . $_SESSION['config']['businessappurl']
-                    // . 'index.php?display=true&module=notes&page=frame_notes_doc&size=middle" '
-                    // . 'frameborder="0" width="100%" height="1000px"></iframe>';
-                $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'
-                    . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=notes&page=notes&identifier='
-                    . $res_id . '&origin=document&coll_id=' . $coll_id . '&load&size=medium"'
-                    . ' frameborder="0" width="100%" height="1000px"></iframe>';
-                //$frm_str .= '<hr class="hr_process"/>';
-            $frm_str .= '</div>';
+        $frm_str .= '<div class="ref-unit">';
+        $frm_str .= '<center><h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});';
+        $frm_str .= 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');';
+        $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _NOTES. '</h2></center>';
+        $frm_str .= '<iframe src="'
+            . $_SESSION['config']['businessappurl']
+            . 'index.php?display=true&module=notes&page=notes&identifier='
+            . $res_id . '&origin=document&coll_id=' . $coll_id . '&load&size=medium" '
+            . 'name="list_notes_doc" id="list_notes_doc" width="100%" height="650px" align="center" '
+            . 'scrolling="auto" frameborder="0" ></iframe>';
+        //$frm_str .= '<hr class="hr_process"/>';
+        $frm_str .= '</div>';
         $frm_str .= '</div>';
     }
 

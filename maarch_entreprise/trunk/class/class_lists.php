@@ -2750,10 +2750,20 @@ class lists extends dbquery
         
         //Show the list
         if ($this->params['bool_modeReturn'] === true){
-            return $grid;
+            return $this->_parse($grid);
         } else {
-            echo $grid;
+            echo $this->_parse($grid);
         }
+    }
+    
+    private function _parse($text) {
+        //...
+        $text = str_replace("\r\n", "\n", $text);
+        $text = str_replace("\r", "\n", $text);
+
+        //
+        $text = str_replace("\n", "\\n ", $text);
+        return $text;
     }
     
     public function loadList($target, $showLoading=true, $divListId='divList', $returnMode = 'true', $init='true') {

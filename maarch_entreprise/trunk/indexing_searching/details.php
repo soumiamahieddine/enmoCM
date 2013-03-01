@@ -641,10 +641,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 {
                                     if ($key == 'folder')
                                     {
-                                        ?><input type="text" name="folder" id="folder" onblur="" value="<?php echo $data['folder']['show_value']; 
-                                        ?>" /><div id="show_folder" class="autocomplete"></div><script type="text/javascript">launch_autocompleter_folders('<?php 
-                                        echo $_SESSION['config']['businessappurl'];
-                                        ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder', 'folder');</script>
+                                    ?>  
+                                        <input type="text" name="folder" id="folder" onblur="" value="<?php echo $data['folder']['show_value']; 
+                                        ?>" /><div id="show_folder" class="autocomplete"></div>
+                                        <script type="text/javascript">initList('folder', 'show_folder','<?php echo $_SESSION['config']['businessappurl'];
+                                        ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder',  'Input', '2');</script>
                                         <?php
                                     }
                                 }
@@ -970,11 +971,12 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id);
                         //$db->show_array($_SESSION['details']['diff_list']);
                         ?>
+                        <!--
                         <h2>
                             <span class="date">
                                 <b><?php  echo _DIFF_LIST;?></b>
                             </span>
-                        </h2>
+                        </h2>-->
                         <br/>
                         <div id="diff_list_div">
                             <?php
@@ -1240,7 +1242,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 </dd>
                 <dt><?php echo _DOC_HISTORY;?></dt>
                 <dd>
-                    <h2><?php echo _HISTORY;?></h2>
+                    <!--<h2><?php echo _HISTORY;?></h2>-->
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&dir=indexing_searching&page=document_history&id=<?php
                     echo $s_id;?>&coll_id=<?php echo $coll_id;?>&load&size=full" name="history_document" width="100%" 
@@ -1260,12 +1262,12 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     ?>
                     <dt><?php  echo _NOTES.$nbr_notes;?></dt>
                     <dd>
-                        <h2><?php echo _NOTES;?></h2>
+                        <!--<h2><?php echo _NOTES;?></h2>-->
                         <iframe name="list_notes_doc" id="list_notes_doc" src="<?php
                             echo $_SESSION['config']['businessappurl'];
                             ?>index.php?display=true&module=notes&page=notes&identifier=<?php 
                             echo $s_id;?>&origin=document&coll_id=<?php echo $coll_id;?>&load&size=full" 
-                            frameborder="0" scrolling="no" width="100%" height="560px"></iframe>
+                            frameborder="0" scrolling="no" width="99%" height="570px"></iframe>
                     </dd> 
                     <?php
                 }
@@ -1382,9 +1384,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             $Links .= '</span>)';
                         $Links .= '</dt>';
                         $Links .= '<dd>';
-                            $Links .= '<h2>';
-                                $Links .= _LINK_TAB;
-                            $Links .= '</h2>';
+                            // $Links .= '<h2>';
+                                // $Links .= _LINK_TAB;
+                            // $Links .= '</h2>';
                             $Links .= '<div id="loadLinks">';
                                 $nbLinkDesc = $Class_LinkController->nbDirectLink(
                                     $_SESSION['doc_id'],
