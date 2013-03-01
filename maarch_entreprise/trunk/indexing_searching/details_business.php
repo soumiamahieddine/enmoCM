@@ -44,11 +44,13 @@ require_once 'core/class/LinkController.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_indexing_searching_app.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php';
 
-if ($_REQUEST['coll_id'] == 'letterbox_coll') {
-    $definitionCategories = 'definition_mail_categories';
-} elseif ($_REQUEST['coll_id'] == 'business_coll') {
+//if ($_REQUEST['coll_id'] == 'letterbox_coll') {
+//    $definitionCategories = 'definition_mail_categories';
+//} elseif ($_REQUEST['coll_id'] == 'business_coll') {
     $definitionCategories = 'definition_mail_categories_business';
-}
+//}
+
+$_REQUEST['coll_id'] = 'business_coll';
 
 if (file_exists(
     $_SESSION['config']['corepath'] . 'custom/apps/' . $_SESSION['config']['app_id']
@@ -110,11 +112,11 @@ if (
     $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl']
-    . 'index.php?page=details&dir=indexing_searching&coll_id='
+    . 'index.php?page=details_business&dir=indexing_searching&coll_id='
     . $_REQUEST['coll_id']
     . '&id=' . $_REQUEST['id'];
 $page_label = _DETAILS;
-$page_id = 'details';
+$page_id = 'details_business';
 $core->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 $hist = new history();
@@ -123,7 +125,7 @@ $func = new functions();
 $request= new request;
 $type = new types();
 $s_id = '';
-$_SESSION['req'] ='details';
+$_SESSION['req'] ='details_business';
 $_SESSION['indexing'] = array();
 $is = new indexing_searching_app();
 $coll_id = '';
@@ -217,10 +219,9 @@ if (isset($_POST['submit_index_doc'])) {
         ); //pb enchainement avec action redirect
         $_SESSION['details']['diff_list']['key_value'] = md5($res_id);
     }
-    $is->update_mail($_POST, 'POST', $s_id, $coll_id);
-
+    $is->update_business($_POST, 'POST', $s_id, $coll_id);
     if ($core->is_module_loaded('tags')) {
-        include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR."tags_update.php");
+        include_once('modules/tags/tags_update.php');
     }
 }
 //delete the doctype
@@ -329,7 +330,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
             $format = $res->format;
             $filesize = $res->filesize;
             $creation_date = $db->format_date_db($res->creation_date, false);
-            $chrono_number = $res->alt_identifier;
+            
             $initiator = $res->initiator;
             $fingerprint = $res->fingerprint;
             $work_batch = $res->work_batch;
@@ -450,7 +451,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                         </span>
                     </h2>
                     <br/>
-                <form method="post" name="index_doc" id="index_doc" action="index.php?page=details&dir=indexing_searching&id=<?php  echo $s_id; ?>">
+                <form method="post" name="index_doc" id="index_doc" action="index.php?page=details_business&dir=indexing_searching&id=<?php  echo $s_id; ?>">
                     <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                         <?php
                         $i=0;
@@ -647,17 +648,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                         <!--</tr>
                         <tr class="col">-->
                             <th align="left" class="picto">
-                                <img alt="<?php echo _CHRONO_NUMBER; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=chrono.gif" />
-                            </th>
-                            <td align="left" width="200px">
-                                <?php  echo _CHRONO_NUMBER; ?> :
-                            </td>
-                            <td>
-                                <input type="text" class="readonly" readonly="readonly" value="<?php  echo $chrono_number; ?>" size="40" title="<?php  echo $chrono_number; ?>" alt="<?php  echo $chrono_number; ?>" />
-                            </td>
-                        </tr>
-                        <tr class="col">
-                            <th align="left" class="picto">
                                 <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?module=entities&filename=manage_entities_b_small.gif" title="<?php echo _INITIATOR; ?>" alt="<?php  echo _INITIATOR; ?>"/>
                             </th>
                             <td align="left" width="200px">
@@ -667,12 +657,10 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                                 <input type="text" class="readonly" readonly="readonly" value="<?php  echo $initiator; ?>" size="40"  />
                             </td>
                         </tr>
-
                     </table>
 
                     <div id="opt_indexes">
-                    <?php if (count($indexes) > 0)
-                    {
+                    <?php if (count($indexes) > 0) {
                         ?><br/>
                         <h2>
                         <span class="date">
@@ -755,24 +743,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     <br/>
                     <br/>
                     <div align="center">
-                        <?php if ($printDetails) {
-                            /*if (
-                              isset($_SESSION['custom_override_id'])
-                              && $_SESSION['custom_override_id'] <> ''
-                            ) {
-                               $path = $_SESSION['config']['coreurl']
-                                . '/custom/'
-                                . $_SESSION['custom_override_id']
-                                . '/apps/'
-                                . $_SESSION['config']['app_id'];
-                            } else {*/
-                              $path = $_SESSION['config']['businessappurl'];
-                            //}
-                            ?>
-                            <input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $path . "/tmp/export_details_".$_SESSION['user']['UserId']."_export.html";?>', '_blank');" />
-                            <?php
-                            }
-                        ?>
                         <?php if ($putInValid) {
                             ?>
                             <input type="submit" class="button"  value="<?php  echo _PUT_DOC_ON_VALIDATION;?>" name="put_doc_on_validation" onclick="return(confirm('<?php  echo _REALLY_PUT_DOC_ON_VALIDATION;?>\n\r\n\r'));" />
@@ -792,9 +762,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     </div>
                     </form>
                     <?php
-                    if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
-                            include_once('modules/tags/templates/details/index.php');
-                    }
         }
         ?>
                 </dd>
@@ -804,15 +771,14 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     include_once('apps/' . $_SESSION['config']['app_id'] . '/view_technical_infos.php');
                 }
                 //$core->execute_app_services($_SESSION['app_services'], 'details.php');
-                if ($core->is_module_loaded('entities'))
-                {
+                if ($core->is_module_loaded('entities')) {
                     ?>
                     <dt><?php  echo _DIFF_LIST;?></dt>
                     <dd><?php
-                        require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+                        require_once('modules/entities/class/class_manage_listdiff.php');
                         $diff_list = new diffusion_list();
                         $_SESSION['details']['diff_list'] = array();
-                        $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id);
+                        $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id, false, $coll_id);
                         //$db->show_array($_SESSION['details']['diff_list']);
                         ?>
                         <h2>
@@ -829,7 +795,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                                 <p class="sstit"><?php echo _RECIPIENT;?></p>
                                 <table cellpadding="0" cellspacing="0" border="0" class="listing">
                                     <tr class="col">
-                                        <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
+                                        <td><img src="<?php echo $_SESSION['config']['businessappurl'];
+                                            ?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
                                         <td><?php echo $_SESSION['details']['diff_list']['dest']['firstname'];?></td>
                                         <td><?php echo $_SESSION['details']['diff_list']['dest']['lastname'];?></td>
                                         <td><?php echo $_SESSION['details']['diff_list']['dest']['entity_label'];?></td>
@@ -856,7 +823,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                                     }
                                     ?>
                                     <tr <?php echo $color;?> >
-                                        <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY;?>" title="<?php echo _ENTITY;?>" /></td>
+                                        <td><img src="<?php echo $_SESSION['config']['businessappurl'];
+                                            ?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY;?>" title="<?php echo _ENTITY;?>" /></td>
                                         <td ><?php echo $_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_id'];?></td>
                                         <td colspan="2"><?php echo $_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_label'];?></td>
                                     </tr><?php
@@ -891,7 +859,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                                             if ($color == ' class="col"') $color = '';
                                             else $color = ' class="col"'; ?>
                                             <tr <?php echo $color;?> >
-                                                <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY;?>" title="<?php echo _ENTITY;?>" /></td>
+                                                <td><img src="<?php echo $_SESSION['config']['businessappurl'];
+                                                    ?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY;?>" title="<?php echo _ENTITY;?>" /></td>
                                                 <td ><?php echo $_SESSION['details']['diff_list'][$role_id]['entities'][$i]['entity_id'];?></td>
                                                 <td colspan="2"><?php echo $_SESSION['details']['diff_list'][$role_id]['entities'][$i]['entity_label'];?></td>
                                             </tr><?php
@@ -915,7 +884,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                             }
                                                         
                             if ($core->test_service('update_list_diff_in_details', 'entities', false)) {
-                                echo '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_listinstance&origin=details\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" title="'._UPDATE_LIST_DIFF.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._UPDATE_LIST_DIFF.'" />'._UPDATE_LIST_DIFF.'</a>';
+                                echo '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl']
+                                    . 'index.php?display=true&module=entities&page=manage_listinstance&origin=details\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" title="'._UPDATE_LIST_DIFF.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._UPDATE_LIST_DIFF.'" />'._UPDATE_LIST_DIFF.'</a>';
                             }
                             ?>
                         </div>
@@ -936,7 +906,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     $nb_attach = 0;
                 }
                 ?>
-                <dt><?php echo _PROCESS . '(' . $nb_attach . ')';?></dt>
+                <dt><?php echo _ATTACHMENTS . ' (' . $nb_attach . ')';?></dt>
                 <dd>
                     <?php
                     if ($core->is_module_loaded('attachments'))
@@ -961,15 +931,13 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                 <dt><?php echo _DOC_HISTORY;?></dt>
                 <dd>
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];
-                    ?>index.php?display=true&dir=indexing_searching&page=document_history&id=<?php
+                    ?>index.php?display=true&dir=indexing_searching&page=document_history&coll_id=<?php echo $coll_id;?>&id=<?php
                     echo $s_id;?>&mode=normal" name="hist_doc_process" width="100%" height="580" 
                     align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>
                 </dd>
                 <?php
                 if ($core->is_module_loaded('notes')) {
-                    require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
-                        . "class" . DIRECTORY_SEPARATOR
-                        . "class_modules_tools.php";
+                    require_once 'modules/notes/class/class_modules_tools.php';
                     $notes_tools    = new notes();
                     
                     //Count notes
@@ -987,73 +955,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     </dd> 
                     <?php
                 }
-
-                //VERSIONS
-                $versionTable = $security->retrieve_version_table_from_coll_id(
-                    $coll_id
-                );
-                $selectVersions = "select res_id from "
-                    . $versionTable . " where res_id_master = "
-                    . $s_id . " and status <> 'DEL' order by res_id desc";
-                $dbVersions = new dbquery();
-                $dbVersions->connect();
-                $dbVersions->query($selectVersions);
-                $nb_versions_for_title = $dbVersions->nb_result();
-                $lineLastVersion = $dbVersions->fetch_object();
-                $lastVersion = $lineLastVersion->res_id;
-                if ($lastVersion <> '') {
-                    $objectId = $lastVersion;
-                    $objectTable = $versionTable;
-                } else {
-                    $objectTable = $security->retrieve_table_from_coll(
-                        $coll_id
-                    );
-                    $objectId = $s_id;
-                    $_SESSION['cm']['objectId4List'] = $s_id;
-                }
-                if ($nb_versions_for_title == 0) {
-                    $extend_title_for_versions = '0';
-                } else {
-                    $extend_title_for_versions = $nb_versions_for_title;
-                }
-                $_SESSION['cm']['resMaster'] = '';
-                ?>
-                <dt>
-                    <?php
-                    echo _VERSIONS . ' (<span id="nbVersions">'
-                        . $extend_title_for_versions . '</span>)';
-                    ?>
-                </dt>
-                <dd>
-                    <div class="error" id="divError" name="divError"></div>
-                    <div style="text-align:center;">
-                        <a href="<?php
-                            echo $_SESSION['config']['businessappurl'];
-                            ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
-                            echo $s_id;
-                            ?>&original" target="_blank">
-                            <img alt="<?php echo _VIEW_ORIGINAL;?>" src="<?php echo
-                                    $_SESSION['config']['businessappurl'];
-                                    ?>static.php?filename=picto_dld.gif" border="0" alt="" />&nbsp;<?php
-                            echo _VIEW_ORIGINAL;
-                            ?></a> &nbsp;|&nbsp;
-                        <?php
-                        if ($addNewVersion) {
-                            $_SESSION['cm']['objectTable'] = $objectTable;
-                            ?>
-                            <div id="createVersion" style="display: inline;"></div>
-                            <?php
-                        }
-                        ?>
-                    </div>
-                    <div id="loadVersions"></div>
-                    <script language="javascript">
-                        showDiv("loadVersions", "nbVersions", "createVersion", "<?php
-                            echo $_SESSION['urltomodules'] ;
-                            ?>content_management/list_versions.php");
-                    </script>
-                </dd>
-                <?php 
                 //############# NOTIFICATIONS ##############
                 $extend_title_for_notifications = 0;
                 ?>
@@ -1123,7 +1024,16 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     //}
 
                     echo $Links;
-                ?>
+                    //TAGS
+                    ?>
+                    <dt><?php echo _TAGS;?></dt>
+                    <dd>
+                    <?php
+                    if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
+                            include_once('modules/tags/templates/details/index.php');
+                    }
+                    ?>
+                    </dd>
             </dl>
     <?php
 }

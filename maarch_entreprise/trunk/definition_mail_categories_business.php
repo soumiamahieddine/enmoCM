@@ -107,7 +107,7 @@ $_ENV['categories']['purchase']['contact_id'] = array (
     'label' => _SUPPLIER,
     'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=supplier.png',
-    'modify' => true,
+    'modify' => false,
     'form_show' => 'textfield'
 );
 
@@ -232,7 +232,7 @@ $_ENV['categories']['sell']['contact_id'] = array (
     'label' => _PURCHASER,
     'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=purchaser.png',
-    'modify' => true,
+    'modify' => false,
     'form_show' => 'textfield'
 );
 
@@ -357,7 +357,7 @@ $_ENV['categories']['enterprise_document']['contact_id'] = array (
     'label' => _CONTACT,
     'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif',
-    'modify' => true,
+    'modify' => false,
     'form_show' => 'textfield'
 );
 
@@ -417,7 +417,7 @@ $_ENV['categories']['human_resources']['contact_id'] = array (
     'label' => _EMPLOYEE,
     'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=employee.png',
-    'modify' => true,
+    'modify' => false,
     'form_show' => 'textfield'
 );
 

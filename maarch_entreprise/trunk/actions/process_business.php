@@ -76,7 +76,6 @@ function get_folder_data($coll_id, $res_id)
     $folder = '';
     $db->query("select folders_system_id, folder_id, folder_name, fold_parent_id, fold_subject, folder_level from "
         . $view . " where res_id = " . $res_id);
-
     if ($db->nb_result() == 1) {
         $res = $db->fetch_object();
         if (!empty($res->folders_system_id)) {
@@ -326,7 +325,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
          // Displays the diffusion list (only copies)
         require_once('modules/entities/class/class_manage_listdiff.php');
         $diff_list = new diffusion_list();
-        $_SESSION['process']['diff_list'] = $diff_list->get_listinstance($res_id);
+        $_SESSION['process']['diff_list'] = $diff_list->get_listinstance($res_id, false, $coll_id);
+        //print_r($_SESSION['process']['diff_list']);exit;
         $frm_str .= '<h3 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
@@ -349,16 +349,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //NOTES
     if ($core_tools->is_module_loaded('notes')) {
-    
-        require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
-                . "class" . DIRECTORY_SEPARATOR
-                . "class_modules_tools.php";
-        $notes_tools    = new notes();
-        
+        require_once 'modules/notes/class/class_modules_tools.php';
+        $notes_tools = new notes();
         //Count notes
         $nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
         $nbr_notes = ' ('.$nbr_notes.')';
-
         // Displays the notes
         $frm_str .= '<h3 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
@@ -381,7 +376,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<h3 onclick="new Effect.toggle(\'links_div\', \'blind\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
         . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-    $frm_str .= ' <span id="divStatus_links_div" style="color:#1C99C5;"><<</span>&nbsp;<b>' . _LINK_TAB . ' (<span id="nbLinks">'.$nbLink.'</span>)</b>';
+    $frm_str .= ' <span id="divStatus_links_div" style="color:#1C99C5;"><<</span>&nbsp;<b>' 
+        . _LINK_TAB . ' (<span id="nbLinks">'.$nbLink.'</span>)</b>';
     $frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</h3>';
     $frm_str .= '<br>';
@@ -390,11 +386,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     if ($core_tools->is_module_loaded('folder')) {
          // Displays the folder data
         $folder = get_folder_data($coll_id, $res_id);
-
         $frm_str .= '<h3 onclick="new Effect.toggle(\'folder_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'folder_div\', \'divStatus_folder_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_folder_div" style="color:#1C99C5;"><<</span>&nbsp;<b>' . _FOLDER_ATTACH . '</b>';
+        $frm_str .= ' <span id="divStatus_folder_div" style="color:#1C99C5;"><<</span>&nbsp;<b>' 
+            . _FOLDER_ATTACH . '</b>';
             $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
         $frm_str .= '<div id="folder_div"  style="display:none">';
@@ -476,7 +472,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<center>';
                     if ($core_tools->is_module_loaded('templates')) {
                         $objectTable = $sec->retrieve_table_from_coll($coll_id);
-                        $frm_str .= _GENERATE_ATTACHMENT_FROM . ' <br><select name="templateOffice" id="templateOffice" style="width:250px" onchange="';
+                        $frm_str .= _GENERATE_ATTACHMENT_FROM 
+                            . ' <br><select name="templateOffice" id="templateOffice" style="width:250px" onchange="';
                         //$frm_str .= 'loadApplet(\''
                         $frm_str .= 'window.open(\''
                             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
@@ -749,9 +746,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
         . $res_id . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
-
     $frm_str .= '</div>';
-
     //SCRIPT
     $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'
         . $id_action . '", "viewframe", true, true);window.scrollTo(0,0);';
@@ -765,9 +760,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '$(\'category\').style.visibility=\'hidden\';';
         $frm_str .= '$(\'baskets\').style.visibility=\'hidden\';';
     $frm_str .= '</script>';
-
     //}
-
     return addslashes($frm_str);
 }
 
@@ -780,39 +773,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
  **/
 function check_form($form_id,$values)
 {
-    $check = false;
-    $other_checked = false;
+    $check = true;
     $other_txt = '';
     $folder = '';
     $core = new core_tools();
     //print_r($values);
     for ($i=0; $i<count($values); $i++) {
-        if ($values[$i]['ID'] == "direct_contact" && $values[$i]['VALUE'] == "true") {
-            $check = true;
-        }
-        if ($values[$i]['ID'] == "fax" && $values[$i]['VALUE'] == "true") {
-            $check = true;
-        }
-        if ($values[$i]['ID'] == "email" && $values[$i]['VALUE'] == "true") {
-            $check = true;
-        }
-        if ($values[$i]['ID'] == "simple_mail" && $values[$i]['VALUE'] == "true") {
-            $check = true;
-        }
-        if ($values[$i]['ID'] == "registered_mail" && $values[$i]['VALUE'] == "true") {
-            $check = true;
-        }
-        if ($values[$i]['ID'] == "no_answer" && $values[$i]['VALUE'] == "true") {
-            $check = true;
-        }
-        if ($values[$i]['ID'] == "other" && $values[$i]['VALUE'] == "true")
-        {
-            $check = true;
-            $other_checked = true;
-        }
-        if ($values[$i]['ID'] == "other_answer"  && trim($values[$i]['VALUE']) <> html_entity_decode('['._DEFINE.']', ENT_NOQUOTES, 'UTF-8')) {
-            $other_txt = $values[$i]['VALUE'];
-        }
         if ($values[$i]['ID'] == "folder") {
             $folder = $values[$i]['VALUE'];
         }
@@ -827,7 +793,6 @@ function check_form($form_id,$values)
         $db = new dbquery();
         $db->connect();
         $folder_id = '';
-
         if (!empty($folder)) {
             if (!preg_match('/\([0-9]+\)$/', $folder)) {
                 $_SESSION['action_error'] = _FOLDER." "._WRONG_FORMAT."";
@@ -840,9 +805,8 @@ function check_form($form_id,$values)
                 return false;
             }
         }
-
         if (!empty($res_id) && !empty($coll_id) && !empty($folder_id)) {
-            require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_security.php');
+            require_once('core/class/class_security.php');
             $sec = new security();
             $table = $sec->retrieve_table_from_coll($coll_id);
             if (empty($table)) {
@@ -865,13 +829,6 @@ function check_form($form_id,$values)
                 return false;
             }
         }
-    }
-    if ($other_checked && $other_txt == '') {
-        $_SESSION['action_error'] = _MUST_DEFINE_ANSWER_TYPE;
-        return false;
-    }
-    if ($check == false) {
-        $_SESSION['action_error'] = _MUST_CHECK_ONE_BOX;
     }
     return $check;
 }
@@ -896,8 +853,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     if (empty($values_form) || count($arr_id) < 1 || empty($coll_id)) {
         return false;
     }
-    //require_once("core/class/class_db.php");
-    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+    require_once('core/class/class_security.php');
     $sec =new security();
     $db = new dbquery();
     $core = new core_tools();
@@ -905,57 +861,15 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     $res_table = $sec->retrieve_table_from_coll($coll_id);
     $ind = $sec->get_ind_collection($coll_id);
     $table = $_SESSION['collections'][$ind]['extensions'][0];
-    $simple_mail = '0';
-    $AR_mail = '0';
-    $contact = '0';
-    $email = '0';
-    $fax = '0';
-    $other = '0';
-    $no_answer = '0';
-    $other_txt = '';
-    $process_notes = '';
-    $folder = '';
-    for ($j=0; $j<count($values_form); $j++) {
-        if ($values_form[$j]['ID'] == "simple_mail" && $values_form[$j]['VALUE'] == "true") {
-            $simple_mail = '1';
-        }
-        if ($values_form[$j]['ID'] == "registered_mail" && $values_form[$j]['VALUE'] == "true") {
-            $AR_mail = '1';
-        }
-        if ($values_form[$j]['ID'] == "direct_contact" && $values_form[$j]['VALUE'] == "true") {
-            $contact = '1';
-        }
-        if ($values_form[$j]['ID'] == "email" && $values_form[$j]['VALUE'] == "true") {
-            $email = '1';
-        }
-        if ($values_form[$j]['ID'] == "fax" && $values_form[$j]['VALUE'] == "true") {
-            $fax = '1';
-        }
-        if ($values_form[$j]['ID'] == "other" && $values_form[$j]['VALUE'] == "true") {
-            $other = '1';
-        }
-        if ($values_form[$j]['ID'] == "no_answer" && $values_form[$j]['VALUE'] == "true") {
-            $no_answer = '1';
-        }
-        if ($values_form[$j]['ID'] == "other_answer" && !empty($values_form[$j]['ID']) && trim($values_form[$j]['ID']) <> html_entity_decode('['._DEFINE.']', ENT_NOQUOTES, 'UTF-8')) {
-            $other_txt = $values_form[$j]['VALUE'];
-        }
-        if ($values_form[$j]['ID'] == "process_notes") {
-            $process_notes = $values_form[$j]['VALUE'];
-        }
-        if ($values_form[$j]['ID'] == "folder") {
+    
+     for ($j=0; $j<count($values_form); $j++) {
+         if ($values_form[$j]['ID'] == "folder") {
             $folder = $values_form[$j]['VALUE'];
         }
-    }
-    if ($no_answer == '1') {
-        $bitmask = '000000';
-    } else {
-        $bitmask = $other.$fax.$email.$contact.$AR_mail.$simple_mail;
-    }
-
+     }
+    
     if ($core->is_module_loaded('tags')) {
-        include_once("modules".DIRECTORY_SEPARATOR."tags".
-                    DIRECTORY_SEPARATOR."tags_update.php");
+        include_once('modules/tags/tags_update.php');
     }
     if ($core->is_module_loaded('folder')) {
         $folder_id = '';
@@ -965,33 +879,31 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         $db->query("select folders_system_id from ".$res_table." where res_id = ".$arr_id[0]);
         $res = $db->fetch_object();
         $old_folder_id = $res->folders_system_id;
-            
         if (!empty($folder)) {    
             $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
-
             if ($folder_id <> $old_folder_id && $_SESSION['history']['folderup']) {
-                require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+                require_once('core/class/class_history.php');
                 $hist = new history();
-                $hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", 'folderup', _DOC_NUM.$arr_id[0]._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
+                $hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", 'folderup', 
+                    _DOC_NUM.$arr_id[0]._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
                 if (isset($old_folder_id) && !empty($old_folder_id)) {
-                    $hist->add($_SESSION['tablename']['fold_folders'], $old_folder_id, "UP", 'folderup', _DOC_NUM.$arr_id[0]._DELETED_FROM_FOLDER, $_SESSION['config']['databasetype'],'apps');
+                    $hist->add($_SESSION['tablename']['fold_folders'], $old_folder_id, "UP", 'folderup', 
+                        _DOC_NUM.$arr_id[0]._DELETED_FROM_FOLDER, $_SESSION['config']['databasetype'],'apps');
                 }
             }
-
             $db->query("update ".$res_table." set folders_system_id =".$folder_id." where res_id =".$arr_id[0]);
         } else if(empty($folder) && !empty($old_folder_id)) { //Delete folder reference in res_X
             $db->query("update ".$res_table." set folders_system_id = NULL where res_id =".$arr_id[0]);
         }
     }
     if ($core->is_module_loaded('entities')) {
-        require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+        require_once('modules/entities/class/class_manage_listdiff.php');
         $list = new diffusion_list();
-        $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[0], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => true);
-        $list->load_list_db($_SESSION['process']['diff_list'], $params); //pb enchainement avec action redirect
+        $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 
+            'coll_id' => $coll_id, 'res_id' => $arr_id[0], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => true);
+        $list->load_list_db($_SESSION['process']['diff_list'], $params);
     }
     unset($_SESSION['redirection']);
-    $db->query("update ".$table." set answer_type_bitmask = '".$bitmask."', process_notes = '".$db->protect_string_db($process_notes)."', other_answer_desc ='".$db->protect_string_db($other_txt)."'
-    WHERE res_id=".$arr_id[0]);
     return array('result' => $arr_id[0].'#', 'history_msg' => '');
 }
 
