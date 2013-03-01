@@ -64,12 +64,11 @@ if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what
 if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
 
  if (isset($_REQUEST['load'])) {
+    $core_tools->load_lang();
     $core_tools->load_html();
     $core_tools->load_header('', true, false);
-    ?>
-    <body id="iframe">
-    <div id="container">
-    <?php
+    
+    ?><body><?php
     $core_tools->load_js();
 
     //Load list
@@ -84,30 +83,26 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
     } else {
         echo '<span class="error">'._ERROR_IN_PARAMETERS.'</span>';
     }
-    ?>
-    </div>
-    </body>
-    </html>
-    <?php
+    ?><div id="container" style="width:100%;min-height:0px;height:0px;"></div></body></html><?php
 } else {
     //If size is full change some parameters
     if (isset($_REQUEST['size']) 
         && ($_REQUEST['size'] == "full")
     ) {
-        $sizeUser = "15";
-        $sizeNotes = "50";
+        $sizeUser = "10";
+        $sizeText = "40";
         $css = "listing spec";
-        $cutString = 200;
+        $cutString = 150;
     } else if (isset($_REQUEST['size']) 
         && ($_REQUEST['size'] == "medium")
     ) {
         $sizeUser = "15";
-        $sizeNotes = "30";
-        $css = "listing spec";
+        $sizeText = "30";
+        $css = "listingsmall";
         $cutString = 100;
     } else {
         $sizeUser = "10";
-        $sizeNotes = "10";
+        $sizeText = "10";
         $css = "listingsmall";
         $cutString = 20;
     }
@@ -208,7 +203,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                     {
                         $tab[$i][$j]["value"] = $request->cut_string( $request->show_string($tab[$i][$j]["value"]), $cutString);
                         $tab[$i][$j]["label"]=_NOTES;
-                        $tab[$i][$j]["size"]=$sizeNotes;
+                        $tab[$i][$j]["size"]=$sizeText;
                         $tab[$i][$j]["label_align"]="left";
                         $tab[$i][$j]["align"]="left";
                         $tab[$i][$j]["valign"]="bottom";
@@ -219,7 +214,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                     {
                         $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
                         $tab[$i][$j]["label"]=_NOTES;
-                        $tab[$i][$j]["size"]=$sizeNotes;
+                        $tab[$i][$j]["size"]=$sizeText;
                         $tab[$i][$j]["label_align"]="left";
                         $tab[$i][$j]["align"]="left";
                         $tab[$i][$j]["valign"]="bottom";
@@ -239,9 +234,9 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         $paramsTab['urlParameters'] = 'identifier='.$identifier
                 ."&origin=".$origin.'&display=true'.$parameters;                            //Parametres d'url supplementaires
         $paramsTab['filters'] = array('user');                                              //Filtres    
-        $paramsTab['listHeight'] = '540px';                                                 //Hauteur de la liste
+        $paramsTab['listHeight'] = '100%';                                                 //Hauteur de la liste
         // $paramsTab['bool_showSmallToolbar'] = true;                                         //Mini barre d'outils
-        $paramsTab['linesToShow'] = 15;                                                     //Nombre de ligne a afficher
+        // $paramsTab['linesToShow'] = 15;                                                     //Nombre de ligne a afficher
         $paramsTab['listCss'] = $css;                                                       //CSS
         $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
           
@@ -259,11 +254,11 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         //Action icons array
         $paramsTab['actionIcons'] = array();
         $preview = array(
-                    "type"          =>  "preview",
-                    "class"         =>  "preview",
-                    "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=showFrameAdminList.png",
-                    "tooltip"       =>  _NOTES,
-                    "content"      =>  "{'identifierDetailFrame' : '@@id@@', '"._DATE." ' : '@@date_note@@', '"._USER." ' : '@@lastname@@', '"._NOTES." ' : '@@note_text@@'}"
+                    "type"      =>  "preview",
+                    "class"     =>  "preview",
+                    "icon"      =>  $_SESSION['config']['businessappurl']."static.php?filename=showFrameAdminList.png",
+                    "tooltip"   =>  _NOTES,
+                    "content"   =>  "{'identifierDetailFrame' : '@@id@@', '"._DATE." ' : '@@date_note@@', '"._USER." ' : '@@lastname@@', '"._NOTES." ' : '@@note_text@@'}"
                 );
         array_push($paramsTab['actionIcons'], $preview);        
         

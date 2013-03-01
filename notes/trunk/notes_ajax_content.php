@@ -45,6 +45,16 @@ $ent        = new EntityControler();
 $notesTools = new notes();
 $list       = new lists();
 
+    function _parse($text) {
+        //...
+        $text = str_replace("\r\n", "\n", $text);
+        $text = str_replace("\r", "\n", $text);
+
+        //
+        $text = str_replace("\n", "\\n ", $text);
+        return $text;
+    }
+    
 $core_tools->load_lang();
 $request->connect();
 
@@ -452,7 +462,7 @@ switch ($mode) {
     break;
 }
 
-echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
+echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
 exit ();
 ?>
 

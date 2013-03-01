@@ -18,7 +18,7 @@ function showNotesForm(path, width, height) {
            
             if(response.status == 0){
              
-                var modal_content = response.content;
+                var modal_content = convertToTextVisibleNewLine(response.content);
                 createModal(modal_content, 'form_notes', height, width); 
             } else {
                 window.top.$('main_error').innerHTML = response.error;
