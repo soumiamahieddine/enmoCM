@@ -131,7 +131,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
                         {
                             $tab[$i][$j]["value"]=$request->dateformat($tab[$i][$j]["value"]);
                             $tab[$i][$j]["label"]=_DATE;
-                            $tab[$i][$j]["size"]="10";
+                            $tab[$i][$j]["size"]="15";
                             $tab[$i][$j]["label_align"]="left";
                             $tab[$i][$j]["align"]="left";
                             $tab[$i][$j]["valign"]="bottom";
@@ -157,7 +157,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
                         {
                             $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
                             $tab[$i][$j]["label"]=_EVENT;
-                            $tab[$i][$j]["size"]="35";
+                            $tab[$i][$j]["size"]="30";
                             $tab[$i][$j]["label_align"]="left";
                             $tab[$i][$j]["align"]="left";
                             $tab[$i][$j]["valign"]="bottom";
@@ -176,9 +176,9 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
             $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
             $paramsTab['urlParameters'] = 'id='.$_REQUEST['id'].'&display=true';                //Parametres d'url supplementaires
             $paramsTab['filters'] = array('user', 'history_action', 'history_date');     //Filtres    
-            $paramsTab['listHeight'] = '475px';                                                 //Hauteur de la liste
+            $paramsTab['listHeight'] = '100%';                                                 //Hauteur de la liste
             // $paramsTab['bool_showSmallToolbar'] = true;                                         //Mini barre d'outils
-            $paramsTab['linesToShow'] = 20;                                                     //Nombre de ligne a afficher
+            $paramsTab['linesToShow'] = 15;                                                     //Nombre de ligne a afficher
             
             //Output
             $status = 0;
