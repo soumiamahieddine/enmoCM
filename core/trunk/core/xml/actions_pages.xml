@@ -193,4 +193,12 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>process_business</ID>
+        <LABEL>_PROCESS_BUSINESS</LABEL>
+        <NAME>process_business</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+    </ACTIONPAGE>
 </ROOT>
