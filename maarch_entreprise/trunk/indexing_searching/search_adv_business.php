@@ -189,15 +189,6 @@ $arr_tmp2 = array('label' => _PROCESS_RECEIPT, 'type' => 'select_multiple', 'par
 'id' => 'destinataire','options' => $arr_tmp));
 $param['destinataire'] = $arr_tmp2;
 
-
-// dest
-/*$arr_tmp2 = array('label' => _DEST, 'type' => 'input_text', 'param' => array('field_label' => _DEST, 'other' => $size));
-$param['dest'] = $arr_tmp2;
-
-//shipper
-$arr_tmp2 = array('label' => _SHIPPER, 'type' => 'input_text', 'param' => array('field_label' => _SHIPPER, 'other' => $size));
-$param['shipper'] = $arr_tmp2;
-*/
 if ($_SESSION['features']['search_notes'] == 'true') {
     //annotations
     $arr_tmp2 = array('label' => _NOTES, 'type' => 'textarea', 'param' => array('field_label' => _NOTES, 'other' => $size));
@@ -540,7 +531,7 @@ if (isset($_REQUEST['nodetails'])) {
  <div class="block_end">&nbsp;</div>
 </td></tr>
 </table>
-
+<h2 id="bottom">&nbsp;</h2>
 <table align="center" border="0" width="100%">
     <tr>
         <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
@@ -550,8 +541,8 @@ if (isset($_REQUEST['nodetails'])) {
         </td>
     </tr>
 </table>
-
 </form>
+
 <br/>
 <div align="right">
 </div>
@@ -565,7 +556,7 @@ if (isset($_REQUEST['init_search'])) {
 ?>
 </script>
 
-<h2 id="bottom">&nbsp;</h2>
+
 
 <?php 
 if ($mode == 'popup' || $mode == 'frame') {

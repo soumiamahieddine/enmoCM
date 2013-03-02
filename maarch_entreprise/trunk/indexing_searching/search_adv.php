@@ -641,6 +641,8 @@ if(isset($_REQUEST['nodetails']))
 </td></tr>
 </table>
 
+<h2 id="bottom">&nbsp;</h2>
+
 <table align="center" border="0" width="100%">
     <tr>
         <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
@@ -665,8 +667,6 @@ load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?ph
     ?>clear_search_form('frmsearch2','select_criteria');clear_q_list(); <?php
 }?>
 </script>
-
-<h2 id="bottom">&nbsp;</h2>
 
 <?php if($mode == 'popup' || $mode == 'frame')
 {

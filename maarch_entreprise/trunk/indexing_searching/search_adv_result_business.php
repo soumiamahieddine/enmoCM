@@ -117,7 +117,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $srv_chosen_tmp = substr($srv_chosen_tmp, 0, -1);
                 $json_txt = substr($json_txt, 0, -1);
                 $srv_chosen_tmp .= ") ";
-
                 $where_request .= " destination IN  ".$srv_chosen_tmp." ";
                 $where_request .=" and  ";
                 $json_txt .= '],';
@@ -125,19 +124,8 @@ if (count($_REQUEST['meta']) > 0) {
                 // MULTIFIELD : subject, title, doc_custom_t1, process notes
                 $json_txt .= "'multifield' : ['".addslashes(trim($_REQUEST['multifield']))."'],";
                 $where_request .= "(lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
-                    ."or lower(alt_identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
-                    ."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
-                    ."or lower(doc_custom_t1) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
-                    ."or lower(process_notes) like lower('%".$func->protect_string_db($_REQUEST['multifield'])."%')) ";
-                
-                $where_request .=" and  ";
-            }
-            // PRIORITY
-            elseif ($tab_id_fields[$j] == 'priority' && !empty($_REQUEST['priority']))
-            {
-                $json_txt .= " 'priority' : ['".addslashes(trim($_REQUEST['priority']))."'],";
-                $prio = $func->wash($_REQUEST['priority'],"num",_THE_PRIORITY,"no");
-                $where_request .= " priority = ".$prio." ";
+                    ."or lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
+                    ."or lower(doc_custom_t1) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%')) ";                
                 $where_request .=" and  ";
             }
             // NOTES
@@ -154,21 +142,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $market = $func->wash($_REQUEST['market'], "no", _MARKET,"no");
                 $where_request .= " (lower(folder_name) like lower('%".$func->protect_string_db($market)."%') or folder_id like '%".$func->protect_string_db($market)."%' ) and ";
             }
-            // FOLDER : PROJECT
-            elseif ($tab_id_fields[$j] == 'project' && !empty($_REQUEST['project']))
-            {
-                $json_txt .= " 'project' : ['".addslashes(trim($_REQUEST['project']))."'],";
-                $project = $func->wash($_REQUEST['project'], "no", _MARKET,"no");
-                $where_request .= " (lower(folder_name) like lower('%".$func->protect_string_db($project)."%') or folder_id like '%".$func->protect_string_db($project)."%' "
-                    ."or folders_system_id in (select parent_id from ".$_SESSION['tablename']['fold_folders']." where lower(folder_name) like lower('".$func->protect_string_db($project)."%') or folder_id like '%".$func->protect_string_db($project)."%')) and ";
-            }
-
-            elseif ($tab_id_fields[$j] == 'folder_name' && !empty($_REQUEST['folder_name']))
-            {
-                $json_txt .= " 'folder_name' : ['".addslashes(trim($_REQUEST['folder_name']))."'],";
-                $folder_name = $func->wash($_REQUEST['folder_name'], "no", _FOLDER_NAME,"no");
-                 $where_request .= " (lower(folder_name) like lower('%".$func->protect_string_db($folder_name)."%') and ";
-            }
             // DEST
             elseif ($tab_id_fields[$j] == 'dest' && !empty($_REQUEST['dest']))
             {
@@ -184,23 +157,6 @@ if (count($_REQUEST['meta']) > 0) {
                         ." where lower(lastname) LIKE lower('".$func->protect_string_db($dest)."%') "
                         ."or lower(firstname) LIKE lower('".$func->protect_string_db($dest)."%') "
                         ."or user_id LIKE '".$func->protect_string_db($dest)."%')) and ";
-            }
-            //SHIPPER
-            elseif ($tab_id_fields[$j] == 'shipper' && !empty($_REQUEST['shipper']))
-            {
-                $json_txt .= " 'shipper' : ['".addslashes(trim($_REQUEST['shipper']))."'],";
-                $shipper = $func->wash($_REQUEST['shipper'], "no", _SHIPPER,"no");
-                $where_request .= " (exp_contact_id in ("
-                    ."select contact_id from ".$_SESSION['tablename']['contacts']
-                    ." where lower(lastname) LIKE lower('".$func->protect_string_db($shipper)."%') "
-                    ."or lower(firstname) LIKE lower('".$func->protect_string_db($shipper)."%') "
-                    ."or lower(society) LIKE lower('".$func->protect_string_db($shipper)."%') "
-                    ."or lower(function) LIKE lower('".$func->protect_string_db($shipper)."%')) "
-                    ."or exp_user_id in ("
-                        ."select user_id from ".$_SESSION['tablename']['users']
-                        ." where lower(lastname) LIKE lower('".$func->protect_string_db($shipper)."%') "
-                        ."or lower(firstname) LIKE lower('".$func->protect_string_db($shipper)."%') "
-                        ."or user_id LIKE '".$func->protect_string_db($shipper)."%')) and ";
             }
             // GED NUM
             elseif ($tab_id_fields[$j] == 'numged' && !empty($_REQUEST['numged']))
@@ -238,7 +194,8 @@ if (count($_REQUEST['meta']) > 0) {
             {
                 $json_txt .= " 'subject' : ['".addslashes(trim($_REQUEST['subject']))."'],";
                 $where_request .= " lower(subject) like lower('%".$func->protect_string_db($_REQUEST['subject'])."%') and ";
-            } elseif ($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext'])
+            } 
+            elseif ($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext'])
             ) {
                 // FULLTEXT
                 $fulltext_request = $func->store_html($_REQUEST['fulltext']);
@@ -255,7 +212,7 @@ if (count($_REQUEST['meta']) > 0) {
                 );
                 $_SESSION['search']['plain_text'] = $_REQUEST['fulltext'];
                 //echo $_SESSION['search']['plain_text']; exit()
-                $path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
+                $path_to_lucene_index = $_SESSION['collections'][1]['path_to_lucene_index'];
                 //$lucene_all_words = explode(' ',$_REQUEST['fulltext']);
                 if (is_dir($path_to_lucene_index))
                 {
@@ -295,8 +252,6 @@ if (count($_REQUEST['meta']) > 0) {
                 include_once("modules".DIRECTORY_SEPARATOR."tags".
                    DIRECTORY_SEPARATOR."tags_search.php");              
             }
-            
-
             //WELCOME PAGE
             elseif ($tab_id_fields[$j] == 'welcome'  && (!empty($_REQUEST['welcome'])))
             {
@@ -315,7 +270,7 @@ if (count($_REQUEST['meta']) > 0) {
                 for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
                     if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id 
                         && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N') {
-                        if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
+                        if (isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
                             $whereBasketsClause .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
                             $cptBasketClause++;
                         }
@@ -334,13 +289,12 @@ if (count($_REQUEST['meta']) > 0) {
                 Zend_Search_Lucene_Analysis_Analyzer::setDefault(
                     new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
                 );
-                $path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
+                $path_to_lucene_index = $_SESSION['collections'][1]['path_to_lucene_index'];
                 if (is_dir($path_to_lucene_index))
                 {
                     if (!$func->isDirEmpty($path_to_lucene_index)) {
                         $index = Zend_Search_Lucene::open($path_to_lucene_index);
                         $hits = $index->find($welcome);
-              
                         $Liste_Ids = "0";
                         $cptIds = 0;
                         foreach ($hits as $hit) {
@@ -356,12 +310,6 @@ if (count($_REQUEST['meta']) > 0) {
                 } else {
                     $where_request_welcome .= " ".$where_multifield_request." and ";
                 } 
-            }
-            // PRIORITY
-            elseif ($tab_id_fields[$j] == 'priority' && (!empty($_REQUEST['priority']) ||$_REQUEST['priority'] == 0) )
-            {
-                $json_txt .= " 'priority' : ['".addslashes(trim($_REQUEST['priority']))."'],";
-                $where_request .= " priority  = ".$_REQUEST['priority']." and ";
             }
             // DOCTYPES
             elseif ($tab_id_fields[$j] == 'doctypes_chosen' && !empty($_REQUEST['doctypes_chosen']))
@@ -380,45 +328,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " type_id IN  ".$doctypes_chosen_tmp." ";
                 $where_request .=" and  ";
                 $json_txt .= '],';
-            }
-            // ARBOXE
-            //Physical Archive including => filter on boxes
-            //elseif ($tab_id_fields[$j] == 'boxes_chosen' && !empty($_REQUEST['arbox_id_chosen']))
-            elseif ($tab_id_fields[$j] == 'arboxes_chosen')
-            {
-                $json_txt .= " 'arbox_id_chosen' : [";
-                $arbox_id_chosen_tmp = " (";
-                if (count($_REQUEST['arboxes_chosen'])){
-                    for ($get_i = 0; $get_i <count($_REQUEST['arboxes_chosen']); $get_i++)
-                    {
-                        $arbox_id_chosen_tmp .= "'".$func->protect_string_db($_REQUEST['arboxes_chosen'][$get_i])."',";
-                        $json_txt .= "'".$_REQUEST['arboxes_chosen'][$get_i]."',";
-                    }
-                    $arbox_id_chosen_tmp = substr($arbox_id_chosen_tmp, 0, -1);
-                    $json_txt = substr($json_txt, 0, -1);
-                    $arbox_id_chosen_tmp .= ") ";
-
-                    $where_request .= " arbox_id IN  ".$arbox_id_chosen_tmp." ";
-                    $where_request .=" and  ";
-                }
-                $json_txt .= '],';
-            }
-            // ARBATCH
-            //Gestion boite archive => Limitation au lot
-            elseif ($tab_id_fields[$j] == 'arbatch_id' && !empty($_REQUEST['arbatch_id']))
-            {
-                $json_txt .= " 'arbatch_id' : ['".addslashes(trim($_REQUEST['arbatch_id']))."'],";
-                $arbatch_id = $func->wash($_REQUEST['arbatch_id'], "no", _BATCH,"no");
-                {
-                    $where_request .= " arbatch_id = ".$arbatch_id." and ";
-                }
-            }
-
-            // MAIL NATURE
-            elseif ($tab_id_fields[$j] == 'mail_nature' && !empty($_REQUEST['mail_nature']))
-            {
-                $json_txt .= "'mail_nature' : ['".addslashes(trim($_REQUEST['mail_nature']))."'],";
-                $where_request .= " nature_id = '".$func->protect_string_db($_REQUEST['mail_nature'])."' and ";
             }
             // CREATION DATE : FROM
             elseif ($tab_id_fields[$j] == 'creation_date_from' && !empty($_REQUEST['creation_date_from']))
@@ -531,83 +440,11 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .=") and ";
                 $json_txt .= '],';
             }
-            // ANSWER TYPE BITMASK
-            /**
-             * Answer type bitmask
-             * 0 0 0 0 0 0
-             * | | | | | |_ Simple Mail
-             * | | | | |___ Registered mail
-             * | | | |_____ Direct Contact
-             * | | |_______ Email
-             * | |_________ Fax
-             * |___________ Other Answer
-             **/
-            elseif ($tab_id_fields[$j] == 'AR' && !empty($_REQUEST['AR']))
-            {
-                $where_request .= " answer_type_bitmask like '____1_' AND ";
-                $json_txt .= " 'AR' : ['".addslashes(trim($_REQUEST['AR']))."'],";
-            }
-            elseif ($tab_id_fields[$j] == 'fax' && !empty($_REQUEST['fax']))
-            {
-                $where_request .= " answer_type_bitmask like '_1____' AND ";
-                $json_txt .= " 'fax' : ['".addslashes(trim($_REQUEST['fax']))."'],";
-            }
-            elseif ($tab_id_fields[$j] == 'courriel' && !empty($_REQUEST['courriel']))
-            {
-                $where_request .= " answer_type_bitmask like '__1___' AND ";
-                $json_txt .= " 'courriel' : ['".addslashes(trim($_REQUEST['courriel']))."'],";
-            }
-            elseif ($tab_id_fields[$j] == 'autre' && !empty($_REQUEST['autre']))
-            {
-                $where_request .= " answer_type_bitmask like '1_____' AND ";
-                $json_txt .= " 'autre' : ['".addslashes(trim($_REQUEST['autre']))."'],";
-            }
-            elseif ($tab_id_fields[$j] == 'direct' && !empty($_REQUEST['direct']))
-            {
-                $where_request .= " answer_type_bitmask like '___1__' AND ";
-                $json_txt .= " 'direct' : ['".addslashes(trim($_REQUEST['direct']))."'],";
-            }
-            elseif ($tab_id_fields[$j] == 'simple_mail' && !empty($_REQUEST['simple_mail']))
-            {
-                $where_request .= " answer_type_bitmask like '_____1' AND ";
-                $json_txt .= " 'simple_mail' : ['".addslashes(trim($_REQUEST['simple_mail']))."'],";
-            }
-            elseif ($tab_id_fields[$j] == 'norep' && !empty($_REQUEST['norep']))
-            {
-                $where_request .= " answer_type_bitmask = '000000' AND ";
-                $json_txt .= " 'norep' : ['".addslashes(trim($_REQUEST['norep']))."'],";
-            }
             // MAIL CATEGORY
             elseif ($tab_id_fields[$j] == 'category' && !empty($_REQUEST['category']))
             {
                 $where_request .= " category_id = '".$func->protect_string_db($_REQUEST['category'])."' AND ";
                 $json_txt .= "'category' : ['".addslashes($_REQUEST['category'])."'],";
-            } 
-            // ADMISSION DATE : FROM
-            elseif ($tab_id_fields[$j] == 'admission_date_from' && !empty($_REQUEST['admission_date_from']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['admission_date_from'])==false )
-                {
-                    $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['admission_date_from'];
-                }
-                else
-                {
-                    $where_request .= " (".$req->extract_date("admission_date")." >= '".$func->format_date_db($_REQUEST['admission_date_from'])."') and ";
-                    $json_txt .= " 'admission_date_from' : ['".trim($_REQUEST['admission_date_from'])."'],";
-                }
-            }
-            // ADMISSION DATE : TO
-            elseif ($tab_id_fields[$j] == 'admission_date_to' && !empty($_REQUEST['admission_date_to']))
-            {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['admission_date_to'])==false )
-                {
-                    $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['admission_date_to'];
-                }
-                else
-                {
-                    $where_request .= " (".$req->extract_date("admission_date")." <= '".$func->format_date_db($_REQUEST['admission_date_to'])."') and ";
-                    $json_txt .= " 'admission_date_to' : ['".trim($_REQUEST['admission_date_to'])."'],";
-                }
             }
             // DOC DATE : FROM
             elseif ($tab_id_fields[$j] == 'doc_date_from' && !empty($_REQUEST['doc_date_from']))
