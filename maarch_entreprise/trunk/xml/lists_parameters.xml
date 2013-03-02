@@ -156,5 +156,15 @@
             <ENABLED>true</ENABLED>
             <GOTOLIST></GOTOLIST>
         </TEMPLATE>
+        <TEMPLATE>
+            <ID>documents_list_search_adv_business</ID>
+            <LABEL>_DOCUMENTS_LIST_SEARCH_BUSINESS</LABEL>
+            <IMG>extend_list.gif</IMG>
+            <NAME>documents_list_search_adv_business</NAME>
+            <ORIGIN>apps</ORIGIN>
+            <MODULE></MODULE>
+            <ENABLED>true</ENABLED>
+            <GOTOLIST></GOTOLIST>
+        </TEMPLATE>
     </TEMPLATES>
 </root>

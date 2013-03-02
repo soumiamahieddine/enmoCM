@@ -19,7 +19,7 @@
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-if (!defined('_MEP_VERSION')) define('_MEP_VERSION', 'Maarch Entreprise v1.4');
+if (!defined('_MEP_VERSION')) define('_MEP_VERSION', 'Maarch v1.4');
 
 /************** Administration **************/
 if (!defined('_ADMIN_USERS'))    define( '_ADMIN_USERS', 'Utilisateurs');
@@ -50,7 +50,7 @@ if (!defined('_FOLDERTYPES_LIST'))    define( '_FOLDERTYPES_LIST', 'Liste des ty
 if (!defined('_SELECTED_FOLDERTYPES'))    define( '_SELECTED_FOLDERTYPES', 'Types de dossier s&eacute;lectionn&eacute;s');
 if (!defined('_FOLDERTYPE_ADDED'))    define( '_FOLDERTYPE_ADDED', 'Nouveau dossier ajout&eacute;');
 if (!defined('_FOLDERTYPE_DELETION'))    define( '_FOLDERTYPE_DELETION', 'Dossier supprim&eacute;');
-if (!defined('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH'))    define( '_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH', 'Attention: Le mod&egrave;le de donn&eacute;es de Maarch Entreprise doit &ecirc;tre mis &agrave; jour...');
+if (!defined('_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH'))    define( '_VERSION_BASE_AND_XML_BASEVERSION_NOT_MATCH', 'Attention: Le mod&egrave;le de donn&eacute;es de Maarch doit &ecirc;tre mis &agrave; jour...');
 
 
 /*********************** communs ***********************************/
@@ -187,7 +187,7 @@ if (!defined('_CHARACTER')) define( '_CHARACTER', 'caract&egrave;re');
 if (!defined('_CHARACTERS')) define( '_CHARACTERS', 'caract&egrave;res');
 if (!defined('MUST_BE_LESS_THAN')) define( 'MUST_BE_LESS_THAN', 'ne doit pas faire plus de');
 if (!defined('_WRONG_FORMAT')) define( '_WRONG_FORMAT', 'n&rsquo;est pas dans le bon format');
-if (!defined('_WELCOME')) define( '_WELCOME', 'Bienvenue sur Maarch Entreprise !');
+if (!defined('_WELCOME')) define( '_WELCOME', 'Bienvenue sur Maarch !');
 if (!defined('_WELCOME_TITLE')) define( '_WELCOME_TITLE', 'Accueil');
 if (!defined('_HELP')) define( '_HELP', 'Aide');
 if (!defined('_SEARCH_ADV_SHORT')) define( '_SEARCH_ADV_SHORT', 'Recherche Avanc&eacute;e');
@@ -210,7 +210,7 @@ if (!defined('_CARD')) define( '_CARD', 'Fiche');
 
 /************************* First login ***********************************/
 if (!defined('_MODIFICATION_PSW')) define( '_MODIFICATION_PSW', 'Modification du mot de passe');
-if (!defined('_YOUR_FIRST_CONNEXION')) define( '_YOUR_FIRST_CONNEXION', 'Bienvenue sur Maarch Entreprise ! <br/>Ceci est votre premi&egrave;re connexion');
+if (!defined('_YOUR_FIRST_CONNEXION')) define( '_YOUR_FIRST_CONNEXION', 'Bienvenue sur Maarch ! <br/>Ceci est votre premi&egrave;re connexion');
 if (!defined('_PLEASE_CHANGE_PSW')) define( '_PLEASE_CHANGE_PSW', ' veuillez d&eacute;finir votre mot de passe');
 if (!defined('_ASKED_ONLY_ONCE')) define( '_ASKED_ONLY_ONCE', 'Cela ne vous sera demand&eacute; qu&rsquo;une seule fois');
 if (!defined('_FIRST_CONN')) define( '_FIRST_CONN', 'Premi&egrave;re connexion');
@@ -693,11 +693,11 @@ if (!defined('_APA_CONFIRM_IN_OUT')) define( '_APA_CONFIRM_IN_OUT', 'Confirmatio
 
 ///// Credits
 if (!defined('_MAARCH_CREDITS')) define( '_MAARCH_CREDITS', 'A propos de Maarch&nbsp;');
-if (!defined('_MAARCH_LICENCE')) define('_MAARCH_LICENCE', 'Maarch Entreprise est diffus&eacute; sous les termes de la');
+if (!defined('_MAARCH_LICENCE')) define('_MAARCH_LICENCE', 'Maarch est diffus&eacute; sous les termes de la');
 if (!defined('_OFFICIAL_WEBSITE')) define('_OFFICIAL_WEBSITE', 'Site officiel');
 if (!defined('_COMMUNITY')) define('_COMMUNITY', 'Communaut&eacute;');
 if (!defined('_DOCUMENTATION')) define('_DOCUMENTATION', 'Documentation');
-if (!defined('_THANKS_TO_EXT_DEV')) define('_THANKS_TO_EXT_DEV', 'Maarch Entreprise s&rsquo;appuie sur quelques composants externes. Merci &agrave; leurs d&eacute;veloppeurs !');
+if (!defined('_THANKS_TO_EXT_DEV')) define('_THANKS_TO_EXT_DEV', 'Maarch s&rsquo;appuie sur quelques composants externes. Merci &agrave; leurs d&eacute;veloppeurs !');
 if (!defined('_EXTERNAL_COMPONENTS')) define('_EXTERNAL_COMPONENTS', 'Composants externes');
 if (!defined('_THANKS_TO_COMMUNITY')) define('_THANKS_TO_COMMUNITY', 'Et toute la communaut&eacute; Maarch !');
 
@@ -980,7 +980,7 @@ if (!defined('_NO_CHRONO_NUMBER_DEFINED')) define( '_NO_CHRONO_NUMBER_DEFINED', 
 if (!defined('_FOR_CONTACT_C')) define( '_FOR_CONTACT_C', 'Pour');
 if (!defined('_TO_CONTACT_C')) define( '_TO_CONTACT_C', 'De');
 
-if (!defined('_APPS_COMMENT')) define( '_APPS_COMMENT', 'Application Maarch Entreprise');
+if (!defined('_APPS_COMMENT')) define( '_APPS_COMMENT', 'Application Maarch');
 if (!defined('_CORE_COMMENT')) define( '_CORE_COMMENT', 'Coeur du Framework');
 if (!defined('_CLEAR_FORM')) define( '_CLEAR_FORM', 'Effacer le formulaire');
 
@@ -1029,7 +1029,7 @@ if (!defined('_INVOICE_NUMBER')) define( '_INVOICE_NUMBER', 'Num facture');
 /******************** fulltext search Helper ************/
 if (!defined('_HELP_GLOBAL_SEARCH')) define( '_HELP_GLOBAL_SEARCH', 'Recherche sur l\'objet, le titre, la description, le contenu du document ou sur le num&eacute;ro de GED');
 if (!defined('_HELP_FULLTEXT_SEARCH')) define( '_HELP_FULLTEXT_SEARCH', 'Aide sur la recherche plein texte');
-if (!defined('_GLOBAL_SEARCH')) define( '_GLOBAL_SEARCH', 'Recherche globale');
+if (!defined('_GLOBAL_SEARCH')) define( '_GLOBAL_SEARCH', 'Recherche globale courriers');
 if (!defined('_TIPS_FULLTEXT')) define( '_TIPS_FULLTEXT', 'Astuces de recherche');
 
 if (!defined('_TIPS_KEYWORD1')) define( '_TIPS_KEYWORD1', 'Pour effectuer une recherche avec joker sur plusieurs caractères');
@@ -1325,7 +1325,7 @@ if (!defined('_UP_TO_DATE'))    define( '_UP_TO_DATE', '&agrave; jour');
 if (!defined('_ACTUAL_INSTALLATION'))    define( '_ACTUAL_INSTALLATION', 'version install&eacute;e');
 if (!defined('_MAKE_UPDATE'))    define( '_MAKE_UPDATE', 'mettre &agrave; jour');
 if (!defined('_TO_GET_LOG_PLEASE_CONNECT'))    define( '_TO_GET_LOG_PLEASE_CONNECT', 'Pour obtenir la liste des logs, vous devez &ecirc;tre connect&eacute;');
-if (!defined('_MANAGE_MEP_RELEASE'))    define( '_MANAGE_MEP_RELEASE', 'Gestion des r&eacute;visions de Maarch Entreprise');
+if (!defined('_MANAGE_MEP_RELEASE'))    define( '_MANAGE_MEP_RELEASE', 'Gestion des r&eacute;visions de Maarch');
 if (!defined('_INSTALL_SVN_EXTENSION'))    define( '_INSTALL_SVN_EXTENSION', 'Vous devez installer la librairie PHP svn pour acc&eacute;der aux logs.');
 if (!defined('_REVERSE_CHECK'))    define( '_REVERSE_CHECK', 'Inverser la s&eacute;lection');
 if (!defined('_CHECK_ALL'))    define( '_CHECK_ALL', 'Tout cocher');
@@ -1412,6 +1412,9 @@ if (!defined('_INITIATOR')) define('_INITIATOR', 'Service initiateur');
 if (!defined('_VALIDATE_QUALIF_BUSINESS')) define('_VALIDATE_QUALIF_BUSINESS', 'Validation/qualification des documents de la collection business');
 if (!defined('_PROCESS_BUSINESS')) define('_PROCESS_BUSINESS', 'Traitement des documents de la collection business');
 if (!defined('_BUSINESS_LIST')) define('_BUSINESS_LIST', 'Liste de documents business');
+
+if (!defined('_INDEXING_BUSINESS')) define('_INDEXING_BUSINESS', 'Enregistrer un document');
+if (!defined('_ADV_SEARCH_BUSINESS')) define('_ADV_SEARCH_BUSINESS', 'Rechercher un document');
 
 /********************Parameters **************/
 if (!defined('_PARAMETERS')) define('_PARAMETERS', 'Paramètres');
