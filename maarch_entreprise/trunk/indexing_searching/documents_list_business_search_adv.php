@@ -88,7 +88,7 @@ if($mode == 'normal') {
     $radioButton    = false;
     
     //Templates
-    $defaultTemplate = 'documents_list_search_adv_business';
+    $defaultTemplate = 'documents_business_list';
     $selectedTemplate = $list->getTemplate();
     if  (empty($selectedTemplate)) {
         if (!empty($defaultTemplate)) {
@@ -97,7 +97,7 @@ if($mode == 'normal') {
         }
     }
     $template_list = array();
-    array_push($template_list, 'documents_list_search_adv_business');
+    array_push($template_list, 'documents_business_list');
     
     //For status icon
     $extension_icon = '';
@@ -169,24 +169,21 @@ if($mode == 'normal') {
 }
 
 /************Construction de la requete*******************/
-//Table or view
+    //Table or view
     $_SESSION['collection_id_choice'] = 'business_coll';
     $view = $sec->retrieve_view_from_coll_id($_SESSION['collection_id_choice']);
     $select = array();
     $select[$view]= array();
 
-//Fields
+    //Fields
     //Documents
-    array_push($select[$view],  "res_id as is_labeled", "res_id", "status", "subject", "category_id as category_img", 
-                                "contact_firstname", "contact_lastname", "contact_society", 
-                                "user_lastname", "user_firstname", "dest_user", "type_label", 
-                                "creation_date", "entity_label", "category_id, exp_user_id");
-    //Cases
-    if($core_tools->is_module_loaded("cases") == true) {
-        array_push($select[$view], "case_id", "case_label", "case_description");
-    }
     
-//Where clause
+    array_push($select[$view], 'res_id', 'status', 'category_id', 'category_id as category_img', 'type_label', 'subject',
+        'contact_firstname', 'contact_lastname', 'contact_society', 'contact_id', 'contact_id as contact_img', 'identifier', 'doc_date', 'creation_date', 
+        'total_sum', 'process_limit_date', 'entity_label', 'dest_user', 'count_attachment'
+    );
+    
+    //Where clause
     $where_tab = array();
     //From search
     if (!empty($_SESSION['searching']['where_request'])) $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)';
@@ -252,236 +249,258 @@ if($mode == 'normal') {
 //Query    
     $tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
     // $request->show();
-    
-//Result array
-    for ($i=0;$i<count($tab);$i++)
-    {
-        for ($j=0;$j<count($tab[$i]);$j++)
-        {
-            foreach(array_keys($tab[$i][$j]) as $value)
-            {
-                if($tab[$i][$j][$value]=='is_labeled' 
-                    && $core_tools->is_module_loaded('labels')
-                    && (isset($_SESSION['user']['services']['labels'])
-                    && $_SESSION['user']['services']['labels'] === true)
-                )
-                {
-                    $str_label = $labels->get_labels_resid($tab[$i][$j]['value'], $_SESSION['collection_id_choice']);
-                    if (!empty($str_label))  $tab[$i][$j]['value'] = '<img src="'
-                        .$_SESSION['config']['businessappurl']
-                        .'static.php?module=labels&filename=labels.gif" width="24px" height="24px" title="'
-                        .$str_label.'"/>'; else  $tab[$i][$j]['value'] = '&nbsp;';
-                    $tab[$i][$j]["label"]='<img src="'
-                        .$_SESSION['config']['businessappurl']
-                        .'static.php?filename=star.png" width="16px" height="16px" title="'
-                        ._LABELS.'"/>';
-                    $tab[$i][$j]["size"]="4";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=true;
-                    $tab[$i][$j]["order"]=false;
-                }
 
-                if($tab[$i][$j][$value]=='res_id')
-                {
-                    $tab[$i][$j]['res_id']=$tab[$i][$j]['value'];
-                    $tab[$i][$j]["label"]=_GED_NUM;
-                    $tab[$i][$j]["size"]="4";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=true;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["order"]='res_id';
-                    $_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
+for ($i=0;$i<count($tab);$i++) {
+    $catId = '';
+    for ($j=0;$j<count($tab[$i]);$j++) {
+        foreach(array_keys($tab[$i][$j]) as $value) {
+            if($tab[$i][$j][$value]=='is_labeled' 
+                && $core_tools->is_module_loaded('labels')
+                && (isset($_SESSION['user']['services']['labels'])
+                && $_SESSION['user']['services']['labels'] === true)
+            )
+            {
+                $str_label = $labels->get_labels_resid($tab[$i][$j]['value'], $_SESSION['collection_id_choice']);
+                if (!empty($str_label))  $tab[$i][$j]['value'] = '<img src="'
+                    .$_SESSION['config']['businessappurl']
+                    .'static.php?module=labels&filename=labels.gif" width="24px" height="24px" title="'
+                    .$str_label.'"/>'; else  $tab[$i][$j]['value'] = '&nbsp;';
+                $tab[$i][$j]["label"]='<img src="'
+                    .$_SESSION['config']['businessappurl']
+                    .'static.php?filename=star.png" width="16px" height="16px" title="'
+                    ._LABELS.'"/>';
+                $tab[$i][$j]["size"]="4";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]=false;
+            }
+            if ($tab[$i][$j][$value]=="res_id") {
+                $tab[$i][$j]["res_id"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_GED_NUM;
+                $tab[$i][$j]["size"]="4";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='res_id';
+                $_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
+            }
+            if ($tab[$i][$j][$value]=="status") {
+                $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
+                $statusCmp = $tab[$i][$j]['value'];
+                $tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
+                $tab[$i][$j]["label"]=_STATUS;
+                $tab[$i][$j]["size"]="4";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='status';
+            }
+            if ($tab[$i][$j][$value]=="category_id") {
+                $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]["value"];
+                $catId = $tab[$i][$j]["value"];
+                $tab[$i][$j]["value"] = $_SESSION['coll_categories']['business_coll'][$tab[$i][$j]["value"]];
+                $tab[$i][$j]["label"]=_CATEGORY;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='category_id';
+            }
+            if ($tab[$i][$j][$value]=="category_img") {
+                $tab[$i][$j]["label"]=_CATEGORY;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=false;
+                $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+                $my_imgcat = get_img_cat($tab[$i][$j]['value'],$extension_icon);
+                $tab[$i][$j]['value'] = "<img src = '".$my_imgcat."' alt = '' title = ''>";
+                $tab[$i][$j]["value"] = $tab[$i][$j]['value'];
+                $tab[$i][$j]["order"]="category_id";
+            }
+            if ($tab[$i][$j][$value]=="type_label") {
+                $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
+                $tab[$i][$j]["label"]=_TYPE;
+                $tab[$i][$j]["size"]="12";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='type_label';
+            }
+            if ($tab[$i][$j][$value]=="subject") {
+                $tab[$i][$j]["value"] = $request->cut_string($request->show_string($tab[$i][$j]["value"]), 100);
+                $tab[$i][$j]["label"]=_SUBJECT;
+                $tab[$i][$j]["size"]="12";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='subject';
+            }
+            if ($tab[$i][$j][$value]=="contact_firstname") {
+                $contact_firstname = $tab[$i][$j]["value"];
+                $tab[$i][$j]["show"]=false;
+            }
+            if ($tab[$i][$j][$value]=="contact_lastname") {
+                $contact_lastname = $tab[$i][$j]["value"];
+                $tab[$i][$j]["show"]=false;
+            }
+            if ($tab[$i][$j][$value]=="contact_society") {
+                $contact_society = $tab[$i][$j]["value"];
+                $tab[$i][$j]["show"]=false;
+            }
+            if ($tab[$i][$j][$value]=="contact_id") {
+                $tab[$i][$j]["label"]=_CONTACT;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=false;
+                $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+                $tab[$i][$j]["value"] = $contact->get_contact_information_from_view(
+                    $_SESSION['mlb_search_current_category_id'], 
+                    $contact_lastname, 
+                    $contact_firstname, 
+                    $contact_society, 
+                    $user_lastname, 
+                    $user_firstname
+                );
+                $tab[$i][$j]["order"]=false;
+            }
+            if ($tab[$i][$j][$value]=="contact_img") {
+                $tab[$i][$j]["label"]=_CONTACT;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=false;
+                if ($catId == 'purchase') {
+                    $contactImg = '<img src="'
+                        . $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                        . 'supplier.png" alt="' . _SUPPLIER . '" title="' . _SUPPLIER . '"/>';
+                } elseif ($catId == 'sell') {
+                    $contactImg = '<img src="'
+                        . $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                        . 'purchaser.png" alt="' . _PURCHASER . '" title="' . _PURCHASER . '"/>';
+                } elseif ($catId == 'enterprise_document') {
+                    $contactImg = '<img src="'
+                        . $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                        . 'my_contacts_off.gif" alt="' . _CONTACT . '" title="' . _CONTACT . '"/>';
+                } elseif ($catId == 'human_resources') {
+                    $contactImg = '<img src="'
+                        . $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                        . 'employee.png" alt="' . _EMPLOYEE . '" title="' . _EMPLOYEE . '"/>';
                 }
-                
-                if($tab[$i][$j][$value]=="type_label")
+                $tab[$i][$j]['value'] = $contactImg;
+                $tab[$i][$j]["value"] = $tab[$i][$j]['value'];
+                $tab[$i][$j]["order"]=false;
+            }
+            if ($tab[$i][$j][$value]=="identifier") {
+                $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
+                $tab[$i][$j]["label"]=_IDENTIFIER;
+                $tab[$i][$j]["size"]="12";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='identifier';
+            }
+            if ($tab[$i][$j][$value]=="doc_date") {
+                $tab[$i][$j]["value"]=$core_tools->format_date_db($tab[$i][$j]["value"], false);
+                $tab[$i][$j]["label"]=_DOC_DATE;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=false;
+                $tab[$i][$j]["order"]='doc_date';
+            }
+            if ($tab[$i][$j][$value]=="creation_date") {
+                $tab[$i][$j]["value"]=$core_tools->format_date_db($tab[$i][$j]["value"], false);
+                $tab[$i][$j]["label"]=_CREATION_DATE;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='creation_date';
+            }
+            if ($tab[$i][$j][$value]=="total_sum") {
+                $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
+                $tab[$i][$j]["label"]=_TOTAL_SUM;
+                $tab[$i][$j]["size"]="12";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='total_sum';
+            }
+            if ($tab[$i][$j][$value]=="process_limit_date") {
+                $tab[$i][$j]["value"]=$core_tools->format_date_db($tab[$i][$j]["value"], false);
+                $compareDate = "";
+                if ($tab[$i][$j]["value"] <> "" && ($statusCmp == "NEW" || $statusCmp == "COU" || $statusCmp == "VAL" || $statusCmp == "RET"))
                 {
-                    $tab[$i][$j]["label"]=_TYPE;
-                    $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                    $tab[$i][$j]["size"]="15";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=true;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["order"]="type_label";
+                    $compareDate = $core_tools->compare_date($tab[$i][$j]["value"], date("d-m-Y"));
+                    if ($compareDate == "date2")
+                    {
+                        $tab[$i][$j]["value"] = "<span style='color:red;'><b>".$tab[$i][$j]["value"]."<br><small>(".$core_tools->nbDaysBetween2Dates($tab[$i][$j]["value"], date("d-m-Y"))." "._DAYS.")<small></b></span>";
+                    }
+                    elseif ($compareDate == "date1")
+                    {
+                        $tab[$i][$j]["value"] = $tab[$i][$j]["value"]."<br><small>(".$core_tools->nbDaysBetween2Dates(date("d-m-Y"), $tab[$i][$j]["value"])." "._DAYS.")<small>";
+                    }
+                    elseif ($compareDate == "equal")
+                    {
+                        $tab[$i][$j]["value"] = "<span style='color:blue;'><b>".$tab[$i][$j]["value"]."<br><small>("._LAST_DAY.")<small></b></span>";
+                    }
                 }
-                
-                if($tab[$i][$j][$value]=="status")
-                {
-                    $tab[$i][$j]["label"]=_STATUS;
-                    $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
-                    $tab[$i][$j]['value'] = '<img src = "'.$res_status['IMG_SRC'].'" alt = "'.$res_status['LABEL'].'" title = "'.$res_status['LABEL'].'">';
-                    $tab[$i][$j]["size"]="5";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=true;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["order"]="status";
-                }
-                
-                if($tab[$i][$j][$value]=="subject")
-                {
-                    $tab[$i][$j]["label"]=_SUBJECT;
-                    $tab[$i][$j]["value"] = $request->cut_string($request->show_string($tab[$i][$j]["value"]), 250);
-                    $tab[$i][$j]["size"]="25";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=true;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["order"]="subject";
-                }
-                
-                if($tab[$i][$j][$value]=="dest_user")
-                {
-                    $tab[$i][$j]["label"]=_DEST_USER;
-                    $tab[$i][$j]["size"]="10";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=false;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["order"]="dest_user";
-                }
-                
-                if($tab[$i][$j][$value]=="creation_date")
-                {
-                    $tab[$i][$j]["label"]=_REG_DATE;
-                    $tab[$i][$j]["size"]="10";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=true;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["value"] = $request->format_date_db($tab[$i][$j]['value'], false);
-                    $tab[$i][$j]["order"]="creation_date";
-                }
-                
-                if($tab[$i][$j][$value]=="entity_label")
-                {
-                    $tab[$i][$j]["label"]=_ENTITY;
-                    $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);
-                    $tab[$i][$j]["size"]="10";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=false;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["order"]="entity_label";
-                }
-                
-                if($tab[$i][$j][$value]=="category_id")
-                {
-                    $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["value"] = $_SESSION['coll_categories']['business_coll'][$tab[$i][$j]['value']];
-                    $tab[$i][$j]["label"]=_CATEGORY;
-                    $tab[$i][$j]["size"]="10";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=true;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["order"]="category_id";
-                }
-                
-                if($tab[$i][$j][$value]=="category_img")
-                {
-                    $tab[$i][$j]["label"]=_CATEGORY;
-                    $tab[$i][$j]["size"]="10";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=false;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $my_imgcat = get_img_cat($tab[$i][$j]['value'],$extension_icon);
-                    $tab[$i][$j]['value'] = "<img src = '".$my_imgcat."' alt = '' title = ''>";
-                    $tab[$i][$j]["value"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["order"]="category_id";
-                }
-                
-                if($tab[$i][$j][$value]=="contact_firstname")
-                {
-                    $contact_firstname = $tab[$i][$j]["value"];
-                    $tab[$i][$j]["show"]=false;
-                }
-                if($tab[$i][$j][$value]=="contact_lastname")
-                {
-                    $contact_lastname = $tab[$i][$j]["value"];
-                    $tab[$i][$j]["show"]=false;
-                }
-                if($tab[$i][$j][$value]=="contact_society")
-                {
-                    $contact_society = $tab[$i][$j]["value"];
-                    $tab[$i][$j]["show"]=false;
-                }
-                if($tab[$i][$j][$value]=="user_firstname")
-                {
-                    $user_firstname = $tab[$i][$j]["value"];
-                    $tab[$i][$j]["show"]=false;
-                }
-                if($tab[$i][$j][$value]=="user_lastname")
-                {
-                    $user_lastname = $tab[$i][$j]["value"];
-                    $tab[$i][$j]["show"]=false;
-                }
-                
-                if($tab[$i][$j][$value]=="$template_to_use exp_user_id")
-                {
-                    $tab[$i][$j]["label"]=_CONTACT;
-                    $tab[$i][$j]["size"]="10";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=false;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["value"] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
-                    $tab[$i][$j]["order"]=false;
-                }
-                
-                if($tab[$i][$j][$value]=="case_id" && $core_tools->is_module_loaded("cases") == true)
-                {
-                    $tab[$i][$j]["label"]=_CASE_NUM;
-                    $tab[$i][$j]["size"]="10";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=false;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["value"] = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=details_cases&module=cases&id=".$tab[$i][$j]['value']."'>".$tab[$i][$j]['value']."</a>";
-                    $tab[$i][$j]["order"]="case_id";
-                }
-                if($tab[$i][$j][$value]=="case_label" && $core_tools->is_module_loaded("cases") == true)
-                {
-                    $tab[$i][$j]["label"]=_CASE_LABEL;
-                    $tab[$i][$j]["size"]="10";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=true;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["order"]="case_id";
-                }
-                if($tab[$i][$j][$value]=="exp_user_id")
-                {
-                    $tab[$i][$j]["label"]=_CONTACT;
-                    $tab[$i][$j]["size"]="10";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=false;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]["value"] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
-                    $tab[$i][$j]["order"]=false;
-                }
-                
+                $tab[$i][$j]["label"]=_PROCESS_LIMIT_DATE;
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='process_limit_date';
+            }
+            if ($tab[$i][$j][$value]=="entity_label") {
+                $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
+                $tab[$i][$j]["label"]=_DESTINATION;
+                $tab[$i][$j]["size"]="12";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='entity_label';
+            }
+            if ($tab[$i][$j][$value]=="dest_user") {
+                $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
+                $tab[$i][$j]["label"]=_DEST_USER;
+                $tab[$i][$j]["size"]="12";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='dest_user';
+            }
+            if ($tab[$i][$j][$value]=="count_attachment") {
+                $tab[$i][$j]["label"]=_ATTACHMENTS;
+                $tab[$i][$j]["size"]="12";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=false;
+                $tab[$i][$j]["order"]='count_attachment';
             }
         }
     }
+}
 
 if (count($tab) > 0) {
 
@@ -509,6 +528,8 @@ if (count($tab) > 0) {
         $paramsTab['templates'] = $template_list;
     }
     $paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
+    $paramsTab['viewDetailsLink'] = 'index.php?page=details_business'
+        . '&dir=indexing_searching&coll_id=' . $_SESSION['collection_id_choice'];   //Link to the details page
     
     //Form attributs
         //Standalone form

@@ -331,7 +331,10 @@ $arr_tmp2 = array('label' => _STATUS_PLUR, 'type' => 'select_multiple', 'param' 
 $param['status'] = $arr_tmp2;
 
 //doc_type
-$conn->query("select type_id, description  from  ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description asc");
+$conn->query("select type_id, description  from  " 
+    . $_SESSION['tablename']['doctypes'] . " where enabled = 'Y' and coll_id = '" 
+    . $coll_id . "' order by description asc"
+);
 $arr_tmp = array();
 while ($res=$conn->fetch_object())
 {
@@ -624,7 +627,8 @@ if(isset($_REQUEST['nodetails']))
        <tr>
      <td width="70%">
         <label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
-        <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php echo $browser_ie;?>, '<?php echo _ERROR_IE_SEARCH;?>');">
+        <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php 
+        echo $browser_ie;?>, '<?php echo _ERROR_IE_SEARCH;?>');window.location.href = '#bottom';">
             <?php echo $src_tab; ?>
         </select>
      </td>
@@ -661,6 +665,9 @@ load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?ph
     ?>clear_search_form('frmsearch2','select_criteria');clear_q_list(); <?php
 }?>
 </script>
+
+<h2 id="bottom">&nbsp;</h2>
+
 <?php if($mode == 'popup' || $mode == 'frame')
 {
     echo '</div>';

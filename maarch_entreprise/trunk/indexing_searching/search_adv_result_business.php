@@ -645,14 +645,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $find2 =  $find1 + 1;
                 $contact_type = substr($contactTmp, 0, $find1);
                 $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
-                if ($contact_type == "user")
-                {
-                    $where_request .= " (exp_user_id = '".$contact_id."' or dest_user_id = '".$contact_id."') and ";
-                }
-                elseif ($contact_type == "contact")
-                {
-                    $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."') and ";
-                }
+                $where_request .= " contact_id = '".$contact_id."' and ";
             }
             // SEARCH IN BASKETS
             else if ($tab_id_fields[$j] == 'baskets_clause' && !empty($_REQUEST['baskets_clause'])) {
