@@ -1,9 +1,9 @@
 <?php
 
 /*
-*   Copyright 2008, 2013 Maarch
+*   Copyright 2008-2013 Maarch
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by

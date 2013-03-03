@@ -282,23 +282,6 @@ $param['net_sum'] = $arr_tmp2;
 $arr_tmp2 = array('label' => _TAX_SUM, 'type' => 'input_text', 'param' => array('field_label' => _TAX_SUM, 'other' => $size));
 $param['tax_sum'] = $arr_tmp2;
 
-//category
-$arr_tmp = array();
-array_push($arr_tmp, array('VALUE' => '', 'LABEL' => _CHOOSE_CATEGORY));
-foreach (array_keys($_SESSION['coll_categories']['business_coll']) as $cat_id) {
-    if ($cat_id <> 'default_category') {
-        array_push(
-            $arr_tmp, 
-            array(
-                'VALUE' => $cat_id, 
-                'LABEL' => $_SESSION['coll_categories']['business_coll'][$cat_id]
-            )
-        );
-    }
-}
-$arr_tmp2 = array('label' => _CATEGORY, 'type' => 'select_simple', 'param' => array('field_label' => _CATEGORY,'default_label' => '', 'options' => $arr_tmp));
-$param['category'] = $arr_tmp2;//Arbox_id ; for physical_archive
-
 // Sorts the param array
 function cmp($a, $b)
 {
@@ -381,12 +364,6 @@ if (isset($_REQUEST['nodetails'])) {
             <input class="button_search_adv" name="imageField" type="submit" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" /><br/>
             <input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" />
         </td>
-        <!--td align="left"><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
-        <td  width="75%" align="right" ><?php if ($core_tools->is_module_loaded("basket") == true) {?><span class="bold"><?php echo _SPREAD_SEARCH_TO_BASKETS;?></span>
-            <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause_false,baskets_clause_true#radio" />
-            <input type="radio" name="baskets_clause" id="baskets_clause_false" class="check"  value="false" checked="checked" /><?php echo _NO;?>
-            <input type="radio" name="baskets_clause" id="baskets_clause_true" class="check"  value="true"  /><?php echo _YES; }?>
-        </td-->
     </tr>
 </table>
 <table align="center" border="0" width="100%">
@@ -400,6 +377,13 @@ if (isset($_REQUEST['nodetails'])) {
                     <div class="block">
                     <table border="0" width="100%">
                         <tr>
+                            <td style="width:30px;align:center;">
+                                <img src="<?php 
+                                        echo $_SESSION['config']['businessappurl'] ;
+                                        ?>static.php?filename=manage_baskets_off.gif&module=basket" alt="<?php 
+                                        echo  _BASKET;
+                                    ?>"/>
+                            </td>
                             <td width="70%">
                                 <label for="baskets" class="bold" ><?php echo _SPREAD_SEARCH_TO_BASKETS;?>:</label>
                                 <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple" />
@@ -426,6 +410,32 @@ if (isset($_REQUEST['nodetails'])) {
                             <td><em><?php echo _SEARCH_SCOPE_HELP; ?></em></td>
                             <td>&nbsp;</td>
                         </tr>
+                        <tr>
+                            <td style="width:30px;align:center;"><span id="imgCat" name="imgCat" /></td>
+                            <td width="70%">
+                                <label for="baskets" class="bold" ><?php echo _CATEGORY;?>:</label>
+                                <input type="hidden" name="meta[]" value="category#category#select_simple" />
+                                <select name="category" id="category" onchange="changeCategory(this.options[this.selectedIndex].value);">
+                                    <?php 
+                                    foreach (array_keys($_SESSION['coll_categories']['business_coll']) as $cat_id) {
+                                        if ($cat_id <> 'default_category') {
+                                            ?>
+                                            <option id="<?php 
+                                                    echo $cat_id;
+                                                    ?>" value="<?php 
+                                                    echo $cat_id;
+                                                    ?>" ><?php 
+                                                    echo $_SESSION['coll_categories']['business_coll'][$cat_id];
+                                                ?></option>
+                                            <?php
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </td>
+                            <td><em><?php echo _CATEGORY_HELP; ?></em></td>
+                            <td>&nbsp;</td>
+                        </tr>
                     </table>
                     </div>
                     <div class ="block_end">&nbsp;</div>
@@ -447,7 +457,8 @@ if (isset($_REQUEST['nodetails'])) {
         <div class="block">
             <table border = "0" width="100%">
                 <tr>
-                    <td width="70%"><label for="contactid" class="bold"><?php echo _CONTACT;?>:</label>
+                    <td style="width:30px;align:center;"><span id="imgContact" name="imgContact" /></td>
+                    <td width="70%"><label for="contactid" class="bold"><span id="labelContact" name="labelContact" />:</label>
                         <input type="text" name="contactid" id="contactid" />
                         <input type="hidden" name="meta[]" value="contactid#contactid#input_text" />
                         <div id="contactListByName" class="autocomplete"></div>
@@ -463,6 +474,13 @@ if (isset($_REQUEST['nodetails'])) {
                     <td><em><?php echo _CONTACT_HELP; ?></em></td>
                 </tr>
                 <tr>
+                    <td style="width:30px;align:center;">
+                        <img src="<?php 
+                            echo $_SESSION['config']['businessappurl'] ;
+                            ?>static.php?filename=subject.png" alt="<?php 
+                            echo  _SUBJECT;
+                        ?>"/>
+                    </td>
                     <td width="70%"><label for="subject" class="bold" ><?php echo _SUBJECT;?>:</label>
                         <input type="text" name="subject" id="subject" <?php echo $size; ?>  />
                         <input type="hidden" name="meta[]" value="subject#subject#input_text" />
@@ -470,50 +488,77 @@ if (isset($_REQUEST['nodetails'])) {
                     <td><em><?php echo _SUBJECT_HELP; ?></em></td>
                 </tr>
                 <tr>
+                    <td style="width:30px;align:center;">
+                        <img src="<?php 
+                            echo $_SESSION['config']['businessappurl'] ;
+                            ?>static.php?filename=identifier.png" alt="<?php 
+                            echo  _IDENTIFIER;
+                        ?>"/>
+                    </td>
                     <td width="70%"><label for="identifier" class="bold"><?php echo _IDENTIFIER;?>:</label>
                         <input type="text" name="identifier" id="identifier" <?php echo $size; ?>  />
                         <input type="hidden" name="meta[]" value="identifier#identifier#input_text" />
                     </td>
                     <td><em><?php echo _IDENTIFIER_HELP; ?></em></td>
                 </tr>
-                <tr>
-                    <td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT;?>:</label>
-                        <input type="text" name="fulltext" id="fulltext" <?php echo $size; ?>  />
-                        <input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
-                        <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=fulltext_search_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=300,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><img src = "<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_search.gif" alt="<?php echo _HELP_FULLTEXT_SEARCH; ?>" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>" /></a>
+                <tr id="totalSumMin">
+                    <td style="width:30px;align:center;">
+                        <img src="<?php 
+                                echo $_SESSION['config']['businessappurl'] ;
+                                ?>static.php?filename=amount.png" alt="<?php 
+                                echo  _TOTAL_SUM;
+                            ?>"/>
                     </td>
-                    <td><em><?php echo _FULLTEXT_HELP; ?></em></td>
-                </tr>
-                <tr>
-                    <td width="70%"><label for="numged" class="bold"><?php echo _N_GED;?>:</label>
-                        <input type="text" name="numged" id="numged" <?php echo $size; ?>  />
-                        <input type="hidden" name="meta[]" value="numged#numged#input_text" />
-                    </td>
-                    <td><em><?php echo _N_GED_HELP; ?></em></td>
-                </tr>
-                <tr>
                     <td width="70%"><label for="total_sum_min" class="bold"><?php echo _TOTAL_SUM_MIN;?>:</label>
                         <input type="text" name="total_sum_min" id="total_sum_min" <?php echo $size; ?>  />
                         <input type="hidden" name="meta[]" value="total_sum_min#total_sum_min#input_text" />
                     </td>
                     <td><em><?php echo _TOTAL_SUM_MIN_HELP; ?></em></td>
                 </tr>
-                <tr>
+                <tr id="totalSumMax">
+                    <td style="width:30px;align:center;">
+                        <img src="<?php 
+                                echo $_SESSION['config']['businessappurl'] ;
+                                ?>static.php?filename=amount.png" alt="<?php 
+                                echo  _TOTAL_SUM;
+                            ?>"/>
+                    </td>
                     <td width="70%"><label for="total_sum_max" class="bold"><?php echo _TOTAL_SUM_MAX;?>:</label>
                         <input type="text" name="total_sum_max" id="total_sum_max" <?php echo $size; ?>  />
                         <input type="hidden" name="meta[]" value="total_sum_max#total_sum_max#input_text" />
                     </td>
                     <td><em><?php echo _TOTAL_SUM_MAX_HELP; ?></em></td>
                 </tr>
-            </table>
+                <tr>
+                    <td style="width:30px;align:center;">
+                        <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=fulltext_search_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=300,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');">
+                            <img src = "<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_search.gif" alt="<?php echo _HELP_FULLTEXT_SEARCH; ?>" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>" /></a>
+                    </td>
+                    <td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT;?>:</label>
+                        <input type="text" name="fulltext" id="fulltext" <?php echo $size; ?>  />
+                        <input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
+                        
+                    </td>
+                    <td><em><?php echo _FULLTEXT_HELP; ?></em></td>
+                </tr>
+                <tr>
+                    <td style="width:30px;align:center;"><span id="imgContact" name="imgContact"></span></td>
+                    <td width="70%"><label for="numged" class="bold"><?php echo _N_GED;?>:</label>
+                        <input type="text" name="numged" id="numged" <?php echo $size; ?>  />
+                        <input type="hidden" name="meta[]" value="numged#numged#input_text" />
+                    </td>
+                    <td><em><?php echo _N_GED_HELP; ?></em></td>
+                </tr>
+                </table>
             </div>
             <div class="block_end">&nbsp;</div>
         </td>
     </tr>
     <tr><td colspan="2"><hr/></td></tr>
 <tr>
-<td  >
+<td >
 <div class="block">
+<h2 id="bottom">&nbsp;</h2>
  <table border = "0" width="100%">
        <tr>
      <td width="70%">
@@ -531,10 +576,10 @@ if (isset($_REQUEST['nodetails'])) {
  <div class="block_end">&nbsp;</div>
 </td></tr>
 </table>
-<h2 id="bottom">&nbsp;</h2>
 <table align="center" border="0" width="100%">
     <tr>
-        <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
+        <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();">
+                <img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
         <td align="right">
             <input class="button_search_adv" name="imageField" type="submit" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" /><br/>
             <input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" />
@@ -554,9 +599,71 @@ if (isset($_REQUEST['init_search'])) {
     ?>clear_search_form('frmsearch2','select_criteria');clear_q_list(); <?php
 }
 ?>
+
+//ON LOAD
+changeCategory($('category').value);
+
+function changeCategory(catId)
+{
+    if (catId == 'purchase') {
+        $('totalSumMin').style.display = 'inline';
+        $('totalSumMax').style.display = 'inline';
+        $('imgCat').innerHTML = '<img src="<?php 
+            echo $_SESSION['config']['businessappurl'] ;
+            ?>static.php?filename=cat_doc_purchase.png" alt="<?php 
+            echo  _PURCHASE;
+        ?>"/>';
+        $('imgContact').innerHTML = '<img src="<?php 
+            echo $_SESSION['config']['businessappurl'] ;
+            ?>static.php?filename=supplier.png" alt="<?php 
+            echo  _SUPPLIER;
+        ?>"/>';
+        $('labelContact').innerHTML = '<?php echo  _SUPPLIER;?>';
+    } else if (catId == 'sell') {
+        $('totalSumMin').style.display = 'inline';
+        $('totalSumMax').style.display = 'inline';
+        $('imgCat').innerHTML = '<img src="<?php 
+            echo $_SESSION['config']['businessappurl'] ;
+            ?>static.php?filename=cat_doc_sell.png" alt="<?php 
+            echo  _SELL;
+        ?>"/>';
+        $('imgContact').innerHTML = '<img src="<?php 
+            echo $_SESSION['config']['businessappurl'] ;
+            ?>static.php?filename=purchaser.png" alt="<?php 
+            echo  _PURCHASER;
+        ?>"/>';
+        $('labelContact').innerHTML = '<?php echo  _PURCHASER;?>';
+    } else if (catId == 'enterprise_document') {
+        $('totalSumMin').style.display = 'none';
+        $('totalSumMax').style.display = 'none';
+        $('imgCat').innerHTML = '<img src="<?php 
+            echo $_SESSION['config']['businessappurl'] ;
+            ?>static.php?filename=cat_doc_enterprise_document.png" alt="<?php 
+            echo  _ENTERPRISE_DOCUMENT;
+        ?>"/>';
+        $('imgContact').innerHTML = '<img src="<?php 
+            echo $_SESSION['config']['businessappurl'] ;
+            ?>static.php?filename=my_contacts_off.gif" alt="<?php 
+            echo  _CONTACT;
+        ?>"/>';
+        $('labelContact').innerHTML = '<?php echo  _CONTACT;?>';
+    } else if (catId == 'human_resources') {
+        $('totalSumMin').style.display = 'none';
+        $('totalSumMax').style.display = 'none';
+        $('imgCat').innerHTML = '<img src="<?php 
+            echo $_SESSION['config']['businessappurl'] ;
+            ?>static.php?filename=cat_doc_human_resources.png" alt="<?php 
+            echo  _PURCHASE;
+        ?>"/>';
+        $('imgContact').innerHTML = '<img src="<?php 
+            echo $_SESSION['config']['businessappurl'] ;
+            ?>static.php?filename=employee.png" alt="<?php 
+            echo  _HUMAN_RESOURCES;
+        ?>"/>';
+        $('labelContact').innerHTML = '<?php echo  _EMPLOYEE;?>';
+    }
+}
 </script>
-
-
 
 <?php 
 if ($mode == 'popup' || $mode == 'frame') {

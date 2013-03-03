@@ -621,9 +621,10 @@ if(isset($_REQUEST['nodetails']))
     </tr>
     <tr><td colspan="2"><hr/></td></tr>
 <tr>
-<td  >
+<td >
 <div class="block">
- <table border = "0" width="100%">
+<h2 id="bottom">&nbsp;</h2>
+<table border = "0" width="100%">
        <tr>
      <td width="70%">
         <label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
@@ -640,8 +641,6 @@ if(isset($_REQUEST['nodetails']))
  <div class="block_end">&nbsp;</div>
 </td></tr>
 </table>
-
-<h2 id="bottom">&nbsp;</h2>
 
 <table align="center" border="0" width="100%">
     <tr>
