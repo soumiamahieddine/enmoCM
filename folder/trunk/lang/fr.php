@@ -63,13 +63,13 @@ if (!defined('_FOLDER'))
 if (!defined('_MODIFY_FOLDER'))
     define('_MODIFY_FOLDER', 'Droit de modification des index d&rsquo;un dossier');
 if (!defined('_FOLDERID'))
-    define('_FOLDERID', 'Num&eacute;ro du Dossier/Sous-dossier');
+    define('_FOLDERID', 'Num&eacute;ro du Dossier');
 if (!defined('_FOLDERSYSTEMID'))
     define('_FOLDERSYSTEMID', 'Num&eacute;ro syst&egrave;me Maarch');
 if (!defined('_FOLDERID_LONG'))
     define('_FOLDERID_LONG', 'Num&eacute;ro de dossier');
 if (!defined('_FOLDERNAME'))
-    define('_FOLDERNAME', 'Nom du Dossier/Sous-dossier');
+    define('_FOLDERNAME', 'Nom du Dossier');
 if (!defined('_FOLDERDATE'))
     define('_FOLDERDATE', 'Date de cr&eacute;ation');
 if (!defined('_FOLDERDATE_START'))
@@ -307,9 +307,9 @@ if (!defined('_REALLY_CLOSE_THIS_FOLDER'))
 if (!defined('_SUBFOLDER'))                         
     define('_SUBFOLDER', 'Sous-dossier');
 if (!defined('_VIEW_FOLDER_TREE'))                  
-    define('_VIEW_FOLDER_TREE', 'Consultation Dossiers Sous-dossiers');
+    define('_VIEW_FOLDER_TREE', 'Consultation Dossiers');
 if (!defined('_SEARCH_FOLDER_TREE'))                
-    define('_SEARCH_FOLDER_TREE', 'Recherche Dossiers Sous-dossiers');
+    define('_SEARCH_FOLDER_TREE', 'Recherche Dossiers');
 if (!defined('_NB_DOCS_IN_FOLDER'))                 
     define('_NB_DOCS_IN_FOLDER', 'Nombre de documents');
 if (!defined('_IS_FOLDER_BASKET'))                  
