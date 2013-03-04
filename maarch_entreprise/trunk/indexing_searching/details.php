@@ -223,6 +223,7 @@ if (isset($_POST['submit_index_doc'])) {
         include_once("modules".DIRECTORY_SEPARATOR."tags".DIRECTORY_SEPARATOR."tags_update.php");
     }
 }
+
 //delete the doctype
 if (isset($_POST['delete_doc'])) {
     $is ->delete_doc($s_id, $coll_id);
@@ -277,7 +278,7 @@ if (empty($_SESSION['error']) || $_SESSION['indexation']) {
 
 }
 ?>
-<div id="details_div" style="display:none;">
+<div id="details_div" style="display:block;">
 <h1 class="titdetail">
     <img src="<?php
         echo $_SESSION['config']['businessappurl'];
@@ -290,7 +291,7 @@ if (empty($_SESSION['error']) || $_SESSION['indexation']) {
         ?>)</span>
 </h1>
 <div id="inner_content" class="clearfix">
-<?php
+<?php 
 if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 {
     ?>
@@ -419,7 +420,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             //$db->show_array($indexes);
             $detailsExport = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" >';
             $detailsExport .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">';
-            $detailsExport .= "<head><title>Maarch Details</title><meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /><meta content='fr' http-equiv='Content-Language'/><meta http-equiv='cache-control' content='no-cache'/><meta http-equiv=\"pragma\" content=\"no-cache\"> </head>";
+            $detailsExport .= "<head><title>Maarch Details</title><meta http-equiv='Content-Type' content='text/html; charset=UTF-8' /><meta content='fr' http-equiv='Content-Language'/><meta http-equiv='cache-control' content='no-cache'/><meta http-equiv='pragma' content='no-cache'><meta http-equiv='Expires' content='0'></head>";
             $detailsExport .= "<body onload='javascript:window.print();' style='font-size:8pt'>";
             ?>
             <div class="block">
@@ -967,6 +968,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <dd><?php
                         require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
                         $diff_list = new diffusion_list();
+                        $roles = $diff_list->get_listinstance_roles();
                         $_SESSION['details']['diff_list'] = array();
                         $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id);
                         //$db->show_array($_SESSION['details']['diff_list']);
@@ -1020,94 +1022,39 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <br/>
                                 <?php
                             }
-                            if (count($_SESSION['details']['diff_list']['copy']['users']) > 0 || count($_SESSION['details']['diff_list']['copy']['entities']) > 0)
-                            {
-                                //$detailsExport .= "<p class='sstit'>"._TO_CC."</p>";
-                                //$detailsExport .= "<table cellpadding='0' cellspacing='0' border='0' class='listing'>";
-                                ?>
-                                <p class="sstit"><?php echo _TO_CC;?></p>
-                                <table cellpadding="0" cellspacing="0" border="0" class="listing">
-                                <?php $color = ' class="col"';
-                                for($i=0;$i<count($_SESSION['details']['diff_list']['copy']['entities']);$i++)
-                                {
-                                    if ($color == ' class="col"')
+
+                            foreach($roles as $role_id => $role_config) {
+                                if (count($_SESSION['details']['diff_list'][$role_id]['users']) > 0 
+                                    || count($_SESSION['details']['diff_list'][$role_id]['entities']) > 0
+                                ) { ?>
+                                    <p class="sstit"><?php echo $role_config['list_label'];?></p>
+                                    <table cellpadding="0" cellspacing="0" border="0" class="listing">
+                                    <?php $color = ' class="col"';
+                                    for($i=0;$i<count($_SESSION['details']['diff_list'][$role_id]['entities']);$i++)
                                     {
-                                        $color = '';
+                                        if ($color == ' class="col"') $color = '';
+                                        else $color = ' class="col"'; ?>
+                                        <tr <?php echo $color;?> >
+                                            <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY;?>" title="<?php echo _ENTITY;?>" /></td>
+                                            <td ><?php echo $_SESSION['details']['diff_list'][$role_id]['entities'][$i]['entity_id'];?></td>
+                                            <td colspan="2"><?php echo $_SESSION['details']['diff_list'][$role_id]['entities'][$i]['entity_label'];?></td>
+                                        </tr><?php
                                     }
-                                    else
+                                    for($i=0;$i<count($_SESSION['details']['diff_list'][$role_id]['users']);$i++)
                                     {
-                                        $color = ' class="col"';
-                                    }
-                                    /*$detailsExport .= "<tr ".$color.">";
-                                    $detailsExport .= "<td><img src='".$_SESSION['config']['businessappurl']."static.php?filename=manage_entities_b_small.gif&module=entities' alt='"._ENTITY."' title='"._ENTITY."' /></td>";
-                                    $detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_id']."</td>";
-                                    $detailsExport .= "<td colspan='2'>".$_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_label']."</td>";
-                                    $detailsExport .= "</tr>";*/
-                                    ?>
-                                    <tr <?php echo $color;?> >
-                                        <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY;?>" title="<?php echo _ENTITY;?>" /></td>
-                                        <td ><?php echo $_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_id'];?></td>
-                                        <td colspan="2"><?php echo $_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_label'];?></td>
-                                    </tr><?php
-                                }
-                                for($i=0;$i<count($_SESSION['details']['diff_list']['copy']['users']);$i++)
-                                {
-                                    if ($color == ' class="col"') $color = '';
-                                    else $color = ' class="col"';
-                                    /*$detailsExport .= "<tr ".$color.">";
-                                    $detailsExport .= "<td><img src='".$_SESSION['config']['businessappurl']."static.php?filename=manage_users_entities_b_small.gif&module=entities' alt='"._USER."' title='"._USER."' /></td>";
-                                    $detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['users'][$i]['firstname']."</td>";
-                                    $detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['users'][$i]['lastname']."</td>";
-                                    $detailsExport .= "<td>".$_SESSION['details']['diff_list']['copy']['users'][$i]['entity_label']."</td>";
-                                    $detailsExport .= "</tr>";*/
-                                    ?>
-                                    <tr <?php echo $color;?> >
-                                        <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
-                                        <td ><?php echo $_SESSION['details']['diff_list']['copy']['users'][$i]['firstname'];?></td>
-                                        <td ><?php echo $_SESSION['details']['diff_list']['copy']['users'][$i]['lastname'];?></td>
-                                        <td><?php echo $_SESSION['details']['diff_list']['copy']['users'][$i]['entity_label'];?></td>
-                                    </tr><?php
-                                }
-                                //$detailsExport .= "</table>";
-                                ?>
-                                </table> <br/>
-                                <?php
-                            }
-                            // 1.4 custom diffusion lists
-                            if(count($_SESSION['listinstance_roles']) > 0) {
-                                foreach($_SESSION['listinstance_roles'] as $role_id => $role_config) {
-                                    if (count($_SESSION['details']['diff_list'][$role_id]['users']) > 0 
-                                        || count($_SESSION['details']['diff_list'][$role_id]['entities']) > 0
-                                    ) { ?>
-                                        <p class="sstit"><?php echo $role_config['list_label'];?></p>
-                                        <table cellpadding="0" cellspacing="0" border="0" class="listing">
-                                        <?php $color = ' class="col"';
-                                        for($i=0;$i<count($_SESSION['details']['diff_list'][$role_id]['entities']);$i++)
-                                        {
-                                            if ($color == ' class="col"') $color = '';
-                                            else $color = ' class="col"'; ?>
-                                            <tr <?php echo $color;?> >
-                                                <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY;?>" title="<?php echo _ENTITY;?>" /></td>
-                                                <td ><?php echo $_SESSION['details']['diff_list'][$role_id]['entities'][$i]['entity_id'];?></td>
-                                                <td colspan="2"><?php echo $_SESSION['details']['diff_list'][$role_id]['entities'][$i]['entity_label'];?></td>
-                                            </tr><?php
-                                        }
-                                        for($i=0;$i<count($_SESSION['details']['diff_list'][$role_id]['users']);$i++)
-                                        {
-                                            if ($color == ' class="col"') $color = '';
-                                            else $color = ' class="col"';
-                                            ?>
-                                            <tr <?php echo $color;?> >
-                                                <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
-                                                <td ><?php echo $_SESSION['details']['diff_list'][$role_id]['users'][$i]['firstname'];?></td>
-                                                <td ><?php echo $_SESSION['details']['diff_list'][$role_id]['users'][$i]['lastname'];?></td>
-                                                <td><?php echo $_SESSION['details']['diff_list'][$role_id]['users'][$i]['entity_label'];?></td>
-                                            </tr><?php
-                                        } ?>
-                                        </table> <br/>
-                                        <?php
-                                    } 
-                                }
+                                        if ($color == ' class="col"') $color = '';
+                                        else $color = ' class="col"';
+                                        ?>
+                                        <tr <?php echo $color;?> >
+                                            <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
+                                            <td ><?php echo $_SESSION['details']['diff_list'][$role_id]['users'][$i]['firstname'];?></td>
+                                            <td ><?php echo $_SESSION['details']['diff_list'][$role_id]['users'][$i]['lastname'];?></td>
+                                            <td><?php echo $_SESSION['details']['diff_list'][$role_id]['users'][$i]['entity_label'];?></td>
+                                        </tr><?php
+                                    } ?>
+                                    </table> <br/>
+                                    <?php
+                                } 
                             }
                                                         
                             if ($core->test_service('update_list_diff_in_details', 'entities', false)) {
