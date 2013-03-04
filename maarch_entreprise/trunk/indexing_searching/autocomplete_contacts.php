@@ -87,6 +87,7 @@ if ($table == 'users') {
     $queryParts = array();
     foreach($args as $arg) {
         $arg = $req->protect_string_db($arg);
+        if(strlen($arg) == 0) continue;
         # Full match of one given arg
         $expr = $arg;
         $conf = 100;
@@ -118,7 +119,7 @@ if ($table == 'users') {
     $time = number_format(($timeend-$timestart), 3);
 
     $found = false;
-    echo "<ul id=\"autocomplete_contacts_ul\" title='$nb contacts'>";
+    echo "<ul id=\"autocomplete_contacts_ul\" title='".$_REQUEST['contact_type'] . " [".$_REQUEST['Input']."] = $nb contacts'>";
     for ($i=0; $i<$l; $i++) {
         $res = $req->fetch_object();
         $score = round($res->score / $num_args);
@@ -126,7 +127,8 @@ if ($table == 'users') {
         else $color = 'white';
         echo "<li style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'>". $res->result ."</li>";
     }
+    if($nb == 0) echo "<li></li>";
     echo "</ul>";
-    if ($nb > $m)
-        echo "<p align='left' style='background-color:LemonChiffon;' title=\"La liste n'a pas pu être affichée intégralement, veuillez compléter votre recherche.\" >...</p>";
+    if($nb == 0) echo "<p align='left' style='background-color:LemonChiffon;' title=\"Aucun résultat trouvé, veuillez compléter votre recherche.\" >...</p>"; 
+    if ($nb > $m) echo "<p align='left' style='background-color:LemonChiffon;' title=\"La liste n'a pas pu être affichée intégralement, veuillez compléter votre recherche.\" >...</p>";
 }
