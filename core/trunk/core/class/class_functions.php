@@ -1705,4 +1705,26 @@ class functions
             mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
         );
     }
+    
+    /**
+    * Return the amount corresponding to the currency
+    * @param  $currency string currency of the amount
+    * @param  $amount float the amount
+    */
+    function formatAmount($currency, $amount)
+    {
+        $formattedAmount = '';
+        if ($currency == 'EUR') {
+            $formattedAmount = '€ ' . number_format($amount , 2 , ',' , '.' );
+        } elseif  ($currency == 'DOL') {
+            $formattedAmount = '$ ' . number_format($amount , 2 , '.' , ',' );
+        } elseif  ($currency == 'YEN') {
+            $formattedAmount = '¥ ' . number_format($amount , 2 , '.' , ',' );
+        } elseif  ($currency == 'POU') {
+            $formattedAmount = '£ ' . number_format($amount , 2 , '.' , ',' );
+        } else {
+            $formattedAmount = ' ' . number_format($amount , 2 , '' , '.' );
+        }
+        return $formattedAmount;
+    }
 }
