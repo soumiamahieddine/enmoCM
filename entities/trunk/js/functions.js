@@ -1,5 +1,13 @@
-function change_entity(entity_id, path_manage_script, diff_list_id, origin_keyword, display_value_tr, load_listmodel)
-{
+// LEGACY !!!!!!!
+// Change destination entity_id => load new listmodel with script load_listinstance
+function change_entity(
+	entity_id, 
+	path_manage_script, 
+	diff_list_id, 
+	origin_keyword, 
+	display_value_tr, 
+	load_listmodel
+) {
     var div_id = diff_list_id || 'diff_list_div';
     var tr_display_val = display_value_tr || 'table-row';
     var origin_arg = origin_keyword || '';
@@ -68,6 +76,76 @@ function change_entity(entity_id, path_manage_script, diff_list_id, origin_keywo
         });
     }
 }
+
+// Load list of listmodels to fill select list (index, validate)
+// >>> type of list (entity_id, type_id, custom list type)
+// >>> type of element to fill (select or list)
+// >>> id of element to fill
+function select_listmodels(
+	listmodel_type, 
+	element_type, 
+	element_id
+) {
+	new Ajax.Request(
+		'index.php?display=true&module=entities&page=select_listmodels',
+        {
+            method:'post',
+            parameters: { 
+				listmodel_type : listmodel_type,
+				element_type : element_type
+            },
+            onSuccess: function(answer)
+				{
+					var element = $(element_id);
+					if(element != null && element.nodeName.toUpperCase() == element_type.toUpperCase()) {
+						element.innerHTML += answer.responseText;
+					}
+				}
+        }
+	);
+}
+
+// Load listmodel to session[origin]
+// >>> type of list (entity_id, type_id, custom list type)
+// >>> id of list (entity_id, type_id, custom id)
+// >>> id of div to fill
+// >>> origin keyword
+function load_listmodel(
+	listmodel_type,
+	listmodel_id, 
+	diff_list_id, 
+	origin_keyword
+) {
+    var div_id = diff_list_id || 'diff_list_div';
+    var origin = origin_keyword || '';
+
+	var diff_list_div = $(div_id);
+	new Ajax.Request(
+		"index.php?display=true&module=entities&page=load_listmodel",
+        {
+            method:'post',
+            parameters: { 
+				listmodel_type : listmodel_type,
+				listmodel_id : listmodel_id,
+                origin : origin,
+			},
+            onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+                //alert(answer.responseText);
+                if(response.status == 0 ) {
+					diff_list_div.innerHTML = response.div_content;
+                }
+                else {
+					diff_list_div.innerHTML = '';
+                    try{
+                        $('frm_error').innerHTML = response.error_txt;
+                    } catch(e){}
+                }
+            }
+        }
+	);
+}
+
 
 function change_diff_list(path_manage_script, display_value_tr, difflist_div, difflist_tr)
 {

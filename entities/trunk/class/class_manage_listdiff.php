@@ -43,6 +43,28 @@ require_once 'core/core_tables.php';
 */
 class diffusion_list extends dbquery
 {
+    public function select_listmodels(
+        $objectType='entity_id'
+    ) {
+        $listmodels = array();
+        $this->connect();
+        
+        $query = 
+            "SELECT distinct object_type, object_id"
+            . " FROM " . ENT_LISTMODELS
+            . " WHERE object_type = '".$objectType."'" 
+            . " GROUP BY object_type, object_id " 
+            . " ORDER BY object_type, object_id ASC";
+
+        $this->query($query);
+        
+        while ($listmodel = $this->fetch_array()) {
+            $listmodels[] = $listmodel;
+        }
+        
+        return $listmodels;
+    }
+    
     /**
     * Gets the diffusion list model for a given entity
     *

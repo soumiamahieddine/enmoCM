@@ -219,7 +219,8 @@ case "add_user":
             $visible = 'Y';
         else 
             $visible = 'N';
-        
+        if(!isset($_SESSION[$origin]['diff_list'][$role_id]['users']))
+            $_SESSION[$origin]['diff_list'][$role_id]['users'] = array();
         array_push(
             $_SESSION[$origin]['diff_list'][$role_id]['users'],
             array(
@@ -247,7 +248,8 @@ case 'add_entity':
         $visible = 'Y';
     else 
         $visible = 'N';
-    
+    if(!isset($_SESSION[$origin]['diff_list'][$role_id]['entities']))
+            $_SESSION[$origin]['diff_list'][$role_id]['entities'] = array();
     array_push(
         $_SESSION[$origin]['diff_list'][$role_id]['entities'],
         array(
