@@ -595,14 +595,12 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . 'class="form_title" id="label_dep_exp" style="display:none;" >'
                 . _DEPARTMENT_EXP . '</label></td>';
         $frmStr .= '<td>&nbsp;</td>';
-        $frmStr .= '<td class="indexing_field"><select name="destination" '
-                . 'id="destination" onchange="clear_error(\'frm_error_'
-                . $actionId . '\');'
-                . 'change_entity(this.options[this.selectedIndex].value, \''
-                . $_SESSION['config']['businessappurl'].'index.php?display=true'
-                . '&module=entities&page=load_listinstance'.'\','
-                . '\'diff_list_div\', \'indexing\', \'' . $displayValue
-                . '\');">';
+        $frmStr .= '<td class="indexing_field">';
+        $frmStr .= '<select name="destination" id="destination" onchange="'
+                    . 'clear_error(\'frm_error_' . $actionId . '\');'
+                    . 'load_listmodel(\'entity_id\', this.options[this.selectedIndex].value, \'diff_list_div\', \'indexing\');'
+                    . '$(\'diff_list_tr\').style.display=\''.$displayValue.'\''
+                . ';" >';
         $frmStr .= '<option value="">' . _CHOOSE_DEPARTMENT . '</option>';
         $countAllEntities = count($allEntitiesTree);
         for ($cptEntities = 0;$cptEntities < $countAllEntities;$cptEntities++) {
@@ -622,6 +620,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<td><span class="red_asterisk" id="destination_mandatory" '
                 . 'style="display:inline;">*</span>&nbsp;</td>';
         $frmStr .= '</tr>';
+        
         $frmStr .= '<tr id="diff_list_tr" style="display:none;">';
         $frmStr .= '<td colspan="3">';
         $frmStr .= '<div id="diff_list_div" class="scroll_div" '
