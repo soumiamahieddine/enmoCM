@@ -140,6 +140,8 @@ class contacts extends dbquery
         } else {
             $_SESSION['m_admin']['contact']['OTHER_DATA'] = '';
         }
+        $_SESSION['m_admin']['contact']['IS_PRIVATE'] =
+            $_REQUEST['is_private'];
 
         if (isset($_REQUEST['owner']) && $_REQUEST['owner'] <> '') {
             if (preg_match('/\((.|\s|\d|\h|\w)+\)$/i', $_REQUEST['owner']) == 0) {
@@ -225,7 +227,7 @@ class contacts extends dbquery
                            . 'phone , email , address_num, address_street, '
                            . 'address_complement, address_town, '
                            . 'address_postal_code, address_country, other_data,'
-                           . " title, is_corporate_person) VALUES (  '"
+                           . " title, is_corporate_person, is_private) VALUES (  '"
                            . $this->protect_string_db(
                                 $_SESSION['m_admin']['contact']['LASTNAME']
                            ) . "', '" . $this->protect_string_db(
@@ -257,9 +259,12 @@ class contacts extends dbquery
                            ) . "','" . $this->protect_string_db(
                                 $_SESSION['m_admin']['contact']
                                     ['IS_CORPORATE_PERSON']
+                           ) . "','" . $this->protect_string_db(
+                                $_SESSION['m_admin']['contact']
+                                    ['IS_PRIVATE']
                            ) . "' )";
                 } else {
-                    $query = "INSERT INTO ".$_SESSION['tablename']['contacts']." (  lastname , firstname , society , function , phone , email , address_num, address_street, address_complement, address_town, address_postal_code, address_country, other_data, title, is_corporate_person, user_id) VALUES (  '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['FUNCTION'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['PHONE'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['MAIL'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_NUM'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_STREET'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_COMP'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_TOWN'])."',  '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_CP'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_COUNTRY'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['OTHER_DATA'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['TITLE'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'])."', '".$this->protect_string_db($_SESSION['user']['UserId'])."')";
+                    $query = "INSERT INTO ".$_SESSION['tablename']['contacts']." (  lastname , firstname , society , function , phone , email , address_num, address_street, address_complement, address_town, address_postal_code, address_country, other_data, title, is_corporate_person, user_id, is_private) VALUES (  '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['FUNCTION'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['PHONE'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['MAIL'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_NUM'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_STREET'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_COMP'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_TOWN'])."',  '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_CP'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_COUNTRY'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['OTHER_DATA'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['TITLE'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'])."', '".$this->protect_string_db($_SESSION['user']['UserId'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_PRIVATE']) ."')";
                 }
                 $this->query($query);
                 if($_SESSION['history']['contactadd'])
@@ -286,7 +291,7 @@ class contacts extends dbquery
             }
             elseif($mode == "up")
             {
-                $query = "update ".$_SESSION['tablename']['contacts']." set lastname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])."', firstname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])."',society = '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])."',function = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FUNCTION'])."',phone = '".$this->protect_string_db($_SESSION['m_admin']['contact']['PHONE'])."', email = '".$this->protect_string_db($_SESSION['m_admin']['contact']['MAIL'])."', address_num = '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_NUM'])."', address_street = '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_STREET'])."', address_complement = '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_COMP'])."', address_town = '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_TOWN'])."', address_postal_code = '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_CP'])."', address_country = '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_COUNTRY'])."', other_data = '".$this->protect_string_db($_SESSION['m_admin']['contact']['OTHER_DATA'])."', title = '".$this->protect_string_db($_SESSION['m_admin']['contact']['TITLE'])."', is_corporate_person = '".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'])."'";
+                $query = "update ".$_SESSION['tablename']['contacts']." set lastname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])."', firstname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])."',society = '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])."',function = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FUNCTION'])."',phone = '".$this->protect_string_db($_SESSION['m_admin']['contact']['PHONE'])."', email = '".$this->protect_string_db($_SESSION['m_admin']['contact']['MAIL'])."', address_num = '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_NUM'])."', address_street = '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_STREET'])."', address_complement = '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_COMP'])."', address_town = '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_TOWN'])."', address_postal_code = '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_CP'])."', address_country = '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_COUNTRY'])."', other_data = '".$this->protect_string_db($_SESSION['m_admin']['contact']['OTHER_DATA'])."', title = '".$this->protect_string_db($_SESSION['m_admin']['contact']['TITLE'])."', is_corporate_person = '".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'])."', is_private = '".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_PRIVATE'])."'";
                 if($admin)
                 {
                     $query .= ", user_id = '".$this->protect_string_db($_SESSION['m_admin']['contact']['OWNER'])."'";
@@ -383,6 +388,7 @@ class contacts extends dbquery
                 $_SESSION['m_admin']['contact']['MAIL'] = $this->show_string($line->email);
                 $_SESSION['m_admin']['contact']['OTHER_DATA'] = $this->show_string($line->other_data);
                 $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = $this->show_string($line->is_corporate_person);
+                $_SESSION['m_admin']['contact']['IS_PRIVATE'] = $this->show_string($line->is_private);
                 $_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
                 if($admin && !empty($_SESSION['m_admin']['contact']['OWNER']))
                 {
@@ -571,6 +577,14 @@ class contacts extends dbquery
                         <td><label for="comp_data"><?php echo _COMP_DATA; ?> : </label></td>
                         <td>&nbsp;</td>
                         <td class="indexing_field"><textarea name="comp_data"   id="comp_data"><?php if(isset($_SESSION['m_admin']['contact']['OTHER_DATA'])){echo $func->show_str($_SESSION['m_admin']['contact']['OTHER_DATA']); }?></textarea></td>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td><label for="is_private"><?php echo _IS_PRIVATE; ?> : </label></td>
+                        <td>&nbsp;</td>
+                        <td class="indexing_field"><input type="radio"  class="check" name="is_private"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_PRIVATE'] == 'Y'){?> checked="checked"<?php } ?> /><?php echo _YES;?>
+                            <input type="radio"  class="check" name="is_private" value="N" <?php if($_SESSION['m_admin']['contact']['IS_PRIVATE'] == 'N'){?> checked="checked"<?php } ?> /><?php echo _NO;?>
+                        </td>
                         <td>&nbsp;</td>
                     </tr>
                 </table>
