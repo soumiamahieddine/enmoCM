@@ -247,7 +247,7 @@ if($core_tools->is_module_loaded('tags'))
     require_once 'modules/tags/class/TagControler.php' ;
     require_once 'modules/tags/tags_tables_definition.php';
     $tag = new tag_controler;
-    $tag_return_value = $tag -> get_all_tags();
+    $tag_return_value = $tag -> get_all_tags($coll_id);
  
     if ($tag_return_value){
         foreach($tag_return_value as $tagelem)

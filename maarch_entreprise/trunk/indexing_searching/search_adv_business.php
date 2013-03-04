@@ -201,7 +201,7 @@ if ($core_tools->is_module_loaded('tags')) {
     require_once 'modules/tags/class/TagControler.php' ;
     require_once 'modules/tags/tags_tables_definition.php';
     $tag = new tag_controler;
-    $tag_return_value = $tag -> get_all_tags();
+    $tag_return_value = $tag -> get_all_tags($coll_id);
     if ($tag_return_value) {
         foreach($tag_return_value as $tagelem) {
             array_push($arr_tmptag, array('VALUE' => $tagelem['tag_label'], 'LABEL' => $tagelem['tag_label']));
@@ -224,8 +224,9 @@ if ($core_tools->is_module_loaded('entities')) {
         $where = ' where '.$where;
     }
     //$conn->query("select distinct r.destination from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by r.destination ");
-    $conn->query("select distinct r.destination, e.short_label from ".$table." r join ".$_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by e.short_label, r.destination order by e.short_label");
-    //  $conn->show();
+    $conn->query("select distinct r.destination, e.short_label from ".$table." r join "
+        . $_SESSION['tablename']['ent_entities']." e on e.entity_id = r.destination ".$where." group by e.short_label, r.destination order by e.short_label");
+    //$conn->show();
     $arr_tmp = array();
     while ($res = $conn->fetch_object()) {
         array_push($arr_tmp, array('VALUE' => $res->destination, 'LABEL' => $res->short_label));
@@ -450,10 +451,10 @@ if (isset($_REQUEST['nodetails'])) {
             }
     ?>
     <tr>
-        <td colspan="2" ><h2><?php echo _DOCUMENT_INFO; ?></h2></td>
+        <td colspan="2"><h2><?php echo _DOCUMENT_INFO; ?></h2></td>
     </tr>
-    <tr >
-        <td >
+    <tr>
+        <td>
         <div class="block">
             <table border = "0" width="100%">
                 <tr>
@@ -481,7 +482,7 @@ if (isset($_REQUEST['nodetails'])) {
                             echo  _SUBJECT;
                         ?>"/>
                     </td>
-                    <td width="70%"><label for="subject" class="bold" ><?php echo _SUBJECT;?>:</label>
+                    <td width="70%"><label for="subject" class="bold"><?php echo _SUBJECT;?>:</label>
                         <input type="text" name="subject" id="subject" <?php echo $size; ?>  />
                         <input type="hidden" name="meta[]" value="subject#subject#input_text" />
                     </td>
@@ -534,7 +535,7 @@ if (isset($_REQUEST['nodetails'])) {
                         <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=fulltext_search_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=300,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');">
                             <img src = "<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_search.gif" alt="<?php echo _HELP_FULLTEXT_SEARCH; ?>" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>" /></a>
                     </td>
-                    <td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT;?>:</label>
+                    <td width="70%"><label for="fulltext" class="bold"><?php echo _FULLTEXT;?>:</label>
                         <input type="text" name="fulltext" id="fulltext" <?php echo $size; ?>  />
                         <input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
                         
@@ -556,24 +557,30 @@ if (isset($_REQUEST['nodetails'])) {
     </tr>
     <tr><td colspan="2"><hr/></td></tr>
 <tr>
-<td >
+<td>
 <div class="block">
 <h2 id="bottom">&nbsp;</h2>
  <table border = "0" width="100%">
-       <tr>
-     <td width="70%">
-        <label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
-        <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php 
-            echo $browser_ie;?>, '<?php echo _ERROR_IE_SEARCH;?>');window.location.href = '#bottom';">
-            <?php echo $src_tab; ?>
-        </select>
-     </td>
-
-        <td width="30%"><em><?php echo _ADD_PARAMETERS_HELP; ?></em></td>
-        </tr>
- </table>
- </div>
- <div class="block_end">&nbsp;</div>
+    <tr>
+        <td style="width:30px;align:center;">
+            <img src="<?php 
+                echo $_SESSION['config']['businessappurl'] ;
+                ?>static.php?filename=picto_add_b.gif" alt="<?php 
+                echo  _ADD_PARAMETERS;
+            ?>"/>
+        </td>
+        <td width="70%">
+            <label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
+            <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php 
+                echo $browser_ie;?>, '<?php echo _ERROR_IE_SEARCH;?>');window.location.href = '#bottom';">
+                <?php echo $src_tab; ?>
+            </select>
+        </td>
+        <td><em><?php echo _ADD_PARAMETERS_HELP; ?></em></td>
+    </tr>
+</table>
+</div>
+<div class="block_end">&nbsp;</div>
 </td></tr>
 </table>
 <table align="center" border="0" width="100%">
@@ -606,8 +613,8 @@ changeCategory($('category').value);
 function changeCategory(catId)
 {
     if (catId == 'purchase') {
-        $('totalSumMin').style.display = 'inline';
-        $('totalSumMax').style.display = 'inline';
+        $('totalSumMin').style.display = '';
+        $('totalSumMax').style.display = '';
         $('imgCat').innerHTML = '<img src="<?php 
             echo $_SESSION['config']['businessappurl'] ;
             ?>static.php?filename=cat_doc_purchase.png" alt="<?php 
@@ -620,8 +627,8 @@ function changeCategory(catId)
         ?>"/>';
         $('labelContact').innerHTML = '<?php echo  _SUPPLIER;?>';
     } else if (catId == 'sell') {
-        $('totalSumMin').style.display = 'inline';
-        $('totalSumMax').style.display = 'inline';
+        $('totalSumMin').style.display = '';
+        $('totalSumMax').style.display = '';
         $('imgCat').innerHTML = '<img src="<?php 
             echo $_SESSION['config']['businessappurl'] ;
             ?>static.php?filename=cat_doc_sell.png" alt="<?php 

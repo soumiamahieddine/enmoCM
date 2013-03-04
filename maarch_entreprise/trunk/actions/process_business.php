@@ -564,7 +564,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 }
                 
                 // 1.4 custom diffusion lists
-                foreach($_SESSION['listinstance_roles'] as $role_id => $role_config) {
+                foreach($roles as $role_id => $role_config) {
                     if (count($_SESSION['process']['diff_list'][$role_id]['users']) > 0
                         || count($_SESSION['process']['diff_list'][$role_id]['entities']) > 0
                     ) {

@@ -133,30 +133,16 @@ if (count($_REQUEST['meta']) > 0) {
             {
                 $json_txt .= " 'doc_notes' : ['".addslashes(trim($_REQUEST['doc_notes']))."'],";
                 $s_doc_notes = $func->wash($_REQUEST['doc_notes'], "no", _NOTES,"no");
-                $where_request .= " res_id in(select identifier from ".$_SESSION['tablename']['not_notes']." where lower(note_text) LIKE lower('%".$func->protect_string_db($s_doc_notes)."%')) and ";
+                $where_request .= " res_id in(select identifier from ".$_SESSION['tablename']['not_notes']
+                    . " where lower(note_text) LIKE lower('%".$func->protect_string_db($s_doc_notes)."%')) and ";
             }
             // FOLDER : MARKET
             elseif ($tab_id_fields[$j] == 'market' && !empty($_REQUEST['market']))
             {
                 $json_txt .= " 'market' : ['".addslashes(trim($_REQUEST['market']))."'],";
                 $market = $func->wash($_REQUEST['market'], "no", _MARKET,"no");
-                $where_request .= " (lower(folder_name) like lower('%".$func->protect_string_db($market)."%') or folder_id like '%".$func->protect_string_db($market)."%' ) and ";
-            }
-            // DEST
-            elseif ($tab_id_fields[$j] == 'dest' && !empty($_REQUEST['dest']))
-            {
-                $json_txt .= " 'dest' : ['".addslashes(trim($_REQUEST['dest']))."'],";
-                $dest = $func->wash($_REQUEST['dest'], "no", _DEST,"no");
-                $where_request .= " (dest_contact_id in(select contact_id from ".$_SESSION['tablename']['contacts']
-                    ." where lower(lastname) LIKE lower('".$func->protect_string_db($dest)."%') "
-                    ."or lower(firstname) LIKE lower('".$func->protect_string_db($dest)."%') "
-                    ."or lower(society) LIKE lower('".$func->protect_string_db($dest)."%') "
-                    ."or function LIKE '".$func->protect_string_db($dest)."%') "
-                    ."or dest_user_id in ("
-                        ."select user_id from ".$_SESSION['tablename']['users']
-                        ." where lower(lastname) LIKE lower('".$func->protect_string_db($dest)."%') "
-                        ."or lower(firstname) LIKE lower('".$func->protect_string_db($dest)."%') "
-                        ."or user_id LIKE '".$func->protect_string_db($dest)."%')) and ";
+                $where_request .= " (lower(folder_name) like lower('%".$func->protect_string_db($market)."%') or folder_id like '%"
+                    . $func->protect_string_db($market)."%' ) and ";
             }
             // GED NUM
             elseif ($tab_id_fields[$j] == 'numged' && !empty($_REQUEST['numged']))
@@ -184,7 +170,8 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt = substr($json_txt, 0, -1);
                 $destinataire_chosen_tmp .= ") ";
 
-                $where_request .= " (dest_user IN  ".$destinataire_chosen_tmp." or res_id in (select res_id from ".$_SESSION['tablename']['ent_listinstance']." where item_id in ".$destinataire_chosen_tmp." and item_mode = 'dest')) ";
+                $where_request .= " (dest_user IN  ".$destinataire_chosen_tmp." or res_id in (select res_id from "
+                    . $_SESSION['tablename']['ent_listinstance']." where item_id in ".$destinataire_chosen_tmp." and item_mode = 'dest')) ";
                 $where_request .=" and  ";
                 //echo $where_request;exit;
                 $json_txt .= '],';
@@ -218,8 +205,8 @@ if (count($_REQUEST['meta']) > 0) {
                 {
                     if (!$func->isDirEmpty($path_to_lucene_index)) {
                         $index = Zend_Search_Lucene::open($path_to_lucene_index);
-//$hits = $index->find($_REQUEST['fulltext']."~");
-//$query_res_ft = Zend_Search_Lucene_Search_QueryParser::parse($_REQUEST['fulltext'], 'iso-8859-5'));
+                        //$hits = $index->find($_REQUEST['fulltext']."~");
+                        //$query_res_ft = Zend_Search_Lucene_Search_QueryParser::parse($_REQUEST['fulltext'], 'iso-8859-5'));
                         $hits = $index->find($fulltext_request);
                         /*
                         avec accent
@@ -249,8 +236,7 @@ if (count($_REQUEST['meta']) > 0) {
             // TAGS
             elseif ($tab_id_fields[$j] == 'tags_chosen' && !empty($_REQUEST['tags_chosen']))
             {
-                include_once("modules".DIRECTORY_SEPARATOR."tags".
-                   DIRECTORY_SEPARATOR."tags_search.php");              
+                include_once('modules/tags/tags_search.php');              
             }
             //WELCOME PAGE
             elseif ($tab_id_fields[$j] == 'welcome'  && (!empty($_REQUEST['welcome'])))
@@ -397,7 +383,7 @@ if (count($_REQUEST['meta']) > 0) {
             // PROCESS LIMIT DATE : TO
             elseif ($tab_id_fields[$j] == 'process_limit_date_to' && !empty($_REQUEST['process_limit_date_to']))
             {
-                if ( preg_match($_ENV['date_pattern'],$_REQUEST['process_limit_date_to'])==false )
+                if (preg_match($_ENV['date_pattern'],$_REQUEST['process_limit_date_to'])==false)
                 {
                     $_SESSION['error'] = _WRONG_DATE_FORMAT.' : '.$_REQUEST['process_limit_date_to'];
                 }
@@ -417,7 +403,10 @@ if (count($_REQUEST['meta']) > 0) {
                     $json_txt .= "'".$_REQUEST['status_chosen'][$get_i]."',";
                     if ($_REQUEST['status_chosen'][$get_i]=="REL1")
                     {
-                        $where_request .="( ".$req->extract_date('alarm1_date')." <= ".$req->current_datetime()." and ".$req->extract_date('alarm2_date')." > ".$req->current_datetime()." and status <> 'END') or ";
+                        $where_request .="( "
+                            . $req->extract_date('alarm1_date')." <= "
+                            . $req->current_datetime()." and "
+                            . $req->extract_date('alarm2_date')." > ".$req->current_datetime()." and status <> 'END') or ";
                     }
                     else
                     {
@@ -427,11 +416,12 @@ if (count($_REQUEST['meta']) > 0) {
                         }
                         elseif ($_REQUEST['status_chosen'][$get_i]=="LATE")
                         {
-                            $where_request .="( process_limit_date is not null and ".$req->current_datetime()." > ".$req->extract_date('process_limit_date')."  and status <> 'END') or ";
+                            $where_request .="(process_limit_date is not null and "
+                                . $req->current_datetime()." > ".$req->extract_date('process_limit_date')."  and status <> 'END') or ";
                         }
                         else
                         {
-                            $where_request .= " ( status = '".$func->protect_string_db($_REQUEST['status_chosen'][$get_i])."') or ";
+                            $where_request .= " (status = '".$func->protect_string_db($_REQUEST['status_chosen'][$get_i])."') or ";
                         }
                     }
                 }
@@ -492,7 +482,6 @@ if (count($_REQUEST['meta']) > 0) {
                     $baskets_clause = "false";
                     $json_txt .= "'baskets_clause' : ['false'],";
                     break;
-                    
                 case 'true':
                     for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
                        if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id 
@@ -506,7 +495,6 @@ if (count($_REQUEST['meta']) > 0) {
                     $baskets_clause = ($_REQUEST['baskets_clause']);
                     $json_txt .= " 'baskets_clause' : ['true'],";
                     break;
-                
                 default:
                     $json_txt .= " 'baskets_clause' : ['".addslashes(trim($_REQUEST['baskets_clause']))."'],";
                     for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
@@ -521,7 +509,6 @@ if (count($_REQUEST['meta']) > 0) {
             }
             else  // opt indexes check
             {
-                //echo $tab_id_fields[$j].' : '.$_REQUEST[$tab_id_fields[$j]].'<br/>';
                 $tmp = $type->search_checks($indexes, $tab_id_fields[$j], $_REQUEST[$tab_id_fields[$j]] );
                 //$func->show_array($tmp);
                 $json_txt .= $tmp['json_txt'];
@@ -545,14 +532,28 @@ exit();
 $_SESSION['current_search_query'] = $json_txt;
 if (!empty($_SESSION['error'])) {
     if ($mode == 'normal') {
-        $_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv_business&dir=indexing_searching">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
+        $_SESSION['error_search'] = '<br /><div class="error">'
+            . _MUST_CORRECT_ERRORS.' : <br /><br /><strong>' 
+            . $_SESSION['error_search'].'<br /><a href="'
+            . $_SESSION['config']['businessappurl'].'index.php?page=search_adv_business&dir=indexing_searching">'
+            . _CLICK_HERE_TO_CORRECT.'</a></strong></div>';
         ?>
-        <script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error_business&dir=indexing_searching';?>';</script>
+        <script  type="text/javascript">window.top.location.href='<?php  
+            echo $_SESSION['config']['businessappurl']
+                . 'index.php?page=search_adv_error_business&dir=indexing_searching';?>';</script>
         <?php
     } else {
-        $_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_business&mode='.$mode.'">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
+        $_SESSION['error_search'] = '<br /><div class="error">'
+            . _MUST_CORRECT_ERRORS.' : <br /><br /><strong>'
+            . $_SESSION['error_search'].'<br /><a href="'
+            . $_SESSION['config']['businessappurl']
+            . 'index.php?display=true&dir=indexing_searching&page=search_adv_business&mode='
+            . $mode.'">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
         ?>
-        <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_error_business&mode='.$mode;?>';</script>
+        <script type="text/javascript">window.top.location.href='<?php 
+        echo $_SESSION['config']['businessappurl']
+            . 'index.php?display=true&dir=indexing_searching&page=search_adv_error_business&mode='
+            . $mode;?>';</script>
         <?php
     }
     exit();
@@ -566,7 +567,10 @@ if (!empty($_SESSION['error'])) {
 }
 if(!empty($_REQUEST['baskets_clause']) && $_REQUEST['baskets_clause'] != 'false' && $_REQUEST['baskets_clause'] != 'true') {
     ?>
-    <script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl']."index.php?page=view_baskets&module=basket&baskets=".$_REQUEST['baskets_clause']."&origin=searching";?>';</script>
+    <script  type="text/javascript">window.top.location.href='<?php 
+        echo $_SESSION['config']['businessappurl'] 
+        . "index.php?page=view_baskets&module=basket&baskets="
+        . $_REQUEST['baskets_clause']."&origin=searching";?>';</script>
     <?php
     exit();
 }
@@ -576,7 +580,21 @@ if (empty($_SESSION['error_search'])) {
     //##################
     $page = 'list_results_business';
     ?>
-    <script type="text/javascript">window.top.location.href='<?php if ($mode == 'normal'){ echo $_SESSION['config']['businessappurl'].'index.php?page='.$page.'&dir=indexing_searching&load'.$extend_link_case;} elseif ($mode=='frame' || $mode == 'popup'){echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page='.$page.'&mode='.$mode.'&action_form='.$_REQUEST['action_form'].'&modulename='.$_REQUEST['modulename'];} if (isset($_REQUEST['nodetails'])){echo '&nodetails';}?>';</script>
+    <script type="text/javascript">window.top.location.href='<?php 
+        if ($mode == 'normal'){ 
+            echo $_SESSION['config']['businessappurl']
+                . 'index.php?page='.$page.'&dir=indexing_searching&load'
+                . $extend_link_case;
+        } elseif ($mode=='frame' || $mode == 'popup'){
+            echo $_SESSION['config']['businessappurl']
+                . 'index.php?display=true&dir=indexing_searching&page='
+                . $page.'&mode='.$mode.'&action_form='
+                . $_REQUEST['action_form'].'&modulename='
+                . $_REQUEST['modulename'];
+        }
+        if (isset($_REQUEST['nodetails'])){
+            echo '&nodetails';
+        }?>';</script>
     <?php
     exit();
 }
