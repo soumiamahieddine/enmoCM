@@ -151,7 +151,13 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
         $Links .= _ADD_A_LINK;
     $Links .= '</h2>';
     $Links .= '<br />';
-
+    
+    if ($_SESSION['collection_id_choice'] == 'business_coll') {
+        $searchAdv = 'search_adv_business';
+    } else {
+        $searchAdv = 'search_adv';
+    }
+    
     //formulaire
     $Links .= '<form action="index.php" method="">';
         $Links .= '<table width="50%" border="0" >';
@@ -159,7 +165,8 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                 $Links .= '<td style="text-align: left;">';
                     $Links .= '<input ';
                       $Links .= 'onclick="window.open(';
-                        $Links .= '\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv&mode=popup&action_form=show_res_id&modulename=attachments&init_search&exclude='.$_SESSION['doc_id'].'&nodetails\', ';
+                        $Links .= '\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page='
+                            . $searchAdv . '&mode=popup&action_form=show_res_id&modulename=attachments&init_search&exclude='.$_SESSION['doc_id'].'&nodetails\', ';
                         $Links .= '\'search_doc_for_attachment\', ';
                         $Links .= '\'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775\'';
                         $Links .= ');"';

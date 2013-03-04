@@ -694,34 +694,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<div id="complementary_fields"  style="display:none">';
     $frm_str .= '<div>';
     
-    $frm_str .= '<table width="100%" align="center" border="0" '
-        . 'id="indexing_fields" style="display:block;">';
-
-    /*** Folder  ***/
-    if ($core_tools->is_module_loaded('folder')) {
-        $folder = '';
-        if (isset($data['folder'])&& !empty($data['folder']))
-        {
-            $folder = $data['folder'];
-        }
-        $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
-        $frm_str .= '<td style="width:30px;align:center;"><img src="'
-            . $_SESSION['config']['businessappurl'] . 'static.php?module=folder&filename='
-            . 'folders.gif" alt="' . _FOLDER 
-            . '"/></td><td><label for="folder" class="form_title" >' . _FOLDER . '</label></td>';
-        $frm_str .='<td><input type="text" name="folder" id="folder" value="'
-            . $folder . '" onblur=""/><div id="show_folder" class="autocomplete"></div>';
-        $frm_str .= '</tr>';
-    }
-
-    if ($core_tools->is_module_loaded('tags') 
-        && ($core_tools->test_service('tag_view', 'tags', false) == 1)
-    ) {
-        include_once('modules/tags/templates/validate_mail/index.php');
-    }
-
-    $frm_str .= '</table>';
-    
     if ($core->test_service('index_attachment', 'attachments', false)) {
         require_once 'core/class/LinkController.php';
         $Class_LinkController = new LinkController();
@@ -801,7 +773,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                   $frm_str .= 'href="javascript://" ';
                   $frm_str .= 'onclick="window.open(';
                     $frm_str .= '\'' . $_SESSION['config']['businessappurl'] 
-                        . 'index.php?display=true&dir=indexing_searching&page=search_adv&mode=popup'
+                        . 'index.php?display=true&dir=indexing_searching&page=search_adv_business&mode=popup'
                         . '&action_form=show_res_id&modulename=attachments&init_search&nodetails\', ';
                     $frm_str .= '\'search_doc_for_attachment\', ';
                     $frm_str .= '\'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775\'';
@@ -835,6 +807,34 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</tr>';
         $frm_str .= '</table>';
     }
+    
+    $frm_str .= '<table width="100%" align="center" border="0" '
+        . 'id="indexing_fields" style="display:block;">';
+
+    /*** Folder  ***/
+    if ($core_tools->is_module_loaded('folder')) {
+        $folder = '';
+        if (isset($data['folder'])&& !empty($data['folder']))
+        {
+            $folder = $data['folder'];
+        }
+        $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
+        $frm_str .= '<td style="width:30px;align:center;"><img src="'
+            . $_SESSION['config']['businessappurl'] . 'static.php?module=folder&filename='
+            . 'folders.gif" alt="' . _FOLDER 
+            . '"/></td><td><label for="folder" class="form_title" >' . _FOLDER . '</label></td>';
+        $frm_str .='<td><input type="text" name="folder" id="folder" value="'
+            . $folder . '" onblur=""/><div id="show_folder" class="autocomplete"></div>';
+        $frm_str .= '</tr>';
+    }
+
+    if ($core_tools->is_module_loaded('tags') 
+        && ($core_tools->test_service('tag_view', 'tags', false) == 1)
+    ) {
+        include_once('modules/tags/templates/validate_mail/index.php');
+    }
+
+    $frm_str .= '</table>';
     
     $frm_str .= '</div>';
     $frm_str .= '</div>';

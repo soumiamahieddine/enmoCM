@@ -599,36 +599,6 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<div id="complementary_fields"  style="display:none">';
     $frmStr .= '<div>';
     
-    $frmStr .= '<table width="100%" align="center" border="0" '
-            . 'id="indexing_fields" style="display:block;">';
-
-    /*** Folder ***/
-    if ($core->is_module_loaded('folder')) {
-        $frmStr .= '<tr id="folder_tr" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?module=folder&filename='
-                . 'folders.gif" alt="' . _FOLDER 
-                . '"/></td><td><label for="folder" class="form_title" >' . _FOLDER
-                . '</label></td>';
-        $frmStr .= '<td class="indexing_field"><input type="text" '
-                . 'name="folder" id="folder" onblur="clear_error(\'frm_error_'
-                . $actionId . '\');return false;" /><div id="show_folder" '
-                . 'class="autocomplete"></div></td>';
-        $frmStr .= '<td><span class="red_asterisk" id="folder_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
-        $frmStr .= '</tr>';
-    }
-
-    /*** Tags ***/
-    if ($core->is_module_loaded('tags') 
-        && ($core->test_service('tag_view', 'tags',false) == 1)
-        && ($core->test_service('add_tag_to_res', 'tags',false) == 1)
-    ) {
-        include_once('modules/tags/templates/index_mlb/index.php');
-    }
-    
-    $frmStr .= '</table>';
-
     if ($core->test_service('index_attachment', 'attachments', false)) {
         $frmStr .= '<table width="100%" align="center" border="0" >';
         $frmStr .= '<tr id="attachment_tr" style="display:' . $displayValue
@@ -656,7 +626,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 $frmStr .= '<a ';
                   $frmStr .= 'href="javascript://" ';
                   $frmStr .= 'onclick="window.open(';
-                    $frmStr .= '\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv&mode=popup&action_form=show_res_id&modulename=attachments&init_search&nodetails\', ';
+                    $frmStr .= '\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv_business&mode=popup&action_form=show_res_id&modulename=attachments&init_search&nodetails\', ';
                     $frmStr .= '\'search_doc_for_attachment\', ';
                     $frmStr .= '\'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775\'';
                   $frmStr .= ');"';
@@ -689,6 +659,36 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '</tr>';
         $frmStr .= '</table>';
     }
+    
+    $frmStr .= '<table width="100%" align="center" border="0" '
+            . 'id="indexing_fields" style="display:block;">';
+
+    /*** Folder ***/
+    if ($core->is_module_loaded('folder')) {
+        $frmStr .= '<tr id="folder_tr" style="display:' . $displayValue . ';">';
+        $frmStr .= '<td style="width:30px;align:center;"><img src="'
+                . $_SESSION['config']['businessappurl'] . 'static.php?module=folder&filename='
+                . 'folders.gif" alt="' . _FOLDER 
+                . '"/></td><td><label for="folder" class="form_title" >' . _FOLDER
+                . '</label></td>';
+        $frmStr .= '<td class="indexing_field"><input type="text" '
+                . 'name="folder" id="folder" onblur="clear_error(\'frm_error_'
+                . $actionId . '\');return false;" /><div id="show_folder" '
+                . 'class="autocomplete"></div></td>';
+        $frmStr .= '<td><span class="red_asterisk" id="folder_mandatory" '
+                . 'style="display:inline;">*</span>&nbsp;</td>';
+        $frmStr .= '</tr>';
+    }
+    
+    /*** Tags ***/
+    if ($core->is_module_loaded('tags') 
+        && ($core->test_service('tag_view', 'tags',false) == 1)
+        && ($core->test_service('add_tag_to_res', 'tags',false) == 1)
+    ) {
+        include_once('modules/tags/templates/index_mlb/index.php');
+    }
+    
+    $frmStr .= '</table>';
     
     // Fin
     

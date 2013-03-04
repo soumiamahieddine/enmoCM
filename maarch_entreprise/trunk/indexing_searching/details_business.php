@@ -51,6 +51,7 @@ require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php';
 //}
 
 $_REQUEST['coll_id'] = 'business_coll';
+$_SESSION['current_basket']['coll_id'] = 'business_coll';
 
 if (file_exists(
     $_SESSION['config']['corepath'] . 'custom/apps/' . $_SESSION['config']['app_id']
@@ -230,7 +231,7 @@ if (isset($_POST['delete_doc'])) {
     ?>
         <script type="text/javascript">window.top.location.href='<?php
             echo $_SESSION['config']['businessappurl']
-                . 'index.php?page=search_adv&dir=indexing_searching';
+                . 'index.php?page=search_adv_business&dir=indexing_searching';
             ?>';</script>
     <?php
     exit();
@@ -240,7 +241,7 @@ if (isset($_POST['put_doc_on_validation'])) {
     ?>
         <script language="javascript" type="text/javascript">window.top.location.href='<?php
             echo $_SESSION['config']['businessappurl']
-            . 'index.php?page=search_adv&dir=indexing_searching';
+            . 'index.php?page=search_adv_business&dir=indexing_searching';
             ?>';</script>
     <?php
     exit();
