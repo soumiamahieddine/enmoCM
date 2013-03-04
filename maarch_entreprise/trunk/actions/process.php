@@ -410,7 +410,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
          // Displays the diffusion list (only copies)
         require_once('modules/entities/class/class_manage_listdiff.php');
         $diff_list = new diffusion_list();
-        $_SESSION['process']['diff_list'] = $diff_list->get_listinstance($res_id);
+        $_SESSION['process']['diff_list'] = $diff_list->get_listinstance($res_id, false, $coll_id);
         $frm_str .= '<h3 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
