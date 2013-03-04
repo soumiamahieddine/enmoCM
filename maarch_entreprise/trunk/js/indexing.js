@@ -1079,3 +1079,22 @@ function getIframeContent(path_manage_script)
         }
     }
 }
+
+function convertAllBusinessAmount()
+{
+    if ($('net_sum')) {
+        if ($('net_sum').value != '') {
+            $('net_sum_formatted').value = convertAmount($('currency').value, $('net_sum').value);
+        }
+    }
+    if ($('tax_sum')) {
+        if ($('tax_sum').value != '') {
+            $('tax_sum_formatted').value = convertAmount($('currency').value, $('tax_sum').value);
+        }
+    }
+    if ($('total_sum')) {
+        if ($('total_sum').value != '') {
+            $('total_sum_formatted').value = convertAmount($('currency').value, $('total_sum').value);
+        }
+    }
+}

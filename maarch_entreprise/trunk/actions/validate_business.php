@@ -400,7 +400,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . 'subject.png" alt="' . _SUBJECT 
                 . '"/></td><td class="indexing_label">'
                 . '<label for="subject" class="form_title" >'._SUBJECT.'</label></td>';
-        $frm_str .='<td class="indexing_field"><textarea name="subject" id="subject" rows="4" onchange="clear_error(\'frm_error_'.$id_action.'\');" >';
+        $frm_str .='<td class="indexing_field"><textarea name="subject" id="subject" rows="2" onchange="clear_error(\'frm_error_'.$id_action.'\');" >';
         if (isset($data['subject']) && !empty($data['subject'])) {
             $frm_str .= $data['subject'];
         }
@@ -1388,10 +1388,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'integer' 
             && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] <> 'none'
         ) {
-            if ($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res') {
-                $query_res .= ", ".$values_form[$i]['ID']." = ".$values_form[$i]['VALUE'];
-            } else if ($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext') {
-                $query_ext .= ", ".$values_form[$i]['ID']." = ".$values_form[$i]['VALUE'];
+            if ($values_form[$i]['VALUE'] <> '') {
+                if ($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res') {
+                    $query_res .= ", ".$values_form[$i]['ID']." = ".$values_form[$i]['VALUE'];
+                } else if ($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext') {
+                    $query_ext .= ", ".$values_form[$i]['ID']." = ".$values_form[$i]['VALUE'];
+                }
             }
         } else if ($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'string' 
             && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] <> 'none') {

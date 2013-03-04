@@ -169,7 +169,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '<div id="index_div" style="display:none;";>';
     $frmStr .= '<h1 class="tit" id="action_title"><img src="'
             . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-            . 'file_index_b.gif"  align="middle" alt="" />' . _INDEXATION_TITLE;
+            . 'file_index_b.gif"  align="middle" alt="" />' . _INDEXING_BUSINESS;
     $frmStr .= '</h1>';
     $frmStr .= '<div id="frm_error_' . $actionId . '" class="indexing_error">'
             . '</div>';
@@ -320,11 +320,10 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<tr id="subject_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td style="width:30px;align:center;"><img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'subject.png" alt="' . _SUBJECT . '"/></td><td><label for="subject" class="form_title" >' . _SUBJECT
+                . 'subject.png" alt="' . _SUBJECT . '"/></td><td class="indexing_label"><label for="subject" class="form_title" >' . _SUBJECT
             . '</label></td>';
-    //$frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><textarea name="subject" '
-            . 'id="subject"  rows="4" onchange="clear_error(\'frm_error_'
+            . 'id="subject"  rows="2" onchange="clear_error(\'frm_error_'
             . $actionId . '\');" ></textarea></td>';
     $frmStr .= '<td><span class="red_asterisk" id="subject_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
@@ -418,10 +417,15 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . 'currency.png" alt="' . _CURRENCY 
                 . '"/></td><td><label for="currency" class="form_title">' . _CURRENCY
             . '</label></td>';
-    //$frmStr .= '<td>&nbsp;</td>';
-    $frmStr .= '<td class="indexing_field"><input name="currency" type="text" '
-            . 'id="currency" value="EUR" onchange="clear_error(\'frm_error_' . $actionId
-            . '\');"/></td>';
+    $frmStr .= '<td class="indexing_field">'
+        . '<select id="currency" name="currency" onchange="clear_error(\'frm_error_' . $actionId
+        . '\');convertAllBusinessAmount();">'
+        . '<option value="EUR">EURO €</option>'
+        . '<option value="DOL">DOLLAR $</option>'
+        . '<option value="YEN">YEN ¥</option>'
+        . '<option value="POU">POUND £</option>'
+        .'</select>'
+        . '</td>';
     $frmStr .= '<td><span class="red_asterisk" id="currency_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
@@ -432,48 +436,49 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . 'amount.png" alt="' . _NET_SUM 
                 . '"/></td><td><label for="net_sum" class="form_title" >' . _NET_SUM
             . '</label></td>';
-    //$frmStr .= '<td>&nbsp;</td>';
-    $frmStr .= '<td class="indexing_field"><input name="net_sum" type="text" '
-            . 'id="net_sum" onchange="clear_error(\'frm_error_' . $actionId
-            . '\');"/></td>';
+    $frmStr .= '<td class="indexing_field">'
+        . '<input name="net_sum" type="text" '
+        . 'id="net_sum" onchange="clear_error(\'frm_error_' . $actionId
+        . '\');$(\'net_sum_formatted\').value=convertAmount($(\'currency\').options[$(\'currency\').selectedIndex].value, this.value);" '
+        . 'class="amountLeft" />&nbsp;'
+        . '<input name="net_sum_formatted" type="text" '
+        . 'id="net_sum_formatted" readonly="readonly" class="amountRight readonly" />'
+        . '</td>';
     $frmStr .= '<td><span class="red_asterisk" id="net_sum_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
     /*** tax_sum ***/
     $frmStr .= '<tr id="tax_sum_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td style="width:30px;align:center;">'
-/*
-                . '<img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'amount.png" alt="' . _TAX_SUM 
-                . '"/>'
-*/
                 . '&nbsp;'
                 . '</td><td><label for="tax_sum" class="form_title" >' . _TAX_SUM
             . '</label></td>';
     //$frmStr .= '<td>&nbsp;</td>';
-    $frmStr .= '<td class="indexing_field"><input name="tax_sum" type="text" '
-            . 'id="tax_sum" onchange="clear_error(\'frm_error_' . $actionId
-            . '\');"/></td>';
+    $frmStr .= '<td class="indexing_field">'
+        . '<input name="tax_sum" type="text" '
+        . 'id="tax_sum" onchange="clear_error(\'frm_error_' . $actionId
+        . '\');$(\'tax_sum_formatted\').value=convertAmount($(\'currency\').options[$(\'currency\').selectedIndex].value, this.value);" '
+        . 'class="amountLeft" />&nbsp;'
+        . '<input name="tax_sum_formatted" type="text" '
+        . 'id="tax_sum_formatted" readonly="readonly" class="amountRight readonly" />'
+        . '</td>';
     $frmStr .= '<td><span class="red_asterisk" id="tax_sum_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
     /*** total_sum ***/
     $frmStr .= '<tr id="total_sum_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td style="width:30px;align:center;">'
-/*
-                . '<img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'amount.png" alt="' . _TOTAL_SUM 
-                . '"/>'
-*/
                  . '&nbsp;'
                 . '</td><td><label for="total_sum" class="form_title" >' . _TOTAL_SUM
             . '</label></td>';
-    //$frmStr .= '<td>&nbsp;</td>';
-    $frmStr .= '<td class="indexing_field"><input name="total_sum" type="text" '
-            . 'id="total_sum" onchange="clear_error(\'frm_error_' . $actionId
-            . '\');"/></td>';
+    $frmStr .= '<td class="indexing_field">'
+        . '<input name="total_sum" type="text" '
+        . 'id="total_sum" onchange="clear_error(\'frm_error_' . $actionId
+        . '\');$(\'total_sum_formatted\').value=convertAmount($(\'currency\').options[$(\'currency\').selectedIndex].value, this.value);" '
+        . 'class="amountLeft" />&nbsp;'
+        . '<input name="total_sum_formatted" type="text" '
+        . 'id="total_sum_formatted" readonly="readonly" class="amountRight readonly" />'
+        . '</td>';
     $frmStr .= '<td><span class="red_asterisk" id="total_sum_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';

@@ -2635,6 +2635,18 @@ text-align:right;
     width: 226px;
 }
 
+.indexingformBusiness .amountLeft
+{
+    text-align: right;
+    width:89px;
+}
+
+.indexingformBusiness .amountRight
+{
+    text-align: right;
+    width:120px;
+}
+
 #indexingfrmcontact
 {
     width:480px;

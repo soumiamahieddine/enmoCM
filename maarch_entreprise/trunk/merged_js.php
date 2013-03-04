@@ -10,6 +10,7 @@ include_once('../../core/init.php');
     header('Content-type: text/javascript');
     ob_start();
 
+    include('apps/'.$_SESSION['config']['app_id'] .'/js/accounting.js');
     include('apps/'.$_SESSION['config']['app_id'] .'/js/functions.js');
     include('apps/'.$_SESSION['config']['app_id'] .'/js/prototype.js');
     include('apps/'.$_SESSION['config']['app_id'] .'/js/scriptaculous.js');
