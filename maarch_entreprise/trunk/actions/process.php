@@ -691,6 +691,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //DIFFUSION FRAME
     if ($core_tools->is_module_loaded('entities')) {
+        require_once 'modules/entities/class/class_manage_listdiff.php';
+        $listdiff = new diffusion_list();
+       
+        $roles = $listdiff->get_listinstance_roles();
+    
         $frm_str .= '<div id="diff_list_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
             $frm_str .= '<div>';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});';
@@ -709,87 +714,45 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         . _UPDATE_LIST_DIFF
                         . '" />'
                         . _UPDATE_LIST_DIFF
-                        . '</a>';
-                }
-                if (
-                    count($_SESSION['process']['diff_list']['copy']['users']) == 0
-                    && count($_SESSION['process']['diff_list']['copy']['entities']) == 0
-                ) {
-                    $frm_str .= '<br><br>' . _NO_COPY . '<br><br>';
-                } else {
-                    $frm_str .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">';
-                    $color = ' class="col"';
-                    for ($i=0;$i<count($_SESSION['process']['diff_list']['copy']['entities']);$i++) {
-                        if ($color == ' class="col"') {
-                            $color = '';
-                        } else {
-                            $color = ' class="col"';
-                        }
-                        $frm_str .= '<tr '.$color.' >';
-                        $frm_str .= '<td><img src="'.$_SESSION['config']['businessappurl']
-                            . 'static.php?module=entities&filename=manage_entities_b_small.gif" alt="'
-                            . _ENTITY.'" title="'._ENTITY.'" /></td>';
-                        $frm_str .= '<td>' . $_SESSION['process']['diff_list']['copy']['entities'][$i]['entity_id'] . '</td>';
-                        $frm_str .= '<td colspan="2">'
-                            . $_SESSION['process']['diff_list']['copy']['entities'][$i]['entity_label'] . '</td>';
-                        $frm_str .= '</tr>';
-                    }
-                    for ($i=0;$i<count($_SESSION['process']['diff_list']['copy']['users']);$i++) {
-                        if ($color == ' class="col"') {
-                            $color = '';
-                        } else {
-                            $color = ' class="col"';
-                        }
-                        $frm_str .= '<tr ' . $color . '>';
-                            $frm_str .= '<td><img src="'
-                                . $_SESSION['config']['businessappurl']
-                                . 'static.php?module=entities&filename=manage_users_entities_b_small.gif" alt="'
-                                . _USER . '" title="' . _USER . '" /></td>';
-                            $frm_str .= '<td>' . $_SESSION['process']['diff_list']['copy']['users'][$i]['firstname'] . '</td>';
-                            $frm_str .= '<td>' . $_SESSION['process']['diff_list']['copy']['users'][$i]['lastname'] . '</td>';
-                            $frm_str .= '<td>' . $_SESSION['process']['diff_list']['copy']['users'][$i]['entity_label'] . '</td>';
-                        $frm_str .= '</tr>';
-                    }
-                    $frm_str .= '</table>';
+                        . '</a><br/>';
                 }
                 // 1.4 custom diffusion lists
-                if(count($_SESSION['listinstance_roles']) > 0) {
-                    foreach($_SESSION['listinstance_roles'] as $role_id => $role_config) {
-                        if (count($_SESSION['process']['diff_list'][$role_id]['users']) > 0
-                            || count($_SESSION['process']['diff_list'][$role_id]['entities']) > 0
-                        ) {
-                            $frm_str .= '<br/>' . $role_config['list_label'];
-                            $frm_str .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">';
-                            $color = ' class="col"';
-                            for ($i=0;$i<count($_SESSION['process']['diff_list'][$role_id]['entities']);$i++) {
-                                if ($color == ' class="col"') $color = '';
-                                else $color = ' class="col"';
-                                $frm_str .= '<tr '.$color.' >';
-                                $frm_str .= '<td><img src="'.$_SESSION['config']['businessappurl']
-                                    . 'static.php?module=entities&filename=manage_entities_b_small.gif" alt="'
-                                    . _ENTITY . '" title="'._ENTITY.'" /></td>';
-                                $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['entities'][$i]['entity_id'] . '</td>';
-                                $frm_str .= '<td colspan="2">'
-                                    . $_SESSION['process']['diff_list'][$role_id]['entities'][$i]['entity_label'] . '</td>';
-                                $frm_str .= '</tr>';
-                            }
-                            for ($i=0;$i<count($_SESSION['process']['diff_list'][$role_id]['users']);$i++) {
-                                if ($color == ' class="col"') $color = '';
-                                else $color = ' class="col"';
-                                $frm_str .= '<tr ' . $color . '>';
-                                    $frm_str .= '<td><img src="'
-                                        . $_SESSION['config']['businessappurl']
-                                        . 'static.php?module=entities&filename=manage_users_entities_b_small.gif" alt="'
-                                        . _USER . '" title="' . _USER . '" /></td>';
-                                    $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['users'][$i]['firstname'] . '</td>';
-                                    $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['users'][$i]['lastname'] . '</td>';
-                                    $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['users'][$i]['entity_label'] . '</td>';
-                                $frm_str .= '</tr>';
-                            }
-                            $frm_str .= '</table>';
+                foreach($roles as $role_id => $role_config) {
+                    if (count($_SESSION['process']['diff_list'][$role_id]['users']) > 0
+                        || count($_SESSION['process']['diff_list'][$role_id]['entities']) > 0
+                    ) {
+                        $frm_str .= '<br/>>>' . $role_config['list_label'];
+                        $frm_str .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">';
+                        $color = ' class="col"';
+                        for ($i=0;$i<count($_SESSION['process']['diff_list'][$role_id]['users']);$i++) {
+                            if ($color == ' class="col"') $color = '';
+                            else $color = ' class="col"';
+                            $frm_str .= '<tr ' . $color . '>';
+                                $frm_str .= '<td><img src="'
+                                    . $_SESSION['config']['businessappurl']
+                                    . 'static.php?module=entities&filename=manage_users_entities_b_small.gif" alt="'
+                                    . _USER . '" title="' . _USER . '" /></td>';
+                                $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['users'][$i]['lastname'] . '</td>';
+                                $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['users'][$i]['firstname'] . '</td>';
+                                $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['users'][$i]['entity_label'] . '</td>';
+                            $frm_str .= '</tr>';
                         }
+                        for ($i=0;$i<count($_SESSION['process']['diff_list'][$role_id]['entities']);$i++) {
+                            if ($color == ' class="col"') $color = '';
+                            else $color = ' class="col"';
+                            $frm_str .= '<tr '.$color.' >';
+                            $frm_str .= '<td><img src="'.$_SESSION['config']['businessappurl']
+                                . 'static.php?module=entities&filename=manage_entities_b_small.gif" alt="'
+                                . _ENTITY . '" title="'._ENTITY.'" /></td>';
+                            $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['entities'][$i]['entity_id'] . '</td>';
+                            $frm_str .= '<td colspan="2">'
+                                . $_SESSION['process']['diff_list'][$role_id]['entities'][$i]['entity_label'] . '</td>';
+                            $frm_str .= '</tr>';
+                        }
+                        $frm_str .= '</table>';
                     }
                 }
+                
                 $frm_str .= '<br>';
                 //$frm_str .= '<hr class="hr_process"/>';
             $frm_str .= '</div>';
