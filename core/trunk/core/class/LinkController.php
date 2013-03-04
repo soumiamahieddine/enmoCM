@@ -1,8 +1,8 @@
 <?php
 /*
-*    Copyright 2008,2009,2010 Maarch
+*   Copyright 2008-2013 Maarch
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -51,6 +51,7 @@ class LinkController
 
         foreach ($arrayToFormat as $key => $value) {
             $infos = $this->getDocInfos($key, $_SESSION['current_basket']['coll_id']);
+            //print_r($infos);
             $return .= '<div id="ged_'.$key.$sens.'" class="linkDiv">';
                 $return .= '<table>';
                     $return .= '<tr>';
@@ -60,14 +61,22 @@ class LinkController
                             $return .= '</a>';
                         $return .= '</td>';
                         $return .= '<td>';
+                        if ($_SESSION['current_basket']['coll_id'] == 'letterbox_coll') {
                             $return .= '<a href="index.php?page=details&dir=indexing_searching&id='.$key.'">';
+                        } elseif ($_SESSION['current_basket']['coll_id'] == 'business_coll') {
+                            $return .= '<a href="index.php?page=details_business&dir=indexing_searching&id='.$key.'">';
+                        }
                                 $return .=  '<b>'.$key.'</b>' ;
                             $return .= '</a>';
                         $return .= '</td>';
                         $return .= '<td class="barreLinks" width="2">';
                         $return .= '</td>';
                         $return .= '<td align="center">';
+                        if ($_SESSION['current_basket']['coll_id'] == 'letterbox_coll') {
                             $return .= $_SESSION['coll_categories']['letterbox_coll'][$infos['category_id']];
+                        } elseif ($_SESSION['current_basket']['coll_id'] == 'business_coll') {
+                            $return .= $_SESSION['coll_categories']['business_coll'][$infos['category_id']];
+                        }
                         $return .= '</td>';
                         $return .= '<td class="barreLinks" width="2">';
                         $return .= '</td>';
@@ -224,23 +233,28 @@ class LinkController
 
     private function getDocInfos($id, $collection)
     {
-        if ($collection = 'letterbox_coll') {
+        if ($collection == 'letterbox_coll') {
             $vue = 'res_view_letterbox';
+        } elseif ($collection == 'business_coll') {
+            $vue = 'res_view_business';
         } else {
             $vue = '';
         }
-        $db = new dbquery;
-        $db->connect();
-        $query = "SELECT * FROM ".$vue." WHERE res_id = ".$id;
-        $result = $db->query($query);
-        if ($result) {
-            $i = 0;
-            while ($row = $db->fetch_assoc($result)) {
-                $return = $row;
-                $i++;
+        if ($vue <> '') {
+            $db = new dbquery;
+            $db->connect();
+            $query = "SELECT * FROM ".$vue." WHERE res_id = ".$id;
+            $result = $db->query($query);
+            if ($result) {
+                $i = 0;
+                while ($row = $db->fetch_assoc($result)) {
+                    $return = $row;
+                    $i++;
+                }
             }
+        } else {
+            $return = false;
         }
-
         return $return;
     }
 
