@@ -30,51 +30,46 @@
 * @version $Revision$
 */
 
-
 try{
     require_once 'core/class/ObjectControlerAbstract.php';
     require_once 'core/class/ObjectControlerIF.php';
     require_once 'core/class/class_request.php' ;
-   	require_once 'modules/tags/class/TagControler.php' ;
+    require_once 'modules/tags/class/TagControler.php' ;
 } catch (Exception $e) {
     echo $e->getMessage();
 }
 
 include_once 'modules/tags/route.php';
 $tag = new tag_controler;
-
+if ($coll_id == '') {
+    $targetColl = 'letterbox';
+} else {
+    $targetColl = $coll_id;
+}
 $tag_resid_return = array();
 $json_txt .= " 'tags_chosen' : [";
 //$tags_chosen_tmp = array();
 for ($getag_i = 0; $getag_i <count($_REQUEST['tags_chosen']); $getag_i++) {
-	$return_tags_res_id = array();
-	$return_tags_res_id  = $tag->getresarray_byLabel($_REQUEST['tags_chosen'][$getag_i], 'letterbox_coll');
-	//array_push($tags_chosen_tmp, $func->protect_string_db($_REQUEST['tags_chosen'][$getag_i]));
-	$json_txt .= "'".$_REQUEST['tags_chosen'][$getag_i]."',";
-	if ($return_tags_res_id)
-	{
-		foreach ($return_tags_res_id as $elem){
-			array_push($tag_resid_return, $elem);
-		}
-	}
-	else
-	{
-		array_push($tag_resid_return, 0);
-	}
-	
+    $return_tags_res_id = array();
+    $return_tags_res_id  = $tag->getresarray_byLabel($_REQUEST['tags_chosen'][$getag_i], $targetColl);
+    //array_push($tags_chosen_tmp, $func->protect_string_db($_REQUEST['tags_chosen'][$getag_i]));
+    $json_txt .= "'".$_REQUEST['tags_chosen'][$getag_i]."',";
+    if ($return_tags_res_id) {
+        foreach ($return_tags_res_id as $elem) {
+            array_push($tag_resid_return, $elem);
+        }
+    } else {
+        array_push($tag_resid_return, 0);
+    }
+    
 }
 
 foreach ($tag_resid_return as $finaltagsearch) {
-	
-	$tag_resid_in .= "'".$finaltagsearch."',";
+    
+    $tag_resid_in .= "'".$finaltagsearch."',";
 }
 $tag_resid_in = substr($tag_resid_in, 0, -1);
 $where_request .= " res_id in (".$tag_resid_in.") and ";
 
 $json_txt = substr($json_txt, 0, -1);
 $json_txt .= '],';
-
-                
-
-   
-?>
