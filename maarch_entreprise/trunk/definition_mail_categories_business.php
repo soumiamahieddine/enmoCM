@@ -140,7 +140,7 @@ $_ENV['categories']['purchase']['currency'] = array (
     'label' => _CURRENCY,
     'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=currency.png',
-    'modify' => true,
+    'modify' => false,
     'form_show' => 'textfield'
 );
 
@@ -151,7 +151,7 @@ $_ENV['categories']['purchase']['net_sum'] = array (
     'label' => _NET_SUM,
     'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=amount.png',
-    'modify' => true,
+    'modify' => false,
     'form_show' => 'textfield'
 );
 
@@ -162,7 +162,7 @@ $_ENV['categories']['purchase']['tax_sum'] = array (
     'label' => _TAX_SUM,
     'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=amount.png',
-    'modify' => true,
+    'modify' => false,
     'form_show' => 'textfield'
 );
 
@@ -173,7 +173,7 @@ $_ENV['categories']['purchase']['total_sum'] = array (
     'label' => _TOTAL_SUM,
     'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=amount.png',
-    'modify' => true,
+    'modify' => false,
     'form_show' => 'textfield'
 );
 
@@ -265,7 +265,7 @@ $_ENV['categories']['sell']['currency'] = array (
     'label' => _CURRENCY,
     'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=currency.png',
-    'modify' => true,
+    'modify' => false,
     'form_show' => 'textfield'
 );
 
@@ -276,7 +276,7 @@ $_ENV['categories']['sell']['net_sum'] = array (
     'label' => _NET_SUM,
     'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=amount.png',
-    'modify' => true,
+    'modify' => false,
     'form_show' => 'textfield'
 );
 
@@ -287,7 +287,7 @@ $_ENV['categories']['sell']['tax_sum'] = array (
     'label' => _TAX_SUM,
     'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=amount.png',
-    'modify' => true,
+    'modify' => false,
     'form_show' => 'textfield'
 );
 
@@ -298,7 +298,7 @@ $_ENV['categories']['sell']['total_sum'] = array (
     'label' => _TOTAL_SUM,
     'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=amount.png',
-    'modify' => true,
+    'modify' => false,
     'form_show' => 'textfield'
 );
 

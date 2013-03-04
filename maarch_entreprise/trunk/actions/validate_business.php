@@ -485,6 +485,37 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</tr >';
     
     /*** currency ***/
+    $frm_str .= '<tr id="currency_tr" style="display:' . $displayValue . ';">';
+    $frm_str .= '<td style="width:30px;align:center;"><img src="'
+                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                . 'currency.png" alt="' . _CURRENCY 
+                . '"/></td><td><label for="currency" class="form_title">' . _CURRENCY
+            . '</label></td>';
+    $tabCurrency = array();
+    array_push($tabCurrency, array('id' => 'EUR', 'label' => 'EURO €'));
+    array_push($tabCurrency, array('id' => 'DOL', 'label' => 'DOLLAR $'));
+    array_push($tabCurrency, array('id' => 'YEN', 'label' => 'YEN ¥'));
+    array_push($tabCurrency, array('id' => 'POU', 'label' => 'POUND £'));
+    $cptTab = count($tabCurrency);
+    $frm_str .= '<td class="indexing_field">'
+        . '<select id="currency" name="currency" onchange="clear_error(\'frm_error_' . $actionId
+        . '\');convertAllBusinessAmount();">';
+    for($cpt=0;$cpt<$cptTab;$cpt++) {
+        if ($tabCurrency[$cpt]['id'] == $data['currency']) {
+            $selected = ' selected="selected" ';
+        } else {
+            $selected = '';
+        }
+        $frm_str .= '<option ' . $selected . ' value="' 
+            . $tabCurrency[$cpt]['id'] . '">' . $tabCurrency[$cpt]['label'] . '</option>';
+    }
+    $frm_str .= '</select></td>';
+    $frm_str .= '<td><span class="red_asterisk" id="currency_mandatory" '
+            . 'style="display:inline;">*</span>&nbsp;</td>';
+    $frm_str .= '</tr>';
+    
+    /*** currency ***/
+/*
     $frm_str .= '<tr id="currency_tr" style="display:' . $display_value . ';">';
     $frm_str .= '<td style="width:30px;align:center;"><img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?filename='
@@ -503,67 +534,73 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<td><span class="red_asterisk" id="currency_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frm_str .= '</tr>';
+*/
     
     /*** net_sum ***/
-    $frm_str .= '<tr id="net_sum_tr" style="display:' . $display_value . ';">';
+    $frm_str .= '<tr id="net_sum_tr" style="display:' . $displayValue . ';">';
     $frm_str .= '<td style="width:30px;align:center;"><img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?filename='
                 . 'amount.png" alt="' . _NET_SUM 
-                . '"/></td><td><label for="net_sum" class="form_title" >' . _NET_SUM
+                . '"/></td><td><label for="net_sum_use" class="form_title" >' . _NET_SUM
             . '</label></td>';
-    $frm_str .= '<td class="indexing_field"><input name="net_sum" type="text" '
-            . 'id="net_sum" onchange="clear_error(\'frm_error_' . $id_action
-            . '\');" value="';
-    if (isset($data['net_sum'])&& !empty($data['net_sum'])) {
-        $frm_str .= $data['net_sum'];
-    }
-    $frm_str .= '"/></td>';
+    $frm_str .= '<td class="indexing_field">'
+        . '<input name="net_sum_use" type="text" '
+        . 'id="net_sum_use" onchange="clear_error(\'frm_error_' . $actionId
+        . '\');$(\'net_sum_preformatted\').value=convertAmount($(\'currency\').options[$(\'currency\').selectedIndex].value, this.value);'
+        . '$(\'net_sum\').value=convertAmount(\'\', this.value);computeTotalAmount();" '
+        . 'class="amountLeft" value="';
+        if (isset($data['net_sum'])&& !empty($data['net_sum'])) {
+            $frm_str .= $data['net_sum'];
+        }
+        $frm_str .= '"/>&nbsp;'
+        . '<input name="net_sum_preformatted" type="text" '
+        . 'id="net_sum_preformatted" readonly="readonly" class="amountRight readonly" />'
+        . '<input name="net_sum" id="net_sum" type="hidden" />'
+        . '</td>';
     $frm_str .= '<td><span class="red_asterisk" id="net_sum_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frm_str .= '</tr>';
     
     /*** tax_sum ***/
-    $frm_str .= '<tr id="tax_sum_tr" style="display:' . $display_value . ';">';
-    $frm_str .= '<td style="width:30px;align:center;">'
-/*
-                . '<img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'amount.png" alt="' . _TAX_SUM 
-                . '"/>'
-*/
-                 . '&nbsp;'
-                . '</td><td><label for="tax_sum" class="form_title" >' . _TAX_SUM
+    $frm_str .= '<tr id="tax_sum_tr" style="display:' . $displayValue . ';">';
+    $frm_str .= '<td style="width:30px;align:center;">&nbsp;</td><td><label for="tax_sum_use" class="form_title" >' . _TAX_SUM
             . '</label></td>';
-    $frm_str .= '<td class="indexing_field"><input name="tax_sum" type="text" '
-            . 'id="tax_sum" onchange="clear_error(\'frm_error_' . $id_action
-            . '\');" value="';
-    if (isset($data['tax_sum'])&& !empty($data['tax_sum'])) {
-        $frm_str .= $data['tax_sum'];
-    }
-    $frm_str .= '"/></td>';
+    $frm_str .= '<td class="indexing_field">'
+        . '<input name="tax_sum_use" type="text" '
+        . 'id="tax_sum_use" onchange="clear_error(\'frm_error_' . $actionId
+        . '\');$(\'tax_sum_preformatted\').value=convertAmount($(\'currency\').options[$(\'currency\').selectedIndex].value, this.value);'
+        . '$(\'tax_sum\').value=convertAmount(\'\', this.value);computeTotalAmount();" '
+        . 'class="amountLeft" value="';
+        if (isset($data['tax_sum'])&& !empty($data['tax_sum'])) {
+            $frm_str .= $data['tax_sum'];
+        }
+        $frm_str .= '"/>&nbsp;'
+        . '<input name="tax_sum_preformatted" type="text" '
+        . 'id="tax_sum_preformatted" readonly="readonly" class="amountRight readonly" />'
+        . '<input name="tax_sum" id="tax_sum" type="hidden" />'
+        . '</td>';
     $frm_str .= '<td><span class="red_asterisk" id="tax_sum_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frm_str .= '</tr>';
     
-     /*** total_sum ***/
-    $frm_str .= '<tr id="total_sum_tr" style="display:' . $display_value . ';">';
-    $frm_str .= '<td style="width:30px;align:center;">'
-/*
-                . '<img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'amount.png" alt="' . _TOTAL_SUM 
-                . '"/>'
-*/
-                 . '&nbsp;'
-                . '</td><td><label for="total_sum" class="form_title" >' . _TOTAL_SUM
+    /*** total_sum ***/
+    $frm_str .= '<tr id="total_sum_tr" style="display:' . $displayValue . ';">';
+    $frm_str .= '<td style="width:30px;align:center;">&nbsp;</td><td><label for="total_sum_use" class="form_title" >' . _TOTAL_SUM
             . '</label></td>';
-    $frm_str .= '<td class="indexing_field"><input name="total_sum" type="text" '
-            . 'id="total_sum" onchange="clear_error(\'frm_error_' . $id_action
-            . '\');" value="';
-    if (isset($data['total_sum'])&& !empty($data['total_sum'])) {
-        $frm_str .= $data['total_sum'];
-    }
-    $frm_str .= '"/></td>';
+    $frm_str .= '<td class="indexing_field">'
+        . '<input name="total_sum_use" type="text" '
+        . 'id="total_sum_use" onchange="clear_error(\'frm_error_' . $actionId
+        . '\');$(\'total_sum_preformatted\').value=convertAmount($(\'currency\').options[$(\'currency\').selectedIndex].value, this.value);'
+        . '$(\'total_sum\').value=convertAmount(\'\', this.value);controlTotalAmount();" '
+        . 'class="amountLeft" value="';
+        if (isset($data['total_sum'])&& !empty($data['total_sum'])) {
+            $frm_str .= $data['total_sum'];
+        }
+        $frm_str .= '"/>&nbsp;'
+        . '<input name="total_sum_preformatted" type="text" '
+        . 'id="total_sum_preformatted" readonly="readonly" class="amountRight readonly" />'
+        . '<input name="total_sum" id="total_sum" type="hidden" />'
+        . '</td>';
     $frm_str .= '<td><span class="red_asterisk" id="total_sum_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frm_str .= '</tr>';
@@ -1031,6 +1068,19 @@ $frm_str .= '</div>';
                     $frm_str .='<textarea name="comp_data" id="comp_data" ></textarea>';
                 $frm_str .= '</td>';
             $frm_str .= '</tr>';
+            
+            $frm_str .= '<tr>';
+                $frm_str .= '<td colspan="2">';
+                    $frm_str .='<label for="is_private">'._IS_PRIVATE.' : </label>';
+                $frm_str .= '</td>';
+                $frm_str .= '<td colspan="2">';
+                    $frm_str .= '<input type="radio" class="check" name="is_private" '
+                            . 'id="is_private" value="Y"/>' . _YES;
+                    $frm_str .= '<input type="radio" id="is_private_N" class="check" '
+                            . 'name="is_private" value="N" checked="checked"/>' . _NO;
+                $frm_str .= '</td>';
+            $frm_str .= '</tr>';
+            
         $frm_str .= '</table>';
             $frm_str .='<div align="center">';
                 $frm_str .='<input name="submit" type="button" value="'._VALIDATE.'"  class="button" onclick="create_contact(\'' 
@@ -1060,7 +1110,7 @@ $frm_str .= '</div>';
             . 'change_category\',  \'' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&page=get_content_js\');launch_autocompleter_contacts(\'' 
             . $_SESSION['config']['businessappurl'].'index.php?display=true'
-            . '&dir=indexing_searching&page=autocomplete_contacts\');';
+            . '&dir=indexing_searching&page=autocomplete_contacts\');convertAllBusinessAmount();';
         if ($core_tools->is_module_loaded('folder'))
         {
             $frm_str .= ' initList(\'folder\', \'show_folder\',\''

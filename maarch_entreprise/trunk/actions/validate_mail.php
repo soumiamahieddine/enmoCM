@@ -969,6 +969,19 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .='<textarea name="comp_data" id="comp_data" ></textarea>';
                 $frm_str .= '</td>';
             $frm_str .= '</tr>';
+            
+             $frm_str .= '<tr>';
+                $frm_str .= '<td colspan="2">';
+                    $frm_str .='<label for="is_private">'._IS_PRIVATE.' : </label>';
+                $frm_str .= '</td>';
+                $frm_str .= '<td colspan="2">';
+                    $frm_str .= '<input type="radio" class="check" name="is_private" '
+                            . 'id="is_private" value="Y"/>' . _YES;
+                    $frm_str .= '<input type="radio" id="is_private_N" class="check" '
+                            . 'name="is_private" value="N" checked="checked"/>' . _NO;
+                $frm_str .= '</td>';
+            $frm_str .= '</tr>';
+            
         $frm_str .= '</table>';
             $frm_str .='<div align="center">';
                 $frm_str .='<input name="submit" type="button" value="'._VALIDATE.'"  class="button" onclick="create_contact(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=create_contact\', \''.$id_action.'\');" />';

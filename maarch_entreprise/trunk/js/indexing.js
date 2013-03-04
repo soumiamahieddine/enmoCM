@@ -848,8 +848,11 @@ function update_contact_autocompleter()
  * @param path_contact_card String Path to the contact card
  * @param path_user_card String Path to the user card
  **/
-function open_contact_card(path_contact_card,path_user_card,mode='view')
+function open_contact_card(path_contact_card,path_user_card,mode)
 {
+    if (mode == '') {
+        mode = 'view';
+    }
     var contact_value = $('contact').value;
     var arr = get_checked_values('type_contact');
     var contact_id = contact_value.substring(contact_value.indexOf('(')+1, contact_value.indexOf(')'));
@@ -1082,19 +1085,46 @@ function getIframeContent(path_manage_script)
 
 function convertAllBusinessAmount()
 {
-    if ($('net_sum')) {
-        if ($('net_sum').value != '') {
-            $('net_sum_formatted').value = convertAmount($('currency').value, $('net_sum').value);
+    if ($('net_sum_use')) {
+        if ($('net_sum_use').value != '') {
+            $('net_sum_preformatted').value = convertAmount($('currency').value, $('net_sum_use').value);
+            $('net_sum').value = convertAmount('', $('net_sum_use').value);
         }
     }
-    if ($('tax_sum')) {
-        if ($('tax_sum').value != '') {
-            $('tax_sum_formatted').value = convertAmount($('currency').value, $('tax_sum').value);
+    if ($('tax_sum_use')) {
+        if ($('tax_sum_use').value != '') {
+            $('tax_sum_preformatted').value = convertAmount($('currency').value, $('tax_sum_use').value);
+            $('tax_sum').value = convertAmount('', $('tax_sum_use').value);
         }
     }
-    if ($('total_sum')) {
-        if ($('total_sum').value != '') {
-            $('total_sum_formatted').value = convertAmount($('currency').value, $('total_sum').value);
+    if ($('total_sum_use')) {
+        if ($('total_sum_use').value != '') {
+            $('total_sum_preformatted').value = convertAmount($('currency').value, $('total_sum_use').value);
+            $('total_sum').value = convertAmount('', $('total_sum_use').value);
         }
+    }
+}
+
+function controlTotalAmount()
+{
+    if ($('net_sum') && $('tax_sum')) {
+        if ($('net_sum').value != '' && $('tax_sum').value != '') {
+            var total = parseFloat($('net_sum').value) + parseFloat($('tax_sum').value);
+            //console.log(total);
+            if (total != $('total_sum').value) {
+                window.alert('total_sum <> net_sum + tax_sum');
+            }
+        }
+    }
+}
+
+function computeTotalAmount()
+{
+    if ($('net_sum') && $('tax_sum')) {
+        var total = parseFloat($('net_sum').value) + parseFloat($('tax_sum').value);
+        $('total_sum').value = total;
+        $('total_sum_use').value = total;
+        $('total_sum_preformatted').value = convertAmount($('currency').value, total);
+        //console.log(total);
     }
 }

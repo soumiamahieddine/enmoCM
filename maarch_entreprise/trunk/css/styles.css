@@ -2647,6 +2647,18 @@ text-align:right;
     width:120px;
 }
 
+.indexingform .amountLeft
+{
+    text-align: right;
+    width:89px;
+}
+
+.indexingform .amountRight
+{
+    text-align: right;
+    width:120px;
+}
+
 #indexingfrmcontact
 {
     width:480px;
