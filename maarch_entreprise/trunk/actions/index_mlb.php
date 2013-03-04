@@ -961,6 +961,17 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<textarea name="comp_data" id="comp_data" ></textarea>';
     $frmStr .= '</td>';
     $frmStr .= '</tr>';
+    $frmStr .= '<tr>';
+        $frmStr .= '<td colspan="2">';
+            $frmStr .='<label for="is_private">'._IS_PRIVATE.' : </label>';
+        $frmStr .= '</td>';
+        $frmStr .= '<td colspan="2">';
+            $frmStr .= '<input type="radio" class="check" name="is_private" '
+                    . 'id="is_private" value="Y"/>' . _YES;
+            $frmStr .= '<input type="radio" id="is_private_N" class="check" '
+                    . 'name="is_private" value="N" checked="checked"/>' . _NO;
+        $frmStr .= '</td>';
+    $frmStr .= '</tr>';
     $frmStr .= '</table>';
     $frmStr .= '<div align="center">';
     $frmStr .= '<input name="submit" type="button" value="' . _VALIDATE . '" '
