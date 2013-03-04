@@ -848,7 +848,7 @@ function update_contact_autocompleter()
  * @param path_contact_card String Path to the contact card
  * @param path_user_card String Path to the user card
  **/
-function open_contact_card(path_contact_card,path_user_card)
+function open_contact_card(path_contact_card,path_user_card,mode='view')
 {
     var contact_value = $('contact').value;
     var arr = get_checked_values('type_contact');
@@ -864,7 +864,7 @@ function open_contact_card(path_contact_card,path_user_card)
         if (arr[0] == 'internal') {
             window.open(path_user_card+'&id='+contact_id, 'contact_info', 'height=450, width=600,scrollbars=no,resizable=yes');
         } else if(arr[0] == 'external') {
-            window.open(path_contact_card+'&id='+contact_id, 'contact_info', 'height=600, width=600,scrollbars=yes,resizable=yes');
+            window.open(path_contact_card+'&mode='+mode+'&id='+contact_id, 'contact_info', 'height=600, width=600,scrollbars=yes,resizable=yes');
         }
     }
 }
