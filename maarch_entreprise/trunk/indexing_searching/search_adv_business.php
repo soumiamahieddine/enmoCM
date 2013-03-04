@@ -360,7 +360,7 @@ if (isset($_REQUEST['nodetails'])) {
 ?>
 <table align="center" border="0" width="100%">
     <tr>
-        <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
+        <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();changeCategory('purchase');"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
         <td align="right">
             <input class="button_search_adv" name="imageField" type="submit" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" /><br/>
             <input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" />
@@ -585,7 +585,7 @@ if (isset($_REQUEST['nodetails'])) {
 </table>
 <table align="center" border="0" width="100%">
     <tr>
-        <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();">
+        <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();changeCategory('purchase');">
                 <img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
         <td align="right">
             <input class="button_search_adv" name="imageField" type="submit" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" /><br/>
@@ -603,7 +603,7 @@ if (isset($_REQUEST['nodetails'])) {
 load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
 <?php 
 if (isset($_REQUEST['init_search'])) {
-    ?>clear_search_form('frmsearch2','select_criteria');clear_q_list(); <?php
+    ?>clear_search_form('frmsearch2','select_criteria');clear_q_list();changeCategory('purchase'); <?php
 }
 ?>
 
