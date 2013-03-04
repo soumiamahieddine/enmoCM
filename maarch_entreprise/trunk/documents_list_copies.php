@@ -85,6 +85,12 @@ $db->connect();
     $filterClause = $list->getFilters(); 
     if (!empty($filterClause)) $where_tab[] = $filterClause;//Filter clause
     
+    //From search
+    if (
+        (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') 
+        && !empty($_SESSION['searching']['where_request'])
+    ) $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)'; 
+        
     //Get entities limitation 
     /*
     if($_SESSION['current_basket']['basket_owner'] <> "") {
@@ -433,6 +439,15 @@ if (count($template_list) > 0 ) {                                               
 $paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
 $paramsTab['bool_showTemplateDefaultList'] = true;                                          //Default list (no template)
 $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
+if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching')  {
+    $save = array(
+            "script"        =>  "createModal(form_txt, 'save_search', '100px', '500px');window.location.href='#top';",
+            "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_save.gif",
+            "tooltip"       =>  _SAVE_QUERY,
+            "disabledRules" =>  count($tab)." == 0"
+            );      
+    array_push($paramsTab['tools'],$save); 
+}
 $export = array(
         "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
         "icon"          =>  $_SESSION['config']['businessappurl']."static.php?&filename=tool_export.gif",

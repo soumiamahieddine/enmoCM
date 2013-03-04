@@ -77,12 +77,13 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];//Col
     //From filters
     $filterClause = $list->getFilters(); 
     if (!empty($filterClause)) $where_tab[] = $filterClause;//Filter clause
+    //From search
+    if (
+        (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') 
+        && !empty($_SESSION['searching']['where_request'])
+    ) $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)'; 
     //Build where
     $where = implode(' and ', $where_tab);
-    //Keep where clause
-    if(isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') {
-        $where = $_SESSION['searching']['where_request'] . ' '. $where;
-    }
 
 //Order
     $order = $order_field = '';
@@ -389,6 +390,15 @@ $paramsTab['tools'] = array();                                                  
             "disabledRules" =>  count($tab)." == 0 || ".$selectedTemplate." != 'none'"
             );      
         array_push($paramsTab['tools'],$label);
+    }
+    if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching')  {
+        $save = array(
+                "script"        =>  "createModal(form_txt, 'save_search', '100px', '500px');window.location.href='#top';",
+                "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_save.gif",
+                "tooltip"       =>  _SAVE_QUERY,
+                "disabledRules" =>  count($tab)." == 0"
+                );      
+        array_push($paramsTab['tools'],$save); 
     }
     $export = array(
             "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",

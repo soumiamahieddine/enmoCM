@@ -567,7 +567,7 @@ if (count($tab) > 0) {
         
         if($saveTool) {
             $save = array(
-                    "script"        =>  "createModal(form_txt);window.location.href='#top';",
+                    "script"        =>  "createModal(form_txt, 'save_search', '100px', '500px');window.location.href='#top';",
                     "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_save.gif",
                     "tooltip"       =>  _SAVE_QUERY,
                     "disabledRules" =>  count($tab)." == 0"
@@ -592,7 +592,7 @@ if (count($tab) > 0) {
     /*************************Extra javascript***********************/
     ?>
     <script type="text/javascript">
-        var form_txt='<form name="frm_save_query" id="frm_save_query" action="#" method="post" class="forms addforms" onsubmit="send_request(this.id);" ><h2><?php echo _SAVE_QUERY_TITLE;?></h2><p><label for="query_name"><?php echo _QUERY_NAME;?></label><input type="text" name="query_name" id="query_name" value=""/></p><p class="buttons"><input type="submit" name="submit" id="submit" value="<?php echo _VALIDATE;?>" class="button"/> <input type="button" name="cancel" id="cancel" value="<?php echo _CANCEL;?>" class="button" onclick="destroyModal();"/></p></form>';
+        var form_txt='<form name="frm_save_query" id="frm_save_query" action="#" method="post" class="forms addforms" onsubmit="send_request(this.id);" ><h2><?php echo _SAVE_QUERY_TITLE;?></h2><p><label for="query_name"><?php echo _QUERY_NAME;?></label><input type="text" name="query_name" id="query_name" value=""/></p><br/><p class="buttons"><input type="submit" name="submit" id="submit" value="<?php echo _VALIDATE;?>" class="button"/> <input type="button" name="cancel" id="cancel" value="<?php echo _CANCEL;?>" class="button" onclick="destroyModal(\'save_search\');"/></p></form>';
 
         function send_request(form_id)
         {
@@ -611,7 +611,7 @@ if (count($tab) > 0) {
                         eval("response = "+answer.responseText)
                         if(response.status == 0)
                         {
-                            $('modal').innerHTML ='<h2><?php echo _QUERY_SAVED;?></h2><br/><input type="button" name="close" value="<?php echo _CLOSE_WINDOW;?>" onclick="destroyModal();" class="button" />';
+                            $('modal').innerHTML ='<h2><?php echo _QUERY_SAVED;?></h2><br/><input type="button" name="close" value="<?php echo _CLOSE_WINDOW;?>" onclick="destroyModal(\'save_search\');" class="button" />';
                         }
                         else if(response.status == 2)
                         {

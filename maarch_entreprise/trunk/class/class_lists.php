@@ -192,24 +192,32 @@ class lists extends dbquery
                     . "entities_tables.php";
                     
                 $ent = new entity();
+                $sec = new security();
+                
+                $view = $sec->retrieve_view_from_table($this->params['tableName']);
+                if (empty($view)) {
+                    $view = $this->params['tableName'];
+                }
+                if (!empty($view)) {
+                    if (! empty($this->params['basketClause'])) $where = 'where '.$this->params['basketClause'];
 
-                if (! empty($this->params['basketClause'])) $where = 'where '.$this->params['basketClause'];
-
-                $db->query(
-                    "select distinct(r.destination) as entity_id, count(distinct r.res_id)"
-                    . " as total, e.entity_label , e.short_label from " .$this->params['tableName']. " r left join " . ENT_ENTITIES
-                    . " e on e.entity_id = r.destination " .$where
-                    . " group by e.entity_label,  e.short_label, r.destination order by e.entity_label"
-                );
-                while ($res = $db->fetch_object()) {
-                    
-                    if (isset($_SESSION['filters']['entity']['VALUE']) 
-                        && $_SESSION['filters']['entity']['VALUE'] == $res->entity_id
-                        )  $selected = 'selected="selected"'; else $selected =  '';
+                    $db->query(
+                        "select distinct(r.destination) as entity_id, count(distinct r.res_id)"
+                        . " as total, e.entity_label , e.short_label from " 
+                        . $view. " r left join " . ENT_ENTITIES
+                        . " e on e.entity_id = r.destination " .$where
+                        . " group by e.entity_label,  e.short_label, r.destination order by e.entity_label"
+                    );
+                    while ($res = $db->fetch_object()) {
                         
-                    if ($ent->is_user_in_entity($_SESSION['user']['UserId'], $res->entity_id)) $style = 'style="font-weight:bold;"';  else $style =  '';
+                        if (isset($_SESSION['filters']['entity']['VALUE']) 
+                            && $_SESSION['filters']['entity']['VALUE'] == $res->entity_id
+                            )  $selected = 'selected="selected"'; else $selected =  '';
+                            
+                        if ($ent->is_user_in_entity($_SESSION['user']['UserId'], $res->entity_id)) $style = 'style="font-weight:bold;"';  else $style =  '';
 
-                    $options .='<option value="'.$res->entity_id.'" '.$selected.' '.$style.'>'.$res->short_label.' ('.$res->total.')</option>';
+                        $options .='<option value="'.$res->entity_id.'" '.$selected.' '.$style.'>'.$res->short_label.' ('.$res->total.')</option>';
+                    }
                 }
                 $filters .='<select name="entity_id" id="entity_id" onChange="loadList(\''.$this->link
                             .'&filter=entity&value=\' + document.filters.entity_id.value, \''

@@ -44,6 +44,12 @@ $list       = new lists();
 //Include definition fields
 include_once('apps/' . $_SESSION['config']['app_id'] . '/definition_mail_categories.php');
 
+//URL extra parameters
+$urlParameters = '';
+
+//origin
+if ($_REQUEST['origin'] == 'searching') $urlParameters .= '&origin=searching';
+
 //Basket information
 if(!empty($_SESSION['current_basket']['view'])) {
     $table = $_SESSION['current_basket']['view'];
@@ -69,17 +75,18 @@ if($core_tools->is_module_loaded("cases") == true) {
 
 //Where clause
 $where_tab = array();
-//From basket
-if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause
-//From filters
-$filterClause = $list->getFilters(); 
-if (!empty($filterClause)) $where_tab[] = $filterClause;//Filter clause
-//Build where
-$where = implode(' and ', $where_tab);
-//Keep where clause
-if(isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') {
-    $where = $_SESSION['searching']['where_request'] . ' '. $where;
-}
+    //From basket
+        if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause
+    //From filters
+        $filterClause = $list->getFilters(); 
+        if (!empty($filterClause)) $where_tab[] = $filterClause;//Filter clause
+    //From search
+        if (
+            (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') 
+            && !empty($_SESSION['searching']['where_request'])
+        ) $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)'; 
+    //Build where
+        $where = implode(' and ', $where_tab);
 
 //Order
 $order = $order_field = '';
@@ -95,7 +102,7 @@ else  {
 
 //Request
 $tab=$request->select($select, $where, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
-// $request->show();
+// $request->show(); exit;
 
 //Templates
 $defaultTemplate = 'documents_list_with_attachments';
@@ -351,7 +358,8 @@ $paramsTab['bool_sortColumn'] = true;                                           
 $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
 $paramsTab['bool_showIconDocument'] = true;                                         //Affichage de l'icone du document
 $paramsTab['bool_showIconDetails'] = true;                                          //Affichage de l'icone de la page de details
-$paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id'];         //Parametres d'url supplementaires
+$paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id']
+            .$urlParameters;                                                        //Parametres d'url supplementaires
 $paramsTab['filters'] = array('entity', 'category', 'contact');                     //Filtres    
 if (count($template_list) > 0 ) {                                                   //Templates
     $paramsTab['templates'] = array();
@@ -360,6 +368,16 @@ if (count($template_list) > 0 ) {                                               
 $paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
 $paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
 $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
+
+if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching')  {
+    $save = array(
+            "script"        =>  "createModal(form_txt, 'save_search', '100px', '500px');window.location.href='#top';",
+            "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_save.gif",
+            "tooltip"       =>  _SAVE_QUERY,
+            "disabledRules" =>  count($tab)." == 0"
+            );      
+    array_push($paramsTab['tools'],$save); 
+}
 $export = array(
         "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
         "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_export.gif",
