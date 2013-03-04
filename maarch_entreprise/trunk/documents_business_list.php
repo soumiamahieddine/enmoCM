@@ -44,6 +44,12 @@ $list       = new lists();
 //Include definition fields
 include_once('apps/' . $_SESSION['config']['app_id'] . '/definition_mail_categories_business.php');
 
+//URL extra parameters
+$urlParameters = '';
+
+//origin
+if ($_REQUEST['origin'] == 'searching') $urlParameters .= '&origin=searching';
+
 //Basket information
 if (!empty($_SESSION['current_basket']['view'])) {
     $table = $_SESSION['current_basket']['view'];
@@ -63,18 +69,19 @@ array_push($select[$table], 'res_id', 'status', 'category_id', 'category_id as c
 );
 
 //Where clause
-$where_tab = array();
-//From basket
-if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause
-//From filters
-$filterClause = $list->getFilters();
-if (!empty($filterClause)) $where_tab[] = $filterClause;//Filter clause
-//Build where
-$where = implode(' and ', $where_tab);
-//Keep where clause
-if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') {
-    $where = $_SESSION['searching']['where_request'] . ' '. $where;
-}
+    $where_tab = array();
+    //From basket
+    if (!empty($_SESSION['current_basket']['clause'])) $where_tab[] = stripslashes($_SESSION['current_basket']['clause']); //Basket clause
+    //From filters
+    $filterClause = $list->getFilters();
+    if (!empty($filterClause)) $where_tab[] = $filterClause;//Filter clause
+    //From search
+    if (
+        (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') 
+        && !empty($_SESSION['searching']['where_request'])
+    ) $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)'; 
+    //Build where
+    $where = implode(' and ', $where_tab);
 
 //Order
 $order = $order_field = '';
@@ -357,15 +364,16 @@ $listKey = 'res_id';
 
 //Initialiser le tableau de paramètres
 $paramsTab = array();
-$paramsTab['pageTitle'] =  _RESULTS . ' : ' . count($tab) . ' ' . _FOUND_DOCS;              //Titre de la page
+$paramsTab['pageTitle'] =  _RESULTS . ' : ' . count($tab) . ' ' . _FOUND_DOCS;      //Titre de la page
 $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
 $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
 $paramsTab['bool_showIconDocument'] = true;                                         //Affichage de l'icone du document
 $paramsTab['bool_showIconDetails'] = true;                                          //Affichage de l'icone de la page de details
 $paramsTab['viewDetailsLink'] = 'index.php?page=details_business'
-    . '&dir=indexing_searching&coll_id=' . $_SESSION['collection_id_choice'];   //Link to the details page
-$paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id'];         //Parametres d'url supplementaires
-$paramsTab['filters'] = array('entity', 'category', 'contactBusiness');                     //Filtres    
+    . '&dir=indexing_searching&coll_id=' . $_SESSION['collection_id_choice'];       //Link to the details page
+$paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id']
+    .$urlParameters;                                                                //Parametres d'url supplementaires
+$paramsTab['filters'] = array('entity', 'category', 'contactBusiness');             //Filtres    
 if (count($template_list) > 0 ) {                                                   //Templates
     $paramsTab['templates'] = array();
     $paramsTab['templates'] = $template_list;
@@ -373,6 +381,15 @@ if (count($template_list) > 0 ) {                                               
 $paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
 $paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
 $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
+if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching')  {
+    $save = array(
+            "script"        =>  "createModal(form_txt, 'save_search', '100px', '500px');window.location.href='#top';",
+            "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_save.gif",
+            "tooltip"       =>  _SAVE_QUERY,
+            "disabledRules" =>  count($tab)." == 0"
+            );      
+    array_push($paramsTab['tools'],$save); 
+}
 $export = array(
         "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
         "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_export.gif",

@@ -47,6 +47,12 @@ $db         = new dbquery();
 //Include definition fields
 include_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'definition_mail_categories.php');
 
+//URL extra parameters
+$urlParameters = '';
+
+//origin
+if ($_REQUEST['origin'] == 'searching') $urlParameters .= '&origin=searching';
+
 //Create sql request
 if(!empty($_SESSION['current_basket']['view'])) {
 	$table = $_SESSION['current_basket']['view'];
@@ -430,9 +436,10 @@ $paramsTab['bool_bigPageTitle'] = false;                                        
 $paramsTab['bool_showIconDocument'] = true;                                         //Affichage de l'icone du document
 $paramsTab['bool_showIconDetails'] = true;                                          //Affichage de l'icone de la page de details
 $paramsTab['bool_showAttachment'] = true;                                           //Affichage du nombre de document attaché (mode étendu)
-$paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id'];         //Parametres d'url supplementaires
+$paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id']
+        .$urlParameters;                                                            //Parametres d'url supplementaires
 $paramsTab['filters'] = array('entity', 'category', 'isViewed', 'contact');         //Filtres    
-if (count($template_list) > 0 ) {                                                    //Templates
+if (count($template_list) > 0 ) {                                                   //Templates
     $paramsTab['templates'] = array();
     $paramsTab['templates'] = $template_list;
 }

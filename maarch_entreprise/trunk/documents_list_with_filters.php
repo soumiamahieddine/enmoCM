@@ -46,6 +46,12 @@ $list       = new lists();
 //Include definition fields
 include_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'definition_mail_categories.php');
 
+//URL extra parameters
+$urlParameters = '';
+
+//origin
+if ($_REQUEST['origin'] == 'searching') $urlParameters .= '&origin=searching';
+
 //Basket information
 if(!empty($_SESSION['current_basket']['view'])) {
 	$table = $_SESSION['current_basket']['view'];
@@ -363,7 +369,7 @@ $paramsTab['bool_sortColumn'] = true;                                           
 $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
 // $paramsTab['bool_showIconDocument'] = true;                                         //Affichage de l'icone du document
 $paramsTab['bool_showIconDetails'] = true;                                          //Affichage de l'icone de la page de details
-$paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id'];         //Parametres d'url supplementaires
+$paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id'].$urlParameters;;         //Parametres d'url supplementaires
 $paramsTab['filters'] = array('entity', 'category', 'contact');                     //Filtres    
 if (count($template_list) >0 ) {                                                    //Templates
     $paramsTab['templates'] = array();
