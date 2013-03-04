@@ -186,7 +186,7 @@ $arr_tmp2 = array('label' => _REG_DATE, 'type' => 'date_range', 'param' => array
 $param['creation_date'] = $arr_tmp2;
 
 //Closing date
-$arr_tmp2 = array('label' => _PROCESS_DATE, 'type' => 'date_range', 'param' => array('field_label' => _PROCESS_DATE, 'id1' => 'closing_date_from', 'id2' =>'closing_date_to'));
+$arr_tmp2 = array('label' => _CLOSING_DATE, 'type' => 'date_range', 'param' => array('field_label' => _CLOSING_DATE, 'id1' => 'closing_date_from', 'id2' =>'closing_date_to'));
 $param['closing_date'] = $arr_tmp2;
 
 //Document date

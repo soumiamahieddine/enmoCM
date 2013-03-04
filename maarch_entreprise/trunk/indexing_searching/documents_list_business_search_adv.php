@@ -248,7 +248,7 @@ if($mode == 'normal') {
         
 //Query    
     $tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
-    // $request->show();
+    //$request->show();exit;
 
 for ($i=0;$i<count($tab);$i++) {
     $catId = '';

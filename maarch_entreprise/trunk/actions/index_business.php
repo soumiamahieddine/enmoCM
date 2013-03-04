@@ -1140,8 +1140,7 @@ function process_category_check($catId, $values)
         if (isset($_ENV['categories'][$catId][$tmpId]['type_form'])
             && $_ENV['categories'][$catId][$tmpId]['type_form'] == 'integer'
             && ! empty($values[$i]['VALUE'])
-            && preg_match("/^[0-9]*$/", $values[$i]['VALUE']) == 0
-            && (is_int($values[$i]['VALUE']) || is_float($values[$i]['VALUE']))
+            && ! is_numeric($values[$i]['VALUE'])
         ) {
             $_SESSION['action_error'] = $_ENV['categories'][$catId][$tmpId]['label']
                                       . ' ' . _WRONG_FORMAT . ' ' . $values[$i]['VALUE'];

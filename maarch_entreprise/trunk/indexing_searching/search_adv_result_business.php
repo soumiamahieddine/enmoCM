@@ -341,7 +341,7 @@ if (count($_REQUEST['meta']) > 0) {
                     $json_txt .= " 'creation_date_to' : ['".trim($_REQUEST['creation_date_to'])."'],";
                 }
             }
-            // PROCESS DATE : FROM (closing_date)
+            // CLOSING DATE : FROM (closing_date)
             elseif ($tab_id_fields[$j] == 'closing_date_from' && !empty($_REQUEST['closing_date_from']))
             {
                 if ( preg_match($_ENV['date_pattern'],$_REQUEST['closing_date_from'])==false )
@@ -430,7 +430,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .=") and ";
                 $json_txt .= '],';
             }
-            // MAIL CATEGORY
+            // CATEGORY
             elseif ($tab_id_fields[$j] == 'category' && !empty($_REQUEST['category']))
             {
                 $where_request .= " category_id = '".$func->protect_string_db($_REQUEST['category'])."' AND ";
@@ -473,6 +473,24 @@ if (count($_REQUEST['meta']) > 0) {
                 $contact_type = substr($contactTmp, 0, $find1);
                 $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
                 $where_request .= " contact_id = '".$contact_id."' and ";
+            }
+            // TOTAL SUM : MIN
+            elseif ($tab_id_fields[$j] == 'total_sum_min' && !empty($_REQUEST['total_sum_min'])) {
+                if (!is_numeric($_REQUEST['total_sum_min'])) {
+                    $_SESSION['error'] .= _WRONG_FORMAT .  ' ' . _TOTAL_SUM_MIN .' : ' . $_REQUEST['total_sum_min'];
+                } else {
+                    $where_request .= " (total_sum >= " . $_REQUEST['total_sum_min'] . ") and ";
+                    $json_txt .= " 'total_sum_min' : ['".trim($_REQUEST['total_sum_min'])."'],";
+                }
+            }
+            // TOTAL SUM : MAX
+            elseif ($tab_id_fields[$j] == 'total_sum_max' && !empty($_REQUEST['total_sum_max'])) {
+                if (!is_numeric($_REQUEST['total_sum_max'])) {
+                    $_SESSION['error'] .= _WRONG_FORMAT .  ' ' . _TOTAL_SUM_MAX .' : ' . $_REQUEST['total_sum_max'];
+                } else {
+                    $where_request .= " (total_sum <= " . $_REQUEST['total_sum_max'] . ") and ";
+                    $json_txt .= " 'total_sum_max' : ['".trim($_REQUEST['total_sum_max'])."'],";
+                }
             }
             // SEARCH IN BASKETS
             else if ($tab_id_fields[$j] == 'baskets_clause' && !empty($_REQUEST['baskets_clause'])) {
