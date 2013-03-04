@@ -180,7 +180,7 @@ if($mode == 'normal') {
     
     array_push($select[$view], 'res_id', 'status', 'category_id', 'category_id as category_img', 'type_label', 'subject',
         'contact_firstname', 'contact_lastname', 'contact_society', 'contact_id', 'contact_id as contact_img', 'identifier', 'doc_date', 'creation_date', 
-        'total_sum', 'process_limit_date', 'entity_label', 'dest_user', 'count_attachment'
+        'currency', 'total_sum', 'process_limit_date', 'entity_label', 'dest_user', 'count_attachment'
     );
     
     //Where clause
@@ -432,8 +432,19 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='creation_date';
             }
+             if ($tab[$i][$j][$value]=="currency") {
+                $tab[$i][$j]["value"] =  $tab[$i][$j]["value"];
+                $currency = $tab[$i][$j]["value"];
+                $tab[$i][$j]["label"]=_CURRENCY;
+                $tab[$i][$j]["size"]="12";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]='total_sum';
+            }
             if ($tab[$i][$j][$value]=="total_sum") {
-                $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
+                $tab[$i][$j]["value"] =  $core_tools->formatAmount($currency, $request->show_string($tab[$i][$j]["value"]));
                 $tab[$i][$j]["label"]=_TOTAL_SUM;
                 $tab[$i][$j]["size"]="12";
                 $tab[$i][$j]["label_align"]="left";
