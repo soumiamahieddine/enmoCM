@@ -842,8 +842,8 @@ if (!defined('_PROBLEM_LOADING_FILE_TMP_DIR')) define( '_PROBLEM_LOADING_FILE_TM
 if (!defined('_DOWNLOADED_FILE')) define( '_DOWNLOADED_FILE', 'Fichier charg&eacute;');
 if (!defined('_WRONG_FILE_TYPE')) define( '_WRONG_FILE_TYPE', 'Ce type de fichier n&rsquo;est pas permis');
 
-if (!defined('_LETTERBOX')) define( '_LETTERBOX', 'Collection Courrier');
-if (!defined('_APA_COLL')) define( '_APA_COLL', 'APA - ne pas utiliser');
+if (!defined('_LETTERBOX')) define( '_LETTERBOX', 'Collection des courriers');
+if (!defined('_APA_COLL')) define( '_APA_COLL', 'Collection de l&rsquo;archivage physique');
 if (!defined('_REDIRECT_TO_ACTION')) define( '_REDIRECT_TO_ACTION', 'Rediriger vers une action');
 if (!defined('_DOCUMENTS_LIST')) define( '_DOCUMENTS_LIST', 'Liste');
 if (!defined('_LOGS_LIST')) define( '_LOGS_LIST', 'Liste des logs');
@@ -1029,7 +1029,7 @@ if (!defined('_INVOICE_NUMBER')) define( '_INVOICE_NUMBER', 'Num facture');
 /******************** fulltext search Helper ************/
 if (!defined('_HELP_GLOBAL_SEARCH')) define( '_HELP_GLOBAL_SEARCH', 'Recherche sur l\'objet, le titre, la description, le contenu du document ou sur le num&eacute;ro de GED');
 if (!defined('_HELP_FULLTEXT_SEARCH')) define( '_HELP_FULLTEXT_SEARCH', 'Aide sur la recherche plein texte');
-if (!defined('_GLOBAL_SEARCH')) define( '_GLOBAL_SEARCH', 'Recherche globale courriers');
+if (!defined('_GLOBAL_SEARCH')) define( '_GLOBAL_SEARCH', 'Recherche globale de courriers');
 if (!defined('_TIPS_FULLTEXT')) define( '_TIPS_FULLTEXT', 'Astuces de recherche');
 
 if (!defined('_TIPS_KEYWORD1')) define( '_TIPS_KEYWORD1', 'Pour effectuer une recherche avec joker sur plusieurs caractères');
@@ -1430,3 +1430,5 @@ if (!defined('_DATE')) define('_DATE', 'Date');
 if (!defined('_ID_IS_MANDATORY')) define('_ID_IS_MANDATORY', 'Identifiant obligatoire');
 if (!defined('_INVALID_PARAMETER_ID')) define('_INVALID_PARAMETER_ID', 'Identifiant invalide (seuls les caractères A-Z, a-z, 0-9 et _ sont autorisés');
 if (!defined('_VALUE_IS_MANDATORY')) define('_VALUE_IS_MANDATORY', 'Valeur obligatoire');
+
+if (!defined('_GLOBAL_SEARCH_BUSINESS')) define('_GLOBAL_SEARCH_BUSINESS', 'Recherche globale de documents');

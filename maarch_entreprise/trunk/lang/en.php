@@ -1152,3 +1152,5 @@ if (!defined('_BUSINESS_LIST')) define('_BUSINESS_LIST', 'Documents business lis
 
 if (!defined('_INDEXING_BUSINESS')) define('_INDEXING_BUSINESS', 'Store a document');
 if (!defined('_ADV_SEARCH_BUSINESS')) define('_ADV_SEARCH_BUSINESS', 'Search a document');
+
+if (!defined('_GLOBAL_SEARCH_BUSINESS')) define('_GLOBAL_SEARCH_BUSINESS', 'Global search of documents');
