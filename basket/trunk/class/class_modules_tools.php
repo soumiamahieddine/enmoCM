@@ -1257,4 +1257,21 @@ class basket extends dbquery
             return false;
         }
     }
+    
+    /**
+     * Return true if the user has a basket in the required collection
+     *
+     * @param  $collId string the collection
+     * @return boolean
+     */
+    public function isUserHasBasketInCollection($collId)
+    {
+        $cpt = count($_SESSION['user']['baskets']);
+        for ($i=0;$i<$cpt;$i++) {
+            if ($_SESSION['user']['baskets'][$i]['coll_id'] == $collId) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
