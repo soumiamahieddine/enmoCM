@@ -1717,13 +1717,13 @@ class functions
         if ($currency == 'EUR') {
             $formattedAmount = '€' . number_format($amount , 2 , ',' , '.' );
         } elseif  ($currency == 'DOL') {
-            $formattedAmount = '$' . number_format($amount , 2 , '.' , ',' );
+            $formattedAmount = '$' . number_format($amount , 2 , ',' , '.' );
         } elseif  ($currency == 'YEN') {
-            $formattedAmount = '¥' . number_format($amount , 2 , '.' , ',' );
+            $formattedAmount = '¥' . number_format($amount , 2 , ',' , '.' );
         } elseif  ($currency == 'POU') {
-            $formattedAmount = '£' . number_format($amount , 2 , '.' , ',' );
+            $formattedAmount = '£' . number_format($amount , 2 , ',' , '.' );
         } else {
-            $formattedAmount = ' ' . number_format($amount , 2 , '' , '.' );
+            $formattedAmount = ' ' . number_format($amount , 2 , '' , ',' );
         }
         return $formattedAmount;
     }
