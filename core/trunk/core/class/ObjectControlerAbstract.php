@@ -184,7 +184,9 @@ abstract class ObjectControler
         $result = array();
         foreach ($object->getArray() as $key => $value) {
             if (!in_array($key,$computed_properties)) {
-                if (substr_compare($key, '_id', -3) == 0
+                if($key == self::$specific_id) {
+                    // do not update key
+                } elseif (substr_compare($key, '_id', -3) == 0
                     || substr_compare($key, '_number', -7) == 0) {
                     if (in_array($key, self::$foolish_ids)) {
                         $result[] = $key . "='" . $value . "'";
