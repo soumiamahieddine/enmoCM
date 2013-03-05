@@ -249,12 +249,13 @@ if($mode == 'normal') {
 //Query    
     $tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
     //$request->show();exit;
-
+//var_dump($tab);
 for ($i=0;$i<count($tab);$i++) {
     $catId = '';
     for ($j=0;$j<count($tab[$i]);$j++) {
-        foreach(array_keys($tab[$i][$j]) as $value) {
-            if($tab[$i][$j][$value]=='is_labeled' 
+        //foreach(array_keys($tab[$i][$j]) as $value) {
+            //echo "KEY " . $value . " CONTENT " . $tab[$i][$j]['column'] . "<br>";
+            if($tab[$i][$j]['column']=='is_labeled' 
                 && $core_tools->is_module_loaded('labels')
                 && (isset($_SESSION['user']['services']['labels'])
                 && $_SESSION['user']['services']['labels'] === true)
@@ -276,7 +277,7 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]=false;
             }
-            if ($tab[$i][$j][$value]=="res_id") {
+            if ($tab[$i][$j]['column']=="res_id") {
                 $tab[$i][$j]["res_id"]=$tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]=_GED_NUM;
                 $tab[$i][$j]["size"]="4";
@@ -287,7 +288,8 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["order"]='res_id';
                 $_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
             }
-            if ($tab[$i][$j][$value]=="status") {
+            if ($tab[$i][$j]['column']=="status") {
+                //echo $value . ' ' . $tab[$i][$j]['column'];
                 $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
                 $statusCmp = $tab[$i][$j]['value'];
                 $tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
@@ -298,8 +300,11 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='status';
+                //echo $tab[$i][$j]["column"];
+                
+                //$core_tools->show_array($tab[$i][$j]);
             }
-            if ($tab[$i][$j][$value]=="category_id") {
+            if ($tab[$i][$j]['column']=="category_id") {
                 $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]["value"];
                 $catId = $tab[$i][$j]["value"];
                 $tab[$i][$j]["value"] = $_SESSION['coll_categories']['business_coll'][$tab[$i][$j]["value"]];
@@ -311,7 +316,7 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='category_id';
             }
-            if ($tab[$i][$j][$value]=="category_img") {
+            if ($tab[$i][$j]['column']=="category_img") {
                 $tab[$i][$j]["label"]=_CATEGORY;
                 $tab[$i][$j]["size"]="10";
                 $tab[$i][$j]["label_align"]="left";
@@ -324,7 +329,7 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["value"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["order"]="category_id";
             }
-            if ($tab[$i][$j][$value]=="type_label") {
+            if ($tab[$i][$j]['column']=="type_label") {
                 $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
                 $tab[$i][$j]["label"]=_TYPE;
                 $tab[$i][$j]["size"]="12";
@@ -334,7 +339,7 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='type_label';
             }
-            if ($tab[$i][$j][$value]=="subject") {
+            if ($tab[$i][$j]['column']=="subject") {
                 $tab[$i][$j]["value"] = $request->cut_string($request->show_string($tab[$i][$j]["value"]), 100);
                 $tab[$i][$j]["label"]=_SUBJECT;
                 $tab[$i][$j]["size"]="12";
@@ -344,19 +349,19 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='subject';
             }
-            if ($tab[$i][$j][$value]=="contact_firstname") {
+            if ($tab[$i][$j]['column']=="contact_firstname") {
                 $contact_firstname = $tab[$i][$j]["value"];
                 $tab[$i][$j]["show"]=false;
             }
-            if ($tab[$i][$j][$value]=="contact_lastname") {
+            if ($tab[$i][$j]['column']=="contact_lastname") {
                 $contact_lastname = $tab[$i][$j]["value"];
                 $tab[$i][$j]["show"]=false;
             }
-            if ($tab[$i][$j][$value]=="contact_society") {
+            if ($tab[$i][$j]['column']=="contact_society") {
                 $contact_society = $tab[$i][$j]["value"];
                 $tab[$i][$j]["show"]=false;
             }
-            if ($tab[$i][$j][$value]=="contact_id") {
+            if ($tab[$i][$j]['column']=="contact_id") {
                 $tab[$i][$j]["label"]=_CONTACT;
                 $tab[$i][$j]["size"]="10";
                 $tab[$i][$j]["label_align"]="left";
@@ -374,7 +379,7 @@ for ($i=0;$i<count($tab);$i++) {
                 );
                 $tab[$i][$j]["order"]=false;
             }
-            if ($tab[$i][$j][$value]=="contact_img") {
+            if ($tab[$i][$j]['column']=="contact_img") {
                 $tab[$i][$j]["label"]=_CONTACT;
                 $tab[$i][$j]["size"]="10";
                 $tab[$i][$j]["label_align"]="left";
@@ -402,7 +407,7 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["value"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["order"]=false;
             }
-            if ($tab[$i][$j][$value]=="identifier") {
+            if ($tab[$i][$j]['column']=="identifier") {
                 $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
                 $tab[$i][$j]["label"]=_IDENTIFIER;
                 $tab[$i][$j]["size"]="12";
@@ -412,7 +417,7 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='identifier';
             }
-            if ($tab[$i][$j][$value]=="doc_date") {
+            if ($tab[$i][$j]['column']=="doc_date") {
                 $tab[$i][$j]["value"]=$core_tools->format_date_db($tab[$i][$j]["value"], false);
                 $tab[$i][$j]["label"]=_DOC_DATE;
                 $tab[$i][$j]["size"]="10";
@@ -422,7 +427,7 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["show"]=false;
                 $tab[$i][$j]["order"]='doc_date';
             }
-            if ($tab[$i][$j][$value]=="creation_date") {
+            if ($tab[$i][$j]['column']=="creation_date") {
                 $tab[$i][$j]["value"]=$core_tools->format_date_db($tab[$i][$j]["value"], false);
                 $tab[$i][$j]["label"]=_CREATION_DATE;
                 $tab[$i][$j]["size"]="10";
@@ -432,7 +437,7 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='creation_date';
             }
-             if ($tab[$i][$j][$value]=="currency") {
+             if ($tab[$i][$j]['column']=="currency") {
                 $tab[$i][$j]["value"] =  $tab[$i][$j]["value"];
                 $currency = $tab[$i][$j]["value"];
                 $tab[$i][$j]["label"]=_CURRENCY;
@@ -441,9 +446,9 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["align"]="left";
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=true;
-                $tab[$i][$j]["order"]='total_sum';
+                $tab[$i][$j]["order"]='currency';
             }
-            if ($tab[$i][$j][$value]=="total_sum") {
+            if ($tab[$i][$j]['column']=="total_sum") {
                 $tab[$i][$j]["value"] =  $core_tools->formatAmount($currency, $request->show_string($tab[$i][$j]["value"]));
                 $tab[$i][$j]["label"]=_TOTAL_SUM;
                 $tab[$i][$j]["size"]="12";
@@ -453,7 +458,7 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='total_sum';
             }
-            if ($tab[$i][$j][$value]=="process_limit_date") {
+            if ($tab[$i][$j]['column']=="process_limit_date") {
                 $tab[$i][$j]["value"]=$core_tools->format_date_db($tab[$i][$j]["value"], false);
                 $compareDate = "";
                 if ($tab[$i][$j]["value"] <> "" && ($statusCmp == "NEW" || $statusCmp == "COU" || $statusCmp == "VAL" || $statusCmp == "RET"))
@@ -461,15 +466,15 @@ for ($i=0;$i<count($tab);$i++) {
                     $compareDate = $core_tools->compare_date($tab[$i][$j]["value"], date("d-m-Y"));
                     if ($compareDate == "date2")
                     {
-                        $tab[$i][$j]["value"] = "<span style='color:red;'><b>".$tab[$i][$j]["value"]."<br><small>(".$core_tools->nbDaysBetween2Dates($tab[$i][$j]["value"], date("d-m-Y"))." "._DAYS.")<small></b></span>";
+                        $tab[$i][$j]["value"] = "<span style='color:red;'><b>".$tab[$i][$j]["value"]."<br><small>(".$core_tools->nbDaysBetween2Dates($tab[$i][$j]["value"], date("d-m-Y"))." "._DAYS.")</small></b></span>";
                     }
                     elseif ($compareDate == "date1")
                     {
-                        $tab[$i][$j]["value"] = $tab[$i][$j]["value"]."<br><small>(".$core_tools->nbDaysBetween2Dates(date("d-m-Y"), $tab[$i][$j]["value"])." "._DAYS.")<small>";
+                        $tab[$i][$j]["value"] = $tab[$i][$j]["value"]."<br><small>(".$core_tools->nbDaysBetween2Dates(date("d-m-Y"), $tab[$i][$j]["value"])." "._DAYS.")</small>";
                     }
                     elseif ($compareDate == "equal")
                     {
-                        $tab[$i][$j]["value"] = "<span style='color:blue;'><b>".$tab[$i][$j]["value"]."<br><small>("._LAST_DAY.")<small></b></span>";
+                        $tab[$i][$j]["value"] = "<span style='color:blue;'><b>".$tab[$i][$j]["value"]."<br><small>("._LAST_DAY.")</small></b></span>";
                     }
                 }
                 $tab[$i][$j]["label"]=_PROCESS_LIMIT_DATE;
@@ -480,7 +485,7 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='process_limit_date';
             }
-            if ($tab[$i][$j][$value]=="entity_label") {
+            if ($tab[$i][$j]['column']=="entity_label") {
                 $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
                 $tab[$i][$j]["label"]=_DESTINATION;
                 $tab[$i][$j]["size"]="12";
@@ -490,7 +495,7 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='entity_label';
             }
-            if ($tab[$i][$j][$value]=="dest_user") {
+            if ($tab[$i][$j]['column']=="dest_user") {
                 $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
                 $tab[$i][$j]["label"]=_DEST_USER;
                 $tab[$i][$j]["size"]="12";
@@ -500,7 +505,7 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='dest_user';
             }
-            if ($tab[$i][$j][$value]=="count_attachment") {
+            if ($tab[$i][$j]['column']=="count_attachment") {
                 $tab[$i][$j]["label"]=_ATTACHMENTS;
                 $tab[$i][$j]["size"]="12";
                 $tab[$i][$j]["label_align"]="left";
@@ -509,10 +514,10 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["show"]=false;
                 $tab[$i][$j]["order"]='count_attachment';
             }
-        }
+        //}
     }
 }
-
+//$core_tools->show_array($tab);
 if (count($tab) > 0) {
 
     /************Construction de la liste*******************/

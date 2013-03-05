@@ -441,7 +441,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         . 'id="net_sum_use" onchange="clear_error(\'frm_error_' . $actionId
         . '\');$(\'net_sum_preformatted\').value=convertAmount($(\'currency\').options[$(\'currency\').selectedIndex].value, this.value);'
         . '$(\'net_sum\').value=convertAmount(\'\', this.value);computeTotalAmount();" '
-        . 'class="amountLeft" />&nbsp;'
+        . 'class="amountLeft" value="0" />&nbsp;'
         . '<input name="net_sum_preformatted" type="text" '
         . 'id="net_sum_preformatted" readonly="readonly" class="amountRight readonly" />'
         . '<input name="net_sum" id="net_sum" type="hidden" />'
@@ -460,7 +460,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         . 'id="tax_sum_use" onchange="clear_error(\'frm_error_' . $actionId
         . '\');$(\'tax_sum_preformatted\').value=convertAmount($(\'currency\').options[$(\'currency\').selectedIndex].value, this.value);'
         . '$(\'tax_sum\').value=convertAmount(\'\', this.value);computeTotalAmount();" '
-        . 'class="amountLeft" />&nbsp;'
+        . 'class="amountLeft" value="0" />&nbsp;'
         . '<input name="tax_sum_preformatted" type="text" '
         . 'id="tax_sum_preformatted" readonly="readonly" class="amountRight readonly" />'
         . '<input name="tax_sum" id="tax_sum" type="hidden" />'
@@ -479,7 +479,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         . 'id="total_sum_use" onchange="clear_error(\'frm_error_' . $actionId
         . '\');$(\'total_sum_preformatted\').value=convertAmount($(\'currency\').options[$(\'currency\').selectedIndex].value, this.value);'
         . '$(\'total_sum\').value=convertAmount(\'\', this.value);controlTotalAmount();" '
-        . 'class="amountLeft" />&nbsp;'
+        . 'class="amountLeft" value="0" />&nbsp;'
         . '<input name="total_sum_preformatted" type="text" '
         . 'id="total_sum_preformatted" readonly="readonly" class="amountRight readonly" />'
         . '<input name="total_sum" id="total_sum" type="hidden" />'
@@ -968,7 +968,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'index.php?display=true&page=get_content_js\');'
             . 'launch_autocompleter_contacts(\''
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-            . '&dir=indexing_searching&page=autocomplete_contacts\');';
+            . '&dir=indexing_searching&page=autocomplete_contacts\');convertAllBusinessAmount();';
 
     if ($core->is_module_loaded('folder')) {
         $frmStr .= ' initList(\'folder\', \'show_folder\',\''
@@ -1467,24 +1467,25 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             && $_ENV['categories'][$catId][$tmpId]['type_field'] == 'integer'
             && $_ENV['categories'][$catId][$tmpId]['table'] <> 'none'
         ) {
-            if ($formValues[$i]['VALUE'] <> 0 || $formValues[$i]['VALUE'] <> '') {
-                if (isset($_ENV['categories'][$catId][$tmpId]['table'])
-                    && $_ENV['categories'][$catId][$tmpId]['table'] == 'res'
-                ) {
-                        array_push(
-                            $_SESSION['data'],
-                            array(
-                                'column' => $tmpId,
-                                'value'  => str_replace(",", ".", $formValues[$i]['VALUE']),
-                                'type'   => 'integer',
-                            )
-                        );
-                } else if (isset($_ENV['categories'][$catId][$tmpId]['table'])
-                    && $_ENV['categories'][$catId][$tmpId]['table'] == 'coll_ext'
-                ) {
-                    $queryExtFields .= $tmpId . ',';
-                    $queryExtValues .= str_replace(",", ".", $formValues[$i]['VALUE']) . ',';
-                }
+            if ($formValues[$i]['VALUE'] == '') {
+                $formValues[$i]['VALUE'] = '0';
+            }
+            if (isset($_ENV['categories'][$catId][$tmpId]['table'])
+                && $_ENV['categories'][$catId][$tmpId]['table'] == 'res'
+            ) {
+                    array_push(
+                        $_SESSION['data'],
+                        array(
+                            'column' => $tmpId,
+                            'value'  => str_replace(",", ".", $formValues[$i]['VALUE']),
+                            'type'   => 'integer',
+                        )
+                    );
+            } else if (isset($_ENV['categories'][$catId][$tmpId]['table'])
+                && $_ENV['categories'][$catId][$tmpId]['table'] == 'coll_ext'
+            ) {
+                $queryExtFields .= $tmpId . ',';
+                $queryExtValues .= str_replace(",", ".", $formValues[$i]['VALUE']) . ',';
             }
         } else if (isset($_ENV['categories'][$catId][$tmpId]['type_field'])
             && isset($_ENV['categories'][$catId][$tmpId]['table'])

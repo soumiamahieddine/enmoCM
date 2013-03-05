@@ -2537,11 +2537,11 @@ function convertAmount(currency, amount)
     if (currency == 'EUR') {
         return accounting.formatMoney(amount, '€', 2, '.', ',');
     } else if  (currency == 'DOL') {
-        return accounting.formatMoney(amount, '$', 2, ',', '.');
+        return accounting.formatMoney(amount, '$', 2, '.', ',');
     } else if  (currency == 'YEN') {
-        return accounting.formatMoney(amount, '¥', 2, ',', '.');
+        return accounting.formatMoney(amount, '¥', 2, '.', ',');
     } else if  (currency == 'POU') {
-        return accounting.formatMoney(amount, '£', 2, ',', '.');
+        return accounting.formatMoney(amount, '£', 2, '.', ',');
     } else {
         return accounting.formatMoney(amount, '', 2, '', '.');
     }

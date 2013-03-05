@@ -514,28 +514,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frm_str .= '</tr>';
     
-    /*** currency ***/
-/*
-    $frm_str .= '<tr id="currency_tr" style="display:' . $display_value . ';">';
-    $frm_str .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'currency.png" alt="' . _CURRENCY 
-                . '"/></td><td><label for="currency" class="form_title">' . _CURRENCY
-            . '</label></td>';
-    $frm_str .= '<td class="indexing_field"><input name="currency" type="text" '
-            . 'id="currency" value="';
-    if (isset($data['currency'])&& !empty($data['currency'])) {
-        $frm_str .= $data['currency'];
-    } else {
-        $frm_str .= 'EUR';
-    }
-    $frm_str .= '" onchange="clear_error(\'frm_error_' . $id_action
-            . '\');"/></td>';
-    $frm_str .= '<td><span class="red_asterisk" id="currency_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
-    $frm_str .= '</tr>';
-*/
-    
     /*** net_sum ***/
     $frm_str .= '<tr id="net_sum_tr" style="display:' . $displayValue . ';">';
     $frm_str .= '<td style="width:30px;align:center;"><img src="'
@@ -551,6 +529,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . 'class="amountLeft" value="';
         if (isset($data['net_sum'])&& !empty($data['net_sum'])) {
             $frm_str .= $data['net_sum'];
+        } else {
+            $frm_str .= '0';
         }
         $frm_str .= '"/>&nbsp;'
         . '<input name="net_sum_preformatted" type="text" '
@@ -573,6 +553,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . 'class="amountLeft" value="';
         if (isset($data['tax_sum'])&& !empty($data['tax_sum'])) {
             $frm_str .= $data['tax_sum'];
+        } else {
+            $frm_str .= '0';
         }
         $frm_str .= '"/>&nbsp;'
         . '<input name="tax_sum_preformatted" type="text" '
@@ -595,6 +577,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . 'class="amountLeft" value="';
         if (isset($data['total_sum'])&& !empty($data['total_sum'])) {
             $frm_str .= $data['total_sum'];
+        } else {
+            $frm_str .= '0';
         }
         $frm_str .= '"/>&nbsp;'
         . '<input name="total_sum_preformatted" type="text" '
@@ -1438,12 +1422,13 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'integer' 
             && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] <> 'none'
         ) {
-            if ($values_form[$i]['VALUE'] <> '') {
-                if ($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res') {
-                    $query_res .= ", ".$values_form[$i]['ID']." = ".$values_form[$i]['VALUE'];
-                } else if ($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext') {
-                    $query_ext .= ", ".$values_form[$i]['ID']." = ".$values_form[$i]['VALUE'];
-                }
+            if ($values_form[$i]['VALUE'] == '') {
+                $values_form[$i]['VALUE'] = '0';
+            }
+            if ($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res') {
+                $query_res .= ", ".$values_form[$i]['ID']." = ".$values_form[$i]['VALUE'];
+            } else if ($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'coll_ext') {
+                $query_ext .= ", ".$values_form[$i]['ID']." = ".$values_form[$i]['VALUE'];
             }
         } else if ($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'string' 
             && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] <> 'none') {
