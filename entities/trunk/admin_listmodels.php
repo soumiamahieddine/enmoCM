@@ -78,9 +78,9 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 $orderstr = $list->define_order($order, $field);
 
 $select[ENT_LISTMODELS] = array();
-array_push($select[ENT_LISTMODELS], "object_type || '|' || object_id  || '|' || coll_id || '|' || listmodel_type as list_id", 'object_type', 'object_id', "coll_id");
+array_push($select[ENT_LISTMODELS], "object_type || '|' || object_id  || '|' || coll_id as list_id", 'object_type', 'object_id', 'description', "coll_id");
 
-$where .= ' 1=1 group by object_type, object_id, coll_id, listmodel_type';
+$where .= ' 1=1 group by object_type, object_id, coll_id, listmodel_type, description';
 $tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databasetype']);
 //$request->show();
 
@@ -127,6 +127,19 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=true;
             }
+            
+            if($tab[$i][$j][$value]=="description")
+            {
+                $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
+                $tab[$i][$j]["description"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_DESCRIPTION;
+                $tab[$i][$j]["size"]="30";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["order"]=$tab[$i][$j][$value];
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+            }
 
             if($tab[$i][$j][$value]=="coll_id")
             {
@@ -140,6 +153,7 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=true;
             }
+            
         }
     }
 }

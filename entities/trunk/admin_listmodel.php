@@ -23,69 +23,60 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 
 $difflist = new diffusion_list();
 $roles = $difflist->get_listinstance_roles();
-$listmodel_types = $difflist->get_listmodel_types();
-/*
-$params ['mode']        : 'listmodel' or 'listinstance' (mandatory)
-        ['table']       : table to update (mandatory)
-        ['object_id']   : Object identifier linked to the diffusion list, entity identifier (mandatory if mode =  'listmodel')
-        ['coll_id']     : Collection identifier (mandatory if mode = 'listinstance')
-        ['res_id']      : Resource identifier (mandatory if mode = 'listinstance')
-        ['user_id']     : User identifier of the person who add an item in the list
-        ['concat_list'] : True or false (can be set only in 'listinstance' mode )*/
+$objectTypes = $difflist->get_listmodel_types();
 
 # Load listmodel into session
 /*
 var_dump($_SESSION['m_admin']['entity']['listmodel']);
-var_dump($_SESSION['m_admin']['entity']['listmodel_objectType']);
-var_dump($_SESSION['m_admin']['entity']['listmodel_objectId']);
-var_dump($_SESSION['m_admin']['entity']['listmodel_collId']);
-var_dump($_SESSION['m_admin']['entity']['listmodel_resType']);*/
+var_dump($_SESSION['m_admin']['entity']['listmodel_info']);
+;*/
 
 if(!isset($_SESSION['m_admin']['entity']['listmodel'])) {
     # Listmodel to be loaded (up action on list or reload in add mode)
     $objectType = trim(strtok($_REQUEST['id'], '|'));
     $objectId = strtok('|');
     $collId = strtok('|');
-    $resType = strtok('|');
+    
+    $_SESSION['m_admin']['entity']['listmodel_info'] =
+        $difflist->select_listmodel(
+            $objectType,
+            $objectId,
+            $collId
+        );
+        
+    $listmodelType = $_SESSION['m_admin']['entity']['listmodel_info']['listmodel_type'];
+    $description =  $_SESSION['m_admin']['entity']['listmodel_info']['description'];
+    
     $_SESSION['m_admin']['entity']['listmodel'] =  
         $difflist->get_listmodel(
             $objectType,
             $objectId,
             $collId
         );
-    $_SESSION['m_admin']['entity']['listmodel_objectType'] = $objectType;
-    $_SESSION['m_admin']['entity']['listmodel_objectId'] = $objectId;
-    $_SESSION['m_admin']['entity']['listmodel_collId'] = $collId;
-    $_SESSION['m_admin']['entity']['listmodel_resType'] = $resType;
 } else {
     # list already loaded and managed (reload after update of list)
-    $objectType = $_SESSION['m_admin']['entity']['listmodel_objectType'];
-    $objectId = $_SESSION['m_admin']['entity']['listmodel_objectId'];
-    $collId = $_SESSION['m_admin']['entity']['listmodel_collId'];
-    $resType = $_SESSION['m_admin']['entity']['listmodel_resType'];
+    $objectType = $_SESSION['m_admin']['entity']['listmodel_info']['object_type'];
+    $objectId = $_SESSION['m_admin']['entity']['listmodel_info']['object_id'];
+    $collId = $_SESSION['m_admin']['entity']['listmodel_info']['coll_id'];
+    $listmodelType = $_SESSION['m_admin']['entity']['listmodel_info']['listmodel_type'];
+    $description = $_SESSION['m_admin']['entity']['listmodel_info']['description'];
 }
 
-$objectTypeLabel = $listmodel_types[$objectType];
+$objectTypeLabel = $objectTypes[$objectType];
 
 # JAVASCRIPT 
 # *****************************************************************************
 ?>
 <script type="text/javascript">
-// OnChange ObjectType 
-// OnLoad
-//   set value or input for object id
-function listmodel_setObjectId() 
+// OnChange ObjectType / onLoad
+//   set value / input mode for object id
+function listmodel_setObjectId(objectId) 
 {
-    var mode = '<?php echo $_REQUEST['mode']; ?>';
+    var mode = $('mode').value;
     
     var objectType = $('objectType').value;
     var objectId_input = $('objectId_input');
-	
-	if($('objectId'))
-		var objectId = $('objectId').value;
-    else 
-		var objectId = '<?php echo $objectId; ?>';
-		
+			
     new Ajax.Request(
         'index.php?display=true&module=entities&page=admin_listmodel_setObjectId',
         {
@@ -109,36 +100,15 @@ function listmodel_open()
 {
     var main_error = $('main_error'); 
     
-    if($('objectType'))
-        var objectType = $('objectType').value; 
-    else    
-        var objectType = '<?php echo $objectType; ?>';
-        
-    if($('objectId'))
-        var objectId = $('objectId').value; 
-    else 
-        var objectId = '<?php echo $objectId; ?>';
-    
-    if($('collId'))
-        var collId = $('collId').value; 
-    else 
-        var collId = '<?php echo $collId; ?>';; 
-        
-    if($('resType'))
-        var resType = $('resType').value; 
-    else 
-        var resType = '<?php echo $resType; ?>';;
-        
-    main_error.innerHTML = '';
-    
     // Validate form
     var valid = listmodel_validate();
+    
     if(valid == false)
         return;
     
     // Open pop up 
     window.open(
-        'index.php?display=true&module=entities&page=creation_listmodel&objectType='+objectType+'&objectId='+objectId+'&collId='+collId+'&resType='+resType,
+        'index.php?display=true&module=entities&page=creation_listmodel',
         '', 
         'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no'
     );
@@ -149,94 +119,72 @@ function listmodel_open()
 function listmodel_validate() {
     // Control input values
     var main_error = $('main_error'); 
-    
+       
+    var mode = $('mode').value; 
     var objectType = $('objectType').value; 
     var objectId = $('objectId').value; 
     var collId = $('collId').value; 
-    var resType = $('resType').value; 
-    // Object Type selected
-    if(objectType == '' || objectId == '') {
-        main_error.innerHTML = '<?php echo _SELECT_OBJECT_TYPE_AND_ID; ?>';
-        return false;
-    }
+    var listmodelType = $('listmodelType').value; 
+    var description = $('description').value; 
     
-    var validId = isIdToken(objectId);
-    if(validId == false) {
-        main_error.innerHTML = '<?php echo _OBJECT_ID_IS_NOT_VALID_ID; ?>';
-        return false;
-    }
+    main_error.innerHTML = "";
+    
+    new Ajax.Request(
+        'index.php?display=true&module=entities&page=admin_listmodel_validateHeader',
+        {
+            method:'post',
+            asynchronous:false,
+            parameters: 
+			{ 
+				mode : mode,
+                objectType : objectType,
+                objectId : objectId,
+                collId : collId,
+                listmodelType : listmodelType, 
+                description : description 
+			},
+            onSuccess: function(answer) {
+                if(answer.responseText) {
+                    main_error.innerHTML += answer.responseText;
+                    this.valid = false;
+                } else {
+                    this.valid = true;
+                }
+            }
+        }
+    ); 
+    return this.valid;
 }
 
 function listmodel_save()
 {
-    var main_error = $('main_error'); 
-    
-    var mode = '<?php echo $_REQUEST['mode']; ?>';
-        
+    var mode = $('mode').value;  
     var objectType = $('objectType').value; 
     var objectId = $('objectId').value; 
     var collId = $('collId').value; 
-    var resType = $('resType').value; 
+    var listmodelType = $('listmodelType').value; 
+    var description = $('description').value; 
     
-    main_error.innerHTML = '';
-     
     // Validate form
     var valid = listmodel_validate();
     if(valid == false)
         return;
     
     // Check if type/id already used
-    var save = false;
     new Ajax.Request(
-        'index.php?display=true&module=entities&page=admin_listmodel_checkLink',
+        'index.php?display=true&module=entities&page=admin_listmodel_save',
         {
             method:'post',
             parameters: 
 			{ 
-				mode : $('mode').value,
+				mode : mode,
                 objectType : objectType,
                 objectId : objectId,
-                collId : collId
+                collId : collId,
+                listmodelType : listmodelType,
+                description : description
 			},
             onSuccess: function(answer){
-                if(answer.responseText == '0') {
-                    listmodel_saveAJAX();
-                } else {
-                    if(mode == 'up') {
-                        if (confirm("<?php echo _CONFIRM_LISTMODEL_SAVE; ?>") != false) {
-                            listmodel_saveAJAX();
-                        }
-                    } else if(mode == 'add') {
-                        alert("<?php echo _LISTMODEL_ID_ALREADY_USED; ?>");
-                    }
-                }
-            }
-        }
-    ); 
-}
-
-function listmodel_saveAJAX(
-) {
-    var mode = '<?php echo $_REQUEST['mode']; ?>';
-        
-    var objectType = $('objectType').value; 
-    var objectId = $('objectId').value; 
-    var collId = $('collId').value; 
-    var resType = $('resType').value; 
-    
-    new Ajax.Request(
-        'index.php?display=true&module=entities&page=admin_listmodel_save',
-        {
-            method:'post',
-            parameters: 
-            { 
-                mode : mode,
-                objectType : objectType,
-                objectId : objectId,
-                collId : collId,
-                resType : resType
-            },
-            onSuccess: function(answer){
                 if(answer.responseText)
                     main_error.innerHTML = answer.responseText;
                 else {
@@ -247,26 +195,23 @@ function listmodel_saveAJAX(
     ); 
 }
 
-function listmodel_delAJAX(
-) {
-    var mode = 'del';
-        
-    var objectType = '<?php echo $objectType; ?>'; 
-    var objectId = '<?php echo $objectId; ?>'; 
-    var collId = '<?php echo $collId; ?>'; 
-    var resType = '<?php echo $resType; ?>'; 
-    
+function listmodel_del(
+    objectType,
+    objectId,
+    collId,
+    listmodelType
+) {    
     new Ajax.Request(
         'index.php?display=true&module=entities&page=admin_listmodel_save',
         {
             method:'post',
             parameters: 
             { 
-                mode : mode,
+                mode : 'del',
                 objectType : objectType,
                 objectId : objectId,
                 collId : collId,
-                resType : resType
+                listmodelType : listmodelType
             },
             onSuccess: function(answer){
                 if(answer.responseText)
@@ -280,13 +225,8 @@ function listmodel_delAJAX(
 
 }
     
-</script> <?php
-switch($_REQUEST['mode']) {
-# ADD / UP => FORM 
-# *****************************************************************************
-case 'add':
-case 'up':
-?>
+</script><?php
+if($_REQUEST['mode'] != 'del') { ?>
 <h1 class="tit"><?php 
     echo _ADMIN_LISTMODEL;
     if($objectType) echo ' : ' . $objectTypeLabel;
@@ -370,10 +310,10 @@ case 'up':
                 <label for="objectType" ><?php echo _OBJECT_TYPE; ?>: </label>
             </td>
             <td>
-                <select id="objectType" onChange="listmodel_setObjectId()" style="width:300px;">
+                <select id="objectType" onChange="listmodel_setObjectId(false);" style="width:300px;">
                     <option value="" ><?php echo _SELECT_OBJECT_TYPE; ?></option><?php
-                    foreach($listmodel_types as $listmodel_type_id => $listmodel_type_label) { ?>
-                    <option value="<?php echo $listmodel_type_id; ?>" <?php if($objectType == $listmodel_type_id) echo "selected='true'"; ?> ><?php echo $listmodel_type_label; ?></option><?php
+                    foreach($objectTypes as $objectTypeId => $objectTypeLabel) { ?>
+                    <option value="<?php echo $objectTypeId; ?>" <?php if($objectType == $objectTypeId) echo "selected='true'"; ?> ><?php echo $objectTypeLabel; ?></option><?php
                     } ?>
                 </select>
             </td>
@@ -384,6 +324,14 @@ case 'up':
             </td>
             <td>
                 <div id="objectId_input"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="description" ><?php echo _DESCRIPTION; ?> : </label>
+            </td>
+            <td>
+                <textarea id="description"><?php echo $description; ?></textarea>
             </td>
         </tr>
         <tr>
@@ -401,12 +349,12 @@ case 'up':
         </tr>
         <tr style="display:none;" >
             <td >
-                <label for="resType" ><?php echo _RES_TYPE; ?>: </label>
+                <label for="listmodelType" ><?php echo _RES_TYPE; ?>: </label>
             </td>
             <td>
-                <select id="resType" style="width:300px;">
-                    <option value="DOC" <?php if($resType == 'DOC') echo "selected='true'"; ?> ><?php echo _DOCUMENT; ?></option>
-                    <option value="FLD" <?php if($resType == 'FLD') echo "selected='true'"; ?> ><?php echo _FOLDER; ?></option>
+                <select id="listmodelType" style="width:300px;">
+                    <option value="DOC" <?php if($listmodelType == 'DOC') echo "selected='true'"; ?> ><?php echo _DOCUMENT; ?></option>
+                    <option value="FLD" <?php if($listmodelType == 'FLD') echo "selected='true'"; ?> ><?php echo _FOLDER; ?></option>
                 </select>
             </td>
         </tr>
@@ -422,17 +370,20 @@ case 'up':
 </div>
 <script type="text/javascript">
     // OnLoad : set object id and label
-    listmodel_setObjectId();
+    listmodel_setObjectId('<?php echo $objectId?>');
 </script><?php
-    break;
-    
-case 'del': 
+}
 # DEL => REDIRECT TO AJAX SAVE
 # *****************************************************************************
+if($_REQUEST['mode'] == 'del') {
 ?>
     <script type="text/javascript">
-        listmodel_delAJAX();
+        listmodel_del(
+            '<?php echo $objectType?>',
+            '<?php echo $objectId?>',
+            '<?php echo $collId?>',
+            '<?php echo $listmodelType?>'
+        );
     </script><?php
-    break;
 }
 

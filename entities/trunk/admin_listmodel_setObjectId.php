@@ -109,6 +109,8 @@ case 'foldertype_id':
     
 case 'user_defined_id':
 default:
+    if(!$objectId) 
+        $objectId = $objectType . '_' . strtoupper(base_convert(date('U'), 10, 36));
     echo "<input type='text' id='objectId' style='width:300px;' value='$objectId' />";
     break;
 }

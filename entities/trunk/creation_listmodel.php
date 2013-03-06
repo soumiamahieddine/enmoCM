@@ -101,27 +101,30 @@ while ($line = $db->fetch_object()) {
 $origin = $_REQUEST['origin'];
 
 $roles = $difflist->get_listinstance_roles();
-$listmodel_types = $difflist->get_listmodel_types();
+$objectTypes = $difflist->get_listmodel_types();
+
+# *****************************************************************************
+# Manage SESSION paramaters
+# *****************************************************************************
+// Object type
+$objectType = $_SESSION['m_admin']['entity']['listmodel_info']['object_type'];
+$objectTypeLabel = $objectTypes[$objectType];
+   
+// Object id
+$objectId = $_SESSION['m_admin']['entity']['listmodel_info']['object_id'];
+
+// Coll id
+$collId = $_SESSION['m_admin']['entity']['listmodel_info']['coll_id'];
+
+// listmodel Type
+$listmodelType = $_SESSION['m_admin']['entity']['listmodel_info']['listmodel_type'] ;
+
+// listmodel Type
+$description = $_SESSION['m_admin']['entity']['listmodel_info']['description'];
+
 # *****************************************************************************
 # Manage request paramaters
 # *****************************************************************************
-// Object type
-$objectType = $_REQUEST['objectType'];
-$_SESSION['m_admin']['entity']['listmodel_objectType'] = $objectType;
-$objectTypeLabel = $listmodel_types[$objectType];
-   
-// Object id
-$objectId = $_REQUEST['objectId'];
-$_SESSION['m_admin']['entity']['listmodel_objectId'] = $objectId;
-
-// Coll id
-$collId = $_REQUEST['collId'];
-$_SESSION['m_admin']['entity']['listmodel_collId'] = $collId;
-
-// Res Type
-$resType = $_REQUEST['resType'];
-$_SESSION['m_admin']['entity']['listmodel_resType'] = $resType;
-
 // Action ?
 if (isset($_GET['action']))
     $action = $_GET['action'];
@@ -385,10 +388,6 @@ $linkwithwhat =
     $link 
     . '&what_users=' . $whatUsers 
     . '&what_services=' . $whatServices 
-    . '&objectType=' . $objectType 
-    . '&objectId=' . $objectId 
-    . '&collId=' . $collId
-    . '&resType=' . $resType;
 #******************************************************************************
 # DISPLAY EXISTING LIST
 #******************************************************************************
@@ -409,9 +408,11 @@ $linkwithwhat =
     <br/>
     <div id="diff_list" align="center">
         <h2 class="tit"><?php 
-            echo _DIFFUSION_LIST . ' - '; 
-            echo $objectTypeLabel;
-            echo ' ' . $objectId;
+            echo _DIFFUSION_LIST . ' - ';
+            if($description)
+                echo $description;
+            else 
+                echo $objectTypeLabel . ' ' . $objectId;
         ?></h2><?php 
         #**************************************************************************
         # DEST USER
@@ -524,20 +525,8 @@ $linkwithwhat =
         # LIST LINK WITH OBJECT + VALIDATION
         #******************************************************************************?>      
         <form name="pop_diff" method="post" >
-            <div align="center"> <?php
-                # Mode dest + copy but no dest : can't save
-                if((empty($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'])
-                    && (count($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']) > 0
-                        || count($_SESSION['m_admin']['entity']['listmodel']['copy']['users']) > 0)
-                    )
-                    || count($_SESSION['m_admin']['entity']['listmodel']) == 0
-                ) { ?>
-                    <div class="error"><?php echo _MUST_CHOOSE_DEST; ?></div>
-                    <?php 
-                }
-                else { ?>
-                    <input align="middle" type="submit" value="<?php echo _VALIDATE;?>" class="button" name="valid"  /><?php
-                } ?>
+            <div align="center">
+                <input align="middle" type="submit" value="<?php echo _VALIDATE;?>" class="button" name="valid"  />
                 <input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>
             </div>
         </form>

@@ -82,23 +82,23 @@ function change_entity(
 // >>> type of element to fill (select or list)
 // >>> id of element to fill
 function select_listmodels(
-	listmodel_type, 
-	element_type, 
-	element_id
+	objectType, 
+	returnElementType, 
+	returnElementId
 ) {
 	new Ajax.Request(
 		'index.php?display=true&module=entities&page=select_listmodels',
         {
             method:'post',
             parameters: { 
-				listmodel_type : listmodel_type,
-				element_type : element_type
+				objectType : objectType,
+				returnElementType : returnElementType
             },
             onSuccess: function(answer)
 				{
-					var element = $(element_id);
-					if(element != null && element.nodeName.toUpperCase() == element_type.toUpperCase()) {
-						element.innerHTML += answer.responseText;
+					var returnElement = $(returnElementId);
+					if(returnElement != null && returnElement.nodeName.toUpperCase() == returnElementType.toUpperCase()) {
+						returnElement.innerHTML += answer.responseText;
 					}
 				}
         }

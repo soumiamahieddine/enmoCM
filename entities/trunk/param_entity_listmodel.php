@@ -37,13 +37,27 @@ if($_SESSION['service_tag'] == 'entity_add')
 		$_SESSION['m_admin']['entity']['listmodel']['copy'] = array();
 		$_SESSION['m_admin']['entity']['listmodel']['copy']['users'] = array();
 		$_SESSION['m_admin']['entity']['listmodel']['copy']['entities'] = array();
+        
+        # Init listmodel info
+        $_SESSION['m_admin']['entity']['listmodel_info']['object_type'] = 'entity_id';
+        $_SESSION['m_admin']['entity']['listmodel_info']['object_id'] = $_SESSION['m_admin']['entity']['entityId'];
+        $_SESSION['m_admin']['entity']['listmodel_info']['coll_id'] = 'letterbox_coll';
+        $_SESSION['m_admin']['entity']['listmodel_info']['listmodel_type'] = 'DOC';
+        $_SESSION['m_admin']['entity']['listmodel_info']['description'] = false;
 	}
 }
 elseif($_SESSION['service_tag'] == 'entity_up')
 {
 	if(!isset($_SESSION['m_admin']['entity']['listmodel']))
 	{
-		$_SESSION['m_admin']['entity']['listmodel'] = 
+		$_SESSION['m_admin']['entity']['listmodel_info'] =
+            $listdiff->select_listmodel(
+                'entity_id',
+                $_SESSION['m_admin']['entity']['entityId'],
+                'letterbox_coll'
+            );
+                
+        $_SESSION['m_admin']['entity']['listmodel'] = 
             $listdiff->get_listmodel(
                 'entity_id',
                 $_SESSION['m_admin']['entity']['entityId']
@@ -70,13 +84,22 @@ elseif($_SESSION['service_tag'] == 'entity_add_db' || $_SESSION['service_tag'] =
         $collId = 'letterbox_coll',
         $listType = 'DOC', 
         $objectType = 'entity_id',
-        $objectId = $_SESSION['m_admin']['entity']['entityId']
+        $objectId = $_SESSION['m_admin']['entity']['entityId'],
+        $description = $_SESSION['m_admin']['entity']['listmodel_info']['description']
     );
 }
+
+# Default description
+if(!isset($_SESSION['m_admin']['entity']['listmodel_info']['description']))
+    $_SESSION['m_admin']['entity']['listmodel_info']['description'] = 
+        "Diffusion au service " 
+            . $_SESSION['m_admin']['entity']['entityId'] 
+            . ' - '
+            . $_SESSION['m_admin']['entity']['label'];
+
+
 if($_SESSION['service_tag_form'] == 'formentity') {
 	$_SESSION['service_tag_form'] = "";
-    $_SESSION['m_admin']['entity']['listmodel_objectType'] = 'entity_id';
-    $_SESSION['m_admin']['entity']['listmodel_objectId'] = $_SESSION['m_admin']['entity']['entity_id'];
 	?>
 	<!--div id="inner_content" class="clearfix"-->
 	<div id="listmodel_box" class="block"> <?php 
