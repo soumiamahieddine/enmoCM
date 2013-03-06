@@ -45,7 +45,10 @@ $db = new dbquery();
 $db->connect();
 
 ?>
-<div id="welcome_box_right">
+<!--<div id="welcome_box_right">-->
+
+<div id="welcome_box_left_baskets">
+<br />
 <?php
 if ($core_tools->test_service('display_basket_list','basket', false)) {
         if (
@@ -70,12 +73,9 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
             <div class="block">
                 <h2><?php echo _MY_BASKETS; ?> : </h2>
             </div>
-            <div class="blank_space">&nbsp;</div>
-            <?php
-            ?>
+            <br />
             <ul class="basket_elem">
             <?php
-            
             $countColl = count($collWithUserBaskets);
             for ($cpt=0;$cpt<$countColl;$cpt++) {
                 echo '<h4><img src="' . $_SESSION['config']['businessappurl']
@@ -159,7 +159,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
 </div>
 
 <script language="javascript">
-    var basketsSpan = $('welcome_box_right').select('span');
+    var basketsSpan = $('welcome_box_left_baskets').select('span');
     //console.log(basketsSpan);
     var path_manage_script = '<?php echo $_SESSION["config"]["businessappurl"];?>'
         + 'index.php?display=true&module=basket&page=ajaxNbResInBasket';
