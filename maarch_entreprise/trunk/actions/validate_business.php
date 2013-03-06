@@ -600,10 +600,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . 'id="label_dep_dest" style="display:inline;" >'
             . _DEPARTMENT_DEST . '</label></td>';
         $frm_str .='<td class="indexing_field">'
-            . '<select name="destination" id="destination" onchange="clear_error(\'frm_error_'
-            . $id_action . '\');change_entity(this.options[this.selectedIndex].value, \'' 
-            . $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \'' 
-            . $display_value . '\');">';
+            . '<select name="destination" id="destination" onchange="clear_error(\'frm_error_'. $id_action . '\');">';
             $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
            for ($i=0; $i < count($services); $i++) {
                 $frm_str .='<option value="'.$services[$i]['ID'].'" ';
@@ -614,13 +611,46 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
            }
         $frm_str .='</select></td>';
         $frm_str .= '<td><span class="red_asterisk" id="destination_mandatory" style="display:inline;">*</span>&nbsp;</td>';
-      $frm_str .= '</tr>';
-        $frm_str .= '<tr id="diff_list_tr" style="display:none;">';
-            $frm_str .= '<td colspan="3">';
-            $frm_str .= '<div id="diff_list_div" class="scroll_div" '
-                . 'style="width:420px; border: 1px solid;"></div>';
-            $frm_str .= '</td>';
         $frm_str .= '</tr>';
+      
+        # Diffusion list model
+        $objectType = 'INVOICE';
+        require_once 'modules/entities/class/class_manage_listdiff.php';
+        $diffList = new diffusion_list();
+        $listmodels = $diffList->select_listmodels($objectType, 'business_coll');
+        
+        $frmStr .= '<tr id="difflist_tr" style="display:' . $displayValue . ';">';
+        $frmStr .= '<td style="width:30px;align:center;"><img src="'
+                . $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename='
+                . 'department.png" alt="' . _DIFFUSION_LIST 
+                . '"/></td><td><label for="difflist" class="form_title" '
+                . 'id="label_dep_dest" style="display:inline;" >'
+                . _DIFFUSION_LIST . '</label></td>';
+        //$frmStr .= '<td>&nbsp;</td>';
+        $frmStr .= '<td class="indexing_field">';
+        $frmStr .= '<select name="difflist" id="difflist" onchange="'
+                    . 'clear_error(\'frm_error_' . $actionId . '\');'
+                    . 'load_listmodel(\''.$objectType.'\', this.options[this.selectedIndex].value, \''.$collId.'\', \'diff_list_div\', \'indexing\');'
+                    . '$(\'diff_list_tr\').style.display=\''.$displayValue.'\''
+                . ';" >';
+        $frmStr .= '<option value="">' . _CHOOSE_DIFFUSION_LIST . '</option>';
+        $countlistmodels = count($listmodels);
+        for ($cptListmodels = 0;$cptListmodels < $countlistmodels; $cptListmodels++) {
+            $frmStr .= '<option value="' . $listmodels[$cptListmodels]['object_id'] . '">' 
+                        .  $db->show_string($listmodels[$cptListmodels]['description']) 
+                    . '</option>';
+        }
+        $frmStr .= '</select></td>';
+        $frmStr .= '<td><span class="red_asterisk" id="destination_mandatory" '
+                . 'style="display:inline;">*</span>&nbsp;</td>';
+        $frmStr .= '</tr>';
+        $frmStr .= '<tr id="diff_list_tr" style="display:none;">';
+        $frmStr .= '<td colspan="3">';
+        $frmStr .= '<div id="diff_list_div" class="scroll_div" '
+                //. 'style="height:200px; width:420px; border: 1px solid;"></div>';
+                . 'style="width:420px; border: 1px solid;"></div>';
+        $frmStr .= '</td>';
+        $frmStr .= '</tr>';
     }
     
     /*** Process limit date ***/
@@ -1282,8 +1312,8 @@ function process_category_check($catId, $values)
         if (isset($_ENV['categories'][$catId]['other_cases']['diff_list'])
             && $_ENV['categories'][$catId]['other_cases']['diff_list']['mandatory'] == true
         ) {
-            if (empty($_SESSION['indexing']['diff_list']['dest']['user_id'])
-                || ! isset($_SESSION['indexing']['diff_list']['dest']['user_id'])
+            if (empty($_SESSION['indexing']['diff_list'])
+                || ! isset($_SESSION['indexing']['diff_list'])
             ) {
                 $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['diff_list']['label']
                     . " " . _MANDATORY;
@@ -1504,19 +1534,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             }
         }
     }
-
-    if ($core->is_module_loaded('entities')) {
-        // Diffusion list
-        $load_list_diff = false;
-        if (isset($_ENV['categories'][$cat_id]['other_cases']['diff_list'])) {
-            if (!empty($_SESSION['indexing']['diff_list']['dest']['user_id']) 
-                && isset($_SESSION['indexing']['diff_list']['dest']['user_id'])) {
-                $query_res .= ", dest_user = '".$db->protect_string_db($_SESSION['indexing']['diff_list']['dest']['user_id'])."'";
-            }
-            $load_list_diff = true;
-        }
-    }
-    
+   
     $query_res = preg_replace('/set ,/', 'set ', $query_res);
     //$query_res = substr($query_res, strpos($query_string, ','));
     $_SESSION['arbox_id'] = "";
@@ -1525,6 +1543,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     $db->query($query_ext." where res_id =".$res_id);
     //$db->show();
     if ($core->is_module_loaded('entities')) {
+        $load_list_diff = true;
         if ($load_list_diff) {
             require_once('modules/entities/class/class_manage_listdiff.php');
             $diff_list = new diffusion_list();

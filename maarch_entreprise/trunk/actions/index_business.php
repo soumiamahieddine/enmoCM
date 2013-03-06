@@ -489,8 +489,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</tr>';
     /*** Entities : department + diffusion list ***/
     if ($core->is_module_loaded('entities')) {
-        $frmStr .= '<tr id="department_tr" style="display:' . $displayValue
-                . ';">';
+        $frmStr .= '<tr id="department_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td style="width:30px;align:center;"><img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename='
                 . 'department.png" alt="' . _DEPARTMENT_DEST 
@@ -499,25 +498,53 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . _DEPARTMENT_DEST . '</label></td>';
         //$frmStr .= '<td>&nbsp;</td>';
         $frmStr .= '<td class="indexing_field">';
-        $frmStr .= '<select name="destination" id="destination" onchange="'
+        $frmStr .= '<select name="destination" id="destination" onchange="clear_error(\'frm_error_' . $actionId . '\');" >';
+            $frmStr .= '<option value="">' . _CHOOSE_DEPARTMENT . '</option>';
+            $countAllEntities = count($allEntitiesTree);
+            for ($cptEntities = 0;$cptEntities < $countAllEntities;$cptEntities++) {
+                if (!$allEntitiesTree[$cptEntities]['KEYWORD']) {
+                    $frmStr .= '<option value="' . $allEntitiesTree[$cptEntities]['ID'] . '"';
+                    if ($allEntitiesTree[$cptEntities]['DISABLED']) {
+                        $frmStr .= ' disabled="disabled" class="disabled_entity"';
+                    } else {
+                         //$frmStr .= ' style="font-weight:bold;"';
+                    }
+                    $frmStr .=  '>' 
+                        .  $db->show_string($allEntitiesTree[$cptEntities]['SHORT_LABEL']) 
+                        . '</option>';
+                }
+            }
+        $frmStr .= '</select></td>';
+        $frmStr .= '<td><span class="red_asterisk" id="destination_mandatory" '
+                . 'style="display:inline;">*</span>&nbsp;</td>';
+        $frmStr .= '</tr>';
+        
+        # Diffusion list model
+        $objectType = 'INVOICE';
+        require_once 'modules/entities/class/class_manage_listdiff.php';
+        $diffList = new diffusion_list();
+        $listmodels = $diffList->select_listmodels($objectType, 'business_coll');
+        
+        $frmStr .= '<tr id="difflist_tr" style="display:' . $displayValue . ';">';
+        $frmStr .= '<td style="width:30px;align:center;"><img src="'
+                . $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename='
+                . 'department.png" alt="' . _DIFFUSION_LIST 
+                . '"/></td><td><label for="difflist" class="form_title" '
+                . 'id="label_dep_dest" style="display:inline;" >'
+                . _DIFFUSION_LIST . '</label></td>';
+        //$frmStr .= '<td>&nbsp;</td>';
+        $frmStr .= '<td class="indexing_field">';
+        $frmStr .= '<select name="difflist" id="difflist" onchange="'
                     . 'clear_error(\'frm_error_' . $actionId . '\');'
-                    . 'load_listmodel(\'entity_id\', this.options[this.selectedIndex].value, \'diff_list_div\', \'indexing\');'
+                    . 'load_listmodel(\''.$objectType.'\', this.options[this.selectedIndex].value, \''.$collId.'\', \'diff_list_div\', \'indexing\');'
                     . '$(\'diff_list_tr\').style.display=\''.$displayValue.'\''
                 . ';" >';
-        $frmStr .= '<option value="">' . _CHOOSE_DEPARTMENT . '</option>';
-        $countAllEntities = count($allEntitiesTree);
-        for ($cptEntities = 0;$cptEntities < $countAllEntities;$cptEntities++) {
-            if (!$allEntitiesTree[$cptEntities]['KEYWORD']) {
-                $frmStr .= '<option value="' . $allEntitiesTree[$cptEntities]['ID'] . '"';
-                if ($allEntitiesTree[$cptEntities]['DISABLED']) {
-                    $frmStr .= ' disabled="disabled" class="disabled_entity"';
-                } else {
-                     //$frmStr .= ' style="font-weight:bold;"';
-                }
-                $frmStr .=  '>' 
-                    .  $db->show_string($allEntitiesTree[$cptEntities]['SHORT_LABEL']) 
+        $frmStr .= '<option value="">' . _CHOOSE_DIFFUSION_LIST . '</option>';
+        $countlistmodels = count($listmodels);
+        for ($cptListmodels = 0;$cptListmodels < $countlistmodels; $cptListmodels++) {
+            $frmStr .= '<option value="' . $listmodels[$cptListmodels]['object_id'] . '">' 
+                        .  $db->show_string($listmodels[$cptListmodels]['description']) 
                     . '</option>';
-            }
         }
         $frmStr .= '</select></td>';
         $frmStr .= '<td><span class="red_asterisk" id="destination_mandatory" '
@@ -1245,8 +1272,8 @@ function process_category_check($catId, $values)
         if (isset($_ENV['categories'][$catId]['other_cases']['diff_list'])
             && $_ENV['categories'][$catId]['other_cases']['diff_list']['mandatory'] == true
         ) {
-            if (empty($_SESSION['indexing']['diff_list']['dest']['user_id'])
-                || ! isset($_SESSION['indexing']['diff_list']['dest']['user_id'])
+            if (empty($_SESSION['indexing']['diff_list'])
+                || ! isset($_SESSION['indexing']['diff_list'])
             ) {
                 $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['diff_list']['label']
                     . " " . _MANDATORY;
@@ -1599,27 +1626,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         }
     }
 
-    if ($core->is_module_loaded('entities')) {
-        // Diffusion list
-        $loadListDiff = false;
-        if (isset($_ENV['categories'][$catId]['other_cases']['diff_list'])) {
-            if (! empty($_SESSION['indexing']['diff_list']['dest']['user_id'])
-                && isset($_SESSION['indexing']['diff_list']['dest']['user_id'])
-            ) {
-                array_push(
-                    $_SESSION['data'],
-                    array(
-                        'column' => 'dest_user',
-                        'value' => $db->protect_string_db(
-                            $_SESSION['indexing']['diff_list']['dest']['user_id']
-                         ),
-                         'type' => 'string'
-                    )
-                );
-            }
-            $loadListDiff = true;
-        }
-    }
     //print_r($_SESSION['data']);
     $resId = $resource->load_into_db(
         $table, $_SESSION['indexing']['destination_dir'],
@@ -1662,6 +1668,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         //$db->show();
         if ($core->is_module_loaded('entities')) {
             //  echo 'entities '.$resId. " ";
+            $loadListDiff = true;
             if ($loadListDiff) {
                 require_once 'modules/entities/class/class_manage_listdiff.php';
                 $diffList = new diffusion_list();
