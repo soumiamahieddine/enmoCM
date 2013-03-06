@@ -9,7 +9,7 @@
 <!-- ====                                                            ==== -->
 <!-- ==================================================================== -->
 
-  <xsd:include schemaLocation='core/xml/datatypes.xsd' />
+  <xsd:include schemaLocation='core/schema/datatypes.xsd' />
   <xsd:include schemaLocation='apps/maarch_entreprise/xml/datasources.xsd' />
 
   <!-- ==================================================================== -->
