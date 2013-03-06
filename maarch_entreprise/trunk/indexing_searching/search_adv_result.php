@@ -354,7 +354,6 @@ if (count($_REQUEST['meta']) > 0) {
                     if (!$func->isDirEmpty($path_to_lucene_index)) {
                         $index = Zend_Search_Lucene::open($path_to_lucene_index);
                         $hits = $index->find($welcome);
-              
                         $Liste_Ids = "0";
                         $cptIds = 0;
                         foreach ($hits as $hit) {

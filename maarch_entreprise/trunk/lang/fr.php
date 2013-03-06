@@ -1029,7 +1029,7 @@ if (!defined('_INVOICE_NUMBER')) define( '_INVOICE_NUMBER', 'Num facture');
 /******************** fulltext search Helper ************/
 if (!defined('_HELP_GLOBAL_SEARCH')) define( '_HELP_GLOBAL_SEARCH', 'Recherche sur l\'objet, le titre, la description, le contenu du document ou sur le num&eacute;ro de GED');
 if (!defined('_HELP_FULLTEXT_SEARCH')) define( '_HELP_FULLTEXT_SEARCH', 'Aide sur la recherche plein texte');
-if (!defined('_GLOBAL_SEARCH')) define( '_GLOBAL_SEARCH', 'Recherche globale de courriers');
+if (!defined('_GLOBAL_SEARCH')) define( '_GLOBAL_SEARCH', 'Recherche globale');
 if (!defined('_TIPS_FULLTEXT')) define( '_TIPS_FULLTEXT', 'Astuces de recherche');
 
 if (!defined('_TIPS_KEYWORD1')) define( '_TIPS_KEYWORD1', 'Pour effectuer une recherche avec joker sur plusieurs caractères');
@@ -1431,4 +1431,4 @@ if (!defined('_ID_IS_MANDATORY')) define('_ID_IS_MANDATORY', 'Identifiant obliga
 if (!defined('_INVALID_PARAMETER_ID')) define('_INVALID_PARAMETER_ID', 'Identifiant invalide (seuls les caractères A-Z, a-z, 0-9 et _ sont autorisés');
 if (!defined('_VALUE_IS_MANDATORY')) define('_VALUE_IS_MANDATORY', 'Valeur obligatoire');
 
-if (!defined('_GLOBAL_SEARCH_BUSINESS')) define('_GLOBAL_SEARCH_BUSINESS', 'Recherche globale de documents');
+if (!defined('_QUICK_SEARCH')) define('_QUICK_SEARCH', 'Recherche rapide');

@@ -449,7 +449,7 @@ if (!defined('_FUNCTION')) define('_FUNCTION', 'Role');
 if (!defined('_GB'))  define('_GB', 'Gigabytes ');
 if (!defined('_GED_NUM')) define('_GED_NUM', 'DMS nb. ');
 if (!defined('_GENERAL_INFO')) define('_GENERAL_INFO', 'General information');
-if (!defined('_GLOBAL_SEARCH'))  define('_GLOBAL_SEARCH', 'Global Search of letters');
+if (!defined('_GLOBAL_SEARCH'))  define('_GLOBAL_SEARCH', 'Global Search');
 if (!defined('_GO_MANAGE_DOCSERVER'))  define('_GO_MANAGE_DOCSERVER', 'Modify');
 if (!defined('_GO_TO_PAGE')) define('_GO_TO_PAGE', 'Go to page');
 if (!defined('_GRAPH')) define('_GRAPH', 'Charts');
@@ -1153,4 +1153,4 @@ if (!defined('_BUSINESS_LIST')) define('_BUSINESS_LIST', 'Documents business lis
 if (!defined('_INDEXING_BUSINESS')) define('_INDEXING_BUSINESS', 'Store a document');
 if (!defined('_ADV_SEARCH_BUSINESS')) define('_ADV_SEARCH_BUSINESS', 'Search a document');
 
-if (!defined('_GLOBAL_SEARCH_BUSINESS')) define('_GLOBAL_SEARCH_BUSINESS', 'Global search of documents');
+if (!defined('_QUICK_SEARCH')) define('_QUICK_SEARCH', 'Quick search');
