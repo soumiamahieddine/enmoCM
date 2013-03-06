@@ -93,6 +93,7 @@ if (count($_REQUEST['meta']) > 0) {
     }
     $opt_indexes = array();
     $_SESSION['meta_search'] = $_REQUEST['meta'];
+    //$func->show_array($_REQUEST['meta']);exit;
     for ($i=0;$i<count($_REQUEST['meta']);$i++) {
         //echo $_REQUEST['meta'][$i]."<br>";
         $tab = explode('#', $_REQUEST['meta'][$i]);
@@ -198,25 +199,12 @@ if (count($_REQUEST['meta']) > 0) {
                     new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
                 );
                 $_SESSION['search']['plain_text'] = $_REQUEST['fulltext'];
-                //echo $_SESSION['search']['plain_text']; exit()
                 $path_to_lucene_index = $_SESSION['collections'][1]['path_to_lucene_index'];
-                //$lucene_all_words = explode(' ',$_REQUEST['fulltext']);
                 if (is_dir($path_to_lucene_index))
                 {
                     if (!$func->isDirEmpty($path_to_lucene_index)) {
                         $index = Zend_Search_Lucene::open($path_to_lucene_index);
-                        //$hits = $index->find($_REQUEST['fulltext']."~");
-                        //$query_res_ft = Zend_Search_Lucene_Search_QueryParser::parse($_REQUEST['fulltext'], 'iso-8859-5'));
                         $hits = $index->find($fulltext_request);
-                        /*
-                        avec accent
-                        $hits = $index->find(
-                            strtolower(strtr(iconv("UTF-8","ISO-8859-1"
-                                , $_REQUEST['fulltext']),
-                                'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ', 
-                                'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY')
-                            )
-                        );*/
                         $Liste_Ids = "0";
                         $cptIds = 0;
                         foreach ($hits as $hit) {
@@ -247,24 +235,10 @@ if (count($_REQUEST['meta']) > 0) {
                 {
                     $where_multifield_request .= "(res_id = ".$func->protect_string_db($_REQUEST['welcome'].") or ");
                 }
-                $where_multifield_request .= "( lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
+                $where_multifield_request .= "(lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
                     ."or lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
                     ."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%')) ";
-                //scan the baskets
-                //$whereBasketsClause = 'or (';
-                $cptBasketClause = 0;
-                for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                    if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id 
-                        && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N') {
-                        if (isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
-                            $whereBasketsClause .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
-                            $cptBasketClause++;
-                        }
-                     }
-                }
-                if ($cptBasketClause > 0) {
-                    $where_multifield_request .= $whereBasketsClause;
-                }
+
                 $welcome = $func->store_html($_REQUEST['welcome']);
                 set_include_path('apps' . DIRECTORY_SEPARATOR 
                     . $_SESSION['config']['app_id'] 
@@ -295,7 +269,7 @@ if (count($_REQUEST['meta']) > 0) {
                     }
                 } else {
                     $where_request_welcome .= " ".$where_multifield_request." and ";
-                } 
+                }
             }
             // DOCTYPES
             elseif ($tab_id_fields[$j] == 'doctypes_chosen' && !empty($_REQUEST['doctypes_chosen']))

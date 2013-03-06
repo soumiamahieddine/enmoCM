@@ -53,7 +53,9 @@ $core_tools->test_service('quicklaunch', "apps");
                         </td> 
                         <td>
                             <input id = "text" name = "welcome" id="welcome" size="27" autocomplete = "off">
+                            <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple" />
                             <input type="hidden" name="meta[]" value="welcome#welcome#welcome" />
+                            <input type="hidden" name="baskets_clause" value="true" />
                             <input class="button_search_adv_text" type="submit"  value="<?php echo _SEARCH; ?>" name ="Submit" >
                             <img src = "<?php echo $_SESSION['config']['businessappurl'];
                                 ?>static.php?filename=picto_menu_search_small.gif" alt="<?php 
@@ -82,7 +84,9 @@ $core_tools->test_service('quicklaunch', "apps");
                         </td> 
                         <td>
                             <input id = "text" name = "welcome" id="welcome" size="27" autocomplete = "off">
+                            <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple" />
                             <input type="hidden" name="meta[]" value="welcome#welcome#welcome" />
+                            <input type="hidden" name="baskets_clause" value="true" />
                             <input class="button_search_adv_text" type="submit"  value="<?php echo _SEARCH; ?>" name ="Submit" >
                             <img src = "<?php echo $_SESSION['config']['businessappurl'];
                                 ?>static.php?filename=picto_menu_search_small.gif" alt="<?php 

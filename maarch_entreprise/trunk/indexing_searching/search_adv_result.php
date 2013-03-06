@@ -326,8 +326,6 @@ if (count($_REQUEST['meta']) > 0) {
                 include_once("modules".DIRECTORY_SEPARATOR."tags".
                    DIRECTORY_SEPARATOR."tags_search.php");              
             }
-            
-
             //WELCOME PAGE
             elseif ($tab_id_fields[$j] == 'welcome'  && (!empty($_REQUEST['welcome'])))
             {
@@ -340,21 +338,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_multifield_request .= "( lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
                     ."or lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
                     ."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%')) ";
-                //scan the baskets
-                //$whereBasketsClause = 'or (';
-                $cptBasketClause = 0;
-                for ($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
-                    if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == $coll_id 
-                        && $_SESSION['user']['baskets'][$ind_bask]['is_folder_basket'] == 'N') {
-                        if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
-                            $whereBasketsClause .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
-                            $cptBasketClause++;
-                        }
-                     }
-                }
-                if ($cptBasketClause > 0) {
-                    $where_multifield_request .= $whereBasketsClause;
-                }
                 $welcome = $func->store_html($_REQUEST['welcome']);
                 set_include_path('apps' . DIRECTORY_SEPARATOR 
                     . $_SESSION['config']['app_id'] 
