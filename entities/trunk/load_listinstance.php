@@ -19,7 +19,18 @@ $core = new core_tools();
 $core->load_lang();
 $diffList = new diffusion_list();
 
-if ((! isset($_REQUEST['id_entity']) || empty($_REQUEST['id_entity']))
+if ((! isset($_REQUEST['objectType']) || empty($_REQUEST['objectType']))
+    && $_REQUEST['load_from_model'] == 'true')
+{
+    if ($_REQUEST['mandatory'] <> 'none') {
+        $_SESSION['error'] = _OBJECT_TYPE . ' ' . _IS_EMPTY;
+    }
+    $_SESSION['indexing']['diff_list'] = array();
+    echo "{status : 1, error_txt : '" . addslashes($_SESSION['error']) . "'}";
+    exit();
+} 
+
+if ((! isset($_REQUEST['objectId']) || empty($_REQUEST['objectId']))
     && $_REQUEST['load_from_model'] == 'true'
 ) {
     if ($_REQUEST['mandatory'] <> 'none') {
@@ -27,6 +38,12 @@ if ((! isset($_REQUEST['id_entity']) || empty($_REQUEST['id_entity']))
     }
     $_SESSION['indexing']['diff_list'] = array();
     echo "{status : 1, error_txt : '" . addslashes($_SESSION['error']) . "'}";
+    exit();
+}
+
+if (empty($_REQUEST['collId']) && $_REQUEST['load_from_model'] == 'true') {
+    $_SESSION['error'] = _COLL_ID . ' ' . _IS_EMPTY;
+    echo "{status : 2, error_txt : '" . addslashes($_SESSION['error']) . "'}";
     exit();
 }
 
@@ -41,13 +58,15 @@ if (isset($_REQUEST['only_cc'])) {
 }
 
 $origin = $_REQUEST['origin'];
-if ($_REQUEST['load_from_model'] == 'true') {
-    $_SESSION[$origin]['diff_list'] = $diffList->get_listmodel(
-        'entity_id',
-        $_REQUEST['id_entity']
-    );
-}
 
+if ($_REQUEST['load_from_model'] == 'true') {
+    $_SESSION[$origin]['diff_list'] = 
+        $diffList->get_listmodel(
+            $_REQUEST['objectType'],
+            $_REQUEST['objectId'],
+            $_REQUEST['collId']
+        );
+}
 
 $roles = $diffList->get_listinstance_roles();
 
@@ -60,25 +79,28 @@ if (! $onlyCC) {
     }
 }
 
-if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
-    && ! empty($_SESSION[$origin]['diff_list']['dest']['user_id'])
-) {
-    if (! $onlyCC) {
-        $content .= '<span class="sstit">' . _RECIPIENT . '</span>';
-        $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
-        $content .= '<tr class="col">';
-        $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
-                 . 'static.php?filename=manage_users_entities_b_small.gif'
-                 . '&module=entities" alt="' . _USER . '" title="'
-                 . _USER . '" /></td>';
-        $content .= '<td >' . $_SESSION[$origin]['diff_list']['dest']['firstname']
-                 . '</td>';
-        $content .= '<td >' . $_SESSION[$origin]['diff_list']['dest']['lastname']
-                 .'</td>';
-        $content .= '<td>' . $_SESSION[$origin]['diff_list']['dest']['entity_label']
-                 .'</td>';
-        $content .= '</tr>';
-        $content .= '</table><br/>';
+if(!empty($_SESSION[$origin]['diff_list'])) {
+
+    if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
+        && ! empty($_SESSION[$origin]['diff_list']['dest']['user_id'])
+    ) {
+        if (! $onlyCC) {
+            $content .= '<span class="sstit">' . _RECIPIENT . '</span>';
+            $content .= '<table cellpadding="0" cellspacing="0" border="0" class="listing spec detailtabricatordebug">';
+            $content .= '<tr class="col">';
+            $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
+                     . 'static.php?filename=manage_users_entities_b_small.gif'
+                     . '&module=entities" alt="' . _USER . '" title="'
+                     . _USER . '" /></td>';
+            $content .= '<td >' . $_SESSION[$origin]['diff_list']['dest']['firstname']
+                     . '</td>';
+            $content .= '<td >' . $_SESSION[$origin]['diff_list']['dest']['lastname']
+                     .'</td>';
+            $content .= '<td>' . $_SESSION[$origin]['diff_list']['dest']['entity_label']
+                     .'</td>';
+            $content .= '</tr>';
+            $content .= '</table><br/>';
+        }
     }
     # OTHER ROLES
     #**************************************************************************
@@ -86,8 +108,7 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
         if(count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0 
             || count($_SESSION[$origin]['diff_list'][$role_id]['entities']) > 0
         ) {
-            if (! $onlyCC 
-                || count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0 
+            if (count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0 
                 || count($_SESSION[$origin]['diff_list'][$role_id]['entities']) > 0
             ) {
                 $content .= '<h4 onclick="new Effect.toggle(\'' . $role_id . '\', \'blind\', {delay:0.2});'
@@ -134,12 +155,12 @@ if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
                 $content .= '</tr>';
             }
             $content .= '</table>';            
-			$content .= '</div>';
+            $content .= '</div>';
             $content .= '</div>';
         }
     }
        
-    
+
     $labelButton = _MODIFY_LIST;
     $arg = '&mode=up';
 } else {

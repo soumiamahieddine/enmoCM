@@ -18,15 +18,17 @@ $core = new core_tools();
 $core->load_lang();
 $diffList = new diffusion_list();
 
-$listmodel_type = $_REQUEST['listmodel_type'];
-$listmodel_id = $_REQUEST['listmodel_id'];
+$objectType = $_REQUEST['objectType'];
+$objectId = $_REQUEST['objectId'];
+$collId = $_REQUEST['collId'];
 $origin = $_REQUEST['origin'];
 
-// Fil session with listmodel
+// Fill session with listmodel
 $_SESSION[$origin]['diff_list'] = 
     $diffList->get_listmodel(
-        $listmodel_type, 
-        $listmodel_id
+        $objectType, 
+        $objectId,
+        $collId
     );
 
 $roles = $diffList->get_listinstance_roles();

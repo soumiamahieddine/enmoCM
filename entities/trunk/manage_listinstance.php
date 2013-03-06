@@ -693,11 +693,7 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
     ?>
     <form name="pop_diff" method="post" >
         <div align="center">
-            <input align="middle" type="button" value="<?php echo _VALIDATE; ?>" class="button" name="valid" onclick="change_diff_list('<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=entities&page=load_listinstance&origin=' . $origin;
-                if ($onlyCc) echo '&only_cc';
-                if ($noDelete) echo '&no_delete';
-                ?>', <?php
-                echo "'" . $displayValue . "'";
+            <input align="middle" type="button" value="<?php echo _VALIDATE; ?>" class="button" name="valid" onclick="change_diff_list('<?php echo $origin; ?>', <?php echo "'" . $displayValue . "'";
                 if ($_REQUEST['origin'] == 'redirect') echo ",'diff_list_div_redirect'";
             ?>);" />
             <input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>

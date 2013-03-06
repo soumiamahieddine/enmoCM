@@ -12,7 +12,7 @@ function change_entity(
     var tr_display_val = display_value_tr || 'table-row';
     var origin_arg = origin_keyword || '';
     var load_listmodel = load_listmodel || 'true';
-
+		
     if($('destination_mandatory'))
     {
         var isMandatory = $('destination_mandatory').style.display;
@@ -26,11 +26,14 @@ function change_entity(
         new Ajax.Request(path_manage_script,
         {
             method:'post',
-            parameters: { id_entity : entity_id,
-                          load_from_model : load_listmodel,
-                          origin : origin_arg,
-                          mandatory : isMandatory
-                    },
+            parameters: { 
+				objectType : 'entity_id',
+				objectId : entity_id,
+				collId : 'letterbox_coll',
+                load_from_model : load_listmodel,
+                origin : origin_arg,
+                mandatory : isMandatory
+            },
                 onSuccess: function(answer){
                 eval("response = "+answer.responseText);
                 //alert(answer.responseText);
@@ -111,8 +114,9 @@ function select_listmodels(
 // >>> id of div to fill
 // >>> origin keyword
 function load_listmodel(
-	listmodel_type,
-	listmodel_id, 
+	objectType,
+	objectId, 
+	collId,
 	diff_list_id, 
 	origin_keyword
 ) {
@@ -125,9 +129,10 @@ function load_listmodel(
         {
             method:'post',
             parameters: { 
-				listmodel_type : listmodel_type,
-				listmodel_id : listmodel_id,
-                origin : origin,
+				objectType : objectType,
+				objectId : objectId,
+				collId : collId,
+                origin : origin
 			},
             onSuccess: function(answer){
                 eval("response = "+answer.responseText);
@@ -147,20 +152,25 @@ function load_listmodel(
 }
 
 
-function change_diff_list(path_manage_script, display_value_tr, difflist_div, difflist_tr)
-{
+function change_diff_list(
+	origin,
+	display_value_tr, 
+	difflist_div, 
+	difflist_tr
+) {
     var list_div = difflist_div || 'diff_list_div';
     var list_div_from_action = 'diff_list_div_from_action';
     var list_tr = difflist_tr || 'diff_list_tr';
     var tr_display_val = display_value_tr || 'table-row';
-    //alert(path_manage_script);
-    new Ajax.Request(path_manage_script,
+
+    new Ajax.Request(
+		'index.php?display=true&module=entities&page=load_listinstance',
         {
             method:'post',
             parameters: {
-                            load_from_model : 'false'
-                        },
-                onSuccess: function(answer){
+				origin : origin
+            },
+            onSuccess: function(answer){
                 eval("response = "+answer.responseText);
                 //alert(answer.responseText);
                 if(response.status == 0 )
@@ -192,7 +202,8 @@ function change_diff_list(path_manage_script, display_value_tr, difflist_div, di
                     catch(e){}
                 }
             }
-        });
+        }
+	);
 }
 
 function validate_listinstance_role() {
