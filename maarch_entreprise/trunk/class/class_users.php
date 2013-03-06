@@ -240,5 +240,35 @@ class class_users extends dbquery
     <?php
 
     }
+    
+    /**
+    * Return a array of user informations
+    *
+    */
+    public function get_user($user_id) {
+        if (!empty($user_id)) {
+            $this->connect();
+            $this->query(
+                "select user_id, firstname, lastname, mail, phone, status from " 
+                . USERS_TABLE . " where user_id = '" . $user_id . "'"
+            );
+            if ($this->nb_result() >0) {
+                $line = $this->fetch_object();
+                $user = array(
+                        'id' => $line->user_id,
+                        'firstname' => $this->show_string($line->firstname),
+                        'lastname' => $this->show_string($line->lastname),
+                        'mail' => $line->mail,
+                        'phone' => $line->phone,
+                        'status' => $line->status
+                    );
+                return $user;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
 }
 ?>
