@@ -157,182 +157,95 @@ class diffusion_list extends dbquery
             $listmodel['dest']['firstname'] = $this->show_str($res->firstname);
             $listmodel['dest']['entity_id'] = $this->show_str($res->entity_id);
             $listmodel['dest']['entity_label'] = $this->show_str($res->entity_label);
+            $listmodel['dest']['visible'] = 'Y';
         }
         
         # Users in copy and other roles
-        $this->query(
-            "SELECT l.item_id, l.item_mode, u.firstname, u.lastname, e.entity_id, e.entity_label "
-            . " FROM " . ENT_LISTMODELS . " l "
-                . " JOIN " . USERS_TABLE . " u ON l.item_id = u.user_id " 
-                . " JOIN " . ENT_USERS_ENTITIES . " ue ON u.user_id = ue.user_id " 
-                . " JOIN " . ENT_ENTITIES . " e ON ue.entity_id = e.entity_id"
-            . " WHERE "
-                . "l.listmodel_type = 'DOC' and ue.primary_entity = 'Y' "
-                . "and l.item_mode != 'dest' "
-                . "and l.item_type = 'user_id' " 
-                . "and l.object_type = '". $objectType ."' "
-                . "and l.object_id = '" . $objectId . "'"
-                . "and l.coll_id = '" . $collId . "' "
-            . "ORDER BY l.sequence"
-        );
-
-        while ($res = $this->fetch_object()) {
-            $role_id = $res->item_mode;
-            if($role_id =='cc') $role_id = 'copy';
-            if(!isset($listmodel[$role_id]))
-                $listmodel[$role_id] = array();
-            if(!isset($listmodel[$role_id]['users']))
-                $listmodel[$role_id]['users'] = array();
-            array_push(
-                $listmodel[$role_id]['users'],
-                array(
-                    'user_id' => $this->show_string($res->item_id),
-                    'lastname' => $this->show_string($res->lastname),
-                    'firstname' => $this->show_string($res->firstname),
-                    'entity_id' => $this->show_string($res->entity_id),
-                    'entity_label' => $this->show_string($res->entity_label)
-                )
+        foreach($roles as $role_id => $role_config) {
+            $item_mode = $role_config['role_mode'];
+            $workflow_mode = $role_config['workflow_mode'];
+            
+            # Users
+            $this->query(
+                "SELECT l.item_id, l.item_mode, u.firstname, u.lastname, e.entity_id, e.entity_label "
+                . " FROM " . ENT_LISTMODELS . " l "
+                    . " JOIN " . USERS_TABLE . " u ON l.item_id = u.user_id " 
+                    . " JOIN " . ENT_USERS_ENTITIES . " ue ON u.user_id = ue.user_id " 
+                    . " JOIN " . ENT_ENTITIES . " e ON ue.entity_id = e.entity_id"
+                . " WHERE "
+                    . "l.listmodel_type = 'DOC' and ue.primary_entity = 'Y' "
+                    . "and l.item_mode = '".$item_mode."' "
+                    . "and l.item_type = 'user_id' " 
+                    . "and l.object_type = '". $objectType ."' "
+                    . "and l.object_id = '" . $objectId . "'"
+                    . "and l.coll_id = '" . $collId . "' "
+                . "ORDER BY l.sequence"
             );
-        }
-        
-        # Users in copy and other roles
-        $this->query(
-            "SELECT l.item_id, e.entity_label, l.item_mode "
-            . "FROM " . ENT_LISTMODELS . " l "
-                . "JOIN " . ENT_ENTITIES . " e ON l.item_id = e.entity_id "
-            . "WHERE l.listmodel_type = 'DOC' "
-                . "and l.item_mode != 'dest' "
-                . "and l.item_type = 'entity_id' "
-                . "and l.object_type = '" . $objectType . "' "
-                . "and l.object_id = '" . $objectId . "' "
-                . "and l.coll_id = '" . $collId . "' "
-            . "ORDER BY l.sequence "
-        );
 
-        while ($res = $this->fetch_object()) {
-            $role_mode = $res->item_mode;
-            if($role_mode=='cc') $role_id = 'copy';
-            if(!isset($listmodel[$role_id]))
-                $listmodel[$role_id] = array();
-            if(!isset($listmodel[$role_id]['entities']))
-                $listmodel[$role_id]['entities'] = array();
-            array_push(
-                $listmodel[$role_id]['entities'],
-                array(
-                    'entity_id' => $this->show_string($res->item_id),
-                    'entity_label' => $this->show_string($res->entity_label)
+            while ($user = $this->fetch_object()) {
+                if(!isset($listmodel[$role_id]))
+                    $listmodel[$role_id] = array();
+                if(!isset($listmodel[$role_id]['users']))
+                    $listmodel[$role_id]['users'] = array();
+                
+                $visible = 'N';
+                if($workflow_mode == 'sequential' 
+                    && count($listmodel[$role_id]['users']) == 0
                 )
+                    $visible = 'Y';
+                    
+                array_push(
+                    $listmodel[$role_id]['users'],
+                    array(
+                        'user_id' => $this->show_string($user->item_id),
+                        'lastname' => $this->show_string($user->lastname),
+                        'firstname' => $this->show_string($user->firstname),
+                        'entity_id' => $this->show_string($user->entity_id),
+                        'entity_label' => $this->show_string($user->entity_label),
+                        'visible' => $visible
+                    )
+                );
+            }
+            
+            # Entities
+            $this->query(
+                "SELECT l.item_id, e.entity_label, l.item_mode "
+                . "FROM " . ENT_LISTMODELS . " l "
+                    . "JOIN " . ENT_ENTITIES . " e ON l.item_id = e.entity_id "
+                . "WHERE l.listmodel_type = 'DOC' "
+                    . "and l.item_mode = '".$item_mode."' "
+                    . "and l.item_type = 'entity_id' "
+                    . "and l.object_type = '" . $objectType . "' "
+                    . "and l.object_id = '" . $objectId . "' "
+                    . "and l.coll_id = '" . $collId . "' "
+                . "ORDER BY l.sequence "
             );
+
+            while ($entity = $this->fetch_object()) {
+                if(!isset($listmodel[$role_id]))
+                    $listmodel[$role_id] = array();
+                if(!isset($listmodel[$role_id]['entities']))
+                    $listmodel[$role_id]['entities'] = array();
+                    
+                $visible = 'N';
+                if($workflow_mode == 'sequential' 
+                    && count($listmodel[$role_id]['users']) == 0
+                )
+                    $visible = 'Y';
+                    
+                array_push(
+                    $listmodel[$role_id]['entities'],
+                    array(
+                        'entity_id' => $this->show_string($entity->item_id),
+                        'entity_label' => $this->show_string($entity->entity_label),
+                        'visible' => $visible
+                    )
+                );
+            }
         }
         return $listmodel;
     }
     
-    public function get_listmodel_desc(
-        $objectType='entity_id', 
-        $objectId, 
-        $collId = 'letterbox_coll'
-    ) {
-        $objectId = $this->protect_string_db($objectId);
-        $objectType = $this->protect_string_db($objectType);
-        $collId = $this->protect_string_db(trim($collId));
-        
-        $this->connect();
-        
-        # Dest user
-        $this->query(
-            "SELECT distinct "
-            . " FROM " . ENT_LISTMODELS . " l "
-                . " JOIN " . USERS_TABLE . " u ON l.item_id = u.user_id " 
-                . " JOIN " . ENT_USERS_ENTITIES . " ue ON u.user_id = ue.user_id " 
-                . " JOIN " . ENT_ENTITIES . " e ON ue.entity_id = e.entity_id"
-            . " WHERE "
-                . "l.listmodel_type = 'DOC' and ue.primary_entity = 'Y' "
-                . "and l.item_mode = 'dest' "
-                . "and l.item_type = 'user_id' " 
-                . "and l.object_type = '". $objectType ."' "
-                . "and l.object_id = '" . $objectId . "'"
-                . "and l.coll_id = '" . $collId . "' "
-        );
-
-        $res = $this->fetch_object();
-
-        if ($this->nb_result() > 0 && isset($res)) {
-            $listmodel['dest'] = array();
-            $listmodel['dest']['user_id'] = $this->show_str($res->item_id);
-            $listmodel['dest']['lastname'] = $this->show_str($res->lastname);
-            $listmodel['dest']['firstname'] = $this->show_str($res->firstname);
-            $listmodel['dest']['entity_id'] = $this->show_str($res->entity_id);
-            $listmodel['dest']['entity_label'] = $this->show_str($res->entity_label);
-        }
-        
-        # Users in copy and other roles
-        $this->query(
-            "SELECT l.item_id, l.item_mode, u.firstname, u.lastname, e.entity_id, e.entity_label "
-            . " FROM " . ENT_LISTMODELS . " l "
-                . " JOIN " . USERS_TABLE . " u ON l.item_id = u.user_id " 
-                . " JOIN " . ENT_USERS_ENTITIES . " ue ON u.user_id = ue.user_id " 
-                . " JOIN " . ENT_ENTITIES . " e ON ue.entity_id = e.entity_id"
-            . " WHERE "
-                . "l.listmodel_type = 'DOC' and ue.primary_entity = 'Y' "
-                . "and l.item_mode != 'dest' "
-                . "and l.item_type = 'user_id' " 
-                . "and l.object_type = '". $objectType ."' "
-                . "and l.object_id = '" . $objectId . "'"
-                . "and l.coll_id = '" . $collId . "' "
-            . "ORDER BY l.sequence"
-        );
-
-        while ($res = $this->fetch_object()) {
-            $role_id = $res->item_mode;
-            if($role_id =='cc') $role_id = 'copy';
-            if(!isset($listmodel[$role_id]))
-                $listmodel[$role_id] = array();
-            if(!isset($listmodel[$role_id]['users']))
-                $listmodel[$role_id]['users'] = array();
-            array_push(
-                $listmodel[$role_id]['users'],
-                array(
-                    'user_id' => $this->show_string($res->item_id),
-                    'lastname' => $this->show_string($res->lastname),
-                    'firstname' => $this->show_string($res->firstname),
-                    'entity_id' => $this->show_string($res->entity_id),
-                    'entity_label' => $this->show_string($res->entity_label)
-                )
-            );
-        }
-        
-        # Users in copy and other roles
-        $this->query(
-            "SELECT l.item_id, e.entity_label, l.item_mode "
-            . "FROM " . ENT_LISTMODELS . " l "
-                . "JOIN " . ENT_ENTITIES . " e ON l.item_id = e.entity_id "
-            . "WHERE l.listmodel_type = 'DOC' "
-                . "and l.item_mode != 'dest' "
-                . "and l.item_type = 'entity_id' "
-                . "and l.object_type = '" . $objectType . "' "
-                . "and l.object_id = '" . $objectId . "' "
-                . "and l.coll_id = '" . $collId . "' "
-            . "ORDER BY l.sequence "
-        );
-
-        while ($res = $this->fetch_object()) {
-            $role_mode = $res->item_mode;
-            if($role_mode=='cc') $role_id = 'copy';
-            if(!isset($listmodel[$role_id]))
-                $listmodel[$role_id] = array();
-            if(!isset($listmodel[$role_id]['entities']))
-                $listmodel[$role_id]['entities'] = array();
-            array_push(
-                $listmodel[$role_id]['entities'],
-                array(
-                    'entity_id' => $this->show_string($res->item_id),
-                    'entity_label' => $this->show_string($res->entity_label)
-                )
-            );
-        }
-        return $listmodel;
-    }
-     
     public function save_listmodel(
         $diffList, 
         $collId = 'letterbox_coll',
