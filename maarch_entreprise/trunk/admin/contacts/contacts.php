@@ -51,10 +51,10 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 ?>
 <a href="<?php 
     echo $_SESSION['config']['businessappurl']
-    ;?>index.php?admin=contacts&page=manage_doubloons"><h2><img src="<?php 
+    ;?>index.php?admin=contacts&page=manage_duplicates"><h2><img src="<?php 
     echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=manage_doubloons.png" alt="" /><?php 
-    echo _MANAGE_DOUBLOONS;?></h2></a>
+    ?>static.php?filename=manage_duplicates.png" alt="" /><?php 
+    echo _MANAGE_DUPLICATES;?></h2></a>
 <?php
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");

@@ -1081,16 +1081,16 @@ if (!defined('_HELP_KEYWORD_EMAIL')) define('_HELP_KEYWORD_EMAIL', 'Email of the
 
 //INITIATOR OF THE WF
 if (!defined('_INITIATOR')) define('_INITIATOR', 'Initiator entity');
-//CONTACT DOUBLOONS
-if (!defined('_MANAGE_DOUBLOONS'))  define('_MANAGE_DOUBLOONS', 'Manage doubloons');
-if (!defined('_DOUBLOONS_BY_SOCIETY'))  define('_DOUBLOONS_BY_SOCIETY', 'Doubloons by society');
-if (!defined('_DOUBLOONS_BY_NAME'))  define('_DOUBLOONS_BY_NAME', 'Doubloons by name');
+//CONTACT DUPLICATES
+if (!defined('_MANAGE_DUPLICATES'))  define('_MANAGE_DUPLICATES', 'Manage duplicates');
+if (!defined('_DUPLICATES_BY_SOCIETY'))  define('_DUPLICATES_BY_SOCIETY', 'Duplicates by society');
+if (!defined('_DUPLICATES_BY_NAME'))  define('_DUPLICATES_BY_NAME', 'Duplicates by name');
 if (!defined('_IS_ATTACHED_TO_DOC'))  define('_IS_ATTACHED_TO_DOC', 'Is attached to doc ?');
 if (!defined('_RES_ATTACHED'))  define('_RES_ATTACHED', 'Doc attached');
 if (!defined('_SELECT_CONTACT_TO_REPLACE'))  define('_SELECT_CONTACT_TO_REPLACE', 'Select replaced contact');
 if (!defined('_ARE_YOU_SURE_TO_DELETE_CONTACT'))  define('_ARE_YOU_SURE_TO_DELETE_CONTACT', 'Are you sure to delete contact ?');
-if (!defined('_NO_SOCIETY_DOUBLOONS'))  define('_NO_SOCIETY_DOUBLOONS', 'No doubloon by society');
-if (!defined('_NO_NAME_DOUBLOONS'))  define('_NO_NAME_DOUBLOONS', 'No doubloon by name');
+if (!defined('_NO_SOCIETY_DUPLICATES'))  define('_NO_SOCIETY_DUPLICATES', 'No duplicate by society');
+if (!defined('_NO_NAME_DUPLICATES'))  define('_NO_NAME_DUPLICATES', 'No duplicate by name');
 
 //Lists
 if (!defined('_LOCK_LIST'))                         define('_LOCK_LIST', 'Verrouillage de liste');

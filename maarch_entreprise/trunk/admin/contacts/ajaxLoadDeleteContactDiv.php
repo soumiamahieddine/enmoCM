@@ -7,7 +7,7 @@ $db = new dbquery();
 $db->connect();
 $return = '';
 if ($_REQUEST['society_label'] <> '') {
-    $selectDoubloons = "SELECT contact_id, society, lower(society) as lowsoc, "
+    $selectDuplicates = "SELECT contact_id, society, lower(society) as lowsoc, "
         . "is_corporate_person, lastname, firstname, "
         . "address_num, address_street, address_town "
         . "from contacts "
@@ -19,7 +19,7 @@ if ($_REQUEST['society_label'] <> '') {
         . "order by lower(society)";
 }
 if ($_REQUEST['name'] <> '') {
-    $selectDoubloons = "SELECT contact_id, lower(lastname||' '||firstname) as lastname_firstname, society, "
+    $selectDuplicates = "SELECT contact_id, lower(lastname||' '||firstname) as lastname_firstname, society, "
         . "is_corporate_person, lastname, firstname, "
         . "address_num, address_street, address_town "
         . "from contacts "
@@ -40,7 +40,7 @@ if (isset($_REQUEST['contact_id'])) {
     $return_db = $db->fetch_object();
     if ($return_db->res_id <> '') {
         $flagResAttached = true;
-        $db->query($selectDoubloons);
+        $db->query($selectDuplicates);
         //$db->show();
         $contactList = array();
         while($lineDoubl = $db->fetch_object()) {

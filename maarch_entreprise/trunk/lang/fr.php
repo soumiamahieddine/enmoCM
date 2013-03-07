@@ -884,15 +884,15 @@ if (!defined('_CONTACT_REAFFECT'))  define('_CONTACT_REAFFECT', 'R&eacute;affect
 if (!defined('_UPDATE_CONTACTS')) define( '_UPDATE_CONTACTS', 'Mise &agrave; jour contact depuis indexation/qualification');
 if (!defined('_CONTACT_TYPE')) define( '_CONTACT_TYPE', 'Type de contact');
 
-if (!defined('_MANAGE_DOUBLOONS'))  define('_MANAGE_DOUBLOONS', 'Gestion des doublons');
-if (!defined('_DOUBLOONS_BY_SOCIETY'))  define('_DOUBLOONS_BY_SOCIETY', 'Doublons par organisme/soci&eacute;t&eacute;');
-if (!defined('_DOUBLOONS_BY_NAME'))  define('_DOUBLOONS_BY_NAME', 'Doublons par nom/pr&eacute;nom');
+if (!defined('_MANAGE_DUPLICATES'))  define('_MANAGE_DUPLICATES', 'Gestion des doublons');
+if (!defined('_DUPLICATES_BY_SOCIETY'))  define('_DUPLICATES_BY_SOCIETY', 'Doublons par organisme/soci&eacute;t&eacute;');
+if (!defined('_DUPLICATES_BY_NAME'))  define('_DUPLICATES_BY_NAME', 'Doublons par nom/pr&eacute;nom');
 if (!defined('_IS_ATTACHED_TO_DOC'))  define('_IS_ATTACHED_TO_DOC', 'Attach&eacute; &agrave; des documents ?');
 if (!defined('_RES_ATTACHED'))  define('_RES_ATTACHED', 'Documents attach&eacute;s');
 if (!defined('_SELECT_CONTACT_TO_REPLACE'))  define('_SELECT_CONTACT_TO_REPLACE', 'S&eacute;lectionner contact rempla&ccedil;ant');
 if (!defined('_ARE_YOU_SURE_TO_DELETE_CONTACT'))  define('_ARE_YOU_SURE_TO_DELETE_CONTACT', '&Ecirc;tes vous s&ucirc;re de supprimer le contact ?');
-if (!defined('_NO_SOCIETY_DOUBLOONS'))  define('_NO_SOCIETY_DOUBLOONS', 'Pas de doublon par organisme/soci&eacute;t&eacute;');
-if (!defined('_NO_NAME_DOUBLOONS'))  define('_NO_NAME_DOUBLOONS', 'Pas de doublon par nom/pr&eacute;nom');
+if (!defined('_NO_SOCIETY_DUPLICATES'))  define('_NO_SOCIETY_DUPLICATES', 'Pas de doublon par organisme/soci&eacute;t&eacute;');
+if (!defined('_NO_NAME_DUPLICATES'))  define('_NO_NAME_DUPLICATES', 'Pas de doublon par nom/pr&eacute;nom');
 
 if (!defined('_YOU_MUST_SELECT_CONTACT')) define( '_YOU_MUST_SELECT_CONTACT', 'Vous devez s&eacute;lectionner un contact ');
 if (!defined('_DOC_SENDED_BY_CONTACT')) define( '_DOC_SENDED_BY_CONTACT', '<b>Documents envoy&eacute;s par ce contact</b>');
