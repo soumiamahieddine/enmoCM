@@ -50,3 +50,6 @@ if (! defined('ENT_LISTINSTANCE_ROLES')) {
 if (! defined('ENT_LISTMODEL_TYPES')) {
     define('ENT_LISTMODEL_TYPES', 'listmodel_types');
 }
+if (! defined('ENT_GROUPBASKET_LISTMODEL_TYPES')) {
+    define('ENT_GROUPBASKET_LISTMODEL_TYPES', 'groupbasket_listmodel_types');
+}
