@@ -348,6 +348,9 @@ if (!defined('_LISTMODEL_ID_ALREADY_USED'))
 if (!defined('_CONFIRM_LISTMODEL_SAVE'))
     define('_CONFIRM_LISTMODEL_SAVE', 'Sauvegarder la liste ?'); 
     
+if (!defined('_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS')) define('_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS', 'Param&eacute;trer les types de modèle de liste de diffusion pour l&rsquo;indexation');
+if (!defined('_INDEXING_LISTMODEL_TYPES')) define('_INDEXING_LISTMODEL_TYPES', 'Types de liste de diffusion');
+    
 /******************** RM ENTITIES ************/
 if (!defined('_STANDARD'))
     define('_STANDARD', 'Standard');
