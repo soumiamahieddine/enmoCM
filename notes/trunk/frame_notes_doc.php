@@ -102,7 +102,7 @@ for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
                 $tabNotes[$indNotes1][$indNotes2]["show"] = true;
                 $indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
                 //echo $tabNotes[$indNotes1][$indNotes2]['value'] . '<br>';
-                if (!$notes_tools->getUserNotes(
+                if (!$notes_tools->getNotes(
                     $tabNotes[$indNotes1][$indNotes2]['value'], 
                     $_SESSION['user']['UserId'], 
                     $_SESSION['user']['primaryentity']['id']

@@ -170,7 +170,7 @@ class notes extends dbquery
         return $entitiesChosen;
     }
     
-    public function getUserNotes($noteId, $userId, $userPrimaryEntity)
+    public function getNotes($noteId, $userId, $userPrimaryEntity)
     {
         $query = "select id from notes where id in ("
             . "select note_id from note_entities where (item_id = '" 
@@ -231,6 +231,57 @@ class notes extends dbquery
         }
         
         return $not_nbr;
+    } 
+    
+    public function getUserNotes($id, $coll_id) {
+        $userNotes = array();
+        $dbId = new dbquery();
+        $dbId->connect();
+        $db = new dbquery();
+        $db->connect();
+        $dbId->query("select id, identifier, user_id, date_note, note_text from "
+                            . $_SESSION['tablename']['not_notes'] 
+                            . " where identifier = " . $id 
+                            . " and coll_id ='"
+                            . $coll_id . "' order by date_note desc");
+        // $dbId->show(); 
+       while ($res = $dbId->fetch_object())
+       {
+           $dbNotesEntities = new dbquery();
+           $dbNotesEntities->connect();
+           $query = "select id from note_entities where "
+           . "note_id = " .$res->id;
+                    
+           $dbNotesEntities->query($query);
+                        
+            if($dbNotesEntities->nb_result()==0) {
+                array_push($userNotes,
+                    array('id' => $res->id, //ID
+                          'label' => $this->show_string($res->note_text), //Label
+                          'author' => $res->user_id, //Author 
+                          'date' => $res->date_note //Date
+                        )
+                );
+           } else {
+             $db->query( "select id from notes where id in ("
+                . "select note_id from note_entities where (item_id = '" 
+                . $_SESSION['user']['primaryentity']['id'] . "' and note_id = " . $res->id . "))"
+                . "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')");
+
+            
+                if($db->nb_result()<>0) {
+                    array_push($userNotes,
+                        array('id' => $res->id, //ID
+                              'label' => $this->show_string($res->note_text), //Label
+                              'author' => $res->user_id, //Author 
+                              'date' => $res->date_note //Date
+                            )
+                    );
+                }
+            }
+        }
+        
+        return $userNotes;
     }
 }
 

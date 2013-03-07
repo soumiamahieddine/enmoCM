@@ -234,7 +234,7 @@ switch ($mode) {
                     } else if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "document") {
                         $hist->add(
                             $view, $identifier, "UP", 'resup',  _ADDITION_NOTE . _ON_DOC_NUM
-                            . $identifier . ' (' . $id . ') ',
+                            . $identifier . ' (' . $id . ') : "' . $request->cut_string($notes, 254) .'"',
                             $_SESSION['config']['databasetype'], 'notes'
                         );
                     }
