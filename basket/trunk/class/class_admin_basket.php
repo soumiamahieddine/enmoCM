@@ -580,6 +580,7 @@ class admin_basket extends dbquery
         $core->execute_modules_services($_SESSION['modules_services'], 'load_groupbasket_db', "include", 'param_redirect_action', 'entities');
         $core->execute_modules_services($_SESSION['modules_services'], 'load_groupbasket_db', "include", 'param_index_entities', 'entities');
         $core->execute_app_services($_SESSION['app_services'], 'load_groupbasket_db', "include");
+        $core->execute_modules_services($_SESSION['modules_services'], 'load_groupbasket_db', "include");
         $_SESSION['service_tag'] = '';
     }
 

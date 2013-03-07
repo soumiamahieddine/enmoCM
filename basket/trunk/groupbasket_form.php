@@ -70,7 +70,7 @@ $core_tools->load_header('', true, false);
 	if(count($_SESSION['groups']) > count($_SESSION['m_admin']['basket']['groups']))
 	{
 		?>
-		<input type="button" class="button" name="popuplink" id="popuplink" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=groupbasket_popup', 'groupe','toolbar=no,status=yes,width=800,height=900,left=200,top=150,scrollbars=yes,top=no,location=no,resize=yes,menubar=no');" value="<?php echo _ADD_GROUP; ?>"/>
+		<input type="button" class="button" name="popuplink" id="popuplink" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=groupbasket_popup', 'groupe','toolbar=no,status=yes,width=1000,height=900,left=0,top=150,scrollbars=yes,top=no,location=no,resize=yes,menubar=no');" value="<?php echo _ADD_GROUP; ?>"/>
 		<?php
 	}
 	?>
@@ -86,7 +86,7 @@ $core_tools->load_header('', true, false);
 		<?php
 		for($i=0; $i < count($_SESSION['m_admin']['basket']['groups']); $i++)
 		{?>
-			<li><input type="checkbox" class="check" name="groupes[]" value="<?php echo $_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']; ?>" class="check" />&nbsp;&nbsp;&nbsp;<a href="javascript://"  onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=groupbasket_popup&id=<?php echo $_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']; ?>', 'groupe','toolbar=no,status=yes,width=800,height=900,left=200,top=150,scrollbars=yes,top=no,location=no,resize=yes,menubar=no');"><?php echo $_SESSION['m_admin']['basket']['groups'][$i]['GROUP_LABEL']; ?></a>
+			<li><input type="checkbox" class="check" name="groupes[]" value="<?php echo $_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']; ?>" class="check" />&nbsp;&nbsp;&nbsp;<a href="javascript://"  onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=groupbasket_popup&id=<?php echo $_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']; ?>', 'groupe','toolbar=no,status=yes,width=1000,height=900,left=0,top=150,scrollbars=yes,top=no,location=no,resize=yes,menubar=no');"><?php echo $_SESSION['m_admin']['basket']['groups'][$i]['GROUP_LABEL']; ?></a>
 			</li>
 		<?php }?>
 		</ul>
