@@ -646,6 +646,8 @@ if (!defined('_DELIVERY_NOTE_IDENTIFIER')) define('_DELIVERY_NOTE_IDENTIFIER', '
 if (!defined('_INDEX_BUSINESS_FILE')) define('_INDEX_BUSINESS_FILE', 'Enregistrement des documents de la collection business');
 if (!defined('_FILING')) define('_FILING', 'Classement');
 
+if (!defined('_CHOOSE_DIFFUSION_LIST')) define('_CHOOSE_DIFFUSION_LIST', 'Choisissez une liste de diffusion');
+
 //BITMASK
 if (!defined('_BITMASK_VALUE_ALREADY_EXIST')) define( '_BITMASK_VALUE_ALREADY_EXIST' , 'Bitmask d&eacute;j&agrave; utilis&eacute; dans un autre type');
 
@@ -1421,7 +1423,7 @@ if (!defined('_PARAMETERS')) define('_PARAMETERS', 'Paramètres');
 if (!defined('_PARAMETER')) define('_PARAMETER', 'Paramètre');
 if (!defined('_PARAMETER_S')) define('_PARAMETER_S', 'Paramètre(s)');
 if (!defined('_ALL_PARAMETERS')) define('_ALL_PARAMETERS', 'Tous');
-if (!defined('_ADMIN_PARAMETERS')) define('_ADMIN_PARAMETERS', 'Gérer les paramètres');
+if (!defined('_ADMIN_PARAMETERS')) define('_ADMIN_PARAMETERS', 'G&eacute;rer les paramètres');
 if (!defined('_ADD_PARAMETER')) define('_ADD_PARAMETER', 'Nouveau paramètre');
 if (!defined('_VALUE')) define('_VALUE', 'Valeur');
 if (!defined('_STRING')) define('_STRING', 'Chaîne de caractères');
@@ -1431,4 +1433,5 @@ if (!defined('_ID_IS_MANDATORY')) define('_ID_IS_MANDATORY', 'Identifiant obliga
 if (!defined('_INVALID_PARAMETER_ID')) define('_INVALID_PARAMETER_ID', 'Identifiant invalide (seuls les caractères A-Z, a-z, 0-9 et _ sont autorisés');
 if (!defined('_VALUE_IS_MANDATORY')) define('_VALUE_IS_MANDATORY', 'Valeur obligatoire');
 
+if (!defined('_GLOBAL_SEARCH_BUSINESS')) define('_GLOBAL_SEARCH_BUSINESS', 'Recherche globale de documents');
 if (!defined('_QUICK_SEARCH')) define('_QUICK_SEARCH', 'Recherche rapide');
