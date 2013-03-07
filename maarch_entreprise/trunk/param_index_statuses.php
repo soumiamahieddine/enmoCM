@@ -29,13 +29,13 @@ if($_SESSION['service_tag'] == 'group_basket')
                 <select name="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuseslist[]" id="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuseslist" size="7" ondblclick='moveclick(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuseslist"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuses_chosen"));' multiple="multiple"  class="statuses_list">
                 <?php
                 // Browse all the statuses
-                for ($i = 0; $i < count($_SESSION['m_admin']['statuses']); $i ++) {
+                for ($cpt = 0; $cpt < count($_SESSION['m_admin']['statuses']); $cpt ++) {
                     $state_status = false;
                     if (! $is_default_action ) {
                         if (isset($current_groupbasket['ACTIONS'])) {
                             for ($j = 0; $j < count($current_groupbasket['ACTIONS']); $j ++) {
                                 for ($k = 0; $k < count($current_groupbasket['ACTIONS'][$j]['STATUSES_LIST']); $k ++) {
-                                    if ($_SESSION['m_admin']['statuses'][$i]['id'] == $current_groupbasket['ACTIONS'][$j]['STATUSES_LIST'][$k]['ID']) {
+                                    if ($_SESSION['m_admin']['statuses'][$cpt]['id'] == $current_groupbasket['ACTIONS'][$j]['STATUSES_LIST'][$k]['ID']) {
 
                                         $state_status = true;
                                     }
@@ -45,7 +45,7 @@ if($_SESSION['service_tag'] == 'group_basket')
                     } else {
                         for ($k = 0; $k < count($current_groupbasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST']); $k ++)
                         {
-                            if ($_SESSION['m_admin']['statuses'][$i]['id'] == $current_groupbasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST'][$k]['ID']) {
+                            if ($_SESSION['m_admin']['statuses'][$cpt]['id'] == $current_groupbasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST'][$k]['ID']) {
                                 $state_status = true;
                             }
                         }
@@ -53,7 +53,7 @@ if($_SESSION['service_tag'] == 'group_basket')
                     if($state_status == false)
                     {
                         ?>
-                        <option value="<?php  echo $_SESSION['m_admin']['statuses'][$i]['id']; ?>"><?php  echo $_SESSION['m_admin']['statuses'][$i]['label']; ?></option>
+                        <option value="<?php  echo $_SESSION['m_admin']['statuses'][$cpt]['id']; ?>"><?php  echo $_SESSION['m_admin']['statuses'][$cpt]['label']; ?></option>
                     <?php
                     }
                 }
@@ -71,7 +71,7 @@ if($_SESSION['service_tag'] == 'group_basket')
             <td width="40%" align="center">
                 <select name="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuses_chosen[]" id="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuses_chosen" size="7" ondblclick='moveclick(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuses_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuseslist"));' multiple="multiple"   class="statuses_list">
                 <?php
-                for ($i = 0; $i < count($_SESSION['m_admin']['statuses']); $i ++) {
+                for ($cpt = 0; $cpt < count($_SESSION['m_admin']['statuses']); $cpt ++) {
                     $state_status = false;
                     if (! $is_default_action) {
                         if (isset($current_groupbasket['ACTIONS'])) {
@@ -79,7 +79,7 @@ if($_SESSION['service_tag'] == 'group_basket')
                             {
                                 for($k=0; $k<count($current_groupbasket['ACTIONS'][$j]['STATUSES_LIST']);$k++)
                                 {
-                                    if($_SESSION['m_admin']['statuses'][$i]['id'] == $current_groupbasket['ACTIONS'][$j]['STATUSES_LIST'][$k]['ID'])
+                                    if($_SESSION['m_admin']['statuses'][$cpt]['id'] == $current_groupbasket['ACTIONS'][$j]['STATUSES_LIST'][$k]['ID'])
                                     {
                                         $state_status = true;
                                     }
@@ -91,7 +91,7 @@ if($_SESSION['service_tag'] == 'group_basket')
                     {
                         for($k=0; $k<count($current_groupbasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST']);$k++)
                         {
-                            if($_SESSION['m_admin']['statuses'][$i]['id'] == $current_groupbasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST'][$k]['ID'])
+                            if($_SESSION['m_admin']['statuses'][$cpt]['id'] == $current_groupbasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST'][$k]['ID'])
                             {
                                 $state_status = true;
                             }
@@ -100,7 +100,7 @@ if($_SESSION['service_tag'] == 'group_basket')
                     if($state_status == true)
                     {
                     ?>
-                        <option value="<?php  echo $_SESSION['m_admin']['statuses'][$i]['id']; ?>" selected="selected" ><?php  echo $_SESSION['m_admin']['statuses'][$i]['label']; ?></option>
+                        <option value="<?php  echo $_SESSION['m_admin']['statuses'][$cpt]['id']; ?>" selected="selected" ><?php  echo $_SESSION['m_admin']['statuses'][$cpt]['label']; ?></option>
                     <?php
                     }
                 }
@@ -131,30 +131,30 @@ elseif($_SESSION['service_tag'] == 'manage_groupbasket')
     }
     $ind = -1;
     $find = false;
-    for ($i=0;$i<count($_SESSION['m_admin']['basket']['groups']);$i++) {
+    for ($cpt=0;$cpt<count($_SESSION['m_admin']['basket']['groups']);$cpt++) {
         if (
-            $_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'] == $groupe 
-            || $old_group == $_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']) {
-            for ($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS']);$j++) {
+            $_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID'] == $groupe 
+            || $old_group == $_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']) {
+            for ($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS']);$j++) {
                 $chosen_statuses = array();
-                if (isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen']) && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen']) > 0) {
-                    for ($k=0; $k < count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen']); $k++) {
-                        $statusId = $_REQUEST[$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen'][$k];
+                if (isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen']) && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen']) > 0) {
+                    for ($k=0; $k < count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen']); $k++) {
+                        $statusId = $_REQUEST[$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen'][$k];
                         $db->query("SELECT label_status FROM " .$_SESSION['tablename']['status']. " WHERE id = '" . $statusId . "'");
                         $res = $db->fetch_object();
                         $label = $res->label_status;
                         array_push($chosen_statuses , array( 'ID' => $statusId, 'LABEL' => $label));
                     }
                 }
-                $_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['STATUSES_LIST'] = $chosen_statuses ;
+                $_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['STATUSES_LIST'] = $chosen_statuses ;
             }
-            if ($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'] == $groupe) {
-                $ind = $i;
+            if ($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID'] == $groupe) {
+                $ind = $cpt;
                 $find = true;
                 break;
             }
-            if ($old_group == $_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']) {
-                $ind = $i;
+            if ($old_group == $_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']) {
+                $ind = $cpt;
                 $find = true;
                 break;
             }
@@ -188,38 +188,38 @@ elseif($_SESSION['service_tag'] == 'load_basket_session')
     $db = new dbquery();
     $db->connect();
     
-    for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'] ); $i++)
+    for($cpt=0; $cpt < count($_SESSION['m_admin']['basket']['groups'] ); $cpt++)
     {
-        //$_SESSION['m_admin']['basket']['groups'][$i]['PARAM_DEFAULT_ACTION'] = array();
-        $_SESSION['m_admin']['basket']['groups'][$i]['PARAM_DEFAULT_ACTION']['STATUSES_LIST'] = array();
-        if(!empty($_SESSION['m_admin']['basket']['groups'][$i]['DEFAULT_ACTION'] ))
+        //$_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION'] = array();
+        $_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION']['STATUSES_LIST'] = array();
+        if(!empty($_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION'] ))
         {
             $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status'] 
                 . " on status_id = id "
                 . " where basket_id= '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
-                . "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']))
-                . "' and action_id = " . $_SESSION['m_admin']['basket']['groups'][$i]['DEFAULT_ACTION'];
+                . "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']))
+                . "' and action_id = " . $_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION'];
             $db->query($query);
             $array = array();
             while($status = $db->fetch_object()) {
                 $array[] = array('ID' => $status->status_id, 'LABEL' => $status->label_status);
             }
-            $_SESSION['m_admin']['basket']['groups'][$i]['PARAM_DEFAULT_ACTION']['STATUSES_LIST'] = $array;
+            $_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION']['STATUSES_LIST'] = $array;
         }
-        for($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS']);$j++)
+        for($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS']);$j++)
         {
             
             $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status'] 
                 . " on status_id = id "
                 . " where basket_id= '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
-                . "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID']))
-                . "' and action_id = " . $_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'];
+                . "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']))
+                . "' and action_id = " . $_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'];
             $db->query($query);
             $array = array();
             while($status = $db->fetch_object()) {
                 $array[] = array('ID' => $status->status_id, 'LABEL' => $status->label_status);
             }
-            $_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['STATUSES_LIST'] = $array;
+            $_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['STATUSES_LIST'] = $array;
         }
     }
 }
@@ -228,20 +228,20 @@ elseif($_SESSION['service_tag'] == 'load_basket_db')
     $db = new dbquery();
     $db->connect();
     $indexing_actions = array();
-    for($i=0; $i<count($_SESSION['m_admin']['basket']['all_actions']);$i++ )
+    for($cpt=0; $cpt<count($_SESSION['m_admin']['basket']['all_actions']);$cpt++ )
     {
-        if($_SESSION['m_admin']['basket']['all_actions'][$i]['KEYWORD'] == 'indexing')
+        if($_SESSION['m_admin']['basket']['all_actions'][$cpt]['KEYWORD'] == 'indexing')
         {
-            array_push($indexing_actions,$_SESSION['m_admin']['basket']['all_actions'][$i]['ID']);
+            array_push($indexing_actions,$_SESSION['m_admin']['basket']['all_actions'][$cpt]['ID']);
         }
     }
 
-    for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'] ); $i++)
+    for($cpt=0; $cpt < count($_SESSION['m_admin']['basket']['groups'] ); $cpt++)
     {
-        $GroupBasket = $_SESSION['m_admin']['basket']['groups'][$i];
+        $GroupBasket = $_SESSION['m_admin']['basket']['groups'][$cpt];
         if(!empty($GroupBasket['DEFAULT_ACTION']) && in_array($GroupBasket['DEFAULT_ACTION'], $indexing_actions))
         {   
-            //$ent->update_redirect_groupbasket_db($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'],  $_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$i]['DEFAULT_ACTION'],$_SESSION['m_admin']['basket']['groups'][$i]['PARAM_DEFAULT_ACTION']['STATUSES_LIST']);
+            //$ent->update_redirect_groupbasket_db($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID'],  $_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION'],$_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION']['STATUSES_LIST']);
             $db->query(
             "DELETE FROM " . GROUPBASKET_STATUS
             . " where basket_id= '" . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
@@ -264,7 +264,7 @@ elseif($_SESSION['service_tag'] == 'load_basket_db')
         {
             $GroupBasketAction = $GroupBasket['ACTIONS'][$j];
             if(in_array($GroupBasketAction['ID_ACTION'], $indexing_actions)) {
-                //$ent->update_redirect_groupbasket_db($_SESSION['m_admin']['basket']['groups'][$i]['GROUP_ID'],  $_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['ID_ACTION'],$_SESSION['m_admin']['basket']['groups'][$i]['ACTIONS'][$j]['STATUSES_LIST']);
+                //$ent->update_redirect_groupbasket_db($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID'],  $_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'],$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['STATUSES_LIST']);
                 $db->query(
                 "DELETE FROM " . GROUPBASKET_STATUS
                 . " where basket_id= '" . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
