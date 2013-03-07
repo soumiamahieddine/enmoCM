@@ -139,6 +139,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $tmp = $business->get_titles();
     $titles = $tmp['titles'];
     $defaultTitle = $tmp['default_title'];
+    
     if ($core->is_module_loaded('entities')) {
         $services = array();
         $EntitiesIdExclusion = array();
@@ -598,7 +599,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<td class="indexing_field">';
         $frmStr .= '<select name="destination" id="destination" onchange="'
                     . 'clear_error(\'frm_error_' . $actionId . '\');'
-                    . 'load_listmodel(\'entity_id\', this.options[this.selectedIndex].value, \'diff_list_div\', \'indexing\');'
+                    . 'load_listmodel(\'entity_id|\'+this.options[this.selectedIndex].value, \'diff_list_div\', \'indexing\');'
                     . '$(\'diff_list_tr\').style.display=\''.$displayValue.'\''
                 . ';" >';
         $frmStr .= '<option value="">' . _CHOOSE_DEPARTMENT . '</option>';

@@ -123,6 +123,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $db = new dbquery();
         $db->connect();
         
+        # Redirect entities
         if (count($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$actionId]['entities']) > 0) {
             $db->query(
                 "select entity_id from "
@@ -135,6 +136,27 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                 array_push($EntitiesIdExclusion, $res->entity_id);
             }
         }
+        
+        # Diffusion list types
+        require_once 'modules/entities/class/class_manage_listdiff.php';
+        $diffList = new diffusion_list();
+        
+        $listmodel_types = 
+            $diffList->list_groupbasket_listmodel_types(
+                $_SESSION['user']['primarygroup'],
+                $_SESSION['current_basket']['id'],
+                $actionId
+            );
+        $listmodels = array();
+        foreach($listmodel_types as $listmodel_type_id) {
+            $listmodels = 
+                array_merge(
+                    $listmodels, 
+                    $diffList->select_listmodels($listmodel_type_id)
+                );
+        }
+        
+        
     }
     //var_dump($EntitiesIdExclusion);
     require_once 'modules/entities/class/class_manage_entities.php';
@@ -520,11 +542,6 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '</tr>';
         
         # Diffusion list model
-        $objectType = 'INVOICE';
-        require_once 'modules/entities/class/class_manage_listdiff.php';
-        $diffList = new diffusion_list();
-        $listmodels = $diffList->select_listmodels($objectType, 'business_coll');
-        
         $frmStr .= '<tr id="difflist_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td style="width:30px;align:center;"><img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename='
@@ -536,13 +553,13 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<td class="indexing_field">';
         $frmStr .= '<select name="difflist" id="difflist" onchange="'
                     . 'clear_error(\'frm_error_' . $actionId . '\');'
-                    . 'load_listmodel(\''.$objectType.'\', this.options[this.selectedIndex].value, \''.$collId.'\', \'diff_list_div\', \'indexing\');'
+                    . 'load_listmodel(this.options[this.selectedIndex].value, \'diff_list_div\', \'indexing\');'
                     . '$(\'diff_list_tr\').style.display=\''.$displayValue.'\''
                 . ';" >';
         $frmStr .= '<option value="">' . _CHOOSE_DIFFUSION_LIST . '</option>';
         $countlistmodels = count($listmodels);
         for ($cptListmodels = 0;$cptListmodels < $countlistmodels; $cptListmodels++) {
-            $frmStr .= '<option value="' . $listmodels[$cptListmodels]['object_id'] . '">' 
+            $frmStr .= '<option value="' .$listmodels[$cptListmodels]['object_type']. '|' . $listmodels[$cptListmodels]['object_id'] . '">' 
                         .  $db->show_string($listmodels[$cptListmodels]['description']) 
                     . '</option>';
         }

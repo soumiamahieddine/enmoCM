@@ -617,7 +617,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $objectType = 'INVOICE';
         require_once 'modules/entities/class/class_manage_listdiff.php';
         $diffList = new diffusion_list();
-        $listmodels = $diffList->select_listmodels($objectType, 'business_coll');
+        $listmodels = $diffList->select_listmodels($objectType);
         
         $frmStr .= '<tr id="difflist_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td style="width:30px;align:center;"><img src="'
@@ -630,7 +630,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frmStr .= '<td class="indexing_field">';
         $frmStr .= '<select name="difflist" id="difflist" onchange="'
                     . 'clear_error(\'frm_error_' . $actionId . '\');'
-                    . 'load_listmodel(\''.$objectType.'\', this.options[this.selectedIndex].value, \''.$collId.'\', \'diff_list_div\', \'indexing\');'
+                    . 'load_listmodel(\''.$objectType.'\', this.options[this.selectedIndex].value, \'diff_list_div\', \'indexing\');'
                     . '$(\'diff_list_tr\').style.display=\''.$displayValue.'\''
                 . ';" >';
         $frmStr .= '<option value="">' . _CHOOSE_DIFFUSION_LIST . '</option>';
