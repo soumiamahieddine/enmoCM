@@ -1066,21 +1066,23 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 <?php
                 }
                 //$detailsExport .= "<h2>"._PROCESS."</h2>";
-                $req = new dbquery;
-                $req->connect();
-                $countAttachments = "select res_id, creation_date, title, format from " 
-                    . $_SESSION['tablename']['attach_res_attachments'] 
-                    . " where res_id_master = " . $_SESSION['doc_id'] 
-                    . " and coll_id ='" . $_SESSION['collection_id_choice'] 
-                    . "' and status <> 'DEL'";
-                $req->query($countAttachments);
-                if ($req->nb_result() > 0) {
-                    $nb_attach = $req->nb_result();
-                } else {
-                    $nb_attach = 0;
+                $nb_attach = '';
+                if ($core->is_module_loaded('attachments'))
+                {
+                    $req = new dbquery;
+                    $req->connect();
+                    $countAttachments = "select res_id, creation_date, title, format from " 
+                        . $_SESSION['tablename']['attach_res_attachments'] 
+                        . " where res_id_master = " . $_SESSION['doc_id'] 
+                        . " and coll_id ='" . $_SESSION['collection_id_choice'] 
+                        . "' and status <> 'DEL'";
+                    $req->query($countAttachments);
+                    if ($req->nb_result() > 0) {
+                        $nb_attach = '(' . ($req->nb_result()). ')';
+                    }
                 }
                 ?>
-                <dt><?php echo _PROCESS . '(' . $nb_attach . ')';?></dt>
+                <dt><?php echo _PROCESS . $nb_attach;?></dt>
                 <dd>
                     <div>
                         <table width="100%">
@@ -1218,6 +1220,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     </dd> 
                     <?php
                 }
+                
+                //CASES
                 if ($core->is_module_loaded('cases') == true)
                 {
                     ?>
@@ -1233,7 +1237,32 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     </dd>
                     <?php
                 }
-
+                //SENDMAILS                
+                if ($core->is_module_loaded('sendmail') === true) {
+                    require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
+                        . "class" . DIRECTORY_SEPARATOR
+                        . "class_modules_tools.php";
+                    $sendmail_tools    = new sendmail();
+                     //Count mails
+                    $nbr_emails = $sendmail_tools->countUserEmails($s_id, $coll_id);
+                    if ($nbr_emails > 0 ) $nbr_emails = ' ('.$nbr_emails.')';  else $nbr_emails = '';
+                   
+                    ?>
+                    <dt><?php  echo _SENDMAIL.$nbr_emails;?></dt>
+                    <dd>
+                    <?php
+                    //test service send emails
+                    if ($core->test_service('sendmail', 'sendmail', false)) {
+                    } 
+                    //Emails iframe
+                    echo $core->execute_modules_services(
+                        $_SESSION['modules_services'], 'details', 'frame', 'sendmail', 'sendmail'
+                    );
+                    ?>
+                    </dd>
+                <?php
+                }
+                
                 //VERSIONS
                 $versionTable = $security->retrieve_version_table_from_coll_id(
                     $coll_id
