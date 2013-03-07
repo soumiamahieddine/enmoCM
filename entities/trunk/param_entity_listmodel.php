@@ -53,8 +53,7 @@ elseif($_SESSION['service_tag'] == 'entity_up')
 		$_SESSION['m_admin']['entity']['listmodel_info'] =
             $listdiff->select_listmodel(
                 'entity_id',
-                $_SESSION['m_admin']['entity']['entityId'],
-                'letterbox_coll'
+                $_SESSION['m_admin']['entity']['entityId']
             );
                 
         $_SESSION['m_admin']['entity']['listmodel'] = 
@@ -81,8 +80,6 @@ elseif($_SESSION['service_tag'] == 'entity_add_db' || $_SESSION['service_tag'] =
 	$diff_list = new diffusion_list();
 	$diff_list->save_listmodel(
         $_SESSION['m_admin']['entity']['listmodel'],
-        $collId = 'letterbox_coll',
-        $listType = 'DOC', 
         $objectType = 'entity_id',
         $objectId = $_SESSION['m_admin']['entity']['entityId'],
         $description = $_SESSION['m_admin']['entity']['listmodel_info']['description']

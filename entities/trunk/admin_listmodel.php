@@ -40,8 +40,7 @@ if(!isset($_SESSION['m_admin']['entity']['listmodel'])) {
     $_SESSION['m_admin']['entity']['listmodel_info'] =
         $difflist->select_listmodel(
             $objectType,
-            $objectId,
-            $collId
+            $objectId
         );
         
     $listmodelType = $_SESSION['m_admin']['entity']['listmodel_info']['listmodel_type'];
@@ -50,8 +49,7 @@ if(!isset($_SESSION['m_admin']['entity']['listmodel'])) {
     $_SESSION['m_admin']['entity']['listmodel'] =  
         $difflist->get_listmodel(
             $objectType,
-            $objectId,
-            $collId
+            $objectId
         );
 } else {
     # list already loaded and managed (reload after update of list)

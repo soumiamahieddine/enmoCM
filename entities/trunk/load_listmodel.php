@@ -20,15 +20,13 @@ $diffList = new diffusion_list();
 
 $objectType = $_REQUEST['objectType'];
 $objectId = $_REQUEST['objectId'];
-$collId = $_REQUEST['collId'];
 $origin = $_REQUEST['origin'];
 
 // Fill session with listmodel
 $_SESSION[$origin]['diff_list'] = 
     $diffList->get_listmodel(
         $objectType, 
-        $objectId,
-        $collId
+        $objectId
     );
 
 $roles = $diffList->get_listinstance_roles();

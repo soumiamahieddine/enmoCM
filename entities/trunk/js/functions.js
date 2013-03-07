@@ -114,15 +114,16 @@ function select_listmodels(
 // >>> id of div to fill
 // >>> origin keyword
 function load_listmodel(
-	objectType,
-	objectId, 
-	collId,
+	selectedValue,
 	diff_list_id, 
 	origin_keyword
 ) {
     var div_id = diff_list_id || 'diff_list_div';
     var origin = origin_keyword || '';
-
+	
+	var objectType = selectedValue.substr(0, selectedValue.indexOf('|'));
+	var objectId = selectedValue.substr(selectedValue.indexOf('|') + 1);
+	
 	var diff_list_div = $(div_id);
 	new Ajax.Request(
 		"index.php?display=true&module=entities&page=load_listmodel",
@@ -131,7 +132,6 @@ function load_listmodel(
             parameters: { 
 				objectType : objectType,
 				objectId : objectId,
-				collId : collId,
                 origin : origin
 			},
             onSuccess: function(answer){

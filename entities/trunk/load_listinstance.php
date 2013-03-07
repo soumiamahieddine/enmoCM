@@ -63,8 +63,7 @@ if ($_REQUEST['load_from_model'] == 'true') {
     $_SESSION[$origin]['diff_list'] = 
         $diffList->get_listmodel(
             $_REQUEST['objectType'],
-            $_REQUEST['objectId'],
-            $_REQUEST['collId']
+            $_REQUEST['objectId']
         );
 }
 

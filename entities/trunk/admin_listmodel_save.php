@@ -9,8 +9,6 @@ case 'up':
 case 'add':
     $difflist->save_listmodel(
         $_SESSION['m_admin']['entity']['listmodel'], 
-        $collId = $_REQUEST['collId'],
-        $listType = $_REQUEST['listmodelType'],
         $objectType = $_REQUEST['objectType'],
         $objectId = $_REQUEST['objectId'],
         $description = $_REQUEST['description']
@@ -19,8 +17,6 @@ case 'add':
     
 case 'del':
     $difflist->delete_listmodel(
-        $collId = $_REQUEST['collId'],
-        $listType = $_REQUEST['listmodelType'],
         $objectType = $_REQUEST['objectType'],
         $objectId = $_REQUEST['objectId']
     );

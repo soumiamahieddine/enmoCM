@@ -11,7 +11,7 @@ $objectType = $_REQUEST['objectType'];
 $collId = $_REQUEST['collId'];
 $returnElementType = $_REQUEST['returnElementType'];
 
-$listmodels = $difflist->select_listmodels($objectType, $collId);
+$listmodels = $difflist->select_listmodels($objectType);
 $l = count($listmodels);
 
 $return = "";
