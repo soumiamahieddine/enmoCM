@@ -833,7 +833,8 @@ CREATE TABLE listmodels
   item_id character varying(128) NOT NULL,
   item_type character varying(255) NOT NULL,
   item_mode character varying(50) NOT NULL,
-  listmodel_type character varying(50) DEFAULT 'DOC'::character varying
+  listmodel_type character varying(50) DEFAULT 'DOC'::character varying,
+  description character varying(255)
 )
 WITH (OIDS=FALSE);
 
@@ -1497,6 +1498,7 @@ acc_number character varying(50),
 entity_id character varying(32),
 contact_type character varying(255) NOT NULL DEFAULT 'letter'::character varying,
 enabled character(1) NOT NULL DEFAULT 'Y'::bpchar,
+is_private character varying(1) NOT NULL DEFAULT 'N'::character varying,
 CONSTRAINT contacts_pkey PRIMARY KEY  (contact_id)
 ) WITH (OIDS=FALSE);
 
@@ -2297,6 +2299,19 @@ CREATE TABLE groupbasket_status
   action_id integer NOT NULL,
   status_id character varying(32),
   CONSTRAINT groupbasket_status_pkey PRIMARY KEY (system_id)
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE TABLE groupbasket_listmodel_types
+(
+  system_id serial NOT NULL,
+  group_id character varying(32) NOT NULL,
+  basket_id character varying(32) NOT NULL,
+  action_id integer NOT NULL,
+  listmodel_type_id character varying(50) NOT NULL,
+  CONSTRAINT groupbasket_listmodel_types_pkey PRIMARY KEY (system_id )
 )
 WITH (
   OIDS=FALSE
