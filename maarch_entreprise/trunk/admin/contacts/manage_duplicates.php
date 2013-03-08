@@ -19,7 +19,7 @@
 */
 
 /**
-* @brief  manage contacts doubloons
+* @brief  manage contacts duplicates
 *
 *
 * @file
@@ -59,9 +59,9 @@ if (
     $level = $_REQUEST['level'];
 }
 $page_path = $_SESSION['config']['businessappurl']
-    . 'index.php?page=manage_doubloons&admin=contacts';
-$page_label = _MANAGE_DOUBLOONS;
-$page_id = "manage_doubloons";
+    . 'index.php?page=manage_duplicates&admin=contacts';
+$page_label = _MANAGE_DUPLICATES;
+$page_id = "manage_duplicates";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 $color = array('#DFE3E0','#EAF2F1','#CDDCDA','#A8BCB9');
@@ -77,23 +77,23 @@ function randomColor($lastColor)
 
 echo '<h1><img src="' 
         . $_SESSION['config']['businessappurl'] 
-        . 'static.php?filename=manage_doubloons.png" alt="" />' 
-        . _MANAGE_DOUBLOONS 
+        . 'static.php?filename=manage_duplicates.png" alt="" />' 
+        . _MANAGE_DUPLICATES 
     . '</h1>';
 echo '<center>';
 //TODO: ENABLE THIS FUNCTION FOR ALL COLLECTION USING CONTACTS
 
-//doubloons by society
-$selectDoubloonsBySociety = "SELECT contact_id, society, lower(society) as lowsoc, "
+//duplicates by society
+$selectDuplicatesBySociety = "SELECT contact_id, society, lower(society) as lowsoc, "
     . "is_corporate_person, lastname, firstname, "
     . "address_num, address_street, address_town "
     . "from contacts "
-    . "WHERE lower(society) in ("
-    . "SELECT lower(society) FROM contacts GROUP BY lower(society) "
-    . "     HAVING Count(*) > 1 and lower(society) <> '') "
+    . "WHERE (contact_type = 'letter' or contact_type is null or contact_type = '') and  lower(society) in ("
+    . "SELECT lower(society) FROM contacts GROUP BY lower(society), contact_type "
+    . "     HAVING Count(*) > 1 and lower(society) <> '' and  (contact_type = 'letter' or contact_type is null or contact_type = '')) "
     . "order by lower(society)";
 $htmlTabSoc = '<table>';
-$htmlTabSoc .= '<CAPTION>' . _DOUBLOONS_BY_SOCIETY . '</CAPTION>';
+$htmlTabSoc .= '<CAPTION>' . _DUPLICATES_BY_SOCIETY . '</CAPTION>';
 $htmlTabSoc .= '<tr>';
 $htmlTabSoc .= '<th>&nbsp;</th>';
 $htmlTabSoc .= '<th>' . _ID . '</th>';
@@ -109,7 +109,7 @@ $tabSoc = array();
 $socCompare = '';
 $colorToUse = '';
 $colorNumber = '2';
-$db->query($selectDoubloonsBySociety);
+$db->query($selectDuplicatesBySociety);
 $cptSoc = 0;
 while($lineDoublSoc = $db->fetch_object()) {
     if ($lineDoublSoc->contact_id <> '') {
@@ -188,22 +188,22 @@ while($lineDoublSoc = $db->fetch_object()) {
 //$func->show_array($tabSoc);
 $htmlTabSoc .= '</table>';
 if ($cptSoc == 0) {
-    echo _NO_SOCIETY_DOUBLOONS . '<br>';
+    echo _NO_SOCIETY_DUPLICATES . '<br>';
 } else {
     echo $htmlTabSoc;
 }
 /***********************************************************************/
-//doubloons by name
-$selectDoubloonsByName = "SELECT contact_id, lower(lastname||' '||firstname) as lastname_firstname, society, "
+//duplicates by name
+$selectDuplicatesByName = "SELECT contact_id, lower(lastname||' '||firstname) as lastname_firstname, society, "
     . "is_corporate_person, lastname, firstname, "
     . "address_num, address_street, address_town "
     . "from contacts "
-    . "WHERE lower(lastname||' '||firstname) in ("
-    . "SELECT lower(lastname||' '||firstname) as lastname_firstname FROM contacts GROUP BY lastname_firstname "
-    . "     HAVING Count(*) > 1 and lower(lastname||' '||firstname) <> ' ') "
+    . "WHERE (contact_type = 'letter' or contact_type is null or contact_type = '') and  lower(lastname||' '||firstname) in ("
+    . "SELECT lower(lastname||' '||firstname) as lastname_firstname FROM contacts GROUP BY lastname_firstname, contact_type "
+    . "     HAVING Count(*) > 1 and lower(lastname||' '||firstname) <> ' ' and  (contact_type = 'letter' or contact_type is null or contact_type = '')) "
     . "order by lower(lastname||' '||firstname)";
 $htmlTabName = '<table>';
-$htmlTabName .= '<CAPTION>' . _DOUBLOONS_BY_NAME . '</CAPTION>';
+$htmlTabName .= '<CAPTION>' . _DUPLICATES_BY_NAME . '</CAPTION>';
 $htmlTabName .= '<tr>';
 $htmlTabName .= '<th>&nbsp;</th>';
 $htmlTabName .= '<th>' . _ID . '</th>';
@@ -218,7 +218,7 @@ $tabName = array();
 $nameCompare = '';
 $colorToUse = '';
 $colorNumber = '2';
-$db->query($selectDoubloonsByName);
+$db->query($selectDuplicatesByName);
 $cptName = 0;
 while($lineDoublName = $db->fetch_object()) {
     if ($lineDoublName->contact_id <> '') {
@@ -297,7 +297,7 @@ while($lineDoublName = $db->fetch_object()) {
 //$func->show_array($tabName);
 $htmlTabName .= '</table>';
 if ($cptName == 0) {
-    echo _NO_NAME_DOUBLOONS . '<br>';
+    echo _NO_NAME_DUPLICATES . '<br>';
 } else {
     echo $htmlTabName;
 }

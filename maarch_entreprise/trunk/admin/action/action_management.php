@@ -62,7 +62,7 @@ elseif($mode == 'up' || $mode == 'add'){
             <p>
                 <label for="status"><?php echo _ASSOCIATED_STATUS; ?> : </label>
                 <select name="status" id="status">
-                    <option value=""><?php echo _CHOOSE_STATUS;?></option>
+                    <option value="_UNCHANGED_"><?php echo _CHOOSE_STATUS;?></option>
                     <option value="_UNCHANGED_"><?php echo _UNCHANGED;?></option>
                     <?php
                     for($i = 0; $i < count($statusArray); $i++){
