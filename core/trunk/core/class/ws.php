@@ -34,7 +34,7 @@ $SOAP_typedef['returnViewResource'] = array('status'=>'string',
                                             'file_content'=>'string',
                                             'tmp_path'=>'string',
                                             'file_path'=>'string',
-                                            'called_by_ws'=>'string',
+                                            'called_by_ws'=>'boolean',
                                             'error'=>'string'
                                     );
 $SOAP_dispatch_map['docserverSave'] = array(
@@ -181,13 +181,21 @@ $SOAP_dispatch_map['userGet'] = array(
 ## Web Service de versement de données issue du gros scanner
 #####################################
 $SOAP_typedef['arrayOfData'] = array(
-    'arrayOfDataContent' => '{urn:MySoapServer}arrayOfDataContent',
+    array(
+        'arrayOfDataContent' => '{urn:MySoapServer}arrayOfDataContent'
+    )
 );
 
 $SOAP_typedef['arrayOfDataContent'] = array(
     'column' => 'string',
     'value' => 'string',
     'type' => 'string',
+);
+
+$SOAP_typedef['returnResArray'] = array(
+    'returnCode'=> 'int',
+    'resId' => 'string',
+    'error' => 'string'
 );
 
 $SOAP_dispatch_map['storeResource'] = array(
@@ -198,21 +206,19 @@ $SOAP_dispatch_map['storeResource'] = array(
         'table' => 'string',
         'fileFormat' => 'string',
         'status' => 'string',
-),
-    'out' => array('out' => 'string'),
+    ),
+    'out' => array('out' => '{urn:MySoapServer}returnResArray'),
     'method' => "core#resources::storeResource",
 );
 
-$SOAP_dispatch_map['storeAttachmentResource'] = array(
+$SOAP_dispatch_map['storeExtResource'] = array(
     'in'  => array(
-        'resId' => 'int',
-        'collId' => 'string',
-        'encodedContent' => 'string',
-        'fileFormat' => 'string',
-        'fileName' => 'string',
-),
-    'out' => array('out' => '{urn:MySoapServer}returnArray'),
-    'method' => "core#resources::storeAttachmentResource",
+        'resId' => 'long',
+        'data' => '{urn:MySoapServer}arrayOfData',
+        'table' => 'string',
+    ),
+    'out' => array('out' => '{urn:MySoapServer}returnResArray'),
+    'method' => "core#resources::storeExtResource",
 );
 
 $SOAP_typedef['searchParams'] = array(

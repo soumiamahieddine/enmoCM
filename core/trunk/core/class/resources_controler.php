@@ -59,53 +59,90 @@ class resources_controler
     #####################################
     public function storeResource($encodedFile, $data, $collId, $table, $fileFormat, $status)
     {
-        $func = new functions();
-        $data = $func->object2array($data);
-        $returnCode = 0;
-        $db = new dbquery();
-        $db->connect();
-        //copy sended file on tmp 
-        $fileContent = base64_decode($encodedFile);
-        $random = rand();
-        $fileName = 'tmp_file_' . $random . '.' . $fileFormat;
-        $Fnm = $_SESSION['config']['tmppath'] . $fileName;
-        $inF = fopen($Fnm,"w");
-        fwrite($inF, $fileContent);
-        fclose($inF);
-        //store resource on docserver
-        $docserverControler = new docservers_controler();
-        $fileInfos = array(
-            'tmpDir'      => $_SESSION['config']['tmppath'],
-            'size'        => filesize($Fnm),
-            'format'      => $fileFormat,
-            'tmpFileName' => $fileName,
-        );
-        //print_r($fileInfos);
-        $storeResult = array();
-        $storeResult = $docserverControler->storeResourceOnDocserver(
-            $collId, $fileInfos
-        );
-        //print_r($storeResult);exit;
-        //store resource metadata in database
-        $resource = new resource();
-        $data = $this->prepareStorage(
-            $data, 
-            $storeResult['docserver_id'],
-            $status,
-            $fileFormat
-        );
-        unlink($Fnm);
-        //var_dump($data);exit;
-        $resId = $resource->load_into_db(
-            $table, 
-            $storeResult['destination_dir'],
-            $storeResult['file_destination_name'],
-            $storeResult['path_template'],
-            $storeResult['docserver_id'], 
-            $data,
-            $_SESSION['config']['databasetype']
-        );
-        return $resId;
+        try {
+            $func = new functions();
+            $data = $func->object2array($data);
+            for ($i=0; $i < count($data);$i++) {
+                $data[$i]['column'] = strtolower($data[$i]['column']);
+            }
+            $returnCode = 0;
+            $db = new dbquery();
+            $db->connect();
+            //copy sended file on tmp 
+            $fileContent = base64_decode($encodedFile);
+            $random = rand();
+            $fileName = 'tmp_file_' . $random . '.' . $fileFormat;
+            $Fnm = $_SESSION['config']['tmppath'] . $fileName;
+            $inF = fopen($Fnm,"w");
+            fwrite($inF, $fileContent);
+            fclose($inF);
+            //store resource on docserver
+            $docserverControler = new docservers_controler();
+            $fileInfos = array(
+                'tmpDir'      => $_SESSION['config']['tmppath'],
+                'size'        => filesize($Fnm),
+                'format'      => $fileFormat,
+                'tmpFileName' => $fileName,
+            );
+            //print_r($fileInfos);
+            $storeResult = array();
+            $storeResult = $docserverControler->storeResourceOnDocserver(
+                $collId, $fileInfos
+            );
+            if (!empty($storeResult['error'])) {
+                $returnResArray = array(
+                    'returnCode' => (int) -3,
+                    'resId' => '',
+                    'error' => $storeResult['error'],
+                );
+                return $returnResArray;
+            }
+            //print_r($storeResult);exit;
+            //store resource metadata in database
+            $resource = new resource();
+            
+            $data = $this->prepareStorage(
+                $data, 
+                $storeResult['docserver_id'],
+                $status,
+                $fileFormat
+            );
+            unlink($Fnm);
+            //var_dump($data);exit;
+            $resId = $resource->load_into_db(
+                $table, 
+                $storeResult['destination_dir'],
+                $storeResult['file_destination_name'],
+                $storeResult['path_template'],
+                $storeResult['docserver_id'], 
+                $data,
+                $_SESSION['config']['databasetype']
+            );
+            if (!is_numeric($resId)) {
+                $returnResArray = array(
+                    'returnCode' => (int) -2,
+                    'resId' => '',
+                    'error' => 'Pb with SQL insertion : ' .$resId ,
+                );
+                return $returnResArray;
+            }
+            if ($resId == 0) {
+                $resId = '';
+            }
+            $returnResArray = array(
+                'returnCode' => (int) 0,
+                'resId' => $resId,
+                'error' => '',
+            );
+            return $returnResArray;
+        } catch (Exception $e) {
+            $returnResArray = array(
+                'returnCode' => (int) -1,
+                'resId' => '',
+                'error' => 'unknown error' . $e->getMessage(),
+            );
+            return $returnResArray;
+        }
     }
 
     private function prepareStorage($data, $docserverId, $status, $fileFormat)
@@ -217,210 +254,57 @@ class resources_controler
     }
     
     #####################################
-    ## Web Service de versement de données issue du gros scanner
+    ## Store datas of the resource in extension table 
     #####################################
-    public function storeAttachmentResource($resId, $collId, $encodedContent, $fileFormat, $fileName)
+    public function storeExtResource($resId, $data, $table)
     {
-        require_once 'core/class/class_request.php';
-        require_once 'core/class/class_resource.php';
-        require_once 'core/class/docservers_controler.php';
-        require_once 'core/class/class_security.php';
-        $sec = new security();
-        $table = $sec->retrieve_table_from_coll($collId);
-        $db = new request();
-        $db->connect();
-        $query = 'select res_id from ' . $table . ' where res_id = '
-               . $resId;
-        $db->query($query);
-        if ($db->nb_result() == 0) {
-            $status = 'ko';
-            $error .= 'res_id inexistant';
-        } else {
-            $fileContent = base64_decode($encodedContent);
-            $tmpFileName = 'tmp_file_ws_'
-                 . rand() . "_" . md5($fileContent) 
-                 . "." . strtolower($fileFormat);
-            $Fnm = $_SESSION['config']['tmppath'] . $tmpFileName; 
-            $inF = fopen($Fnm, "w");
-            fwrite($inF, $fileContent);
-            fclose($inF);
-            $docserverControler = new docservers_controler();
-            $docserver = $docserverControler->getDocserverToInsert(
-               $collId
-            );
-            if (empty($docserver)) {
-                $status = 'ko';
-                $error = _DOCSERVER_ERROR . ' : '
-                    . _NO_AVAILABLE_DOCSERVER . ". " . _MORE_INFOS . ".";
-            } else {
-                $newSize = $docserverControler->checkSize(
-                    $docserver, $_SESSION['upfile']['size']
-                );
-                if ($newSize == 0) {
-                    $status = 'ko';
-                    $error = _DOCSERVER_ERROR . ' : '
-                        . _NOT_ENOUGH_DISK_SPACE . ". " . _MORE_INFOS . ".";
+        try {
+            $func = new functions();
+            $data = $func->object2array($data);
+            $queryExtFields = '(';
+            $queryExtValues = '(';
+            for ($i=0; $i < count($data);$i++) {
+                //COLUMN
+                $data[$i]['column'] = strtolower($data[$i]['column']);
+                $queryExtFields .= $data[$i]['column'] . ',';
+                //VALUE
+                if ($data[$i]['type'] == 'string' || $data[$i]['type'] == 'date') {
+                    $queryExtValues .= "'" . $data[$i]['value'] . "',";
                 } else {
-                    $fileInfos = array(
-                        "tmpDir"      => $_SESSION['config']['tmppath'],
-                        "size"        => filesize($Fnm),
-                        "format"      => strtolower($fileFormat),
-                        "tmpFileName" => $tmpFileName,
-                    );
-                    $storeResult = array();
-                    $storeResult = $docserverControler->storeResourceOnDocserver(
-                        $collId, $fileInfos
-                    );
-                    if (isset($storeResult['error']) && $storeResult['error'] <> '') {
-                        $status = 'ko';
-                        $error = $storeResult['error'];
-                    } else {
-                        unlink($Fnm);
-                        $resAttach = new resource();
-                        $_SESSION['data'] = array();
-                        array_push(
-                            $_SESSION['data'],
-                            array(
-                                'column' => "typist",
-                                'value' => $_SESSION['user']['UserId'],
-                                'type' => "string",
-                            )
-                        );
-                        array_push(
-                            $_SESSION['data'],
-                            array(
-                                'column' => "format",
-                                'value' => strtolower($fileFormat),
-                                'type' => "string",
-                            )
-                        );
-                        array_push(
-                            $_SESSION['data'],
-                            array(
-                                'column' => "docserver_id",
-                                'value' => $storeResult['docserver_id'],
-                                'type' => "string",
-                            )
-                        );
-                        array_push(
-                            $_SESSION['data'],
-                            array(
-                                'column' => "status",
-                                'value' => 'NEW',
-                                'type' => "string",
-                            )
-                        );
-                        array_push(
-                            $_SESSION['data'],
-                            array(
-                                'column' => "offset_doc",
-                                'value' => ' ',
-                                'type' => "string",
-                            )
-                        );
-                        array_push(
-                            $_SESSION['data'],
-                            array(
-                                'column' => "logical_adr",
-                                'value' => ' ',
-                                'type' => "string",
-                            )
-                        );
-                        array_push(
-                            $_SESSION['data'],
-                            array(
-                                'column' => "title",
-                                'value' => strtolower($fileName),
-                                'type' => "string",
-                            )
-                        );
-                        array_push(
-                            $_SESSION['data'],
-                            array(
-                                'column' => "coll_id",
-                                'value' => $collId,
-                                'type' => "string",
-                            )
-                        );
-                        array_push(
-                            $_SESSION['data'],
-                            array(
-                                'column' => "res_id_master",
-                                'value' => $resId,
-                                'type' => "integer",
-                            )
-                        );
-                        if ($_SESSION['origin'] == "scan") {
-                            array_push(
-                                $_SESSION['data'],
-                                array(
-                                    'column' => "scan_user",
-                                    'value' => $_SESSION['user']['UserId'],
-                                    'type' => "string",
-                                )
-                            );
-                            array_push(
-                                $_SESSION['data'],
-                                array(
-                                    'column' => "scan_date",
-                                    'value' => $req->current_datetime(),
-                                    'type' => "function",
-                                )
-                            );
-                        }
-                        array_push(
-                            $_SESSION['data'],
-                            array(
-                                'column' => "type_id",
-                                'value' => 0,
-                                'type' => "int",
-                            )
-                        );
-                        $id = $resAttach->load_into_db(
-                            'res_attachments',
-                            $storeResult['destination_dir'],
-                            $storeResult['file_destination_name'] ,
-                            $storeResult['path_template'],
-                            $storeResult['docserver_id'], $_SESSION['data'],
-                            $_SESSION['config']['databasetype']
-                        );
-                        if ($id == false) {
-                            $status = 'ko';
-                            $error = $resAttach->get_error();
-                        } else {
-                            $status = 'ok';
-                            if ($_SESSION['history']['attachadd'] == "true") {
-                                $users = new history();
-                                $view = $sec->retrieve_view_from_coll_id(
-                                    $collId
-                                );
-                                $users->add(
-                                    $view, $resId, "ADD", 'attachadd',
-                                    ucfirst(_DOC_NUM) . $id . ' '
-                                    . _NEW_ATTACH_ADDED . ' ' . _TO_MASTER_DOCUMENT
-                                    . $resId,
-                                    $_SESSION['config']['databasetype'],
-                                    'apps'
-                                );
-                                $users->add(
-                                    RES_ATTACHMENTS_TABLE, $id, "ADD",'attachadd',
-                                    _NEW_ATTACH_ADDED . " (" . $fileName
-                                    . ") ",
-                                    $_SESSION['config']['databasetype'],
-                                    'attachments'
-                                );
-                            }
-                        }
-                    }
+                    $queryExtValues .= $data[$i]['value'] . ",";
                 }
             }
+            $queryExtFields = preg_replace('/,$/', ',res_id)', $queryExtFields);
+            $queryExtValues = preg_replace(
+                '/,$/', ',' . $resId . ')', $queryExtValues
+            );
+            $queryExt = " insert into " . $table . " " . $queryExtFields
+                   . ' values ' . $queryExtValues ;
+            $returnCode = 0;
+            $db = new dbquery();
+            $db->connect();
+            if ($db->query($queryExt)) {
+                $returnResArray = array(
+                    'returnCode' => (int) 0,
+                    'resId' => $resId,
+                    'error' => '',
+                );
+            } else {
+                $returnResArray = array(
+                    'returnCode' => (int) -2,
+                    'resId' => '',
+                    'error' => 'Pb with SQL insertion',
+                );
+            }
+            return $returnResArray;
+        } catch (Exception $e) {
+            $returnResArray = array(
+                'returnCode' => (int) -1,
+                'resId' => '',
+                'error' => 'unknown error' . $e->getMessage(),
+            );
+            return $returnResArray;
         }
-        $returnArray = array(
-            'status' => $status,
-            'value' => $id,
-            'error' => $error,
-        );
-        return $returnArray;
     }
     
     function Demo_searchResources($searchParams)

@@ -153,6 +153,7 @@
         if(!$this->check_basic_fields($data))
         {
             $_SESSION['error'] = $this->error;
+            echo $this->error;exit;
             return false;
         }
         else

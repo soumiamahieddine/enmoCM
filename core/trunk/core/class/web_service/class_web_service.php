@@ -191,9 +191,11 @@ class webService {
         $soapServer = new MySoapServer();
         $xmlRPC = new MyXmlRPCServer();
         $wsMode = explode('/', $_SERVER['QUERY_STRING']);
-        //echo $_SERVER['QUERY_STRING'];exit;
+        
         if (isset($wsMode[0]) && !empty($wsMode[0])) {
             $wsMode = $wsMode[0];
+        } else {
+            $wsMode = 'RAS';
         }
         $wsMode = explode('&', $wsMode);
         if (isset($wsMode[0]) && !empty($wsMode[0])) {
