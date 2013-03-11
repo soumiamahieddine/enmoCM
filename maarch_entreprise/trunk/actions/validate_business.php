@@ -466,6 +466,24 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frm_str .= '</tr>';
     
+    /*** Identifier ***/
+    $frm_str .= '<tr id="identifier_tr" style="display:' . $displayValue . ';">';
+    $frm_str .= '<td style="width:30px;align:center;"><img src="'
+                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                . 'identifier.png" alt="' . _IDENTIFIER 
+                . '"/></td><td><label for="identifier" class="form_title" >' . _IDENTIFIER
+            . '</label></td>';
+    $frm_str .= '<td class="indexing_field"><input name="identifier" type="text" '
+            . 'id="identifier" onchange="clear_error(\'frm_error_' . $actionId
+            . '\');"value="';
+    if (isset($data['identifier'])&& !empty($data['identifier'])) {
+        $frm_str .= $data['identifier'];
+    }
+    $frm_str .= '"/></td>';
+    $frm_str .= '<td><span class="red_asterisk" id="identifier_mandatory" '
+            . 'style="display:inline;">*</span>&nbsp;</td>';
+    $frm_str .= '</tr>';
+    
     /*** Doc date ***/
     $frm_str .= '<tr id="doc_date_tr" style="display:'.$display_value.';">';
         $frm_str .='<td style="width:30px;align:center;"><img src="'

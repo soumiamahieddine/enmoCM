@@ -1154,3 +1154,5 @@ if (!defined('_INDEXING_BUSINESS')) define('_INDEXING_BUSINESS', 'Store a docume
 if (!defined('_ADV_SEARCH_BUSINESS')) define('_ADV_SEARCH_BUSINESS', 'Search a document');
 
 if (!defined('_QUICK_SEARCH')) define('_QUICK_SEARCH', 'Quick search');
+
+if (!defined('_FROM_WS')) define('_FROM_WS', 'From a web service');

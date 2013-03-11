@@ -1435,3 +1435,5 @@ if (!defined('_VALUE_IS_MANDATORY')) define('_VALUE_IS_MANDATORY', 'Valeur oblig
 
 if (!defined('_GLOBAL_SEARCH_BUSINESS')) define('_GLOBAL_SEARCH_BUSINESS', 'Recherche globale de documents');
 if (!defined('_QUICK_SEARCH')) define('_QUICK_SEARCH', 'Recherche rapide');
+
+if (!defined('_FROM_WS')) define('_FROM_WS', 'Depuis un web service');
