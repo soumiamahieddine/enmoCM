@@ -694,7 +694,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         require_once 'modules/entities/class/class_manage_listdiff.php';
         $listdiff = new diffusion_list();
        
-        $roles = $listdiff->get_listinstance_roles();
+        $roles = $listdiff->get_workflow_roles();
     
         $frm_str .= '<div id="diff_list_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
             $frm_str .= '<div>';
@@ -717,11 +717,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         . '</a><br/>';
                 }
                 // 1.4 custom diffusion lists
-                foreach($roles as $role_id => $role_config) {
+                foreach($roles as $role_id => $role_label) {
                     if (count($_SESSION['process']['diff_list'][$role_id]['users']) > 0
                         || count($_SESSION['process']['diff_list'][$role_id]['entities']) > 0
                     ) {
-                        $frm_str .= '<br/>>>' . $role_config['list_label'];
+                        $frm_str .= '<br/>>>' . $role_label;
                         $frm_str .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">';
                         $color = ' class="col"';
                         for ($i=0;$i<count($_SESSION['process']['diff_list'][$role_id]['users']);$i++) {
