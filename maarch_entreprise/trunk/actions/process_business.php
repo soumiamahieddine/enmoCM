@@ -161,7 +161,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $values_fields = $b->fetch_object();
         //print_r($indexes);
     }
-
+    
+    if ($core_tools->is_module_loaded('entities')) {
+        require_once('modules/entities/class/class_manage_listdiff.php');
+        $listdiff = new diffusion_list();
+        $roles = $listdiff->get_workflow_roles();      
+        $_SESSION['process']['diff_list'] = $listdiff->get_listinstance($res_id, false, $coll_id);
+    
+    }
+    
     //  to activate locking decomment these lines
     /*if ($b->reserve_doc($_SESSION['user']['UserId'], $res_id, $coll_id) == false) {
         $frm_str = '<div>';
@@ -322,10 +330,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //DIFFUSION LIST
     if ($core_tools->is_module_loaded('entities')) {
-         // Displays the diffusion list (only copies)
-        require_once('modules/entities/class/class_manage_listdiff.php');
-        $diff_list = new diffusion_list();
-        $_SESSION['process']['diff_list'] = $diff_list->get_listinstance($res_id, false, $coll_id);
         //print_r($_SESSION['process']['diff_list']);exit;
         $frm_str .= '<h3 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');return false;" '
@@ -538,10 +542,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //DIFFUSION FRAME
     if ($core_tools->is_module_loaded('entities')) {
-        require_once 'modules/entities/class/class_manage_listdiff.php';
-        $listdiff = new diffusion_list();
-       
-        $roles = $listdiff->get_listinstance_roles();
         $frm_str .= '<div id="diff_list_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
             $frm_str .= '<div>';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});';
@@ -564,11 +564,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 }
                 
                 // 1.4 custom diffusion lists
-                foreach($roles as $role_id => $role_config) {
+                foreach($roles as $role_id => $role_label) {
                     if (count($_SESSION['process']['diff_list'][$role_id]['users']) > 0
                         || count($_SESSION['process']['diff_list'][$role_id]['entities']) > 0
                     ) {
-                        $frm_str .= '<br/>' . $role_config['list_label'];
+                        $frm_str .= '<br/>' . $role_label;
                         $frm_str .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">';
                         $color = ' class="col"';
                         for ($i=0;$i<count($_SESSION['process']['diff_list'][$role_id]['users']);$i++) {
