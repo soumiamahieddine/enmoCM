@@ -268,7 +268,12 @@ class resources_controler
             $data = $func->object2array($data);
             $queryExtFields = '(';
             $queryExtValues = '(';
-            for ($i=0; $i < count($data);$i++) {
+            for ($i=0;$i<count($data);$i++) {
+                if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'FLOAT') {
+                    if ($data[$i]['value'] == '') {
+                        $data[$i]['value'] = '0';
+                    }
+                }
                 //COLUMN
                 $data[$i]['column'] = strtolower($data[$i]['column']);
                 $queryExtFields .= $data[$i]['column'] . ',';
