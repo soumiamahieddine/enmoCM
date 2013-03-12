@@ -11,9 +11,9 @@
 * @author  Claire Figueras  <dev@maarch.org>
 * @author  Cyril Vazquez  <dev@maarch.org>
 */
-require 'modules/entities/class/class_manage_listdiff.php';
-require 'modules/entities/entities_tables.php';
-require 'core/core_tables.php';
+require_once 'modules/entities/class/class_manage_listdiff.php';
+require_once 'modules/entities/entities_tables.php';
+require_once 'core/core_tables.php';
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
@@ -26,13 +26,12 @@ $difflist = new diffusion_list();
 # *****************************************************************************
 # Search functions / filter users and entities avilable for list composition
 # *****************************************************************************
-if (isset($_POST['what_users']) && ! empty($_POST['what_users'])) {
+if (isset($_POST['what_users']) && !empty($_POST['what_users'])) {
     $_GET['what_users'] = $_POST['what_users'];
 }
 if (isset($_POST['what_services']) && ! empty($_POST['what_services'])) {
     $_GET['what_services'] = $_POST['what_services'];
 }
-
 $users = array();
 $entities = array();
 $whereUsers = '';
@@ -131,21 +130,21 @@ while ($line = $db->fetch_object()) {
     );
 }
 
+$roles = $difflist->get_workflow_roles();
 # *****************************************************************************
 # Create empty lists
 # *****************************************************************************
-$roles = $difflist->get_listinstance_roles();
+
 if(! isset($_SESSION[$origin]['diff_list']['dest']))
     $_SESSION[$origin]['diff_list']['dest'] = array();
 
 // 1.4 custom listinstance modes
-foreach($roles as $role_id => $role_config) {
+foreach($roles as $role_id => $role_label) {
     if(! isset($_SESSION[$origin]['diff_list'][$role_id]['users']))
         $_SESSION[$origin]['diff_list'][$role_id]['users'] = array();
-    if($role_config['allow_entities'] && !isset($_SESSION[$origin]['diff_list'][$role_id]['entities']))
+    if(!isset($_SESSION[$origin]['diff_list'][$role_id]['entities']))
         $_SESSION[$origin]['diff_list'][$role_id]['entities'] = array();
 }
-
 # *****************************************************************************
 # Manage request paramaters
 # *****************************************************************************
@@ -176,9 +175,6 @@ if(isset($_GET['role']) && !empty($_GET['role']))
 else 
     $role_id = 'dest';
 
-// Workflow mode    
-$role_workflow_mode = $roles[$role_id]['workflow_mode'];    
-    
 // Dest user    
 if(isset($_SESSION[$origin]['diff_list']['dest']['user_id']) 
     && !empty($_SESSION[$origin]['diff_list']['dest']['user_id']))
@@ -204,6 +200,8 @@ case "add_user":
     $line = $db->fetch_object();
     # IF DEST, set unique dest
     if($role_id == 'dest') {
+        if(! isset($_SESSION[$origin]['diff_list']['dest']))
+            $_SESSION[$origin]['diff_list']['dest'] = array();
         $_SESSION[$origin]['diff_list']['dest']['user_id'] = $db->show_string($id);
         $_SESSION[$origin]['diff_list']['dest']['firstname'] = $db->show_string($line->firstname);
         $_SESSION[$origin]['diff_list']['dest']['lastname'] = $db->show_string($line->lastname);
@@ -213,14 +211,11 @@ case "add_user":
         $dest_is_set = true;
     } else {
         # OTHER ROLES
-        if($role_workflow_mode == 'collaborative'
-            || ($role_workflow_mode == 'sequential' && count($_SESSION[$origin]['diff_list'][$role_id]['users']) == 0)
-        )
-            $visible = 'Y';
-        else 
-            $visible = 'N';
         if(!isset($_SESSION[$origin]['diff_list'][$role_id]['users']))
             $_SESSION[$origin]['diff_list'][$role_id]['users'] = array();
+       
+        $lastUser = end($_SESSION[$origin]['diff_list'][$role_id]['users']);
+        $visible = $lastUser['visible'];
         array_push(
             $_SESSION[$origin]['diff_list'][$role_id]['users'],
             array(
@@ -229,7 +224,7 @@ case "add_user":
                 'lastname' => $db->show_string($line->lastname),
                 'entity_id' => $db->show_string($line->entity_id),
                 'entity_label' => $db->show_string($line->entity_label),
-                'visible' => $visible
+                'visible' => $visible,
             )
         ); 
     }
@@ -242,20 +237,17 @@ case 'add_entity':
         . " WHERE entity_id = '" . $db->protect_string_db($id) . "'"
     );
     $line = $db->fetch_object();
-    if($role_workflow_mode == 'collaborative'
-        || ($role_workflow_mode == 'sequential' && count($_SESSION[$origin]['diff_list'][$role_id]['entities']) == 0)
-    )
-        $visible = 'Y';
-    else 
-        $visible = 'N';
     if(!isset($_SESSION[$origin]['diff_list'][$role_id]['entities']))
             $_SESSION[$origin]['diff_list'][$role_id]['entities'] = array();
+    
+    $lastEntity = end($_SESSION[$origin]['diff_list'][$role_id]['entities']);
+    $visible = $lastEntity['visible'];
     array_push(
         $_SESSION[$origin]['diff_list'][$role_id]['entities'],
         array(
             'entity_id'    => $db->show_string($id),
             'entity_label' => $db->show_string($line->entity_label),
-            'visible' => $visible
+            'visible' => $visible,
         )
     );
     break;    
@@ -273,19 +265,10 @@ case 'remove_user':
     if($rank !== false && $id && $role_id
         && $_SESSION[$origin]['diff_list'][$role_id]['users'][$rank]['user_id'] == $id
     ) {
-        $wasVisible = $_SESSION[$origin]['diff_list'][$role_id]['users'][$rank]['visible'];
-        
+        $visible = $_SESSION[$origin]['diff_list'][$role_id]['users'][$rank]['visible'];
         unset($_SESSION[$origin]['diff_list'][$role_id]['users'][$rank]);
-        $_SESSION[$origin]['diff_list'][$role_id]['users'] = array_values(
-            $_SESSION[$origin]['diff_list'][$role_id]['users']
-        );
-        
-        # Move visible to next user if exists and remove item was visible
-        if($role_workflow_mode == 'sequential' 
-            && isset($_SESSION[$origin]['diff_list'][$role_id]['users'][$rank])
-        )
-            $_SESSION[$origin]['diff_list'][$role_id]['users'][$rank]['visible'] = $wasVisible;
-        
+        if(isset($_SESSION[$origin]['diff_list'][$role_id]['users'][$rank]))
+            $_SESSION[$origin]['diff_list'][$role_id]['users'][$rank]['visible'] = $visible;
     }
     break;
 
@@ -294,18 +277,10 @@ case 'remove_entity':
     if($rank !== false && $id && $role_id
         && $_SESSION[$origin]['diff_list'][$role_id]['entities'][$rank]['entity_id'] == $id
     ) {
-        $wasVisible = $_SESSION[$origin]['diff_list'][$role_id]['entities'][$rank]['visible'];
-        
+        $visible = $_SESSION[$origin]['diff_list'][$role_id]['entities'][$rank]['visible'];
         unset($_SESSION[$origin]['diff_list'][$role_id]['entities'][$rank]);
-        $_SESSION[$origin]['diff_list'][$role_id]['entities'] = array_values(
-            $_SESSION[$origin]['diff_list'][$role_id]['entities']
-        );
-        
-        # Move visible to next entity if exists and remove item was visible
-        if($role_workflow_mode == 'sequential' 
-            && isset($_SESSION[$origin]['diff_list'][$role_id]['entities'][$rank])
-        )
-            $_SESSION[$origin]['diff_list'][$role_id]['entities'][$rank]['visible'] = $wasVisible;
+        if(isset($_SESSION[$origin]['diff_list'][$role_id]['entities'][$rank]))
+            $_SESSION[$origin]['diff_list'][$role_id]['entities'][$rank]['visible'] = $visible;
     }
     break;
 
@@ -313,6 +288,8 @@ case 'remove_entity':
 //***************************************************************************************    
 case 'dest_to_copy':
     if ($dest_is_set) {  
+        if(! isset($_SESSION[$origin]['diff_list']['copy']['users']))
+            $_SESSION[$origin]['diff_list']['copy']['users'] = array();
         array_push(
             $_SESSION[$origin]['diff_list']['copy']['users'],
             array(
@@ -331,7 +308,8 @@ case 'dest_to_copy':
 
 case 'copy_to_dest':
     if ($dest_is_set) {
-        # push dest to copy
+        if(! isset($_SESSION[$origin]['diff_list'][$role_id]['users']))
+            $_SESSION[$origin]['diff_list'][$role_id]['users'] = array();
         array_push(
             $_SESSION[$origin]['diff_list']['copy']['users'],
             array(
@@ -354,8 +332,7 @@ case 'copy_to_dest':
         $_SESSION[$origin]['diff_list']['dest']['lastname'] = $_SESSION[$origin]['diff_list']['copy']['users'][$rank]['lastname'];
         $_SESSION[$origin]['diff_list']['dest']['entity_id'] = $_SESSION[$origin]['diff_list']['copy']['users'][$rank]['entity_id'];
         $_SESSION[$origin]['diff_list']['dest']['entity_label'] = $_SESSION[$origin]['diff_list']['copy']['users'][$rank]['entity_label'];
-        $_SESSION[$origin]['diff_list']['dest']['visible'] = 'Y';
-        
+        $_SESSION[$origin]['diff_list']['dest']['visible'] = 'Y';  
         unset( $_SESSION[$origin]['diff_list']['copy']['users'][$rank]);
         $_SESSION[$origin]['diff_list']['copy']['users'] = array_values(
             $_SESSION[$origin]['diff_list']['copy']['users']
@@ -380,7 +357,6 @@ case 'move_user_down':
             1,
             $preserve_keys = true
         );
-    
     if($upUser[0] && $downUser[0]) {
         # Switch visible values
         $downUserVisible = $downUser[0]['visible'];
@@ -391,7 +367,6 @@ case 'move_user_down':
         $_SESSION[$origin]['diff_list'][$role_id]['users'][$rank] = $upUser[0];
         $_SESSION[$origin]['diff_list'][$role_id]['users'][$newRank] = $downUser[0];
     }
-    
     break;
 
 case 'move_entity_down':
@@ -410,7 +385,6 @@ case 'move_entity_down':
             1,
             $preserve_keys = true
         );
-    
     if($upEntity[0] && $downEntity[0]) {
         # Switch visible values
         $downEntityVisible = $downEntity[0]['visible'];
@@ -421,7 +395,6 @@ case 'move_entity_down':
         $_SESSION[$origin]['diff_list'][$role_id]['entities'][$rank] = $upEntity[0];
         $_SESSION[$origin]['diff_list'][$role_id]['entities'][$newRank] = $downEntity[0];
     }
-
     break; 
     
 case 'move_user_up':
@@ -450,10 +423,9 @@ case 'move_user_up':
         $_SESSION[$origin]['diff_list'][$role_id]['users'][$rank] = $downUser[0]; 
         $_SESSION[$origin]['diff_list'][$role_id]['users'][$newRank] = $upUser[0];
     }
-    
     break;
 
-case 'move_entity_down':
+case 'move_entity_up':
     $upEntity = 
     array_splice(
         $_SESSION[$origin]['diff_list'][$role_id]['entities'], 
@@ -481,8 +453,25 @@ case 'move_entity_down':
         $_SESSION[$origin]['diff_list'][$role_id]['entities'][$rank] = $downEntity[0];
         $_SESSION[$origin]['diff_list'][$role_id]['entities'][$newRank] = $upEntity[0];
     }
-
     break;     
+    
+// VISIBLE
+//*************************************************************************************** 
+case 'make_user_visible':
+    $_SESSION[$origin]['diff_list'][$role_id]['users'][$rank]['visible'] = 'Y'; 
+    break;
+    
+case 'make_user_unvisible':
+    $_SESSION[$origin]['diff_list'][$role_id]['users'][$rank]['visible'] = 'N'; 
+    break;    
+    
+case 'make_entity_visible':
+    $_SESSION[$origin]['diff_list'][$role_id]['entities'][$rank]['visible'] = 'Y'; 
+    break;
+    
+case 'make_entity_unvisible':
+    $_SESSION[$origin]['diff_list'][$role_id]['entities'][$rank]['visible'] = 'N'; 
+    break;  
 }
  
 // 1.4 create indexed array of existing diffusion to search for users/entities easily
@@ -491,19 +480,16 @@ if(isset($_SESSION[$origin]['diff_list']['dest']['user_id'])) {
     $user_id = $_SESSION[$origin]['diff_list']['dest']['user_id'];
     $indexed_diff_list['users'][$user_id] = _PRINCIPAL_RECIPIENT;
 }
-foreach($roles as $role_id => $role_config) {
+foreach($roles as $role_id => $role_label) {
     for($i=0, $l=count($_SESSION[$origin]['diff_list'][$role_id]['users']); $i<$l; $i++) {
         $user_id = $_SESSION[$origin]['diff_list'][$role_id]['users'][$i]['user_id'];
-        $indexed_diff_list['users'][$user_id] = $role_config['role_label'];
+        $indexed_diff_list['users'][$user_id] = $role_label;
     }
     for($i=0, $l=count($_SESSION[$origin]['diff_list'][$role_id]['entities']); $i<$l; $i++) {
         $entity_id = $_SESSION[$origin]['diff_list'][$role_id]['entities'][$i]['entity_id'];
-        $indexed_diff_list['entities'][$entity_id] = $role_config['role_label'];
+        $indexed_diff_list['entities'][$entity_id] = $role_label;
     }
 }
-
-#echo"<pre>" . print_r($roles,true) . "</pre>";
-#echo"<pre>" . print_r($_SESSION[$origin]['diff_list'],true) . "</pre>";
 
 $core_tools->load_html();
 $core_tools->load_header(_USER_ENTITIES_TITLE);
@@ -526,7 +512,10 @@ $link = $_SESSION['config']['businessappurl'] . "index.php?display=true&module=e
 if ($onlyCc) $link .= '&only_cc';
 if ($noDelete) $link .= '&no_delete';
 
-$linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $whatServices;
+$linkwithwhat =  
+    $link 
+    . '&what_users=' . $whatUsers 
+    . '&what_services=' . $whatServices;
 #******************************************************************************
 # DISPLAY EXISTING LIST
 #******************************************************************************
@@ -551,7 +540,9 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
         || ( !empty($indexed_diff_list))
     ) { ?>
     <div id="diff_list" align="center">
-    <h2 class="tit"><?php echo _DIFFUSION_LIST;?></h2><?php 
+    <h2 class="tit"><?php 
+        echo _DIFFUSION_LIST;
+    ?></h2><?php 
     #**************************************************************************
     # DEST USER
     #**************************************************************************
@@ -567,7 +558,7 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
             </td>
             <td><?php
             if($_SESSION[$origin]['diff_list']['dest']['visible'] == 'Y') { ?>
-                <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=visible.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" /> <?php
+                <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" /> <?php
             } ?>
             </td>
             <td><?php echo $_SESSION[$origin]['diff_list']['dest']['lastname']; ?></td>
@@ -586,12 +577,11 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
     #**************************************************************************
     # OTHER ROLES
     #**************************************************************************
-    foreach($roles as $role_id => $role_config) {
-        $workflow_mode = $role_config['workflow_mode'];
+    foreach($roles as $role_id => $role_label) {
         if (count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0
          || count($_SESSION[$origin]['diff_list'][$role_id]['entities']) > 0
         ) { ?>
-            <h2 class="sstit"><img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=<?php echo $role_config['list_img']; ?>&module=entities" alt=""/>&nbsp;<?php echo $role_config['list_label'];?></h2>
+            <h2 class="sstit"><?php echo $role_label;?></h2>
             <table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php
             #**************************************************************************
             # OTHER ROLE USERS
@@ -607,11 +597,17 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                 else $color = ' class="col"'; ?>
                 <tr <?php echo $color; ?> >
                     <td>
-                        <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER . " " . $role_config['role_label'] ;?>" title="<?php echo _USER . " " . $role_config['role_label'] ; ?>" />
+                        <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER . " " . $role_label ;?>" title="<?php echo _USER . " " . $role_label; ?>" />
                     </td>
                     <td><?php
                     if($user['visible'] == 'Y') { ?>
-                        <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=visible.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" /><?php
+                        <a href="<?php echo $linkwithwhat;?>&action=make_user_unvisible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+                            <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" />
+                        </a><?php
+                    } else {?>
+                        <a href="<?php echo $linkwithwhat;?>&action=make_user_visible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+                            <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_delete.gif&module=entities" alt="<?php echo _NOT_VISIBLE; ?>" title="<?php echo _NOT_VISIBLE;?>" />
+                        </a><?php
                     } ?>
                     </td>
                     <td ><?php echo $user['lastname']; ?></td>
@@ -628,16 +624,15 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                     } ?>
                     </td>
                     <td class="action_entities"><!-- Move up in list --><?php 
-                    if($l>1 && $i>0 && $workflow_mode == 'sequential') { ?>
+                    if($i > 0) { ?>
                         <a href="<?php echo $linkwithwhat;?>&action=move_user_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php 
                     } ?>
                     </td>
                     <td class="action_entities"><!-- Move down in list --><?php 
-                    if($l>1 && $i<($l-1) && $workflow_mode == 'sequential') { ?>
+                    if($i < $l-1) { ?>
                         <a href="<?php echo $linkwithwhat;?>&action=move_user_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php 
                     } ?>
                     </td>
-                    
                 </tr> <?php
             }
             #**************************************************************************
@@ -652,11 +647,17 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                 else $color = ' class="col"'; ?>
                 <tr <?php echo $color; ?> >
                     <td>
-                        <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY . " " . $role_config['role_label'] ;?>" title="<?php echo _ENTITY . " " . $role_config['role_label'] ; ?>" />
+                        <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY . " " . $role_label;?>" title="<?php echo _ENTITY . " " . $role_label; ?>" />
                     </td>
                     <td><?php
                     if($entity['visible'] == 'Y') { ?>
-                        <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=visible.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" /><?php
+                        <a href="<?php echo $linkwithwhat;?>&action=make_entity_unvisible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+                            <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" />
+                        </a><?php
+                    } else {?>
+                        <a href="<?php echo $linkwithwhat;?>&action=make_entity_visible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+                            <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_delete.gif&module=entities" alt="<?php echo _NOT_VISIBLE; ?>" title="<?php echo _NOT_VISIBLE;?>" />
+                        </a><?php
                     } ?>
                     </td>
                     <td ><?php echo $entity['entity_id']; ?></td>
@@ -670,17 +671,16 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                     } ?>
                     </td>
                     <td class="action_entities">&nbsp;</td>
-                    <td class="action_entities"><!-- Move up in list --><?php 
-                    if($l>1 && $i>0 && $workflow_mode == 'sequential') { ?>
-                        <a href="<?php echo $linkwithwhat;?>&action=move_entity_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php 
+                    <td class="action_entities"><!-- Move up in list --><?php
+                    if($i > 0) { ?>
+                        <a href="<?php echo $linkwithwhat;?>&action=move_entity_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php
                     } ?>
                     </td>
                     <td class="action_entities"><!-- Move down in list --><?php 
-                    if($l>1 && $i<($l-1) && $workflow_mode == 'sequential') { ?>
-                        <a href="<?php echo $linkwithwhat;?>&action=move_entity_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php 
+                    if($i < $l-1) { ?>
+                        <a href="<?php echo $linkwithwhat;?>&action=move_entity_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php
                     } ?>
                     </td>
-                    
                 </tr> <?php
             } ?>
             </table>
@@ -689,8 +689,7 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
     }
     #******************************************************************************
     # ACTIONS BUTTONS
-    #******************************************************************************
-    ?>
+    #******************************************************************************?>
     <form name="pop_diff" method="post" >
         <div align="center">
             <input align="middle" type="button" value="<?php echo _VALIDATE; ?>" class="button" name="valid" onclick="change_diff_list('<?php echo $origin; ?>', <?php echo "'" . $displayValue . "'";
@@ -756,6 +755,8 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                     $j++
                 ) {
                     $user_id = $users[$j]['ID'];
+                    $user_roles = $difflist->get_workflow_roles($user_id);
+                        
                     if(isset($indexed_diff_list['users'][$user_id]))
                         $already_in_list_as = $indexed_diff_list['users'][$user_id];
                     else 
@@ -776,8 +777,8 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                             if(!$dest_is_set && !$onlyCc) { ?>
                                 <option value="dest"><?php echo _DEST; ?></option><?php
                             }
-                            foreach($roles as $role_id => $role_config) { ?>
-                                <option value="<?php echo $role_id; ?>"><?php echo $role_config['role_label']; ?></option><?php 
+                            foreach($user_roles as $role_id => $role_label) { ?>
+                                <option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
                             } 
                             if($dest_is_set && !$onlyCc) { ?>
                                 <option value="dest"><?php echo _DEST; ?></option><?php
@@ -825,10 +826,8 @@ $linkwithwhat =  $link . '&what_users=' . $whatUsers . '&what_services=' . $what
                         } else  { ?>
                             <input type="hidden" id="entity_id_<?php echo $j; ?>" value="<?php echo $entities[$j]['ID'];?>" />
                             <select name="role" id="entity_role_<?php echo $j; ?>"><?php 
-                            foreach($roles as $role_id => $role_config) {
-                                if($role_config['allow_entities']) { ?>
-                                    <option value="<?php echo $role_id; ?>"><?php echo $role_config['role_label']; ?></option><?php 
-                                }
+                            foreach($roles as $role_id => $role_label) { ?>
+                                <option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
                             } ?>
                             </select>&nbsp;
                             <span onclick="add_entity(<?php echo $j; ?>);" class="change"/> 

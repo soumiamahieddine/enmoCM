@@ -65,11 +65,11 @@ unset($_SESSION['m_admin']);
                 <strong><?php  echo _ENTITY_TREE;?></strong>
          </div>
     </div>
-    <div class="admin_item" id="admin_listinstance_roles" title="<?php  echo _LISTINSTANCE_ROLES_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin_listinstance_roles&amp;module=entities';">
+    <!--div class="admin_item" id="admin_listinstance_roles" title="<?php  echo _LISTINSTANCE_ROLES_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin_listinstance_roles&amp;module=entities';">
         <div class="sum_margin">
                 <strong><?php  echo _LISTINSTANCE_ROLES;?></strong>
          </div>
-    </div>
+    </div-->
     <div class="admin_item" id="admin_listmodel_types" title="<?php  echo _LISTMODEL_TYPES_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin_listmodel_types&amp;module=entities';">
         <div class="sum_margin">
                 <strong><?php  echo _LISTMODEL_TYPES;?></strong>

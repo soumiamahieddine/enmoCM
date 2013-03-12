@@ -67,7 +67,7 @@ if ($_REQUEST['load_from_model'] == 'true') {
         );
 }
 
-$roles = $diffList->get_listinstance_roles();
+$roles = $diffList->get_workflow_roles();
 
 $content = '';
 if (! $onlyCC) {
@@ -103,7 +103,7 @@ if(!empty($_SESSION[$origin]['diff_list'])) {
     }
     # OTHER ROLES
     #**************************************************************************
-    foreach($roles as $role_id => $role_config) {
+    foreach($roles as $role_id => $role_label) {
         if(count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0 
             || count($_SESSION[$origin]['diff_list'][$role_id]['entities']) > 0
         ) {
@@ -114,7 +114,7 @@ if(!empty($_SESSION[$origin]['diff_list'])) {
                     . 'whatIsTheDivStatus(\'' . $role_id . '\', \'divStatus_' . $role_id . '\');" '
                     . 'class="categorie" style="width:405px;" onmouseover="this.style.cursor=\'pointer\';">';
                 $content .= '<small><span id="divStatus_' . $role_id . '" style="color:#1B99C4;" class="sstit"><<</span>&nbsp;' 
-                    . $role_config['list_label'];
+                    . $role_label;
                 $content .= '</small></h4>';
                 $content .= '<div id="' . $role_id . '"  style="display:block">';
                 $content .= '<div>';
@@ -131,7 +131,7 @@ if(!empty($_SESSION[$origin]['diff_list'])) {
                 $content .= '<tr ' . $color . ' >';
                 $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
                          . 'static.php?filename=manage_users_entities_b_small.gif'
-                         . '&module=entities" alt="' . _USER . " " .$role_config['role_label'] . '" title="' . _USER . " " .$role_config['role_label'] 
+                         . '&module=entities" alt="' . _USER . " " .$role_label . '" title="' . _USER . " " .$role_label
                          . '" /></td>';
                 $content .= '<td >' . $_SESSION[$origin]['diff_list'][$role_id]['users'][$i]['lastname'] . '</td>';
                 $content .= '<td >' . $_SESSION[$origin]['diff_list'][$role_id]['users'][$i]['firstname'] . '</td>';
@@ -147,7 +147,7 @@ if(!empty($_SESSION[$origin]['diff_list'])) {
                 $content .= '<tr ' . $color . ' >';
                 $content .= '<td><img src="' . $_SESSION['config']['businessappurl']
                          . 'static.php?filename=manage_entities_b_small.gif&module='
-                         . 'entities" alt="' . _ENTITY . " " .$role_config['role_label'] . '" title="' . _ENTITY . " " .$role_config['role_label']
+                         . 'entities" alt="' . _ENTITY . " " .$role_label . '" title="' . _ENTITY . " " .$role_label
                          . '" /></td>';
                 $content .= '<td >' . $_SESSION[$origin]['diff_list'][$role_id]['entities'][$i]['entity_id'] .'</td>';
                 $content .= '<td colspan="2">'. $_SESSION[$origin]['diff_list'][$role_id]['entities'][$i]['entity_label'].'</td>';

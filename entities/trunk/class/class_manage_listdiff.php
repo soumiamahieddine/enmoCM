@@ -119,8 +119,7 @@ class diffusion_list extends dbquery
         $objectType = $this->protect_string_db($objectType);
         
         $this->connect();
-        $roles = $this->get_listinstance_roles();
-        
+        $roles = $this->get_workflow_roles();
         $listmodel = array();
         
         if (empty($objectId) || empty($objectType)) 
@@ -128,13 +127,13 @@ class diffusion_list extends dbquery
         
         # Dest user
         $this->query(
-            "SELECT l.item_id, u.firstname, u.lastname, e.entity_id, e.entity_label "
+            "SELECT l.item_id, u.firstname, u.lastname, e.entity_id, e.entity_label, l.visible "
             . " FROM " . ENT_LISTMODELS . " l "
                 . " JOIN " . USERS_TABLE . " u ON l.item_id = u.user_id " 
                 . " JOIN " . ENT_USERS_ENTITIES . " ue ON u.user_id = ue.user_id " 
                 . " JOIN " . ENT_ENTITIES . " e ON ue.entity_id = e.entity_id"
             . " WHERE "
-                . "l.listmodel_type = 'DOC' and ue.primary_entity = 'Y' "
+                . "ue.primary_entity = 'Y' "
                 . "and l.item_mode = 'dest' "
                 . "and l.item_type = 'user_id' " 
                 . "and l.object_type = '". $objectType ."' "
@@ -150,23 +149,25 @@ class diffusion_list extends dbquery
             $listmodel['dest']['firstname'] = $this->show_str($res->firstname);
             $listmodel['dest']['entity_id'] = $this->show_str($res->entity_id);
             $listmodel['dest']['entity_label'] = $this->show_str($res->entity_label);
-            $listmodel['dest']['visible'] = 'Y';
+            $listmodel['dest']['visible'] = $this->show_str($res->visible);
         }
         
         # Users in copy and other roles
-        foreach($roles as $role_id => $role_config) {
-            $item_mode = $role_config['role_mode'];
-            $workflow_mode = $role_config['workflow_mode'];
+        foreach($roles as $role_id => $role_label) {
+            if($role_id == 'copy')
+                $item_mode = 'cc';
+            else 
+                $item_mode = $role_id;
             
             # Users
             $this->query(
-                "SELECT l.item_id, l.item_mode, u.firstname, u.lastname, e.entity_id, e.entity_label "
+                "SELECT l.item_id, l.item_mode, u.firstname, u.lastname, e.entity_id, e.entity_label, l.visible "
                 . " FROM " . ENT_LISTMODELS . " l "
                     . " JOIN " . USERS_TABLE . " u ON l.item_id = u.user_id " 
                     . " JOIN " . ENT_USERS_ENTITIES . " ue ON u.user_id = ue.user_id " 
                     . " JOIN " . ENT_ENTITIES . " e ON ue.entity_id = e.entity_id"
                 . " WHERE "
-                    . "l.listmodel_type = 'DOC' and ue.primary_entity = 'Y' "
+                    . "ue.primary_entity = 'Y' "
                     . "and l.item_mode = '".$item_mode."' "
                     . "and l.item_type = 'user_id' " 
                     . "and l.object_type = '". $objectType ."' "
@@ -179,14 +180,7 @@ class diffusion_list extends dbquery
                     $listmodel[$role_id] = array();
                 if(!isset($listmodel[$role_id]['users']))
                     $listmodel[$role_id]['users'] = array();
-                
-                $visible = 'N';
-                if($workflow_mode == 'collaborative' 
-                    || ($workflow_mode == 'sequential' 
-                        && count($listmodel[$role_id]['users']) == 0)
-                )
-                    $visible = 'Y';
-                
+                                
                 array_push(
                     $listmodel[$role_id]['users'],
                     array(
@@ -195,18 +189,18 @@ class diffusion_list extends dbquery
                         'firstname' => $this->show_string($user->firstname),
                         'entity_id' => $this->show_string($user->entity_id),
                         'entity_label' => $this->show_string($user->entity_label),
-                        'visible' => $visible
+                        'visible' => $this->show_str($res->visible)
                     )
                 );
             }
             
             # Entities
             $this->query(
-                "SELECT l.item_id, e.entity_label, l.item_mode "
+                "SELECT l.item_id, e.entity_label, l.item_mode, l.visible "
                 . "FROM " . ENT_LISTMODELS . " l "
                     . "JOIN " . ENT_ENTITIES . " e ON l.item_id = e.entity_id "
-                . "WHERE l.listmodel_type = 'DOC' "
-                    . "and l.item_mode = '".$item_mode."' "
+                . "WHERE "
+                    . " l.item_mode = '".$item_mode."' "
                     . "and l.item_type = 'entity_id' "
                     . "and l.object_type = '" . $objectType . "' "
                     . "and l.object_id = '" . $objectId . "' "
@@ -219,19 +213,12 @@ class diffusion_list extends dbquery
                 if(!isset($listmodel[$role_id]['entities']))
                     $listmodel[$role_id]['entities'] = array();
                     
-                $visible = 'N';
-                if($workflow_mode == 'collaborative' 
-                    || ($workflow_mode == 'sequential' 
-                        && count($listmodel[$role_id]['entities']) == 0)
-                )
-                    $visible = 'Y';
-                    
                 array_push(
                     $listmodel[$role_id]['entities'],
                     array(
                         'entity_id' => $this->show_string($entity->item_id),
                         'entity_label' => $this->show_string($entity->entity_label),
-                        'visible' => $visible
+                        'visible' => $this->show_str($res->visible)
                     )
                 );
             }
@@ -246,7 +233,7 @@ class diffusion_list extends dbquery
         $description = false
     ) {
         $this->connect();
-        $roles = $this->get_listinstance_roles();
+        $roles = $this->get_workflow_roles();
         
         require_once 'core/class/class_history.php';
         $hist = new history();
@@ -284,7 +271,12 @@ class diffusion_list extends dbquery
                    
         # Roles
         #**********************************************************************
-        foreach($roles as $role_id => $role_config) {
+        foreach($roles as $role_id => $role_label) {
+            if($role_id == 'copy')
+                $item_mode = 'cc';
+            else 
+                $item_mode = $role_id;
+            
             # users
             #**********************************************************************
             for ($i=0, $l=count($diffList[$role_id]['users']);
@@ -302,7 +294,7 @@ class diffusion_list extends dbquery
                         . $i . ", "
                         . "'" . $user_id . "', "
                         . "'user_id', "
-                        . "'".$role_config['role_mode']."', "
+                        . "'".$item_mode."', "
                         . "null, "
                         . "'" . $description . "'"
                     . ")"
@@ -322,7 +314,7 @@ class diffusion_list extends dbquery
                         . $i . ", "
                         . "'" . $entity_id . "', "
                         . "'entity_id', "
-                        . "'".$role_config['role_mode']."', "
+                        . "'".$item_mode."', "
                         . "null, "
                         . "'" . $description . "'"
                     . ")"
@@ -467,8 +459,13 @@ class diffusion_list extends dbquery
                 . " and res_id = " . $params['res_id']
                 . " and item_mode != 'dest'"
         );
-        $roles = $this->get_listinstance_roles();
-        foreach($roles as $role_id => $role_config) {
+        $roles = $this->get_workflow_roles();
+        foreach($roles as $role_id => $role_label) {
+            if($role_id == 'copy')
+                $item_mode = 'cc';
+            else 
+                $item_mode = $role_id;
+            
             # CUSTOM USER ROLES IN NEW LIST
             for ($i=0, $l=count($diffList[$role_id]['users']);
                 $i<$l;
@@ -487,7 +484,7 @@ class diffusion_list extends dbquery
                         . $i . ", "
                         . "'" . $user_id . "', " 
                         . "'user_id' , "
-                        . "'".$role_config['role_mode']."', "
+                        . "'".$item_mode."', "
                         . "'" . $creatorUser . "', "
                         . "'" . $creatorEntity. "', "
                         . "'" . $visible . "', "
@@ -529,7 +526,7 @@ class diffusion_list extends dbquery
                         . $i . ", "
                         . "'" . $entity_id . "', " 
                         . "'entity_id' , "
-                        . "'".$role_config['role_mode']."', "
+                        . "'".$item_mode."', "
                         . "'" . $creatorUser . "', "
                         . "'" . $creatorEntity . "', "
                         . "'" . $visible . "',"
@@ -578,12 +575,12 @@ class diffusion_list extends dbquery
     public function get_listinstance($resId, $modeCc = false, $collId = 'letterbox_coll')
     {
         $this->connect();
-        $roles = $this->get_listinstance_roles();
+        $roles = $this->get_workflow_roles();
         
         $listinstance = array();
         $listinstance['dest'] = array();
         
-        foreach($roles as $role_id => $role_config) {
+        foreach($roles as $role_id => $role_label) {
             $listinstance[$role_id] = array();
             $listinstance[$role_id]['users'] = array();
             $listinstance[$role_id]['entities'] = array();
@@ -639,8 +636,11 @@ class diffusion_list extends dbquery
         );
         //$this->show();
         while ($res = $this->fetch_object()) {
-            $role_id = $res->item_mode;
-            if($role_id =='cc') $role_id = 'copy';
+            if($res->item_mode == 'cc') 
+                $role_id = 'copy';
+            else 
+                $role_id = $res->item_mode;
+                
             if(!isset($listinstance[$role_id]['users']))
                 $listinstance[$role_id]['users'] = array();
             array_push(
@@ -668,8 +668,11 @@ class diffusion_list extends dbquery
         );
 
         while ($res = $this->fetch_object()) {
-            $role_id = $res->item_mode;
-            if($role_id=='cc') $role_id = 'copy';
+            if($res->item_mode == 'cc') 
+                $role_id = 'copy';
+            else 
+                $role_id = $res->item_mode;
+                
             if(!isset($listinstance[$role_id]['entities']))
                 $listinstance[$role_id]['entities'] = array();
             array_push(
@@ -726,23 +729,47 @@ class diffusion_list extends dbquery
     }
     
     #  Get list of available roles for list models and diffusion lists definition
-    public function get_listinstance_roles()
-    {
-        $this->connect();
-        $this->query('select * from ' . ENT_LISTINSTANCE_ROLES);
-        
+    public function get_workflow_roles(
+        $user_id = false
+    ) {
         $roles = array();
         
+        $roles['copy'] = _TO_CC;
+        
+        require_once 'core' . DIRECTORY_SEPARATOR . 'core_tables.php';
+        
+        $query = 
+            "SELECT distinct ug.group_id, ug.group_desc FROM " . USERGROUPS_TABLE . " ug "
+            . " LEFT JOIN " . USERGROUPS_SERVICES_TABLE . " ugs "
+                . " ON ug.group_id = ugs.group_id "
+            . " LEFT JOIN " . USERGROUP_CONTENT_TABLE . " ugc "
+                . " ON ug.group_id = ugc.group_id "
+            . " WHERE ug.enabled = 'Y' and ugs.service_id = 'diffusion_list_role'";
+        
+        if($user_id)
+            $query .= " AND ugc.user_id = '".$user_id."'";
+        
+        $query .= " GROUP BY ug.group_id, ug.group_desc";
+        $query .= " ORDER BY ug.group_id ASC";
+        
+        $this->connect();
+        $this->query($query);
+        
+        while($usergroup = $this->fetch_object()) {
+            $group_id = $usergroup->group_id;
+            $roles[$group_id] = $usergroup->group_desc;
+        }
+        
         # Default list : copy/cc
-        $roles['copy'] = 
-                array(
-                    'role_mode' => 'cc',
-                    'list_label' => _TO_CC,
-                    'role_label' => _TO_CC,
-                    'workflow_mode' => 'collaborative',
-                    'list_img' => 'manage_entities_b_small.gif&module=entities',
-                    'allow_entities' => true
-                );
+        /*$roles['copy'] = 
+            array(
+                'role_mode' => 'cc',
+                'list_label' => _TO_CC,
+                'role_label' => _TO_CC,
+                'workflow_mode' => 'collaborative',
+                'list_img' => 'manage_entities_b_small.gif&module=entities',
+                'allow_entities' => true
+            );
         
         while ($role = $this->fetch_object()) { 
             if ($role->allow_entities == 'Y') $ent = true;
@@ -756,10 +783,10 @@ class diffusion_list extends dbquery
                     'list_img' => (string) $role->list_img,
                     'allow_entities' => $ent
                 );
-        }
+        }*/
         return $roles;
     }
-
+    
     #  Get list of available list model types
     public function get_listmodel_types()
     {

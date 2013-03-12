@@ -14,13 +14,27 @@
          <nature>listelement</nature>
        </WHEREAMIUSED>
     </SERVICE>
-    <SERVICE>
+    <!--SERVICE>
         <id>admin_listinstance_roles</id>
         <name>_ADMIN_LISTINSTANCE_ROLES</name>
         <comment>_ADMIN_LISTINSTANCE_ROLES_DESC</comment>
         <servicepage>index.php?page=admin_listinstance_roles&amp;module=entities</servicepage>
         <servicetype>use</servicetype>
-        <system_service>true</system_service>
+        <system_service>false</system_service>
+        <style>ent_manage_entities</style>
+        <enabled>true</enabled>
+         <WHEREAMIUSED>
+         <page>admin.php</page>
+         <nature>listelement</nature>
+       </WHEREAMIUSED>
+    </SERVICE-->
+    <SERVICE>
+        <id>diffusion_list_role</id>
+        <name>_DIFFUSION_LIST_ROLE</name>
+        <comment>_DIFFUSION_LIST_ROLE</comment>
+        <servicepage>index.php?module=entities</servicepage>
+        <servicetype>use</servicetype>
+        <system_service>false</system_service>
         <style>ent_manage_entities</style>
         <enabled>true</enabled>
          <WHEREAMIUSED>
@@ -34,7 +48,7 @@
         <comment>_ADMIN_LISTMODEL_TYPES_DESC</comment>
         <servicepage>index.php?page=admin_listmodel_types&amp;module=entities</servicepage>
         <servicetype>use</servicetype>
-        <system_service>true</system_service>
+        <system_service>false</system_service>
         <style>ent_manage_entities</style>
         <enabled>true</enabled>
          <WHEREAMIUSED>
@@ -48,7 +62,7 @@
         <comment>_ADMIN_LISTMODELS_DESC</comment>
         <servicepage>index.php?page=admin_listmodels&amp;module=entities</servicepage>
         <servicetype>use</servicetype>
-        <system_service>true</system_service>
+        <system_service>false</system_service>
         <style>ent_manage_entities</style>
         <enabled>true</enabled>
          <WHEREAMIUSED>
@@ -147,29 +161,29 @@
         </WHEREAMIUSED>
     </SERVICE>
     <SERVICE>
-   <id>param_index_listmodeltypes</id>
-   <name>_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS</name>
-   <servicepage>param_index_listmodel_types.php</servicepage>
-   <servicetype>use</servicetype>
-   <system_service>true</system_service>
-   <enabled>true</enabled>
-   <WHEREAMIUSED>
-        <page>groupbasket_popup.php</page>
-        <nature>include</nature>
-    </WHEREAMIUSED>
-    <WHEREAMIUSED>
-        <page>manage_group_basket.php</page>
-        <nature>include</nature>
-    </WHEREAMIUSED>
-    <WHEREAMIUSED>
-        <page>load_groupbasket</page>
-        <nature>include</nature>
-    </WHEREAMIUSED>
-    <WHEREAMIUSED>
-        <page>load_groupbasket_db</page>
-        <nature>include</nature>
-    </WHEREAMIUSED>
- </SERVICE>
+     <id>param_index_listmodeltypes</id>
+     <name>_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS</name>
+     <servicepage>param_index_listmodel_types.php</servicepage>
+     <servicetype>use</servicetype>
+     <system_service>true</system_service>
+     <enabled>true</enabled>
+     <WHEREAMIUSED>
+          <page>groupbasket_popup.php</page>
+          <nature>include</nature>
+      </WHEREAMIUSED>
+      <WHEREAMIUSED>
+          <page>manage_group_basket.php</page>
+          <nature>include</nature>
+      </WHEREAMIUSED>
+      <WHEREAMIUSED>
+          <page>load_groupbasket</page>
+          <nature>include</nature>
+      </WHEREAMIUSED>
+      <WHEREAMIUSED>
+          <page>load_groupbasket_db</page>
+          <nature>include</nature>
+      </WHEREAMIUSED>
+   </SERVICE>
     <SERVICE>
         <id>param_templates_entities</id>
         <name>_PARAM_TEMPLATE_ENTITIES</name>

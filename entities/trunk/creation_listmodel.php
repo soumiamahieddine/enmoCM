@@ -26,7 +26,7 @@ $difflist = new diffusion_list();
 # *****************************************************************************
 # Search functions / filter users and entities avilable for list composition
 # *****************************************************************************
-if (isset($_POST['what_users']) && !empty($_POST['what_users']) ) {
+if (isset($_POST['what_users']) && !empty($_POST['what_users'])) {
     $_GET['what_users'] = $_POST['what_users'];
 }
 if (isset($_POST['what_services']) && ! empty($_POST['what_services']) ) {
@@ -100,7 +100,7 @@ while ($line = $db->fetch_object()) {
 
 $origin = $_REQUEST['origin'];
 
-$roles = $difflist->get_listinstance_roles();
+$roles = $difflist->get_workflow_roles();
 $objectTypes = $difflist->get_listmodel_types();
 
 # *****************************************************************************
@@ -149,9 +149,6 @@ if(isset($_GET['role']) && !empty($_GET['role']))
 else 
     $role_id = 'dest';
 
-// Workflow mode    
-$role_workflow_mode = $roles[$role_id]['workflow_mode'];     
-    
 // Dest user    
 if(isset($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']) 
     && !empty($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']))
@@ -198,11 +195,15 @@ case "add_user":
         $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'] = $db->show_string($line->lastname);
         $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_id'] = $db->show_string($line->entity_id);
         $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label'] = $db->show_string($line->entity_label);
+        $_SESSION['m_admin']['entity']['listmodel']['dest']['visible'] = 'Y';
         $dest_is_set = true;
     } else {
     # OTHER ROLES
         if(! isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']))
             $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'] = array();
+            
+        $lastUser = end($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']);
+        $visible = $lastUser['visible'];
         array_push(
             $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'],
             array(
@@ -211,6 +212,7 @@ case "add_user":
                 'lastname' => $db->show_string($line->lastname),
                 'entity_id' => $db->show_string($line->entity_id),
                 'entity_label' => $db->show_string($line->entity_label),
+                'visible' => $visible,
             )
         ); 
     }
@@ -225,11 +227,15 @@ case 'add_entity':
     $line = $db->fetch_object();
     if(! isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']))
         $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'] = array();
+        
+    $lastEntity = end($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']);
+    $visible = $lastEntity['visible'];
     array_push(
         $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'],
         array(
             'entity_id'    => $db->show_string($id),
-            'entity_label' => $db->show_string($line->entity_label)
+            'entity_label' => $db->show_string($line->entity_label),
+            'visible' => $visible,
         )
     );
     break;    
@@ -247,10 +253,10 @@ case 'remove_user':
     if($rank !== false && $id && $role_id
         && $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['user_id'] == $id
     ) {
+        $visible = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['visible'];
         unset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]);
-        $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'] = array_values(
-            $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']
-        );
+        if(isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]))
+            $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['visible'] = $visible;
     }
     break;
 
@@ -259,10 +265,10 @@ case 'remove_entity':
     if($rank !== false && $id && $role_id
         && $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$rank]['entity_id'] == $id
     ) {
+        $visible = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$rank]['visible'];
         unset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$rank]);
-        $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'] = array_values(
-            $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']
-        );
+        if(isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$rank]))
+            $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$rank]['visible'] = $visible;
     }
     break;
 
@@ -280,6 +286,7 @@ case 'dest_to_copy':
                 'lastname' => $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'],
                 'entity_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_id'],
                 'entity_label' => $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label'],
+                'visible' => 'Y',
             )
         );
         unset($_SESSION['m_admin']['entity']['listmodel']['dest']);
@@ -299,6 +306,7 @@ case 'copy_to_dest':
                 'lastname' => $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'],
                 'entity_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_id'],
                 'entity_label' => $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label'],
+                'visible' => 'Y',
             )
         );
         unset($_SESSION['m_admin']['entity']['listmodel']['dest']);
@@ -312,6 +320,7 @@ case 'copy_to_dest':
         $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'] = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['lastname'];
         $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_id'] = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['entity_id'];
         $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label'] = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['entity_label'];
+        $_SESSION['m_admin']['entity']['listmodel']['dest']['visible'] = 'Y';
         unset( $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]);
         $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'] = array_values(
             $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']
@@ -328,14 +337,21 @@ case 'move_user_down':
             1,
             $preserve_keys = true
         );
+    $newRank = $rank+1;
     $upUser = 
         array_splice(
             $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'], 
-            ($rank + 1),
+            $newRank,
             1,
             $preserve_keys = true
         );
     if($upUser[0] && $downUser[0]) {
+        # Switch visible values
+        $downUserVisible = $downUser[0]['visible'];
+        $upUserVisible = $upUser[0]['visible'];
+        $upUser[0]['visible'] = $downUserVisible;
+        $downUser[0]['visible'] = $upUserVisible;
+        # Switch positions
         $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank] = $upUser[0];
         $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][($rank+1)] = $downUser[0];
     }
@@ -349,18 +365,101 @@ case 'move_entity_down':
             1,
             $preserve_keys = true
         );
+        $newRank = $rank+1;
     $upEntity = 
         array_splice(
             $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'], 
-            ($rank + 1),
+            $newRank,
             1,
             $preserve_keys = true
         );
     if($upEntity[0] && $downEntity[0]) {
+        # Switch visible values
+        $downEntityVisible = $downEntity[0]['visible'];
+        $upEntityVisible = $upEntity[0]['visible'];
+        $upEntity[0]['visible'] = $downEntityVisible;
+        $downEntity[0]['visible'] = $upEntityVisible;
+        # Switch positions
         $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$rank] = $upEntity[0];
         $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][($rank+1)] = $downEntity[0];
     }
     break;
+    
+case 'move_user_up':
+    $upUser = 
+        array_splice(
+            $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'], 
+            $rank,
+            1,
+            $preserve_keys = true
+        );
+    $newRank = $rank-1;
+    $downUser = 
+        array_splice(
+            $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'], 
+            $newRank,
+            1,
+            $preserve_keys = true
+        );
+    if($upUser[0] && $downUser[0]) {
+        # Switch visible values
+        $downUserVisible = $downUser[0]['visible'];
+        $upUserVisible = $upUser[0]['visible'];
+        $upUser[0]['visible'] = $downUserVisible;
+        $downUser[0]['visible'] = $upUserVisible;
+        # Switch positions
+        $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank] = $downUser[0]; 
+        $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$newRank] = $upUser[0];
+    }
+    break;
+
+case 'move_entity_up':
+    $upEntity = 
+    array_splice(
+        $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'], 
+        $rank,
+        1,
+        $preserve_keys = true
+    );
+    $newRank = $rank-1;
+    $downEntity = 
+        array_splice(
+            $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'], 
+            $newRank,
+            1,
+            $preserve_keys = true
+        );
+    
+    
+    if($upEntity[0] && $downEntity[0]) {
+        # Switch visible values
+        $downEntityVisible = $downEntity[0]['visible'];
+        $upEntityVisible = $upEntity[0]['visible'];
+        $upEntity[0]['visible'] = $downEntityVisible;
+        $downEntity[0]['visible'] = $upEntityVisible;
+        # Switch positions
+        $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$rank] = $downEntity[0];
+        $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$newRank] = $upEntity[0];
+    }
+    break;   
+    
+// VISIBLE
+//*************************************************************************************** 
+case 'make_user_visible':
+    $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['visible'] = 'Y'; 
+    break;
+    
+case 'make_user_unvisible':
+    $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$rank]['visible'] = 'N'; 
+    break;    
+    
+case 'make_entity_visible':
+    $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$rank]['visible'] = 'Y'; 
+    break;
+    
+case 'make_entity_unvisible':
+    $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$rank]['visible'] = 'N'; 
+    break;  
 }
  
 // 1.4 create indexed array of existing diffusion to search for users/entities easily
@@ -369,14 +468,14 @@ if(isset($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'])) {
     $user_id = $_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'];
     $indexed_diff_list['users'][$user_id] = _PRINCIPAL_RECIPIENT;
 }
-foreach($roles as $role_id => $role_config) {
+foreach($roles as $role_id => $role_label) {
     for($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']); $i<$l; $i++) {
         $user_id = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['user_id'];
-        $indexed_diff_list['users'][$user_id] = $role_config['role_label'];
+        $indexed_diff_list['users'][$user_id] = $role_label;
     }
     for($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']); $i<$l; $i++) {
         $entity_id = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i]['entity_id'];
-        $indexed_diff_list['entities'][$entity_id] = $role_config['role_label'];
+        $indexed_diff_list['entities'][$entity_id] = $role_label;
     }
 }
 
@@ -387,7 +486,7 @@ $link = $_SESSION['config']['businessappurl']."index.php?display=true&module=ent
 $linkwithwhat =  
     $link 
     . '&what_users=' . $whatUsers 
-    . '&what_services=' . $whatServices 
+    . '&what_services=' . $whatServices;
 #******************************************************************************
 # DISPLAY EXISTING LIST
 #******************************************************************************
@@ -424,7 +523,12 @@ $linkwithwhat =
         <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
             <tr>
                 <td>
-                    <img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b.gif&module=entities';?>" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" />
+                    <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_users_entities_b.gif&module=entities" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" />
+                </td>
+                <td><?php
+                if($_SESSION['m_admin']['entity']['listmodel']['dest']['visible'] == 'Y') { ?>
+                    <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" /> <?php
+                } ?>
                 </td>
                 <td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'];?></td>
                 <td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'];?></td>
@@ -442,29 +546,44 @@ $linkwithwhat =
         #**************************************************************************
         # OTHER ROLES
         #**************************************************************************
-        foreach($roles as $role_id => $role_config) {
-            $workflow_mode = $role_config['workflow_mode'];
+        foreach($roles as $role_id => $role_label) {
             if (count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']) > 0
              || count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']) > 0
             ) { ?>
-                <h2 class="sstit"><?php echo $role_config['list_label'];?></h2>
+                <h2 class="sstit"><?php echo $role_label;?></h2>
                 <table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php
                 #**************************************************************************
                 # OTHER ROLE USERS
                 #**************************************************************************
                 $color = ' class="col"';
-                for ($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']) ; $i<$l ; $i++) {
+                for($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']); 
+                    $i<$l; 
+                    $i++
+                ) {
+                    $user = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i];
+                    
                     if ($color == ' class="col"') $color = '';
                     else $color = ' class="col"'; ?>
                     <tr <?php echo $color; ?> >
                         <td>
-                            <img src="<?php echo $_SESSION['config']['businessappurl'] ?>static.php?filename=manage_users_entities_b.gif&module=entities" alt="<?php echo _USER . " " . $role_config['role_label'] ;?>" title="<?php echo _USER . " " . $role_config['role_label'] ; ?>" />
+                            <img src="<?php echo $_SESSION['config']['businessappurl'] ?>static.php?filename=manage_users_entities_b.gif&module=entities" alt="<?php echo _USER . " " . $role_label;?>" title="<?php echo _USER . " " . $role_label; ?>" />
                         </td>
-                        <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['lastname']; ?></td>
-                        <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['firstname'];?></td>
-                        <td><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['entity_label']; ?></td>
+                        <td><?php
+                        if($user['visible'] == 'Y') { ?>
+                            <a href="<?php echo $linkwithwhat;?>&action=make_user_unvisible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+                                <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" />
+                            </a><?php
+                        } else {?>
+                            <a href="<?php echo $linkwithwhat;?>&action=make_user_visible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+                                <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_delete.gif&module=entities" alt="<?php echo _NOT_VISIBLE; ?>" title="<?php echo _NOT_VISIBLE;?>" />
+                            </a><?php
+                        } ?>
+                        </td>
+                        <td ><?php echo $user['lastname']; ?></td>
+                        <td ><?php echo $user['firstname'];?></td>
+                        <td><?php echo $user['entity_label']; ?></td>
                         <td class="action_entities"><!-- Remove user -->
-                            <a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['user_id'];?>" class="delete"><?php echo _DELETE; ?></a>
+                            <a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>" class="delete"><?php echo _DELETE; ?></a>
                         </td>
                         <td class="action_entities"><!-- Switch copy to dest --><?php
                         if($role_id == 'copy') { ?>
@@ -472,13 +591,13 @@ $linkwithwhat =
                         } ?>
                         </td>
                         <td class="action_entities"><!-- Move up in list --><?php 
-                        if($l>1 && $i>0 && $workflow_mode == 'sequential') { ?>
-                            <a href="<?php echo $linkwithwhat;?>&action=move_user_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php 
+                        if($i > 0) { ?>
+                            <a href="<?php echo $linkwithwhat;?>&action=move_user_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php
                         } ?>
                         </td>
                         <td class="action_entities"><!-- Move down in list --><?php 
-                        if($l>1 && $i<($l-1) && $workflow_mode == 'sequential') { ?>
-                            <a href="<?php echo $linkwithwhat;?>&action=move_user_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php 
+                        if($i < $l-1) { ?>
+                            <a href="<?php echo $linkwithwhat;?>&action=move_user_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php
                         } ?>
                         </td>
                     </tr> <?php
@@ -490,29 +609,41 @@ $linkwithwhat =
                     $i<$l;
                     $i++
                 ) {
+                    $entity = $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i];
                     if ($color == ' class="col"') $color = '';
                     else $color = ' class="col"'; ?>
                     <tr <?php echo $color; ?> >
                         <td>
-                            <img src="<?php echo $_SESSION['config']['businessappurl'] ?>static.php?filename=manage_entities_b.gif&module=entities" alt="<?php echo _ENTITY . " " . $role_config['role_label'] ;?>" title="<?php echo _ENTITY . " " . $role_config['role_label'] ; ?>" />
+                            <img src="<?php echo $_SESSION['config']['businessappurl'] ?>static.php?filename=manage_entities_b.gif&module=entities" alt="<?php echo _ENTITY . " " . $role_label ;?>" title="<?php echo _ENTITY . " " . $role_label; ?>" />
                         </td>
-                        <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i]['entity_id']; ?></td>
-                        <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i]['entity_label']; ?></td>
+                        <td><?php
+                        if($entity['visible'] == 'Y') { ?>
+                            <a href="<?php echo $linkwithwhat;?>&action=make_entity_unvisible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+                                <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" />
+                            </a><?php
+                        } else {?>
+                            <a href="<?php echo $linkwithwhat;?>&action=make_entity_visible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+                                <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_delete.gif&module=entities" alt="<?php echo _NOT_VISIBLE; ?>" title="<?php echo _NOT_VISIBLE;?>" />
+                            </a><?php
+                        } ?>
+                        </td>
+                        <td ><?php echo $entity['entity_id']; ?></td>
+                        <td ><?php echo $entity['entity_label']; ?></td>
                         <td>&nbsp;</td>
                         <td class="action_entities">
-                            <a href="<?php echo $linkwithwhat; ?>&action=remove_entity&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i]['entity_id'];?>" class="delete">
+                            <a href="<?php echo $linkwithwhat; ?>&action=remove_entity&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $entity['entity_id'];?>" class="delete">
                                 <?php echo _DELETE; ?>
                             </a>
                         </td>
                         <td class="action_entities">&nbsp;</td>
                         <td class="action_entities"><!-- Move up in list --><?php 
-                        if($l>1 && $i>0 && $workflow_mode == 'sequential') { ?>
-                            <a href="<?php echo $linkwithwhat;?>&action=move_entity_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php 
+                        if($i > 0) { ?>
+                            <a href="<?php echo $linkwithwhat;?>&action=move_entity_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php
                         } ?>
                         </td>
                         <td class="action_entities"><!-- Move down in list --><?php 
-                        if($l>1 && $i<($l-1) && $workflow_mode == 'sequential') { ?>
-                            <a href="<?php echo $linkwithwhat;?>&action=move_entity_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php 
+                        if($i < $l-1) { ?>
+                            <a href="<?php echo $linkwithwhat;?>&action=move_entity_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php
                         } ?>
                         </td>
                     </tr><?php
@@ -522,7 +653,7 @@ $linkwithwhat =
             }
         }
         #******************************************************************************
-        # LIST LINK WITH OBJECT + VALIDATION
+        # ACTIONS BUTTONS
         #******************************************************************************?>      
         <form name="pop_diff" method="post" >
             <div align="center">
@@ -587,6 +718,8 @@ $linkwithwhat =
                         $j++
                     ) {
                         $user_id = $users[$j]['ID'];
+                        $user_roles = $difflist->get_workflow_roles($user_id);
+                        
                         if(isset($indexed_diff_list['users'][$user_id]))
                             $already_in_list_as = $indexed_diff_list['users'][$user_id];
                         else 
@@ -607,8 +740,8 @@ $linkwithwhat =
                             if(!$dest_is_set) { ?>
                                 <option value="dest"><?php echo _DEST; ?></option><?php
                             }
-                            foreach($roles as $role_id => $role_config) { ?>
-                                <option value="<?php echo $role_id; ?>"><?php echo $role_config['role_label']; ?></option><?php 
+                            foreach($user_roles as $role_id => $role_label) { ?>
+                                <option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
                             } 
                             if($dest_is_set) { ?>
                                 <option value="dest"><?php echo _DEST; ?></option><?php
@@ -656,10 +789,8 @@ $linkwithwhat =
                         } else { ?>
                             <input type="hidden" id="entity_id_<?php echo $j; ?>" value="<?php echo $entities[$j]['ID'];?>" />
                             <select name="role" id="entity_role_<?php echo $j; ?>"><?php 
-                            foreach($roles as $role_id => $role_config) { 
-                                if($role_config['allow_entities']) { ?>
-                                    <option value="<?php echo $role_id; ?>"><?php echo $role_config['role_label']; ?></option><?php 
-                                }
+                            foreach($roles as $role_id => $role_label) { ?>
+                                <option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
                             } ?>
                             </select>&nbsp;
                             <span onclick="add_entity(<?php echo $j; ?>);" class="change"/> 

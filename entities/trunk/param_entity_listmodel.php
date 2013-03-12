@@ -26,7 +26,7 @@ require_once 'modules'. DIRECTORY_SEPARATOR
     .'class_manage_listdiff.php';
     
 $listdiff = new diffusion_list();
-$roles = $listdiff->get_listinstance_roles();
+$roles = $listdiff->get_workflow_roles();
 
 if($_SESSION['service_tag'] == 'entity_add')
 {
@@ -118,11 +118,11 @@ if($_SESSION['service_tag_form'] == 'formentity') {
 		</table>
 		<br/> <?php 
         }
-        foreach($roles as $role_id => $role_config) {
+        foreach($roles as $role_id => $role_label) {
             if(count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']) > 0
                 || count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']) > 0
             ) { ?>
-                <h2 class="sstit"><?php echo $role_config['list_label'];?></h2>
+                <h2 class="sstit"><?php echo $role_label;?></h2>
                 <table cellpadding="0" cellspacing="0" border="0" class="listingsmall liste_diff spec">
                 <?php
                 $color = ' class="col"';

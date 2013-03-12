@@ -22,7 +22,7 @@ $page_id = "amdin_listmodel";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 
 $difflist = new diffusion_list();
-$roles = $difflist->get_listinstance_roles();
+$roles = $difflist->get_workflow_roles();
 $objectTypes = $difflist->get_listmodel_types();
 
 # Load listmodel into session
@@ -35,14 +35,14 @@ if(!isset($_SESSION['m_admin']['entity']['listmodel'])) {
     # Listmodel to be loaded (up action on list or reload in add mode)
     $objectType = trim(strtok($_REQUEST['id'], '|'));
     $objectId = strtok('|');
-    $collId = strtok('|');
     
     $_SESSION['m_admin']['entity']['listmodel_info'] =
         $difflist->select_listmodel(
             $objectType,
             $objectId
         );
-        
+    
+    $collId = $_SESSION['m_admin']['entity']['listmodel_info']['coll_id'];
     $listmodelType = $_SESSION['m_admin']['entity']['listmodel_info']['listmodel_type'];
     $description =  $_SESSION['m_admin']['entity']['listmodel_info']['description'];
     
@@ -249,11 +249,11 @@ if($_REQUEST['mode'] != 'del') { ?>
 	</table>
 	<br/> <?php 
     }
-    foreach($roles as $role_id => $role_config) {
+    foreach($roles as $role_id => $role_label) {
         if(count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']) > 0
             || count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']) > 0
         ) { ?>
-            <h2 class="sstit"><?php echo $role_config['list_label'];?></h2>
+            <h2 class="sstit"><?php echo $role_label;?></h2>
             <table cellpadding="0" cellspacing="0" border="0" class="listingsmall liste_diff spec">
             <?php
             $color = ' class="col"';
@@ -332,13 +332,13 @@ if($_REQUEST['mode'] != 'del') { ?>
                 <textarea id="description"><?php echo $description; ?></textarea>
             </td>
         </tr>
-        <tr>
+        <tr style="display:none;">
             <td >
                 <label for="collId" ><?php echo _COLL_ID; ?>: </label>
             </td>
             <td>
                 <select id="collId" style="width:300px;">
-                    <option value="" ><?php echo _SELECT_COLL_ID; ?></option><?php
+                    <option value="any" ><?php echo _SELECT_COLL_ID; ?></option><?php
                     foreach($_SESSION['collections'] as $collection) { ?>
                     <option value="<?php echo $collection['id']; ?>" <?php if($collId == $collection['id']) echo "selected='true'"; ?> ><?php echo $collection['label']; ?></option><?php
                     } ?>
