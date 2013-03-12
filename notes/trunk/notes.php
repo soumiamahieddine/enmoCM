@@ -212,7 +212,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                     }
                     if($tab[$i][$j][$value]=="note_text")
                     {
-                        $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
+                        $tab[$i][$j]["value"] = addslashes($tab[$i][$j]["value"]);
                         $tab[$i][$j]["label"]=_NOTES;
                         $tab[$i][$j]["size"]=$sizeText;
                         $tab[$i][$j]["label_align"]="left";

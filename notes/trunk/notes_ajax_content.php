@@ -371,7 +371,7 @@ switch ($mode) {
                     $date = $request->current_datetime();
 
                     $request->query(
-                        "UPDATE ".NOTES_TABLE." SET note_text = '". addslashes($notes)
+                        "UPDATE ".NOTES_TABLE." SET note_text = '". $notes
                         . "', date_note = " . $date . " WHERE id = "
                         . $id
                     );
@@ -443,13 +443,13 @@ switch ($mode) {
                 );
                 if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "folder") {
                     $hist->add(
-                        $table, $identifier, "DEL", 'folderup', _NOTES_DELETED . _ON_FOLDER_NUM
+                        $table, $identifier, "UP", 'folderup', _NOTES_DELETED . _ON_FOLDER_NUM
                         . $identifier . ' (' . $id . ')',
                         $_SESSION['config']['databasetype'], 'notes'
                     );
                 } else if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "document") {
                     $hist->add(
-                        $view, $identifier, "DEL", 'notedel',  _NOTES_DELETED . _ON_DOC_NUM
+                        $view, $identifier, "UP", 'resup',  _NOTES_DELETED . _ON_DOC_NUM
                         . $identifier . ' (' . $id . ')',
                         $_SESSION['config']['databasetype'], 'notes'
                     );
