@@ -273,6 +273,7 @@ class resources_controler
                     if ($data[$i]['value'] == '') {
                         $data[$i]['value'] = '0';
                     }
+                    $data[$i]['value'] = str_replace(',' , '.', $data[$i]['value']);
                 }
                 //COLUMN
                 $data[$i]['column'] = strtolower($data[$i]['column']);
