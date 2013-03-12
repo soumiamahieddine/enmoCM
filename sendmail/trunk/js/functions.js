@@ -49,70 +49,66 @@ function validEmailForm (path, form_id) {
     });
 }
 
-var adress = { 
-    adresses : [],
-    modifyAdress : function(id, value) {
-        var index = this.adresses.indexOf(this.adresses[id]);
-        if(index < 0) {
-            return;
-        }
-        this.adresses[index].value = this.adresses[id].value = value;
-    },
-    addAdress : function(id, value) { 
-        if(this.adresses[id]) { 
-            this.modifyAdress(id, value);
-            return;
-        }
-        this.adresses[id] = { 
-            id : id, 
-            value : value,
-            toString : function() { 
-                return "\"" + this.id + "\" <" + this.value + ">"; 
-            },
-        };
-        this.adresses.push(this.adresses[id]);
-    },
-    removeAdress : function(id) { 
-        if(!this.adresses[id]) return;
-        this.adresses.splice(this.adresses.indexOf(this.adresses[id]), 1);
-        delete this.adresses[id];
-    },
-    toString : function() {
-        return this.adresses.join(", ");
-    },
-};
+var MyAjax = { };
+MyAjax.Autocompleter = Class.create(Ajax.Autocompleter, {
+    updateChoices: function(choices) {
+        if(!this.changed && this.hasFocus) {
+            this.update.innerHTML = choices;
+            Element.cleanWhitespace(this.update);
+            Element.cleanWhitespace(this.update.down());
+            if(this.update.firstChild && this.update.down().childNodes) {
+                this.entryCount = this.update.down().childNodes.length;
+                for (var i = 0; i < this.entryCount; i++) {
+                    var entry = this.getEntry(i);
+                    entry.autocompleteIndex = i;
+                    this.addObservers(entry);
+                }
+            } else {
+                this.entryCount = 0;
+            }
+            this.stopIndicator();
+            this.index = -1;
 
+            if(this.entryCount==1 && this.options.autoSelect) {
+                this.selectEntry();
+                this.hide();
+            } else {
+                this.render();
+            }
+        }
+    }
+});
 var addEmailAdress = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv) {
-     new Ajax.Autocompleter(
+     new MyAjax.Autocompleter(
          idField,
          idList,
          theUrlToListScript,
          {
              paramName: paramNameSrv,
              minChars: minCharsSrv,
-             afterUpdateElement:extractEmailAdress
+             tokens: ',',
+             // afterUpdateElement:extractEmailAdress,
+             updateElement:updateAdresses
          });
  };
- 
-var savedArray = new Array();
-function saveField(field) {
-    savedArray = field.value.split(", ");
-   
-    for (var i = 0; i < savedArray.length; i++) {
-        
-        if (validateEmail(savedArray[i]) === false) {
-            alert("NOK: " + savedArray[i]);
-        } else {
-            alert("OK: " + savedArray[i]);
-        }
-    }
+var previous;
+updateAdresses = function(item){
+    var fullAdress = item.innerHTML;
+    var email = fullAdress.match(/\(([^)]+)\)/)[1];
+    var fromField = item.getAttribute('field', 0);
+    Form.Element.clear(fromField);
+    Form.Element.setValue(fromField, previous + ", " + email);
+    previous = Form.Element.getValue(fromField);    
 }
 
 function extractEmailAdress(field, item) {
     var fullAdress = item.innerHTML;
     var email = fullAdress.match(/\(([^)]+)\)/)[1];
-    adress.addAdress(email, email);
-    field.value = adress.toString();
+     Form.Element.clear(field);
+     Form.Element.setValue(field, previous + ", " + email);
+    previous = Form.Element.getValue(field);
+   
+     
 }
 
 function validateEmail(email) { 

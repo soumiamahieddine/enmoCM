@@ -31,6 +31,8 @@
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $db = new dbquery();
 $db->connect();
+
+$field = $_REQUEST['field'];
 $listArray = array();
 $db->query("select lastname, firstname, user_id, mail from ".$_SESSION['tablename']['users']
 	." where lower(lastname) like lower('%".$db->protect_string_db($_REQUEST['what'])."%') and enabled = 'Y' order by lastname, firstname");
@@ -55,7 +57,7 @@ while($line = $db->fetch_object())
                 . " WHEN is_corporate_person = 'Y' THEN society"
                 . " WHEN is_corporate_person = 'N' THEN UPPER(lastname) || ' ' || firstname "
             . " END) || ' (' || email || ')' AS result, "
-            . ' %d AS confidence'
+            . ' %d AS confidence, email'
         . " FROM contacts"
         . " WHERE (user_id = '' OR user_id IS NULL OR user_id = '".$db->protect_string_db($_SESSION['user']['UserId'])."' ) "
             . " AND enabled = 'Y' AND email <> ''"
@@ -105,7 +107,7 @@ while($line = $db->fetch_object())
         $score = round($res->score / $num_args);
         if($i%2==1) $color = 'LightYellow';
         else $color = 'white';
-        echo "<li style='font-size: 8pt; background-color:$color;' title='confiance:".$score."%'>". $res->result ."</li>";
+        echo "<li style='font-size: 8pt; background-color:$color;' title='confiance:".$score."%' id='".$res->email."' field='".$field."'>". $res->result ."</li>";
     }
     if($nb == 0) echo "<li></li>";
     echo "</ul>";

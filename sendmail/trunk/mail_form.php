@@ -110,21 +110,22 @@ if ($mode == 'add') {
     $content .= '</tr>';
     $content .= '<tr>';
     $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk">*</span><a><label>'._SEND_TO_SHORT.'</label></a></td>';
-    $content .= '<td width="90%"><input type="text" name="to" id="to" class="emailInput" value="" /></td>';
+    $content .= '<td width="90%"><input type="text" name="to" id="to" class="emailInput" value="" />';
     // $content .= '<td width="90%"><input type="text" name="to" id="to" class="emailInput" value="" onBlur="saveField(this)" />';
     $content .= '<div id="toList" class="autocomplete"></div>';
-    $content .= '<script type="text/javascript">';
-    $content .= 'addEmailAdress(\'to\', \'toList\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=sendmail&page=adresss_autocomletion\', \'what\', \'2\');';
-    $content .= '</script>';
     $content .= '</td>';
     $content .= '</tr>';
     $content .= '<tr>';
     $content .= '<td align="right" nowrap><a><label>'._COPY_TO_SHORT.'</label></a></td>';
-    $content .= '<td><input type="text" name="cc" id="cc" class="emailInput" value="" /></td>';
+    $content .= '<td><input type="text" name="cc" id="cc" class="emailInput" value="" />';
+    $content .= '<div id="ccList" class="autocomplete"></div>';
+    $content .= '</td>';
     $content .= '</tr>';
     $content .= '<tr>';
     $content .= '<td align="right" nowrap><a><label>'._COPY_TO_INVISIBLE_SHORT.'</label></a></td>';
-    $content .= '<td><input type="text" name="cci" id="cci" class="emailInput" value="" /></td></tr>';
+    $content .= '<td><input type="text" name="cci" id="cci" class="emailInput" value="" />';
+    $content .= '<div id="cciList" class="autocomplete"></div>';
+    $content .= '</td>';
     $content .= '</tr>';
     $content .= '<tr>';
     $content .= '<td align="right" nowrap><span class="red_asterisk">*</span><label>'._OBJECT.' </label></td>';
@@ -293,17 +294,17 @@ if ($mode == 'add') {
             $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk">*</span><a><label>'
                 ._SEND_TO_SHORT.'</label></a></td>';
             $content .= '<td width="90%"><input type="text" name="to" id="to" class="emailInput" value="'
-                .(join(',', $emailArray['to'])).'" /></td>';
+                .(join(',', $emailArray['to'])).'" /><div id="toList" class="autocomplete"></div></td>';
             $content .= '</tr>';
             $content .= '<tr>';
             $content .= '<td align="right" nowrap><a><label>'._COPY_TO_SHORT.'</label></a></td>';
             $content .= '<td><input type="text" name="cc" id="cc" class="emailInput" value="'
-                .(join(',', $emailArray['cc'])).'" /></td>';
+                .(join(',', $emailArray['cc'])).'" /><div id="ccList" class="autocomplete"></div></td>';
             $content .= '</tr>';
             $content .= '<tr>';
             $content .= '<td align="right" nowrap><a><label>'._COPY_TO_INVISIBLE_SHORT.'</label></a></td>';
             $content .= '<td><input type="text" name="cci" id="cci" class="emailInput" value="'
-                .(join(',', $emailArray['cci'])).'" /></td></tr>';
+                .(join(',', $emailArray['cci'])).'" /><div id="cciList" class="autocomplete"></div></td></tr>';
             $content .= '</tr>';
             $content .= '<tr>';
             $content .= '<td align="right" nowrap><span class="red_asterisk">*</span><label>'._MAIL_OBJECT.' </label></td>';
@@ -483,6 +484,20 @@ if ($mode == 'add') {
     }
 }
 
+//Autocompletion javascript
+if ($mode == 'add' || $mode == 'up') {
+    $content .= '<script type="text/javascript">';
+    $content .= 'addEmailAdress(\'to\', \'toList\', \''
+        .$_SESSION['config']['businessappurl']
+        .'index.php?display=true&module=sendmail&page=adresss_autocomletion&field=to\', \'what\', \'2\');';
+    $content .= 'addEmailAdress(\'cc\', \'ccList\', \''
+        .$_SESSION['config']['businessappurl']
+        .'index.php?display=true&module=sendmail&page=adresss_autocomletion&field=cc\', \'what\', \'2\');';
+    $content .= 'addEmailAdress(\'cci\', \'cciList\', \''
+        .$_SESSION['config']['businessappurl']
+        .'index.php?display=true&module=sendmail&page=adresss_autocomletion&field=cci\', \'what\', \'2\');';
+    $content .= '</script>';
+}
 echo $content;
 
 ?></body></html>

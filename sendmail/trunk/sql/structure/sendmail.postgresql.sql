@@ -19,5 +19,3 @@ CREATE TABLE app_emails
   send_date timestamp without time zone DEFAULT NULL,
   CONSTRAINT app_emails_pkey PRIMARY KEY (email_id )
  );
- 
-CREATE INDEX app_emails_res_id_ndx ON app_emails(res_id);
