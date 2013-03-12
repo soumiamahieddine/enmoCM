@@ -39,7 +39,8 @@ class attachments_controler
     #####################################
     ## Attachment on a resource
     #####################################
-    public function storeAttachmentResource($resId, $collId, $encodedContent, $fileFormat, $fileName)
+    //add datas to have the subject
+    public function storeAttachmentResource($resId, $collId, $encodedContent, $fileFormat, $title)
     {
         require_once 'core/class/class_request.php';
         require_once 'core/class/class_resource.php';
@@ -53,7 +54,7 @@ class attachments_controler
                . $resId;
         $db->query($query);
         if ($db->nb_result() == 0) {
-            $status = 'ko';
+            $returnCode = -2;
             $error .= 'res_id inexistant';
         } else {
             $fileContent = base64_decode($encodedContent);
@@ -69,7 +70,7 @@ class attachments_controler
                $collId
             );
             if (empty($docserver)) {
-                $status = 'ko';
+                $returnCode = -3;
                 $error = _DOCSERVER_ERROR . ' : '
                     . _NO_AVAILABLE_DOCSERVER . ". " . _MORE_INFOS . ".";
             } else {
@@ -77,7 +78,7 @@ class attachments_controler
                     $docserver, $_SESSION['upfile']['size']
                 );
                 if ($newSize == 0) {
-                    $status = 'ko';
+                    $returnCode = -4;
                     $error = _DOCSERVER_ERROR . ' : '
                         . _NOT_ENOUGH_DISK_SPACE . ". " . _MORE_INFOS . ".";
                 } else {
@@ -92,7 +93,7 @@ class attachments_controler
                         $collId, $fileInfos
                     );
                     if (isset($storeResult['error']) && $storeResult['error'] <> '') {
-                        $status = 'ko';
+                        $returnCode = -5;
                         $error = $storeResult['error'];
                     } else {
                         unlink($Fnm);
@@ -150,7 +151,7 @@ class attachments_controler
                             $_SESSION['data'],
                             array(
                                 'column' => "title",
-                                'value' => strtolower($fileName),
+                                'value' => strtolower($title),
                                 'type' => "string",
                             )
                         );
@@ -205,10 +206,10 @@ class attachments_controler
                             $_SESSION['config']['databasetype']
                         );
                         if ($id == false) {
-                            $status = 'ko';
+                            $returnCode = -6;
                             $error = $resAttach->get_error();
                         } else {
-                            $status = 'ok';
+                            $returnCode = 0;
                             if ($_SESSION['history']['attachadd'] == "true") {
                                 $users = new history();
                                 $view = $sec->retrieve_view_from_coll_id(
@@ -224,7 +225,7 @@ class attachments_controler
                                 );
                                 $users->add(
                                     RES_ATTACHMENTS_TABLE, $id, "ADD",'attachadd',
-                                    _NEW_ATTACH_ADDED . " (" . $fileName
+                                    _NEW_ATTACH_ADDED . " (" . $title
                                     . ") ",
                                     $_SESSION['config']['databasetype'],
                                     'attachments'
@@ -236,8 +237,8 @@ class attachments_controler
             }
         }
         $returnArray = array(
-            'status' => $status,
-            'value' => $id,
+            'returnCode' => (int) $returnCode,
+            'resId' => $id,
             'error' => $error,
         );
         return $returnArray;
