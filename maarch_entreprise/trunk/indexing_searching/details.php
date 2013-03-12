@@ -968,7 +968,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <dd><?php
                         require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
                         $diff_list = new diffusion_list();
-                        $roles = $diff_list->get_listinstance_roles();
+                        $roles = $diff_list->get_workflow_roles();
                         $_SESSION['details']['diff_list'] = array();
                         $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id);
                         //$db->show_array($_SESSION['details']['diff_list']);
@@ -1023,11 +1023,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <?php
                             }
 
-                            foreach($roles as $role_id => $role_config) {
+                            foreach($roles as $role_id => $role_label) {
                                 if (count($_SESSION['details']['diff_list'][$role_id]['users']) > 0 
                                     || count($_SESSION['details']['diff_list'][$role_id]['entities']) > 0
                                 ) { ?>
-                                    <p class="sstit"><?php echo $role_config['list_label'];?></p>
+                                    <p class="sstit"><?php echo $role_label;?></p>
                                     <table cellpadding="0" cellspacing="0" border="0" class="listing">
                                     <?php $color = ' class="col"';
                                     for($i=0;$i<count($_SESSION['details']['diff_list'][$role_id]['entities']);$i++)
