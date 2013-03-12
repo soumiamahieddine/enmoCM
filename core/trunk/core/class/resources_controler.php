@@ -152,7 +152,7 @@ class resources_controler
         $typeIdFound = false;
         $toAddressFound = false;
         for ($i=0;$i<count($data);$i++) {
-            if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'INTEGER') {
+            if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'FLOAT') {
                 if ($data[$i]['value'] == '') {
                     $data[$i]['value'] = '0';
                 }
