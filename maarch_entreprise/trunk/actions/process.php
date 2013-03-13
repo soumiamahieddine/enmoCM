@@ -309,7 +309,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $req->connect();
         $req->query("select res_id from "
             . $_SESSION['tablename']['attach_res_attachments']
-            . " where status <> 'DEL' and res_id_master = " . $res_id);
+            . " where status <> 'DEL' and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
         if ($req->nb_result() > 0) {
             $nb_attach = $req->nb_result();
         }
@@ -616,7 +616,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $req = new request;
                     $req->connect();
                     $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
-                        . " where status = 'NEW' and res_id_master = " . $res_id);
+                        . " where status = 'NEW' and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
                     //$req->show();
                     $nb_attach = 0;
                     if ($req->nb_result() > 0) {

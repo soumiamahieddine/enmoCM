@@ -125,7 +125,7 @@ function check_category($coll_id, $res_id)
  * @param $mode String Action mode 'mass' or 'page'
  * @return String The form content text
  **/
-function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
+function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode)
 {
     if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
         $browser_ie = true;
@@ -142,6 +142,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     $_SESSION['req'] = "action";
     $res_id = $values[0];
+    $_SESSION['doc_id'] = $res_id;
     $frm_str = '';
     require_once('core/class/class_security.php');
     require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_business_app_tools.php');
@@ -240,53 +241,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
 
             $frm_str .= '<div  style="display:block">';
-    
-    if ($core_tools->is_module_loaded('notes')) {
-        $frm_str .= '<hr width="90%" align="center"/>';
-         // Displays the notes
-        $select_notes[$_SESSION['tablename']['users']] = array();
-        array_push($select_notes[$_SESSION['tablename']['users']],"user_id","lastname","firstname");
-        $select_notes[$_SESSION['tablename']['not_notes']] = array();
-        array_push($select_notes[$_SESSION['tablename']['not_notes']],"id", "date_note", "note_text", "user_id");
-        $where_notes = " identifier = ".$res_id." ";
-        $_SESSION['doc_id'] = $res_id;
-        $request_notes = new request;
-        $tab_notes=$request_notes->select(
-            $select_notes,
-            $where_notes,
-            "order by " . $_SESSION['tablename']['not_notes'] . ".date_note desc",
-            $_SESSION['config']['databasetype'], 
-            "500", 
-            true, 
-            $_SESSION['tablename']['not_notes'], 
-            $_SESSION['tablename']['users'], 
-            "user_id"
-        );
-        
-        $frm_str .= '<h4 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});'
-        . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');" '
-        . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
-        $frm_str .= ' <span id="divStatus_notes_div" style="color:#1C99C5;"><<</span>&nbsp;' 
-            ._NOTES . " (" . count($tab_notes) . ")";
-        $frm_str .= '</h4>';
-        $frm_str .= '<div id="notes_div"  style="display:none">';
-                $frm_str .= '<div class="ref-unit">';
-                $frm_str .= '<div style="text-align:center;">';
-                $frm_str .= '<img src="'.$_SESSION['config']['businessappurl'] 
-                    . 'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
-                                    $frm_str .= '<a href="javascript://" onclick="ouvreFenetre(\'' 
-                                        . $_SESSION['config']['businessappurl'] 
-                                        . 'index.php?display=true&module=notes&page=note_add&identifier=' 
-                                        . $res_id . '&coll_id=' . $_SESSION['collection_id_choice'].'\', 450, 300)" >';
-                                        $frm_str .= _ADD_NOTE;
-                                    $frm_str .= '</a>';
-                    $frm_str .= '</div>';
-                $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="' 
-                    . $_SESSION['config']['businessappurl'].'index.php?display=true&module=notes'
-                    . '&page=frame_notes_doc" frameborder="0" width="430px" height="150px"></iframe>';
-        $frm_str .= '</div>';
-        $frm_str .= '</div>';
-    }
     
     $frm_str .= '<hr width="90%" align="center"/>';
     
@@ -459,6 +413,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . $display_value . ';">' . _CONTACT . '</span>'
             . '<span id="contact_label_human_resources" style="display:' 
                 . $display_value . ';">' . _EMPLOYEE . '</span></a>';
+
     if ($_SESSION['features']['personal_contact'] == "true"
        // && $core->test_service('my_contacts', 'apps', false)
     ) {
@@ -469,6 +424,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . $_SESSION['config']['businessappurl'] . 'static.php?filename='
                 . 'modif_liste.png" alt="' . _CREATE_CONTACT . '"/></a>';
     }
+
     $frm_str .= '</label></td>';
     $frm_str .= '<td class="indexing_field"><input type="text" name="contact" '
             . 'id="contact" onblur="clear_error(\'frm_error_' . $id_action . '\');'
@@ -774,120 +730,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<div id="complementary_fields"  style="display:none">';
     $frm_str .= '<div>';
     
-    if ($core->test_service('index_attachment', 'attachments', false)) {
-        require_once 'core/class/LinkController.php';
-        $Class_LinkController = new LinkController();
-            $nbLink = $Class_LinkController->nbDirectLink(
-                $res_id,
-                $coll_id,
-                'all'
-            );
-            $Links = '';
-            $Links .= '<div style="text-align:center;">';
-            $Links .= '<div id="loadLinks">';
-                $nbLinkDesc = $Class_LinkController->nbDirectLink(
-                    $res_id,
-                    $coll_id,
-                    'desc'
-                );
-                if ($nbLinkDesc > 0) {
-                    $Links .= '<img src="static.php?filename=cat_doc_incoming.gif" />';
-                    $Links .= $Class_LinkController->formatMap(
-                        $Class_LinkController->getMap(
-                            $res_id,
-                            $coll_id,
-                            'desc'
-                        ),
-                        'desc'
-                    );
-                    $Links .= '<br />';
-                }
-
-                $nbLinkAsc = $Class_LinkController->nbDirectLink(
-                    $res_id,
-                    $coll_id,
-                    'asc'
-                );
-                if ($nbLinkAsc > 0) {
-                    $Links .= '<img src="static.php?filename=cat_doc_outgoing.gif" />';
-                    $Links .= $Class_LinkController->formatMap(
-                        $Class_LinkController->getMap(
-                            $res_id,
-                            $coll_id,
-                            'asc'
-                        ),
-                        'asc'
-                    );
-                    $Links .= '<br />';
-                }
-            $Links .= '</div>';
-        $Links .= '</div>';
-
-        $frm_str .= $Links;
-        
-        $frm_str .= '<table width="100%" align="center" border="0" >';
-        $frm_str .= '<tr id="attachment_tr" style="display:' . $displayValue
-                . ';">';
-        $frm_str .= '<td style="width:24px;align:left;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'link.png" alt="' . _LINK_TO_DOC . '" title="' . _LINK_TO_DOC . '"/>'
-            . '</td><td><label for="attachment" class="form_title" >'
-                . _LINK_TO_DOC . ' : </label></td>';
-        $frm_str .= '<td class="indexing_field"><input type="radio" '
-                . 'name="attachment" id="attach" value="true" '
-                . 'onclick="show_attach(\'true\');"'
-                . ' /> '
-                . _YES . ' <input type="radio" name="attachment" id="no_attach"'
-                . ' value="false" checked="checked" '
-                . 'onclick="show_attach(\'false\');"'
-                . ' /> '
-                . _NO . '</td>';
-        $frm_str .= ' <td><span class="red_asterisk" id="attachment_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
-        $frm_str .= '</tr>';
-
-        $frm_str .= '<tr id="attach_show" style="display:none;">';
-            $frm_str .= '<td>&nbsp;</td>';
-            $frm_str .= '<td style="text-align: right;">';
-                $frm_str .= '<a ';
-                  $frm_str .= 'href="javascript://" ';
-                  $frm_str .= 'onclick="window.open(';
-                    $frm_str .= '\'' . $_SESSION['config']['businessappurl'] 
-                        . 'index.php?display=true&dir=indexing_searching&page=search_adv_business&mode=popup'
-                        . '&action_form=show_res_id&modulename=attachments&init_search&nodetails\', ';
-                    $frm_str .= '\'search_doc_for_attachment\', ';
-                    $frm_str .= '\'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775\'';
-                  $frm_str .= ');"';
-                  $frm_str .= ' title="' . _SEARCH . '"';
-                $frm_str .= '>';
-                    $frm_str .= '<span style="font-weight: bold;">';
-                        $frm_str .= '<img ';
-                          $frm_str .= 'src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=folder_search.gif" ';
-                          $frm_str .= 'width="20px" ';
-                          $frm_str .= 'height="20px" ';
-                        $frm_str .= '/>';
-                    $frm_str .= '</span>';
-                $frm_str .= '</a>';
-            $frm_str .= '</td>';
-            $frm_str .= '<td style="text-align: right;">';
-                $frm_str .= '<input ';
-                  $frm_str .= 'type="text" ';
-                  $frm_str .= 'name="res_id" ';
-                  $frm_str .= 'id="res_id" ';
-                  $frm_str .= 'class="readonly" ';
-                  $frm_str .= 'readonly="readonly" ';
-                  $frm_str .= 'value="" ';
-                $frm_str .= '/>';
-            $frm_str .= '</td>';
-            $frm_str .= '<td>';
-                $frm_str .= '<span class="red_asterisk" id="category_id_mandatory" style="display:inline;">';
-                    $frm_str .= '*';
-                $frm_str .= '</span>';
-            $frm_str .= '</td>';
-        $frm_str .= '</tr>';
-        $frm_str .= '</table>';
-    }
-    
     $frm_str .= '<table width="100%" align="center" border="0" '
         . 'id="indexing_fields" style="display:block;">';
 
@@ -918,7 +760,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     $frm_str .= '</div>';
     $frm_str .= '</div>';
-    
+
     /*** Actions ***/
     $frm_str .= '<hr width="90%" align="center"/>';
     $frm_str .= '<p align="center">';
@@ -953,193 +795,422 @@ $frm_str .= '</div>';
 $frm_str .= '</div>';
 $frm_str .= '</div>';
 
-        /*** Frame to display the doc ***/
         $frm_str .= '<div id="validright">';
-        $frm_str .= '<div id="create_contact_div" style="display:none">';
-            $frm_str .= '<div>';
-                $frm_str .= '<fieldset style="border:1px solid;">';
-            $frm_str .= '<legend ><b>'._CREATE_CONTACT.'</b></legend>';
-    $frm_str .= '<form name="indexingfrmcontact" id="indexingfrmcontact" method="post" action="' 
-        . $_SESSION['config']['businessappurl'].'index.php?display=true&mpage=contact_info" >';
-            $frm_str .= '<table>';
-                $frm_str .= '<tr>';
-                    $frm_str .= '<td colspan="2">';
-                        $frm_str .= '<label for="is_corporate">'._IS_CORPORATE_PERSON.' : </label>';
-                    $frm_str .= '</td>';
-                    $frm_str .= '<td colspan="2">';
-                        $frm_str .='<input type="radio" class="check" name="is_corporate" id="is_corporate_Y" value="Y" ';
-                            $frm_str .=' checked="checked"';
-                        $frm_str .= 'onclick="javascript:show_admin_contacts(true, \''.$display_value.'\');">'._YES;
-                        $frm_str .='<input type="radio" id="is_corporate_N" class="check" name="is_corporate" value="N"';
-                        $frm_str .=' onclick="javascript:show_admin_contacts( false, \''.$display_value.'\');"/>'._NO;
-                    $frm_str .= '</td>';
-                $frm_str .= '</tr>';
-                $frm_str .= '<tr id="title_p" style="display:';
-                     $frm_str .= $display_value;
-                $frm_str .='">';
-                    $frm_str .= '<td  colspan="2">';
-                        $frm_str .='<label for="title">'._TITLE2.' : </label>';
-                    $frm_str .= '</td>';
-                    $frm_str .= '<td colspan="2" >';
-                        $frm_str .='<select name="title" id="title" >';
-                            $frm_str .='<option value="">'._CHOOSE_TITLE.'</option>';
-                            foreach(array_keys($titles) as $key)
-                            {
-                                $frm_str .='<option value="'.$key.'" ';
-                                if ($key == $default_title)
-                                {
-                                    $frm_str .= 'selected="selected"';
-                                }
-                                $frm_str .='>'.$titles[$key].'</option>';
-                            }
-                        $frm_str .='</select>';
-                    $frm_str .= '</td>';
-                $frm_str .= '</tr>';
-         $frm_str .= '<tr id="lastname_p" style="display:';
-                $frm_str .= $display_value;
-            $frm_str .='">';
-                $frm_str .= '<td colspan="2">';
-                        $frm_str .='<label for="lastname">'._LASTNAME.' : </label>';
-                $frm_str .= '</td>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<input name="lastname" type="text"  id="lastname" value="" /> ';
-                    $frm_str .='<span class="red_asterisk" id="lastname_mandatory" style="display:inline;">*</span>';
-                $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-            $frm_str .= '<tr id="firstname_p" style="display:';
-                $frm_str .= $display_value;
-            $frm_str .='">';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<label for="firstname">'._FIRSTNAME.' : </label>';
-                $frm_str .= '</td>';
-                $frm_str .= '<td colspan="2">';
-                $frm_str .='<input name="firstname" type="text"  id="firstname" value=""/>';
-                $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-
-            $frm_str .= '<tr>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<label for="society">'._SOCIETY.' : </label>';
-                $frm_str .= '</td>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<input name="society" type="text"  id="society" value="" />';
-                    $frm_str .='<span class="red_asterisk" id="society_mandatory" style="display:inline;">*</span>';
-                $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-
-            $frm_str .= '<tr id="function_p" style="display:';
-                $frm_str .= 'block';
-            $frm_str .='">';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<label for="function">'._FUNCTION.' : </label>';
-                $frm_str .= '</td>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<input name="function" type="text"  id="function" value="" />';
-                $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-            $frm_str .= '<tr>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<label for="phone">'._PHONE.' : </label>';
-                $frm_str .= '</td>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<input name="phone" type="text"  id="phone" value="" />';
-                $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-
-            $frm_str .= '<tr>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<label for="mail">'._MAIL.' : </label>';
-                $frm_str .= '</td>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<input name="mail" type="text" id="mail" value="" />';
-                $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-
-            $frm_str .= '<tr>';
-                $frm_str .= '<td>';
-                    $frm_str .='<label for="num">'._NUM.' : </label>';
-                $frm_str .= '</td>';
-                $frm_str .= '<td>';
-                    $frm_str .='<input name="num" type="text" class="small"  id="num" value="" />';
-                $frm_str .= '</td>';
-                $frm_str .= '<td>';
-                    $frm_str .='<label for="street">'._STREET.' : </label>';
-                $frm_str .= '</td>';
-                $frm_str .= '<td>';
-                    $frm_str .='<input name="street" type="text" class="medium"  id="street" value="" />';
-                $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-
-            $frm_str .= '<tr>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<label for="add_comp">'._COMPLEMENT.' : </label>';
-                $frm_str .= '</td>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<input name="add_comp" type="text"  id="add_comp" value="" />';
-                $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-
-            $frm_str .= '<tr>';
-                $frm_str .= '<td>';
-                    $frm_str .='<label for="cp">'._POSTAL_CODE.' : </label>';
-                $frm_str .= '</td>';
-                $frm_str .= '<td>';
-                    $frm_str .='<input name="cp" type="text" id="cp" value="" class="small" />';
-                $frm_str .= '</td>';
-                $frm_str .= '<td>';
-                    $frm_str .='<label for="town">'._TOWN.' : </label>';
-                $frm_str .= '</td>';
-                $frm_str .= '<td>';
-                    $frm_str .='<input name="town" type="text" id="town" value="" class="medium" />';
-                $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-
-            $frm_str .= '<tr>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<label for="country">'._COUNTRY.' : </label>';
-                $frm_str .= '</td>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<input name="country" type="text"  id="country" value="" />';
-                $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-
-            $frm_str .= '<tr>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<label for="comp_data">'._COMP_DATA.' : </label>';
-                $frm_str .= '</td>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<textarea name="comp_data" id="comp_data" ></textarea>';
-                $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-            
-            $frm_str .= '<tr>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .='<label for="is_private">'._IS_PRIVATE.' : </label>';
-                $frm_str .= '</td>';
-                $frm_str .= '<td colspan="2">';
-                    $frm_str .= '<input type="radio" class="check" name="is_private" '
-                            . 'id="is_private" value="Y"/>' . _YES;
-                    $frm_str .= '<input type="radio" id="is_private_N" class="check" '
-                            . 'name="is_private" value="N" checked="checked"/>' . _NO;
-                $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-            
+        
+        /*** TOOLBAR ***/
+        $frm_str .= '<div class="block" align="center" style="height:10px;width=95%;">';
+        
+        $frm_str .= '<table width="95%" cellpadding="0" cellspacing="0">';
+        $frm_str .= '<tr align="center">';
+        
+        //CONTACT
+        
+         if ($_SESSION['features']['personal_contact'] == "true"
+        ) {
+            $frm_str .= '<td>';
+            $frm_str .= '|<span onclick="new Effect.toggle(\'create_contact_div\', \'appear\', {delay:0.2});'
+                . 'whatIsTheDivStatus(\'create_contact_div\', \'divStatus_create_contact_div\');return false;" '
+                . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+            $frm_str .= ' <span id="divStatus_create_contact_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+                . _CREATE_CONTACT;
+            $frm_str .= '</b></span>&nbsp;|';
+            $frm_str .= '</td>';
+        }
+        
+        //NOTE
+        if ($core_tools->is_module_loaded('notes')) {
+            $frm_str .= '<td>';
+            require_once 'modules/notes/class/class_modules_tools.php';
+            $notes_tools    = new notes();
+            //Count notes
+            $nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
+            $nbr_notes = ' ('.$nbr_notes.')';
+            $frm_str .= '|<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
+                . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
+                . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+            $frm_str .= ' <span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+                . _NOTES . $nbr_notes;
+            $frm_str .= '</b></span>&nbsp;|';
+            $frm_str .= '</td>';
+        }
+        
+        //ATTACHMENTS
+        if ($core_tools->is_module_loaded('attachments')) {
+            $frm_str .= '<td>';
+            $req = new request;
+            $req->connect();
+            $req->query("select res_id from "
+                . $_SESSION['tablename']['attach_res_attachments']
+                . " where status <> 'DEL' and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
+            if ($req->nb_result() > 0) {
+                $nb_attach = $req->nb_result();
+            } else {
+                $nb_attach = 0;
+            }
+            if ($answer <> '') {
+                $answer .= ': ';
+            }
+            $frm_str .= '|<span onclick="new Effect.toggle(\'list_answers_div\', \'appear\', {delay:0.2});'
+                . 'whatIsTheDivStatus(\'list_answers_div\', \'divStatus_done_answers_div\');return false;" '
+                . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+            $frm_str .= ' <span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+                . _PJ . ' (' . $answer .'<span id="nb_attach">' . $nb_attach . '</span>)';
+            $frm_str .= '</b></span>&nbsp;|';
+            $frm_str .= '</td>';
+        }
+        
+        //LINKS
+        $frm_str .= '<td>';
+        require_once('core/class/LinkController.php');
+        $Class_LinkController = new LinkController();
+        $nbLink = $Class_LinkController->nbDirectLink(
+            $res_id,
+            $coll_id,
+            'all'
+        );
+        $frm_str .= '|<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+             . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)';
+        $frm_str .= '</b></span>&nbsp;|';
+        $frm_str .= '</td>';
+        
+        //END TOOLBAR
         $frm_str .= '</table>';
-            $frm_str .='<div align="center">';
-                $frm_str .='<input name="submit" type="button" value="'._VALIDATE.'"  class="button" onclick="create_contact(\'' 
-                    . $_SESSION['config']['businessappurl'].'index.php?display=true&page=create_contact\', \''.$id_action.'\');" />';
-            $frm_str .=' <input name="cancel" type="button" value="'._CANCEL 
-                . '"  onclick="new Effect.toggle(\'create_contact_div\', \'blind\', {delay:0.2});clear_form(\'indexingfrmcontact\');return false;" class="button" />';
+        $frm_str .= '</div>';
+        
+        //FRAME FOR TOOLS
+        
+        //CONTACT CREATION
+        $frm_str .= '<div id="create_contact_div" style="display:none">';
+        $frm_str .= '<div>';
+        $frm_str .= '<fieldset style="border:1px solid;">';
+        $frm_str .= '<legend ><b>'._CREATE_CONTACT.'</b></legend>';
+        $frm_str .= '<form name="indexingfrmcontact" id="indexingfrmcontact" method="post" action="' 
+            . $_SESSION['config']['businessappurl'].'index.php?display=true&mpage=contact_info" >';
+        $frm_str .= '<table>';
+        $frm_str .= '<tr>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .= '<label for="is_corporate">'._IS_CORPORATE_PERSON.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<input type="radio" class="check" name="is_corporate" id="is_corporate_Y" value="Y" ';
+        $frm_str .=' checked="checked"';
+        $frm_str .= 'onclick="javascript:show_admin_contacts(true, \''.$display_value.'\');">'._YES;
+        $frm_str .='<input type="radio" id="is_corporate_N" class="check" name="is_corporate" value="N"';
+        $frm_str .=' onclick="javascript:show_admin_contacts( false, \''.$display_value.'\');"/>'._NO;
+        $frm_str .= '</td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<tr id="title_p" style="display:';
+        $frm_str .= $display_value;
+        $frm_str .='">';
+        $frm_str .= '<td  colspan="2">';
+        $frm_str .='<label for="title">'._TITLE2.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td colspan="2" >';
+        $frm_str .='<select name="title" id="title" >';
+        $frm_str .='<option value="">'._CHOOSE_TITLE.'</option>';
+        foreach (array_keys($titles) as $key) {
+            $frm_str .='<option value="'.$key.'" ';
+            if ($key == $default_title) {
+                $frm_str .= 'selected="selected"';
+            }
+            $frm_str .='>'.$titles[$key].'</option>';
+        }
+        $frm_str .='</select>';
+        $frm_str .= '</td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<tr id="lastname_p" style="display:';
+        $frm_str .= $display_value;
+        $frm_str .='">';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<label for="lastname">'._LASTNAME.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<input name="lastname" type="text"  id="lastname" value="" /> ';
+        $frm_str .='<span class="red_asterisk" id="lastname_mandatory" style="display:inline;">*</span>';
+        $frm_str .= '</td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<tr id="firstname_p" style="display:';
+        $frm_str .= $display_value;
+        $frm_str .='">';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<label for="firstname">'._FIRSTNAME.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<input name="firstname" type="text"  id="firstname" value=""/>';
+        $frm_str .= '</td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<tr>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<label for="society">'._SOCIETY.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<input name="society" type="text"  id="society" value="" />';
+        $frm_str .='<span class="red_asterisk" id="society_mandatory" style="display:inline;">*</span>';
+        $frm_str .= '</td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<tr id="function_p" style="display:';
+        $frm_str .= 'block';
+        $frm_str .='">';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<label for="function">'._FUNCTION.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<input name="function" type="text"  id="function" value="" />';
+        $frm_str .= '</td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<tr>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<label for="phone">'._PHONE.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<input name="phone" type="text"  id="phone" value="" />';
+        $frm_str .= '</td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<tr>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<label for="mail">'._MAIL.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<input name="mail" type="text" id="mail" value="" />';
+        $frm_str .= '</td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<tr>';
+        $frm_str .= '<td>';
+        $frm_str .='<label for="num">'._NUM.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td>';
+        $frm_str .='<input name="num" type="text" class="small"  id="num" value="" />';
+        $frm_str .= '</td>';
+        $frm_str .= '<td>';
+        $frm_str .='<label for="street">'._STREET.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td>';
+        $frm_str .='<input name="street" type="text" class="medium"  id="street" value="" />';
+        $frm_str .= '</td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<tr>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<label for="add_comp">'._COMPLEMENT.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<input name="add_comp" type="text"  id="add_comp" value="" />';
+        $frm_str .= '</td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<tr>';
+        $frm_str .= '<td>';
+        $frm_str .='<label for="cp">'._POSTAL_CODE.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td>';
+        $frm_str .='<input name="cp" type="text" id="cp" value="" class="small" />';
+        $frm_str .= '</td>';
+        $frm_str .= '<td>';
+        $frm_str .='<label for="town">'._TOWN.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td>';
+        $frm_str .='<input name="town" type="text" id="town" value="" class="medium" />';
+        $frm_str .= '</td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<tr>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<label for="country">'._COUNTRY.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<input name="country" type="text"  id="country" value="" />';
+        $frm_str .= '</td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<tr>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<label for="comp_data">'._COMP_DATA.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<textarea name="comp_data" id="comp_data" ></textarea>';
+        $frm_str .= '</td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '<tr>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .='<label for="is_private">'._IS_PRIVATE.' : </label>';
+        $frm_str .= '</td>';
+        $frm_str .= '<td colspan="2">';
+        $frm_str .= '<input type="radio" class="check" name="is_private" '
+            . 'id="is_private" value="Y"/>' . _YES;
+        $frm_str .= '<input type="radio" id="is_private_N" class="check" '
+            . 'name="is_private" value="N" checked="checked"/>' . _NO;
+        $frm_str .= '</td>';
+        $frm_str .= '</tr>';
+        $frm_str .= '</table>';
+        $frm_str .='<div align="center">';
+        $frm_str .='<input name="submit" type="button" value="'._VALIDATE.'"  class="button" onclick="create_contact(\'' 
+            . $_SESSION['config']['businessappurl'].'index.php?display=true&page=create_contact\', \''.$id_action.'\');" />';
+        $frm_str .=' <input name="cancel" type="button" value="'._CANCEL 
+            . '"  onclick="new Effect.toggle(\'create_contact_div\', \'blind\', {delay:0.2});clear_form(\'indexingfrmcontact\');return false;" class="button" />';
         $frm_str .='</div>';
         $frm_str .= '</fieldset >';
         $frm_str .='</form >';
-            $frm_str .= '</div><br/>';
+        $frm_str .= '</div><br/>';
+        $frm_str .= '<hr />';
         $frm_str .= '</div>';
-        $frm_str .= '<script type="text/javascript">show_admin_contacts( true);</script>';
+        $frm_str .= '<script type="text/javascript">show_admin_contacts(true);</script>';
+        
+        //NOTES
+        if ($core_tools->is_module_loaded('notes')) {
+            //Iframe notes
+            $frm_str .= '<div id="notes_div" style="display:none;">';
+            $frm_str .= '<div class="ref-unit">';
+            $frm_str .= '<center><h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});';
+            $frm_str .= 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');';
+            $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _NOTES. '</h2></center>';
+            $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'
+                . $_SESSION['config']['businessappurl']
+                . 'index.php?display=true&module=notes&page=notes&identifier='
+                . $res_id . '&origin=document&coll_id=' . $coll_id . '&load&size=medium"'
+                . ' frameborder="0" width="100%" height="450px"></iframe>';
+            $frm_str .= '</div>';
+            $frm_str .= '<hr />';
+            $frm_str .= '</div>';
+        }
+        
+        //ATTACHMENTS
+        if ($core_tools->is_module_loaded('attachments')) {
+            require 'modules/templates/class/templates_controler.php';
+            $templatesControler = new templates_controler();
+            $templates = array();
+            $templates = $templatesControler->getAllTemplatesForProcess($data['destination']);
+            
+            $frm_str .= '<div id="list_answers_div" style="display:none">';
 
+            $frm_str .= '<center><h2>';
+            $frm_str .= _ATTACHMENTS . ', ' . _DONE_ANSWERS . '</h2></center>';
+            $req = new request;
+            $req->connect();
+            $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
+                . " where status = 'NEW' and res_id_master = " . $res_id . " and coll_id = '" . $coll_id ."'");
+            //$req->show();
+            $nb_attach = 0;
+            if ($req->nb_result() > 0) {
+                $nb_attach = $req->nb_result();
+            }
+            $frm_str .= '<center>';
+            if ($core_tools->is_module_loaded('templates')) {
+                $objectTable = $sec->retrieve_table_from_coll($coll_id);
+                $frm_str .= _GENERATE_ATTACHMENT_FROM 
+                    . ' <br><select name="templateOffice" id="templateOffice" style="width:250px" onchange="';
+                //$frm_str .= 'loadApplet(\''
+                $frm_str .= 'window.open(\''
+                    . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+                    . '&module=content_management&page=applet_popup_launcher&objectType=attachmentFromTemplate'
+                    . '&objectId='
+                    . '\' + $(\'templateOffice\').value + \''
+                    . '&objectTable='
+                    . $objectTable
+                    . '&resMaster='
+                    . $res_id
+                    //. '\', $(\'templateOffice\').value);">';
+                    . '\', \'\', \'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no\');">';
+                    $frm_str .= '<option value="">' . _OFFICE . '</option>';
+                        for ($i=0;$i<count($templates);$i++) {
+                            if ($templates[$i]['TYPE'] == 'OFFICE') {
+                                $frm_str .= '<option value="';
+                                    $frm_str .= $templates[$i]['ID'];
+                                    $frm_str .= '">';
+                                    //$frm_str .= $templates[$i]['TYPE'] . ' : ';
+                                    $frm_str .= $templates[$i]['LABEL'];
+                                }
+                            $frm_str .= '</option>';
+                        }
+                    $frm_str .= '</select>&nbsp;|&nbsp;';
+                    $frm_str .= '<select name="templateHtml" id="templateHtml" style="width:250px" '
+                        //. 'onchange="window.alert(\'\' + $(\'templateHtml\').value + \'\');">';
+                        . 'onchange="checkBeforeOpenBlank(\''
+                        . $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&module=templates&page=generate_attachment_html&mode=add&template='
+                        . '\' + $(\'templateHtml\').value + \''
+                        . '&res_id=' . $res_id
+                        . '&coll_id=' . $coll_id
+                        . '\', $(\'templateHtml\').value);">';
+                    $frm_str .= '<option value="">' . _HTML . '</option>';
+                        for ($i=0;$i<count($templates);$i++) {
+                            if ($templates[$i]['TYPE'] == 'HTML') {
+                                $frm_str .= '<option value="';
+                                    $frm_str .= $templates[$i]['ID'];
+                                    $frm_str .= '">';
+                                    //$frm_str .= $templates[$i]['TYPE'] . ' : ';
+                                    $frm_str .= $templates[$i]['LABEL'];
+                                }
+                            $frm_str .= '</option>';
+                        }
+                    $frm_str .= '</select><br>' . _OR . '&nbsp;';
+                    $frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'
+                        . _ATTACH_FROM_HDD
+                        . '" onclick="javascript:window.open(\'' . $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&module=attachments&page=join_file\',\'\', \'scrollbars=yes,'
+                        . 'menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200\');" />';
+                }
+                $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'
+                . $_SESSION['config']['businessappurl']
+                . 'index.php?display=true&module=attachments&page=frame_list_attachments&resId=' . $res_id . '" '
+                . 'frameborder="0" width="100%" height="450px"></iframe>';
+            $frm_str .= '<hr />';
+            $frm_str .= '</div>';
+        }
+        
+        //LINKS
+        $frm_str .= '<div id="links_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
+        $frm_str .= '<div style="text-align: left;">';
+        $frm_str .= '<h2>';
+        $frm_str .= '<center>' . _LINK_TAB . '</center>';
+        $frm_str .= '</h2>';
+        $frm_str .= '<div id="loadLinks">';
+        $nbLinkDesc = $Class_LinkController->nbDirectLink(
+            $res_id,
+            $coll_id,
+            'desc'
+        );
+        if ($nbLinkDesc > 0) {
+            $frm_str .= '<img src="static.php?filename=cat_doc_incoming.gif"/>';
+            $frm_str .= $Class_LinkController->formatMap(
+                $Class_LinkController->getMap(
+                    $res_id,
+                    $coll_id,
+                    'desc'
+                ),
+                'desc'
+            );
+            $frm_str .= '<br />';
+        }
+        $nbLinkAsc = $Class_LinkController->nbDirectLink(
+            $res_id,
+            $coll_id,
+            'asc'
+        );
+        if ($nbLinkAsc > 0) {
+            $frm_str .= '<img src="static.php?filename=cat_doc_outgoing.gif" />';
+            $frm_str .= $Class_LinkController->formatMap(
+                $Class_LinkController->getMap(
+                    $res_id,
+                    $coll_id,
+                    'asc'
+                ),
+                'asc'
+            );
+            $frm_str .= '<br />';
+        }
+        $frm_str .= '</div>';
+        if ($core_tools->test_service('add_links', 'apps', false)) {
+            include 'apps/'.$_SESSION['config']['app_id'].'/add_links.php';
+            $frm_str .= $Links;
+        }
+        $frm_str .= '</div>';
+        $frm_str .= '</div>';
+        
+        //DOCUMENT VIEWER
         $path_file = get_file_path($res_id, $coll_id);
         $frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
             . $res_id.'&coll_id='.$coll_id.'" name="viewframevalid" id="viewframevalid"  scrolling="auto" frameborder="0" ></iframe>';
+            
+        //END RIGHT DIV
         $frm_str .= '</div>';
 
         /*** Extra javascript ***/
@@ -1154,8 +1225,7 @@ $frm_str .= '</div>';
             . 'index.php?display=true&page=get_content_js\');launch_autocompleter_contacts(\'' 
             . $_SESSION['config']['businessappurl'].'index.php?display=true'
             . '&dir=indexing_searching&page=autocomplete_contacts\');convertAllBusinessAmount();';
-        if ($core_tools->is_module_loaded('folder'))
-        {
+        if ($core_tools->is_module_loaded('folder')) {
             $frm_str .= ' initList(\'folder\', \'show_folder\',\''
                 . $_SESSION['config']['businessappurl'] . 'index.php?display='
                 . 'true&module=folder&page=autocomplete_folders&mode=folder\','
@@ -1168,7 +1238,7 @@ $frm_str .= '</div>';
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=change_doctype&coll_id=' 
             . $coll_id . '\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''
             . $display_value.'\', '.$res_id.', \''. $coll_id.'\', true);}';
-        if ($core_tools->is_module_loaded('entities') && isset($data['destination']) ) {
+        if ($core_tools->is_module_loaded('entities') && isset($data['destination'])) {
             $frm_str .='change_entity(\''.$data['destination'].'\', \'' 
             . $_SESSION['config']['businessappurl'] 
             . 'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\'';
@@ -1178,7 +1248,6 @@ $frm_str .= '</div>';
             $frm_str .= ');';
         }
         $frm_str .='</script>';
-
     return addslashes($frm_str);
 }
 
@@ -1580,32 +1649,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
                 'coll_id' => $coll_id, 'res_id' => $res_id, 'user_id' => $_SESSION['user']['UserId']);
             $diff_list->load_list_db($_SESSION['indexing']['diff_list'], $params);
         }
-    }
-    
-    if ($attach) {
-        $idDoc = get_value_fields($values_form, 'res_id');
-        $queryLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES('" 
-            . $idDoc . "', '" . $res_id . "', '" . $_SESSION['collection_id_choice'] . "')";
-        $db->connect();
-        $db->query($queryLink);
-        $hist2 = new history();
-        $hist2->add($table,
-           $res_id,
-           "ADD",
-           'linkadd',
-           _LINKED_TO . $idDoc,
-           $_SESSION['config']['databasetype'],
-           'apps'
-        );
-        $hist3 = new history();
-        $hist3->add($table,
-            $idDoc,
-           "UP",
-           'linkup',
-           '(doc. ' . $res_id . ')' . _NOW_LINK_WITH_THIS_ONE,
-           $_SESSION['config']['databasetype'],
-           'apps'
-        );
     }
 
     //$_SESSION['indexing'] = array();

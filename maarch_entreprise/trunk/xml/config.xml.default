@@ -354,4 +354,8 @@
         <moduleid>records_management</moduleid>
         <comment>_RECORDS_MANAGEMENT_COMMENT</comment>
     </MODULES>
+    <MODULES>
+        <moduleid>sendmail</moduleid>
+        <comment>_SENDMAIL_COMMENT</comment>
+    </MODULES>
 </ROOT>

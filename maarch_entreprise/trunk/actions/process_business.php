@@ -161,15 +161,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $values_fields = $b->fetch_object();
         //print_r($indexes);
     }
-    
+
     if ($core_tools->is_module_loaded('entities')) {
         require_once('modules/entities/class/class_manage_listdiff.php');
         $listdiff = new diffusion_list();
-        $roles = $listdiff->get_workflow_roles();      
+        $roles = $listdiff->get_workflow_roles();
         $_SESSION['process']['diff_list'] = $listdiff->get_listinstance($res_id, false, $coll_id);
-    
+
     }
-    
+
     //  to activate locking decomment these lines
     /*if ($b->reserve_doc($_SESSION['user']['UserId'], $res_id, $coll_id) == false) {
         $frm_str = '<div>';
@@ -202,9 +202,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<input type="hidden" name="coll_id" id="coll_id" value="' . $coll_id . '" />';
     $frm_str .= '<input type="hidden" name="module" id="module" value="' . $module . '" />';
     $frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
-                
+
         $frm_str .= '<hr />';
-        
+
         //GENERAL DATAS
         $frm_str .= '<h3 onclick="new Effect.toggle(\'general_datas_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'general_datas_div\', \'divStatus_general_datas_div\');return false;" '
@@ -243,9 +243,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</table>';
             $frm_str .= '</div>';
             $frm_str .= '</div>';
-            
+
             $frm_str .= '<hr />';
-            
+
         if (count($indexes) > 0) {
             $frm_str .= '<h3 onclick="new Effect.toggle(\'doctypes_indexes_div\', \'blind\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'doctypes_indexes_div\', \'divStatus_doctypes_indexes_div\');return false;" '
@@ -291,7 +291,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $req->connect();
         $req->query("select res_id from "
             . $_SESSION['tablename']['attach_res_attachments']
-            . " where status <> 'DEL' and res_id_master = " . $res_id);
+            . " where status <> 'DEL' and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
         if ($req->nb_result() > 0) {
             $nb_attach = $req->nb_result();
         } else {
@@ -313,7 +313,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</h3>';
     $frm_str .= '<div class="desc" id="done_answers_div" style="display:none;width:90%;">';
         $frm_str .= '<div class="ref-unit" style="width:95%;">';
-           
+
         $frm_str .= '</div>';
     $frm_str .= '</div>';
     $frm_str .= '<br>';
@@ -380,7 +380,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<h3 onclick="new Effect.toggle(\'links_div\', \'blind\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
         . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-    $frm_str .= ' <span id="divStatus_links_div" style="color:#1C99C5;"><<</span>&nbsp;<b>' 
+    $frm_str .= ' <span id="divStatus_links_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
         . _LINK_TAB . ' (<span id="nbLinks">'.$nbLink.'</span>)</b>';
     $frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</h3>';
@@ -393,7 +393,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<h3 onclick="new Effect.toggle(\'folder_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'folder_div\', \'divStatus_folder_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_folder_div" style="color:#1C99C5;"><<</span>&nbsp;<b>' 
+        $frm_str .= ' <span id="divStatus_folder_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
             . _FOLDER_ATTACH . '</b>';
             $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
@@ -466,7 +466,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $req = new request;
                     $req->connect();
                     $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
-                        . " where status = 'NEW' and res_id_master = " . $res_id);
+                        . " where status = 'NEW' and res_id_master = " . $res_id . " and coll_id = '" . $coll_id ."'");
                     //$req->show();
                     $nb_attach = 0;
                     if ($req->nb_result() > 0) {
@@ -476,7 +476,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<center>';
                     if ($core_tools->is_module_loaded('templates')) {
                         $objectTable = $sec->retrieve_table_from_coll($coll_id);
-                        $frm_str .= _GENERATE_ATTACHMENT_FROM 
+                        $frm_str .= _GENERATE_ATTACHMENT_FROM
                             . ' <br><select name="templateOffice" id="templateOffice" style="width:250px" onchange="';
                         //$frm_str .= 'loadApplet(\''
                         $frm_str .= 'window.open(\''
@@ -562,7 +562,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         . _UPDATE_LIST_DIFF
                         . '</a><br/>';
                 }
-                
+
                 // 1.4 custom diffusion lists
                 foreach($roles as $role_id => $role_label) {
                     if (count($_SESSION['process']['diff_list'][$role_id]['users']) > 0
@@ -595,11 +595,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $frm_str .= '<td colspan="2">'
                                 . $_SESSION['process']['diff_list'][$role_id]['entities'][$i]['entity_label'] . '</td>';
                             $frm_str .= '</tr>';
-                        }                      
+                        }
                         $frm_str .= '</table>';
                     }
                 }
-                
+
                 $frm_str .= '<br>';
                 //$frm_str .= '<hr class="hr_process"/>';
             $frm_str .= '</div>';
@@ -824,13 +824,13 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     $res_table = $sec->retrieve_table_from_coll($coll_id);
     $ind = $sec->get_ind_collection($coll_id);
     $table = $_SESSION['collections'][$ind]['extensions'][0];
-    
+
      for ($j=0; $j<count($values_form); $j++) {
          if ($values_form[$j]['ID'] == "folder") {
             $folder = $values_form[$j]['VALUE'];
         }
      }
-    
+
     if ($core->is_module_loaded('tags')) {
         include_once('modules/tags/tags_update.php');
     }
@@ -842,15 +842,15 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         $db->query("select folders_system_id from ".$res_table." where res_id = ".$arr_id[0]);
         $res = $db->fetch_object();
         $old_folder_id = $res->folders_system_id;
-        if (!empty($folder)) {    
+        if (!empty($folder)) {
             $folder_id = str_replace(')', '', substr($folder, strrpos($folder,'(')+1));
             if ($folder_id <> $old_folder_id && $_SESSION['history']['folderup']) {
                 require_once('core/class/class_history.php');
                 $hist = new history();
-                $hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", 'folderup', 
+                $hist->add($_SESSION['tablename']['fold_folders'], $folder_id, "UP", 'folderup',
                     _DOC_NUM.$arr_id[0]._ADDED_TO_FOLDER, $_SESSION['config']['databasetype'],'apps');
                 if (isset($old_folder_id) && !empty($old_folder_id)) {
-                    $hist->add($_SESSION['tablename']['fold_folders'], $old_folder_id, "UP", 'folderup', 
+                    $hist->add($_SESSION['tablename']['fold_folders'], $old_folder_id, "UP", 'folderup',
                         _DOC_NUM.$arr_id[0]._DELETED_FROM_FOLDER, $_SESSION['config']['databasetype'],'apps');
                 }
             }
@@ -862,7 +862,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     if ($core->is_module_loaded('entities')) {
         require_once('modules/entities/class/class_manage_listdiff.php');
         $list = new diffusion_list();
-        $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 
+        $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'],
             'coll_id' => $coll_id, 'res_id' => $arr_id[0], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => true);
         $list->load_list_db($_SESSION['process']['diff_list'], $params);
     }
