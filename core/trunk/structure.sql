@@ -834,24 +834,11 @@ CREATE TABLE listmodels
   item_type character varying(255) NOT NULL,
   item_mode character varying(50) NOT NULL,
   listmodel_type character varying(50) DEFAULT 'DOC'::character varying,
-  description character varying(255)
+  description character varying(255),
+  visible character varying(1) NOT NULL DEFAULT 'Y'::bpchar
 )
 WITH (OIDS=FALSE);
 
-CREATE TABLE listinstance_roles 
-(
-  role_id character varying(50) NOT NULL,
-  role_label character varying(100) NOT NULL,
-  list_label character varying(100) NOT NULL,
-  workflow_mode character varying(50) NOT NULL,
-  list_img character varying(100) DEFAULT 'manage_users_entities_b_small.gif',
-  allow_users character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
-  allow_entities character varying(1) NOT NULL DEFAULT 'N'::bpchar, 
-  CONSTRAINT "entities_roles_pkey" PRIMARY KEY (role_id)
-)
-WITH (
-    OIDS=FALSE
-);
 
 CREATE TABLE listmodel_types 
 (
