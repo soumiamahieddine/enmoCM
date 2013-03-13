@@ -1238,7 +1238,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <?php
                 }
                 //SENDMAILS                
-                if ($core->is_module_loaded('sendmail') === true) {
+                if ($core->is_module_loaded('sendmail') === true 
+                    && $core->test_service('sendmail', 'sendmail', false) === true
+                ) {
                     require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
                         . "class" . DIRECTORY_SEPARATOR
                         . "class_modules_tools.php";
@@ -1251,9 +1253,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <dt><?php  echo _SENDMAIL.$nbr_emails;?></dt>
                     <dd>
                     <?php
-                    //test service send emails
-                    if ($core->test_service('sendmail', 'sendmail', false)) {
-                    } 
                     //Emails iframe
                     echo $core->execute_modules_services(
                         $_SESSION['modules_services'], 'details', 'frame', 'sendmail', 'sendmail'
