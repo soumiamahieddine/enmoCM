@@ -9,6 +9,14 @@ $func = new functions();
 if (empty($_SESSION['collection_id_choice'])) {
     $_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
 }
+
+if (isset($_REQUEST['resId']) && $_REQUEST['resId'] <> '') {
+   $resId = $_REQUEST['resId'];
+   $_SESSION['doc_id'] = $resId;
+} else {
+    $resId = $_SESSION['doc_id'];
+}
+
 $viewOnly = false;
 if (isset($_REQUEST['view_only'])) {
     $viewOnly = true;
@@ -24,7 +32,7 @@ array_push(
     $select[RES_ATTACHMENTS_TABLE], 'res_id', 'creation_date', 'title', 'format', 'identifier'
 );
 
-$where = " res_id_master = " . $_SESSION['doc_id'] . " and coll_id ='"
+$where = " res_id_master = " . $resId  . " and coll_id ='"
        . $_SESSION['collection_id_choice'] . "' and status <> 'DEL'";
 $request = new request;
 $attachArr = $request->select(
