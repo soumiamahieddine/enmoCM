@@ -29,5 +29,5 @@
 * @ingroup sendmail
 */
 if (! defined('EMAILS_TABLE')) {
-    define('EMAILS_TABLE', 'app_emails');
+    define('EMAILS_TABLE', 'sendmail');
 }

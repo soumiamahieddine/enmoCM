@@ -22,7 +22,7 @@
 if (!defined('_SENDMAIL'))
     define('_SENDMAIL', 'Envoi de mails');
 if (!defined('_SENDMAIL_COMMENT'))
-    define('_SENDMAIL_COMMENT', 'Envoi de mails depuis la page de d&eacute;tails');
+    define('_SENDMAIL_COMMENT', 'Envoi de mails');
 if (!defined('_MAIL_LIST'))
     define('_MAIL_LIST', 'Emails');
 if (!defined('_MAIL_LIST_DESC'))
@@ -59,14 +59,16 @@ if (!defined('_COPY_TO_INVISIBLE_SHORT'))
     define('_COPY_TO_INVISIBLE_SHORT','Cci');
 if (!defined('_JOINED_FILES'))
     define('_JOINED_FILES','Fichiers joints');
-if (!defined('_MAIL_OBJECT'))
-    define('_MAIL_OBJECT','Objet');
+if (!defined('_EMAIL_OBJECT'))
+    define('_EMAIL_OBJECT','Objet');
 if (!defined('_HTML_OR_RAW'))
     define('_HTML_OR_RAW','Mise en forme avanc&eacute;e / Texte brut');  
 if (!defined('_DEFAULT_BODY'))
     define('_DEFAULT_BODY','Votre message est pr&ecirc;t &agrave;  &ecirc;tre envoy&eacute;e avec les fichiers joints suivants :');
 if (!defined('_NOTES_FILE'))
     define('_NOTES_FILE', 'Notes du document');
+if (!defined('_EMAIL_WRONG_FORMAT'))
+    define('_EMAIL_WRONG_FORMAT', 'L\'adresse email n&rsquo;est pas dans le bon format');
     
     
 //ERROR
@@ -91,11 +93,17 @@ if (!defined('_RESEND_MAIL'))
 if (!defined('_SAVE_MAIL'))
     define('_SAVE_MAIL','Enregistrer');
     
+//READ
+if (!defined('_READ_MAIL'))
+    define('_READ_MAIL','Afficher le mail');
+    
 //EDIT    
 if (!defined('_EDIT_MAIL'))
     define('_EDIT_MAIL', 'Modifier le mail');
 if (!defined('_SAVE_MAIL'))
     define('_SAVE_MAIL', 'Enregistrer');
+if (!defined('_SAVE_COPY_MAIL'))
+    define('_SAVE_COPY_MAIL', 'Enregistrer une copie');
 if (!defined('_MAIL_UPDATED'))
     define('_MAIL_UPDATED', 'Email modifi&eacute;');
  

@@ -318,26 +318,25 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         
         //Action icons array
         $paramsTab['actionIcons'] = array();      
-        $preview = array(
-            "type"      =>  "preview",
-            "class"     =>  "preview",
-            "icon"      =>  $_SESSION['config']['businessappurl']."static.php?filename=showFrameAdminList.png",
-            "tooltip"   =>  _EMAIL,
-            "content"   =>  "{'identifierDetailFrame' : '@@email_id@@', '"._STATUS." ' : '@@status_label@@', '"._CREATION_DATE." ' : '@@creation_date@@', '"._FROM." ' : '@@lastname@@', '"._MAIL_OBJECT." ' : '@@email_object@@'}"
-        );
-        array_push($paramsTab['actionIcons'], $preview);  
         $read = array(
+        "script"        => "showEmailForm('".$_SESSION['config']['businessappurl']
+                                    ."index.php?display=true&module=sendmail&page=sendmail_ajax_content"
+                                    ."&mode=read&id=@@email_id@@&identifier=".$identifier."&origin=".$origin
+                                    . $parameters."');",
+            "icon"      =>  $_SESSION['config']['businessappurl']."static.php?filename=icon_read.png",
+            "tooltip"   =>  _READ
+        );
+        array_push($paramsTab['actionIcons'], $read);  
+        $update = array(
             "script"        => "showEmailForm('".$_SESSION['config']['businessappurl']
                                     ."index.php?display=true&module=sendmail&page=sendmail_ajax_content"
                                     ."&mode=up&id=@@email_id@@&identifier=".$identifier."&origin=".$origin
                                     . $parameters."');",
             "class"         =>  "change",
-            // "icon"          =>  $_SESSION['config']['businessappurl']."static.php?module=sendmail&filename=modif_email.gif",
-            // "label"         =>  _UPDATE.'/'._DELETE,
-            "tooltip"       =>  _UPDATE.'/'._DELETION,
+            "tooltip"       =>  _UPDATE,
             "disabledRules" => "@@user_id@@ != '".$_SESSION['user']['UserId']."' || @@email_status@@ == 'I'"
         );
-        array_push($paramsTab['actionIcons'], $read);     
+        array_push($paramsTab['actionIcons'], $update);     
          
         //Output
         $status = 0;

@@ -112,8 +112,9 @@ class sendmail extends dbquery
     }
     
     public function CheckEmailAdress($adress) {
+        $error = '';
         if (!empty($adress)) {
-            $error = '';
+            
             $adressArray = explode(',', trim($adress));
             for($i=0; $i < count($adressArray); $i++) {
                 if (!empty($adressArray[$i])) {
@@ -124,10 +125,8 @@ class sendmail extends dbquery
                 }
             }
             $error = str_replace("<br />", "#", $error);
-            return $error;
-        } else {
-            return false;
         }
+        return $error;
     }
     
     public function haveJoinedFiles($id) {
@@ -260,6 +259,35 @@ class sendmail extends dbquery
         }
         
         return $email;
+    }
+    
+    public function updateAdressInputField($ajaxPath, $adressArray, $inputField, $readOnly=false) {
+        $content = '';
+        //Init with loading div
+        $content .= '<div id="loading_'.$inputField.'" style="display:none;"><img src="'
+            . $_SESSION['config']['businessappurl']
+            . 'static.php?filename=loading.gif" width="12" '
+            . 'height="12" style="vertical-align: middle;" alt='
+            . '"loading..." title="loading..."></div>';
+        // $content .=  print_r($adressArray, true);
+        //Get info from session array and display tag
+        if (isset($adressArray[$inputField]) && count($adressArray[$inputField]) > 0) {
+            foreach($adressArray[$inputField] as $key => $adress)	{
+                if (!empty($adress)) {
+                    $content .= '<div class="email_element" id="'.$key.'_'.$adress.'">'.$adress;
+                    if ($readOnly === false) {
+                        $content .= '&nbsp;<div class="email_delete_button" id="'.$key.'"'
+                            . 'onclick="updateAdress(\''.$ajaxPath
+                            .'&mode=adress\', \'del\', \''.$adress.'\', \''
+                            .$inputField.'\', this.id);" alt="'._DELETE.'" title="'
+                            ._DELETE.'">x</div>';
+                    }
+                    $content .= '</div>';
+                }
+            }
+        }
+        
+        return $content;
     }
     
     public function createNotesFile($notesArray) {

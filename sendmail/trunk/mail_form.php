@@ -97,6 +97,7 @@ $core_tools->load_html();
 $core_tools->load_header('', true, false);           
 ?><body><?php
 $core_tools->load_js(); 
+//ADD
 if ($mode == 'add') {
     $content .= '<div class="block">';
     $content .= '<form name="formEmail" id="formEmail" method="post" action="#">';
@@ -104,32 +105,59 @@ if ($mode == 'add') {
     $content .= '<input type="hidden" value="Y" name="is_html" id="is_html">';
     $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
     $content .= '<tr>';
-    $content .= '<td colspan="2"><h3>'._NEW_MAIL.'</h3>'
+    $content .= '<td colspan="3" nowrap><h4>'._NEW_MAIL.'</h4>'
         .$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName']
-        .'<br/>'.$_SESSION['user']['Mail'].'<br/></td>';
+        .': '.$_SESSION['user']['Mail'].'<br/></td>';
     $content .= '</tr>';
     $content .= '<tr>';
-    $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk">*</span><a><label>'._SEND_TO_SHORT.'</label></a></td>';
-    $content .= '<td width="90%"><input type="text" name="to" id="to" class="emailInput" value="" />';
-    // $content .= '<td width="90%"><input type="text" name="to" id="to" class="emailInput" value="" onBlur="saveField(this)" />';
-    $content .= '<div id="toList" class="autocomplete"></div>';
+    $content .= '<td>'._EMAIL.'</label></td>';
+    $content .= '<td colspan="2"><input type="text" name="email" id="email" value="" class="emailSelect" />';
+    $content .= '<div id="adressList" class="autocomplete"></div>';
+    $content .= '<script type="text/javascript">addEmailAdress(\'email\', \'adressList\', \''
+        .$_SESSION['config']['businessappurl']
+        .'index.php?display=true&module=sendmail&page=adresss_autocomletion\', \'what\', \'2\');</script>';
+    $content .= '<select name="target" id="target">'
+        .'<option id="target_target_to" value="to">'._SEND_TO_SHORT.'</option>'
+        .'<option id="target_cc" value="cc">'._COPY_TO_SHORT.'</option>'
+        .'<option id="target_cci" value="cci">'._COPY_TO_INVISIBLE_SHORT.'</option>'
+        .'</select>';
+    $content .=' <input type="button" name="add" value="&nbsp;'._ADD
+                    .'&nbsp;" id="valid" class="button" onclick="updateAdress(\''.$path_to_script
+                    .'&mode=adress\', \'add\', document.getElementById(\'email\').value, '
+                    .'document.getElementById(\'target\').value, false, \''.(addslashes(_EMAIL_WRONG_FORMAT)).'\');" />&nbsp;';
     $content .= '</td>';
     $content .= '</tr>';
     $content .= '<tr>';
-    $content .= '<td align="right" nowrap><a><label>'._COPY_TO_SHORT.'</label></a></td>';
-    $content .= '<td><input type="text" name="cc" id="cc" class="emailInput" value="" />';
-    $content .= '<div id="ccList" class="autocomplete"></div>';
-    $content .= '</td>';
+    $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk">*</span><label>'
+        ._SEND_TO_SHORT.'</label></td>';
+    $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput">'
+        .'<div id="loading_to" style="display:none;"><img src="'
+        . $_SESSION['config']['businessappurl']
+        . 'static.php?filename=loading.gif" width="12" '
+        . 'height="12" style="vertical-align: middle;" alt='
+        . '"loading..." title="loading..."></div></div></td>';
     $content .= '</tr>';
     $content .= '<tr>';
-    $content .= '<td align="right" nowrap><a><label>'._COPY_TO_INVISIBLE_SHORT.'</label></a></td>';
-    $content .= '<td><input type="text" name="cci" id="cci" class="emailInput" value="" />';
-    $content .= '<div id="cciList" class="autocomplete"></div>';
-    $content .= '</td>';
+    $content .= '<td align="right" nowrap><label>'._COPY_TO_SHORT.'</label></td>';
+    $content .= '<td colspan="2"><div name="cc" id="cc" class="emailInput">'
+        .'<div id="loading_cc" style="display:none;"><img src="'
+        . $_SESSION['config']['businessappurl']
+        . 'static.php?filename=loading.gif" width="12" '
+        . 'height="12" style="vertical-align: middle;" alt='
+        . '"loading..." title="loading..."></div></div></td>';
     $content .= '</tr>';
     $content .= '<tr>';
-    $content .= '<td align="right" nowrap><span class="red_asterisk">*</span><label>'._OBJECT.' </label></td>';
-    $content .= '<td><input name="object" id="object" class="emailInput" type="text" value="" /></td>';
+    $content .= '<td align="right" nowrap><label>'._COPY_TO_INVISIBLE_SHORT.'</label></td>';
+    $content .= '<td colspan="2"><div name="cci" id="cci" class="emailInput">'
+        .'<div id="loading_cci" style="display:none;"><img src="'
+        . $_SESSION['config']['businessappurl']
+        . 'static.php?filename=loading.gif" width="12" '
+        . 'height="12" style="vertical-align: middle;" alt='
+        . '"loading..." title="loading..."></div></div></td>';
+    $content .= '</tr>';
+    $content .= '<tr>';
+    $content .= '<td align="right" nowrap><span class="red_asterisk">*</span><label>'._EMAIL_OBJECT.' </label></td>';
+    $content .= '<td colspan="2"><input name="object" id="object" class="emailInput" type="text" value="" /></td>';
     $content .= '</tr>';
     $content .= '</table><br />';
     $content .='<hr />';
@@ -188,7 +216,7 @@ if ($mode == 'add') {
                     . "\" title=\"".$description
                     . "\"><input type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_attachment[]\""
                     . " class=\"check\" value=\""
-                    . $id."\" checked=\"checked\">"
+                    . $id."\">"
                    . $description." <em>(".$mime_type.")</em> ".$filesize."</li>";
                    
                 $filename = preg_replace("/[^a-z0-9_-s.]/i","_", $description.".".$format); 
@@ -219,7 +247,7 @@ if ($mode == 'add') {
                     . "\" title=\"".$note
                     . "\"><input type=\"checkbox\" id=\"note_".$id."\" name=\"notes[]\""
                     . " class=\"check\" value=\""
-                    . $id."\" checked=\"checked\">"
+                    . $id."\">"
                     . $noteShort." (".$userArray['firstname']." ".$userArray['lastname'].") ".$date."</li>"; 
             }
             
@@ -235,10 +263,11 @@ if ($mode == 'add') {
     $content .='<script type="text/javascript">var mode="html";</script>';
      //Show/hide html VS raw mode
     $content .= '<a href="javascript://" onclick="switchMode(\'show\');"><em>'._HTML_OR_RAW.'</em></a>';
+    
     //load tinyMCE editor
     ob_start();
     include('modules/sendmail/load_editor.php');
-    $content .= ob_get_contents();
+    $content .= ob_get_clean();
     ob_end_flush();
     $content .='<div id="html_mode" style="display:'.$displayHtml.'">';
     $content .= '<textarea name="body_from_html" id="body_from_html" style="width:100%" rows="15" cols="60">'
@@ -252,7 +281,7 @@ if ($mode == 'add') {
     $content .='</div>';
     
     //Buttons
-    $content .='<hr />';
+    $content .='<hr style=" margin-top:5px;margin-bottom:5px;" />';
     $content .='<div align="center">';
     //Send
     $content .=' <input type="button" name="valid" value="&nbsp;'._SEND_MAIL
@@ -268,15 +297,16 @@ if ($mode == 'add') {
     $content .='</div>';
     $content .= '</form>';
     $content .= '</div>';
-    
- } else if ($mode == 'up') {
+
+//UPDATE
+} else if ($mode == 'up') {
  
     if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
         
         $id = $_REQUEST['id'];
         $emailArray = $sendmail_tools->getEmail($id);
-        
-         //Check if mail exists
+
+        //Check if mail exists
         if (count($emailArray) > 0 ) {
             $content .= '<div class="block">';
             $content .= '<form name="formEmail" id="formEmail" method="post" action="#">';
@@ -285,35 +315,70 @@ if ($mode == 'add') {
             $content .= '<input type="hidden" value="'.$emailArray['isHtml'].'" name="is_html" id="is_html">';
             $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
             $content .= '<tr>';
-            $content .= '<td colspan="2"><h3>'._EDIT_MAIL.'</h3>'
+            $content .= '<td colspan="3" nowrap><h4>'._EDIT_MAIL.'</h4>'
                 .$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName']
-                .'<br/>'.$_SESSION['user']['Mail'].'<br/></td>';
-            $content .= '</tr>';
-            //Destinations
-            $content .= '<tr>';
-            $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk">*</span><a><label>'
-                ._SEND_TO_SHORT.'</label></a></td>';
-            $content .= '<td width="90%"><input type="text" name="to" id="to" class="emailInput" value="'
-                .(join(',', $emailArray['to'])).'" /><div id="toList" class="autocomplete"></div></td>';
+                .': '.$_SESSION['user']['Mail'].'<br/></td>';
             $content .= '</tr>';
             $content .= '<tr>';
-            $content .= '<td align="right" nowrap><a><label>'._COPY_TO_SHORT.'</label></a></td>';
-            $content .= '<td><input type="text" name="cc" id="cc" class="emailInput" value="'
-                .(join(',', $emailArray['cc'])).'" /><div id="ccList" class="autocomplete"></div></td>';
+            $content .= '<td>'._EMAIL.'</label></td>';
+            $content .= '<td colspan="2"><input type="text" name="email" id="email" value="" class="emailSelect" />';
+            $content .= '<div id="adressList" class="autocomplete"></div>';
+            $content .= '<script type="text/javascript">addEmailAdress(\'email\', \'adressList\', \''
+                .$_SESSION['config']['businessappurl']
+                .'index.php?display=true&module=sendmail&page=adresss_autocomletion\', \'what\', \'2\');</script>';
+            $content .= '<select name="target" id="target">'
+                .'<option id="target_target_to" value="to">'._SEND_TO_SHORT.'</option>'
+                .'<option id="target_cc" value="cc">'._COPY_TO_SHORT.'</option>'
+                .'<option id="target_cci" value="cci">'._COPY_TO_INVISIBLE_SHORT.'</option>'
+                .'</select>';
+            $content .=' <input type="button" name="add" value="&nbsp;'._ADD
+                            .'&nbsp;" id="valid" class="button" onclick="updateAdress(\''.$path_to_script
+                            .'&mode=adress\', \'add\', document.getElementById(\'email\').value, '
+                            .'document.getElementById(\'target\').value, false, \''.(addslashes(_EMAIL_WRONG_FORMAT)).'\');" />&nbsp;';
+            $content .= '</td>';
             $content .= '</tr>';
+            //To
+            if (count($emailArray['to']) > 0) {
+                $_SESSION['adresses']['to'] = array();
+                $_SESSION['adresses']['to'] = $emailArray['to'];
+            }
             $content .= '<tr>';
-            $content .= '<td align="right" nowrap><a><label>'._COPY_TO_INVISIBLE_SHORT.'</label></a></td>';
-            $content .= '<td><input type="text" name="cci" id="cci" class="emailInput" value="'
-                .(join(',', $emailArray['cci'])).'" /><div id="cciList" class="autocomplete"></div></td></tr>';
+            $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk">*</span><label>'
+                ._SEND_TO_SHORT.'</label></td>';
+            $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput">';
+            $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'to');
+            $content .= '</div></td>';
             $content .= '</tr>';
+            //CC
+            if (count($emailArray['cc']) > 0) {
+                $_SESSION['adresses']['cc'] = array();
+                $_SESSION['adresses']['cc'] = $emailArray['cc'];
+            }
             $content .= '<tr>';
-            $content .= '<td align="right" nowrap><span class="red_asterisk">*</span><label>'._MAIL_OBJECT.' </label></td>';
-            $content .= '<td><input name="object" id="object" class="emailInput" type="text" value="'
+            $content .= '<td align="right" nowrap><label>'._COPY_TO_SHORT.'</label></td>';
+            $content .= '<td colspan="2"><div name="cc" id="cc" class="emailInput">';
+            $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'cc');
+            $content .= '</div></td>';
+            $content .= '</tr>';
+            //CCI
+            if (count($emailArray['cci']) > 0) {
+                $_SESSION['adresses']['cci'] = array();
+                $_SESSION['adresses']['cci'] = $emailArray['cci'];
+            }
+            $content .= '<tr>';
+            $content .= '<td align="right" nowrap><label>'._COPY_TO_INVISIBLE_SHORT.'</label></td>';
+            $content .= '<td colspan="2"><div name="cci" id="cci" class="emailInput">';
+            $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'cci');
+            $content .= '</div></td>';
+            $content .= '</tr>';
+            //Object
+            $content .= '<tr>';
+            $content .= '<td align="right" nowrap><span class="red_asterisk">*</span><label>'._EMAIL_OBJECT.' </label></td>';
+            $content .= '<td colspan="2"><input name="object" id="object" class="emailInput" type="text" value="'
                 .$emailArray['object'].'" /></td>';
             $content .= '</tr>';
             $content .= '</table><br />';
             $content .='<hr />';
-
             //Show hide joined info
             $content .= '<h4 onclick="new Effect.toggle(\'joined_files\', \'blind\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'joined_files\', \'divStatus_joined_files\');" '
@@ -434,7 +499,7 @@ if ($mode == 'add') {
             //load tinyMCE editor
             ob_start();
             include('modules/sendmail/load_editor.php');
-            $content .= ob_get_contents();
+            $content .= ob_get_clean();
             ob_end_flush();
             $content .='<div id="html_mode" style="display:'.$displayHtml.'">';
             $content .= '<textarea name="body_from_html" id="body_from_html" style="width:100%" rows="15" cols="60">'
@@ -450,26 +515,33 @@ if ($mode == 'add') {
             //Buttons
             $content .='<hr />';
             $content .='<div align="center">';
-            //Send button
+            
             if ($emailArray['status'] <> 'S') {
-            $content .=' <input type="button" name="valid" value="&nbsp;'._SEND_MAIL
-                        .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
-                        .$path_to_script.'&mode=updated&for=send\', \'formEmail\');" />&nbsp;';  
+                //Send button
+                $content .=' <input type="button" name="valid" value="&nbsp;'._SEND_MAIL
+                    .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
+                    .$path_to_script.'&mode=updated&for=send\', \'formEmail\');" />&nbsp;';  
+                //Delete button    
+                $content .=' <input type="button" name="valid" value="&nbsp;'._REMOVE_MAIL
+                    .'&nbsp;" id="valid" class="button" onclick="if(confirm(\''
+                    ._REALLY_DELETE.': '.$request->cut_string($emailArray['object'], 50)
+                    .' ?\')) validEmailForm(\''.$path_to_script
+                    .'&mode=del\', \'formEmail\');" />&nbsp;';
+                //Save button    
+                $content .=' <input type="button" name="valid" value="&nbsp;'._SAVE_MAIL
+                    .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
+                    .$path_to_script.'&mode=updated&for=save\', \'formEmail\');" />&nbsp;';                    
             } else {
+                //Re-send button
                 $content .=' <input type="button" name="valid" value="&nbsp;'._RESEND_MAIL
-                        .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
-                        .$path_to_script.'&mode=added&for=send\', \'formEmail\');" />&nbsp;';  
+                    .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
+                    .$path_to_script.'&mode=added&for=send\', \'formEmail\');" />&nbsp;';
+                //Save copy button
+                $content .=' <input type="button" name="valid" value="&nbsp;'._SAVE_COPY_MAIL
+                    .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
+                    .$path_to_script.'&mode=added&for=save\', \'formEmail\');" />&nbsp;';    
             }
-            //Delete button
-            $content .=' <input type="button" name="valid" value="&nbsp;'._REMOVE_MAIL
-                        .'&nbsp;" id="valid" class="button" onclick="if(confirm(\''
-                        ._REALLY_DELETE.': '.$request->cut_string($emailArray['object'], 50)
-                        .' ?\')) validEmailForm(\''.$path_to_script
-                        .'&mode=del\', \'formEmail\');" />&nbsp;';            
-            //Save button
-            $content .=' <input type="button" name="valid" value="&nbsp;'._SAVE_MAIL
-                        .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
-                        .$path_to_script.'&mode=updated&for=save\', \'formEmail\');" />&nbsp;';
+            
             //Cancel button
             $content .='<input type="button" name="cancel" id="cancel" class="button" value="'
                         ._CANCEL.'" onclick="window.parent.destroyModal(\'form_email\');"/>';
@@ -482,21 +554,194 @@ if ($mode == 'add') {
     } else {
         $content = $request->wash_html(_ID.' '._IS_EMPTY.'!','NONE');
     }
-}
+} else if ($mode == 'read') {
+    if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
+        
+        $id = $_REQUEST['id'];
+        $emailArray = $sendmail_tools->getEmail($id);
 
-//Autocompletion javascript
-if ($mode == 'add' || $mode == 'up') {
-    $content .= '<script type="text/javascript">';
-    $content .= 'addEmailAdress(\'to\', \'toList\', \''
-        .$_SESSION['config']['businessappurl']
-        .'index.php?display=true&module=sendmail&page=adresss_autocomletion&field=to\', \'what\', \'2\');';
-    $content .= 'addEmailAdress(\'cc\', \'ccList\', \''
-        .$_SESSION['config']['businessappurl']
-        .'index.php?display=true&module=sendmail&page=adresss_autocomletion&field=cc\', \'what\', \'2\');';
-    $content .= 'addEmailAdress(\'cci\', \'cciList\', \''
-        .$_SESSION['config']['businessappurl']
-        .'index.php?display=true&module=sendmail&page=adresss_autocomletion&field=cci\', \'what\', \'2\');';
-    $content .= '</script>';
+        //Check if mail exists
+        if (count($emailArray) > 0 ) {
+            $content .= '<div class="block">';
+            $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
+            $content .= '<tr>';
+            $content .= '<td colspan="3" nowrap><h4>'._READ_MAIL.'</h4>'
+                .$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName']
+                .': '.$_SESSION['user']['Mail'].'<br/></td>';
+            $content .= '</tr>';
+            //To
+            if (count($emailArray['to']) > 0) {
+                $_SESSION['adresses']['to'] = array();
+                $_SESSION['adresses']['to'] = $emailArray['to'];
+            }
+            $content .= '<tr>';
+            $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk">*</span><label>'
+                ._SEND_TO_SHORT.'</label></td>';
+            $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput">';
+            $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'to', true);
+            $content .= '</div></td>';
+            $content .= '</tr>';
+            //CC
+            if (count($emailArray['cc']) > 0) {
+                $_SESSION['adresses']['cc'] = array();
+                $_SESSION['adresses']['cc'] = $emailArray['cc'];
+            }
+            $content .= '<tr>';
+            $content .= '<td align="right" nowrap><label>'._COPY_TO_SHORT.'</label></td>';
+            $content .= '<td colspan="2"><div name="cc" id="cc" class="emailInput">';
+            $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'cc', true);
+            $content .= '</div></td>';
+            $content .= '</tr>';
+            //CCI
+            if (count($emailArray['cci']) > 0) {
+                $_SESSION['adresses']['cci'] = array();
+                $_SESSION['adresses']['cci'] = $emailArray['cci'];
+            }
+            $content .= '<tr>';
+            $content .= '<td align="right" nowrap><label>'._COPY_TO_INVISIBLE_SHORT.'</label></td>';
+            $content .= '<td colspan="2"><div name="cci" id="cci" class="emailInput">';
+            $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'cci', true);
+            $content .= '</div></td>';
+            $content .= '</tr>';   
+            //Object
+            $content .= '<tr>';
+            $content .= '<td align="right" nowrap><span class="red_asterisk">*</span><label>'._EMAIL_OBJECT.' </label></td>';
+            $content .= '<td colspan="2"><div name="object" id="object" class="emailInput">'
+                .$emailArray['object'].'</div></td>';
+            $content .= '</tr>';
+            $content .= '</table><br />';
+
+            $content .='<hr />';
+            //Show hide joined info
+            $content .= '<h4 onclick="new Effect.toggle(\'joined_files\', \'blind\', {delay:0.2});'
+                . 'whatIsTheDivStatus(\'joined_files\', \'divStatus_joined_files\');" '
+                . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
+            $content .= ' <span id="divStatus_joined_files" style="color:#1C99C5;"><<</span>&nbsp;' 
+                . _JOINED_FILES;
+            $content .= '</h4>';
+            //
+            $content .= '<div id="joined_files" style="display:none">';
+            //Document
+            $joined_files = $sendmail_tools->getJoinedFiles($identifier, $collId);
+            if (count($joined_files) >0) {
+                $content .='<br/>';
+                $content .=_DOC;
+                for($i=0; $i < count($joined_files); $i++) {
+                    //Get data
+                    $id = $joined_files[$i]['id']; 
+                    $description = $joined_files[$i]['label'];
+                    $format = $joined_files[$i]['format'];
+                    $format = $joined_files[$i]['format'];
+                    $mime_type = $is->get_mime_type($joined_files[$i]['format']);
+                    $filesize = $joined_files[$i]['filesize']/1024;
+                    ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = $filesize.' Octets';
+                    //Checked?
+                    ($emailArray['resMasterAttached'] == 'Y')? $checked = ' checked="checked"' : $checked = '';
+                    //Show data
+                    $content .= "<li alt=\"".$description
+                        . "\" title=\"".$description
+                        . "\"><input type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_file[]\""
+                        . " class=\"check\" value=\""
+                        . $id."\"".$checked." disabled=\"disabled\">"
+                        . $description." <em>(".$mime_type.")</em> ".$filesize."</li>"; 
+                }
+            }
+            
+            //Attachments
+            if ($core_tools->is_module_loaded('attachments')) {
+                $attachment_files = $sendmail_tools->getJoinedFiles($identifier, $collId, true);
+                if (count($attachment_files) >0) {
+                    $content .='<br/>';
+                    $content .=_ATTACHMENTS;
+                    for($i=0; $i < count($attachment_files); $i++) {
+                        //Get data
+                        $id = $attachment_files[$i]['id']; 
+                        $description = $attachment_files[$i]['label'];
+                        $format = $attachment_files[$i]['format'];
+                        $mime_type = $is->get_mime_type($joined_files[$i]['format']);
+                        $filesize = $attachment_files[$i]['filesize']/1024;
+                        ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = $filesize.' Octets';
+                        //Checked?
+                        (in_array($id, $emailArray['attachments']))? $checked = ' checked="checked"' : $checked = '';
+                        //Show data
+                        $content .= "<li alt=\"".$description
+                            . "\" title=\"".$description
+                            . "\"><input type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_attachment[]\""
+                            . " class=\"check\" value=\""
+                            . $id."\"".$checked." disabled=\"disabled\">"
+                           . $description." <em>(".$mime_type.")</em> ".$filesize."</li>";
+                    }
+                }
+            }
+            
+            //Notes            
+            if ($core_tools->is_module_loaded('notes')) {
+                require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
+                    . "class" . DIRECTORY_SEPARATOR
+                    . "class_modules_tools.php";
+                $notes_tools    = new notes();
+                $user_notes = $notes_tools->getUserNotes($identifier, $collId);
+                if (count($user_notes) >0) {
+                    $content .='<br/>';
+                    $content .=_NOTES;
+                    for($i=0; $i < count($user_notes); $i++) {
+                        //Get data
+                        $id = $user_notes[$i]['id']; 
+                        $noteShort = $request->cut_string($user_notes[$i]['label'], 50);
+                        $note = $user_notes[$i]['label'];
+                        $userArray = $users_tools->get_user($user_notes[$i]['author']);
+                        $date = $request->dateformat($user_notes[$i]['date']);
+                        //Checked?
+                        (in_array($id, $emailArray['notes']))? $checked = ' checked="checked"' : $checked = '';
+                        //Show data
+                        $content .= "<li alt=\"".$note
+                            . "\" title=\"".$note
+                            . "\"><input type=\"checkbox\" id=\"note_".$id."\" name=\"notes[]\""
+                            . " class=\"check\" value=\""
+                            . $id."\"".$checked." disabled=\"disabled\">"
+                            . $noteShort." (".$userArray['firstname']." ".$userArray['lastname'].") ".$date."</li>"; 
+                    }
+                }
+            }
+            $content .= '</div>';
+            $content .='<hr />';
+            //Body (html or raw mode)
+            if ($emailArray['isHtml'] == 'Y') { 
+                $content .='<script type="text/javascript">var mode="html";</script>';
+                //load tinyMCE editor
+                ob_start();
+                include('modules/sendmail/load_editor.php');
+                $content .= ob_get_clean();
+                ob_end_flush();
+                $content .='<div id="html_mode" style="display:block">';
+                $content .= '<textarea name="body_from_html" id="body_from_html" style="width:100%" '
+                    .'rows="15" cols="60" readonly="readonly">'
+                    .$sendmail_tools->rawToHtml($emailArray['body']).'</textarea>';
+                $content .='</div>';
+            } else {
+                $content .='<script type="text/javascript">var mode="raw";</script>';
+                //raw textarera
+                $content .='<div id="raw_mode" style="display:block">';
+                $content .= '<textarea name="body_from_raw" id="body_from_raw" class="emailInput" '
+                    .'cols="60" rows="15" readonly="readonly">'
+                    .$sendmail_tools->htmlToRaw($emailArray['body']).'</textarea>';
+                $content .='</div>';
+            }
+                        
+            //Buttons
+            $content .='<hr />';
+            $content .='<div align="center">';
+            //Close button
+            $content .='<input type="button" name="cancel" id="cancel" class="button" value="'
+                        ._CLOSE.'" onclick="window.parent.destroyModal(\'form_email\');"/>';
+            $content .='</div>';
+            $content .= '</div>';
+        } else {
+            $content = $request->wash_html($id.': '._EMAIL_DONT_EXIST.'!','NONE');
+        }
+    } else {
+        $content = $request->wash_html(_ID.' '._IS_EMPTY.'!','NONE');
+    }
 }
 echo $content;
 

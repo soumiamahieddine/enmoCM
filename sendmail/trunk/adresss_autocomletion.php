@@ -32,7 +32,6 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 $db = new dbquery();
 $db->connect();
 
-$field = $_REQUEST['field'];
 $listArray = array();
 $db->query("select lastname, firstname, user_id, mail from ".$_SESSION['tablename']['users']
 	." where lower(lastname) like lower('%".$db->protect_string_db($_REQUEST['what'])."%') and enabled = 'Y' order by lastname, firstname");
@@ -107,7 +106,7 @@ while($line = $db->fetch_object())
         $score = round($res->score / $num_args);
         if($i%2==1) $color = 'LightYellow';
         else $color = 'white';
-        echo "<li style='font-size: 8pt; background-color:$color;' title='confiance:".$score."%' id='".$res->email."' field='".$field."'>". $res->result ."</li>";
+        echo "<li style='font-size: 8pt; background-color:$color;' title='confiance:".$score."%' id='".$res->email."'>". $res->result ."</li>";
     }
     if($nb == 0) echo "<li></li>";
     echo "</ul>";

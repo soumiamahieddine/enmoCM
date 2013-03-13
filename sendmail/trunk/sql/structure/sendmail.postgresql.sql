@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS app_emails;
-CREATE TABLE app_emails
+DROP TABLE IF EXISTS sendmail;
+CREATE TABLE sendmail
 (
   email_id serial NOT NULL,
   coll_id character varying(32) NOT NULL,
   res_id bigint NOT NULL,
-  from_user_id character varying(128) NOT NULL,
+  user_id character varying(128) NOT NULL,
   to_list character varying(255) NOT NULL,
   cc_list character varying(255) DEFAULT NULL,
   cci_list character varying(255) DEFAULT NULL,

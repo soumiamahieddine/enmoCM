@@ -1,3 +1,16 @@
+var addEmailAdress = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv) {
+     new Ajax.Autocompleter(
+         idField,
+         idList,
+         theUrlToListScript,
+         {
+             paramName: paramNameSrv,
+             minChars: minCharsSrv,
+             tokens: ',',
+             afterUpdateElement:extractEmailAdress
+         });
+ };
+ 
 function showEmailForm(path, width, height) {
     
     if(typeof(width)==='undefined'){
@@ -5,7 +18,7 @@ function showEmailForm(path, width, height) {
     }
     
     if(typeof(height)==='undefined'){
-        var height = '540px';
+        var height = '545px';
     }  
     
     new Ajax.Request(path,
@@ -25,6 +38,42 @@ function showEmailForm(path, width, height) {
             }
         }
     });
+}
+
+function updateAdress(path, action, adress, target, array_index, email_format_text_error) {
+    
+    if (validateEmail(adress) === true) {
+        
+        new Ajax.Request(path,
+        {
+            method:'post',
+            parameters: { url : path,
+                          'for': action,
+                          email: adress,
+                          field: target,
+                          index: array_index
+                        },
+            onLoading: function(answer) {
+                $('loading_' + target).style.display='inline';
+            },
+            onSuccess: function(answer) {
+                eval("response = "+answer.responseText);
+                if(response.status == 0){
+                    $(target).innerHTML = response.content;
+                    if (action == 'add') {$('email').value = '';}
+                } else {
+                    alert(response.error);
+                    eval(response.exec_js);
+                }
+                // $('loading_' + target).style.display='none';
+            }
+        });
+    } else {
+        if(typeof(email_format_text_error) == 'undefined'){
+            email_format_text_error = 'Email format is not available!';
+        }
+        alert(email_format_text_error);
+    }
 }
 
 function validEmailForm (path, form_id) {
@@ -47,6 +96,28 @@ function validEmailForm (path, form_id) {
             }
         }
     });
+}
+
+function extractEmailAdress(field, item) {
+    var fullAdress = item.innerHTML;
+    var email = fullAdress.match(/\(([^)]+)\)/)[1];
+    field.value = email;
+}
+
+function validateEmail(email) { 
+    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}
+ 
+function switchMode(action) {
+    var div = document.getElementById(mode+"_mode");
+    div.style.display = "block";
+    if(action == "show") {
+        div.style.display = "none"; // Hide the current div.
+        mode = (mode === 'html')? 'raw' : 'html';      // switch the mode
+        document.getElementById("is_html").value = (mode === 'html')? 'Y' : 'N'; //Update the hidden field
+        document.getElementById(mode+"_mode").style.display = "block"; // Show the other div.
+    }
 }
 
 var MyAjax = { };
@@ -78,51 +149,3 @@ MyAjax.Autocompleter = Class.create(Ajax.Autocompleter, {
         }
     }
 });
-var addEmailAdress = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv) {
-     new MyAjax.Autocompleter(
-         idField,
-         idList,
-         theUrlToListScript,
-         {
-             paramName: paramNameSrv,
-             minChars: minCharsSrv,
-             tokens: ',',
-             // afterUpdateElement:extractEmailAdress,
-             updateElement:updateAdresses
-         });
- };
-var previous;
-updateAdresses = function(item){
-    var fullAdress = item.innerHTML;
-    var email = fullAdress.match(/\(([^)]+)\)/)[1];
-    var fromField = item.getAttribute('field', 0);
-    Form.Element.clear(fromField);
-    Form.Element.setValue(fromField, previous + ", " + email);
-    previous = Form.Element.getValue(fromField);    
-}
-
-function extractEmailAdress(field, item) {
-    var fullAdress = item.innerHTML;
-    var email = fullAdress.match(/\(([^)]+)\)/)[1];
-     Form.Element.clear(field);
-     Form.Element.setValue(field, previous + ", " + email);
-    previous = Form.Element.getValue(field);
-   
-     
-}
-
-function validateEmail(email) { 
-    var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(email);
-}
- 
-function switchMode(action) {
-    var div = document.getElementById(mode+"_mode");
-    div.style.display = "block";
-    if(action == "show") {
-        div.style.display = "none"; // Hide the current div.
-        mode = (mode === 'html')? 'raw' : 'html';      // switch the mode
-        document.getElementById("is_html").value = (mode === 'html')? 'Y' : 'N'; //Update the hidden field
-        document.getElementById(mode+"_mode").style.display = "block"; // Show the other div.
-    }
-}

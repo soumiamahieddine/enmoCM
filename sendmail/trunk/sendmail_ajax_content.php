@@ -132,6 +132,7 @@ $path_to_script = $_SESSION['config']['businessappurl']
 
 switch ($mode) {
     case 'up':
+    case 'read':
         if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
             $parameters .= '&id='.$_REQUEST['id'];
         } else {
@@ -148,12 +149,15 @@ switch ($mode) {
              //Close the modal
             $js =  "window.parent.destroyModal('form_email');"; 
         } else {
-            
+            //Reset arry of adresses
+            unset($_SESSION['adresses']);
+            $_SESSION['adresses'] = array();
+            //Show iframe
             $content .='<iframe name="form_mail" id="form_mail" src="'
                 . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&module=sendmail&page=mail_form&identifier='
                 . $identifier.'&origin=document&coll_id='.$collId.'&mode='.$mode.$parameters.'" '
-                . 'frameborder="0" scrolling="no" width="99%" style="height:540px;padding:0px;"></iframe>';
+                . 'frameborder="0" width="99%" style="height:545px;padding:0px;overflow-x:hidden;overflow-y: auto;"></iframe>';
         }
     break;
         
@@ -162,33 +166,35 @@ switch ($mode) {
             $error = $request->wash_html(_IDENTIFIER.' '._IS_EMPTY.'!','NONE');
             $status = 1;
         } else {
-            if (!empty($_REQUEST['to'])) {
+            if (isset($_SESSION['adresses']['to']) && count($_SESSION['adresses']['to']) > 0 ) {
                 if (!empty($_REQUEST['object'])) {
                     // print_r($_REQUEST);
                     
                     //Check adress for to
-                    $_REQUEST['to'] =  str_replace(";", ",", $_REQUEST['to']);
-                    $error = $sendmail_tools->CheckEmailAdress($_REQUEST['to']);
+                    $to =  join(',', $_SESSION['adresses']['to']);
+                    $error = $sendmail_tools->CheckEmailAdress($to);
                     
                     if (empty($error)) {
                         
                         //Check adress for cc
-                        $_REQUEST['cc'] =  str_replace(";", ",", $_REQUEST['cc']);
-                        $error = $sendmail_tools->CheckEmailAdress($_REQUEST['cc']);
+                        (isset($_SESSION['adresses']['cc']) && count($_SESSION['adresses']['cc']) > 0)? 
+                            $cc =  join(',', $_SESSION['adresses']['cc']) : $cc = '';
+                        $error = $sendmail_tools->CheckEmailAdress($cc);
                         
                         if (empty($error)) {
                         
                             //Check adress for cci
-                            $_REQUEST['cci'] =  str_replace(";", ",", $_REQUEST['cci']);
-                            $error = $sendmail_tools->CheckEmailAdress($_REQUEST['cci']);
+                            (isset($_SESSION['adresses']['cci']) && count($_SESSION['adresses']['cci']) > 0)? 
+                                $cci =  join(',', $_SESSION['adresses']['cci']) : $cci = '';
+                            $error = $sendmail_tools->CheckEmailAdress($cci);
                             
                             if (empty($error)) {
                             
                                 //Data
                                 $collId = $request->protect_string_db($_REQUEST['coll_id']);
-                                $to =  $request->protect_string_db($_REQUEST['to']);
-                                $cc = $request->protect_string_db($_REQUEST['cc']);
-                                $cci = $request->protect_string_db($_REQUEST['cci']);
+                                $to =  $request->protect_string_db($to);
+                                $cc = $request->protect_string_db($cc);
+                                $cci = $request->protect_string_db($cci);
                                 $object = $request->protect_string_db($_REQUEST['object']);
                                 (isset($_REQUEST['join_file']) 
                                     && count($_REQUEST['join_file']) > 0
@@ -214,13 +220,6 @@ switch ($mode) {
                                     $email_status = 'D';
                                 } else if ($_REQUEST['for'] == 'send'){
                                     $email_status = 'W';
-                                    
-                                    //Inserer les informations dans la table notif_event_stack ???
-                                   /* $request->query("INSERT INTO " . _NOTIF_EVENT_STACK_TABLE_NAME . "("
-                                        . "notification_sid, table_name,  record_id, user_id, event_info, event_date)("
-                                        . $notification_id.", '" . EMAILS_TABLE . "', '" . $id . "'"._SENDMAIL." (".$id
-                                        . ")', '" . $userId . "', '', ".$date.")";
-                                    );*/
                                 }
                                 
                                 //Query                 
@@ -271,7 +270,7 @@ switch ($mode) {
                         $status = 1;
                     }
                 } else {
-                    $error = $request->wash_html(_OBJECT.' '._IS_EMPTY.'!','NONE');
+                    $error = $request->wash_html(_EMAIL_OBJECT.' '._IS_EMPTY.'!','NONE');
                     $status = 1;
                 }
             } else {
@@ -291,33 +290,35 @@ switch ($mode) {
                 $error = $request->wash_html(_IDENTIFIER.' '._IS_EMPTY.'!','NONE');
                 $status = 1;
             } else {
-                if (!empty($_REQUEST['to'])) {
+                if (isset($_SESSION['adresses']['to']) && count($_SESSION['adresses']['to']) > 0 ) {
                     if (!empty($_REQUEST['object'])) {
-                        // print_r($_REQUEST);
+                        print_r($_REQUEST);
                         
                         //Check adress for to
-                        $_REQUEST['to'] =  str_replace(";", ",", $_REQUEST['to']);
-                        $error = $sendmail_tools->CheckEmailAdress($_REQUEST['to']);
+                        $to =  join(',', $_SESSION['adresses']['to']);
+                        $error = $sendmail_tools->CheckEmailAdress($to);
                         
                         if (empty($error)) {
                             
                             //Check adress for cc
-                            $_REQUEST['cc'] =  str_replace(";", ",", $_REQUEST['cc']);
-                            $error = $sendmail_tools->CheckEmailAdress($_REQUEST['cc']);
+                            (isset($_SESSION['adresses']['cc']) && count($_SESSION['adresses']['cc']) > 0)? 
+                                $cc =  join(',', $_SESSION['adresses']['cc']) : $cc = '';
+                            $error = $sendmail_tools->CheckEmailAdress($cc);
                             
                             if (empty($error)) {
                             
                                 //Check adress for cci
-                                $_REQUEST['cci'] =  str_replace(";", ",", $_REQUEST['cci']);
-                                $error = $sendmail_tools->CheckEmailAdress($_REQUEST['cci']);
+                                (isset($_SESSION['adresses']['cci']) && count($_SESSION['adresses']['cci']) > 0)? 
+                                    $cci =  join(',', $_SESSION['adresses']['cci']) : $cci = '';
+                                $error = $sendmail_tools->CheckEmailAdress($cci);
                                 
                                 if (empty($error)) {
                                 
                                     //Data
                                     $collId = $request->protect_string_db($_REQUEST['coll_id']);
-                                    $to =  $request->protect_string_db($_REQUEST['to']);
-                                    $cc = $request->protect_string_db($_REQUEST['cc']);
-                                    $cci = $request->protect_string_db($_REQUEST['cci']);
+                                    $to =  $request->protect_string_db($to);
+                                    $cc = $request->protect_string_db($cc);
+                                    $cci = $request->protect_string_db($cci);
                                     $object = $request->protect_string_db($_REQUEST['object']);
                                     (isset($_REQUEST['join_file']) 
                                         && count($_REQUEST['join_file']) > 0
@@ -391,7 +392,7 @@ switch ($mode) {
                             $status = 1;
                         }
                     } else {
-                        $error = $request->wash_html(_OBJECT.' '._IS_EMPTY.'!','NONE');
+                        $error = $request->wash_html(_EMAIL_OBJECT.' '._IS_EMPTY.'!','NONE');
                         $status = 1;
                     }
                 } else {
@@ -454,6 +455,36 @@ switch ($mode) {
             $status = 1;
             //Close the modal
             $js =  "window.parent.destroyModal('form_email');"; 
+        }
+    break;
+    case 'adress':
+        if (isset($_REQUEST['for']) && isset($_REQUEST['field']) && isset($_REQUEST['email'])) {
+            //
+            if (isset($_REQUEST['email']) && !empty($_REQUEST['email'])) {
+                //Clean up email
+                $email = trim($_REQUEST['email']);
+                //Reset session adresses if necessary
+                if (!isset($_SESSION['adresses'][$_REQUEST['field']])) $_SESSION['adresses'][$_REQUEST['field']] = array();
+                //For ADD
+                if ($_REQUEST['for'] == 'add') {
+                    array_push($_SESSION['adresses'][$_REQUEST['field']], $email);
+                //For DEL
+                } else  if ($_REQUEST['for'] == 'del') {
+                    //unset adress in array
+                    unset($_SESSION['adresses'][$_REQUEST['field']][$_REQUEST['index']]);
+                    //If no adresse for field, unset the entire sub-array
+                    if (count($_SESSION['adresses'][$_REQUEST['field']]) == 0) 
+                        unset($_SESSION['adresses'][$_REQUEST['field']]);
+                }
+                //Get content
+                $content = $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], $_REQUEST['field']);
+            } else {
+                $error = $request->wash_html(_EMAIL.' '._IS_EMPTY.'!','NONE');
+                $status = 1;
+            }
+        } else {
+            $error = $request->wash_html(_UNKNOW_ERROR.'!','NONE');
+            $status = 1;
         }
     break;
 }
