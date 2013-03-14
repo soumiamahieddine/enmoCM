@@ -404,56 +404,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         DIRECTORY_SEPARATOR."templates/process/index.php");
     }
 
-
-    //DIFFUSION LIST
-    if ($core_tools->is_module_loaded('entities')) {
-         // Displays the diffusion list (only copies)
-        require_once('modules/entities/class/class_manage_listdiff.php');
-        $diff_list = new diffusion_list();
-        $_SESSION['process']['diff_list'] = $diff_list->get_listinstance($res_id, false, $coll_id);
-        $frm_str .= '<h3 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});'
-            . 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');return false;" '
-            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_diff_list_div" style="color:#1C99C5;"><<</span>';
-            $frm_str .= '&nbsp;<b>'._DIFF_LIST_COPY.' :</b>';
-            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-        $frm_str .= '</h3>';
-        $frm_str .= '<br>';
-    }
-
-    // HISTORY
-    $frm_str .= '<h3 onclick="new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});'
-        . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');return false;" '
-        . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-    $frm_str .= ' <span id="divStatus_history_div" style="color:#1C99C5;"><<</span>';
-        $frm_str .= '&nbsp;<b>'. _DOC_HISTORY.' :</b>';
-        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-    $frm_str .= '</h3>';
-    $frm_str .= '<br>';
-
-    //NOTES
-    if ($core_tools->is_module_loaded('notes')) {
-    
-        require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
-                . "class" . DIRECTORY_SEPARATOR
-                . "class_modules_tools.php";
-        $notes_tools    = new notes();
-        
-        //Count notes
-        $nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
-        $nbr_notes = ' ('.$nbr_notes.')';
-
-        // Displays the notes
-        $frm_str .= '<h3 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});'
-            . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
-            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_notes_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
-            . _NOTES . $nbr_notes.' :</b>';
-        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-        $frm_str .= '</h3>';
-        $frm_str .= '<br>';
-    }
-
     //CASES
     if ($core_tools->is_module_loaded('cases')) {
         require_once('modules/cases/class/class_modules_tools.php');
@@ -472,22 +422,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</h3>';
         $frm_str .= '<br>';
     }
-
-    //LINKS
-    require_once('core/class/LinkController.php');
-    $Class_LinkController = new LinkController();
-    $nbLink = $Class_LinkController->nbDirectLink(
-        $_SESSION['doc_id'],
-        $_SESSION['collection_id_choice'],
-        'all'
-    );
-    $frm_str .= '<h3 onclick="new Effect.toggle(\'links_div\', \'blind\', {delay:0.2});'
-        . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
-        . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-    $frm_str .= ' <span id="divStatus_links_div" style="color:#1C99C5;"><<</span>&nbsp;<b>' . _LINK_TAB . ' (<span id="nbLinks">'.$nbLink.'</span>) :</b>';
-    $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-    $frm_str .= '</h3>';
-    $frm_str .= '<br>';
 
     //FOLDERS
     if ($core_tools->is_module_loaded('folder')) {
@@ -513,53 +447,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</div>';
         $frm_str .= '</div>';
         $frm_str .='<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="' . $res_id . '" />';
-        $frm_str .= '<br>';
-    }
-
-    //test service add new version
-    $viewVersions = false;
-    if ($core->test_service('add_new_version', 'apps', false)) {
-        $viewVersions = true;
-    }
-    //VERSIONS
-    if ($core->is_module_loaded('content_management') && $viewVersions) {
-        $versionTable = $sec->retrieve_version_table_from_coll_id(
-            $coll_id
-        );
-        $selectVersions = "select res_id from "
-            . $versionTable . " where res_id_master = "
-            . $res_id . " and status <> 'DEL' order by res_id desc";
-        $dbVersions = new dbquery();
-        $dbVersions->connect();
-        $dbVersions->query($selectVersions);
-        $nb_versions_for_title = $dbVersions->nb_result();
-        $lineLastVersion = $dbVersions->fetch_object();
-        $lastVersion = $lineLastVersion->res_id;
-        if ($lastVersion <> '') {
-            $objectId = $lastVersion;
-            $objectTable = $versionTable;
-        } else {
-            $objectTable = $sec->retrieve_table_from_coll(
-                $coll_id
-            );
-            $objectId = $res_id;
-            $_SESSION['cm']['objectId4List'] = $res_id;
-        }
-        if ($nb_versions_for_title == 0) {
-            $extend_title_for_versions = '0';
-        } else {
-            $extend_title_for_versions = $nb_versions_for_title;
-        }
-        $_SESSION['cm']['resMaster'] = '';
-        $frm_str .= '<h3 onclick="new Effect.toggle(\'versions_div\', \'blind\', ';
-        $frm_str .= '{delay:0.2});'
-            . 'whatIsTheDivStatus(\'versions_div\', \'divStatus_versions_div\');return false;" '
-            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_versions_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
-                . _VERSIONS . ' (<span id="nbVersions">'
-                . $extend_title_for_versions . '</span>) :</b>';
-            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-        $frm_str .= '</h3>';
         $frm_str .= '<br>';
     }
 
@@ -599,7 +486,119 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     // ****************************** RIGHT PART *******************************************/
 
-    $frm_str .= '<div id="validright" style="width: 67%;">';
+    $frm_str .= '<div id="validright">';
+    
+    /*** TOOLBAR ***/
+    $frm_str .= '<div class="block" align="center" style="height:10px;width=100%;">';
+    
+    $frm_str .= '<table width="95%" cellpadding="0" cellspacing="0">';
+    $frm_str .= '<tr align="center">';
+    
+    //HISTORY
+    $frm_str .= '<td>';
+    $frm_str .= '|<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');return false;" '
+        . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+    $frm_str .= ' <span id="divStatus_history_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+        . _DOC_HISTORY;
+    $frm_str .= '</b></span>&nbsp;|';
+    $frm_str .= '</td>';
+    
+    //NOTE
+    if ($core_tools->is_module_loaded('notes')) {
+        $frm_str .= '<td>';
+        require_once 'modules/notes/class/class_modules_tools.php';
+        $notes_tools    = new notes();
+        //Count notes
+        $nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
+        $nbr_notes = ' ('.$nbr_notes.')';
+        $frm_str .= '|<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+            . _NOTES . $nbr_notes;
+        $frm_str .= '</b></span>&nbsp;|';
+        $frm_str .= '</td>';
+    }
+    
+    //DIFFUSION LIST
+    if ($core_tools->is_module_loaded('entities')) {        
+        $frm_str .= '<td>';
+        $frm_str .= '|<span onclick="new Effect.toggle(\'diff_list_div\', \'appear\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_diff_list_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+            . _DIFF_LIST_COPY;
+        $frm_str .= '</b></span>&nbsp;|';
+        $frm_str .= '</td>';
+    }
+    
+     //test service add new version
+    $viewVersions = false;
+    if ($core->test_service('add_new_version', 'apps', false)) {
+        $viewVersions = true;
+    }
+    //VERSIONS
+    if ($core->is_module_loaded('content_management') && $viewVersions) {
+        $versionTable = $sec->retrieve_version_table_from_coll_id(
+            $coll_id
+        );
+        $selectVersions = "select res_id from "
+            . $versionTable . " where res_id_master = "
+            . $res_id . " and status <> 'DEL' order by res_id desc";
+        $dbVersions = new dbquery();
+        $dbVersions->connect();
+        $dbVersions->query($selectVersions);
+        $nb_versions_for_title = $dbVersions->nb_result();
+        $lineLastVersion = $dbVersions->fetch_object();
+        $lastVersion = $lineLastVersion->res_id;
+        if ($lastVersion <> '') {
+            $objectId = $lastVersion;
+            $objectTable = $versionTable;
+        } else {
+            $objectTable = $sec->retrieve_table_from_coll(
+                $coll_id
+            );
+            $objectId = $res_id;
+            $_SESSION['cm']['objectId4List'] = $res_id;
+        }
+        if ($nb_versions_for_title == 0) {
+            $extend_title_for_versions = '0';
+        } else {
+            $extend_title_for_versions = $nb_versions_for_title;
+        }
+        $_SESSION['cm']['resMaster'] = '';
+        $frm_str .= '<td>';
+        $frm_str .= '|<span onclick="new Effect.toggle(\'versions_div\', \'appear\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'versions_div\', \'divStatus_versions_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_versions_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+            . _VERSIONS . ' (<span id="nbVersions">' . $extend_title_for_versions . '</span>)';
+        $frm_str .= '</b></span>&nbsp;|';
+        $frm_str .= '</td>';
+    }
+    
+    //LINKS
+    $frm_str .= '<td>';
+    require_once('core/class/LinkController.php');
+    $Class_LinkController = new LinkController();
+    $nbLink = $Class_LinkController->nbDirectLink(
+        $res_id,
+        $coll_id,
+        'all'
+    );
+    $frm_str .= '|<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
+        . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+    $frm_str .= ' <span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+         . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)';
+    $frm_str .= '</b></span>&nbsp;|';
+    $frm_str .= '</td>';
+    
+    //END TOOLBAR
+    $frm_str .= '</table>';
+    $frm_str .= '</div>';
+    
     //ATTACHMENTS FRAME
     if ($core_tools->is_module_loaded('attachments')) {
         require 'modules/templates/class/templates_controler.php';

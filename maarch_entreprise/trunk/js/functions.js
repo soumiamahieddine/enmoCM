@@ -686,11 +686,14 @@ function resize_frame_process(id_modal, id_frame, resize_width, resize_height)
             } else {
                 newwidth = (windowWidth - 600);
             }
-            frame2.style.width =  newwidth +"px";
+            frame2.style.width =  newwidth + "px";
+            if ($('validright')) {
+                $('validright').style.width =  (newwidth - 3) + "px";
+            }
             //alert('frame width:' + frame2.getWidth());
         }
         if (resize_height == true && frame2 != null) {
-            frame2.style.height = newheight +"px";
+            frame2.style.height = newheight + "px";
             //alert('frame height:' + frame2.getHeight());
         }
     }

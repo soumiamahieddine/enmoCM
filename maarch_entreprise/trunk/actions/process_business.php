@@ -286,38 +286,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<br />';
         }
 
-    if ($core_tools->is_module_loaded('attachments')) {
-        $req = new request;
-        $req->connect();
-        $req->query("select res_id from "
-            . $_SESSION['tablename']['attach_res_attachments']
-            . " where status <> 'DEL' and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
-        if ($req->nb_result() > 0) {
-            $nb_attach = $req->nb_result();
-        } else {
-            $nb_attach = 0;
-        }
-    }
-
-    if ($answer <> '') {
-        $answer .= ': ';
-    }
-
-    $frm_str .= '<h3 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});'
-              . 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});'
-              . 'whatIsTheDivStatus(\'done_answers_div\', \'divStatus_done_answers_div\');return false;" '
-              . 'onmouseover="this.style.cursor=\'pointer\';" style="width:90%;">';
-    $frm_str .= ' <span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span>';
-    $frm_str .= '&nbsp;<b>' . _PJ . ', ' . _DONE_ANSWERS . ' (' . $answer .'<span id="nb_attach">'. $nb_attach . '</span>)</b>';
-    $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-    $frm_str .= '</h3>';
-    $frm_str .= '<div class="desc" id="done_answers_div" style="display:none;width:90%;">';
-        $frm_str .= '<div class="ref-unit" style="width:95%;">';
-
-        $frm_str .= '</div>';
-    $frm_str .= '</div>';
-    $frm_str .= '<br>';
-
     //TAGS
     if (
         $core_tools->is_module_loaded('tags') && (
@@ -326,65 +294,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     {
         include_once('modules/tags/templates/process/index.php');
     }
-
-
-    //DIFFUSION LIST
-    if ($core_tools->is_module_loaded('entities')) {
-        //print_r($_SESSION['process']['diff_list']);exit;
-        $frm_str .= '<h3 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});'
-            . 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');return false;" '
-            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_diff_list_div" style="color:#1C99C5;"><<</span>';
-            $frm_str .= '&nbsp;<b>'._DIFF_LIST_COPY.'</b>';
-            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-        $frm_str .= '</h3>';
-        $frm_str .= '<br>';
-    }
-
-    // HISTORY
-    $frm_str .= '<h3 onclick="new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});'
-        . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');return false;" '
-        . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-    $frm_str .= ' <span id="divStatus_history_div" style="color:#1C99C5;"><<</span>';
-        $frm_str .= '&nbsp;<b>'. _DOC_HISTORY.'</b>';
-        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-    $frm_str .= '</h3>';
-    $frm_str .= '<br>';
-
-    //NOTES
-    if ($core_tools->is_module_loaded('notes')) {
-        require_once 'modules/notes/class/class_modules_tools.php';
-        $notes_tools = new notes();
-        //Count notes
-        $nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
-        $nbr_notes = ' ('.$nbr_notes.')';
-        // Displays the notes
-        $frm_str .= '<h3 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});'
-            . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
-            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_notes_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
-            . _NOTES . $nbr_notes.'</b>';
-        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-        $frm_str .= '</h3>';
-        $frm_str .= '<br>';
-    }
-
-    //LINKS
-    require_once('core/class/LinkController.php');
-    $Class_LinkController = new LinkController();
-    $nbLink = $Class_LinkController->nbDirectLink(
-        $_SESSION['doc_id'],
-        $_SESSION['collection_id_choice'],
-        'all'
-    );
-    $frm_str .= '<h3 onclick="new Effect.toggle(\'links_div\', \'blind\', {delay:0.2});'
-        . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
-        . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-    $frm_str .= ' <span id="divStatus_links_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
-        . _LINK_TAB . ' (<span id="nbLinks">'.$nbLink.'</span>)</b>';
-    $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-    $frm_str .= '</h3>';
-    $frm_str .= '<br>';
 
     //FOLDERS
     if ($core_tools->is_module_loaded('folder')) {
@@ -449,7 +358,102 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     // ****************************** RIGHT PART *******************************************/
 
-    $frm_str .= '<div id="validright" style="width: 67%;">';
+/*
+    $frm_str .= '<div id="validright" style="width: 80%;">';
+*/
+    $frm_str .= '<div id="validright">';
+    
+     /*** TOOLBAR ***/
+    $frm_str .= '<div class="block" align="center" style="height:10px;width=100%;">';
+    
+    $frm_str .= '<table width="95%" cellpadding="0" cellspacing="0">';
+    $frm_str .= '<tr align="center">';
+    
+    // HISTORY
+    $frm_str .= '<td>';
+    $frm_str .= '|<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');return false;" '
+        . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+    $frm_str .= ' <span id="divStatus_history_div" style="color:#1C99C5;"><<</span><b>'
+       . '<small>' . _DOC_HISTORY . '</small>';
+    $frm_str .= '</b></span>|';
+    $frm_str .= '</td>';
+    
+    //NOTE
+    if ($core_tools->is_module_loaded('notes')) {
+        $frm_str .= '<td>';
+        require_once 'modules/notes/class/class_modules_tools.php';
+        $notes_tools    = new notes();
+        //Count notes
+        $nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
+        $nbr_notes = ' ('.$nbr_notes.')';
+        $frm_str .= '|<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>'
+            . '<small>' . _NOTES . $nbr_notes . '</small>';
+        $frm_str .= '</b></span>|';
+        $frm_str .= '</td>';
+    }
+    
+    //DIFFUSION LIST
+    if ($core_tools->is_module_loaded('entities')) {        
+        $frm_str .= '<td>';
+        $frm_str .= '|<span onclick="new Effect.toggle(\'diff_list_div\', \'appear\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_diff_list_div" style="color:#1C99C5;"><<</span><b>'
+            . '<small>' . _DIFF_LIST_COPY . $nbr_notes . '</small>';
+        $frm_str .= '</b></span>|';
+        $frm_str .= '</td>';
+    }
+    
+    //ATTACHMENTS
+    if ($core_tools->is_module_loaded('attachments')) {
+        $frm_str .= '<td>';
+        $req = new request;
+        $req->connect();
+        $req->query("select res_id from "
+            . $_SESSION['tablename']['attach_res_attachments']
+            . " where status <> 'DEL' and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
+        if ($req->nb_result() > 0) {
+            $nb_attach = $req->nb_result();
+        } else {
+            $nb_attach = 0;
+        }
+        if ($answer <> '') {
+            $answer .= ': ';
+        }
+        $frm_str .= '|<span onclick="new Effect.toggle(\'list_answers_div\', \'appear\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'list_answers_div\', \'divStatus_done_answers_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span><b>'
+             . '<small>' . _PJ . ' (' . $answer .'<span id="nb_attach">' . $nb_attach . '</span>)</small>';
+        $frm_str .= '</b></span>|';
+        $frm_str .= '</td>';
+    }
+    
+    //LINKS
+    $frm_str .= '<td>';
+    require_once('core/class/LinkController.php');
+    $Class_LinkController = new LinkController();
+    $nbLink = $Class_LinkController->nbDirectLink(
+        $res_id,
+        $coll_id,
+        'all'
+    );
+    $frm_str .= '|<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
+        . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+    $frm_str .= ' <span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>'
+         . '<small>' . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)</small>';
+    $frm_str .= '</b></span>|';
+    $frm_str .= '</td>';
+    
+    //END TOOLBAR
+    $frm_str .= '</table>';
+    $frm_str .= '</div>';
+    
     //ATTACHMENTS FRAME
     if ($core_tools->is_module_loaded('attachments')) {
         require 'modules/templates/class/templates_controler.php';
@@ -709,7 +713,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
         . $res_id . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
+    
+    //CLOSE DIV VALID RIGHT
     $frm_str .= '</div>';
+    
     //SCRIPT
     $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'
         . $id_action . '", "viewframe", true, true);window.scrollTo(0,0);';
