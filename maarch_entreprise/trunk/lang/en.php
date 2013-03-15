@@ -296,6 +296,7 @@ if (!defined('_DEPARTMENT')) define('_DEPARTMENT', 'Department');
 if (!defined('_DEPARTMENTS_LIST_SHORT')) define('_DEPARTMENTS_LIST_SHORT', 'Service list');
 if (!defined('_DEPARTMENT_DEST')) define('_DEPARTMENT_DEST', 'Recipient department');
 if (!defined('_DEPARTMENT_EXP')) define('_DEPARTMENT_EXP', 'Sender department');
+if (!defined('_DEPARTMENT_OWNER')) define( '_DEPARTMENT_OWNER', 'Owner department');
 if (!defined('_DESC')) define('_DESC', 'Description');
 if (!defined('_DESC_SORT')) define('_DESC_SORT', 'Downwards sorting');
 if (!defined('_DESC_STRUCTURE_MISSING')) define('_DESC_STRUCTURE_MISSING', 'The description of the classification scheme is missing');

@@ -441,12 +441,14 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'contact_mandatory', type:'label', state:'display'},
         {id:'identifier_mandatory', type:'label', state:'display'},
         {id:'doc_date_mandatory', type:'label', state:'display'},
-        {id:'currency_mandatory', type:'label', state:'display'},
-        {id:'tax_sum_mandatory', type:'label', state:'display'},
-        {id:'total_sum_mandatory', type:'label', state:'display'},
+        {id:'currency_mandatory', type:'label', state:'hide'},
+        {id:'net_sum_mandatory', type:'label', state:'hide'},
+        {id:'tax_sum_mandatory', type:'label', state:'hide'},
+        {id:'total_sum_mandatory', type:'label', state:'hide'},
         {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
         {id:'process_limit_date_mandatory', type:'label', state:'hide'},
         {id:'destination_mandatory', type:'label', state:'display'},
+        {id:'difflist_mandatory', type:'label', state:'display'},
         {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }
@@ -485,16 +487,18 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
-        {id:'subject_mandatory', type:'label', state:'display'},
+        {id:'subject_mandatory', type:'label', state:'hide'},
         {id:'contact_mandatory', type:'label', state:'display'},
         {id:'identifier_mandatory', type:'label', state:'display'},
         {id:'doc_date_mandatory', type:'label', state:'display'},
-        {id:'currency_mandatory', type:'label', state:'display'},
-        {id:'tax_sum_mandatory', type:'label', state:'display'},
-        {id:'total_sum_mandatory', type:'label', state:'display'},
+        {id:'currency_mandatory', type:'label', state:'hide'},
+        {id:'net_sum_mandatory', type:'label', state:'hide'},
+        {id:'tax_sum_mandatory', type:'label', state:'hide'},
+        {id:'total_sum_mandatory', type:'label', state:'hide'},
         {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
         {id:'process_limit_date_mandatory', type:'label', state:'hide'},
         {id:'destination_mandatory', type:'label', state:'display'},
+        {id:'difflist_mandatory', type:'label', state:'display'},
         {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }
@@ -536,13 +540,14 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'subject_mandatory', type:'label', state:'display'},
         {id:'contact_mandatory', type:'label', state:'hide'},
         {id:'identifier_mandatory', type:'label', state:'hide'},
-        {id:'doc_date_mandatory', type:'label', state:'hide'},
+        {id:'doc_date_mandatory', type:'label', state:'display'},
         {id:'currency_mandatory', type:'label', state:'hide'},
         {id:'tax_sum_mandatory', type:'label', state:'hide'},
         {id:'total_sum_mandatory', type:'label', state:'hide'},
         {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
         {id:'process_limit_date_mandatory', type:'label', state:'hide'},
         {id:'destination_mandatory', type:'label', state:'display'},
+        {id:'difflist_mandatory', type:'label', state:'hide'},
         {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }
@@ -581,8 +586,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
-        {id:'subject_mandatory', type:'label', state:'hide'},
-        {id:'contact_mandatory', type:'label', state:'display'},
+        {id:'subject_mandatory', type:'label', state:'display'},
+        {id:'contact_mandatory', type:'label', state:'hide'},
         {id:'identifier_mandatory', type:'label', state:'hide'},
         {id:'doc_date_mandatory', type:'label', state:'display'},
         {id:'currency_mandatory', type:'label', state:'hide'},
@@ -591,6 +596,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
         {id:'process_limit_date_mandatory', type:'label', state:'hide'},
         {id:'destination_mandatory', type:'label', state:'display'},
+        {id:'difflist_mandatory', type:'label', state:'hide'},
         {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }

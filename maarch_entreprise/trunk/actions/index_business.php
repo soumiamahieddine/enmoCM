@@ -514,10 +514,10 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<tr id="department_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td style="width:30px;align:center;"><img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename='
-                . 'department.png" alt="' . _DEPARTMENT_DEST 
+                . 'department.png" alt="' . _DEPARTMENT_OWNER 
                 . '"/></td><td><label for="department" class="form_title" '
                 . 'id="label_dep_dest" style="display:inline;" >'
-                . _DEPARTMENT_DEST . '</label></td>';
+                . _DEPARTMENT_OWNER . '</label></td>';
         //$frmStr .= '<td>&nbsp;</td>';
         $frmStr .= '<td class="indexing_field">';
         $frmStr .= '<select name="destination" id="destination" onchange="clear_error(\'frm_error_' . $actionId . '\');" >';
@@ -564,7 +564,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                     . '</option>';
         }
         $frmStr .= '</select></td>';
-        $frmStr .= '<td><span class="red_asterisk" id="destination_mandatory" '
+        $frmStr .= '<td><span class="red_asterisk" id="difflist_mandatory" '
                 . 'style="display:inline;">*</span>&nbsp;</td>';
         $frmStr .= '</tr>';
         $frmStr .= '<tr id="diff_list_tr" style="display:none;">';
@@ -1620,9 +1620,10 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         $contactId = str_replace(
             ')', '', substr($contact, strrpos($contact, '(') + 1)
         );
-        $queryExtFields .= 'contact_id,';
-        $queryExtValues .= "'" . $db->protect_string_db($contactId)
-                        . "',";
+        if ($contactId <> '') {
+            $queryExtFields .= 'contact_id,';
+            $queryExtValues .= $contactId;
+        }
     }
     if ($core->is_module_loaded('folder')) {
         $folderId = '';

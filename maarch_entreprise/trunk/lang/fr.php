@@ -1418,6 +1418,8 @@ if (!defined('_BUSINESS_LIST')) define('_BUSINESS_LIST', 'Liste de documents bus
 if (!defined('_INDEXING_BUSINESS')) define('_INDEXING_BUSINESS', 'Enregistrer un document');
 if (!defined('_ADV_SEARCH_BUSINESS')) define('_ADV_SEARCH_BUSINESS', 'Rechercher un document');
 
+if (!defined('_DEPARTMENT_OWNER')) define( '_DEPARTMENT_OWNER', 'Service propri&eacute;taire');
+
 /********************Parameters **************/
 if (!defined('_PARAMETERS')) define('_PARAMETERS', 'Paramètres');
 if (!defined('_PARAMETER')) define('_PARAMETER', 'Paramètre');

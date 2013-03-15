@@ -585,10 +585,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<tr id="department_tr" style="display:'.$display_value.';">';
         $frm_str .= '<td style="width:30px;align:center;"><img src="'
             . $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename='
-            . 'department.png" alt="' . _DEPARTMENT_DEST
+            . 'department.png" alt="' . _DEPARTMENT_OWNER
             . '"/></td><td><label for="department" class="form_title" '
             . 'id="label_dep_dest" style="display:inline;" >'
-            . _DEPARTMENT_DEST . '</label></td>';
+            . _DEPARTMENT_OWNER . '</label></td>';
         $frm_str .='<td class="indexing_field">'
             . '<select name="destination" id="destination" onchange="clear_error(\'frm_error_'. $id_action . '\');">';
             $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
@@ -811,9 +811,9 @@ $frm_str .= '</div>';
             $frm_str .= '|<span onclick="new Effect.toggle(\'create_contact_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'create_contact_div\', \'divStatus_create_contact_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-            $frm_str .= ' <span id="divStatus_create_contact_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+            $frm_str .= '<span id="divStatus_create_contact_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
                 . _CREATE_CONTACT;
-            $frm_str .= '</b></span>&nbsp;|';
+            $frm_str .= '</b></span>|';
             $frm_str .= '</td>';
         }
         
@@ -828,9 +828,9 @@ $frm_str .= '</div>';
             $frm_str .= '|<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-            $frm_str .= ' <span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+            $frm_str .= '<span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
                 . _NOTES . $nbr_notes;
-            $frm_str .= '</b></span>&nbsp;|';
+            $frm_str .= '</b></span>|';
             $frm_str .= '</td>';
         }
         
@@ -853,9 +853,9 @@ $frm_str .= '</div>';
             $frm_str .= '|<span onclick="new Effect.toggle(\'list_answers_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'list_answers_div\', \'divStatus_done_answers_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-            $frm_str .= ' <span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+            $frm_str .= '<span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
                 . _PJ . ' (' . $answer .'<span id="nb_attach">' . $nb_attach . '</span>)';
-            $frm_str .= '</b></span>&nbsp;|';
+            $frm_str .= '</b></span>|';
             $frm_str .= '</td>';
         }
         
@@ -871,9 +871,9 @@ $frm_str .= '</div>';
         $frm_str .= '|<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+        $frm_str .= '<span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
              . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)';
-        $frm_str .= '</b></span>&nbsp;|';
+        $frm_str .= '</b></span>|';
         $frm_str .= '</td>';
         
         //END TOOLBAR
@@ -1605,7 +1605,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         $contact = get_value_fields($values_form, 'contact');
         //echo 'contact '.$contact.', type '.$contact_type;
         $contact_id = str_replace(')', '', substr($contact, strrpos($contact,'(')+1));
-        $query_ext .= ", contact_id = " . $contact_id;
+        if ($contact_id <> '') {
+            $query_ext .= ", contact_id = " . $contact_id;
+        }
     }
     
     if ($core->is_module_loaded('folder')) {

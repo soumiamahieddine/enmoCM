@@ -670,9 +670,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '|<span onclick="new Effect.toggle(\'create_contact_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'create_contact_div\', \'divStatus_create_contact_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-            $frm_str .= ' <span id="divStatus_create_contact_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+            $frm_str .= '<span id="divStatus_create_contact_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
                 . _CREATE_CONTACT;
-            $frm_str .= '</b></span>&nbsp;|';
+            $frm_str .= '</b></span>|';
             $frm_str .= '</td>';
         }
         
@@ -687,9 +687,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '|<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-            $frm_str .= ' <span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+            $frm_str .= '<span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
                 . _NOTES . $nbr_notes;
-            $frm_str .= '</b></span>&nbsp;|';
+            $frm_str .= '</b></span>|';
             $frm_str .= '</td>';
         }
         
@@ -712,9 +712,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '|<span onclick="new Effect.toggle(\'list_answers_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'list_answers_div\', \'divStatus_done_answers_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-            $frm_str .= ' <span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+            $frm_str .= '<span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
                 . _PJ . ' (' . $answer .'<span id="nb_attach">' . $nb_attach . '</span>)';
-            $frm_str .= '</b></span>&nbsp;|';
+            $frm_str .= '</b></span>|';
             $frm_str .= '</td>';
         }
         
@@ -730,9 +730,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '|<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+        $frm_str .= '<span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
              . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)';
-        $frm_str .= '</b></span>&nbsp;|';
+        $frm_str .= '</b></span>|';
         $frm_str .= '</td>';
         
         //END TOOLBAR

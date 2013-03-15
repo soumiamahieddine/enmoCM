@@ -92,7 +92,7 @@ $_ENV['categories']['purchase']['type_id'] = array (
 $_ENV['categories']['purchase']['subject'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
-    'mandatory' => true,
+    'mandatory' => false,
     'label' => _SUBJECT,
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=subject.png',
@@ -217,7 +217,7 @@ $_ENV['categories']['sell']['type_id'] = array (
 $_ENV['categories']['sell']['subject'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
-    'mandatory' => true,
+    'mandatory' => false,
     'label' => _SUBJECT,
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=subject.png',
@@ -364,7 +364,7 @@ $_ENV['categories']['enterprise_document']['contact_id'] = array (
 $_ENV['categories']['enterprise_document']['identifier'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
-    'mandatory' => true,
+    'mandatory' => false,
     'label' => _IDENTIFIER,
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=identifier.png',
@@ -402,7 +402,7 @@ $_ENV['categories']['human_resources']['type_id'] = array (
 $_ENV['categories']['human_resources']['subject'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
-    'mandatory' => false,
+    'mandatory' => true,
     'label' => _SUBJECT,
     'table' => 'res',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=subject.png',
@@ -450,7 +450,7 @@ if ($core->is_module_loaded('entities')) {
         'type_form' => 'string',
         'type_field' => 'string',
         'mandatory' => true,
-        'label' => _DEPARTMENT_DEST,
+        'label' => _DEPARTMENT_OWNER,
         'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=department.png',
         'modify' => false,
@@ -467,7 +467,7 @@ if ($core->is_module_loaded('entities')) {
         'type_form' => 'string',
         'type_field' => 'string',
         'mandatory' => true,
-        'label' => _DEPARTMENT_DEST,
+        'label' => _DEPARTMENT_OWNER,
         'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=department.png',
         'modify' => false,
@@ -484,7 +484,7 @@ if ($core->is_module_loaded('entities')) {
         'type_form' => 'string',
         'type_field' => 'string',
         'mandatory' => true,
-        'label' => _DEPARTMENT_DEST,
+        'label' => _DEPARTMENT_OWNER,
         'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=department.png',
         'modify' => false,
@@ -492,7 +492,7 @@ if ($core->is_module_loaded('entities')) {
     );
     $_ENV['categories']['enterprise_document']['other_cases']['diff_list'] = array (
         'type' => 'special',
-        'mandatory' => true,
+        'mandatory' => false,
         'label' => _DIFF_LIST,
         'table' => 'special'
     );
@@ -501,7 +501,7 @@ if ($core->is_module_loaded('entities')) {
         'type_form' => 'string',
         'type_field' => 'string',
         'mandatory' => true,
-        'label' => _DEPARTMENT_DEST,
+        'label' => _DEPARTMENT_OWNER,
         'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=department.png',
         'modify' => false,
@@ -509,7 +509,7 @@ if ($core->is_module_loaded('entities')) {
     );
     $_ENV['categories']['human_resources']['other_cases']['diff_list'] = array (
         'type' => 'special',
-        'mandatory' => true,
+        'mandatory' => false,
         'label' => _DIFF_LIST,
         'table' => 'special'
     );
@@ -666,7 +666,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     if ($data[$field]['field_type'] == 'select') {
                         $data[$field]['select'] = array ();
                         if ($field == 'type_id') {
-                            require_once ("apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_types.php");
+                            require_once ('apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php');
                             $type = new types();
                             if ($_SESSION['features']['show_types_tree'] == 'true') {
                                 $data[$field]['select'] = $type->getArrayStructTypes($coll_id);
@@ -913,6 +913,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
 
     $line = $db->fetch_object();
     // We fill the array with the query result
+    $currency = '';
     for ($i = 0; $i < count($arr); $i++) {
         if ($mode == 'full' || $mode == 'form') {
             // Normal Cases
@@ -936,6 +937,9 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                 $data[$arr[$i]]['show_value'] = $db->show_string($line-> $arr[$i], true);
             }
             // special cases :
+            if ($arr[$i] == 'currency') {
+                  $currency = $line-> $arr[$i];
+            }
             if ($arr[$i] == 'priority') {
                 $data[$arr[$i]]['show_value'] = $_SESSION['mail_priorities'][$line-> $arr[$i]];
             }
@@ -951,6 +955,9 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             }
             elseif ($arr[$i] == 'type_id') {
                 $data[$arr[$i]]['show_value'] = $db->show_string($line->type_label);
+            }
+            elseif ($arr[$i] == 'net_sum' || $arr[$i] == 'tax_sum' || $arr[$i] == 'total_sum') {
+                $data[$arr[$i]]['show_value'] = $db->formatAmount($currency, $line-> $arr[$i]);
             }
             // Arboxe
             elseif ($arr[$i] == 'arbox_id') {
