@@ -375,6 +375,7 @@ if (!defined('_DOC_DELETED')) define( '_DOC_DELETED', 'Document deleted');
 if (!defined('_DOC_HISTORY')) define('_DOC_HISTORY', 'Logs');
 if (!defined('_DOC_NOT_FOUND')) define('_DOC_NOT_FOUND', 'The document cannot be found');
 if (!defined('_DOC_NUM')) define('_DOC_NUM', 'document nb. ');
+if (!defined('_LETTER_NUM')) define('_LETTER_NUM', 'letter nb. ');
 if (!defined('_DONE')) define('_DONE','Description');
 if (!defined('_DONE_ANSWERS')) define('_DONE_ANSWERS','Answers to the mail');
 if (!defined('_DOUBLED_DOC')) define('_DOUBLED_DOC', 'Duplicate problem');

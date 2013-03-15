@@ -173,7 +173,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<h2 id="action_title"><img src="'
             . $_SESSION['config']['businessappurl']
             . 'static.php?filename=file_index_b.gif"  align="middle" alt="" />'
-            . _PROCESS . _DOC_NUM . ' ' . $res_id;
+            . _PROCESS . _LETTER_NUM . ' ' . $res_id;
                 $frm_str .= '</h2>';
                 $frm_str .= '<div id="frm_error_' . $id_action . '" class="error"></div>';
                 $frm_str .= '<form name="process" method="post" id="process" action="#" '

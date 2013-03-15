@@ -824,6 +824,7 @@ if (!defined('_FOUND_DOC')) define( '_FOUND_DOC', 'document(s) trouv&eacute;(s)'
 if (!defined('_FOUND_LOGS')) define( '_FOUND_LOGS', 'fichier(s) de logs trouv&eacute;(s)');
 if (!defined('_PROCESS')) define( '_PROCESS', 'Traitement ');
 if (!defined('_DOC_NUM')) define( '_DOC_NUM', 'document n&deg; ');
+if (!defined('_LETTER_NUM')) define( '_LETTER_NUM', 'courrier n&deg; ');
 if (!defined('_GENERAL_INFO')) define( '_GENERAL_INFO', 'Informations g&eacute;n&eacute;rales');
 if (!defined('_ON_DOC_NUM')) define( '_ON_DOC_NUM', ' sur le document n&deg;');
 if (!defined('_PRIORITY')) define( '_PRIORITY', 'Priorit&eacute;');
