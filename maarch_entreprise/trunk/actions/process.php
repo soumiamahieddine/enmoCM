@@ -489,7 +489,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<div id="validright">';
     
     /*** TOOLBAR ***/
-    $frm_str .= '<div class="block" align="center" style="height:10px;width=100%;">';
+    $frm_str .= '<div class="block" align="center" style="height:20px;width=100%;">';
     
     $frm_str .= '<table width="95%" cellpadding="0" cellspacing="0">';
     $frm_str .= '<tr align="center">';
@@ -499,8 +499,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '|<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');return false;" '
         . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-    $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
-        . _DOC_HISTORY;
+    $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><<</span><b>'
+        . '<small>' . _DOC_HISTORY . '</small>';
     $frm_str .= '</b></span>|';
     $frm_str .= '</td>';
     
@@ -515,8 +515,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '|<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= '<span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
-            . _NOTES . $nbr_notes;
+        $frm_str .= '<span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>'
+            . '<small>' . _NOTES . $nbr_notes . '</small>';
         $frm_str .= '</b></span>|';
         $frm_str .= '</td>';
     }
@@ -527,8 +527,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '|<span onclick="new Effect.toggle(\'diff_list_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= '<span id="divStatus_diff_list_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
-            . _DIFF_LIST_COPY;
+        $frm_str .= '<span id="divStatus_diff_list_div" style="color:#1C99C5;"><<</span><b>'
+            . '<small>' . _DIFF_LIST_COPY . '</small>';
         $frm_str .= '</b></span>|';
         $frm_str .= '</td>';
     }
@@ -572,8 +572,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '|<span onclick="new Effect.toggle(\'versions_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'versions_div\', \'divStatus_versions_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= '<span id="divStatus_versions_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
-            . _VERSIONS . ' (<span id="nbVersions">' . $extend_title_for_versions . '</span>)';
+        $frm_str .= '<span id="divStatus_versions_div" style="color:#1C99C5;"><<</span><b>'
+            . '<small>' . _VERSIONS . ' (<span id="nbVersions">' . $extend_title_for_versions . '</span>)</small>';
         $frm_str .= '</b></span>|';
         $frm_str .= '</td>';
     }
@@ -590,8 +590,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '|<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
         . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-    $frm_str .= '<span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
-         . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)';
+    $frm_str .= '<span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>'
+         . '<small>' . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)</small>';
     $frm_str .= '</b></span>|';
     $frm_str .= '</td>';
     
@@ -685,6 +685,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '</div>';
                 //$frm_str .= '<hr class="hr_process"/>';
             $frm_str .= '</div>';
+            $frm_str .= '<hr />';
         $frm_str .= '</div>';
     }
 
@@ -755,6 +756,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '<br>';
                 //$frm_str .= '<hr class="hr_process"/>';
             $frm_str .= '</div>';
+            $frm_str .= '<hr />';
         $frm_str .= '</div>';
     }
 
@@ -772,6 +774,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . 'scrolling="auto" frameborder="0"></iframe>';
     //$frm_str .= '<hr class="hr_process"/>';
     $frm_str .= '</div>';
+    $frm_str .= '<hr />';
     $frm_str .= '</div>';
 
     //NOTES FRAME
@@ -789,6 +792,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . 'scrolling="auto" frameborder="0" ></iframe>';
         //$frm_str .= '<hr class="hr_process"/>';
         $frm_str .= '</div>';
+        $frm_str .= '<hr />';
         $frm_str .= '</div>';
     }
 
@@ -845,6 +849,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '<br>';
                 //$frm_str .= '<hr class="hr_process"/>';
             $frm_str .= '</div>';
+            $frm_str .= '<hr />';
         $frm_str .= '</div>';
     }
 
@@ -897,6 +902,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= $Links;
             }
         $frm_str .= '</div>';
+        $frm_str .= '<hr />';
     $frm_str .= '</div>';
 
     //VERSIONS FRAME
@@ -937,6 +943,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '</script>';
                 $frm_str .= '</div><br>';
         $frm_str .= '</div>';
+        $frm_str .= '<hr />';
     $frm_str .= '</div>';
 
     //RESOURCE FRAME

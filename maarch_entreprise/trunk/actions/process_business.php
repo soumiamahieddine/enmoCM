@@ -541,6 +541,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '</div>';
                 //$frm_str .= '<hr class="hr_process"/>';
             $frm_str .= '</div>';
+            $frm_str .= '<hr />';
         $frm_str .= '</div>';
     }
 
@@ -607,6 +608,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '<br>';
                 //$frm_str .= '<hr class="hr_process"/>';
             $frm_str .= '</div>';
+            $frm_str .= '<hr />';
         $frm_str .= '</div>';
     }
 
@@ -624,6 +626,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . 'scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>';
     //$frm_str .= '<hr class="hr_process"/>';
     $frm_str .= '</div>';
+    $frm_str .= '<hr />';
     $frm_str .= '</div>';
 
     //NOTES FRAME
@@ -652,9 +655,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     . $_SESSION['config']['businessappurl']
                     . 'index.php?display=true&module=notes&page=notes&identifier='
                     . $res_id . '&origin=document&coll_id=' . $coll_id . '&load&size=medium"'
-                    . ' frameborder="0" width="100%" height="1000px"></iframe>';
+                    . ' frameborder="0" width="100%" height="650px"></iframe>';
                 //$frm_str .= '<hr class="hr_process"/>';
             $frm_str .= '</div>';
+            $frm_str .= '<hr />';
         $frm_str .= '</div>';
     }
 
@@ -707,6 +711,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= $Links;
             }
         $frm_str .= '</div>';
+        $frm_str .= '<hr />';
     $frm_str .= '</div>';
 
     //RESOURCE FRAME

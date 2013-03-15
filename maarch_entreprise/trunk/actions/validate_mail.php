@@ -657,21 +657,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<div id="validright">';
         
         /*** TOOLBAR ***/
-        $frm_str .= '<div class="block" align="center" style="height:10px;width=95%;">';
+        $frm_str .= '<div class="block" align="center" style="height:20px;width=95%;">';
         
         $frm_str .= '<table width="95%" cellpadding="0" cellspacing="0">';
         $frm_str .= '<tr align="center">';
         
         //CONTACT
-        
          if ($_SESSION['features']['personal_contact'] == "true"
         ) {
             $frm_str .= '<td>';
             $frm_str .= '|<span onclick="new Effect.toggle(\'create_contact_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'create_contact_div\', \'divStatus_create_contact_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-            $frm_str .= '<span id="divStatus_create_contact_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
-                . _CREATE_CONTACT;
+            $frm_str .= '<span id="divStatus_create_contact_div" style="color:#1C99C5;"><<</span><b>'
+                . '<small>' . _CREATE_CONTACT . '</small>';
             $frm_str .= '</b></span>|';
             $frm_str .= '</td>';
         }
@@ -687,8 +686,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '|<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-            $frm_str .= '<span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
-                . _NOTES . $nbr_notes;
+            $frm_str .= '<span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>'
+                . '<small>' . _NOTES . $nbr_notes . '</small>';
             $frm_str .= '</b></span>|';
             $frm_str .= '</td>';
         }
@@ -712,8 +711,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '|<span onclick="new Effect.toggle(\'list_answers_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'list_answers_div\', \'divStatus_done_answers_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-            $frm_str .= '<span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
-                . _PJ . ' (' . $answer .'<span id="nb_attach">' . $nb_attach . '</span>)';
+            $frm_str .= '<span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span><b>'
+                . '<small>' . _PJ . ' (' . $answer .'<span id="nb_attach">' . $nb_attach . '</span>)</small>';
             $frm_str .= '</b></span>|';
             $frm_str .= '</td>';
         }
@@ -730,8 +729,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '|<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= '<span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
-             . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)';
+        $frm_str .= '<span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>'
+              . '<small>' . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)</small>';
         $frm_str .= '</b></span>|';
         $frm_str .= '</td>';
         
@@ -925,7 +924,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&module=notes&page=notes&identifier='
                 . $res_id . '&origin=document&coll_id=' . $coll_id . '&load&size=medium"'
-                . ' frameborder="0" width="100%" height="450px"></iframe>';
+                . ' frameborder="0" width="100%" height="650px"></iframe>';
             $frm_str .= '</div>';
             $frm_str .= '<hr />';
             $frm_str .= '</div>';
@@ -1062,6 +1061,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= $Links;
         }
         $frm_str .= '</div>';
+        $frm_str .= '<hr />';
         $frm_str .= '</div>';
         
         //DOCUMENT VIEWER
