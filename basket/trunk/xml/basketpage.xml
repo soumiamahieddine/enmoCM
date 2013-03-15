@@ -6,27 +6,40 @@
         <NAME>redirect_to_action</NAME>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
+        <COLLECTIONS>
+            <COLL_ID>*</COLL_ID>
+        </COLLECTIONS>
     </BASKETPAGE>
-    <BASKETPAGE>
+    <!-- letters lists -->
+    <!--<BASKETPAGE>
         <ID>list</ID>
         <LABEL>_DOCUMENTS_LIST</LABEL>
         <NAME>documents_list</NAME>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
-    </BASKETPAGE>
-    <BASKETPAGE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </BASKETPAGE>-->
+    <!--<BASKETPAGE>
         <ID>list_with_filters</ID>
         <LABEL>_DOCUMENTS_LIST_WITH_FILTERS</LABEL>
         <NAME>documents_list_with_filters</NAME>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
-    </BASKETPAGE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </BASKETPAGE>-->
     <BASKETPAGE>
         <ID>list_with_attachments</ID>
         <LABEL>_DOCUMENTS_LIST_WITH_ATTACHMENTS</LABEL>
         <NAME>documents_list_with_attachments</NAME>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
     </BASKETPAGE>
     <BASKETPAGE>
         <ID>list_copies</ID>
@@ -34,6 +47,9 @@
         <NAME>documents_list_copies</NAME>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
     </BASKETPAGE>
     <BASKETPAGE>
         <ID>list_cases</ID>
@@ -41,13 +57,20 @@
         <NAME>cases_list</NAME>
         <ORIGIN>module</ORIGIN>
         <MODULE>cases</MODULE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
     </BASKETPAGE>
+    <!-- ios lists -->
     <BASKETPAGE>
         <ID>io_basket_list</ID>
         <LABEL>_IO_BASKET_LIST</LABEL>
         <NAME>io_basket_list</NAME>
         <ORIGIN>module</ORIGIN>
         <MODULE>records_management</MODULE>
+        <COLLECTIONS>
+            <COLL_ID>io_coll</COLL_ID>
+        </COLLECTIONS>
     </BASKETPAGE>
     <BASKETPAGE>
         <ID>item_basket_list</ID>
@@ -55,27 +78,41 @@
         <NAME>item_basket_list</NAME>
         <ORIGIN>module</ORIGIN>
         <MODULE>records_management</MODULE>
+        <COLLECTIONS>
+            <COLL_ID>rm_coll</COLL_ID>
+        </COLLECTIONS>
     </BASKETPAGE>
+    <!-- logs lists -->
     <BASKETPAGE>
         <ID>logs_list</ID>
         <LABEL>_LOGS_LIST</LABEL>
         <NAME>logs_list</NAME>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
+        <COLLECTIONS>
+            <COLL_ID>log_coll</COLL_ID>
+        </COLLECTIONS>
     </BASKETPAGE>
+    <!-- folders lists -->
     <BASKETPAGE>
         <ID>list_folders</ID>
         <LABEL>_FOLDERS_LIST</LABEL>
         <NAME>folders_list</NAME>
         <ORIGIN>module</ORIGIN>
         <MODULE>folder</MODULE>
+        <COLLECTIONS>
+            <COLL_ID>*</COLL_ID>
+        </COLLECTIONS>
     </BASKETPAGE>
-    <!-- maarch for business -->
+    <!-- business lists -->
     <BASKETPAGE>
         <ID>documents_business_list</ID>
         <LABEL>_BUSINESS_LIST</LABEL>
         <NAME>documents_business_list</NAME>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
+        <COLLECTIONS>
+            <COLL_ID>business_coll</COLL_ID>
+        </COLLECTIONS>
     </BASKETPAGE>
 </ROOT>

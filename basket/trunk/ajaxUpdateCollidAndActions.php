@@ -5,6 +5,8 @@ $dbActions->connect();
 require_once('modules/basket/class/class_admin_basket.php');
 $adminBasket = new admin_basket();
 
+$_SESSION['m_admin']['basket']['coll_id'] = $_REQUEST['coll_id'];
+
 //SELECT ACTIONS
 $_SESSION['m_admin']['basket']['all_actions'] = array();
 if ($_REQUEST['is_reload_groups'] == 'true') {

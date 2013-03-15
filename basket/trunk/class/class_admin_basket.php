@@ -98,7 +98,27 @@ class admin_basket extends dbquery
         for ($i=0;$i<$cpt;$i++) {
             if ($actionPage == $_SESSION['actions_pages'][$i]['ID']) {
                 for ($j=0;$j<count($_SESSION['actions_pages'][$i]['COLLECTIONS']);$j++) {
-                    if ($_SESSION['actions_pages'][$i]['COLLECTIONS'][$j] == $collId) {
+                    if ($_SESSION['actions_pages'][$i]['COLLECTIONS'][$j] == $collId
+                        || $_SESSION['actions_pages'][$i]['COLLECTIONS'][$j] == '*'
+                    ) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    public function isABasketPageOfMyBasketCollection($basketPage, $collId)
+    {
+        $cpt = count($_SESSION['basket_page']);
+        for ($i=0;$i<$cpt;$i++) {
+            //echo $_SESSION['basket_page'][$i]['ID'];
+            if ($basketPage == $_SESSION['basket_page'][$i]['ID']) {
+                for ($j=0;$j<count($_SESSION['basket_page'][$i]['COLLECTIONS']);$j++) {
+                    if ($_SESSION['basket_page'][$i]['COLLECTIONS'][$j] == $collId 
+                        || $_SESSION['basket_page'][$i]['COLLECTIONS'][$j] == '*'
+                    ) {
                         return true;
                     }
                 }

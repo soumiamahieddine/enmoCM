@@ -250,12 +250,19 @@ class basket extends dbquery
             if (!empty($desc) && defined($desc) && constant($desc) <> NULL) {
                 $desc = constant($desc);
             }
+            $collections = array();
+            $collectionsTag = $basketPage->COLLECTIONS;
+            foreach ($collectionsTag->COLL_ID as $collection) {
+                //echo $collection . '<br />';
+                array_push($collections, (string) $collection);
+            }
             $_SESSION['basket_page'][$i] = array(
                 'ID'     => (string) $basketPage->ID,
                 'LABEL'  => $desc,
                 'NAME'   => (string) $basketPage->NAME,
                 'ORIGIN' => (string) $basketPage->ORIGIN,
                 'MODULE' => (string) $basketPage->MODULE,
+                'COLLECTIONS' => $collections,
             );
             $i++;
         }

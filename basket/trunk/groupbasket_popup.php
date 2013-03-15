@@ -36,6 +36,8 @@ $db->connect();
 $group ="";
 $tab1 = array();
 $tab2 = array();
+require_once('modules/basket/class/class_admin_basket.php');
+$adminBasket = new admin_basket();
 $_SESSION['service_tag'] = 'group_basket';
 if(isset($_GET['id']) && !empty($_GET['id']))
 {
@@ -115,11 +117,24 @@ $time = $core_tools->get_session_time_expire();
             <select name="result_page" id="result_page">
             <?php
             if (isset($_SESSION['basket_page']) && count($_SESSION['basket_page']) > 0) {
-                for($i=0; $i < count($_SESSION['basket_page']); $i++)
-                {
-                    ?>
-                    <option value="<?php echo $_SESSION['basket_page'][$i]['ID'];?>" <?php if ((isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['RESULT_PAGE']) && $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['RESULT_PAGE'] == $_SESSION['basket_page'][$i]['ID']) || ( isset($_SESSION['m_admin']['basket_popup']['res_page']) && $_SESSION['m_admin']['basket_popup']['res_page'] == $_SESSION['basket_page'][$i]['ID'])) { echo "selected=\"selected\"";} elseif($i==0){ echo "selected=\"selected\"";}?>><?php echo $_SESSION['basket_page'][$i]['LABEL'];?></option>
-                    <?php
+                for ($i=0;$i<count($_SESSION['basket_page']);$i++) {
+                    if ($adminBasket->isABasketPageOfMyBasketCollection($_SESSION['basket_page'][$i]['ID'], $_SESSION['m_admin']['basket']['coll_id'])) {
+                        ?>
+                        <option value="<?php echo 
+                            $_SESSION['basket_page'][$i]['ID'];?>" <?php 
+                                if ((isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['RESULT_PAGE']) 
+                                && $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['RESULT_PAGE'] == $_SESSION['basket_page'][$i]['ID']) 
+                                || ( isset($_SESSION['m_admin']['basket_popup']['res_page']) 
+                                && $_SESSION['m_admin']['basket_popup']['res_page'] == $_SESSION['basket_page'][$i]['ID'])) { 
+                                    echo "selected=\"selected\"";
+                                } elseif ($i==0){ 
+                                    echo "selected=\"selected\"";
+                                }
+                                ?>><?php 
+                                    echo $_SESSION['basket_page'][$i]['LABEL'];
+                                ?></option>
+                        <?php
+                    }
                 }
             }
             ?>
@@ -178,7 +193,6 @@ $time = $core_tools->get_session_time_expire();
             </div> <?php
             if(count($_SESSION['m_admin']['basket']['all_actions']) > 0)
             {
-                require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_admin_basket.php");
                 $bask = new admin_basket();
                 ?>
                 <table> <?php
