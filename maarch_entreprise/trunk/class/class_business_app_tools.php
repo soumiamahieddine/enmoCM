@@ -337,7 +337,12 @@ class business_app_tools extends dbquery
                 ) {
                     $createFlag = 'Y';
                 }
-
+                $collections = array();
+                $collectionsTag = $actionPage->COLLECTIONS;
+                foreach ($collectionsTag->COLL_ID as $collection) {
+                    //echo $collection . '<br />';
+                    array_push($collections, (string) $collection);
+                }
                 $_SESSION['actions_pages'][$i] = array(
                     'ID' => (string) $actionPage->ID,
                     'LABEL' => $label,
@@ -346,6 +351,7 @@ class business_app_tools extends dbquery
                     'MODULE' => (string) $actionPage->MODULE,
                     'KEYWORD' => $keyword,
                     'FLAG_CREATE' => $createFlag,
+                    'COLLECTIONS' => $collections,
                 );
                 $i++;
 
