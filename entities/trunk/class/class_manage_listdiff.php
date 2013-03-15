@@ -189,7 +189,7 @@ class diffusion_list extends dbquery
                         'firstname' => $this->show_string($user->firstname),
                         'entity_id' => $this->show_string($user->entity_id),
                         'entity_label' => $this->show_string($user->entity_label),
-                        'visible' => $this->show_str($res->visible)
+                        'visible' => $user->visible
                     )
                 );
             }
@@ -218,7 +218,7 @@ class diffusion_list extends dbquery
                     array(
                         'entity_id' => $this->show_string($entity->item_id),
                         'entity_label' => $this->show_string($entity->entity_label),
-                        'visible' => $this->show_str($res->visible)
+                        'visible' => $entity->visible
                     )
                 );
             }
@@ -255,7 +255,7 @@ class diffusion_list extends dbquery
         if($dest_user_id = $this->protect_string_db(trim($diffList['dest']['user_id'])))
             $this->query(
                 "insert into " . ENT_LISTMODELS
-                    . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description ) "
+                    . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible ) "
                 . " values ("
                     . "'any', "
                     . "'" . $objectId . "' , " 
@@ -265,7 +265,8 @@ class diffusion_list extends dbquery
                     . "'user_id', "
                     . "'dest', "
                     . "null, "
-                    . "'" . $description . "'"
+                    . "'" . $description . "',"
+                    . "'" . $diffList['dest']['visible'] . "'"
                 .")"
             );
                    
@@ -283,40 +284,42 @@ class diffusion_list extends dbquery
                 $i<$l; 
                 $i++
             ) {
-                $user_id = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['user_id']));
+                $user = $diffList[$role_id]['users'][$i];
                 $this->query(
                     "insert into " . ENT_LISTMODELS
-                        . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description ) "
+                        . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible ) "
                     . " values ("
                         . "'any', "
                         . "'" . $objectId . "' , " 
                         . "'" . $objectType . "', "
                         . $i . ", "
-                        . "'" . $user_id . "', "
+                        . "'" . $user['user_id'] . "', "
                         . "'user_id', "
                         . "'".$item_mode."', "
                         . "null, "
-                        . "'" . $description . "'"
+                        . "'" . $description . "',"
+                        . "'" . $user['visible']. "'"
                     . ")"
                 );
             }
             # Entities
             #**********************************************************************
             for ($i=0, $l=count($diffList[$role_id]['entities']); $i<$l ; $i++) {
-                $entity_id = $this->protect_string_db(trim($diffList[$role_id]['entities'][$i]['entity_id']));
+                $entity = $diffList[$role_id]['entities'][$i];
                 $this->query(
                     "insert into " . ENT_LISTMODELS
-                        . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description ) "
+                        . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible ) "
                     . " values ("
                         . "'any', "
                         . "'" . $objectId . "' , " 
                         . "'" . $objectType . "', "
                         . $i . ", "
-                        . "'" . $entity_id . "', "
+                        . "'" . $entity['entity_id'] . "', "
                         . "'entity_id', "
                         . "'".$item_mode."', "
                         . "null, "
-                        . "'" . $description . "'"
+                        . "'" . $description . "', "
+                        . "'" . $entity['visible'] . "'"
                     . ")"
                 );
             }

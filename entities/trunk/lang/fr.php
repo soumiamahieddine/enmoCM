@@ -266,28 +266,6 @@ if (!defined('_ALL_LIST'))
  /******************** Listinstance roles ***********/   
 if (!defined('_DEST_OR_COPY'))
     define('_DEST_OR_COPY', 'Destinataire');       
-if (!defined('_ROLE_ID'))
-    define('_ROLE_ID', 'Identifiant du rôle');   
-if (!defined('_ROLE_LABEL'))
-    define('_ROLE_LABEL', 'Libellé');       
-if (!defined('_LIST_LABEL'))
-    define('_LIST_LABEL', 'Intitulé de liste');   
-if (!defined('_ALLOW_ENTITIES'))
-    define('_ALLOW_ENTITIES', 'Autoriser les entités');   
-if (!defined('_LIST_IMG'))
-    define('_LIST_IMG', 'Icône de liste');
-if (!defined('_ALL_ROLES'))
-    define('_ALL_ROLES', 'Tous les rôles');
-if (!defined('_ADD_LISTINSTANCE_ROLE'))
-    define('_ADD_LISTINSTANCE_ROLE', 'Ajouter un rôle');    
-if (!defined('_LISTINSTANCE_ROLE_LIST'))
-    define('_LISTINSTANCE_ROLE_LIST', 'Rôles de diffusion');
-if (!defined('_LISTINSTANCE_ROLE'))
-    define('_LISTINSTANCE_ROLE', 'Rôle');     
-if (!defined('_LISTINSTANCE_ROLES'))
-    define('_LISTINSTANCE_ROLES', 'Rôle(s)'); 
-    if (!defined('_LISTINSTANCE_ROLES_DESC'))
-    define('_LISTINSTANCE_ROLES_DESC', 'Gérer les rôles des utilisateurs et entités dans la circulation'); 
 if (!defined('_SUBMIT'))
     define('_SUBMIT', 'Valider'); 
 if (!defined('_CANCEL'))
@@ -350,7 +328,10 @@ if (!defined('_CONFIRM_LISTMODEL_SAVE'))
     
 if (!defined('_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS')) define('_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS', 'Param&eacute;trer les types de modèle de liste de diffusion pour l&rsquo;indexation');
 if (!defined('_INDEXING_LISTMODEL_TYPES')) define('_INDEXING_LISTMODEL_TYPES', 'Types de liste de diffusion');
-    
+
+if (!defined('_DIFFUSION_LIST_ROLE')) define('_DIFFUSION_LIST_ROLE', 'Rôle de diffusion');
+if (!defined('_ADMIN_LISTMODEL_TYPES')) define('_ADMIN_LISTMODEL_TYPES', 'Types de liste de diffusion (Admin)');
+if (!defined('_ADMIN_LISTMODELS')) define('_ADMIN_LISTMODELS', 'Listes de diffusion (Admin)');
 /******************** RM ENTITIES ************/
 if (!defined('_STANDARD'))
     define('_STANDARD', 'Standard');
