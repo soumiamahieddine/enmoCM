@@ -91,7 +91,22 @@ class admin_basket extends dbquery
 
         $_SESSION['m_admin']['groupbasket'] = false ;
     }
-
+    
+    public function isAnActionOfMyBasketCollection($actionPage, $collId)
+    {
+        $cpt = count($_SESSION['actions_pages']);
+        for ($i=0;$i<$cpt;$i++) {
+            if ($actionPage == $_SESSION['actions_pages'][$i]['ID']) {
+                for ($j=0;$j<count($_SESSION['actions_pages'][$i]['COLLECTIONS']);$j++) {
+                    if ($_SESSION['actions_pages'][$i]['COLLECTIONS'][$j] == $collId) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
     /**
     * Form for the management of the basket : used to add a new basket or to modify one
     *
@@ -103,7 +118,14 @@ class admin_basket extends dbquery
         $state = true;
         $core_tools = new core_tools();
         $this->connect();
-
+        
+        $dbActions = new dbquery();
+        $dbActions->connect();
+        
+        if ($mode == "add") {
+            $_SESSION['m_admin']['basket']['coll_id'] = $_SESSION['collections'][0]['id'];
+        }
+        
         // If mode "Up", Loading the informations of the basket in session
         if($mode == "up")
         {
@@ -142,10 +164,10 @@ class admin_basket extends dbquery
                 }
             }
         }
+        
         // The title is different according the mode
         if($mode == "add")
         {
-            $_SESSION['m_admin']['basket']['coll_id'] = $_SESSION['collections'][0]['id'];
             echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'basket_add.php', "include");
             echo $core_tools->execute_app_services($_SESSION['app_services'], 'basket_add.php', "include");
             echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_basket_b.gif&module=basket" alt="" /> '._BASKET_ADDITION.'</h1>';
@@ -174,19 +196,37 @@ class admin_basket extends dbquery
             <form name="formbasket" id="formbasket" method="post" action="<?php if($mode == "up") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_up_db"; } elseif($mode == "add") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_add_db"; } ?>" class="forms addforms">
                 <input type="hidden" name="display"  value="true" />
                 <input type="hidden" name="module"  value="basket" />
-                <?php if($mode == "up")
-                 {?>
+                <?php 
+                if ($mode == "up") {
+                     $disabled = ' disabled="disabled" ';
+                     ?>
                     <input type="hidden" name="page"  value="basket_up_db" />
-                 <?php }
-                 elseif($mode == "add")
-                 {?>
+                    <?php
+                } elseif($mode == "add") {
+                    ?>
                     <input type="hidden" name="page"  value="basket_add_db" />
-                 <?php } ?>
+                    <?php
+                }
+                ?>
                 <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])){echo $_REQUEST['order'];}?>" />
                 <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])){echo $_REQUEST['order_field'];}?>" />
                 <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){echo $_REQUEST['what'];}?>" />
                 <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){echo $_REQUEST['start'];}?>" />
-
+                
+                <p>
+                    <label><?php echo _COLLECTION;?> : </label>
+                    <select name="collection" id="collection" <?php echo  $disabled;?> onchange="updateCollection(this.options[this.selectedIndex].value, 'true');">
+                        <option value=""><?php echo _CHOOSE_COLLECTION;?></option>
+                        <?php 
+                        for($i=0; $i<count($_SESSION['collections']);$i++) {
+                            ?>
+                            <option value="<?php echo $_SESSION['collections'][$i]['id'];?>" <?php if(count($_SESSION['collections']) == 1 || $_SESSION['collections'][$i]['id'] == $_SESSION['m_admin']['basket']['coll_id']) { echo 'selected="selected"';}?>><?php echo $_SESSION['collections'][$i]['label'];?></option>
+                            <?php
+                        }
+                        ?>
+                    </select>
+                </p>
+                
                 <p>
                     <label><?php echo _ID;?> : </label>
                     <input name="basketId" id="basketId" type="text" value="<?php echo $_SESSION['m_admin']['basket']['basketId']; ?>" <?php if($mode == "up") { echo 'readonly="readonly" class="readonly"';} ?> />
@@ -207,18 +247,6 @@ class admin_basket extends dbquery
                         <em><?php echo _SYSTEM_BASKET_MESSAGE;?>.</em>
                     </p>
                 <?php } ?>
-                <p>
-                    <label><?php echo _COLLECTION;?> : </label>
-                    <select name="collection" id="collection">
-                        <option value=""><?php echo _CHOOSE_COLLECTION;?></option>
-                        <?php for($i=0; $i<count($_SESSION['collections']);$i++)
-                        {
-                        ?>
-                            <option value="<?php echo $_SESSION['collections'][$i]['id'];?>" <?php if(count($_SESSION['collections']) == 1 || $_SESSION['collections'][$i]['id'] == $_SESSION['m_admin']['basket']['coll_id']) { echo 'selected="selected"';}?>><?php echo $_SESSION['collections'][$i]['label'];?></option>
-                        <?php
-                        }?>
-                    </select>
-                </p>
                 <p>
                     <label><?php echo _BASKET_VIEW;?> : </label>
                     <textarea  cols="30" rows="4"  name="basketclause" id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause']; ?></textarea> <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=keywords_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><img src = "<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_help.gif" alt="<?php echo _HELP_KEYWORDS; ?>" title="<?php echo _HELP_KEYWORDS; ?>" /></a>
@@ -243,6 +271,24 @@ class admin_basket extends dbquery
                     <input type="button" name="cancel" value="<?php echo _CANCEL; ?>" class="button"  onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=basket&amp;module=basket';"/>
                 </p>
             </form>
+            <script language="javascript">
+                updateCollection($('collection').value, 'false');
+                function updateCollection(collId, isReloadGroups)
+                {
+                    //console.log(collId);
+                    new Ajax.Request('index.php?module=basket&page=ajaxUpdateCollidAndActions&display=true',
+                    {
+                        method:'post',
+                        parameters: {coll_id : collId, is_reload_groups : isReloadGroups},
+                        onSuccess: function(answer) {
+                            var response = answer.responseText;
+                            //console.log(response);
+                        },
+                        onFailure: function(){ alert('Something went wrong...'); },
+                    });
+                    $('groupbasket_form').src = 'index.php?display=true&module=basket&page=groupbasket_form';
+                }
+            </script>
         <?php
         }
         ?>

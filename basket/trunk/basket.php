@@ -192,16 +192,27 @@ while($line = $request->fetch_object())
 }
 $_SESSION['m_admin']['load_groupbasket'] = true;
 
+//SELECT ACTIONS
+/*
 $_SESSION['m_admin']['basket']['all_actions'] = array();
-$request->query("select id, label_action, keyword, create_id from ".$_SESSION['tablename']['actions']." where enabled = 'Y' order by label_action");
+$request->query("select id, label_action, keyword, create_id, action_page from " 
+    . $_SESSION['tablename']['actions'] . " where enabled = 'Y' order by label_action"
+);
 
-while($line = $request->fetch_object())
-{
-    if($admin->is_action_defined($line->id))
-    {
-        array_push($_SESSION['m_admin']['basket']['all_actions'] ,array('ID' => $line->id, 'LABEL' => $line->label_action, 'KEYWORD' => $line->keyword, 'CREATE_ID' => $line->create_id));
+while ($line = $request->fetch_object()) {
+    if ($admin->is_action_defined($line->id)) {
+        array_push(
+            $_SESSION['m_admin']['basket']['all_actions'] ,
+            array(
+                'ID' => $line->id, 
+                'LABEL' => $line->label_action, 
+                'KEYWORD' => $line->keyword, 
+                'CREATE_ID' => $line->create_id
+            )
+        );
     }
 }
+*/
 
 $_SESSION['m_admin']['basket']['all_statuses'] = array();
 
