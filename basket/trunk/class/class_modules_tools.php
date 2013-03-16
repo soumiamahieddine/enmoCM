@@ -38,13 +38,12 @@
  * @ingroup basket
  */
 
-require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-. 'SecurityControler.php';
-require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-. 'class_security.php';
-require_once 'core' . DIRECTORY_SEPARATOR . 'core_tables.php';
-require_once 'modules' . DIRECTORY_SEPARATOR . 'basket' . DIRECTORY_SEPARATOR
-. 'basket_tables.php';
+require_once 'core/class/SecurityControler.php';
+require_once 'core/class/class_security.php';
+require_once 'core/core_tables.php';
+require_once 'modules/basket/basket_tables.php';
+require_once 'modules/entities/entities_tables.php';
+
 /**
  * @brief   Module Basket : Module Tools Class
  *
@@ -584,8 +583,7 @@ class basket extends dbquery
      * @param   $mode  string  "PAGE_USE" or "MASS_USE"
      * @return array  Actions to be displayed
      */
-    public function get_actions_from_current_basket($resId, $collId, $mode,
-    $testWhere = true)
+    public function get_actions_from_current_basket($resId, $collId, $mode,$testWhere = true)
     {
         $arr = array();
         // If parameters error return an empty array
@@ -1248,7 +1246,8 @@ class basket extends dbquery
         }
     }
     
-    public function is_redirect_to_action_basket($basketId, $primaryGroup) {
+    public function is_redirect_to_action_basket($basketId, $primaryGroup) 
+    {
         $this->connect();
         $this->query(
                 "select result_page from " . GROUPBASKET_TABLE 
@@ -1280,5 +1279,181 @@ class basket extends dbquery
             }
         }
         return false;
+    }
+    
+    /************** WF MANAGEMENT **************/
+    
+    /**
+     * Return true if it is the turn of the user in the WF
+     *
+     * @param $userId string the user ID
+     * @param $resId long the res ID
+     * @param $collId string the collection
+     * @param $role string role in the WF
+     * @return boolean
+     */
+    public function isItMyTurnInTheWF($userId, $resId, $collId, $role='')
+    {
+        if ($role <> '') {
+            $itemMode = " and item_mode = '" . $role . "'";
+        }
+        $db = new dbquery();
+        $db->connect();
+        $db->query(
+            "select res_id from " . ENT_LISTINSTANCE 
+            . " where coll_id = '" . $collId . "'"
+            . " and res_id = " . $resId
+            . " and item_id = '" . $userId . "'"
+            . $itemMode
+            . " and visible = 'Y'"
+        );
+        $line = $db->fetch_object();
+        if ($line->res_id <> '') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Return array of roles of the user in the WF
+     *
+     * @param $userId string the user ID
+     * @param $resId long the res ID
+     * @param $collId string the collection
+     * @return array of roles
+     */
+    public function whatAreMyRoleInTheWF($userId, $resId, $collId)
+    {
+        $roles = array();
+        $db = new dbquery();
+        $db->connect();
+        $db->query(
+            "select item_mode from " . ENT_LISTINSTANCE 
+            . " where coll_id = '" . $collId . "'"
+            . " and res_id = " . $resId
+            . " and item_id = '" . $userId . "'"
+            . " and visible = 'Y'"
+        );
+        while ($line = $db->fetch_object()) {
+            array_push($roles, $line->item_mode);
+        }
+        return $roles;
+    }
+    
+    /**
+     * Return true if the there is a possibility to advance in the WF
+     *
+     * @param $resId long the res ID
+     * @param $collId string the collection
+     * @param $role string role in the WF
+     * @param $sequence integer sequence of the actual user in the WF
+     * @return boolean
+     */
+    public function canIAdvanceInTheWF($resId, $collId, $role, $sequence)
+    {
+        $db = new dbquery();
+        $db->connect();
+        $db->query(
+            "select visible from " . ENT_LISTINSTANCE 
+            . " where coll_id = '" . $collId . "'"
+            . " and res_id = " . $resId
+            . " and item_mode = '" . $role . "'"
+            . " and sequence > " . $sequence
+            . " and visible = 'N'"
+        );
+        $line = $db->fetch_object();
+        if ($line->visible <> '') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+     /**
+     * Return the sequence of the user in the WF for a role
+     *
+     * @param $userId string the user ID
+     * @param $resId long the res ID
+     * @param $collId string the collection
+     * @param $role string role in the WF
+     * @return integer sequence
+     */
+    public function whatIsMySequenceForMyRole($userId, $resId, $collId, $role)
+    {
+        $db = new dbquery();
+        $db->connect();
+        $db->query(
+            "select sequence from " . ENT_LISTINSTANCE 
+            . " where coll_id = '" . $collId . "'"
+            . " and res_id = " . $resId
+            . " and item_id = '" . $userId . "'"
+            . " and item_mode = '" . $role . "'"
+            . " and visible = 'Y'"
+        );
+        $line = $db->fetch_object();
+        if ($line->sequence <> '') {
+            return $line->sequence;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Return array of the agent who is the next in the WF for the role
+     *
+     * @param $resId long the res ID
+     * @param $collId string the collection
+     * @param $role string role in the WF
+     * @param $sequence integer sequence of the actual user in the WF
+     * @return string the agent
+     */
+    public function whoseTheNextInTheWF($resId, $collId, $role, $sequence)
+    {
+        $db = new dbquery();
+        $db->connect();
+        $db->query(
+            "select item_id, sequence from " . ENT_LISTINSTANCE 
+            . " where coll_id = '" . $collId . "'"
+            . " and res_id = " . $resId
+            . " and item_mode = '" . $role . "'"
+            . " and sequence > " . $sequence
+            . " and (visible = 'N' or visible = '' or visible is null) order by sequence"
+        );
+        $line = $db->fetch_object();
+        if ($line->item_id <> '') {
+            return $line->item_id;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Return array of the agent who is the previous in the WF for the role
+     *
+     * @param $resId long the res ID
+     * @param $collId string the collection
+     * @param $role string role in the WF
+     * @param $sequence integer sequence of the actual user in the WF
+     * @return string the agent
+     */
+    public function whoseThePreviousInTheWF($resId, $collId, $role, $sequence)
+    {
+        $db = new dbquery();
+        $db->connect();
+        $db->query(
+            "select item_id, sequence from " . ENT_LISTINSTANCE 
+            . " where coll_id = '" . $collId . "'"
+            . " and res_id = " . $resId
+            . " and item_mode = '" . $role . "'"
+            . " and sequence < " . $sequence
+            . " and (visible = 'N' or visible = '' or visible is null) order by sequence"
+        );
+        $line = $db->fetch_object();
+        if ($line->item_id <> '') {
+            return $line->item_id;
+        } else {
+            return false;
+        }
     }
 }
