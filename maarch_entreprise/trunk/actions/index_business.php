@@ -1622,7 +1622,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         );
         if ($contactId <> '') {
             $queryExtFields .= 'contact_id,';
-            $queryExtValues .= $contactId;
+            $queryExtValues .= $contactId . ',';
         }
     }
     if ($core->is_module_loaded('folder')) {
@@ -1654,22 +1654,13 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     );
     //echo 'load '.$resId. " ";
     if ($resId <> false) {
-        //Create chrono number
         //######
-        $cBoxId = get_value_fields($formValues, 'arbox_id');
-        $cTypeId = get_value_fields($formValues, 'type_id');
-        $cEntity = get_value_fields($formValues, 'destination');
-
-        //######
-        //echo $resId. " ";
         $queryExtFields = preg_replace('/,$/', ',res_id)', $queryExtFields);
         $queryExtValues = preg_replace(
             '/,$/', ',' . $resId . ')', $queryExtValues
         );
-        //echo $resId. " ";
-        $queryExt = " insert into " . $tableExt . " " . $queryExtFields
-                   . ' values ' . $queryExtValues ;
-        //echo $queryExt;
+        $queryExt = ' insert into ' . $tableExt . ' ' . $queryExtFields
+                   . ' values ' . $queryExtValues;
         $db->connect();
         $db->query($queryExt);
         if ($core->is_module_loaded('folder') && ! empty($folderId)

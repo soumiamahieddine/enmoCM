@@ -147,6 +147,65 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         'img_destination' => true,
         'show_folder' => false
     );
+    
+    $myTurnInTheWF = false;
+    //is it my turn in the WF ?
+    $myTurnInTheWF = $b->isItMyTurnInTheWF(
+        $_SESSION['user']['UserId'], 
+        $res_id, 
+        $coll_id
+    );
+    if ($myTurnInTheWF) {
+        $roles = array();
+        //get the roles in the wf of the user
+        $roles = $b->whatAreMyRoleInTheWF(
+            $_SESSION['user']['UserId'], 
+            $res_id, 
+            $coll_id
+        );
+        
+        if (!empty($roles)) {
+            $rolesInTheWF = array();
+            for ($cptRoles=0;$cptRoles<count($roles);$cptRoles++) {
+                $sequence = $b->whatIsMySequenceForMyRole(
+                    $_SESSION['user']['UserId'], 
+                    $res_id, 
+                    $coll_id, 
+                    $roles[$cptRoles]
+                );
+                //can I advance in the WF ?
+                array_push(
+                    $rolesInTheWF, 
+                    array(
+                        'role' => $roles[$cptRoles],
+                        'sequence' => $sequence,
+                        'canIAdvanceInTheWF' =>$b->canIAdvanceInTheWF(
+                            $res_id, 
+                            $coll_id, 
+                            $roles[$cptRoles],
+                            $sequence
+                        ),
+                        'theNextInTheWF' =>$b->whoseTheNextInTheWF(
+                            $res_id, 
+                            $coll_id, 
+                            $roles[$cptRoles],
+                            $sequence
+                        ),
+                        'thePreviousInTheWF' =>$b->whoseThePreviousInTheWF(
+                            $res_id, 
+                            $coll_id, 
+                            $roles[$cptRoles],
+                            $sequence
+                        ),
+                    )
+                );
+            }
+        }
+        //print_r($rolesInTheWF);
+    }
+    
+    //exit;
+    
     $data = get_general_data($coll_id, $res_id, 'full', $params_data);
     $_SESSION['doc_id'] = $res_id;
     $indexes = array();
