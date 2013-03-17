@@ -1341,35 +1341,6 @@ class basket extends dbquery
         return $roles;
     }
     
-    /**
-     * Return true if the there is a possibility to advance in the WF
-     *
-     * @param $resId long the res ID
-     * @param $collId string the collection
-     * @param $role string role in the WF
-     * @param $sequence integer sequence of the actual user in the WF
-     * @return boolean
-     */
-    public function canIAdvanceInTheWF($resId, $collId, $role, $sequence)
-    {
-        $db = new dbquery();
-        $db->connect();
-        $db->query(
-            "select visible from " . ENT_LISTINSTANCE 
-            . " where coll_id = '" . $collId . "'"
-            . " and res_id = " . $resId
-            . " and item_mode = '" . $role . "'"
-            . " and sequence > " . $sequence
-            . " and visible = 'N'"
-        );
-        $line = $db->fetch_object();
-        if ($line->visible <> '') {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
      /**
      * Return the sequence of the user in the WF for a role
      *
@@ -1394,6 +1365,64 @@ class basket extends dbquery
         $line = $db->fetch_object();
         if ($line->sequence <> '') {
             return $line->sequence;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Return true if the there is a possibility to back in the WF
+     *
+     * @param $resId long the res ID
+     * @param $collId string the collection
+     * @param $role string role in the WF
+     * @param $sequence integer sequence of the actual user in the WF
+     * @return boolean
+     */
+    public function canIBackInTheWF($resId, $collId, $role, $sequence)
+    {
+        $db = new dbquery();
+        $db->connect();
+        $db->query(
+            "select visible from " . ENT_LISTINSTANCE 
+            . " where coll_id = '" . $collId . "'"
+            . " and res_id = " . $resId
+            . " and item_mode = '" . $role . "'"
+            . " and sequence < " . $sequence
+            . " and (visible = 'N' or visible = '' or visible is null)"
+        );
+        $line = $db->fetch_object();
+        if ($line->visible <> '') {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    /**
+     * Return true if the there is a possibility to advance in the WF
+     *
+     * @param $resId long the res ID
+     * @param $collId string the collection
+     * @param $role string role in the WF
+     * @param $sequence integer sequence of the actual user in the WF
+     * @return boolean
+     */
+    public function canIAdvanceInTheWF($resId, $collId, $role, $sequence)
+    {
+        $db = new dbquery();
+        $db->connect();
+        $db->query(
+            "select visible from " . ENT_LISTINSTANCE 
+            . " where coll_id = '" . $collId . "'"
+            . " and res_id = " . $resId
+            . " and item_mode = '" . $role . "'"
+            . " and sequence > " . $sequence
+            . " and visible = 'N'"
+        );
+        $line = $db->fetch_object();
+        if ($line->visible <> '') {
+            return true;
         } else {
             return false;
         }
@@ -1442,7 +1471,7 @@ class basket extends dbquery
         $db = new dbquery();
         $db->connect();
         $db->query(
-            "select item_id, sequence from " . ENT_LISTINSTANCE 
+            "select item_id, sequence from " . ENT_LISTINSTANCE
             . " where coll_id = '" . $collId . "'"
             . " and res_id = " . $resId
             . " and item_mode = '" . $role . "'"
