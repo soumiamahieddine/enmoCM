@@ -147,65 +147,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         'img_destination' => true,
         'show_folder' => false
     );
-    
-    $myTurnInTheWF = false;
-    //is it my turn in the WF ?
-    $myTurnInTheWF = $b->isItMyTurnInTheWF(
-        $_SESSION['user']['UserId'], 
-        $res_id, 
-        $coll_id
-    );
-    if ($myTurnInTheWF) {
-        $roles = array();
-        //get the roles in the wf of the user
-        $roles = $b->whatAreMyRoleInTheWF(
-            $_SESSION['user']['UserId'], 
-            $res_id, 
-            $coll_id
-        );
-        
-        if (!empty($roles)) {
-            $rolesInTheWF = array();
-            for ($cptRoles=0;$cptRoles<count($roles);$cptRoles++) {
-                $sequence = $b->whatIsMySequenceForMyRole(
-                    $_SESSION['user']['UserId'], 
-                    $res_id, 
-                    $coll_id, 
-                    $roles[$cptRoles]
-                );
-                //can I advance in the WF ?
-                array_push(
-                    $rolesInTheWF, 
-                    array(
-                        'role' => $roles[$cptRoles],
-                        'sequence' => $sequence,
-                        'canIAdvanceInTheWF' =>$b->canIAdvanceInTheWF(
-                            $res_id, 
-                            $coll_id, 
-                            $roles[$cptRoles],
-                            $sequence
-                        ),
-                        'theNextInTheWF' =>$b->whoseTheNextInTheWF(
-                            $res_id, 
-                            $coll_id, 
-                            $roles[$cptRoles],
-                            $sequence
-                        ),
-                        'thePreviousInTheWF' =>$b->whoseThePreviousInTheWF(
-                            $res_id, 
-                            $coll_id, 
-                            $roles[$cptRoles],
-                            $sequence
-                        ),
-                    )
-                );
-            }
-        }
-        //print_r($rolesInTheWF);
-    }
-    
-    //exit;
-    
+
     $data = get_general_data($coll_id, $res_id, 'full', $params_data);
     $_SESSION['doc_id'] = $res_id;
     $indexes = array();
@@ -226,7 +168,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $listdiff = new diffusion_list();
         $roles = $listdiff->get_workflow_roles();
         $_SESSION['process']['diff_list'] = $listdiff->get_listinstance($res_id, false, $coll_id);
-
     }
 
     //  to activate locking decomment these lines
@@ -356,31 +297,160 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //FOLDERS
     if ($core_tools->is_module_loaded('folder')) {
-         // Displays the folder data
+        // Displays the folder data
         $folder = get_folder_data($coll_id, $res_id);
         $frm_str .= '<h3 onclick="new Effect.toggle(\'folder_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'folder_div\', \'divStatus_folder_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= ' <span id="divStatus_folder_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
             . _FOLDER_ATTACH . '</b>';
-            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
         $frm_str .= '<div id="folder_div"  style="display:none">';
-            $frm_str .= '<div>';
-                $frm_str .= '<table width="98%" align="center" border="0">';
-                        $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
-                    $frm_str .= '<td><label for="folder" class="form_title_process" >' . _FOLDER . '</label></td>';
-                    $frm_str .= '<td>&nbsp;</td>';
-                     $frm_str .='<td><input type="text" name="folder" id="folder" value="'
-                        . $folder . '" onblur=""/><div id="show_folder" class="autocomplete"></div>';
-                $frm_str .= '</tr>';
-                $frm_str .= '</table>';
-            $frm_str .= '</div>';
+        $frm_str .= '<div>';
+        $frm_str .= '<table width="98%" align="center" border="0">';
+        $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
+        $frm_str .= '<td><label for="folder" class="form_title_process" >' . _FOLDER . '</label></td>';
+        $frm_str .= '<td>&nbsp;</td>';
+        $frm_str .='<td><input type="text" name="folder" id="folder" value="'
+            . $folder . '" onblur=""/><div id="show_folder" class="autocomplete"></div>';
+        $frm_str .= '</tr>';
+        $frm_str .= '</table>';
+        $frm_str .= '</div>';
         $frm_str .= '</div>';
         $frm_str .='<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="' . $res_id . '" />';
         $frm_str .= '<br>';
     }
-
+    
+    //WF COMPUTING
+     $myTurnInTheWF = false;
+    //is it my turn in the WF ?
+    $myTurnInTheWF = $b->isItMyTurnInTheWF(
+        $_SESSION['user']['UserId'],
+        $res_id,
+        $coll_id
+    );
+    if ($myTurnInTheWF) {
+        $roles = array();
+        //get the roles in the wf of the user
+        $roles = $b->whatAreMyRoleInTheWF(
+            $_SESSION['user']['UserId'],
+            $res_id,
+            $coll_id
+        );
+        //print_r($roles);
+        if (!empty($roles)) {
+            $rolesInTheWF = array();
+            for ($cptRoles=0;$cptRoles<count($roles);$cptRoles++) {
+                $sequence = $b->whatIsMySequenceForMyRole(
+                    $_SESSION['user']['UserId'],
+                    $res_id,
+                    $coll_id,
+                    $roles[$cptRoles]
+                );
+                array_push(
+                    $rolesInTheWF,
+                    array(
+                        'role' => $roles[$cptRoles],
+                        'sequence' => $sequence,
+                        'canIAdvanceInTheWF' =>$b->canIAdvanceInTheWF(
+                            $res_id,
+                            $coll_id,
+                            $roles[$cptRoles],
+                            $sequence
+                        ),
+                        'theNextInTheWF' =>$b->whoseTheNextInTheWF(
+                            $res_id,
+                            $coll_id,
+                            $roles[$cptRoles],
+                            $sequence
+                        ),
+                        'canIBackInTheWF' =>$b->canIBackInTheWF(
+                            $res_id,
+                            $coll_id,
+                            $roles[$cptRoles],
+                            $sequence
+                        ),
+                        'thePreviousInTheWF' =>$b->whoseThePreviousInTheWF(
+                            $res_id,
+                            $coll_id,
+                            $roles[$cptRoles],
+                            $sequence
+                        ),
+                    )
+                );
+            }
+        }
+        //print_r($rolesInTheWF);
+    }
+    //exit;
+    
+    //WF general view for the agent
+    if ($myTurnInTheWF) {
+        $frm_str .= '<h3 onclick="new Effect.toggle(\'wf_div\', \'blind\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'wf_div\', \'divStatus_wf_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_wf_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
+            . _WF . '</b>';
+        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+        $frm_str .= '</h3>';
+        $frm_str .= '<div id="wf_div"  style="display:none">';
+        $countRoles = count($rolesInTheWF);
+        $frm_str .= '<table width="98%" align="center" border="0">';
+        for ($cptR=0;$cptR<$countRoles;$cptR++) {
+            $frm_str .= '<tr style="color:red;">';
+            $frm_str .= '<td>';
+                $frm_str .= 'role : ';
+            $frm_str .= '</td>';
+            $frm_str .= '<td>';
+                $frm_str .= $rolesInTheWF[$cptR]['role'];
+            $frm_str .= '</td>';
+            $frm_str .= '</tr>';
+            $frm_str .= '<tr>';
+            $frm_str .= '<td>';
+                $frm_str .= 'sequence : ';
+            $frm_str .= '</td>';
+            $frm_str .= '<td>';
+                $frm_str .= $rolesInTheWF[$cptR]['sequence'];
+            $frm_str .= '</td>';
+            $frm_str .= '</tr>';
+            $frm_str .= '<tr>';
+            $frm_str .= '<td>';
+                $frm_str .= 'canIAdvanceInTheWF : ';
+            $frm_str .= '</td>';
+            $frm_str .= '<td>';
+                $frm_str .= $rolesInTheWF[$cptR]['canIAdvanceInTheWF'];
+            $frm_str .= '</td>';
+            $frm_str .= '</tr>';
+            $frm_str .= '<tr>';
+            $frm_str .= '<td>';
+                $frm_str .= 'theNextInTheWF : ';
+            $frm_str .= '</td>';
+            $frm_str .= '<td>';
+                $frm_str .= $rolesInTheWF[$cptR]['theNextInTheWF'];
+            $frm_str .= '</td>';
+            $frm_str .= '</tr>';
+            $frm_str .= '<tr>';
+            $frm_str .= '<td>';
+                $frm_str .= 'canIBackInTheWF : ';
+            $frm_str .= '</td>';
+            $frm_str .= '<td>';
+                $frm_str .= $rolesInTheWF[$cptR]['canIBackInTheWF'];
+            $frm_str .= '</td>';
+            $frm_str .= '</tr>';
+            $frm_str .= '<tr>';
+            $frm_str .= '<td>';
+                $frm_str .= 'thePreviousInTheWF : ';
+            $frm_str .= '</td>';
+            $frm_str .= '<td>';
+                $frm_str .= $rolesInTheWF[$cptR]['thePreviousInTheWF'];
+            $frm_str .= '</td>';
+            $frm_str .= '</tr>';
+        }
+        $frm_str .= '</table>';
+        $frm_str .= '</div>';
+    }
+    
     //ACTIONS
     $frm_str .= '<hr class="hr_process"/>';
     $frm_str .= '<p align="center" style="width:90%;">';
@@ -421,13 +491,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<div id="validright" style="width: 80%;">';
 */
     $frm_str .= '<div id="validright">';
-    
+
      /*** TOOLBAR ***/
     $frm_str .= '<div class="block" align="center" style="height:10px;width=100%;">';
-    
+
     $frm_str .= '<table width="95%" cellpadding="0" cellspacing="0">';
     $frm_str .= '<tr align="center">';
-    
+
     // HISTORY
     $frm_str .= '<td>';
     $frm_str .= '|<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
@@ -437,7 +507,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
        . '<small>' . _DOC_HISTORY . '</small>';
     $frm_str .= '</b></span>|';
     $frm_str .= '</td>';
-    
+
     //NOTE
     if ($core_tools->is_module_loaded('notes')) {
         $frm_str .= '<td>';
@@ -454,9 +524,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</b></span>|';
         $frm_str .= '</td>';
     }
-    
+
     //DIFFUSION LIST
-    if ($core_tools->is_module_loaded('entities')) {        
+    if ($core_tools->is_module_loaded('entities')) {
         $frm_str .= '<td>';
         $frm_str .= '|<span onclick="new Effect.toggle(\'diff_list_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');return false;" '
@@ -466,7 +536,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</b></span>|';
         $frm_str .= '</td>';
     }
-    
+
     //ATTACHMENTS
     if ($core_tools->is_module_loaded('attachments')) {
         $frm_str .= '<td>';
@@ -491,7 +561,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</b></span>|';
         $frm_str .= '</td>';
     }
-    
+
     //LINKS
     $frm_str .= '<td>';
     require_once('core/class/LinkController.php');
@@ -508,11 +578,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
          . '<small>' . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)</small>';
     $frm_str .= '</b></span>|';
     $frm_str .= '</td>';
-    
+
     //END TOOLBAR
     $frm_str .= '</table>';
     $frm_str .= '</div>';
-    
+
     //ATTACHMENTS FRAME
     if ($core_tools->is_module_loaded('attachments')) {
         require 'modules/templates/class/templates_controler.php';
@@ -777,10 +847,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
         . $res_id . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
-    
+
     //CLOSE DIV VALID RIGHT
     $frm_str .= '</div>';
-    
+
     //SCRIPT
     $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'
         . $id_action . '", "viewframe", true, true);window.scrollTo(0,0);';
