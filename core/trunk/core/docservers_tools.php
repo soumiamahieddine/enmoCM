@@ -570,7 +570,8 @@ function Ds_isFileTypeAllowed($filePath)
         . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml'
         . DIRECTORY_SEPARATOR . 'extensions.xml';
     } else {
-        $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+        $path = $_SESSION['config']['corepath'] . 'apps' 
+		. DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
         . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'extensions.xml';
     }
     $xmlconfig = simplexml_load_file($path);
