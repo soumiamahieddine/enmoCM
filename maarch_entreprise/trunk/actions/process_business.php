@@ -204,7 +204,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
 
     $frm_str .= '<hr />';
-    
+
     //WF COMPUTING
      $myTurnInTheWF = false;
     //is it my turn in the WF ?
@@ -214,50 +214,50 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $coll_id
     );
     if ($myTurnInTheWF) {
-        $roles = array();
+        $rolesArr = array();
         //get the roles in the wf of the user
-        $roles = $b->whatAreMyRoleInTheWF(
+        $rolesArr = $b->whatAreMyRoleInTheWF(
             $_SESSION['user']['UserId'],
             $res_id,
             $coll_id
         );
-        //print_r($roles);
-        if (!empty($roles)) {
+        //print_r($rolesArr);
+        if (!empty($rolesArr)) {
             $rolesInTheWF = array();
-            for ($cptRoles=0;$cptRoles<count($roles);$cptRoles++) {
+            for ($cptRoles=0;$cptRoles<count($rolesArr);$cptRoles++) {
                 $sequence = $b->whatIsMySequenceForMyRole(
                     $_SESSION['user']['UserId'],
                     $res_id,
                     $coll_id,
-                    $roles[$cptRoles]
+                    $rolesArr[$cptRoles]
                 );
                 array_push(
                     $rolesInTheWF,
                     array(
-                        'role' => $roles[$cptRoles],
+                        'role' => $rolesArr[$cptRoles],
                         'sequence' => $sequence,
                         'isThereSomeoneAfterMeInTheWF' =>$b->isThereSomeoneAfterMeInTheWF(
                             $res_id,
                             $coll_id,
-                            $roles[$cptRoles],
+                            $rolesArr[$cptRoles],
                             $sequence
                         ),
                         'theNextInTheWF' =>$b->whoseTheNextInTheWF(
                             $res_id,
                             $coll_id,
-                            $roles[$cptRoles],
+                            $rolesArr[$cptRoles],
                             $sequence
                         ),
                         'isThereSomeoneBeforeMeInTheWF' =>$b->isThereSomeoneBeforeMeInTheWF(
                             $res_id,
                             $coll_id,
-                            $roles[$cptRoles],
+                            $rolesArr[$cptRoles],
                             $sequence
                         ),
                         'thePreviousInTheWF' =>$b->whoseThePreviousInTheWF(
                             $res_id,
                             $coll_id,
-                            $roles[$cptRoles],
+                            $rolesArr[$cptRoles],
                             $sequence
                         ),
                     )
@@ -267,10 +267,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         //print_r($rolesInTheWF);
     }
     //exit;
-    
+
     //WF general view for the agent
     if ($myTurnInTheWF) {
-       
         $countRoles = count($rolesInTheWF);
         for ($cptR=0;$cptR<$countRoles;$cptR++) {
              $frm_str .= '<h3 onclick="new Effect.toggle(\'wf_div' . $cptR . '\', \'blind\', {delay:0.2});'
@@ -281,14 +280,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<span class="lb1-details">&nbsp;</span>';
             $frm_str .= '</h3>';
             $frm_str .= '<div id="wf_div' . $cptR . '">';
-
             $frm_str .= '<table width="98%" align="center" border="0" cellspacing="5" cellpadding="5">';
             if ($rolesInTheWF[$cptR]['isThereSomeoneAfterMeInTheWF']) {
                 $frm_str .= '<tr>';
                 $frm_str .= '<td class="tdButtonGreen" onmouseover="this.style.cursor=\'pointer\';" '
-                    . 'onclick="advanceWF(\'' 
-                    . $coll_id . '\', \'' 
-                    . $res_id . '\', \'' 
+                    . 'onclick="moveInWF(\'forward\', \''
+                    . $coll_id . '\', \''
+                    . $res_id . '\', \''
                     . $rolesInTheWF[$cptR]['role'] . '\', \''
                     . $_SESSION['user']['UserId'] . '\');">';
                     $frm_str .= '>> ' . _ADVANCE_TO . ' ' . $rolesInTheWF[$cptR]['theNextInTheWF'] . ' >>';
@@ -297,7 +295,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             } else {
                 $frm_str .= '<tr>';
                 $frm_str .= '<td class="tdButtonGreen" onmouseover="this.style.cursor=\'pointer\';" '
-                    . 'onclick="console.log(\'valid step\');">';
+                    . 'onclick="moveInWF(\'forward\', \''
+                    . $coll_id . '\', \''
+                    . $res_id . '\', \''
+                    . $rolesInTheWF[$cptR]['role'] . '\', \''
+                    . $_SESSION['user']['UserId'] . '\');">';
                     $frm_str .= _VALID_STEP . ' ' . $rolesInTheWF[$cptR]['role'];
                 $frm_str .= '</td>';
                 $frm_str .= '</tr>';
@@ -305,7 +307,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             if ($rolesInTheWF[$cptR]['isThereSomeoneBeforeMeInTheWF']) {
                 $frm_str .= '<tr>';
                 $frm_str .= '<td class="tdButtonRed" onmouseover="this.style.cursor=\'pointer\';" '
-                    . 'onclick="console.log(\'back to\');">';
+                     . 'onclick="moveInWF(\'back\', \''
+                    . $coll_id . '\', \''
+                    . $res_id . '\', \''
+                    . $rolesInTheWF[$cptR]['role'] . '\', \''
+                    . $_SESSION['user']['UserId'] . '\');">';
                     $frm_str .= '<< ' . _BACK_TO . ' ' . $rolesInTheWF[$cptR]['thePreviousInTheWF'] . ' <<';
                 $frm_str .= '</td>';
                 $frm_str .= '</tr>';
@@ -313,10 +319,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</table>';
             $frm_str .= '</div>';
         }
+        $frm_str .= '<hr />';
     }
-    
-    $frm_str .= '<hr />';
-    
+
     //GENERAL DATAS
     $frm_str .= '<h3 onclick="new Effect.toggle(\'general_datas_div\', \'blind\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'general_datas_div\', \'divStatus_general_datas_div\');return false;" '
@@ -431,7 +436,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</div>';
         $frm_str .='<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="' . $res_id . '" />';
     }
-    
+
     //ACTIONS
     $frm_str .= '<hr />';
     $frm_str .= '<p align="center" style="width:90%;">';
