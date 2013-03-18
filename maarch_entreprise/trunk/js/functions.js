@@ -2558,3 +2558,18 @@ function updateActionForWF()
         }
     }
 }
+
+function loadDiffList(id)
+{
+    new Effect.toggle('diffList_'+id, 'appear' , {delay:0.2});
+    var path_manage_script = 'index.php?module=entities&page=loadDiffList&display=true';
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: { res_id : id },
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            $('divDiffList_'+id).innerHTML = response.toShow;
+        }
+    });
+}

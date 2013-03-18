@@ -131,6 +131,7 @@ Mods
                                         <td style="font-size:10px;text-align:right" width ="30px"  alt="##defineLang|_TYPE##" title="##defineLang|_TYPE##" ##clickOnLine##><img src="##loadImage|mini_type.gif##">
                                         <td style="font-size:10px;text-align:left"  ##clickOnLine##>##loadValue|type_label##</td>
                                         <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_ATTACHMENTS#|#loadImage|picto_attachment.gif#|loadRepList('#loadValue|res_id#')|#loadValue|count_attachment# == 0##</td>
+                                        <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_WF#|#loadImage|lot.gif#|loadDiffList('#loadValue|res_id#')##</td>
                                         <td style="font-size:10px;" width ="30px">##showIconDocument##</td>
                                         <td style="font-size:10px;" width ="30px">##showIconDetails##</td>
                                     </tr>                         
@@ -140,6 +141,14 @@ Mods
                 <tr id="repList_##loadValue|res_id##" name="repList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: #FFF;" width="100%">
                     <td colspan="2" style="background-color: white;">
                         <div id="divRepList_##loadValue|res_id##" align="center" style="color: grey;">
+                            <img src="##loadImage|loading.gif##" /><br />
+                            ##defineLang|_LOADING_INFORMATIONS##
+                        </div>
+                    </td>
+                </tr>
+                <tr id="diffList_##loadValue|res_id##" name="diffList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: #FFF;" width="100%">
+                    <td colspan="2" style="background-color: white;">
+                        <div id="divDiffList_##loadValue|res_id##" align="center" style="color: grey;">
                             <img src="##loadImage|loading.gif##" /><br />
                             ##defineLang|_LOADING_INFORMATIONS##
                         </div>
