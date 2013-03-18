@@ -1,18 +1,18 @@
 // LEGACY !!!!!!!
 // Change destination entity_id => load new listmodel with script load_listinstance
 function change_entity(
-	entity_id, 
-	path_manage_script, 
-	diff_list_id, 
-	origin_keyword, 
-	display_value_tr, 
-	load_listmodel
+    entity_id,
+    path_manage_script,
+    diff_list_id,
+    origin_keyword,
+    display_value_tr,
+    load_listmodel
 ) {
     var div_id = diff_list_id || 'diff_list_div';
     var tr_display_val = display_value_tr || 'table-row';
     var origin_arg = origin_keyword || '';
     var load_listmodel = load_listmodel || 'true';
-		
+
     if($('destination_mandatory'))
     {
         var isMandatory = $('destination_mandatory').style.display;
@@ -26,10 +26,10 @@ function change_entity(
         new Ajax.Request(path_manage_script,
         {
             method:'post',
-            parameters: { 
-				objectType : 'entity_id',
-				objectId : entity_id,
-				collId : 'letterbox_coll',
+            parameters: {
+                objectType : 'entity_id',
+                objectId : entity_id,
+                collId : 'letterbox_coll',
                 load_from_model : load_listmodel,
                 origin : origin_arg,
                 mandatory : isMandatory
@@ -85,27 +85,27 @@ function change_entity(
 // >>> type of element to fill (select or list)
 // >>> id of element to fill
 function select_listmodels(
-	objectType, 
-	returnElementType, 
-	returnElementId
+    objectType,
+    returnElementType,
+    returnElementId
 ) {
-	new Ajax.Request(
-		'index.php?display=true&module=entities&page=select_listmodels',
+    new Ajax.Request(
+        'index.php?display=true&module=entities&page=select_listmodels',
         {
             method:'post',
-            parameters: { 
-				objectType : objectType,
-				returnElementType : returnElementType
+            parameters: {
+                objectType : objectType,
+                returnElementType : returnElementType
             },
             onSuccess: function(answer)
-				{
-					var returnElement = $(returnElementId);
-					if(returnElement != null && returnElement.nodeName.toUpperCase() == returnElementType.toUpperCase()) {
-						returnElement.innerHTML += answer.responseText;
-					}
-				}
+                {
+                    var returnElement = $(returnElementId);
+                    if(returnElement != null && returnElement.nodeName.toUpperCase() == returnElementType.toUpperCase()) {
+                        returnElement.innerHTML += answer.responseText;
+                    }
+                }
         }
-	);
+    );
 }
 
 // Load listmodel to session[origin]
@@ -114,61 +114,61 @@ function select_listmodels(
 // >>> id of div to fill
 // >>> origin keyword
 function load_listmodel(
-	selectedValue,
-	diff_list_id, 
-	origin_keyword
+    selectedValue,
+    diff_list_id,
+    origin_keyword
 ) {
     var div_id = diff_list_id || 'diff_list_div';
     var origin = origin_keyword || '';
-	
-	var objectType = selectedValue.substr(0, selectedValue.indexOf('|'));
-	var objectId = selectedValue.substr(selectedValue.indexOf('|') + 1);
-	
-	var diff_list_div = $(div_id);
-	new Ajax.Request(
-		"index.php?display=true&module=entities&page=load_listmodel",
+
+    var objectType = selectedValue.substr(0, selectedValue.indexOf('|'));
+    var objectId = selectedValue.substr(selectedValue.indexOf('|') + 1);
+
+    var diff_list_div = $(div_id);
+    new Ajax.Request(
+        "index.php?display=true&module=entities&page=load_listmodel",
         {
             method:'post',
-            parameters: { 
-				objectType : objectType,
-				objectId : objectId,
+            parameters: {
+                objectType : objectType,
+                objectId : objectId,
                 origin : origin
-			},
+            },
             onSuccess: function(answer){
                 eval("response = "+answer.responseText);
                 //alert(answer.responseText);
                 if(response.status == 0 ) {
-					diff_list_div.innerHTML = response.div_content;
+                    diff_list_div.innerHTML = response.div_content;
                 }
                 else {
-					diff_list_div.innerHTML = '';
+                    diff_list_div.innerHTML = '';
                     try{
                         $('frm_error').innerHTML = response.error_txt;
                     } catch(e){}
                 }
             }
         }
-	);
+    );
 }
 
 
 function change_diff_list(
-	origin,
-	display_value_tr, 
-	difflist_div, 
-	difflist_tr
-) {
+    origin,
+    display_value_tr,
+    difflist_div,
+    difflist_tr
+){
     var list_div = difflist_div || 'diff_list_div';
     var list_div_from_action = 'diff_list_div_from_action';
     var list_tr = difflist_tr || 'diff_list_tr';
     var tr_display_val = display_value_tr || 'table-row';
 
     new Ajax.Request(
-		'index.php?display=true&module=entities&page=load_listinstance',
+        'index.php?display=true&module=entities&page=load_listinstance',
         {
             method:'post',
             parameters: {
-				origin : origin
+                origin : origin
             },
             onSuccess: function(answer){
                 eval("response = "+answer.responseText);
@@ -203,23 +203,23 @@ function change_diff_list(
                 }
             }
         }
-	);
+    );
 }
 
 function validate_listinstance_role() {
-  
+
   $('listinstance_role_messages').innerHTML = '';
   new Ajax.Request(
     'index.php?module=entities&page=admin_listinstance_role_validate&display=true',
-    { 
+    {
       method: 'post',
-      parameters: 
+      parameters:
       {
         mode : $('mode').value,
         role_id : $('role_id').value,
         role_label : $('role_label').value,
         list_label : $('list_label').value,
-		workflow_mode : $('workflow_mode').value,
+        workflow_mode : $('workflow_mode').value,
         list_img : $('list_img').value,
         allow_entities : $('allow_entities').checked
       },
@@ -227,12 +227,12 @@ function validate_listinstance_role() {
           var responseText = transport.responseText.replace(new RegExp("(\r|\n)", "g"), "");
           if(responseText)
             $('listinstance_role_messages').innerHTML += responseText;
-          else  
+          else
             goTo('index.php?module=entities&page=admin_listinstance_roles');
         }
     }
   );
-  
+
 }
 
 function isIdToken(value)
@@ -242,15 +242,16 @@ function isIdToken(value)
         return false;
     if(token[0] != value)
         return false;
-    else 
+    else
         return true;
-    
+
 }
 
-function validate_listmodel_type() {
-  var main_error = $('main_error'); 
+function validate_listmodel_type()
+{
+  var main_error = $('main_error');
   main_error.innerHTML = '';
-  
+
   var listmodel_type_id = $('listmodel_type_id').value;
   var listmodel_type_label = $('listmodel_type_label').value;
   var idValid = isIdToken(listmodel_type_id);
@@ -259,25 +260,25 @@ function validate_listmodel_type() {
       return;
   }
   main_error.innerHTML = '';
-    
+
   new Ajax.Request(
     'index.php?module=entities&page=admin_listmodel_type_validate&display=true',
-    { 
+    {
       method: 'post',
-      parameters: 
+      parameters:
       {
         mode : $('mode').value,
-		listmodel_type_id : listmodel_type_id,
+        listmodel_type_id : listmodel_type_id,
         listmodel_type_label : listmodel_type_label
       },
       onSuccess: function(transport) {
           var responseText = transport.responseText.replace(new RegExp("(\r|\n)", "g"), "");
           if(responseText)
             $('listmodel_type_messages').innerHTML += responseText;
-          else  
+          else
             goTo('index.php?module=entities&page=admin_listmodel_types');
         }
     }
   );
-  
 }
+
