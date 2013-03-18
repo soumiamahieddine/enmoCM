@@ -400,3 +400,9 @@ if (!defined('_VALID_STEP'))
     define('_VALID_STEP', 'Valid step');
 if (!defined('_BACK_TO'))
     define('_BACK_TO', 'Back to');
+if (!defined('_FORWARD_IN_THE_WF'))
+    define('_FORWARD_IN_THE_WF', 'Forward in the workflow');
+if (!defined('_BACK_IN_THE_WF'))
+    define('_BACK_IN_THE_WF', 'Back in the workflow');
+if (!defined('_ITS_NOT_MY_TURN_IN_THE_WF'))
+    define('_ITS_NOT_MY_TURN_IN_THE_WF', 'It is not my turn to process in the workflow');

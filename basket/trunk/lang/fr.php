@@ -403,3 +403,9 @@ if (!defined('_VALID_STEP'))
     define('_VALID_STEP', 'Valider l&rsquo;&eacute;tape');
 if (!defined('_BACK_TO'))
     define('_BACK_TO', 'Retourner vers');
+if (!defined('_FORWARD_IN_THE_WF'))
+    define('_FORWARD_IN_THE_WF', 'Avance dans le workflow');
+if (!defined('_BACK_IN_THE_WF'))
+    define('_BACK_IN_THE_WF', 'Recule dans le workflow');
+if (!defined('_ITS_NOT_MY_TURN_IN_THE_WF'))
+    define('_ITS_NOT_MY_TURN_IN_THE_WF', 'Ce n&rsquo;est pas mon tour de traiter dans le workflow');

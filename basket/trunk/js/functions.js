@@ -231,10 +231,34 @@ function valid_actions_param(id_form)
     }
 }
 
-function advanceWF(collId, resId, role, userId)
+function moveInWF(way, collId, resId, role, userId)
 {
-    /*console.log(collId);
-    console.log(resId);
-    console.log(role);
-    console.log(userId);*/
+    if (way != '' && collId != '' &&  resId != '' && role != '' && userId != '') {
+        //~ console.log(way);
+        //~ console.log(collId);
+        //~ console.log(resId);
+        //~ console.log(role);
+        //~ console.log(userId);
+        new Ajax.Request(
+            'index.php?display=true&module=basket&page=ajaxMoveInWF&display=true',
+            {
+                method:'post',
+                parameters: {
+                    way : way,
+                    collId : collId,
+                    resId : resId,
+                    role : role,
+                    userId : userId
+                },
+                onSuccess: function(answer) {
+                    eval('response=' + answer.responseText);
+                    if (response.status > 0) {
+                        window.alert(response.error_txt);
+                     } else {
+                         $('send').click();
+                     }
+                }
+            }
+        );  
+    }
 }

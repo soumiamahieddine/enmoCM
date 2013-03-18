@@ -1476,7 +1476,7 @@ class basket extends dbquery
             . " and res_id = " . $resId
             . " and item_mode = '" . $role . "'"
             . " and sequence < " . $sequence
-            . " and (visible = 'N' or visible = '' or visible is null) order by sequence"
+            . " and (visible = 'N' or visible = '' or visible is null) order by sequence desc"
         );
         $line = $db->fetch_object();
         if ($line->item_id <> '') {
@@ -1484,5 +1484,59 @@ class basket extends dbquery
         } else {
             return false;
         }
+    }
+    
+    /**
+     * move agent in the WF
+     *
+     * @param $way string way to move in the WF : forward, back
+     * @param $collId string the collection
+     * @param $resId long the res ID
+     * @param $role string role in the WF
+     * @param $userId user ID to move
+     * @return nothing
+     */
+    public function moveInTheWF($way, $collId, $resId, $role, $userId)
+    {
+        if ($way == 'forward') {
+            $way = '>';
+        } elseif ($way == 'back') {
+            $way = '<';
+            $order = ' desc';
+        }
+        $db = new dbquery();
+        $db->connect();
+        $db->query(
+            "select item_id from " . ENT_LISTINSTANCE 
+            . " where coll_id = '" . $collId . "'"
+            . " and res_id = " . $resId
+            . " and item_mode = '" . $role . "'"
+            . " and (visible = 'N' or visible = '' or visible is null) "
+            . " and sequence " . $way . " ("
+                . " select sequence from " . ENT_LISTINSTANCE 
+                . " where coll_id = '" . $collId . "'"
+                . " and res_id = " . $resId
+                . " and item_mode = '" . $role . "'"
+                . " and item_id = '" . $userId . "')"
+            . " order by sequence" . $order
+        );
+        //$db->show();
+        $line = $db->fetch_object();
+        if ($line->item_id <> '') {
+            $db->query(
+                "update " . ENT_LISTINSTANCE . " set visible = 'Y'" 
+                . " where coll_id = '" . $collId . "'"
+                . " and res_id = " . $resId
+                . " and item_mode = '" . $role . "'"
+                . " and item_id = '" . $line->item_id . "'"
+            );
+        }
+        $db->query(
+            "update " . ENT_LISTINSTANCE . " set visible = 'N'" 
+            . " where coll_id = '" . $collId . "'"
+            . " and res_id = " . $resId
+            . " and item_mode = '" . $role . "'"
+            . " and item_id = '" . $userId . "'"
+        );
     }
 }
