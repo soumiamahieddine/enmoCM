@@ -270,19 +270,18 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     //WF general view for the agent
     if ($myTurnInTheWF) {
-        $frm_str .= '<h3 onclick="new Effect.toggle(\'wf_div\', \'blind\', {delay:0.2});'
-            . 'whatIsTheDivStatus(\'wf_div\', \'divStatus_wf_div\');return false;" '
-            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_wf_div" style="color:#1C99C5;">>></span>&nbsp;<b>'
-            . _WF . '</b>';
-        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-        $frm_str .= '</h3>';
-        $frm_str .= '<div id="wf_div">';
+       
         $countRoles = count($rolesInTheWF);
         for ($cptR=0;$cptR<$countRoles;$cptR++) {
-            $frm_str .= '<span style="font-weight:bold;"><center><small>';
-                $frm_str .= _ROLE . ' : ' . $rolesInTheWF[$cptR]['role'];
-            $frm_str .= '</small></center></span>';
+             $frm_str .= '<h3 onclick="new Effect.toggle(\'wf_div' . $cptR . '\', \'blind\', {delay:0.2});'
+                . 'whatIsTheDivStatus(\'wf_div' . $cptR . '\', \'divStatus_wf_div' . $cptR . '\');return false;" '
+                . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+            $frm_str .= ' <span id="divStatus_wf_div' . $cptR . '" style="color:#1C99C5;">>></span>&nbsp;<b>'
+                . _WF  . '</b> : <small><small>' . _ROLE . ' ' . $rolesInTheWF[$cptR]['role'] . '</small></small>';
+            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+            $frm_str .= '</h3>';
+            $frm_str .= '<div id="wf_div' . $cptR . '">';
+
             $frm_str .= '<table width="98%" align="center" border="0" cellspacing="5" cellpadding="5">';
             if ($rolesInTheWF[$cptR]['isThereSomeoneAfterMeInTheWF']) {
                 $frm_str .= '<tr>';
@@ -312,8 +311,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '</tr>';
             }
             $frm_str .= '</table>';
+            $frm_str .= '</div>';
         }
-        $frm_str .= '</div>';
     }
     
     $frm_str .= '<hr />';
