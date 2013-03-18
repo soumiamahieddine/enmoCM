@@ -68,6 +68,8 @@ if (isset($_REQUEST['identifier']) && ! empty($_REQUEST['identifier'])) {
 if (isset($_REQUEST['coll_id']) && ! empty($_REQUEST['coll_id'])) {
     $collId = trim($_REQUEST['coll_id']);
     $parameters .= '&coll_id='.$_REQUEST['coll_id'];
+	$view = $sec->retrieve_view_from_coll_id($collId);
+    $table = $sec->retrieve_table_from_coll($collId);
 }
 
 //Keep some origin parameters
@@ -105,7 +107,7 @@ if ($mode == 'add') {
     $content .= '<input type="hidden" value="Y" name="is_html" id="is_html">';
     $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
     $content .= '<tr>';
-    $content .= '<td colspan="3" nowrap><h4>'._NEW_MAIL.'</h4>'
+    $content .= '<td colspan="3" nowrap><h4>'._NEW_EMAIL.'</h4>'
         .$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName']
         .': '.$_SESSION['user']['Mail'].'<br/></td>';
     $content .= '</tr>';
@@ -171,7 +173,7 @@ if ($mode == 'add') {
     $all_joined_files = "\n \n";
     $content .= '<div id="joined_files" style="display:none">';
     //Document
-    $joined_files = $sendmail_tools->getJoinedFiles($identifier, $collId);
+    $joined_files = $sendmail_tools->getJoinedFiles($collId, $table, $identifier);
     if (count($joined_files) >0) {
         $content .='<br/>';
         $content .=_DOC;
@@ -192,14 +194,14 @@ if ($mode == 'add') {
                 . $id."\" checked=\"checked\">"
                 . $description." <em>(".$mime_type.")</em> ".$filesize."</li>"; 
             
-            $filename = preg_replace("/[^a-z0-9_-s.]/i","_", $description.".".$format); 
+			$filename = $sendmail_tools->createFilename($description, $format);
             $all_joined_files .= $description.': '.$filename."\n";
         }
     }
     
     //Attachments
     if ($core_tools->is_module_loaded('attachments')) {
-        $attachment_files = $sendmail_tools->getJoinedFiles($identifier, $collId, true);
+        $attachment_files = $sendmail_tools->getJoinedFiles($collId, $table, $identifier, true);
         if (count($attachment_files) >0) {
             $content .='<br/>';
             $content .=_ATTACHMENTS;
@@ -219,7 +221,7 @@ if ($mode == 'add') {
                     . $id."\">"
                    . $description." <em>(".$mime_type.")</em> ".$filesize."</li>";
                    
-                $filename = preg_replace("/[^a-z0-9_-s.]/i","_", $description.".".$format); 
+				$filename = $sendmail_tools->createFilename($description, $format);
                 $all_joined_files .= $description.': '.$filename."\n";
             }
         }
@@ -284,11 +286,11 @@ if ($mode == 'add') {
     $content .='<hr style=" margin-top:5px;margin-bottom:5px;" />';
     $content .='<div align="center">';
     //Send
-    $content .=' <input type="button" name="valid" value="&nbsp;'._SEND_MAIL
+    $content .=' <input type="button" name="valid" value="&nbsp;'._SEND_EMAIL
                 .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
                 .$path_to_script.'&mode=added&for=send\', \'formEmail\');" />&nbsp;';
     //Save
-    $content .=' <input type="button" name="valid" value="&nbsp;'._SAVE_MAIL
+    $content .=' <input type="button" name="valid" value="&nbsp;'._SAVE_EMAIL
                 .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
                 .$path_to_script.'&mode=added&for=save\', \'formEmail\');" />&nbsp;';
     //Cancel
@@ -298,8 +300,8 @@ if ($mode == 'add') {
     $content .= '</form>';
     $content .= '</div>';
 
-//UPDATE
-} else if ($mode == 'up') {
+//UPDATE OR TRANSFER
+} else if ($mode == 'up' || $mode == 'transfer') {
  
     if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
         
@@ -315,7 +317,7 @@ if ($mode == 'add') {
             $content .= '<input type="hidden" value="'.$emailArray['isHtml'].'" name="is_html" id="is_html">';
             $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
             $content .= '<tr>';
-            $content .= '<td colspan="3" nowrap><h4>'._EDIT_MAIL.'</h4>'
+            $content .= '<td colspan="3" nowrap><h4>'._EDIT_EMAIL.'</h4>'
                 .$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName']
                 .': '.$_SESSION['user']['Mail'].'<br/></td>';
             $content .= '</tr>';
@@ -375,7 +377,7 @@ if ($mode == 'add') {
             $content .= '<tr>';
             $content .= '<td align="right" nowrap><span class="red_asterisk">*</span><label>'._EMAIL_OBJECT.' </label></td>';
             $content .= '<td colspan="2"><input name="object" id="object" class="emailInput" type="text" value="'
-                .$emailArray['object'].'" /></td>';
+                .(($mode == 'transfer')? 'Fw: '.$emailArray['object'] : $emailArray['object']).'" /></td>';
             $content .= '</tr>';
             $content .= '</table><br />';
             $content .='<hr />';
@@ -389,7 +391,7 @@ if ($mode == 'add') {
             //
             $content .= '<div id="joined_files" style="display:none">';
             //Document
-            $joined_files = $sendmail_tools->getJoinedFiles($identifier, $collId);
+            $joined_files = $sendmail_tools->getJoinedFiles($collId, $table, $identifier);
             if (count($joined_files) >0) {
                 $content .='<br/>';
                 $content .=_DOC;
@@ -412,14 +414,14 @@ if ($mode == 'add') {
                         . $id."\"".$checked.">"
                         . $description." <em>(".$mime_type.")</em> ".$filesize."</li>"; 
                     //Filename
-                    $filename = preg_replace("/[^a-z0-9_-s.]/i","_", $description.".".$format); 
+					$filename = $sendmail_tools->createFilename($description, $format);
                     $all_joined_files .= $description.': '.$filename."\n";
                 }
             }
             
             //Attachments
             if ($core_tools->is_module_loaded('attachments')) {
-                $attachment_files = $sendmail_tools->getJoinedFiles($identifier, $collId, true);
+                $attachment_files = $sendmail_tools->getJoinedFiles($collId, $table, $identifier, true);
                 if (count($attachment_files) >0) {
                     $content .='<br/>';
                     $content .=_ATTACHMENTS;
@@ -441,7 +443,7 @@ if ($mode == 'add') {
                             . $id."\"".$checked.">"
                            . $description." <em>(".$mime_type.")</em> ".$filesize."</li>";
                         //Filename
-                        $filename = preg_replace("/[^a-z0-9_-s.]/i","_", $description.".".$format); 
+						$filename = $sendmail_tools->createFilename($description, $format);
                         $all_joined_files .= $description.': '.$filename."\n";
                     }
                 }
@@ -518,26 +520,26 @@ if ($mode == 'add') {
             
             if ($emailArray['status'] <> 'S') {
                 //Send button
-                $content .=' <input type="button" name="valid" value="&nbsp;'._SEND_MAIL
+                $content .=' <input type="button" name="valid" value="&nbsp;'._SEND_EMAIL
                     .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
-                    .$path_to_script.'&mode=updated&for=send\', \'formEmail\');" />&nbsp;';  
+                    .$path_to_script.'&mode=updated&for=send\', \'formEmail\');" />&nbsp;';
+                //Save button    
+                $content .=' <input type="button" name="valid" value="&nbsp;'._SAVE_EMAIL
+                    .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
+                    .$path_to_script.'&mode=updated&for=save\', \'formEmail\');" />&nbsp;';                     
                 //Delete button    
-                $content .=' <input type="button" name="valid" value="&nbsp;'._REMOVE_MAIL
+                $content .=' <input type="button" name="valid" value="&nbsp;'._REMOVE_EMAIL
                     .'&nbsp;" id="valid" class="button" onclick="if(confirm(\''
                     ._REALLY_DELETE.': '.$request->cut_string($emailArray['object'], 50)
                     .' ?\')) validEmailForm(\''.$path_to_script
                     .'&mode=del\', \'formEmail\');" />&nbsp;';
-                //Save button    
-                $content .=' <input type="button" name="valid" value="&nbsp;'._SAVE_MAIL
-                    .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
-                    .$path_to_script.'&mode=updated&for=save\', \'formEmail\');" />&nbsp;';                    
             } else {
                 //Re-send button
-                $content .=' <input type="button" name="valid" value="&nbsp;'._RESEND_MAIL
+                $content .=' <input type="button" name="valid" value="&nbsp;'._RESEND_EMAIL
                     .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
                     .$path_to_script.'&mode=added&for=send\', \'formEmail\');" />&nbsp;';
                 //Save copy button
-                $content .=' <input type="button" name="valid" value="&nbsp;'._SAVE_COPY_MAIL
+                $content .=' <input type="button" name="valid" value="&nbsp;'._SAVE_COPY_EMAIL
                     .'&nbsp;" id="valid" class="button" onclick="validEmailForm(\''
                     .$path_to_script.'&mode=added&for=save\', \'formEmail\');" />&nbsp;';    
             }
@@ -558,14 +560,14 @@ if ($mode == 'add') {
     if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
         
         $id = $_REQUEST['id'];
-        $emailArray = $sendmail_tools->getEmail($id);
+        $emailArray = $sendmail_tools->getEmail($id, false);
 
         //Check if mail exists
         if (count($emailArray) > 0 ) {
             $content .= '<div class="block">';
             $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
             $content .= '<tr>';
-            $content .= '<td colspan="3" nowrap><h4>'._READ_MAIL.'</h4>'
+            $content .= '<td colspan="3" nowrap><h4>'._READ_EMAIL.'</h4>'
                 .$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName']
                 .': '.$_SESSION['user']['Mail'].'<br/></td>';
             $content .= '</tr>';
@@ -622,7 +624,7 @@ if ($mode == 'add') {
             //
             $content .= '<div id="joined_files" style="display:none">';
             //Document
-            $joined_files = $sendmail_tools->getJoinedFiles($identifier, $collId);
+            $joined_files = $sendmail_tools->getJoinedFiles($collId, $table, $identifier);
             if (count($joined_files) >0) {
                 $content .='<br/>';
                 $content .=_DOC;
@@ -649,7 +651,7 @@ if ($mode == 'add') {
             
             //Attachments
             if ($core_tools->is_module_loaded('attachments')) {
-                $attachment_files = $sendmail_tools->getJoinedFiles($identifier, $collId, true);
+                $attachment_files = $sendmail_tools->getJoinedFiles($collId, $table, $identifier, true);
                 if (count($attachment_files) >0) {
                     $content .='<br/>';
                     $content .=_ATTACHMENTS;

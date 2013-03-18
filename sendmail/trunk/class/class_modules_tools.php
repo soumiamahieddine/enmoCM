@@ -118,7 +118,7 @@ class sendmail extends dbquery
             $adressArray = explode(',', trim($adress));
             for($i=0; $i < count($adressArray); $i++) {
                 if (!empty($adressArray[$i])) {
-                    $this->wash($adressArray[$i], 'mail', _MAIL.": ".$adressArray[$i], 'yes', 0, 255);
+                    $this->wash($adressArray[$i], 'mail', _EMAIL.": ".$adressArray[$i], 'yes', 0, 255);
                     if (!empty($_SESSION['error'])) {
                         $error .= $_SESSION['error'];$_SESSION['error']='';
                     }
@@ -146,23 +146,21 @@ class sendmail extends dbquery
             return false;
     }
     
-    public function getJoinedFiles($id, $coll_id, $from_res_attachment=false) {
+    public function getJoinedFiles($coll_id, $table, $id, $from_res_attachment=false) {
         $joinedFiles = array();
         $db = new dbquery();
         $db->connect();
         if ($from_res_attachment === false) {
-            $sec = new security();
-            $table = $sec->retrieve_table_from_coll($coll_id);
             $db->query(
                 "select res_id, description, subject, title, format, filesize from "
                 . $table . " where res_id = " . $id 
                 . " and status <> 'DEL'");
         } else {
+			require_once 'modules/attachments/attachments_tables.php';
             $db->query(
                 "select res_id, description, subject, title, format, filesize, res_id_master from " 
-                .  $_SESSION['tablename']['attach_res_attachments']
-                . " where res_id_master = " . $id . " and coll_id ='"
-                . $coll_id . "' and status <> 'DEL'");
+                .  RES_ATTACHMENTS_TABLE . " where res_id_master = " 
+				. $id . " and coll_id ='" . $coll_id . "' and status <> 'DEL'");
         }
         // $db->show(); 
         
@@ -218,9 +216,9 @@ class sendmail extends dbquery
             }
             
             $this->query("select * from "
-                            . EMAILS_TABLE 
-                            . " where email_id = " . $id
-                            . $where);
+                . EMAILS_TABLE 
+                . " where email_id = " . $id
+                . $where);
             //
             if ($this->nb_result() > 0) {
                 $res = $this->fetch_object();
@@ -286,14 +284,221 @@ class sendmail extends dbquery
                 }
             }
         }
-        
         return $content;
     }
     
-    public function createNotesFile($notesArray) {
-    
+	public function getResource($collectionArray, $coll_id, $res_id) {
+		$viewResourceArr = array();
+
+		for ($i=0;$i<count($collectionArray);$i++) {
+			if ($collectionArray[$i]['id'] == $coll_id) {
+				//Get table
+				$table = $collectionArray[$i]['table'];
+				//Get adress
+				$adrTable = $collectionArray[$i]['adr'];
+				//Get versions table
+				$versionTable = $collectionArray[$i]['version_table'];
+				break;
+			}
+		}
+		
+		if (!empty($res_id) && !empty($table) && !empty($adrTable)) {
+			//docserver
+			require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
+				. 'docservers_controler.php');
+			$docserverControler = new docservers_controler();
+			$docserverLocation = array();
+			// echo '--> '.$coll_id.'/'.$res_id.'/'.$table.'/'.$adrTable.PHP_EOL;
+			$docserverLocation = $docserverControler->retrieveDocserverNetLinkOfResource(
+				$res_id, $table, $adrTable
+			);
+			//View resource controler
+			$viewResourceArr = $docserverControler->viewResource(
+				$res_id, 
+				$table, 
+				$adrTable, 
+				false
+			);
+			//Reajust some info
+			if (strtoupper($viewResourceArr['ext']) == 'HTML' 
+				&& $viewResourceArr['mime_type'] == "text/plain"
+			) {
+				$viewResourceArr['mime_type'] = "text/html";
+			}
+			$db = new dbquery();
+			$db->connect();
+			$db->query(
+                "select res_id, description, subject, title, format, filesize from "
+                . $table . " where res_id = " . $res_id 
+                . " and status <> 'DEL'");
+			$res = $db->fetch_object();
+            $label = '';
+            //Tile, or subject or description
+            if (strlen(trim($res->title)) > 0)
+                $label = $res->title;
+            elseif (strlen(trim($res->subject)) > 0)
+                $label = $res->subject;
+            elseif (strlen(trim($res->description)) > 0)
+                $label = $res->description;
+			$viewResourceArr['label'] = $this->show_string($label);
+
+			//$viewResourceArr['status'] /ko /ok
+			//$viewResourceArr['error']
+			$this->show_array($viewResourceArr);
+		}
+
+		return $viewResourceArr;
+	}
+	
+	public function getAttachment($coll_id, $res_id_master, $res_attachment) {
+		
+		require_once 'modules/attachments/attachments_tables.php';
+		require_once 'core/core_tables.php';
+		require_once 'core/docservers_tools.php';
+
+		$viewAttachmentArr = array();
+
+		$db = new dbquery();
+        $db->connect();
+		$db->query(
+            "select description, subject, title, docserver_id, path, filename, format from "
+            . RES_ATTACHMENTS_TABLE . " where res_id = " . $res_attachment 
+			. " and coll_id = '".$coll_id."' and res_id_master = ".$res_id_master
+        );
+		if ($db->nb_result() > 0) {
+			$line = $db->fetch_object();
+			//Tile, or subject or description
+            if (strlen(trim($line->title)) > 0)
+                $label = $line->title;
+            elseif (strlen(trim($line->subject)) > 0)
+                $label = $line->subject;
+            elseif (strlen(trim($line->description)) > 0)
+                $label = $line->description;
+			//
+            $docserver = $line->docserver_id;
+            $path = $line->path;
+            $filename = $line->filename;
+            $format = $line->format;
+            $db->query(
+                "select path_template from " . _DOCSERVERS_TABLE_NAME
+                . " where docserver_id = '" . $docserver . "'"
+            );
+            //$db->show();
+            $lineDoc = $db->fetch_object();
+            $docserver = $lineDoc->path_template;
+            $file = $docserver . $path . $filename;
+            $file = str_replace("#", DIRECTORY_SEPARATOR, $file);
+			if (file_exists($file)) {
+				$mimeType = Ds_getMimeType($file);
+				
+				$fileNameOnTmp = 'tmp_file_' . rand()
+					. '.' . strtolower($format);
+				$filePathOnTmp = $_SESSION['config']
+					['tmppath'] . DIRECTORY_SEPARATOR
+					. $fileNameOnTmp;
+				copy($file, $filePathOnTmp);
+				
+				$viewAttachmentArr = array(
+					'status' => 'ok',
+					'label' => $this->show_string($label),
+					'mime_type' => $mimeType,
+					'ext' => $format,
+					'file_content' => '',
+					'tmp_path' => $_SESSION['config']
+					['tmppath'],
+					'file_path' => $filePathOnTmp,
+					'called_by_ws' => '',
+					'error' => ''
+				);
+			} else {
+				$viewAttachmentArr = array(
+					'status' => 'ko',
+					'label' => '',
+					'mime_type' => '',
+					'ext' => '',
+					'file_content' => '',
+					'tmp_path' => '',
+					'file_path' => '',
+					'called_by_ws' => '',
+					'error' => _FILE_NOT_EXISTS_ON_THE_SERVER
+				);
+			
+			}
+		} else {
+			$viewAttachmentArr = array(
+                'status' => 'ko',
+				'label' => '',
+                'mime_type' => '',
+                'ext' => '',
+                'file_content' => '',
+                'tmp_path' => '',
+                'file_path' => '',
+                'called_by_ws' => '',
+                'error' => _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS
+            );
+		}
+		
+		$this->show_array($viewAttachmentArr);
+		
+		return $viewAttachmentArr;
+	}
+	
+	public function createFilename($label, $extension){
+	
+		$filename = preg_replace("/[^a-z0-9_-s.]/i","_", $label.".".$extension); 
+		
+		return $filename;
+	}
+	
+    public function createNotesFile($coll_id, $id, $notesArray) {
+		require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
+            . "class" . DIRECTORY_SEPARATOR
+            . "class_modules_tools.php";
+        $notes_tools    = new notes();
+		
+		$db = new dbquery();
+        $db->connect();
+				
         if (count($notesArray) > 0) {
-        
+			/*
+				for($i=0; $i < count($notesArray); $i++) {
+					$note_id = $notesArray[$i];
+					$db->query(""select n.date_note, n.note_text, u.lastname, "
+						. "u.firstname from " . NOTES_TABLE . " n inner join ". USERS_TABLE
+						. " u on n.user_id  = u.user_id where n.id = " . $note_id ." and identifier = " . $id 
+						. " and coll_id ='" . $coll_id . "' order by date_note desc");
+						
+					if($db->nb_result() > 0) {
+                
+						$line = $db->fetch_object();
+					
+						$user = $db->show_string($line->lastname . " " . $line->firstname);
+						$notes = $db->show_string($line->note_text);
+						$date = $line->date_note;
+						
+						//create file
+					}
+					
+				}
+			*/				
+			$format = 'html';
+			$name = "notes_".$id."_".date(dmY).".".$format;
+			
+			$viewAttachmentArr = array(
+					'status' => 'ok',
+					'label' => '',
+					'mime_type' => $mimeType,
+					'ext' => $format,
+					'file_content' => '',
+					'tmp_path' => $_SESSION['config']
+					['tmppath'],
+					'file_path' => $filePathOnTmp,
+					'filename' => $name,
+					'called_by_ws' => '',
+					'error' => ''
+				);
+				
+			return $viewAttachmentArr;
         } else { 
             return false;
         }

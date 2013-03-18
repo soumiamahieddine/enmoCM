@@ -23,10 +23,10 @@ if (!defined('_SENDMAIL'))
     define('_SENDMAIL', 'Envoi de mails');
 if (!defined('_SENDMAIL_COMMENT'))
     define('_SENDMAIL_COMMENT', 'Envoi de mails');
-if (!defined('_MAIL_LIST'))
-    define('_MAIL_LIST', 'Emails');
-if (!defined('_MAIL_LIST_DESC'))
-    define('_MAIL_LIST_DESC', 'Liste des  emails');
+if (!defined('_EMAIL_LIST'))
+    define('_EMAIL_LIST', 'Emails');
+if (!defined('_EMAIL_LIST_DESC'))
+    define('_EMAIL_LIST_DESC', 'Liste des  emails');
  
 //STATUS
 if (!defined('_EMAIL_DRAFT'))
@@ -72,47 +72,51 @@ if (!defined('_EMAIL_WRONG_FORMAT'))
     
     
 //ERROR
-if (!defined('_MAIL_NOT_EXIST'))
-    define('_MAIL_NOT_EXIST', 'Cet email n&rsquo;existe pas');
+if (!defined('_EMAIL_NOT_EXIST'))
+    define('_EMAIL_NOT_EXIST', 'Cet email n&rsquo;existe pas');
 
 //ADD
-if (!defined('_NEW_MAIL'))
-    define('_NEW_MAIL','Nouveau message');
-if (!defined('_CREATE_MAIL'))
-    define('_CREATE_MAIL', 'Cr&eacute;er');
-if (!defined('_MAIL_ADDED'))
-    define('_MAIL_ADDED', 'Email ajout&eacute;');
+if (!defined('_NEW_EMAIL'))
+    define('_NEW_EMAIL','Nouveau message');
+if (!defined('_CREATE_EMAIL'))
+    define('_CREATE_EMAIL', 'Cr&eacute;er');
+if (!defined('_EMAIL_ADDED'))
+    define('_EMAIL_ADDED', 'Email ajout&eacute;');
     
 //SEND
-if (!defined('_SEND_MAIL'))
-    define('_SEND_MAIL','Envoyer'); 
-if (!defined('_RESEND_MAIL'))
-    define('_RESEND_MAIL','Renvoyer');
+if (!defined('_SEND_EMAIL'))
+    define('_SEND_EMAIL','Envoyer'); 
+if (!defined('_RESEND_EMAIL'))
+    define('_RESEND_EMAIL','Renvoyer');
     
 //SAVE
-if (!defined('_SAVE_MAIL'))
-    define('_SAVE_MAIL','Enregistrer');
+if (!defined('_SAVE_EMAIL'))
+    define('_SAVE_EMAIL','Enregistrer');
     
 //READ
-if (!defined('_READ_MAIL'))
-    define('_READ_MAIL','Afficher le mail');
+if (!defined('_READ_EMAIL'))
+    define('_READ_EMAIL','Afficher le mail');
+    
+//TRANSFER
+if (!defined('_TRANSFER_EMAIL'))
+    define('_TRANSFER_EMAIL','Transf&eacute;rer le mail');
     
 //EDIT    
-if (!defined('_EDIT_MAIL'))
-    define('_EDIT_MAIL', 'Modifier le mail');
-if (!defined('_SAVE_MAIL'))
-    define('_SAVE_MAIL', 'Enregistrer');
-if (!defined('_SAVE_COPY_MAIL'))
-    define('_SAVE_COPY_MAIL', 'Enregistrer une copie');
-if (!defined('_MAIL_UPDATED'))
-    define('_MAIL_UPDATED', 'Email modifi&eacute;');
+if (!defined('_EDIT_EMAIL'))
+    define('_EDIT_EMAIL', 'Modifier le mail');
+if (!defined('_SAVE_EMAIL'))
+    define('_SAVE_EMAIL', 'Enregistrer');
+if (!defined('_SAVE_COPY_EMAIL'))
+    define('_SAVE_COPY_EMAIL', 'Enregistrer une copie');
+if (!defined('_EMAIL_UPDATED'))
+    define('_EMAIL_UPDATED', 'Email modifi&eacute;');
  
 //REMOVE 
-if (!defined('_REMOVE_MAIL'))
-    define('_REMOVE_MAIL', 'Supprimer');
-if (!defined('_REMOVE_MAILS'))
-    define('_REMOVE_MAILS', 'Supprimer les mails');
-if (!defined('_REALLY_REMOVE_MAIL'))
-    define('_REALLY_REMOVE_MAIL', 'Voulez-vous supprimez le message');
-if (!defined('_MAIL_REMOVED'))
-    define('_MAIL_REMOVED', 'Email supprim&eacute;');
+if (!defined('_REMOVE_EMAIL'))
+    define('_REMOVE_EMAIL', 'Supprimer');
+if (!defined('_REMOVE_EMAILS'))
+    define('_REMOVE_EMAILS', 'Supprimer les mails');
+if (!defined('_REALLY_REMOVE_EMAIL'))
+    define('_REALLY_REMOVE_EMAIL', 'Voulez-vous supprimez le message');
+if (!defined('_EMAIL_REMOVED'))
+    define('_EMAIL_REMOVED', 'Email supprim&eacute;');

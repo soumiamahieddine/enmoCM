@@ -216,7 +216,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                     if($tab[$i][$j][$value]=="email_object")
                     {
                         $tab[$i][$j]["value"] = addslashes($tab[$i][$j]["value"]);
-                        $tab[$i][$j]["label"]=_MAIL_OBJECT;
+                        $tab[$i][$j]["label"]=_EMAIL_OBJECT;
                         $tab[$i][$j]["size"]=$sizeObject;
                         $tab[$i][$j]["label_align"]="left";
                         $tab[$i][$j]["align"]="left";
@@ -227,7 +227,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                     if($tab[$i][$j][$value]=="email_object_short")
                     {
                         $tab[$i][$j]["value"] = $request->cut_string( $request->show_string($tab[$i][$j]["value"]), $cutString);
-                        $tab[$i][$j]["label"]=_MAIL_OBJECT;
+                        $tab[$i][$j]["label"]=_EMAIL_OBJECT;
                         $tab[$i][$j]["size"]=$sizeObject;
                         $tab[$i][$j]["label_align"]="left";
                         $tab[$i][$j]["align"]="left";
@@ -311,7 +311,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                                         . "&mode=add&identifier=".$identifier."&origin=".$origin
                                         . $parameters."')",
                 "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_sendmail.gif&module=sendmail",
-                "tooltip"       =>  _NEW_MAIL,
+                "tooltip"       =>  _NEW_EMAIL,
                 "alwaysVisible" =>  true
                 );
         array_push($paramsTab['tools'],$add);   
@@ -336,7 +336,17 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
             "tooltip"       =>  _UPDATE,
             "disabledRules" => "@@user_id@@ != '".$_SESSION['user']['UserId']."' || @@email_status@@ == 'I'"
         );
-        array_push($paramsTab['actionIcons'], $update);     
+        array_push($paramsTab['actionIcons'], $update);  
+        $transfer = array(
+            "script"        => "showEmailForm('".$_SESSION['config']['businessappurl']
+                                    ."index.php?display=true&module=sendmail&page=sendmail_ajax_content"
+                                    ."&mode=transfer&id=@@email_id@@&identifier=".$identifier."&origin=".$origin
+                                    . $parameters."');",
+            "icon"      =>  $_SESSION['config']['businessappurl']."static.php?filename=nature_send.gif",
+            "tooltip"       =>  _TRANSFER_EMAIL,
+            "disabledRules" => "@@user_id@@ != '".$_SESSION['user']['UserId']."' || @@email_status@@ != 'S'"
+        );
+        array_push($paramsTab['actionIcons'], $transfer);     
          
         //Output
         $status = 0;

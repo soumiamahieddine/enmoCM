@@ -133,6 +133,7 @@ $path_to_script = $_SESSION['config']['businessappurl']
 switch ($mode) {
     case 'up':
     case 'read':
+    case 'transfer':
         if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
             $parameters .= '&id='.$_REQUEST['id'];
         } else {
@@ -157,7 +158,7 @@ switch ($mode) {
                 . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&module=sendmail&page=mail_form&identifier='
                 . $identifier.'&origin=document&coll_id='.$collId.'&mode='.$mode.$parameters.'" '
-                . 'frameborder="0" width="99%" style="height:545px;padding:0px;overflow-x:hidden;overflow-y: auto;"></iframe>';
+                . 'frameborder="0" width="100%" style="height:545px;padding:0px;overflow-x:hidden;overflow-y: auto;"></iframe>';
         }
     break;
         
@@ -240,26 +241,26 @@ switch ($mode) {
                                     $hist = new history();
                                     if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "folder") {
                                         $hist->add(
-                                            $table, $identifier, "UP", 'folderup', _MAIL_ADDED . _ON_FOLDER_NUM
+                                            $table, $identifier, "UP", 'folderup', _EMAIL_ADDED . _ON_FOLDER_NUM
                                             . $identifier . ' (' . $id . ') : "' . $request->cut_string($object, 254) .'"',
                                             $_SESSION['config']['databasetype'], 'sendmail'
                                         );
                                     } else if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "document") {
                                         $hist->add(
-                                            $view, $identifier, "UP", 'resup',  _MAIL_ADDED . _ON_DOC_NUM
+                                            $view, $identifier, "UP", 'resup',  _EMAIL_ADDED . _ON_DOC_NUM
                                             . $identifier . ' (' . $id . ') : "' . $request->cut_string($object, 254) .'"',
                                             $_SESSION['config']['databasetype'], 'sendmail'
                                         );
                                     }
 
                                     $hist->add(
-                                        EMAILS_TABLE, $id, "ADD", 'mailadd', _MAIL_ADDED . ' (' . $id . ')',
+                                        EMAILS_TABLE, $id, "ADD", 'mailadd', _EMAIL_ADDED . ' (' . $id . ')',
                                         $_SESSION['config']['databasetype'], 'sendmail'
                                     );
                                 }
                                 
                                 //Reload and show message
-                                $js =  $list_origin."window.parent.top.$('main_info').innerHTML = '"._MAIL_ADDED."';"; 
+                                $js =  $list_origin."window.parent.top.$('main_info').innerHTML = '"._EMAIL_ADDED."';"; 
                             } else {
                                 $status = 1;
                             }
@@ -292,7 +293,7 @@ switch ($mode) {
             } else {
                 if (isset($_SESSION['adresses']['to']) && count($_SESSION['adresses']['to']) > 0 ) {
                     if (!empty($_REQUEST['object'])) {
-                        print_r($_REQUEST);
+                        // print_r($_REQUEST);
                         
                         //Check adress for to
                         $to =  join(',', $_SESSION['adresses']['to']);
@@ -362,26 +363,26 @@ switch ($mode) {
                                         $hist = new history();
                                         if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "folder") {
                                             $hist->add(
-                                                $table, $identifier, "UP", 'folderup', _MAIL_UPDATED . _ON_FOLDER_NUM
+                                                $table, $identifier, "UP", 'folderup', _EMAIL_UPDATED . _ON_FOLDER_NUM
                                                 . $identifier . ' (' . $id . ') : "' . $request->cut_string($object, 254) .'"',
                                                 $_SESSION['config']['databasetype'], 'sendmail'
                                             );
                                         } else if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "document") {
                                             $hist->add(
-                                                $view, $identifier, "UP", 'resup',  _MAIL_UPDATED . _ON_DOC_NUM
+                                                $view, $identifier, "UP", 'resup',  _EMAIL_UPDATED . _ON_DOC_NUM
                                                 . $identifier . ' (' . $id . ') : "' . $request->cut_string($object, 254) .'"',
                                                 $_SESSION['config']['databasetype'], 'sendmail'
                                             );
                                         }
 
                                         $hist->add(
-                                            EMAILS_TABLE, $id, "UP", 'mailup', _MAIL_UPDATED . ' (' . $id . ')',
+                                            EMAILS_TABLE, $id, "UP", 'mailup', _EMAIL_UPDATED . ' (' . $id . ')',
                                             $_SESSION['config']['databasetype'], 'sendmail'
                                         );
                                     }
                                     
                                     //Reload and show message
-                                    $js =  $list_origin."window.parent.top.$('main_info').innerHTML = '"._MAIL_UPDATED."';"; 
+                                    $js =  $list_origin."window.parent.top.$('main_info').innerHTML = '"._EMAIL_UPDATED."';"; 
                                 } else {
                                     $status = 1;
                                 }
@@ -428,27 +429,27 @@ switch ($mode) {
                 $hist = new history();
                 if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "folder") {
                     $hist->add(
-                        $table, $identifier, "UP", 'folderup', _MAIL_REMOVED . _ON_FOLDER_NUM
+                        $table, $identifier, "UP", 'folderup', _EMAIL_REMOVED . _ON_FOLDER_NUM
                         . $identifier . ' (' . $id . ') : "' . $request->cut_string($object, 254) .'"',
                         $_SESSION['config']['databasetype'], 'sendmail'
                     );
                 } else if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "document") {
                     $hist->add(
-                        $view, $identifier, "UP", 'resup',  _MAIL_REMOVED . _ON_DOC_NUM
+                        $view, $identifier, "UP", 'resup',  _EMAIL_REMOVED . _ON_DOC_NUM
                         . $identifier . ' (' . $id . ') : "' . $request->cut_string($object, 254) .'"',
                         $_SESSION['config']['databasetype'], 'sendmail'
                     );
                 }
 
                 $hist->add(
-                    EMAILS_TABLE, $id, "DEL", 'maildel', _MAIL_REMOVED . ' (' . $id . ') : "' 
+                    EMAILS_TABLE, $id, "DEL", 'maildel', _EMAIL_REMOVED . ' (' . $id . ') : "' 
                     . $request->cut_string($object, 254) .'"',
                     $_SESSION['config']['databasetype'], 'sendmail'
                 );
             }
             
             //Reload and show message
-            $js =  $list_origin."window.parent.top.$('main_info').innerHTML = '"._MAIL_REMOVED."';";
+            $js =  $list_origin."window.parent.top.$('main_info').innerHTML = '"._EMAIL_REMOVED."';";
             
         } else {
             $error = $request->wash_html(_ID.' '._IS_EMPTY.'!','NONE');

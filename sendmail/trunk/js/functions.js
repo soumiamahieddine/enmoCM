@@ -14,7 +14,7 @@ var addEmailAdress = function (idField, idList, theUrlToListScript, paramNameSrv
 function showEmailForm(path, width, height) {
     
     if(typeof(width)==='undefined'){
-        var width = '800px';
+        var width = '820px';
     }
     
     if(typeof(height)==='undefined'){
