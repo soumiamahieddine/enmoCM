@@ -2549,3 +2549,12 @@ function convertAmount(currency, amount)
         return accounting.formatMoney(amount, '', 2, '', '.');
     }
 }
+
+function updateActionForWF()
+{
+    if ($('chosen_action').value != '') {
+        if ($('combinatedAction')) {
+            $('combinatedAction').innerHTML = $('chosen_action').options[$('chosen_action').selectedIndex].text;
+        }
+    }
+}
