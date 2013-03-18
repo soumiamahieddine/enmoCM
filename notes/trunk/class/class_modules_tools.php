@@ -173,7 +173,7 @@ class notes extends dbquery
     public function getNotes($noteId, $userId, $userPrimaryEntity)
     {
         $query = "select id from notes where id in ("
-            . "select note_id from note_entities where (item_id = '" 
+            . "select note_id from ". NOTE_ENTITIES_TABLE. " where (item_id = '" 
             . $userPrimaryEntity . "' and note_id = " . $noteId . "))"
             . "or (id = " . $noteId . " and user_id = '" . $userId . "')";
         $db = new dbquery();
@@ -184,7 +184,7 @@ class notes extends dbquery
             return true;
          } else {
             // test if public
-            $query = "select note_id from note_entities where note_id = " . $noteId;
+            $query = "select note_id from ". NOTE_ENTITIES_TABLE. " where note_id = " . $noteId;
             $db->query($query);
             if ($db->nb_result() == 0) {
                 return true;
@@ -201,7 +201,7 @@ class notes extends dbquery
         $db = new dbquery();
         $db->connect();
         $dbId->query("select id, identifier, user_id, date_note, note_text from "
-                            . $_SESSION['tablename']['not_notes'] 
+                            . NOTES_TABLE 
                             . " where identifier = " . $id 
                             . " and coll_id ='"
                             . $coll_id . "' order by date_note desc");
@@ -210,7 +210,7 @@ class notes extends dbquery
        {
            $dbNotesEntities = new dbquery();
            $dbNotesEntities->connect();
-           $query = "select id from note_entities where "
+           $query = "select id from ". NOTE_ENTITIES_TABLE. " where "
            . "note_id = " .$res->id;
                     
            $dbNotesEntities->query($query);
@@ -220,7 +220,7 @@ class notes extends dbquery
            else
            {
              $db->query( "select id from notes where id in ("
-                . "select note_id from note_entities where (item_id = '" 
+                . "select note_id from ". NOTE_ENTITIES_TABLE. " where (item_id = '" 
                 . $_SESSION['user']['primaryentity']['id'] . "' and note_id = " . $res->id . "))"
                 . "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')");
 
@@ -240,7 +240,7 @@ class notes extends dbquery
         $db = new dbquery();
         $db->connect();
         $dbId->query("select id, identifier, user_id, date_note, note_text from "
-                            . $_SESSION['tablename']['not_notes'] 
+                            . NOTES_TABLE 
                             . " where identifier = " . $id 
                             . " and coll_id ='"
                             . $coll_id . "' order by date_note desc");
@@ -249,7 +249,7 @@ class notes extends dbquery
        {
            $dbNotesEntities = new dbquery();
            $dbNotesEntities->connect();
-           $query = "select id from note_entities where "
+           $query = "select id from ".NOTE_ENTITIES_TABLE." where "
            . "note_id = " .$res->id;
                     
            $dbNotesEntities->query($query);
@@ -264,7 +264,7 @@ class notes extends dbquery
                 );
            } else {
              $db->query( "select id from notes where id in ("
-                . "select note_id from note_entities where (item_id = '" 
+                . "select note_id from ". NOTE_ENTITIES_TABLE. " where (item_id = '" 
                 . $_SESSION['user']['primaryentity']['id'] . "' and note_id = " . $res->id . "))"
                 . "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')");
 
