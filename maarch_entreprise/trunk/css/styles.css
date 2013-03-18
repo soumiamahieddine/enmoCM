@@ -3765,3 +3765,27 @@ table.listing  {
 .separator2 {
     border-top: 1px solid #999999;
 }
+
+/*** NEW WF ***/
+
+.tdButton {
+    background-color: #CEE9F1;
+    text-align: center;
+    font-weight: bold;
+    border: solid black 1px;
+}
+
+.tdButtonRed {
+    background-color: #F78181;
+    text-align: center;
+    color: #EFFBF5;
+    font-weight: bold;
+    border: solid black 1px;
+}
+
+.tdButtonGreen {
+    background-color: #A9F5A9;
+    text-align: center;
+    font-weight: bold;
+    border: solid black 1px;
+}

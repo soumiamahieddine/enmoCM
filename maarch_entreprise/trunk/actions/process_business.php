@@ -203,124 +203,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<input type="hidden" name="module" id="module" value="' . $module . '" />';
     $frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
 
-        $frm_str .= '<hr />';
-
-        //GENERAL DATAS
-        $frm_str .= '<h3 onclick="new Effect.toggle(\'general_datas_div\', \'blind\', {delay:0.2});'
-            . 'whatIsTheDivStatus(\'general_datas_div\', \'divStatus_general_datas_div\');return false;" '
-            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_general_datas_div" style="color:#1C99C5;">>></span>&nbsp;<b>'
-                . _GENERAL_INFO . ' </b>';
-        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-        $frm_str .= '</h3>';
-        $frm_str .= '<div id="general_datas_div" style="display:block">';
-            $frm_str .= '<div>';
-              $frm_str .= '<table width="95%" align="left" border="0">';
-              // Displays the document indexes
-            foreach (array_keys($data) as $key) {
-                $frm_str .= '<tr>';
-                    $frm_str .= '<td style="width:10%;align:center;"><img src="'
-            . $data[$key]['img'] . '" title="' .  $data[$key]['label'] . '"/></td>';
-                    $frm_str .= '<td width="40%" align="left"><span class="form_title_process">'
-                        . $data[$key]['label'] . ' </span></td>';
-                    $frm_str .= '<td>';
-                    if ($data[$key]['display'] == 'textinput') {
-                        $frm_str .= '<input type="text" name="' . $key . '" id="' . $key
-                            . '" value="' . $data[$key]['show_value']
-                            . '" readonly="readonly" class="readonly" style="border:none;" />';
-                    } elseif ($data[$key]['display'] == 'textarea') {
-                        $frm_str .= '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" '
-                                    .'title="'.$data[$key]['show_value'].'" style="width: 150px; max-width: 150px; border: none; color: #666666;">'
-                                        .$data[$key]['show_value']
-                                    .'</textarea>';
-                        if (isset($data[$key]['addon'])) {
-                            $frm_str .= $data[$key]['addon'];
-                        }
-                    }
-                    $frm_str .= '</td>';
-                $frm_str .= '</tr>';
-            }
-            $frm_str .= '</table>';
-            $frm_str .= '</div>';
-            $frm_str .= '</div>';
-
-            $frm_str .= '<hr />';
-
-        if (count($indexes) > 0) {
-            $frm_str .= '<h3 onclick="new Effect.toggle(\'doctypes_indexes_div\', \'blind\', {delay:0.2});'
-                . 'whatIsTheDivStatus(\'doctypes_indexes_div\', \'divStatus_doctypes_indexes_div\');return false;" '
-                . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-            $frm_str .= ' <span id="divStatus_doctypes_indexes_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
-                    . _DOCTYPE_INDEXES . ' </b>';
-            $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-            $frm_str .= '</h3>';
-            $frm_str .= '<div id="doctypes_indexes_div" style="display:none">';
-            $frm_str .= '<div>';
-            $frm_str .= '<table width="95%" align="left" border="0">';
-            foreach (array_keys($indexes) as $key) {
-                $frm_str .= '<tr>';
-                    $frm_str .= '<td width="50%" align="left"><span class="form_title_process" >'
-                              . $indexes[$key]['label'] . ' </span></td>';
-                    $frm_str .= '<td>';
-                    $frm_str .= '<input type="text" name="' . $key . '" id="'
-                              . $key . '" readonly="readonly" class="readonly" style="border:none;" ';
-                    if ($indexes[$key]['type_field'] == 'input') {
-                        $frm_str .= ' value="'.$values_fields->$key.'" ';
-                    } else {
-                        $val = '';
-                        for ($i=0; count($indexes[$key]['values']); $i++) {
-                            if ($values_fields->$key == $indexes[$key]['values'][$i]['id']) {
-                                $val =     $indexes[$key]['values'][$i]['label'];
-                                break;
-                            }
-                        }
-                        $frm_str .= ' value="'.$val.'" ';
-                    }
-                    $frm_str .= ' />';
-                    $frm_str .= '</td >';
-                $frm_str .= '</tr>';
-            }
-            $frm_str .= '</table>';
-            $frm_str .= '</div>';
-            $frm_str .= '</div>';
-            $frm_str .= '<br />';
-        }
-
-    //TAGS
-    if (
-        $core_tools->is_module_loaded('tags') && (
-        $core_tools->test_service('tag_view', 'tags',false) == 1)
-        )
-    {
-        include_once('modules/tags/templates/process/index.php');
-    }
-
-    //FOLDERS
-    if ($core_tools->is_module_loaded('folder')) {
-        // Displays the folder data
-        $folder = get_folder_data($coll_id, $res_id);
-        $frm_str .= '<h3 onclick="new Effect.toggle(\'folder_div\', \'blind\', {delay:0.2});'
-            . 'whatIsTheDivStatus(\'folder_div\', \'divStatus_folder_div\');return false;" '
-            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_folder_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
-            . _FOLDER_ATTACH . '</b>';
-        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
-        $frm_str .= '</h3>';
-        $frm_str .= '<div id="folder_div"  style="display:none">';
-        $frm_str .= '<div>';
-        $frm_str .= '<table width="98%" align="center" border="0">';
-        $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
-        $frm_str .= '<td><label for="folder" class="form_title_process" >' . _FOLDER . '</label></td>';
-        $frm_str .= '<td>&nbsp;</td>';
-        $frm_str .='<td><input type="text" name="folder" id="folder" value="'
-            . $folder . '" onblur=""/><div id="show_folder" class="autocomplete"></div>';
-        $frm_str .= '</tr>';
-        $frm_str .= '</table>';
-        $frm_str .= '</div>';
-        $frm_str .= '</div>';
-        $frm_str .='<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="' . $res_id . '" />';
-        $frm_str .= '<br>';
-    }
+    $frm_str .= '<hr />';
     
     //WF COMPUTING
      $myTurnInTheWF = false;
@@ -353,7 +236,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     array(
                         'role' => $roles[$cptRoles],
                         'sequence' => $sequence,
-                        'canIAdvanceInTheWF' =>$b->canIAdvanceInTheWF(
+                        'isThereSomeoneAfterMeInTheWF' =>$b->isThereSomeoneAfterMeInTheWF(
                             $res_id,
                             $coll_id,
                             $roles[$cptRoles],
@@ -365,7 +248,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $roles[$cptRoles],
                             $sequence
                         ),
-                        'canIBackInTheWF' =>$b->canIBackInTheWF(
+                        'isThereSomeoneBeforeMeInTheWF' =>$b->isThereSomeoneBeforeMeInTheWF(
                             $res_id,
                             $coll_id,
                             $roles[$cptRoles],
@@ -390,69 +273,168 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<h3 onclick="new Effect.toggle(\'wf_div\', \'blind\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'wf_div\', \'divStatus_wf_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-        $frm_str .= ' <span id="divStatus_wf_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
+        $frm_str .= ' <span id="divStatus_wf_div" style="color:#1C99C5;">>></span>&nbsp;<b>'
             . _WF . '</b>';
         $frm_str .= '<span class="lb1-details">&nbsp;</span>';
         $frm_str .= '</h3>';
-        $frm_str .= '<div id="wf_div"  style="display:none">';
+        $frm_str .= '<div id="wf_div">';
         $countRoles = count($rolesInTheWF);
-        $frm_str .= '<table width="98%" align="center" border="0">';
         for ($cptR=0;$cptR<$countRoles;$cptR++) {
-            $frm_str .= '<tr style="color:red;">';
+            $frm_str .= '<span style="font-weight:bold;"><center><small>';
+                $frm_str .= _ROLE . ' : ' . $rolesInTheWF[$cptR]['role'];
+            $frm_str .= '</small></center></span>';
+            $frm_str .= '<table width="98%" align="center" border="0" cellspacing="5" cellpadding="5">';
+            if ($rolesInTheWF[$cptR]['isThereSomeoneAfterMeInTheWF']) {
+                $frm_str .= '<tr>';
+                $frm_str .= '<td class="tdButtonGreen" onmouseover="this.style.cursor=\'pointer\';" '
+                    . 'onclick="advanceWF(\'' 
+                    . $coll_id . '\', \'' 
+                    . $res_id . '\', \'' 
+                    . $rolesInTheWF[$cptR]['role'] . '\', \''
+                    . $_SESSION['user']['UserId'] . '\');">';
+                    $frm_str .= '>> ' . _ADVANCE_TO . ' ' . $rolesInTheWF[$cptR]['theNextInTheWF'] . ' >>';
+                $frm_str .= '</td>';
+                $frm_str .= '</tr>';
+            } else {
+                $frm_str .= '<tr>';
+                $frm_str .= '<td class="tdButtonGreen" onmouseover="this.style.cursor=\'pointer\';" '
+                    . 'onclick="console.log(\'valid step\');">';
+                    $frm_str .= _VALID_STEP . ' ' . $rolesInTheWF[$cptR]['role'];
+                $frm_str .= '</td>';
+                $frm_str .= '</tr>';
+            }
+            if ($rolesInTheWF[$cptR]['isThereSomeoneBeforeMeInTheWF']) {
+                $frm_str .= '<tr>';
+                $frm_str .= '<td class="tdButtonRed" onmouseover="this.style.cursor=\'pointer\';" '
+                    . 'onclick="console.log(\'back to\');">';
+                    $frm_str .= '<< ' . _BACK_TO . ' ' . $rolesInTheWF[$cptR]['thePreviousInTheWF'] . ' <<';
+                $frm_str .= '</td>';
+                $frm_str .= '</tr>';
+            }
+            $frm_str .= '</table>';
+        }
+        $frm_str .= '</div>';
+    }
+    
+    $frm_str .= '<hr />';
+    
+    //GENERAL DATAS
+    $frm_str .= '<h3 onclick="new Effect.toggle(\'general_datas_div\', \'blind\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'general_datas_div\', \'divStatus_general_datas_div\');return false;" '
+        . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+    $frm_str .= ' <span id="divStatus_general_datas_div" style="color:#1C99C5;">>></span>&nbsp;<b>'
+            . _GENERAL_INFO . ' </b>';
+    $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+    $frm_str .= '</h3>';
+    $frm_str .= '<div id="general_datas_div" style="display:block">';
+    $frm_str .= '<div>';
+    $frm_str .= '<table width="95%" align="left" border="0">';
+    // Displays the document indexes
+    foreach (array_keys($data) as $key) {
+        $frm_str .= '<tr>';
+            $frm_str .= '<td style="width:10%;align:center;"><img src="'
+                . $data[$key]['img'] . '" title="' .  $data[$key]['label'] . '"/></td>';
+            $frm_str .= '<td width="40%" align="left"><span class="form_title_process">'
+                . $data[$key]['label'] . ' </span></td>';
             $frm_str .= '<td>';
-                $frm_str .= 'role : ';
+            if ($data[$key]['display'] == 'textinput') {
+                $frm_str .= '<input type="text" name="' . $key . '" id="' . $key
+                    . '" value="' . $data[$key]['show_value']
+                    . '" readonly="readonly" class="readonly" style="border:none;" />';
+            } elseif ($data[$key]['display'] == 'textarea') {
+                $frm_str .= '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" '
+                            .'title="'.$data[$key]['show_value'].'" style="width: 150px; max-width: 150px; border: none; color: #666666;">'
+                                .$data[$key]['show_value']
+                            .'</textarea>';
+                if (isset($data[$key]['addon'])) {
+                    $frm_str .= $data[$key]['addon'];
+                }
+            }
             $frm_str .= '</td>';
-            $frm_str .= '<td>';
-                $frm_str .= $rolesInTheWF[$cptR]['role'];
-            $frm_str .= '</td>';
-            $frm_str .= '</tr>';
+        $frm_str .= '</tr>';
+    }
+    $frm_str .= '</table>';
+    $frm_str .= '</div>';
+    $frm_str .= '</div>';
+
+    $frm_str .= '<hr />';
+
+    if (count($indexes) > 0) {
+        $frm_str .= '<h3 onclick="new Effect.toggle(\'doctypes_indexes_div\', \'blind\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'doctypes_indexes_div\', \'divStatus_doctypes_indexes_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_doctypes_indexes_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
+                . _DOCTYPE_INDEXES . ' </b>';
+        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+        $frm_str .= '</h3>';
+        $frm_str .= '<div id="doctypes_indexes_div" style="display:none">';
+        $frm_str .= '<div>';
+        $frm_str .= '<table width="95%" align="left" border="0">';
+        foreach (array_keys($indexes) as $key) {
             $frm_str .= '<tr>';
-            $frm_str .= '<td>';
-                $frm_str .= 'sequence : ';
-            $frm_str .= '</td>';
-            $frm_str .= '<td>';
-                $frm_str .= $rolesInTheWF[$cptR]['sequence'];
-            $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-            $frm_str .= '<tr>';
-            $frm_str .= '<td>';
-                $frm_str .= 'canIAdvanceInTheWF : ';
-            $frm_str .= '</td>';
-            $frm_str .= '<td>';
-                $frm_str .= $rolesInTheWF[$cptR]['canIAdvanceInTheWF'];
-            $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-            $frm_str .= '<tr>';
-            $frm_str .= '<td>';
-                $frm_str .= 'theNextInTheWF : ';
-            $frm_str .= '</td>';
-            $frm_str .= '<td>';
-                $frm_str .= $rolesInTheWF[$cptR]['theNextInTheWF'];
-            $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-            $frm_str .= '<tr>';
-            $frm_str .= '<td>';
-                $frm_str .= 'canIBackInTheWF : ';
-            $frm_str .= '</td>';
-            $frm_str .= '<td>';
-                $frm_str .= $rolesInTheWF[$cptR]['canIBackInTheWF'];
-            $frm_str .= '</td>';
-            $frm_str .= '</tr>';
-            $frm_str .= '<tr>';
-            $frm_str .= '<td>';
-                $frm_str .= 'thePreviousInTheWF : ';
-            $frm_str .= '</td>';
-            $frm_str .= '<td>';
-                $frm_str .= $rolesInTheWF[$cptR]['thePreviousInTheWF'];
-            $frm_str .= '</td>';
+                $frm_str .= '<td width="50%" align="left"><span class="form_title_process" >'
+                          . $indexes[$key]['label'] . ' </span></td>';
+                $frm_str .= '<td>';
+                $frm_str .= '<input type="text" name="' . $key . '" id="'
+                          . $key . '" readonly="readonly" class="readonly" style="border:none;" ';
+                if ($indexes[$key]['type_field'] == 'input') {
+                    $frm_str .= ' value="'.$values_fields->$key.'" ';
+                } else {
+                    $val = '';
+                    for ($i=0; count($indexes[$key]['values']); $i++) {
+                        if ($values_fields->$key == $indexes[$key]['values'][$i]['id']) {
+                            $val =     $indexes[$key]['values'][$i]['label'];
+                            break;
+                        }
+                    }
+                    $frm_str .= ' value="'.$val.'" ';
+                }
+                $frm_str .= ' />';
+                $frm_str .= '</td >';
             $frm_str .= '</tr>';
         }
         $frm_str .= '</table>';
         $frm_str .= '</div>';
+        $frm_str .= '</div>';
+        $frm_str .= '<br />';
+    }
+
+    //TAGS
+    if (
+        $core_tools->is_module_loaded('tags') && (
+        $core_tools->test_service('tag_view', 'tags',false) == 1)
+        ) {
+        include_once('modules/tags/templates/process/index.php');
+    }
+
+    //FOLDERS
+    if ($core_tools->is_module_loaded('folder')) {
+        // Displays the folder data
+        $folder = get_folder_data($coll_id, $res_id);
+        $frm_str .= '<h3 onclick="new Effect.toggle(\'folder_div\', \'blind\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'folder_div\', \'divStatus_folder_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_folder_div" style="color:#1C99C5;"><<</span>&nbsp;<b>'
+            . _FOLDER_ATTACH . '</b>';
+        $frm_str .= '<span class="lb1-details">&nbsp;</span>';
+        $frm_str .= '</h3>';
+        $frm_str .= '<div id="folder_div"  style="display:none">';
+        $frm_str .= '<div>';
+        $frm_str .= '<table width="98%" align="center" border="0">';
+        $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
+        $frm_str .= '<td><label for="folder" class="form_title_process" >' . _FOLDER . '</label></td>';
+        $frm_str .= '<td>&nbsp;</td>';
+        $frm_str .='<td><input type="text" name="folder" id="folder" value="'
+            . $folder . '" onblur=""/><div id="show_folder" class="autocomplete"></div>';
+        $frm_str .= '</tr>';
+        $frm_str .= '</table>';
+        $frm_str .= '</div>';
+        $frm_str .= '</div>';
+        $frm_str .='<input type="hidden" name="res_id_to_process" id="res_id_to_process"  value="' . $res_id . '" />';
     }
     
     //ACTIONS
-    $frm_str .= '<hr class="hr_process"/>';
+    $frm_str .= '<hr />';
     $frm_str .= '<p align="center" style="width:90%;">';
         $frm_str .= '<b>'._ACTIONS.' : </b>';
         $actions  = $b->get_actions_from_current_basket($res_id, $coll_id, 'PAGE_USE');
@@ -487,9 +469,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     // ****************************** RIGHT PART *******************************************/
 
-/*
-    $frm_str .= '<div id="validright" style="width: 80%;">';
-*/
     $frm_str .= '<div id="validright">';
 
      /*** TOOLBAR ***/
