@@ -1371,7 +1371,7 @@ class basket extends dbquery
     }
     
     /**
-     * Return true if the there is a possibility to back in the WF
+     * Return true if the there is someone before me in the WF
      *
      * @param $resId long the res ID
      * @param $collId string the collection
@@ -1379,12 +1379,12 @@ class basket extends dbquery
      * @param $sequence integer sequence of the actual user in the WF
      * @return boolean
      */
-    public function canIBackInTheWF($resId, $collId, $role, $sequence)
+    public function isThereSomeoneBeforeMeInTheWF($resId, $collId, $role, $sequence)
     {
         $db = new dbquery();
         $db->connect();
         $db->query(
-            "select visible from " . ENT_LISTINSTANCE 
+            "select res_id from " . ENT_LISTINSTANCE 
             . " where coll_id = '" . $collId . "'"
             . " and res_id = " . $resId
             . " and item_mode = '" . $role . "'"
@@ -1392,7 +1392,7 @@ class basket extends dbquery
             . " and (visible = 'N' or visible = '' or visible is null)"
         );
         $line = $db->fetch_object();
-        if ($line->visible <> '') {
+        if ($line->res_id <> '') {
             return true;
         } else {
             return false;
@@ -1400,7 +1400,7 @@ class basket extends dbquery
     }
     
     /**
-     * Return true if the there is a possibility to advance in the WF
+     * Return true if the there is someone after me in the WF
      *
      * @param $resId long the res ID
      * @param $collId string the collection
@@ -1408,20 +1408,20 @@ class basket extends dbquery
      * @param $sequence integer sequence of the actual user in the WF
      * @return boolean
      */
-    public function canIAdvanceInTheWF($resId, $collId, $role, $sequence)
+    public function isThereSomeoneAfterMeInTheWF($resId, $collId, $role, $sequence)
     {
         $db = new dbquery();
         $db->connect();
         $db->query(
-            "select visible from " . ENT_LISTINSTANCE 
+            "select res_id from " . ENT_LISTINSTANCE 
             . " where coll_id = '" . $collId . "'"
             . " and res_id = " . $resId
             . " and item_mode = '" . $role . "'"
             . " and sequence > " . $sequence
-            . " and visible = 'N'"
+            . " and (visible = 'N' or visible = '' or visible is null)"
         );
         $line = $db->fetch_object();
-        if ($line->visible <> '') {
+        if ($line->res_id <> '') {
             return true;
         } else {
             return false;

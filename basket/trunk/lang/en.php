@@ -389,4 +389,14 @@ if (!defined('_BASKET_WELCOME_TXT1'))
 if (!defined('_BASKET_WELCOME_TXT2'))
     define('_BASKET_WELCOME_TXT2', 'you can click on the menu above to change basket');
 
-?>
+//NEW WF
+if (!defined('_WF'))
+    define('_WF', 'Workflow');
+if (!defined('_POSITION'))
+    define('_POSITION', 'Position');
+if (!defined('_ADVANCE_TO'))
+    define('_ADVANCE_TO', 'Advance to');
+if (!defined('_VALID_STEP'))
+    define('_VALID_STEP', 'Valid step');
+if (!defined('_BACK_TO'))
+    define('_BACK_TO', 'Back to');

@@ -392,4 +392,14 @@ if (!defined('_SEE_BASKETS_RELATED'))
 if (!defined('_GO_MANAGE_BASKET'))
     define('_GO_MANAGE_BASKET', 'Modifier');
 
-?>
+//NEW WF
+if (!defined('_WF'))
+    define('_WF', 'Workflow');
+if (!defined('_POSITION'))
+    define('_POSITION', 'Position');
+if (!defined('_ADVANCE_TO'))
+    define('_ADVANCE_TO', 'Avancer vers');
+if (!defined('_VALID_STEP'))
+    define('_VALID_STEP', 'Valider l&rsquo;&eacute;tape');
+if (!defined('_BACK_TO'))
+    define('_BACK_TO', 'Retourner vers');
