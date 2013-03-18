@@ -243,6 +243,7 @@ function moveInWF(way, collId, resId, role, userId)
             'index.php?display=true&module=basket&page=ajaxMoveInWF&display=true',
             {
                 method:'post',
+                asynchronous : false,
                 parameters: {
                     way : way,
                     collId : collId,

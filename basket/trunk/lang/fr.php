@@ -409,3 +409,5 @@ if (!defined('_BACK_IN_THE_WF'))
     define('_BACK_IN_THE_WF', 'Recule dans le workflow');
 if (!defined('_ITS_NOT_MY_TURN_IN_THE_WF'))
     define('_ITS_NOT_MY_TURN_IN_THE_WF', 'Ce n&rsquo;est pas mon tour de traiter dans le workflow');
+if (!defined('_COMBINATED_ACTION'))
+    define('_COMBINATED_ACTION', 'Action combin&eacute;e');

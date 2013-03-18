@@ -1304,6 +1304,8 @@ class basket extends dbquery
             . " where coll_id = '" . $collId . "'"
             . " and res_id = " . $resId
             . " and item_id = '" . $userId . "'"
+            . " and item_mode <> 'dest'"
+            . " and item_mode <> 'cc'"
             . $itemMode
             . " and visible = 'Y'"
         );
