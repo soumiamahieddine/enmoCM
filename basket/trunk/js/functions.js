@@ -256,7 +256,7 @@ function moveInWF(way, collId, resId, role, userId)
                     if (response.status > 0) {
                         window.alert(response.error_txt);
                      } else {
-                         $('send').click();
+                         //$('send').click();
                      }
                 }
             }

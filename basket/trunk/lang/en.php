@@ -408,3 +408,5 @@ if (!defined('_ITS_NOT_MY_TURN_IN_THE_WF'))
     define('_ITS_NOT_MY_TURN_IN_THE_WF', 'It is not my turn to process in the workflow');
 if (!defined('_COMBINATED_ACTION'))
     define('_COMBINATED_ACTION', 'Combinated action');
+if (!defined('_END_OF_THE_WF'))
+    define('_END_OF_THE_WF', 'End of the workflow');

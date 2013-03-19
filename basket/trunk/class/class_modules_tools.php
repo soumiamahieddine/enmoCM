@@ -1362,7 +1362,6 @@ class basket extends dbquery
             . " and res_id = " . $resId
             . " and item_id = '" . $userId . "'"
             . " and item_mode = '" . $role . "'"
-            . " and visible = 'Y'"
         );
         $line = $db->fetch_object();
         if ($line->sequence <> '') {
