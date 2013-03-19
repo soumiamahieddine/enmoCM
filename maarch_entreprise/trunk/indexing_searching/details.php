@@ -1250,7 +1250,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     if ($nbr_emails > 0 ) $nbr_emails = ' ('.$nbr_emails.')';  else $nbr_emails = '';
                    
                     ?>
-                    <dt><?php  echo _SENDMAIL.$nbr_emails;?></dt>
+                    <dt><?php  echo _SENDED_EMAILS.$nbr_emails;?></dt>
                     <dd>
                     <?php
                     //Emails iframe

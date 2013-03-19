@@ -526,6 +526,27 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</td>';
     }
     
+	//SENDMAILS                
+    if ($core_tools->is_module_loaded('sendmail') === true 
+        && $core_tools->test_service('sendmail', 'sendmail', false) === true
+    ) {
+        require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
+            . "class" . DIRECTORY_SEPARATOR
+            . "class_modules_tools.php";
+        $sendmail_tools    = new sendmail();
+        //Count mails
+		$nbr_emails = 0;
+        $nbr_emails = $sendmail_tools->countUserEmails($res_id, $coll_id);
+		$frm_str .= '<td>';
+		$frm_str .= '|<span onclick="new Effect.toggle(\'emails_div\', \'appear\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'emails_div\', \'divStatus_emails_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= ' <span id="divStatus_emails_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
+            . _SENDED_EMAILS . ' ('.$nbr_emails.')';
+        $frm_str .= '</b></span>&nbsp;|';
+        $frm_str .= '</td>';
+	}
+	
     //DIFFUSION LIST
     if ($core_tools->is_module_loaded('entities')) {        
         $frm_str .= '<td>';
@@ -798,6 +819,25 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         //$frm_str .= '<hr class="hr_process"/>';
         $frm_str .= '</div>';
         $frm_str .= '<hr />';
+        $frm_str .= '</div>';
+    }
+	
+	//SENDMAIL FRAME
+    if ($core_tools->is_module_loaded('sendmail') === true 
+        && $core_tools->test_service('sendmail', 'sendmail', false) === true
+    ) {
+        $frm_str .= '<div class="desc" id="emails_div" style="display:none;">';
+        $frm_str .= '<div class="ref-unit">';
+        $frm_str .= '<center><h2 onclick="new Effect.toggle(\'emails_div\', \'blind\', {delay:0.2});';
+        $frm_str .= 'whatIsTheDivStatus(\'emails_div\', \'divStatus_emails_div\');';
+        $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _SENDED_EMAILS. '</h2></center>';
+        $frm_str .= '<iframe src="'
+            . $_SESSION['config']['businessappurl']
+            . 'index.php?display=true&module=sendmail&page=sendmail&identifier='
+            . $res_id . '&origin=document&coll_id=' . $coll_id . '&load&size=medium" '
+            . 'name="sendmail_iframe" id="sendmail_iframe" width="100%" height="650px" align="center" '
+            . 'scrolling="auto" frameborder="0" ></iframe>';
+        $frm_str .= '</div>';
         $frm_str .= '</div>';
     }
 
