@@ -844,6 +844,7 @@ CREATE TABLE listmodel_types
 (
   listmodel_type_id character varying(50) NOT NULL,
   listmodel_type_label character varying(100) NOT NULL,
+  usergroup_ids TEXT,
   CONSTRAINT "listmodel_types_pkey" PRIMARY KEY (listmodel_type_id)
 )
 WITH (
