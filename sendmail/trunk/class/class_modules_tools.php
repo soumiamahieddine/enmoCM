@@ -188,10 +188,10 @@ class sendmail extends dbquery
     
     public function rawToHtml($text) {
         //...
-        $text = str_replace("\r\n", "\n", $text);
-        $text = str_replace("\r", "\n", $text);
+        // $text = str_replace("\r\n", "\n", $text);
+        // $text = str_replace("\r", "\n", $text);
         //
-        $text = str_replace("\n", "<br />", $text);
+        // $text = str_replace("\n", "<br />", $text);
         //
         return $text;
     }
@@ -201,10 +201,28 @@ class sendmail extends dbquery
         $text = str_replace("<br>", "\n", $text);
         $text = str_replace("<br/>", "\n", $text);
         $text = str_replace("<br />", "\n", $text);
+		$text = strip_tags($text);
         //
         return $text;
     }
     
+	public function cleanHtml($htmlContent){
+	
+		$htmlContent = str_replace(';', '###', $htmlContent);        
+        $htmlContent = str_replace('--', '___', $htmlContent); 
+		
+        $allowedTags = '<html><head><body><title>'; //Structure
+        $allowedTags .= '<h1><h2><h3><h4><h5><h6><b><i><tt><u><strike><blockquote><pre><blink><font><big><small><sup><sub><strong><em>'; // Text formatting
+        $allowedTags .='<p><br><hr><center><div><span>'; // Text position
+        $allowedTags .= '<li><ol><ul><dl><dt><dd>'; // Lists
+        $allowedTags .= '<img><a>'; // Multimedia
+        $allowedTags .= '<table><tr><td><th><tbody><thead><tfooter><caption>'; // Tables
+        $allowedTags .= '<form><input><textarea><select>'; // Forms
+        $htmlContent = strip_tags($htmlContent, $allowedTags);
+		
+        return $htmlContent;
+	}
+	
     public function getEmail($id, $owner=true) {
         $email = array();
         if (!empty($id)) {
@@ -247,7 +265,9 @@ class sendmail extends dbquery
                     $email['notes'] = explode(',', $res->note_id_list);
                 }
                 $email['object'] = $this->show_string($res->email_object);
-                $email['body'] = $this->show_string($res->email_body);
+				$body = str_replace('###', ';', $res->email_body);
+				$body = str_replace('___', '--', $body);
+                $email['body'] = $this->show_string($body);
                 $email['resMasterAttached'] = $res->is_res_master_attached;
                 $email['isHtml'] = $res->is_html;
                 $email['status'] = $res->email_status;
@@ -344,7 +364,7 @@ class sendmail extends dbquery
 
 			//$viewResourceArr['status'] /ko /ok
 			//$viewResourceArr['error']
-			$this->show_array($viewResourceArr);
+			// $this->show_array($viewResourceArr);
 		}
 
 		return $viewResourceArr;
@@ -438,7 +458,7 @@ class sendmail extends dbquery
             );
 		}
 		
-		$this->show_array($viewAttachmentArr);
+		// $this->show_array($viewAttachmentArr);
 		
 		return $viewAttachmentArr;
 	}
@@ -460,49 +480,90 @@ class sendmail extends dbquery
         $db->connect();
 				
         if (count($notesArray) > 0) {
-			/*
-				for($i=0; $i < count($notesArray); $i++) {
-					$note_id = $notesArray[$i];
-					$db->query(""select n.date_note, n.note_text, u.lastname, "
-						. "u.firstname from " . NOTES_TABLE . " n inner join ". USERS_TABLE
-						. " u on n.user_id  = u.user_id where n.id = " . $note_id ." and identifier = " . $id 
-						. " and coll_id ='" . $coll_id . "' order by date_note desc");
-						
-					if($db->nb_result() > 0) {
-                
-						$line = $db->fetch_object();
-					
-						$user = $db->show_string($line->lastname . " " . $line->firstname);
-						$notes = $db->show_string($line->note_text);
-						$date = $line->date_note;
-						
-						//create file
-					}
-					
-				}
-			*/				
+			//Format
 			$format = 'html';
-			$name = "notes_".$id."_".date(dmY).".".$format;
+			//Mime type
+			$mimeType = 'text/html';
+			//Filename
+			$fileName = "notes_".date(dmY_Hi).".".$format;
+			//File path	
+			$fileNameOnTmp = 'tmp_file_' . rand()
+					. '.' . strtolower($format);
+			$filePathOnTmp = $_SESSION['config']
+					['tmppath'] . DIRECTORY_SEPARATOR
+					. $fileNameOnTmp;
+			
+			//Create file		
+			if (file_exists($filePathOnTmp)) {
+				unlink($filePathOnTmp);
+			}
+			
+			//File content
+			$content = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" '
+				. '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd" >';
+            $content .= '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">';
+            $content .= "<head><title>Maarch Notes</title><meta http-equiv='Content-Type' "
+				. "content='text/html; charset=UTF-8' /><meta content='fr' "
+				. "http-equiv='Content-Language'/><meta http-equiv='cache-control' "
+				. "content='no-cache'/><meta http-equiv='pragma' content='no-cache'>"
+				. "<meta http-equiv='Expires' content='0'></head>";
+            $content .= "<body onload='javascript:window.print();' style='font-size:8pt'>";
+			$content .= "<h2>"._NOTES."</h2>";
+            $content .= "<table cellpadding='4' cellspacing='0' border='1' width='100%'>";
+
+			for($i=0; $i < count($notesArray); $i++) {
+				$db->query("select n.date_note, n.note_text, u.lastname, "
+					. "u.firstname from " . NOTES_TABLE . " n inner join ". USERS_TABLE
+					. " u on n.user_id  = u.user_id where n.id = " . $notesArray[$i] ." and identifier = " . $id 
+					. " and coll_id ='" . $coll_id . "' order by date_note desc");
+					
+				if($db->nb_result() > 0) {
+            
+					$line = $db->fetch_object();
+				
+					$user = $db->show_string($line->firstname . " " . $line->lastname);
+					$notes = $db->show_string($line->note_text);
+					$date = $db->dateformat($line->date_note);
+					
+					$content .= "<tr height='130px'>";
+					$content .= "<td width='15%'>";
+					$content .= "<h3>"._USER.": ". $user."</h3>";
+					$content .= "<h3>"._DATE.": ". $date."</h3>";
+					$content .= "</td>";
+					$content .= "<td width='85%'>";
+					$content .= $notes;
+					$content .= "</td>";
+					$content .= "</tr>";
+				}
+			}
+			
+			$content .= "</table>";
+			$content .= "</body></html>";
+			//Write file
+			$inF = fopen($filePathOnTmp,"w");
+			fwrite($inF, $content);
+			fclose($inF);
 			
 			$viewAttachmentArr = array(
-					'status' => 'ok',
-					'label' => '',
-					'mime_type' => $mimeType,
-					'ext' => $format,
-					'file_content' => '',
-					'tmp_path' => $_SESSION['config']
-					['tmppath'],
-					'file_path' => $filePathOnTmp,
-					'filename' => $name,
-					'called_by_ws' => '',
-					'error' => ''
-				);
-				
+				'status' => 'ok',
+				'label' => '',
+				'mime_type' => $mimeType,
+				'ext' => $format,
+				'file_content' => '',
+				'tmp_path' => $_SESSION['config']
+				['tmppath'],
+				'file_path' => $filePathOnTmp,
+				'filename' => $fileName,
+				'called_by_ws' => '',
+				'error' => ''
+			);
+
+			// $this->show_array($viewAttachmentArr);
+	
 			return $viewAttachmentArr;
         } else { 
             return false;
         }
-    
     }
 }
 

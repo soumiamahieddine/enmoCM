@@ -1,0 +1,184 @@
+<?php
+
+/******************************************************************************/
+
+// load the config and prepare to process
+include('load_process_emails.php');
+
+/* begin */
+$state = 'LOAD_EMAILS';
+while ($state <> 'END') {
+    if (isset($GLOBALS['logger'])) {
+        $GLOBALS['logger']->write('STATE:' . $state, 'INFO');
+    }
+    switch ($state) {
+		
+	/**********************************************************************/
+    /*                          LOAD_EMAILS 							  */
+    /* List the records to proceed       									  */
+    /**********************************************************************/
+    case 'LOAD_EMAILS' :
+		$query = "SELECT * FROM " . EMAILS_TABLE
+			. " WHERE email_status = 'W' and send_date is NULL";
+		Bt_doQuery($GLOBALS['db'], $query);
+		$totalEmailsToProcess = $GLOBALS['db']->nb_result();
+		$currentEmail = 0;
+		if ($totalEmailsToProcess === 0) {
+			Bt_exitBatch(0, 'No e-mails to process');
+        }
+		$GLOBALS['logger']->write($totalEmailsToProcess . ' e-mails to proceed.', 'INFO');
+		$GLOBALS['emails'] = array();
+		while ($emailRecordset = $GLOBALS['db']->fetch_object()) {
+			$GLOBALS['emails'][] = $emailRecordset;
+		}
+		$state = 'SEND_AN_EMAIL';
+    break;
+		
+	/**********************************************************************/
+    /*                          SEND_AN_EMAIL	 		          	          */
+    /* Load parameters and send an e-mail                                    */
+    /**********************************************************************/
+    case 'SEND_AN_EMAIL' :
+		if($currentEmail < $totalEmailsToProcess) {
+			$email = $GLOBALS['emails'][$currentEmail];
+			$GLOBALS['mailer'] = new htmlMimeMail();
+            if($mailerParams->smtp_auth === "true") $smtp_auth = true;
+			$GLOBALS['mailer']->setSMTPParams(
+				$host = (string)$mailerParams->smtp_host, 
+				$port = (string)$mailerParams->smtp_port,
+				$helo = (string)$mailerParams->domains,
+				$auth = $smtp_auth,
+				$user = (string)$mailerParams->smtp_user,
+				$pass = (string)$mailerParams->smtp_password
+				);
+		//Composing email	
+			//--> Set from
+			$userInfo = $users->get_user($email->user_id);
+						$GLOBALS['logger']->write("Sending e-mail from : " 
+				. '"' . $userInfo['firstname'].' ' .$userInfo['lastname'] 
+				. '" <'.$userInfo['mail'].'>', 'INFO');
+				
+			$GLOBALS['mailer']->setFrom('"'.$userInfo['firstname'].' '
+				. $userInfo['lastname'].' ('.$userInfo['mail'].')" <'.$user.'> ');
+
+			//
+			$GLOBALS['logger']->write("Sending e-mail to : " . $email->to_list, 'INFO');
+			if (!empty($email->cc_list))$GLOBALS['logger']->write("Copy e-mail to : " . $email->cc_list, 'INFO');
+			if (!empty($email->cci_list))$GLOBALS['logger']->write("Copy invisible e-mail to : " . $email->cci_list, 'INFO');
+			
+			//--> Set the return path
+			$GLOBALS['mailer']->setReturnPath($userInfo['mail']);
+			//--> To
+			$to = array();
+			$to = explode(',', $email->to_list);
+			//--> Cc
+			if (!empty($email->cc_list)) {
+				$GLOBALS['mailer']->setCc($email->cc_list);
+			}
+			//--> Cci
+			if (!empty($email->cci_list)) {
+				$GLOBALS['mailer']->setBcc($email->cci_list);
+			}
+			//--> Set subject
+			$GLOBALS['logger']->write("Subject : " . $email->email_object, 'INFO');
+			$GLOBALS['mailer']->setSubject($email->email_object);
+			//--> Set body: Is Html/raw text ?
+			if ($email->is_html == 'Y') {
+				$GLOBALS['mailer']->setHtml($email->email_body);
+			} else {
+				$GLOBALS['mailer']->setText($email->email_body);
+			}
+			//--> Set charset
+			$GLOBALS['mailer']->setTextCharset($GLOBALS['charset']);
+			$GLOBALS['mailer']->setHtmlCharset($GLOBALS['charset']);
+			$GLOBALS['mailer']->setHeadCharset($GLOBALS['charset']);
+			
+			//--> Set attachments
+				//Res master
+				if ($email->is_res_master_attached == 'Y') {
+					$GLOBALS['logger']->write("Set attachment on res master : " . $email->res_id, 'INFO');
+
+					//Get file from docserver
+					$resFile = $sendmail_tools->getResource($GLOBALS['collections'], $email->coll_id, $email->res_id);
+					//Get file content
+					if(is_file($resFile['file_path'])) {
+						//Filename
+						$resFilename = $sendmail_tools->createFilename($resFile['label'], $resFile['ext']);
+						$GLOBALS['logger']->write("Set attachment filename : " . $resFilename, 'INFO');
+
+						//File content
+						$file_content = $GLOBALS['mailer']->getFile($resFile['file_path']);
+						//Add file
+						$GLOBALS['mailer']->addAttachment($file_content, $resFilename, $resFile['mime_type']); 
+					}
+				}
+				
+				//Res attachment
+				if (!empty($email->res_attachment_id_list)) {
+                    $attachments = explode(',', $email->res_attachment_id_list);
+					foreach($attachments as $attachment_id) {
+						$GLOBALS['logger']->write("Set attachment on res attachment : " . $attachment_id, 'INFO');
+						$attachmentFile = $sendmail_tools->getAttachment(
+								$email->coll_id, 
+								$email->res_id,
+								$attachment_id
+							);
+						if(is_file($attachmentFile['file_path'])) {
+							//Filename
+							$attachmentFilename = $sendmail_tools->createFilename($attachmentFile['label'], $attachmentFile['ext']);
+							$GLOBALS['logger']->write("Set attachment filename : " . $attachmentFilename, 'INFO');
+
+							//File content
+							$file_content = $GLOBALS['mailer']->getFile($attachmentFile['file_path']);
+							//Add file
+							$GLOBALS['mailer']->addAttachment($file_content, $attachmentFilename, $attachmentFile['mime_type']); 
+						}
+					}
+                }
+				
+				//Notes
+				if (!empty($email->note_id_list)) {
+					$notes = explode(',', $email->note_id_list);
+					$noteFile = $sendmail_tools->createNotesFile($email->coll_id, $email->res_id, $notes);
+					if(is_file($noteFile['file_path'])) {
+						//File content
+						$file_content = $GLOBALS['mailer']->getFile($noteFile['file_path']);
+						//Add file
+						$GLOBALS['mailer']->addAttachment($file_content, $noteFile['filename'], $noteFile['mime_type']); 
+					}
+				}
+			
+			//Now send the mail
+			$return = $GLOBALS['mailer']->send($to, (string)$mailerParams->type);
+			
+			if($return || $return == 0) {
+				$exec_result = 'S';
+			} else {
+				$GLOBALS['logger']->write("Errors when sending message through SMTP :" 
+					. implode(', ', $GLOBALS['mailer']->errors), 'ERROR');
+				$exec_result = 'E';
+			}
+			//Update emails table
+			$query = "UPDATE " . EMAILS_TABLE 
+				. " SET send_date = " . $GLOBALS['db']->current_datetime()
+				. ", email_status = '".$exec_result."' "
+				. " WHERE email_id = ".$email->email_id;
+			$GLOBALS['db']->connect();
+			Bt_doQuery($GLOBALS['db'], $query);
+			$currentEmail++;
+			$state = 'SEND_AN_EMAIL';
+		} else {
+			$state = 'END';
+		}
+        break;
+	}
+}
+
+$GLOBALS['logger']->write('End of process', 'INFO');
+Bt_logInDataBase(
+    $totalEmailsToProcess, 0, 'process without error'
+);
+$GLOBALS['db']->disconnect();
+//unlink($GLOBALS['lckFile']);
+exit($GLOBALS['exitCode']);
+?>

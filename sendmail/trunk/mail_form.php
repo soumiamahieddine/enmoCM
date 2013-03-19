@@ -279,7 +279,7 @@ if ($mode == 'add') {
     //raw text arera
     $content .='<div id="raw_mode" style="display:'.$displayRaw.'">';
     $content .= '<textarea name="body_from_raw" id="body_from_raw" class="emailInput" cols="60" rows="15">'
-        ._DEFAULT_BODY.$all_joined_files.'</textarea>';
+        ._DEFAULT_BODY.$sendmail_tools->htmlToRaw($all_joined_files).'</textarea>';
     $content .='</div>';
     
     //Buttons

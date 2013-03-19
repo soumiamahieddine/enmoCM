@@ -169,7 +169,7 @@ switch ($mode) {
         } else {
             if (isset($_SESSION['adresses']['to']) && count($_SESSION['adresses']['to']) > 0 ) {
                 if (!empty($_REQUEST['object'])) {
-                    // print_r($_REQUEST);
+                    // print_r($_REQUEST);exit;
                     
                     //Check adress for to
                     $to =  join(',', $_SESSION['adresses']['to']);
@@ -211,7 +211,7 @@ switch ($mode) {
                                 (!empty($_REQUEST['is_html']) && $_REQUEST['is_html'] == 'Y')? $isHtml = 'Y' : $isHtml = 'N';
                                 //Body content
                                 if ($isHtml == 'Y') {
-                                    $body = $request->protect_string_db($_REQUEST['body_from_html']);
+                                    $body = $request->protect_string_db($sendmail_tools->cleanHtml($_REQUEST['body_from_html']));
                                 } else {
                                      $body = $request->protect_string_db($_REQUEST['body_from_raw']);
                                 }
@@ -293,7 +293,7 @@ switch ($mode) {
             } else {
                 if (isset($_SESSION['adresses']['to']) && count($_SESSION['adresses']['to']) > 0 ) {
                     if (!empty($_REQUEST['object'])) {
-                        // print_r($_REQUEST);
+                        // print_r($_REQUEST);exit;
                         
                         //Check adress for to
                         $to =  join(',', $_SESSION['adresses']['to']);
@@ -335,7 +335,7 @@ switch ($mode) {
                                     (!empty($_REQUEST['is_html']) && $_REQUEST['is_html'] == 'Y')? $isHtml = 'Y' : $isHtml = 'N';
                                     //Body content
                                     if ($isHtml == 'Y') {
-                                        $body = $request->protect_string_db($_REQUEST['body_from_html']);
+                                        $body = $request->protect_string_db($sendmail_tools->cleanHtml($_REQUEST['body_from_html']));
                                     } else {
                                          $body = $request->protect_string_db($_REQUEST['body_from_raw']);
                                     }

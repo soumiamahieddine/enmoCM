@@ -78,11 +78,14 @@ function updateAdress(path, action, adress, target, array_index, email_format_te
 
 function validEmailForm (path, form_id) {
     // var bodyContent = getBodyConten();
-
+	// var content = tinyMCE.get('body_from_html').getContent(); // 
+	// alert(content);
+	tinyMCE.triggerSave();
     new Ajax.Request(path,
     {
         asynchronous:false,
         method:'post',
+        // parameters: Form.serialize(form_id)+ '&body_from_html=' + content,   
         parameters: Form.serialize(form_id),   
         encoding: 'UTF-8',                       
         onSuccess: function(answer){
