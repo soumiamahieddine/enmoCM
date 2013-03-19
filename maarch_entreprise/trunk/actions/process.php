@@ -186,10 +186,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '<input type="hidden" name="module" id="module" value="' . $module . '" />';
                 $frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
                 
-                //WF COMPUTING
-                include_once('modules/basket/includeWFComputing.php');
-                include_once('modules/basket/includeWFManagement.php');
-                
                 $frm_str .= '<h3 onclick="new Effect.toggle(\'general_datas_div\', \'blind\', {delay:0.2});'
                     . 'whatIsTheDivStatus(\'general_datas_div\', \'divStatus_general_datas_div\');return false;" '
                     . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
@@ -461,7 +457,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<b>'._ACTIONS.' : </b>';
         $actions  = $b->get_actions_from_current_basket($res_id, $coll_id, 'PAGE_USE');
         if (count($actions) > 0) {
-            $frm_str .='<select name="chosen_action" id="chosen_action" onchange="updateActionForWF();">';
+            $frm_str .='<select name="chosen_action" id="chosen_action">';
                 $frm_str .='<option value="">'._CHOOSE_ACTION.'</option>';
                 for ($ind_act = 0;$ind_act<count($actions);$ind_act++) {
                     $frm_str .='<option value="'.$actions[$ind_act]['VALUE'].'"';
@@ -999,7 +995,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div>';
 
     //SCRIPT
-    $frm_str .= '<script type="text/javascript">updateActionForWF();resize_frame_process("modal_'
+    $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'
         . $id_action . '", "viewframe", true, true);window.scrollTo(0,0);';
         if ($core_tools->is_module_loaded('folder')) {
             $frm_str .= ' initList(\'folder\', \'show_folder\',\''

@@ -1440,3 +1440,7 @@ if (!defined('_GLOBAL_SEARCH_BUSINESS')) define('_GLOBAL_SEARCH_BUSINESS', 'Rech
 if (!defined('_QUICK_SEARCH')) define('_QUICK_SEARCH', 'Recherche rapide');
 
 if (!defined('_FROM_WS')) define('_FROM_WS', 'Depuis un web service');
+if (!defined('_PROCESS_WORKFLOW')) define('_PROCESS_WORKFLOW', 'Traiter workflow');
+if (!defined('_PROCESS_STEP')) define('_PROCESS_STEP', 'Traiter l&rsquo;&eacute;tape');
+if (!defined('_DOCUMENT')) define('_DOCUMENT', 'document');
+

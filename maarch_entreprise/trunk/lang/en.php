@@ -1158,3 +1158,6 @@ if (!defined('_ADV_SEARCH_BUSINESS')) define('_ADV_SEARCH_BUSINESS', 'Search a d
 if (!defined('_QUICK_SEARCH')) define('_QUICK_SEARCH', 'Quick search');
 
 if (!defined('_FROM_WS')) define('_FROM_WS', 'From a web service');
+if (!defined('_PROCESS_WORKFLOW')) define('_PROCESS_WORKFLOW', 'Process workflow');
+if (!defined('_PROCESS_STEP')) define('_PROCESS_STEP', 'Process step');
+if (!defined('_DOCUMENT')) define('_DOCUMENT', 'document');

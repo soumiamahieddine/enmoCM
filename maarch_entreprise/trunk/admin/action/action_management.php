@@ -62,8 +62,8 @@ elseif($mode == 'up' || $mode == 'add'){
             <p>
                 <label for="status"><?php echo _ASSOCIATED_STATUS; ?> : </label>
                 <select name="status" id="status">
-                    <option value="_UNCHANGED_"><?php echo _CHOOSE_STATUS;?></option>
-                    <option value="_UNCHANGED_"><?php echo _UNCHANGED;?></option>
+                    <option value="_NOSTATUS_"><?php echo _CHOOSE_STATUS;?></option>
+                    <option value="_NOSTATUS_"><?php echo _UNCHANGED;?></option>
                     <?php
                     for($i = 0; $i < count($statusArray); $i++){
                         ?><option value="<?php echo $statusArray[$i]['id'];?>"
@@ -101,6 +101,7 @@ elseif($mode == 'up' || $mode == 'add'){
                     <option value="redirect" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'redirect'){ echo 'selected="selected"';}?>><?php echo _REDIRECT; ?></option>
                     <option value="to_validate" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'to_validate'){ echo 'selected="selected"';}?>><?php echo _TO_VALIDATE; ?></option>
                     <option value="indexing" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'indexing'){ echo 'selected="selected"';}?>><?php echo _INDEXING; ?></option>
+                    <option value="workflow" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'workflow'){ echo 'selected="selected"';}?>><?php echo _WF; ?></option>
                 </select>
             </p>
             <p>
