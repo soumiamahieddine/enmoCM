@@ -95,16 +95,20 @@ class sendmail extends dbquery
 		$_SESSION['history']['maildel'] = (string) $hist->maildel;
 	}
 	
-    public function countUserEmails($id, $coll_id) {
+    public function countUserEmails($id, $coll_id, $owner=false) {
         $nbr = 0;
         $db = new dbquery();
         $db->connect();
+		if ( $owner=== true) {
+            $where = " and user_id = '" . $_SESSION['user']['UserId'] . "'";
+        } else {
+            $where = "";
+        }
         $db->query("select email_id from "
                 . EMAILS_TABLE 
                 . " where res_id = " . $id 
                 . " and coll_id ='"
-                . $coll_id . "' and user_id = '" 
-                . $_SESSION['user']['UserId'] . "'");
+                . $coll_id . "'". $where);
         // $db->show(); 
         $nbr = $db->nb_result(); 
          

@@ -222,7 +222,7 @@ if ($mode == 'add') {
                    . $description." <em>(".$mime_type.")</em> ".$filesize."</li>";
                    
 				$filename = $sendmail_tools->createFilename($description, $format);
-                $all_joined_files .= $description.': '.$filename."\n";
+                // $all_joined_files .= $description.': '.$filename."\n";
             }
         }
     }
@@ -253,7 +253,7 @@ if ($mode == 'add') {
                     . $noteShort." (".$userArray['firstname']." ".$userArray['lastname'].") ".$date."</li>"; 
             }
             
-            $all_joined_files .= _NOTES.": notes_".$identifier."_".date(dmY).".html\n";
+            // $all_joined_files .= _NOTES.": notes_".$identifier."_".date(dmY).".html\n";
         }
     }
     $content .= '</div>';

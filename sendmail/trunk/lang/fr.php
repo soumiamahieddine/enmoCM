@@ -27,6 +27,8 @@ if (!defined('_EMAIL_LIST'))
     define('_EMAIL_LIST', 'Emails');
 if (!defined('_EMAIL_LIST_DESC'))
     define('_EMAIL_LIST_DESC', 'Liste des  emails');
+if (!defined('_SENDED_EMAILS'))
+    define('_SENDED_EMAILS', 'Emails envoy&eacute;s');
  
 //STATUS
 if (!defined('_EMAIL_DRAFT'))
