@@ -81,7 +81,10 @@ require("modules/entities/entities_tables.php");
                         $frm_str .='<option value="'.$users[$i]['ID'].'">'.$users[$i]['NOM'].' '.$users[$i]['PRENOM'].'</option>';
                        }
                     $frm_str .='</select>';
-                    $frm_str .=' <input type="button" name="redirect_user" id="redirect_user" value="'._REDIRECT.'" class="button" onclick="valid_action_form( \'frm_redirect_user\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$values_str.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"  />';
+                    $frm_str .=' <input type="button" name="redirect_user" id="redirect_user" value="'
+                        ._REDIRECT
+                        . '" class="button" onclick="valid_action_form( \'frm_redirect_user\', \''
+                        . $path_manage_action . '\', \'' . $id_action . '\', \'' . $values_str . '\', \'' . $table . '\', \'' . $module . '\', \'' . $coll_id . '\', \'' . $mode . '\');"  />';
                 $frm_str .='</p>';
             $frm_str .='</form>';
         $frm_str .='</div>';

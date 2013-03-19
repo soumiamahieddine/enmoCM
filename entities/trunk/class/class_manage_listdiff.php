@@ -726,7 +726,7 @@ class diffusion_list extends dbquery
                 . $this->protect_string_db($dest) . "', '"
                 . $this->protect_string_db($itemType) . "', 'dest', 0, '"
                 . $_SESSION['user']['UserId'] . "','"
-                . $_SESSION['primaryentity']['id'] . "', " . $viewed . ");"
+                . $_SESSION['primaryentity']['id'] . "', " . $viewed . ")"
             );
         }
     }
