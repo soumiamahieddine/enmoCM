@@ -845,6 +845,7 @@ CREATE TABLE listmodel_types
   listmodel_type_id character varying(50) NOT NULL,
   listmodel_type_label character varying(100) NOT NULL,
   usergroup_ids TEXT,
+  use_dest character varying(1) NOT NULL DEFAULT 'N'::bpchar,
   CONSTRAINT "listmodel_types_pkey" PRIMARY KEY (listmodel_type_id)
 )
 WITH (
