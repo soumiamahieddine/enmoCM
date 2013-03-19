@@ -84,7 +84,9 @@ while ($state <> 'END') {
 			$GLOBALS['mailer']->setSubject($email->email_object);
 			//--> Set body: Is Html/raw text ?
 			if ($email->is_html == 'Y') {
-				$GLOBALS['mailer']->setHtml($email->email_body);
+				$body = str_replace('###', ';', $email->email_body);
+				$body = str_replace('___', '--', $body);
+				$GLOBALS['mailer']->setHtml($body);
 			} else {
 				$GLOBALS['mailer']->setText($email->email_body);
 			}
