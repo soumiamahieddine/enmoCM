@@ -133,33 +133,40 @@ if($_POST['req'] == 'valid_form' && !empty($_POST['action_id']) && isset($_POST[
 }
 elseif(trim($_POST['req']) == 'change_status' && !empty($_POST['values']) && !empty($_POST['new_status']) && !empty($_POST['table']))
 {
-    $arr_id = explode(',', $_POST['values']);
-    $result = '';
-    $db->connect();
-    for ($i=0; $i<count($arr_id );$i++) {
-        $arr_id[$i] = str_replace('#', '', $arr_id[$i]);
-        $result .= $arr_id[$i].'#';
-        if (trim($_POST['new_status']) <> '') {
-            if ($_POST['table'] == 'folders') {
-                $query_str = "update " . $_POST['table'] .  " set status = '" 
-                    . $_POST['new_status'] . "' where folders_system_id = " . $arr_id[$i];
-            } else if ($_POST['table'] == 'rm_ios') {
-                $query_str = "update " . $_POST['table'] .  " set status = '" 
-                    . $_POST['new_status'] . "' where io_id = " . $arr_id[$i];
-            } else {
-                $query_str = "update " . $_POST['table'] .  " set status = '" 
-                    . $_POST['new_status'] . "' where res_id = " . $arr_id[$i];
-            }
-            $req = $db->query($query_str, true);
-            if (!$req) {
-                $_SESSION['action_error'] = _SQL_ERROR.' : '.$query_str;
-                echo "{status : 1, error_txt : '".addslashes(_ERROR_WITH_STATUS)." ".$query_str."'}";
-                exit();
+    $db->query("select id from status where id ='" . $_POST['new_status'] . "'");
+    $lineStatus = $db->fetch_object();
+    if ($lineStatus->id <> '') {
+        $arr_id = explode(',', $_POST['values']);
+        $result = '';
+        $db->connect();
+        for ($i=0; $i<count($arr_id );$i++) {
+            $arr_id[$i] = str_replace('#', '', $arr_id[$i]);
+            $result .= $arr_id[$i].'#';
+            if (trim($_POST['new_status']) <> '') {
+                if ($_POST['table'] == 'folders') {
+                    $query_str = "update " . $_POST['table'] .  " set status = '" 
+                        . $_POST['new_status'] . "' where folders_system_id = " . $arr_id[$i];
+                } else if ($_POST['table'] == 'rm_ios') {
+                    $query_str = "update " . $_POST['table'] .  " set status = '" 
+                        . $_POST['new_status'] . "' where io_id = " . $arr_id[$i];
+                } else {
+                    $query_str = "update " . $_POST['table'] .  " set status = '" 
+                        . $_POST['new_status'] . "' where res_id = " . $arr_id[$i];
+                }
+                $req = $db->query($query_str, true);
+                if (!$req) {
+                    $_SESSION['action_error'] = _SQL_ERROR.' : '.$query_str;
+                    echo "{status : 1, error_txt : '".addslashes(_ERROR_WITH_STATUS)." ".$query_str."'}";
+                    exit();
+                }
             }
         }
+        echo "{status : 0, error_txt : '".addslashes(_STATUS_UPDATED.' : '.$_POST['new_status'])."'}";
+        exit();
+    } else {
+        echo "{status : 0, error_txt : '".addslashes(_STATUS_NOT_EXISTS.' : '.$_POST['new_status'])."'}";
+        exit();
     }
-    echo "{status : 0, error_txt : '".addslashes(_STATUS_UPDATED.' : '.$_POST['new_status'])."'}";
-    exit();
 }
 // Post variables error
 else if(empty($_POST['values']) || !isset($_POST['action_id']) || empty($_POST['action_id']) ||
@@ -212,28 +219,31 @@ else
             echo "{status : 6, error_txt : '".addslashes($_SESSION['action_error'])."'}";
             exit();
         }
-
-        // Update the status
-        $result = '';
-        for ($i=0;$i<count($arr_id );$i++) {
-            $arr_id[$i] = str_replace('#', '', $arr_id[$i]);
-            $result .= $arr_id[$i].'#';
-            if (trim($status) <> '') {
-                if ($_POST['table'] == 'folders') {
-                    $query_str = "update " . $_POST['table'] .  " set status = '" 
-                    . $status . "' where folders_system_id = " . $arr_id[$i];
-                } else if ($_POST['table'] == 'rm_ios') {
-                    $query_str = "update " . $_POST['table'] .  " set status = '" 
-                        . $status . "' where io_id = " . $arr_id[$i];
-                } else {
-                    $query_str = "update " . $_POST['table'] .  " set status = '" 
-                        . $status . "' where res_id = " . $arr_id[$i];
-                }
-                $req = $db->query($query_str, true);
-                if (!$req) {
-                    $_SESSION['action_error'] = _SQL_ERROR . ' : ' . $query_str;
-                    echo "{status : 7, error_txt : '" . addslashes($label_action . ' : ' . $_SESSION['action_error']) . "'}";
-                    exit();
+        $db->query("select id from status where id ='" . $_POST['new_status'] . "'");
+        $lineStatus = $db->fetch_object();
+        if ($lineStatus->id <> '') {
+            // Update the status
+            $result = '';
+            for ($i=0;$i<count($arr_id );$i++) {
+                $arr_id[$i] = str_replace('#', '', $arr_id[$i]);
+                $result .= $arr_id[$i].'#';
+                if (trim($status) <> '') {
+                    if ($_POST['table'] == 'folders') {
+                        $query_str = "update " . $_POST['table'] .  " set status = '" 
+                        . $status . "' where folders_system_id = " . $arr_id[$i];
+                    } else if ($_POST['table'] == 'rm_ios') {
+                        $query_str = "update " . $_POST['table'] .  " set status = '" 
+                            . $status . "' where io_id = " . $arr_id[$i];
+                    } else {
+                        $query_str = "update " . $_POST['table'] .  " set status = '" 
+                            . $status . "' where res_id = " . $arr_id[$i];
+                    }
+                    $req = $db->query($query_str, true);
+                    if (!$req) {
+                        $_SESSION['action_error'] = _SQL_ERROR . ' : ' . $query_str;
+                        echo "{status : 7, error_txt : '" . addslashes($label_action . ' : ' . $_SESSION['action_error']) . "'}";
+                        exit();
+                    }
                 }
             }
         }

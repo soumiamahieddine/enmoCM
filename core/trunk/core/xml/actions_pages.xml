@@ -277,4 +277,19 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>business_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
+    <ACTIONPAGE>
+        <ID>process_workflow</ID>
+        <LABEL>_PROCESS_WORKFLOW</LABEL>
+        <NAME>process_workflow</NAME>
+        <ORIGIN>apps</ORIGIN>
+        <MODULE></MODULE>
+        <KEYWORD>workflow</KEYWORD>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <!--<COLLECTIONS>
+            <COLL_ID>business_coll</COLL_ID>
+        </COLLECTIONS>-->
+        <COLLECTIONS>
+            <COLL_ID>business_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
 </ROOT>
