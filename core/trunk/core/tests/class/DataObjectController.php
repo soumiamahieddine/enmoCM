@@ -258,6 +258,7 @@ class DataObjectController
                 $dataObject,
                 $saveChildren
             );
+            $this->commit();
             if($this->transactionControl == 'controller') {
                 $this->commit();
             }
