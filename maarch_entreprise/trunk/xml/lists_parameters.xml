@@ -166,5 +166,15 @@
             <ENABLED>true</ENABLED>
             <GOTOLIST></GOTOLIST>
         </TEMPLATE>
+        <TEMPLATE>
+            <ID>ios_list_extend_with_items</ID>
+            <LABEL>IOS</LABEL>
+            <IMG>extend_list.gif</IMG>
+            <NAME>ios_list_extend_with_items</NAME>
+            <ORIGIN>apps</ORIGIN>
+            <MODULE></MODULE>
+            <ENABLED>true</ENABLED>
+            <GOTOLIST></GOTOLIST>
+        </TEMPLATE>
     </TEMPLATES>
 </root>
