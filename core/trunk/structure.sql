@@ -2936,6 +2936,7 @@ SELECT
     rm_items.archival_agency_item_identifier,
     rm_items.description_language,
     rm_items.name,
+    rm_items.item_type,
     rm_items.originating_agency_item_identifier,
     rm_items.service_level,
     rm_items.transferring_agency_item_identifier,
