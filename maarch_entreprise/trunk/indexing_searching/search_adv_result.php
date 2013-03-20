@@ -272,7 +272,8 @@ if (count($_REQUEST['meta']) > 0) {
             } elseif ($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext'])
             ) {
                 // FULLTEXT
-                $fulltext_request = $func->store_html($_REQUEST['fulltext']);
+                //$fulltext_request = $func->store_html($_REQUEST['fulltext']);
+                $fulltext_request = $_REQUEST['fulltext'];
                 $json_txt .= " 'fulltext' : ['" 
                     . addslashes(trim($_REQUEST['fulltext'])) . "'],";
                 set_include_path('apps' . DIRECTORY_SEPARATOR 
