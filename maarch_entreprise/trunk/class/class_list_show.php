@@ -1223,7 +1223,10 @@ class list_show extends functions
                         {
                             $can_modify = false;
                         }
-                        elseif(isset($result[$theline][$count_column]['can_delete']) && ($result[$theline][$count_column]['can_delete']=='false' || $result[$theline][$count_column]['can_delete'] == 'N')))
+                        elseif(
+                            isset($result[$theline][$count_column]['can_delete']) 
+                            && ($result[$theline][$count_column]['can_delete']=='false' 
+                            || $result[$theline][$count_column]['can_delete'] == 'N'))
                         {
                             $can_delete = false;
                         }
