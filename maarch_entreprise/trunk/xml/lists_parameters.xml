@@ -168,9 +168,19 @@
         </TEMPLATE>
         <TEMPLATE>
             <ID>ios_list_extend_with_items</ID>
-            <LABEL>IOS</LABEL>
+            <LABEL>_IOS</LABEL>
             <IMG>extend_list.gif</IMG>
             <NAME>ios_list_extend_with_items</NAME>
+            <ORIGIN>apps</ORIGIN>
+            <MODULE></MODULE>
+            <ENABLED>true</ENABLED>
+            <GOTOLIST></GOTOLIST>
+        </TEMPLATE>
+        <TEMPLATE>
+            <ID>rm_documents_list_extend</ID>
+            <LABEL>_ITEMS</LABEL>
+            <IMG>extend_list.gif</IMG>
+            <NAME>rm_documents_list_extend</NAME>
             <ORIGIN>apps</ORIGIN>
             <MODULE></MODULE>
             <ENABLED>true</ENABLED>

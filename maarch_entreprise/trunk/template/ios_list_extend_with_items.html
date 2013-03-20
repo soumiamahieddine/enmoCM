@@ -48,7 +48,7 @@ Defines :
 
 #!#TABLE
 <!-- ------------------------------------------------------------------------->
-<table border="0" cellspacing="0" class="##loadCss|listing spec zero_padding ##" id='test' style = "padding: 0px;">
+<table border="0" cellspacing="0" class="listing spec  zero_padding" id="extended_list" style ="padding: 0px;">
 
 #!#HEAD
 <!-- ------------------------------------------------------------------------->
@@ -58,11 +58,11 @@ Defines :
             <div align="center" style="border:1px solid; height:20px;margin-bottom:10px;padding-top:10px;vertical-align:middle;font-size:8px;">
                 ##defineLang|_SORT_BY## :
                 ##defineLang|_IO_ID##            ##sortColumn|io_id##&nbsp;
-                ##defineLang|_STATUS##               ##sortColumn|status##&nbsp;
-                ##defineLang|_DESCRIPTION##            ##sortColumn|description##&nbsp;
+                ##defineLang|_STATUS##               ##sortColumn|io_status##&nbsp;
+                ##defineLang|_DESCRIPTION##            ##sortColumn|comment##&nbsp;
                 ##defineLang|_REQUESTING_NUMBER_ARCHIVE##          ##sortColumn|identifier##&nbsp;
                 ##defineLang|_IO_DATE##           ##sortColumn|date##&nbsp;
-                ##defineLang|_REQUESTING_ENTITY## ##sortColumn|requesting_entity_id##&nbsp;
+                ##defineLang|_REQUESTING_ENTITY## ##sortColumn|requesting_agency_entity_id##&nbsp;
             </div>
         </th>
     </tr>
@@ -70,31 +70,23 @@ Defines :
 <tbody>
 #!#RESULT
 <!-- ------------------------------------------------------------------------->
-    <tr  class="##cssLine|col|white ##" >
+
+    <tr  class="##cssLine|col|white##" >
         <td width="10%" ##clickOnLine##>
             <div align="center">##loadValue|io_status## </div>
         </td>
-        <td width="90%" align="center" style="padding : 0px; vertical-align:top" colspan="3"  ##clickOnLine##>
+        <td width="90%" align="center" style="padding : 0px; vertical-align:top" ##clickOnLine##>
             <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                     <tr>
-                        <td width="40%" style="font-size:12px;" ##clickOnLine##></b><em>##loadValue|comment##</em> </td>
-                        <td width="30%">
+                        <td width="65%"   style="font-size:12px;"><b></b><em>##loadValue|comment##</em> </td>
+                        <td width="35%">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                <tr><td ##clickOnLine##> </td><td ##clickOnLine##></td></tr>
                                 <tr>
-                                    <td style="text-align:right; vertical-align:top" ##clickOnLine##>
-                                        ##defineLang|_ARCHIVAL_ENTITY## :</td>
-                                    <td  style="text-align:right">##loadValue|archival_agency_entity_id##</td>
+                                    <td width="50%" style="text-align:right">##defineLang|_ARCHIVAL_ENTITY## :</td><td style="text-align:right">##loadValue|archival_agency_entity_id##</td>
                                 </tr>
-                            </table>
-                        </td>
-                        <td width="30%">
-                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                <tr><td ##clickOnLine##> </td><td ##clickOnLine##></td></tr>
+                                <tr><td> </td><td></td></tr>
                                 <tr>
-                                    <td style="text-align:right; vertical-align:top" ##clickOnLine##>
-                                        ##defineLang|_REQUESTING_ENTITY## :</td>
-                                    <td  style="text-align:right">##loadValue|requesting_agency_entity_id##</td>
+                                    <td style="text-align:right; vertical-align:top">##defineLang|_REQUESTING_ENTITY## :</td><td style="text-align:right">##loadValue|requesting_agency_entity_id##</td>
                                 </tr>
                             </table>
                         </td>
@@ -102,29 +94,25 @@ Defines :
             </table>
         </td>
     </tr>
-    <tr class="##cssLine_reload##">
-        <td style="text-align:center" style="font-size:13px;" > ##checkBox##<b ##clickOnLine##>##loadValue|io_id##</b></td>
-        <td style="text-align:center">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0" >
-                <tr>
-                    <td style="font-size:10px;" width ="30px" alt="##defineLang|_IO_DATE##" title="##defineLang|_IO_DATE##" ##clickOnLine##></td>
-                    <td style="font-size:10px;" width ="50px" ##clickOnLine##>
-                        <img src="##loadImage|date_arriv.gif##">&nbsp;##loadValue|date##
-                    </td>
-                    <td style="font-size:10px;" width ="50px">
-                        <img src="##loadImage|key.png##" title="##defineLang|_REQUESTING_NUMBER##">&nbsp;##loadValue|identifier##
-                    </td>
-                    <!--<td style="font-size:10px;" width ="60px">##func_bool_see_items## &nbsp;##loadValue|nb_archive_objects## articles</td>-->
-                    <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_VIEW_ARCHIVES#|#loadImage|view_archives.png|records_management#|ArchiveTransferBasket__loadItemList('#loadValue|nb_archive_objects#')##</td>
-                    <td style="font-size:10px;" width ="30px">##showIconDetails##</td>
-                </tr>
-            </table>
-        </td>
+    <tr class="##cssLineReload##">
+            <td style="text-align:center" style="font-size:13px;" ##clickOnLine##>##checkBox##<b>##loadValue|io_id##</b></td>
+            <td style="text-align:center">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                        <tr>
+                            <td style="font-size:10px;" width ="30px" alt="##defineLang|_IO_DATE##" title="##defineLang|_IO_DATE##" ##clickOnLine##><img src="##loadImage|date_arriv.gif##"> </td>
+                            <td style="font-size:10px;" width ="100px" >##loadValue|date##</td>
+                            <td style="font-size:10px;" width ="30px" alt="##defineLang|_REQUESTING_NUMBER##" title="##defineLang|_REQUESTING_NUMBER##" ##clickOnLine##><img src="##loadImage|key.png##"> </td>
+                            <td style="font-size:10px;" width ="100px" >##loadValue|identifier##</td>
+                            <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_VIEW_ARCHIVES#|#loadImage|view_archives.png|records_management#|ArchiveTransferBasket__loadItemList('#loadValue|io_id#')## ##loadValue|nb_archive_objects##</td>
+                            <td style="font-size:10px;" width ="30px">##showIconDetails##</td>
+                        </tr>                         
+                </table>
+            </td>
     </tr>
     <tr id="itemList_##loadValue|io_id##" name="itemList_##loadValue|io_id##" style="display: none; border-bottom: solid 1px black; background-color: #FFF;" width="100%">
-        <td colspan="6" style="background-color: white;">
+        <td colspan="2" style="background-color: white;">
             <div id="divItemList_##loadValue|io_id##" align="center" style="color: grey;">
-                <img src="static.php?filename=loading_big.gif" width="10%" style="background-color: white; margin: 0; padding: 0;"/><br />
+                <img src="##loadImage|loading.gif##" /><br />
                 ##defineLang|_LOADING_INFORMATIONS##
             </div>
         </td>
