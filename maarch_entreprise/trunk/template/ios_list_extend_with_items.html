@@ -18,26 +18,28 @@ Parts :
     ##RESULT> : End fo result list
 
 Functions :
-    ##load_css|arg1## : load css style - arg1= name of this class
-    ##css_line|coll|nonecoll## : load css style for line arg1,arg2 : switch beetwin style on line one or line two
-    ##css_line_reload## : reload last css style loaded by css_line
+    ##loadCss|arg1## : load css style - arg1= name of this class
+    ##cssLine|coll|nonecoll## : load css style for line arg1,arg2 : switch beetwin style on line one or line two
+    ##cssLine_reload## : reload last css style loaded by cssLine
     ##order_link|arg1|arg2## : reload list and change order;  arg1=type; arg2=sort
 
     ##url_docview## : open view of document;
     ##url_docdetail## : open detail of document;
     ##url_download## : download document;
 
-    ##load_img|arg1## : show loaded image; arg1= name of img file
+    ##loadImage|arg1## : show loaded image; arg1= name of img file
 
-    ##load_value|arg|##: load value in the db; arg1= column's value  transferring_entity_item_id
+    ##loadValue|arg|##: load value in the db; arg1= column's value  transferring_entity_item_id
 
 Mods :
 
-    ##func_bool_radio_form## : Activate bool_radio_form in class_list_show.php
-    ##func_bool_check_form## : Activate bool_check_form in class_list_show.php
-    ##func_bool_view_doc## : Activate func to view documents
-    ##func_bool_detail_doc## : Activate func to view documents detail's page
-    ##func_display_category_img## : Return icon defined in the category
+    ##radioButton##         : display radio
+    ##checkBox##            : display checkbox
+    ##checkUncheckAll##     : display checkbox for check/uncheck All
+    ##clickOnLine##         : action on click under the line
+    ##showIconDocument##    : view document icon
+    ##showIconDetails##     : view detail's page icon
+    ##getBusinessAppUrl##   : get business app url
 
 Defines :
     _NAME_OF_LANG_INSTANCE : u se constant define in lang.php
@@ -46,66 +48,53 @@ Defines :
 
 #!#TABLE
 <!-- ------------------------------------------------------------------------->
-<table border="0" cellspacing="0" class="##load_css|listing spec zero_padding ##" id='test' style = "padding: 0px;">
+<table border="0" cellspacing="0" class="##loadCss|listing spec zero_padding ##" id='test' style = "padding: 0px;">
 
 #!#HEAD
 <!-- ------------------------------------------------------------------------->
 <thead border ="1">
     <tr>
-        <th  width="100%" colspan="2">
+        <th width="100%" colspan="2">
             <div align="center" style="border:1px solid; height:20px;margin-bottom:10px;padding-top:10px;vertical-align:middle;font-size:8px;">
-            ##define_lang|_SORT_BY## :
-                ##define_lang|_IO_ID##
-                <a href="##order_link|io_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|io_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
-                &nbsp;
-                ##define_lang|_STATUS##
-                <a href="##order_link|io_status|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|status|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
-                &nbsp;
-                ##define_lang|_DESCRIPTION##
-                <a href="##order_link|comment|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|description|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
-                &nbsp;
-                ##define_lang|_REQUESTING_NUMBER_ARCHIVE##
-                <a href="##order_link|identifier|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|archival_entity_item_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
-                &nbsp;
-                ##define_lang|_IO_DATE##
-                <a href="##order_link|date|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|io_date|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
-                &nbsp;
-                ##define_lang|_REQUESTING_ENTITY##
-                <a href="##order_link|requesting_entity_id|desc##" title="##define_lang|_DESC_SORT##"><img src="##load_img|tri_down.gif##" border="0" alt="##define_lang|_DESC_SORT##" /> </a> <a href="##order_link|requesting_entity_id|asc##" title="##define_lang|_ASC_SORT##"> <img src="##load_img|tri_up.gif##" border="0" alt="##define_lang|_ASC_SORT##" /></a>
-                &nbsp;
+                ##defineLang|_SORT_BY## :
+                ##defineLang|_IO_ID##            ##sortColumn|io_id##&nbsp;
+                ##defineLang|_STATUS##               ##sortColumn|status##&nbsp;
+                ##defineLang|_DESCRIPTION##            ##sortColumn|description##&nbsp;
+                ##defineLang|_REQUESTING_NUMBER_ARCHIVE##          ##sortColumn|identifier##&nbsp;
+                ##defineLang|_IO_DATE##           ##sortColumn|io_date##&nbsp;
+                ##defineLang|_REQUESTING_ENTITY## ##sortColumn|requesting_entity_id##&nbsp;
             </div>
         </th>
     </tr>
 </thead>
-
 <tbody>
 #!#RESULT
 <!-- ------------------------------------------------------------------------->
-    <tr  class="##css_line|col|white ##" >
-        <td width="10%" ##func_click_form##>
-            <div align="center">##load_value|io_status## </div>
+    <tr  class="##cssLine|col|white ##" >
+        <td width="10%" ##clickOnLine##>
+            <div align="center">##loadValue|io_status## </div>
         </td>
-        <td width="90%" align="center" style="padding : 0px; vertical-align:top" colspan="3"  ##func_click_form##>
+        <td width="90%" align="center" style="padding : 0px; vertical-align:top" colspan="3"  ##clickOnLine##>
             <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                     <tr>
-                        <td width="40%" style="font-size:12px;" ##func_click_form##></b><em>##load_value|comment##</em> </td>
+                        <td width="40%" style="font-size:12px;" ##clickOnLine##></b><em>##loadValue|comment##</em> </td>
                         <td width="30%">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                <tr><td ##func_click_form##> </td><td ##func_click_form##></td></tr>
+                                <tr><td ##clickOnLine##> </td><td ##clickOnLine##></td></tr>
                                 <tr>
-                                    <td style="text-align:right; vertical-align:top" ##func_click_form##>
-                                        ##define_lang|_ARCHIVAL_ENTITY## :</td>
-                                    <td  style="text-align:right">##load_value|archival_agency_entity_id##</td>
+                                    <td style="text-align:right; vertical-align:top" ##clickOnLine##>
+                                        ##defineLang|_ARCHIVAL_ENTITY## :</td>
+                                    <td  style="text-align:right">##loadValue|archival_agency_entity_id##</td>
                                 </tr>
                             </table>
                         </td>
                         <td width="30%">
                             <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                                <tr><td ##func_click_form##> </td><td ##func_click_form##></td></tr>
+                                <tr><td ##clickOnLine##> </td><td ##clickOnLine##></td></tr>
                                 <tr>
-                                    <td style="text-align:right; vertical-align:top" ##func_click_form##>
-                                        ##define_lang|_REQUESTING_ENTITY## :</td>
-                                    <td  style="text-align:right">##load_value|requesting_agency_entity_id##</td>
+                                    <td style="text-align:right; vertical-align:top" ##clickOnLine##>
+                                        ##defineLang|_REQUESTING_ENTITY## :</td>
+                                    <td  style="text-align:right">##loadValue|requesting_agency_entity_id##</td>
                                 </tr>
                             </table>
                         </td>
@@ -113,29 +102,30 @@ Defines :
             </table>
         </td>
     </tr>
-    <tr class="##css_line_reload##">
-        <td style="text-align:center" style="font-size:13px;" > ##func_bool_check_form##<b ##func_click_form##>##load_value|io_id##</b></td>
+    <tr class="##cssLine_reload##">
+        <td style="text-align:center" style="font-size:13px;" > ##checkBox##<b ##clickOnLine##>##loadValue|io_id##</b></td>
         <td style="text-align:center">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                 <tr>
-                    <td style="font-size:10px;" width ="30px" alt="##define_lang|_IO_DATE##" title="##define_lang|_IO_DATE##" ##func_click_form##></td>
-                    <td style="font-size:10px;" width ="50px" ##func_click_form##>
-                        <img src="##load_img|date_arriv.gif##">&nbsp;##load_value|date##
+                    <td style="font-size:10px;" width ="30px" alt="##defineLang|_IO_DATE##" title="##defineLang|_IO_DATE##" ##clickOnLine##></td>
+                    <td style="font-size:10px;" width ="50px" ##clickOnLine##>
+                        <img src="##loadImage|date_arriv.gif##">&nbsp;##loadValue|date##
                     </td>
                     <td style="font-size:10px;" width ="50px">
-                        <img src="##load_img|key.png##" title="##define_lang|_REQUESTING_NUMBER##">&nbsp;##load_value|identifier##
+                        <img src="##loadImage|key.png##" title="##defineLang|_REQUESTING_NUMBER##">&nbsp;##loadValue|identifier##
                     </td>
-                    <td style="font-size:10px;" width ="60px">##func_bool_see_items## &nbsp;##load_value|nb_archive_objects## articles</td>
-                    <td style="font-size:10px;" width ="60px">##func_bool_detail_io##</td>
+                    <!--<td style="font-size:10px;" width ="60px">##func_bool_see_items## &nbsp;##loadValue|nb_archive_objects## articles</td>-->
+                    <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_VIEW_ARCHIVES#|#loadImage|view_archives.png|records_management#|ArchiveTransferBasket__loadItemList('#loadValue|nb_archive_objects#')##</td>
+                    <td style="font-size:10px;" width ="30px">##showIconDetails##</td>
                 </tr>
             </table>
         </td>
     </tr>
-    <tr id="itemList_##load_value|io_id##" name="itemList_##load_value|io_id##" style="display: none; border-bottom: solid 1px black; background-color: #FFF;" width="100%">
+    <tr id="itemList_##loadValue|io_id##" name="itemList_##loadValue|io_id##" style="display: none; border-bottom: solid 1px black; background-color: #FFF;" width="100%">
         <td colspan="6" style="background-color: white;">
-            <div id="divItemList_##load_value|io_id##" align="center" style="color: grey;">
+            <div id="divItemList_##loadValue|io_id##" align="center" style="color: grey;">
                 <img src="static.php?filename=loading_big.gif" width="10%" style="background-color: white; margin: 0; padding: 0;"/><br />
-                ##define_lang|_LOADING_INFORMATIONS##
+                ##defineLang|_LOADING_INFORMATIONS##
             </div>
         </td>
     </tr>

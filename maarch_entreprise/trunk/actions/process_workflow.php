@@ -2,7 +2,7 @@
 $confirm = false;
 $etapes = array('form');
 $frm_width='355px';
-$frm_height = '800px';
+$frm_height = '500px';
 require("modules/entities/entities_tables.php");
 
 function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
@@ -84,9 +84,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<input type="hidden" name="coll_id" id="coll_id" value="' . $coll_id . '" />';
         $frm_str .= '<input type="hidden" name="res_id" id="res_id" value="' . $res_id . '" />';
         $frm_str .= '<input type="hidden" name="way" id="way" value="forward" />';
+        $frm_str .= '<input type="hidden" name="role" id="role" />';
         $countRoles = count($rolesInTheWF);
         for ($cptR=0;$cptR<$countRoles;$cptR++) {
-            $frm_str .= '<input type="hidden" name="role" id="role" value="' . $rolesInTheWF[$cptR]['role'] . '" />';
              $frm_str .= '<h3 onclick="new Effect.toggle(\'wf_div' . $cptR . '\', \'blind\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'wf_div' . $cptR . '\', \'divStatus_wf_div' . $cptR . '\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
@@ -103,7 +103,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             }
             $frm_str .= '<tr>';
             $frm_str .= '<td class="tdButtonGreen" onmouseover="this.style.cursor=\'pointer\';" '
-                . 'onclick="$(\'way\').value=\'forward\';valid_action_form(\'process_wf\', \''
+                . 'onclick="$(\'role\').value=\'' . $rolesInTheWF[$cptR]['role'] 
+                . '\';$(\'way\').value=\'forward\';valid_action_form(\'process_wf\', \''
                         . $path_manage_action . '\', \'' . $id_action . '\', \'' 
                         . $res_id . '\', \'' . $table . '\', \'' 
                         . $module . '\', \'' . $coll_id . '\', \'' . $mode . '\');">';
@@ -113,7 +114,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             if ($rolesInTheWF[$cptR]['isThereSomeoneBeforeMeInTheWF']) {
                 $frm_str .= '<tr>';
                 $frm_str .= '<td class="tdButtonRed" onmouseover="this.style.cursor=\'pointer\';" '
-                     . 'onclick="$(\'way\').value=\'back\';valid_action_form(\'process_wf\', \''
+                     . 'onclick="$(\'role\').value=\'' . $rolesInTheWF[$cptR]['role'] 
+                     . '\';$(\'way\').value=\'back\';valid_action_form(\'process_wf\', \''
                         . $path_manage_action . '\', \'' . $id_action . '\', \'' 
                         . $res_id . '\', \'' . $table . '\', \'' 
                         . $module . '\', \'' . $coll_id . '\', \'' . $mode . '\');">';
