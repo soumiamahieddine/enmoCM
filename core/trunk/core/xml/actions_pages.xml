@@ -184,7 +184,7 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE>records_management</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
         <COLLECTIONS>
-            <COLL_ID>rm_coll</COLL_ID>
+            <COLL_ID>io_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
@@ -195,7 +195,7 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE>records_management</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
         <COLLECTIONS>
-            <COLL_ID>rm_coll</COLL_ID>
+            <COLL_ID>io_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
@@ -206,7 +206,7 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE>records_management</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
         <COLLECTIONS>
-            <COLL_ID>rm_coll</COLL_ID>
+            <COLL_ID>io_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
@@ -217,7 +217,7 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE>records_management</MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
         <COLLECTIONS>
-            <COLL_ID>rm_coll</COLL_ID>
+            <COLL_ID>io_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
