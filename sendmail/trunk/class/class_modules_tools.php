@@ -128,7 +128,7 @@ class sendmail extends dbquery
                     }
                 }
             }
-            $error = str_replace("<br />", "#", $error);
+            $error = str_replace("<br />", "###", $error);
         }
         return $error;
     }
@@ -192,10 +192,10 @@ class sendmail extends dbquery
     
     public function rawToHtml($text) {
         //...
-        // $text = str_replace("\r\n", "\n", $text);
-        // $text = str_replace("\r", "\n", $text);
+        $text = str_replace("\r\n", PHP_EOL, $text);
+        $text = str_replace("\r", PHP_EOL, $text);
         //
-        // $text = str_replace("\n", "<br />", $text);
+        $text = str_replace(PHP_EOL, "<br />", $text);
         //
         return $text;
     }

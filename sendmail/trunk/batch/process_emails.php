@@ -15,7 +15,7 @@ while ($state <> 'END') {
 		
 	/**********************************************************************/
     /*                          LOAD_EMAILS 							  */
-    /* List the records to proceed       									  */
+    /* List the records to proceed       								  */
     /**********************************************************************/
     case 'LOAD_EMAILS' :
 		$query = "SELECT * FROM " . EMAILS_TABLE
@@ -86,9 +86,11 @@ while ($state <> 'END') {
 			if ($email->is_html == 'Y') {
 				$body = str_replace('###', ';', $email->email_body);
 				$body = str_replace('___', '--', $body);
+				$body = $sendmail_tools->rawToHtml($body);
 				$GLOBALS['mailer']->setHtml($body);
 			} else {
-				$GLOBALS['mailer']->setText($email->email_body);
+				$body = $sendmail_tools->htmlToRaw($email->email_body);
+				$GLOBALS['mailer']->setText($body);
 			}
 			//--> Set charset
 			$GLOBALS['mailer']->setTextCharset($GLOBALS['charset']);

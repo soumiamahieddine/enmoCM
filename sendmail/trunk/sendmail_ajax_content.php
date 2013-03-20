@@ -51,16 +51,16 @@ $sendmail_tools = new sendmail();
 
 function _parse($text) {
     //...
-    $text = str_replace("\r\n", "\n", $text);
-    $text = str_replace("\r", "\n", $text);
+    $text = str_replace("\r\n", PHP_EOL, $text);
+    $text = str_replace("\r", PHP_EOL, $text);
 
     //
-    $text = str_replace("\n", "\\n ", $text);
+    $text = str_replace(PHP_EOL, "\\n ", $text);
     return $text;
 }
 function _parse_error($text) {
     //...
-    $text = str_replace("#", "\\n ", $text);
+    $text = str_replace("###", "\\n ", $text);
     return $text;
 }
     

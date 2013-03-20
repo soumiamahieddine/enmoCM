@@ -195,7 +195,7 @@ if ($mode == 'add') {
                 . $description." <em>(".$mime_type.")</em> ".$filesize."</li>"; 
             
 			$filename = $sendmail_tools->createFilename($description, $format);
-            $all_joined_files .= $description.': '.$filename."\n";
+            $all_joined_files .= $description.': '.$filename.PHP_EOL;
         }
     }
     
@@ -222,7 +222,7 @@ if ($mode == 'add') {
                    . $description." <em>(".$mime_type.")</em> ".$filesize."</li>";
                    
 				$filename = $sendmail_tools->createFilename($description, $format);
-                // $all_joined_files .= $description.': '.$filename."\n";
+                // $all_joined_files .= $description.': '.$filename.PHP_EOL;
             }
         }
     }
@@ -415,7 +415,7 @@ if ($mode == 'add') {
                         . $description." <em>(".$mime_type.")</em> ".$filesize."</li>"; 
                     //Filename
 					$filename = $sendmail_tools->createFilename($description, $format);
-                    $all_joined_files .= $description.': '.$filename."\n";
+                    $all_joined_files .= $description.': '.$filename.PHP_EOL;
                 }
             }
             
@@ -444,7 +444,7 @@ if ($mode == 'add') {
                            . $description." <em>(".$mime_type.")</em> ".$filesize."</li>";
                         //Filename
 						$filename = $sendmail_tools->createFilename($description, $format);
-                        $all_joined_files .= $description.': '.$filename."\n";
+                        $all_joined_files .= $description.': '.$filename.PHP_EOL;
                     }
                 }
             }
@@ -478,7 +478,7 @@ if ($mode == 'add') {
                     }
                     //Filename
                     $filename = "notes_".$identifier."_".date(dmY).".html";
-                    $all_joined_files .= _NOTES.': '.$filename."\n";
+                    $all_joined_files .= _NOTES.': '.$filename.PHP_EOL;
                 }
             }
             $content .= '</div>';
