@@ -81,6 +81,11 @@ require_once(
     .DIRECTORY_SEPARATOR."Logger.php"
 );
 
+require_once(
+    "core"
+    .DIRECTORY_SEPARATOR."core_tables.php"
+);
+
 class history extends dbquery
 {
     /**
