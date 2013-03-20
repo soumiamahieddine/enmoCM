@@ -2490,6 +2490,7 @@ CREATE TABLE rm_documents
   archival_agency_document_identifier character varying(100),
   copy character varying(1),
   creation_date timestamp without time zone,
+  crdoc_date timestamp without time zone,
   description text, 
   fingerprint character varying(64),
   issue timestamp without time zone,
