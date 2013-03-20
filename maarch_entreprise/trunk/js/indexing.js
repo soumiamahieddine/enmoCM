@@ -162,7 +162,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
         {id:'doc_date_mandatory', type:'label', state:'display'},
-        {id:'item_name_mandatory', type:'label', state:'display'},
+        {id:'name_mandatory', type:'label', state:'display'},
         {id:'originating_entity_mandatory', type:'label', state:'display'},
         {id:'originating_subentity_mandatory', type:'label', state:'hide'},
         {id:'requesting_entity_mandatory', type:'label', state:'display'},

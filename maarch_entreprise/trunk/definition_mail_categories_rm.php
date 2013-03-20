@@ -77,7 +77,7 @@ $_ENV['categories']['rm_archive']['img_cat'] = $_SESSION['config']['businessappu
     . 'static.php?filename=cat_doc_incoming.gif';
 $_ENV['categories']['rm_archive']['other_cases'] = array ();
 
-$_ENV['categories']['rm_archive']['originating_entity_id'] = array (
+$_ENV['categories']['rm_archive']['originating_agency_entity_id'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
     'mandatory' => true,
@@ -88,7 +88,7 @@ $_ENV['categories']['rm_archive']['originating_entity_id'] = array (
     'modify' => false,
     'form_show' => 'select'
 );
-$_ENV['categories']['rm_archive']['originating_user_id'] = array (
+$_ENV['categories']['rm_archive']['dest_user'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
     'mandatory' => true,
@@ -163,7 +163,7 @@ $_ENV['categories']['rm_archive']['other_cases']['folder'] = array (
     'modify' => true,
     'form_show' => 'autocomplete'
 );
-$_ENV['categories']['rm_archive']['item_name'] = array (
+$_ENV['categories']['rm_archive']['name'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
     'mandatory' => true,
@@ -278,7 +278,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     );
                 }
                 array_push($arr, $field);
-                if ($field == 'item_name') {
+                if ($field == 'name') {
                     $data[$field]['display'] = 'textarea';
                 }
                 $data[$field]['readonly'] = true;
