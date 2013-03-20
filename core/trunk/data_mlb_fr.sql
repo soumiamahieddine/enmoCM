@@ -1204,3 +1204,9 @@ INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos
 INSERT INTO ar_sites (site_id, site_desc, entity_id) VALUES ('FR01', 'Site de Paris', 'COU');
 INSERT INTO ar_sites (site_id, site_desc, entity_id) VALUES ('DK01', 'Site de Dakar', 'COU');
 
+--
+-- Entities / diffusion
+--
+INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('entity_id', 'Diffusion aux services', 'dest copy', 'Y', 'Y');
+INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('type_id', 'Diffusion selon le type de document', 'dest copy', 'Y', 'Y');
+INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('foldertype_id', 'Diffusion selon le type de dossiers', 'dest copy', 'Y', 'Y');

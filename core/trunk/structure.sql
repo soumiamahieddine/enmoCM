@@ -839,14 +839,14 @@ CREATE TABLE listmodels
 )
 WITH (OIDS=FALSE);
 
-
-CREATE TABLE listmodel_types 
+CREATE TABLE difflist_types 
 (
-  listmodel_type_id character varying(50) NOT NULL,
-  listmodel_type_label character varying(100) NOT NULL,
-  usergroup_ids TEXT,
-  use_dest character varying(1) NOT NULL DEFAULT 'N'::bpchar,
-  CONSTRAINT "listmodel_types_pkey" PRIMARY KEY (listmodel_type_id)
+  difflist_type_id character varying(50) NOT NULL,
+  difflist_type_label character varying(100) NOT NULL,
+  difflist_type_roles TEXT,
+  allow_entities character varying(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_system character varying(1) NOT NULL DEFAULT 'N'::bpchar,
+  CONSTRAINT "difflist_types_pkey" PRIMARY KEY (difflist_type_id)
 )
 WITH (
     OIDS=FALSE
@@ -2293,14 +2293,14 @@ WITH (
   OIDS=FALSE
 );
 
-CREATE TABLE groupbasket_listmodel_types
+CREATE TABLE groupbasket_difflist_types
 (
   system_id serial NOT NULL,
   group_id character varying(32) NOT NULL,
   basket_id character varying(32) NOT NULL,
   action_id integer NOT NULL,
-  listmodel_type_id character varying(50) NOT NULL,
-  CONSTRAINT groupbasket_listmodel_types_pkey PRIMARY KEY (system_id )
+  difflist_type_id character varying(50) NOT NULL,
+  CONSTRAINT groupbasket_difflist_types_pkey PRIMARY KEY (system_id )
 )
 WITH (
   OIDS=FALSE
