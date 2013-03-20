@@ -85,6 +85,7 @@ require_once(
     "core"
     .DIRECTORY_SEPARATOR."core_tables.php"
 );
+$_SESSION['tablename']['history'] = HISTORY_TABLE;
 
 class history extends dbquery
 {
