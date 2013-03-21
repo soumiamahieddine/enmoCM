@@ -81,19 +81,19 @@ else
 // 1.4 create indexed array of existing diffusion to search for users/entities easily
 $user_roles = array();
 $entity_roles = array();
-foreach($roles as $role_id => $role_label) {
-    for($i=0, $l=count($_SESSION[$origin]['diff_list'][$role_id]['users']); 
+foreach($roles as $role_id_local => $role_label) {
+    for($i=0, $l=count($_SESSION[$origin]['diff_list'][$role_id_local]['users']); 
         $i<$l; $i++
     ) {
-        $user_id = $_SESSION[$origin]['diff_list'][$role_id]['users'][$i]['user_id'];
-        $user_roles[$user_id][] = $role_id;
+        $user_id = $_SESSION[$origin]['diff_list'][$role_id_local]['users'][$i]['user_id'];
+        $user_roles[$user_id][] = $role_id_local;
     }
-    for($i=0, $l=count($_SESSION[$origin]['diff_list'][$role_id]['entities']); 
+    for($i=0, $l=count($_SESSION[$origin]['diff_list'][$role_id_local]['entities']); 
         $i<$l; 
         $i++
     ) {
-        $entity_id = $_SESSION[$origin]['diff_list'][$role_id]['entities'][$i]['entity_id'];
-        $entity_roles[$entity_id][] = $role_id;
+        $entity_id = $_SESSION[$origin]['diff_list'][$role_id_local]['entities'][$i]['entity_id'];
+        $entity_roles[$entity_id][] = $role_id_local;
     }
 }    
 # *****************************************************************************
@@ -309,6 +309,7 @@ case 'remove_user':
         $_SESSION[$origin]['diff_list'][$role_id]['users'] = array_values(
             $_SESSION[$origin]['diff_list'][$role_id]['users']
         );
+        # Set next user (replacing removed one) visible
         if(isset($_SESSION[$origin]['diff_list'][$role_id]['users'][$rank]))
             $_SESSION[$origin]['diff_list'][$role_id]['users'][$rank]['visible'] = $visible;
         if($role_id == 'dest') $dest_is_set = false;
