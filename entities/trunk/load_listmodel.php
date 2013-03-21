@@ -27,7 +27,7 @@ $_SESSION[$origin]['difflist_type'] = $diffList->get_difflist_type($objectType);
 
 // Fill session with listmodel
 $_SESSION[$origin]['diff_list'] = $diffList->get_listmodel($objectType, $objectId);
-
+$_SESSION[$origin]['diff_list']['difflist_type'] = $_SESSION[$origin]['diff_list']['object_type'];
 $roles = $diffList->list_difflist_roles();
 $difflist = $_SESSION[$origin]['diff_list'];
 

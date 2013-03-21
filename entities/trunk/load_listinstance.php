@@ -66,6 +66,7 @@ $_SESSION[$origin]['difflist_type'] = $diffList->get_difflist_type($objectType);
 
 if ($_REQUEST['load_from_model'] == 'true') {
     $_SESSION[$origin]['diff_list'] = $diffList->get_listmodel($objectType, $objectId);
+    $_SESSION[$origin]['diff_list']['difflist_type'] = $_SESSION[$origin]['diff_list']['object_type'];
 }
 
 $roles = $diffList->list_difflist_roles();
