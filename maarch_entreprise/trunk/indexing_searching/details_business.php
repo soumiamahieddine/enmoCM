@@ -204,8 +204,8 @@ if (isset($_POST['submit_index_doc'])) {
         && is_array($_SESSION['details']['diff_list'])
     ) {
         require_once('modules/entities/class/class_manage_listdiff.php');
-        $list = new diffusion_list();
-        $params = array(
+        $diff_list = new diffusion_list();
+        /*$params = array(
             'mode'=> 'listinstance',
             'table' => $_SESSION['tablename']['ent_listinstance'],
             'coll_id' => $coll_id,
@@ -217,7 +217,14 @@ if (isset($_POST['submit_index_doc'])) {
         $list->load_list_db(
             $_SESSION['details']['diff_list'],
             $params
-        ); //pb enchainement avec action redirect
+        ); //pb enchainement avec action redirect*/
+        $diff_list->save_listinstance(
+                $_SESSION['details']['diff_list'], 
+                $_SESSION['details']['diff_list']['object_type'],
+                $coll_id, 
+                $res_id, 
+                $_SESSION['user']['UserId']
+            );
         $_SESSION['details']['diff_list']['key_value'] = md5($res_id);
     }
     $is->update_business($_POST, 'POST', $s_id, $coll_id);
@@ -775,14 +782,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                 if ($core->is_module_loaded('entities')) {
                     ?>
                     <dt><?php  echo _DIFF_LIST;?></dt>
-                    <dd><?php
-                        require_once('modules/entities/class/class_manage_listdiff.php');
-                        $diff_list = new diffusion_list();
-                        $roles = $diff_list->get_listinstance_roles();
-                        $_SESSION['details']['diff_list'] = array();
-                        $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id, false, $coll_id);
-                        //$db->show_array($_SESSION['details']['diff_list']);
-                        ?>
+                    <dd>
+                        
                         <h2>
                             <span class="date">
                                 <b><?php  echo _DIFF_LIST;?></b>
@@ -790,57 +791,17 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                         </h2>
                         <br/>
                         <div id="diff_list_div">
-                            <?php
-                            if (isset($_SESSION['details']['diff_list']['dest']['user_id']) && !empty($_SESSION['details']['diff_list']['dest']['user_id']))
-                            {
-                                ?>
-                                <p class="sstit"><?php echo _RECIPIENT;?></p>
-                                <table cellpadding="0" cellspacing="0" border="0" class="listing">
-                                    <tr class="col">
-                                        <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
-                                        <td><?php echo $_SESSION['details']['diff_list']['dest']['firstname'];?></td>
-                                        <td><?php echo $_SESSION['details']['diff_list']['dest']['lastname'];?></td>
-                                        <td><?php echo $_SESSION['details']['diff_list']['dest']['entity_label'];?></td>
-                                    </tr>
-                                </table>
-                                <br/>
-                                <?php
-                            }
-                            foreach($roles as $role_id => $role_config) {
-                                if (count($_SESSION['details']['diff_list'][$role_id]['users']) > 0 
-                                    || count($_SESSION['details']['diff_list'][$role_id]['entities']) > 0
-                                ) { ?>
-                                    <p class="sstit"><?php echo $role_config['list_label'];?></p>
-                                    <table cellpadding="0" cellspacing="0" border="0" class="listing">
-                                    <?php $color = ' class="col"';
-                                    for($i=0;$i<count($_SESSION['details']['diff_list'][$role_id]['entities']);$i++)
-                                    {
-                                        if ($color == ' class="col"') $color = '';
-                                        else $color = ' class="col"'; ?>
-                                        <tr <?php echo $color;?> >
-
-                                            <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY;?>" title="<?php echo _ENTITY;?>" /></td>
-                                            <td ><?php echo $_SESSION['details']['diff_list'][$role_id]['entities'][$i]['entity_id'];?></td>
-                                            <td colspan="2"><?php echo $_SESSION['details']['diff_list'][$role_id]['entities'][$i]['entity_label'];?></td>
-                                        </tr><?php
-                                    }
-                                    for($i=0;$i<count($_SESSION['details']['diff_list'][$role_id]['users']);$i++)
-                                    {
-                                        if ($color == ' class="col"') $color = '';
-                                        else $color = ' class="col"';
-                                        ?>
-                                        <tr <?php echo $color;?> >
-                                            <td><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" /></td>
-                                            <td ><?php echo $_SESSION['details']['diff_list'][$role_id]['users'][$i]['firstname'];?></td>
-                                            <td ><?php echo $_SESSION['details']['diff_list'][$role_id]['users'][$i]['lastname'];?></td>
-                                            <td><?php echo $_SESSION['details']['diff_list'][$role_id]['users'][$i]['entity_label'];?></td>
-                                        </tr><?php
-                                    } ?>
-                                    </table> <br/>
-                                    <?php
-                                } 
-                            }
-                                                        
+                            <?php 
+                            require_once('modules/entities/class/class_manage_listdiff.php');
+                            $diff_list = new diffusion_list();
+                            $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id, false, $coll_id);
+                            $_SESSION['details']['difflist_type'] = $diff_list->get_difflist_type($_SESSION['details']['diff_list']['object_type']);
+                            
+                            # Include display of list
+                            $roles = $diff_list->list_difflist_roles();
+                            $difflist = $_SESSION['details']['diff_list'];
+                            require_once 'modules/entities/difflist_display.php';  
+                            
                             if ($core->test_service('update_list_diff_in_details', 'entities', false)) {
                                 echo '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl']
                                     . 'index.php?display=true&module=entities&page=manage_listinstance&origin=details\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" title="'._UPDATE_LIST_DIFF.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._UPDATE_LIST_DIFF.'" />'._UPDATE_LIST_DIFF.'</a>';

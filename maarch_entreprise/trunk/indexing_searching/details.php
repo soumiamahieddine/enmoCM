@@ -965,24 +965,20 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $detailsExport .= "<h2>"._DIFF_LIST."</h2>";
                     ?>
                     <dt><?php  echo _DIFF_LIST;?></dt>
-                    <dd><?php
-                        require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
-                        $diff_list = new diffusion_list();
-                        $roles = $diff_list->get_workflow_roles();
-                        $_SESSION['details']['diff_list'] = array();
-                        $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id);
-                        //$db->show_array($_SESSION['details']['diff_list']);
-                        ?>
-                        <!--
-                        <h2>
-                            <span class="date">
-                                <b><?php  echo _DIFF_LIST;?></b>
-                            </span>
-                        </h2>-->
+                    <dd><?php  echo _DIFF_LIST;?></b>
                         <br/>
                         <div id="diff_list_div">
                             <?php
-                            if (isset($_SESSION['details']['diff_list']['dest']['user_id']) && !empty($_SESSION['details']['diff_list']['dest']['user_id']))
+                            require_once('modules/entities/class/class_manage_listdiff.php');
+                            $diff_list = new diffusion_list();
+                            $_SESSION['details']['diff_list'] = $diff_list->get_listinstance($s_id, false, $coll_id);
+                            $_SESSION['details']['difflist_type'] = $diff_list->get_difflist_type($_SESSION['details']['diff_list']['object_type']);
+                            # Include display of list
+                            $roles = $diff_list->list_difflist_roles();
+                            $difflist = $_SESSION['details']['diff_list'];
+                            require_once 'modules/entities/difflist_display.php';  
+                                                        
+                            /*if (isset($_SESSION['details']['diff_list']['dest']['user_id']) && !empty($_SESSION['details']['diff_list']['dest']['user_id']))
                             {
                                 //$detailsExport .= "<p class='sstit'>"._RECIPIENT."</p>";
                                 $detailsExport .= "<table cellpadding='4' cellspacing='0' border='1' width='100%'>";
@@ -1003,10 +999,10 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 }
                                 $detailsExport .= "</td>";
                                 $detailsExport .= "</tr>";
-                                /*$detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['firstname']."&nbsp;&nbsp;</td>";
-                                $detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['lastname']."&nbsp;&nbsp;</td>";
-                                $detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['entity_label']."&nbsp;&nbsp;</td>";
-                                $detailsExport .= "</tr>";*/
+                                //$detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['firstname']."&nbsp;&nbsp;</td>";
+                                //$detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['lastname']."&nbsp;&nbsp;</td>";
+                                //$detailsExport .= "<td>".$_SESSION['details']['diff_list']['dest']['entity_label']."&nbsp;&nbsp;</td>";
+                                //$detailsExport .= "</tr>";
                                 $detailsExport .= "</table>";
                                 //$detailsExport .= "<br>";
                                 ?>
@@ -1055,7 +1051,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     </table> <br/>
                                     <?php
                                 } 
-                            }
+                            }*/
                                                         
                             if ($core->test_service('update_list_diff_in_details', 'entities', false)) {
                                 echo '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_listinstance&origin=details\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" title="'._UPDATE_LIST_DIFF.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._UPDATE_LIST_DIFF.'" />'._UPDATE_LIST_DIFF.'</a>';
