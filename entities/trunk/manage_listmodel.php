@@ -632,9 +632,9 @@ $linkwithwhat =
                             <a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>" class="delete"><?php echo _DELETE; ?></a>
                         </td>
                         <td class="action_entities"><!-- Switch copy to dest --><?php
-                        if($role_id == 'dest') { ?>
+                        if($role_id == 'dest'  && isset($roles['copy']) ) { ?>
                             <a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy" class="down"><?php echo _TO_CC;?></a><?php
-                        } elseif($role_id == 'copy') { ?>
+                        } elseif($role_id == 'copy' && isset($roles['dest'])) { ?>
                             <a href="<?php echo $linkwithwhat;?>&action=copy_to_dest&role=copy&rank=<?php echo $i;?>" class="up"><?php echo _TO_DEST;?></a><?php
                         } else echo '&nbsp;'?>
                         </td>
