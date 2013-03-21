@@ -258,9 +258,9 @@ class DataObjectController
                 $dataObject,
                 $saveChildren
             );
-            //if($this->transactionControl == 'controller') {
+            if($this->transactionControl == 'controller') {
                 $this->commit();
-            //}
+            }
             return $key;
         } catch (maarch\Exception $e) {
             $this->rollback();
