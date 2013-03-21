@@ -169,7 +169,7 @@ $users_query =
     . "FROM " . $_SESSION['tablename']['users'] . " u, " . ENT_ENTITIES . " e, "
     . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' and"
     . " e.entity_id = ue.entity_id and u.user_id = ue.user_id and"
-    . " e.enabled = 'Y' " . $user_expr . $entity_expr
+    . " e.enabled = 'Y' and ue.primary_entity='Y' " . $user_expr . $entity_expr
     . " order by u.user_id asc, u.lastname asc, u.firstname asc, e.entity_label asc";
 
 $db->query($users_query);
