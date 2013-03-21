@@ -203,6 +203,7 @@ while ($line = $db->fetch_object()) {
     );
 }
 
+var_dump($_REQUEST);
 #****************************************************************************************
 # RELOAD PARENT ID VALIDATION OF LIST
 #****************************************************************************************
@@ -251,20 +252,23 @@ case "add_user":
             );
         }
         unset($_SESSION[$origin]['diff_list']['dest']['users'][0]);
+        $_SESSION[$origin]['diff_list']['dest']['users'] = array_values(
+            $_SESSION[$origin]['diff_list']['dest']['users']
+        );
     }
     
-        array_push(
-            $_SESSION[$origin]['diff_list'][$role_id]['users'],
-            array(
-                'user_id' => $db->show_string($id),
-                'firstname' => $db->show_string($line->firstname),
-                'lastname' => $db->show_string($line->lastname),
-                'entity_id' => $db->show_string($line->entity_id),
-                'entity_label' => $db->show_string($line->entity_label),
-                'visible' => $visible,
-            )
-        ); 
-        $_SESSION[$origin]['diff_list'][$role_id]['users'] = array_values(
+    array_push(
+        $_SESSION[$origin]['diff_list'][$role_id]['users'],
+        array(
+            'user_id' => $db->show_string($id),
+            'firstname' => $db->show_string($line->firstname),
+            'lastname' => $db->show_string($line->lastname),
+            'entity_id' => $db->show_string($line->entity_id),
+            'entity_label' => $db->show_string($line->entity_label),
+            'visible' => $visible,
+        )
+    ); 
+    $_SESSION[$origin]['diff_list'][$role_id]['users'] = array_values(
             $_SESSION[$origin]['diff_list'][$role_id]['users']
     );
     break;
@@ -348,8 +352,8 @@ case 'dest_to_copy':
             );
         }
         unset($_SESSION[$origin]['diff_list']['dest']['users'][0]);
-        $_SESSION['m_admin']['entity']['listmodel']['dest']['users'] = array_values(
-            $_SESSION['m_admin']['entity']['listmodel']['dest']['users']
+        $_SESSION[$origin]['diff_list']['dest']['users'] = array_values(
+            $_SESSION[$origin]['diff_list']['dest']['users']
         );
         $dest_is_set = false;
     }
