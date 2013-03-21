@@ -195,9 +195,13 @@ class dbquery extends functions
     */
     public function connect()
     {
+        # Do not connect if already connected
+        if($this->_sqlLink)
+            return;
+            
         $this->_debug = 0;
         $this->_nbQuery = 0;
-        
+
         switch($this->_databasetype) 
         {
         case 'MYSQL' : 
@@ -285,20 +289,15 @@ class dbquery extends functions
     {
         switch($this->_databasetype) 
         {
-        
         case 'POSTGRESQL'   : 
-            $this->connect();
             $this->query("select column_name from information_schema.columns where table_name = '" . $table . "' and column_name = '" . $field . "'");
             $res = $this->nb_result();
-            $this->disconnect();
             if ($res > 0) return true; 
             else return false;
             
         case 'ORACLE'       : 
-            $this->connect();
             $this->query("SELECT * from USER_TAB_COLUMNS where TABLE_NAME = '" . $table . "' AND COLUMN_NAME = '" . $field . "'");
             $res = $this->nb_result();
-            $this->disconnect();
             if ($res > 0) return true; 
             else return false;
         
@@ -319,6 +318,10 @@ class dbquery extends functions
     */
     public function query($sqlQuery, $catchError = false, $noFilter = false)
     {
+        # Connect if not already connected
+        if(!$this->_sqlLink)
+            $this->connect();
+        
         $canExecute = true;        
         // if filter, we looking for ; or -- in the sql query
         if (!$noFilter) {
@@ -619,6 +622,7 @@ class dbquery extends functions
             $dbNbResult->connect();
             $dbNbResult->query("SELECT COUNT(*) FROM  (" . $this->_debugQuery . ")");
             $row = $dbNbResult->fetch_array();
+            $dbNbResult->disconnect();
             return $row[0]; 
         default             : return false;
         }
@@ -630,6 +634,9 @@ class dbquery extends functions
     */
     public function disconnect()
     {
+        if(!$this->_sqlLink)
+            return;
+
         switch($this->_databasetype)
         {
         case 'MYSQL':
