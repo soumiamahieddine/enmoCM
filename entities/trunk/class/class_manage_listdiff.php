@@ -488,6 +488,8 @@ class diffusion_list extends dbquery
         $this->query($query);
 
         $listinstance = $this->fetch_assoc();
+        if($listinstance['difflist_type'] = "")
+            $listinstance['difflist_type'] = 'entity_id';
         
         # DEST USER
         if (! $modeCc) {
@@ -623,31 +625,6 @@ class diffusion_list extends dbquery
                 . $_SESSION['primaryentity']['id'] . "', " . $viewed . ")"
             );
         }
-    }
-    
-    public function get_listinstance_type(
-        $listinstance
-    ) {
-        if(count($listinstance) > 0) {
-            foreach($listinstance as $role_id => $role_content) {
-                if(count($role_content['users']) > 0) {
-                    foreach($role_content['users'] as $i => $user) {
-                        if($user['object_type'] != "")
-                            return $user['object_type'];
-                    }
-                }
-                if(count($role_content['entities']) > 0) {
-                    foreach($role_content['entities'] as $i => $entity) {
-                        if($entity['object_type'] != "")
-                            return $entity['object_type'];
-                    }
-                }
-            }
-        }
-        
-        # For legacy listinstance entries
-        return 'entity_id';
-
     }
     
     #**************************************************************************
