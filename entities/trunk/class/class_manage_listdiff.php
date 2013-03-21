@@ -492,7 +492,7 @@ class diffusion_list extends dbquery
             $listinstance['difflist_type'] = 'entity_id';
         
         # DEST USER
-        if (! $modeCc) {
+        /*if (! $modeCc) {
             $this->query(
                 "select l.item_id, u.firstname, u.lastname, e.entity_id, "
                 . "e.entity_label, l.visible, l.viewed from " . ENT_LISTINSTANCE . " l, "
@@ -517,7 +517,7 @@ class diffusion_list extends dbquery
                 'visible' => $this->show_string($res->visible),
                 'viewed' => $this->show_string($res->viewed)
             );
-        }
+        }*/
         
         # OTHER ROLES USERS
         #**********************************************************************
