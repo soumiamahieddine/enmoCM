@@ -820,6 +820,7 @@ CREATE TABLE listinstance
   added_by_entity character varying(50) NOT NULL,
   visible character varying(50) NOT NULL DEFAULT 'Y'::bpchar,
   viewed bigint,
+  difflist_type character varying(50),
   CONSTRAINT listinstance_pkey PRIMARY KEY (listinstance_id)
 )
 WITH (OIDS=FALSE);
