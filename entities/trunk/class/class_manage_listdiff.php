@@ -488,7 +488,7 @@ class diffusion_list extends dbquery
         $this->query($query);
 
         $listinstance = $this->fetch_assoc();
-        if($listinstance['difflist_type'] = "")
+        if($listinstance['difflist_type'] == "")
             $listinstance['difflist_type'] = 'entity_id';
         
         # DEST USER
