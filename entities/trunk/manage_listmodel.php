@@ -79,7 +79,25 @@ if(isset($_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0])
     $dest_is_set = true;
 else
     $dest_is_set = false;
-
+    
+// 1.4 create indexed array of existing diffusion to search for users/entities easily
+$user_roles = array();
+$entity_roles = array();
+foreach($roles as $role_id => $role_label) {
+    for($i=0, $l=count($_SESSION[$origin]['diff_list'][$role_id]['users']); 
+        $i<$l; $i++
+    ) {
+        $user_id = $_SESSION[$origin]['diff_list'][$role_id]['users'][$i]['user_id'];
+        $user_roles[$user_id][] = $role_id;
+    }
+    for($i=0, $l=count($_SESSION[$origin]['diff_list'][$role_id]['entities']); 
+        $i<$l; 
+        $i++
+    ) {
+        $entity_id = $_SESSION[$origin]['diff_list'][$role_id]['entities'][$i]['entity_id'];
+        $entity_roles[$entity_id][] = $role_id;
+    }
+}
 # *****************************************************************************
 # Search functions / filter users and entities avilable for list composition
 # *****************************************************************************
@@ -196,17 +214,21 @@ case "add_user":
     if ($role_id == 'dest' && $dest_is_set) {
         if(!isset($_SESSION['m_admin']['entity']['listmodel']['copy']['users']))
             $_SESSION['m_admin']['entity']['listmodel']['copy']['users'] = array();
-        array_push(
-            $_SESSION['m_admin']['entity']['listmodel']['copy']['users'],
-            array(
-                'user_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['user_id'],
-                'firstname' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['firstname'],
-                'lastname' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['lastname'],
-                'entity_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['entity_id'],
-                'entity_label' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['entity_label'],
-                'visible' => 'Y',
-            )
-        );
+        
+        $old_dest = $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['user_id'];
+        if(!in_array('copy', $user_roles[$old_dest])) {
+            array_push(
+                $_SESSION['m_admin']['entity']['listmodel']['copy']['users'],
+                array(
+                    'user_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['user_id'],
+                    'firstname' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['firstname'],
+                    'lastname' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['lastname'],
+                    'entity_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['entity_id'],
+                    'entity_label' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['entity_label'],
+                    'visible' => 'Y',
+                )
+            );
+        }
         unset($_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]);
     }
     
@@ -289,17 +311,21 @@ case 'dest_to_copy':
     if ($dest_is_set) {
         if(! isset($_SESSION['m_admin']['entity']['listmodel']['copy']['users']))
             $_SESSION['m_admin']['entity']['listmodel']['copy']['users'] = array();
-        array_push(
-            $_SESSION['m_admin']['entity']['listmodel']['copy']['users'],
-            array(
-                'user_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['user_id'],
-                'firstname' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['firstname'],
-                'lastname' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['lastname'],
-                'entity_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['entity_id'],
-                'entity_label' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['entity_label'],
-                'visible' => 'Y',
-            )
-        );
+        
+        $old_dest = $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['user_id'];
+        if(!in_array('copy', $user_roles[$old_dest])) {
+            array_push(
+                $_SESSION['m_admin']['entity']['listmodel']['copy']['users'],
+                array(
+                    'user_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['user_id'],
+                    'firstname' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['firstname'],
+                    'lastname' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['lastname'],
+                    'entity_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['entity_id'],
+                    'entity_label' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['entity_label'],
+                    'visible' => 'Y',
+                )
+            );
+        }
         unset($_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]);
         $_SESSION['m_admin']['entity']['listmodel']['dest']['users'] = array_values(
             $_SESSION['m_admin']['entity']['listmodel']['dest']['users']
@@ -312,17 +338,20 @@ case 'copy_to_dest':
     if ($dest_is_set) {
         if(! isset($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']))
             $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'] = array();
-        array_push(
-            $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'],
-            array(
-                'user_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['user_id'],
-                'firstname' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['firstname'],
-                'lastname' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['lastname'],
-                'entity_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['entity_id'],
-                'entity_label' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['entity_label'],
-                'visible' => 'Y',
-            )
-        );
+        $old_dest = $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['user_id'];
+        if(!in_array('copy', $user_roles[$old_dest])) {
+            array_push(
+                $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'],
+                array(
+                    'user_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['user_id'],
+                    'firstname' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['firstname'],
+                    'lastname' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['lastname'],
+                    'entity_id' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['entity_id'],
+                    'entity_label' => $_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]['entity_label'],
+                    'visible' => 'Y',
+                )
+            );
+        }
         unset($_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]);
         $_SESSION['m_admin']['entity']['listmodel']['dest']['users'] = array_values(
             $_SESSION['m_admin']['entity']['listmodel']['dest']['users']

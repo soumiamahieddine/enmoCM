@@ -151,7 +151,6 @@ function load_listmodel(
 	);
 }
 
-
 function change_diff_list(
 	origin,
 	display_value_tr, 
