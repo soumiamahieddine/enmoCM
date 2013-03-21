@@ -1281,7 +1281,7 @@ function process_category_check($cat_id, $values)
         // Diffusion list
         if(isset($_ENV['categories'][$cat_id]['other_cases']['diff_list']) && $_ENV['categories'][$cat_id]['other_cases']['diff_list']['mandatory'] == true)
         {
-            if(empty($_SESSION['indexing']['diff_list']['dest']['user_id']) || !isset($_SESSION['indexing']['diff_list']['dest']['user_id']))
+            if(empty($_SESSION['indexing']['diff_list']['dest']['users'][0]['user_id']) || !isset($_SESSION['indexing']['diff_list']['dest']['users'][0]['user_id']))
             {
                 $_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['diff_list']['label']." "._MANDATORY."";
                 return false;
@@ -1605,9 +1605,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         $load_list_diff = false;
         if(isset($_ENV['categories'][$cat_id]['other_cases']['diff_list']) )
         {
-            if(!empty($_SESSION['indexing']['diff_list']['dest']['user_id']) && isset($_SESSION['indexing']['diff_list']['dest']['user_id']))
+            if(!empty($_SESSION['indexing']['diff_list']['dest']['users'][0]['user_id']) && isset($_SESSION['indexing']['diff_list']['dest']['users'][0]['user_id']))
             {
-                $query_res .= ", dest_user = '".$db->protect_string_db($_SESSION['indexing']['diff_list']['dest']['user_id'])."'";
+                $query_res .= ", dest_user = '".$db->protect_string_db($_SESSION['indexing']['diff_list']['dest']['users'][0]['user_id'])."'";
             }
             $load_list_diff = true;
         }
