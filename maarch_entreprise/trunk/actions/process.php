@@ -716,7 +716,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         require_once 'modules/entities/class/class_manage_listdiff.php';
         $listdiff = new diffusion_list();
        
-        $roles = $listdiff->get_workflow_roles();
+        $roles = $listdiff->list_difflist_roles();
     
         $frm_str .= '<div id="diff_list_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
             $frm_str .= '<div>';

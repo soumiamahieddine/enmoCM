@@ -599,14 +599,14 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<td class="indexing_field">';
         $frmStr .= '<select name="destination" id="destination" onchange="'
                     . 'clear_error(\'frm_error_' . $actionId . '\');'
-                    . 'load_listmodel(\'entity_id|\'+this.options[this.selectedIndex].value, \'diff_list_div\', \'indexing\');'
+                    . 'load_listmodel(this.options[this.selectedIndex], \'diff_list_div\', \'indexing\');'
                     . '$(\'diff_list_tr\').style.display=\''.$displayValue.'\''
                 . ';" >';
         $frmStr .= '<option value="">' . _CHOOSE_DEPARTMENT . '</option>';
         $countAllEntities = count($allEntitiesTree);
         for ($cptEntities = 0;$cptEntities < $countAllEntities;$cptEntities++) {
             if (!$allEntitiesTree[$cptEntities]['KEYWORD']) {
-                $frmStr .= '<option value="' . $allEntitiesTree[$cptEntities]['ID'] . '"';
+                $frmStr .= '<option data-object_type="entity_id" value="' . $allEntitiesTree[$cptEntities]['ID'] . '"';
                 if ($allEntitiesTree[$cptEntities]['DISABLED']) {
                     $frmStr .= ' disabled="disabled" class="disabled_entity"';
                 } else {

@@ -166,8 +166,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     if ($core_tools->is_module_loaded('entities')) {
         require_once('modules/entities/class/class_manage_listdiff.php');
         $listdiff = new diffusion_list();
-        $roles = $listdiff->get_workflow_roles();
+        $roles = $listdiff->list_difflist_roles();
         $_SESSION['process']['diff_list'] = $listdiff->get_listinstance($res_id, false, $coll_id);
+        $_SESSION['process']['difflist_type'] = $listdiff->get_difflist_type($_SESSION['process']['diff_list']['object_type']);
     }
 
     //  to activate locking decomment these lines
@@ -562,45 +563,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         . _UPDATE_LIST_DIFF
                         . '</a><br/>';
                 }
-
-                // 1.4 custom diffusion lists
-                foreach($roles as $role_id => $role_label) {
-                    if (count($_SESSION['process']['diff_list'][$role_id]['users']) > 0
-                        || count($_SESSION['process']['diff_list'][$role_id]['entities']) > 0
-                    ) {
-                        $frm_str .= '<br/>' . $role_label;
-                        $frm_str .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">';
-                        $color = ' class="col"';
-                        for ($i=0;$i<count($_SESSION['process']['diff_list'][$role_id]['users']);$i++) {
-                            if ($color == ' class="col"') $color = '';
-                            else $color = ' class="col"';
-                            $frm_str .= '<tr ' . $color . '>';
-                                $frm_str .= '<td><img src="'
-                                    . $_SESSION['config']['businessappurl']
-                                    . 'static.php?module=entities&filename=manage_users_entities_b_small.gif" alt="'
-                                    . _USER . '" title="' . _USER . '" /></td>';
-                                $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['users'][$i]['lastname'] . '</td>';
-                                $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['users'][$i]['firstname'] . '</td>';
-                                $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['users'][$i]['entity_label'] . '</td>';
-                            $frm_str .= '</tr>';
-                        }
-                        for ($i=0;$i<count($_SESSION['process']['diff_list'][$role_id]['entities']);$i++) {
-                            if ($color == ' class="col"') $color = '';
-                            else $color = ' class="col"';
-                            $frm_str .= '<tr '.$color.' >';
-                            $frm_str .= '<td><img src="'.$_SESSION['config']['businessappurl']
-                                . 'static.php?module=entities&filename=manage_entities_b_small.gif" alt="'
-                                . _ENTITY . '" title="'._ENTITY.'" /></td>';
-                            $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['entities'][$i]['entity_id'] . '</td>';
-                            $frm_str .= '<td colspan="2">'
-                                . $_SESSION['process']['diff_list'][$role_id]['entities'][$i]['entity_label'] . '</td>';
-                            $frm_str .= '</tr>';
-                        }
-                        $frm_str .= '</table>';
-                    }
-                }
-
-                $frm_str .= '<br>';
+                # Get content from buffer of difflist_display 
+                $difflist = $_SESSION['process']['diff_list'];
+                
+                ob_start();
+                require_once 'modules/entities/difflist_display.php';
+                $frm_str .= str_replace(array("\r", "\n", "\t"), array("", "", ""), ob_get_contents());
+                ob_end_clean();
+                
                 //$frm_str .= '<hr class="hr_process"/>';
             $frm_str .= '</div>';
             $frm_str .= '<hr />';

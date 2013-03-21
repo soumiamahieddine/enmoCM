@@ -141,19 +141,17 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         require_once 'modules/entities/class/class_manage_listdiff.php';
         $diffList = new diffusion_list();
         
-        $listmodel_types = 
-            $diffList->list_groupbasket_listmodel_types(
+        $groupbasket_difflist_types = 
+            $diffList->list_groupbasket_difflist_types(
                 $_SESSION['user']['primarygroup'],
                 $_SESSION['current_basket']['id'],
                 $actionId
             );
+        $difflistTypes = array();
         $listmodels = array();
-        foreach($listmodel_types as $listmodel_type_id) {
-            $listmodels = 
-                array_merge(
-                    $listmodels, 
-                    $diffList->select_listmodels($listmodel_type_id)
-                );
+        foreach($groupbasket_difflist_types as $difflist_type_id) {
+            $difflistTypes[$difflist_type_id] = $diffList->get_difflist_type($difflist_type_id);
+            $listmodels[$difflist_type_id] = $diffList->select_listmodels($difflist_type_id);
         }
         
         
@@ -553,15 +551,20 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<td class="indexing_field">';
         $frmStr .= '<select name="difflist" id="difflist" onchange="'
                     . 'clear_error(\'frm_error_' . $actionId . '\');'
-                    . 'load_listmodel(this.options[this.selectedIndex].value, \'diff_list_div\', \'indexing\');'
+                    . 'load_listmodel(this.options[this.selectedIndex], \'diff_list_div\', \'indexing\');'
                     . '$(\'diff_list_tr\').style.display=\''.$displayValue.'\''
                 . ';" >';
         $frmStr .= '<option value="">' . _CHOOSE_DIFFUSION_LIST . '</option>';
-        $countlistmodels = count($listmodels);
-        for ($cptListmodels = 0;$cptListmodels < $countlistmodels; $cptListmodels++) {
-            $frmStr .= '<option value="' .$listmodels[$cptListmodels]['object_type']. '|' . $listmodels[$cptListmodels]['object_id'] . '">' 
-                        .  $db->show_string($listmodels[$cptListmodels]['description']) 
-                    . '</option>';
+        if(count($listmodels) > 0) {
+            foreach($listmodels as $difflist_type_id => $listmodel) {
+                $frmStr .= '<optgroup label="'.$difflistTypes[$difflist_type_id]->difflist_type_label . '">';
+                for($i=0, $l=count($listmodel); $i<$l; $i++) {
+                    $frmStr .= '<option data-object_type="'.$difflist_type_id.'" value="' . $listmodel[$i]['object_id'] . '">' 
+                                .  $db->show_string($listmodel[$i]['description']) 
+                            . '</option>';
+                }
+                $frmStr .= '</optgroup>';
+            }
         }
         $frmStr .= '</select></td>';
         $frmStr .= '<td><span class="red_asterisk" id="difflist_mandatory" '
@@ -1681,15 +1684,13 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             if ($loadListDiff) {
                 require_once 'modules/entities/class/class_manage_listdiff.php';
                 $diffList = new diffusion_list();
-                $params = array(
-                    'mode' => 'listinstance',
-                    'table' => $_SESSION['tablename']['ent_listinstance'],
-                    'coll_id' => $collId,
-                    'res_id' => $resId,
-                    'user_id' => $_SESSION['user']['UserId'],
-                );
-                $diffList->load_list_db(
-                    $_SESSION['indexing']['diff_list'], $params
+                $origin = $_SESSION['origin'];
+                $diffList->save_listinstance(
+                    $_SESSION[$origin]['diff_list'], 
+                    $_SESSION[$origin]['diff_list']['object_type'],
+                    $collId, 
+                    $resId, 
+                    $_SESSION['user']['UserId']
                 );
             }
             //  echo 'entities '.$resId. " ";

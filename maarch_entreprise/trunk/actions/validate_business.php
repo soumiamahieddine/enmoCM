@@ -199,22 +199,21 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $_SESSION['indexing']['diff_list'] = $diff_list->get_listinstance($res_id, false, $coll_id);
         }
         
-        $listmodel_types = 
-            $diff_list->list_groupbasket_listmodel_types(
+        $groupbasket_difflist_types = 
+            $diff_list->list_groupbasket_difflist_types(
                 $_SESSION['user']['primarygroup'],
                 $_SESSION['current_basket']['id'],
                 $id_action
             );
+        $difflistTypes = array();
         $listmodels = array();
-        foreach($listmodel_types as $listmodel_type_id) {
-            $listmodels = 
-                array_merge(
-                    $listmodels, 
-                    $diff_list->select_listmodels($listmodel_type_id)
-                );
+        foreach($groupbasket_difflist_types as $difflist_type_id) {
+            $difflistTypes[$difflist_type_id] = $diff_list->get_difflist_type($difflist_type_id);
+            $listmodels[$difflist_type_id] = $diff_list->select_listmodels($difflist_type_id);
         }
         
     }
+
 
     check_category($coll_id, $res_id);
     $data = get_general_data($coll_id, $res_id, 'minimal');
@@ -615,15 +614,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<td class="indexing_field">';
         $frm_str .= '<select name="difflist" id="difflist" onchange="'
                     . 'clear_error(\'frm_error_' . $actionId . '\');'
-                    . 'load_listmodel(this.options[this.selectedIndex].value, \'diff_list_div\', \'indexing\');'
+                    . 'load_listmodel(this.options[this.selectedIndex], \'diff_list_div\', \'indexing\');'
                     . '$(\'diff_list_tr\').style.display=\''.$displayValue.'\''
                 . ';" >';
         $frm_str .= '<option value="">' . _CHOOSE_DIFFUSION_LIST . '</option>';
-        $countlistmodels = count($listmodels);
-        for ($cptListmodels = 0;$cptListmodels < $countlistmodels; $cptListmodels++) {
-            $frm_str .= '<option value="' .$listmodels[$cptListmodels]['object_type']. '|' . $listmodels[$cptListmodels]['object_id'] . '">' 
-                        .  $db->show_string($listmodels[$cptListmodels]['description']) 
-                    . '</option>';
+        if(count($listmodels) > 0) {
+            foreach($listmodels as $difflist_type_id => $listmodel) {
+                $frm_str .= '<optgroup label="'.$difflistTypes[$difflist_type_id]->difflist_type_label . '">';
+                for($i=0, $l=count($listmodel); $i<$l; $i++) {
+                    $frm_str .= '<option data-object_type="'.$difflist_type_id.'" value="' . $listmodel[$i]['object_id'] . '">' 
+                                .  $db->show_string($listmodel[$i]['description']) 
+                            . '</option>';
+                }
+                $frm_str .= '</optgroup>';
+            }
         }
         $frm_str .= '</select></td>';
         $frm_str .= '<td><span class="red_asterisk" id="destination_mandatory" '
@@ -1232,6 +1236,7 @@ $frm_str .= '</div>';
                 . ' \'Input\', \'2\');';   
         }
 
+
         $frm_str .= '$(\'baskets\').style.visibility=\'hidden\';var item = $(\'valid_div\'); if (item){item.style.display=\'block\';}';
         $frm_str .='var type_id = $(\'type_id\');';
         $frm_str .='if (type_id){change_doctype(type_id.options[type_id.selectedIndex].value, \'' 
@@ -1647,11 +1652,20 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         if ($load_list_diff) {
             require_once('modules/entities/class/class_manage_listdiff.php');
             $diff_list = new diffusion_list();
-            $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 
-                'coll_id' => $coll_id, 'res_id' => $res_id, 'user_id' => $_SESSION['user']['UserId']);
-            $diff_list->load_list_db($_SESSION['indexing']['diff_list'], $params);
+            /*$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 
+                'coll_id' => $coll_id, 'res_id' => $res_id, 'user_id' => $_SESSION['user']['UserId']);*/
+            //$diff_list->load_list_db($_SESSION['indexing']['diff_list'], $params);
+            $origin = $_SESSION['origin'];
+            $diff_list->save_listinstance(
+                $_SESSION['indexing']['diff_list'], 
+                $_SESSION['indexing']['diff_list']['object_type'],
+                $coll_id, 
+                $res_id, 
+                $_SESSION['user']['UserId']
+            );
         }
     }
+
 
     //$_SESSION['indexing'] = array();
     unset($_SESSION['upfile']);
