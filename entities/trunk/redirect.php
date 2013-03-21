@@ -159,18 +159,18 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
                 $db2 = new dbquery();
                 $db2->connect();
                 $db->query("update ".$table." set destination = '".$db->protect_string_db($values_form[$j]['VALUE'])."' where res_id = ".$arr_id[$i]);
-                if(isset($_SESSION['redirect']['diff_list']['dest']['user_id']) && !empty($_SESSION['redirect']['diff_list']['dest']['user_id']))
+                if(isset($_SESSION['redirect']['diff_list']['dest']['users'][0]['user_id']) && !empty($_SESSION['redirect']['diff_list']['dest']['users'][0]['user_id']))
                 {
                     $db->query("update ".$table." set dest_user = '".$db->protect_string_db($_SESSION['redirect']['diff_list']['dest']['user_id'])."' where res_id = ".$arr_id[$i]);
                 }
                 $newDestViewed = 0;
                 // Récupère le nombre de fois où le futur destinataire principal a vu le document
-                $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$db->protect_string_db($coll_id)."' and res_id = ".$arr_id[$i]." and item_type = 'user_id' and item_id = '".$_SESSION['redirect']['diff_list']['dest']['user_id']."'");
+                $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$db->protect_string_db($coll_id)."' and res_id = ".$arr_id[$i]." and item_type = 'user_id' and item_id = '".$_SESSION['redirect']['diff_list']['dest']['users'][0]['user_id']."'");
                 //$db->show();
                 $res = $db->fetch_object();
                 if($res->viewed <> "")
                 {
-                    $_SESSION['redirect']['diff_list']['dest']['viewed'] = $res->viewed;
+                    $_SESSION['redirect']['diff_list']['dest']['users'][0]['viewed'] = $res->viewed;
                     $newDestViewed = $res->viewed;
                 }
                 if($_SESSION['features']['dest_to_copy_during_redirection'] == 'true')
@@ -210,16 +210,16 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
                 $difflist['copy'] = array();
                 $difflist['copy']['users'] = array();
                 $difflist['copy']['entities'] = array();
-                $difflist['dest']['user_id'] = $values_form[$j]['VALUE'];
+                $difflist['dest']['users'][0]['user_id'] = $values_form[$j]['VALUE'];
                 $arr_list .= $arr_id[$i].'#';
                 // Récupère le nombre de fois où le futur destinataire principal a vu le document
-                $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$db->protect_string_db($coll_id)."' and res_id = ".$arr_id[$i]." and item_type = 'user_id' and item_id = '".$difflist['dest']['user_id']."'");
+                $db->query("select viewed from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '".$db->protect_string_db($coll_id)."' and res_id = ".$arr_id[$i]." and item_type = 'user_id' and item_id = '".$difflist['dest']['users'][0]['user_id']."'");
                 //$db->show();
                 $res = $db->fetch_object();
                 $newDestViewed = 0;
                 if($res->viewed <> "")
                 {
-                    $difflist['dest']['viewed'] = $res->viewed;
+                    $difflist['dest']['users'][0]['viewed'] = $res->viewed;
                     $newDestViewed = $res->viewed;
                 }
                 // Récupère le nombre de fois où l'ancien destinataire principal a vu le document
