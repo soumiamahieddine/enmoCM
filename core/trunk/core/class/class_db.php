@@ -351,7 +351,7 @@ class dbquery extends functions
                 break;
 
             case 'POSTGRESQL' : 
-                $this->query = @pg_query($sqlQuery);
+                $this->query = @pg_query($this->_sqlLink, $sqlQuery);
                 break;
                 
             case 'SQLSERVER' : 
@@ -402,12 +402,12 @@ class dbquery extends functions
         switch($this->_databasetype) 
         {
         case 'MYSQL'        : 
-            @mysqli_query($this->_sqlLink, 'BEGIN');
+            $this->query('BEGIN');
             break;
         case 'SQLSERVER'    : 
             break;
         case 'POSTGRESQL'   : 
-            @pg_query('BEGIN');
+            $this->query('BEGIN');
             break;
         case 'ORACLE'       : 
             break;
@@ -419,12 +419,12 @@ class dbquery extends functions
         switch($this->_databasetype) 
         {
         case 'MYSQL'        : 
-            @mysqli_query($this->_sqlLink, 'ROLLBACK');
+            $this->query('ROLLBACK');
             break;
         case 'SQLSERVER'    : 
             break;
         case 'POSTGRESQL'   : 
-            @pg_query('ROLLBACK');
+            $this->query('ROLLBACK');
             break;
         case 'ORACLE'       : 
             break;
@@ -436,12 +436,12 @@ class dbquery extends functions
         switch($this->_databasetype) 
         {
         case 'MYSQL'        : 
-            @mysqli_query($this->_sqlLink, 'COMMIT');
+            $this->query('COMMIT');
             break;
         case 'SQLSERVER'    : 
             break;
         case 'POSTGRESQL'   : 
-            @pg_query('COMMIT');
+            $this->query('COMMIT');
             break;
         case 'ORACLE'       : 
             break;
@@ -799,7 +799,7 @@ class dbquery extends functions
         switch($this->_databasetype) {
         case 'MYSQL'        : return @mysqli_insert_id($this->_sqlLink);
         case 'POSTGRESQL'   : 
-            $this->query = @pg_query("select currval('" . $sequenceName . "') as lastinsertid");
+            $this->query = @pg_query($this->_sqlLink, "select currval('" . $sequenceName . "') as lastinsertid");
             $line = @pg_fetch_object($this->query);
             return $line->lastinsertid;
         case 'SQLSERVER'    : return '';
