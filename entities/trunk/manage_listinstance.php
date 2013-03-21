@@ -202,7 +202,7 @@ while ($line = $db->fetch_object()) {
         )
     );
 }
-
+$_REQUEST['dest_is_set'] = $dest_is_set;
 var_dump($_REQUEST);
 #****************************************************************************************
 # RELOAD PARENT ID VALIDATION OF LIST
@@ -269,7 +269,7 @@ case "add_user":
         )
     ); 
     $_SESSION[$origin]['diff_list'][$role_id]['users'] = array_values(
-            $_SESSION[$origin]['diff_list'][$role_id]['users']
+         $_SESSION[$origin]['diff_list'][$role_id]['users']
     );
     break;
 
