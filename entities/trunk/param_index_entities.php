@@ -196,27 +196,21 @@ elseif($_SESSION['service_tag'] == 'load_basket_session')
 }
 elseif($_SESSION['service_tag'] == 'load_basket_db')
 {
-    require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+    require_once('modules/entities/class/class_modules_tools.php');
     $ent = new entities();
     $indexing_actions = array();
-    for($cpt=0; $cpt<count($_SESSION['m_admin']['basket']['all_actions']);$cpt++ )
-    {
-        if($_SESSION['m_admin']['basket']['all_actions'][$cpt]['KEYWORD'] == 'indexing')
-        {
-            array_push($indexing_actions,$_SESSION['m_admin']['basket']['all_actions'][$cpt]['ID']);
+    for ($cptI=0; $cptI<count($_SESSION['m_admin']['basket']['all_actions']);$cptI++) {
+        if($_SESSION['m_admin']['basket']['all_actions'][$cptI]['KEYWORD'] == 'indexing') {
+            array_push($indexing_actions,$_SESSION['m_admin']['basket']['all_actions'][$cptI]['ID']);
         }
     }
-    for($cpt=0; $cpt < count($_SESSION['m_admin']['basket']['groups'] ); $cpt++)
-    {
-        if(!empty($_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION'] )&& in_array($_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION'], $indexing_actions))
-        {
-            $ent->update_redirect_groupbasket_db($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID'],  $_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION'],$_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION']['ENTITIES_LIST']);
+    for ($cptRedirection=0; $cptRedirection < count($_SESSION['m_admin']['basket']['groups'] ); $cptRedirection++) {
+        if (!empty($_SESSION['m_admin']['basket']['groups'][$cptRedirection]['DEFAULT_ACTION'] )&& in_array($_SESSION['m_admin']['basket']['groups'][$cptRedirection]['DEFAULT_ACTION'], $indexing_actions)) {
+            $ent->update_redirect_groupbasket_db($_SESSION['m_admin']['basket']['groups'][$cptRedirection]['GROUP_ID'],  $_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$cptRedirection]['DEFAULT_ACTION'],$_SESSION['m_admin']['basket']['groups'][$cptRedirection]['PARAM_DEFAULT_ACTION']['ENTITIES_LIST']);
         }
-        for($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS']);$j++)
-        {
-            if(in_array($_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'], $indexing_actions))
-            {
-                $ent->update_redirect_groupbasket_db($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID'],  $_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'],$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ENTITIES_LIST']);
+        for ($cptJ=0;$cptJ<count($_SESSION['m_admin']['basket']['groups'][$cptRedirection]['ACTIONS']);$cptJ++) {
+            if (in_array($_SESSION['m_admin']['basket']['groups'][$cptRedirection]['ACTIONS'][$cptJ]['ID_ACTION'], $indexing_actions)) {
+                $ent->update_redirect_groupbasket_db($_SESSION['m_admin']['basket']['groups'][$cptRedirection]['GROUP_ID'],  $_SESSION['m_admin']['basket']['basketId'],$_SESSION['m_admin']['basket']['groups'][$cptRedirection]['ACTIONS'][$cptJ]['ID_ACTION'],$_SESSION['m_admin']['basket']['groups'][$cptRedirection]['ACTIONS'][$cptJ]['ENTITIES_LIST']);
             }
         }
     }
