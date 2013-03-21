@@ -1333,8 +1333,8 @@ function process_category_check($catId, $values)
         if (isset($_ENV['categories'][$catId]['other_cases']['diff_list'])
             && $_ENV['categories'][$catId]['other_cases']['diff_list']['mandatory'] == true
         ) {
-            if (empty($_SESSION['indexing']['diff_list']['dest']['user_id'])
-                || ! isset($_SESSION['indexing']['diff_list']['dest']['user_id'])
+            if (empty($_SESSION['indexing']['diff_list']['dest']['users'][0])
+                || ! isset($_SESSION['indexing']['diff_list']['dest']['users'][0])
             ) {
                 $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['diff_list']['label']
                     . " " . _MANDATORY;
@@ -1746,15 +1746,15 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         // Diffusion list
         $loadListDiff = false;
         if (isset($_ENV['categories'][$catId]['other_cases']['diff_list'])) {
-            if (! empty($_SESSION['indexing']['diff_list']['dest']['user_id'])
-                && isset($_SESSION['indexing']['diff_list']['dest']['user_id'])
+            if (! empty($_SESSION['indexing']['diff_list']['dest']['users'][0])
+                && isset($_SESSION['indexing']['diff_list']['dest']['users'][0])
             ) {
                 array_push(
                     $_SESSION['data'],
                     array(
                         'column' => 'dest_user',
                         'value' => $db->protect_string_db(
-                            $_SESSION['indexing']['diff_list']['dest']['user_id']
+                            $_SESSION['indexing']['diff_list']['dest']['users'][0]['user_id']
                          ),
                          'type' => 'string'
                     )
