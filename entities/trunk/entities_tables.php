@@ -44,12 +44,9 @@ if (! defined('ENT_LISTINSTANCE')) {
 if (! defined('ENT_GROUPBASKET_REDIRECT')) {
     define('ENT_GROUPBASKET_REDIRECT', 'groupbasket_redirect');
 }
-if (! defined('ENT_LISTINSTANCE_ROLES')) {
-    define('ENT_LISTINSTANCE_ROLES', 'listinstance_roles');
+if (! defined('ENT_DIFFLIST_TYPES')) {
+    define('ENT_DIFFLIST_TYPES', 'difflist_types');
 }
-if (! defined('ENT_LISTMODEL_TYPES')) {
-    define('ENT_LISTMODEL_TYPES', 'listmodel_types');
-}
-if (! defined('ENT_GROUPBASKET_LISTMODEL_TYPES')) {
-    define('ENT_GROUPBASKET_LISTMODEL_TYPES', 'groupbasket_listmodel_types');
+if (! defined('ENT_GROUPBASKET_DIFFLIST_TYPES')) {
+    define('ENT_GROUPBASKET_DIFFLIST_TYPES', 'groupbasket_difflist_types');
 }

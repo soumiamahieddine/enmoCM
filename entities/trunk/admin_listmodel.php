@@ -1,6 +1,7 @@
 <?php
 
 require_once 'modules/entities/class/class_manage_listdiff.php';
+require_once 'core/class/usergroups_controler.php';
 $core_tools = new core_tools();
 
 $admin = new core_tools();
@@ -22,45 +23,40 @@ $page_id = "amdin_listmodel";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 
 $difflist = new diffusion_list();
-$roles = $difflist->get_workflow_roles();
-$objectTypes = $difflist->get_listmodel_types();
+# all roles available
+$roles = $difflist->list_difflist_roles();
+
+# list difflist_types
+$difflistTypes = $difflist->list_difflist_types();
 
 # Load listmodel into session
 /*
 var_dump($_SESSION['m_admin']['entity']['listmodel']);
-var_dump($_SESSION['m_admin']['entity']['listmodel_info']);
+var_dump($_SESSION['m_admin']['entity']['difflist_type']);
 ;*/
+$mode = $_REQUEST['mode'];
 
+$objectType = trim(strtok($_REQUEST['id'], '|'));
+$objectId = strtok('|');
+    
 if(!isset($_SESSION['m_admin']['entity']['listmodel'])) {
     # Listmodel to be loaded (up action on list or reload in add mode)
-    $objectType = trim(strtok($_REQUEST['id'], '|'));
-    $objectId = strtok('|');
-    
-    $_SESSION['m_admin']['entity']['listmodel_info'] =
-        $difflist->select_listmodel(
-            $objectType,
-            $objectId
-        );
-    
-    $collId = $_SESSION['m_admin']['entity']['listmodel_info']['coll_id'];
-    $listmodelType = $_SESSION['m_admin']['entity']['listmodel_info']['listmodel_type'];
-    $description =  $_SESSION['m_admin']['entity']['listmodel_info']['description'];
+    $_SESSION['m_admin']['entity']['difflist_type'] = $difflist->get_difflist_type($objectType);
     
     $_SESSION['m_admin']['entity']['listmodel'] =  
         $difflist->get_listmodel(
             $objectType,
             $objectId
         );
+    $description =  $_SESSION['m_admin']['entity']['listmodel']['description'];
 } else {
     # list already loaded and managed (reload after update of list)
-    $objectType = $_SESSION['m_admin']['entity']['listmodel_info']['object_type'];
-    $objectId = $_SESSION['m_admin']['entity']['listmodel_info']['object_id'];
-    $collId = $_SESSION['m_admin']['entity']['listmodel_info']['coll_id'];
-    $listmodelType = $_SESSION['m_admin']['entity']['listmodel_info']['listmodel_type'];
-    $description = $_SESSION['m_admin']['entity']['listmodel_info']['description'];
+    $objectType = $_SESSION['m_admin']['entity']['listmodel']['object_type'];
+    $objectId = $_SESSION['m_admin']['entity']['listmodel']['object_id'];
+    $description = $_SESSION['m_admin']['entity']['listmodel']['description'];
 }
 
-$objectTypeLabel = $objectTypes[$objectType];
+
 
 # JAVASCRIPT 
 # *****************************************************************************
@@ -68,7 +64,30 @@ $objectTypeLabel = $objectTypes[$objectType];
 <script type="text/javascript">
 // OnChange ObjectType / onLoad
 //   set value / input mode for object id
-function listmodel_setObjectId(objectId) 
+function listmodel_setObjectType() 
+{
+    var objectType = $('objectType').value;
+    var objectType_info = $('objectType_info');
+    new Ajax.Request(
+        'index.php?display=true&module=entities&page=admin_listmodel_setObjectType',
+        {
+            method:'post',
+            parameters: 
+			{ 
+                objectType : objectType
+			},
+            onSuccess: function(answer){
+                objectType_info.innerHTML = answer.responseText;
+                objectType_info.style.display = 'block';
+            }
+        }
+    );
+
+    
+}
+
+
+function listmodel_setObjectId() 
 {
     var mode = $('mode').value;
     
@@ -82,8 +101,7 @@ function listmodel_setObjectId(objectId)
             parameters: 
 			{ 
 				mode : mode,
-                objectType : objectType,
-				objectId : objectId
+                objectType : objectType
 			},
             onSuccess: function(answer){
                 objectId_input.innerHTML = answer.responseText;
@@ -106,7 +124,7 @@ function listmodel_open()
     
     // Open pop up 
     window.open(
-        'index.php?display=true&module=entities&page=creation_listmodel',
+        'index.php?display=true&module=entities&page=manage_listmodel',
         '', 
         'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no'
     );
@@ -121,8 +139,6 @@ function listmodel_validate() {
     var mode = $('mode').value; 
     var objectType = $('objectType').value; 
     var objectId = $('objectId').value; 
-    var collId = $('collId').value; 
-    var listmodelType = $('listmodelType').value; 
     var description = $('description').value; 
     
     main_error.innerHTML = "";
@@ -137,8 +153,6 @@ function listmodel_validate() {
 				mode : mode,
                 objectType : objectType,
                 objectId : objectId,
-                collId : collId,
-                listmodelType : listmodelType, 
                 description : description 
 			},
             onSuccess: function(answer) {
@@ -159,8 +173,6 @@ function listmodel_save()
     var mode = $('mode').value;  
     var objectType = $('objectType').value; 
     var objectId = $('objectId').value; 
-    var collId = $('collId').value; 
-    var listmodelType = $('listmodelType').value; 
     var description = $('description').value; 
     
     // Validate form
@@ -178,8 +190,6 @@ function listmodel_save()
 				mode : mode,
                 objectType : objectType,
                 objectId : objectId,
-                collId : collId,
-                listmodelType : listmodelType,
                 description : description
 			},
             onSuccess: function(answer){
@@ -195,9 +205,7 @@ function listmodel_save()
 
 function listmodel_del(
     objectType,
-    objectId,
-    collId,
-    listmodelType
+    objectId
 ) {    
     new Ajax.Request(
         'index.php?display=true&module=entities&page=admin_listmodel_save',
@@ -208,8 +216,6 @@ function listmodel_del(
                 mode : 'del',
                 objectType : objectType,
                 objectId : objectId,
-                collId : collId,
-                listmodelType : listmodelType
             },
             onSuccess: function(answer){
                 if(answer.responseText)
@@ -224,10 +230,10 @@ function listmodel_del(
 }
     
 </script><?php
-if($_REQUEST['mode'] != 'del') { ?>
+if($mode != 'del') { ?>
 <h1 class="tit"><?php 
     echo _ADMIN_LISTMODEL;
-    if($objectType) echo ' : ' . $objectTypeLabel;
+    if($objectType) echo ' : ' . $difflistTypes[$objectType];
     if($objectId) echo " " . $objectId;
     ?>
 </h1>
@@ -235,63 +241,8 @@ if($_REQUEST['mode'] != 'del') { ?>
 <h2><?php echo _ADMIN_LISTMODEL_TITLE; ?></h2>
 <div id="listmodel_box" class="block">
 	<h2 class="tit"><?php echo _LINKED_DIFF_LIST;?> : </h2><?php
-    if($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']) { ?>
-	<p class="sstit"><?php echo _RECIPIENT;?></p>
-	<table cellpadding="0" cellspacing="0" border="0" class="listingsmall list_diff spec">
-		<tr >
-			<td>
-                <img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b_small.gif&module=entities';?>" alt="<?php echo _USER;?>" title="<?php echo _USER;?>" />
-            </td>
-			<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'];?></td>
-            <td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'];?></td>
-			<td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label']; ?></td>
-		</tr>
-	</table>
-	<br/> <?php 
-    }
-    foreach($roles as $role_id => $role_label) {
-        if(count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']) > 0
-            || count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']) > 0
-        ) { ?>
-            <h2 class="sstit"><?php echo $role_label;?></h2>
-            <table cellpadding="0" cellspacing="0" border="0" class="listingsmall liste_diff spec">
-            <?php
-            $color = ' class="col"';
-            for($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']);
-                $i<$l;
-                $i++
-            ) {
-                if ($color == ' class="col"') $color = ' ';
-                else $color = ' class="col"'; ?>
-                <tr <?php echo $color; ?> >
-                    <td>
-                        <img src="<?php echo $_SESSION['config']['businessappurl'] ?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER . " " . $list_config['role_label'] ;?>" title="<?php echo _USER . " " . $list_config['role_label'] ; ?>" />
-                    </td>
-                    <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['lastname']; ?></td>
-                    <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['firstname'];?></td>
-                    <td><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['users'][$i]['entity_label']; ?></td>
-                </tr> <?php
-            }
-            $color = ' class="col"';
-            for ($i=0, $l=count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']);
-                $i<$l;
-                $i++
-            ) {
-                if ($color == ' class="col"') $color = '';
-                else $color = ' class="col"';?>
-                <tr <?php echo $color; ?> >
-                    <td>
-                        <img src="<?php echo $_SESSION['config']['businessappurl'] ?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY . " " . $list_config['role_label'] ;?>" title="<?php echo _ENTITY . " " . $list_config['role_label'] ; ?>" />
-                    </td>
-                    <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i]['entity_id']; ?></td>
-                    <td ><?php echo $_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities'][$i]['entity_label']; ?></td>
-                    <td>&nbsp;</td>
-                </tr> <?php
-            } ?>
-            </table>
-            <br/> <?php
-        }
-    } ?>
+    $difflist = $_SESSION['m_admin']['entity']['listmodel'];
+    require_once 'modules/entities/difflist_display.php'; ?>
 	<p class="buttons">
 		<input type="button" onclick="listmodel_open()" class="button" value="<?php echo _MODIFY_LIST;?>" />
 	</p>
@@ -308,10 +259,10 @@ if($_REQUEST['mode'] != 'del') { ?>
                 <label for="objectType" ><?php echo _OBJECT_TYPE; ?>: </label>
             </td>
             <td>
-                <select id="objectType" onChange="listmodel_setObjectId(false);" style="width:300px;">
+                <select id="objectType" onChange="listmodel_setObjectType(); listmodel_setObjectId();" style="width:300px;" <?php if($mode == 'up') echo "disabled='true'"; ?>>
                     <option value="" ><?php echo _SELECT_OBJECT_TYPE; ?></option><?php
-                    foreach($objectTypes as $objectTypeId => $objectTypeLabel) { ?>
-                    <option value="<?php echo $objectTypeId; ?>" <?php if($objectType == $objectTypeId) echo "selected='true'"; ?> ><?php echo $objectTypeLabel; ?></option><?php
+                    foreach($difflistTypes as $difflistTypeId => $difflistTypeLabel) { ?>
+                    <option value="<?php echo $difflistTypeId; ?>" <?php if($objectType == $difflistTypeId) echo "selected='true'"; ?> ><?php echo $difflistTypeLabel; ?></option><?php
                     } ?>
                 </select>
             </td>
@@ -321,7 +272,17 @@ if($_REQUEST['mode'] != 'del') { ?>
                 <label for="objectId" ><?php echo _ID; ?> : </label>
             </td>
             <td>
-                <div id="objectId_input"></div>
+                <div id="objectId_input" ><?php 
+                if($mode == 'up') { ?>
+                    <input type="text" id="objectId" disabled='true' value="<?php echo $objectId; ?>" />
+                <?php 
+                } else { ?>
+                    <script type="text/javascript">
+                        // OnLoad : set object id and label
+                        listmodel_setObjectId('<?php echo $objectId?>');
+                    </script><?php
+                } ?>
+                </div>
             </td>
         </tr>
         <tr>
@@ -332,44 +293,24 @@ if($_REQUEST['mode'] != 'del') { ?>
                 <textarea id="description"><?php echo $description; ?></textarea>
             </td>
         </tr>
-        <tr style="display:none;">
-            <td >
-                <label for="collId" ><?php echo _COLL_ID; ?>: </label>
+        <tr>
+            <td>
+                <label for="objectType_info" ><?php echo _DIFFLIST_TYPE_ROLES; ?> : </label>
             </td>
             <td>
-                <select id="collId" style="width:300px;">
-                    <option value="any" ><?php echo _SELECT_COLL_ID; ?></option><?php
-                    foreach($_SESSION['collections'] as $collection) { ?>
-                    <option value="<?php echo $collection['id']; ?>" <?php if($collId == $collection['id']) echo "selected='true'"; ?> ><?php echo $collection['label']; ?></option><?php
-                    } ?>
-                </select>
-            </td>
-        </tr>
-        <tr style="display:none;" >
-            <td >
-                <label for="listmodelType" ><?php echo _RES_TYPE; ?>: </label>
-            </td>
-            <td>
-                <select id="listmodelType" style="width:300px;">
-                    <option value="DOC" <?php if($listmodelType == 'DOC') echo "selected='true'"; ?> ><?php echo _DOCUMENT; ?></option>
-                    <option value="FLD" <?php if($listmodelType == 'FLD') echo "selected='true'"; ?> ><?php echo _FOLDER; ?></option>
-                </select>
+                <span id="objectType_info"></span>
             </td>
         </tr>
     </table> 
     <br/>
     <br/>
     <p class="buttons"><?php
-        if($objectType && $objectId && $collId) { ?>
+        if($objectType && $objectId) { ?>
 		<input type="button" onclick="listmodel_save();" class="button" value="<?php echo _SAVE_LISTMODEL;?>" /><?php
         } ?>
         <input type="button" onclick="goTo('index.php?module=entities&page=admin_listmodels');" class="button" value="<?php echo _CANCEL;?>" />
 	</p>
-</div>
-<script type="text/javascript">
-    // OnLoad : set object id and label
-    listmodel_setObjectId('<?php echo $objectId?>');
-</script><?php
+</div><?php
 }
 # DEL => REDIRECT TO AJAX SAVE
 # *****************************************************************************
@@ -378,9 +319,7 @@ if($_REQUEST['mode'] == 'del') {
     <script type="text/javascript">
         listmodel_del(
             '<?php echo $objectType?>',
-            '<?php echo $objectId?>',
-            '<?php echo $collId?>',
-            '<?php echo $listmodelType?>'
+            '<?php echo $objectId?>'
         );
     </script><?php
 }

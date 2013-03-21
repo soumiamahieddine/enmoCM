@@ -270,25 +270,29 @@ if (!defined('_SUBMIT'))
     define('_SUBMIT', 'Valider'); 
 if (!defined('_CANCEL'))
     define('_CANCEL', 'Annuler');     
-if (!defined('_WORKFLOW_MODE'))
-    define('_WORKFLOW_MODE', 'Type de flux');    
-
- /******************** Listmodels types ***********/       
- if (!defined('_ALL_LISTMODEL_TYPES'))
-    define('_ALL_LISTMODEL_TYPES', 'Tous les types');
-if (!defined('_LISTMODEL_TYPES_DESC'))
-    define('_LISTMODEL_TYPES_DESC', 'Types listes de diffusion');     
-if (!defined('_LISTMODEL_TYPES'))
-    define('_LISTMODEL_TYPES', 'Types de listes de diffusion');   
-if (!defined('_LISTMODEL_TYPE'))
-    define('_LISTMODEL_TYPE', 'Type(s) de liste');
-if (!defined('_ADD_LISTMODEL_TYPE'))
-   define('_ADD_LISTMODEL_TYPE', 'Ajouter un type');
-if (!defined('_LISTMODEL_TYPE_ID'))
-   define('_LISTMODEL_TYPE_ID', 'Identifiant');   
-if (!defined('_LISTMODEL_TYPE_LABEL'))
-   define('_LISTMODEL_TYPE_LABEL', 'Description');   
-   
+if (!defined('_DIFFLIST_TYPE_ROLES'))
+    define('_DIFFLIST_TYPE_ROLES', 'Rôles disponibles');
+if (!defined('_NO_AVAILABLE_ROLE'))
+    define('_NO_AVAILABLE_ROLE', 'Aucun rôle disponible');  
+  
+    
+ /******************** Difflist types ***********/       
+ if (!defined('_ALL_DIFFLIST_TYPES'))
+    define('_ALL_DIFFLIST_TYPES', 'Tous les types');
+if (!defined('_DIFFLIST_TYPES_DESC'))
+    define('_DIFFLIST_TYPES_DESC', 'Types listes de diffusion');     
+if (!defined('_DIFFLIST_TYPES'))
+    define('_DIFFLIST_TYPES', 'Types de listes de diffusion');   
+if (!defined('_DIFFLIST_TYPE'))
+    define('_DIFFLIST_TYPE', 'Type(s) de liste');
+if (!defined('_ADD_DIFFLIST_TYPE'))
+   define('_ADD_DIFFLIST_TYPE', 'Ajouter un type');
+if (!defined('_DIFFLIST_TYPE_ID'))
+   define('_DIFFLIST_TYPE_ID', 'Identifiant');   
+if (!defined('_DIFFLIST_TYPE_LABEL'))
+   define('_DIFFLIST_TYPE_LABEL', 'Description');   
+if (!defined('_ALLOW_ENTITIES'))
+    define('_ALLOW_ENTITIES', 'Autoriser les services');     
    
  /******************** Listmodels ***********/   
 if (!defined('_ALL_LISTMODELS'))
@@ -325,12 +329,15 @@ if (!defined('_LISTMODEL_ID_ALREADY_USED'))
     define('_LISTMODEL_ID_ALREADY_USED', 'Cet identifiant est déjà utilisé!');    
 if (!defined('_CONFIRM_LISTMODEL_SAVE'))
     define('_CONFIRM_LISTMODEL_SAVE', 'Sauvegarder la liste ?'); 
+
+if (!defined('_ENTER_DESCRIPTION'))
+    define('_ENTER_DESCRIPTION', 'Description obligatoire'); 
+
     
 if (!defined('_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS')) define('_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS', 'Param&eacute;trer les types de modèle de liste de diffusion pour l&rsquo;indexation');
-if (!defined('_INDEXING_LISTMODEL_TYPES')) define('_INDEXING_LISTMODEL_TYPES', 'Types de liste de diffusion');
+if (!defined('_INDEXING_DIFFLIST_TYPES')) define('_INDEXING_DIFFLIST_TYPES', 'Types de liste de diffusion');
 
-if (!defined('_DIFFUSION_LIST_ROLE')) define('_DIFFUSION_LIST_ROLE', 'Rôle de diffusion');
-if (!defined('_ADMIN_LISTMODEL_TYPES')) define('_ADMIN_LISTMODEL_TYPES', 'Types de liste de diffusion (Admin)');
+if (!defined('_ADMIN_DIFFLIST_TYPES')) define('_ADMIN_DIFFLIST_TYPES', 'Types de liste de diffusion (Admin)');
 if (!defined('_ADMIN_LISTMODELS')) define('_ADMIN_LISTMODELS', 'Listes de diffusion (Admin)');
 /******************** RM ENTITIES ************/
 if (!defined('_STANDARD'))
@@ -346,7 +353,7 @@ if (!defined('_53_RELATIONS'))
 if (!defined('_54_CONTROL'))
     define('_54_CONTROL', '5.4 Contr&ocirc;le');
     
-if (!defined('_TO_CONTRIB'))    
-    define('_TO_CONTRIB', 'Contributeurs');
-if (!defined('_ADD_CONTRIB')) 
-    define('_ADD_CONTRIB', 'Contributeur');
+if (!defined('_VISIBLE'))    
+    define('_VISIBLE', 'Actif');
+if (!defined('_NOT_VISIBLE')) 
+    define('_NOT_VISIBLE', 'En attente');

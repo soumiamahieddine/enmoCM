@@ -22,7 +22,7 @@
 */
 
 $admin = new core_tools();
-$admin->test_admin('admin_listmodel_types', 'entities');
+$admin->test_admin('admin_difflist_types', 'entities');
 $_SESSION['m_admin']= array();
 /****************Management of the location bar  ************/
 $init = false;
@@ -35,22 +35,22 @@ if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] =
 {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=admin_listmodel_type&module=entities';
-$page_label = _LISTMODEL_TYPE;
-$page_id = "admin_listmodel_type";
+$page_path = $_SESSION['config']['businessappurl'].'index.php?page=admin_difflist_type&module=entities';
+$page_label = _DIFFLIST_TYPE;
+$page_id = "admin_difflist_type";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 #******************************************************************************
+require_once("core/class/usergroups_controler.php");
+$ugc = new usergroups_controler();
 
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
-require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
-require_once("modules/entities/entities_tables.php");
+require_once("modules/entities/class/class_manage_listdiff.php");
+$difflist = new diffusion_list();
 
 # Prepare view for UP/ADD
 #******************************************************************************
 $view = new DOMDocument();
 $view->loadHTMLFile(
-    __DIR__ . DIRECTORY_SEPARATOR . 'html' 
-        . DIRECTORY_SEPARATOR . 'admin_listmodel_type.html' 
+    __DIR__ . '/html/admin_difflist_type.html' 
 );
 $xview = new DOMXPath($view);
 
@@ -78,45 +78,68 @@ for($i=0, $l=$buttons->length; $i<$l; $i++) {
 $cancel_btn = $view->getElementById("cancel");
 $cancel_btn->setAttribute(
     'onclick',
-    "goTo('index.php?module=entities&page=admin_listmodel_types');"
+    "goTo('index.php?module=entities&page=admin_difflist_types');"
 );
 
 # Get data for UP/DEL
 #******************************************************************************
-$request = new request();
-$request->connect();
-$request->query(
-    "select * from " . ENT_LISTMODEL_TYPES
-    . " where listmodel_type_id = '".$_REQUEST['id']."' "
-);
-$listmodel_type = $request->fetch_object();
+if($_REQUEST['mode'] == 'up' || $_REQUEST['mode'] == 'del') {
+    $difflist_type = $difflist->get_difflist_type($_REQUEST['id']);
+    $difflist_type_roles = $difflist->get_difflist_type_roles($difflist_type);
+}
+$difflist_roles = $difflist->list_difflist_roles();
 
 # Switch on mode/action
 #******************************************************************************
 switch($_REQUEST['mode']) {
 case 'add':
+    # difflist_type_roles
+    $all_roles = $view->getElementById("all_roles");
+    foreach($difflist_roles as $role_id => $role_label) {
+        $option = $view->createElement('option', $role_label);
+        $option->setAttribute('value', $role_id);
+        $all_roles->appendChild($option);
+    }
     echo $view->saveXML();
     break;
     
 case 'up':
-    # listmodel_type id
-    $listmodel_type_id = $view->getElementById("listmodel_type_id");
-    $listmodel_type_id->setAttribute('value', $listmodel_type->listmodel_type_id);
-    $listmodel_type_id->setAttribute('readonly', 'true');
-    $listmodel_type_id->setAttribute('disabled', 'true');
+    # difflist_type id
+    $difflist_type_id = $view->getElementById("difflist_type_id");
+    $difflist_type_id->setAttribute('value', $difflist_type->difflist_type_id);
+    $difflist_type_id->setAttribute('readonly', 'true');
+    $difflist_type_id->setAttribute('disabled', 'true');
        
-    # listmodel_type Label
-    $listmodel_type_label = $view->getElementById("listmodel_type_label");
-    $listmodel_type_label->setAttribute('value', $listmodel_type->listmodel_type_label);
+    # difflist_type Label
+    $difflist_type_label = $view->getElementById("difflist_type_label");
+    $difflist_type_label->setAttribute('value', $difflist_type->difflist_type_label);
     
+    # difflist_type_roles
+    $all_roles = $view->getElementById("all_roles");
+    $selected_roles = $view->getElementById("selected_roles");
+    foreach($difflist_roles as $role_id => $role_label) {
+        $option = $view->createElement('option', $role_label);
+        $option->setAttribute('value', $role_id);
+        if(!isset($difflist_type_roles[$role_id])) {
+            $all_roles->appendChild($option);
+        } else {
+            $selected_roles->appendChild($option);
+        }
+    }
+    
+    # Allow entities
+    $allow_entities = $view->getElementById("allow_entities");
+    if($difflist_type->allow_entities == 'Y')
+        $allow_entities->setAttribute('checked', 'true');
+    
+    # Display
     echo $view->saveXML();
     break;
 
 case "del":
-    $res = $request->query(
-        "delete from " . ENT_LISTMODEL_TYPES 
-            . " where listmodel_type_id = '" . $listmodel_type->listmodel_type_id . "'"
-    );
-    echo "<script type='text/javascript'> goTo('".$_SESSION['config']['businessappurl']."index.php?page=admin_listmodel_types&module=entities');</script>";
+    if($difflist_type->is_system != 'Y') {
+        $difflist->delete_difflist_type($_REQUEST['id']);
+    }
+    echo "<script type='text/javascript'> goTo('".$_SESSION['config']['businessappurl']."index.php?page=admin_difflist_types&module=entities');</script>";
     break;
 }

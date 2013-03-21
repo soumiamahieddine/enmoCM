@@ -57,17 +57,19 @@ if (isset($_REQUEST['only_cc'])) {
     $onlyCC = true;
 }
 
+$objectType = $_REQUEST['objectType'];
+$objectId = $_REQUEST['objectId'];
 $origin = $_REQUEST['origin'];
 
+// Get listmodel_parameters
+$_SESSION[$origin]['difflist_type'] = $diffList->get_difflist_type($objectType);
+
 if ($_REQUEST['load_from_model'] == 'true') {
-    $_SESSION[$origin]['diff_list'] = 
-        $diffList->get_listmodel(
-            $_REQUEST['objectType'],
-            $_REQUEST['objectId']
-        );
+    $_SESSION[$origin]['diff_list'] = $diffList->get_listmodel($objectType, $objectId);
 }
 
-$roles = $diffList->get_workflow_roles();
+$roles = $diffList->list_difflist_roles();
+$difflist = $_SESSION[$origin]['diff_list'];
 
 $content = '';
 if (! $onlyCC) {
@@ -79,7 +81,7 @@ if (! $onlyCC) {
 }
 
 if(!empty($_SESSION[$origin]['diff_list'])) {
-
+    /*
     if (isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
         && ! empty($_SESSION[$origin]['diff_list']['dest']['user_id'])
     ) {
@@ -157,8 +159,13 @@ if(!empty($_SESSION[$origin]['diff_list'])) {
             $content .= '</div>';
             $content .= '</div>';
         }
-    }
-       
+    }*/
+    
+    # Get content from buffer of difflist_display 
+    ob_start();
+    require_once 'modules/entities/difflist_display.php';
+    $content .= str_replace(array("\r", "\n", "\t"), array("", "", ""), ob_get_contents());
+    ob_end_clean();   
 
     $labelButton = _MODIFY_LIST;
     $arg = '&mode=up';

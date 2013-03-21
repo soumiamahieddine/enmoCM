@@ -14,8 +14,6 @@ $request->connect();
 $mode = $_REQUEST['mode'];
 $objectType = $_REQUEST['objectType'];
 $objectId = $_REQUEST['objectId'];
-$collId = $_REQUEST['collId'];
-$listmodelType = $_REQUEST['listmodelType'];
 $description = $_REQUEST['description'];
 
 $return = "";
@@ -23,9 +21,6 @@ $return = "";
 if($objectId == '' || $objectType == '')
     $return .= _SELECT_OBJECT_TYPE_AND_ID . "<br/>";
     
-if($collId == '')
-    $return .= _SELECT_COLL_ID . "<br/>";
-
 if($description == '')
     $return .= _ENTER_DESCRIPTION . "<br/>";
     
@@ -34,19 +29,16 @@ if($mode == 'add' && $objectId && $objectType && $collId) {
         "select count(1) as nb from " . ENT_LISTMODELS
         . " where object_type = '" . $objectType . "'"
         . " and object_id = '" . $objectId . "'"
-        . " and coll_id = '" . $collId . "'"
     );
     $res = $request->fetch_object();
     if($res->nb > 0)
         $return .= _LISTMODEL_ID_ALREADY_USED . "<br/>";
 }
 
-# Load into session
-$_SESSION['m_admin']['entity']['listmodel_info']['object_type'] = $objectType;
-$_SESSION['m_admin']['entity']['listmodel_info']['object_id'] = $objectId;
-$_SESSION['m_admin']['entity']['listmodel_info']['coll_id'] = $collId;
-$_SESSION['m_admin']['entity']['listmodel_info']['listmodel_type'] = $listmodelType;
-$_SESSION['m_admin']['entity']['listmodel_info']['description'] = $description;
+# Load header into session
+$_SESSION['m_admin']['entity']['listmodel']['object_type'] = $objectType;
+$_SESSION['m_admin']['entity']['listmodel']['object_id'] = $objectId;
+$_SESSION['m_admin']['entity']['listmodel']['description'] = $description;
 
 # Return messages
 echo $return;

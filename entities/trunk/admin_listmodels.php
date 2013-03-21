@@ -50,8 +50,8 @@ $func = new functions();
 $request = new request;
 
 $listdiff = new diffusion_list();
-$roles = $listdiff->get_workflow_roles();
-$listmodel_types = $listdiff->get_listmodel_types();
+$roles = $listdiff->list_difflist_roles();
+$difflist_types = $listdiff->list_difflist_types();
 
 $what = '';
 $where = '';
@@ -80,7 +80,7 @@ $orderstr = $list->define_order($order, $field);
 $select[ENT_LISTMODELS] = array();
 array_push($select[ENT_LISTMODELS], "object_type || '|' || object_id as list_id", 'object_type', 'object_id', 'description');
 
-$where .= ' 1=1 group by object_type, object_id, coll_id, listmodel_type, description';
+$where .= ' 1=1 group by object_type, object_id, description';
 $tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databasetype']);
 //$request->show();
 
@@ -106,7 +106,7 @@ for ($i=0;$i<count($tab);$i++)
             if($tab[$i][$j][$value]=="object_type")
             {
                 $objectType = $tab[$i][$j]['value'];
-                $tab[$i][$j]['value'] = $listmodel_types[$objectType];
+                $tab[$i][$j]['value'] = $difflist_types[$objectType];
                 $tab[$i][$j]["label"]= _OBJECT_TYPE;
                 $tab[$i][$j]["size"]="18";
                 $tab[$i][$j]["label_align"]="left";

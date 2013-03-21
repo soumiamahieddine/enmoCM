@@ -2,13 +2,12 @@
 
 // AJAX 
 // Loads a list of listmodels onto a html structure
-// >>> listmodel_type : type of list (listmodels.object_type)
+// >>> difflist_type : type of list (listmodels.object_type)
 // >>> return type : type of list to return [select | ul]
 require_once 'modules/entities/class/class_manage_listdiff.php';
 $difflist = new diffusion_list();
 
 $objectType = $_REQUEST['objectType'];
-$collId = $_REQUEST['collId'];
 $returnElementType = $_REQUEST['returnElementType'];
 
 $listmodels = $difflist->select_listmodels($objectType);

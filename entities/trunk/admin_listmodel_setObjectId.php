@@ -2,16 +2,15 @@
 # AJAX script to list objects to be linked with list model
 
 function asSelect(
-    $items,
-    $objectId=false
+    $items
 ) {
     $return = "<select id='objectId' style='width:300px;'>";
     
     foreach($items as $id => $label) {
-        $return .= "<option ";
-        if($id == $objectId) 
-            $return .= 'selected="true"';
-        $return .= " value='".$id."'>".$id . ' - ' .$label."</option>";
+        $return .= "<option value='".$id."'>";
+            if($id) $return .=  $id . ' ';
+            $return .= $label;
+        $return .= "</option>";
     }
     $return .= "</select>";
     return $return;
@@ -26,7 +25,6 @@ $difflist = new diffusion_list();
 
 $mode = $_REQUEST['mode'];
 $objectType = $_REQUEST['objectType'];
-$objectId = $_REQUEST['objectId'];
 
 if(!$objectType) {
     echo ""; 
@@ -49,12 +47,12 @@ case 'entity_id':
                 'entity_id',
                 $entity_id
             );
-        if(count($existinglist) == 0 || ($mode == 'up' && $entity_id == $objectId)) {
+        if(!$existinglist) {
             $entities[$entity_id] = $ent->getentitylabel($entity_id); 
         }
     }
     if(count($entities) > 0)
-        echo asSelect($entities, $objectId);
+        echo asSelect($entities);
     else {   
         echo asSelect(array("" => _ALL_OBJECTS_ARE_LINKED));
     }    
@@ -73,12 +71,12 @@ case 'type_id':
                 'type_id',
                 $type_id
             );
-        if(count($existinglist) == 0 || ($mode == 'up' && $type_id == $objectId)) {
+        if(!$existinglist) {
             $doctypes[$type_id] = $doctype->description; 
         }
     }
     if(count($doctypes) > 0)
-        echo asSelect($doctypes, $objectId);
+        echo asSelect($doctypes);
     else    
         echo asSelect(array("" => _ALL_OBJECTS_ARE_LINKED));
     
@@ -97,12 +95,12 @@ case 'foldertype_id':
                 'foldertype_id',
                 $foldertype_id
             );
-        if(count($existinglist) == 0 || ($mode == 'up' && $foldertype_id == $objectId)) {
+        if(!$existinglist) {
             $foldertypes[$foldertype_id] = $foldertype->foldertype_label; 
         }
     }
     if(count($foldertypes) > 0)
-        echo asSelect($foldertypes, $objectId);
+        echo asSelect($foldertypes);
     else    
         echo asSelect(array("" => _ALL_OBJECTS_ARE_LINKED));
     break;

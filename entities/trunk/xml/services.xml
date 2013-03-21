@@ -14,39 +14,11 @@
          <nature>listelement</nature>
        </WHEREAMIUSED>
     </SERVICE>
-    <!--SERVICE>
-        <id>admin_listinstance_roles</id>
-        <name>_ADMIN_LISTINSTANCE_ROLES</name>
-        <comment>_ADMIN_LISTINSTANCE_ROLES_DESC</comment>
-        <servicepage>index.php?page=admin_listinstance_roles&amp;module=entities</servicepage>
-        <servicetype>use</servicetype>
-        <system_service>false</system_service>
-        <style>ent_manage_entities</style>
-        <enabled>true</enabled>
-         <WHEREAMIUSED>
-         <page>admin.php</page>
-         <nature>listelement</nature>
-       </WHEREAMIUSED>
-    </SERVICE-->
     <SERVICE>
-        <id>diffusion_list_role</id>
-        <name>_DIFFUSION_LIST_ROLE</name>
-        <comment>_DIFFUSION_LIST_ROLE</comment>
-        <servicepage>index.php?module=entities</servicepage>
-        <servicetype>use</servicetype>
-        <system_service>false</system_service>
-        <style>ent_manage_entities</style>
-        <enabled>true</enabled>
-         <WHEREAMIUSED>
-         <page>admin.php</page>
-         <nature>listelement</nature>
-       </WHEREAMIUSED>
-    </SERVICE>
-    <SERVICE>
-        <id>admin_listmodel_types</id>
-        <name>_ADMIN_LISTMODEL_TYPES</name>
-        <comment>_ADMIN_LISTMODEL_TYPES_DESC</comment>
-        <servicepage>index.php?page=admin_listmodel_types&amp;module=entities</servicepage>
+        <id>admin_difflist_types</id>
+        <name>_ADMIN__DIFFLIST_TYPES</name>
+        <comment>_ADMIN__DIFFLIST_TYPES_DESC</comment>
+        <servicepage>index.php?page=admin_difflist_types&amp;module=entities</servicepage>
         <servicetype>use</servicetype>
         <system_service>false</system_service>
         <style>ent_manage_entities</style>
@@ -161,9 +133,9 @@
         </WHEREAMIUSED>
     </SERVICE>
     <SERVICE>
-     <id>param_index_listmodeltypes</id>
-     <name>_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS</name>
-     <servicepage>param_index_listmodel_types.php</servicepage>
+     <id>param_index_difflist_types</id>
+     <name>_PARAM_AVAILABLE_DIFFLIST_TYPES_ON_GROUP_BASKETS</name>
+     <servicepage>param_index_difflist_types.php</servicepage>
      <servicetype>use</servicetype>
      <system_service>true</system_service>
      <enabled>true</enabled>
