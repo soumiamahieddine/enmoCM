@@ -658,7 +658,7 @@ $linkwithwhat =
                 else $color = ' class="col"'; ?>
                 <tr <?php echo $color; ?> >
                     <td>
-                        <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER . " " . $role_label ;?>" title="<?php echo _USER . " " . $role_label; ?>" />
+                        <?php echo $i; ?>&nbsp;<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER . " " . $role_label ;?>" title="<?php echo _USER . " " . $role_label; ?>" />
                     </td>
                     <td><?php
                     if($user['visible'] == 'Y') { ?>
@@ -709,7 +709,7 @@ $linkwithwhat =
                 else $color = ' class="col"'; ?>
                 <tr <?php echo $color; ?> >
                     <td>
-                        <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY . " " . $role_label;?>" title="<?php echo _ENTITY . " " . $role_label; ?>" />
+                        <?php echo $i; ?>&nbsp;<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY . " " . $role_label;?>" title="<?php echo _ENTITY . " " . $role_label; ?>" />
                     </td>
                     <td><?php
                     if($entity['visible'] == 'Y') { ?>
