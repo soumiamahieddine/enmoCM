@@ -1684,10 +1684,9 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             if ($loadListDiff) {
                 require_once 'modules/entities/class/class_manage_listdiff.php';
                 $diffList = new diffusion_list();
-                $origin = $_SESSION['origin'];
                 $diffList->save_listinstance(
-                    $_SESSION[$origin]['diff_list'], 
-                    $_SESSION[$origin]['diff_list']['object_type'],
+                    $_SESSION['indexing']['diff_list'], 
+                    $_SESSION['indexing']['diff_list']['object_type'],
                     $collId, 
                     $resId, 
                     $_SESSION['user']['UserId']
