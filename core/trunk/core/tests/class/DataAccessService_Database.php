@@ -248,7 +248,9 @@ class DataAccessService_Database
             throw $e;
         }
         if(!$result) {
-            $this->throwDatabaseException($selectQuery);
+            $sqlError = $this->databaseObject->getError();
+            throw new maarch\Exception($sqlError . ' [' .$selectQuery . ']');
+            //$this->throwDatabaseException($selectQuery);
         } else {
             //*********************************************************************
             // CREATE / FILL OBJECTS
@@ -304,7 +306,9 @@ class DataAccessService_Database
         }
         
         if(!$result) {
-            $this->throwDatabaseException($deleteQuery);
+            $sqlError = $this->databaseObject->getError();
+            throw new maarch\Exception($sqlError . ' [' .$deleteQuery . ']');
+            //$this->throwDatabaseException($deleteQuery);
         } else {
             $keys = $this->databaseObject->fetch_object();
             return $keys;
@@ -347,7 +351,10 @@ class DataAccessService_Database
             throw $e;
         }
         if(!$result) {
-            $this->throwDatabaseException($insertQuery);
+            $sqlError = $this->databaseObject->getError();
+            throw new maarch\Exception($sqlError . ' [' .$insertQuery . ']');
+            
+            //$this->throwDatabaseException($insertQuery);
         } else {
             $keys = $this->databaseObject->fetch_object();
             return $keys;
@@ -391,7 +398,9 @@ class DataAccessService_Database
         }
         
         if(!$result) {
-            $this->throwDatabaseException($updateQuery);
+            $sqlError = $this->databaseObject->getError();
+            throw new maarch\Exception($sqlError . ' [' .$updateQuery . ']');
+            //$this->throwDatabaseException($updateQuery);
         } else {
             $keys = $this->databaseObject->fetch_object();
             return $keys;
@@ -864,7 +873,7 @@ class DataAccessService_Database
         $messageController = new MessageController();
         $messageController->loadMessageFile('core/xml/DataAccessService_Messages.xml');
         $sqlError = $this->databaseObject->getError();
-        if(!$sqlError) $sqlError = "@";
+        if(!$sqlError) $sqlError = "-- unable to retrieve SQL error --";
         $exception = $messageController->getMessageText(
             'query_error',
             false,
