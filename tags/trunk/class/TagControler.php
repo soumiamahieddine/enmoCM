@@ -441,7 +441,7 @@ class tag_controler
                 );
                 return true; }
         }
-        return fasle;
+        return false;
         
         //$db->show();
         
