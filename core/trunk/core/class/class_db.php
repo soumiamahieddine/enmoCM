@@ -196,7 +196,7 @@ class dbquery extends functions
     public function connect()
     {
         # Do not connect if already connected
-        if($this->_sqlLink)
+        if($this->connected())
             return;
             
         $this->_debug = 0;
@@ -229,13 +229,14 @@ class dbquery extends functions
             $this->_sqlLink = @mssql_connect(
                 $this->_server, 
                 $this->_user, 
-                $this->_password
+                $this->_password,
+                $new_link = true
             );
             break;
             
         case 'ORACLE' : 
             if ($this->_server <> '') {
-                $this->_sqlLink = oci_connect_new(
+                $this->_sqlLink = oci_new_connect(
                     $this->_user, 
                     $this->_password, '//' . 
                     $this->_server . '/' . 
@@ -243,7 +244,7 @@ class dbquery extends functions
                     'UTF8'
                 );
             } else {
-                $this->_sqlLink = oci_connect(
+                $this->_sqlLink = oci_new_connect(
                     $this->_user, 
                     $this->_password, 
                     $this->_database, 
@@ -257,7 +258,7 @@ class dbquery extends functions
             break;      
         }
 
-        if (! $this->_sqlLink) {
+        if (!$this->_sqlLink) {
             $this->_sqlError = 1; // error connexion
             $this->error();
         } 
@@ -273,19 +274,21 @@ class dbquery extends functions
         
         switch($this->_databasetype) {
         case 'MYSQL' : 
+            return true;
             break;
 
         case 'POSTGRESQL' : 
             if(@pg_connection_status($this->_sqlLink) == PGSQL_CONNECTION_OK)
                 return true;
-            elseif(@pg_connection_status($this->_sqlLink) == PGSQL_CONNECTION_BAD)
-                return false;
             break;
             
         case 'SQLSERVER' : 
+            return true;
             break;
             
         case 'ORACLE' : 
+            if(@oci_server_version($this->_sqlLink))
+                return true;
             break;
             
         default : 
@@ -481,6 +484,9 @@ class dbquery extends functions
     
     public function getError()
     {
+        if(!$this->connected())
+            return false;
+        
         switch($this->_databasetype) {
             case 'MYSQL':
                 $sqlError = @mysqli_errno($this->_sqlLink);
@@ -662,20 +668,20 @@ class dbquery extends functions
     */
     public function disconnect()
     {
-        if(!$this->_sqlLink)
+        if(!$this->connected())
             return;
 
         switch($this->_databasetype)
         {
         case 'MYSQL':
-            if (! mysqli_close($this->_sqlLink)) {
+            if (!mysqli_close($this->_sqlLink)) {
                 $this->_sqlError = 4;
                 $this->error();
             }
             break;
             
         case 'SQLSERVER' : 
-            if (! mssql_close($this->_sqlLink)) {
+            if (!mssql_close($this->_sqlLink)) {
                 $this->_sqlError = 4;
                 $this->error();
             }
@@ -689,7 +695,7 @@ class dbquery extends functions
             break;
             
         case 'ORACLE' :
-            if (! oci_close($this->_sqlLink)) {
+            if (!oci_close($this->_sqlLink)) {
                 $this->_sqlError = 4;
                 $this->error();
             }
@@ -833,6 +839,9 @@ class dbquery extends functions
     */
     public function last_insert_id($sequenceName = '')
     {
+        if(!$this->connected())
+            $this->connect();
+        
         switch($this->_databasetype) {
         case 'MYSQL'        : return @mysqli_insert_id($this->_sqlLink);
         case 'POSTGRESQL'   : 
@@ -996,8 +1005,7 @@ class dbquery extends functions
     *   Offset with MSSQL
     *************************************************************************/
     public function limit_select($start, $count, $select_expr, $table_refs, $where_def='1=1', $other_clauses='', $select_opts='')
-    {
-            
+    {  
         // LIMIT
         if($count || $start) 
         {
