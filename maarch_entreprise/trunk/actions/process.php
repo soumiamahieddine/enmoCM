@@ -839,6 +839,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //CASES FRAME
     if ($core_tools->is_module_loaded('cases')) {
+        if (!isset($case_properties['case_id'])) {
+            $case_properties = array();
+            $case_properties['case_id'] = '';
+            $case_properties['case_label'] = '';
+            $case_properties['case_description'] = '';
+        }
         $frm_str .= '<div id="cases_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
             $frm_str .= '<div>';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'cases_div\', \'blind\', {delay:0.2});';
