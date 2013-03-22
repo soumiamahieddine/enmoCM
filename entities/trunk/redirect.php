@@ -131,18 +131,185 @@ require("modules/entities/entities_tables.php");
     }
  }
 
-function manage_form($arr_id, $history, $id_action, $label_action, $status,  $coll_id, $table, $values_form )
+function manage_form($arr_id, $history, $id_action, $label_action, $status, $coll_id, $table, $values_form )
 {
-    if(empty($values_form) || count($arr_id) < 1)
-    {
+    /*
+        Redirect to dep:
+        $values_form = array (size=3)
+          0 => 
+            array (size=2)
+              'ID' => string 'chosen_action' (length=13)
+              'VALUE' => string 'end_action' (length=10)
+          1 => 
+            array (size=2)
+              'ID' => string 'department' (length=10)
+              'VALUE' => string 'DGA' (length=3)
+          2 => 
+            array (size=2)
+              'ID' => string 'redirect_dep' (length=12)
+              'VALUE' => string 'Rediriger' (length=9)
+        
+        Redirect to user:
+        $values_form = array (size=3)
+          0 => 
+            array (size=2)
+              'ID' => string 'chosen_action' (length=13)
+              'VALUE' => string 'end_action' (length=10)
+          1 => 
+            array (size=2)
+              'ID' => string 'user' (length=4)
+              'VALUE' => string 'aackermann' (length=10)
+          2 => 
+            array (size=2)
+              'ID' => string 'redirect_user' (length=13)
+              'VALUE' => string 'Rediriger' (length=9)
+    
+    */
+    
+    if(empty($values_form) || count($arr_id) < 1) 
         return false;
-    }
+    
+    require_once('modules/entities/class/class_manage_listdiff.php');
+    $diffList = new diffusion_list();
+    
     $db = new dbquery();
     $db->connect();
-    require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+    
+    $formValues = array();
+    for($i=0; $i<count($values_form); $i++) {
+        $formValue = $values_form[$i];
+        $id = $formValue['ID'];
+        $value = $formValue['VALUE'];
+        $formValues[$id] = $value;
+    }
+    
+    # 1 : Redirect to user :
+    #   - create new listinstance from scratch with only dest user
+    #   - do not change destination
+    if(isset($formValues['redirect_user'])) {
+        $userId = $formValues['user'];
+        
+        # Select new_dest user info
+        $db->query(
+            "select u.user_id, u.firstname, u.lastname, e.entity_id, e.entity_label "
+            . "FROM " . $_SESSION['tablename']['users'] . " u, " . ENT_ENTITIES . " e, "
+            . ENT_USERS_ENTITIES . " ue WHERE u.status <> 'DEL' and u.enabled = 'Y' and"
+            . " e.entity_id = ue.entity_id and u.user_id = ue.user_id and"
+            . " e.enabled = 'Y' and ue.primary_entity='Y' and u.user_id = '" . $userId . "'"
+        );
+        $user = $db->fetch_object();
+        
+        # Create new listinstance
+        $_SESSION['redirect']['diff_list'] = array();
+        $_SESSION['redirect']['diff_list']['difflist_type'] = 'entity_id';
+        $_SESSION['redirect']['diff_list']['dest']['users'][0] =    
+            array(
+                'user_id' => $userId,
+                'lastname' => $user->lastname,
+                'firstname' => $user->firstname,
+                'entity_id' => $user->entity_id,
+                'viewed' => 0,
+                'visible' => 'Y',
+                'difflist_type' => 'entity_id'
+            );
+        
+        $message = _REDIRECT_TO_USER_OK . ' ' . $userId;
+    }
+    # 2 : Redirect to departement (+ dest user)
+    #   - listinstance has laready been loaded when selecting entity
+    #   - get entity_id that will update destination
+    elseif(isset($formValues['redirect_dep'])) {
+        $entityId = $formValues['department'];
+        $message = _REDIRECT_TO_DEP_OK . " " . $entityId;
+    }
+    
+    # 1 + 2 :
+    #   - update dest_user
+    #   - move former dest user to copy if requested
+    #   - finally save listinstance 
+    for($i=0; $i<count($arr_id); $i++) {
+        $res_id = $arr_id[$i];
+        # update dest_user
+        $new_dest = $_SESSION['redirect']['diff_list']['dest']['users'][0]['user_id'];
+        if($new_dest) {
+            $db->query("update ".$table." set dest_user = '".$new_dest."' where res_id = ".$res_id);
+            # If new dest was in other roles, get number of views
+            $db->query(
+                "select viewed"
+                . " from " . $_SESSION['tablename']['ent_listinstance'] 
+                . " where coll_id = '". $coll_id ."' and res_id = " . $res_id . " and item_type = 'user_id' and item_id = '" . $new_dest . "'"
+            );
+            $res = $db->fetch_object();
+            $viewed = $res->viewed;
+            $_SESSION['redirect']['diff_list']['dest']['users'][0]['viewed'] = (integer)$viewed;
+        }
+        
+        # Update destination if needed
+        if($entityId)
+            $db->query("update ".$table." set destination = '".$entityId."' where res_id = ".$res_id); 
+        
+        # If feature activated, put old dest in copy
+        if($_SESSION['features']['dest_to_copy_during_redirection'] == 'true') {
+            # Get old dest
+            $db->query(
+                "select * "
+                . " from " . $_SESSION['tablename']['ent_listinstance'] 
+                . " where coll_id = '". $coll_id ."' and res_id = " . $res_id . " and item_type = 'user_id' and item_mode = 'dest'"
+            );
+            $old_dest = $db->fetch_object();
+            
+            if($old_dest && isset($_SESSION['redirect']['diff_list']['copy']['users'])) {
+                # try to find old dest in copies already
+                $found = false;
+                for($ci=0; $ci<count($_SESSION['redirect']['diff_list']['copy']['users']);$ci++) {
+                    # If in copies before, add number of views as dest to number of views as copy
+                    if($_SESSION['redirect']['diff_list']['copy']['users'][$ci]['user_id'] == $_SESSION['user']['UserId']) {
+                        $found = true;
+                        $_SESSION['redirect']['diff_list']['copy']['users'][$ci]['viewed'] = 
+                            $_SESSION['redirect']['diff_list']['copy']['users'][$ci]['viewed'] + (integer)$old_dest->viewed;
+                        break;
+                    }
+                }
+                if(!$found) {
+                    array_push(
+                        $_SESSION['redirect']['diff_list']['copy']['users'], 
+                        array(
+                            'user_id' => $_SESSION['user']['UserId'], 
+                            'lastname' => $_SESSION['user']['LastName'], 
+                            'firstname' => $_SESSION['user']['FirstName'], 
+                            'entity_id' => $_SESSION['user']['primaryentity']['id'], 
+                            'viewed' => (integer)$old_dest->viewed,
+                            'visible' => 'Y',
+                            'difflist_type' => $_SESSION['redirect']['diff_list']['difflist_type']
+                        )
+                    );
+                }
+            }
+        }
+        
+        # Save listinstance
+        $diffList->save_listinstance(
+            $_SESSION['redirect']['diff_list'], 
+            $_SESSION['redirect']['diff_list']['difflist_type'],
+            $coll_id, 
+            $res_id, 
+            $_SESSION['user']['UserId']
+        );           
+    }
+    
+    # Pb with action chain : main action page is saved after this. 
+    #   if process, $_SESSION['process']['diff_list'] will override this one
+    
+    $_SESSION['process']['diff_list'] = $_SESSION['redirect']['diff_list'];
+    $_SESSION['action_error'] = $message;
+    return array('result' => implode('#', $arr_id), 'history_msg' => $message);
+    
+    #
+    # OLD SCRIPT
+    #
     $list = new diffusion_list();
     $arr_list = '';
-    //$db->show_array($arr_id);
+
     for($j=0; $j<count($values_form); $j++)
     {
         $queryEntityLabel = "SELECT entity_label FROM entities WHERE entity_id='".$values_form[$j]['VALUE']."'";
