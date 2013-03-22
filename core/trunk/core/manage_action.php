@@ -350,6 +350,7 @@ else
     // Save action in history if needed
     if($bool_history=='Y')
     {
+		$db = new dbquery();
         require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
         $hist = new history();
         $arr_res = explode('#', $res_action['result']);
