@@ -680,9 +680,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div>';
 
     //RESOURCE FRAME
+/*
     $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
         . $res_id . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
+*/
 
     //CLOSE DIV VALID RIGHT
     $frm_str .= '</div>';

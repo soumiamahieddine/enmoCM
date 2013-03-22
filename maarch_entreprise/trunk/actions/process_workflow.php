@@ -35,43 +35,45 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         if (!empty($rolesArr)) {
             $rolesInTheWF = array();
             for ($cptRoles=0;$cptRoles<count($rolesArr);$cptRoles++) {
-                $sequence = $myBasket->whatIsMySequenceForMyRole(
-                    $_SESSION['user']['UserId'],
-                    $res_id,
-                    $coll_id,
-                    $rolesArr[$cptRoles]
-                );
-                array_push(
-                    $rolesInTheWF,
-                    array(
-                        'role' => $rolesArr[$cptRoles],
-                        'sequence' => $sequence,
-                        'isThereSomeoneAfterMeInTheWF' =>$myBasket->isThereSomeoneAfterMeInTheWF(
-                            $res_id,
-                            $coll_id,
-                            $rolesArr[$cptRoles],
-                            $sequence
-                        ),
-                        'theNextInTheWF' =>$myBasket->whoseTheNextInTheWF(
-                            $res_id,
-                            $coll_id,
-                            $rolesArr[$cptRoles],
-                            $sequence
-                        ),
-                        'isThereSomeoneBeforeMeInTheWF' =>$myBasket->isThereSomeoneBeforeMeInTheWF(
-                            $res_id,
-                            $coll_id,
-                            $rolesArr[$cptRoles],
-                            $sequence
-                        ),
-                        'thePreviousInTheWF' =>$myBasket->whoseThePreviousInTheWF(
-                            $res_id,
-                            $coll_id,
-                            $rolesArr[$cptRoles],
-                            $sequence
-                        ),
-                    )
-                );
+                if ($rolesArr[$cptRoles] <> 'dest' && $rolesArr[$cptRoles] <> 'cc') {
+                    $sequence = $myBasket->whatIsMySequenceForMyRole(
+                        $_SESSION['user']['UserId'],
+                        $res_id,
+                        $coll_id,
+                        $rolesArr[$cptRoles]
+                    );
+                    array_push(
+                        $rolesInTheWF,
+                        array(
+                            'role' => $rolesArr[$cptRoles],
+                            'sequence' => $sequence,
+                            'isThereSomeoneAfterMeInTheWF' =>$myBasket->isThereSomeoneAfterMeInTheWF(
+                                $res_id,
+                                $coll_id,
+                                $rolesArr[$cptRoles],
+                                $sequence
+                            ),
+                            'theNextInTheWF' =>$myBasket->whoseTheNextInTheWF(
+                                $res_id,
+                                $coll_id,
+                                $rolesArr[$cptRoles],
+                                $sequence
+                            ),
+                            'isThereSomeoneBeforeMeInTheWF' =>$myBasket->isThereSomeoneBeforeMeInTheWF(
+                                $res_id,
+                                $coll_id,
+                                $rolesArr[$cptRoles],
+                                $sequence
+                            ),
+                            'thePreviousInTheWF' =>$myBasket->whoseThePreviousInTheWF(
+                                $res_id,
+                                $coll_id,
+                                $rolesArr[$cptRoles],
+                                $sequence
+                            ),
+                        )
+                    );
+                }
             }
         }
         //print_r($rolesInTheWF);
