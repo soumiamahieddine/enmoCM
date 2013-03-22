@@ -2307,6 +2307,19 @@ WITH (
   OIDS=FALSE
 );
 
+CREATE TABLE groupbasket_difflist_roles
+(
+  system_id serial NOT NULL,
+  group_id character varying(32) NOT NULL,
+  basket_id character varying(32) NOT NULL,
+  action_id integer NOT NULL,
+  difflist_role_id character varying(50) NOT NULL,
+  CONSTRAINT groupbasket_difflist_roles_pkey PRIMARY KEY (system_id)
+)
+WITH (
+  OIDS=FALSE
+);
+
 -- ************************************************************************* --
 --                                                                           --
 --                  RECORDS MANAGEMENT V1.0 DATABASE SCHEMA                  --
