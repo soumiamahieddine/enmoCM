@@ -1554,5 +1554,6 @@ class basket extends dbquery
                 . " and item_mode = '" . $role . "'"
                 . " and item_id = '" . $userId . "')"
         );
+        //$db->show();exit;
     }
 }
