@@ -156,6 +156,30 @@
           <nature>include</nature>
       </WHEREAMIUSED>
    </SERVICE>
+   <SERVICE>
+     <id>param_workflow</id>
+     <name>_PARAM_WORKFLOW</name>
+     <servicepage>param_workflow.php</servicepage>
+     <servicetype>use</servicetype>
+     <system_service>true</system_service>
+     <enabled>true</enabled>
+     <WHEREAMIUSED>
+          <page>groupbasket_popup.php</page>
+          <nature>include</nature>
+      </WHEREAMIUSED>
+      <WHEREAMIUSED>
+          <page>manage_group_basket.php</page>
+          <nature>include</nature>
+      </WHEREAMIUSED>
+      <WHEREAMIUSED>
+          <page>load_groupbasket</page>
+          <nature>include</nature>
+      </WHEREAMIUSED>
+      <WHEREAMIUSED>
+          <page>load_groupbasket_db</page>
+          <nature>include</nature>
+      </WHEREAMIUSED>
+   </SERVICE>
     <SERVICE>
         <id>param_templates_entities</id>
         <name>_PARAM_TEMPLATE_ENTITIES</name>
