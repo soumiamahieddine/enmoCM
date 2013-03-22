@@ -669,7 +669,7 @@ class diffusion_list extends dbquery
     # DIFFLIST_TYPES
     # Administration and management of types of list
     #**************************************************************************
-    #  Get list of available list model types / labels
+    #  Get list of available list types / labels
     public function list_difflist_types()
     {
         $this->connect();
