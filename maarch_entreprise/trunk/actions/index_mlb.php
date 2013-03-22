@@ -1963,7 +1963,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         .DIRECTORY_SEPARATOR."tags_update.php");
     }
 
-    //$_SESSION['indexing'] = array();
+    // $_SESSION['indexing'] = array();
     unset($_SESSION['upfile']);
     unset($_SESSION['data']);
     $_SESSION['action_error'] = _NEW_DOC_ADDED;
