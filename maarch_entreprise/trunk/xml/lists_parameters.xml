@@ -177,6 +177,16 @@
             <GOTOLIST></GOTOLIST>
         </TEMPLATE>
         <TEMPLATE>
+            <ID>item_list_extend_new</ID>
+            <LABEL>_ITEM</LABEL>
+            <IMG>extend_list.gif</IMG>
+            <NAME>item_list_extend_new</NAME>
+            <ORIGIN>apps</ORIGIN>
+            <MODULE></MODULE>
+            <ENABLED>true</ENABLED>
+            <GOTOLIST></GOTOLIST>
+        </TEMPLATE>
+        <TEMPLATE>
             <ID>rm_documents_list_extend</ID>
             <LABEL>_ITEMS</LABEL>
             <IMG>extend_list.gif</IMG>

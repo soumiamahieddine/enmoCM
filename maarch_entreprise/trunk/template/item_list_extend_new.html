@@ -1,0 +1,116 @@
+<!--
+
+* basket_list and search_adv_list template
+*
+*
+* @package  Maarch Entreprise
+* @version 3.0
+* @since 10/2005
+* @license GPL
+* @author  Loïc Vinet  <dev@maarch.org>
+*
+
+Parts :
+    ##HEAD< : Begining of the head part
+    ##HEAD> : End of the head part
+
+    ##RESULT< : Begining of result list
+    ##RESULT> : End fo result list
+
+Functions :
+    ##loadCss|arg1## : load css style - arg1= name of this class
+    ##cssLine|coll|nonecoll## : load css style for line arg1,arg2 : switch beetwin style on line one or line two
+    ##cssLine_reload## : reload last css style loaded by cssLine
+    ##order_link|arg1|arg2## : reload list and change order;  arg1=type; arg2=sort
+
+    ##url_docview## : open view of document;
+    ##url_docdetail## : open detail of document;
+    ##url_download## : download document;
+
+    ##loadImage|arg1## : show loaded image; arg1= name of img file
+
+    ##loadValue|arg|##: load value in the db; arg1= column's value  transferring_entity_item_id
+
+Mods :
+
+    ##radioButton##         : display radio
+    ##checkBox##            : display checkbox
+    ##checkUncheckAll##     : display checkbox for check/uncheck All
+    ##clickOnLine##         : action on click under the line
+    ##showIconDocument##    : view document icon
+    ##showIconDetails##     : view detail's page icon
+    ##getBusinessAppUrl##   : get business app url
+
+Defines :
+    _NAME_OF_LANG_INSTANCE : u se constant define in lang.php
+
+-->
+
+#!#TABLE
+<!-- ------------------------------------------------------------------------->
+<table border="0" cellspacing="0" class="listing spec  zero_padding" id="extended_list" style ="padding: 0px;">
+
+#!#HEAD
+<!-- ------------------------------------------------------------------------->
+<thead border ="1">
+    <tr>
+        <th width="100%" colspan="2">
+            <div align="center" style="border:1px solid; height:20px;margin-bottom:10px;padding-top:10px;vertical-align:middle;font-size:8px;">
+                ##defineLang|_SORT_BY## :
+                ##defineLang|_NUM_GED##            ##sortColumn|res_id##&nbsp;
+                ##defineLang|_STATUS##               ##sortColumn|status##&nbsp;
+                ##defineLang|_ORIGINATING_ENTITY##               ##sortColumn|originating_agency_entity_id##&nbsp;
+                ##defineLang|_REQUESTING_NUMBER_ARCHIVE##          ##sortColumn|transferring_agency_item_identifier##&nbsp;
+                ##defineLang|_INTITULE_ANALYSE##           ##sortColumn|name##&nbsp;
+                ##defineLang|_TYPE_DARCHIVE## ##sortColumn|type_label##&nbsp;
+            </div>
+        </th>
+    </tr>
+</thead>
+<tbody>
+#!#RESULT
+<!-- ------------------------------------------------------------------------->
+
+    <tr  class="##cssLine|col|white##" >
+        <td width="10%" ##clickOnLine##>
+            <div align="center">##loadValue|status## </div>
+        </td>
+        <td width="90%" align="center" style="padding : 0px; vertical-align:top" ##clickOnLine##>
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                    <tr>
+                        <td width="65%"   style="font-size:12px;"><b></b><em>##loadValue|name##</em> </td>
+                        <td width="35%">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                <tr>
+                                    <td width="50%" style="text-align:right">##defineLang|_REQUESTING_ENTITY## :</td><td style="text-align:right">##loadValue|requesting_agency_entity_id##</td>
+                                </tr>
+                                <tr><td> </td><td></td></tr>
+                                <tr>
+                                    <td style="text-align:right; vertical-align:top">##defineLang|_ORIGINATING_ENTITY## :</td><td style="text-align:right">##loadValue|originating_agency_entity_id##</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+            </table>
+        </td>
+    </tr>
+    <tr class="##cssLineReload##">
+            <td style="text-align:center" style="font-size:13px;" ##clickOnLine##>##checkBox##<b>##loadValue|res_id##</b></td>
+            <td style="text-align:center">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                        <tr>
+                            <td style="font-size:10px;" width ="30px" alt="##defineLang|_DOCTYPE##" title="##defineLang|_DOCTYPE##" ##clickOnLine##><img src="##loadImage|mini_type.gif##"> </td>
+                            <td style="font-size:10px;" width ="100px" >##loadValue|type_label##</td>
+                            <td style="font-size:10px;" width ="30px" alt="##defineLang|_REQUESTING_NUMBER_ARCHIVE##" title="##defineLang|_REQUESTING_NUMBER_ARCHIVE##" ##clickOnLine##><img src="##loadImage|key.png##"> </td>
+                            <td style="font-size:10px;" width ="100px" >##loadValue|transferring_agency_item_identifier##</td>
+                            <td style="font-size:10px;" width ="30px">##showIconDetails##</td>
+                        </tr>                         
+                </table>
+            </td>
+    </tr>
+
+ #!#FOOTER
+<!--   ------------------------------------------------------------------------->
+</tbody>
+</table>
+
