@@ -220,7 +220,8 @@ class dbquery extends functions
                 ' user=' . $this->_user . 
                 ' password=' . $this->_password . 
                 ' dbname=' . $this->_database . 
-                ' port=' . $this->_port
+                ' port=' . $this->_port,
+                PGSQL_CONNECT_FORCE_NEW
             );
             break;
             
@@ -234,7 +235,7 @@ class dbquery extends functions
             
         case 'ORACLE' : 
             if ($this->_server <> '') {
-                $this->_sqlLink = oci_connect(
+                $this->_sqlLink = oci_connect_new(
                     $this->_user, 
                     $this->_password, '//' . 
                     $this->_server . '/' . 
@@ -265,6 +266,33 @@ class dbquery extends functions
         }
     }
 
+    public function connected()
+    {
+        if(!$this->_sqlLink)
+            return false;
+        
+        switch($this->_databasetype) {
+        case 'MYSQL' : 
+            break;
+
+        case 'POSTGRESQL' : 
+            if(@pg_connection_status($this->_sqlLink) == PGSQL_CONNECTION_OK)
+                return true;
+            elseif(@pg_connection_status($this->_sqlLink) == PGSQL_CONNECTION_BAD)
+                return false;
+            break;
+            
+        case 'SQLSERVER' : 
+            break;
+            
+        case 'ORACLE' : 
+            break;
+            
+        default : 
+        }   
+        
+    }
+    
     /**
     * Database selection (only for SQLSERVER)
     */
@@ -319,7 +347,7 @@ class dbquery extends functions
     public function query($sqlQuery, $catchError = false, $noFilter = false)
     {
         # Connect if not already connected
-        if(!$this->_sqlLink)
+        if(!$this->connected())
             $this->connect();
         
         $canExecute = true;        
@@ -354,7 +382,7 @@ class dbquery extends functions
                 break;
 
             case 'POSTGRESQL' : 
-                $this->query = @pg_query($this->_sqlLink, $sqlQuery);
+                $this->query = pg_query($this->_sqlLink, $sqlQuery);
                 break;
                 
             case 'SQLSERVER' : 
@@ -654,7 +682,7 @@ class dbquery extends functions
             break;
             
         case 'POSTGRESQL':
-            if (! pg_close($this->_sqlLink)) {
+            if (!pg_close($this->_sqlLink)) {
                 $this->_sqlError = 4;
                 $this->error();
             }
@@ -670,6 +698,8 @@ class dbquery extends functions
         default :
 
         }
+        
+        $this->_sqlLink = false;
     }
 
     /**
