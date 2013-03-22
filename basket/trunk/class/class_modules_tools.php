@@ -1501,8 +1501,10 @@ class basket extends dbquery
     {
         if ($way == 'forward') {
             $way = '>';
+            $oppositeWay = '<';
         } elseif ($way == 'back') {
             $way = '<';
+            $oppositeWay = '>';
             $order = ' desc';
         }
         $db = new dbquery();
@@ -1521,7 +1523,7 @@ class basket extends dbquery
                 . " and item_id = '" . $userId . "')"
             . " order by sequence" . $order
         );
-        //$db->show();
+        //$db->show();exit;
         $line = $db->fetch_object();
         if ($line->item_id <> '') {
             $db->query(
@@ -1538,6 +1540,19 @@ class basket extends dbquery
             . " and res_id = " . $resId
             . " and item_mode = '" . $role . "'"
             . " and item_id = '" . $userId . "'"
+        );
+        //update to visible N everyone before or after me
+        $db->query(
+            "update " . ENT_LISTINSTANCE . " set visible = 'N'" 
+            . " where coll_id = '" . $collId . "'"
+            . " and res_id = " . $resId
+            . " and item_mode = '" . $role . "'"
+            . " and sequence " . $oppositeWay . " ("
+                . " select sequence from " . ENT_LISTINSTANCE 
+                . " where coll_id = '" . $collId . "'"
+                . " and res_id = " . $resId
+                . " and item_mode = '" . $role . "'"
+                . " and item_id = '" . $userId . "')"
         );
     }
 }
