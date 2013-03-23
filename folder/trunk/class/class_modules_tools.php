@@ -733,7 +733,7 @@ class folder extends request
 			if($_SESSION['history']['folderup'])
 			{
 				$hist = new history();
-				$hist->add(FOLD_FOLDERS_TABLE, $id_to_update, "UP", 'folderup', $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');
+				$hist->add(FOLD_FOLDERS_TABLE, $id_to_update, "UP", 'folderup', $_SESSION['error'], $_SESSION['config']['databasetype'],'folder');
 			}
 		}
 		$_SESSION['error_page'] = $_SESSION['error'];
@@ -765,7 +765,7 @@ class folder extends request
 			$msg = _FOLDER_CLOSED .' : ' . $folderId ;
 			$hist->add(
 			    FOLD_FOLDERS_TABLE, $folderId, "UP", 'folderup', $msg,
-			    $_SESSION['config']['databasetype'], 'apps'
+			    $_SESSION['config']['databasetype'], 'folder'
 			);
 		}
 	}
@@ -784,7 +784,7 @@ class folder extends request
 			$msg = _FROZEN_FOLDER .' : ' . $folderId ;
 			$hist->add(
 			    FOLD_FOLDERS_TABLE, $folderId, "UP", 'folderup', $msg,
-			    $_SESSION['config']['databasetype'], 'apps'
+			    $_SESSION['config']['databasetype'], 'folder'
 			);
 		}
 	}
@@ -805,7 +805,7 @@ class folder extends request
 			$msg = _UNFROZEN_FOLDER .' : ' . $folderId ;
 			$hist->add(
 			    FOLD_FOLDERS_TABLE, $folderId, "UP", 'folderup', $msg,
-			    $_SESSION['config']['databasetype'], 'apps'
+			    $_SESSION['config']['databasetype'], 'folder'
 			);
 		}
 	}
