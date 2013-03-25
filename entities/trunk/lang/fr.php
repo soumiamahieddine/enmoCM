@@ -357,3 +357,7 @@ if (!defined('_VISIBLE'))
     define('_VISIBLE', 'Actif');
 if (!defined('_NOT_VISIBLE')) 
     define('_NOT_VISIBLE', 'En attente');
+    
+/******** NEW WF ************/
+if (!defined('_TARGET_STATUS'))
+    define('_TARGET_STATUS', 'Statut final &agrave; la validation de l&rsquo;&eacute;tape');

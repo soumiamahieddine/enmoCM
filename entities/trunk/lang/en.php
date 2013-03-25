@@ -257,3 +257,7 @@ if (!defined('_53_RELATIONS'))
     define('_53_RELATIONS', '5.3 Relations');
 if (!defined('_54_CONTROL'))
     define('_54_CONTROL', '5.4 Control');
+
+/******** NEW WF ************/
+if (!defined('_TARGET_STATUS'))
+    define('_TARGET_STATUS', 'Target status at the end of the step');
