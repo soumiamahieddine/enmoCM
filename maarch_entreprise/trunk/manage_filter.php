@@ -497,7 +497,7 @@ if(count($tab) > 0)
     if (isset($_SESSION['auth_dep']['bask_chosen_contact'])) {
         $chosenStatus = $_SESSION['auth_dep']['bask_chosen_contact'];
     }
-    if ($attachments) {
+    if ($attachments && $template_to_use <> 'group_case_for_basket') {
         $template_to_use = 'document_list_extend_with_attachments';
     }
     $i = count($tab);
