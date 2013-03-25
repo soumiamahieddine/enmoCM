@@ -859,7 +859,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<iframe src="'
             . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&module=photo_capture&page=photo_capture'
-            . '&origin=document" name="scan_iframe" id="scan_iframe" '
+            . '&origin=document" name="photo_iframe" id="photo_iframe" '
 			. 'width="100%" height="450px" align="center" '
             . 'scrolling="auto" frameborder="0" ></iframe>';
         $frmStr .= '</div>';
