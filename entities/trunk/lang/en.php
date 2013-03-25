@@ -261,3 +261,9 @@ if (!defined('_54_CONTROL'))
 /******** NEW WF ************/
 if (!defined('_TARGET_STATUS'))
     define('_TARGET_STATUS', 'Target status at the end of the step');
+if (!defined('_TARGET_ROLE'))
+    define('_TARGET_ROLE', 'Target role to manage in the workflow');
+if (!defined('_ITS_NOT_MY_TURN_IN_THE_WF'))
+    define('_ITS_NOT_MY_TURN_IN_THE_WF', 'It is not my turn in the workflow');
+if (!defined('_NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF'))
+    define('_NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF', 'There is no available role for me in the workflow');

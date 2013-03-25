@@ -1,9 +1,11 @@
 <?php
 
 // Group - Basket Form : actions params
-require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-    . DIRECTORY_SEPARATOR . 'apps_tables.php';
-    
+require_once 'apps/' . $_SESSION['config']['app_id'] . '/apps_tables.php';
+require_once 'modules/entities/class/class_manage_listdiff.php';
+
+$diffListObj = new diffusion_list();
+
 if ($_SESSION['service_tag'] == 'group_basket') {
     $current_groupbasket = $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']];
     $current_compteur = $_SESSION['m_admin']['compteur'];
@@ -13,12 +15,13 @@ if ($_SESSION['service_tag'] == 'group_basket') {
         $is_default_action = false;
         // Is the action the default action for the group on this basket ?
         if (
-            isset($current_groupbasket['DEFAULT_ACTION']) 
+            isset($current_groupbasket['DEFAULT_ACTION'])
             && $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'] == $current_groupbasket['DEFAULT_ACTION']
         ) {
             $is_default_action = true;
         }
-        // workflow statuses list
+        //retrieve roles
+        $diffListRoles = $diffListObj->list_difflist_roles();
         ?>
         <br />
         <table>
@@ -27,9 +30,9 @@ if ($_SESSION['service_tag'] == 'group_basket') {
                     <b><?php echo _TARGET_STATUS;?> :</b>
                 </td>
                 <td>
-                    <select name ="<?php 
+                    <select name ="<?php
                         echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];
-                        ?>_statuses_chosen[]" id ="<?php 
+                        ?>_statuses_chosen[]" id ="<?php
                         echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];
                         ?>_statuses_chosen[]">
                         <?php
@@ -47,11 +50,48 @@ if ($_SESSION['service_tag'] == 'group_basket') {
                                 }
                             }
                             ?>
-                            <option value=<?php 
-                                echo $_SESSION['m_admin']['statuses'][$cpt]['id'] . ' ' . $selected;?> ><?php 
+                            <option value=<?php
+                                echo $_SESSION['m_admin']['statuses'][$cpt]['id'] . ' ' . $selected;?> ><?php
                                 echo $_SESSION['m_admin']['statuses'][$cpt]['label'];?>
                             </option>
                             <?php
+                        }
+                        ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b><?php echo _TARGET_ROLE;?> :</b>
+                </td>
+                <td>
+                    <select name ="<?php
+                        echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];
+                        ?>_roles_chosen[]" id ="<?php
+                        echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];
+                        ?>_roles_chosen[]">
+                        <?php
+                        // Browse all the roles
+                        foreach ($diffListRoles as $diffListRolesKey => $diffListRolesValue) {
+                            if ($diffListRolesKey <> 'dest' && $diffListRolesKey <> 'copy') {
+                                $selected= '';
+                                if (isset($current_groupbasket['ACTIONS'])) {
+                                    for ($j = 0;$j<count($current_groupbasket['ACTIONS']);$j++) {
+                                        for ($k=0;$k<count($current_groupbasket['ACTIONS'][$j]['ROLES_LIST']);$k ++) {
+                                            if ($diffListRolesKey == $current_groupbasket['ACTIONS'][$j]['ROLES_LIST'][$k]['ID']) {
+                                                $state_roles = true;
+                                                $selected = ' selected="selected" ';
+                                            }
+                                        }
+                                    }
+                                }
+                                ?>
+                                <option value=<?php
+                                    echo $diffListRolesKey . ' ' . $selected;?> ><?php
+                                    echo $diffListRolesValue;?>
+                                </option>
+                            <?php
+                            }
                         }
                         ?>
                     </select>
@@ -63,10 +103,10 @@ if ($_SESSION['service_tag'] == 'group_basket') {
 } elseif ($_SESSION['service_tag'] == 'manage_groupbasket') {
     $db = new dbquery();
     $db->connect();
-    
+
 /*
     echo 'before<br>';
-    echo 'param status';
+    echo 'param workflow';
     $db->show_array($_SESSION['m_admin']['basket']['groups']);
     exit;
 */
@@ -78,12 +118,13 @@ if ($_SESSION['service_tag'] == 'group_basket') {
     $find = false;
     for ($cpt=0;$cpt<count($_SESSION['m_admin']['basket']['groups']);$cpt++) {
         if (
-            $_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID'] == $groupe 
+            $_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID'] == $groupe
             || $old_group == $_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']) {
             for ($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS']);$j++) {
+                //STATUS
                 $chosen_statuses = array();
                 if (
-                    isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen']) 
+                    isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen'])
                     && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen']) > 0
                 ) {
                     for ($k=0; $k < count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'].'_statuses_chosen']); $k++) {
@@ -94,7 +135,19 @@ if ($_SESSION['service_tag'] == 'group_basket') {
                         array_push($chosen_statuses , array('ID' => $statusId, 'LABEL' => $label));
                     }
                 }
-                $_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['STATUSES_LIST'] = $chosen_statuses ;
+                //ROLES
+                $_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ROLES_LIST'] = $chosen_roles ;
+                 $chosen_roles = array();
+                if (
+                    isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'].'_roles_chosen'])
+                    && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'].'_roles_chosen']) > 0
+                ) {
+                    for ($k=0;$k<count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'].'_roles_chosen']);$k++) {
+                        $roleId = $_REQUEST[$_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'].'_roles_chosen'][$k];
+                        array_push($chosen_roles , array('ID' => $roleId));
+                    }
+                }
+                $_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ROLES_LIST'] = $chosen_roles ;
             }
             if ($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID'] == $groupe) {
                 $ind = $cpt;
@@ -110,11 +163,10 @@ if ($_SESSION['service_tag'] == 'group_basket') {
     }
 
     if ($find && $ind >= 0) {
-        //$_SESSION['m_admin']['basket']['groups'][$ind]['PARAM_DEFAULT_ACTION'] = array();
+        //STATUS
         $_SESSION['m_admin']['basket']['groups'][$ind]['PARAM_DEFAULT_ACTION']['STATUSES_LIST'] = array();
-
         if (
-            isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_statuses_chosen']) 
+            isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_statuses_chosen'])
             && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_statuses_chosen']) > 0
         ) {
             for ($l=0; $l < count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_statuses_chosen']); $l++) {
@@ -125,26 +177,35 @@ if ($_SESSION['service_tag'] == 'group_basket') {
                 array_push($_SESSION['m_admin']['basket']['groups'][$ind]['PARAM_DEFAULT_ACTION']['STATUSES_LIST'] , array('ID' =>$statusId, 'LABEL' => $label));
             }
         }
+        //ROLES
+        $_SESSION['m_admin']['basket']['groups'][$ind]['PARAM_DEFAULT_ACTION']['ROLES_LIST'] = array();
+        if (
+            isset($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_roles_chosen'])
+            && count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_roles_chosen']) > 0
+        ) {
+            for ($l=0;$l<count($_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_roles_chosen']);$l++) {
+                $roleId = $_REQUEST[$_SESSION['m_admin']['basket']['groups'][$ind]['DEFAULT_ACTION'].'_roles_chosen'][$l];
+                array_push($_SESSION['m_admin']['basket']['groups'][$ind]['PARAM_DEFAULT_ACTION']['ROLES_LIST'] , array('ID' =>$roleId));
+            }
+        }
     }
     $_SESSION['m_admin']['load_groupbasket'] = false;
-    
+
 /*
     echo 'after<br>';
-    echo 'param status';
+    echo 'param workflow';
     $ent->show_array($_SESSION['m_admin']['basket']['groups']);
     exit;
 */
-    
+
 } elseif ($_SESSION['service_tag'] == 'load_basket_session') {
     $db = new dbquery();
     $db->connect();
-    
-    for ($cpt=0; $cpt < count($_SESSION['m_admin']['basket']['groups'] ); $cpt++) {
-        //$_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION'] = array();
+    for ($cpt=0;$cpt<count($_SESSION['m_admin']['basket']['groups'] );$cpt++) {
+        //STATUS
         $_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION']['STATUSES_LIST'] = array();
-        if (!empty($_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION'] ))
-        {
-            $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status'] 
+        if (!empty($_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION'])) {
+            $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status']
                 . " on status_id = id "
                 . " where basket_id= '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
                 . "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']))
@@ -156,9 +217,23 @@ if ($_SESSION['service_tag'] == 'group_basket') {
             }
             $_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION']['STATUSES_LIST'] = $array;
         }
+        //ROLES
+        $_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION']['ROLES_LIST'] = array();
+        if (!empty($_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION'])) {
+            $query = "SELECT difflist_role_id FROM " . ENT_GROUPBASKET_DIFFLIST_ROLES 
+                . " where basket_id= '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
+                . "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']))
+                . "' and action_id = " . $_SESSION['m_admin']['basket']['groups'][$cpt]['DEFAULT_ACTION'];
+            $db->query($query);
+            $array = array();
+            while ($roles = $db->fetch_object()) {
+                $array[] = array('ID' => $roles->difflist_role_id);
+            }
+            $_SESSION['m_admin']['basket']['groups'][$cpt]['PARAM_DEFAULT_ACTION']['ROLES_LIST'] = $array;
+        }
+        //STATUS
         for ($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS']);$j++) {
-            
-            $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status'] 
+            $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status']
                 . " on status_id = id "
                 . " where basket_id= '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
                 . "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']))
@@ -169,6 +244,19 @@ if ($_SESSION['service_tag'] == 'group_basket') {
                 $array[] = array('ID' => $status->status_id, 'LABEL' => $status->label_status);
             }
             $_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['STATUSES_LIST'] = $array;
+        }
+        //ROLES
+        for ($j=0;$j<count($_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS']);$j++) {
+            $query = "SELECT difflist_role_id FROM " . ENT_GROUPBASKET_DIFFLIST_ROLES
+                . " where basket_id= '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
+                . "' and group_id = '" . $this->protect_string_db(trim($_SESSION['m_admin']['basket']['groups'][$cpt]['GROUP_ID']))
+                . "' and action_id = " . $_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ID_ACTION'];
+            $db->query($query);
+            $array = array();
+            while ($roles = $db->fetch_object()) {
+                $array[] = array('ID' => $roles->difflist_role_id);
+            }
+            $_SESSION['m_admin']['basket']['groups'][$cpt]['ACTIONS'][$j]['ROLES_LIST'] = $array;
         }
     }
 } elseif ($_SESSION['service_tag'] == 'load_basket_db') {
@@ -182,43 +270,88 @@ if ($_SESSION['service_tag'] == 'group_basket') {
     }
     for ($cpt=0; $cpt < count($_SESSION['m_admin']['basket']['groups'] ); $cpt++) {
         $GroupBasket = $_SESSION['m_admin']['basket']['groups'][$cpt];
-        if (!empty($GroupBasket['DEFAULT_ACTION']) && in_array($GroupBasket['DEFAULT_ACTION'], $workflow_actions)) {   
+        if (!empty($GroupBasket['DEFAULT_ACTION']) && in_array($GroupBasket['DEFAULT_ACTION'], $workflow_actions)) {
+            //STATUS
             $db->query(
-            "DELETE FROM " . GROUPBASKET_STATUS
-            . " where basket_id= '" . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
-            . "' and group_id = '" . $db->protect_string_db(trim($GroupBasket['GROUP_ID']))
-            . "' and action_id = " . $GroupBasket['DEFAULT_ACTION']);
-            
+                "DELETE FROM " . GROUPBASKET_STATUS
+                . " where basket_id= '" . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
+                . "' and group_id = '" . $db->protect_string_db(trim($GroupBasket['GROUP_ID']))
+                . "' and action_id = " . $GroupBasket['DEFAULT_ACTION']
+            );
+            //ROLES
+            $db->query(
+                "DELETE FROM " . ENT_GROUPBASKET_DIFFLIST_ROLES
+                . " where basket_id= '" . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
+                . "' and group_id = '" . $db->protect_string_db(trim($GroupBasket['GROUP_ID']))
+                . "' and action_id = " . $GroupBasket['DEFAULT_ACTION']
+            );
+            //STATUS
             for ($k = 0; $k < count($GroupBasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST']); $k++) {
                 $Status = $GroupBasket['PARAM_DEFAULT_ACTION']['STATUSES_LIST'][$k];
                 $db->query(
                     "INSERT INTO " . GROUPBASKET_STATUS
-                    . " (group_id, basket_id, action_id, status_id) values ('" 
-                    . $db->protect_string_db(trim($GroupBasket['GROUP_ID'])) . "', '" 
+                    . " (group_id, basket_id, action_id, status_id) values ('"
+                    . $db->protect_string_db(trim($GroupBasket['GROUP_ID'])) . "', '"
                     . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId'])) . "', "
-                    . $GroupBasket['DEFAULT_ACTION'] . ", '" 
+                    . $GroupBasket['DEFAULT_ACTION'] . ", '"
                     . $Status['ID']. "')"
+                );
+            }
+            //ROLES
+            for ($k=0;$k<count($GroupBasket['PARAM_DEFAULT_ACTION']['ROLES_LIST']);$k++) {
+                $Roles = $GroupBasket['PARAM_DEFAULT_ACTION']['ROLES_LIST'][$k];
+                $db->query(
+                    "INSERT INTO " . ENT_GROUPBASKET_DIFFLIST_ROLES
+                    . " (group_id, basket_id, action_id, difflist_role_id) values ('"
+                    . $db->protect_string_db(trim($GroupBasket['GROUP_ID'])) . "', '"
+                    . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId'])) . "', "
+                    . $GroupBasket['DEFAULT_ACTION'] . ", '"
+                    . $Roles['ID']. "')"
                 );
             }
         }
         for ($j=0;$j<count($GroupBasket['ACTIONS']);$j++) {
             $GroupBasketAction = $GroupBasket['ACTIONS'][$j];
             if (in_array($GroupBasketAction['ID_ACTION'], $workflow_actions)) {
+                //STATUS
                 $db->query(
-                "DELETE FROM " . GROUPBASKET_STATUS
-                . " where basket_id= '" . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
-                . "' and group_id = '" . $db->protect_string_db(trim($GroupBasket['GROUP_ID']))
-                . "' and action_id = " . $GroupBasketAction['ID_ACTION']);
+                    "DELETE FROM " . GROUPBASKET_STATUS
+                    . " where basket_id= '" . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
+                    . "' and group_id = '" . $db->protect_string_db(trim($GroupBasket['GROUP_ID']))
+                    . "' and action_id = " . $GroupBasketAction['ID_ACTION']
+                );
+                //ROLES
+                $db->query(
+                    "DELETE FROM " . ENT_GROUPBASKET_DIFFLIST_ROLES
+                    . " where basket_id= '" . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
+                    . "' and group_id = '" . $db->protect_string_db(trim($GroupBasket['GROUP_ID']))
+                    . "' and action_id = " . $GroupBasketAction['ID_ACTION']
+                );
+                //STATUS
                 if (isset($GroupBasketAction['STATUSES_LIST'])) {
                     for ($k = 0; $k < count($GroupBasketAction['STATUSES_LIST']); $k++) {
                         $Status = $GroupBasketAction['STATUSES_LIST'][$k];
                         $db->query(
                             "INSERT INTO " . GROUPBASKET_STATUS
-                            . " (group_id, basket_id, action_id, status_id) values ('" 
-                            . $db->protect_string_db(trim($GroupBasket['GROUP_ID'])) . "', '" 
+                            . " (group_id, basket_id, action_id, status_id) values ('"
+                            . $db->protect_string_db(trim($GroupBasket['GROUP_ID'])) . "', '"
                             . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId'])) . "', "
-                            . $GroupBasketAction['ID_ACTION'] . ", '" 
+                            . $GroupBasketAction['ID_ACTION'] . ", '"
                             . $Status['ID']. "')"
+                        );
+                    }
+                }
+                //ROLES
+                 if (isset($GroupBasketAction['ROLES_LIST'])) {
+                    for ($k = 0; $k < count($GroupBasketAction['ROLES_LIST']); $k++) {
+                        $Roles = $GroupBasketAction['ROLES_LIST'][$k];
+                        $db->query(
+                            "INSERT INTO " . ENT_GROUPBASKET_DIFFLIST_ROLES
+                            . " (group_id, basket_id, action_id, difflist_role_id) values ('"
+                            . $db->protect_string_db(trim($GroupBasket['GROUP_ID'])) . "', '"
+                            . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId'])) . "', "
+                            . $GroupBasketAction['ID_ACTION'] . ", '"
+                            . $Roles['ID']. "')"
                         );
                     }
                 }
@@ -228,5 +361,6 @@ if ($_SESSION['service_tag'] == 'group_basket') {
 } else if ($_SESSION['service_tag'] == 'del_basket' && !empty($_SESSION['temp_basket_id'])) {
     $db = new dbquery();
     $db->query("delete from ".GROUPBASKET_STATUS." where basket_id = '".$_SESSION['temp_basket_id']."'");
+    $db->query("delete from ".ENT_GROUPBASKET_DIFFLIST_ROLES." where basket_id = '".$_SESSION['temp_basket_id']."'");
     unset($_SESSION['temp_basket_id']);
 }

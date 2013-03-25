@@ -50,3 +50,6 @@ if (! defined('ENT_DIFFLIST_TYPES')) {
 if (! defined('ENT_GROUPBASKET_DIFFLIST_TYPES')) {
     define('ENT_GROUPBASKET_DIFFLIST_TYPES', 'groupbasket_difflist_types');
 }
+if (! defined('ENT_GROUPBASKET_DIFFLIST_ROLES')) {
+    define('ENT_GROUPBASKET_DIFFLIST_ROLES', 'groupbasket_difflist_roles');
+}
