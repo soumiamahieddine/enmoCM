@@ -7,6 +7,21 @@ require("modules/entities/entities_tables.php");
 
 function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
 {
+    // Select roles from GROUPBASKET_DIFFLIST_ROLES
+    $statuses = array();
+    $db = new dbquery();
+    $db->connect();
+    $query = "SELECT difflist_role_id FROM " . ENT_GROUPBASKET_DIFFLIST_ROLES
+        . " where basket_id= '" . $_SESSION['current_basket']['id']
+        . "' and group_id = '" . $_SESSION['user']['primarygroup']
+        . "' and action_id = " . $id_action;
+    $db->query($query);
+
+    if($db->nb_result() > 0) {
+        $rolesLine = $db->fetch_object();
+        $roleFromParam = $rolesLine->difflist_role_id;
+    }
+    
     $res_id = $values[0];
     //WF COMPUTING
     require_once('modules/basket/class/class_modules_tools.php');
@@ -32,10 +47,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $coll_id
         );
         //print_r($rolesArr);
+        $foundARoleForMe = false;
         if (!empty($rolesArr)) {
             $rolesInTheWF = array();
             for ($cptRoles=0;$cptRoles<count($rolesArr);$cptRoles++) {
-                if ($rolesArr[$cptRoles] <> 'dest' && $rolesArr[$cptRoles] <> 'cc') {
+                if ($rolesArr[$cptRoles] == $roleFromParam) {
+                    $foundARoleForMe = true;
                     $sequence = $myBasket->whatIsMySequenceForMyRole(
                         $_SESSION['user']['UserId'],
                         $res_id,
@@ -129,6 +146,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</div>';
         }
         $frm_str .='</form>';
+    } else {
+        echo _ITS_NOT_MY_TURN_IN_THE_WF . '<br />';
+    }
+    if (!$foundARoleForMe) {
+        echo _NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF . '<br />';
     }
     $frm_str .='<hr />';
     $frm_str .='<div align="center">';
