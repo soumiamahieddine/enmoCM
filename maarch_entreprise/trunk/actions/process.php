@@ -152,7 +152,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $values_fields = $b->fetch_object();
         //print_r($indexes);
     }
-
+    if ($core_tools->is_module_loaded('entities')) {
+        require_once('modules/entities/class/class_manage_listdiff.php');
+        $listdiff = new diffusion_list();
+        $roles = $listdiff->list_difflist_roles();
+        $_SESSION['process']['diff_list'] = $listdiff->get_listinstance($res_id, false, $coll_id);
+        $_SESSION['process']['difflist_type'] = $listdiff->get_difflist_type($_SESSION['process']['diff_list']['object_type']);
+    }
     //  to activate locking decomment these lines
     /*if ($b->reserve_doc($_SESSION['user']['UserId'], $res_id, $coll_id) == false) {
         $frm_str = '<div>';
@@ -522,7 +528,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</td>';
     }
     
-	//SENDMAILS                
+    //SENDMAILS                
     if ($core_tools->is_module_loaded('sendmail') === true 
         && $core_tools->test_service('sendmail', 'sendmail', false) === true
     ) {
@@ -531,18 +537,18 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . "class_modules_tools.php";
         $sendmail_tools    = new sendmail();
         //Count mails
-		$nbr_emails = 0;
+        $nbr_emails = 0;
         $nbr_emails = $sendmail_tools->countUserEmails($res_id, $coll_id);
-		$frm_str .= '<td>';
-		$frm_str .= '|<span onclick="new Effect.toggle(\'emails_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<td>';
+        $frm_str .= '|<span onclick="new Effect.toggle(\'emails_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'emails_div\', \'divStatus_emails_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= ' <span id="divStatus_emails_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
             . _SENDED_EMAILS . ' ('.$nbr_emails.')';
         $frm_str .= '</b></span>&nbsp;|';
         $frm_str .= '</td>';
-	}
-	
+    }
+    
     //DIFFUSION LIST
     if ($core_tools->is_module_loaded('entities')) {        
         $frm_str .= '<td>';
@@ -713,11 +719,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //DIFFUSION FRAME
     if ($core_tools->is_module_loaded('entities')) {
-        require_once 'modules/entities/class/class_manage_listdiff.php';
-        $listdiff = new diffusion_list();
-       
-        $roles = $listdiff->list_difflist_roles();
-    
         $frm_str .= '<div id="diff_list_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
             $frm_str .= '<div>';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});';
@@ -738,44 +739,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         . _UPDATE_LIST_DIFF
                         . '</a><br/>';
                 }
-                // 1.4 custom diffusion lists
-                foreach($roles as $role_id => $role_label) {
-                    if (count($_SESSION['process']['diff_list'][$role_id]['users']) > 0
-                        || count($_SESSION['process']['diff_list'][$role_id]['entities']) > 0
-                    ) {
-                        $frm_str .= '<br/>>>' . $role_label;
-                        $frm_str .= '<table cellpadding="0" cellspacing="0" border="0" class="listingsmall">';
-                        $color = ' class="col"';
-                        for ($i=0;$i<count($_SESSION['process']['diff_list'][$role_id]['users']);$i++) {
-                            if ($color == ' class="col"') $color = '';
-                            else $color = ' class="col"';
-                            $frm_str .= '<tr ' . $color . '>';
-                                $frm_str .= '<td><img src="'
-                                    . $_SESSION['config']['businessappurl']
-                                    . 'static.php?module=entities&filename=manage_users_entities_b_small.gif" alt="'
-                                    . _USER . '" title="' . _USER . '" /></td>';
-                                $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['users'][$i]['lastname'] . '</td>';
-                                $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['users'][$i]['firstname'] . '</td>';
-                                $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['users'][$i]['entity_label'] . '</td>';
-                            $frm_str .= '</tr>';
-                        }
-                        for ($i=0;$i<count($_SESSION['process']['diff_list'][$role_id]['entities']);$i++) {
-                            if ($color == ' class="col"') $color = '';
-                            else $color = ' class="col"';
-                            $frm_str .= '<tr '.$color.' >';
-                            $frm_str .= '<td><img src="'.$_SESSION['config']['businessappurl']
-                                . 'static.php?module=entities&filename=manage_entities_b_small.gif" alt="'
-                                . _ENTITY . '" title="'._ENTITY.'" /></td>';
-                            $frm_str .= '<td>' . $_SESSION['process']['diff_list'][$role_id]['entities'][$i]['entity_id'] . '</td>';
-                            $frm_str .= '<td colspan="2">'
-                                . $_SESSION['process']['diff_list'][$role_id]['entities'][$i]['entity_label'] . '</td>';
-                            $frm_str .= '</tr>';
-                        }
-                        $frm_str .= '</table>';
-                    }
-                }
+                # Get content from buffer of difflist_display 
+                $difflist = $_SESSION['process']['diff_list'];
                 
-                $frm_str .= '<br>';
+                ob_start();
+                require_once 'modules/entities/difflist_display.php';
+                $frm_str .= str_replace(array("\r", "\n", "\t"), array("", "", ""), ob_get_contents());
+                ob_end_clean();
+                
                 //$frm_str .= '<hr class="hr_process"/>';
             $frm_str .= '</div>';
             $frm_str .= '<hr />';
@@ -817,8 +788,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<hr />';
         $frm_str .= '</div>';
     }
-	
-	//SENDMAIL FRAME
+    
+    //SENDMAIL FRAME
     if ($core_tools->is_module_loaded('sendmail') === true 
         && $core_tools->test_service('sendmail', 'sendmail', false) === true
     ) {

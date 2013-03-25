@@ -1,48 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>  <!-- If id are numbers, always start with 1, never with 0 -->
-    <INDEX>
-        <column>custom_t1</column>
-        <label>_IDENTIFIER</label>
-        <type>string</type>
-        <img>plus.png</img>
-    </INDEX>
-    <INDEX>
-        <column>custom_t2</column>
-        <label>_CONTACT_NAME</label>
-        <type>string</type>
-        <img>plus.png</img>
-    </INDEX>
-    <INDEX>
-        <column>custom_t3</column>
-        <label>_COUNTRY</label>
-        <type>string</type>
-        <img>plus.png</img>
-    </INDEX>
-    <INDEX>
-        <column>custom_n1</column>
-        <label>_AMOUNT</label>
-        <type>integer</type>
-        <img>plus.png</img>
-    </INDEX>
-    <INDEX>
-        <column>custom_t4</column>
-        <label>_CUSTOMER</label>
-        <type>string</type>
-        <img>plus.png</img>
-    </INDEX>
-    <INDEX>
-        <column>custom_t5</column>
-        <label>_PO_NUMBER</label>
-        <type>string</type>
-        <img>plus.png</img>
-    </INDEX>
-    <INDEX>
-        <column>custom_d1</column>
-        <label>_CUSTOM_D1</label>
-        <type>date</type>
-        <img>plus.png</img>
-    </INDEX>
-        <INDEX>   
+    
+    <INDEX>   
         <column>custom_t6</column>
         <label>Utilisateur contributeur</label>
         <type>string</type>
