@@ -270,9 +270,9 @@ elseif($_SESSION['service_tag'] == 'load_basket_db')
                 . " where basket_id= '" . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId']))
                 . "' and group_id = '" . $db->protect_string_db(trim($GroupBasket['GROUP_ID']))
                 . "' and action_id = " . $GroupBasketAction['ID_ACTION']);
-                if (isset($GroupBasketAction['ID_ACTION']['STATUSES_LIST'])) {
-                    for ($k = 0; $k < count($GroupBasketAction['ID_ACTION']['STATUSES_LIST']); $k++) {
-                        $Status = $GroupBasketAction['ID_ACTION']['STATUSES_LIST'][$k];
+                if (isset($GroupBasketAction['STATUSES_LIST'])) {
+                    for ($k = 0; $k < count($GroupBasketAction['STATUSES_LIST']); $k++) {
+                        $Status = $GroupBasketAction['STATUSES_LIST'][$k];
                         $db->query(
                             "INSERT INTO " . GROUPBASKET_STATUS
                             . " (group_id, basket_id, action_id, status_id) values ('" 
@@ -293,4 +293,3 @@ else if($_SESSION['service_tag'] == 'del_basket' && !empty($_SESSION['temp_baske
     $db->query("delete from ".GROUPBASKET_STATUS." where basket_id = '".$_SESSION['temp_basket_id']."'");
     unset($_SESSION['temp_basket_id']);
 }
-?>

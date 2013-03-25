@@ -193,11 +193,26 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $role,
             $sequence
         );
+        $updateStatus = true;
+        $theNewStatus = '';
+        // Select statuses from groupbasket
+        $db = new dbquery();
+        $db->connect();
+        $query = "SELECT status_id, label_status FROM " 
+            . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status']
+            . " on status_id = id "
+            . " where basket_id= '" . $_SESSION['current_basket']['id']
+            . "' and group_id = '" . $_SESSION['user']['primarygroup']
+            . "' and action_id = " . $id_action;
+        $db->query($query);
+        if($db->nb_result() > 0) {
+            $status = $db->fetch_object();
+            $theNewStatus = $status->status_id;
+        } else {
+            $updateStatus = false;
+        }
         //UPDATE STATUS IF NOBODY AFTER ME
-        if (!$someoneAfterMe) {
-            $theNewStatus = 'TOTO';
-            $db = new dbquery();
-            $db->connect();
+        if (!$someoneAfterMe && ($updateStatus && $theNewStatus <> '')) {
             $queryUpdateStatus = "update " 
                 . $table . " set status = '" 
                 . $theNewStatus 
