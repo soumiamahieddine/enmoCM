@@ -77,7 +77,6 @@ function updateAdress(path, action, adress, target, array_index, email_format_te
 }
 
 function validEmailForm (path, form_id) {
-    // var bodyContent = getBodyConten();
 	// var content = tinyMCE.get('body_from_html').getContent(); // 
 	// alert(content);
 	tinyMCE.triggerSave();
