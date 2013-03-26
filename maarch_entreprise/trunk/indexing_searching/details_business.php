@@ -463,9 +463,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                         <?php
                         $i=0;
-                        if (!$modify_doc) {
-                            $data['process_limit_date']['readonly'] = true;
-                        }
+                        if (!$modify_doc) $data['process_limit_date']['readonly'] = true;
+                        
                         foreach(array_keys($data) as $key)
                         {
 
@@ -851,7 +850,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                 <dd>
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&dir=indexing_searching&page=document_history&coll_id=<?php echo $coll_id;?>&id=<?php
-                    echo $s_id;?>&mode=normal" name="hist_doc_process" width="100%" height="580" 
+                    echo $s_id;?>&load&size=full" name="hist_doc_process" width="100%" height="580" 
                     align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>
                 </dd>
                 <?php
