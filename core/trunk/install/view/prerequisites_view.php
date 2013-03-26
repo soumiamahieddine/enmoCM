@@ -161,6 +161,44 @@
                         <?php echo _XSL; ?>
                     </td>
                 </tr>
+                <!-- tr>
+                    <td class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
+                            $Class_Install->isPhpRequirements(
+                                'gettext'
+                            ), true
+                        ); ?>
+                    </td>
+                    <td>
+                        <?php echo _GETTEXT; ?>
+                    </td>
+                </tr -->
+                <tr>
+                    <td class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
+                            $Class_Install->isPhpRequirements(
+                                'xmlrpc'
+                            ), true
+                        ); ?>
+                    </td>
+                    <td>
+                        <?php echo _XMLRPC; ?>
+                    </td>
+                </tr>
+                <?php if (DIRECTORY_SEPARATOR != '/') { ?>
+                    <tr>
+                        <td class="voyantPrerequisites">
+                            <?php echo $Class_Install->checkPrerequisites(
+                                $Class_Install->isPhpRequirements(
+                                    'fileinfo'
+                                ), true
+                            ); ?>
+                        </td>
+                        <td>
+                            <?php echo _FILEINFO; ?>
+                        </td>
+                    </tr>
+                <?php } ?>
                 <tr>
                     <td>&nbsp;
                     </td>

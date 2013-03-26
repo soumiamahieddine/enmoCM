@@ -250,9 +250,7 @@ class Install extends functions
         return $return;
     }
 
-    public function setPreviousStep(
-        $previousStep
-    )
+    public function setPreviousStep($previousStep)
     {
         $_SESSION['previousStep'] = $previousStep;
     }

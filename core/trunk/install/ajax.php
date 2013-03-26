@@ -41,11 +41,8 @@ $Class_Install = new Install;
 if (!file_exists('install/scripts/'.$_REQUEST['script'].'.php')) {
     $return['status'] = 0;
     $return['text'] = 'Le script n\'existe pas';
-
-    $jsonReturn = json_encode($return);
-
-    echo $jsonReturn;
-    exit;
+    
+    exit(json_encode($return));
 }
 
 require_once('install/scripts/'.$_REQUEST['script'].'.php');
