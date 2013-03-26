@@ -1027,8 +1027,8 @@ INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readon
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_AI', 'FASTHD', 'Fast internal disc bay for autoimport', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\ai\\', NULL, NULL, NULL, '2011-01-07 13:43:48.696644', NULL, 'res_coll', 10, 'NANTERRE', 1);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('OAIS_MAIN_1', 'OAIS_MAIN', 'Main OAIS store', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\OAIS_main\\', NULL, NULL, NULL, '2011-01-13 14:48:27.901368', NULL, 'res_coll', 20, 'NANTERRE', 2);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('OAIS_SAFE_1', 'OAIS_SAFE', 'Distant backup OAIS store', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\OAIS_safe\\', NULL, NULL, NULL, '2011-01-13 14:49:05.095119', NULL, 'res_coll', 20, 'NICE', 3);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_MAN', 'FASTHD', 'Fast internal disc bay for letterbox mode', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\manual\\', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'letterbox_coll', 10, 'NANTERRE', 2);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TEMPLATES', 'TEMPLATES', 'Templates', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\templates\\', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'templates', 1, 'NANTERRE', 1);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_MAN', 'FASTHD', '[courrier] Fast internal disc bay for letterbox mode', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\manual\\', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'letterbox_coll', 10, 'NANTERRE', 2);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TEMPLATES', 'TEMPLATES', '[system] Templates', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\templates\\', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'templates', 1, 'NANTERRE', 1);
 
 ------------
 --CONTACTS--
@@ -1256,15 +1256,15 @@ VALUES ('OAIS_RM', 'OAIS_RM', 'Y', 'Y', 100, 'Y', '7Z', 'Y', 'OAIS_std.dtd', 'Y'
 --DOCSERVERS--
 --------------
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('FASTHD_RM_BATCH', 'FASTHD', 'FASTHD RM BATCH', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\RM_BATCH\\', '1', '1', '1', '2012-08-23 00:00:00', NULL, 'rm_coll', 2, 'NANTERRE', 2);
+VALUES ('FASTHD_RM_BATCH', 'FASTHD', '[archivage] FASTHD RM BATCH', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\RM_BATCH\\', '1', '1', '1', '2012-08-23 00:00:00', NULL, 'rm_coll', 2, 'NANTERRE', 2);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('FASTHD_RM_MAN', 'FASTHD', 'FASTHD RM MANUAL', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\RM_MAN\\', '1', '1', '1', '2012-08-23 00:00:00', NULL, 'rm_coll', 1, 'NANTERRE', 1);
+VALUES ('FASTHD_RM_MAN', 'FASTHD', '[archivage] FASTHD RM MANUAL', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\RM_MAN\\', '1', '1', '1', '2012-08-23 00:00:00', NULL, 'rm_coll', 1, 'NANTERRE', 1);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('IOS', 'IOS', 'IOS', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\IOS\\', NULL, NULL, NULL, '2012-08-28 15:43:05.922', NULL, 'io_coll', 1, 'NANTERRE', 1);
+VALUES ('IOS', 'IOS', '[archivage] IOS', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\IOS\\', NULL, NULL, NULL, '2012-08-28 15:43:05.922', NULL, 'io_coll', 1, 'NANTERRE', 1);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('OAIS_RM', 'OAIS_RM', 'Zone de stockage OAIS des archives', 'N', 'Y', 100000000000, 1, 'C:\\maarch\\docservers\\entreprise\\OAIS_RM\\', '1', '1', '1', '2012-08-23 00:00:00', NULL, 'rm_coll', 3, 'NANTERRE', 3);
+VALUES ('OAIS_RM', 'OAIS_RM', '[archivage] Zone de stockage OAIS des archives', 'N', 'Y', 100000000000, 1, 'C:\\maarch\\docservers\\entreprise\\OAIS_RM\\', '1', '1', '1', '2012-08-23 00:00:00', NULL, 'rm_coll', 3, 'NANTERRE', 3);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('LOG', 'FASTHD', 'Zone de stockage des logs', 'N', 'Y', 10000000000, 1, 'C:\\maarch\\docservers\\entreprise\\LOG\\', '1', '1', '1', '2012-08-23 00:00:00', NULL, 'log_coll', 100, 'NANTERRE', 100);
+VALUES ('LOG', 'FASTHD', '[archivage] Zone de stockage des logs', 'N', 'Y', 10000000000, 1, 'C:\\maarch\\docservers\\entreprise\\LOG\\', '1', '1', '1', '2012-08-23 00:00:00', NULL, 'log_coll', 100, 'NANTERRE', 100);
 
 ---------------
 --FOLDERTYPES--
@@ -3042,13 +3042,17 @@ VALUES ('CORRESPONDANT', 'ArchiveTransferCreation');
 ------------------
 --USERS_ENTITIES--
 ------------------
+delete from users_entities where user_id = 'bblier' and entity_id = 'COU';
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) 
 VALUES ('bblier', 'COU', 'Responsable courrier', 'N');
+delete from users_entities where user_id = 'bblier' and entity_id = 'VILLE';
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) 
 VALUES ('bblier', 'VILLE', 'Responsable courrier', 'Y');
 
+delete from users_entities where user_id = 'ggrand' and entity_id = 'COR';
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) 
 VALUES ('ggrand', 'COR', 'Responsable correspondant Archive', 'N');
+delete from users_entities where user_id = 'ggrand' and entity_id = 'CCAS';
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity)
 VALUES ('ggrand', 'CCAS', 'Responsable CCAS', 'Y');
 
@@ -3318,7 +3322,7 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'adv_
 --DOCSERVERS--
 ------------
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('BUSINESS_MAN', 'FASTHD', 'Business manual docserver', 'N', 'Y', 50000000000, 1397206, 'C:\\\\maarch\\\\docservers\\\\entreprise\\\\BUSINESS_MAN\\\\', NULL, NULL, NULL, '2013-02-25 18:36:59.38', NULL, 'business_coll', 50, 'NANTERRE', 50);
+VALUES ('BUSINESS_MAN', 'FASTHD', '[business] Business manual docserver', 'N', 'Y', 50000000000, 1397206, 'C:\\maarch\\docservers\\entreprise\\BUSINESS_MAN\\', NULL, NULL, NULL, '2013-02-25 18:36:59.38', NULL, 'business_coll', 50, 'NANTERRE', 50);
 
 ------------
 --DOCTYPES--
