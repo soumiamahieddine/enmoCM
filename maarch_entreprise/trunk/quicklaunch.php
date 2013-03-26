@@ -149,8 +149,8 @@ $core_tools->test_service('quicklaunch', "apps");
         //rm collection
          if ($_SESSION['user']['UserId'] <> 'superadmin' && ($element['id'] == 'index_rm' && $element['show'] == true &&
             (!isset($displayed_index_rm) || $displayed_index_rm <> true))) {
-            echo '<div class="quiclaunch_div bighome_indexing"><a href="index.php?page=view_baskets&amp;module=basket&amp;baskets=INDEXARCHIVE"><span>'
-                ._INDEXING_RM.'</span></a></div>';
+            echo '<a href="index.php?page=view_baskets&amp;module=basket&amp;baskets=INDEXARCHIVE"><div class="quiclaunch_div bighome_indexing"><span>'
+                ._INDEXING_RM.'</span></div></a>';
             $nb_max++;
             $displayed_index_rm = true;
         }
@@ -170,9 +170,9 @@ $core_tools->test_service('quicklaunch', "apps");
         }
     }
     ?>
-    <div class="quiclaunch_div bighome_userinfo">
-        <a href="index.php?page=modify_user&amp;admin=users&amp;reinit=true">
+    <a href="index.php?page=modify_user&amp;admin=users&amp;reinit=true">
+        <div class="quiclaunch_div bighome_userinfo">
             <span><?php echo _MY_INFO; ?></span>
-        </a>
-    </div>
+        </div>
+    </a>
 </div>
