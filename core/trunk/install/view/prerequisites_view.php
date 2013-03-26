@@ -161,7 +161,7 @@
                         <?php echo _XSL; ?>
                     </td>
                 </tr>
-                <!-- tr>
+                <tr>
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isPhpRequirements(
@@ -172,7 +172,7 @@
                     <td>
                         <?php echo _GETTEXT; ?>
                     </td>
-                </tr -->
+                </tr>
                 <tr>
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(

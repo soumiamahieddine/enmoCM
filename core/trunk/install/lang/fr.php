@@ -80,6 +80,15 @@ if (!defined('_MBSTRING')) {
 if (!defined('_XSL')) {
     define('_XSL', "librairie xsl");
 }
+if (!defined('_XMLRPC')) {
+    define('_XMLRPC', "librairie XML-RPC");
+}
+if (!defined('_FILEINFO')) {
+    define('_FILEINFO', "librairie fileinfo");
+}
+if (!defined('_GETTEXT')) {
+    define('_GETTEXT', "librairie gettext");
+}
 if (!defined('_PEAR')) {
     define('_PEAR', "PEAR");
 }
@@ -90,8 +99,10 @@ if (!defined('_CLITOOLS')) {
     define('_CLITOOLS', "CLITools");
 }
 if (!defined('_ERROR_REPORTING')) {
-    define('_ERROR_REPORTING', "error_reporting si php version < 5.4 alors E_ALL & ~E_NOTICE & ~E_DEPRECATED "
-        . "sinon E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT");
+    if (version_compare(PHP_VERSION, '5.4.0') >= 0)
+        define('_ERROR_REPORTING', "error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT");
+    else
+        define('_ERROR_REPORTING', "error_reporting = E_ALL & ~E_NOTICE & ~E_DEPRECATED");
 }
 if (!defined('_DISPLAY_ERRORS')) {
     define('_DISPLAY_ERRORS', "display_errors (On)");
