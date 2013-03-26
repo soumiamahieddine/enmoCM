@@ -141,6 +141,11 @@ class Install extends functions
         if (!$this->isIniMagicQuotesGpcRequirements()) {
             return false;
         }
+        
+        if (DIRECTORY_SEPARATOR != '/' && !$this->isPhpRequirements('fileinfo')){
+            return false;
+        }
+        
         return true;
     }
 

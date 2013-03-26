@@ -191,7 +191,7 @@
                             <?php echo $Class_Install->checkPrerequisites(
                                 $Class_Install->isPhpRequirements(
                                     'fileinfo'
-                                ), true
+                                )
                             ); ?>
                         </td>
                         <td>
