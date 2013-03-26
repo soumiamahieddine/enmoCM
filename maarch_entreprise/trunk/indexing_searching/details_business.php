@@ -873,6 +873,30 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     </dd> 
                     <?php
                 }
+				
+				//SENDMAILS                
+                if ($core->test_service('sendmail', 'sendmail', false) === true) {
+                    require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
+                        . "class" . DIRECTORY_SEPARATOR
+                        . "class_modules_tools.php";
+                    $sendmail_tools    = new sendmail();
+                     //Count mails
+                    $nbr_emails = $sendmail_tools->countUserEmails($s_id, $coll_id);
+                    if ($nbr_emails > 0 ) $nbr_emails = ' ('.$nbr_emails.')';  else $nbr_emails = '';
+                   
+                    ?>
+                    <dt><?php  echo _SENDED_EMAILS.$nbr_emails;?></dt>
+                    <dd>
+                    <?php
+                    //Emails iframe
+                    echo $core->execute_modules_services(
+                        $_SESSION['modules_services'], 'details', 'frame', 'sendmail', 'sendmail'
+                    );
+                    ?>
+                    </dd>
+                <?php
+                }
+				
                 //############# NOTIFICATIONS ##############
                 $extend_title_for_notifications = 0;
                 ?>

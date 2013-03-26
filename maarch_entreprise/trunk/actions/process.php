@@ -790,9 +790,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     
     //SENDMAIL FRAME
-    if ($core_tools->is_module_loaded('sendmail') === true 
-        && $core_tools->test_service('sendmail', 'sendmail', false) === true
-    ) {
+    if ($core_tools->test_service('sendmail', 'sendmail', false) === true) {
         $frm_str .= '<div class="desc" id="emails_div" style="display:none;">';
         $frm_str .= '<div class="ref-unit">';
         $frm_str .= '<center><h2 onclick="new Effect.toggle(\'emails_div\', \'blind\', {delay:0.2});';

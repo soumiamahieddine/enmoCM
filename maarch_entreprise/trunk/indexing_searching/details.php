@@ -934,7 +934,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 			$photo_capture = new photo_capture();
 			echo "<h2>"._PHOTO_CAPTURE."</h2>";
 			//Collection id, ressource Id (document or folder), can modifiy (false/true)
-			var_dump($modify_doc);
 			echo $photo_capture->showPhoto($coll_id, $s_id, $modify_doc); 
 		}
         ?>
@@ -1170,10 +1169,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     </dd>
                     <?php
                 }
+				
                 //SENDMAILS                
-                if ($core->is_module_loaded('sendmail') === true 
-                    && $core->test_service('sendmail', 'sendmail', false) === true
-                ) {
+                if ($core->test_service('sendmail', 'sendmail', false) === true) {
                     require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
                         . "class" . DIRECTORY_SEPARATOR
                         . "class_modules_tools.php";
