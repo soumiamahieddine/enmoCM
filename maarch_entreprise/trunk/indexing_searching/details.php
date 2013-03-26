@@ -925,6 +925,18 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             include_once('modules/tags/templates/details/index.php');
                     }
         }
+		
+		//PHOTO CAPTURE
+		if ($core->test_service('photo_capture', 'photo_capture', false) === true){
+			require_once("modules".DIRECTORY_SEPARATOR."photo_capture"
+				.DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR
+				."class_modules_tools.php");
+			$photo_capture = new photo_capture();
+			echo "<h2>"._PHOTO_CAPTURE."</h2>";
+			//Collection id, ressource Id (document or folder), can modifiy (false/true)
+			var_dump($modify_doc);
+			echo $photo_capture->showPhoto($coll_id, $s_id, $modify_doc); 
+		}
         ?>
                 </dd>
                 <?php
