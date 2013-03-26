@@ -722,6 +722,7 @@ function process_category(category, display_value_tr, params_cat)
         }
     }
 }
+
 /** Declaration of the autocompleter object used for the contacts*/
 var contact_autocompleter;
 
@@ -732,38 +733,21 @@ var contact_autocompleter;
  **/
 function launch_autocompleter_contacts(path_script, id_text, id_div, cat_id)
 {
-    var input = id_text || 'contact';
-    var div  = id_div || 'show_contacts';
-    // Get the parameters
+    var input  = id_text || 'contact';
+    var div    = id_div  || 'show_contacts';
+    
     var params = get_contacts_params();
-    // If the object already exists, we delete it to avoid conflict
-    try
-    {
-        delete contact_autocompleter;
-    }
-    catch(e){ }
-
-    if( path_script)
-    {
-        // Ajax autocompleter object creation
+    
+    if (contact_autocompleter && contact_autocompleter.element == $$('#' + input)[0])
+        contact_autocompleter.options.defaultParams = params;
+    else if(path_script)
         contact_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
-         method:'get',
-         paramName:'Input',
-         parameters: params,
-         minChars: 2
-         });
-    }
-    else
-    {
-        if(console != null)
-        {
-            console.log('error parameters launch_autocompleter_contacts function');
-        }
-        else
-        {
-            alert('error parameters launch_autocompleter_contacts function');
-        }
-    }
+            method:'get',
+            paramName:'Input',
+            parameters: params,
+            minChars: 2
+        });
+    else return false;
 }
 
 /**
@@ -793,21 +777,13 @@ function get_contact_type (category_id)
  **/
 function get_contacts_params(name_radio)
 {
-    //console.log($('category_id').value);
     var check = name_radio || 'type_contact';
     var arr = get_checked_values(check);
     var params = '';
+    
     if (arr.length == 0) {
-        //~ if(console != null)
-        //~ {
-            //~ console.log('Erreur get_contacts_params, no items checked');
-        //~ }
-        //~ else
-        //~ {
-            //~ alert('Erreur get_contacts_params, no items checked');
-        //~ }
         var contact_type = get_contact_type($('category_id').value);
-       params = 'table=contacts&contact_type=' + contact_type;
+        params = 'table=contacts&contact_type=' + contact_type;
     } else {
         if (arr[0] == 'internal') {
             params = 'table=users';
@@ -817,7 +793,7 @@ function get_contacts_params(name_radio)
             params = 'table=contacts';
         }
     }
-    //window.alert(params);
+    
     return params;
 }
 
