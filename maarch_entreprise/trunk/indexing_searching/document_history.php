@@ -60,26 +60,27 @@ if(isset($_REQUEST['coll_id']) && !empty($_REQUEST['coll_id'])) {
 }
 
 //Extra parameters
-if (isset($_REQUEST['size']) && !empty($_REQUEST['size'])) $parameters .= '&size='.$_REQUEST['size'];
+if (isset($_REQUEST['size']) && !empty($_REQUEST['size']))
+    $parameters .= '&size='.$_REQUEST['size'];
 
- if (isset($_REQUEST['load'])) {
+if (isset($_REQUEST['load'])) {
     //
     $core_tools->load_lang();
     $core_tools->load_html();
     $core_tools->load_header('', true, false);
-
+    
     ?><body><?php
     $core_tools->load_js();
-
+    
     //Load list
-    $target = $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&&id='.$id.$parameters;
+    $target = $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='.$id.$parameters;
     $listContent = $list->loadList($target);
     echo $listContent;
-
+    
     ?>
     </body>
     </html>
-   <?php
+    <?php
 } else {
 
     //If size is full change some parameters
@@ -233,7 +234,8 @@ if (isset($_REQUEST['size']) && !empty($_REQUEST['size'])) $parameters .= '&size
             //Output
             $status = 0;
             $content = $list->showList($tab, $paramsTab, $listKey);
-            // $debug = $list->debug();
+            $debug = '';
+            //$debug = $list->debug();
 
     echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
 }

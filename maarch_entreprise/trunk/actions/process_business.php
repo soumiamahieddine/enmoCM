@@ -607,7 +607,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . 'index.php?display=true&dir=indexing_searching&page=document_history&id='
         . $res_id . '&coll_id=' . $coll_id . '&load&size=medium" '
         . 'name="hist_doc_process" width="100%" height="690px" align="center" '
-        . 'scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>';
+        . 'scrolling="auto" frameborder="0" id="hist_doc_process" style="height: 690px; max-height: 690px; overflow: scroll;"></iframe>';
     //$frm_str .= '<hr class="hr_process"/>';
     $frm_str .= '</div>';
     $frm_str .= '<hr />';

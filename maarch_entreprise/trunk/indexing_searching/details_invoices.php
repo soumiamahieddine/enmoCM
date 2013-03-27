@@ -765,7 +765,7 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
                             ?>
                             <dt><?php echo _DOC_HISTORY;?></dt>
                             <dd>
-                                <iframe src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=hist_doc&id=<?php echo $s_id;?>&mode=normal" name="hist_doc_process" width="100%" height="580" align="left" scrolling="auto" frameborder="0" id="hist_doc_process"></iframe>
+                                <iframe src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=hist_doc&id=<?php echo $s_id;?>&load&size=full" name="hist_doc_process" width="100%" height="580" align="left" scrolling="auto" frameborder="0" id="hist_doc_process" style="height: 580px; max-height: 580px; overflow: scroll;"></iframe>
                             </dd>
                             <?php
 
