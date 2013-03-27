@@ -1256,15 +1256,15 @@ VALUES ('OAIS_RM', 'OAIS_RM', 'Y', 'Y', 100, 'Y', '7Z', 'Y', 'OAIS_std.dtd', 'Y'
 --DOCSERVERS--
 --------------
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('FASTHD_RM_BATCH', 'FASTHD', '[archivage] FASTHD RM BATCH', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\RM_BATCH\\', '1', '1', '1', '2012-08-23 00:00:00', NULL, 'rm_coll', 2, 'NANTERRE', 2);
+VALUES ('FASTHD_RM_BATCH', 'FASTHD', '[archivage] FASTHD RM BATCH', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\RM_BATCH\\', '', '', '', '2012-08-23 00:00:00', NULL, 'rm_coll', 2, 'NANTERRE', 2);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('FASTHD_RM_MAN', 'FASTHD', '[archivage] FASTHD RM MANUAL', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\RM_MAN\\', '1', '1', '1', '2012-08-23 00:00:00', NULL, 'rm_coll', 1, 'NANTERRE', 1);
+VALUES ('FASTHD_RM_MAN', 'FASTHD', '[archivage] FASTHD RM MANUAL', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\RM_MAN\\', '', '', '', '2012-08-23 00:00:00', NULL, 'rm_coll', 1, 'NANTERRE', 1);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
 VALUES ('IOS', 'IOS', '[archivage] IOS', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\IOS\\', NULL, NULL, NULL, '2012-08-28 15:43:05.922', NULL, 'io_coll', 1, 'NANTERRE', 1);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('OAIS_RM', 'OAIS_RM', '[archivage] Zone de stockage OAIS des archives', 'N', 'Y', 100000000000, 1, 'C:\\maarch\\docservers\\entreprise\\OAIS_RM\\', '1', '1', '1', '2012-08-23 00:00:00', NULL, 'rm_coll', 3, 'NANTERRE', 3);
+VALUES ('OAIS_RM', 'OAIS_RM', '[archivage] Zone de stockage OAIS des archives', 'N', 'Y', 100000000000, 1, 'C:\\maarch\\docservers\\entreprise\\OAIS_RM\\', '', '', '', '2012-08-23 00:00:00', NULL, 'rm_coll', 3, 'NANTERRE', 3);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('LOG', 'FASTHD', '[archivage] Zone de stockage des logs', 'N', 'Y', 10000000000, 1, 'C:\\maarch\\docservers\\entreprise\\LOG\\', '1', '1', '1', '2012-08-23 00:00:00', NULL, 'log_coll', 100, 'NANTERRE', 100);
+VALUES ('LOG', 'FASTHD', '[archivage] Zone de stockage des logs', 'N', 'Y', 10000000000, 1, 'C:\\maarch\\docservers\\entreprise\\LOG\\', '', '', '', '2012-08-23 00:00:00', NULL, 'log_coll', 100, 'NANTERRE', 100);
 
 ---------------
 --FOLDERTYPES--
