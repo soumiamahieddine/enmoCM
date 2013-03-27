@@ -400,7 +400,7 @@ class Maarch_Core_Class_StatusControler
     public function getAllInfos() {
         $db = new dbquery();
         $db->connect();
-        $query = "select * from " . STATUS_TABLE . " ";
+        $query = "select * from " . STATUS_TABLE . " order by label_status";
         try {
             if ($_ENV['DEBUG'])
                 echo $query . ' // ';

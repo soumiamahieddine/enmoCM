@@ -256,9 +256,9 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>validate_business</ID>
-        <LABEL>_VALIDATE_QUALIF_BUSINESS</LABEL>
-        <NAME>validate_business</NAME>
+        <ID>qualify_business</ID>
+        <LABEL>_QUALIF_BUSINESS</LABEL>
+        <NAME>qualify_business</NAME>
         <ORIGIN>apps</ORIGIN>
         <MODULE></MODULE>
         <FLAG_CREATE>false</FLAG_CREATE>
