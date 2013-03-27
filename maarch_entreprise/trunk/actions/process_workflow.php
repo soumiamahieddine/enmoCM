@@ -145,12 +145,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</table>';
             $frm_str .= '</div>';
         }
-        $frm_str .='</form>';
+        $frm_str .= '</form>';
     } else {
-        echo _ITS_NOT_MY_TURN_IN_THE_WF . '<br />';
+         $frm_str .= _ITS_NOT_MY_TURN_IN_THE_WF . '<br />';
     }
     if (!$foundARoleForMe) {
-        echo _NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF . '<br />';
+         $frm_str .= _NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF . '<br />';
     }
     $frm_str .='<hr />';
     $frm_str .='<div align="center">';

@@ -135,7 +135,7 @@ $core_tools->test_service('quicklaunch', "apps");
         //business collection
         if ($_SESSION['user']['UserId'] <> 'superadmin' && ($element['id'] == 'index_business' && $element['show'] == true &&
             (!isset($displayed_index_business) || $displayed_index_business <> true))) {
-            echo '<a href="index.php?page=view_baskets&amp;module=basket&amp;baskets=businessIndexation"><div class="quiclaunch_div bighome_indexing"><span>'
+            echo '<a href="index.php?page=view_baskets&amp;module=basket&amp;baskets=BusinessIndexation"><div class="quiclaunch_div bighome_indexing"><span>'
                 ._INDEXING_BUSINESS.'</span></div></a>';
             $nb_max++;
             $displayed_index_business = true;
