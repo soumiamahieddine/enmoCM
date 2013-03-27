@@ -719,7 +719,7 @@ class admin_basket extends dbquery
                     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_core_tools.php");
                     $core = new core_tools();
                     echo $core->execute_modules_services($_SESSION['modules_services'], 'del_basket', "include");
-                    echo $core_tools->execute_app_services($_SESSION['app_services'], 'del_basket', "include");
+                    echo $core->execute_app_services($_SESSION['app_services'], 'del_basket', "include");
 
                     // Log in database if needed
                     if($_SESSION['history']['basketdel'] == "true")
