@@ -1148,7 +1148,7 @@ if (!defined('_DELIVERY_NOTE_IDENTIFIER')) define('_DELIVERY_NOTE_IDENTIFIER', '
 
 if (!defined('_INDEX_BUSINESS_FILE')) define('_INDEX_BUSINESS_FILE', 'Index business collection file');
 if (!defined('_FILING')) define('_FILING', 'Filing');
-if (!defined('_VALIDATE_QUALIF_BUSINESS')) define('_VALIDATE_QUALIF_BUSINESS', 'Validation/qualification of business documents');
+if (!defined('_QUALIF_BUSINESS')) define('_QUALIF_BUSINESS', 'Qualification of business documents');
 if (!defined('_PROCESS_BUSINESS')) define('_PROCESS_BUSINESS', 'Traitement des documents de la collection business');
 if (!defined('_BUSINESS_LIST')) define('_BUSINESS_LIST', 'Documents business list');
 
