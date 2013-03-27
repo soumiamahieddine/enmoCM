@@ -61,7 +61,6 @@ INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, cust
 INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('AGENT', 'Agents', 'N', 'N', 'N', 'N', 'N', 'Y');
 INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('RESP_COURRIER', 'Superviseurs courrier', 'N', 'N', 'N', 'N', 'N', 'Y');
 INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('COURRIER', 'Archivistes et operateurs de scan', 'N', 'N', 'N', 'N', 'N', 'Y');
-INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('FINANCE', 'Superviseurs finance', 'N', 'N', 'N', 'N', 'N', 'Y');
 INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('CORRESPONDANT', 'Correspondants Archive', 'N', 'N', 'N', 'N', 'N', 'Y');
 
 ------------
@@ -78,7 +77,6 @@ INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ccharles', 'AGENT', 'Y', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ccordy', 'AGENT', 'Y', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('sstar', 'RESPONSABLE', 'N', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('sstar', 'FINANCE', 'Y', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bblier', 'COURRIER', 'Y', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bbain', 'AGENT', 'Y', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('bboule', 'AGENT', 'Y', '');
@@ -185,30 +183,6 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'view_vers
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'index_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'tag_view');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'add_tag_to_res');
-
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'view_folder_tree');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'view_technical_infos');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'add_links');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'view_baskets');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'join_res_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'close_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'add_copy_in_process');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'reports');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'add_new_version');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'admin');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'adv_search_invoices');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'my_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'print_details');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'view_trees');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'update_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'join_res_case_in_process');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'add_cases');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'update_list_diff_in_details');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'view_versions');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'index_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'tag_view');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('FINANCE', 'add_tag_to_res');
 
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'adv_search_mlb');
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'index_mlb');
@@ -387,9 +361,9 @@ INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause
 ------------
 --ACTIONS--
 ------------
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (1, 'redirect', '[courrier] Rediriger', 'NONE', 'Y', 'Y', 'redirect', 'Y', 'entities', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (1, 'redirect', '[courrier] Rediriger', '_NOSTATUS_', 'Y', 'Y', 'redirect', 'Y', 'entities', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (2, 'to_validate', 'Valider', 'VAL', 'Y', 'N', 'confirm_status', 'N', 'apps', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (3, '', '[courrier] Retourner au service Courrier', 'RET', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (3, '', 'Renvoyer en qualification', 'RET', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (15, '', '[APA] Prelever une archive', 'OUT', 'N', 'Y', 'confirm_apa', 'Y', 'advanced_physical_archive', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (16, '', '[APA] Reintegrer une archive', 'POS', 'N', 'Y', 'confirm_apa', 'Y', 'advanced_physical_archive', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (18, 'indexing', '[courrier] Valider courrier', 'NEW', 'N', 'Y', 'validate_mail', 'Y', 'apps', 'N');
@@ -404,7 +378,7 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, a
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (112, 'indexing', '[courrier] Enregistrer un courrier', 'NEW', 'N', 'Y', 'index_mlb', 'Y', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (113, 'redirect', '[courrier] Ajouter en copie', '', 'N', 'Y', 'put_in_copy', 'Y', 'apps', 'N');
 
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id) VALUES (300, 'redirect', '[dossier] Rediriger le dossier', 'NONE', 'Y', 'Y', 'Y', 'redirect_folder', 'Y', 'folder', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id) VALUES (300, 'redirect', '[dossier] Rediriger le dossier', '_NOSTATUS_', 'Y', 'Y', 'Y', 'redirect_folder', 'Y', 'folder', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id) VALUES (301, '', '[dossier] Valider le dossier', 'FOLDVAL', 'N', 'Y', 'Y', 'confirm_status', 'Y', 'folder', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id) VALUES (302, '', '[dossier] Supprimer le dossier', 'FOLDDEL', 'N', 'Y','Y', 'confirm_status', 'Y', 'folder', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_action, enabled, action_page, history, origin, create_id) VALUES (303, '', '[dossier] Rejeter le dossier', 'FOLDREJ', 'N', 'Y', 'Y', 'confirm_status', 'Y', 'folder', 'N');
@@ -416,14 +390,13 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_
 ------------
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('COU', 'En cours', 'Y', 'mail.gif', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('DEL', 'Supprimé', 'Y', NULL, 'apps', 'N', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('END', 'Clos', 'Y', 'mail_end.gif', 'apps', 'Y', 'Y');
+INSERT INTO status VALUES ('END', 'Clos / fin du workflow', 'Y', 'N', '', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('NEW', 'Nouveau', 'Y', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('RET', '[courrier] Retour courrier', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('VIS', 'A approuver', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SIG', 'A imprimer', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status VALUES ('RET', 'Retour courrier ou document en qualification', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status VALUES ('SIG', 'A signer', 'N', 'N', '', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('UNS', 'Rejeté', 'N', '', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('VAL', 'A Valider', 'Y', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('INIT', '[courrier] Nouveau courrier non validé', 'Y', '', 'apps', 'Y', 'Y');
+INSERT INTO status VALUES ('INIT', 'Nouveau courrier ou document non qualifié', 'Y', 'N', '', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('OUT', '[APA] Prelevee', 'N', '', 'advanced_physical_archive', 'N', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('POS', '[APA] Reintegree', 'N', '', 'advanced_physical_archive', 'N', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('MAQUAL', '[courrier] Email à qualifier', 'N', '', 'apps', 'Y', 'Y');
@@ -434,16 +407,10 @@ INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename,
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDTRT', '[dossier] Dossier traité', 'N', 'Y', '', 'folder', 'N', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDNOT', '[dossier] Dossier incomplet', 'N', 'Y', '', 'folder', 'N', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDDEL', '[dossier] Dossier supprimé', 'N', 'Y', '', 'folder', 'N', 'Y');
-
+INSERT INTO status VALUES ('APP', 'A approuver', 'N', 'N', '', 'apps', 'Y', 'Y');
 ------------
 --GROUPBASKET--
 ------------
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'SignedBasket', 4, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'LateMailBasket', 5, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'UnsignedBasket', 6, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'CopyMailBasket', 8, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'MyBasket', 9, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('FINANCE', 'IndexingBasket', 10, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'SignedBasket', 14, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'LateMailBasket', 1, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'UnsignedBasket', 9, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
@@ -488,21 +455,6 @@ INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, red
 ------------
 --ACTIONS_GROUPBASKETS--
 ------------
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'FINANCE', 'SignedBasket', 'Y', 'N', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'FINANCE', 'SignedBasket', 'Y', 'N', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (3, '', 'FINANCE', 'CopyMailBasket', 'Y', 'N', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'FINANCE', 'CopyMailBasket', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'FINANCE', 'LateMailBasket', 'N', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (21, '', 'FINANCE', 'LateMailBasket', 'N', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (3, '', 'FINANCE', 'LateMailBasket', 'Y', 'N', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'FINANCE', 'LateMailBasket', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (101, '', 'FINANCE', 'UnsignedBasket', 'N', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'FINANCE', 'UnsignedBasket', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (102, '', 'FINANCE', 'MyBasket', 'N', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (103, '', 'FINANCE', 'MyBasket', 'N', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'FINANCE', 'MyBasket', 'N', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'FINANCE', 'MyBasket', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (112, '', 'FINANCE', 'IndexingBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'AGENT', 'SignedBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'AGENT', 'SignedBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (3, '', 'AGENT', 'CopyMailBasket', 'Y', 'N', 'N');
@@ -588,7 +540,6 @@ INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, ent
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (111, 'AGENT', 'MyBasket', 1, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (112, 'AGENT', 'IndexingBasket', 21, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (113, 'AGENT', 'IndexingBasket', 112, '', 'ALL_ENTITIES', 'ENTITY');
-INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (120, 'FINANCE', 'LateMailBasket', 21, '', 'ENTITIES_JUST_BELOW', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (130, 'RESP_COURRIER', 'ValidationBasket', 18, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (131, 'RESP_COURRIER', 'RetourCourrier', 21, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (132, 'RESP_COURRIER', 'MyBasket', 1, '', 'ALL_ENTITIES', 'ENTITY');
@@ -750,7 +701,6 @@ INSERT INTO parameters (id, param_value_string, param_value_int, param_value_dat
 ------------
 INSERT INTO security (security_id, group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES (41, 'ADMINISTRATEUR', 'letterbox_coll', 'DESTINATION in (@my_entities)', 'Administration', 'N', 'N', 'N', 0, NULL, NULL, 'DOC');
 INSERT INTO security (security_id, group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES (42, 'COURRIER', 'letterbox_coll', 'typist=@user', 'COURRIER', 'N', 'N', 'N', 153, NULL, NULL, 'DOC');
-INSERT INTO security (security_id, group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES (43, 'FINANCE', 'letterbox_coll', 'DESTINATION in (@subentities[@my_entities])', 'FINANCE', 'N', 'N', 'N', 0, NULL, NULL, 'DOC');
 INSERT INTO security (security_id, group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES (44, 'ELU', 'letterbox_coll', 'DEST_USER=@user', 'ELU', 'N', 'N', 'N', 0, NULL, NULL, 'DOC');
 INSERT INTO security (security_id, group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES (45, 'RESPONSABLE', 'letterbox_coll', 'DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])', 'RESPONSABLE', 'N', 'N', 'N', 128, NULL, NULL, 'DOC');
 INSERT INTO security (security_id, group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) VALUES (46, 'RESP_COURRIER', 'letterbox_coll', 'DESTINATION IN (@subentities[@my_entities])', 'Profil responsable', 'N', 'N', 'N', 153, NULL, NULL, 'DOC');
@@ -1289,7 +1239,7 @@ VALUES (101, 100);
 ---------------
 delete from doctypes_first_level where doctypes_first_level_id = 100;
 INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) 
-VALUES (100, '[archivage] Archivage', NULL, 'Y');
+VALUES (100, '[archivage] Documents Archivés', NULL, 'Y');
 
 ---------------
 --DOCTYPES_SECOND_LEVEL--
@@ -3200,11 +3150,11 @@ VALUES ('rm_coll',200, 'Document archivé', 'Y', 100, 100, NULL, NULL);
 
 delete from doctypes_first_level where doctypes_first_level_id = 100;
 INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) 
-VALUES (100, '[archivage] Document Archivé', 'orange_style_big', 'Y');
+VALUES (100, '[archivage] Documents Archivés', 'orange_style_big', 'Y');
 
 delete from doctypes_second_level where doctypes_second_level_id = 100;
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) 
-VALUES (100, '[archivage] Document Archivé', 100, 'blue_style_big', 'Y');
+VALUES (100, '[archivage] Documents Archivés', 100, 'blue_style_big', 'Y');
 
 delete from foldertypes_doctypes_level1 where foldertype_id = 101 and doctypes_first_level_id = 100;
 INSERT INTO foldertypes_doctypes_level1 (foldertype_id, doctypes_first_level_id) VALUES (101, 100);
@@ -3281,36 +3231,121 @@ INSERT INTO invoice_types (invoice_type_id, invoice_type_name, invoice_movement)
 ------------
 --ACTIONS--
 ------------
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, is_folder_action) VALUES (306, 'indexing', '[business] Enregistrer un document de la collection business', 'COU', 'N', 'Y', 'index_business', 'Y', 'apps', 'N', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, is_folder_action) VALUES (307, 'indexing', '[business] Valider/qualifier document business', 'COU', 'N', 'Y', 'validate_business', 'Y', 'apps', 'N', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id, is_folder_action) VALUES (308, ' ', '[business] Traiter document business', 'COU', 'N', 'Y', 'process_business', 'Y', 'apps', 'N', 'N');
+INSERT INTO actions VALUES (306, 'indexing', '[business] Enregistrer un document', 'VAL', 'N', 'N', 'Y', 'index_business', 'Y', 'apps', 'N');
+INSERT INTO actions VALUES (307, 'indexing', '[business] Qualifier document', 'VAL', 'N', 'N', 'Y', 'qualify_business', 'Y', 'apps', 'N');
+INSERT INTO actions VALUES (308, ' ', '[business] Traiter document', '_NOSTATUS_', 'N', 'N', 'Y', 'process_business', 'Y', 'apps', 'N');
+INSERT INTO actions VALUES (200, 'workflow', '[business] Traiter l''étape', '_NOSTATUS_', 'N', 'N', 'Y', 'process_workflow', 'Y', 'apps', 'N');
+INSERT INTO actions VALUES (201, ' ', '[business] Clôturer', 'END', 'N', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
+INSERT INTO actions VALUES (207, ' ', '[business] Demander avoir', 'DAV', 'N', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
+INSERT INTO actions VALUES (209, ' ', '[business] Avoir demandé', 'AVD', 'N', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
 
 ------------
 --BASKETS--
 ------------
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled, is_folder_basket) VALUES ('business_coll', 'BusinessProcess', '[business] 03 - Traitement des documents business', '03 - Traitement des documents business', 'status = ''COU'' or status = ''NEW''', 'N', 'Y', 'Y', 'N');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled, is_folder_basket) VALUES ('business_coll', 'businessIndexation', '[business] 01 - Enregistrer un document Business', '01 - Enregistrer un document Business', '', 'N', 'Y', 'Y', 'N');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled, is_folder_basket) VALUES ('business_coll', 'ValidationBusiness', '[business] 02 - Validation/Qualification des documents business', '02 - Validation/Qualification des documents business', 'status = ''ATT'' or status = ''VAL''', 'N', 'Y', 'Y', 'N');
+INSERT INTO baskets VALUES ('business_coll', 'BusinessIndexation', '[business] 01 - Enregistrer un document', '01 - Enregistrer un document', '', 'N', 'Y', 'N', 'Y');
+INSERT INTO baskets VALUES ('business_coll', 'BusinessApprobation', '[business] 02 - Approbation des factures', '02 - Approbation des factures', 'status = ''APP'' and res_id in (select res_id from listinstance WHERE coll_id = ''business_coll'' and item_mode = ''APPROBATEUR'' and item_id = @user and visible=''Y'')', 'N', 'Y', 'N', 'Y');
+INSERT INTO baskets VALUES ('business_coll', 'BusinessQualify', '[business] 00 - Qualification des documents', '00 - Qualification des documents', 'status = ''INIT''', 'N', 'Y', 'N', 'Y');
+INSERT INTO baskets VALUES ('business_coll', 'BusinessVisa', '[business] 10 - Viser les documents', '10 - Viser les documents', 'res_id in (select res_id from listinstance WHERE coll_id = ''business_coll'' and item_mode = ''DIRIGEANT'' and item_id = @user and visible=''Y'')', 'N', 'Y', 'N', 'Y');
+INSERT INTO baskets VALUES ('business_coll', 'BusinessValidationAvoir', '[business] 01 - Validation des avoirs', '01 - Validation des avoirs', 'status = ''VAL'' and res_id in (select res_id from listinstance WHERE coll_id = ''business_coll'' and item_mode = ''COMPTABLES'' and item_id = @user and visible=''Y'')', 'N', 'Y', 'N', 'Y');
+INSERT INTO baskets VALUES ('business_coll', 'BusinessQualifyRet', '[business] 00 - Retour des documents', '00 - Retour des documents', 'status = ''RET''', 'N', 'Y', 'N', 'Y');
+INSERT INTO baskets VALUES ('business_coll', 'BusinessDemandeAvoir', '[business] 03 - Demandes d''avoir', '03 - Demandes d''avoir', 'status = ''DAV''', 'N', 'Y', 'N', 'Y');
+INSERT INTO baskets VALUES ('business_coll', 'BusinessBAP', '[business] 04 - Bon à payer', '04 - Bon à payer', 'status = ''BAP''', 'N', 'Y', 'N', 'Y');
+INSERT INTO baskets VALUES ('business_coll', 'BusinessAvoirDemande', '[business] 04 - Avoirs demandés', '04 - Avoirs demandés', 'status = ''AVD''', 'N', 'Y', 'N', 'Y');
+INSERT INTO baskets VALUES ('business_coll', 'BusinessValidation', '[business] 01 - Validation des factures', '01 - Validation des factures', 'status = ''VAL'' and res_id in (select res_id from listinstance WHERE coll_id = ''business_coll'' and item_mode = ''VALIDATEUR'' and item_id = @user and visible=''Y'')', 'N', 'Y', 'N', 'Y');
 
 ------------
 --GROUPBASKET--
 ------------
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert, list_lock_clause, sublist_lock_clause) VALUES ('COURRIER', 'businessIndexation', 33, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N', '', '');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert, list_lock_clause, sublist_lock_clause) VALUES ('COURRIER', 'ValidationBusiness', 35, NULL, NULL, 'documents_business_list', 'N', 'N', 'N', '', '');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert, list_lock_clause, sublist_lock_clause) VALUES ('COURRIER', 'BusinessProcess', 36, NULL, NULL, 'documents_business_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('COMPTABLES', 'BusinessIndexation', 13, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('COMPTABLES', 'BusinessQualify', 14, NULL, NULL, 'documents_business_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('COMPTABLES', 'BusinessValidationAvoir', 16, NULL, NULL, 'documents_business_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('COMPTABLES', 'BusinessQualifyRet', 17, NULL, NULL, 'documents_business_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('COMPTABLES', 'BusinessDemandeAvoir', 18, NULL, NULL, 'documents_business_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('COMPTABLES', 'BusinessBAP', 9, NULL, NULL, 'documents_business_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('COMPTABLES', 'BusinessAvoirDemande', 19, NULL, NULL, 'documents_business_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('APPROBATEUR', 'BusinessApprobation', 4, NULL, NULL, 'documents_business_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('VALIDATEUR', 'BusinessValidation', 5, NULL, NULL, 'documents_business_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('DIRIGEANT', 'BusinessVisa', 6, NULL, NULL, 'documents_business_list', 'N', 'N', 'N', '', '');
+
+------------
+--GROUPBASKET_DIFFLIST_ROLES--
+------------
+INSERT INTO groupbasket_difflist_roles VALUES (18, 'COMPTABLES', 'BusinessValidationAvoir', 200, 'COMPTABLES');
+INSERT INTO groupbasket_difflist_roles VALUES (19, 'APPROBATEUR', 'BusinessApprobation', 200, 'APPROBATEUR');
+INSERT INTO groupbasket_difflist_roles VALUES (20, 'VALIDATEUR', 'BusinessValidation', 200, 'VALIDATEUR');
+INSERT INTO groupbasket_difflist_roles VALUES (21, 'DIRIGEANT', 'BusinessVisa', 200, 'DIRIGEANT');
+
+------------
+--GROUPBASKET_DIFFLIST_TYPES--
+------------
+INSERT INTO groupbasket_difflist_types VALUES (28, 'COMPTABLES', 'BusinessIndexation', 306, 'WORKFLOW_AVOIR');
+INSERT INTO groupbasket_difflist_types VALUES (29, 'COMPTABLES', 'BusinessIndexation', 306, 'WORKFLOW_FACTURE');
+INSERT INTO groupbasket_difflist_types VALUES (30, 'COMPTABLES', 'BusinessIndexation', 306, 'VISER_DOCUMENT');
+INSERT INTO groupbasket_difflist_types VALUES (31, 'COMPTABLES', 'BusinessQualify', 307, 'WORKFLOW_AVOIR');
+INSERT INTO groupbasket_difflist_types VALUES (32, 'COMPTABLES', 'BusinessQualify', 307, 'WORKFLOW_FACTURE');
+INSERT INTO groupbasket_difflist_types VALUES (33, 'COMPTABLES', 'BusinessQualify', 307, 'VISER_DOCUMENT');
+INSERT INTO groupbasket_difflist_types VALUES (34, 'COMPTABLES', 'BusinessQualifyRet', 307, 'VISER_DOCUMENT');
+INSERT INTO groupbasket_difflist_types VALUES (35, 'COMPTABLES', 'BusinessQualifyRet', 307, 'WORKFLOW_AVOIR');
+INSERT INTO groupbasket_difflist_types VALUES (36, 'COMPTABLES', 'BusinessQualifyRet', 307, 'WORKFLOW_FACTURE');
 
 ------------
 --GROUPBASKET_REDIRECT--
 ------------
-INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (245, 'COURRIER', 'businessIndexation', 306, '', 'ALL_ENTITIES', 'ENTITY');
-INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (246, 'COURRIER', 'ValidationBusiness', 307, '', 'ALL_ENTITIES', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (310, 'COMPTABLES', 'BusinessIndexation', 306, 'ACME', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (311, 'COMPTABLES', 'BusinessIndexation', 306, 'ACMEPDG', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (312, 'COMPTABLES', 'BusinessIndexation', 306, 'ACMECOM', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (313, 'COMPTABLES', 'BusinessIndexation', 306, 'ACMEDF', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (314, 'COMPTABLES', 'BusinessIndexation', 306, 'ACMEDI', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (315, 'COMPTABLES', 'BusinessIndexation', 306, 'ACMEDP', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (316, 'COMPTABLES', 'BusinessIndexation', 306, 'ACMEDRH', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (324, 'COMPTABLES', 'BusinessQualify', 307, 'ACME', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (325, 'COMPTABLES', 'BusinessQualify', 307, 'ACMEPDG', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (326, 'COMPTABLES', 'BusinessQualify', 307, 'ACMECOM', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (327, 'COMPTABLES', 'BusinessQualify', 307, 'ACMEDF', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (328, 'COMPTABLES', 'BusinessQualify', 307, 'ACMEDI', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (329, 'COMPTABLES', 'BusinessQualify', 307, 'ACMEDP', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (330, 'COMPTABLES', 'BusinessQualify', 307, 'ACMEDRH', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (338, 'COMPTABLES', 'BusinessQualifyRet', 307, 'ACME', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (339, 'COMPTABLES', 'BusinessQualifyRet', 307, 'ACMEPDG', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (340, 'COMPTABLES', 'BusinessQualifyRet', 307, 'ACMECOM', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (341, 'COMPTABLES', 'BusinessQualifyRet', 307, 'ACMEDF', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (342, 'COMPTABLES', 'BusinessQualifyRet', 307, 'ACMEDI', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (343, 'COMPTABLES', 'BusinessQualifyRet', 307, 'ACMEDP', '', 'ENTITY');
+INSERT INTO groupbasket_redirect VALUES (344, 'COMPTABLES', 'BusinessQualifyRet', 307, 'ACMEDRH', '', 'ENTITY');
+
+------------
+--GROUPBASKET_STATUS--
+------------
+INSERT INTO groupbasket_status VALUES (14, 'COMPTABLES', 'BusinessValidationAvoir', 200, 'END');
+INSERT INTO groupbasket_status VALUES (15, 'APPROBATEUR', 'BusinessApprobation', 200, 'BAP');
+INSERT INTO groupbasket_status VALUES (16, 'VALIDATEUR', 'BusinessValidation', 200, 'APP');
+
 
 ------------
 --ACTIONS_GROUPBASKETS--
 ------------
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (306, '', 'COURRIER', 'businessIndexation', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (308, '', 'COURRIER', 'BusinessProcess', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (307, '', 'COURRIER', 'ValidationBusiness', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets VALUES (306, '', 'COMPTABLES', 'BusinessIndexation', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets VALUES (307, '', 'COMPTABLES', 'BusinessQualify', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets VALUES (200, '', 'COMPTABLES', 'BusinessValidationAvoir', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (3, '', 'COMPTABLES', 'BusinessValidationAvoir', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (308, '', 'COMPTABLES', 'BusinessValidationAvoir', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets VALUES (307, '', 'COMPTABLES', 'BusinessQualifyRet', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets VALUES (209, '', 'COMPTABLES', 'BusinessDemandeAvoir', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (308, '', 'COMPTABLES', 'BusinessDemandeAvoir', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets VALUES (201, '', 'COMPTABLES', 'BusinessBAP', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (308, '', 'COMPTABLES', 'BusinessBAP', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets VALUES (3, '', 'COMPTABLES', 'BusinessAvoirDemande', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (308, '', 'COMPTABLES', 'BusinessAvoirDemande', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets VALUES (207, '', 'APPROBATEUR', 'BusinessApprobation', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (200, '', 'APPROBATEUR', 'BusinessApprobation', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (3, '', 'APPROBATEUR', 'BusinessApprobation', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (308, '', 'APPROBATEUR', 'BusinessApprobation', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets VALUES (207, '', 'VALIDATEUR', 'BusinessValidation', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (200, '', 'VALIDATEUR', 'BusinessValidation', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (3, '', 'VALIDATEUR', 'BusinessValidation', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (308, '', 'VALIDATEUR', 'BusinessValidation', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets VALUES (200, '', 'DIRIGEANT', 'BusinessVisa', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (308, '', 'DIRIGEANT', 'BusinessVisa', 'N', 'N', 'Y');
 
 ------------
 --USERGROUPS_SERVICES--
@@ -3319,31 +3354,260 @@ INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'inde
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'adv_search_business');
 
 ------------
+--DIFFLIST_TYPES--
+------------
+INSERT INTO difflist_types VALUES ('VISER_DOCUMENT', 'Viser les documents', 'DIRIGEANT ', 'N', 'N');
+INSERT INTO difflist_types VALUES ('WORKFLOW_AVOIR', 'Workflow des avoirs', 'COMPTABLES ', 'N', 'N');
+INSERT INTO difflist_types VALUES ('WORKFLOW_FACTURE', 'Workflow des factures', 'APPROBATEUR VALIDATEUR ', 'N', 'N');
+
+------------
 --DOCSERVERS--
 ------------
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
 VALUES ('BUSINESS_MAN', 'FASTHD', '[business] Business manual docserver', 'N', 'Y', 50000000000, 1397206, 'C:\\maarch\\docservers\\entreprise\\BUSINESS_MAN\\', NULL, NULL, NULL, '2013-02-25 18:36:59.38', NULL, 'business_coll', 50, 'NANTERRE', 50);
 
 ------------
+--DOCTYPES_FIRST_LEVEL--
+------------
+INSERT INTO doctypes_first_level VALUES (101, '[business] Documents Entreprise', 'default_style', 'Y');
+
+------------
+--DOCTYPES_SECOND_LEVEL--
+------------
+INSERT INTO doctypes_second_level VALUES (101, '[business] Comptabilité', 101, 'default_style', 'Y');
+INSERT INTO doctypes_second_level VALUES (103, '[business] Administratif', 101, 'default_style', 'Y');
+INSERT INTO doctypes_second_level VALUES (104, '[business] Gestion commerciale', 101, 'default_style', 'Y');
+INSERT INTO doctypes_second_level VALUES (106, '[business] Marketing', 101, 'default_style', 'N');
+INSERT INTO doctypes_second_level VALUES (107, '[business] Gestion RH', 101, 'default_style', 'Y');
+INSERT INTO doctypes_second_level VALUES (105, '[business] Gestion projets et produits', 101, 'default_style', 'Y');
+
+------------
 --DOCTYPES--
 ------------
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('business_coll', 400, 'Facture fournisseur', 'Y', 30, 50, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 201, 'Contrat location', 'Y', 101, 103, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 203, 'Contrat baux', 'Y', 101, 103, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 204, 'Contrat maintenance', 'Y', 101, 103, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 205, 'Contrat abonnement', 'Y', 101, 103, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 206, 'Contrat assurance', 'Y', 101, 103, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 208, 'Facture fournisseur', 'Y', 101, 101, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 209, 'Relevé de banque', 'Y', 101, 101, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 210, 'Echéancier emprunt', 'Y', 101, 101, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 211, 'Taxes', 'Y', 101, 101, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 207, 'Facture frais généraux', 'Y', 101, 101, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 213, 'Contrat location matériels', 'Y', 101, 104, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 212, 'Contrat location de licences', 'Y', 101, 104, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 214, 'BPA sur devis & proposition commerciale', 'Y', 101, 104, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 215, 'Proposition commerciale', 'Y', 101, 104, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 216, 'Cahier des charges', 'Y', 101, 105, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 217, 'Expression de besoins', 'Y', 101, 105, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 218, 'Spécifications', 'Y', 101, 105, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 219, 'CV', 'Y', 101, 107, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 220, 'Contrat de travail', 'Y', 101, 107, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 221, 'Demande de formation', 'Y', 101, 107, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 222, 'Arrêt maladie', 'Y', 101, 107, NULL, NULL);
+
+------------
+--DOCTYPES_EXT--
+------------
+INSERT INTO mlb_doctype_ext VALUES (208, 21, 14, 1);
+INSERT INTO mlb_doctype_ext VALUES (207, 21, 14, 1);
 
 ------------
 --DOCTYPES_INDEXES--
 ------------
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (400, 'business_coll', 'custom_t1', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (400, 'business_coll', 'custom_t2', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (400, 'business_coll', 'custom_d1', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (400, 'business_coll', 'custom_t3', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (400, 'business_coll', 'custom_t4', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (400, 'business_coll', 'custom_d2', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (400, 'business_coll', 'custom_t5', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (400, 'business_coll', 'custom_t6', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (400, 'business_coll', 'custom_d3', 'N');
-INSERT INTO doctypes_indexes (type_id, coll_id, field_name, mandatory) VALUES (400, 'business_coll', 'custom_t7', 'N');
+INSERT INTO doctypes_indexes VALUES (208, 'business_coll', 'custom_t1', 'Y');
+INSERT INTO doctypes_indexes VALUES (208, 'business_coll', 'custom_t2', 'N');
+INSERT INTO doctypes_indexes VALUES (208, 'business_coll', 'custom_d1', 'N');
+INSERT INTO doctypes_indexes VALUES (208, 'business_coll', 'custom_t3', 'N');
+INSERT INTO doctypes_indexes VALUES (208, 'business_coll', 'custom_t4', 'N');
+INSERT INTO doctypes_indexes VALUES (208, 'business_coll', 'custom_d2', 'N');
+INSERT INTO doctypes_indexes VALUES (208, 'business_coll', 'custom_t5', 'N');
+INSERT INTO doctypes_indexes VALUES (208, 'business_coll', 'custom_t6', 'N');
+INSERT INTO doctypes_indexes VALUES (208, 'business_coll', 'custom_d3', 'N');
+INSERT INTO doctypes_indexes VALUES (207, 'business_coll', 'custom_t1', 'Y');
+INSERT INTO doctypes_indexes VALUES (207, 'business_coll', 'custom_t2', 'N');
+INSERT INTO doctypes_indexes VALUES (207, 'business_coll', 'custom_d1', 'N');
+INSERT INTO doctypes_indexes VALUES (207, 'business_coll', 'custom_t3', 'N');
+INSERT INTO doctypes_indexes VALUES (207, 'business_coll', 'custom_t4', 'N');
+INSERT INTO doctypes_indexes VALUES (207, 'business_coll', 'custom_d2', 'N');
+INSERT INTO doctypes_indexes VALUES (207, 'business_coll', 'custom_t5', 'N');
+INSERT INTO doctypes_indexes VALUES (207, 'business_coll', 'custom_t6', 'N');
+INSERT INTO doctypes_indexes VALUES (207, 'business_coll', 'custom_d3', 'N');
+
+------------
+--ENTITIES--
+------------
+INSERT INTO entities VALUES ('ACME', 'ACME', 'ACME', 'Y', '', '', '', '', '', '', '', '', '', 'Direction');
+INSERT INTO entities VALUES ('ACMECOM', 'ACMECOM:Direction commerciale et marketing', 'ACMECOM:Direction commerciale et marketing', 'Y', '', '', '', '', '', '', '', '', 'ACMEPDG', 'Direction');
+INSERT INTO entities VALUES ('ACMEDF', 'ACMEDF:Direction financière', 'ACMEDF:Direction financière', 'Y', '', '', '', '', '', '', '', '', 'ACMEPDG', 'Direction');
+INSERT INTO entities VALUES ('ACMEDI', 'ACMEDI:Direction informatique', 'ACMEDI:Direction informatique', 'Y', '', '', '', '', '', '', '', '', 'ACMEPDG', 'Direction');
+INSERT INTO entities VALUES ('ACMEDP', 'ACMEDP:Direction de la production', 'ACMEDP:Direction de la production', 'Y', '', '', '', '', '', '', '', '', 'ACMEPDG', 'Direction');
+INSERT INTO entities VALUES ('ACMEDRH', 'ACMEDRH:Direction du personnel', 'ACMEDRH:Direction du personnel', 'Y', '', '', '', '', '', '', '', '', 'ACMEPDG', 'Direction');
+INSERT INTO entities VALUES ('ACMEPDG', 'ACMEPDG:Direction générale', 'ACMEPDG:Direction générale', 'Y', '', '', '', '', '', '', '', '', 'ACME', 'Direction');
+
+------------
+--FOLDERTYPES--
+------------
+INSERT INTO foldertypes VALUES (102, '[business] Documents d''Entreprise', '[business] Documents d''Entreprise', NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'business_coll');
+
+------------
+--FOLDERTYPES_DOCTYPES_LEVEL1--
+------------
+INSERT INTO foldertypes_doctypes_level1 VALUES (102, 101);
+
+------------
+--LISTMODELS-
+------------
+INSERT INTO listmodels VALUES ('any', 'VISER_DOCUMENT_MKBNVC', 'VISER_DOCUMENT', 0, 'ddenis', 'user_id', 'DIRIGEANT', NULL, 'Visa sur documents', 'Y');
+INSERT INTO listmodels VALUES ('any', 'WORKFLOW_FACTURE_MKBU5A', 'WORKFLOW_FACTURE', 0, 'ttule', 'user_id', 'APPROBATEUR', NULL, 'Workflow des factures', 'Y');
+INSERT INTO listmodels VALUES ('any', 'WORKFLOW_FACTURE_MKBU5A', 'WORKFLOW_FACTURE', 0, 'kkrach', 'user_id', 'VALIDATEUR', NULL, 'Workflow des factures', 'Y');
+INSERT INTO listmodels VALUES ('any', 'WORKFLOW_FACTURE_MKBU5A', 'WORKFLOW_FACTURE', 1, 'aalambic', 'user_id', 'VALIDATEUR', NULL, 'Workflow des factures', 'N');
+INSERT INTO listmodels VALUES ('any', 'WORKFLOW_AVOIR_MKBU6L', 'WORKFLOW_AVOIR', 0, 'lpacioli', 'user_id', 'COMPTABLES', NULL, 'Workflow des avoirs', 'Y');
+
 
 ------------
 --MLB_DOCTYPE_EXT--
 ------------
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (400, 21, 14, 1);
+
+------------
+--SECURITY--
+------------
+INSERT INTO security(group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) 
+VALUES ('COMPTABLES', 'business_coll', '1=1', 'Accès aux documents business', 'N', 'N', 'N', 153, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) 
+VALUES ('VALIDATEUR', 'business_coll', '1=1', 'accès aux documents business', 'N', 'N', 'N', 153, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) 
+VALUES ('APPROBATEUR', 'business_coll', '1=1', 'accès aux documents business', 'N', 'N', 'N', 153, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) 
+VALUES ('FINANCE', 'business_coll', '1=1', 'accès documents business', 'N', 'N', 'N', 153, NULL, NULL, 'DOC');
+INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) 
+VALUES ('DIRIGEANT', 'business_coll', '1=1', 'acces documents business', 'N', 'N', 'N', 153, NULL, NULL, 'DOC');
+
+------------
+--STATUS--
+------------
+INSERT INTO status VALUES ('BAP', '[business] Bon à payer', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status VALUES ('DAV', '[business] Demande d''avoir', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status VALUES ('AVD', '[business] Avoir demandé', 'N', 'N', '', 'apps', 'Y', 'Y');
+
+------------
+--TEMPLATES_DOCTYPE_EXT--
+------------
+INSERT INTO templates_doctype_ext VALUES (NULL, 201, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 203, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 204, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 205, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 206, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 208, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 209, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 210, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 211, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 207, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 213, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 212, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 214, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 215, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 216, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 217, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 218, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 219, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 220, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 221, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 222, 'N');
+
+------------
+--USERGROUP_CONTENT-
+------------
+INSERT INTO usergroup_content VALUES ('lpacioli', 'COMPTABLES', 'Y', 'Comptable');
+INSERT INTO usergroup_content VALUES ('hhier', 'FINANCE', 'Y', 'DAF');
+INSERT INTO usergroup_content VALUES ('kkrach', 'VALIDATEUR', 'Y', '');
+INSERT INTO usergroup_content VALUES ('aalambic', 'VALIDATEUR', 'Y', '');
+INSERT INTO usergroup_content VALUES ('ttule', 'APPROBATEUR', 'Y', '');
+INSERT INTO usergroup_content VALUES ('ddenis', 'DIRIGEANT', 'Y', 'PDG');
+
+------------
+--USERGROUPS-
+------------
+INSERT INTO usergroups VALUES ('COMPTABLES', '[business] Comptables', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups VALUES ('VALIDATEUR', '[business] Validateurs', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups VALUES ('APPROBATEUR', '[business] Approbateurs', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups VALUES ('FINANCE', '[business] Superviseurs finance', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups VALUES ('DIRIGEANT', '[business] Dirigeants', 'N', 'N', 'N', 'N', 'N', 'Y');
+
+------------
+--USERGROUPS_SERVICES-
+------------
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'my_contacts');
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'update_contacts');
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'add_links');
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'index_business');
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'adv_search_business');
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'view_baskets');
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'add_copy_in_process');
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'update_list_diff_in_details');
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'tag_view');
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'delete_tag_to_res');
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'sendmail');
+INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'my_contacts');
+INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'update_contacts');
+INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'add_links');
+INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'adv_search_business');
+INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'view_baskets');
+INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'add_copy_in_process');
+INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'update_list_diff_in_details');
+INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'tag_view');
+INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'delete_tag_to_res');
+INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'sendmail');
+INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'my_contacts');
+INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'update_contacts');
+INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'add_links');
+INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'adv_search_business');
+INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'view_baskets');
+INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'add_copy_in_process');
+INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'update_list_diff_in_details');
+INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'tag_view');
+INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'delete_tag_to_res');
+INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'sendmail');
+INSERT INTO usergroups_services VALUES ('FINANCE', 'my_contacts');
+INSERT INTO usergroups_services VALUES ('FINANCE', 'add_links');
+INSERT INTO usergroups_services VALUES ('FINANCE', 'adv_search_business');
+INSERT INTO usergroups_services VALUES ('FINANCE', 'view_baskets');
+INSERT INTO usergroups_services VALUES ('FINANCE', 'add_copy_in_process');
+INSERT INTO usergroups_services VALUES ('FINANCE', 'update_list_diff_in_details');
+INSERT INTO usergroups_services VALUES ('FINANCE', 'tag_view');
+INSERT INTO usergroups_services VALUES ('FINANCE', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('FINANCE', 'delete_tag_to_res');
+INSERT INTO usergroups_services VALUES ('FINANCE', 'sendmail');
+INSERT INTO usergroups_services VALUES ('DIRIGEANT', 'add_links');
+INSERT INTO usergroups_services VALUES ('DIRIGEANT', 'adv_search_business');
+INSERT INTO usergroups_services VALUES ('DIRIGEANT', 'view_baskets');
+INSERT INTO usergroups_services VALUES ('DIRIGEANT', 'add_copy_in_process');
+INSERT INTO usergroups_services VALUES ('DIRIGEANT', 'tag_view');
+INSERT INTO usergroups_services VALUES ('DIRIGEANT', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('DIRIGEANT', 'delete_tag_to_res');
+INSERT INTO usergroups_services VALUES ('DIRIGEANT', 'sendmail');
+
+------------
+--USERS-
+------------
+INSERT INTO users VALUES ('hhier', 'ef9689be896dacd901cae4f13593e90d', 'Hier', 'Hubert', NULL, 'info@maarch.org', NULL, '0', NULL, NULL, NULL, NULL, 'Y', 'Y', NULL, 'OK', 'standard', NULL);
+INSERT INTO users VALUES ('ttule', 'ef9689be896dacd901cae4f13593e90d', 'Thierry', 'TULE', '', 'info@maarch.org', '', '0', NULL, NULL, '5558fa4b2872805433959da8f31e6519', '2013-03-27 19:14:34.041', 'Y', 'N', NULL, 'OK', 'standard', NULL);
+INSERT INTO users VALUES ('kkrach', 'ef9689be896dacd901cae4f13593e90d', 'Kevin', 'KRACH', '', 'info@maarch.org', '', '0', NULL, NULL, '10cb757d7eb9ec66c0549948f69f394c', '2013-03-27 19:12:49.029', 'Y', 'N', NULL, 'OK', 'standard', NULL);
+INSERT INTO users VALUES ('ddenis', 'ef9689be896dacd901cae4f13593e90d', 'Didier', 'DENIS', '', 'info@maarch.org', '', '0', NULL, NULL, '2ab8e70c7915dde376d80dfa870230d7', '2013-03-27 20:21:33.922', 'Y', 'N', NULL, 'OK', 'standard', NULL);
+INSERT INTO users VALUES ('aalambic', 'ef9689be896dacd901cae4f13593e90d', 'Alain', 'ALAMBIC', '', 'info@maarch.org', '', '0', NULL, NULL, '1d2cb3c43d00c9b6d08e6b1f4d0b96cf', '2013-03-27 19:13:41.414', 'Y', 'N', NULL, 'OK', 'standard', NULL);
+INSERT INTO users VALUES ('lpacioli', 'ef9689be896dacd901cae4f13593e90d', 'Luca', 'PACIOLI', '', 'info@maarch.org', '', '0', NULL, NULL, '4cd3add5b533c5f4a6b460107be355d6', '2013-03-27 20:17:15.857', 'Y', 'N', NULL, 'OK', 'standard', NULL);
+
+------------
+--USERS_ENTITIES-
+------------
+INSERT INTO users_entities VALUES ('lpacioli', 'ACMEDF', '', 'Y');
+INSERT INTO users_entities VALUES ('hhier', 'ACMEDF', '', 'Y');
+INSERT INTO users_entities VALUES ('kkrach', 'ACMEDF', '', 'Y');
+INSERT INTO users_entities VALUES ('aalambic', 'ACMEDF', '', 'Y');
+INSERT INTO users_entities VALUES ('ttule', 'ACMEDF', '', 'Y');
+INSERT INTO users_entities VALUES ('ddenis', 'ACME', '', 'N');
+INSERT INTO users_entities VALUES ('ddenis', 'ACMEPDG', '', 'Y');
