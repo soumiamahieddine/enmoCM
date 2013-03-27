@@ -649,7 +649,7 @@ class diffusion_list extends dbquery
             $query .= " AND ugc.user_id = '".$user_id."'";
         
         $query .= " GROUP BY ug.group_id, ug.group_desc";
-        $query .= " ORDER BY ug.group_id ASC";
+        $query .= " ORDER BY ug.group_desc ASC";
         
         $this->connect();
         $this->query($query);
