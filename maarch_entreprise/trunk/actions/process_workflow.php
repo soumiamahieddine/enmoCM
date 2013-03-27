@@ -234,7 +234,11 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             $updateStatus = false;
         }
         //UPDATE STATUS IF NOBODY AFTER ME
-        if (!$someoneAfterMe && ($updateStatus && $theNewStatus <> '')) {
+        if (
+            !$someoneAfterMe 
+            && ($updateStatus && $theNewStatus <> '')
+            && $way == 'forward'
+        ) {
             $queryUpdateStatus = "update " 
                 . $table . " set status = '" 
                 . $theNewStatus 
