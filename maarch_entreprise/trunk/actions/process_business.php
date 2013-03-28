@@ -406,7 +406,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . 'whatIsTheDivStatus(\'emails_div\', \'divStatus_emails_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= ' <span id="divStatus_emails_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
-            . _SENDED_EMAILS . ' ('.$nbr_emails.')';
+            . '<small>' ._SENDED_EMAILS . ' ('.$nbr_emails.')</small>';
         $frm_str .= '</b></span>&nbsp;|';
         $frm_str .= '</td>';
     }
