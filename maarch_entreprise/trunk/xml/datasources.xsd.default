@@ -12,7 +12,7 @@
         driver='postgresql' 
         host='localhost' 
         port='5432' 
-        dbname='maarch_entreprise_trunk' 
+        dbname='maarch_entreprise' 
         user='postgres' 
         password='maarch' />
     </xsd:appinfo>
