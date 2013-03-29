@@ -446,7 +446,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</tr>';
     
     /*** Identifier ***/
-    $frm_str .= '<tr id="identifier_tr" style="display:' . $displayValue . ';">';
+    $frm_str .= '<tr id="identifier_tr" style="display:' . $display_value . ';">';
     $frm_str .= '<td style="width:30px;align:center;"><img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?filename='
                 . 'identifier.png" alt="' . _IDENTIFIER 
@@ -482,7 +482,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</tr >';
     
     /*** currency ***/
-    $frm_str .= '<tr id="currency_tr" style="display:' . $displayValue . ';">';
+    $frm_str .= '<tr id="currency_tr" style="display:' . $display_value . ';">';
     $frm_str .= '<td style="width:30px;align:center;"><img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?filename='
                 . 'currency.png" alt="' . _CURRENCY 
@@ -512,7 +512,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</tr>';
     
     /*** net_sum ***/
-    $frm_str .= '<tr id="net_sum_tr" style="display:' . $displayValue . ';">';
+    $frm_str .= '<tr id="net_sum_tr" style="display:' . $display_value . ';">';
     $frm_str .= '<td style="width:30px;align:center;"><img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?filename='
                 . 'amount.png" alt="' . _NET_SUM 
@@ -539,7 +539,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</tr>';
     
     /*** tax_sum ***/
-    $frm_str .= '<tr id="tax_sum_tr" style="display:' . $displayValue . ';">';
+    $frm_str .= '<tr id="tax_sum_tr" style="display:' . $display_value . ';">';
     $frm_str .= '<td style="width:30px;align:center;">&nbsp;</td><td><label for="tax_sum_use" class="form_title" >' . _TAX_SUM
             . '</label></td>';
     $frm_str .= '<td class="indexing_field">'
@@ -563,7 +563,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</tr>';
     
     /*** total_sum ***/
-    $frm_str .= '<tr id="total_sum_tr" style="display:' . $displayValue . ';">';
+    $frm_str .= '<tr id="total_sum_tr" style="display:' . $display_value . ';">';
     $frm_str .= '<td style="width:30px;align:center;">&nbsp;</td><td><label for="total_sum_use" class="form_title" >' . _TOTAL_SUM
             . '</label></td>';
     $frm_str .= '<td class="indexing_field">'
@@ -621,7 +621,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</tr>';
       
         # Diffusion list model            
-        $frm_str .= '<tr id="difflist_tr" style="display:' . $displayValue . ';">';
+        $frm_str .= '<tr id="difflist_tr" style="display:' . $display_value . ';">';
         $frm_str .= '<td style="width:30px;align:center;"><img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename='
                 . 'department.png" alt="' . _DIFFUSION_LIST 
@@ -633,7 +633,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<select name="difflist" id="difflist" onchange="'
                     . 'clear_error(\'frm_error_' . $id_action . '\');'
                     . 'load_listmodel(this.options[this.selectedIndex], \'diff_list_div\', \'indexing\');'
-                    . '$(\'diff_list_tr\').style.display=\''.$displayValue.'\''
+                    . '$(\'diff_list_tr\').style.display=\''.$display_value.'\''
                 . ';" >';
         $frm_str .= '<option value="">' . _CHOOSE_DIFFUSION_LIST . '</option>';
         if(count($listmodels) > 0) {
@@ -713,7 +713,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
     }
     if (count($statuses) > 0) {
-        $frm_str .= '<tr id="status" style="display:' . $displayValue . ';">';
+        $frm_str .= '<tr id="status" style="display:' . $display_value . ';">';
         $frm_str .= '<td><td style="width:30px;align:center;">&nbsp;</td><label for="status" class="form_title" >' . _STATUS
                 . '</label></td>';
         $frm_str .= '<td class="indexing_field"><select name="status" '
@@ -837,6 +837,16 @@ $frm_str .= '</div>';
             $frm_str .= '</b></span>|';
             $frm_str .= '</td>';
         }
+        
+        // HISTORY
+        $frm_str .= '<td>';
+        $frm_str .= '|<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><<</span><b>'
+           . '<small>' . _DOC_HISTORY . '</small>';
+        $frm_str .= '</b></span>|';
+        $frm_str .= '</td>';
         
         //NOTE
         if ($core_tools->is_module_loaded('notes')) {
@@ -1074,6 +1084,22 @@ $frm_str .= '</div>';
         $frm_str .= '<hr />';
         $frm_str .= '</div>';
         $frm_str .= '<script type="text/javascript">show_admin_contacts(true);</script>';
+        
+        //HISTORY FRAME
+        $frm_str .= '<div class="desc" id="history_div" style="display:none">';
+        $frm_str .= '<div class="ref-unit">';
+        $frm_str .= '<center><h2 onclick="new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});';
+        $frm_str .= 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');';
+        $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _HISTORY. '</h2></center>';
+        $frm_str .= '<iframe src="'
+            . $_SESSION['config']['businessappurl']
+            . 'index.php?display=true&dir=indexing_searching&page=document_history&id='
+            . $res_id . '&coll_id=' . $coll_id . '&load&size=medium" '
+            . 'name="hist_doc_process" width="100%" height="690px" align="center" '
+            . 'scrolling="auto" frameborder="0" id="hist_doc_process" style="height: 690px; max-height: 690px; overflow: scroll;"></iframe>';
+        $frm_str .= '</div>';
+        $frm_str .= '<hr />';
+        $frm_str .= '</div>';
         
         //NOTES
         if ($core_tools->is_module_loaded('notes')) {

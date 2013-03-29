@@ -418,7 +418,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_diff_list_div" style="color:#1C99C5;"><<</span><b>'
-            . '<small>' . _DIFF_LIST_COPY . '</small>';
+            . '<small>' . _WF . '</small>';
         $frm_str .= '</b></span>|';
         $frm_str .= '</td>';
     }
@@ -608,7 +608,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . $res_id . '&coll_id=' . $coll_id . '&load&size=medium" '
         . 'name="hist_doc_process" width="100%" height="690px" align="center" '
         . 'scrolling="auto" frameborder="0" id="hist_doc_process" style="height: 690px; max-height: 690px; overflow: scroll;"></iframe>';
-    //$frm_str .= '<hr class="hr_process"/>';
     $frm_str .= '</div>';
     $frm_str .= '<hr />';
     $frm_str .= '</div>';

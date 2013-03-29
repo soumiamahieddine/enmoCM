@@ -274,6 +274,16 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $frmStr .= '</div>';
     }
     $frmStr .= '<hr />';
+    
+    $frmStr .= '<h4 onclick="new Effect.toggle(\'general_infos_div\', \'blind\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'general_infos_div\', \'divStatus_general_infos_div\');" '
+        . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
+    $frmStr .= ' <span id="divStatus_general_infos_div" style="color:#1C99C5;">>></span>&nbsp;' 
+        ._GENERAL_INFO;
+    $frmStr .= '</h4>';
+    $frmStr .= '<div id="general_infos_div"  style="display:inline">';
+    $frmStr .= '<div class="ref-unit">';
+    
     if ($core->test_service('index_attachment', 'attachments', false)) {
         $frmStr .= '<table width="100%" align="center" border="0" >';
         $frmStr .= '<tr id="attachment_tr" style="display:' . $displayValue
@@ -336,6 +346,10 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
 
         $frmStr .= '</table>';
     }
+    
+    $frmStr .= '<table width="100%" align="center" '
+        . 'border="0"  id="indexing_fields" style="display:block;">';
+    
     $frmStr .= '<table width="100%" align="center" border="0" '
             . 'id="indexing_fields" style="display:block;">';
     /*** Category ***/
@@ -668,6 +682,9 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     }
     
     $frmStr .= '</table>';
+    
+    $frmStr .= '</div>';
+    $frmStr .= '</div>';
     
     /*** CUSTOM INDEXES ***/
     $frmStr .= '<div id="comp_indexes" style="display:block;">';

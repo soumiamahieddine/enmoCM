@@ -243,6 +243,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     $frm_str .= '<hr width="90%" align="center"/>';
     
+    $frm_str .= '<h4 onclick="new Effect.toggle(\'general_infos_div\', \'blind\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'general_infos_div\', \'divStatus_general_infos_div\');" '
+        . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
+    $frm_str .= ' <span id="divStatus_general_infos_div" style="color:#1C99C5;">>></span>&nbsp;' 
+        ._GENERAL_INFO;
+    $frm_str .= '</h4>';
+    $frm_str .= '<div id="general_infos_div"  style="display:inline">';
+    $frm_str .= '<div class="ref-unit">';
+    
                   $frm_str .= '<table width="100%" align="center" border="0"  id="indexing_fields" style="display:block;">';
                   /*** Category ***/
                   $frm_str .= '<tr id="category_tr" style="display:'.$display_value.';">';
@@ -534,7 +543,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             }
         }
         if(count($statuses) > 0) {
-            $frm_str .= '<tr id="status" style="display:' . $displayValue . ';">';
+            $frm_str .= '<tr id="status" style="display:' . $display_value . ';">';
             $frm_str .= '<td><label for="status" class="form_title" >' . _STATUS
                     . '</label></td>';
             $frm_str .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
@@ -554,6 +563,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
         
         $frm_str .= '</table>';
+        
+        $frm_str .= '</div>';
+        $frm_str .= '</div>';
         
         /*** CUSTOM INDEXES ***/
         $frm_str .= '<div id="comp_indexes" style="display:block;">';
@@ -693,6 +705,16 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</b></span>|';
             $frm_str .= '</td>';
         }
+        
+        // HISTORY
+        $frm_str .= '<td>';
+        $frm_str .= '|<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><<</span><b>'
+           . '<small>' . _DOC_HISTORY . '</small>';
+        $frm_str .= '</b></span>|';
+        $frm_str .= '</td>';
         
         //NOTE
         if ($core_tools->is_module_loaded('notes')) {
@@ -930,6 +952,22 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<hr />';
         $frm_str .= '</div>';
         $frm_str .= '<script type="text/javascript">show_admin_contacts(true);</script>';
+        
+        //HISTORY FRAME
+        $frm_str .= '<div class="desc" id="history_div" style="display:none">';
+        $frm_str .= '<div class="ref-unit">';
+        $frm_str .= '<center><h2 onclick="new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});';
+        $frm_str .= 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');';
+        $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _HISTORY. '</h2></center>';
+        $frm_str .= '<iframe src="'
+            . $_SESSION['config']['businessappurl']
+            . 'index.php?display=true&dir=indexing_searching&page=document_history&id='
+            . $res_id . '&coll_id=' . $coll_id . '&load&size=medium" '
+            . 'name="hist_doc_process" width="100%" height="690px" align="center" '
+            . 'scrolling="auto" frameborder="0" id="hist_doc_process" style="height: 690px; max-height: 690px; overflow: scroll;"></iframe>';
+        $frm_str .= '</div>';
+        $frm_str .= '<hr />';
+        $frm_str .= '</div>';
         
         //NOTES
         if ($core_tools->is_module_loaded('notes')) {
