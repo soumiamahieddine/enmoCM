@@ -175,23 +175,33 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     $today = date('d-m-Y');
 
-    if($core_tools->is_module_loaded('entities'))
-    {
-        require_once("modules".DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
-        $diff_list = new diffusion_list();
-        $services = array();
-        if(!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']))
-        {
-            $db->query("select entity_id, short_label from ".$_SESSION['tablename']['ent_entities']." where entity_id in (".$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'].") and enabled= 'Y' order by entity_label");
-            while($res = $db->fetch_object())
-            {
-                array_push($services, array( 'ID' => $res->entity_id, 'LABEL' => $db->show_string($res->short_label)));
+    if ($core_tools->is_module_loaded('entities')) {
+        $EntitiesIdExclusion = array();
+        $db = new dbquery();
+        $db->connect();
+        if (count($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']) > 0) {
+            $db->query(
+                "select entity_id from "
+                . ENT_ENTITIES . " where entity_id not in ("
+                . $_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']
+                . ") and enabled= 'Y' order by entity_id"
+            );
+            while ($res = $db->fetch_object()) {
+                array_push($EntitiesIdExclusion, $res->entity_id);
             }
         }
+        require_once 'modules/entities/class/class_manage_entities.php';
+        $ent = new entity();
+        $allEntitiesTree= array();
+        $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
+            $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
+        );
+        //LOADING LISTMODEL
+        require_once('modules/entities/class/class_manage_listdiff.php');
+        $diff_list = new diffusion_list();
         $load_listmodel = true;
-        $db->query("select res_id from ".$_SESSION['tablename']['ent_listinstance']." where res_id = ".$res_id);
-        if($db->nb_result() > 0)
-        {
+        $db->query("select res_id from " . $_SESSION['tablename']['ent_listinstance']." where res_id = " . $res_id);
+        if ($db->nb_result() > 0) {
             $load_listmodel = false;
             $_SESSION['indexing']['diff_list'] = $diff_list->get_listinstance($res_id);
         }
@@ -436,32 +446,41 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                          $frm_str .= '</textarea></td>';
                          $frm_str .= '<td><span class="red_asterisk" id="subject_mandatory" style="display:inline;">*</span>&nbsp;</td>';
                   $frm_str .= '</tr>';
+                
                 /*** Entities : department + diffusion list ***/
-                if($core_tools->is_module_loaded('entities'))
-                {
+                if ($core_tools->is_module_loaded('entities')) {
                     $_SESSION['validStep'] = "ok";
-                  $frm_str .= '<tr id="department_tr" style="display:'.$display_value.';">';
-                        $frm_str .='<td class="indexing_label"><label for="department" class="form_title" id="label_dep_dest" style="display:inline;" >'._DEPARTMENT_DEST.'</label><label for="department" class="form_title" id="label_dep_exp" style="display:none;" >'._DEPARTMENT_EXP.'</label></td>';
-                        $frm_str .='<td>&nbsp;</td>';
+                    $frm_str .= '<tr id="department_tr" style="display:'.$display_value.';">';
+                    $frm_str .='<td class="indexing_label"><label for="department" class="form_title" id="label_dep_dest" style="display:inline;" >'._DEPARTMENT_DEST.'</label><label for="department" class="form_title" id="label_dep_exp" style="display:none;" >'._DEPARTMENT_EXP.'</label></td>';
+                    $frm_str .='<td>&nbsp;</td>';
                     $frm_str .='<td class="indexing_field"><select name="destination" id="destination" onchange="clear_error(\'frm_error_'.$id_action.'\');change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\',\'diff_list_div\', \'indexing\', \''.$display_value.'\');">';
-                        $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
-                       for($i=0; $i < count($services); $i++)
-                       {
-                            $frm_str .='<option value="'.$services[$i]['ID'].'" ';
-                            if(isset($data['destination'])&& $data['destination'] == $services[$i]['ID'])
-                            {
-                                $frm_str .='selected="selected"';
+                    $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
+                    
+                    $countAllEntities = count($allEntitiesTree);
+                    for ($cptEntities = 0;$cptEntities < $countAllEntities;$cptEntities++) {
+                        if (!$allEntitiesTree[$cptEntities]['KEYWORD']) {
+                            $frm_str .= '<option data-object_type="entity_id" value="' . $allEntitiesTree[$cptEntities]['ID'] . '"';
+                             if (isset($data['destination'])&& $data['destination'] == $allEntitiesTree[$cptEntities]['ID']) {
+                                $frm_str .=' selected="selected"';
                             }
-                            $frm_str .= '>'.$db->show_string($services[$i]['LABEL']).'</option>';
-                       }
+                            if ($allEntitiesTree[$cptEntities]['DISABLED']) {
+                                $frm_str .= ' disabled="disabled" class="disabled_entity"';
+                            } else {
+                                 //$frm_str .= ' style="font-weight:bold;"';
+                            }
+                            $frm_str .=  '>' 
+                                .  $db->show_string($allEntitiesTree[$cptEntities]['SHORT_LABEL']) 
+                                . '</option>';
+                        }
+                    }
                     $frm_str .='</select></td>';
                     $frm_str .= '<td><span class="red_asterisk" id="destination_mandatory" style="display:inline;">*</span>&nbsp;</td>';
-                  $frm_str .= '</tr>';
+                    $frm_str .= '</tr>';
                     $frm_str .= '<tr id="diff_list_tr" style="display:none;">';
-                        $frm_str .= '<td colspan="3">';
-                        $frm_str .= '<div id="diff_list_div" class="scroll_div" '
-                            . 'style="width:420px; border: 1px solid;"></div>';
-                        $frm_str .= '</td>';
+                    $frm_str .= '<td colspan="3">';
+                    $frm_str .= '<div id="diff_list_div" class="scroll_div" '
+                        . 'style="width:420px; border: 1px solid;"></div>';
+                    $frm_str .= '</td>';
                     $frm_str .= '</tr>';
                 }
                 
@@ -520,7 +539,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     . '</label></td>';
             $frm_str .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
             $frm_str .= '<td class="indexing_field"><select name="status" '
-                    . 'id="status" onchange="clear_error(\'frm_error_' . $actionId
+                    . 'id="status" onchange="clear_error(\'frm_error_' . $id_action
                     . '\');">';
             $frm_str .= '<option value="">' . _CHOOSE_STATUS . '</option>';
             for ($i = 0; $i < count($statuses); $i ++) {

@@ -141,7 +141,6 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $defaultTitle = $tmp['default_title'];
     
     if ($core->is_module_loaded('entities')) {
-        $services = array();
         $EntitiesIdExclusion = array();
         $db = new dbquery();
         $db->connect();

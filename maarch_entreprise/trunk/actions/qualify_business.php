@@ -178,27 +178,37 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $today = date('d-m-Y');
 
     if ($core_tools->is_module_loaded('entities')) {
-        require_once('modules/entities/class/class_manage_listdiff.php');
-        $diff_list = new diffusion_list();
-        $services = array();
-        if (!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'])) {
-            $db->query("select entity_id, short_label from " 
-                . $_SESSION['tablename']['ent_entities'] 
-                . " where entity_id in (" 
-                . $_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'] 
-                . ") and enabled= 'Y' order by entity_label");
+        $EntitiesIdExclusion = array();
+        $db = new dbquery();
+        $db->connect();
+        if (count($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']) > 0) {
+            $db->query(
+                "select entity_id from "
+                . ENT_ENTITIES . " where entity_id not in ("
+                . $_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']
+                . ") and enabled= 'Y' order by entity_id"
+            );
             while ($res = $db->fetch_object()) {
-                array_push($services, array( 'ID' => $res->entity_id, 'LABEL' => $db->show_string($res->short_label)));
+                array_push($EntitiesIdExclusion, $res->entity_id);
             }
         }
+        require_once 'modules/entities/class/class_manage_entities.php';
+        $ent = new entity();
+        $allEntitiesTree= array();
+        $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
+            $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
+        );
+        //LOADING LISTMODEL
+        require_once('modules/entities/class/class_manage_listdiff.php');
+        $diff_list = new diffusion_list();
         $load_listmodel = true;
-        $db->query("select res_id from ".$_SESSION['tablename']['ent_listinstance']." where coll_id = '" 
+        $db->query("select res_id from " . $_SESSION['tablename']['ent_listinstance']." where coll_id = '" 
             . $coll_id . "' and res_id = " . $res_id);
         if ($db->nb_result() > 0) {
             $load_listmodel = false;
             $_SESSION['indexing']['diff_list'] = $diff_list->get_listinstance($res_id, false, $coll_id);
         }
-        
+        //LOADING DIFFLIST TYPES
         $groupbasket_difflist_types = 
             $diff_list->list_groupbasket_difflist_types(
                 $_SESSION['user']['primarygroup'],
@@ -211,10 +221,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $difflistTypes[$difflist_type_id] = $diff_list->get_difflist_type($difflist_type_id);
             $listmodels[$difflist_type_id] = $diff_list->select_listmodels($difflist_type_id);
         }
-        
     }
-
-
+    
     check_category($coll_id, $res_id);
     $data = get_general_data($coll_id, $res_id, 'minimal');
 /*
@@ -445,7 +453,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . '"/></td><td><label for="identifier" class="form_title" >' . _IDENTIFIER
             . '</label></td>';
     $frm_str .= '<td class="indexing_field"><input name="identifier" type="text" '
-            . 'id="identifier" onchange="clear_error(\'frm_error_' . $actionId
+            . 'id="identifier" onchange="clear_error(\'frm_error_' . $id_action
             . '\');"value="';
     if (isset($data['identifier'])&& !empty($data['identifier'])) {
         $frm_str .= $data['identifier'];
@@ -487,7 +495,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     array_push($tabCurrency, array('id' => 'POU', 'label' => 'POUND £'));
     $cptTab = count($tabCurrency);
     $frm_str .= '<td class="indexing_field">'
-        . '<select id="currency" name="currency" onchange="clear_error(\'frm_error_' . $actionId
+        . '<select id="currency" name="currency" onchange="clear_error(\'frm_error_' . $id_action
         . '\');convertAllBusinessAmount();">';
     for($cpt=0;$cpt<$cptTab;$cpt++) {
         if ($tabCurrency[$cpt]['id'] == $data['currency']) {
@@ -512,7 +520,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . '</label></td>';
     $frm_str .= '<td class="indexing_field">'
         . '<input name="net_sum_use" type="text" '
-        . 'id="net_sum_use" onchange="clear_error(\'frm_error_' . $actionId
+        . 'id="net_sum_use" onchange="clear_error(\'frm_error_' . $id_action
         . '\');$(\'net_sum_preformatted\').value=convertAmount($(\'currency\').options[$(\'currency\').selectedIndex].value, this.value);'
         . '$(\'net_sum\').value=convertAmount(\'\', this.value);computeTotalAmount();" '
         . 'class="amountLeft" value="';
@@ -536,7 +544,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . '</label></td>';
     $frm_str .= '<td class="indexing_field">'
         . '<input name="tax_sum_use" type="text" '
-        . 'id="tax_sum_use" onchange="clear_error(\'frm_error_' . $actionId
+        . 'id="tax_sum_use" onchange="clear_error(\'frm_error_' . $id_action
         . '\');$(\'tax_sum_preformatted\').value=convertAmount($(\'currency\').options[$(\'currency\').selectedIndex].value, this.value);'
         . '$(\'tax_sum\').value=convertAmount(\'\', this.value);computeTotalAmount();" '
         . 'class="amountLeft" value="';
@@ -560,7 +568,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . '</label></td>';
     $frm_str .= '<td class="indexing_field">'
         . '<input name="total_sum_use" type="text" '
-        . 'id="total_sum_use" onchange="clear_error(\'frm_error_' . $actionId
+        . 'id="total_sum_use" onchange="clear_error(\'frm_error_' . $id_action
         . '\');$(\'total_sum_preformatted\').value=convertAmount($(\'currency\').options[$(\'currency\').selectedIndex].value, this.value);'
         . '$(\'total_sum\').value=convertAmount(\'\', this.value);controlTotalAmount();" '
         . 'class="amountLeft" value="';
@@ -590,14 +598,24 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . _DEPARTMENT_OWNER . '</label></td>';
         $frm_str .='<td class="indexing_field">'
             . '<select name="destination" id="destination" onchange="clear_error(\'frm_error_'. $id_action . '\');">';
-            $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
-           for ($i=0; $i < count($services); $i++) {
-                $frm_str .='<option value="'.$services[$i]['ID'].'" ';
-                if (isset($data['destination'])&& $data['destination'] == $services[$i]['ID']) {
-                    $frm_str .='selected="selected"';
+        $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
+        $countAllEntities = count($allEntitiesTree);
+        for ($cptEntities = 0;$cptEntities < $countAllEntities;$cptEntities++) {
+            if (!$allEntitiesTree[$cptEntities]['KEYWORD']) {
+                $frm_str .= '<option data-object_type="entity_id" value="' . $allEntitiesTree[$cptEntities]['ID'] . '"';
+                 if (isset($data['destination'])&& $data['destination'] == $allEntitiesTree[$cptEntities]['ID']) {
+                    $frm_str .=' selected="selected"';
                 }
-                $frm_str .= '>'.$db->show_string($services[$i]['LABEL']).'</option>';
-           }
+                if ($allEntitiesTree[$cptEntities]['DISABLED']) {
+                    $frm_str .= ' disabled="disabled" class="disabled_entity"';
+                } else {
+                     //$frm_str .= ' style="font-weight:bold;"';
+                }
+                $frm_str .=  '>' 
+                    .  $db->show_string($allEntitiesTree[$cptEntities]['SHORT_LABEL']) 
+                    . '</option>';
+            }
+        }
         $frm_str .='</select></td>';
         $frm_str .= '<td><span class="red_asterisk" id="destination_mandatory" style="display:inline;">*</span>&nbsp;</td>';
         $frm_str .= '</tr>';
@@ -613,7 +631,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         //$frm_str .= '<td>&nbsp;</td>';
         $frm_str .= '<td class="indexing_field">';
         $frm_str .= '<select name="difflist" id="difflist" onchange="'
-                    . 'clear_error(\'frm_error_' . $actionId . '\');'
+                    . 'clear_error(\'frm_error_' . $id_action . '\');'
                     . 'load_listmodel(this.options[this.selectedIndex], \'diff_list_div\', \'indexing\');'
                     . '$(\'diff_list_tr\').style.display=\''.$displayValue.'\''
                 . ';" >';
@@ -699,7 +717,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<td><td style="width:30px;align:center;">&nbsp;</td><label for="status" class="form_title" >' . _STATUS
                 . '</label></td>';
         $frm_str .= '<td class="indexing_field"><select name="status" '
-                . 'id="status" onchange="clear_error(\'frm_error_' . $actionId
+                . 'id="status" onchange="clear_error(\'frm_error_' . $id_action
                 . '\');">';
         $frm_str .= '<option value="">' . _CHOOSE_STATUS . '</option>';
         for ($i = 0; $i < count($statuses); $i ++) {
