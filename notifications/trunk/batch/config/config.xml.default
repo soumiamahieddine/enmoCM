@@ -31,7 +31,7 @@
         <databasepassword>maarch</databasepassword>
     </CONFIG_BASE>
     <MAILER>
-        <path_to_mailer>\modules\notifications\class\mails\htmlMimeMail.php</path_to_mailer>
+        <path_to_mailer>\apps\maarch_entreprise\tools\mails\htmlMimeMail.php</path_to_mailer>
         <path_to_phpmailer>PHPMailer_v5.1</path_to_phpmailer>
         <type>smtp</type><!-- mail (default), smtp, sendmail, qmail -->
         <smtp_host>smtp.yourdomain.com</smtp_host><!-- smtp1.example.com:25;smtp2.example.com -->
