@@ -3244,6 +3244,7 @@ CREATE TABLE sendmail
   email_object character varying(255) DEFAULT NULL,
   email_body text,
   is_res_master_attached character varying(1) NOT NULL DEFAULT 'Y',
+  res_version_id_list character varying(255) DEFAULT NULL,
   res_attachment_id_list character varying(255) DEFAULT NULL,
   note_id_list character varying(255) DEFAULT NULL,
   is_html character varying(1) NOT NULL DEFAULT 'Y',
@@ -3251,7 +3252,7 @@ CREATE TABLE sendmail
   creation_date timestamp without time zone NOT NULL,
   send_date timestamp without time zone DEFAULT NULL,
   CONSTRAINT sendmail_pkey PRIMARY KEY (email_id )
-);
+ );
 
 --VIEWS
 --view for demo
