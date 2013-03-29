@@ -43,12 +43,19 @@ class Install extends functions
     private $lang = 'en';
 
     private $docservers = array(
+        array('OFFLINE_1', 'offline'),
         array('FASTHD_AI', 'ai'),
-        array('FASTHD_MAN', 'manual'),
         array('OAIS_MAIN_1', 'OAIS_main'),
         array('OAIS_SAFE_1', 'OAIS_safe'),
-        array('OFFLINE_1', 'offline'),
-        array('TEMPLATES', 'templates')
+        array('FASTHD_MAN', 'manual'),
+        array('TEMPLATES', 'templates'),
+        array('FASTHD_RM_BATCH', 'RM_BATCH'),
+        array('FASTHD_RM_MAN', 'RM_MAN'),
+        array('IOS', 'IOS'),
+        array('OAIS_RM', 'OAIS_RM'),
+        array('LOG', 'LOG'),
+        array('BUSINESS_MAN', 'BUSINESS_MAN'),
+        array('PHOTO_CAPTURE', 'photo_capture'),
     );
 
     function __construct()
