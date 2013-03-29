@@ -142,6 +142,7 @@ class sendmail extends dbquery
                 . " where email_id = " . $id 
                 . " and (is_res_master_attached ='Y' or"
                 . " res_attachment_id_list <> '' or" 
+                . " res_version_id_list <> '' or" 
                 . " note_id_list <> '')");
         // $db->show(); 
         if ($db->nb_result() > 0)
@@ -149,14 +150,58 @@ class sendmail extends dbquery
         else
             return false;
     }
-    
+	
     public function getJoinedFiles($coll_id, $table, $id, $from_res_attachment=false) {
         $joinedFiles = array();
         $db = new dbquery();
         $db->connect();
         if ($from_res_attachment === false) {
+			require_once('core/class/class_security.php');
+			$sec = new security();	
+			$versionTable = $sec->retrieve_version_table_from_coll_id(
+				$coll_id
+			);
+			
+			//Have version table
+			if ($versionTable <> '') {
+				$db->query("select res_id from " 
+					. $versionTable . " where res_id_master = " 
+					. $id . " and status <> 'DEL' order by res_id desc");
+				$line = $db->fetch_object();
+				$lastVersion = $line->res_id;
+				//Have new version
+				if ($lastVersion <> '') {
+					$db->query(
+						"select res_id, description, subject, title, format, filesize, relation from "
+						. $versionTable . " where res_id = " . $lastVersion	. " and status <> 'DEL'"
+					);
+					// $db->show();
+					//Get infos
+					while($res = $db->fetch_object()) {
+						$label = '';
+						//Tile, or subject or description
+						if (strlen(trim($res->title)) > 0)
+							$label = $res->title;
+						elseif (strlen(trim($res->subject)) > 0)
+							$label = $res->subject;
+						elseif (strlen(trim($res->description)) > 0)
+							$label = $res->description;
+							
+						array_push($joinedFiles,
+									array('id' => $res->res_id, //ID
+										  'label' => $this->show_string($label), //Label
+										  'format' => $res->format, //Format 
+										  'filesize' => $res->filesize, //Filesize
+										  'is_version' => true, //Have version bool
+										  'version' => $res->relation //Version
+										)
+						);
+					}
+				}
+			}
+			
             $db->query(
-                "select res_id, description, subject, title, format, filesize from "
+                "select res_id, description, subject, title, format, filesize, relation from "
                 . $table . " where res_id = " . $id 
                 . " and status <> 'DEL'");
         } else {
@@ -182,7 +227,9 @@ class sendmail extends dbquery
                         array('id' => $res->res_id, //ID
                               'label' => $this->show_string($label), //Label
                               'format' => $res->format, //Format 
-                              'filesize' => $res->filesize //Filesize
+                              'filesize' => $res->filesize, //Filesize
+                              'is_version' => false, //
+                              'version' => '' //
                             )
             );
         }
@@ -259,6 +306,10 @@ class sendmail extends dbquery
                 $email['cci'] = array();
                 if (!empty($res->cci_list)) {
                     $email['cci'] = explode(',', $res->cci_list);
+                }               
+                $email['version'] = array();
+                if (!empty($res->res_version_id_list)) {
+                    $email['version'] = explode(',', $res->res_version_id_list);
                 }               
                 $email['attachments'] = array();
                 if (!empty($res->res_attachment_id_list)) {
@@ -467,9 +518,140 @@ class sendmail extends dbquery
 		return $viewAttachmentArr;
 	}
 	
-	public function createFilename($label, $extension){
+	public function getVersion($collectionArray, $coll_id, $res_id_master, $res_version) {
+		
+		$viewVersionArr = array();
+		
+		//Parse collection
+		for ($i=0;$i<count($collectionArray);$i++) {
+			if ($collectionArray[$i]['id'] == $coll_id) {
+				//Get table
+				$table = $collectionArray[$i]['table'];
+				//Get adress
+				$adrTable = $collectionArray[$i]['adr'];
+				//Get versions table
+				$versionTable = $collectionArray[$i]['version_table'];
+				break;
+			}
+		}
+
+		//Have version table
+		if ($versionTable <> '') {
+			$db = new dbquery();
+			$db->connect();
+			
+			$db->query("select res_id, description, subject, title, docserver_id, "
+				. "path, filename,format, filesize, relation from " 
+				. $versionTable . " where res_id = " . $res_version	. " and res_id_master = " 
+				. $res_id_master . " and status <> 'DEL'");
+			//$db->show();
+			//Have new version
+			if ($db->nb_result() > 0) {
+
+				$line = $db->fetch_object();
+				//Tile, or subject or description
+				if (strlen(trim($line->title)) > 0)
+					$label = $line->title;
+				elseif (strlen(trim($line->subject)) > 0)
+					$label = $line->subject;
+				elseif (strlen(trim($line->description)) > 0)
+					$label = $line->description;
+					
+				//Get file from docserver
+				require_once 'core/core_tables.php';
+				require_once 'core/docservers_tools.php';
+				
+				$docserver = $line->docserver_id;
+				$path = $line->path;
+				$filename = $line->filename;
+				$format = $line->format;
+				$db->query(
+					"select path_template from " . _DOCSERVERS_TABLE_NAME
+					. " where docserver_id = '" . $docserver . "'"
+				);
+				//$db->show();
+				$lineDoc = $db->fetch_object();
+				$docserver = $lineDoc->path_template;
+				$file = $docserver . $path . $filename;
+				$file = str_replace("#", DIRECTORY_SEPARATOR, $file);
+				
+				//Is there a corresponding file?
+				if (file_exists($file)) {
+					$mimeType = Ds_getMimeType($file);
+					
+					$fileNameOnTmp = 'tmp_file_' . rand()
+						. '.' . strtolower($format);
+					$filePathOnTmp = $_SESSION['config']
+						['tmppath'] . DIRECTORY_SEPARATOR
+						. $fileNameOnTmp;
+					copy($file, $filePathOnTmp);
+					
+					$viewVersionArr = array(
+						'status' => 'ok',
+						'label' => $this->show_string($label),
+						'mime_type' => $mimeType,
+						'ext' => $format,
+						'file_content' => '',
+						'tmp_path' => $_SESSION['config']
+						['tmppath'],
+						'file_path' => $filePathOnTmp,
+						'called_by_ws' => '',
+						'error' => ''
+					);
+				} else {
+					$viewVersionArr = array(
+						'status' => 'ko',
+						'label' => '',
+						'mime_type' => '',
+						'ext' => '',
+						'file_content' => '',
+						'tmp_path' => '',
+						'file_path' => '',
+						'called_by_ws' => '',
+						'error' => _FILE_NOT_EXISTS_ON_THE_SERVER
+					);
+				}
+			} else {
+				$viewVersionArr = array(
+					'status' => 'ko',
+					'label' => '',
+					'mime_type' => '',
+					'ext' => '',
+					'file_content' => '',
+					'tmp_path' => '',
+					'file_path' => '',
+					'called_by_ws' => '',
+					'error' => _NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS
+				);
+			}
+		} else {
+			$viewVersionArr = array(
+                'status' => 'ko',
+				'label' => '',
+                'mime_type' => '',
+                'ext' => '',
+                'file_content' => '',
+                'tmp_path' => '',
+                'file_path' => '',
+                'called_by_ws' => '',
+                'error' => _NO_VERSION_TABLE_FOR_THIS_COLLECTION
+            );
+		}
+		// $this->show_array($viewVersionArr);
+		
+		return $viewVersionArr;
+	}
 	
-		$filename = preg_replace("/[^a-z0-9_-s.]/i","_", $label.".".$extension); 
+	public function createFilename($label, $extension){
+		$search = array (
+                    '@[éèêë]@i', '@[ÊË]@i', '@[àâä]@i',' @[ÂÄ]@i',
+                    '@[îï]@i', '@[ÎÏ]@i', '@[ûùü]@i', '@[ÛÜ]@i',
+                    '@[ôö]@i', '@[ÔÖ]@i', '@[ç]@i', '@[^a-zA-Z0-9_-s.]@i');
+                    
+		$replace = array ('e', 'E','a', 'A','i', 'I', 'u', 'U', 'o', 'O','c','_');
+    
+		$filename = preg_replace($search, $replace, $label.".".$extension); 
+		// $filename = preg_replace("/[^a-z0-9_-s.]/i","_", $label.".".$extension); 
 		
 		return $filename;
 	}

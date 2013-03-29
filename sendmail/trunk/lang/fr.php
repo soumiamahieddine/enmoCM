@@ -61,6 +61,8 @@ if (!defined('_COPY_TO_INVISIBLE_SHORT'))
     define('_COPY_TO_INVISIBLE_SHORT','Cci');
 if (!defined('_JOINED_FILES'))
     define('_JOINED_FILES','Fichiers joints');
+if (!defined('_SHOW_OTHER_COPY_FIELDS'))
+    define('_SHOW_OTHER_COPY_FIELDS','Afficher/masquer les champs Cc et Cci');
 if (!defined('_EMAIL_OBJECT'))
     define('_EMAIL_OBJECT','Objet');
 if (!defined('_HTML_OR_RAW'))

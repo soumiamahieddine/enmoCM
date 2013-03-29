@@ -107,9 +107,9 @@ if ($mode == 'add') {
     $content .= '<input type="hidden" value="Y" name="is_html" id="is_html">';
     $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
     $content .= '<tr>';
-    $content .= '<td colspan="3" nowrap><h4>'._NEW_EMAIL.'</h4>'
+    $content .= '<td colspan="3" nowrap><b>'._NEW_EMAIL.' '.strtolower(_FROM_SHORT).': </b>'
         .$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName']
-        .': '.$_SESSION['user']['Mail'].'<br/></td>';
+        .' ('.$_SESSION['user']['Mail'].')<br/></td>';
     $content .= '</tr>';
     $content .= '<tr>';
     $content .= '<td>'._EMAIL.'</label></td>';
@@ -139,7 +139,11 @@ if ($mode == 'add') {
         . 'height="12" style="vertical-align: middle;" alt='
         . '"loading..." title="loading..."></div></div></td>';
     $content .= '</tr>';
-    $content .= '<tr>';
+    $content .= '<tr><td colspan="3"><a href="javascript://" '
+		.'onclick="new Effect.toggle(\'tr_cc\', \'blind\', {delay:0.2});'
+		.'new Effect.toggle(\'tr_cci\', \'blind\', {delay:0.2});">'
+		._SHOW_OTHER_COPY_FIELDS.'</a></td></tr>';
+    $content .= '<tr id="tr_cc" style="display:none">';
     $content .= '<td align="right" nowrap><label>'._COPY_TO_SHORT.'</label></td>';
     $content .= '<td colspan="2"><div name="cc" id="cc" class="emailInput">'
         .'<div id="loading_cc" style="display:none;"><img src="'
@@ -148,7 +152,7 @@ if ($mode == 'add') {
         . 'height="12" style="vertical-align: middle;" alt='
         . '"loading..." title="loading..."></div></div></td>';
     $content .= '</tr>';
-    $content .= '<tr>';
+    $content .= '<tr id="tr_cci" style="display:none">';
     $content .= '<td align="right" nowrap><label>'._COPY_TO_INVISIBLE_SHORT.'</label></td>';
     $content .= '<td colspan="2"><div name="cci" id="cci" class="emailInput">'
         .'<div id="loading_cci" style="display:none;"><img src="'
@@ -185,16 +189,30 @@ if ($mode == 'add') {
             $format = $joined_files[$i]['format'];
             $mime_type = $is->get_mime_type($joined_files[$i]['format']);
             $filesize = $joined_files[$i]['filesize']/1024;
-            ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = $filesize.' Octets';
-            
-            $content .= "<li alt=\"".$description
-                . "\" title=\"".$description
-                . "\"><input type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_file[]\""
-                . " class=\"check\" value=\""
-                . $id."\" checked=\"checked\">"
-                . $description." <em>(".$mime_type.")</em> ".$filesize."</li>"; 
-            
-			$filename = $sendmail_tools->createFilename($description, $format);
+            ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = round($filesize,2).' Octets';
+			//Show data
+			$version = '';
+            if($joined_files[$i]['is_version'] === true){
+				//Version
+				$version = ' - '._VERSION.' '.$joined_files[$i]['version'] ;
+				//Contents
+				$content .= "<li alt=\"".$description
+					. "\" title=\"".$description
+					. "\"><input type=\"checkbox\" id=\"join_file_".$id
+					. "_V".$joined_files[$i]['version']."\" name=\"join_version[]\""
+					. " class=\"check\" value=\""
+					. $id."\" checked=\"checked\">"
+					. $description." <em>(".$mime_type.")</em> ".$filesize.$version."</li>";
+			} else {
+				$content .= "<li alt=\"".$description
+					. "\" title=\"".$description
+					. "\"><input type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_file[]\""
+					. " class=\"check\" value=\""
+					. $id."\" checked=\"checked\">"
+					. $description." <em>(".$mime_type.")</em> ".$filesize."</li>";
+            }
+
+			$filename = $sendmail_tools->createFilename($description.$version, $format);
             $all_joined_files .= $description.': '.$filename.PHP_EOL;
         }
     }
@@ -278,12 +296,12 @@ if ($mode == 'add') {
     
     //raw text arera
     $content .='<div id="raw_mode" style="display:'.$displayRaw.'">';
-    $content .= '<textarea name="body_from_raw" id="body_from_raw" class="emailInput" cols="60" rows="15">'
+    $content .= '<textarea name="body_from_raw" id="body_from_raw" class="emailInput" cols="60" rows="14">'
         ._DEFAULT_BODY.$sendmail_tools->htmlToRaw($all_joined_files).'</textarea>';
     $content .='</div>';
     
     //Buttons
-    $content .='<hr style=" margin-top:5px;margin-bottom:5px;" />';
+    $content .='<hr style="margin-top:2px;" />';
     $content .='<div align="center">';
     //Send
     $content .=' <input type="button" name="valid" value="&nbsp;'._SEND_EMAIL
@@ -317,9 +335,9 @@ if ($mode == 'add') {
             $content .= '<input type="hidden" value="'.$emailArray['isHtml'].'" name="is_html" id="is_html">';
             $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
             $content .= '<tr>';
-            $content .= '<td colspan="3" nowrap><h4>'._EDIT_EMAIL.'</h4>'
+			$content .= '<td colspan="3" nowrap><b>'._EDIT_EMAIL.' '.strtolower(_FROM_SHORT).': </b>'
                 .$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName']
-                .': '.$_SESSION['user']['Mail'].'<br/></td>';
+                .' ('.$_SESSION['user']['Mail'].')<br/></td>';
             $content .= '</tr>';
             $content .= '<tr>';
             $content .= '<td>'._EMAIL.'</label></td>';
@@ -356,7 +374,11 @@ if ($mode == 'add') {
                 $_SESSION['adresses']['cc'] = array();
                 $_SESSION['adresses']['cc'] = $emailArray['cc'];
             }
-            $content .= '<tr>';
+			$content .= '<tr><td colspan="3"><a href="javascript://" '
+				.'onclick="new Effect.toggle(\'tr_cc\', \'blind\', {delay:0.2});'
+				.'new Effect.toggle(\'tr_cci\', \'blind\', {delay:0.2});">'
+				._SHOW_OTHER_COPY_FIELDS.'</a></td></tr>';
+			$content .= '<tr id="tr_cc" style="display:none">';
             $content .= '<td align="right" nowrap><label>'._COPY_TO_SHORT.'</label></td>';
             $content .= '<td colspan="2"><div name="cc" id="cc" class="emailInput">';
             $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'cc');
@@ -367,7 +389,7 @@ if ($mode == 'add') {
                 $_SESSION['adresses']['cci'] = array();
                 $_SESSION['adresses']['cci'] = $emailArray['cci'];
             }
-            $content .= '<tr>';
+            $content .= '<tr id="tr_cci" style="display:none">';
             $content .= '<td align="right" nowrap><label>'._COPY_TO_INVISIBLE_SHORT.'</label></td>';
             $content .= '<td colspan="2"><div name="cci" id="cci" class="emailInput">';
             $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'cci');
@@ -403,18 +425,36 @@ if ($mode == 'add') {
                     $format = $joined_files[$i]['format'];
                     $mime_type = $is->get_mime_type($joined_files[$i]['format']);
                     $filesize = $joined_files[$i]['filesize']/1024;
-                    ($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = $filesize.' Octets';
-                    //Checked?
-                    ($emailArray['resMasterAttached'] == 'Y')? $checked = ' checked="checked"' : $checked = '';
+					($filesize > 1)? $filesize = ceil($filesize).' Ko' :  $filesize = round($filesize,2).' Octets';
+
                     //Show data
-                    $content .= "<li alt=\"".$description
-                        . "\" title=\"".$description
-                        . "\"><input type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_file[]\""
-                        . " class=\"check\" value=\""
-                        . $id."\"".$checked.">"
-                        . $description." <em>(".$mime_type.")</em> ".$filesize."</li>"; 
+					$version = '';
+					if($joined_files[$i]['is_version'] === true){
+						//Checked?
+						(in_array($id, $emailArray['version']))? $checked = ' checked="checked"' : $checked = '';
+						//Version
+						$version = ' - '._VERSION.' '.$joined_files[$i]['version'] ;
+						//Content
+						$content .= "<li alt=\"".$description
+							. "\" title=\"".$description
+							. "\"><input type=\"checkbox\" id=\"join_file_".$id
+							. "_V".$joined_files[$i]['version']."\" name=\"join_version[]\""
+							. " class=\"check\" value=\""
+							. $id."\"".$checked.">"
+							. $description." <em>(".$mime_type.")</em> ".$filesize.$version."</li>";
+					} else {
+						//Checked?
+						($emailArray['resMasterAttached'] == 'Y')? $checked = ' checked="checked"' : $checked = '';
+						//Content
+						$content .= "<li alt=\"".$description
+							. "\" title=\"".$description
+							. "\"><input type=\"checkbox\" id=\"join_file_".$id."\" name=\"join_file[]\""
+							. " class=\"check\" value=\""
+							. $id."\"".$checked.">"
+							. $description." <em>(".$mime_type.")</em> ".$filesize."</li>";
+					}
                     //Filename
-					$filename = $sendmail_tools->createFilename($description, $format);
+					$filename = $sendmail_tools->createFilename($description.$version, $format);
                     $all_joined_files .= $description.': '.$filename.PHP_EOL;
                 }
             }
@@ -510,12 +550,12 @@ if ($mode == 'add') {
             
             //raw textarera
             $content .='<div id="raw_mode" style="display:'.$displayRaw.'">';
-            $content .= '<textarea name="body_from_raw" id="body_from_raw" class="emailInput" cols="60" rows="15">'
+            $content .= '<textarea name="body_from_raw" id="body_from_raw" class="emailInput" cols="60" rows="14">'
                 .$sendmail_tools->htmlToRaw($emailArray['body']).'</textarea>';
             $content .='</div>';
             
             //Buttons
-            $content .='<hr />';
+            $content .='<hr style="margin-top:5px;margin-bottom:2px;" />';
             $content .='<div align="center">';
             
             if ($emailArray['status'] <> 'S') {
@@ -567,9 +607,9 @@ if ($mode == 'add') {
             $content .= '<div class="block">';
             $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
             $content .= '<tr>';
-            $content .= '<td colspan="3" nowrap><h4>'._READ_EMAIL.'</h4>'
+			$content .= '<td colspan="3" nowrap><b>'._READ_EMAIL.' '.strtolower(_FROM_SHORT).': </b>'
                 .$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName']
-                .': '.$_SESSION['user']['Mail'].'<br/></td>';
+                .' ('.$_SESSION['user']['Mail'].')<br/></td>';
             $content .= '</tr>';
             //To
             if (count($emailArray['to']) > 0) {
@@ -725,13 +765,13 @@ if ($mode == 'add') {
                 //raw textarera
                 $content .='<div id="raw_mode" style="display:block">';
                 $content .= '<textarea name="body_from_raw" id="body_from_raw" class="emailInput" '
-                    .'cols="60" rows="15" readonly="readonly">'
+                    .'cols="60" rows="14" readonly="readonly">'
                     .$sendmail_tools->htmlToRaw($emailArray['body']).'</textarea>';
                 $content .='</div>';
             }
                         
             //Buttons
-            $content .='<hr />';
+            $content .='<hr style="margin-top:2px;" />';
             $content .='<div align="center">';
             //Close button
             $content .='<input type="button" name="cancel" id="cancel" class="button" value="'
