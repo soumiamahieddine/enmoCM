@@ -126,4 +126,48 @@
             </EMPTY>
         </EMPTYS>
     </log_coll>
+    <business_coll>
+        <FIELD>
+            <LIBELLE>Num GED</LIBELLE>
+            <DATABASE_FIELD>res_view_business.res_id</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Catégorie</LIBELLE>
+            <DATABASE_FIELD>category_id</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Prénom de l'expéditeur</LIBELLE>
+            <DATABASE_FIELD>contact_firstname</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Nom de l'expéditeur</LIBELLE>
+            <DATABASE_FIELD>contact_lastname</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Société de l'expéditeur</LIBELLE>
+            <DATABASE_FIELD>contact_society</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Service propriétaire</LIBELLE>
+            <DATABASE_FIELD>entity_label</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Objet</LIBELLE>
+            <DATABASE_FIELD>subject</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Type de document</LIBELLE>
+            <DATABASE_FIELD>type_label</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Montant TTC</LIBELLE>
+            <DATABASE_FIELD>total_sum</DATABASE_FIELD>
+        </FIELD>
+        <EMPTYS>
+            <EMPTY>
+                <LIBELLE>Commentaire</LIBELLE>
+                <COLNAME>comments</COLNAME> <!-- no spaces in the COLNAME -->
+            </EMPTY>
+        </EMPTYS>
+    </business_coll>
 </ROOT>
