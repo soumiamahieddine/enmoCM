@@ -2871,7 +2871,7 @@ background:  url(static.php?filename=big_home_rm_ios.gif) no-repeat top;
 background:  url(static.php?filename=big_home_physical.gif) no-repeat top;
 }
 
-.bighome_search_adv span, .bighome_userinfo span, .bighome_workflow span, .bighome_indexing span, .bighome_physical_archive, .bighome_createio span {
+.bighome_search_adv span, .bighome_userinfo span, .bighome_workflow span, .bighome_indexing span, .bighome_physical_archive span, .bighome_createio span {
     vertical-align: middle;
     margin-top: 15px;
     margin-left: 55px;
