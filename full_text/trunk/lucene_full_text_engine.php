@@ -229,8 +229,9 @@ function prepareIndexFullTextHtml($pathToFile, $indexFileDirectory, $Id)
 * @return integer user exit code is stored in fulltext_result column of the
 * document in "res_x"
 */
-function launchIndexFullText($fileContent, $indexFileDirectory, $Id)
+function launchIndexFullText($fileContent, $tempIndexFileDirectory, $Id) // $IndexFileDirectory is replace by tempIndexFileDirectory
 {
+    $indexFileDirectory = (string) $tempIndexFileDirectory; // with version 1.12, we need a string, not an XML element
     $result = -1;
     if (strlen($fileContent) > 50) {
         // Storing text in lucene index
@@ -249,8 +250,9 @@ function launchIndexFullText($fileContent, $indexFileDirectory, $Id)
                 $index = Zend_Search_Lucene::open($indexFileDirectory);
             }
         }
+        $index->setFormatVersion(Zend_Search_Lucene::FORMAT_2_3); // we set the lucene format to 2.3 
         Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-            new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
+            new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive() // we need utf8 for accents
         );
         $term = new Zend_Search_Lucene_Index_Term($Id, 'Id');
         foreach ($index->termDocs($term) as $id) {
