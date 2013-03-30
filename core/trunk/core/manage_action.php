@@ -219,7 +219,7 @@ else
             echo "{status : 6, error_txt : '".addslashes($_SESSION['action_error'])."'}";
             exit();
         }
-        $db->query("select id from status where id ='" . $_POST['new_status'] . "'");
+        $db->query("select id from status where id ='" . $status . "'");
         $lineStatus = $db->fetch_object();
         if ($lineStatus->id <> '') {
             // Update the status
