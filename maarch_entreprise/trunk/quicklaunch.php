@@ -147,6 +147,13 @@ $core_tools->test_service('quicklaunch', "apps");
             $displayed_adv_search_business = true;
         }
         //rm collection
+         if ($_SESSION['user']['UserId'] <> 'superadmin' && ($element['id'] == 'ArchiveTransferCreation' && $element['show'] == true &&
+            (!isset($displayed_create_io) || $displayed_create_io <> true))) {
+            echo '<a href="index.php?page=view_baskets&amp;module=basket&amp;baskets=BRCreation"><div class="quiclaunch_div bighome_createio"><span>'
+                ._ARCHIVE_TRANSFER_CREATE.'</span></div></a>';
+            $nb_max++;
+            $displayed_create_io = true;
+        }
          if ($_SESSION['user']['UserId'] <> 'superadmin' && ($element['id'] == 'index_rm' && $element['show'] == true &&
             (!isset($displayed_index_rm) || $displayed_index_rm <> true))) {
             echo '<a href="index.php?page=view_baskets&amp;module=basket&amp;baskets=INDEXARCHIVE"><div class="quiclaunch_div bighome_indexing"><span>'
