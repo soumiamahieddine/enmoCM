@@ -1161,3 +1161,13 @@ if (!defined('_FROM_WS')) define('_FROM_WS', 'From a web service');
 if (!defined('_PROCESS_WORKFLOW')) define('_PROCESS_WORKFLOW', 'Process workflow');
 if (!defined('_PROCESS_STEP')) define('_PROCESS_STEP', 'Process step');
 if (!defined('_DOCUMENT')) define('_DOCUMENT', 'document');
+
+/*************** business search adv **************/
+if (!defined('_CATEGORY_HELP')) define('_CATEGORY_HELP', 'Update the category will update the form');
+if (!defined('_CONTACT_HELP')) define('_CONTACT_HELP', 'Field with autocompletion, the contact type depends on the selected category');
+if (!defined('_SUBJECT_HELP')) define('_SUBJECT_HELP', 'Subject of the document');
+if (!defined('_IDENTIFIER_HELP')) define('_IDENTIFIER_HELP', 'Document ID, generally uniq');
+if (!defined('_TOTAL_SUM_MIN_HELP')) define('_TOTAL_SUM_MIN_HELP', 'Min total sum');
+if (!defined('_TOTAL_SUM_MIN')) define('_TOTAL_SUM_MIN', 'Min total sum');
+if (!defined('_TOTAL_SUM_MAX')) define('_TOTAL_SUM_MAX', 'Max total sum');
+if (!defined('_TOTAL_SUM_MAX_HELP')) define('_TOTAL_SUM_MAX_HELP', 'Max total sum');

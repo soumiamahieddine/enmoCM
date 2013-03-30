@@ -1444,3 +1444,13 @@ if (!defined('_PROCESS_WORKFLOW')) define('_PROCESS_WORKFLOW', 'Traiter workflow
 if (!defined('_PROCESS_STEP')) define('_PROCESS_STEP', 'Traiter l&rsquo;&eacute;tape');
 if (!defined('_DOCUMENT')) define('_DOCUMENT', 'document');
 
+
+/*************** business search adv **************/
+if (!defined('_CATEGORY_HELP')) define('_CATEGORY_HELP', 'Modifier la cat&eacute;gorie modifiera le formulaire de recherche');
+if (!defined('_CONTACT_HELP')) define('_CONTACT_HELP', 'Champ disposant de l&rsquo;autocompl&eacute;tion, le type de contact d&eacute;pend de la cat&eacute;gorie choisie');
+if (!defined('_SUBJECT_HELP')) define('_SUBJECT_HELP', 'Sujet du document');
+if (!defined('_IDENTIFIER_HELP')) define('_IDENTIFIER_HELP', 'Identifiant du document, id&eacute;al pour une recherche pointue car g&eacute;n&eacute;ralement unique');
+if (!defined('_TOTAL_SUM_MIN_HELP')) define('_TOTAL_SUM_MIN_HELP', 'Total TTC minimal');
+if (!defined('_TOTAL_SUM_MIN')) define('_TOTAL_SUM_MIN', 'Total TTC minimal');
+if (!defined('_TOTAL_SUM_MAX')) define('_TOTAL_SUM_MAX', 'Total TTC maximal');
+if (!defined('_TOTAL_SUM_MAX_HELP')) define('_TOTAL_SUM_MAX_HELP', 'Total TTC maximal');
