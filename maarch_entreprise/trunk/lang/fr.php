@@ -1039,10 +1039,12 @@ if (!defined('_TIPS_KEYWORD1')) define( '_TIPS_KEYWORD1', 'Pour effectuer une re
 if (!defined('_TIPS_KEYWORD2')) define( '_TIPS_KEYWORD2', 'Pour effectuer une recherche sur un groupe de mots, une phrase');
 
 if (!defined('_TIPS_KEYWORD3')) define( '_TIPS_KEYWORD3', 'Pour effectuer une recherche approximative');
-if (!defined('_HELP_FULLTEXT_SEARCH_EXEMPLE1')) define( '_HELP_FULLTEXT_SEARCH_EXEMPLE1', 'auto* trouve autoroute et automobile ');
-if (!defined('_HELP_FULLTEXT_SEARCH_EXEMPLE2')) define( '_HELP_FULLTEXT_SEARCH_EXEMPLE2', '"route nationale" trouve l\'expression entière "route nationale"
-                                                        <p> Sans guillemet la recherche trouve des documents contenant les mots route ou nationale</p>
-                                                        <p> route + nationale trouve les documents contenant à la fois les mots route et nationale</p>');
+
+if (!defined('_HELP_FULLTEXT_SEARCH_EXEMPLE1')) define( '_HELP_FULLTEXT_SEARCH_EXEMPLE1', '<b>auto*</b> trouve autoroute et automobile ');
+if (!defined('_HELP_FULLTEXT_SEARCH_EXEMPLE2')) define( '_HELP_FULLTEXT_SEARCH_EXEMPLE2', '<b>"route nationale"</b> trouve l&rsquo;expression enti&egrave;re "route nationale"
+                                                        <p> <b>Sans guillemet</b> la recherche trouve des documents contenant les mots <b>route<BIG> et </BIG>nationale</b></p>
+                                                        <p> N&rsquo;utilisez surtout pas de tiret ! Pour rechercher des mots contenant un tiret comme sous-préfecture,
+                                                        saisissez simplement les mots <b>sous pr&eacute;fecture</b> s&eacute;par&eacute;s par un espace. ');
 if (!defined('_HELP_FULLTEXT_SEARCH_EXEMPLE3')) define( '_HELP_FULLTEXT_SEARCH_EXEMPLE3', 'vite~ trouve vote, vite');
 if (!defined('_TIPS_FULLTEXT_TEXT')) define( '_TIPS_FULLTEXT_TEXT', 'La recherche peut se faire sur des nombres');
 if (!defined('_CLOSE_MAIL')) define( '_CLOSE_MAIL', 'Cl&ocirc;turer un courrier');

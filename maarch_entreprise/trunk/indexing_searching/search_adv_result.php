@@ -272,7 +272,6 @@ if (count($_REQUEST['meta']) > 0) {
             } elseif ($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext'])
             ) {
                 // FULLTEXT
-                //$fulltext_request = $func->store_html($_REQUEST['fulltext']);
                 $fulltext_request = $_REQUEST['fulltext'];
                 $json_txt .= " 'fulltext' : ['" 
                     . addslashes(trim($_REQUEST['fulltext'])) . "'],";
@@ -283,28 +282,19 @@ if (count($_REQUEST['meta']) > 0) {
                 );
                 require_once('Zend/Search/Lucene.php');
                 Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-                    new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
+                    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive() // we need utf8 for accents
                 );
+                Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(Zend_Search_Lucene_Search_QueryParser::B_AND);
+                Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
+                
                 $_SESSION['search']['plain_text'] = $_REQUEST['fulltext'];
-                //echo $_SESSION['search']['plain_text']; exit()
+
                 $path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
-                //$lucene_all_words = explode(' ',$_REQUEST['fulltext']);
                 if (is_dir($path_to_lucene_index))
                 {
                     if (!$func->isDirEmpty($path_to_lucene_index)) {
                         $index = Zend_Search_Lucene::open($path_to_lucene_index);
-//$hits = $index->find($_REQUEST['fulltext']."~");
-//$query_res_ft = Zend_Search_Lucene_Search_QueryParser::parse($_REQUEST['fulltext'], 'iso-8859-5'));
-                        $hits = $index->find($fulltext_request);
-                        /*
-                        avec accent
-                        $hits = $index->find(
-                            strtolower(strtr(iconv("UTF-8","ISO-8859-1"
-                                , $_REQUEST['fulltext']),
-                                'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ', 
-                                'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY')
-                            )
-                        );*/
+                        $hits = $index->find(urldecode($fulltext_request));
                         $Liste_Ids = "0";
                         $cptIds = 0;
                         foreach ($hits as $hit) {
@@ -347,7 +337,7 @@ if (count($_REQUEST['meta']) > 0) {
                 );
                 require_once('Zend/Search/Lucene.php');
                 Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-                    new Zend_Search_Lucene_Analysis_Analyzer_Common_TextNum_CaseInsensitive()
+                    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive() // we need utf8 for accents
                 );
                 $path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
                 if (is_dir($path_to_lucene_index))
