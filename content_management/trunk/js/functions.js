@@ -67,7 +67,10 @@ function endResource()
     );
     if (window.opener.$('viewframe')) {
         window.opener.$('viewframe').src = window.opener.$('viewframe').src;
+    } else if (window.opener.$('viewframevalid')) {
+        window.opener.$('viewframevalid').src = window.opener.$('viewframevalid').src;
     }
+    
     //window.close();
 }
 
