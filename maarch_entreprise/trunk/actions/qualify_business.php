@@ -890,6 +890,51 @@ $frm_str .= '</div>';
             $frm_str .= '</td>';
         }
         
+        //test service add new version
+        $viewVersions = false;
+        if ($core->test_service('add_new_version', 'apps', false)) {
+            $viewVersions = true;
+        }
+        //VERSIONS
+        if ($core->is_module_loaded('content_management') && $viewVersions) {
+            $versionTable = $sec->retrieve_version_table_from_coll_id(
+                $coll_id
+            );
+            $selectVersions = "select res_id from "
+                . $versionTable . " where res_id_master = "
+                . $res_id . " and status <> 'DEL' order by res_id desc";
+            $dbVersions = new dbquery();
+            $dbVersions->connect();
+            $dbVersions->query($selectVersions);
+            $nb_versions_for_title = $dbVersions->nb_result();
+            $lineLastVersion = $dbVersions->fetch_object();
+            $lastVersion = $lineLastVersion->res_id;
+            if ($lastVersion <> '') {
+                $objectId = $lastVersion;
+                $objectTable = $versionTable;
+            } else {
+                $objectTable = $sec->retrieve_table_from_coll(
+                    $coll_id
+                );
+                $objectId = $res_id;
+                $_SESSION['cm']['objectId4List'] = $res_id;
+            }
+            if ($nb_versions_for_title == 0) {
+                $extend_title_for_versions = '0';
+            } else {
+                $extend_title_for_versions = $nb_versions_for_title;
+            }
+            $_SESSION['cm']['resMaster'] = '';
+            $frm_str .= '<td>';
+            $frm_str .= '|<span onclick="new Effect.toggle(\'versions_div\', \'appear\', {delay:0.2});'
+                . 'whatIsTheDivStatus(\'versions_div\', \'divStatus_versions_div\');return false;" '
+                . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+            $frm_str .= '<span id="divStatus_versions_div" style="color:#1C99C5;"><<</span><b>'
+                . '<small>' . _VERSIONS . ' (<span id="nbVersions">' . $extend_title_for_versions . '</span>)</small>';
+            $frm_str .= '</b></span>|';
+            $frm_str .= '</td>';
+        }
+        
         //LINKS
         $frm_str .= '<td>';
         require_once('core/class/LinkController.php');
@@ -1202,6 +1247,47 @@ $frm_str .= '</div>';
             $frm_str .= '<hr />';
             $frm_str .= '</div>';
         }
+        
+        //VERSIONS FRAME
+        //test service add new version
+        $addNewVersion = false;
+        if ($core->test_service('add_new_version', 'apps', false)) {
+            $addNewVersion = true;
+        }
+        $frm_str .= '<div id="versions_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
+            $frm_str .= '<div>';
+                    //$frm_str .= '<center><h2>' . _VERSIONS . '</h2></center>';
+                    $frm_str .= '<h2 onclick="new Effect.toggle(\'versions_div\', \'blind\', {delay:0.2});';
+                    $frm_str .= 'whatIsTheDivStatus(\'versions_div\', \'divStatus_versions_div\');';
+                        $frm_str .= 'return false;">';
+                        $frm_str .= '<center>' . _VERSIONS . '</center>';
+                    $frm_str .= '</h2>';
+                    $frm_str .= '<div class="error" id="divError" name="divError"></div>';
+                    $frm_str .= '<div style="text-align:center;">';
+                        $frm_str .= '<a href="';
+                            $frm_str .=  $_SESSION['config']['businessappurl'];
+                            $frm_str .= 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&original&id=';
+                            $frm_str .= $res_id;
+                            $frm_str .= '" target="_blank">';
+                            $frm_str .= '<img alt="' . _VIEW_ORIGINAL . '" src="';
+                            $frm_str .= $_SESSION['config']['businessappurl'];
+                            $frm_str .= 'static.php?filename=picto_dld.gif" border="0" alt="" />';
+                            $frm_str .= _VIEW_ORIGINAL . ' | ';
+                        $frm_str .= '</a>';
+                        if ($addNewVersion) {
+                            $_SESSION['cm']['objectTable'] = $objectTable;
+                            $frm_str .= '<div id="createVersion" style="display: inline;"></div>';
+                        }
+                        $frm_str .= '<div id="loadVersions"></div>';
+                        $frm_str .= '<script language="javascript">';
+                            $frm_str .= 'showDiv("loadVersions", "nbVersions", "createVersion", "';
+                                $frm_str .= $_SESSION['urltomodules'];
+                                $frm_str .= 'content_management/list_versions.php")';
+                        $frm_str .= '</script>';
+                    $frm_str .= '</div><br>';
+            $frm_str .= '</div>';
+            $frm_str .= '<hr />';
+        $frm_str .= '</div>';
         
         //LINKS
         $frm_str .= '<div id="links_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';

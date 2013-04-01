@@ -29,11 +29,11 @@ function show_helper($mode)
 			echo "<p> <br/><br/> </p>";
 			echo "<p align='justify'>";
 				echo "<p><b> * : </b><em>"._TIPS_KEYWORD1."</em></p>";
-				echo "<div style='border:1px black solid; padding:3px;'><b>"._HELP_FULLTEXT_SEARCH_EXEMPLE1."</b></div>";
-				echo "<p><b> \" \" ou + : </b><em>"._TIPS_KEYWORD2."</em></p>";
-				echo "<div style='border:1px black solid; padding:3px;'><b>"._HELP_FULLTEXT_SEARCH_EXEMPLE2."</b></div>";
+				echo "<div style='border:1px black solid; padding:3px;'>"._HELP_FULLTEXT_SEARCH_EXEMPLE1."</div>";
+				echo "<p><b> \" \" : </b><em>"._TIPS_KEYWORD2."</em></p>";
+				echo "<div style='border:1px black solid; padding:3px;'>"._HELP_FULLTEXT_SEARCH_EXEMPLE2."</div>";
 				echo "<p><b> ~ : </b><em>"._TIPS_KEYWORD3."</em><br/></p>";
-				echo "<div style='border:1px black solid; padding:3px;'><b>"._HELP_FULLTEXT_SEARCH_EXEMPLE3."</b></div>";
+				echo "<div style='border:1px black solid; padding:3px;'>"._HELP_FULLTEXT_SEARCH_EXEMPLE3."</div>";
 				echo "<p> <br/> </p>";
 				echo "<p><em>"._TIPS_FULLTEXT_TEXT."</em></p>";
 			echo "</p>";
