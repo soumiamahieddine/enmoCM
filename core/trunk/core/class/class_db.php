@@ -51,25 +51,25 @@ class dbquery extends functions
     * Debug mode activation.
     * Integer 1,0
          */
-    protected $_debug;             // debug mode
+    private $_debug;             // debug mode
 
     /**
     * Debug query (debug mode). String
     */
-    protected $_debugQuery;       // request for the debug mode
+    private $_debugQuery;       // request for the debug mode
 
     /**
     * SQL link identifier
     * Integer
     */
-    protected $_sqlLink;          // sql link identifier
+    private $_sqlLink;          // sql link identifier
 
 
     /**
     * To know where the script was stopped
     *  Integer
     */
-    protected $_sqlError;    // to know where the script was stopped
+    private $_sqlError;    // to know where the script was stopped
 
     /**
     * SQL query
@@ -81,27 +81,27 @@ class dbquery extends functions
     * Number of queries made with this identifier
          * Integer
          */
-    protected $_nbQuery;          // number of queries made with this identifier
+    private $_nbQuery;          // number of queries made with this identifier
 
     /**
     * Sent query result
          * String
          */
-    protected $_result;            // sent query result
+    private $_result;            // sent query result
 
     /**
     * OCI query identifier
     * @access private
     * @var integer
     */
-    protected $_statement  ;       // OCI query identifier
+    private $_statement  ;       // OCI query identifier
 
-    protected $_server;
-    protected $_port;
-    protected $_user;
-    protected $_password;
-    protected $_database;
-    protected $_databasetype;
+    private $_server;
+    private $_port;
+    private $_user;
+    private $_password;
+    private $_database;
+    private $_databasetype;
     //private $workspace;
 
     public function __construct()
@@ -193,15 +193,11 @@ class dbquery extends functions
     * Connects to the database
     *
     */
-    public function connect($force_new = false)
+    public function connect()
     {
-        # Do not connect if already connected
-        if(!$force_new && $this->connected())
-            return;
-        
         $this->_debug = 0;
         $this->_nbQuery = 0;
-
+        
         switch($this->_databasetype) 
         {
         case 'MYSQL' : 
@@ -215,69 +211,39 @@ class dbquery extends functions
             break;
             
         case 'POSTGRESQL' : 
-            $connection_string = 
+            $this->_sqlLink = @pg_connect(
                 'host=' . $this->_server . 
                 ' user=' . $this->_user . 
                 ' password=' . $this->_password . 
                 ' dbname=' . $this->_database . 
-                ' port=' . $this->_port;
-                
-            if($force_new)
-                $this->_sqlLink = @pg_connect(
-                    $connection_string, 
-                    PGSQL_CONNECT_FORCE_NEW
-                );
-            else 
-                $this->_sqlLink = @pg_connect(
-                    $connection_string
-                );
+                ' port=' . $this->_port
+            );
             break;
             
         case 'SQLSERVER' :
-            if($force_new) $new_link = true;
-            else $new_link = false;
-            
             $this->_sqlLink = @mssql_connect(
                 $this->_server, 
                 $this->_user, 
-                $this->_password,
-                $new_link
+                $this->_password
             );
             break;
             
         case 'ORACLE' : 
             if ($this->_server <> '') {
-                if($force_new)
-                    $this->_sqlLink = oci_new_connect(
-                        $this->_user, 
-                        $this->_password, '//' . 
-                        $this->_server . '/' . 
-                        $this->_database, 
-                        'UTF8'
-                    );
-                else 
-                    $this->_sqlLink = oci_connect(
-                        $this->_user, 
-                        $this->_password, '//' . 
-                        $this->_server . '/' . 
-                        $this->_database, 
-                        'UTF8'
-                    );
+                $this->_sqlLink = oci_connect(
+                    $this->_user, 
+                    $this->_password, '//' . 
+                    $this->_server . '/' . 
+                    $this->_database, 
+                    'UTF8'
+                );
             } else {
-                if($force_new)
-                    $this->_sqlLink = oci_new_connect(
-                        $this->_user, 
-                        $this->_password, 
-                        $this->_database, 
-                        'UTF8'
-                    );
-                else 
-                    $this->_sqlLink = oci_connect(
-                        $this->_user, 
-                        $this->_password, 
-                        $this->_database, 
-                        'UTF8'
-                    );
+                $this->_sqlLink = oci_connect(
+                    $this->_user, 
+                    $this->_password, 
+                    $this->_database, 
+                    'UTF8'
+                );
             }
             break;
             
@@ -286,50 +252,15 @@ class dbquery extends functions
             break;      
         }
 
-        if (!$this->_sqlLink) {
+        if (! $this->_sqlLink) {
             $this->_sqlError = 1; // error connexion
             $this->error();
         } 
         else {
             $this->select_db();
-            /*switch($this->_databasetype) 
-            {
-            case 'POSTGRESQL':
-                $this->query('SET application_name = ' . get_class($this));
-                break;
-            }*/
         }
     }
 
-    public function connected()
-    {
-        if(!$this->_sqlLink)
-            return false;
-
-        switch($this->_databasetype) {
-        case 'MYSQL' : 
-            return true;
-            break;
-
-        case 'POSTGRESQL' : 
-            if(pg_connection_status($this->_sqlLink) == PGSQL_CONNECTION_OK)
-                return true;
-            break;
-            
-        case 'SQLSERVER' : 
-            return true;
-            break;
-            
-        case 'ORACLE' : 
-            if(@oci_server_version($this->_sqlLink))
-                return true;
-            break;
-            
-        default : 
-        }   
-        
-    }
-    
     /**
     * Database selection (only for SQLSERVER)
     */
@@ -354,15 +285,20 @@ class dbquery extends functions
     {
         switch($this->_databasetype) 
         {
+        
         case 'POSTGRESQL'   : 
+            $this->connect();
             $this->query("select column_name from information_schema.columns where table_name = '" . $table . "' and column_name = '" . $field . "'");
             $res = $this->nb_result();
+            $this->disconnect();
             if ($res > 0) return true; 
             else return false;
             
         case 'ORACLE'       : 
+            $this->connect();
             $this->query("SELECT * from USER_TAB_COLUMNS where TABLE_NAME = '" . $table . "' AND COLUMN_NAME = '" . $field . "'");
             $res = $this->nb_result();
+            $this->disconnect();
             if ($res > 0) return true; 
             else return false;
         
@@ -383,10 +319,6 @@ class dbquery extends functions
     */
     public function query($sqlQuery, $catchError = false, $noFilter = false)
     {
-        # Connect if not already connected
-        if(!$this->connected())
-            $this->connect();
-        
         $canExecute = true;        
         // if filter, we looking for ; or -- in the sql query
         if (!$noFilter) {
@@ -419,7 +351,7 @@ class dbquery extends functions
                 break;
 
             case 'POSTGRESQL' : 
-                $this->query = pg_query($this->_sqlLink, $sqlQuery);
+                $this->query = @pg_query($sqlQuery);
                 break;
                 
             case 'SQLSERVER' : 
@@ -467,16 +399,15 @@ class dbquery extends functions
     
     public function start_transaction()
     {
-        $this->connect(true);
         switch($this->_databasetype) 
         {
         case 'MYSQL'        : 
-            $this->query('BEGIN');
+            @mysqli_query($this->_sqlLink, 'BEGIN');
             break;
         case 'SQLSERVER'    : 
             break;
         case 'POSTGRESQL'   : 
-            $this->query('BEGIN');
+            @pg_query('BEGIN');
             break;
         case 'ORACLE'       : 
             break;
@@ -488,12 +419,12 @@ class dbquery extends functions
         switch($this->_databasetype) 
         {
         case 'MYSQL'        : 
-            $this->query('ROLLBACK');
+            @mysqli_query($this->_sqlLink, 'ROLLBACK');
             break;
         case 'SQLSERVER'    : 
             break;
         case 'POSTGRESQL'   : 
-            $this->query('ROLLBACK');
+            @pg_query('ROLLBACK');
             break;
         case 'ORACLE'       : 
             break;
@@ -505,12 +436,12 @@ class dbquery extends functions
         switch($this->_databasetype) 
         {
         case 'MYSQL'        : 
-            $this->query('COMMIT');
+            @mysqli_query($this->_sqlLink, 'COMMIT');
             break;
         case 'SQLSERVER'    : 
             break;
         case 'POSTGRESQL'   : 
-            $this->query('COMMIT');
+            @pg_query('COMMIT');
             break;
         case 'ORACLE'       : 
             break;
@@ -519,9 +450,6 @@ class dbquery extends functions
     
     public function getError()
     {
-        if(!$this->connected())
-            return false;
-        
         switch($this->_databasetype) {
             case 'MYSQL':
                 $sqlError = @mysqli_errno($this->_sqlLink);
@@ -691,7 +619,6 @@ class dbquery extends functions
             $dbNbResult->connect();
             $dbNbResult->query("SELECT COUNT(*) FROM  (" . $this->_debugQuery . ")");
             $row = $dbNbResult->fetch_array();
-            $dbNbResult->disconnect();
             return $row[0]; 
         default             : return false;
         }
@@ -703,34 +630,31 @@ class dbquery extends functions
     */
     public function disconnect()
     {
-        if(!$this->connected())
-            return;
-
         switch($this->_databasetype)
         {
         case 'MYSQL':
-            if (!mysqli_close($this->_sqlLink)) {
+            if (! mysqli_close($this->_sqlLink)) {
                 $this->_sqlError = 4;
                 $this->error();
             }
             break;
             
         case 'SQLSERVER' : 
-            if (!mssql_close($this->_sqlLink)) {
+            if (! mssql_close($this->_sqlLink)) {
                 $this->_sqlError = 4;
                 $this->error();
             }
             break;
             
         case 'POSTGRESQL':
-            if (!pg_close($this->_sqlLink)) {
+            if (! pg_close($this->_sqlLink)) {
                 $this->_sqlError = 4;
                 $this->error();
             }
             break;
             
         case 'ORACLE' :
-            if (!oci_close($this->_sqlLink)) {
+            if (! oci_close($this->_sqlLink)) {
                 $this->_sqlError = 4;
                 $this->error();
             }
@@ -739,8 +663,6 @@ class dbquery extends functions
         default :
 
         }
-        
-        $this->_sqlLink = false;
     }
 
     /**
@@ -874,13 +796,10 @@ class dbquery extends functions
     */
     public function last_insert_id($sequenceName = '')
     {
-        if(!$this->connected())
-            $this->connect();
-        
         switch($this->_databasetype) {
         case 'MYSQL'        : return @mysqli_insert_id($this->_sqlLink);
         case 'POSTGRESQL'   : 
-            $this->query = @pg_query($this->_sqlLink, "select currval('" . $sequenceName . "') as lastinsertid");
+            $this->query = @pg_query("select currval('" . $sequenceName . "') as lastinsertid");
             $line = @pg_fetch_object($this->query);
             return $line->lastinsertid;
         case 'SQLSERVER'    : return '';
@@ -1040,7 +959,8 @@ class dbquery extends functions
     *   Offset with MSSQL
     *************************************************************************/
     public function limit_select($start, $count, $select_expr, $table_refs, $where_def='1=1', $other_clauses='', $select_opts='')
-    {  
+    {
+            
         // LIMIT
         if($count || $start) 
         {
