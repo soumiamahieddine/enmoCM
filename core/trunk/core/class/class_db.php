@@ -51,25 +51,25 @@ class dbquery extends functions
     * Debug mode activation.
     * Integer 1,0
          */
-    private $_debug;             // debug mode
+    protected $_debug;             // debug mode
 
     /**
     * Debug query (debug mode). String
     */
-    private $_debugQuery;       // request for the debug mode
+    protected $_debugQuery;       // request for the debug mode
 
     /**
     * SQL link identifier
     * Integer
     */
-    private $_sqlLink;          // sql link identifier
+    protected $_sqlLink;          // sql link identifier
 
 
     /**
     * To know where the script was stopped
     *  Integer
     */
-    private $_sqlError;    // to know where the script was stopped
+    protected $_sqlError;    // to know where the script was stopped
 
     /**
     * SQL query
@@ -81,27 +81,27 @@ class dbquery extends functions
     * Number of queries made with this identifier
          * Integer
          */
-    private $_nbQuery;          // number of queries made with this identifier
+    protected $_nbQuery;          // number of queries made with this identifier
 
     /**
     * Sent query result
          * String
          */
-    private $_result;            // sent query result
+    protected $_result;            // sent query result
 
     /**
     * OCI query identifier
     * @access private
     * @var integer
     */
-    private $_statement  ;       // OCI query identifier
+    protected $_statement  ;       // OCI query identifier
 
-    private $_server;
-    private $_port;
-    private $_user;
-    private $_password;
-    private $_database;
-    private $_databasetype;
+    protected $_server;
+    protected $_port;
+    protected $_user;
+    protected $_password;
+    protected $_database;
+    protected $_databasetype;
     //private $workspace;
 
     public function __construct()
@@ -220,9 +220,10 @@ class dbquery extends functions
                 ' user=' . $this->_user . 
                 ' password=' . $this->_password . 
                 ' dbname=' . $this->_database . 
-                ' port=' . $this->_port,
-                PGSQL_CONNECT_FORCE_NEW
+                ' port=' . $this->_port//, 
+                //PGSQL_CONNECT_FORCE_NEW
             );
+            //
             break;
             
         case 'SQLSERVER' :
@@ -264,6 +265,12 @@ class dbquery extends functions
         } 
         else {
             $this->select_db();
+            /*switch($this->_databasetype) 
+            {
+            case 'POSTGRESQL':
+                $this->query('SET application_name = ' . get_class($this));
+                break;
+            }*/
         }
     }
 
@@ -271,14 +278,14 @@ class dbquery extends functions
     {
         if(!$this->_sqlLink)
             return false;
-        
+
         switch($this->_databasetype) {
         case 'MYSQL' : 
             return true;
             break;
 
         case 'POSTGRESQL' : 
-            if(@pg_connection_status($this->_sqlLink) == PGSQL_CONNECTION_OK)
+            if(pg_connection_status($this->_sqlLink) == PGSQL_CONNECTION_OK)
                 return true;
             break;
             
