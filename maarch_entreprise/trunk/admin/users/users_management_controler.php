@@ -154,7 +154,7 @@ function display_list(){
     $what = '';
     if(isset($_REQUEST['what'])){
         $what = $func->protect_string_db($_REQUEST['what']);
-		$where .= " and lower(lastname) like lower('".$what."%')";
+		$where .= " and (lower(lastname) like lower('".$what."%') or lower(user_id) like lower('".$what."%') )";
     }
 
     // Checking order and order_field values

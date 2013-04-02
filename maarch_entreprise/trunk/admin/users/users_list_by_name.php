@@ -31,7 +31,14 @@
 
 $db = new dbquery();
 $db->connect();
-$db->query("select lastname as tag from ".$_SESSION['tablename']['users']." where lower(lastname) like lower('".$_REQUEST['what']."%') order by lastname");
+$db->query(
+    "select lastname as tag from ".$_SESSION['tablename']['users']
+    . " where ("
+        . "lower(lastname) like lower('".$_REQUEST['what']."%') "
+        . " or lower(user_id) like lower('".$_REQUEST['what']."%') "
+    . ") "
+    . " order by lastname"
+);
 
 $listArray = array();
 while($line = $db->fetch_object())
@@ -47,8 +54,8 @@ foreach($listArray as $what)
     {
         $flagAuthView = true;
     }
-    if(stripos($what, $_REQUEST['what']) === 0)
-    {
+    //if(stripos($what, $_REQUEST['what']) === 0)
+    //{
         echo "<li>".$what."</li>\n";
         if($flagAuthView)
         {
@@ -56,6 +63,6 @@ foreach($listArray as $what)
             break;
         }
         $authViewList++;
-    }
+    //}
 }
 echo "</ul>";
