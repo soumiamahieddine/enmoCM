@@ -619,7 +619,7 @@ if (count($tab) > 0) {
         }
 
     //Afficher la liste
-        $list->showList($tab, $paramsTab, $listKey, $_SESSION['current_basket']);
+        $list->showList($tab, $paramsTab, $listKey);
         // $list->debug();
 
     /*************************Extra javascript***********************/
