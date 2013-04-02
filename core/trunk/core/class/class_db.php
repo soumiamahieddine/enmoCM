@@ -193,12 +193,12 @@ class dbquery extends functions
     * Connects to the database
     *
     */
-    public function connect()
+    public function connect($force_new = false)
     {
         # Do not connect if already connected
-        if($this->connected())
+        if(!$force_new && $this->connected())
             return;
-            
+        
         $this->_debug = 0;
         $this->_nbQuery = 0;
 
@@ -215,42 +215,69 @@ class dbquery extends functions
             break;
             
         case 'POSTGRESQL' : 
-            $this->_sqlLink = @pg_connect(
+            $connection_string = 
                 'host=' . $this->_server . 
                 ' user=' . $this->_user . 
                 ' password=' . $this->_password . 
                 ' dbname=' . $this->_database . 
-                ' port=' . $this->_port//, 
-                //PGSQL_CONNECT_FORCE_NEW
-            );
-            //
+                ' port=' . $this->_port;
+                
+            if($force_new)
+                $this->_sqlLink = @pg_connect(
+                    $connection_string, 
+                    PGSQL_CONNECT_FORCE_NEW
+                );
+            else 
+                $this->_sqlLink = @pg_connect(
+                    $connection_string
+                );
             break;
             
         case 'SQLSERVER' :
+            if($force_new) $new_link = true;
+            else $new_link = false;
+            
             $this->_sqlLink = @mssql_connect(
                 $this->_server, 
                 $this->_user, 
                 $this->_password,
-                $new_link = true
+                $new_link
             );
             break;
             
         case 'ORACLE' : 
             if ($this->_server <> '') {
-                $this->_sqlLink = oci_new_connect(
-                    $this->_user, 
-                    $this->_password, '//' . 
-                    $this->_server . '/' . 
-                    $this->_database, 
-                    'UTF8'
-                );
+                if($force_new)
+                    $this->_sqlLink = oci_new_connect(
+                        $this->_user, 
+                        $this->_password, '//' . 
+                        $this->_server . '/' . 
+                        $this->_database, 
+                        'UTF8'
+                    );
+                else 
+                    $this->_sqlLink = oci_connect(
+                        $this->_user, 
+                        $this->_password, '//' . 
+                        $this->_server . '/' . 
+                        $this->_database, 
+                        'UTF8'
+                    );
             } else {
-                $this->_sqlLink = oci_new_connect(
-                    $this->_user, 
-                    $this->_password, 
-                    $this->_database, 
-                    'UTF8'
-                );
+                if($force_new)
+                    $this->_sqlLink = oci_new_connect(
+                        $this->_user, 
+                        $this->_password, 
+                        $this->_database, 
+                        'UTF8'
+                    );
+                else 
+                    $this->_sqlLink = oci_connect(
+                        $this->_user, 
+                        $this->_password, 
+                        $this->_database, 
+                        'UTF8'
+                    );
             }
             break;
             
@@ -440,6 +467,7 @@ class dbquery extends functions
     
     public function start_transaction()
     {
+        $this->connect(true);
         switch($this->_databasetype) 
         {
         case 'MYSQL'        : 
