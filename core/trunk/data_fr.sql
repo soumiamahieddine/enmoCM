@@ -3419,6 +3419,7 @@ INSERT INTO doctypes VALUES ('business_coll', 219, 'CV', 'Y', 101, 107, NULL, NU
 INSERT INTO doctypes VALUES ('business_coll', 220, 'Contrat de travail', 'Y', 101, 107, NULL, NULL);
 INSERT INTO doctypes VALUES ('business_coll', 221, 'Demande de formation', 'Y', 101, 107, NULL, NULL);
 INSERT INTO doctypes VALUES ('business_coll', 222, 'Arrêt maladie', 'Y', 101, 107, NULL, NULL);
+INSERT INTO doctypes VALUES ('business_coll', 223, 'Note de frais', 'Y', 101, 101, NULL, NULL);
 
 ------------
 --DOCTYPES_EXT--
@@ -3529,6 +3530,7 @@ INSERT INTO templates_doctype_ext VALUES (NULL, 219, 'N');
 INSERT INTO templates_doctype_ext VALUES (NULL, 220, 'N');
 INSERT INTO templates_doctype_ext VALUES (NULL, 221, 'N');
 INSERT INTO templates_doctype_ext VALUES (NULL, 222, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 223, 'N');
 
 ------------
 --USERGROUP_CONTENT-
