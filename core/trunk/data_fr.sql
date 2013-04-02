@@ -3362,12 +3362,6 @@ INSERT INTO actions_groupbaskets VALUES (200, '', 'DIRIGEANT', 'BusinessVisa', '
 INSERT INTO actions_groupbaskets VALUES (308, '', 'DIRIGEANT', 'BusinessVisa', 'N', 'N', 'Y');
 
 ------------
---USERGROUPS_SERVICES--
-------------
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'index_business');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'adv_search_business');
-
-------------
 --DIFFLIST_TYPES--
 ------------
 INSERT INTO difflist_types VALUES ('VISER_DOCUMENT', 'Viser les documents', 'DIRIGEANT ', 'N', 'N');
@@ -3554,6 +3548,8 @@ INSERT INTO usergroups VALUES ('DIRIGEANT', '[business] Dirigeants', 'N', 'N', '
 ------------
 --USERGROUPS_SERVICES-
 ------------
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'add_new_version');
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'view_versions');
 INSERT INTO usergroups_services VALUES ('COMPTABLES', 'my_contacts');
 INSERT INTO usergroups_services VALUES ('COMPTABLES', 'update_contacts');
 INSERT INTO usergroups_services VALUES ('COMPTABLES', 'add_links');
@@ -3566,6 +3562,8 @@ INSERT INTO usergroups_services VALUES ('COMPTABLES', 'tag_view');
 INSERT INTO usergroups_services VALUES ('COMPTABLES', 'add_tag_to_res');
 INSERT INTO usergroups_services VALUES ('COMPTABLES', 'delete_tag_to_res');
 INSERT INTO usergroups_services VALUES ('COMPTABLES', 'sendmail');
+INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'add_new_version');
+INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'view_versions');
 INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'my_contacts');
 INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'update_contacts');
 INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'add_links');
@@ -3577,6 +3575,8 @@ INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'tag_view');
 INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'add_tag_to_res');
 INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'delete_tag_to_res');
 INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'sendmail');
+INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'add_new_version');
+INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'view_versions');
 INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'my_contacts');
 INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'update_contacts');
 INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'add_links');
@@ -3588,6 +3588,8 @@ INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'tag_view');
 INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'add_tag_to_res');
 INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'delete_tag_to_res');
 INSERT INTO usergroups_services VALUES ('APPROBATEUR', 'sendmail');
+INSERT INTO usergroups_services VALUES ('FINANCE', 'add_new_version');
+INSERT INTO usergroups_services VALUES ('FINANCE', 'view_versions');
 INSERT INTO usergroups_services VALUES ('FINANCE', 'my_contacts');
 INSERT INTO usergroups_services VALUES ('FINANCE', 'add_links');
 INSERT INTO usergroups_services VALUES ('FINANCE', 'adv_search_business');
@@ -3598,6 +3600,8 @@ INSERT INTO usergroups_services VALUES ('FINANCE', 'tag_view');
 INSERT INTO usergroups_services VALUES ('FINANCE', 'add_tag_to_res');
 INSERT INTO usergroups_services VALUES ('FINANCE', 'delete_tag_to_res');
 INSERT INTO usergroups_services VALUES ('FINANCE', 'sendmail');
+INSERT INTO usergroups_services VALUES ('DIRIGEANT', 'add_new_version');
+INSERT INTO usergroups_services VALUES ('DIRIGEANT', 'view_versions');
 INSERT INTO usergroups_services VALUES ('DIRIGEANT', 'add_links');
 INSERT INTO usergroups_services VALUES ('DIRIGEANT', 'adv_search_business');
 INSERT INTO usergroups_services VALUES ('DIRIGEANT', 'view_baskets');
