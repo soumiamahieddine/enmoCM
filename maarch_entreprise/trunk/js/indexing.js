@@ -158,6 +158,9 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
             typeContactExternal = 'checked';
         }
     }
+    if (typeContactInternal == 'not_checked' && typeContactExternal == 'not_checked') {
+        typeContactExternal = 'checked';
+    }
     //Category = RM
     if(cat_id == 'rm_archive')
     {
