@@ -345,7 +345,6 @@ INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'ValidationBasket', '[courrier] 00 - Courriers à valider', 'Corbeille de validation', '(status = ''VAL'' and destination <>''COU'')', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'MyBasket', '[courrier] 01 - Courriers à traiter', 'Corbeille de traitement', '(status =''NEW'' or status =''COU'') and dest_user = @user and type_id not in (100)', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'LateMailBasket', '[courrier] 02 - Courriers en retard', 'Courriers en retard', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'') and (now() > process_limit_date)', 'N', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'WaitingBillBasket', '[courrier] 31 - Factures en attente de  validation', 'Corbeille des factures à valider par les service', '(status=''COU'' or status = ''NEW'') and type_id in (100)', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'DepartmentBasket', '[courrier] 10 - Courriers de ma direction', 'Corbeille de supervision', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'' and status <> ''VAL'')', 'N', 'Y', 'Y');
 
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'MyEmailsToQualify', '[courrier] 100 - Mes emails à qualifier', 'Mes emails à qualifier', 'status=''MAQUAL'' and (dest_user = @user or doc_custom_t14 = @email)', 'N', 'Y');
@@ -3410,7 +3409,6 @@ INSERT INTO doctypes VALUES ('business_coll', 220, 'Contrat de travail', 'Y', 10
 INSERT INTO doctypes VALUES ('business_coll', 221, 'Demande de formation', 'Y', 101, 107, NULL, NULL);
 INSERT INTO doctypes VALUES ('business_coll', 222, 'Arrêt maladie', 'Y', 101, 107, NULL, NULL);
 INSERT INTO doctypes VALUES ('business_coll', 223, 'Note de frais', 'Y', 101, 101, NULL, NULL);
-INSERT INTO doctypes VALUES ('business_coll', 224, 'Facture client / sortante', 'Y', 101, 101, NULL, NULL);
 ------------
 --DOCTYPES_EXT--
 ------------
@@ -3521,7 +3519,6 @@ INSERT INTO templates_doctype_ext VALUES (NULL, 220, 'N');
 INSERT INTO templates_doctype_ext VALUES (NULL, 221, 'N');
 INSERT INTO templates_doctype_ext VALUES (NULL, 222, 'N');
 INSERT INTO templates_doctype_ext VALUES (NULL, 223, 'N');
-INSERT INTO templates_doctype_ext VALUES (NULL, 224, 'N');
 
 ------------
 --USERGROUP_CONTENT-
