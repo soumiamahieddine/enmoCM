@@ -257,7 +257,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'contact_id_tr', type:'tr', state:'display'},
         {id:'dest_contact', type:'label', state:'display'},
         {id:'exp_contact', type:'label', state:'hide'},
-        {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal,
+        {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
         {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
         {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
