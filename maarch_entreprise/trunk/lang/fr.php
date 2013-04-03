@@ -746,9 +746,9 @@ if (!defined('_LOW')) define( '_LOW', 'Basse');
 if (!defined('_VERY_LOW')) define( '_VERY_LOW', 'Tr&egrave;s Basse');
 
 
-if (!defined('_INDEXING_MLB')) define( '_INDEXING_MLB', 'Enregistrer un courrier');
-if (!defined('_ADV_SEARCH_MLB')) define( '_ADV_SEARCH_MLB', 'Rechercher un courrier');
-if (!defined('_ADV_SEARCH_INVOICES')) define( '_ADV_SEARCH_INVOICES', 'Rechercher une facture');
+if (!defined('_INDEXING_MLB')) define( '_INDEXING_MLB', '[courrier] Enregistrer un courrier');
+if (!defined('_ADV_SEARCH_MLB')) define( '_ADV_SEARCH_MLB', '[courrier] Rechercher un courrier');
+if (!defined('_ADV_SEARCH_INVOICES')) define( '_ADV_SEARCH_INVOICES', '[cold] Rechercher une facture client');
 
 if (!defined('_ADV_SEARCH_TITLE')) define( '_ADV_SEARCH_TITLE', 'Recherche avanc&eacute;e de document');
 if (!defined('_MAIL_OBJECT')) define( '_MAIL_OBJECT', 'Objet du courrier');
@@ -1418,8 +1418,8 @@ if (!defined('_QUALIF_BUSINESS')) define('_QUALIF_BUSINESS', 'Qualification des 
 if (!defined('_PROCESS_BUSINESS')) define('_PROCESS_BUSINESS', 'Traitement des documents de la collection business');
 if (!defined('_BUSINESS_LIST')) define('_BUSINESS_LIST', 'Liste de documents business');
 
-if (!defined('_INDEXING_BUSINESS')) define('_INDEXING_BUSINESS', 'Enregistrer un document');
-if (!defined('_ADV_SEARCH_BUSINESS')) define('_ADV_SEARCH_BUSINESS', 'Rechercher un document');
+if (!defined('_INDEXING_BUSINESS')) define('_INDEXING_BUSINESS', '[business] Enregistrer un document');
+if (!defined('_ADV_SEARCH_BUSINESS')) define('_ADV_SEARCH_BUSINESS', '[business] Rechercher un document');
 
 if (!defined('_DEPARTMENT_OWNER')) define( '_DEPARTMENT_OWNER', 'Service propri&eacute;taire');
 
@@ -1456,3 +1456,6 @@ if (!defined('_TOTAL_SUM_MIN_HELP')) define('_TOTAL_SUM_MIN_HELP', 'Total TTC mi
 if (!defined('_TOTAL_SUM_MIN')) define('_TOTAL_SUM_MIN', 'Total TTC minimal');
 if (!defined('_TOTAL_SUM_MAX')) define('_TOTAL_SUM_MAX', 'Total TTC maximal');
 if (!defined('_TOTAL_SUM_MAX_HELP')) define('_TOTAL_SUM_MAX_HELP', 'Total TTC maximal');
+
+/*************** COLD **************/
+if (!defined('_OUTGOING_INVOICE')) define('_OUTGOING_INVOICE', '[cold] Factures clients');

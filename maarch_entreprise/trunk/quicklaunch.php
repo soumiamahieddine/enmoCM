@@ -53,7 +53,7 @@ $core_tools->test_service('quicklaunch', "apps");
                         <select id="collection" name="collection" onchange="updateActionForm(this.options[this.selectedIndex].value);">
                             <?php
                             foreach ($_SESSION['user']['security'] as $key => $value) {
-                                if ($key == 'letterbox_coll' || $key == 'business_coll' || $key == 'rm_coll') {
+                                if ($key == 'letterbox_coll' || $key == 'business_coll' || $key == 'rm_coll' || $key == 'res_coll') {
                                     echo '<option id="' . $key . '" value="' . $key . '">' . $value['DOC']['label_coll'] .'</option>';
                                 }
                             }
@@ -87,6 +87,8 @@ $core_tools->test_service('quicklaunch', "apps");
                      targetAction = 'index.php?display=true&dir=indexing_searching&page=search_adv_result_business';
                 } else if (collId == 'rm_coll') {
                      targetAction = 'index.php?display=true&module=records_management&page=search_adv_result_rm';
+                } else if (collId == 'res_coll') {
+                     targetAction = 'index.php?display=true&dir=indexing_searching&page=search_adv_result_invoices';
                 } else {
                     window.alert('no global search for this collection');
                 }
@@ -167,6 +169,13 @@ $core_tools->test_service('quicklaunch', "apps");
             ._ADV_SEARCH_RM.'</span></div></a>';
             $nb_max++;
             $displayed_adv_search_rm = true;
+        }
+        //cold collection
+        if ($element['id'] == 'adv_search_invoices' && $element['show'] == true &&
+            (!isset($displayed_adv_search_invoice) || isset($displayed_adv_search_invoice) && $displayed_adv_search_invoice <> true)) {
+            echo '<a href="index.php?page=search_adv_invoices&amp;dir=indexing_searching&amp;reinit=true"><div class="quiclaunch_div bighome_search_adv"><span>' ._ADV_SEARCH_INVOICES.'</span></div></a>';
+            $nb_max++;
+            $displayed_adv_search_invoice = true;
         }
         //physical archive
         if ($element['id'] == 'physical_archive' && $element['show'] == true && (!isset($displayed_physical_archive) || isset($displayed_physical_archive) && $displayed_physical_archive <> true)) {

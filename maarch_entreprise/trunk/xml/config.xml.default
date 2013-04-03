@@ -181,7 +181,7 @@
     </COLLECTION>
     <COLLECTION>
         <id>res_coll</id>
-        <label>_SAMPLE</label>
+        <label>_OUTGOING_INVOICE</label>
         <table>res_x</table>
         <version_table>res_version_x</version_table>
         <view>res_view</view>
@@ -194,7 +194,7 @@
         <extensions>
             <table/>
         </extensions>
-        <path_to_lucene_index>C:\Maarch\indexes\sample\res_coll\</path_to_lucene_index>
+        <path_to_lucene_index>C:\Maarch\indexes\entreprise\res_coll\</path_to_lucene_index>
     </COLLECTION>
     <HISTORY>
         <usersdel>true</usersdel>

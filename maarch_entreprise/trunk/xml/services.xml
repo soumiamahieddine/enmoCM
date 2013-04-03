@@ -16,7 +16,6 @@
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
-<!--
  <SERVICE>
    <id>adv_search_invoices</id>
    <name>_ADV_SEARCH_INVOICES</name>
@@ -25,7 +24,6 @@
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
--->
 <SERVICE>
    <id>index_mlb</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
    <name>_INDEXING_MLB</name>

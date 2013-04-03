@@ -78,8 +78,8 @@ if (!defined('_ADMIN_USERS')) define('_ADMIN_USERS', 'Users');
 if (!defined('_ADMIN_USERS_DESC')) define('_ADMIN_USERS_DESC', 'Add, suspend, or modify users profiles. Affect users to their groups and define their primary group.');
 if (!defined('_ADMISSION_DATE')) define('_ADMISSION_DATE', 'Reception date');
 if (!defined('_ADR_PRIORITY'))  define('_ADR_PRIORITY', 'Priority in storage zones');
-if (!defined('_ADV_SEARCH_INVOICES')) define( '_ADV_SEARCH_INVOICES', 'Search an invoice');
-if (!defined('_ADV_SEARCH_MLB')) define('_ADV_SEARCH_MLB', 'Search a document');
+if (!defined('_ADV_SEARCH_INVOICES')) define( '_ADV_SEARCH_INVOICES', '[cold] Search a custumer invoice');
+if (!defined('_ADV_SEARCH_MLB')) define('_ADV_SEARCH_MLB', '[letter] Search a document');
 if (!defined('_ADV_SEARCH_TITLE')) define('_ADV_SEARCH_TITLE', 'Document advanced search');
 if (!defined('_AJAX_PARAM_ERROR')) define('_AJAX_PARAM_ERROR', 'Wrong parameters given to the AJAX request.');
 if (!defined('_ALARM1_DELAY')) define('_ALARM1_DELAY', 'Period before 1st reminder');
@@ -499,7 +499,7 @@ if (!defined('_INDEX')) define('_INDEX', 'Index');
 if (!defined('_INDEXATION_TITLE')) define('_INDEXATION_TITLE', 'Record a document');
 if (!defined('_INDEXING')) define( '_INDEXING', 'Indexing');
 if (!defined('_INDEXING_INSERT_ERROR'))    define('_INDEXING_INSERT_ERROR', 'Indexation : error during insert');
-if (!defined('_INDEXING_MLB')) define('_INDEXING_MLB', 'Record a document');
+if (!defined('_INDEXING_MLB')) define('_INDEXING_MLB', '[letter] Record a letter');
 if (!defined('_INDEXING_STATUSES')) define( '_INDEXING_STATUSES', 'Index in status');
 if (!defined('_UNCHANGED')) define( '_UNCHANGED', 'Unchanged');
 if (!defined('_INDEX_FILE')) define('_INDEX_FILE', 'Add a document');
@@ -1152,8 +1152,8 @@ if (!defined('_QUALIF_BUSINESS')) define('_QUALIF_BUSINESS', 'Qualification of b
 if (!defined('_PROCESS_BUSINESS')) define('_PROCESS_BUSINESS', 'Traitement des documents de la collection business');
 if (!defined('_BUSINESS_LIST')) define('_BUSINESS_LIST', 'Documents business list');
 
-if (!defined('_INDEXING_BUSINESS')) define('_INDEXING_BUSINESS', 'Store a document');
-if (!defined('_ADV_SEARCH_BUSINESS')) define('_ADV_SEARCH_BUSINESS', 'Search a document');
+if (!defined('_INDEXING_BUSINESS')) define('_INDEXING_BUSINESS', '[business] Store a document');
+if (!defined('_ADV_SEARCH_BUSINESS')) define('_ADV_SEARCH_BUSINESS', '[business] Search a document');
 
 if (!defined('_QUICK_SEARCH')) define('_QUICK_SEARCH', 'Quick search');
 
@@ -1171,3 +1171,6 @@ if (!defined('_TOTAL_SUM_MIN_HELP')) define('_TOTAL_SUM_MIN_HELP', 'Min total su
 if (!defined('_TOTAL_SUM_MIN')) define('_TOTAL_SUM_MIN', 'Min total sum');
 if (!defined('_TOTAL_SUM_MAX')) define('_TOTAL_SUM_MAX', 'Max total sum');
 if (!defined('_TOTAL_SUM_MAX_HELP')) define('_TOTAL_SUM_MAX_HELP', 'Max total sum');
+
+/*************** COLD **************/
+if (!defined('_OUTGOING_INVOICE')) define('_OUTGOING_INVOICE', '[cold] Factures clients');
