@@ -961,6 +961,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
         //echo 'folder';
         $fields .= 'folders_system_id,';
 
+
         array_push($arr, 'folder');
         if ($mode == 'full' || $mode == 'form') {
             if ($params['img_folder'] == true) {
@@ -1143,8 +1144,8 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             // special cases :
             // Contact
             if ($arr[$i] == 'dest_user_id' || $arr[$i] == 'exp_user_id') {
-                $data['type_contact'] = 'internal';
                 if (!empty ($line-> $arr[$i])) {
+                    $data['type_contact'] = 'internal';
                     $db2->query('select lastname, firstname from ' . $_SESSION['tablename']['users'] . " where user_id = '" . $line-> $arr[$i] . "'");
                     $res = $db2->fetch_object();
                     $data['contact'] = $res->lastname . ', ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
@@ -1153,8 +1154,8 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
 
             }
             elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
-                $data['type_contact'] = 'external';
                 if (!empty ($line-> $arr[$i])) {
+                    $data['type_contact'] = 'external';
                     $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts'] . " where enabled = 'Y' and contact_id = " . $line-> $arr[$i] . "");
                     $res = $db2->fetch_object();
                     if ($res->is_corporate_person == 'Y') {

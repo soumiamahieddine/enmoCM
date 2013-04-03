@@ -146,6 +146,18 @@ function activate_process_date(activate, display_value_tr)
  **/
 function change_category(cat_id, display_value_tr, path_manage_script,get_js_script, params_cat)
 {
+    var typeContactInternal = 'not_checked';
+    var typeContactExternal = 'not_checked';
+    if ($('type_contact_internal')) {
+        if ($('type_contact_internal').checked == true) {
+            var typeContactInternal = 'checked';
+        }
+    }
+    if ($('type_contact_external')) {
+        if ($('type_contact_external').checked == true) {
+            typeContactExternal = 'checked';
+        }
+    }
     //Category = RM
     if(cat_id == 'rm_archive')
     {
@@ -195,8 +207,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'contact_id_tr', type:'tr', state:'display'},
         {id:'dest_contact', type:'label', state:'hide'},
         {id:'exp_contact', type:'label', state:'display'},
-        {id:'type_contact_internal', type:'radiobutton', state:'not_checked'},
-        {id:'type_contact_external', type:'radiobutton', state:'checked'},
+        {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
+        {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
         {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
@@ -242,8 +254,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'contact_id_tr', type:'tr', state:'display'},
         {id:'dest_contact', type:'label', state:'display'},
         {id:'exp_contact', type:'label', state:'hide'},
-        {id:'type_contact_internal', type:'radiobutton', state:'not_checked'},
-        {id:'type_contact_external', type:'radiobutton', state:'checked'},
+        {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal,
+        {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
         {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
@@ -289,8 +301,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'contact_id_tr', type:'tr', state:'display'},
         {id:'dest_contact', type:'label', state:'hide'},
         {id:'exp_contact', type:'label', state:'display'},
-        {id:'type_contact_internal', type:'radiobutton', state:'checked'},
-        {id:'type_contact_external', type:'radiobutton', state:'not_checked'},
+        {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
+        {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
         {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
@@ -378,8 +390,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'contact_id_tr', type:'tr', state:'display'},
         {id:'dest_contact', type:'label', state:'hide'},
         {id:'exp_contact', type:'label', state:'display'},
-        {id:'type_contact_internal', type:'radiobutton', state:'not_checked'},
-        {id:'type_contact_external', type:'radiobutton', state:'checked'},
+        {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
+        {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
         {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
