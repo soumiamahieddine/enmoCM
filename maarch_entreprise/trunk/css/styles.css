@@ -622,6 +622,7 @@ input.button {
 
 #diff_list_div .listingsmall, .specsmall {
     margin: 0;
+    width: 420px;
 }
 
 #iframe .listing  {
