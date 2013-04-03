@@ -973,10 +973,6 @@ INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, i
 ------------
 --DOCSERVERS--
 ------------
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('OFFLINE_1', 'OFFLINE', 'Off line tape', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\offline\\', NULL, NULL, NULL, '2011-01-13 16:58:24.00929', NULL, 'res_coll', 30, 'NANTERRE', 4);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_AI', 'FASTHD', 'Fast internal disc bay for autoimport', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\ai\\', NULL, NULL, NULL, '2011-01-07 13:43:48.696644', NULL, 'res_coll', 10, 'NANTERRE', 1);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('OAIS_MAIN_1', 'OAIS_MAIN', 'Main OAIS store', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\OAIS_main\\', NULL, NULL, NULL, '2011-01-13 14:48:27.901368', NULL, 'res_coll', 20, 'NANTERRE', 2);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('OAIS_SAFE_1', 'OAIS_SAFE', 'Distant backup OAIS store', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\OAIS_safe\\', NULL, NULL, NULL, '2011-01-13 14:49:05.095119', NULL, 'res_coll', 20, 'NICE', 3);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_MAN', 'FASTHD', '[courrier] Fast internal disc bay for letterbox mode', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\manual\\', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'letterbox_coll', 10, 'NANTERRE', 2);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TEMPLATES', 'TEMPLATES', '[system] Templates', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\templates\\', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'templates', 1, 'NANTERRE', 1);
 
@@ -3414,7 +3410,7 @@ INSERT INTO doctypes VALUES ('business_coll', 220, 'Contrat de travail', 'Y', 10
 INSERT INTO doctypes VALUES ('business_coll', 221, 'Demande de formation', 'Y', 101, 107, NULL, NULL);
 INSERT INTO doctypes VALUES ('business_coll', 222, 'Arrêt maladie', 'Y', 101, 107, NULL, NULL);
 INSERT INTO doctypes VALUES ('business_coll', 223, 'Note de frais', 'Y', 101, 101, NULL, NULL);
-
+INSERT INTO doctypes VALUES ('business_coll', 224, 'Facture client / sortante', 'Y', 101, 101, NULL, NULL);
 ------------
 --DOCTYPES_EXT--
 ------------
@@ -3525,6 +3521,7 @@ INSERT INTO templates_doctype_ext VALUES (NULL, 220, 'N');
 INSERT INTO templates_doctype_ext VALUES (NULL, 221, 'N');
 INSERT INTO templates_doctype_ext VALUES (NULL, 222, 'N');
 INSERT INTO templates_doctype_ext VALUES (NULL, 223, 'N');
+INSERT INTO templates_doctype_ext VALUES (NULL, 224, 'N');
 
 ------------
 --USERGROUP_CONTENT-
@@ -3631,3 +3628,114 @@ INSERT INTO users_entities VALUES ('aalambic', 'ACMEDF', '', 'Y');
 INSERT INTO users_entities VALUES ('ttule', 'ACMEDF', '', 'Y');
 INSERT INTO users_entities VALUES ('ddenis', 'ACME', '', 'N');
 INSERT INTO users_entities VALUES ('ddenis', 'ACMEPDG', '', 'Y');
+
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+
+-- ************************************************************************* --
+--                                                                           --
+--                  COLD DATAS                                 --
+--                                                                           --
+-- ************************************************************************* --
+
+------------
+--AF_SECURITY-
+------------
+INSERT INTO af_security VALUES (1365019844528, 'all access', 'FACTURES_CLIENTS', 'view_year', '1=1', NULL, NULL);
+INSERT INTO af_security VALUES (1365019862985, 'all access', 'FACTURES_CLIENTS', 'view_customer', '1=1', NULL, NULL);
+
+------------
+--DOCSERVERS-
+------------
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('OFFLINE_1', 'OFFLINE', 'Off line tape', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\offline\\', NULL, NULL, NULL, '2011-01-13 16:58:24.00929', NULL, 'res_coll', 30, 'NANTERRE', 4);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('FASTHD_AI', 'FASTHD', 'Fast internal disc bay for autoimport', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\ai\\', NULL, NULL, NULL, '2011-01-07 13:43:48.696644', NULL, 'res_coll', 10, 'NANTERRE', 1);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES 
+('OAIS_MAIN_1', 'OAIS_MAIN', 'Main OAIS store', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\OAIS_main\\', NULL, NULL, NULL, '2011-01-13 14:48:27.901368', NULL, 'res_coll', 20, 'NANTERRE', 2);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
+VALUES ('OAIS_SAFE_1', 'OAIS_SAFE', 'Distant backup OAIS store', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\OAIS_safe\\', NULL, NULL, NULL, '2011-01-13 14:49:05.095119', NULL, 'res_coll', 20, 'NICE', 3);
+
+------------
+--DOCTYPES-
+------------
+INSERT INTO doctypes VALUES ('res_coll', 400, 'Facture client', 'Y', 200, 200, NULL, NULL);
+
+------------
+--DOCTYPES_FIRST_LEVEL-
+------------
+INSERT INTO doctypes_first_level VALUES (200, '[cold] Factures clients', 'default_style', 'Y');
+
+------------
+--DOCTYPES_INDEXES-
+------------
+INSERT INTO doctypes_indexes VALUES (400, 'res_coll', 'custom_t1', 'N');
+INSERT INTO doctypes_indexes VALUES (400, 'res_coll', 'custom_t2', 'N');
+INSERT INTO doctypes_indexes VALUES (400, 'res_coll', 'custom_t3', 'N');
+INSERT INTO doctypes_indexes VALUES (400, 'res_coll', 'custom_n1', 'N');
+INSERT INTO doctypes_indexes VALUES (400, 'res_coll', 'custom_t4', 'N');
+INSERT INTO doctypes_indexes VALUES (400, 'res_coll', 'custom_t5', 'N');
+INSERT INTO doctypes_indexes VALUES (400, 'res_coll', 'custom_d1', 'N');
+
+------------
+--DOCTYPES_SECOND_LEVEL-
+------------
+INSERT INTO doctypes_second_level VALUES (200, '[cold] Factures clients', 200, 'default_style', 'Y');
+
+------------
+--FOLDERTYPES--
+------------
+INSERT INTO foldertypes VALUES (103, '[cold] Factures clients', '[cold] Factures clients', NULL, '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', '0000000000', 'res_coll');
+
+------------
+--FOLDERTYPES_DOCTYPES_LEVEL1-
+------------
+INSERT INTO foldertypes_doctypes_level1 VALUES (103, 200);
+
+------------
+--SECURITY-
+------------
+INSERT INTO security VALUES (508, 'FACTURES_CLIENTS', 'res_coll', '1=1', 'Acces', 'N', 'N', 'N', 128, NULL, NULL, 'DOC');
+
+------------
+--TEMPLATES_DOCTYPE_EXT-
+------------
+INSERT INTO templates_doctype_ext VALUES (NULL, 400, 'N');
+
+------------
+--USERGROUP_CONTENT-
+------------
+INSERT INTO usergroup_content VALUES ('vvictoire', 'FACTURES_CLIENTS', 'Y', '');
+
+------------
+--USERGROUPS-
+------------
+INSERT INTO usergroups VALUES ('FACTURES_CLIENTS', '[cold] Factures clients', 'N', 'N', 'N', 'N', 'N', 'Y');
+
+------------
+--USERGROUPS_SERVICES-
+------------
+INSERT INTO usergroups_services VALUES ('FACTURES_CLIENTS', 'admin');
+INSERT INTO usergroups_services VALUES ('FACTURES_CLIENTS', 'adv_search_invoices');
+INSERT INTO usergroups_services VALUES ('FACTURES_CLIENTS', 'admin_docservers');
+INSERT INTO usergroups_services VALUES ('FACTURES_CLIENTS', 'view_technical_infos');
+INSERT INTO usergroups_services VALUES ('FACTURES_CLIENTS', 'admin_tree_autofoldering');
+INSERT INTO usergroups_services VALUES ('FACTURES_CLIENTS', 'view_trees');
+INSERT INTO usergroups_services VALUES ('FACTURES_CLIENTS', 'admin_life_cycle');
+INSERT INTO usergroups_services VALUES ('FACTURES_CLIENTS', 'tag_view');
+INSERT INTO usergroups_services VALUES ('FACTURES_CLIENTS', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('FACTURES_CLIENTS', 'delete_tag_to_res');
+
+------------
+--USERS-
+------------
+INSERT INTO users VALUES ('vvictoire', 'ef9689be896dacd901cae4f13593e90d', 'Victor', 'VICTOIRE', '', 'info@maarch.org', '', '0', NULL, NULL, '4e8df53e8c0f9bec8a2357ca600ebff3', '2013-04-03 21:23:06.364', 'Y', 'N', NULL, 'OK', 'standard', NULL);
+
+------------
+--USERS_ENTITIES-
+------------
+INSERT INTO users_entities VALUES ('vvictoire', 'ACME', '', 'Y');
+
