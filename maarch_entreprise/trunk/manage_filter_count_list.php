@@ -277,7 +277,7 @@ else
             $entities = $request->empty_list();
         }
         //$where_concat .= " and ".$table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and (".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['user']['UserId']."' or ".$_SESSION['tablename']['ent_listinstance'].".item_id in (" . $entities . "))";
-    $where_concat = $table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and (" . $where_concat . ") and (".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['user']['UserId']."' or ".$_SESSION['tablename']['ent_listinstance'].".item_id in (" . $entities . "))";
+        $where_concat = $table.".res_id = ".$_SESSION['tablename']['ent_listinstance'].".res_id and (" . $where_concat . ") and (".$_SESSION['tablename']['ent_listinstance'].".item_id = '".$_SESSION['user']['UserId']."' ".(!empty($entities)?"or ".$_SESSION['tablename']['ent_listinstance'].".item_id in (" . $entities . ")":"").")";
     }
     $tab = $request->select($select, $where_concat, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false,"", "", "", false, false, 'distinct');
 
