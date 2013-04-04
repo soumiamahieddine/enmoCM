@@ -2972,12 +2972,10 @@ VALUES ('ggrand', 'CCAS', 'Responsable CCAS', 'Y');
 
 INSERT INTO users VALUES ('ccamus', 'ef9689be896dacd901cae4f13593e90d', 'Cyril', 'CAMUS', '', 'info@maarch.org', '', '0', NULL, NULL, 'e8be8d2f23f636ad76d12d666ef333b8', '2013-04-04 12:02:23.273', 'Y', 'N', NULL, 'OK', 'standard', NULL);
 
-UPDATE usergroup_content SET primary_group='Y' where user_id='ggrand' and group_id='CORRESPONDANT';
-
 ----------
 --USERGROUP_CONTENT--
 ----------
-INSERT INTO usergroup_content VALUES ('ggrand', 'CORRESPONDANT', 'N', '');
+INSERT INTO usergroup_content VALUES ('ggrand', 'CORRESPONDANT', 'Y', 'Correspondant');
 INSERT INTO usergroup_content VALUES ('ccamus', 'ARCHIVISTE', 'Y', 'Archiviste');
 
 ----------
