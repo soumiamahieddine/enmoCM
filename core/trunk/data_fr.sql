@@ -55,13 +55,12 @@ INSERT INTO users (user_id, password, firstname, lastname, phone, mail, departme
 ------------
 --USERGROUPS--
 ------------
-INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('ADMINISTRATEUR', 'Administrateurs fonctionnels', 'N', 'N', 'N', 'N', 'N', 'Y');
-INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('ELU', 'Elus', 'N', 'N', 'N', 'N', 'N', 'Y');
-INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('RESPONSABLE', 'Responsables de direction', 'N', 'N', 'N', 'N', 'N', 'Y');
-INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('AGENT', 'Agents', 'N', 'N', 'N', 'N', 'N', 'Y');
-INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('RESP_COURRIER', 'Superviseurs courrier', 'N', 'N', 'N', 'N', 'N', 'Y');
-INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('COURRIER', 'Archivistes et operateurs de scan', 'N', 'N', 'N', 'N', 'N', 'Y');
-INSERT INTO usergroups (group_id, group_desc, administrator, custom_right1, custom_right2, custom_right3, custom_right4, enabled) VALUES ('CORRESPONDANT', 'Correspondants Archive', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups VALUES ('ADMINISTRATEUR', '[courrier] Administrateurs fonctionnels', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups VALUES ('AGENT', '[courrier] Agents', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups VALUES ('COURRIER', '[courrier] Operateurs de scan', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups VALUES ('ELU', '[courrier] Elus', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups VALUES ('RESP_COURRIER', '[courrier] Superviseurs courrier', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups VALUES ('RESPONSABLE', '[courrier] Responsables de direction', 'N', 'N', 'N', 'N', 'N', 'Y');
 
 ------------
 --USERGROUP_CONTENT--
@@ -90,150 +89,119 @@ INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ddaull', 'RESPONSABLE', 'N', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('jjonasz', 'AGENT', 'Y', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ggrand', 'AGENT', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ggrand', 'CORRESPONDANT', 'N', '');
 
 ------------
 --USERGROUPS_SERVICES--
 ------------
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'my_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'print_details');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_baskets');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'join_res_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'close_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_copy_in_process');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'admin_templates');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_versions');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_folder_tree');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'view_technical_infos');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_links');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'update_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'join_res_case_in_process');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_cases');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'update_list_diff_in_details');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'reports');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_new_version');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'index_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'tag_view');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'add_tag_to_res');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'delete_tag_to_res');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'index_mlb');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'view_technical_infos');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'add_links');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'update_case');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'join_res_case_in_process');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'add_cases');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'update_list_diff_in_details');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'admin_templates');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'add_new_version');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'add_tag_to_res');
 
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'my_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'print_details');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_baskets');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'join_res_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_cases');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_list_diff_in_details');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'create_folder');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_new_version');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_folder_tree');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_technical_infos');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_links');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'update_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'join_res_case_in_process');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_copy_in_process');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'folder_search');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'view_versions');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'index_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'tag_view');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('AGENT', 'adv_search_mlb');
+INSERT INTO usergroups_services VALUES ('AGENT', 'index_mlb');
+INSERT INTO usergroups_services VALUES ('AGENT', 'my_contacts');
+INSERT INTO usergroups_services VALUES ('AGENT', 'view_technical_infos');
+INSERT INTO usergroups_services VALUES ('AGENT', 'print_details');
+INSERT INTO usergroups_services VALUES ('AGENT', 'add_links');
+INSERT INTO usergroups_services VALUES ('AGENT', 'view_baskets');
+INSERT INTO usergroups_services VALUES ('AGENT', 'update_case');
+INSERT INTO usergroups_services VALUES ('AGENT', 'join_res_case');
+INSERT INTO usergroups_services VALUES ('AGENT', 'join_res_case_in_process');
+INSERT INTO usergroups_services VALUES ('AGENT', 'add_cases');
+INSERT INTO usergroups_services VALUES ('AGENT', 'add_copy_in_process');
+INSERT INTO usergroups_services VALUES ('AGENT', 'update_list_diff_in_details');
+INSERT INTO usergroups_services VALUES ('AGENT', 'folder_search');
+INSERT INTO usergroups_services VALUES ('AGENT', 'view_folder_tree');
+INSERT INTO usergroups_services VALUES ('AGENT', 'create_folder');
+INSERT INTO usergroups_services VALUES ('AGENT', 'add_new_version');
+INSERT INTO usergroups_services VALUES ('AGENT', 'tag_view');
+INSERT INTO usergroups_services VALUES ('AGENT', 'add_tag_to_res');
 
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'index_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view_technical_infos');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_links');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'join_res_case_in_process');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_cases');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'update_list_diff_in_details');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'reports');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_new_version');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'admin');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view_folder_tree');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'admin_architecture');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'my_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'put_in_validation');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view_baskets');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'join_res_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'close_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_copy_in_process');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'view_versions');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'tag_view');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'add_tag_to_res');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'admin_apa');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'manage_apa');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'physical_archive');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'physical_archive_box_read');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'physical_archive_box_manage');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'physical_archive_batch_read');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', 'physical_archive_batch_manage');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('COURRIER', '_print_sep');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'admin');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'adv_search_mlb');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'index_mlb');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'admin_architecture');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'my_contacts');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'view_technical_infos');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'put_in_validation');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'add_links');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'view_baskets');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'update_case');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'join_res_case');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'join_res_case_in_process');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'close_case');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'add_cases');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'add_copy_in_process');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'update_list_diff_in_details');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'view_folder_tree');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'physical_archive');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'physical_archive_box_read');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'physical_archive_box_manage');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'physical_archive_batch_read');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'physical_archive_batch_manage');
+INSERT INTO usergroups_services VALUES ('COURRIER', '_print_sep');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'reports');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'add_new_version');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'tag_view');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'add_tag_to_res');
 
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'view_technical_infos');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'add_links');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'add_copy_in_process');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'reports');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'add_new_version');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'print_details');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'view_baskets');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'update_list_diff_in_details');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'view_versions');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'index_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'tag_view');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ELU', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('ELU', 'adv_search_mlb');
+INSERT INTO usergroups_services VALUES ('ELU', 'index_mlb');
+INSERT INTO usergroups_services VALUES ('ELU', 'view_technical_infos');
+INSERT INTO usergroups_services VALUES ('ELU', 'print_details');
+INSERT INTO usergroups_services VALUES ('ELU', 'add_links');
+INSERT INTO usergroups_services VALUES ('ELU', 'view_baskets');
+INSERT INTO usergroups_services VALUES ('ELU', 'add_copy_in_process');
+INSERT INTO usergroups_services VALUES ('ELU', 'update_list_diff_in_details');
+INSERT INTO usergroups_services VALUES ('ELU', 'reports');
+INSERT INTO usergroups_services VALUES ('ELU', 'add_new_version');
+INSERT INTO usergroups_services VALUES ('ELU', 'tag_view');
+INSERT INTO usergroups_services VALUES ('ELU', 'add_tag_to_res');
 
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'index_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_technical_infos');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'join_res_case_in_process');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_cases');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'update_list_diff_in_details');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'reports');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'admin');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_folder_tree');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'my_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_baskets');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'join_res_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'close_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'add_copy_in_process');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'admin_templates');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'view_versions');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESP_COURRIER', 'tag_view');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESp_COURRIER', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'admin');
+INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'index_mlb');
+INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'view_technical_infos');
+INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'update_case');
+INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'join_res_case_in_process');
+INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'add_cases');
+INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'update_list_diff_in_details');
+INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'admin_templates');
+INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'tag_view');
 
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'adv_search_mlb');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_users');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_groups');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_architecture');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'view_history');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'view_history_batch');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_status');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_actions');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_contacts');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'reopen_mail');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_docservers');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_baskets');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'update_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'join_res_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'join_res_case_in_process');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'close_case');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'manage_entities');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'update_list_diff_in_details');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_templates');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_reports');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'reports');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'view_versions');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'add_new_version');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'tag_view');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'add_tag_to_res');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'delete_tag_to_res');
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('ADMINISTRATEUR', 'admin_tag');
-
-INSERT INTO usergroups_services (group_id, service_id) VALUES ('CORRESPONDANT', 'reserve_apa');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'adv_search_mlb');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin_users');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin_groups');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin_architecture');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'view_history');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'view_history_batch');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin_status');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin_actions');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin_contacts');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'reopen_mail');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin_docservers');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin_baskets');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'update_case');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'join_res_case');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'join_res_case_in_process');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'close_case');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'manage_entities');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'update_list_diff_in_details');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin_templates');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin_reports');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'reports');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'add_new_version');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin_tag');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'tag_view');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'delete_tag_to_res');
 
 ------------
 --ENTITIES--
@@ -331,8 +299,6 @@ INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item
 ------------
 --BASKETS--
 ------------
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('apa_coll', 'APA_reservation', '[APA] 40 - Archives reservees', 'Corbeille des archives reservees', 'res_view_apa.status = ''RSV'' and (ORIGIN= @my_primary_entity or ORIGIN in (@subentities[@my_primary_entity]))', 'NO', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('apa_coll', 'APA_picking', '[APA] 41 - Archives prelevees', 'Corbeille des archives prelevees', 'res_view_apa.status = ''OUT'' and (ORIGIN= @my_primary_entity or ORIGIN in (@subentities[@my_primary_entity]))', 'NO', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'SignedBasket', '[courrier] 05 - Courriers visés par la direction', 'Corbeilles des courriers visés, à imprimer', 'status=''SIG'' and DEST_USER = @user', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'SigningBasket', '[courrier] 11 - Courriers à viser', 'Corbeille des courriers à approuver', 'STATUS = ''VIS'' and DESTINATION in (@subentities[@my_entities])', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'QualificationBasket', '[courrier] 22 - Courriers à qualifier', 'Corbeille de qualification', 'status=''ATT''', 'N', 'Y', 'Y');
@@ -435,8 +401,6 @@ INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, red
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'QualificationBasket', 18, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'IndexingBasket', 16, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'RetourCourrier', 12, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'APA_reservation', 1, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'APA_picking', 2, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ELU', 'DepartmentBasket', 1, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ELU', 'CopyMailBasket', 2, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ELU', 'MyBasket', 4, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
@@ -507,8 +471,6 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (21, '', 'COURRIER', 'RetourCourrier', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (22, '', 'COURRIER', 'QualificationBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (21, '', 'COURRIER', 'IndexingBasket', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (15, '', 'COURRIER', 'APA_reservation', 'Y', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (16, '', 'COURRIER', 'APA_picking', 'Y', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'ELU', 'DepartmentBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'ELU', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'ELU', 'MyBasket', 'N', 'Y', 'N');
@@ -2961,32 +2923,38 @@ insert into entities (entity_id, entity_label, business_id) values ('AD06', 'Arc
 insert into entities (entity_id, entity_label, business_id) values ('CCAS', 'Centre Communal d''Action Sociale', 'CCAS01');
 
 -----------------------
+--USERGROUPS--
+-----------------------
+INSERT INTO usergroups VALUES ('ARCHIVISTE', '[archivage] Archivistes', 'N', 'N', 'N', 'N', 'N', 'Y');
+INSERT INTO usergroups VALUES ('CORRESPONDANT', '[archivage] Correspondants Archive', 'N', 'N', 'N', 'N', 'N', 'Y');
+
+-----------------------
 --USERGROUPS_SERVICES--
 -----------------------
-INSERT INTO usergroups_services (group_id, service_id) 
-VALUES ('COURRIER', 'admin_records_management');
-INSERT INTO usergroups_services (group_id, service_id) 
-VALUES ('COURRIER', 'admin_ArchivalAgreement');
-INSERT INTO usergroups_services (group_id, service_id) 
-VALUES ('COURRIER', 'index_rm');
-INSERT INTO usergroups_services (group_id, service_id) 
-VALUES ('COURRIER', 'admin_rm_entities');
-INSERT INTO usergroups_services (group_id, service_id) 
-VALUES ('COURRIER', 'admin_FilePlan');
-INSERT INTO usergroups_services (group_id, service_id) 
-VALUES ('COURRIER', 'admin_Schedule');
-INSERT INTO usergroups_services (group_id, service_id) 
-VALUES ('COURRIER', 'ArchiveTransferCreation');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'admin');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'view_technical_infos');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'admin_apa');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'manage_apa');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'reserve_apa');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'view_baskets');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'tag_view');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'admin_records_management');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'admin_ArchivalAgreement');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'admin_rm_entities');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'admin_FilePlan');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'admin_Schedule');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'adv_search_rm');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'index_rm');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'ArchiveTransferCreation');
 
-INSERT INTO usergroups_services (group_id, service_id) 
-VALUES ('CORRESPONDANT', 'adv_search_rm');
-INSERT INTO usergroups_services (group_id, service_id) 
-VALUES ('CORRESPONDANT', 'index_rm');
-INSERT INTO usergroups_services (group_id, service_id) 
-VALUES ('CORRESPONDANT', 'ArchiveTransferCreation');
+INSERT INTO usergroups_services VALUES ('CORRESPONDANT', 'reserve_apa');
+INSERT INTO usergroups_services VALUES ('CORRESPONDANT', 'adv_search_rm');
+INSERT INTO usergroups_services VALUES ('CORRESPONDANT', 'index_rm');
+INSERT INTO usergroups_services VALUES ('CORRESPONDANT', 'ArchiveTransferCreation');
 
 ------------------
---USERS_ENTITIES--
+--USERS--
 ------------------
 delete from users_entities where user_id = 'bblier' and entity_id = 'COU';
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) 
@@ -2994,6 +2962,7 @@ VALUES ('bblier', 'COU', 'Responsable courrier', 'N');
 delete from users_entities where user_id = 'bblier' and entity_id = 'VILLE';
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) 
 VALUES ('bblier', 'VILLE', 'Responsable courrier', 'Y');
+INSERT INTO users_entities VALUES ('ccamus', 'VILLE', '', 'Y');
 
 delete from users_entities where user_id = 'ggrand' and entity_id = 'COR';
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) 
@@ -3002,8 +2971,16 @@ delete from users_entities where user_id = 'ggrand' and entity_id = 'CCAS';
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity)
 VALUES ('ggrand', 'CCAS', 'Responsable CCAS', 'Y');
 
+INSERT INTO users VALUES ('ccamus', 'ef9689be896dacd901cae4f13593e90d', 'Cyril', 'CAMUS', '', 'info@maarch.org', '', '0', NULL, NULL, 'e8be8d2f23f636ad76d12d666ef333b8', '2013-04-04 12:02:23.273', 'Y', 'N', NULL, 'OK', 'standard', NULL);
+
 UPDATE usergroup_content SET primary_group='Y' where user_id='ggrand' and group_id='CORRESPONDANT';
 UPDATE usergroup_content SET primary_group='N' where user_id='ggrand' and group_id='AGENT';
+
+----------
+--USERGROUP_CONTENT--
+----------
+INSERT INTO usergroup_content VALUES ('ggrand', 'CORRESPONDANT', 'N', '');
+INSERT INTO usergroup_content VALUES ('ccamus', 'ARCHIVISTE', 'Y', 'Archiviste');
 
 ----------
 --STATUS--
@@ -3051,19 +3028,23 @@ VALUES ('rm_coll', 'INDEXARCHIVE', '[archivage] Indexer une archive', 'Indexer u
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) 
 VALUES ('io_coll', 'BREnvoyes', '[archivage] Bordereaux envoyés', 'Bordereaux envoyés', 'io_type = ''ArchiveTransfer'' AND io_status = ''SENT''', 'N', 'Y', 'Y');
 
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) 
+VALUES ('log_coll', 'logsArchives', '[archivage] 100 - logs archivés', '100 - logs archivés', '1=1', 'N', 'Y', 'Y');
+
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) 
+VALUES ('apa_coll', 'APA_reservation', '[APA] 40 - Archives reservees', 'Corbeille des archives reservees', 'res_view_apa.status = ''RSV'' and (ORIGIN= @my_primary_entity or ORIGIN in (@subentities[@my_primary_entity]))', 'NO', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) 
+VALUES ('apa_coll', 'APA_picking', '[APA] 41 - Archives prelevees', 'Corbeille des archives prelevees', 'res_view_apa.status = ''OUT'' and (ORIGIN= @my_primary_entity or ORIGIN in (@subentities[@my_primary_entity]))', 'NO', 'Y', 'Y');
+
 ------------------------
 --ACTIONS_GROUPBASKETS--
 ------------------------
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) 
-VALUES (202, '', 'COURRIER', 'INDEXARCHIVE', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) 
-VALUES (203, '', 'COURRIER', 'BRAttenteControleConformite', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) 
-VALUES (204, '', 'COURRIER', 'TransfertArticles', 'Y', 'N', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) 
-VALUES (205, '', 'COURRIER', 'BRCreation', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) 
-VALUES (206, '', 'COURRIER', 'BREnPreparation', 'Y', 'N', 'Y');
+INSERT INTO actions_groupbaskets VALUES (15, '', 'ARCHIVISTE', 'APA_reservation', 'Y', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (16, '', 'ARCHIVISTE', 'APA_picking', 'Y', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (203, '', 'ARCHIVISTE', 'BRAttenteControleConformite', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets VALUES (206, '', 'ARCHIVISTE', 'BREnPreparation', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets VALUES (205, '', 'ARCHIVISTE', 'BRCreation', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets VALUES (202, '', 'ARCHIVISTE', 'INDEXARCHIVE', 'N', 'N', 'Y');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) 
 VALUES (202, '', 'CORRESPONDANT', 'INDEXARCHIVE', 'N', 'N', 'Y');
@@ -3075,53 +3056,39 @@ VALUES (206, '', 'CORRESPONDANT', 'BREnPreparation', 'Y', 'N', 'Y');
 ---------------
 --GROUPBASKET--
 ---------------
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) 
-VALUES ('COURRIER', 'BRCreation', 26, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) 
-VALUES ('COURRIER', 'INDEXARCHIVE', 19, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) 
-VALUES ('COURRIER', 'BRAttenteControleConformite', 21, NULL, NULL, 'io_basket_list', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) 
-VALUES ('COURRIER', 'BRAcceptes', 22, NULL, NULL, 'io_basket_list', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) 
-VALUES ('COURRIER', 'BRRejetes', 23, NULL, NULL, 'io_basket_list', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) 
-VALUES ('COURRIER', 'TransfertArticles', 24, NULL, NULL, 'item_basket_list', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) 
-VALUES ('COURRIER', 'ArticlesTransferes', 25, NULL, NULL, 'item_basket_list', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) 
-VALUES ('COURRIER', 'BREnPreparation', 27, NULL, NULL, 'io_basket_list', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) 
-VALUES ('COURRIER', 'BREnvoyes', 32, NULL, NULL, 'io_basket_list', 'N', 'N', 'N');
-
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) 
-VALUES ('CORRESPONDANT', 'BRCreation', 26, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) 
-VALUES ('CORRESPONDANT', 'INDEXARCHIVE', 19, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) 
-VALUES ('CORRESPONDANT', 'BREnPreparation', 27, NULL, NULL, 'io_basket_list', 'N', 'N', 'N');
-
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'APA_reservation', 1, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'APA_picking', 2, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'logsArchives', 3, NULL, NULL, 'logs_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'TransfertArticles', 4, NULL, NULL, 'item_basket_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'BRAcceptes', 5, NULL, NULL, 'io_basket_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'BRAttenteControleConformite', 6, NULL, NULL, 'io_basket_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('CORRESPONDANT', 'BREnPreparation', 27, NULL, NULL, 'io_basket_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'BREnPreparation', 7, NULL, NULL, 'io_basket_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'BRRejetes', 8, NULL, NULL, 'io_basket_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('CORRESPONDANT', 'BRCreation', 26, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'BRCreation', 9, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('CORRESPONDANT', 'INDEXARCHIVE', 19, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'INDEXARCHIVE', 10, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'ArticlesTransferes', 25, NULL, NULL, 'item_basket_list', 'N', 'N', 'N', NULL, NULL);
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'BREnvoyes', 32, NULL, NULL, 'io_basket_list', 'N', 'N', 'N', NULL, NULL);
 
 ------------------------
 --GROUPBASKET_REDIRECT--
 ------------------------
-delete from groupbasket_redirect where basket_id = 'INDEXARCHIVE' or basket_id='BRCreation';
-INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) 
-VALUES ('COURRIER', 'INDEXARCHIVE', 202, '', 'ALL_ENTITIES', 'ENTITY');
-INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) 
-VALUES ('COURRIER', 'BRCreation', 205, '', 'ALL_ENTITIES', 'ENTITY');
-
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) 
 VALUES ('CORRESPONDANT', 'INDEXARCHIVE', 202, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) 
+VALUES ('ARCHIVISTE', 'INDEXARCHIVE', 202, '', 'ALL_ENTITIES', 'ENTITY');
+INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) 
 VALUES ('CORRESPONDANT', 'BRCreation', 205, '', 'ALL_ENTITIES', 'ENTITY');
+INSERT INTO groupbasket_redirect (group_id, basket_id, action_id, entity_id, keyword, redirect_mode) 
+VALUES ('ARCHIVISTE', 'BRCreation', 205, '', 'ALL_ENTITIES', 'ENTITY');
 
 ------------
 --SECURITY--
 ------------
-delete from security where coll_id = 'rm_coll' and group_id = 'COURRIER';
 INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) 
-VALUES ('COURRIER', 'rm_coll', '1=1', 'ARCHIVES', 'N', 'N', 'N', 153, NULL, NULL, 'DOC');
+VALUES ('ARCHIVISTE', 'rm_coll', '1=1', 'Acces', 'N', 'N', 'N', 153, NULL, NULL, 'DOC');
 
 delete from security where coll_id = 'rm_coll' and group_id = 'CORRESPONDANT';
 INSERT INTO security (group_id, coll_id, where_clause, maarch_comment, can_insert, can_update, can_delete, rights_bitmask, mr_start_date, mr_stop_date, where_target) 
@@ -3186,12 +3153,6 @@ INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc,
 VALUES ('RM_POLICY', 'INIT_OAIS_RM', 'INIT_OAIS_RM_STEP', 'Étape d''initialisation de la politique d''archivage de la collection RM', 'FASTHD', 'N', 'NONE', 1, 'N', NULL, NULL);
 INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) 
 VALUES ('RM_POLICY', 'OAIS_RM', 'OAIS_RM_STEP', 'Étape de création des conteneurs OAIS pour la collection RM', 'OAIS_RM', 'N', 'COPY', 1, 'N', NULL, NULL);
-
-------------
---BASKETS--
-------------
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) 
-VALUES ('log_coll', 'logsArchives', '[archivage] 100 - logs archivés', '100 - logs archivés', '1=1', 'N', 'Y', 'Y');
 
 ---------------
 --GROUPBASKET--
