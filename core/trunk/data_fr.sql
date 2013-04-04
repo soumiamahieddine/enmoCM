@@ -2,7 +2,6 @@
 -- PostgreSQL database
 --
 
-
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -11,6 +10,86 @@ SET client_min_messages = warning;
 SET escape_string_warning = off;
 
 SET search_path = public, pg_catalog;
+
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+
+-- ************************************************************************* --
+--                                                                           --
+--                  COMMON DATAS                                          --
+--                                                                           --
+-- ************************************************************************* --
+
+------------
+--DOCSERVER_LOCATIONS--
+------------
+INSERT INTO docserver_locations (docserver_location_id, ipv4, ipv6, net_domain, mask, net_link, enabled) VALUES ('NANTERRE', '127.0.0.1', '', 'MAARCH', '255.255.255.0', NULL, 'Y');
+INSERT INTO docserver_locations (docserver_location_id, ipv4, ipv6, net_domain, mask, net_link, enabled) VALUES ('NICE', '192.168.21.63', '', '', '', NULL, 'Y');
+
+------------
+--DOCSERVER_TYPES-
+------------
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('FASTHD', 'FASTHD', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('TEMPLATES', 'TEMPLATES', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'N', 'NONE');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OAIS_MAIN', 'Main OAIS store', 'Y', 'Y', 100, 'Y', '7Z', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OFFLINE', 'Off line tape', 'Y', 'Y', 1000, 'Y', '7Z', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OAIS_SAFE', 'Distant backup OAIS store', 'Y', 'Y', 20, 'Y', 'ZIP', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
+
+------------
+--DOCSERVERS-
+------------
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TEMPLATES', 'TEMPLATES', '[system] Templates', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\templates\\', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'templates', 1, 'NANTERRE', 1);
+
+------------
+--USERS-
+------------
+INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('superadmin', '17c4520f6cfd1ab53d8745e84681eb49', 'Super', 'ADMIN', '+33 1 47 24 51', 'info@maarch.org', 'Maarch', '11', NULL, NULL, 'e657b3542b0362910db9195cb0fd0fb5', '2012-02-28 10:02:08', 'Y', 'N', NULL, 'OK', 'standard', NULL);
+
+------------
+--USERS_ENTITIES-
+------------
+INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ggrand', 'COR', 'Responsable correspondant Archive', 'Y');
+
+------------
+--STATUS-
+------------
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('COU', 'En cours', 'Y', 'mail.gif', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('DEL', 'Supprimé', 'Y', NULL, 'apps', 'N', 'Y');
+INSERT INTO status VALUES ('END', 'Clos / fin du workflow', 'Y', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('NEW', 'Nouveau', 'Y', '', 'apps', 'Y', 'Y');
+INSERT INTO status VALUES ('RET', 'Retour courrier ou document en qualification', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status VALUES ('SIG', 'A signer', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('UNS', 'Rejeté', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('VAL', 'A Valider', 'Y', '', 'apps', 'Y', 'Y');
+INSERT INTO status VALUES ('INIT', 'Nouveau courrier ou document non qualifié', 'Y', 'N', '', 'apps', 'Y', 'Y');
+
+------------
+--PARAMETERS--
+------------
+INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('apa_reservation_batch', NULL, 1, NULL);
+INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('workbatch_rec', '', 7, NULL);
+INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('folder_id_increment', '', 200, NULL);
+INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('work_batch_autoimport_id', NULL, 1, NULL);
+INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('postindexing_workbatch', NULL, 40, NULL);
+INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', NULL, 140, NULL);
+
+------------
+--CONTACTS--
+------------
+INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (108, '', '', 'LA POSTE', '', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', 'title1', NULL, NULL, NULL, NULL, 'letter', 'Y', 'N');
+INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (109, '', '', 'FRANCE TELECOM', '', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', 'title1', NULL, NULL, NULL, NULL, 'letter', 'Y', 'N');
+INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (110, '', '', 'Transport Choisy', '', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', 'title1', NULL, NULL, NULL, NULL, 'letter', 'Y', 'N');
+INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (131, NULL, NULL, 'Maarch', NULL, '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', NULL, NULL, NULL, NULL, NULL, 'letter', 'Y', 'N');
+
+------------
+--DIFFLIST_TYPES--
+------------
+INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('entity_id', 'Diffusion aux services', 'dest copy', 'Y', 'Y');
+INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('type_id', 'Diffusion selon le type de document', 'dest copy', 'Y', 'Y');
+INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('foldertype_id', 'Diffusion selon le type de dossiers', 'dest copy', 'Y', 'Y');
 
 
 -- *************************************************************************************************************************************************************************************************************************** --
@@ -50,7 +129,6 @@ INSERT INTO users (user_id, password, firstname, lastname, phone, mail, departme
 INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('bbain', 'ef9689be896dacd901cae4f13593e90d', 'Barbara', 'BAIN', '', 'info@maarch.org', '', '0', NULL, NULL, '4c087c76c038bdd5ba9172834b88e8f5', '2012-02-28 10:02:11', 'Y', 'N', NULL, 'OK', 'standard', NULL);
 INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('jjonasz', 'ef9689be896dacd901cae4f13593e90d', 'Jean', 'JONASZ', '', 'info@maarch.org', '', '0', NULL, NULL, '4c087c76c038bdd5ba9172834b88e8f5', '2012-02-28 10:02:11', 'Y', 'N', NULL, 'OK', 'standard', NULL);
 INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('ggrand', 'ef9689be896dacd901cae4f13593e90d', 'George', 'GRAND', '', 'info@maarch.org', '', '0', NULL, NULL, '4c087c76c038bdd5ba9172834b88e8f5', '2012-02-28 10:02:11', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users (user_id, password, firstname, lastname, phone, mail, department, custom_t1, custom_t2, custom_t3, cookie_key, cookie_date, enabled, change_password, delay_number, status, loginmode, docserver_location_id) VALUES ('superadmin', '17c4520f6cfd1ab53d8745e84681eb49', 'Super', 'ADMIN', '+33 1 47 24 51', 'info@maarch.org', 'Maarch', '11', NULL, NULL, 'e657b3542b0362910db9195cb0fd0fb5', '2012-02-28 10:02:08', 'Y', 'N', NULL, 'OK', 'standard', NULL);
 
 ------------
 --USERGROUPS--
@@ -249,7 +327,6 @@ INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUE
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ssaporta', 'PE', 'Responsable service de la petite enfance', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ttong', 'SP', 'Responsable service des Sports', 'Y');
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('jjonasz', 'PJU', 'Responsable service Juridique', 'Y');
-INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUES ('ggrand', 'COR', 'Responsable correspondant Archive', 'Y');
 
 ------------
 --LISTMODELS--
@@ -328,8 +405,6 @@ INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (1, 'redirect', '[courrier] Rediriger', '_NOSTATUS_', 'Y', 'Y', 'redirect', 'Y', 'entities', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (2, 'to_validate', 'Valider', 'VAL', 'Y', 'N', 'confirm_status', 'N', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (3, '', 'Renvoyer en qualification', 'RET', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (15, '', '[APA] Prelever une archive', 'OUT', 'N', 'Y', 'confirm_apa', 'Y', 'advanced_physical_archive', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (16, '', '[APA] Reintegrer une archive', 'POS', 'N', 'Y', 'confirm_apa', 'Y', 'advanced_physical_archive', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (18, 'indexing', '[courrier] Valider courrier', 'NEW', 'N', 'Y', 'validate_mail', 'Y', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (19, '', '[courrier] Traiter courrier', 'COU', 'N', 'Y', 'process', 'Y', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (20, '', '[courrier] Cloturer', 'END', 'N', 'Y', 'close_mail', 'Y', 'apps', 'N');
@@ -352,17 +427,6 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_
 ------------
 --STATUS--
 ------------
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('COU', 'En cours', 'Y', 'mail.gif', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('DEL', 'Supprimé', 'Y', NULL, 'apps', 'N', 'Y');
-INSERT INTO status VALUES ('END', 'Clos / fin du workflow', 'Y', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('NEW', 'Nouveau', 'Y', '', 'apps', 'Y', 'Y');
-INSERT INTO status VALUES ('RET', 'Retour courrier ou document en qualification', 'N', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status VALUES ('SIG', 'A signer', 'N', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('UNS', 'Rejeté', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('VAL', 'A Valider', 'Y', '', 'apps', 'Y', 'Y');
-INSERT INTO status VALUES ('INIT', 'Nouveau courrier ou document non qualifié', 'Y', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('OUT', '[APA] Prelevee', 'N', '', 'advanced_physical_archive', 'N', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('POS', '[APA] Reintegree', 'N', '', 'advanced_physical_archive', 'N', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('MAQUAL', '[courrier] Email à qualifier', 'N', '', 'apps', 'Y', 'Y');
 
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDNEW', '[dossier] Nouveau dossier', 'N', 'Y', 'basket_folders_b.gif', 'folder', 'N', 'Y');
@@ -371,7 +435,7 @@ INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename,
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDTRT', '[dossier] Dossier traité', 'N', 'Y', '', 'folder', 'N', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDNOT', '[dossier] Dossier incomplet', 'N', 'Y', '', 'folder', 'N', 'Y');
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDDEL', '[dossier] Dossier supprimé', 'N', 'Y', '', 'folder', 'N', 'Y');
-INSERT INTO status VALUES ('APP', 'A approuver', 'N', 'N', '', 'apps', 'Y', 'Y');
+
 ------------
 --GROUPBASKET--
 ------------
@@ -536,7 +600,6 @@ INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_
 ------------
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (10, '[courrier] Autres', 10, 'blue_style', 'Y');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (20, '[courrier] Dossiers civils', 10, 'blue_style', 'Y');
-INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (30, '[courrier] Dossiers du Personnel', 10, 'blue_style', 'Y');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (40, '[courrier] Dossiers juridiques', 10, 'blue_style', 'Y');
 INSERT INTO doctypes_second_level (doctypes_second_level_id, doctypes_second_level_label, doctypes_first_level_id, css_style, enabled) VALUES (50, '[courrier] Demandes GDD', 20, 'black_style', 'Y');
 
@@ -556,8 +619,6 @@ INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_lev
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 30, 'Arrêté municipal', 'Y', 10, 20, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 35, 'Délibération', 'Y', 10, 20, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 40, 'Etat civil', 'Y', 10, 20, NULL, NULL);
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 45, 'Candidature', 'Y', 10, 30, NULL, NULL);
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 50, 'Contrat de travail', 'Y', 10, 30, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 55, 'Contravention', 'Y', 10, 40, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 60, 'Extrait de main courante', 'Y', 10, 40, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 65, 'Réclamation', 'Y', 10, 40, NULL, NULL);
@@ -606,8 +667,6 @@ INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (28,
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (30, 21, 14, 1);
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (35, 21, 14, 1);
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (40, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (45, 21, 14, 1);
-INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (50, 21, 14, 1);
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (55, 21, 14, 1);
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (60, 21, 14, 1);
 INSERT INTO mlb_doctype_ext (type_id, process_delay, delay1, delay2) VALUES (65, 21, 14, 1);
@@ -645,16 +704,6 @@ INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, fol
 INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date, folder_out_id, video_status, video_user, is_frozen, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_d11, custom_t12, custom_d12, custom_t13, custom_d13, custom_t14, custom_d14, custom_t15, is_complete, is_folder_out, last_modified_date) VALUES (28, 'LP', 5, 23, 'LaPoste', NULL, NULL, NULL, 'superadmin', 'FOLDNEW', 2, '2012-03-02 18:33:17.705', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', '2012-03-02 18:33:17.705');
 INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date, folder_out_id, video_status, video_user, is_frozen, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_d11, custom_t12, custom_d12, custom_t13, custom_d13, custom_t14, custom_d14, custom_t15, is_complete, is_folder_out, last_modified_date) VALUES (29, 'PSF', 5, 0, 'POLE SERVICES FONCTIONNELS', NULL, NULL, NULL, 'superadmin', 'FOLDNEW', 1, '2012-03-02 18:32:07.22', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', '2012-03-02 18:32:07.22');
 INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date, folder_out_id, video_status, video_user, is_frozen, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_d11, custom_t12, custom_d12, custom_t13, custom_d13, custom_t14, custom_d14, custom_t15, is_complete, is_folder_out, last_modified_date) VALUES (30, 'PSF - BUDGET', 5, 29, 'BUDGET', NULL, NULL, NULL, 'superadmin', 'FOLDNEW', 2, '2012-03-02 18:32:07.22', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', '2012-03-02 18:32:07.22');
-
-------------
---PARAMETERS--
-------------
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('apa_reservation_batch', NULL, 1, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('workbatch_rec', '', 7, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('folder_id_increment', '', 200, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('work_batch_autoimport_id', NULL, 1, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('postindexing_workbatch', NULL, 40, NULL);
-INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', NULL, 140, NULL);
 
 ------------
 --SECURITY--
@@ -855,6 +904,7 @@ VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvel
 </tr>
 </tbody>
 </table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes');
+
 ------------
 --NOTIFICATIONS--
 ------------
@@ -894,55 +944,21 @@ INSERT INTO templates_association (system_id, template_id, what, value_field, ma
 INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (35, 3, 'destination', 'DRH', 'entities');
 
 ------------
---LC_POLICIES--
-------------
-INSERT INTO lc_policies (policy_id, policy_name, policy_desc) VALUES ('FNTC', 'FNTC standard archiving policy', '3 months fast cache, immediate double backup on AIP, final sort: offline after 10 years');
-
-------------
---LC_CYCLES--
-------------
-INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_clause, break_key, validation_mode) VALUES ('FNTC', 'INIT', 'Initial location', 0, '1=1', 'doc_custom_t1', 'AUTO');
-INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_clause, break_key, validation_mode) VALUES ('FNTC', 'DISPOSAL', 'Disposal', 3, 'current_date >= creation_date::timestamp + interval ''10'' year', '', 'USER');
-INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_clause, break_key, validation_mode) VALUES ('FNTC', 'OAIS', 'FASTHD cache is purged. Resource lays only on OAIS docservers', 2, 'current_date >= creation_date::timestamp + interval ''3'' month', '', 'AUTO');
-INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_clause, break_key, validation_mode) VALUES ('FNTC', 'OAIS_CACHED', 'Immediate copy on OAIS main and backup docservers. Resource is still present on FASTHD', 1, 'current_date >= creation_date::timestamp + interval ''7'' day', '', 'AUTO');
-
-------------
---LC_CYCLE_STEPS--
-------------
-INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) VALUES ('FNTC', 'INIT', 'INIT', 'Initial location', 'FASTHD', 'N', 'NONE', 1, 'N', NULL, NULL);
-INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) VALUES ('FNTC', 'OAIS_CACHED', 'COPY_MAIN', 'Immediate copy on main OAIS docserver', 'OAIS_MAIN', 'N', 'COPY', 1, 'Y', NULL, NULL);
-INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) VALUES ('FNTC', 'OAIS_CACHED', 'COPY_SAFE', 'Immediate copy on main OAIS docserver', 'OAIS_SAFE', 'N', 'COPY', 2, 'Y', NULL, NULL);
-INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) VALUES ('FNTC', 'OAIS', 'PURGE', 'Purge after 3 months', 'FASTHD', 'N', 'PURGE', 1, 'N', NULL, NULL);
-INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) VALUES ('FNTC', 'DISPOSAL', 'FINAL_MAIN', 'Disposal', 'OAIS_MAIN', 'N', 'NONE', 1, 'N', NULL, NULL);
-
-------------
---DOCSERVER_LOCATIONS--
-------------
-INSERT INTO docserver_locations (docserver_location_id, ipv4, ipv6, net_domain, mask, net_link, enabled) VALUES ('NANTERRE', '127.0.0.1', '', 'MAARCH', '255.255.255.0', NULL, 'Y');
-INSERT INTO docserver_locations (docserver_location_id, ipv4, ipv6, net_domain, mask, net_link, enabled) VALUES ('NICE', '192.168.21.63', '', '', '', NULL, 'Y');
-
-------------
---DOCSERVER_TYPES--
-------------
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('FASTHD', 'FASTHD', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'SHA256');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OAIS_MAIN', 'Main OAIS store', 'Y', 'Y', 100, 'Y', '7Z', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OFFLINE', 'Off line tape', 'Y', 'Y', 1000, 'Y', '7Z', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OAIS_SAFE', 'Distant backup OAIS store', 'Y', 'Y', 20, 'Y', 'ZIP', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
-INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('TEMPLATES', 'TEMPLATES', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'N', 'NONE');
-
-------------
 --DOCSERVERS--
 ------------
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_MAN', 'FASTHD', '[courrier] Fast internal disc bay for letterbox mode', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\manual\\', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'letterbox_coll', 10, 'NANTERRE', 2);
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TEMPLATES', 'TEMPLATES', '[system] Templates', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\templates\\', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'templates', 1, 'NANTERRE', 1);
 
-------------
---CONTACTS--
-------------
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (108, '', '', 'LA POSTE', '', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', 'title1', NULL, NULL, NULL, NULL, 'letter', 'Y', 'N');
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (109, '', '', 'FRANCE TELECOM', '', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', 'title1', NULL, NULL, NULL, NULL, 'letter', 'Y', 'N');
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (110, '', '', 'Transport Choisy', '', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', 'title1', NULL, NULL, NULL, NULL, 'letter', 'Y', 'N');
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (131, NULL, NULL, 'maarch', NULL, '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', NULL, NULL, NULL, NULL, NULL, 'letter', 'Y', 'N');
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+
+-- ************************************************************************* --
+--                                                                           --
+--                  RECORDS MANAGEMENT DATAS                                 --
+--                                                                           --
+-- ************************************************************************* --
 
 ------------
 --AR_BATCH--
@@ -1131,25 +1147,6 @@ INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos
 ------------
 INSERT INTO ar_sites (site_id, site_desc, entity_id) VALUES ('FR01', 'Site de Paris', 'COU');
 INSERT INTO ar_sites (site_id, site_desc, entity_id) VALUES ('DK01', 'Site de Dakar', 'COU');
-
-------------
---DIFFLIST_TYPES--
-------------
-INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('entity_id', 'Diffusion aux services', 'dest copy', 'Y', 'Y');
-INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('type_id', 'Diffusion selon le type de document', 'dest copy', 'Y', 'Y');
-INSERT INTO difflist_types (difflist_type_id, difflist_type_label, difflist_type_roles, allow_entities, is_system) VALUES ('foldertype_id', 'Diffusion selon le type de dossiers', 'dest copy', 'Y', 'Y');
-
--- *************************************************************************************************************************************************************************************************************************** --
--- *************************************************************************************************************************************************************************************************************************** --
--- *************************************************************************************************************************************************************************************************************************** --
--- *************************************************************************************************************************************************************************************************************************** --
--- *************************************************************************************************************************************************************************************************************************** --
-
--- ************************************************************************* --
---                                                                           --
---                  RECORDS MANAGEMENT DATAS                                 --
---                                                                           --
--- ************************************************************************* --
 
 -------------------
 --DOCSERVER_TYPES--
@@ -2890,19 +2887,14 @@ alter sequence folders_system_id_seq restart 3000;
 -----------------
 --RM_AGREEMENTS--
 -----------------
-truncate table rm_agreements;
---
 INSERT INTO rm_agreements (agreement_id, identifier, description, comment, archival_profile, archival_entity_id, transferring_entity_id, begin_date, end_date, coll_id, allowed_file_types, transfer_max_size, transfer_max_item, transfer_count, transfer_count_period, is_enabled) 
 VALUES (5, 'ENVOI_AD', 'Convention pour envoi aux AD', 'Convention pour envoi aux Archives Départementales', 'Actes', 'AD06', 'COU', '2012-09-07', '2014-09-23', '', 'application/pdf', 100000000000, 100, 10, 'D', 'Y');
---
 INSERT INTO rm_agreements (agreement_id, identifier, description, comment, archival_profile, archival_entity_id, transferring_entity_id, begin_date, end_date, coll_id, allowed_file_types, transfer_max_size, transfer_max_item, transfer_count, transfer_count_period, is_enabled) 
 VALUES (4, 'TRSFT_INTERNE', 'Convention pour transfert interne', 'Convention pour transfert dans le SAE de l''organisation', 'Actes', 'COU', 'CCAS', '2012-01-01', '2014-01-01', 'rm_coll', 'application/pdf', 100000, 300, 1, 'D', 'Y');
 
 ---------------
 --RM_ENTITIES--
 ---------------
-truncate table rm_entities;
---
 INSERT INTO rm_entities (entity_id, is_archival_agency, is_originating_agency, is_transferring_agency, is_control_authority, rm_entity_type, parallel_forms_of_names, other_normalized_names, other_names, oldest_date, latest_date, history, places, legal_status, activities, mandates, structure, context, record_id, institution_id, rules, status, detail_level, maintenance_dates, description_language, sources, maintenance_notes) 
 VALUES ('VILLE', 'N', 'Y', 'N', 'N', 'Collectivité', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 INSERT INTO rm_entities (entity_id, is_archival_agency, is_originating_agency, is_transferring_agency, is_control_authority, rm_entity_type, parallel_forms_of_names, other_normalized_names, other_names, oldest_date, latest_date, history, places, legal_status, activities, mandates, structure, context, record_id, institution_id, rules, status, detail_level, maintenance_dates, description_language, sources, maintenance_notes) 
@@ -2982,6 +2974,10 @@ INSERT INTO usergroup_content VALUES ('ccamus', 'ARCHIVISTE', 'Y', 'Archiviste')
 --STATUS--
 ----------
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) 
+VALUES ('OUT', '[APA] Prelevee', 'N', '', 'advanced_physical_archive', 'N', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) 
+VALUES ('POS', '[APA] Reintegree', 'N', '', 'advanced_physical_archive', 'N', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) 
 VALUES ('BRSAS', '[archivage] BR en attente de contrôle conformité', 'N', 'brsas.gif', 'records_management', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) 
 VALUES ('XML', '[archivage] BR généré en attente de transfert', 'N', 'brsas.gif', 'records_management', 'Y', 'Y');
@@ -2993,6 +2989,10 @@ VALUES ('WAIT_REPLY', '[archivage] Article envoyé en attente de réponse', 'N',
 -----------
 --ACTIONS--
 -----------
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) 
+VALUES (15, '', '[APA] Prelever une archive', 'OUT', 'N', 'Y', 'confirm_apa', 'Y', 'advanced_physical_archive', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) 
+VALUES (16, '', '[APA] Reintegrer une archive', 'POS', 'N', 'Y', 'confirm_apa', 'Y', 'advanced_physical_archive', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) 
 VALUES (202, 'indexing', '[archivage] Indexer une archive', 'NEW', 'N', 'Y', 'index_rm', 'Y', 'records_management', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) 
@@ -3366,6 +3366,7 @@ INSERT INTO doctypes VALUES ('business_coll', 220, 'Contrat de travail', 'Y', 10
 INSERT INTO doctypes VALUES ('business_coll', 221, 'Demande de formation', 'Y', 101, 107, NULL, NULL);
 INSERT INTO doctypes VALUES ('business_coll', 222, 'Arrêt maladie', 'Y', 101, 107, NULL, NULL);
 INSERT INTO doctypes VALUES ('business_coll', 223, 'Note de frais', 'Y', 101, 101, NULL, NULL);
+
 ------------
 --DOCTYPES_EXT--
 ------------
@@ -3450,7 +3451,7 @@ VALUES ('DIRIGEANT', 'business_coll', '1=1', 'acces documents business', 'N', 'N
 INSERT INTO status VALUES ('BAP', '[business] Bon à payer', 'N', 'N', '', 'apps', 'Y', 'Y');
 INSERT INTO status VALUES ('DAV', '[business] Demande d''avoir', 'N', 'N', '', 'apps', 'Y', 'Y');
 INSERT INTO status VALUES ('AVD', '[business] Avoir demandé', 'N', 'N', '', 'apps', 'Y', 'Y');
-
+INSERT INTO status VALUES ('APP',  '[business] A approuver', 'N', 'N', '', 'apps', 'Y', 'Y');
 ------------
 --TEMPLATES_DOCTYPE_EXT--
 ------------
@@ -3650,6 +3651,28 @@ INSERT INTO foldertypes VALUES (103, '[cold] Factures clients', '[cold] Factures
 INSERT INTO foldertypes_doctypes_level1 VALUES (103, 200);
 
 ------------
+--LC_POLICIES--
+------------
+INSERT INTO lc_policies (policy_id, policy_name, policy_desc) VALUES ('FNTC', 'FNTC standard archiving policy', '3 months fast cache, immediate double backup on AIP, final sort: offline after 10 years');
+
+------------
+--LC_CYCLES--
+------------
+INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_clause, break_key, validation_mode) VALUES ('FNTC', 'INIT', 'Initial location', 0, '1=1', 'doc_custom_t1', 'AUTO');
+INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_clause, break_key, validation_mode) VALUES ('FNTC', 'DISPOSAL', 'Disposal', 3, 'current_date >= creation_date::timestamp + interval ''10'' year', '', 'USER');
+INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_clause, break_key, validation_mode) VALUES ('FNTC', 'OAIS', 'FASTHD cache is purged. Resource lays only on OAIS docservers', 2, 'current_date >= creation_date::timestamp + interval ''3'' month', '', 'AUTO');
+INSERT INTO lc_cycles (policy_id, cycle_id, cycle_desc, sequence_number, where_clause, break_key, validation_mode) VALUES ('FNTC', 'OAIS_CACHED', 'Immediate copy on OAIS main and backup docservers. Resource is still present on FASTHD', 1, 'current_date >= creation_date::timestamp + interval ''7'' day', '', 'AUTO');
+
+------------
+--LC_CYCLE_STEPS--
+------------
+INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) VALUES ('FNTC', 'INIT', 'INIT', 'Initial location', 'FASTHD', 'N', 'NONE', 1, 'N', NULL, NULL);
+INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) VALUES ('FNTC', 'OAIS_CACHED', 'COPY_MAIN', 'Immediate copy on main OAIS docserver', 'OAIS_MAIN', 'N', 'COPY', 1, 'Y', NULL, NULL);
+INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) VALUES ('FNTC', 'OAIS_CACHED', 'COPY_SAFE', 'Immediate copy on main OAIS docserver', 'OAIS_SAFE', 'N', 'COPY', 2, 'Y', NULL, NULL);
+INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) VALUES ('FNTC', 'OAIS', 'PURGE', 'Purge after 3 months', 'FASTHD', 'N', 'PURGE', 1, 'N', NULL, NULL);
+INSERT INTO lc_cycle_steps (policy_id, cycle_id, cycle_step_id, cycle_step_desc, docserver_type_id, is_allow_failure, step_operation, sequence_number, is_must_complete, preprocess_script, postprocess_script) VALUES ('FNTC', 'DISPOSAL', 'FINAL_MAIN', 'Disposal', 'OAIS_MAIN', 'N', 'NONE', 1, 'N', NULL, NULL);
+
+------------
 --SECURITY-
 ------------
 INSERT INTO security VALUES (508, 'FACTURES_CLIENTS', 'res_coll', '1=1', 'Acces', 'N', 'N', 'N', 128, NULL, NULL, 'DOC');
@@ -3692,4 +3715,3 @@ INSERT INTO users VALUES ('vvictoire', 'ef9689be896dacd901cae4f13593e90d', 'Vict
 --USERS_ENTITIES-
 ------------
 INSERT INTO users_entities VALUES ('vvictoire', 'ACME', '', 'Y');
-
