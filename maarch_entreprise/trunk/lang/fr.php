@@ -1458,4 +1458,4 @@ if (!defined('_TOTAL_SUM_MAX')) define('_TOTAL_SUM_MAX', 'Total TTC maximal');
 if (!defined('_TOTAL_SUM_MAX_HELP')) define('_TOTAL_SUM_MAX_HELP', 'Total TTC maximal');
 
 /*************** COLD **************/
-if (!defined('_OUTGOING_INVOICE')) define('_OUTGOING_INVOICE', '[cold] Factures clients');
+if (!defined('_OUTGOING_INVOICE')) define('_OUTGOING_INVOICE', 'Collection COLD factures clients');

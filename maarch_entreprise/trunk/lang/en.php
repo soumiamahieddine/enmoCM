@@ -1173,4 +1173,4 @@ if (!defined('_TOTAL_SUM_MAX')) define('_TOTAL_SUM_MAX', 'Max total sum');
 if (!defined('_TOTAL_SUM_MAX_HELP')) define('_TOTAL_SUM_MAX_HELP', 'Max total sum');
 
 /*************** COLD **************/
-if (!defined('_OUTGOING_INVOICE')) define('_OUTGOING_INVOICE', '[cold] Factures clients');
+if (!defined('_OUTGOING_INVOICE')) define('_OUTGOING_INVOICE', 'Collection COLD Outgoing invoices');
