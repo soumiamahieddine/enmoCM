@@ -592,7 +592,7 @@ VALUES (5, '[Courrier] Les courriers', '', NULL, '0000000000', '0000000000', '00
 ------------
 --DOCTYPES_FIRST_LEVEL--
 ------------
-INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (20, '[courrier] GDD', 'black_style_big', 'Y');
+INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (20, '[courrier] ALLO MAIRIE', 'black_style_big', 'Y');
 INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (10, '[courrier] Courriers des services', 'blue_style_big', 'Y');
 
 ------------
@@ -904,6 +904,96 @@ VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvel
 </tr>
 </tbody>
 </table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes');
+INSERT INTO templates VALUES (100, '[allo mairie] Enregistrement demande - DIVERS', '[allo mairie] Enregistrement demande - DIVERS', '<p style="text-align: center###"><span style="font-size: small### text-decoration: underline###">ENREGISTREMENT DEMANDE Allo Mairie - DIVERS</span></p>
+<p style="text-align: center###">&nbsp###</p>
+<table style="border: 1pt solid #000000### width: 800px### background-color: #40a497###" border="1" cellspacing="1" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px###">DECLARATION DU BESOIN</td>
+<td>DATE: [dates]</td>
+<td>HEURE: [time]</td>
+</tr>
+</tbody>
+</table>
+<table style="border: 1pt solid #000000### width: 800px###" border="1" cellspacing="1" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px### background-color: #40a497###">OBJET</td>
+<td style="background-color: #bef3ec###">&nbsp###</td>
+</tr>
+<tr>
+<td style="width: 200px### background-color: #40a497###">DATE ET HEURE ESTIMEES DU DECLENCHEMENT</td>
+<td>&nbsp###</td>
+</tr>
+<tr>
+<td style="width: 200px### background-color: #40a497###">IMPLANTATION / LOCALISATION</td>
+<td style="background-color: #bef3ec###">&nbsp###</td>
+</tr>
+<tr>
+<td style="width: 200px### background-color: #40a497###">DESCRIPTION</td>
+<td>&nbsp###</td>
+</tr>
+<tr>
+<td style="width: 200px### background-color: #40a497###">ETENDUE DU PROBLEME</td>
+<td style="background-color: #bef3ec###">&nbsp###</td>
+</tr>
+<tr>
+<td style="width: 200px### background-color: #40a497###">NATURE DU DESAGREMENT</td>
+<td>&nbsp###</td>
+</tr>
+<tr>
+<td style="width: 200px### background-color: #40a497###">DELAIS DE TRAITEMENT SOUHAITE</td>
+<td style="background-color: #bef3ec###">&nbsp###</td>
+</tr>
+<tr>
+<td style="width: 200px### background-color: #40a497###">AUTRES OBSERVATIONS</td>
+<td>&nbsp###</td>
+</tr>
+</tbody>
+</table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '');
+INSERT INTO templates VALUES (101, '[allo mairie] Clôture de demande', '[allo mairie] Clôture de demande', '<p style="text-align: left###"><span style="font-size: small###">&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###</span><span style="text-decoration: underline###"><span style="font-size: small###">CLOTURE DEMANDE Allo Mairie - [res_letterbox.type_label] - [res_letterbox.res_id] </span></span></p>
+<p style="text-align: center###">&nbsp###</p>
+<table style="background-color: #a8c33c### width: 800px### border: #000000 1pt solid###" border="1" cellspacing="1" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px###">CLOTURE&nbsp###DE LA DEMANDE</td>
+<td>DATE: [dates]</td>
+<td>HEURE: [time]</td>
+</tr>
+</tbody>
+</table>
+<table style="width: 800px### border: #000000 1pt solid###" border="1" cellspacing="1" cellpadding="5">
+<tbody>
+<tr>
+<td style="width: 200px### background-color: #a8c33c###">OBJET</td>
+<td style="background-color: #e1f787###">&nbsp###[res_letterbox.subject]</td>
+</tr>
+<tr>
+<td style="width: 200px### background-color: #a8c33c###">ACTIONS CONDUITES</td>
+<td>&nbsp###</td>
+</tr>
+<tr>
+<td style="width: 200px### background-color: #a8c33c###">DATE DE REMISE EN ETAT / SERVICE</td>
+<td style="background-color: #e1f787###">&nbsp###</td>
+</tr>
+<tr>
+<td style="width: 200px### background-color: #a8c33c###">CONSIGNES COMPLEMENTAIRES</td>
+<td>&nbsp###</td>
+</tr>
+<tr>
+<td style="width: 200px### background-color: #a8c33c###">AUTRES OBSERVATIONS</td>
+<td style="background-color: #e1f787###">&nbsp###</td>
+</tr>
+<tr>
+<td style="width: 200px### background-color: #a8c33c###">&nbsp###</td>
+<td>&nbsp###</td>
+</tr>
+<tr>
+<td style="width: 200px### background-color: #a8c33c###">&nbsp###</td>
+<td style="background-color: #e1f787###">&nbsp###</td>
+</tr>
+</tbody>
+</table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '');
 
 ------------
 --NOTIFICATIONS--
@@ -942,6 +1032,29 @@ INSERT INTO templates_association (system_id, template_id, what, value_field, ma
 INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (33, 3, 'destination', 'COU', 'entities');
 INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (34, 3, 'destination', 'PSF', 'entities');
 INSERT INTO templates_association (system_id, template_id, what, value_field, maarch_module) VALUES (35, 3, 'destination', 'DRH', 'entities');
+
+INSERT INTO templates_association VALUES (100, 101, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association VALUES (101, 101, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association VALUES (102, 101, 'destination', 'DGA', 'entities');
+INSERT INTO templates_association VALUES (103, 101, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association VALUES (104, 101, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association VALUES (105, 101, 'destination', 'PE', 'entities');
+INSERT INTO templates_association VALUES (106, 101, 'destination', 'SP', 'entities');
+INSERT INTO templates_association VALUES (107, 101, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association VALUES (108, 101, 'destination', 'DRH', 'entities');
+INSERT INTO templates_association VALUES (109, 101, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association VALUES (110, 101, 'destination', 'COU', 'entities');
+INSERT INTO templates_association VALUES (111, 101, 'destination', 'COR', 'entities');
+INSERT INTO templates_association VALUES (112, 101, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association VALUES (113, 101, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association VALUES (114, 101, 'destination', 'PJU', 'entities');
+INSERT INTO templates_association VALUES (115, 101, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association VALUES (116, 101, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association VALUES (117, 101, 'destination', 'ELUS', 'entities');
+INSERT INTO templates_association VALUES (118, 101, 'destination', 'VILLE', 'entities');
+INSERT INTO templates_association VALUES (119, 101, 'destination', 'CCAS', 'entities');
+INSERT INTO templates_association VALUES (120, 101, 'destination', 'AD06', 'entities');
+
 
 ------------
 --DOCSERVERS--
@@ -3477,6 +3590,9 @@ INSERT INTO templates_doctype_ext VALUES (NULL, 220, 'N');
 INSERT INTO templates_doctype_ext VALUES (NULL, 221, 'N');
 INSERT INTO templates_doctype_ext VALUES (NULL, 222, 'N');
 INSERT INTO templates_doctype_ext VALUES (NULL, 223, 'N');
+INSERT INTO templates_doctype_ext VALUES (100, 80, 'Y');
+INSERT INTO templates_doctype_ext VALUES (100, 85, 'Y');
+INSERT INTO templates_doctype_ext VALUES (100, 90, 'Y');
 
 ------------
 --USERGROUP_CONTENT-
