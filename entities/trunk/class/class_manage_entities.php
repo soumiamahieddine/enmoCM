@@ -1299,6 +1299,10 @@ class entity extends dbquery
 
             for($i=0; $i<count($_SESSION['collections']); $i++)
             {
+                // Skip this test if view doesn't have a column named res_id or destination
+                if(!$this->test_column($_SESSION['collections'][$i]['view'], 'res_id')) continue;
+                if(!$this->test_column($_SESSION['collections'][$i]['view'], 'destination')) continue;
+                
                 $this->query("select res_id from ".$_SESSION['collections'][$i]['view']." where destination = '".$this->protect_string_db($s_id)."'");
                 if($this->nb_result() > 0)
                 {
