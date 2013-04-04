@@ -180,6 +180,7 @@ INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'update_list_diff_in_deta
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'admin_templates');
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'add_new_version');
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'view_baskets');
 
 INSERT INTO usergroups_services VALUES ('AGENT', 'adv_search_mlb');
 INSERT INTO usergroups_services VALUES ('AGENT', 'index_mlb');
@@ -251,6 +252,7 @@ INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'add_cases');
 INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'update_list_diff_in_details');
 INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'admin_templates');
 INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'tag_view');
+INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'view_baskets');
 
 INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin');
 INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'adv_search_mlb');
