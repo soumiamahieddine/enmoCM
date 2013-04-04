@@ -2800,7 +2800,8 @@ SELECT
     rm_items.originating_agency_item_identifier,
     rm_items.service_level,
     rm_items.transferring_agency_item_identifier,
-    
+    rm_items.schedule_id, 
+	
     rm_content_descriptions.description as content_description,
     rm_content_descriptions.description_level,
     rm_content_descriptions.file_plan_position,
@@ -2823,6 +2824,8 @@ SELECT
     
     file_plan_position.folders_system_id,
     
+	schedule.folder_id as schedule_name,
+	
     originating_agency.identification as originating_agency_identification,
     originating_agency.entity_id as originating_agency_entity_id,
     originating_agency.name as originating_agency_name,
