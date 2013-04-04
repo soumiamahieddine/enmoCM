@@ -88,7 +88,6 @@ INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ddaull', 'RESP_COURRIER', 'Y', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ddaull', 'RESPONSABLE', 'N', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('jjonasz', 'AGENT', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ggrand', 'AGENT', 'Y', '');
 
 ------------
 --USERGROUPS_SERVICES--
@@ -2974,7 +2973,6 @@ VALUES ('ggrand', 'CCAS', 'Responsable CCAS', 'Y');
 INSERT INTO users VALUES ('ccamus', 'ef9689be896dacd901cae4f13593e90d', 'Cyril', 'CAMUS', '', 'info@maarch.org', '', '0', NULL, NULL, 'e8be8d2f23f636ad76d12d666ef333b8', '2013-04-04 12:02:23.273', 'Y', 'N', NULL, 'OK', 'standard', NULL);
 
 UPDATE usergroup_content SET primary_group='Y' where user_id='ggrand' and group_id='CORRESPONDANT';
-UPDATE usergroup_content SET primary_group='N' where user_id='ggrand' and group_id='AGENT';
 
 ----------
 --USERGROUP_CONTENT--
