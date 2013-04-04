@@ -167,7 +167,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $default_title = $tmp['default_title'];
     if($core_tools->is_module_loaded('templates'))
     {
-        $db->query("select type_id from ".$_SESSION['tablename']['temp_templates_doctype_ext']." where is_generated = 'Y'");
+        $db->query("select type_id from ".$_SESSION['tablename']['temp_templates_doctype_ext']." where is_generated = 'NULL!!!'");
         while($res = $db->fetch_object())
         {
             array_push($hidden_doctypes, $res->type_id);
