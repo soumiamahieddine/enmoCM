@@ -536,31 +536,26 @@ if (count($tab) > 0) {
     //Toolbar
         $paramsTab['tools'] = array();                                                  //Icones dans la barre d'outils
         
-        //Labels
-        if($core_tools->is_module_loaded('labels')
-        && (
-            isset($_SESSION['user']['services']['labels'])
-            && $_SESSION['user']['services']['labels'] === true
-            )
-        ) {
+        //Fileplan
+		if ($core_tools->test_service('fileplan', 'fileplan', false)) {
             if ($mode = 'normal')  {
-                require_once "modules" . DIRECTORY_SEPARATOR . "labels" . DIRECTORY_SEPARATOR
+                require_once "modules" . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR
                     . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
-                $labels     = new labels();
-                if ($labels->count_labels() > 0) {
+                $fileplan     = new fileplan();
+                if (count($fileplan->getUserFileplan()) > 0 || count($fileplan->getEntitiesFileplan()) > 0) {
                     $paramsTab['bool_checkBox'] = true;
                     $paramsTab['bool_standaloneForm'] = true;
-                    $label = array(
-                            "script"        =>  "showLabelsList('".$_SESSION['config']['businessappurl']  
-                                                    . "index.php?display=true&module=labels&page=labels_script"
-                                                    . "&mode=tag&origin=search&coll_id=".$_SESSION['collection_id_choice']
-                                                    . $parameters."', 'formList', '320px', '430px', '"
+                    $positions = array(
+                            "script"        =>  "showFileplanList('".$_SESSION['config']['businessappurl']  
+                                                    . "index.php?display=true&module=fileplan&page=fileplan_ajax_script"
+                                                    . "&mode=setPosition&origin=search&coll_id=".$_SESSION['collection_id_choice']
+                                                    . $parameters."', 'formList', '600px', '490px', '"
                                                     . _CHOOSE_ONE_DOC."')",
-                            "icon"          =>  $_SESSION['config']['businessappurl']."static.php?module=labels&filename=tool_labels.gif",
-                            "tooltip"       =>  _LABELS,
-                            "disabledRules" =>  count($tab)." == 0 || ".$selectedTemplate." != 'none'"
+                            "icon"          =>  $_SESSION['config']['businessappurl']."static.php?module=fileplan&filename=tool_fileplan.gif",
+                            "tooltip"       =>  _FILEPLAN,
+                            "disabledRules" =>  count($tab)." == 0 || ".$selectedTemplate." == 'cases_list_search_adv'"
                             );      
-                    array_push($paramsTab['tools'],$label);
+                    array_push($paramsTab['tools'],$positions);
                 }
             }
         }
