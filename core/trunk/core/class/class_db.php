@@ -810,6 +810,31 @@ class dbquery extends functions
         default             : return false;
         }       
     }
+	
+	/**
+    * Returns the next free id of a sequence
+	*
+	* @param string $seqName name of the sequence
+	*
+	* @return integer next id in the given sequence
+    */
+    public function next_id($sequenceName = '')
+    {
+		switch($this->_databasetype) {
+			case 'MYSQL'        : return '';
+			case 'POSTGRESQL'   : 
+				$this->query = @pg_query("select nextval('" . $sequenceName . "') as nextid");
+				$line = @pg_fetch_object($this->query);
+				return $line->nextid;
+			case 'SQLSERVER'   	: return '';
+			case 'ORACLE'       : 
+				$this->query("select " . $sequenceName . ".nextval  as nextid from dual");
+				$line = $this->fetch_object($this->query);
+				return $line->nextid;
+			default             : return false;
+		}
+	}
+	
     
     /*************************************************************************
     * Returns instruction to get date or part of the date
