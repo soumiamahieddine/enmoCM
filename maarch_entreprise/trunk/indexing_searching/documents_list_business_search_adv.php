@@ -668,7 +668,6 @@ if (count($tab) > 0) {
     <?php
      exit();
 } else {
-    
     echo '<script type="text/javascript">window.top.location.href=\''.$url_error.'\';</script>';
     exit();
 }
