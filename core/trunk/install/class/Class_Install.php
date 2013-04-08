@@ -455,14 +455,62 @@ class Install extends functions
         for ($i=0;$i<count($this->docservers);$i++) {
             if (!is_dir(
                 $docserverPath . DIRECTORY_SEPARATOR
-                . $this->docservers[$i][1])
+                    . $this->docservers[$i][1])
             ) {
                 if (!mkdir(
                     $docserverPath . DIRECTORY_SEPARATOR
-                    . $this->docservers[$i][1])
+                        . $this->docservers[$i][1])
                 ) {
                     return false;
                 }
+            }
+        }
+        //create indexes dir
+        if (!is_dir(
+            $docserverPath . DIRECTORY_SEPARATOR
+                . 'indexes')
+        ) {
+            if (!mkdir(
+                $docserverPath . DIRECTORY_SEPARATOR
+                    . 'indexes')
+            ) {
+                return false;
+            }
+        }
+        //create indexes dir for letterbox collection
+        if (!is_dir(
+            $docserverPath . DIRECTORY_SEPARATOR
+                . 'indexes' . DIRECTORY_SEPARATOR . 'letterbox_coll')
+        ) {
+            if (!mkdir(
+                $docserverPath . DIRECTORY_SEPARATOR
+                    . 'indexes' . DIRECTORY_SEPARATOR . 'letterbox_coll')
+            ) {
+                return false;
+            }
+        }
+        //create indexes dir for business collection
+        if (!is_dir(
+            $docserverPath . DIRECTORY_SEPARATOR
+                . 'indexes' . DIRECTORY_SEPARATOR . 'business_coll')
+        ) {
+            if (!mkdir(
+                $docserverPath . DIRECTORY_SEPARATOR
+                    . 'indexes' . DIRECTORY_SEPARATOR . 'business_coll')
+            ) {
+                return false;
+            }
+        }
+        //create indexes dir for cold collection
+        if (!is_dir(
+            $docserverPath . DIRECTORY_SEPARATOR
+                . 'indexes' . DIRECTORY_SEPARATOR . 'res_coll')
+        ) {
+            if (!mkdir(
+                $docserverPath . DIRECTORY_SEPARATOR
+                    . 'indexes' . DIRECTORY_SEPARATOR . 'res_coll')
+            ) {
+                return false;
             }
         }
         return true;
