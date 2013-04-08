@@ -3310,7 +3310,10 @@ DROP VIEW IF EXISTS res_view_business;
 CREATE VIEW res_view_business AS
     SELECT r.tablename, r.is_multi_docservers, r.res_id, r.type_id,
     d.description AS type_label, d.doctypes_first_level_id,
-    d.doctypes_second_level_id, r.format, r.typist,
+    d.doctypes_second_level_id, dfl.doctypes_first_level_label, 
+    dfl.css_style as doctype_first_level_style,
+    dsl.doctypes_second_level_label,
+    dsl.css_style as doctype_second_level_style, r.format, r.typist,
     r.creation_date, r.relation, r.docserver_id, r.folders_system_id,
     f.folder_id, f.is_frozen as folder_is_frozen, r.path, r.filename, 
     r.fingerprint, r.offset_doc, r.filesize,
@@ -3365,7 +3368,7 @@ CREATE VIEW res_view_business AS
     cont.firstname AS contact_firstname, cont.lastname AS contact_lastname,
     cont.society AS contact_society, list.item_id AS dest_user_from_listinstance,  list.viewed, 
     r.is_frozen as res_is_frozen, COALESCE(att.count_attachment, 0::bigint) AS count_attachment 
-    FROM doctypes d, res_business r
+    FROM doctypes d, doctypes_first_level dfl, doctypes_second_level dsl, res_business r
     LEFT JOIN (SELECT res_attachments.res_id_master, coll_id, count(res_attachments.res_id_master) AS count_attachment
         FROM res_attachments GROUP BY res_attachments.res_id_master, coll_id) att ON (r.res_id = att.res_id_master and att.coll_id = 'business_coll')
     LEFT JOIN entities en ON ((r.destination)::text = (en.entity_id)::text)
@@ -3374,7 +3377,9 @@ CREATE VIEW res_view_business AS
     LEFT JOIN contacts cont ON (busi.contact_id = cont.contact_id)
     LEFT JOIN listinstance list ON ((r.res_id = list.res_id)
         AND ((list.item_mode)::text = 'dest'::text))
-    WHERE r.type_id = d.type_id;
+    WHERE r.type_id = d.type_id 
+    AND d.doctypes_first_level_id = dfl.doctypes_first_level_id
+    AND d.doctypes_second_level_id = dsl.doctypes_second_level_id;
 
 -- view for letterbox
 DROP VIEW IF EXISTS res_view_letterbox;
