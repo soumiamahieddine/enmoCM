@@ -52,7 +52,7 @@
         <extensions>
             <table>mlb_coll_ext</table>
         </extensions>
-        <path_to_lucene_index>C:\Maarch\indexes\entreprise\letterbox_coll\</path_to_lucene_index>
+        <path_to_lucene_index>C:\Maarch\docservers\indexes\letterbox_coll\</path_to_lucene_index>
         <categories>
             <category>
                 <id>incoming</id>
@@ -84,7 +84,7 @@
         <extensions>
             <table>business_coll_ext</table>
         </extensions>
-        <path_to_lucene_index>C:\Maarch\indexes\entreprise\business_coll\</path_to_lucene_index>
+        <path_to_lucene_index>C:\Maarch\docservers\indexes\business_coll\</path_to_lucene_index>
         <categories>
             <category>
                 <id>purchase</id>
@@ -194,7 +194,7 @@
         <extensions>
             <table/>
         </extensions>
-        <path_to_lucene_index>C:\Maarch\indexes\entreprise\res_coll\</path_to_lucene_index>
+        <path_to_lucene_index>C:\Maarch\docservers\indexes\res_coll\</path_to_lucene_index>
     </COLLECTION>
     <HISTORY>
         <usersdel>true</usersdel>
