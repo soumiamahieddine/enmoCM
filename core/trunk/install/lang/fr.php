@@ -40,7 +40,7 @@ if (!defined('_PREREQUISITES_HEAD')) {
 }
 
 if (!defined('_PREREQUISITES_EXP')) {
-    define('_PREREQUISITES_EXP', "L'installation de Maarch nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A style='color: #800000; font-family:verdana;' href='http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch-entreprise-1.3' target=\"_blank\"> pre-requis</A> pour les détails");
+    define('_PREREQUISITES_EXP', "L'installation de Maarch nécessite un certain nombre de pré-requis au niveau de l'installation de PHP. Reportez-vous à la page <A style='color: #800000; font-family:verdana;' href='http://www.maarch.org/projets/entreprise/architecture-technique-et-prerequis-pour-maarch' target=\"_blank\"> pre-requis</A> pour les détails");
 }
 if (!defined('_ACTIVATED')) {
     define('_ACTIVATED', "Conforme");
@@ -242,7 +242,7 @@ if (!defined('_RESUME')) {
 }
 
 if (!defined('_START_MEP_1_3')) {
-    define('_START_MEP_1_3', "Démarrer avec Maarch Entreprise 1.3");
+    define('_START_MEP_1_3', "Démarrer avec Maarch 1.4");
 }
 
 //ERROR

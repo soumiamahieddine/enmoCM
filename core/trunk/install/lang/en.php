@@ -244,7 +244,7 @@ if (!defined('_RESUME')) {
 }
 
 if (!defined('_START_MEP_1_3')) {
-    define('_START_MEP_1_3', "Start with Maarch Entreprise 1.3");
+    define('_START_MEP_1_3', "Start with Maarch 1.4");
 }
 
 //ERROR
