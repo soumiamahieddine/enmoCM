@@ -3058,6 +3058,7 @@ INSERT INTO usergroups_services VALUES ('CORRESPONDANT', 'reserve_apa');
 INSERT INTO usergroups_services VALUES ('CORRESPONDANT', 'adv_search_rm');
 INSERT INTO usergroups_services VALUES ('CORRESPONDANT', 'index_rm');
 INSERT INTO usergroups_services VALUES ('CORRESPONDANT', 'ArchiveTransferCreation');
+INSERT INTO usergroups_services VALUES ('CORRESPONDANT', 'view_baskets');
 
 ------------------
 --USERS--
@@ -3538,7 +3539,7 @@ INSERT INTO listmodels VALUES ('any', 'VISER_DOCUMENT_MKBNVC', 'VISER_DOCUMENT',
 INSERT INTO listmodels VALUES ('any', 'WORKFLOW_FACTURE_MKBU5A', 'WORKFLOW_FACTURE', 0, 'ttule', 'user_id', 'APPROBATEUR', NULL, 'Workflow des factures', 'Y');
 INSERT INTO listmodels VALUES ('any', 'WORKFLOW_FACTURE_MKBU5A', 'WORKFLOW_FACTURE', 0, 'kkrach', 'user_id', 'VALIDATEUR', NULL, 'Workflow des factures', 'Y');
 INSERT INTO listmodels VALUES ('any', 'WORKFLOW_FACTURE_MKBU5A', 'WORKFLOW_FACTURE', 1, 'aalambic', 'user_id', 'VALIDATEUR', NULL, 'Workflow des factures', 'N');
-INSERT INTO listmodels VALUES ('any', 'WORKFLOW_AVOIR_MKBU6L', 'WORKFLOW_AVOIR', 0, 'lpacioli', 'user_id', 'COMPTABLES', NULL, 'Workflow des avoirs', 'Y');
+INSERT INTO listmodels VALUES ('any', 'WORKFLOW_AVOIR_MKBU6L', 'WORKFLOW_AVOIR', 0, 'ppacioli', 'user_id', 'COMPTABLES', NULL, 'Workflow des avoirs', 'Y');
 
 
 ------------
@@ -3599,7 +3600,7 @@ INSERT INTO templates_doctype_ext VALUES (100, 90, 'Y');
 ------------
 --USERGROUP_CONTENT-
 ------------
-INSERT INTO usergroup_content VALUES ('lpacioli', 'COMPTABLES', 'Y', 'Comptable');
+INSERT INTO usergroup_content VALUES ('ppacioli', 'COMPTABLES', 'Y', 'Comptable');
 INSERT INTO usergroup_content VALUES ('hhier', 'FINANCE', 'Y', 'DAF');
 INSERT INTO usergroup_content VALUES ('kkrach', 'VALIDATEUR', 'Y', '');
 INSERT INTO usergroup_content VALUES ('aalambic', 'VALIDATEUR', 'Y', '');
@@ -3689,12 +3690,12 @@ INSERT INTO users VALUES ('ttule', 'ef9689be896dacd901cae4f13593e90d', 'Thierry'
 INSERT INTO users VALUES ('kkrach', 'ef9689be896dacd901cae4f13593e90d', 'Kevin', 'KRACH', '', 'info@maarch.org', '', '0', NULL, NULL, '10cb757d7eb9ec66c0549948f69f394c', '2013-03-27 19:12:49.029', 'Y', 'N', NULL, 'OK', 'standard', NULL);
 INSERT INTO users VALUES ('ddenis', 'ef9689be896dacd901cae4f13593e90d', 'Didier', 'DENIS', '', 'info@maarch.org', '', '0', NULL, NULL, '2ab8e70c7915dde376d80dfa870230d7', '2013-03-27 20:21:33.922', 'Y', 'N', NULL, 'OK', 'standard', NULL);
 INSERT INTO users VALUES ('aalambic', 'ef9689be896dacd901cae4f13593e90d', 'Alain', 'ALAMBIC', '', 'info@maarch.org', '', '0', NULL, NULL, '1d2cb3c43d00c9b6d08e6b1f4d0b96cf', '2013-03-27 19:13:41.414', 'Y', 'N', NULL, 'OK', 'standard', NULL);
-INSERT INTO users VALUES ('lpacioli', 'ef9689be896dacd901cae4f13593e90d', 'Luca', 'PACIOLI', '', 'info@maarch.org', '', '0', NULL, NULL, '4cd3add5b533c5f4a6b460107be355d6', '2013-03-27 20:17:15.857', 'Y', 'N', NULL, 'OK', 'standard', NULL);
+INSERT INTO users VALUES ('ppacioli', 'ef9689be896dacd901cae4f13593e90d', 'Paolo', 'PACIOLI', '', 'info@maarch.org', '', '0', NULL, NULL, '4cd3add5b533c5f4a6b460107be355d6', '2013-03-27 20:17:15.857', 'Y', 'N', NULL, 'OK', 'standard', NULL);
 
 ------------
 --USERS_ENTITIES-
 ------------
-INSERT INTO users_entities VALUES ('lpacioli', 'ACMEDF', '', 'Y');
+INSERT INTO users_entities VALUES ('ppacioli', 'ACMEDF', '', 'Y');
 INSERT INTO users_entities VALUES ('hhier', 'ACMEDF', '', 'Y');
 INSERT INTO users_entities VALUES ('kkrach', 'ACMEDF', '', 'Y');
 INSERT INTO users_entities VALUES ('aalambic', 'ACMEDF', '', 'Y');
