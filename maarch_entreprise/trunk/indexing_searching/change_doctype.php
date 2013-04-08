@@ -65,6 +65,9 @@ if ($coll_id == '') {
 if ($coll_id == '') {
     $coll_id = 'letterbox_coll';
 }
+if ($res_id == '') {
+    $res_id = $_REQUEST['res_id'];
+}
 // Process limit date calcul
 //Bug fix if delay process is disabled in services
 if ($core->service_is_enabled('param_mlb_doctypes')) {
