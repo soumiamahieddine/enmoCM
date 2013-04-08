@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
   <CONFIG>
-    <CONFIG_NAME>the_custom</CONFIG_NAME> <!-- usefull for multi customs -->
+    <CONFIG_NAME>business</CONFIG_NAME> <!-- usefull for multi customs -->
     <BASE_DIRECTORY>C:\xampp\htdocs\maarch_entreprise\modules\full_text\</BASE_DIRECTORY> <!-- Path to full text module -->
-    <INDEX_FILE_DIRECTORY>C:\Maarch\indexes\entreprise\letterbox_coll\</INDEX_FILE_DIRECTORY> <!-- Path to the indexes dir of the collection -->
+    <INDEX_FILE_DIRECTORY>C:\Maarch\docservers\indexes\business_coll\</INDEX_FILE_DIRECTORY> <!-- Path to the indexes dir of the collection -->
     <LOCATION>localhost</LOCATION>
     <DATABASE_PORT>5432</DATABASE_PORT>
     <DATABASE>maarch_entreprise</DATABASE>
