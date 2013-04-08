@@ -170,6 +170,9 @@ if(isset($_REQUEST['listid']) && $_REQUEST['listid'] <> "") {
         $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
         $paramsTab['bool_showIconDocument'] = true;                                         //Affichage de l'icone du document
         $paramsTab['bool_showIconDetails'] = true;                                          //Affichage de l'icone de la page de details
+        $details_page = $security->get_script_from_coll($_SESSION['current_foldertype_coll_id'], 'script_details');
+        $paramsTab['viewDetailsLink'] = 'index.php?page=' . str_replace(".php", '', $details_page) 
+            . '&dir=indexing_searching';       //Link to the details page
         $paramsTab['urlParameters'] = 'listid='.$_REQUEST['listid'].'&display=true';        //Parametres d'url supplementaires
         // $paramsTab['listHeight'] = '200px';                                                 //Hauteur de la liste
         $paramsTab['bool_showSmallToolbar'] = true;                                         //Mini barre d'outils

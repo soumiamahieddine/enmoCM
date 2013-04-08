@@ -353,7 +353,7 @@ if (isset($_POST['delete_folder'])) {
                     $_SESSION['FILLING_RES']['PARAM']['WHAT'] = 'res_id';
                     $_SESSION['FILLING_RES']['PARAM']['NAME'] = "filling_res";
                     $_SESSION['FILLING_RES']['PARAM']['KEY'] = 'res_id';
-                    $details_page = $sec->get_script_from_coll($folderArray['coll_id'], 'script_details');
+                    $details_page = $sec->get_script_from_coll($_SESSION['current_foldertype_coll_id'], 'script_details');
                     $_SESSION['FILLING_RES']['PARAM']['DETAIL_DESTINATION'] = $details_page."";
                     $_SESSION['FILLING_RES']['PARAM']['BOOL_VIEW_DOCUMENT'] = true;
                     $_SESSION['FILLING_RES']['PARAM']['BOOL_RADIO_FORM'] = false;
@@ -381,7 +381,7 @@ if (isset($_POST['delete_folder'])) {
                     <td valign="top" style="border-left: 1px solid #CCCCCC;">
                         <iframe name="view_doc" id="view_doc" src="<?php  echo $_SESSION['config']['businessappurl']
                             ."index.php?display=true&module=folder&page=list_doc";
-                            ?>" frameborder="0" scrolling="no" width="570px" height="580px"></iframe>
+                            ?>" frameborder="0" scrolling="no" width="550px" height="580px"></iframe>
                     </td>
                 </tr>
             </table>
