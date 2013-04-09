@@ -5,11 +5,16 @@ if(
 	&& (isset($_POST['branch_id']) && !empty($_POST['branch_id']))
 ) {
 	$branch_array = array();
-	$branch_array = explode('@@', $_POST['branch_id']);
+	if (strpos($_POST['branch_id'], '@@') !== false) {
+		$branch_array = explode('@@', $_POST['branch_id']);
 	
-	$fileplan_id = $branch_array[0];
-	$position_id = $branch_array[1];
-	
+		$fileplan_id = $branch_array[0];
+		$position_id = $branch_array[1];
+	} else {
+		$fileplan_id = $_POST['fileplan_id'];
+		$position_id = $_POST['branch_id'];
+	}
+
 	//Same fileplan ID?
 	($_POST['fileplan_id'] == $fileplan_id )? $fileplan_id = $fileplan_id : $fileplan_id = $_POST['fileplan_id'];
 	
