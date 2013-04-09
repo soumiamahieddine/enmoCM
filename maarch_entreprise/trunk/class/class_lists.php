@@ -1537,17 +1537,20 @@ class lists extends dbquery
         
         $searchTools = '';
         if ($this->params['bool_showSearchTools']) {
+			//Remove old what filter
+			$searchToolsLink = $this->_removeUrlVar($this->link,'what');
+			//
             $searchTools .= '<div id="searchTools" class="listletter"><table width="100%" border="0" cellpadding="0" cellspacing="0" class="forms"><tr>';
             //Alphabetical list
             $searchTools .= '<td width="65%" height="30"><strong>'._ALPHABETICAL_LIST.'</strong> : ';
             for($i=ord('A'); $i <= ord('Z');$i++) {
                 //Highlight selected letter
                 (chr($i) == trim($this->whatSearch))? $letter = '<span class="selectedLetter">'.chr($i).'</span>' : $letter = chr($i);
-                $searchTools .= '<a href="javascript://" onClick="loadList(\''.$this->link.'&what='.chr($i)
+                $searchTools .= '<a href="javascript://" onClick="loadList(\''.$searchToolsLink.'&what='.chr($i)
                     .'\', \''.$this->divListId.'\', '.$this->modeReturn.');">'.$letter.'</a>&nbsp;';
             }
             $searchTools .= '-&nbsp;<a href="javascript://" onClick="loadList(\''.
-                $this->link.'&what=\', \''.$this->divListId.'\', '.$this->modeReturn.');">'._ALL.'</a>';
+                $searchToolsLink.'&what=\', \''.$this->divListId.'\', '.$this->modeReturn.');">'._ALL.'</a>';
             $searchTools .= '</td>';
             //Search box
             $searchTools .= '<td width="35%" align="right">&nbsp;';
@@ -2663,7 +2666,7 @@ class lists extends dbquery
         
         //Build page link
         $this->link = $this->_buildPageLink();
-        // $grid .=  'Link = '. $this->link.''; //debug
+        $grid .=  'Link = '. $this->link.''; //debug
         
         //Search tools
         $grid .= $this->_displaySearchTools();
