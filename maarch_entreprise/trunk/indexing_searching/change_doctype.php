@@ -108,7 +108,7 @@ if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
 $opt_indexes  = '';
 if(count($indexes) > 0)
 {
-    if(isset($res_id) && isset($coll_id))
+    if((isset($res_id) && isset($coll_id)) && (!empty($res_id) && !empty($coll_id)))
     {
         $sec = new security();
         $table = $sec->retrieve_table_from_coll($coll_id);

@@ -275,21 +275,24 @@ function repost(php_file,update_divs,fields,action,timeout)
       return false;
     }
 
-    function initMenu(){
-      var menus, menu, text, aRef, i;
-      menus = getChildrenByElement($("menu"));
-      for(i = 0; i < menus.length; i++){
-        menu = menus[i];
-        text = getFirstChildByText(menu);
-        aRef = document.createElement("a");
-        if(aRef == null){
-            menu.replaceChild(aRef, text);
-            aRef.appendChild(text);
-            aRef.href = "#";
-            aRef.onclick = showMenu;
-            aRef.onfocus = function(){this.blur()};
+    function initMenu()
+    {
+        var menus, menu, text, aRef, i;
+        if ($("menu")) {
+            menus = getChildrenByElement($("menu"));
+            for(i = 0; i < menus.length; i++){
+                menu = menus[i];
+                text = getFirstChildByText(menu);
+                aRef = document.createElement("a");
+                if(aRef == null){
+                    menu.replaceChild(aRef, text);
+                    aRef.appendChild(text);
+                    aRef.href = "#";
+                    aRef.onclick = showMenu;
+                    aRef.onfocus = function(){this.blur()};
+                }
+            }
         }
-      }
     }
 
     if(document.createElement) window.onload = initMenu;
