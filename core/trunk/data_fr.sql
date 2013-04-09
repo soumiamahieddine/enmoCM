@@ -230,6 +230,7 @@ INSERT INTO usergroups_services VALUES ('COURRIER', 'add_new_version');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'tag_view');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'add_tag_to_res');
 
+
 INSERT INTO usergroups_services VALUES ('ELU', 'adv_search_mlb');
 INSERT INTO usergroups_services VALUES ('ELU', 'index_mlb');
 INSERT INTO usergroups_services VALUES ('ELU', 'view_technical_infos');
@@ -3633,6 +3634,7 @@ INSERT INTO usergroups_services VALUES ('COMPTABLES', 'tag_view');
 INSERT INTO usergroups_services VALUES ('COMPTABLES', 'add_tag_to_res');
 INSERT INTO usergroups_services VALUES ('COMPTABLES', 'delete_tag_to_res');
 INSERT INTO usergroups_services VALUES ('COMPTABLES', 'sendmail');
+INSERT INTO usergroups_services VALUES ('COMPTABLES', 'photo_capture');
 INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'add_new_version');
 INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'view_versions');
 INSERT INTO usergroups_services VALUES ('VALIDATEUR', 'my_contacts');
@@ -3834,3 +3836,9 @@ INSERT INTO users VALUES ('vvictoire', 'ef9689be896dacd901cae4f13593e90d', 'Vict
 --USERS_ENTITIES-
 ------------
 INSERT INTO users_entities VALUES ('vvictoire', 'ACME', '', 'Y');
+
+-----------------
+--PHOTO_CAPTURE--
+-----------------
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('PHOTO_CAPTURE', 'PHOTO_CAPTURE', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'N', 'NONE');
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('PHOTO_CAPTURE', 'PHOTO_CAPTURE', 'Photo capture', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\photo_capture\\', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'photo_capture', 1, 'NANTERRE', 1);

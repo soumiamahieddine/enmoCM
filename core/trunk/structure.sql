@@ -3276,6 +3276,28 @@ CREATE TABLE sendmail
   send_date timestamp without time zone DEFAULT NULL,
   CONSTRAINT sendmail_pkey PRIMARY KEY (email_id )
  );
+ 
+-- photo_capture module
+CREATE TABLE photo_capture
+(
+  res_id serial NOT NULL,
+  title character varying(255) DEFAULT NULL,
+  format character varying(50) NOT NULL,
+  typist character varying(128) NOT NULL,
+  creation_date timestamp without time zone NOT NULL,
+  docserver_id character varying(32) NOT NULL,
+  path character varying(255) DEFAULT NULL,
+  filename character varying(255) DEFAULT NULL,
+  offset_doc character varying(255) DEFAULT NULL,
+  logical_adr character varying(255) DEFAULT NULL,
+  fingerprint character varying(255) DEFAULT NULL,
+  filesize bigint,
+  status character varying(10) DEFAULT NULL,
+  coll_id character varying(32) NOT NULL,
+  res_id_master bigint,
+  folders_system_id bigint,
+  CONSTRAINT photo_capture_pkey PRIMARY KEY (res_id)
+); 
 
 --VIEWS
 --view for demo
