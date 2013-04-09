@@ -2666,7 +2666,7 @@ class lists extends dbquery
         
         //Build page link
         $this->link = $this->_buildPageLink();
-        $grid .=  'Link = '. $this->link.''; //debug
+        // $grid .=  'Link = '. $this->link.''; //debug
         
         //Search tools
         $grid .= $this->_displaySearchTools();
