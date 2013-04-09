@@ -358,4 +358,8 @@
         <moduleid>sendmail</moduleid>
         <comment>_SENDMAIL_COMMENT</comment>
     </MODULES>
+	<MODULES>
+        <moduleid>photo_capture</moduleid>
+        <comment>_PHOTO_CAPTURE_COMMENT</comment>
+    </MODULES>
 </ROOT>
