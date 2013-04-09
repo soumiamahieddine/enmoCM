@@ -542,7 +542,12 @@ if (count($tab) > 0) {
                 require_once "modules" . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR
                     . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
                 $fileplan     = new fileplan();
-                if (count($fileplan->getUserFileplan()) > 0 || count($fileplan->getEntitiesFileplan()) > 0) {
+                if (
+					count($fileplan->getUserFileplan()) > 0 
+					|| (count($fileplan->getEntitiesFileplan()) > 0 
+						&& $core_tools->test_service('put_doc_in_fileplan', 'fileplan', false)
+						)
+				) {
                     $paramsTab['bool_checkBox'] = true;
                     $paramsTab['bool_standaloneForm'] = true;
                     $positions = array(
