@@ -114,6 +114,7 @@ switch ($mode) {
 			.'" /><span class="red_asterisk">*</span>';
 		$content .='</p>';
 		//Entity if needed
+		/*
 		if ($core_tools->test_service('admin_fileplan', 'fileplan', false)) {
 			//If entities module
 			if ($core_tools->is_module_loaded('entities')) {
@@ -142,7 +143,7 @@ switch ($mode) {
 				$content .='</select><span class="red_asterisk">*</span>';
 				$content .='</p>';
 			}
-		}
+		}*/
 		//
 		$content .='<br/><p>';
 		$content .='<label >'._IS_SERIAL_ID.': </label>';
@@ -172,12 +173,13 @@ switch ($mode) {
 			if ($origin == "admin" 
 				&& $core_tools->test_service('admin_fileplan', 'fileplan', false)
 			) {
+				/*
 				if (isset($_REQUEST['entity_id']) && !empty($_REQUEST['entity_id'])) {
 					 $entity_id = "'".$_REQUEST['entity_id']."'";
 				} else {
 					$error = $request->wash_html(_ENTITY.' '._IS_EMPTY.'!','NONE');
 					$status = 1;
-				}
+				}*/
 			} elseif ($origin == "manage") {
 				$user_id = "'".$_SESSION['user']['UserId']."'";
 			}
@@ -244,6 +246,7 @@ switch ($mode) {
 				.'" /><span class="red_asterisk">*</span>';
 			$content .='</p>';
 			//Entity if needed
+			/*
 			if ($core_tools->test_service('admin_fileplan', 'fileplan', false)) {
 				//If entities module
 				if ($core_tools->is_module_loaded('entities')) {
@@ -273,7 +276,7 @@ switch ($mode) {
 					$content .='</select><span class="red_asterisk">*</span>';
 					$content .='</p>';
 				}
-			}
+			}*/
 			//If fileplan has position no possibility to change type
 			if ($fileplan->fileplanHasPositions($fileplan_array['ID']) === false){
 				$checkedYes = $checkedNo = '';
@@ -319,12 +322,13 @@ switch ($mode) {
 				if ($origin == "admin" 
 					&& $core_tools->test_service('admin_fileplan', 'fileplan', false)
 				) {
+					/*
 					if (isset($_REQUEST['entity_id']) && !empty($_REQUEST['entity_id'])) {
 						 $entity_id = "'".$_REQUEST['entity_id']."'";
 					} else {
 						$error = $request->wash_html(_ENTITY.' '._IS_EMPTY.'!','NONE');
 						$status = 1;
-					}
+					}*/
 				} elseif ($origin == "manage") {
 					$user_id = "'".$_SESSION['user']['UserId']."'";
 				}
@@ -471,7 +475,7 @@ switch ($mode) {
 				//From manage
 				$js .= "window.top.location.href='"
 					.$_SESSION['config']['businessappurl']
-					."index.php?page=fileplan_managment&module=fileplan&reinit=true&load';";
+					."index.php?page=fileplan&module=fileplan&reinit=true&load';";
 			}
 	} else {
             $error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
@@ -618,12 +622,14 @@ switch ($mode) {
 			$content .= _NEST_POSITION_UNDER.': <br/>';
 			$content .='<select name="parent_id" id="parent_id" class="fileplan_position">'; 
 			$content .='<option value="">'._CHOOSE_PARENT_POSITION.'</option>';
-			//Init with fileplan
-			$fileplan_array = $fileplan->getFileplan($fileplan_id);
-			$content .='<option value="'.$fileplan_array['ID'].'" >'
-				.$fileplan_array['LABEL'].'</option>';
 			//Get positions tree
 			$positions_array = $fileplan->getPositionsTree($fileplan_id, $positions_array);
+			//Init with fileplan
+			(count($positions_array) == 0)? $rootSelected = ' selected="selected"' : $rootSelected = '';
+			$fileplan_array = $fileplan->getFileplan($fileplan_id);
+			$content .='<option value="'.$fileplan_array['ID'].'"'.$rootSelected.'>'
+				.$fileplan_array['LABEL'].'</option>';
+			//Show positions
 			for($i=0; $i < count($positions_array); $i++) {
 				//Is enable ?
 				if ($fileplan->isEnable($fileplan_id, $positions_array[$i]['ID'])) { 
@@ -1252,7 +1258,7 @@ switch ($mode) {
 					//Is enable ?
 					if ($fileplan_array[$i]['ENABLED'] == 'Y') { 
 						//Selected?
-						($fileplan_id == $fileplan_array[$i]['ID'])? $selected = ' selected="selected"' : $elected = '';
+						($fileplan_id == $fileplan_array[$i]['ID'] || count($fileplan_array) == 1)? $selected = ' selected="selected"' : $selected = '';
 						$content .='<option value="'.$fileplan_array[$i]['ID'].'"'.$selected.' >'
 							.$fileplan_array[$i]['LABEL'].'</option>';
 					}
@@ -1264,7 +1270,9 @@ switch ($mode) {
 					for($i=0; $i < count($fileplan_array); $i++) {
 						//Is enable ?
 						if ($fileplan_array[$i]['ENABLED'] == 'Y') { 
-							$content .='<option value="'.$fileplan_array[$i]['ID'].'" >'
+							//Selected?
+						(count($fileplan_array) == 1 && empty($selected))? $selected = ' selected="selected"' : $selected = '';
+							$content .='<option value="'.$fileplan_array[$i]['ID'].'"'.$selected.'>'
 								.$fileplan_array[$i]['LABEL'].'</option>';
 						}
 					}

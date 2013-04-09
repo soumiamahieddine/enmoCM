@@ -57,6 +57,8 @@ if (!defined('_DUPLICATE_FILEPLAN'))
     define('_DUPLICATE_FILEPLAN','Dupliquer un plan de classement');
 if (!defined('_MANAGE_FILEPLAN_SHORT'))
     define('_MANAGE_FILEPLAN_SHORT', 'G&eacute;rer');
+if (!defined('_MANAGE_PERSONNAL_FILEPLAN'))
+    define('_MANAGE_PERSONNAL_FILEPLAN', 'G&eacute;rer mon plan de classement personnel');
 if (!defined('_MANAGE_FILEPLAN'))
     define('_MANAGE_FILEPLAN', 'G&eacute;rer le plan de classement');
 if (!defined('_VIEW_FILEPLAN'))

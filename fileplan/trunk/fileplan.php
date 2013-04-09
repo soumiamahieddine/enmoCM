@@ -45,9 +45,10 @@ $entitiesFileplanArray = $fileplan->getEntitiesFileplan();
 
 $fileplans_array = array();
 $fileplans_array = array_merge ($userFileplanArray, $entitiesFileplanArray);
-// print_r($fileplans_array);
+// print_r($userFileplanArray);
+// print_r($entitiesFileplanArray);
 
-if (count($userFileplanArray > 0) || count($entitiesFileplanArray > 0)) {
+if (count($userFileplanArray) > 0 || count($entitiesFileplanArray) > 0)  {
 	
 	/****************Management of the location bar  ************/
 	$init = false;
@@ -77,8 +78,8 @@ if (count($userFileplanArray > 0) || count($entitiesFileplanArray > 0)) {
 				<span class="selected_link"><?php echo _VIEW_FILEPLAN;?></span>
 				&nbsp;/&nbsp;
 				<a href="<?php echo $_SESSION['config']['businessappurl'];
-				?>index.php?page=fileplan_managment&module=fileplan&reinit=true&load" class="back">
-				<?php echo _MANAGE_FILEPLAN;?></a>                
+				?>index.php?page=fileplan_managment&module=fileplan&load" class="back">
+				<?php echo _MANAGE_PERSONNAL_FILEPLAN;?></a>                
 			</b></p>
 			&nbsp;
 		</div>

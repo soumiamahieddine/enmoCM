@@ -169,7 +169,7 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 								"defaultImgOpenSelected" : "position_on.gif",
 								"defaultImgCloseSelected" : "position_on.gif",
 								'onOpenPopulate' : [funcOpen, '<?php echo $_SESSION['config']['businessappurl'];
-												?>index.php?display=true&module=fileplan&page=positions_tree_childs&fileplan_id=<?php 
+												?>index.php?display=true&module=fileplan&page=positions_tree_childs&origin=admin&fileplan_id=<?php 
 												echo $fileplan_id;?>']
 							});
 						}

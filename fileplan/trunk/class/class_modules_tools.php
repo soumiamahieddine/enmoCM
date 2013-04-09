@@ -176,16 +176,20 @@ class fileplan extends dbquery
 	public function getEntitiesFileplan() {
 	
 		$fileplan = array();
-		if (isset($_SESSION['user']['entities']) && count($_SESSION['user']['entities']) > 0) {
-			$entities = array();
-			for($i=0; $i < count($_SESSION['user']['entities']); $i++) {
-				array_push($entities, "'".$_SESSION['user']['entities'][$i]['ENTITY_ID']."'");
-			}
+		// if (isset($_SESSION['user']['entities']) && count($_SESSION['user']['entities']) > 0) {
+			// $entities = array();
+			// for($i=0; $i < count($_SESSION['user']['entities']); $i++) {
+				// array_push($entities, "'".$_SESSION['user']['entities'][$i]['ENTITY_ID']."'");
+			// }
 			$this->connect();
+			// $this->query(
+				// "select * from " 
+				// . FILEPLAN_TABLE . " where entity_id in(" 
+				// . join(',', $entities) . ")"
+			// );
 			$this->query(
 				"select * from " 
-				. FILEPLAN_TABLE . " where entity_id in(" 
-				. join(',', $entities) . ")"
+				. FILEPLAN_TABLE . " where user_id is null"
 			);
 			
 			if($this->nb_result() > 0) {
@@ -199,7 +203,7 @@ class fileplan extends dbquery
 					)
 				);
 			}
-		}
+		// }
 		
 		return $fileplan;
 	}

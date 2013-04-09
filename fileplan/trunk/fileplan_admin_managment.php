@@ -256,6 +256,7 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 			.count($tab).' '._FILEPLAN_POSITIONS;              								//Titre de la page
 		// $paramsTab['pagePicto'] = $_SESSION['config']['businessappurl']
 			// ."static.php?module=fileplan&filename=manage_fileplan_b.gif";               	//Image (pictogramme) de la page
+		$paramsTab['urlParameters'] = 'fileplan_id='.$fileplan_id;                          //Parametres d'url supplementaires
 		$paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
 		$paramsTab['bool_showSearchTools'] = true;                                          //Affiche le filtre alphabetique et le champ de recherche
 		$paramsTab['searchBoxAutoCompletionUrl'] = $_SESSION['config']['businessappurl']

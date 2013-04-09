@@ -47,10 +47,66 @@ $fileplan_id	= $fileplanArray[0]['ID'];
 $fileplan_label	= $fileplanArray[0]['LABEL'];
 // 
 if (empty($fileplan_id)) {
-	echo '<script type="text/javascript">window.top.location.href=\'' 
-		. $_SESSION['config']['businessappurl']
-        . 'index.php?page=fileplan&module=fileplan'
-        . '&reinit=true\';</script>';
+	// echo '<script type="text/javascript">window.top.location.href=\'' 
+		// . $_SESSION['config']['businessappurl']
+        // . 'index.php?page=fileplan&module=fileplan'
+        // . '&reinit=true\';</script>';
+		/****************Management of the location bar  ************/
+	$init = false;
+	if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
+	{
+		$init = true;
+	}
+	$level = "";
+	if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
+	{
+		$level = $_REQUEST['level'];
+	}
+	$page_path = $_SESSION['config']['businessappurl'].'index.php?page=fileplan&module=fileplan';
+	$page_label = _ADD_FILEPLAN;
+	$page_id = "fileplan_add";
+	$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
+	/***********************************************************/
+	$func = new functions();
+	$userInfo = $func->infouser($_SESSION['user']['UserId']);
+	
+	//Path to ajax script
+	$path_to_script = $_SESSION['config']['businessappurl']
+		."index.php?display=true&module=fileplan&page=fileplan_ajax_script".$parameters;
+	
+	?>
+	<div id="inner_content">
+	<h1><img src="<?php echo $_SESSION['config']['businessappurl'];
+		?>static.php?module=fileplan&filename=manage_fileplan_b.gif" alt="<?php
+		echo _ADD_FILEPLAN;?>" /><?php echo _ADD_FILEPLAN;?></h1>
+	<h3> <?php echo _CREATE_YOUR_PERSONNAL_FILEPLAN.".<br/><br/>"._ASKED_ONLY_ONCE.".";?>  </h3>
+	<div class="blank_space">&nbsp;</div>
+	
+	<form name="formFileplan" id="formFileplan" method="post"  action="#">
+	<em><?php echo _CHANGE_DEFAULT_FILEPLAN_NAME;?></em><br /><br />
+	<p>
+		<label ><?php echo _FILEPLAN_NAME;?> : </label>
+		<input name="fileplan_label" type="text" id="fileplan_label" class="fileplan_position" value="<?php  
+			echo _PERSONNAL_FILEPLAN.' ('.	$userInfo['FirstName'].' '.$userInfo['LastName']
+			.')'; ?>" /><span class="red_asterisk">*</span>
+	</p>
+	<p>
+		<label ><?php echo _IS_SERIAL_ID;?> : </label>
+		<input name="is_serial" type="radio" id="is_serial" value="Y" checked="ckecked" /><?php echo _YES;?>
+		<input name="is_serial" type="radio" id="is_serial" value="N" /><?php echo _NO;?>
+		<span class="red_asterisk">*</span>
+	</p>
+	<p class="buttons">
+		<input type="button" name="valid" value="<?php  
+			echo _VALIDATE;?>" class="button" onClick="validFileplanForm('<?php 
+		echo $path_to_script.'&origin=manage&mode=saveFileplan';?>', 'formFileplan');" />
+        <input type="button" name="cancel" value="<?php echo 
+			_CANCEL;?>" class="button" onclick="window.top.location.href='<?php 
+			echo $_SESSION['config']['businessappurl'];?>index.php?module=fileplan&page=fileplan'" />
+	</p>
+	</form>
+	</div>
+	<?php
 	exit();
 } else {
 	//
@@ -71,7 +127,7 @@ if (empty($fileplan_id)) {
 			$level = $_REQUEST['level'];
 		}
 		$page_path = $_SESSION['config']['businessappurl'].'index.php?page=fileplan_managment&module=fileplan';
-		$page_label = _MANAGE_FILEPLAN;
+		$page_label = _MANAGE_PERSONNAL_FILEPLAN;
 		$page_id = "fileplan_managment";
 		$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 		/***********************************************************/
@@ -86,7 +142,7 @@ if (empty($fileplan_id)) {
 					<a href="<?php  echo $_SESSION['config']['businessappurl'];
 					?>index.php?page=fileplan&module=fileplan&reinit=true" class="back"><?php 
 					echo _VIEW_FILEPLAN;?></a>&nbsp;/&nbsp;
-					<span class="selected_link"><?php echo _MANAGE_FILEPLAN;?></span>            
+					<span class="selected_link"><?php echo _MANAGE_PERSONNAL_FILEPLAN;?></span>            
 				</p>
 				</b>&nbsp;
 			</div>

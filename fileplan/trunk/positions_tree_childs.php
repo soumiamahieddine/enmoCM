@@ -4,8 +4,9 @@ if(
 	(isset($_POST['fileplan_id']) && !empty($_POST['fileplan_id'])) 
 	&& (isset($_POST['branch_id']) && !empty($_POST['branch_id']))
 ) {
-	$branch_array = array();
+	//Single or composed ID?
 	if (strpos($_POST['branch_id'], '@@') !== false) {
+		$branch_array = array();
 		$branch_array = explode('@@', $_POST['branch_id']);
 	
 		$fileplan_id = $branch_array[0];
@@ -42,26 +43,27 @@ if(
     if($request->nb_result() > 0) {
         while($res = $request->fetch_object()) {
             array_push(
-                        $childrens
-                        , array(
-                                'id' => $res->fileplan_id.'@@'.$res->position_id, 
-                                'tree' => '0', 
-                                'key_value' => $res->position_id, 
-                                'label_value' => $request->show_string($fileplan->truncate($res->position_label), true), 
-                                'tooltip_value' => $request->show_string($res->position_label, true), 
-                                'canhavechildren' => 'true'
-                                )
-                        );
+               $childrens,
+               array(
+                    'id' => $res->fileplan_id.'@@'.$res->position_id, 
+                    'tree' => '0', 
+                    'key_value' => $res->position_id, 
+                    'label_value' => $request->show_string($fileplan->truncate($res->position_label), true), 
+                    'tooltip_value' => $request->show_string($res->position_label, true), 
+                    'canhavechildren' => 'true'
+                )
+            );
         }
     }
     if(count($childrens) > 0) {
+		(isset($_POST['origin']) && $_POST['origin'] == 'admin')? $view_documents = "" : $view_documents = ", onclick : 'view_document_list'";
         echo '[';
         for($i=0; $i< count($childrens); $i++) {
             echo "
                 {id : '".$childrens[$i]['id']
                 ."', title : '".addslashes($childrens[$i]['tooltip_value'])
                 ."', canhavechildren : '".$childrens[$i]['canhavechildren']
-                ."', onclick : 'view_document_list'"
+                ."'".$view_documents
                 .", txt : '&nbsp;".addslashes($childrens[$i]['label_value'])."'"
                 .", style : 'tree_branch'},";
         }
