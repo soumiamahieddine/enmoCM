@@ -282,7 +282,7 @@
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isIniErrorRepportingRequirements()
-                        ); ?>
+                            , true); ?>
                     </td>
                     <td>
                         <?php echo _ERROR_REPORTING; ?>

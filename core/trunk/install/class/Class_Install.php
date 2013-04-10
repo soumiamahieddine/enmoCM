@@ -203,7 +203,7 @@ class Install extends functions
                 return true;
             }
         } else {
-            if (ini_get('error_reporting') <> 24567) {
+            if (ini_get('error_reporting') <> 22519) {
                 return false;
             } else {
                 return true;
