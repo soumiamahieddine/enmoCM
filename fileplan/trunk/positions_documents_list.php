@@ -285,7 +285,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
                                             . "index.php?display=true&module=fileplan&page=fileplan_ajax_script"
                                             . "&mode=setPosition&origin=fileplan&fileplan_id=".$fileplan_id
 											. "&actual_position_id=". $position_id.$parameters
-											. "', 'formList', '600px', '490px', '"
+											. "', 'formList', '600px', '510px', '"
                                             . _CHOOSE_ONE_DOC."')",
                     "icon"          =>  $_SESSION['config']['businessappurl']."static.php?module=fileplan&filename=tool_fileplan.gif",
                     "tooltip"       =>  _FILEPLAN,

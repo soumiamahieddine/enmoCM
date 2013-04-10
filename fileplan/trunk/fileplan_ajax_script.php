@@ -1229,7 +1229,7 @@ switch ($mode) {
 					if (isset($_REQUEST['fileplan_id']) && !empty($_REQUEST['fileplan_id'])) {
 						//fileplan ID
 						$fileplan_id = $_REQUEST['fileplan_id'];
-						//Preselect actuel position
+						//Preselect actual position
 						$_SESSION['checked_positions'][$_REQUEST['actual_position_id']] = 'true';
 						//Add it to next url step...
 						$extraUrl="&actual_position_id=".$_REQUEST['actual_position_id'];
@@ -1279,6 +1279,7 @@ switch ($mode) {
 				}
 				$content .='</select><br/><br/>';
 				//Autocompletion
+				$content .= '<label>'._SEARCH.': </label><br/>';
                 $content .= '<input type="text" name="selectedPosition"  id="selectedPosition"'
                     .' value="" class="fileplan_position" onKeyUp="loadFileplanList(\'selectedPosition\', \'positionsList\', \''
                     .$_SESSION['config']['businessappurl'].'index.php?display=true&module='
@@ -1376,6 +1377,9 @@ switch ($mode) {
 								
                                 //Set position
                                 $fileplan->set($fileplan_id, $position_id, $res_id, $coll_id);
+								
+								//Unset checked positions array
+								unset($_SESSION['checked_positions']);
                             }
                         } else {
                             $error = $request->wash_html($position_id.': '._POSITION_NOT_EXISTS.'!','NONE');
