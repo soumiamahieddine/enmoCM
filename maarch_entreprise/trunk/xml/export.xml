@@ -6,7 +6,7 @@
     <CSVOPTIONS>
         <DELIMITER>;</DELIMITER> <!-- 1 charcater, default for MSExcel ';' && default other ',' -->
         <ENCLOSURE>"</ENCLOSURE> <!-- 1 charcater, default for all '"' -->
-        <!-- ENCODING>UTF-8</ENCODING -->
+        <IS_UTF8>FALSE</IS_UTF8>
     </CSVOPTIONS>
     <!--
         letterbox_coll
