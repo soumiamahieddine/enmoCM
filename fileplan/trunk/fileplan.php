@@ -45,6 +45,7 @@ $entitiesFileplanArray = $fileplan->getEntitiesFileplan();
 
 $fileplans_array = array();
 $fileplans_array = array_merge ($userFileplanArray, $entitiesFileplanArray);
+// print_r($_SESSION['collections']);
 // print_r($userFileplanArray);
 // print_r($entitiesFileplanArray);
 

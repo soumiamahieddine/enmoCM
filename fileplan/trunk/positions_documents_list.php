@@ -116,8 +116,9 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 				$temp= array();
 				//Create list ID
 				array_push($temp, array('column'=>'list_id', 'value'=>$line->coll_id.'@@'.$line->res_id));
-				//Keep collection ID
+				//Keep collection ID & LABEL
 				array_push($temp, array('column'=>'coll_id', 'value'=>$line->coll_id));
+				array_push($temp, array('column'=>'coll_label', 'value'=>$security->get_script_from_coll($line->coll_id, "label")));
 				
 				//Get the details page (from colletion)
 				$coll_script_details = $security->get_script_from_coll($line->coll_id, "script_details");
@@ -166,14 +167,23 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 							if($tab[$i][$j][$value]=="coll_id")
 							{
 								$coll_id = $tab[$i][$j]['value']; //Keep collection ID
-								
+								$tab[$i][$j]["label"]=_COLLECTION;
+								$tab[$i][$j]["size"]="1";
+								$tab[$i][$j]["label_align"]="left";
+								$tab[$i][$j]["align"]="left";
+								$tab[$i][$j]["valign"]="bottom";
+								$tab[$i][$j]["show"]=false;
+								$tab[$i][$j]["order"]='coll_id';
+							}		
+							if($tab[$i][$j][$value]=="coll_label")
+							{
 								$tab[$i][$j]["label"]=_COLLECTION;
 								$tab[$i][$j]["size"]="1";
 								$tab[$i][$j]["label_align"]="left";
 								$tab[$i][$j]["align"]="left";
 								$tab[$i][$j]["valign"]="bottom";
 								$tab[$i][$j]["show"]=true;
-								$tab[$i][$j]["order"]='coll_id';
+								$tab[$i][$j]["order"]='coll_label';
 							}							
 							if($tab[$i][$j][$value]=="page_details")
 							{								
@@ -193,7 +203,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 								$tab[$i][$j]["label_align"]="left";
 								$tab[$i][$j]["align"]="left";
 								$tab[$i][$j]["valign"]="bottom";
-								$tab[$i][$j]["show"]=true;
+								$tab[$i][$j]["show"]=false;
 								$tab[$i][$j]["order"]=false;
 							}
 							
