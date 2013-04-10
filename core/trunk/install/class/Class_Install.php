@@ -136,9 +136,9 @@ class Install extends functions
         if (!$this->isPearRequirements('MIME/Type.php')) {
             return false;
         }
-        if (!$this->isIniErrorRepportingRequirements()) {
+        /*if (!$this-&gt;isIniErrorRepportingRequirements()) {
             return false;
-        }
+        }*/
         if (!$this->isIniDisplayErrorRequirements()) {
             return false;
         }
