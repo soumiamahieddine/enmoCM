@@ -336,6 +336,12 @@ class Install extends functions
             return false;
             exit;
         }
+        
+        if (!$this->setDatasourcesXsd()) {
+            return false;
+            exit;
+        }
+        
         return true;
     }
 
@@ -357,6 +363,36 @@ class Install extends functions
             exit;
         }
         $write = fwrite($fp,$res);
+        if (!$write) {
+            return false;
+            exit;
+        }
+        return true;
+    }
+    
+    private function setDatasourcesXsd()
+    {
+        $Fnm = 'apps/maarch_entreprise/xml/datasources.xsd.default';
+        $inF = fopen($Fnm,"r");
+        while (!feof($inF)) {
+           $contentFile .= fgets($inF, 4096);
+        }
+        $contentFile = str_replace("##databaseserver##", $_SESSION['config']['databaseserver'], $contentFile);
+        $contentFile = str_replace("##databaseserverport##", $_SESSION['config']['databaseserverport'], $contentFile);
+        $contentFile = str_replace("##databasename##", $_SESSION['config']['databasename'], $contentFile);
+        $contentFile = str_replace("##databaseuser##", $_SESSION['config']['databaseuser'], $contentFile);
+        $contentFile = str_replace("##databasepassword##", $_SESSION['config']['databasepassword'], $contentFile);
+        fclose($inF);
+        if (file_exists('apps/maarch_entreprise/xml/datasources.xsd')) {
+            unlink('apps/maarch_entreprise/xml/datasources.xsd');
+        }
+        copy('apps/maarch_entreprise/xml/datasources.xsd.default', 'apps/maarch_entreprise/xml/datasources.xsd'); 
+        $fp = fopen('apps/maarch_entreprise/xml/datasources.xsd', "w+");
+        if (!$fp) {
+            return false;
+            exit;
+        }
+        $write = fwrite($fp, $contentFile);
         if (!$write) {
             return false;
             exit;
