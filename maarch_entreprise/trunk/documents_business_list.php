@@ -44,6 +44,17 @@ $list       = new lists();
 //Include definition fields
 include_once('apps/' . $_SESSION['config']['app_id'] . '/definition_mail_categories_business.php');
 
+//Keep some parameters
+$parameters = '';
+if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
+    $parameters .= '&order='.$_REQUEST['order'];
+    if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) $parameters 
+		.= '&order_field='.$_REQUEST['order_field'];
+}
+if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what='.$_REQUEST['what'];
+if (isset($_REQUEST['template']) && !empty($_REQUEST['template'])) $parameters .= '&template='.$_REQUEST['template'];
+if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
+
 //URL extra parameters
 $urlParameters = '';
 
@@ -392,6 +403,32 @@ if (count($template_list) > 0 ) {                                               
 $paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
 $paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
 $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
+//Fileplan
+if ($core_tools->test_service('fileplan', 'fileplan', false)) {
+    require_once "modules" . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR
+        . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
+    $fileplan = new fileplan();
+    if (
+		count($fileplan->getUserFileplan()) > 0 
+		|| (count($fileplan->getEntitiesFileplan()) > 0 
+			&& $core_tools->test_service('put_doc_in_fileplan', 'fileplan', false)
+			)
+	) {
+        $paramsTab['bool_checkBox'] = true;
+        $paramsTab['bool_standaloneForm'] = true;
+        $positions = array(
+                "script"        =>  "showFileplanList('".$_SESSION['config']['businessappurl']  
+                                        . "index.php?display=true&module=fileplan&page=fileplan_ajax_script"
+                                        . "&mode=setPosition&origin=basket&coll_id=".$_SESSION['current_basket']['coll_id']
+                                        . $parameters."', 'formList', '600px', '510px', '"
+                                        . _CHOOSE_ONE_DOC."')",
+                "icon"          =>  $_SESSION['config']['businessappurl']."static.php?module=fileplan&filename=tool_fileplan.gif",
+                "tooltip"       =>  _FILEPLAN,
+                "disabledRules" =>  count($tab)." == 0 || ".$selectedTemplate." == 'cases_list_search_adv'"
+                );      
+        array_push($paramsTab['tools'],$positions);
+    }
+}
 if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching')  {
     $save = array(
             "script"        =>  "createModal(form_txt, 'save_search', '100px', '500px');window.location.href='#top';",

@@ -575,14 +575,19 @@ if (count($tab) > 0) {
                 require_once "modules" . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR
                     . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
                 $fileplan     = new fileplan();
-                if (count($fileplan->getUserFileplan()) > 0 || count($fileplan->getEntitiesFileplan()) > 0) {
+                if (
+					count($fileplan->getUserFileplan()) > 0 
+					|| (count($fileplan->getEntitiesFileplan()) > 0 
+						&& $core_tools->test_service('put_doc_in_fileplan', 'fileplan', false)
+						)
+				) {
                     $paramsTab['bool_checkBox'] = true;
                     $paramsTab['bool_standaloneForm'] = true;
                     $positions = array(
                             "script"        =>  "showFileplanList('".$_SESSION['config']['businessappurl']  
                                                     . "index.php?display=true&module=fileplan&page=fileplan_ajax_script"
                                                     . "&mode=setPosition&origin=search&coll_id=".$_SESSION['collection_id_choice']
-                                                    . $parameters."', 'formList', '600px', '490px', '"
+                                                    . $parameters."', 'formList', '600px', '510px', '"
                                                     . _CHOOSE_ONE_DOC."')",
                             "icon"          =>  $_SESSION['config']['businessappurl']."static.php?module=fileplan&filename=tool_fileplan.gif",
                             "tooltip"       =>  _FILEPLAN,

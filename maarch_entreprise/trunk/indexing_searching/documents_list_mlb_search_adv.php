@@ -554,7 +554,7 @@ if (count($tab) > 0) {
                             "script"        =>  "showFileplanList('".$_SESSION['config']['businessappurl']  
                                                     . "index.php?display=true&module=fileplan&page=fileplan_ajax_script"
                                                     . "&mode=setPosition&origin=search&coll_id=".$_SESSION['collection_id_choice']
-                                                    . $parameters."', 'formList', '600px', '490px', '"
+                                                    . $parameters."', 'formList', '600px', '510px', '"
                                                     . _CHOOSE_ONE_DOC."')",
                             "icon"          =>  $_SESSION['config']['businessappurl']."static.php?module=fileplan&filename=tool_fileplan.gif",
                             "tooltip"       =>  _FILEPLAN,
