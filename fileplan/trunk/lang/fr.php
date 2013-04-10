@@ -82,11 +82,11 @@ if (!defined('_FILEPLAN_UPDATED'))
 if (!defined('_ENABLE_FILEPLAN'))
     define('_ENABLE_FILEPLAN', 'D&eacute;verouiller');
 if (!defined('_FILEPLAN_ENABLED'))
-    define('_FILEPLAN_ENABLED', 'Classeur d&eacute;verouill&eacute;');
+    define('_FILEPLAN_ENABLED', 'Plan de classement d&eacute;verouill&eacute;');
 if (!defined('_DISABLE_FILEPLAN'))
-    define('_DISABLE_FILEPLAN', 'Verouiller');    
+    define('_DISABLE_FILEPLAN', 'Verrouiller');    
 if (!defined('_FILEPLAN_DISABLED'))
-    define('_FILEPLAN_DISABLED', 'Classeur verouiller&eacute;');
+    define('_FILEPLAN_DISABLED', 'Plan de classement verouiller&eacute;');
 if (!defined('_REMOVE_FILEPLAN_INFOS_1'))
     define('_REMOVE_FILEPLAN_INFOS_1', 'Voulez-vous supprimez plan de classement suivant et retirer les documents li&eacute;s?');
 if (!defined('_REMOVE_FILEPLAN_INFOS_2'))
@@ -102,75 +102,75 @@ if (!defined('_NO_DOC_IN_POSITION'))
 	
 /*FORM*/
 if (!defined('_POSITION_ID'))
-    define('_POSITION_ID','Identifiant du classeur');
+    define('_POSITION_ID','Identifiant de position');
 if (!defined('_POSITION_NAME'))
-    define('_POSITION_NAME','Nom du classeur');
+    define('_POSITION_NAME','Nom de position');
 if (!defined('_NEST_POSITION_UNDER'))
-    define('_NEST_POSITION_UNDER','Imbriquer le classeur sous');
+    define('_NEST_POSITION_UNDER','Positionner sous');
 if (!defined('_POSITION_PARENT'))
-    define('_POSITION_PARENT','Classeur parent');
+    define('_POSITION_PARENT','Position parente');
 if (!defined('_CHOOSE_ONE_POSITION'))
-    define('_CHOOSE_ONE_POSITION', 'Veuillez s&eacute;lectionner au moins un classeur');
+    define('_CHOOSE_ONE_POSITION', 'Veuillez s&eacute;lectionner au moins une position');
 if (!defined('_CHOOSE_PARENT_POSITION'))
-    define('_CHOOSE_PARENT_POSITION', 'Veuillez s&eacute;lectionner un classeur parent');
+    define('_CHOOSE_PARENT_POSITION', 'Veuillez s&eacute;lectionner une position parente');
 	
 /*ACTIONS*/
 	//ADD
 if (!defined('_NEW_POSITION'))
-    define('_NEW_POSITION','Nouveau classeur');
+    define('_NEW_POSITION','Nouvelle position');
 if (!defined('_ADD_POSITION'))
     define('_ADD_POSITION', 'Cr&eacute;er');
 if (!defined('_POSITION_ADDED'))
-    define('_POSITION_ADDED', 'Classeur ajout&eacute;');
+    define('_POSITION_ADDED', 'Position ajout&eacute;e');
 	//EDIT
 if (!defined('_EDIT_POSITION_SHORT'))
     define('_EDIT_POSITION_SHORT', 'Modifier');
 if (!defined('_EDIT_POSITION'))
-    define('_EDIT_POSITION', 'Modifier le classeur');
+    define('_EDIT_POSITION', 'Modifier la position');
 if (!defined('_SAVE_POSITION'))
     define('_SAVE_POSITION', 'Enregistrer');
 if (!defined('_POSITION_UPDATED'))
-    define('_POSITION_UPDATED', 'Classeur modifi&eacute;e');
+    define('_POSITION_UPDATED', 'Position modifi&eacute;e');
 	//ENABLE/DISABLE
 if (!defined('_ENABLE_POSITION'))
     define('_ENABLE_POSITION', 'D&eacute;verouiller');
 if (!defined('_POSITION_ENABLED'))
-    define('_POSITION_ENABLED', 'Classeur d&eacute;verouill&eacute;');
+    define('_POSITION_ENABLED', 'Position d&eacute;verouill&eacute;e');
 if (!defined('_DISABLE_POSITION'))
     define('_DISABLE_POSITION', 'Verouiller');    
 if (!defined('_POSITION_DISABLED'))
-    define('_POSITION_DISABLED', 'Classeur verouiller&eacute;');
+    define('_POSITION_DISABLED', 'Position verouiller&eacute;e');
 	//REMOVE
 if (!defined('_REMOVE_POSITION'))
-    define('_REMOVE_POSITION', 'Supprimer le classeur');
+    define('_REMOVE_POSITION', 'Supprimer la position');
 if (!defined('_REMOVE_POSITIONS'))
-    define('_REMOVE_POSITIONS', 'Supprimer les classeurs');
+    define('_REMOVE_POSITIONS', 'Supprimer les positions');
 if (!defined('_REALLY_REMOVE_POSITION'))
-    define('_REALLY_REMOVE_POSITION', 'Voulez-vous supprimez le classeur');
+    define('_REALLY_REMOVE_POSITION', 'Voulez-vous supprimez la position');
 if (!defined('_REMOVE_POSITIONS_INFOS_1'))
-    define('_REMOVE_POSITIONS_INFOS_1', 'Voulez-vous supprimez les classeurs suivants et retirer les documents li&eacute;s?');
+    define('_REMOVE_POSITIONS_INFOS_1', 'Voulez-vous supprimez les positions suivantes et retirer les documents li&eacute;s?');
 if (!defined('_REMOVE_POSITIONS_INFOS_2'))
     define('_REMOVE_POSITIONS_INFOS_2', 'Aucun document ne sera supprim&eacute;.');
 if (!defined('_DELETE_POSITION'))
     define('_DELETE_POSITION', 'Supprimer');
 if (!defined('_POSITION_REMOVED'))
-    define('_POSITION_REMOVED', 'Classeur supprim&eacute;');
+    define('_POSITION_REMOVED', 'Position supprim&eacute;e');
 	//SET
 if (!defined('_SET_DOC_TO_POSITION'))
     define('_SET_DOC_TO_POSITION', 'Classer un/des document(s)');
 if (!defined('_DOC_ADDED_TO_POSITION'))
-    define('_DOC_ADDED_TO_POSITION', 'Document(s) aff&eacute;ct&eacute;(s) au classeur');
+    define('_DOC_ADDED_TO_POSITION', 'Document(s) aff&eacute;ct&eacute;(s) à la position');
 if (!defined('_REMOVED_DOC_FROM_POSITION'))
-    define('_REMOVED_DOC_FROM_POSITION', ' Retirer le document du classeur');
+    define('_REMOVED_DOC_FROM_POSITION', ' Retirer le document de la position');
 if (!defined('_REALLY_REMOVE_DOC_FROM_POSITION'))
-    define('_REALLY_REMOVE_DOC_FROM_POSITION', 'Voulez-vous retirer le document du classeur');
+    define('_REALLY_REMOVE_DOC_FROM_POSITION', 'Voulez-vous retirer le document de la position');
 if (!defined('_DOC_REMOVED_FROM_POSITION'))
-    define('_DOC_REMOVED_FROM_POSITION', 'Document retir&eacute; du classeur');
+    define('_DOC_REMOVED_FROM_POSITION', 'Document retir&eacute; de la position');
 	//ERROR
 if (!defined('_ERROR_DURING_POSITION_ID_GENERATION'))
-    define('_ERROR_DURING_POSITION_ID_GENERATION', 'Erreur durant le generation de l\'identifiant du classeur. (database error)');
+    define('_ERROR_DURING_POSITION_ID_GENERATION', 'Erreur durant le generation de l\'identifiant de la position. (database error)');
 if (!defined('_POSITION_NOT_EXISTS'))
-    define('_POSITION_NOT_EXISTS', 'Ce Classeur n&rsquo;existe pas');
+    define('_POSITION_NOT_EXISTS', 'Cette position n&rsquo;existe pas');
 if (!defined('_POSITION_ALREADY_EXISTS'))
-    define('_POSITION_ALREADY_EXISTS', 'Cet identifiant de classeur existe d&eacute;j&agrave;');
+    define('_POSITION_ALREADY_EXISTS', 'Cet identifiant de position existe d&eacute;j&agrave;');
 ?>
