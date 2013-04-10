@@ -356,7 +356,7 @@ if (!defined('_54_CONTROL'))
 if (!defined('_VISIBLE'))    
     define('_VISIBLE', 'Actif');
 if (!defined('_NOT_VISIBLE')) 
-    define('_NOT_VISIBLE', 'En attente');
+    define('_NOT_VISIBLE', 'Inactif');
     
 /******** NEW WF ************/
 if (!defined('_TARGET_STATUS'))
