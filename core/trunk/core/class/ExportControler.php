@@ -75,6 +75,7 @@ class ExportControler extends ExportFunctions
             $this->configuration = $configuration->$collection;
             $this->delimiter     = end($configuration->CSVOPTIONS->DELIMITER);
             $this->enclosure     = end($configuration->CSVOPTIONS->ENCLOSURE);
+            $this->isUtf8 = end($configuration->CSVOPTIONS->IS_UTF8);
         }
         
         private function retrieve_datas()
@@ -152,6 +153,9 @@ class ExportControler extends ExportFunctions
                 foreach($line_value as $column_name => $column_value) {
                     if ($this->retrieve_encoding($column_value) === false) {
                         $column_value = utf8_encode($column_value);
+                    }
+                    if ($this->isUtf8 <> "TRUE") {
+                        $column_value = utf8_decode($column_value);
                     }
                     $column_value = $this->unprotect_string($column_value);
                     $this->object_export->$line_name->$column_name = $column_value;
