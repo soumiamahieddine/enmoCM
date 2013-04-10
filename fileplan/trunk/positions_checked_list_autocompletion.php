@@ -39,18 +39,46 @@ $fileplan = new fileplan();
 $where = "";
 $content = "";
 $actual_position_id = "";
-$positions_array = array();
+$positions_array = $path_array = array();
 
 $path_to_script = $_SESSION['config']['businessappurl']
 	."index.php?display=true&module=fileplan&page=fileplan_ajax_script";
 
-//Selected label (update mode)
-if (isset($_REQUEST['actual_position_id']) && !empty($_REQUEST['actual_position_id'])) {
-    $actual_position_id = $_REQUEST['actual_position_id'];
+if (isset($_REQUEST['res_id']) && !empty($_REQUEST['res_id'])) {
+	
+	//Build res_array
+	$res_array = $fileplan->buildResArray($_REQUEST['res_id']);
+	//
+    $resIdArray = array();
+    $resIdArray = explode (',', $_REQUEST['res_id']);
+	//Get uuthorized fileplans
+	$authorizedFileplans =  $fileplan->getAuthorizedFileplans();
+	
+	//For each ressource
+	for($i = 0; $i < count($resIdArray); $i++) {
+		$allIsChecked = false;
+		//Separate coll_id from res_id
+		$tmp = explode('@@', $resIdArray[$i]);
+
+		//Search for the fileplans and positions
+		$path_array = $fileplan->whereAmISetted($authorizedFileplans, $tmp[0], $tmp[1]);
+		
+		for($j = 0; $j < count($path_array); $j++) {
+			//Get the state of checkbox
+			$state = $fileplan->getPositionState($path_array[$j]['FILEPLAN_ID'], $path_array[$j]['POSITION_ID'], $res_array);
+			//Set the tate
+			$_SESSION['checked_positions'][$path_array[$j]['FILEPLAN_ID']][$path_array[$j]['POSITION_ID']] = $state;
+		}
+	}
 }
 
 if (!empty($_REQUEST['fileplan_id'])) {
 
+	//Selected label (update mode)
+	if (isset($_REQUEST['actual_position_id']) && !empty($_REQUEST['actual_position_id'])) {
+		$actual_position_id = $_REQUEST['actual_position_id'];
+	}
+	
 	$positions_array = array();
 	$fileplan_id = $_REQUEST['fileplan_id'];
 	
@@ -85,57 +113,64 @@ if (!empty($_REQUEST['fileplan_id'])) {
 			);
 		}
 	}
+
+	// $content .= 'CHECKED_POSITIONS:'.(print_r($_SESSION['checked_positions'], true)).'<br/>'; //DEBUG
+
+	$content .= "<ul>\n";
+
+	//Show selected positions first
+	if (count($_SESSION['checked_positions'][$fileplan_id]) > 0) {
+		$js .='<script type="text/javascript">';
+		foreach (array_keys($_SESSION['checked_positions'][$fileplan_id]) as $position_id) 
+		{	//Description
+			$description = $fileplan->getPositionPath($fileplan_id, $position_id); 
+			//Checked or partially checked?
+			if(isset($_SESSION['checked_positions'][$fileplan_id][$position_id])) {
+				$content .= "<li alt=\"".$description
+					. "\" title=\"".$description
+					. "\"><input type=\"checkbox\" id=\"position_".$position_id."\" name=\"position[]\""
+					. " class=\"check\" onClick=\"saveCheckedState('".$path_to_script
+					. "&fileplan_id=".$fileplan_id."&mode=checkPosition', this);\" value=\""
+					. $position_id."\" checked=\"checked\">". $description."</li>\n";
+				//extra javascript
+				if ($_SESSION['checked_positions'][$fileplan_id][$position_id] == 'true') {
+
+				} elseif ($_SESSION['checked_positions'][$fileplan_id][$position_id] == 'partial') {
+					$js.= "document.getElementById('position_". $position_id."').indeterminate = true;";
+				}
+			}
+		}
+		$js .='</script>';
+		$content .=  "<li class=\"separator\"></li>";
+	}
+	 
+	 //Show postions
+	 for($i=0; $i < count($positions_array); $i++) {
+		
+		if($i < 100) {
+			$id = $positions_array[$i]['ID']; 
+			$description = $fileplan->getPositionPath($fileplan_id, $positions_array[$i]['ID']); 
+			// $description = $fileplan->truncate($description); 
+			
+			//Check if position is already selected
+			// ($id == $actual_position_id || isset($_SESSION['checked_positions'][$fileplan_id][$id]))? 
+				// $checked = ' checked="checked"': $checked =  '';
+			
+			//Content (only unselected)
+			if (!isset($_SESSION['checked_positions'][$fileplan_id][$id])) {
+				$content .= "<li alt=\"".$description
+						. "\" title=\"".$description
+						. "\"><input type=\"checkbox\" id=\"position_".$id."\" name=\"position[]\""
+						. " class=\"check\" onClick=\"saveCheckedState('".$path_to_script
+						. "&fileplan_id=".$fileplan_id."&mode=checkPosition', "
+						. "this);\" value=\"". $id."\">". $description."</li>\n"; 
+			}
+		} else  {
+			$content .= "<li>...</li>\n";
+			break;
+		}
+	 }
+	$content .=  "</ul>";
 }
 
-// $content .= print_r($_SESSION['checked_positions'], true); //DEBUG
-$content .= "<ul>\n";
-
-//Show selected positions first
-if (count($_SESSION['checked_positions']) > 0) {
-	foreach (array_keys($_SESSION['checked_positions']) as $position_id) {
-        (isset($_SESSION['checked_positions'][$position_id]))? $checked = ' checked="checked"': $checked =  '';
-        $description = $fileplan->getPositionPath($fileplan_id, $position_id); 
-        $content .= "<li alt=\"".$description
-            . "\" title=\"".$description
-            . "\"><input type=\"checkbox\" id=\"position_".$position_id."\" name=\"position[]\""
-            . " class=\"check\" onClick=\"saveCheckedState('".$path_to_script
-			. "&fileplan_id=".$fileplan_id."&mode=checkPosition', "
-			. "this.value , document.getElementById('position_"
-			. $position_id."').checked);\" value=\""
-            . $position_id."\"".$checked.">"
-            . $description."</li>\n"; 
-    }
-	$content .=  "<li class=\"separator\"></li>";
-}
- 
- //Show postions
- for($i=0; $i < count($positions_array); $i++) {
-    
-    if($i < 100) {
-        $id = $positions_array[$i]['ID']; 
-        $description = $fileplan->getPositionPath($fileplan_id, $positions_array[$i]['ID']); 
-        // $description = $fileplan->truncate($description); 
-        
-        //Check if position is already selected
-        ($id == $actual_position_id || isset($_SESSION['checked_positions'][$id]))? 
-			$checked = ' checked="checked"': $checked =  '';
-        
-        //Content (only unselected)
-        if (!isset($_SESSION['checked_positions'][$id])) {
-            $content .= "<li alt=\"".$description
-                    . "\" title=\"".$description
-                    . "\"><input type=\"checkbox\" id=\"position_".$id."\" name=\"position[]\""
-                    . " class=\"check\" onClick=\"saveCheckedState('".$path_to_script
-					. "&fileplan_id=".$fileplan_id."&mode=checkPosition', "
-					. "this.value , document.getElementById('position_".$id."').checked);\" value=\""
-                    . $id."\"".$checked.">"
-                    . $description."</li>\n"; 
-        }
-    } else  {
-        $content .= "<li>...</li>\n";
-        break;
-    }
- }
-$content .=  "</ul>";
-
-echo $content;
+echo $js.$content;

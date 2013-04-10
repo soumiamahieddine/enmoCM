@@ -149,26 +149,31 @@ function loadFileplanList(idField, idList, path) {
         },                        
         onSuccess: function(answer){
             $(idList).innerHTML = answer.responseText;
+			 evalMyScripts(idList);
             $('loadingFileplan').style.display='none';
         }
     });
 }
 
-function saveCheckedState(path, checkedValue, isChecked) {
-    new Ajax.Request(path,
-    {
-        method:'post',
-        parameters: { url : path,
-                      'value': checkedValue,
-                      'checked': isChecked
-                    }, 
-        onSuccess: function(answer) {
-            eval("response = "+answer.responseText);
-            if(response.status == 0){
-                eval(response.exec_js);
-            } else {
-                window.top.$('main_error').innerHTML = response.error;
-            }
-        }
-    });
+function saveCheckedState(path, checkboxId) {
+
+	 if(typeof(checkboxId) !='undefined'){
+
+		new Ajax.Request(path,
+		{
+			method:'post',
+			parameters: { url : path,
+						  'value': checkboxId.value,
+						  'checked': checkboxId.checked
+						}, 
+			onSuccess: function(answer) {
+				eval("response = "+answer.responseText);
+				if(response.status == 0){
+					eval(response.exec_js);
+				} else {
+					window.top.$('main_error').innerHTML = response.error;
+				}
+			}
+		});
+	}
 }

@@ -207,7 +207,11 @@ class fileplan extends dbquery
 		
 		return $fileplan;
 	}
-	
+	/**
+	*
+	*
+	*
+	*/
 	public function getUserFileplan() {
 	
 		$fileplan = array();
@@ -230,6 +234,28 @@ class fileplan extends dbquery
 			);
 		}
 		return $fileplan;
+	}
+	/**
+	*
+	*
+	*
+	*/
+	public function getAuthorizedFileplans() {
+	
+		$authorizedFileplans = array();
+		
+		//Get user fileplan
+		$userFileplanArray = $this->getUserFileplan();
+		
+		//Get global fileplans
+		$entitiesFileplanArray = $this->getEntitiesFileplan();
+
+		// print_r($userFileplanArray);
+		// print_r($entitiesFileplanArray);
+		
+		$authorizedFileplans = array_merge ($userFileplanArray, $entitiesFileplanArray);
+		
+		return $authorizedFileplans;
 	}
 	/**
 	*
@@ -554,7 +580,39 @@ class fileplan extends dbquery
             return false;
         }
     }
+	/**
+	*
+	*
+	*
+	*/
+	public function buildResArray($res_string) {
 	
+		if (strlen(trim($res_string)) > 0) {
+			$resIdArray = $res_array = array();
+            $resIdArray = explode (',', $res_string);
+			
+			//Separate coll_id and res_id
+			for($i = 0; $i < count($resIdArray); $i++) {
+				//Build res_array
+				$tmp = explode('@@', $resIdArray[$i]);
+				array_push($res_array, 
+					array(
+						'COLL_ID' => $tmp[0],
+						'RES_ID' => $tmp[1]
+					)
+				);
+			}
+			
+			return $res_array;
+		} else {
+			return false;
+		}
+	}
+	/**
+	*
+	*
+	*
+	*/
 	public function set($fileplan_id, $position_id,  $res_id, $coll_id) {
         if (!empty($fileplan_id) 
 			&& !empty($position_id) 
@@ -587,7 +645,11 @@ class fileplan extends dbquery
             return false;
         }
     }
-	
+	/**
+	*
+	*
+	*
+	*/
 	public function remove($fileplan_id, $position_id, $resid_array) {
         if (!empty($fileplan_id) 
 			&& !empty($position_id) 
@@ -610,5 +672,92 @@ class fileplan extends dbquery
             return false;
         }
     }
+	/**
+	*
+	*
+	*
+	*/
+	public function whereAmISetted($authorizedFileplans, $coll_id,  $res_id) {
+        if (count($authorizedFileplans) > 0 
+			&& !empty($coll_id) 
+			&& !empty($res_id) 
+		) {
+			$fileplans_array = array();
+			for($i=0; $i < count($authorizedFileplans); $i++) {
+				array_push($fileplans_array, $authorizedFileplans[$i]['ID']);
+			}
+			$fileplans = join(',', $fileplans_array);
+			
+            $this->connect();
+            $this->query(
+                    "SELECT fileplan_id, position_id FROM "
+                    . FILEPLAN_RES_POSITIONS_TABLE
+                    . " WHERE fileplan_id in  (" . $fileplans 
+                    . ") AND coll_id = '" . $coll_id 
+                    . "' AND res_id = '" . $res_id 
+                    . "'"
+            );
+            // $this->show();
+			$positions = array();
+            if($this->nb_result() > 0) {
+				
+                while($line = $this->fetch_object()) {
+                 array_push(
+                        $positions, 
+                        array(
+                            'FILEPLAN_ID' => $line->fileplan_id, 
+                            'POSITION_ID' => $line->position_id
+                        )
+                    );
+				}
+            }
+			return $positions;
+        } else {
+            return false;
+        }
+    }
+	/**
+	*
+	*
+	*
+	*/
+	public function getPositionState($fileplan_id, $position_id, $resid_array) {
+		// echo $fileplan_id.'/'.$position_id.'/'.count($resid_array).'<br/>';
+		if (!empty($fileplan_id) 
+			&& !empty($position_id) 
+			&& count($resid_array) > 0
+		) {
+            $this->connect();
+			
+			$nb_res = count($resid_array);
+			$nb_match = 0;
+			
+            for($i=0; $i < $nb_res; $i++) {
+				
+                $this->query(
+                    "SELECT * FROM "
+                    . FILEPLAN_RES_POSITIONS_TABLE
+                    . " WHERE fileplan_id = " . $fileplan_id 
+                    . " AND position_id = '" . $position_id 
+                    . "' AND res_id = " . $resid_array[$i]['RES_ID']
+                    . " AND coll_id = '".$resid_array[$i]['COLL_ID']
+                    . "'"
+                );
+                // $this->show();
+				if($this->nb_result() > 0) {
+					$nb_match ++;
+				}
+            }
+			
+			if ($nb_match == 0) {
+				return 'false';
+			} else if ($nb_match == $nb_res){
+				return 'true';
+			} else {
+				return 'partial';
+			}			
+        } else {
+            return false;
+        }
+	}
 }
-

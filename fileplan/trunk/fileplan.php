@@ -39,17 +39,12 @@ $fileplan   = new fileplan();
 
 $core_tools->test_service('fileplan', 'fileplan');
 
-//Get fileplan
-$userFileplanArray = $fileplan->getUserFileplan();
-$entitiesFileplanArray = $fileplan->getEntitiesFileplan();
+//Get fileplans
+$fileplans_array = $fileplan->getAuthorizedFileplans();
 
-$fileplans_array = array();
-$fileplans_array = array_merge ($userFileplanArray, $entitiesFileplanArray);
-// print_r($_SESSION['collections']);
-// print_r($userFileplanArray);
-// print_r($entitiesFileplanArray);
+// print_r($fileplans_array);
 
-if (count($userFileplanArray) > 0 || count($entitiesFileplanArray) > 0)  {
+if (count($fileplans_array) > 0)  {
 	
 	/****************Management of the location bar  ************/
 	$init = false;

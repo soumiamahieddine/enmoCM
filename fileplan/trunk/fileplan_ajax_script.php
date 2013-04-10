@@ -1201,7 +1201,10 @@ switch ($mode) {
         }
     break;
     case 'setPosition':
+		//Reset checked positions array
+		unset($_SESSION['checked_positions']);
         $_SESSION['checked_positions'] = array();
+		
 		$fileplan_id ='';
         if (isset($_REQUEST['values']) && count($_REQUEST['values']) > 0) {
 			//Selected ressources
@@ -1218,94 +1221,90 @@ switch ($mode) {
 				}
             }
             //Get selected res_id
-                $values_array = array();
-                //Filter empty and double
-                $values_array = array_unique(array_filter($selected_values));
-                $values = join(',', $values_array);
-                // $content .='AVANT: '.join(',', $selected_values) .'<br/>APRES: '.$values ; //DEBUG
-                
+            $values_array = array();
+            //Filter empty and double
+            $values_array = array_unique(array_filter($selected_values));
+            $values = join(',', $values_array);
+			//Add to url
+			$extraUrl .="&res_id=".$values;
+            // $content .='AVANT: '.join(',', $selected_values) .'<br/>APRES: '.$values ; //DEBUG
+            
             //Selected label (update mode)
-                if (isset($_REQUEST['actual_position_id']) && !empty($_REQUEST['actual_position_id'])) {
-					if (isset($_REQUEST['fileplan_id']) && !empty($_REQUEST['fileplan_id'])) {
-						//fileplan ID
-						$fileplan_id = $_REQUEST['fileplan_id'];
-						//Preselect actual position
-						$_SESSION['checked_positions'][$_REQUEST['actual_position_id']] = 'true';
-						//Add it to next url step...
-						$extraUrl="&actual_position_id=".$_REQUEST['actual_position_id'];
-						//...and to hidden field
-						$extraContent .=  '<input type="hidden" name="actual_position_id" value="'.$_REQUEST['actual_position_id'].'" />';
-					} else {
-						$error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
-						$status = 1;
-					}
-                }
+            if (isset($_REQUEST['actual_position_id']) && !empty($_REQUEST['actual_position_id'])) {
+				if (isset($_REQUEST['fileplan_id']) && !empty($_REQUEST['fileplan_id'])) {
+					//fileplan ID
+					$fileplan_id = $_REQUEST['fileplan_id'];
+					//Preselect actual position
+					$_SESSION['checked_positions'][$fileplan_id][$_REQUEST['actual_position_id']] = 'true';
+					//Add it to next url step...
+					$extraUrl .="&actual_position_id=".$_REQUEST['actual_position_id'];
+					//...and to hidden field
+					$extraContent .=  '<input type="hidden" name="actual_position_id" value="'.$_REQUEST['actual_position_id'].'" />';
+				} else {
+					$error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
+					$status = 1;
+				}
+            }
             //Form
-                $content .= '<form name="formFileplan" id="formFileplan" method="post" action="#" class="forms">';
-                $content .= $extraContent;
-                $content .= '<input type="hidden" name="res_id" value="'.$values.'" />';
-				$content .= '<h2>'._SET_DOC_TO_POSITION.' : </h2>';
-				$content .= '<label>'._FILEPLAN.': </label><br/>';
-				$content .='<select name="fileplan_id" id="fileplan_id" class="fileplan_position" '
-					.'onChange="loadFileplanList(\'selectedPosition\', \'positionsList\', \''
-                    .$_SESSION['config']['businessappurl'].'index.php?display=true&module='
-                    .'fileplan&page=positions_checked_list_autocompletion'.$extraUrl
-					.'&fileplan_id=\' + document.formFileplan.fileplan_id.value);">';
-				$content .='<option value="">'._CHOOSE_FILEPLAN.'</option>';
-				//User personnal fileplan
-				$fileplan_array = $fileplan->getUserFileplan();
-				for($i=0; $i < count($fileplan_array); $i++) {
-					//Is enable ?
-					if ($fileplan_array[$i]['ENABLED'] == 'Y') { 
-						//Selected?
-						($fileplan_id == $fileplan_array[$i]['ID'] || count($fileplan_array) == 1)? $selected = ' selected="selected"' : $selected = '';
-						$content .='<option value="'.$fileplan_array[$i]['ID'].'"'.$selected.' >'
-							.$fileplan_array[$i]['LABEL'].'</option>';
-					}
+            $content .= '<form name="formFileplan" id="formFileplan" method="post" action="#" class="forms">';
+            $content .= $extraContent;
+            $content .= '<input type="hidden" name="res_id" value="'.$values.'" />';
+			$content .= '<h2>'._SET_DOC_TO_POSITION.' : </h2>';
+			$content .= '<label>'._FILEPLAN.': </label><br/>';
+			$content .='<select name="fileplan_id" id="fileplan_id" class="fileplan_position" '
+				.'onChange="loadFileplanList(\'selectedPosition\', \'positionsList\', \''
+                .$_SESSION['config']['businessappurl'].'index.php?display=true&module='
+                .'fileplan&page=positions_checked_list_autocompletion'.$extraUrl
+				.'&fileplan_id=\' + document.formFileplan.fileplan_id.value);">';
+			$content .='<option value="">'._CHOOSE_FILEPLAN.'</option>';
+			//User personnal fileplan
+			$userFileplanArray = $fileplan->getUserFileplan();
+			//Entities fileplan
+			$entitiesFileplanArray = array();
+			if ($core_tools->test_service('put_doc_in_fileplan', 'fileplan', false)) {
+				$entitiesFileplanArray = $fileplan->getEntitiesFileplan();
+			}
+			//Merge all
+			$fileplan_array = array_merge ($userFileplanArray, $entitiesFileplanArray);
+			for($i=0; $i < count($fileplan_array); $i++) {
+				//Is enable ?
+				if ($fileplan_array[$i]['ENABLED'] == 'Y') { 
+					//Selected?
+					($fileplan_id == $fileplan_array[$i]['ID'] || count($fileplan_array) == 1)? $selected = ' selected="selected"' : $selected = '';
+					$content .='<option value="'.$fileplan_array[$i]['ID'].'"'.$selected.' >'
+						.$fileplan_array[$i]['LABEL'].'</option>';
 				}
-				
-				//Entities fileplan
-				if ($core_tools->test_service('put_doc_in_fileplan', 'fileplan', false)) {
-					$fileplan_array = $fileplan->getEntitiesFileplan();
-					for($i=0; $i < count($fileplan_array); $i++) {
-						//Is enable ?
-						if ($fileplan_array[$i]['ENABLED'] == 'Y') { 
-							//Selected?
-						(count($fileplan_array) == 1 && empty($selected))? $selected = ' selected="selected"' : $selected = '';
-							$content .='<option value="'.$fileplan_array[$i]['ID'].'"'.$selected.'>'
-								.$fileplan_array[$i]['LABEL'].'</option>';
-						}
-					}
-				}
-				$content .='</select><br/><br/>';
-				//Autocompletion
-				$content .= '<label>'._SEARCH.': </label><br/>';
-                $content .= '<input type="text" name="selectedPosition"  id="selectedPosition"'
-                    .' value="" class="fileplan_position" onKeyUp="loadFileplanList(\'selectedPosition\', \'positionsList\', \''
-                    .$_SESSION['config']['businessappurl'].'index.php?display=true&module='
-                    .'fileplan&page=positions_checked_list_autocompletion'.$extraUrl
-					.'&fileplan_id=\' + document.formFileplan.fileplan_id.value);" /><br/><br/>';
-				//Content 
-                $content .= '<div style="width:585px; height:300px; border:1px solid; overflow-x:hidden; overflow-y:auto; padding:5px;">'; 
-                $content .= '<div id="loadingFileplan" style="display:none;"><img src="'.$_SESSION['config']['businessappurl']
-                    .'static.php?filename=loading.gif" width="24px" height="24px" /></div>';
-                $content .= '<div id="positionsList"></div>';
-                $content .='</div>';
-                
-                //Buttons
-                $content .='<hr />';
-                $content .='<div align="center">';
-                $content .=' <input type="button" name="valid" value="&nbsp;'._VALIDATE
-                            .'&nbsp;" id="valid" class="button" onclick="validFileplanForm(\''
-                            .$path_to_script.'&mode=set&origin='.$origin.'\', \'formFileplan\');" />&nbsp;';
-                $content .='<input type="button" name="cancel" id="cancel" class="button"  value="'
-                            ._CANCEL.'" onclick="destroyModal(\'modal_fileplan\');"/>';
-                $content .='</div">';
-                $content .= '</form>';
-                $content .='<script type="text/javascript">loadFileplanList(\'selectedPosition\', \'positionsList\', \''
-                            .$_SESSION['config']['businessappurl'].'index.php?display=true&module='
-                            .'fileplan&page=positions_checked_list_autocompletion'.$extraUrl
-							.'&fileplan_id=\' + document.formFileplan.fileplan_id.value);</script>';
+			}
+			
+			$content .='</select><br/><br/>';
+			//Autocompletion
+			$content .= '<label>'._SEARCH.': </label><br/>';
+            $content .= '<input type="text" name="selectedPosition"  id="selectedPosition"'
+                .' value="" class="fileplan_position" onKeyUp="loadFileplanList(\'selectedPosition\', \'positionsList\', \''
+                .$_SESSION['config']['businessappurl'].'index.php?display=true&module='
+                .'fileplan&page=positions_checked_list_autocompletion'.$extraUrl
+				.'&fileplan_id=\' + document.formFileplan.fileplan_id.value);" /><br/><br/>';
+			//Content 
+            $content .= '<div style="width:585px; height:300px; border:1px solid; overflow-x:hidden; overflow-y:auto; padding:5px;">'; 
+            $content .= '<div id="loadingFileplan" style="display:none;"><img src="'.$_SESSION['config']['businessappurl']
+                .'static.php?filename=loading.gif" width="24px" height="24px" /></div>';
+            $content .= '<div id="positionsList"></div>';
+            $content .='</div>';
+            
+            //Buttons
+            $content .='<hr />';
+            $content .='<div align="center">';
+            $content .=' <input type="button" name="valid" value="&nbsp;'._VALIDATE
+                .'&nbsp;" id="valid" class="button" onclick="validFileplanForm(\''
+                .$path_to_script.'&mode=set&origin='.$origin.'\', \'formFileplan\');" />&nbsp;';
+            $content .='<input type="button" name="cancel" id="cancel" class="button"  value="'
+                ._CANCEL.'" onclick="destroyModal(\'modal_fileplan\');"/>';
+            $content .='</div">';
+            $content .= '</form>';
+            $content .='<script type="text/javascript">loadFileplanList(\'selectedPosition\', \'positionsList\', \''
+                .$_SESSION['config']['businessappurl'].'index.php?display=true&module='
+                .'fileplan&page=positions_checked_list_autocompletion'.$extraUrl
+				.'&fileplan_id=\' + document.formFileplan.fileplan_id.value);</script>';
         } else {
             $error = $request->wash_html(_CHOOSE_ONE_DOC.'!','NONE');
             $status = 1;
@@ -1315,20 +1314,9 @@ switch ($mode) {
          //Get RES_ID
         if (isset($_REQUEST['res_id']) && !empty($_REQUEST['res_id'])) {
 
-            $resIdArray = $res_array = array();
-            $resIdArray = explode (',', $_REQUEST['res_id']);
+			//Build res_array
+			$res_array = $fileplan->buildResArray($_REQUEST['res_id']);
 			
-			//Separate coll_id and res_id
-			for($i = 0; $i < count($resIdArray); $i++) {
-				//Get info
-				$tmp = explode('@@', $resIdArray[$i]);
-				array_push($res_array, 
-					array(
-						'COLL_ID' => $tmp[0],
-						'RES_ID' => $tmp[1]
-					)
-				);
-			}
 		    //Fileplan ID
 			if (isset($_REQUEST['fileplan_id']) && !empty($_REQUEST['fileplan_id'])) {
 				
@@ -1434,15 +1422,10 @@ switch ($mode) {
 					if (isset($_REQUEST['coll_id']) && !empty($_REQUEST['coll_id'])) {
 						//Get COLL_ID
 						$coll_id = $_REQUEST['coll_id'];
-						
-						//Build res array
-						$res_array = array();
-						array_push($res_array, 
-							array(
-								'COLL_ID' => $coll_id,
-								'RES_ID' => $res_id
-							)
-						);
+
+						//Build res_array
+						$res_array = $fileplan->buildResArray($coll_id.'@@'.$res_id);
+		
 						//Remove doc from position
 						$fileplan->remove($fileplan_id, $position_id, $res_array);
 						
@@ -1483,10 +1466,12 @@ switch ($mode) {
 			//Fileplan ID
 			if (isset($_REQUEST['fileplan_id']) && !empty($_REQUEST['fileplan_id'])) {
 				//
+				$fileplan_id = $_REQUEST['fileplan_id'];
+				
 				if ($_REQUEST['checked'] == 'true') {
-					$_SESSION['checked_positions'][$_REQUEST['value']] = $_REQUEST['checked'];
+					$_SESSION['checked_positions'][$fileplan_id][$_REQUEST['value']] = $_REQUEST['checked'];
 				} else  if ($_REQUEST['checked'] == 'false') {
-					unset($_SESSION['checked_positions'][$_REQUEST['value']]);
+					unset($_SESSION['checked_positions'][$fileplan_id][$_REQUEST['value']]);
 				}
 				$js = 'loadFileplanList(\'selectedPosition\', \'positionsList\', \''
 					.$_SESSION['config']['businessappurl'].'index.php?display=true&module='
