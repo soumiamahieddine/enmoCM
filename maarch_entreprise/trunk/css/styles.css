@@ -3204,6 +3204,7 @@ hr{
     background-repeat: no-repeat;
     background-position : 2px top;
 }
+
 #admin_contacts {
 /*  background:  url(static.php?filename=manage_architecture.gif) no-repeat 2px top;*/
     background-image : url(static.php?filename=manage_contacts.gif);
@@ -3213,6 +3214,13 @@ hr{
 
 #admin_reopen_mail {
     background-image : url(static.php?filename=file_status.gif);
+    background-repeat: no-repeat;
+    background-position : 2px top;
+}
+
+#admin_parameters {
+/*  background:  url(static.php?filename=manage_architecture.gif) no-repeat 2px top;*/
+    background-image : url(static.php?filename=picto_admin_parameters.gif);
     background-repeat: no-repeat;
     background-position : 2px top;
 }
