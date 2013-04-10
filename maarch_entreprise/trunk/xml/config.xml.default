@@ -362,4 +362,8 @@
         <moduleid>photo_capture</moduleid>
         <comment>_PHOTO_CAPTURE_COMMENT</comment>
     </MODULES>
+    <MODULES>
+        <moduleid>fileplan</moduleid>
+        <comment>_FILEPLAN_COMMENT</comment>
+    </MODULES>
 </ROOT>
