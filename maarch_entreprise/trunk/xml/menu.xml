@@ -36,7 +36,7 @@
     <MENU>
         <id>index_business</id>
         <libconst>_INDEXING_BUSINESS</libconst>
-        <url>index.php?page=view_baskets&amp;module=basket&amp;baskets=businessIndexation</url>
+        <url>index.php?page=view_baskets&amp;module=basket&amp;baskets=BusinessIndexation</url>
         <style>indexing</style>
     </MENU>
     <MENU>
