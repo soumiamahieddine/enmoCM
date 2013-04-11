@@ -1174,3 +1174,5 @@ if (!defined('_TOTAL_SUM_MAX_HELP')) define('_TOTAL_SUM_MAX_HELP', 'Max total su
 
 /*************** COLD **************/
 if (!defined('_OUTGOING_INVOICE')) define('_OUTGOING_INVOICE', 'Collection COLD Outgoing invoices');
+
+if (!defined('_NOT_EXISTS')) define('_NOT_EXISTS', 'not exists');

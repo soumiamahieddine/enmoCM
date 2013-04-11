@@ -251,13 +251,17 @@ if (!empty($_REQUEST['submit'])) {
     }
 }
 
+if ($_REQUEST['id'] == '') {
+    $_REQUEST['id'] = 0;
+}
+
 $readonly = true;
 $is_private = false;
 $is_personal = false;
 $is_owner = false;
 $db->query("select * from ".$_SESSION['tablename']['contacts']." where contact_id = ".$_REQUEST['id']."  ");
 if($db->nb_result() == 0) {
-    $_SESSION['error'] = _THE_CONTACT.' '._NOT_EXISTS;
+    $_SESSION['error'] = _CONTACT.' '._NOT_EXISTS;
     $state = false;
 }
 else

@@ -1459,3 +1459,5 @@ if (!defined('_TOTAL_SUM_MAX_HELP')) define('_TOTAL_SUM_MAX_HELP', 'Total TTC ma
 
 /*************** COLD **************/
 if (!defined('_OUTGOING_INVOICE')) define('_OUTGOING_INVOICE', 'Collection COLD factures clients');
+
+if (!defined('_NOT_EXISTS')) define('_NOT_EXISTS', 'n&rsquo;existe pas');
