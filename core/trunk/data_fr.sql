@@ -58,7 +58,7 @@ INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUE
 ------------
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('COU', 'En cours', 'Y', 'mail.gif', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('DEL', 'Supprimé', 'Y', NULL, 'apps', 'N', 'Y');
-INSERT INTO status VALUES ('END', 'Clos / fin du workflow', 'Y', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status VALUES ('END', 'Clos / fin du workflow', 'Y', 'N', 'mail_end.gif', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('NEW', 'Nouveau', 'Y', '', 'apps', 'Y', 'Y');
 INSERT INTO status VALUES ('RET', 'Retour courrier ou document en qualification', 'N', 'N', '', 'apps', 'Y', 'Y');
 INSERT INTO status VALUES ('SIG', 'A signer', 'N', 'N', '', 'apps', 'Y', 'Y');
