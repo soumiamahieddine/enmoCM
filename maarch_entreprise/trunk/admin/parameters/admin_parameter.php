@@ -54,7 +54,11 @@ $view = new DOMDocument();
     . 'template' . DIRECTORY_SEPARATOR . 'admin_parameter.html' 
 );
 $xview = new DOMXPath($view);
-
+# Set id attributes in view
+$ids = $xview->query('//*[@id]');
+for($i=0, $l=$ids->length; $i<$l; $i++)
+    $ids->item($i)->setIdAttribute('id', true);
+    
 # Set action mode
 $mode = $view->getElementById("mode");
 $mode->setAttribute('value', $_REQUEST['mode']);
