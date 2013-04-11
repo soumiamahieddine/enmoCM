@@ -53,6 +53,10 @@ $view->loadHTMLFile(
     __DIR__ . '/html/admin_difflist_type.html' 
 );
 $xview = new DOMXPath($view);
+# Set id attributes in view
+$ids = $xview->query('//*[@id]');
+for($i=0, $l=$ids->length; $i<$l; $i++)
+    $ids->item($i)->setIdAttribute('id', true);
 
 # Set action mode
 $mode = $view->getElementById("mode");
