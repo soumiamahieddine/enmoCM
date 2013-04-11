@@ -727,7 +727,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             }
             $frm_str .= '>' . $statuses[$i]['LABEL'] . '</option>';
         }
-        $frm_str .= '</select></td>';
+        $frm_str .= '</select></td><td><span class="red_asterisk" id="market_mandatory" '
+                . 'style="display:inline;">*</span>&nbsp;</td>';
         $frm_str .= '</tr>';
     }
     

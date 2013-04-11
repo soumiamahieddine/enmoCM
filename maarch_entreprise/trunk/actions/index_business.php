@@ -631,7 +631,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             }
             $frmStr .= '>' . $statuses[$i]['LABEL'] . '</option>';
         }
-        $frmStr .= '</select></td>';
+        $frmStr .= '</select></td><td><span class="red_asterisk" id="market_mandatory" '
+                . 'style="display:inline;">*</span>&nbsp;</td>';
         $frmStr .= '</tr>';
     }
     
