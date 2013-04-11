@@ -56,7 +56,7 @@ $list = new list_show();
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     $what = $func->protect_string_db($_REQUEST['what']);
-	$where = " lower(id) like lower('".$what."%') or lower(description) like lower('".$what."%') ";
+	$where = " lower(id) like lower('".$what."%') or lower(description) like lower('%".$what."%') ";
 }
 
 $order = 'asc';
