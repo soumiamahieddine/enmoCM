@@ -439,12 +439,22 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '</label></td>';
     $frmStr .= '<td class="indexing_field">'
         . '<select id="currency" name="currency" onchange="clear_error(\'frm_error_' . $actionId
-        . '\');convertAllBusinessAmount();">'
-        . '<option value="EUR">EURO €</option>'
-        . '<option value="DOL">DOLLAR $</option>'
-        . '<option value="YEN">YEN ¥</option>'
-        . '<option value="POU">POUND £</option>'
-        .'</select>'
+        . '\');convertAllBusinessAmount();">';
+	foreach (array_keys($_SESSION['currency']) as $currency) {
+		$frmStr .= '<option value="' . $currency . '"';
+		if ($_SESSION['default_currency'] == $currency) {
+			$frmStr .= 'selected="selected"';
+		}
+		$frmStr .= '>' . $_SESSION['currency'][$currency] . '</option>';
+	}
+		/*
+    $frmStr .=  '<option value="EUR">EURO €</option>'
+        . '<option value="USD">DOLLAR $</option>'
+        . '<option value="JPY">YEN ¥</option>'
+        . '<option value="GBP">POUND £</option>'
+        . '<option value="XOF">CFA F</option>';*/
+		
+    $frmStr .= '</select>'
         . '</td>';
     $frmStr .= '<td><span class="red_asterisk" id="currency_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';

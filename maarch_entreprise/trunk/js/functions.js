@@ -2542,12 +2542,14 @@ function convertAmount(currency, amount)
 {
     if (currency == 'EUR') {
         return accounting.formatMoney(amount, '€', 2, '.', ',');
-    } else if  (currency == 'DOL') {
+    } else if  (currency == 'USD') {
         return accounting.formatMoney(amount, '$', 2, '.', ',');
-    } else if  (currency == 'YEN') {
+    } else if  (currency == 'JPY') {
         return accounting.formatMoney(amount, '¥', 2, '.', ',');
-    } else if  (currency == 'POU') {
+    } else if  (currency == 'GBP') {
         return accounting.formatMoney(amount, '£', 2, '.', ',');
+    }else if  (currency == 'XOF') {
+        return accounting.formatMoney(amount, 'F', 2, '.', ',');
     } else {
         return accounting.formatMoney(amount, '', 2, '', '.');
     }

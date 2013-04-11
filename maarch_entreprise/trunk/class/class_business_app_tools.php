@@ -432,6 +432,22 @@ class business_app_tools extends dbquery
             }
             $_SESSION['default_mail_title'] = (string) $mailTitles->default_title;
         }
+		
+		$_SESSION['currency'] = array();
+        $currency = $xmlfile->currency;
+        if (count($currency) > 0) {
+            $i = 0;
+            foreach ($currency->cur as $cur ) {
+                $label = (string) $cur->label;
+                if (!empty($label) && defined($label)
+                    && constant($label) <> NULL
+                ) {
+                    $label = constant($label);
+                }
+                $_SESSION['currency'][(string)$cur->id] = $label;
+            }
+            $_SESSION['default_currency'] = (string) $currency->default_currency;
+        }
         
     }
 
