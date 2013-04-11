@@ -10,11 +10,11 @@
         name='maarch_entreprise' 
         type='database' 
         driver='postgresql' 
-        host='localhost' 
-        port='5432' 
-        dbname='maarch_entreprise' 
-        user='postgres' 
-        password='maarch' />
+        host='##databaseserver##' 
+        port='##databaseserverport##' 
+        dbname='##databasename##' 
+        user='##databaseuser##' 
+        password='##databasepassword##' />
     </xsd:appinfo>
   </xsd:annotation>
 </xsd:schema>
