@@ -367,6 +367,7 @@ if (isset($_REQUEST['nodetails'])) {
         </td>
     </tr>
 </table>
+
 <table align="center" border="0" width="100%">
 <?php
             if ($core_tools->is_module_loaded("basket") == true) { ?>
@@ -394,7 +395,13 @@ if (isset($_REQUEST['nodetails'])) {
                                     <?php 
                                     if ($_REQUEST['mode'] != 'popup') {
                                         for ($i=0; $i< count($_SESSION['user']['baskets']);$i++) {
-                                            if ($_SESSION['user']['baskets'][$i]['coll_id'] == $coll_id && $_SESSION['user']['baskets'][$i]['is_folder_basket'] == 'N') {
+                                             if (
+                                                $_SESSION['user']['baskets'][$i]['coll_id'] == $coll_id 
+                                                && $_SESSION['user']['baskets'][$i]['is_folder_basket'] == 'N'
+                                                && $_SESSION['user']['baskets'][$i]['id'] <> 'BusinessQualify'
+                                                && $_SESSION['user']['baskets'][$i]['id'] <> 'BusinessQualifyRet'
+                                                && $_SESSION['user']['baskets'][$i]['id'] <> 'BusinessIndexation'
+                                            ) {
                                                 ?><option id="<?php 
                                                     echo $_SESSION['user']['baskets'][$i]['id'];
                                                     ?>" value="<?php 

@@ -489,7 +489,15 @@ if(isset($_REQUEST['nodetails']))
                                     <?php 
                                     if($_REQUEST['mode'] != 'popup') {
                                         for($i=0; $i< count($_SESSION['user']['baskets']);$i++) {
-                                            if ($_SESSION['user']['baskets'][$i]['coll_id'] == $coll_id && $_SESSION['user']['baskets'][$i]['is_folder_basket'] == 'N') {
+                                            if (
+                                                $_SESSION['user']['baskets'][$i]['coll_id'] == $coll_id 
+                                                && $_SESSION['user']['baskets'][$i]['is_folder_basket'] == 'N'
+                                                && $_SESSION['user']['baskets'][$i]['id'] <> 'IndexingBasket'
+                                                && $_SESSION['user']['baskets'][$i]['id'] <> 'EmailsToQualify'
+                                                && $_SESSION['user']['baskets'][$i]['id'] <> 'InitBasket'
+                                                && $_SESSION['user']['baskets'][$i]['id'] <> 'RetourCourrier'
+                                                && $_SESSION['user']['baskets'][$i]['id'] <> 'QualificationBasket'
+                                            ) {
                                                 ?><option id="<?php 
                                                     echo $_SESSION['user']['baskets'][$i]['id'];
                                                     ?>" value="<?php 
