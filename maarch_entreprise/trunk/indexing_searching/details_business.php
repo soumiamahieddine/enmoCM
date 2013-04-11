@@ -222,7 +222,7 @@ if (isset($_POST['submit_index_doc'])) {
                 $_SESSION['details']['diff_list'], 
                 $_SESSION['details']['diff_list']['object_type'],
                 $coll_id, 
-                $res_id, 
+                $s_id, 
                 $_SESSION['user']['UserId']
             );
         $_SESSION['details']['diff_list']['key_value'] = md5($res_id);
