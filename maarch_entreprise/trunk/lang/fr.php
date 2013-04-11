@@ -1461,3 +1461,11 @@ if (!defined('_TOTAL_SUM_MAX_HELP')) define('_TOTAL_SUM_MAX_HELP', 'Total TTC ma
 if (!defined('_OUTGOING_INVOICE')) define('_OUTGOING_INVOICE', 'Collection COLD factures clients');
 
 if (!defined('_NOT_EXISTS')) define('_NOT_EXISTS', 'n&rsquo;existe pas');
+
+/*************** ARCHIVE **************/
+if (!defined('_INDEX_ARCHIVE')) define('_INDEX_ARCHIVE', '[archive] Verser une archive');
+if (!defined('_RM_ITEMS_TRANSFER')) define('_RM_ITEMS_TRANSFER', '[archive] Transfert des items');
+
+/*************** FOLDER **************/
+if (!defined('_CONFIRM_FOLDER_STATUS')) define('_CONFIRM_FOLDER_STATUS', '[dossier] Confirmer le statut du dossier');
+if (!defined('_REDIRECT_FOLDER')) define('_REDIRECT_FOLDER', '[dossier] Rediriger le dossier');

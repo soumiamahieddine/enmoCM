@@ -1176,3 +1176,11 @@ if (!defined('_TOTAL_SUM_MAX_HELP')) define('_TOTAL_SUM_MAX_HELP', 'Max total su
 if (!defined('_OUTGOING_INVOICE')) define('_OUTGOING_INVOICE', 'Collection COLD Outgoing invoices');
 
 if (!defined('_NOT_EXISTS')) define('_NOT_EXISTS', 'not exists');
+
+/*************** ARCHIVE **************/
+if (!defined('_INDEX_ARCHIVE')) define('_INDEX_ARCHIVE', '[archive] Index archive');
+if (!defined('_RM_ITEMS_TRANSFER')) define('_RM_ITEMS_TRANSFER', '[archive] Items transfer');
+
+/*************** FOLDER **************/
+if (!defined('_CONFIRM_FOLDER_STATUS')) define('_CONFIRM_FOLDER_STATUS', '[dossier] Confirm folder status');
+if (!defined('_REDIRECT_FOLDER')) define('_REDIRECT_FOLDER', '[dossier] Redirect folder');
