@@ -254,6 +254,7 @@ INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'update_list_diff_in_de
 INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'admin_templates');
 INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'tag_view');
 INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'view_baskets');
+INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'adv_search_mlb');
 
 INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'admin');
 INSERT INTO usergroups_services VALUES ('ADMINISTRATEUR', 'adv_search_mlb');
@@ -2998,7 +2999,7 @@ INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, fol
 INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, status, folder_level, creation_date, is_frozen, custom_t1, custom_t2, custom_t3, custom_n3, is_complete, is_folder_out) VALUES (2247, 'V.8.1 - Association des Maires de France ', 100, 2246, 'V.8.1 - Association des Maires de France ', 'NEW', 4, '2012-12-06', 'N', 'minimal', 'AR038', 'conserver', 0, 'N', 'N');
 INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, status, folder_level, creation_date, is_frozen, custom_t1, custom_t2, custom_t3, custom_n3, is_complete, is_folder_out) VALUES (2248, 'V.8.2 - Observatoire Zonal de la Sécurité des Systèmes d''Information (O.Z.S.S.I.)', 100, 2246, 'V.8.2 - Observatoire Zonal de la Sécurité des Systèmes d''Information (O.Z.S.S.I.)', 'NEW', 4, '2012-12-06', 'N', 'minimal', 'AR038', 'conserver', 0, 'N', 'N');
 
-alter sequence folders_system_id_seq restart 3000;
+alter sequence folders_system_id_seq restart 10000;
 
 -----------------
 --RM_AGREEMENTS--
@@ -3243,7 +3244,7 @@ VALUES (100, '[archivage] Tableau de Gestion', 100, 0, 'Tableau de Gestion Archi
 INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date, folder_out_id, video_status, video_user, is_frozen, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_d11, custom_t12, custom_d12, custom_t13, custom_d13, custom_t14, custom_d14, custom_t15, is_complete, is_folder_out, last_modified_date) 
 VALUES (101, '[archivage] Plan de Classement', 101, 0, 'Plan de Classement Archivistique', NULL, NULL, NULL, 'superadmin', 'NEW', 2, '2012-03-02 18:32:07.22', NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', '2012-03-02 18:32:07.22');
 
-alter sequence folders_system_id_seq restart 102;
+alter sequence folders_system_id_seq restart 10000;
 
 ------------
 --LC_POLICIES--
