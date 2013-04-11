@@ -181,6 +181,7 @@ INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'admin_templates');
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'add_new_version');
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'add_tag_to_res');
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'view_baskets');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'sendmail');
 
 INSERT INTO usergroups_services VALUES ('AGENT', 'adv_search_mlb');
 INSERT INTO usergroups_services VALUES ('AGENT', 'index_mlb');
@@ -201,6 +202,7 @@ INSERT INTO usergroups_services VALUES ('AGENT', 'create_folder');
 INSERT INTO usergroups_services VALUES ('AGENT', 'add_new_version');
 INSERT INTO usergroups_services VALUES ('AGENT', 'tag_view');
 INSERT INTO usergroups_services VALUES ('AGENT', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('AGENT', 'sendmail');
 
 INSERT INTO usergroups_services VALUES ('COURRIER', 'admin');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'adv_search_mlb');
@@ -229,6 +231,7 @@ INSERT INTO usergroups_services VALUES ('COURRIER', 'reports');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'add_new_version');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'tag_view');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'sendmail');
 
 
 INSERT INTO usergroups_services VALUES ('ELU', 'adv_search_mlb');
@@ -243,6 +246,7 @@ INSERT INTO usergroups_services VALUES ('ELU', 'reports');
 INSERT INTO usergroups_services VALUES ('ELU', 'add_new_version');
 INSERT INTO usergroups_services VALUES ('ELU', 'tag_view');
 INSERT INTO usergroups_services VALUES ('ELU', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('ELU', 'sendmail');
 
 INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'admin');
 INSERT INTO usergroups_services VALUES ('RESP_COURRIER', 'index_mlb');
