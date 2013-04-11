@@ -42,8 +42,9 @@ if (strlen(trim($_REQUEST['what'])) > 0 && !empty($_REQUEST['fileplan_id'])) {
 
     $db->query(
                "select  position_id, position_label, position_enabled from "
-               . FILEPLAN_VIEW." where fileplan_id = ".$_REQUEST['fileplan_id']." and user_id = '" 
-               . $_SESSION['user']['UserId']."' and position_enabled = 'Y'"
+               . FILEPLAN_VIEW." where fileplan_id = ".$_REQUEST['fileplan_id']
+               // . " and user_id = '".$_SESSION['user']['UserId']."'"
+			   . " and position_enabled = 'Y'"
                ." and lower(position_label) like lower('%"
                . $label."%') order by position_label"
                );
