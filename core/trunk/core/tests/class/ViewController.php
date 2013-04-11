@@ -54,6 +54,12 @@ class ViewController
         
         parent::__construct($view);
         $this->view = $this->document;
+        
+        # Set id attributes in view
+        $ids = $this->query('//*[@id]');
+        for($i=0, $l=$ids->length; $i<$l; $i++)
+            $ids->item($i)->setIdAttribute('id', true);
+        
         return $this->view;
     }
     
@@ -65,6 +71,12 @@ class ViewController
         
         parent::__construct($view);
         $this->view = $this->document;
+        
+        # Set id attributes in view
+        $ids = $this->query('//*[@id]');
+        for($i=0, $l=$ids->length; $i<$l; $i++)
+            $ids->item($i)->setIdAttribute('id', true);
+        
         return $this->view;
     }
 
