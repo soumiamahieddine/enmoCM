@@ -2185,7 +2185,7 @@ class lists extends dbquery
     
     private function _createActionsList($currentBasket) {
         
-        if (count($currentBasket) > 0 && $this->params['bool_standaloneForm'] === false) {
+        if (count($currentBasket) > 0 ) {
            
             //Default action
             if(!empty($currentBasket['default_action'])) {
