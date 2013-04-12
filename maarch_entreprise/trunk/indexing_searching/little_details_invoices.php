@@ -22,22 +22,6 @@ require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
 require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_types.php";
 
-if (file_exists(
-    $_SESSION['config']['corepath'] . 'custom'. DIRECTORY_SEPARATOR
-    . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-    . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
-    . 'definition_mail_categories.php'
-)
-) {
-    $path = $_SESSION['config']['corepath'] . 'custom'. DIRECTORY_SEPARATOR
-          . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-          . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-          . DIRECTORY_SEPARATOR . 'definition_mail_categories.php';
-} else {
-    $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-          . DIRECTORY_SEPARATOR . 'definition_mail_categories.php';
-}
-include_once $path;
 $core = new core_tools();
 $core->test_user();
 $core->load_lang();
@@ -64,6 +48,42 @@ if (isset($_SESSION['collection_id_choice'])
 } else {
 	$collId = $_SESSION['user']['collections'][0];
 }
+if ($collId == 'letterbox_coll') {
+	if (file_exists(
+		$_SESSION['config']['corepath'] . 'custom'. DIRECTORY_SEPARATOR
+		. $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+		. DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
+		. 'definition_mail_categories.php'
+	)
+	) {
+		$path = $_SESSION['config']['corepath'] . 'custom'. DIRECTORY_SEPARATOR
+			  . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+			  . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+			  . DIRECTORY_SEPARATOR . 'definition_mail_categories.php';
+	} else {
+		$path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+			  . DIRECTORY_SEPARATOR . 'definition_mail_categories.php';
+	}
+
+} elseif($collId == 'business_coll') {
+	if (file_exists(
+		$_SESSION['config']['corepath'] . 'custom'. DIRECTORY_SEPARATOR
+		. $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+		. DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
+		. 'definition_mail_categories_business.php'
+	)
+	) {
+		$path = $_SESSION['config']['corepath'] . 'custom'. DIRECTORY_SEPARATOR
+			  . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+			  . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+			  . DIRECTORY_SEPARATOR . 'definition_mail_categories_business.php';
+	} else {
+		$path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+			  . DIRECTORY_SEPARATOR . 'definition_mail_categories_business.php';
+	}
+}
+
+include_once $path;
 
 $table = $security->retrieve_view_from_coll_id($collId);
 $isView = true;
@@ -146,14 +166,14 @@ if (empty($_SESSION['error'])) {
         }
     }
     $caseSqlComplementary = '';
-    if ($core->is_module_loaded('cases') == true) {
+    if ($core->is_module_loaded('cases') == true && $table == 'res_view_letterbox') {
         $caseSqlComplementary = " , case_id";
     }
     $db->query(
     	"select status, format, typist, creation_date, fingerprint, filesize, "
         . "res_id, work_batch, page_count, is_paper, scan_date, scan_user, "
         . "scan_location, scan_wkstation, scan_batch, source, doc_language, "
-        . "description, closing_date, alt_identifier, type_id " . $compFields
+        . "description, closing_date, type_id " . $compFields
         . $caseSqlComplementary . " from " . $table . " where res_id = "
         . $resId
     );
@@ -249,7 +269,7 @@ if (! empty($_SESSION['error']) ) {
             }
         }
         //$db->show_array($indexes);
-        $processData = $is->get_process_data($collId, $resId);
+        // $processData = $is->get_process_data($collId, $resId);
         $status = $res->status;
         if (! empty($status)) {
             require_once 'core/class/class_manage_status.php';

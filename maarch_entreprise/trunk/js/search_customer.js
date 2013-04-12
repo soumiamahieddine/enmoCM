@@ -58,7 +58,7 @@ Maarch.require('treeview', function(){
  * @param onComplete_callback string Callback to execute after the completion of the ajax request
  */
 // Init tree data
-function tree_init(treeId, projectStr, more_params)
+function tree_init(treeId, folder_string, more_params)
 {
 	if($('myTree'))
     {
@@ -67,11 +67,11 @@ function tree_init(treeId, projectStr, more_params)
 		});
     }
     // Get tree parameters from an ajax script (get_tree_info.php)
-    new Ajax.Request(BASE_URL+'index.php?dir=indexing_searching&page=get_tree_info&display=true',{
+    new Ajax.Request(BASE_URL+'index.php?display=true&module=folder&page=get_tree_info&display=true',{
         method: 'post',
         parameters: {
             tree_id: treeId,
-            project: projectStr
+            project: folder_string
         },
         onSuccess: function(response){
             eval('params='+response.responseText+';');
