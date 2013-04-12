@@ -225,8 +225,7 @@ function validate_difflist_type() {
   var difflist_type_label = $('difflist_type_label').value;
   
   var allow_entities = 'N';
-  console.log($('allow_entities').checked);
-
+  
   if($('allow_entities').checked)
 	allow_entities = 'Y';
   
