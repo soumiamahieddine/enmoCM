@@ -30,7 +30,7 @@
 * @ingroup basket
 */
 
-require_once 'apps/' . $_SESSION['config']['app_id'] . ' /class/class_lists.php';
+require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_lists.php';
 
 $core_tools = new core_tools();
 $list       = new lists();
