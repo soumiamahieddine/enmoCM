@@ -52,7 +52,7 @@ if(!empty($_SESSION['current_basket']['view'])) {
 
 //Fields
     array_push($select[$table],"folders_system_id", "status", "foldertype_label", 
-        "custom_t2", "folder_id", "folder_name", "creation_date", "count_document");
+        "custom_t2", "folder_id", "folder_name", "creation_date", "folders_system_id as count_document");
 
 //Where
     $where_tab = array();
@@ -170,9 +170,9 @@ if(!empty($_SESSION['current_basket']['view'])) {
 					$tab[$i][$j]["label_align"]="right";
 					$tab[$i][$j]["align"]="right";
 					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=true;
+					$tab[$i][$j]["show"]=false;
 					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]["order"]="count_document";
+					$tab[$i][$j]["order"]=false;
 				}
 			}
 		}

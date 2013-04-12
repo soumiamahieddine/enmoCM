@@ -19,7 +19,7 @@ $_SESSION['error_page'] = '';
 //Fields
     array_push($select[$view],"folders_system_id", "status", 
             "foldertype_label", "custom_t2", "folder_id", 
-            "folder_name",  "count_document",  "creation_date");
+            "folder_name",  "folders_system_id as count_document",  "creation_date");
 
 //Where
     $where_tab = array();
@@ -132,9 +132,9 @@ $_SESSION['error_page'] = '';
                         $tab[$i][$j]["label_align"]="right";
                         $tab[$i][$j]["align"]="right";
                         $tab[$i][$j]["valign"]="bottom";
-                        $tab[$i][$j]["show"]=true;
+                        $tab[$i][$j]["show"]=false;
                         $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]["order"]="count_document";
+                        $tab[$i][$j]["order"]=false;
                     }
                     if($tab[$i][$j][$value]=="creation_date")
                     {
