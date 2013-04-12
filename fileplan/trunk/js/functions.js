@@ -149,8 +149,8 @@ function loadFileplanList(idField, idList, path) {
         },                        
         onSuccess: function(answer){
             $(idList).innerHTML = answer.responseText;
-			 evalMyScripts(idList);
             $('loadingFileplan').style.display='none';
+			evalMyScripts(idList);
         }
     });
 }
