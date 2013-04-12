@@ -358,7 +358,7 @@ class folder extends request
 					);
 				}
 
-				$_SESSION['error'] = _FOLDER_ADDED;
+				$_SESSION['info'] = _FOLDER_ADDED;
 				unset($_SESSION['m_admin']);
 				header(
 					"location: " . $_SESSION['config']['businessappurl']

@@ -104,7 +104,8 @@ if (isset($_POST['delete_folder'])) {
         $status = $folderObject->get_field('status');
         $_SESSION['current_foldertype_coll_id'] = $folderObject->get_field('coll_id');
         $view = $sec->retrieve_view_from_coll_id($_SESSION['current_foldertype_coll_id']);
-        if ($status == 'DEL') {
+
+        if ($status == 'DEL' || $status == 'FOLDDEL') {
         	echo _NO_FOLDER_FOUND.".";
         } else {
         	$folderArray = array();
@@ -414,7 +415,6 @@ if (isset($_POST['delete_folder'])) {
             ?>            
             <dt><?php  echo _FOLDER_HISTORY;?></dt>
             <dd>
-                <h2><?php echo _HISTORY;?></h2>
                 <iframe name="history_folder" id="history_folder" src="<?php
                     echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&module=folder&page=folder_history&load&size=full&id=<?php 

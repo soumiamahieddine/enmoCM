@@ -87,9 +87,8 @@ $_SESSION['error_page'] = '';
                         $tab[$i][$j]["label_align"]="left";
                         $tab[$i][$j]["align"]="left";
                         $tab[$i][$j]["valign"]="bottom";
-                        $tab[$i][$j]["show"]=false;
+                        $tab[$i][$j]["show"]=true;
                         $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]['value']=$tab[$i][$j]['value'];
                         $tab[$i][$j]["order"]="foldertype_label";
                     }
                     if ($tab[$i][$j][$value] == "custom_t2")
@@ -99,9 +98,8 @@ $_SESSION['error_page'] = '';
                         $tab[$i][$j]["label_align"]="left";
                         $tab[$i][$j]["align"]="left";
                         $tab[$i][$j]["valign"]="bottom";
-                        $tab[$i][$j]["show"]=true;
+                        $tab[$i][$j]["show"]=false;
                         $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]['value']=$tab[$i][$j]['value'];
                         $tab[$i][$j]["order"]="custom_t2";
                     }
                     if ($tab[$i][$j][$value] == "folder_id")
@@ -113,7 +111,6 @@ $_SESSION['error_page'] = '';
                         $tab[$i][$j]["valign"]="bottom";
                         $tab[$i][$j]["show"]=true;
                         $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]['value']=$tab[$i][$j]['value'];
                         $tab[$i][$j]["order"]="folder_id";
                     }
                     if ($tab[$i][$j][$value] == "folder_name")
@@ -125,7 +122,6 @@ $_SESSION['error_page'] = '';
                         $tab[$i][$j]["valign"]="bottom";
                         $tab[$i][$j]["show"]=true;
                         $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                        $tab[$i][$j]['value']=$tab[$i][$j]['value'];
                         $tab[$i][$j]["order"]="folder_name";
                     }
                     if($tab[$i][$j][$value]=="count_document")

@@ -59,6 +59,7 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
 ?>" alt="" /> <?php  echo _SEARCH_FOLDER_TREE; ?></h1>
 <div id="inner_content" align="center">
     <div class="block">
+		<form method="post" name="form_search_folder" id="form_search_folder" action="#">
         <table width="100%" border="0">
             <tr>
                 <td align="right"><label for="folder"><?php
@@ -68,18 +69,20 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
                                 <input type="text" name="folder" id="folder" size="45" onKeyPress="if(event.keyCode == 13) submitForm();" />
                                 <div id="show_folder" class="autocomplete"></div>
                             </td>
-                             <td align="right"><label for="subfolder"><?php  echo _SUBFOLDER;?> :</label></td>
+                            <!-- <td align="right"><label for="subfolder"><?php  echo _SUBFOLDER;?> :</label></td>
                             <td>
                                 <input type="text" name="subfolder" id="subfolder" size="45" onKeyPress="if(event.keyCode == 13) submitForm();" />
                                 <div id="show_subfolder" class="autocomplete"></div>
-                            </td>
+                            </td>-->
                             <td>
                                 <input type="button" value="<?php
             echo _SEARCH;
             ?>" onclick="javascript:submitForm();" class="button">
                 </td>
+				<td width="50%">&nbsp;</td>
             </tr>
         </table>
+		</form>
     </div>
     <div class="clearsearch">
         <br>
@@ -108,23 +111,11 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
         echo $_SESSION['config']['businessappurl'];
         ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder', 
         'Input', '2');
-    
-    initList('subfolder', 'show_subfolder', '<?php
-        echo $_SESSION['config']['businessappurl'];
-        ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=subfolder', 
-        'Input', '2');
-        
+
     function submitForm()
     {
         var folder = $('folder').value;
-        if (folder) {
-            tree_init('myTree', folder);
-        } else {
-            var subfolder = $('subfolder').value;
-            if (subfolder) {
-        	   tree_init('myTree', subfolder);
-            }
-        }
+        tree_init('myTree', folder);
     }
 </script>
 <script type="text/javascript" src="<?php

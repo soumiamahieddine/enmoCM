@@ -15,11 +15,11 @@ $req = new request();
 $req->connect();
 
 //If no mode
-if($_REQUEST['mode']<> 'folder' && $_REQUEST['mode'] <> 'subfolder') {
-	exit();
-} else {
-    $mode = $_REQUEST['mode'];
-}
+// if($_REQUEST['mode']<> 'folder' && $_REQUEST['mode'] <> 'subfolder') {
+	// exit();
+// } else {
+    // $mode = $_REQUEST['mode'];
+// }
 
 //Build query
 $select = array();
@@ -29,12 +29,14 @@ $select = array();
     $select[$table]= array( 'folder_id', 'folder_name',  'folders_system_id');
     //Where
     $where = '';
-    if($mode == 'subfolder') {
-        $where = " folder_level = 2 and ";
-    } else {
-        $where = " folder_level = 1 and ";
-    }
-    $where .= " (lower(folder_name) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') or lower(folder_id) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') ) and status <> 'DEL'";
+    // if($mode == 'subfolder') {
+        // $where = " folder_level = 2 and ";
+    // } else {
+        // $where = " folder_level = 1 and ";
+    // }
+    $where .= " (folder_level = 1 or folder_level = 2) and (lower(folder_name) like lower('%"
+		.$req->protect_string_db($_REQUEST['Input'])."%') or lower(folder_id) like lower('%"
+		.$req->protect_string_db($_REQUEST['Input'])."%') ) and (status <> 'DEL' or status <> 'FOLDDEL')";
     //Order
     $order = 'order by subject, folder_name';
 

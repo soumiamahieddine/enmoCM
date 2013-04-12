@@ -101,9 +101,8 @@ if(!empty($_SESSION['current_basket']['view'])) {
 					$tab[$i][$j]["label_align"]="left";
 					$tab[$i][$j]["align"]="left";
 					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=false;
+					$tab[$i][$j]["show"]=true;
 					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]['value']=$tab[$i][$j]['value'];
 					$tab[$i][$j]["order"]="foldertype_label";
 				}
                 if($tab[$i][$j][$value]=="status")
@@ -126,9 +125,8 @@ if(!empty($_SESSION['current_basket']['view'])) {
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
                     $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=true;
+                    $tab[$i][$j]["show"]=false;
                     $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    $tab[$i][$j]['value']=$tab[$i][$j]['value'];
                     $tab[$i][$j]["order"]="custom_t2";
                 }
 				if ($tab[$i][$j][$value] == "folder_id")
@@ -140,7 +138,6 @@ if(!empty($_SESSION['current_basket']['view'])) {
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=true;
 					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]['value']=$tab[$i][$j]['value'];
 					$tab[$i][$j]["order"]="folder_id";
 				}
 				if ($tab[$i][$j][$value] == "folder_name")
@@ -152,7 +149,6 @@ if(!empty($_SESSION['current_basket']['view'])) {
 					$tab[$i][$j]["valign"]="bottom";
 					$tab[$i][$j]["show"]=true;
 					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-					$tab[$i][$j]['value']=$tab[$i][$j]['value'];
 					$tab[$i][$j]["order"]="folder_name";
 				}
 				if($tab[$i][$j][$value]=="creation_date")
