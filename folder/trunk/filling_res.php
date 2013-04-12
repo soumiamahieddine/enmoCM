@@ -70,7 +70,7 @@ if (empty($collIdTest)) {
 		. " order by doctypes_first_level_label, doctypes_second_level_label, "
 		. "type_label, res_id "
 	);
-	$db->show();
+	// $db->show();
 	$countDoc = 0;
 	while ($res = $db->fetch_object()) {
 	    if (isset($res->doctype_first_level_style)) {
