@@ -55,8 +55,11 @@ $view->loadHTMLFile(
 $xview = new DOMXPath($view);
 # Set id attributes in view
 $ids = $xview->query('//*[@id]');
-for($i=0, $l=$ids->length; $i<$l; $i++)
-    $ids->item($i)->setIdAttribute('id', true);
+for($i=0, $l=$ids->length; $i<$l; $i++) {
+    $id = $ids->item($i);
+    $id->setIdAttribute('id', false);
+    $id->setIdAttribute('id', true);
+}
 
 # Set action mode
 $mode = $view->getElementById("mode");
