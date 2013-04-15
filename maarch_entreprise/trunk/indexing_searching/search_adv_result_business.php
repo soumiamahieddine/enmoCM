@@ -233,7 +233,7 @@ if (count($_REQUEST['meta']) > 0) {
             //WELCOME PAGE
             elseif ($tab_id_fields[$j] == 'welcome'  && (!empty($_REQUEST['welcome'])))
             {
-                $welcome = $func->store_html($_REQUEST['welcome']);
+                $welcome = $_REQUEST['welcome'];
                 $json_txt .= "'multifield' : ['".addslashes(trim($welcome))."'],";
                 if (is_numeric($_REQUEST['welcome']))
                 {
@@ -243,7 +243,7 @@ if (count($_REQUEST['meta']) > 0) {
                     ."or lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
                     ."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%')) ";
 
-                $welcome = $func->store_html($_REQUEST['welcome']);
+                $welcome = $_REQUEST['welcome'];
                 set_include_path('apps' . DIRECTORY_SEPARATOR 
                     . $_SESSION['config']['app_id'] 
                     . DIRECTORY_SEPARATOR . 'tools' 
@@ -253,6 +253,8 @@ if (count($_REQUEST['meta']) > 0) {
                 Zend_Search_Lucene_Analysis_Analyzer::setDefault(
                     new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive() // we need utf8 for accents
                 );
+                Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(Zend_Search_Lucene_Search_QueryParser::B_AND);
+                Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
                 $path_to_lucene_index = $_SESSION['collections'][1]['path_to_lucene_index'];
                 if (is_dir($path_to_lucene_index))
                 {
