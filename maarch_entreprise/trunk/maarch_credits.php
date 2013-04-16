@@ -99,6 +99,7 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
             <li>Cyril VAZQUEZ</li>
             <li>Arnaud VEBER</li>
             <li>Loic VINET</li>
+            <li><em>Merci &agrave; la Mairie de Saint-Germain-En-Laye pour sa contribution sur la recherche plein-texte.</em></li>
             <li><em><?php echo _THANKS_TO_COMMUNITY;?></em></li>
         </ul>
         <p>&nbsp;</p>
