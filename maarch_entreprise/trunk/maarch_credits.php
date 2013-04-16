@@ -47,7 +47,7 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
     <div class="maarch_credits_left_box" style="height:520px;">
         <h3><?php  echo _MAARCH_CREDITS; ?></h3>
         <hr/>
-        <p><em>Copyright &copy; 2008-2012 Maarch SAS.</em></p>
+        <p><em>Copyright &copy; 2008-2013 Maarch SAS.</em></p>
         <p><?php echo _MAARCH_LICENCE;?> 
             <a href="http://www.gnu.org/licenses/gpl-3.0-standalone.html">licence GNU GPLv3</a>.</p>
         <div>
