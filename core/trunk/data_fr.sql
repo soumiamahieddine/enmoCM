@@ -65,6 +65,7 @@ INSERT INTO status VALUES ('SIG', 'A signer', 'N', 'N', '', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('UNS', 'Rejeté', 'N', '', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('VAL', 'A Valider', 'Y', '', 'apps', 'Y', 'Y');
 INSERT INTO status VALUES ('INIT', 'Nouveau courrier ou document non qualifié', 'Y', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status VALUES ('VIS', 'A viser', 'N', 'N', '', 'apps', 'Y', 'Y');
 
 ------------
 --PARAMETERS--
