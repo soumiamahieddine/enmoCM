@@ -222,7 +222,7 @@ class chrono
             $chrono = $fetch->param_value_int;
         }
         $this->_updateChronoForEntity($chrono, $db, $entity);
-        return $chrono;
+        return $entity . "/" . $chrono;
     }
 
     public function execute_chrono_by_category($category)
@@ -241,7 +241,7 @@ class chrono
             $chrono = $fetch->param_value_int;
         }
         $this->_updateChronoForCategory($chrono, $db, $category);
-        return $chrono;
+        return $category . "/" . $chrono;
     }
 
     public function execute_chrono_by_folder($folder)
@@ -278,7 +278,7 @@ class chrono
             }
         }
     }
-    
+
     //For global chrono
     private function _updateChronoForThisYear($actualChrono, $db)
     {
@@ -356,7 +356,6 @@ class chrono
         );
         return 1;
     }
-    
     public function generate_chrono($chronoId, $phpVar='false', $form='false')
     {
         $tmp = $this->get_structure($chronoId);
