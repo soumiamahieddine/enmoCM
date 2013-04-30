@@ -82,10 +82,10 @@ if ($core->test_service('add_new_version', 'apps', false)) {
 }
 
 //test service view_emails_notifs
-$viewEmailsNotifs = false;
-if ($core->test_service('view_emails_notifs', 'notifications', false)) {
-    $viewEmailsNotifs = true;
-}
+// $viewEmailsNotifs = false;
+// if ($core->test_service('view_emails_notifs', 'notifications', false)) {
+    // $viewEmailsNotifs = true;
+// }
 
 if (!isset($_REQUEST['coll_id'])) {
     $_REQUEST['coll_id'] = '';
@@ -908,7 +908,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                 }
 				
                 //############# NOTIFICATIONS ##############
-                $extend_title_for_notifications = 0;
+				
+                // $extend_title_for_notifications = 0;
                 ?>
                 <?php $Class_LinkController = new LinkController(); ?>
                 <?php

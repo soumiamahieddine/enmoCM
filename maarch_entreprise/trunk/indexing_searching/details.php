@@ -79,10 +79,10 @@ if ($core->test_service('add_new_version', 'apps', false)) {
 }
 
 //test service view_emails_notifs
-$viewEmailsNotifs = false;
-if ($core->test_service('view_emails_notifs', 'notifications', false)) {
-    $viewEmailsNotifs = true;
-}
+// $viewEmailsNotifs = false;
+// if ($core->test_service('view_emails_notifs', 'notifications', false)) {
+    // $viewEmailsNotifs = true;
+// }
 
 if (!isset($_REQUEST['coll_id'])) {
     $_REQUEST['coll_id'] = '';
@@ -1260,6 +1260,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 </dd>
                 <?php 
                 //############# NOTIFICATIONS ##############
+				/*
                 $extend_title_for_notifications = 0;
                 ?>
                 <dt>
@@ -1273,72 +1274,74 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         test
                     </div>
                 </dd>
-                <?php $Class_LinkController = new LinkController(); ?>
-                <?php
-                    $nbLink = $Class_LinkController->nbDirectLink(
-                        $_SESSION['doc_id'],
-                        $_SESSION['collection_id_choice'],
-                        'all'
-                    );
-                    $Links = '';
+                <?php 
+				*/
+				$Class_LinkController = new LinkController();
+                
+                $nbLink = $Class_LinkController->nbDirectLink(
+                    $_SESSION['doc_id'],
+                    $_SESSION['collection_id_choice'],
+                    'all'
+                );
+                $Links = '';
 
-                    //if ($nbLink > 0) {
-                        $Links .= '<dt>';
-                            $Links .= _LINK_TAB;
-                            $Links .= ' (<span id="nbLinks">';
-                            $Links .= $nbLink;
-                            $Links .= '</span>)';
-                        $Links .= '</dt>';
-                        $Links .= '<dd>';
-                            // $Links .= '<h2>';
-                                // $Links .= _LINK_TAB;
-                            // $Links .= '</h2>';
-                            $Links .= '<div id="loadLinks">';
-                                $nbLinkDesc = $Class_LinkController->nbDirectLink(
-                                    $_SESSION['doc_id'],
-                                    $_SESSION['collection_id_choice'],
+                //if ($nbLink > 0) {
+                    $Links .= '<dt>';
+                        $Links .= _LINK_TAB;
+                        $Links .= ' (<span id="nbLinks">';
+                        $Links .= $nbLink;
+                        $Links .= '</span>)';
+                    $Links .= '</dt>';
+                    $Links .= '<dd>';
+                        // $Links .= '<h2>';
+                            // $Links .= _LINK_TAB;
+                        // $Links .= '</h2>';
+                        $Links .= '<div id="loadLinks">';
+                            $nbLinkDesc = $Class_LinkController->nbDirectLink(
+                                $_SESSION['doc_id'],
+                                $_SESSION['collection_id_choice'],
+                                'desc'
+                            );
+                            if ($nbLinkDesc > 0) {
+                                $Links .= '<img src="static.php?filename=cat_doc_incoming.gif" />';
+                                $Links .= $Class_LinkController->formatMap(
+                                    $Class_LinkController->getMap(
+                                        $_SESSION['doc_id'],
+                                        $_SESSION['collection_id_choice'],
+                                        'desc'
+                                    ),
                                     'desc'
                                 );
-                                if ($nbLinkDesc > 0) {
-                                    $Links .= '<img src="static.php?filename=cat_doc_incoming.gif" />';
-                                    $Links .= $Class_LinkController->formatMap(
-                                        $Class_LinkController->getMap(
-                                            $_SESSION['doc_id'],
-                                            $_SESSION['collection_id_choice'],
-                                            'desc'
-                                        ),
-                                        'desc'
-                                    );
-                                    $Links .= '<br />';
-                                }
+                                $Links .= '<br />';
+                            }
 
-                                $nbLinkAsc = $Class_LinkController->nbDirectLink(
-                                    $_SESSION['doc_id'],
-                                    $_SESSION['collection_id_choice'],
+                            $nbLinkAsc = $Class_LinkController->nbDirectLink(
+                                $_SESSION['doc_id'],
+                                $_SESSION['collection_id_choice'],
+                                'asc'
+                            );
+                            if ($nbLinkAsc > 0) {
+                                $Links .= '<img src="static.php?filename=cat_doc_outgoing.gif" />';
+                                $Links .= $Class_LinkController->formatMap(
+                                    $Class_LinkController->getMap(
+                                        $_SESSION['doc_id'],
+                                        $_SESSION['collection_id_choice'],
+                                        'asc'
+                                    ),
                                     'asc'
                                 );
-                                if ($nbLinkAsc > 0) {
-                                    $Links .= '<img src="static.php?filename=cat_doc_outgoing.gif" />';
-                                    $Links .= $Class_LinkController->formatMap(
-                                        $Class_LinkController->getMap(
-                                            $_SESSION['doc_id'],
-                                            $_SESSION['collection_id_choice'],
-                                            'asc'
-                                        ),
-                                        'asc'
-                                    );
-                                    $Links .= '<br />';
-                                }
-                            $Links .= '</div>';
+                                $Links .= '<br />';
+                            }
+                        $Links .= '</div>';
 
-                        if ($core->test_service('add_links', 'apps', false)) {
-                            include_once 'apps/'.$_SESSION['config']['app_id'].'/add_links.php';
-                        }
+                    if ($core->test_service('add_links', 'apps', false)) {
+                        include_once 'apps/'.$_SESSION['config']['app_id'].'/add_links.php';
+                    }
 
-                        $Links .= '</dd>';
-                    //}
+                    $Links .= '</dd>';
+                //}
 
-                    echo $Links;
+                echo $Links;
                 ?>
             </dl>
     <?php
