@@ -61,6 +61,16 @@
             <LABEL>_DATE</LABEL>
             <ENABLED>true</ENABLED>
         </FILTER>
+        <FILTER>
+            <ID>typist</ID>
+            <LABEL>_TYPIST</LABEL>
+            <ENABLED>true</ENABLED>
+        </FILTER>
+        <FILTER>
+            <ID>creation_date</ID>
+            <LABEL>_CREATION_DATE</LABEL>
+            <ENABLED>true</ENABLED>
+        </FILTER>
     </FILTERS>
     <TEMPLATES>
         <TEMPLATE>

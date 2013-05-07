@@ -226,6 +226,40 @@ class lists extends dbquery
                             .$options.'</select>&nbsp;';
             break;
             
+            case 'typist':
+                $sec = new security();
+                
+                $view = $sec->retrieve_view_from_table($this->params['tableName']);
+                if (empty($view)) {
+                    $view = $this->params['tableName'];
+                }
+                if (!empty($view)) {
+                    if (! empty($this->params['basketClause'])) $where = 'where '.$this->params['basketClause'];
+
+                    $db->query(
+                        "select distinct(typist) as typist, count(distinct r.res_id)"
+                        . " as total from " 
+                        . $view. " r " .$where
+                        . " group by typist order by typist"
+                    );
+                    while ($res = $db->fetch_object()) {
+                        
+                        if (isset($_SESSION['filters']['typist']['VALUE']) 
+                            && $_SESSION['filters']['typist']['VALUE'] == $res->typist
+                            ) $selected = 'selected="selected"'; else $selected =  '';
+                            
+                        if ($_SESSION['user']['UserId'] ==  $res->typist) $style = 'style="font-weight:bold;"';  else $style =  '';
+
+                        $options .='<option value="'.$res->typist.'" '.$selected.' '.$style.'>'.$res->typist.' ('.$res->total.')</option>';
+                    }
+                }
+                $filters .='<select name="typist" id="typist" onChange="loadList(\''.$this->link
+                            .'&filter=typist&value=\' + document.filters.typist.value, \''
+                            .$this->divListId.'\', '.$this->modeReturn.');">'
+                            .'<option value="none">'._CHOOSE_USER2.'</option>'
+                            .$options.'</select>&nbsp;';
+            break;
+            
             case 'category':
                 $filters .='<select name="category_id_list" id="category_id_list" onChange="loadList(\''.$this->link
                          .'&filter=category&value=\' + document.filters.category_id_list.value, \''
@@ -406,6 +440,26 @@ class lists extends dbquery
                     .'&filter=history_date_end&value=\' + this.value, \''.$this->divListId.'\', '
                     .$this->modeReturn.');" value="'.$date_end.'" size="15" />&nbsp;';
             break;
+            
+            case 'creation_date':
+                if(isset($_SESSION['filters']['creation_date_start']['VALUE']) && !empty($_SESSION['filters']['creation_date_start']['VALUE'])) {
+                    $date_start = $_SESSION['filters']['creation_date_start']['VALUE'];
+                }
+                $filters .= '&nbsp;&nbsp;'._SINCE.': <input type="text" name="date_start" '
+                    .'id="date_start" onclick="showCalender(this);" '
+                    .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
+                    .'&filter=creation_date_start&value=\' + this.value, \''.$this->divListId.'\', '
+                    .$this->modeReturn.');" value="'.$date_start.'" size="15" />';
+                  
+                if(isset($_SESSION['filters']['creation_date_end']['VALUE']) && !empty($_SESSION['filters']['creation_date_end']['VALUE'])) {
+                    $date_end = $_SESSION['filters']['creation_date_end']['VALUE'];
+                }
+                $filters .= '&nbsp;&nbsp;'._FOR.': <input type="text" name="date_end" '
+                    .'id="date_end" onclick="showCalender(this);" '
+                    .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
+                    .'&filter=creation_date_end&value=\' + this.value, \''.$this->divListId.'\', '
+                    .$this->modeReturn.');" value="'.$date_end.'" size="15" />&nbsp;';
+            break;
         }
         
         return $filters;
@@ -467,6 +521,10 @@ class lists extends dbquery
                     } else if ($_REQUEST['filter'] == 'entity') {
                     
                        $_SESSION['filters']['entity']['CLAUSE'] = "destination = '".$_SESSION['filters']['entity']['VALUE']."'";
+                    
+                    } else if ($_REQUEST['filter'] == 'typist') {
+                    
+                       $_SESSION['filters']['typist']['CLAUSE'] = "typist = '".$_SESSION['filters']['typist']['VALUE']."'";
                     
                     } else if ($_REQUEST['filter'] == 'category') {
                     
@@ -555,6 +613,32 @@ class lists extends dbquery
                         }
                         
                         $_SESSION['filters']['history_date']['CLAUSE'] = join(' and ', $history_date);
+                    } else if ($_REQUEST['filter'] == 'creation_date_start' || $_REQUEST['filter'] == 'creation_date_end') {
+                    
+                        //Pattern
+                        $pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
+                        //Keep the date
+                        $creation_date = array();
+                        //date start
+                        if (preg_match($pattern, $_SESSION['filters']['creation_date_start']['VALUE']) == false) {
+                        
+                            $_SESSION['error'] = _DATE.' '._WRONG_FORMAT;
+                        } else {
+                        
+                            $creation_date['start'] = "(creation_date >= '"
+                                .$_SESSION['filters']['creation_date_start']['VALUE']."')";
+                        }
+                        //date end
+                        if (preg_match($pattern, $_SESSION['filters']['creation_date_end']['VALUE']) == false) {
+                        
+                            $_SESSION['error'] = _DATE.' '._WRONG_FORMAT;
+                        } else {
+                        
+                            $creation_date['end'] = "(creation_date <= '"
+                                .$_SESSION['filters']['creation_date_end']['VALUE']."')";
+                        }
+                        
+                        $_SESSION['filters']['creation_date']['CLAUSE'] = join(' and ', $creation_date);
                     }
                 }
             }
