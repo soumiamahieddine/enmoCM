@@ -129,6 +129,12 @@ if (count($_REQUEST['meta']) > 0) {
                     ."or lower(doc_custom_t1) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%')) ";                
                 $where_request .=" and  ";
             }
+			// IDENTIFIER
+			elseif ($tab_id_fields[$j] == 'identifier' && !empty($_REQUEST['identifier'])) {
+                $json_txt .= "'identifier' : ['".addslashes(trim($_REQUEST['identifier']))."'],";
+                $where_request .=" lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['identifier'])."%') ";
+                $where_request .=" and  ";
+            }
             // NOTES
             elseif ($tab_id_fields[$j] == 'doc_notes' && !empty($_REQUEST['doc_notes']))
             {
