@@ -488,7 +488,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . 'currency.png" alt="' . _CURRENCY 
                 . '"/></td><td><label for="currency" class="form_title">' . _CURRENCY
             . '</label></td>';
-	/*
+    /*
     $tabCurrency = array();
     array_push($tabCurrency, array('id' => 'EUR', 'label' => 'EURO €'));
     array_push($tabCurrency, array('id' => 'USD', 'label' => 'DOLLAR $'));
@@ -496,18 +496,19 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     array_push($tabCurrency, array('id' => 'GBP', 'label' => 'POUND £'));
     array_push($tabCurrency, array('id' => 'XOF', 'label' => 'CFA F'));
     $cptTab = count($tabCurrency);
-	*/
-	foreach (array_keys($_SESSION['currency']) as $currency) {
-		$frm_str .= '<option value="' . $currency . '"';
-		if ($data['currency'] == $currency) {
-				$frm_str .= 'selected="selected"';
-		}
-		$frm_str .= '>' . $_SESSION['currency'][$currency] . '</option>';
-	}
+    */
     $frm_str .= '<td class="indexing_field">'
         . '<select id="currency" name="currency" onchange="clear_error(\'frm_error_' . $id_action
         . '\');convertAllBusinessAmount();">';
-	/*
+    foreach (array_keys($_SESSION['currency']) as $currency) {
+        $frm_str .= '<option value="' . $currency . '"';
+        if ($data['currency'] == $currency) {
+                $frm_str .= 'selected="selected"';
+        }
+        $frm_str .= '>' . $_SESSION['currency'][$currency] . '</option>';
+    }
+    
+    /*
     for($cpt=0;$cpt<$cptTab;$cpt++) {
         if ($tabCurrency[$cpt]['id'] == $data['currency']) {
             $selected = ' selected="selected" ';
