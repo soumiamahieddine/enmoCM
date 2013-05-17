@@ -73,7 +73,7 @@ if(isset($_REQUEST['user_submit'])){
             location_bar_management($mode);
             break;
     }
-    include('users_management.php');
+    include('apps/maarch_entreprise/admin/users/users_management.php');
 }
 
 
