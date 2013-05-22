@@ -1769,16 +1769,20 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             if ($loadListDiff) {
                 require_once 'modules/entities/class/class_manage_listdiff.php';
                 $diffList = new diffusion_list();
-                $diffList->save_listinstance(
-                    $_SESSION['indexing']['diff_list'], 
-                    $_SESSION['indexing']['diff_list']['object_type'],
-                    $collId, 
-                    $resId, 
-                    $_SESSION['user']['UserId']
+				$params = array(
+                    'mode' => 'listinstance',
+                    'table' => $_SESSION['tablename']['ent_listinstance'],
+                    'coll_id' => $collId,
+                    'res_id' => $resId,
+                    'user_id' => $_SESSION['user']['UserId'],
+                );
+                $diffList->load_list_db(
+                    $_SESSION['indexing']['diff_list'], $params, 
+					'DOC', $_SESSION['indexing']['diff_list']['object_type']
                 );
             }
-            //  echo 'entities '.$resId. " ";
         }
+		
         if ($core->is_module_loaded('tags')) {
                 include_once('modules/tags/tags_update.php');
         }

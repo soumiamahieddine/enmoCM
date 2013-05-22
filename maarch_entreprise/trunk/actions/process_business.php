@@ -168,7 +168,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $listdiff = new diffusion_list();
         $roles = $listdiff->list_difflist_roles();
         $_SESSION['process']['diff_list'] = $listdiff->get_listinstance($res_id, false, $coll_id);
-        $_SESSION['process']['difflist_type'] = $listdiff->get_difflist_type($_SESSION['process']['diff_list']['object_type']);
+        // $_SESSION['process']['difflist_type'] = $listdiff->get_difflist_type($_SESSION['process']['diff_list']['difflist_type']);
     }
 
     //  to activate locking decomment these lines
@@ -959,10 +959,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     }
     if ($core->is_module_loaded('entities')) {
         require_once('modules/entities/class/class_manage_listdiff.php');
-        $list = new diffusion_list();
+        $diff_list = new diffusion_list();
         $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'],
-            'coll_id' => $coll_id, 'res_id' => $arr_id[0], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => true);
-        $list->load_list_db($_SESSION['process']['diff_list'], $params);
+            'coll_id' => $coll_id, 'res_id' => $arr_id[0], 'user_id' => $_SESSION['user']['UserId']);
+        $diff_list->load_list_db($_SESSION['process']['diff_list'], $params, 'DOC', $_SESSION['process']['diff_list']['difflist_type']);
     }
     unset($_SESSION['redirection']);
     return array('result' => $arr_id[0].'#', 'history_msg' => '');

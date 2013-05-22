@@ -488,15 +488,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . 'currency.png" alt="' . _CURRENCY 
                 . '"/></td><td><label for="currency" class="form_title">' . _CURRENCY
             . '</label></td>';
-    /*
-    $tabCurrency = array();
-    array_push($tabCurrency, array('id' => 'EUR', 'label' => 'EURO €'));
-    array_push($tabCurrency, array('id' => 'USD', 'label' => 'DOLLAR $'));
-    array_push($tabCurrency, array('id' => 'JPY', 'label' => 'YEN ¥'));
-    array_push($tabCurrency, array('id' => 'GBP', 'label' => 'POUND £'));
-    array_push($tabCurrency, array('id' => 'XOF', 'label' => 'CFA F'));
-    $cptTab = count($tabCurrency);
-    */
     $frm_str .= '<td class="indexing_field">'
         . '<select id="currency" name="currency" onchange="clear_error(\'frm_error_' . $id_action
         . '\');convertAllBusinessAmount();">';
@@ -508,16 +499,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '>' . $_SESSION['currency'][$currency] . '</option>';
     }
     
-    /*
-    for($cpt=0;$cpt<$cptTab;$cpt++) {
-        if ($tabCurrency[$cpt]['id'] == $data['currency']) {
-            $selected = ' selected="selected" ';
-        } else {
-            $selected = '';
-        }
-        $frm_str .= '<option ' . $selected . ' value="' 
-            . $tabCurrency[$cpt]['id'] . '">' . $tabCurrency[$cpt]['label'] . '</option>';
-    }*/
     $frm_str .= '</select></td>';
     $frm_str .= '<td><span class="red_asterisk" id="currency_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
@@ -652,9 +633,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             foreach($listmodels as $difflist_type_id => $listmodel) {
                 $frm_str .= '<optgroup label="'.$difflistTypes[$difflist_type_id]->difflist_type_label . '">';
                 for($i=0, $l=count($listmodel); $i<$l; $i++) {
-                    $frm_str .= '<option data-object_type="'.$difflist_type_id.'" value="' . $listmodel[$i]['object_id'] . '">' 
-                                .  $db->show_string($listmodel[$i]['description']) 
-                            . '</option>';
+                    $frm_str .= '<option data-object_type="'.$difflist_type_id.'" value="' . $listmodel[$i]['object_id'] . '"';
+					if (isset($_SESSION['indexing']['diff_list']['difflist_type'])
+						&& $_SESSION['indexing']['diff_list']['difflist_type'] == $difflist_type_id) {
+						$frm_str .=' selected="selected"';
+					}
+					$frm_str .=  '>'  
+                        .  $db->show_string($listmodel[$i]['description']) 
+						. '</option>';
                 }
                 $frm_str .= '</optgroup>';
             }
@@ -1795,9 +1781,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         if ($load_list_diff) {
             require_once('modules/entities/class/class_manage_listdiff.php');
             $diff_list = new diffusion_list();
-            /*$params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 
-                'coll_id' => $coll_id, 'res_id' => $res_id, 'user_id' => $_SESSION['user']['UserId']);*/
-            //$diff_list->load_list_db($_SESSION['indexing']['diff_list'], $params);
+            $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 
+                'coll_id' => $coll_id, 'res_id' => $res_id, 'user_id' => $_SESSION['user']['UserId']);
+			$diff_list->load_list_db($_SESSION['indexing']['diff_list'], $params, 'DOC', $_SESSION['indexing']['diff_list']['difflist_type']);
+			/*
             $origin = $_SESSION['origin'];
             $diff_list->save_listinstance(
                 $_SESSION['indexing']['diff_list'], 
@@ -1805,7 +1792,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
                 $coll_id, 
                 $res_id, 
                 $_SESSION['user']['UserId']
-            );
+            );*/
         }
     }
 
