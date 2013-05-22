@@ -327,7 +327,6 @@ class diffusion_list extends dbquery
             $creatorUser,
             $creatorEntity
         );
-        
     }
     
     function save_listinstance(
