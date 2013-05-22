@@ -234,8 +234,8 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '<div id="general_infos_div"  style="display:inline">';
     $frmStr .= '<div class="ref-unit">';
     
-    $frmStr .= '<table width="100%" align="center" '
-        . 'border="0"  id="indexing_fields" style="display:block;">';
+    // $frmStr .= '<table width="100%" align="center" '
+        // . 'border="1"  id="indexing_fields" style="display:block;">';
     
     $frmStr .= '<table width="100%" align="center" border="0" '
             . 'id="indexing_fields" style="display:block;">';
@@ -581,7 +581,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . 'style="display:inline;">*</span>&nbsp;</td>';
         $frmStr .= '</tr>';
         $frmStr .= '<tr id="diff_list_tr" style="display:none;">';
-        $frmStr .= '<td colspan="3">';
+        $frmStr .= '<td colspan="4">';
         $frmStr .= '<div id="diff_list_div" class="scroll_div" '
                 //. 'style="height:200px; width:420px; border: 1px solid;"></div>';
                 . 'style="width:420px; border: 1px solid;"></div>';
