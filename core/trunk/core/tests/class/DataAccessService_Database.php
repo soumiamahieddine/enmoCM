@@ -388,7 +388,7 @@ class DataAccessService_Database
         //echo "<pre>UPDATE QUERY = " . $updateQuery . "</pre>";
         
         try {
-            $this->databaseObject->connect();
+            //$this->databaseObject->connect();
             $result = $this->databaseObject->query(
                 $updateQuery, 
                 $catchErrors=true
