@@ -3077,6 +3077,7 @@ delete from users_entities where user_id = 'bblier' and entity_id = 'VILLE';
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) 
 VALUES ('bblier', 'VILLE', 'Responsable courrier', 'Y');
 INSERT INTO users_entities VALUES ('ccamus', 'VILLE', '', 'Y');
+INSERT INTO users_entities VALUES ('ccamus', 'CCAS', '', 'Y');
 
 delete from users_entities where user_id = 'ggrand' and entity_id = 'COR';
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) 
