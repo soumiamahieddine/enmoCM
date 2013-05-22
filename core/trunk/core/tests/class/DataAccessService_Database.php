@@ -363,6 +363,7 @@ class DataAccessService_Database
     
     public function updateData($objectElement, $dataObject)
     {
+        global $argv;
         $updateParts = array();
         
         $tableExpression = $this->createFromExpression($objectElement);
@@ -388,7 +389,11 @@ class DataAccessService_Database
         //echo "<pre>UPDATE QUERY = " . $updateQuery . "</pre>";
         
         try {
-            //$this->databaseObject->connect();
+            if (isset($argv) && count($argv) > 0) {
+                //no new database connection, maybe in transaction
+            } else {
+                $this->databaseObject->connect();
+            }
             $result = $this->databaseObject->query(
                 $updateQuery, 
                 $catchErrors=true

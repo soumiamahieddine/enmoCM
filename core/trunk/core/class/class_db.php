@@ -62,7 +62,7 @@ class dbquery extends functions
     * SQL link identifier
     * Integer
     */
-    private $_sqlLink;          // sql link identifier
+    public $_sqlLink;          // sql link identifier
 
 
     /**
@@ -319,6 +319,9 @@ class dbquery extends functions
     */
     public function query($sqlQuery, $catchError = false, $noFilter = false)
     {
+        if (!$this->_sqlLink) {
+            $this->connect();
+        }
         $canExecute = true;        
         // if filter, we looking for ; or -- in the sql query
         if (!$noFilter) {
@@ -351,7 +354,7 @@ class dbquery extends functions
                 break;
 
             case 'POSTGRESQL' : 
-                $this->query = @pg_query($sqlQuery);
+                $this->query = @pg_query($this->_sqlLink, $sqlQuery);
                 break;
                 
             case 'SQLSERVER' : 
@@ -407,7 +410,7 @@ class dbquery extends functions
         case 'SQLSERVER'    : 
             break;
         case 'POSTGRESQL'   : 
-            @pg_query('BEGIN');
+            @pg_query($this->_sqlLink, 'BEGIN');
             break;
         case 'ORACLE'       : 
             break;
@@ -424,7 +427,7 @@ class dbquery extends functions
         case 'SQLSERVER'    : 
             break;
         case 'POSTGRESQL'   : 
-            @pg_query('ROLLBACK');
+            @pg_query($this->_sqlLink, 'ROLLBACK');
             break;
         case 'ORACLE'       : 
             break;
@@ -441,7 +444,7 @@ class dbquery extends functions
         case 'SQLSERVER'    : 
             break;
         case 'POSTGRESQL'   : 
-            @pg_query('COMMIT');
+            @pg_query($this->_sqlLink, 'COMMIT');
             break;
         case 'ORACLE'       : 
             break;
