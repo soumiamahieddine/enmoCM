@@ -650,7 +650,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . 'style="display:inline;">*</span>&nbsp;</td>';
         $frm_str .= '</tr>';
         $frm_str .= '<tr id="diff_list_tr" style="display:none;">';
-        $frm_str .= '<td colspan="3">';
+        $frm_str .= '<td colspan="4">';
         $frm_str .= '<div id="diff_list_div" class="scroll_div" '
                 //. 'style="height:200px; width:420px; border: 1px solid;"></div>';
                 . 'style="width:420px; border: 1px solid;"></div>';
