@@ -122,40 +122,47 @@ $title = _RESULTS.' : '.$i.' '._FOUND_LOGS;
 $_SESSION['origin'] = 'basket';
 $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
 
-$details = 'details&dir=indexing_searching';
+//Clé de la liste
+$listKey = 'res_id';
 
-$param_list = array(
-    'values' => $tab,
-    'title' => $title,
-    'key' => 'res_id',
-    'page_name' => 'view_baskets&module=basket&baskets=' 
-        . $_SESSION['current_basket']['id'].'&origin='.$_REQUEST['origin'],
-    'what' => 'res_id',
-    'detail_destination' => $details,
-    'details_page' => '',
-    'view_doc' => true,
-    'bool_details' => false,
-    'bool_order' => true,
-    'bool_frame' => false,
-    'module' => '',
-    'css' => 'listing spec',
-    'hidden_fields' => "<input type='hidden' name='module' id='module' value='basket' />"
-        . "<input type='hidden' name='table' id='table' value="
-        . $_SESSION['current_basket']['table'] . "/><input type='hidden' name='coll_id' id='coll_id' value="
-        . $_SESSION['current_basket']['coll_id'] . "/>",
-    'open_details_popup' => false,
-    'do_actions_arr' => $do_actions_arr,
-    'template' => true,
-    'template_list' => $template_list,
-    'actual_template' => $template_to_use,
-    'bool_export' => true
-);
-$bask->basket_list_doc(
-    $param_list, 
-    $_SESSION['current_basket']['actions'],
-    '', 
-    true, 
-    $template_list, 
-    $template_to_use
-);
+//Initialiser le tableau de paramètres
+$paramsTab = array();
+$paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_LOGS;              //Titre de la page
+$paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
+$paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
+$paramsTab['bool_showIconDocument'] = true;                                         //Affichage de l'icone du document
+$paramsTab['bool_showIconDetails'] = false;                                          //Affichage de l'icone de la page de details
+$paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id']
+            .$urlParameters;                                                        //Parametres d'url supplementaires
+if (count($template_list) > 0 ) {                                                   //Templates
+    $paramsTab['templates'] = array();
+    $paramsTab['templates'] = $template_list;
+}
+$paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
+$paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
+$paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
 
+if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching')  {
+    $save = array(
+            "script"        =>  "createModal(form_txt, 'save_search', '100px', '500px');window.location.href='#top';",
+            "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_save.gif",
+            "tooltip"       =>  _SAVE_QUERY,
+            "disabledRules" =>  count($tab)." == 0"
+            );      
+    array_push($paramsTab['tools'],$save); 
+}
+$export = array(
+        "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
+        "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_export.gif",
+        "tooltip"       =>  _EXPORT_LIST,
+        "disabledRules" =>  count($tab)." == 0"
+        );
+array_push($paramsTab['tools'],$export);
+
+//Afficher la liste
+$status = 0;
+require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_lists.php';
+$list       = new lists();
+$content = $list->showList($tab, $paramsTab, $listKey, $_SESSION['current_basket']);
+// $debug = $list->debug(false);
+echo "{'status' : " . $status . ", 'content' : '" . addslashes($debug.$content) . "', 'error' : '" . addslashes($error) . "'}";
