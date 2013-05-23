@@ -1243,7 +1243,7 @@ class docservers_controler
             $concatError .= _FILE_NOT_EXISTS_ON_THE_SERVER . ' : '
                           . $file . '||';
             $history->add(
-                $tableName, $gedId, 'ERR',
+                $tableName, $gedId, 'ERR', 'docserverserr',
                 _FAILOVER . ' ' . _DOCSERVERS . ' '
                 . $adr['docserver_id'] . ':'
                 . _FILE_NOT_EXISTS_ON_THE_SERVER . ' : '
@@ -1267,7 +1267,7 @@ class docservers_controler
                 $concatError .=
                     _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER . '||';
                 $history->add(
-                    $tableName, $gedId, 'ERR',
+                    $tableName, $gedId, 'ERR', 'docserverserr',
                     _FAILOVER . ' ' . _DOCSERVERS . ' '
                     . $adr['docserver_id'] . ':'
                     . _PB_WITH_OFFSET_OF_THE_DOC_IN_THE_CONTAINER,
@@ -1285,7 +1285,7 @@ class docservers_controler
                     $error = true;
                     $concatError .= $extract['error'] . '||';
                     $history->add(
-                        $tableName, $gedId, 'ERR',
+                        $tableName, $gedId, 'ERR', 'docserverserr',
                         _FAILOVER . ' ' . _DOCSERVERS . ' '
                         . $adr['docserver_id'] . ':'
                         . $extract['error'],
@@ -1334,7 +1334,7 @@ class docservers_controler
                             . 'class_history.php'
                         );
                         $history->add(
-                            $tableName, $gedId, 'VIEW',
+                            $tableName, $gedId, 'VIEW', 'resview',
                             _VIEW_DOC_NUM . $gedId,
                             $_SESSION['config']['databasetype'],
                             'indexing_searching'
@@ -1394,7 +1394,7 @@ class docservers_controler
                     } else {
                         $concatError .= _FILE_NOT_EXISTS . '||';
                         $history->add(
-                            $tableName, $gedId, 'ERR',
+                            $tableName, $gedId, 'ERR', 'docserverserr',
                             _FAILOVER . ' ' . _DOCSERVERS . ' '
                             . $adr['docserver_id']
                             . ':' . _FILE_NOT_EXISTS,
@@ -1404,7 +1404,7 @@ class docservers_controler
                 } else {
                     $concatError .= _FILE_TYPE . ' ' . _UNKNOWN . '||';
                     $history->add(
-                        $tableName, $gedId, 'ERR',
+                        $tableName, $gedId, 'ERR', 'docserverserr',
                         _FAILOVER . ' ' . _DOCSERVERS . ' '
                         . $adr['docserver_id'] . ':'
                         . _FILE_TYPE . ' ' . _UNKNOWN,
@@ -1414,7 +1414,7 @@ class docservers_controler
             } else {
                 $concatError .= _PB_WITH_FINGERPRINT_OF_DOCUMENT . '||';
                 $history->add(
-                    $tableName, $gedId, 'ERR',
+                    $tableName, $gedId, 'ERR', 'docserverserr',
                     _FAILOVER . ' ' . _DOCSERVERS . ' '
                     . $adr['docserver_id'] . ':'
                     . _PB_WITH_FINGERPRINT_OF_DOCUMENT,
