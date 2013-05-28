@@ -221,6 +221,19 @@ $SOAP_dispatch_map['storeExtResource'] = array(
     'method' => "core#resources::storeExtResource",
 );
 
+$SOAP_dispatch_map['storeResourceFromURI'] = array(
+    'in'  => array(
+        'fileURI' => 'string',
+        'data' => '{urn:MySoapServer}arrayOfData',
+        'collId' => 'string',
+        'table' => 'string',
+        'fileFormat' => 'string',
+        'status' => 'string',
+    ),
+    'out' => array('out' => '{urn:MySoapServer}returnResArray'),
+    'method' => "core#resource::storeResourceFromURI",
+);
+
 $SOAP_typedef['searchParams'] = array(
     'country' => 'string',
     'docDate' => 'date',

@@ -144,6 +144,29 @@ class resources_controler
             return $returnResArray;
         }
     }
+    
+    function storeResourceFromURI(
+        $fileURI, 
+        $data, 
+        $collId, 
+        $table, 
+        $fileFormat, 
+        $status
+    ) {       
+        $encodedContent = base64_encode(file_get_contents($fileURI));
+        
+        $returnResArray = $this->storeResource(
+            $encodedContent,
+            $data, 
+            $collId, 
+            $table, 
+            $fileFormat, 
+            $status
+        );
+        
+        return $returnResArray;
+        
+    }
 
     private function prepareStorage($data, $docserverId, $status, $fileFormat)
     {
