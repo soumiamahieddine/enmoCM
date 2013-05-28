@@ -231,7 +231,7 @@ $SOAP_dispatch_map['storeResourceFromURI'] = array(
         'status' => 'string',
     ),
     'out' => array('out' => '{urn:MySoapServer}returnResArray'),
-    'method' => "core#resource::storeResourceFromURI",
+    'method' => "core#resources::storeResourceFromURI",
 );
 
 $SOAP_typedef['searchParams'] = array(

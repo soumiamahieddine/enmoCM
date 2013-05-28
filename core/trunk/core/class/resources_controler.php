@@ -153,7 +153,7 @@ class resources_controler
         $fileFormat, 
         $status
     ) {       
-        $encodedContent = base64_encode(file_get_contents($fileURI));
+        $encodedContent = base64_encode(file_get_contents($fileURI, FILE_BINARY));
         
         $returnResArray = $this->storeResource(
             $encodedContent,
