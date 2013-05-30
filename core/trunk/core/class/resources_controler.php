@@ -153,19 +153,90 @@ class resources_controler
         $fileFormat, 
         $status
     ) {       
-        $encodedContent = base64_encode(file_get_contents($fileURI, FILE_BINARY));
-        
-        $returnResArray = $this->storeResource(
-            $encodedContent,
-            $data, 
-            $collId, 
-            $table, 
-            $fileFormat, 
-            $status
-        );
-        
-        return $returnResArray;
-        
+        try {
+            $func = new functions();
+            $data = $func->object2array($data);
+            for ($i=0; $i < count($data);$i++) {
+                $data[$i]['column'] = strtolower($data[$i]['column']);
+            }
+            $returnCode = 0;
+            $db = new dbquery();
+            $db->connect();
+            //copy sended file on tmp 
+            $fileContent = file_get_contents($fileURI);
+            $random = rand();
+            $fileName = 'tmp_file_' . $random . '.' . $fileFormat;
+            $Fnm = $_SESSION['config']['tmppath'] . $fileName;
+            $inF = fopen($Fnm,"w");
+            fwrite($inF, $fileContent);
+            fclose($inF);
+            //store resource on docserver
+            $docserverControler = new docservers_controler();
+            $fileInfos = array(
+                'tmpDir'      => $_SESSION['config']['tmppath'],
+                'size'        => filesize($Fnm),
+                'format'      => $fileFormat,
+                'tmpFileName' => $fileName,
+            );
+            //print_r($fileInfos);
+            $storeResult = array();
+            $storeResult = $docserverControler->storeResourceOnDocserver(
+                $collId, $fileInfos
+            );
+            if (!empty($storeResult['error'])) {
+                $returnResArray = array(
+                    'returnCode' => (int) -3,
+                    'resId' => '',
+                    'error' => $storeResult['error'],
+                );
+                return $returnResArray;
+            }
+            //print_r($storeResult);exit;
+            //store resource metadata in database
+            $resource = new resource();
+            
+            $data = $this->prepareStorage(
+                $data, 
+                $storeResult['docserver_id'],
+                $status,
+                $fileFormat
+            );
+            unlink($Fnm);
+            //var_dump($data);exit;
+            $resId = $resource->load_into_db(
+                $table, 
+                $storeResult['destination_dir'],
+                $storeResult['file_destination_name'],
+                $storeResult['path_template'],
+                $storeResult['docserver_id'], 
+                $data,
+                $_SESSION['config']['databasetype']
+            );
+            if (!is_numeric($resId)) {
+                $returnResArray = array(
+                    'returnCode' => (int) -2,
+                    'resId' => '',
+                    'error' => 'Pb with SQL insertion : ' .$resId ,
+                );
+                return $returnResArray;
+            }
+            if ($resId == 0) {
+                $resId = '';
+            }
+            $returnResArray = array(
+                'returnCode' => (int) 0,
+                'resId' => $resId,
+                'error' => '',
+            );
+            return $returnResArray;
+        } catch (Exception $e) {
+            $returnResArray = array(
+                'returnCode' => (int) -1,
+                'resId' => '',
+                'error' => 'unknown error' . $e->getMessage(),
+            );
+            return $returnResArray;
+        }
     }
 
     private function prepareStorage($data, $docserverId, $status, $fileFormat)
