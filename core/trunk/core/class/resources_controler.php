@@ -153,6 +153,9 @@ class resources_controler
         $fileFormat, 
         $status
     ) {       
+        ini_set('max_execution_time', 600);
+        ini_set('memory_limit', '1024M');
+        
         try {
             $func = new functions();
             $data = $func->object2array($data);
