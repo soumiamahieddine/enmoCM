@@ -493,7 +493,8 @@ class dbquery extends functions
         case 'POSTGRESQL'   : return @pg_fetch_object($this->query);
         case 'ORACLE'       : 
             $myObject = @oci_fetch_object($this->query);
-            $myLowerObject = false;
+            //$myLowerObject = false;
+            $myLowerObject = new stdClass();
             if (isset($myObject) && ! empty($myObject)) {
                 foreach ($myObject as $key => $value) {
                     $myKey = strtolower($key);
