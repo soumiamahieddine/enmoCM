@@ -495,7 +495,6 @@ class functions
             {
                 var link1 = document.createElement("a");
                 link1.href='<?php  echo $_SESSION['location_bar']['level1']['path'];?>';
-                // link1.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level1']['path']);?>';
                 var label1 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level1']['label'];?>");
                 link1.appendChild(label1);
                 bar.appendChild(link1);
@@ -511,7 +510,6 @@ class functions
                     if(bar != null)
                     {
                         var link1 = document.createElement("a");
-                        //link1.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level1']['path']);?>';
                         link1.href='<?php  echo $_SESSION['location_bar']['level1']['path'];?>';
                         var label1 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level1']['label'];?>");
                         link1.appendChild(label1);

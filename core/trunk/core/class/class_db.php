@@ -317,8 +317,12 @@ class dbquery extends functions
     *           if not catched, the error is displayed (false by default)
     * @param  $noFilter bool true if you don't want to filter on ; and --
     */
-    public function query($sqlQuery, $catchError = false, $noFilter = false)
-    {
+    public function query(
+        $sqlQuery, 
+        $catchError = false, 
+        $noFilter = false,
+        &$params = array()
+    ) {
         if (!$this->_sqlLink) {
             $this->connect();
         }
@@ -363,7 +367,7 @@ class dbquery extends functions
                 
             case 'ORACLE' : 
                 $this->query = @oci_parse($this->_sqlLink, $sqlQuery);
-                
+                                
                 if ($this->query == false) {
                     if ($catchError) return false;
                     $this->_sqlError = 6;
@@ -371,10 +375,20 @@ class dbquery extends functions
                     exit();
                 } 
                 else {
+                    if(count($params) > 0) {
+                        //echo "<br/>Params to bind:"; var_dump($params);
+                        foreach($params as $paramname => &$paramvar) {   
+                            $binded = oci_bind_by_name($this->query, $paramname, $paramvar, -1, SQLT_CHR);
+                        }
+                    }
+
                     if (! @oci_execute($this->query)) {
                         if ($catchError) return false;
                         $this->_sqlError = 3;
                         $this->error();
+                    }
+                    if(count($params) > 0) {
+                        //echo "<br/>Params after execution: "; var_dump($params);
                     }
                 }
                 break;
