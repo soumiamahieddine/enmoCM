@@ -468,6 +468,9 @@ input.year {
 select.small {
     width: 5em;
 }
+select.medium {
+    width: 7em;
+}
 
 input.medium {
     width: 120px;

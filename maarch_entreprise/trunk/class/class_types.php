@@ -970,7 +970,8 @@ class types extends dbquery
                         . 'static.php?filename=' . $img,
                         'type_field' => 'select',
                         'values' => $values,
-                        'default_value' => $default
+                        'default_value' => $default,
+						'origin' => 'document'
                     );
                 } else if (isset($item->table)) {
                     $values = array();
@@ -1008,6 +1009,7 @@ class types extends dbquery
                         'type_field' => 'select',
                         'values' => $values,
                         'default_value' => $default,
+						'origin' => 'document'
                     );
                 } else {
                     $indexes[$col] = array(
@@ -1017,6 +1019,7 @@ class types extends dbquery
                         . 'static.php?filename=' . $img,
                         'type_field' => 'input',
                         'default_value' => $default,
+						'origin' => 'document'
                     );
                 }
             }
