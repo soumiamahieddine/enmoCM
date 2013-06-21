@@ -410,9 +410,9 @@ class core_tools extends functions
                     . (string) $MENU2->url;
                 if (trim((string) $MENU2->target) <> "") {
                     $tmp = preg_replace(
-                        '/\/core\//$', '/', $_SESSION['urltocore']
+                        '/\/core\/$/', '/', $_SESSION['urltocore']
                     );
-                    $_SESSION['menu'][$k]['url'] = $tmp. (string) $MENU->url;
+                    $_SESSION['menu'][$k]['url'] = $tmp. (string) $MENU2->url;
                     $_SESSION['menu'][$k]['target'] = (string) $MENU2->target;
                 }
                 $_SESSION['menu'][$k]['style'] = (string) $MENU2->style;
