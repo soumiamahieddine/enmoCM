@@ -50,7 +50,6 @@ Object.extend(Keypress.Observer.prototype,
 {
   initialize: function(key_code, callback, options) {
         var SHIFT_OFFSET = 32;
-        
         this.ie = (navigator.userAgent.indexOf("MSIE")) != -1;
         this.utf_8 = !(typeof(document.charset) == 'undefined');
         this.debug = false;
