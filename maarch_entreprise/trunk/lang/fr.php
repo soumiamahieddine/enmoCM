@@ -1465,6 +1465,7 @@ if (!defined('_NOT_EXISTS')) define('_NOT_EXISTS', 'n&rsquo;existe pas');
 /*************** ARCHIVE **************/
 if (!defined('_INDEX_ARCHIVE')) define('_INDEX_ARCHIVE', '[archive] Verser une archive');
 if (!defined('_RM_ITEMS_TRANSFER')) define('_RM_ITEMS_TRANSFER', '[archive] Transfert des items');
+if (!defined('_RM_ARCHIVE')) define('_RM_ARCHIVE', 'Archives interm&eacute;diaires');
 
 /*************** FOLDER **************/
 if (!defined('_CONFIRM_FOLDER_STATUS')) define('_CONFIRM_FOLDER_STATUS', '[dossier] Confirmer le statut du dossier');
