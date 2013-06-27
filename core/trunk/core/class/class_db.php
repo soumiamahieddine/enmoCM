@@ -379,7 +379,7 @@ class dbquery extends functions
                     if(count($params) > 0) {
                         //echo "<br/>Params to bind:"; var_dump($params);
                         foreach($params as $paramname => &$paramvar) {   
-                            $binded = oci_bind_by_name($this->query, $paramname, $paramvar, -1, SQLT_CHR);
+                            $binded = oci_bind_by_name($this->query, $paramname, $paramvar, 100, SQLT_CHR);
                         }
                     }
 
