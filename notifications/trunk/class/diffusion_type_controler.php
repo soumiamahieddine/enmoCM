@@ -32,8 +32,8 @@
 
 //Loads the required class
 try {
-	require_once 'modules/notifications/class/diffusion_type.php';
-	require_once 'core/class/ObjectControlerAbstract.php';
+    require_once 'modules/notifications/class/diffusion_type.php';
+    require_once 'core/class/ObjectControlerAbstract.php';
 } catch (Exception $e) {
     echo $e->getMessage() . ' // ';
 }
@@ -52,29 +52,33 @@ class diffusion_type_controler
      * @return event
      */
     public function getAllDiffusion() {
-		core_tools::load_lang();
-		$return = array();
-		$xmlfile = 'modules/notifications/xml/diffusion_type.xml';
-        
+        core_tools::load_lang();
+        $return = array();
+        $xmlfile = 'modules/notifications/xml/diffusion_type.xml';
+        $xmlfileCustom = $_SESSION['config']['corepath'] 
+            . 'custom/' . $_SESSION['custom_override_id'] . '/' . $xmlfile;
+        if (file_exists($xmlfileCustom)) {
+            $xmlfile = $xmlfileCustom;
+        }
         $xmldiffusion = simplexml_load_file($xmlfile);
         foreach($xmldiffusion->diffusion_type as $diffusion) {
-			//<id> <label> <script>	
-			
-			$diffusion_type = new diffusion_type();
-			
-			if(@constant((string) $diffusion->label)) {
-				$label = constant((string)$diffusion->label);
-			} else {
-				$label = (string) $diffusion->label;
-			}
-			
-			$diffusion_type->id = (string) $diffusion->id;
-			$diffusion_type->label = $label;
-			$diffusion_type->script = (string) $diffusion->script;
-		
-			$return[$diffusion_type->id] = $diffusion_type;
-		}
-		
+            //<id> <label> <script> 
+            
+            $diffusion_type = new diffusion_type();
+            
+            if(@constant((string) $diffusion->label)) {
+                $label = constant((string)$diffusion->label);
+            } else {
+                $label = (string) $diffusion->label;
+            }
+            
+            $diffusion_type->id = (string) $diffusion->id;
+            $diffusion_type->label = $label;
+            $diffusion_type->script = (string) $diffusion->script;
+        
+            $return[$diffusion_type->id] = $diffusion_type;
+        }
+        
         if (isset($return)) {
             return $return;
         } else {
@@ -82,44 +86,44 @@ class diffusion_type_controler
         }
     }
   
-	public function get($type_id) {
-		if ($type_id <> '') {
-			$fulllist = array();
-			$fulllist = $this->getAllDiffusion();
-			foreach ($fulllist as $dt_id => $dt)
-			{
-				if ($type_id == $dt_id){
-					return $dt;
-				}
-			}
-		}
-		return null;
-	}
+    public function get($type_id) {
+        if ($type_id <> '') {
+            $fulllist = array();
+            $fulllist = $this->getAllDiffusion();
+            foreach ($fulllist as $dt_id => $dt)
+            {
+                if ($type_id == $dt_id){
+                    return $dt;
+                }
+            }
+        }
+        return null;
+    }
    
-	public function getRecipients($notification, $event) 
-	{
-		$diffusionType = $this->get($notification->diffusion_type);
-		$request = 'recipients';
-		require($diffusionType->script);
-		return $recipients;
-	}
-	
-	public function getAttachFor($notification, $user_id) {
-		// No attachment defined
-		if($notification->attachfor_type == '') {
-			return false;
-		}
-		$attachforType = $this->get($notification->attachfor_type);
-		$request = 'attach';
-		require($attachforType->script);
-		return $attach;
-	}
+    public function getRecipients($notification, $event) 
+    {
+        $diffusionType = $this->get($notification->diffusion_type);
+        $request = 'recipients';
+        require($diffusionType->script);
+        return $recipients;
+    }
+    
+    public function getAttachFor($notification, $user_id) {
+        // No attachment defined
+        if($notification->attachfor_type == '') {
+            return false;
+        }
+        $attachforType = $this->get($notification->attachfor_type);
+        $request = 'attach';
+        require($attachforType->script);
+        return $attach;
+    }
     
     public function getResId($notification, $event) {
         $diffusionType = $this->get($notification->diffusion_type);
         $request = 'res_id';
-		require($diffusionType->script);
-		return $res_id;
+        require($diffusionType->script);
+        return $res_id;
     }
 
 }
