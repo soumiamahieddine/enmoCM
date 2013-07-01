@@ -153,7 +153,12 @@ if ($xmlconfig == FALSE) {
 // Load config
 $config = $xmlconfig->CONFIG;
 $lang = (string)$config->Lang;
-$maarchDirectory = (string)$config->MaarchDirectory; 
+$maarchDirectory = (string)$config->MaarchDirectory;
+$customID = (string)$config->customID;
+if ($customID <> '') {
+     $_SESSION['config']['corepath'] = $maarchDirectory;
+     $_SESSION['custom_override_id'] = $customID;
+}
 chdir($maarchDirectory);
 $maarchUrl = (string)$config->MaarchUrl;
 $maarchApps = (string) $config->MaarchApps;

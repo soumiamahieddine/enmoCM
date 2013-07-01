@@ -3,6 +3,7 @@
     <CONFIG>
         <Lang>fr</Lang> <!-- fr, en-->
         <MaarchDirectory>C:\xampp\htdocs\maarch_entreprise\</MaarchDirectory>
+        <customID></customID>
         <MaarchUrl>http://localhost/maarch_entreprise/</MaarchUrl>
         <MaarchApps>maarch_entreprise</MaarchApps>
         <TmpDirectory>C:\xampp\htdocs\maarch_entreprise\modules\notifications\batch\tmp\</TmpDirectory>
