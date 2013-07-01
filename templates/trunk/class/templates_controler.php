@@ -1015,8 +1015,14 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
     private function getDatasourceScript($datasourceId) 
     {
         if ($datasourceId <> '') {
+            $xmlfile = 'modules/templates/xml/datasources.xml';
+            $xmlfileCustom = $_SESSION['config']['corepath'] 
+            . 'custom/' . $_SESSION['custom_override_id'] . '/' . $xmlfile;
+             if (file_exists($xmlfileCustom)) {
+                $xmlfile = $xmlfileCustom;
+            }
             $fulllist = array();
-            $fulllist = $this->getTemplatesDatasources('modules/templates/xml/datasources.xml');
+            $fulllist = $this->getTemplatesDatasources($xmlfileCustom);
             foreach ($fulllist as $ds) {
                 if ($datasourceId == $ds['id']){
                     return (object)$ds;
@@ -1094,33 +1100,33 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         $pathToTemplate = $this->getWorkingCopy($templateObj);
         
         $datasources = $this->getBaseDatasources();
-		// Make params array for datasrouce script
+        // Make params array for datasrouce script
         foreach($params as $paramName => $paramValue) {
             $$paramName = $paramValue;
         }
-		//Retrieve script for datasources
+        //Retrieve script for datasources
         $datasourceObj = $this->getDatasourceScript($templateObj->template_datasource);
-		if($datasourceObj->script) {
-			require $datasourceObj->script;
-		}
-		
+        if($datasourceObj->script) {
+            require $datasourceObj->script;
+        }
+        
         // Merge with TBS
         $TBS = new clsTinyButStrong;
-		$TBS->NoErr = true;
+        $TBS->NoErr = true;
         if($templateObj->template_type == 'OFFICE') {
             $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN);
-			$TBS->LoadTemplate($pathToTemplate, OPENTBS_ALREADY_UTF8);
+            $TBS->LoadTemplate($pathToTemplate, OPENTBS_ALREADY_UTF8);
         } else {
-			$TBS->LoadTemplate($pathToTemplate);
-		}
-		
+            $TBS->LoadTemplate($pathToTemplate);
+        }
+        
         foreach ($datasources as $name => $datasource) {
             // Scalar values or arrays ?
-			if(!is_array($datasource)) {
-				$TBS->MergeField($name, $datasource);
+            if(!is_array($datasource)) {
+                $TBS->MergeField($name, $datasource);
             } else {
-			    $TBS->MergeBlock($name, 'array', $datasource);
-		    }
+                $TBS->MergeBlock($name, 'array', $datasource);
+            }
         }
         
         switch($outputType) {
@@ -1162,15 +1168,15 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         $templateObj = $this->get($templateId);
         // Get template path from docserver
         $pathToTemplate = $this->getWorkingCopy($templateObj);
-		$fileExtension = $this->extractFileExt($pathToTemplate);
+        $fileExtension = $this->extractFileExt($pathToTemplate);
         $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
             . '_' . rand() . '.' . $fileExtension;
         $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
         // Copy the template from the DS to the tmp dir
         if (!copy($pathToTemplate, $filePathOnTmp)) {
-			return '';
-		} else {
-			return $filePathOnTmp;
-		}
+            return '';
+        } else {
+            return $filePathOnTmp;
+        }
     }
 }

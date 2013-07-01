@@ -114,7 +114,7 @@ function init_session()
 {
     $_SESSION['m_admin']['templates'] = array();
     $_SESSION['m_admin']['templatesStyles'] = array();
-	$_SESSION['m_admin']['templatesDatasources'] = array();
+    $_SESSION['m_admin']['templatesDatasources'] = array();
     $_SESSION['m_admin']['templatesEntities'] = array();
     $_SESSION['m_admin']['templatesEntitiesOrg'] = array();
     $_SESSION['m_admin']['templatesEntitiesSelected'] = array();
@@ -256,11 +256,15 @@ function display_up($templateId)
         $dir, 
         $stylesArray
     );
-	$datasourcesArray = array();
-    $datasourcesArray = $templatesControler->getTemplatesDatasources(
-		'modules/templates/xml/datasources.xml'
-	);
-	$templates = $templatesControler->get($templateId);
+    $xmlfile = 'modules/templates/xml/datasources.xml';
+    $xmlfileCustom = $_SESSION['config']['corepath'] 
+    . 'custom/' . $_SESSION['custom_override_id'] . '/' . $xmlfile;
+     if (file_exists($xmlfileCustom)) {
+        $xmlfile = $xmlfileCustom;
+    }
+    $datasourcesArray = array();
+    $datasourcesArray = $templatesControler->getTemplatesDatasources($xmlfile);
+    $templates = $templatesControler->get($templateId);
     /*echo '<pre>';
     print_r($stylesArray);
     echo '</pre>';*/
@@ -276,7 +280,7 @@ function display_up($templateId)
     } else {
         At_putInSession('templates', $templates->getArray());
         At_putInSession('templatesStyles', $stylesArray);
-		At_putInSession('templatesDatasources', $datasourcesArray);
+        At_putInSession('templatesDatasources', $datasourcesArray);
         At_putInSession('templatesEntities', $entities);
         At_putInSession('templatesEntitiesOrg', $entitiesOrg);
     }
@@ -304,15 +308,19 @@ function display_add()
         $dir, 
         $stylesArray
     );
+    $xmlfile = 'modules/templates/xml/datasources.xml';
+    $xmlfileCustom = $_SESSION['config']['corepath'] 
+    . 'custom/' . $_SESSION['custom_override_id'] . '/' . $xmlfile;
+     if (file_exists($xmlfileCustom)) {
+        $xmlfile = $xmlfileCustom;
+    }
     $datasourcesArray = array();
-    $datasourcesArray = $templatesControler->getTemplatesDatasources(
-		'modules/templates/xml/datasources.xml'
-	);
+    $datasourcesArray = $templatesControler->getTemplatesDatasources($xmlfile);
     require_once 'modules/entities/class/EntityControler.php';
     $entityControler = new EntityControler();
     $entitiesOrg = $entityControler->getAllEntities();
     At_putInSession('templatesStyles', $stylesArray);
-	At_putInSession('templatesDatasources', $datasourcesArray);
+    At_putInSession('templatesDatasources', $datasourcesArray);
     At_putInSession('templatesEntitiesOrg', $entitiesOrg);
 }
 
@@ -423,4 +431,3 @@ function display_del($template_id)
         $_SESSION['error'] = _TEMPLATE . ' ' . _UNKNOWN;
     }
 }
-
