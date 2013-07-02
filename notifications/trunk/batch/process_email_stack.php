@@ -10,90 +10,90 @@ while ($state <> 'END') {
         $GLOBALS['logger']->write('STATE:' . $state, 'INFO');
     }
     switch ($state) {
-		
-	/**********************************************************************/
-    /*                          LOAD_NOTIFS 							  */
-    /* List the stack to proceed       									  */
+        
+    /**********************************************************************/
+    /*                          LOAD_NOTIFS                               */
+    /* List the stack to proceed                                          */
     /**********************************************************************/
     case 'LOAD_EMAILS' :
-		$query = "SELECT * FROM " . _NOTIF_EMAIL_STACK_TABLE_NAME
-			. " WHERE exec_date is NULL";
-		Bt_doQuery($GLOBALS['db'], $query);
-		$totalEmailsToProcess = $GLOBALS['db']->nb_result();
-		$currentEmail = 0;
-		if ($totalEmailsToProcess === 0) {
-			Bt_exitBatch(0, 'No e-mail to process');
+        $query = "SELECT * FROM " . _NOTIF_EMAIL_STACK_TABLE_NAME
+            . " WHERE exec_date is NULL";
+        Bt_doQuery($GLOBALS['db'], $query);
+        $totalEmailsToProcess = $GLOBALS['db']->nb_result();
+        $currentEmail = 0;
+        if ($totalEmailsToProcess === 0) {
+            Bt_exitBatch(0, 'No e-mail to process');
         }
-		$GLOBALS['logger']->write($totalEmailsToProcess . ' e-mails to proceed.', 'INFO');
-		$GLOBALS['emails'] = array();
-		while ($emailRecordset = $GLOBALS['db']->fetch_object()) {
-			$GLOBALS['emails'][] = $emailRecordset;
-		}
-		$state = 'SEND_AN_EMAIL';
+        $GLOBALS['logger']->write($totalEmailsToProcess . ' e-mails to proceed.', 'INFO');
+        $GLOBALS['emails'] = array();
+        while ($emailRecordset = $GLOBALS['db']->fetch_object()) {
+            $GLOBALS['emails'][] = $emailRecordset;
+        }
+        $state = 'SEND_AN_EMAIL';
         break;
-		
-	/**********************************************************************/
-    /*                          SEND_AN_EMAIL	 		          	          */
+        
+    /**********************************************************************/
+    /*                          SEND_AN_EMAIL                                 */
     /* Load parameters and send an e-mail                                    */
     /**********************************************************************/
     case 'SEND_AN_EMAIL' :
-		if($currentEmail < $totalEmailsToProcess) {
-			$email = $GLOBALS['emails'][$currentEmail];
-			$GLOBALS['mailer'] = new htmlMimeMail();
+        if($currentEmail < $totalEmailsToProcess) {
+            $email = $GLOBALS['emails'][$currentEmail];
+            $GLOBALS['mailer'] = new htmlMimeMail();
             if($mailerParams->smtp_auth === "true") $smtp_auth = true;
-			$GLOBALS['mailer']->setSMTPParams(
-				$host = (string)$mailerParams->smtp_host, 
-				$port = (string)$mailerParams->smtp_port,
-				$helo = (string)$mailerParams->domains,
-				$auth = $smtp_auth,
-				$user = (string)$mailerParams->smtp_user,
-				$pass = (string)$mailerParams->smtp_password
-				);
-			$GLOBALS['logger']->write("Sending e-mail to : " . $email->recipient, 'INFO');
-			$GLOBALS['mailer']->setFrom($email->sender);
-			$GLOBALS['logger']->write("Subject : " . $email->subject, 'INFO');
-			$GLOBALS['mailer']->setSubject($email->subject);
-			$GLOBALS['mailer']->setHtml($email->html_body);
-			$GLOBALS['mailer']->setTextCharset((string)$email->charset);
-			$GLOBALS['mailer']->setHtmlCharset((string)$email->charset);
-			$GLOBALS['mailer']->setHeadCharset((string)$email->charset);
-			
-			if($email->attachments != '') {
-				$attachments = explode(',', $email->attachments);
-				foreach($attachments as $num => $attachment) {
-					if(is_file($attachment)) {
-					$ext = strrchr($attachment, '.');
+            $GLOBALS['mailer']->setSMTPParams(
+                $host = (string)$mailerParams->smtp_host, 
+                $port = (string)$mailerParams->smtp_port,
+                $helo = (string)$mailerParams->domains,
+                $auth = $smtp_auth,
+                $user = (string)$mailerParams->smtp_user,
+                $pass = (string)$mailerParams->smtp_password
+                );
+            $GLOBALS['logger']->write("Sending e-mail to : " . $email->recipient, 'INFO');
+            $GLOBALS['mailer']->setFrom($email->sender);
+            $GLOBALS['logger']->write("Subject : " . $email->subject, 'INFO');
+            $GLOBALS['mailer']->setSubject($email->subject);
+            $GLOBALS['mailer']->setHtml(gzinflate(base64_decode($email->html_body)));
+            $GLOBALS['mailer']->setTextCharset((string)$email->charset);
+            $GLOBALS['mailer']->setHtmlCharset((string)$email->charset);
+            $GLOBALS['mailer']->setHeadCharset((string)$email->charset);
+            
+            if($email->attachments != '') {
+                $attachments = explode(',', $email->attachments);
+                foreach($attachments as $num => $attachment) {
+                    if(is_file($attachment)) {
+                    $ext = strrchr($attachment, '.');
                     $name = str_pad(($num + 1), 4, '0', STR_PAD_LEFT) . $ext;
-					$ctype = '';
-					switch($ext) {
-						case '.pdf':
-							$ctype = 'application/pdf';
-							break;
-					}
-					$file_content = $GLOBALS['mailer']->getFile($attachment);
-					$GLOBALS['mailer']->addAttachment($file_content, $name, $ctype); 
-					}
-				}
-			}
-			$return = $GLOBALS['mailer']->send(array($email->recipient), (string)$mailerParams->type);
-			if($return || $return == 0) {
-				$exec_result = 'SENT';
-			} else {
-				$GLOBALS['logger']->write("Errors when sending message through SMTP :" . implode(', ', $GLOBALS['mailer']->errors), 'ERROR');
-				$exec_result = 'FAILED';
-			}	
-			$query = "UPDATE " . _NOTIF_EMAIL_STACK_TABLE_NAME 
-				. " SET exec_date = " . $GLOBALS['db']->current_datetime()
-				. ", exec_result = '".$exec_result."' "
-				. " WHERE email_stack_sid = ".$email->email_stack_sid;
-			Bt_doQuery($GLOBALS['db'], $query);
-			$currentEmail++;
-			$state = 'SEND_AN_EMAIL';
-		} else {
-			$state = 'END';
-		}
+                    $ctype = '';
+                    switch($ext) {
+                        case '.pdf':
+                            $ctype = 'application/pdf';
+                            break;
+                    }
+                    $file_content = $GLOBALS['mailer']->getFile($attachment);
+                    $GLOBALS['mailer']->addAttachment($file_content, $name, $ctype); 
+                    }
+                }
+            }
+            $return = $GLOBALS['mailer']->send(array($email->recipient), (string)$mailerParams->type);
+            if($return || $return == 0) {
+                $exec_result = 'SENT';
+            } else {
+                $GLOBALS['logger']->write("Errors when sending message through SMTP :" . implode(', ', $GLOBALS['mailer']->errors), 'ERROR');
+                $exec_result = 'FAILED';
+            }   
+            $query = "UPDATE " . _NOTIF_EMAIL_STACK_TABLE_NAME 
+                . " SET exec_date = " . $GLOBALS['db']->current_datetime()
+                . ", exec_result = '".$exec_result."' "
+                . " WHERE email_stack_sid = ".$email->email_stack_sid;
+            Bt_doQuery($GLOBALS['db'], $query);
+            $currentEmail++;
+            $state = 'SEND_AN_EMAIL';
+        } else {
+            $state = 'END';
+        }
         break;
-	}
+    }
 }
 
 $GLOBALS['logger']->write('End of process', 'INFO');
