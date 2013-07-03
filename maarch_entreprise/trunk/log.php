@@ -75,13 +75,24 @@ if (! empty($_SESSION['error'])) {
 } else {
     if ($_SESSION['config']['ldap'] == 'true' && $login <> 'superadmin') {
         //Extraction de /root/config dans le fichier de conf
+        if (file_exists($_SESSION['config']['corepath'] 
+            . '/custom/' . $_SESSION['custom_override_id']
+            . '/modules/ldap/xml/config.xml')
+        ) {
+            $pathtoConfig = $_SESSION['config']['corepath'] 
+            . '/custom/' . $_SESSION['custom_override_id']
+            . '/modules/ldap/xml/config.xml';
+        } else {
+             $pathtoConfig = $_SESSION['config']['corepath'] 
+                . 'modules/ldap/xml/config.xml';
+        }
         $ldapConf = new DomDocument();
         try {
-            if (!@$ldapConf->load($_SESSION['config']['corepath'].'modules/ldap/xml/config.xml')) 
-			{
+            if (!@$ldapConf->load($pathtoConfig)) 
+            {
                 throw new Exception(
                     'Impossible de charger le document : '
-                    . $_SESSION['config']['corepath'].'modules/ldap/xml/config.xml'
+                    . $pathtoConfig
                 );
             }
         } catch(Exception $e) {
@@ -96,8 +107,9 @@ if (! empty($_SESSION['error'])) {
 
         //On inclus la class LDAP qui correspond à l'annuaire
         if (!include $_SESSION['config']['corepath'] . 'modules/ldap/class/class_adLDAP.php') 
-		{
-            exit('Impossible de charger class_' . $_SESSION['config']['corepath'] . 'modules/ldap/class/class_adLDAP.php'."\n");
+        {
+            exit('Impossible de charger class_' . $_SESSION['config']['corepath'] 
+                . 'modules/ldap/class/class_adLDAP.php'."\n");
         }
 
         //Try to create a new ldap instance
@@ -111,8 +123,8 @@ if (! empty($_SESSION['error'])) {
         if ($ad -> authenticate($login, $password)) {
             $db = new dbquery();
             $db->connect();
-			
-			$login = end(explode('\\', $login));
+            
+            $login = end(explode('\\', $login));
 
             $query = 'select * from ' . USERS_TABLE
                        . " where user_id like '"
