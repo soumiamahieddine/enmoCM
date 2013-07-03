@@ -111,16 +111,24 @@ if (! empty($_SESSION['error'])) {
             exit('Impossible de charger class_' . $_SESSION['config']['corepath'] 
                 . 'modules/ldap/class/class_adLDAP.php'."\n");
         }
-
+        
+        if ($prefix_login <> '') {
+            $login_admin = $prefix_login . "\\" . $login_admin;
+        }
+        
         //Try to create a new ldap instance
         try {
-            $ad = new LDAP($domain, $adminLogin, $pass, $ssl);
+            $ad = new LDAP($domain, $login_admin, $pass, $ssl);
         } catch(Exception $conFailure) {
             echo $conFailure->getMessage();
             exit;
         }
-
-        if ($ad -> authenticate($login, $password)) {
+        
+        if ($prefix_login <> '') {
+            $loginToAd = $prefix_login . "\\" . $login;
+        }
+        
+        if ($ad -> authenticate($loginToAd, $password)) {
             $db = new dbquery();
             $db->connect();
             
