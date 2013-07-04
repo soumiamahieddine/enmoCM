@@ -1022,7 +1022,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
                 $xmlfile = $xmlfileCustom;
             }
             $fulllist = array();
-            $fulllist = $this->getTemplatesDatasources($xmlfileCustom);
+            $fulllist = $this->getTemplatesDatasources($xmlfile);
             foreach ($fulllist as $ds) {
                 if ($datasourceId == $ds['id']){
                     return (object)$ds;
