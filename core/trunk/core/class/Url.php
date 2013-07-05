@@ -195,10 +195,15 @@ class Url
 
     private static function _buildPort()
     {
-        return array_key_exists('HTTP_X_FORWARDED_PORT', $_SERVER)
-                ? $_SERVER['HTTP_X_FORWARDED_PORT'] : $_SERVER['SERVER_PORT'];
+        if(array_key_exists('HTTP_X_FORWARDED_PORT', $_SERVER)) {
+            return $_SERVER['HTTP_X_FORWARDED_PORT'];
+        } else if (array_key_exists('HTTP_X_FORWARDED_HOST', $_SERVER)) {
+            return '80';
+        } else {
+            return $_SERVER['SERVER_PORT'];
+        }
     }
-
+    
     private static function _buildProto()
     {
         if (array_key_exists('HTTP_X_FORWARDED_PROTO', $_SERVER)) {
