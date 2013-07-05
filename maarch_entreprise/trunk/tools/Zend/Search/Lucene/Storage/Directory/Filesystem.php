@@ -345,7 +345,12 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
     public function getFileObject($filename, $shareHandler = true)
     {
         $fullFilename = $this->_dirPath . '/' . $filename;
-
+        if (!file_exists('Zend/Search/Lucene/Storage/File/Filesystem.php')) {
+            set_include_path($_SESSION['config']['corepath'] . 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                . DIRECTORY_SEPARATOR . 'tools' . DIRECTORY_SEPARATOR . PATH_SEPARATOR 
+                . get_include_path()
+            );
+        }
         require_once 'Zend/Search/Lucene/Storage/File/Filesystem.php';
         if (!$shareHandler) {
             return new Zend_Search_Lucene_Storage_File_Filesystem($fullFilename);
