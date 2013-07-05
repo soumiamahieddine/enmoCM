@@ -96,6 +96,11 @@
         <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
+        <name>TXT</name>
+        <mime>application/octet-stream</mime>
+        <index_frame_show>true</index_frame_show>
+    </FORMAT>
+    <FORMAT>
         <name>MAARCH</name>
         <mime>text/plain</mime>
         <index_frame_show>true</index_frame_show>
