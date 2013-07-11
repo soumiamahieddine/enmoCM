@@ -170,6 +170,7 @@ while ($state <> 'END') {
             $subject = $func->protect_string_db($notification->description);
             $html = $func->protect_string_db($html);
             $html = str_replace('&amp;', '&', $html);
+            $html = str_replace('&', '#and#', $html);
             
             // Attachments
             $attachments = array();
@@ -196,16 +197,32 @@ while ($state <> 'END') {
             }
             
             $logger->write('Adding e-mail to email stack', 'INFO');
-            $query = "INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME 
-                . " (sender, recipient, subject, html_body, charset, attachments, module) "
-                . "VALUES ('".$sender."', "
-                . "'".$recipient_mail."', "
-                . "'".$subject."', "
-                //. "'" . base64_encode(gzdeflate($html, 9)) . "', " 
-                . "'" . $html . "', " 
-                . "'".(string)$mailerParams->charset."', "
-                . "'".implode(',', $attachments)."', "
-                . "'notifications')";
+            if ($_SESSION['config']['databasetype'] == 'ORACLE') {
+                $query = "DECLARE
+  vString notif_email_stack.html_body%type;
+BEGIN
+  vString := '" . $html ."';
+  INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME . "
+  (sender, recipient, subject, html_body, charset, attachments, module) 
+  VALUES ('".$sender."', 
+  '".$recipient_mail."', 
+  '".$subject."', 
+  vString,  
+  '".(string)$mailerParams->charset."', 
+  '".implode(',', $attachments)."', 
+  'notifications');
+END;";
+            } else {
+                $query = "INSERT INTO " . _NOTIF_EMAIL_STACK_TABLE_NAME 
+                        . " (sender, recipient, subject, html_body, charset, attachments, module) "
+                        . "VALUES ('".$sender."', "
+                        . "'".$recipient_mail."', "
+                        . "'".$subject."', "
+                        . "'" . $html . "', " 
+                        . "'".(string)$mailerParams->charset."', "
+                        . "'".implode(',', $attachments)."', "
+                        . "'notifications')";
+            }
             $logger->write('SQL query:' . $query, 'DEBUG');
             $db2 = new dbquery();
             $db2->connect();
@@ -214,7 +231,6 @@ while ($state <> 'END') {
             foreach($tmpNotif['events'] as $event) {
                 $events_controler->commitEvent($event->event_stack_sid, "SUCCESS");
             }
-
         } 
         $state = 'END';
         break;
