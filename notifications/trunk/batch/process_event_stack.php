@@ -201,7 +201,8 @@ while ($state <> 'END') {
                 . "VALUES ('".$sender."', "
                 . "'".$recipient_mail."', "
                 . "'".$subject."', "
-                . "'" . base64_encode(gzdeflate($html, 9)) . "', " 
+                //. "'" . base64_encode(gzdeflate($html, 9)) . "', " 
+                . "'" . $html . "', " 
                 . "'".(string)$mailerParams->charset."', "
                 . "'".implode(',', $attachments)."', "
                 . "'notifications')";

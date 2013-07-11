@@ -53,7 +53,8 @@ while ($state <> 'END') {
             $GLOBALS['mailer']->setFrom($email->sender);
             $GLOBALS['logger']->write("Subject : " . $email->subject, 'INFO');
             $GLOBALS['mailer']->setSubject($email->subject);
-            $GLOBALS['mailer']->setHtml(gzinflate(base64_decode($email->html_body)));
+            //$GLOBALS['mailer']->setHtml(gzinflate(base64_decode($email->html_body)));
+            $GLOBALS['mailer']->setHtml($email->html_body);
             $GLOBALS['mailer']->setTextCharset((string)$email->charset);
             $GLOBALS['mailer']->setHtmlCharset((string)$email->charset);
             $GLOBALS['mailer']->setHeadCharset((string)$email->charset);
