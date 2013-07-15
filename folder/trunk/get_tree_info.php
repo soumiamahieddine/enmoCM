@@ -52,6 +52,9 @@ $db4 = new dbquery();
 $db4->connect();
 
 $collId = $_SESSION['user']['collections'][0];
+if ($_SESSION['user']['collections'][1] == 'letterbox_coll') {
+    $collId = 'letterbox_coll';
+}
 $resView = $_SESSION['user']['security'][$collId]['DOC']['view'];
 $whereClause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
 if (trim($whereClause) == "") {

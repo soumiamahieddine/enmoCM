@@ -27,7 +27,9 @@ $_SESSION['indexation'] = false;
 
 //Definition de la collection
 $_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
-
+if ($_SESSION['user']['collections'][1] == 'letterbox_coll') {
+    $_SESSION['collection_id_choice'] = 'letterbox_coll';
+}
 /****************Management of the location bar  ************/
 $init = false;
 if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == 'true') {
