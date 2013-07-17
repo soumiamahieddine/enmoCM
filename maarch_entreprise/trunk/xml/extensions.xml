@@ -37,12 +37,22 @@
     </FORMAT>
     <FORMAT>
         <name>DOCX</name>
+        <mime>application/msword</mime>
+        <index_frame_show>false</index_frame_show>
+    </FORMAT>
+    <FORMAT>
+        <name>DOCX</name>
         <mime>application/zip</mime>
         <index_frame_show>false</index_frame_show>
     </FORMAT>
     <FORMAT>
         <name>XLSX</name>
         <mime>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</mime>
+        <index_frame_show>false</index_frame_show>
+    </FORMAT>
+    <FORMAT>
+        <name>XLSX</name>
+        <mime>application/vnd.ms-excel</mime>
         <index_frame_show>false</index_frame_show>
     </FORMAT>
     <FORMAT>
@@ -58,6 +68,11 @@
     <FORMAT>
         <name>PPTX</name>
         <mime>application/zip</mime>
+        <index_frame_show>false</index_frame_show>
+    </FORMAT>
+    <FORMAT>
+        <name>PPTX</name>
+        <mime>application/vnd.ms-powerpoint</mime>
         <index_frame_show>false</index_frame_show>
     </FORMAT>
     <FORMAT>
