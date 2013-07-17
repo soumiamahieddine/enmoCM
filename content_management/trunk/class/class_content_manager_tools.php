@@ -164,6 +164,7 @@ class content_management_tools
     */
     public function closeReservation($CMId)
     {
+        $this->db->connect();
         $query = "delete from " . PARAM_TABLE
             . " where id = '" . $CMId . "'";
         $this->db->query($query);
