@@ -1389,6 +1389,13 @@ function process_category_check($catId, $values)
             }
         }
     }
+    
+    //Status
+	$statusId = get_value_fields($values, 'status');
+    if (! $statusId) {
+        $_SESSION['action_error'] = _STATUS . ' ' . _IS_EMPTY;
+         return false;
+    }
 
     if ($core->is_module_loaded('entities')) {
         // Diffusion list
