@@ -103,6 +103,7 @@ if (!defined('_ACTION_PAGE'))    define( '_ACTION_PAGE', 'Page de r&eacute;sulta
 if (!defined('_DO_NOT_MODIFY_UNLESS_EXPERT'))    define( '_DO_NOT_MODIFY_UNLESS_EXPERT', ' Ne pas modifier cette section &agrave; moins de savoir ce que vous faites. Un mauvais param&egrave;trage peut entrainer des dysfonctionnements de l&rsquo;application!');
 if (!defined('_INFOS_ACTIONS'))    define( '_INFOS_ACTIONS', 'Vous devez choisir au moins un statut et / ou un script.');
 
+if (!defined('_EDIT_MAIL'))    define( '_EDIT_MAIL', 'Courriel pour');
 
 /************** Intitul&eacute;s formulaires et listes **************/
 if (!defined('_ID'))    define( '_ID', 'Identifiant');
@@ -878,6 +879,7 @@ if (!defined('_CONTACT_DELETED')) define( '_CONTACT_DELETED', 'Contact supprim&e
 if (!defined('_MODIFY_CONTACT')) define( '_MODIFY_CONTACT', 'Modifier un contact');
 if (!defined('_IS_CORPORATE_PERSON')) define( '_IS_CORPORATE_PERSON', 'Personne morale');
 if (!defined('_IS_PRIVATE')) define( '_IS_PRIVATE', 'Coordonnées confidentielles');
+if (!defined('_PRIVATE')) define( '_PRIVATE', 'Priv&eacute;');
 if (!defined('_TITLE2')) define( '_TITLE2', 'Civilit&eacute;');
 if (!defined('_WARNING_MESSAGE_DEL_CONTACT'))  define('_WARNING_MESSAGE_DEL_CONTACT', 'Avertissement :<br> La suppression d&rsquo;un contact entraine la r&eacute;affectation des documents &agrave un nouveau contact quelque soit le statut des documents (courriers).');
 if (!defined('_CONTACT_DELETION'))  define('_CONTACT_DELETION', 'Suppression de contact');
