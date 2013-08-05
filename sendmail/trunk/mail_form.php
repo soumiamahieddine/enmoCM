@@ -604,12 +604,19 @@ if ($mode == 'add') {
 
         //Check if mail exists
         if (count($emailArray) > 0 ) {
+			$usermailArray = $users_tools->get_user($emailArray['userId']);
+		
             $content .= '<div class="block">';
             $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
             $content .= '<tr>';
+/*
 			$content .= '<td colspan="3" nowrap><b>'._READ_EMAIL.' '.strtolower(_FROM_SHORT).': </b>'
                 .$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName']
                 .' ('.$_SESSION['user']['Mail'].')<br/></td>';
+*/
+			$content .= '<td colspan="3" nowrap><b>'._READ_EMAIL.' '.strtolower(_FROM_SHORT).': </b>'
+                .$usermailArray['firstname'].' '.$usermailArray['lastname']
+                .' ('.$usermailArray['mail'].')<br/></td>';
             $content .= '</tr>';
             //To
             if (count($emailArray['to']) > 0) {
