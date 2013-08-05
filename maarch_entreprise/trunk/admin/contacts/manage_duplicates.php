@@ -84,7 +84,7 @@ echo '<center>';
 //TODO: ENABLE THIS FUNCTION FOR ALL COLLECTION USING CONTACTS
 
 //duplicates by society
-$selectDuplicatesBySociety = "SELECT contact_id, society, lower(society) as lowsoc, "
+$selectDuplicatesBySociety = "SELECT contact_id, user_id, society, lower(society) as lowsoc, "
     . "is_corporate_person, lastname, firstname, "
     . "address_num, address_street, address_town "
     . "from contacts "
@@ -97,6 +97,7 @@ $htmlTabSoc .= '<CAPTION>' . _DUPLICATES_BY_SOCIETY . '</CAPTION>';
 $htmlTabSoc .= '<tr>';
 $htmlTabSoc .= '<th>&nbsp;</th>';
 $htmlTabSoc .= '<th>' . _ID . '</th>';
+$htmlTabSoc .= '<th>' . _PRIVATE . '</th>';
 $htmlTabSoc .= '<th>' . _SOCIETY . '</th>';
 $htmlTabSoc .= '<th>' . _IS_CORPORATE_PERSON . '</th>';
 $htmlTabSoc .= '<th>' . _LASTNAME . '</th>';
@@ -114,6 +115,11 @@ $cptSoc = 0;
 while($lineDoublSoc = $db->fetch_object()) {
     if ($lineDoublSoc->contact_id <> '') {
         $cptSoc++;
+        if($lineDoublSoc->user_id <> '') {
+			$is_private = 'Y';
+		}
+		else
+			$is_private = 'N';
         //USE AJAX REQUEST TO KNOW IF RES ATTACHED
         /*$selectResAttached = "select res_id from res_view_letterbox where "
             . "exp_contact_id = " . $lineDoublSoc->contact_id . " or "
@@ -144,6 +150,7 @@ while($lineDoublSoc = $db->fetch_object()) {
             . _IS_ATTACHED_TO_DOC . '" onclick="loadDocList('
             . $lineDoublSoc->contact_id . ');" style="cursor: pointer;"/></td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->contact_id . '</td>';
+        $htmlTabSoc .= '<td>' . $is_private. '</td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->society . '</td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->is_corporate_person . '</td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->lastname . '</td>';
