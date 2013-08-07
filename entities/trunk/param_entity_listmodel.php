@@ -56,8 +56,10 @@ elseif($_SESSION['service_tag'] == 'entities_list_init')
 }
 elseif($_SESSION['service_tag'] == 'entity_check')
 {
-	if((count($_SESSION['m_admin']['entity']['listmodel']['copy']['users']) > 0 || count($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']) > 0) && (!isset($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']) || empty($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'])))
+	if((isset($_SESSION['m_admin']['entity']['listmodel']['copy']['users']) && count($_SESSION['m_admin']['entity']['listmodel']['copy']['users']) >= 0 || isset($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']) && count($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']) > 0) && (!isset($_SESSION['m_admin']['entity']['listmodel']['dest']['users']) || empty($_SESSION['m_admin']['entity']['listmodel']['dest']['users'])))
 	{
+		
+		$_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'];
 		$_SESSION['error'] .= _DEST_MANDATORY;
 	}
 }
@@ -108,4 +110,3 @@ if($_SESSION['service_tag_form'] == 'formentity') {
 	</div> <?php
 } 
 ?>
-
