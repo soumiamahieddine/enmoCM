@@ -3448,7 +3448,7 @@ CREATE VIEW res_view_business AS
 -- view for letterbox
 DROP VIEW IF EXISTS res_view_letterbox;
 CREATE VIEW res_view_letterbox AS
-    SELECT r.tablename, r.is_multi_docservers, r.res_id, r.type_id,
+    SELECT r.tablename, r.is_multi_docservers, r.res_id, r.type_id, r.policy_id, r.cycle_id, 
     d.description AS type_label, d.doctypes_first_level_id,
     dfl.doctypes_first_level_label, dfl.css_style as doctype_first_level_style,
     d.doctypes_second_level_id, dsl.doctypes_second_level_label,
