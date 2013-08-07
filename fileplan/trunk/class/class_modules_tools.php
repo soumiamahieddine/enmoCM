@@ -39,233 +39,234 @@ try {
 
 class fileplan extends dbquery
 {
-	/**
-	* Build Maarch module tables into sessions vars with a xml configuration file
-	*
-	*
-	*/
-	public function build_modules_tables() {
-		
-		if (file_exists(
-		    $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-		    . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . "modules"
-		    . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR . "xml"
-		    . DIRECTORY_SEPARATOR . "config.xml"
-		)
-		) {
-			$path = $_SESSION['config']['corepath'] . 'custom'
-			      . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
-			      . DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR
-			      . "fileplan" . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
-			      . "config.xml";
-		} else {
-			$path = "modules" . DIRECTORY_SEPARATOR . "fileplan"
-			      . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
-			      . "config.xml";
-		}
-		$xmlconfig = simplexml_load_file($path);
+    /**
+    * Build Maarch module tables into sessions vars with a xml configuration file
+    *
+    *
+    */
+    public function build_modules_tables() {
+        
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . "modules"
+            . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR . "xml"
+            . DIRECTORY_SEPARATOR . "config.xml"
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom'
+                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                  . DIRECTORY_SEPARATOR . "modules" . DIRECTORY_SEPARATOR
+                  . "fileplan" . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
+                  . "config.xml";
+        } else {
+            $path = "modules" . DIRECTORY_SEPARATOR . "fileplan"
+                  . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR
+                  . "config.xml";
+        }
+        $xmlconfig = simplexml_load_file($path);
 
 
-		//History
-		$hist = $xmlconfig->HISTORY;
-		$_SESSION['history']['fileplanadd'] = (string) $hist->fileplanadd;
-		$_SESSION['history']['fileplanup'] = (string) $hist->fileplanup;
-		$_SESSION['history']['fileplandel'] = (string) $hist->fileplandel;
-	}
-	/**
-	*
-	*
-	*
-	*/
-	public function getFileplan($fileplan_id, $root_mode = true) {
-	
-		$fileplan = array();
-		
-		$this->connect();
+        //History
+        $hist = $xmlconfig->HISTORY;
+        $_SESSION['history']['fileplanadd'] = (string) $hist->fileplanadd;
+        $_SESSION['history']['fileplanup'] = (string) $hist->fileplanup;
+        $_SESSION['history']['fileplandel'] = (string) $hist->fileplandel;
+    }
+    /**
+    *
+    *
+    *
+    */
+    public function getFileplan($fileplan_id, $root_mode = true) {
+    
+        $fileplan = array();
+        
+        $this->connect();
         $this->query(
             "select * from " 
             . FILEPLAN_TABLE 
-			. " where fileplan_id = " 
-			. $fileplan_id
-		);
-		if($this->nb_result() > 0) {		
-			$res = $this->fetch_object();
-			//Root mode
-			($root_mode === true)? $id = '##ROOT##' : $id = $res->fileplan_id;
-			
-			$fileplan = array(
-				'ID' => $id , 
-				'LABEL' => $this->show_string($res->fileplan_label),
-				'USER' => $res->user_id,
-				'ENTITY' => $res->entity_id,
-				'IS_SERIAL' => $res->is_serial_id,
-				'ENABLED' => $res->enabled
-			);
-		}
-		return $fileplan;
-	}
-	/**
-	*
-	*
-	*
-	*/
-	public function isPersonnalFileplan($fileplan_id) {
-		$this->connect();
+            . " where fileplan_id = " 
+            . $fileplan_id
+        );
+        if($this->nb_result() > 0) {        
+            $res = $this->fetch_object();
+            //Root mode
+            ($root_mode === true)? $id = '##ROOT##' : $id = $res->fileplan_id;
+            
+            $fileplan = array(
+                'ID' => $id , 
+                'LABEL' => $this->show_string($res->fileplan_label),
+                'USER' => $res->user_id,
+                'ENTITY' => $res->entity_id,
+                'IS_SERIAL' => $res->is_serial_id,
+                'ENABLED' => $res->enabled
+            );
+        }
+        return $fileplan;
+    }
+    /**
+    *
+    *
+    *
+    */
+    public function isPersonnalFileplan($fileplan_id) {
+        $this->connect();
         $this->query(
             "select fileplan_id from " 
             . FILEPLAN_TABLE . " where fileplan_id = "
-			. $fileplan_id." and user_id = '" 
-			. $_SESSION['user']['UserId'] . "'"
-		);
-		
-		return ($this->nb_result() > 0)? true : false;
-	}
-	/**
-	*
-	*
-	*
-	*/
-	public function isSerialFileplan($fileplan_id) {
-		$this->connect();
+            . $fileplan_id." and user_id = '" 
+            . $_SESSION['user']['UserId'] . "'"
+        );
+        
+        return ($this->nb_result() > 0)? true : false;
+    }
+    /**
+    *
+    *
+    *
+    */
+    public function isSerialFileplan($fileplan_id) {
+        $this->connect();
         $this->query(
             "select fileplan_id from " 
             . FILEPLAN_TABLE . " where fileplan_id = "
-			. $fileplan_id." and is_serial_id = 'Y'"
-		);
-		
-		return ($this->nb_result() > 0)? true : false;
-	}
-	/**
-	*
-	*
-	*
-	*/
-	public function fileplanHasPositions($fileplan_id) {
-		$this->connect();
+            . $fileplan_id." and is_serial_id = 'Y'"
+        );
+        
+        return ($this->nb_result() > 0)? true : false;
+    }
+    /**
+    *
+    *
+    *
+    */
+    public function fileplanHasPositions($fileplan_id) {
+        $this->connect();
         $this->query(
             "select position_id from " 
             . FILEPLAN_POSITIONS_TABLE . " where fileplan_id = "
-			. $fileplan_id
-		);
-		
-		return ($this->nb_result() > 0)? true : false;
-	}
-	/**
-	*
-	*
-	*
-	*/
-	public function userCanChangeFileplan($fileplan_id) {
-	
-		if ($this->isPersonnalFileplan($fileplan_id)) {
-			return true;
-		} else {
-			$core_tools = new core_tools();
-			if ($core_tools->test_service('put_doc_in_fileplan', 'fileplan', false)) {
-				return true;
-			} else {
-				return false;
-			}
-		}
-	}
-	/**
-	*
-	*
-	*
-	*/
-	public function getEntitiesFileplan() {
-	
-		$fileplan = array();
-		// if (isset($_SESSION['user']['entities']) && count($_SESSION['user']['entities']) > 0) {
-			// $entities = array();
-			// for($i=0; $i < count($_SESSION['user']['entities']); $i++) {
-				// array_push($entities, "'".$_SESSION['user']['entities'][$i]['ENTITY_ID']."'");
-			// }
-			$this->connect();
-			// $this->query(
-				// "select * from " 
-				// . FILEPLAN_TABLE . " where entity_id in(" 
-				// . join(',', $entities) . ")"
-			// );
-			$this->query(
-				"select * from " 
-				. FILEPLAN_TABLE . " where user_id is null"
-			);
-			
-			if($this->nb_result() > 0) {
-				$res = $this->fetch_object();
-				array_push(
-					$fileplan , 
-					array(
-						'ID' =>   $res->fileplan_id, 
-						'LABEL' => $this->show_string($res->fileplan_label),
-						'ENABLED' => $res->enabled
-					)
-				);
-			}
-		// }
-		
-		return $fileplan;
-	}
-	/**
-	*
-	*
-	*
-	*/
-	public function getUserFileplan() {
-	
-		$fileplan = array();
-		
-		$this->connect();
+            . $fileplan_id
+        );
+        
+        return ($this->nb_result() > 0)? true : false;
+    }
+    /**
+    *
+    *
+    *
+    */
+    public function userCanChangeFileplan($fileplan_id) {
+    
+        if ($this->isPersonnalFileplan($fileplan_id)) {
+            return true;
+        } else {
+            $core_tools = new core_tools();
+            if ($core_tools->test_service('put_doc_in_fileplan', 'fileplan', false)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+    /**
+    *
+    *
+    *
+    */
+    public function getEntitiesFileplan() {
+    
+        $fileplan = array();
+        // if (isset($_SESSION['user']['entities']) && count($_SESSION['user']['entities']) > 0) {
+            // $entities = array();
+            // for($i=0; $i < count($_SESSION['user']['entities']); $i++) {
+                // array_push($entities, "'".$_SESSION['user']['entities'][$i]['ENTITY_ID']."'");
+            // }
+            $this->connect();
+            // $this->query(
+                // "select * from " 
+                // . FILEPLAN_TABLE . " where entity_id in(" 
+                // . join(',', $entities) . ")"
+            // );
+            $this->query(
+                "select * from " 
+                . FILEPLAN_TABLE . " where user_id is null"
+            );
+            
+            if($this->nb_result() > 0) {
+                while($res = $this->fetch_object()) {
+                    array_push(
+                        $fileplan , 
+                        array(
+                            'ID' =>   $res->fileplan_id, 
+                            'LABEL' => $this->show_string($res->fileplan_label),
+                            'ENABLED' => $res->enabled
+                        )
+                    );
+                }
+            }
+        // }
+        
+        return $fileplan;
+    }
+    /**
+    *
+    *
+    *
+    */
+    public function getUserFileplan() {
+    
+        $fileplan = array();
+        
+        $this->connect();
         $this->query(
             "select * from " 
             . FILEPLAN_TABLE . " where user_id = '" 
-			. $_SESSION['user']['UserId'] . "'"
-		);
-		if($this->nb_result() > 0) {		
-			$res = $this->fetch_object();
-			array_push(
+            . $_SESSION['user']['UserId'] . "'"
+        );
+        if($this->nb_result() > 0) {        
+            $res = $this->fetch_object();
+            array_push(
                 $fileplan , 
                 array(
-					'ID' =>   $res->fileplan_id, 
-					'LABEL' => $this->show_string($res->fileplan_label),
-					'ENABLED' => $res->enabled
-				)
-			);
-		}
-		return $fileplan;
-	}
-	/**
-	*
-	*
-	*
-	*/
-	public function getAuthorizedFileplans() {
-	
-		$authorizedFileplans = array();
-		
-		//Get user fileplan
-		$userFileplanArray = $this->getUserFileplan();
-		
-		//Get global fileplans
-		$entitiesFileplanArray = $this->getEntitiesFileplan();
+                    'ID' =>   $res->fileplan_id, 
+                    'LABEL' => $this->show_string($res->fileplan_label),
+                    'ENABLED' => $res->enabled
+                )
+            );
+        }
+        return $fileplan;
+    }
+    /**
+    *
+    *
+    *
+    */
+    public function getAuthorizedFileplans() {
+    
+        $authorizedFileplans = array();
+        
+        //Get user fileplan
+        $userFileplanArray = $this->getUserFileplan();
+        
+        //Get global fileplans
+        $entitiesFileplanArray = $this->getEntitiesFileplan();
 
-		// print_r($userFileplanArray);
-		// print_r($entitiesFileplanArray);
-		
-		$authorizedFileplans = array_merge ($userFileplanArray, $entitiesFileplanArray);
-		
-		return $authorizedFileplans;
-	}
-	/**
-	*
-	*
-	*
-	*/
-	public function positionAlreadyExists($fileplan_id, $position_id) {
+        // print_r($userFileplanArray);
+        // print_r($entitiesFileplanArray);
+        
+        $authorizedFileplans = array_merge ($userFileplanArray, $entitiesFileplanArray);
+        
+        return $authorizedFileplans;
+    }
+    /**
+    *
+    *
+    *
+    */
+    public function positionAlreadyExists($fileplan_id, $position_id) {
         $this->connect();
         $this->query(
-        	"select position_id from " 
+            "select position_id from " 
             . FILEPLAN_POSITIONS_TABLE
             . "  where position_id = '" . $position_id 
             . "' and fileplan_id = " . $fileplan_id
@@ -277,103 +278,103 @@ class fileplan extends dbquery
             return false;
         }
     }
-	/**
-	* Build position path
-	*
-	*
-	*/
-	private function _buildPositionPath($fileplan_id, $position_array, $position_id) {
+    /**
+    * Build position path
+    *
+    *
+    */
+    private function _buildPositionPath($fileplan_id, $position_array, $position_id) {
         
         if (!empty($fileplan_id) && !empty($position_id)) {
-			
-			$this->query(
+            
+            $this->query(
                 "select position_label, parent_id from " 
                 . FILEPLAN_POSITIONS_TABLE 
-				. " where fileplan_id = "
-				. $fileplan_id . " and position_id = '" 
-				. $position_id . "' "
+                . " where fileplan_id = "
+                . $fileplan_id . " and position_id = '" 
+                . $position_id . "' "
             );
-			// $this->show();
-			$res = $this->fetch_object();
+            // $this->show();
+            $res = $this->fetch_object();
             $position_name = $this->show_string($res->position_label);
             $parent_id = $res->parent_id;
-			
-			if (!empty($position_name)){
-				array_push($position_array , $position_name);
-			}
-			if (!empty($parent_id)){
-				$position_array = $this->_buildPositionPath($fileplan_id, $position_array, $parent_id);
-			}
-		}
-		return $position_array;
-	}
-	/**
-	* Return position path
-	*
-	*
-	*/
-	public function getPositionPath($fileplan_id, $position_id, $full_path = false, $separator='/') {
-		
-		$position_path = '';
-		
-		if (!empty($fileplan_id) && !empty($position_id)) {
-			//
-			$position_array = array();
-			//Build path
-			$position_array = $this->_buildPositionPath($fileplan_id, $position_array, $position_id);
-			//Ascendant sort
-			krsort($position_array);
-			//Join with separator
-			$position_path = join($separator, $position_array);
-			//Full path
-			if ($full_path) {
-				$fileplan_array = $this->getFileplan($fileplan_id, false);
-				$position_path = $fileplan_array['LABEL'].$separator.$position_path;
-			}	
-		}
-		
-		return  $position_path;
-	}
-	/**
-	* Get position name
-	*
-	*
-	*/
-	public function getPosition($fileplan_id, $position_id, $onlyThisField = '') {
+            
+            if (!empty($position_name)){
+                array_push($position_array , $position_name);
+            }
+            if (!empty($parent_id)){
+                $position_array = $this->_buildPositionPath($fileplan_id, $position_array, $parent_id);
+            }
+        }
+        return $position_array;
+    }
+    /**
+    * Return position path
+    *
+    *
+    */
+    public function getPositionPath($fileplan_id, $position_id, $full_path = false, $separator='/') {
+        
+        $position_path = '';
+        
+        if (!empty($fileplan_id) && !empty($position_id)) {
+            //
+            $position_array = array();
+            //Build path
+            $position_array = $this->_buildPositionPath($fileplan_id, $position_array, $position_id);
+            //Ascendant sort
+            krsort($position_array);
+            //Join with separator
+            $position_path = join($separator, $position_array);
+            //Full path
+            if ($full_path) {
+                $fileplan_array = $this->getFileplan($fileplan_id, false);
+                $position_path = $fileplan_array['LABEL'].$separator.$position_path;
+            }   
+        }
+        
+        return  $position_path;
+    }
+    /**
+    * Get position name
+    *
+    *
+    */
+    public function getPosition($fileplan_id, $position_id, $onlyThisField = '') {
                 
         if (!empty($fileplan_id) && !empty($position_id)) {
             $this->connect();
             $this->query(
                 "select * from " 
                 . FILEPLAN_VIEW . " where fileplan_id = "
-				. $fileplan_id . " and position_id = '" 
-				. $position_id . "' "
+                . $fileplan_id . " and position_id = '" 
+                . $position_id . "' "
                 );
              
             $line = $this->fetch_object();
-			if(!empty($onlyThisField)){
-				return (isset($line->$onlyThisField))? $this->show_string($line->$onlyThisField) : false;
-			} else {
-				$positionArray = array();
-				array_push(
+            if(!empty($onlyThisField)){
+                return (isset($line->$onlyThisField))? $this->show_string($line->$onlyThisField) : false;
+            } else {
+                $positionArray = array();
+                array_push(
                 $positionArray , 
                 array(
                     'ID' => $line->position_id, 
                     'LABEL' => $this->show_string($line->position_label), 
                     'PARENT_ID' => $line->parent_id,
-					'COUNT_DOCUMENT' => $line->count_document
+                    'COUNT_DOCUMENT' => $line->count_document
                     )
                 );
-				return $positionArray;
-			}
+                return $positionArray;
+            }
         }
     }
-	/**
-	* Truncate string
-	*
-	*
-	*/
-	public function truncate($string, $limit = 30, $etc = "...") {
+    /**
+    * Truncate string
+    *
+    *
+    */
+    public function truncate($string, $limit = 30, $etc = "...") {
                 
         if (strlen($string) > $limit) {
         
@@ -387,7 +388,7 @@ class fileplan extends dbquery
     }
     /**
     * Truncate around the middle
-	*
+    *
     *
     */
     public function m_truncate($string, $limit = 30, $etc = "...") {
@@ -421,12 +422,12 @@ class fileplan extends dbquery
         
         return $string;
     }
-	/**
-	* Get positions tree
-	*
-	*
-	*/
-	public function getPositionsTree($fileplan_id, $positions, $parent='',  $tabspace = '') {
+    /**
+    * Get positions tree
+    *
+    *
+    */
+    public function getPositionsTree($fileplan_id, $positions, $parent='',  $tabspace = '') {
         if(is_array($parent)) {
             // echo 'IS_ARRAY<br/>';
             for ($i=0; $i < count($parent); $i++) {
@@ -450,10 +451,10 @@ class fileplan extends dbquery
         return $positions;
     }
     /**
-	*
-	*
-	*
-	*/
+    *
+    *
+    *
+    */
     private function _getChildrensTree($fileplan_id, $positions, $parent = '', $tabspace = '') {
         $this->connect();
         if ($this->protect_string_db(trim($parent)) == '') {
@@ -461,18 +462,18 @@ class fileplan extends dbquery
             $this->query(
                     "select position_id, position_label, parent_id, count_document from "
                     . FILEPLAN_VIEW 
-					. " where fileplan_id = "
-					. $fileplan_id 
-					// . " and user_id = '" . $_SESSION['user']['UserId'] . "'"
-					. " and parent_id is null" 
+                    . " where fileplan_id = "
+                    . $fileplan_id 
+                    // . " and user_id = '" . $_SESSION['user']['UserId'] . "'"
+                    . " and parent_id is null" 
                     . " order by position_label asc"
                     );
         } else {
             $this->query(
                 "select position_id, position_label, parent_id, count_document from "
                 . FILEPLAN_VIEW." where fileplan_id = "
-				. $fileplan_id 
-				// . " and user_id = '" . $_SESSION['user']['UserId'] . "'"
+                . $fileplan_id 
+                // . " and user_id = '" . $_SESSION['user']['UserId'] . "'"
                 . " and parent_id = '"
                 . trim($parent)
                 . "' order by position_label asc"
@@ -490,7 +491,7 @@ class fileplan extends dbquery
                             'ID' =>$line->position_id, 
                             'LABEL' =>  $espace.$this->show_string($line->position_label), 
                             'PARENT_ID' =>$line->parent_id,
-							'COUNT_DOCUMENT' => $line->count_document
+                            'COUNT_DOCUMENT' => $line->count_document
                             )
                         );       
                 if (!empty($line->position_id)) {
@@ -498,7 +499,7 @@ class fileplan extends dbquery
                     $db->connect();
                     $db->query('select position_id from '
                         . FILEPLAN_VIEW." where fileplan_id = "
-						. $fileplan_id . " and parent_id = '"
+                        . $fileplan_id . " and parent_id = '"
                         .$line->position_id."'"
                         );
                     
@@ -513,19 +514,19 @@ class fileplan extends dbquery
         }
         return $positions;
     }
-	/**
-	*
-	*
-	*
-	*/
-	public function getParents($positions, $fileplan_id, $position_id) {
-	
+    /**
+    *
+    *
+    *
+    */
+    public function getParents($positions, $fileplan_id, $position_id) {
+    
         if (!empty($fileplan_id) && !empty($position_id)) {
             $this->connect();
             $this->query(
                     "select parent_id from "
                     . FILEPLAN_VIEW . " where fileplan_id = "
-					. $fileplan_id . " and position_id = '" 
+                    . $fileplan_id . " and position_id = '" 
                     . $position_id."'" 
                     );
             $res = $this->fetch_object();
@@ -537,7 +538,7 @@ class fileplan extends dbquery
                 $db->query(
                     "select position_id, position_label, parent_id, count_document from "
                     . FILEPLAN_VIEW." where fileplan_id = "
-					. $fileplan_id . " and position_id = '" 
+                    . $fileplan_id . " and position_id = '" 
                     . $res->parent_id ."'" 
                     );
                     
@@ -548,7 +549,7 @@ class fileplan extends dbquery
                             'ID' => $line->position_id, 
                             'LABEL' =>  $db->show_string($line->position_label), 
                             'PARENT_ID' => $line->parent_id,
-							'COUNT_DOCUMENT' => $line->count_document
+                            'COUNT_DOCUMENT' => $line->count_document
                             )
                         );
                 // $db->show();        
@@ -559,19 +560,19 @@ class fileplan extends dbquery
         }
         return $positions;
     }
-	/**
-	*
-	*
-	*
-	*/
-	public function isEnable($fileplan_id, $position_id) {
+    /**
+    *
+    *
+    *
+    */
+    public function isEnable($fileplan_id, $position_id) {
         $this->connect();
         $this->query(
-        	"select position_id from " 
+            "select position_id from " 
             . FILEPLAN_POSITIONS_TABLE
             . "  where fileplan_id = "
-			. $fileplan_id . " and position_id = '" 
-			. $position_id . "' and enabled = 'Y'"
+            . $fileplan_id . " and position_id = '" 
+            . $position_id . "' and enabled = 'Y'"
         );
             
         if($this->nb_result() > 0) {
@@ -580,45 +581,45 @@ class fileplan extends dbquery
             return false;
         }
     }
-	/**
-	*
-	*
-	*
-	*/
-	public function buildResArray($res_string) {
-	
-		if (strlen(trim($res_string)) > 0) {
-			$resIdArray = $res_array = array();
+    /**
+    *
+    *
+    *
+    */
+    public function buildResArray($res_string) {
+    
+        if (strlen(trim($res_string)) > 0) {
+            $resIdArray = $res_array = array();
             $resIdArray = explode (',', $res_string);
-			
-			//Separate coll_id and res_id
-			for($i = 0; $i < count($resIdArray); $i++) {
-				//Build res_array
-				$tmp = explode('@@', $resIdArray[$i]);
-				array_push($res_array, 
-					array(
-						'COLL_ID' => $tmp[0],
-						'RES_ID' => $tmp[1]
-					)
-				);
-			}
-			
-			return $res_array;
-		} else {
-			return false;
-		}
-	}
-	/**
-	*
-	*
-	*
-	*/
-	public function set($fileplan_id, $position_id,  $res_id, $coll_id) {
+            
+            //Separate coll_id and res_id
+            for($i = 0; $i < count($resIdArray); $i++) {
+                //Build res_array
+                $tmp = explode('@@', $resIdArray[$i]);
+                array_push($res_array, 
+                    array(
+                        'COLL_ID' => $tmp[0],
+                        'RES_ID' => $tmp[1]
+                    )
+                );
+            }
+            
+            return $res_array;
+        } else {
+            return false;
+        }
+    }
+    /**
+    *
+    *
+    *
+    */
+    public function set($fileplan_id, $position_id,  $res_id, $coll_id) {
         if (!empty($fileplan_id) 
-			&& !empty($position_id) 
-			&& !empty($res_id) 
-			&& !empty($coll_id) 
-		) {
+            && !empty($position_id) 
+            && !empty($res_id) 
+            && !empty($coll_id) 
+        ) {
         
             $this->connect();
             $this->query(
@@ -645,16 +646,16 @@ class fileplan extends dbquery
             return false;
         }
     }
-	/**
-	*
-	*
-	*
-	*/
-	public function remove($fileplan_id, $position_id, $resid_array) {
+    /**
+    *
+    *
+    *
+    */
+    public function remove($fileplan_id, $position_id, $resid_array) {
         if (!empty($fileplan_id) 
-			&& !empty($position_id) 
-			&& count($resid_array) > 0
-		) {
+            && !empty($position_id) 
+            && count($resid_array) > 0
+        ) {
             $this->connect();
             for($i=0; $i < count($resid_array); $i++) {
                 $this->query(
@@ -672,22 +673,22 @@ class fileplan extends dbquery
             return false;
         }
     }
-	/**
-	*
-	*
-	*
-	*/
-	public function whereAmISetted($authorizedFileplans, $coll_id,  $res_id) {
+    /**
+    *
+    *
+    *
+    */
+    public function whereAmISetted($authorizedFileplans, $coll_id,  $res_id) {
         if (count($authorizedFileplans) > 0 
-			&& !empty($coll_id) 
-			&& !empty($res_id) 
-		) {
-			$fileplans_array = array();
-			for($i=0; $i < count($authorizedFileplans); $i++) {
-				array_push($fileplans_array, $authorizedFileplans[$i]['ID']);
-			}
-			$fileplans = join(',', $fileplans_array);
-			
+            && !empty($coll_id) 
+            && !empty($res_id) 
+        ) {
+            $fileplans_array = array();
+            for($i=0; $i < count($authorizedFileplans); $i++) {
+                array_push($fileplans_array, $authorizedFileplans[$i]['ID']);
+            }
+            $fileplans = join(',', $fileplans_array);
+            
             $this->connect();
             $this->query(
                     "SELECT fileplan_id, position_id FROM "
@@ -698,9 +699,9 @@ class fileplan extends dbquery
                     . "'"
             );
             // $this->show();
-			$positions = array();
+            $positions = array();
             if($this->nb_result() > 0) {
-				
+                
                 while($line = $this->fetch_object()) {
                  array_push(
                         $positions, 
@@ -709,31 +710,31 @@ class fileplan extends dbquery
                             'POSITION_ID' => $line->position_id
                         )
                     );
-				}
+                }
             }
-			return $positions;
+            return $positions;
         } else {
             return false;
         }
     }
-	/**
-	*
-	*
-	*
-	*/
-	public function getPositionState($fileplan_id, $position_id, $resid_array) {
-		// echo $fileplan_id.'/'.$position_id.'/'.count($resid_array).'<br/>';
-		if (!empty($fileplan_id) 
-			&& !empty($position_id) 
-			&& count($resid_array) > 0
-		) {
+    /**
+    *
+    *
+    *
+    */
+    public function getPositionState($fileplan_id, $position_id, $resid_array) {
+        // echo $fileplan_id.'/'.$position_id.'/'.count($resid_array).'<br/>';
+        if (!empty($fileplan_id) 
+            && !empty($position_id) 
+            && count($resid_array) > 0
+        ) {
             $this->connect();
-			
-			$nb_res = count($resid_array);
-			$nb_match = 0;
-			
+            
+            $nb_res = count($resid_array);
+            $nb_match = 0;
+            
             for($i=0; $i < $nb_res; $i++) {
-				
+                
                 $this->query(
                     "SELECT * FROM "
                     . FILEPLAN_RES_POSITIONS_TABLE
@@ -744,20 +745,20 @@ class fileplan extends dbquery
                     . "'"
                 );
                 // $this->show();
-				if($this->nb_result() > 0) {
-					$nb_match ++;
-				}
+                if($this->nb_result() > 0) {
+                    $nb_match ++;
+                }
             }
-			
-			if ($nb_match == 0) {
-				return 'false';
-			} else if ($nb_match == $nb_res){
-				return 'true';
-			} else {
-				return 'partial';
-			}			
+            
+            if ($nb_match == 0) {
+                return 'false';
+            } else if ($nb_match == $nb_res){
+                return 'true';
+            } else {
+                return 'partial';
+            }           
         } else {
             return false;
         }
-	}
+    }
 }
