@@ -2479,6 +2479,18 @@ class lists extends dbquery
                     
         return $icon;
     }
+	
+	private function _checkTypeOfActionIcon($actionButtons, $type) {
+		$isThisType = false;
+		for($button = 0; $button < count($actionButtons); $button++) {
+			if($actionButtons[$button]['type'] == $type) {
+				$isThisType = true;
+				break;
+			}
+		}
+		 
+		return $isThisType;
+	}
     
     private function _createContent($resultArray, $listColumn, $listKey) {
         $content = $lineCss = '';
@@ -2735,8 +2747,11 @@ class lists extends dbquery
         //Top anchor
         $grid .= '<div id="topOfTheList"></div>';
         
-        $grid .= $this->_createPreviewDiv();
-        
+        //Check ih there is a preview button before show preview div
+		if ($this->_checkTypeOfActionIcon($this->actionButtons, 'preview') === true) {
+			$grid .= $this->_createPreviewDiv();
+        }
+		
         //Page title
         if(isset($parameters['pageTitle'])) {           
             if($parameters['bool_bigPageTitle'])
