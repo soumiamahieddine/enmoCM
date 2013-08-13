@@ -244,6 +244,9 @@ class resources_controler
 
     private function prepareStorage($data, $docserverId, $status, $fileFormat)
     {
+        require_once 'core/class/class_db.php';
+        $dbQuery = new dbquery();
+        $dbQuery->connect();
         $statusFound = false;
         $typistFound = false;
         $typeIdFound = false;
@@ -253,6 +256,11 @@ class resources_controler
                 if ($data[$i]['value'] == '') {
                     $data[$i]['value'] = '0';
                 }
+            }
+            if (strtoupper($data[$i]['type']) == 'STRING') {
+               $data[$i]['value'] = $dbQuery->protect_string_db($data[$i]['value']);
+               $data[$i]['value'] = str_replace(";", "", $data[$i]['value']);
+               $data[$i]['value'] = str_replace("--", "", $data[$i]['value']);
             }
             if (strtoupper($data[$i]['column']) == strtoupper('status')) {
                 $statusFound = true;
@@ -264,9 +272,6 @@ class resources_controler
                 $typeIdFound = true;
             }
             if (strtoupper($data[$i]['column']) == strtoupper('custom_t10')) {
-                require_once 'core/class/class_db.php';
-                $dbQuery = new dbquery();
-                $dbQuery->connect();
                 $mail = array();
                 $theString = str_replace(">", "", $data[$i]['value']);
                 $mail = explode("<", $theString);
