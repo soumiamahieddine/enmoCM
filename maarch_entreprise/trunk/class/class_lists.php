@@ -2445,8 +2445,10 @@ class lists extends dbquery
                 } else {
                     $icon .= 'onClick="'.$script.'" ';
                 }
-                $icon .= ' onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); '
-                    .'$(\'return_previsualise\').style.display=\'none\';" ';
+                if ($this->_checkTypeOfActionIcon($this->actionButtons, 'preview') === true) {
+					$icon .= ' onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); '
+						.'$(\'return_previsualise\').style.display=\'none\';" ';
+				}
                 $icon .= ' title="'.$actualButton['tooltip'].'"';
             } else {
                 $href = $this->_buildMyLink($actualButton['href'], $actualLine, $listKey);
@@ -2456,8 +2458,10 @@ class lists extends dbquery
                 if(isset($actualButton['alertText']) && !empty($actualButton['alertText'])) {
                     $alertText = $this->_buildMyLink($actualButton['alertText'], $actualLine);
                     $icon .= ' onClick="return(confirm(\''.addslashes($alertText).'\'));" ';
-                    $icon .= ' onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); '
-                        .'$(\'return_previsualise\').style.display=\'none\';" ';
+                    if ($this->_checkTypeOfActionIcon($this->actionButtons, 'preview') === true) {
+						$icon .= ' onMouseOver="$(\'identifierDetailFrame\').setValue(\'\'); '
+							.'$(\'return_previsualise\').style.display=\'none\';" ';
+					}
                 }
             }
         }
