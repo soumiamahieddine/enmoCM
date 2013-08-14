@@ -30,10 +30,10 @@ $roles = $difflist->list_difflist_roles();
 $difflistTypes = $difflist->list_difflist_types();
 
 # Load listmodel into session
-/*
-var_dump($_SESSION['m_admin']['entity']['listmodel']);
-var_dump($_SESSION['m_admin']['entity']['difflist_type']);
-;*/
+
+//var_dump($_SESSION['m_admin']['entity']['listmodel']);
+//var_dump($_SESSION['m_admin']['entity']['difflist_type']);
+
 $mode = $_REQUEST['mode'];
 
 $objectType = trim(strtok($_REQUEST['id'], '|'));
@@ -87,7 +87,7 @@ function listmodel_setObjectType()
 }
 
 
-function listmodel_setObjectId() 
+function listmodel_setObjectId(objectId) 
 {
     var mode = $('mode').value;
     
@@ -101,7 +101,8 @@ function listmodel_setObjectId()
             parameters: 
 			{ 
 				mode : mode,
-                objectType : objectType
+                objectType : objectType,
+                objectId : objectId
 			},
             onSuccess: function(answer){
                 objectId_input.innerHTML = answer.responseText;
@@ -298,7 +299,7 @@ if($mode != 'del') { ?>
                 <label for="objectType_info" ><?php echo _DIFFLIST_TYPE_ROLES; ?> : </label>
             </td>
             <td>
-                <span id="objectType_info"></span>
+                <span id="objectType_info"><?php echo trim($_SESSION['m_admin']['entity']['difflist_type']->difflist_type_roles); ?></span>
             </td>
         </tr>
     </table> 

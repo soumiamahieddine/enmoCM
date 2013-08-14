@@ -25,7 +25,8 @@ require_once 'modules/entities/class/class_manage_listdiff.php';
     
 $usergroups_controler = new usergroups_controler();
 $listdiff = new diffusion_list();
-$roles = $listdiff->list_difflist_roles();
+$difflistType = $listdiff->get_difflist_type('entity_id');
+$roles = $listdiff->get_difflist_type_roles($difflistType);
 
 if($_SESSION['service_tag'] == 'entity_add')
 {
@@ -34,9 +35,9 @@ if($_SESSION['service_tag'] == 'entity_add')
 		$_SESSION['m_admin']['entity']['listmodel'] = array();
         
         # Init listmodel info
-        $_SESSION['m_admin']['entity']['listmodel_info']['object_type'] = 'entity_id';
-        $_SESSION['m_admin']['entity']['listmodel_info']['object_id'] = $_SESSION['m_admin']['entity']['entityId'];
-        $_SESSION['m_admin']['entity']['listmodel_info']['description'] = false;
+        $_SESSION['m_admin']['entity']['listmodel']['object_type'] = 'entity_id';
+        $_SESSION['m_admin']['entity']['listmodel']['object_id'] = $_SESSION['m_admin']['entity']['entityId'];
+        $_SESSION['m_admin']['entity']['listmodel']['description'] = 'Diffusion aux services';
 	}
 }
 elseif($_SESSION['service_tag'] == 'entity_up')
@@ -49,6 +50,9 @@ elseif($_SESSION['service_tag'] == 'entity_up')
                 $_SESSION['m_admin']['entity']['entityId']
             );
 	}
+    $_SESSION['m_admin']['entity']['listmodel']['object_type'] = 'entity_id';
+    $_SESSION['m_admin']['entity']['listmodel']['object_id'] = $_SESSION['m_admin']['entity']['entityId'];
+    $_SESSION['m_admin']['entity']['listmodel']['description'] = 'Diffusion aux services';
 }
 elseif($_SESSION['service_tag'] == 'entities_list_init')
 {
@@ -56,11 +60,10 @@ elseif($_SESSION['service_tag'] == 'entities_list_init')
 }
 elseif($_SESSION['service_tag'] == 'entity_check')
 {
-	if((isset($_SESSION['m_admin']['entity']['listmodel']['copy']['users']) && count($_SESSION['m_admin']['entity']['listmodel']['copy']['users']) >= 0 || isset($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']) && count($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']) > 0) && (!isset($_SESSION['m_admin']['entity']['listmodel']['dest']['users']) || empty($_SESSION['m_admin']['entity']['listmodel']['dest']['users'])))
+	if((count($_SESSION['m_admin']['entity']['listmodel']['copy']['users']) > 0 || count($_SESSION['m_admin']['entity']['listmodel']['copy']['entities']) > 0) 
+        && (!isset($_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0]) || empty($_SESSION['m_admin']['entity']['listmodel']['dest']['users'][0])))
 	{
-		
-		$_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'];
-		$_SESSION['error'] .= _DEST_MANDATORY;
+		$_SESSION['error'] .= _MUST_CHOOSE_DEST;
 	}
 }
 elseif($_SESSION['service_tag'] == 'entity_add_db' || $_SESSION['service_tag'] == 'entity_up_db')
@@ -71,25 +74,22 @@ elseif($_SESSION['service_tag'] == 'entity_add_db' || $_SESSION['service_tag'] =
         $_SESSION['m_admin']['entity']['listmodel'],
         $objectType = 'entity_id',
         $objectId = $_SESSION['m_admin']['entity']['entityId'],
-        $description = $_SESSION['m_admin']['entity']['listmodel_info']['description']
+        $description = $_SESSION['m_admin']['entity']['listmodel']['description']
     );
 }
 
 # Default description
 if(!isset($_SESSION['m_admin']['entity']['listmodel_info']['description']))
-    $_SESSION['m_admin']['entity']['listmodel_info']['description'] = 
+    $_SESSION['m_admin']['entity']['listmodel']['description'] = 
         "Diffusion au service " 
             . $_SESSION['m_admin']['entity']['entityId'] 
             . ' - '
             . $_SESSION['m_admin']['entity']['label'];
 
 
-
-
-
 if($_SESSION['service_tag_form'] == 'formentity') {
 	$_SESSION['service_tag_form'] = "";
-	?>
+    ?>
 	<!--div id="inner_content" class="clearfix"-->
 	<div id="listmodel_box" class="block"> <?php 
 	if(count($_SESSION['m_admin']['entity']['listmodel']) > 0) { ?>
@@ -108,5 +108,4 @@ if($_SESSION['service_tag_form'] == 'formentity') {
 		</p> <?php 
 	} ?>
 	</div> <?php
-} 
-?>
+}

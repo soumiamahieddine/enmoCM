@@ -2,14 +2,18 @@
 # AJAX script to list objects to be linked with list model
 
 function asSelect(
-    $items
+    $items,
+    $objectId = false
 ) {
     $return = "<select id='objectId' style='width:300px;'>";
     
     foreach($items as $id => $label) {
-        $return .= "<option value='".$id."'>";
+        $return .= "<option value='".$id."'";
+        if($id == $objectId) $return .= " selected='true' ";
+        $return .= ">";
             if($id) $return .=  $id . ' ';
             $return .= $label;
+            
         $return .= "</option>";
     }
     $return .= "</select>";
@@ -25,6 +29,7 @@ $difflist = new diffusion_list();
 
 $mode = $_REQUEST['mode'];
 $objectType = $_REQUEST['objectType'];
+$objectId = $_REQUEST['objectId'];
 
 if(!$objectType) {
     echo ""; 
@@ -52,7 +57,7 @@ case 'entity_id':
         }
     }
     if(count($entities) > 0)
-        echo asSelect($entities);
+        echo asSelect($entities, $objectId);
     else {   
         echo asSelect(array("" => _ALL_OBJECTS_ARE_LINKED));
     }    
@@ -76,7 +81,7 @@ case 'type_id':
         }
     }
     if(count($doctypes) > 0)
-        echo asSelect($doctypes);
+        echo asSelect($doctypes, $objectId);
     else    
         echo asSelect(array("" => _ALL_OBJECTS_ARE_LINKED));
     
@@ -100,7 +105,7 @@ case 'foldertype_id':
         }
     }
     if(count($foldertypes) > 0)
-        echo asSelect($foldertypes);
+        echo asSelect($foldertypes, $objectId);
     else    
         echo asSelect(array("" => _ALL_OBJECTS_ARE_LINKED));
     break;
