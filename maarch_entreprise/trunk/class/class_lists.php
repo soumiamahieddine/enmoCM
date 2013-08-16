@@ -460,6 +460,20 @@ class lists extends dbquery
                     .'&filter=creation_date_end&value=\' + this.value, \''.$this->divListId.'\', '
                     .$this->modeReturn.');" value="'.$date_end.'" size="15" />&nbsp;';
             break;
+            
+            case 'identifier':
+                if(isset($_SESSION['filters']['identifier']['VALUE']) && !empty($_SESSION['filters']['identifier']['VALUE'])) {
+                    $identifier = $_SESSION['filters']['identifier']['VALUE'];
+                } else {
+                    $identifier = '['._IDENTIFIER.']';
+                }
+                $filters .='<input type="text" name="identifier" id="identifier" value="'.$identifier.'" size="40" '
+                            .'onfocus="if(this.value==\'['._IDENTIFIER.']\'){this.value=\'\';}" '
+                            .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
+                            .'&filter=identifier&value=\' + this.value, \''.$this->divListId.'\', '
+                            .$this->modeReturn.');" />&nbsp;';
+                break;
+            
         }
         
         return $filters;
@@ -559,6 +573,9 @@ class lists extends dbquery
                             substr($_SESSION['filters']['folder']['VALUE'], 
                             strrpos($_SESSION['filters']['folder']['VALUE'], '(') + 1)));
                         $_SESSION['filters']['folder']['CLAUSE'] = "folder_id = '".$folderId."'";
+
+                    } else if ($_REQUEST['filter'] == 'identifier') {
+                        $_SESSION['filters']['identifier']['CLAUSE'] = "identifier = '".$_SESSION['filters']['identifier']['VALUE']."'";
 
                     } else if ($_REQUEST['filter'] == 'type') {
                     
