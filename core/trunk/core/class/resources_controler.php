@@ -166,7 +166,7 @@ class resources_controler
             $db = new dbquery();
             $db->connect();
             //copy sended file on tmp 
-            $fileContent = file_get_contents($fileURI);
+            /*$fileContent = file_get_contents($fileURI);
             $random = rand();
             $fileName = 'tmp_file_' . $random . '.' . $fileFormat;
             $Fnm = $_SESSION['config']['tmppath'] . $fileName;
@@ -180,7 +180,15 @@ class resources_controler
                 'size'        => filesize($Fnm),
                 'format'      => $fileFormat,
                 'tmpFileName' => $fileName,
+            );*/
+            $docserverControler = new docservers_controler();
+            $fileInfos = array(
+                'tmpDir'      => dirname($fileURI) . DIRECTORY_SEPARATOR,
+                'size'        => filesize($fileURI),
+                'format'      => $fileFormat,
+                'tmpFileName' => basename($fileURI),
             );
+            
             //print_r($fileInfos);
             $storeResult = array();
             $storeResult = $docserverControler->storeResourceOnDocserver(
@@ -204,7 +212,7 @@ class resources_controler
                 $status,
                 $fileFormat
             );
-            unlink($Fnm);
+            //unlink($Fnm);
             //var_dump($data);exit;
             $resId = $resource->load_into_db(
                 $table, 
