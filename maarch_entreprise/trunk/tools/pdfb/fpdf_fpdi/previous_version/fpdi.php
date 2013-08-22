@@ -17,6 +17,8 @@
 //  limitations under the License.
 //
 
+//global $extgstates;
+
 define ('PDF_TYPE_NULL', 0);
 define ('PDF_TYPE_NUMERIC', 1);
 define ('PDF_TYPE_TOKEN', 2);
@@ -222,6 +224,13 @@ class fpdi extends fpdf_tpl {
             }
             $this->_out('>>');
     	}
+        if (isset($_SESSION['extgstates']) && count($_SESSION['extgstates']) > 0) {
+            $this->_out('/ExtGState <<');
+            foreach($_SESSION['extgstates'] as $k=>$extgstate)
+                $this->_out('/GS'.$k.' '.$extgstate['n'].' 0 R');
+            $this->_out('>>');
+            $_SESSION['extgstates'] = array();
+        }
     	$this->_out('>>');
     	$this->_out('endobj');
     }
