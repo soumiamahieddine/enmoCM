@@ -98,7 +98,7 @@ class MySoapServer extends webService {
         $server = new SOAP_Server();
         $webservice = new MySoapServer();
         //var_dump($webservice);
-        $server->addObjectMap($webservice, 'urn:MySoapServer');
+        $server->addObjectMap($webservice, 'urn:MaarchSoapServer');
         return $server;
     }
     
@@ -108,7 +108,7 @@ class MySoapServer extends webService {
     function makeWSDL() {
         $this->importSOAPLibs();
         $server = $this->launchSOAPServer();
-        $disco = new Maarch_SOAP_DISCO_Server($server, 'MySoapServer');
+        $disco = new Maarch_SOAP_DISCO_Server($server, 'MaarchSoapServer');
         header("Content-type: text/xml");
         echo $disco->getWSDL();
     }
@@ -129,7 +129,7 @@ class MySoapServer extends webService {
     function makeDISCO() {
         $this->importSOAPLibs();
         $server = $this->launchSOAPServer();
-        $disco = new Maarch_SOAP_DISCO_Server($server, 'MySoapServer');
+        $disco = new Maarch_SOAP_DISCO_Server($server, 'MaarchSoapServer');
         header("Content-type: text/xml");
         echo $disco->getDISCO();
     }
