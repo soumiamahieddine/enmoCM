@@ -467,8 +467,10 @@ class lists extends dbquery
                 } else {
                     $identifier = '['._IDENTIFIER.']';
                 }
-                $filters .='<input type="text" name="identifier" id="identifier" value="'.$identifier.'" size="40" '
+               $filters .='<input type="text" name="identifier" id="identifier" value="'.$identifier.'" size="40" '
                             .'onfocus="if(this.value==\'['._IDENTIFIER.']\'){this.value=\'\';}" '
+                            .'onChange="loadList(\''.$this->link
+                            .'&filter=identifier&value=\' + this.value, \''.$this->divListId.'\', '.$this->modeReturn.');" '
                             .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
                             .'&filter=identifier&value=\' + this.value, \''.$this->divListId.'\', '
                             .$this->modeReturn.');" />&nbsp;';
