@@ -228,7 +228,7 @@ function display_list()
     init_session();
     
     $select[_LC_POLICIES_TABLE_NAME] = array();
-    array_push($select[_LC_POLICIES_TABLE_NAME], $idName, "policy_id", "policy_name", "policy_desc");
+    array_push($select[_LC_POLICIES_TABLE_NAME], $idName, "policy_name", "policy_desc");
     $what = "";
     $where ="";
     if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
