@@ -129,7 +129,7 @@
     * @param  $data  array Data array
     * @param  $databasetype string Type of the db (MYSQL, SQLSERVER, ...)
     */
-    function load_into_db($table_res, $path, $filename, $docserver_path, $docserver_id, $data, $databasetype)
+    function load_into_db($table_res, $path, $filename, $docserver_path, $docserver_id, $data, $databasetype, $calledByWs=false)
     {
         $filetmp = $docserver_path;
         $tmp = $path;
@@ -160,7 +160,9 @@
         {
             if(!$this->insert($table_res, $data, $_SESSION['config']['databasetype']))
             {
-                $this->error = _INDEXING_INSERT_ERROR."<br/>".$this->show();
+                if (!$calledByWs) {
+                    $this->error = _INDEXING_INSERT_ERROR."<br/>".$this->show();
+                }
                 return false;
             }
             else

@@ -116,7 +116,8 @@ class resources_controler
                 $storeResult['path_template'],
                 $storeResult['docserver_id'], 
                 $data,
-                $_SESSION['config']['databasetype']
+                $_SESSION['config']['databasetype'],
+                true
             );
             if (!is_numeric($resId)) {
                 $returnResArray = array(
