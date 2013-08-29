@@ -195,7 +195,9 @@ function updateDatabase(
     $fileName, 
     $offsetDoc='' 
 ) {
-    Bt_doQuery($GLOBALS['db'], 'START TRANSACTION');
+    if ($GLOBALS['databasetype'] == 'POSTGRESQL') {
+		Bt_doQuery($GLOBALS['db'], 'START TRANSACTION');
+	}
     if (is_array($resInContainer) && count($resInContainer) > 0) {
         for ($cptRes = 0;$cptRes < count($resInContainer);$cptRes++) {
             doUpdateDb(
@@ -430,7 +432,9 @@ function doMinimalUpdate($resId)
  */
 function deleteAdrx($resId, $dsToUpdate) 
 {
-    Bt_doQuery($GLOBALS['db'], 'START TRANSACTION');
+    if ($GLOBALS['databasetype'] == 'POSTGRESQL') {
+		Bt_doQuery($GLOBALS['db'], 'START TRANSACTION');
+	}
     $query = "update " . _LC_STACK_TABLE_NAME . " set status = 'P' where "
            . "policy_id = '" . $GLOBALS['policy'] . "' and cycle_id = '" 
            . $GLOBALS['cycle'] . "' and cycle_step_id = '" 
@@ -467,7 +471,9 @@ function deleteAdrx($resId, $dsToUpdate)
  */
 function updateOnNonePurge($resId) 
 {
-    Bt_doQuery($GLOBALS['db'], 'START TRANSACTION');
+    if ($GLOBALS['databasetype'] == 'POSTGRESQL') {
+		Bt_doQuery($GLOBALS['db'], 'START TRANSACTION');
+	}
     $query = "update " . _LC_STACK_TABLE_NAME 
            . " set status = 'P' where policy_id = '" . $GLOBALS['policy'] 
            . "' and cycle_id = '" . $GLOBALS['cycle'] 
