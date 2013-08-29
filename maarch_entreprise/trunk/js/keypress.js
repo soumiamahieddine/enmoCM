@@ -12,13 +12,13 @@
   =Usage
 
         // monitor ctrl-shift-G
-        new Keypress.Observer(Ansi.G, function(e)
+        new Keydown.Observer(Ansi.G, function(e)
         {
             alert('Do something');
         },{shift:true, control:true});
     
         // monitor ctrl-meta-shift-P
-        new Keypress.observe(Ansi.P, function(e)
+        new Keydown.observe(Ansi.P, function(e)
         {
             print_document();
         }, {control:true, meta:true, shift:true});
@@ -49,6 +49,11 @@ Keypress.Observer = Class.create();
 Object.extend(Keypress.Observer.prototype,
 {
   initialize: function(key_code, callback, options) {
+        /*if(console) {
+            console.log("initialize: \nkey_code:"+key_code);
+            console.log(options);
+            console.log("charset:" + document.charset);
+        }  */
         var SHIFT_OFFSET = 32;
         this.ie = (navigator.userAgent.indexOf("MSIE")) != -1;
         this.utf_8 = !(typeof(document.charset) == 'undefined');
@@ -67,8 +72,10 @@ Object.extend(Keypress.Observer.prototype,
         this.options = this.options.toObject();
         
         // control changes the key_code for lowercase letters so this will adjust for that
-        if(this.options.control)
-            this.key_code -= this.control_offset();
+        if(this.options.control) {
+            //this.key_code -= this.control_offset();
+            //console.log("apply control_offset: "+this.key_code);
+        }
 
         // if they want a "G" and pass in a "g" this will correct the key_code
         if(this.options.shift && this.key_code >= 97 && this.key_code <= 122)
@@ -78,7 +85,7 @@ Object.extend(Keypress.Observer.prototype,
     },
     observe:function(element)
     {
-        $(element).observe('keypress', function(e)
+        $(element).observe('keydown', function(e)
         {
             var char_code = (e.charCode ? e.charCode : e.keyCode);
             var keyboard_options = {
@@ -88,11 +95,19 @@ Object.extend(Keypress.Observer.prototype,
                 control: e.ctrlKey
             };
             
-            if(this.debug)
-                alert("GOT: "+char_code+"\nWNT: "+this.key_code+"\n\n"+$H(keyboard_options).toQueryString()+"\n"+$H(this.options).toQueryString() + "\n\nUTF8?: " + this.utf_8 + "\nCOFF: " + this.control_offset());           
+            if(this.debug && console)
+                console.log(
+                    "char_code: "+char_code
+                    +"\nkey_code: "+this.key_code
+                    +"\n"+$H(keyboard_options).toQueryString()
+                    +"\n"+$H(this.options).toQueryString() 
+                    +"\n\nUTF8: " + this.utf_8 
+                    + "\ncontrol_offset: " + this.control_offset());           
             
-            if(char_code == this.key_code && ($H(keyboard_options).toQueryString() == $H(this.options).toQueryString()))
+            if(char_code == this.key_code && ($H(keyboard_options).toQueryString() == $H(this.options).toQueryString())) {
+                if(this.debug && console) console.log("callback");
                 this.callback(e);
+            }
         }.bind(this));      
     },
     
