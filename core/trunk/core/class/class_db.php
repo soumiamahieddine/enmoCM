@@ -636,7 +636,7 @@ class dbquery extends functions
                 $dbNbResult = new dbquery();
         }
             $dbNbResult->connect();
-            $dbNbResult->query("SELECT COUNT(*) FROM  (" . $this->_debugQuery . ")");
+            $dbNbResult->query("SELECT COUNT(*) FROM  (" . $this->_debugQuery . ")", true);
             $row = $dbNbResult->fetch_array();
             return $row[0]; 
         default             : return false;
