@@ -68,7 +68,7 @@ if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
     $what = $func->protect_string_db($func->wash($_REQUEST['what'], "alphanum", "", "no"));
     $contact_id = str_replace(')', '', substr($_REQUEST['what'], strrpos($_REQUEST['what'],'(')+1));
     $contact_id = str_replace('contact:', '', $contact_id);
-    if($contact_id != substr($_REQUEST['what'], strrpos($_REQUEST['what'],'(')+1)){
+    if($contact_id != substr($_REQUEST['what'], strrpos($_REQUEST['what'],'(')+1) and is_numeric($contact_id)){
         $where .= " and contact_id = " . $contact_id;
     }
 
