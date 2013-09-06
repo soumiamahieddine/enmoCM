@@ -287,9 +287,9 @@ class indexing_searching_app extends dbquery
             $res = $request->fetch_object();
             $old_folder_id = $res->folders_system_id;
             $market = '';
-            if (isset($post['market']))
+            if (isset($post['folder']))
             {
-                $market = $post['market'];
+                $market = $post['folder'];
             }
             $project_id = '';
             $market_id = '';
