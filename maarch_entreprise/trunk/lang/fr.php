@@ -844,7 +844,7 @@ if (!defined('_FILE_LOADED_BUT_NOT_VISIBLE')) define( '_FILE_LOADED_BUT_NOT_VISI
 if (!defined('_ONLY_FILETYPES_AUTHORISED')) define( '_ONLY_FILETYPES_AUTHORISED', 'Seuls les fichiers suivants peuvent &ecirc;tre affich&eacute;s dans cette fen&ecirc;tre');
 if (!defined('_PROBLEM_LOADING_FILE_TMP_DIR')) define( '_PROBLEM_LOADING_FILE_TMP_DIR', 'Probl&egrave;me lors du chargement du fichier sur le r&eacute;pertoire temporaire du serveur');
 if (!defined('_DOWNLOADED_FILE')) define( '_DOWNLOADED_FILE', 'Fichier charg&eacute;');
-if (!defined('_WRONG_FILE_TYPE')) define( '_WRONG_FILE_TYPE', 'Ce type de fichier n&rsquo;est pas permis');
+if (!defined('_WRONG_FILE_TYPE')) define( '_WRONG_FILE_TYPE', 'Ce type de fichier n est pas permis');
 
 if (!defined('_LETTERBOX')) define( '_LETTERBOX', 'Collection des courriers');
 if (!defined('_APA_COLL')) define( '_APA_COLL', 'Collection de l&rsquo;archivage physique');
