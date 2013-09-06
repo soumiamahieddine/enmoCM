@@ -1303,6 +1303,7 @@ class entity extends dbquery
                 if(!$this->test_column($_SESSION['collections'][$i]['view'], 'res_id')) continue;
                 if(!$this->test_column($_SESSION['collections'][$i]['view'], 'destination')) continue;
                 
+                $this->connect();
                 $this->query("select res_id from ".$_SESSION['collections'][$i]['view']." where destination = '".$this->protect_string_db($s_id)."'");
                 if($this->nb_result() > 0)
                 {
