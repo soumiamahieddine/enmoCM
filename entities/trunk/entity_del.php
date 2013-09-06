@@ -62,6 +62,10 @@ if(isset($_REQUEST['valid']))
     {
         for($i=0;$i<count($_SESSION['collections']);$i++)
         {
+            // Skip this test if view doesn't have a column named res_id or destination
+            if(!$db->test_column($_SESSION['collections'][$i]['view'], 'res_id')) continue;
+            if(!$db->test_column($_SESSION['collections'][$i]['view'], 'destination')) continue;
+            $db->connect();
             if(isset($_SESSION['collections'][$i]['table']) && !empty($_SESSION['collections'][$i]['table']))
             {
                 $db->query("update ".$_SESSION['collections'][$i]['table']." set destination = '".$db->protect_string_db($_REQUEST['doc_entity_id'])."' where destination = '".$db->protect_string_db($s_id)."' and status <> 'DEL'");
