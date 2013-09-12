@@ -1443,7 +1443,7 @@ class functions
         $isEmpty = true;
         $filesArray = array();
         while (($entry = readdir($dir)) !== false) {
-            if ($entry !== '.' && $entry !== '..'  && $entry !== '.svn') {
+            if ($entry !== '.' && $entry !== '..'  && $entry !== '.svn' && $entry !== 'backup') {
                 array_push($filesArray, $entry);
             }
         }
