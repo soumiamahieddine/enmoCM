@@ -68,12 +68,19 @@ if(isset($_REQUEST['valid']))
             $db->connect();
             if(isset($_SESSION['collections'][$i]['table']) && !empty($_SESSION['collections'][$i]['table']))
             {
-                $db->query("update ".$_SESSION['collections'][$i]['table']." set destination = '".$db->protect_string_db($_REQUEST['doc_entity_id'])."' where destination = '".$db->protect_string_db($s_id)."' and status <> 'DEL'");
+                if ($_SESSION['collections'][$i]['view'] == 'rm_documents_view') {
+                    $db->query("update rm_organizations set entity_id = '".$db->protect_string_db($_REQUEST['doc_entity_id'])."' where entity_id = '".$db->protect_string_db($s_id)."'");
+                } else {
+                    $db->query("update ".$_SESSION['collections'][$i]['table']." set destination = '".$db->protect_string_db($_REQUEST['doc_entity_id'])."' where destination = '".$db->protect_string_db($s_id)."' and status <> 'DEL'");
+                }
                 //$db->show();
             }
         }
-        $db->query("update ".ENT_USERS_ENTITIES." set entity_id = '".$db->protect_string_db($_REQUEST['doc_entity_id'])."' where entity_id = '".$db->protect_string_db($s_id)."'");
+        $db->query("update ".ENT_USERS_ENTITIES." set entity_id = '".$db->protect_string_db($_REQUEST['doc_entity_id'])
+            ."' where entity_id = '".$db->protect_string_db($s_id)."' and user_id not in (select distinct(user_id) from " . ENT_USERS_ENTITIES 
+            . " where entity_id <> '" . $db->protect_string_db($_REQUEST['doc_entity_id']) . "')");
         //$db->show();
+        $db->query("delete from " . ENT_USERS_ENTITIES . " where entity_id = '".$db->protect_string_db($s_id) ."'");
         $db->query("select entity_id from ".ENT_ENTITIES." where parent_entity_id = '".$db->protect_string_db($s_id)."'");
         $db2 = new dbquery();
         $db2->connect();

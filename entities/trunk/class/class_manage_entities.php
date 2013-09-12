@@ -1304,7 +1304,12 @@ class entity extends dbquery
                 if(!$this->test_column($_SESSION['collections'][$i]['view'], 'destination')) continue;
                 
                 $this->connect();
-                $this->query("select res_id from ".$_SESSION['collections'][$i]['view']." where destination = '".$this->protect_string_db($s_id)."'");
+                if ($_SESSION['collections'][$i]['view'] == 'rm_documents_view') {
+                    $this->query("select res_id from ".$_SESSION['collections'][$i]['view']." where originating_agency_entity_id = '".$this->protect_string_db($s_id)."'");
+                } else {
+                    $this->query("select res_id from ".$_SESSION['collections'][$i]['view']." where destination = '".$this->protect_string_db($s_id)."'");
+                }
+                //$this->show();
                 if($this->nb_result() > 0)
                 {
                     $element_found = true;
