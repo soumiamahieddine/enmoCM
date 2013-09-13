@@ -207,7 +207,8 @@ public class MaarchCM extends JApplet {
         if (isWindows) {
             System.out.println("This is Windows");
             this.userLocalDirTmp = this.userLocalDirTmp + "\\maarchTmp\\";
-            this.appPath = this.userLocalDirTmp + "start.bat";
+            this.appPath = this.userLocalDirTmp.replaceAll(" ", "%20") + "start.bat";
+            //this.appPath = "\""+this.userLocalDirTmp + "start.bat\"";
             this.os = "win";
         } else if (isMac) {
             System.out.println("This is Mac");
@@ -302,9 +303,10 @@ public class MaarchCM extends JApplet {
             this.fileContentTosend = fM.encodeFile(this.userLocalDirTmp + "thefile." + this.fileExtension);
             this.logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
             
-            this.logger.log("----------BEGIN SEND OF THE OBJECT----------", Level.INFO);
             String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType 
                             + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId;
+            this.logger.log("----------BEGIN SEND OF THE OBJECT----------", Level.INFO);
+            this.logger.log("URL TO SAVE : " + urlToSave, Level.INFO);
             sendHttpRequest(urlToSave, this.fileContentTosend);
             this.logger.log("MESSAGE STATUS : " + this.messageStatus.toString(), Level.INFO);
             this.logger.log("LAST MESSAGE RESULT : ", Level.INFO);
