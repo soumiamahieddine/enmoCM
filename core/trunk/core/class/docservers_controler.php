@@ -1260,7 +1260,8 @@ class docservers_controler
             $docserverTypeObject = $docserverTypeControler->get(
                 $docserverObject->docserver_type_id
             );
-            if ($docserverTypeObject->is_container
+
+            if ($docserverTypeObject->is_container == 'Y'
                 && $adr['offset_doc'] == ''
             ) {
                 $error = true;
@@ -1275,7 +1276,7 @@ class docservers_controler
                 );
             }
             //manage compressed resource
-            if ($docserverTypeObject->is_compressed) {
+            if ($docserverTypeObject->is_compressed == 'Y') {
                 $extract = array();
                 $extract = Ds_extractArchive(
                     $adrToExtract,
