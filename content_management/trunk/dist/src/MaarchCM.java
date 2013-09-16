@@ -201,14 +201,16 @@ public class MaarchCM extends JApplet {
         boolean isWindows = os.indexOf("win") >= 0;
         boolean isMac = os.indexOf("mac") >= 0;
         this.userLocalDirTmp = System.getProperty("user.home");
+        //this.userLocalDirTmp = "C:/repertoire avec espaces";
         //this.userLocalDirTmp = "c:\\maarch";
         fileManager fM = new fileManager();
         fM.createUserLocalDirTmp(this.userLocalDirTmp);
         if (isWindows) {
             System.out.println("This is Windows");
-            this.userLocalDirTmp = this.userLocalDirTmp + "\\maarchTmp\\";
-            this.appPath = this.userLocalDirTmp.replaceAll(" ", "%20") + "start.bat";
+            this.userLocalDirTmp = this.userLocalDirTmp + "/maarchTmp/";
+            //this.appPath = this.userLocalDirTmp.replaceAll(" ", "%20") + "start.bat";
             //this.appPath = "\""+this.userLocalDirTmp + "start.bat\"";
+            this.appPath = this.userLocalDirTmp + "start.bat";
             this.os = "win";
         } else if (isMac) {
             System.out.println("This is Mac");
@@ -292,7 +294,7 @@ public class MaarchCM extends JApplet {
             procVbs.waitFor();*/
             
             this.logger.log("LAUNCH THE EDITOR !", Level.INFO);
-            final String exec = this.appPath;
+            final String exec = "\""+this.appPath+"\"";
             this.logger.log("EXEC PATH : " + exec, Level.INFO);
             Process proc = fM.launchApp(exec);
             proc.waitFor();
