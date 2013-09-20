@@ -41,11 +41,12 @@ class pdf_context {
 		if (!is_null ($pos)) {
 			fseek ($this->file, $pos);
 		}
-
-		$this->buffer = fread($this->file, $l);
-		$this->offset = 0;
-		$this->length = strlen($this->buffer);
-		$this->stack = array();
+        if ($l <> 0) {
+            $this->buffer = fread($this->file, $l);
+            $this->offset = 0;
+            $this->length = strlen($this->buffer);
+            $this->stack = array();
+        }
 	}
 
 	// Make sure that there is at least one
