@@ -867,10 +867,14 @@ class basket extends dbquery
         $tab['lock_list'] = $secCtrl->process_security_where_clause(
             $res->list_lock_clause, $userId
         );
+		$tab['lock_list'] = str_replace('where', '', $tab['lock_list']);
+		
         $tab['lock_sublist'] = $secCtrl->process_security_where_clause(
             $res->sublist_lock_clause, $userId
         );
-          
+        
+		$tab['lock_sublist'] = str_replace('where', '', $tab['lock_sublist']);
+		
         return $tab;
     }
 
