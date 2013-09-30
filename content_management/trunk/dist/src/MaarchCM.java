@@ -203,11 +203,13 @@ public class MaarchCM extends JApplet {
         this.userLocalDirTmp = System.getProperty("user.home");
         //this.userLocalDirTmp = "C:/repertoire avec espaces";
         //this.userLocalDirTmp = "c:\\maarch";
+        //this.userLocalDirTmp = "\\\\192.168.21.100\\Public\\montage_nas\\avec espaces";
+        
         fileManager fM = new fileManager();
         fM.createUserLocalDirTmp(this.userLocalDirTmp);
         if (isWindows) {
             System.out.println("This is Windows");
-            this.userLocalDirTmp = this.userLocalDirTmp + "/maarchTmp/";
+            this.userLocalDirTmp = this.userLocalDirTmp + "\\maarchTmp\\";
             //this.appPath = this.userLocalDirTmp.replaceAll(" ", "%20") + "start.bat";
             //this.appPath = "\""+this.userLocalDirTmp + "start.bat\"";
             this.appPath = this.userLocalDirTmp + "start.bat";
