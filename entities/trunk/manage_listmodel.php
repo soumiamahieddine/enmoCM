@@ -544,13 +544,15 @@ $linkwithwhat =
 <body onload="setTimeout(window.close, <?php echo $time;?>*60*1000);">
     <script type="text/javascript">
         function add_user(id) {
-            user_id = $('user_id_' + id).value;
-            role = $('user_role_' + id).value;
+            var user_id = $('user_id' + id).value;
+            var role_select = $('entity_role_' + id);
+			var role = role_select.options[role_select.selectedIndex].value;
             goTo('<?php echo $linkwithwhat; ?>&action=add_user&id='+user_id+'&role='+role);        
         }
         function add_entity(id) {
-            entity_id = $('entity_id_' + id).value;
-            role = $('entity_role_' + id).value;
+            var entity_id = $('entity_id_' + id).value;
+            var role_select = $('entity_role_' + id);
+			var role = role_select.options[role_select.selectedIndex].value;
             goTo('<?php echo $linkwithwhat; ?>&action=add_entity&id='+entity_id+'&role='+role);        
         }
     </script>
