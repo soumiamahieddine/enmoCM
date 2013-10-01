@@ -5,3 +5,4 @@ php $eventStackPath -c /var/www/maarch_entreprise/modules/notifications/batch/co
 php $eventStackPath -c /var/www/maarch_entreprise/modules/notifications/batch/config/config.xml -n NCC
 php $eventStackPath -c /var/www/maarch_entreprise/modules/notifications/batch/config/config.xml -n ANC
 php $eventStackPath -c /var/www/maarch_entreprise/modules/notifications/batch/config/config.xml -n AND
+php $eventStackPath -c /var/www/maarch_entreprise/modules/notifications/batch/config/config.xml -n RED
