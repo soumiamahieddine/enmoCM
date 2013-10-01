@@ -1010,17 +1010,19 @@ INSERT INTO templates VALUES (101, '[allo mairie] Clôture de demande', '[allo m
 INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, rss_url_template) 
 VALUES (2, 'USERS', '[administration] Actions sur les utilisateurs de l''application', 'users%', 'EMAIL', 2, 'user', 'superadmin', '', '', 'http://localhost/maarch_entreprise');
 INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) 
-VALUES (3, 'NCC', '[courrier] Nouveaux courriers en copie', 'diffcopy%', 'EMAIL', 4, '', 'copy_list', '', '', '', 'Y');
+VALUES (3, 'NCC', '[courrier] Nouveaux courriers en copie', '18', 'EMAIL', 4, '', 'copy_list', '', '', '', 'Y');
 INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) 
 VALUES (4, 'RET2', '[courrier] 2ie alerte sur courriers en retard', 'alert2', 'EMAIL', 5, '', 'dest_user', '', '', '', 'Y');
 INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) 
 VALUES (5, 'RET1', '[courrier] 1ère alerte sur courriers en retard', 'alert1', 'EMAIL', 6, '', 'dest_user', '', '', '', 'Y');
 INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) 
-VALUES (6, 'NCT', '[courrier] Nouveaux courriers à traiter', 'diffdest%', 'EMAIL', 7, '', 'dest_user', '', '', '', 'Y');
+VALUES (6, 'NCT', '[courrier] Nouveaux courriers à traiter', '18', 'EMAIL', 7, '', 'dest_user', '', '', '', 'Y');
 INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) 
 VALUES (7, 'ANC', '[courrier] Nouvelle annotation sur courrier en copie', 'noteadd', 'EMAIL', 8, '', 'copy_list', '', '', '', 'Y');
 INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) 
 VALUES (8, 'AND', '[courrier] Nouvelle annotation sur courrier destinataire', 'noteadd', 'EMAIL', 8, '', 'dest_user', '', '', '', 'Y');
+INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) 
+VALUES (9, 'RED', '[courrier] Redirection de courrier', '1', 'EMAIL', 7, '', 'dest_user', '', '', '', 'Y');
 
 ------------
 --TEMPLATES_ASSOCIATION--
