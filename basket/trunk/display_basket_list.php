@@ -174,7 +174,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
             {
                 eval('response = '+answer.responseText);
                 $(response.idSpan).innerHTML = '<b>(' + response.nb + ')</b>';
-            },
+            }
         });
     }
 </script>
