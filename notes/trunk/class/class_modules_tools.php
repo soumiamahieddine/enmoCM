@@ -283,5 +283,29 @@ class notes extends dbquery
         
         return $userNotes;
     }
+	
+	public function isUserNote($noteId, $userId, $userPrimaryEntity)
+    {
+        $query = "select id from notes where id in ("
+            . "select note_id from note_entities where (item_id = '" 
+            . $userPrimaryEntity . "' and note_id = " . $noteId . "))"
+            . "or (id = " . $noteId . " and user_id = '" . $userId . "')";
+        $db = new dbquery();
+        $db->connect();
+        $db->query($query);
+        //$db->show();exit;
+        if ($db->nb_result() > 0) {
+            return true;
+         } else {
+            // test if public
+            $query = "select note_id from note_entities where note_id = " . $noteId;
+            $db->query($query);
+            if ($db->nb_result() == 0) {
+                return true;
+            } else {
+                return false;
+            }
+         }
+    }
 }
 

@@ -33,10 +33,14 @@ require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
             ."class".DIRECTORY_SEPARATOR."class_lists.php";
 require_once "modules".DIRECTORY_SEPARATOR."notes".DIRECTORY_SEPARATOR."notes_tables.php";
+require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
+    . "class" . DIRECTORY_SEPARATOR
+    . "class_modules_tools.php";
 
 $core_tools = new core_tools();
 $request    = new request();
 $list       = new lists();   
+$notes_tools = new notes();
 
 $identifier = '';
 $origin = '';
@@ -138,7 +142,12 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         }
     
     //Request
-        $tab=$request->select(
+        /*$tab=$request->select(
+            $select, $where, $orderstr,
+            $_SESSION['config']['databasetype'], "500", true, NOTES_TABLE, USERS_TABLE,
+            "user_id"
+        );*/
+		$tabNotes=$request->select(
             $select, $where, $orderstr,
             $_SESSION['config']['databasetype'], "500", true, NOTES_TABLE, USERS_TABLE,
             "user_id"
@@ -146,7 +155,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         // $request->show();
         
     //Result Array
-        for ($i=0;$i<count($tab);$i++)
+        /*for ($i=0;$i<count($tab);$i++)
         {
             for ($j=0;$j<count($tab[$i]);$j++)
             {
@@ -223,8 +232,124 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                     }
                 }
             }
-        }
+        }*/
         
+		//LGI UPDATE
+		$arrayToUnset = array();
+
+		for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
+			for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
+				foreach (array_keys($tabNotes[$indNotes1][$indNotes2]) as $value) {
+					if ($tabNotes[$indNotes1][$indNotes2][$value] == "id") {
+						$tabNotes[$indNotes1][$indNotes2]["id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+						$tabNotes[$indNotes1][$indNotes2]["label"] = 'ID';
+						$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
+						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
+						$indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
+						//echo $tabNotes[$indNotes1][$indNotes2]['value'] . '<br>';
+						if (!$notes_tools->isUserNote(
+							$tabNotes[$indNotes1][$indNotes2]['value'], 
+							$_SESSION['user']['UserId'], 
+							$_SESSION['user']['primaryentity']['id']
+							)
+						) {
+							//unset($tabNotes[$indNotes1]);
+							//echo 'sort ' . $indNotes1 . '<br>';
+							array_push($arrayToUnset, $indNotes1);
+						} else {
+							//echo 'garde ' . $indNotes1 . '<br>';
+						}
+					}
+				}
+			}
+		}
+
+		for ($cptUnset=0;$cptUnset<count($arrayToUnset);$cptUnset++ ) {
+			unset($tabNotes[$arrayToUnset[$cptUnset]]);
+		}
+		array_multisort($tabNotes, SORT_DESC);
+		
+		//$request->show_array($tabNotes);
+		for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
+			for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
+				foreach (array_keys($tabNotes[$indNotes1][$indNotes2]) as $value) {
+					if ($tabNotes[$indNotes1][$indNotes2][$value] == "id") {
+						$tabNotes[$indNotes1][$indNotes2]["id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+						$tabNotes[$indNotes1][$indNotes2]["label"] = 'ID';
+						$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
+						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+						$tabNotes[$indNotes1][$indNotes2]["show"] = false;
+						$indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
+					}
+					if ($tabNotes[$indNotes1][$indNotes2][$value] == "user_id") {
+						$tabNotes[$indNotes1][$indNotes2]["user_id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+						$tabNotes[$indNotes1][$indNotes2]["label"] = _ID;
+						$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
+						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+						$tabNotes[$indNotes1][$indNotes2]["show"] = false;
+					}
+					if ($tabNotes[$indNotes1][$indNotes2][$value] == "lastname") {
+						$tabNotes[$indNotes1][$indNotes2]['value'] = $request->show_string(
+							$tabNotes[$indNotes1][$indNotes2]['value']
+						);
+						$tabNotes[$indNotes1][$indNotes2]["lastname"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+						$tabNotes[$indNotes1][$indNotes2]["label"] = _LASTNAME;
+						$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall ;
+						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
+					}
+					if ($tabNotes[$indNotes1][$indNotes2][$value] == "date_note") {
+						$tabNotes[$indNotes1][$indNotes2]["date_note"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+						$tabNotes[$indNotes1][$indNotes2]["label"] = _DATE;
+						$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeMedium;
+						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
+					}
+					if ($tabNotes[$indNotes1][$indNotes2][$value] == "firstname") {
+						$tabNotes[$indNotes1][$indNotes2]["firstname"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+						$tabNotes[$indNotes1][$indNotes2]["label"] = _FIRSTNAME;
+						$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
+						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "center";
+						$tabNotes[$indNotes1][$indNotes2]["align"] = "center";
+						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
+					}
+					if ($tabNotes[$indNotes1][$indNotes2][$value] == "note_text") {
+						$tabNotes[$indNotes1][$indNotes2]['value'] = '<a href="javascript://"'
+							. ' onclick="ouvreFenetre(\''
+							. $_SESSION['config']['businessappurl']
+							. 'index.php?display=true&module=notes&page=note_details&id='
+							. $indNotes1d . '&amp;resid=' . $_SESSION['doc_id']
+							. '&amp;coll_id=' . $_SESSION['collection_id_choice']
+							. $extendUrl . '\', 1024, 650)">'
+							. $request->cut_string(
+								$request->show_string(
+									$tabNotes[$indNotes1][$indNotes2]['value']
+								), $cutString
+							) . '<span class="sstit"> > ' . _READ . '</span>';
+						$tabNotes[$indNotes1][$indNotes2]["note_text"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+						$tabNotes[$indNotes1][$indNotes2]["label"] = _NOTES;
+						$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeFull;
+						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "center";
+						$tabNotes[$indNotes1][$indNotes2]["align"] = "center";
+						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
+					}
+				}
+			}
+		}
+		
         //List
         $listKey = 'id';                                                                    //Clé de la liste
         $paramsTab = array();                                                               //Initialiser le tableau de paramètres
@@ -277,7 +402,8 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
          
         //Output
         $status = 0;
-        $content = $list->showList($tab, $paramsTab, $listKey);
+        //$content = $list->showList($tab, $paramsTab, $listKey);
+        $content = $list->showList($tabNotes, $paramsTab, $listKey);
         // $debug = $list->debug();
 
     echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
