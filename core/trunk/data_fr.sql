@@ -1269,8 +1269,8 @@ INSERT INTO ar_positions (position_id, site_id, pos_row, pos_col, pos_level, pos
 ------------
 --AR_SITES--
 ------------
-INSERT INTO ar_sites (site_id, site_desc, entity_id) VALUES ('FR01', 'Site de Paris', 'COU');
-INSERT INTO ar_sites (site_id, site_desc, entity_id) VALUES ('DK01', 'Site de Dakar', 'COU');
+INSERT INTO ar_sites (site_id, site_desc, entity_id) VALUES ('FR01', 'Site de Paris', 'CCAS');
+INSERT INTO ar_sites (site_id, site_desc, entity_id) VALUES ('DK01', 'Site de Dakar', 'CCAS');
 
 -------------------
 --DOCSERVER_TYPES--
@@ -3154,9 +3154,9 @@ INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause
 VALUES ('log_coll', 'logsArchives', '[archivage] 100 - logs archivés', '100 - logs archivés', '1=1', 'N', 'Y', 'Y');
 
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) 
-VALUES ('apa_coll', 'APA_reservation', '[APA] 40 - Archives reservees', 'Corbeille des archives reservees', 'res_view_apa.status = ''RSV'' and (ORIGIN= @my_primary_entity or ORIGIN in (@subentities[@my_primary_entity]))', 'NO', 'Y', 'Y');
+VALUES ('apa_coll', 'APA_reservation', '[APA] 40 - Archives reservees', 'Corbeille des archives reservees', 'res_view_apa.status = ''RSV'' and (ORIGIN= @my_primary_entity or ORIGIN in (@subentities[@my_primary_entity]))', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) 
-VALUES ('apa_coll', 'APA_picking', '[APA] 41 - Archives prelevees', 'Corbeille des archives prelevees', 'res_view_apa.status = ''OUT'' and (ORIGIN= @my_primary_entity or ORIGIN in (@subentities[@my_primary_entity]))', 'NO', 'Y', 'Y');
+VALUES ('apa_coll', 'APA_picking', '[APA] 41 - Archives prelevees', 'Corbeille des archives prelevees', 'res_view_apa.status = ''OUT'' and (ORIGIN= @my_primary_entity or ORIGIN in (@subentities[@my_primary_entity]))', 'N', 'Y', 'Y');
 
 ------------------------
 --ACTIONS_GROUPBASKETS--
@@ -3178,8 +3178,8 @@ VALUES (206, '', 'CORRESPONDANT', 'BREnPreparation', 'Y', 'N', 'Y');
 ---------------
 --GROUPBASKET--
 ---------------
-INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'APA_reservation', 1, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N', '', '');
-INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'APA_picking', 2, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'APA_reservation', 1, NULL, NULL, 'list_folders', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'APA_picking', 2, NULL, NULL, 'list_folders', 'N', 'N', 'N', '', '');
 INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'logsArchives', 3, NULL, NULL, 'logs_list', 'N', 'N', 'N', '', '');
 INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'TransfertArticles', 4, NULL, NULL, 'item_basket_list', 'N', 'N', 'N', '', '');
 INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'BRAcceptes', 5, NULL, NULL, 'io_basket_list', 'N', 'N', 'N', '', '');
