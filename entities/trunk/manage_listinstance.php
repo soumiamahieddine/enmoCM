@@ -586,8 +586,8 @@ $linkwithwhat =
 <body onload="setTimeout(window.close, <?php echo $time;?>*60*1000);">
     <script type="text/javascript">
         function add_user(id) {
-            var user_id = $('user_id' + id).value;
-            var role_select = $('entity_role_' + id);
+            var user_id = $('user_id_' + id).value;
+            var role_select = $('user_role_' + id);
 			var role = role_select.options[role_select.selectedIndex].value;
             goTo('<?php echo $linkwithwhat; ?>&action=add_user&id='+user_id+'&role='+role);        
         }
