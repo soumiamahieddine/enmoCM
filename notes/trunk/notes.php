@@ -279,7 +279,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 					if ($tabNotes[$indNotes1][$indNotes2][$value] == "id") {
 						$tabNotes[$indNotes1][$indNotes2]["id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
 						$tabNotes[$indNotes1][$indNotes2]["label"] = 'ID';
-						$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
+						$tabNotes[$indNotes1][$indNotes2]["size"] = 1;
 						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
@@ -289,7 +289,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 					if ($tabNotes[$indNotes1][$indNotes2][$value] == "user_id") {
 						$tabNotes[$indNotes1][$indNotes2]["user_id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
 						$tabNotes[$indNotes1][$indNotes2]["label"] = _ID;
-						$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
+						$tabNotes[$indNotes1][$indNotes2]["size"] = 5;
 						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
@@ -301,7 +301,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 						);
 						$tabNotes[$indNotes1][$indNotes2]["lastname"] = $tabNotes[$indNotes1][$indNotes2]['value'];
 						$tabNotes[$indNotes1][$indNotes2]["label"] = _LASTNAME;
-						$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall ;
+						$tabNotes[$indNotes1][$indNotes2]["size"] = 5;
 						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
@@ -310,7 +310,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 					if ($tabNotes[$indNotes1][$indNotes2][$value] == "date_note") {
 						$tabNotes[$indNotes1][$indNotes2]["date_note"] = $tabNotes[$indNotes1][$indNotes2]['value'];
 						$tabNotes[$indNotes1][$indNotes2]["label"] = _DATE;
-						$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeMedium;
+						$tabNotes[$indNotes1][$indNotes2]["size"] = 5;
 						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
@@ -319,28 +319,17 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 					if ($tabNotes[$indNotes1][$indNotes2][$value] == "firstname") {
 						$tabNotes[$indNotes1][$indNotes2]["firstname"] = $tabNotes[$indNotes1][$indNotes2]['value'];
 						$tabNotes[$indNotes1][$indNotes2]["label"] = _FIRSTNAME;
-						$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
+						$tabNotes[$indNotes1][$indNotes2]["size"] = 5;
 						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "center";
 						$tabNotes[$indNotes1][$indNotes2]["align"] = "center";
 						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
 						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
 					}
 					if ($tabNotes[$indNotes1][$indNotes2][$value] == "note_text") {
-						$tabNotes[$indNotes1][$indNotes2]['value'] = '<a href="javascript://"'
-							. ' onclick="ouvreFenetre(\''
-							. $_SESSION['config']['businessappurl']
-							. 'index.php?display=true&module=notes&page=note_details&id='
-							. $indNotes1d . '&amp;resid=' . $_SESSION['doc_id']
-							. '&amp;coll_id=' . $_SESSION['collection_id_choice']
-							. $extendUrl . '\', 1024, 650)">'
-							. $request->cut_string(
-								$request->show_string(
-									$tabNotes[$indNotes1][$indNotes2]['value']
-								), $cutString
-							) . '<span class="sstit"> > ' . _READ . '</span>';
-						$tabNotes[$indNotes1][$indNotes2]["note_text"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+						//$tabNotes[$indNotes1][$indNotes2]["note_text"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+						$tabNotes[$indNotes1][$indNotes2]["note_text"] = $request->cut_string($request->show_string($tabNotes[$indNotes1][$indNotes2]['value']), $cutString);
 						$tabNotes[$indNotes1][$indNotes2]["label"] = _NOTES;
-						$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeFull;
+						$tabNotes[$indNotes1][$indNotes2]["size"] = 20;
 						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "center";
 						$tabNotes[$indNotes1][$indNotes2]["align"] = "center";
 						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
