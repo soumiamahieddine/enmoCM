@@ -317,12 +317,12 @@ class tag_controler
             $coll_id = $params[1];
             $this->insert_tag_label($new_tag_label, $coll_id);  
             
-            $hist = new history();
+            /*$hist = new history();
             $hist->add(
                 _TAG_TABLE_NAME, $new_tag_label, "ADD", 'tagadd', _TAG_ADDED.' : "'.
                 substr($db->protect_string_db($new_tag_label), 0, 254) .'"',
                 $_SESSION['config']['databasetype'], 'tags'
-            );
+            );*/
             return true;
         }
         elseif($mode=='up'){
@@ -330,12 +330,12 @@ class tag_controler
             $new_tag_label = $params[0];
             $coll_id = $params[1];
             $this->update_tag_label($new_tag_label, $tag_label, $coll_id);  
-            $hist = new history();
+            /*$hist = new history();
             $hist->add(
                 _TAG_TABLE_NAME, $new_tag_label, "ADD", 'tagup', _TAG_ADDED.' : "'.
                 substr($db->protect_string_db($new_tag_label), 0, 254) .'"',
                 $_SESSION['config']['databasetype'], 'tags'
-            );
+            );*/
             return true;
         }
         else
@@ -399,12 +399,12 @@ class tag_controler
             "insert into " ._TAG_TABLE_NAME
             . " values ('".$new_tag_label."', '".$coll_id."', 0)"
               );
-             $hist = new history();
-             $hist->add(
-                _TAG_TABLE_NAME, $new_tag_label, "ADD", 'tagadd', _TAG_ADDED.' : "'.
-                substr($db->protect_string_db($new_tag_label), 0, 254) .'"',
-                $_SESSION['config']['databasetype'], 'tags'
-             );
+            /*$hist = new history();
+            $hist->add(
+				_TAG_TABLE_NAME, $new_tag_label, "ADD", 'tagadd', _TAG_ADDED.' : "'.
+				substr($db->protect_string_db($new_tag_label), 0, 254) .'"',
+				$_SESSION['config']['databasetype'], 'tags'
+			);*/
         }
         
     }
@@ -433,12 +433,12 @@ class tag_controler
             );
             if ($fin){ 
                 
-                $hist = new history();
+                /*$hist = new history();
                 $hist->add(
                     'res_view_letterbox', $res_id, "ADD", 'tagadd', _TAG_ADDED.' : "'.
                     substr($db->protect_string_db($tag_label), 0, 254) .'"',
                     $_SESSION['config']['databasetype'], 'tags'
-                );
+                );*/
                 return true; }
         }
         return false;
