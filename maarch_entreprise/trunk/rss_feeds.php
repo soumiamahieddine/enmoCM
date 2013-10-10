@@ -6,7 +6,6 @@ require_once('modules/notifications/lang/fr.php');
 require_once('modules/notifications/notifications_tables_definition.php');
 require_once('modules/notifications/class/notifications_controler.php');
 
-//test lgi svn
 
 
 //load Maarch session vars
