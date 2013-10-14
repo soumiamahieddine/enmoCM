@@ -143,6 +143,7 @@ if (!isset($_REQUEST['coll_id']) || empty($_REQUEST['coll_id'])) {
     }
 }
 $_SESSION['collection_id_choice'] = $coll_id;
+$_SESSION['current_basket']['coll_id'] = $coll_id;
 
 if (isset($_GET['id']) && !empty($_GET['id'])) {
     $s_id = addslashes($func->wash($_GET['id'], 'num', _THE_DOC));
