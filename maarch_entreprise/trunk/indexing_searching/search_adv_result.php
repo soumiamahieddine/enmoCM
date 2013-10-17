@@ -342,7 +342,7 @@ if (count($_REQUEST['meta']) > 0) {
                 Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(Zend_Search_Lucene_Search_QueryParser::B_AND);
                 Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
                 $path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
-                if (is_dir($path_to_lucene_index))
+                if (is_dir($path_to_lucene_index) && !$func->isDirEmpty($path_to_lucene_index))
                 {
                     if (!$func->isDirEmpty($path_to_lucene_index)) {
                         $index = Zend_Search_Lucene::open($path_to_lucene_index);
@@ -361,7 +361,7 @@ if (count($_REQUEST['meta']) > 0) {
                     }
                 } else {
                     $where_request_welcome .= " ".$where_multifield_request." and ";
-                } 
+                }
             }
             // PRIORITY
             elseif ($tab_id_fields[$j] == 'priority' && (!empty($_REQUEST['priority']) ||$_REQUEST['priority'] == 0) )
@@ -704,6 +704,39 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= $tmp['where'];
             }
         }
+        // SEARCH IN BASKETS
+        /*if ($tab_id_fields[$j] == 'baskets_clause' && !empty($_REQUEST['baskets_clause'])) {
+                //$func->show_array($_REQUEST);exit;
+                switch($_REQUEST['baskets_clause']) {
+                case 'false':
+                    $baskets_clause = "false";
+                    $json_txt .= "'baskets_clause' : ['false'],";
+                    break;
+                    
+                case 'true':
+                    for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
+                        if ($_SESSION['user']['baskets'][$ind_bask]['coll_id'] == 'letterbox_coll') {
+                            if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
+                                $_SESSION['searching']['comp_query'] .= ' or ('.$_SESSION['user']['baskets'][$ind_bask]['clause'].')';
+                            }
+                         }
+                    }
+                    $_SESSION['searching']['comp_query'] = preg_replace('/^ or/', '', $_SESSION['searching']['comp_query']);
+                    $baskets_clause = ($_REQUEST['baskets_clause']);
+                    $json_txt .= " 'baskets_clause' : ['true'],";
+                    break;
+                
+                default:
+                    
+                    for($ind_bask = 0; $ind_bask < count($_SESSION['user']['baskets']); $ind_bask++) {
+                        if($_SESSION['user']['baskets'][$ind_bask]['id'] == $_REQUEST['baskets_clause']) {
+                            if(isset($_SESSION['user']['baskets'][$ind_bask]['clause']) && trim($_SESSION['user']['baskets'][$ind_bask]['clause']) <> '') {
+                                $where_request .= ' ' . $_SESSION['user']['baskets'][$ind_bask]['clause'] . ' and ' ;
+                            } 
+                        }
+                    }
+                }
+            }*/
         $json_txt = preg_replace('/,$/', '', $json_txt);
         $json_txt .= "}},";
     }
