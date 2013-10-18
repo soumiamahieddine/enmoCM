@@ -1674,6 +1674,10 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             && $_ENV['categories'][$catId][$tmpId]['type_field'] == 'string'
             && $_ENV['categories'][$catId][$tmpId]['table'] <> 'none'
         ) {
+			//enleve bug sur ';' et '--'
+			$formValues[$i]['VALUE']=str_replace(';', ' ', $formValues[$i]['VALUE']);
+			$formValues[$i]['VALUE']=str_replace('--', '-', $formValues[$i]['VALUE']);
+			
             if ($_ENV['categories'][$catId][$tmpId]['table'] == 'res') {
                 array_push(
                     $_SESSION['data'],
