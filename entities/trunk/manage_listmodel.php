@@ -807,7 +807,7 @@ $linkwithwhat =
                     <thead>
                         <tr>
                             <th><?php echo _ID;?></th>
-                            <th><?php echo _LABEL;?></th>
+                            <th><?php echo _DEPARTMENT;?></th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead><?php 
