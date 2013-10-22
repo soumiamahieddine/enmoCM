@@ -538,7 +538,7 @@ if (count($tab) > 0) {
         
         //Fileplan
 		if ($core_tools->test_service('fileplan', 'fileplan', false)) {
-            if ($mode = 'normal')  {
+            if ($mode == 'normal')  {
                 require_once "modules" . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR
                     . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
                 $fileplan     = new fileplan();
