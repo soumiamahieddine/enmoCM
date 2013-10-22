@@ -201,14 +201,13 @@ for ($i=0;$i<count($tab);$i++)
             if($tab[$i][$j][$value]=="is_persistent")
 			{
                 $db->query("SELECT distinct(res_id) FROM basket_persistent_mode WHERE res_id = "
-                        .$tab[$i][$j]['value']." and user_id = '"
+                        .$_SESSION['mlb_search_current_res_id']." and user_id = '"
                         .$_SESSION['user']['UserId']."' and is_persistent = 'Y'");
                 $nb = $db->nb_result();
-               
                 if ($nb > 0) {
-                   $tab[$i][$j]["value"]= true;
+                    $tab[$i][$j]["value"] = "true";
                 } else {
-                     $tab[$i][$j]["value"] = false;
+                    $tab[$i][$j]["value"] = "false";
                 }
 				$tab[$i][$j]["label"]=_IS_PERSISTENT;
 				$tab[$i][$j]["size"]="4";
@@ -431,11 +430,17 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='viewed';
+				$db->query("select viewed from listinstance where res_id = " 
+					. $_SESSION['mlb_search_current_res_id'] 
+					. " and coll_id = '" . $_SESSION['current_basket']['coll_id'] . "'"
+					. " and item_id = '".$_SESSION['user']['UserId']."'");
+				$lineViewed = $db->fetch_object();
+				$tab[$i][$j]['value'] = $lineViewed->viewed;
             }
 		}
 	}
 }
-
+//var_dump($tab);exit;
 //Clé de la liste
 $listKey = 'res_id';
 
