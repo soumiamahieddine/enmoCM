@@ -114,6 +114,10 @@ if (isset($_REQUEST['baskets']) && ! empty($_REQUEST['baskets'])) {
     //$bask->show_array($_SESSION['current_basket']);
 }
 
+if ((isset($_REQUEST['id']) && !empty($_REQUEST['id'])) && !isset($_REQUEST['resid'])) {
+	$_REQUEST['resid'] = $_REQUEST['id'];
+}
+
 if (
     isset($_REQUEST['directLinkToAction']) 
     && isset($_REQUEST['resid']) && !empty($_REQUEST['resid'])
