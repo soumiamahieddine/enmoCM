@@ -61,10 +61,10 @@ if (isset($_REQUEST['id']) && !empty($_REQUEST['id']))
 
 //Fields
     //Documents
-    array_push($select[$view],  "res_id", "status", "subject", "category_id as category_img", 
+    array_push($select[$view],  "res_id", "status", "subject", "category_id", "category_id as category_img", 
                                 "contact_firstname", "contact_lastname", "contact_society", 
                                 "user_lastname", "user_firstname", "dest_user", "type_label", 
-                                "creation_date", "entity_label", "category_id, exp_user_id");
+                                "creation_date", "entity_label", "exp_user_id");
 //Cases fields
     if($core_tools->is_module_loaded("cases") == true) {
         array_push($select[$view], "case_id", "case_label", "case_description");

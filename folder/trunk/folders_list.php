@@ -47,6 +47,9 @@ if(!empty($_SESSION['current_basket']['view'])) {
 	$table = $_SESSION['current_basket']['table'];
 }
 
+//Collection
+$_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];
+
 //Table or view
     $select[$table]= array();
 
