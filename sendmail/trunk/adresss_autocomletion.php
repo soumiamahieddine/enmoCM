@@ -32,15 +32,6 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 $db = new dbquery();
 $db->connect();
 
-$listArray = array();
-$db->query("select lastname, firstname, user_id, mail from ".$_SESSION['tablename']['users']
-	." where lower(lastname) like lower('%".$db->protect_string_db($_REQUEST['what'])."%') and enabled = 'Y' order by lastname, firstname");
-
-while($line = $db->fetch_object())
-{
-	array_push($listArray, '"'.$db->show_string($line->lastname).' '.$db->show_string($line->firstname).'" <'.$line->mail.'>');
-	//array_push($listArray, "user : [".$db->show_string($line->lastname)." ".$db->show_string($line->firstname))."]";
-}
     $timestart=microtime(true);
    
     $args = explode(' ', $_REQUEST['what']);
@@ -49,8 +40,14 @@ while($line = $db->fetch_object())
     if($num_args == 0) return "<ul></ul>"; 
        
     $query = "SELECT result, SUM(confidence) AS score, count(1) AS num FROM (";
-    
-    $subQuery = 
+    $subQuery = array();
+    $subQuery[1] = "SELECT UPPER(lastname) || ' ' || firstname || ' (' || mail || ')' AS result, "
+                . ' %d AS confidence, mail AS email '
+                . "FROM users"
+                . " WHERE enabled ='Y' AND "
+		. "(LOWER(lastname) LIKE LOWER('%s') OR LOWER(firstname) LIKE LOWER('%s') OR LOWER(user_id) LIKE LOWER('%s') OR LOWER(mail) LIKE LOWER('%s'))";
+
+    $subQuery[2]= 
         "SELECT "
             . "(CASE "
                 . " WHEN is_corporate_person = 'Y' THEN society"
@@ -64,27 +61,30 @@ while($line = $db->fetch_object())
                 . " LOWER(lastname) LIKE LOWER('%s')"
                 . " OR LOWER(firstname) LIKE LOWER('%s')"
                 . " OR LOWER(society) LIKE LOWER('%s')"
+		. " OR LOWER(email) LIKE LOWER('%s')"
             .")";
-    
+
     $queryParts = array();
+for($i=1;$i<3;$i++){
     foreach($args as $arg) {
         $arg = $db->protect_string_db($arg);
         if(strlen($arg) == 0) continue;
         # Full match of one given arg
         $expr = $arg;
         $conf = 100;
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr); 
+        $queryParts[] = sprintf($subQuery[$i], $conf, $expr, $expr, $expr, $expr); 
 
         # Partial match (starts with)
         $expr = $arg . "%"; ;
         $conf = 34; # If found, partial match contains will also be so score is sum of both confidences, i.e. 67)
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr); 
+        $queryParts[] = sprintf($subQuery[$i], $conf, $expr, $expr, $expr, $expr);
       
         # Partial match (contains)
         $expr = "%" . $arg . "%";
         $conf = 33;
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr); 
+        $queryParts[] = sprintf($subQuery[$i], $conf, $expr, $expr, $expr, $expr);
     }
+}
     $query .= implode (' UNION ALL ', $queryParts);
     $query .= ") matches" 
         . " GROUP BY result "
