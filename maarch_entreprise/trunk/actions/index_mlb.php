@@ -535,12 +535,12 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     }
     $frmStr .= '</label></td>';
     $contact_mode = "view";
-    if($core->test_service('update_contacts','apps', false)) $contact_mode = 'up';
+if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update';
     $frmStr .= '<td><a href="#" id="contact_card" title="' . _CONTACT_CARD
             . '" onclick="open_contact_card(\''
             . $_SESSION ['config']['businessappurl'] . 'index.php?display=true'
-            . '&page=contact_info&mode='.$contact_mode.'\', \'' . $_SESSION ['config']['businessappurl']
-            . 'index.php?display=true&page=user_info\');" '
+            . '&page=contact_info\', \'' . $_SESSION ['config']['businessappurl']
+            . 'index.php?display=true&page=user_info\',\''.$contact_mode.'\');" '
             . 'style="visibility:hidden;" ><img src="'
             . $_SESSION['config']['businessappurl'] . 'static.php?filename='
             . 'my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>&nbsp;</td>';
