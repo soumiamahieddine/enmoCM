@@ -271,12 +271,12 @@ class tag_controler
                 "delete from " ._TAG_TABLE_NAME
                 . " where res_id = '" . $res_id . "' and coll_id = '".$coll_id."' "
         );
-        $hist = new history();
+        /*$hist = new history();
         $hist->add(
             'res_view_letterbox', $res_id, "DEL", 'tagdel', _ALL_TAG_DELETED_FOR_RES_ID.' : "'.
             substr($db->protect_string_db($res_id), 0, 254) .'"',
             $_SESSION['config']['databasetype'], 'tags'
-        );
+        );*/
         //$db->show();
     }
     
