@@ -64,7 +64,7 @@ $log4PhpEnabled = false;
 $logger = new Logger4Php();
 $logger->set_threshold_level('DEBUG');
 
-$logFile = '..' . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . $GLOBALS['batchName']
+$logFile = 'logs' . DIRECTORY_SEPARATOR . $GLOBALS['batchName']
              . DIRECTORY_SEPARATOR . date('Y-m-d_H-i-s') . '.log';
 			 
 $file = new FileHandler($logFile);
