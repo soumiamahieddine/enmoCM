@@ -343,6 +343,7 @@ class lists extends dbquery
                             .$_SESSION['config']['businessappurl'].'index.php?display=true&page='
                             .'contact_list_by_name\', \'what\', \'2\');</script>';
             break;
+            
             case 'type':
                 require_once 'core' . DIRECTORY_SEPARATOR . 'core_tables.php';
                 
@@ -460,14 +461,14 @@ class lists extends dbquery
                     .'&filter=creation_date_end&value=\' + this.value, \''.$this->divListId.'\', '
                     .$this->modeReturn.');" value="'.$date_end.'" size="15" />&nbsp;';
             break;
-            
+      
             case 'identifier':
                 if(isset($_SESSION['filters']['identifier']['VALUE']) && !empty($_SESSION['filters']['identifier']['VALUE'])) {
                     $identifier = $_SESSION['filters']['identifier']['VALUE'];
                 } else {
                     $identifier = '['._IDENTIFIER.']';
                 }
-               $filters .='<input type="text" name="identifier" id="identifier" value="'.$identifier.'" size="40" '
+                $filters .='<input type="text" name="identifier" id="identifier" value="'.$identifier.'" size="40" '
                             .'onfocus="if(this.value==\'['._IDENTIFIER.']\'){this.value=\'\';}" '
                             .'onChange="loadList(\''.$this->link
                             .'&filter=identifier&value=\' + this.value, \''.$this->divListId.'\', '.$this->modeReturn.');" '
@@ -931,6 +932,19 @@ class lists extends dbquery
         return $return;
     }
     
+	private function _tmplt_showIconProcessDocument($resultTheLine, $listKey) {
+        
+        $return = '';
+        //Show document icon
+        $href = $this->_buildMyLink('index.php?page=view_baskets&module=basket&baskets=MyBasket&directLinkToAction', $resultTheLine, $listKey);
+        $return .= '<div align="center"><a href="'.$href.'" target="_blank" title="'
+                ._PROCESS.'"><img src="'.$_SESSION['config']['businessappurl']
+                .'static.php?filename=lot.gif" alt="'._PROCESS
+                .'" border="0"/></a></div>';
+           
+        return $return;
+    }
+	
     private function _tmplt_showIconDocument($resultTheLine, $listKey) {
         
         $return = '';
@@ -1140,7 +1154,10 @@ class lists extends dbquery
         ##radioButton## : show radio button
         } elseif (preg_match("/^radioButton$/", $parameter)) {
             $var = $this->_tmplt_radioButton($resultTheLine, $listKey, $lineIsDisabled);
-        ##showIconDocument## : show document icon and link
+        ##showIconProcessDocument## : show process document icon and link
+        } elseif (preg_match("/^showIconProcessDocument$/", $parameter)) {
+            $var = $this->_tmplt_showIconProcessDocument($resultTheLine, $listKey);
+		##showIconDocument## : show document icon and link
         } elseif (preg_match("/^showIconDocument$/", $parameter)) {
             $var = $this->_tmplt_showIconDocument($resultTheLine, $listKey);
         ##showIconDetails## : show details icon and link
@@ -1680,7 +1697,6 @@ class lists extends dbquery
     }
     
     private function _createToolbar($resultFirstRow) {
-        //Init
         $toolbar = $tools =  $templates = $filters = '';
         $start = $end = 0;
         
@@ -2677,7 +2693,7 @@ class lists extends dbquery
     }
     
     public function showList($resultArray, $parameters=array(), $listKey='', $currentBasket=array()) {
-        
+
         //Put in different arrays: label, show, sort of columns
         if (count($resultArray) > 0 && isset($resultArray[0])) {
             $listColumn = array();
