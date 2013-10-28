@@ -108,7 +108,6 @@ function display_up($statusId)
     } else {
         put_in_session('status', $status->getArray());
     }
-
     return $state;
 }
 
@@ -133,9 +132,10 @@ function display_list()
     init_session();
 
     $select[STATUS_TABLE] = array();
-    array_push($select[STATUS_TABLE], 'id', 'label_status');
+    array_push($select[STATUS_TABLE], 'id', 'label_status','img_filename');
     $where = '';
     $what = '';
+
     if (isset($_REQUEST['what'])) {
         $what = $func->protect_string_db($_REQUEST['what']);
 		$where .= " (lower(label_status) like lower('"
@@ -164,6 +164,7 @@ function display_list()
     $tab = $request->select(
         $select, $where, $orderstr, $_SESSION['config']['databasetype']
     );
+
 
     for ($i=0;$i<count($tab);$i++) {
         foreach ($tab[$i] as &$item) {
@@ -290,7 +291,7 @@ function validate_status_submit()
     if (isset($_REQUEST['is_system']) && !empty($_REQUEST['is_system'])) {
         $statusObj->is_system = $_REQUEST['is_system'];
     }
-    $statusObj->img_filename = '';
+    $statusObj->img_filename = $_REQUEST['img_filename'];
     $statusObj->maarch_module = 'apps';
     $statusObj->can_be_searched = 'Y';
     if (isset($_REQUEST['can_be_searched'])) {
@@ -319,9 +320,11 @@ function validate_status_submit()
                );
 
     $control = $statusCtrl->save($statusObj, $mode, $params);
+
     if (!empty($control['error']) && $control['error'] <> 1) {
         // Error management depending of mode
         $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
+
         put_in_session('status', $status);
         put_in_session('status', $statusObj->getArray());
 
@@ -357,6 +360,7 @@ function validate_status_submit()
             $_SESSION['error'] = _STATUS_MODIFIED;
         }
         unset($_SESSION['m_admin']);
+
         header(
             'location: ' . $_SESSION['config']['businessappurl']
             . 'index.php?page=' . $pageName . '&mode=list&admin=status&order='
@@ -388,6 +392,7 @@ function init_session()
  */
 function put_in_session($type, $hashable, $showString = true)
 {
+
     $func = new functions();
     foreach ($hashable as $key=>$value) {
         if ($showString) {
@@ -395,5 +400,8 @@ function put_in_session($type, $hashable, $showString = true)
         } else {
             $_SESSION['m_admin'][$type][$key]=$value;
         }
+			
+
     }
+
 }
