@@ -243,7 +243,7 @@ class Maarch_Core_Class_StatusControler
         $status->is_system = $f->protect_string_db(
             $f->wash($status->is_system, 'no', _IS_SYSTEM)
         );
-        $status->img_filename = '';
+        $status->img_filename = $status->img_filename;
         $status->maarch_module = 'apps';
 
         if (!isset($status->can_be_searched)
