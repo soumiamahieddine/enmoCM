@@ -108,6 +108,14 @@ if ($mode == 'list') {
             if ($_SESSION['m_admin']['status']['can_be_modified'] == 'N') {
                ?> checked="checked"<?php
             } ?> /><?php echo _NO;?>
+			
+			<input name="img_filename" type="hidden"  id="img_filename" value="<?php
+                echo functions::show_str(
+                    $_SESSION['m_admin']['status']['img_filename']
+                ); ?>" <?php
+                /* if ($mode == 'up') {
+                    echo 'readonly="readonly" class="readonly"';
+                } */?>/>
         </p>
         <?php
         $core_tools = new core_tools();
