@@ -1116,6 +1116,11 @@ if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update
  **/
 function check_form($formId, $values)
 {
+	if ($_SESSION['upfile']['format']=='maarch'){
+		$_SESSION['upfile']='';
+		$_SESSION['upfile']['error']='0';
+		$_SESSION['upfile']['format']='maarch';
+	}
     //print_r($values);
     $_SESSION['action_error'] = '';
     if (count($values) < 1 || empty($formId)) {
