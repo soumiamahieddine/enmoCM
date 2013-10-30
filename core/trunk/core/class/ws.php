@@ -3,7 +3,6 @@ global $SOAP_dispatch_map;
 global $XMLRPC_dispatch_map;
 global $SOAP_typedef;
 
-
 //test
 /*$SOAP_dispatch_map['testMethod'] = array(
                                         'in'  => array('myVar' => 'string'),
