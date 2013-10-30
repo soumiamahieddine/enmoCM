@@ -1,4 +1,5 @@
 <?php 
+
 /*******************************Statut courrier*********************************/
 define('_TO_PROCESS','A traiter');
 define('_IN_PROGRESS','En cours');
