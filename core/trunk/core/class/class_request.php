@@ -257,6 +257,10 @@ class request extends dbquery
                     {
                         $update_string .= $data[$i]['column']."=sysdate,";
                     }
+                    elseif(trim(strtoupper($data[$i]['value'])) == "CURRENT_TIMESTAMP")
+                    {
+                        $update_string .= $data[$i]['column']."=CURRENT_TIMESTAMP,";
+                    }
                     else
                     {
                         $update_string .= $data[$i]['column']."='".$data[$i]['value']."',";
