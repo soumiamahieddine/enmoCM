@@ -1533,6 +1533,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         }
         else if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['type_field'] == 'string' && $_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] <> 'none')
         {
+            //FIX BUG WITH -- and ;
+            $values_form[$i]['VALUE']=str_replace(';', ' ', $values_form[$i]['VALUE']);
+            $values_form[$i]['VALUE']=str_replace('--', '-',$values_form[$i]['VALUE']);
             if($_ENV['categories'][$cat_id][$values_form[$i]['ID']]['table'] == 'res')
             {
                 $query_res .= ", ".$values_form[$i]['ID']." = '".$db->protect_string_db($values_form[$i]['VALUE'])."'";
@@ -1554,7 +1557,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             }
         }
     }
-    
     $status_id = get_value_fields($values_form, 'status');
     if(empty($status_id) || $status_id === "") $status_id = 'BAD';
     $query_res .= ", status = '" . $status_id . "'";

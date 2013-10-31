@@ -265,6 +265,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     if (! isset($_SESSION['FILE']['extension'])
         || $_SESSION['FILE']['extension'] == ""
     ) {
+
         $frmStr .= '<div  style="display:block" id="choose_file_div">';
         $frmStr .= '<iframe src="' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&dir=indexing_searching&page='
@@ -535,7 +536,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     }
     $frmStr .= '</label></td>';
     $contact_mode = "view";
-if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update';
+    if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update';
     $frmStr .= '<td><a href="#" id="contact_card" title="' . _CONTACT_CARD
             . '" onclick="open_contact_card(\''
             . $_SESSION ['config']['businessappurl'] . 'index.php?display=true'
@@ -808,48 +809,48 @@ if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update
 
     /*** Frame to display the doc ***/
     $frmStr .= '<div id="validright">';
-	
-	/*** CAPTURE TOOLBAR ***/
+    
+    /*** CAPTURE TOOLBAR ***/
     if (
-		($core->test_service('scan', 'webtwain', false) === true)
+        ($core->test_service('scan', 'webtwain', false) === true)
         || 
-		($core->test_service('photo_capture', 'photo_capture', false) === true)
+        ($core->test_service('photo_capture', 'photo_capture', false) === true)
     )
     {
-		$frmStr .= '<div class="block" align="center" style="height:20px;width=100%;">';
-		
-		$frmStr .= '<table width="95%" cellpadding="0" cellspacing="0">';
-		$frmStr .= '<tr align="center">';
-		
-		//Webtwain
+        $frmStr .= '<div class="block" align="center" style="height:20px;width=100%;">';
+        
+        $frmStr .= '<table width="95%" cellpadding="0" cellspacing="0">';
+        $frmStr .= '<tr align="center">';
+        
+        //Webtwain
         if ($core->test_service('scan', 'webtwain', false) === true) {
-			$frmStr .= '<td>';
-			$frmStr .= '|<span onclick="new Effect.toggle(\'webtwain_div\', \'appear\', {delay:0.2});'
-				. 'whatIsTheDivStatus(\'webtwain_div\', \'divStatus_webtwain_div\');return false;" '
-				. 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-			$frmStr .= '<span id="divStatus_webtwain_div" style="color:#1C99C5;"><<</span><b>'
-				. '<small>' . _SCAN_DOCUMENT . '</small>';
-			$frmStr .= '</b></span>|';
-			$frmStr .= '</td>';
+            $frmStr .= '<td>';
+            $frmStr .= '|<span onclick="new Effect.toggle(\'webtwain_div\', \'appear\', {delay:0.2});'
+                . 'whatIsTheDivStatus(\'webtwain_div\', \'divStatus_webtwain_div\');return false;" '
+                . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+            $frmStr .= '<span id="divStatus_webtwain_div" style="color:#1C99C5;"><<</span><b>'
+                . '<small>' . _SCAN_DOCUMENT . '</small>';
+            $frmStr .= '</b></span>|';
+            $frmStr .= '</td>';
         }
-		
-		//Photo capture
+        
+        //Photo capture
         if ($core->test_service('photo_capture', 'photo_capture', false) === true){
-			$frmStr .= '<td>';
-			$frmStr .= '|<span onclick="new Effect.toggle(\'photo_capture_div\', \'appear\', {delay:0.2});'
-				. 'whatIsTheDivStatus(\'photo_capture_div\', \'divStatus_photo_capture_div\');return false;" '
-				. 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-			$frmStr .= '<span id="divStatus_photo_capture_div" style="color:#1C99C5;"><<</span><b>'
-				. '<small>' . _PHOTO_CAPTURE . '</small>';
-			$frmStr .= '</b></span>|';
-			$frmStr .= '</td>';
+            $frmStr .= '<td>';
+            $frmStr .= '|<span onclick="new Effect.toggle(\'photo_capture_div\', \'appear\', {delay:0.2});'
+                . 'whatIsTheDivStatus(\'photo_capture_div\', \'divStatus_photo_capture_div\');return false;" '
+                . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+            $frmStr .= '<span id="divStatus_photo_capture_div" style="color:#1C99C5;"><<</span><b>'
+                . '<small>' . _PHOTO_CAPTURE . '</small>';
+            $frmStr .= '</b></span>|';
+            $frmStr .= '</td>';
         }
-		//END TOOLBAR
-		$frmStr .= '</table>';
-		$frmStr .= '</div>';
-	}
-	
-	//Webtwain frame
+        //END TOOLBAR
+        $frmStr .= '</table>';
+        $frmStr .= '</div>';
+    }
+    
+    //Webtwain frame
      if ($core->test_service('scan', 'webtwain', false) === true) {
         $frmStr .= '<div class="desc" id="webtwain_div" style="display:none;">';
         $frmStr .= '<div class="ref-unit">';
@@ -864,10 +865,10 @@ if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update
         $frmStr .= '</div>';
         $frmStr .= '</div>';
     }
-	
-	//Photo capture frame
+    
+    //Photo capture frame
     if ($core->test_service('photo_capture', 'photo_capture', false) === true){
-		$_SESSION['photofile'] = array();
+        $_SESSION['photofile'] = array();
         $frmStr .= '<div class="desc" id="photo_capture_div" style="display:none;">';
         $frmStr .= '<div class="ref-unit">';
         $frmStr .= '<center><h2 onclick="new Effect.toggle(\'webtwain_div\', \'blind\', {delay:0.2});';
@@ -877,12 +878,12 @@ if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update
             . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&module=photo_capture&page=photo_capture'
             . '&origin=document" name="photo_iframe" id="photo_iframe" '
-			. 'width="100%" height="450px" align="center" '
+            . 'width="100%" height="450px" align="center" '
             . 'scrolling="auto" frameborder="0" ></iframe>';
         $frmStr .= '</div>';
         $frmStr .= '</div>';
     }
-	
+    
     /**** Contact form start *******/
     $frmStr .= '<div id="create_contact_div" style="display:none">';
     $frmStr .= '<div >';
@@ -1078,7 +1079,6 @@ if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update
                 . 'scrolling="auto" frameborder="0" style="display:block;">'
                 . '</iframe>';
     }
-
     $frmStr .= '</div>';
 
     /*** Extra javascript ***/
@@ -1105,6 +1105,7 @@ if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update
             . '{item.style.display=\'block\';}</script>';
 
     return addslashes($frmStr);
+
 }
 
 /**
@@ -1116,17 +1117,20 @@ if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update
  **/
 function check_form($formId, $values)
 {
-	if ($_SESSION['upfile']['format']=='maarch'){
-		$_SESSION['upfile']='';
-		$_SESSION['upfile']['error']='0';
-		$_SESSION['upfile']['format']='maarch';
-	}
+    
+    if ($_SESSION['upfile']['format']=='maarch'){
+        $_SESSION['upfile']='';
+        $_SESSION['upfile']['error']='0';
+        $_SESSION['upfile']['format']='maarch';
+    }    
+
     //print_r($values);
     $_SESSION['action_error'] = '';
     if (count($values) < 1 || empty($formId)) {
         $_SESSION['action_error'] = _FORM_ERROR;
         return false;
     } else {
+
         //print_r($values);
         $attach = get_value_fields($values, 'attach');
         $collId = get_value_fields($values, 'coll_id');
@@ -1145,7 +1149,8 @@ function check_form($formId, $values)
             return false;
         }
         $noError = process_category_check($catId, $values);
-
+        
+        
         if ($noError == false) {
             //$_SESSION['action_error'] .= _ERROR_CATEGORY;
             return false;
@@ -1176,6 +1181,7 @@ function check_form($formId, $values)
  * @return Bool true if no error, false otherwise
  **/
 function check_docserver($collId) {
+
     if (isset($_SESSION['indexing']['path_template'])
         && ! empty($_SESSION['indexing']['path_template'])
         && isset($_SESSION['indexing']['destination_dir'])
@@ -1394,7 +1400,6 @@ function process_category_check($catId, $values)
             }
         }
     }
-    
 
     if ($core->is_module_loaded('entities')) {
         // Diffusion list
@@ -1679,12 +1684,14 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             && $_ENV['categories'][$catId][$tmpId]['type_field'] == 'string'
             && $_ENV['categories'][$catId][$tmpId]['table'] <> 'none'
         ) {
-			//enleve bug sur ';' et '--'
-			$formValues[$i]['VALUE']=str_replace(';', ' ', $formValues[$i]['VALUE']);
-			$formValues[$i]['VALUE']=str_replace('--', '-', $formValues[$i]['VALUE']);
-			
+        
+            //FIX BUG WITH -- and ;
+            $formValues[$i]['VALUE']=str_replace(';', ' ', $formValues[$i]['VALUE']);
+            $formValues[$i]['VALUE']=str_replace('--', '-', $formValues[$i]['VALUE']);
+            
             if ($_ENV['categories'][$catId][$tmpId]['table'] == 'res') {
-                array_push(
+               
+               array_push(
                     $_SESSION['data'],
                     array(
                         'column' => $tmpId,
@@ -1943,15 +1950,15 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                 include_once("modules".DIRECTORY_SEPARATOR."tags"
                 .DIRECTORY_SEPARATOR."tags_update.php");
         }
-		
-		//Photo capture module
-		if ($core->is_module_loaded('photo_capture') && isset($_SESSION['photofile']['name'])) {
-			require_once("modules".DIRECTORY_SEPARATOR."photo_capture"
-				.DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR
-				."class_modules_tools.php");
-			$photo_capture = new photo_capture();
-			$photo_capture->addPhoto($collId, $resId);
-		}
+        
+        //Photo capture module
+        if ($core->is_module_loaded('photo_capture') && isset($_SESSION['photofile']['name'])) {
+            require_once("modules".DIRECTORY_SEPARATOR."photo_capture"
+                .DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR
+                ."class_modules_tools.php");
+            $photo_capture = new photo_capture();
+            $photo_capture->addPhoto($collId, $resId);
+        }
     } else {
         $_SESSION['action_error'] = _ERROR_RES_ID;
         return false;
