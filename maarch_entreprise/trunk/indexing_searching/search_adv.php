@@ -84,7 +84,7 @@ elseif($mode == 'popup' || $mode == 'frame')
     $core_tools->load_header('', true, false);
     $time = $core_tools->get_session_time_expire();
     ?><body>
-    <div id="container">
+    <div id="container" style="height:auto;">
 
             <div class="error" id="main_error">
                 <?php  echo $_SESSION['error'];?>
