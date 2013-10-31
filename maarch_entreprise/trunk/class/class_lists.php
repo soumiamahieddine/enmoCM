@@ -374,7 +374,7 @@ class lists extends dbquery
                 } else {
                     $user = '['._USER.']';
                 }
-                $filters .='<input type="text" name="user_id" id="user_id" value="'.$user.'" size="40" '
+                $filters .='<input type="text" name="user_id" id="user_id" value="'.$user.'" size="30" '
                             .'onfocus="if(this.value==\'['._USER.']\'){this.value=\'\';}" '
                             .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
                             .'&filter=user&value=\' + this.value, \''.$this->divListId.'\', '
