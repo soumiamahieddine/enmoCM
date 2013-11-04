@@ -73,6 +73,7 @@ if ($s_id == '') {
     if (isset($_REQUEST['collid']) && $_REQUEST['collid'] <> '') {
         $_SESSION['collection_id_choice'] = $_REQUEST['collid'];
     }
+    
     if (isset($_SESSION['collection_id_choice']) 
         && !empty($_SESSION['collection_id_choice'])
     ) {
@@ -85,6 +86,7 @@ if ($s_id == '') {
             );
         }
     } else {
+        
         if (isset($_SESSION['collections'][0]['view']) 
             && !empty($_SESSION['collections'][0]['view'])
         ) {
@@ -92,6 +94,7 @@ if ($s_id == '') {
         } else {
             $table = $_SESSION['collections'][0]['table'];
         }
+        $_SESSION['collection_id_choice'] = $_SESSION['collections'][0]['id'];
     }
     for ($cptColl = 0;$cptColl < count($_SESSION['collections']);$cptColl++) {
         if ($table == $_SESSION['collections'][$cptColl]['table'] 
