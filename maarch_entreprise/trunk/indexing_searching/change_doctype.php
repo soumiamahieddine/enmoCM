@@ -68,6 +68,11 @@ if ($coll_id == '') {
 if ($res_id == '') {
     $res_id = $_REQUEST['res_id'];
 }
+if (isset($_REQUEST['admission_date']) 
+    && !empty($_REQUEST['admission_date'])
+) {
+    $admissionDate = $_REQUEST['admission_date'];
+}
 // Process limit date calcul
 //Bug fix if delay process is disabled in services
 if ($core->service_is_enabled('param_mlb_doctypes')) {
@@ -255,7 +260,13 @@ unset($_SESSION['indexing_services']);
 if (isset($delay) && $delay > 0) {
     require_once('core/class/class_alert_engine.php');
     $alert_engine = new alert_engine();
-    $date = $alert_engine->date_max_treatment($delay, false);
+    if (isset($admissionDate) && !empty($admissionDate)) {
+        $convertedDate = $alert_engine->dateFR2Time(str_replace("-", "/", $admissionDate));
+        $date = $alert_engine->WhenOpenDay($convertedDate, $delay);
+        //$date = $alert_engine->date_max_treatment($delay, false);
+    } else {
+        $date = $alert_engine->date_max_treatment($delay, false);
+    }
     $process_date = $db->dateformat($date, '-');
     echo "{status : 0, process_date : '" . trim($process_date) 
         . "', opt_indexes : '" . addslashes($opt_indexes) . "', services : " 

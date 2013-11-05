@@ -492,7 +492,11 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td class="indexing_field"><input name="admission_date" '
             . 'type="text" id="admission_date" value="' . $today
             . '" onclick="clear_error(\'frm_error_' . $actionId . '\');'
-            . 'showCalender(this);"/></td>';
+            . 'showCalender(this);" onChange="updateProcessDate(\''
+            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+            . '&dir=indexing_searching&page=update_process_date\');" onFocus="updateProcessDate(\''
+            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+            . '&dir=indexing_searching&page=update_process_date\');"/></td>';
     $frmStr .= '<td><span class="red_asterisk" id="admission_date_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';

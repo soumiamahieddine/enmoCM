@@ -117,6 +117,8 @@ function repost(php_file,update_divs,fields,action,timeout)
             var monthOut=month+1;
             if(monthOut < 10) monthOut='0'+monthOut;
             target.value=dayOut+'-'+monthOut+'-'+year;
+            //console.log(target);
+            target.focus();
             removeCalender();
         }
     }
@@ -811,7 +813,7 @@ function displayModal(url, id_mod, height, width, mode_frm )
  * @param width String Modal width in px
  * @param mode_frm String Modal mode : fullscreen or ''
  */
-function createModal(txt, id_mod,height, width, mode_frm){
+function createModal(txt, id_mod, height, width, mode_frm){
     if(height == undefined || height=='')
     {
         height = '100px';
@@ -2485,15 +2487,14 @@ function loadList(path, inDiv, modeReturn, init) {
         method:'post',
         parameters: { url : path
                     },   
-        onLoading: function(answer) {
+       /* onLoading: function(answer) {
                 //show loading image in toolbar
                 $('loading').style.display='block';
-        },                        
+        },*/                        
         onSuccess: function(answer){
                 if (modeReturn !== false) {
                     eval("response = "+answer.responseText);
-                    if(response.status == 0){
-                       
+                    if(response.status == 0){                      
                         $(div).innerHTML = convertToHTMLVisibleNewline(response.content);
                         evalMyScripts(div);
                     } else {
@@ -2503,7 +2504,7 @@ function loadList(path, inDiv, modeReturn, init) {
                     $(div).innerHTML = answer.responseText;
                     evalMyScripts(div);
                 }
-                $('loading').style.display='none';
+               // $('loading').style.display='none';
         }
     });
 }

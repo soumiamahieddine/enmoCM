@@ -9,6 +9,10 @@
  **/
 function change_doctype(doctype_id, path_manage_script, error_empty_type, action_id, get_js_script,display_value_tr, id_res, id_coll, from_valid_qualif)
 {
+    var admissionDate;
+    if ($('admission_date')) {
+        admissionDate = $('admission_date').value;
+    }
     var theCollId = path_manage_script.split('coll_id=');
     var tmp_res_id = id_res || null;
     if (theCollId[1] != '') {
@@ -24,7 +28,8 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
             parameters: { type_id : doctype_id,
                           id_action : action_id,
                           res_id : tmp_res_id,
-                          coll_id : tmp_coll_id
+                          coll_id : tmp_coll_id,
+                          admission_date : admissionDate
                         },
                 onSuccess: function(answer){
                 eval("response = "+answer.responseText);
@@ -112,6 +117,44 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
             $('frm_error_'+action_id).innerHTML = error_empty_type;
             }
         catch(e){}
+    }
+}
+
+/**
+ * Compute process limit date from the admission date
+ *
+ **/
+function updateProcessDate(path_manage_script)
+{
+    var admissionDate;
+    if ($('admission_date')) {
+        admissionDate = $('admission_date').value;
+    }
+    var typeId;
+    if ($('type_id')) {
+        typeId = $('type_id').value;
+        
+    }
+     if (admissionDate != null && admissionDate != '' && admissionDate != NaN) {
+        new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: {
+                    type_id: typeId,
+                    admission_date : admissionDate
+                },
+                onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+                //alert(answer.responseText);
+                if (response.status == 0  || response.status == 1) {
+                    //console.log(response.process_date);
+                    var process_date = $('process_limit_date');
+                    if (response.process_date != null) {
+                        process_date.value = response.process_date;
+                    }
+                }
+            }
+        });
     }
 }
 
