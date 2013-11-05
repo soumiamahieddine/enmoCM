@@ -67,6 +67,11 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];//Col
     if(isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching') {
         $where = $_SESSION['searching']['where_request'] . ' '. $where;
     }
+   
+    if(!empty($_SESSION['current_basket'])){
+           $where .= " and (".$_SESSION['current_basket']['clause'].")";
+    }
+    
     
 //Order
     $order = $order_field = '';
@@ -93,9 +98,14 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];//Col
     array_push($template_list, 'cases_list');
         
 
-//Request    
-    $tab = $request->select($select, $where . $where_concat, 'order by case_id desc', $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
-    // $request->show();
+//Request  
+    if(!empty($_SESSION['current_basket'])){
+        $tab = $request->select($select, $where . $where_concat, 'order by case_id desc', $_SESSION['config']['databasetype'], "default", false, "", "", "", false, false, true);
+    }else{
+        $tab = $request->select($select, $where . $where_concat, 'order by case_id desc', $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
+
+    }
+    //$request->show();
 
     //Result array
 for ($i=0;$i<count($tab);$i++)
@@ -194,11 +204,11 @@ $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_CASE;          
 $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
 $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
 $paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id'];         //Parametres d'url supplementaires
-if (count($template_list) > 0 ) {                                                    //Templates
+if (count($template_list) > 0 ) {                                                   //Templates
     $paramsTab['templates'] = array();
     $paramsTab['templates'] = $template_list;
 }
-$paramsTab['bool_showTemplateDefaultList'] = true;                                          //Default list (no template)
+$paramsTab['bool_showTemplateDefaultList'] = true;                                  //Default list (no template)
 $paramsTab['defaultTemplate'] = $defaultTemplate;                                   //Default template
 $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
 $export = array(
@@ -218,6 +228,6 @@ $paramsTab['currentPageUrl'] = $_SESSION['current_basket']['page_no_frame']."&di
 //Afficher la liste
 $status = 0;
 $content = $list->showList($tab, $paramsTab, $listKey);
-// $debug = $list->debug();
+//$debug = $list->debug();
 echo "{status : " . $status . ", content : '" . addslashes($debug.$content) . "', error : '" . addslashes($error) . "'}";
 ?>
