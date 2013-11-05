@@ -62,9 +62,10 @@ $log4PhpEnabled = false;
 // Open Logger
 $GLOBALS['logger'] = new Logger4Php();
 $GLOBALS['logger']->set_threshold_level('DEBUG');
+
 $logFile = 'logs' . DIRECTORY_SEPARATOR . $GLOBALS['batchName']
-             . DIRECTORY_SEPARATOR . date('Y-m-d_H-i-s');
-			 
+             . DIRECTORY_SEPARATOR . date('Y-m-d_H-i-s') . '.log';
+             
 $file = new FileHandler($logFile);
 $GLOBALS['logger']->add_handler($file);
 
@@ -149,13 +150,13 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $GLOBALS['maarchDirectory
 //log4php params
 $log4phpParams = $xmlconfig->LOG4PHP;
 if ((string) $log4phpParams->enabled == 'true') {
-	$GLOBALS['logger']->set_log4PhpLibrary(
-		$GLOBALS['maarchDirectory'] . 'apps/maarch_entreprise/tools/log4php/Logger.php'
-	);
-	$GLOBALS['logger']->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
-	$GLOBALS['logger']->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
-	$GLOBALS['logger']->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
-	$GLOBALS['logger']->set_log4PhpBatchName('process_event_stack');
+    $GLOBALS['logger']->set_log4PhpLibrary(
+        $GLOBALS['maarchDirectory'] . 'apps/maarch_entreprise/tools/log4php/Logger.php'
+    );
+    $GLOBALS['logger']->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
+    $GLOBALS['logger']->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
+    $GLOBALS['logger']->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
+    $GLOBALS['logger']->set_log4PhpBatchName('process_event_stack');
 }
 
 // Mailer
@@ -163,7 +164,7 @@ $mailerParams = $xmlconfig->MAILER;
 $path_to_mailer = (string)$mailerParams->path_to_mailer;
 
 try {
-	Bt_myInclude(
+    Bt_myInclude(
         $GLOBALS['maarchDirectory'] . 'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'class_functions.php'
     );
@@ -175,10 +176,10 @@ try {
         $GLOBALS['maarchDirectory'] . 'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'class_core_tools.php'
     );  
-	Bt_myInclude(
+    Bt_myInclude(
         $maarchDirectory . "modules" . DIRECTORY_SEPARATOR . "notifications" 
-		. DIRECTORY_SEPARATOR . "notifications_tables_definition.php"
-	);
+        . DIRECTORY_SEPARATOR . "notifications_tables_definition.php"
+    );
     Bt_myInclude(
         $GLOBALS['maarchDirectory'] . $path_to_mailer
     );  
@@ -204,7 +205,7 @@ $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR
                          . $GLOBALS['batchName'] . '_error.lck';
 $GLOBALS['lckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
                     . $GLOBALS['batchName'] . '.lck';
-					
+                    
 if (file_exists($GLOBALS['errorLckFile'])) {
     $GLOBALS['logger']->write(
         'Error persists, please solve this before launching a new batch', 

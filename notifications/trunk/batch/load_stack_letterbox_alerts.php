@@ -64,7 +64,7 @@ $logger->set_threshold_level('DEBUG');
 
 $logFile = 'logs' . DIRECTORY_SEPARATOR . $GLOBALS['batchName']
              . DIRECTORY_SEPARATOR . date('Y-m-d_H-i-s') . '.log';
-			 
+             
 $file = new FileHandler($logFile);
 $logger->add_handler($file);
 
@@ -154,13 +154,13 @@ set_include_path(get_include_path() . PATH_SEPARATOR . $maarchDirectory);
 //log4php params
 $log4phpParams = $xmlconfig->LOG4PHP;
 if ((string) $log4phpParams->enabled == 'true') {
-	$logger->set_log4PhpLibrary(
-		$maarchDirectory . 'apps/maarch_entreprise/tools/log4php/Logger.php'
-	);
-	$logger->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
-	$logger->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
-	$logger->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
-	$logger->set_log4PhpBatchName('process_event_stack');
+    $logger->set_log4PhpLibrary(
+        $maarchDirectory . 'apps/maarch_entreprise/tools/log4php/Logger.php'
+    );
+    $logger->set_log4PhpLogger((string) $log4phpParams->Log4PhpLogger);
+    $logger->set_log4PhpBusinessCode((string) $log4phpParams->Log4PhpBusinessCode);
+    $logger->set_log4PhpConfigPath((string) $log4phpParams->Log4PhpConfigPath);
+    $logger->set_log4PhpBatchName('process_event_stack');
 }
   
 // COLLECTION
@@ -173,7 +173,7 @@ $collDoctypeExt = (string)$collParams->DoctypeExt;
   
 // INCLUDES
 try {
-	Bt_myInclude(
+    Bt_myInclude(
         $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'class_functions.php'
     );
@@ -181,15 +181,19 @@ try {
         $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'class_db.php'
     );
-	Bt_myInclude(
+    Bt_myInclude(
         $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class' 
         . DIRECTORY_SEPARATOR . 'class_core_tools.php'
     );
-	// Notifications
-	Bt_myInclude(
+    Bt_myInclude(
+        $maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class' 
+        . DIRECTORY_SEPARATOR . 'class_alert_engine.php'
+    );
+    // Notifications
+    Bt_myInclude(
         $maarchDirectory . "modules" . DIRECTORY_SEPARATOR . "notifications" 
-		. DIRECTORY_SEPARATOR . "notifications_tables_definition.php"
-	);
+        . DIRECTORY_SEPARATOR . "notifications_tables_definition.php"
+    );
    
 } catch (IncludeFileError $e) {
     $logger->write(
@@ -208,11 +212,13 @@ $db = new dbquery($GLOBALS['configFile']);
 $db->connect();
 $databasetype = (string)$xmlconfig->CONFIG_BASE->databasetype;
 
+$alert_engine = new alert_engine();
+
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
                          . $GLOBALS['batchName'] . '_error.lck';
 $GLOBALS['lckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
                     . $GLOBALS['batchName'] . '.lck';
-					
+                    
 if (file_exists($GLOBALS['errorLckFile'])) {
     $logger->write(
         'Error persists, please solve this before launching a new batch', 
