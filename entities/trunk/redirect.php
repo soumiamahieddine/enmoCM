@@ -248,7 +248,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         if($entityId)
             $db->query("update ".$table." set destination = '".$entityId."' where res_id = ".$res_id); 
         
-        # If feature activated, put old dest in copy
+		# If feature activated, put old dest in copy
         if($_SESSION['features']['dest_to_copy_during_redirection'] == 'true') {
             # Get old dest
             $db->query(
@@ -286,6 +286,71 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 }
             }
         }
+		
+		# Put all existing copies in copy
+		# Get old copies for users
+		$db->query(
+			"select * "
+			. " from " . $_SESSION['tablename']['ent_listinstance'] 
+			. " where coll_id = '". $coll_id ."' and res_id = " . $res_id . " and item_type = 'user_id' and item_mode = 'cc'"
+		);
+		if (!is_array($_SESSION['redirect']['diff_list']['copy'])) {
+			$_SESSION['redirect']['diff_list']['copy'] = array();
+		}
+		if (!is_array($_SESSION['redirect']['diff_list']['copy']['users'])) {
+			$_SESSION['redirect']['diff_list']['copy']['users'] = array();
+		}
+		if (!is_array($_SESSION['redirect']['diff_list']['copy']['entities'])) {
+			$_SESSION['redirect']['diff_list']['copy']['entities'] = array();
+		}
+		while ($old_copiesU = $db->fetch_object()) {
+			$found = false;
+			for ($cptU=0;$cptU<count($_SESSION['redirect']['diff_list']['copy']['users']);$cptU++) {
+				if ($_SESSION['redirect']['diff_list']['copy']['users'][$cptU]['user_id'] == $old_copiesU->item_id) {
+					//echo $_SESSION['redirect']['diff_list']['copy']['users'][$cptU]['user_id'] . " found" . PHP_EOL;
+					$found = true;
+					break;
+				}
+			}
+			//if not found, add the old copy in the new diff list
+			if (!$found) {
+				//echo $old_copiesU->item_id . " not found" . PHP_EOL;
+				array_push(
+					$_SESSION['redirect']['diff_list']['copy']['users'], 
+					array(
+						'user_id' => $old_copiesU->item_id, 
+						'viewed' => (integer)$old_copiesU->viewed,
+						'visible' => 'Y',
+						'difflist_type' => $_SESSION['redirect']['diff_list']['difflist_type']
+					)
+				);
+			}
+		}
+		# Get old copies for entities
+		$db->query(
+			"select * "
+			. " from " . $_SESSION['tablename']['ent_listinstance'] 
+			. " where coll_id = '". $coll_id ."' and res_id = " . $res_id . " and item_type = 'entity_id' and item_mode = 'cc'"
+		);
+		while ($old_copiesE = $db->fetch_object()) {
+			$found = false;
+			for ($cptE=0;$cptE<count($_SESSION['redirect']['diff_list']['copy']['entities']);$cptE++) {
+				if ($_SESSION['redirect']['diff_list']['copy']['entities'][$cptE]['entity_id'] == $old_copiesE->item_id) {
+					$found = true;
+					break;
+				}
+			}
+			//if not found, add the old copy in the new diff list
+			if (!$found) {
+				array_push(
+					$_SESSION['redirect']['diff_list']['copy']['entities'], 
+					array(
+						'entity_id' => $old_copiesE->item_id, 
+						'visible' => 'Y',
+					)
+				);
+			}
+		}
         
         # Save listinstance
         $diffList->save_listinstance(
