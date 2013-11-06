@@ -71,7 +71,7 @@ $where_request = str_replace("and ()", "", $where_request);
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_contacts.php');
 $contact = new contacts();
 
-$db_external->query("select res_id, status, subject, contact_firstname, contact_lastname, contact_society, user_lastname, user_firstname, dest_user, type_label, creation_date, entity_label, category_id, exp_user_id, category_id as category_img, process_limit_date, priority  from ".$_SESSION['collections'][0]['view']." where ".$where_request." order by priority,process_limit_date desc" );
+$db_external->query("select res_id, status, subject, contact_firstname, contact_lastname, contact_society, user_lastname, user_firstname, dest_user, type_label, creation_date, entity_label, category_id, exp_user_id, category_id as category_img, process_limit_date, priority  from ".$_SESSION['collections'][0]['view']." where ".$where_request." order by res_id" );
 if($db_external->nb_result() >0)
 {
 	require_once("core/class/class_security.php");
