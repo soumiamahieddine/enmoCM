@@ -321,6 +321,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 . " from " . $_SESSION['tablename']['ent_listinstance'] 
                 . " where coll_id = '". $coll_id ."' and res_id = " . $res_id . " and item_type = 'user_id' and item_mode = 'dest'"
             );
+            //$db->show();
+            //exit();
             $old_dest = $db->fetch_object();
             
             if($old_dest && isset($_SESSION['redirect']['diff_list']['copy']['users'])) {
@@ -328,7 +330,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 $found = false;
                 for($ci=0; $ci<count($_SESSION['redirect']['diff_list']['copy']['users']);$ci++) {
                     # If in copies before, add number of views as dest to number of views as copy
-                    if($_SESSION['redirect']['diff_list']['copy']['users'][$ci]['user_id'] == $_SESSION['user']['UserId']) {
+					if($_SESSION['redirect']['diff_list']['copy']['users'][$ci]['user_id'] == $old_dest->item_id) {
                         $found = true;
                         $_SESSION['redirect']['diff_list']['copy']['users'][$ci]['viewed'] = 
                             $_SESSION['redirect']['diff_list']['copy']['users'][$ci]['viewed'] + (integer)$old_dest->viewed;
@@ -339,13 +341,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                     array_push(
                         $_SESSION['redirect']['diff_list']['copy']['users'], 
                         array(
-                            'user_id' => $_SESSION['user']['UserId'], 
-                            'lastname' => $_SESSION['user']['LastName'], 
-                            'firstname' => $_SESSION['user']['FirstName'], 
-                            'entity_id' => $_SESSION['user']['primaryentity']['id'], 
-                            'viewed' => (integer)$old_dest->viewed,
-                            'visible' => 'Y',
-                            'difflist_type' => $_SESSION['redirect']['diff_list']['difflist_type']
+						'user_id' => $old_dest->item_id, 
+						'viewed' => (integer)$old_dest->viewed,
+						'visible' => 'Y',
+						'difflist_type' => $_SESSION['redirect']['diff_list']['difflist_type']
                         )
                     );
                 }
