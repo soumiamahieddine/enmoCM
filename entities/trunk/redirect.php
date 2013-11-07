@@ -247,45 +247,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         # Update destination if needed
         if($entityId)
             $db->query("update ".$table." set destination = '".$entityId."' where res_id = ".$res_id); 
-        
-		# If feature activated, put old dest in copy
-        if($_SESSION['features']['dest_to_copy_during_redirection'] == 'true') {
-            # Get old dest
-            $db->query(
-                "select * "
-                . " from " . $_SESSION['tablename']['ent_listinstance'] 
-                . " where coll_id = '". $coll_id ."' and res_id = " . $res_id . " and item_type = 'user_id' and item_mode = 'dest'"
-            );
-            $old_dest = $db->fetch_object();
-            
-            if($old_dest && isset($_SESSION['redirect']['diff_list']['copy']['users'])) {
-                # try to find old dest in copies already
-                $found = false;
-                for($ci=0; $ci<count($_SESSION['redirect']['diff_list']['copy']['users']);$ci++) {
-                    # If in copies before, add number of views as dest to number of views as copy
-                    if($_SESSION['redirect']['diff_list']['copy']['users'][$ci]['user_id'] == $_SESSION['user']['UserId']) {
-                        $found = true;
-                        $_SESSION['redirect']['diff_list']['copy']['users'][$ci]['viewed'] = 
-                            $_SESSION['redirect']['diff_list']['copy']['users'][$ci]['viewed'] + (integer)$old_dest->viewed;
-                        break;
-                    }
-                }
-                if(!$found) {
-                    array_push(
-                        $_SESSION['redirect']['diff_list']['copy']['users'], 
-                        array(
-                            'user_id' => $_SESSION['user']['UserId'], 
-                            'lastname' => $_SESSION['user']['LastName'], 
-                            'firstname' => $_SESSION['user']['FirstName'], 
-                            'entity_id' => $_SESSION['user']['primaryentity']['id'], 
-                            'viewed' => (integer)$old_dest->viewed,
-                            'visible' => 'Y',
-                            'difflist_type' => $_SESSION['redirect']['diff_list']['difflist_type']
-                        )
-                    );
-                }
-            }
-        }
 		
 		# Put all existing copies in copy
 		# Get old copies for users
@@ -352,6 +313,44 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 			}
 		}
         
+        # If feature activated, put old dest in copy
+        if($_SESSION['features']['dest_to_copy_during_redirection'] == 'true') {
+            # Get old dest
+            $db->query(
+                "select * "
+                . " from " . $_SESSION['tablename']['ent_listinstance'] 
+                . " where coll_id = '". $coll_id ."' and res_id = " . $res_id . " and item_type = 'user_id' and item_mode = 'dest'"
+            );
+            $old_dest = $db->fetch_object();
+            
+            if($old_dest && isset($_SESSION['redirect']['diff_list']['copy']['users'])) {
+                # try to find old dest in copies already
+                $found = false;
+                for($ci=0; $ci<count($_SESSION['redirect']['diff_list']['copy']['users']);$ci++) {
+                    # If in copies before, add number of views as dest to number of views as copy
+                    if($_SESSION['redirect']['diff_list']['copy']['users'][$ci]['user_id'] == $_SESSION['user']['UserId']) {
+                        $found = true;
+                        $_SESSION['redirect']['diff_list']['copy']['users'][$ci]['viewed'] = 
+                            $_SESSION['redirect']['diff_list']['copy']['users'][$ci]['viewed'] + (integer)$old_dest->viewed;
+                        break;
+                    }
+                }
+                if(!$found) {
+                    array_push(
+                        $_SESSION['redirect']['diff_list']['copy']['users'], 
+                        array(
+                            'user_id' => $_SESSION['user']['UserId'], 
+                            'lastname' => $_SESSION['user']['LastName'], 
+                            'firstname' => $_SESSION['user']['FirstName'], 
+                            'entity_id' => $_SESSION['user']['primaryentity']['id'], 
+                            'viewed' => (integer)$old_dest->viewed,
+                            'visible' => 'Y',
+                            'difflist_type' => $_SESSION['redirect']['diff_list']['difflist_type']
+                        )
+                    );
+                }
+            }
+        }
         # Save listinstance
         $diffList->save_listinstance(
             $_SESSION['redirect']['diff_list'], 
