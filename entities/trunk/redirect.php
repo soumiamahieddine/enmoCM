@@ -329,12 +329,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 # try to find old dest in copies already
                 $found = false;
                 for($ci=0; $ci<count($_SESSION['redirect']['diff_list']['copy']['users']);$ci++) {
-                
-                    //make empty if user dest is in copy too
-                    if($_SESSION['redirect']['diff_list']['copy']['users'][$ci]['user_id'] ==  $new_dest){
-                        unset($_SESSION['redirect']['diff_list']['copy']['users'][$ci]);
-                        $tmp--;
-                    } 
                     
                     # If in copies before, add number of views as dest to number of views as copy
 					if($_SESSION['redirect']['diff_list']['copy']['users'][$ci]['user_id'] == $old_dest->item_id) {
@@ -343,13 +337,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                             $_SESSION['redirect']['diff_list']['copy']['users'][$ci]['viewed'] + (integer)$old_dest->viewed;
                         break;
                     }
-                    $tmp++;
                 }
                 
                 //re-built session without dest in copy
                 $tab=array();
-                for($ci=0; $ci<$tmp;$ci++) {
-                    if($_SESSION['redirect']['diff_list']['copy']['users'][$ci] != ""){
+                for($ci=0; $ci<count($_SESSION['redirect']['diff_list']['copy']['users']);$ci++) {
+                    if($_SESSION['redirect']['diff_list']['copy']['users'][$ci]['user_id'] != $new_dest){
                     array_push(
                         $tab, 
                         array(
