@@ -678,12 +678,14 @@ $linkwithwhat =
                     <td ><?php echo $user['lastname'] ." ". $user['firstname'];?></td>
                     <td><?php echo $user['entity_label']; ?></td>
                     <td class="action_entities"><?php 
-                    if (!$noDelete) { ?><!-- Remove user -->
+                    if ($noDelete || ($role_id == 'dest' && $onlyCc)) { ?><!-- Remove user --> 
+                    <?php }else{ ?>
                         <a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>" class="delete"><?php echo _DELETE; ?></a><?php
-                    } ?>
+                        
+                     } ?>
                     </td>
                     <td class="action_entities"><!-- Switch copy to dest --><?php
-                    if($role_id == 'dest' && isset($roles['copy']) ) { ?>
+                    if($role_id == 'dest' && isset($roles['copy']) && ($role_id != 'dest' && $onlyCc)) { ?>
                         <a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy" class="down"><?php echo _TO_CC;?></a><?php
                     } elseif($role_id == 'copy' && !$onlyCc &&  isset($roles['dest'])) { ?>
                         <a href="<?php echo $linkwithwhat;?>&action=copy_to_dest&role=copy&rank=<?php echo $i;?>" class="up"><?php echo _TO_DEST;?></a><?php
