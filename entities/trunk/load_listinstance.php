@@ -53,7 +53,8 @@ if (empty($_REQUEST['origin'])) {
     exit();
 }
 $onlyCC = false;
-if (isset($_REQUEST['only_cc'])) {
+//if (isset($_REQUEST['only_cc'])) {
+if($core->test_service('add_copy_in_process', 'entities', false)){
     $onlyCC = true;
 }
 
