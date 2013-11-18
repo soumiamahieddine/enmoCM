@@ -471,6 +471,12 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         
         {id:'doctype_tr', type:'tr', state:'display'},
         {id:'subject_tr', type:'tr', state:'display'},
+		{id:'box_id_tr', type:'tr', state:'hide'},
+		{id:'type_id_tr', type:'tr', state:'hide'},
+		{id:'appraisal_code_tr', type:'tr', state:'hide'},
+		{id:'appraisal_duration_tr', type:'tr', state:'hide'},
+		{id:'access_restriction_code_tr', type:'tr', state:'hide'},
+		{id:'project_tr', type:'tr', state:'hide'},
         
         {id:'contact_id_tr', type:'tr', state:'display'},
         {id:'contact_label_purchase', type:'label', state:'display'},
@@ -492,6 +498,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'process_limit_date_tr', type:'tr', state:'display'},
         {id:'department_tr', type:'tr', state:'display'},
         {id:'folder_tr', type:'tr', state:'display'},
+		{id:'difflist_tr', type:'tr', state:'display'},
         
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
@@ -521,6 +528,12 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         
         {id:'doctype_tr', type:'tr', state:'display'},
         {id:'subject_tr', type:'tr', state:'display'},
+		{id:'box_id_tr', type:'tr', state:'hide'},
+		{id:'type_id_tr', type:'tr', state:'hide'},
+		{id:'appraisal_code_tr', type:'tr', state:'hide'},
+		{id:'appraisal_duration_tr', type:'tr', state:'hide'},
+		{id:'access_restriction_code_tr', type:'tr', state:'hide'},
+		{id:'project_tr', type:'tr', state:'hide'},		
         
         {id:'contact_id_tr', type:'tr', state:'display'},
         {id:'contact_label_purchase', type:'label', state:'hide'},
@@ -542,6 +555,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'process_limit_date_tr', type:'tr', state:'display'},
         {id:'department_tr', type:'tr', state:'display'},
         {id:'folder_tr', type:'tr', state:'display'},
+		{id:'difflist_tr', type:'tr', state:'display'},
         
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
@@ -571,6 +585,12 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         
         {id:'doctype_tr', type:'tr', state:'display'},
         {id:'subject_tr', type:'tr', state:'display'},
+		{id:'box_id_tr', type:'tr', state:'display'},
+		{id:'type_id_tr', type:'tr', state:'display'},
+		{id:'appraisal_code_tr', type:'tr', state:'display'},
+		{id:'appraisal_duration_tr', type:'tr', state:'display'},
+		{id:'access_restriction_code_tr', type:'tr', state:'display'},
+		{id:'project_tr', type:'tr', state:'display'},
         
         {id:'contact_id_tr', type:'tr', state:'display'},
         {id:'contact_label_purchase', type:'label', state:'hide'},
@@ -592,6 +612,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'process_limit_date_tr', type:'tr', state:'display'},
         {id:'department_tr', type:'tr', state:'display'},
         {id:'folder_tr', type:'tr', state:'display'},
+		{id:'difflist_tr', type:'tr', state:'hide'},
         
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
@@ -606,7 +627,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'process_limit_date_mandatory', type:'label', state:'hide'},
         {id:'destination_mandatory', type:'label', state:'display'},
         {id:'difflist_mandatory', type:'label', state:'hide'},
-        {id:'folder_mandatory', type:'label', state:'hide'}
+        {id:'folder_mandatory', type:'label', state:'hide'}		 
         ];
     }
     //Category = HUMAN_RESOURCES
@@ -620,6 +641,12 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         
         {id:'doctype_tr', type:'tr', state:'display'},
         {id:'subject_tr', type:'tr', state:'display'},
+		{id:'box_id_tr', type:'tr', state:'hide'},
+		{id:'type_id_tr', type:'tr', state:'hide'},
+		{id:'appraisal_code_tr', type:'tr', state:'hide'},
+		{id:'appraisal_duration_tr', type:'tr', state:'hide'},
+		{id:'access_restriction_code_tr', type:'tr', state:'hide'},
+		{id:'project_tr', type:'tr', state:'hide'},		
         
         {id:'contact_id_tr', type:'tr', state:'display'},
         {id:'contact_label_purchase', type:'label', state:'hide'},
@@ -641,6 +668,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'process_limit_date_tr', type:'tr', state:'display'},
         {id:'department_tr', type:'tr', state:'display'},
         {id:'folder_tr', type:'tr', state:'display'},
+		{id:'difflist_tr', type:'tr', state:'display'},
         
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},

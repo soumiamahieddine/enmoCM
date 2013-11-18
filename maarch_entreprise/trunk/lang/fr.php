@@ -103,7 +103,6 @@ if (!defined('_ACTION_PAGE'))    define( '_ACTION_PAGE', 'Page de r&eacute;sulta
 if (!defined('_DO_NOT_MODIFY_UNLESS_EXPERT'))    define( '_DO_NOT_MODIFY_UNLESS_EXPERT', ' Ne pas modifier cette section &agrave; moins de savoir ce que vous faites. Un mauvais param&egrave;trage peut entrainer des dysfonctionnements de l&rsquo;application!');
 if (!defined('_INFOS_ACTIONS'))    define( '_INFOS_ACTIONS', 'Vous devez choisir au moins un statut et / ou un script.');
 
-if (!defined('_EDIT_MAIL'))    define( '_EDIT_MAIL', 'Courriel pour');
 
 /************** Intitul&eacute;s formulaires et listes **************/
 if (!defined('_ID'))    define( '_ID', 'Identifiant');
@@ -618,7 +617,8 @@ if (!defined('_BUSINESS')) define('_BUSINESS', 'Collection des documents busines
 //BUSINESS CATEGORIES
 if (!defined('_PURCHASE')) define('_PURCHASE', 'Achats');
 if (!defined('_SELL')) define('_SELL', 'Ventes');
-if (!defined('_ENTERPRISE_DOCUMENT')) define('_ENTERPRISE_DOCUMENT', 'Documents de l&rsquo;Entreprise');
+//if (!defined('_ENTERPRISE_DOCUMENT')) define('_ENTERPRISE_DOCUMENT', 'Documents de l&rsquo;Entreprise');
+if (!defined('_ENTERPRISE_DOCUMENT')) define('_ENTERPRISE_DOCUMENT', 'Documents de r&eacute;f&eacute;rence');
 if (!defined('_HR')) define('_HR', 'Ressources humaines');
 
 //PURCHASE/SELL CATEGORY
@@ -645,7 +645,8 @@ if (!defined('_PAYMENT_DATE')) define('_PAYMENT_DATE', 'Date de paiement');
 if (!defined('_DELIVERY_NOTE_IDENTIFIER')) define('_DELIVERY_NOTE_IDENTIFIER', 'N&deg; de BL');
 
 if (!defined('_INDEX_BUSINESS_FILE')) define('_INDEX_BUSINESS_FILE', 'Enregistrement des documents de la collection business');
-if (!defined('_FILING')) define('_FILING', 'Classement');
+//if (!defined('_FILING')) define('_FILING', 'Classement');
+if (!defined('_FILING')) define('_FILING', 'Typologie');
 
 if (!defined('_CHOOSE_DIFFUSION_LIST')) define('_CHOOSE_DIFFUSION_LIST', 'Choisissez une liste de diffusion');
 
@@ -879,7 +880,6 @@ if (!defined('_CONTACT_DELETED')) define( '_CONTACT_DELETED', 'Contact supprim&e
 if (!defined('_MODIFY_CONTACT')) define( '_MODIFY_CONTACT', 'Modifier un contact');
 if (!defined('_IS_CORPORATE_PERSON')) define( '_IS_CORPORATE_PERSON', 'Personne morale');
 if (!defined('_IS_PRIVATE')) define( '_IS_PRIVATE', 'Coordonnées confidentielles');
-if (!defined('_PRIVATE')) define( '_PRIVATE', 'Priv&eacute;');
 if (!defined('_TITLE2')) define( '_TITLE2', 'Civilit&eacute;');
 if (!defined('_WARNING_MESSAGE_DEL_CONTACT'))  define('_WARNING_MESSAGE_DEL_CONTACT', 'Avertissement :<br> La suppression d&rsquo;un contact entraine la r&eacute;affectation des documents &agrave un nouveau contact quelque soit le statut des documents (courriers).');
 if (!defined('_CONTACT_DELETION'))  define('_CONTACT_DELETION', 'Suppression de contact');
@@ -1472,3 +1472,12 @@ if (!defined('_RM_ARCHIVE')) define('_RM_ARCHIVE', 'Archives interm&eacute;diair
 /*************** FOLDER **************/
 if (!defined('_CONFIRM_FOLDER_STATUS')) define('_CONFIRM_FOLDER_STATUS', '[dossier] Confirmer le statut du dossier');
 if (!defined('_REDIRECT_FOLDER')) define('_REDIRECT_FOLDER', '[dossier] Rediriger le dossier');
+
+//***Business Collection***/
+
+if (!defined('_CHOOSE_TYPE')) define('_CHOOSE_TYPE', 'Choisissez une typologie');
+if (!defined('_DEPARTMENT_OWNER')) define( '_DEPARTMENT_OWNER', 'Entit&eacute; d\'appartenance');
+if (!defined('_FOLDER')) define( '_FOLDER', 'Dossier seriel');
+if (!defined('_ORGANIC_FP')) define( '_ORGANIC_FP', 'Classement organique');
+if (!defined('_BOX_ID')) define('_BOX_ID', 'Bo&icirc;te d\'archive');
+if (!defined('_ITEM_FOLDER')) define('_ITEM_FOLDER', 'Classement organique');

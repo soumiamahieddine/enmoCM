@@ -52,6 +52,12 @@ if ($core->is_module_loaded('entities')) {
 if ($core->is_module_loaded('folder')) {
     require_once 'modules/folder/folder_tables.php';
 }
+if ($core->is_module_loaded('physical_archive')) {
+    require_once 'modules' . DIRECTORY_SEPARATOR . 'physical_archive'
+        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+        . 'class_modules_tools.php';
+    require_once 'modules/physical_archive/physical_archive_tables.php';
+}
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/apps_tables.php';
 /**
 * $confirm  bool false
@@ -184,6 +190,49 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             );
         }
     }
+	
+	if ($core->is_module_loaded('physical_archive')) {
+        $boxes = array();
+        $db = new dbquery();
+        $db->connect();
+
+        $db->query(
+            "select arbox_id, title from " . PA_AR_BOXES
+            . " where status = 'NEW' order by title"
+        );
+        while ($res = $db->fetch_object()) {
+            array_push(
+                $boxes,
+                array(
+                    'ID' => $res->arbox_id,
+                    'LABEL' => $db->show_string($res->title),
+                )
+            );
+        }
+    }
+	
+	require_once 'modules/records_management/class/RecordsManagementController.php';
+    require_once 'core/tests/class/ViewController.php';
+    $RecordsManagementController = new RecordsManagementController();
+    $ViewController = new ViewController();
+    $view = $ViewController->createView();
+    $folder_select = $view->createSelect();
+    $folder_select->setAttribute('id', 'schedule');
+    $folder_select->setAttribute('name', 'schedule');
+    $folder_select->setAttribute('onChange', 'ArchiveObjectIndexSchedule__select()');
+    $Schedules = 
+        $RecordsManagementController->read(
+            'Schedule',
+            '100'
+        );
+    $folder_select->addOption(
+        '', 'Sélectionnez un type d\'archive...'
+    );
+    makeScheduleList(
+        $Schedules,
+        $folder_select
+    );
+	
 
     $frmStr .= '<div id="validleft">';
     $frmStr .= '<div id="index_div" style="display:none;";>';
@@ -369,7 +418,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '<span id="contact_enterprise_document_img" style="display:' 
                 . $displayValue . ';"><img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'my_contacts_off.gif" alt="' . _CONTACT . '"/></span>'
+                . 'my_contacts_off.gif" alt="' . _AUTHOR . '"/></span>'
             . '<span id="contact_human_resources_img" style="display:' 
                 . $displayValue . ';"><img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?filename='
@@ -380,7 +429,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '<span id="contact_label_sell" style="display:' 
                 . $displayValue . ';">' . _PURCHASER . '</span>'
             . '<span id="contact_label_enterprise_document" style="display:' 
-                . $displayValue . ';">' . _CONTACT . '</span>'
+                . $displayValue . ';">' . _AUTHOR . '</span>'
             . '<span id="contact_label_human_resources" style="display:' 
                 . $displayValue . ';">' . _EMPLOYEE . '</span></a>';
     if ($_SESSION['features']['personal_contact'] == "true"
@@ -655,9 +704,135 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<div id="comp_indexes" style="display:block;">';
     $frmStr .= '</div>';
     
-    /*** Complementary fields ***/
     $frmStr .= '<hr />';
-    
+  
+	$frmStr .= '<h4 onclick="new Effect.toggle(\'classement\', \'blind\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'classement\', \'divStatus_classement\');" '
+        . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
+    $frmStr .= ' <span id="divStatus_classement" style="color:#1C99C5;">>></span>&nbsp;Classement';
+    $frmStr .= '</h4>';
+    $frmStr .= '<div id="classement"  style="display:inline">';
+    $frmStr .= '<div>';
+	$frmStr .= '<table width="100%" align="center" border="0" >';
+	
+		/*** Boite archive ***/
+	if ($core->is_module_loaded('physical_archive')) {
+        $frmStr .= '<tr id="box_id_tr" style="display:' . $displayValue . ';">';
+		$frmStr .= '<td style="width:30px;align:center;"></td>';
+		$frmStr .= '<td><label for="arbox_id" class="form_title" id="label_box"'
+                . ' style="display:inline;" >' . _BOX_ID . '</label></td>';
+        $frmStr .= '<td class="indexing_field"><select name="arbox_id" '
+                . 'id="arbox_id" onchange="clear_error(\'frm_error_' . $actionId
+                . '\');" >';
+        $frmStr .= '<option value="">' . _CHOOSE_BOX . '</option>';
+        for ($i = 0; $i < count($boxes); $i ++) {
+            $frmStr .= '<option value="' . $boxes[$i]['ID'] . '" >'
+                    . $db->show_string($boxes[$i]['LABEL']) . '</option>';
+        }
+        $frmStr .= '</select></td>';
+        $frmStr .= '</tr>';
+    }
+	
+	    /*** Folder ***/
+    if ($core->is_module_loaded('folder')) {
+        $frmStr .= '<tr id="folder_tr" style="display:' . $displayValue . ';">';
+        $frmStr .= '<td style="width:30px;align:center;"><img src="'
+                . $_SESSION['config']['businessappurl'] . 'static.php?module=folder&filename='
+                . 'folders.gif" alt="' . _FOLDER 
+                . '"/></td><td><label for="folder" class="form_title" >' . _FOLDER
+                . '</label></td>';
+        $frmStr .= '<td class="indexing_field"><input type="text" '
+                . 'name="folder" id="folder" onblur="clear_error(\'frm_error_'
+                . $actionId . '\');return false;" /><div id="show_folder" '
+                . 'class="autocomplete"></div></td>';
+        $frmStr .= '<td><span class="red_asterisk" id="folder_mandatory" '
+                . 'style="display:inline;">*</span>&nbsp;</td>';
+        $frmStr .= '</tr>';
+    }
+	
+		/*** Classement organique ***/
+	$frmStr .= '<tr id="project_tr" style="display:' . $displayValue . ';">';
+		$frmStr .= '<td style="width:30px;align:center;"></td>';
+		$frmStr .= '<td>';
+			$frmStr .= '<label for="project" class="form_title" >';
+				$frmStr .= _ITEM_FOLDER;
+			$frmStr .= '</label>';
+		$frmStr .= '</td>';
+		$frmStr .= '<td class="indexing_field">';
+			$frmStr .= '<input type="text" name="project" id="project" onblur="clear_error(\'frm_error_'. $actionId . '\');return false;" />';
+			$frmStr .= '<div id="project_autocomplete" class="autocomplete"></div>';
+		$frmStr .= '</td>';
+	$frmStr .= '</tr>';
+	
+	
+		/*** _TYPE_DARCHIVE ***/
+	$frmStr .= '<tr id="type_id_tr" style="display:' . $displayValue . ';">';
+			$frmStr .= '<td style="width:30px;align:center;"></td>';
+		$frmStr .= '<td>';
+			$frmStr .= '<label for="schedule">';
+				$frmStr .= '<span class="form_title" id="doctype_res" style="display:none;">';
+					$frmStr .= _RM_DOCTYPE;
+				$frmStr .= '</span>';
+				$frmStr .= '<span class="form_title" id="doctype_mail" style="display:inline;">';
+					$frmStr .= _RM_DOCTYPE;
+				$frmStr .= '</span>';
+			$frmStr .= '</label>';
+		$frmStr .= '</td>';
+		$frmStr .= '<td class="indexing_field">';
+			$frmStr .= $folder_select->C14N();
+		$frmStr .= '</td>';
+	$frmStr .= '</tr>';
+	
+	/*** REGLE DE GESTION ***/
+	$frmStr .= '<tr id="appraisal_code_tr" style="display:' . $displayValue . ';">';
+			$frmStr .= '<td style="width:30px;align:center;"></td>';
+		$frmStr .= '<td>';
+			$frmStr .= '<label for="appraisal_code" class="form_title" style="display:inline;" >';
+				$frmStr .= _APPRAISAL;
+			$frmStr .= '</label>';
+		$frmStr .= '</td>';
+		$frmStr .= '<td class="indexing_field">';
+			$frmStr .= '<select name="appraisal_code" id="appraisal_code" disabled="disabled" class="readonly" onchange="clear_error(\'frm_error_' . $actionId . '\');">';
+				//$frmStr .= '<option value="">' . _CHOOSE_APPRAISAL . '</option>';
+				$frmStr .= '<option value="conserver">Conserver</option>';
+				$frmStr .= '<option value="detruire">Détruire</option>';
+			$frmStr .= '</select>';
+		$frmStr .= '</td>';
+	$frmStr .= '</tr>';
+	
+	/*** DUA ***/
+	$frmStr .= '<tr id="appraisal_duration_tr" style="display:' . $displayValue . ';">';
+			$frmStr .= '<td style="width:30px;align:center;"></td>';
+		$frmStr .= '<td>';
+			$frmStr .= '<label for="appraisal_duration" class="form_title" style="display:inline;" >';
+				$frmStr .= _DUA;
+			$frmStr .= '</label>';
+		$frmStr .= '</td>';
+		$frmStr .= '<td class="indexing_field">';
+			$frmStr .= '<input name="appraisal_duration" disabled="disabled" class="readonly" type="text" id="appraisal_duration" onclick="clear_error(\'frm_error_' . $actionId . '\');" />';
+		$frmStr .= '</td>';
+	$frmStr .= '</tr>';
+	
+	/*** COMMUNICABILITE ***/
+	$frmStr .= '<tr id="access_restriction_code_tr" style="display:' . $displayValue . ';">';
+			$frmStr .= '<td style="width:30px;align:center;"></td>';
+		$frmStr .= '<td>';
+			$frmStr .= '<label for="access_restriction_code" class="form_title" style="display:inline;" >';
+				$frmStr .= _ACCESS_RESTRICTION;
+			$frmStr .= '</label>';
+		$frmStr .= '</td>';
+		$frmStr .= '<td class="indexing_field">';
+			$frmStr .= '<input name="access_restriction_code" disabled="disabled" class="readonly" type="text" id="access_restriction_code" onclick="clear_error(\'frm_error_' . $actionId . '\');" />';
+		$frmStr .= '</td>';
+	$frmStr .= '</tr>';	
+	
+	$frmStr .= '</table>';
+	$frmStr .= '</div>';
+    $frmStr .= '</div>';
+	
+	$frmStr .= '<hr />';
+
+	/*** Complementary fields ***/
     $frmStr .= '<h4 onclick="new Effect.toggle(\'complementary_fields\', \'blind\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'complementary_fields\', \'divStatus_complementary_fields\');" '
         . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
@@ -731,22 +906,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<table width="100%" align="center" border="0" '
             . 'id="indexing_fields" style="display:block;">';
 
-    /*** Folder ***/
-    if ($core->is_module_loaded('folder')) {
-        $frmStr .= '<tr id="folder_tr" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?module=folder&filename='
-                . 'folders.gif" alt="' . _FOLDER 
-                . '"/></td><td><label for="folder" class="form_title" >' . _FOLDER
-                . '</label></td>';
-        $frmStr .= '<td class="indexing_field"><input type="text" '
-                . 'name="folder" id="folder" onblur="clear_error(\'frm_error_'
-                . $actionId . '\');return false;" /><div id="show_folder" '
-                . 'class="autocomplete"></div></td>';
-        $frmStr .= '<td><span class="red_asterisk" id="folder_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
-        $frmStr .= '</tr>';
-    }
+
     
     /*** Tags ***/
     if ($core->is_module_loaded('tags') 
@@ -1108,6 +1268,11 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . 'true&module=folder&page=autocomplete_folders&mode=folder\','
                 . ' \'Input\', \'2\');';
     }
+	        $frmStr .= ' initList(\'project\', \'project_autocomplete\',\''
+                . $_SESSION['config']['businessappurl'] . 'index.php?display='
+                . 'true&module=folder&page=autocomplete_fileplan&mode=folder\','
+                . ' \'Input\', \'2\');';
+	
     $frmStr .= '$(\'baskets\').style.visibility=\'hidden\';'
             . 'var item  = $(\'index_div\'); if(item)'
             . '{item.style.display=\'block\';}</script>';
@@ -1516,6 +1681,39 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             'type' => 'string',
         )
     );
+	
+	$custom_id = get_value_fields($formValues, 'schedule');
+    array_push(
+        $_SESSION['data'],
+        array(
+            'column' => 'custom_n1',
+            'value' => $custom_id,
+            'type' => 'integer',
+        )
+    );
+	
+	$project_id = get_value_fields($formValues, 'project');
+	preg_match('#\(+(.*)\)+#', $project_id, $result); 
+	
+    array_push(
+        $_SESSION['data'],
+        array(
+            'column' => 'custom_n2',
+            'value' => $result[1],
+            'type' => 'integer',
+        )
+    );
+	
+	$arbox_id = get_value_fields($formValues, 'arbox_id');
+    array_push(
+        $_SESSION['data'],
+        array(
+            'column' => 'arbox_id',
+            'value' => $arbox_id,
+            'type' => 'string',
+        )
+    );
+	
     if (isset($_SESSION['upfile']['format'])) {
         array_push(
             $_SESSION['data'],
@@ -1847,4 +2045,47 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                          . 'index.php?page=details_business&dir=indexing_searching'
                          . '&coll_id=' . $collId . '&id=' . $resId
     );
+}
+
+function makeScheduleList(
+    $ScheduleTree,
+    $Schedule__select,
+    $level = 0
+) {
+           
+    $subSchedules = $ScheduleTree->Schedule;
+    $l = $subSchedules->length;
+    for($i=0; $i<$l; $i++) {
+        $subSchedule = $subSchedules[$i];
+        $option = 
+            $Schedule__select->addOption(
+                $subSchedule->schedule_id,
+                str_repeat(' ', $level) . $subSchedule->Identifier
+            );
+        $option->setDataAttribute(
+            'appraisal_code',
+            $subSchedule->AppraisalCode
+        );
+        $option->setDataAttribute(
+            'appraisal_duration',
+            $subSchedule->AppraisalDuration
+        );
+        $option->setDataAttribute(
+            'access_restriction_code',
+            $subSchedule->AccessRestrictionCode
+        );
+        
+        if($level < 1)
+            $option->setStyle('font-variant', 'small-caps');
+        if($level < 2)
+            $option->setStyle('text-decoration', 'underline');
+        if($level < 3)
+            $option->setStyle('font-weight', 'bold');
+        
+        makeScheduleList(
+            $subSchedule,
+            $Schedule__select,
+            $level+1
+        );
+    }
 }

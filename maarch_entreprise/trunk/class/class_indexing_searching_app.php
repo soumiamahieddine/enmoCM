@@ -1183,7 +1183,21 @@ class indexing_searching_app extends dbquery
                     $_SESSION['error'] .= $_ENV['categories'][$cat_id][$key]['label']." "._WRONG_FORMAT." <br/>";
                 }  else if ($_ENV['categories'][$cat_id][$key]['type_field'] == 'integer' && $_ENV['categories'][$cat_id][$key]['table'] <> 'none' && $post[$key] != '') {
                     if ($_ENV['categories'][$cat_id][$key]['table'] == 'res') {
-                        array_push($data_res, array('column' => $key, 'value' => $post[$key], 'type' => "integer"));
+						if($_ENV['categories'][$cat_id][$key]['label'] == _ITEM_FOLDER){
+							$chaine = $post[$key];
+							$value = substr($chaine,-2,1);
+							$i=-3;
+							while (is_numeric(substr($chaine,$i,1))){
+								$value .= substr($chaine,$i,1);
+								$i--;
+							}
+							$value = strrev($value);
+							$key2 = str_replace("doc_","",$key);
+							array_push($data_res, array('column' => $key2, 'value' => $value, 'type' => "integer"));
+						}else{
+							$key2 = str_replace("doc_","",$key);
+							array_push($data_res, array('column' => $key2, 'value' => $post[$key], 'type' => "integer"));
+						}
                     } else if ($_ENV['categories'][$cat_id][$key]['table'] == 'coll_ext') {
                         array_push($data_ext, array('column' => $key, 'value' => $post[$key], 'type' => "integer"));
                     }
@@ -1200,7 +1214,7 @@ class indexing_searching_app extends dbquery
                 }
             }
         }
-        //print_r($data_ext);exit;
+        //print_r($data_res);exit;
         require_once('apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php');
         $type = new types();
         $type_id =  $post['type_id'];
@@ -1230,6 +1244,16 @@ class indexing_searching_app extends dbquery
                     'column' => 'process_limit_date', 
                     'value' => $func->format_date_db($post['process_limit_date']), 
                     'type' => "date"
+                )
+            );
+        }
+		if (!empty($post['arbox_id'])) {
+            array_push(
+                $data_res, 
+                array(
+                    'column' => 'arbox_id', 
+                    'value' => $post['arbox_id'], 
+                    'type' => "string"
                 )
             );
         }
@@ -1330,6 +1354,7 @@ class indexing_searching_app extends dbquery
             //$request->show_array($data_res);
             //exit();
             $request->update($table, $data_res, $where, $_SESSION['config']['databasetype']);
+			//$request->show();
             if (count($data_ext) > 0) {
                 $request->update($table_ext, $data_ext, $where, $_SESSION['config']['databasetype']);
             }

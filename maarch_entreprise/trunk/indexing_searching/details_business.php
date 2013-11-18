@@ -587,8 +587,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                                                         for($l=0; $l<count($data[$key]['select'][$k]['level2'][$j]['types']);$l++)
                                                         {
                                                             ?><option
-                                                            <?php if ($data[$key]['value'] ==$data[$key]['select'][$k]['level2'][$j]['types'][$l]['id']){ echo 'selected="selected"';}?>
-                                                             value="<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['id'];?>" >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['label'];?></option><?php
+                                                            <?php if ($data[$key]['value'] ==$data[$key]['select'][$k]['level2'][$j]['types'][$l]['id']){ echo 'selected="selected"'; $_SESSION['category_id_session'] = $data[$key]['select'][$k]['level2'][$j]['types'][$l]['id'];}?>
+                                                             value="<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['id'];?>" >&nbsp;&nbsp;&nbsp;&nbsp;<?php echo $data[$key]['select'][$k]['level2'][$j]['types'][$l]['label'];
+															 ?></option><?php
                                                         }
                                                     }
                                                 }
@@ -621,6 +622,22 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                                         echo $_SESSION['config']['businessappurl'];
                                         ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder', 'folder');</script>
                                         <?php
+                                    }
+									if ($key == 'folder_id')
+                                    {
+                                        ?><input type="text" name="project" id="project" onblur="" value="<?php echo $data['folder_id']['show_value']; 
+                                        ?>" /><div id="show_project_id" class="autocomplete"></div><script type="text/javascript">initList('project','show_project_id','<?php 
+                                        echo $_SESSION['config']['businessappurl'];
+                                        ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder', 'Input','2');</script>
+                                        <?php 
+                                    }
+									if ($key == 'doc_custom_n2')
+                                    {
+                                        ?><input type="text" name="doc_custom_n2" id="doc_custom_n2" onblur="" value="<?php echo $data['doc_custom_n2']['show_value']; 
+                                        ?>" /><div id="show_doc_custom_n2_id" class="autocomplete"></div><script type="text/javascript">initList('doc_custom_n2','show_doc_custom_n2_id','<?php 
+                                        echo $_SESSION['config']['businessappurl'];
+                                        ?>index.php?display=true&module=folder&page=autocomplete_fileplan&mode=folder', 'Input','2');</script>
+                                        <?php 
                                     }
                                 }
                             }

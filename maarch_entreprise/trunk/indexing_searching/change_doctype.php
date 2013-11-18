@@ -224,11 +224,11 @@ if(count($indexes) > 0)
     $opt_indexes .= '</div></div>';
 }
 
-
-
 $services = '[';
 $_SESSION['indexing_services'] = array();
 $_SESSION['indexing_type_id'] = $_REQUEST['type_id'];
+$_SESSION['category_id_session'] = $_SESSION['indexing_type_id'];
+
 // Module and apps services
 $core->execute_modules_services(
     $_SESSION['modules_services'], 'change_doctype.php', 'include'

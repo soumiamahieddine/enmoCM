@@ -354,7 +354,7 @@ $_ENV['categories']['enterprise_document']['contact_id'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
     'mandatory' => false,
-    'label' => _CONTACT,
+    'label' => _AUTHOR,
     'table' => 'coll_ext',
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif',
     'modify' => false,
@@ -381,6 +381,57 @@ $_ENV['categories']['enterprise_document']['doc_date'] = array (
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date.png',
     'modify' => true,
     'form_show' => 'date'
+);
+
+$_ENV['categories']['enterprise_document']['doc_custom_n1'] = array (
+    'type_form' => 'integer',
+    'type_field' => 'integer',
+    'mandatory' => false,
+    'label' => _RM_DOCTYPE,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=desarchivage.gif',
+    'modify' => true,
+    'form_show' => 'select'
+);
+
+$_ENV['categories']['enterprise_document']['doc_custom_n2'] = array (
+    'type_form' => 'integer',
+    'type_field' => 'integer',
+    'mandatory' => false,
+    'label' => _ITEM_FOLDER,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=folder_documents_mini.png',
+    'modify' => true,
+    'form_show' => 'autocomplete'
+);
+
+$_ENV['categories']['enterprise_document']['other_cases']['arbox_id'] = array (
+    'type_form' => 'integer',
+    'type_field' => 'integer',
+    'mandatory' => false,
+    'label' => _BOX_ID,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=box.gif',
+    'modify' => true,
+    'form_show' => 'select'
+);
+$_ENV['categories']['enterprise_document']['other_cases']['process_limit_date'] = array (
+    'type_form' => 'date',
+    'type_field' => 'date',
+    'label' => _PROCESS_LIMIT_DATE,
+    'table' => 'coll_ext',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=process_limit_date.png',
+    'modify' => true,
+    'form_show' => 'date'
+);
+$_ENV['categories']['enterprise_document']['folder_id'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'label' => _FOLDER,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_folder.gif',
+    'modify' => true,
+    'form_show' => 'autocomplete'
 );
 
 ///////////////////////////// HUMAN RESOURCES ////////////////////////////////////////////////
@@ -901,6 +952,47 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
         array_push($arr, 'arbox_id');
     }
 
+	//Tableau de gestion avec fichiers
+	if (isset ($_ENV['categories'][$cat_id]['doc_custom_n1']) && count($_ENV['categories'][$cat_id]['doc_custom_n1']) > 0 && (!isset ($params['show_doc_custom_n1']) || $params['show_doc_custom_n1'] == true)) {
+        $fields .= 'doc_custom_n1,';
+        if ($mode == 'full' || $mode == 'form') {
+            if ($params['img_doc_custom_n1'] == true) {
+                $data['doc_custom_n1'] = array (
+                    'value' => '',
+                    'show_value' => '',
+                    'label' => $_ENV['categories'][$cat_id]['doc_custom_n1']['label'],
+                    'display' => 'textinput',
+                    'img' => $_ENV['categories'][$cat_id]['doc_custom_n1']['img']
+                );
+            } else {
+                $data['doc_custom_n1'] = array (
+                    'value' => '',
+                    'show_value' => '',
+                    'label' => $_ENV['categories'][$cat_id]['doc_custom_n1']['label'],
+                    'display' => 'textinput'
+                );
+            }
+            $data['doc_custom_n1']['readonly'] = true;
+            if ($mode == 'form' && $_ENV['categories'][$cat_id]['doc_custom_n1']['modify']) {
+                $data['doc_custom_n1']['field_type'] = $_ENV['categories'][$cat_id]['doc_custom_n1']['form_show'];
+                $data['doc_custom_n1']['readonly'] = false;
+                $data['doc_custom_n1']['select'] = array ();
+				
+                $db->query("select folders_system_id, folder_name from " . $_SESSION['tablename']['fold_folders'] . " where foldertype_id = 100 order by folder_name");
+                while ($res = $db->fetch_object()) {
+                    array_push($data['doc_custom_n1']['select'], array (
+                        'ID' => $res->folders_system_id,
+                        'LABEL' => $res->folder_name
+                    ));
+                }
+				
+            }
+        } else {
+            $data['doc_custom_n1'] = '';
+        }
+        array_push($arr, 'doc_custom_n1');
+    }
+	
     if ($mode == 'full' || $mode == 'form') {
         $fields = preg_replace('/,$/', ',type_label', $fields);
     } else {
@@ -966,8 +1058,41 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
 
                     $res = $db2->fetch_object();
                     $data[$arr[$i]]['show_value'] = $db->show_string($res->title . ' (' . $line->arbox_id . ')');
+					$data[$arr[$i]]['img'] = $_ENV['categories']['enterprise_document']['other_cases']['arbox_id']['img'];
                 }
             }
+			// Plan de classement
+			elseif ($arr[$i] == 'doc_custom_n2') {
+                if (isset ($line->doc_custom_n2) && !empty ($line->doc_custom_n2)) {
+                    $db2->query('select folder_name, folder_id, folders_system_id from ' . $_SESSION['tablename']['fold_folders'] . " where folders_system_id = " . $line->doc_custom_n2 . "");
+
+                    $res = $db2->fetch_object();
+                    $data[$arr[$i]]['show_value'] = $db->show_string($res->folder_id) . ', ' . $db->show_string($res->folder_name) . ' (' .$db->show_string($res->folders_system_id) . ')';
+					$data[$arr[$i]]['img'] = $_ENV['categories']['enterprise_document']['doc_custom_n2']['img'];
+                }
+            }
+			// Tableau de gestion
+			elseif ($arr[$i] == 'doc_custom_n1') {
+                if (isset ($line->doc_custom_n1) && !empty ($line->doc_custom_n1)) {
+                    $db2->query('select folder_name from ' . $_SESSION['tablename']['fold_folders'] . " where folders_system_id = " . $line->doc_custom_n1 . "");
+
+                    $res = $db2->fetch_object();
+                    $data[$arr[$i]]['show_value'] = $db->show_string($res->folder_name);
+					$data[$arr[$i]]['img'] = $_ENV['categories']['enterprise_document']['doc_custom_n1']['img'];
+                }
+            }
+			
+			//Folders
+			elseif ($arr[$i] == 'folder_id') {
+                if (isset ($line->folder_id) && !empty ($line->folder_id)) {
+                    $db2->query('select folder_id, folder_name, folders_system_id from ' . $_SESSION['tablename']['fold_folders'] . " where folder_id = '" . $line->folder_id . "'");
+
+                    $res = $db2->fetch_object();
+                    $data[$arr[$i]]['show_value'] = $db->show_string($res->folder_id) . ', ' . $db->show_string($res->folder_name) . ' (' .$db->show_string($res->folders_system_id) . ')';
+					$data[$arr[$i]]['img'] = $_ENV['categories']['enterprise_document']['folder_id']['img'];
+                }
+            }
+			
             // Contact
             elseif ($arr[$i] == 'contact_id') {
                 if (!empty ($line-> $arr[$i])) {
@@ -1101,4 +1226,5 @@ function get_img_cat($cat_id) {
         }
     }
 }
+
 ?>
