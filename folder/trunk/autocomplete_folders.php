@@ -34,11 +34,23 @@ $select = array();
     // } else {
         // $where = " folder_level = 1 and ";
     // }
-    $where .= " (folder_level = 1 or folder_level = 2) and (lower(folder_name) like lower('%"
+
+	$category_id = $_SESSION['category_id_session'];
+	
+	$db = new dbquery();
+	$db->connect();
+	
+	$db->query("select doctypes_first_level_id from doctypes where type_id = ".$category_id);
+	$res = $db->fetch_object();
+	
+	$db->query("select foldertype_id from foldertypes_doctypes_level1 where doctypes_first_level_id = ".$res->doctypes_first_level_id);
+	$res = $db->fetch_object();
+	
+    $where .= " (foldertype_id = ".$res->foldertype_id.") and (lower(folder_name) like lower('%"
 		.$req->protect_string_db($_REQUEST['Input'])."%') or lower(folder_id) like lower('%"
 		.$req->protect_string_db($_REQUEST['Input'])."%') ) and (status <> 'DEL' or status <> 'FOLDDEL')";
     //Order
-    $order = 'order by subject, folder_name';
+    $order = 'order by folders_system_id, folder_name';
 
 //Query
 $res = $req->select($select, $where, $order, $_SESSION['config']['databasetype'], 11,false,"","","", false);
