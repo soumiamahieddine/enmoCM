@@ -979,7 +979,12 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                 $data['doc_custom_n1']['select'] = array ();
 				
                 $db->query("select folders_system_id, folder_name from " . $_SESSION['tablename']['fold_folders'] . " where foldertype_id = 100 order by folder_name");
-                while ($res = $db->fetch_object()) {
+               				    array_push($data['doc_custom_n1']['select'], array (
+                        'ID' => '',
+                        'LABEL' => 'Sélectionner un type d archive'
+                    ));
+
+			   while ($res = $db->fetch_object()) {
                     array_push($data['doc_custom_n1']['select'], array (
                         'ID' => $res->folders_system_id,
                         'LABEL' => $res->folder_name
@@ -1079,7 +1084,9 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     $res = $db2->fetch_object();
                     $data[$arr[$i]]['show_value'] = $db->show_string($res->folder_name);
 					$data[$arr[$i]]['img'] = $_ENV['categories']['enterprise_document']['doc_custom_n1']['img'];
-                }
+                }else {
+					$data[$arr[$i]]['show_value'] = 'Sélectionner un type d archive';
+				}
             }
 			
 			//Folders

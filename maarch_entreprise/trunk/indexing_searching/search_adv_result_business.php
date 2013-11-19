@@ -301,6 +301,40 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .=" and  ";
                 $json_txt .= '],';
             }
+			
+			// ARBOXE
+            //Physical Archive including => filter on boxes
+            //elseif ($tab_id_fields[$j] == 'boxes_chosen' && !empty($_REQUEST['arbox_id_chosen']))
+            elseif ($tab_id_fields[$j] == 'arboxes_chosen')
+            {
+                $json_txt .= " 'arbox_id_chosen' : [";
+                $arbox_id_chosen_tmp = " (";
+                if (count($_REQUEST['arboxes_chosen'])){
+                    for ($get_i = 0; $get_i <count($_REQUEST['arboxes_chosen']); $get_i++)
+                    {
+                        $arbox_id_chosen_tmp .= "'".$func->protect_string_db($_REQUEST['arboxes_chosen'][$get_i])."',";
+                        $json_txt .= "'".$_REQUEST['arboxes_chosen'][$get_i]."',";
+                    }
+                    $arbox_id_chosen_tmp = substr($arbox_id_chosen_tmp, 0, -1);
+                    $json_txt = substr($json_txt, 0, -1);
+                    $arbox_id_chosen_tmp .= ") ";
+
+                    $where_request .= " arbox_id IN  ".$arbox_id_chosen_tmp." ";
+                    $where_request .=" and  ";
+                }
+                $json_txt .= '],';
+            }
+            // ARBATCH
+            //Gestion boite archive => Limitation au lot
+            elseif ($tab_id_fields[$j] == 'arbatch_id' && !empty($_REQUEST['arbatch_id']))
+            {
+                $json_txt .= " 'arbatch_id' : ['".addslashes(trim($_REQUEST['arbatch_id']))."'],";
+                $arbatch_id = $func->wash($_REQUEST['arbatch_id'], "no", _BATCH,"no");
+                {
+                    $where_request .= " arbatch_id = ".$arbatch_id." and ";
+                }
+            }
+			
             // CREATION DATE : FROM
             elseif ($tab_id_fields[$j] == 'creation_date_from' && !empty($_REQUEST['creation_date_from']))
             {

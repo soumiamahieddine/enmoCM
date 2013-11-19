@@ -1256,8 +1256,23 @@ class indexing_searching_app extends dbquery
                     'type' => "string"
                 )
             );
-        }
         
+			require_once('modules'.DIRECTORY_SEPARATOR.'physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
+			$physicalArchive = new physical_archive();
+				$paReturnValue = $physicalArchive->load_box_db_business(
+					$post['arbox_id'], $cat_id, $_SESSION['user']['UserId']
+				);
+				array_push(
+					$data_res,
+					array(
+						'column' => 'arbatch_id',
+						'value' => $paReturnValue,
+						'type' => 'integer',
+					)
+				);
+        
+		}
+		
         if ($core->is_module_loaded('folder')) {
             $request->connect();
             $request->query("select folders_system_id from ".$table." where res_id = ".$id_to_update);

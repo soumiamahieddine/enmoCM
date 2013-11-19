@@ -759,7 +759,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
 			$frmStr .= '</label>';
 		$frmStr .= '</td>';
 		$frmStr .= '<td class="indexing_field">';
-			$frmStr .= '<input type="text" name="project" id="project" onblur="clear_error(\'frm_error_'. $actionId . '\');return false;" />';
+			$frmStr .= '<input type="text" name="project" id="project" value = "" onblur="clear_error(\'frm_error_'. $actionId . '\');return false;" />';
 			$frmStr .= '<div id="project_autocomplete" class="autocomplete"></div>';
 		$frmStr .= '</td>';
 	$frmStr .= '</tr>';
@@ -1609,6 +1609,30 @@ function process_category_check($catId, $values)
             }
         }
     }
+	
+	if ($core->is_module_loaded('physical_archive')) {
+        // Arbox id
+        $boxId = get_value_fields($values, 'arbox_id');
+        if (isset($_ENV['categories'][$catId]['other_cases']['arbox_id'])
+            && $_ENV['categories'][$catId]['other_cases']['arbox_id']['mandatory'] == true
+        ) {
+            if ($boxId == false) {
+                $_SESSION['action_error'] = _NO_BOX_SELECTED . ' ';
+                return false;
+            }
+        }
+        if ($boxId != false && preg_match('/^[0-9]+$/', $boxId)) {
+            $physicalArchive = new physical_archive();
+            $paReturnValue = $physicalArchive->load_box_db_business(
+                $boxId, $catId, $_SESSION['user']['UserId']
+            );
+            if ($paReturnValue == false) {
+                $_SESSION['action_error'] = _ERROR_TO_INDEX_NEW_BATCH_WITH_PHYSICAL_ARCHIVE;
+                return false;
+            }
+        }
+    }
+	
     return true;
 }
 
@@ -1683,26 +1707,30 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     );
 	
 	$custom_id = get_value_fields($formValues, 'schedule');
-    array_push(
-        $_SESSION['data'],
-        array(
-            'column' => 'custom_n1',
-            'value' => $custom_id,
-            'type' => 'integer',
-        )
-    );
+	if($custom_id != ''){ 
+		array_push(
+			$_SESSION['data'],
+			array(
+				'column' => 'custom_n1',
+				'value' => $custom_id,
+				'type' => 'integer',
+			)
+		);
+	}
 	
 	$project_id = get_value_fields($formValues, 'project');
 	preg_match('#\(+(.*)\)+#', $project_id, $result); 
 	
-    array_push(
-        $_SESSION['data'],
-        array(
-            'column' => 'custom_n2',
-            'value' => $result[1],
-            'type' => 'integer',
-        )
-    );
+	if($result[1] != ''){ 
+		array_push(
+			$_SESSION['data'],
+			array(
+				'column' => 'custom_n2',
+				'value' => $result[1],
+				'type' => 'integer',
+			)
+		);
+	}
 	
 	$arbox_id = get_value_fields($formValues, 'arbox_id');
     array_push(
@@ -1928,6 +1956,32 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                 array(
                     'column' => 'folders_system_id',
                     'value' => $folderId,
+                    'type' => 'integer',
+                )
+            );
+        }
+    }
+	if ($core->is_module_loaded('physical_archive')) {
+        // Arbox_id + Arbatch_id
+        $boxId = get_value_fields($formValues, 'arbox_id');
+        if ($boxId <> '') {
+            /*array_push(
+                $_SESSION['data'],
+                array(
+                    'column' => 'arbox_id',
+                    'value' => $boxId,
+                    'type' => 'integer',
+                )
+            );*/
+            $physicalArchive = new physical_archive();
+            $paReturnValue = $physicalArchive->load_box_db_business(
+                $boxId, $catId, $_SESSION['user']['UserId']
+            );
+            array_push(
+                $_SESSION['data'],
+                array(
+                    'column' => 'arbatch_id',
+                    'value' => $paReturnValue,
                     'type' => 'integer',
                 )
             );
