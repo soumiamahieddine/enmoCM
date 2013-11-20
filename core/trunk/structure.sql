@@ -2366,6 +2366,9 @@ CREATE TABLE rm_documents
   transferring_agency_document_identifier character varying(100),
   content_type character varying(10) DEFAULT 'CDO',
   
+  arbox_id character varying(32) DEFAULT NULL::character varying,
+  arbatch_id bigint DEFAULT NULL,
+  
   CONSTRAINT "rm_documents_pkey" PRIMARY KEY (res_id)
 )
 WITH (

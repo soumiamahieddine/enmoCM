@@ -1,7 +1,6 @@
 --
 -- PostgreSQL database
 --
-
 SET statement_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = off;
@@ -66,6 +65,9 @@ INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, ca
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('VAL', 'A Valider', 'Y', '', 'apps', 'Y', 'Y');
 INSERT INTO status VALUES ('INIT', 'Nouveau courrier ou document non qualifié', 'Y', 'N', '', 'apps', 'Y', 'Y');
 INSERT INTO status VALUES ('VIS', 'A viser', 'N', 'N', '', 'apps', 'Y', 'Y');
+
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SMART', 'Nouvelle demande Allo Mairie', 'N', '', 'apps', 'Y', 'N');
+
 
 ------------
 --PARAMETERS--
@@ -408,6 +410,8 @@ INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersTreatBasket', '[dossier] 94 - Dossiers traités', 'Corbeille des dossiers traités', 'status = ''FOLDTRT'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersDepartmentBasket', '[dossier] 95 - Dossiers', 'Corbeille de dossiers', 'status = ''FOLDNEW'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
 
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'AlloMairieBasket', 'Demandes Allo Mairie', 'Corbeilles des demandes Allo Mairie', 'status = ''SMART''', 'N', 'Y', 'Y');
+
 ------------
 --ACTIONS--
 ------------
@@ -487,6 +491,8 @@ INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, red
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'FoldersRejectedBasket', 4, NULL, NULL, 'list_folders', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'FoldersIncompleteBasket', 5, NULL, NULL, 'list_folders', 'N', 'N', 'N');
 
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'AlloMairieBasket', 9, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
+
 ------------
 --ACTIONS_GROUPBASKETS--
 ------------
@@ -560,6 +566,9 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (303, '', 'RESPONSABLE', 'FoldersDepartmentBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (304, '', 'RESPONSABLE', 'FoldersDepartmentBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (305, '', 'RESPONSABLE', 'FoldersDepartmentBasket', 'Y', 'N', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'COURRIER', 'AlloMairieBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'COURRIER', 'AlloMairieBasket', 'Y', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'COURRIER', 'AlloMairieBasket', 'N', 'N', 'Y');
 
 ------------
 --GROUPBASKET_REDIRECT--
@@ -591,7 +600,7 @@ INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, ent
 
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (160, 'RESPONSABLE', 'FoldersDepartmentBasket', 300, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (161, 'RESPONSABLE', 'FoldersDepartmentBasket', 300, '', 'ALL_ENTITIES', 'USERS');
-
+INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (163, 'COURRIER', 'AlloMairieBasket', 1, '', 'ALL_ENTITIES', 'ENTITY');
 ------------
 --FOLDERTYPES--
 ------------
@@ -639,6 +648,7 @@ INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_lev
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 85, 'Demande Environnement', 'Y', 20, 50, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 90, 'Demande Urbanisme', 'Y', 20, 50, NULL, NULL);
 
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 99, 'Demande Allo Mairie', 'Y', 10, 10, NULL, NULL);
 ------------
 --DOCTYPES_INDEXES--
 ------------
@@ -1023,7 +1033,6 @@ INSERT INTO notifications (notification_sid, notification_id, description, event
 VALUES (8, 'AND', '[courrier] Nouvelle annotation sur courrier destinataire', 'noteadd', 'EMAIL', 8, '', 'dest_user', '', '', '', 'Y');
 INSERT INTO notifications (notification_sid, notification_id, description, event_id, notification_mode, template_id, rss_url_template, diffusion_type, diffusion_properties, attachfor_type, attachfor_properties, is_enabled) 
 VALUES (9, 'RED', '[courrier] Redirection de courrier', '1', 'EMAIL', 7, '', 'dest_user', '', '', '', 'Y');
-
 ------------
 --TEMPLATES_ASSOCIATION--
 ------------
@@ -3062,6 +3071,12 @@ INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'admin_Schedule');
 INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'adv_search_rm');
 INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'index_rm');
 INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'ArchiveTransferCreation');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'adv_search_mlb');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'physical_archive');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'physical_archive_box_read');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'physical_archive_box_manage');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'physical_archive_batch_read');
+INSERT INTO usergroups_services VALUES ('ARCHIVISTE', 'physical_archive_batch_manage');
 
 INSERT INTO usergroups_services VALUES ('CORRESPONDANT', 'reserve_apa');
 INSERT INTO usergroups_services VALUES ('CORRESPONDANT', 'adv_search_rm');
@@ -3079,7 +3094,8 @@ delete from users_entities where user_id = 'bblier' and entity_id = 'VILLE';
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) 
 VALUES ('bblier', 'VILLE', 'Responsable courrier', 'Y');
 INSERT INTO users_entities VALUES ('ccamus', 'VILLE', '', 'Y');
-INSERT INTO users_entities VALUES ('ccamus', 'CCAS', '', 'Y');
+INSERT INTO users_entities VALUES ('ccamus', 'CCAS', '', 'N');
+INSERT INTO users_entities VALUES ('ccamus', 'COU', '', 'N');
 
 delete from users_entities where user_id = 'ggrand' and entity_id = 'COR';
 INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) 
@@ -3161,8 +3177,8 @@ VALUES ('apa_coll', 'APA_picking', '[APA] 41 - Archives prelevees', 'Corbeille d
 ------------------------
 --ACTIONS_GROUPBASKETS--
 ------------------------
-INSERT INTO actions_groupbaskets VALUES (15, '', 'ARCHIVISTE', 'APA_reservation', 'Y', 'Y', 'N');
-INSERT INTO actions_groupbaskets VALUES (16, '', 'ARCHIVISTE', 'APA_picking', 'Y', 'Y', 'N');
+INSERT INTO actions_groupbaskets VALUES (15, '', 'ARCHIVISTE', 'APA_reservation', 'Y', 'N', 'N');
+INSERT INTO actions_groupbaskets VALUES (16, '', 'ARCHIVISTE', 'APA_picking', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets VALUES (203, '', 'ARCHIVISTE', 'BRAttenteControleConformite', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets VALUES (206, '', 'ARCHIVISTE', 'BREnPreparation', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets VALUES (205, '', 'ARCHIVISTE', 'BRCreation', 'N', 'N', 'Y');
@@ -3178,8 +3194,8 @@ VALUES (206, '', 'CORRESPONDANT', 'BREnPreparation', 'Y', 'N', 'Y');
 ---------------
 --GROUPBASKET--
 ---------------
-INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'APA_reservation', 1, NULL, NULL, 'list_folders', 'N', 'N', 'N', '', '');
-INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'APA_picking', 2, NULL, NULL, 'list_folders', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'APA_reservation', 1, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N', '', '');
+INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'APA_picking', 2, NULL, NULL, 'apa_basket_list', 'N', 'N', 'N', '', '');
 INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'logsArchives', 3, NULL, NULL, 'logs_list', 'N', 'N', 'N', '', '');
 INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'TransfertArticles', 4, NULL, NULL, 'item_basket_list', 'N', 'N', 'N', '', '');
 INSERT INTO groupbasket VALUES ('ARCHIVISTE', 'BRAcceptes', 5, NULL, NULL, 'io_basket_list', 'N', 'N', 'N', '', '');
