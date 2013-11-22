@@ -84,7 +84,7 @@ if ($_SESSION['current_basket']['clause'] <> '' )
 //$request = new request();
 //$tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype']);
  
-$db_external->query("select res_id, status, subject, dest_user, type_label, creation_date, entity_label, category_id, exp_user_id, category_id as category_img, process_limit_date, priority  from ".$_SESSION['collections'][0]['view']." where ".$where_request." order by priority,process_limit_date desc" );
+$db_external->query("select res_id, status, subject, dest_user, type_label, creation_date, entity_label, category_id, exp_user_id, category_id as category_img, process_limit_date, priority  from ".$_SESSION['collections'][0]['view']." where ".$where_request." order by res_id" );
 
 if ($db_external->nb_result() >0)
 {
