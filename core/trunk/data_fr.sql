@@ -417,7 +417,7 @@ INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause
 ------------
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (1, 'redirect', '[courrier] Rediriger', '_NOSTATUS_', 'Y', 'Y', 'redirect', 'Y', 'entities', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (2, 'to_validate', 'Valider', 'VAL', 'Y', 'N', 'confirm_status', 'N', 'apps', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (3, '', 'Renvoyer en qualification', 'RET', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (3, '', 'Renvoyer en qualification', 'INIT', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (18, 'indexing', '[courrier] Valider courrier', 'NEW', 'N', 'Y', 'validate_mail', 'Y', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (19, '', '[courrier] Traiter courrier', 'COU', 'N', 'Y', 'process', 'Y', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (20, '', '[courrier] Cloturer', 'END', 'N', 'Y', 'close_mail', 'Y', 'apps', 'N');
