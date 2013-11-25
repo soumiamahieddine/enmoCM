@@ -125,7 +125,7 @@ $formatText = $listVersions->list_simple(
     true,
     $_SESSION['config']['businessappurl']
         . 'index.php?display=true&amp;dir=indexing_searching&amp;'
-        . 'page=view_resource_controler&aVersion=',
+        . 'page=view_resource_controler&aVersion&resIdMaster=' . $_SESSION['doc_id'],
     $css,
     '',
     '',
