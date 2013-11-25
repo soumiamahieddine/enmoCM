@@ -63,6 +63,11 @@ if (isset($_REQUEST['id'])) {
 } else {
     $s_id = '';
 }
+if (isset($_REQUEST['resIdMaster'])) {
+    $resIdMaster = $_REQUEST['resIdMaster'];
+} else {
+    $resIdMaster = '';
+}
 if ($s_id == '') {
     $_SESSION['error'] = _THE_DOC . ' ' . _IS_EMPTY;
     header('location: ' . $_SESSION['config']['businessappurl'] . 'index.php');
@@ -112,10 +117,15 @@ if ($s_id == '') {
     );
     //SECURITY PATCH
     require_once 'core/class/class_security.php';
+    if ($resIdMaster <> '') {
+        $idToTest = $resIdMaster;
+    } else {
+        $idToTest = $s_id;
+    }
     $security = new security();
     $right = $security->test_right_doc(
         $_SESSION['collection_id_choice'], 
-        $s_id
+        $idToTest
     );
     //$_SESSION['error'] = 'coll '.$coll_id.', res_id : '.$s_id;
     $_SESSION['origin'] = '';
