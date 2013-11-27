@@ -977,7 +977,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $detailsExport .= "<h2>"._DIFF_LIST."</h2>";
                     ?>
                     <dt><?php  echo _DIFF_LIST;?></dt>
-                    <dd><?php  echo _DIFF_LIST;?></b>
+                    <dd>
                         <br/>
                         <div id="diff_list_div">
                             <?php
@@ -994,7 +994,32 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 echo '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_listinstance&origin=details\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" title="'._UPDATE_LIST_DIFF.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._UPDATE_LIST_DIFF.'" />'._UPDATE_LIST_DIFF.'</a>';
                             }else if($core->test_service('update_list_diff_in_details', 'entities', false) ){
                                 echo '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_listinstance&origin=details&only_cc\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" title="'._UPDATE_LIST_DIFF.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._UPDATE_LIST_DIFF.'" />'._UPDATE_LIST_DIFF.'</a>';
-                                
+                            }
+                            
+                            //print details
+                            if (
+                                isset($_SESSION['details']['diff_list']['dest']['users'][0]['user_id']) 
+                                && !empty($_SESSION['details']['diff_list']['dest']['users'][0]['user_id'])
+                            ) {
+                                $detailsExport .= "<table cellpadding='4' cellspacing='0' border='1' width='100%'>";
+                                $detailsExport .= "<tr class='col'>";
+                                $detailsExport .= "<td>"._RECIPIENT."</td>";
+                                $detailsExport .= "<td>"._TO_CC."</td>";
+                                $detailsExport .= "</tr>";
+                                $detailsExport .= "<tr class='col' valign='top'>";
+                                $detailsExport .= "<td>-&nbsp;<b>".$entityLabel."</b><br>-&nbsp;"
+                                    . $_SESSION['details']['diff_list']['dest']['users'][0]['entity_label']."</td>";
+                                $detailsExport .= "<td>";
+                                for ($i=0;$i<count($_SESSION['details']['diff_list']['copy']['entities']);$i++) {
+                                    $detailsExport .= "-&nbsp;".$_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_id']
+                                        . "&nbsp;".$_SESSION['details']['diff_list']['copy']['entities'][$i]['entity_label']."<br>";
+                                }
+                                for ($i=0;$i<count($_SESSION['details']['diff_list']['copy']['users']);$i++) {
+                                    $detailsExport .= "-&nbsp;".$_SESSION['details']['diff_list']['copy']['users'][$i]['entity_label']."<br>";
+                                }
+                                $detailsExport .= "</td>";
+                                $detailsExport .= "</tr>";
+                                $detailsExport .= "</table>";
                             }
                             ?>
                         </div>
