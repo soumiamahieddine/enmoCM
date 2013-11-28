@@ -767,8 +767,15 @@ $linkwithwhat =
                         $user_id = $users[$j]['ID'];
                         $possible_roles = array();
                         foreach($roles as $role_id => $role_label) {
-                            if(isset($user_roles[$user_id]) && in_array($role_id, $user_roles[$user_id]))
-                                continue;
+							if(isset($user_roles[$user_id]) 
+									&& (in_array($role_id, $user_roles[$user_id]) 
+										|| in_array('dest', $user_roles[$user_id]) 
+										|| in_array('copy', $user_roles[$user_id])
+										)
+								)
+							{
+								continue;
+							}
                             if($role_id == 'copy' || $role_id == 'dest'
                                     || $usergroups_controler->inGroup($users[$j]['ID'], $role_id))
                                 $possible_roles[$role_id] = $role_label;
