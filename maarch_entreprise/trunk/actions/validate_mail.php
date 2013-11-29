@@ -1421,7 +1421,6 @@ function process_category_check($cat_id, $values)
                 return true;
             }
         }
-    }
 
     //For specific case => chrono number
     $chrono_out = get_value_fields($values, 'chrono_number');
@@ -1444,7 +1443,7 @@ function process_category_check($cat_id, $values)
             return false;
         }
     }
-
+}
     return true;
 }
 
