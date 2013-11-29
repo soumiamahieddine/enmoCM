@@ -600,323 +600,323 @@ $linkwithwhat =
     </script>
     <br/>
     <?php
-    if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
+    /*if ((isset($_GET['what_users']) && ! empty($_GET['what_users']))
         || (isset($_GET['what_services']) && !empty($_GET['what_services']))
         || ( !empty($user_roles) || !empty($entity_roles))
-    ) { ?>
-    <div id="diff_list" align="center">
-    <h2 class="tit"><?php 
-        echo _DIFFUSION_LIST;
-        echo " (" . $difflistType->difflist_type_label . ")";
-    ?></h2><?php 
-    #**************************************************************************
-    # DEST USER
-    #**************************************************************************
-    if (1==2 && isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
-        && ! empty($_SESSION[$origin]['diff_list']['dest']['user_id'])
-        && ! $onlyCc
-    ) { ?>
-    <h2 class="sstit"><?php echo _PRINCIPAL_RECIPIENT;?></h2>
-    <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
-        <tr >
-            <td>
-                <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_users_entities_b.gif&module=entities" alt="<?php echo _USER; ?>" title="<?php echo _USER;?>" /> 
-            </td>
-            <td><?php
-            if($_SESSION[$origin]['diff_list']['dest']['visible'] == 'Y') { ?>
-                <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" /> <?php
-            } ?>
-            </td>
-            <td><?php echo $_SESSION[$origin]['diff_list']['dest']['lastname'] . " " . $_SESSION[$origin]['diff_list']['dest']['firstname'];?></td>
-            <td><?php echo $_SESSION[$origin]['diff_list']['dest']['entity_label'];?></td>
-            <td class="action_entities"><!-- Remove dest -->
-                <a href="<?php echo $linkwithwhat;?>&action=remove_dest" class="delete"><?php echo _DELETE;?></a>
-            </td>
-            <td class="action_entities"><!-- Move dest to copy -->
-                <a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy" class="down"><?php echo _TO_CC;?></a>
-            </td>
-        </tr>
-    </table><?php
-    } ?>
-    <br/> <?php 
-    #**************************************************************************
-    # OTHER ROLES
-    #**************************************************************************
-    foreach($roles as $role_id => $role_label) {
-        if (count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0
-         || count($_SESSION[$origin]['diff_list'][$role_id]['entities']) > 0
-        ) { ?>
-            <h2 class="sstit"><?php echo $role_label;?></h2>
-            <table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php
-            #**************************************************************************
-            # OTHER ROLE USERS
-            #**************************************************************************   
-            $color = ' class="col"';
-            for($i=0, $l=count($_SESSION[$origin]['diff_list'][$role_id]['users']); 
-                $i<$l;
-                $i++
-            ) {
-                $user = $_SESSION[$origin]['diff_list'][$role_id]['users'][$i];
-                
-                if ($color == ' class="col"') $color = '';
-                else $color = ' class="col"'; ?>
-                <tr <?php echo $color; ?> >
-                    <td>
-                        <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER . " " . $role_label ;?>" title="<?php echo _USER . " " . $role_label; ?>" />
-                    </td>
-                    <td><?php
-                    if($user['visible'] == 'Y') { ?>
-                        <a href="<?php echo $linkwithwhat;?>&action=make_user_unvisible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
-                            <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" />
-                        </a><?php
-                    } else {?>
-                        <a href="<?php echo $linkwithwhat;?>&action=make_user_visible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
-                            <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_delete.gif&module=entities" alt="<?php echo _NOT_VISIBLE; ?>" title="<?php echo _NOT_VISIBLE;?>" />
-                        </a><?php
-                    } ?>
-                    </td>
-                    <td ><?php echo $user['lastname'] ." ". $user['firstname'];?></td>
-                    <td><?php echo $user['entity_label']; ?></td>
-                    <td class="action_entities"><?php 
-						if ($noDelete || ($role_id == 'dest' && $onlyCc)) { ?><!-- Remove user --> 
-						<?php }else{ ?>
-							<a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>" class="delete"><?php echo _DELETE; ?></a><?php                       
+    ) {*/ ?>
+		<div id="diff_list" align="center">
+		<h2 class="tit"><?php 
+			echo _DIFFUSION_LIST;
+			echo " (" . $difflistType->difflist_type_label . ")";
+		?></h2><?php 
+		#**************************************************************************
+		# DEST USER
+		#**************************************************************************
+		if (1==2 && isset($_SESSION[$origin]['diff_list']['dest']['user_id'])
+			&& ! empty($_SESSION[$origin]['diff_list']['dest']['user_id'])
+			&& ! $onlyCc
+		) { ?>
+		<h2 class="sstit"><?php echo _PRINCIPAL_RECIPIENT;?></h2>
+		<table cellpadding="0" cellspacing="0" border="0" class="listing spec">
+			<tr >
+				<td>
+					<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_users_entities_b.gif&module=entities" alt="<?php echo _USER; ?>" title="<?php echo _USER;?>" /> 
+				</td>
+				<td><?php
+				if($_SESSION[$origin]['diff_list']['dest']['visible'] == 'Y') { ?>
+					<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" /> <?php
+				} ?>
+				</td>
+				<td><?php echo $_SESSION[$origin]['diff_list']['dest']['lastname'] . " " . $_SESSION[$origin]['diff_list']['dest']['firstname'];?></td>
+				<td><?php echo $_SESSION[$origin]['diff_list']['dest']['entity_label'];?></td>
+				<td class="action_entities"><!-- Remove dest -->
+					<a href="<?php echo $linkwithwhat;?>&action=remove_dest" class="delete"><?php echo _DELETE;?></a>
+				</td>
+				<td class="action_entities"><!-- Move dest to copy -->
+					<a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy" class="down"><?php echo _TO_CC;?></a>
+				</td>
+			</tr>
+		</table><?php
+		} ?>
+		<br/> <?php 
+		#**************************************************************************
+		# OTHER ROLES
+		#**************************************************************************
+		foreach($roles as $role_id => $role_label) {
+			if (count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0
+			 || count($_SESSION[$origin]['diff_list'][$role_id]['entities']) > 0
+			) { ?>
+				<h2 class="sstit"><?php echo $role_label;?></h2>
+				<table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php
+				#**************************************************************************
+				# OTHER ROLE USERS
+				#**************************************************************************   
+				$color = ' class="col"';
+				for($i=0, $l=count($_SESSION[$origin]['diff_list'][$role_id]['users']); 
+					$i<$l;
+					$i++
+				) {
+					$user = $_SESSION[$origin]['diff_list'][$role_id]['users'][$i];
+					
+					if ($color == ' class="col"') $color = '';
+					else $color = ' class="col"'; ?>
+					<tr <?php echo $color; ?> >
+						<td>
+							<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER . " " . $role_label ;?>" title="<?php echo _USER . " " . $role_label; ?>" />
+						</td>
+						<td><?php
+						if($user['visible'] == 'Y') { ?>
+							<a href="<?php echo $linkwithwhat;?>&action=make_user_unvisible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+								<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" />
+							</a><?php
+						} else {?>
+							<a href="<?php echo $linkwithwhat;?>&action=make_user_visible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+								<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_delete.gif&module=entities" alt="<?php echo _NOT_VISIBLE; ?>" title="<?php echo _NOT_VISIBLE;?>" />
+							</a><?php
 						} ?>
-                    </td>
-                    <td class="action_entities"><!-- Switch copy to dest --><?php
-						//if($role_id == 'dest' && isset($roles['copy']) && ($role_id != 'dest' && $onlyCc)) { 
-						if($role_id == 'dest' && isset($roles['copy'])) {?>
-							<a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy" class="down"><?php echo _TO_CC;?></a><?php
-						} elseif($role_id == 'copy' && !$onlyCc &&  isset($roles['dest'])) { ?>
-							<a href="<?php echo $linkwithwhat;?>&action=copy_to_dest&role=copy&rank=<?php echo $i;?>" class="up"><?php echo _TO_DEST;?></a><?php
-						} else echo '&nbsp;'?>
-                    </td>
-                    <td class="action_entities"><!-- Move up in list --><?php 
+						</td>
+						<td ><?php echo $user['lastname'] ." ". $user['firstname'];?></td>
+						<td><?php echo $user['entity_label']; ?></td>
+						<td class="action_entities"><?php 
+							if ($noDelete || ($role_id == 'dest' && $onlyCc)) { ?><!-- Remove user --> 
+							<?php }else{ ?>
+								<a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>" class="delete"><?php echo _DELETE; ?></a><?php                       
+							} ?>
+						</td>
+						<td class="action_entities"><!-- Switch copy to dest --><?php
+							//if($role_id == 'dest' && isset($roles['copy']) && ($role_id != 'dest' && $onlyCc)) { 
+							if($role_id == 'dest' && isset($roles['copy'])) {?>
+								<a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy" class="down"><?php echo _TO_CC;?></a><?php
+							} elseif($role_id == 'copy' && !$onlyCc &&  isset($roles['dest'])) { ?>
+								<a href="<?php echo $linkwithwhat;?>&action=copy_to_dest&role=copy&rank=<?php echo $i;?>" class="up"><?php echo _TO_DEST;?></a><?php
+							} else echo '&nbsp;'?>
+						</td>
+						<td class="action_entities"><!-- Move up in list --><?php 
+							if($i > 0) { ?>
+								<a href="<?php echo $linkwithwhat;?>&action=move_user_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php 
+							} ?>
+						</td>
+						<td class="action_entities"><!-- Move down in list --><?php 
+							if($i < $l-1) { ?>
+								<a href="<?php echo $linkwithwhat;?>&action=move_user_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php 
+							} ?>
+						</td>
+					</tr> <?php
+				}
+				#**************************************************************************
+				# OTHER ROLE ENTITIES
+				#**************************************************************************
+				for($i=0, $l = count($_SESSION[$origin]['diff_list'][$role_id]['entities']);
+					$i<$l;
+					$i++
+				) {
+					$entity = $_SESSION[$origin]['diff_list'][$role_id]['entities'][$i];
+					if ($color == ' class="col"') $color = '';
+					else $color = ' class="col"'; ?>
+					<tr <?php echo $color; ?> >
+						<td>
+							<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY . " " . $role_label;?>" title="<?php echo _ENTITY . " " . $role_label; ?>" />
+						</td>
+						<td><?php
+						if($entity['visible'] == 'Y') { ?>
+							<a href="<?php echo $linkwithwhat;?>&action=make_entity_unvisible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+								<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" />
+							</a><?php
+						} else {?>
+							<a href="<?php echo $linkwithwhat;?>&action=make_entity_visible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+								<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_delete.gif&module=entities" alt="<?php echo _NOT_VISIBLE; ?>" title="<?php echo _NOT_VISIBLE;?>" />
+							</a><?php
+						} ?>
+						</td>
+						<td ><?php echo $entity['entity_id']; ?></td>
+						<td ><?php echo $entity['entity_label']; ?></td>
+						<td class="action_entities"><?php 
+						if (!$noDelete) { ?>
+							<a href="<?php echo $linkwithwhat; ?>&action=remove_entity&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $entity['entity_id'];?>" class="delete">
+								<?php echo _DELETE; ?>
+							</a><?php
+						} ?>
+						</td>
+						<td class="action_entities">&nbsp;</td>
+						<td class="action_entities"><!-- Move up in list --><?php
 						if($i > 0) { ?>
-							<a href="<?php echo $linkwithwhat;?>&action=move_user_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php 
+							<a href="<?php echo $linkwithwhat;?>&action=move_entity_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php
 						} ?>
-                    </td>
-                    <td class="action_entities"><!-- Move down in list --><?php 
+						</td>
+						<td class="action_entities"><!-- Move down in list --><?php 
 						if($i < $l-1) { ?>
-							<a href="<?php echo $linkwithwhat;?>&action=move_user_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php 
+							<a href="<?php echo $linkwithwhat;?>&action=move_entity_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php
 						} ?>
-                    </td>
-                </tr> <?php
-            }
-            #**************************************************************************
-            # OTHER ROLE ENTITIES
-            #**************************************************************************
-            for($i=0, $l = count($_SESSION[$origin]['diff_list'][$role_id]['entities']);
-                $i<$l;
-                $i++
-            ) {
-                $entity = $_SESSION[$origin]['diff_list'][$role_id]['entities'][$i];
-                if ($color == ' class="col"') $color = '';
-                else $color = ' class="col"'; ?>
-                <tr <?php echo $color; ?> >
-                    <td>
-                        <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY . " " . $role_label;?>" title="<?php echo _ENTITY . " " . $role_label; ?>" />
-                    </td>
-                    <td><?php
-                    if($entity['visible'] == 'Y') { ?>
-                        <a href="<?php echo $linkwithwhat;?>&action=make_entity_unvisible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
-                            <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" />
-                        </a><?php
-                    } else {?>
-                        <a href="<?php echo $linkwithwhat;?>&action=make_entity_visible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
-                            <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_delete.gif&module=entities" alt="<?php echo _NOT_VISIBLE; ?>" title="<?php echo _NOT_VISIBLE;?>" />
-                        </a><?php
-                    } ?>
-                    </td>
-                    <td ><?php echo $entity['entity_id']; ?></td>
-                    <td ><?php echo $entity['entity_label']; ?></td>
-                    <td class="action_entities"><?php 
-                    if (!$noDelete) { ?>
-                        <a href="<?php echo $linkwithwhat; ?>&action=remove_entity&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $entity['entity_id'];?>" class="delete">
-                            <?php echo _DELETE; ?>
-                        </a><?php
-                    } ?>
-                    </td>
-                    <td class="action_entities">&nbsp;</td>
-                    <td class="action_entities"><!-- Move up in list --><?php
-                    if($i > 0) { ?>
-                        <a href="<?php echo $linkwithwhat;?>&action=move_entity_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php
-                    } ?>
-                    </td>
-                    <td class="action_entities"><!-- Move down in list --><?php 
-                    if($i < $l-1) { ?>
-                        <a href="<?php echo $linkwithwhat;?>&action=move_entity_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php
-                    } ?>
-                    </td>
-                </tr> <?php
-            } ?>
-            </table>
-            <br/> <?php
-        }
-    }
-    #******************************************************************************
-    # ACTIONS BUTTONS
-    #******************************************************************************?>
-    <form name="pop_diff" method="post" >
-        <div align="center">
-            <input align="middle" type="button" value="<?php echo _VALIDATE; ?>" class="button" name="valid" onclick="change_diff_list('<?php echo $origin; ?>', <?php echo "'" . $displayValue . "'";
-                if ($_REQUEST['origin'] == 'redirect') echo ",'diff_list_div_redirect'";
-            ?>);" />
-            <input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>
-        </div>
-    </form>
-    <br/>
-    <br/><?php
-    #******************************************************************************
-    # LIST OF AVAILABLE ENTITIES / USERS
-    #******************************************************************************  ?>
-    <hr align="center" color="#6633CC" size="5" width="60%">
-    <div align="center">
-        <form action="#" name="search_diff_list" method="" id="search_diff_list" >
-            <input type="hidden" name="display" value="true" />
-            <input type="hidden" name="module" value="entities" />
-            <input type="hidden" name="page" value="manage_listinstance" />
-            <input type="hidden" name="origin" id="origin" value="<?php echo $origin; ?>" />
-            <table cellpadding="2" cellspacing="2" border="0">
-                <tr>
-                    <th>
-                        <label for="what_users" class="bold"><?php echo _USER;?></label>
-                    </th>
-                    <th>
-                        <input name="what_users" id="what_users" type="text" <?php if (isset($_GET["what_users"])) echo "value ='".$_GET["what_users"]."'"; ?> />
-                    </th>
-                 </tr>
-                 <tr>
-                    <th>
-                        <label for="what_services" class="bold"><?php echo _DEPARTMENT; ?></label>
-                    </th>
-                    <th>
-                        <input name="what_services" id="what_services" type="text" <?php if (isset($_GET["what_services"])) echo "value ='".$_GET["what_services"]."'"; ?>/>
-                    </th>
-                </tr>
-            </table>
-        </form>
-    </div>
-    <script type="text/javascript">
-        repost('<?php echo $link;?>',new Array('diff_list_items'),new Array('what_users','what_services'),'keyup',250);
-    </script>
-    <br/>
-    <div id="diff_list_items"> <?php
-    #******************************************************************************
-    # LIST OF AVAILABLE USERS
-    #******************************************************************************?> 
-        <div align="center">
-            <h2 class="tit"><?php echo _USERS_LIST;?></h2>
-            <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
-                <thead>
-                    <tr>
-                        <th ><?php echo _LASTNAME . " " . _FIRSTNAME;?></th>
-                        <th><?php echo _DEPARTMENT;?></th>
-                        <th>&nbsp;</th>
-                    </tr>
-                </thead><?php
-                $color = ' class="col"';
-                for ($j=0, $m=count($users);
-                    $j<$m ;
-                    $j++
-                ) {
-                    $user_id = $users[$j]['ID'];
-                    $possible_roles = array();
-                    foreach($roles as $role_id => $role_label) {
-                        if(isset($user_roles[$user_id]) 
-								&& (in_array($role_id, $user_roles[$user_id]) 
-									|| in_array('dest', $user_roles[$user_id]) 
-									|| in_array('copy', $user_roles[$user_id])
-									)
-							)
-						{
-                            continue;
-						}
-                        if($role_id == 'copy' || $role_id == 'dest'
-                                || $usergroups_controler->inGroup($users[$j]['ID'], $role_id))
-                            $possible_roles[$role_id] = $role_label;
-                    } 
-                    
-                    if ($color == ' class="col"') $color = '';
-                    else $color = ' class="col"'; ?>
-                    <tr <?php echo $color; ?> id="user_<?php echo $j; ?>">
-                        <td><?php echo $users[$j]['NOM'] . " " .$users[$j]['PRENOM']; ?></td>
-                        <td><?php echo $users[$j]['DEP'];?></td>
-                        <td class="action_entities"><?php
-                        if(count($possible_roles) > 0) { ?>
-                            <input type="hidden" id="user_id_<?php echo $j; ?>" value="<?php echo $users[$j]['ID'];?>" />
-                            <select name="role" id="user_role_<?php echo $j; ?>"><?php
-                            foreach($possible_roles as $role_id => $role_label) {
-                                if($role_id != 'dest' || ($role_id == 'dest' && !$onlyCc)) { ?>
-                                <option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
-                                } 
-                            }?>
-                            </select>&nbsp;
-                            <span onclick="add_user(<?php echo $j; ?>);" class="change"/> 
-                                <?php echo _ADD;?>
-                            </span> <?php 
-                        } else echo _NO_AVAILABLE_ROLE; ?>
-                        </td>
-                    </tr> <?php
-                } ?>
-            </table>
-            <br/>
-        </div><?php
-        #******************************************************************************
-        # LIST OF AVAILABLE ENTITIES
-        #******************************************************************************
-        if($allow_entities) { ?>
-        <div align="center"> 
-            <h2 class="tit"><?php echo _ENTITIES_LIST;?></h2>
-            <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
-                <thead>
-                    <tr>
-                        <th><?php echo _ID;?></th>
-                        <th><?php echo _DEPARTMENT;?></th>
-                        <th>&nbsp;</th>
-                    </tr>
-                </thead><?php
-                $color = ' class="col"';
-                for ($j=0, $m=count($entities); $j<$m ; $j++) {
-                    $entity_id = $entities[$j]['ID'];
-                    # Check if at least one role can be added
-                    $possible_roles = array();
-                    foreach($roles as $role_id => $role_label) {
-                        if(isset($entity_roles[$entity_id]) && in_array($role_id, $entity_roles[$entity_id]))
-                            continue;
-                        if($role_id == 'dest')
-                            continue;
-                        $possible_roles[$role_id] = $role_label;
-                    } 
-                    
-                    if ($color == ' class="col"') $color = '';
-                    else $color = ' class="col"';?>
-                    <tr <?php echo $color; ?>>
-                        <td><?php echo $entities[$j]['ID'];?></td>
-                        <td><?php echo $entities[$j]['DEP']; ?></td>
-                        <td class="action_entities"><?php
-                        if(count($possible_roles) > 0) { ?>
-                            <input type="hidden" id="entity_id_<?php echo $j; ?>" value="<?php echo $entities[$j]['ID'];?>" />
-                            <select name="role" id="entity_role_<?php echo $j; ?>"><?php 
-                            foreach($possible_roles as $role_id => $role_label) { ?>
-                                <option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
-                            } ?>
-                            </select>&nbsp;
-                            <span onclick="add_entity(<?php echo $j; ?>);" class="change"/> 
-                                <?php echo _ADD;?>
-                            </span> <?php 
-                        } else echo _NO_AVAILABLE_ROLE; ?>  
-                        </td>
-                    </tr> <?php
-                }?>
-            </table>
-        </div><?php
-        } ?>
-    </div> <?php
-} else { ?>
-    <div id="diff_list" align="center">
-        <input align="middle" type="button" value="<?php echo _CANCEL; ?>" class="button"  onclick="self.close();"/>
-    </div> <?php
-} ?>
+						</td>
+					</tr> <?php
+				} ?>
+				</table>
+				<br/> <?php
+			}
+		}
+		#******************************************************************************
+		# ACTIONS BUTTONS
+		#******************************************************************************?>
+		<form name="pop_diff" method="post" >
+			<div align="center">
+				<input align="middle" type="button" value="<?php echo _VALIDATE; ?>" class="button" name="valid" onclick="change_diff_list('<?php echo $origin; ?>', <?php echo "'" . $displayValue . "'";
+					if ($_REQUEST['origin'] == 'redirect') echo ",'diff_list_div_redirect'";
+				?>);" />
+				<input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>
+			</div>
+		</form>
+		<br/>
+		<br/><?php
+		#******************************************************************************
+		# LIST OF AVAILABLE ENTITIES / USERS
+		#******************************************************************************  ?>
+		<hr align="center" color="#6633CC" size="5" width="60%">
+		<div align="center">
+			<form action="#" name="search_diff_list" method="" id="search_diff_list" >
+				<input type="hidden" name="display" value="true" />
+				<input type="hidden" name="module" value="entities" />
+				<input type="hidden" name="page" value="manage_listinstance" />
+				<input type="hidden" name="origin" id="origin" value="<?php echo $origin; ?>" />
+				<table cellpadding="2" cellspacing="2" border="0">
+					<tr>
+						<th>
+							<label for="what_users" class="bold"><?php echo _USER;?></label>
+						</th>
+						<th>
+							<input name="what_users" id="what_users" type="text" <?php if (isset($_GET["what_users"])) echo "value ='".$_GET["what_users"]."'"; ?> />
+						</th>
+					 </tr>
+					 <tr>
+						<th>
+							<label for="what_services" class="bold"><?php echo _DEPARTMENT; ?></label>
+						</th>
+						<th>
+							<input name="what_services" id="what_services" type="text" <?php if (isset($_GET["what_services"])) echo "value ='".$_GET["what_services"]."'"; ?>/>
+						</th>
+					</tr>
+				</table>
+			</form>
+		</div>
+		<script type="text/javascript">
+			repost('<?php echo $link;?>',new Array('diff_list_items'),new Array('what_users','what_services'),'keyup',250);
+		</script>
+		<br/>
+		<div id="diff_list_items"> <?php
+		#******************************************************************************
+		# LIST OF AVAILABLE USERS
+		#******************************************************************************?> 
+			<div align="center">
+				<h2 class="tit"><?php echo _USERS_LIST;?></h2>
+				<table cellpadding="0" cellspacing="0" border="0" class="listing spec">
+					<thead>
+						<tr>
+							<th ><?php echo _LASTNAME . " " . _FIRSTNAME;?></th>
+							<th><?php echo _DEPARTMENT;?></th>
+							<th>&nbsp;</th>
+						</tr>
+					</thead><?php
+					$color = ' class="col"';
+					for ($j=0, $m=count($users);
+						$j<$m ;
+						$j++
+					) {
+						$user_id = $users[$j]['ID'];
+						$possible_roles = array();
+						foreach($roles as $role_id => $role_label) {
+							if(isset($user_roles[$user_id]) 
+									&& (in_array($role_id, $user_roles[$user_id]) 
+										|| in_array('dest', $user_roles[$user_id]) 
+										|| in_array('copy', $user_roles[$user_id])
+										)
+								)
+							{
+								continue;
+							}
+							if($role_id == 'copy' || $role_id == 'dest'
+									|| $usergroups_controler->inGroup($users[$j]['ID'], $role_id))
+								$possible_roles[$role_id] = $role_label;
+						} 
+						
+						if ($color == ' class="col"') $color = '';
+						else $color = ' class="col"'; ?>
+						<tr <?php echo $color; ?> id="user_<?php echo $j; ?>">
+							<td><?php echo $users[$j]['NOM'] . " " .$users[$j]['PRENOM']; ?></td>
+							<td><?php echo $users[$j]['DEP'];?></td>
+							<td class="action_entities"><?php
+							if(count($possible_roles) > 0) { ?>
+								<input type="hidden" id="user_id_<?php echo $j; ?>" value="<?php echo $users[$j]['ID'];?>" />
+								<select name="role" id="user_role_<?php echo $j; ?>"><?php
+								foreach($possible_roles as $role_id => $role_label) {
+									if($role_id != 'dest' || ($role_id == 'dest' && !$onlyCc)) { ?>
+									<option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
+									} 
+								}?>
+								</select>&nbsp;
+								<span onclick="add_user(<?php echo $j; ?>);" class="change"/> 
+									<?php echo _ADD;?>
+								</span> <?php 
+							} else echo _NO_AVAILABLE_ROLE; ?>
+							</td>
+						</tr> <?php
+					} ?>
+				</table>
+				<br/>
+			</div><?php
+			#******************************************************************************
+			# LIST OF AVAILABLE ENTITIES
+			#******************************************************************************
+			if($allow_entities) { ?>
+			<div align="center"> 
+				<h2 class="tit"><?php echo _ENTITIES_LIST;?></h2>
+				<table cellpadding="0" cellspacing="0" border="0" class="listing spec">
+					<thead>
+						<tr>
+							<th><?php echo _ID;?></th>
+							<th><?php echo _DEPARTMENT;?></th>
+							<th>&nbsp;</th>
+						</tr>
+					</thead><?php
+					$color = ' class="col"';
+					for ($j=0, $m=count($entities); $j<$m ; $j++) {
+						$entity_id = $entities[$j]['ID'];
+						# Check if at least one role can be added
+						$possible_roles = array();
+						foreach($roles as $role_id => $role_label) {
+							if(isset($entity_roles[$entity_id]) && in_array($role_id, $entity_roles[$entity_id]))
+								continue;
+							if($role_id == 'dest')
+								continue;
+							$possible_roles[$role_id] = $role_label;
+						} 
+						
+						if ($color == ' class="col"') $color = '';
+						else $color = ' class="col"';?>
+						<tr <?php echo $color; ?>>
+							<td><?php echo $entities[$j]['ID'];?></td>
+							<td><?php echo $entities[$j]['DEP']; ?></td>
+							<td class="action_entities"><?php
+							if(count($possible_roles) > 0) { ?>
+								<input type="hidden" id="entity_id_<?php echo $j; ?>" value="<?php echo $entities[$j]['ID'];?>" />
+								<select name="role" id="entity_role_<?php echo $j; ?>"><?php 
+								foreach($possible_roles as $role_id => $role_label) { ?>
+									<option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
+								} ?>
+								</select>&nbsp;
+								<span onclick="add_entity(<?php echo $j; ?>);" class="change"/> 
+									<?php echo _ADD;?>
+								</span> <?php 
+							} else echo _NO_AVAILABLE_ROLE; ?>  
+							</td>
+						</tr> <?php
+					}?>
+				</table>
+			</div><?php
+			} ?>
+		</div> <?php
+	/*} else { ?>
+		<div id="diff_list" align="center">
+			<input align="middle" type="button" value="<?php echo _CANCEL; ?>" class="button"  onclick="self.close();"/>
+		</div> <?php
+	} */?>
 </body>
 </html>
