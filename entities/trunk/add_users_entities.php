@@ -2,7 +2,7 @@
 /**
 * File : add_users_entities.php
 *
-* Form to add a entity to a user, pop up page
+* Form to add an entity to a user, pop up page
 *
 * @package  Maarch Framework 3.0
 * @version 1
@@ -16,7 +16,7 @@ try{
     echo $e->getMessage();
 }
 core_tools::load_lang();
-core_tools::test_admin('manage_entities', 'entities');
+//core_tools::test_admin('manage_entities', 'entities');
 
 require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 $ent = new entity();
