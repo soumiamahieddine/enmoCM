@@ -140,7 +140,7 @@ class contacts extends dbquery
         } else {
             $_SESSION['m_admin']['contact']['OTHER_DATA'] = '';
         }
-        $_SESSION['m_admin']['contact']['IS_PRIVATE'] =
+         $_SESSION['m_admin']['contact']['IS_PRIVATE'] =
             $_REQUEST['is_private'];
 
         if (isset($_REQUEST['owner']) && $_REQUEST['owner'] <> '') {
@@ -582,8 +582,9 @@ class contacts extends dbquery
                     <tr>
                         <td><label for="is_private"><?php echo _IS_PRIVATE; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input type="radio"  class="check" name="is_private"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_PRIVATE'] == 'Y'){?> checked="checked"<?php } ?> /><?php echo _YES;?>
-                            <input type="radio"  class="check" name="is_private" value="N" <?php if($_SESSION['m_admin']['contact']['IS_PRIVATE'] == 'N'){?> checked="checked"<?php } ?> /><?php echo _NO;?>
+                        <td class="indexing_field">
+							<input type="radio"  class="check" name="is_private" value="Y" <?php if($_SESSION['m_admin']['contact']['IS_PRIVATE'] == 'Y'){?> checked="checked"<?php } ?> /><?php echo _YES;?>
+                            <input type="radio"  class="check" name="is_private" value="N" <?php if($_SESSION['m_admin']['contact']['IS_PRIVATE'] == 'N' OR $_SESSION['m_admin']['contact']['IS_PRIVATE'] <> 'Y'){?> checked="checked"<?php } ?> /><?php echo _NO;?>
                         </td>
                         <td>&nbsp;</td>
                     </tr>

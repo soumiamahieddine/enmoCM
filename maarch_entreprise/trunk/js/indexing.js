@@ -954,6 +954,10 @@ function create_contact(path_create, id_action)
         if ($('is_corporate_N').checked == true) {
             corporate = 'N' ;
         }
+        var private = 'Y' ;
+        if ($('is_private_N').checked == true) {
+            private = 'N' ;
+        }
         var title_val = $('title').value;
         var society_val = $('society').value;
         var phone_val = $('phone').value;
@@ -975,6 +979,7 @@ function create_contact(path_create, id_action)
             asynchronous:false,
             parameters: {
                 is_corporate : corporate,
+                is_private : private,
                 title : title_val,
                 society : society_val,
                 phone : phone_val,
