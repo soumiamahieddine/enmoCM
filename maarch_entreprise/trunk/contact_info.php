@@ -218,7 +218,7 @@ if (!empty($_REQUEST['submit'])) {
             	"select contact_id, lastname, firstname, society from "
             	. $_SESSION['tablename']['contacts'] . " where lastname = '"
             	. $func->protect_string_db($contact['LASTNAME'])
-            	. "' and enabled = 'Y' order by contact_id desc"
+            	. "' and firstname = '" . $func->protect_string_db($contact['FIRSTNAME']) . "' and enabled = 'Y' order by contact_id desc"
             );
             $res = $db->fetch_object();
             if (empty($res->society)) {
