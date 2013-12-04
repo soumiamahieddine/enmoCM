@@ -35,6 +35,12 @@ require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
     . 'class_indexing_searching_app.php';
 $is = new indexing_searching_app();
+
+$extension = explode(".",$_SESSION['upfile']['name']);
+$count_level = count($extension)-1;
+$the_ext = $extension[$count_level];
+$_SESSION['upfile']['format'] = $the_ext;
+
 $extList = $is->filetypes_showed_indexation();
 if (isset($_SESSION['upfile']['format'])) {
     $showFile = $is->show_index_frame($_SESSION['upfile']['format']);
