@@ -154,7 +154,7 @@ function display_list(){
     $what = '';
     if(isset($_REQUEST['what'])){
         $what = $func->protect_string_db($_REQUEST['what']);
-		$where .= " and (lower(lastname) like lower('".$what."%') or lower(user_id) like lower('".$what."%') )";
+		$where .= " and (lower(lastname) like lower('".$what."%') or lower(users.user_id) like lower('".$what."%') )";
     }
 
     // Checking order and order_field values
@@ -169,7 +169,41 @@ function display_list(){
 
     $orderstr = $list->define_order($order, $field);
     $request = new request();
-    $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+	
+	if($entities_loaded == true ){
+		$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+    } else {
+	
+		require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
+		$ent = new entity();
+		$my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);
+		
+		if($_SESSION['user']['UserId'] != 'superadmin'){
+			$where = " ((status = 'OK' or status = 'ABS') and users.user_id != 'superadmin') and users_entities.entity_id in (".join(',', $my_tab_entities_id).")";
+		}else{
+			$where = " ((status = 'OK' or status = 'ABS') and users.user_id != 'superadmin')";
+		}
+		
+		$what = '';
+		if(isset($_REQUEST['what'])){
+			$what = $func->protect_string_db($_REQUEST['what']);
+			$where .= " and (lower(lastname) like lower('".$what."%') or lower(users.user_id) like lower('".$what."%') )";
+		}
+
+		// Checking order and order_field values
+		$order = 'asc';
+		if(isset($_REQUEST['order']) && !empty($_REQUEST['order'])){
+			$order = trim($_REQUEST['order']);
+		}
+
+		$field = 'lastname';
+		if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
+			$field = trim($_REQUEST['order_field']);
+
+		$orderstr = $list->define_order($order, $field);
+		$tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype'], 'default', 'users_entities', 'users','users_entities', 'user_id', true, false, true);
+	
+	}
     for ($i=0;$i<count($tab);$i++) {
         foreach($tab[$i] as &$item) {
             switch ($item['column']){
