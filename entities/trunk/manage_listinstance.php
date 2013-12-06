@@ -71,6 +71,12 @@ if($difflistType->allow_entities == 'Y')
 else 
     $allow_entities = false;
 
+if($difflistType == ''){
+	$roles = array();
+	$roles['dest'] = 'Destinataire';
+	$roles['copy'] = 'En copie';
+	$allow_entities = true;
+}
 // Dest user    
 if(isset($_SESSION[$origin]['diff_list']['dest']['users'][0]) 
     && !empty($_SESSION[$origin]['diff_list']['dest']['users'][0]))
@@ -607,7 +613,9 @@ $linkwithwhat =
 		<div id="diff_list" align="center">
 		<h2 class="tit"><?php 
 			echo _DIFFUSION_LIST;
-			echo " (" . $difflistType->difflist_type_label . ")";
+			if($difflistType->difflist_type_label != ''){
+				echo " (" . $difflistType->difflist_type_label . ")";
+			}
 		?></h2><?php 
 		#**************************************************************************
 		# DEST USER
