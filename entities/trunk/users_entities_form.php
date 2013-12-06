@@ -44,12 +44,12 @@ header("Content-Type: text/html", true);
          ?> <br/><input class="button" type="button" name="removeEntities" id="removeEntities" value="<?php  echo _DELETE_ENTITY; ?>" onclick="doActionEntity('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=entities&amp;page=remove_user_entities', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=entities&amp;page=users_entities_form');" /><br/><br/>
 <?php   }
 
-    if (!isset($_SESSION['m_admin']['entity']['entities'])|| (count($_SESSION['m_admin']['entity']['entities']) < $_SESSION['m_admin']['nbentities']  || empty($_SESSION['m_admin']['entity']['entities'])))
-    {
+    //if (!isset($_SESSION['m_admin']['entity']['entities'])|| (count($_SESSION['m_admin']['entity']['entities']) < $_SESSION['m_admin']['nbentities']  || empty($_SESSION['m_admin']['entity']['entities'])))
+    //{
     ?>
         <input class="button" type="button" name="addEntity" onclick="displayModal('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=entities&amp;page=add_users_entities', 'add_user_entities', 600, 150);" value="<?php  echo _ADD_TO_ENTITY; ?>" />
     <?php
-    }
+    //}
     ?>
     <br/><br/>
     <?php  if (isset($_SESSION['m_admin']['entity']['entities']) && count($_SESSION['m_admin']['entity']['entities']) > 0)

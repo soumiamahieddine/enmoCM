@@ -52,6 +52,32 @@ function in_session_array($entity_id)
     return false;
 }
 {
+}
+
+$tab2 = array();
+if ( count($_SESSION['m_admin']['entity']['entities']) > 0 )
+{
+    for($i=0; $i < count($_SESSION['m_admin']['entity']['entities']); $i++)
+    {
+        array_push($tab2, array('ID'=> $_SESSION['m_admin']['entity']['entities'][$i]['ENTITY_ID'], 'LABEL' => $_SESSION['m_admin']['entity']['entities'][$i]['LABEL']));
+    }
+}
+
+$res = $entities;
+for($j=0; $j < count($entities); $j++)
+{
+    for($k=0; $k < count($tab2); $k++)
+    {
+        if($entities[$j]->__get('entity_id') ==  $tab2[$k]['ID'])
+        {
+            unset($res[$j]);
+            break;
+        }
+    }
+}
+$res = array_values($res);
+unset($tab2);
+unset($entities);
 
 }
 ?>
@@ -63,7 +89,7 @@ function in_session_array($entity_id)
     <select name="entity_id" id="entity_id" size="10">
     <?php
    
-        for($i=0; $i<count($entities);$i++)
+        /*for($i=0; $i<count($entities);$i++)
         {
             $short_label = $entities[$i]->__get('short_label');
             $entity_id = $entities[$i]->__get('entity_id');
@@ -77,7 +103,19 @@ function in_session_array($entity_id)
             ?>
                 <option value="<?php  echo $entity_id;?>" ><?php  if(isset($short_label) && !empty($short_label)){ echo $short_label;}else{echo $entities[$i]->__get('entity_label');}?></option><?php
 
-        }
+        }*/
+				
+		for($j=0; $j<count($res); $j++)
+		{
+			$desc = $res[$j]->__get('short_label');
+			if(isset($res[$j]) && !empty($desc))
+			{
+		?>
+			<option value="<?php  echo $res[$j]->__get('entity_id') ?>"><?php   echo $res[$j]->__get('short_label'); ?></option>
+		<?php
+			}
+		}
+		
     ?>
     </select>
 </p>
