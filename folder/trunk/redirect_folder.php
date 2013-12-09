@@ -235,7 +235,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             require_once 'modules' . DIRECTORY_SEPARATOR . 'entities' . DIRECTORY_SEPARATOR
                 . 'class' . DIRECTORY_SEPARATOR . 'class_manage_listdiff.php';
             $diffList = new diffusion_list();
-            $_SESSION['redirect']['diff_list'] = $diffList->get_listmodel_from_entity(
+            $_SESSION['redirect']['diff_list'] = $diffList->get_listmodel(
+                    'entity_id',
                     $values_form[$j]['VALUE']
                 );
             //
