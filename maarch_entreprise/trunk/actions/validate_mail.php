@@ -1729,7 +1729,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             $db->query("update " . $table_ext ." set alt_identifier = '" 
                 . $db->protect_string_db($myChrono) . "' where res_id = " . $res_id);
         }
-    } elseif ($cat_id == 'incoming') {
+    } elseif ($cat_id == 'incoming' || $cat_id == 'internal' ) {
         $queryChrono = "select alt_identifier from " . $table_ext 
             . " where res_id = " . $res_id;
         $resultChrono = $db->fetch_array();
