@@ -285,7 +285,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '<div id="general_infos_div"  style="display:inline">';
     $frmStr .= '<div class="ref-unit">';
     
-    if ($core->test_service('index_attachment', 'attachments', false)) {
+    if ($core->test_service('add_links', 'apps', false)) {
         $frmStr .= '<table width="100%" align="center" border="0" >';
         $frmStr .= '<tr id="attachment_tr" style="display:' . $displayValue
                 . ';">';

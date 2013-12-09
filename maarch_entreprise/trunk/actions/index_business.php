@@ -842,7 +842,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<div id="complementary_fields"  style="display:none">';
     $frmStr .= '<div>';
     
-    if ($core->test_service('index_attachment', 'attachments', false)) {
+    if ($core->test_service('add_links', 'apps', false)) {
         $frmStr .= '<table width="100%" align="center" border="0" >';
         $frmStr .= '<tr id="attachment_tr" style="display:' . $displayValue
                 . ';">';
