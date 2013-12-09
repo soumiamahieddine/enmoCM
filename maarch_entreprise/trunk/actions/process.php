@@ -223,6 +223,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $frm_str .= $data[$key]['addon'];
                         }
                     }
+					
+					if($key == 'type_id'){
+						$_SESSION['category_id_session'] = $data[$key]['value'];
+					}
+					
                     $frm_str .= '</td>';
                 $frm_str .= '</tr>';
             }
