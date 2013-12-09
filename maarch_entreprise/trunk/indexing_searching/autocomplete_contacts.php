@@ -123,6 +123,9 @@ if ($table == 'users') {
     for ($i=0; $i<$l; $i++) {
         $res = $req->fetch_object();
         $score = round($res->score / $num_args);
+        if ($score > 100) {
+            $score = 100;
+        }
         if ($i%2==1) $color = 'LightYellow';
         else $color = 'white';
         echo "<li style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'>". $res->result ."</li>";
