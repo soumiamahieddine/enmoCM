@@ -430,7 +430,7 @@ $core->load_js();
             <input name="contact_type" type="text"  id="contact_type" value="<?php echo $func->show_str($contact['CONTACT_TYPE']); ?>" <?php if($readonly){ echo 'readonly="readonly"';}?>/>
         </p>
         <p class="buttons">
-        <?php if(!$readonly)
+        <?php if(!$readonly && $core->test_service('update_contacts','apps', false))
         { ?>
         <input name="submit" type="submit" value="<?php echo _VALIDATE;?>"  class="button" />
         <?php } ?>
