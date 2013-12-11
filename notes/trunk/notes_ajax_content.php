@@ -225,18 +225,37 @@ switch ($mode) {
                 //History
                 if ($_SESSION['history']['noteadd']) {
                     $hist = new history();
-                    if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "folder") {
-                        $hist->add(
-                            $table, $identifier, "UP", 'folderup', _ADDITION_NOTE . _ON_FOLDER_NUM
-                            . $identifier . ' (' . $id . ') : "' . $request->cut_string($notes, 254) .'"',
-                            $_SESSION['config']['databasetype'], 'notes'
-                        );
+
+                if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "folder") {
+                        if (!empty($id) && isset($_REQUEST['entities_chosen']) && !empty($_REQUEST['entities_chosen'])){
+
+                            $hist->add(
+                                    $table, $identifier, "UP", 'folderup', _ADDITION_NOTE_PRIVATE . _ON_FOLDER_NUM
+                                    . $identifier . ' (' . $id . ')',
+                                    $_SESSION['config']['databasetype'], 'notes'
+                                );
+                        }else{
+                            $hist->add(
+                                $table, $identifier, "UP", 'folderup', _ADDITION_NOTE . _ON_FOLDER_NUM
+                                . $identifier . ' (' . $id . ') : "' . $request->cut_string($notes, 254) .'"',
+                                $_SESSION['config']['databasetype'], 'notes'
+                            );
+                        }
                     } else if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == "document") {
-                        $hist->add(
-                            $view, $identifier, "UP", 'resup',  _ADDITION_NOTE . _ON_DOC_NUM
-                            . $identifier . ' (' . $id . ') : "' . $request->cut_string($notes, 254) .'"',
-                            $_SESSION['config']['databasetype'], 'notes'
-                        );
+                        if (!empty($id) && isset($_REQUEST['entities_chosen']) && !empty($_REQUEST['entities_chosen'])){
+
+                            $hist->add(
+                                    $table, $identifier, "UP", 'folderup', _ADDITION_NOTE_PRIVATE . _ON_DOC_NUM
+                                    . $identifier . ' (' . $id . ')',
+                                    $_SESSION['config']['databasetype'], 'notes'
+                                );
+                        }else{
+                            $hist->add(
+                                $view, $identifier, "UP", 'resup',  _ADDITION_NOTE . _ON_DOC_NUM
+                                . $identifier . ' (' . $id . ') : "' . $request->cut_string($notes, 254) .'"',
+                                $_SESSION['config']['databasetype'], 'notes'
+                            );
+                        }
                     }
 
                     $hist->add(
