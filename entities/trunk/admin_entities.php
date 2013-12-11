@@ -65,14 +65,18 @@ unset($_SESSION['m_admin']);
                 <strong><?php  echo _ENTITY_TREE;?></strong>
          </div>
     </div>
+    <?php if($admin->test_admin('admin_difflist_types', 'entities', false)){ ?>
     <div class="admin_item" id="admin_difflist_types" title="<?php  echo _DIFFLIST_TYPES_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin_difflist_types&amp;module=entities';">
         <div class="sum_margin">
                 <strong><?php  echo _DIFFLIST_TYPES;?></strong>
          </div>
     </div>
+    <?php } ?>
+    <?php if($admin->test_admin('admin_listmodels', 'entities', false)){ ?>
     <div class="admin_item" id="admin_listmodels" title="<?php  echo _LISTMODELS_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin_listmodels&amp;module=entities';">
         <div class="sum_margin">
                 <strong><?php  echo _LISTMODELS;?></strong>
          </div>
     </div>
+    <?php } ?>
 </div>
