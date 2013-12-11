@@ -25,6 +25,8 @@ if (!defined('_READ'))
     define('_READ', 'Lire');
 if (!defined('_ADDITION_NOTE'))
     define('_ADDITION_NOTE', 'Ajout d&rsquo;une note');
+if (!defined('_ADDITION_NOTE_PRIVATE'))
+    define('_ADDITION_NOTE_PRIVATE', 'Ajout d&rsquo;une note priv&eacute;e');
 if (!defined('_NOTES_ADDED'))
     define('_NOTES_ADDED', 'Note ajout&eacute;e');
 if (!defined('_NOTES_DELETED'))
