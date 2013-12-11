@@ -1251,11 +1251,11 @@ function process_category_check($cat_id, $values)
     require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_types.php');
     $type = new types();
     $type_id =  get_value_fields($values, 'type_id');
-    if($type_id == 1)
+    /*if($type_id == 1)
     {
         $_SESSION['action_error'] = _TYPE." "._WRONG_FORMAT."";
         return false;
-    }
+    }*/
     $coll_id =  get_value_fields($values, 'coll_id');
     $indexes = $type->get_indexes( $type_id,$coll_id, 'minimal');
     $val_indexes = array();
