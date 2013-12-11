@@ -88,9 +88,9 @@ $selectDuplicatesBySociety = "SELECT contact_id, user_id, society, lower(society
     . "is_corporate_person, lastname, firstname, "
     . "address_num, address_street, address_town "
     . "from contacts "
-    . "WHERE (contact_type = 'letter' or contact_type is null or contact_type = '') and  lower(society) in ("
-    . "SELECT lower(society) FROM contacts GROUP BY lower(society), contact_type "
-    . "     HAVING Count(*) > 1 and lower(society) <> '' and  (contact_type = 'letter' or contact_type is null or contact_type = '')) "
+    . "WHERE (contact_type = 'letter' or contact_type is null or contact_type = '') and (user_id IS NULL or user_id='') and  lower(society) in ("
+    . "SELECT lower(society) FROM contacts GROUP BY lower(society), contact_type, user_id "
+    . "     HAVING Count(*) > 1 and lower(society) <> '' and  (user_id IS NULL or user_id='') and  (contact_type = 'letter' or contact_type is null or contact_type = '')) "
     . "order by lower(society)";
 $htmlTabSoc = '<table>';
 $htmlTabSoc .= '<CAPTION>' . _DUPLICATES_BY_SOCIETY . '</CAPTION>';
