@@ -113,7 +113,7 @@ function getSourceResourcePath(
             )
         );
     }
-    if ($GLOBALS['docserverSourcePath'] == '') {
+    //if ($GLOBALS['docserverSourcePath'] == '') {
         $query = "select path_template, docserver_type_id from " 
                . _DOCSERVERS_TABLE_NAME . " where docserver_id = '" 
                . $resDocserverId . "'";
@@ -143,7 +143,7 @@ function getSourceResourcePath(
             'Docserver source fingerprint:' 
             . $GLOBALS['docserverSourceFingerprint'], 'DEBUG'
         );
-    }
+    //}
     $sourceFilePath = $GLOBALS['docserverSourcePath'] . $sourceFilePath;
     $sourceFilePath = str_replace('#', DIRECTORY_SEPARATOR, $sourceFilePath);
     if ($returnArray) {
