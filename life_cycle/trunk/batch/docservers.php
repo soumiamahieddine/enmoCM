@@ -54,7 +54,7 @@ function doCompression($targeFile, $arrayOfFileToCompress, $dirToCompress='')
         }
     }
     if (DIRECTORY_SEPARATOR == "/") {
-        $command = "7z a -y -t" 
+        $command = "7z a -y -mx -t"
                  . strtolower(
                      $GLOBALS['docservers'][$GLOBALS['currentStep']]
                      ['compression_mode']
