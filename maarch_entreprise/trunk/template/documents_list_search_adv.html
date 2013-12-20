@@ -81,6 +81,9 @@ Mods
                                                 ##defineLang|_ENTITY##
                                                 ##sortColumn|entity_label##
                                                 &nbsp;
+												##defineLang|_FOLDER##
+                                                ##sortColumn|folder_name##
+                                                &nbsp;
                                                 ##defineLang|_CATEGORY##
                                                 ##sortColumn|category_id##
                                                 ##ifStatement|#isModuleLoaded|cases#===true|&nbsp;#defineLang|_CASE# #sortColumn|case_label#| ##
@@ -112,7 +115,9 @@ Mods
                                             <tr>
                                                 <td style="text-align:right; vertical-align:top;">##defineLang|_ENTITY## :</td><td  style="text-align:right">##loadValue|entity_label##</td>
                                             </tr>
-                                            ##ifStatement|#isModuleLoaded|cases#===true|<tr><td style="text-align:right"><b>#defineLang|_CASE# :</b></td><td style="text-align:right"><b>#loadValue|case_label#</b></td></tr>| ##
+											 ##ifStatement|#loadValue|folder_name#!=null|<tr><td style="text-align:right"><b>#defineLang|_FOLDER# :</b></td><td style="text-align:right">#loadValue|folder_name#</td></tr>|##
+                                            <!--##ifStatement|#isModuleLoaded|cases#===true|<tr><td style="text-align:right"><b>#defineLang|_CASE# :</b></td><td style="text-align:right"><b>#loadValue|case_label#</b></td></tr>| ##-->
+											##ifStatement|#loadValue|case_label#!=null|<tr><td style="text-align:right"><b>#defineLang|_CASE# :</b></td><td style="text-align:right">#loadValue|case_label#</td></tr>|##
                                         </table>
                                     </td>
                                 </tr>
