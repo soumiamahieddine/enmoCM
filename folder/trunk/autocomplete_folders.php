@@ -40,18 +40,41 @@ $select = array();
 	$db = new dbquery();
 	$db->connect();
 	
-	$db->query("select doctypes_first_level_id from doctypes where type_id = ".$category_id);
-	$res = $db->fetch_object();
+	if($category_id != null and $category_id != ''){
 	
-	$db->query("select foldertype_id from foldertypes_doctypes_level1 where doctypes_first_level_id = ".$res->doctypes_first_level_id);
-	$res = $db->fetch_object();
+		$db->query("select doctypes_first_level_id from doctypes where type_id = ".$category_id);
+
+		$res = $db->fetch_object();
+		
+		$db->query("select foldertype_id from foldertypes_doctypes_level1 where doctypes_first_level_id = ".$res->doctypes_first_level_id);
+		$res = $db->fetch_object();
 	
-    $where .= " (foldertype_id = ".$res->foldertype_id.") and (lower(folder_name) like lower('%"
+		$where .= " (foldertype_id = ".$res->foldertype_id.") and (lower(folder_name) like lower('%"
+			.$req->protect_string_db($_REQUEST['Input'])."%') or lower(folder_id) like lower('%"
+			.$req->protect_string_db($_REQUEST['Input'])."%') ) and (status <> 'DEL' or status <> 'FOLDDEL')";
+		//Order
+		$order = 'order by folders_system_id, folder_name';
+	}else{
+	
+		$db->query("select doctypes_first_level_id from doctypes");
+		$doctypes_1 = '';
+		while($res = $db->fetch_object()){
+			$doctypes_1 .= $res->doctypes_first_level_id.",";
+		}
+		$doctypes_1 .= 0 ;
+		$db->query("select foldertype_id from foldertypes_doctypes_level1 where doctypes_first_level_id in ( ".$doctypes_1.")");
+		$wh = '';
+		while($res = $db->fetch_object()){
+			$wh .= $res->foldertype_id.",";
+		}
+		$wh .= 0 ;
+		$where .= " (foldertype_id in (".$wh.")) and (lower(folder_name) like lower('%"
 		.$req->protect_string_db($_REQUEST['Input'])."%') or lower(folder_id) like lower('%"
 		.$req->protect_string_db($_REQUEST['Input'])."%') ) and (status <> 'DEL' or status <> 'FOLDDEL')";
-    //Order
-    $order = 'order by folders_system_id, folder_name';
-
+		//Order
+		$order = 'order by folders_system_id, folder_name';
+	}
+	
 //Query
 $res = $req->select($select, $where, $order, $_SESSION['config']['databasetype'], 11,false,"","","", false);
 
