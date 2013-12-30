@@ -1156,7 +1156,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&dir=indexing_searching&page=document_history&id=<?php
                     echo $s_id;?>&coll_id=<?php echo $coll_id;?>&load&size=full" name="history_document" width="100%" 
-                    height="590px" align="left" scrolling="no" frameborder="0" id="history_document"></iframe>
+                    height="590px" align="left" scrolling="yes" frameborder="0" id="history_document"></iframe>
                 </dd>
                 <?php
                 if ($core->is_module_loaded('notes')) {
