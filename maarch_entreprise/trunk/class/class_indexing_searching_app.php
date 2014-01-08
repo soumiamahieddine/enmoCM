@@ -435,7 +435,16 @@ class indexing_searching_app extends dbquery
             }
             $_SESSION['error'] = _INDEX_UPDATED." (".strtolower(_NUM).$id_to_update.")";
 
-            $hist->add($table, $id_to_update, "UP", $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');
+            //$hist->add($table, $id_to_update, "UP", $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');
+            $hist->add(
+                $table,
+                $id_to_update,
+                'UP',
+                'resup',
+                $_SESSION['error'],
+                $_SESSION['config']['databasetype'],
+                'apps'
+            );
         }
         //$_SESSION['error_page'] = $_SESSION['error'];
         $error = $_SESSION['error'];
@@ -686,7 +695,15 @@ class indexing_searching_app extends dbquery
             }
             $_SESSION['error'] = _INDEX_UPDATED." (".strtolower(_NUM).$id_to_update.")";
 
-            $hist->add($table, $id_to_update, "UP", $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');
+            $hist->add(
+                $table,
+                $id_to_update,
+                'UP',
+                'resup',
+                $_SESSION['error'],
+                $_SESSION['config']['databasetype'],
+                'apps'
+            );
         }
         //$_SESSION['error_page'] = $_SESSION['error'];
         $error = $_SESSION['error'];
