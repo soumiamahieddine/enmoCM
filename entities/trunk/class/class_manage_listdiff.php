@@ -337,6 +337,12 @@ class diffusion_list extends dbquery
         $creatorUser = "",
         $creatorEntity = ""
     ) {
+        $oldListInst = $this->get_listinstance($resId, false, $collId);
+        /*echo 'old<br/>';
+        var_dump($oldListInst);
+        echo 'new<br/>';
+        var_dump($diffList);*/
+        
         $this->connect();
 
         require_once 'core/class/class_history.php';
@@ -351,19 +357,31 @@ class diffusion_list extends dbquery
         
         $roles = $this->list_difflist_roles();
         foreach($roles as $role_id => $role_label) {
+            //echo $role_id . "<br/>";
             # Special value 'copy', item_mode = cc
             if($role_id == 'copy')
                 $item_mode = 'cc';
             else 
                 $item_mode = $role_id;
             
-            for ($i=0, $l=count($diffList[$role_id]['users']);
-                $i<$l;
-                $i++
-            ) {
+            $cptUsers = count($diffList[$role_id]['users']);
+            for ($i=0;$i<$cptUsers;$i++) {
+                $userFound = false;
                 $userId = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['user_id']));
                 $visible = $diffList[$role_id]['users'][$i]['visible'];
                 $viewed = (integer)$diffList[$role_id]['users'][$i]['viewed'];
+                $cptOldUsers = count($oldListInst[$role_id]['users']);
+                for ($h=0;$h<$cptOldUsers;$h++) {
+                    //echo $userId . " ? " . $oldListInst[$role_id]['users'][$h]['user_id'] . "<br/>";
+                    if ($userId == $oldListInst[$role_id]['users'][$h]['user_id']) {
+                        //echo $userId . " already exists in old list<br/>";
+                        $userFound = true;
+                        break;
+                    } else {
+                        //echo $userId . " New in the list !<br/>";
+                    }
+                }
+                
                 $this->query(
                     "insert into " . ENT_LISTINSTANCE
                         . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type) "
@@ -383,27 +401,38 @@ class diffusion_list extends dbquery
                     . " )"
                 );
                 
-                # History
-                $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
-                $hist->add(
-                    ENT_LISTINSTANCE,
-                    $listinstance_id,
-                    'ADD',
-                    'diff'.$role_id.'user',
-                    'Diffusion of document '.$resId.' to '. $userId . ' as ' . $role_id,
-                    $_SESSION['config']['databasetype'],
-                    'entities'
-                ); 
+                if (!$userFound) {
+                    # History
+                    $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
+                    $hist->add(
+                        ENT_LISTINSTANCE,
+                        $listinstance_id,
+                        'ADD',
+                        'diff'.$role_id.'user',
+                        'Diffusion of document '.$resId.' to '. $userId . ' as ' . $role_id,
+                        $_SESSION['config']['databasetype'],
+                        'entities'
+                    );
+                }
             }
             
             # CUSTOM ENTITY ROLES
-            for ($i=0, $l=count($diffList[$role_id]['entities']);
-                $i<$l;
-                $i++
-            ) {
-                $entityId = $this->protect_string_db(trim($diffList[$role_id]['entities'][$i]['entity_id']));
-                $visible = $diffList[$role_id]['entities'][$i]['visible'];
-                $viewed = (integer)$diffList[$role_id]['entities'][$i]['viewed'];
+            $cptEntities=count($diffList[$role_id]['entities']);
+            for ($j=0;$j<$cptEntities;$j++) {
+                $entityFound = false;
+                $entityId = $this->protect_string_db(trim($diffList[$role_id]['entities'][$j]['entity_id']));
+                $visible = $diffList[$role_id]['entities'][$j]['visible'];
+                $viewed = (integer)$diffList[$role_id]['entities'][$j]['viewed'];
+                $cptOldEntities = count($oldListInst[$role_id]['entities']);
+                for ($g=0;$g<$cptOldEntities;$g++) {
+                    if ($entityId == $oldListInst[$role_id]['entities'][$g]['entity_id']) {
+                        //echo $entityId . " already exists in old list<br/>";
+                        $entityFound = true;
+                        break;
+                    } else {
+                        //echo $entityId . " New in the list !<br/>";
+                    }
+                }
                 
                 $this->query(
                     "insert into " . ENT_LISTINSTANCE
@@ -412,7 +441,7 @@ class diffusion_list extends dbquery
                         . "'" . $collId . "', "
                         . $resId . ", "
                         . "'DOC', "
-                        . $i . ", "
+                        . $j . ", "
                         . "'" . $entityId . "', " 
                         . "'entity_id' , "
                         . "'".$item_mode."', "
@@ -424,18 +453,19 @@ class diffusion_list extends dbquery
                     . " )"
                 );
                 
-                # History
-                $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
-                $hist->add(
-                    ENT_LISTINSTANCE,
-                    $listinstance_id,
-                    'ADD',
-                    'diff'.$role_id.'user',
-                    'Diffusion of document '.$resId.' to '. $entityId . ' as ' . $role_id,
-                    $_SESSION['config']['databasetype'],
-                    'entities'
-                ); 
-
+                if (!$entityFound) {
+                    # History
+                    $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
+                    $hist->add(
+                        ENT_LISTINSTANCE,
+                        $listinstance_id,
+                        'ADD',
+                        'diff'.$role_id.'user',
+                        'Diffusion of document '.$resId.' to '. $entityId . ' as ' . $role_id,
+                        $_SESSION['config']['databasetype'],
+                        'entities'
+                    );
+                }
             }
         }
     }
