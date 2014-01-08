@@ -18,6 +18,13 @@ $db = new dbquery();
 $core = new core_tools();
 $core->load_lang();
 $diffList = new diffusion_list();
+$origin = $_REQUEST['origin'];
+
+if (empty($_REQUEST['origin'])) {
+    $_SESSION['error'] = _ORIGIN . ' ' . _UNKNOWN;
+    echo "{status : 2, error_txt : '" . addslashes($_SESSION['error']) . "'}";
+    exit();
+}
 
 if ((! isset($_REQUEST['objectType']) || empty($_REQUEST['objectType']))
     && $_REQUEST['load_from_model'] == 'true')
@@ -25,7 +32,7 @@ if ((! isset($_REQUEST['objectType']) || empty($_REQUEST['objectType']))
     if ($_REQUEST['mandatory'] <> 'none') {
         $_SESSION['error'] = _OBJECT_TYPE . ' ' . _IS_EMPTY;
     }
-    $_SESSION['indexing']['diff_list'] = array();
+    $_SESSION[$origin]['diff_list'] = array();
     echo "{status : 1, error_txt : '" . addslashes($_SESSION['error']) . "'}";
     exit();
 } 
@@ -36,7 +43,7 @@ if ((! isset($_REQUEST['objectId']) || empty($_REQUEST['objectId']))
     if ($_REQUEST['mandatory'] <> 'none') {
         $_SESSION['error'] = _ENTITY_ID . ' ' . _IS_EMPTY;
     }
-    $_SESSION['indexing']['diff_list'] = array();
+    $_SESSION[$origin]['diff_list'] = array();
     echo "{status : 1, error_txt : '" . addslashes($_SESSION['error']) . "'}";
     exit();
 }
@@ -47,20 +54,19 @@ if (empty($_REQUEST['collId']) && $_REQUEST['load_from_model'] == 'true') {
     exit();
 }
 
-if (empty($_REQUEST['origin'])) {
-    $_SESSION['error'] = _ORIGIN . ' ' . _UNKNOWN;
-    echo "{status : 2, error_txt : '" . addslashes($_SESSION['error']) . "'}";
-    exit();
-}
 $onlyCC = false;
-//if (isset($_REQUEST['only_cc'])) {
-if($core->test_service('add_copy_in_process', 'entities', false)){
+
+
+if( $core->test_service('add_copy_in_process', 'entities', false) && $_REQUEST['origin'] == 'process'){
     $onlyCC = true;
+}
+
+if($_REQUEST['origin'] == 'indexing'){
+    $onlyCC = false;
 }
 
 $objectType = $_REQUEST['objectType'];
 $objectId = $_REQUEST['objectId'];
-$origin = $_REQUEST['origin'];
 
 // Get listmodel_parameters
 $_SESSION[$origin]['difflist_type'] = $diffList->get_difflist_type($objectType);
@@ -112,7 +118,6 @@ $content_standard .= '<img src="' . $_SESSION['config']['businessappurl']
          . 'resizable=yes,width=1280,height=800,location=no\');"><small>'
          . $labelButton . '</small></a>';
 $content_standard .= '</span></center>';
-
 echo "{status : 0, div_content : '" . addslashes($content_standard . $content . '<br>') 
     . "', div_content_action : '" . addslashes($content) . "'}";
 exit();
