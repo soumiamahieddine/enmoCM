@@ -354,7 +354,7 @@ switch ($mode) {
                          .$path_to_script.'&mode=updated\', \'formNotes\');" />&nbsp;';
                 $content .=' <input type="button" name="valid" value="&nbsp;'._DELETE
                          .'&nbsp;" id="valid" class="button" onclick="if(confirm(\''._REALLY_DELETE.': '
-                         .$request->cut_string($notes, 20).' ?\')) validNotesForm(\''
+                         .$request->cut_string(str_replace("'","\'", $notes), 20).' ?\')) validNotesForm(\''
                          .$path_to_script.'&mode=del\', \'formNotes\');" />&nbsp;';
                 $content .='<input type="button" name="cancel" id="cancel" class="button" value="'
                     ._CANCEL.'" onclick="destroyModal(\'form_notes\');"/>';

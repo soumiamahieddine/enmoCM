@@ -372,7 +372,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                     "class"     =>  "preview",
                     "icon"      =>  $_SESSION['config']['businessappurl']."static.php?filename=showFrameAdminList.png",
                     "tooltip"   =>  _NOTES,
-                    "content"   =>  "{'identifierDetailFrame' : '@@id@@', '"._DATE." ' : '@@date_note@@', '"._USER." ' : '@@lastname@@', '"._NOTES." ' : '@@note_text@@'}"
+                    "content"   =>  '{"identifierDetailFrame" : "@@id@@", "'._DATE.'" : "@@date_note@@", "'._USER.'" : "@@lastname@@", "'._NOTES.'" : "@@note_text@@"}'
                 );
         array_push($paramsTab['actionIcons'], $preview);        
         
