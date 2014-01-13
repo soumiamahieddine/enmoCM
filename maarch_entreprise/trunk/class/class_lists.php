@@ -1195,6 +1195,9 @@ class lists extends dbquery
     
     private function _buildTemplate($templateFile, $resultArray, $listKey) {
         
+        if (file_exists('custom/' . $_SESSION['custom_override_id']  . '/' . $templateFile)) {
+            $templateFile = 'custom/' . $_SESSION['custom_override_id']  . '/' . $templateFile;
+        }
         //Check if template file exists
         if (file_exists($templateFile)) {
             
