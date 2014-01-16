@@ -233,7 +233,12 @@ if ($mode == 'list') {
                 <option value=""><?php echo _NEVER;?></option>
                 <?php
                 foreach($diffusion_types as $this_diffusion){
-					if($this_diffusion->id != 'dest_user' && $this_diffusion->id != 'copy_list') {
+					if(
+                        $this_diffusion->id != 'dest_user' 
+                        && $this_diffusion->id != 'copy_list'
+                        && $this_diffusion->id != 'note_dest_user'
+                        && $this_diffusion->id != 'note_copy_list'
+                    ) {
 						?><option value="<?php echo $this_diffusion->id;?>"
 						<?php
 						if(trim($_SESSION['m_admin']['notification']['attachfor_type'])
