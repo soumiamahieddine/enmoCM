@@ -1482,7 +1482,7 @@ if (!defined('_BOX_ID')) define('_BOX_ID', 'Bo&icirc;te d\'archive');
 if (!defined('_ITEM_FOLDER')) define('_ITEM_FOLDER', 'Classement organique');
 
 //choose status on valid
-if (!defined('_CHOOSE_CURRENT_STATUS')) define('_CHOOSE_CURRENT_STATUS', 'Ne pas changer le statut actuel');
+if (!defined('_CHOOSE_CURRENT_STATUS')) define('_CHOOSE_CURRENT_STATUS', 'Conserver statut actuel');
 
 //PRINT
 if (!defined('_PRINT_DETAILS_SERVICE')) define('_PRINT_DETAILS_SERVICE', 'Imprimer la fiche de liaison depuis la fiche d&eacute;tail');
