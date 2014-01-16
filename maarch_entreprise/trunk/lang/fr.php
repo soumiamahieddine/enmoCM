@@ -1289,7 +1289,6 @@ if (!defined('_TO_MASTER_DOCUMENT'))    define('_TO_MASTER_DOCUMENT', 'au docume
 
 //print details
 if (!defined('_DETAILS_PRINT'))    define( '_DETAILS_PRINT', 'Fiche de liaison N&deg;');
-if (!defined('_PRINT_DETAILS'))    define( '_PRINT_DETAILS', 'Imprimer fiche de liaison');
 if (!defined('_NOTES_1'))    define( '_NOTES_1', 'Exemple Notes service 1');
 if (!defined('_NOTES_2'))    define( '_NOTES_2', 'Exemple Notes service 2');
 if (!defined('_NOTES_3'))    define( '_NOTES_3', 'Exemple Notes service 3');
@@ -1481,3 +1480,34 @@ if (!defined('_FOLDER')) define( '_FOLDER', 'Dossier seriel');
 if (!defined('_ORGANIC_FP')) define( '_ORGANIC_FP', 'Classement organique');
 if (!defined('_BOX_ID')) define('_BOX_ID', 'Bo&icirc;te d\'archive');
 if (!defined('_ITEM_FOLDER')) define('_ITEM_FOLDER', 'Classement organique');
+
+//choose status on valid
+if (!defined('_CHOOSE_CURRENT_STATUS')) define('_CHOOSE_CURRENT_STATUS', 'Ne pas changer le statut actuel');
+
+//PRINT
+if (!defined('_PRINT_DETAILS_SERVICE')) define('_PRINT_DETAILS_SERVICE', 'Imprimer la fiche de liaison depuis la fiche d&eacute;tail');
+if (!defined('_PRINT_DETAILS')) define('_PRINT_DETAILS', 'Imprimer fiche de liaison');
+if (!defined('_PRINT_DOC_DETAILS_FROM_LIST')) define('_PRINT_DOC_DETAILS_FROM_LIST', 'Imprimer les fiches de liaison depuis les listes de résultats');
+if (!defined('_PRINT_LIST')) define('_PRINT_LIST', 'Imprimer la liste');
+if (!defined('_PRINT_CATEGORY')) define('_PRINT_CATEGORY', 'Catégorie');
+if (!defined('_PRINT_DOC_DATE')) define('_PRINT_DOC_DATE', 'Date du document');
+if (!defined('_PRINT_PROCESS_LIMIT_DATE')) define('_PRINT_PROCESS_LIMIT_DATE', 'Date limite de traitement');
+if (!defined('_PRINT_PRIORITY')) define('_PRINT_PRIORITY', 'Priorité');
+if (!defined('_PRINT_CONTACT')) define('_PRINT_CONTACT', 'CONTACT');
+if (!defined('_PRINT_SUBJECT')) define('_PRINT_SUBJECT', 'OBJET');
+if (!defined('_PRINT_DATE')) define('_PRINT_DATE', 'Date d\'impression');
+if (!defined('_PRINT_FOLDER')) define('_PRINT_FOLDER', 'Dossier');
+if (!defined('_PRINT_ARBOX')) define('_PRINT_ARBOX', 'Boite d\'archive');
+if (!defined('_PRINT_STATUS')) define('_PRINT_STATUS', 'Statut');
+if (!defined('_PRINT_ALT_IDENTIFIER')) define('_PRINT_ALT_IDENTIFIER', 'Numéro chrono');
+if (!defined('_PRINTED_FILE_NUMBER')) define('_PRINTED_FILE_NUMBER', 'Fiche de liaison');
+if (!defined('_CREATED_ON')) define('_CREATED_ON', 'Créé le');
+if (!defined('_INFORMATIONS_OF_THE_DOCUMENT')) define('_INFORMATIONS_OF_THE_DOCUMENT', 'Informations sur le document');
+if (!defined('_PRINT_ADMISSION_DATE')) define('_PRINT_ADMISSION_DATE', 'Date d\'arrivée');
+if (!defined('_PRINT_TYPIST')) define('_PRINT_TYPIST', 'Opérateur');
+if (!defined('_PRINT_FREE_NOTES')) define('_PRINT_FREE_NOTES', 'NOTES LIBRES');
+if (!defined('_PRINT_COPIES')) define('_PRINT_COPIES', 'COPIES');
+if (!defined('_PRINT_NOTES')) define('_PRINT_NOTES', 'NOTES');
+if (!defined('_PRINT_PROCESS_ENTITY')) define('_PRINT_PROCESS_ENTITY', 'SERVICE TRAITANT');
+if (!defined('_PRINT_PRIVATE_NOTE')) define('_PRINT_PRIVATE_NOTE', 'Note privée');
+if (!defined('_PRINT_THE')) define('_PRINT_THE', 'Le');

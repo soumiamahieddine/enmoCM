@@ -1184,3 +1184,34 @@ if (!defined('_RM_ITEMS_TRANSFER')) define('_RM_ITEMS_TRANSFER', '[archive] Item
 /*************** FOLDER **************/
 if (!defined('_CONFIRM_FOLDER_STATUS')) define('_CONFIRM_FOLDER_STATUS', '[dossier] Confirm folder status');
 if (!defined('_REDIRECT_FOLDER')) define('_REDIRECT_FOLDER', '[dossier] Redirect folder');
+
+//choose status on valid
+if (!defined('_CHOOSE_CURRENT_STATUS')) define('_CHOOSE_CURRENT_STATUS', 'Don t change the actual status');
+
+//PRINT
+if (!defined('_PRINT_DETAILS_SERVICE')) define('_PRINT_DETAILS_SERVICE', 'Print the doc informations from the details page');
+if (!defined('_PRINT_DETAILS')) define('_PRINT_DETAILS', 'Print the details page');
+if (!defined('_PRINT_DOC_DETAILS_FROM_LIST')) define('_PRINT_DOC_DETAILS_FROM_LIST', 'Print the docs informations from lists');
+if (!defined('_PRINT_LIST')) define('_PRINT_LIST', 'Print the list');
+if (!defined('_PRINT_CATEGORY')) define('_PRINT_CATEGORY', 'Category');
+if (!defined('_PRINT_DOC_DATE')) define('_PRINT_DOC_DATE', 'Document date');
+if (!defined('_PRINT_PROCESS_LIMIT_DATE')) define('_PRINT_PROCESS_LIMIT_DATE', 'Process limit date');
+if (!defined('_PRINT_PRIORITY')) define('_PRINT_PRIORITY', 'Priority');
+if (!defined('_PRINT_CONTACT')) define('_PRINT_CONTACT', 'CONTACT');
+if (!defined('_PRINT_SUBJECT')) define('_PRINT_SUBJECT', 'SUBJECT');
+if (!defined('_PRINT_DATE')) define('_PRINT_DATE', 'Print date');
+if (!defined('_PRINT_FOLDER')) define('_PRINT_FOLDER', 'Folder');
+if (!defined('_PRINT_ARBOX')) define('_PRINT_ARBOX', 'Box');
+if (!defined('_PRINT_STATUS')) define('_PRINT_STATUS', 'Status');
+if (!defined('_PRINT_ALT_IDENTIFIER')) define('_PRINT_ALT_IDENTIFIER', 'Identifier');
+if (!defined('_PRINTED_FILE_NUMBER')) define('_PRINTED_FILE_NUMBER', 'Detail page');
+if (!defined('_CREATED_ON')) define('_CREATED_ON', 'Created on');
+if (!defined('_INFORMATIONS_OF_THE_DOCUMENT')) define('_INFORMATIONS_OF_THE_DOCUMENT', 'Document information');
+if (!defined('_PRINT_ADMISSION_DATE')) define('_PRINT_ADMISSION_DATE', 'Arrival date');
+if (!defined('_PRINT_TYPIST')) define('_PRINT_TYPIST', 'Typist');
+if (!defined('_PRINT_FREE_NOTES')) define('_PRINT_FREE_NOTES', 'Free notes');
+if (!defined('_PRINT_COPIES')) define('_PRINT_COPIES', 'COPIES');
+if (!defined('_PRINT_NOTES')) define('_PRINT_NOTES', 'NOTES');
+if (!defined('_PRINT_PROCESS_ENTITY')) define('_PRINT_PROCESS_ENTITY', 'PROCESS ENTITY');
+if (!defined('_PRINT_PRIVATE_NOTE')) define('_PRINT_PRIVATE_NOTE', 'Private note');
+if (!defined('_PRINT_THE')) define('_PRINT_THE', 'The');

@@ -541,7 +541,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 );
             }
         }
+        $view = $sec->retrieve_view_from_coll_id($coll_id);
         if(count($statuses) > 0) {
+            //load current status
+            $db->query("select status from " 
+                . $view 
+                . " where res_id = " . $res_id);
+            $statusObj = $db->fetch_object();
+            $current_status = $statusObj->status;
+            if ($current_status <> '') {
+                $db->query("select label_status from " . STATUS_TABLE 
+                    . " where id = '" . $current_status . "'");
+                $statusObjLabel = $db->fetch_object();
+                $current_status_label = $statusObjLabel->label_status;
+            }
             $frm_str .= '<tr id="status" style="display:' . $display_value . ';">';
             $frm_str .= '<td><label for="status" class="form_title" >' . _STATUS
                     . '</label></td>';
@@ -549,7 +562,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '<td class="indexing_field"><select name="status" '
                     . 'id="status" onchange="clear_error(\'frm_error_' . $id_action
                     . '\');">';
-            $frm_str .= '<option value="">' . _CHOOSE_STATUS . '</option>';
+            if ($current_status <> '') {
+                $frm_str .= '<option value="' . $current_status . '">' . _CHOOSE_CURRENT_STATUS 
+                    . ' : ' . $current_status_label . '(' . $current_status . ')</option>';
+            } else {
+                $frm_str .= '<option value="">' . _CHOOSE_CURRENT_STATUS . ')</option>';
+            }
             for ($i = 0; $i < count($statuses); $i ++) {
                 $frm_str .= '<option value="' . $statuses[$i]['ID'] . '" ';
                 if ($statuses[$i]['ID'] == 'NEW') {
@@ -587,7 +605,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . 'id="indexing_fields" style="display:block;">';
 
         /*** Chrono number ***/
-        $view = $sec->retrieve_view_from_coll_id($coll_id);
         $db->query("select alt_identifier from " 
             . $view 
             . " where res_id = " . $res_id);
