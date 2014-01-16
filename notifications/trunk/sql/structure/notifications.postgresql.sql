@@ -18,7 +18,7 @@ CREATE TABLE notifications
   diffusion_type character varying(50) NOT NULL,
   diffusion_properties character varying(255),
   attachfor_type character varying(50),
-  attachfor_properties character varying(255),
+  attachfor_properties character varying(2048),
   CONSTRAINT notifications_pkey PRIMARY KEY (notification_sid)
 )
 WITH (
