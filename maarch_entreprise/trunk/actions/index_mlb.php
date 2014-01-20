@@ -1126,7 +1126,10 @@ function check_form($formId, $values)
         $_SESSION['upfile']='';
         $_SESSION['upfile']['error']='0';
         $_SESSION['upfile']['format']='maarch';
-    }    
+    } elseif (empty($_SESSION['upfile']['format'])) {
+        $_SESSION['action_error'] = _FILE . ' ' . _MANDATORY;
+        return false;
+    } 
 
     //print_r($values);
     $_SESSION['action_error'] = '';
