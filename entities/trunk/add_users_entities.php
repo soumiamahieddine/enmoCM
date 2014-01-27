@@ -52,7 +52,6 @@ function in_session_array($entity_id)
     return false;
 }
 {
-}
 
 $tab2 = array();
 if ( count($_SESSION['m_admin']['entity']['entities']) > 0 )
@@ -104,7 +103,7 @@ unset($entities);
                 <option value="<?php  echo $entity_id;?>" ><?php  if(isset($short_label) && !empty($short_label)){ echo $short_label;}else{echo $entities[$i]->__get('entity_label');}?></option><?php
 
         }*/
-				
+		
 		for($j=0; $j<count($res); $j++)
 		{
 			$desc = $res[$j]->__get('short_label');
