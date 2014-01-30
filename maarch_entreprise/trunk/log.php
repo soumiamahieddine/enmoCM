@@ -126,6 +126,8 @@ if (! empty($_SESSION['error'])) {
         
         if ($prefix_login <> '') {
             $loginToAd = $prefix_login . "\\" . $login;
+        } else {
+            $loginToAd = $login;
         }
         
         if ($ad -> authenticate($loginToAd, $password)) {
