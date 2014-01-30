@@ -77,7 +77,7 @@ class LDAP {
     *
     * @var bool
     */
-    protected $_ssl=false;
+    protected $_use_ssl=false;
 
     /*
     * Connection and bind default variables
@@ -99,13 +99,13 @@ class LDAP {
         // Connect to the AD/LDAP server as the username/password
         if ($this->_use_ssl)
         {
+            //echo "ldaps://".$this->_domain;
             $this->_conn = ldap_connect("ldaps://".$this->_domain);
         }
         else
         {
             $this->_conn = ldap_connect($this->_domain);
         }
-
 
         // Set some ldap options for talking to AD
         ldap_set_option($this->_conn, LDAP_OPT_PROTOCOL_VERSION, 3);
@@ -114,9 +114,12 @@ class LDAP {
         // Bind as a domain admin if they've set it up
         if ($this->_login!=NULL && $this->_password!=NULL){
             //$this->_bind = @ldap_bind($this->_conn,$this->_login."@".$this->_domain,$this->_password);
+            //echo '<pre>';
+            //var_dump($this);
+            //echo '</pre>';
             $this->_bind = @ldap_bind($this->_conn,$this->_login,$this->_password);
             if (!$this->_bind){
-                if ($this->_ssl)
+                if ($this->_use_ssl)
                 {
                     throw new Exception ('FATAL: AD bind failed. Either the LDAPS connection failed or the login credentials are incorrect.');
                 }
