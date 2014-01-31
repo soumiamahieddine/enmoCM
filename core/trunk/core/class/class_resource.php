@@ -327,10 +327,10 @@
             elseif($data[$i]['column'] == 'status' )
             {
                 $find_status = true;
-                if( !preg_match("/^[A-Z][A-Z][A-Z][A-Z]*$/", $data[$i]['value']))
+                /*if( !preg_match("/^[A-Z][A-Z][A-Z][A-Z]*$/", $data[$i]['value']))
                 {
                     $error .= _STATUS_ERROR.'<br/>';
-                }
+                }*/
             }
         }
 
