@@ -114,6 +114,7 @@ function Ds_copyOnDocserver(
  */
 function Ds_createPathOnDocServer($docServer)
 {
+    umask(0022);
     if (!is_dir($docServer . date('Y') . DIRECTORY_SEPARATOR)) {
         mkdir($docServer . date('Y') . DIRECTORY_SEPARATOR, 0770);
         Ds_setRights($docServer . date('Y') . DIRECTORY_SEPARATOR);

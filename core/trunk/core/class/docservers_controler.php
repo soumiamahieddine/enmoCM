@@ -1041,6 +1041,7 @@ class docservers_controler
     */
     public function getNextFileNameInDocserver($pathOnDocserver)
     {
+        umask(0022);
         //Scans the docserver path
         $fileTab = scandir($pathOnDocserver);
         //Removes . and .. lines
