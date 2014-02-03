@@ -1605,7 +1605,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             if($_SESSION['store_process_limit_date'] == "ok")
             {
                 $query_ext .= ", process_limit_date = '".$db->format_date_db($process_limit_date)."'";
-            }
+            } else {
+				$query_ext .= ", process_limit_date = null";
+			}
             $_SESSION['store_process_limit_date'] = "";
         }
     }
