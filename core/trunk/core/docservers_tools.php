@@ -472,6 +472,8 @@ function Ds_setRights($dest)
     ) {
         exec('chown ' . $GLOBALS['apacheUserAndGroup'] . ' ' . $dest);
     }
+    umask(0022);
+    chmod($dest, 0770);
 }
 
 /**
