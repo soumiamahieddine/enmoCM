@@ -223,7 +223,7 @@ END;";
                         . "'".implode(',', $attachments)."', "
                         . "'notifications')";
             }
-            $logger->write('SQL query:' . $query, 'DEBUG');
+            //$logger->write('SQL query:' . $query, 'DEBUG');
             $db2 = new dbquery();
             $db2->connect();
             $db2->query($query, false, true);
@@ -254,7 +254,7 @@ END;";
                     . "VALUES ('".$user_id."', "
                     . "".$event->event_stack_sid.", "
                     . "'".$url."')";
-                $logger->write('SQL query:' . $query, 'DEBUG');
+                //$logger->write('SQL query:' . $query, 'DEBUG');
                 $db2 = new dbquery();
                 $db2->connect();
                 $db2->query($query, false, true);
