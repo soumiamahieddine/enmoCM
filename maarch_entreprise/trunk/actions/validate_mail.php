@@ -1645,6 +1645,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
                 $query_ext .= ", dest_contact_id = ".$contact_id."";
             }
         }
+        $db->connect();
+        $db->query("update ". $table_ext 
+            . " set exp_user_id = 0, dest_user_id = 0, exp_contact_id = 0, dest_contact_id = 0 where res_id = " 
+            . $res_id);
     }
     
     if($core->is_module_loaded('folder'))
