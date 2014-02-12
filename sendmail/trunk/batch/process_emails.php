@@ -58,8 +58,9 @@ while ($state <> 'END') {
 				. '"' . $userInfo['firstname'].' ' .$userInfo['lastname'] 
 				. '" <'.$userInfo['mail'].'>', 'INFO');
 				
-			$GLOBALS['mailer']->setFrom('"'.$userInfo['firstname'].' '
-				. $userInfo['lastname'].' ('.$userInfo['mail'].')" <'.$user.'> ');
+			/*$GLOBALS['mailer']->setFrom('"'.$userInfo['firstname'].' '
+				. $userInfo['lastname'].' ('.$userInfo['mail'].')" <'.$user.'> ');*/
+			$GLOBALS['mailer']->setFrom($userInfo['mail']);
 
 			//
 			$GLOBALS['logger']->write("Sending e-mail to : " . $email->to_list, 'INFO');
@@ -178,7 +179,7 @@ while ($state <> 'END') {
 			
 			//Now send the mail
 			$return = $GLOBALS['mailer']->send($to, (string)$mailerParams->type);
-			
+
 			if($return || $return == 0) {
 				$exec_result = 'S';
 			} else {
