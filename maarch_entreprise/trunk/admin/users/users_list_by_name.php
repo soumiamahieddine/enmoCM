@@ -36,7 +36,7 @@ $db->query(
     . " where ("
         . "lower(lastname) like lower('".$_REQUEST['what']."%') "
         . " or lower(user_id) like lower('".$_REQUEST['what']."%') "
-    . ") "
+    . ") and status <> 'DEL'"
     . " order by lastname"
 );
 
