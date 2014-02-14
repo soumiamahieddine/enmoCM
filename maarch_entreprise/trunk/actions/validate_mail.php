@@ -400,7 +400,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     if ($data['type_contact'] == 'internal') {
                         $frm_str .= ' checked="checked" ';
                     }
-                    $frm_str .= ' />'._INTERNAL.'<input type="radio" name="type_contact"   class="check" id="type_contact_external" value="external" onclick="clear_error(\'frm_error_'.$id_action.'\');change_contact_type(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');"';
+                    $frm_str .= ' />'._INTERNAL2.'<input type="radio" name="type_contact"   class="check" id="type_contact_external" value="external" onclick="clear_error(\'frm_error_'.$id_action.'\');change_contact_type(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');"';
                     if ($data['type_contact'] == 'external') {
                         $frm_str .= ' checked="checked" ';
                     }
