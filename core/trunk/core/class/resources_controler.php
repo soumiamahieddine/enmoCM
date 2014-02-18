@@ -266,6 +266,11 @@ class resources_controler
                     $data[$i]['value'] = '0';
                 }
             }
+            if (strtoupper($data[$i]['type']) == 'STRING') {
+               $data[$i]['value'] = $dbQuery->protect_string_db($data[$i]['value']);
+               $data[$i]['value'] = str_replace(";", "", $data[$i]['value']);
+               $data[$i]['value'] = str_replace("--", "", $data[$i]['value']);
+            }
             if (strtoupper($data[$i]['column']) == strtoupper('status')) {
                 $statusFound = true;
             }
