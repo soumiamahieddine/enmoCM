@@ -260,6 +260,7 @@ class resources_controler
         $typistFound = false;
         $typeIdFound = false;
         $toAddressFound = false;
+        $dbQuery = new dbquery();
         for ($i=0;$i<count($data);$i++) {
             if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'FLOAT') {
                 if ($data[$i]['value'] == '') {
