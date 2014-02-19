@@ -891,117 +891,117 @@ class core_tools extends functions
             if (isset($modules_services)) {
                 foreach (array_keys($modules_services) as $value) {
                     if (isset($modules_services[$value])) {
-                        for ($i = 0; $i < count($modules_services[$value]);
-                            $i ++
+                        for ($iService = 0; $iService < count($modules_services[$value]);
+                            $iService ++
                         ){
-                            if (isset($modules_services[$value][$i])
-                                && isset($modules_services[$value][$i]['whereamiused'])
-                                && count($modules_services[$value][$i]['whereamiused']) > 0
+                            if (isset($modules_services[$value][$iService])
+                                && isset($modules_services[$value][$iService]['whereamiused'])
+                                && count($modules_services[$value][$iService]['whereamiused']) > 0
                             ) {
                                 for ($k = 0; $k < count(
-                                    $modules_services[$value][$i]['whereamiused']
+                                    $modules_services[$value][$iService]['whereamiused']
                                 ); $k ++
                                 ) {
                                     if (isset(
-                                        $modules_services[$value][$i]['whereamiused'][$k]['page']
-                                    ) && $modules_services[$value][$i]['whereamiused'][$k]['page'] == $whereami
+                                        $modules_services[$value][$iService]['whereamiused'][$k]['page']
+                                    ) && $modules_services[$value][$iService]['whereamiused'][$k]['page'] == $whereami
                                     ) {
-                                        if ($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "frame"
-                                            && $_SESSION['user']['services'][$modules_services[$value][$i]['id']]
+                                        if ($modules_services[$value][$iService]['whereamiused'][$k]['nature'] == "frame"
+                                            && $_SESSION['user']['services'][$modules_services[$value][$iService]['id']]
                                             && ($servicenature == "all" || $servicenature == "frame")
                                             && ! in_array(
-                                                $modules_services[$value][$i]['id'],
+                                                $modules_services[$value][$iService]['id'],
                                                 $executedServices
                                             )
                                         ) {
                                             array_push(
                                                 $executedServices,
-                                                $modules_services[$value][$i]['id']
+                                                $modules_services[$value][$iService]['id']
                                             );
 
                                             if (isset(
-                                                $modules_services[$value][$i]['whereamiused'][$k]['frame_id']
+                                                $modules_services[$value][$iService]['whereamiused'][$k]['frame_id']
                                             ) && ! empty(
-                                                $modules_services[$value][$i]['whereamiused'][$k]['frame_id']
+                                                $modules_services[$value][$iService]['whereamiused'][$k]['frame_id']
                                             )
                                             ) {
                                                 $name = 'name="'
-                                                    . $modules_services[$value][$i]['whereamiused'][$k]['frame_id'].'"';
+                                                    . $modules_services[$value][$iService]['whereamiused'][$k]['frame_id'].'"';
                                             }
                                             if (isset(
-                                                $modules_services[$value][$i]['whereamiused'][$k]['frame_id']
+                                                $modules_services[$value][$iService]['whereamiused'][$k]['frame_id']
                                             ) && ! empty(
-                                                $modules_services[$value][$i]['whereamiused'][$k]['frame_id']
+                                                $modules_services[$value][$iService]['whereamiused'][$k]['frame_id']
                                             )
                                             ) {
-                                                $id = 'id="'
-                                                    . $modules_services[$value][$i]['whereamiused'][$k]['frame_id'].'"';
+                                                $iServiced = 'id="'
+                                                    . $modules_services[$value][$iService]['whereamiused'][$k]['frame_id'].'"';
                                             }
                                             if (isset(
-                                                $modules_services[$value][$i]['whereamiused'][$k]['width']
+                                                $modules_services[$value][$iService]['whereamiused'][$k]['width']
                                             ) &&  strlen(
-                                                $modules_services[$value][$i]['whereamiused'][$k]['width']
+                                                $modules_services[$value][$iService]['whereamiused'][$k]['width']
                                             ) > 0
                                             ) {
-                                                $width = 'width="'.$modules_services[$value][$i]['whereamiused'][$k]['width'].'" ';
+                                                $width = 'width="'.$modules_services[$value][$iService]['whereamiused'][$k]['width'].'" ';
                                             }
                                             if (isset(
-                                                $modules_services[$value][$i]['whereamiused'][$k]['height']
+                                                $modules_services[$value][$iService]['whereamiused'][$k]['height']
                                             ) && strlen(
-                                                $modules_services[$value][$i]['whereamiused'][$k]['height']
+                                                $modules_services[$value][$iService]['whereamiused'][$k]['height']
                                             ) > 0
                                             ) {
-                                                $height = 'height="'.$modules_services[$value][$i]['whereamiused'][$k]['height'].'"';
+                                                $height = 'height="'.$modules_services[$value][$iService]['whereamiused'][$k]['height'].'"';
                                             }
                                             if (isset(
-                                                $modules_services[$value][$i]['whereamiused'][$k]['border']
+                                                $modules_services[$value][$iService]['whereamiused'][$k]['border']
                                             ) && strlen(
-                                                $modules_services[$value][$i]['whereamiused'][$k]['border']
+                                                $modules_services[$value][$iService]['whereamiused'][$k]['border']
                                             ) > 0
                                             ) {
-                                                $frameborder = 'frameborder="'.$modules_services[$value][$i]['whereamiused'][$k]['border'].'" ';
+                                                $frameborder = 'frameborder="'.$modules_services[$value][$iService]['whereamiused'][$k]['border'].'" ';
                                             }
                                             if (isset(
-                                                $modules_services[$value][$i]['whereamiused'][$k]['scrolling']
+                                                $modules_services[$value][$iService]['whereamiused'][$k]['scrolling']
                                             ) && ! empty(
-                                                $modules_services[$value][$i]['whereamiused'][$k]['scrolling']
+                                                $modules_services[$value][$iService]['whereamiused'][$k]['scrolling']
                                             )
                                             ) {
-                                                $scrolling = 'scrolling="'.$modules_services[$value][$i]['whereamiused'][$k]['scrolling'].'"';
+                                                $scrolling = 'scrolling="'.$modules_services[$value][$iService]['whereamiused'][$k]['scrolling'].'"';
                                             }
                                             if (isset(
-                                                $modules_services[$value][$i]['whereamiused'][$k]['style']
+                                                $modules_services[$value][$iService]['whereamiused'][$k]['style']
                                             ) && ! empty(
-                                                $modules_services[$value][$i]['whereamiused'][$k]['style']
+                                                $modules_services[$value][$iService]['whereamiused'][$k]['style']
                                             )
                                             ) {
-                                                $style = 'style="'.$modules_services[$value][$i]['whereamiused'][$k]['style'].'"';
+                                                $style = 'style="'.$modules_services[$value][$iService]['whereamiused'][$k]['style'].'"';
                                             }
 
-                                            $iframeStr = '<iframe src="'
+                                            $iServiceframeStr = '<iframe src="'
                                                 . $_SESSION['config']['businessappurl']
                                                 . 'index.php?display=true&module='
                                                 . $value . '&page='
-                                                . $modules_services[$value][$i]['servicepage']
-                                                . '" ' . $name . ' ' . $id . ' '
+                                                . $modules_services[$value][$iService]['servicepage']
+                                                . '" ' . $name . ' ' . $iServiced . ' '
                                                 . $width . ' ' . $height . ' '
                                                 . $frameborder . ' ' . $scrolling
                                                 . ' ' . $style . '></iframe>';
 
-                                            return $iframeStr;
-                                        } else if($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "tab"
-                                            && $_SESSION['user']['services'][$modules_services[$value][$i]['id']]
+                                            return $iServiceframeStr;
+                                        } else if($modules_services[$value][$iService]['whereamiused'][$k]['nature'] == "tab"
+                                            && $_SESSION['user']['services'][$modules_services[$value][$iService]['id']]
                                             && ($servicenature == "tab")
                                             && ! in_array(
-                                                $modules_services[$value][$i]['id'],
+                                                $modules_services[$value][$iService]['id'],
                                                 $executedServices
                                             )
                                         ) {
                                             array_push(
                                                 $executedServices,
-                                                $modules_services[$value][$i]['id']
+                                                $modules_services[$value][$iService]['id']
                                             );
-                                            $arrLabel = $modules_services[$value][$i]['whereamiused'][$k]['tab_label'];
+                                            $arrLabel = $modules_services[$value][$iService]['whereamiused'][$k]['tab_label'];
 
                                             if ( !empty($arrLabel)
                                                 && defined($arrLabel)
@@ -1009,42 +1009,42 @@ class core_tools extends functions
                                             ) {
                                                 $arrLabel  = constant($arrLabel);
                                             }
-                                            $arrOrder = $modules_services[$value][$i]['whereamiused'][$k]['tab_order'];
+                                            $arrOrder = $modules_services[$value][$iService]['whereamiused'][$k]['tab_order'];
 
-                                            $frameSrc = $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$value."&page=".$modules_services[$value][$i]['servicepage'];
-                                            //$frameSrc = $_SESSION['urltomodules'].$value."/".$modules_services[$value][$i]['servicepage'];
+                                            $frameSrc = $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$value."&page=".$modules_services[$value][$iService]['servicepage'];
+                                            //$frameSrc = $_SESSION['urltomodules'].$value."/".$modules_services[$value][$iService]['servicepage'];
                                             $tab_view[$arrOrder]['tab_label'] = $arrLabel;
                                             $tab_view[$arrOrder]['frame_src'] = $frameSrc;
-                                        } else if ($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "popup"
-                                            && $_SESSION['user']['services'][$modules_services[$value][$i]['id']]
+                                        } else if ($modules_services[$value][$iService]['whereamiused'][$k]['nature'] == "popup"
+                                            && $_SESSION['user']['services'][$modules_services[$value][$iService]['id']]
                                             && ($servicenature == "all" || $servicenature == "popup")
                                             && ! in_array(
-                                                $modules_services[$value][$i]['id'],
+                                                $modules_services[$value][$iService]['id'],
                                                 $executedServices
                                             )
                                         ) {
                                             array_push(
                                                 $executedServices,
-                                                $modules_services[$value][$i]['id']
+                                                $modules_services[$value][$iService]['id']
                                             );
-                                            echo $modules_services[$value][$i]['name'];
+                                            echo $modules_services[$value][$iService]['name'];
                                             ?>
                                             <br />
-                                            <a href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$value."&page=".$modules_services[$value][$i]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
+                                            <a href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$value."&page=".$modules_services[$value][$iService]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
                                             <?php
-                                        } else if ($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "button"
-                                            && $_SESSION['user']['services'][$modules_services[$value][$i]['id']]
+                                        } else if ($modules_services[$value][$iService]['whereamiused'][$k]['nature'] == "button"
+                                            && $_SESSION['user']['services'][$modules_services[$value][$iService]['id']]
                                             && ($servicenature == "all" || $servicenature == "button")
                                             && ! in_array(
-                                                $modules_services[$value][$i]['id'],
+                                                $modules_services[$value][$iService]['id'],
                                                 $executedServices
                                             )
                                         ) {
                                             array_push(
                                                 $executedServices,
-                                                $modules_services[$value][$i]['id']
+                                                $modules_services[$value][$iService]['id']
                                             );
-                                            $tmp = $modules_services[$value][$i]['whereamiused'][$k]['button_label'];
+                                            $tmp = $modules_services[$value][$iService]['whereamiused'][$k]['button_label'];
 
                                             if ( !empty($tmp) && defined($tmp)
                                                 && constant($tmp) <> NULL
@@ -1052,24 +1052,24 @@ class core_tools extends functions
                                                 $tmp  = constant($tmp);
                                             }
                                             ?>
-                                            <input type="button" name="<?php  echo $modules_services[$value][$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>', '<?php  echo $modules_services[$value][$i]['id'];?>','width=<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $modules_services[$value][$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
+                                            <input type="button" name="<?php  echo $modules_services[$value][$iService]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$iServiced_module."&page=".$modules_services[$iServiced_module][$iService]['servicepage'];?>', '<?php  echo $modules_services[$value][$iService]['id'];?>','width=<?php  echo $modules_services[$value][$iService]['whereamiused'][$k]['width'];?>,height=<?php  echo $modules_services[$value][$iService]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
                                             <?php
-                                        } else if ( isset($_SESSION['user']['services'][$modules_services[$value][$i]['id']])
-                                            && $modules_services[$value][$i]['whereamiused'][$k]['nature'] == "include"
-                                            && $_SESSION['user']['services'][$modules_services[$value][$i]['id']]
+                                        } else if ( isset($_SESSION['user']['services'][$modules_services[$value][$iService]['id']])
+                                            && $modules_services[$value][$iService]['whereamiused'][$k]['nature'] == "include"
+                                            && $_SESSION['user']['services'][$modules_services[$value][$iService]['id']]
                                             && ($servicenature == "all" || $servicenature == "include")
                                             && ! in_array(
-                                                $modules_services[$value][$i]['id'],
+                                                $modules_services[$value][$iService]['id'],
                                                 $executedServices
                                             )
                                         ) {
                                             array_push(
                                                 $executedServices,
-                                                $modules_services[$value][$i]['id']
+                                                $modules_services[$value][$iService]['id']
                                             );
                                             include 'modules' . DIRECTORY_SEPARATOR
                                                 . $value . DIRECTORY_SEPARATOR
-                                                . $modules_services[$value][$i]['servicepage'];
+                                                . $modules_services[$value][$iService]['servicepage'];
                                         }
                                     }
                                 }
