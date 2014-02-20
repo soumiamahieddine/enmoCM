@@ -381,7 +381,10 @@ class diffusion_list extends dbquery
                         //echo $userId . " New in the list !<br/>";
                     }
                 }
-                
+                //Modification du dest_user dans la table res_letterbox
+                if($role_id == 'dest' && $collId == 'letterbox_coll')
+					$this->query("update ".RES_LETTERBOX." set dest_user = '".$userId."' where res_id = ".$resId);
+					
                 $this->query(
                     "insert into " . ENT_LISTINSTANCE
                         . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type) "
@@ -703,7 +706,7 @@ class diffusion_list extends dbquery
     {
         $this->connect();
         $this->query('select * from ' . ENT_DIFFLIST_TYPES);
-        
+        //$this->show();
         $types = array();
                         
         while ($type = $this->fetch_object()) { 
