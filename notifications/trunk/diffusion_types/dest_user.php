@@ -11,7 +11,7 @@ case 'recipients':
     
     $select = "SELECT distinct us.*";
 	$from = " FROM listinstance li JOIN users us ON li.item_id = us.user_id";
-    $where = " WHERE li.coll_id = 'letterbox_coll' AND li.listinstance_type='DOC' AND li.item_mode = 'dest'";
+    $where = " WHERE li.coll_id = 'letterbox_coll'   AND li.item_mode = 'dest'";
     
     switch($event->table_name) {
     case 'notes':
@@ -54,7 +54,7 @@ case 'attach':
 case 'res_id':
     $select = "SELECT li.res_id";
     $from = " FROM listinstance li";
-    $where = " WHERE li.coll_id = 'letterbox_coll' AND li.listinstance_type='DOC' ";
+    $where = " WHERE li.coll_id = 'letterbox_coll'   ";
     
     switch($event->table_name) {
     case 'notes':

@@ -9,7 +9,7 @@ case 'recipients':
 		. " FROM listinstance li JOIN users us ON li.item_id = us.user_id "
             . " JOIN notes ON notes.coll_id = li.coll_id AND notes.identifier = li.res_id "
 		. " WHERE notes.coll_id = 'letterbox_coll' AND notes.id = ".$event->record_id
-		. " AND li.listinstance_type='DOC' AND li.item_mode = 'dest'"
+		. "   AND li.item_mode = 'dest'"
         . " AND li.item_id != notes.user_id";
 	$dbRecipients = new dbquery();
 	$dbRecipients->query($query);
