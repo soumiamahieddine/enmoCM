@@ -214,12 +214,20 @@ if (!empty($_REQUEST['submit'])) {
             }
         }
         if ($contact['IS_CORPORATE_PERSON'] == 'N') {
-            $db->query(
-            	"select contact_id, lastname, firstname, society from "
-            	. $_SESSION['tablename']['contacts'] . " where lastname = '"
-            	. $func->protect_string_db($contact['LASTNAME'])
-            	. "' and firstname = '" . $func->protect_string_db($contact['FIRSTNAME']) . "' and enabled = 'Y' order by contact_id desc"
-            );
+            if(isset($contact['ID'])) {
+                $db->query(
+                    "select contact_id, lastname, firstname, society from "
+                    . $_SESSION['tablename']['contacts'] . " where contact_id = " 
+                    . $contact['ID'] . " and enabled = 'Y' order by contact_id desc"
+                );
+            } else {
+                $db->query(
+                    "select contact_id, lastname, firstname, society from "
+                    . $_SESSION['tablename']['contacts'] . " where lastname = '"
+                    . $func->protect_string_db($contact['LASTNAME'])
+                    . "' and firstname = '" . $func->protect_string_db($contact['FIRSTNAME']) . "' and enabled = 'Y' order by contact_id desc"
+                );
+            }
             $res = $db->fetch_object();
             if (empty($res->society)) {
                 $value_contact = $res->lastname.', '.$res->firstname.' ('.$res->contact_id.')';
