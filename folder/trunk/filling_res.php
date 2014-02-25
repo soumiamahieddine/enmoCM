@@ -105,7 +105,7 @@ if (empty($collIdTest)) {
 	    )
 	    ) {
 	    	$arrayStruct['level1'][$res->doctypes_first_level_id]['level2'][$res->doctypes_second_level_id]['level3'][$res->type_id] = array(
-	    		'label' => $func->show_string($res->type_label).' - '.$res->subject,
+	    		'label' => $func->show_string($res->type_label),
 	    		'level4' => array(),
 	    	);
 	    }
@@ -114,7 +114,8 @@ if (empty($collIdTest)) {
 	    )
 	    ) {
 	    	$arrayStruct['level1'][$res->doctypes_first_level_id]['level2'][$res->doctypes_second_level_id]['level3'][$res->type_id]['level4'][$res->res_id] = array(
-	    		'label' => $func->show_string($res->res_id),
+	    		'id' => $func->show_string($res->res_id),
+	    		'label' => $func->show_string($res->subject)
 	    	);
 	    }
 		$countDoc++;
@@ -150,7 +151,7 @@ if (empty($collIdTest)) {
 								$arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4']
 							) as $level4
 							) {
-								$res_id_list .= $arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['label'].",";
+								$res_id_list .= $arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['id'].",";
 
 							}
 						}
@@ -180,7 +181,7 @@ if (empty($collIdTest)) {
 								{
 									foreach(array_keys($arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4']) as $level4)
 									{
-										$res_id_list .= $arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['label'].",";
+										$res_id_list .= $arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['id'].",";
 
 									}
 								}
@@ -212,12 +213,12 @@ if (empty($collIdTest)) {
 											$res_id_list = "";
 											foreach(array_keys($arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4']) as $level4)
 											{
-												$res_id_list = $arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['label'].",";
+												$res_id_list = $arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['id'].",";
 												echo 	"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 													<a href=javascript:view_doc('".$res_id_list."');><img src='".$_SESSION['config']['businessappurl']
                                                     ."static.php?module=folder&filename=page.gif' alt='' />"
-                                                    .$arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['label']
-                                                    ." - ".$arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['label']
+                                                    .$arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['label']
+                                                    ." - ".$arrayStruct['level1'][$level1]['level2'][$level2]['level3'][$level3]['level4'][$level4]['label']
                                                     ."</a><br>";
 											}
 											?>
