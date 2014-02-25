@@ -201,7 +201,7 @@ class entity extends dbquery
                             for($i=0; $i<count($entities);$i++)
                             {
                                 ?>
-                                <option value="<?php  echo $entities[$i]['ID'];?>" <?php  if(isset($_SESSION['m_admin']['entity']['parent']) && $entities[$i]['ID']== $_SESSION['m_admin']['entity']['parent']){ echo 'selected="selected"'; }?> ><?php  echo $entities[$i]['LABEL'];?></option><?php
+                                <option <?php  if(isset($_SESSION['m_admin']['entity']['parent']) && $entities[$i]['ID']== $_SESSION['m_admin']['entity']['parent']){ echo 'style="font-size:14px;font-weight:bold;"'; } ?> value="<?php  echo $entities[$i]['ID'];?>" <?php  if(isset($_SESSION['m_admin']['entity']['parent']) && $entities[$i]['ID']== $_SESSION['m_admin']['entity']['parent']){ echo 'selected="selected"'; }?> ><?php  echo $entities[$i]['LABEL'];?></option><?php
                             }
                             ?>
                         </select><span class="red_asterisk" >*</span>
