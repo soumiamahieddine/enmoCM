@@ -39,19 +39,19 @@ else
         $level1 = array();
         while($res = $ent->fetch_object())
         {
-            array_push($level1, array('id' => $res->entity_id, 'tree' => $_SESSION['entities_chosen_tree'], 'key_value' => $res->entity_id, 'label_value' => $ent->show_string($res->entity_label, true), 'script' => "", 'is_entity' => true));
+            array_push($level1, array('id' => $res->entity_id, 'tree' => $_SESSION['entities_chosen_tree'], 'key_value' => $res->entity_id, 'label_value' => '<a href="index.php?page=entity_up&module=entities&id='.$res->entity_id.'" target="_top">'.$ent->show_string($res->entity_label, true).'</a>', 'script' => "", 'is_entity' => true));
         }
         for($i=0;$i<count($_SESSION['tree_entities']);$i++)
         {
             if($_SESSION['tree_entities'][$i]['ID'] == $_SESSION['entities_chosen_tree'])
             {
-                $label = "<b>".$_SESSION['tree_entities'][$i]['ID'].' - '.$_SESSION['tree_entities'][$i]['LABEL']."</b>";
+                $label = "<b>".$_SESSION['tree_entities'][$i]['ID'].' - '.'<a href="index.php?page=entity_up&module=entities&id='.$_SESSION['tree_entities'][$i]['ID'].'" target="_top">'.$_SESSION['tree_entities'][$i]['LABEL']."</a></b>";
             }
         }
         $ent->query("select u.user_id, u.lastname, u.firstname from  ".ENT_USERS_ENTITIES." ue, ".$_SESSION['tablename']['users']." u where ue.entity_id  = '".$_SESSION['entities_chosen_tree']."' and ue.user_id = u.user_id and u.status <> 'DEL' order by u.lastname, u.firstname");
         while($res = $ent->fetch_object())
         {
-            array_push($level1, array('id' => $res->user_id, 'tree' => $_SESSION['entities_chosen_tree'], 'key_value' => $res->user_id, 'label_value' => $ent->show_string($res->lastname.' '.$res->firstname, true), 'is_entity' => false));
+            array_push($level1, array('id' => $res->user_id, 'tree' => $_SESSION['entities_chosen_tree'], 'key_value' => $res->user_id, 'label_value' => $ent->show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='.$res->user_id.'" target="_top">'.$res->lastname.' '.$res->firstname.'</a>', true), 'is_entity' => false));
         }
         ?>
         <script type="text/javascript">
