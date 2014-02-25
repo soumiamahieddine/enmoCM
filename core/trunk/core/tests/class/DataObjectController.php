@@ -224,7 +224,8 @@ class DataObjectController
     public function read(
         $objectName, 
         $key,
-        $readChildren=true
+        $readChildren=true,
+		$levelToShow='full'
     ) {
         $dataObjectDocument = new DataObjectDocument();
         $this->dataObjectDocuments[] = $dataObjectDocument;
@@ -238,7 +239,8 @@ class DataObjectController
             $dataObjectDocument, 
             $dataObjectDocument,
             $key,
-            $readChildren
+            $readChildren,
+			$levelToShow
         );
         return $dataObjectDocument->documentElement;
     }
@@ -510,7 +512,8 @@ class DataObjectController
         $parentObject,
         $dataObjectDocument,
         $key=false,
-        $readChildren=true
+        $readChildren=true,
+		$levelToShow='full'
     ) {      
         try {
             if($dataAccessService = 
@@ -547,7 +550,8 @@ class DataObjectController
                     $this->readChildDataObjects(
                         $objectElement,
                         $newObject, 
-                        $dataObjectDocument
+                        $dataObjectDocument,
+						$levelToShow
                     );
                 }
             }
@@ -560,11 +564,13 @@ class DataObjectController
     public function readChildDataObjects( 
         $objectElement,
         $dataObject,
-        $dataObjectDocument
+        $dataObjectDocument,
+		$levelToShow='full'
     ) {
         // Get list of childElements
         $objectContents = $this->getObjectContents($objectElement);
         $l = count($objectContents);
+		$decompte = $levelToShow;
         for($i=0; $i<$l; $i++) {
             $objectNode = $objectContents[$i];
             if(!$objectNode->isReadable()) continue;
@@ -574,11 +580,38 @@ class DataObjectController
             $relation = $this->getRelation($objectNode, $dataObject);
             if(!$relation) continue;
             //echo "<br/>Read child of " . $objectElement->getName() . " named " . $refNode->getName();
-            $this->readDataObject(
-                $refNode, 
-                $dataObject, 
-                $dataObjectDocument
-            );
+			if((string)$levelToShow=='full'){
+				$this->readDataObject(
+				$refNode, 
+				$dataObject, 
+				$dataObjectDocument
+				);	
+				
+			}else{			
+				if($decompte==1){
+					$this->readDataObject(
+						$refNode, 
+						$dataObject, 
+						$dataObjectDocument,
+						false,
+						false
+					);
+					
+				}elseif($decompte==0){
+					//on affiche rien				
+				}else{
+					$decompte--;
+					$this->readDataObject(
+						$refNode, 
+						$dataObject, 
+						$dataObjectDocument,
+						false,
+						true,
+						$decompte
+					);				
+					
+				}
+			}
         }
     }
     
