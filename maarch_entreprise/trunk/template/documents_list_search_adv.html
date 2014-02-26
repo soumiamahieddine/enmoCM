@@ -115,7 +115,7 @@ Mods
                                             <tr>
                                                 <td style="text-align:right; vertical-align:top;">##defineLang|_ENTITY## :</td><td  style="text-align:right">##loadValue|entity_label##</td>
                                             </tr>
-											 ##ifStatement|#loadValue|folders_system_id#!=null|<tr><td style="text-align:right"><b>#defineLang|_FOLDER# :</b></td><td style="text-align:right">#loadValue|folder_name#</td></tr>|##
+											 ##ifStatement|'#loadValue|folders_system_id#'!=null|<tr><td style="text-align:right"><b>#defineLang|_FOLDER# :</b></td><td style="text-align:right">#loadValue|folder_name#</td></tr>|##
                                             <!--##ifStatement|#isModuleLoaded|cases#===true|<tr><td style="text-align:right"><b>#defineLang|_CASE# :</b></td><td style="text-align:right"><b>#loadValue|case_label#</b></td></tr>| ##-->
 											##ifStatement|'#loadValue|case_label#'!=null|<tr><td style="text-align:right"><b>#defineLang|_CASE# :</b></td><td style="text-align:right">#loadValue|case_label#</td></tr>|##
                                         </table>
