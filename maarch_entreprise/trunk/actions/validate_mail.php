@@ -1768,7 +1768,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
                 'entity_id' => $cEntity,
                 'arbox_id' => $cBoxId,
                 'type_id' => $cTypeId,
-                'category_id' => $cat_id,
+                'category_id' => $cat_id,                
+                'res_id' => $res_id
             );
             //print_r($myVars);
             $myForm = array(
