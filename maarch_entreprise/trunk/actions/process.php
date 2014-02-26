@@ -1205,13 +1205,16 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             $db->query("update ".$res_table." set folders_system_id = NULL where res_id =".$arr_id[0]);
         }
     }
-    if ($core->is_module_loaded('entities')) {
-        require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
+    if ($core->is_module_loaded('entities') && count($_SESSION['redirect']['diff_list']) == 0) {
+        require_once('modules/entities/class/class_manage_listdiff.php');
         $list = new diffusion_list();
         $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[0], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => true);
         $list->load_list_db($_SESSION['process']['diff_list'], $params); //pb enchainement avec action redirect
     }
+    $_SESSION['process']['diff_list'] = array();
+    $_SESSION['redirect']['diff_list'] = array();
     unset($_SESSION['redirection']);
+    unset($_SESSION['redirect']);
     $db->query("update ".$table." set answer_type_bitmask = '".$bitmask."', process_notes = '".$db->protect_string_db($process_notes)."', other_answer_desc ='".$db->protect_string_db($other_txt)."'
     WHERE res_id=".$arr_id[0]);
     return array('result' => $arr_id[0].'#', 'history_msg' => '');
