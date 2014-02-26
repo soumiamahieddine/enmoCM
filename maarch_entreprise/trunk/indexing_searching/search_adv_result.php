@@ -128,8 +128,17 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= "(lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
                     ."or lower(alt_identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
                     ."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
-                    ."or lower(doc_custom_t1) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') "
+                    ."or lower(doc_custom_t1) LIKE lower('%".$func->protect_string_db($_REQUEST['multifield'])."%') ";
+                    
+                if (is_numeric($_REQUEST['multifield']))
+                {
+                    $where_request .= "or res_id = '".$func->protect_string_db($_REQUEST['multifield'])."' "
                     ."or lower(process_notes) like lower('%".$func->protect_string_db($_REQUEST['multifield'])."%')) ";
+                }else{
+                    $where_request .= "or lower(process_notes) like lower('%".$func->protect_string_db($_REQUEST['multifield'])."%')) ";
+                }
+                
+                    
                 
                 $where_request .=" and  ";
             } elseif ($tab_id_fields[$j] == 'numcase' && !empty($_REQUEST['numcase'])) {
