@@ -175,6 +175,10 @@ class chrono
                     $chronoArray[$i]['VALUE'] = $this->_executeCategoryChar(
                         $phpVar
                     );
+                } else if ($chronoArray[$i]['VALUE'] == "chr_by_res_id") {
+                    $chronoArray[$i]['VALUE'] = $this->execute_chrono_by_res_id(
+                        $phpVar['res_id']
+                    );
                 } else if ($chronoArray[$i]['VALUE'] == "chr_by_folder") {
                    $chronoArray[$i]['VALUE'] = $this->execute_chrono_by_folder(
                        $phpVar['folder_id']
@@ -205,6 +209,26 @@ class chrono
         return $chrono;
     }
 
+    public function execute_chrono_by_res_id($res_id)
+    {
+        $db = new dbquery();
+        $db->connect();
+        //Get res_id of document
+        if($res_id==''){
+            $db->query(
+                "SELECT res_id from res_letterbox ORDER BY res_id DESC LIMIT 1"
+            );
+        }else{
+            $db->query(
+                "SELECT res_id from res_letterbox WHERE res_id='".$res_id."'"
+            );
+        }
+
+        $fetch = $db->fetch_object();
+        $chrono = $fetch->res_id;
+        return $chrono;
+    }
+
 
     public function execute_chrono_by_entity($entity)
     {
@@ -222,7 +246,8 @@ class chrono
             $chrono = $fetch->param_value_int;
         }
         $this->_updateChronoForEntity($chrono, $db, $entity);
-        return $entity . "/" . $chrono;
+        //return $entity . "/" . $chrono;
+        return $entity;
     }
 
     public function execute_chrono_by_category($category)
@@ -241,7 +266,9 @@ class chrono
             $chrono = $fetch->param_value_int;
         }
         $this->_updateChronoForCategory($chrono, $db, $category);
-        return $category . "/" . $chrono;
+        //return $category . "/" . $chrono;
+        return $category;
+
     }
 
     public function execute_chrono_by_folder($folder)
