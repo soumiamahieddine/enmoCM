@@ -899,7 +899,10 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                               $path = $_SESSION['config']['businessappurl'];
                             //}
                             ?>
-                            <input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $path . "/tmp/export_details_".$_SESSION['user']['UserId']."_export.html";?>', '_blank');" />
+							<!-- OLD PRINT DETAILS VERSION -->
+                            <!--<input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $path . "/tmp/export_details_".$_SESSION['user']['UserId']."_export.html";?>', '_blank');" />-->
+							<!-- NEW PRINT DETAILS VERSION -->
+                            <input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=print&id=<?php echo $s_id; ?>', '_blank');" />
                             <?php
                             }
                         ?>
@@ -1391,7 +1394,7 @@ $_SESSION['doc_convert'] = array();
 $_SESSION['doc_convert']['details_result'] = $detailsExport;
 $core = new core_tools();
 
-if ($printDetails) {
+/*if ($printDetails) {
     $Fnm = $_SESSION['config']['tmppath']. '/export_details_'
         . $_SESSION['user']['UserId'] . '_export.html';
     if (file_exists($Fnm)) {
@@ -1400,4 +1403,4 @@ if ($printDetails) {
     $inF = fopen($Fnm,"w");
     fwrite($inF, $detailsExport);
     fclose($inF);
-}
+}*/

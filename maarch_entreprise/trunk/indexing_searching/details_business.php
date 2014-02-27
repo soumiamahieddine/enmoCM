@@ -64,6 +64,12 @@ if (file_exists(
 }
 include_once $path;
 
+//test service print_details
+$printDetails = false;
+if ($core->test_service('print_details', 'apps', false)) {
+    $printDetails = true;
+}
+
 //test service put_in_validation
 $putInValid = false;
 if ($core->test_service('put_in_validation', 'apps', false)) {
@@ -768,6 +774,27 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     <br/>
                     <br/>
                     <div align="center">
+						<?php if ($printDetails) {
+                            /*if (
+                              isset($_SESSION['custom_override_id'])
+                              && $_SESSION['custom_override_id'] <> ''
+                            ) {
+                               $path = $_SESSION['config']['coreurl']
+                                . '/custom/'
+                                . $_SESSION['custom_override_id']
+                                . '/apps/'
+                                . $_SESSION['config']['app_id'];
+                            } else {*/
+                              $path = $_SESSION['config']['businessappurl'];
+                            //}
+                            ?>
+							<!-- OLD PRINT DETAILS VERSION -->
+                            <!--<input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $path . "/tmp/export_details_".$_SESSION['user']['UserId']."_export.html";?>', '_blank');" />-->
+							<!-- NEW PRINT DETAILS VERSION -->
+                            <input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=print&id=<?php echo $s_id; ?>', '_blank');" />
+                            <?php
+                            }
+                        ?>
                         <?php if ($putInValid) {
                             ?>
                             <input type="submit" class="button"  value="<?php  echo _PUT_DOC_ON_VALIDATION;?>" name="put_doc_on_validation" onclick="return(confirm('<?php  echo _REALLY_PUT_DOC_ON_VALIDATION;?>\n\r\n\r'));" />

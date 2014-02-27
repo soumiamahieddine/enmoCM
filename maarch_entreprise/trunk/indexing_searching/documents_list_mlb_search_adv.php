@@ -86,6 +86,7 @@ if($mode == 'normal') {
     $saveTool       = true;
     $useTemplate    = true;
     $exportTool     = true;
+    $printTool      = true;
     $bigPageTitle   = true;
     $standaloneForm = false;
     $radioButton    = false;
@@ -123,6 +124,7 @@ if($mode == 'normal') {
     $saveTool       = false;
     $useTemplate    = false;
     $exportTool     = false;
+    $printTool      = false;
     $bigPageTitle   = false;
     $radioButton    = true;
     
@@ -594,6 +596,16 @@ if (count($tab) > 0) {
                     "disabledRules" =>  count($tab)." == 0"
                     );
             array_push($paramsTab['tools'],$export);   
+        }
+		
+		if($printTool && $core_tools->test_service('print_doc_details_from_list', 'apps', false)) { 
+            $print = array(
+                    "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=print', '_blank');",
+                    "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_print.gif",
+                    "tooltip"       =>  _PRINT_LIST,
+                    "disabledRules" =>  count($tab)." == 0"
+                    );
+            array_push($paramsTab['tools'], $print);   
         }
 
     //Afficher la liste
