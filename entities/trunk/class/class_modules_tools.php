@@ -337,6 +337,35 @@ class entities extends dbquery
                 );
             }
         }
+        
+        /* CV 1.5 : ancestors up to depth n*/        
+        $total = preg_match_all(
+        	"|@ancestor_entity\[('[^\]]*')\](?:\[(\d)\])?|", $where, $tmpArr,
+            PREG_PATTERN_ORDER
+        );
+        if ($total > 0) {
+            //$this->show_array( $tmpArr);
+            for ($i = 0; $i < $total; $i ++) {
+                $entity = trim(str_replace("'", '', $tmpArr[1][$i]));
+                $max_depth = false;
+                if(isset($tmpArr[2][$i]) && $tmpArr[2][$i] > 0)
+                    $max_depth = $tmpArr[2][$i];
+                $ancestors = array();
+                while (($entity = $obj->getParentEntityId($entity)) && (!$max_depth || $depth < $max_depth)) { 
+                    $ancestors[] = $entity;
+                    $depth++;
+                }
+                if(count($ancestors))
+                    $entity = "'" . implode("', '", $ancestors) . "'";
+                else $entity = $this->empty_list();;
+                if($userId == 'superadmin')
+                    $entity = $this->empty_list();
+                $where = preg_replace(
+                    "|@ancestor_entity\[('[^\]]*')\](?:\[(\d)\])?|", $entity, $where, 1
+                    );
+            }
+        }
+        
         $where = str_ireplace("DESTINATION in ()", "1=2", $where);
         //echo $where;exit;
         return $where;

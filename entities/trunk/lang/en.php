@@ -211,6 +211,8 @@ if (!defined('_HELP_KEYWORD6'))
     define('_HELP_KEYWORD6', 'All active departments');
 if (!defined('_HELP_KEYWORD7'))
     define('_HELP_KEYWORD7', 'Immediate sub-department of given departments');
+if (!defined('_HELP_KEYWORD8'))
+    define('_HELP_KEYWORD8', 'Ancestor entities of the given entity up to the depth given as second argument (no second argument means no max depth)');
 if (!defined('_HELP_KEYWORDS'))
     define('_HELP_KEYWORDS', 'Help for keywords');
 if (!defined('_HELP_KEYWORD_EXEMPLE_TITLE'))

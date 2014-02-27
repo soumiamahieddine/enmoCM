@@ -220,6 +220,8 @@ if (!defined('_HELP_KEYWORD6'))
     define('_HELP_KEYWORD6', 'toutes les entit&eacute;s (actives)');
 if (!defined('_HELP_KEYWORD7'))
     define('_HELP_KEYWORD7', 'sous-entit&eacute;s imm&eacute;diates (n-1) des entit&eacute;s donn&eacute;es en argument');
+if (!defined('_HELP_KEYWORD8'))
+    define('_HELP_KEYWORD8', 'entit&eacute;s anc&egrave;tres de l\'entit&eacute; donn&eacute;e en argument jusqu\'à la profondeur demand&eacute;e en second argument (ou la racine si aucun argument 2 fourni)');
 if (!defined('_HELP_KEYWORDS'))
     define('_HELP_KEYWORDS', 'Aide sur les mots cl&eacute;s');
 if (!defined('_HELP_KEYWORD_EXEMPLE_TITLE'))
