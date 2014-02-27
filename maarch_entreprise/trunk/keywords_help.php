@@ -46,6 +46,7 @@ function show_helper($mode)
                 echo "<p><b>@sisters_entities[entity_id] : <em></b>"._HELP_KEYWORD5."</em><br/></p>";
                 echo "<p><b>@all_entities : <em></b>"._HELP_KEYWORD6."</em><br/></p>";
                 echo "<p><b>@immediate_children[entity_1,..., entity_id] : </b><em>"._HELP_KEYWORD7."</em><br/></p>";
+                echo "<p><b>@ancestor_entities[entity_id][depth] : </b><em>"._HELP_KEYWORD8."</em><br/></p>";
                 echo "<br/>"._HELP_KEYWORD_EXEMPLE_TITLE."<br/><br/>";
                 echo "<div style='border:1px black solid; padding:3px;'><b>"._HELP_KEYWORD_EXEMPLE."</b></div>";
             echo "</p>";
