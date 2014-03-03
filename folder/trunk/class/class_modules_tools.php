@@ -300,7 +300,7 @@ class folder extends request
 			$this->query(
 				"select folder_id from " . FOLD_FOLDERS_TABLE
 			    . " where folder_id= '"
-			    . $_SESSION['m_admin']['folder']['folder_id'] . "'"
+			    . $_SESSION['m_admin']['folder']['folder_id'] . "' and status != 'DEL'"
 			);
 			if ($this->nb_result() > 0) {
 				$_SESSION['error'] = $_SESSION['m_admin']['folder']['folder_id']
