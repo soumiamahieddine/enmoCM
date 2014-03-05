@@ -10,7 +10,7 @@ switch($request) {
 case 'form_content':
 	//Recuperer l ensemble des utilisateurs valides
 	$usrCtl = new users_controler();
-	$userslist = $usrCtl->getAllUsers();
+	$userslist = $usrCtl->getAllUsers('order by lastname');
 	
 	$form_content .= '<input type="hidden" name="'.$formId.'" id="'.$formId.'" value="user">';
 	$form_content .= '<p class="sstit">' . _NOTIFICATIONS_USER_DIFF_TYPE . '</p>';
@@ -19,7 +19,7 @@ case 'form_content':
 			$form_content .= '<td>';
 				$form_content .= '<select name="'.$leftList.'[]" id="'.$leftList.'" size="7" 	ondblclick=\'moveclick(document.frmevent.elements["'.$leftList.'[]"],document.frmevent.elements["'.$rightList.'[]"]);\' multiple="multiple" >';
 				foreach ($userslist as $user){
-					$form_content .=  '<option value="'.$user->user_id.'" selected="selected" >'.$user->firstname.' '.$user->lastname.'</option>';
+					$form_content .=  '<option value="'.$user->user_id.'" selected="selected" >'.$user->lastname.' '.$user->firstname.'</option>';
 				}
 				
 				$form_content .= '</select><br/>';
