@@ -654,7 +654,7 @@ if (!defined('_MODULES_SERVICES')) define('_MODULES_SERVICES', 'Services defined
 if (!defined('_MORE_INFOS')) define('_MORE_INFOS', 'Contact your admin for more information ');
 if (!defined('_MORE_THAN_ONE')) define('_MORE_THAN_ONE', 'Iterative file');
 if (!defined('_MULTI_FIELD')) define('_MULTI_FIELD','Multi-field');
-if (!defined('_MULTI_FIELD_HELP')) define('_MULTI_FIELD_HELP','Object, description, title, chrono number, processing notes...');
+if (!defined('_MULTI_FIELD_HELP')) define('_MULTI_FIELD_HELP','Object, description, title, DMS number, chrono number, processing notes...');
 if (!defined('_MUST_CHANGE_PSW')) define('_MUST_CHANGE_PSW', 'must change his/her password');
 if (!defined('_MUST_CHECK_ONE_BOX')) define('_MUST_CHECK_ONE_BOX', 'You must check at least one box');
 if (!defined('_MUST_CHOOSE_COLLECTION_FIRST')) define('_MUST_CHOOSE_COLLECTION_FIRST', 'You must select a collection');

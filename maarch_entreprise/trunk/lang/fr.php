@@ -796,7 +796,7 @@ if (!defined('_MAIL_OBJECT_HELP')) define( '_MAIL_OBJECT_HELP', 'Saisissez les m
 if (!defined('_N_GED_HELP')) define( '_N_GED_HELP', '');
 if (!defined('_CHOOSE_RECIPIENT_SEARCH_TITLE')) define( '_CHOOSE_RECIPIENT_SEARCH_TITLE', 'Ajoutez le/les destinataire(s) d&eacute;sir&eacute;(s) pour restreindre la recherche');
 if (!defined('_MULTI_FIELD')) define( '_MULTI_FIELD','Multi-champs');
-if (!defined('_MULTI_FIELD_HELP')) define( '_MULTI_FIELD_HELP','Objet, description, titre, Num chrono, notes de traitement...');
+if (!defined('_MULTI_FIELD_HELP')) define( '_MULTI_FIELD_HELP','Objet, description, titre, Num GED, Num chrono, notes de traitement...');
 if (!defined('_SAVE_QUERY')) define( '_SAVE_QUERY', 'Enregistrer ma recherche');
 if (!defined('_SAVE_QUERY_TITLE')) define( '_SAVE_QUERY_TITLE', 'Enregistrement de recherche');
 if (!defined('_QUERY_NAME')) define( '_QUERY_NAME', 'Nom de ma recherche');
