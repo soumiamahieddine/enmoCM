@@ -68,19 +68,11 @@ For developper :
             <type>maarch_functions</type>
             <value>chr_by_category</value>
         </ELEMENT>
-        <ELEMENT>
-            <type>text</type>
-            <value>/</value>
-        </ELEMENT>
-        <ELEMENT>
-            <type>maarch_functions</type>
-            <value>chr_by_res_id</value>
-        </ELEMENT>
     </CHRONO>
 
     <CHRONO>
         <id>outgoing</id>
-        <separator></separator>
+        <separator>/</separator>
         <ELEMENT>
             <type>maarch_form</type>
             <value>chrono_out</value>
@@ -110,26 +102,18 @@ For developper :
 
     <CHRONO>
         <id>internal</id>
-        <separator></separator>
-        <ELEMENT>
-            <type>date</type>
-            <value>year</value>
-        </ELEMENT>
+        <separator>/</separator>
         <ELEMENT>
             <type>text</type>
-            <value>/</value>
+            <value>internal</value>
+        </ELEMENT>
+        <ELEMENT>
+            <type>date</type>
+            <value>full_date</value>
         </ELEMENT>
         <ELEMENT>
             <type>maarch_functions</type>
             <value>chr_by_category</value>
-        </ELEMENT>
-        <ELEMENT>
-            <type>text</type>
-            <value>/</value>
-        </ELEMENT>
-        <ELEMENT>
-            <type>maarch_functions</type>
-            <value>chr_by_res_id</value>
         </ELEMENT>
     </CHRONO>
 
