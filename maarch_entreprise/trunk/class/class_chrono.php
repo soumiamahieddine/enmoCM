@@ -246,8 +246,8 @@ class chrono
             $chrono = $fetch->param_value_int;
         }
         $this->_updateChronoForEntity($chrono, $db, $entity);
-        //return $entity . "/" . $chrono;
-        return $entity;
+        return $entity . "/" . $chrono;
+        //return $entity;
     }
 
     public function execute_chrono_by_category($category)
@@ -266,8 +266,8 @@ class chrono
             $chrono = $fetch->param_value_int;
         }
         $this->_updateChronoForCategory($chrono, $db, $category);
-        //return $category . "/" . $chrono;
-        return $category;
+        return $category . "/" . $chrono;
+        //return $category;
 
     }
 
