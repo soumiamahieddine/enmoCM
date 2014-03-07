@@ -194,8 +194,8 @@ class entity extends dbquery
                         </select><span class="red_asterisk">*</span>
                     </p>
                     <p>
-                        <label for="parent_id"><?php  echo _ENTITY_PARENT;?> : </label>
-                        <select name="parententity"  size="5">
+                        <label for="parent_id"><?php  echo _ENTITY_PARENT;?> : </label><br /><br />
+                        <select name="parententity"  size="10" style="width:620px">
                             <option value=""><?php  echo _CHOOSE_ENTITY_PARENT;?></option>
                             <?php
                             for($i=0; $i<count($entities);$i++)
