@@ -612,7 +612,7 @@ VALUES (5, '[Courrier] Les courriers', '', NULL, '0000000000', '0000000000', '00
 ------------
 INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (20, '[courrier] ALLO MAIRIE', 'black_style_big', 'Y');
 INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (10, '[courrier] Courriers des services', 'blue_style_big', 'Y');
-
+ALTER SEQUENCE doctypes_first_level_id_seq RESTART WITH 201;
 ------------
 --DOCTYPES_SECOND_LEVEL--
 ------------
