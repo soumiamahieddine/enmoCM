@@ -404,17 +404,19 @@ $_ENV['categories']['enterprise_document']['doc_custom_n2'] = array (
     'modify' => true,
     'form_show' => 'autocomplete'
 );
-
-$_ENV['categories']['enterprise_document']['other_cases']['arbox_id'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => false,
-    'label' => _BOX_ID,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=box.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
+$core = new core_tools();
+if ($core->is_module_loaded('physical_archive')) {
+	$_ENV['categories']['enterprise_document']['other_cases']['arbox_id'] = array (
+		'type_form' => 'integer',
+		'type_field' => 'integer',
+		'mandatory' => false,
+		'label' => _BOX_ID,
+		'table' => 'res',
+		'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=box.gif',
+		'modify' => true,
+		'form_show' => 'select'
+	);
+}
 $_ENV['categories']['enterprise_document']['other_cases']['process_limit_date'] = array (
     'type_form' => 'date',
     'type_field' => 'date',
