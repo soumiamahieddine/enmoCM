@@ -1730,6 +1730,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     //Create chrono number
     //######
     if ($cat_id == 'outgoing') {
+        if ($resultChrono->alt_identifier == '' and false) {
         require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
             . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
         $cBoxId = get_value_fields($values_form, 'arbox_id');
@@ -1752,11 +1753,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             $db->query("update " . $table_ext ." set alt_identifier = '" 
                 . $db->protect_string_db($myChrono) . "' where res_id = " . $res_id);
         }
+    }
     } elseif ($cat_id == 'incoming' || $cat_id == 'internal' ) {
         $queryChrono = "select alt_identifier from " . $table_ext 
             . " where res_id = " . $res_id;
         $resultChrono = $db->fetch_array();
-        if ($resultChrono->alt_identifier == '') {
+        if ($resultChrono->alt_identifier == '' and false) {
             require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
                 . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
             $cBoxId = get_value_fields($values_form, 'arbox_id');
