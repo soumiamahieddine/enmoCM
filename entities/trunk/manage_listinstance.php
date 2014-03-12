@@ -346,23 +346,47 @@ case 'dest_to_copy':
             $_SESSION[$origin]['diff_list']['copy']['users'] = array();
         
         $old_dest = $_SESSION[$origin]['diff_list']['dest']['users'][0]['user_id'];
-        if(!in_array('copy', $user_roles[$old_dest])) {
-            array_push(
-                $_SESSION[$origin]['diff_list']['copy']['users'],
-                array(
-                    'user_id' => $_SESSION[$origin]['diff_list']['dest']['users'][0]['user_id'],
-                    'firstname' => $_SESSION[$origin]['diff_list']['dest']['users'][0]['firstname'],
-                    'lastname' => $_SESSION[$origin]['diff_list']['dest']['users'][0]['lastname'],
-                    'entity_id' => $_SESSION[$origin]['diff_list']['dest']['users'][0]['entity_id'],
-                    'entity_label' => $_SESSION[$origin]['diff_list']['dest']['users'][0]['entity_label'],
-                    'visible' => 'Y'
-                )
-            );
+        
+        if($_SESSION['collection_id_choice']!="letterbox_coll"){
+                if(!in_array('copy', $user_roles[$old_dest])) {
+                    array_push(
+                        $_SESSION[$origin]['diff_list']['copy']['users'],
+                        array(
+                            'user_id' => $_SESSION[$origin]['diff_list']['dest']['users'][0]['user_id'],
+                            'firstname' => $_SESSION[$origin]['diff_list']['dest']['users'][0]['firstname'],
+                            'lastname' => $_SESSION[$origin]['diff_list']['dest']['users'][0]['lastname'],
+                            'entity_id' => $_SESSION[$origin]['diff_list']['dest']['users'][0]['entity_id'],
+                            'entity_label' => $_SESSION[$origin]['diff_list']['dest']['users'][0]['entity_label'],
+                            'visible' => 'Y'
+                        )
+                    );
+                }
+                unset($_SESSION[$origin]['diff_list']['dest']['users'][0]);
+                $_SESSION[$origin]['diff_list']['dest']['users'] = array_values(
+                    $_SESSION[$origin]['diff_list']['dest']['users']
+                );
+
+        }else{
+            $old_dest_array = $_SESSION[$origin]['diff_list']['dest']['users'][0];
+            $old_copy_array = $_SESSION[$origin]['diff_list']['copy']['users'][0];
+
+            if(!in_array('copy', $user_roles[$old_dest])) {
+                $_SESSION[$origin]['diff_list']['copy']['users'][0]['user_id'] = $_SESSION[$origin]['diff_list']['dest']['users'][0]['user_id'];
+                $_SESSION[$origin]['diff_list']['copy']['users'][0]['firstname'] = $_SESSION[$origin]['diff_list']['dest']['users'][0]['firstname'];
+                $_SESSION[$origin]['diff_list']['copy']['users'][0]['lastname'] = $_SESSION[$origin]['diff_list']['dest']['users'][0]['lastname'];
+                $_SESSION[$origin]['diff_list']['copy']['users'][0]['entity_id'] = $_SESSION[$origin]['diff_list']['dest']['users'][0]['entity_id'];
+                $_SESSION[$origin]['diff_list']['copy']['users'][0]['entity_label'] = $_SESSION[$origin]['diff_list']['dest']['users'][0]['entity_label'];
+                $_SESSION[$origin]['diff_list']['copy']['users'][0]['visible'] = 'Y';
+            }
+
+            $_SESSION[$origin]['diff_list']['dest']['users'][0]['user_id'] = $old_copy_array['user_id'];
+            $_SESSION[$origin]['diff_list']['dest']['users'][0]['firstname'] = $old_copy_array['firstname'];
+            $_SESSION[$origin]['diff_list']['dest']['users'][0]['lastname'] = $old_copy_array['lastname'];
+            $_SESSION[$origin]['diff_list']['dest']['users'][0]['entity_id'] = $old_copy_array['entity_id'];
+            $_SESSION[$origin]['diff_list']['dest']['users'][0]['entity_label'] = $old_copy_array['entity_label'];
+            $_SESSION[$origin]['diff_list']['dest']['users'][0]['visible'] = 'Y'; 
+
         }
-        unset($_SESSION[$origin]['diff_list']['dest']['users'][0]);
-        $_SESSION[$origin]['diff_list']['dest']['users'] = array_values(
-            $_SESSION[$origin]['diff_list']['dest']['users']
-        );
         $dest_is_set = false;
     }
     break;
@@ -687,12 +711,12 @@ $linkwithwhat =
 						<td><?php echo $user['entity_label']; ?></td>
 						<td class="action_entities"><?php 
 							if (!$noDelete && ($role_id != 'dest' && !$onlyCc)) { ?><!-- Remove user --> 
-								<a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>" class="delete"><?php echo _DELETE; ?></a><?php                       
+								<a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>" class="delete"><?php echo _DELETE; ?></a><?php
 							} ?>
 						</td>
 						<td class="action_entities"><!-- Switch copy to dest --><?php
 							//if($role_id == 'dest' && isset($roles['copy']) && ($role_id != 'dest' && $onlyCc)) { 
-							if($role_id == 'dest' && isset($roles['copy']) && !$onlyCc) {?>
+							if($role_id == 'dest' && isset($roles['copy']) && !$onlyCc && $_SESSION[$origin]['diff_list']['copy']['users'][0]!='') {?>
 								<a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy" class="down"><?php echo _TO_CC;?></a><?php
 							} elseif($role_id == 'copy' && !$onlyCc &&  isset($roles['dest'])) { ?>
 								<a href="<?php echo $linkwithwhat;?>&action=copy_to_dest&role=copy&rank=<?php echo $i;?>" class="up"><?php echo _TO_DEST;?></a><?php
