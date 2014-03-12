@@ -340,7 +340,7 @@ class entities extends dbquery
         
         /* CV 1.5 : ancestors up to depth n*/        
         $total = preg_match_all(
-        	"|@ancestor_entity\[('[^\]]*')\](?:\[(\d)\])?|", $where, $tmpArr,
+        	"|@ancestor_entities\[('[^\]]*')\](?:\[(\d)\])?|", $where, $tmpArr,
             PREG_PATTERN_ORDER
         );
         if ($total > 0) {
@@ -361,7 +361,7 @@ class entities extends dbquery
                 if($userId == 'superadmin')
                     $entity = $this->empty_list();
                 $where = preg_replace(
-                    "|@ancestor_entity\[('[^\]]*')\](?:\[(\d)\])?|", $entity, $where, 1
+                    "|@ancestor_entities\[('[^\]]*')\](?:\[(\d)\])?|", $entity, $where, 1
                     );
             }
         }
