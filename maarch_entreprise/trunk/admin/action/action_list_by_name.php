@@ -31,8 +31,11 @@
 $db = new dbquery();
 $db->connect();
 $db->query('select label_action as tag from '
-    . $_SESSION['tablename']['actions'] . " where lower(label_action) like lower'"
-    . $_REQUEST['what'] . "%') order by label_action");
+    . $_SESSION['tablename']['actions'] . " where lower(label_action) like lower('%".$_REQUEST['what']."%') order by label_action");
+
+
+
+	
 $listArray = array();
 while($line = $db->fetch_object()){
 	array_push($listArray, $line->tag);
