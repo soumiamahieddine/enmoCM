@@ -51,9 +51,10 @@ $select = array();
 	
 		$where .= " (foldertype_id = ".$res->foldertype_id.") and (lower(folder_name) like lower('%"
 			.$req->protect_string_db($_REQUEST['Input'])."%') or lower(folder_id) like lower('%"
-			.$req->protect_string_db($_REQUEST['Input'])."%') ) and (status <> 'DEL' or status <> 'FOLDDEL')";
+			.$req->protect_string_db($_REQUEST['Input'])."%') ) and (status NOT IN('DEL','FOLDDEL'))";
 		//Order
 		$order = 'order by folders_system_id, folder_name';
+
 	}else{
 	
 		$db->query("select doctypes_first_level_id from doctypes");
@@ -70,7 +71,7 @@ $select = array();
 		$wh .= 0 ;
 		$where .= " (foldertype_id in (".$wh.")) and (lower(folder_name) like lower('%"
 		.$req->protect_string_db($_REQUEST['Input'])."%') or lower(folder_id) like lower('%"
-		.$req->protect_string_db($_REQUEST['Input'])."%') ) and (status <> 'DEL' or status <> 'FOLDDEL')";
+		.$req->protect_string_db($_REQUEST['Input'])."%') ) and (status NOT IN('DEL','FOLDDEL'))";
 		//Order
 		$order = 'order by folders_system_id, folder_name';
 	}
