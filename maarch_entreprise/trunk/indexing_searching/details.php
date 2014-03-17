@@ -431,7 +431,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     if (! isset($_POST['up_res_id']) || ! $_POST['up_res_id']) {
                         if ($_SESSION['indexation'] == false) {
                             echo '<a href="#" onclick="history.go(';
-                            if ($_SESSION['origin'] == 'basket' || $_SESSION['origin'] == 'show_folder') {
+                            if ($_SESSION['origin'] == 'basket' || $_SESSION['origin'] == 'show_folder' || $_SESSION['origin'] == 'search_folder_tree') {
                                 echo '-2';
                             } else {
                                 echo '-1';

@@ -127,8 +127,13 @@ if ($s_id == '') {
         $_SESSION['collection_id_choice'], 
         $idToTest
     );
+	
     //$_SESSION['error'] = 'coll '.$coll_id.', res_id : '.$s_id;
-    $_SESSION['origin'] = '';
+	if($_SESSION['origin'] = 'search_folder_tree'){
+		$_SESSION['origin'] = 'search_folder_tree';
+	}else{
+		$_SESSION['origin'] = '';
+	}	
     if (!$right) {
         ?>
         <script type="text/javascript">
