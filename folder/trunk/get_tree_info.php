@@ -296,7 +296,8 @@ try {
          . $_SESSION['config']['businessappurl'] . "tools/MaarchJS/src/img/', "
          . "'initial_structure' : [";
     for ($i = 0; $i < count($searchCustomerResults); $i ++) {
-        $resStr .= "{'id' : 'folder::" . $searchCustomerResults[$i]['folder_id']
+	$folderid_without_space = str_replace(' ','_',$searchCustomerResults[$i]['folder_id']);
+        $resStr .= "{'id' : 'folder::" . $folderid_without_space
                 . "', 'label' :'<b>" . addslashes(
                     $searchCustomerResults[$i]['folder_id']
                 ) . "</b> <small>(" . addslashes($searchCustomerResults[$i]['folder_name'])
@@ -304,7 +305,7 @@ try {
                  . $searchCustomerResults[$i]['folder_id']
                  . "', 'classes' : ['default_style'], 'open' : true, children: [";
         for ($j = 0; $j < count($searchCustomerResults[$i]['content']); $j ++) {
-            $resStr .= "{'id' : 'folder::" . $searchCustomerResults[$i]['folder_id']
+            $resStr .= "{'id' : 'folder::" . $folderid_without_space
                 . "::dfl::" . addslashes(
                 $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_id']
                 ) . "', 'label' :'" . addslashes(
@@ -319,7 +320,7 @@ try {
                 $searchCustomerResults[$i]['content'][$j]['second_level']
             ); $k ++
             ) {
-                $resStr .= "{'id' : 'folder::" . $searchCustomerResults[$i]['folder_id']
+                $resStr .= "{'id' : 'folder::" . $folderid_without_space
                 . "::dfl::" . addslashes(
                 $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_id']
                 ) . "::dsl::" . addslashes(
@@ -337,7 +338,7 @@ try {
                 ); $l ++
                 ) {
 
-					    $resStr .= "{'id' : 'folder::" . $searchCustomerResults[$i]['folder_id']
+					    $resStr .= "{'id' : 'folder::" . $folderid_without_space
                 . "::dfl::" . addslashes(
                 $searchCustomerResults[$i]['content'][$j]['doctypes_first_level_id']
                 ) . "::dsl::" . addslashes(
