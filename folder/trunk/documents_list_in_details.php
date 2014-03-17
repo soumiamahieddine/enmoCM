@@ -58,7 +58,7 @@ if(isset($_REQUEST['listid']) && $_REQUEST['listid'] <> "") {
         //From security
         foreach (array_keys($_SESSION['user']['security']) as $collId) {
             if($collId == $_SESSION['current_foldertype_coll_id']) {
-                $where_tab[] = $_SESSION['user']['security'][$collId]['DOC']['where'];
+                $where_tab[] = '(' . $_SESSION['user']['security'][$collId]['DOC']['where'] . ')';
                 break;
             }
         }
