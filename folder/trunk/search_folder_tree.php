@@ -52,6 +52,7 @@ $core->manage_location_bar(
 /***********************************************************/
 
 //$core->show_array($_REQUEST);
+$_SESSION['origin'] = "search_folder_tree";
 ?>
 <script type="text/javascript" >
     BASE_URL = "<?php echo $_SESSION['config']['businessappurl'] ?>";
