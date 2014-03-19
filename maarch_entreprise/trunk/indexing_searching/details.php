@@ -430,13 +430,19 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <?php
                     if (! isset($_POST['up_res_id']) || ! $_POST['up_res_id']) {
                         if ($_SESSION['indexation'] == false) {
-                            echo '<a href="#" onclick="history.go(';
-                            if ($_SESSION['origin'] == 'basket' || $_SESSION['origin'] == 'show_folder' || $_SESSION['origin'] == 'search_folder_tree') {
-                                echo '-2';
-                            } else {
-                                echo '-1';
-                            }
-                            echo ');" class="back">' .  _BACK . '</a>';
+						
+							if($_SESSION['origin'] == 'show_folder' || $_SESSION['origin'] == 'search_folder_tree'){
+								echo '<a href="#" onclick="history.back();return false;" class="back">' .  _BACK . '</a>';
+								
+							}else{
+								echo '<a href="#" onclick="history.go(';
+								if ($_SESSION['origin'] == 'basket' ) {
+									echo '-2';
+								} else {
+									echo '-1';
+								}
+								echo ');" class="back">' .  _BACK . '</a>';
+							}
                         }
                     }
                     ?>
