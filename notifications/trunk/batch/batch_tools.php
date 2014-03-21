@@ -104,7 +104,10 @@ function Bt_logInDataBase($totalProcessed=0, $totalErrors=0, $info='')
            . $GLOBALS['db']->current_datetime() . ", " . $totalProcessed . ", " . $totalErrors . ", '"
            . $GLOBALS['func']->protect_string_db(substr(str_replace('\\', '\\\\', str_replace("'", "`", $info)), 0, 999)) . "')";
            //. $GLOBALS['func']->protect_string_db(substr($info, 0, 999)) . "')";
-    Bt_doQuery($GLOBALS['db'], $query);
+    $dbLog = new dbquery();
+    $dbLog->connect();
+    $dbLog->query($query);
+    //Bt_doQuery($GLOBALS['db'], $query);
 }
 
 /**
