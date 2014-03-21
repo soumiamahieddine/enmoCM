@@ -157,4 +157,3 @@ function Bt_myInclude($file)
         throw new IncludeFileError($file);
     }
 }
-
