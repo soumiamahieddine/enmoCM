@@ -76,8 +76,9 @@ while ($state <> 'END') {
                 }
             }
             $return = $GLOBALS['mailer']->send(array($email->recipient), (string)$mailerParams->type);
-            if($return || $return == 0) {
+            if($return == 1) {
                 $exec_result = 'SENT';
+                
             } else {
                 $GLOBALS['logger']->write("Errors when sending message through SMTP :" . implode(', ', $GLOBALS['mailer']->errors), 'ERROR');
                 $exec_result = 'FAILED';
