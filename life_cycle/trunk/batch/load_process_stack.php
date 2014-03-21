@@ -365,9 +365,11 @@ $GLOBALS['func'] = new functions();
 $GLOBALS['db'] = new dbquery($GLOBALS['configFile']);
 $GLOBALS['db2'] = new dbquery($GLOBALS['configFile']);
 $GLOBALS['db3'] = new dbquery($GLOBALS['configFile']);
+$GLOBALS['dbLog'] = new dbquery($GLOBALS['configFile']);
 $GLOBALS['db']->connect();
 $GLOBALS['db2']->connect();
 $GLOBALS['db3']->connect();
+$GLOBALS['dbLog']->connect();
 $GLOBALS['docserverControler'] = new docservers_controler();
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
                          . $GLOBALS['batchName'] . '_' . $GLOBALS['policy'] 

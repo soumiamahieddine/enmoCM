@@ -290,7 +290,9 @@ $coreTools = new core_tools();
 $coreTools->load_lang($lang, $maarchDirectory, $MaarchApps);
 $GLOBALS['func'] = new functions();
 $GLOBALS['db'] = new dbquery($GLOBALS['configFile']);
+$GLOBALS['dbLog'] = new dbquery($GLOBALS['configFile']);
 $GLOBALS['db']->connect();
+$GLOBALS['dbLog']->connect();
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
                          . $GLOBALS['batchName'] . '_' . $GLOBALS['policy'] 
                          . '_' . $GLOBALS['cycle'] . '_error.lck';
