@@ -25,6 +25,8 @@ $core->load_lang();
 $core->test_service('view_folder_tree', 'folder');
 $_SESSION['indexation'] = false;
 
+$_SESSION['category_id_session'] = '';
+
 //Definition de la collection
 $_SESSION['collection_id_choice'] = $_SESSION['user']['collections'][0];
 if ($_SESSION['user']['collections'][1] == 'letterbox_coll') {
