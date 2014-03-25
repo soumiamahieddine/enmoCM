@@ -1647,7 +1647,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         }
         $db->connect();
         $db->query("update ". $table_ext 
-            . " set exp_user_id = 0, dest_user_id = 0, exp_contact_id = 0, dest_contact_id = 0 where res_id = " 
+            . " set exp_user_id = NULL, dest_user_id = NULL, exp_contact_id = NULL, dest_contact_id = NULL where res_id = " 
             . $res_id);
     }
     
