@@ -144,6 +144,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         'img_tax_sum' => true,
         'img_total_sum' => true,
         'img_process_limit_date' => true,
+        'img_doc_custom_n2' => true,
+        'img_folder_id' => true,
         'img_destination' => true,
         'show_folder' => false
     );
