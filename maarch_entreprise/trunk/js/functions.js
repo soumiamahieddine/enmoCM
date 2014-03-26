@@ -1318,15 +1318,11 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
                 }
                 else if(response.status == 2) // Confirm asked to the user
                 {
-                    if(response.action_status != '' && response.action_status != 'NONE')
-                    {
-                        actions_status.action_push(response.action_status);
-                    }
                     //console.log('confirm');
                     //alert('confirm');
                     var modal_txt='<div class=h2_title>'+response.confirm_content+'</div>';
                     modal_txt += '<p class="buttons">';
-                    modal_txt += '<input type="button" name="submit" id="submit" value="'+response.validate+'" class="button" onclick="action_send_form_confirm_result( \''+path_manage_script+'\', \''+mode_req+'\',\''+id_action+'\', \''+res_id_values+'\', \''+tablename+'\', \''+modulename+'\', \''+id_coll+'\');"/>';
+                    modal_txt += '<input type="button" name="submit" id="submit" value="'+response.validate+'" class="button" onclick="if(response.action_status != \'\' && response.action_status != \'NONE\'){actions_status.action_push(response.action_status);}action_send_form_confirm_result( \''+path_manage_script+'\', \''+mode_req+'\',\''+id_action+'\', \''+res_id_values+'\', \''+tablename+'\', \''+modulename+'\', \''+id_coll+'\');"/>';
                     modal_txt += ' <input type="button" name="cancel" id="cancel" value="'+response.cancel+'" class="button" onclick="destroyModal(\'modal_'+id_action+'\');"/></p>';
                     //console.log(modal_txt);
                     window.top.createModal(modal_txt, 'modal_'+id_action, '150px', '300px');
