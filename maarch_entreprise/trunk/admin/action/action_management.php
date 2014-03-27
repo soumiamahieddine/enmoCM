@@ -132,7 +132,10 @@ elseif($mode == 'up' || $mode == 'add'){
                        ?> checked="checked"<?php
                     } ?> /><?php echo _NO;?>
                 </p>
-            <?php } ?>
+            <?php }else{
+
+                    echo '<input type="hidden" name="is_folder_action" value="N"';
+                } ?>
             <p class="buttons">
         <?php
             if($mode == 'up'){
