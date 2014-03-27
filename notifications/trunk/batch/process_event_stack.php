@@ -85,8 +85,8 @@ while ($state <> 'END') {
                 $recipient = $recipients[$i];
                 $user_id = $recipient->user_id;              
                 $logger->write('Recipient ' . $user_id, 'INFO');
-                if($recipient->enabled == 'N') {
-                    $logger->write($user_id .' is disabled', 'INFO');
+                if($recipient->enabled == 'N' || $recipient->status == 'DEL') {
+                    $logger->write($user_id .' is disabled or deleted, this notification will not sent', 'INFO');
                     unset($recipients[$i]);
                     continue;
                 }
