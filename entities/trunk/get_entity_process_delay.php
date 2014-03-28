@@ -149,10 +149,13 @@ $where_clause = $sec->get_where_clause_from_coll_id('letterbox_coll');
 //var_dump($where_clause);
 if ($where_clause)
     $where_clause = " and ".$where_clause;
-
+	
+$totalDocTypes = count($doctypes);
+	
 for($i=0; $i<count($doctypes);$i++)
 {
-    $valid = false;
+    //Permet d'afficher ou non les entités dont le nombre de courrier est égal à 0
+	$valid = true;
     if ($_SESSION['user']['entities']){
         foreach($_SESSION['user']['entities'] as $user_ent){
             if ($doctypes[$i]['ID'] == $user_ent['ENTITY_ID']){
@@ -205,7 +208,12 @@ for($i=0; $i<count($doctypes);$i++)
 
 if($report_type == 'graph')
 {
-    $src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=1000&hauteur=400&title=".$title."&labelX="._MONTH."&labelY="._N_DAYS;
+    $largeur=50*$totalDocTypes;
+    if ($totalDocTypes<5){
+        $largeur=1000;
+    }
+
+    $src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=250&title=".$title."&labelY="._N_DAYS;
     for($i=0;$i<count($_SESSION['labels1']);$i++)
     {
         $src1 .= "&labels[]=".$_SESSION['labels1'][$i];
@@ -225,7 +233,7 @@ if ( $has_data)
     if($report_type == 'graph')
     {
     ?>
-        <img src="<?php echo $src1;?>" alt="<?php echo $title;?>"/><?php
+        <div style="overflow:auto"><img src="<?php echo $src1;?>" alt="<?php echo $title;?>"/></div><?php
      }
     elseif($report_type == 'array')
     {
