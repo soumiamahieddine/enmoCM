@@ -593,6 +593,7 @@ $str_status = '(';
 					elseif($report_type == 'array')
 					{
 						array_push($data, array('LABEL' => $_SESSION['coll_categories']['letterbox_coll'][$key], 'VALUE' => $res->total ));
+						array_push($totalCourrier, $res->total);
 					}
 
 					if($res->total > 0)
