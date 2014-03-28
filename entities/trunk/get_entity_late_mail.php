@@ -60,26 +60,28 @@ $where_clause = $sec->get_where_clause_from_coll_id('letterbox_coll');
 //var_dump($where_clause);
 if ($where_clause)
     $where_clause = " and ".$where_clause;
+	
+$totalCourrier=array();
+$totalEntities = count($entities);
 
 for($i=0; $i<count($entities);$i++)
 {
-    $valid = false;
-    if ($_SESSION['user']['entities']){
+    $valid = true;
+   /* if ($_SESSION['user']['entities']){
         foreach($_SESSION['user']['entities'] as $user_ent){
             if ($entities[$i]['ID'] == $user_ent['ENTITY_ID']){
                 $valid = true;
             }
         }
-    }
+    }*/
     if ($valid == 'true' || $_SESSION['user']['UserId'] == "superadmin")
     {
 /*
     $this->query("select l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id and l.item_id='".$user['ID']."'  and item_type = 'user_id' and  r.flag_alarm1 = 'N' and (r.status = 'NEW' or r.status = 'COU') and date(r.alarm1_date) =date(now()) and l.item_mode = 'dest' and item_type='user_id'");
 */
+        $db->query("SELECT count(res_id) AS total FROM ".$view." WHERE  status not in ('DEL','INIT') ".$where_clause." and destination = '".$entities[$i]['ID']."' and date(process_limit_date) <= date(now()) ");
 
-
-        $db->query("SELECT count(res_id) AS total FROM ".$view." WHERE  status in ".$str_status." ".$where_clause." and destination = '".$entities[$i]['ID']."' and date(process_limit_date) <= date(now()) ");
-        if( $db->nb_result() > 0)
+		if( $db->nb_result() > 0)
         {
             $tmp = 0;
             $res = $db->fetch_object();
@@ -92,6 +94,7 @@ for($i=0; $i<count($entities);$i++)
             elseif($report_type == 'array')
             {
                 array_push($data, array('LABEL' => $entities[$i]['LABEL'], 'VALUE' => $res->total ));
+                array_push($totalCourrier, $res->total);
             }
             if($res->total > 0)
             {
@@ -117,9 +120,19 @@ for($i=0; $i<count($entities);$i++)
     }
 }
 
+if ($report_type == 'array'){
+    $totalCourriers=array_sum($totalCourrier);
+    array_push($data, array('LABEL' => 'Total :', 'VALUE' => $totalCourriers));
+}
+
 if($report_type == 'graph')
 {
-    $src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=1000&hauteur=400&title=".$title."&labelX="._MONTH."&labelY="._N_DAYS;
+    $largeur=50*$totalEntities;
+    if ($totalEntities<5){
+        $largeur=1000;
+    }
+
+    $src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=250&title=".$title."&labelY="._N_DAYS;
     for($i=0;$i<count($_SESSION['labels1']);$i++)
     {
         $src1 .= "&labels[]=".$_SESSION['labels1'][$i];
@@ -131,13 +144,13 @@ if($report_type == 'graph')
 }
 elseif($report_type == 'array')
 {
-    array_unshift($data, array('LABEL' => _ENTITY, 'VALUE' => _NB_DOCS));
+    array_unshift($data, array('LABEL' => _ENTITY, 'VALUE' =>_NB_MAILS1));
 }
 
 if ($has_data) {
     if($report_type == 'graph') {
     ?>
-        <img src="<?php echo $src1;?>" alt="<?php echo $title;?>"/><?php
+        <div style="overflow:auto"><img src="<?php echo $src1;?>" alt="<?php echo $title;?>"/></div><?php
     } elseif($report_type == 'array') {
         $graph->show_stats_array($title, $data);
     }
