@@ -4,6 +4,7 @@ require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_secur
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once('modules'.DIRECTORY_SEPARATOR.'reports'.DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_graphics.php");
+require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'entities_tables.php');
 
 $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
@@ -30,6 +31,14 @@ for($i=0;$i<count($search_status);$i++)
 	$str_status .= "'".$search_status[$i]['ID']."',";
 }
 $str_status = preg_replace('/,$/', ')', $str_status);
+
+//Récupération de l'ensemble des types de documents
+$db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
+$entities = array();
+while($res = $db->fetch_object())
+{
+    array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res->short_label));
+}
 
 if($period_type == 'period_year')
 {
@@ -159,13 +168,10 @@ else
 	exit();
 }
 
-
-
-
-
 $has_data = false;
 $title = _MAIL_VOL_BY_ENT_REPORT.' '.$date_title ;
 $db = new dbquery();
+
 if($report_type == 'graph')
 {
 	$vol_an = array();
@@ -183,34 +189,47 @@ $where_clause = $sec->get_where_clause_from_coll_id('letterbox_coll');
 if ($where_clause)
 	$where_clause = " and ".$where_clause;
 
-
-$db->query("select count(*) as total, entity_label, destination from ".$view." where status in ".$str_status."   ".$where_date.$where_clause." group by destination,entity_label");
-//$db->show();
-while($res = $db->fetch_object())
-{
-/*
-	$db->query("select count(*) as total from ".$view." where status in ".$str_status."   ".$where_date." and category_id = '".$key."'");
-*/
+$totalCourrier=array();
+$totalEntities = count($entities);	
 	
-	if($report_type == 'graph')
-	{
-		array_push($_SESSION['labels1'], utf8_decode($db->wash_html($res->entity_label, 'NO_ACCENT')));
-		array_push($vol_an, $res->total);
-	}
-	elseif($report_type == 'array')
-	{
-		array_push($data, array('LABEL' => $res->entity_label, 'VALUE' => $res->total ));
-	}
+for($i=0; $i<count($entities);$i++)
+{
+	$db->query("select count(*) as total from ".$view." where status not in ('DEL','INIT')   ".$where_date.$where_clause." and destination = '".$entities[$i]['ID']."'");
+	//$db->show();
+	$res = $db->fetch_object();
+	/*
+		$db->query("select count(*) as total from ".$view." where status in ".$str_status."   ".$where_date." and category_id = '".$key."'");
+	*/
+		
+		if($report_type == 'graph')
+		{
+				array_push($_SESSION['labels1'], utf8_decode($db->wash_html($entities[$i]['LABEL'], 'NO_ACCENT')));
+				array_push($vol_an, $res->total);
+		}
+		elseif($report_type == 'array')
+		{
+			array_push($data, array('LABEL' => $entities[$i]['LABEL'], 'VALUE' => $res->total ));
+			array_push($totalCourrier, $res->total);		
+		}
 
-	if($res->total > 0)
-	{
-		$has_data = true;
-	}
+			$has_data = true;
 }
+
+if($report_type == 'array'){
+
+	$totalCourriers=array_sum($totalCourrier);
+	array_push($data, array('LABEL' => 'Total :', 'VALUE' => $totalCourriers ));
+}
+
 if($report_type == 'graph')
 {
-	$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=pie&largeur=1000&hauteur=300&title=".$title;
+	$largeur=50*$totalEntities;
+	if ($totalEntities<5){
+		$largeur=1000;
+	}
 
+	$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=250&title=".$title;
+	
 	for($i=0;$i<count($vol_an);$i++)
 	{
 		$src1 .= "&values[]=".$vol_an[$i];
@@ -226,7 +245,7 @@ if($has_data)
 	if($report_type == 'graph')
 	{
 		?>
-			<img src="<?php echo $src1;?>" alt=""/><br/><br/>
+			<div style="overflow:auto"><img src="<?php echo $src1;?>" alt=""/></div><br/><br/>
 		<?php
 	}
 	elseif($report_type == 'array')
