@@ -168,7 +168,7 @@ class graphics
 
 		$plot->grid->setBackgroundColor($this->grid_color);
 
-		$plot->yAxis->setLabelPrecision(1);
+		//$plot->yAxis->setLabelPrecision(1);
 
 	   // To add space around the plot
 	   $plot->setSpace(
@@ -202,7 +202,7 @@ class graphics
 	public function histo($width = 400, $height = 400, $values, $title, $labels, $bottom_margin, $XLabel ="", $YLabel = "")
 	{
 
-  		 $graph = new Graph($width, $height);
+  		$graph = new Graph($width, $height);
    		$graph->setAntiAliasing(TRUE);
  		$graph->border->setColor($this->border_color);
 
@@ -212,10 +212,10 @@ class graphics
 		$plot->title->setColor($this->typo_color);
 		$plot->grid->setBackgroundColor($this->grid_color);
 		$plot->title->move(0, -15);
-	   $plot->setBarColor(
+	   	$plot->setBarColor(
 		 $this->plot_color
 	   );
-	   $plot->setSpace(5, 5, 5, NULL);
+	   $plot->setSpace(0, 0, 5, NULL);
 	   $plot->setPadding(NULL, NULL, 50, $bottom_margin);
 
 	   $plot->setBackgroundColor($this->background_color);
@@ -229,7 +229,7 @@ class graphics
 	   $plot->xAxis->label->setAngle(90);
 		$plot->xAxis->label->setColor($this->typo_color);
 		$plot->yAxis->label->setColor($this->typo_color);
-	   $plot->xAxis->label->setFont(new Tuffy(8));
+	   $plot->xAxis->label->setFont(new Tuffy(10));
 
 	   $plot->yAxis->title->set($YLabel);
 		$plot->yAxis->title->setFont(new TuffyBold(10));
