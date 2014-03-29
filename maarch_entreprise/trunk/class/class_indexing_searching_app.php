@@ -816,7 +816,7 @@ class indexing_searching_app extends dbquery
         return $tab;
     }
 
-    private function json_line($id, $field_type, $param)
+    public function json_line($id, $field_type, $param)
     {
         $str = '';
         $init = "'label' : '".addslashes($param['field_label'])."', 'value' :'";
