@@ -51,7 +51,7 @@ class LinkController
 
         foreach ($arrayToFormat as $key => $value) {
             $infos = $this->getDocInfos($key, $_SESSION['current_basket']['coll_id']);
-            //print_r($infos);
+            $infos['subject'] = preg_replace("/\r\n|\r|\n/",'<br/>',$infos['subject']);
             $return .= '<div id="ged_'.$key.$sens.'" class="linkDiv">';
                 $return .= '<table>';
                     $return .= '<tr>';
