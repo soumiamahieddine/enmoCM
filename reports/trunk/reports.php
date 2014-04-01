@@ -51,14 +51,14 @@ $rep->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
 $db->query(
 	"SELECT count(*) as total from " . $_SESSION['collections'][0]['view']
-	. " where status in ('NEW', 'COU')"
+	. " where status not in ('DEL')"
 );
 //$db->show();
 $countPiece = $db->fetch_object();
 if ($rep->is_module_loaded('folder')) {
     $db->query(
     	"SELECT count(*) as total from " 
-    	. $_SESSION['tablename']['fold_folders'] . " where status = 'NEW'"
+    	. $_SESSION['tablename']['fold_folders'] . " where status not in ('DEL','FOLDDEL')"
     );
     $countFolder = $db->fetch_object();
 }
