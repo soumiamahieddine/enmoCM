@@ -57,7 +57,7 @@ if(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'foldertype')
 					}
 
 					if($tab[$i][$j][$value]=="foldertype_label"){
-						$tab[$i][$j]["label"]=strtoupper(_LABEL);
+						$tab[$i][$j]["label"]=strtoupper(_FOLDERTYPE);
 						$tab[$i][$j]["size"]="50";
 						$tab[$i][$j]["label_align"]="left";
 						$tab[$i][$j]["align"]="left";
