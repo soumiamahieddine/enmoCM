@@ -236,18 +236,20 @@ $str_status = '(';
 		if($report_type == 'graph')
 		{
 			$largeur=50*$totalDocTypes;
-			if ($totalDocTypes<5){
+			if ($totalDocTypes<20){
 				$largeur=1000;
 			}
 
 			$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=250&title=".$title."&labelY="._N_DAYS;
 			for($i=0;$i<count($_SESSION['labels1']);$i++)
 			{
-				$src1 .= "&labels[]=".$_SESSION['labels1'][$i];
+				//$src1 .= "&labels[]=".$_SESSION['labels1'][$i];
 			}
+			$_SESSION['GRAPH']['VALUES']='';
 			for($i=0;$i<count($val_an);$i++)
 			{
-				$src1 .= "&values[]=".$val_an[$i];
+				$_SESSION['GRAPH']['VALUES'][$i]=$val_an[$i];
+				//$src1 .= "&values[]=".$val_an[$i];
 			}
 		}
 		elseif($report_type == 'array')
@@ -264,6 +266,10 @@ $str_status = '(';
 			}
 			elseif($report_type == 'array')
 			{
+				$data2=urlencode(serialize($data));
+				$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"".$data2."\")' style='float:right;'/>";
+				echo $form;
+
 				$graph->show_stats_array($title, $data);
 			}
 		}
@@ -453,6 +459,10 @@ $str_status = '(';
 				<img src="<?php echo $src1;?>" alt="<?php echo $title1;?>"/><?php }
 				elseif($report_type  == 'array')
 				{
+					$data2=urlencode(serialize($data));
+					$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"".$data2."\")' style='float:right;'/>";
+					echo $form;
+
 					$graph->show_stats_array($title1, $data);
 				}
 			}
@@ -464,6 +474,10 @@ $str_status = '(';
 				<?php }
 				elseif($report_type == 'array')
 				{
+					$data2=urlencode(serialize($data));
+					$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"".$data2."\")' style='float:right;'/>";
+					echo $form;
+
 					$graph->show_stats_array($title2, $data);
 				}
 			}
@@ -478,8 +492,9 @@ $str_status = '(';
 		{
 			$has_data = false;
 			$title = _MAIL_TYPOLOGY_REPORT.' '.$date_title ;
-			$db->query("select distinct type_id, type_label from ".$view ." where status in ".$str_status." and ".$where_date);
-	//$db->show();
+			//$db->query("select distinct type_id, type_label from ".$view ." where status in ".$str_status." and ".$where_date." ORDER BY type_label ASC");
+			$db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description");
+			//$db->show();
 			if($report_type == 'graph')
 			{
 				$vol_an = array();
@@ -494,19 +509,20 @@ $str_status = '(';
 
 			$totalCourrier=array();
 			$totalEntities = count($entities);
-
+			$z=0;
 			while($line = $db->fetch_object())
 			{
 				$db2->query("select count(*) as total from ".$view." where status in ".$str_status."  and ".$where_date." and type_id = ".$line->type_id."");
 				$res = $db2->fetch_object();
 				if($report_type == 'graph')
 				{
-					array_push($_SESSION['labels1'], (string)utf8_decode($line->type_label));
+					//array_push($_SESSION['labels1'], (string)utf8_decode($line->type_label));
+					array_push($_SESSION['labels1'], (string)utf8_decode($line->description));
 					array_push($vol_an, $res->total);
 				}
 				elseif($report_type == 'array')
 				{
-					array_push($data, array('LABEL' =>$line->type_label, 'VALUE' => $res->total ));
+					array_push($data, array('LABEL' =>$line->description, 'VALUE' => $res->total ));
 					array_push($totalCourrier, $res->total);
 				}
 
@@ -514,6 +530,7 @@ $str_status = '(';
 				{
 					$has_data = true;
 				}
+				$totalDocTypes=$z++;
 			}
 
 			if($report_type == 'array'){
@@ -524,17 +541,18 @@ $str_status = '(';
 
 			if($report_type == 'graph')
 			{
-				$largeur=50*$totalEntities;
+				$largeur=50*$totalDocTypes;
 
-				if ($totalEntities<5){
+				if ($totalDocTypes<20){
 					$largeur=1000;
 				}
 
 				$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=150&title=".$title;
-
+				$_SESSION['GRAPH']['VALUES']='';
 				for($i=0;$i<count($vol_an);$i++)
 				{
-					$src1 .= "&values[]=".$vol_an[$i];
+					$_SESSION['GRAPH']['VALUES'][$i]=$vol_an[$i];
+					//$src1 .= "&values[]=".$vol_an[$i];
 				}
 			}
 			elseif($report_type == 'array')
@@ -552,6 +570,10 @@ $str_status = '(';
 				}
 				elseif($report_type == 'array')
 				{
+					$data2=urlencode(serialize($data));
+					$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"".$data2."\")' style='float:right;'/>";
+					echo $form;
+
 					$graph->show_stats_array($title, $data);
 				}
 			}
@@ -583,7 +605,7 @@ $str_status = '(';
 			foreach(array_keys($_SESSION['coll_categories']['letterbox_coll']) as $key)
 			{
 				if($key!='default_category'){
-					$db->query("select count(*) as total from ".$view." where status in ".$str_status."  and ".$where_date." and category_id = '".$key."'");
+					$db->query("select count(*) as total from ".$view." where status not in ('DEL')  and ".$where_date." and category_id = '".$key."'");
 					$res = $db->fetch_object();
 					if($report_type == 'graph')
 					{
@@ -617,9 +639,11 @@ $str_status = '(';
 
 				$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=150&title=".$title;
 
+				$_SESSION['GRAPH']['VALUES']='';
 				for($i=0;$i<count($vol_an);$i++)
 				{
-					$src1 .= "&values[]=".$vol_an[$i];
+					//$src1 .= "&values[]=".$vol_an[$i];
+					$_SESSION['GRAPH']['VALUES'][$i]=$vol_an[$i];
 				}
 			}
 			elseif($report_type == 'array')
@@ -637,6 +661,10 @@ $str_status = '(';
 				}
 				elseif($report_type == 'array')
 				{
+					$data2=urlencode(serialize($data));
+					$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"".$data2."\")' style='float:right;'/>";
+					echo $form;
+					
 					$graph->show_stats_array($title, $data);
 				}
 			}
