@@ -128,18 +128,20 @@ if ($report_type == 'array'){
 if($report_type == 'graph')
 {
     $largeur=50*$totalEntities;
-    if ($totalEntities<5){
+    if ($totalEntities<20){
         $largeur=1000;
     }
 
     $src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=250&title=".$title."&labelY="._N_DAYS;
     for($i=0;$i<count($_SESSION['labels1']);$i++)
     {
-        $src1 .= "&labels[]=".$_SESSION['labels1'][$i];
+        //$src1 .= "&labels[]=".$_SESSION['labels1'][$i];
     }
+    $_SESSION['GRAPH']['VALUES']='';
     for($i=0;$i<count($vol);$i++)
     {
-        $src1 .= "&values[]=".$vol[$i];
+        //$src1 .= "&values[]=".$vol[$i];
+        $_SESSION['GRAPH']['VALUES'][$i]=$vol[$i];
     }
 }
 elseif($report_type == 'array')
@@ -152,6 +154,11 @@ if ($has_data) {
     ?>
         <div style="overflow:auto"><img src="<?php echo $src1;?>" alt="<?php echo $title;?>"/></div><?php
     } elseif($report_type == 'array') {
+	
+		$data2=urlencode(serialize($data));
+		$form =	"<input type='button' class='button' value='Exporter les données' onclick='record_data(\"".$data2."\")' style='float:right;'/>";
+		echo $form;
+		
         $graph->show_stats_array($title, $data);
     }
 } else {
