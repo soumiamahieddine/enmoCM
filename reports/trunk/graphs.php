@@ -105,7 +105,7 @@ if(isset($_GET['labels']))
 
 if($_GET['type'] == "histo")
 {
-	$graphi->histo($width, $height, $values, $title, $_SESSION['labels1'], $margin_bottom,$labelX,$labelY);
+	$graphi->histo($width, $height, $_SESSION['GRAPH']['VALUES'], $title, $_SESSION['labels1'], $margin_bottom,$labelX,$labelY);
 }
 elseif($_GET['type'] == "courbe")
 {
