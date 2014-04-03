@@ -587,9 +587,9 @@ class lists extends dbquery
                     } else if ($_REQUEST['filter'] == 'isViewed') {
                     
                         if ($_SESSION['filters']['isViewed']['VALUE'] == 'yes') {
-                            $_SESSION['filters']['isViewed']['CLAUSE'] = "viewed > 0";
+                            $_SESSION['filters']['isViewed']['CLAUSE'] = "res_id in (select res_id from listinstance WHERE coll_id = '".$_SESSION['collection_id_choice']."' and item_type = 'user_id' and item_id = '".$_SESSION['user']['UserId']."' and item_mode = 'cc' and viewed > 0)";
                         } else  if ($_SESSION['filters']['isViewed']['VALUE'] == 'no') {
-                            $_SESSION['filters']['isViewed']['CLAUSE'] = "(viewed = 0 or viewed is null)";
+                            $_SESSION['filters']['isViewed']['CLAUSE'] = "res_id in (select res_id from listinstance WHERE coll_id = '".$_SESSION['collection_id_choice']."' and item_type = 'user_id' and item_id = '".$_SESSION['user']['UserId']."' and item_mode = 'cc' and viewed = 0 or viewed is null)";
                         }
                         
                     } else if ($_REQUEST['filter'] == 'user') {
