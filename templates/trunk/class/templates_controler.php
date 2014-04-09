@@ -759,7 +759,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         } else {
             $ExtractFileExt = explode ('.', $sName);
         }
-        return $ExtractFileExt[1];
+        return end($ExtractFileExt);
     }
     
     function storeTemplateFile() {
