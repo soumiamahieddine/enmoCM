@@ -830,12 +830,12 @@ class types extends dbquery
                 }
                 $this->connect();
                 $this->query($query);
-                while ($res = $this->fetch_object()) {
+                while ($res = $this->fetch_array()) {
                      array_push(
                          $values,
                          array(
-                             'id' => (string) $res->$foreignKey,
-                             'label' => $res->$foreignLabel,
+                             'id' => (string) $res[0],
+                             'label' => (string) $res[1],
                          )
                      );
                 }
