@@ -35,6 +35,10 @@
         <FIELD>
             <LIBELLE>Service destinataire</LIBELLE>
             <DATABASE_FIELD>destination</DATABASE_FIELD>
+        </FIELD>        
+		<FIELD>
+            <LIBELLE>Destinataire</LIBELLE>
+            <DATABASE_FIELD>dest_user</DATABASE_FIELD>
         </FIELD>
         <FIELD>
             <LIBELLE>Objet</LIBELLE>
