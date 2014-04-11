@@ -14,6 +14,11 @@ $req = new request();
 $db = new dbquery();
 $sec = new security();
 
+
+$entities_chosen=explode("#",$_POST['entities_chosen']);
+$entities_chosen=join(",",$entities_chosen);
+
+
 $status_obj = new manage_status();
 $ind_coll = $sec->get_ind_collection('letterbox_coll');
 $table = $_SESSION['collections'][$ind_coll]['table'];
@@ -36,7 +41,13 @@ $title = _ENTITY_LATE_MAIL.' '.$date_title ;
 $db = new dbquery();
 
 //Récupération de l'ensemble des types de documents
-$db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
+if (!$_REQUEST['entities_chosen']){
+    $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' order by short_label");
+}else{
+    $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label");
+}
+
+
 $entities = array();
 while($res = $db->fetch_object())
 {
@@ -132,7 +143,7 @@ if($report_type == 'graph')
         $largeur=1000;
     }
 
-    $src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=250&title=".$title."&labelY="._N_DAYS;
+    $src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=300&title=".$title."&labelY="._N_DAYS;
     for($i=0;$i<count($_SESSION['labels1']);$i++)
     {
         //$src1 .= "&labels[]=".$_SESSION['labels1'][$i];
@@ -152,7 +163,7 @@ elseif($report_type == 'array')
 if ($has_data) {
     if($report_type == 'graph') {
     ?>
-        <div style="overflow:auto"><img src="<?php echo $src1;?>" alt="<?php echo $title;?>"/></div><?php
+        <div style="overflow:auto"><img src="<?php echo $src1;?>" alt="<?php echo $title;?>" id="src1"/></div><?php
     } elseif($report_type == 'array') {
 	
 		$data2=urlencode(serialize($data));
