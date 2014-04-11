@@ -32,3 +32,22 @@ function fill_report_result(url_report)
 		});
 	}
 }
+
+function record_data(donnees){
+	var path_manage_script = './reports/record_data.php';
+    new Ajax.Request(path_manage_script,
+	{
+		method:'post',
+		parameters: {
+						data : donnees
+					},
+		onSuccess: function(response){
+			eval("result = "+response.responseText);
+			if(result.status == 1){
+				window.location.assign("../../apps/maarch_entreprise/tmp/export_reports_maarch.csv");			
+			} else {
+				console.log(result.response);
+			}
+		}
+	});
+}
