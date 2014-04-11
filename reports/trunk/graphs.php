@@ -17,7 +17,8 @@ $graphi = new graphics();
 $title = "";
 if(!empty($_GET['title']) && isset($_GET['title']))
 {
-	$title = $_GET['title'];
+	$tab_title=explode('?', $_GET['title']);
+	$title = $tab_title[0];
 }
 
 $width = 1000;
@@ -47,7 +48,9 @@ if(isset($_GET['labelX']) && !empty($_GET['labelX']))
 $labelY = "";
 if(isset($_GET['labelY']) && !empty($_GET['labelY']))
 {
-	$labelY = $_GET['labelY'];
+	//$labelY = $_GET['labelY'];
+	$tab_labelY = explode('?', $_GET['labelY']);
+	$labelY = $tab_labelY[0];
 }
 
 $plot1_legend = "";
