@@ -138,6 +138,8 @@ if (!defined('_ENTITY_PARENT'))
     define('_ENTITY_PARENT', 'Entit&eacute; parente');
 if (!defined('_CHOOSE_ENTITY_PARENT'))
     define('_CHOOSE_ENTITY_PARENT', 'Choisissez l&rsquo;entit&eacute; parente');
+if (!defined('_CHOOSE_FILTER_ENTITY'))
+    define('_CHOOSE_FILTER_ENTITY', 'Filtrer par entit&eacute;');
 if (!defined('_CHOOSE_ENTITY_TYPE'))
     define('_CHOOSE_ENTITY_TYPE', 'Choisissez le type de l&rsquo;entit&eacute;');
 if (!defined('_ENTITY_TYPE'))
