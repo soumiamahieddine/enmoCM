@@ -14,7 +14,7 @@
         
         <!--<ReverseWhereClause>custom_d1 &gt;= '11/04/2014'</ReverseWhereClause>--> <!-- GOOD -->
         <ReverseWhereClause>custom_d1 &lt;&gt; '08/10/2023'</ReverseWhereClause>
-        <EndCycleId>DISPOSAL</EndCycleId>
+        <EndCycleId>DISPOSAL_OK</EndCycleId>
     </CONFIG>
     <CONFIG_BASE>
         <databaseserver>127.0.0.1</databaseserver>
