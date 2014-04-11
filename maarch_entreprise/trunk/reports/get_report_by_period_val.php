@@ -14,6 +14,10 @@ $req = new request();
 $list = new list_show();
 $graph = new graphics();
 $sec = new security();
+
+$entities_chosen=explode("#",$_POST['entities_chosen']);
+$entities_chosen=join(",",$entities_chosen);
+
 $status_obj = new manage_status();
 $ind_coll = $sec->get_ind_collection('letterbox_coll');
 $table = $_SESSION['collections'][$ind_coll]['table'];
@@ -171,7 +175,17 @@ $str_status = '(';
 
 	if($id_report == 'process_delay')
 	{
-		$db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description");
+		//$db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description");
+	
+		if (!$_REQUEST['entities_chosen']){
+	    $db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description");
+		}else{
+		    $db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' and type_id IN (".$entities_chosen.") order by description");
+		}
+		//$db->show();
+
+
+
 		$doctypes = array();
 		
 		while($res = $db->fetch_object())
@@ -240,7 +254,7 @@ $str_status = '(';
 				$largeur=1000;
 			}
 
-			$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=250&title=".$title."&labelY="._N_DAYS;
+			$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=300&title=".$title."&labelY="._N_DAYS;
 			for($i=0;$i<count($_SESSION['labels1']);$i++)
 			{
 				//$src1 .= "&labels[]=".$_SESSION['labels1'][$i];
@@ -262,7 +276,7 @@ $str_status = '(';
 			if($report_type == 'graph')
 			{
 				?>
-				<div style="overflow:auto"><img src="<?php echo $src1;?>" alt="<?php echo $title;?>"/></div><?php
+				<div style="overflow:auto"><img src="<?php echo $src1;?>" alt="<?php echo $title;?>" id="src1"/></div><?php
 			}
 			elseif($report_type == 'array')
 			{
@@ -493,7 +507,14 @@ $str_status = '(';
 			$has_data = false;
 			$title = _MAIL_TYPOLOGY_REPORT.' '.$date_title ;
 			//$db->query("select distinct type_id, type_label from ".$view ." where status in ".$str_status." and ".$where_date." ORDER BY type_label ASC");
-			$db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description");
+			//$db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description");
+			
+			if (!$_REQUEST['entities_chosen']){
+		    $db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description");
+			}else{
+			    $db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' and type_id IN (".$entities_chosen.") order by description");
+			}
+
 			//$db->show();
 			if($report_type == 'graph')
 			{
@@ -547,7 +568,7 @@ $str_status = '(';
 					$largeur=1000;
 				}
 
-				$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=150&title=".$title;
+				$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=300&title=".$title;
 				$_SESSION['GRAPH']['VALUES']='';
 				for($i=0;$i<count($vol_an);$i++)
 				{
@@ -565,7 +586,7 @@ $str_status = '(';
 				if($report_type == 'graph')
 				{
 					?>
-					<div style="overflow:auto"><img src="<?php echo $src1;?>" alt=""/></div><br/><br/>
+					<div style="overflow:auto"><img src="<?php echo $src1;?>" alt="" id="src1"/></div><br/><br/>
 					<?php
 				}
 				elseif($report_type == 'array')
