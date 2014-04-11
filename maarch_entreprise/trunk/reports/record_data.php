@@ -13,9 +13,13 @@
 			$fp = fopen('../../../apps/maarch_entreprise/tmp/export_reports_maarch.csv', 'w');
 			
 			foreach($data as $key => $value){
-				$value['LABEL'] = $functions->wash_html($value['LABEL'], "UTF-8");
+				//conversion en html
+				$value['LABEL'] = $functions->wash_html($value['LABEL'], "UTF-16LE");
+				//conversion en UTF-8
+				$value['LABEL'] = mb_convert_encoding($value['LABEL'], 'UTF-16LE', 'UTF-8');
 				$value['VALUE'] = $functions->wash_html($value['VALUE'], "UTF-8");
-				fputcsv($fp, $value);
+				$value['VALUE'] = mb_convert_encoding($value['VALUE'], 'UTF-16LE', 'UTF-8');
+				fputcsv($fp, $value, ';');
 			}
 			
 			fclose($fp);
