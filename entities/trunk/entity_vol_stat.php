@@ -1,5 +1,6 @@
 <?php
 require_once('modules'.DIRECTORY_SEPARATOR."reports".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
+require_once('modules'.DIRECTORY_SEPARATOR."entities".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_entities.php");
 $core_tools = new core_tools();
 $rep = new reports();
 $core_tools->load_lang();
@@ -18,20 +19,49 @@ $content .='<div id="params">';
           $content .='<td><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=stats_parameters.gif" alt="'._ADV_OPTIONS.'"  /></td>';
           $content .='<td align="left">';
           $content .='<p>';
-            	$content .='<span>'._SHOW_FORM_RESULT.' : </span> <input type="radio" name="form_report" id="report_graph"  value="graph" checked="checked" /> '._GRAPH.' <input type="radio" name="form_report" id="report_array" value="array" /> '. _ARRAY;
-            $content .='</p>';
-            $content .='<br/>';
-           $content .='<p class="double">';
-             $content .='<input type="radio" name="type_period" id="period_by_year" value="year" checked="checked" />';
-            $content .= _SHOW_YEAR_GRAPH;
-	 		$content .='<select name="the_year" id="the_year">';
-            $year=date("Y");
-			$i_current=date("Y'");
-			while ($year <> ($i_current-5))
-			{
+            $content .='<span>'._SHOW_FORM_RESULT.' : </span> <input type="radio" name="form_report" id="report_graph"  value="graph" checked="checked" /> '._GRAPH.' <input type="radio" name="form_report" id="report_array" value="array" /> '. _ARRAY;
+          $content .='</p>';
+          $content .='<br/>';
+
+
+          $content.='<p class="double" style="margin-left:10px">';
+          $content.= _CHOOSE_FILTER_ENTITY.' :<br /><br />';
+
+          $entities = array();
+          $ent = new entity();
+            $except[] = $_SESSION['m_admin']['entity']['entityId'];
+    
+          $entities=$ent->getShortEntityTree($entities, 'all', '', $except );
+
+          $content.='<select name="entitieslist"  size="10" style="width:300px; height:150px" ondblclick="moveclick($(entitieslist), $(entities_chosen))" multiple="multiple">';
+          for($i=0; $i<count($entities);$i++)
+          {
+            $content.="<option";
+            $content.=" value='".$entities[$i]['ID']."'>";
+            $content.=$entities[$i]['LABEL']."</option>";                 
+          }             
+          $content.='</select>';
+
+          $content.='<input style="margin-left:10px;margin-right:5px" type="button" class="button" value="Ajouter >>" onclick="Move($(entitieslist), $(entities_chosen));" />';
+          //$content.='<br />';
+          $content.='<input style="margin-left:5px;margin-right:10px" type="button" class="button" value="<< Enlever" onclick="Move($(entities_chosen), $(entitieslist));" />';
+
+          $content.='<select style="width:300px; height:150px" name="entities_chosen[]" id="entities_chosen" size="7" ondblclick="moveclick($(entities_chosen), $(entitieslist))" multiple="multiple"></select>';
+          $content.='</p>'; 
+          $content.='<br/><br/>';
+
+
+          $content .='<p class="double">';
+          $content .='<input type="radio" name="type_period" id="period_by_year" value="year" checked="checked" />';
+          $content .= _SHOW_YEAR_GRAPH;
+	 		    $content .='<select name="the_year" id="the_year">';
+          $year=date("Y");
+			   $i_current=date("Y'");
+			   while ($year <> ($i_current-5))
+			     {
              	$content .= '<option value = "'.$year.'">'.$year.'</option>';
              	$year= $year-1;
-			}
+			     }
             $content .='</select>';
             $content .='</p>';
 
