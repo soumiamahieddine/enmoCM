@@ -13,6 +13,7 @@ if(empty($id))
 {
 	echo _ID.' '._IS_MISSING;
 }
+
 $content = '';
 $content .='<div id="params">';
 	$content .='<form id="report_by_period_form" name="report_by_period_form" method="get" action="">';
@@ -25,6 +26,30 @@ $content .='<div id="params">';
             	$content .='<span>'._SHOW_FORM_RESULT.' : </span> <input type="radio" name="form_report" id="report_graph"  value="graph" checked="checked" /> '._GRAPH.' <input type="radio" name="form_report" id="report_array" value="array" /> '. _ARRAY;
             $content .='</p>';
             $content .='<br/>';
+
+          if($id <> 'mail_vol_by_cat' && $id <> 'process_delay_generic_evaluation'){
+          $content.='<p class="double" style="margin-left:10px">';
+          $content.= _CHOOSE_ONE_ENTITY.' :<br /><br />';
+          $content.='<select style="width:300px" name="entitieslist[]" id="entitieslist" size="7" ondblclick="moveclick($(entitieslist), $(entities_chosen))" multiple="multiple">';
+
+          $db = new dbquery();
+          $db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' order by description");
+          
+          while($res = $db->fetch_object()){                             
+            $content.="<option value='".$res->type_id."'>".$res->description."</option>";
+          }
+          $content.='</select>';
+
+          $content.='<input style="margin-left:10px;margin-right:5px" type="button" class="button" value="Ajouter >>" onclick="Move($(entitieslist), $(entities_chosen));" />';
+          //$content.='<br />';
+          $content.='<input style="margin-left:5px;margin-right:10px" type="button" class="button" value="<< Enlever" onclick="Move($(entities_chosen), $(entitieslist));" />';
+
+          $content.='<select style="width:300px" name="entities_chosen[]" id="entities_chosen" size="7" ondblclick="moveclick($(entities_chosen), $(entitieslist))" multiple="multiple"></select>';
+          $content.='</p>'; 
+          $content.='<br/><br/>';
+          }
+
+
            $content .='<p class="double">';
              $content .='<input type="radio" name="type_period" id="period_by_year" value="year" checked="checked" />';
             $content .= _SHOW_YEAR_GRAPH;
@@ -57,6 +82,8 @@ $content .='<div id="params">';
                  	$content .='<option value ="12"> '._DECEMBER.' </option>';
                	$content .='</select>';
 	          $content .= _OF_THIS_YEAR.'.</p>';
+
+
 	   		if($id <> 'process_delay' && $id <> 'process_delay_generic_evaluation')
 	    	{
 	           	$content .='<p class="double">';
