@@ -1907,9 +1907,31 @@ function valid_report_by_period(url)
     var dateend = '';
     var year = '';
     var month = '';
+
+    
+    
+    if ($('entities_chosen')){
+        var entities_chosen_list = $('entities_chosen');
+        var entities_chosen;
+        for (var i = 0; i < entities_chosen_list.options.length; i++) {
+            //if(entities_chosen_list.options[i].selected ==true){
+                if(i==0){
+                  entities_chosen = "'"+entities_chosen_list.options[i].value+"'";
+                  //entities_chosen = "'"+entities_chosen_list.options[i].value+"'";
+                }else{
+                   entities_chosen += "#'"+entities_chosen_list.options[i].value+"'";
+                   //entities_chosen += ","+"'"+entities_chosen_list.options[i].value+"'";
+                   
+                    }
+                //}
+
+            }
+    }
+    
+    
     var error = '';
     var report_id = '';
-
+    //test =  'test';
     var report_id_item = $('id_report');
     if(report_id_item)
     {
@@ -1972,16 +1994,17 @@ function valid_report_by_period(url)
                 period_type : type_period,
                 the_year : year,
                 the_month : month,
+                entities_chosen : entities_chosen,
                 date_start : datestart,
                 date_fin : dateend
                         },
                 onSuccess: function(answer){
-            //  alert(answer.responseText);
                 var div_to_fill = $('result_period_report');
-            //  console.log(div_to_fill);
+
                 if(div_to_fill)
                 {
                     div_to_fill.innerHTML = answer.responseText;
+                    document.getElementById('src1').src = document.getElementById('src1').src + '?unique=' + new Date().valueOf();
                 }
             }
         });
