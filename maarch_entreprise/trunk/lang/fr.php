@@ -709,7 +709,7 @@ if (!defined('_PROCESSING_DATE')) define( '_PROCESSING_DATE', 'Date limite de tr
 if (!defined('_PROCESS_NUM')) define( '_PROCESS_NUM','Traitement du courrier n&deg;');
 if (!defined('_PROCESS_LIMIT_DATE')) define( '_PROCESS_LIMIT_DATE', 'Date limite de traitement');
 if (!defined('_LATE_PROCESS')) define( '_LATE_PROCESS', 'En retard');
-if (!defined('_PROCESS_DELAY')) define( '_PROCESS_DELAY', 'D&eacute;lai de traitement');
+if (!defined('_PROCESS_DELAY')) define( '_PROCESS_DELAY', 'D&eacute;lai de traitement (en jours)');
 if (!defined('_ALARM1_DELAY')) define( '_ALARM1_DELAY', 'D&eacute;lai relance 1 (jours) avant terme');
 if (!defined('_ALARM2_DELAY')) define( '_ALARM2_DELAY', 'D&eacute;lai relance 2 (jours) apr&egrave;s terme');
 if (!defined('_CATEGORY')) define( '_CATEGORY', 'Cat&eacute;gorie');
@@ -1262,7 +1262,7 @@ if (!defined('_FAILOVER'))  define('_FAILOVER', 'Reprise sur erreur');
 if (!defined('_FILE_NOT_EXISTS_ON_THE_SERVER'))  define('_FILE_NOT_EXISTS_ON_THE_SERVER', 'Le fichier n&rsquo;existe pas sur le docserver');
 if (!defined('_NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS'))  define('_NO_RIGHT_ON_RESOURCE_OR_RESOURCE_NOT_EXISTS', 'Aucun droit sur la resource demand&eacute;e ou elle est non disponible');
 
-if (!defined('_PROCESS_DELAY'))  define('_PROCESS_DELAY', 'D&eacute;lai de traitement');
+if (!defined('_PROCESS_DELAY'))  define('_PROCESS_DELAY', 'D&eacute;lai de traitementee');
 if (!defined('_ALERT_DELAY_1'))  define('_ALERT_DELAY_1', 'D&eacute;lai de 1ere alerte');
 if (!defined('_ALERT_DELAY_2'))  define('_ALERT_DELAY_2', 'D&eacute;lai de 2eme alerte');
 
