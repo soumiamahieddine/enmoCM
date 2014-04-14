@@ -90,7 +90,7 @@ for($i=0; $i<count($entities);$i++)
 /*
     $this->query("select l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id and l.item_id='".$user['ID']."'  and item_type = 'user_id' and  r.flag_alarm1 = 'N' and (r.status = 'NEW' or r.status = 'COU') and date(r.alarm1_date) =date(now()) and l.item_mode = 'dest' and item_type='user_id'");
 */
-        $db->query("SELECT count(res_id) AS total FROM ".$view." WHERE  status not in ('DEL','INIT') ".$where_clause." and destination = '".$entities[$i]['ID']."' and date(process_limit_date) <= date(now()) ");
+        $db->query("SELECT count(res_id) AS total FROM ".$view." WHERE  status not in ('DEL','INIT') and destination = '".$entities[$i]['ID']."' and date(process_limit_date) <= date(now()) ");
 
 		if( $db->nb_result() > 0)
         {

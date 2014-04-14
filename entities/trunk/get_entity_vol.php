@@ -207,7 +207,7 @@ $totalEntities = count($entities);
 	
 for($i=0; $i<count($entities);$i++)
 {
-	$db->query("select count(*) as total from ".$view." where status not in ('DEL','INIT')   ".$where_date.$where_clause." and destination = '".$entities[$i]['ID']."'");
+	$db->query("select count(*) as total from ".$view." where status not in ('DEL','INIT')   ".$where_date." and destination = '".$entities[$i]['ID']."'");
 	//$db->show();
 	$res = $db->fetch_object();
 	/*

@@ -175,7 +175,7 @@ for($i=0; $i<count($doctypes);$i++)
     if ($valid == 'true' || $_SESSION['user']['UserId'] == "superadmin")
     {
 
-        $db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." AS delay FROM ".$view." WHERE  status in ".$str_status." ".$where_date.$where_clause." AND status in ".$str_status." and destination = '".$doctypes[$i]['ID']."'");
+        $db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." AS delay FROM ".$view." WHERE  status in ".$str_status." ".$where_date." AND status in ".$str_status." and destination = '".$doctypes[$i]['ID']."'");
 
         if( $db->nb_result() > 0)
         {
