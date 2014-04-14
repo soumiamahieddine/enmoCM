@@ -215,8 +215,9 @@ if (isset($_SESSION['chosen_name_folder'])
 						"select res_id, doc_date, folder_name, identifier, subject from "
 						. $resView." where (type_id = " . $res3->type_id
 						. " and folder_id = '" . $actualCustomT1 . "') and ("
-						. $whereClause . ") order by doc_date desc"
+						. $whereClause . ") and status <> 'DEL' order by doc_date desc"
 					);
+                    //$db4->show();
 					$results = array();
 					while ($res4 = $db4->fetch_object()) {
 						array_push(
