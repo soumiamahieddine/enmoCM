@@ -528,8 +528,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td><label for="contact" class="form_title" >'
             . '<span id="exp_contact">' . _SHIPPER . '</span>'
             . '<span id="dest_contact">' . _DEST . '</span>';
-    if ($_SESSION['features']['personal_contact'] == "true"
-       // && $core->test_service('my_contacts', 'apps', false)
+    if ($_SESSION['features']['personal_contact'] != "false" || $_SESSION['features']['create_public_contact'] != "false"
     ) {
         $frmStr .= ' <a href="#" id="create_contact" title="' . _CREATE_CONTACT
                 . '" onclick="new Effect.toggle(\'create_contact_div\', '
