@@ -226,7 +226,7 @@ class graphics
 	   $plot->barShadow->smooth(TRUE);
 	   $plot->xAxis->setLabelText($labels);
 
-	   $plot->xAxis->label->setAngle(90);
+	   $plot->xAxis->label->setAngle(75);
 		$plot->xAxis->label->setColor($this->typo_color);
 		$plot->yAxis->label->setColor($this->typo_color);
 	   $plot->xAxis->label->setFont(new Tuffy(10));
