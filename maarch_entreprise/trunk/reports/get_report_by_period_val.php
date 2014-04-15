@@ -253,7 +253,8 @@ $str_status = '(';
 			if ($totalDocTypes<20){
 				$largeur=1000;
 			}
-
+			
+			$title = _PROCESS_DELAY_GENERIC_EVALUATION_REPORT_BY_TYPE.' '.$date_title ;
 			$src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=300&title=".$title."&labelY="._N_DAYS;
 			for($i=0;$i<count($_SESSION['labels1']);$i++)
 			{
