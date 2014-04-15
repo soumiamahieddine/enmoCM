@@ -33,8 +33,9 @@ function fill_report_result(url_report)
 	}
 }
 
-function record_data(donnees){
-	var path_manage_script = './reports/record_data.php';
+function record_data(url, donnees)
+{
+	var path_manage_script = url;
     new Ajax.Request(path_manage_script,
 	{
 		method:'post',
@@ -44,7 +45,7 @@ function record_data(donnees){
 		onSuccess: function(response){
 			eval("result = "+response.responseText);
 			if(result.status == 1){
-				window.location.assign("../../apps/maarch_entreprise/tmp/export_reports_maarch.csv");			
+				window.location.assign("tmp/export_reports_maarch.csv");			
 			} else {
 				console.log(result.response);
 			}
