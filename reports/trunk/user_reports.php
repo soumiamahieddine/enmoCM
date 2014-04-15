@@ -80,7 +80,7 @@ if(count($userReports) > 0)
 	foreach(array_keys($authorized_reports_sort_by_parent) as $value)
 	{
 	?>
-		<h5 onclick="new Effect.toggle('div_<?php  echo $authorized_reports_sort_by_parent[$value][0]['module_label'];?>', 'blind', {delay:0.2});return false;"  >
+		<h5 onmouseover="" style="cursor: pointer;" onclick="new Effect.toggle('div_<?php  echo $authorized_reports_sort_by_parent[$value][0]['module_label'];?>', 'blind', {delay:0.2});return false;"  >
 			<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=plus.png&module=reports" alt="" />&nbsp;<b><?php  echo $authorized_reports_sort_by_parent[$value][0]['module_label'];?></b>
 		</h5>
 		<br/>
