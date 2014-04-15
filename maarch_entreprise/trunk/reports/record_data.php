@@ -1,8 +1,7 @@
 <?php
-	session_start();
-	require_once("..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
-	
-	
+	//session_start();
+	//require_once("..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."..".DIRECTORY_SEPARATOR."core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
+	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_functions.php");
 	
 	if(isset($_POST["data"])){
 		try{
@@ -10,7 +9,7 @@
 			$_POST['data']=urldecode($_POST['data']);
 			$data=unserialize($_POST['data']);
 			$contenu = '';
-			$fp = fopen('../../../apps/maarch_entreprise/tmp/export_reports_maarch.csv', 'w');
+			$fp = fopen('apps/maarch_entreprise/tmp/export_reports_maarch.csv', 'w');
 			
 			foreach($data as $key => $value){
 				//conversion en html
