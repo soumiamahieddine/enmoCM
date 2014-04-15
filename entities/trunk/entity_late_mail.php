@@ -19,7 +19,7 @@ $content .='<div id="params">';
           $content .='<td><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=stats_parameters.gif" alt="'._ADV_OPTIONS.'"  /></td>';
           $content .='<td align="left">';
           $content .='<p>';
-            	$content .='<span>'._SHOW_FORM_RESULT.' : </span> <input type="radio" name="form_report" id="report_graph"  value="graph" checked="checked" /> '._GRAPH.' <input type="radio" name="form_report" id="report_array" value="array" /> '. _ARRAY;
+            	$content .='<span>'._SHOW_FORM_RESULT.' : </span> <input type="radio" name="form_report" id="report_graph"  value="graph" checked="checked" /><label for="report_graph"> '._GRAPH.'</label><input type="radio" name="form_report" id="report_array" value="array" /><label for="report_array"> '. _ARRAY . '</label>' ;
             $content .='</p>';
             $content .='<br/>';
 
