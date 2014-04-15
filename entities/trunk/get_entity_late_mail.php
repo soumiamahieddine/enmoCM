@@ -143,7 +143,7 @@ if($report_type == 'graph')
         $largeur=1000;
     }
 
-    $src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=300&title=".$title."&labelY="._N_DAYS;
+    $src1 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=histo&largeur=$largeur&hauteur=600&marge_bas=300&title=".$title;
     for($i=0;$i<count($_SESSION['labels1']);$i++)
     {
         //$src1 .= "&labels[]=".$_SESSION['labels1'][$i];
