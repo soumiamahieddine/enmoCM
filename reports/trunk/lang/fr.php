@@ -78,4 +78,6 @@ if (!defined('_PROCESS_DELAI_AVG'))
     define('_PROCESS_DELAI_AVG', 'D&eacute;lai moyen (en jours)');
 if (!defined('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT'))
     define('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT', 'D&eacute;lai moyen de traitement');
+if (!defined('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_BY_TYPE'))
+    define('_PROCESS_DELAY_GENERIC_EVALUATION_REPORT_BY_TYPE', 'D&eacute;lai moyen de traitement par type de courrier');
 ?>
