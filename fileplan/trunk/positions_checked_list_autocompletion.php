@@ -31,8 +31,8 @@
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once "modules" . DIRECTORY_SEPARATOR . "fileplan" . DIRECTORY_SEPARATOR
-    . "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
-    
+. "class" . DIRECTORY_SEPARATOR . "class_modules_tools.php";
+
 $db     = new dbquery();
 $fileplan = new fileplan();
 
@@ -42,15 +42,15 @@ $actual_position_id = "";
 $positions_array = $path_array = array();
 
 $path_to_script = $_SESSION['config']['businessappurl']
-	."index.php?display=true&module=fileplan&page=fileplan_ajax_script";
+."index.php?display=true&module=fileplan&page=fileplan_ajax_script";
 
 if (isset($_REQUEST['res_id']) && !empty($_REQUEST['res_id'])) {
 	
 	//Build res_array
 	$res_array = $fileplan->buildResArray($_REQUEST['res_id']);
 	//
-    $resIdArray = array();
-    $resIdArray = explode (',', $_REQUEST['res_id']);
+	$resIdArray = array();
+	$resIdArray = explode (',', $_REQUEST['res_id']);
 	//Get uuthorized fileplans
 	$authorizedFileplans =  $fileplan->getAuthorizedFileplans();
 	
@@ -71,106 +71,118 @@ if (isset($_REQUEST['res_id']) && !empty($_REQUEST['res_id'])) {
 		}
 	}
 }
-
 if (!empty($_REQUEST['fileplan_id'])) {
-
-	//Selected label (update mode)
-	if (isset($_REQUEST['actual_position_id']) && !empty($_REQUEST['actual_position_id'])) {
-		$actual_position_id = $_REQUEST['actual_position_id'];
-	}
-	
-	$positions_array = array();
-	$fileplan_id = $_REQUEST['fileplan_id'];
-	
-	if (strlen(trim($_REQUEST['param'])) > 0) {
-		$where = "fileplan_id = " . $fileplan_id
-			. " and position_enabled = 'Y'"
-			. " and lower(position_label) like lower('%"
-			. $_REQUEST['param']."%')";
-	} else {
-		$where = "fileplan_id = "
-			. $fileplan_id
-			." and position_enabled = 'Y'";
-	}
-
-	$db->connect();
-	$db->query(
-		"select  position_id, position_label, position_enabled from "
-		. FILEPLAN_VIEW." where 
-		".$where." order by position_label"
-		);
-		
-	if($db->nb_result() > 0) {
-		while($line = $db->fetch_object()) {
-			array_push(
-                $positions_array , 
-                array(
-                    'ID' => $line->position_id, 
-                    'LABEL' => $db->show_string($line->position_label), 
-                    'PARENT_ID' => $line->parent_id,
-					'COUNT_DOCUMENT' => $line->count_document
-                )
+	if(!empty($_REQUEST['param'])){
+		$html = "<form id='formFileplan'>";
+		$html .= "\n<ul id='positionsList'>\n";
+		$where=" and translate(
+    LOWER(position_label),
+    'âãäåÁÂÃÄÅèééêëÈÉÉÊËìíîïìÌÍÎÏÌóôõöÒÓÔÕÖùúûüÙÚÛÜ',
+    'aaaaAAAAAeeeeeEEEEEiiiiiIIIIIooooOOOOOuuuuUUUU'
+) like translate(
+    '%".strtolower($_REQUEST['param'])."%',
+    'âãäåÁÂÃÄÅèééêëÈÉÉÊËìíîïìÌÍÎÏÌóôõöÒÓÔÕÖùúûüÙÚÛÜ',
+    'aaaaAAAAAeeeeeEEEEEiiiiiIIIIIooooOOOOOuuuuUUUU'
+) ";
+		$_SESSION['origin_positions']='';
+		$fileplan_id = $_REQUEST['fileplan_id'];
+		$db->connect();
+		$db->query(
+			"select position_id, position_label, parent_id from fp_view_fileplan where fileplan_id = ".$fileplan_id.$where." and position_enabled = 'Y' order by position_label asc "
 			);
+		//$db->show();
+		while($row = $db->fetch_array()) {
+			$categories[] = array(
+				'parent_id' => $row['parent_id'],
+				'fileplan_id' => $row['position_id'],
+				'nom_fileplan' => $row['position_label']
+				);
 		}
-	}
+		foreach ($categories AS $noeud)
+		{
+			$tmp = explode('@@', $_REQUEST['res_id']);
+			$db2     = new dbquery();
 
-	// $content .= 'CHECKED_POSITIONS:'.(print_r($_SESSION['checked_positions'], true)).'<br/>'; //DEBUG
-
-	$content .= "<ul>\n";
-
-	//Show selected positions first
-	if (count($_SESSION['checked_positions'][$fileplan_id]) > 0) {
-		$js .='<script type="text/javascript">';
-		foreach (array_keys($_SESSION['checked_positions'][$fileplan_id]) as $position_id) 
-		{	//Description
-			$description = $fileplan->getPositionPath($fileplan_id, $position_id); 
-			//Checked or partially checked?
-			if(isset($_SESSION['checked_positions'][$fileplan_id][$position_id])) {
-				$content .= "<li alt=\"".$description
-					. "\" title=\"".$description
-					. "\"><input type=\"checkbox\" id=\"position_".$position_id."\" name=\"position[]\""
-					. " class=\"check\" onClick=\"saveCheckedState('".$path_to_script
-					. "&fileplan_id=".$fileplan_id."&mode=checkPosition', this);\" value=\""
-					. $position_id."\" checked=\"checked\">". $description."</li>\n";
-				//extra javascript
-				if ($_SESSION['checked_positions'][$fileplan_id][$position_id] == 'true') {
-
-				} elseif ($_SESSION['checked_positions'][$fileplan_id][$position_id] == 'partial') {
-					$js.= "document.getElementById('position_". $position_id."').indeterminate = true;";
-				}
+			$db2->connect();
+			$db2->query(
+				"select fileplan_id, position_id from fp_res_fileplan_positions where res_id = '".$tmp[1]."' and position_id='".$noeud['fileplan_id']."'"
+				);
+			$row2 = $db2->fetch_array();
+			if(!$row2){
+				$html .= "<li style='margin-left:10px;'><input type='checkbox' name='position[]' id='position_".$noeud['fileplan_id']."' value='".$noeud['fileplan_id']."' onClick=\"saveCheckedState('". $_SESSION['config']['businessappurl']
+					."index.php?display=true&module=fileplan&page=fileplan_ajax_script"
+					. "&fileplan_id=".$_REQUEST['fileplan_id']."&mode=checkPosition', this);\"/>" . $noeud['nom_fileplan'];
+			}else{
+				$_SESSION['origin_positions'][]=$noeud['fileplan_id'];
+				$html .= "<li style='margin-left:10px;'><input type='checkbox' name='position[]' id='position_".$noeud['fileplan_id']."' value='".$noeud['fileplan_id']."' checked='checked' onClick=\"saveCheckedState('". $_SESSION['config']['businessappurl']
+					."index.php?display=true&module=fileplan&page=fileplan_ajax_script"
+					. "&fileplan_id=".$_REQUEST['fileplan_id']."&mode=checkPosition', this);\"/>" . $noeud['nom_fileplan'];
 			}
+			$html .= "</li>\n";
 		}
-		$js .='</script>';
-		$content .=  "<li class=\"separator\"></li>";
+		$html .= "</ul>\n";
+		$html.="</form>";
+	}else{
+		$_SESSION['origin_positions']='';
+		$fileplan_id = $_REQUEST['fileplan_id'];
+		$db->connect();
+		$db->query(
+			"select position_id, position_label, parent_id from fp_view_fileplan where fileplan_id = ".$fileplan_id." and position_enabled = 'Y' order by position_label asc "
+			);
+
+		$categories = array();
+
+		while($row = $db->fetch_array()) {
+			$categories[] = array(
+				'parent_id' => $row['parent_id'],
+				'fileplan_id' => $row['position_id'],
+				'nom_fileplan' => $row['position_label']
+				);
+		}
+
+		echo afficher_arbo(0, 0, $categories);
 	}
-	 
-	 //Show postions
-	 for($i=0; $i < count($positions_array); $i++) {
-		
-		if($i < 100) {
-			$id = $positions_array[$i]['ID']; 
-			$description = $fileplan->getPositionPath($fileplan_id, $positions_array[$i]['ID']); 
-			// $description = $fileplan->truncate($description); 
-			
-			//Check if position is already selected
-			// ($id == $actual_position_id || isset($_SESSION['checked_positions'][$fileplan_id][$id]))? 
-				// $checked = ' checked="checked"': $checked =  '';
-			
-			//Content (only unselected)
-			if (!isset($_SESSION['checked_positions'][$fileplan_id][$id])) {
-				$content .= "<li alt=\"".$description
-						. "\" title=\"".$description
-						. "\"><input type=\"checkbox\" id=\"position_".$id."\" name=\"position[]\""
-						. " class=\"check\" onClick=\"saveCheckedState('".$path_to_script
-						. "&fileplan_id=".$fileplan_id."&mode=checkPosition', "
-						. "this);\" value=\"". $id."\">". $description."</li>\n"; 
-			}
-		} else  {
-			$content .= "<li>...</li>\n";
-			break;
-		}
-	 }
-	$content .=  "</ul>";
 }
+function afficher_arbo($parent, $niveau, $array)
+{
+	$html = "<form id='formFileplan'>";
+	$niveau_precedent = 0;
 
-echo $js.$content;
+	if (!$niveau && !$niveau_precedent) $html .= "\n<ul id='positionsList'>\n";
+
+	foreach ($array AS $noeud)
+	{
+		if ($parent == $noeud['parent_id'])
+		{
+			if ($niveau_precedent < $niveau) $html .= "\n<ul>\n";
+			$tmp = explode('@@', $_REQUEST['res_id']);
+			$db2     = new dbquery();
+
+			$db2->connect();
+			$db2->query(
+				"select fileplan_id, position_id from fp_res_fileplan_positions where res_id = '".$tmp[1]."' and position_id='".$noeud['fileplan_id']."'"
+				);
+			$row2 = $db2->fetch_array();
+			if(!$row2){
+				$html .= "<li style='margin-left:20px;'><input type='checkbox' name='position[]' id='position_".$noeud['fileplan_id']."' value='".$noeud['fileplan_id']."' onClick=\"saveCheckedState('". $_SESSION['config']['businessappurl']
+					."index.php?display=true&module=fileplan&page=fileplan_ajax_script"
+					. "&fileplan_id=".$_REQUEST['fileplan_id']."&mode=checkPosition', this);\"/>" . $noeud['nom_fileplan'];
+			}else{
+				$_SESSION['origin_positions'][]=$noeud['fileplan_id'];
+				$html .= "<li style='margin-left:20px;'><input type='checkbox' name='position[]' id='position_".$noeud['fileplan_id']."' value='".$noeud['fileplan_id']."' checked='checked' onClick=\"saveCheckedState('". $_SESSION['config']['businessappurl']
+					."index.php?display=true&module=fileplan&page=fileplan_ajax_script"
+					. "&fileplan_id=".$_REQUEST['fileplan_id']."&mode=checkPosition', this);\"/>" . $noeud['nom_fileplan'];
+			}
+
+		$niveau_precedent = $niveau;
+		$html .= afficher_arbo($noeud['fileplan_id'], ($niveau + 1), $array);
+		}
+	}
+
+	if (($niveau_precedent == $niveau) && ($niveau_precedent != 0)) $html .= "</ul>\n</li>\n";
+	else if ($niveau_precedent == $niveau) $html .= "</ul>\n";
+	else $html .= "</li>\n";
+	$html.="</form>";
+	return $html;
+}
+echo $html;
