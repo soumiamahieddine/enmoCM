@@ -1323,27 +1323,40 @@ switch ($mode) {
 				$fileplan_id = $_REQUEST['fileplan_id'];
 				//Selected position (update mode)
 				$actual_position_id = '';
-				if (isset($_REQUEST['actual_position_id']) && !empty($_REQUEST['actual_position_id'])) {
-					$actual_position_id = $_REQUEST['actual_position_id'];
+				
+				if(!$_REQUEST['position']){
+					foreach ($_SESSION['origin_positions'] as $key => $value) {
+						$fileplan->remove($fileplan_id, $value, $res_array);
+					}
+				}else{
+					$fileplan_diff=array_diff($_SESSION['origin_positions'],$_REQUEST['position']);
+
+					foreach ($fileplan_diff as $key => $value) {
+						$fileplan->remove($fileplan_id, $value, $res_array);
+					}
+				}
+				
+				//if (isset($_REQUEST['actual_position_id']) && !empty($_REQUEST['actual_position_id'])) {
+				//	$actual_position_id = $_REQUEST['actual_position_id'];
 					//Remove Actual position if not selected
-					if (
+					/*if (
 						!isset($_REQUEST['position']) 
 						|| (count($_REQUEST['position']) == 0)
 						|| !in_array($actual_position_id, $_REQUEST['position'])
-						) {
-						$fileplan->remove($fileplan_id, $actual_position_id, $res_array);
-					}
-				}
+						) {*/
+						//$fileplan->remove($fileplan_id, '14', $res_array);
+					//}
+				//}
 				//Check POSITIONS
 					//I	 : Mode SET, position required
 					//II : Mode DELETE, remove the actual position from document(s)
 					//III: Mode MOVE, move document(s) in another position
-                if (
+                /*if (
                     (isset($_REQUEST['position']) && count($_REQUEST['position']) > 0 && empty($actual_position_id)) 		//I
                     || (!isset($_REQUEST['position']) && count($_REQUEST['position']) == 0 && !empty($actual_position_id)) 	//II
                     || (isset($_REQUEST['position']) && count($_REQUEST['position']) > 0 && !empty($actual_position_id)) 	//III
                     ) 
-				{
+				{*/
 					//DEBUG
 					// print_r($_REQUEST['position']);
 					// print_r($res_array);
@@ -1392,10 +1405,10 @@ switch ($mode) {
 					$js .= $list_origin;
 					$js .= "window.top.$('main_info').innerHTML = '"._DOC_ADDED_TO_POSITION."';";
 
-                } else {
+                /*} else {
                     $error = $request->wash_html(_CHOOSE_ONE_POSITION.'!','NONE');
                     $status = 1;
-                }
+                }*/
 				
             } else {
 				$error = $request->wash_html(_CHOOSE_FILEPLAN.'!','NONE');
@@ -1473,10 +1486,10 @@ switch ($mode) {
 				} else  if ($_REQUEST['checked'] == 'false') {
 					unset($_SESSION['checked_positions'][$fileplan_id][$_REQUEST['value']]);
 				}
-				$js = 'loadFileplanList(\'selectedPosition\', \'positionsList\', \''
+				/*$js = 'loadFileplanList(\'selectedPosition\', \'positionsList\', \''
 					.$_SESSION['config']['businessappurl'].'index.php?display=true&module='
 					.'fileplan&page=positions_checked_list_autocompletion'.$extraUrl
-					.'&fileplan_id='.$_REQUEST['fileplan_id'].'\');';
+					.'&fileplan_id='.$_REQUEST['fileplan_id'].'\');';*/
 			} else {
 				$error = $request->wash_html(_FILEPLAN_ID.' '._IS_EMPTY.'!','NONE');
 				$status = 1;
