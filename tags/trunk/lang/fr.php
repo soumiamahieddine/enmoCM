@@ -85,8 +85,6 @@ if (!defined('_TAG_SEPARATOR_HELP'))
     define('_TAG_SEPARATOR_HELP', 'S&eacute;parez les mots-cl&eacute;s en appuyant sur Entrée ou avec des virgules');
 if (!defined('_NB_DOCS_FOR_THIS_TAG'))
     define('_NB_DOCS_FOR_THIS_TAG', 'Nbre de documents taggu&eacute;s');
-if (!defined('_TAG_FUSION_ACTIONLABEL'))
-    define('_NB_DOCS_FOR_THIS_TAG', 'Fusionner le tag avec');
 if (!defined('_TAGOTHER_OPTIONS'))
     define('_TAGOTHER_OPTIONS', 'Autres options');
 if (!defined('_TAG_FUSION_ACTIONLABEL'))
