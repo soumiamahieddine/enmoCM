@@ -46,7 +46,7 @@ if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2
 }
 $pagePath = $_SESSION['config']['businessappurl']
            . 'index.php?page=search_folder_tree&module=folder';
-$pageLabel = _SEARCH_FOLDER_TREE;
+$pageLabel = _VIEW_FOLDER_TREE;
 $pageId = 'search_folder_tree';
 $core->manage_location_bar(
     $pagePath, $pageLabel, $pageId, $init, $level
@@ -61,7 +61,7 @@ $_SESSION['origin'] = "search_folder_tree";
 </script>
 <h1><img src="<?php
 echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_off.gif";
-?>" alt="" /> <?php  echo _SEARCH_FOLDER_TREE; ?></h1>
+?>" alt="" /> <?php  echo _VIEW_FOLDER_TREE; ?></h1>
 <div id="inner_content" align="center">
     <div class="block">
 		<form method="post" name="form_search_folder" id="form_search_folder" action="#">
@@ -101,9 +101,10 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
     <table width="100%" height="100%" cellspacing="5" style="border:1px solid #999999;">
         <tr>
             <td width="55%" height="720px" style="vertical-align: top; text-align: left;border-right:1px solid #999999;">
+                <div id="loading" style="display:none;"><img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=loading.gif" alt="loading..." width="24px" height="24px" /></div>
                 <div id="myTree">&nbsp;</div>
             </td>
-            <td width="45%">
+            <td width="45%" style="vertical-align: top;">
                 <div id="docView"><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl']
                     .'static.php?filename=bg_home_home.gif'; 
                     ?>"  width="400px" alt="Maarch" /></p></div>
@@ -112,6 +113,7 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
     </table>
 </div>
 <script type="text/javascript">
+
     initList('folder', 'show_folder', '<?php
         echo $_SESSION['config']['businessappurl'];
         ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder', 
@@ -120,7 +122,36 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
     function submitForm()
     {
         var folder = $('folder').value;
-        tree_init('myTree', folder);
+        if($('myTree'))
+        {
+            $('myTree').innerHTML="";
+        }
+        // Get tree parameters from an ajax script (get_tree_info.php)
+        new Ajax.Request(BASE_URL+'index.php?display=true&module=folder&page=get_tree_info&display=true',{
+            method: 'post',
+            parameters: {
+                tree_id: 'myTree',
+                project: folder
+            },
+            onSuccess: function(response){
+                eval('params='+response.responseText+';');
+                //console.log(params);
+            },
+            onLoading: function(answer) {
+                //show loading
+                $('loading').style.display='block';
+            }, 
+            onComplete: function(response){
+                $('loading').style.display='none';
+                $('myTree').innerHTML=response.responseText;
+                 // alert(response.responseText);
+
+             /*   if(more_params['onComplete_callback'])
+                {
+                    eval(more_params['onComplete_callback']);
+                }*/
+            }
+        });
     }
 </script>
 <script type="text/javascript" src="<?php
