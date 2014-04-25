@@ -1217,7 +1217,7 @@ class foldertype extends dbquery
         foreach (array_keys($indexes) as $key) {
             if ($key == $fieldName) {// type == 'string'
                 if (!empty($val)) {
-                    $whereRequest .= " lower(" . $_SESSION['tablename']['fold_folders']
+                    $whereRequest .= " lower(" . $table_or_view
                         . "." . $key . ") like lower('%" 
                         . $this->protect_string_db($val) . "%') and ";
                 }
