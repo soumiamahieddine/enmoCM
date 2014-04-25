@@ -901,7 +901,11 @@ class basket extends dbquery
         $tab['id'] = $res->basket_id;
         $tab['coll_id'] = $res->coll_id;
         $tab['table'] = $sec->retrieve_table_from_coll($tab['coll_id']);
-        $tab['view'] = $sec->retrieve_view_from_coll_id($tab['coll_id']);
+        if($res->is_folder_basket == 'Y'){
+            $tab['view'] = "view_folders";
+        }else{
+            $tab['view'] = $sec->retrieve_view_from_coll_id($tab['coll_id']);
+        }
         $tab['is_generic'] = 'NO';
 
         $tab['desc'] = $res->basket_desc;
