@@ -50,10 +50,14 @@ $pageId = "reports";
 $rep->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
 $db->query(
-	"SELECT count(*) as total from " . $_SESSION['collections'][0]['view']
-	. " where status not in ('DEL')"
+	"select count(*) as total from " . $_SESSION['collections'][0]['view']
+    . " inner join mlb_coll_ext on " . $_SESSION['collections'][0]['view']
+    . ".res_id = mlb_coll_ext.res_id where " . $_SESSION['collections'][0]['view']
+    . ".status not in ('DEL','BAD')"
 );
+
 //$db->show();
+
 $countPiece = $db->fetch_object();
 if ($rep->is_module_loaded('folder')) {
     $db->query(
@@ -62,6 +66,7 @@ if ($rep->is_module_loaded('folder')) {
     );
     $countFolder = $db->fetch_object();
 }
+//$db->show();
 ?>
 <h1><img src="<?php 
 echo $_SESSION['config']['businessappurl'];
