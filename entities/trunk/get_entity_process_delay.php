@@ -175,7 +175,8 @@ for($i=0; $i<count($doctypes);$i++)
     if ($valid == 'true' || $_SESSION['user']['UserId'] == "superadmin")
     {
 
-        $db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." AS delay FROM ".$view." WHERE  status in ".$str_status." ".$where_date." AND status in ".$str_status." and destination = '".$doctypes[$i]['ID']."'");
+        $db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date' )." AS delay from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE ".$view.".destination = '".$doctypes[$i]['ID']."' ".$where_date);
+        //$db->show();
 
         if( $db->nb_result() > 0)
         {
@@ -190,7 +191,7 @@ for($i=0; $i<count($doctypes);$i++)
             }
             elseif($report_type == 'array')
             {
-                array_push($data, array('LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)$tmp / $db->nb_result()));
+                array_push($data, array('LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $db->nb_result(),2)));
             }
             if($tmp / $db->nb_result() > 0)
             {
