@@ -247,6 +247,28 @@ if (isset($_POST['put_doc_on_validation'])) {
     exit();
 }
 
+//Load multicontacts
+	$query = "select c.firstname, c.lastname, c.society ";
+			$query .= "from contacts c, contacts_res cres  ";
+			$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['id']." AND cast (c.contact_id as varchar) = cres.contact_id ";
+			$query .= "GROUP BY c.firstname, c.lastname, c.society";
+			
+	$db->query($query);
+	$nbContacts = 0;
+	$frameContacts = "";
+	$frameContacts = "{";
+	while($res = $db->fetch_object()){
+		$nbContacts = $nbContacts + 1;
+		$firstname = str_replace("'","\'", $res->firstname);
+		$firstname = str_replace('"'," ", $firstname);
+		$lastname = str_replace("'","\'", $res->lastname);
+		$lastname = str_replace('"'," ", $lastname);
+		$society = str_replace("'","\'", $res->society);
+		$society = str_replace('"'," ", $society);
+		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " " . $society . "', ";
+	}
+	$frameContacts = substr($frameContacts, 0, -2);
+	$frameContacts .= "}";
 if (empty($_SESSION['error']) || $_SESSION['indexation']) {
     $comp_fields = '';
     $db->query("select type_id from ".$table." where res_id = ".$s_id);
@@ -331,7 +353,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 'img_author' => true,
                 'img_destination' => true,
                 'img_arbox_id' => true,
-                'img_folder' => true
+                'img_folder' => true,
+                'img_contact' => true,
                 );
 
             $res = $db->fetch_object();
@@ -491,43 +514,50 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         }
                         foreach(array_keys($data) as $key)
                         {
-
-                            if ($i%2 != 1 || $i==0) // pair
-                            {
-                                $detailsExport .= "<tr class='col'>";
-                                ?>
-                                <tr class="col">
-                                <?php
-                            }
-                            $folder_id = "";
-                            if ($key == "folder" && $data[$key]['show_value'] <> "")
-                            {
-                                $folderTmp = $data[$key]['show_value'];
-                                $find1 = strpos($folderTmp, '(');
-                                $folder_id = substr($folderTmp, $find1, strlen($folderTmp));
-                                $folder_id = str_replace("(", "", $folder_id);
-                                $folder_id = str_replace(")", "", $folder_id);
-                            }
-
-                            //$detailsExport .= "<th align='left' width='50px'>";
-                            ?>
-                            <th align="left" class="picto" >
-                                <?php
-                                if (isset($data[$key]['addon']))
-                                {
-                                    echo $data[$key]['addon'];
-                                    //$detailsExport .= $data[$key]['addon'];
-                                }
-                                elseif (isset($data[$key]['img']))
-                                {
-                                    //$detailsExport .= "<img alt='".$data[$key]['label']."' title='".$data[$key]['label']."' src='".$data[$key]['img']."'  />";
-                                    if ($folder_id <> "")
-                                    {
-                                        echo "<a href='".$_SESSION['config']['businessappurl']."index.php?page=show_folder&module=folder&id=".$folder_id."'>";
-                                        ?>
-                                        <img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  /></a>
-                                        <?php
-                                    }
+							if($key != 'is_multicontacts' || ($key == 'is_multicontacts' && $data[$key]['show_value'] == 'Y')){
+								if ($i%2 != 1 || $i==0) // pair
+								{
+									$detailsExport .= "<tr class='col'>";
+									?>
+									<tr class="col">
+									<?php
+								}
+								$folder_id = "";
+								if ($key == "folder" && $data[$key]['show_value'] <> "")
+								{
+									$folderTmp = $data[$key]['show_value'];
+									$find1 = strpos($folderTmp, '(');
+									$folder_id = substr($folderTmp, $find1, strlen($folderTmp));
+									$folder_id = str_replace("(", "", $folder_id);
+									$folder_id = str_replace(")", "", $folder_id);
+								}
+								//$detailsExport .= "<th align='left' width='50px'>";
+								?>
+								<th align="left" class="picto" >
+									<?php
+									if (isset($data[$key]['addon']))
+									{
+										echo $data[$key]['addon'];
+										//$detailsExport .= $data[$key]['addon'];
+									}
+									elseif (isset($data[$key]['img']))
+									{
+										//$detailsExport .= "<img alt='".$data[$key]['label']."' title='".$data[$key]['label']."' src='".$data[$key]['img']."'  />";
+										if ($folder_id <> "")
+										{
+											echo "<a href='".$_SESSION['config']['businessappurl']."index.php?page=show_folder&module=folder&id=".$folder_id."'>";
+											?>
+											<img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  /></a>
+											<?php
+										} else if($key == 'is_multicontacts'){
+										?>
+										
+										<img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  												
+												onmouseover = "previsualiseAdminRead(event, <?php echo $frameContacts; ?>);"
+										/>
+										</a>
+										<?php
+									}
                                     else
                                     {
                                         ?>
@@ -542,40 +572,74 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 ?>
                             </th>
                             <?php
-                            $detailsExport .= "<td align='left' width='200px'>";
-                            ?>
-                            <td align="left" width="200px">
-                                <?php
-                                $detailsExport .= $data[$key]['label'];
-                                echo $data[$key]['label'];?> :
-                            </td>
-                            <?php
+							
+                        $detailsExport .= "<td align='left' width='200px'>";
+						
+									?>
+								<td align="left" width="200px">
+									<?php
+									
+									
+									
+										$detailsExport .= $data[$key]['label'];
+										echo $data[$key]['label'];
+										
+									?> :
+									
+								</td>
+								<?php
+							
                             $detailsExport .=  "</td>";
                             $detailsExport .=  "<td>";
+							
                             ?>
                             <td>
+							
                                 <?php
                                 $detailsExport .=  $data[$key]['show_value'];
                             if (!isset($data[$key]['readonly']) || $data[$key]['readonly'] == true)
                             {
-                                if ($data[$key]['display'] == 'textinput')
+							
+								if($key == 'is_multicontacts') {
+									if($data[$key]['show_value'] == 'Y'){
+									?>
+										<input type="hidden" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
+													
+										<div onClick="$('return_previsualise').style.display='none';" id="return_previsualise" style="display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
+											<input type="hidden" id="identifierDetailFrame" value="" />
+										</div>
+										
+										<input type="text" value="<?php echo $nbContacts . ' ' ._CONTACTS;?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo _MULTI_CONTACT; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" 
+													onmouseover = "previsualiseAdminRead(event, <?php echo $frameContacts; ?>);"
+													 
+										/>
+									<?php
+									}
+	
+								}elseif ($data[$key]['display'] == 'textinput')
                                 {
                                     ?>
                                     <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
                                     <?php
                                 }
-                                elseif ($data[$key]['display'] == 'textarea') 
+                                elseif ($data[$key]['display'] == 'textarea')
+								
                                 {
                                     echo '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" style="width: 200px; max-width: 200px;">'
                                         .$data[$key]['show_value']
                                     .'</textarea>';
+									
+									
                                 }
                                 else
+								
                                 {
                                     ?>
                                     <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40" title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
                                     <?php
                                     if (isset($data[$key]['addon']))
+									
+									
                                     {
                                         $frm_str .= $data[$key]['addon'];
                                     }
@@ -586,6 +650,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 if ($data[$key]['field_type'] == 'textfield')
                                 {
                                     ?>
+									
+									
                                     <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
                                     <?php
                                 }
@@ -597,9 +663,16 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 }
                                 else if ($data[$key]['field_type'] == 'date')
                                 {
+								
+								
                                     ?>
                                     <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" onclick="showCalender(this);" />
-                                    <?php
+                                    
+									
+									
+									
+									
+									<?php
                                 }
                                 else if ($data[$key]['field_type'] == 'select')
                                 {
@@ -836,6 +909,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     }
                                 }
                                 $i++;
+								}
                             }
                             ?>
                         </table>

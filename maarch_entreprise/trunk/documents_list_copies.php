@@ -82,7 +82,7 @@ $db->connect();
                             "contact_firstname", "contact_lastname", "contact_society", "user_lastname", 
                             "user_firstname", "priority", "creation_date", "admission_date", "subject", 
                             "process_limit_date", "entity_label", "dest_user", "type_label", 
-                            "exp_user_id", "count_attachment", "viewed");
+                            "exp_user_id", "count_attachment", "viewed", "is_multicontacts");
     //Additionnal fields                        
     if($core_tools->is_module_loaded("cases") == true) {
         array_push($select[$table], "case_id", "case_label", "case_description");
@@ -349,6 +349,20 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["value"] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
                 $tab[$i][$j]["order"]=false;
+            }
+            if($tab[$i][$j][$value]=="is_multicontacts")
+            {
+				if($tab[$i][$j]['value'] == 'Y'){
+					$tab[$i][$j]["label"]=_CONTACT;
+					$tab[$i][$j]["size"]="10";
+					$tab[$i][$j]["label_align"]="left";
+					$tab[$i][$j]["align"]="left";
+					$tab[$i][$j]["valign"]="bottom";
+					$tab[$i][$j]["show"]=false;
+					$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+					$tab[$i][$j]["value"] = _MULTI_CONTACT;
+					$tab[$i][$j]["order"]=false;
+				}
             }
 			if($tab[$i][$j][$value]=="type_label")
 			{

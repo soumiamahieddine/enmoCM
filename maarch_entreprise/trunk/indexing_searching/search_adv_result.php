@@ -666,7 +666,8 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 elseif ($contact_type == "contact")
                 {
-                    $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."') and ";
+					$where_request .= " (res_id in (select res_id from contacts_res where contact_id = '".$contact_id."' and coll_id = '" . $coll_id . "') or ";
+                    $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."')) and ";
                 }
             }
             // SEARCH IN BASKETS

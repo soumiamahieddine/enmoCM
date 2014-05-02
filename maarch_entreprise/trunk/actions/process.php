@@ -174,6 +174,29 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     } else {
     */
 
+//Load multicontacts
+	$query = "select c.firstname, c.lastname, c.society ";
+			$query .= "from contacts c, contacts_res cres  ";
+			$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$res_id." AND cast (c.contact_id as varchar) = cres.contact_id ";
+			$query .= "GROUP BY c.firstname, c.lastname, c.society";
+			
+	$b->query($query);
+	$nbContacts = 0;
+	$frameContacts = "";
+	$frameContacts = "{";
+	while($res = $b->fetch_object()){
+		$nbContacts = $nbContacts + 1;
+		$firstname = str_replace("'","\'", $res->firstname);
+		$firstname = str_replace('"'," ", $firstname);
+		$lastname = str_replace("'","\'", $res->lastname);
+		$lastname = str_replace('"'," ", $lastname);
+		$society = str_replace("'","\'", $res->society);
+		$society = str_replace('"'," ", $society);
+		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " " . $society . "', ";
+	}
+	$frameContacts = substr($frameContacts, 0, -2);
+	$frameContacts .= "}";
+	
     /********************************* LEFT PART **************************************/
     $frm_str = '<div id="validleftprocess">';
         $frm_str .= '<h2 id="action_title"><img src="'
@@ -206,30 +229,47 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
               $frm_str .= '<table width="95%" align="left" border="0">';
               // Displays the document indexes
             foreach (array_keys($data) as $key) {
-                $frm_str .= '<tr>';
-                    $frm_str .= '<td width="50%" align="left"><span class="form_title_process">'
-                        . $data[$key]['label'] . ' :</span></td>';
-                    $frm_str .= '<td>';
-                    if ($data[$key]['display'] == 'textinput') {
-                        $frm_str .= '<input type="text" name="' . $key . '" id="' . $key
-                            . '" value="' . $data[$key]['show_value']
-                            . '" readonly="readonly" class="readonly" style="border:none;" />';
-                    } elseif ($data[$key]['display'] == 'textarea') {
-                        $frm_str .= '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" '
-                                    .'title="'.$data[$key]['show_value'].'" style="width: 150px; max-width: 150px; border: none; color: #666666;">'
-                                        .$data[$key]['show_value']
-                                    .'</textarea>';
-                        if (isset($data[$key]['addon'])) {
-                            $frm_str .= $data[$key]['addon'];
-                        }
-                    }
-					
-					if($key == 'type_id'){
-						$_SESSION['category_id_session'] = $data[$key]['value'];
-					}
-					
-                    $frm_str .= '</td>';
-                $frm_str .= '</tr>';
+				if($key != 'is_multicontacts' || ($key == 'is_multicontacts' && $data[$key]['show_value'] == 'Y')){
+					$frm_str .= '<tr>';
+						$frm_str .= '<td width="50%" align="left"><span class="form_title_process">'
+							. $data[$key]['label'] . ' :</span></td>';
+						$frm_str .= '<td>';
+						if ($data[$key]['display'] == 'textinput') {
+							if($key == 'is_multicontacts'){
+								$frm_str .= '<input type="hidden" name="' . $key . '" id="' . $key
+									. '" value="' . $data[$key]['show_value']
+									. '" readonly="readonly" class="readonly" style="border:none;" />';	
+
+								$frm_str .= '<div onClick="$(\'return_previsualise\').style.display=\'none\';" id="return_previsualise" style="display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
+									$frm_str .= '<input type="hidden" id="identifierDetailFrame" value="" />';
+								$frm_str .= '</div>';
+								
+								$frm_str .= '<input type="text" value="'.$nbContacts . ' ' ._CONTACTS .'" readonly="readonly" class="readonly" size="40" style="border:none;" title="'._MULTI_CONTACT.'" alt="'._MULTI_CONTACTS.'"'; 
+											$frm_str .= 'onmouseover = "previsualiseAdminRead(event, '.$frameContacts.');"';
+								$frm_str .= '/>';                                  
+									
+							} else {
+								$frm_str .= '<input type="text" name="' . $key . '" id="' . $key
+									. '" value="' . $data[$key]['show_value']
+									. '" readonly="readonly" class="readonly" style="border:none;" />';
+							}
+						} elseif ($data[$key]['display'] == 'textarea') {
+							$frm_str .= '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" '
+										.'title="'.$data[$key]['show_value'].'" style="width: 150px; max-width: 150px; border: none; color: #666666;">'
+											.$data[$key]['show_value']
+										.'</textarea>';
+							if (isset($data[$key]['addon'])) {
+								$frm_str .= $data[$key]['addon'];
+							}
+						}
+						
+						if($key == 'type_id'){
+							$_SESSION['category_id_session'] = $data[$key]['value'];
+						}
+						
+						$frm_str .= '</td>';
+					$frm_str .= '</tr>';
+				}
             }
             if ($chrono_number <> '') {
                 $frm_str .= '<tr>';

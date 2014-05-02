@@ -94,7 +94,7 @@ Mods
                                     <td width="35%">
                                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                             <tr>
-                                                <td width="50%" style="text-align:right">##defineLang|_CONTACT## :</td><td style="text-align:right">##loadValue|exp_user_id##</td>
+                                                <td width="50%" style="text-align:right">##defineLang|_CONTACT## :</td><td style="text-align:right">##loadValue|exp_user_id####loadValue|is_multicontacts##</td>
                                             </tr>
 
                                             <tr><td> </td><td></td></tr>
@@ -124,6 +124,7 @@ Mods
                                         <td style="font-size:10px;" width ="110px" > ##loadValue|dest_user##</td>
                                         <td style="font-size:10px;text-align:right" width ="30px"  alt="##defineLang|_TYPE##" title="##defineLang|_TYPE##" ##clickOnLine##><img src="##loadImage|mini_type.gif##">
                                         <td style="font-size:10px;text-align:left"  ##clickOnLine##>##loadValue|type_label##</td>
+                                        <td style="font-size:10px;" >##func_bool_see_multi_contacts##</td>
                                         <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_ATTACHMENTS#|#loadImage|picto_attachment.gif#|loadRepList('#loadValue|res_id#')|#loadValue|count_attachment# == 0##</td>
                                         <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_WF#|#loadImage|lot.gif#|loadDiffList('#loadValue|res_id#')##</td>
                                         <td style="font-size:10px;" width ="30px" >##showIconDocument##</td>
@@ -132,6 +133,14 @@ Mods
                             </table>
                         </td>
                 </tr>
+			   <tr id="contactsList_##loadValue|res_id##" name="contactsList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: white;" width="100%">
+					<td colspan="6" style="background-color: white;">
+						<div id="divContactsList_##loadValue|res_id##" align="center" style="color: grey;">
+							<img src="##loadImage|loading.gif##" width="10%" style="background-color: white; margin: 0; padding: 0;"/><br />
+							##define_lang|_LOADING_INFORMATIONS##
+						</div>
+					</td>
+				</tr>	
                 <tr id="repList_##loadValue|res_id##" name="repList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: #FFF;" width="100%">
                     <td colspan="2" style="background-color: white;">
                         <div id="divRepList_##loadValue|res_id##" align="center" style="color: grey;">

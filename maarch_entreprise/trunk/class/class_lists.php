@@ -584,8 +584,7 @@ class lists extends dbquery
                     
                         $_SESSION['filters']['type']['CLAUSE'] = "type_id = '".$_SESSION['filters']['type']['VALUE']."'";
                         
-                    } else if ($_REQUEST['filter'] == 'isViewed') {
-                    
+                    } else if ($_REQUEST['filter'] == 'isViewed') {                    
                         if ($_SESSION['filters']['isViewed']['VALUE'] == 'yes') {
                             $_SESSION['filters']['isViewed']['CLAUSE'] = "res_id in (select res_id from listinstance WHERE coll_id = '".$_SESSION['collection_id_choice']."' and item_type = 'user_id' and item_id = '".$_SESSION['user']['UserId']."' and item_mode = 'cc' and viewed > 0)";
                         } else  if ($_SESSION['filters']['isViewed']['VALUE'] == 'no') {
@@ -1122,6 +1121,27 @@ class lists extends dbquery
             }
         }
     }
+	
+	public function tmplt_func_bool_see_multi_contacts($resultTheLine)
+    {
+        $return = '';
+		$nbresult_I = count($resultTheLine);
+
+		for($iresults=0;$iresults<$nbresult_I;$iresults++){
+			if($resultTheLine[$iresults]['is_multi_contacts']){
+				$isMultiContacts = $resultTheLine[$iresults]['is_multi_contacts'];
+			}				
+			if($resultTheLine[$iresults]['res_multi_contacts']){
+				$resMultiContacts = $resultTheLine[$iresults]['res_multi_contacts'];
+			}
+		}
+		
+        if ($isMultiContacts == 'Y') {
+            $return .= '<img src="static.php?filename=manage_groups_b.gif" style="cursor: pointer;" title="Afficher les contacts" onclick="loadContactsList(' . $resMultiContacts . ');" />';
+        }
+
+        return $return;
+    }
     
     private function _tmplt_loadVarSys($parameter, $resultTheLine=array(), $listKey='', $lineIsDisabled=false) {
         ##loadValue|arg1##: load value in the db; arg1= column's value identifier
@@ -1187,6 +1207,8 @@ class lists extends dbquery
         ##ifStatement## : 
         } elseif (preg_match("/^ifStatement\|/", $parameter)) {
             $var = $this->_tmplt_ifStatement($parameter);   
+        } elseif (preg_match("/^func_bool_see_multi_contacts$/", $parameter)){
+            $var = $this->tmplt_func_bool_see_multi_contacts($resultTheLine);
         } else {
             $var = _WRONG_FUNCTION_OR_WRONG_PARAMETERS;
         }

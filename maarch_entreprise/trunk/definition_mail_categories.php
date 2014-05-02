@@ -268,7 +268,8 @@ $_ENV['categories']['outgoing']['type_contact'] = array (
     'table' => 'none',
     'values' => array (
         'internal',
-        'external'
+        'external',
+		'multi_external'
     ),
     'modify' => false
 );
@@ -278,7 +279,8 @@ $_ENV['categories']['outgoing']['other_cases']['contact'] = array (
     'mandatory' => true,
     'label' => _DEST,
     'table' => 'coll_ext',
-    'special' => 'dest_user_id,dest_contact_id',
+    'special' => 'dest_user_id,dest_contact_id,is_multicontacts',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif',
     'modify' => false
 );
 
@@ -938,7 +940,8 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     'value' => '',
                     'show_value' => '',
                     'label' => $_ENV['categories'][$cat_id]['other_cases']['contact']['label'],
-                    'display' => 'textinput'
+                    'display' => 'textinput',
+					'img' => $_ENV['categories'][$cat_id]['other_cases']['contact']['img'],
                 );
                 $data[$arr_tmp[$i]]['readonly'] = true;
                 if (isset($_ENV['categories'][$cat_id][$arr_tmp[$i]]['modify'])
@@ -1169,7 +1172,24 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     }
                 }
                 unset ($data[$arr[$i]]);
-            }
+            } else if ($arr[$i] == 'is_multicontacts') {
+                if (!empty ($line-> $arr[$i])) {
+                    $data['type_contact'] = 'multi_external';
+                    /*$db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts'] . " where enabled = 'Y' and contact_id = " . $line-> $arr[$i] . "");
+                    $res = $db2->fetch_object();
+                    if ($res->is_corporate_person == 'Y') {
+                        $data['contact'] = $res->society . ' (' . $line-> $arr[$i] . ')';
+                    } else {
+                        if (!empty ($res->society)) {
+                            $data['contact'] = $res->society . ', ' . $res->lastname . ' ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
+                        } else {
+                            $data['contact'] = $res->lastname . ', ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
+                        }
+                    }*/
+                }
+                unset ($data[$arr[$i]]);			
+			
+			}
             // Folder
             elseif ($arr[$i] == 'folder' && isset($line->folders_system_id) && $line->folders_system_id <> '' ) {
                 $db2->query('select folder_id, folder_name, subject, folders_system_id, parent_id from ' 

@@ -191,6 +191,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
 {
     var typeContactInternal = 'not_checked';
     var typeContactExternal = 'not_checked';
+    var typeMultiContactExternal = 'not_checked';
     if ($('type_contact_internal')) {
         if ($('type_contact_internal').checked == true) {
             var typeContactInternal = 'checked';
@@ -200,8 +201,13 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         if ($('type_contact_external').checked == true) {
             typeContactExternal = 'checked';
         }
+    }    
+	if ($('type_multi_contact_external')) {
+        if ($('type_multi_contact_external').checked == true) {
+            typeMultiContactExternal = 'checked';
+        }
     }
-    if (typeContactInternal == 'not_checked' && typeContactExternal == 'not_checked') {
+    if (typeContactInternal == 'not_checked' && typeContactExternal == 'not_checked' && typeMultiContactExternal == 'not_checked') {
         typeContactExternal = 'checked';
     }
     //Category = RM
@@ -248,6 +254,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'department_tr', type:'tr', state:'display'},
         {id:'box_id_tr', type:'tr', state:'display'},
         {id:'contact_choose_tr', type:'tr', state:'display'},
+        {id:'contact_choose_2_tr', type:'tr', state:'display'},
+        {id:'contact_choose_3_tr', type:'tr', state:'hide'},
         {id:'dest_contact_choose_label', type:'label', state:'hide'},
         {id:'exp_contact_choose_label', type:'label', state:'display'},
         {id:'contact_id_tr', type:'tr', state:'display'},
@@ -255,6 +263,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'exp_contact', type:'label', state:'display'},
         {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
         {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
+        {id:'type_multi_contact_external', type:'radiobutton', state:typeMultiContactExternal},
         {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
@@ -295,6 +304,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'process_limit_date_tr', type:'tr', state:'display'},
         {id:'box_id_tr', type:'tr', state:'display'},
         {id:'contact_choose_tr', type:'tr', state:'display'},
+        {id:'contact_choose_2_tr', type:'tr', state:'display'},
+        {id:'contact_choose_3_tr', type:'tr', state:'display'},
         {id:'dest_contact_choose_label', type:'label', state:'display'},
         {id:'exp_contact_choose_label', type:'label', state:'hide'},
         {id:'contact_id_tr', type:'tr', state:'display'},
@@ -302,6 +313,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'exp_contact', type:'label', state:'hide'},
         {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
         {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
+        {id:'type_multi_contact_external', type:'radiobutton', state:typeMultiContactExternal},
         {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
@@ -342,6 +354,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'process_limit_date_tr', type:'tr', state:'display'},
         {id:'box_id_tr', type:'tr', state:'display'},
         {id:'contact_choose_tr', type:'tr', state:'display'},
+        {id:'contact_choose_2_tr', type:'tr', state:'display'},
+        {id:'contact_choose_3_tr', type:'tr', state:'hide'},
         {id:'dest_contact_choose_label', type:'label', state:'hide'},
         {id:'exp_contact_choose_label', type:'label', state:'display'},
         {id:'contact_id_tr', type:'tr', state:'display'},
@@ -349,6 +363,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'exp_contact', type:'label', state:'display'},
         {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
         {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
+        {id:'type_multi_contact_external', type:'radiobutton', state:typeMultiContactExternal},
         {id:'folder_tr', type:'tr', state:'display'},
         {id:'category_id_mandatory', type:'label', state:'display'},
         {id:'type_id_mandatory', type:'label', state:'display'},
@@ -921,7 +936,12 @@ function open_contact_card(path_contact_card,path_user_card,mode)
     if (mode == '') {
         mode = 'view';
     }
-    var contact_value = $('contact').value;
+	
+	if($('email')){
+		var contact_value = $('email').value;
+	}else{
+		var contact_value = $('contact').value;
+	}
     var arr = get_checked_values('type_contact');
     var contact_id = contact_value.substring(contact_value.indexOf('(')+1, contact_value.indexOf(')'));
     if (arr.length == 0) {
@@ -934,7 +954,7 @@ function open_contact_card(path_contact_card,path_user_card,mode)
     } else {
         if (arr[0] == 'internal') {
             window.open(path_user_card+'&id='+contact_id, 'contact_info', 'height=450, width=600,scrollbars=no,resizable=yes');
-        } else if(arr[0] == 'external') {
+        } else if(arr[0] == 'external' || arr[0] == 'multi_external') {
             window.open(path_contact_card+'&mode='+mode+'&id='+contact_id, 'contact_info', 'height=600, width=600,scrollbars=yes,resizable=yes');
         }
     }
@@ -942,10 +962,11 @@ function open_contact_card(path_contact_card,path_user_card,mode)
 
 function create_contact(path_create, id_action)
 {
-    if ($('type_contact_external')) {
+    /*if ($('type_contact_external')) {
         $('type_contact_external').checked = true;
         $('type_contact_external').onclick();
-    }
+    }*/
+
     
     var contact_frm = $('indexingfrmcontact');
     var contact_type = get_contact_type($('category_id').value);
@@ -1000,7 +1021,12 @@ function create_contact(path_create, id_action)
                     eval("response = "+answer.responseText);
                     //alert(answer.responseText);
                     if (response.status == 0 ) {
-                        var contact = $('contact');
+						if($('type_multi_contact_external').checked == true){
+							var contact = $('email');
+						}else{
+							var contact = $('contact');
+						}
+						
                         if (contact) {
                             contact.value = response.value;
                             //$('contact_card').style.visibility = 'visible';
@@ -1024,13 +1050,21 @@ function create_contact(path_create, id_action)
  *
  * @param path_autocomplete String Path to the Ajax script
  **/
-function change_contact_type(path_autocomplete, empty_contact_div, id_internal, id_external, id_contact)
+function change_contact_type(path_autocomplete, empty_contact_div, id_internal, id_external, id_contact, id_multi_external)
 {
     var contact_id = id_contact || 'contact';
     var external_type = id_external || 'type_contact_external';
     var internal_type = id_internal || 'type_contact_internal';
+    var multi_external_type = id_multi_external || 'type_multi_contact_external';
     var create_contact = $('create_contact');
     var contact_card = $('contact_card');
+    var valid_multi_contact = $('valid_multi_contact');
+    var email = $('email');
+    var to_multi_contact = $('to_multi_contact');
+    var to = $('to');
+    var show_multi_contact = $('show_multi_contact_tr');
+    var add_multi_contact = $('add_multi_contact_tr');
+    var contact_id_tr = $('contact_id_tr');
     if(typeof(empty_contact_div) == 'undefined' || empty_contact_div == null)
     {
         var empty_contact = true ;
@@ -1045,11 +1079,35 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
         {
             Element.setStyle(create_contact, {display : 'none'});
             //create_contact.style.display = 'none';
+			Element.setStyle(email, {display : 'none'});
+			Element.setStyle(valid_multi_contact, {display : 'none'});
+			Element.setStyle(to_multi_contact, {display : 'none'});
+			Element.setStyle(to, {display : 'none'});
+			Element.setStyle(show_multi_contact, {display : 'none'});
+			Element.setStyle(add_multi_contact, {display : 'none'});
+			Element.setStyle(contact_id_tr, {display : 'table-row'});
         }
-        else if($(external_type ).checked == true)
+        else if($(external_type ).checked == true || $(multi_external_type ).checked == true )
         {
             Element.setStyle(create_contact, {display : 'inline'});
             //create_contact.style.display = 'inline';
+			if($(multi_external_type ).checked == true){
+				Element.setStyle(email, {display : 'inline'});
+				Element.setStyle(valid_multi_contact, {display : 'inline'});
+				Element.setStyle(to_multi_contact, {display : 'inline'});
+				Element.setStyle(to, {display : 'inline'});
+				Element.setStyle(show_multi_contact, {display : 'table-row'});
+				Element.setStyle(add_multi_contact, {display : 'table-row'});
+				Element.setStyle(contact_id_tr, {display : 'none'});
+			}else if ($(external_type ).checked == true){
+				Element.setStyle(email, {display : 'none'});
+				Element.setStyle(valid_multi_contact, {display : 'none'});
+				Element.setStyle(to_multi_contact, {display : 'none'});
+				Element.setStyle(to, {display : 'none'});
+				Element.setStyle(show_multi_contact, {display : 'none'});
+				Element.setStyle(add_multi_contact, {display : 'none'});
+				Element.setStyle(contact_id_tr, {display : 'table-row'});
+			}
         }
     }
     if(empty_contact)
@@ -1062,7 +1120,7 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
 
 function init_validation(path_autocomplete_contact, display_value_tr, path_manage_script, get_js_script)
 {
-    var param_cat = {'type_contact_internal' : {'onclick' : false} , 'type_contact_external' : {'onclick' : false}};
+    var param_cat = {'type_contact_internal' : {'onclick' : false} , 'type_contact_external' : {'onclick' : false}, 'type_multi_contact_external' : {'onclick' : false}};
     change_category($('category_id').value, display_value_tr,path_manage_script,get_js_script, param_cat);
     change_contact_type(path_autocomplete_contact, false);
     $('contact').onchange();
@@ -1080,9 +1138,13 @@ function clear_error(id_error)
     }
 }
 
-function display_contact_card(mode)
+function display_contact_card(mode, id)
 {
-    var contact_card = $('contact_card');
+	if(id){
+		var contact_card = $(id);
+	}else{
+		var contact_card = $('contact_card');
+	}
     if(contact_card && (mode == 'hidden' || mode == 'visible'))
     {
         Element.setStyle(contact_card, {visibility : mode});
@@ -1200,4 +1262,46 @@ function computeTotalAmount()
         $('total_sum_preformatted').value = convertAmount($('currency').value, total);
         //console.log(total);
     }
+}
+
+var addMultiContacts = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv) {
+     new Ajax.Autocompleter(
+         idField,
+         idList,
+         theUrlToListScript,
+         {
+             paramName : paramNameSrv,
+             minChars : minCharsSrv,
+             tokens : ',',
+             //afterUpdateElement : extractEmailAdress,
+			parameters : 'table=contacts'
+         });
+ };
+ 
+function updateMultiContacts(path, action, contact, target, array_index) {
+        
+	new Ajax.Request(path,
+	{
+		method:'post',
+		parameters: { url : path,
+					  'for': action,
+					  contact: contact,
+					  field: target,
+					  index: array_index
+					},
+		onLoading: function(answer) {
+			$('loading_' + target).style.display='inline';
+		},
+		onSuccess: function(answer) {
+			eval("response = "+answer.responseText);
+			if(response.status == 0){
+				$(target).innerHTML = response.content;
+				if (action == 'add') {$('email').value = '';}
+			} else {
+				alert(response.error);
+				eval(response.exec_js);
+			}
+			// $('loading_' + target).style.display='none';
+		}
+	});
 }

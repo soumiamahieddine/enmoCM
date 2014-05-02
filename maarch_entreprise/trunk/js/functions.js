@@ -2337,6 +2337,9 @@ function previsualiseAdminRead(e, json){
     if (divWidth > 0) {
         leftPosition = mouseX - (divWidth + 40);
     }
+	if(leftPosition < 0){
+		leftPosition = - leftPosition;
+	}
     var divHeight = $('return_previsualise').getHeight();
     if (divHeight > 0) {
         topPosition = mouseY - (divHeight - 2);

@@ -500,6 +500,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td><span class="red_asterisk" id="admission_date_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
+	
     /*** Contact ***/
     $frmStr .= '<tr id="contact_choose_tr" style="display:' . $displayValue
             . ';">';
@@ -513,16 +514,31 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'onclick="clear_error(\'frm_error_' . $actionId . '\');'
             . 'change_contact_type(\'' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&dir=indexing_searching&page='
-            . 'autocomplete_contacts\', true);"  />' . _INTERNAL2
-            . '<input type="radio" name="type_contact" '
+            . 'autocomplete_contacts\', true);"  /><label for="type_contact_internal">' . _INTERNAL2 . '</label>'
+			.  '</td></tr>';
+    $frmStr .= '<tr id="contact_choose_2_tr" style="display:' . $displayValue
+            . ';">';
+    $frmStr .= '<td>&nbsp;</td>';
+    $frmStr .= '<td>&nbsp;</td>';
+	$frmStr .= '<td class="indexing_field"><input type="radio" name="type_contact" '
             . 'id="type_contact_external" value="external" '
             . 'onclick="clear_error(\'frm_error_' . $actionId . '\');'
             . 'change_contact_type(\'' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&dir=indexing_searching'
-            . '&autocomplete_contacts\', true);"  class="check"/>' . _EXTERNAL
+            . '&autocomplete_contacts\', true);"  class="check"/><label for="type_contact_external">' . _EXTERNAL	.'</label>'		
             . '</td>';
-    $frmStr .= '<td><span class="red_asterisk" id="type_contact_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+    $frmStr .= '</tr>';
+    $frmStr .= '<tr id="contact_choose_3_tr" style="display:' . $displayValue
+            . ';">';
+    $frmStr .= '<td>&nbsp;</td>';
+    $frmStr .= '<td>&nbsp;</td>';
+	$frmStr .= '<td class="indexing_field"><input type="radio" name="type_contact" '
+            . 'id="type_multi_contact_external" value="multi_external" '
+            . 'onclick="clear_error(\'frm_error_' . $actionId . '\');'
+            . 'change_contact_type(\'' . $_SESSION['config']['businessappurl']
+            . 'index.php?display=true&dir=indexing_searching'
+            . '&autocomplete_contacts\', true);"  class="check"/><label for="type_multi_contact_external">' . _MULTI_EXTERNAL	.'</label>'		
+            . '</td>';
     $frmStr .= '</tr>';
     $frmStr .= '<tr id="contact_id_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td><label for="contact" class="form_title" >'
@@ -555,6 +571,62 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td><span class="red_asterisk" id="contact_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
+	
+	/****multicontact***/
+	
+	//Path to actual script
+	$path_to_script = $_SESSION['config']['businessappurl']
+		."index.php?display=true&dir=indexing_searching&page=add_multi_contacts&coll_id=".$collId;
+ 	
+	$_SESSION['adresses']['to'] = array();
+	
+    $frmStr .= '<tr id="add_multi_contact_tr" style="display:' . $displayValue . ';">';
+        $frmStr .= '<td><label for="contact" class="form_title" >'
+            . '<span id="dest_multi_contact">' . _DEST . '</span>';
+    if ($_SESSION['features']['personal_contact'] != "false" || $_SESSION['features']['create_public_contact'] != "false"
+    ) {
+        $frmStr .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
+                . '" onclick="new Effect.toggle(\'create_contact_div\', '
+                . '\'blind\', {delay:0.2});return false;" '
+                . 'style="display:inline;" ><img src="'
+                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
+                . 'modif_liste.png" alt="' . _CREATE_CONTACT . '"/></a>';
+    }
+    $frmStr .= '</label></td>';
+    $contact_mode = "view";
+    if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update';
+    $frmStr .= '<td><a href="#" id="multi_contact_card" title="' . _CONTACT_CARD
+            . '" onclick="open_contact_card(\''
+            . $_SESSION ['config']['businessappurl'] . 'index.php?display=true'
+            . '&page=contact_info\', \'' . $_SESSION ['config']['businessappurl']
+            . 'index.php?display=true&page=user_info\',\''.$contact_mode.'\');" '
+            . 'style="visibility:hidden;" ><img src="'
+            . $_SESSION['config']['businessappurl'] . 'static.php?filename='
+            . 'my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>&nbsp;</td>';
+	$frmStr .= '<td><input type="text" name="email" id="email" value="" onblur="clear_error(\'frm_error_' . $actionId . '\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
+    $frmStr .= '<div id="multiContactList" class="autocomplete"></div>';
+    $frmStr .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
+        .$_SESSION['config']['businessappurl']
+        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'Input\', \'2\');</script>';
+    $frmStr .=' <input type="button" name="add" value="&nbsp;'._ADD
+                    .'&nbsp;" id="valid_multi_contact" class="button" onclick="updateMultiContacts(\''.$path_to_script
+                    .'&mode=adress\', \'add\', document.getElementById(\'email\').value, '
+                    .'\'to\', false);" />&nbsp;';
+    $frmStr .= '</td>';
+    $frmStr .= '</tr>';
+    $frmStr .= '<tr id="show_multi_contact_tr">';
+    $frmStr .= '<td align="right" nowrap width="10%" id="to_multi_contact"><label>'
+        ._SEND_TO_SHORT.'</label></td>';
+    $frmStr .= '<td>&nbsp;</td><td ><div name="to" id="to"  style="width:200px;" class="multicontactInput">'
+        .'<div id="loading_to" style="display:none;"><img src="'
+        . $_SESSION['config']['businessappurl']
+        . 'static.php?filename=loading.gif" width="12" '
+        . 'height="12" style="vertical-align: middle;" alt='
+        . '"loading..." title="loading..."></div></div></td>';
+    $frmStr .= '<td><span class="red_asterisk" id="contact_mandatory" '
+            . 'style="display:inline;">*</span>&nbsp;</td>';
+    $frmStr .= '</tr>';	
+	
     /*** Nature ***/
     $frmStr .= '<tr id="nature_id_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td><label for="nature_id" class="form_title" >' . _NATURE
@@ -1128,7 +1200,7 @@ function check_form($formId, $values)
     } elseif (empty($_SESSION['upfile']['format'])) {
         $_SESSION['action_error'] = _FILE . ' ' . _MANDATORY;
         return false;
-    } 
+    }
 
     //print_r($values);
     $_SESSION['action_error'] = '';
@@ -1376,6 +1448,9 @@ function process_category_check($catId, $values)
         $contactType = get_value_fields($values, 'type_contact_external');
         if (! $contactType) {
             $contactType = get_value_fields($values, 'type_contact_internal');
+        }        
+		if (! $contactType) {
+            $contactType = get_value_fields($values, 'type_multi_contact_external');
         }
         if (! $contactType) {
             $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['type_contact']['label']
@@ -1383,8 +1458,10 @@ function process_category_check($catId, $values)
             return false;
         }
         $contact = get_value_fields($values, 'contact');
+
+		$nb_multi_contact = count($_SESSION['adresses']['to']);
         if ($_ENV['categories'][$catId]['other_cases']['contact']['mandatory'] == true) {
-            if (empty($contact)) {
+            if (empty($contact) && $nb_multi_contact == 0) {
                 $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
                     . ' ' . _IS_EMPTY;
                 return false;
@@ -1773,41 +1850,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         }
     }
 
-    // Contact
-    if (isset($_ENV['categories'][$catId]['other_cases']['contact'])) {
-        $contact = get_value_fields($formValues, 'contact');
-        $contactType = get_value_fields(
-            $formValues, 'type_contact_external'
-        );
-        if (! $contactType) {
-            $contactType = get_value_fields(
-                $formValues, 'type_contact_internal'
-            );
-        }
-        //echo 'contact '.$contact.', type '.$contactType;
-        $contactId = str_replace(
-            ')', '', substr($contact, strrpos($contact, '(') + 1)
-        );
-        if ($contactType == 'internal') {
-            if ($catId == 'incoming') {
-                $queryExtFields .= 'exp_user_id,';
-                $queryExtValues .= "'" . $db->protect_string_db($contactId)
-                                . "',";
-            } else if ($catId == 'outgoing' || $catId == 'internal') {
-                $queryExtFields .= 'dest_user_id,';
-                $queryExtValues .= "'" . $db->protect_string_db($contactId)
-                                . "',";
-            }
-        } else if ($contactType == 'external') {
-            if ($catId == 'incoming') {
-                $queryExtFields .= 'exp_contact_id,';
-                $queryExtValues .= $contactId . ",";
-            } else if ($catId == 'outgoing' || $catId == 'internal') {
-                $queryExtFields .= 'dest_contact_id,';
-                $queryExtValues .= $contactId . ",";
-            }
-        }
-    }
+
     if ($core->is_module_loaded('folder')) {
         $folderId = '';
         $folder = get_value_fields($formValues, 'folder');
@@ -1884,6 +1927,73 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         $_SESSION['config']['databasetype']
     );
     //echo 'load '.$resId. " ";
+	
+    // Contact
+    if (isset($_ENV['categories'][$catId]['other_cases']['contact'])) {
+        $contact = get_value_fields($formValues, 'contact');
+		
+        $contactType = get_value_fields(
+            $formValues, 'type_contact_external'
+        );
+		
+        if (! $contactType) {
+            $contactType = get_value_fields(
+                $formValues, 'type_contact_internal'
+            );
+        }        
+		
+		if (! $contactType) {
+            $contactType = get_value_fields(
+                $formValues, 'type_multi_contact_external'
+            );
+        }
+        //echo 'contact '.$contact.', type '.$contactType;
+
+		$nb_multi_contact = count($_SESSION['adresses']['to']);
+		
+		if($nb_multi_contact > 0 && $contactType == 'multi_external'){
+		
+			for($icontact = 0; $icontact<$nb_multi_contact; $icontact++){
+			
+				$contactId = str_replace(
+					')', '', substr($_SESSION['adresses']['to'][$icontact], strrpos($_SESSION['adresses']['to'][$icontact], '(') + 1)
+				);
+			
+				$db->query("INSERT INTO contacts_res (coll_id, res_id, contact_id) VALUES ('". $collId ."', ". $resId .", '". $contactId ."')");
+			
+			}
+			
+			$queryExtFields .= 'is_multicontacts,';
+			$queryExtValues .= "'Y',";
+		
+		}
+		else{
+		
+			$contactId = str_replace(
+				')', '', substr($contact, strrpos($contact, '(') + 1)
+			);
+			if ($contactType == 'internal') {
+				if ($catId == 'incoming') {
+					$queryExtFields .= 'exp_user_id,';
+					$queryExtValues .= "'" . $db->protect_string_db($contactId)
+									. "',";
+				} else if ($catId == 'outgoing' || $catId == 'internal') {
+					$queryExtFields .= 'dest_user_id,';
+					$queryExtValues .= "'" . $db->protect_string_db($contactId)
+									. "',";
+				}
+			} else if ($contactType == 'external') {
+				if ($catId == 'incoming') {
+					$queryExtFields .= 'exp_contact_id,';
+					$queryExtValues .= $contactId . ",";
+				} else if ($catId == 'outgoing' || $catId == 'internal') {
+					$queryExtFields .= 'dest_contact_id,';
+					$queryExtValues .= $contactId . ",";
+				}
+			}
+		}
+    }
+	
     if ($resId <> false) {
         //Create chrono number
         //######

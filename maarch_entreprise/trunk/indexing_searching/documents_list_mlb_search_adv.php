@@ -186,7 +186,7 @@ if($mode == 'normal') {
     array_push($select[$view],  "res_id as is_labeled", "res_id", "status", "subject", "category_id as category_img", 
                                 "contact_firstname", "contact_lastname", "contact_society", 
                                 "user_lastname", "user_firstname", "dest_user", "type_label", 
-                                "creation_date", "folders_system_id", "folder_name", "entity_label", "category_id, exp_user_id");
+                                "creation_date", "folders_system_id", "folder_name", "entity_label", "category_id, exp_user_id", "is_multicontacts");
     //Cases
     if($core_tools->is_module_loaded("cases") == true) {
         array_push($select[$view], "case_id", "case_label", "case_description");
@@ -301,6 +301,7 @@ if($mode == 'normal') {
                     $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
                     $tab[$i][$j]["order"]='res_id';
                     $_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
+						$tab[$i][$j]['res_multi_contacts'] = $_SESSION['mlb_search_current_res_id'];
                 }
                 
                 if($tab[$i][$j][$value]=="type_label")
@@ -448,6 +449,22 @@ if($mode == 'normal') {
                     $tab[$i][$j]["value"] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
                     $tab[$i][$j]["order"]=false;
                 }
+				
+				if($tab[$i][$j][$value]=="is_multicontacts")
+				{
+					if($tab[$i][$j]['value'] == 'Y'){
+						$tab[$i][$j]["label"]=_CONTACT;
+						$tab[$i][$j]["size"]="10";
+						$tab[$i][$j]["label_align"]="left";
+						$tab[$i][$j]["align"]="left";
+						$tab[$i][$j]["valign"]="bottom";
+						$tab[$i][$j]["show"]=false;
+						$tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+						$tab[$i][$j]["value"] = _MULTI_CONTACT;
+						$tab[$i][$j]["order"]=false;
+						$tab[$i][$j]["is_multi_contacts"] = 'Y';
+					}
+				}
                 
                 if($tab[$i][$j][$value]=="case_id" && $core_tools->is_module_loaded("cases") == true)
                 {
