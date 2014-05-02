@@ -550,24 +550,24 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 											<img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  /></a>
 											<?php
 										} else if($key == 'is_multicontacts'){
+											?>
+											
+											<img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  												
+													onmouseover = "previsualiseAdminRead(event, <?php echo $frameContacts; ?>);"
+											/>
+											</a>
+											<?php
+										}
+										else
+										{
+											?>
+											<img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  /></a>
+											<?php
+										}
 										?>
-										
-										<img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  												
-												onmouseover = "previsualiseAdminRead(event, <?php echo $frameContacts; ?>);"
-										/>
-										</a>
+
 										<?php
 									}
-                                    else
-                                    {
-                                        ?>
-                                        <img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  /></a>
-                                        <?php
-                                    }
-                                    ?>
-
-                                    <?php
-                                }
                                 //$detailsExport .= "</th>";
                                 ?>
                             </th>
@@ -577,10 +577,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 						
 									?>
 								<td align="left" width="200px">
-									<?php
-									
-									
-									
+									<?php									
 										$detailsExport .= $data[$key]['label'];
 										echo $data[$key]['label'];
 										
@@ -751,6 +748,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 }
                             }
                             $i++;
+							}
                         }
                         $detailsExport .=  "<tr class='col'>";
                         $detailsExport .=  "<td align='left' width='200px'>";
@@ -909,7 +907,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     }
                                 }
                                 $i++;
-								}
                             }
                             ?>
                         </table>
