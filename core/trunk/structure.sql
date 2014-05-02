@@ -1519,6 +1519,13 @@ CREATE SEQUENCE query_id_seq
   START 10
   CACHE 1;
 
+  -- multicontacts
+CREATE TABLE contacts_res
+(
+  coll_id character varying(32) NOT NULL,
+  res_id bigint NOT NULL,
+  contact_id character varying(128) NOT NULL
+ );
 
 CREATE TABLE saved_queries (
   query_id bigint NOT NULL DEFAULT nextval('query_id_seq'::regclass),
@@ -1879,7 +1886,8 @@ CREATE TABLE mlb_coll_ext (
   alarm2_date timestamp without time zone default NULL,
   flag_notif char(1)  default 'N'::character varying ,
   flag_alarm1 char(1)  default 'N'::character varying ,
-  flag_alarm2 char(1) default 'N'::character varying
+  flag_alarm2 char(1) default 'N'::character varying,
+  is_multicontacts char(1)
 )WITH (OIDS=FALSE);
 
 CREATE SEQUENCE res_id_version_letterbox_seq
@@ -3504,7 +3512,7 @@ CREATE VIEW res_view_letterbox AS
     mlb.dest_user_id, mlb.dest_contact_id, mlb.nature_id, mlb.alt_identifier,
     mlb.admission_date, mlb.answer_type_bitmask, mlb.other_answer_desc,
     mlb.process_limit_date, mlb.closing_date, mlb.alarm1_date, mlb.alarm2_date,
-    mlb.flag_notif, mlb.flag_alarm1, mlb.flag_alarm2, r.video_user, r.video_time,
+    mlb.flag_notif, mlb.flag_alarm1, mlb.flag_alarm2, mlb.is_multicontacts, r.video_user, r.video_time,
     r.video_batch, r.subject, r.identifier, r.title, r.priority, mlb.process_notes,
     ca.case_id, ca.case_label, ca.case_description, en.entity_label,
     cont.contact_id AS contact_id, cont.email AS contact_email,
