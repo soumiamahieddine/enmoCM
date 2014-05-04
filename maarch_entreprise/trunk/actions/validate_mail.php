@@ -1746,6 +1746,9 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 
 		$db->query("DELETE FROM contacts_res where res_id = ".$res_id);
 		
+		$db->query("update ". $table_ext 
+			. " set exp_user_id = NULL, dest_user_id = NULL, exp_contact_id = NULL, dest_contact_id = NULL where res_id = " 
+			. $res_id);
 		if($nb_multi_contact > 0 && $contact_type == 'multi_external'){
 		
 			for($icontact = 0; $icontact<$nb_multi_contact; $icontact++){
@@ -1790,9 +1793,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 				$db->query("DELETE FROM contacts_res where res_id = ".$res_id);
 				$query_ext .= ", is_multicontacts = ''";
 			}
-			$db->query("update ". $table_ext 
-				. " set exp_user_id = NULL, dest_user_id = NULL, exp_contact_id = NULL, dest_contact_id = NULL where res_id = " 
-				. $res_id);
 		}
     }
     
