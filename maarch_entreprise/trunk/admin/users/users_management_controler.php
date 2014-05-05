@@ -179,7 +179,7 @@ function display_list(){
 		$my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);
 		
 		if($_SESSION['user']['UserId'] != 'superadmin'){
-			$where = " ((status = 'OK' or status = 'ABS') and users.user_id != 'superadmin') and users_entities.entity_id in (".join(',', $my_tab_entities_id).")";
+			$where = " ((status = 'OK' or status = 'ABS') and users.user_id != 'superadmin') and ((users_entities.entity_id is NULL) or users_entities.entity_id in (".join(',', $my_tab_entities_id)."))";
 		}else{
 			$where = " ((status = 'OK' or status = 'ABS') and users.user_id != 'superadmin')";
 		}
