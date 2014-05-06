@@ -56,7 +56,7 @@ $db->query(
     . ".status not in ('DEL','BAD')"
 );
 
-//$db->show();
+$db->show();
 
 $countPiece = $db->fetch_object();
 if ($rep->is_module_loaded('folder')) {
