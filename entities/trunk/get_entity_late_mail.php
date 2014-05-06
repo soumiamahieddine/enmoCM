@@ -46,7 +46,7 @@ if (!$_REQUEST['entities_chosen']){
 }else{
     $db->query("select entity_id, short_label from ".ENT_ENTITIES." where enabled = 'Y' and entity_id IN (".$entities_chosen.") order by short_label");
 }
-
+//$db->show();
 
 $entities = array();
 while($res = $db->fetch_object())
@@ -90,7 +90,8 @@ for($i=0; $i<count($entities);$i++)
 /*
     $this->query("select l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id and l.item_id='".$user['ID']."'  and item_type = 'user_id' and  r.flag_alarm1 = 'N' and (r.status = 'NEW' or r.status = 'COU') and date(r.alarm1_date) =date(now()) and l.item_mode = 'dest' and item_type='user_id'");
 */
-        $db->query("SELECT count(res_id) AS total FROM ".$view." WHERE  status not in ('DEL','INIT') and destination = '".$entities[$i]['ID']."' and date(process_limit_date) <= date(now()) ");
+        $db->query("SELECT count(*) AS total from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id where destination = '".$entities[$i]['ID']."' and ".$view.".status not in ('DEL','BAD') and date(".$view.".process_limit_date) <= date(now()) ");
+        //$db->show();
 
 		if( $db->nb_result() > 0)
         {
