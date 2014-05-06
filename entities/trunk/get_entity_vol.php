@@ -50,8 +50,6 @@ while($res = $db->fetch_object())
 {
     array_push($entities, array('ID' => $res->entity_id, 'LABEL' => $res->short_label));
 }
-	
-//var_dump($entities);
 if($period_type == 'period_year')
 {
 	if(empty($_REQUEST['the_year']) || !isset($_REQUEST['the_year']))
@@ -207,8 +205,8 @@ $totalEntities = count($entities);
 	
 for($i=0; $i<count($entities);$i++)
 {
-	$db->query("select count(*) as total from ".$view." where status not in ('DEL','INIT')   ".$where_date." and destination = '".$entities[$i]['ID']."'");
-	//$db->show();
+	$db->query("select count(*) as total from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id where destination = '".$entities[$i]['ID']."' and ".$view.".status not in ('DEL','BAD') ".$where_date);
+	$db->show();
 	$res = $db->fetch_object();
 	/*
 		$db->query("select count(*) as total from ".$view." where status in ".$str_status."   ".$where_date." and category_id = '".$key."'");
