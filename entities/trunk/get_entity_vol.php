@@ -232,7 +232,7 @@ for($i=0; $i<count($entities);$i++)
 if($report_type == 'array'){
 
 	$totalCourriers=array_sum($totalCourrier);
-	array_push($data, array('LABEL' => 'Total :', 'VALUE' => $totalCourriers ));
+	array_push($data, array('LABEL' => 'Total des courriers rattachés à une entité existante :', 'VALUE' => $totalCourriers ));
 }
 
 if($report_type == 'graph')
