@@ -552,9 +552,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 										} else if($key == 'is_multicontacts'){
 											?>
 											
-											<img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  												
-													onmouseover = "previsualiseAdminRead(event, <?php echo $frameContacts; ?>);"
-											/>
+												<img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  												
+														onclick = "previsualiseAdminRead(event, <?php echo $frameContacts; ?>);" style="cursor: pointer;"
+												/>
 											</a>
 											<?php
 										}
@@ -565,6 +565,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 											<?php
 										}
 										?>
+
 
 										<?php
 									}
@@ -600,16 +601,16 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 								if($key == 'is_multicontacts') {
 									if($data[$key]['show_value'] == 'Y'){
 									?>
-										<input type="hidden" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
-													
-										<div onClick="$('return_previsualise').style.display='none';" id="return_previsualise" style="display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
-											<input type="hidden" id="identifierDetailFrame" value="" />
-										</div>
-										
-										<input type="text" value="<?php echo $nbContacts . ' ' ._CONTACTS;?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo _MULTI_CONTACT; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" 
-													onmouseover = "previsualiseAdminRead(event, <?php echo $frameContacts; ?>);"
-													 
-										/>
+											<input type="hidden" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo $data[$key]['show_value']; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
+														
+											<div onClick="$('return_previsualise').style.display='none';" id="return_previsualise" style="cursor: pointer; display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
+												<input type="hidden" id="identifierDetailFrame" value="" />
+											</div>
+											
+											<input type="text" value="<?php echo $nbContacts . ' ' ._CONTACTS;?>" readonly="readonly" class="readonly" size="40"  title="<?php  echo _SHOW_MULTI_CONTACT; ?>" alt="<?php  echo $data[$key]['show_value']; ?>" 
+														onclick = "previsualiseAdminRead(event, <?php echo $frameContacts; ?>);" style="cursor: pointer;"
+														 
+											/>
 									<?php
 									}
 	

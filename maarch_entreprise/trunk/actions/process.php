@@ -240,12 +240,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 									. '" value="' . $data[$key]['show_value']
 									. '" readonly="readonly" class="readonly" style="border:none;" />';	
 
-								$frm_str .= '<div onClick="$(\'return_previsualise\').style.display=\'none\';" id="return_previsualise" style="display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
+								$frm_str .= '<div onClick="$(\'return_previsualise\').style.display=\'none\';" id="return_previsualise" style="cursor: pointer; display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
 									$frm_str .= '<input type="hidden" id="identifierDetailFrame" value="" />';
 								$frm_str .= '</div>';
 								
-								$frm_str .= '<input type="text" value="'.$nbContacts . ' ' ._CONTACTS .'" readonly="readonly" class="readonly" size="40" style="border:none;" title="'._MULTI_CONTACT.'" alt="'._MULTI_CONTACTS.'"'; 
-											$frm_str .= 'onmouseover = "previsualiseAdminRead(event, '.$frameContacts.');"';
+								$frm_str .= '<input type="text" value="'.$nbContacts . ' ' ._CONTACTS .'" readonly="readonly" class="readonly" size="40" style="cursor: pointer; border:none;" title="'._SHOW_MULTI_CONTACT.'" alt="'.SHOW_MULTI_CONTACT.'"'; 
+											$frm_str .= 'onClick = "previsualiseAdminRead(event, '.$frameContacts.');"';
 								$frm_str .= '/>';                                  
 									
 							} else {
