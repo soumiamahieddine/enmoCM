@@ -10,6 +10,8 @@ $db = new dbquery();
 $db->connect();
 $db2 = new dbquery();
 $db2->connect();
+$db3 = new dbquery();
+$db3->connect();
 $req = new request();
 $list = new list_show();
 $graph = new graphics();
@@ -23,6 +25,8 @@ $ind_coll = $sec->get_ind_collection('letterbox_coll');
 $table = $_SESSION['collections'][$ind_coll]['table'];
 $view = $_SESSION['collections'][$ind_coll]['view'];
 $search_status = $status_obj->get_searchable_status();
+
+//print_r($search_status);
 
 $id_report = $_REQUEST['id_report'];
 if(empty($id_report))
@@ -60,6 +64,7 @@ $str_status = '(';
 		$str_status .= "'".$search_status[$i]['ID']."',";
 	}
 	$str_status = preg_replace('/,$/', ')', $str_status);
+	$str_status2 = "('COU','END','NEW','RET','SIG','UNS','VAL','VIS','SMART','MAQUAL','BRSAS','XML','XML_SENT','WAIT_REPLY','BAP','DAV','AVD','APP')";
 
 	if($period_type == 'period_year')
 	{
@@ -208,8 +213,16 @@ $str_status = '(';
 
 		for($i=0; $i<count($doctypes);$i++)
 		{
-			$db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." AS delay FROM ".$view." WHERE  ".$where_date." AND status in ".$str_status." and type_id = ".$doctypes[$i]['ID']."");
-			
+			//$db->query("SELECT doctypes_second_level_label,".$req->get_date_diff('closing_date', 'creation_date' )." AS delay FROM ".$view." WHERE  ".$where_date." AND closing_date is NOT NULL AND status in ".$str_status." and type_id = ".$doctypes[$i]['ID']."");
+			$db->query("SELECT ".$view.".doctypes_second_level_label,".$req->get_date_diff($view.'.closing_date', $view.'.creation_date' )." AS delay from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE  ".$where_date." AND ".$view.".closing_date is NOT NULL AND ".$view.".status not in ('DEL','BAD') and ".$view.".type_id = ".$doctypes[$i]['ID']."");
+			//$db->show();
+
+
+			$db2->query( "SELECT doctypes_second_level_label FROM doctypes INNER JOIN doctypes_second_level 
+						  ON doctypes.doctypes_second_level_id = doctypes_second_level.doctypes_second_level_id
+						  WHERE doctypes.type_id='". $doctypes[$i]['ID'] . "'");
+			$res2 = $db2->fetch_object();
+
 			if( $db->nb_result() > 0)
 			{
 				$tmp = 0;
@@ -223,7 +236,7 @@ $str_status = '(';
 				}
 				elseif($report_type == 'array')
 				{
-					array_push($data, array('LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)$tmp / $db->nb_result()));
+					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $db->nb_result(),2)));
 				}
 				if($tmp / $db->nb_result() > 0)
 				{
@@ -238,7 +251,7 @@ $str_status = '(';
 				}
 				elseif($report_type == 'array')
 				{
-					array_push($data, array('LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => _UNDEFINED));
+					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => _UNDEFINED));
 				}
 			}
 			if($report_type == 'graph')
@@ -269,8 +282,17 @@ $str_status = '(';
 		}
 		elseif($report_type == 'array')
 		{
-			array_unshift($data, array('LABEL' => _DOCTYPE, 'VALUE' => _PROCESS_DELAY));
+			array_unshift($data, array('SSCHEMISE' => _SSCHEMISE, 'LABEL' => _DOCTYPE, 'VALUE' => _PROCESS_DELAY));
+
+			// Tri du tableau $data
+			foreach ($data as $key => $value) {
+				$ssChemise[$key] = $value['SSCHEMISE'];
+				$document[$key]  = $value['LABEL'];
+			}
+			array_multisort($ssChemise, SORT_ASC, $document, SORT_ASC, $data);
 		}
+
+		
 
 		if ( $has_data)
 		{
@@ -335,8 +357,10 @@ $str_status = '(';
 					$period = substr($where_date, -5, -1);
 				}
 				
-				$db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." FROM ".$view." WHERE status in ".$str_status." and date_part( 'month', creation_date)  = ".$i." and date_part( 'year', creation_date)  = ".$period." AND STATUS = 'END'");
-				
+				//$db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." FROM ".$view." WHERE status in ".$str_status." AND closing_date is NOT NULL AND date_part( 'month', creation_date)  = ".$i." and date_part( 'year', creation_date)  = ".$period." AND STATUS = 'END'");
+				$db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date')." from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE ".$view.".status not in ('DEL','BAD') AND ".$view.".closing_date is NOT NULL AND date_part( 'month', ".$view.".creation_date)  = ".$i." and date_part( 'year', ".$view.".creation_date)  = ".$period);
+				//$db->show();
+
 				if( $db->nb_result() > 0)
 				{
 					
@@ -352,7 +376,7 @@ $str_status = '(';
 					}
 					elseif($report_type == 'array')
 					{
-						array_push($data, array('LABEL' => $_SESSION['month'][$i], 'VALUE' => (string)$tmp / $db->nb_result()));
+						array_push($data, array('LABEL' => $_SESSION['month'][$i], 'VALUE' => (string)round($tmp / $db->nb_result(),2)));
 					}
 					if($tmp / $db->nb_result() > 0)
 					{
@@ -516,6 +540,8 @@ $str_status = '(';
 			    $db->query("select type_id, description from ".$_SESSION['tablename']['doctypes']." where enabled = 'Y' and type_id IN (".$entities_chosen.") order by description");
 			}
 
+
+
 			//$db->show();
 			if($report_type == 'graph')
 			{
@@ -534,8 +560,17 @@ $str_status = '(';
 			$z=0;
 			while($line = $db->fetch_object())
 			{
-				$db2->query("select count(*) as total from ".$view." where status in ".$str_status."  and ".$where_date." and type_id = ".$line->type_id."");
+				//$db2->query("select count(*) as total from ".$view." where status in ".$str_status."  and ".$where_date." and type_id = ".$line->type_id."");
+				$db2->query("select count(*) as total from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id where ".$where_date." and type_id = ".$line->type_id." and ".$view.".status not in ('DEL','BAD')");
 				$res = $db2->fetch_object();
+				//$db2->show();
+
+				$db3->query( "select doctypes_second_level_label from doctypes inner join doctypes_second_level 
+						  on doctypes.doctypes_second_level_id = doctypes_second_level.doctypes_second_level_id
+						  where doctypes.type_id='". $line->type_id . "'");
+				$res3 = $db3->fetch_object();
+
+
 				if($report_type == 'graph')
 				{
 					//array_push($_SESSION['labels1'], (string)utf8_decode($line->type_label));
@@ -544,7 +579,7 @@ $str_status = '(';
 				}
 				elseif($report_type == 'array')
 				{
-					array_push($data, array('LABEL' =>$line->description, 'VALUE' => $res->total ));
+					array_push($data, array('SSCHEMISE' => $res3->doctypes_second_level_label, 'LABEL' =>$line->description, 'VALUE' => $res->total ));
 					array_push($totalCourrier, $res->total);
 				}
 
@@ -558,7 +593,7 @@ $str_status = '(';
 			if($report_type == 'array'){
 
 				$totalCourriers=array_sum($totalCourrier);
-				array_push($data, array('LABEL' => 'Total :', 'VALUE' => $totalCourriers ));
+				array_push($data, array('SSCHEMISE' => '_', 'LABEL' => 'Total :', 'VALUE' => $totalCourriers ));
 			}
 
 			if($report_type == 'graph')
@@ -579,9 +614,15 @@ $str_status = '(';
 			}
 			elseif($report_type == 'array')
 			{
-				array_unshift($data, array('LABEL' => _DOCTYPE, 'VALUE' => _NB_MAILS1));
+				array_unshift($data, array('SSCHEMISE'=> _SSCHEMISE, 'LABEL' => _DOCTYPE, 'VALUE' => _NB_MAILS1));
+				// Tri du tableau $data
+				foreach ($data as $key => $value) {
+					$ssChemise[$key] = $value['SSCHEMISE'];
+					$document[$key]  = $value['LABEL'];
+				}
+				array_multisort($ssChemise, SORT_ASC, $document, SORT_ASC, $data);
 			}
-		//echo $src1;
+		
 			if($has_data)
 			{
 				if($report_type == 'graph')
@@ -627,8 +668,9 @@ $str_status = '(';
 			foreach(array_keys($_SESSION['coll_categories']['letterbox_coll']) as $key)
 			{
 				if($key!='default_category'){
-					$db->query("select count(*) as total from ".$view." where status not in ('DEL')  and ".$where_date." and category_id = '".$key."'");
+					$db->query("select count(*) as total from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id where ".$view.".status not in ('DEL','BAD')  and ".$where_date." and ".$view.".category_id = '".$key."'");
 					$res = $db->fetch_object();
+					//$db->show();
 					if($report_type == 'graph')
 					{
 						array_push($_SESSION['labels1'], utf8_decode($db->wash_html($_SESSION['coll_categories']['letterbox_coll'][$key], 'NO_ACCENT')));
