@@ -611,7 +611,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .=' <input type="button" name="add" value="&nbsp;'._ADD
                     .'&nbsp;" id="valid_multi_contact" class="button" onclick="updateMultiContacts(\''.$path_to_script
                     .'&mode=adress\', \'add\', document.getElementById(\'email\').value, '
-                    .'\'to\', false);" />&nbsp;';
+                    .'\'to\', false);display_contact_card(\'hidden\', \'multi_contact_card\');" />&nbsp;';
     $frmStr .= '</td>';
     $frmStr .= '</tr>';
     $frmStr .= '<tr id="show_multi_contact_tr">';

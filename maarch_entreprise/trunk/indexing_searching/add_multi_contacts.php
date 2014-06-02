@@ -447,7 +447,7 @@ switch ($mode) {
                 //Get content
                 $content = $multicontacts->updateContactsInputField($path_to_script, $_SESSION['adresses'], $_REQUEST['field']);
             } else {
-                $error = $request->wash_html(_EMAIL.' '._IS_EMPTY.'!','NONE');
+                $error = $request->wash_html(_DEST.' '._IS_EMPTY.'!','NONE');
                 $status = 1;
             }
         } else {

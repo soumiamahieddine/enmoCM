@@ -504,7 +504,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .=' <input type="button" name="add" value="&nbsp;'._ADD
 									.'&nbsp;" id="valid_multi_contact" class="button" onclick="updateMultiContacts(\''.$path_to_script
 									.'&mode=adress\', \'add\', document.getElementById(\'email\').value, '
-									.'\'to\', false);" />&nbsp;';
+									.'\'to\', false);display_contact_card(\'hidden\', \'multi_contact_card\');" />&nbsp;';
 					$frm_str .= '</td>';
 					$frm_str .= '</tr>';
 					$frm_str .= '<tr id="show_multi_contact_tr">';
