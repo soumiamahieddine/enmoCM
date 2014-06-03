@@ -1305,3 +1305,36 @@ function updateMultiContacts(path, action, contact, target, array_index) {
 		}
 	});
 }
+
+function update_contact_type_session(path)
+{
+    var check = 'type_contact';
+    var arr = get_checked_values(check);
+    var params = '';
+    
+    if (arr.length == 0) {
+        var contact_type = get_contact_type($('category_id').value);
+        params = 'table=contacts&contact_type=' + contact_type;
+    } else {
+        if (arr[0] == 'internal') {
+            params = 'users';
+        } else if(arr[0] == 'external') {
+            params = 'contacts';
+        } else if(arr[0] == 'multi_external') {
+            params = 'multi';
+        } else {
+            params = 'contacts';
+        }
+    }
+    new Ajax.Request(path,
+    {
+        method:'post',
+        parameters:
+        {
+            paramsRequest : params
+        },
+        onSuccess: function(answer){
+            eval(answer.responseText);
+        }
+    });
+}

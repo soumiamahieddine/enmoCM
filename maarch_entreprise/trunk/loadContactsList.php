@@ -28,7 +28,7 @@ if (isset($_REQUEST['res_id'])) {
                         $return .= '<td style="background: transparent; border: 0px dashed rgb(200, 200, 200);">';
                             
                                 $return .= '<div style="text-align: left; background-color: rgb(230, 230, 230); padding: 3px; margin-left: 20px; margin-top: -6px;">';
-                                    $return .= $res->firstname . ' ' . $res->lastname . ' ' . $res->society;
+                                    $return .= $res->firstname . ' ' . $res->lastname . ' ' . $res->society . ' (contact)';
                                     
                                     if(isset($res->address_num) && !empty($res->address_num)){
                                         $return .= ': ' . $res->address_num;
@@ -48,6 +48,31 @@ if (isset($_REQUEST['res_id'])) {
                                     if(isset($res->address_country) && !empty($res->address_country)){
                                         $return .= ', ' . $res->address_country;
                                     }
+                                                
+                                $return .= '</div>';
+                                //$return .= '<br />';
+                            
+                        $return .= '</td>';
+                    $return .= '</tr>';
+                }
+                
+                $db = new dbquery();
+                $db->connect();
+                      
+                $query = "select u.firstname, u.lastname, u.user_id ";
+                        $query .= "from users u, contacts_res cres  ";
+                        $query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['res_id']." AND cast (u.user_id as varchar) = cres.contact_id";
+                        
+                $db->query($query);
+
+                $fetch = '';
+                while ($res = $db->fetch_object()) {
+
+                    $return .= '<tr>';
+                        $return .= '<td style="background: transparent; border: 0px dashed rgb(200, 200, 200);">';
+                            
+                                $return .= '<div style="text-align: left; background-color: rgb(230, 230, 230); padding: 3px; margin-left: 20px; margin-top: -6px;">';
+                                    $return .= $res->firstname . ' ' . $res->lastname . ' (user)';
                                                 
                                 $return .= '</div>';
                                 //$return .= '<br />';

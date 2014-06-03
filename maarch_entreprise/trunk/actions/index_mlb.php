@@ -59,6 +59,7 @@ require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
     . 'class_history.php';
 
+$_SESSION['is_multi_contact'] = '';
 
 $core = new core_tools();
 if ($core->is_module_loaded('entities')) {
@@ -514,7 +515,9 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'onclick="clear_error(\'frm_error_' . $actionId . '\');'
             . 'change_contact_type(\'' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&dir=indexing_searching&page='
-            . 'autocomplete_contacts\', true);"  /><label for="type_contact_internal">' . _INTERNAL2 . '</label>'
+            . 'autocomplete_contacts\', true);update_contact_type_session(\''
+        .$_SESSION['config']['businessappurl']
+        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');"  /><label for="type_contact_internal">' . _INTERNAL2 . '</label>'
 			.  '</td></tr>';
     $frmStr .= '<tr id="contact_choose_2_tr" style="display:' . $displayValue
             . ';">';
@@ -525,7 +528,9 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'onclick="clear_error(\'frm_error_' . $actionId . '\');'
             . 'change_contact_type(\'' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&dir=indexing_searching'
-            . '&autocomplete_contacts\', true);"  class="check"/><label for="type_contact_external">' . _EXTERNAL	.'</label>'		
+            . '&autocomplete_contacts\', true);update_contact_type_session(\''
+        .$_SESSION['config']['businessappurl']
+        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');"  class="check"/><label for="type_contact_external">' . _EXTERNAL	.'</label>'		
             . '</td>';
     $frmStr .= '</tr>';
     $frmStr .= '<tr id="contact_choose_3_tr" style="display:' . $displayValue
@@ -537,7 +542,9 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'onclick="clear_error(\'frm_error_' . $actionId . '\');'
             . 'change_contact_type(\'' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&dir=indexing_searching'
-            . '&autocomplete_contacts\', true);"  class="check"/><label for="type_multi_contact_external">' . _MULTI_EXTERNAL	.'</label>'		
+            . '&autocomplete_contacts\', true);update_contact_type_session(\''
+        .$_SESSION['config']['businessappurl']
+        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');"  class="check"/><label for="type_multi_contact_external">' . _MULTI	.'</label>'		
             . '</td>';
     $frmStr .= '</tr>';
     $frmStr .= '<tr id="contact_id_tr" style="display:' . $displayValue . ';">';

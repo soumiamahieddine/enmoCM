@@ -51,6 +51,8 @@ $frm_height = '';
 */
 $mode_form = 'fullscreen';
 
+$_SESSION['is_multi_contact'] = '';
+
 include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'definition_mail_categories.php');
 
 ///////////////////// Pattern to check dates
@@ -218,8 +220,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
 	
 	//Load Multicontacts
-	$query = "select c.firstname, c.lastname, c.society, c.contact_id ";
-		$query .= "from contacts c, contacts_res cres  ";
+	//CONTACTS
+    $query = "select c.firstname, c.lastname, c.society, c.contact_id ";
+		$query .= "from contacts c, contacts_res cres ";
 		$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$res_id." AND cast (c.contact_id as varchar) = cres.contact_id";			
 	$db->query($query);
 	
@@ -230,7 +233,17 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		 array_push($_SESSION['adresses']['to'], $addContact);
 	}
 	
+    //USERS
+	$query = "select u.firstname, u.lastname, u.user_id ";
+		$query .= "from users u, contacts_res cres ";
+		$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$res_id." AND cast (u.user_id as varchar) = cres.contact_id";			
+	$db->query($query);
 	
+	while($res = $db->fetch_object()){
+		$addContact = $res->firstname . $res->lastname . ' ('. $res->user_id .')';
+		 array_push($_SESSION['adresses']['to'], $addContact);
+	}
+    
     check_category($coll_id, $res_id);
     $data = get_general_data($coll_id, $res_id, 'minimal');
 /*
@@ -412,7 +425,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                   $frm_str .= '<tr id="contact_choose_tr" style="display:'.$display_value.';">';
 					   $frm_str .='<td class="indexing_label"><label for="type_contact" class="form_title" ><span id="exp_contact_choose_label">'._SHIPPER_TYPE.'</span><span id="dest_contact_choose_label">'._DEST_TYPE.'</span></label></td>';
 					   $frm_str .='<td>&nbsp;</td>';
-					   $frm_str .='<td class="indexing_field"><input type="radio" name="type_contact" id="type_contact_internal" value="internal"  class="check" onclick="clear_error(\'frm_error_'.$id_action.'\');change_contact_type(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');"';
+					   $frm_str .='<td class="indexing_field"><input type="radio" name="type_contact" id="type_contact_internal" value="internal"  class="check" onclick="clear_error(\'frm_error_'.$id_action.'\');change_contact_type(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');update_contact_type_session(\''
+        .$_SESSION['config']['businessappurl']
+        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');"';
 
 						if ($data['type_contact'] == 'internal') {
 							$frm_str .= ' checked="checked" ';
@@ -423,7 +438,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					   $frm_str .='<td>&nbsp;</td>';
 					   $frm_str .='<td>&nbsp;</td>';
 					   $frm_str .='<td class="indexing_field">';					
-						$frm_str .= '<input type="radio" name="type_contact" class="check" id="type_contact_external" value="external" onclick="clear_error(\'frm_error_'.$id_action.'\');change_contact_type(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');"';
+						$frm_str .= '<input type="radio" name="type_contact" class="check" id="type_contact_external" value="external" onclick="clear_error(\'frm_error_'.$id_action.'\');change_contact_type(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');update_contact_type_session(\''
+        .$_SESSION['config']['businessappurl']
+        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');"';
 						if ($data['type_contact'] == 'external') {
 							$frm_str .= ' checked="checked" ';
 						}
@@ -438,11 +455,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 								. 'onclick="clear_error(\'frm_error_' . $actionId . '\');'
 								. 'change_contact_type(\'' . $_SESSION['config']['businessappurl']
 								. 'index.php?display=true&dir=indexing_searching'
-								. '&autocomplete_contacts\', true);"  class="check" ';
+								. '&autocomplete_contacts\', true);update_contact_type_session(\''
+        .$_SESSION['config']['businessappurl']
+        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');"  class="check" ';
 						if ($data['type_contact'] == 'multi_external') {
 							$frm_str .= ' checked="checked" ';
 						}
-						$frm_str .= '/><label for="type_multi_contact_external">' . _MULTI_EXTERNAL	.'</label>'		
+						$frm_str .= '/><label for="type_multi_contact_external">' . _MULTI	.'</label>'		
 						. '</td>';
                     $frm_str .= '</tr>';
 					 
@@ -1254,7 +1273,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</div>';
 
         /*** Extra javascript ***/
-        $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'.$id_action.'", "viewframevalid", true, true);resize_frame_process("modal_'.$id_action.'", "hist_doc", true, false);window.scrollTo(0,0);launch_autocompleter_contacts(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');';
+        $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'.$id_action.'", "viewframevalid", true, true);resize_frame_process("modal_'.$id_action.'", "hist_doc", true, false);window.scrollTo(0,0);launch_autocompleter_contacts(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');update_contact_type_session(\''
+        .$_SESSION['config']['businessappurl']
+        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');';
         if($core_tools->is_module_loaded('folder'))
         {
             $frm_str .= ' initList(\'folder\', \'show_folder\',\''

@@ -265,7 +265,22 @@ if (isset($_POST['put_doc_on_validation'])) {
 		$lastname = str_replace('"'," ", $lastname);
 		$society = str_replace("'","\'", $res->society);
 		$society = str_replace('"'," ", $society);
-		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " " . $society . "', ";
+		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " " . $society . " (contact)', ";
+	}
+    $query = "select u.firstname, u.lastname, u.user_id ";
+			$query .= "from users u, contacts_res cres  ";
+			$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['id']." AND cast (u.user_id as varchar) = cres.contact_id ";
+			$query .= "GROUP BY u.firstname, u.lastname, u.user_id";
+			
+	$db->query($query);
+	
+	while($res = $db->fetch_object()){
+		$nbContacts = $nbContacts + 1;
+		$firstname = str_replace("'","\'", $res->firstname);
+		$firstname = str_replace('"'," ", $firstname);
+		$lastname = str_replace("'","\'", $res->lastname);
+		$lastname = str_replace('"'," ", $lastname);
+		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " (user)', ";
 	}
 	$frameContacts = substr($frameContacts, 0, -2);
 	$frameContacts .= "}";
