@@ -185,8 +185,14 @@ if (($_REQUEST['template'] == 'group_case') && ($core_tools->is_module_loaded('c
     $select[$_SESSION['tablename']['cases']] = array ();
     array_push($select[$_SESSION['tablename']['cases']], "case_id", "case_label", "case_description", "case_typist", "case_creation_date", "case_closing_date");*/
     //$where = " " . $_SESSION['tablename']['cases'] . ".case_id = " . $view . ".case_id  and ";
+
+    //$where = "cases.case_closing_date is null and";
+    $where = "cases.case_closing_date is null";
+    //$cond= $where . $where_request;
+    //var_dump($cond);
     $request = new request();
-    $tab = $request->select($select, $where . $where_request, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
+    //$tab = $request->select($select, $where . $where_request, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
+    $tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
 } else {
     $request = new request();
     $tab = $request->select($select, $where_request, $orderstr, $_SESSION['config']['databasetype']);
@@ -402,8 +408,9 @@ if (count($tab) > 0) {
                 }
             }
         }
-    }
+    } 
     ?>
+
     <h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl']."static.php?filename=picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." "._FOUND_DOC;?></h4></p>
         <div id="inner_content">
             <?php
