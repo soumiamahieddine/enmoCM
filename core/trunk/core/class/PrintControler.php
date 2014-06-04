@@ -322,27 +322,41 @@ class PrintControler extends PrintFunctions
 				}
 				
 				/**********************************************************************/
-				
-				//BREAK A LINE
-				$pdf->SetY($pdf->GetY()+4);
-				//BREAK A LINE
-				$pdf->SetY($pdf->GetY()+4);
-				
-				$pdf->SetFont('Arial','B',11);
-				
-                if ($this->array_print[$cpt]['contact_id'] <> '') {
+                //UNIQUE CONTACT
+				if ($this->array_print[$cpt]['contact_id'] <> '') {
+                    //BREAK A LINE
+                    $pdf->SetY($pdf->GetY()+4);
+                    //BREAK A LINE
+                    $pdf->SetY($pdf->GetY()+4);
+                    
+                    $pdf->SetFont('Arial','B',11);
+				                
                     $contactInfos = $this->getContactInfos($this->array_print[$cpt]['contact_id']);
-                }
-				
-				//CONTACT
-				$pdf->Cell(182,5,utf8_decode(_PRINT_CONTACT),0,1, 'C', false);
-				
-				$pdf->SetFont('Arial','',11);
-				
-				$pdf->MultiCell(182,5,utf8_decode($contactInfos),1, 'C', false);
+                    //CONTACT
+                    $pdf->Cell(182,5,utf8_decode(_PRINT_CONTACT),0,1, 'C', false);
+                
+                    $pdf->SetFont('Arial','',11);
+                    
+                    $pdf->MultiCell(182,5,utf8_decode($contactInfos),1, 'C', false);
+				}
+				/**********************************************************************/
+				//MULTI CONTACT
+				if ($this->array_print[$cpt]['retrieve_multi_contacts'] <> '') {
+                    //BREAK A LINE
+                    $pdf->SetY($pdf->GetY()+4);
+                    //BREAK A LINE
+                    $pdf->SetY($pdf->GetY()+4);
+                    
+                    $pdf->SetFont('Arial','B',11);
+					$pdf->Cell(182,5,utf8_decode(_MULTI_CONTACTS),0,1, 'C', false);
+					
+					$pdf->SetFont('Arial','',11);
+					
+					$pdf->MultiCell(182,5,utf8_decode($this->array_print[$cpt]['retrieve_multi_contacts']),1, 'L', false);
+				}
 				
 				/**********************************************************************/
-				
+                
 				//BREAK A LINE
 				$pdf->SetY($pdf->GetY()+4);
 				//BREAK A LINE
@@ -487,7 +501,7 @@ class PrintFunctions
 			if ($result->society <> '') {
 				$contactInfos = $result->society . "\r\n";
 			}
-			if ($result->title <> '') {
+			if ($result->title <> '' && $result->lastname <> '') {
 				foreach(array_keys($titles) as $key) {
 					if($result->title == $key) {
 						$result->title = $titles[$key];
@@ -539,6 +553,44 @@ class PrintFunctions
 		}
 	}
 	
+    function retrieve_multi_contacts($libelle)
+    {
+        $db = new dbquery();
+        $db->connect();
+        $queryContacts = "select c.firstname, c.lastname, c.society, c.contact_id ";
+			$queryContacts .= "from contacts c, contacts_res cres  ";
+			$queryContacts .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ##res_id## AND cast (c.contact_id as varchar) = cres.contact_id ";
+			$queryContacts .= "GROUP BY c.firstname, c.lastname, c.society, c.contact_id";
+			
+        $queryUsers = "select u.firstname, u.lastname, u.user_id ";
+                $queryUsers .= "from users u, contacts_res cres  ";
+                $queryUsers .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ##res_id## AND cast (u.user_id as varchar) = cres.contact_id ";
+                $queryUsers .= "GROUP BY u.firstname, u.lastname, u.user_id";
+        
+        $i = 0;
+        foreach($this->object_print as $line_name => $line_value) {
+            $return = false;
+            $res_id = $line_value->res_id;
+            $queryContacts = str_replace('##res_id##', $res_id, $queryContacts);
+            $db->query($queryContacts);
+            //$db->show();
+            while($result = $db->fetch_object()) {
+                $return .= "contact : " . $this->getContactInfos($result->contact_id);
+            }
+            $queryUsers = str_replace('##res_id##', $res_id, $queryUsers);
+            $db->query($queryUsers);
+            //$db->show();
+            while($result = $db->fetch_object()) {
+                $return .= "user : " . $this->getUserInfo($result->user_id) . "\r\n";
+            }
+            if (strlen($return) > 3)
+                $return = substr($return, 0, -2);
+            
+            $line_value->retrieve_multi_contacts = $return;
+            $i++;
+        }
+    }
+    
     function retrieve_copies($libelle)
     {
         $db = new dbquery();
