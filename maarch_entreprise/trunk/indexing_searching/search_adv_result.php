@@ -650,7 +650,7 @@ if (count($_REQUEST['meta']) > 0) {
                     $json_txt .= " 'doc_date_to' : ['".trim($_REQUEST['doc_date_to'])."'],";
                 }
             }
-            // CONTACTS
+            // CONTACTS EXTERNAL
             elseif ($tab_id_fields[$j] == 'contactid' && !empty($_REQUEST['contactid']))
             {
                 $json_txt .= " 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
@@ -668,6 +668,22 @@ if (count($_REQUEST['meta']) > 0) {
                 {
 					$where_request .= " (res_id in (select res_id from contacts_res where contact_id = '".$contact_id."' and coll_id = '" . $coll_id . "') or ";
                     $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."')) and ";
+                }
+            }
+            // CONTACTS INTERNAL
+            elseif ($tab_id_fields[$j] == 'contactid_internal' && !empty($_REQUEST['contactid_internal']))
+            {
+                $json_txt .= " 'contactid_internal' : ['".addslashes(trim($_REQUEST['contactid_internal']))."'],";
+                //$where_request .= "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
+                $contactTmp = str_replace(')', '', substr($_REQUEST['contactid_internal'], strrpos($_REQUEST['contactid_internal'],'(')+1));
+                $find1 = strpos($contactTmp, ':');
+                $find2 =  $find1 + 1;
+                $contact_type = substr($contactTmp, 0, $find1);
+                $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
+                if ($contact_type == "user")
+                {
+                    $where_request .= " ((exp_user_id = '".$contact_id."' or dest_user_id = '".$contact_id."') or ";
+                    $where_request .= " (res_id in (select res_id from contacts_res where contact_id = '".$contact_id."' and coll_id = '" . $coll_id . "'))) and ";
                 }
             }
             // SEARCH IN BASKETS

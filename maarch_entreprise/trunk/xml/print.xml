@@ -101,6 +101,10 @@
         </FIELD>
         <FUNCTIONS>
             <FUNCTION>
+                <LIBELLE>Contacts multiples</LIBELLE>
+                <CALL>retrieve_multi_contacts</CALL>
+            </FUNCTION>
+            <FUNCTION>
                 <LIBELLE>Services en copie</LIBELLE>
                 <CALL>retrieve_copies</CALL>
             </FUNCTION>

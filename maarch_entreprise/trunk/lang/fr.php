@@ -1514,3 +1514,9 @@ if (!defined('_PRINT_NOTES')) define('_PRINT_NOTES', 'NOTES');
 if (!defined('_PRINT_PROCESS_ENTITY')) define('_PRINT_PROCESS_ENTITY', 'SERVICE TRAITANT');
 if (!defined('_PRINT_PRIVATE_NOTE')) define('_PRINT_PRIVATE_NOTE', 'Note privée');
 if (!defined('_PRINT_THE')) define('_PRINT_THE', 'Le');
+
+//MULTICONTACTS
+if (!defined('_MULTI')) define('_MULTI', 'Multi');
+if (!defined('_MULTI_CONTACTS')) define('_MULTI_CONTACTS', 'Contacts multiples');
+if (!defined('_CONTACT_EXTERNAL')) define('_CONTACT_EXTERNAL', 'Contact externe');
+if (!defined('_CONTACT_INTERNAL')) define('_CONTACT_INTERNAL', 'Contact interne');
