@@ -72,7 +72,7 @@ if (isset($_REQUEST['res_id'])) {
                         $return .= '<td style="background: transparent; border: 0px dashed rgb(200, 200, 200);">';
                             
                                 $return .= '<div style="text-align: left; background-color: rgb(230, 230, 230); padding: 3px; margin-left: 20px; margin-top: -6px;">';
-                                    $return .= $res->firstname . ' ' . $res->lastname . ' (user)';
+                                    $return .= $res->firstname . ' ' . $res->lastname . ' (utilisateur)';
                                                 
                                 $return .= '</div>';
                                 //$return .= '<br />';

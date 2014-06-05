@@ -192,6 +192,9 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
     var typeContactInternal = 'not_checked';
     var typeContactExternal = 'not_checked';
     var typeMultiContactExternal = 'not_checked';
+    if (cat_id == 'internal' || cat_id == 'incoming') {
+        $('type_contact_internal').checked = true;
+    };
     if ($('type_contact_internal')) {
         if ($('type_contact_internal').checked == true) {
             var typeContactInternal = 'checked';

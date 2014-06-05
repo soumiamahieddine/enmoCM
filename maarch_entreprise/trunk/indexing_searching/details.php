@@ -280,7 +280,7 @@ if (isset($_POST['put_doc_on_validation'])) {
 		$firstname = str_replace('"'," ", $firstname);
 		$lastname = str_replace("'","\'", $res->lastname);
 		$lastname = str_replace('"'," ", $lastname);
-		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " (user)', ";
+		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " (utilisateur)', ";
 	}
 	$frameContacts = substr($frameContacts, 0, -2);
 	$frameContacts .= "}";
@@ -580,6 +580,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 											<?php
 										}
 										?>
+
 
 
 										<?php

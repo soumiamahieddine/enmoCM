@@ -207,7 +207,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$firstname = str_replace('"'," ", $firstname);
 		$lastname = str_replace("'","\'", $res->lastname);
 		$lastname = str_replace('"'," ", $lastname);
-		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " (user)', ";
+		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " (utilisateur)', ";
 	}
 	$frameContacts = substr($frameContacts, 0, -2);
 	$frameContacts .= "}";
