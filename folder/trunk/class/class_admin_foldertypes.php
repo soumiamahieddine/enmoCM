@@ -724,40 +724,43 @@ class foldertype extends dbquery
     public function get_all_indexes()
     {
         if (file_exists(
-        	$_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-        	. $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
-        	. DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR . 'xml'
-        	. DIRECTORY_SEPARATOR . 'folder_index.xml'
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+            . DIRECTORY_SEPARATOR . 'folder' . DIRECTORY_SEPARATOR . 'xml'
+            . DIRECTORY_SEPARATOR . 'folder_index.xml'
         )
         ) {
             $path = $_SESSION['config']['corepath'] . 'custom'
-            	. DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
-            	. DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR 
-            	. 'folder' . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
-            	. 'folder_index.xml';
+                . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR 
+                . 'folder' . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+                . 'folder_index.xml';
         } else {
             $path = 'modules' . DIRECTORY_SEPARATOR . 'folder'
-            	. DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR 
-            	.'folder_index.xml';
+                . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR 
+                .'folder_index.xml';
         }
         $xmlfile = simplexml_load_file($path);
         include_once 'modules' . DIRECTORY_SEPARATOR . 'folder'
-        	. DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
-        	. $_SESSION['config']['lang'] . '.php';
+            . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR
+            . $_SESSION['config']['lang'] . '.php';
         $indexes = array();
         foreach ($xmlfile->INDEX as $item) {
             $label = (string) $item->label;
-          	if (!empty($label) && defined($label) && constant($label) <> NULL) {
-          		$label = constant($label);
-          	}
+            if (!empty($label) && defined($label) && constant($label) <> NULL) {
+                $label = constant($label);
+            }
+
             $img = (string) $item->img;
             if (isset($item->default_value) && ! empty($item->default_value)) {
                 $default = (string) $item->default_value;
-            	if (!empty($default) && defined($default) 
-            		&& constant($default) <> NULL
-            	) {
-          			$default = constant($default);
-          		}
+                if (!empty($default) && defined($default) 
+                    && constant($default) <> NULL
+                ) {
+
+                    $default = constant($default);
+                }
+
             } else {
                 $default = false;
             }
@@ -766,28 +769,35 @@ class foldertype extends dbquery
                 $list = $item->values_list ;
                 foreach ($list->value as $val) {
                     $labelVal = (string) $val->label;
-               	 	if (!empty($labelVal) && defined($labelVal) 
-            			&& constant($labelVal) <> NULL
-            		) {
-          				$labelVal = constant($labelVal);
-          			}	
+                    if (!empty($labelVal) && defined($labelVal) 
+                        && constant($labelVal) <> NULL
+                    ) {
+
+                        $labelVal = constant($labelVal);
+                    }
+                   
+
                     array_push(
-                    	$values, 
-                    	array(
-                    		'id' => (string) $val->id, 
-                    		'label' => $labelVal
-                    	)
+                        $values,
+                        array(
+
+
+                            'id' => (string) $val->id,
+                            'label' => $labelVal,
+                        )
+
                     );
                 }
-                $arrTmp = array(
-                	'column' => (string) $item->column, 
-                	'label' => $label, 
-                	'type' => (string) $item->type, 
-                	'img' => $_SESSION['config']['businessappurl']
-                		. 'static.php?module=folder&filename=' . $img, 
-                	'type_field' => 'select', 
-                	'values' => $values, 
-                	'default_value' => $default
+                $tmpArr = array(
+
+                    'column' => (string) $item->column,
+                    'label' => $label,
+                    'type' => (string) $item->type,
+                    'img' => $_SESSION['config']['businessappurl']
+                    . 'static.php?filename=' . $img,
+                    'type_field' => 'select',
+                    'values' => $values,
+                    'default_value' => $default
                 );
             } else if (isset($item->table)) {
                 $values = array();
@@ -808,12 +818,14 @@ class foldertype extends dbquery
                 }
                 $this->connect();
                 $this->query($query);
-                while ($res = $this->fetch_object()) {
+                while ($res = $this->fetch_array()) {
                      array_push(
                          $values,
                          array(
-                             'id' => (string) $res->$foreignKey,
-                             'label' => $res->$foreignLabel,
+                             'id' => (string) $res[0],
+                             'label' => (string) $res[1],
+
+
                          )
                      );
                 }
@@ -828,17 +840,19 @@ class foldertype extends dbquery
                     'default_value' => $default,
                 );
             } else {
-                $arrTmp = array(
-                	'column' => (string) $item->column, 
-                	'label' => $label, 
-                	'type' => (string) $item->type, 
-                	'img' => $_SESSION['config']['businessappurl']
-                		. 'static.php?module=folder&filename=' . $img, 
-                	'type_field' => 'input', 
-                	'default_value' => $default
+                $tmpArr = array(
+
+                    'column' => (string) $item->column,
+                    'label' => $label,
+                    'type' => (string) $item->type,
+                    'img' => $_SESSION['config']['businessappurl']
+                    . 'static.php?filename=' . $img,
+                    'type_field' => 'input',
+                    'default_value' => $default,
                 );
             }
-            array_push($indexes, $arrTmp);
+            //$this->show_array($tmpArr);
+            array_push($indexes, $tmpArr);
         }
         return $indexes;
     }
