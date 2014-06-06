@@ -152,7 +152,7 @@ function afficher_arbo($parent, $niveau, $array)
 				$i=0;
 				$html.="<ul id='parent_".$noeud['folders_system_id']."_position_".$niveau."_doc' style='display:none;' >";
 				while ($i<sizeof($tab_doc)) {
-					$html .= "<li style='font-size: 10px;display:block;margin-left:25px;' id='parent_".$parent."_position_".$niveau."' ><a onclick='updateContent(\"http://localhost/maarch_entreprise_branche/apps/maarch_entreprise/index.php?dir=indexing_searching&page=little_details_invoices&display=true&value=" . $tab_doc[$i]."\", \"docView\");'><ul><li style='margin-left:30px;list-style-image:url(static.php?filename=page.gif);'>".$tab_doc[$i+2]."</li><li style='margin-left:40px;'>".$tab_doc[$i+3]."</li><li style='margin-left:50px;'>" . $tab_doc[$i]." - ".$tab_doc[$i+1]."</li></ul></a>";
+					$html .= "<li style='font-size: 10px;display:block;margin-left:25px;' id='parent_".$parent."_position_".$niveau."' ><a onclick='updateContent(\"index.php?dir=indexing_searching&page=little_details_invoices&display=true&value=" . $tab_doc[$i]."\", \"docView\");'><ul><li style='margin-left:30px;list-style-image:url(static.php?filename=page.gif);'>".$tab_doc[$i+2]."</li><li style='margin-left:40px;'>".$tab_doc[$i+3]."</li><li style='margin-left:50px;'>" . $tab_doc[$i]." - ".$tab_doc[$i+1]."</li></ul></a>";					
 					$i=$i+4;
 				}
 				$html.="</ul>";
