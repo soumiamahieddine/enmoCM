@@ -37,13 +37,49 @@ if (empty($_REQUEST['table'])) {
 }
 $table = $_REQUEST['table'];
 
+$multi_sessions = $_SESSION['adresses']['to'];
+$user_ids = array();
+// $user_ids = '';
+$contact_ids = array();
+// $contact_ids = '';
+
+if(count($multi_sessions) > 0){
+    for ($imulti=0; $imulti <= count($multi_sessions); $imulti++) { 
+        $multi_explode = explode('(', $multi_sessions[$imulti]);
+        $multi_id = end($multi_explode);
+        $multi_id = substr($multi_id, 0, -1);
+        if (is_numeric($multi_id)) {
+            array_push($contact_ids, $multi_id);
+        } else {
+            array_push($user_ids, "'".$multi_id."'");
+        }
+    }
+
+    if (!empty($contact_ids)) {
+        $contacts = implode(' ,', $contact_ids);
+        $request_contact = " and contact_id not in (".$contacts.")";
+    } else {
+        $request_contact = ''; 
+    }
+
+    if (!empty($user_ids)) {
+        $users = implode(' ,', $user_ids);
+        $request_user = " and user_id not in (".$users.")";
+    } else {
+        $request_user = ''; 
+    }
+} else{
+    $request_user = '';
+    $request_contact = ''; 
+}
+
 if ($_SESSION['is_multi_contact'] == 'OK') {
     //USERS
     $select = array();
     $select[$_SESSION['tablename']['users']]= array('lastname', 'firstname', 'user_id');
     $where = " (lower(lastname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
         ."or lower(firstname) like lower('%".$req->protect_string_db($_REQUEST['Input'])."%') "
-        ."or user_id like '%".$req->protect_string_db($_REQUEST['Input'])."%') and (status = 'OK' or status = 'ABS') and enabled = 'Y'";
+        ."or user_id like '%".$req->protect_string_db($_REQUEST['Input'])."%') and (status = 'OK' or status = 'ABS') and enabled = 'Y'".$request_user;
     $other = 'order by lastname, firstname';
     $res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
     //echo "<ul>\n";
@@ -85,7 +121,8 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
                 . " LOWER(lastname) LIKE LOWER('%s')"
                 . " OR LOWER(firstname) LIKE LOWER('%s')"
                 . " OR LOWER(society) LIKE LOWER('%s')"
-            .")";
+
+            .")".$request_contact;
     
     $queryParts = array();
     foreach($args as $arg) {
