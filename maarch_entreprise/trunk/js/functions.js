@@ -2608,6 +2608,7 @@ function loadContactsList(id)
 
     var path_manage_script = 'index.php?page=loadContactsList&display=true';
 
+
     new Ajax.Request(path_manage_script,
     {
         method:'post',
@@ -2615,6 +2616,23 @@ function loadContactsList(id)
         onSuccess: function(answer){
             eval("response = "+answer.responseText);
             $('divContactsList_'+id).innerHTML = response.toShow;
+        }
+    });
+}
+
+function loadNoteList(id)
+{
+    new Effect.toggle('noteList_'+id, 'appear' , {delay:0.2});
+
+    var path_manage_script = 'index.php?page=loadNoteList&display=true';
+
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: { identifier : id},
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            $('divNoteList_'+id).innerHTML = response.toShow;
         }
     });
 }

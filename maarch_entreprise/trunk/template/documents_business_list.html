@@ -132,11 +132,20 @@ Mods
                                         <td style="font-size:10px;text-align:left"  ##clickOnLine##>##loadValue|type_label##</td>
                                         <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_ATTACHMENTS#|#loadImage|picto_attachment.gif#|loadRepList('#loadValue|res_id#')|#loadValue|count_attachment# == 0##</td>
                                         <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_WF#|#loadImage|lot.gif#|loadDiffList('#loadValue|res_id#')##</td>
+                                        <td style="font-size:10px;" >##func_bool_see_notes##</td>
                                         <td style="font-size:10px;" width ="30px">##showIconDocument##</td>
                                         <td style="font-size:10px;" width ="30px">##showIconDetails##</td>
                                     </tr>                         
                             </table>
                         </td>
+                </tr>
+               <tr id="noteList_##loadValue|res_id##" name="noteList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: white;" width="100%">
+                    <td colspan="6" style="background-color: white;">
+                        <div id="divNoteList_##loadValue|res_id##" align="center" style="color: grey;">
+                            <img src="static.php?filename=loading_big.gif" width="10%" style="background-color: white; margin: 0; padding: 0;"/><br />
+                            ##define_lang|_LOADING_INFORMATIONS##
+                        </div>
+                    </td>
                 </tr>
                 <tr id="repList_##loadValue|res_id##" name="repList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: #FFF;" width="100%">
                     <td colspan="2" style="background-color: white;">

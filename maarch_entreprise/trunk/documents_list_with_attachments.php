@@ -150,7 +150,45 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='res_id';
                 $_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
-					$tab[$i][$j]['res_multi_contacts'] = $_SESSION['mlb_search_current_res_id'];
+				
+				// notes
+				$db = new dbquery();
+				$db->connect();
+				$query = "select ";
+				 $query .= "notes.id ";
+				$query .= "from ";
+				 $query .= "notes "; 
+				$query .= "left join "; 
+				 $query .= "note_entities "; 
+				$query .= "on "; 
+				 $query .= "notes.id = note_entities.note_id ";
+				$query .= "where ";
+				  $query .= "tablename = 'res_letterbox' ";
+				 $query .= "AND "; 
+				  $query .= "coll_id = 'letterbox_coll' ";
+				 $query .= "AND ";
+				  $query .= "identifier = " . $tab[$i][$j]['value'] . " ";
+				 $query .= "AND ";
+				  $query .= "( ";
+					$query .= "( ";
+					  $query .= "item_id IN (";
+					  
+					   foreach($_SESSION['user']['entities'] as $entitiestmpnote) {
+						$query .= "'" . $entitiestmpnote['ENTITY_ID'] . "', ";
+					   }
+					   $query = substr($query, 0, -2);
+					  
+					  $query .= ") ";
+					 $query .= "OR "; 
+					  $query .= "item_id IS NULL ";
+					$query .= ") ";
+				   $query .= "OR ";
+					$query .= "user_id = '" . $_SESSION['user']['UserId'] . "' ";
+				  $query .= ") ";
+				  //echo $query . '<br />';
+				$db->query($query);
+				$tab[$i][$j]['hasNotes'] = $db->fetch_object();				
+				$tab[$i][$j]['res_multi_contacts'] = $_SESSION['mlb_search_current_res_id'];
             }
             if($tab[$i][$j][$value]=="creation_date")
             {

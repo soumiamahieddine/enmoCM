@@ -154,6 +154,43 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]='res_id';
                 $_SESSION['mlb_search_current_res_id'] = $tab[$i][$j]['value'];
+                        // notes
+                        $db = new dbquery();
+                        $db->connect();
+                        $query = "select ";
+                         $query .= "notes.id ";
+                        $query .= "from ";
+                         $query .= "notes "; 
+                        $query .= "left join "; 
+                         $query .= "note_entities "; 
+                        $query .= "on "; 
+                         $query .= "notes.id = note_entities.note_id ";
+                        $query .= "where ";
+                          $query .= "tablename = 'res_business' ";
+                         $query .= "AND "; 
+                          $query .= "coll_id = '". $_SESSION['collection_id_choice'] ."' ";
+                         $query .= "AND ";
+                          $query .= "identifier = " . $tab[$i][$j]['value'] . " ";
+                         $query .= "AND ";
+                          $query .= "( ";
+                            $query .= "( ";
+                              $query .= "item_id IN (";
+                              
+                               foreach($_SESSION['user']['entities'] as $entitiestmpnote) {
+                                $query .= "'" . $entitiestmpnote['ENTITY_ID'] . "', ";
+                               }
+                               $query = substr($query, 0, -2);
+                              
+                              $query .= ") ";
+                             $query .= "OR "; 
+                              $query .= "item_id IS NULL ";
+                            $query .= ") ";
+                           $query .= "OR ";
+                            $query .= "user_id = '" . $_SESSION['user']['UserId'] . "' ";
+                          $query .= ") ";
+                          //echo $query . '<br />';
+                        $db->query($query);
+                        $tab[$i][$j]['hasNotes'] = $db->fetch_object();
             }
             if ($tab[$i][$j][$value]=="status") {
                 $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);

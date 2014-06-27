@@ -1121,6 +1121,15 @@ class lists extends dbquery
             }
         }
     }
+
+	public function tmplt_func_bool_see_notes($resultTheLine)
+    {
+        $return = '';
+        if ($resultTheLine[0]['hasNotes'] || $resultTheLine[1]['hasNotes']) {
+            $return .= '<img src="static.php?filename=modif_note_small.gif&module=notes" style="cursor: pointer;" title="Afficher les notes" onclick="loadNoteList(' . $resultTheLine[0]['value'] . ');" />';
+        }
+        return $return;
+    }
 	
 	public function tmplt_func_bool_see_multi_contacts($resultTheLine)
     {
@@ -1209,6 +1218,8 @@ class lists extends dbquery
             $var = $this->_tmplt_ifStatement($parameter);   
         } elseif (preg_match("/^func_bool_see_multi_contacts$/", $parameter)){
             $var = $this->tmplt_func_bool_see_multi_contacts($resultTheLine);
+        } elseif (preg_match("/^func_bool_see_notes$/", $parameter)){
+            $var = $this->tmplt_func_bool_see_notes($resultTheLine);
         } else {
             $var = _WRONG_FUNCTION_OR_WRONG_PARAMETERS;
         }

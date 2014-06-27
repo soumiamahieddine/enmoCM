@@ -129,6 +129,7 @@ Mods
                                     <td style="font-size:10px;" width ="110px" > ##loadValue|dest_user##</td>
                                     <td style="font-size:10px;text-align:right" width ="30px" alt="##defineLang|_TYPE##" title="##defineLang|_TYPE##" ##clickOnLine##><img src="##loadImage|mini_type.gif##">
                                     <td style="font-size:10px;text-align:left" ##clickOnLine##>##loadValue|type_label##</td>
+                                    <td >##func_bool_see_notes##</td>
                                     <td width ="30px"><img src="##ifStatement|#loadValue|is_persistent#==true|#loadImage|persistentLock.gif#|#loadImage|persistentUnlock.gif#|##" width="27" height="27"></td>
                                     <td width ="30px">##showIconDetails##</td>
                                     <td style="font-size:12px; color:red;" width="15px">##loadValue|viewed##</td>
@@ -137,7 +138,14 @@ Mods
                     </td>
                     
                 </tr>
-                
+				<tr id="noteList_##loadValue|res_id##" name="noteList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: white;" width="100%">
+					<td colspan="6" style="background-color: white;">
+						<div id="divNoteList_##loadValue|res_id##" align="center" style="color: grey;">
+							<img src="static.php?filename=loading_big.gif" width="10%" style="background-color: white; margin: 0; padding: 0;"/><br />
+							##define_lang|_LOADING_INFORMATIONS##
+						</div>
+					</td>
+				</tr>                
                 <tr><td colspan="2" style="background-color: white;" ##clickOnLine##></td></tr>
 
  #!#FOOTER

@@ -138,6 +138,7 @@ Mods
                                         <td width ="30px"  style="text-align:right"><img src="##loadImage|mini_type.gif##">
                                         <td  style="text-align:left">##loadValue|type_label##</td>
                                         <td style="font-size:10px;" >##func_bool_see_multi_contacts##</td>
+                                        <td style="font-size:10px;" >##func_bool_see_notes##</td>
                                         <td width ="30px">##showIconDocument##</td>
                                         <td width ="30px">##showIconDetails##</td>
                                     </tr>
@@ -152,7 +153,14 @@ Mods
 						</div>
 					</td>
 				</tr>				
-
+               <tr id="noteList_##loadValue|res_id##" name="noteList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: white;" width="100%">
+                    <td colspan="6" style="background-color: white;">
+                        <div id="divNoteList_##loadValue|res_id##" align="center" style="color: grey;">
+                            <img src="static.php?filename=loading_big.gif" width="10%" style="background-color: white; margin: 0; padding: 0;"/><br />
+                            ##define_lang|_LOADING_INFORMATIONS##
+                        </div>
+                    </td>
+                </tr>
 
 
  #!#FOOTER
