@@ -98,6 +98,10 @@ if (count($_REQUEST['meta']) > 0) {
     for ($i = 0; $i < count($_REQUEST['meta']); $i++) {
         //echo $_REQUEST['meta'][$i]."<br>";
         $tab = explode('#', $_REQUEST['meta'][$i]);
+        if ($tab[0] == 'welcome') {
+            $tab[0] = 'multifield';
+            $tab[2] = 'input_text';
+        }
         $id_val = $tab[0];
         $json_txt .= "'" . $tab[0] . "' : { 'type' : '" . $tab[2] . "', 'fields' : {";
         $tab_id_fields = explode(',', $tab[1]);
@@ -187,6 +191,55 @@ if (count($_REQUEST['meta']) > 0) {
                         $where_request .= " 1=-1 and ";
                     }
                 }
+
+            //WELCOME PAGE
+            else
+                if ($tab_id_fields[$j] == 'welcome'  && (!empty($_REQUEST['welcome'])))
+            {
+                $welcome = $_REQUEST['welcome'];
+                $json_txt .= "'multifield' : ['".addslashes(trim($welcome))."'],";
+                if (is_numeric($_REQUEST['welcome']))
+                {
+                    $where_multifield_request .= "(res_id = ".$func->protect_string_db($_REQUEST['welcome'].") or ");
+                }
+                $where_multifield_request .= "(lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
+                    ."or lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
+                    ."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%')) ";
+
+                $welcome = $_REQUEST['welcome'];
+                set_include_path('apps' . DIRECTORY_SEPARATOR 
+                    . $_SESSION['config']['app_id'] 
+                    . DIRECTORY_SEPARATOR . 'tools' 
+                    . DIRECTORY_SEPARATOR . PATH_SEPARATOR . get_include_path()
+                );
+                require_once('Zend/Search/Lucene.php');
+                Zend_Search_Lucene_Analysis_Analyzer::setDefault(
+                    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive() // we need utf8 for accents
+                );
+                Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(Zend_Search_Lucene_Search_QueryParser::B_AND);
+                Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
+                $path_to_lucene_index = $_SESSION['collections'][6]['path_to_lucene_index'];
+                if (is_dir($path_to_lucene_index))
+                {
+                    if (!$func->isDirEmpty($path_to_lucene_index)) {
+                        $index = Zend_Search_Lucene::open($path_to_lucene_index);
+                        $hits = $index->find($welcome);
+                        $Liste_Ids = "0";
+                        $cptIds = 0;
+                        foreach ($hits as $hit) {
+                            if ($cptIds < 500) {
+                                $Liste_Ids .= ", '". $hit->Id ."'";
+                            } else {
+                                break;
+                            }
+                            $cptIds ++;
+                        }
+                        $where_request_welcome .= " res_id IN ($Liste_Ids) or ".$where_multifield_request. " and ";
+                    }
+                } else {
+                    $where_request_welcome .= " ".$where_multifield_request." and ";
+                }
+            }
 
             // DOCTYPES
             else
@@ -470,6 +523,10 @@ if (!empty ($_SESSION['error'])) {
     }
     exit ();
 } else {
+    if ($where_request_welcome <> '') {
+        $where_request_welcome = substr($where_request_welcome, 0, -4);
+        $where_request .= '(' . $where_request_welcome . ') and ';
+    }
     $where_request = trim($where_request);
     $_SESSION['searching']['where_request'] = $where_request;
 }
