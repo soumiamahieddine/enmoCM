@@ -40,7 +40,12 @@ if (isset($_REQUEST['identifier'])) {
            foreach($_SESSION['user']['entities'] as $entitiestmpnote) {
             $query .= "'" . $entitiestmpnote['ENTITY_ID'] . "', ";
            }
-           $query = substr($query, 0, -2);
+
+            if ($_SESSION['user']['UserId'] == 'superadmin') {
+                $query .= " null ";
+            } else {
+                $query = substr($query, 0, -2);
+            }
           
           $query .= ") ";
          $query .= "OR "; 
