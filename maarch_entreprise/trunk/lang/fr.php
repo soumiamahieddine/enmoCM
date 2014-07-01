@@ -1520,3 +1520,7 @@ if (!defined('_MULTI')) define('_MULTI', 'Multi');
 if (!defined('_MULTI_CONTACTS')) define('_MULTI_CONTACTS', 'Contacts multiples');
 if (!defined('_CONTACT_EXTERNAL')) define('_CONTACT_EXTERNAL', 'Contact externe');
 if (!defined('_CONTACT_INTERNAL')) define('_CONTACT_INTERNAL', 'Contact interne');
+
+//DocLocker
+if (!defined('_DOC_LOCKER_RES_ID')) define('_DOC_LOCKER_RES_ID', 'Vous ne pouvez pas ouvrir le document N°');
+if (!defined('_DOC_LOCKER_USER')) define('_DOC_LOCKER_USER', ', il est déjà en édition par :');

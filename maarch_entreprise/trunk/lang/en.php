@@ -1221,3 +1221,7 @@ if (!defined('_MULTI')) define('_MULTI', 'Multi');
 if (!defined('_MULTI_CONTACTS')) define('_MULTI_CONTACTS', 'Multi contacts');
 if (!defined('_CONTACT_EXTERNAL')) define('_CONTACT_EXTERNAL', 'External contact');
 if (!defined('_CONTACT_INTERNAL')) define('_CONTACT_INTERNAL', 'Internal contact');
+
+//DocLocker
+if (!defined('_DOC_LOCKER_RES_ID')) define('_DOC_LOCKER_RES_ID', 'You can not open the document N°');
+if (!defined('_DOC_LOCKER_USER')) define('_DOC_LOCKER_USER', ', it is already processing by :');
