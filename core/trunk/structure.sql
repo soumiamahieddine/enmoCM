@@ -1718,6 +1718,8 @@ CREATE TABLE res_x
   esign_proof_content text,
   esign_content text,
   esign_date timestamp without time zone,
+  locker_user_id character varying(255) DEFAULT NULL::character varying,
+  locker_time timestamp without time zone,
   CONSTRAINT res_x_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1844,6 +1846,8 @@ CREATE TABLE res_letterbox
   esign_proof_content text,
   esign_content text,
   esign_date timestamp without time zone,
+  locker_user_id character varying(255) DEFAULT NULL::character varying,
+  locker_time timestamp without time zone,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -3115,6 +3119,8 @@ CREATE TABLE res_business
   esign_proof_content text,
   esign_content text,
   esign_date timestamp without time zone,
+  locker_user_id character varying(255) DEFAULT NULL::character varying,
+  locker_time timestamp without time zone,
   CONSTRAINT res_business_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -3434,7 +3440,8 @@ CREATE VIEW res_view_business AS
     f.status AS fold_status, f.subject AS fold_subject,
     f.parent_id AS fold_parent_id, f.folder_level, f.folder_name,
     f.creation_date AS fold_creation_date, r.initiator, r.destination,
-    r.dest_user, busi.category_id, busi.contact_id, busi.currency, 
+    r.dest_user, busi.category_id, busi.contact_id, busi.currency,
+	r.locker_user_id, r.locker_time,	
     busi.net_sum, busi.tax_sum, busi.total_sum, 
     busi.process_limit_date, busi.closing_date, busi.alarm1_date, busi.alarm2_date,
     busi.flag_notif, busi.flag_alarm1, busi.flag_alarm2, r.video_user, r.video_time,
@@ -3514,6 +3521,7 @@ CREATE VIEW res_view_letterbox AS
     mlb.process_limit_date, mlb.closing_date, mlb.alarm1_date, mlb.alarm2_date,
     mlb.flag_notif, mlb.flag_alarm1, mlb.flag_alarm2, mlb.is_multicontacts, r.video_user, r.video_time,
     r.video_batch, r.subject, r.identifier, r.title, r.priority, mlb.process_notes,
+	r.locker_user_id, r.locker_time,
     ca.case_id, ca.case_label, ca.case_description, en.entity_label,
     cont.contact_id AS contact_id, cont.email AS contact_email,
     cont.firstname AS contact_firstname, cont.lastname AS contact_lastname,
