@@ -187,12 +187,12 @@ if (($_REQUEST['template'] == 'group_case') && ($core_tools->is_module_loaded('c
     //$where = " " . $_SESSION['tablename']['cases'] . ".case_id = " . $view . ".case_id  and ";
 
     //$where = "cases.case_closing_date is null and";
-    $where = "cases.case_closing_date is null";
+    $where .= "cases.case_closing_date is null and ";
     //$cond= $where . $where_request;
     //var_dump($cond);
     $request = new request();
-    //$tab = $request->select($select, $where . $where_request, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
-    $tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
+    $tab = $request->select($select, $where . $where_request, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
+    //$tab = $request->select($select, $where, $orderstr, $_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
 } else {
     $request = new request();
     $tab = $request->select($select, $where_request, $orderstr, $_SESSION['config']['databasetype']);
