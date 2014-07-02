@@ -126,6 +126,16 @@ $_ENV['categories']['incoming']['nature_id'] = array (
     'modify' => true,
     'form_show' => 'select'
 );
+$_ENV['categories']['incoming']['reference_number'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _MONITORING_NUMBER,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
+    'modify' => false,
+    'form_show' => 'textfield'
+);
 $_ENV['categories']['incoming']['subject'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
@@ -220,6 +230,16 @@ $_ENV['categories']['outgoing']['nature_id'] = array (
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
     'modify' => true,
     'form_show' => 'select'
+);
+$_ENV['categories']['outgoing']['reference_number'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _MONITORING_NUMBER,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
+    'modify' => false,
+    'form_show' => 'textfield'
 );
 $_ENV['categories']['outgoing']['subject'] = array (
     'type_form' => 'string',
@@ -327,6 +347,16 @@ $_ENV['categories']['internal']['nature_id'] = array (
     'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
     'modify' => true,
     'form_show' => 'select'
+);
+$_ENV['categories']['internal']['reference_number'] = array (
+    'type_form' => 'string',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _MONITORING_NUMBER,
+    'table' => 'res',
+    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
+    'modify' => false,
+    'form_show' => 'textfield'
 );
 $_ENV['categories']['internal']['subject'] = array (
     'type_form' => 'string',
@@ -1078,6 +1108,11 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             }
             elseif ($arr[$i] == 'nature_id') {
                 $data[$arr[$i]]['show_value'] = $_SESSION['mail_natures'][$line-> $arr[$i]];
+            }
+            elseif ($arr[$i] == 'reference_number') {
+                if (empty ($line-> $arr[$i])) {
+                    unset ($data[$arr[$i]]);
+                }
             }
             elseif ($arr[$i] == 'type_id') {
                 $data[$arr[$i]]['show_value'] = $db->show_string($line->type_label);

@@ -555,20 +555,31 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                  $frm_str .= '<tr id="nature_id_tr" style="display:'.$display_value.';">';
                         $frm_str .='<td class="indexing_label"><label for="nature_id" class="form_title" >'._NATURE.'</label></td>';
                         $frm_str .='<td>&nbsp;</td>';
-                        $frm_str .='<td class="indexing_field"><select name="nature_id" id="nature_id" onchange="clear_error(\'frm_error_'.$id_action.'\');">';
+                        $frm_str .='<td class="indexing_field"><select name="nature_id" id="nature_id" onchange="clear_error(\'frm_error_'.$id_action.'\');affiche_reference();">';
                             $frm_str .='<option value="">'. _CHOOSE_NATURE.'</option>';
                             foreach(array_keys($_SESSION['mail_natures']) as $nature)
                             {
-                                $frm_str .='<option value="'.$nature.'"';
-                                if($_SESSION['default_mail_nature'] == $nature || (isset($data['nature_id'])&& $data['nature_id'] == $nature))
-                                {
+                                $frm_str .='<option value="'.$nature.'"  with_reference = "'.$_SESSION['mail_natures_attribute'][$nature].'"';
+                                if($_SESSION['default_mail_nature'] == $nature || (isset($data['nature_id']) && $data['nature_id'] == $nature)) {
                                     $frm_str .='selected="selected"';
                                 }
                                 $frm_str .='>'.$_SESSION['mail_natures'][$nature].'</option>';
                             }
-                         $frm_str .= '</select></td>';
-                         $frm_str .= '<td><span class="red_asterisk" id="nature_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+                        $frm_str .= '</select></td>';
+                        $frm_str .= '<td><span class="red_asterisk" id="nature_mandatory" style="display:inline;">*</span>&nbsp;</td>';
                   $frm_str .= '</tr>';
+
+                /*** Recommande ***/
+                $frm_str .= '<tr id="reference_number_tr" style="display:none;">';
+                    $frm_str .= '<td ><label for="reference_number" class="form_title" ><FONT size="5"> &rarr;</font> ' ._MONITORING_NUMBER.'</label></td>';
+                    $frm_str .= '<td>&nbsp;</td>';
+                    $frm_str .= '<td><input type="text" name="reference_number" id="reference_number"';
+                        if (isset($data['reference_number']) && $data['reference_number'] <> '') {
+                            $frm_str .= 'value = "'.$data['reference_number'].'"';
+                        }
+                    $frm_str .= '/></td>';
+                $frm_str .= '</tr>'; 
+
                 /*** Subject ***/
                   $frm_str .= '<tr id="subject_tr" style="display:'.$display_value.';">';
                         $frm_str .='<td class="indexing_label"><label for="subject" class="form_title" >'._SUBJECT.'</label></td>';
@@ -1276,6 +1287,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'.$id_action.'", "viewframevalid", true, true);resize_frame_process("modal_'.$id_action.'", "hist_doc", true, false);window.scrollTo(0,0);launch_autocompleter_contacts(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');update_contact_type_session(\''
         .$_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');';
+         $frm_str .= 'affiche_reference();';
         if($core_tools->is_module_loaded('folder'))
         {
             $frm_str .= ' initList(\'folder\', \'show_folder\',\''

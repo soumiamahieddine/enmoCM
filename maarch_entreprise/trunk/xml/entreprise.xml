@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
     <mail_natures>
-        <nature>
+        <nature with_reference="false">
             <id>simple_mail</id>
             <label>_SIMPLE_MAIL</label>
         </nature>
-        <nature>
+        <nature with_reference="false">
             <id>email</id>
             <label>_EMAIL</label>
         </nature>
-        <nature>
+        <nature with_reference="false">
             <id>fax</id>
             <label>_FAX</label>
         </nature>
-        <nature>
+        <nature with_reference="true">
             <id>chronopost</id>
             <label>_CHRONOPOST</label>
         </nature>
-        <nature>
+        <nature with_reference="true">
             <id>fedex</id>
             <label>_FEDEX</label>
         </nature>
-        <nature>
+        <nature with_reference="true">
             <id>registered_mail</id>
             <label>_REGISTERED_MAIL</label>
         </nature>
-        <nature>
+        <nature with_reference="false">
             <id>courier</id>
             <label>_COURIER</label>
         </nature>
-        <nature>
+        <nature with_reference="false">
             <id>other</id>
             <label>_OTHER</label>
         </nature>

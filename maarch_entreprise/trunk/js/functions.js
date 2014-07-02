@@ -2636,3 +2636,15 @@ function loadNoteList(id)
         }
     });
 }
+
+function affiche_reference(){
+    
+var nature = document.getElementById('nature_id').options[document.getElementById('nature_id').selectedIndex];
+
+    if (nature.getAttribute('with_reference') == 'true') {      
+        $('reference_number_tr').setStyle({display: 'table-row'});
+    } else {
+        $('reference_number_tr').setStyle({display: 'none'});
+        $('reference_number').value='';
+    }
+}

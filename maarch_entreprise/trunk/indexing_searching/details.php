@@ -363,6 +363,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 'img_doc_date' => true,
                 'img_admission_date' => true,
                 'img_nature_id' => true,
+                'img_reference_number' => true,
                 'img_subject' => true,
                 'img_process_limit_date' => true,
                 'img_author' => true,

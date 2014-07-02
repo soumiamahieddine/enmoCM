@@ -641,10 +641,10 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><select name="nature_id" '
             . 'id="nature_id" onchange="clear_error(\'frm_error_' . $actionId
-            . '\');">';
+            . '\');affiche_reference();">';
     $frmStr .= '<option value="">' . _CHOOSE_NATURE . '</option>';
     foreach (array_keys($_SESSION['mail_natures']) as $nature) {
-        $frmStr .= '<option value="' . $nature . '"';
+        $frmStr .= '<option value="' . $nature . '" with_reference = "'.$_SESSION['mail_natures_attribute'][$nature].'"';
         if ($_SESSION['default_mail_nature'] == $nature) {
             $frmStr .= 'selected="selected"';
         }
@@ -654,6 +654,14 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td><span class="red_asterisk" id="nature_id_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
+
+    /****** RECOMMANDE ******/
+    $frmStr .= '<tr id="reference_number_tr" style="display:none;">';
+    $frmStr .= '<td ><label for="reference_number" class="form_title" ><FONT size="5"> &rarr;</font> ' ._MONITORING_NUMBER.'</label></td>';
+    $frmStr .= '<td>&nbsp;</td>';
+    $frmStr .= '<td><input type="text" name="reference_number" id="reference_number"/></td>';
+
+    $frmStr .= '</tr>'; 
     /*** Subject ***/
     $frmStr .= '<tr id="subject_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td><label for="subject" class="form_title" >' . _SUBJECT
@@ -1669,6 +1677,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             'type' => 'string',
         )
     );
+
     if (isset($_SESSION['upfile']['format'])) {
         array_push(
             $_SESSION['data'],

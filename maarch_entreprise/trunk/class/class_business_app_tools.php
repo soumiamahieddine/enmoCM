@@ -386,16 +386,19 @@ class business_app_tools extends dbquery
                   . $_SESSION['config']['lang'] . '.php';
         
         $_SESSION['mail_natures'] = array();
+        $_SESSION['mail_natures_attribute'] = array();
         $mailNatures = $xmlfile->mail_natures;
         if (count($mailNatures) > 0) {
             foreach ($mailNatures->nature as $nature ) {
                 $label = (string) $nature->label;
+                $attribute = (string) $nature->attributes();
                 if (!empty($label) && defined($label)
                     && constant($label) <> NULL
                  ) {
                     $label = constant($label);
                 }
                 $_SESSION['mail_natures'][(string) $nature->id] = $label;
+                $_SESSION['mail_natures_attribute'][(string) $nature->id] = $attribute;
             }
             $_SESSION['default_mail_nature'] = (string) $mailNatures->default_nature;
         }
