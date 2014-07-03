@@ -49,12 +49,24 @@ $page_id = "contacts";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 ?>
-<a href="<?php 
-    echo $_SESSION['config']['businessappurl']
-    ;?>index.php?admin=contacts&page=manage_duplicates"><h2><img src="<?php 
-    echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=manage_duplicates.png" alt="" /><?php 
-    echo _MANAGE_DUPLICATES;?></h2></a>
+<table width="100%">
+    <tr>
+        <td>
+            <a href="<?php 
+                echo $_SESSION['config']['businessappurl']
+                ;?>index.php?admin=contacts&page=manage_duplicates">
+                <h2>
+                    <img src="<?php echo $_SESSION['config']['businessappurl'];
+                    ?>static.php?filename=manage_duplicates.png" alt="" /><?php 
+                    echo _MANAGE_DUPLICATES;?>
+                </h2>
+            </a>
+        </td>
+        <td>
+            <input class="button" type="button" value="Exporter contacts" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=admin&page=export_admin_list'?>');"/>      
+        </td>
+   </tr>
+</table>
 <?php
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
@@ -91,8 +103,21 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 
 $orderstr = $list->define_order($order, $field);
 
+//EXPORT DE LA LISTE
+$select2[$_SESSION['tablename']['contacts']] = array();
+array_push($select2[$_SESSION['tablename']['contacts']],"lastname as "._LASTNAME, "firstname as "._FIRSTNAME, "society as "._SOCIETY, "email as "._EMAIL, 
+                                                        "phone as "._PHONE, "address_num as "._NUMBER, "address_street as "._STREET
+                                                        , "address_complement as "._COMPLEMENT, "address_postal_code as code_postal", "address_town as "._TOWN, 
+                                                        "address_country as "._COUNTRY);
+
 $request= new request;
+
+$tab_export = $request->select($select2,$where,$orderstr,$_SESSION['config']['databasetype']);
+$_SESSION['export_admin_list'] = array();
+$_SESSION['export_admin_list'] = $tab_export;
+
 $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+
 for ($i=0;$i<count($tab);$i++)
 {
     for ($j=0;$j<count($tab[$i]);$j++)
