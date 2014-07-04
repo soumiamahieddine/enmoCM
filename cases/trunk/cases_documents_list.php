@@ -69,8 +69,23 @@ for($i=0; $i<count($status);$i++)
 }
 $status_str = preg_replace('/,$/', '', $status_str);
 $where_request.= "  status not in (".$status_str.") ";
+
 //$where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
 $where_request .= $obj_cases->get_where_clause_from_case($_SESSION['cases']['actual_case_id']);
+$where_request .= " and (";
+$j=0;
+while($j<=count($_SESSION['user']['baskets'])){
+
+	if($_SESSION['user']['baskets'][$j]['clause']<>''){
+		$where_request .= $_SESSION['user']['baskets'][$j]['clause'];
+		if($j+1 != count($_SESSION['user']['baskets'])){
+			$where_request .=" or "; 
+		}
+	}
+
+$j++;
+}
+$where_request .= " or ".$_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where'].") ";
 
 if($where_clause <> '')
 {
@@ -94,8 +109,11 @@ else
 	$where_request = $where_clause;
 }
 */
+
 $where_request = str_replace("()", "(1=-1)", $where_request);
 $where_request = str_replace("and ()", "", $where_request);
+$where_request = str_replace("now(1=-1)", "now()", $where_request);
+
 $list=new list_show();
 $order = '';
 if(isset($_REQUEST['order']) && !empty($_REQUEST['order']))
@@ -111,7 +129,7 @@ if(isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field']))
 $orderstr = $list->define_order($order, $field);
 
 $request = new request();
-$tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype']);
+$tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'],"default",false,"","","",false,false,false);
 //$request->show();
 $_SESSION['error_page'] = '';
 
