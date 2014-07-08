@@ -192,3 +192,16 @@ $_SESSION['error_page'] = '';
     }
 
 ?>
+
+<script type="text/javascript">
+    $$('#container')[0].setAttribute('style', 'width: 90%; min-width: 1000px;');
+    $$('#content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');
+
+    if ($$('#inner_content')[0]) {
+        $$('#inner_content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');
+    };
+    //$$('table#extended_list')[0].setAttribute('style', 'width: 100%; min-width: 900px; margin: 0;');
+    
+    // liste condensée
+    $$('table.listing')[0].setAttribute('style', 'width: 100%; min-width: 900px;');
+</script>
