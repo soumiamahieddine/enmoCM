@@ -499,6 +499,7 @@ $listKey = 'res_id';
 //Initialiser le tableau de paramètres
 $paramsTab = array();
 $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_DOCS;              //Titre de la page
+$paramsTab['listCss'] = 'listing largerList spec';                                  //css
 // $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
 $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
 $paramsTab['bool_showIconDocument'] = true;                                         //Affichage de l'icone du document

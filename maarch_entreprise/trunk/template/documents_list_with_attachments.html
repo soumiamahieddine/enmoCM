@@ -52,11 +52,11 @@ Mods
 
 
 #!#TABLE
-<!-- ------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------- -->
     <table border="0" cellspacing="0" class="listing spec  zero_padding" id="extended_list" style ="padding: 0px;">
 
 #!#HEAD
-<!-- ------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------- -->
         <thead border ="1">
             <tr>
                 <th width="100%" colspan="2">
@@ -80,7 +80,7 @@ Mods
         <tbody>
         
 #!#RESULT
-<!-- ------------------------------------------------------------------------->
+<!-- ----------------------------------------------------------------------- -->
                 <tr  class="##cssLine|col|white##" >
 
                     <td width="10%" ##clickOnLine##>
@@ -168,7 +168,17 @@ Mods
                 </tr>
 
  #!#FOOTER
- <!--   ------------------------------------------------------------------------->
+ <!--   ----------------------------------------------------------------------- -->
         </tbody>
     </table>
 
+<script>
+    $$('#container')[0].setAttribute('style', 'width: 90%; min-width: 1000px;');
+    $$('#content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');
+    $$('#inner_content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');
+    $$('table#extended_list')[0].setAttribute('style', 'width: 100%; min-width: 900px; margin: 0;');
+    /*
+    // liste condensée
+    $$('table.listing')[0].setAttribute('style', 'width: 100%; min-width: 900px;');
+    */
+</script>

@@ -570,6 +570,7 @@ if (count($tab) > 0) {
     //Initialiser le tableau de paramètres
     $paramsTab = array();
     $paramsTab['bool_modeReturn'] = false;                                              //Desactivation du mode return (vs echo)
+    $paramsTab['listCss'] = 'listing largerList spec';                                  //css
     $paramsTab['urlParameters'] =  $urlParameters.'&dir=indexing_searching';            //Parametres supplémentaires
     $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_DOCS;              //Titre de la page
     $paramsTab['pagePicto'] =  $_SESSION['config']['businessappurl']

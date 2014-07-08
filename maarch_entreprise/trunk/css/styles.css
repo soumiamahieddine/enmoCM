@@ -3822,3 +3822,9 @@ table.listing  {
     width: 225px;
     min-height: 13px;    
 }
+
+.largerList{
+    margin: 0;
+    min-width: 900px;
+    width: 100%;
+}
