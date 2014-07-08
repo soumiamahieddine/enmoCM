@@ -104,6 +104,17 @@
             <COLL_ID>*</COLL_ID>
         </COLLECTIONS>
     </BASKETPAGE>
+    <!-- apa -->
+    <BASKETPAGE>
+        <ID>apa_basket_list</ID>
+        <LABEL>list_apa</LABEL>
+        <NAME>apa_basket_list</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>advanced_physical_archive</MODULE>
+        <COLLECTIONS>
+            <COLL_ID>*</COLL_ID>
+        </COLLECTIONS>
+    </BASKETPAGE>
     <!-- business lists -->
     <BASKETPAGE>
         <ID>documents_business_list</ID>
