@@ -1527,3 +1527,7 @@ if (!defined('_DOC_LOCKER_USER')) define('_DOC_LOCKER_USER', ', il est déjà en
 
 //RECOMMANDE
 if (!defined('_MONITORING_NUMBER')) define('_MONITORING_NUMBER', 'N&deg; recommand&eacute;');
+
+//EXPORT CONTACT
+if (!defined('_EXPORT_CONTACT')) define('_EXPORT_CONTACT', 'Exporter contacts');
+

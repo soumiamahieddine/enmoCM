@@ -1225,3 +1225,6 @@ if (!defined('_CONTACT_INTERNAL')) define('_CONTACT_INTERNAL', 'Internal contact
 //DocLocker
 if (!defined('_DOC_LOCKER_RES_ID')) define('_DOC_LOCKER_RES_ID', 'You can not open the document N°');
 if (!defined('_DOC_LOCKER_USER')) define('_DOC_LOCKER_USER', ', it is already processing by :');
+
+//EXPORT CONTACT
+if (!defined('_EXPORT_CONTACT')) define('_EXPORT_CONTACT', 'Exporter contacts');

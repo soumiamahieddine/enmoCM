@@ -62,8 +62,8 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
                 </h2>
             </a>
         </td>
-        <td>
-            <input class="button" type="button" value="Exporter contacts" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=admin&page=export_admin_list'?>');"/>      
+        <td align="right">
+            <input class="button" type="button" value="<?php echo _EXPORT_CONTACT;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=admin&page=export_admin_list'?>');"/>      
         </td>
    </tr>
 </table>
