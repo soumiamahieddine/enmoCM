@@ -78,7 +78,7 @@ if(isset($_REQUEST['valid']))
         }
         $db->query("update ".ENT_USERS_ENTITIES." set entity_id = '".$db->protect_string_db($_REQUEST['doc_entity_id'])
             ."' where entity_id = '".$db->protect_string_db($s_id)."' and user_id not in (select distinct(user_id) from " . ENT_USERS_ENTITIES 
-            . " where entity_id <> '" . $db->protect_string_db($_REQUEST['doc_entity_id']) . "')");
+            . " where entity_id = '" . $db->protect_string_db($_REQUEST['doc_entity_id']) . "')");
         //$db->show();
         $db->query("delete from " . ENT_USERS_ENTITIES . " where entity_id = '".$db->protect_string_db($s_id) ."'");
         $db->query("select entity_id from ".ENT_ENTITIES." where parent_entity_id = '".$db->protect_string_db($s_id)."'");
