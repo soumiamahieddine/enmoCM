@@ -3383,7 +3383,8 @@ CREATE VIEW res_view AS
  r.custom_d10 AS doc_custom_d10, r.custom_n1 AS doc_custom_n1, r.custom_n2 AS doc_custom_n2,
  r.custom_n3 AS doc_custom_n3, r.custom_n4 AS doc_custom_n4, r.custom_n5 AS doc_custom_n5,
  r.custom_f1 AS doc_custom_f1, r.custom_f2 AS doc_custom_f2, r.custom_f3 AS doc_custom_f3,
- r.custom_f4 AS doc_custom_f4, r.custom_f5 AS doc_custom_f5, r.is_frozen as res_is_frozen
+ r.custom_f4 AS doc_custom_f4, r.custom_f5 AS doc_custom_f5, r.is_frozen as res_is_frozen,  
+ r.reference_number, r.locker_user_id, r.locker_time
    FROM  doctypes d, doctypes_first_level dfl, doctypes_second_level dsl, res_x r
    WHERE r.type_id = d.type_id
    AND d.doctypes_first_level_id = dfl.doctypes_first_level_id
