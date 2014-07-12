@@ -1531,3 +1531,4 @@ if (!defined('_MONITORING_NUMBER')) define('_MONITORING_NUMBER', 'N&deg; recomma
 //EXPORT CONTACT
 if (!defined('_EXPORT_CONTACT')) define('_EXPORT_CONTACT', 'Exporter contacts');
 
+if (!defined('_WITHOUT_FILE')) define('_WITHOUT_FILE', 'Sans fichier');

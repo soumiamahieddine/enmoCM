@@ -1,7 +1,7 @@
 <?php
 
 /*
-*   Copyright 2008-2013 Maarch
+*   Copyright 2008-2014 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -36,6 +36,7 @@ $db = new dbquery();
 $db->connect();
 $core_tools->load_html();
 $core_tools->load_header('', true, false);
+$upFileOK = false;
 ?>
     <body>
     <?php
@@ -87,7 +88,25 @@ $core_tools->load_header('', true, false);
                 $_SESSION['error'] = _WRONG_FILE_TYPE . ' ' . $arrayIsAllowed['mime_type'];
                 $_SESSION['upfile'] = array();
             }
+            $upFileOK = true;
         }
+    } elseif ($_REQUEST['with_file'] == 'true') {
+        $pathToFile = 'apps/' . $_SESSION['config']['app_id'] . '/_no_file.pdf';
+        $_SESSION['upfile']['size'] = filesize($pathToFile);
+        $_SESSION['upfile']['mime'] = 'application/pdf';
+        $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
+            . '_' . rand() . '.pdf';
+        $_SESSION['upfile']['name'] = $fileNameOnTmp;
+        $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+        $_SESSION['upfile']['local_path'] = $filePathOnTmp;
+        if (copy($pathToFile, $filePathOnTmp)) {
+            $upFileOK = true;
+        }
+    } elseif ($_REQUEST['with_file'] == 'false') {
+        $_SESSION['upfile'] = array();
+        $upFileOK = true;
+    }
+    if ($upFileOK) {
         ?>
         <script language="javascript" type="text/javascript">
             function refreshFrame(frameId) {
@@ -146,6 +165,19 @@ $core_tools->load_header('', true, false);
                 if (isset($_SESSION['file_path'])) {
                     echo $_SESSION['file_path'];
                 } ?>" style="width:200px;margin-left:33px;" />
+        </p>
+        <p>
+            <label for="with_file">
+                <?php echo _WITHOUT_FILE;?>
+            </label>
+            <div align="center">
+            <?php echo _YES;?><input <?php
+                if ($_REQUEST['with_file'] == 'true') { echo 'checked="checked"';}
+            ?> type="radio" name="with_file" id="with_file" value="true" onclick="this.form.method = 'post';this.form.submit();" />
+            <?php echo _NO;?><input <?php
+                if ($_REQUEST['with_file'] == 'false' || $_REQUEST['with_file'] == '') { echo 'checked="checked"';}
+            ?> type="radio" name="with_file" id="with_file" value="false" onclick="this.form.method = 'post';this.form.submit();" />
+            </div>
         </p>
     </form>
     <?php $core_tools->load_js();?>

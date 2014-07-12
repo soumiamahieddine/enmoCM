@@ -1228,3 +1228,5 @@ if (!defined('_DOC_LOCKER_USER')) define('_DOC_LOCKER_USER', ', it is already pr
 
 //EXPORT CONTACT
 if (!defined('_EXPORT_CONTACT')) define('_EXPORT_CONTACT', 'Exporter contacts');
+
+if (!defined('_WITHOUT_FILE')) define('_WITHOUT_FILE', 'Without file');
