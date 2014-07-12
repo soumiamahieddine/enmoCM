@@ -161,7 +161,7 @@ $upFileOK = false;
             }
             ?>
             </label>
-            <input type="file" name="file" id="file" onchange="this.form.method = 'post';this.form.submit();" value="<?php
+            <input type="file" name="file" id="file" onchange="$('with_file').value='false';this.form.method = 'post';this.form.submit();" value="<?php
                 if (isset($_SESSION['file_path'])) {
                     echo $_SESSION['file_path'];
                 } ?>" style="width:200px;margin-left:33px;" />
