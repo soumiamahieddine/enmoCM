@@ -73,6 +73,17 @@ if (isset($_REQUEST['admission_date'])
 ) {
     $admissionDate = $_REQUEST['admission_date'];
 }
+
+if (!isset($_REQUEST['priority_id']) || $_REQUEST['priority_id'] == '') {
+    echo "{status : 1, error_txt : '".addslashes(_PRIORITY . ' ' . _IS_EMPTY)."'}";
+    exit();
+} else {
+    $priorityId = $_REQUEST['priority_id'];
+    if ($_SESSION['mail_priorities_attribute'][$priorityId] <> 'false') {
+        $priorityDelay = $_SESSION['mail_priorities_attribute'][$priorityId];
+    }
+}
+
 // Process limit date calcul
 //Bug fix if delay process is disabled in services
 if ($core->service_is_enabled('param_mlb_doctypes')) {
@@ -257,6 +268,11 @@ $services = preg_replace('/, $/', '', $services);
 $services .= ']';
 unset($_SESSION['indexing_type_id']);
 unset($_SESSION['indexing_services']);
+
+if ($priorityDelay <> '') {
+    $delay = $priorityDelay;
+}
+
 if (isset($delay) && $delay > 0) {
     require_once('core/class/class_alert_engine.php');
     $alert_engine = new alert_engine();

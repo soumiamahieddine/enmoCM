@@ -404,17 +404,20 @@ class business_app_tools extends dbquery
         }
         
         $_SESSION['mail_priorities'] = array();
+        $_SESSION['mail_priorities_attribute'] = array();
         $mailPriorities = $xmlfile->priorities;
         if (count($mailPriorities) > 0) {
             $i = 0;
             foreach ($mailPriorities->priority as $priority ) {
                 $label = (string) $priority;
+                $attribute = (string) $priority->attributes();
                 if (!empty($label) && defined($label)
                     && constant($label) <> NULL
                 ) {
                     $label = constant($label);
                 }
                 $_SESSION['mail_priorities'][$i] = $label;
+                $_SESSION['mail_priorities_attribute'][$i] = $attribute;
                 $i++;
             }
             $_SESSION['default_mail_priority'] = (string) $mailPriorities->default_priority;

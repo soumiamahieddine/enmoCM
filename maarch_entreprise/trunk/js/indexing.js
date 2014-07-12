@@ -13,6 +13,10 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
     if ($('admission_date')) {
         admissionDate = $('admission_date').value;
     }
+    var priorityId;
+    if ($('priority')) {
+        priorityId = $('priority').value;
+    }
     var theCollId = path_manage_script.split('coll_id=');
     var tmp_res_id = id_res || null;
     if (theCollId[1] != '') {
@@ -29,7 +33,8 @@ function change_doctype(doctype_id, path_manage_script, error_empty_type, action
                           id_action : action_id,
                           res_id : tmp_res_id,
                           coll_id : tmp_coll_id,
-                          admission_date : admissionDate
+                          admission_date : admissionDate,
+                          priority_id : priorityId                          
                         },
                 onSuccess: function(answer){
                 eval("response = "+answer.responseText);
@@ -133,15 +138,19 @@ function updateProcessDate(path_manage_script)
     var typeId;
     if ($('type_id')) {
         typeId = $('type_id').value;
-        
     }
-     if (admissionDate != null && admissionDate != '' && admissionDate != NaN) {
+    var priorityId;
+    if ($('priority')) {
+        priorityId = $('priority').value;
+    }
+    if (admissionDate != null && admissionDate != '' && admissionDate != NaN) {
         new Ajax.Request(path_manage_script,
         {
             method:'post',
             parameters: {
                     type_id: typeId,
-                    admission_date : admissionDate
+                    admission_date : admissionDate,
+                    priority_id : priorityId
                 },
                 onSuccess: function(answer){
                 eval("response = "+answer.responseText);
@@ -193,7 +202,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
     var typeContactExternal = 'not_checked';
     var typeMultiContactExternal = 'not_checked';
     if (cat_id == 'internal' || cat_id == 'incoming') {
-        $('type_contact_internal').checked = true;
+        $('type_contact_external').checked = true;
     };
     if ($('type_contact_internal')) {
         if ($('type_contact_internal').checked == true) {

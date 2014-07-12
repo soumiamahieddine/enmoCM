@@ -49,6 +49,16 @@ if (!isset($_REQUEST['admission_date']) || empty($_REQUEST['admission_date'])) {
     $admissionDate = $_REQUEST['admission_date'];
 }
 
+if (!isset($_REQUEST['priority_id']) || $_REQUEST['priority_id'] == '') {
+    echo "{status : 1, error_txt : '".addslashes(_PRIORITY . ' ' . _IS_EMPTY)."'}";
+    exit();
+} else {
+    $priorityId = $_REQUEST['priority_id'];
+    if ($_SESSION['mail_priorities_attribute'][$priorityId] <> 'false') {
+        $priorityDelay = $_SESSION['mail_priorities_attribute'][$priorityId];
+    }
+}
+
 //Process limit process date compute
 //Bug fix if delay process is disabled in services
 if ($core->service_is_enabled('param_mlb_doctypes')) {
@@ -59,6 +69,10 @@ if ($core->service_is_enabled('param_mlb_doctypes')) {
     );
     $res = $db->fetch_object();
     $delay = $res->process_delay;
+}
+
+if ($priorityDelay <> '') {
+    $delay = $priorityDelay;
 }
 
 if (isset($delay) && $delay > 0) {

@@ -357,7 +357,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                   $frm_str .= '<tr id="priority_tr" style="display:'.$display_value.';">';
                         $frm_str .='<td class="indexing_label"><label for="priority" class="form_title" >'._PRIORITY.'</label></td>';
                         $frm_str .='<td>&nbsp;</td>';
-                        $frm_str .='<td class="indexing_field"><select name="priority" id="priority" onchange="clear_error(\'frm_error_'.$id_action.'\');">';
+                        $frm_str .='<td class="indexing_field"><select name="priority" id="priority" onChange="updateProcessDate(\''
+                                    . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+                                    . '&dir=indexing_searching&page=update_process_date\');" onFocus="updateProcessDate(\''
+                                    . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+                                    . '&dir=indexing_searching&page=update_process_date\');clear_error(\'frm_error_' . $actionId
+                                    . '\');">';
                             $frm_str .='<option value="">'._CHOOSE_PRIORITY.'</option>';
                                 for($i=0; $i<count($_SESSION['mail_priorities']);$i++)
                                 {

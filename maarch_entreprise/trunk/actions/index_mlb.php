@@ -445,7 +445,11 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '</label></td>';
     $frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><select name="priority" '
-            . 'id="priority" onchange="clear_error(\'frm_error_' . $actionId
+            . 'id="priority" onChange="updateProcessDate(\''
+            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+            . '&dir=indexing_searching&page=update_process_date\');" onFocus="updateProcessDate(\''
+            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+            . '&dir=indexing_searching&page=update_process_date\');clear_error(\'frm_error_' . $actionId
             . '\');">';
     $frmStr .= '<option value="">' . _CHOOSE_PRIORITY . '</option>';
     for ($i = 0; $i < count($_SESSION['mail_priorities']); $i ++) {

@@ -36,12 +36,12 @@
         <default_nature>simple_mail</default_nature>
     </mail_natures>
     <priorities>
-        <priority>_VERY_HIGH</priority> <!-- 0 -->
-        <priority>_HIGH</priority><!-- 1 -->
-        <priority>_NORMAL</priority> <!-- 2 -->
-        <!--<priority>_LOW</priority>  3 -->
-        <!--<priority>_VERY_LOW</priority>  4 -->
-        <default_priority>2</default_priority>
+        <priority with_delay="2">_VERY_HIGH</priority> <!-- 0 -->
+        <priority with_delay="false">_HIGH</priority><!-- 1 -->
+        <priority with_delay="false">_NORMAL</priority> <!-- 2 -->
+        <!--<priority with_delay="false">_LOW</priority>  3 -->
+        <!--<priority with_delay="false">_VERY_LOW</priority>  4 -->
+        <default_priority with_delay="false">2</default_priority>
     </priorities>
     <titles>
         <title>
