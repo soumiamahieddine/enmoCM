@@ -330,7 +330,7 @@ class basket extends dbquery
         $this->query(
             "select agb.id_action, agb.where_clause, agb.used_in_basketlist, "
             . "agb.used_in_action_page, a.label_action, a.id_status, "
-            . "a.action_page, a.is_folder_action from " . ACTIONS_TABLE . " a, "
+            . "a.action_page, a.is_folder_action, a.category_id from " . ACTIONS_TABLE . " a, "
             . ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action and "
             . "agb.group_id = '" . $groupId . "' and agb.basket_id = '"
             . $basketId . "' and a.enabled = 'Y' and "
@@ -348,7 +348,8 @@ class basket extends dbquery
                     'PAGE_USE' => $res->used_in_action_page,
                     'ID_STATUS' => $res->id_status,
                     'ACTION_PAGE' => $res->action_page,
-                    'IS_FOLDER_ACTION' => $res->is_folder_action
+                    'IS_FOLDER_ACTION' => $res->is_folder_action,
+                    'CATEGORY_ID' => $res->category_id
                 )
             );
         }
@@ -585,6 +586,10 @@ class basket extends dbquery
      */
     public function get_actions_from_current_basket($resId, $collId, $mode,$testWhere = true)
     {
+        if ($_SESSION['category_id'] == '') {
+            $_SESSION['category_id'] = $_SESSION['coll_categories'][$collId]['default_category'];
+        }
+        //var_dump($_SESSION['category_id']);
         $arr = array();
         // If parameters error return an empty array
         if (empty($resId) || empty($collId)
@@ -619,58 +624,65 @@ class basket extends dbquery
             for ($i = 0; $i < count($_SESSION['current_basket']['actions']);
             $i ++
             ) {
-                // If in mode "PAGE_USE", testing the action where clause
-                // on the res_id before adding the action
-                if (strtoupper($mode) == 'PAGE_USE'
-                && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y'
-                && $testWhere
+                //echo $_SESSION['current_basket']['actions'][$i]['CATEGORY_ID'] . PHP_EOL;
+                if (
+                    $_SESSION['current_basket']['actions'][$i]['CATEGORY_ID'] == ''
+                    ||$_SESSION['current_basket']['actions'][$i]['CATEGORY_ID'] == '_'
+                    || $_SESSION['current_basket']['actions'][$i]['CATEGORY_ID'] == $_SESSION['category_id']
                 ) {
-                    $where = ' where res_id = ' . $resId;
-                    if (! empty(
-                    $_SESSION['current_basket']['actions'][$i]['WHERE']
-                    )
+                    // If in mode "PAGE_USE", testing the action where clause
+                    // on the res_id before adding the action
+                    if (strtoupper($mode) == 'PAGE_USE'
+                    && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y'
+                    && $testWhere
                     ) {
-                        $where = $where . ' and '
-                        . $_SESSION['current_basket']['actions'][$i]
-                        ['WHERE'];
-                    }
-                    $this->query('select res_id from ' . $table . ' ' . $where);
-                    if ($this->nb_result() > 0) {
+                        $where = ' where res_id = ' . $resId;
+                        if (! empty(
+                        $_SESSION['current_basket']['actions'][$i]['WHERE']
+                        )
+                        ) {
+                            $where = $where . ' and '
+                            . $_SESSION['current_basket']['actions'][$i]
+                            ['WHERE'];
+                        }
+                        $this->query('select res_id from ' . $table . ' ' . $where);
+                        if ($this->nb_result() > 0) {
+                            array_push(
+                                $arr,
+                                array(
+                                    'VALUE' => $_SESSION['current_basket']['actions']
+                                    [$i]['ID'],
+                                    'LABEL' => $_SESSION['current_basket']
+                                    ['actions'][$i]['LABEL'],
+                                )
+                            );
+                        }
+                    } else if (strtoupper($mode) == 'PAGE_USE'
+                    && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y'
+                    && ! $testWhere
+                    ) {
                         array_push(
                             $arr,
                             array(
                                 'VALUE' => $_SESSION['current_basket']['actions']
                                 [$i]['ID'],
-                                'LABEL' => $_SESSION['current_basket']
-                                ['actions'][$i]['LABEL'],
+                                'LABEL' => $_SESSION['current_basket']['actions']
+                                [$i]['LABEL'],
+                            )
+                        );
+                    } else if (strtoupper($mode) == 'MASS_USE'
+                    && $_SESSION['current_basket']['actions'][$i]['MASS_USE'] == 'Y'
+                    ) { // If "MASS_USE" adding the actions in the array
+                        array_push(
+                            $arr,
+                            array(
+                                'VALUE' => $_SESSION['current_basket']['actions']
+                                [$i]['ID'],
+                                'LABEL' => $_SESSION['current_basket']['actions']
+                                [$i]['LABEL'],
                             )
                         );
                     }
-                } else if (strtoupper($mode) == 'PAGE_USE'
-                && $_SESSION['current_basket']['actions'][$i]['PAGE_USE'] == 'Y'
-                && ! $testWhere
-                ) {
-                    array_push(
-                        $arr,
-                        array(
-                            'VALUE' => $_SESSION['current_basket']['actions']
-                            [$i]['ID'],
-                            'LABEL' => $_SESSION['current_basket']['actions']
-                            [$i]['LABEL'],
-                        )
-                    );
-                } else if (strtoupper($mode) == 'MASS_USE'
-                && $_SESSION['current_basket']['actions'][$i]['MASS_USE'] == 'Y'
-                ) { // If "MASS_USE" adding the actions in the array
-                    array_push(
-                        $arr,
-                        array(
-                            'VALUE' => $_SESSION['current_basket']['actions']
-                            [$i]['ID'],
-                            'LABEL' => $_SESSION['current_basket']['actions']
-                            [$i]['LABEL'],
-                        )
-                    );
                 }
             }
         }
