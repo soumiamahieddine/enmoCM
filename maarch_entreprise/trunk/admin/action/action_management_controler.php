@@ -83,6 +83,7 @@ function init_session()
     $_SESSION['m_admin']['action']['KEYWORD'] = '';
     $_SESSION['m_admin']['action']['HISTORY'] = 'Y';
     $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'] = 'N';
+    $_SESSION['m_admin']['action']['CATEGORY_ID'] = '';
 }
 
 if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
@@ -112,6 +113,7 @@ if (isset($_REQUEST['action_submit'])) {
         $_SESSION['m_admin']['action']['ACTION_PAGE'] = trim($_REQUEST['action_page']);
     }
     $_SESSION['m_admin']['action']['KEYWORD'] = $_REQUEST['keyword'];
+    $_SESSION['m_admin']['action']['CATEGORY_ID'] = $_REQUEST['category_id'];
     $_SESSION['m_admin']['action']['FLAG_CREATE'] = 'N';
     
 
@@ -165,7 +167,8 @@ if (isset($_REQUEST['action_submit'])) {
             'history' => $_SESSION['m_admin']['action']['HISTORY'],
             'is_folder_action' => $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'],
             'action_page' => $_SESSION['m_admin']['action']['ACTION_PAGE'],
-            'id_status' => $_SESSION['m_admin']['action']['ID_STATUS']
+            'id_status' => $_SESSION['m_admin']['action']['ID_STATUS'],
+            'category_id' => $_SESSION['m_admin']['action']['CATEGORY_ID']
         );
 
         $action = new Action();
@@ -233,6 +236,8 @@ if ($mode == 'up') {
             functions::show_string($action->__get('is_folder_action'));
         $_SESSION['m_admin']['action']['KEYWORD'] = 
             functions::show_string($action->__get('keyword'));
+        $_SESSION['m_admin']['action']['CATEGORY_ID'] = 
+            functions::show_string($action->__get('category_id'));
     }
 } elseif ($mode == 'add') {
     if (!isset($_SESSION['m_admin']['action'])) {

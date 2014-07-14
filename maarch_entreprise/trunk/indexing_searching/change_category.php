@@ -42,6 +42,7 @@ if(!isset($_REQUEST['category_id']) || empty($_REQUEST['category_id']))
 $services = '[';
 $_SESSION['indexing_services_cat'] = array();
 $_SESSION['indexing_category_id'] = $_REQUEST['category_id'];
+$_SESSION['category_id'] = $_REQUEST['category_id'];
 // Module and apps services
 $core->execute_modules_services($_SESSION['modules_services'], 'change_category.php', 'include');
 $core->execute_app_services($_SESSION['app_services'], 'change_category.php', 'include');

@@ -136,6 +136,27 @@ elseif($mode == 'up' || $mode == 'add'){
 
                     echo '<input type="hidden" name="is_folder_action" value="N"';
                 } ?>
+            <p>
+                <label for="category_id"><?php echo _ASSOCIATED_CATEGORY;?> : </label>
+                <select name="category_id" id="category_id">
+                    <option value="_"><?php echo _NO_CATEGORY_ASSOCIATED;?></option>
+                    <?php
+                    foreach ($_SESSION['coll_categories'] as $collId => $collLabel) {
+                        foreach ($collLabel as $catId => $catValue) {
+                            if ($catId <> 'default_category') {
+                                ?><option value="<?php
+                                echo $catId;?>" <?php
+                                if ($catId == $_SESSION['m_admin']['action']['CATEGORY_ID']) {
+                                    echo 'selected="selected"';
+                                }?> ><?php
+                                echo $collId . ' / ' . $catValue;
+                                ?></option><?php
+                            }
+                        }
+                    }
+                ?>
+                </select>
+            </p>
             <p class="buttons">
         <?php
             if($mode == 'up'){

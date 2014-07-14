@@ -279,13 +279,19 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</h4>';
     $frm_str .= '<div id="general_infos_div"  style="display:inline">';
     $frm_str .= '<div class="ref-unit">';
-    
+    $_SESSION['category_id'] = $data['category_id']['value'];
                   $frm_str .= '<table width="100%" align="center" border="0"  id="indexing_fields" style="display:block;">';
                   /*** Category ***/
                   $frm_str .= '<tr id="category_tr" style="display:'.$display_value.';">';
                     $frm_str .='<td class="indexing_label"><label for="category_id" class="form_title" >'._CATEGORY.'</label></td>';
                     $frm_str .='<td>&nbsp;</td>';
-                    $frm_str .='<td class="indexing_field"><select name="category_id" id="category_id" onchange="clear_error(\'frm_error_'.$id_action.'\');change_category(this.options[this.selectedIndex].value, \''.$display_value.'\',  \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_category\',  \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\');">';
+                    $frm_str .='<td class="indexing_field"><select name="category_id" id="category_id" onchange="clear_error(\'frm_error_' 
+                             . $id_action . '\');change_category(this.options[this.selectedIndex].value, \''.$display_value.'\',  \''
+                             . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=change_category\',  \'' 
+                             . $_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\');change_category_actions(\'' 
+                             . $_SESSION['config']['businessappurl'] 
+                             . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
+                             . '&resId=' . $res_id . '&collId=' . $coll_id . '\');">';
                                 $frm_str .='<option value="">'._CHOOSE_CATEGORY.'</option>';
                             foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $cat_id) {
                                 if ($cat_id <> 'default_category') {
@@ -818,26 +824,35 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         /*** Actions ***/
         $frm_str .= '<hr width="90%" align="center"/>';
         $frm_str .= '<p align="center">';
-            $frm_str .= '<b>'._ACTIONS.' : </b>';
+        
+        //GET ACTION LIST BY AJAX REQUEST
+        $frm_str .= '<span id="actionSpan"></span>';
 
-            $actions  = $b->get_actions_from_current_basket($res_id, $coll_id, 'PAGE_USE');
-            if(count($actions) > 0)
-            {
-                $frm_str .='<select name="chosen_action" id="chosen_action">';
-                    $frm_str .='<option value="">'._CHOOSE_ACTION.'</option>';
-                    for($ind_act = 0; $ind_act < count($actions);$ind_act++)
+        /*$actions  = $b->get_actions_from_current_basket($res_id, $coll_id, 'PAGE_USE');
+        if(count($actions) > 0)
+        {
+            $frm_str .='<select name="chosen_action" id="chosen_action">';
+                $frm_str .='<option value="">'._CHOOSE_ACTION.'</option>';
+                if (count($actions) > 1) {
+                    for($ind_act = 1; $ind_act < count($actions);$ind_act++)
                     {
                         $frm_str .='<option value="'.$actions[$ind_act]['VALUE'].'"';
-                        if($ind_act==0)
+                        if($ind_act==1)
                         {
                             $frm_str .= 'selected="selected"';
                         }
                         $frm_str .= '>'.$actions[$ind_act]['LABEL'].'</option>';
                     }
-                $frm_str .='</select> ';
-                $frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
-            }
-            $frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
+                } else {
+                    $frm_str .= '<option value="' . $actions[0]['VALUE'] . '"';
+                        $frm_str .= 'selected="selected"';
+                    $frm_str .= '>' . $actions[0]['LABEL'] . '</option>';
+                }
+            $frm_str .='</select> ';
+            $frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
+        }*/
+        $frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
+        $frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
         $frm_str .= '</p>';
     $frm_str .= '</form>';
     $frm_str .= '</div>';
@@ -1307,7 +1322,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . 'index.php?display=true&dir=indexing_searching&page=change_category\',  \''
             . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&page=get_content_js\');$(\'baskets\').style.visibility=\'hidden\';var item = $(\'valid_div\'); if(item){item.style.display=\'block\';}';
-        $frm_str .='var type_id = $(\'type_id\');';
+        $frm_str .='var type_id = $(\'type_id\');change_category_actions(\'' 
+            . $_SESSION['config']['businessappurl'] 
+            . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
+            . '&resId=' . $res_id . '&collId=' . $coll_id . '\');';
         $frm_str .='if(type_id){change_doctype(type_id.options[type_id.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\', '.$res_id.', \''. $coll_id.'\', true);}';
         if($core_tools->is_module_loaded('entities') )
         {
@@ -1721,8 +1739,11 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         }
     }
     $status_id = get_value_fields($values_form, 'status');
-    if(empty($status_id) || $status_id === "") $status_id = 'BAD';
-    $query_res .= ", status = '" . $status_id . "'";
+    if (empty($status_id) || $status_id === "") {
+        $status_id = 'BAD';
+    } else {
+        $query_res .= ", status = '" . $status_id . "'";
+    }
 
     ///////////////////////// Other cases
     require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_types.php');

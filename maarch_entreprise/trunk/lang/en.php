@@ -1229,4 +1229,9 @@ if (!defined('_DOC_LOCKER_USER')) define('_DOC_LOCKER_USER', ', it is already pr
 //EXPORT CONTACT
 if (!defined('_EXPORT_CONTACT')) define('_EXPORT_CONTACT', 'Exporter contacts');
 
+//INDEXATION WITHOUT FILE
 if (!defined('_WITHOUT_FILE')) define('_WITHOUT_FILE', 'Without file');
+
+//ASSOCIATION ACTION / CATEGORY
+if (!defined('_ASSOCIATED_CATEGORY')) define('_ASSOCIATED_CATEGORY', 'Associated category');
+if (!defined('_NO_CATEGORY_ASSOCIATED')) define('_NO_CATEGORY_ASSOCIATED', 'No associated category');

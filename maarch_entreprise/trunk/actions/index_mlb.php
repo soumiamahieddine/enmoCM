@@ -110,6 +110,7 @@ $mode_form = 'fullscreen';
  **/
 function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $collId, $mode )
 {
+    $_SESSION['category_id'] = '';
     if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
         $ieBrowser = true;
         $displayValue = 'block';
@@ -365,7 +366,10 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . $displayValue . '\',  \'' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&dir=indexing_searching&page='
             . 'change_category\',  \'' . $_SESSION['config']['businessappurl']
-            . 'index.php?display=true&page=get_content_js\');">';
+            . 'index.php?display=true&page=get_content_js\');change_category_actions(\'' 
+            . $_SESSION['config']['businessappurl'] 
+            . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
+            . '&resId=' . $resId . '&collId=' . $collId . '\');">';
     $frmStr .= '<option value="">' . _CHOOSE_CATEGORY . '</option>';
     foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $catId) {
         if ($catId <> 'default_category') {
@@ -866,31 +870,18 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     /*** Actions ***/
     $frmStr .= '<hr width="90%"/>';
     $frmStr .= '<p align="center">';
-    $frmStr .= '<b>' . _ACTIONS . ' : </b>';
-
-    $actions  = $b->get_actions_from_current_basket(
-        $resId, $collId, 'PAGE_USE', false
-    );
-    if (count($actions) > 0) {
-        $frmStr .= '<select name="chosen_action" id="chosen_action">';
-        $frmStr .= '<option value="">' . _CHOOSE_ACTION . '</option>';
-        for ($indAct = 0; $indAct < count($actions); $indAct ++) {
-            $frmStr .= '<option value="' . $actions[$indAct]['VALUE'] . '"';
-            if ($indAct == 0) {
-                $frmStr .= 'selected="selected"';
-            }
-            $frmStr .= '>' . $actions[$indAct]['LABEL'] . '</option>';
-        }
-        $frmStr .= '</select> ';
-        $frmStr .= '<input type="button" name="send" id="send" value="'
-                . _VALIDATE . '" class="button" '
-                . 'onclick="getIframeContent(\''
-                . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-                . '&page=getIframeTemplateContent\');valid_action_form(\'index_file\', \''
-                . $pathManageAction . '\', \'' . $actionId . '\', \'' . $resId
-                . '\', \'' . $table . '\', \'' . $module . '\', \'' . $collId
-                . '\', \'' . $mode . '\', true);"/> ';
-    }
+    
+    //GET ACTION LIST BY AJAX REQUEST
+    $frmStr .= '<span id="actionSpan"></span>';
+    
+    $frmStr .= '<input type="button" name="send" id="send" value="'
+            . _VALIDATE . '" class="button" '
+            . 'onclick="getIframeContent(\''
+            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+            . '&page=getIframeTemplateContent\');valid_action_form(\'index_file\', \''
+            . $pathManageAction . '\', \'' . $actionId . '\', \'' . $resId
+            . '\', \'' . $table . '\', \'' . $module . '\', \'' . $collId
+            . '\', \'' . $mode . '\', true);"/> ';
     $frmStr .= '<input name="close" id="close" type="button" value="'
             . _CANCEL . '" class="button" '
             . 'onclick="javascript:window.top.location.href=\''
@@ -1183,7 +1174,10 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '\', \'' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&dir=indexing_searching&page='
             . 'change_category\',  \'' . $_SESSION['config']['businessappurl']
-            . 'index.php?display=true&page=get_content_js\');'
+            . 'index.php?display=true&page=get_content_js\');change_category_actions(\'' 
+            . $_SESSION['config']['businessappurl'] 
+            . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
+            . '&resId=' . $resId . '&collId=' . $collId . '\');'
             . 'launch_autocompleter_contacts(\''
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
             . '&dir=indexing_searching&page=autocomplete_contacts\');';

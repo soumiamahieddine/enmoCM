@@ -1531,4 +1531,9 @@ if (!defined('_MONITORING_NUMBER')) define('_MONITORING_NUMBER', 'N&deg; recomma
 //EXPORT CONTACT
 if (!defined('_EXPORT_CONTACT')) define('_EXPORT_CONTACT', 'Exporter contacts');
 
+//INDEXATION WITHOUT FILE
 if (!defined('_WITHOUT_FILE')) define('_WITHOUT_FILE', 'Sans fichier');
+
+//ASSOCIATION ACTION / CATEGORY
+if (!defined('_ASSOCIATED_CATEGORY')) define('_ASSOCIATED_CATEGORY', 'Cat&eacute;gorie associ&eacute;e');
+if (!defined('_NO_CATEGORY_ASSOCIATED')) define('_NO_CATEGORY_ASSOCIATED', 'Ne pas associer une cat&eacute;gorie');
