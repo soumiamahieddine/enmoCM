@@ -75,7 +75,7 @@ if (isset($_REQUEST['tmp_file'])) {
 }
 //print_r($_SESSION['FILE']);
 //print_r($_SESSION['upfile']);exit;
-
+$_SESSION['category_id'] = '';
 require_once 'core/class/class_request.php';
 require_once 'core/class/class_db.php';
 $core = new core_tools();
