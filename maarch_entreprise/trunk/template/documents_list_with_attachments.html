@@ -109,10 +109,11 @@ Mods
                     </td>
                 </tr>
                 <tr class="##cssLineReload##">
-                        <td style="text-align:center" style="font-size:13px;">##radioButton## ##checkBox##<b>##loadValue|res_id##</b></td>
+                        <td style="text-align:center" style="font-size:13px;" ##clickOnLine##>##ifStatement|'#loadValue|locker_user_id#' != null|<img src="#loadImage|cadenas_rouge.png#">|##  ##radioButton## ##checkBox##<b>##loadValue|res_id##</b></td>
                         <td style="text-align:center" >
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                                     <tr>
+                                        
                                         <td style="font-size:10px;">##loadValue|priority##</td>
                                         <td style="font-size:10px;" width ="30px" alt="##defineLang|_CATEGORY##" title="##defineLang|_CATEGORY##" ##clickOnLine##>##loadValue|category_img##</td>
                                         <td style="font-size:10px;" width ="150px" >##loadValue|category_id##</td>
@@ -125,7 +126,7 @@ Mods
                                         <td style="font-size:10px;text-align:right" width ="30px"  alt="##defineLang|_TYPE##" title="##defineLang|_TYPE##" ##clickOnLine##><img src="##loadImage|mini_type.gif##">
                                         <td style="font-size:10px;text-align:left"  ##clickOnLine##>##loadValue|type_label##</td>
                                         <td style="font-size:10px;" >##func_bool_see_multi_contacts##</td>
-                                        <td style="font-size:10px;" >##func_bool_see_notes##</td>
+                                        <td  >##func_bool_see_notes##</td>
                                         <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_ATTACHMENTS#|#loadImage|picto_attachment.gif#|loadRepList('#loadValue|res_id#')|#loadValue|count_attachment# == 0##</td>
                                         <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_WF#|#loadImage|lot.gif#|loadDiffList('#loadValue|res_id#')##</td>
                                         <td style="font-size:10px;" width ="30px" >##showIconDocument##</td>

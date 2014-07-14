@@ -78,7 +78,7 @@ array_push($select[$table],"res_id", "status", "category_id", "category_id as ca
                         "contact_firstname", "contact_lastname", "contact_society", "user_lastname", 
                         "user_firstname", "priority", "creation_date", "admission_date", "subject", 
                         "process_limit_date", "entity_label", "dest_user", "type_label", 
-                        "exp_user_id", "count_attachment", "is_multicontacts");
+                        "exp_user_id", "count_attachment", "is_multicontacts", "locker_user_id", "locker_time");
                         
 if($core_tools->is_module_loaded("cases") == true) {
     array_push($select[$table], "case_id", "case_label", "case_description");

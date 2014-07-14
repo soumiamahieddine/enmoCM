@@ -76,7 +76,7 @@ $select[$table]= array();
 //Fields
 array_push($select[$table], 'res_id', 'status', 'category_id', 'category_id as category_img', 'type_label', 'subject',
     'contact_firstname', 'contact_lastname', 'contact_society', 'contact_id', 'contact_id as contact_img', 'identifier', 'doc_date', 'creation_date', 
-    'currency', 'total_sum', 'process_limit_date', 'entity_label', 'dest_user', 'count_attachment'
+    'currency', 'total_sum', 'process_limit_date', 'entity_label', 'dest_user', 'count_attachment','locker_user_id', 'locker_time'
 );
 
 //Where clause

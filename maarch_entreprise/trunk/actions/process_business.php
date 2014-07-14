@@ -362,13 +362,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .='</select><br>';
             $frm_str .= '<input type="button" name="send" id="send" value="'
                 . _VALIDATE
-                . '" class="button" onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form(\'process\', \''
+                . '" class="button" onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . ', \'table\': \'res_business\', \'coll_id\': \'business_coll\'} });valid_action_form(\'process\', \''
                 . $path_manage_action . '\', \'' . $id_action.'\', \''
                 . $res_id . '\', \'' . $table . '\', \'' . $module . '\', \''
                 . $coll_id . '\', \'' . $mode . '\');"/> ';
         }
         $frm_str .= '<input name="close" id="close" type="button" value="'
-            . _CANCEL . '" class="button" onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '}, onSuccess: function(answer){window.location.href=window.location.href;} });var tmp_bask=$(\'baskets\');';
+            . _CANCEL . '" class="button" onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . ', \'table\': \'res_business\', \'coll_id\': \'business_coll\'}, onSuccess: function(answer){window.location.href=window.location.href;} });var tmp_bask=$(\'baskets\');';
         $frm_str .= 'if (tmp_bask){tmp_bask.style.visibility=\'visible\';}var tmp_ent =$(\'entity\');';
         $frm_str .= 'if (tmp_ent){tmp_ent.style.visibility=\'visible\';} var tmp_cat =$(\'category\');';
         $frm_str .= 'if (tmp_cat){tmp_cat.style.visibility=\'visible\';}destroyModal(\'modal_'

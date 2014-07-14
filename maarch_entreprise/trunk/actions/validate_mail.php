@@ -140,6 +140,27 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $_SESSION['req'] = "action";
     $res_id = $values[0];
     $_SESSION['doc_id'] = $res_id;
+
+		// Ouverture de la modal
+
+	$docLockerCustomPath = 'apps/maarch_entreprise/actions/docLocker.php';
+    $docLockerPath = $_SESSION['config']['businessappurl'] . '/actions/docLocker.php';
+    if (is_file($docLockerCustomPath))
+        require_once $docLockerCustomPath;
+    else if (is_file($docLockerPath))
+        require_once $docLockerPath;
+    else
+        exit("can't find docLocker.php");
+
+    $docLocker = new docLocker($res_id);
+    if (!$docLocker->canOpen()) {
+        $docLockerscriptError = '<script>';
+            $docLockerscriptError .= 'destroyModal("modal_' . $id_action . '");';
+            $docLockerscriptError .= 'alert("'._DOC_LOCKER_RES_ID.''.$res_id.''._DOC_LOCKER_USER.' ' . $_SESSION['userLock'] . '");';
+        $docLockerscriptError .= '</script>';
+        return $docLockerscriptError;
+    }
+
     $frm_str = '';
     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
     require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
@@ -851,8 +872,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .='</select> ';
             $frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
         }*/
-        $frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
-        $frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
+        $frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
+        $frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '}, onSuccess: function(answer){window.location.href=window.location.href;} });$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
         $frm_str .= '</p>';
     $frm_str .= '</form>';
     $frm_str .= '</div>';
@@ -1308,6 +1329,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         .$_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');';
          $frm_str .= 'affiche_reference();';
+
+	// DocLocker constantly	
+	$frm_str .= 'setInterval("new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'lock\': true, \'res_id\': ' . $res_id . '} });", 50000);';
+        
         if($core_tools->is_module_loaded('folder'))
         {
             $frm_str .= ' initList(\'folder\', \'show_folder\',\''
@@ -1338,6 +1363,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
         $frm_str .='</script>';
 
+	// À la fin de la methode d’ouverture de la modale
+	$docLocker->lock();
+	
     return addslashes($frm_str);
 }
 
