@@ -139,6 +139,7 @@ Mods
                                         <td  style="text-align:left">##loadValue|type_label##</td>
                                         <td style="font-size:10px;" >##func_bool_see_multi_contacts##</td>
                                         <td style="font-size:10px;" >##func_bool_see_notes##</td>
+                                        <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_WF#|#loadImage|lot.gif#|loadDiffList('#loadValue|res_id#')##</td>
                                         <td width ="30px">##showIconDocument##</td>
                                         <td width ="30px">##showIconDetails##</td>
                                     </tr>
@@ -158,6 +159,14 @@ Mods
                         <div id="divNoteList_##loadValue|res_id##" align="center" style="color: grey;">
                             <img src="static.php?filename=loading_big.gif" width="10%" style="background-color: white; margin: 0; padding: 0;"/><br />
                             ##define_lang|_LOADING_INFORMATIONS##
+                        </div>
+                    </td>
+                </tr>
+                <tr id="diffList_##loadValue|res_id##" name="diffList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: #FFF;" width="100%">
+                    <td colspan="2" style="background-color: white;">
+                        <div id="divDiffList_##loadValue|res_id##" align="center" style="color: grey;">
+                            <img src="##loadImage|loading.gif##" /><br />
+                            ##defineLang|_LOADING_INFORMATIONS##
                         </div>
                     </td>
                 </tr>
