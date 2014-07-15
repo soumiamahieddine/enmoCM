@@ -389,14 +389,16 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<tr align="center">';
 
     // HISTORY
-    $frm_str .= '<td>';
-    $frm_str .= '|<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
-        . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');return false;" '
-        . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-    $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><<</span><b>'
-       . '<small>' . _DOC_HISTORY . '</small>';
-    $frm_str .= '</b></span>|';
-    $frm_str .= '</td>';
+    if ($core_tools->test_service('view_doc_history', 'apps', false)) {
+        $frm_str .= '<td>';
+        $frm_str .= '|<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
+            . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');return false;" '
+            . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+        $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><<</span><b>'
+           . '<small>' . _DOC_HISTORY . '</small>';
+        $frm_str .= '</b></span>|';
+        $frm_str .= '</td>';
+    }
 
     //NOTE
     if ($core_tools->is_module_loaded('notes')) {
