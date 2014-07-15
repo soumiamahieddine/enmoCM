@@ -1537,3 +1537,6 @@ if (!defined('_WITHOUT_FILE')) define('_WITHOUT_FILE', 'Sans fichier');
 //ASSOCIATION ACTION / CATEGORY
 if (!defined('_ASSOCIATED_CATEGORY')) define('_ASSOCIATED_CATEGORY', 'Cat&eacute;gorie associ&eacute;e');
 if (!defined('_NO_CATEGORY_ASSOCIATED')) define('_NO_CATEGORY_ASSOCIATED', 'Ne pas associer une cat&eacute;gorie');
+
+//SERVICE VIEW DOC HISTORY
+if (!defined('_VIEW_DOC_HISTORY')) define('_VIEW_DOC_HISTORY', 'Voir l\'historique du document');

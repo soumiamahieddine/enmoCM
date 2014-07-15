@@ -72,6 +72,12 @@ if ($core->test_service('view_technical_infos', 'apps', false)) {
     $viewTechnicalInfos = true;
 }
 
+//test service view doc history
+$viewDocHistory = false;
+if ($core->test_service('view_doc_history', 'apps', false)) {
+    $viewDocHistory = true;
+}
+
 //test service add new version
 $addNewVersion = false;
 if ($core->test_service('add_new_version', 'apps', false)) {
@@ -1139,11 +1145,13 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         . "' and status <> 'DEL'";
                     $req->query($countAttachments);
                     if ($req->nb_result() > 0) {
-                        $nb_attach = '(' . ($req->nb_result()). ')';
+                        $nb_attach = $req->nb_result();
+                    } else {
+                        $nb_attach = 0;
                     }
                 }
                 ?>
-                <dt><?php echo _PROCESS . $nb_attach;?></dt>
+                <dt><?php echo _ATTACHMENTS . ' (' . $nb_attach . ')';?></dt>
                 <dd>
                     <div>
                         <table width="100%">
@@ -1250,6 +1258,10 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     $detailsExport .= "<br><br><br>";
                     ?>
                 </dd>
+                <?php
+                    //SERVICE TO VIEW DOC HISTORY
+                    if ($viewDocHistory) {
+                ?>
                 <dt><?php echo _DOC_HISTORY;?></dt>
                 <dd>
                     <!--<h2><?php echo _HISTORY;?></h2>-->
@@ -1259,6 +1271,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     height="590px" align="left" scrolling="yes" frameborder="0" id="history_document"></iframe>
                 </dd>
                 <?php
+                    }
                 if ($core->is_module_loaded('notes')) {
                     require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
                         . "class" . DIRECTORY_SEPARATOR

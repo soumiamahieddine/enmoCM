@@ -38,6 +38,13 @@ $viewTechnicalInfos = false;
 if ($core_tools->test_service('view_technical_infos', 'apps', false)) {
     $viewTechnicalInfos = true;
 }
+
+//test service view doc history
+$viewDocHistory = false;
+if ($core->test_service('view_doc_history', 'apps', false)) {
+    $viewDocHistory = true;
+}
+
 /****************Management of the location bar  ************/
 $init = false;
 if (isset ($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
@@ -762,12 +769,16 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
                             if ($viewTechnicalInfos) {
                                 include_once('apps/' . $_SESSION['config']['app_id'] . '/view_technical_infos.php');
                             }
-                            ?>
-                            <dt><?php echo _DOC_HISTORY;?></dt>
-                            <dd>
-                                <iframe src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=document_history&coll_id=<?php echo $coll_id;?>&id=<?php echo $s_id;?>&load&size=full" name="hist_doc_process" width="100%" height="580" align="left" scrolling="auto" frameborder="0" id="hist_doc_process" style="height: 580px; max-height: 580px; overflow: scroll;"></iframe>
-                            </dd>
-                            <?php
+                            
+                            //SERVICE TO VIEW DOC HISTORY
+                            if ($viewDocHistory) {
+                                ?>
+                                <dt><?php echo _DOC_HISTORY;?></dt>
+                                <dd>
+                                    <iframe src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=document_history&coll_id=<?php echo $coll_id;?>&id=<?php echo $s_id;?>&load&size=full" name="hist_doc_process" width="100%" height="580" align="left" scrolling="auto" frameborder="0" id="hist_doc_process" style="height: 580px; max-height: 580px; overflow: scroll;"></iframe>
+                                </dd>
+                                <?php
+                            }
 
             if ($core_tools->is_module_loaded('notes')) {
                 $selectNotes = "select id, identifier, user_id, date_note, note_text from " . $_SESSION['tablename']['not_notes'] . " where identifier = " . $s_id . " and coll_id ='" . $_SESSION['collection_id_choice'] . "' order by date_note desc";

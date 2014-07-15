@@ -81,6 +81,12 @@ if ($core->test_service('view_technical_infos', 'apps', false)) {
     $viewTechnicalInfos = true;
 }
 
+//test service view doc history
+$viewDocHistory = false;
+if ($core->test_service('view_doc_history', 'apps', false)) {
+    $viewDocHistory = true;
+}
+
 //test service add new version
 $addNewVersion = false;
 if ($core->test_service('add_new_version', 'apps', false)) {
@@ -901,6 +907,10 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     }
                     ?>
                 </dd>
+                <?php
+                    //SERVICE TO VIEW DOC HISTORY
+                    if ($viewDocHistory) {
+                ?>
                 <dt><?php echo _DOC_HISTORY;?></dt>
                 <dd>
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];
@@ -909,6 +919,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     align="left" scrolling="auto" frameborder="0" id="hist_doc_process" style="height: 580px; max-height: 580px; overflow: scroll;"></iframe>
                 </dd>
                 <?php
+                    }
                 if ($core->is_module_loaded('notes')) {
                     require_once 'modules/notes/class/class_modules_tools.php';
                     $notes_tools    = new notes();
