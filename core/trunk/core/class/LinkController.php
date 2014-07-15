@@ -118,7 +118,17 @@ class LinkController
                                     $return .= '\''.$_SESSION['config']['businessappurl'].'index.php?page=add_links&display=true\', ';
                                     $return .= '\''.$delChild.'\' ,';
                                     $return .= '\''.$delParent.'\' ,';
-                                    $return .= '\'del\'';
+                                    $return .= '\'del\',';
+
+                                if ($_SESSION['current_basket']['coll_id'] == 'letterbox_coll') {
+                                    $return .= '\'res_view_letterbox\'';
+                                } elseif ($_SESSION['current_basket']['coll_id'] == 'business_coll') {
+                                    $return .= '\'res_view_business\'';
+                                } else {
+                                    $return .= '\'\'';
+                                }
+
+
                                   $return .= ');';
                                 $return .= '">';
                                     $return .= '<img src="static.php?filename=picto_delete.gif" />';
