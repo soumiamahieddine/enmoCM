@@ -2225,7 +2225,7 @@ function show_attach(state) {
     }
 }
 
-function addLinks(path_manage_script, child, parent, action) {
+function addLinks(path_manage_script, child, parent, action, tableHist) {
     //window.alert('child : '+child+', parent : '+parent+', action : '+action);
     var divName = 'loadLinks';
     var spanNb = 'nbLinks';
@@ -2235,7 +2235,9 @@ function addLinks(path_manage_script, child, parent, action) {
             method:'post',
             parameters: { res_id : parent,
                           res_id_child : child,
-                          mode : action
+                          mode : action,
+                          tableHist : tableHist
+
                         },
                 onSuccess: function(answer){
                 eval("response = "+answer.responseText);

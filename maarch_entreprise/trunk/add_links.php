@@ -66,7 +66,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                $res_child,
                "DEL",
                'linkdel',
-               _LINK_TO_THE_DOCUMENT. '  ('.$res_parent.') ' . _LINK_DELETED,
+               _LINK_TO_THE_DOCUMENT. $res_parent. ' ' . _LINK_DELETED,
                $_SESSION['config']['databasetype'],
                'apps'
             );
@@ -189,6 +189,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                     $Links .= '<input ';
                       $Links .= 'type="hidden" ';
                       $Links .= 'name="tableHist" ';
+                      $Links .= 'id="tableHist" ';
                       $Links .= 'value="'.$table.'" ';
                     $Links .= '>';
                     $Links .= '<label for="res_id_link">'.ucfirst(_DOC_NUM).':&nbsp;</label>';
@@ -206,7 +207,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                     $Links .= '<input ';
                       $Links .= 'type="button" ';
                       $Links .= 'class="button" ';
-                      $Links .= 'onClick="if($(\'res_id_link\').value != \'\') addLinks(\''.$_SESSION['config']['businessappurl'].'index.php?page=add_links&display=true\', \''.$_SESSION['doc_id'].'\', $(\'res_id_link\').value, \'add\');';
+                      $Links .= 'onClick="if($(\'res_id_link\').value != \'\') addLinks(\''.$_SESSION['config']['businessappurl'].'index.php?page=add_links&display=true\', \''.$_SESSION['doc_id'].'\', $(\'res_id_link\').value, \'add\', $(\'tableHist\').value);';
                       $Links .= '$(\'res_id_link\').setValue(\'\');"';
                       $Links .= 'value="&nbsp;&nbsp; '._LINK_ACTION.' &nbsp;&nbsp;" ';
                     $Links .= '>';
