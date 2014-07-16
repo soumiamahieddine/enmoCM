@@ -134,3 +134,13 @@ if (!defined('_NO_DATASOURCE'))
 
 if (!defined('_ALREADY_RESERVED'))
     define('_ALREADY_RESERVED', 'Document en cours de modification');
+
+if (!defined('_TXT'))
+    define('_TXT', 'TXT');
+
+if (!defined('_TEMPLATE_TARGET'))
+    define('_TEMPLATE_TARGET', 'Cible du mod&egrave;le');
+
+if (!defined('_NO_TARGET'))
+    define('_NO_TARGET', 'Pas de cible');
+    

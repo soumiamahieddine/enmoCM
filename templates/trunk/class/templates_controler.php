@@ -199,6 +199,9 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         if ($mode == 'add' && $this->templateExists($template->template_id)) {
             $error .= $template->template_id.' '._ALREADY_EXISTS.'#';
         }
+        $template->template_target = $f->protect_string_db(
+            $f->wash($template->template_target, 'no', _TEMPLATE_TARGET.' ', 'no', 0, 255)
+        );
         $error .= $_SESSION['error'];
         //TODO:rewrite wash to return errors without html
         $error = str_replace('<br />', '#', $error);
@@ -210,7 +213,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
                 'error' => $error,
             );
         } else {
-            if ($template->template_type <> 'HTML') {
+            if ($template->template_type == 'OFFICE') {
                 if (
                     $mode == 'add' 
                     && !$_SESSION['m_admin']['templates']['applet']
@@ -571,6 +574,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             $this_template['label'] = $result->template_label;
             $this_template['comment'] = $result->template_comment;
             $this_template['type'] = $result->template_type;
+            $this_template['target'] = $result->template_target;
             array_push($return, $this_template);
         }
         
@@ -601,6 +605,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
                     'ID' => $res->template_id, 
                     'LABEL' => $res->template_label,
                     'TYPE' => $res->template_type,
+                    'TARGET' => $res->template_target,
                 )
             );
         }
@@ -750,6 +755,51 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         return $datasources;
     }
     
+    public function getTemplatesTargets() 
+    {
+        $targets = array();
+        //attachments
+        array_push(
+            $targets, 
+            array(
+                'id' => 'attachments',
+                'label'  => _ATTACHMENTS,
+            )
+        );
+        //notifications
+        array_push(
+            $targets, 
+            array(
+                'id' => 'notifications',
+                'label'  => _NOTIFICATIONS,
+            )
+        );
+        //doctypes
+        array_push(
+            $targets, 
+            array(
+                'id' => 'doctypes',
+                'label'  => _DOCTYPES,
+            )
+        );
+        //notes
+        array_push(
+            $targets, 
+            array(
+                'id' => 'notes',
+                'label'  => _NOTES,
+            )
+        );
+        //sendmail
+        array_push(
+            $targets, 
+            array(
+                'id' => 'sendmail',
+                'label'  => _SENDMAIL,
+            )
+        );
+        return $targets;
+    }
     
     //returns file ext
     function extractFileExt($sFullPath) {
@@ -982,8 +1032,18 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
     */
     private function getWorkingCopy($templateObj) {
         
-        if($templateObj->template_type == 'HTML') {
+        if ($templateObj->template_type == 'HTML') {
             $fileExtension = 'html';
+            $fileNameOnTmp = $_SESSION['config']['tmppath'] . 'tmp_template_' . $_SESSION['user']['UserId']
+            . '_' . rand() . '.' . $fileExtension;
+            $handle = fopen($fileNameOnTmp, 'w');
+            if (fwrite($handle, $templateObj->template_content) === FALSE) {
+                return false;
+            }
+            fclose($handle);
+            return $fileNameOnTmp;
+        } elseif ($templateObj->template_type == 'TXT') {
+            $fileExtension = 'txt';
             $fileNameOnTmp = $_SESSION['config']['tmppath'] . 'tmp_template_' . $_SESSION['user']['UserId']
             . '_' . rand() . '.' . $fileExtension;
             $handle = fopen($fileNameOnTmp, 'w');
@@ -1009,7 +1069,6 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             
             return $pathToTemplateOnDs;
         }
-    
     }
     
     private function getDatasourceScript($datasourceId) 

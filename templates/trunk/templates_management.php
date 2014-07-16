@@ -127,18 +127,46 @@ if ($mode == 'list') {
                     ?></textarea>
                 </p>
                 <p>
+                    <label for="template_target"><?php echo _TEMPLATE_TARGET; ?> : </label>
+                    <select name="template_target" id="template_target">
+                        <option value="" ><?php echo _NO_TARGET; ?></option>
+                        <?php
+                        for (
+                            $cptTarget = 0;
+                            $cptTarget < count($_SESSION['m_admin']['templatesTargets']);
+                            $cptTarget ++
+                        ) {
+                        ?>
+                            <option value="<?php echo $_SESSION['m_admin']['templatesTargets'][$cptTarget]['id']; ?>" <?php
+                            if (isset($_SESSION['m_admin']['templates']['template_target'])
+                                && $_SESSION['m_admin']['templates']['template_target']
+                                    == $_SESSION['m_admin']['templatesTargets'][$cptTarget]['id']
+                            ) {
+                                echo 'selected="selected"';
+                            }
+                            ?> ><?php
+                                echo $_SESSION['m_admin']['templatesTargets'][$cptTarget]['label'];
+                            ?></option><?php
+                        }
+                        ?>
+                    </select>
+                </p>
+                <p>
                     <label><?php echo _TEMPLATE_TYPE;?> :</label>
                     <input type="radio" name="template_type" value="OFFICE"
-                        onClick="javascript:show_special_form('office_div', 'html_div');" <?php
+                        onClick="javascript:show_special_form_3_elements('office_div', 'html_div', 'txt_div');" <?php
                         echo $checkedOFFICE;?>/> <?php echo _OFFICE;?>
                     <input type="radio" name="template_type" value="HTML"
-                        onClick="javascript:show_special_form('html_div', 'office_div');" <?php
+                        onClick="javascript:show_special_form_3_elements('html_div', 'office_div', 'txt_div');" <?php
                         echo $checkedHTML;?>/> <?php echo _HTML;?>
+                    <input type="radio" name="template_type" value="TXT"
+                        onClick="javascript:show_special_form_3_elements('txt_div', 'html_div', 'office_div');" <?php
+                        echo $checkedTXT;?>/> <?php echo _TXT;?>
                 </p>
                 <p>
                     <label for="template_datasource"><?php echo _TEMPLATE_DATASOURCE; ?> : </label>
                     <select name="template_datasource" id="template_datasource">
-                        <option value="" ><?php echo _NO_DATASOURCE ?></option>
+                        <option value="" ><?php echo _NO_DATASOURCE; ?></option>
                         <?php
                         for (
                             $cptDatasource = 0;
@@ -268,6 +296,22 @@ if ($mode == 'list') {
                         </div>
                     </p>
                 </div>
+                <div id="txt_div" name="txt_div">
+                    <p>
+                        <label for="template_content">
+                            <?php echo _TEMPLATE_CONTENT; ?> TXT :
+                        </label><br/><br/>
+                        <textarea name="template_content" style="width:100%" rows="15" cols="60" id="template_content" value="<?php
+                            if (isset($_SESSION['m_admin']['templates']['template_content'])) {
+                                echo $func->show_str($_SESSION['m_admin']['templates']['template_content']);
+                            }
+                            ?>" /><?php
+                            if (isset($_SESSION['m_admin']['templates']['template_content'])) {
+                                echo $_SESSION['m_admin']['templates']['template_content'];
+                            }
+                        ?></textarea>
+                    </p>
+                </div>
                     <table align="center" width="100%" id="template_entities" >
                     <tr>
                         <td colspan="3"><?php echo _CHOOSE_ENTITY_TEMPLATE;?> :</td>
@@ -371,16 +415,22 @@ if ($mode == 'list') {
                 </p>
             </form>
             <?php
-            if($_SESSION['m_admin']['templates']['template_type'] <> 'HTML') {
+            if($_SESSION['m_admin']['templates']['template_type'] == 'HTML') {
                 ?>
                 <script>
-                    show_special_form('office_div', 'html_div');
+                    show_special_form_3_elements('html_div', 'txt_div', 'office_div');
+                </script>
+                <?php
+            } elseif ($_SESSION['m_admin']['templates']['template_type'] == 'TXT') {
+                ?>
+                <script>
+                    show_special_form_3_elements('txt_div', 'office_div', 'html_div');
                 </script>
                 <?php
             } else {
                 ?>
                 <script>
-                    show_special_form('html_div', 'office_div');
+                    show_special_form_3_elements('office_div', 'html_div', 'txt_div');
                 </script>
                 <?php
             }

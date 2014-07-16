@@ -137,3 +137,12 @@ if (!defined('_NO_DATASOURCE'))
 
 if (!defined('_ALREADY_RESERVED'))
     define('_ALREADY_RESERVED', 'Already reserved');
+
+if (!defined('_TXT'))
+    define('_TXT', 'TXT');
+
+if (!defined('_TEMPLATE_TARGET'))
+    define('_TEMPLATE_TARGET', 'Template target');
+
+if (!defined('_NO_TARGET'))
+    define('_NO_TARGET', 'No target');
