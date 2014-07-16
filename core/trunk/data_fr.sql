@@ -739,7 +739,7 @@ INSERT INTO security (security_id, group_id, coll_id, where_clause, maarch_comme
 ------------
 --TEMPLATES--
 ------------
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target) 
 VALUES (3, 'AppelTel', '[courrier] Appel téléphonique', 
 '<p><font size="\\&quot;5\\&quot;"><strong>APPEL TELEPHONIQUE</strong></font></p>
 <p><font size="\\&quot;2\\&quot;">Bonjour,</font></p>
@@ -751,8 +751,8 @@ VALUES (3, 'AppelTel', '[courrier] Appel téléphonique',
 <li><font size="\\&quot;2\\&quot;">Contact :</font></li>
 </ul>
 <p><font size="\\&quot;2\\&quot;">Notes : </font></p>',
-'HTML', NULL, NULL, '', '');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+'HTML', NULL, NULL, '', '', 'doctypes');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)  
 VALUES (2, '[notification] Notifications événement', 'Notifications des événements système', 
 '<p><font face="verdana,geneva" size="1">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
 <p><font face="verdana,geneva" size="1"> </font></p>
@@ -771,8 +771,8 @@ VALUES (2, '[notification] Notifications événement', 'Notifications des évén
 </tr>
 </tbody>
 </table>', 
-'HTML', NULL, NULL, '', 'notif_events');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+'HTML', NULL, NULL, '', 'notif_events', 'notifications');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)  
 VALUES (4, '[notification courrier] Diffusion de courrier en copie', '[notification] Diffusion de courrier en copie', '<p><font face="arial,helvetica,sans-serif" size="2">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
 <p> </p>
 <p><font face="arial,helvetica,sans-serif" size="2">Voici la liste des nouveaux courriers qui vous ont été envoyés en copie :</font></p>
@@ -799,8 +799,8 @@ VALUES (4, '[notification courrier] Diffusion de courrier en copie', '[notificat
 <td><font face="arial,helvetica,sans-serif"><a href="[res_letterbox.linktodetail]" name="detail">detail</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)  
 VALUES (5, '[notification courrier] Alerte 2', '[notification] Alerte 2', '<p><font face="arial,helvetica,sans-serif" size="2">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
 <p> </p>
 <p><font face="arial,helvetica,sans-serif" size="2">Voici la liste des courriers dont la date limite de traitement est dépassée :n</font></p>
@@ -828,8 +828,8 @@ VALUES (5, '[notification courrier] Alerte 2', '[notification] Alerte 2', '<p><f
 <td><font face="arial,helvetica,sans-serif"><a href="res_letterbox.linktoprocess" name="traiter">traiter</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)  
 VALUES (6, '[notification courrier] Alerte 1', '[notification] Alerte 1', '<p><font face="arial,helvetica,sans-serif" size="2">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
 <p> </p>
 <p><font face="arial,helvetica,sans-serif" size="2"> </font></p>
@@ -860,8 +860,8 @@ VALUES (6, '[notification courrier] Alerte 1', '[notification] Alerte 1', '<p><f
 <td><font face="arial,helvetica,sans-serif"><a href="res_letterbox.linktoprocess" name="traiter">traiter</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)  
 VALUES (7, '[notification courrier] Diffusion de courrier', '[notification] Diffusion de courrier à traiter', '<p><font face="arial,helvetica,sans-serif" size="2">Bonjour [recipient.firstname] [recipient.lastname],</font></p>
 <p> </p>
 <p><font face="arial,helvetica,sans-serif" size="2"> </font></p>
@@ -891,8 +891,8 @@ VALUES (7, '[notification courrier] Diffusion de courrier', '[notification] Diff
 <td><font face="arial,helvetica,sans-serif"><a href="[res_letterbox.linktodetail]" name="detail">detail</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events');
-INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource) 
+</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target)  
 VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvelle annotation', '<p><font face="verdana,geneva" size="2">Bonjour [recipient.firstname] [recipient.lastname], [recipient.text]</font></p>
 <p>&nbsp###</p>
 <p><font face="verdana,geneva" size="2"> </font></p>
@@ -922,7 +922,7 @@ VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvel
 <td><a href="notes.linktodetail" name="detail">d&eacute###tail</a> <a href="notes.linktodoc" name="doc">doc</a></td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes');
+</table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes', 'notifications');
 INSERT INTO templates VALUES (100, '[allo mairie] Enregistrement demande - DIVERS', '[allo mairie] Enregistrement demande - DIVERS', '<p style="text-align: center###"><span style="font-size: small### text-decoration: underline###">ENREGISTREMENT DEMANDE Allo Mairie - DIVERS</span></p>
 <p style="text-align: center###">&nbsp###</p>
 <table style="border: 1pt solid #000000### width: 800px### background-color: #40a497###" border="1" cellspacing="1" cellpadding="5">
@@ -969,7 +969,7 @@ INSERT INTO templates VALUES (100, '[allo mairie] Enregistrement demande - DIVER
 <td>&nbsp###</td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '');
+</table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'doctypes');
 INSERT INTO templates VALUES (101, '[allo mairie] Clôture de demande', '[allo mairie] Clôture de demande', '<p style="text-align: left###"><span style="font-size: small###">&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###</span><span style="text-decoration: underline###"><span style="font-size: small###">CLOTURE DEMANDE Allo Mairie - [res_letterbox.type_label] - [res_letterbox.res_id] </span></span></p>
 <p style="text-align: center###">&nbsp###</p>
 <table style="background-color: #a8c33c### width: 800px### border: #000000 1pt solid###" border="1" cellspacing="1" cellpadding="5">
@@ -1012,7 +1012,7 @@ INSERT INTO templates VALUES (101, '[allo mairie] Clôture de demande', '[allo m
 <td style="background-color: #e1f787###">&nbsp###</td>
 </tr>
 </tbody>
-</table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '');
+</table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'doctypes');
 
 ------------
 --NOTIFICATIONS--
