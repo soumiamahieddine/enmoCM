@@ -29,7 +29,7 @@ $func = new functions();
 
 $select[RES_ATTACHMENTS_TABLE] = array();
 array_push(
-    $select[RES_ATTACHMENTS_TABLE], 'res_id', 'creation_date', 'title', 'format', 'identifier'
+    $select[RES_ATTACHMENTS_TABLE], 'res_id', 'typist', 'creation_date', 'title', 'format', 'identifier'
 );
 
 $where = " res_id_master = " . $resId  . " and coll_id ='"
@@ -52,6 +52,15 @@ for ($i = 0; $i < count($attachArr); $i ++) {
                 $attachArr[$i][$j]['align'] = 'left';
                 $attachArr[$i][$j]['valign'] = 'bottom';
                 $attachArr[$i][$j]['show'] = false;
+            }
+            if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'typist') {
+                $attachArr[$i][$j]['typist'] = $attachArr[$i][$j]['value'];
+                $attachArr[$i][$j]['label'] = _TYPIST;
+                $attachArr[$i][$j]['size'] = '30';
+                $attachArr[$i][$j]['label_align'] = 'left';
+                $attachArr[$i][$j]['align'] = 'left';
+                $attachArr[$i][$j]['valign'] = 'bottom';
+                $attachArr[$i][$j]['show'] = true;
             }
             if (isset($attachArr[$i][$j][$value]) && $attachArr[$i][$j][$value] == 'title') {
                 $attachArr[$i][$j]['title'] = $attachArr[$i][$j]['value'];
