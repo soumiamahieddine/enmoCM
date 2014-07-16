@@ -1145,13 +1145,13 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         . "' and status <> 'DEL'";
                     $req->query($countAttachments);
                     if ($req->nb_result() > 0) {
-                        $nb_attach = $req->nb_result();
+                        $nb_attach = ' (' . $req->nb_result() . ')';
                     } else {
-                        $nb_attach = 0;
+                        $nb_attach = '';
                     }
                 }
                 ?>
-                <dt><?php echo _ATTACHMENTS . ' (' . $nb_attach . ')';?></dt>
+                <dt><?php echo _ATTACHMENTS .  '<span id="nb_attach">'. $nb_attach . '</span>';?></dt>
                 <dd>
                     <div>
                         <table width="100%">
@@ -1250,11 +1250,56 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         $detailsExport .= "</table>";*/
                         ?>
                         <div>
+					<br />
+				<center>
+					<?php echo _GENERATE_ATTACHMENT_FROM;?><br />
+					<select name="templateOffice" id="templateOffice" style="width:250px" onchange="
+	                	window.open('
+	                    <?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentFromTemplate
+	                    &objectId=
+	                    ' + $(\'templateOffice\').value + '&objectTable=<?php echo $objectTable;?>
+	                    &resMaster=<?php echo $s_id;?>
+	                    ', '', 'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no');">
+	                    <option value=""><?php echo _OFFICE ;?></option>
+	                        <?php for ($i=0;$i<count($templates);$i++) {
+	                            if ($templates[$i]['TYPE'] == 'OFFICE') {
+	                                ?> <option value="
+	                                    <?php echo $templates[$i]['ID'];?>
+	                                    ">
+	                                    <?php echo $templates[$i]['LABEL'];?>
+	                                <?php } ?>
+	 								</option>
+	                        <?php } ?>
+                    </select>&nbsp;|&nbsp;
+
+					<select name="templateHtml" id="templateHtml" style="width:250px" onchange="checkBeforeOpenBlank('
+	                        <?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=templates&page=generate_attachment_html&mode=add&template=
+	                        ' + $(\'templateHtml\').value + '
+	                        &res_id=<?php echo $s_id;?>
+	                        &coll_id=<?php echo $coll_id;?>
+	                        ', $(\'templateHtml\').value);">
+	                    <option value=""><?php echo _HTML;?></option>
+	                    <?php
+	                        for ($i=0;$i<count($templates);$i++) {
+	                            if ($templates[$i]['TYPE'] == 'HTML') {
+	                                ?><option value="
+	                                    <?php echo $templates[$i]['ID'];?>
+	                                    ">
+	                                    <?php echo $templates[$i]['LABEL'];?>
+	                                <?php } ?>
+	                            </option>
+	                        <?php } ?>
+                    </select>
+                    <br>
+                    <?php echo _OR ;?>&nbsp;
+					<input type="button" name="attach" id="attach" class="button" value="<?php echo _ATTACH_FROM_HDD;?>" 
+						onclick="javascript:window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=join_file','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200');" />                   
+                </center>
                         <label><?php echo _ATTACHED_DOC;?> : </label>
-                        <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&view_only&mode=normal" frameborder="0" width="100%" height="300px"></iframe>
+                        <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal&view_only=true" frameborder="0" width="100%" height="300px"></iframe>
                         </div>
                         <?php
-                    }
+ 					}
                     $detailsExport .= "<br><br><br>";
                     ?>
                 </dd>
