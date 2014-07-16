@@ -62,4 +62,4 @@ if (!defined('_GENERATE_ATTACHMENT_FROM'))
     define('_GENERATE_ATTACHMENT_FROM', 'Generate Attachment from a model with format');
 
 if (!defined('_EDIT_ATTACHMENTS_FROM_DETAILS'))
-    define('_EDIT_ATTACHMENTS_FROM_DETAILS', 'Edit attachments from details page');
+    define('_EDIT_ATTACHMENTS_FROM_DETAILS', 'Manage attachments from details page');

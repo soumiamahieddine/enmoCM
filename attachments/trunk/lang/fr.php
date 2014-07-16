@@ -61,4 +61,4 @@ if (!defined('_GENERATE_ATTACHMENT_FROM'))
     define('_GENERATE_ATTACHMENT_FROM', 'G&eacute;n&eacute;rer une pi&egrave;ce jointe / r&eacute;ponse depuis un mod&egrave;le au format');
 
 if (!defined('_EDIT_ATTACHMENTS_FROM_DETAILS'))
-    define('_EDIT_ATTACHMENTS_FROM_DETAILS', 'Modifier les pi&egraveces jointes depuis la fiche d&eacute;tail');
+    define('_EDIT_ATTACHMENTS_FROM_DETAILS', 'G&eacute;rer les pi&egraveces jointes depuis la fiche d&eacute;tail');
