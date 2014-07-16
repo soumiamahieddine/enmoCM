@@ -1151,6 +1151,26 @@ class lists extends dbquery
 
         return $return;
     }
+
+    public function tmplt_func_cadenas($parameter)
+    {
+        $my_explode= explode ("|", $parameter);
+        $now = date("Y-m-d H:i:s"); 
+        $my_explode[2] = str_replace("'","",$my_explode[2]);
+        $my_explode[1] = str_replace("'","",$my_explode[1]);
+
+        if (!isset($my_explode[2])) {
+            return '';
+        } else if ($my_explode[2] == null || $my_explode[2] == '' || empty($my_explode[2])) {
+            return '';
+        } else if ($my_explode[1] == $_SESSION['user']['UserId'] ) {
+            return '';
+        } else if ($my_explode[2] > $now ) {
+            return '<img src="static.php?filename=cadenas_rouge.png">';
+        } else {
+            return '';
+        }
+    }
     
     private function _tmplt_loadVarSys($parameter, $resultTheLine=array(), $listKey='', $lineIsDisabled=false) {
         ##loadValue|arg1##: load value in the db; arg1= column's value identifier
@@ -1220,6 +1240,8 @@ class lists extends dbquery
             $var = $this->tmplt_func_bool_see_multi_contacts($resultTheLine);
         } elseif (preg_match("/^func_bool_see_notes$/", $parameter)){
             $var = $this->tmplt_func_bool_see_notes($resultTheLine);
+        } elseif (preg_match("/^func_cadenas\|/", $parameter)){
+            $var = $this->tmplt_func_cadenas($parameter);
         } else {
             $var = _WRONG_FUNCTION_OR_WRONG_PARAMETERS;
         }
