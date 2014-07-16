@@ -1448,6 +1448,7 @@ CREATE TABLE templates
   template_file_name character varying(255),
   template_style character varying(255),
   template_datasource character varying(32),
+  template_target character varying(255),
   CONSTRAINT templates_pkey PRIMARY KEY (template_id)
 )
 WITH (OIDS=FALSE);
