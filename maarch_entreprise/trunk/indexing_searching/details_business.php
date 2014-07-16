@@ -890,6 +890,12 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     <?php
                     if ($core->is_module_loaded('attachments'))
                     {
+
+                        require 'modules/templates/class/templates_controler.php';
+                        $templatesControler = new templates_controler();
+                        $templates = array();
+                        $templates = $templatesControler->getAllTemplatesForProcess($data['destination']['value']);
+
                         $selectAttachments = "select res_id, creation_date, title, format from " 
                             . $_SESSION['tablename']['attach_res_attachments'] 
                             . " where res_id_master = ".$_SESSION['doc_id']." and coll_id ='".$_SESSION['collection_id_choice']."' and status <> 'DEL'";
@@ -906,14 +912,13 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                         <div>
                     <br />
                 <center>
-                    <?php echo _GENERATE_ATTACHMENT_FROM;?><br />
-                    <select name="templateOffice" id="templateOffice" style="width:250px" onchange="
-                        window.open('
-                        <?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentFromTemplate
-                        &objectId=
-                        ' + $(\'templateOffice\').value + '&objectTable=<?php echo $objectTable;?>
-                        &resMaster=<?php echo $s_id;?>
-                        ', '', 'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no');">
+                    <?php 
+
+                    $objectTable = $security->retrieve_table_from_coll($coll_id);
+                    echo _GENERATE_ATTACHMENT_FROM;?><br />
+                    <select name="templateOffice" id="templateOffice" style="width:250px" 
+                                onchange="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentFromTemplate'
+                                + '&objectId=' + $('templateOffice').value + '&objectTable=<?php echo $objectTable;?>&resMaster=<?php echo $s_id;?>', '', 'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no');">
                         <option value=""><?php echo _OFFICE ;?></option>
                             <?php for ($i=0;$i<count($templates);$i++) {
                                 if ($templates[$i]['TYPE'] == 'OFFICE') {
@@ -926,12 +931,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                             <?php } ?>
                     </select>&nbsp;|&nbsp;
 
-                    <select name="templateHtml" id="templateHtml" style="width:250px" onchange="checkBeforeOpenBlank('
-                            <?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=templates&page=generate_attachment_html&mode=add&template=
-                            ' + $(\'templateHtml\').value + '
-                            &res_id=<?php echo $s_id;?>
-                            &coll_id=<?php echo $coll_id;?>
-                            ', $(\'templateHtml\').value);">
+                    <select name="templateHtml" id="templateHtml" style="width:250px" 
+                                onchange="checkBeforeOpenBlank('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=templates&page=generate_attachment_html&mode=add'
+                                + '&template=' + $('templateHtml').value + '&res_id=<?php echo $s_id;?>&coll_id=<?php echo $coll_id;?>', $('templateHtml').value);">
                         <option value=""><?php echo _HTML;?></option>
                         <?php
                             for ($i=0;$i<count($templates);$i++) {
