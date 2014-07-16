@@ -20,7 +20,7 @@ if ($_SESSION['service_tag'] == 'doctype_up') {
     $db = new dbquery();
     $db->connect();
     $db->query("select template_id, template_label from "
-        . $_SESSION['tablename']['temp_templates'] . " where template_type = 'HTML'"
+        . $_SESSION['tablename']['temp_templates'] . " where template_type = 'HTML' and (template_target = 'doctypes' or template_target = '')"
     );
     $templates = array();
     while ($res = $db->fetch_object()) {
