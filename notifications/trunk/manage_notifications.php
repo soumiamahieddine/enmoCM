@@ -159,7 +159,7 @@ if ($mode == 'list') {
                 <option value=""><?php echo _SELECT_TEMPLATE;?></option>
                 <?php
                 foreach($templates_list as $template){
-                    if($template['type'] === 'HTML') {
+                    if ($template['type'] === 'HTML' && ($template['target'] == 'notifications' || $template['target'] == '')) {
                         ?><option value="<?php echo $template['id'];?>"
                         <?php
                         if($_SESSION['m_admin']['notification']['template_id']
