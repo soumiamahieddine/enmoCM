@@ -1258,7 +1258,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         <div>
 					<br />
 				<center>
-					<?php 
+					<?php
+                if ($core->is_module_loaded('templates') && (!isset($_SESSION['current_basket']['id']) && $core->test_service('edit_attachments_from_detail', 'attachments', false)) || isset($_SESSION['current_basket']['id'])) { 
 					$objectTable = $security->retrieve_table_from_coll($coll_id);
 					echo _GENERATE_ATTACHMENT_FROM;?><br />
 					<select name="templateOffice" id="templateOffice" style="width:250px" 
@@ -1295,6 +1296,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <?php echo _OR ;?>&nbsp;
 					<input type="button" name="attach" id="attach" class="button" value="<?php echo _ATTACH_FROM_HDD;?>" 
 						onclick="javascript:window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=join_file','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200');" />                   
+                <?php } ?>
                 </center>
                         <label><?php echo _ATTACHED_DOC;?> : </label>
                         <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal&view_only=true" frameborder="0" width="100%" height="300px"></iframe>
