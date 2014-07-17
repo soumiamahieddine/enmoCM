@@ -1363,6 +1363,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             }
             $frm_str .= ');';
         }
+        if ($data['type_contact'] == 'internal') {
+            $frm_str .='$(\'type_contact_internal\').checked=true;';
+        } else if ($data['type_contact'] == 'external') {           
+            $frm_str .='$(\'type_contact_external\').checked=true;';
+        }
         $frm_str .='</script>';
 
 	// À la fin de la methode d’ouverture de la modale
