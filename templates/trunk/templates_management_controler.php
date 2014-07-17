@@ -183,16 +183,24 @@ function validate_cs_submit($mode)
         = $_REQUEST['template_label'];
     if (isset($_REQUEST['template_comment'])) $templates->template_comment 
         = $_REQUEST['template_comment'];
-    if (isset($_REQUEST['template_content'])) $templates->template_content 
-        = $_REQUEST['template_content'];
-    if (isset($_REQUEST['template_type'])) $templates->template_type 
-        = $_REQUEST['template_type'];
     if (isset($_REQUEST['template_style'])) $templates->template_style 
         = $_REQUEST['template_style'];
     if (isset($_REQUEST['template_datasource'])) $templates->template_datasource 
         = $_REQUEST['template_datasource'];
-    if (isset($_REQUEST['template_target'])) $templates->template_target 
-        = $_REQUEST['template_target'];
+    if (isset($_REQUEST['template_target'])) {
+        $templates->template_target = $_REQUEST['template_target'];
+    }
+    if (isset($_REQUEST['template_type'])) {
+        $templates->template_type = $_REQUEST['template_type'];
+        if ($templates->template_type == 'HTML') {
+            if (isset($_REQUEST['template_content'])) {
+                $templates->template_content = $_REQUEST['template_content'];
+            }
+        } elseif ($templates->template_type == 'TXT') {
+            if (isset($_REQUEST['template_content_txt'])) $templates->template_content 
+                = $_REQUEST['template_content_txt'];
+        }
+    }
     $_SESSION['m_admin']['templatesEntitiesSelected'] = array();
     for ($i=0;$i<count($_REQUEST['entities_chosen']); $i++) {
         array_push(

@@ -298,10 +298,10 @@ if ($mode == 'list') {
                 </div>
                 <div id="txt_div" name="txt_div">
                     <p>
-                        <label for="template_content">
+                        <label for="template_content_txt">
                             <?php echo _TEMPLATE_CONTENT; ?> TXT :
                         </label><br/><br/>
-                        <textarea name="template_content" style="width:100%" rows="15" cols="60" id="template_content" value="<?php
+                        <textarea name="template_content_txt" style="width:100%" rows="15" cols="60" id="template_content_txt" value="<?php
                             if (isset($_SESSION['m_admin']['templates']['template_content'])) {
                                 echo $func->show_str($_SESSION['m_admin']['templates']['template_content']);
                             }
