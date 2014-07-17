@@ -1202,7 +1202,7 @@ $frm_str .= '</div>';
                     . '\', \'\', \'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no\');">';
                     $frm_str .= '<option value="">' . _OFFICE . '</option>';
                         for ($i=0;$i<count($templates);$i++) {
-                            if ($templates[$i]['TYPE'] == 'OFFICE') {
+                            if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
                                 $frm_str .= '<option value="';
                                     $frm_str .= $templates[$i]['ID'];
                                     $frm_str .= '">';
@@ -1223,7 +1223,7 @@ $frm_str .= '</div>';
                         . '\', $(\'templateHtml\').value);">';
                     $frm_str .= '<option value="">' . _HTML . '</option>';
                         for ($i=0;$i<count($templates);$i++) {
-                            if ($templates[$i]['TYPE'] == 'HTML') {
+                            if ($templates[$i]['TYPE'] == 'HTML' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
                                 $frm_str .= '<option value="';
                                     $frm_str .= $templates[$i]['ID'];
                                     $frm_str .= '">';

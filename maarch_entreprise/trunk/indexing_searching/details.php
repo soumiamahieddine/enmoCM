@@ -1267,7 +1267,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 								+ '&objectType=attachmentFromTemplate&objectId=' + $('templateOffice').value + '&objectTable=<?php echo $objectTable;?>&resMaster=<?php echo $s_id;?>', '', 'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no');">
 	                    <option value=""><?php echo _OFFICE ;?></option>
 	                        <?php for ($i=0;$i<count($templates);$i++) {
-	                            if ($templates[$i]['TYPE'] == 'OFFICE') {
+                                if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
 	                                ?> <option value="
 	                                    <?php echo $templates[$i]['ID'];?>
 	                                    ">
@@ -1283,7 +1283,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 	                    <option value=""><?php echo _HTML;?></option>
 	                    <?php
 	                        for ($i=0;$i<count($templates);$i++) {
-	                            if ($templates[$i]['TYPE'] == 'HTML') {
+                                if ($templates[$i]['TYPE'] == 'HTML' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
 	                                ?><option value="
 	                                    <?php echo $templates[$i]['ID'];?>
 	                                    ">

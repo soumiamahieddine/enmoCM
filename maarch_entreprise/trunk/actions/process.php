@@ -538,6 +538,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<br>';
     }
 
+
+
+
     //ACTIONS
     $frm_str .= '<hr class="hr_process"/>';
     $frm_str .= '<p align="center" style="width:90%;">';
@@ -716,6 +719,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $templatesControler = new templates_controler();
         $templates = array();
         $templates = $templatesControler->getAllTemplatesForProcess($data['destination']['value']);
+        //var_dump($templates);
         $frm_str .= '<div id="list_answers_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
             $frm_str .= '<div>';
                 $frm_str .= '<div id="processframe" name="processframe">';
@@ -751,7 +755,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             . '\', \'\', \'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no\');">';
                             $frm_str .= '<option value="">' . _OFFICE . '</option>';
                                 for ($i=0;$i<count($templates);$i++) {
-                                    if ($templates[$i]['TYPE'] == 'OFFICE') {
+                                    if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
                                         $frm_str .= '<option value="';
                                             $frm_str .= $templates[$i]['ID'];
                                             $frm_str .= '">';
@@ -772,7 +776,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             . '\', $(\'templateHtml\').value);">';
                             $frm_str .= '<option value="">' . _HTML . '</option>';
                                 for ($i=0;$i<count($templates);$i++) {
-                                    if ($templates[$i]['TYPE'] == 'HTML') {
+                                    if ($templates[$i]['TYPE'] == 'HTML' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
                                         $frm_str .= '<option value="';
                                             $frm_str .= $templates[$i]['ID'];
                                             $frm_str .= '">';
