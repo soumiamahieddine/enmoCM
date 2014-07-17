@@ -106,6 +106,10 @@ if (isset($_POST['what_users']) && !empty($_POST['what_users'])) {
 if (isset($_POST['what_services']) && ! empty($_POST['what_services']) ) {
     $_GET['what_services'] = $_POST['what_services'];
 }
+if (isset($_REQUEST['no_filter'])) {
+    $_GET['what_users'] = '%';
+    $_GET['what_services'] = '%';
+}
 $users = array();
 $entities = array();
 if (isset($_GET['what_users']) 
@@ -140,20 +144,25 @@ $users_query =
     . " e.entity_id = ue.entity_id and u.user_id = ue.user_id and"
     . " e.enabled = 'Y' and ue.primary_entity='Y' " . $user_expr . $entity_expr
     . " order by u.lastname asc, u.firstname asc, u.user_id asc, e.entity_label asc";
-    
-$db->query($users_query);
-while ($line = $db->fetch_object()) {
-    array_push(
-        $users,
-        array(
-            'ID'     => $db->show_string($line->user_id),
-            'PRENOM' => $db->show_string($line->firstname),
-            'NOM'    => $db->show_string($line->lastname),
-            'DEP_ID' => $db->show_string($line->entity_id),
-            'DEP'    => $db->show_string($line->entity_label)
-        )
-    );
+
+if ($user_expr == '' && $entity_expr == '') {
+    //no query
+} else {
+    $db->query($users_query);
+    while ($line = $db->fetch_object()) {
+        array_push(
+            $users,
+            array(
+                'ID'     => $db->show_string($line->user_id),
+                'PRENOM' => $db->show_string($line->firstname),
+                'NOM'    => $db->show_string($line->lastname),
+                'DEP_ID' => $db->show_string($line->entity_id),
+                'DEP'    => $db->show_string($line->entity_label)
+            )
+        );
+    }
 }
+
 $entity_query =
     "select e.entity_id,  e.entity_label FROM "
         . $_SESSION['tablename']['users'] . " u, " . ENT_ENTITIES . " e, "
@@ -161,17 +170,21 @@ $entity_query =
         . "and  e.entity_id = ue.entity_id and u.user_id = ue.user_id and "
         . "e.enabled = 'Y' " . $user_expr . $entity_expr
         . " group by e.entity_id, e.entity_label order by e.entity_label asc";
-$db->query($entity_query);
-while ($line = $db->fetch_object()) {
-    array_push(
-        $entities,
-        array(
-            'ID' => $db->show_string($line->entity_id),
-            'DEP' =>$db->show_string($line->entity_label)
-        )
-    );
-}
 
+if ($user_expr == '' && $entity_expr == '') {
+    //no query
+} else {
+    $db->query($entity_query);
+    while ($line = $db->fetch_object()) {
+        array_push(
+            $entities,
+            array(
+                'ID' => $db->show_string($line->entity_id),
+                'DEP' =>$db->show_string($line->entity_label)
+            )
+        );
+    }
+}
 #****************************************************************************************
 # RELOAD PARENT ID VALIDATION OF LIST
 #****************************************************************************************     
@@ -738,17 +751,28 @@ $linkwithwhat =
                             <input name="what_services" id="what_services" type="text" <?php if(isset($_GET["what_services"])) echo "value ='".$_GET["what_services"]."'"; ?>/>
                         </th>
                     </tr>
+                    <tr>
+						<th>
+							<label for="no_filter" class="bold">&nbsp;</label>
+						</th>
+						<th>
+							<input class="button" name="no_filter" id="no_filter" type="button" onclick="$('what_services').value='';$('what_users').value='';" value="<?php echo _NO_FILTER; ?>"/>
+						</th>
+					</tr>
                 </table>
             </form>     
         </div> 
         <script type="text/javascript">
             repost('<?php echo $link;?>',new Array('diff_list_items'),new Array('what_users','what_services'),'keyup',250);
+            repost('<?php echo $link;?>',new Array('diff_list_items'),new Array('no_filter'), 'click',250);
         </script>
         <br/>
         <div id="diff_list_items"> <?php
         #******************************************************************************
         # LIST OF AVAILABLE USERS
-        #******************************************************************************?> 
+        #******************************************************************************
+        if (count($users) > 0) {
+        ?> 
             <div align="center">
                 <h2 class="tit"><?php echo _USERS_LIST;?></h2>
                 <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
@@ -804,57 +828,61 @@ $linkwithwhat =
                 </table>
                 <br/>
             </div> <?php
+            }
             #******************************************************************************
             # LIST OF AVAILABLE ENTITIES
             #****************************************************************************** 
-            if($allow_entities) { ?>
-            <div align="center"> 
-                <h2 class="tit"><?php echo _ENTITIES_LIST;?></h2>
-                <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
-                    <thead>
-                        <tr>
-                            <th><?php echo _ID;?></th>
-                            <th><?php echo _DEPARTMENT;?></th>
-                            <th>&nbsp;</th>
-                        </tr>
-                    </thead><?php 
-                $color = ' class="col"';
-                for ($j=0, $m=count($entities); $j<$m ; $j++) {
-                    $entity_id = $entities[$j]['ID'];
-                    
-                    # Check if at least one role can be added
-                    $possible_roles = array();
-                    foreach($roles as $role_id => $role_label) {
-                        if(isset($entity_roles[$entity_id]) && in_array($role_id, $entity_roles[$entity_id]))
-                            continue;
-                        if($role_id == 'dest')
-                            continue;
-                        $possible_roles[$role_id] = $role_label;
-                    } 
-                    
-                    if($color == ' class="col"') $color = '';
-                    else $color = ' class="col"'; ?>
-                    <tr <?php echo $color; ?>>
-                        <td><?php echo $entities[$j]['ID'];?></td>
-                        <td><?php echo $entities[$j]['DEP']; ?></td>
-                        <td class="action_entities"><?php
-                        if(count($possible_roles) > 0) { ?>
-                            <input type="hidden" id="entity_id_<?php echo $j; ?>" value="<?php echo $entities[$j]['ID'];?>" />
-                            <select name="role" id="entity_role_<?php echo $j; ?>"><?php 
-                            foreach($possible_roles as $role_id => $role_label) { ?>
-                                <option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
-                            } ?>
-                            </select>&nbsp;
-                            <span onclick="add_entity(<?php echo $j; ?>);" class="change"/> 
-                                <?php echo _ADD;?>
-                            </span><?php
-                        } else echo _NO_AVAILABLE_ROLE; ?>               
-                        </td>
-                    </tr> <?php
-                } ?>
-                </table>
-            </div><?php
-            } ?>
+            if (count($entities) > 0) {
+                if($allow_entities) { ?>
+                <div align="center"> 
+                    <h2 class="tit"><?php echo _ENTITIES_LIST;?></h2>
+                    <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
+                        <thead>
+                            <tr>
+                                <th><?php echo _ID;?></th>
+                                <th><?php echo _DEPARTMENT;?></th>
+                                <th>&nbsp;</th>
+                            </tr>
+                        </thead><?php 
+                    $color = ' class="col"';
+                    for ($j=0, $m=count($entities); $j<$m ; $j++) {
+                        $entity_id = $entities[$j]['ID'];
+                        
+                        # Check if at least one role can be added
+                        $possible_roles = array();
+                        foreach($roles as $role_id => $role_label) {
+                            if(isset($entity_roles[$entity_id]) && in_array($role_id, $entity_roles[$entity_id]))
+                                continue;
+                            if($role_id == 'dest')
+                                continue;
+                            $possible_roles[$role_id] = $role_label;
+                        } 
+                        
+                        if($color == ' class="col"') $color = '';
+                        else $color = ' class="col"'; ?>
+                        <tr <?php echo $color; ?>>
+                            <td><?php echo $entities[$j]['ID'];?></td>
+                            <td><?php echo $entities[$j]['DEP']; ?></td>
+                            <td class="action_entities"><?php
+                            if(count($possible_roles) > 0) { ?>
+                                <input type="hidden" id="entity_id_<?php echo $j; ?>" value="<?php echo $entities[$j]['ID'];?>" />
+                                <select name="role" id="entity_role_<?php echo $j; ?>"><?php 
+                                foreach($possible_roles as $role_id => $role_label) { ?>
+                                    <option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
+                                } ?>
+                                </select>&nbsp;
+                                <span onclick="add_entity(<?php echo $j; ?>);" class="change"/> 
+                                    <?php echo _ADD;?>
+                                </span><?php
+                            } else echo _NO_AVAILABLE_ROLE; ?>               
+                            </td>
+                        </tr> <?php
+                    } ?>
+                    </table>
+                </div><?php
+                }
+            }
+            ?>
         </div>  
     </div>
 </body>

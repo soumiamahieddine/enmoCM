@@ -269,3 +269,6 @@ if (!defined('_ITS_NOT_MY_TURN_IN_THE_WF'))
     define('_ITS_NOT_MY_TURN_IN_THE_WF', 'It is not my turn in the workflow');
 if (!defined('_NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF'))
     define('_NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF', 'There is no available role for me in the workflow');
+
+if (!defined('_NO_FILTER')) 
+    define('_NO_FILTER', 'No filter');
