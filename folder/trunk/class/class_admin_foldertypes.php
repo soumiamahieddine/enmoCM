@@ -721,7 +721,7 @@ class foldertype extends dbquery
     *                   ['type'] : Index type ('date', 'string', 'integer' or 'float')
     *                   ['img'] : url to the image index
     */
-    public function get_all_indexes()
+  public function get_all_indexes()
     {
         if (file_exists(
             $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
