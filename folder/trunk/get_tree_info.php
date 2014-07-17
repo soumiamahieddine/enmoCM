@@ -68,15 +68,15 @@ $db->connect();
 $subject = $_REQUEST['project'];
 $pattern = '/\([0-9]*\)/';
 preg_match($pattern, substr($subject,3), $matches, PREG_OFFSET_CAPTURE);
-if($matches[0] != ''){
+$fold_id=str_replace("(", "", $matches[0][0]);
+$fold_id=str_replace(")", "", $fold_id);
+//print_r($fold_id);
+//var_dump($matches[0]);die();
+
 	$db->query(
-		"select folders_system_id, folder_id, parent_id from folders WHERE folders_system_id not in (100) AND folders_system_id in ".$matches[0][0]." order by folder_id asc "
+		"select folders_system_id, folder_name, parent_id from folders WHERE folders_system_id not in (100) order by folder_id asc "
 		);
-}else{
-	$db->query(
-		"select folders_system_id, folder_id, parent_id from folders WHERE folders_system_id not in (100) order by folder_id asc "
-		);
-}
+
 
 
 $categories = array();
@@ -86,10 +86,12 @@ while($row = $db->fetch_array()) {
 		"select count(*) as total from folders WHERE parent_id in ('".$row['folders_system_id']."')"
 		);
 	$row2 = $db2->fetch_array();
+	//var_dump($row2);
 	$db3->query(
 		"select count(*) as total from res_view_letterbox WHERE folders_system_id in ('".$row['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
 		);
 	$row3 = $db3->fetch_array();
+	//var_dump($row3);
 	$db4->query(
 		"select res_id, subject,doctypes_first_level_label,doctypes_second_level_label from res_view_letterbox WHERE folders_system_id in ('".$row['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
 		);
@@ -105,11 +107,12 @@ while($row = $db->fetch_array()) {
 		}
 		$i++;
 	}
+	//var_dump($id_docs);
 
 	$categories[] = array(
 		'parent_id' => $row['parent_id'],
 		'folders_system_id' => $row['folders_system_id'],
-		'nom_folder' => $row['folder_id'],
+		'nom_folder' => $row['folder_name'],
 		'nb_child' => $row2['total'],
 		'nb_doc' => $row3['total'],
 		'id_doc' => $id_docs
@@ -117,14 +120,16 @@ while($row = $db->fetch_array()) {
 }
 //print_r($categories);exit;
 if($matches[0] != ''){
-	echo afficher_arbo($categories[0]['parent_id'], 0, $categories);
+	echo afficher_arbo($fold_id, 0, $categories,$whereClause,$fold_id);
 }else{
-	echo afficher_arbo(0, 0, $categories);
+	echo afficher_arbo(0, 0, $categories,$whereClause,"");
 }
 
 
-function afficher_arbo($parent, $niveau, $array)
+function afficher_arbo($parent, $niveau, $array,$whereClause,$origin)
 {
+	$db4 = new dbquery();
+	$db4->connect();
 	$niveau_precedent = 0;
 	$niveau_suiv=$niveau+1;
 
@@ -132,6 +137,7 @@ function afficher_arbo($parent, $niveau, $array)
 
 	foreach ($array AS $noeud)
 	{
+
 
 		$which="document.getElementById(\"parent_".$noeud['folders_system_id']."_position_".$niveau_suiv."\")";
 		$which_doc="document.getElementById(\"parent_".$noeud['folders_system_id']."_position_".$niveau."_doc\")";
@@ -152,15 +158,45 @@ function afficher_arbo($parent, $niveau, $array)
 				$i=0;
 				$html.="<ul id='parent_".$noeud['folders_system_id']."_position_".$niveau."_doc' style='display:none;' >";
 				while ($i<sizeof($tab_doc)) {
-					$html .= "<li style='font-size: 10px;display:block;margin-left:25px;' id='parent_".$parent."_position_".$niveau."' ><a onclick='updateContent(\"index.php?dir=indexing_searching&page=little_details_invoices&display=true&value=" . $tab_doc[$i]."\", \"docView\");'><ul><li style='margin-left:30px;list-style-image:url(static.php?filename=page.gif);'>".$tab_doc[$i+2]."</li><li style='margin-left:40px;'>".$tab_doc[$i+3]."</li><li style='margin-left:50px;'>" . $tab_doc[$i]." - ".$tab_doc[$i+1]."</li></ul></a>";					
+					$html .= "<li style='font-size: 10px;display:block;margin-left:25px;' id='parent_".$parent."_position_".$niveau."' ><a onclick='updateContent(\"index.php?dir=indexing_searching&page=little_details_invoices&display=true&value=" . $tab_doc[$i]."\", \"docView\");'><ul><li style='margin-left:30px;list-style-image:url(static.php?filename=page.gif);'>".$tab_doc[$i+2]."</li><li style='margin-left:40px;'>".$tab_doc[$i+3]."</li><li style='margin-left:50px;'>" . $tab_doc[$i]." - ".$tab_doc[$i+1]."</li></ul></a>";
 					$i=$i+4;
 				}
 				$html.="</ul>";
 			}
 
 			$niveau_precedent = $niveau;
-			$html .= afficher_arbo($noeud['folders_system_id'], ($niveau + 1), $array);
+			
+			$html .= afficher_arbo($noeud['folders_system_id'], ($niveau + 1), $array, $whereClause,'');
 		}
+		//var_dump($origin);
+			if ($origin!='') {
+				$db4->query(
+					"select res_id, subject,doctypes_first_level_label,doctypes_second_level_label from res_view_letterbox WHERE folders_system_id in ('".$parent."') AND (".$whereClause.") AND status NOT IN ('DEL')"
+					);
+				$id_docs='';
+				$z=0;
+				while($row4 = $db4->fetch_array()){
+					if($z==0){
+						$id_docs_2=$row4['res_id'].",".$row4['subject'].",".$row4['doctypes_first_level_label'].",".$row4['doctypes_second_level_label'];
+
+					}else{
+						$id_docs_2.=",".$row4['res_id'].",".$row4['subject'].",".$row4['doctypes_first_level_label'].",".$row4['doctypes_second_level_label'];
+
+					}
+					$z++;
+				}
+				$tab_doc_2=explode(',',$id_docs_2);
+				if($tab_doc_2[0]!=''){
+					$z=0;
+					$html.="<ul id='parent_0_position_".$niveau."_doc' style='display:block;' >";
+					while ($z<sizeof($tab_doc_2)) {
+						$html .= "<li style='font-size: 10px;display:block;margin-left:25px;' id='parent_0_position_".$niveau."' ><a onclick='updateContent(\"index.php?dir=indexing_searching&page=little_details_invoices&display=true&value=" . $tab_doc_2[$z]."\", \"docView\");'><ul><li style='margin-left:30px;list-style-image:url(static.php?filename=page.gif);'>".$tab_doc_2[$z+2]."</li><li style='margin-left:40px;'>".$tab_doc_2[$z+3]."</li><li style='margin-left:50px;'>" . $tab_doc_2[$z]." - ".$tab_doc_2[$z+1]."</li></ul></a>";
+						$z=$z+4;
+					}
+					$html.="</ul>";
+				}
+				$origin='';
+			}
 	}
 
 	if (($niveau_precedent == $niveau) && ($niveau_precedent != 0)) $html .= "</ul>\n</li>\n";
