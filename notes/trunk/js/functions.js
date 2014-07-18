@@ -61,8 +61,6 @@ function addTemplateToNote(templateNotes, path)
                 var strContent = response.content;
                 var reg = new RegExp(/\\n/gi);
                 var strContentReplace = strContent.replace(reg, '\n');
-                console.log(strContent);
-                console.log(strContentReplace);
                 $('notes').value = $('notes').value + ' ' + strContentReplace;
             } else {
                 window.top.$('main_error').innerHTML = response.error;
