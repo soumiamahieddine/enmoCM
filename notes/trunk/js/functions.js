@@ -46,3 +46,27 @@ function validNotesForm (path, form_id) {
         }
     });
 }
+
+function addTemplateToNote(templateNotes, path)
+{
+    new Ajax.Request(path,
+    {
+        method:'post',
+        parameters: { 
+                      templateId : templateNotes
+                    }, 
+        onSuccess: function(answer) {
+            eval("response = "+answer.responseText);
+            if (response.status == 0) {
+                var strContent = response.content;
+                var reg = new RegExp(/\\n/gi);
+                var strContentReplace = strContent.replace(reg, '\n');
+                console.log(strContent);
+                console.log(strContentReplace);
+                $('notes').value = $('notes').value + ' ' + strContentReplace;
+            } else {
+                window.top.$('main_error').innerHTML = response.error;
+            }
+        }
+    });
+}

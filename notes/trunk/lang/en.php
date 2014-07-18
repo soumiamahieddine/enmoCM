@@ -44,4 +44,9 @@ if (!defined('_NOTE_DONT_EXIST'))
 if (!defined('_THIS_NOTE_IS_VISIBLE_BY'))
     define('_THIS_NOTE_IS_VISIBLE_BY', 'This note is visible by');
 
-?>
+//TEMPLATES FOR NOTES
+if (!defined('_NOTE_TEMPLATE'))
+    define('_NOTE_TEMPLATE', 'Template for note');
+if (!defined('_SELECT_NOTE_TEMPLATE'))
+    define('_SELECT_NOTE_TEMPLATE', 'Select a template for the note');
+

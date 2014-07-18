@@ -330,8 +330,8 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 						$tabNotes[$indNotes1][$indNotes2]["note_text"] = $request->cut_string($request->show_string($tabNotes[$indNotes1][$indNotes2]['value']), $cutString);
 						$tabNotes[$indNotes1][$indNotes2]["label"] = _NOTES;
 						$tabNotes[$indNotes1][$indNotes2]["size"] = 20;
-						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "center";
-						$tabNotes[$indNotes1][$indNotes2]["align"] = "center";
+						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
 						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
 					}

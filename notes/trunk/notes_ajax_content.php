@@ -45,15 +45,17 @@ $ent        = new EntityControler();
 $notesTools = new notes();
 $list       = new lists();
 
-    function _parse($text) {
-        //...
-        $text = str_replace("\r\n", "\n", $text);
-        $text = str_replace("\r", "\n", $text);
+$destination = '';
 
-        //
-        $text = str_replace("\n", "\\n ", $text);
-        return $text;
-    }
+function _parse($text) {
+    //...
+    $text = str_replace("\r\n", "\n", $text);
+    $text = str_replace("\r", "\n", $text);
+
+    //
+    $text = str_replace("\n", "\\n ", $text);
+    return $text;
+}
     
 $core_tools->load_lang();
 $request->connect();
@@ -82,6 +84,12 @@ if (isset($_REQUEST['coll_id']) && ! empty($_REQUEST['coll_id'])) {
     $parameters .= '&coll_id='.$_REQUEST['coll_id'];
     $view = $sec->retrieve_view_from_coll_id($collId);
     $table = $sec->retrieve_table_from_coll($collId);
+    //retrieve the process entity of document
+    $request->query(
+        "select destination from " . $table . " where res_id = " . $identifier
+    );
+    $resultDest = $request->fetch_object();
+    $destination = $resultDest->destination;
 }
 
 //Keep some origin parameters
@@ -121,6 +129,14 @@ $path_to_script = $_SESSION['config']['businessappurl']
             ."index.php?display=true&module=notes&page=notes_ajax_content&identifier="
             .$identifier."&origin=".$origin.$parameters;
 
+require 'modules/templates/class/templates_controler.php';
+$templatesControler = new templates_controler();
+$templates = array();
+if ($destination <> '') {
+    $templates = $templatesControler->getAllTemplatesForProcess($destination);
+} else {
+    $templates = $templatesControler->getAllTemplatesForSelect();
+}            
 switch ($mode) {
     case 'add':
         if (empty($identifier)) {
@@ -133,6 +149,22 @@ switch ($mode) {
             $content .= '<form name="formNotes" id="formNotes" method="post" action="#">';
             $content .= '<input type="hidden" value="'.$identifier.'" name="identifier" id="identifier">';
             $content .= '<h2>'._ADD_NOTE.'</h2>';
+            $content .= '<label for="templateNotes">' . _NOTE_TEMPLATE .' : </label>';
+            $content .= '<select name="templateNotes" id="templateNotes" style="width:250px" '
+                . 'onchange="addTemplateToNote($(\'templateNotes\').value, \''
+                            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+                            . '&module=templates&page=templates_ajax_content_for_notes\');">';
+            $content .= '<option value="">' . _SELECT_NOTE_TEMPLATE . '</option>';
+                for ($i=0;$i<count($templates);$i++) {
+                    if ($templates[$i]['TYPE'] == 'TXT' && ($templates[$i]['TARGET'] == 'notes' || $templates[$i]['TARGET'] == '')) {
+                        $content .= '<option value="';
+                            $content .= $templates[$i]['ID'];
+                            $content .= '">';
+                            $content .= $templates[$i]['LABEL'];
+                        }
+                    $content .= '</option>';
+                }
+            $content .= '</select><br />';
             $content .= '<textarea style="width:500px" cols="70" rows="10"  name="notes"  id="notes" ></textarea>';
             $content .= '<h3 class="sstit">'._THIS_NOTE_IS_VISIBLE_BY.'</h3>';
             $content .= '<table align="center" width="100%" id="template_entities">';
@@ -312,6 +344,22 @@ switch ($mode) {
                 $content .= '<input type="hidden" value="'.$identifier.'" name="identifier" id="identifier">';
                 $content .= '<input type="hidden" value="'.$id.'" name="id" id="id">';
                 $content .= '<h2 class="sstit">'._NOTES . " " . _OF . " " . $user . " (" . $date . ")".'</h2>';
+                $content .= '<label for="templateNotes">' . _NOTE_TEMPLATE .' : </label>';
+                $content .= '<select name="templateNotes" id="templateNotes" style="width:250px" '
+                             . 'onchange="addTemplateToNote($(\'templateNotes\').value, \''
+                             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+                             . '&module=templates&page=templates_ajax_content_for_notes\');">';
+                $content .= '<option value="">' . _SELECT_NOTE_TEMPLATE . '</option>';
+                for ($i=0;$i<count($templates);$i++) {
+                    if ($templates[$i]['TYPE'] == 'TXT' && ($templates[$i]['TARGET'] == 'notes' || $templates[$i]['TARGET'] == '')) {
+                        $content .= '<option value="';
+                            $content .= $templates[$i]['ID'];
+                            $content .= '">';
+                            $content .= $templates[$i]['LABEL'];
+                        }
+                    $content .= '</option>';
+                }
+                $content .= '</select><br />';
                 $content .= '<textarea style="width:500px" cols="70" rows="10"  name="notes"  id="notes">'.$notes.'</textarea>';
                 $content .= '<h3 class="sstit">'._THIS_NOTE_IS_VISIBLE_BY.'</h3>';
                 $content .= '<table align="center" width="100%" id="template_entities">';
