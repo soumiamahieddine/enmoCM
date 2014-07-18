@@ -1325,10 +1325,14 @@ switch ($mode) {
 				$actual_position_id = '';
 				
 				if(!$_REQUEST['position']){
+
 					foreach ($_SESSION['origin_positions'] as $key => $value) {
 						$fileplan->remove($fileplan_id, $value, $res_array);
 					}
 				}else{
+					if(!$_SESSION['origin_positions']){
+							$_SESSION['origin_positions']=array();
+					}
 					$fileplan_diff=array_diff($_SESSION['origin_positions'],$_REQUEST['position']);
 
 					foreach ($fileplan_diff as $key => $value) {
