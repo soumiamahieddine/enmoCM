@@ -161,7 +161,7 @@ class request extends dbquery
 		
 		$query = $this->limit_select(0, $limit, $field_string, $table_string." ".$join, $where_string, $other, $dist);
 
-        if (preg_match('/res_view/i', $query)) {
+        if (preg_match('/_view/i', $query)) {
             $_SESSION['last_select_query'] = $query;
         }
         
