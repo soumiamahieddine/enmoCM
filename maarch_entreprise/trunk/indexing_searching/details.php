@@ -72,12 +72,6 @@ if ($core->test_service('view_technical_infos', 'apps', false)) {
     $viewTechnicalInfos = true;
 }
 
-//test service view doc history
-$viewDocHistory = false;
-if ($core->test_service('view_doc_history', 'apps', false)) {
-    $viewDocHistory = true;
-}
-
 //test service add new version
 $addNewVersion = false;
 if ($core->test_service('add_new_version', 'apps', false)) {
@@ -271,22 +265,7 @@ if (isset($_POST['put_doc_on_validation'])) {
 		$lastname = str_replace('"'," ", $lastname);
 		$society = str_replace("'","\'", $res->society);
 		$society = str_replace('"'," ", $society);
-		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " " . $society . " (contact)', ";
-	}
-    $query = "select u.firstname, u.lastname, u.user_id ";
-			$query .= "from users u, contacts_res cres  ";
-			$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['id']." AND cast (u.user_id as varchar) = cres.contact_id ";
-			$query .= "GROUP BY u.firstname, u.lastname, u.user_id";
-			
-	$db->query($query);
-	
-	while($res = $db->fetch_object()){
-		$nbContacts = $nbContacts + 1;
-		$firstname = str_replace("'","\'", $res->firstname);
-		$firstname = str_replace('"'," ", $firstname);
-		$lastname = str_replace("'","\'", $res->lastname);
-		$lastname = str_replace('"'," ", $lastname);
-		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " (utilisateur)', ";
+		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " " . $society . "', ";
 	}
 	$frameContacts = substr($frameContacts, 0, -2);
 	$frameContacts .= "}";
@@ -369,7 +348,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 'img_doc_date' => true,
                 'img_admission_date' => true,
                 'img_nature_id' => true,
-                'img_reference_number' => true,
                 'img_subject' => true,
                 'img_process_limit_date' => true,
                 'img_author' => true,
@@ -589,7 +567,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 										?>
 
 
-
 										<?php
 									}
                                 //$detailsExport .= "</th>";
@@ -615,6 +592,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 							
                             ?>
                             <td>
+
 							
                                 <?php
                                 $detailsExport .=  $data[$key]['show_value'];
@@ -700,6 +678,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     ?>
                                     <select id="<?php echo $key;?>" name="<?php echo $key;?>" <?php if ($key == 'type_id'){echo 'onchange="change_doctype_details(this.options[this.options.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype_details\' , \''._DOCTYPE.' '._MISSING.'\');"';}?>>
                                     <?php
+
                                         if ($key == 'type_id')
                                         {
                                             if ($_SESSION['features']['show_types_tree'] == 'true')
@@ -823,7 +802,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <input type="text" class="readonly" readonly="readonly" value="<?php  echo $initiator; ?>" size="40"  />
                             </td>
                         </tr>
-
                     </table>
                     <?php
                     $detailsExport .=  "</table>";
@@ -1023,8 +1001,55 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         <?php  } ?>
                             <input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php echo _BACK_TO_WELCOME;?>" onclick="window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';" />
 
+                    </div> 
+                    </form><br><br>
+
+                    <?php
+                        //Identifiant du courrier en cours
+                        $idCourrier=$_GET['id'];
+                        //Requete pour récupérer position_label
+                        $db->query("SELECT position_label FROM fp_fileplan_positions INNER JOIN fp_res_fileplan_positions 
+                                    ON fp_fileplan_positions.position_id = fp_res_fileplan_positions.position_id
+                                    WHERE fp_res_fileplan_positions.res_id=".$idCourrier);
+
+                        while($res= $db->fetch_object()){
+                            if(!isset($positionLabel)){
+                                $positionLabel=$res->position_label;
+                            }else{
+                                $positionLabel=$positionLabel." / ".$res->position_label;
+                            }  
+                        }
+
+                        //Requete pour récuperer fileplan_label
+                        $db->query("SELECT fileplan_label FROM fp_fileplan INNER JOIN fp_res_fileplan_positions
+                                    ON fp_fileplan.fileplan_id = fp_res_fileplan_positions.fileplan_id
+                                    WHERE fp_res_fileplan_positions.res_id=".$idCourrier);
+                        $res2 = $db->fetch_object();
+                        $fileplanLabel=$res2->fileplan_label;
+
+                        $planClassement= $fileplanLabel." / ".$positionLabel;
+                    ?>
+                     
+                    <div>
+                        <h2>Plan de classement</h2><br><?php echo $_SESSION['IMG_SRC']?>
+                        <div class="block">                              
+                            <table>
+                                <tr class="col">
+                                    <th align="left" class="picto">
+                                        <img alt="Plan de classement" src="<?php echo "../../modules/fileplan/img/tool_fileplan.gif"; ?>" title="Plan de classement" alt="Plan de classement"/>
+                                    </th>
+                                    <td align="left" width="200px">
+                                        <?php  echo "Plan de classement"; ?> :
+                                    </td>
+                                    <td>
+                                        <input type="text" class="readonly" readonly="readonly" value="<?php  echo $planClassement; ?>" size="110"  />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-                    </form>
+                    <br><br>
+
                     <?php
                     if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
                             include_once('modules/tags/templates/details/index.php');
@@ -1145,13 +1170,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         . "' and status <> 'DEL'";
                     $req->query($countAttachments);
                     if ($req->nb_result() > 0) {
-                        $nb_attach = ' (' . $req->nb_result() . ')';
-                    } else {
-                        $nb_attach = '';
+                        $nb_attach = '(' . ($req->nb_result()). ')';
                     }
                 }
                 ?>
-                <dt><?php echo _ATTACHMENTS .  '<span id="nb_attach">'. $nb_attach . '</span>';?></dt>
+                <dt><?php echo _PROCESS . $nb_attach;?></dt>
                 <dd>
                     <div>
                         <table width="100%">
@@ -1226,12 +1249,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <?php
                     if ($core->is_module_loaded('attachments'))
                     {
-
-		            require 'modules/templates/class/templates_controler.php';
-		            $templatesControler = new templates_controler();
-		            $templates = array();
-		            $templates = $templatesControler->getAllTemplatesForProcess($data['destination']['value']);
-
                         $detailsExport .= "<h3>"._ATTACHED_DOC." : </h3>";
                         $selectAttachments = "select res_id, creation_date, title, format from ".$_SESSION['tablename']['attach_res_attachments']." where res_id_master = ".$_SESSION['doc_id']." and coll_id ='".$_SESSION['collection_id_choice']."' and status <> 'DEL'";
                         $dbAttachments = new dbquery();
@@ -1256,60 +1273,14 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         $detailsExport .= "</table>";*/
                         ?>
                         <div>
-					<br />
-				<center>
-					<?php
-                if ($core->is_module_loaded('templates') && (!isset($_SESSION['current_basket']['id']) && $core->test_service('edit_attachments_from_detail', 'attachments', false)) || isset($_SESSION['current_basket']['id'])) { 
-					$objectTable = $security->retrieve_table_from_coll($coll_id);
-					echo _GENERATE_ATTACHMENT_FROM;?><br />
-					<select name="templateOffice" id="templateOffice" style="width:250px" 
-								onchange="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=content_management&page=applet_popup_launcher'
-								+ '&objectType=attachmentFromTemplate&objectId=' + $('templateOffice').value + '&objectTable=<?php echo $objectTable;?>&resMaster=<?php echo $s_id;?>', '', 'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no');">
-	                    <option value=""><?php echo _OFFICE ;?></option>
-	                        <?php for ($i=0;$i<count($templates);$i++) {
-                                if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
-	                                ?> <option value="
-	                                    <?php echo $templates[$i]['ID'];?>
-	                                    ">
-	                                    <?php echo $templates[$i]['LABEL'];?>
-	                                <?php } ?>
-	 								</option>
-	                        <?php } ?>
-                    </select>&nbsp;|&nbsp;
-
-					<select name="templateHtml" id="templateHtml" style="width:250px"                                 
-								onchange="checkBeforeOpenBlank('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=templates&page=generate_attachment_html&mode=add'
-                                + '&template=' + $('templateHtml').value + '&res_id=<?php echo $s_id;?>&coll_id=<?php echo $coll_id;?>', $('templateHtml').value);">
-	                    <option value=""><?php echo _HTML;?></option>
-	                    <?php
-	                        for ($i=0;$i<count($templates);$i++) {
-                                if ($templates[$i]['TYPE'] == 'HTML' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
-	                                ?><option value="
-	                                    <?php echo $templates[$i]['ID'];?>
-	                                    ">
-	                                    <?php echo $templates[$i]['LABEL'];?>
-	                                <?php } ?>
-	                            </option>
-	                        <?php } ?>
-                    </select>
-                    <br>
-                    <?php echo _OR ;?>&nbsp;
-					<input type="button" name="attach" id="attach" class="button" value="<?php echo _ATTACH_FROM_HDD;?>" 
-						onclick="javascript:window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=join_file','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200');" />                   
-                <?php } ?>
-                </center>
                         <label><?php echo _ATTACHED_DOC;?> : </label>
-                        <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal&view_only=true" frameborder="0" width="100%" height="300px"></iframe>
+                        <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&view_only&mode=normal" frameborder="0" width="100%" height="300px"></iframe>
                         </div>
                         <?php
- 					}
+                    }
                     $detailsExport .= "<br><br><br>";
                     ?>
                 </dd>
-                <?php
-                    //SERVICE TO VIEW DOC HISTORY
-                    if ($viewDocHistory) {
-                ?>
                 <dt><?php echo _DOC_HISTORY;?></dt>
                 <dd>
                     <!--<h2><?php echo _HISTORY;?></h2>-->
@@ -1319,7 +1290,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     height="590px" align="left" scrolling="yes" frameborder="0" id="history_document"></iframe>
                 </dd>
                 <?php
-                    }
                 if ($core->is_module_loaded('notes')) {
                     require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
                         . "class" . DIRECTORY_SEPARATOR
