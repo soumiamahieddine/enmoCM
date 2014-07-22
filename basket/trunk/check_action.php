@@ -9,14 +9,14 @@ for($i=0; $i < count($_SESSION['m_admin']['basket']['all_actions']); $i++)
 {
 	if($_SESSION['m_admin']['basket']['all_actions'][$i]['ID'] == trim($_REQUEST['id_action']))
 	{
-		if($_SESSION['m_admin']['basket']['all_actions'][$i]['CREATE_ID'] == 'Y')
+		/*if($_SESSION['m_admin']['basket']['all_actions'][$i]['CREATE_ID'] == 'Y')
 		{
 			echo "{status : 1, msg :'"._CREATE_ID."'}";
 		}
 		else
-		{
+		{*/
 			echo "{status : 2, msg :'"._SIMPLE_ACTION."'}";
-		}
+		//}
 		exit();
 	}
 }
