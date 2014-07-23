@@ -1026,7 +1026,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     WHERE fp_res_fileplan_positions.res_id=".$idCourrier);
                         $res2 = $db->fetch_object();
                         $fileplanLabel=$res2->fileplan_label;
-
                         $planClassement= $fileplanLabel." / ".$positionLabel;
                     ?>
                      
