@@ -1325,6 +1325,7 @@ switch ($mode) {
 				$actual_position_id = '';
 				
 				if(!$_REQUEST['position']){
+				
 					foreach ($_SESSION['origin_positions'] as $key => $value) {
 						$fileplan->remove($fileplan_id, $value, $res_array);
 					}
