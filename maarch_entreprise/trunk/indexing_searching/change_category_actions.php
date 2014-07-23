@@ -13,13 +13,17 @@ $actions = $b->get_actions_from_current_basket(
 if (count($actions) > 0) {
     $frmStr .= '<b>' . _ACTIONS . ' : </b>';
     $frmStr .= '<select name="chosen_action" id="chosen_action">';
-    $frmStr .= '<option value="">' . _CHOOSE_ACTION . '</option>';
+    if (count($actions) > 1) {
+        $frmStr .= '<option value="" selected="selected">' . _CHOOSE_ACTION . '</option>';
+    } else {
+        $frmStr .= '<option value="">' . _CHOOSE_ACTION . '</option>';
+    }
     if (count($actions) > 1) {
         for ($indAct = 1; $indAct < count($actions); $indAct ++) {
             $frmStr .= '<option value="' . $actions[$indAct]['VALUE'] . '"';
-            if ($indAct == 1) {
+            /*if ($indAct == 1) {
                 $frmStr .= 'selected="selected"';
-            }
+            }*/
             $frmStr .= '>' . $actions[$indAct]['LABEL'] . '</option>';
         }
     } else {
