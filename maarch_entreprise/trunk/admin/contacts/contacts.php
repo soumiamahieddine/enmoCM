@@ -105,10 +105,10 @@ $orderstr = $list->define_order($order, $field);
 
 //EXPORT DE LA LISTE
 $select2[$_SESSION['tablename']['contacts']] = array();
-array_push($select2[$_SESSION['tablename']['contacts']],"lastname as "._LASTNAME, "firstname as "._FIRSTNAME, "society as "._SOCIETY, "email as "._EMAIL, 
-                                                        "phone as "._PHONE, "address_num as "._NUMBER, "address_street as "._STREET
-                                                        , "address_complement as "._COMPLEMENT, "address_postal_code as code_postal", "address_town as "._TOWN, 
-                                                        "address_country as "._COUNTRY);
+array_push($select2[$_SESSION['tablename']['contacts']],'lastname as "'._LASTNAME . '"', 'firstname as "'._FIRSTNAME . '"', 'society as "'._SOCIETY . '"', 'email as "'._EMAIL . '"', 
+                                                        'phone as "'._PHONE . '"', 'address_num as "'._NUMBER . '"', 'address_street as "'._STREET . '"'
+                                                        , 'address_complement as "'._COMPLEMENT . '"', 'address_postal_code as "'. _POSTAL_CODE . '"', 'address_town as "'._TOWN . '"', 
+                                                        'address_country as "'._COUNTRY . '"');
 
 $request= new request;
 
