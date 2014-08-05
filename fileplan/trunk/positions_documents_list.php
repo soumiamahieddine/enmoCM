@@ -315,7 +315,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 						"tooltip"       => _REMOVED_DOC_FROM_POSITION,
 						"alertText"     =>  _REALLY_REMOVE_DOC_FROM_POSITION.": ".$description."?", 
 						//"disabledRules" => (int)$change_fileplan." == 0"
-						"disabledRules" => "@@right_doc@@ == 'false'"
+						//"disabledRules" => "@@right_doc@@ == 'false'"
 						);
 				array_push($paramsTab['actionIcons'], $remove);
 				$viewDoc = array(
