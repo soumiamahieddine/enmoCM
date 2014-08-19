@@ -1235,6 +1235,8 @@ if (!defined('_WITHOUT_FILE')) define('_WITHOUT_FILE', 'Without file');
 //ASSOCIATION ACTION / CATEGORY
 if (!defined('_ASSOCIATED_CATEGORY')) define('_ASSOCIATED_CATEGORY', 'Associated category');
 if (!defined('_NO_CATEGORY_ASSOCIATED')) define('_NO_CATEGORY_ASSOCIATED', 'No associated category');
+if (!defined('_CHOOSE_CATEGORY_ASSOCIATION')) define('_CHOOSE_CATEGORY_ASSOCIATION', 'Choose categories to associate');
+if (!defined('_CHOOSE_CATEGORY_ASSOCIATION_HELP')) define('_CHOOSE_CATEGORY_ASSOCIATION_HELP', 'If empty all categories are associeted');
 
 //SERVICE VIEW DOC HISTORY
 if (!defined('_VIEW_DOC_HISTORY')) define('_VIEW_DOC_HISTORY', 'View document history');

@@ -83,7 +83,8 @@ function init_session()
     $_SESSION['m_admin']['action']['KEYWORD'] = '';
     $_SESSION['m_admin']['action']['HISTORY'] = 'Y';
     $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'] = 'N';
-    $_SESSION['m_admin']['action']['CATEGORY_ID'] = '';
+    $_SESSION['m_admin']['action']['categories'] = '';
+    $_SESSION['m_admin']['action']['categoriesSelected'] = '';
 }
 
 if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
@@ -113,7 +114,14 @@ if (isset($_REQUEST['action_submit'])) {
         $_SESSION['m_admin']['action']['ACTION_PAGE'] = trim($_REQUEST['action_page']);
     }
     $_SESSION['m_admin']['action']['KEYWORD'] = $_REQUEST['keyword'];
-    $_SESSION['m_admin']['action']['CATEGORY_ID'] = $_REQUEST['category_id'];
+    //$_SESSION['m_admin']['action']['CATEGORY_ID'] = $_REQUEST['category_id'];
+    $_SESSION['m_admin']['action']['categoriesSelected'] = array();
+    for ($i=0;$i<count($_REQUEST['categories_chosen']); $i++) {
+        array_push(
+            $_SESSION['m_admin']['action']['categoriesSelected'], 
+            $_REQUEST['categories_chosen'][$i]
+        );
+    }
     $_SESSION['m_admin']['action']['FLAG_CREATE'] = 'N';
     
 
@@ -168,13 +176,14 @@ if (isset($_REQUEST['action_submit'])) {
             'is_folder_action' => $_SESSION['m_admin']['action']['IS_FOLDER_ACTION'],
             'action_page' => $_SESSION['m_admin']['action']['ACTION_PAGE'],
             'id_status' => $_SESSION['m_admin']['action']['ID_STATUS'],
-            'category_id' => $_SESSION['m_admin']['action']['CATEGORY_ID']
+            //'category_id' => $_SESSION['m_admin']['action']['CATEGORY_ID']
         );
 
         $action = new Action();
         $action->setArray($action_value);
 
         ActionControler::save($action, $mode);
+        ActionControler::saveCategoriesAssociation(ActionControler::getLastActionId($_SESSION['m_admin']['action']['LABEL']));
         ActionControler::razActionPage();
 
         if ($_SESSION['history']['actionadd'] == 'true' && $mode == 'add') {
@@ -217,7 +226,7 @@ $state = true;
 
 if ($mode == 'up') {
     $action = ActionControler::get($action_id);
-
+    $categories = ActionControler::getAllCategoriesLinkedToAction($action_id);
     if (!isset($action)) {
         $state = false;
     } else {
@@ -236,8 +245,9 @@ if ($mode == 'up') {
             functions::show_string($action->__get('is_folder_action'));
         $_SESSION['m_admin']['action']['KEYWORD'] = 
             functions::show_string($action->__get('keyword'));
-        $_SESSION['m_admin']['action']['CATEGORY_ID'] = 
-            functions::show_string($action->__get('category_id'));
+        /*$_SESSION['m_admin']['action']['CATEGORY_ID'] = 
+            functions::show_string($action->__get('category_id'));*/
+        $_SESSION['m_admin']['action']['categories'] = $categories;
     }
 } elseif ($mode == 'add') {
     if (!isset($_SESSION['m_admin']['action'])) {

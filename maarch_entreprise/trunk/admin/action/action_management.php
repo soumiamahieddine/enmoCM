@@ -136,38 +136,100 @@ elseif($mode == 'up' || $mode == 'add'){
 
                     echo '<input type="hidden" name="is_folder_action" value="N"';
                 } ?>
-            <p>
-                <label for="category_id"><?php echo _ASSOCIATED_CATEGORY;?> : </label>
-                <select name="category_id" id="category_id">
-                    <option value="_"><?php echo _NO_CATEGORY_ASSOCIATED;?></option>
-                    <?php
-                    foreach ($_SESSION['coll_categories'] as $collId => $collLabel) {
-                        foreach ($collLabel as $catId => $catValue) {
-                            if ($catId <> 'default_category') {
-                                ?><option value="<?php
-                                echo $catId;?>" <?php
-                                if ($catId == $_SESSION['m_admin']['action']['CATEGORY_ID']) {
-                                    echo 'selected="selected"';
-                                }?> ><?php
-                                echo $collId . ' / ' . $catValue;
-                                ?></option><?php
+            <table align="center" width="100%" id="categories_association" >
+                    <tr>
+                        <td colspan="3"><?php echo _CHOOSE_CATEGORY_ASSOCIATION; ?> : <br /> <small>(<?php echo _CHOOSE_CATEGORY_ASSOCIATION_HELP; ?>)<small></td>
+                    </tr>
+                    <tr>
+                        <td width="40%" align="center">
+                            <select name="categorieslist[]" id="categorieslist" size="7"
+                            ondblclick='moveclick($(categorieslist), $(categories_chosen));' multiple="multiple" >
+                            <?php
+                            foreach ($_SESSION['coll_categories'] as $collId => $collLabel) {
+                                $state_category = false;
+                                foreach ($collLabel as $catId => $catValue) {
+                                    $j=0;
+                                    $state_category = false;
+                                    if ($catId <> 'default_category') {
+                                        for ($j=0;$j<count($_SESSION['m_admin']['action']['categories']);$j++) {
+                                            if ($catId == $_SESSION['m_admin']['action']['categories'][$j]) {
+                                                $state_category = true;
+                                            }
+                                        }
+                                        if ($state_category == false) {
+                                            ?>
+                                            <option value="<?php
+                                                echo $catId;
+                                                ?>"><?php
+                                                echo $collId . ' / ' . $catValue;
+                                                ?></option>
+                                            <?php
+                                        }
+                                    }
+                                }
                             }
-                        }
-                    }
-                ?>
-                </select>
-            </p>
+                            ?>
+                            </select>
+                            <br/>
+                        </td>
+                        <td width="20%" align="center">
+                            <input type="button" class="button" value="<?php
+                                echo _ADD;
+                                ?> &gt;&gt;" onclick='Move($(categorieslist), $(categories_chosen));' />
+                            <br />
+                            <br />
+                            <input type="button" class="button" value="&lt;&lt; <?php
+                                echo _REMOVE;
+                                ?>" onclick='Move($(categories_chosen), $(categorieslist));' />
+                        </td>
+                        <td width="40%" align="center">
+                            <select name="categories_chosen[]" id="categories_chosen" size="7"
+                            ondblclick='moveclick($(categories_chosen), $(categorieslist));' multiple="multiple">
+                            <?php
+                            foreach ($_SESSION['coll_categories'] as $collId => $collLabel) {
+                                $state_category = false;
+                                foreach ($collLabel as $catId => $catValue) {
+                                    $j=0;
+                                    $state_category = false;
+                                    if ($catId <> 'default_category') {
+                                        for ($j=0;$j<count($_SESSION['m_admin']['action']['categories']);$j++) {
+                                            if ($catId == $_SESSION['m_admin']['action']['categories'][$j]) {
+                                                $state_category = true;
+                                            }
+                                        }
+                                        if ($state_category == true) {
+                                            ?>
+                                            <option value="<?php
+                                                echo $catId;
+                                                ?>" selected="selected"><?php
+                                                echo $collId . ' / ' . $catValue;
+                                                ?></option>
+                                            <?php
+                                        }
+                                    }
+                                }
+                            }
+                            ?>
+                            </select>
+                            <br/>
+                            <!--<em><a href="javascript:selectall($(categories_chosen));" >
+                            <?php echo _SELECT_ALL; ?></a></em>-->
+                        </td>
+                    </tr>
+                </table>
+            
+            
             <p class="buttons">
         <?php
             if($mode == 'up'){
             ?>
-                <input class="button" type="submit" name="action_submit" value="<?php
+                <input class="button" type="submit" name="action_submit" onclick ="javascript:selectall($(categories_chosen));" value="<?php
                 echo _MODIFY_ACTION; ?>" />
             <?php
             }
             elseif($mode == 'add'){
             ?>
-                <input type="submit" class="button"  name="action_submit" value="<?php
+                <input type="submit" class="button"  name="action_submit" onclick ="javascript:selectall($(categories_chosen));" value="<?php
                 echo _ADD_ACTION; ?>" />
                 <?php
             }
