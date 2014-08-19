@@ -330,14 +330,17 @@ class basket extends dbquery
         $this->query(
             "select agb.id_action, agb.where_clause, agb.used_in_basketlist, "
             . "agb.used_in_action_page, a.label_action, a.id_status, "
-            . "a.action_page, a.is_folder_action, a.category_id from " . ACTIONS_TABLE . " a, "
+            . "a.action_page, a.is_folder_action from " . ACTIONS_TABLE . " a, "
             . ACTIONS_GROUPBASKET_TABLE . " agb where a.id = agb.id_action and "
             . "agb.group_id = '" . $groupId . "' and agb.basket_id = '"
             . $basketId . "' and a.enabled = 'Y' and "
             . "agb.default_action_list ='N'"
         );
-
+        require_once('core/class/ActionControler.php');
+        $actionControler = new actionControler();
         while ($res = $this->fetch_object()) {
+            $categories = array();
+            $categories = $actionControler->getAllCategoriesLinkedToAction($res->id_action);
             array_push(
                 $actions,
                 array(
@@ -349,11 +352,11 @@ class basket extends dbquery
                     'ID_STATUS' => $res->id_status,
                     'ACTION_PAGE' => $res->action_page,
                     'IS_FOLDER_ACTION' => $res->is_folder_action,
-                    'CATEGORY_ID' => $res->category_id
+                    'CATEGORIES' => $categories
                 )
             );
         }
-            return $actions;
+        return $actions;
     }
 
     /**
@@ -624,11 +627,18 @@ class basket extends dbquery
             for ($i = 0; $i < count($_SESSION['current_basket']['actions']);
             $i ++
             ) {
-                //echo $_SESSION['current_basket']['actions'][$i]['CATEGORY_ID'] . PHP_EOL;
+                $noFilterOnCat = true;
+                if (count($_SESSION['current_basket']['actions'][$i]['CATEGORIES']) > 0) {
+                    $noFilterOnCat = false;
+                }
+                $categoryIdForActions = '';
+                for ($cptCat=0;$cptCat<count($_SESSION['current_basket']['actions'][$i]['CATEGORIES']);$cptCat++) {
+                    if ($_SESSION['current_basket']['actions'][$i]['CATEGORIES'][$cptCat] == $_SESSION['category_id']) {
+                        $categoryIdForActions = $_SESSION['category_id'];
+                    }
+                }
                 if (
-                    $_SESSION['current_basket']['actions'][$i]['CATEGORY_ID'] == ''
-                    ||$_SESSION['current_basket']['actions'][$i]['CATEGORY_ID'] == '_'
-                    || $_SESSION['current_basket']['actions'][$i]['CATEGORY_ID'] == $_SESSION['category_id']
+                    $noFilterOnCat || $categoryIdForActions <> ''
                 ) {
                     // If in mode "PAGE_USE", testing the action where clause
                     // on the res_id before adding the action
