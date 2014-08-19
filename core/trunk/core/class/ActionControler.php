@@ -173,7 +173,37 @@ class ActionControler
 		}
 	}
 
+    /**
+	* Returns an Categories array of categories linked to an action
+	*
+	* @return categories array 
+	*/
+	public function getAllCategoriesLinkedToAction($actionId)
+	{
+		self::connect();
+		$query = "select category_id from actions_categories where action_id = " . $actionId;
 
+		try {
+			if($_ENV['DEBUG']){echo $query.' // ';}
+			self::$db->query($query);
+		} catch (Exception $e) {
+            echo _NO_CATEGORY;
+		}
+
+		if (self::$db->nb_result() > 0) {
+			$categories_list = array();
+			while($queryResult=self::$db->fetch_object()){
+				array_push($categories_list, $queryResult->category_id);
+			}
+			self::disconnect();
+			return $categories_list;
+		} else {
+			self::disconnect();
+			return null;
+		}
+	}
+    
+    
 	/**
 	* Saves in the database an Action object
 	*
@@ -402,6 +432,35 @@ class ActionControler
 		}
 		return array('COLUMNS' => implode(",",$columns), 'VALUES' => implode(",",$values));
 	}
-
+    
+    /**
+    * Return the last actionId
+    * 
+    * @return bigint actionId
+    */
+    public function getLastActionId($actionLabel)
+    {
+        self::$db->connect();
+        $query = "select id from " . ACTIONS_TABLE
+            . " where label_action = '" . self::$db->protect_string_db($actionLabel) . "'"
+            . " order by id desc";
+        self::$db->query($query);
+        $queryResult = self::$db->fetch_object();
+        return $queryResult->id;
+    }
+    
+    public function saveCategoriesAssociation($actionId)
+    {
+        self::$db->connect();
+        self::$db->query("delete from " . ACTIONS_CATEGORIES_TABLE_NAME 
+            . " where action_id = '" . $actionId . "'"
+        );
+        for ($i=0;$i<count($_SESSION['m_admin']['action']['categoriesSelected']);$i++) {
+            self::$db->query("insert into " . ACTIONS_CATEGORIES_TABLE_NAME 
+                . " (action_id, category_id) VALUES (" 
+                . $actionId 
+                . ", '" . $_SESSION['m_admin']['action']['categoriesSelected'][$i] . "')"
+            );
+        }
+    }
 }
-?>

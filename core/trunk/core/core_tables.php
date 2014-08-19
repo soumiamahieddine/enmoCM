@@ -31,6 +31,9 @@
 if (! defined('ACTIONS_TABLE')) {
     define('ACTIONS_TABLE', 'actions');
 }
+if (! defined('ACTIONS_CATEGORIES_TABLE_NAME')) {
+    define('ACTIONS_CATEGORIES_TABLE_NAME', 'actions_categories');
+}
 if (! defined('AUTHORS_TABLE')) {
     define('AUTHORS_TABLE', 'authors');
 }
