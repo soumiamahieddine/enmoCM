@@ -1,29 +1,45 @@
 <?php
-/**
-* File : my_contact_up.php
+/*
+*    Copyright 2008,2009 Maarch
 *
-* Form to modify a contact
+*  This file is part of Maarch Framework.
 *
-* @package Maarch LetterBox 2.3
-* @version 2.0
-* @since 10/2005
-* @license GPL
-* @author  Claire Figueras  <dev@maarch.org>
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+/**
+* @brief  Form to modify a contact
+*
+*
+* @file
+* @author Claire Figueras <dev@maarch.org>
+* @date $date$
+* @version $Revision$
+* @ingroup admin
+*/
+
 $core_tools = new core_tools();
 $core_tools->load_lang();
-$core_tools->test_service('my_contacts', 'apps');
+$core_tools->test_admin('admin_contacts', 'apps');
 
-require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
-require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
-            ."class".DIRECTORY_SEPARATOR."class_lists.php";
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 
 $func = new functions();
-$list2 = new lists(); 
 
 if(isset($_GET['id']))
 {
-    $id = addslashes($func->wash($_GET['id'], "alphanum", _THE_CONTACT));
+    $id = addslashes($func->wash($_GET['id'], "alphanum", _CONTACT));
     $_SESSION['contact']['current_contact_id'] = $id;
 }else if ($_SESSION['contact']['current_contact_id'] <> ''){
 	$id = $_SESSION['contact']['current_contact_id'];
@@ -43,14 +59,14 @@ if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] =
 {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=my_contact_up&dir=my_contacts';
+$page_path = $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2_up';
 $page_label = _MODIFICATION;
-$page_id = "my_contact_up";
+$page_id = "contacts_v2_up";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 
 $contact = new contacts_v2();
-$contact->formcontact("up",$id, false);
+$contact->formcontact("up",$id);
 
 // GESTION DES ADDRESSES
 
@@ -210,73 +226,27 @@ for ($i = 0; $i < count($tab); $i ++) {
         }
     }
 }
-// $pageName = "contact_addresses";
-// $pageNameUp = "contact_addresses_up";
-// $pageNameAdd = "contact_addresses_add";
-// $pageNameDel = "contact_addresses_del";
-// $pageNameVal = "";
-// $tableName = $_SESSION['tablename']['contact_addresses'];
-// $pageNameBan = "";
-// $addLabel = _NEW_CONTACT_ADDRESS;
+$pageName = "contact_addresses";
+$pageNameUp = "contact_addresses_up";
+$pageNameAdd = "contact_addresses_add";
+$pageNameDel = "contact_addresses_del";
+$pageNameVal = "";
+$tableName = $_SESSION['tablename']['contact_addresses'];
+$pageNameBan = "";
+$addLabel = _NEW_CONTACT_ADDRESS;
 
-// $autoCompletionArray = array();
-// $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']
-//     . "index.php?display=true&page=contact_addresses_list_by_name";
-// $autoCompletionArray["number_to_begin"] = 1;
-// $list->admin_list(
-//     $tab, $i, '',
-//     'contact_id"', 'my_contact_up', 'my_contacts',
-//     'id', true, $pageNameUp, $pageNameVal, $pageNameBan,
-//     $pageNameDel, $pageNameAdd, $addLabel, FALSE, FALSE, _ALL_CONTACT_ADDRESSES,
-//     _A_CONTACT_ADDRESS, $_SESSION['config']['businessappurl']
-//     . 'static.php?filename=manage_contact_b.gif', false, true, true, true,
-//     $what, true, $autoCompletionArray
-// );
+$autoCompletionArray = array();
+$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']
+    . "index.php?display=true&page=contact_addresses_list_by_name";
+$autoCompletionArray["number_to_begin"] = 1;
+$list->admin_list(
+    $tab, $i, '',
+    'contact_id"', 'contacts_v2_up', 'contacts_v2',
+    'id', true, $pageNameUp, $pageNameVal, $pageNameBan,
+    $pageNameDel, $pageNameAdd, $addLabel, FALSE, FALSE, _ALL_CONTACT_ADDRESSES,
+    _A_CONTACT_ADDRESS, $_SESSION['config']['businessappurl']
+    . 'static.php?filename=manage_contact_b.gif', false, true, true, true,
+    $what, true, $autoCompletionArray
+);
 
-
-//List parameters
-    $paramsTab = array();
-    $paramsTab['bool_modeReturn'] = false;                                              //Desactivation du mode return (vs echo)
-    $paramsTab['pageTitle'] =  '';           //Titre de la page
-    $paramsTab['urlParameters'] = '&dir=my_contacts';                                   //parametre d'url supplementaire
-    $paramsTab['pagePicto'] = $_SESSION['config']['businessappurl']
-            ."static.php?filename=manage_contact_b.gif";                                //Image (pictogramme) de la page
-    $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
-    $paramsTab['bool_showSearchTools'] = true;                                          //Afficle le filtre alphabetique et le champ de recherche
-    $paramsTab['searchBoxAutoCompletionUrl'] = $_SESSION['config']['businessappurl']
-        ."index.php?display=true&page=contact_addresses_list_by_name";            //Script pour l'autocompletion
-    $paramsTab['searchBoxAutoCompletionMinChars'] = 2;                                  //Nombre minimum de caractere pour activer l'autocompletion (1 par defaut)
-    $paramsTab['bool_showAddButton'] = true;                                            //Affichage du bouton Nouveau
-    $paramsTab['addButtonLabel'] = _NEW_CONTACT_ADDRESS;                                   //Libellé du bouton Nouveau
-    // $paramsTab['addButtonLink'] = $_SESSION['config']['businessappurl']
-        // ."index.php?dir=my_contacts&page=my_contact_add";                            //Lien sur le bouton nouveau (1)
-    $paramsTab['addButtonScript'] = "window.top.location='".$_SESSION['config']['businessappurl']
-        ."index.php?page=contact_addresses_add&mycontact=Y'";                              //Action sur le bouton nouveau (2)
-
-    //Action icons array
-    $paramsTab['actionIcons'] = array();
-        //get start
-        $start = $list2->getStart();
-        
-        $update = array(
-                "script"        => "window.top.location='".$_SESSION['config']['businessappurl']
-                                        ."index.php?page=contact_addresses_up&mycontact=Y&id=@@id@@&what=".$what."&start=".$start."'",
-                "class"         =>  "change",
-                "label"         =>  _MODIFY,
-                "tooltip"       =>  _MODIFY
-                );
-        $delete = array(
-                "href"          => $_SESSION['config']['businessappurl']
-                                    ."index.php?page=contact_addresses_del&mycontact=Y&what=".$what."&start=".$start,
-                "class"         =>  "delete",
-                "label"         =>  _DELETE,
-                "tooltip"       =>  _DELETE,
-                "alertText"     =>  _REALLY_DELETE.": @@lastname@@ @@firstname@@ ?"
-                );
-        array_push($paramsTab['actionIcons'], $update);          
-        array_push($paramsTab['actionIcons'], $delete);
-    
-//Afficher la liste
-    echo '<br/>';
-    $list2->showList($tab, $paramsTab, 'id');
 ?>

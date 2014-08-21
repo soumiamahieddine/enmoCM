@@ -1240,3 +1240,90 @@ if (!defined('_CHOOSE_CATEGORY_ASSOCIATION_HELP')) define('_CHOOSE_CATEGORY_ASSO
 
 //SERVICE VIEW DOC HISTORY
 if (!defined('_VIEW_DOC_HISTORY')) define('_VIEW_DOC_HISTORY', 'View document history');
+
+//CONTACTS V2
+if (!defined('_MANAGE_CONTACTS_TYPES_DESC')) define( '_MANAGE_CONTACTS_TYPES_DESC','Manage contacts types');
+if (!defined('_MANAGE_CONTACTS_TYPES')) define( '_MANAGE_CONTACTS_TYPES','Manage contacts types');
+
+if (!defined('_MANAGE_CONTACTS_PURPOSES_DESC')) define( '_MANAGE_CONTACTS_PURPOSES_DESC','Manage contacts purposes');
+if (!defined('_MANAGE_CONTACTS_PURPOSES')) define( '_MANAGE_CONTACTS_PURPOSES','Manage contacts purposes');
+
+if (!defined('_MANAGE_CONTACTS_DESC')) define( '_MANAGE_CONTACTS_DESC','Manage contacts');
+if (!defined('_MANAGE_CONTACTS')) define( '_MANAGE_CONTACTS','Manage contacts');
+
+if (!defined('_VIEW_TREE_CONTACTS_DESC')) define( '_VIEW_TREE_CONTACTS_DESC','Contacts tree');
+if (!defined('_VIEW_TREE_CONTACTS')) define( '_VIEW_TREE_CONTACTS','Contacts tree');
+
+if (!defined('_CONTACT_TYPES_LIST')) define( '_CONTACT_TYPES_LIST','Contact types list');
+if (!defined('_DESC_CONTACT_TYPES')) define( '_DESC_CONTACT_TYPES','Contact type');
+if (!defined('_NEW_CONTACT_TYPE_ADDED')) define( '_NEW_CONTACT_TYPE_ADDED','Add new contact type');
+if (!defined('_ALL_CONTACT_TYPES')) define( '_ALL_CONTACT_TYPES','All types');
+if (!defined('_CONTACT_TYPE')) define( '_CONTACT_TYPE','Contact types');
+if (!defined('_CONTACT_TYPE_MISSING')) define( '_CONTACT_TYPE_MISSING','Contact type is missing');
+if (!defined('_CONTACT_TYPES')) define( '_CONTACT_TYPES','contact type(s)');
+if (!defined('_A_CONTACT_TYPE')) define( '_A_CONTACT_TYPE','a contact type');
+if (!defined('_NEW_CONTACT_TYPE')) define( '_NEW_CONTACT_TYPE','New contact type');
+if (!defined('_CONTACT_TYPE_MODIF')) define( '_CONTACT_TYPE_MODIF','Modify the contact type');
+if (!defined('_ID_CONTACT_TYPE_PB')) define( '_ID_CONTACT_TYPE_PB','There is a problem with contact type ID');
+if (!defined('_THE_CONTACT_TYPE')) define( '_THE_CONTACT_TYPE','The contact type');
+if (!defined('_CONTACT_TYPE_DEL')) define( '_CONTACT_TYPE_DEL','Deleting contact type');
+if (!defined('_DELETED_CONTACT_TYPE')) define( '_DELETED_CONTACT_TYPE','Contact type deleted');
+if (!defined('_WARNING_MESSAGE_DEL_CONTACT_TYPE')) define( '_WARNING_MESSAGE_DEL_CONTACT_TYPE','Caution :<br> When you delete a contact type, you must reaffect contact to a new contact type.');
+if (!defined('_CONTACT_TYPE_REAFFECT')) define( '_CONTACT_TYPE_REAFFECT','Reaffecting contacts');
+
+if (!defined('_CONTACT_PURPOSES_LIST')) define( '_CONTACT_PURPOSES_LIST','Purposes list');
+if (!defined('_DESC_CONTACT_PURPOSES')) define( '_DESC_CONTACT_PURPOSES','Purposes');
+if (!defined('_NEW_CONTACT_PURPOSE_ADDED')) define( '_NEW_CONTACT_PURPOSE_ADDED','Add a new purpose');
+if (!defined('_ALL_CONTACT_PURPOSES')) define( '_ALL_CONTACT_PURPOSES','All');
+if (!defined('_CONTACT_PURPOSE')) define( '_CONTACT_PURPOSE','Purpose');
+if (!defined('_CONTACT_PURPOSE_MISSING')) define( '_CONTACT_PURPOSE_MISSING','Purpose is missing');
+if (!defined('_CONTACT_PURPOSES')) define( '_CONTACT_PURPOSES','purpose(s)');
+if (!defined('_A_CONTACT_PURPOSE')) define( '_A_CONTACT_PURPOSE','a purpose');
+if (!defined('_NEW_CONTACT_PURPOSE')) define( '_NEW_CONTACT_PURPOSE','New purpose');
+if (!defined('_CONTACT_PURPOSE_MODIF')) define( '_CONTACT_PURPOSE_MODIF','Modify a purpose');
+if (!defined('_ID_CONTACT_PURPOSE_PB')) define( '_ID_CONTACT_PURPOSE_PB','There is a problem with purpose ID');
+if (!defined('_THE_CONTACT_PURPOSE')) define( '_THE_CONTACT_PURPOSE','The purpose');
+if (!defined('_CONTACT_PURPOSE_DEL')) define( '_CONTACT_PURPOSE_DEL','Deleting purpose');
+if (!defined('_DELETED_CONTACT_PURPOSE')) define( '_DELETED_CONTACT_PURPOSE','Purpose deleted');
+if (!defined('_CONTACT_PURPOSE_REAFFECT')) define( '_CONTACT_PURPOSE_REAFFECT','Reaffecting addresses');
+if (!defined('_WARNING_MESSAGE_DEL_CONTACT_PURPOSE')) define( '_WARNING_MESSAGE_DEL_CONTACT_PURPOSE','Caution :<br> When you delete a contact purpose, you must reaffect address to a new contact purpose.');
+
+if (!defined('_ADDRESSES')) define( '_ADDRESSES','address(es)');
+if (!defined('_DOC_S')) define( '_DOC_S','document(s)');
+if (!defined('_CONTACTS_CONFIRMATION')) define( '_CONTACTS_CONFIRMATION','Confirm the creation');
+if (!defined('_YOUR_CONTACT_LOOKS_LIKE_ANOTHER')) define( '_YOUR_CONTACT_LOOKS_LIKE_ANOTHER','<b>Your contact looks like to a contact already created :</b>');
+if (!defined('_CONFIRM_CREATE_CONTACT')) define( '_CONFIRM_CREATE_CONTACT','Do you confirm the creation of your contact ?');
+if (!defined('_CONFIRM_EDIT_CONTACT')) define( '_CONFIRM_EDIT_CONTACT','Do you confirm the modification of your contact ?');
+if (!defined('_CONTACTS_CONFIRMATION_MODIFICATION')) define( '_CONTACTS_CONFIRMATION_MODIFICATION','Confirmation of modification');
+
+if (!defined('_CREATE_BY')) define( '_CREATE_BY','Created by');
+if (!defined('_SOCIETY_SHORT')) define( '_SOCIETY_SHORT','Society short name');
+if (!defined('_CHOOSE_CONTACT_TYPES')) define( '_CHOOSE_CONTACT_TYPES','Choose contact type');
+
+if (!defined('_NEW_CONTACT_ADDRESS')) define( '_NEW_CONTACT_ADDRESS','Add a new address');
+if (!defined('_A_CONTACT_ADDRESS')) define( '_A_CONTACT_ADDRESS','an address');
+if (!defined('_ALL_CONTACT_ADDRESSES')) define( '_ALL_CONTACT_ADDRESSES','All addresses');
+if (!defined('_THE_CONTACT')) define( '_THE_CONTACT','The contact');
+
+if (!defined('_MANAGE_CONTACT_ADDRESSES')) define( '_MANAGE_CONTACT_ADDRESSES','<h2>Manage associated addresses</h2>');
+if (!defined('_DEPARTEMENT')) define( '_DEPARTEMENT','Department');
+if (!defined('_ADDITION_ADDRESS')) define( '_ADDITION_ADDRESS','Add an address');
+if (!defined('_THE_ADDRESS')) define( '_THE_ADDRESS','The address');
+if (!defined('_MODIFY_ADDRESS')) define( '_MODIFY_ADDRESS','The address');
+if (!defined('_CHOOSE_CONTACT_PURPOSES')) define( '_CHOOSE_CONTACT_PURPOSES','Choose a purpose');
+if (!defined('_WEBSITE')) define( '_WEBSITE','Website');
+if (!defined('_OCCUPANCY')) define( '_OCCUPANCY','Floor, office, door');
+if (!defined('_ADDRESS_ADDED')) define( '_ADDRESS_ADDED','Adress added');
+if (!defined('_ADD_ADDRESS')) define( '_ADD_ADDRESS','Add an address');
+if (!defined('_EDIT_ADDRESS')) define( '_EDIT_ADDRESS','Edit the address');
+if (!defined('_ADDRESS_EDITED')) define( '_ADDRESS_EDITED','Address edited');
+if (!defined('_DELETED_ADDRESS')) define( '_DELETED_ADDRESS','Address deleted');
+if (!defined('_ADDRESS_DEL')) define( '_ADDRESS_DEL','Removing an address');
+if (!defined('_WARNING_MESSAGE_DEL_CONTACT_ADDRESS')) define( '_WARNING_MESSAGE_DEL_CONTACT_ADDRESS','Avertissement :<br> La suppression d&rsquo;une adresse entraine la r&eacute;affectation des documents &agrave une nouvelle adresse.');
+if (!defined('_CONTACT_ADDRESS_REAFFECT')) define( '_CONTACT_ADDRESS_REAFFECT','Reaffecting documents');
+if (!defined('_NEW_ADDRESS')) define( '_NEW_ADDRESS','New address');
+if (!defined('_CHOOSE_CONTACT_ADDRESS')) define( '_CHOOSE_CONTACT_ADDRESS','Choose an address');
+
+if (!defined('_SALUTATION')) define( '_SALUTATION','Salutation');
+if (!defined('_SALUTATION_HEADER')) define( '_SALUTATION_HEADER','Salutation header');
+if (!defined('_SALUTATION_FOOTER')) define( '_SALUTATION_FOOTER','Salutation footer');

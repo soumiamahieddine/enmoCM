@@ -118,6 +118,10 @@ class business_app_tools extends dbquery
             $_SESSION['tablename']['doctypes_indexes'] = (string) $tablename->doctypes_indexes;
             $_SESSION['tablename']['saved_queries'] = (string) $tablename->saved_queries;
             $_SESSION['tablename']['contacts'] = (string) $tablename->contacts;
+            $_SESSION['tablename']['contacts_v2'] = (string) $tablename->contacts_v2;
+            $_SESSION['tablename']['contact_types'] = (string) $tablename->contact_types;
+            $_SESSION['tablename']['contact_purposes'] = (string) $tablename->contact_purposes;
+            $_SESSION['tablename']['contact_addresses'] = (string) $tablename->contact_addresses;
             
             $_SESSION['config']['tmppath'] = $_SESSION['config']['corepath'] . 'apps' 
                 . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
@@ -256,6 +260,15 @@ class business_app_tools extends dbquery
             $_SESSION['history']['docserverstypesdel'] = (string) $history->docserverstypesdel;
             $_SESSION['history']['docserverstypesallow'] = (string) $history->docserverstypesallow;
             $_SESSION['history']['docserverstypesban'] = (string) $history->docserverstypesban;
+            $_SESSION['history']['contact_types_del'] = (string) $history->contact_types_del;
+            $_SESSION['history']['contact_types_add'] = (string) $history->contact_types_add;
+            $_SESSION['history']['contact_types_up'] = (string) $history->contact_types_up;
+            $_SESSION['history']['contact_purposes_del'] = (string) $history->contact_purposes_del;
+            $_SESSION['history']['contact_purposes_add'] = (string) $history->contact_purposes_add;
+            $_SESSION['history']['contact_purposes_up'] = (string) $history->contact_purposes_up;
+            $_SESSION['history']['contact_addresses_del'] = (string) $history->contact_addresses_del;
+            $_SESSION['history']['contact_addresses_add'] = (string) $history->contact_addresses_add;
+            $_SESSION['history']['contact_addresses_up'] = (string) $history->contact_addresses_up;
             $_SESSION['history_keywords'] = array();
             foreach ($xmlconfig->KEYWORDS as $keyword) {
                 $tmp = (string) $keyword->label;
@@ -635,6 +648,40 @@ class business_app_tools extends dbquery
                   . 'architecture' . DIRECTORY_SEPARATOR . 'types'
                   . DIRECTORY_SEPARATOR . $name . '.php';
 
+            return $path;
+        } else if ($name == 'contact_types' || $name == 'contact_types_list_by_name'
+            || $name == 'contact_types_up' || $name == 'contact_types_del'
+        ) {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
+                  . 'contacts' . DIRECTORY_SEPARATOR . 'contact_types'
+                  . DIRECTORY_SEPARATOR . $name . '.php';
+            return $path;
+        } else if ($name == 'contact_purposes' || $name == 'contact_purposes_list_by_name'
+            || $name == 'contact_purposes_up' || $name == 'contact_purposes_del'
+        ) {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
+                  . 'contacts' . DIRECTORY_SEPARATOR . 'contact_purposes'
+                  . DIRECTORY_SEPARATOR . $name . '.php';
+            return $path;
+        } else if ($name == 'contacts_v2' || $name == 'contacts_v2_list_by_name'
+            || $name == 'contacts_v2_up' || $name == 'contacts_v2_del' || $name == 'contacts_v2_add'
+            || $name == 'contacts_v2_up_db' || $name == 'contacts_v2_confirm'
+        ) {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
+                  . 'contacts' . DIRECTORY_SEPARATOR . 'contacts_v2'
+                  . DIRECTORY_SEPARATOR . $name . '.php';
+            return $path;
+        } else if ($name == 'contact_addresses' || $name == 'contact_addresses_list_by_name'
+            || $name == 'contact_addresses_up' || $name == 'contact_addresses_del' || $name == 'contact_addresses_add'
+            || $name == 'contact_addresses_up_db'
+        ) {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
+                  . 'contacts' . DIRECTORY_SEPARATOR . 'contact_addresses'
+                  . DIRECTORY_SEPARATOR . $name . '.php';
             return $path;
         } else {
             return false;

@@ -15,8 +15,16 @@ $core_tools = new core_tools();
 $core_tools->load_lang();
 $core_tools->test_service('my_contacts', 'apps');
 
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts.php");
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 
-$contact = new contacts();
-$contact->addupcontact($_POST['mode'], false);
+$contact = new contacts_v2();
+
+if(isset($_GET['confirm']) &&  $_GET['confirm'] <> ''){
+	$confirm = 'Y';
+	$_POST['mode'] = $_GET['mode'];
+} else {
+	$confirm = 'N';
+}
+
+$contact->addupcontact($_POST['mode'], false, $confirm, 'Y');
 ?>

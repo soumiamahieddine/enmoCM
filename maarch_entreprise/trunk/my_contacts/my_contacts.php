@@ -32,10 +32,13 @@
 require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php";
 require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
             ."class".DIRECTORY_SEPARATOR."class_lists.php";
+require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
+            ."class".DIRECTORY_SEPARATOR."class_contacts_v2.php";
 
 $core_tools = new core_tools();
 $request    = new request();
 $list       = new lists();   
+$contact    = new contacts_v2();
 
  $parameters = '';
  if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) $parameters .= '&order='.$_REQUEST['order'];
@@ -76,16 +79,16 @@ $list       = new lists();
     <?php
 } else {
 //Table
-    $table = $_SESSION['tablename']['contacts'];
+    $table = $_SESSION['tablename']['contacts_v2'];
     $select[$table]= array(); 
     
 //Fields
-    array_push($select[$table],"contact_id", "is_corporate_person", "society", "lastname", "firstname", "enabled");
+    array_push($select[$table],"contact_id", "is_corporate_person", "contact_type", "society","lastname","firstname", 'user_id');
     
 //Where clause
     $where_tab = array();
     //
-    $where_tab[] = "(user_id  = '".$_SESSION['user']['UserId']."' and enabled = 'Y')";
+     $where_tab[] = "(user_id  = '".$_SESSION['user']['UserId']."')";
     //Filtre alphabetique et champ de recherche
     $what = $list->getWhatSearch();
     if (!empty($what)) {
@@ -131,6 +134,18 @@ $list       = new lists();
                     $tab[$i][$j]["show"]=true;
                     $tab[$i][$j]["order"]= "contact_id";
                 }
+                if($tab[$i][$j][$value]=="contact_type")
+                {
+                    $tab[$i][$j]["contact_type"]= $tab[$i][$j]['value'];
+                    $tab[$i][$j]["value"]= $contact->get_label_contact($tab[$i][$j]['value'], $_SESSION['tablename']['contact_types']);
+                    $tab[$i][$j]["label"]= _CONTACT_TYPE;
+                    $tab[$i][$j]["size"]="5";
+                    $tab[$i][$j]["label_align"]="left";
+                    $tab[$i][$j]["align"]="left";
+                    $tab[$i][$j]["valign"]="bottom";
+                    $tab[$i][$j]["show"]=true;
+                    $tab[$i][$j]["order"]= "contact_type";
+                }
                 if($tab[$i][$j][$value]=="is_corporate_person")
                 {
                     $tab[$i][$j]['value']= ($tab[$i][$j]['value'] == 'Y')? _YES : _NO;
@@ -147,7 +162,7 @@ $list       = new lists();
                     $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
                     $tab[$i][$j]["society"]=$tab[$i][$j]['value'];
                     $tab[$i][$j]["label"]=_SOCIETY;
-                    $tab[$i][$j]["size"]="25";
+                    $tab[$i][$j]["size"]="15";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
                     $tab[$i][$j]["valign"]="bottom";
@@ -170,24 +185,24 @@ $list       = new lists();
                 {
                     $tab[$i][$j]["firstname"]= $tab[$i][$j]['value'];
                     $tab[$i][$j]["label"]=_FIRSTNAME;
-                    $tab[$i][$j]["size"]="20";
+                    $tab[$i][$j]["size"]="15";
                     $tab[$i][$j]["label_align"]="center";
                     $tab[$i][$j]["align"]="center";
                     $tab[$i][$j]["valign"]="bottom";
                     $tab[$i][$j]["show"]=true;
                     $tab[$i][$j]["order"]= "firstname";
                 }
-                if($tab[$i][$j][$value]=="enabled")
-				{
-					$tab[$i][$j]["enabled"]= $tab[$i][$j]['value'];
-					$tab[$i][$j]["label"]=_STATUS;
-					$tab[$i][$j]["size"]="1";
-					$tab[$i][$j]["label_align"]="left";
-					$tab[$i][$j]["align"]="center";
-					$tab[$i][$j]["valign"]="bottom";
-					$tab[$i][$j]["show"]=false;
-					$tab[$i][$j]["order"]='enabled';
-				}
+                if($tab[$i][$j][$value]=="user_id")
+                {
+                    $tab[$i][$j]["user_id"]= $tab[$i][$j]['value'];
+                    $tab[$i][$j]["label"]=_CREATE_BY;
+                    $tab[$i][$j]["size"]="15";
+                    $tab[$i][$j]["label_align"]="center";
+                    $tab[$i][$j]["align"]="center";
+                    $tab[$i][$j]["valign"]="bottom";
+                    $tab[$i][$j]["show"]=true;
+                    $tab[$i][$j]["order"]= "user_id";
+                }
             }
         }
     } 

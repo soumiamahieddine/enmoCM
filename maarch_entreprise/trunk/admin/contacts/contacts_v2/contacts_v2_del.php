@@ -31,7 +31,7 @@
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
-$core_tools->test_service('my_contacts', 'apps');
+$core_tools->test_admin('admin_contacts', 'apps');
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 
  /****************Management of the location bar  ************/
@@ -46,9 +46,9 @@ if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] =
     $level = $_REQUEST['level'];
 }
 
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=my_contact_del&dir=my_contacts';
+$page_path = $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2_del';
 $page_label = _DELETION;
-$page_id = "my_contact_del";
+$page_id = "contacts_v2_del";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 $func = new functions();
 $db = new dbquery();
@@ -91,7 +91,7 @@ if(isset($_REQUEST['valid']))
         }
         ?>
         <script type="text/javascript">
-            window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&dir=my_contacts&load&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
+            window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2&order='.$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>";
         </script>
         <?php
 
@@ -103,6 +103,6 @@ if(isset($_REQUEST['valid']))
         $contact->delcontact($s_id);
     }
 } else {
-    $contact->delcontact($s_id, false);
+    $contact->delcontact($s_id);
 }
 ?>

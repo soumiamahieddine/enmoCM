@@ -138,6 +138,62 @@ a:hover {
     display: block;
 }
 
+#admin_contact_types {
+    background:  url(static.php?filename=manage_doctypes.gif) no-repeat 2px top;
+    width: 315px;
+    min-height: 110px;
+    float: left;
+    padding-top: 0px;
+    padding-right: 18px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    margin: 0px 0px 15px;
+    position: relative;
+    display: block;
+}
+
+#admin_contact_purposes {
+    background:  url(static.php?filename=manage_structures.gif) no-repeat 2px top;
+    width: 315px;
+    min-height: 110px;
+    float: left;
+    padding-top: 0px;
+    padding-right: 18px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    margin: 0px 0px 15px;
+    position: relative;
+    display: block;
+}
+
+#admin_contacts_v2 {
+    background:  url(static.php?filename=manage_subfolders.gif) no-repeat 2px top;
+    width: 315px;
+    min-height: 110px;
+    float: left;
+    padding-top: 0px;
+    padding-right: 18px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    margin: 0px 0px 15px;
+    position: relative;
+    display: block;
+}
+
+#view_tree_contacts {
+    background:  url(static.php?filename=manage_architecture.gif) no-repeat 2px top;
+    width: 315px;
+    min-height: 110px;
+    float: left;
+    padding-top: 0px;
+    padding-right: 18px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    margin: 0px 0px 15px;
+    position: relative;
+    display: block;
+}
+
 /*admin docservers CSS*/
 #admin_docservers_locations {
     background:  url(static.php?filename=maarch_box_tmp.gif) no-repeat 2px top;

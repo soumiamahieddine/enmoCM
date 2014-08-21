@@ -177,7 +177,8 @@
    <id>admin_contacts</id>
    <name>_ADMIN_CONTACTS</name>
    <comment>_ADMIN_CONTACTS_DESC</comment>
-   <servicepage>index.php?page=contacts&amp;admin=contacts</servicepage>
+   <!-- <servicepage>index.php?page=contacts&amp;admin=contacts</servicepage> -->
+   <servicepage>index.php?page=admin_contacts&amp;admin=contacts</servicepage>
    <servicetype>admin</servicetype>
    <style>admin_contacts</style>
    <system_service>false</system_service>

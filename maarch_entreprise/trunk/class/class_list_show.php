@@ -887,7 +887,7 @@ class list_show extends functions
             $start = 0;
         }
         $param_comp .= "&amp;start=".$start;
-        if($name == "structures" || $name == "subfolders" || $name == "types")
+        if($name == "structures" || $name == "subfolders" || $name == "types"  || $name == "contact_types" || $name == "contact_purposes" || $name == "contacts_v2" || $name == "contacts_v2_up")
         {
             $link = $_SESSION['config']['businessappurl']."index.php?page=".$name;
         }
@@ -1095,7 +1095,7 @@ class list_show extends functions
             }
             elseif($bool_simple_list)
             {
-                if($page_name_up == "contrat_up" || $name == 'structures')
+                if($page_name_up == "contrat_up" || $name == 'structures' || $name == 'contacts_v2')
                 {
                     $height = "750";
                 }
@@ -1107,7 +1107,7 @@ class list_show extends functions
                 {
                     $height = "250";
                 }
-                if($admin == "types" || $admin == "structures" || $admin == "subfolders")
+                if($admin == "types" || $admin == "structures" || $admin == "subfolders" || $admin == "contact_types" || $admin == "contact_purposes" || $admin == "contacts_v2" || $admin == "contact_addresses")
                 {
                     //$path_root = $_SESSION['config']['businessappurl']."admin/architecture/".$admin."/";
                     $path_root = $_SESSION['config']['businessappurl']."index.php?display=true";
@@ -1131,7 +1131,7 @@ class list_show extends functions
                     <tfoot>
                          <tr>
                             <td colspan="<?php  if($name <> 'types'){ echo'7';} else{ echo '5'; }
-                            ?>" class="price"><span class="add clearfix"><a href="javascript://" onclick="window.open('<?php  echo $path_root; if($name <> 'types'){ echo '&amp;page='.$page_name_up;?>&amp;mode=add<?php  } else{ echo  '&amp;page='.$page_name_add; }?>','add','height=250, width=500, resizable=yes, scrollbars=yes');" ><span><?php  echo $label_add;?></span></a></span></td>
+                            ?>" class="price"><span class="add clearfix"><a href="javascript://" onclick="window.open('<?php  echo $path_root; if($name <> 'types' && $name <> 'contacts_v2' && $name <> 'contact_addresses'){ echo '&amp;page='.$page_name_up;?>&amp;mode=add<?php  } else{ echo  '&amp;page='.$page_name_add; }?>','add','height=250, width=500, resizable=yes, scrollbars=yes');" ><span><?php  echo $label_add;?></span></a></span></td>
                         </tr>
                     </tfoot>
                     <?php
@@ -1389,7 +1389,7 @@ class list_show extends functions
                         }
 
 
-                if($admin == "types" || $admin == "structures" || $admin == "subfolders")
+                if($admin == "types" || $admin == "structures" || $admin == "subfolders" || $admin == "contact_types" || $admin == "contact_purposes" || $admin == "contacts_v2" || $admin == "contact_addresses")
                 {
                     $path_up2 = $_SESSION['config']['businessappurl']."index.php?display=true&amp;page=".$page_name_up."&amp;mode=up&amp;id=".$result[$theline][0][$key];
                     $path_del2 = $_SESSION['config']['businessappurl']."index.php?display=true&amp;page=".$page_name_del."&amp;id=".$result[$theline][0][$key];

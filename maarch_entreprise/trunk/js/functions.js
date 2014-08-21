@@ -76,6 +76,42 @@ function repost(php_file,update_divs,fields,action,timeout)
             });
     };
 
+    /**
+    * List used for autocompletion and set id in hidden input
+    *
+    */
+    var initList_hidden_input = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value)
+    {
+        new Ajax.Autocompleter(
+            idField,
+            idList,
+            theUrlToListScript,
+            {
+                paramName: paramNameSrv,
+                minChars: minCharsSrv,
+                afterUpdateElement: function (text, li){
+                    $(new_value).value = li.id;
+                }
+            });
+    };
+
+    var initList_hidden_input_before = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, previous_name, previous_field)
+    {
+        new Ajax.Autocompleter(
+            idField,
+            idList,
+            theUrlToListScript,
+            {
+                paramName: paramNameSrv,
+                minChars: minCharsSrv,
+                callback: function (element, entry){
+					return entry + "&"+previous_name+"=" + $(previous_field).value; 
+			    },
+                afterUpdateElement: function (text, li){
+                    $(new_value).value = li.id;
+                }
+            });
+    };
 
 /*********** Init vars for the calendar ****************/
     var allMonth=[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
