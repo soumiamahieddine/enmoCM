@@ -28,7 +28,9 @@
 * @version $Revision$
 * @ingroup admin
 */
-
+require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR  . 'class' . DIRECTORY_SEPARATOR 
+    . 'class_business_app_tools.php';
 $admin = new core_tools();
 $admin->test_admin('admin_contacts', 'apps');
 $func = new functions();
@@ -36,9 +38,10 @@ $db = new dbquery();
 $db->connect();
 $db2 = new dbquery();
 $db2->connect();
+$business = new business_app_tools();
 
 //delete old contacts with enabled = 'N'
-$db->query("delete from contacts where enabled = 'N'");
+// $db->query("delete from contacts where enabled = 'N'");
 
 $_SESSION['m_admin'] = array();
 /****************Management of the location bar  ************/
@@ -84,24 +87,25 @@ echo '<center>';
 //TODO: ENABLE THIS FUNCTION FOR ALL COLLECTION USING CONTACTS
 
 //update NULL to ''
-$db->query("UPDATE contacts SET user_id='' WHERE user_id IS NULL");
+$db->query("UPDATE contacts_v2 SET user_id='' WHERE user_id IS NULL");
 
 //duplicates by society
-$selectDuplicatesBySociety = "SELECT contact_id, user_id, society, lower(society) as lowsoc, "
-    . "is_corporate_person, lastname, firstname, "
-    . "address_num, address_street, address_town "
-    . "from contacts "
-    . "WHERE (contact_type = 'letter' or contact_type is null or contact_type = '') and user_id='' and  lower(society) in ("
-    . "SELECT lower(society) FROM contacts GROUP BY lower(society), contact_type, user_id "
-    . "     HAVING Count(*) > 1 and lower(society) <> '' and user_id='' and (contact_type = 'letter' or contact_type is null or contact_type = '')) "
+$selectDuplicatesBySociety = "SELECT contact_id, user_id, society, lower(society) as lowsoc, society_short,"
+    . "is_corporate_person, lastname, firstname "
+    // . "address_num, address_street, address_town "
+    . "from contacts_v2 "
+    . "WHERE user_id='superadmin' and  lower(society) in ("
+    . "SELECT lower(society) FROM contacts_v2 GROUP BY lower(society), user_id "
+    . "     HAVING Count(lower(society)) > 1 and lower(society) <> '' and user_id='superadmin' ) "
     . "order by lower(society)";
 $htmlTabSoc = '<table>';
 $htmlTabSoc .= '<CAPTION>' . _DUPLICATES_BY_SOCIETY . '</CAPTION>';
 $htmlTabSoc .= '<tr>';
 $htmlTabSoc .= '<th>&nbsp;</th>';
 $htmlTabSoc .= '<th>' . _ID . '</th>';
-$htmlTabSoc .= '<th>' . _PRIVATE . '</th>';
+$htmlTabSoc .= '<th>' . _IS_PRIVATE . '</th>';
 $htmlTabSoc .= '<th>' . _SOCIETY . '</th>';
+$htmlTabSoc .= '<th>' . _SOCIETY_SHORT . '</th>';
 $htmlTabSoc .= '<th>' . _IS_CORPORATE_PERSON . '</th>';
 $htmlTabSoc .= '<th>' . _LASTNAME . '</th>';
 $htmlTabSoc .= '<th>' . _FIRSTNAME . '</th>';
@@ -155,12 +159,10 @@ while($lineDoublSoc = $db->fetch_object()) {
         $htmlTabSoc .= '<td>' . $lineDoublSoc->contact_id . '</td>';
         $htmlTabSoc .= '<td>' . $is_private. '</td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->society . '</td>';
+        $htmlTabSoc .= '<td align="center">' . $lineDoublSoc->society_short . '</td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->is_corporate_person . '</td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->lastname . '</td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->firstname . '</td>';
-        $htmlTabSoc .= '<td>' . $lineDoublSoc->address_num;
-        $htmlTabSoc .= ' ' . $lineDoublSoc->address_street;
-        $htmlTabSoc .= ' ' . $lineDoublSoc->address_town . '</td>';
         $htmlTabSoc .= '<td><img onclick="loadDeleteContactDiv('
             . $lineDoublSoc->contact_id . ', \'' 
             . addslashes($lineDoublSoc->society) . '\', \'\');" src="'
@@ -173,7 +175,7 @@ while($lineDoublSoc = $db->fetch_object()) {
             . '" name="deleteContactDiv_' . $lineDoublSoc->contact_id
             . '" style="display: none; border-bottom: solid 1px black; '
             . 'background-color: #FFF;">';
-        $htmlTabSoc .= '<td style="background-color: white;" colspan="8">';
+        $htmlTabSoc .= '<td style="background-color: white;" colspan="9">';
         $htmlTabSoc .= '<div id="divDeleteContact_' . $lineDoublSoc->contact_id
             . '" align="center" style="color: grey;" width="100%">';
         $htmlTabSoc .= '<img width="10%" style="background-color: white; '
@@ -185,7 +187,7 @@ while($lineDoublSoc = $db->fetch_object()) {
             . '" name="docList_' . $lineDoublSoc->contact_id
             . '" style="display: none; border-bottom: solid 1px black; '
             . 'background-color: #FFF;">';
-        $htmlTabSoc .= '<td style="background-color: white;" colspan="8">';
+        $htmlTabSoc .= '<td style="background-color: white;" colspan="9">';
         $htmlTabSoc .= '<div id="divDocList_' . $lineDoublSoc->contact_id
             . '" align="center" style="color: grey;" width="100%">';
         $htmlTabSoc .= '<img width="10%" style="background-color: white; '
@@ -204,22 +206,23 @@ if ($cptSoc == 0) {
 }
 /***********************************************************************/
 //duplicates by name
-$selectDuplicatesByName = "SELECT contact_id, lower(lastname||' '||firstname) as lastname_firstname, society, "
-    . "is_corporate_person, lastname, firstname, "
-    . "address_num, address_street, address_town "
-    . "from contacts "
-    . "WHERE (contact_type = 'letter' or contact_type is null or contact_type = '') and  lower(lastname||' '||firstname) in ("
-    . "SELECT lower(lastname||' '||firstname) as lastname_firstname FROM contacts GROUP BY lastname_firstname, contact_type "
-    . "     HAVING Count(*) > 1 and lower(lastname||' '||firstname) <> ' ' and  (contact_type = 'letter' or contact_type is null or contact_type = '')) "
+$selectDuplicatesByName = "SELECT contact_id, lower(lastname||' '||firstname) as lastname_firstname, society, society_short,"
+    . "is_corporate_person, lastname, firstname, title "
+    . "from contacts_v2 "
+    . "WHERE lower(lastname||' '||firstname) in ("
+    . "SELECT lower(lastname||' '||firstname) as lastname_firstname FROM contacts_v2 GROUP BY lastname_firstname, contact_type "
+    . "     HAVING Count(lower(lastname||' '||firstname)) > 1 and lower(lastname||' '||firstname) <> ' ') "
     . "order by lower(lastname||' '||firstname)";
 $htmlTabName = '<table>';
 $htmlTabName .= '<CAPTION>' . _DUPLICATES_BY_NAME . '</CAPTION>';
 $htmlTabName .= '<tr>';
 $htmlTabName .= '<th>&nbsp;</th>';
 $htmlTabName .= '<th>' . _ID . '</th>';
+$htmlTabName .= '<th>' . _TITLE2 . '</th>';
 $htmlTabName .= '<th>' . _LASTNAME . '</th>';
 $htmlTabName .= '<th>' . _FIRSTNAME . '</th>';
 $htmlTabName .= '<th>' . _SOCIETY . '</th>';
+$htmlTabName .= '<th>' . _SOCIETY_SHORT . '</th>';
 $htmlTabName .= '<th>' . _IS_CORPORATE_PERSON . '</th>';
 $htmlTabName .= '<th>' . _ADDRESS . '</th>';
 $htmlTabName .= '<th>&nbsp;</th>';
@@ -263,9 +266,11 @@ while($lineDoublName = $db->fetch_object()) {
             . _IS_ATTACHED_TO_DOC . '" onclick="loadDocList('
             . $lineDoublName->contact_id . ');" style="cursor: pointer;"/></td>';
         $htmlTabName .= '<td>' . $lineDoublName->contact_id . '</td>';
+        $htmlTabName .= '<td>' . $business->get_label_title($lineDoublName->title) . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->lastname . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->firstname . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->society . '</td>';
+        $htmlTabName .= '<td>' . $lineDoublName->society_short . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->is_corporate_person . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->address_num;
         $htmlTabName .= ' ' . $lineDoublName->address_street;
@@ -294,7 +299,7 @@ while($lineDoublName = $db->fetch_object()) {
             . '" name="docList_' . $lineDoublName->contact_id
             . '" style="display: none; border-bottom: solid 1px black; '
             . 'background-color: #FFF;">';
-        $htmlTabName .= '<td style="background-color: white;" colspan="8">';
+        $htmlTabName .= '<td style="background-color: white;" colspan="9">';
         $htmlTabName .= '<div id="divDocList_' . $lineDoublName->contact_id
             . '" align="center" style="color: grey;" width="100%">';
         $htmlTabName .= '<img width="10%" style="background-color: white; '

@@ -212,7 +212,7 @@ class contacts_v2 extends dbquery
                     if($_SESSION['user']['UserId'] == 'superadmin'){
                         $entity_id = 'SUPERADMIN';
                     } else {
-                        $entity_id = $_SESSION['user']['primaryentity']['ID'];
+                        $entity_id = $_SESSION['user']['primaryentity']['id'];
                     }
                     $query = 'INSERT INTO ' . $_SESSION['tablename']['contacts_v2']
                            . ' ( contact_type, lastname , firstname , society , society_short, function , '
@@ -1336,7 +1336,7 @@ class contacts_v2 extends dbquery
                     if($_SESSION['user']['UserId'] == 'superadmin'){
                         $entity_id = 'SUPERADMIN';
                     } else {
-                        $entity_id = $_SESSION['user']['primaryentity']['ID'];
+                        $entity_id = $_SESSION['user']['primaryentity']['id'];
                     }
                     $query = 'INSERT INTO ' . $_SESSION['tablename']['contact_addresses']
                            . ' (  contact_id, contact_purpose_id, departement, lastname , firstname , function , '

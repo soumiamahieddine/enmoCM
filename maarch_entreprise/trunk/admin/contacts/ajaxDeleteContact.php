@@ -8,7 +8,7 @@ $db->connect();
 $return = '';
 $status = 0;
 if (isset($_REQUEST['contactId'])) {
-    $deleteContactQuery = "delete from contacts  where contact_id = " 
+    $deleteContactQuery = "delete from contacts_v2  where contact_id = " 
         . $_REQUEST['contactId'];
     //echo $_REQUEST['contactId'] . ' ' . $_REQUEST['replacedContactId'];
     if ($_REQUEST['replacedContactId'] == '') {

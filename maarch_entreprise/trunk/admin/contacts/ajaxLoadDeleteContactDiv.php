@@ -7,28 +7,26 @@ $db = new dbquery();
 $db->connect();
 $return = '';
 if ($_REQUEST['society_label'] <> '') {
-    $selectDuplicates = "SELECT contact_id, society, lower(society) as lowsoc, "
-        . "is_corporate_person, lastname, firstname, "
-        . "address_num, address_street, address_town "
-        . "from contacts "
-        . "WHERE (contact_type = 'letter' or contact_type is null or contact_type = '') and lower(society) in ("
-        . "SELECT lower(society) FROM contacts GROUP BY lower(society) "
-        . "     HAVING Count(*) > 1 and lower(society) <> '') and contact_id <> "
+    $selectDuplicates = "SELECT contact_id, user_id, society, lower(society) as lowsoc, society_short,"
+        . "is_corporate_person, lastname, firstname "
+        . "from contacts_v2 "
+        . "WHERE lower(society) in ("
+        . "SELECT lower(society) FROM contacts_v2 GROUP BY lower(society) "
+        . "     HAVING Count(lower(society)) > 1 and lower(society) <> '' ) and contact_id <> "
         . $_REQUEST['contact_id'] . " and lower(society) = '" 
         . mb_strtolower($db->protect_string_db($_REQUEST['society_label']), 'utf-8') . "' "
         . "order by lower(society)";
 }
 if ($_REQUEST['name'] <> '') {
-    $selectDuplicates = "SELECT contact_id, lower(lastname||' '||firstname) as lastname_firstname, society, "
-        . "is_corporate_person, lastname, firstname, "
-        . "address_num, address_street, address_town "
-        . "from contacts "
-        . "WHERE (contact_type = 'letter' or contact_type is null or contact_type = '') and  lower(lastname||' '||firstname) in ("
-        . "SELECT lower(lastname||' '||firstname) as lastname_firstname FROM contacts GROUP BY lastname_firstname "
-        . "     HAVING Count(*) > 1 and lower(lastname||' '||firstname) <> ' ') and contact_id <> "
+    $selectDuplicates = "SELECT contact_id, lower(lastname||' '||firstname) as lastname_firstname, society, society_short,"
+    . "is_corporate_person, lastname, firstname, title "
+    . "from contacts_v2 "
+    . "WHERE lower(lastname||' '||firstname) in ("
+    . "SELECT lower(lastname||' '||firstname) as lastname_firstname FROM contacts_v2 GROUP BY lastname_firstname, contact_type "
+    . "     HAVING Count(lower(lastname||' '||firstname)) > 1 and lower(lastname||' '||firstname) <> ' ') and contact_id <> "
         . $_REQUEST['contact_id'] . " and lower(lastname||' '||firstname) = '" 
         . mb_strtolower($db->protect_string_db($_REQUEST['name']), 'utf-8') . "' "
-        . "order by lower(lastname||' '||firstname)";
+    . "order by lower(lastname||' '||firstname)";
 }
 if (isset($_REQUEST['contact_id'])) {
     //test if res attached to the contact

@@ -172,7 +172,9 @@ if (isset($_REQUEST['valid'])) {
 					);
 
 				}
-				$_SESSION['error'] .= _NEW_CONTACT_PURPOSE . " : " . $desc . "<br/>";
+				if($mode <> 'popup'){
+					$_SESSION['error'] .= _NEW_CONTACT_PURPOSE . " : " . $desc . "<br/>";
+				}
 			}
 		}
 	}
