@@ -33,6 +33,7 @@ CREATE TABLE actions
   history character(1) NOT NULL DEFAULT 'N'::bpchar,
   origin character varying(255) NOT NULL DEFAULT 'apps'::bpchar,
   create_id  character(1) NOT NULL DEFAULT 'N'::bpchar,
+  category_id character varying(255),
   CONSTRAINT actions_pkey PRIMARY KEY (id)
 )
 WITH (OIDS=FALSE);
@@ -1528,6 +1529,97 @@ CREATE TABLE contacts_res
   contact_id character varying(128) NOT NULL
  );
 
+-- contacts v2
+CREATE SEQUENCE contact_types_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 100
+  CACHE 1;
+
+CREATE TABLE contact_types 
+(
+  id bigint NOT NULL DEFAULT nextval('contact_types_id_seq'::regclass),
+  label character varying(255) NOT NULL,
+  CONSTRAINT contact_types_pkey PRIMARY KEY  (id)
+) WITH (OIDS=FALSE);
+
+CREATE SEQUENCE contact_v2_id_seq
+  INCREMENT 1
+  MINVALUE 14
+  MAXVALUE 9223372036854775807
+  START 200
+  CACHE 1;
+
+CREATE TABLE contacts_v2 
+(
+  contact_id bigint NOT NULL DEFAULT nextval('contact_v2_id_seq'::regclass),
+  contact_type bigint NOT NULL,
+  is_corporate_person character(1) DEFAULT 'Y'::bpchar,
+  society character varying(255),
+  society_short character varying(32),
+  firstname character varying(255),
+  lastname character varying(255),
+  title character varying(255),
+  function character varying(255),
+  other_data character varying(255),
+  user_id character varying(255) NOT NULL,
+  entity_id character varying(32) NOT NULL,
+  creation_date timestamp without time zone NOT NULL,
+  update_date timestamp without time zone,
+  CONSTRAINT contacts_v2_pkey PRIMARY KEY  (contact_id)
+) WITH (OIDS=FALSE);
+
+CREATE SEQUENCE contact_purposes_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 100
+  CACHE 1;
+
+CREATE TABLE contact_purposes 
+(
+  id bigint NOT NULL DEFAULT nextval('contact_purposes_id_seq'::regclass),
+  label character varying(255) NOT NULL,
+  CONSTRAINT contact_purposes_pkey PRIMARY KEY  (id)
+) WITH (OIDS=FALSE);
+
+CREATE SEQUENCE contact_addresses_id_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 100
+  CACHE 1;
+
+CREATE TABLE contact_addresses 
+(
+  id bigint NOT NULL DEFAULT nextval('contact_addresses_id_seq'::regclass),
+  contact_id bigint NOT NULL,
+  contact_purpose_id bigint DEFAULT 1,
+  departement character varying(255),
+  firstname character varying(32),
+  lastname character varying(255),
+  title character varying(255),
+  function character varying(255),
+  occupancy character varying(1024),
+  address_num character varying(32)  ,
+  address_street character varying(255),
+  address_complement character varying(255),
+  address_town character varying(255),
+  address_postal_code character varying(255),
+  address_country character varying(255),
+  phone character varying(20),
+  email character varying(255),
+  website character varying(255),
+  salutation_header character varying(255),
+  salutation_footer character varying(255),
+  other_data character varying(255),
+  user_id character varying(255) NOT NULL,
+  entity_id character varying(32) NOT NULL,
+  is_private character(1) NOT NULL DEFAULT 'N'::bpchar,
+  CONSTRAINT contact_addresses_pkey PRIMARY KEY  (id)
+) WITH (OIDS=FALSE);
+
 CREATE TABLE saved_queries (
   query_id bigint NOT NULL DEFAULT nextval('query_id_seq'::regclass),
   user_id character varying(128)  default NULL,
@@ -1894,7 +1986,8 @@ CREATE TABLE mlb_coll_ext (
   flag_notif char(1)  default 'N'::character varying ,
   flag_alarm1 char(1)  default 'N'::character varying ,
   flag_alarm2 char(1) default 'N'::character varying,
-  is_multicontacts char(1)
+  is_multicontacts char(1),
+  address_id bigint
 )WITH (OIDS=FALSE);
 
 CREATE SEQUENCE res_id_version_letterbox_seq
@@ -3265,7 +3358,8 @@ CREATE TABLE business_coll_ext (
   alarm2_date timestamp without time zone default NULL,
   flag_notif char(1)  default 'N'::character varying ,
   flag_alarm1 char(1)  default 'N'::character varying ,
-  flag_alarm2 char(1) default 'N'::character varying
+  flag_alarm2 char(1) default 'N'::character varying,
+  address_id bigint
 )WITH (OIDS=FALSE);
 
 DROP TABLE IF EXISTS invoice_types CASCADE;
@@ -3629,3 +3723,17 @@ CREATE OR REPLACE VIEW fp_view_fileplan AS
            FROM fp_res_fileplan_positions
           GROUP BY fp_res_fileplan_positions.position_id) r ON r.position_id::text = fp_fileplan_positions.position_id::text
   WHERE fp_fileplan.fileplan_id = fp_fileplan_positions.fileplan_id;
+
+--view for contacts_v2
+DROP VIEW IF EXISTS view_contacts;
+CREATE VIEW view_contacts AS
+  SELECT 
+  c.contact_id, c.contact_type, c.is_corporate_person, c.society, c.society_short, c.firstname AS contact_firstname, c.lastname AS contact_lastname, 
+  c.title AS contact_title, c.function AS contact_function, c.other_data AS contact_other_data, c.user_id AS contact_user_id, c.entity_id AS contact_entity_id, 
+  c.creation_date, c.update_date,
+  ca.id AS ca_id, ca.contact_purpose_id, ca.departement, ca.firstname, ca.lastname, ca.title, ca.function, ca.occupancy, ca.address_num,
+  ca.address_street, ca.address_complement, ca.address_town, ca.address_postal_code, ca.address_country, ca.phone, ca.email, 
+  ca.website, ca.salutation_header, ca.salutation_footer, ca.other_data, ca.user_id, ca.entity_id, ca.is_private
+  FROM contacts_v2 c
+  RIGHT JOIN contact_addresses ca
+  ON c.contact_id = ca.contact_id;
