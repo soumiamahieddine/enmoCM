@@ -1023,8 +1023,55 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         <?php  } ?>
                             <input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php echo _BACK_TO_WELCOME;?>" onclick="window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';" />
 
+							</div>
+							</form><br><br>
+						<?php
+                        //Identifiant du courrier en cours
+                        $idCourrier=$_GET['id'];
+                        //Requete pour récupérer position_label
+                        $db->query("SELECT position_label FROM fp_fileplan_positions INNER JOIN fp_res_fileplan_positions 
+                                    ON fp_fileplan_positions.position_id = fp_res_fileplan_positions.position_id
+                                    WHERE fp_res_fileplan_positions.res_id=".$idCourrier);
+
+                        while($res= $db->fetch_object()){
+                            if(!isset($positionLabel)){
+                                $positionLabel=$res->position_label;
+                            }else{
+                                $positionLabel=$positionLabel." / ".$res->position_label;
+                            }  
+                        }
+
+                        //Requete pour récuperer fileplan_label
+                        $db->query("SELECT fileplan_label FROM fp_fileplan INNER JOIN fp_res_fileplan_positions
+                                    ON fp_fileplan.fileplan_id = fp_res_fileplan_positions.fileplan_id
+                                    WHERE fp_res_fileplan_positions.res_id=".$idCourrier);
+                        $res2 = $db->fetch_object();
+                        $fileplanLabel=$res2->fileplan_label;
+                        $planClassement= $fileplanLabel." / ".$positionLabel;
+                    ?>
+             
+					<?php if ($core->is_module_loaded('fileplan') && ($core->test_service('put_doc_in_fileplan', 'fileplan', false) == 1)) { ?>
+                    <div>
+                        <h2>Plan de classement</h2><br><?php echo $_SESSION['IMG_SRC']?>
+                        <div class="block">                              
+                            <table>
+                                <tr class="col">
+                                    <th align="left" class="picto">
+                                        <img alt="Plan de classement" src="<?php echo "../../modules/fileplan/img/tool_fileplan.gif"; ?>" title="Plan de classement" alt="Plan de classement"/>
+                                    </th>
+                                    <td align="left" width="200px">
+                                        <?php  echo "Plan de classement"; ?> :
+                                    </td>
+                                    <td>
+                                        <input type="text" class="readonly" readonly="readonly" value="<?php  echo $planClassement; ?>" size="110"  />
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
-                    </form>
+                    <br><br>
+					<?php } ?>
+         
                     <?php
                     if ($core->is_module_loaded('tags') && ($core->test_service('tag_view', 'tags', false) == 1)) {
                             include_once('modules/tags/templates/details/index.php');
