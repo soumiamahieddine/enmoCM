@@ -88,7 +88,9 @@ $what = "";
 $where = "contact_id = " . $id;
 if (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
     $what = $func->protect_string_db($_REQUEST['what']);
-    $where .= " and lower(lastname) like lower('%" . $what. "%')";
+    $where .= " and (lower(lastname) like lower('" . $what. "%') 
+                    or lower(firstname) like lower('" . $what. "%') 
+                    or lower(departement) like lower('" . $what. "%'))";
 }
 
 $list = new list_show();
@@ -96,7 +98,7 @@ $order = 'asc';
 if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
     $order = trim($_REQUEST['order']);
 }
-$field = 'id';
+$field = 'lastname';
 if (isset($_REQUEST['order_field']) && ! empty($_REQUEST['order_field'])) {
     $field = trim($_REQUEST['order_field']);
 }
@@ -248,5 +250,7 @@ $list->admin_list(
     . 'static.php?filename=manage_contact_b.gif', false, true, true, true,
     $what, true, $autoCompletionArray
 );
+
+$_SESSION['m_admin']['address'] = array();
 
 ?>

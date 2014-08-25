@@ -29,15 +29,30 @@
 * @ingroup admin
 */
 $admin = new core_tools();
+$admin->load_lang();
 if(!$admin->test_admin('admin_contacts', 'apps', false)){
 	$admin->test_admin('my_contacts', 'apps');
 }
+$admin->load_html();
+$admin->load_header('', true, false);
+$admin->load_js();
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_request.php';
 $contact = new contacts_v2();
 $db = new dbquery();
 $db->connect();
+
+echo '<div class="error" id="main_error">';
+echo $_SESSION['error'];
+echo '</div>';
+
+echo '<div class="info" id="main_info">';
+echo $_SESSION['info'];
+echo '</div>';
+
+$_SESSION['error'] = '';
+$_SESSION['info'] = '';
 
 /****************Management of the location bar  ************/
 $init = false;
@@ -165,7 +180,11 @@ $list = new list_show();
 		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _YES;?>" name="Submit" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contacts_v2_up_db&confirm=Y&mode=<?php echo $_GET['mode'];?>';"> 
 		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _NO;?>" name="Cancel" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2';">
 <?php 
-	} else { ?>
+	} else if($_GET['mycontact'] == 'iframe'){?>
+		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _YES;?>" name="Submit" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=my_contact_up_db&dir=my_contacts&confirm=Y&mode=<?php echo $_GET['mode'];?>&mycontact=iframe';"> 
+		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _NO;?>" name="Cancel" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=false&dir=my_contacts&page=create_contact_iframe';new Effect.toggle(parent.document.getElementById('create_contact_div'), 'blind', {delay:0.2});return false;">
+<?php	
+	}	else { ?>
 		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _YES;?>" name="Submit" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=my_contact_up_db&dir=my_contacts&confirm=Y&mode=<?php echo $_GET['mode'];?>';"> 
 		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _NO;?>" name="Cancel" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=my_contacts&dir=my_contacts&load';">
 <?php 

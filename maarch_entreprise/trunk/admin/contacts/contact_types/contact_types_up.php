@@ -93,7 +93,14 @@ if (isset($_REQUEST['valid'])) {
 	) {
 		$desc = $db->protect_string_db($_REQUEST['desc_contact_types']);
         $desc=str_replace(';', ' ', $desc);
-        $desc=str_replace('--', '-', $desc);	
+        $desc=str_replace('--', '-', $desc);
+	    $desc = $core->wash(
+	        $desc, 'no', _CONTACT_TYPE, 'yes', 0, 255
+	    );
+	    if($_SESSION['error'] <> ''){
+	    	$_SESSION['error'] = '';
+	    	$erreur .= _CONTACT_TYPE .' '. MUST_BE_LESS_THAN." 255 "._CHARACTERS;
+	    }	
 	} else {
 		$erreur .= _CONTACT_TYPE_MISSING . ".<br/>";
 	}

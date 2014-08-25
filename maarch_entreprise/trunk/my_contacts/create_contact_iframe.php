@@ -19,7 +19,7 @@
 */
 
 /**
-* @brief  Modify the contact in the database after the form
+* @brief  Add contact form
 *
 *
 * @file
@@ -29,25 +29,27 @@
 * @ingroup admin
 */
 
-$core_tools = new core_tools();
-$core_tools->load_lang();
-if(!$core_tools->test_admin('admin_contacts', 'apps', false)){
-	$core_tools->test_admin('my_contacts', 'apps');
-}
+$core_tools2 = new core_tools();
+$core_tools2->load_lang();
+$core_tools2->test_admin('my_contacts', 'apps');
+$core_tools2->load_html();
+$core_tools2->load_header('', true, false);
 
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 
 $contact = new contacts_v2();
-$iframe = false;
 
-if(isset($_GET['mycontact']) && $_GET['mycontact'] <> ''){
-	$admin = false;
-	if($_GET['mycontact'] == 'iframe'){
-		$iframe = true;
-	}
-} else {
-	$admin = true;
-}
+echo '<div class="error" id="main_error">';
+echo $_SESSION['error'];
+echo '</div>';
 
-$contact->addupaddress($_POST['mode'], $admin, $iframe);
+echo '<div class="info" id="main_info">';
+echo $_SESSION['info'];
+echo '</div>';
+
+$_SESSION['error'] = '';
+$_SESSION['info'] = '';
+
+$contact->formcontact("add", "", false, true);
+$core_tools2->load_js();
 ?>

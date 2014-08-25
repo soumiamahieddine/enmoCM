@@ -39,6 +39,8 @@ class contacts_v2 extends dbquery
             );
             $_SESSION['m_admin']['contact']['LASTNAME'] = '';
             $_SESSION['m_admin']['contact']['FIRSTNAME'] = '';
+            $_SESSION['m_admin']['contact']['FUNCTION'] = '';
+            $_SESSION['m_admin']['contact']['TITLE'] = '';
         } else {
             $_SESSION['m_admin']['contact']['LASTNAME'] = $func->wash(
                 $_REQUEST['lastname'], 'no', _LASTNAME, 'yes', 0, 255
@@ -53,10 +55,24 @@ class contacts_v2 extends dbquery
             } else {
                 $_SESSION['m_admin']['contact']['SOCIETY'] = '';
             }
+            if ($_REQUEST['function'] <> '') {
+                $_SESSION['m_admin']['contact']['FUNCTION'] = $func->wash(
+                    $_REQUEST['function'], 'no', _FUNCTION . ' ', 'yes', 0, 255
+                );
+            } else {
+                $_SESSION['m_admin']['contact']['FUNCTION'] = '';
+            }
+            if ($_REQUEST['title'] <> '') {
+                $_SESSION['m_admin']['contact']['TITLE'] = $func->wash(
+                    $_REQUEST['title'], 'no', _TITLE2 . ' ', 'yes', 0, 255
+                );
+            } else {
+                $_SESSION['m_admin']['contact']['TITLE'] = '';
+            }
         }
         if ($_REQUEST['society_short'] <> '') {
             $_SESSION['m_admin']['contact']['SOCIETY_SHORT'] = $func->wash(
-                $_REQUEST['society_short'], 'no', _SOCIETY_SHORT . ' ', 'yes', 0, 255
+                $_REQUEST['society_short'], 'no', _SOCIETY_SHORT . ' ', 'yes', 0, 32
             );
         } else {
             $_SESSION['m_admin']['contact']['SOCIETY_SHORT'] = '';
@@ -66,25 +82,9 @@ class contacts_v2 extends dbquery
             $_REQUEST['contact_type'], 'no', _CONTACT_TYPE . ' ', 'yes', 0, 255
         );
 
-        if ($_REQUEST['title'] <> '') {
-            $_SESSION['m_admin']['contact']['TITLE'] = $func->wash(
-                $_REQUEST['title'], 'no', _TITLE2 . ' ', 'yes', 0, 255
-            );
-        } else {
-            $_SESSION['m_admin']['contact']['TITLE'] = '';
-        }
-
-        if ($_REQUEST['function'] <> '') {
-            $_SESSION['m_admin']['contact']['FUNCTION'] = $func->wash(
-                $_REQUEST['function'], 'no', _FUNCTION . ' ', 'yes', 0, 255
-            );
-        } else {
-            $_SESSION['m_admin']['contact']['FUNCTION'] = '';
-        }
-
         if ($_REQUEST['comp_data'] <> '') {
             $_SESSION['m_admin']['contact']['OTHER_DATA'] = $func->wash(
-                $_REQUEST['comp_data'], 'no', _COMP_DATA
+                $_REQUEST['comp_data'], 'no', _COMP_DATA . ' ', 'yes', 0, 255
             );
         } else {
             $_SESSION['m_admin']['contact']['OTHER_DATA'] = '';
@@ -121,7 +121,12 @@ class contacts_v2 extends dbquery
             if($mode <> 'up'){
                 $_SESSION['error'] = _THE_CONTACT.' '._ALREADY_EXISTS;
             }
-            $path_contacts_confirm = $_SESSION['config']['businessappurl'] . 'index.php?page=contacts_v2_confirm';
+
+            if($mycontact == 'iframe'){
+                $path_contacts_confirm = $_SESSION['config']['businessappurl'] . 'index.php?display=false&page=contacts_v2_confirm';
+            } else {
+                $path_contacts_confirm = $_SESSION['config']['businessappurl'] . 'index.php?page=contacts_v2_confirm';
+            }
             header(
                 'location: ' . $path_contacts_confirm.'&mode='.$mode.'&mycontact='.$mycontact
             );
@@ -188,6 +193,12 @@ class contacts_v2 extends dbquery
                                      . 'index.php?page=my_contact_up&dir='
                                      . 'my_contacts&load';
         }
+        if ($mycontact == 'iframe') {
+            $path_contacts = $_SESSION['config']['businessappurl']
+                                      . 'index.php?display=false&dir=my_contacts&page=create_address_iframe';
+            $path_contacts_add_errors = $_SESSION['config']['businessappurl']
+                                      . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe';
+        }
         if (! empty($_SESSION['error'])) {
             if ($mode == 'up') {
                 if (! empty($_SESSION['m_admin']['contact']['ID'])) {
@@ -208,45 +219,47 @@ class contacts_v2 extends dbquery
         } else {
             $this->connect();
             if ($mode == 'add') {
-                // if ($admin) {
-                    if($_SESSION['user']['UserId'] == 'superadmin'){
-                        $entity_id = 'SUPERADMIN';
-                    } else {
-                        $entity_id = $_SESSION['user']['primaryentity']['id'];
-                    }
-                    $query = 'INSERT INTO ' . $_SESSION['tablename']['contacts_v2']
-                           . ' ( contact_type, lastname , firstname , society , society_short, function , '
-                           . 'other_data,'
-                           . " title, is_corporate_person, user_id, entity_id, creation_date) VALUES (  "
-                             . $_SESSION['m_admin']['contact']['CONTACT_TYPE']                          
-                             . ", '" . $this->protect_string_db(
-                                $_SESSION['m_admin']['contact']['LASTNAME']
-                           ) . "', '" . $this->protect_string_db(
-                                $_SESSION['m_admin']['contact']['FIRSTNAME']
-                           ) . "', '" . $this->protect_string_db(
-                                $_SESSION['m_admin']['contact']['SOCIETY']
-                           ) . "', '" . $this->protect_string_db(
-                                $_SESSION['m_admin']['contact']['SOCIETY_SHORT']
-                           ) . "', '" . $this->protect_string_db(
-                                $_SESSION['m_admin']['contact']['FUNCTION']
-                           ) . "','" . $this->protect_string_db(
-                                $_SESSION['m_admin']['contact']['OTHER_DATA']
-                           ) . "','" . $this->protect_string_db(
-                                $_SESSION['m_admin']['contact']['TITLE']
-                           ) . "','" . $this->protect_string_db(
-                                $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON']                                   
-                           ) . "','" . $this->protect_string_db(
-                                $_SESSION['user']['UserId']
-                           ) . "','" . $this->protect_string_db(
-                                $entity_id
-                           ) . "', current_timestamp)";
-                // } else {
-                //     $query = "INSERT INTO ".$_SESSION['tablename']['contacts']." (  lastname , firstname , society , function , phone , email , address_num, address_street, address_complement, address_town, address_postal_code, address_country, other_data, title, is_corporate_person, user_id, is_private) VALUES (  '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['FUNCTION'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['PHONE'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['MAIL'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_NUM'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_STREET'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_COMP'])."', '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_TOWN'])."',  '".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_CP'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['ADD_COUNTRY'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['OTHER_DATA'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['TITLE'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'])."', '".$this->protect_string_db($_SESSION['user']['UserId'])."','".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_PRIVATE']) ."')";
-                // }
+                if($_SESSION['user']['UserId'] == 'superadmin'){
+                    $entity_id = 'SUPERADMIN';
+                } else {
+                    $entity_id = $_SESSION['user']['primaryentity']['id'];
+                }
+                $query = 'INSERT INTO ' . $_SESSION['tablename']['contacts_v2']
+                       . ' ( contact_type, lastname , firstname , society , society_short, function , '
+                       . 'other_data,'
+                       . " title, is_corporate_person, user_id, entity_id, creation_date) VALUES (  "
+                         . $_SESSION['m_admin']['contact']['CONTACT_TYPE']                          
+                         . ", '" . $this->protect_string_db(
+                            $_SESSION['m_admin']['contact']['LASTNAME']
+                       ) . "', '" . $this->protect_string_db(
+                            $_SESSION['m_admin']['contact']['FIRSTNAME']
+                       ) . "', '" . $this->protect_string_db(
+                            $_SESSION['m_admin']['contact']['SOCIETY']
+                       ) . "', '" . $this->protect_string_db(
+                            $_SESSION['m_admin']['contact']['SOCIETY_SHORT']
+                       ) . "', '" . $this->protect_string_db(
+                            $_SESSION['m_admin']['contact']['FUNCTION']
+                       ) . "','" . $this->protect_string_db(
+                            $_SESSION['m_admin']['contact']['OTHER_DATA']
+                       ) . "','" . $this->protect_string_db(
+                            $_SESSION['m_admin']['contact']['TITLE']
+                       ) . "','" . $this->protect_string_db(
+                            $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON']                                   
+                       ) . "','" . $this->protect_string_db(
+                            $_SESSION['user']['UserId']
+                       ) . "','" . $this->protect_string_db(
+                            $entity_id
+                       ) . "', current_timestamp)";
                 $this->query($query);
                 if($_SESSION['history']['contactadd'])
                 {
-                    $this->query("select contact_id from ".$_SESSION['tablename']['contacts_v2']." where lastname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])."' and firstname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])."' and society = '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])."' and function = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FUNCTION'])."' and is_corporate_person = '".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'])."'");
+                    $this->query("select contact_id, creation_date from ".$_SESSION['tablename']['contacts_v2']
+                        ." where lastname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])
+                        ."' and firstname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])
+                        ."' and society = '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])
+                        ."' and function = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FUNCTION'])
+                        ."' and is_corporate_person = '".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'])
+                        ."' order by creation_date desc");
                     $res = $this->fetch_object();
                     $id = $res->contact_id;
                     if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y')
@@ -261,6 +274,18 @@ class contacts_v2 extends dbquery
                     $hist = new history();
                     $hist->add($_SESSION['tablename']['contacts_v2'], $id,"ADD",'contacts_v2_add',$msg, $_SESSION['config']['databasetype']);
                 }
+                if($mycontact = 'iframe'){
+                    $this->query("select contact_id, creation_date from ".$_SESSION['tablename']['contacts_v2']
+                        ." where lastname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])
+                        ."' and firstname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])
+                        ."' and society = '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])
+                        ."' and function = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FUNCTION'])
+                        ."' and is_corporate_person = '".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'])
+                        ."' order by creation_date desc");
+                    $res = $this->fetch_object();
+                    $id = $res->contact_id;
+                    $_SESSION['contact']['current_contact_id'] = $id;
+                }
                 $this->clearcontactinfos();
                 $_SESSION['info'] = _CONTACT_ADDED;
                 header("location: ".$path_contacts);
@@ -269,10 +294,10 @@ class contacts_v2 extends dbquery
             elseif($mode == "up")
             {
                 $query = "update ".$_SESSION['tablename']['contacts_v2']." set update_date = current_timestamp, contact_type = ".$_SESSION['m_admin']['contact']['CONTACT_TYPE'].", lastname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])."', firstname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])."',society = '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])."',society_short = '".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY_SHORT'])."',function = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FUNCTION'])."', other_data = '".$this->protect_string_db($_SESSION['m_admin']['contact']['OTHER_DATA'])."', title = '".$this->protect_string_db($_SESSION['m_admin']['contact']['TITLE'])."', is_corporate_person = '".$this->protect_string_db($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'])."'";
-                if($admin)
-                {
-                    $query .= ", user_id = '".$this->protect_string_db($_SESSION['m_admin']['contact']['OWNER'])."'";
-                }
+                // if($admin)
+                // {
+                //     $query .= ", user_id = '".$this->protect_string_db($_SESSION['m_admin']['contact']['OWNER'])."'";
+                // }
                 $query .=" where contact_id = '".$_SESSION['m_admin']['contact']['ID']."'";
                 if(!$admin)
                 {
@@ -307,7 +332,7 @@ class contacts_v2 extends dbquery
     * @param  $string $mode up or add
     * @param int  $id  $id of the contact to change
     */
-    public function formcontact($mode,$id = "", $admin = true)
+    public function formcontact($mode,$id = "", $admin = true, $iframe = false)
     {
         if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"]))
         {
@@ -409,6 +434,9 @@ class contacts_v2 extends dbquery
                 if(!$admin)
                 {
                     $action = $_SESSION['config']['businessappurl']."index.php?display=true&dir=my_contacts&page=my_contact_up_db";
+                    if($iframe){
+                        $action = $_SESSION['config']['businessappurl']."index.php?display=true&dir=my_contacts&page=my_contact_up_db&mycontact=iframe";
+                    }
                 }
                 ?>
                 <form name="frmcontact" id="frmcontact" method="post" action="<?php echo $action;?>" class="forms">
@@ -445,7 +473,7 @@ class contacts_v2 extends dbquery
                             <label for="owner"><?php echo _OWNER; ?> : </label>
                         </td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input name="owner" type="text"  id="owner" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['OWNER']); ?>"/><div id="show_user" class="autocomplete"></div>
+                        <td class="indexing_field"><input disabled name="owner" type="text"  id="owner" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['OWNER']); ?>"/><div id="show_user" class="autocomplete"></div>
                         </td>
                         <td>&nbsp;</td>
                     </tr>
@@ -550,8 +578,16 @@ class contacts_v2 extends dbquery
                     {
                         $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&amp;dir=my_contacts&amp;load';
                     }
+                    if($iframe){
+                    ?>    
+                        <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="new Effect.toggle(parent.document.getElementById('create_contact_div'), 'blind', {delay:0.2});return false;" />
+                    <?php
+                    } else {
                     ?>
-                    <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $cancel_target;?>';" />
+                        <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $cancel_target;?>';" />                 
+                    <?php
+                    }
+                    ?>
                     </p>
                 </form>
             <?php
@@ -661,12 +697,14 @@ class contacts_v2 extends dbquery
                 else
                 {
                     $res = $this->fetch_object();
-                    $this->query("delete from ".$_SESSION['tablename']['contacts_v2']." where contact_id = ".$id);
+                    $this->query("delete from " . $_SESSION['tablename']['contacts_v2'] . " where contact_id = " . $id);
+                    $this->query("delete from " . $_SESSION['tablename']['contact_addresses'] . " where contact_id = " . $id);
                     if($_SESSION['history']['contactdel'])
                     {
                         require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
                         $hist = new history();
                         $hist->add($_SESSION['tablename']['contacts_v2'], $id,"DEL","contactdel",_CONTACT_DELETED.' : '.$id, $_SESSION['config']['databasetype']);
+                        $hist->add($_SESSION['tablename']['contact_addresses'], $id,"DEL","contact_addresses_del", _ADDRESS_DEL." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
                     }
                     $_SESSION['info'] = _CONTACT_DELETED;
                 }
@@ -907,7 +945,7 @@ class contacts_v2 extends dbquery
     * @param  $string $mode up or add
     * @param int  $id  $id of the contact to change
     */
-    public function formaddress($mode,$id = "", $admin = true)
+    public function formaddress($mode,$id = "", $admin = true, $iframe = "")
     {
         if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"]))
         {
@@ -957,9 +995,9 @@ class contacts_v2 extends dbquery
                 $_SESSION['m_admin']['address']['FUNCTION'] = $this->show_string($line->function);
                 $_SESSION['m_admin']['address']['OTHER_DATA'] = $this->show_string($line->other_data);
                 $_SESSION['m_admin']['address']['OWNER'] = $line->user_id;
-                $_SESSION['m_admin']['address']['DEPARTEMENT'] = $line->departement;
+                $_SESSION['m_admin']['address']['DEPARTEMENT'] = $this->show_string($line->departement);
                 $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = $line->contact_purpose_id;
-                $_SESSION['m_admin']['address']['OCCUPANCY'] = $line->occupancy;
+                $_SESSION['m_admin']['address']['OCCUPANCY'] = $this->show_string($line->occupancy);
                 $_SESSION['m_admin']['address']['ADD_NUM'] = $this->show_string($line->address_num);
                 $_SESSION['m_admin']['address']['ADD_STREET'] = $this->show_string($line->address_street);
                 $_SESSION['m_admin']['address']['ADD_COMP'] = $this->show_string($line->address_complement);
@@ -1022,6 +1060,9 @@ class contacts_v2 extends dbquery
                 if(!$admin)
                 {
                     $action = $_SESSION['config']['businessappurl']."index.php?display=true&page=contact_addresses_up_db&mycontact=Y";
+                }
+                if($iframe == "iframe"){
+                    $action = $_SESSION['config']['businessappurl']."index.php?display=false&page=contact_addresses_up_db&mycontact=iframe";
                 }
                 ?>
                 <form name="frmcontact" id="frmcontact" method="post" action="<?php echo $action;?>" class="forms">
@@ -1265,6 +1306,10 @@ class contacts_v2 extends dbquery
                     {
                         $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=my_contact_up&amp;dir=my_contact_up&amp;load';
                     }
+                    if($iframe)
+                    {
+                        $cancel_target = $_SESSION['config']['businessappurl'].'index.php?display=false&page=create_contact_iframe&dir=my_contacts';
+                    }
                     ?>
                     <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $cancel_target;?>';" />
                     </p>
@@ -1285,7 +1330,7 @@ class contacts_v2 extends dbquery
     *
     * @param string $mode up or add
     */
-    public function addupaddress($mode, $admin = true)
+    public function addupaddress($mode, $admin = true, $iframe = false)
     {
         // add ou modify users in the database
         $this->addressinfo($mode);
@@ -1312,6 +1357,12 @@ class contacts_v2 extends dbquery
             $path_contacts_up_errors = $_SESSION['config']['businessappurl']
                                      . 'index.php?page=contact_addresses_up&mycontact=Y';
         }
+        if ($iframe) {
+            $path_contacts = $_SESSION['config']['businessappurl']
+                                      . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe';
+            $path_contacts_add_errors = $_SESSION['config']['businessappurl']
+                                      . 'index.php?display=false&dir=my_contacts&page=create_address_iframe';
+        }
         if (! empty($_SESSION['error'])) {
             if ($mode == 'up') {
                 if (! empty($_SESSION['m_admin']['address']['ID'])) {
@@ -1332,51 +1383,49 @@ class contacts_v2 extends dbquery
         } else {
             $this->connect();
             if ($mode == 'add') {
-                // if ($admin) {
                     if($_SESSION['user']['UserId'] == 'superadmin'){
                         $entity_id = 'SUPERADMIN';
                     } else {
                         $entity_id = $_SESSION['user']['primaryentity']['id'];
                     }
                     $query = 'INSERT INTO ' . $_SESSION['tablename']['contact_addresses']
-                           . ' (  contact_id, contact_purpose_id, departement, lastname , firstname , function , '
-                           . 'phone , email , address_num, address_street, '
-                           . 'address_complement, address_town, '
-                           . 'address_postal_code, address_country, other_data,'
-                           . " title, is_private, website, occupancy, user_id, entity_id, salutation_header, salutation_footer) VALUES (  "
-                           .   $_SESSION['contact']['current_contact_id']
+                            . ' (  contact_id, contact_purpose_id, departement, lastname , firstname , function , '
+                            . 'phone , email , address_num, address_street, '
+                            . 'address_complement, address_town, '
+                            . 'address_postal_code, address_country, other_data,'
+                            . " title, is_private, website, occupancy, user_id, entity_id, salutation_header, salutation_footer) VALUES (  "
+                            .   $_SESSION['contact']['current_contact_id']
                             . ", " .  $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']
                             . ", '" . $this->protect_string_db(
                                $_SESSION['m_admin']['address']['DEPARTEMENT']
-                           ) . "', '" . $this->protect_string_db(
+                            ) . "', '" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['LASTNAME']
-                           ) . "', '" . $this->protect_string_db(
+                            ) . "', '" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['FIRSTNAME']
-                           ) . "', '" . $this->protect_string_db(
+                            ) . "', '" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['FUNCTION']
-                           ) . "', '" . $this->protect_string_db(
+                            ) . "', '" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['PHONE']
-                           ) . "', '" . $this->protect_string_db(
+                            ) . "', '" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['MAIL']
-                           ) . "', '" . $this->protect_string_db(
+                            ) . "', '" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['ADD_NUM']
-                           ) . "','" . $this->protect_string_db(
+                            ) . "','" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['ADD_STREET']
-                           ) . "', '" . $this->protect_string_db(
+                            ) . "', '" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['ADD_COMP']
-                           ) . "', '" . $this->protect_string_db(
+                            ) . "', '" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['ADD_TOWN']
-                           ) . "',  '" . $this->protect_string_db(
+                            ) . "',  '" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['ADD_CP']
-                           ) . "','" . $this->protect_string_db(
+                            ) . "','" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['ADD_COUNTRY']
-                           ) . "','" . $this->protect_string_db(
+                            ) . "','" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['OTHER_DATA']
-                           ) . "','" . $this->protect_string_db(
+                            ) . "','" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['TITLE']
-                           ) . "','" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']
-                                    ['IS_PRIVATE']
+                            ) . "','" . $this->protect_string_db(
+                                $_SESSION['m_admin']['address']['IS_PRIVATE']
                             ) . "','" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['WEBSITE']
                             ) . "','" . $this->protect_string_db(
@@ -1385,14 +1434,12 @@ class contacts_v2 extends dbquery
                                 $_SESSION['user']['UserId']
                             ) . "','" . $this->protect_string_db(
                                 $entity_id
-                           ) . "','" . $this->protect_string_db(
+                            ) . "','" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['SALUTATION_HEADER']
-                           ) . "','" . $this->protect_string_db(
+                            ) . "','" . $this->protect_string_db(
                                 $_SESSION['m_admin']['address']['SALUTATION_FOOTER']
-                           ) . "' )";
-                // } else {
-                //     $query = "INSERT INTO ".$_SESSION['tablename']['contacts']." (  lastname , firstname , society , function , phone , email , address_num, address_street, address_complement, address_town, address_postal_code, address_country, other_data, title, is_corporate_person, user_id, is_private) VALUES (  '".$this->protect_string_db($_SESSION['m_admin']['address']['LASTNAME'])."', '".$this->protect_string_db($_SESSION['m_admin']['address']['FIRSTNAME'])."', '".$this->protect_string_db($_SESSION['m_admin']['address']['SOCIETY'])."', '".$this->protect_string_db($_SESSION['m_admin']['address']['FUNCTION'])."', '".$this->protect_string_db($_SESSION['m_admin']['address']['PHONE'])."', '".$this->protect_string_db($_SESSION['m_admin']['address']['MAIL'])."', '".$this->protect_string_db($_SESSION['m_admin']['address']['ADD_NUM'])."','".$this->protect_string_db($_SESSION['m_admin']['address']['ADD_STREET'])."', '".$this->protect_string_db($_SESSION['m_admin']['address']['ADD_COMP'])."', '".$this->protect_string_db($_SESSION['m_admin']['address']['ADD_TOWN'])."',  '".$this->protect_string_db($_SESSION['m_admin']['address']['ADD_CP'])."','".$this->protect_string_db($_SESSION['m_admin']['address']['ADD_COUNTRY'])."','".$this->protect_string_db($_SESSION['m_admin']['address']['OTHER_DATA'])."','".$this->protect_string_db($_SESSION['m_admin']['address']['TITLE'])."','".$this->protect_string_db($_SESSION['m_admin']['address']['IS_CORPORATE_PERSON'])."', '".$this->protect_string_db($_SESSION['user']['UserId'])."','".$this->protect_string_db($_SESSION['m_admin']['address']['IS_PRIVATE']) ."')";
-                // }
+                            ) . "' )";
+
                 $this->query($query);
                 if($_SESSION['history']['addressadd'])
                 {
@@ -1411,6 +1458,11 @@ class contacts_v2 extends dbquery
                     $hist = new history();
                     $hist->add($_SESSION['tablename']['contact_addresses'], $id,"ADD",'contact_addresses_add',$msg, $_SESSION['config']['databasetype']);
                 }
+
+                if($iframe){
+                    $this->clearcontactinfos();
+                }
+
                 $this->clearaddressinfos();
                 $_SESSION['info'] = _ADDRESS_ADDED;
                 header("location: ".$path_contacts);
@@ -1572,7 +1624,7 @@ class contacts_v2 extends dbquery
         }
         if ($_REQUEST['comp_data'] <> '') {
             $_SESSION['m_admin']['address']['OTHER_DATA'] = $func->wash(
-                $_REQUEST['comp_data'], 'no', _COMP_DATA
+                $_REQUEST['comp_data'], 'no', _COMP_DATA, 'yes', 0, 255
             );
         } else {
             $_SESSION['m_admin']['address']['OTHER_DATA'] = '';
@@ -1586,21 +1638,21 @@ class contacts_v2 extends dbquery
         }
         if ($_REQUEST['occupancy'] <> '') {
             $_SESSION['m_admin']['address']['OCCUPANCY'] = $func->wash(
-                $_REQUEST['occupancy'], 'no', _OCCUPANCY, 'yes', 0, 255
+                $_REQUEST['occupancy'], 'no', _OCCUPANCY, 'yes', 0, 1024
             );
         } else {
             $_SESSION['m_admin']['address']['occupancy'] = '';
         }
         if ($_REQUEST['salutation_header'] <> '') {
             $_SESSION['m_admin']['address']['SALUTATION_HEADER'] = $func->wash(
-                $_REQUEST['salutation_header'], 'no', _COMP_DATA
+                $_REQUEST['salutation_header'], 'no', _SALUTATION_HEADER, 'yes', 0, 255
             );
         } else {
             $_SESSION['m_admin']['address']['SALUTATION_HEADER'] = '';
         }
         if ($_REQUEST['salutation_footer'] <> '') {
             $_SESSION['m_admin']['address']['SALUTATION_FOOTER'] = $func->wash(
-                $_REQUEST['salutation_footer'], 'no', _COMP_DATA
+                $_REQUEST['salutation_footer'], 'no', _SALUTATION_FOOTER, 'yes', 0, 255
             );
         } else {
             $_SESSION['m_admin']['address']['SALUTATION_FOOTER'] = '';

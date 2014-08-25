@@ -80,7 +80,7 @@
             <id>title9</id>
             <label>Messieurs</label>
         </title>
-        <default_title>title1</default_title>
+        <default_title></default_title>
     </titles>
 	<currency>
 		<cur>

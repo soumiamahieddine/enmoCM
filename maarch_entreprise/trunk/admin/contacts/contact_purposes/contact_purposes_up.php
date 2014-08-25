@@ -100,6 +100,13 @@ if (isset($_REQUEST['valid'])) {
 		$desc = $db->protect_string_db($_REQUEST['desc_contact_purposes']);
         $desc=str_replace(';', ' ', $desc);
         $desc=str_replace('--', '-', $desc);
+	    $desc = $core->wash(
+	        $desc, 'no', _CONTACT_PURPOSE, 'yes', 0, 255
+	    );
+	    if($_SESSION['error'] <> ''){
+	    	$_SESSION['error'] = '';
+	    	$erreur .= _CONTACT_PURPOSE .' '. MUST_BE_LESS_THAN." 255 "._CHARACTERS;
+	    }
 	} else {
 		$erreur .= _CONTACT_PURPOSE_MISSING . ".<br/>";
 	}

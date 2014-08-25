@@ -1139,7 +1139,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             }
             elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
                 if (!empty ($line-> $arr[$i])) {
-                    $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts'] . " where  contact_id = " . $line-> $arr[$i] . "");
+                    $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts_v2'] . " where  contact_id = " . $line-> $arr[$i] . "");
                     $res = $db2->fetch_object();
                     if ($res->is_corporate_person == 'Y') {
                         $data[$arr[$i]]['show_value'] = $res->society;
@@ -1194,7 +1194,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
                 if (!empty ($line-> $arr[$i])) {
                     $data['type_contact'] = 'external';
-                    $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts'] . " where enabled = 'Y' and contact_id = " . $line-> $arr[$i] . "");
+                    $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts_v2'] . " where contact_id = " . $line-> $arr[$i] . "");
                     $res = $db2->fetch_object();
                     if ($res->is_corporate_person == 'Y') {
                         $data['contact'] = $res->society . ' (' . $line-> $arr[$i] . ')';

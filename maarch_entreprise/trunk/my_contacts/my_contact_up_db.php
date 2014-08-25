@@ -26,5 +26,11 @@ if(isset($_GET['confirm']) &&  $_GET['confirm'] <> ''){
 	$confirm = 'N';
 }
 
-$contact->addupcontact($_POST['mode'], false, $confirm, 'Y');
+if(isset($_GET['mycontact']) &&  $_GET['mycontact'] <> ''){
+	$mycontact = $_GET['mycontact'];
+} else {
+	$mycontact = 'Y';
+}
+
+$contact->addupcontact($_POST['mode'], false, $confirm, $mycontact);
 ?>

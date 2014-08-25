@@ -58,10 +58,14 @@ require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
     . 'class_history.php';
+require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+    . 'class_contacts_v2.php';
 
 $_SESSION['is_multi_contact'] = '';
 
 $core = new core_tools();
+$contacts_v2 = new contacts_v2();
 if ($core->is_module_loaded('entities')) {
     require_once 'modules/entities/entities_tables.php';
 }
@@ -971,182 +975,10 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     
     /**** Contact form start *******/
     $frmStr .= '<div id="create_contact_div" style="display:none">';
-    $frmStr .= '<div >';
-    $frmStr .= '<fieldset style="border:1px solid;">';
-    $frmStr .= '<legend ><b>' . _CREATE_CONTACT . '</b></legend>';
-    $frmStr .= '<form name="indexingfrmcontact" id="indexingfrmcontact" '
-            . 'method="post" action="' . $_SESSION['config']['businessappurl']
-            . 'index.php?display=true&page=contact_info" >';
-    $frmStr .= '<table>';
-    $frmStr .= '<tr>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<label for="is_corporate">' . _IS_CORPORATE_PERSON . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<input type="radio" class="check" name="is_corporate" '
-            . 'id="is_corporate_Y" value="Y" ';
-    $frmStr .= ' checked="checked"';
-    $frmStr .= 'onclick="javascript:show_admin_contacts(true, \''
-            . $displayValue . '\');">' . _YES;
-    $frmStr .= '<input type="radio" id="is_corporate_N" class="check" '
-            . 'name="is_corporate" value="N"';
-    $frmStr .= ' onclick="javascript:show_admin_contacts( false, \''
-            . $displayValue . '\');"/>' . _NO;
-    $frmStr .= '</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<tr id="title_p" style="display:none">';
-    $frmStr .= '<td  colspan="2">';
-    $frmStr .= '<label for="title"> ' . _TITLE2 . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td colspan="2" >';
-    $frmStr .= '<select name="title" id="title" >';
-    $frmStr .= '<option value="">' . _CHOOSE_TITLE . '</option>';
-    foreach (array_keys($titles) as $key) {
-        $frmStr .= '<option value="' . $key . '" ';
-        if ($key == $defaultTitle) {
-            $frmStr .= 'selected="selected"';
-        }
-        $frmStr .= '>' . $titles[$key] . '</option>';
-    }
-    $frmStr .= '</select>';
-    $frmStr .= '</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<tr id="lastname_p" style="display:';
-    $frmStr .= $displayValue;
-    $frmStr .= '">';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<label for="lastname">' . _LASTNAME . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<input name="lastname" type="text"  id="lastname" value="" /> ';
-    $frmStr .= '<span class="red_asterisk" id="lastname_mandatory" '
-            . 'style="display:inline;">*</span>';
-    $frmStr .= '</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<tr id="firstname_p" style="display:';
-    $frmStr .= $displayValue;
-    $frmStr .= '">';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<label for="firstname">' . _FIRSTNAME . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<input name="firstname" type="text"  id="firstname" value=""/>';
-    $frmStr .= '</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<tr>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<label for="society">' . _SOCIETY . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<input name="society" type="text"  id="society" value="" />';
-    $frmStr .= '<span class="red_asterisk" id="society_mandatory" '
-            . 'style="display:inline;">*</span>';
-    $frmStr .= '</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<tr id="function_p" style="display:';
-    $frmStr .= 'block';
-    $frmStr .= '">';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<label for="function">' . _FUNCTION . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<input name="function" type="text"  id="function" value="" />';
-    $frmStr .= '</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<tr>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<label for="phone">' . _PHONE . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<input name="phone" type="text"  id="phone" value="" />';
-    $frmStr .= '</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<tr>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<label for="mail">' . _MAIL . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<input name="mail" type="text" id="mail" value="" />';
-    $frmStr .= '</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<tr>';
-    $frmStr .= '<td>';
-    $frmStr .= '<label for="num">' . _NUM . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td>';
-    $frmStr .= '<input name="num" type="text" class="small" id="num" value=""/>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td>';
-    $frmStr .= '<label for="street">' . _STREET . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td>';
-    $frmStr .= '<input name="street" type="text" class="medium"  id="street" '
-            . 'value="" />';
-    $frmStr .= '</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<tr>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<label for="add_comp">' . _COMPLEMENT . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<input name="add_comp" type="text"  id="add_comp" value="" />';
-    $frmStr .= '</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<tr>';
-    $frmStr .= '<td>';
-    $frmStr .= '<label for="cp">' . _POSTAL_CODE . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td>';
-    $frmStr .= '<input name="cp" type="text" id="cp" value="" class="small" />';
-    $frmStr .= '</td>';
-    $frmStr .= '<td>';
-    $frmStr .= '<label for="town">' . _TOWN . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td>';
-    $frmStr .= '<input name="town" type="text" id="town" value="" class="medium"/>';
-    $frmStr .= '</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<tr>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<label for="country">' . _COUNTRY . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<input name="country" type="text"  id="country" value="" />';
-    $frmStr .= '</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<tr>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<label for="comp_data">' . _COMP_DATA . ' : </label>';
-    $frmStr .= '</td>';
-    $frmStr .= '<td colspan="2">';
-    $frmStr .= '<textarea name="comp_data" id="comp_data" ></textarea>';
-    $frmStr .= '</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '<tr>';
-        $frmStr .= '<td colspan="2">';
-            $frmStr .='<label for="is_private">'._IS_PRIVATE.' : </label>';
-        $frmStr .= '</td>';
-        $frmStr .= '<td colspan="2">';
-            $frmStr .= '<input type="radio" class="check" name="is_private" '
-                    . 'id="is_private" value="Y"/>' . _YES;
-            $frmStr .= '<input type="radio" id="is_private_N" class="check" '
-                    . 'name="is_private" value="N" checked="checked"/>' . _NO;
-        $frmStr .= '</td>';
-    $frmStr .= '</tr>';
-    $frmStr .= '</table>';
-    $frmStr .= '<div align="center">';
-    $frmStr .= '<input name="submit" type="button" value="' . _VALIDATE . '" '
-            . 'class="button" onclick="create_contact(\''
-            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-            . '&page=create_contact\', \'' . $actionId . '\');" />';
-    $frmStr .= ' <input name="cancel" type="button" value="' . _CANCEL . '" '
-            . 'onclick="new Effect.toggle(\'create_contact_div\', \'blind\', '
-            . '{delay:0.2});clear_form(\'indexingfrmcontact\');return false;" '
-            . 'class="button" />';
-    $frmStr .= '</div>';
-    $frmStr .= '</fieldset >';
-    $frmStr .= '</form >';
-    $frmStr .= '</div><br/>';
+        $frmStr .= '<iframe width="100%" height="700" src="' . $_SESSION['config']['businessappurl']
+                . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe" name="contact_iframe" id="contact_iframe"'
+                . ' scrolling="auto" frameborder="0" style="display:block;">'
+                . '</iframe>';
     $frmStr .= '</div>';
     /**** Contact form end *******/
     $frmStr .= '<script type="text/javascript">show_admin_contacts( true);</script>';

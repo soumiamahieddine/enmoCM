@@ -95,6 +95,8 @@ $contact    = new contacts_v2();
         $where_tab[] = "(lower(lastname) like lower('"
                         .$request->protect_string_db($what)
                         ."%') or lower(society) like lower('"
+                        .$request->protect_string_db($what)."%') 
+                            or lower(firstname) like lower('"
                         .$request->protect_string_db($what)."%'))";
     }
     //Build where
@@ -217,7 +219,7 @@ $contact    = new contacts_v2();
     $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
     $paramsTab['bool_showSearchTools'] = true;                                          //Afficle le filtre alphabetique et le champ de recherche
     $paramsTab['searchBoxAutoCompletionUrl'] = $_SESSION['config']['businessappurl']
-        ."index.php?display=true&dir=my_contacts&page=contact_list_by_name";            //Script pour l'autocompletion
+                    ."index.php?display=true&page=contacts_v2_list_by_name";            //Script pour l'autocompletion
     $paramsTab['searchBoxAutoCompletionMinChars'] = 2;                                  //Nombre minimum de caractere pour activer l'autocompletion (1 par defaut)
     $paramsTab['bool_showAddButton'] = true;                                            //Affichage du bouton Nouveau
     $paramsTab['addButtonLabel'] = _CONTACT_ADDITION;                                   //Libellé du bouton Nouveau

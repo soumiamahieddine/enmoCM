@@ -932,6 +932,7 @@ class list_show extends functions
         if(isset($_REQUEST['what']))
         {
             $get_what = strip_tags($_REQUEST['what']);
+            $get_what = str_replace('"', '%22', $get_what);
         }
         else
         {

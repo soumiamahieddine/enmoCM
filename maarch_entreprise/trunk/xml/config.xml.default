@@ -33,7 +33,7 @@
         <doctypes_indexes>doctypes_indexes</doctypes_indexes>
         <saved_queries>saved_queries</saved_queries>
         <contacts>contacts</contacts>
-        <contacts_v2>contact_v2</contacts_v2>
+        <contacts_v2>contacts_v2</contacts_v2>
         <contact_types>contact_types</contact_types>
         <contact_purposes>contact_purposes</contact_purposes>
         <contact_addresses>contact_addresses</contact_addresses>
