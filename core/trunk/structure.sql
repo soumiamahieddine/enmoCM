@@ -1597,7 +1597,7 @@ CREATE TABLE contact_addresses
   contact_id bigint NOT NULL,
   contact_purpose_id bigint DEFAULT 1,
   departement character varying(255),
-  firstname character varying(32),
+  firstname character varying(255),
   lastname character varying(255),
   title character varying(255),
   function character varying(255),
@@ -3622,7 +3622,7 @@ CREATE VIEW res_view_letterbox AS
     r.video_batch, r.subject, r.identifier, r.title, r.priority, mlb.process_notes,
 	r.locker_user_id, r.locker_time,
     ca.case_id, ca.case_label, ca.case_description, en.entity_label,
-    cont.contact_id AS contact_id, cont.email AS contact_email,
+    cont.contact_id AS contact_id, 
     cont.firstname AS contact_firstname, cont.lastname AS contact_lastname,
     cont.society AS contact_society, u.lastname AS user_lastname,
     u.firstname AS user_firstname, list.item_id AS dest_user_from_listinstance, list.viewed, 
@@ -3638,7 +3638,7 @@ CREATE VIEW res_view_letterbox AS
     LEFT JOIN foldertypes ft ON (((f.foldertype_id = ft.foldertype_id)
         AND ((f.status)::text <> 'DEL'::text))))
     LEFT JOIN cases ca ON ((cr.case_id = ca.case_id)))
-    LEFT JOIN contacts cont ON (((mlb.exp_contact_id = cont.contact_id)
+    LEFT JOIN contacts_v2 cont ON (((mlb.exp_contact_id = cont.contact_id)
         OR (mlb.dest_contact_id = cont.contact_id))))
     LEFT JOIN users u ON ((((mlb.exp_user_id)::text = (u.user_id)::text)
         OR ((mlb.dest_user_id)::text = (u.user_id)::text))))
