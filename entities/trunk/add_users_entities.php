@@ -31,7 +31,24 @@ for($i = 0; $i < count($_SESSION['m_admin']['entity']['entities']); $i++)
 
 
 $entities = array();
-$entities = $entity_ctrl->getAllEntities(); // To do : recup l'arborescence des entités
+//$entities = $entity_ctrl->getAllEntities(); // To do : recup l'arborescence des entités
+
+if($_SESSION['user']['UserId'] == 'superadmin')
+{
+
+    $entities = $entity_ctrl->getAllEntities();
+}
+else
+{
+    $entities = $entity_ctrl->getEntitiesUser($_SESSION['user']['primaryentity']['id']);
+	if(empty($entities)){
+		echo "Vous ne pouvez plus associer d'entit&eacute;s &agrave; cet utilisateur!";	
+
+	}else{
+    		$entities = $entity_ctrl->sortentities($entities);
+	}
+
+}
 /*
 if($_SESSION['user']['UserId'] == 'superadmin')
 {
