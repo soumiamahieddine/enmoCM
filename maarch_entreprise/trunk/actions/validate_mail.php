@@ -397,7 +397,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                     if(isset($data['type_id'])&& $data['priority'] == $i)
                                     {
                                         $frm_str .='selected="selected"';
-                                    }
+                                    }else if($data['priority']=='' && $_SESSION['default_mail_priority']==$i){
+					$frm_str .='selected="selected"';
+				}
                                     $frm_str .='>'.$_SESSION['mail_priorities'][$i].'</option>';
                                 }
                             $frm_str .='</select></td>';
