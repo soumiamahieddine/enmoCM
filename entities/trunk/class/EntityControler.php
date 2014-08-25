@@ -176,6 +176,73 @@ class EntityControler
         return $entities;
     }
 
+        /**
+    * Returns entities of current user from the database in an array of Entity Objects (ordered by group_desc by default)
+    *
+    * @param  $order_str string  Order string passed to the query ("order by short_label asc" by default)
+    * @param  $enabled_only bool  if true returns only the enabled entities, otherwise returns even the disabled (true by default)
+    * @return Array of Entity objects with properties from the database
+    */
+    public function getEntitiesUser($entity_id)
+    {
+        self::connect();
+
+        $entities=self::getEntityArbo($entity_id);
+
+        self::disconnect();
+
+        return $entities;
+    }
+    public function getEntityArbo($parent)
+    {
+       $db = new dbquery();
+       $db->connect();
+       $entities=array();
+
+       $db->query("Select * from ".self::$entities_table." WHERE parent_entity_id='".$parent."' and enabled = 'Y'");
+       while($res = $db->fetch_object())
+       {   
+           $ent=new EntityObj();
+           foreach($res as $key => $value)
+            $tmp_array[$key] = $value;
+
+            $ent->setArray($tmp_array);
+            array_push($entities, $ent);
+            $entities=array_merge(self::getEntityArbo($res->entity_id),$entities);
+        }
+        return $entities;
+    }
+
+    /**
+    * Returns entities of current user from the database in an array of Entity Objects (ordered by group_desc by default)
+    *
+    * @param  $entities Array of Entities Objects  entities  will be sort
+    * @return Array of Entity objects sorted
+    */
+    public function sortEntities($entities)
+    {
+        $arr=array();
+        foreach($entities as $key => $value){
+            array_push($arr, "'".$value->entity_id."'");
+        }
+        $tmp_entities=join(',',$arr);   
+
+        self::connect();
+        $arr=array();
+        $query="Select * from ".self::$entities_table." WHERE entity_id IN (".$tmp_entities.") order by short_label asc";
+        self::$db->query($query);
+        while($res = self::$db->fetch_object())
+        {
+            $ent=new EntityObj();
+            foreach($res as $key => $value)
+                $tmp_array[$key] = $value;
+
+            $ent->setArray($tmp_array);
+            array_push($arr, $ent);
+        }
+        return $arr;
+    }
+
     /**
     * Returns in an array all the members of an entity (user_id only)
     *
