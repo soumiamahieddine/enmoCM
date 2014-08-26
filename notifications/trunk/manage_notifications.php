@@ -160,12 +160,12 @@ if ($mode == 'list') {
                 <?php
                 foreach($templates_list as $template){
                     if ($template['TYPE'] === 'HTML' && ($template['TARGET'] == 'notifications' || $template['TARGET'] == '')) {
-                        ?><option value="<?php echo $template['id'];?>"
+                        ?><option value="<?php echo $template['ID'];?>"
                         <?php
                         if($_SESSION['m_admin']['notification']['template_id']
-                            == $template['id']) {
+                            == $template['ID']) {
                             echo 'selected="selected"';
-                        }?>><?php echo $template['label'];
+                        }?>><?php echo $template['LABEL'];
                         ?></option><?php
                     }
                 }
