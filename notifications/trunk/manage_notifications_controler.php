@@ -166,7 +166,7 @@ function display_list() {
     }
     $where .= " (lower(description) like lower('"
 				. $func->protect_string_db($what, $_SESSION['config']['databasetype'])
-				. "%') or lower(description) like lower('"
+				. "%') or lower(notification_id) like lower('"
 				. $func->protect_string_db($what, $_SESSION['config']['databasetype'])
 				. "%')) ";
 
