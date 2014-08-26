@@ -410,3 +410,6 @@ if (!defined('_COMBINATED_ACTION'))
     define('_COMBINATED_ACTION', 'Combinated action');
 if (!defined('_END_OF_THE_WF'))
     define('_END_OF_THE_WF', 'End of the workflow');
+
+if (!defined('_BASKET_VISIBLE_ONLY_ON_SEARCH'))
+    define('_BASKET_VISIBLE_ONLY_ON_SEARCH', 'Basket only visible on search');

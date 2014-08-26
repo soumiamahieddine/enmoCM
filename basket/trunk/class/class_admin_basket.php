@@ -272,9 +272,35 @@ class admin_basket extends dbquery
                     <textarea  cols="30" rows="4"  name="basketclause" id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause']; ?></textarea> <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=keywords_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><img src = "<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_help.gif" alt="<?php echo _HELP_KEYWORDS; ?>" title="<?php echo _HELP_KEYWORDS; ?>" /></a>
                 </p>
                 <p>
+                    <label><?php echo _BASKET_VISIBLE_ONLY_ON_SEARCH;?> : </label>
+                    <input type='checkbox' name="is_visible_only_on_search" id="is_visible_only_on_search" value="N" <?php 
+                        if ($_SESSION['m_admin']['basket']['is_visible'] === 'N') {
+                            echo 'checked="checked"'; 
+                        }
+                    ?> onchange="updateIsVisible();"/>
+                    <input type='hidden' name="is_visible" id="is_visible" <?php 
+                        if ($_SESSION['m_admin']['basket']['is_visible'] === 'Y' || $_SESSION['m_admin']['basket']['is_visible']=== '') {
+                            echo 'value="Y"';
+                        } else {
+                            echo 'value="N"';
+                        }
+                    ?>/>
+                </p> 
+                <script language="javascript">
+                    function updateIsVisible()
+                    {
+                        if ($(is_visible_only_on_search).checked == true) {
+                            $(is_visible).value = 'N';
+                        } else {
+                            $(is_visible).value = 'Y';
+                        }
+                    }
+                </script>
+                <br />
+                <!--<p>
                     <label><?php echo _BASKET_VISIBLE;?> : </label>
                     <input type='checkbox' name="is_visible" id="is_visible" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_visible'] === 'Y' || $_SESSION['m_admin']['basket']['is_visible']=== '') echo 'checked="checked"'; ?>/>
-                </p>                              
+                </p>-->
                 <?php
                 if ($core_tools->is_module_loaded('folder')) {
                 ?>
