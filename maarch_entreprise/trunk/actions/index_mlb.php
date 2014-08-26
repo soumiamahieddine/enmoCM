@@ -590,6 +590,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td><span class="red_asterisk" id="contact_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
+    $frmStr .= '<input type="hidden" id="contactid" />';
+    $frmStr .= '<input type="hidden" id="addressid" />';
 	
 	/****multicontact***/
 	
@@ -1010,9 +1012,9 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . $_SESSION['config']['businessappurl'] 
             . 'index.php?display=true&dir=indexing_searching&page=change_category_actions'
             . '&resId=' . $resId . '&collId=' . $collId . '\');'
-            . 'launch_autocompleter_contacts(\''
+            . 'launch_autocompleter_contacts_v2(\''
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-            . '&dir=indexing_searching&page=autocomplete_contacts\');';
+            . '&dir=indexing_searching&page=autocomplete_contacts\', \'contact\', \'show_contacts\', \'\', \'contactid\', \'addressid\');';
 
     if ($core->is_module_loaded('folder')) {
         $frmStr .= ' initList(\'folder\', \'show_folder\',\''
@@ -1313,13 +1315,14 @@ function process_category_check($catId, $values)
             }
         }
         if (! empty($contact)) {
-            if ($contactType == 'external'
-                && preg_match('/\([0-9]+\)$/', $contact) == 0
-            ) {
-                $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
-                    . " " . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;
-                return false;
-            } else if ($contactType == 'internal'
+            // if ($contactType == 'external'
+            //     && preg_match('/\([0-9]+\)$/', $contact) == 0
+            // ) {
+            //     $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
+            //         . " " . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;
+            //     return false;
+            // } else if ($contactType == 'internal'
+            if ($contactType == 'internal'
                 && preg_match('/\((.|\s|\d|\h|\w)+\)$/i', $contact) == 0
             ) {
                 $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
@@ -1815,9 +1818,12 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
 		}
 		else{
 		
-			$contactId = str_replace(
-				')', '', substr($contact, strrpos($contact, '(') + 1)
-			);
+			// $contactId = str_replace(
+			// 	')', '', substr($contact, strrpos($contact, '(') + 1)
+			// );
+            $contactId = get_value_fields(
+                $formValues, 'contactid'
+            );
 			if ($contactType == 'internal') {
 				if ($catId == 'incoming') {
 					$queryExtFields .= 'exp_user_id,';
@@ -1836,6 +1842,12 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
 					$queryExtFields .= 'dest_contact_id,';
 					$queryExtValues .= $contactId . ",";
 				}
+                $addressId = get_value_fields(
+                    $formValues, 'addressid'
+                );
+                $queryExtFields .= 'address_id,';
+                $queryExtValues .= "'" . $db->protect_string_db($addressId)
+                                . "',"; 
 			}
 		}
     }

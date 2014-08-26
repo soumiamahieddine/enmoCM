@@ -52,4 +52,13 @@ $_SESSION['info'] = '';
 
 $contact->formcontact("add", "", false, true);
 $core_tools2->load_js();
+
+if(isset($_GET['created']) && $_GET['created'] <> ''){
+?>
+	<script type="text/javascript">
+		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address';?>");
+	</script>
+<?php
+}
+
 ?>

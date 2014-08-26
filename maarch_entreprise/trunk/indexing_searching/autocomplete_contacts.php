@@ -186,7 +186,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         $res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
         echo "<ul>\n";
         for ($i=0; $i< min(count($res), 10)  ;$i++) {
-            echo "<li>".$req->show_string($res[$i][0]['value']).', '.$req->show_string($res[$i][1]['value']).' ('.$res[$i][2]['value'].")</li>\n";
+            echo "<li id='".$res[$i][2]['value'].", '>".$req->show_string($res[$i][0]['value']).', '.$req->show_string($res[$i][1]['value']).' ('.$res[$i][2]['value'].")</li>\n";
         }
         if (count($res) == 11) {
                 echo "<li>...</li>\n";
@@ -204,22 +204,29 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         $num_args = count($args);
         if ($num_args == 0) return "<ul></ul>"; 
            
-        $query = "SELECT result, SUM(confidence) AS score, count(1) AS num FROM (";
+        $query = "SELECT result, SUM(confidence) AS score, count(1) AS num, address, contact_id, ca_id FROM (";
         
         $subQuery = 
             "SELECT "
                 . "(CASE "
-                    . " WHEN is_corporate_person = 'Y' THEN society"
-                    . " WHEN is_corporate_person = 'N' THEN UPPER(lastname) || ' ' || firstname "
-                . " END) || ' (' || contact_id || ')' AS result, "
-                . " %d AS confidence"
-            . " FROM contacts_v2"
+                    . " WHEN is_corporate_person = 'Y' THEN society || ' (' || society_short || ')'"
+                    . " WHEN is_corporate_person = 'N' THEN UPPER(contact_lastname) || ' ' || contact_firstname "
+                . " END) AS result, "
+                . " %d AS confidence, "
+                . " contact_id, ca_id, "
+                . " address_num || ' ' || address_street || ' ' || address_postal_code || ' ' || UPPER(address_town) ||" 
+                . "(CASE "
+                    . " WHEN address_country <> '' THEN ( ' - ' || UPPER(address_country))"
+                    . " WHEN address_country = '' THEN ('')"
+                . " END)"
+                . "AS address"
+            . " FROM view_contacts"
             . " WHERE (user_id = 'superadmin' OR user_id IS NULL OR user_id = '".$req->protect_string_db($_SESSION['user']['UserId'])."' ) "
                 // . " AND enabled = 'Y' "
                 . $contactTypeRequest
                 . " AND ("
-                    . " LOWER(lastname) LIKE LOWER('%s')"
-                    . " OR LOWER(firstname) LIKE LOWER('%s')"
+                    . " LOWER(contact_lastname) LIKE LOWER('%s')"
+                    . " OR LOWER(contact_firstname) LIKE LOWER('%s')"
                     . " OR LOWER(society) LIKE LOWER('%s')"
                 .")";
         
@@ -244,7 +251,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         }
         $query .= implode (' UNION ALL ', $queryParts);
         $query .= ") matches" 
-            . " GROUP BY result "
+            . " GROUP BY result, contact_id, address, ca_id "
             . " ORDER BY score DESC, result ASC";
         
         $req->query($query);
@@ -267,7 +274,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
             }
             if ($i%2==1) $color = 'LightYellow';
             else $color = 'white';
-            echo "<li style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'>". $res->result ."</li>";
+            echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'>". $res->result ."<br/> ".$res->address."</li>";
         }
         if($nb == 0) echo "<li></li>";
         echo "</ul>";

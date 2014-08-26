@@ -517,6 +517,16 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                    $frm_str .=  ' /><div id="show_contacts" class="autocomplete autocompleteIndex"></div></td>';
                    $frm_str .= '<td><span class="red_asterisk" id="contact_mandatory" style="display:inline;">*</span>&nbsp;</td>';
                      $frm_str .= '</tr>';
+                    $frm_str .= '<input type="hidden" id="contactid" ';
+                        if(isset($data['contactId']) && !empty($data['contactId'])){
+                            $frm_str .= ' value="'.$data['contactId'].'" ';
+                        }
+                    $frm_str .= '/>';
+                    $frm_str .= '<input type="hidden" id="addressid" ';
+                        if(isset($data['addressId']) && !empty($data['addressId'])){
+                            $frm_str .= ' value="'.$data['addressId'].'" ';
+                        }
+                    $frm_str .= '/>';
 					 
 					/****multicontact***/
 					
@@ -1167,7 +1177,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '</div>';
 
         /*** Extra javascript ***/
-        $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'.$id_action.'", "viewframevalid", true, true);resize_frame_process("modal_'.$id_action.'", "hist_doc", true, false);window.scrollTo(0,0);launch_autocompleter_contacts(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');update_contact_type_session(\''
+        $frm_str .= '<script type="text/javascript">resize_frame_process("modal_'.$id_action.'", "viewframevalid", true, true);resize_frame_process("modal_'.$id_action.'", "hist_doc", true, false);window.scrollTo(0,0);launch_autocompleter_contacts_v2(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'contact\', \'show_contacts\', \'\', \'contactid\', \'addressid\');update_contact_type_session(\''
         .$_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');';
          $frm_str .= 'affiche_reference();';
@@ -1376,13 +1386,14 @@ function process_category_check($cat_id, $values)
         }
         if(!empty($contact) )
         {
-            if($contact_type == 'external' && !preg_match('/\(\d+\)$/', trim($contact)))
-            {
-                $_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label']." "._WRONG_FORMAT.".<br/>".' '._USE_AUTOCOMPLETION;
-                return false;
-            }
+            // if($contact_type == 'external' && !preg_match('/\(\d+\)$/', trim($contact)))
+            // {
+            //     $_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label']." "._WRONG_FORMAT.".<br/>".' '._USE_AUTOCOMPLETION;
+            //     return false;
+            // }
             //elseif($contact_type == 'internal' && preg_match('/\([A-Za-Z0-9-_ ]+\)$/', $contact) == 0)
-            elseif($contact_type == 'internal' && preg_match('/\((.|\s|\d|\h|\w)+\)$/i', $contact) == 0)
+            // elseif($contact_type == 'internal' && preg_match('/\((.|\s|\d|\h|\w)+\)$/i', $contact) == 0)
+            if($contact_type == 'internal' && preg_match('/\((.|\s|\d|\h|\w)+\)$/i', $contact) == 0)
             {
                 $_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label']." "._WRONG_FORMAT.".<br/>"._USE_AUTOCOMPLETION;
                 return false;
@@ -1699,8 +1710,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		
 		}
 		else{
-		
-			$contact_id = str_replace(')', '', substr($contact, strrpos($contact,'(')+1));
+            $contact_id = get_value_fields(
+                $values_form, 'contactid'
+            );		
+			// $contact_id = str_replace(')', '', substr($contact, strrpos($contact,'(')+1));
 			if($contact_type == 'internal')
 			{
 				if($cat_id == 'incoming')
@@ -1724,6 +1737,11 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 				{
 					$query_ext .= ", dest_contact_id = ".$contact_id."";
 				}
+                $addressId = get_value_fields(
+                    $values_form, 'addressid'
+                );
+                $query_ext .= ", address_id = ". $db->protect_string_db($addressId);
+
 				$db->query("DELETE FROM contacts_res where res_id = ".$res_id);
 				$query_ext .= ", is_multicontacts = ''";
 			}

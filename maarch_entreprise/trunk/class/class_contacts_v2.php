@@ -1359,7 +1359,7 @@ class contacts_v2 extends dbquery
         }
         if ($iframe) {
             $path_contacts = $_SESSION['config']['businessappurl']
-                                      . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe';
+                                      . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe&created=Y';
             $path_contacts_add_errors = $_SESSION['config']['businessappurl']
                                       . 'index.php?display=false&dir=my_contacts&page=create_address_iframe';
         }

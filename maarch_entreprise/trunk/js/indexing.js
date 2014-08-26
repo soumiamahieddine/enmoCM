@@ -864,6 +864,36 @@ function launch_autocompleter_contacts(path_script, id_text, id_div, cat_id)
 }
 
 /**
+ * Launch the Ajax autocomplete object to activate autocompletion on contacts en put address_id and contact_id in an hidden input
+ *
+ * @param path_script String Path to the Ajax script
+ **/
+function launch_autocompleter_contacts_v2(path_script, id_text, id_div, cat_id, contact_id, address_id)
+{
+    var input  = id_text || 'contact';
+    var div    = id_div  || 'show_contacts';
+    
+    var params = get_contacts_params();
+    
+    if (contact_autocompleter && contact_autocompleter.element == $$('#' + input)[0])
+        contact_autocompleter.options.defaultParams = params;
+    else if(path_script)
+        contact_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
+            method:'get',
+            paramName:'Input',
+            parameters: params,
+            minChars: 2,
+            afterUpdateElement: function (text, li){
+                var all_li = li.id;
+                var res = all_li.split(",");
+                parent.$(contact_id).value = res[0];
+                parent.$(address_id).value = res[1];
+            }
+        });
+    else return false;
+}
+
+/**
  * Get the type of the contact with the category_id
  *
  * @return String category_id
@@ -1377,4 +1407,19 @@ function change_category_actions(path_manage_script, resId, collId)
             }
         });
     }
+}
+
+function set_new_contact_address(path_manage_script){
+    new Effect.toggle(parent.document.getElementById('create_contact_div'), 'blind', {delay:0.2});  
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: {},
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            parent.$('contact').value = response.contactName;
+            parent.$('contactid').value = response.contactId;
+            parent.$('addressid').value = response.addressId;
+        }       
+    });  
 }
