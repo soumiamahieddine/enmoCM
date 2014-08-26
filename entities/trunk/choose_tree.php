@@ -6,7 +6,7 @@ $core_tools->load_lang();
 $func = new functions();
 $core_tools->load_html();
 $core_tools->load_header('', true, false);
-
+$_SESSION['entities_chosen_tree'] = array();
 if(isset($_REQUEST['tree_id']) && !empty($_REQUEST['tree_id']))
 {
 	$_SESSION['entities_chosen_tree'] = $_REQUEST['tree_id'];
