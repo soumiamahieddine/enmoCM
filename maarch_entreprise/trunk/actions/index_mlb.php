@@ -576,10 +576,9 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $contact_mode = "view";
     if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update';
     $frmStr .= '<td><a href="#" id="contact_card" title="' . _CONTACT_CARD
-            . '" onclick="open_contact_card(\''
-            . $_SESSION ['config']['businessappurl'] . 'index.php?display=true'
-            . '&page=contact_info\', \'' . $_SESSION ['config']['businessappurl']
-            . 'index.php?display=true&page=user_info\',\''.$contact_mode.'\');" '
+            . '" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
+                . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
+                . '\'blind\', {delay:0.2});return false;"'
             . 'style="visibility:hidden;" ><img src="'
             . $_SESSION['config']['businessappurl'] . 'static.php?filename='
             . 'my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>&nbsp;</td>';
@@ -983,6 +982,13 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . '</iframe>';
     $frmStr .= '</div>';
     /**** Contact form end *******/
+    /**** Contact info start *******/
+    $frmStr .= '<div id="info_contact_div" style="display:none">';
+        $frmStr .= '<iframe width="100%" height="700" name="info_contact_iframe" id="info_contact_iframe"'
+                . ' scrolling="auto" frameborder="0" style="display:block;">'
+                . '</iframe>';
+    $frmStr .= '</div>';
+    /**** Contact info end *******/    
     $frmStr .= '<script type="text/javascript">show_admin_contacts( true);</script>';
     //$frmStr .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=file_iframe" name="file_iframe" id="file_iframe" scrolling="auto" frameborder="0" style="display:block;" ></iframe>';
     if ($_SESSION['origin'] == "scan") {
@@ -1314,22 +1320,21 @@ function process_category_check($catId, $values)
                 return false;
             }
         }
-        if (! empty($contact)) {
-            // if ($contactType == 'external'
-            //     && preg_match('/\([0-9]+\)$/', $contact) == 0
-            // ) {
-            //     $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
-            //         . " " . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;
-            //     return false;
-            // } else if ($contactType == 'internal'
-            if ($contactType == 'internal'
-                && preg_match('/\((.|\s|\d|\h|\w)+\)$/i', $contact) == 0
-            ) {
-                $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
-                    . " " . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;
-                return false;
-            }
-        }
+        // if (! empty($contact)) {
+        //     if ($contactType == 'external'
+        //         && preg_match('/\([0-9]+\)$/', $contact) == 0
+        //     ) {
+        //         $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
+        //             . " " . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;
+        //         return false;
+        //     } else if ($contactType == 'internal'
+        //         && preg_match('/\((.|\s|\d|\h|\w)+\)$/i', $contact) == 0
+        //     ) {
+        //         $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
+        //             . " " . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;
+        //         return false;
+        //     }
+        // }
     }
 
     if ($core->is_module_loaded('entities')) {

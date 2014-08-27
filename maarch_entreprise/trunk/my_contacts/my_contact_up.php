@@ -15,8 +15,7 @@ $core_tools->load_lang();
 $core_tools->test_service('my_contacts', 'apps');
 
 require("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
-require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
-            ."class".DIRECTORY_SEPARATOR."class_lists.php";
+require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_lists.php";
 
 $func = new functions();
 $list2 = new lists(); 
@@ -50,7 +49,11 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
 /***********************************************************/
 
 $contact = new contacts_v2();
-$contact->formcontact("up",$id, false);
+if ($from_iframe) {
+	$contact->formcontact("up",$id, false, true);
+} else {
+	$contact->formcontact("up",$id, false);
+}
 
 // GESTION DES ADDRESSES
 
@@ -210,48 +213,24 @@ for ($i = 0; $i < count($tab); $i ++) {
         }
     }
 }
-// $pageName = "contact_addresses";
-// $pageNameUp = "contact_addresses_up";
-// $pageNameAdd = "contact_addresses_add";
-// $pageNameDel = "contact_addresses_del";
-// $pageNameVal = "";
-// $tableName = $_SESSION['tablename']['contact_addresses'];
-// $pageNameBan = "";
-// $addLabel = _NEW_CONTACT_ADDRESS;
-
-// $autoCompletionArray = array();
-// $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']
-//     . "index.php?display=true&page=contact_addresses_list_by_name";
-// $autoCompletionArray["number_to_begin"] = 1;
-// $list->admin_list(
-//     $tab, $i, '',
-//     'contact_id"', 'my_contact_up', 'my_contacts',
-//     'id', true, $pageNameUp, $pageNameVal, $pageNameBan,
-//     $pageNameDel, $pageNameAdd, $addLabel, FALSE, FALSE, _ALL_CONTACT_ADDRESSES,
-//     _A_CONTACT_ADDRESS, $_SESSION['config']['businessappurl']
-//     . 'static.php?filename=manage_contact_b.gif', false, true, true, true,
-//     $what, true, $autoCompletionArray
-// );
-
 
 //List parameters
     $paramsTab = array();
     $paramsTab['bool_modeReturn'] = false;                                              //Desactivation du mode return (vs echo)
-    $paramsTab['pageTitle'] =  '';           //Titre de la page
+    $paramsTab['pageTitle'] =  '';           											//Titre de la page
+    $paramsTab['listCss'] =  'listing largerList spec';
     $paramsTab['urlParameters'] = '&dir=my_contacts';                                   //parametre d'url supplementaire
-    $paramsTab['pagePicto'] = $_SESSION['config']['businessappurl']
-            ."static.php?filename=manage_contact_b.gif";                                //Image (pictogramme) de la page
+//    $paramsTab['pagePicto'] = $_SESSION['config']['businessappurl']
+//            ."static.php?filename=manage_contact_b.gif";                                //Image (pictogramme) de la page
     $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
     $paramsTab['bool_showSearchTools'] = true;                                          //Afficle le filtre alphabetique et le champ de recherche
     $paramsTab['searchBoxAutoCompletionUrl'] = $_SESSION['config']['businessappurl']
-        ."index.php?display=true&page=contact_addresses_list_by_name";            //Script pour l'autocompletion
+        ."index.php?display=true&page=contact_addresses_list_by_name";            		//Script pour l'autocompletion
     $paramsTab['searchBoxAutoCompletionMinChars'] = 2;                                  //Nombre minimum de caractere pour activer l'autocompletion (1 par defaut)
     $paramsTab['bool_showAddButton'] = true;                                            //Affichage du bouton Nouveau
-    $paramsTab['addButtonLabel'] = _NEW_CONTACT_ADDRESS;                                   //Libellé du bouton Nouveau
-    // $paramsTab['addButtonLink'] = $_SESSION['config']['businessappurl']
-        // ."index.php?dir=my_contacts&page=my_contact_add";                            //Lien sur le bouton nouveau (1)
+    $paramsTab['addButtonLabel'] = _NEW_CONTACT_ADDRESS;                                //Libellé du bouton Nouveau
     $paramsTab['addButtonScript'] = "window.top.location='".$_SESSION['config']['businessappurl']
-        ."index.php?page=contact_addresses_add&mycontact=Y'";                              //Action sur le bouton nouveau (2)
+        ."index.php?page=contact_addresses_add&mycontact=Y'";                          	//Action sur le bouton nouveau (2)
 
     //Action icons array
     $paramsTab['actionIcons'] = array();

@@ -186,7 +186,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         $res = $req->select($select, $where, $other, $_SESSION['config']['databasetype'], 11,false,"","","", false);
         echo "<ul>\n";
         for ($i=0; $i< min(count($res), 10)  ;$i++) {
-            echo "<li id='".$res[$i][2]['value'].", '>".$req->show_string($res[$i][0]['value']).', '.$req->show_string($res[$i][1]['value']).' ('.$res[$i][2]['value'].")</li>\n";
+            echo "<li id='".$res[$i][2]['value'].", '>".$req->show_string($res[$i][0]['value'])." ".$req->show_string($res[$i][1]['value'])."</li>\n";
         }
         if (count($res) == 11) {
                 echo "<li>...</li>\n";
@@ -201,6 +201,10 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
        
         $args = explode(' ', $_REQUEST['Input']);
         $args[] = $_REQUEST['Input'];
+        $args_bold = array();
+        foreach ($args as $key => $value) {
+            $args_bold[$key] = '<b>'. $value . '</b>';
+        }
         $num_args = count($args);
         if ($num_args == 0) return "<ul></ul>"; 
            
@@ -209,7 +213,19 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         $subQuery = 
             "SELECT "
                 . "(CASE "
-                    . " WHEN is_corporate_person = 'Y' THEN society || ' (' || society_short || ')'"
+                    . " WHEN is_corporate_person = 'Y' THEN society ||" 
+                        . "(CASE "
+                            . " WHEN society_short <> '' THEN  ' (' || society_short || ')' ||"
+                                . "(CASE "
+                                    . " WHEN lastname <> '' THEN ( ' - ' || UPPER(lastname) || ' ' || firstname)"
+                                    . " WHEN lastname = '' THEN ('')"
+                                . " END)"                            
+                            . " WHEN society_short = '' THEN '' ||"
+                                . "(CASE "
+                                    . " WHEN lastname <> '' THEN ( ' - ' || UPPER(lastname) || ' ' || firstname)"
+                                    . " WHEN lastname = '' THEN ('')"
+                                . " END)"
+                        . " END)"
                     . " WHEN is_corporate_person = 'N' THEN UPPER(contact_lastname) || ' ' || contact_firstname "
                 . " END) AS result, "
                 . " %d AS confidence, "
@@ -222,12 +238,14 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
                 . "AS address"
             . " FROM view_contacts"
             . " WHERE (user_id = 'superadmin' OR user_id IS NULL OR user_id = '".$req->protect_string_db($_SESSION['user']['UserId'])."' ) "
-                // . " AND enabled = 'Y' "
                 . $contactTypeRequest
                 . " AND ("
                     . " LOWER(contact_lastname) LIKE LOWER('%s')"
                     . " OR LOWER(contact_firstname) LIKE LOWER('%s')"
                     . " OR LOWER(society) LIKE LOWER('%s')"
+                    . " OR LOWER(lastname) LIKE LOWER('%s')"
+                    . " OR LOWER(firstname) LIKE LOWER('%s')"
+                    . " OR LOWER(address_town) LIKE LOWER('%s')"
                 .")";
         
         $queryParts = array();
@@ -237,17 +255,17 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
             # Full match of one given arg
             $expr = $arg;
             $conf = 100;
-            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr); 
+            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr); 
 
             # Partial match (starts with)
             $expr = $arg . "%"; ;
             $conf = 34; # If found, partial match contains will also be so score is sum of both confidences, i.e. 67)
-            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr); 
+            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr); 
           
             # Partial match (contains)
             $expr = "%" . $arg . "%";
             $conf = 33;
-            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr); 
+            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr); 
         }
         $query .= implode (' UNION ALL ', $queryParts);
         $query .= ") matches" 
@@ -274,7 +292,11 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
             }
             if ($i%2==1) $color = 'LightYellow';
             else $color = 'white';
-            echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'>". $res->result ."<br/> ".$res->address."</li>";
+            echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'>"
+                    . ucwords(strtolower(str_ireplace($args, $args_bold, $res->result))) 
+                    ."<br/> "
+                    . ucwords(strtolower(str_ireplace($args, $args_bold, $res->address)))
+                ."</li>";
         }
         if($nb == 0) echo "<li></li>";
         echo "</ul>";

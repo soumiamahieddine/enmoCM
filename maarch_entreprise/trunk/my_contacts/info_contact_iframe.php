@@ -1,0 +1,119 @@
+<?php
+/*
+*    Copyright 2014 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+*
+*
+* @file
+* @author <dev@maarch.org>
+* @date $date$
+* @version $Revision$
+* @ingroup admin
+*/
+
+$core_tools2 = new core_tools();
+$core_tools2->load_lang();
+$core_tools2->test_admin('my_contacts', 'apps');
+$core_tools2->load_html();
+$core_tools2->load_header('', true, false);
+$core_tools2->load_js();
+
+require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_request.php';
+$request = new request();
+
+echo '<div class="error" id="main_error">';
+echo $_SESSION['error'];
+echo '</div>';
+
+echo '<div class="info" id="main_info">';
+echo $_SESSION['info'];
+echo '</div>';
+
+$_SESSION['error'] = '';
+$_SESSION['info'] = '';
+
+$request->connect();
+
+$query = "select * from ".$_SESSION['tablename']['contacts_v2']." where contact_id = ".$_GET['contactid'];
+$request->query($query);
+$line = $request->fetch_object();
+
+if ($line->user_id == $_SESSION['user']['UserId']) {
+	$_SESSION['contact']['current_contact_id'] = $_GET['contactid'];
+	$from_iframe = true;
+	include_once 'apps/' . $_SESSION['config']['app_id'] . '/my_contacts/my_contact_up.php';
+} else {
+	require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
+	require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
+	$contact = new contacts_v2();
+
+	$_SESSION['m_admin']['contact'] = array();
+	$_SESSION['m_admin']['contact']['ID'] = $line->contact_id;
+	$_SESSION['m_admin']['contact']['TITLE'] = $request->show_string($line->title);
+	$_SESSION['m_admin']['contact']['LASTNAME'] = $request->show_string($line->lastname);
+	$_SESSION['m_admin']['contact']['FIRSTNAME'] = $request->show_string($line->firstname);
+	$_SESSION['m_admin']['contact']['SOCIETY'] = $request->show_string($line->society);
+	$_SESSION['m_admin']['contact']['SOCIETY_SHORT'] = $request->show_string($line->society_short);
+	$_SESSION['m_admin']['contact']['FUNCTION'] = $request->show_string($line->function);
+	$_SESSION['m_admin']['contact']['OTHER_DATA'] = $request->show_string($line->other_data);
+	$_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = $request->show_string($line->is_corporate_person);
+	$_SESSION['m_admin']['contact']['CONTACT_TYPE'] = $line->contact_type;
+	$_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
+
+	$query = "select * from ".$_SESSION['tablename']['contact_addresses']." where id = ".$_GET['addressid'];
+	$request->query($query);
+	$line = $request->fetch_object();
+
+	$_SESSION['m_admin']['address'] = array();
+	$_SESSION['m_admin']['address']['ID'] = $line->id;
+	$_SESSION['m_admin']['address']['CONTACT_ID'] = $line->contact_id;
+	$_SESSION['m_admin']['address']['TITLE'] = $request->show_string($line->title);
+	$_SESSION['m_admin']['address']['LASTNAME'] = $request->show_string($line->lastname);
+	$_SESSION['m_admin']['address']['FIRSTNAME'] = $request->show_string($line->firstname);
+	$_SESSION['m_admin']['address']['FUNCTION'] = $request->show_string($line->function);
+	$_SESSION['m_admin']['address']['OTHER_DATA'] = $request->show_string($line->other_data);
+	$_SESSION['m_admin']['address']['OWNER'] = $line->user_id;
+	$_SESSION['m_admin']['address']['DEPARTEMENT'] = $request->show_string($line->departement);
+	$_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = $line->contact_purpose_id;
+	$_SESSION['m_admin']['address']['OCCUPANCY'] = $request->show_string($line->occupancy);
+	$_SESSION['m_admin']['address']['ADD_NUM'] = $request->show_string($line->address_num);
+	$_SESSION['m_admin']['address']['ADD_STREET'] = $request->show_string($line->address_street);
+	$_SESSION['m_admin']['address']['ADD_COMP'] = $request->show_string($line->address_complement);
+	$_SESSION['m_admin']['address']['ADD_TOWN'] = $request->show_string($line->address_town);
+	$_SESSION['m_admin']['address']['ADD_CP'] = $request->show_string($line->address_postal_code);
+	$_SESSION['m_admin']['address']['ADD_COUNTRY'] = $request->show_string($line->address_country);
+	$_SESSION['m_admin']['address']['PHONE'] = $request->show_string($line->phone);
+	$_SESSION['m_admin']['address']['MAIL'] = $request->show_string($line->email);
+	$_SESSION['m_admin']['address']['WEBSITE'] = $request->show_string($line->website);
+	$_SESSION['m_admin']['address']['IS_PRIVATE'] = $request->show_string($line->is_private);
+	$_SESSION['m_admin']['address']['SALUTATION_HEADER'] = $request->show_string($line->salutation_header);
+	$_SESSION['m_admin']['address']['SALUTATION_FOOTER'] = $request->show_string($line->salutation_footer);
+
+	$core_tools2->load_js();
+	?>
+	    <div id="inner_content" class="clearfix" align="center">
+	<?php
+		$contact->get_contact_form();
+		$contact->get_address_form();
+	?>
+		</div>
+<?php
+}
+

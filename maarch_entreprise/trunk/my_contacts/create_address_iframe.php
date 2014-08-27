@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2014 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -19,11 +19,10 @@
 */
 
 /**
-* @brief  Add contact form
 *
 *
 * @file
-* @author Claire Figueras <dev@maarch.org>
+* @author <dev@maarch.org>
 * @date $date$
 * @version $Revision$
 * @ingroup admin
