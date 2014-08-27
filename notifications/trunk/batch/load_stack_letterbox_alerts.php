@@ -212,7 +212,7 @@ $db = new dbquery($GLOBALS['configFile']);
 $db->connect();
 $databasetype = (string)$xmlconfig->CONFIG_BASE->databasetype;
 
-$alert_engine = new alert_engine();
+$alert_engine = new alert_engine($GLOBALS['configFile']);
 
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
                          . $GLOBALS['batchName'] . '_error.lck';
