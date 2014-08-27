@@ -16,7 +16,11 @@ class alert_engine extends dbquery
     */
     function __construct()
     {
-        parent::__construct();
+	$args = func_get_args();
+	
+        if (count($args) < 1) parent::__construct();
+	
+        else parent::__construct($args[0]);
     }
 
     /**
