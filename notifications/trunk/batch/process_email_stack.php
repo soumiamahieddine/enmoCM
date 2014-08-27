@@ -44,7 +44,7 @@ while ($state <> 'END') {
                 $host = (string)$mailerParams->smtp_host, 
                 $port = (string)$mailerParams->smtp_port,
                 $helo = (string)$mailerParams->domains,
-                $auth = (bool)$mailerParams->smtp_auth,
+                $auth = filter_var($mailerParams->smtp_auth, FILTER_VALIDATE_BOOLEAN),
                 $user = (string)$mailerParams->smtp_user,
                 $pass = (string)$mailerParams->smtp_password
                 );
