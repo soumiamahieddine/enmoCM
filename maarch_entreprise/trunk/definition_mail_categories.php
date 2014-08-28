@@ -1132,14 +1132,14 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     $db2->query('select lastname, firstname from ' . $_SESSION['tablename']['users'] . " where user_id = '" . $line-> $arr[$i] . "'");
                     $res = $db2->fetch_object();
                     $data[$arr[$i]]['show_value'] = $res->lastname . ' ' . $res->firstname;
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=user_info&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=450, width=600,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
+                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=user_info&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=400, width=600,scrollbars=no,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
                 } else {
                     unset ($data[$arr[$i]]);
                 }
             }
             elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
                 if (!empty ($line-> $arr[$i])) {
-                    $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts_v2'] . " where  contact_id = " . $line-> $arr[$i] . "");
+                    $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts_v2'] . ' where  contact_id = ' . $line-> $arr[$i]);
                     $res = $db2->fetch_object();
                     if ($res->is_corporate_person == 'Y') {
                         $data[$arr[$i]]['show_value'] = $res->society;
@@ -1149,7 +1149,9 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                             $data[$arr[$i]]['show_value'] .= ' (' . $res->society . ')';
                         }
                     }
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=contact_info&mode=view&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=600, width=600,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
+                    $db2->query("select address_id from mlb_coll_ext where res_id = " . $res_id);
+                    $res = $db2->fetch_object();
+                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&contactid=' . $line-> $arr[$i] . '&addressid='.$res->address_id.'\', \'contact_info\', \'height=800, width=900,scrollbars=no,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
                 } else {
                     unset ($data[$arr[$i]]);
                 }
@@ -1198,20 +1200,23 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     $db2->query("select address_id from mlb_coll_ext where res_id = ".$res_id);
                     $resAddress = $db2->fetch_object();
                     $addressId = $resAddress->address_id;
-                    $db2->query('select is_corporate_person, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town from view_contacts where contact_id = ' . $line-> $arr[$i] . ' and ca_id = ' . $addressId);
+                    $db2->query('select is_corporate_person, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname from view_contacts where contact_id = ' . $line-> $arr[$i] . ' and ca_id = ' . $addressId);
                     $res = $db2->fetch_object();
                     if ($res->is_corporate_person == 'Y') {
                         $data['contact'] = $res->society ;
                         if (!empty ($res->society_short)) {
                             $data['contact'] .= ' ('.$res->society_short.')';
                         }
+                        if (!empty($res->lastname) || !empty($res->firstname)) {
+                            $data['contact'] .= ' - ' . $res->lastname . ' ' . $res->firstname;
+                        }
                         $data['contact'] .= ' ' . $res->address_num .' ' . $res->address_street .' ' . strtoupper($res->address_town);
                     } else {
-                        $data['contact'] = '';
+                        $data['contact'] .= $res->contact_lastname . ' ' . $res->contact_firstname;
                         if (!empty ($res->society)) {
-                            $data['contact'] = $res->society . ', ';
+                            $data['contact'] .= ' (' .$res->society . ') ';
                         } 
-                        $data['contact'] .= $res->contact_lastname . ' ' . $res->contact_firstname .' ' . $res->address_num .' ' . $res->address_street .' ' . strtoupper($res->address_town);
+                         $data['contact'] .= $res->address_num .' ' . $res->address_street .' ' . strtoupper($res->address_town);
                         
                     }
                     $data['contactId'] = $line-> $arr[$i];

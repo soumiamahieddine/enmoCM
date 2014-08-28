@@ -72,6 +72,10 @@ $_SESSION['m_admin']['contact']['CONTACT_TYPE'] = $line->contact_type;
 $_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
 
 $core_tools2->load_js();
-$contact->formaddress("add", "", false, "iframe");
+if (isset($_GET['iframe']) && $_GET['iframe'] == 'iframe_up_add') {
+	$contact->formaddress("add", "", false, "iframe_add_up");
+} else {
+	$contact->formaddress("add", "", false, "iframe");
+}
 
 ?>

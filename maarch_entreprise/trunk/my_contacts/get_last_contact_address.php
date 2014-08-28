@@ -31,8 +31,17 @@
 require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
     . 'class_request.php';
 $db = new dbquery();
-
 $db->connect();
+
+if (isset($_GET['mode']) && $_GET['mode'] == 'up') {
+	$extra = ' AND contact_id = '.$_SESSION['contact']['current_contact_id'].' and ca_id = '.$_SESSION['contact']['current_address_id'];
+} else if (isset($_GET['contactid']) && $_GET['contactid'] <> '' && isset($_GET['addressid']) && $_GET['addressid'] <> ''){
+	$extra = ' AND contact_id = '.$_GET['contactid'].' and ca_id = '.$_GET['addressid'];
+} 
+else {
+	$extra = ' ORDER BY creation_date DESC limit 1';
+}
+
 $db->query("SELECT is_corporate_person, 
 					contact_lastname, 
 					contact_firstname, 
@@ -40,16 +49,16 @@ $db->query("SELECT is_corporate_person,
 					society_short, 
 					contact_id, 
 					ca_id, 
-					creation_date,
 					lastname,
 					firstname,
 					address_num,
 					address_street,
 					address_town,
-					address_postal_code 
+					address_postal_code,
+					creation_date,
+					update_date 
 			FROM view_contacts 
-			WHERE user_id = '". $_SESSION['user']['UserId'] . "' 
-			ORDER BY creation_date desc limit 1");
+			WHERE user_id = '". $_SESSION['user']['UserId'] . "' " . $extra);
 
 $res = $db->fetch_object();
 
@@ -63,24 +72,19 @@ if($res->is_corporate_person == 'N') {
 	} else if($res->society <> '') {
 		$contact .= ' (' . $db->protect_string_db($res->society) . ')';
 	}
-	if ($res->lastname <> '') {
-		$contact .= ' ' . $db->protect_string_db($res->lastname);
-	}
-	if ($res->firstname <> '') {
-		$contact .= ' ' . $db->protect_string_db($res->firstname);
-	}
-	if (!empty($address)) {
-		$contact .= ', ' . $address;
-	}
 
 } else {
 	$contact = $db->protect_string_db($res->society);
 	if($res->society_short <> '') {
 		$contact .= ' (' . $db->protect_string_db($res->society_short) . ')';
 	}
-	if (!empty($address)) {
-		$contact .= ', ' . $address;
-	}
+}
+
+if ($res->lastname <> '' || $res->firstname <> '') {
+	$contact .= ' - ' . $db->protect_string_db($res->lastname) . ' ' . $db->protect_string_db($res->firstname);
+}
+if (!empty($address)) {
+	$contact .= ', ' . $address;
 }
 
 $contactId = $res->contact_id;

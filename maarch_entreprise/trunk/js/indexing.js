@@ -1409,8 +1409,8 @@ function change_category_actions(path_manage_script, resId, collId)
     }
 }
 
-function set_new_contact_address(path_manage_script){
-    new Effect.toggle(parent.document.getElementById('create_contact_div'), 'blind', {delay:0.2});  
+function set_new_contact_address(path_manage_script, id_div){
+    new Effect.toggle(parent.document.getElementById(id_div), 'blind', {delay:0.2});  
     new Ajax.Request(path_manage_script,
     {
         method:'post',

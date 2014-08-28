@@ -35,7 +35,10 @@ $core_tools2->load_html();
 $core_tools2->load_header('', true, false);
 
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
+require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+    . 'class_request.php';
 
+$request = new request();
 $contact = new contacts_v2();
 
 echo '<div class="error" id="main_error">';
@@ -49,15 +52,19 @@ echo '</div>';
 $_SESSION['error'] = '';
 $_SESSION['info'] = '';
 
-$contact->formcontact("add", "", false, true);
 $core_tools2->load_js();
+$func = new functions();
 
-if(isset($_GET['created']) && $_GET['created'] <> ''){
-?>
-	<script type="text/javascript">
-		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address';?>", "create_contact_div");
-	</script>
-<?php
+if(isset($_GET['id']))
+{
+    $id = addslashes($func->wash($_GET['id'], "alphanum", _ADDRESS));
 }
+else
+{
+    $id = "";
+}
+
+$contact->formaddress("up", $id, false, "iframe_add_up");
+
 
 ?>

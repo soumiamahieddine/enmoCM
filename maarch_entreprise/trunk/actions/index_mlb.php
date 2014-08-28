@@ -984,7 +984,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     /**** Contact form end *******/
     /**** Contact info start *******/
     $frmStr .= '<div id="info_contact_div" style="display:none">';
-        $frmStr .= '<iframe width="100%" height="700" name="info_contact_iframe" id="info_contact_iframe"'
+        $frmStr .= '<iframe width="100%" height="800" name="info_contact_iframe" id="info_contact_iframe"'
                 . ' scrolling="auto" frameborder="0" style="display:block;">'
                 . '</iframe>';
     $frmStr .= '</div>';

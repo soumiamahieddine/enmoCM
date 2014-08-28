@@ -20,7 +20,7 @@ $db = new dbquery();
 $db->connect();
 if($_REQUEST['id'] == "")
 {
-    echo '<script type="text/javascript">window.resizeTo(300, 150);</script>';
+    echo '<script type="text/javascript">window.resizeTo(400, 300);</script>';
     echo '<br/><br/><center>'._YOU_MUST_SELECT_USER.'</center><br/><br/><div align="center">
         <input name="close" type="button" value="'._CLOSE.'"  onclick="self.close();" class="button" />
         </div>';
@@ -44,8 +44,8 @@ else
         $user_data['MAIL'] = $func->show_string($line->email);
     }
     ?>
-    <script type="text/javascript">window.resizeTo(500, 350);</script>
-<div class="popup_content">
+<!--     <script type="text/javascript">window.resizeTo(500, 350);</script> -->
+<div class="popup_content" align="center">
     <br/>
     <h2 align="center"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=account_off.gif" alt="<?php echo _USER_DATA;?>" /> <?php echo _USER_DATA;?></h2>   <br/>
     <form name="frmuserdata" id="frmuserdata" method="post" action="#" class="forms addforms">
@@ -94,10 +94,13 @@ else
             </p>
             <?php
         }
-         ?>
-        <p class="buttons">
-            <input name="close" type="button" value="<?php echo _CLOSE;?>"  onclick="self.close();" class="button" />
-        </p>
+        if (!$from_iframe) { ?>
+            <p class="buttons">
+                <input name="close" type="button" value="<?php echo _CLOSE;?>"  onclick="self.close();" class="button" />
+            </p>
+    <?php 
+        }
+    ?>
     </form >
 </div>
     <?php

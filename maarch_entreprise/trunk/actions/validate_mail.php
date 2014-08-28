@@ -508,7 +508,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                      $frm_str .= '</label></td>';
                     $contact_mode = "view";
                     if($core_tools->test_service('update_contacts','apps', false)) $contact_mode = 'up';
-                   $frm_str .='<td><a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="open_contact_card(\''.$_SESSION ['config']['businessappurl'].'index.php?display=true&page=contact_info&mode='.$contact_mode.'\', \''.$_SESSION ['config']['businessappurl'].'index.php?display=true&page=user_info\');" style="visibility:hidden;" ><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=my_contacts_off.gif" alt="'._CONTACT_CARD.'" /></a>&nbsp;</td>';
+                   $frm_str .='<td><a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
+                        . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
+                        . '\'blind\', {delay:0.2});return false;"'
+                        . ' style="visibility:hidden;" ><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=my_contacts_off.gif" alt="'._CONTACT_CARD.'" /></a>&nbsp;</td>';
                    $frm_str .='<td class="indexing_field"><input type="text" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');"';
                     if(isset($data['contact']) && !empty($data['contact']))
                    {
@@ -998,6 +1001,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . '</iframe>';
     $frm_str .= '</div>';
     /**** Contact form end *******/
+    /**** Contact info start *******/
+    $frm_str .= '<div id="info_contact_div" style="display:none">';
+        $frm_str .= '<iframe width="100%" height="800" name="info_contact_iframe" id="info_contact_iframe"'
+                . ' scrolling="auto" frameborder="0" style="display:block;">'
+                . '</iframe>';
+    $frm_str .= '</div>';
+    /**** Contact info end *******/ 
+    
         $frm_str .= '<script type="text/javascript">show_admin_contacts(true);</script>';
         
         //HISTORY FRAME

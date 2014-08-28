@@ -49,14 +49,35 @@ echo '</div>';
 $_SESSION['error'] = '';
 $_SESSION['info'] = '';
 
+if (!isset($_GET['contactid']) || $_GET['contactid'] == '') {
+	echo '<div class="error" id="main_error">';
+	echo _YOU_MUST_SELECT_CONTACT;
+	echo '</div>';
+	exit;
+}
+
+if ((isset($_GET['contactid']) && $_GET['contactid'] <> '') && (!isset($_GET['addressid']) || $_GET['addressid'] == '')) {
+	$_REQUEST['id'] = $_GET['contactid'];
+	$from_iframe = true;
+	include_once 'apps/' . $_SESSION['config']['app_id'] . '/user_info.php';
+	exit;
+}
+
 $request->connect();
 
 $query = "select * from ".$_SESSION['tablename']['contacts_v2']." where contact_id = ".$_GET['contactid'];
 $request->query($query);
 $line = $request->fetch_object();
 
-if ($line->user_id == $_SESSION['user']['UserId']) {
+if (isset($_GET['mode']) && $_GET['mode'] <> '') {
+	$mode = $_GET['mode'];
+} else {
+	$mode = '';
+}
+
+if ($line->user_id == $_SESSION['user']['UserId'] && $mode <> 'view') {
 	$_SESSION['contact']['current_contact_id'] = $_GET['contactid'];
+	$_SESSION['contact']['current_address_id'] = $_GET['addressid'];
 	$from_iframe = true;
 	include_once 'apps/' . $_SESSION['config']['app_id'] . '/my_contacts/my_contact_up.php';
 } else {
@@ -117,3 +138,10 @@ if ($line->user_id == $_SESSION['user']['UserId']) {
 <?php
 }
 
+if(isset($_GET['created']) && $_GET['created'] <> ''){
+?>
+	<script type="text/javascript">
+		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up';?>", "info_contact_div");
+	</script>
+<?php
+}

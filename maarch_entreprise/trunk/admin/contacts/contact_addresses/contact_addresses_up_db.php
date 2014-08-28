@@ -43,7 +43,9 @@ $iframe = false;
 if(isset($_GET['mycontact']) && $_GET['mycontact'] <> ''){
 	$admin = false;
 	if($_GET['mycontact'] == 'iframe'){
-		$iframe = true;
+		$iframe = 1;
+	} else if ($_GET['mycontact'] == 'iframe_add_up') {
+		$iframe = 2;
 	}
 } else {
 	$admin = true;

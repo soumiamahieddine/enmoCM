@@ -1005,6 +1005,7 @@ if (!defined('_WARNING_MESSAGE_DEL_CONTACT_ADDRESS')) define( '_WARNING_MESSAGE_
 if (!defined('_CONTACT_ADDRESS_REAFFECT')) define( '_CONTACT_ADDRESS_REAFFECT','R&eacute;affectation des documents');
 if (!defined('_NEW_ADDRESS')) define( '_NEW_ADDRESS','Nouvelle adresse');
 if (!defined('_CHOOSE_CONTACT_ADDRESS')) define( '_CHOOSE_CONTACT_ADDRESS','Choisissez une adresse');
+if (!defined('_USE')) define( '_USE','Utiliser');
 
 if (!defined('_SALUTATION')) define( '_SALUTATION','Formule de politesse');
 if (!defined('_SALUTATION_HEADER')) define( '_SALUTATION_HEADER','De d&eacutebut de courrier');

@@ -83,7 +83,7 @@ $order = 'asc';
 if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
     $order = trim($_REQUEST['order']);
 }
-$field = 'id';
+$field = 'lastname';
 if (isset($_REQUEST['order_field']) && ! empty($_REQUEST['order_field'])) {
     $field = trim($_REQUEST['order_field']);
 }
@@ -158,8 +158,8 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["firstname"]= $request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["label"]=_FIRSTNAME;
                 $tab[$i][$j]["size"]="15";
-                $tab[$i][$j]["label_align"]="center";
-                $tab[$i][$j]["align"]="center";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]= "firstname";
@@ -181,8 +181,8 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["address_town"]= $request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["label"]=_TOWN;
                 $tab[$i][$j]["size"]="15";
-                $tab[$i][$j]["label_align"]="center";
-                $tab[$i][$j]["align"]="center";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]= "address_town";
@@ -229,32 +229,58 @@ for ($i = 0; $i < count($tab); $i ++) {
     $paramsTab['searchBoxAutoCompletionMinChars'] = 2;                                  //Nombre minimum de caractere pour activer l'autocompletion (1 par defaut)
     $paramsTab['bool_showAddButton'] = true;                                            //Affichage du bouton Nouveau
     $paramsTab['addButtonLabel'] = _NEW_CONTACT_ADDRESS;                                //Libellé du bouton Nouveau
-    $paramsTab['addButtonScript'] = "window.top.location='".$_SESSION['config']['businessappurl']
-        ."index.php?page=contact_addresses_add&mycontact=Y'";                          	//Action sur le bouton nouveau (2)
+    if ($from_iframe) {
+	    $paramsTab['addButtonScript'] = "window.location='".$_SESSION['config']['businessappurl']
+	        ."index.php?display=false&dir=my_contacts&page=create_address_iframe&iframe=iframe_up_add'";
+    } else {
+	    $paramsTab['addButtonScript'] = "window.top.location='".$_SESSION['config']['businessappurl']
+	        ."index.php?page=contact_addresses_add&mycontact=Y'";                          	//Action sur le bouton nouveau (2)
+    }
 
     //Action icons array
     $paramsTab['actionIcons'] = array();
         //get start
         $start = $list2->getStart();
-        
-        $update = array(
-                "script"        => "window.top.location='".$_SESSION['config']['businessappurl']
-                                        ."index.php?page=contact_addresses_up&mycontact=Y&id=@@id@@&what=".$what."&start=".$start."'",
-                "class"         =>  "change",
-                "label"         =>  _MODIFY,
-                "tooltip"       =>  _MODIFY
-                );
-        $delete = array(
-                "href"          => $_SESSION['config']['businessappurl']
-                                    ."index.php?page=contact_addresses_del&mycontact=Y&what=".$what."&start=".$start,
-                "class"         =>  "delete",
-                "label"         =>  _DELETE,
-                "tooltip"       =>  _DELETE,
-                "alertText"     =>  _REALLY_DELETE.": @@lastname@@ @@firstname@@ ?"
-                );
-        array_push($paramsTab['actionIcons'], $update);          
-        array_push($paramsTab['actionIcons'], $delete);
-    
+       
+       if ($from_iframe) {
+	        $update = array(
+	                "script"        => "window.location='".$_SESSION['config']['businessappurl']
+	                                        ."index.php?display=false&dir=my_contacts&page=update_address_iframe&id=@@id@@'",
+	                "class"         =>  "change",
+	                "label"         =>  _MODIFY,
+	                "tooltip"       =>  _MODIFY
+	                );
+        } else {
+	        $update = array(
+	                "script"        => "window.top.location='".$_SESSION['config']['businessappurl']
+	                                        ."index.php?page=contact_addresses_up&mycontact=Y&id=@@id@@&what=".$what."&start=".$start."'",
+	                "class"         =>  "change",
+	                "label"         =>  _MODIFY,
+	                "tooltip"       =>  _MODIFY
+	                );        	
+        }
+
+        array_push($paramsTab['actionIcons'], $update); 
+
+		if ($from_iframe) {
+	        $use = array(
+	                "script"        => "set_new_contact_address('".$_SESSION['config']['businessappurl'] . "index.php?display=false&dir=my_contacts&page=get_last_contact_address&contactid=".$id."&addressid=@@id@@', 'info_contact_div')",
+	                "class"         =>  "change",
+	                "label"         =>  _USE
+	                );
+	        array_push($paramsTab['actionIcons'], $use); 
+		} else {
+	        $delete = array(
+	                "href"          => $_SESSION['config']['businessappurl']
+	                                    ."index.php?page=contact_addresses_del&mycontact=Y&what=".$what."&start=".$start,
+	                "class"         =>  "delete",
+	                "label"         =>  _DELETE,
+	                "tooltip"       =>  _DELETE,
+	                "alertText"     =>  _REALLY_DELETE.": @@lastname@@ @@firstname@@ ?"
+	                );
+	        array_push($paramsTab['actionIcons'], $delete);
+		}         
+   
 //Afficher la liste
     echo '<br/>';
     $list2->showList($tab, $paramsTab, 'id');
