@@ -1313,7 +1313,7 @@ class contacts_v2 extends dbquery
                     $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2_up';
                     if(!$admin)
                     {
-                        $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=my_contact_up&amp;dir=my_contact_up&amp;load';
+                        $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=my_contact_up&amp;dir=my_contacts&amp;load';
                     }
                     if($iframe == 'iframe')
                     {

@@ -32,6 +32,14 @@
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
+ <SERVICE>
+   <id>search_contacts</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
+   <name>_SEARCH_CONTACTS</name>
+   <comment>_SEARCH_CONTACTS</comment>
+   <servicetype>menu</servicetype>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
+ </SERVICE>
 <SERVICE>
    <id>admin_users</id>
    <name>_ADMIN_USERS</name>

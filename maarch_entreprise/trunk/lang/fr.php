@@ -970,6 +970,8 @@ if (!defined('_DELETED_CONTACT_PURPOSE')) define( '_DELETED_CONTACT_PURPOSE','D&
 if (!defined('_CONTACT_PURPOSE_REAFFECT')) define( '_CONTACT_PURPOSE_REAFFECT','R&eacute;affectation des adresses');
 if (!defined('_WARNING_MESSAGE_DEL_CONTACT_PURPOSE')) define( '_WARNING_MESSAGE_DEL_CONTACT_PURPOSE','Avertissement :<br> La suppression d&rsquo;une d&eacute;nomination entraine la r&eacute;affectation des adresses &agrave une nouvelle d&eacute;nomination.');
 
+if (!defined('_SEARCH_CONTACTS')) define( '_SEARCH_CONTACTS','Rechercher un contact');
+
 if (!defined('_ADDRESSES')) define( '_ADDRESSES','adresse(s)');
 if (!defined('_DOC_S')) define( '_DOC_S','document(s)');
 if (!defined('_CONTACTS_CONFIRMATION')) define( '_CONTACTS_CONFIRMATION','Confirmation de cr&eacute;ation');
@@ -988,6 +990,7 @@ if (!defined('_ALL_CONTACT_ADDRESSES')) define( '_ALL_CONTACT_ADDRESSES','Toutes
 if (!defined('_THE_CONTACT')) define( '_THE_CONTACT','Le contact');
 
 if (!defined('_MANAGE_CONTACT_ADDRESSES')) define( '_MANAGE_CONTACT_ADDRESSES','<h2>G&eacute;rer les adresses associ&eacute;es</h2>');
+if (!defined('_MANAGE_CONTACT_ADDRESSES_IMG')) define( '_MANAGE_CONTACT_ADDRESSES_IMG','G&eacute;rer les adresses associ&eacute;es');
 if (!defined('_DEPARTEMENT')) define( '_DEPARTEMENT','D&eacute;partement');
 if (!defined('_ADDITION_ADDRESS')) define( '_ADDITION_ADDRESS','Ajouter une adresse');
 if (!defined('_THE_ADDRESS')) define( '_THE_ADDRESS','L&rsquo;adresse');

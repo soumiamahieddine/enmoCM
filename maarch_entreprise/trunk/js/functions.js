@@ -2686,3 +2686,9 @@ var nature = document.getElementById('nature_id').options[document.getElementByI
         $('reference_number').value='';
     }
 }
+
+function erase_contact_external_id(){
+    if($('contactid').value == ''){
+        $('contactid_external').value = '';
+    }
+}

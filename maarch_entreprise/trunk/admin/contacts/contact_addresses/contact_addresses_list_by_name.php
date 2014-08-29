@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2014 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -16,14 +16,11 @@
 *
 *   You should have received a copy of the GNU General Public License
 *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/**
+*
 * @brief List of structures for autocompletion
 *
-*
 * @file
-* @author Laurent Giovannoni <dev@maarch.org>
+* @author <dev@maarch.org>
 * @date $date$
 * @version $Revision$
 * @ingroup admin

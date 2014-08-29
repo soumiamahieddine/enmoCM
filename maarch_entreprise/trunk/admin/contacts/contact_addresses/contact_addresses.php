@@ -1,72 +1,4 @@
 <?php
-/*
-*    Copyright 2014 Maarch
-*
-*  This file is part of Maarch Framework.
-*
-*   Maarch Framework is free software: you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation, either version 3 of the License, or
-*   (at your option) any later version.
-*
-*   Maarch Framework is distributed in the hope that it will be useful,
-*   but WITHOUT ANY WARRANTY; without even the implied warranty of
-*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-*   GNU General Public License for more details.
-*
-*   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-/**
-* @brief  Form to modify a contact
-*
-*
-* @file
-* @author <dev@maarch.org>
-* @date $date$
-* @version $Revision$
-* @ingroup admin
-*/
-
-$core_tools = new core_tools();
-$core_tools->load_lang();
-$core_tools->test_admin('admin_contacts', 'apps');
-
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
-
-$func = new functions();
-
-if(isset($_GET['id']))
-{
-    $id = addslashes($func->wash($_GET['id'], "alphanum", _CONTACT));
-    $_SESSION['contact']['current_contact_id'] = $id;
-}else if ($_SESSION['contact']['current_contact_id'] <> ''){
-	$id = $_SESSION['contact']['current_contact_id'];
-}
-else
-{
-    $id = "";
-}
- /****************Management of the location bar  ************/
-$init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
-    $init = true;
-}
-$level = "";
-if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
-{
-    $level = $_REQUEST['level'];
-}
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2_up';
-$page_label = _MODIFICATION;
-$page_id = "contacts_v2_up";
-$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
-/***********************************************************/
-
-$contact = new contacts_v2();
-$contact->formcontact("up",$id);
 
 // GESTION DES ADDRESSES
 echo '<h2><img alt="" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_contact_b.gif"> &nbsp;' . _MANAGE_CONTACT_ADDRESSES_IMG . '</h2>';
@@ -84,26 +16,10 @@ array_push(
     "id", "contact_id", "contact_purpose_id", "departement", "lastname", "firstname", "function", "address_town", "phone", "email"
 );
 $what = "";
-$where = "contact_id = " . $id;
-if (isset($_REQUEST['what2']) && ! empty($_REQUEST['what2'])) {
-    $what = $func->protect_string_db($_REQUEST['what2']);
-    // $where .= " and (lower(lastname) like lower('" . $what. "%') 
-    //                 or lower(firstname) like lower('" . $what. "%') 
-    //                 or lower(departement) like lower('" . $what. "%'))";
-
-
-    $what = str_replace("  ", "", $func->protect_string_db($_REQUEST['what2']));
-    $what_table = explode(" ", $what);
-
-    foreach($what_table as $what_a){
-        $sql_lastname[] = " lower(lastname) LIKE lower('".$what_a."%')";
-        $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
-        $sql_society[] = " lower(departement) LIKE lower('".$what_a."%')";
-    }
-
-    $where .= " and (" . implode(' OR ', $sql_lastname) . " ";
-    $where .= " or " . implode(' OR ', $sql_firstname) . " ";
-    $where .= " or " . implode(' OR ', $sql_society) . ") ";
+$where = "contact_id = " . $_SESSION['contact']['current_contact_id'];
+if (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
+    $what = $func->protect_string_db($_REQUEST['what']);
+    $where .= " and lower(lastname) like lower('%" . $what. "%')";
 }
 
 $list = new list_show();
@@ -186,8 +102,8 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["firstname"]= $request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["label"]=_FIRSTNAME;
                 $tab[$i][$j]["size"]="15";
-                $tab[$i][$j]["label_align"]="center";
-                $tab[$i][$j]["align"]="center";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]= "firstname";
@@ -209,8 +125,8 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["address_town"]= $request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["label"]=_TOWN;
                 $tab[$i][$j]["size"]="15";
-                $tab[$i][$j]["label_align"]="center";
-                $tab[$i][$j]["align"]="center";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]= "address_town";
@@ -241,29 +157,75 @@ for ($i = 0; $i < count($tab); $i ++) {
         }
     }
 }
-$pageName = "contact_addresses";
-$pageNameUp = "contact_addresses_up";
-$pageNameAdd = "contact_addresses_add";
-$pageNameDel = "contact_addresses_del";
-$pageNameVal = "";
-$tableName = $_SESSION['tablename']['contact_addresses'];
-$pageNameBan = "";
-$addLabel = _NEW_CONTACT_ADDRESS;
 
-$autoCompletionArray = array();
-$autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']
-    . "index.php?display=true&page=contact_addresses_list_by_name&idContact=".$id;
-$autoCompletionArray["number_to_begin"] = 1;
-$list->admin_list(
-    $tab, $i, '',
-    'contact_id"', 'contacts_v2_up', 'contacts_v2',
-    'id', true, $pageNameUp, $pageNameVal, $pageNameBan,
-    $pageNameDel, $pageNameAdd, $addLabel, FALSE, FALSE, _ALL_CONTACT_ADDRESSES,
-    _A_CONTACT_ADDRESS, $_SESSION['config']['businessappurl']
-    . 'static.php?filename=manage_contact_b.gif', false, true, true, true,
-    $what, true, $autoCompletionArray, false, false, 'what2', 'whatListInput2'
-);
+//List parameters
+    $paramsTab = array();
+    $paramsTab['bool_modeReturn'] = false;                                              //Desactivation du mode return (vs echo)
+    $paramsTab['pageTitle'] =  '';           											//Titre de la page
+    $paramsTab['listCss'] =  'listing largerList spec';
+    $paramsTab['urlParameters'] = '&dir=my_contacts';                                   //parametre d'url supplementaire
+//    $paramsTab['pagePicto'] = $_SESSION['config']['businessappurl']
+//            ."static.php?filename=manage_contact_b.gif";                                //Image (pictogramme) de la page
+    $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
+    $paramsTab['bool_showSearchTools'] = true;                                          //Afficle le filtre alphabetique et le champ de recherche
+    $paramsTab['searchBoxAutoCompletionUrl'] = $_SESSION['config']['businessappurl']
+        ."index.php?display=true&page=contact_addresses_list_by_name&idContact=".$_SESSION['contact']['current_contact_id'];   //Script pour l'autocompletion
+    $paramsTab['searchBoxAutoCompletionMinChars'] = 2;                                  //Nombre minimum de caractere pour activer l'autocompletion (1 par defaut)
+    $paramsTab['bool_showAddButton'] = true;                                            //Affichage du bouton Nouveau
+    $paramsTab['addButtonLabel'] = _NEW_CONTACT_ADDRESS;                                //Libellé du bouton Nouveau
+    if ($from_iframe) {
+	    $paramsTab['addButtonScript'] = "window.location='".$_SESSION['config']['businessappurl']
+	        ."index.php?display=false&dir=my_contacts&page=create_address_iframe&iframe=iframe_up_add'";
+    } else {
+	    $paramsTab['addButtonScript'] = "window.top.location='".$_SESSION['config']['businessappurl']
+	        ."index.php?page=contact_addresses_add&mycontact=Y'";                          	//Action sur le bouton nouveau (2)
+    }
 
-$_SESSION['m_admin']['address'] = array();
+    //Action icons array
+    $paramsTab['actionIcons'] = array();
+        //get start
+        $start = $list2->getStart();
+       
+       if ($from_iframe) {
+	        $update = array(
+	                "script"        => "window.location='".$_SESSION['config']['businessappurl']
+	                                        ."index.php?display=false&dir=my_contacts&page=update_address_iframe&id=@@id@@'",
+	                "class"         =>  "change",
+	                "label"         =>  _MODIFY,
+	                "tooltip"       =>  _MODIFY
+	                );
+        } else {
+	        $update = array(
+	                "script"        => "window.top.location='".$_SESSION['config']['businessappurl']
+	                                        ."index.php?page=contact_addresses_up&mycontact=Y&id=@@id@@&what=".$what."&start=".$start."'",
+	                "class"         =>  "change",
+	                "label"         =>  _MODIFY,
+	                "tooltip"       =>  _MODIFY
+	                );        	
+        }
 
+        array_push($paramsTab['actionIcons'], $update); 
+
+		if ($from_iframe) {
+	        $use = array(
+	                "script"        => "set_new_contact_address('".$_SESSION['config']['businessappurl'] . "index.php?display=false&dir=my_contacts&page=get_last_contact_address&contactid=".$_SESSION['contact']['current_contact_id']."&addressid=@@id@@', 'info_contact_div')",
+	                "class"         =>  "change",
+	                "label"         =>  _USE
+	                );
+	        array_push($paramsTab['actionIcons'], $use); 
+		} else {
+	        $delete = array(
+	                "href"          => $_SESSION['config']['businessappurl']
+	                                    ."index.php?page=contact_addresses_del&mycontact=Y&what=".$what."&start=".$start,
+	                "class"         =>  "delete",
+	                "label"         =>  _DELETE,
+	                "tooltip"       =>  _DELETE,
+	                "alertText"     =>  _REALLY_DELETE.": @@lastname@@ @@firstname@@ ?"
+	                );
+	        array_push($paramsTab['actionIcons'], $delete);
+		}         
+   
+//Afficher la liste
+    echo '<br/>';
+    $list2->showList($tab, $paramsTab, 'id');
 ?>

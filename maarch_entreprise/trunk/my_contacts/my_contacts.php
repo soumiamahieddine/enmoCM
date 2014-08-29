@@ -92,12 +92,23 @@ $contact    = new contacts_v2();
     //Filtre alphabetique et champ de recherche
     $what = $list->getWhatSearch();
     if (!empty($what)) {
-        $where_tab[] = "(lower(lastname) like lower('"
-                        .$request->protect_string_db($what)
-                        ."%') or lower(society) like lower('"
-                        .$request->protect_string_db($what)."%') 
-                            or lower(firstname) like lower('"
-                        .$request->protect_string_db($what)."%'))";
+        // $where_tab[] = "(lower(lastname) like lower('"
+        //                 .$request->protect_string_db($what)
+        //                 ."%') or lower(society) like lower('"
+        //                 .$request->protect_string_db($what)."%') 
+        //                     or lower(firstname) like lower('"
+        //                 .$request->protect_string_db($what)."%'))";
+
+        $what = str_replace("  ", "", $request->protect_string_db($_REQUEST['what']));
+        $what_table = explode(" ", $what);
+
+        foreach($what_table as $what_a){
+            $sql_lastname[] = " lower(lastname) LIKE lower('".$what_a."%')";
+            $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
+            $sql_society[] = " lower(society) LIKE lower('".$what_a."%')";
+        }
+
+        $where_tab[] = " (" . implode(' OR ', $sql_lastname) . "  or " . implode(' OR ', $sql_firstname) . "  or " . implode(' OR ', $sql_society) . ") ";
     }
     //Build where
     $where = implode(' and ', $where_tab);
@@ -110,7 +121,7 @@ $contact    = new contacts_v2();
         $orderstr = "order by ".$order_field." ".$order;
     else  {
         $list->setOrder('asc');
-        $list->setOrderField('lastname, society');
+        $list->setOrderField('lastname');
         $orderstr = "order by lastname, society asc";
     }
 
@@ -219,7 +230,7 @@ $contact    = new contacts_v2();
     $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
     $paramsTab['bool_showSearchTools'] = true;                                          //Afficle le filtre alphabetique et le champ de recherche
     $paramsTab['searchBoxAutoCompletionUrl'] = $_SESSION['config']['businessappurl']
-                    ."index.php?display=true&page=contacts_v2_list_by_name";            //Script pour l'autocompletion
+                    ."index.php?display=true&page=contacts_v2_list_by_name&my_contact=Y";            //Script pour l'autocompletion
     $paramsTab['searchBoxAutoCompletionMinChars'] = 2;                                  //Nombre minimum de caractere pour activer l'autocompletion (1 par defaut)
     $paramsTab['bool_showAddButton'] = true;                                            //Affichage du bouton Nouveau
     $paramsTab['addButtonLabel'] = _CONTACT_ADDITION;                                   //Libellé du bouton Nouveau

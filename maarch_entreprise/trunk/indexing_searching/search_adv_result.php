@@ -651,24 +651,25 @@ if (count($_REQUEST['meta']) > 0) {
                 }
             }
             // CONTACTS EXTERNAL
-            elseif ($tab_id_fields[$j] == 'contactid' && !empty($_REQUEST['contactid']))
+            elseif ($tab_id_fields[$j] == 'contactid' && !empty($_REQUEST['contactid_external']))
             {
-                $json_txt .= " 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
+                $json_txt .= " 'contactid_external' : ['".addslashes(trim($_REQUEST['contactid_external']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
                 //$where_request .= "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
-                $contactTmp = str_replace(')', '', substr($_REQUEST['contactid'], strrpos($_REQUEST['contactid'],'(')+1));
-                $find1 = strpos($contactTmp, ':');
-                $find2 =  $find1 + 1;
-                $contact_type = substr($contactTmp, 0, $find1);
-                $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
-                if ($contact_type == "user")
-                {
-                    $where_request .= " (exp_user_id = '".$contact_id."' or dest_user_id = '".$contact_id."') and ";
-                }
-                elseif ($contact_type == "contact")
-                {
+                // $contactTmp = str_replace(')', '', substr($_REQUEST['contactid'], strrpos($_REQUEST['contactid'],'(')+1));
+                // $find1 = strpos($contactTmp, ':');
+                // $find2 =  $find1 + 1;
+                // $contact_type = substr($contactTmp, 0, $find1);
+                // $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
+                // if ($contact_type == "user")
+                // {
+                //     $where_request .= " (exp_user_id = '".$contact_id."' or dest_user_id = '".$contact_id."') and ";
+                // }
+                // elseif ($contact_type == "contact")
+                // {
+                    $contact_id = $_REQUEST['contactid_external'];
 					$where_request .= " (res_id in (select res_id from contacts_res where contact_id = '".$contact_id."' and coll_id = '" . $coll_id . "') or ";
                     $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."')) and ";
-                }
+                // }
             }
             // CONTACTS INTERNAL
             elseif ($tab_id_fields[$j] == 'contactid_internal' && !empty($_REQUEST['contactid_internal']))

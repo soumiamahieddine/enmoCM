@@ -75,21 +75,25 @@ $contact = new contacts_v2();
 $select[$_SESSION['tablename']['contacts_v2']] = array();
 array_push($select[$_SESSION['tablename']['contacts_v2']],"contact_id", "is_corporate_person", "contact_type", "society","lastname","firstname", 'user_id');
 $what = "";
-//$where =" (user_id is null or user_id = '') and enabled = 'Y' ";
+
 $where =" ";
 if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     $what = $func->protect_string_db($func->wash($_REQUEST['what'], "alphanum", "", "no"));
-    $contact_id = str_replace(')', '', substr($_REQUEST['what'], strrpos($_REQUEST['what'],'(')+1));
-    $contact_id = str_replace('contact:', '', $contact_id);
-    if($contact_id != substr($_REQUEST['what'], strrpos($_REQUEST['what'],'(')+1) and is_numeric($contact_id)){
-        $where .= " contact_id = " . $contact_id;
+
+    $what = str_replace("  ", "", $func->protect_string_db($_REQUEST['what']));
+    $what_table = explode(" ", $what);
+
+    foreach($what_table as $what_a){
+        $sql_lastname[] = " lower(lastname) LIKE lower('".$what_a."%')";
+        $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
+        $sql_society[] = " lower(society) LIKE lower('".$what_a."%')";
     }
 
-    else {
-        $where .= " (lower(lastname) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') "
-            . "or lower(society) like lower('".$func->protect_string_db($what,$_SESSION['config']['databasetype'])."%') ) ";
-    }
+    $where .= " (" . implode(' OR ', $sql_lastname) . " ";
+    $where .= " or " . implode(' OR ', $sql_firstname) . " ";
+    $where .= " or " . implode(' OR ', $sql_society) . ") ";
+
 }
 $list = new list_show();
 $order = 'asc';
@@ -112,6 +116,7 @@ array_push($select2[$_SESSION['tablename']['contacts_v2']], 'is_corporate_person
 $request= new request;
 
 $tab_export = $request->select($select2,$where,$orderstr,$_SESSION['config']['databasetype']);
+
 $_SESSION['export_admin_list'] = array();
 $_SESSION['export_admin_list'] = $tab_export;
 

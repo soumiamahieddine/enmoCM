@@ -45,4 +45,10 @@
         <url>index.php?page=search_adv_business&amp;dir=indexing_searching</url>
         <style>searching</style>
     </MENU>
+    <MENU>
+        <id>search_contacts</id>
+        <libconst>_SEARCH_CONTACTS</libconst>
+        <url>index.php?page=search_contacts&amp;dir=indexing_searching</url>
+        <style>searching</style>
+    </MENU>
 </ROOT>

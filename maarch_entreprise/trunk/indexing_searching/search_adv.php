@@ -613,13 +613,14 @@ if(isset($_REQUEST['nodetails']))
                 </tr>
                 <tr>
                     <td width="70%"><label for="contactid" class="bold"><?php echo _CONTACT_EXTERNAL;?>:</label>
-                        <input type="text" name="contactid" id="contactid" />
+                        <input type="text" name="contactid" id="contactid" onkeyup="erase_contact_external_id();"/>
                         <input type="hidden" name="meta[]" value="contactid#contactid#input_text" />
                         <div id="contactListByName" class="autocomplete"></div>
                         <script type="text/javascript">
-                            initList('contactid', 'contactListByName', '<?php 
-                                echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_list_by_name', 'what', '2');
+                            initList_hidden_input('contactid', 'contactListByName', '<?php 
+                                echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contacts_v2_list_by_name', 'what', '2', 'contactid_external');
                         </script>
+                        <input id="contactid_external" name="contactid_external" type="hidden" />
                     </td>
                     <td><em><?php echo ""; ?></em></td>
                 </tr>

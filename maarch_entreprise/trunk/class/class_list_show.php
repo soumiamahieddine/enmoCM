@@ -752,7 +752,7 @@ class list_show extends functions
     * @param string $button_text text of button
     * @param string $alpha_text text of the alphabetical list
     */
-    public function listletters($link, $page, $all_text, $button_text, $alpha_list_text, $show_searchbox = true, $autoCompletion = false, $autoCompletionArray2 = array())
+    public function listletters($link, $page, $all_text, $button_text, $alpha_list_text, $show_searchbox = true, $autoCompletion = false, $autoCompletionArray2 = array(), $whatinput =  'what', $whatListinput = 'whatList')
     {
         $link = preg_replace("/(&(?!amp;))/", "&amp;", $link);
         ?>
@@ -764,11 +764,11 @@ class list_show extends functions
                 <?php  for($i=ord('A'); $i <= ord('Z');$i++)
                 {
                     ?>
-                    <a  href="<?php  echo $link;?>&amp;what=<?php  echo chr($i);?>"><?php  echo chr($i);?></a>
+                    <a  href="<?php  echo $link;?>&amp;<?php echo $whatinput ;?>=<?php  echo chr($i);?>"><?php  echo chr($i);?></a>
                     <?php
                 }
                 ?>
-                - <a href="<?php  echo $link;?>&amp;what="><?php  echo $all_text; ?></a>
+                - <a href="<?php  echo $link;?>&amp;<?php echo $whatinput ;?>="><?php  echo $all_text; ?></a>
             </td>
             <td  align="right">
             <?php
@@ -777,15 +777,15 @@ class list_show extends functions
                 ?>
                 <form action="<?php  echo $link;?>" method="post" id="frmletters">
                     <div>
-                    <input name="what" id="what" type="text" size="15"/>
+                    <input name="<?php echo $whatinput ;?>" id="<?php echo $whatinput ;?>" type="text" size="15"/>
                     <?php
                     if($autoCompletion)
                     {
                         //preg_replace("/(&(?!amp;))/", "&amp;",$autoCompletionArray2['list_script_url'])
                         ?>
-                        <div id="whatList" class="autocomplete"></div>
+                        <div id="<?php echo $whatListinput ;?>" class="autocomplete"></div>
                         <script type="text/javascript">
-                            initList('what', 'whatList', '<?php  echo $autoCompletionArray2['list_script_url'];?>', 'what', '<?php  echo $autoCompletionArray2['number_to_begin'];?>');
+                            initList('<?php echo $whatinput ;?>', '<?php echo $whatListinput ;?>', '<?php  echo $autoCompletionArray2['list_script_url'];?>', 'what', '<?php  echo $autoCompletionArray2['number_to_begin'];?>');
                         </script>
                         <?php
                     }
@@ -831,7 +831,7 @@ class list_show extends functions
     * @param string $show_big_title
     * @param string $flag_not_admin
     */
-    public function admin_list($result, $nb_total, $title, $expr, $name, $admin, $key, $bool_order, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, $bool_history = FALSE, $bool_simple_list = FALSE, $all_sentence='', $whatname='', $picto_path ='', $is_part_of_module = FALSE, $show_big_title = true, $flag_not_admin = false, $show_listletters = true, $what ="", $autoCompletion = false, $autoCompletionArray = array(), $is_in_apps_dir = false, $is_del_page_popup = false)
+    public function admin_list($result, $nb_total, $title, $expr, $name, $admin, $key, $bool_order, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, $bool_history = FALSE, $bool_simple_list = FALSE, $all_sentence='', $whatname='', $picto_path ='', $is_part_of_module = FALSE, $show_big_title = true, $flag_not_admin = false, $show_listletters = true, $what ="", $autoCompletion = false, $autoCompletionArray = array(), $is_in_apps_dir = false, $is_del_page_popup = false, $whatinput = 'what', $whatListinput = 'whatList')
     {
         // show the document list in result of the search
         $page_list1 = "";
@@ -1033,7 +1033,7 @@ class list_show extends functions
                 }
                 else
                 {
-                    self::listletters($link, $name, $all_sentence, _SEARCH." ".$whatname, _ALPHABETICAL_LIST, true, $autoCompletion, $autoCompletionArray);
+                    self::listletters($link, $name, $all_sentence, _SEARCH." ".$whatname, _ALPHABETICAL_LIST, true, $autoCompletion, $autoCompletionArray, $whatinput, $whatListinput);
                 }
             }
         }
