@@ -56,4 +56,6 @@ if ($from_iframe) {
 	$contact->formcontact("up",$id, false);
 }
 
+$_SESSION['m_admin']['address'] = array();
+
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/admin/contacts/contact_addresses/contact_addresses.php';

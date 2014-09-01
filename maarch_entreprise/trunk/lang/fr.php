@@ -988,6 +988,9 @@ if (!defined('_NEW_CONTACT_ADDRESS')) define( '_NEW_CONTACT_ADDRESS','Ajouter un
 if (!defined('_A_CONTACT_ADDRESS')) define( '_A_CONTACT_ADDRESS','une adresse');
 if (!defined('_ALL_CONTACT_ADDRESSES')) define( '_ALL_CONTACT_ADDRESSES','Toutes les adresses');
 if (!defined('_THE_CONTACT')) define( '_THE_CONTACT','Le contact');
+if (!defined('_CONTACT_ADDRESSES_ASSOCIATED')) define( '_CONTACT_ADDRESSES_ASSOCIATED','Adresses associ&eacute;es &agrave; ce contact');
+if (!defined('_VIEW_CONTACT')) define( '_VIEW_CONTACT','Visualisation du contact');
+if (!defined('_VIEW_ADDRESS')) define( '_VIEW_ADDRESS','Visualisation de l&rsquo;adresse');
 
 if (!defined('_MANAGE_CONTACT_ADDRESSES')) define( '_MANAGE_CONTACT_ADDRESSES','<h2>G&eacute;rer les adresses associ&eacute;es</h2>');
 if (!defined('_MANAGE_CONTACT_ADDRESSES_IMG')) define( '_MANAGE_CONTACT_ADDRESSES_IMG','G&eacute;rer les adresses associ&eacute;es');
@@ -1013,6 +1016,8 @@ if (!defined('_USE')) define( '_USE','Utiliser');
 if (!defined('_SALUTATION')) define( '_SALUTATION','Formule de politesse');
 if (!defined('_SALUTATION_HEADER')) define( '_SALUTATION_HEADER','De d&eacutebut de courrier');
 if (!defined('_SALUTATION_FOOTER')) define( '_SALUTATION_FOOTER','De fin de courrier');
+
+if (!defined('_BACK_TO_RESULTS_LIST')) define( '_BACK_TO_RESULTS_LIST','Retour &agrave; la liste de r&eacute;susltats');
 
 //// INDEXING SEARCHING
 if (!defined('_NO_COLLECTION_ACCESS_FOR_THIS_USER')) define( '_NO_COLLECTION_ACCESS_FOR_THIS_USER', 'Aucun acc&egrave;s aux collections documentaires pour cet utilisateur');

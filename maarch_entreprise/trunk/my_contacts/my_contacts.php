@@ -45,6 +45,7 @@ $contact    = new contacts_v2();
  if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) $parameters .= '&order_field='.$_REQUEST['order_field'];
  if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what='.$_REQUEST['what'];
  if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
+ if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) $parameters .= '&mode='.$_REQUEST['mode'];
  
 
  if (isset($_REQUEST['load'])) {
@@ -78,17 +79,25 @@ $contact    = new contacts_v2();
     </div>
     <?php
 } else {
-//Table
+    //Table
     $table = $_SESSION['tablename']['contacts_v2'];
     $select[$table]= array(); 
     
-//Fields
+    //Fields
     array_push($select[$table],"contact_id", "is_corporate_person", "contact_type", "society","lastname","firstname", 'user_id');
     
-//Where clause
+    //Where clause
     $where_tab = array();
-    //
-     $where_tab[] = "(user_id  = '".$_SESSION['user']['UserId']."')";
+
+    //From search
+    if (!empty($_SESSION['searching']['where_request']) && $_REQUEST['mode'] == 'search') {
+        $where_tab[] = $_SESSION['searching']['where_request'] . ' (1=1)';
+    }
+
+    if ($_REQUEST['mode'] <> 'search') {
+        $where_tab[] = "(user_id  = '".$_SESSION['user']['UserId']."')";
+    }  
+
     //Filtre alphabetique et champ de recherche
     $what = $list->getWhatSearch();
     if (!empty($what)) {
@@ -113,7 +122,7 @@ $contact    = new contacts_v2();
     //Build where
     $where = implode(' and ', $where_tab);
     
-//Order
+    //Order
     $order = $order_field = '';
     $order = $list->getOrder();
     $order_field = $list->getOrderField();
@@ -125,11 +134,11 @@ $contact    = new contacts_v2();
         $orderstr = "order by lastname, society asc";
     }
 
-//Request
+    //Request
     $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
     // $request->show();
     
-//Result array    
+    //Result array    
     for ($i=0;$i<count($tab);$i++)
     {
         for ($j=0;$j<count($tab[$i]);$j++)
@@ -199,8 +208,8 @@ $contact    = new contacts_v2();
                     $tab[$i][$j]["firstname"]= $tab[$i][$j]['value'];
                     $tab[$i][$j]["label"]=_FIRSTNAME;
                     $tab[$i][$j]["size"]="15";
-                    $tab[$i][$j]["label_align"]="center";
-                    $tab[$i][$j]["align"]="center";
+                    $tab[$i][$j]["label_align"]="left";
+                    $tab[$i][$j]["align"]="left";
                     $tab[$i][$j]["valign"]="bottom";
                     $tab[$i][$j]["show"]=true;
                     $tab[$i][$j]["order"]= "firstname";
@@ -210,8 +219,8 @@ $contact    = new contacts_v2();
                     $tab[$i][$j]["user_id"]= $tab[$i][$j]['value'];
                     $tab[$i][$j]["label"]=_CREATE_BY;
                     $tab[$i][$j]["size"]="15";
-                    $tab[$i][$j]["label_align"]="center";
-                    $tab[$i][$j]["align"]="center";
+                    $tab[$i][$j]["label_align"]="left";
+                    $tab[$i][$j]["align"]="left";
                     $tab[$i][$j]["valign"]="bottom";
                     $tab[$i][$j]["show"]=true;
                     $tab[$i][$j]["order"]= "user_id";
@@ -220,29 +229,38 @@ $contact    = new contacts_v2();
         }
     } 
 
-//List parameters
+    //List parameters
     $paramsTab = array();
     $paramsTab['bool_modeReturn'] = false;                                              //Desactivation du mode return (vs echo)
     $paramsTab['pageTitle'] =  _CONTACTS_LIST." : ".count($tab).' '._CONTACTS;           //Titre de la page
     $paramsTab['urlParameters'] = '&dir=my_contacts';                                   //parametre d'url supplementaire
+    if ($_REQUEST['mode'] == 'search') {
+        $paramsTab['urlParameters'] .= "&mode=search";
+    } 
     $paramsTab['pagePicto'] = $_SESSION['config']['businessappurl']
             ."static.php?filename=manage_contact_b.gif";                                //Image (pictogramme) de la page
     $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
     $paramsTab['bool_showSearchTools'] = true;                                          //Afficle le filtre alphabetique et le champ de recherche
     $paramsTab['searchBoxAutoCompletionUrl'] = $_SESSION['config']['businessappurl']
-                    ."index.php?display=true&page=contacts_v2_list_by_name&my_contact=Y";            //Script pour l'autocompletion
+                    ."index.php?display=true&page=contacts_v2_list_by_name";            //Script pour l'autocompletion
+    if ($_REQUEST['mode'] <> 'search') {
+        $paramsTab['searchBoxAutoCompletionUrl'] .= "&my_contact=Y";
+    }           
     $paramsTab['searchBoxAutoCompletionMinChars'] = 2;                                  //Nombre minimum de caractere pour activer l'autocompletion (1 par defaut)
     $paramsTab['bool_showAddButton'] = true;                                            //Affichage du bouton Nouveau
     $paramsTab['addButtonLabel'] = _CONTACT_ADDITION;                                   //Libellé du bouton Nouveau
     // $paramsTab['addButtonLink'] = $_SESSION['config']['businessappurl']
         // ."index.php?dir=my_contacts&page=my_contact_add";                            //Lien sur le bouton nouveau (1)
-    $paramsTab['addButtonScript'] = "window.top.location='".$_SESSION['config']['businessappurl']
-        ."index.php?dir=my_contacts&page=my_contact_add'";                              //Action sur le bouton nouveau (2)
+    if ($_REQUEST['mode'] <> 'search') {
+        $paramsTab['addButtonScript'] = "window.top.location='".$_SESSION['config']['businessappurl']
+            ."index.php?dir=my_contacts&page=my_contact_add'";                              //Action sur le bouton nouveau (2)
+    }
 
     //Action icons array
     $paramsTab['actionIcons'] = array();
-        //get start
-        $start = $list->getStart();
+    //get start
+    $start = $list->getStart();
+    if ($_REQUEST['mode'] <> 'search') {
         
         $update = array(
                 "script"        => "window.top.location='".$_SESSION['config']['businessappurl']
@@ -261,9 +279,18 @@ $contact    = new contacts_v2();
                 );
         array_push($paramsTab['actionIcons'], $update);          
         array_push($paramsTab['actionIcons'], $delete);
+    } else {
+        $view = array(
+                "script"        => "window.top.location='".$_SESSION['config']['businessappurl']
+                                        ."index.php?dir=indexing_searching&page=contacts_view&id=@@contact_id@@&what=".$what."&start=".$start."'",
+                "class"         =>  "change",
+                "label"         =>  _VIEW,
+                "tooltip"       =>  _MODIFY
+                );
+        array_push($paramsTab['actionIcons'], $view);
+    }
     
-//Afficher la liste
+    //Afficher la liste
     echo '<br/>';
     $list->showList($tab, $paramsTab, 'contact_id');
 }
-

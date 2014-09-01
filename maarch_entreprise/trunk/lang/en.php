@@ -711,7 +711,6 @@ if (!defined('_NO_LINK_WITH_THIS_ONE'))     define('_NO_LINK_WITH_THIS_ONE', 'un
 if (!defined('_NO_OTHER_RECIPIENT')) define('_NO_OTHER_RECIPIENT', 'There is no other recipient for this document');
 if (!defined('_NO_PAGE')) define( '_NO_PAGE', 'No page');
 if (!defined('_NO_PRIMARY_GROUP')) define('_NO_PRIMARY_GROUP', 'No primary group selected!');
-if (!defined('_NO_RESULTS')) define( '_NO_RESULTS', 'Aucun r&eacute;sultat');
 if (!defined('_NO_RESULTS')) define('_NO_RESULTS', 'No result found');
 if (!defined('_NO_RIGHT')) define('_NO_RIGHT', 'Error');
 if (!defined('_NO_RIGHTS_ON')) define('_NO_RIGHTS_ON', 'No rights for');

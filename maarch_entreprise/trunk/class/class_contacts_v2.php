@@ -419,13 +419,14 @@ class contacts_v2 extends dbquery
         ?>
         <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" />
             <?php
-            if($mode == "up")
-            {
+            if($mode == "up") {
                 echo '&nbsp;' . _MODIFY_CONTACT;
             }
-            elseif($mode == "add")
-            {
+            elseif($mode == "add") {
                 echo '&nbsp;' . _ADD_CONTACT;
+            }
+            elseif($mode == "view") {
+                echo '&nbsp;' . _VIEW;
             }
             ?>
         </h1>
@@ -568,9 +569,7 @@ class contacts_v2 extends dbquery
                     <p class="buttons">
                     <?php
 
-                    if($mode == "up")
-                    {
-                        ?>
+                    if($mode == "up") { ?>
                         <input class="button" type="submit" name="Submit" value="<?php echo _MODIFY_CONTACT; ?>" />
                         <?php
                     }
@@ -581,18 +580,19 @@ class contacts_v2 extends dbquery
                         <?php
                     }
                     $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2';
-                    if(!$admin)
-                    {
+                    if(!$admin) {
                         $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&amp;dir=my_contacts&amp;load';
                     }
-                    if($iframe){
-                    ?>    
+                    if($iframe) { ?>    
                         <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div'));new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return false;" />
                     <?php
                     } else {
+                        if ($mode == 'view') { ?>
+                            <input type="button" class="button"  name="cancel" value="<?php echo _BACK_TO_RESULTS_LIST; ?>" onclick="history.go(-1);" />
+                    <?php } else {
                     ?>
-                        <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $cancel_target;?>';" />                 
-                    <?php
+                            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $cancel_target;?>';" />                 
+                    <?php   }           
                     }
                     ?>
                     </p>

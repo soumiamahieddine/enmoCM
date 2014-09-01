@@ -613,7 +613,7 @@ if(isset($_REQUEST['nodetails']))
                 </tr>
                 <tr>
                     <td width="70%"><label for="contactid" class="bold"><?php echo _CONTACT_EXTERNAL;?>:</label>
-                        <input type="text" name="contactid" id="contactid" onkeyup="erase_contact_external_id();"/>
+                        <input type="text" name="contactid" id="contactid" onkeyup="erase_contact_external_id('contactid', 'contactid_external');"/>
                         <input type="hidden" name="meta[]" value="contactid#contactid#input_text" />
                         <div id="contactListByName" class="autocomplete"></div>
                         <script type="text/javascript">
@@ -626,13 +626,14 @@ if(isset($_REQUEST['nodetails']))
                 </tr>
                 <tr>
                     <td width="70%"><label for="contactid_internal" class="bold"><?php echo _CONTACT_INTERNAL;?>:</label>
-                        <input type="text" name="contactid_internal" id="contactid_internal" />
+                        <input type="text" name="contactid_internal" id="contactid_internal" onkeyup="erase_contact_external_id('contactid_internal', 'contact_internal_id');"/>
                         <input type="hidden" name="meta[]" value="contactid_internal#contactid_internal#input_text" />
                         <div id="contactInternalListByName" class="autocomplete"></div>
                         <script type="text/javascript">
-                            initList('contactid_internal', 'contactInternalListByName', '<?php 
-                                echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=users_list_by_name_search', 'what', '2');
+                            initList_hidden_input('contactid_internal', 'contactInternalListByName', '<?php 
+                                echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=users_list_by_name_search', 'what', '2', 'contact_internal_id');
                         </script>
+                        <input id="contact_internal_id" name="contact_internal_id" type="hidden" />
                     </td>
                     <td><em><?php echo ""; ?></em></td>
                 </tr>

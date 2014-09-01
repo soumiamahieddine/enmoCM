@@ -43,26 +43,23 @@ $db->query(
 
 $listArray = array();
 while ($line = $db->fetch_object()) {
-    array_push($listArray, $db->show_string($line->lastname)." ".$db->show_string($line->firstname)." (user:".$line->user_id.")");
+    $listArray[$line->user_id] = $db->show_string($line->lastname)." ".$db->show_string($line->firstname);
 }
 echo "<ul>\n";
 $authViewList = 0;
 $flagAuthView = false;
-foreach($listArray as $what)
+foreach($listArray as $key => $what)
 {
     if(isset($authViewList) && $authViewList>= 10)
     {
         $flagAuthView = true;
     }
-    //if(stripos($what, $_REQUEST['what']) === 0)
-    //{
-        echo "<li>".$what."</li>\n";
+        echo "<li id='".$key."'>".$what."</li>\n";
         if($flagAuthView)
         {
             echo "<li>...</li>\n";
             break;
         }
         $authViewList++;
-    //}
 }
 echo "</ul>";

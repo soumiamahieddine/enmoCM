@@ -2687,8 +2687,8 @@ var nature = document.getElementById('nature_id').options[document.getElementByI
     }
 }
 
-function erase_contact_external_id(){
-    if($('contactid').value == ''){
-        $('contactid_external').value = '';
+function erase_contact_external_id(id, erase_id){
+    if($(id).value == ''){
+        $(erase_id).value = '';
     }
 }

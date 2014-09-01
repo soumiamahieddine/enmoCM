@@ -1,7 +1,13 @@
 <?php
 
 // GESTION DES ADDRESSES
-echo '<h2><img alt="" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_contact_b.gif"> &nbsp;' . _MANAGE_CONTACT_ADDRESSES_IMG . '</h2>';
+echo '<h2><img alt="" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_contact_b.gif"> &nbsp;'; 
+    if ($mode <> 'view') { 
+        echo _MANAGE_CONTACT_ADDRESSES_IMG;
+    } else {
+        echo _CONTACT_ADDRESSES_ASSOCIATED;
+    } 
+echo '</h2>';
 
 require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
     . "class_request.php";
@@ -177,15 +183,17 @@ for ($i = 0; $i < count($tab); $i ++) {
 	    $paramsTab['addButtonScript'] = "window.location='".$_SESSION['config']['businessappurl']
 	        ."index.php?display=false&dir=my_contacts&page=create_address_iframe&iframe=iframe_up_add'";
     } else {
-	    $paramsTab['addButtonScript'] = "window.top.location='".$_SESSION['config']['businessappurl']
-	        ."index.php?page=contact_addresses_add&mycontact=Y'";                          	//Action sur le bouton nouveau (2)
+        if($mode <> 'view'){
+        $paramsTab['addButtonScript'] = "window.top.location='".$_SESSION['config']['businessappurl']
+            ."index.php?page=contact_addresses_add&mycontact=Y'";                       //Action sur le bouton nouveau (2)            
+        }
     }
 
     //Action icons array
     $paramsTab['actionIcons'] = array();
         //get start
         $start = $list2->getStart();
-       
+    if ($mode <> 'view') {   
        if ($from_iframe) {
 	        $update = array(
 	                "script"        => "window.location='".$_SESSION['config']['businessappurl']
@@ -201,7 +209,7 @@ for ($i = 0; $i < count($tab); $i ++) {
 	                "class"         =>  "change",
 	                "label"         =>  _MODIFY,
 	                "tooltip"       =>  _MODIFY
-	                );        	
+	                );
         }
 
         array_push($paramsTab['actionIcons'], $update); 
@@ -212,7 +220,7 @@ for ($i = 0; $i < count($tab); $i ++) {
 	                "class"         =>  "change",
 	                "label"         =>  _USE
 	                );
-	        array_push($paramsTab['actionIcons'], $use); 
+	        array_push($paramsTab['actionIcons'], $use);
 		} else {
 	        $delete = array(
 	                "href"          => $_SESSION['config']['businessappurl']
@@ -223,8 +231,17 @@ for ($i = 0; $i < count($tab); $i ++) {
 	                "alertText"     =>  _REALLY_DELETE.": @@lastname@@ @@firstname@@ ?"
 	                );
 	        array_push($paramsTab['actionIcons'], $delete);
-		}         
-   
+		}
+    } else {
+        $view = array(
+                "script"        => "window.top.location='".$_SESSION['config']['businessappurl']
+                                        ."index.php?dir=indexing_searching&page=contact_address_view&addressid=@@id@@&what=".$what."&start=".$start."'",
+                "class"         =>  "change",
+                "label"         =>  _VIEW,
+                "tooltip"       =>  _MODIFY
+                );
+        array_push($paramsTab['actionIcons'], $view);
+    }
 //Afficher la liste
     echo '<br/>';
     $list2->showList($tab, $paramsTab, 'id');
