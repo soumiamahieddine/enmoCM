@@ -919,7 +919,7 @@ VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvel
 <td>[notes.note_text]</td>
 <td>[notes.user_id]</td>
 <td>[notes.contact_society][notes.contact_firstname][notes.contact_lastname]</td>
-<td><a href="notes.linktodetail" name="detail">d&eacute###tail</a> <a href="notes.linktodoc" name="doc">doc</a></td>
+<td><a href="[notes.linktodetail]" name="detail">d&eacute###tail</a> <a href="[notes.linktodoc]" name="doc">doc</a></td>
 </tr>
 </tbody>
 </table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes', 'notifications');
