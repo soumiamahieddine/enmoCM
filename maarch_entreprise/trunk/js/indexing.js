@@ -1427,10 +1427,11 @@ function set_new_contact_address(path_manage_script, id_div){
 
 function check_date_exp(path_manage_script){
     var contact_id = $('contactid').value;
+    var res_id = $('values').value;
     new Ajax.Request(path_manage_script,
     {
         method:'post',
-        parameters: {contact_id : contact_id},
+        parameters: {contact_id : contact_id, res_id : res_id},
         onSuccess: function(answer){
             if(answer.responseText=="success"){
 	    document.getElementById('contact').style.backgroundColor='#ffffff';
