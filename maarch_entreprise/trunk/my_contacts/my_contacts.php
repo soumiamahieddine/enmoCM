@@ -247,11 +247,12 @@ $contact    = new contacts_v2();
         $paramsTab['searchBoxAutoCompletionUrl'] .= "&my_contact=Y";
     }           
     $paramsTab['searchBoxAutoCompletionMinChars'] = 2;                                  //Nombre minimum de caractere pour activer l'autocompletion (1 par defaut)
-    $paramsTab['bool_showAddButton'] = true;                                            //Affichage du bouton Nouveau
-    $paramsTab['addButtonLabel'] = _CONTACT_ADDITION;                                   //Libellé du bouton Nouveau
+
     // $paramsTab['addButtonLink'] = $_SESSION['config']['businessappurl']
         // ."index.php?dir=my_contacts&page=my_contact_add";                            //Lien sur le bouton nouveau (1)
     if ($_REQUEST['mode'] <> 'search') {
+        $paramsTab['bool_showAddButton'] = true;                                            //Affichage du bouton Nouveau
+        $paramsTab['addButtonLabel'] = _CONTACT_ADDITION;                                   //Libellé du bouton Nouveau
         $paramsTab['addButtonScript'] = "window.top.location='".$_SESSION['config']['businessappurl']
             ."index.php?dir=my_contacts&page=my_contact_add'";                              //Action sur le bouton nouveau (2)
     }

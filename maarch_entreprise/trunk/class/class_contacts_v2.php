@@ -1151,7 +1151,7 @@ class contacts_v2 extends dbquery
                             <td><label for="departement"><?php echo _SERVICE; ?> : </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="departement" type="text"  id="departement" value="<?php if(isset($_SESSION['m_admin']['address']['DEPARTEMENT'])){ echo $func->show_str($_SESSION['m_admin']['address']['DEPARTEMENT']);} ?>"/></td>
-                            <td>&nbsp;</td>
+                            <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr id="title_p" style="display:<?php if($_SESSION['m_admin']['address']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
                             <td><label for="title"><?php echo _TITLE2; ?> : </label></td>
@@ -1180,7 +1180,7 @@ class contacts_v2 extends dbquery
                             <td><label for="lastname"><?php echo _LASTNAME; ?> : </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="lastname" type="text"  id="lastname" value="<?php if(isset($_SESSION['m_admin']['address']['LASTNAME'])){ echo $func->show_str($_SESSION['m_admin']['address']['LASTNAME']);} ?>"/></td>
-                            <td><span id="lastname_mandatory" class="red_asterisk" style="visibility:hidden;">*</span></td>
+                            <td>&nbsp;</td>
                         </tr>
                         <tr id="firstname_p" >
                             <td><label for="firstname"><?php echo _FIRSTNAME; ?> : </label></td>
@@ -1198,55 +1198,55 @@ class contacts_v2 extends dbquery
                             <td><?php echo _OCCUPANCY; ?> : </td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="occupancy" type="text"  id="occupancy" value="<?php if(isset($_SESSION['m_admin']['address']['OCCUPANCY'])){echo $func->show_str($_SESSION['m_admin']['address']['OCCUPANCY']); }?>"/></td>
-                            <td>&nbsp;</td>
+                            <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr>
                             <td><label for="num"><?php echo _NUM; ?> : </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="num" type="text"  id="num" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_NUM'])){echo $func->show_str($_SESSION['m_admin']['address']['ADD_NUM']); }?>"/></td>
-                            <td>&nbsp;</td>
+                            <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr>
                             <td><label for="street"><?php echo _STREET; ?> : </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="street" type="text"  id="street" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_STREET'])){ echo $func->show_str($_SESSION['m_admin']['address']['ADD_STREET']); }?>"/></td>
-                            <td>&nbsp;</td>
+                            <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr>
                             <td><label for="add_comp"><?php echo _COMPLEMENT; ?> : </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="add_comp" type="text"  id="add_comp" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_COMP'])){ echo $func->show_str($_SESSION['m_admin']['address']['ADD_COMP']); }?>"/></td>
-                            <td>&nbsp;</td>
+                            <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr>
                             <td><label for="cp"><?php echo _POSTAL_CODE; ?> : </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="cp" type="text" id="cp" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_CP'])){echo $func->show_str($_SESSION['m_admin']['address']['ADD_CP']); }?>"/></td>
-                            <td>&nbsp;</td>
+                            <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr>
                             <td><label for="town"><?php echo _TOWN; ?> : </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="town" type="text" id="town" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_TOWN'])){ echo $func->show_str($_SESSION['m_admin']['address']['ADD_TOWN']);} ?>"/></td>
-                            <td>&nbsp;</td>
+                            <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr>
                             <td><label for="country"><?php echo _COUNTRY; ?> : </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="country" type="text"  id="country" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_COUNTRY'])){ echo $func->show_str($_SESSION['m_admin']['address']['ADD_COUNTRY']); }?>"/></td>
-                            <td>&nbsp;</td>
+                            <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr >
                             <td><label for="phone"><?php echo _PHONE; ?> : </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="phone" type="text"  id="phone" value="<?php if(isset($_SESSION['m_admin']['address']['PHONE'])){echo $func->show_str($_SESSION['m_admin']['address']['PHONE']);} ?>"/></td>
-                            <td>&nbsp;</td>
+                            <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr>
                             <td><label for="mail"><?php echo _MAIL; ?> : </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="mail" type="text" id="mail" value="<?php if(isset($_SESSION['m_admin']['address']['MAIL'])){ echo $func->show_str($_SESSION['m_admin']['address']['MAIL']);} ?>"/></td>
-                            <td>&nbsp;</td>
+                            <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr>
                             <td><label for="website"><?php echo _WEBSITE; ?> : </label></td>
@@ -1269,6 +1269,9 @@ class contacts_v2 extends dbquery
                             </td>
                             <td>&nbsp;</td>
                         </tr>
+                        <tr>
+                            <td colspan="4"><?php echo _HELP_PRIVATE; ?></td>
+                        </tr>
                     </table>
                 </div>
                     <table width="65%">
@@ -1284,13 +1287,13 @@ class contacts_v2 extends dbquery
                             <td><?php echo _SALUTATION_HEADER; ?> : </td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><textarea name="salutation_header" id="salutation_header"><?php if(isset($_SESSION['m_admin']['address']['SALUTATION_HEADER'])){echo $func->show_str($_SESSION['m_admin']['address']['SALUTATION_HEADER']); }?></textarea></td>
-                            <td>&nbsp;</td>
+                            <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr>
                             <td><?php echo _SALUTATION_FOOTER; ?> : </td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><textarea name="salutation_footer" id="salutation_footer"><?php if(isset($_SESSION['m_admin']['address']['SALUTATION_FOOTER'])){echo $func->show_str($_SESSION['m_admin']['address']['SALUTATION_FOOTER']); }?></textarea></td>
-                            <td>&nbsp;</td>
+                            <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                     </table>
                 </div>

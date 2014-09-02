@@ -2237,6 +2237,14 @@ height:auto;
     vertical-align:top;
 }
 
+.blue_asterisk
+{
+    color: #1B99C4;
+    font-weight: bold;
+    font-size: 14px;
+    vertical-align:top;
+}
+
 #welcome_desc
 {
     float:left;

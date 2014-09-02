@@ -177,7 +177,9 @@ for ($i = 0; $i < count($tab); $i ++) {
     $paramsTab['searchBoxAutoCompletionUrl'] = $_SESSION['config']['businessappurl']
         ."index.php?display=true&page=contact_addresses_list_by_name&idContact=".$_SESSION['contact']['current_contact_id'];   //Script pour l'autocompletion
     $paramsTab['searchBoxAutoCompletionMinChars'] = 2;                                  //Nombre minimum de caractere pour activer l'autocompletion (1 par defaut)
-    $paramsTab['bool_showAddButton'] = true;                                            //Affichage du bouton Nouveau
+    if($mode <> 'view'){
+        $paramsTab['bool_showAddButton'] = true;                                            //Affichage du bouton Nouveau
+    }
     $paramsTab['addButtonLabel'] = _NEW_CONTACT_ADDRESS;                                //Libellé du bouton Nouveau
     if ($from_iframe) {
 	    $paramsTab['addButtonScript'] = "window.location='".$_SESSION['config']['businessappurl']
