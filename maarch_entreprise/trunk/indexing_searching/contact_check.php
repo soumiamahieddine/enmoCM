@@ -34,7 +34,14 @@ echo "success";
 }else{
 $db = new dbquery();
 $db->connect();
-$query="SELECT res_id FROM res_view_letterbox WHERE contact_id = '".$_POST['contact_id']."' AND creation_date >= (select CURRENT_DATE + integer '-5') ORDER by creation_date DESC limit 1";
+$query="SELECT res_id FROM res_view_letterbox WHERE contact_id = '".$_POST['contact_id']."' AND creation_date >= (select CURRENT_DATE + integer '-5')";
+
+if($_POST['res_id'] != "none"){
+$query.=" AND res_id NOT IN (".$_POST['res_id'].")";
+}
+
+$query.="  ORDER by creation_date DESC limit 1";
+
 $db->query($query);
 if ($db->nb_result() > 0){
 echo "fail";
