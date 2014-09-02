@@ -587,7 +587,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><input type="text" name="contact" '
             . 'id="contact" onblur="clear_error(\'frm_error_' . $actionId . '\');'
-            . 'display_contact_card(\'visible\');check_date_exp(\''.$path_to_script.'\');" /><div id="show_contacts" '
+            . 'display_contact_card(\'visible\');if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\');}" /><div id="show_contacts" '
             . 'class="autocomplete autocompleteIndex"></div></td>';
     $frmStr .= '<td><span class="red_asterisk" id="contact_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
