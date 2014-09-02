@@ -1184,6 +1184,7 @@ function display_contact_card(mode, id)
 {
 	if(id){
 		var contact_card = $(id);
+
 	}else{
 		var contact_card = $('contact_card');
 	}
@@ -1422,4 +1423,31 @@ function set_new_contact_address(path_manage_script, id_div){
             parent.$('addressid').value = response.addressId;
         }       
     });  
+}
+
+function check_date_exp(path_manage_script){
+    var contact_id = $('contactid').value;
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: {contact_id : contact_id},
+        onSuccess: function(answer){
+            if(answer.responseText=="success"){
+	    document.getElementById('contact').style.backgroundColor='#ffffff';
+	    document.getElementById('contact_check').style.display='none';
+	    document.getElementById('contactcheck').value = answer.responseText;
+ 		}else{
+	    document.getElementById('contact').style.backgroundColor='#ffe09b';
+	    document.getElementById('contact_check').style.display='table-row';
+	    document.getElementById("contact_check").innerHTML = "<td colspan=\"3\" style=\"font-size: 9px;text-align: center;color:#ea0000;\">un courrier enregistré dans les 5 derniers jours a déjà été enregistré pour le même expéditeur</td>";
+	    document.getElementById('contactcheck').value = answer.responseText;
+	    }
+        }       
+    });  
+}
+
+function reset_check_date_exp(){
+	document.getElementById('contact').style.backgroundColor='#ffffff';
+	document.getElementById('contact_check').style.display='none';
+	document.getElementById('contactcheck').value = 'success';
 }
