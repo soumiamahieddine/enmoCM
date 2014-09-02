@@ -461,7 +461,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					   $frm_str .='<td>&nbsp;</td>';
 					   $frm_str .='<td class="indexing_field"><input type="radio" name="type_contact" id="type_contact_internal" value="internal"  class="check" onclick="clear_error(\'frm_error_'.$id_action.'\');change_contact_type(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\');update_contact_type_session(\''
         .$_SESSION['config']['businessappurl']
-        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');"';
+        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');reset_check_date_exp();"';
 
 						if ($data['type_contact'] == 'internal') {
 							$frm_str .= ' checked="checked" ';
@@ -512,7 +512,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
                         . '\'blind\', {delay:0.2});return false;"'
                         . ' style="visibility:hidden;" ><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=my_contacts_off.gif" alt="'._CONTACT_CARD.'" /></a>&nbsp;</td>';
-                   $frm_str .='<td class="indexing_field"><input type="text" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');"';
+		//Path to actual script
+    $path_to_script = $_SESSION['config']['businessappurl']
+		."index.php?display=true&dir=indexing_searching&page=contact_check&coll_id=".$collId;
+    //check functions on load page
+    $frm_str.="<script>check_date_exp('".$path_to_script."');</script>";
+                   $frm_str .='<td class="indexing_field"><input type="text" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');" onblur="if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\');}"';
                     if(isset($data['contact']) && !empty($data['contact']))
                    {
                       $frm_str .= ' value="'.$data['contact'].'" ';
@@ -520,6 +525,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                    $frm_str .=  ' /><div id="show_contacts" class="autocomplete autocompleteIndex"></div></td>';
                    $frm_str .= '<td><span class="red_asterisk" id="contact_mandatory" style="display:inline;">*</span>&nbsp;</td>';
                      $frm_str .= '</tr>';
+		   $frm_str .= '<tr style="display:none" id="contact_check"><td></td></tr>';
                     $frm_str .= '<input type="hidden" id="contactid" ';
                         if(isset($data['contactId']) && !empty($data['contactId'])){
                             $frm_str .= ' value="'.$data['contactId'].'" ';
@@ -530,6 +536,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $frm_str .= ' value="'.$data['addressId'].'" ';
                         }
                     $frm_str .= '/>';
+		    $frm_str .= '<input type="hidden" id="contactcheck" value="success"/>';
 					 
 					/****multicontact***/
 					
@@ -887,7 +894,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .='</select> ';
             $frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
         }*/
-        $frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
+        $frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="if(document.getElementById(\'contactcheck\').value!=\'success\'){if (confirm(\''. _CONTACT_CHECK .'\n\ncontinuer ?\')){new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');}}else{new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');}"/> ';
         $frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '}, onSuccess: function(answer){window.location.href=window.location.href;} });$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
         $frm_str .= '</p>';
     $frm_str .= '</form>';
