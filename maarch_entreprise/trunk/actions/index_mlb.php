@@ -524,7 +524,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><input type="radio" class="check" '
             . 'name="type_contact" id="type_contact_internal" value="internal" '
-            . 'onclick="clear_error(\'frm_error_' . $actionId . '\');'
+            . 'onclick="clear_error(\'frm_error_' . $actionId . '\');reset_check_date_exp();'
             . 'change_contact_type(\'' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&dir=indexing_searching&page='
             . 'autocomplete_contacts\', true);update_contact_type_session(\''
@@ -575,6 +575,9 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</label></td>';
     $contact_mode = "view";
     if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update';
+    //Path to actual script
+    $path_to_script = $_SESSION['config']['businessappurl']
+		."index.php?display=true&dir=indexing_searching&page=contact_check&coll_id=".$collId;
     $frmStr .= '<td><a href="#" id="contact_card" title="' . _CONTACT_CARD
             . '" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
@@ -584,13 +587,15 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><input type="text" name="contact" '
             . 'id="contact" onblur="clear_error(\'frm_error_' . $actionId . '\');'
-            . 'display_contact_card(\'visible\');" /><div id="show_contacts" '
+            . 'display_contact_card(\'visible\');check_date_exp(\''.$path_to_script.'\');" /><div id="show_contacts" '
             . 'class="autocomplete autocompleteIndex"></div></td>';
     $frmStr .= '<td><span class="red_asterisk" id="contact_mandatory" '
             . 'style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
+	$frmStr .= '<tr style="display:none" id="contact_check"><td></td></tr>';
     $frmStr .= '<input type="hidden" id="contactid" />';
     $frmStr .= '<input type="hidden" id="addressid" />';
+    $frmStr .= '<input type="hidden" id="contactcheck" value="success"/>';
 	
 	/****multicontact***/
 	
@@ -883,10 +888,13 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . _VALIDATE . '" class="button" '
             . 'onclick="getIframeContent(\''
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-            . '&page=getIframeTemplateContent\');valid_action_form(\'index_file\', \''
+            . '&page=getIframeTemplateContent\');if(document.getElementById(\'contactcheck\').value!=\'success\'){if (confirm(\''. _CONTACT_CHECK .'\n\ncontinuer ?\'))valid_action_form(\'index_file\', \''
             . $pathManageAction . '\', \'' . $actionId . '\', \'' . $resId
             . '\', \'' . $table . '\', \'' . $module . '\', \'' . $collId
-            . '\', \'' . $mode . '\', true);"/> ';
+            . '\', \'' . $mode . '\', true);}else{valid_action_form(\'index_file\', \''
+            . $pathManageAction . '\', \'' . $actionId . '\', \'' . $resId
+            . '\', \'' . $table . '\', \'' . $module . '\', \'' . $collId
+            . '\', \'' . $mode . '\', true);}"/> ';
     $frmStr .= '<input name="close" id="close" type="button" value="'
             . _CANCEL . '" class="button" '
             . 'onclick="javascript:window.top.location.href=\''
