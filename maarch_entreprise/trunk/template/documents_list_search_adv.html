@@ -81,8 +81,7 @@ Mods
                                                 ##defineLang|_ENTITY##
                                                 ##sortColumn|entity_label##
                                                 &nbsp;
-												##defineLang|_FOLDER##
-                                                ##sortColumn|folder_name##
+                                                ##ifStatement|#isModuleLoaded|folder#===true|&nbsp;#defineLang|_FOLDER# #sortColumn|folder_name#| ##
                                                 &nbsp;
                                                 ##defineLang|_CATEGORY##
                                                 ##sortColumn|category_id##
