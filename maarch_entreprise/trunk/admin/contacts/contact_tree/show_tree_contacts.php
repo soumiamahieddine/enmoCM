@@ -29,6 +29,7 @@
 */
 
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once("apps".DIRECTORY_SEPARATOR."maarch_entreprise".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
@@ -58,31 +59,47 @@ $f_level = array();
 $search_customer_results = array();
 $f_level = array();
 
-$query="select id, label from  ".$_SESSION['tablename']['contact_types'];
+$query="select id, label from  ".$_SESSION['tablename']['contact_types']." order by label";
 
 $db1->query($query);
-
+$contactv2 = new contacts_v2();
 while($res1 = $db1->fetch_object())
 {
     $s_level = array();
-    $db2->query("select contact_id, society, lastname, firstname from ".$_SESSION['tablename']['contacts_v2']." where contact_type = ".$res1->id);
+    $db2->query("select contact_id, society, society_short, lastname, firstname, is_corporate_person from ".$_SESSION['tablename']['contacts_v2']." where contact_type = ".$res1->id." group by is_corporate_person, contact_id order by society, lastname");
     while($res2 = $db2->fetch_object())
     {
         $doctypes = array();
-        $db3->query("select id, lastname, firstname, address_num, address_street, address_town, address_postal_code from ".$_SESSION['tablename']['contact_addresses']." where contact_id = ".$res2->contact_id);
+        $db3->query("select id, contact_purpose_id, lastname, firstname, address_num, address_street, address_town, address_postal_code from ".$_SESSION['tablename']['contact_addresses']." where contact_id = ".$res2->contact_id." order by lastname, firstname, address_num");
         while($res3 = $db3->fetch_object())
         {
             $results = array();
-            $address = $func->show_string($res3->lastname, true) . ' ' . $func->show_string($res3->firstname, true) . ' ' . $func->show_string($res3->address_num, true) . ' ' . $func->show_string($res3->address_street, true) . ' ' . $func->show_string($res3->address_postal_code, true) . ' ' . $func->show_string($res3->address_town, true);
+            $address = '';
+            $address = '('.$contactv2->get_label_contact($res3->contact_purpose_id, $_SESSION['tablename']['contact_purposes']).') ';
+            if ($res3->lastname <> '' || $res3->firstname <> ''){
+                $address .= strtoupper($func->show_string($res3->lastname, true)) . ' ' . $func->show_string($res3->firstname, true) . ' : ';
+            }
+            $address .= $func->show_string($res3->address_num, true) . ' ' . $func->show_string($res3->address_street, true) . ' ' . $func->show_string($res3->address_postal_code, true) . ' ' . $func->show_string($res3->address_town, true);
             array_push($doctypes, array('type_id' => $res3->id, 'description' => $address, "results" => $results));
         }
-        $contact = $func->show_string($res2->society, true) . ' ' . $func->show_string($res2->lastname, true) . ' ' . $func->show_string($res2->firstname, true);
+        $contact = '';
+        if($res2->is_corporate_person == 'Y'){
+            $contact = ucfirst($func->show_string($res2->society, true));
+            if ($res2->society_short <> '') {
+               $contact .= ' ('.$res2->society_short.')';
+            }
+        } else {
+            $contact = strtoupper($func->show_string($res2->lastname, true)) . ' ' . $func->show_string($res2->firstname, true);
+            if ($res2->society <> '') {
+               $contact .= ' ('.$res2->society.')';
+            }
+        }
         array_push($s_level, array('contact_id' => $res2->contact_id, 'contact_label' => $contact, 'doctypes' => $doctypes));
     }
-    array_push($f_level, array('contact_type_id' => $res1->id, 'contact_type_label' => $func->show_string($res1->label, true), 'second_level' => $s_level));
+    array_push($f_level, array('contact_type_id' => $res1->id, 'contact_type_label' => ucfirst($func->show_string($res1->label, true)), 'second_level' => $s_level));
 }
 
-array_push($search_customer_results, array('contact' => _TREE_ROOT, 'content' => $f_level));
+array_push($search_customer_results, array('contact' => _VIEW_TREE_CONTACTS . ' ' . _TREE_INFO, 'content' => $f_level));
 
 //$core_tools->show_array($search_customer_results);
 ?>
@@ -190,7 +207,7 @@ array_push($search_customer_results, array('contact' => _TREE_ROOT, 'content' =>
                                         ?>
                                         {
                                             'id':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_id']);?>',
-                                            'txt':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_label']);?>',
+                                            'txt':'<a onmouseover="this.style.cursor=\'pointer\';" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types_up&id=<?php echo $search_customer_results[$i]['content'][$j]['contact_type_id'];?>\');"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_label']);?></a>',
                                             'items':[
                                                         <?php
                                                         for($k=0;$k<count($search_customer_results[$i]['content'][$j]['second_level']);$k++)
@@ -198,7 +215,7 @@ array_push($search_customer_results, array('contact' => _TREE_ROOT, 'content' =>
                                                             ?>
                                                             {
                                                                 'id':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_id']);?>',
-                                                                'txt':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_label']);?>',
+                                                                'txt':'<a onmouseover="this.style.cursor=\'pointer\';" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2_up&id=<?php echo $search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_id'];?>\');"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_label']);?></a>',
                                                                 'items':[
                                                                             <?php
                                                                             for($l=0;$l<count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes']);$l++)
@@ -207,7 +224,7 @@ array_push($search_customer_results, array('contact' => _TREE_ROOT, 'content' =>
                                                                                 {
                                                                                     <?php
                                                                                     ?>
-                                                                                    'txt':'<span style="font-style:italic;"><small><small><a href="#" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_addresses_up&tree=Y&id=<?php echo $search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id'];?>\');"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']);?></a></small></small></span>',
+                                                                                    'txt':'<span style="font-style:italic;"><small><small><?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']);?></small></small></span>',
                                                                                     'img':'empty.gif'
                                                                                 }
                                                                                 <?php
