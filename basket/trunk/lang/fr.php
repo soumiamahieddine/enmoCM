@@ -266,7 +266,7 @@ if (!defined('_BACK_FROM_VACATION'))
 if (!defined('_MISSING_ADVERT_TITLE'))
     define('_MISSING_ADVERT_TITLE','Gestion des absences');
 if (!defined('_MISSING_ADVERT_01'))
-    define('_MISSING_ADVERT_01','Ce compte est actuellement d&eacute;finit en mode &rsquo;absent&rsquo; et les courriers sont redirig&eacute;s vers un autre utilisateur.');
+    define('_MISSING_ADVERT_01','Ce compte est actuellement d&eacute;fini en mode &rsquo;absent&rsquo; et les courriers sont redirig&eacute;s vers un autre utilisateur.');
 if (!defined('_MISSING_ADVERT_02'))
     define('_MISSING_ADVERT_02','Si vous desirez vous connecter avec ce compte, le mode &rsquo;absent&rsquo; sera alors supprim&eacute;.<br/> La redirection des courriers arrivera &agrave; son terme et l&rsquo;application sera r&eacute;activ&eacute;e');
 if (!defined('_MISSING_CHOOSE'))
