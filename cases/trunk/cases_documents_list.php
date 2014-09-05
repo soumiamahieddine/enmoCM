@@ -62,31 +62,40 @@ if (isset($_SESSION['searching']['cases_request'])) {
 array_push($select[$view], "res_id", "status", "subject", "category_id as category_img", "contact_firstname", "contact_lastname", "contact_society", "user_lastname", "user_firstname", "dest_user", "type_label", "creation_date", "destination", "category_id, exp_user_id");
 
 $status = $status_obj->get_not_searchable_status();
+
 $status_str = '';
-for($i=0; $i<count($status);$i++)
-{
+for ($i=0; $i<count($status);$i++) {
 	$status_str .=	"'".$status[$i]['ID']."',";
 }
-$status_str = preg_replace('/,$/', '', $status_str);
-$where_request.= "  status not in (".$status_str.") ";
-
+if ($status_str <> '') {
+    $status_str = preg_replace('/,$/', '', $status_str);
+    $where_request.= "  status not in (".$status_str.") ";
+    
+} else {
+    $where_request .= " 1=1 ";
+}
 //$where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
+
 $where_request .= $obj_cases->get_where_clause_from_case($_SESSION['cases']['actual_case_id']);
 $where_request .= " and (";
+
 $j=0;
-while($j<=count($_SESSION['user']['baskets'])){
-
-	if($_SESSION['user']['baskets'][$j]['clause']<>''){
-		$where_request .= $_SESSION['user']['baskets'][$j]['clause'];
-		if($j+1 != count($_SESSION['user']['baskets'])){
-			$where_request .=" or "; 
-		}
-	}
-
-$j++;
+if (count($_SESSION['user']['baskets']) > 0) {
+    while($j<=count($_SESSION['user']['baskets'])){
+        if($_SESSION['user']['baskets'][$j]['clause']<>''){
+            $where_request .= "(" . $_SESSION['user']['baskets'][$j]['clause'] . ")";
+            if($j+1 != count($_SESSION['user']['baskets'])){
+                $where_request .=" or "; 
+            }
+        }
+        $j++;
+    }
+    $where_request .= " or ";
 }
-$where_request .= " or ".$_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where'].") ";
-
+if ($_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where'] <> '') {
+    
+    $where_request .= $_SESSION['user']['security'][$_SESSION['collection_id_choice']]['DOC']['where'].") ";
+}
 if($where_clause <> '')
 {
 		//$where_clause .= $obj_cases->get_where_clause_from_case($_SESSION['cases']['actual_case_id']);

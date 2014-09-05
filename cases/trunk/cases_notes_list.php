@@ -35,15 +35,20 @@ if (isset($_SESSION['searching']['cases_request'])) {
     $where_request = $_SESSION['searching']['cases_request'];
 }
 
-
 $status = $status_obj->get_not_searchable_status();
 $status_str = '';
 for($i=0; $i<count($status);$i++)
 {
 	$status_str .=	"'".$status[$i]['ID']."',";
 }
-$status_str = preg_replace('/,$/', '', $status_str);
-$where_request.= "  status not in (".$status_str.") ";
+if ($status_str <> '') {
+    $status_str = preg_replace('/,$/', '', $status_str);
+    $where_request.= "  status not in (".$status_str.") ";
+    
+} else {
+    $where_request .= " 1=1 ";
+}
+
 $where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
 
 if(!empty($where_request))
@@ -63,6 +68,8 @@ else
 	}
 	$where_request = $where_clause;
 }
+
+
 $where_request = str_replace("()", "(1=-1)", $where_request);
 $where_request = str_replace("and ()", "", $where_request);
 

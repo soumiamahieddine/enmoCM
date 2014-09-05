@@ -50,8 +50,17 @@ for($i=0; $i<count($status);$i++)
 {
 	$status_str .=	"'".$status[$i]['ID']."',";
 }
-$status_str = preg_replace('/,$/', '', $status_str);
-$where_request.= "  status not in (".$status_str.") ";
+//$status_str = preg_replace('/,$/', '', $status_str);
+//$where_request.= "  status not in (".$status_str.") ";
+
+if ($status_str <> '') {
+    $status_str = preg_replace('/,$/', '', $status_str);
+    $where_request.= "  status not in (".$status_str.") ";
+    
+} else {
+    $where_request .= " 1=1 ";
+}
+
 //$where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
 $where_clause =" case_id = '".$case_id."' ";
 
