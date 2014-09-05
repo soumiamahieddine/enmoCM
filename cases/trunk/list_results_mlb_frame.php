@@ -118,8 +118,16 @@ if(!$searchOnCases) {
     for ($i = 0; $i < count($status); $i++) {
         $status_str .= "'" . $status[$i]['ID'] . "',";
     }
-    $status_str = preg_replace('/,$/', '', $status_str);
-    $where_request .= "  status not in (" . $status_str . ") ";
+   
+    if ($status_str <> '') {
+        $status_str = preg_replace('/,$/', '', $status_str);
+        $where_request.= "  status not in (".$status_str.") ";
+        
+    } else {
+        $where_request .= " 1=1 ";
+    }
+    //$status_str = preg_replace('/,$/', '', $status_str);
+    //$where_request .= "  status not in (" . $status_str . ") ";
     if ($core_tools->is_module_loaded("cases") == true) {
         array_push($select[$view], "case_id", "case_label", "case_description");
     }
