@@ -1756,6 +1756,10 @@ class contacts_v2 extends dbquery
             
             if($this->nb_result() > 0)$nb_elements = $nb_elements + $this->nb_result();
             // $this->show(); 
+            if ($mode == 'contact_address'){
+                $this->query("select address_id from contacts_res where address_id = ". $id );
+                if($this->nb_result() > 0)$nb_elements = $nb_elements + $this->nb_result();
+            }
                          
             if ($nb_elements == 0)
             {

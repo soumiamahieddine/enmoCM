@@ -76,6 +76,7 @@ if ($_REQUEST['valid']) {
 		// delete contact types
 		$db->query("DELETE FROM ".$_SESSION['tablename']['contact_addresses']." WHERE id = ".$id);
 		$db->query("UPDATE mlb_coll_ext SET address_id = ".$newid." WHERE address_id = ".$id);
+		$db->query("UPDATE contacts_res SET address_id = ".$newid." WHERE address_id = ".$id);
 
 		if($_SESSION['history']['contact_addresses_del'] == "true")
 		{

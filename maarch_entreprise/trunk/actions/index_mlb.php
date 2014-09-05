@@ -603,7 +603,9 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
 	$path_to_script = $_SESSION['config']['businessappurl']
 		."index.php?display=true&dir=indexing_searching&page=add_multi_contacts&coll_id=".$collId;
  	
-	$_SESSION['adresses']['to'] = array();
+    $_SESSION['adresses']['to'] = array();
+    $_SESSION['adresses']['contactid'] = array();
+	$_SESSION['adresses']['addressid'] = array();
 	
     $frmStr .= '<tr id="add_multi_contact_tr" style="display:' . $displayValue . ';">';
         $frmStr .= '<td><label for="contact" class="form_title" >'
@@ -632,11 +634,11 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<div id="multiContactList" class="autocomplete"></div>';
     $frmStr .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
         .$_SESSION['config']['businessappurl']
-        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'Input\', \'2\');</script>';
+        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'Input\', \'2\', \'contactid\', \'addressid\');</script>';
     $frmStr .=' <input type="button" name="add" value="&nbsp;'._ADD
                     .'&nbsp;" id="valid_multi_contact" class="button" onclick="updateMultiContacts(\''.$path_to_script
                     .'&mode=adress\', \'add\', document.getElementById(\'email\').value, '
-                    .'\'to\', false);display_contact_card(\'hidden\', \'multi_contact_card\');" />&nbsp;';
+                    .'\'to\', false, document.getElementById(\'addressid\').value, document.getElementById(\'contactid\').value);display_contact_card(\'hidden\', \'multi_contact_card\');" />&nbsp;';
     $frmStr .= '</td>';
     $frmStr .= '</tr>';
     $frmStr .= '<tr id="show_multi_contact_tr">';
@@ -1817,19 +1819,18 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
 		
 			for($icontact = 0; $icontact<$nb_multi_contact; $icontact++){
 			
-				$contactId = str_replace(
-					')', '', substr($_SESSION['adresses']['to'][$icontact], strrpos($_SESSION['adresses']['to'][$icontact], '(') + 1)
-				);
+				// $contactId = str_replace(
+				// 	')', '', substr($_SESSION['adresses']['to'][$icontact], strrpos($_SESSION['adresses']['to'][$icontact], '(') + 1)
+				// );
 			
-				$db->query("INSERT INTO contacts_res (coll_id, res_id, contact_id) VALUES ('". $collId ."', ". $resId .", '". $contactId ."')");
+				$db->query("INSERT INTO contacts_res (coll_id, res_id, contact_id, address_id) VALUES ('". $collId ."', ". $resId .", '". $_SESSION['adresses']['contactid'][$icontact] ."', ". $_SESSION['adresses']['addressid'][$icontact] .")");
 			
 			}
 			
 			$queryExtFields .= 'is_multicontacts,';
 			$queryExtValues .= "'Y',";
 		
-		}
-		else{
+		} else {
 		
 			// $contactId = str_replace(
 			// 	')', '', substr($contact, strrpos($contact, '(') + 1)

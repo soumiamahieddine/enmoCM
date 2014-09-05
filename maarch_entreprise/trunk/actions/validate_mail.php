@@ -242,16 +242,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	//Load Multicontacts
 	//CONTACTS
-    $query = "select c.firstname, c.lastname, c.society, c.contact_id ";
-		$query .= "from contacts c, contacts_res cres ";
-		$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$res_id." AND cast (c.contact_id as varchar) = cres.contact_id";			
+    $query = "select c.firstname, c.lastname, c.society, c.contact_id, c.ca_id ";
+		$query .= "from view_contacts c, contacts_res cres ";
+		$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$res_id." AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id";			
 	$db->query($query);
 	
-	$_SESSION['adresses']['to'] = array();
+    $_SESSION['adresses']['to'] = array();
+    $_SESSION['adresses']['addressid'] = array();
+	$_SESSION['adresses']['contactid'] = array();
 	
 	while($res = $db->fetch_object()){
-		$addContact = $res->firstname . $res->lastname . $res->society . ' ('. $res->contact_id .')';
-		 array_push($_SESSION['adresses']['to'], $addContact);
+		$addContact = $res->firstname . $res->lastname . $res->society;
+         array_push($_SESSION['adresses']['to'], $addContact);
+         array_push($_SESSION['adresses']['addressid'], $res->ca_id);
+		 array_push($_SESSION['adresses']['contactid'], $res->contact_id);
 	}
 	
     //USERS
@@ -261,8 +265,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$db->query($query);
 	
 	while($res = $db->fetch_object()){
-		$addContact = $res->firstname . $res->lastname . ' ('. $res->user_id .')';
-		 array_push($_SESSION['adresses']['to'], $addContact);
+		$addContact = $res->firstname . $res->lastname;
+         array_push($_SESSION['adresses']['to'], $addContact);
+         array_push($_SESSION['adresses']['addressid'], 0);
+		 array_push($_SESSION['adresses']['contactid'], $res->user_id);
 	}
     
     check_category($coll_id, $res_id);
@@ -573,11 +579,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .= '<div id="multiContactList" class="autocomplete"></div>';
 					$frm_str .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
 						.$_SESSION['config']['businessappurl']
-						.'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'Input\', \'2\');</script>';
+						.'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'Input\', \'2\', \'contactid\', \'addressid\');</script>';
 					$frm_str .=' <input type="button" name="add" value="&nbsp;'._ADD
 									.'&nbsp;" id="valid_multi_contact" class="button" onclick="updateMultiContacts(\''.$path_to_script
 									.'&mode=adress\', \'add\', document.getElementById(\'email\').value, '
-									.'\'to\', false);display_contact_card(\'hidden\', \'multi_contact_card\');" />&nbsp;';
+									.'\'to\', false, document.getElementById(\'addressid\').value, document.getElementById(\'contactid\').value);display_contact_card(\'hidden\', \'multi_contact_card\');" />&nbsp;';
 					$frm_str .= '</td>';
 					$frm_str .= '</tr>';
 					$frm_str .= '<tr id="show_multi_contact_tr">';
@@ -593,7 +599,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 							//if ($readOnly === false) {
 								$frm_str .= '&nbsp;<div class="email_delete_button" id="'.$icontacts.'"'
 									. 'onclick="updateMultiContacts(\''.$path_to_script
-									.'&mode=adress\', \'del\', \''.$_SESSION['adresses']['to'][$icontacts].'\', \'to\', this.id);" alt="'._DELETE.'" title="'
+									.'&mode=adress\', \'del\', \''.$_SESSION['adresses']['to'][$icontacts].'\', \'to\', this.id, \''.$_SESSION['adresses']['addressid'][$icontacts].'\', \''.$_SESSION['adresses']['contactid'][$icontacts].'\');" alt="'._DELETE.'" title="'
 									._DELETE.'">x</div>';
 							//}
 							$frm_str .= '</div>';
@@ -1717,11 +1723,11 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		
 			for($icontact = 0; $icontact<$nb_multi_contact; $icontact++){
 			
-				$contactId = str_replace(
-					')', '', substr($_SESSION['adresses']['to'][$icontact], strrpos($_SESSION['adresses']['to'][$icontact], '(') + 1)
-				);
+				// $contactId = str_replace(
+				// 	')', '', substr($_SESSION['adresses']['to'][$icontact], strrpos($_SESSION['adresses']['to'][$icontact], '(') + 1)
+				// );
 			
-				$db->query("INSERT INTO contacts_res (coll_id, res_id, contact_id) VALUES ('". $coll_id ."', ". $res_id .", '". $contactId ."')");
+				$db->query("INSERT INTO contacts_res (coll_id, res_id, contact_id, address_id) VALUES ('". $coll_id ."', ". $res_id .", '". $_SESSION['adresses']['contactid'][$icontact] ."', ". $_SESSION['adresses']['addressid'][$icontact] .")");
 
 			}
 			

@@ -85,7 +85,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     //echo "<ul>\n";
     echo "<ul id=\"autocomplete_contacts_ul\" title='".$_REQUEST['contact_type'] . " [".$_REQUEST['Input']."] = $nb contacts'>";
     for ($i=0; $i< min(count($res), 10)  ;$i++) {
-        echo "<li>".$req->show_string($res[$i][0]['value']).', '.$req->show_string($res[$i][1]['value']).' ('.$res[$i][2]['value'].")</li>\n";
+        echo "<li id='".$res[$i][2]['value'].", '>".$req->show_string($res[$i][0]['value'])." ".$req->show_string($res[$i][1]['value'])."</li>\n";
     }
     /*if (count($res) == 11) {
             echo "<li>...</li>\n";
@@ -101,27 +101,54 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
    
     $args = explode(' ', $_REQUEST['Input']);
     $args[] = $_REQUEST['Input'];
+    $args_bold = array();
+    foreach ($args as $key => $value) {
+        $args_bold[$key] = '<b>'. $value . '</b>';
+    }
     $num_args = count($args);
     if ($num_args == 0) return "<ul></ul>"; 
        
-    $query = "SELECT result, SUM(confidence) AS score, count(1) AS num FROM (";
-    
+    $query = "SELECT result, SUM(confidence) AS score, count(1) AS num, address, contact_id, ca_id FROM (";
+
     $subQuery = 
         "SELECT "
             . "(CASE "
-                . " WHEN is_corporate_person = 'Y' THEN society"
-                . " WHEN is_corporate_person = 'N' THEN UPPER(lastname) || ' ' || firstname "
-            . " END) || ' (' || contact_id || ')' AS result, "
-            . " %d AS confidence"
-        . " FROM contacts_v2"
+                . " WHEN is_corporate_person = 'Y' THEN society ||" 
+                    . "(CASE "
+                        . " WHEN society_short <> '' THEN  ' (' || society_short || ')' ||"
+                            . "(CASE "
+                                . " WHEN lastname <> '' THEN ( ' - ' || UPPER(lastname) || ' ' || firstname)"
+                                . " WHEN lastname = '' THEN ('')"
+                            . " END)"                            
+                        . " WHEN society_short = '' THEN '' ||"
+                            . "(CASE "
+                                . " WHEN lastname <> '' THEN ( ' - ' || UPPER(lastname) || ' ' || firstname)"
+                                . " WHEN lastname = '' THEN ('')"
+                            . " END)"
+                    . " END)"
+                . " WHEN is_corporate_person = 'N' THEN UPPER(contact_lastname) || ' ' || contact_firstname "
+            . " END) AS result, "
+            . " %d AS confidence, "
+            . " contact_id, ca_id, "
+            ."(CASE "
+                . " WHEN is_private = 'N' THEN address_num || ' ' || address_street || ' ' || address_postal_code || ' ' || UPPER(address_town) || " 
+                    . "(CASE "
+                        . " WHEN address_country <> '' THEN ( ' - ' || UPPER(address_country))"
+                        . " WHEN address_country = '' THEN ('')"
+                    . " END)"
+                . " WHEN is_private = 'Y' THEN ' (coordonnees confidentielles) '"
+            ." END)"   
+            . "AS address"
+        . " FROM view_contacts"
         . " WHERE (user_id = 'superadmin' OR user_id IS NULL OR user_id = '".$req->protect_string_db($_SESSION['user']['UserId'])."' ) "
-            // . " AND enabled = 'Y' "
             . $contactTypeRequest
             . " AND ("
-                . " LOWER(lastname) LIKE LOWER('%s')"
-                . " OR LOWER(firstname) LIKE LOWER('%s')"
+                . " LOWER(contact_lastname) LIKE LOWER('%s')"
+                . " OR LOWER(contact_firstname) LIKE LOWER('%s')"
                 . " OR LOWER(society) LIKE LOWER('%s')"
-
+                . " OR LOWER(lastname) LIKE LOWER('%s')"
+                . " OR LOWER(firstname) LIKE LOWER('%s')"
+                . " OR LOWER(address_town) LIKE LOWER('%s')"
             .")".$request_contact;
     
     $queryParts = array();
@@ -131,21 +158,21 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         # Full match of one given arg
         $expr = $arg;
         $conf = 100;
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr); 
+        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr); 
 
         # Partial match (starts with)
         $expr = $arg . "%"; ;
         $conf = 34; # If found, partial match contains will also be so score is sum of both confidences, i.e. 67)
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr); 
+        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr); 
       
         # Partial match (contains)
         $expr = "%" . $arg . "%";
         $conf = 33;
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr); 
+        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr); 
     }
     $query .= implode (' UNION ALL ', $queryParts);
     $query .= ") matches" 
-        . " GROUP BY result "
+        . " GROUP BY result, contact_id, address, ca_id "
         . " ORDER BY score DESC, result ASC";
     
     $req->query($query);
@@ -159,7 +186,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     $time = number_format(($timeend-$timestart), 3);
 
     $found = false;
-    //echo "<ul id=\"autocomplete_contacts_ul\" title='".$_REQUEST['contact_type'] . " [".$_REQUEST['Input']."] = $nb contacts'>";
+    // echo "<ul id=\"autocomplete_contacts_ul\" title='".$_REQUEST['contact_type'] . " [".$_REQUEST['Input']."] = $nb contacts'>";
     for ($i=0; $i<$l; $i++) {
         $res = $req->fetch_object();
         $score = round($res->score / $num_args);
@@ -168,7 +195,11 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         }
         if ($i%2==1) $color = 'LightYellow';
         else $color = 'white';
-        echo "<li style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'>". $res->result ."</li>";
+        echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'>"
+                . ucwords(strtolower(str_ireplace($args, $args_bold, $res->result))) 
+                ."<br/> "
+                . ucwords(strtolower(str_ireplace($args, $args_bold, $res->address)))
+            ."</li>";
     }
     if($nb == 0) echo "<li></li>";
     echo "</ul>";

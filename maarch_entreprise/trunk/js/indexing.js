@@ -1307,7 +1307,7 @@ function computeTotalAmount()
     }
 }
 
-var addMultiContacts = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv) {
+var addMultiContacts = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, contact_id, address_id) {
      new Ajax.Autocompleter(
          idField,
          idList,
@@ -1317,11 +1317,20 @@ var addMultiContacts = function (idField, idList, theUrlToListScript, paramNameS
              minChars : minCharsSrv,
              tokens : ',',
              //afterUpdateElement : extractEmailAdress,
-			parameters : 'table=contacts'
+			parameters : 'table=contacts',
+            afterUpdateElement: function (text, li){
+                var all_li = li.id;
+                var res = all_li.split(",");
+                parent.$(contact_id).value = res[0];
+                if(res[1]==' ') {
+                    res[1] = 0;
+                }
+                parent.$(address_id).value = res[1];
+            }
          });
  };
  
-function updateMultiContacts(path, action, contact, target, array_index) {
+function updateMultiContacts(path, action, contact, target, array_index, addressid, contactid) {
         
 	new Ajax.Request(path,
 	{
@@ -1330,7 +1339,9 @@ function updateMultiContacts(path, action, contact, target, array_index) {
 					  'for': action,
 					  contact: contact,
 					  field: target,
-					  index: array_index
+					  index: array_index,
+                      addressid: addressid,
+                      contactid: contactid
 					},
 		onLoading: function(answer) {
 			$('loading_' + target).style.display='inline';
@@ -1339,7 +1350,11 @@ function updateMultiContacts(path, action, contact, target, array_index) {
 			eval("response = "+answer.responseText);
 			if(response.status == 0){
 				$(target).innerHTML = response.content;
-				if (action == 'add') {$('email').value = '';}
+				if (action == 'add') {
+                    $('email').value = '';
+                    $('contactid').value = '';
+                    $('addressid').value = '';
+                }
 			} else {
 				alert(response.error);
 				eval(response.exec_js);

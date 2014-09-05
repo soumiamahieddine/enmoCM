@@ -426,23 +426,32 @@ switch ($mode) {
     case 'adress':
         if (isset($_REQUEST['for']) && isset($_REQUEST['field']) && isset($_REQUEST['contact'])) {
             //
-            if (isset($_REQUEST['contact']) && !empty($_REQUEST['contact'])) {
+            if (isset($_REQUEST['contactid']) && !empty($_REQUEST['contactid'])) {
                 //Clean up email
                 $email = trim($_REQUEST['contact']);
                 //Reset session adresses if necessary
                 if (!isset($_SESSION['adresses'][$_REQUEST['field']])) $_SESSION['adresses'][$_REQUEST['field']] = array();
+                if (!isset($_SESSION['adresses']['contactid'])) $_SESSION['adresses']['contactid'] = array();
+                if (!isset($_SESSION['adresses']['addressid'])) $_SESSION['adresses']['addressid'] = array();
                 //For ADD
                 if ($_REQUEST['for'] == 'add') {
                     array_push($_SESSION['adresses'][$_REQUEST['field']], $email);
+                    array_push($_SESSION['adresses']['contactid'], $_REQUEST['contactid']);
+                    array_push($_SESSION['adresses']['addressid'], $_REQUEST['addressid']);
                 //For DEL
-                } else  if ($_REQUEST['for'] == 'del') {
+                } else if ($_REQUEST['for'] == 'del') {
                     //unset adress in array
                     //unset($_SESSION['adresses'][$_REQUEST['field']][$_REQUEST['index']]);
-					array_splice($_SESSION['adresses'][$_REQUEST['field']], $_REQUEST['index'], 1);
+                    array_splice($_SESSION['adresses'][$_REQUEST['field']], $_REQUEST['index'], 1);
+                    array_splice($_SESSION['adresses']['contactid'], $_REQUEST['index'], 1);
+					array_splice($_SESSION['adresses']['addressid'], $_REQUEST['index'], 1);
                     //If no adresse for field, unset the entire sub-array
-                    if (count($_SESSION['adresses'][$_REQUEST['field']]) == 0) 
+                    if (count($_SESSION['adresses'][$_REQUEST['field']]) == 0) { 
                         unset($_SESSION['adresses'][$_REQUEST['field']]);
+                        unset($_SESSION['adresses']['contactid']);
+                        unset($_SESSION['adresses']['addressid']);
 						//array_splice($_SESSION['adresses'], 0);
+                    }
                 }
                 //Get content
                 $content = $multicontacts->updateContactsInputField($path_to_script, $_SESSION['adresses'], $_REQUEST['field']);

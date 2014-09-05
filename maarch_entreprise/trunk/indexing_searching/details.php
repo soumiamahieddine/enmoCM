@@ -254,10 +254,10 @@ if (isset($_POST['put_doc_on_validation'])) {
 }
 
 //Load multicontacts
-	$query = "select c.firstname, c.lastname, c.society ";
-			$query .= "from contacts c, contacts_res cres  ";
-			$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['id']." AND cast (c.contact_id as varchar) = cres.contact_id ";
-			$query .= "GROUP BY c.firstname, c.lastname, c.society";
+	$query = "SELECT c.contact_firstname, c.contact_lastname, c.firstname, c.lastname, c.society 
+                FROM view_contacts c, contacts_res cres 
+                WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['id']." AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id 
+                GROUP BY c.firstname, c.lastname, c.society, c.contact_firstname, c.contact_lastname";
 			
 	$db->query($query);
 	$nbContacts = 0;
@@ -265,13 +265,17 @@ if (isset($_POST['put_doc_on_validation'])) {
 	$frameContacts = "{";
 	while($res = $db->fetch_object()){
 		$nbContacts = $nbContacts + 1;
+        $contact_firstname = str_replace("'","\'", $res->contact_firstname);
+        $contact_firstname = str_replace('"'," ", $contact_firstname);
+        $contact_lastname = str_replace("'","\'", $res->contact_lastname);
+        $contact_lastname = str_replace('"'," ", $contact_lastname);
 		$firstname = str_replace("'","\'", $res->firstname);
 		$firstname = str_replace('"'," ", $firstname);
 		$lastname = str_replace("'","\'", $res->lastname);
 		$lastname = str_replace('"'," ", $lastname);
 		$society = str_replace("'","\'", $res->society);
 		$society = str_replace('"'," ", $society);
-		$frameContacts .= "'contact ".$nbContacts."' : '" . $firstname . " " . $lastname . " " . $society . " (contact)', ";
+		$frameContacts .= "'contact ".$nbContacts."' : '" . $contact_firstname . " " . $contact_lastname . " " . $firstname . " " . $lastname . " " . $society . " (contact)', ";
 	}
     $query = "select u.firstname, u.lastname, u.user_id ";
 			$query .= "from users u, contacts_res cres  ";

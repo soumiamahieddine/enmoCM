@@ -55,7 +55,7 @@ class multicontacts extends dbquery
                         $content .= '&nbsp;<div class="email_delete_button" id="'.$key.'"'
                             . 'onclick="updateMultiContacts(\''.$ajaxPath
                             .'&mode=adress\', \'del\', \''.$contacts.'\', \''
-                            .$inputField.'\', this.id);" alt="'._DELETE.'" title="'
+                            .$inputField.'\', this.id, \''.$contactsArray['addressid'][$key].'\', \''.$contactsArray['contactid'][$key].'\');" alt="'._DELETE.'" title="'
                             ._DELETE.'">x</div>';
                     }
                     $content .= '</div>';

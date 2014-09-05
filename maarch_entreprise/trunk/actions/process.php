@@ -196,10 +196,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     */
 
 //Load multicontacts
-	$query = "select c.firstname, c.lastname, c.society ";
-			$query .= "from contacts c, contacts_res cres  ";
-			$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$res_id." AND cast (c.contact_id as varchar) = cres.contact_id ";
-			$query .= "GROUP BY c.firstname, c.lastname, c.society";
+	$query = "select c.firstname, c.lastname, c.society, c.contact_id, c.ca_id  ";
+			$query .= "from view_contacts c, contacts_res cres  ";
+			$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$res_id." AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id ";
+			$query .= "GROUP BY c.firstname, c.lastname, c.society, c.contact_id, c.ca_id";
 			
 	$b->query($query);
 	$nbContacts = 0;

@@ -15,9 +15,9 @@ if (isset($_REQUEST['res_id'])) {
                 $db = new dbquery();
                 $db->connect();
                       
-                $query = "select c.firstname, c.lastname, c.society, c.address_num, c.address_street, c.address_complement, c.address_town, c.address_postal_code, c.address_country ";
-                        $query .= "from contacts c, contacts_res cres  ";
-                        $query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['res_id']." AND cast (c.contact_id as varchar) = cres.contact_id";
+                $query = "select c.contact_firstname, c.contact_lastname, c.firstname, c.lastname, c.society, c.address_num, c.address_street, c.address_complement, c.address_town, c.address_postal_code, c.address_country ";
+                        $query .= "from view_contacts c, contacts_res cres  ";
+                        $query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['res_id']." AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id";
                         
                 $db->query($query);
 
@@ -28,7 +28,7 @@ if (isset($_REQUEST['res_id'])) {
                         $return .= '<td style="background: transparent; border: 0px dashed rgb(200, 200, 200);">';
                             
                                 $return .= '<div style="text-align: left; background-color: rgb(230, 230, 230); padding: 3px; margin-left: 20px; margin-top: -6px;">';
-                                    $return .= $res->firstname . ' ' . $res->lastname . ' ' . $res->society . ' (contact)';
+                                    $return .= $res->contact_lastname . ' ' . $res->contact_firstname . ' ' . $res->firstname . ' ' . $res->lastname . ' ' . $res->society . ' (contact)';
                                     
                                     if(isset($res->address_num) && !empty($res->address_num)){
                                         $return .= ': ' . $res->address_num;
