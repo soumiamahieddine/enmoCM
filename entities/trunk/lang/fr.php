@@ -376,4 +376,4 @@ if (!defined('_NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF'))
     define('_NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF', 'Il n&rsquo;y a pas de r&ocirc;le d&eacute;fini pour moi dans le workflow');
 
 if (!defined('_NO_FILTER')) 
-    define('_NO_FILTER', 'Ne pas appliquer de filtre');
+    define('_NO_FILTER', 'Afficher tout');
