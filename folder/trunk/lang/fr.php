@@ -140,6 +140,8 @@ if (!defined('_CHOOSE_FOLDERTYPE'))
     define('_CHOOSE_FOLDERTYPE', 'Choisissez un type de dossier');
 if (!defined('_BROWSE_BY_FOLDER'))
     define('_BROWSE_BY_FOLDER', 'Recherche Dossier');
+if (!defined('_CHAR_ERROR'))
+    define('_CHAR_ERROR', 'L\'identifiant ne peut pas contenir les caract&egrave;res suivants : \', "');
 
 /*************************** Foldertypes management *****************/
 if (!defined('_FOLDERTYPE_ADDITION'))
