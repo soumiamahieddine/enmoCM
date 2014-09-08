@@ -101,7 +101,7 @@ for ($i = 0; $i < count($attachArr); $i ++) {
             }
         }
     }
-    if (! $viewOnly || (!isset($_SESSION['current_basket']['id']) && $core->test_service('edit_attachments_from_detail', 'attachments', false)) || isset($_SESSION['current_basket']['id'])) {
+    if (! $viewOnly || ($core->test_service('edit_attachments_from_detail', 'attachments', false))) {
         $tmp = array(
             'column' => 'modify_item',
             'value' => true,
