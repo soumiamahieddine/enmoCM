@@ -156,7 +156,7 @@ if (! empty($_SESSION['error'])) {
                 );
                 exit();
             } else {
-                $_SESSION['error'] = _NO_LOGIN_OR_PSW_BY_LDAP . '...';
+                $_SESSION['error'] = _BAD_LOGIN_OR_PSW;
                 header(
                     'location: ' . $_SESSION['config']['businessappurl']
                     . 'index.php?display=true&page=login&coreurl='
@@ -165,7 +165,7 @@ if (! empty($_SESSION['error'])) {
                 exit;
             }
         } else {
-            $_SESSION['error'] = _BAD_LOGIN_OR_PSW . ' (ad authenticate) ...';
+            $_SESSION['error'] = _BAD_LOGIN_OR_PSW;
             header(
                 'location: ' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&page=login&coreurl='
