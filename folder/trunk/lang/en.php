@@ -138,6 +138,8 @@ if (!defined('_CHOOSE_FOLDERTYPE'))
     define('_CHOOSE_FOLDERTYPE', 'Select a folder type');
 if (!defined('_BROWSE_BY_FOLDER'))
     define('_BROWSE_BY_FOLDER', 'Search a folder');
+if (!defined('_CHAR_ERROR'))
+    define('_CHAR_ERROR', 'ID can not contain the following characters: \', "');
 
 /*************************** Foldertypes management *****************/
 if (!defined('_FOLDERTYPE_ADDITION'))
