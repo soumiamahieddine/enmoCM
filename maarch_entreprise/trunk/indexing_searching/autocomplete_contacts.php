@@ -223,9 +223,9 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
     } elseif ($table == 'contacts') {
         $timestart=microtime(true);
        
-       if (isset($_REQUEST['contact_type']) && $_REQUEST['contact_type'] <> '') {
-           $contactTypeRequest = " AND contact_type = '" . $_REQUEST['contact_type'] . "'";
-       }
+       // if (isset($_REQUEST['contact_type']) && $_REQUEST['contact_type'] <> '') {
+       //     $contactTypeRequest = " AND contact_type = '" . $_REQUEST['contact_type'] . "'";
+       // }
        
         $args = explode(' ', $_REQUEST['Input']);
         $args[] = $_REQUEST['Input'];

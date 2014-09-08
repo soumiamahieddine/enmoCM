@@ -1105,7 +1105,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             // Contact
             elseif ($arr[$i] == 'contact_id') {
                 if (!empty ($line-> $arr[$i])) {
-                    $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts'] . " where  contact_id = " . $line-> $arr[$i] . "");
+                    $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts_v2'] . " where  contact_id = " . $line-> $arr[$i] . "");
                     $res = $db2->fetch_object();
                     if ($res->is_corporate_person == 'Y') {
                         $data[$arr[$i]]['show_value'] = $res->society;
@@ -1115,9 +1115,9 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                             $data[$arr[$i]]['show_value'] .= ' (' . $res->society . ')';
                         }
                     }
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' 
-                        . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=contact_info&mode=view&id=' 
-                        . $line-> $arr[$i] . '\', \'contact_info\', \'height=600, width=600,scrollbars=yes,resizable=yes\');" ><img src="' 
+                    $db2->query("select address_id from business_coll_ext where res_id = " . $res_id);
+                    $res = $db2->fetch_object();
+                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&contactid=' . $line-> $arr[$i] . '&addressid='.$res->address_id.'\', \'contact_info\', \'height=800, width=900,scrollbars=no,resizable=yes\');" ><img src="' 
                         . $_ENV['categories'][$cat_id]['contact_id']['img'] . '" alt="' . _CONTACT_CARD . '" /></a>';
                 } else {
                     unset ($data[$arr[$i]]);
