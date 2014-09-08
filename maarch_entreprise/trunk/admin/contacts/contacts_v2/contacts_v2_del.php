@@ -79,6 +79,8 @@ if(isset($_REQUEST['valid']))
         $db->query("update ".$_SESSION['collections'][$i]['extensions'][$i] 
             . " set dest_contact_id = '".$db->protect_string_db($new_contact) 
             . "', address_id = ".$new_address." where dest_contact_id = '".$db->protect_string_db($s_id) . "'");
+        $db->query("update contacts_res set contact_id = '".$db->protect_string_db($new_contact) 
+            . "', address_id = ".$new_address." where contact_id = '".$db->protect_string_db($s_id) . "'");
         $db->query("delete from " . $_SESSION['tablename']['contacts_v2']
             . " where contact_id = ".$db->protect_string_db($s_id));
         $db->query("delete from " . $_SESSION['tablename']['contact_addresses']

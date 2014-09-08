@@ -678,8 +678,10 @@ class contacts_v2 extends dbquery
                 . " where exp_contact_id = '".$this->protect_string_db($id) 
                 . "' or dest_contact_id = '".$this->protect_string_db($id) . "'");
             // $this->show();
-            if($this->nb_result() > 0)$nb_docs = $nb_docs + $this->nb_result(); 
+            if($this->nb_result() > 0)$nb_docs = $nb_docs + $this->nb_result();
 
+                $this->query("select contact_id from contacts_res where contact_id = '". $this->protect_string_db($id)."'");
+                if($this->nb_result() > 0)$nb_docs = $nb_docs + $this->nb_result();
 /*            $this->query("select res_id from mlb_coll_ext 
                             where address_id in 
                                 (select distinct id from ".$_SESSION['tablename']['contact_addresses'] 

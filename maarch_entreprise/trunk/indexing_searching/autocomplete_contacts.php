@@ -37,27 +37,24 @@ if (empty($_REQUEST['table'])) {
 }
 $table = $_REQUEST['table'];
 
-$multi_sessions = $_SESSION['adresses']['to'];
+$multi_sessions_address_id = $_SESSION['adresses']['addressid'];
 $user_ids = array();
 // $user_ids = '';
-$contact_ids = array();
-// $contact_ids = '';
+$address_ids = array();
+// $address_ids = '';
 
-if(count($multi_sessions) > 0){
-    for ($imulti=0; $imulti <= count($multi_sessions); $imulti++) { 
-        $multi_explode = explode('(', $multi_sessions[$imulti]);
-        $multi_id = end($multi_explode);
-        $multi_id = substr($multi_id, 0, -1);
-        if (is_numeric($multi_id)) {
-            array_push($contact_ids, $multi_id);
+if(count($multi_sessions_address_id) > 0){
+    for ($imulti=0; $imulti <= count($multi_sessions_address_id); $imulti++) { 
+        if (is_numeric($multi_sessions_address_id[$imulti])) {
+            array_push($address_ids, $multi_sessions_address_id[$imulti]);
         } else {
-            array_push($user_ids, "'".$multi_id."'");
+            array_push($user_ids, "'".$multi_sessions_address_id[$imulti]."'");
         }
     }
 
-    if (!empty($contact_ids)) {
-        $contacts = implode(' ,', $contact_ids);
-        $request_contact = " and contact_id not in (".$contacts.")";
+    if (!empty($address_ids)) {
+        $addresses = implode(' ,', $address_ids);
+        $request_contact = " and ca_id not in (".$addresses.")";
     } else {
         $request_contact = ''; 
     }
