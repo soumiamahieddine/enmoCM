@@ -130,7 +130,7 @@ if (isset($_POST['delete_folder'])) {
     }
         ?>
         	<div class="block">
-            	<h4><a href="#" onclick="history.go(-1);" class="back"><?php echo _BACK;?></a></h4>
+            	<h4><a href="#" onclick="history.back();return false;" class="back"><?php echo _BACK;?></a></h4>
         	</div>
         <br/>
         <dl id="tabricator2">
