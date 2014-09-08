@@ -1310,7 +1310,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 					<br />
 				<center>
 					<?php
-                if ($core->is_module_loaded('templates') && (!isset($_SESSION['current_basket']['id']) && $core->test_service('edit_attachments_from_detail', 'attachments', false)) || isset($_SESSION['current_basket']['id'])) { 
+                /*if ($core->is_module_loaded('templates') && (!isset($_SESSION['current_basket']['id']) && $core->test_service('edit_attachments_from_detail', 'attachments', false)) || isset($_SESSION['current_basket']['id'])) { */
+                if ($core->is_module_loaded('templates') && ($core->test_service('edit_attachments_from_detail', 'attachments', false))) {
 					$objectTable = $security->retrieve_table_from_coll($coll_id);
 					echo _GENERATE_ATTACHMENT_FROM;?><br />
 					<select name="templateOffice" id="templateOffice" style="width:250px" 
