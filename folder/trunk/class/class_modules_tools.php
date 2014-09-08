@@ -295,7 +295,15 @@ class folder extends request
 			    . "index.php?page=create_folder_form&module=folder"
 			);
 			exit();
-		} else {
+		} else if(preg_match('/\'|\"/',$_SESSION['m_admin']['folder']['folder_id'])) 
+{ 
+			$_SESSION['error'] = _CHAR_ERROR . "<br />";
+				header(
+					"location: " . $_SESSION['config']['businessappurl']
+				    . "index.php?page=create_folder_form&module=folder"
+				);
+				exit();
+		}else{
 			$this->connect();
 			$this->query(
 				"select folder_id from " . FOLD_FOLDERS_TABLE
