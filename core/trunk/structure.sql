@@ -3545,7 +3545,7 @@ CREATE VIEW res_view_business AS
     busi.process_limit_date, busi.closing_date, busi.alarm1_date, busi.alarm2_date,
     busi.flag_notif, busi.flag_alarm1, busi.flag_alarm2, r.video_user, r.video_time,
     r.video_batch, r.subject, r.identifier, r.title, r.priority,
-    en.entity_label, cont.email AS contact_email,
+    en.entity_label,
     cont.firstname AS contact_firstname, cont.lastname AS contact_lastname,
     cont.society AS contact_society, list.item_id AS dest_user_from_listinstance,  list.viewed, 
     r.is_frozen as res_is_frozen, COALESCE(att.count_attachment, 0::bigint) AS count_attachment 
@@ -3555,7 +3555,7 @@ CREATE VIEW res_view_business AS
     LEFT JOIN entities en ON ((r.destination)::text = (en.entity_id)::text)
     LEFT JOIN folders f ON ((r.folders_system_id = f.folders_system_id))
     LEFT JOIN business_coll_ext busi ON (busi.res_id = r.res_id)
-    LEFT JOIN contacts cont ON (busi.contact_id = cont.contact_id)
+    LEFT JOIN contacts_v2 cont ON (busi.contact_id = cont.contact_id)
     LEFT JOIN listinstance list ON ((r.res_id = list.res_id)
         AND ((list.item_mode)::text = 'dest'::text))
     WHERE r.type_id = d.type_id 
