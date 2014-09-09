@@ -387,7 +387,7 @@ for ($i=0;$i<count($tab);$i++) {
             }
             if ($tab[$i][$j][$value]=="entity_label") {
                 $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]);
-                $tab[$i][$j]["label"]=_DESTINATION;
+                $tab[$i][$j]["label"]=_ENTITY;
                 $tab[$i][$j]["size"]="12";
                 $tab[$i][$j]["label_align"]="left";
                 $tab[$i][$j]["align"]="left";

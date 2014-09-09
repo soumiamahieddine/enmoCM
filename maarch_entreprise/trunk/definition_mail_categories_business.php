@@ -1110,7 +1110,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     if ($res->is_corporate_person == 'Y') {
                         $data[$arr[$i]]['show_value'] = $res->society;
                     } else {
-                        $data[$arr[$i]]['show_value'] = $res->lastname . ', ' . $res->firstname;
+                        $data[$arr[$i]]['show_value'] = $res->lastname . ' ' . $res->firstname;
                         if (!empty ($res->society)) {
                             $data[$arr[$i]]['show_value'] .= ' (' . $res->society . ')';
                         }
@@ -1156,18 +1156,45 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             if ($arr[$i] == 'contact_id') {
                 $data['type_contact'] = 'external';
                 if (!empty ($line-> $arr[$i])) {
-                    $db2->query('select is_corporate_person, lastname, firstname, society from ' 
-                        . $_SESSION['tablename']['contacts'] . " where enabled = 'Y' and contact_id = " . $line-> $arr[$i] . "");
+                    // $db2->query('select is_corporate_person, lastname, firstname, society from ' 
+                    //     . $_SESSION['tablename']['contacts'] . " where enabled = 'Y' and contact_id = " . $line-> $arr[$i] . "");
+                    // $res = $db2->fetch_object();
+                    // if ($res->is_corporate_person == 'Y') {
+                    //     $data['contact_id'] = $res->society . ' (' . $line-> $arr[$i] . ')';
+                    // } else {
+                    //     if (!empty ($res->society)) {
+                    //         $data['contact_id'] = $res->society . ', ' . $res->lastname . ' ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
+                    //     } else {
+                    //         $data['contact_id'] = $res->lastname . ', ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
+                    //     }
+                    // }
+                    $db2->query("select address_id from business_coll_ext where res_id = ".$res_id);
+                    $resAddress = $db2->fetch_object();
+                    $addressId = $resAddress->address_id;
+                    $db2->query('select is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname from view_contacts where contact_id = ' . $line-> $arr[$i] . ' and ca_id = ' . $addressId);
                     $res = $db2->fetch_object();
                     if ($res->is_corporate_person == 'Y') {
-                        $data['contact_id'] = $res->society . ' (' . $line-> $arr[$i] . ')';
-                    } else {
-                        if (!empty ($res->society)) {
-                            $data['contact_id'] = $res->society . ', ' . $res->lastname . ' ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
-                        } else {
-                            $data['contact_id'] = $res->lastname . ', ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
+                        $data['contact_id'] = $res->society . ' ' ;
+                        if (!empty ($res->society_short)) {
+                            $data['contact_id'] .= '('.$res->society_short.') ';
                         }
+                        if (!empty($res->lastname) || !empty($res->firstname)) {
+                            $data['contact_id'] .= '- ' . $res->lastname . ' ' . $res->firstname . ' ';
+                        }
+                    } else {
+                        $data['contact_id'] = $res->contact_lastname . ' ' . $res->contact_firstname . ' ';
+                        if (!empty ($res->society)) {
+                            $data['contact_id'] .= '(' .$res->society . ') ';
+                        }                        
                     }
+                    if ($res->is_private == 'Y') {
+                        $data['contact_id'] .= '('._CONFIDENTIAL_ADDRESS.')';
+                    } else {
+                        $data['contact_id'] .= $res->address_num .' ' . $res->address_street .' ' . strtoupper($res->address_town);                         
+                    }
+
+                    $data['contactId'] = $line-> $arr[$i];
+                    $data['addressId'] = $addressId;
                 }
                 //unset ($data[$arr[$i]]);
             } 

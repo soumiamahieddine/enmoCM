@@ -1768,7 +1768,7 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
 
     // Contact
     if (isset($_ENV['categories'][$catId]['contact_id'])) {
-        $contact = get_value_fields($formValues, 'contact');
+        // $contact = get_value_fields($formValues, 'contact');
         //echo 'contact '.$contact.', type '.$contactType;
         // $contactId = str_replace(
         //     ')', '', substr($contact, strrpos($contact, '(') + 1)
