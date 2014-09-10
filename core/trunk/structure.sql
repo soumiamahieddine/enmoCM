@@ -1526,7 +1526,8 @@ CREATE TABLE contacts_res
 (
   coll_id character varying(32) NOT NULL,
   res_id bigint NOT NULL,
-  contact_id character varying(128) NOT NULL
+  contact_id character varying(128) NOT NULL,
+  address_id bigint NOT NULL
  );
 
 -- contacts v2
@@ -3454,6 +3455,14 @@ CREATE TABLE fp_res_fileplan_positions
   fileplan_id bigint NOT NULL,
   position_id character varying(32) NOT NULL,
   CONSTRAINT fp_res_fileplan_positions_pkey PRIMARY KEY (res_id, coll_id, fileplan_id, position_id)
+);
+
+DROP TABLE IF EXISTS actions_categories;
+CREATE TABLE actions_categories
+(
+  action_id bigint NOT NULL,
+  category_id character varying(255) NOT NULL,
+  CONSTRAINT actions_categories_pkey PRIMARY KEY (action_id,category_id)
 );
 
 --VIEWS
