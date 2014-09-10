@@ -467,17 +467,14 @@ if (isset($_REQUEST['nodetails'])) {
                 <tr>
                     <td style="width:30px;align:center;"><span id="imgContact" name="imgContact" /></td>
                     <td width="70%"><label for="contactid" class="bold"><span id="labelContact" name="labelContact" />:</label>
-                        <input type="text" name="contactid" id="contactid" />
+                        <input type="text" name="contactid" id="contactid" onkeyup="erase_contact_external_id('contactid', 'contactid_external');"/>
                         <input type="hidden" name="meta[]" value="contactid#contactid#input_text" />
                         <div id="contactListByName" class="autocomplete"></div>
                         <script type="text/javascript">
-                            initList(
-                                'contactid', 'contactListByName', 
-                                '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_list_by_name', 
-                                'what', 
-                                '2'
-                            );
+                            initList_hidden_input('contactid', 'contactListByName', '<?php 
+                                echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contacts_v2_list_by_name', 'what', '2', 'contactid_external');
                         </script>
+                        <input id="contactid_external" name="contactid_external" type="hidden" />
                     </td>
                     <td><em><?php echo _CONTACT_HELP; ?></em></td>
                 </tr>

@@ -483,15 +483,17 @@ if (count($_REQUEST['meta']) > 0) {
                 }
             }
             // CONTACTS
-            elseif ($tab_id_fields[$j] == 'contactid' && !empty($_REQUEST['contactid']))
+            elseif ($tab_id_fields[$j] == 'contactid' && !empty($_REQUEST['contactid_external']))
             {
-                $json_txt .= " 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
+                // $json_txt .= " 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
+                $json_txt .= " 'contactid_external' : ['".addslashes(trim($_REQUEST['contactid_external']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
                 //$where_request .= "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
-                $contactTmp = str_replace(')', '', substr($_REQUEST['contactid'], strrpos($_REQUEST['contactid'],'(')+1));
-                $find1 = strpos($contactTmp, ':');
-                $find2 =  $find1 + 1;
-                $contact_type = substr($contactTmp, 0, $find1);
-                $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
+                // $contactTmp = str_replace(')', '', substr($_REQUEST['contactid'], strrpos($_REQUEST['contactid'],'(')+1));
+                // $find1 = strpos($contactTmp, ':');
+                // $find2 =  $find1 + 1;
+                // $contact_type = substr($contactTmp, 0, $find1);
+                // $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
+                $contact_id = $_REQUEST['contactid_external'];
                 $where_request .= " contact_id = '".$contact_id."' and ";
             }
             // TOTAL SUM : MIN
