@@ -1390,7 +1390,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             echo $_SESSION['config']['businessappurl'];
                             ?>index.php?display=true&module=notes&page=notes&identifier=<?php 
                             echo $s_id;?>&origin=document&coll_id=<?php echo $coll_id;?>&load&size=full" 
-                            frameborder="0" scrolling="no" width="99%" height="570px"></iframe>
+                            frameborder="0" scrolling="yes" width="99%" height="570px"></iframe>
                     </dd> 
                     <?php
                 }
