@@ -1725,7 +1725,7 @@ class contacts_v2 extends dbquery
         $this->connect();
         $this->query('select label from '.$table . ' where id = '.$contact_type_id);
         $res = $this->fetch_object();
-        return $this->show_string($this->protect_string_db($res->label));
+        return $this->show_string($res->label);
     }
 
     public function type_purpose_address_del($id, $admin = true, $tablename, $mode='contact_type', $deleted_sentence, $warning_sentence, $title, $reaffect_sentence, $new_sentence, $choose_sentence, $page_return, $page_del, $name){
