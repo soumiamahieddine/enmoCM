@@ -160,7 +160,8 @@ class history extends dbquery
 
         $info = $this->protect_string_db(
             $info,
-            $databasetype
+            $databasetype,
+            'no'
         );
 
         if (!$isTech) {

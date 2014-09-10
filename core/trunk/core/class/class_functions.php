@@ -906,7 +906,7 @@ class functions
     * @param  $string string String to format
     * @return Formated date
     */
-    public function protect_string_db($string, $databasetype = '')
+    public function protect_string_db($string, $databasetype = '', $full='yes')
     {
         if (isset($_SESSION['config']['databasetype']) && !empty($_SESSION['config']['databasetype']))
         {
@@ -925,9 +925,11 @@ class functions
             $string = pg_escape_string($string);
         }
 
-        $string=str_replace(';', ' ', $string);
-        $string=str_replace('--', '-', $string);    
-
+        if ($full == 'yes') {
+            $string=str_replace(';', ' ', $string);
+            $string=str_replace('--', '-', $string);  
+        }
+        
         return $string;
     }
 
