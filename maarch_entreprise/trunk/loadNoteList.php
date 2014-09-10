@@ -54,6 +54,7 @@ if (isset($_REQUEST['identifier'])) {
        $query .= "OR ";
         $query .= "user_id = '" . $_SESSION['user']['UserId'] . "' ";
       $query .= ") ";
+      $query .= " order by date_note desc";
 
                 $db->query($query);
 
