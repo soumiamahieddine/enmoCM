@@ -3639,7 +3639,7 @@ CREATE VIEW res_view_letterbox AS
     FROM doctypes d, doctypes_first_level dfl, doctypes_second_level dsl,
     (((((((((((ar_batch a RIGHT JOIN res_letterbox r ON ((r.arbatch_id = a.arbatch_id)))
     LEFT JOIN (SELECT res_attachments.res_id_master, count(res_attachments.res_id_master) AS count_attachment
-        FROM res_attachments GROUP BY res_attachments.res_id_master) att ON (r.res_id = att.res_id_master))
+        FROM res_attachments WHERE res_attachments.status <> 'DEL' GROUP BY res_attachments.res_id_master) att ON (r.res_id = att.res_id_master))
     LEFT JOIN entities en ON (((r.destination)::text = (en.entity_id)::text)))
     LEFT JOIN folders f ON ((r.folders_system_id = f.folders_system_id)))
     LEFT JOIN cases_res cr ON ((r.res_id = cr.res_id)))
