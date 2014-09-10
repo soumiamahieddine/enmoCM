@@ -481,7 +481,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     if (! isset($_POST['up_res_id']) || ! $_POST['up_res_id']) {
                         if ($_SESSION['indexation'] == false) {
 						
-							if($_SESSION['origin'] == 'show_folder' || $_SESSION['origin'] == 'search_folder_tree'){
+							/*if($_SESSION['origin'] == 'show_folder' || $_SESSION['origin'] == 'search_folder_tree'){
 								echo '<a href="#" onclick="history.back();return false;" class="back">' .  _BACK . '</a>';
 								
 							}else{
@@ -492,9 +492,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 									echo '-1';
 								}
 								echo ');" class="back">' .  _BACK . '</a>';
-							}
+							}*/
+	 		    echo '<a href="#" onclick="history.back();return false;" class="back">' .  _BACK . '</a>';
                         }
                     }
+		    
                     ?>
                 </p>
                 <p id="viewdoc">
