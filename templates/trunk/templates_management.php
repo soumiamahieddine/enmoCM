@@ -128,7 +128,7 @@ if ($mode == 'list') {
                 </p>
                 <p>
                     <label for="template_target"><?php echo _TEMPLATE_TARGET; ?> : </label>
-                    <select name="template_target" id="template_target">
+                    <select name="template_target" id="template_target" onchange="setradiobutton(this.options[this.selectedIndex].value);">
                         <option value="" ><?php echo _NO_TARGET; ?></option>
                         <?php
                         for (
@@ -153,15 +153,15 @@ if ($mode == 'list') {
                 </p>
                 <p>
                     <label><?php echo _TEMPLATE_TYPE;?> :</label>
-                    <input type="radio" name="template_type" value="OFFICE"
+                    <input type="radio" name="template_type" value="OFFICE" id="office"
                         onClick="javascript:show_special_form_3_elements('office_div', 'html_div', 'txt_div');" <?php
-                        echo $checkedOFFICE;?>/> <?php echo _OFFICE;?>
-                    <input type="radio" name="template_type" value="HTML"
+                        echo $checkedOFFICE;?>/> <span id="span_office"><?php echo _OFFICE;?></span>
+                    <input type="radio" name="template_type" value="HTML" id="html"
                         onClick="javascript:show_special_form_3_elements('html_div', 'office_div', 'txt_div');" <?php
-                        echo $checkedHTML;?>/> <?php echo _HTML;?>
-                    <input type="radio" name="template_type" value="TXT"
+                        echo $checkedHTML;?>/> <span id="span_html"><?php echo _HTML;?></span>
+                    <input type="radio" name="template_type" value="TXT" id="txt"
                         onClick="javascript:show_special_form_3_elements('txt_div', 'html_div', 'office_div');" <?php
-                        echo $checkedTXT;?>/> <?php echo _TXT;?>
+                        echo $checkedTXT;?>/> <span id="span_txt"><?php echo _TXT;?></span>
                 </p>
                 <p>
                     <label for="template_datasource"><?php echo _TEMPLATE_DATASOURCE; ?> : </label>
@@ -433,6 +433,26 @@ if ($mode == 'list') {
                     show_special_form_3_elements('office_div', 'html_div', 'txt_div');
                 </script>
                 <?php
+            }
+
+            if (isset($_SESSION['m_admin']['templates']['template_target'])
+                && $_SESSION['m_admin']['templates']['template_target']
+                    == "notes"
+            ) {
+                ?>
+                <script>
+                    setradiobutton("notes");
+                </script>
+                <?php                
+            } else if (isset($_SESSION['m_admin']['templates']['template_target'])
+                && $_SESSION['m_admin']['templates']['template_target']
+                    == "notifications"
+            ) {
+                ?>
+                <script>
+                    setradiobutton("notifications");
+                </script>
+                <?php                
             }
         }
         ?>

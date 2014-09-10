@@ -57,3 +57,30 @@ function changeStyle(style_id, path_to_script)
         }
     });
 }
+
+function setradiobutton(target)
+{
+    $("html").style.display="inline";
+    $("office").style.display="inline";
+    $("txt").style.display="inline";
+    $("span_html").style.display="inline";
+    $("span_office").style.display="inline";
+    $("span_txt").style.display="inline";
+
+    if(target=="notes") {
+        $("html").style.display="none";
+        $("span_html").style.display="none";
+        $("txt").click();
+        $("txt").checked = true;
+        $("office").style.display="none";
+        $("span_office").style.display="none";
+    } else if(target=="notifications") {
+        $("txt").style.display="none";
+        $("span_txt").style.display="none";
+        $("html").click();
+        $("html").checked = true;
+        $("office").style.display="none";
+        $("span_office").style.display="none";
+    }
+
+}

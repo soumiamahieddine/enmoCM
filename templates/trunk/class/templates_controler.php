@@ -791,13 +791,13 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             )
         );
         //sendmail
-        array_push(
-            $targets, 
-            array(
-                'id' => 'sendmail',
-                'label'  => _SENDMAIL,
-            )
-        );
+        // array_push(
+        //     $targets, 
+        //     array(
+        //         'id' => 'sendmail',
+        //         'label'  => _SENDMAIL,
+        //     )
+        // );
         return $targets;
     }
     
