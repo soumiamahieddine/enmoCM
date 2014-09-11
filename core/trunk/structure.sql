@@ -3560,7 +3560,7 @@ CREATE VIEW res_view_business AS
     r.is_frozen as res_is_frozen, COALESCE(att.count_attachment, 0::bigint) AS count_attachment 
     FROM doctypes d, doctypes_first_level dfl, doctypes_second_level dsl, res_business r
     LEFT JOIN (SELECT res_attachments.res_id_master, coll_id, count(res_attachments.res_id_master) AS count_attachment
-        FROM res_attachments GROUP BY res_attachments.res_id_master, coll_id) att ON (r.res_id = att.res_id_master and att.coll_id = 'business_coll')
+        FROM res_attachments WHERE res_attachments.status <> 'DEL' GROUP BY res_attachments.res_id_master, coll_id) att ON (r.res_id = att.res_id_master and att.coll_id = 'business_coll')
     LEFT JOIN entities en ON ((r.destination)::text = (en.entity_id)::text)
     LEFT JOIN folders f ON ((r.folders_system_id = f.folders_system_id))
     LEFT JOIN business_coll_ext busi ON (busi.res_id = r.res_id)
