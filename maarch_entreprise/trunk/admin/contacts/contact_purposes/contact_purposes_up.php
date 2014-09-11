@@ -112,6 +112,9 @@ if (isset($_REQUEST['valid'])) {
 	}
 
 	if (empty($erreur)) {
+		if(utf8_encode(utf8_decode($desc)) != $desc) {
+			$desc = utf8_encode($desc);
+		}
 		$db->query(
 			"select * from ".$_SESSION['tablename']['contact_purposes']
 		    . " where lower(label) = lower('" . $desc . "')"
@@ -154,6 +157,9 @@ if (isset($_REQUEST['valid'])) {
 				}
 			} else {
 				$desc = $db->protect_string_db($_REQUEST['desc_contact_purposes']);
+				if(utf8_encode(utf8_decode($desc)) != $desc) {
+					$desc = utf8_encode($desc);
+				}
 		        $desc=str_replace(';', ' ', $desc);
 		        $desc=str_replace('--', '-', $desc);
 				$db->query(
@@ -193,7 +199,7 @@ if (isset($_REQUEST['valid'])) {
 			);
 			$res = $db->fetch_object();
 			?>
-				<script type="text/javascript">window.opener.$("new_id").value ="<?php echo $res->label;?>";window.opener.$("contact_purposes").value ='<?php echo $res->id;?>';self.close();</script> 
+				<script type="text/javascript">window.opener.$("new_id").value ="<?php echo utf8_decode($res->label);?>";window.opener.$("contact_purposes").value ='<?php echo $res->id;?>';self.close();</script> 
 			<?php
 		} else {
 			unset($_SESSION['m_admin']);

@@ -106,7 +106,9 @@ if (isset($_REQUEST['valid'])) {
 	}
 
 	if (empty($erreur)) {
-		$db->connect();
+		if(utf8_encode(utf8_decode($desc)) != $desc) {
+			$desc = utf8_encode($desc);
+		}
 		$db->query(
 			"select * from ".$_SESSION['tablename']['contact_types']
 		    . " where lower(label) = lower('" . $desc . "')"
@@ -123,7 +125,6 @@ if (isset($_REQUEST['valid'])) {
 				if($db->nb_result() > 0){
 					$erreur .= _THIS_CONTACT_TYPE . ' ' . _ALREADY_EXISTS ;
 				} else {			
-					$db->connect();
 					if (isset($_REQUEST['ID_contact_types'])
 					    && ! empty($_REQUEST['ID_contact_types'])
 					) {
@@ -149,8 +150,10 @@ if (isset($_REQUEST['valid'])) {
 					}
 				}
 			} else {
-				$db->connect();
 				$desc = $db->protect_string_db($_REQUEST['desc_contact_types']);
+				if(utf8_encode(utf8_decode($desc)) != $desc) {
+					$desc = utf8_encode($desc);
+				}
 	            $desc=str_replace(';', ' ', $desc);
 	            $desc=str_replace('--', '-', $desc);				
 				$db->query(

@@ -983,6 +983,7 @@ if (!defined('_CONTACTS_CONFIRMATION_MODIFICATION')) define( '_CONTACTS_CONFIRMA
 if (!defined('_CREATE_BY')) define( '_CREATE_BY','Cr&eacute;&eacute; par');
 if (!defined('_SOCIETY_SHORT')) define( '_SOCIETY_SHORT','Nom court de la soci&eacute;t&eacute;');
 if (!defined('_CHOOSE_CONTACT_TYPES')) define( '_CHOOSE_CONTACT_TYPES','Choisissez le type de contact');
+if (!defined('_ORGANISM')) define( '_ORGANISM','Organisme');
 
 if (!defined('_NEW_CONTACT_ADDRESS')) define( '_NEW_CONTACT_ADDRESS','Ajouter une nouvelle adresse');
 if (!defined('_A_CONTACT_ADDRESS')) define( '_A_CONTACT_ADDRESS','une adresse');

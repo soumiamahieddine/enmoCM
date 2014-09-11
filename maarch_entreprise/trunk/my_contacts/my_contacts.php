@@ -183,7 +183,7 @@ $contact    = new contacts_v2();
                 {
                     $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
                     $tab[$i][$j]["society"]=$tab[$i][$j]['value'];
-                    $tab[$i][$j]["label"]=_SOCIETY;
+                    $tab[$i][$j]["label"]=_ORGANISM;
                     $tab[$i][$j]["size"]="15";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";

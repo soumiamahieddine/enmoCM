@@ -50,7 +50,7 @@ class contacts_v2 extends dbquery
             );
             if ($_REQUEST['society'] <> '') {
                 $_SESSION['m_admin']['contact']['SOCIETY'] = $func->wash(
-                    $_REQUEST['society'], 'no', _SOCIETY . ' ', 'yes', 0, 255
+                    $_REQUEST['society'], 'no', _ORGANISM . ' ', 'yes', 0, 255
                 );
             } else {
                 $_SESSION['m_admin']['contact']['SOCIETY'] = '';
@@ -507,7 +507,7 @@ class contacts_v2 extends dbquery
                         <td><span class="red_asterisk" style="visibility:visible;" id="contact_types_mandatory">*</span></td>
                     </tr>
                     <tr>
-                        <td><label for="society"><?php echo _SOCIETY; ?> : </label></td>
+                        <td><label for="society"><?php echo _ORGANISM; ?> : </label></td>
                         <td>&nbsp;</td>
                         <td class="indexing_field"><input name="society" type="text"  id="society" value="<?php if(isset($_SESSION['m_admin']['contact']['SOCIETY'])){ echo $func->show_str($_SESSION['m_admin']['contact']['SOCIETY']); }?>"/></td>
                         <td class="indexing_field" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ echo $display_value;}?>"><span class="red_asterisk" style="visibility:visible;" id="society_mandatory">*</span></td>
@@ -1926,7 +1926,7 @@ class contacts_v2 extends dbquery
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
-                        <td><?php echo _SOCIETY; ?> : </td>
+                        <td><?php echo _ORGANISM; ?> : </td>
                         <td>&nbsp;</td>
                         <td class="indexing_field" align="right"><input disabled name="society" type="text"  id="society" value="<?php if(isset($_SESSION['m_admin']['contact']['SOCIETY'])){ echo $func->show_str($_SESSION['m_admin']['contact']['SOCIETY']); }?>"/></td>
                         <td>&nbsp;</td>
