@@ -1041,7 +1041,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
 	
     /**** Contact form start *******/
     $frmStr .= '<div id="create_contact_div" style="display:none">';
-        $frmStr .= '<iframe width="100%" height="700" src="' . $_SESSION['config']['businessappurl']
+        $frmStr .= '<iframe width="100%" height="450" src="' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe" name="contact_iframe" id="contact_iframe"'
                 . ' scrolling="auto" frameborder="0" style="display:block;">'
                 . '</iframe>';

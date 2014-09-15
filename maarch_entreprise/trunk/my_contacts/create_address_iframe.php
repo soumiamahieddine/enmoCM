@@ -79,3 +79,7 @@ if (isset($_GET['iframe']) && $_GET['iframe'] == 'iframe_up_add') {
 }
 
 ?>
+	<script type="text/javascript">
+		resize_frame_contact('address');
+	</script>
+<?php

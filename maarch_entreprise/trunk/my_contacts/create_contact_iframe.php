@@ -52,6 +52,12 @@ $_SESSION['info'] = '';
 $contact->formcontact("add", "", false, true);
 $core_tools2->load_js();
 
+?>
+	<script type="text/javascript">
+		resize_frame_contact('contact');
+	</script>
+<?php
+
 if(isset($_GET['created']) && $_GET['created'] <> ''){
 ?>
 	<script type="text/javascript">

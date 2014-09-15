@@ -138,6 +138,12 @@ if ($line->user_id == $_SESSION['user']['UserId'] && $mode <> 'view') {
 <?php
 }
 
+?>
+	<script type="text/javascript">
+		resize_frame_contact('contact');
+	</script>
+<?php
+
 if(isset($_GET['created']) && $_GET['created'] <> ''){
 ?>
 	<script type="text/javascript">

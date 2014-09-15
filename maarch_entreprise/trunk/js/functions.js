@@ -740,6 +740,23 @@ function resize_frame_process(id_modal, id_frame, resize_width, resize_height)
     }
 }
 
+function resize_frame_contact(mode) {
+    var width = $(parent.document.documentElement).getWidth();
+    if( width < 1200) {
+        $('inner_content').style.width = width - 600 + "px";
+    } else {
+        $('inner_content').style.width = "700px";
+    }
+    if (mode == 'contact') {
+        $('frmcontact_table').style.width = "90%";        
+    } else {
+        $('info_contact_div').style.width = "65%";
+        $('frmaddress_table1').style.width = "65%";
+        $('frmaddress_table2').style.width = "65%";
+        parent.$('contact_iframe').style.height="850px"        
+    };
+}
+
 /**
 * Resize frames in a modal
 *
