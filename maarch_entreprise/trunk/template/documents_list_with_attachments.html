@@ -60,7 +60,7 @@ Mods
         <thead border ="1">
             <tr>
                 <th width="100%" colspan="2">
-                    <div align="center" style="border:1px solid; height:20px;margin-bottom:10px;padding-top:10px;vertical-align:middle;font-size:8px;">
+                    <div align="center" style="border:1px solid; height:20px;margin-bottom:10px;padding-top:10px;vertical-align:middle;">
 						##checkUncheckAll##&nbsp;
                         ##defineLang|_SORT_BY## :
                         ##defineLang|_NUM_GED##            ##sortColumn|res_id##&nbsp;
@@ -115,19 +115,19 @@ Mods
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                                     <tr>
                                         
-                                        <td style="font-size:10px;">##loadValue|priority##</td>
+                                        <td style="font-size:10px;" width ="30px">##loadValue|priority##</td>
                                         <td style="font-size:10px;" width ="30px" alt="##defineLang|_CATEGORY##" title="##defineLang|_CATEGORY##" ##clickOnLine##>##loadValue|category_img##</td>
                                         <td style="font-size:10px;" width ="150px" >##loadValue|category_id##</td>
                                         <td style="font-size:10px;" width ="30px" alt="##defineLang|_CREATION_DATE##" title="##defineLang|_CREATION_DATE##" ##clickOnLine##><img src="##loadImage|date_arriv.gif##"> </td>
                                         <td style="font-size:10px;" width ="100px" >##loadValue|creation_date##</td>
                                         <td style="font-size:10px;" width ="30px" alt="##defineLang|_PROCESS_LIMIT_DATE##" title="##defineLang|_PROCESS_LIMIT_DATE##" ##clickOnLine##><img src="##loadImage|date_limit.gif##"> </td>
                                         <td style="font-size:10px;" width ="100px" >##loadValue|process_limit_date##</td>
-                                        <td style="font-size:10px;text-align:right" width ="30px" alt="##defineLang|_DEST_USER##" title="##defineLang|_DEST_USER##" ##clickOnLine##><img src="##loadImage|manage_users_entities_b_small.gif##"></td>
+                                        <td style="font-size:10px;text-align:right" width ="80px" alt="##defineLang|_DEST_USER##" title="##defineLang|_DEST_USER##" ##clickOnLine##><img src="##loadImage|manage_users_entities_b_small.gif##"></td>
                                         <td style="font-size:10px;" width ="110px" > ##loadValue|dest_user##</td>
                                         <td style="font-size:10px;text-align:right" width ="30px"  alt="##defineLang|_TYPE##" title="##defineLang|_TYPE##" ##clickOnLine##><img src="##loadImage|mini_type.gif##">
-                                        <td style="font-size:10px;text-align:left"  ##clickOnLine##>##loadValue|type_label##</td>
-                                        <td style="font-size:10px;" >##func_bool_see_multi_contacts##</td>
-                                        <td  >##func_bool_see_notes##</td>
+                                        <td style="font-size:10px;text-align:left"  width ="80px" >##loadValue|type_label##</td>
+                                        <td style="font-size:10px;" width ="50px">##func_bool_see_multi_contacts##</td>
+                                        <td style="font-size:10px;" width ="30px">##func_bool_see_notes##</td>
                                         <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_ATTACHMENTS#|#loadImage|picto_attachment.gif#|loadRepList('#loadValue|res_id#')|#loadValue|count_attachment# == 0##</td>
                                         <td style="font-size:10px;" width ="30px">##showActionIcon|#defineLang|_WF#|#loadImage|lot.gif#|loadDiffList('#loadValue|res_id#')##</td>
                                         <td style="font-size:10px;" width ="30px" >##showIconDocument##</td>
@@ -173,6 +173,7 @@ Mods
  <!--   ----------------------------------------------------------------------- -->
         </tbody>
     </table>
+    <br/>
 
 <script>
     $$('#container')[0].setAttribute('style', 'width: 90%; min-width: 1000px;');
