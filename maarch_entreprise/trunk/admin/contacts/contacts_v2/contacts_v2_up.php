@@ -254,6 +254,12 @@ $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']
     . "index.php?display=true&page=contact_addresses_list_by_name&idContact=".$id;
 $autoCompletionArray["number_to_begin"] = 1;
+
+if ($_SESSION['origin']=='contacts_list') {
+    $_REQUEST['start']='';
+    $_SESSION['origin']='contact_up';
+}
+
 $list->admin_list(
     $tab, $i, '',
     'contact_id"', 'contacts_v2_up', 'contacts_v2',

@@ -58,4 +58,9 @@ if ($from_iframe) {
 
 $_SESSION['m_admin']['address'] = array();
 
+if ($_SESSION['origin']=='contacts_list') {
+    $_REQUEST['start']='';
+    $_SESSION['origin']='contact_up';
+}
+
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/admin/contacts/contact_addresses/contact_addresses.php';

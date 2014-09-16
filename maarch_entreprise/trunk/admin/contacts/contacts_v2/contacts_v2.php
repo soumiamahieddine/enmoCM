@@ -243,3 +243,5 @@ $_SESSION['m_admin']['contacts']['phone'] = "";
 $_SESSION['m_admin']['contacts']['other_data'] = "";
 $_SESSION['m_admin']['contacts']['is_corporate_person'] = "";
 $_SESSION['m_admin']['contacts']['is_private'] = "";
+
+$_SESSION['origin']="contacts_list";
