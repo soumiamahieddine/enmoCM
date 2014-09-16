@@ -260,7 +260,7 @@ class notifications_controler extends ObjectControler implements ObjectControler
             $f->wash($notification->notification_id, 'no', _ID, 'yes', 0, 50)
         );
         $notification->description = $f->protect_string_db(
-            $f->wash($notification->description, 'no', _DESC, 'yes', 0, 50)
+            $f->wash($notification->description, 'no', _DESC, 'yes', 0, 255)
         );
         if ($notification->is_enabled == 'false') {
             $notification->is_enabled = false;
