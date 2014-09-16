@@ -130,7 +130,7 @@ class entity extends dbquery
                     </p>
                     <p>
                         <label><?php  echo _SHORT_LABEL; ?> : </label>
-                        <input name="short_label"  type="text" id="short_label" value="<?php if(isset($_SESSION['m_admin']['entity']['label'])){ echo $_SESSION['m_admin']['entity']['short_label'];} ?>" /><span class="red_asterisk">*</span>
+                        <input name="short_label"  type="text" id="short_label" value="<?php if(isset($_SESSION['m_admin']['entity']['short_label'])){ echo $_SESSION['m_admin']['entity']['short_label'];} ?>" /><span class="red_asterisk">*</span>
                     </p>
                     <p>
                         <label><?php  echo _ENTITY_ADR_1; ?> : </label>
@@ -869,7 +869,7 @@ class entity extends dbquery
         }
         if(isset($_REQUEST['short_label']) && !empty($_REQUEST['short_label']))
         {
-            $_SESSION['m_admin']['entity']['short_label'] = $this->wash($_REQUEST['short_label'], "no", _SHORT_LABEL, 'yes', 0, 255);
+            $_SESSION['m_admin']['entity']['short_label'] = $this->wash($_REQUEST['short_label'], "no", _SHORT_LABEL, 'yes', 0, 50);
         }
         else
         {
