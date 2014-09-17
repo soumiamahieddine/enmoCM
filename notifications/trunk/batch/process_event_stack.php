@@ -168,7 +168,7 @@ while ($state <> 'END') {
             $sender = $func->protect_string_db((string)$mailerParams->mailfrom);
             $recipient_mail = $tmpNotif['recipient']->mail;
             $subject = $func->protect_string_db($notification->description);
-            $html = $func->protect_string_db($html);
+            $html = $func->protect_string_db($html, '', 'no');
             $html = str_replace('&amp;', '&', $html);
             $html = str_replace('&', '#and#', $html);
             
