@@ -225,7 +225,9 @@ switch ($mode) {
             } else {
                 
                 //Add notes
-                $notes = $request->protect_string_db($_REQUEST['notes']);
+                $notes_protected1 = str_replace(";", ".", $_REQUEST['notes']);
+                $notes_protected2 = str_replace("--", "-", $notes_protected1);
+                $notes = $request->protect_string_db($notes_protected2);
                 $date = $request->current_datetime();
                 $userId = $request->protect_string_db($_SESSION['user']['UserId']);
                 $collId = $request->protect_string_db($collId);
@@ -434,7 +436,10 @@ switch ($mode) {
                 } else {
                     
                     //Update note
-                    $notes = $request->protect_string_db($_REQUEST['notes']);
+                    $notes_protected1 = str_replace(";", ".", $_REQUEST['notes']);
+                    $notes_protected2 = str_replace("--", "-", $notes_protected1);
+                    $notes = $request->protect_string_db($notes_protected2);
+                    // $notes = $request->protect_string_db($_REQUEST['notes']);
                     $date = $request->current_datetime();
 
                     $request->query(
