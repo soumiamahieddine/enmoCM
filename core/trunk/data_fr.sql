@@ -825,7 +825,7 @@ VALUES (5, '[notification courrier] Alerte 2', '[notification] Alerte 2', '<p><f
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
 <td><font face="arial,helvetica,sans-serif" color="#FF0000"><strong><font size="2">[res_letterbox.subject]</font></strong></font></td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.type_label]</font></td>
-<td><font face="arial,helvetica,sans-serif"><a href="res_letterbox.linktoprocess" name="traiter">traiter</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
+<td><font face="arial,helvetica,sans-serif"><a href="[res_letterbox.linktoprocess]" name="traiter">traiter</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
 </tr>
 </tbody>
 </table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
@@ -857,7 +857,7 @@ VALUES (6, '[notification courrier] Alerte 1', '[notification] Alerte 1', '<p><f
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
 <td><font face="arial,helvetica,sans-serif" color="#FF0000"><strong><font size="2">[res_letterbox.subject]</font></strong></font></td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.type_label]</font></td>
-<td><font face="arial,helvetica,sans-serif"><a href="res_letterbox.linktoprocess" name="traiter">traiter</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
+<td><font face="arial,helvetica,sans-serif"><a href="[res_letterbox.linktoprocess]" name="traiter">traiter</a> <a href="[res_letterbox.linktodoc]" name="doc">Afficher</a></font></td>
 </tr>
 </tbody>
 </table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'letterbox_events', 'notifications');
