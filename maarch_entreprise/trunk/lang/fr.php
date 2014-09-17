@@ -1642,3 +1642,7 @@ if (!defined('_CHOOSE_CATEGORY_ASSOCIATION_HELP')) define('_CHOOSE_CATEGORY_ASSO
 
 //SERVICE VIEW DOC HISTORY
 if (!defined('_VIEW_DOC_HISTORY')) define('_VIEW_DOC_HISTORY', 'Voir l\'historique du document');
+
+//ONLY ALPHANUM
+if (!defined('_ONLY_ALPHANUM')) define('_ONLY_ALPHANUM', 'Seuls les caract&egrave;res alphanum&eacute;riques sont accept&eacute;s');
+if (!defined('_ONLY_ALPHABETIC')) define('_ONLY_ALPHABETIC', 'Seuls les caract&egrave;res alphab&eacute;tiques sont accept&eacute;s');
