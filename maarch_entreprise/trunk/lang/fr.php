@@ -897,6 +897,7 @@ if (!defined('_IS_ATTACHED_TO_DOC'))  define('_IS_ATTACHED_TO_DOC', 'Attach&eacu
 if (!defined('_RES_ATTACHED'))  define('_RES_ATTACHED', 'Documents attach&eacute;s');
 if (!defined('_SELECT_CONTACT_TO_REPLACE'))  define('_SELECT_CONTACT_TO_REPLACE', 'S&eacute;lectionner contact rempla&ccedil;ant');
 if (!defined('_ARE_YOU_SURE_TO_DELETE_CONTACT'))  define('_ARE_YOU_SURE_TO_DELETE_CONTACT', '&Ecirc;tes vous s&ucirc;re de supprimer le contact ?');
+if (!defined('_CONTACT_CHECK'))  define('_CONTACT_CHECK', 'un courrier enregistr&eacute; dans les 5 derniers jours a d&eacute;j&agrave; &eacute;t&eacute; enregistr&eacute; pour le m&ecirc;me exp&eacute;diteur');
 if (!defined('_NO_SOCIETY_DUPLICATES'))  define('_NO_SOCIETY_DUPLICATES', 'Pas de doublon par organisme/soci&eacute;t&eacute;');
 if (!defined('_NO_NAME_DUPLICATES'))  define('_NO_NAME_DUPLICATES', 'Pas de doublon par nom/pr&eacute;nom');
 
