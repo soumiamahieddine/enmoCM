@@ -10,6 +10,13 @@ require("modules/entities/entities_tables.php");
     $services = array();
     $db = new dbquery();
     $db->connect();
+    $labelAction = '';
+    if ($id_action <> '') {
+        $db->query("select label_action from actions where id = " . $id_action);
+        $resAction = $db->fetch_object();
+        $labelAction = $db->show_string($resAction->label_action);
+    }
+    
     //print_r($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']);
     preg_match("'^ ,'",$_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities'], $out);
     if(count($out[0]) == 1) {
@@ -35,7 +42,11 @@ require("modules/entities/entities_tables.php");
     }
 
     $frm_str = '<div id="frm_error_'.$id_action.'" class="error"></div>';
-    $frm_str .= '<h2 class="title">'._REDIRECT_MAIL.' '._NUM;
+    if ($labelAction <> '') {
+        $frm_str .= '<h2 class="title">' . $labelAction . ' ' . _NUM;
+    } else {
+        $frm_str .= '<h2 class="title">'._REDIRECT_MAIL.' '._NUM;
+    }
     $values_str = '';
     for($i=0; $i < count($values);$i++)
     {
