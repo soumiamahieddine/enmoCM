@@ -29,36 +29,47 @@
 * @ingroup admin
 */
 
+require_once('modules/entities/class/class_manage_entities.php');
+$ent = new entity();
+$my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);
+
+if ($_SESSION['user']['UserId'] != 'superadmin') {
+    $whereSecurityOnEntities = " and (users.user_id != 'superadmin' and (users_entities.entity_id in (" 
+        . join(',', $my_tab_entities_id) . ")))";
+} else {
+    $whereSecurityOnEntities = " and (users.user_id != 'superadmin')";
+}
+
+if ($whereSecurityOnEntities == '') {
+    $whereSecurityOnEntities = " and 1=1 ";
+}
+
 $db = new dbquery();
 $db->connect();
 $db->query(
-    "select lastname as tag from ".$_SESSION['tablename']['users']
+    "select distinct(users.user_id), users.lastname as tag from users, users_entities "
     . " where ("
-        . "lower(lastname) like lower('".$_REQUEST['what']."%') "
-        . " or lower(user_id) like lower('".$_REQUEST['what']."%') "
-    . ") and status <> 'DEL'"
-    . " order by lastname"
+        . "lower(users.lastname) like lower('".$_REQUEST['what']."%') "
+        . " or lower(users.user_id) like lower('".$_REQUEST['what']."%') "
+    . ") and users.status <> 'DEL' " . $whereSecurityOnEntities . " and (users.user_id = users_entities.user_id) "
+    . " order by users.lastname"
 );
 
 $listArray = array();
-while($line = $db->fetch_object())
-{
+while ($line = $db->fetch_object()) {
     array_push($listArray, $line->tag);
 }
 echo "<ul>\n";
 $authViewList = 0;
 $flagAuthView = false;
-foreach($listArray as $what)
-{
-    if(isset($authViewList ) && $authViewList>= 10)
-    {
+foreach ($listArray as $what) {
+    if (isset($authViewList ) && $authViewList>= 10) {
         $flagAuthView = true;
     }
     //if(stripos($what, $_REQUEST['what']) === 0)
     //{
         echo "<li>".$what."</li>\n";
-        if($flagAuthView)
-        {
+        if ($flagAuthView) {
             echo "<li>...</li>\n";
             break;
         }
