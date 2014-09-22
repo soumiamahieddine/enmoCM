@@ -162,9 +162,9 @@ if (!defined('_REDIRECT_MAIL'))
 if (!defined('_DISTRIBUTE_MAIL'))
     define('_DISTRIBUTE_MAIL', 'Ventilation du document');
 if (!defined('_REDIRECT_TO_OTHER_DEP'))
-    define('_REDIRECT_TO_OTHER_DEP', 'Rediriger vers un autre service');
+    define('_REDIRECT_TO_OTHER_DEP', 'Vers un autre service');
 if (!defined('_REDIRECT_TO_USER'))
-    define('_REDIRECT_TO_USER', 'Rediriger vers un utilisateur');
+    define('_REDIRECT_TO_USER', 'Vers un utilisateur');
 if (!defined('_LETTER_SERVICE_REDIRECT'))
     define('_LETTER_SERVICE_REDIRECT','Rediriger vers le service &eacute;metteur');
 if (!defined('_LETTER_SERVICE_REDIRECT_VALIDATION'))

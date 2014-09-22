@@ -163,9 +163,9 @@ if (!defined('_REDIRECT_MAIL'))
 if (!defined('_DISTRIBUTE_MAIL'))
     define('_DISTRIBUTE_MAIL', 'Distribute mail');
 if (!defined('_REDIRECT_TO_OTHER_DEP'))
-    define('_REDIRECT_TO_OTHER_DEP', 'Redirect to another department');
+    define('_REDIRECT_TO_OTHER_DEP', 'To another department');
 if (!defined('_REDIRECT_TO_USER'))
-    define('_REDIRECT_TO_USER', 'Rediriger to another user');
+    define('_REDIRECT_TO_USER', 'To another user');
 if (!defined('_LETTER_SERVICE_REDIRECT'))
     define('_LETTER_SERVICE_REDIRECT','Redirect to sender department');
 if (!defined('_LETTER_SERVICE_REDIRECT_VALIDATION'))
