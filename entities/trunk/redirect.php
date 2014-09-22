@@ -4,10 +4,16 @@ $etapes = array('form');
 $frm_width='355px';
 $frm_height = '800px';
 require("modules/entities/entities_tables.php");
+require_once("modules/entities/class/EntityControler.php");
+require_once('modules/entities/class/class_manage_entities.php');;
+
 
  function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
  {
+    $ent = new entity();
+    $entity_ctrl = new EntityControler();
     $services = array();
+    $servicesCompare = array();
     $db = new dbquery();
     $db->connect();
     $labelAction = '';
@@ -29,6 +35,7 @@ require("modules/entities/entities_tables.php");
         while($res = $db->fetch_object())
         {
             array_push($services, array( 'ID' => $res->entity_id, 'LABEL' => $db->show_string($res->entity_label)));
+            array_push($servicesCompare, $res->entity_id);
         }
     }
     $users = array();
@@ -57,6 +64,21 @@ require("modules/entities/entities_tables.php");
     $frm_str .= '</h2><br/><br/>';
     if(!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']))
     {
+        $EntitiesIdExclusion = array();
+        $entities = $entity_ctrl->getAllEntities();
+        $countEntities = count($entities);
+        //var_dump($entities);
+        for ($cptAllEnt = 0;$cptAllEnt<$countEntities;$cptAllEnt++) {
+            if (!is_integer(array_search($entities[$cptAllEnt]->__get('entity_id'), $servicesCompare))) {
+                array_push($EntitiesIdExclusion, $entities[$cptAllEnt]->__get('entity_id'));
+            }
+        }
+        
+        $allEntitiesTree= array();
+        $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
+            $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
+        );
+        //var_dump($allEntitiesTree);
         $frm_str .= '<hr />';
         $frm_str .='<div id="form2">';
         $frm_str .= '<form name="frm_redirect_dep" id="frm_redirect_dep" method="post" class="forms" action="#">';
@@ -65,10 +87,24 @@ require("modules/entities/entities_tables.php");
                     $frm_str .= '<label><b>'._REDIRECT_TO_OTHER_DEP.' :</b></label>';
                     $frm_str .= '<select name="department" id="department" onchange="change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\', \'diff_list_div_redirect\', \'redirect\');">';
                         $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
-                       for($i=0; $i < count($services); $i++)
+                       /*for($i=0; $i < count($services); $i++)
                        {
                             $frm_str .='<option value="'.$services[$i]['ID'].'" >'.$db->show_string($services[$i]['LABEL']).'</option>';
-                       }
+                       }*/
+                       $countAllEntities = count($allEntitiesTree);
+                        for ($cptEntities = 0;$cptEntities < $countAllEntities;$cptEntities++) {
+                            if (!$allEntitiesTree[$cptEntities]['KEYWORD']) {
+                                $frm_str .= '<option data-object_type="entity_id" value="' . $allEntitiesTree[$cptEntities]['ID'] . '"';
+                                if ($allEntitiesTree[$cptEntities]['DISABLED']) {
+                                    $frm_str .= ' disabled="disabled" class="disabled_entity"';
+                                } else {
+                                     //$frm_str .= ' style="font-weight:bold;"';
+                                }
+                                $frm_str .=  '>' 
+                                    .  $ent->show_string($allEntitiesTree[$cptEntities]['SHORT_LABEL']) 
+                                    . '</option>';
+                            }
+                        }
                     $frm_str .='</select>';
                     $frm_str .=' <input type="button" name="redirect_dep" value="'._REDIRECT.'" id="redirect_dep" class="button" onclick="valid_action_form( \'frm_redirect_dep\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$values_str.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');" />';
 

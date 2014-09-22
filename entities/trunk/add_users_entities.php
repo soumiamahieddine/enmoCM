@@ -42,7 +42,7 @@ if ($_SESSION['user']['UserId'] != 'superadmin') {
     if (count($my_tab_entities_id) > 0) {
         $countEntities = count($entities);
         for ($cptAllEnt = 0;$cptAllEnt<$countEntities;$cptAllEnt++) {
-            $result = array_search("'" . $entities[$cptAllEnt]->__get('entity_id') . "'", $my_tab_entities_id);
+            //$result = array_search("'" . $entities[$cptAllEnt]->__get('entity_id') . "'", $my_tab_entities_id);
             //var_dump($result);
             if (!is_integer(array_search("'" . $entities[$cptAllEnt]->__get('entity_id') . "'", $my_tab_entities_id))) {
                 //echo "UNSET " . $entities[$cptAllEnt]->__get('entity_id') . "<br>";
