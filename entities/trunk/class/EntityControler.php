@@ -193,13 +193,14 @@ class EntityControler
 
         return $entities;
     }
+    
     public function getEntityArbo($parent)
     {
        $db = new dbquery();
        $db->connect();
        $entities=array();
 
-       $db->query("Select * from ".self::$entities_table." WHERE parent_entity_id='".$parent."' and enabled = 'Y'");
+       $db->query("Select * from entities WHERE parent_entity_id='".$parent."' and enabled = 'Y'");
        while($res = $db->fetch_object())
        {   
            $ent=new EntityObj();
@@ -209,6 +210,30 @@ class EntityControler
             $ent->setArray($tmp_array);
             array_push($entities, $ent);
             $entities=array_merge(self::getEntityArbo($res->entity_id),$entities);
+        }
+        return $entities;
+    }
+    
+    public function getEntityParentTreeOf($entityId)
+    {
+        $entities = array();
+        if ($entityId <> '') {
+            $db = new dbquery();
+            $db->connect();
+           
+
+            $db->query("Select parent_entity_id from entities WHERE entity_id='" . $entityId . "' and enabled = 'Y'");
+            while ($res = $db->fetch_object()) {
+                $ent=new EntityObj();
+                foreach($res as $key => $value)
+                    $tmp_array[$key] = $value;
+
+                $ent->setArray($tmp_array);
+                array_push($entities, $ent);
+                $entities=array_merge(self::getEntityParentTreeOf($res->parent_entity_id),$entities);
+            }
+        } else {
+        
         }
         return $entities;
     }
