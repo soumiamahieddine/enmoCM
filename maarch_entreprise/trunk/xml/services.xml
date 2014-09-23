@@ -326,7 +326,7 @@
  <SERVICE>
    <id>admin_parameters</id>
    <name>_ADMIN_PARAMETERS</name>
-   <comment>_ADMIN_PARAMETERS_DESC</comment>
+   <comment>_ADMIN_PARAMETERS</comment>
    <servicepage>index.php?page=admin_parameters&amp;admin=parameters</servicepage>
    <servicetype>admin</servicetype>
    <style>admin_parameters</style>
