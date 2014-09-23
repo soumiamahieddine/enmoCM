@@ -28,7 +28,7 @@
 * @version $Revision$
 * @ingroup indexing_searching
 */
-
+$_SESSION['HTTP_REFERER'] = Url::requestUri();
 if (!isset($_SESSION['user']['UserId']) && $_SESSION['user']['UserId'] == '') {
     if (trim($_SERVER['argv'][0]) <> '') {
         header('location: reopen.php?' . $_SERVER['argv'][0]);
@@ -37,6 +37,7 @@ if (!isset($_SESSION['user']['UserId']) && $_SESSION['user']['UserId'] == '') {
     }
     exit();
 }
+$_SESSION['HTTP_REFERER'] = '';
 
 try {
     require_once('core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR 
