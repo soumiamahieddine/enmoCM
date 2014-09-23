@@ -76,6 +76,18 @@ if ($_REQUEST['load_from_model'] == 'true') {
     $_SESSION[$origin]['diff_list']['difflist_type'] = $_SESSION[$origin]['diff_list']['object_type'];
 }
 
+if ($objectId <> '') {
+    $_SESSION[$origin]['difflist_object']['object_id'] = $objectId;
+    if ($objectType == 'entity_id') {
+        $db->connect();
+        $query = "select entity_label from entities where entity_id = '" . $objectId . "'";
+        $db->query($query);
+        $res = $db->fetch_object();
+        if ($res->entity_label <> '') {
+            $_SESSION[$origin]['difflist_object']['object_label'] = $res->entity_label;
+        }
+    }
+}
 
 
 $content = '';

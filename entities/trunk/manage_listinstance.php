@@ -32,6 +32,10 @@ $usergroups_controler = new usergroups_controler();
 // Origin
 $origin = $_REQUEST['origin'];
 
+/*echo '<pre>';
+print_r($_SESSION[$origin]);
+echo '</pre>';*/
+
 // Action ?
 if (isset($_GET['action']))
     $action = $_GET['action'];
@@ -111,10 +115,17 @@ if (isset($_POST['what_users']) && !empty($_POST['what_users'])) {
 if (isset($_POST['what_services']) && ! empty($_POST['what_services'])) {
     $_GET['what_services'] = $_POST['what_services'];
 }
+
+// by default, if difflist for entities, load users and entity of the selectionned entity
+if ($_GET['what_services'] == '' && $_GET['what_users'] == '') {
+    $_GET['what_services'] = $_SESSION[$origin]['difflist_object']['object_label'];
+}
+
 if (isset($_REQUEST['no_filter'])) {
     $_GET['what_users'] = '%';
     $_GET['what_services'] = '%';
 }
+
 $users = array();
 $entities = array();
 $whereUsers = '';
@@ -652,11 +663,15 @@ $linkwithwhat =
     ) {*/ ?>
 		<div id="diff_list" align="center">
 		<h2 class="tit"><?php 
-			echo _DIFFUSION_LIST;
-			if($difflistType->difflist_type_label != ''){
-				echo " (" . $difflistType->difflist_type_label . ")";
-			}
-		?></h2><?php 
+			echo _DIFFUSION_LIST . '&nbsp;';
+            if ($_SESSION[$origin]['difflist_object']['object_label'] <> '') {
+                echo $_SESSION[$origin]['difflist_object']['object_label'];
+            }
+			/*if ($difflistType->difflist_type_label != '') {
+				echo "<br /><small><small><small> (" . $difflistType->difflist_type_label . ")</small></small></small>";
+			}*/
+		?></h2>
+        <?php 
 		#**************************************************************************
 		# DEST USER
 		#**************************************************************************
@@ -844,9 +859,17 @@ $linkwithwhat =
 					</tr>
                     <tr>
 						<th>
-							<label for="no_filter" class="bold">&nbsp;</label>
+							<label for="auto_filters" class="bold">&nbsp;</label>
 						</th>
 						<th>
+                            <?php
+                            if ($_SESSION[$origin]['difflist_object']['object_label'] <> '') {
+                                ?>
+                                <input class="button" name="auto_filter" id="auto_filter" type="button" onclick="$('what_services').value='<?php 
+                                    echo $_SESSION[$origin]['difflist_object']['object_label'];?>';$('what_users').value='';" value="<?php echo _AUTO_FILTER; ?>"/>
+                                <?php
+                            }
+                            ?>
 							<input class="button" name="no_filter" id="no_filter" type="button" onclick="$('what_services').value='';$('what_users').value='';" value="<?php echo _NO_FILTER; ?>"/>
 						</th>
 					</tr>
@@ -856,6 +879,7 @@ $linkwithwhat =
 		<script type="text/javascript">
 			repost('<?php echo $link;?>',new Array('diff_list_items'),new Array('what_users','what_services'),'keyup',250);
             repost('<?php echo $link;?>',new Array('diff_list_items'),new Array('no_filter'), 'click',250);
+            repost('<?php echo $link;?>',new Array('diff_list_items'),new Array('auto_filter'), 'click',250);
 		</script>
 		<br/>
 		<div id="diff_list_items"> <?php

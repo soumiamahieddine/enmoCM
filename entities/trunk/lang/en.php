@@ -271,4 +271,7 @@ if (!defined('_NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF'))
     define('_NO_AVAILABLE_ROLE_FOR_ME_IN_THE_WF', 'There is no available role for me in the workflow');
 
 if (!defined('_NO_FILTER')) 
-    define('_NO_FILTER', 'View all');
+    define('_NO_FILTER', 'Erase filters');
+
+if (!defined('_AUTO_FILTER')) 
+    define('_AUTO_FILTER', 'Suggested list');

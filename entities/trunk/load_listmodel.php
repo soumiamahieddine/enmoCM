@@ -25,6 +25,18 @@ $origin = $_REQUEST['origin'];
 // Get listmodel_parameters
 $_SESSION[$origin]['difflist_type'] = $diffList->get_difflist_type($objectType);
 
+if ($objectId <> '') {
+    $_SESSION[$origin]['difflist_object']['object_id'] = $objectId;
+    if ($objectType == 'entity_id') {
+        $query = "select entity_label from entities where entity_id = '" . $objectId . "'";
+        $db->query($query);
+        $res = $db->fetch_object();
+        if ($res->entity_label <> '') {
+            $_SESSION[$origin]['difflist_object']['object_label'] = $res->entity_label;
+        }
+    }
+}
+
 // Fill session with listmodel
 $_SESSION[$origin]['diff_list'] = $diffList->get_listmodel($objectType, $objectId);
 $_SESSION[$origin]['diff_list']['difflist_type'] = $_SESSION[$origin]['diff_list']['object_type'];
