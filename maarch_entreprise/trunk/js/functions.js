@@ -1,6 +1,8 @@
 
 var isAlreadyClick = false;
 
+page_result_final = '';
+
 function whatIsTheDivStatus(theDiv, divStatus)
 {
     if ($(theDiv).style.display == 'none') {
@@ -1358,6 +1360,7 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
                 //console.log(answer.responseText);
                 //alert(answer.responseText);
                 var page_result = response.page_result;
+                //page_result_final = response.page_result;
                 if(response.status == 0 ) // No confirm or form asked
                 {
                     if(response.action_status != '' && response.action_status != 'NONE')
@@ -1491,6 +1494,7 @@ function action_send_form_confirm_result(path_manage_script, mode_req, id_action
                             table_name = response.table;
                         }
                         var page_result = response.page_result;
+                        page_result_final = response.page_result;
                         close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, table_name, id_coll);
                     }
                     else //  Form Params errors
@@ -1554,6 +1558,13 @@ function action_change_status(path_manage_script, mode_req, res_id_values, table
                     {
                         window.top.location.reload();
                     }
+                    
+                    // fix for Chrome and firefox
+                    if (page_result_final != '') {
+                        //console.log(page_result_final);
+                        window.top.location.href=page_result_final;
+                    }
+                    
                     do_nothing = false;
                 },
                 onFailure: function(){
