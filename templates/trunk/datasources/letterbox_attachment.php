@@ -7,6 +7,11 @@
 $dbDatasource = new dbquery();
 $dbDatasource->connect();
 
+require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
+    . 'class_contacts_v2.php';
+$contacts = new contacts_v2();
+
 // Main document resource from view
 $datasources['res_letterbox'] = array();
 $dbDatasource->query("SELECT * FROM " . $res_view . " WHERE res_id = " . $res_id . "");
@@ -15,16 +20,20 @@ $datasources['res_letterbox'][] = $dbDatasource->fetch_assoc();
 // Contact from mail
 if ($datasources['res_letterbox'][0]['exp_contact_id'] <> '') {
     $datasources['contact'] = array();
-    $dbDatasource->query("SELECT * FROM contacts WHERE contact_id = ".$datasources['res_letterbox'][0]['exp_contact_id']);
+    $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ".$datasources['res_letterbox'][0]['exp_contact_id']." and ca_id = ".$datasources['res_letterbox'][0]['address_id']);
     $myContact = $dbDatasource->fetch_array();
 	$myContact['title'] = $_SESSION['mail_titles'][$myContact['title']];
+    $myContact['contact_type'] = $contacts->get_label_contact($myContact['contact_type'], $_SESSION['tablename']['contact_types']);
+    $myContact['contact_purpose_id'] = $contacts->get_label_contact($myContact['contact_purpose_id'], $_SESSION['tablename']['contact_purposes']);
 	$datasources['contact'][] = $myContact;
 }
 if ($datasources['res_letterbox'][0]['dest_contact_id'] <> '') {
     $datasources['contact'] = array();
-    $dbDatasource->query("SELECT * FROM contacts WHERE contact_id = ".$datasources['res_letterbox'][0]['dest_contact_id']);
+    $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ".$datasources['res_letterbox'][0]['dest_contact_id']." and ca_id = ".$datasources['res_letterbox'][0]['address_id']);
     $myContact = $dbDatasource->fetch_array();
 	$myContact['title'] = $_SESSION['mail_titles'][$myContact['title']];
+    $myContact['contact_type'] = $contacts->get_label_contact($myContact['contact_type'], $_SESSION['tablename']['contact_types']);
+    $myContact['contact_purpose_id'] = $contacts->get_label_contact($myContact['contact_purpose_id'], $_SESSION['tablename']['contact_purposes']);
 	$datasources['contact'][] = $myContact;
 }
 
