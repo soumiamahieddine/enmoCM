@@ -791,7 +791,7 @@ VALUES (4, '[notification courrier] Diffusion de courrier en copie', '[notificat
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.res_id]</font></td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.typist]</font></td>
 <td>
-<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society][res_letterbox.contact_firstname][res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
+<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
 </td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
 <td><font face="arial,helvetica,sans-serif" color="#FF0000"><strong><font size="2">[res_letterbox.subject]</font></strong></font></td>
@@ -819,7 +819,7 @@ VALUES (5, '[notification courrier] Alerte 2', '[notification] Alerte 2', '<p><f
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.res_id]</font></td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.typist]</font></td>
 <td>
-<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society][res_letterbox.contact_firstname][res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
+<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
 <p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.tag_label]</font></p>
 </td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
@@ -851,7 +851,7 @@ VALUES (6, '[notification courrier] Alerte 1', '[notification] Alerte 1', '<p><f
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.res_id]</font></td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.typist]</font></td>
 <td>
-<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society][res_letterbox.contact_firstname][res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
+<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
 <p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.tag_label]</font></p>
 </td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
@@ -883,7 +883,7 @@ VALUES (7, '[notification courrier] Diffusion de courrier', '[notification] Diff
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.res_id]</font></td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.typist]</font></td>
 <td>
-<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society][res_letterbox.contact_firstname][res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
+<p><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.contact_society] [res_letterbox.contact_firstname] [res_letterbox.contact_lastname][res_letterbox.function][res_letterbox.address_num][res_letterbox.address_street][res_letterbox.address_postal_code][res_letterbox.address_town]</font></p>
 </td>
 <td><font face="arial,helvetica,sans-serif" size="2">[res_letterbox.doc_date###block=tr###frm=dd/mm/yyyy]</font></td>
 <td><font face="arial,helvetica,sans-serif" color="#FF0000"><strong><font size="2">[res_letterbox.subject]</font></strong></font></td>
@@ -918,7 +918,7 @@ VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvel
 <td>[notes.subject]</td>
 <td>[notes.note_text]</td>
 <td>[notes.user_id]</td>
-<td>[notes.contact_society][notes.contact_firstname][notes.contact_lastname]</td>
+<td>[notes.contact_society] [notes.contact_firstname] [notes.contact_lastname]</td>
 <td><a href="[notes.linktodetail]" name="detail">d&eacute###tail</a> <a href="[notes.linktodoc]" name="doc">doc</a></td>
 </tr>
 </tbody>
