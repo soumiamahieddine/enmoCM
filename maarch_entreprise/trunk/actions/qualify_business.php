@@ -417,9 +417,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . '<span id="contact_label_human_resources" style="display:' 
                 . $display_value . ';">' . _EMPLOYEE . '</span></a>';
 
-    if ($_SESSION['features']['personal_contact'] == "true"
+    // if ($_SESSION['features']['personal_contact'] == "true"
        // && $core->test_service('my_contacts', 'apps', false)
-    ) {
+    // ) {
+    if ($core->test_admin('my_contacts', 'apps', false)) {
         $frm_str .= ' <a href="#" id="create_contact" title="' . _CREATE_CONTACT
                 . '" onclick="new Effect.toggle(\'create_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;" '
@@ -831,8 +832,9 @@ $frm_str .= '</div>';
         $frm_str .= '<tr align="center">';
         
         //CONTACT
-         if ($_SESSION['features']['personal_contact'] == "true"
-        ) {
+        //  if ($_SESSION['features']['personal_contact'] == "true"
+        // ) {
+        if ($core->test_admin('my_contacts', 'apps', false)) {
             $frm_str .= '<td>';
             $frm_str .= '|<span onclick="new Effect.toggle(\'create_contact_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'create_contact_div\', \'divStatus_create_contact_div\');return false;" '
@@ -863,12 +865,12 @@ $frm_str .= '</div>';
             //Count notes
             $nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
             $nbr_notes = ' ('.$nbr_notes.')';
-            $frm_str .= '|<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
+            $frm_str .= '<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
             $frm_str .= '<span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>'
                 . '<small>' . _NOTES . $nbr_notes . '</small>';
-            $frm_str .= '</b></span>|';
+            $frm_str .= '</b></span>';
             $frm_str .= '</td>';
         }
         
@@ -888,12 +890,12 @@ $frm_str .= '</div>';
             if ($answer <> '') {
                 $answer .= ': ';
             }
-            $frm_str .= '|<span onclick="new Effect.toggle(\'list_answers_div\', \'appear\', {delay:0.2});'
+            $frm_str .= '<span onclick="new Effect.toggle(\'list_answers_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'list_answers_div\', \'divStatus_done_answers_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
             $frm_str .= '<span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span><b>'
                 . '<small>' . _PJ . ' (' . $answer .'<span id="nb_attach">' . $nb_attach . '</span>)</small>';
-            $frm_str .= '</b></span>|';
+            $frm_str .= '</b></span>';
             $frm_str .= '</td>';
         }
         
@@ -933,12 +935,12 @@ $frm_str .= '</div>';
             }
             $_SESSION['cm']['resMaster'] = '';
             $frm_str .= '<td>';
-            $frm_str .= '|<span onclick="new Effect.toggle(\'versions_div\', \'appear\', {delay:0.2});'
+            $frm_str .= '<span onclick="new Effect.toggle(\'versions_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'versions_div\', \'divStatus_versions_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
             $frm_str .= '<span id="divStatus_versions_div" style="color:#1C99C5;"><<</span><b>'
                 . '<small>' . _VERSIONS . ' (<span id="nbVersions">' . $extend_title_for_versions . '</span>)</small>';
-            $frm_str .= '</b></span>|';
+            $frm_str .= '</b></span>';
             $frm_str .= '</td>';
         }
         
@@ -951,12 +953,12 @@ $frm_str .= '</div>';
             $coll_id,
             'all'
         );
-        $frm_str .= '|<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>'
              . '<small>' . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)</small>';
-        $frm_str .= '</b></span>|';
+        $frm_str .= '</b></span>';
         $frm_str .= '</td>';
         
         //END TOOLBAR
@@ -966,12 +968,14 @@ $frm_str .= '</div>';
         //FRAME FOR TOOLS
         
            /**** Contact form start *******/
-        $frm_str .= '<div id="create_contact_div" style="display:none">';
-            $frm_str .= '<iframe width="100%" height="450" src="' . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe" name="contact_iframe" id="contact_iframe"'
-                    . ' scrolling="auto" frameborder="0" style="display:block;">'
-                    . '</iframe>';
-        $frm_str .= '</div>';
+        if ($core->test_admin('my_contacts', 'apps', false)) {
+            $frm_str .= '<div id="create_contact_div" style="display:none">';
+                $frm_str .= '<iframe width="100%" height="450" src="' . $_SESSION['config']['businessappurl']
+                        . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe" name="contact_iframe" id="contact_iframe"'
+                        . ' scrolling="auto" frameborder="0" style="display:block;">'
+                        . '</iframe>';
+            $frm_str .= '</div>';
+        }
         /**** Contact form end *******/
         /**** Contact info start *******/
         $frm_str .= '<div id="info_contact_div" style="display:none">';

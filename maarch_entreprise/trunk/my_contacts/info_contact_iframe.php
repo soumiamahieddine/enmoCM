@@ -29,8 +29,9 @@
 */
 
 $core_tools2 = new core_tools();
+$core_tools2->test_user();
 $core_tools2->load_lang();
-$core_tools2->test_admin('my_contacts', 'apps');
+// $core_tools2->test_admin('my_contacts', 'apps');
 $core_tools2->load_html();
 $core_tools2->load_header('', true, false);
 $core_tools2->load_js();
@@ -75,7 +76,7 @@ if (isset($_GET['mode']) && $_GET['mode'] <> '') {
 	$mode = '';
 }
 
-if ($line->user_id == $_SESSION['user']['UserId'] && $mode <> 'view') {
+if ($line->user_id == $_SESSION['user']['UserId'] && $mode <> 'view' && $core_tools2->test_admin('my_contacts', 'apps', false)) {
 	$_SESSION['contact']['current_contact_id'] = $_GET['contactid'];
 	$_SESSION['contact']['current_address_id'] = $_GET['addressid'];
 	$from_iframe = true;

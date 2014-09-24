@@ -430,9 +430,10 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . $displayValue . ';">' . _AUTHOR . '</span>'
             . '<span id="contact_label_human_resources" style="display:' 
                 . $displayValue . ';">' . _EMPLOYEE . '</span></a>';
-    if ($_SESSION['features']['personal_contact'] == "true"
+    // if ($_SESSION['features']['personal_contact'] == "true"
        // && $core->test_service('my_contacts', 'apps', false)
-    ) {
+    // ) {
+    if ($core->test_admin('my_contacts', 'apps', false)) {
         $frmStr .= ' <a href="#" id="create_contact" title="' . _CREATE_CONTACT
                 . '" onclick="new Effect.toggle(\'create_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;" '
@@ -980,24 +981,24 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
 		//Webtwain
         if ($core->test_service('scan', 'webtwain', false) === true) {
 			$frmStr .= '<td>';
-			$frmStr .= '|<span onclick="new Effect.toggle(\'webtwain_div\', \'appear\', {delay:0.2});'
+			$frmStr .= '<span onclick="new Effect.toggle(\'webtwain_div\', \'appear\', {delay:0.2});'
 				. 'whatIsTheDivStatus(\'webtwain_div\', \'divStatus_webtwain_div\');return false;" '
 				. 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
 			$frmStr .= '<span id="divStatus_webtwain_div" style="color:#1C99C5;"><<</span><b>'
 				. '<small>' . _SCAN_DOCUMENT . '</small>';
-			$frmStr .= '</b></span>|';
+			$frmStr .= '</b></span>';
 			$frmStr .= '</td>';
         }
 		
 		//Photo capture
         if ($core->test_service('photo_capture', 'photo_capture', false) === true){
 			$frmStr .= '<td>';
-			$frmStr .= '|<span onclick="new Effect.toggle(\'photo_capture_div\', \'appear\', {delay:0.2});'
+			$frmStr .= '<span onclick="new Effect.toggle(\'photo_capture_div\', \'appear\', {delay:0.2});'
 				. 'whatIsTheDivStatus(\'photo_capture_div\', \'divStatus_photo_capture_div\');return false;" '
 				. 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
 			$frmStr .= '<span id="divStatus_photo_capture_div" style="color:#1C99C5;"><<</span><b>'
 				. '<small>' . _PHOTO_CAPTURE . '</small>';
-			$frmStr .= '</b></span>|';
+			$frmStr .= '</b></span>';
 			$frmStr .= '</td>';
         }
 		//END TOOLBAR
@@ -1040,12 +1041,14 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     }
 	
     /**** Contact form start *******/
-    $frmStr .= '<div id="create_contact_div" style="display:none">';
-        $frmStr .= '<iframe width="100%" height="450" src="' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe" name="contact_iframe" id="contact_iframe"'
-                . ' scrolling="auto" frameborder="0" style="display:block;">'
-                . '</iframe>';
-    $frmStr .= '</div>';
+    if ($core->test_admin('my_contacts', 'apps', false)) {
+        $frmStr .= '<div id="create_contact_div" style="display:none">';
+            $frmStr .= '<iframe width="100%" height="450" src="' . $_SESSION['config']['businessappurl']
+                    . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe" name="contact_iframe" id="contact_iframe"'
+                    . ' scrolling="auto" frameborder="0" style="display:block;">'
+                    . '</iframe>';
+        $frmStr .= '</div>';
+    }
     /**** Contact form end *******/
     /**** Contact info start *******/
     $frmStr .= '<div id="info_contact_div" style="display:none">';

@@ -507,9 +507,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					 
 					$frm_str .= '<tr id="contact_id_tr" style="display:'.$display_value.';">';
                    $frm_str .='<td class="indexing_label"><label for="contact" class="form_title" ><span id="exp_contact">'._SHIPPER.'</span><span id="dest_contact">'._DEST.'</span>';
-                   if($_SESSION['features']['personal_contact'] == "true") //  && $core_tools->test_service('my_contacts','apps', false))
-                   {
+                   // if($_SESSION['features']['personal_contact'] == "true") //  && $core_tools->test_service('my_contacts','apps', false))
+                   // {
+                    if ($core->test_admin('my_contacts', 'apps', false)) {
                         $frm_str .=' <a href="#" id="create_contact" title="'._CREATE_CONTACT.'" onclick="new Effect.toggle(\'create_contact_div\', \'blind\', {delay:0.2});return false;" style="display:inline;" ><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._CREATE_CONTACT.'"/></a>';
+                    } else {
+                        $frm_str .= ' <a href="#" id="create_contact"/></a>';       
                     }
                      $frm_str .= '</label></td>';
                     $contact_mode = "view";
@@ -555,8 +558,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .= '<tr id="add_multi_contact_tr" style="display:' . $displayValue . ';">';
 						$frm_str .= '<td><label for="contact" class="form_title" >'
 							. '<span id="dest_multi_contact">' . _DEST . '</span>';
-					if ($_SESSION['features']['personal_contact'] != "false" || $_SESSION['features']['create_public_contact'] != "false"
-					) {
+					// if ($_SESSION['features']['personal_contact'] != "false" || $_SESSION['features']['create_public_contact'] != "false"
+					// ) {
+                    if ($core->test_admin('my_contacts', 'apps', false)) {
 						$frm_str .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
 								. '" onclick="new Effect.toggle(\'create_contact_div\', '
 								. '\'blind\', {delay:0.2});return false;" '
@@ -568,10 +572,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$contact_mode = "view";
 					if($core->test_service('update_contacts','apps', false)) $contact_mode = 'update';
 					$frm_str .= '<td><a href="#" id="multi_contact_card" title="' . _CONTACT_CARD
-							. '" onclick="open_contact_card(\''
-							. $_SESSION ['config']['businessappurl'] . 'index.php?display=true'
-							. '&page=contact_info\', \'' . $_SESSION ['config']['businessappurl']
-							. 'index.php?display=true&page=user_info\',\''.$contact_mode.'\');" '
+							. '" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
+                . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
+                . '\'blind\', {delay:0.2});return false;" '
 							. 'style="visibility:hidden;" ><img src="'
 							. $_SESSION['config']['businessappurl'] . 'static.php?filename='
 							. 'my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>&nbsp;</td>';
@@ -917,27 +920,28 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<tr align="center">';
         
         //CONTACT
-         if ($_SESSION['features']['personal_contact'] == "true"
-        ) {
+        //  if ($_SESSION['features']['personal_contact'] == "true"
+        // ) {
+        if ($core->test_admin('my_contacts', 'apps', false)) {
             $frm_str .= '<td>';
-            $frm_str .= '|<span onclick="new Effect.toggle(\'create_contact_div\', \'appear\', {delay:0.2});'
+            $frm_str .= '<span onclick="new Effect.toggle(\'create_contact_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'create_contact_div\', \'divStatus_create_contact_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
             $frm_str .= '<span id="divStatus_create_contact_div" style="color:#1C99C5;"><<</span><b>'
                 . '<small>' . _CREATE_CONTACT . '</small>';
-            $frm_str .= '</b></span>|';
+            $frm_str .= '</b></span>';
             $frm_str .= '</td>';
         }
         
         // HISTORY
         if ($core_tools->test_service('view_doc_history', 'apps', false)) {
             $frm_str .= '<td>';
-            $frm_str .= '|<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
+            $frm_str .= '<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
             $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><<</span><b>'
                . '<small>' . _DOC_HISTORY . '</small>';
-            $frm_str .= '</b></span>|';
+            $frm_str .= '</b></span>';
             $frm_str .= '</td>';
         }
 
@@ -949,12 +953,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             //Count notes
             $nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
             $nbr_notes = ' ('.$nbr_notes.')';
-            $frm_str .= '|<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
+            $frm_str .= '<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
             $frm_str .= '<span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>'
                 . '<small>' . _NOTES . $nbr_notes . '</small>';
-            $frm_str .= '</b></span>|';
+            $frm_str .= '</b></span>';
             $frm_str .= '</td>';
         }
         
@@ -974,12 +978,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             if ($answer <> '') {
                 $answer .= ': ';
             }
-            $frm_str .= '|<span onclick="new Effect.toggle(\'list_answers_div\', \'appear\', {delay:0.2});'
+            $frm_str .= '<span onclick="new Effect.toggle(\'list_answers_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'list_answers_div\', \'divStatus_done_answers_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
             $frm_str .= '<span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span><b>'
                 . '<small>' . _PJ . ' (' . $answer .'<span id="nb_attach">' . $nb_attach . '</span>)</small>';
-            $frm_str .= '</b></span>|';
+            $frm_str .= '</b></span>';
             $frm_str .= '</td>';
         }
         
@@ -992,12 +996,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $coll_id,
             'all'
         );
-        $frm_str .= '|<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>'
               . '<small>' . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)</small>';
-        $frm_str .= '</b></span>|';
+        $frm_str .= '</b></span>';
         $frm_str .= '</td>';
         
         //END TOOLBAR
@@ -1007,12 +1011,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         //FRAME FOR TOOLS
         
     /**** Contact form start *******/
-    $frm_str .= '<div id="create_contact_div" style="display:none">';
-        $frm_str .= '<iframe width="100%" height="450" src="' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe" name="contact_iframe" id="contact_iframe"'
-                . ' scrolling="auto" frameborder="0" style="display:block;">'
-                . '</iframe>';
-    $frm_str .= '</div>';
+    if ($core->test_admin('my_contacts', 'apps', false)) {
+        $frm_str .= '<div id="create_contact_div" style="display:none">';
+            $frm_str .= '<iframe width="100%" height="450" src="' . $_SESSION['config']['businessappurl']
+                    . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe" name="contact_iframe" id="contact_iframe"'
+                    . ' scrolling="auto" frameborder="0" style="display:block;">'
+                    . '</iframe>';
+        $frm_str .= '</div>';
+    }
     /**** Contact form end *******/
     /**** Contact info start *******/
     $frm_str .= '<div id="info_contact_div" style="display:none">';
