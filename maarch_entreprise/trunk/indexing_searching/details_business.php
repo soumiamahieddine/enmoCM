@@ -954,7 +954,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                 <?php } ?>
                 </center>
                         <label><?php echo _ATTACHED_DOC;?> : </label>
-                        <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal&view_only=true" frameborder="0" width="100%" height="300px"></iframe>
+                        <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal&view_only=true" frameborder="0" width="100%" height="450px"></iframe>
                         </div>
                         <?php
                     }
