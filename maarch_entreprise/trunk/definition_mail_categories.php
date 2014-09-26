@@ -1132,7 +1132,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     $db2->query('select lastname, firstname from ' . $_SESSION['tablename']['users'] . " where user_id = '" . $line-> $arr[$i] . "'");
                     $res = $db2->fetch_object();
                     $data[$arr[$i]]['show_value'] = $res->lastname . ' ' . $res->firstname;
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=user_info&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=400, width=600,scrollbars=no,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
+                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=user_info&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=400, width=600,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
                 } else {
                     unset ($data[$arr[$i]]);
                 }
@@ -1151,7 +1151,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     }
                     $db2->query("select address_id from mlb_coll_ext where res_id = " . $res_id);
                     $res = $db2->fetch_object();
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&contactid=' . $line-> $arr[$i] . '&addressid='.$res->address_id.'\', \'contact_info\', \'height=800, width=900,scrollbars=no,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
+                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&contactid=' . $line-> $arr[$i] . '&addressid='.$res->address_id.'\', \'contact_info\', \'height=800, width=700,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
                 } else {
                     unset ($data[$arr[$i]]);
                 }
