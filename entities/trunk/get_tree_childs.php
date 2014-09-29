@@ -16,7 +16,7 @@ if (isset($_POST['branch_id'])) {
     if ($ent->nb_result() > 0) {
         while ($res = $ent->fetch_object()) {
             $canhavechildren = 'canhavechildren:false, ';
-            if (array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion']) == false || count($_SESSION['EntitiesIdExclusion']) == 0) {
+            if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
                 $labelValue = '<span class="entity_tree_element_ok">' . $ent->show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
                             . $res->user_id . '" target="_top">' . $res->lastname . ' ' . $res->firstname . '</a>', true) . '</span>';
             } else {
@@ -42,7 +42,7 @@ if (isset($_POST['branch_id'])) {
         if ($ent->nb_result() > 0) {
             while ($res = $ent->fetch_object()) {
                 $canhavechildren = 'canhavechildren:false, ';
-                if (array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion']) == false || count($_SESSION['EntitiesIdExclusion']) == 0) {
+                if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
                     $labelValue = '<span class="entity_tree_element_ok">' . $ent->show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
                                 . $res->user_id . '" target="_top">' . $res->lastname . ' ' . $res->firstname . '</a>', true) . '</span>';
                 } else {
@@ -70,7 +70,7 @@ if (isset($_POST['branch_id'])) {
         while ($res = $ent->fetch_object()) {
             $canhavechildren = '';
             $canhavechildren = 'canhavechildren:true, ';
-            if (array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion']) == false || count($_SESSION['EntitiesIdExclusion']) == 0) {
+            if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
                 $labelValue = '<span class="entity_tree_element_ok"><a href="index.php?page=entity_up&module=entities&id=' 
                             . $res->entity_id . '" target="_top">' . $ent->show_string($res->entity_label, true) . '</a></span>';
             } else {

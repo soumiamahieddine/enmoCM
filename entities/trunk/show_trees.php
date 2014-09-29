@@ -68,7 +68,7 @@ if (count($_SESSION['tree_entities']) < 1) {
         //$ent->show();
         $level1 = array();
         while ($res = $ent->fetch_object()) {
-            if (array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion']) == false || count($_SESSION['EntitiesIdExclusion']) == 0) {
+            if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
                 $labelValue = '<span class="entity_tree_element_ok"><a href="index.php?page=entity_up&module=entities&id=' 
                             . $res->entity_id . '" target="_top">' . $ent->show_string($res->entity_label, true) . '</a></span>';
             } else {
@@ -88,10 +88,13 @@ if (count($_SESSION['tree_entities']) < 1) {
         }
         for ($i=0;$i<count($_SESSION['tree_entities']);$i++) {
             if ($_SESSION['tree_entities'][$i]['ID'] == $_SESSION['entities_chosen_tree']) {
-                $label = "<b>" . $_SESSION['tree_entities'][$i]['ID'] . ' - ' 
-                    . '<a href="index.php?page=entity_up&module=entities&id=' 
-                    . $_SESSION['tree_entities'][$i]['ID'] . '" target="_top">' 
-                    . $_SESSION['tree_entities'][$i]['LABEL'] . "</a></b>";
+                if (!is_integer(array_search("'" . $_SESSION['tree_entities'][$i]['ID'] . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
+                    $label = $_SESSION['tree_entities'][$i]['ID'] . ' - <span class="entity_tree_element_ok"><a href="index.php?page=entity_up&module=entities&id=' 
+                                . $_SESSION['tree_entities'][$i]['ID'] . '" target="_top">' . $ent->show_string($_SESSION['tree_entities'][$i]['LABEL'], true) . '</a></span>';
+                } else {
+                    $label = "<b>" . $_SESSION['tree_entities'][$i]['ID'] . ' - '  
+                        . $_SESSION['tree_entities'][$i]['LABEL'] . "</b>";
+                }
             }
         }
         $ent->query("select u.user_id, u.lastname, u.firstname, ue.entity_id as entity_id from  " 
@@ -99,7 +102,7 @@ if (count($_SESSION['tree_entities']) < 1) {
             . " u where ue.entity_id  = '" . $_SESSION['entities_chosen_tree'] 
             . "' and ue.user_id = u.user_id and u.status <> 'DEL' order by u.lastname, u.firstname");
         while ($res = $ent->fetch_object()) {
-            if (array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion']) == false || count($_SESSION['EntitiesIdExclusion']) == 0) {
+            if (!is_integer(array_search("'" . $res->entity_id . "'", $_SESSION['EntitiesIdExclusion'])) || count($_SESSION['EntitiesIdExclusion']) == 0) {
                 $labelValue = '<span class="entity_tree_element_ok">' . $ent->show_string('<a href="index.php?page=users_management_controler&mode=up&admin=users&id='
                             . $res->user_id . '" target="_top">' . $res->lastname . ' ' . $res->firstname . '</a>', true) . '</span>';
             } else {
