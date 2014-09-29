@@ -367,6 +367,7 @@ class entities extends dbquery
         }
         
         $where = str_ireplace("DESTINATION in ()", "1=2", $where);
+        $where = str_ireplace("initiator in ()", "1=2", $where);
         //echo $where;exit;
         return $where;
     }
