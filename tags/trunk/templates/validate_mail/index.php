@@ -42,8 +42,10 @@ $tags->load_sessiontag($res_id,$coll_id);
 //--------------------------------------
 
 
+
+
 $frm_str .= '<tr id="subject_tr" style="display:'.$display_value.';">';
-$frm_str .= '<td colspan="3">';
+$frm_str .= '<td colspan="4">';
 $frm_str .= '<b>'._TAGS.' :</b>';
 $frm_str .= '<span class="lb1-details">&nbsp;</span>';
 $frm_str .= '<div id="tag_div">';
@@ -52,13 +54,13 @@ $frm_str .= '<div>';
 $frm_str .= '<table width="98%" align="center" border="0">';
 
 
-$tag_customsize = '200px';
-$tag_customcols = '26';
+$tag_customsize = '360px';
+$tag_customcols = '53';
 include_once 'modules/tags/templates/addtag_userform.php'; //CHARGEMENT DU FORMULAIRE D'AJOUT DE DROITS	
-
 $frm_str .= '<tr id="tag_tr">';
 //$frm_str .= '<td><label for="tag" class="tag_title" ></label></td>';
 $frm_str .= '<td><div id="tag_displayed" style="display:block;width:400px;"></div></td>';
+
 
 
 $frm_str .= '</tr>';
