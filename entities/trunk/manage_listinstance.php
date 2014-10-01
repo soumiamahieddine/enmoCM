@@ -741,7 +741,8 @@ $linkwithwhat =
 						<td ><?php echo $user['lastname'] ." ". $user['firstname'];?></td>
 						<td><?php echo $user['entity_label']; ?></td>
 						<td class="action_entities"><?php 
-							if (!$noDelete && ($role_id != 'dest' && !$onlyCc)) { ?><!-- Remove user --> 
+							/*if (!$noDelete && ($role_id != 'dest' && !$onlyCc)) { */
+							if (!$noDelete && !$onlyCc) { ?>
 								<a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>" class="delete"><?php echo _DELETE; ?></a><?php
 							} ?>
 						</td>
@@ -794,7 +795,7 @@ $linkwithwhat =
 						<td ><?php echo $entity['entity_id']; ?></td>
 						<td ><?php echo $entity['entity_label']; ?></td>
 						<td class="action_entities"><?php 
-						if (!$noDelete) { ?>
+						if (!$noDelete && !$onlyCc) { ?>
 							<a href="<?php echo $linkwithwhat; ?>&action=remove_entity&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $entity['entity_id'];?>" class="delete">
 								<?php echo _DELETE; ?>
 							</a><?php
