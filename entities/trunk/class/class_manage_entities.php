@@ -1023,7 +1023,7 @@ class entity extends dbquery
                 else
                 {
                     if ($_SESSION['m_admin']['entity']['parent'] == '') {
-                        $entityPath = '/' . $_SESSION['m_admin']['entity']['parent'];
+                        $entityPath = '/' . $_SESSION['m_admin']['entity']['entityId'];
                     } else {
                         require_once 'modules/entities/class/EntityControler.php';
                         $entityCtrl = new EntityControler();
@@ -1050,7 +1050,7 @@ class entity extends dbquery
                         } else {
                             $entityIdForTree = $_SESSION['m_admin']['entity']['parent'];
                         }
-                        $entityPath .= $entityIdForTree;
+                        $entityPath .= $entityIdForTree . '/' . $_SESSION['m_admin']['entity']['entityId'];
                     }
                     
                     //echo $entityPath;exit;
@@ -1076,7 +1076,7 @@ class entity extends dbquery
             elseif($mode == 'up')
             {
                 if ($_SESSION['m_admin']['entity']['parent'] == '') {
-                    $entityPath = '/' . $_SESSION['m_admin']['entity']['parent'];
+                    $entityPath = '/' . $_SESSION['m_admin']['entity']['entityId'];
                 } else {
                     require_once 'modules/entities/class/EntityControler.php';
                     $entityCtrl = new EntityControler();
@@ -1103,7 +1103,7 @@ class entity extends dbquery
                     } else {
                         $entityIdForTree = $_SESSION['m_admin']['entity']['parent'];
                     }
-                    $entityPath .= $entityIdForTree;
+                    $entityPath .= $entityIdForTree . '/' . $_SESSION['m_admin']['entity']['entityId'];
                 }
                     
                 $this->query('UPDATE '.ENT_ENTITIES." set entity_label = '".$this->protect_string_db($_SESSION['m_admin']['entity']['label'])."' , short_label = '".$this->protect_string_db($_SESSION['m_admin']['entity']['short_label'])."' , adrs_1 = '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs1'])."', adrs_2 = '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs2'])."', adrs_3 = '".$this->protect_string_db($_SESSION['m_admin']['entity']['adrs3'])."', zipcode = '".$this->protect_string_db($_SESSION['m_admin']['entity']['zcode'])."', city = '".$this->protect_string_db($_SESSION['m_admin']['entity']['city'])."', country = '".$this->protect_string_db($_SESSION['m_admin']['entity']['country'])."', email = '".$this->protect_string_db($_SESSION['m_admin']['entity']['email'])."', business_id = '".$this->protect_string_db($_SESSION['m_admin']['entity']['business'])."', parent_entity_id = '".$_SESSION['m_admin']['entity']['parent']."', entity_type = '".$_SESSION['m_admin']['entity']['type']."', entity_path = '" . $this->protect_string_db($entityPath) . "' where entity_id = '".$_SESSION['m_admin']['entity']['entityId'] ."'");
