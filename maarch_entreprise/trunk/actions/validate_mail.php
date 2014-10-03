@@ -526,7 +526,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		."index.php?display=true&dir=indexing_searching&page=contact_check&coll_id=".$collId;
     //check functions on load page
     $frm_str.="<script>check_date_exp('".$path_to_script."');</script>";
-                   $frm_str .='<td class="indexing_field"><input type="text" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');" onblur="if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\');}"';
+                   $frm_str .='<td class="indexing_field"><input type="text" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');" onblur="if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\');}"';
                     if(isset($data['contact']) && !empty($data['contact']))
                    {
                       $frm_str .= ' value="'.$data['contact'].'" ';
@@ -1404,12 +1404,12 @@ function process_category_check($cat_id, $values)
             $_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['type_contact']['label']." "._MANDATORY."";
             return false;
         }
-        $contact = get_value_fields($values, 'contact');
+        $contact = get_value_fields($values, 'contactid');
 		
 		$nb_multi_contact = count($_SESSION['adresses']['to']);
         if($_ENV['categories'][$cat_id]['other_cases']['contact']['mandatory'] == true)
         {
-            if(empty($contact) && $nb_multi_contact == 0)
+            if((empty($contact) && $contact_type != 'multi_external') || ($nb_multi_contact == 0 && $contact_type == 'multi_external'))
             {
                 $_SESSION['action_error'] = $_ENV['categories'][$cat_id]['contact']['label'].' '._IS_EMPTY;
                 return false;

@@ -588,7 +588,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'style="visibility:hidden;" ><img src="'
             . $_SESSION['config']['businessappurl'] . 'static.php?filename='
             . 'my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>&nbsp;</td>';
-    $frmStr .= '<td class="indexing_field"><input type="text" name="contact" '
+    $frmStr .= '<td class="indexing_field"><input type="text" name="contact" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');"'
             . 'id="contact" onblur="clear_error(\'frm_error_' . $actionId . '\');'
             . 'display_contact_card(\'visible\');if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\');}" /><div id="show_contacts" '
             . 'class="autocomplete autocompleteIndex"></div></td>';
@@ -1326,11 +1326,11 @@ function process_category_check($catId, $values)
                 . " " . _MANDATORY;
             return false;
         }
-        $contact = get_value_fields($values, 'contact');
+        $contact = get_value_fields($values, 'contactid');
 
 		$nb_multi_contact = count($_SESSION['adresses']['to']);
         if ($_ENV['categories'][$catId]['other_cases']['contact']['mandatory'] == true) {
-            if (empty($contact) && $nb_multi_contact == 0) {
+            if ((empty($contact) && $contactType != 'multi_external') || ($nb_multi_contact == 0 && $contactType == 'multi_external')) {
                 $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
                     . ' ' . _IS_EMPTY;
                 return false;
