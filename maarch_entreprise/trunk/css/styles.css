@@ -3892,3 +3892,15 @@ table.listing  {
     min-width: 900px;
     width: 100%;
 }
+
+#inner_content_contact {
+    border-top: none;
+    border-bottom: none;
+    padding: 15px 0px 0px;
+    height: auto;
+    margin-left: 0px;
+}
+
+#post #inner_content_contact {
+    padding: 0 4px 0px 0px;
+}

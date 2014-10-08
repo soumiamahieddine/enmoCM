@@ -66,7 +66,7 @@ $contactv2 = new contacts_v2();
 while($res1 = $db1->fetch_object())
 {
     $s_level = array();
-    $db2->query("select contact_id, society, society_short, lastname, firstname, is_corporate_person from ".$_SESSION['tablename']['contacts_v2']." where contact_type = ".$res1->id." group by is_corporate_person, contact_id order by society, lastname");
+    $db2->query("select contact_id, society, society_short, lastname, firstname, is_corporate_person from ".$_SESSION['tablename']['contacts_v2']." where contact_type = ".$res1->id." group by contact_id, society, society_short, lastname, firstname, is_corporate_person ");
     while($res2 = $db2->fetch_object())
     {
         $doctypes = array();

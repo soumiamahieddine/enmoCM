@@ -59,15 +59,15 @@ unset($_SESSION['m_admin']);
         </div>
     </div>
 
-    <div class="admin_item" id="admin_contact_purposes" title="<?php  echo _MANAGE_CONTACT_PURPOSES_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_purposes';">
-        <div class="sum_margin">
-                <strong><?php  echo _MANAGE_CONTACT_PURPOSES;?></strong>
-         </div>
-    </div>
-
     <div class="admin_item" id="admin_contacts_v2" title="<?php  echo _MANAGE_CONTACTS_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2';">
         <div class="sum_margin">
                 <strong><?php  echo _MANAGE_CONTACTS;?></strong>
+         </div>
+    </div>
+    
+    <div class="admin_item" id="admin_contact_purposes" title="<?php  echo _MANAGE_CONTACT_PURPOSES_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_purposes';">
+        <div class="sum_margin">
+                <strong><?php  echo _MANAGE_CONTACT_PURPOSES;?></strong>
          </div>
     </div>
 

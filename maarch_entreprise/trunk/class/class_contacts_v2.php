@@ -308,7 +308,7 @@ class contacts_v2 extends dbquery
                 $query .=" where contact_id = '".$_SESSION['m_admin']['contact']['ID']."'";
                 if(!$admin)
                 {
-                    $query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
+                    //$query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
                 }
                 $this->query($query);
                 if($_SESSION['history']['contactup'])
@@ -368,7 +368,7 @@ class contacts_v2 extends dbquery
             $query = "select * from ".$_SESSION['tablename']['contacts_v2']." where contact_id = ".$id;
             if(!$admin)
             {
-                $query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
+                //$query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
             }
             $this->query($query);
 
@@ -430,7 +430,7 @@ class contacts_v2 extends dbquery
             }
             ?>
         </h1>
-        <div id="inner_content" class="clearfix" align="center">
+        <div id="inner_content_contact" class="clearfix" align="center">
             <?php
             if($state == false)
             {
@@ -1056,7 +1056,7 @@ class contacts_v2 extends dbquery
             }
             ?>
         </h1>
-        <div id="inner_content" class="clearfix" align="center">
+        <div id="inner_content_contact" class="clearfix" align="center">
             <?php
             if($state == false)
             {
