@@ -252,7 +252,7 @@ class functions
                     else
                     {
                         $this->add_error($msg_error, _WRONG_FORMAT);
-                        $this->add_error(_ONLY_ALPHABETIC);
+                        $this->add_error(_ONLY_ALPHABETIC, '');
                         return "";
                     }
 
@@ -264,7 +264,7 @@ class functions
                     else
                     {
                         $this->add_error($msg_error,_WRONG_FORMAT);
-                        $this->add_error(_ONLY_ALPHANUM);
+                        $this->add_error(_ONLY_ALPHANUM,  '');
                         return "";
                     }
 
