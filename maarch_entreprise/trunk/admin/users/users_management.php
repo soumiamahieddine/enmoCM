@@ -108,7 +108,7 @@ elseif($mode == "up" || $mode == "add")
             </p>
             <p class="buttons">
             <?php
-                if($mode == "up")
+                if($mode == "up" && $_SESSION['config']['ldap'] != "true")
                 {
                     ?>
                     <input type="button" name="reset_pwd" value="<?php  echo _RESET.' '._PASSWORD; ?>" class="button" onclick="displayModal('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;admin=users&amp;page=psw_changed', 'pwd_changed', 40, 150);"  />

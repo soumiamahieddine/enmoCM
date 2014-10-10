@@ -50,11 +50,14 @@ class class_users extends dbquery
         $_SESSION['user']['pass1'] = $this->wash(
             $_POST['pass1'], 'no', _FIRST_PSW
         );
-        $_SESSION['user']['pass2'] = $this->wash(
-            $_POST['pass2'], 'no', _SECOND_PSW
-        );
+        
+        if ($_SESSION['config']['ldap'] != "true") {
+            $_SESSION['user']['pass2'] = $this->wash(
+                $_POST['pass2'], 'no', _SECOND_PSW
+            );
+        }
 
-        if ($_SESSION['user']['pass1'] <> $_SESSION['user']['pass2']) {
+        if ($_SESSION['user']['pass1'] <> $_SESSION['user']['pass2'] && $_SESSION['config']['ldap'] != "true") {
             $this->add_error(_WRONG_SECOND_PSW, '');
         }
 
@@ -188,16 +191,16 @@ class class_users extends dbquery
                         <label><?php  echo _ID; ?> : </label>
                         <input name="UserId"  type="text" id="UserId" value="<?php  echo $_SESSION['user']['UserId']; ?>"  readonly="readonly" />
                         <input type="hidden"  name="id" value="<?php  echo $_SESSION['user']['UserId']; ?>" />
-                     </p>
-                     <p>
+                    </p>
+                    <p <?php if($_SESSION['config']['ldap'] == "true"){echo 'style="display:none"';} ?> >
                         <label for="pass1"><?php  echo _PASSWORD; ?> : </label>
                         <input name="pass1"  type="password" id="pass1"  value="" />
                     </p>
-                    <p>
+                    <p <?php if($_SESSION['config']['ldap'] == "true"){echo 'style="display:none"';} ?> >
                         <label for="pass2"><?php  echo _REENTER_PSW; ?> : </label>
                         <input name="pass2"  type="password" id="pass2" value="" />
-                     </p>
-                      <p>
+                    </p>
+                    <p>
                         <label for="LastName"><?php  echo _LASTNAME; ?> : </label>
                         <input name="LastName"   type="text" id="LastName" size="45" value="<?php  echo $this->show_string($_SESSION['user']['LastName']); ?>" />
                     </p>
