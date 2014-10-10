@@ -893,6 +893,37 @@ function launch_autocompleter_contacts_v2(path_script, id_text, id_div, cat_id, 
     else return false;
 }
 
+function launch_autocompleter_choose_contact(path_script, id_text, id_div, cat_id, contact_id){
+    var input  = id_text || 'contact';
+    var div    = id_div  || 'show_contacts';
+    
+    // var params = get_contacts_params();
+
+    contact_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
+        method:'get',
+        paramName:'what',
+        // parameters: params,
+        minChars: 2,
+        afterUpdateElement: function (text, li){
+            $(contact_id).value = li.id;
+        }
+    });
+
+}
+
+function putInSession(path_script){
+    new Ajax.Request(path_script,
+    {
+        method:'post',
+        parameters: {
+            contactid : $('contactid').value
+        },
+        onSuccess: function(answer){
+                document.location = 'index.php?display=false&dir=my_contacts&page=create_address_iframe';
+        }
+    });    
+}
+
 /**
  * Get the type of the contact with the category_id
  *
@@ -1188,9 +1219,14 @@ function display_contact_card(mode, id)
 	}else{
 		var contact_card = $('contact_card');
 	}
-    if(contact_card && (mode == 'hidden' || mode == 'visible'))
+
+    var contactid = $('contactid').value;
+
+    if(contact_card && (mode == 'hidden' || mode == 'visible') && contactid != '')
     {
         Element.setStyle(contact_card, {visibility : mode});
+    } else if (contactid == '') {
+        Element.setStyle(contact_card, {visibility : 'hidden'});
     }
 }
 

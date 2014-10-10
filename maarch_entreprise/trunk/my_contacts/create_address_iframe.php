@@ -75,6 +75,7 @@ $core_tools2->load_js();
 if (isset($_GET['iframe']) && $_GET['iframe'] == 'iframe_up_add') {
 	$contact->formaddress("add", "", false, "iframe_add_up");
 } else {
+	unset($_SESSION['m_admin']['address']);
 	$contact->formaddress("add", "", false, "iframe");
 }
 

@@ -128,7 +128,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
             . " %d AS confidence, "
             . " contact_id, ca_id, "
             ."(CASE "
-                . " WHEN is_private = 'N' THEN address_num || ' ' || address_street || ' ' || address_postal_code || ' ' || UPPER(address_town) || " 
+                . " WHEN is_private = 'N' THEN contact_purpose_label || ' : ' || departement || ' ' || address_num || ' ' || address_street || ' ' || address_postal_code || ' ' || UPPER(address_town) || " 
                     . "(CASE "
                         . " WHEN address_country <> '' THEN ( ' - ' || UPPER(address_country))"
                         . " WHEN address_country = '' THEN ('')"
@@ -145,6 +145,8 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
                 . " OR LOWER(society) LIKE LOWER('%s')"
                 . " OR LOWER(lastname) LIKE LOWER('%s')"
                 . " OR LOWER(firstname) LIKE LOWER('%s')"
+                . " OR LOWER(contact_purpose_label) LIKE LOWER('%s')"
+                . " OR LOWER(departement) LIKE LOWER('%s')"
                 . " OR LOWER(address_town) LIKE LOWER('%s')"
             .")".$request_contact;
     
@@ -155,17 +157,17 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         # Full match of one given arg
         $expr = $arg;
         $conf = 100;
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr); 
+        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
 
         # Partial match (starts with)
         $expr = $arg . "%"; ;
         $conf = 34; # If found, partial match contains will also be so score is sum of both confidences, i.e. 67)
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr); 
+        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
       
         # Partial match (contains)
         $expr = "%" . $arg . "%";
         $conf = 33;
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr); 
+        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
     }
     $query .= implode (' UNION ALL ', $queryParts);
     $query .= ") matches" 
@@ -259,7 +261,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
                 . " %d AS confidence, "
                 . " contact_id, ca_id, "
                 ."(CASE "
-                    . " WHEN is_private = 'N' THEN address_num || ' ' || address_street || ' ' || address_postal_code || ' ' || UPPER(address_town) || " 
+                    . " WHEN is_private = 'N' THEN contact_purpose_label || ' : ' || departement || ' ' || address_num || ' ' || address_street || ' ' || address_postal_code || ' ' || UPPER(address_town) || " 
                         . "(CASE "
                             . " WHEN address_country <> '' THEN ( ' - ' || UPPER(address_country))"
                             . " WHEN address_country = '' THEN ('')"
@@ -276,6 +278,8 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
                     . " OR LOWER(society) LIKE LOWER('%s')"
                     . " OR LOWER(lastname) LIKE LOWER('%s')"
                     . " OR LOWER(firstname) LIKE LOWER('%s')"
+                    . " OR LOWER(contact_purpose_label) LIKE LOWER('%s')"
+                    . " OR LOWER(departement) LIKE LOWER('%s')"
                     . " OR LOWER(address_town) LIKE LOWER('%s')"
                 .")";
         
@@ -286,17 +290,17 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
             # Full match of one given arg
             $expr = $arg;
             $conf = 100;
-            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr); 
+            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
 
             # Partial match (starts with)
             $expr = $arg . "%"; ;
             $conf = 34; # If found, partial match contains will also be so score is sum of both confidences, i.e. 67)
-            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr); 
+            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
           
             # Partial match (contains)
             $expr = "%" . $arg . "%";
             $conf = 33;
-            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr); 
+            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
         }
         $query .= implode (' UNION ALL ', $queryParts);
         $query .= ") matches" 

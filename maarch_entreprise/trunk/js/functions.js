@@ -747,10 +747,17 @@ function resize_frame_contact(mode) {
     if( width < 1200) {
         $('inner_content').style.width = width - 600 + "px";
     } else {
-        $('inner_content').style.width = "700px";
+        if ($('inner_content')) {
+            $('inner_content').style.width = "700px";            
+        } else if ($('inner_content_contact')) {
+            $('inner_content_contact').style.width = "700px"; 
+        };
     }
     if (mode == 'contact') {
-        $('frmcontact_table').style.width = "90%";        
+        if ($('frmcontact_table')) {
+            $('frmcontact_table').style.width = "90%"; 
+        };
+        parent.$('contact_iframe').style.height="550px"      
     } else {
         $('info_contact_div').style.width = "65%";
         $('frmaddress_table1').style.width = "65%";

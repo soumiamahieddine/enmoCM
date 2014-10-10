@@ -912,7 +912,7 @@ if (!defined('_CHOOSE_SHIPPER')) define( '_CHOOSE_SHIPPER', 'Choisir un exp&eacu
 if (!defined('_CHOOSE_DEST')) define( '_CHOOSE_DEST', 'Choisir un destainataire');
 if (!defined('_DOC_DATE')) define( '_DOC_DATE', 'Date du document');
 if (!defined('_CONTACT_CARD')) define( '_CONTACT_CARD', 'Fiche contact');
-if (!defined('_CREATE_CONTACT')) define( '_CREATE_CONTACT', 'Ajouter un contact');
+if (!defined('_CREATE_CONTACT')) define( '_CREATE_CONTACT', 'Ajouter un contact ou une adresse');
 if (!defined('_USE_AUTOCOMPLETION')) define( '_USE_AUTOCOMPLETION', 'Utiliser l&rsquo;autocompl&eacute;tion');
 
 if (!defined('_USER_DATA')) define( '_USER_DATA', 'Fiche utilisateur');
@@ -1023,6 +1023,10 @@ if (!defined('_SALUTATION_HEADER')) define( '_SALUTATION_HEADER','De d&eacutebut
 if (!defined('_SALUTATION_FOOTER')) define( '_SALUTATION_FOOTER','De fin de courrier');
 
 if (!defined('_BACK_TO_RESULTS_LIST')) define( '_BACK_TO_RESULTS_LIST','Retour &agrave; la liste de r&eacute;susltats');
+if (!defined('_ADD_ADDRESS_TO_CONTACT')) define( '_ADD_ADDRESS_TO_CONTACT','Ajouter une adresse &agrave; un contact');
+if (!defined('_ADD_ADDRESS_TO_CONTACT_DESC')) define( '_ADD_ADDRESS_TO_CONTACT_DESC','Cette partie est utilis&eacute;e pour ajouter une adresse &agrave; un contact qui existe d&eacute;j&agrave;.');
+if (!defined('_WHICH_CONTACT')) define( '_WHICH_CONTACT','A quel contact voulez-vous ajouter une adresse ?');
+if (!defined('_CHOOSE_THIS_CONTACT')) define( '_CHOOSE_THIS_CONTACT','Choisir ce contact');
 
 //// INDEXING SEARCHING
 if (!defined('_NO_COLLECTION_ACCESS_FOR_THIS_USER')) define( '_NO_COLLECTION_ACCESS_FOR_THIS_USER', 'Aucun acc&egrave;s aux collections documentaires pour cet utilisateur');

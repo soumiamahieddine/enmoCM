@@ -39,7 +39,7 @@ if (isset($_GET['mode']) && $_GET['mode'] == 'up') {
 	$extra = ' AND contact_id = '.$_GET['contactid'].' and ca_id = '.$_GET['addressid'];
 } 
 else {
-	$extra = ' ORDER BY creation_date DESC limit 1';
+	$extra = ' ORDER BY ca_id DESC limit 1';
 }
 
 $db->query("SELECT is_corporate_person, 
@@ -56,9 +56,11 @@ $db->query("SELECT is_corporate_person,
 					address_town,
 					address_postal_code,
 					creation_date,
+					contact_purpose_label,
+					departement,
 					update_date 
 			FROM view_contacts 
-			WHERE user_id = '". $_SESSION['user']['UserId'] . "' " . $extra);
+			WHERE 1=1 " . $extra);
 
 $res = $db->fetch_object();
 
@@ -80,10 +82,18 @@ if($res->is_corporate_person == 'N') {
 	}
 }
 
+$contact .= ' '. $db->protect_string_db($res->contact_purpose_label) ;
+
+if ($res->departement <> '') {
+	$contact .= ' : ' . $db->protect_string_db($res->departement);
+}
+
 if ($res->lastname <> '' || $res->firstname <> '') {
 	$contact .= ' - ' . $db->protect_string_db($res->lastname) . ' ' . $db->protect_string_db($res->firstname);
 }
-if (!empty($address)) {
+
+$trimed = trim($address);
+if (!empty($trimed)) {
 	$contact .= ', ' . $address;
 }
 

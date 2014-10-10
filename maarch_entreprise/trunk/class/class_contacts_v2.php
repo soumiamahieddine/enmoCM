@@ -608,6 +608,34 @@ class contacts_v2 extends dbquery
     <?php
     }
 
+    public function chooseContact(){
+        ?>
+        <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" />
+            <?php
+                echo '&nbsp;' . _ADD_ADDRESS_TO_CONTACT;
+            ?>
+        </h1>
+        <br/>
+            <?php
+             echo '&nbsp;'. _ADD_ADDRESS_TO_CONTACT_DESC;
+             ?>
+             <br/>
+             <br/>
+                 <form class="forms" method="post">
+                    <table width="60%">
+                        <tr>
+                            <td><?php echo '&nbsp;'. _WHICH_CONTACT; ?></td>
+                            <td><input id="contact" type="text"/><div id="show_contacts" class="autocomplete autocompleteIndex"></div></td>
+                            <td>&nbsp;</td>
+                            <td><input class="button" type="button" value="<?php echo _CHOOSE_THIS_CONTACT; ?>" onclick="putInSession('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=my_contacts&page=put_in_session');" /></td>
+                        </tr>
+                    </table>
+                 </form>
+             <input id="contactid" type="hidden"/>
+             <?php
+
+    }
+
     /**
     * Clear the session variables of the edmit 's administration
     *

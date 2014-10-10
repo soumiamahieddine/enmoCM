@@ -50,11 +50,15 @@ $_SESSION['error'] = '';
 $_SESSION['info'] = '';
 
 $contact->formcontact("add", "", false, true);
-$core_tools2->load_js();
-
+?>
+<br/>
+<?php
+	$core_tools2->load_js();
+	$contact->chooseContact();
 ?>
 	<script type="text/javascript">
-		resize_frame_contact('contact');
+		launch_autocompleter_choose_contact("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=contacts_v2_list_by_name';?>", "contact", "show_contacts", "", "contactid");
+		resize_frame_contact('contact');		
 	</script>
 <?php
 
