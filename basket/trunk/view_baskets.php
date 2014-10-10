@@ -312,9 +312,7 @@ if (isset($_SESSION['current_basket']['page_include'])
         $core->execute_modules_services(
             $_SESSION['modules_services'], 'view_basket', "include"
         );
-        echo '<p style="border:0px solid;padding-left:250px;"><img src="'
-            . $_SESSION['config']['businessappurl']
-            . 'static.php?filename=arrow_up.gif" /></p>';
+        echo '<p style="border:0px solid;padding-left:250px;"></p>';
         ?><div align="left"  style="width:500px;"><?php
 
          echo "<p align = 'justify'>
