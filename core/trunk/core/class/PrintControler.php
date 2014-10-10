@@ -330,8 +330,11 @@ class PrintControler extends PrintFunctions
                     $pdf->SetY($pdf->GetY()+4);
                     
                     $pdf->SetFont('Arial','B',11);
-				                
-                    $contactInfos = $this->getContactInfos($this->array_print[$cpt]['contact_id']);
+				    
+				    $db->query("SELECT address_id FROM res_view_letterbox WHERE res_id = " .$this->array_print[$cpt]['res_id']);
+                    $resultAddressId = $db->fetch_object();
+
+                    $contactInfos = $this->getContactInfos($this->array_print[$cpt]['contact_id'], $resultAddressId->address_id);
                     //CONTACT
                     $pdf->Cell(182,5,utf8_decode(_PRINT_CONTACT),0,1, 'C', false);
                 
@@ -484,7 +487,7 @@ class PrintFunctions
     - Cette argument est le libelle de la colonne à afficher dans l'en-tête du
     - fichier d'print
     ------------------------------------------------------------------------- */
-	function getContactInfos($contactId)
+	function getContactInfos($contactId, $addressId = "")
 	{
 		$business = new business_app_tools();
 		$tmp = $business->get_titles();
@@ -495,11 +498,35 @@ class PrintFunctions
 		$db = new dbquery();
         $db->connect();
 		
-		$query = "select * from contacts where contact_id = " . $contactId;
+		$query = "select * from view_contacts where contact_id = " . $contactId . " AND ca_id = " . $addressId;
 		$db->query($query);
         while($result = $db->fetch_object()) {
-			if ($result->society <> '') {
-				$contactInfos = $result->society . "\r\n";
+        	if ($result->society <> '' || $result->society_short <> '') {
+				if ($result->society <> '') {
+					$contactInfos = $result->society . "";
+				}
+				if ($result->society_short <> '') {
+					$contactInfos .= ' ('.$result->society_short . ")";
+				}
+				$contactInfos .= "\r\n";
+        	}
+
+			if ($result->contact_title <> '' && $result->contact_lastname <> '') {
+				foreach(array_keys($titles) as $key) {
+					if($result->contact_title == $key) {
+						$result->contact_title = $titles[$key];
+					}
+				}
+				$contactInfos .= $result->contact_title . ' ';
+			}
+			if ($result->contact_firstname <> '') {
+				$contactInfos .= $result->contact_firstname . ' ';
+			}
+			if ($result->contact_lastname <> '') {
+				$contactInfos .= $result->contact_lastname ."\r\n";
+			}
+			if ($result->contact_purpose_label <> '') {
+				$contactInfos .= $result->contact_purpose_label . ' ';
 			}
 			if ($result->title <> '' && $result->lastname <> '') {
 				foreach(array_keys($titles) as $key) {
@@ -513,8 +540,12 @@ class PrintFunctions
 				$contactInfos .= $result->firstname . ' ';
 			}
 			if ($result->lastname <> '') {
-				$contactInfos .= $result->lastname ."\r\n";
+				$contactInfos .= $result->lastname;
 			}
+			if ($result->departement <> '') {
+				$contactInfos .= ', ' .$result->departement . ' ';
+			}
+			$contactInfos .= "\r\n";
 			if ($result->address_num <> '') {
 				$contactInfos .= $result->address_num . ' ';
 			}
@@ -525,7 +556,7 @@ class PrintFunctions
 				$contactInfos .= $result->address_complement;
 			}
 			if ($result->address_postal_code <> '') {
-				$contactInfos .= "\r\n" . $result->address_postal_code . ' ';
+				$contactInfos .= $result->address_postal_code . ' ';
 			}
 			if ($result->address_town <> '') {
 				$contactInfos .= $result->address_town . ' ';
@@ -533,6 +564,8 @@ class PrintFunctions
 			if ($result->address_country <> '') {
 				$contactInfos .= $result->address_country;
 			}
+			$contactInfos .= "\r\n";
+			$contactInfos .= "\r\n";
 		}
 		return $contactInfos;
 	}
@@ -557,10 +590,10 @@ class PrintFunctions
     {
         $db = new dbquery();
         $db->connect();
-        $queryContacts = "select c.firstname, c.lastname, c.society, c.contact_id ";
-			$queryContacts .= "from contacts c, contacts_res cres  ";
-			$queryContacts .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ##res_id## AND cast (c.contact_id as varchar) = cres.contact_id ";
-			$queryContacts .= "GROUP BY c.firstname, c.lastname, c.society, c.contact_id";
+        $queryContacts = "select c.firstname, c.lastname, c.society, c.contact_id, cres.address_id ";
+			$queryContacts .= "from view_contacts c, contacts_res cres  ";
+			$queryContacts .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ##res_id## AND cast (c.contact_id as varchar) = cres.contact_id AND ca_id = cres.address_id ";
+			$queryContacts .= "GROUP BY c.firstname, c.lastname, c.society, c.contact_id, cres.address_id";
 			
         $queryUsers = "select u.firstname, u.lastname, u.user_id ";
                 $queryUsers .= "from users u, contacts_res cres  ";
@@ -575,13 +608,13 @@ class PrintFunctions
             $db->query($queryContacts);
             //$db->show();
             while($result = $db->fetch_object()) {
-                $return .= "contact : " . $this->getContactInfos($result->contact_id);
+                $return .= "Contact : " . $this->getContactInfos($result->contact_id, $result->address_id);
             }
             $queryUsers = str_replace('##res_id##', $res_id, $queryUsers);
             $db->query($queryUsers);
             //$db->show();
             while($result = $db->fetch_object()) {
-                $return .= "user : " . $this->getUserInfo($result->user_id) . "\r\n";
+                $return .= "Utilisateur : " . $this->getUserInfo($result->user_id) . "\r\n";
             }
             if (strlen($return) > 3)
                 $return = substr($return, 0, -2);
