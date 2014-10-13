@@ -179,6 +179,7 @@ if (isset($_GET['what_services'])
     $what_services = addslashes(
         $func->wash($_GET['what_services'], 'no', '', 'no')
     );
+    $what_services = $db->protect_string_db($what_services);
     $entity_expr = 
         " and ("
             . " lower(e.entity_label) like lower('%" . $what_services . "%') "
