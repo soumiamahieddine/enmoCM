@@ -150,7 +150,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
                 . " OR LOWER(departement) LIKE LOWER('%s')"
                 . " OR LOWER(address_town) LIKE LOWER('%s')"
             .")".$request_contact;
-    
+     
     $queryParts = array();
     foreach($args as $arg) {
         $arg = $req->protect_string_db($arg);
