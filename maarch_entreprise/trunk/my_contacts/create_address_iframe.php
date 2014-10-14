@@ -53,7 +53,7 @@ $_SESSION['error'] = '';
 $_SESSION['info'] = '';
 
 $request->connect();
-$query = "select * from ".$_SESSION['tablename']['contacts_v2']." where contact_id = ".$_SESSION['contact']['current_contact_id']." and user_id = '".$request->protect_string_db($_SESSION['user']['UserId'])."'";
+$query = "select * from ".$_SESSION['tablename']['contacts_v2']." where contact_id = ".$_SESSION['contact']['current_contact_id'];
 
 $request->query($query);
 
