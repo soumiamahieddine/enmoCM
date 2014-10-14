@@ -137,7 +137,8 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
             ." END)"   
             . "AS address"
         . " FROM view_contacts"
-        . " WHERE (user_id = 'superadmin' OR user_id IS NULL OR user_id = '".$req->protect_string_db($_SESSION['user']['UserId'])."' ) "
+        // . " WHERE (user_id = 'superadmin' OR user_id IS NULL OR user_id = '".$req->protect_string_db($_SESSION['user']['UserId'])."' ) "
+        . " WHERE (1=1) "
             . $contactTypeRequest
             . " AND ("
                 . " LOWER(contact_lastname) LIKE LOWER('%s')"
@@ -270,7 +271,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
                 ." END)"   
                 . "AS address"
             . " FROM view_contacts"
-            . " WHERE (user_id = 'superadmin' OR user_id IS NULL OR user_id = '".$req->protect_string_db($_SESSION['user']['UserId'])."' ) "
+            . " WHERE (1=1) "
                 . $contactTypeRequest
                 . " AND ("
                     . " LOWER(contact_lastname) LIKE LOWER('%s')"
