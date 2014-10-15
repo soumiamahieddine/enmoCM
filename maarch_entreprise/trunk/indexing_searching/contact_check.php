@@ -34,7 +34,7 @@ if(empty($_POST['contact_id'])){
 	$db->connect();
 
 	if (is_numeric($_POST['contact_id'])) {
-		$query="SELECT res_id FROM res_view_letterbox WHERE contact_id = ".$_POST['contact_id']." AND creation_date >= (select CURRENT_DATE + integer '-5')";
+		$query="SELECT res_id FROM res_view_letterbox WHERE contact_id = ".$_POST['contact_id']." AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
 	} else {
 		$query="SELECT res_id 
 				FROM res_view_letterbox 
