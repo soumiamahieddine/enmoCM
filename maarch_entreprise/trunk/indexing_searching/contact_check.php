@@ -1,7 +1,7 @@
 <?php
 /*
 *
-*    Copyright 2013 Maarch
+*    Copyright 2014 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -27,25 +27,30 @@
 * @version  $Revision$
 */
 
-
 if(empty($_POST['contact_id'])){
-echo "success";
+	echo "success";
+} else {
+	$db = new dbquery();
+	$db->connect();
 
-}else{
-$db = new dbquery();
-$db->connect();
-$query="SELECT res_id FROM res_view_letterbox WHERE contact_id = '".$_POST['contact_id']."' AND creation_date >= (select CURRENT_DATE + integer '-5')";
+	if (is_numeric($_POST['contact_id'])) {
+		$query="SELECT res_id FROM res_view_letterbox WHERE contact_id = ".$_POST['contact_id']." AND creation_date >= (select CURRENT_DATE + integer '-5')";
+	} else {
+		$query="SELECT res_id 
+				FROM res_view_letterbox 
+				WHERE (exp_user_id = '".$_POST['contact_id']."' OR dest_user_id = '".$_POST['contact_id']."') AND creation_date >= (select CURRENT_DATE + integer '-".$_SESSION['check_days_before']."')";
+	}
 
-if($_POST['res_id'] != "none"){
-$query.=" AND res_id NOT IN (".$_POST['res_id'].")";
-}
+	if($_POST['res_id'] != "none"){
+		$query.=" AND res_id NOT IN (".$_POST['res_id'].")";
+	}
 
-$query.="  ORDER by creation_date DESC limit 1";
+	$query.="  ORDER by creation_date DESC limit 1";
+	$db->query($query);
 
-$db->query($query);
-if ($db->nb_result() > 0){
-echo "fail";
-}else{
-echo "success";
-}
+	if ($db->nb_result() > 0){
+		echo "fail";
+	} else {
+		echo "success";
+	}
 }

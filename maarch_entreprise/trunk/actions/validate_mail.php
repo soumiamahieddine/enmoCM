@@ -292,6 +292,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<input type="hidden" name="coll_id" id="coll_id" value="'.$coll_id.'" />';
                     $frm_str .= '<input type="hidden" name="module" id="module" value="'.$module.'" />';
                     $frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
+                    $frm_str .= '<input type="hidden" id="check_days_before" value="'.$_SESSION['check_days_before'].'" />';
 
             $frm_str .= '<div  style="display:block">';
 

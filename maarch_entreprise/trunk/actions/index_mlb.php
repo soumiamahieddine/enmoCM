@@ -265,6 +265,8 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . $module . '" />';
     $frmStr .= '<input type="hidden" name="req" id="req" value="second_request"'
             . ' />';
+    $frmStr .= '<input type="hidden" id="check_days_before" value="'.$_SESSION['check_days_before'].'"'
+            . ' />';
 
     $frmStr .= '<div  style="display:block">';
 

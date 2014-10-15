@@ -435,7 +435,12 @@ class business_app_tools extends dbquery
             }
             $_SESSION['default_mail_priority'] = (string) $mailPriorities->default_priority;
         }
-        
+
+        $contact_check = $xmlfile->contact_check;
+        if (count($contact_check) > 0) {
+            $_SESSION['check_days_before'] = (string) $contact_check->check_days_before;
+        }
+
         $_SESSION['mail_titles'] = array();
         $mailTitles = $xmlfile->titles;
         if (count($mailTitles) > 0) {
