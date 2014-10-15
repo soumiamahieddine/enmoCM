@@ -92,6 +92,11 @@ $upFileOK = false;
         }
     } elseif ($_REQUEST['with_file'] == 'true') {
         $pathToFile = 'apps/' . $_SESSION['config']['app_id'] . '/_no_file.pdf';
+
+        if (is_file('custom/'.$_SESSION['custom_override_id'].'/'.$pathToFile)) {
+        $pathToFile = 'custom/'.$_SESSION['custom_override_id'].'/'.$pathToFile;
+        }
+        
         $_SESSION['upfile']['size'] = filesize($pathToFile);
         $_SESSION['upfile']['mime'] = 'application/pdf';
         $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
