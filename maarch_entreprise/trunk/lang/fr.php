@@ -864,6 +864,7 @@ if (!defined('_CONTACT')) define( '_CONTACT', 'Contact');
 if (!defined('_NEW_CONTACT')) define( '_NEW_CONTACT', 'Nouveau contact');
 if (!defined('_ALL_CONTACTS')) define( '_ALL_CONTACTS', 'Tous les contacts');
 if (!defined('_ADD_CONTACT')) define( '_ADD_CONTACT', 'Ajout d&rsquo;un contact');
+if (!defined('_ADD_NEW_CONTACT')) define( '_ADD_NEW_CONTACT', 'Ajouter un nouveau contact');
 if (!defined('_UPDATE_CONTACT')) define( '_UPDATE_CONTACT', 'Modification des contacts');
 if (!defined('_PHONE')) define( '_PHONE', 'T&eacute;l&eacute;phone');
 if (!defined('_ADDRESS')) define( '_ADDRESS', 'Adresse');

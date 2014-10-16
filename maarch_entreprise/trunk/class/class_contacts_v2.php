@@ -423,7 +423,7 @@ class contacts_v2 extends dbquery
                 echo '&nbsp;' . _MODIFY_CONTACT;
             }
             elseif($mode == "add") {
-                echo '&nbsp;' . _ADD_CONTACT;
+                echo '&nbsp;' . _ADD_NEW_CONTACT;
             }
             elseif($mode == "view") {
                 echo '&nbsp;' . _VIEW;
