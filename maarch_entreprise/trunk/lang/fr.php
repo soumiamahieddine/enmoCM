@@ -889,6 +889,7 @@ if (!defined('_CONTACT_TYPE')) define( '_CONTACT_TYPE', 'Type de contact');
 if (!defined('_MULTI_EXTERNAL')) define( '_MULTI_EXTERNAL', 'Multi externe');
 if (!defined('_MULTI_CONTACT')) define( '_MULTI_CONTACT', '<b><i>Multi contacts<i><b>');
 if (!defined('_SHOW_MULTI_CONTACT')) define( '_SHOW_MULTI_CONTACT', 'Voir les contacts');
+if (!defined('_STRUCTURE_ORGANISM')) define( '_STRUCTURE_ORGANISM', 'Structure');
 
 if (!defined('_MANAGE_DUPLICATES'))  define('_MANAGE_DUPLICATES', 'Gestion des doublons');
 if (!defined('_DUPLICATES_BY_SOCIETY'))  define('_DUPLICATES_BY_SOCIETY', 'Doublons par organisme/soci&eacute;t&eacute;');
@@ -924,13 +925,13 @@ if (!defined('_DATE_START')) define( '_DATE_START','Date d&rsquo;arriv&eacute;e'
 if (!defined('_LIMIT_DATE_PROCESS')) define( '_LIMIT_DATE_PROCESS','Date limite de traitement');
 
 if (!defined('_MANAGE_CONTACT_TYPES_DESC')) define( '_MANAGE_CONTACT_TYPES_DESC','Gestion des types de contact');
-if (!defined('_MANAGE_CONTACT_TYPES')) define( '_MANAGE_CONTACT_TYPES','Gestion des types de contact');
+if (!defined('_MANAGE_CONTACT_TYPES')) define( '_MANAGE_CONTACT_TYPES','Gestion des types de contact <br/>(Niveau 1)');
 
 if (!defined('_MANAGE_CONTACT_PURPOSES_DESC')) define( '_MANAGE_CONTACT_PURPOSES_DESC','Gestion des d&eacute;nominations');
-if (!defined('_MANAGE_CONTACT_PURPOSES')) define( '_MANAGE_CONTACT_PURPOSES','Gestion des d&eacute;nominations');
+if (!defined('_MANAGE_CONTACT_PURPOSES')) define( '_MANAGE_CONTACT_PURPOSES','Gestion des d&eacute;nominations <br/>(Niveau 3)');
 
 if (!defined('_MANAGE_CONTACTS_DESC')) define( '_MANAGE_CONTACTS_DESC','Gestion des contacts');
-if (!defined('_MANAGE_CONTACTS')) define( '_MANAGE_CONTACTS','Gestion des contacts');
+if (!defined('_MANAGE_CONTACTS')) define( '_MANAGE_CONTACTS','Gestion des contacts <br/>(Niveau 2)');
 
 if (!defined('_VIEW_TREE_CONTACTS_DESC')) define( '_VIEW_TREE_CONTACTS_DESC','Arborescence des contacts');
 if (!defined('_VIEW_TREE_CONTACTS')) define( '_VIEW_TREE_CONTACTS','Arborescence des contacts');
@@ -982,7 +983,7 @@ if (!defined('_CONFIRM_EDIT_CONTACT')) define( '_CONFIRM_EDIT_CONTACT','Confirme
 if (!defined('_CONTACTS_CONFIRMATION_MODIFICATION')) define( '_CONTACTS_CONFIRMATION_MODIFICATION','Confirmation de modification');
 
 if (!defined('_CREATE_BY')) define( '_CREATE_BY','Cr&eacute;&eacute; par');
-if (!defined('_SOCIETY_SHORT')) define( '_SOCIETY_SHORT','Nom court de la soci&eacute;t&eacute;');
+if (!defined('_SOCIETY_SHORT')) define( '_SOCIETY_SHORT','Sigle de la structure');
 if (!defined('_CHOOSE_CONTACT_TYPES')) define( '_CHOOSE_CONTACT_TYPES','Choisissez le type de contact');
 if (!defined('_ORGANISM')) define( '_ORGANISM','Organisme');
 
@@ -1023,7 +1024,7 @@ if (!defined('_SALUTATION_HEADER')) define( '_SALUTATION_HEADER','De d&eacutebut
 if (!defined('_SALUTATION_FOOTER')) define( '_SALUTATION_FOOTER','De fin de courrier');
 
 if (!defined('_BACK_TO_RESULTS_LIST')) define( '_BACK_TO_RESULTS_LIST','Retour &agrave; la liste de r&eacute;susltats');
-if (!defined('_ADD_ADDRESS_TO_CONTACT')) define( '_ADD_ADDRESS_TO_CONTACT','Ajouter une adresse &agrave; un contact');
+if (!defined('_ADD_ADDRESS_TO_CONTACT')) define( '_ADD_ADDRESS_TO_CONTACT','Ajouter une nouvelle adresse &agrave; un contact existant');
 if (!defined('_ADD_ADDRESS_TO_CONTACT_DESC')) define( '_ADD_ADDRESS_TO_CONTACT_DESC','Cette partie est utilis&eacute;e pour ajouter une adresse &agrave; un contact qui existe d&eacute;j&agrave;.');
 if (!defined('_WHICH_CONTACT')) define( '_WHICH_CONTACT','A quel contact voulez-vous ajouter une adresse ?');
 if (!defined('_CHOOSE_THIS_CONTACT')) define( '_CHOOSE_THIS_CONTACT','Choisir ce contact');
@@ -1233,6 +1234,7 @@ if (!defined('_HOW_CAN_I_LOGIN')) define( '_HOW_CAN_I_LOGIN', 'Je n&rsquo;arrive
 if (!defined('_CONNECT')) define( '_CONNECT', 'Se connecter');
 if (!defined('_LOGIN_MODE')) define( '_LOGIN_MODE', 'Type d&rsquo;authentification');
 if (!defined('_SSO_LOGIN')) define( '_SSO_LOGIN', 'Login via SSO');
+if (!defined('_LDAP')) define( '_LDAP', 'Annuaire LDAP ');
 
 
 /******** Admin groups **********/
@@ -1273,6 +1275,7 @@ if (!defined('_DOCSERVER_ID'))  define('_DOCSERVER_ID', 'Identifiant docserver')
 /**********DOCSERVERS****************/
 if (!defined('_YOU_CANNOT_DELETE')) define( '_YOU_CANNOT_DELETE', 'Suppression imposible');
 if (!defined('_UNKNOWN')) define( '_UNKNOWN', 'Inconnu');
+if (!defined('_UNKOWN')) define( '_UNKOWN', 'est inconnu');
 if (!defined('_YOU_CANNOT_DISABLE')) define( '_YOU_CANNOT_DISABLE', 'Suspension impossible');
 if (!defined('_DOCSERVER_TYPE_DISABLED')) define( '_DOCSERVER_TYPE_DISABLED', 'Type de zone de stockage suspendu');
 if (!defined('_SIZE_LIMIT_UNAPPROACHABLE')) define( '_SIZE_LIMIT_UNAPPROACHABLE', 'Taille limite inaccessible');

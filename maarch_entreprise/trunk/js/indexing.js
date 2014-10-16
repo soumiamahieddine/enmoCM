@@ -1158,7 +1158,9 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
 			Element.setStyle(to, {display : 'none'});
 			Element.setStyle(show_multi_contact, {display : 'none'});
 			Element.setStyle(add_multi_contact, {display : 'none'});
-			Element.setStyle(contact_id_tr, {display : 'table-row'});
+            Element.setStyle(contact_id_tr, {display : 'table-row'});
+            Element.setStyle('create_contact_div', {display : 'none'});
+			Element.setStyle('info_contact_div', {display : 'none'});
         }
         else if($(external_type ).checked == true || $(multi_external_type ).checked == true )
         {

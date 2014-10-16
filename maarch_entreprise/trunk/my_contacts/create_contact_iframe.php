@@ -49,12 +49,14 @@ echo '</div>';
 $_SESSION['error'] = '';
 $_SESSION['info'] = '';
 
-$contact->formcontact("add", "", false, true);
-?>
-<br/>
-<?php
 	$core_tools2->load_js();
 	$contact->chooseContact();
+?>
+<br/>
+<br/>
+<br/>
+<?php
+	$contact->formcontact("add", "", false, true);
 ?>
 	<script type="text/javascript">
 		launch_autocompleter_choose_contact("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=contacts_v2_list_by_name';?>", "contact", "show_contacts", "", "contactid");
