@@ -53,6 +53,8 @@ $_SESSION['info'] = '';
 	$contact->chooseContact();
 ?>
 <br/>
+<hr>
+<br/>
 <br/>
 <br/>
 <?php
