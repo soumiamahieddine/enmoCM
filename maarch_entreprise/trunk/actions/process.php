@@ -626,12 +626,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $nbr_emails = 0;
         $nbr_emails = $sendmail_tools->countUserEmails($res_id, $coll_id);
         $frm_str .= '<td>';
-        $frm_str .= '|<span onclick="new Effect.toggle(\'emails_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span onclick="new Effect.toggle(\'emails_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'emails_div\', \'divStatus_emails_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= ' <span id="divStatus_emails_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
             . '<small>' ._SENDED_EMAILS . ' ('.$nbr_emails.')</small>';
-        $frm_str .= '</b></span>&nbsp;|';
+        $frm_str .= '</b></span>&nbsp;';
         $frm_str .= '</td>';
     }
     
