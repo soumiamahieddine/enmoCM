@@ -63,6 +63,7 @@ require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . 'class_contacts_v2.php';
 
 $_SESSION['is_multi_contact'] = '';
+unset($_SESSION['m_admin']['contact']);
 
 $core = new core_tools();
 $contacts_v2 = new contacts_v2();

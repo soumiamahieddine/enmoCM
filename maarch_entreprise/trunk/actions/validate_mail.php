@@ -137,6 +137,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $browser_ie = false;
         $display_value = 'table-row';
     }
+    unset($_SESSION['m_admin']['contact']);
     $_SESSION['req'] = "action";
     $res_id = $values[0];
     $_SESSION['doc_id'] = $res_id;
