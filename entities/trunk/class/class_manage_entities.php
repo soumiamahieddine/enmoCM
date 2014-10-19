@@ -899,7 +899,8 @@ class entity extends dbquery
         }
         if(isset($_REQUEST['short_label']) && !empty($_REQUEST['short_label']))
         {
-            $_SESSION['m_admin']['entity']['short_label'] = $this->wash($_REQUEST['short_label'], "no", _SHORT_LABEL, 'yes', 0, 50);
+            $_SESSION['m_admin']['entity']['short_label'] = $this->wash(utf8_decode($_REQUEST['short_label']), "no", _SHORT_LABEL, 'yes', 0, 50);
+            $_SESSION['m_admin']['entity']['short_label'] = utf8_encode($_SESSION['m_admin']['entity']['short_label']);
         }
         else
         {
