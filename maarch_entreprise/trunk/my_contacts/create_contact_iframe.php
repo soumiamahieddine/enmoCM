@@ -56,7 +56,6 @@ $_SESSION['info'] = '';
 <hr>
 <br/>
 <br/>
-<br/>
 <?php
 	$contact->formcontact("add", "", false, true);
 ?>
