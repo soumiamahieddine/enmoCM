@@ -64,7 +64,9 @@ $page_label = _MODIFICATION;
 $page_id = "contacts_v2_up";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-
+if (isset($_REQUEST['fromContactTree'])) {
+    $_SESSION['fromContactTree'] = 'yes';
+}
 $contact = new contacts_v2();
 $contact->formcontact("up",$id);
 
