@@ -615,11 +615,16 @@ class basket extends dbquery
             // If mode "PAGE_USE", add the action 'end_action' to validate
             // the current action
             if ($mode == 'PAGE_USE') {
+                $this->connect();
+                $this->query(
+                    "SELECT label_action FROM actions WHERE id=".$_SESSION['current_basket']['default_action']
+                );
+                $label_action = $this->fetch_object();
                 array_push(
                     $arr,
                     array(
                         'VALUE' => 'end_action',
-                        'LABEL' => _SAVE_CHANGES,
+                        'LABEL' => $label_action->label_action.' (par défaut)',
                     )
                 );
             }
