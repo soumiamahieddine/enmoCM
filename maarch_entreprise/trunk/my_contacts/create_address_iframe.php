@@ -49,9 +49,6 @@ echo '<div class="info" id="main_info">';
 echo $_SESSION['info'];
 echo '</div>';
 
-$_SESSION['error'] = '';
-$_SESSION['info'] = '';
-
 $request->connect();
 $query = "select * from ".$_SESSION['tablename']['contacts_v2']." where contact_id = ".$_SESSION['contact']['current_contact_id'];
 
@@ -75,9 +72,14 @@ $core_tools2->load_js();
 if (isset($_GET['iframe']) && $_GET['iframe'] == 'iframe_up_add') {
 	$contact->formaddress("add", "", false, "iframe_add_up");
 } else {
-	unset($_SESSION['m_admin']['address']);
+	if ($_SESSION['error'] == '') {
+		unset($_SESSION['m_admin']['address']);
+	}
 	$contact->formaddress("add", "", false, "iframe");
 }
+
+$_SESSION['error'] = '';
+$_SESSION['info'] = '';
 
 ?>
 	<script type="text/javascript">
