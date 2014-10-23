@@ -80,7 +80,7 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
                                 <div id="show_subfolder" class="autocomplete"></div>
                             </td>-->
                             <td>
-                                <input type="button" value="<?php
+                                <input id="tree_send" type="button" value="<?php
             echo _SEARCH;
             ?>" onclick="javascript:submitForm();" class="button">
                 </td>
@@ -118,7 +118,6 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
         echo $_SESSION['config']['businessappurl'];
         ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=folder', 
         'Input', '2');
-
     function submitForm()
     {
         var folder = $('folder').value;
@@ -153,6 +152,127 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
             }
         });
     }
+    function get_folders(folders_system_id)
+        {
+
+            if($(''+folders_system_id+'_img').hasClassName('mt_fopened')){
+                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                {  
+                    method:'post',
+                    parameters: {folders_system_id: folders_system_id,
+                                FOLDER_TREE_RESET: true
+                                },
+                    onSuccess: function(answer){
+                        folders = JSON.parse(answer.responseText);
+
+                        for (var i = 0; i <= folders.length; i++) {
+                            level=folders[i].folder_level*10;
+                            //console.log(folders[i]);
+                            $(''+folders_system_id).innerHTML ='<span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nom_folder+' <b>('+folders[i].nb_doc+')</b></span>';
+                            $(''+folders_system_id+"_img").addClassName('mt_fclosed');
+                            $(''+folders_system_id+"_img").removeClassName('mt_fopened');
+                            $(''+folders_system_id+"_img").src = BASE_URL+'static.php?filename=folder.gif';
+                        };
+                        
+                    },
+                    onFailure: function(){
+                        $(''+folders_system_id).innerHTML += '<div class="error">_SERVER_ERROR</div>';
+                       }
+                });
+
+            }else{
+                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                {  
+                    method:'post',
+                    parameters: {folders_system_id: folders_system_id,
+                                FOLDER_TREE: true
+                                },
+                    onSuccess: function(answer){
+                        folders = JSON.parse(answer.responseText);
+
+                        for (var i = 0; i <= folders.length; i++) {
+                            //console.log(answer.responseText);
+                            level=folders[i].folder_level*10;
+                            if(i!=0){
+                                var style='style="margin-left:'+level+'px;"';
+                            }
+                            //alert('ok');
+                            $(''+folders_system_id).innerHTML +='<span '+style+' onclick="get_folders('+folders[i].folders_system_id+')" class="folder"><img src=\"'+BASE_URL+'static.php?filename=folder.gif\" class=\"mt_fclosed\" alt=\"\" id=\"'+folders[i].folders_system_id+'_img\" ></span><li class="folder" id="'+folders[i].folders_system_id+'"><span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nom_folder+' <b>('+folders[i].nb_doc+')</b></span></li>';
+
+                            $(''+folders_system_id+"_img").addClassName('mt_fopened');
+                            $(''+folders_system_id+"_img").removeClassName('mt_fclosed');
+                            $(''+folders_system_id+"_img").src = BASE_URL+'static.php?filename=folderopen.gif';
+                        };
+                        
+                    },
+                    onFailure: function(){
+                        $(''+folders_system_id).innerHTML += '<div class="error">_SERVER_ERROR</div>';
+                       }
+                });
+        }
+
+        }
+
+        function get_folder_docs(folders_system_id)
+        {
+
+            if($(''+folders_system_id+'_img').hasClassName('mt_fopened')){
+                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                {  
+                    method:'post',
+                    parameters: {folders_system_id: folders_system_id,
+                                FOLDER_TREE_RESET: true
+                                },
+                    onSuccess: function(answer){
+                        folders = JSON.parse(answer.responseText);
+
+                        for (var i = 0; i <= folders.length; i++) {
+                            level=folders[i].folder_level*10;
+                            //console.log(folders[i]);
+                            $(''+folders_system_id).innerHTML ='<span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nom_folder+' <b>('+folders[i].nb_doc+')</b></span>';
+                            $(''+folders_system_id+"_img").addClassName('mt_fclosed');
+                            $(''+folders_system_id+"_img").removeClassName('mt_fopened');
+                            $(''+folders_system_id+"_img").src = BASE_URL+'static.php?filename=folder.gif';
+                        };
+                        
+                    },
+                    onFailure: function(){
+                        $(''+folders_system_id).innerHTML += '<div class="error">_SERVER_ERROR</div>';
+                       }
+                });
+
+            }else{
+                new Ajax.Request(BASE_URL+'index.php?page=ajax_get_folder&module=folder&display=true',
+                {  
+                    method:'post',
+                    parameters: {folders_system_id: folders_system_id,
+                                FOLDER_TREE_DOCS: true
+                                },
+                    onSuccess: function(answer){
+                        docs = JSON.parse(answer.responseText);
+
+                        for (var i = 0; i <= docs.length; i++) {
+                            //console.log(docs);
+                            level=docs[i].folder_level*10;
+                            //if(i!=0){
+                                var style='margin-left:'+level+'px;';
+                            //}
+                            //alert('ok');
+                            $(''+folders_system_id).innerHTML +='<ul class="doc" style="margin-top:10px;'+style+'"><li><b>'+docs[i].doctypes_first_level_label+'</b></li><li style="'+style+'"><b>'+docs[i].doctypes_second_level_label+'</b></li><span style="position: relative;top: 4px;'+style+'"" class="doc"><img src=\"'+BASE_URL+'static.php?filename=page.gif\" alt=\"\" id=\"'+docs[i].res_id+'_img_doc\" ></span><a onclick=\'updateContent("index.php?dir=indexing_searching&page=little_details_invoices&display=true&value='+docs[i].res_id+'", "docView");\'>'+docs[i].res_id+' - '+docs[i].subject+'</ul>';
+
+                            $(''+folders_system_id+"_img").addClassName('mt_fopened');
+                            $(''+folders_system_id+"_img").removeClassName('mt_fclosed');
+                            $(''+folders_system_id+"_img").src = BASE_URL+'static.php?filename=folderopen.gif';
+                        };
+                        
+                    },
+                    onFailure: function(){
+                        $(''+folders_system_id).innerHTML += '<div class="error">_SERVER_ERROR</div>';
+                       }
+                });
+        }
+
+        }
 </script>
 <script type="text/javascript" src="<?php
 echo $_SESSION['config']['businessappurl'] . 'tools/'
