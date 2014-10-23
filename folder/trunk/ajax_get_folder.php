@@ -26,30 +26,22 @@ if($_POST['FOLDER_TREE']){
 	$folders = array();
 	$db->query('select folders_system_id, folder_name, parent_id, folder_level from folders WHERE foldertype_id not in (100) AND parent_id='.$_POST["folders_system_id"].' order by folder_id asc');
 	while($row=$db->fetch_array()){
-
-		$db3->query(
-			"select res_id, subject,doctypes_first_level_label,doctypes_second_level_label from res_view_letterbox WHERE folders_system_id in ('".$_POST['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
-		);
 	
-		/*while($row3 = $db3->fetch_array()) {
-			$folders_doc[] = array(
-			'subject' => $row3['subject'],
-			'doctypes_first_level_label' => $row3['doctypes_first_level_label'],
-			'res_id' => $row3['res_id'],
-			'doctypes_second_level_label' => $row3['doctypes_second_level_label']
-			);
-		}*/
 		$db2->query(
 				"select count(*) as total from res_view_letterbox WHERE folders_system_id in ('".$row['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
 				);
 		$row2 = $db2->fetch_array();
+		$db3->query(
+		"select count(*) as total from folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].")"
+		);
+		$row3 = $db3->fetch_array();
 		$folders[] = array(
 			'parent_id' => $row['parent_id'],
 			'folders_system_id' => $row['folders_system_id'],
 			'nom_folder' => $row['folder_name'],
 			'folder_level' => $row['folder_level'],
 			'nb_doc' => $row2['total'],
-			'docs' => $folders_doc
+			'nb_subfolder' => $row3['total']
 		);
 	}
 	echo json_encode($folders);
@@ -62,12 +54,17 @@ if($_POST['FOLDER_TREE']){
 				"select count(*) as total from res_view_letterbox WHERE folders_system_id in ('".$_POST['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
 				);
 		$row2 = $db2->fetch_array();
+		$db3->query(
+		"select count(*) as total from folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].")"
+		);
+		$row3 = $db3->fetch_array();
 		$folders[] = array(
 			'parent_id' => $row['parent_id'],
 			'folders_system_id' => $row['folders_system_id'],
 			'nom_folder' => $row['folder_name'],
 			'folder_level' => $row['folder_level'],
-			'nb_doc' => $row2['total']
+			'nb_doc' => $row2['total'],
+			'nb_subfolder' => $row3['total']
 		);
 	}
 	echo json_encode($folders);
