@@ -2577,6 +2577,7 @@ function loadList(path, inDiv, modeReturn, init) {
         window.top.$('main_error').innerHTML = '';
         window.top.$('main_info').innerHTML = '';
     }
+    path = path.replace('#', '%23');
     new Ajax.Request(path,
     {
         method:'post',
