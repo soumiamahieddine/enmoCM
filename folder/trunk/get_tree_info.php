@@ -81,7 +81,6 @@ if($matches[0] != ''){
 	$db->query(
 		"select folders_system_id, folder_name, parent_id from folders WHERE foldertype_id not in (100) AND parent_id=0 order by folder_id asc "
 		);
-
 }
 
 
@@ -92,10 +91,14 @@ while($row = $db->fetch_array()) {
 		"select count(*) as total from res_view_letterbox WHERE folders_system_id in ('".$row['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
 		);
 	$row2 = $db2->fetch_array();
+	$db3->query(
+		"select count(*) as total from folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].")"
+		);
+	$row3 = $db3->fetch_array();
 
 	$folders_system_id=$row['folders_system_id'];
 	$html.="<span onclick='get_folders(".$folders_system_id.")' class='folder'><img src=\"". $_SESSION['config']['businessappurl']. "static.php?filename=folder.gif\" class=\"mt_fclosed\" alt=\"\" id='".$row['folders_system_id']."_img'></span><li id='".$row['folders_system_id']."' class='folder'>";
-	$html.="<span onclick='get_folder_docs(".$folders_system_id.")'>".$row['folder_name']." <b>(".$row2['total'].")</b></span>";
+	$html.="<span onclick='get_folder_docs(".$folders_system_id.")'>".$row['folder_name']." <b>(".$row3['total']." sous-dossier(s), ".$row2['total']." document(s))</b></span>";
 	$html.="</li>";
 }
 $html.="</ul>";
