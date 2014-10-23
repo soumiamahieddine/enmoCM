@@ -520,7 +520,7 @@ class contacts_v2 extends dbquery
                         <td class="indexing_field" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ echo $display_value;}?>"><span class="red_asterisk" style="visibility:visible;" id="society_mandatory">*</span></td>
                     </tr>
                     <tr>
-                        <td><label for="society_short"><?php echo _SOCIETY_SHORT; ?> : </label></td>
+                        <td><?php echo _SOCIETY_SHORT; ?> :</td>
                         <td>&nbsp;</td>
                         <td class="indexing_field"><input name="society_short" type="text"  id="society_short" value="<?php if(isset($_SESSION['m_admin']['contact']['SOCIETY_SHORT'])){ echo $func->show_str($_SESSION['m_admin']['contact']['SOCIETY_SHORT']); }?>"/></td>
                     </tr>
@@ -566,13 +566,15 @@ class contacts_v2 extends dbquery
                         <td>&nbsp;</td>
                     </tr>
                     <tr>
-                        <td><label for="comp_data"><?php echo _COMP_DATA; ?>&nbsp;: </label></td>
+                        <td><?php echo _COMP_DATA; ?>&nbsp;:</td>
                         <td>&nbsp;</td>
                         <td class="indexing_field"><textarea name="comp_data" id="comp_data"><?php if(isset($_SESSION['m_admin']['contact']['OTHER_DATA'])){echo $func->show_str($_SESSION['m_admin']['contact']['OTHER_DATA']); }?></textarea></td>
                         <td>&nbsp;</td>
                     </tr>
                 </table>
                         <input name="mode" type="hidden" value="<?php echo $mode; ?>" />
+                        <br/>
+                        <em>(<?php echo _YOU_SHOULD_ADD_AN_ADDRESS;?>)</em>
                     <p class="buttons">
                     <?php
 
@@ -599,6 +601,7 @@ class contacts_v2 extends dbquery
                     <?php } else {
                                 if (isset($_SESSION['fromContactTree']) && $_SESSION['fromContactTree'] == "yes"){
                                     ?><input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="self.close();" /><?php
+                                    $_SESSION['fromContactTree'] = "";
                                 } else {?>
                                     <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $cancel_target;?>';" />                 
                     <?php       }

@@ -976,6 +976,7 @@ if (!defined('_CONTACT_PURPOSE_WILL_BE_CREATED')) define( '_CONTACT_PURPOSE_WILL
 
 if (!defined('_SEARCH_CONTACTS')) define( '_SEARCH_CONTACTS','Rechercher un contact');
 
+if (!defined('_YOU_SHOULD_ADD_AN_ADDRESS')) define( '_YOU_SHOULD_ADD_AN_ADDRESS','Apr&egrave;s avoir valid&eacute;, n\'oubliez pas d\'ajouter une adresse &agrave; ce contact');
 if (!defined('_ADDRESSES')) define( '_ADDRESSES','adresse(s)');
 if (!defined('_DOC_S')) define( '_DOC_S','document(s)');
 if (!defined('_CONTACTS_CONFIRMATION')) define( '_CONTACTS_CONFIRMATION','Confirmation de cr&eacute;ation');
