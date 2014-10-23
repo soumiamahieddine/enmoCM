@@ -260,10 +260,10 @@ if (isset($_POST['valid']) && $_POST['valid']) {
                                         $_SESSION['config']['databasetype'],
                                         'apps'
                                     );
-                                    $_SESSION['error'] = _NEW_ATTACH_ADDED;
+                                    $_SESSION['info'] = _NEW_ATTACH_ADDED;
                                     $hist->add(
                                         RES_ATTACHMENTS_TABLE, $id, "ADD",'attachadd',
-                                        $_SESSION['error'] . " (" . $title
+                                        $_SESSION['info'] . " (" . $title
                                         . ") ",
                                         $_SESSION['config']['databasetype'],
                                         'attachments'
