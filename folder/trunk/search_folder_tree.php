@@ -258,7 +258,7 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
                                 var style='margin-left:'+level+'px;';
                             //}
                             //alert('ok');
-                            $(''+folders_system_id).innerHTML +='<ul class="doc" style="margin-top:10px;'+style+'"><li><b>'+docs[i].doctypes_first_level_label+'</b></li><li style="'+style+'"><b>'+docs[i].doctypes_second_level_label+'</b></li><span style="position: relative;top: 4px;'+style+'"" class="doc"><img src=\"'+BASE_URL+'static.php?filename=page.gif\" alt=\"\" id=\"'+docs[i].res_id+'_img_doc\" ></span><a onclick=\'updateContent("index.php?dir=indexing_searching&page=little_details_invoices&display=true&value='+docs[i].res_id+'", "docView");\'>'+docs[i].res_id+' - '+docs[i].subject+'</ul>';
+                            $(''+folders_system_id).innerHTML +='<ul class="doc" style="margin-top:10px;'+style+'"><li><b>'+docs[i].doctypes_first_level_label+'</b></li><li style="'+style+'"><b>'+docs[i].doctypes_second_level_label+'</b></li><span style="position: relative;top: 4px;'+style+'"" class="doc"><img src=\"'+BASE_URL+'static.php?filename=page.gif\" alt=\"\" id=\"'+docs[i].res_id+'_img_doc\" ></span><a onclick=\'updateContent("index.php?dir=indexing_searching&page=little_details_invoices&display=true&value='+docs[i].res_id+'", "docView");\'>('+docs[i].res_id+') '+docs[i].type_label+' - '+docs[i].subject+'</ul>';
 
                             $(''+folders_system_id+"_img").addClassName('mt_fopened');
                             $(''+folders_system_id+"_img").removeClassName('mt_fclosed');
