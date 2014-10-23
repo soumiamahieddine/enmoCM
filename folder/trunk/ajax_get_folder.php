@@ -71,11 +71,12 @@ if($_POST['FOLDER_TREE']){
 	exit();
 }else if($_POST['FOLDER_TREE_DOCS']){
 	$docs = array();
-	$db->query("select res_id, subject,doctypes_first_level_label,doctypes_second_level_label, folder_level from res_view_letterbox WHERE folders_system_id in ('".$_POST['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')");
+	$db->query("select res_id, type_label, subject,doctypes_first_level_label,doctypes_second_level_label, folder_level from res_view_letterbox WHERE folders_system_id in ('".$_POST['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')");
 	while($row=$db->fetch_array()){
 		
 		$docs[] = array(
 			'res_id' => $row['res_id'],
+			'type_label' => $row['type_label'],
 			'subject' => $row['subject'],
 			'doctypes_first_level_label' => $row['doctypes_first_level_label'],
 			'doctypes_second_level_label' => $row['doctypes_second_level_label'],
