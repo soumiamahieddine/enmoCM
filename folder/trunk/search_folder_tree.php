@@ -168,7 +168,7 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
                         for (var i = 0; i <= folders.length; i++) {
                             level=folders[i].folder_level*10;
                             //console.log(folders[i]);
-                            $(''+folders_system_id).innerHTML ='<span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nom_folder+' <b>('+folders[i].nb_doc+')</b></span>';
+                            $(''+folders_system_id).innerHTML ='<span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nom_folder+' <b>('+folders[i].nb_subfolder+' sous-dossier(s), '+folders[i].nb_doc+' document(s))</b></span>';
                             $(''+folders_system_id+"_img").addClassName('mt_fclosed');
                             $(''+folders_system_id+"_img").removeClassName('mt_fopened');
                             $(''+folders_system_id+"_img").src = BASE_URL+'static.php?filename=folder.gif';
@@ -197,7 +197,7 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
                                 var style='style="margin-left:'+level+'px;"';
                             }
                             //alert('ok');
-                            $(''+folders_system_id).innerHTML +='<span '+style+' onclick="get_folders('+folders[i].folders_system_id+')" class="folder"><img src=\"'+BASE_URL+'static.php?filename=folder.gif\" class=\"mt_fclosed\" alt=\"\" id=\"'+folders[i].folders_system_id+'_img\" ></span><li class="folder" id="'+folders[i].folders_system_id+'"><span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nom_folder+' <b>('+folders[i].nb_doc+')</b></span></li>';
+                            $(''+folders_system_id).innerHTML +='<span '+style+' onclick="get_folders('+folders[i].folders_system_id+')" class="folder"><img src=\"'+BASE_URL+'static.php?filename=folder.gif\" class=\"mt_fclosed\" alt=\"\" id=\"'+folders[i].folders_system_id+'_img\" ></span><li class="folder" id="'+folders[i].folders_system_id+'"><span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nom_folder+' <b>('+folders[i].nb_subfolder+' sous-dossier(s), '+folders[i].nb_doc+' document(s))</b></span></li>';
 
                             $(''+folders_system_id+"_img").addClassName('mt_fopened');
                             $(''+folders_system_id+"_img").removeClassName('mt_fclosed');
@@ -229,7 +229,7 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
                         for (var i = 0; i <= folders.length; i++) {
                             level=folders[i].folder_level*10;
                             //console.log(folders[i]);
-                            $(''+folders_system_id).innerHTML ='<span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nom_folder+' <b>('+folders[i].nb_doc+')</b></span>';
+                            $(''+folders_system_id).innerHTML ='<span onclick="get_folder_docs('+folders[i].folders_system_id+')">'+folders[i].nom_folder+' <b>('+folders[i].nb_subfolder+' sous-dossier(s), '+folders[i].nb_doc+' document(s))</b></span>';
                             $(''+folders_system_id+"_img").addClassName('mt_fclosed');
                             $(''+folders_system_id+"_img").removeClassName('mt_fopened');
                             $(''+folders_system_id+"_img").src = BASE_URL+'static.php?filename=folder.gif';
