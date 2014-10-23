@@ -74,9 +74,8 @@ $fold_id=str_replace(")", "", $fold_id);
 //var_dump($matches[0]);die();
 if($matches[0] != ''){
 	$db->query(
-		"select folders_system_id, folder_name, parent_id from folders WHERE foldertype_id not in (100) AND parent_id=0 AND folders_system_id IN (".$fold_id.") order by folder_id asc "
+		"select folders_system_id, folder_name, parent_id from folders WHERE foldertype_id not in (100) AND folders_system_id IN (".$fold_id.") order by folder_id asc "
 		);
-
 }else{
 	$db->query(
 		"select folders_system_id, folder_name, parent_id from folders WHERE foldertype_id not in (100) AND parent_id=0 order by folder_id asc "
