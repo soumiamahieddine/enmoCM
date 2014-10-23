@@ -2728,3 +2728,27 @@ function erase_contact_external_id(id, erase_id){
         $(erase_id).value = '';
     }
 }
+
+function purposeCheck(){
+    var contact_purpose_id = $('contact_purposes').value;
+    var contact_purpose_name = $('new_id').value;
+    var path_manage_script = 'index.php?page=purpose_check&dir=my_contacts&display=true';
+    if (contact_purpose_name != null && contact_purpose_id == null) {
+        $('purpose_to_create').setStyle({display: 'table-row'});
+    } else if (contact_purpose_name != null && contact_purpose_id != null) {
+        new Ajax.Request(path_manage_script,
+        {
+            method:'post',
+            parameters: { contact_purpose : contact_purpose_name,
+                        contact_purpose_id : contact_purpose_id},
+            onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+                if (response.status == 1) {
+                    $('purpose_to_create').setStyle({display: 'table-row'});
+                } else if (response.status == 0){
+                    $('purpose_to_create').setStyle({display: 'none'});
+                }
+            }
+        });
+    }
+}

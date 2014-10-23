@@ -972,6 +972,7 @@ if (!defined('_CONTACT_PURPOSE_DEL')) define( '_CONTACT_PURPOSE_DEL','Suppressio
 if (!defined('_DELETED_CONTACT_PURPOSE')) define( '_DELETED_CONTACT_PURPOSE','D&eacute;nomination supprim&eacute;e');
 if (!defined('_CONTACT_PURPOSE_REAFFECT')) define( '_CONTACT_PURPOSE_REAFFECT','R&eacute;affectation des adresses');
 if (!defined('_WARNING_MESSAGE_DEL_CONTACT_PURPOSE')) define( '_WARNING_MESSAGE_DEL_CONTACT_PURPOSE','Avertissement :<br> La suppression d&rsquo;une d&eacute;nomination entraine la r&eacute;affectation des adresses &agrave une nouvelle d&eacute;nomination.');
+if (!defined('_CONTACT_PURPOSE_WILL_BE_CREATED')) define( '_CONTACT_PURPOSE_WILL_BE_CREATED','Cette d&eacute;nomination n\'existe pas. Elle sera cr&eacute;&eacute;e automatiquement.');
 
 if (!defined('_SEARCH_CONTACTS')) define( '_SEARCH_CONTACTS','Rechercher un contact');
 

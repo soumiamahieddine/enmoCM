@@ -1143,10 +1143,10 @@ class contacts_v2 extends dbquery
                     <table width="65%" id="frmaddress_table1">
                         <tr id="contact_purposes_tr" >
                             <td><label for="contact_purposes"><?php echo _CONTACT_PURPOSE; ?>&nbsp;:&nbsp;</label>
-                                <a href="#" id="create_contact" title="<?php echo _NEW_CONTACT_PURPOSE_ADDED; ?>" 
+<!--                                 <a href="#" id="create_contact" title="<?php echo _NEW_CONTACT_PURPOSE_ADDED; ?>" 
                                     onclick="javascript:window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=false&page=contact_purposes_up&mode=popup','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=250');" style="display:inline;" >
                                     <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=modif_liste.png" alt="<?php echo _NEW_CONTACT_PURPOSE_ADDED; ?>"/>
-                                </a>
+                                </a> -->
                             </td>
                             <td>&nbsp;</td>
                             <td class="indexing_field">
@@ -1164,7 +1164,7 @@ class contacts_v2 extends dbquery
                                                                 ?>><?php echo $contact_purposes[$key];?></option><?php
                                                             }?>
                                                         </select> -->
-                                <input name="new_id" id="new_id"                                 
+                                <input name="new_id" id="new_id" onblur="purposeCheck();";
                                     <?php if(isset($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']) && $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] <> '')
                                         {
                                             echo 'value="'.$this->get_label_contact($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'],$_SESSION['tablename']['contact_purposes']).'"';
@@ -1186,6 +1186,11 @@ class contacts_v2 extends dbquery
                             </td>
                             <td class="indexing_field"><span class="red_asterisk" style="visibility:visible;" id="contact_purposes_mandatory">*</span></td>
                         </tr> 
+                        <tr id="purpose_to_create" style="display:none">
+                            <td colspan="4">
+                                <em><?php echo _CONTACT_PURPOSE_WILL_BE_CREATED;?></em>
+                            </td>
+                        </tr>
                         
                         <tr id="departement_p" style="display:<?php if($_SESSION['m_admin']['address']['DEPARTEMENT'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
                             <td><label for="departement"><?php echo _SERVICE; ?>&nbsp;: </label></td>
@@ -1451,63 +1456,78 @@ class contacts_v2 extends dbquery
             }
         } else {
             $this->connect();
+            if ($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] == "") {
+                $this->query("INSERT INTO contact_purposes (label) VALUES ('".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."')");
+                $this->query("SELECT id FROM contact_purposes WHERE label = '".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."'");
+                $res_purpose = $this->fetch_object();
+                $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = $res_purpose->id;
+            } else if($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] <> "" && $_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'] <> ""){
+                $this->query("SELECT id FROM contact_purposes WHERE label = '".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."'");
+                $res_purpose = $this->fetch_object();
+                if ($res_purpose->id != $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']) {
+                    $this->query("INSERT INTO contact_purposes (label) VALUES ('".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."')");
+                    $this->query("SELECT id FROM contact_purposes WHERE label = '".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."'");
+                    $res_purpose = $this->fetch_object();
+                    $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = $res_purpose->id;
+                }
+            }
             if ($mode == 'add') {
-                    if($_SESSION['user']['UserId'] == 'superadmin'){
-                        $entity_id = 'SUPERADMIN';
-                    } else {
-                        $entity_id = $_SESSION['user']['primaryentity']['id'];
-                    }
-                    $query = 'INSERT INTO ' . $_SESSION['tablename']['contact_addresses']
-                            . ' (  contact_id, contact_purpose_id, departement, lastname , firstname , function , '
-                            . 'phone , email , address_num, address_street, '
-                            . 'address_complement, address_town, '
-                            . 'address_postal_code, address_country, other_data,'
-                            . " title, is_private, website, occupancy, user_id, entity_id, salutation_header, salutation_footer) VALUES (  "
-                            .   $_SESSION['contact']['current_contact_id']
-                            . ", " .  $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']
-                            . ", '" . $this->protect_string_db(
-                               $_SESSION['m_admin']['address']['DEPARTEMENT']
-                            ) . "', '" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['LASTNAME']
-                            ) . "', '" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['FIRSTNAME']
-                            ) . "', '" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['FUNCTION']
-                            ) . "', '" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['PHONE']
-                            ) . "', '" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['MAIL']
-                            ) . "', '" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['ADD_NUM']
-                            ) . "','" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['ADD_STREET']
-                            ) . "', '" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['ADD_COMP']
-                            ) . "', '" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['ADD_TOWN']
-                            ) . "',  '" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['ADD_CP']
-                            ) . "','" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['ADD_COUNTRY']
-                            ) . "','" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['OTHER_DATA']
-                            ) . "','" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['TITLE']
-                            ) . "','" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['IS_PRIVATE']
-                            ) . "','" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['WEBSITE']
-                            ) . "','" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['OCCUPANCY']
-                            ) . "','" . $this->protect_string_db(
-                                $_SESSION['user']['UserId']
-                            ) . "','" . $this->protect_string_db(
-                                $entity_id
-                            ) . "','" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['SALUTATION_HEADER']
-                            ) . "','" . $this->protect_string_db(
-                                $_SESSION['m_admin']['address']['SALUTATION_FOOTER']
-                            ) . "' )";
+                if($_SESSION['user']['UserId'] == 'superadmin'){
+                    $entity_id = 'SUPERADMIN';
+                } else {
+                    $entity_id = $_SESSION['user']['primaryentity']['id'];
+                }
+                $query = 'INSERT INTO ' . $_SESSION['tablename']['contact_addresses']
+                        . ' (  contact_id, contact_purpose_id, departement, lastname , firstname , function , '
+                        . 'phone , email , address_num, address_street, '
+                        . 'address_complement, address_town, '
+                        . 'address_postal_code, address_country, other_data,'
+                        . " title, is_private, website, occupancy, user_id, entity_id, salutation_header, salutation_footer) VALUES (  "
+                        .   $_SESSION['contact']['current_contact_id']
+                        . ", " .  $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']
+                        . ", '" . $this->protect_string_db(
+                           $_SESSION['m_admin']['address']['DEPARTEMENT']
+                        ) . "', '" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['LASTNAME']
+                        ) . "', '" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['FIRSTNAME']
+                        ) . "', '" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['FUNCTION']
+                        ) . "', '" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['PHONE']
+                        ) . "', '" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['MAIL']
+                        ) . "', '" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['ADD_NUM']
+                        ) . "','" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['ADD_STREET']
+                        ) . "', '" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['ADD_COMP']
+                        ) . "', '" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['ADD_TOWN']
+                        ) . "',  '" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['ADD_CP']
+                        ) . "','" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['ADD_COUNTRY']
+                        ) . "','" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['OTHER_DATA']
+                        ) . "','" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['TITLE']
+                        ) . "','" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['IS_PRIVATE']
+                        ) . "','" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['WEBSITE']
+                        ) . "','" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['OCCUPANCY']
+                        ) . "','" . $this->protect_string_db(
+                            $_SESSION['user']['UserId']
+                        ) . "','" . $this->protect_string_db(
+                            $entity_id
+                        ) . "','" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['SALUTATION_HEADER']
+                        ) . "','" . $this->protect_string_db(
+                            $_SESSION['m_admin']['address']['SALUTATION_FOOTER']
+                        ) . "' )";
 
                 $this->query($query);
                 if($_SESSION['history']['addressadd'])
@@ -1596,9 +1616,18 @@ class contacts_v2 extends dbquery
             $_SESSION['m_admin']['address']['TITLE'] = '';
         }
 
-        $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = $func->wash(
-            $_REQUEST['contact_purposes'], 'no', _CONTACT_PURPOSE . ' ', 'yes', 0, 255
+        if ($_REQUEST['contact_purposes'] <> '') {
+            $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = $func->wash(
+                $_REQUEST['contact_purposes'], 'no', _CONTACT_PURPOSE . ' ', 'yes', 0, 255
+            );
+        }  else {
+            $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = '';
+        }
+
+        $_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'] = $func->wash(
+            $_REQUEST['new_id'], 'no', _CONTACT_PURPOSE . ' ', 'yes', 0, 255
         );
+
 
         if ($_REQUEST['departement'] <> '') {
             $_SESSION['m_admin']['address']['DEPARTEMENT'] = $func->wash(
