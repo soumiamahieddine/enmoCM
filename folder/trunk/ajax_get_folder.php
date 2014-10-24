@@ -85,6 +85,116 @@ if($_POST['FOLDER_TREE']){
 	}
 	echo json_encode($docs);
 	exit();
+}else if($_POST['AUTOFOLDERS_TREE']){
+	$config_autofoldering = "modules/autofoldering/xml/autofoldering.xml";
+	$xml=simplexml_load_file($config_autofoldering);
+	//print_r($xml->tree);
+	$autofolders = array();
+
+	foreach($xml->tree as $tree) {
+		//echo $tree->id;
+		$autofolders[] = array(
+			'id' => $tree->id,
+			'desc' => $tree->desc,
+			'tree_level' => 1
+		);
+	}
+	echo json_encode($autofolders);
+	exit();
+}else if($_POST['AUTOFOLDER_FOLDERS']){
+	$config_autofoldering = "modules/autofoldering/xml/autofoldering.xml";
+	$xml=simplexml_load_file($config_autofoldering);
+	$path_folder = explode(";", $_POST['path_folder']);	
+	//print_r($path_folder);
+	$folders = array();
+	$level = $_POST['folder_level'];
+	$level=$level-1;
+	$level_comp=$level-1;
+	foreach($xml->tree as $tree) {
+		if($tree->id == $_POST['id']){
+			$view = $sec->retrieve_view_from_coll_id($tree->coll_id);
+				for ($i=0; $i < $level ; $i++) { 
+					if($i<>0){
+						$where .= " AND (".$tree->nodes->node[$i]->target_column[0]." = '".$path_folder[$i+1]."')";
+					}else{
+						$where = "WHERE (".$tree->nodes->node[$i]->target_column[0]." = '".$path_folder[$i+1]."')";
+					}
+				}
+				$select=$tree->nodes->node[$level]->target_column[0];
+				if($_POST['folder_level']==$tree->nodes->node->count()){
+					$check_docs=true;
+				}else{
+					$check_docs=false;
+				}
+			
+			break;
+		}
+		
+	}
+
+	if(!empty($where)){
+		$where.= ' AND ('.$whereClause.')';
+	}else{
+		$where = 'WHERE ('.$whereClause.')';
+	}
+
+	if($level<>0){
+		$order="ORDER BY ".$select." ASC";
+	}
+	$db->query('select DISTINCT ('.$select.') as libelle FROM '.$view.' '.$where.' '.$order);
+	
+
+	while($row=$db->fetch_array()){
+		$folders[] = array(
+			'libelle' => $row['libelle'],
+			'folder_level' => $level + 2,
+			'check_docs' => $check_docs,
+		);
+	}
+	echo json_encode($folders);
+	exit();
+}else if($_POST['AUTOFOLDER_FOLDER_DOCS']){
+	$config_autofoldering = "modules/autofoldering/xml/autofoldering.xml";
+	$xml=simplexml_load_file($config_autofoldering);
+	$path_folder = explode(";", $_POST['path_folder']);
+	//print_r($path_folder);
+	$docs = array();
+	foreach($xml->tree as $tree) {
+		if($tree->id == $_POST['id']){
+			$view = $sec->retrieve_view_from_coll_id($tree->coll_id);
+			for ($i=0; $i <= $tree->nodes->node->count()-1 ; $i++) { 
+				if($i<>0){
+					$where .= " AND (".$tree->nodes->node[$i]->target_column[0]." = '".$path_folder[$i+1]."')";
+				}else{
+					$where = "WHERE (".$tree->nodes->node[$i]->target_column[0]." = '".$path_folder[$i+1]."')";
+				}
+			}
+			
+			break;
+		}
+		
+	}
+	if(!empty($where)){
+		$where.= ' AND ('.$whereClause.')';
+	}else{
+		$where= 'WHERE ('.$whereClause.')';
+	}
+	//echo "requete where: ".$where;exit();
+	$db->query('select res_id, type_label, subject,doctypes_first_level_label,doctypes_second_level_label, folder_level FROM '.$view.' '.$where);
+	//$db->show();
+
+	while($row=$db->fetch_array()){
+		$docs[] = array(
+			'res_id' => $row['res_id'],
+			'type_label' => $row['type_label'],
+			'subject' => $row['subject'],
+			'doctypes_first_level_label' => $row['doctypes_first_level_label'],
+			'doctypes_second_level_label' => $row['doctypes_second_level_label'],
+			'folder_level' => $row['folder_level']
+		);
+	}
+	echo json_encode($docs);
+	exit();
 }else{
 
 if(!isset($_REQUEST['id_subfolder']) || empty($_REQUEST['id_subfolder']))
