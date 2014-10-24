@@ -49,18 +49,21 @@ echo '</div>';
 $_SESSION['error'] = '';
 $_SESSION['info'] = '';
 
-	$core_tools2->load_js();
-	$contact->chooseContact();
+if ((!isset($_GET['created']) || $_GET['created'] == '') && $_SESSION['error'] <> '') {
+	$_SESSION['m_admin']['contact'] = '';
+}
+$core_tools2->load_js();
+$contact->chooseContact();
 ?>
-<br/>
-<hr>
-<br/>
-<br/>
+	<br/>
+	<hr>
+	<br/>
+	<br/>
 <?php
-	$contact->formcontact("add", "", false, true);
+$contact->formcontact("add", "", false, true);
 ?>
 	<script type="text/javascript">
-		launch_autocompleter_choose_contact("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=contacts_v2_list_by_name';?>", "contact", "show_contacts", "", "contactid");
+		// launch_autocompleter_choose_contact("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=contacts_v2_list_by_name';?>", "contact", "show_contacts", "", "contactid");
 		resize_frame_contact('contact');		
 	</script>
 <?php

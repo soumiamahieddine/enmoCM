@@ -472,7 +472,7 @@ class contacts_v2 extends dbquery
                     <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){ echo $_REQUEST['start'];}?>" />
                 <table width="65%" id="frmcontact_table">
                     <tr>
-                        <td><label for="is_corporate"><?php echo _IS_CORPORATE_PERSON; ?> : </label></td>
+                        <td><?php echo _IS_CORPORATE_PERSON; ?> :</td>
                         <td>&nbsp;</td>
                         <td class="indexing_field">
                             <input type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?>/ onclick="javascript:show_admin_contacts( true, '<?php echo $display_value;?>');"><?php echo _YES;?>
@@ -497,21 +497,34 @@ class contacts_v2 extends dbquery
                     <tr id="contact_types_tr" >
                         <td><label for="contact_types"><?php echo _CONTACT_TYPE; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><select name="contact_type" id="contact_type" >
-                            <option value=""><?php echo _CHOOSE_CONTACT_TYPES;?></option>
-                            <?php
-                            foreach(array_keys($contact_types) as $key)
-                            {
-                                ?><option value="<?php echo $key;?>" <?php
+                        <td class="indexing_field">
+                            <select name="contact_type" id="contact_type" 
+                                <?php if($mode == "add"){ 
+                                    ?> onchange="getContacts('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=my_contacts&page=getContacts', this.options[this.selectedIndex].value, 'view');" <?php 
+                                } ?>
+                                >
+                                <option value=""><?php echo _CHOOSE_CONTACT_TYPES;?></option>
+                                <?php
+                                    foreach(array_keys($contact_types) as $key) {
+                                        ?><option value="<?php echo $key;?>" <?php
 
-                                if(isset($_SESSION['m_admin']['contact']['CONTACT_TYPE']) && $key == $_SESSION['m_admin']['contact']['CONTACT_TYPE'] )
-                                {
-                                    echo 'selected="selected"';
-                                }
-                                ?>><?php echo $contact_types[$key];?></option><?php
-                            }?>
-                        </select></td>
+                                        if(isset($_SESSION['m_admin']['contact']['CONTACT_TYPE']) && $key == $_SESSION['m_admin']['contact']['CONTACT_TYPE'] )
+                                        {
+                                            echo 'selected="selected"';
+                                        }
+                                        ?>><?php echo $contact_types[$key];?>
+                                        </option><?php
+                                    }?>
+                            </select></td>
                         <td><span class="red_asterisk" style="visibility:visible;" id="contact_types_mandatory">*</span></td>
+                    </tr>
+                    <tr id="contacts_created_tr" style="display:none">
+                        <td><?php echo _CONTACT_ALREADY_CREATED; ?> : </td>
+                        <td>&nbsp;</td>
+                        <td class="indexing_field">
+                            <select id="contacts_created">
+                            </select>
+                        </td>
                     </tr>
                     <tr>
                         <td><label for="society"><?php echo _STRUCTURE_ORGANISM; ?> : </label></td>
@@ -622,6 +635,7 @@ class contacts_v2 extends dbquery
     }
 
     public function chooseContact(){
+        $this->connect();
         ?>
         <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" />
             <?php
@@ -629,23 +643,58 @@ class contacts_v2 extends dbquery
             ?>
         </h1>
         <br/>
-            <?php
-             echo '&nbsp;'. _ADD_ADDRESS_TO_CONTACT_DESC;
-             ?>
-             <br/>
-             <br/>
-                 <form class="forms" method="post">
+            <span style="margin-left:30px;">
+                <?php echo '&nbsp;'. _ADD_ADDRESS_TO_CONTACT_DESC; ?>
+            </span>
+            <br/>
+            <br/>
+                <form class="forms" method="post" style="margin-left:30px;">
                     <table width="60%">
                         <tr>
+                            <td><?php echo '&nbsp;'. _TYPE_OF_THE_CONTACT; ?></td>
+                            <td>
+                                <select id="contact_type_selected" onchange="getContacts('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=my_contacts&page=getContacts', this.options[this.selectedIndex].value, 'set');">
+                                    <option value="all"><?php echo _ALL;?></option>
+                                    <?php
+                                        $this->query("SELECT id, label FROM contact_types");
+                                        while ($res_label = $this->fetch_object()){
+                                            ?><option value="<?php echo $res_label->id;?>"><?php echo $res_label->label;?></option>
+                                        <?php
+                                        }
+                                    ?>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
                             <td><?php echo '&nbsp;'. _WHICH_CONTACT; ?></td>
-                            <td><input id="contact" type="text"/><div id="show_contacts" class="autocomplete autocompleteIndex"></div></td>
+                            <td>                                
+                                <select id="contactSelect">
+                                    <option value=""><?php echo _CHOOSE_A_CONTACT;?></option>
+                                    <?php
+                                        $this->query("SELECT contact_id, society, firstname, lastname, is_corporate_person FROM contacts_v2 ORDER BY is_corporate_person desc, society, lastname");
+                                        while ($res_contact = $this->fetch_object()){
+                                            ?><option value="<?php echo $res_contact->contact_id;?>"><?php
+                                            if ($res_contact->is_corporate_person == "Y") {
+                                                echo $res_contact->society;
+                                            } else if ($res_contact->is_corporate_person == "N") {
+                                                echo $res_contact->lastname .' '. $res_contact->firstname;
+                                            } ?>
+                                            </option>
+                                        <?php
+                                        }
+                                    ?>
+                                </select>
+                                <span class="red_asterisk">*</span>
+                            </td>
                             <td>&nbsp;</td>
-                            <td><input class="button" type="button" value="<?php echo _CHOOSE_THIS_CONTACT; ?>" onclick="putInSession('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=my_contacts&page=put_in_session');" /></td>
+                            <td>
+                                <input class="button" type="button" value="<?php echo _CHOOSE_THIS_CONTACT; ?>" onclick="putInSessionContact('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=my_contacts&page=put_in_session');" />
+                            </td>
                         </tr>
                     </table>
-                 </form>
-             <input id="contactid" type="hidden"/>
-             <?php
+                </form>
+            <!-- <input id="contactid" type="hidden"/> -->
+            <?php
 
     }
 

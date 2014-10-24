@@ -891,6 +891,7 @@ if (!defined('_MULTI_EXTERNAL')) define( '_MULTI_EXTERNAL', 'Multi externe');
 if (!defined('_MULTI_CONTACT')) define( '_MULTI_CONTACT', '<b><i>Multi contacts<i><b>');
 if (!defined('_SHOW_MULTI_CONTACT')) define( '_SHOW_MULTI_CONTACT', 'Voir les contacts');
 if (!defined('_STRUCTURE_ORGANISM')) define( '_STRUCTURE_ORGANISM', 'Structure');
+if (!defined('_TYPE_OF_THE_CONTACT')) define( '_TYPE_OF_THE_CONTACT', 'Quelle est le type du contact ?');
 
 if (!defined('_MANAGE_DUPLICATES'))  define('_MANAGE_DUPLICATES', 'Gestion des doublons');
 if (!defined('_DUPLICATES_BY_SOCIETY'))  define('_DUPLICATES_BY_SOCIETY', 'Doublons par organisme/soci&eacute;t&eacute;');
@@ -954,6 +955,8 @@ if (!defined('_CONTACT_TYPE_DEL')) define( '_CONTACT_TYPE_DEL','Suppression du t
 if (!defined('_DELETED_CONTACT_TYPE')) define( '_DELETED_CONTACT_TYPE','Type de contact supprim&eacute;');
 if (!defined('_WARNING_MESSAGE_DEL_CONTACT_TYPE')) define( '_WARNING_MESSAGE_DEL_CONTACT_TYPE','Avertissement :<br> La suppression d&rsquo;un type de contact entraine la r&eacute;affectation des contacts &agrave un nouveau type de contact.');
 if (!defined('_CONTACT_TYPE_REAFFECT')) define( '_CONTACT_TYPE_REAFFECT','R&eacute;affectation des contacts');
+if (!defined('_ALL')) define( '_ALL','Tous');
+if (!defined('_CONTACT_ALREADY_CREATED')) define( '_CONTACT_ALREADY_CREATED','Contacts d&eacute;j&agrave; existants (pour information)');
 
 if (!defined('_CONTACT_PURPOSES_LIST')) define( '_CONTACT_PURPOSES_LIST','Liste des d&eacute;nominations');
 if (!defined('_DESC_CONTACT_PURPOSES')) define( '_DESC_CONTACT_PURPOSES','D&eacute;nomination');
@@ -1031,6 +1034,7 @@ if (!defined('_ADD_ADDRESS_TO_CONTACT')) define( '_ADD_ADDRESS_TO_CONTACT','Ajou
 if (!defined('_ADD_ADDRESS_TO_CONTACT_DESC')) define( '_ADD_ADDRESS_TO_CONTACT_DESC','Cette partie est utilis&eacute;e pour ajouter une adresse &agrave; un contact qui existe d&eacute;j&agrave;.');
 if (!defined('_WHICH_CONTACT')) define( '_WHICH_CONTACT','A quel contact voulez-vous ajouter une adresse ?');
 if (!defined('_CHOOSE_THIS_CONTACT')) define( '_CHOOSE_THIS_CONTACT','Choisir ce contact');
+if (!defined('_CHOOSE_A_CONTACT')) define( '_CHOOSE_A_CONTACT','Choisissez un contact');
 
 //// INDEXING SEARCHING
 if (!defined('_NO_COLLECTION_ACCESS_FOR_THIS_USER')) define( '_NO_COLLECTION_ACCESS_FOR_THIS_USER', 'Aucun acc&egrave;s aux collections documentaires pour cet utilisateur');

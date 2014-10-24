@@ -911,17 +911,45 @@ function launch_autocompleter_choose_contact(path_script, id_text, id_div, cat_i
 
 }
 
-function putInSession(path_script){
+function putInSessionContact(path_script){
+    var contactSelected = $('contactSelect').options[$('contactSelect').selectedIndex].value;
+    if (contactSelected == "") {
+        alert("Choisissez un contact");
+    } else {
+        new Ajax.Request(path_script,
+        {
+            method:'post',
+            parameters: {
+                contactid : contactSelected
+            },
+            onSuccess: function(answer){
+                    document.location = 'index.php?display=false&dir=my_contacts&page=create_address_iframe';
+            }
+        });
+    }
+}
+
+function getContacts(path_script, id, mode){
     new Ajax.Request(path_script,
     {
         method:'post',
         parameters: {
-            contactid : $('contactid').value
+            type_id: id,
+            mode: mode
         },
         onSuccess: function(answer){
-                document.location = 'index.php?display=false&dir=my_contacts&page=create_address_iframe';
+            if(mode=="view"){
+                if (id != "") {
+                    $('contacts_created_tr').setStyle({display : 'table-row'});
+                    $('contacts_created').innerHTML = answer.responseText;
+                } else {
+                    $('contacts_created_tr').setStyle({display : 'none'});
+                }
+            } else if(mode="set"){
+                $('contactSelect').innerHTML = answer.responseText;
+            }
         }
-    });    
+    });
 }
 
 /**
