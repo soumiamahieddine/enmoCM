@@ -19,7 +19,7 @@ while($res = $db->fetch_object()){
 	if ($res->is_corporate_person == "Y") {
 		$contact = $res->society;
 	} else if ($res->is_corporate_person == "N") {
-		$contact = $ret->lastname .' '. $res->firstname;
+		$contact = $res->lastname .' '. $res->firstname;
 	}
 	array_push($contact_selected, array('id' => $res->contact_id, 'name' => $contact ));
 }

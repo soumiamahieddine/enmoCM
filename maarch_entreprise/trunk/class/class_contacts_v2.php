@@ -415,7 +415,7 @@ class contacts_v2 extends dbquery
 
         $contact_types = array();
         $this->connect();
-        $this->query("SELECT id, label FROM ".$_SESSION['tablename']['contact_types']);
+        $this->query("SELECT id, label FROM ".$_SESSION['tablename']['contact_types']." ORDER BY label");
         while($res = $this->fetch_object()){
             $contact_types[$res->id] = $this->show_string($res->label); 
         }
@@ -656,7 +656,7 @@ class contacts_v2 extends dbquery
                                 <select id="contact_type_selected" onchange="getContacts('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=my_contacts&page=getContacts', this.options[this.selectedIndex].value, 'set');">
                                     <option value="all"><?php echo _ALL;?></option>
                                     <?php
-                                        $this->query("SELECT id, label FROM contact_types");
+                                        $this->query("SELECT id, label FROM contact_types ORDER BY label");
                                         while ($res_label = $this->fetch_object()){
                                             ?><option value="<?php echo $res_label->id;?>"><?php echo $res_label->label;?></option>
                                         <?php

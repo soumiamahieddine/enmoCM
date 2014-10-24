@@ -58,7 +58,6 @@ $contact->chooseContact();
 	<br/>
 	<hr>
 	<br/>
-	<br/>
 <?php
 $contact->formcontact("add", "", false, true);
 ?>
