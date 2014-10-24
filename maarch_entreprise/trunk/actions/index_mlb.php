@@ -896,7 +896,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . _VALIDATE . '" class="button" '
             . 'onclick="getIframeContent(\''
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-            . '&page=getIframeTemplateContent\');if(document.getElementById(\'contactcheck\').value!=\'success\'){if (confirm(\''. _CONTACT_CHECK .'\n\ncontinuer ?\'))valid_action_form(\'index_file\', \''
+            . '&page=getIframeTemplateContent\');if(document.getElementById(\'contactcheck\').value!=\'success\'){if (confirm(\''. _CONTACT_CHECK .'\n\nContinuer ?\'))valid_action_form(\'index_file\', \''
             . $pathManageAction . '\', \'' . $actionId . '\', \'' . $resId
             . '\', \'' . $table . '\', \'' . $module . '\', \'' . $collId
             . '\', \'' . $mode . '\', true);}else{valid_action_form(\'index_file\', \''
