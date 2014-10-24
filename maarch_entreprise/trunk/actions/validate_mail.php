@@ -527,7 +527,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $path_to_script = $_SESSION['config']['businessappurl']
 		."index.php?display=true&dir=indexing_searching&page=contact_check&coll_id=".$collId;
     //check functions on load page
-    $frm_str.="<script>check_date_exp('".$path_to_script."');</script>";
+/*        if (condition) {
+            $frm_str.="<script>check_date_exp('".$path_to_script."');</script>";
+        }*/
+
                    $frm_str .='<td class="indexing_field"><input type="text" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');" onblur="if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\');}"';
                     if(isset($data['contact']) && !empty($data['contact']))
                    {
@@ -1246,6 +1249,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .='$(\'type_contact_internal\').checked=true;';
         } else if ($data['type_contact'] == 'external') {           
             $frm_str .='$(\'type_contact_external\').checked=true;';
+        }
+        //Path to actual script
+        $path_to_script = $_SESSION['config']['businessappurl']
+        ."index.php?display=true&dir=indexing_searching&page=contact_check&coll_id=".$collId;
+        //check functions on load page
+        if ($data['type_contact'] != 'internal') {
+            $frm_str.="check_date_exp('".$path_to_script."');";
         }
         $frm_str .='launch_autocompleter_contacts_v2(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'\', \'\', \'\', \'contactid\', \'addressid\');update_contact_type_session(\''
         .$_SESSION['config']['businessappurl']
