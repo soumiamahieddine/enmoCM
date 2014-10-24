@@ -52,17 +52,8 @@ $db4 = new dbquery();
 $db4->connect();
 $whereClause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
 ?>
-<script type="text/javascript">
-	function hideshow(which){
-		if (!document.getElementById)
-			return
-		if (which.style.display=="block")
-			which.style.display="none"
-		else
-			which.style.display="block"
-	}
-</script>
-<style type="text/css">li{cursor: pointer;}li.folder{padding-top: 10px;padding-bottom: 10px;}span.folder{float:left;margin-top:5px;}ul.doc a{padding:5px;}ul.doc a:hover{background-color: #BAD1E2;border-radius:2px;}</style>
+
+<style type="text/css">li{cursor: pointer;}li.folder{padding-top: 10px;}span.folder{float:left;margin-top:3px;}ul.doc a{padding:5px;}ul.doc a:hover{background-color: #BAD1E2;border-radius:2px;}</style>
 <?php
 $db->connect();
 $subject = $_REQUEST['project'];
@@ -72,6 +63,7 @@ $fold_id=str_replace("(", "", $matches[0][0]);
 $fold_id=str_replace(")", "", $fold_id);
 //print_r($fold_id);
 //var_dump($matches[0]);die();
+$html.="<ul class='folder' id='folder_tree_content'>";
 if($matches[0] != ''){
 	$db->query(
 		"select folders_system_id, folder_name, parent_id from folders WHERE foldertype_id not in (100) AND folders_system_id IN (".$fold_id.") order by folder_id asc "
@@ -80,11 +72,22 @@ if($matches[0] != ''){
 	$db->query(
 		"select folders_system_id, folder_name, parent_id from folders WHERE foldertype_id not in (100) AND parent_id=0 order by folder_id asc "
 		);
+	//autofoldering
+	$filename = 'modules/autofoldering/xml/autofoldering.xml';
+	if (file_exists($filename)) {
+	    $html.="<span onclick='get_autofolders(1)' class='folder'><img src=\"". $_SESSION['config']['businessappurl']. "static.php?filename=folder.gif\" class=\"mt_fclosed\" alt=\"\" id='1_img'></span><li id='autofolders' class='folder'>";
+		$html.="Plan de classement dynamique";
+		$html.="</li>";
+		$html.="<hr/>";
+	}
 }
 
 
 $categories = array();
-$html.="<ul class='folder' id='folder_tree_content'>";
+
+
+
+
 while($row = $db->fetch_array()) {
 	$db2->query(
 		"select count(*) as total from res_view_letterbox WHERE folders_system_id in ('".$row['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
