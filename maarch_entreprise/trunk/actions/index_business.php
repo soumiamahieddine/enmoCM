@@ -834,6 +834,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
 	$frmStr .= '<hr />';
 
 	/*** Complementary fields ***/
+    $frmStr .= '<input type="hidden" id="priority" name="priority" value="2" />';
     $frmStr .= '<h4 onclick="new Effect.toggle(\'complementary_fields\', \'blind\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'complementary_fields\', \'divStatus_complementary_fields\');" '
         . 'class="categorie" style="width:90%;" onmouseover="this.style.cursor=\'pointer\';">';
