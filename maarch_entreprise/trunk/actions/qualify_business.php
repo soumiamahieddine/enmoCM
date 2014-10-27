@@ -747,6 +747,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</div>';
         
     /*** Complementary fields ***/
+    $frmStr .= '<input type="hidden" id="priority" name="priority" value="2" />';
     $frm_str .= '<hr />';
     
     $frm_str .= '<h4 onclick="new Effect.toggle(\'complementary_fields\', \'blind\', {delay:0.2});'
