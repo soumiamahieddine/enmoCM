@@ -719,7 +719,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     if (count($statuses) > 0) {
         $frm_str .= '<tr id="status" style="display:' . $display_value . ';">';
-        $frm_str .= '<td><td style="width:30px;align:center;">&nbsp;</td><label for="status" class="form_title" >' . _STATUS
+        $frm_str .= '<td style="width:30px;align:center;">&nbsp;</td><td><label for="status" class="form_title" >' . _STATUS
                 . '</label></td>';
         $frm_str .= '<td class="indexing_field"><select name="status" '
                 . 'id="status" onchange="clear_error(\'frm_error_' . $id_action
