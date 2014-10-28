@@ -255,7 +255,7 @@ case "add_user":
         . " FROM " . USERS_TABLE . " u "
         . " LEFT JOIN " . ENT_USERS_ENTITIES . " ue ON u.user_id = ue.user_id "
         . " LEFT JOIN " . ENT_ENTITIES . " e ON ue.entity_id = e.entity_id" 
-        . " WHERE u.user_id='" . $db->protect_string_db($id) . "'"
+        . " WHERE u.user_id='" . $db->protect_string_db($id) . "' and ue.primary_entity = 'Y'"
     );
     $line = $db->fetch_object();
     
