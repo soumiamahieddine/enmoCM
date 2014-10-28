@@ -313,7 +313,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</tr>';
     
     /*** Doctype ***/
-    $frm_str .= '<tr id="type_id_tr" style="display:'.$display_value.';">';
+    $frm_str .= '<tr id="doctype_tr" style="display:'.$display_value.';">';
     $frm_str .= '<td style="width:30px;align:center;"><span class="form_title" '
             . 'id="doctype_res"><img src="'
                 . $_SESSION['config']['businessappurl'] . 'static.php?filename='
