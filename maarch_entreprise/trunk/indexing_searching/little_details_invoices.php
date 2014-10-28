@@ -324,11 +324,20 @@ if (! empty($_SESSION['error']) ) {
          ?>&dir=indexing_searching" target="_blank"><b><?php
          echo _VIEW_DOC_FULL; ?></b> </a>
                                         |
-         <a href="javascript://"  onClick="window.top.location.href='<?php
+	<?php if($collId=='business_coll'){ ?>
+		 <a href="javascript://"  onClick="window.top.location.href='<?php
+             echo $_SESSION['config']['businessappurl'];
+             ?>index.php?page=details_business&dir=indexing_searching&id=<?php
+             echo $resId;
+             ?>';"><b><?php  echo _DETAILS_DOC_FULL; ?> </b></a>
+	<?php }else{ ?>
+ <a href="javascript://"  onClick="window.top.location.href='<?php
              echo $_SESSION['config']['businessappurl'];
              ?>index.php?page=details&dir=indexing_searching&id=<?php
              echo $resId;
              ?>';"><b><?php  echo _DETAILS_DOC_FULL; ?> </b></a>
+	<?php } ?>
+        
          <hr/>
 
          <p>
