@@ -53,7 +53,7 @@ $db4->connect();
 $whereClause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
 ?>
 
-<style type="text/css">li{cursor: pointer;}li.folder{padding-top: 10px;}span.folder{float:left;margin-top:3px;}ul.doc a{padding:5px;}ul.doc a:hover{background-color: #BAD1E2;border-radius:2px;}</style>
+<style type="text/css">.link_open{border-left:dashed 1px #FFC200;}li{cursor: pointer;}li.folder{list-style-image: url('static.php?filename=folder.gif');list-style-position: inside;margin-top: 10px;white-space: pre;}li.folder span:hover{background-color: #BAD1E2;padding:5px;border-radius:2px;}li.folder span{padding:5px;}ul.doc a{padding:5px;}ul.doc a:hover{background-color: #BAD1E2;border-radius:2px;}</style>
 <?php
 $db->connect();
 $subject = $_REQUEST['project'];
@@ -75,8 +75,8 @@ if($matches[0] != ''){
 	//autofoldering
 	$filename = 'modules/autofoldering/xml/autofoldering.xml';
 	if (file_exists($filename)) {
-	    $html.="<span onclick='get_autofolders(1)' class='folder'><img src=\"". $_SESSION['config']['businessappurl']. "static.php?filename=folder.gif\" class=\"mt_fclosed\" alt=\"\" id='1_img'></span><li id='autofolders' class='folder'>";
-		$html.="Plan de classement dynamique";
+	    $html.="<li id='autofolders' class='folder'>";
+		$html.="<span onclick='get_autofolders(1)'>Plan de classement dynamique</span>";
 		$html.="</li>";
 		$html.="<hr/>";
 	}
@@ -87,7 +87,7 @@ $categories = array();
 
 
 
-
+$i=0;
 while($row = $db->fetch_array()) {
 	$db2->query(
 		"select count(*) as total from res_view_letterbox WHERE folders_system_id in ('".$row['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
@@ -99,9 +99,15 @@ while($row = $db->fetch_array()) {
 	$row3 = $db3->fetch_array();
 
 	$folders_system_id=$row['folders_system_id'];
-	$html.="<span onclick='get_folders(".$folders_system_id.")' class='folder'><img src=\"". $_SESSION['config']['businessappurl']. "static.php?filename=folder.gif\" class=\"mt_fclosed\" alt=\"\" id='".$row['folders_system_id']."_img'></span><li id='".$row['folders_system_id']."' class='folder'>";
-	$html.="<span onclick='get_folder_docs(".$folders_system_id.")'>".$row['folder_name']." <b>(".$row3['total']." sous-dossier(s), ".$row2['total']." document(s))</b></span>";
-	$html.="</li>";
+	//$html.="<span onclick='get_folders(".$folders_system_id.")' class='folder'><img src=\"". $_SESSION['config']['businessappurl']. "static.php?filename=folder.gif\" class=\"mt_fclosed\" alt=\"\" id='".$row['folders_system_id']."_img'></span><li id='".$row['folders_system_id']."' class='folder'>";
+	$html.="<li id='".$row['folders_system_id']."' class='folder'>";
+
+	//$html.="<span onclick='get_folder_docs(".$folders_system_id.")'>".$row['folder_name']." <b>(".$row3['total']." sous-dossier(s), ".$row2['total']." document(s))</b></span>";
+	$html.="<span onclick='get_folders(".$folders_system_id.")'>".$row['folder_name']."</span><b>(".$row3['total']." sous-dossier(s), <span onclick='get_folder_docs(".$folders_system_id.")'>".$row2['total']." document(s)</span>)</b>";
+
+
+	//$html.="</li>";
+	$i++;
 }
 $html.="</ul>";
 echo $html;
