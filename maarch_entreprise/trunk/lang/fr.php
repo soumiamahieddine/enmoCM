@@ -1036,6 +1036,8 @@ if (!defined('_WHICH_CONTACT')) define( '_WHICH_CONTACT','A quel contact voulez-
 if (!defined('_CHOOSE_THIS_CONTACT')) define( '_CHOOSE_THIS_CONTACT','Choisir ce contact');
 if (!defined('_CHOOSE_A_CONTACT')) define( '_CHOOSE_A_CONTACT','Choisissez un contact');
 
+if (!defined('_CREATE_CONTACTS')) define( '_CREATE_CONTACTS','Enregistrer un contact');
+
 //// INDEXING SEARCHING
 if (!defined('_NO_COLLECTION_ACCESS_FOR_THIS_USER')) define( '_NO_COLLECTION_ACCESS_FOR_THIS_USER', 'Aucun acc&egrave;s aux collections documentaires pour cet utilisateur');
 if (!defined('_CREATION_DATE')) define( '_CREATION_DATE', 'Date de cr&eacute;ation');

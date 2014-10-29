@@ -200,6 +200,14 @@
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
+  <SERVICE>
+   <id>create_contacts</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
+   <name>_CREATE_CONTACTS</name>
+   <comment>_CREATE_CONTACTS</comment>
+   <servicetype>menu</servicetype>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
+ </SERVICE>
  <SERVICE>
    <id>update_contacts</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
    <name>_UPDATE_CONTACTS</name>

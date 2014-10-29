@@ -29,7 +29,19 @@
 * @ingroup admin
 */
 $admin = new core_tools();
-$admin->test_admin('admin_contacts', 'apps');
+$return = $admin->test_admin('admin_contacts', 'apps', false);
+if (!$return) {
+    $return = $admin->test_admin('create_contacts', 'apps', false);
+}
+
+if (!$return) {
+    $_SESSION['error'] = _SERVICE . ' ' . _UNKNOWN;
+    ?>
+    <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+    <?php
+    exit();
+}
+
 $func = new functions();
 $_SESSION['m_admin'] = array();
 /****************Management of the location bar  ************/

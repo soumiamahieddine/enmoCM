@@ -12,6 +12,12 @@
         <url>index.php?page=my_contacts&amp;dir=my_contacts&amp;load</url>
         <style>my_contacts</style>
     </MENU>
+    <MENU>
+        <id>create_contacts</id>
+        <libconst>_CREATE_CONTACTS</libconst>
+        <url>index.php?page=contacts_v2</url>
+        <style>my_contacts</style>
+    </MENU>
 <!-- LETTERBOX -->
     <MENU>
         <id>index_mlb</id>

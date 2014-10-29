@@ -1326,3 +1326,5 @@ if (!defined('_CHOOSE_CONTACT_ADDRESS')) define( '_CHOOSE_CONTACT_ADDRESS','Choo
 if (!defined('_SALUTATION')) define( '_SALUTATION','Salutation');
 if (!defined('_SALUTATION_HEADER')) define( '_SALUTATION_HEADER','Salutation header');
 if (!defined('_SALUTATION_FOOTER')) define( '_SALUTATION_FOOTER','Salutation footer');
+
+if (!defined('_CREATE_CONTACTS')) define( '_CREATE_CONTACTS','Create a contact');
