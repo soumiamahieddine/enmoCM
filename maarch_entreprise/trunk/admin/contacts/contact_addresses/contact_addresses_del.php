@@ -31,8 +31,21 @@
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 $contact = new contacts_v2();
 $core_tools = new core_tools('');
-if(!$core_tools->test_admin('admin_contacts', 'apps', false)){
-	$core_tools->test_admin('my_contacts', 'apps');
+$return = $core_tools->test_admin('admin_contacts', 'apps', false);
+if (!$return) {
+    $return = $core_tools->test_admin('create_contacts', 'apps', false);
+}
+
+if (!$return) {
+    $return = $core_tools->test_admin('my_contacts', 'apps', false);
+}
+
+if (!$return) {
+    $_SESSION['error'] = _SERVICE . ' ' . _UNKNOWN;
+    ?>
+    <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+    <?php
+    exit();
 }
 $core_tools->load_lang();
 $db = new dbquery();

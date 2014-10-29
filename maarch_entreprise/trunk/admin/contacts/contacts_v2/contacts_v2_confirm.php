@@ -29,9 +29,23 @@
 */
 $admin = new core_tools();
 $admin->load_lang();
-if(!$admin->test_admin('admin_contacts', 'apps', false)){
-	$admin->test_admin('my_contacts', 'apps');
+$return = $admin->test_admin('admin_contacts', 'apps', false);
+if (!$return) {
+    $return = $admin->test_admin('create_contacts', 'apps', false);
 }
+
+if (!$return) {
+    $return = $admin->test_admin('my_contacts', 'apps', false);
+}
+
+if (!$return) {
+    $_SESSION['error'] = _SERVICE . ' ' . _UNKNOWN;
+    ?>
+    <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+    <?php
+    exit();
+}
+
 $admin->load_html();
 $admin->load_header('', true, false);
 $admin->load_js();

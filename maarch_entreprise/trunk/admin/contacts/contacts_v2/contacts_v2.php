@@ -225,7 +225,9 @@ for ($i=0;$i<count($tab);$i++)
 }
 $page_name = "contacts_v2";
 $page_name_up = "contacts_v2_up";
-$page_name_del = "contacts_v2_del";
+if ($admin->test_admin('admin_contacts', 'apps', false)) {
+    $page_name_del = "contacts_v2_del";
+}
 $page_name_val= "";
 $page_name_ban = "";
 $page_name_add = "contacts_v2_add";

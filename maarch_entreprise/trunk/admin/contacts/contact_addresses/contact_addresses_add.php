@@ -31,9 +31,23 @@
 
 $core_tools2 = new core_tools();
 $core_tools2->load_lang();
-if(!$core_tools2->test_admin('admin_contacts', 'apps', false)){
-	$core_tools2->test_admin('my_contacts', 'apps');
+$return = $core_tools2->test_admin('admin_contacts', 'apps', false);
+if (!$return) {
+    $return = $core_tools2->test_admin('create_contacts', 'apps', false);
 }
+
+if (!$return) {
+    $return = $core_tools2->test_admin('my_contacts', 'apps', false);
+}
+
+if (!$return) {
+    $_SESSION['error'] = _SERVICE . ' ' . _UNKNOWN;
+    ?>
+    <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+    <?php
+    exit();
+}
+
 /****************Management of the location bar  ************/
 $init = false;
 if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
