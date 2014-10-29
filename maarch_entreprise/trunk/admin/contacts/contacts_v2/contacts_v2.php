@@ -28,6 +28,7 @@
 * @version $Revision$
 * @ingroup admin
 */
+
 $admin = new core_tools();
 $return = $admin->test_admin('admin_contacts', 'apps', false);
 if (!$return) {
