@@ -16,6 +16,11 @@ Require all denied
 </FilesMatch>
 
 # App static files
-<FilesMatch "(css|js|jpg|png|gif)$">
+<FilesMatch "\.(css|js|jpg|png|gif)$">
   Require all granted
 </FilesMatch> 
+
+# App tools files
+<FilesMatch "\.(htm|html|jar)$">
+  Require all granted
+</FilesMatch>
