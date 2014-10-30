@@ -88,6 +88,15 @@ if (isset($_SESSION['user']['UserId']) && isset($_GET['page'])
         time() + ($_SESSION['config']['cookietime'] * 1000)
     );
 }
+
+// CV 31 oct 2014 : clean request
+foreach ($_REQUEST as $name => $value) {
+    if (is_string($value) && strpos($value, "<") !== false) {
+        $value = preg_replace('/(<\/?script[^>]*>|<\?php)/i', "", $value);
+        $_REQUEST[$name] = $value;
+    }
+}
+
 if (isset($_REQUEST['display'])) {
      $core->insert_page();
      exit();
