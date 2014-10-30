@@ -92,6 +92,18 @@ class security extends dbquery
         $array = array();
         $error = '';
         $uc = new users_controler();
+
+	$s_login = str_replace('\'', '', $s_login);
+	$s_login = str_replace('=', '', $s_login);
+	$s_login = str_replace('"', '', $s_login);
+	$s_login = str_replace('*', '', $s_login);
+	$s_login = str_replace(';', '', $s_login);
+	$s_login = str_replace('--', '', $s_login);
+	$s_login = str_replace(',', '', $s_login);
+	$s_login = str_replace('$', '', $s_login);
+	$s_login = str_replace('>', '', $s_login);
+	$s_login = str_replace('<', '', $s_login);
+
         // #TODO : Not usefull anymore, loginmode field is always in users table
         //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
         if ($this->test_column($_SESSION['tablename']['users'], 'loginmode')) {
