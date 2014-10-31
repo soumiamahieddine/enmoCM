@@ -1360,7 +1360,7 @@ class core_tools extends functions
                 array('../', '..%2F'), 
                 array ('', ''), 
                 $this->wash($_GET['page'],"file","","yes")
-                );
+            );
         } else {
             $this->loadDefaultPage();
             return true;
