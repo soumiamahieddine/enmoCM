@@ -103,19 +103,19 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " contact_type = ".$func->protect_string_db($_REQUEST['contact_type'])." and ";
             }
             // SOCIETY
-            elseif ($tab_id_fields[$j] == 'society' && (!empty($_REQUEST['society']) ||$_REQUEST['society'] == 0) )
+            elseif ($tab_id_fields[$j] == 'society' && (!empty($_REQUEST['society']) || $_REQUEST['society'] <> '') )
             {
                 $json_txt .= " 'society' : ['".addslashes(trim($_REQUEST['society']))."'],";
                 $where_request .= " lower(society) like lower('%".$func->protect_string_db($_REQUEST['society'])."%') and ";
             }
             // LASTNAME
-            elseif ($tab_id_fields[$j] == 'lastname' && (!empty($_REQUEST['lastname']) ||$_REQUEST['lastname'] == 0) )
+            elseif ($tab_id_fields[$j] == 'lastname' && (!empty($_REQUEST['lastname']) ||$_REQUEST['lastname'] <> '') )
             {
                 $json_txt .= " 'lastname' : ['".addslashes(trim($_REQUEST['lastname']))."'],";
                 $where_request .= " lower(lastname) like lower('%".$func->protect_string_db($_REQUEST['lastname'])."%') and ";
             }
             // FIRSTNAME
-            elseif ($tab_id_fields[$j] == 'firstname' && (!empty($_REQUEST['firstname']) ||$_REQUEST['firstname'] == 0) )
+            elseif ($tab_id_fields[$j] == 'firstname' && (!empty($_REQUEST['firstname']) ||$_REQUEST['firstname'] <> '') )
             {
                 $json_txt .= " 'firstname' : ['".addslashes(trim($_REQUEST['firstname']))."'],";
                 $where_request .= " lower(firstname) like lower('%".$func->protect_string_db($_REQUEST['firstname'])."%') and ";
