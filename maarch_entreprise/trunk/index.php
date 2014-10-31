@@ -92,7 +92,7 @@ if (isset($_SESSION['user']['UserId']) && isset($_GET['page'])
 // CV 31 oct 2014 : clean request
 foreach ($_REQUEST as $name => $value) {
     if (is_string($value) && strpos($value, "<") !== false) {
-        $value = preg_replace('/(<\/?script[^>]*>|<\?php|<\?\n)/i', "", $value);
+        $value = preg_replace('/(<\/?script[^>]*>|<\w+[\s\n\r]*on[^>]*>|<\?php|<\?[\s|\n|\r])/i', "", $value);
         $_REQUEST[$name] = $value;
     }
 }
