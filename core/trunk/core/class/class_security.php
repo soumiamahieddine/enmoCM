@@ -1,4 +1,4 @@
-<?php
+<*?php
 /*
 *    Copyright 2008,2009,2010 Maarch
 *
@@ -93,16 +93,16 @@ class security extends dbquery
         $error = '';
         $uc = new users_controler();
 
-	$s_login = str_replace('\'', '', $s_login);
-	$s_login = str_replace('=', '', $s_login);
-	$s_login = str_replace('"', '', $s_login);
-	$s_login = str_replace('*', '', $s_login);
-	$s_login = str_replace(';', '', $s_login);
-	$s_login = str_replace('--', '', $s_login);
-	$s_login = str_replace(',', '', $s_login);
-	$s_login = str_replace('$', '', $s_login);
-	$s_login = str_replace('>', '', $s_login);
-	$s_login = str_replace('<', '', $s_login);
+        $s_login = str_replace('\'', '', $s_login);
+        $s_login = str_replace('=', '', $s_login);
+        $s_login = str_replace('"', '', $s_login);
+        $s_login = str_replace('*', '', $s_login);
+        $s_login = str_replace(';', '', $s_login);
+        $s_login = str_replace('--', '', $s_login);
+        $s_login = str_replace(',', '', $s_login);
+        $s_login = str_replace('$', '', $s_login);
+        $s_login = str_replace('>', '', $s_login);
+        $s_login = str_replace('<', '', $s_login);
 
         // #TODO : Not usefull anymore, loginmode field is always in users table
         //Compatibility test, if loginmode column doesn't exists, Maarch can't crash
