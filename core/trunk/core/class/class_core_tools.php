@@ -1419,11 +1419,18 @@ class core_tools extends functions
                 require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
                 $app = new business_app_tools();
                 $path = $app->insert_app_page($this->f_page);
-                if((!$path || empty($path)) && !file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path) && !file_exists($_SESSION['config']['corepath'].$path)) {
+                if(
+                    (!$path || empty($path)) 
+                    && !file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR.$path) 
+                    && !file_exists($path)) {
                     //require($_SESSION["config"]["defaultPage"].".php");
                     $this->loadDefaultPage();
                 } else {
-                    require($path);
+                    if (!file_exists($path)) {
+                        $this->loadDefaultPage();
+                    } else {
+                        require($path);
+                    }
                 }
             }
         }
