@@ -285,9 +285,6 @@ An action page is described in a ACTIONPAGE tag :
         <MODULE></MODULE>
         <KEYWORD>workflow</KEYWORD>
         <FLAG_CREATE>false</FLAG_CREATE>
-        <!--<COLLECTIONS>
-            <COLL_ID>business_coll</COLL_ID>
-        </COLLECTIONS>-->
         <COLLECTIONS>
             <COLL_ID>business_coll</COLL_ID>
         </COLLECTIONS>
