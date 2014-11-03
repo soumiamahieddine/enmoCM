@@ -1328,3 +1328,5 @@ if (!defined('_SALUTATION_HEADER')) define( '_SALUTATION_HEADER','Salutation hea
 if (!defined('_SALUTATION_FOOTER')) define( '_SALUTATION_FOOTER','Salutation footer');
 
 if (!defined('_CREATE_CONTACTS')) define( '_CREATE_CONTACTS','Create a contact');
+
+if (!defined('_CLOSE_MAIL_AND_INDEX')) define( '_CLOSE_MAIL_AND_INDEX', 'Close this document and store another one');

@@ -1663,3 +1663,5 @@ if (!defined('_VIEW_DOC_HISTORY')) define('_VIEW_DOC_HISTORY', 'Voir l\'historiq
 //ONLY ALPHANUM
 if (!defined('_ONLY_ALPHANUM')) define('_ONLY_ALPHANUM', 'Seuls les caract&egrave;res alphanum&eacute;riques sont accept&eacute;s');
 if (!defined('_ONLY_ALPHABETIC')) define('_ONLY_ALPHABETIC', 'Seuls les caract&egrave;res alphab&eacute;tiques sont accept&eacute;s');
+
+if (!defined('_CLOSE_MAIL_AND_INDEX')) define( '_CLOSE_MAIL_AND_INDEX', 'Cl&ocirc;turer un courrier et lancer l\'indexation');
