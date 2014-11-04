@@ -1525,7 +1525,7 @@ function check_date_exp(path_manage_script){
             } else {
                 document.getElementById('contact').style.backgroundColor='#ffe09b';
                 document.getElementById('contact_check').style.display='table-row';
-                document.getElementById("contact_check").innerHTML = "<td colspan=\"3\" style=\"font-size: 9px;text-align: center;color:#ea0000;\">Un courrier enregistré dans les "+check_days_before+" derniers jours à déjà été enregistré pour le même expéditeur</td>";
+                document.getElementById("contact_check").innerHTML = "<td colspan=\"3\" style=\"font-size: 9px;text-align: center;color:#ea0000;\">Un courrier enregistré dans les "+check_days_before+" derniers jours a déjà été enregistré pour le même expéditeur</td>";
                 document.getElementById('contactcheck').value = answer.responseText;
             }
         }       
