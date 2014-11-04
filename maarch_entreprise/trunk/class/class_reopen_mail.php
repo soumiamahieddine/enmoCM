@@ -39,11 +39,21 @@ class ReopenMail extends dbquery
     */
     public function reopen_mail_check()
     {
-        if (empty($_REQUEST['id'])) {
-            $_SESSION['error'] = _ID . ' ' . _IS_EMPTY;
+        if (!empty($_REQUEST['id']) && !empty($_REQUEST['ref_id'])) {
+            $_SESSION['error'] = _ENTER_REF_ID_OR_GED_ID;
+            $_SESSION['m_admin']['reopen_mail']['REF_ID'] = '';
+            $_SESSION['m_admin']['reopen_mail']['ID'] = '';
+            return false;
+        }
+        if (empty($_REQUEST['id']) && empty($_REQUEST['ref_id'])) {
+            $_SESSION['error'] = _REF_ID . ', ' . _GED_ID . ' ' . _IS_EMPTY;
         } else {
-            $_SESSION['m_admin']['reopen_mail']['ID'] = $this->wash(
-                $_REQUEST['id'], 'num',  _ID . ' ');
+            if (!empty($_REQUEST['ref_id'])) {
+                $_SESSION['m_admin']['reopen_mail']['REF_ID'] = $_REQUEST['ref_id'];
+            } elseif (!empty($_REQUEST['id'])) {
+                $_SESSION['m_admin']['reopen_mail']['ID'] = $this->wash(
+                    $_REQUEST['id'], 'num',  _GED_ID . ' ');
+            }
         }
     }
 
@@ -60,6 +70,7 @@ class ReopenMail extends dbquery
                 'location: ' . $_SESSION['config']['businessappurl']
                 . 'index.php?page=reopen_mail&id='
                 . $_SESSION['m_admin']['reopen_mail']['ID']
+                . '&ref_id=' . $_SESSION['m_admin']['reopen_mail']['REF_ID']
                 . '&admin=reopen_mail'
             );
             exit();
@@ -69,13 +80,22 @@ class ReopenMail extends dbquery
             $ind_coll = $sec->get_ind_collection('letterbox_coll');
             $table = $_SESSION['collections'][$ind_coll]['table'];
             $this->connect();
-
-            $this->query(
-                'select res_id from ' . $table . ' where res_id = '
-                . $_SESSION['m_admin']['reopen_mail']['ID']
-            );
+            if (!empty($_SESSION['m_admin']['reopen_mail']['REF_ID'])) {
+                $this->query(
+                    "select res_id, alt_identifier from res_view_letterbox where alt_identifier = '" 
+                        . $_SESSION['m_admin']['reopen_mail']['REF_ID'] . "'"
+                );
+                $errorMsg = _REF_ID . ' ' . _UNKNOWN;
+            } elseif (!empty($_SESSION['m_admin']['reopen_mail']['ID'])) {
+                $this->query(
+                    'select res_id, alt_identifier from res_view_letterbox where res_id = ' 
+                        . $_SESSION['m_admin']['reopen_mail']['ID'] 
+                );
+                $errorMsg = _GED_ID . ' ' . _UNKNOWN;
+            }
+            
             if ($this->nb_result() == 0) {
-                $_SESSION['error'] = _NUM_GED . ' ' . _UNKNOWN;
+                $_SESSION['error'] = $errorMsg;
                 header(
                     'location: ' . $_SESSION['config']['businessappurl']
                     . 'index.php?page=reopen_mail&id='
@@ -83,25 +103,34 @@ class ReopenMail extends dbquery
                     . '&admin=reopen_mail'
                 );
                 exit();
+            } else {
+                $resultRes = $this->fetch_object();
             }
+            
             $this->query(
                 'update ' . $table . " set status = 'COU' where res_id = "
-                . $_SESSION['m_admin']['reopen_mail']['ID']
+                . $resultRes->res_id
             );
-
+            
+            $historyMsg = _REOPEN_THIS_MAIL . ' : ';
+            if ($resultRes->alt_identifier <> '') {
+                $historyMsg .= $resultRes->alt_identifier . ' (' . $resultRes->res_id . ')';
+            } else {
+                $historyMsg .= $resultRes->res_id;
+            }
+            
             if ($_SESSION['history']['resup'] == true) {
                 require_once 'core/class/class_history.php';
                 $hist = new history();
                 $hist->add(
                     $table, $_SESSION['m_admin']['reopen_mail']['ID'], 'UP','resup',
-                    _REOPEN_THIS_MAIL . ' : '
-                    . $_SESSION['m_admin']['reopen_mail']['ID'],
+                    $historyMsg,
                     $_SESSION['config']['databasetype'], 'apps'
                 );
             }
 
-            $_SESSION['error'] = _REOPEN_THIS_MAIL . ' : '
-                               . $_SESSION['m_admin']['reopen_mail']['ID'];
+            $_SESSION['error'] = $historyMsg;
+            
             unset($_SESSION['m_admin']);
             header(
                 'location: ' . $_SESSION['config']['businessappurl']
@@ -122,14 +151,16 @@ class ReopenMail extends dbquery
 
         <div id="inner_content" class="clearfix" align="center">
         <br /><br />
-        <p ><?php echo _MAIL_SENTENCE2._MAIL_SENTENCE3;?> </p>
+        <p ><?php echo _MAIL_SENTENCE2 . '<br />' . _MAIL_SENTENCE3 . '<br />' . _MAIL_SENTENCE4 . ' ' . _BASKETS . ' ' . _MAIL_SENTENCE5;?> </p>
           <br/>
           <p ><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=separateur_1.jpg" width="90%" height="1" alt="" /></p>
           <form name="form1" method="post" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=reopen_mail&page=reopen_mail_db";?>" >
           <p>
-            <label for="id"><?php echo _ENTER_DOC_ID;?> : </h2>
+            <?php echo _ENTER_REF_ID;?> : 
+                <input type="text" name="ref_id" id="ref_id" value="<?php if(isset($_SESSION['m_admin']['reopen_mail']['REF_ID'])){ echo $_SESSION['m_admin']['reopen_mail']['REF_ID'];}?>" />
+            <?php echo _ENTER_DOC_ID;?> :  
                 <input type="text" name="id" id="id" value="<?php if(isset($_SESSION['m_admin']['reopen_mail']['ID'])){ echo $_SESSION['m_admin']['reopen_mail']['ID'];}?>" />
-          </p >
+          </p>
              <br/>
 
            <p >(<?php echo _TO_KNOW_ID;?>) </p>

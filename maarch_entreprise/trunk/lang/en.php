@@ -585,6 +585,13 @@ if (!defined('_MAIL_OBJECT_HELP')) define('_MAIL_OBJECT_HELP', 'Add object keywo
 if (!defined('_MAIL_PRIORITY')) define('_MAIL_PRIORITY', 'Mail priority');
 if (!defined('_MAIL_SENTENCE2')) define('_MAIL_SENTENCE2', 'Enter the number of a document and switch its status to "In progress".');
 if (!defined('_MAIL_SENTENCE3')) define('_MAIL_SENTENCE3', ' This feature enables to reopen a document that was closed too early.');
+if (!defined('_MAIL_SENTENCE4')) define( '_MAIL_SENTENCE4', '');
+if (!defined('_MAIL_SENTENCE5')) define( '_MAIL_SENTENCE5', '');
+if (!defined('_ENTER_DOC_ID')) define( '_ENTER_DOC_ID', ' or enter doc Id ');
+if (!defined('_ENTER_REF_ID')) define( '_ENTER_REF_ID', ' Enter ref Id');
+if (!defined('_ENTER_REF_ID_OR_GED_ID')) define( '_ENTER_REF_ID_OR_GED_ID', 'Enter ref Id or doc Id');
+if (!defined('_REF_ID')) define( '_REF_ID', 'Ref Id');
+if (!defined('_GED_ID')) define( '_GED_ID', 'Doc Id');
 if (!defined('_MAIL_TYPOLOGY_REPORT')) define('_MAIL_TYPOLOGY_REPORT', 'Volume of documents per type over a period');
 if (!defined('_MAIL_TYPOLOGY_REPORT_DESC')) define('_MAIL_TYPOLOGY_REPORT_DESC', 'Volume of documents per type over a period');
 if (!defined('_MAIL_VOL_BY_CAT_REPORT')) define('_MAIL_VOL_BY_CAT_REPORT', 'Volume of documents per category over a period');
