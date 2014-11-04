@@ -1071,7 +1071,8 @@ class contacts_v2 extends dbquery
         {
             $this->connect();
             $query = "select * from ".$_SESSION['tablename']['contact_addresses']." where id = ".$id;
-            if(!$admin)
+            $core_tools = new core_tools();
+            if(!$admin && !$core_tools->test_service('update_contacts', 'apps', false))
             {
                 $query .= " and user_id = '".$this->protect_string_db($_SESSION['user']['UserId'])."'";
             }
