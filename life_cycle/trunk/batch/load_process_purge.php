@@ -60,7 +60,6 @@ $configFile = '';
 $MaarchDirectory = '';
 $batchDirectory = '';
 $batchName = 'process_purge';
-$outputDirectory = '';
 
 $table = '';
 $adrTable = '';
@@ -87,10 +86,6 @@ $lckFile = '';
 $errorLckFile = '';
 $totalProcessedResources = 0;
 $whereClause =  '';
-$endCycleId =  '';
-$reverseWhereClause =  '';
-$breakKey = '';
-$breakKeyValue = '';
 $log4PhpEnabled = false;
 $targetCycle = '';
 
@@ -116,26 +111,7 @@ $argsparser->add_arg(
         'help' => 'Collection target is mandatory.',
     )
 );
-// The life cycle policy
-$argsparser->add_arg(
-    'policy', 
-    array(
-        'short' => 'p',
-        'long' => 'policy',
-        'mandatory' => true,
-        'help' => 'Policy is mandatory.',
-    )
-);
-// The cycle of the policy
-$argsparser->add_arg(
-    'cycle', 
-    array(
-        'short' => 'cy',
-        'long' => 'cycle',
-        'mandatory' => true,
-        'help' => 'Cycle is mandatory.',
-    )
-);
+
 // The path of the log directory
 $argsparser->add_arg(
     'logs', 
@@ -160,14 +136,6 @@ try {
     }
     if ($e->arg_name == 'collection') {
         $GLOBALS['logger']->write('Collection missing', 'ERROR', 1);
-        exit(105);
-    }
-    if ($e->arg_name == 'policy') {
-        $GLOBALS['logger']->write('Policy missing', 'ERROR', 1);
-        exit(105);
-    }
-    if ($e->arg_name == 'cycle') {
-        $GLOBALS['logger']->write('Cycle missing', 'ERROR', 1);
         exit(105);
     }
 }
@@ -198,8 +166,6 @@ foreach (array_keys($options) as $key) {
 $GLOBALS['logger']->write($txt, 'DEBUG');
 $GLOBALS['configFile'] = $options['config'];
 $GLOBALS['collection'] = $options['collection'];
-$GLOBALS['policy'] = $options['policy'];
-$GLOBALS['cycle'] = $options['cycle'];
 $GLOBALS['logger']->write($txt, 'INFO');
 // Tests existence of config file
 if (!file_exists($GLOBALS['configFile'])) {
@@ -223,17 +189,23 @@ $GLOBALS['MaarchDirectory'] = (string) $CONFIG->MaarchDirectory;
 $GLOBALS['batchDirectory'] = $GLOBALS['MaarchDirectory'] . 'modules' 
                            . DIRECTORY_SEPARATOR . 'life_cycle' 
                            . DIRECTORY_SEPARATOR . 'batch' . DIRECTORY_SEPARATOR;
-$GLOBALS['outputDirectory'] = (string) $CONFIG->OutputDirectory;
-$GLOBALS['docserversFeatures']['DOCSERVERS']['PATHTOCOMPRESSTOOL'] =
-                                           (string) $CONFIG->PathToCompressTool;
 $MaarchApps = (string) $CONFIG->MaarchApps;
 $logLevel = (string) $CONFIG->LogLevel;
 $GLOBALS['logger']->set_threshold_level($logLevel);
 $DisplayedLogLevel = (string) $CONFIG->DisplayedLogLevel;
 $GLOBALS['databasetype'] = (string) $xmlconfig->CONFIG_BASE->databasetype;
 $GLOBALS['whereClause'] = (string) $CONFIG->WhereClause;
-$GLOBALS['reverseWhereClause'] = (string) $CONFIG->ReverseWhereClause;
-$GLOBALS['endCycleId'] = (string) $CONFIG->endCycleId;
+
+if (empty($GLOBALS['whereClause'])) {
+    $GLOBALS['logger']->write('whereClause is empty', 'ERROR', 1);
+    exit(105);
+}
+
+if (trim($GLOBALS['whereClause']) == '1=1') {
+    $GLOBALS['logger']->write('Security problem with whereClause', 'ERROR', 1);
+    exit(113);
+}
+
 $i = 0;
 foreach ($xmlconfig->COLLECTION as $col) {
     $GLOBALS['collections'][$i] = array(
@@ -319,11 +291,11 @@ $GLOBALS['db2']->connect();
 $GLOBALS['dbLog']->connect();
 $GLOBALS['docserverControler'] = new docservers_controler();
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
-                         . $GLOBALS['batchName'] . '_' . $GLOBALS['policy'] 
-                         . '_' . $GLOBALS['cycle'] . '_error.lck';
+                         . $GLOBALS['batchName'] . '_' . $GLOBALS['collection'] 
+                         . '_error.lck';
 $GLOBALS['lckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
-                    . $GLOBALS['batchName'] . '_' . $GLOBALS['policy'] 
-                    . '_' . $GLOBALS['cycle'] . '.lck';
+                    . $GLOBALS['batchName'] . '_' . $GLOBALS['collection'] 
+                    . '.lck';
 if (file_exists($GLOBALS['errorLckFile'])) {
     $GLOBALS['logger']->write(
         'Error persists, please solve this before launching a new batch', 
@@ -333,8 +305,8 @@ if (file_exists($GLOBALS['errorLckFile'])) {
 }
 if (file_exists($GLOBALS['lckFile'])) {
     $GLOBALS['logger']->write(
-        'An instance of the batch for policy:' . $GLOBALS['policy'] 
-        . ' and the cycle:' . $GLOBALS['cycle'] . ' is already in progress',
+        'An instance of the purge batch for collection:' . $GLOBALS['collection'] 
+        . ' is already in progress',
         'ERROR', 109
     );
     exit(109);
@@ -343,6 +315,4 @@ $semaphore = fopen($GLOBALS['lckFile'], 'a');
 fwrite($semaphore, '1');
 fclose($semaphore);
 Bt_getWorkBatch();
-if (!is_dir($GLOBALS['outputDirectory'])) {
-    mkdir($GLOBALS['outputDirectory'], 0777);
-}
+
