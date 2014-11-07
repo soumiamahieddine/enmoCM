@@ -38,7 +38,7 @@ case 'recipients':
     case 'listinstance':
     default:
         $from .= " JOIN res_letterbox lb ON lb.res_id = li.res_id";
-        $where .= " AND listinstance_id = " . $event->record_id . " AND lb.status not in ('INIT', 'AVAL')";
+        $where .= " AND listinstance_id = " . $event->record_id . " AND lb.status not in ('INIT', 'AVAL') AND li.item_id <> '". $event->user_id ."'";
     }
     
     $query = $select . $from . $where;
