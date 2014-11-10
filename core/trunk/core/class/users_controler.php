@@ -350,6 +350,10 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                 md5($params['userdefaultpassword'])
             );
 
+            if($_SESSION['config']['ldap'] == "true"){
+                $user->change_password = "N";
+            }
+
             if (self::userExists($user->user_id)) {
                 $error .= _USER . ' ' . _ALREADY_EXISTS . '#';
             }
