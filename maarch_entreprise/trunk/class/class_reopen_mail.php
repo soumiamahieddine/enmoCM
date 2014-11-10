@@ -106,7 +106,7 @@ class ReopenMail extends dbquery
             } else {
                 $resultRes = $this->fetch_object();
 
-                if ($resultRes->status <> "END" && $resultRes->status <> "CLO" && $resultRes->status && "CLOS") {
+                if ($resultRes->status <> "END" && $resultRes->status <> "CLO" && $resultRes->status <> "CLOS") {
                     $_SESSION['error'] = _DOC_NOT_CLOSED;
                     header(
                         'location: ' . $_SESSION['config']['businessappurl']
