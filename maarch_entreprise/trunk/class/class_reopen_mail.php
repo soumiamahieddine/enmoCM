@@ -82,13 +82,13 @@ class ReopenMail extends dbquery
             $this->connect();
             if (!empty($_SESSION['m_admin']['reopen_mail']['REF_ID'])) {
                 $this->query(
-                    "select res_id, alt_identifier from res_view_letterbox where alt_identifier = '" 
+                    "select res_id, alt_identifier, status from res_view_letterbox where alt_identifier = '" 
                         . $_SESSION['m_admin']['reopen_mail']['REF_ID'] . "'"
                 );
                 $errorMsg = _REF_ID . ' ' . _UNKNOWN;
             } elseif (!empty($_SESSION['m_admin']['reopen_mail']['ID'])) {
                 $this->query(
-                    'select res_id, alt_identifier from res_view_letterbox where res_id = ' 
+                    'select res_id, alt_identifier, status from res_view_letterbox where res_id = ' 
                         . $_SESSION['m_admin']['reopen_mail']['ID'] 
                 );
                 $errorMsg = _GED_ID . ' ' . _UNKNOWN;
@@ -105,6 +105,17 @@ class ReopenMail extends dbquery
                 exit();
             } else {
                 $resultRes = $this->fetch_object();
+
+                if ($resultRes->status <> "END" && $resultRes->status <> "CLO" && $resultRes->status && "CLOS") {
+                    $_SESSION['error'] = _DOC_NOT_CLOSED;
+                    header(
+                        'location: ' . $_SESSION['config']['businessappurl']
+                        . 'index.php?page=reopen_mail&id='
+                        . $_SESSION['m_admin']['reopen_mail']['ID']
+                        . '&admin=reopen_mail'
+                    );
+                    exit();
+                }
             }
             
             $this->query(

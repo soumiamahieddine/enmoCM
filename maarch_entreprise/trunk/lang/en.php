@@ -1337,3 +1337,4 @@ if (!defined('_SALUTATION_FOOTER')) define( '_SALUTATION_FOOTER','Salutation foo
 if (!defined('_CREATE_CONTACTS')) define( '_CREATE_CONTACTS','Create a contact');
 
 if (!defined('_CLOSE_MAIL_AND_INDEX')) define( '_CLOSE_MAIL_AND_INDEX', 'Close this document and store another one');
+if (!defined('_DOC_NOT_CLOSED')) define('_DOC_NOT_CLOSED', 'This mail is not closed');

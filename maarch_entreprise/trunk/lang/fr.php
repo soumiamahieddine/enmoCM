@@ -1671,3 +1671,4 @@ if (!defined('_ONLY_ALPHANUM')) define('_ONLY_ALPHANUM', 'Seuls les caract&egrav
 if (!defined('_ONLY_ALPHABETIC')) define('_ONLY_ALPHABETIC', 'Seuls les caract&egrave;res alphab&eacute;tiques sont accept&eacute;s');
 
 if (!defined('_CLOSE_MAIL_AND_INDEX')) define( '_CLOSE_MAIL_AND_INDEX', 'Cl&ocirc;turer un courrier et lancer l\'indexation');
+if (!defined('_DOC_NOT_CLOSED')) define('_DOC_NOT_CLOSED', 'Ce courrier n\'est pas cl&ocirc;tur&eacute;');
