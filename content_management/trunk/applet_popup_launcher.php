@@ -5,6 +5,18 @@ $core_tools->load_html();
 $core_tools->load_header();
 $core_tools->load_js();
 
+if (
+    file_exists(
+        $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+        . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+        . DIRECTORY_SEPARATOR . 'content_management' . DIRECTORY_SEPARATOR . 'applet_launcher.php'
+    )
+) {
+    $path = 'custom/'. $_SESSION['custom_override_id'] .'/modules/content_management/applet_launcher.php';
+} else {
+    $path = 'modules/content_management/applet_launcher.php';
+}
+
 ?>
 
 <body>
@@ -13,8 +25,8 @@ $core_tools->load_js();
             <div class="error" id="divError" name="divError"></div>
             <script language="javascript">
                 loadApplet('<?php 
-                    echo $_SESSION['config']['coreurl'];
-                    ?>modules/content_management/applet_launcher.php?objectType=attachment&objectId=<?php 
+                    echo $_SESSION['config']['coreurl'] .''.$path;
+                    ?>?objectType=attachment&objectId=<?php 
                     echo $_REQUEST['objectId'];
                     ?>&objectType=<?php
                     echo $_REQUEST['objectType'];
@@ -22,6 +34,8 @@ $core_tools->load_js();
                     echo $_REQUEST['objectTable'];
                     ?>&resMaster=<?php
                     echo $_REQUEST['resMaster'];
+                    ?>&custom_override_id=<?php 
+                    echo $_SESSION['custom_override_id'];
                     ?>');
             </script>
         </div>

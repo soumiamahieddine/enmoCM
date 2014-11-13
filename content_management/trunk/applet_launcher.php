@@ -1,6 +1,25 @@
 <?php
 
-include_once '../../core/init.php';
+if (
+    file_exists('..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR. '..' 
+                    . DIRECTORY_SEPARATOR . 'core'. DIRECTORY_SEPARATOR . 'init.php'
+    )
+) {
+    include_once '../../../../core/init.php';
+} else {
+    include_once '../../core/init.php';
+}
+
+if (
+    file_exists('custom'.DIRECTORY_SEPARATOR. $_SESSION['custom_override_id']
+                . DIRECTORY_SEPARATOR . 'modules'. DIRECTORY_SEPARATOR . 'content_management'
+                . DIRECTORY_SEPARATOR . 'applet_controller.php'
+    )
+) {
+    $path = 'custom/'. $_SESSION['custom_override_id'] .'/modules/content_management/applet_controller.php';
+} else {
+    $path = 'modules/content_management/applet_controller.php';
+}
 
 //ONLY FOR THE TESTS
 /*
@@ -136,8 +155,8 @@ $_SESSION['error'] = '';
         code="maarchcm.MaarchCM" name="maarchcmapplet" id="maarchcmapplet" 
         WIDTH="1" HEIGHT="1" version = "1.6">
         <param name="url" value="<?php 
-            echo $_SESSION['config']['coreurl'];
-        ?>modules/content_management/applet_controller.php">
+            echo $_SESSION['config']['coreurl'].$path;
+        ?>">
         <param name="objectType" value="<?php echo $objectType;?>">
         <param name="objectTable" value="<?php echo $objectTable;?>">
         <param name="objectId" value="<?php echo $objectId;?>">
