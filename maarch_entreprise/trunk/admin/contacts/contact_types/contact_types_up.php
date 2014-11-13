@@ -185,9 +185,9 @@ if (isset($_REQUEST['valid'])) {
 	}
 	if (empty($erreur)) {
 		unset($_SESSION['m_admin']);
-		if (isset($_REQUEST['fromContactTree']) && $_REQUEST['fromContactTree'] == 'yes') {
+		if (isset($_SESSION['fromContactTree']) && $_SESSION['fromContactTree'] == 'yes') {
 			$_SESSION['error'] = "";
-			?><script type="text/javascript">self.close();</script><?php
+			?><script type="text/javascript">window.location.href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_contacts";</script><?php
 		} else {
 		?>
 	   		<script type="text/javascript">window.location.href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types";</script>
@@ -272,9 +272,10 @@ if ($mode == "up") {
 	?>index.php?display=true&page=contact_types_up">
 		<input type="hidden" name="display" value="true" />
 	    <input type="hidden" name="page" value="contact_types_up" />
-	    <?php if (isset($_REQUEST['fromContactTree'])){
+	    <?php 
+/*	    if (isset($_SESSION['fromContactTree']) && $_SESSION['fromContactTree']=="yes"){
 	    		?><input type="hidden" name="fromContactTree" value="yes" /><?php
-	    	}
+	    	}*/
 	if ($mode == "up") {
 	    ?>
 		<p>
@@ -307,8 +308,8 @@ if ($mode == "up") {
 	echo _CANCEL;
 	?>" 
 	    <?php 
-	    if (isset($_REQUEST['fromContactTree'])){
-    		?> onclick="self.close();" /><?php
+	    if (isset($_SESSION['fromContactTree']) && $_SESSION['fromContactTree']=="yes"){
+    		?> onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_contacts';" /><?php
     	} else {
     		?> onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types';" /><?php
     	}?>

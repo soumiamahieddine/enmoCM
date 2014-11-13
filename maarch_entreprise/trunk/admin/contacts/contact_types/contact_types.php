@@ -49,6 +49,7 @@ $pageId = "contact_types";
 $admin->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
 /***********************************************************/
 unset($_SESSION['m_admin']);
+$_SESSION['fromContactTree'] = "";
 require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
     . "class_request.php";
 require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']

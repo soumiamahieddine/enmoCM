@@ -191,6 +191,7 @@ array_push($search_customer_results, array('contact' => _VIEW_TREE_CONTACTS . ' 
 
     function TafelTreeInit ()
     {
+        <?php $_SESSION['fromContactTree'] = "yes";?>
         var struct = [
         <?php
 
@@ -207,7 +208,8 @@ array_push($search_customer_results, array('contact' => _VIEW_TREE_CONTACTS . ' 
                                         ?>
                                         {
                                             'id':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_id']);?>',
-                                            'txt':'<a onmouseover="this.style.cursor=\'pointer\';" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types_up&id=<?php echo $search_customer_results[$i]['content'][$j]['contact_type_id'];?>&fromContactTree\');"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_label']);?></a>',
+                                            // 'txt':'<a onmouseover="this.style.cursor=\'pointer\';" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types_up&id=<?php echo $search_customer_results[$i]['content'][$j]['contact_type_id'];?>&fromContactTree\');"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_label']);?></a>',
+                                            'txt':'<a href="#" onclick="window.top.location.href=\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types_up&id=<?php echo $search_customer_results[$i]['content'][$j]['contact_type_id'];?>\'"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_label']);?></a>',
                                             'items':[
                                                         <?php
                                                         for($k=0;$k<count($search_customer_results[$i]['content'][$j]['second_level']);$k++)
@@ -215,7 +217,8 @@ array_push($search_customer_results, array('contact' => _VIEW_TREE_CONTACTS . ' 
                                                             ?>
                                                             {
                                                                 'id':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_id']);?>',
-                                                                'txt':'<a onmouseover="this.style.cursor=\'pointer\';" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2_up&id=<?php echo $search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_id'];?>&fromContactTree\');"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_label']);?></a>',
+                                                                // 'txt':'<a onmouseover="this.style.cursor=\'pointer\';" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2_up&id=<?php echo $search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_id'];?>&fromContactTree\');"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_label']);?></a>',
+                                                                'txt':'<a onmouseover="this.style.cursor=\'pointer\';" onclick="window.top.location.href=\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2_up&id=<?php echo $search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_id'];?>\'"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_label']);?></a>',
                                                                 'items':[
                                                                             <?php
                                                                             for($l=0;$l<count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes']);$l++)

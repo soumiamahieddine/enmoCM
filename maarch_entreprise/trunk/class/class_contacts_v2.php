@@ -327,8 +327,9 @@ class contacts_v2 extends dbquery
                 }
                 $this->clearcontactinfos();
                 $_SESSION['info'] = _CONTACT_MODIFIED;
-                if (isset($_REQUEST['fromContactTree'])) {
-                    ?><script>self.close();</script><?php
+                if (isset($_SESSION['fromContactTree'])) {
+                    header("location: ".$_SESSION['config']['businessappurl']. 'index.php?page=view_tree_contacts');
+                    exit(); 
                 } else {
                     header("location: ".$path_contacts);
                     exit();                    
@@ -462,9 +463,10 @@ class contacts_v2 extends dbquery
                     {?>
                         <input type="hidden" name="admin"  value="contacts_v2" />
                         <input type="hidden" name="page"  value="contacts_v2_up_db" />
-                <?php if (isset($_REQUEST['fromContactTree'])){
+                <?php 
+/*                if (isset($_REQUEST['fromContactTree'])){
                         ?><input type="hidden" name="fromContactTree" value="yes" /><?php
-                    }
+                    }*/
                    }?>
                     <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])) {echo $_REQUEST['order'];}?>" />
                     <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])) { echo $_REQUEST['order_field'];}?>" />
@@ -613,7 +615,7 @@ class contacts_v2 extends dbquery
                             <input type="button" class="button"  name="cancel" value="<?php echo _BACK_TO_RESULTS_LIST; ?>" onclick="history.go(-1);" />
                     <?php } else {
                                 if (isset($_SESSION['fromContactTree']) && $_SESSION['fromContactTree'] == "yes"){
-                                    ?><input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="self.close();" /><?php
+                                    ?><input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_contacts';" /><?php
                                     $_SESSION['fromContactTree'] = "";
                                 } else {?>
                                     <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $cancel_target;?>';" />                 
