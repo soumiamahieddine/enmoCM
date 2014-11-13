@@ -101,7 +101,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                     $tab[$i][$j]['value']
                 );
                 $tab[$i][$j]["contact_purposes_label"] = $tab[$i][$j]['value'];
-                $tab[$i][$j]["label"] = _DESC_CONTACT_TYPES;
+                $tab[$i][$j]["label"] = _DESC_CONTACT_PURPOSES;
                 $tab[$i][$j]["size"] = "60";
                 $tab[$i][$j]["label_align"] = "left";
                 $tab[$i][$j]["align"] = "left";
