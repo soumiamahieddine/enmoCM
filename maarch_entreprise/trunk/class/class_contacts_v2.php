@@ -123,7 +123,7 @@ class contacts_v2 extends dbquery
             }
 
             if($mycontact == 'iframe'){
-                $path_contacts_confirm = $_SESSION['config']['businessappurl'] . 'index.php?display=false&page=contacts_v2_confirm';
+                $path_contacts_confirm = $_SESSION['config']['businessappurl'] . 'index.php?display=false&page=contacts_v2_confirm&popup';
             } else {
                 $path_contacts_confirm = $_SESSION['config']['businessappurl'] . 'index.php?page=contacts_v2_confirm';
             }

@@ -56,9 +56,11 @@ $contact = new contacts_v2();
 $db = new dbquery();
 $db->connect();
 
-echo '<div class="error" id="main_error">';
-echo $_SESSION['error'];
-echo '</div>';
+if (isset($_REQUEST['popup'])) {
+	echo '<div class="error" id="main_error">';
+	echo $_SESSION['error'];
+	echo '</div>';
+}
 
 echo '<div class="info" id="main_info">';
 echo $_SESSION['info'];
