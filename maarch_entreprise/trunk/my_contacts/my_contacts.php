@@ -114,11 +114,13 @@ $contact    = new contacts_v2();
 
         foreach($what_table as $what_a){
             $sql_lastname[] = " lower(lastname) LIKE lower('".$what_a."%')";
-            $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
+            // $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
             $sql_society[] = " lower(society) LIKE lower('".$what_a."%')";
         }
 
-        $where_tab[] = " (" . implode(' OR ', $sql_lastname) . "  or " . implode(' OR ', $sql_firstname) . "  or " . implode(' OR ', $sql_society) . ") ";
+        $where_tab[] = " (" . implode(' OR ', $sql_lastname) 
+                        // . "  or " . implode(' OR ', $sql_firstname) 
+                        . "  or " . implode(' OR ', $sql_society) . ") ";
     }
     //Build where
     $where = implode(' and ', $where_tab);

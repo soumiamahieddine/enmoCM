@@ -99,12 +99,12 @@ if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 
     foreach($what_table as $what_a){
         $sql_lastname[] = " lower(lastname) LIKE lower('".$what_a."%')";
-        $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
+        // $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
         $sql_society[] = " lower(society) LIKE lower('".$what_a."%')";
     }
 
     $where .= " (" . implode(' OR ', $sql_lastname) . " ";
-    $where .= " or " . implode(' OR ', $sql_firstname) . " ";
+    // $where .= " or " . implode(' OR ', $sql_firstname) . " ";
     $where .= " or " . implode(' OR ', $sql_society) . ") ";
 
 }
