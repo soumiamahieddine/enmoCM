@@ -163,6 +163,14 @@ if($mode == 'normal') {
     $url_error = $_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching'
         .'&page=search_adv_error';
+
+    if (isset($_REQUEST['exclude'])) {
+        $_SESSION['excludeId'] = $_REQUEST['exclude'];
+    }
+    if ($_REQUEST['mode'] == 'popup' && isset($_SESSION['excludeId'])) {
+        $urlParameters .= '&exclude='.$_SESSION['excludeId'];
+    }
+
     $url_search = $_SESSION['config']['businessappurl']
         .'index.php?display=true&dir=indexing_searching'
         .'&page=search_adv&load&mode='.$mode.$urlParameters;
@@ -201,6 +209,10 @@ if($mode == 'normal') {
     //From search
     if (!empty($_SESSION['searching']['where_request'])) $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)';
     
+    if (isset($_REQUEST['exclude'])) {
+        $_SESSION['excludeId'] = $_REQUEST['exclude'];
+    }
+
     //From popup excluding some id
     if ($_REQUEST['mode'] == 'popup' && isset($_SESSION['excludeId'])) {
         $where_tab[] = 'res_id <> '.$_SESSION['excludeId'].' and '
