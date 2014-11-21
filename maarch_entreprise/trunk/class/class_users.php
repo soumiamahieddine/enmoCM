@@ -50,6 +50,13 @@ class class_users extends dbquery
         $_SESSION['user']['pass1'] = $this->wash(
             $_POST['pass1'], 'no', _FIRST_PSW
         );
+
+        if(!empty($_POST['Phone'])){
+            $_SESSION['user']['Phone'] = $this->wash(
+                $_POST['Phone'], 'num', _PHONE, "no", "",32
+            );
+        }
+
         
         if ($_SESSION['config']['ldap'] != "true") {
             $_SESSION['user']['pass2'] = $this->wash(
