@@ -167,6 +167,34 @@ function updateProcessDate(path_manage_script)
     }
 }
 
+function checkRealDate(arg) {  
+
+    var cat = $('category_id').options[$('category_id').selectedIndex].value
+
+    if (cat == 'incoming') {
+
+        var admissionDate;
+        var docDate;
+
+        if ($('admission_date')) {
+            admissionDate = $('admission_date').value;
+        }
+
+        if($('doc_date')) {
+            docDate = $('doc_date').value;
+        }
+
+        if(admissionDate!="" && docDate!="" && docDate>admissionDate){          
+            alert("La date du courrier doit être antérieur à la date d'arrivée du courrier ");
+            if(arg=='admissionDate'){
+                $('admission_date').value = "";
+            }
+            if(arg=='docDate'){
+                $('doc_date').value = "";
+            }    
+        }
+    }
+}
 /**
  * Activates / Desactivates the process date limit
  *

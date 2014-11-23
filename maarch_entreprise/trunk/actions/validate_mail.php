@@ -427,7 +427,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         {
                             $frm_str .= $today;
                         }
-                        $frm_str .= '" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/></td>';
+                        $frm_str .= '" onfocus="checkRealDate(\'docDate\');" onChange="checkRealDate(\'docDate\');" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/></td>';
                         $frm_str .= '<td><span class="red_asterisk" id="doc_date_mandatory" style="display:inline;">*</span>&nbsp;</td>';
                   $frm_str .= '</tr >';
                   /*** Author ***/
@@ -459,7 +459,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         {
                             $frm_str .= $today;
                         }
-                        $frm_str .= '" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/></td>';
+                        $frm_str .= '" onfocus="checkRealDate(\'admissionDate\');" onChange="checkRealDate(\'admissionDate\');" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/></td>';
                         $frm_str .= '<td><span class="red_asterisk" id="admission_date_mandatory" style="display:inline;">*</span>&nbsp;</td>';
                   $frm_str .= '</tr>';
 				  
