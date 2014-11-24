@@ -299,7 +299,11 @@ switch ($mode) {
                 }
                 
                 //Reload and show message
-                $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTES_ADDED."';"; 
+                $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTES_ADDED."';";
+
+                //Count notes
+                $nb_notes = $notesTools->countUserNotes($identifier, $collId); 
+                $js .= "window.parent.top.$('nb_note').innerHTML='".$nb_notes."';";
             }
         } else {
             $error = $request->wash_html(_NOTES.' '._IS_EMPTY.'!','NONE');
@@ -529,7 +533,11 @@ switch ($mode) {
             }
             
             //Reload and show message
-            $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTES_DELETED."';"; 
+            $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTES_DELETED."';";
+            
+            //Count notes
+            $nb_notes = $notesTools->countUserNotes($identifier, $collId); 
+            $js .= "window.parent.top.$('nb_note').innerHTML='".$nb_notes."';";
         }
     break;
 }
