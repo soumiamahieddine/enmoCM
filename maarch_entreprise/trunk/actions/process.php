@@ -604,7 +604,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $notes_tools    = new notes();
         //Count notes
         $nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
-        $nbr_notes = ' ('.$nbr_notes.')';
+        $nbr_notes = ' (<span id="nb_note">'.$nbr_notes.'</span>)';
         $frm_str .= '<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';

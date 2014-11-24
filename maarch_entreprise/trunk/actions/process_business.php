@@ -391,12 +391,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     // HISTORY
     if ($core_tools->test_service('view_doc_history', 'apps', false)) {
         $frm_str .= '<td>';
-        $frm_str .= '|<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><<</span><b>'
            . '<small>' . _DOC_HISTORY . '</small>';
-        $frm_str .= '</b></span>|';
+        $frm_str .= '</b></span>';
         $frm_str .= '</td>';
     }
 
@@ -407,13 +407,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $notes_tools    = new notes();
         //Count notes
         $nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
-        $nbr_notes = ' ('.$nbr_notes.')';
-        $frm_str .= '|<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
+        $nbr_notes = ' (<span id="nb_note">'.$nbr_notes.'</span>)';
+        $frm_str .= '<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>'
             . '<small>' . _NOTES . $nbr_notes . '</small>';
-        $frm_str .= '</b></span>|';
+        $frm_str .= '</b></span>';
         $frm_str .= '</td>';
     }
 	
@@ -427,24 +427,24 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $nbr_emails = 0;
         $nbr_emails = $sendmail_tools->countUserEmails($res_id, $coll_id);
         $frm_str .= '<td>';
-        $frm_str .= '|<span onclick="new Effect.toggle(\'emails_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span onclick="new Effect.toggle(\'emails_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'emails_div\', \'divStatus_emails_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= ' <span id="divStatus_emails_div" style="color:#1C99C5;"><<</span><b>&nbsp;'
             . '<small>' ._SENDED_EMAILS . ' ('.$nbr_emails.')</small>';
-        $frm_str .= '</b></span>&nbsp;|';
+        $frm_str .= '</b></span>&nbsp;';
         $frm_str .= '</td>';
     }
 	
     //DIFFUSION LIST
     if ($core_tools->is_module_loaded('entities')) {
         $frm_str .= '<td>';
-        $frm_str .= '|<span onclick="new Effect.toggle(\'diff_list_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span onclick="new Effect.toggle(\'diff_list_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_diff_list_div" style="color:#1C99C5;"><<</span><b>'
             . '<small>' . _WF . '</small>';
-        $frm_str .= '</b></span>|';
+        $frm_str .= '</b></span>';
         $frm_str .= '</td>';
     }
 
@@ -464,12 +464,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         if ($answer <> '') {
             $answer .= ': ';
         }
-        $frm_str .= '|<span onclick="new Effect.toggle(\'list_answers_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span onclick="new Effect.toggle(\'list_answers_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'list_answers_div\', \'divStatus_done_answers_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span><b>'
              . '<small>' . _PJ . ' (' . $answer .'<span id="nb_attach">' . $nb_attach . '</span>)</small>';
-        $frm_str .= '</b></span>|';
+        $frm_str .= '</b></span>';
         $frm_str .= '</td>';
     }
     
@@ -509,12 +509,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
         $_SESSION['cm']['resMaster'] = '';
         $frm_str .= '<td>';
-        $frm_str .= '|<span onclick="new Effect.toggle(\'versions_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span onclick="new Effect.toggle(\'versions_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'versions_div\', \'divStatus_versions_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_versions_div" style="color:#1C99C5;"><<</span><b>'
             . '<small>' . _VERSIONS . ' (<span id="nbVersions">' . $extend_title_for_versions . '</span>)</small>';
-        $frm_str .= '</b></span>|';
+        $frm_str .= '</b></span>';
         $frm_str .= '</td>';
     }
 
@@ -527,12 +527,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $coll_id,
         'all'
     );
-    $frm_str .= '|<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
+    $frm_str .= '<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
         . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
         . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
     $frm_str .= '<span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>'
          . '<small>' . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)</small>';
-    $frm_str .= '</b></span>|';
+    $frm_str .= '</b></span>';
     $frm_str .= '</td>';
 
     //END TOOLBAR
