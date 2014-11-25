@@ -882,9 +882,9 @@ if (!defined('_MODIFY_CONTACT')) define( '_MODIFY_CONTACT', 'Modifier un contact
 if (!defined('_IS_CORPORATE_PERSON')) define( '_IS_CORPORATE_PERSON', 'Personne morale');
 if (!defined('_IS_PRIVATE')) define( '_IS_PRIVATE', 'Coordonnées confidentielles');
 if (!defined('_TITLE2')) define( '_TITLE2', 'Civilit&eacute;');
-if (!defined('_WARNING_MESSAGE_DEL_CONTACT'))  define('_WARNING_MESSAGE_DEL_CONTACT', 'Avertissement :<br> La suppression d&rsquo;un contact entraine la r&eacute;affectation des documents &agrave un nouveau contact quelque soit le statut des documents (courriers).');
+if (!defined('_WARNING_MESSAGE_DEL_CONTACT'))  define('_WARNING_MESSAGE_DEL_CONTACT', 'Avertissement :<br> La suppression d&rsquo;un contact entraine la r&eacute;affectation des documents et des courriers &agrave un nouveau contact.');
 if (!defined('_CONTACT_DELETION'))  define('_CONTACT_DELETION', 'Suppression de contact');
-if (!defined('_CONTACT_REAFFECT'))  define('_CONTACT_REAFFECT', 'R&eacute;affectation des documents');
+if (!defined('_CONTACT_REAFFECT'))  define('_CONTACT_REAFFECT', 'R&eacute;affectation des documents et des courriers');
 if (!defined('_UPDATE_CONTACTS')) define( '_UPDATE_CONTACTS', 'Mise &agrave; jour contact depuis indexation/qualification');
 if (!defined('_CONTACT_TYPE')) define( '_CONTACT_TYPE', 'Type de contact');
 if (!defined('_MULTI_EXTERNAL')) define( '_MULTI_EXTERNAL', 'Multi externe');
@@ -905,7 +905,7 @@ if (!defined('_NO_SOCIETY_DUPLICATES'))  define('_NO_SOCIETY_DUPLICATES', 'Pas d
 if (!defined('_NO_NAME_DUPLICATES'))  define('_NO_NAME_DUPLICATES', 'Pas de doublon par nom/pr&eacute;nom');
 
 if (!defined('_YOU_MUST_SELECT_CONTACT')) define( '_YOU_MUST_SELECT_CONTACT', 'Vous devez s&eacute;lectionner un contact ');
-if (!defined('_DOC_SENDED_BY_CONTACT')) define( '_DOC_SENDED_BY_CONTACT', '<b>Documents envoy&eacute;s par ce contact</b>');
+if (!defined('_DOC_SENDED_BY_CONTACT')) define( '_DOC_SENDED_BY_CONTACT', '<b>Documents et/ou courriers envoy&eacute;s par ce contact</b>');
 if (!defined('_CONTACT_INFO')) define( '_CONTACT_INFO', 'Fiche contact');
 if (!defined('_SHIPPER')) define( '_SHIPPER', 'Exp&eacute;diteur');
 if (!defined('_DEST')) define( '_DEST', 'Destinataire');
