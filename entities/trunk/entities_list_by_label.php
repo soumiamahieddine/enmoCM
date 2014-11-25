@@ -17,7 +17,8 @@ require_once("modules/entities/entities_tables.php");
 $ent = new entity();
 
 $select = "select entity_label from ".ENT_ENTITIES;
-$where = " where lower(entity_label) like lower('".$_REQUEST['what']."%') ";
+$where = " where (lower(entity_label) like lower('".$_REQUEST['what']."%') ";
+$where .= " or lower(short_label) like lower('".$_REQUEST['what']."%')) ";
 
 if($_SESSION['user']['UserId'] != 'superadmin')
 {
@@ -31,6 +32,7 @@ if($_SESSION['user']['UserId'] != 'superadmin')
 $sql = $select.$where." order by entity_id";
 $ent->connect();
 $ent->query($sql);
+// $ent->show();
 
 $entities = array();
 while($line = $ent->fetch_object())
@@ -45,8 +47,8 @@ foreach($entities as $entity)
     {
         $flagAuthView = true;
     }
-    if(stripos($entity, $_REQUEST['what']) === 0)
-    {
+    // if(stripos($entity, $_REQUEST['what']) === 0)
+    // {
         echo "<li>".$entity."</li>\n";
         if(isset($flagAuthView) && $flagAuthView)
         {
@@ -54,6 +56,6 @@ foreach($entities as $entity)
             break;
         }
         $authViewList++;
-    }
+    // }
 }
 echo "</ul>";
