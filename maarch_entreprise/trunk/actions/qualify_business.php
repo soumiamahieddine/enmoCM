@@ -837,24 +837,24 @@ $frm_str .= '</div>';
         // ) {
         if ($core->test_admin('my_contacts', 'apps', false)) {
             $frm_str .= '<td>';
-            $frm_str .= '|<span onclick="new Effect.toggle(\'create_contact_div\', \'appear\', {delay:0.2});'
+            $frm_str .= '<span onclick="hideOtherDiv(\'create_contact_div\');new Effect.toggle(\'create_contact_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'create_contact_div\', \'divStatus_create_contact_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
             $frm_str .= '<span id="divStatus_create_contact_div" style="color:#1C99C5;"><<</span><b>'
-                . '<small>' . _CREATE_CONTACT . '</small>';
-            $frm_str .= '</b></span>|';
+                . '&nbsp;<small>' . _CREATE_CONTACT . '</small>';
+            $frm_str .= '</b></span>';
             $frm_str .= '</td>';
         }
         
         // HISTORY
         if ($core_tools->test_service('view_doc_history', 'apps', false)) {
             $frm_str .= '<td>';
-            $frm_str .= '|<span onclick="new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
+            $frm_str .= '<span onclick="hideOtherDiv(\'history_div\');new Effect.toggle(\'history_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
             $frm_str .= '<span id="divStatus_history_div" style="color:#1C99C5;"><<</span><b>'
-               . '<small>' . _DOC_HISTORY . '</small>';
-            $frm_str .= '</b></span>|';
+               . '&nbsp;<small>' . _DOC_HISTORY . '</small>';
+            $frm_str .= '</b></span>';
             $frm_str .= '</td>';
         }
         
@@ -866,11 +866,11 @@ $frm_str .= '</div>';
             //Count notes
             $nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
             $nbr_notes = ' (<span id="nb_note">'.$nbr_notes.'</span>)';
-            $frm_str .= '<span onclick="new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
+            $frm_str .= '<span onclick="hideOtherDiv(\'notes_div\');new Effect.toggle(\'notes_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
             $frm_str .= '<span id="divStatus_notes_div" style="color:#1C99C5;"><<</span><b>'
-                . '<small>' . _NOTES . $nbr_notes . '</small>';
+                . '&nbsp;<small>' . _NOTES . $nbr_notes . '</small>';
             $frm_str .= '</b></span>';
             $frm_str .= '</td>';
         }
@@ -891,11 +891,11 @@ $frm_str .= '</div>';
             if ($answer <> '') {
                 $answer .= ': ';
             }
-            $frm_str .= '<span onclick="new Effect.toggle(\'list_answers_div\', \'appear\', {delay:0.2});'
+            $frm_str .= '<span onclick="hideOtherDiv(\'list_answers_div\');new Effect.toggle(\'list_answers_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'list_answers_div\', \'divStatus_done_answers_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
             $frm_str .= '<span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span><b>'
-                . '<small>' . _PJ . ' (' . $answer .'<span id="nb_attach">' . $nb_attach . '</span>)</small>';
+                . '&nbsp;<small>' . _PJ . ' (' . $answer .'<span id="nb_attach">' . $nb_attach . '</span>)</small>';
             $frm_str .= '</b></span>';
             $frm_str .= '</td>';
         }
@@ -954,11 +954,11 @@ $frm_str .= '</div>';
             $coll_id,
             'all'
         );
-        $frm_str .= '<span onclick="new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span onclick="hideOtherDiv(\'links_div\');new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>'
-             . '<small>' . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)</small>';
+             . '&nbsp;<small>' . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)</small>';
         $frm_str .= '</b></span>';
         $frm_str .= '</td>';
         

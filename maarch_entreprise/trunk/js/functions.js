@@ -12,6 +12,24 @@ function whatIsTheDivStatus(theDiv, divStatus)
     }
 }
 
+function hideOtherDiv(theDiv)
+{
+    var DivTable = ["create_contact_div","history_div", "notes_div", "emails_div", "diff_list_div", "versions_div", "links_div", "list_answers_div", "cases_div"];
+    var DivStatusTable = ["divStatus_create_contact_div","divStatus_history_div", "divStatus_notes_div", "divStatus_emails_div", "divStatus_diff_list_div", "divStatus_versions_div", "divStatus_links_div", "divStatus_done_answers_div", "divStatus_cases_div"];
+
+    for(var i = 0; i < DivTable.length; i++){
+        if($(DivTable[i]) && $(DivStatusTable[i]) && DivTable[i] != theDiv && $(DivTable[i]).style.display != 'none'){
+            // new Effect.toggle(DivTable[i], 'blind', {delay:0});
+            $(DivTable[i]).style.display="none";
+            if (DivTable[i] == 'list_answers_div' && $("done_answers_div")) {
+                new Effect.toggle('done_answers_div', 'blind', {delay:0});
+            }
+            // console.log(DivStatusTable[i]);
+            $(DivStatusTable[i]).innerHTML = '<<';
+        }
+    }
+}
+
 function repost(php_file,update_divs,fields,action,timeout)
     {
         //alert('php file : '+php_file);
