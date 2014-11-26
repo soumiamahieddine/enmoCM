@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008-2014 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -23,7 +23,7 @@
 *
 *
 * @file
-* @author Claire Figueras <dev@maarch.org>
+* @author <dev@maarch.org>
 * @date $date$
 * @version $Revision$
 * @ingroup admin
@@ -99,12 +99,10 @@ if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 
     foreach($what_table as $what_a){
         $sql_lastname[] = " lower(lastname) LIKE lower('".$what_a."%')";
-        // $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
         $sql_society[] = " lower(society) LIKE lower('".$what_a."%')";
     }
 
     $where .= " (" . implode(' OR ', $sql_lastname) . " ";
-    // $where .= " or " . implode(' OR ', $sql_firstname) . " ";
     $where .= " or " . implode(' OR ', $sql_society) . ") ";
 
 }
@@ -124,7 +122,7 @@ $orderstr = $list->define_order($order, $field);
 
 //EXPORT DE LA LISTE
 $select2[$_SESSION['tablename']['contacts_v2']] = array();
-array_push($select2[$_SESSION['tablename']['contacts_v2']], 'is_corporate_person as "'._IS_CORPORATE_PERSON.'"', 'contact_type as "'._CONTACT_TYPE.'"','lastname as "'._LASTNAME . '"', 'firstname as "'._FIRSTNAME . '"', 'society as "'._SOCIETY . '"');
+array_push($select2[$_SESSION['tablename']['contacts_v2']], 'contact_id as "'._ID.'"','is_corporate_person as "'._IS_CORPORATE_PERSON.'"', 'contact_type as "'._CONTACT_TYPE.'"','lastname as "'._LASTNAME . '"', 'firstname as "'._FIRSTNAME . '"', 'society as "'._SOCIETY . '"');
 
 $request= new request;
 
