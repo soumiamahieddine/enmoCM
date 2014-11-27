@@ -319,10 +319,10 @@ if ($mode == 'list') {
             $dType = $Type->get($_SESSION['m_admin']['notification']['diffusion_type']);
             ?>
             <script language="javascript">
-            loadDiffusionProperties(
+            setTimeout(function(){loadDiffusionProperties(
                 '<?php echo $_SESSION['m_admin']['notification']['diffusion_type']; ?>',
                 '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_diffusionproperties_formcontent'
-                );
+                )},500);
             </script>
             <?php
         }
@@ -353,11 +353,11 @@ if ($mode == 'list') {
             //include_once ($dType->script);
             ?>
             <script language="javascript">
-            loadAttachforProperties(
+                setTimeout(function () {loadAttachforProperties(
                 '<?php echo $_SESSION['m_admin']['notification']['attachfor_type']; ?>',
                 '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_attachforproperties_formcontent',
 				'attach_for_div'
-                );
+                )},500);
             </script>
             <?php
         }
