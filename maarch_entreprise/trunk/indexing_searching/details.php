@@ -827,7 +827,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <?php  echo _INITIATOR; ?> :
                             </td>
                             <td>
-                                <input type="text" class="readonly" readonly="readonly" value="<?php  echo $initiator; ?>" size="40"  />
+                                <textarea rows="2" style="width: 200px; max-width: 200px;" class="readonly" readonly="readonly"><?php  echo $initiator; ?></textarea>
                             </td>
                         </tr>
 

@@ -268,7 +268,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				if($key != 'is_multicontacts' || ($key == 'is_multicontacts' && $data[$key]['show_value'] == 'Y')){
 					$frm_str .= '<tr>';
 						$frm_str .= '<td width="50%" align="left"><span class="form_title_process">'
-							. $data[$key]['label'] . ' :</span></td>';
+							. $data[$key]['label'] . ' :</span>';
+                        if (isset($data[$key]['addon'])) {
+                            $frm_str .= ' '.$data[$key]['addon'];
+                        }
 						$frm_str .= '<td>';
 						if ($data[$key]['display'] == 'textinput') {
 							if($key == 'is_multicontacts'){
@@ -294,10 +297,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 										.'title="'.$data[$key]['show_value'].'" style="width: 150px; max-width: 150px; border: none; color: #666666;">'
 											.$data[$key]['show_value']
 										.'</textarea>';
-							if (isset($data[$key]['addon'])) {
-								$frm_str .= $data[$key]['addon'];
-							}
-						}
+                        }
 						
 						if($key == 'type_id'){
 							$_SESSION['category_id_session'] = $data[$key]['value'];

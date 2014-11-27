@@ -594,7 +594,7 @@ if ($core->is_module_loaded('entities')) {
         'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
         'modify' => false,
-        'form_show' => 'select'
+        'form_show' => 'textarea'
     );
     $_ENV['categories']['incoming']['other_cases']['diff_list'] = array (
         'type' => 'special',
@@ -612,7 +612,7 @@ if ($core->is_module_loaded('entities')) {
         'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
         'modify' => false,
-        'form_show' => 'select'
+        'form_show' => 'textarea'
     );
     $_ENV['categories']['outgoing']['other_cases']['diff_list'] = array (
         'type' => 'special',
@@ -630,7 +630,7 @@ if ($core->is_module_loaded('entities')) {
         'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
         'modify' => false,
-        'form_show' => 'select'
+        'form_show' => 'textarea'
     );
     $_ENV['categories']['internal']['other_cases']['diff_list'] = array (
         'type' => 'special',
@@ -648,7 +648,7 @@ if ($core->is_module_loaded('entities')) {
         'table' => 'res',
         'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
         'modify' => false,
-        'form_show' => 'select'
+        'form_show' => 'textarea'
     );
     $_ENV['categories']['postindexing_document']['other_cases']['diff_list'] = array (
         'type' => 'special',
@@ -870,7 +870,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     );
                 }
                 array_push($arr, $field);
-                if ($field == 'subject') {
+                if ($field == 'subject' || $field == 'destination') {
                     $data[$field]['display'] = 'textarea';
                 }
                 $data[$field]['readonly'] = true;
@@ -970,7 +970,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     'value' => '',
                     'show_value' => '',
                     'label' => $_ENV['categories'][$cat_id]['other_cases']['contact']['label'],
-                    'display' => 'textinput',
+                    'display' => 'textarea',
 					'img' => $_ENV['categories'][$cat_id]['other_cases']['contact']['img'],
                 );
                 $data[$arr_tmp[$i]]['readonly'] = true;
@@ -1229,17 +1229,6 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             } else if ($arr[$i] == 'is_multicontacts') {
                 if (!empty ($line-> $arr[$i])) {
                     $data['type_contact'] = 'multi_external';
-                    /*$db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts'] . " where enabled = 'Y' and contact_id = " . $line-> $arr[$i] . "");
-                    $res = $db2->fetch_object();
-                    if ($res->is_corporate_person == 'Y') {
-                        $data['contact'] = $res->society . ' (' . $line-> $arr[$i] . ')';
-                    } else {
-                        if (!empty ($res->society)) {
-                            $data['contact'] = $res->society . ', ' . $res->lastname . ' ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
-                        } else {
-                            $data['contact'] = $res->lastname . ', ' . $res->firstname . ' (' . $line-> $arr[$i] . ')';
-                        }
-                    }*/
                 }
                 unset ($data[$arr[$i]]);			
 			
