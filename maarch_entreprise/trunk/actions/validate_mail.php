@@ -731,10 +731,22 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $statuses = array();
         $db = new dbquery();
         $db->connect();
+        /* Basket of ABS users */
+        if($_SESSION['current_basket']['abs_basket']=='1'){
+            $query="SELECT group_id FROM usergroup_content WHERE user_id='".$_SESSION['current_basket']['basket_owner']."' AND primary_group='Y'";
+            $db->query($query);
+            $grp_status=$db->fetch_object();
+            $owner_usr_grp=$grp_status->group_id;
+            $owner_basket_id=str_replace("_".$_SESSION['current_basket']['basket_owner'], "", $_SESSION['current_basket']['id']);
+
+        }else{
+            $owner_usr_grp=$_SESSION['user']['primarygroup'];
+            $owner_basket_id=$_SESSION['current_basket']['id'];
+        }
         $query = "SELECT status_id, label_status FROM " . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status']
             . " on status_id = id "
-            . " where basket_id= '" . $_SESSION['current_basket']['id']
-            . "' and group_id = '" . $_SESSION['user']['primarygroup']
+            . " where basket_id= '" . $owner_basket_id
+            . "' and group_id = '" . $owner_usr_grp
             . "' and action_id = " . $id_action;
         $db->query($query);
 
