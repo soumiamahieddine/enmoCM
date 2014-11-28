@@ -64,7 +64,7 @@ $contact    = new contacts_v2();
     {
         $level = $_REQUEST['level'];
     }
-    $page_path = $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&dir=my_contacts';
+    $page_path = $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&dir=my_contacts&load';
     $page_label = _CONTACTS_LIST;
     $page_id = "my_contacts";
     $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
