@@ -30,22 +30,27 @@ else
 {
     $id = "";
 }
- /****************Management of the location bar  ************/
-$init = false;
-if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
-{
-    $init = true;
+
+if (!isset($_REQUEST['letters'])) {
+	/****************Management of the location bar  ************/
+	$init = false;
+	if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")
+	{
+	    $init = true;
+	}
+	$level = "";
+	if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
+	{
+	    $level = $_REQUEST['level'];
+	}
+	$page_path = $_SESSION['config']['businessappurl'].'index.php?page=contacts_view&dir=indexing_searching';
+	$page_label = _VIEW_CONTACT;
+	$page_id = "contacts_view";
+	$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
+	/***********************************************************/
 }
-$level = "";
-if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 || $_REQUEST['level'] == 1))
-{
-    $level = $_REQUEST['level'];
-}
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=contacts_view&dir=indexing_searching';
-$page_label = _VIEW_CONTACT;
-$page_id = "contacts_view";
-$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
-/***********************************************************/
+
+?><div id="divList" name="divList"><?php
 
 $contact = new contacts_v2();
 $request = new request();
@@ -79,3 +84,4 @@ $_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
 
 $mode = 'view';
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/admin/contacts/contact_addresses/contact_addresses.php';
+?> </div>

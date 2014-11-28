@@ -50,6 +50,18 @@ echo '</div>';
 $_SESSION['error'] = '';
 $_SESSION['info'] = '';
 
+if(isset($_GET['contactid']) && $_GET['contactid'] <> '') {
+    $_SESSION['contact']['current_contact_id'] = $id;
+} else if ($_SESSION['contact']['current_contact_id'] <> ''){
+	$_GET['contactid'] = $_SESSION['contact']['current_contact_id'];
+}
+
+if(isset($_GET['addressid']) && $_GET['addressid'] <> '') {
+    $_SESSION['contact']['current_address_id'] = $id;
+} else if ($_SESSION['contact']['current_address_id'] <> ''){
+	$_GET['addressid'] = $_SESSION['contact']['current_address_id'];
+}
+
 if (!isset($_GET['contactid']) || $_GET['contactid'] == '') {
 	echo '<div class="error" id="main_error">';
 	echo _YOU_MUST_SELECT_CONTACT;

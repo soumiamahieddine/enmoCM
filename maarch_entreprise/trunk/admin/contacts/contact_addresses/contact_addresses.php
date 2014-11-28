@@ -1,4 +1,32 @@
 <?php
+/*
+*    Copyright 2014 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+*
+*
+* @file
+* @author <dev@maarch.org>
+* @date $date$
+* @version $Revision$
+* @ingroup admin
+*/
 
 // GESTION DES ADDRESSES
 echo '<h2><img alt="" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_contact_b.gif"> &nbsp;'; 
@@ -25,7 +53,7 @@ $what = "";
 $where = "contact_id = " . $_SESSION['contact']['current_contact_id'];
 if (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
     $what = $func->protect_string_db($_REQUEST['what']);
-    $where .= " and lower(lastname) like lower('%" . $what. "%')";
+    $where .= " and lower(lastname) like lower('" . $what. "%')";
 }
 
 $list = new list_show();
@@ -169,11 +197,17 @@ for ($i = 0; $i < count($tab); $i ++) {
     $paramsTab['bool_modeReturn'] = false;                                              //Desactivation du mode return (vs echo)
     $paramsTab['pageTitle'] =  '';           											//Titre de la page
     $paramsTab['listCss'] =  'listing largerList spec';
-    $paramsTab['urlParameters'] = '&dir=my_contacts';                                   //parametre d'url supplementaire
+    if ($mode == "view") {
+        $paramsTab['urlParameters'] = '&dir=indexing_searching&letters&display=true'; 
+    } else {
+        $paramsTab['urlParameters'] = '&dir=my_contacts&letters&display=true';                                   //parametre d'url supplementaire        
+    }
 //    $paramsTab['pagePicto'] = $_SESSION['config']['businessappurl']
 //            ."static.php?filename=manage_contact_b.gif";                                //Image (pictogramme) de la page
     $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
     $paramsTab['bool_showSearchTools'] = true;                                          //Afficle le filtre alphabetique et le champ de recherche
+    $paramsTab['bool_showSearchBox'] = false;
+
     $paramsTab['searchBoxAutoCompletionUrl'] = $_SESSION['config']['businessappurl']
         ."index.php?display=true&page=contact_addresses_list_by_name&idContact=".$_SESSION['contact']['current_contact_id'];   //Script pour l'autocompletion
     $paramsTab['searchBoxAutoCompletionMinChars'] = 2;                                  //Nombre minimum de caractere pour activer l'autocompletion (1 par defaut)
