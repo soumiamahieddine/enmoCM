@@ -68,7 +68,7 @@ if (!defined('_EMAIL_OBJECT'))
 if (!defined('_HTML_OR_RAW'))
     define('_HTML_OR_RAW','Mise en forme avanc&eacute;e / Texte brut');  
 if (!defined('_DEFAULT_BODY'))
-    define('_DEFAULT_BODY','Votre message est pr&ecirc;t &agrave;  &ecirc;tre envoy&eacute;e avec les fichiers joints suivants :');
+    define('_DEFAULT_BODY','Votre message est pr&ecirc;t &agrave;  &ecirc;tre envoy&eacute; avec les fichiers joints suivants :');
 if (!defined('_NOTES_FILE'))
     define('_NOTES_FILE', 'Notes du document');
 if (!defined('_EMAIL_WRONG_FORMAT'))
