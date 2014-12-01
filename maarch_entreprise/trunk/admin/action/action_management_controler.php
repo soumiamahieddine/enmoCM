@@ -264,8 +264,8 @@ if ($mode == 'up') {
     $what = '';
     $where = " enabled = 'Y' ";
     if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
-        //$what = $_REQUEST['what'];
-        $what = functions::protect_string_db($_REQUEST['what']);
+        $what = $_REQUEST['what'];
+        //$what = functions::protect_string_db($_REQUEST['what']);
         $where .= " and (lower(label_action) like lower('"
                    . functions::protect_string_db($what,
                         $_SESSION['config']['databasetype'])
