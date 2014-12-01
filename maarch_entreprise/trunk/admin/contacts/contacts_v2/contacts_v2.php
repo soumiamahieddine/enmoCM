@@ -122,7 +122,7 @@ $orderstr = $list->define_order($order, $field);
 
 //EXPORT DE LA LISTE
 $select2[$_SESSION['tablename']['contacts_v2']] = array();
-array_push($select2[$_SESSION['tablename']['contacts_v2']], 'contact_id as "'._ID.'"','is_corporate_person as "'._IS_CORPORATE_PERSON.'"', 'contact_type as "'._CONTACT_TYPE.'"','lastname as "'._LASTNAME . '"', 'firstname as "'._FIRSTNAME . '"', 'society as "'._SOCIETY . '"');
+array_push($select2[$_SESSION['tablename']['contacts_v2']], 'contact_id as "'._ID.'"','is_corporate_person as "'._IS_CORPORATE_PERSON.'"', 'contact_type as "'._CONTACT_TYPE.'"','lastname as "'._LASTNAME . '"', 'firstname as "'._FIRSTNAME . '"', 'society as "'._STRUCTURE_ORGANISM . '"');
 
 $request= new request;
 
