@@ -145,21 +145,21 @@ require_once('modules/entities/class/class_manage_entities.php');;
 
  function check_form($form_id,$values)
  {
-    if($form_id == 'frm_redirect_dep')
-    {
+    if($form_id == 'frm_redirect_dep') {
         $dep = get_value_fields($values, 'department');
-        if($dep == '')
-        {
+        if($dep == '') {
             $_SESSION['action_error'] = _MUST_CHOOSE_DEP;
             return false;
-        }
-        else
-        {
+        } else if (empty($_SESSION['redirect']['diff_list']['dest']['users'][0])
+                || ! isset($_SESSION['redirect']['diff_list']['dest']['users'][0])
+            ) {
+                $_SESSION['action_error'] = _DEST
+                    . " " . _MANDATORY;
+                return false;
+        } else {
             return true;
         }
-    }
-    else if($form_id == 'frm_redirect_user')
-    {
+    } else if($form_id == 'frm_redirect_user') {
         $user = get_value_fields($values, 'user');
         if($user == '')
         {
@@ -170,9 +170,7 @@ require_once('modules/entities/class/class_manage_entities.php');;
         {
             return true;
         }
-    }
-    else
-    {
+    } else {
         $_SESSION['action_error'] = _FORM_ERROR;
         return false;
     }
