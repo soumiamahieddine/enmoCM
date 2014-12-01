@@ -137,7 +137,8 @@ function display_list()
     $what = '';
 
     if (isset($_REQUEST['what'])) {
-        $what = $func->protect_string_db($_REQUEST['what']);
+        //$what = $func->protect_string_db($_REQUEST['what']);
+        $what = $_REQUEST['what'];
 		$where .= " (lower(label_status) like lower('"
                . $func->protect_string_db(
                    $what, $_SESSION['config']['databasetype']
