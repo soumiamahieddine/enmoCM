@@ -36,7 +36,7 @@ $db->connect();
 $db->query(
         'select label_status as tag from ' .
         $_SESSION['tablename']['status'] . " where lower(label_status) like lower('"
-        . $_REQUEST['what']."%') order by label_status"
+        . $db->protect_string_db($_REQUEST['what'])."%') order by label_status"
     );
 $listArray = array();
 while ($line = $db->fetch_object()) {
