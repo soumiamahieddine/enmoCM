@@ -31,7 +31,7 @@
 $db = new dbquery();
 $db->connect();
 $db->query('select label_action as tag from '
-    . $_SESSION['tablename']['actions'] . " where lower(label_action) like lower('%".$_REQUEST['what']."%') order by label_action");
+    . $_SESSION['tablename']['actions'] . " where lower(label_action) like lower('%".$db->protect_string_db($_REQUEST['what'])."%') order by label_action");
 
 
 
