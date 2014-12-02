@@ -643,14 +643,14 @@ class sendmail extends dbquery
 	}
 	
 	public function createFilename($label, $extension){
-		$search = array (
-                    '@[éèêë]@i', '@[ÊË]@i', '@[àâä]@i',' @[ÂÄ]@i',
-                    '@[îï]@i', '@[ÎÏ]@i', '@[ûùü]@i', '@[ÛÜ]@i',
-                    '@[ôö]@i', '@[ÔÖ]@i', '@[ç]@i', '@[^a-zA-Z0-9_-s.]@i');
+        $search = array (
+                    utf8_decode('@[éèêë]@i'), utf8_decode('@[ÊË]@i'), utf8_decode('@[àâä]@i'), utf8_decode('@[ÂÄ]@i'),
+                    utf8_decode('@[îï]@i'), utf8_decode('@[ÎÏ]@i'), utf8_decode('@[ûùü]@i'), utf8_decode('@[ÛÜ]@i'),
+                    utf8_decode('@[ôö]@i'), utf8_decode('@[ÔÖ]@i'), utf8_decode('@[ç]@i'), utf8_decode('@[^a-zA-Z0-9_-s.]@i'));
                     
 		$replace = array ('e', 'E','a', 'A','i', 'I', 'u', 'U', 'o', 'O','c','_');
     
-		$filename = preg_replace($search, $replace, $label.".".$extension); 
+		$filename = preg_replace($search, $replace, utf8_decode($label.".".$extension)); 
 		// $filename = preg_replace("/[^a-z0-9_-s.]/i","_", $label.".".$extension); 
 		
 		return $filename;
