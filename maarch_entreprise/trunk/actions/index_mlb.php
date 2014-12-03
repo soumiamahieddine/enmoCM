@@ -1040,8 +1040,17 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     /*** Extra javascript ***/
     $frmStr .= '<script type="text/javascript">resize_frame_process(\'modal_'
             . $actionId . '\', \'file_iframe\', true, true); '
-            . 'window.scrollTo(0,0);change_category(\''
-            . $_SESSION['coll_categories']['letterbox_coll']['default_category'] . '\', \'' . $displayValue
+            . 'window.scrollTo(0,0);';
+
+    if (isset($_SESSION['indexing']['category_id']) && $_SESSION['indexing']['category_id'] <> "") {
+        $category_default = $_SESSION['indexing']['category_id'];
+        $_SESSION['indexing']['category_id'] = ""; 
+    } else {
+        $category_default = $_SESSION['coll_categories']['letterbox_coll']['default_category'];    
+    }
+
+    $frmStr .= 'change_category(\''
+            . $category_default . '\', \'' . $displayValue
             . '\', \'' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&dir=indexing_searching&page='
             . 'change_category\',  \'' . $_SESSION['config']['businessappurl']
