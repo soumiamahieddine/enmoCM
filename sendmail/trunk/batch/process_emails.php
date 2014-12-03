@@ -42,12 +42,11 @@ while ($state <> 'END') {
 		if($currentEmail < $totalEmailsToProcess) {
 			$email = $GLOBALS['emails'][$currentEmail];
 			$GLOBALS['mailer'] = new htmlMimeMail();
-            if($mailerParams->smtp_auth === "true") $smtp_auth = true;
 			$GLOBALS['mailer']->setSMTPParams(
 				$host = (string)$mailerParams->smtp_host, 
 				$port = (string)$mailerParams->smtp_port,
 				$helo = (string)$mailerParams->domains,
-				$auth = $smtp_auth,
+				$auth = filter_var($mailerParams->smtp_auth, FILTER_VALIDATE_BOOLEAN),
 				$user = (string)$mailerParams->smtp_user,
 				$pass = (string)$mailerParams->smtp_password
 				);
