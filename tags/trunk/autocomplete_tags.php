@@ -38,7 +38,7 @@ $table = _TAG_TABLE_NAME;
 
 if($_SESSION['config']['databasetype'] == "POSTGRESQL")
 {
-	$where .= " (tag_label ilike '%".addslashes($_REQUEST['Input'])."%' or tag_label ilike '%".addslashes($_REQUEST['Input'])."%' ) ";
+	$where .= " (tag_label ilike '%".$this->protect_string_db(addslashes($_REQUEST['Input']))."%' or tag_label ilike '%".$this->protect_string_db(addslashes($_REQUEST['Input']))."%' ) ";
 	$limit = " limit 10";
 }
 else
