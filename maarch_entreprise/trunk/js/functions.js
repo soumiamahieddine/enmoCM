@@ -1211,6 +1211,8 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                 onFailure: function(){
                 }
             });
+    } else if (chosen_action_id == ''){
+        alert('Aucune action choisie');
     }
     else
     {
