@@ -217,8 +217,7 @@ elseif($mode == 'up' || $mode == 'add'){
                         </td>
                     </tr>
                 </table>
-            
-            
+   
             <p class="buttons">
         <?php
             if($mode == 'up'){
@@ -241,6 +240,7 @@ elseif($mode == 'up' || $mode == 'add'){
             </p>
         </form >
         <div class="infos"><?php echo _INFOS_ACTIONS;?></div>
+    </div>
     <?php
     }
 }
