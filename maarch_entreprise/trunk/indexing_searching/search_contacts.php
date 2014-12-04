@@ -183,7 +183,7 @@ if (count($queries) > 0) { ?>
                         </td>
                     </tr>
                     <tr>
-                        <td width="70%"><label for="society" class="bold" ><?php echo _ORGANISM;?> :</label>
+                        <td width="70%"><label for="society" class="bold" ><?php echo _STRUCTURE_ORGANISM;?> :</label>
                             <input type="text" name="society" id="society" <?php echo $size; ?>  />
                             <input type="hidden" name="meta[]" value="society#society#input_text" />
                         </td>
