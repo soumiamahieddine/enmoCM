@@ -1139,19 +1139,36 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             }
             elseif ($arr[$i] == 'dest_contact_id' || $arr[$i] == 'exp_contact_id') {
                 if (!empty ($line-> $arr[$i])) {
-                    $db2->query('select is_corporate_person, lastname, firstname, society from ' . $_SESSION['tablename']['contacts_v2'] . ' where  contact_id = ' . $line-> $arr[$i]);
+                    $db2->query("select address_id from mlb_coll_ext where res_id = ".$res_id);
+                    $resAddress = $db2->fetch_object();
+                    $addressId = $resAddress->address_id;
+                    $db2->query('select is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, contact_purpose_id, address_num, address_street, address_town, lastname, firstname from view_contacts where contact_id = ' . $line-> $arr[$i] . ' and ca_id = ' . $addressId);
                     $res = $db2->fetch_object();
                     if ($res->is_corporate_person == 'Y') {
-                        $data[$arr[$i]]['show_value'] = $res->society;
-                    } else {
-                        $data[$arr[$i]]['show_value'] = $res->lastname . ' ' . $res->firstname;
-                        if (!empty ($res->society)) {
-                            $data[$arr[$i]]['show_value'] .= ' (' . $res->society . ')';
+                        $data[$arr[$i]]['show_value'] = $res->society . ' ' ;
+                        if (!empty ($res->society_short)) {
+                            $data[$arr[$i]]['show_value'] .= '('.$res->society_short.') ';
                         }
+                    } else {
+                        $data[$arr[$i]]['show_value'] = $res->contact_lastname . ' ' . $res->contact_firstname . ' ';
+                        if (!empty ($res->society)) {
+                            $data[$arr[$i]]['show_value'] .= '(' .$res->society . ') ';
+                        }                        
                     }
-                    $db2->query("select address_id from mlb_coll_ext where res_id = " . $res_id);
-                    $res = $db2->fetch_object();
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&contactid=' . $line-> $arr[$i] . '&addressid='.$res->address_id.'\', \'contact_info\', \'height=800, width=700,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
+                    if ($res->is_private == 'Y') {
+                        $data[$arr[$i]]['show_value'] .= '('._CONFIDENTIAL_ADDRESS.')';
+                    } else {
+                        require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
+                        $contact = new contacts_v2();
+                        $data[$arr[$i]]['show_value'] .= ': (' . $contact->get_label_contact($res->contact_purpose_id, $_SESSION['tablename']['contact_purposes']).') ';
+                        if (!empty($res->lastname) || !empty($res->firstname)) {
+                            $data[$arr[$i]]['show_value'] .= $res->lastname . ' ' . $res->firstname . ' ';
+                        }
+                        if (!empty($res->address_num) || !empty($res->address_street) || !empty($res->address_town)) {
+                            $data[$arr[$i]]['show_value'] .= ', '.$res->address_num .' ' . $res->address_street .' ' . strtoupper($res->address_town);
+                        }         
+                    }
+                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&contactid=' . $line-> $arr[$i] . '&addressid='.$addressId.'\', \'contact_info\', \'height=800, width=700,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
                 } else {
                     unset ($data[$arr[$i]]);
                 }
