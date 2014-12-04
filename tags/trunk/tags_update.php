@@ -62,7 +62,7 @@ elseif($coll_id){
 
 include_once 'modules/tags/route.php';
 
-if ($_SESSION['tagsuser'])
+if (isset($_SESSION['tagsuser']))
 {
 
 	$tags = new tag_controler();	
