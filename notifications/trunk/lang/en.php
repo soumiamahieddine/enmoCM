@@ -195,6 +195,8 @@ if (!defined('_DIFFUSION_LIST'))
 if (!defined('_NOTIFICATIONS_DEST_USER_DIFF_TYPE'))
     define('_NOTIFICATIONS_DEST_USER_DIFF_TYPE', 'Send to the main recipient of the document');
 if (!defined('_DEST_USER'))
+    if (!defined('_NOTIFICATIONS_DEST_USER_DIFF_TYPE_WITH_STATUS'))
+    define('_NOTIFICATIONS_DEST_USER_DIFF_TYPE_WITH_STATUS', 'Send to the main recipient of the document with status:');
     define('_DEST_USER', 'Doc recipient');
 if (!defined('_NOTIFICATIONS_COPY_LIST_DIFF_TYPE'))
     define('_NOTIFICATIONS_COPY_LIST_DIFF_TYPE', 'Send to the users in copy of the document');
