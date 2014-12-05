@@ -341,7 +341,6 @@ function validate_notif_submit() {
     $notifObj->is_enabled = $_REQUEST['is_enabled'];
     $notifObj->diffusion_type = $_REQUEST['diffusion_type'];
     $notifObj->attachfor_type = $_REQUEST['attachfor_type'];
-    $notifObj->selected_status = implode(',', $_REQUEST['selected_status']);
     
 	foreach($diffType as $loadedType) 	{
 		if ($loadedType->id == $notifObj->diffusion_type){
@@ -429,8 +428,6 @@ function init_session()
 		//'diffusion_content'   => '',
         'attachfor_type' 		=> '',
         'attachfor_properties' 	=> '',
-        'selected_status'       => ''
-
     );
 }
 
