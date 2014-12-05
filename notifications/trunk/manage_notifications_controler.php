@@ -18,12 +18,15 @@ try{
     require_once 'modules/templates/class/templates_controler.php' ;
     require_once 'modules/notifications/class/notifications_controler.php';
     require_once 'modules/notifications/class/diffusion_type_controler.php';
+
     
     if ($mode == 'list') {
         require_once 'core/class/class_request.php' ;
         require_once 'apps' . DIRECTORY_SEPARATOR
                      . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
                      . 'class' . DIRECTORY_SEPARATOR . 'class_list_show.php' ;
+    }else if($mode == 'add' || $mode == 'up'){
+        require_once 'core/class/class_request.php' ;
     }
 } catch (Exception $e) {
     echo $e->getMessage();
@@ -32,6 +35,17 @@ try{
 //Get list of aff availables actions
 $al = new ActionControler();
 $actions_list = $al->getAllActions();
+
+//Get list of aff availables status
+$select[STATUS_TABLE] = array();
+    array_push($select[STATUS_TABLE], 'id', 'label_status','img_filename');
+$request = new request();
+$where = '';
+    $what = '';
+    $tab = $request->select(
+        $select, $where, $orderstr, $_SESSION['config']['databasetype']
+    );
+$status_list = $tab;
 
 //Get list of all diffusion types
 $dt = new diffusion_type_controler();
@@ -327,6 +341,7 @@ function validate_notif_submit() {
     $notifObj->is_enabled = $_REQUEST['is_enabled'];
     $notifObj->diffusion_type = $_REQUEST['diffusion_type'];
     $notifObj->attachfor_type = $_REQUEST['attachfor_type'];
+    $notifObj->selected_status = implode(',', $_REQUEST['selected_status']);
     
 	foreach($diffType as $loadedType) 	{
 		if ($loadedType->id == $notifObj->diffusion_type){
@@ -413,7 +428,9 @@ function init_session()
         'diffusion_properties'  => '',
 		//'diffusion_content'   => '',
         'attachfor_type' 		=> '',
-        'attachfor_properties' 	=> ''
+        'attachfor_properties' 	=> '',
+        'selected_status'       => ''
+
     );
 }
 
