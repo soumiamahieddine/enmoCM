@@ -120,7 +120,7 @@ while ($state <> 'END') {
             
             if (count($recipients) === 0) {
                 $logger->write('No recipient found' , 'WARNING');
-                $events_controler->commitEvent($event->event_stack_sid, "FAILED: no recipient found");
+                $events_controler->commitEvent($event->event_stack_sid, "INFO: no recipient found");
             }            
         } 
         $totalNotificationsToProcess = count($tmpNotifs);

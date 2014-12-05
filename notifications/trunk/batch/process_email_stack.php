@@ -81,8 +81,9 @@ while ($state <> 'END') {
                 
             } else {
                 //$GLOBALS['logger']->write("Errors when sending message through SMTP :" . implode(', ', $GLOBALS['mailer']->errors), 'ERROR');
-                $GLOBALS['logger']->write("Errors when sending message through SMTP :" . $GLOBALS['mailer']->errors[1], 'ERROR');
+                $GLOBALS['logger']->write("Errors when sending message through SMTP :" . $GLOBALS['mailer']->errors[0], 'ERROR', 108);
                 $exec_result = 'FAILED';
+                $GLOBALS['exitCode'] = 108;
             }   
             $query = "UPDATE " . _NOTIF_EMAIL_STACK_TABLE_NAME 
                 . " SET exec_date = " . $GLOBALS['db']->current_datetime()
