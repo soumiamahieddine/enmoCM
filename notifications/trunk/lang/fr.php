@@ -194,6 +194,8 @@ if (!defined('_DIFFUSION_LIST'))
     define('_DIFFUSION_LIST', 'Liste de diffusion');
 if (!defined('_NOTIFICATIONS_DEST_USER_DIFF_TYPE'))
     define('_NOTIFICATIONS_DEST_USER_DIFF_TYPE', 'Envoi au destinataire principal du document');
+if (!defined('_NOTIFICATIONS_DEST_USER_DIFF_TYPE_WITH_STATUS'))
+    define('_NOTIFICATIONS_DEST_USER_DIFF_TYPE_WITH_STATUS', 'Envoi au destinataire principal du document avec le(s) statut(s):');
 if (!defined('_DEST_USER'))
     define('_DEST_USER', 'Destinataire principal');
 if (!defined('_NOTE_DEST_USER'))
