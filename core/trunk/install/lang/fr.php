@@ -242,7 +242,7 @@ if (!defined('_RESUME')) {
 }
 
 if (!defined('_START_MEP_1_3')) {
-    define('_START_MEP_1_3', "Démarrer avec Maarch 1.4");
+    define('_START_MEP_1_3', "Démarrer avec Maarch 1.5");
 }
 
 //ERROR
