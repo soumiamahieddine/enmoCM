@@ -39,8 +39,6 @@ try{
 }
 
 
-
-
 $db = new dbquery();
 $db->connect();
 $core = new core_tools();
@@ -51,7 +49,7 @@ $tag = new tag_controler;
 $a_search_tag = $_REQUEST['a_search_tag'];
 $a_search_tag  = str_replace('\r', '', $a_search_tag);
 $a_search_tag  = str_replace('\n', '', $a_search_tag);
-$a_search_tag  = str_replace('\'', ' ', $a_search_tag);
+// $a_search_tag  = str_replace('\'', ' ', $a_search_tag);
 $a_search_tag  = str_replace('"', ' ', $a_search_tag);
 $a_search_tag  = str_replace('\\', ' ', $a_search_tag);
 
@@ -70,7 +68,7 @@ $a_search_tag_coll = $a_search_tag_arr[1];
 $a_new_tag = $_REQUEST['a_new_tag'];
 $a_new_tag   = str_replace('\r', '', $a_new_tag );
 $a_new_tag   = str_replace('\n', '', $a_new_tag );
-$a_new_tag   = str_replace('\'', ' ', $a_new_tag );
+// $a_new_tag   = str_replace('\'', ' ', $a_new_tag );
 $a_new_tag   = str_replace('"', ' ', $a_new_tag );
 $a_new_tag   = str_replace('\\', ' ', $a_new_tag );
 //On découpe la chaine composée de virgules
@@ -90,10 +88,10 @@ $db2=new dbquery();
 $db2->connect();
 
 $db->query("select distinct res_id from "._TAG_TABLE_NAME.
-		   " where tag_label = '".$a_search_tag_label."' and coll_id = '".$a_search_tag_coll."' ");
-while ($result = $db->fetch_object())
-{
-	$tag -> delete_this_tag($result->res_id,$a_search_tag_coll,$a_search_tag_label);
+		   " where tag_label = '".$db->protect_string_db($a_search_tag_label)."' and coll_id = '".$a_search_tag_coll."' ");
+
+while ($result = $db->fetch_object()) {
+	$tag -> delete_this_tag($result->res_id,$a_search_tag_coll,$db->protect_string_db($a_search_tag_label));
 	$tag -> add_this_tag($result->res_id,$a_new_tag_coll,$a_new_tag_label);
 }
 

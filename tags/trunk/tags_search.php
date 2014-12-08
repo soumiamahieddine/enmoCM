@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2012 Maarch
+*    Copyright 2008,2014 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -41,6 +41,7 @@ try{
 
 include_once 'modules/tags/route.php';
 $tag = new tag_controler;
+
 if ($coll_id == '') {
     $targetColl = 'letterbox';
 } else {
@@ -53,7 +54,7 @@ for ($getag_i = 0; $getag_i <count($_REQUEST['tags_chosen']); $getag_i++) {
     $return_tags_res_id = array();
     $return_tags_res_id  = $tag->getresarray_byLabel($_REQUEST['tags_chosen'][$getag_i], $targetColl);
     //array_push($tags_chosen_tmp, $func->protect_string_db($_REQUEST['tags_chosen'][$getag_i]));
-    $json_txt .= "'".$_REQUEST['tags_chosen'][$getag_i]."',";
+    $json_txt .= "'".addslashes($_REQUEST['tags_chosen'][$getag_i])."',";
     if ($return_tags_res_id) {
         foreach ($return_tags_res_id as $elem) {
             array_push($tag_resid_return, $elem);

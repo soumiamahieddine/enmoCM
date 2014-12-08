@@ -57,7 +57,7 @@ $tag = new tag_controler;
 $p_input_value = $_REQUEST['p_input_value'];
 $p_input_value  = str_replace('\r', '', $p_input_value);
 $p_input_value  = str_replace('\n', '', $p_input_value);
-$p_input_value  = str_replace('\'', ' ', $p_input_value);
+// $p_input_value  = str_replace('\'', ' ', $p_input_value);
 $p_input_value  = str_replace('"', ' ', $p_input_value);
 $p_input_value  = str_replace('\\', ' ', $p_input_value);
 

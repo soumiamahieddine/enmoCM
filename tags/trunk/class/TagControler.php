@@ -329,7 +329,7 @@ class tag_controler
             
             $new_tag_label = $params[0];
             $coll_id = $params[1];
-            $this->update_tag_label($new_tag_label, $tag_label, $coll_id);  
+            $this->update_tag_label($new_tag_label, $db->protect_string_db($tag_label), $coll_id);  
             /*$hist = new history();
             $hist->add(
                 _TAG_TABLE_NAME, $new_tag_label, "ADD", 'tagup', _TAG_ADDED.' : "'.
@@ -416,20 +416,20 @@ class tag_controler
         /*
          * Adding  [REALLY] a tag for a ressource
          */
-        
+        $db = new dbquery();       
         $tag_label = $this->control_label($tag_label);
         
         $db = new dbquery();
         $db->connect();
         $db->query(
             "select tag_label from " ._TAG_TABLE_NAME
-            . " where res_id = '" . $res_id . "' and coll_id = '".$coll_id."' and tag_label = '".$tag_label."'  "
+            . " where res_id = '" . $res_id . "' and coll_id = '".$coll_id."' and tag_label = '".$db->protect_string_db($tag_label)."'  "
         );
         if ($db->nb_result()==0){
             //Lancement de la suppression de l'occurence
             $fin =$db->query(
                 "insert into " ._TAG_TABLE_NAME
-                . " (tag_label, res_id, coll_id) values ('".$tag_label."', '" . $res_id . "','".$coll_id."')  "
+                . " (tag_label, res_id, coll_id) values ('".$db->protect_string_db($tag_label)."', '" . $res_id . "','".$coll_id."')  "
             );
             if ($fin){ 
                 
@@ -527,10 +527,10 @@ class tag_controler
     private function control_label($label){
         $label  = str_replace('\r', '', $label);
         $label  = str_replace('\n', '', $label);
-        $label  = str_replace('\'', ' ', $label);
+        // $label  = str_replace('\'', ' ', $label);
         $label  = str_replace('"', ' ', $label);
         $label  = str_replace('\\', ' ', $label);
-        $label  = str_replace(' ', '', $label);
+        // $label  = str_replace(' ', '', $label);
         
         
         //On découpe la chaine composée de virgules

@@ -66,9 +66,11 @@ try{
 //$al = new ActionControler();
 //$tagslist = $al->getAllTags();
 
+$func = new functions();
+
 //Get list of all templates
 if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
-    $tag_label = $_REQUEST['id'];
+    $tag_label = $func->protect_string_db($_REQUEST['id']);
 }
 
 
@@ -152,7 +154,7 @@ function location_bar_management($mode)
 function display_up($tag_label)
 {
 	
-	
+	$func = new functions();
     $tagCtrl = new tag_controler;
     $state = true;
     $tag = $tagCtrl->get_by_label($tag_label);
@@ -163,7 +165,7 @@ function display_up($tag_label)
         $_SESSION['m_admin']['tag']['tag_label'] = $tag->tag_label;
 		$_SESSION['m_admin']['tag']['tag_coll'] = $tag->coll_id;
 		$_SESSION['m_admin']['tag']['tag_count'] = (string) $tagCtrl->countdocs(
-																	$tag->tag_label, 
+																	$func->protect_string_db($tag->tag_label), 
 																	$tag->coll_id
 																  );		
 																 									  
@@ -314,7 +316,7 @@ function display_del($tag_label) {
         if (!$control) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
-            $_SESSION['error'] = _TAG_DELETED.' : '.$tag_label;
+            $_SESSION['error'] = _TAG_DELETED.' : '. str_replace("''", "'", $tag_label);
         }
         ?><script type="text/javascript">window.top.location='<?php
             echo $_SESSION['config']['businessappurl']
@@ -370,7 +372,7 @@ function format_item(
 function validate_tag_submit() {
 
   	$pageName = 'manage_tag_list_controller';
-	
+	$func = new functions();
 	$mode = 'up';
     $mode = $_REQUEST['mode'];
     $tagObj = new tag_controler();
@@ -384,7 +386,7 @@ function validate_tag_submit() {
 	}
 	if ($_REQUEST['tag_label'])
 	{
-  	  $new_tag_label = $_REQUEST['tag_label'];
+  	  $new_tag_label = $func->protect_string_db($_REQUEST['tag_label']);
 	}
 	//$_SESSION['m_admin']['tag']['tag_label'] = $_REQUEST['tag_label_id'];
 	
@@ -416,7 +418,7 @@ function validate_tag_submit() {
     switch ($mode) {
         case 'up':
 			if ($_SESSION['error'] == "")
-				$_SESSION['error'] = _TAG_UPDATED.' : '.$new_tag_label;
+				$_SESSION['info'] = _TAG_UPDATED.' : '.str_replace("''", "'", $new_tag_label);
 			
             if (!empty($_SESSION['m_admin']['tag']['dddtag_label'])) {
                 header(
@@ -439,7 +441,7 @@ function validate_tag_submit() {
             //    'location: ' . $_SESSION['config']['businessappurl']
             //    . 'index.php?page=' . $pageName . '&mode=add&module=tags'
             //);
-            $_SESSION['error'] = _TAG_ADDED.' : '.$new_tag_label;
+            $_SESSION['info'] = _TAG_ADDED.' : '. str_replace("''", "'", $new_tag_label);
             header(
                     'location: ' . $_SESSION['config']['businessappurl']
                     . 'index.php?page=' . $pageName . '&mode=list&module='

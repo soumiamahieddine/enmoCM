@@ -54,7 +54,7 @@ if ($tag_list){
 		
 		$styledisplay="";
 		$aja_str .= '<div class="tag_element_word" id="taglabel_'.$this_tag.'">'
-			.addslashes($this_tag);
+			.$this_tag;
 			
 		if ($core_tools->test_service('delete_tag_to_res', 'tags',false) == 1)
 		{
@@ -62,7 +62,7 @@ if ($tag_list){
 			if ($_dev_option == "hide_deletebutton"){}
 			else{
 				$aja_str .= ' &nbsp;<div class="tag_delete_button" onclick="delete_this_tag('
-				.$route_tag_delete_tags_from_res.', \''.$this_tag.'\', '.$route_tag_ui_script.');" alt="'._TAGCLICKTODEL.'" title="'._TAGCLICKTODEL.'">x</div>';
+				.$route_tag_delete_tags_from_res.', \''.addslashes($this_tag).'\', '.$route_tag_ui_script.');" alt="'._TAGCLICKTODEL.'" title="'._TAGCLICKTODEL.'">x</div>';
 			}
 			}
 		$aja_str .= '</div>';

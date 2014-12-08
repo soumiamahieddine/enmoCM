@@ -74,7 +74,7 @@ $tag = new tag_controler;
 $result = $tag->remove_this_tags_in_session($p_tag_label);
 
 if ($result){
-	echo "{status : 0, value : '".$p_tag_label."'}";
+	echo "{status : 0, value : '".addslashes($p_tag_label)."'}";
 	exit();
 }
 else
