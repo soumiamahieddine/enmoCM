@@ -178,13 +178,27 @@ function checkRealDate(arg) {
 
         if ($('admission_date')) {
             admissionDate = $('admission_date').value;
+			var date1 = new Date();
+			date1.setFullYear(admissionDate.substr(6,4));
+			date1.setMonth(admissionDate.substr(3,2));
+			date1.setDate(admissionDate.substr(0,2));
+			date1.setHours(0);
+			date1.setMinutes(0);
+			var d1_admissionDate=date1.getTime();
         }
 
         if($('doc_date')) {
             docDate = $('doc_date').value;
+			var date2 = new Date();
+			date2.setFullYear(docDate.substr(6,4));
+			date2.setMonth(docDate.substr(3,2));
+			date2.setDate(docDate.substr(0,2));
+			date2.setHours(0);
+			date2.setMinutes(0);
+			var d2_docDate=date2.getTime();
         }
 
-        if(admissionDate!="" && docDate!="" && docDate>admissionDate){          
+        if(admissionDate!="" && docDate!="" && d2_docDate>d1_admissionDate){          
             alert("La date du courrier doit être antérieur à la date d'arrivée du courrier ");
             if(arg=='admissionDate'){
                 $('admission_date').value = "";
