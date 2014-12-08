@@ -39,8 +39,8 @@ $core_tools->test_user();
 $core_tools->load_lang();
 
 $_SESSION['search']['plain_text'] = "";
-$type = new types();
 
+$type = new types();
 $func = new functions();
 $conn = new dbquery();
 $conn->connect();
@@ -252,7 +252,7 @@ if($core_tools->is_module_loaded('tags'))
     if ($tag_return_value){
         foreach($tag_return_value as $tagelem)
         {
-            array_push($arr_tmptag, array('VALUE' => $tagelem['tag_label'], 'LABEL' => $tagelem['tag_label']));
+            array_push($arr_tmptag, array('VALUE' => $conn->protect_string_db($tagelem['tag_label']), 'LABEL' => $tagelem['tag_label']));
         }
     }
     else
