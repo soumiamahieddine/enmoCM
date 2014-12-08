@@ -255,6 +255,9 @@ if($mode == 'normal') {
     $order = $order_field = '';
     $order = $list->getOrder();
     $order_field = $list->getOrderField();
+    $_SESSION['save_list']['order'] = $order;
+    $_SESSION['save_list']['order_field'] = $order_field;
+
     if (!empty($order_field) && !empty($order)) 
         $orderstr = "order by ".$order_field." ".$order;
     else  {
@@ -270,6 +273,7 @@ if($mode == 'normal') {
     if (!empty($what)) $parameters .= '&what='.$what;
     if (!empty($selectedTemplate)) $parameters .= '&template='.$selectedTemplate;
     if (!empty($start)) $parameters .= '&start='.$start;
+    $_SESSION['save_list']['start'] = $start;
         
 //Query    
     $tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);

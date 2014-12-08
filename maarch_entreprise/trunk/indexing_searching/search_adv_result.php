@@ -51,6 +51,8 @@ $indexes = $type->get_all_indexes($coll_id);
 //$func->show_array($indexes);
 $_SESSION['error_search'] = '';
 $_SESSION['searching']['comp_query'] = '';
+$_SESSION['save_list']['fromDetail'] = "false";
+
 // define the row of the start
 if (isset($_REQUEST['start'])) {
     $start = $_REQUEST['start'];

@@ -95,6 +95,7 @@ if (!isset($_REQUEST['coll_id'])) {
     $_REQUEST['coll_id'] = '';
 }
 $_SESSION['doc_convert'] = array();
+$_SESSION['save_list']['fromDetail'] = "true";
 
 /****************Management of the location bar  ************/
 $init = false;
