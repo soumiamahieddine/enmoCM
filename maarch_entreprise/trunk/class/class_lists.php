@@ -1768,6 +1768,7 @@ class lists extends dbquery
         //Lines to show
         if(isset($_REQUEST['lines']) && !empty($_REQUEST['lines'])) {
             $nbLines = $this->params['linesToShow'] = strip_tags($_REQUEST['lines']);
+            $_SESSION['save_list']['lines'] = $nbLines;
         }
 
         //Number of pages
