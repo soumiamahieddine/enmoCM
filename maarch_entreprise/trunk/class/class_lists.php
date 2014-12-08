@@ -1486,6 +1486,7 @@ class lists extends dbquery
             $link = $this->_removeUrlVar($link,'template');
             $this->template =  $_REQUEST['template'];
             $link.= '&template='.$_REQUEST['template'];
+            $_SESSION['save_list']['template'] = $_REQUEST['template'];
         }
         
         //Id (used in sublist)

@@ -66,13 +66,17 @@ $urlParameters = '';
         $urlParameters .= '&lines='.$_SESSION['save_list']['lines'];
         $urlParameters .= '&order='.$_SESSION['save_list']['order'];
         $urlParameters .= '&order_field='.$_SESSION['save_list']['order_field'];
+        if ($_SESSION['save_list']['template'] <> "") {
+        	$urlParameters .= '&template='.$_SESSION['save_list']['template'];
+        }
         $_SESSION['save_list']['fromDetail'] = "false";
         $_SESSION['save_list']['url'] = $urlParameters;
     }
 	$_SESSION['save_list']['start'] = "";
 	$_SESSION['save_list']['lines'] = "";
 	$_SESSION['save_list']['order'] = "";
-	$_SESSION['save_list']['order_field'] = "";  
+	$_SESSION['save_list']['order_field'] = "";
+	$_SESSION['save_list']['template'] = "";  
     
 //Begin
 if($mode == 'normal') {
