@@ -47,6 +47,8 @@ CREATE TABLE lc_stack
    res_id bigint NOT NULL, 
    cnt_retry integer DEFAULT NULL, 
    status character(1) NOT NULL,
+   work_batch bigint,
+   regex character varying(32),
    CONSTRAINT lc_stack_pkey PRIMARY KEY (policy_id, cycle_id, cycle_step_id, res_id)
 ) 
 WITH (OIDS = FALSE);
