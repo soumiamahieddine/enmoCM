@@ -1247,13 +1247,13 @@ class contacts_v2 extends dbquery
                             </td>
                         </tr>
                         
-                        <tr id="departement_p" style="display:<?php if($_SESSION['m_admin']['address']['DEPARTEMENT'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
+                        <tr id="departement_p">
                             <td><label for="departement"><?php echo _SERVICE; ?>&nbsp;: </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="departement" type="text"  id="departement" value="<?php if(isset($_SESSION['m_admin']['address']['DEPARTEMENT'])){ echo $func->show_str($_SESSION['m_admin']['address']['DEPARTEMENT']);} ?>"/></td>
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
-                        <tr id="title_p" style="display:<?php if($_SESSION['m_admin']['address']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
+                        <tr id="title_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ echo $display_value;}?>">
                             <td><label for="title"><?php echo _TITLE2; ?>&nbsp;: </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><select name="title" id="title" >
@@ -1276,19 +1276,19 @@ class contacts_v2 extends dbquery
                             </select></td>
                             <td>&nbsp;</td>
                         </tr>
-                        <tr id="lastname_p" >
+                        <tr id="lastname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ echo $display_value;}?>">
                             <td><label for="lastname"><?php echo _LASTNAME; ?> : </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="lastname" type="text"  id="lastname" value="<?php if(isset($_SESSION['m_admin']['address']['LASTNAME'])){ echo $func->show_str($_SESSION['m_admin']['address']['LASTNAME']);} ?>"/></td>
                             <td>&nbsp;</td>
                         </tr>
-                        <tr id="firstname_p" >
+                        <tr id="firstname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ echo $display_value;}?>">
                             <td><label for="firstname"><?php echo _FIRSTNAME; ?>&nbsp;: </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="firstname" type="text"  id="firstname" value="<?php if(isset($_SESSION['m_admin']['address']['FIRSTNAME'])){ echo $func->show_str($_SESSION['m_admin']['address']['FIRSTNAME']);} ?>"/></td>
                             <td>&nbsp;</td>
                         </tr>
-                        <tr id="function_p" >
+                        <tr id="function_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ echo $display_value;}?>">
                             <td><label for="function"><?php echo _FUNCTION; ?>&nbsp;: </label></td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="function" type="text"  id="function" value="<?php if(isset($_SESSION['m_admin']['address']['FUNCTION'])){echo $func->show_str($_SESSION['m_admin']['address']['FUNCTION']);} ?>"/></td>
