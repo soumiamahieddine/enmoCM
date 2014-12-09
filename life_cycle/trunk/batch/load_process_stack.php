@@ -1,7 +1,7 @@
 <?php
 
 /*
- *   Copyright 2008-2011 Maarch
+ *   Copyright 2008-2015 Maarch
  *
  *   This file is part of Maarch Framework.
  *
@@ -69,6 +69,7 @@ $view = '';
 $coll = '';
 $policy = '';
 $cycle = '';
+$creationDateClause = '';
 $steps = Array();
 $currentStep = '';
 $docservers = Array();
@@ -83,12 +84,23 @@ $db2 = '';
 $db3 = '';
 $docserverControler = '';
 $wb = '';
+$wbCompute = '';
+$stackSizeLimit = '';
 $docserversFeatures = array();
 $isAContainerOpened = false;
 $lckFile = '';
 $errorLckFile = '';
 $totalProcessedResources = 0;
 $apacheUserAndGroup =  '';
+$enableHistory = true;
+$enableFingerprintControl = true;
+$enablePdi = true;
+$regExResId = 'false';
+$startDateRecovery = 'false';
+$currentDate = 'false';
+$endCurrentDate = 'false';
+$currentMonthOnly = 'false';
+$whereRegex = '';
 $breakKey = '';
 $breakKeyValue = '';
 $log4PhpEnabled = false;
@@ -238,6 +250,26 @@ $GLOBALS['customPath'] = (string) $CONFIG->CustomPath;
 $GLOBALS['customLang'] = (string) $CONFIG->CustomLang;
 $GLOBALS['databasetype'] = (string) $xmlconfig->CONFIG_BASE->databasetype;
 $GLOBALS['apacheUserAndGroup'] = (string) $CONFIG->ApacheUserAndGroup;
+$GLOBALS['stackSizeLimit'] = (string) $CONFIG->StackSizeLimit;
+if ((string) $CONFIG->enableHistory == 'true') {
+    $GLOBALS['enableHistory'] = true;
+} else {
+    $GLOBALS['enableHistory'] = false;
+}
+if ((string) $CONFIG->enableFingerprintControl == 'true') {
+    $GLOBALS['enableFingerprintControl'] = true;
+} else {
+    $GLOBALS['enableFingerprintControl'] = false;
+}
+if ((string) $CONFIG->enablePdi == 'true') {
+    $GLOBALS['enablePdi'] = true;
+} else {
+    $GLOBALS['enablePdi'] = false;
+}
+$GLOBALS['regExResId'] = (string) $CONFIG->regExResId;
+$GLOBALS['startDateRecovery'] = (string) $CONFIG->startDateRecovery;
+$GLOBALS['currentMonthOnly'] = (string) $CONFIG->currentMonthOnly;
+$GLOBALS['databasetype'] = (string) $xmlconfig->CONFIG_BASE->databasetype;
 $i = 0;
 foreach ($xmlconfig->COLLECTION as $col) {
     $GLOBALS['collections'][$i] = array(
@@ -253,6 +285,17 @@ foreach ($xmlconfig->COLLECTION as $col) {
     }
     $i++;
 }
+
+if ($GLOBALS['regExResId'] <> 'false') {
+    if ($GLOBALS['databasetype'] == 'POSTGRESQL') {
+        $GLOBALS['whereRegex'] = " and cast(res_id as character varying(255)) ~ '" 
+            . $GLOBALS['regExResId'] . "' ";
+    } elseif ($GLOBALS['databasetype'] == 'ORACLE') {
+        $GLOBALS['whereRegex'] = " and REGEXP_LIKE (to_char(res_id), '" 
+            . $GLOBALS['regExResId'] . "') ";
+    }
+}
+
 set_include_path(get_include_path() . PATH_SEPARATOR 
     . $GLOBALS['MaarchDirectory']);
 //log4php params
@@ -287,9 +330,9 @@ if (file_exists($GLOBALS['MaarchDirectory'] . 'modules' .DIRECTORY_SEPARATOR
     . 'life_cycle' .DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR 
     . $lang . '.php');
 }
-if ($logLevel == 'DEBUG') {
+/*if ($logLevel == 'DEBUG') {
     error_reporting(E_ALL);
-}
+}*/
 $GLOBALS['logger']->change_handler_log_level($file, $logLevel);
 $GLOBALS['logger']->change_handler_log_level($console, $DisplayedLogLevel);
 unset($xmlconfig);
@@ -371,12 +414,17 @@ $GLOBALS['db2']->connect();
 $GLOBALS['db3']->connect();
 $GLOBALS['dbLog']->connect();
 $GLOBALS['docserverControler'] = new docservers_controler();
+$configFileName = basename($GLOBALS['configFile'], '.xml');
 $GLOBALS['errorLckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
                          . $GLOBALS['batchName'] . '_' . $GLOBALS['policy'] 
-                         . '_' . $GLOBALS['cycle'] . '_error.lck';
+                         . '_' . $GLOBALS['cycle'] 
+                         . '_' . $configFileName
+                         . '_error.lck';
 $GLOBALS['lckFile'] = $GLOBALS['batchDirectory'] . DIRECTORY_SEPARATOR 
                     . $GLOBALS['batchName'] . '_' . $GLOBALS['policy'] 
-                    . '_' . $GLOBALS['cycle'] . '.lck';
+                    . '_' . $GLOBALS['cycle'] 
+                    . '_' . $configFileName
+                    . '.lck';
 if (file_exists($GLOBALS['errorLckFile'])) {
     $GLOBALS['logger']->write(
         'Error persists, please solve this before launching a new batch', 
@@ -392,10 +440,32 @@ if (file_exists($GLOBALS['lckFile'])) {
     );
     exit(109);
 }
+
+if ($GLOBALS['currentMonthOnly'] == 'true') {
+    $GLOBALS['currentDate'] = date(
+        "d/m/Y", 
+        mktime(0, 0, 0, date("m"), 1, date("Y"))
+    );
+    Bt_getEndCurrentDateToProcess();
+    Bt_computeCreationDateClause();
+    $GLOBALS['logger']->write('current begin date to process : ' 
+        . $GLOBALS['currentDate'], 'INFO');
+} elseif ($GLOBALS['startDateRecovery'] <> 'false') {
+    Bt_getCurrentDateToProcess();
+    Bt_updateCurrentDateToProcess();
+    Bt_getEndCurrentDateToProcess();
+    Bt_computeCreationDateClause();
+    $GLOBALS['logger']->write('current begin date to process : ' 
+        . $GLOBALS['currentDate'], 'INFO');
+}
+
 $semaphore = fopen($GLOBALS['lckFile'], 'a');
 fwrite($semaphore, '1');
 fclose($semaphore);
 Bt_getWorkBatch();
+$GLOBALS['wb'] = rand() . $GLOBALS['wbCompute'];
+Bt_updateWorkBatch();
+$GLOBALS['logger']->write('Batch number:' . $GLOBALS['wb'], 'INFO');
 $GLOBALS['tmpDirectory'] = $GLOBALS['tmpDirectoryRoot'] . DIRECTORY_SEPARATOR 
                          . $GLOBALS['wb'] . DIRECTORY_SEPARATOR;
 if (!is_dir($GLOBALS['tmpDirectory'])) {

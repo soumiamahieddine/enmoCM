@@ -1,7 +1,7 @@
 <?php
 
 /*
- *   Copyright 2008-2011 Maarch
+ *   Copyright 2008-2015 Maarch
  *
  *   This file is part of Maarch Framework.
  *
@@ -52,7 +52,8 @@
 
 date_default_timezone_set('Europe/Paris');
 // load the config and prepare to process
-include('load_fill_stack.php');
+//include('load_fill_stack.php');
+include('load_process_stack.php');
 /******************************************************************************/
 /* beginning */
 $state = 'CONTROL_STACK';
@@ -68,12 +69,14 @@ while ($state <> 'END') {
         case 'CONTROL_STACK' :
             $query = "select * from " . _LC_STACK_TABLE_NAME
                    . " where policy_id = '" . $GLOBALS['policy']
-                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
+                   . "' and cycle_id = '" . $GLOBALS['cycle']
+                   . "' and regex = '" . $GLOBALS['regExResId'] . "'";
             Bt_doQuery($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() > 0) {
                 Bt_exitBatch(107, 'WARNING stack is full for policy:'
-                             . $GLOBALS['policy'] . ' and cycle:'
-                             . $GLOBALS['cycle']);
+                             . $GLOBALS['policy'] . ', cycle:'
+                             . $GLOBALS['cycle'] . ', regex:'
+                             . $GLOBALS['regExResId']);
                 break;
             }
             $state = 'GET_STEPS';
@@ -125,45 +128,121 @@ while ($state <> 'END') {
                    . "' and sequence_number = "
                    . ($cycleRecordset->sequence_number - 1);
             Bt_doQuery($GLOBALS['db'], $query);
+            $prevCycleIdWhereClause = '';
+            $cptPrevCycleId = 0;
             if ($GLOBALS['db']->nb_result() > 0) {
-                $cyclePreviousRecordset = $GLOBALS['db']->fetch_object();
+                while ($cyclePreviousRecordset = $GLOBALS['db']->fetch_object()) {
+                    if ($cptPrevCycleId == 0) {
+                        $prevCycleIdWhereClause .= "(cycle_id = '" . $cyclePreviousRecordset->cycle_id . "'";
+                    } else {
+                        $prevCycleIdWhereClause .= " or cycle_id = '" . $cyclePreviousRecordset->cycle_id . "'";
+                    }
+                    $cptPrevCycleId ++;
+                }
+                $prevCycleIdWhereClause .= ")";
             } else {
                 Bt_exitBatch(12, 'previous cycle not found for policy:'
                              . $GLOBALS['policy'] . ', cycle:'
                              . $GLOBALS['cycle']);
                 break;
             }
+
             // select resources
             if ($cycleRecordset->break_key <> '') {
                 $orderBy = ' order by ' . $cycleRecordset->break_key;
+            } else {
+                $orderBy = ' order by res_id ';
             }
             if ($GLOBALS['stackSizeLimit'] <> '') {
                 $limit = ' LIMIT ' . $GLOBALS['stackSizeLimit'];
             }
 
             $where_clause = " policy_id = '" . $GLOBALS['policy']
-                   . "' and cycle_id = '" . $cyclePreviousRecordset->cycle_id
-                   . "' and " . $cycleRecordset->where_clause;
+                . "' and " . $prevCycleIdWhereClause
+                . " and " . $cycleRecordset->where_clause
+                . $GLOBALS['creationDateClause']
+                . $GLOBALS['whereRegex'];
 
-            $query = $GLOBALS['db']->limit_select(0, $GLOBALS['stackSizeLimit'], 'res_id', $GLOBALS['table'], $where_clause, $orderBy);
+            $query = $GLOBALS['db']->limit_select(
+                0, 
+                $GLOBALS['stackSizeLimit'], 
+                'res_id', 
+                $GLOBALS['view'], 
+                $where_clause, 
+                $orderBy
+            );
 
             Bt_doQuery($GLOBALS['db'], $query);
             $resourcesArray = array();
+
             if ($GLOBALS['db']->nb_result() > 0) {
                 while ($resoucesRecordset = $GLOBALS['db']->fetch_object()) {
                     array_push(
                         $resourcesArray,
-                        array('res_id' => $resoucesRecordset->res_id)
-                    );
+                            array('res_id' => $resoucesRecordset->res_id)
+                        );
                 }
             } else {
-                Bt_exitBatch(111, 'no resource found for policy:'
-                             . $GLOBALS['policy'] . ', cycle:'
-                             . $GLOBALS['cycle']);
-                break;
+                if ($GLOBALS['creationDateClause'] <> '') {
+                    $GLOBALS['logger']->write('no resource found for policy:'
+                        . $GLOBALS['policy'] . ', cycle:'
+                        . $GLOBALS['cycle'] . ' ' 
+                        . $GLOBALS['creationDateClause']
+                        . ' compute next month if necessary'
+                    );
+                    // test if we have to change the current date
+                    if ($GLOBALS['currentMonthOnly'] == 'false') {
+                        $queryTestDate = " select count(res_id) as totalres from " 
+                            . $GLOBALS['view'] . " where policy_id = '" . $GLOBALS['policy']
+                            . "' and " . $prevCycleIdWhereClause
+                            . " and " . $cycleRecordset->where_clause
+                            . $GLOBALS['creationDateClause'];
+                        Bt_doQuery($GLOBALS['db'], $queryTestDate);
+                        $resultTotal = $GLOBALS['db']->fetch_object();
+                        if ($resultTotal->totalres == 0) {
+                            Bt_computeNextMonthCurrentDate();
+                            Bt_computeCreationDateClause();
+                            Bt_updateCurrentDateToProcess();
+                            $where_clause = " policy_id = '" . $GLOBALS['policy']
+                                . "' and " . $prevCycleIdWhereClause
+                                . " and " . $cycleRecordset->where_clause
+                                . $GLOBALS['creationDateClause']
+                                . $GLOBALS['whereRegex'];
+
+                            $query = $GLOBALS['db']->limit_select(
+                                0, 
+                                $GLOBALS['stackSizeLimit'], 
+                                'res_id', 
+                                $GLOBALS['view'], 
+                                $where_clause, 
+                                $orderBy
+                            );
+                            Bt_doQuery($GLOBALS['db'], $query);
+                            $resourcesArray = array();
+                            if ($GLOBALS['db']->nb_result() > 0) {
+                                while ($resoucesRecordset = $GLOBALS['db']->fetch_object()) {
+                                    array_push(
+                                        $resourcesArray,
+                                            array('res_id' => $resoucesRecordset->res_id)
+                                        );
+                                }
+                            } else {
+                                Bt_exitBatch(111, 'no resource found for policy:'
+                                    . $GLOBALS['policy'] . ', cycle:'
+                                    . $GLOBALS['cycle'] . ' ' 
+                                    . $GLOBALS['creationDateClause']);
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    Bt_exitBatch(111, 'no resource found for policy:'
+                        . $GLOBALS['policy'] . ', cycle:'
+                        . $GLOBALS['cycle'] . ' ' 
+                        . $GLOBALS['creationDateClause']);
+                    break;
+                }
             }
-            Bt_updateWorkBatch();
-            $GLOBALS['logger']->write('Batch number:' . $GLOBALS['wb'], 'INFO');
             $state = 'FILL_STACK';
             break;
         /**********************************************************************/
@@ -179,26 +258,30 @@ while ($state <> 'END') {
                 for ($cptRes = 0;$cptRes < count($resourcesArray);$cptRes++) {
                     $query = "insert into " . _LC_STACK_TABLE_NAME
                            . " (policy_id, cycle_id, cycle_step_id, coll_id, "
-                           . "res_id, status) values ('" . $GLOBALS['policy']
+                           . "res_id, status, work_batch, regex) values ('" . $GLOBALS['policy']
                            . "', '" . $GLOBALS['cycle'] . "', '"
                            . $GLOBALS['steps'][$cptSteps]['cycle_step_id']
                            . "', '" . $GLOBALS['collection'] . "', "
-                           . $resourcesArray[$cptRes]["res_id"] . ", 'I')";
+                           . $resourcesArray[$cptRes]["res_id"] 
+                           . ", 'I', " . $GLOBALS['wb'] 
+                           . ", '" . $GLOBALS['regExResId'] . "')";
                     Bt_doQuery($GLOBALS['db'], $query);
                     //history
-                    $query = "insert into " . HISTORY_TABLE
-                           . " (table_name, record_id, event_type, user_id, "
-                           . "event_date, info, id_module) values ('"
-                           . $GLOBALS['table'] . "', '"
-                           . $resourcesArray[$cptRes]["res_id"]
-                           . "', 'ADD', 'LC_BOT', "
-                           . $GLOBALS['db']->current_datetime()
-                           . ", 'fill stack, policy:" . $GLOBALS['policy']
-                           . ", cycle:" . $GLOBALS['cycle'] . ", cycle step:"
-                           . $GLOBALS['steps'][$cptSteps]['cycle_step_id']
-                           . ", collection:" . $GLOBALS['collection']
-                           . "', 'life_cycle')";
-                    Bt_doQuery($GLOBALS['db'], $query);
+                    if ($GLOBALS['enableHistory']) {
+                        $query = "insert into " . HISTORY_TABLE
+                               . " (table_name, record_id, event_type, user_id, "
+                               . "event_date, info, id_module) values ('"
+                               . $GLOBALS['view'] . "', '"
+                               . $resourcesArray[$cptRes]["res_id"]
+                               . "', 'ADD', 'LC_BOT', "
+                               . $GLOBALS['db']->current_datetime()
+                               . ", 'fill stack, policy:" . $GLOBALS['policy']
+                               . ", cycle:" . $GLOBALS['cycle'] . ", cycle step:"
+                               . $GLOBALS['steps'][$cptSteps]['cycle_step_id']
+                               . ", collection:" . $GLOBALS['collection']
+                               . "', 'life_cycle')";
+                        Bt_doQuery($GLOBALS['db'], $query);
+                    }
                     $GLOBALS['totalProcessedResources']++;
                 }
             }
@@ -206,6 +289,7 @@ while ($state <> 'END') {
             break;
     }
 }
-unlink($GLOBALS['lckFile']);
-$GLOBALS['logger']->write('End of process', 'INFO');
+//unlink($GLOBALS['lckFile']);
+$GLOBALS['logger']->write('End of process fill stack', 'INFO');
+include('process_stack.php');
 exit($GLOBALS['exitCode']);

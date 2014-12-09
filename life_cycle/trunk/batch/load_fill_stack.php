@@ -1,7 +1,7 @@
 <?php
 
 /*
- *   Copyright 2008-2011 Maarch
+ *   Copyright 2008-2015 Maarch
  *
  *   This file is part of Maarch Framework.
  *
@@ -59,12 +59,19 @@ $configFile = '';
 $table = '';
 $policy = '';
 $cycle = '';
+$dateBegin = '';
+$dateEnd = '';
+$creationDateClause = '';
 $steps = Array();
 $databasetype = '';
 $exitCode = 0;
 $collections = array();
 $wb = '';
 $stackSizeLimit = '';
+$enableHistory = true;
+$enableFingerprintControl = true;
+$enablePdi = true;
+$regExResId = 'false';
 $batchName = 'fill_stack';
 $func = '';
 $db = '';
@@ -116,6 +123,26 @@ $argsparser->add_arg(
         'help' => 'Cycle is mandatory.',
     )
 );
+// The date begin
+$argsparser->add_arg(
+    'datebegin', 
+    array(
+        'short' => 'db',
+        'long' => 'datebegin',
+        'mandatory' => false,
+        'help' => 'Date begin is mandatory.',
+    )
+);
+// The date end
+$argsparser->add_arg(
+    'dateend', 
+    array(
+        'short' => 'de',
+        'long' => 'dateend',
+        'mandatory' => false,
+        'help' => 'Date end is mandatory.',
+    )
+);
 // The path of the log directory
 $argsparser->add_arg(
     'logs', 
@@ -126,6 +153,23 @@ $argsparser->add_arg(
         'help' => '',
     )
 );
+
+// Log management
+$GLOBALS['logger'] = new Logger4Php();
+$GLOBALS['logger']->set_threshold_level('DEBUG');
+$console = new ConsoleHandler();
+$GLOBALS['logger']->add_handler($console);
+if (!empty($options['logs'])) {
+    $logFile = $options['logs'] . DIRECTORY_SEPARATOR . 'fill_stack' 
+             . DIRECTORY_SEPARATOR . date('Y-m-d_H-i-s') . '.log';
+} else {
+    $logFile = 'logs' . DIRECTORY_SEPARATOR . 'fill_stack' 
+             . DIRECTORY_SEPARATOR . date('Y-m-d_H-i-s') . '.log';
+}
+
+$file = new FileHandler($logFile);
+$GLOBALS['logger']->add_handler($file);
+
 // Parsing script options
 try {
     $options = $argsparser->parse_args($GLOBALS['argv']);
@@ -151,21 +195,7 @@ try {
         exit(105);
     }
 }
-// Log management
-$GLOBALS['logger'] = new Logger4Php();
-$GLOBALS['logger']->set_threshold_level('DEBUG');
-$console = new ConsoleHandler();
-$GLOBALS['logger']->add_handler($console);
-if (!empty($options['logs'])) {
-    $logFile = $options['logs'] . DIRECTORY_SEPARATOR . 'fill_stack' 
-             . DIRECTORY_SEPARATOR . date('Y-m-d_H-i-s') . '.log';
-} else {
-    $logFile = 'logs' . DIRECTORY_SEPARATOR . 'fill_stack' 
-             . DIRECTORY_SEPARATOR . date('Y-m-d_H-i-s') . '.log';
-}
 
-$file = new FileHandler($logFile);
-$GLOBALS['logger']->add_handler($file);
 $GLOBALS['logger']->write('STATE:INIT', 'INFO');
 $txt = '';
 foreach (array_keys($options) as $key) {
@@ -180,7 +210,18 @@ $GLOBALS['configFile'] = $options['config'];
 $GLOBALS['collection'] = $options['collection'];
 $GLOBALS['policy'] = $options['policy'];
 $GLOBALS['cycle'] = $options['cycle'];
+$GLOBALS['dateBegin'] = $options['datebegin'];
+$GLOBALS['dateEnd'] = $options['dateend'];
+$GLOBALS['creationDateClause'] = '';
+if ($GLOBALS['dateBegin'] <> '') {
+    $GLOBALS['creationDateClause'] = " and (creation_date >= '" . $GLOBALS['dateBegin'] . "'";
+    if ($GLOBALS['dateEnd'] <> '') {
+        $GLOBALS['creationDateClause'] .= " and creation_date <= '" . $GLOBALS['dateEnd'] . "'";
+    }
+    $GLOBALS['creationDateClause'] .= ")";
+}
 $GLOBALS['logger']->write($txt, 'INFO');
+
 // Tests existence of config file
 if (!file_exists($GLOBALS['configFile'])) {
     $GLOBALS['logger']->write(
@@ -211,6 +252,22 @@ $logLevel = (string) $config->LogLevel;
 $GLOBALS['logger']->set_threshold_level($logLevel);
 $DisplayedLogLevel = (string) $config->DisplayedLogLevel;
 $GLOBALS['stackSizeLimit'] = (string) $config->StackSizeLimit;
+if ((string) $config->enableHistory == 'true') {
+    $GLOBALS['enableHistory'] = true;
+} else {
+    $GLOBALS['enableHistory'] = false;
+}
+if ((string) $config->enableFingerprintControl == 'true') {
+    $GLOBALS['enableFingerprintControl'] = true;
+} else {
+    $GLOBALS['enableFingerprintControl'] = false;
+}
+if ((string) $config->enablePdi == 'true') {
+    $GLOBALS['enablePdi'] = true;
+} else {
+    $GLOBALS['enablePdi'] = false;
+}
+$GLOBALS['regExResId'] = (string) $config->regExResId;
 $GLOBALS['databasetype'] = (string) $xmlconfig->CONFIG_BASE->databasetype;
 $GLOBALS['batchDirectory'] = $maarchDirectory . 'modules' 
                            . DIRECTORY_SEPARATOR . 'life_cycle' 
@@ -247,9 +304,9 @@ if ($GLOBALS['table'] == '') {
     );
     exit(110);
 }
-if ($logLevel == 'DEBUG') {
+/*if ($logLevel == 'DEBUG') {
     error_reporting(E_ALL);
-}
+}*/
 $GLOBALS['logger']->change_handler_log_level($file, $logLevel);
 $GLOBALS['logger']->change_handler_log_level($console, $DisplayedLogLevel);
 unset($xmlconfig);

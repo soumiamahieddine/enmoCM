@@ -1,7 +1,7 @@
 <?php
 
 /*
- *   Copyright 2008-2011 Maarch
+ *   Copyright 2008-2015 Maarch
  *
  *   This file is part of Maarch Framework.
  *
@@ -120,13 +120,13 @@ function Bt_getWorkBatch()
          . "'". $GLOBALS['batchName'] . "_id'";
     $GLOBALS['db']->query($req);
     while ($reqResult = $GLOBALS['db']->fetch_array()) {
-        $GLOBALS['wb'] = $reqResult[0] + 1;
+        $GLOBALS['wbCompute'] = $reqResult[0] + 1;
     }
-    if ($GLOBALS['wb'] == '') {
+    if ($GLOBALS['wbCompute'] == '') {
         $req = "insert into parameters(id, param_value_int) values "
              . "('" . $GLOBALS['batchName'] . "_id', 1)";
         $GLOBALS['db']->query($req);
-        $GLOBALS['wb'] = 1;
+        $GLOBALS['wbCompute'] = 1;
     }
 }
 
@@ -137,7 +137,7 @@ function Bt_getWorkBatch()
  */
 function Bt_updateWorkBatch()
 {
-    $req = "update parameters set param_value_int  = " . $GLOBALS['wb'] . " "
+    $req = "update parameters set param_value_int  = " . $GLOBALS['wbCompute'] . " "
          . "where id = '" . $GLOBALS['batchName'] . "_id'";
     $GLOBALS['db']->query($req);
 }
@@ -155,4 +155,118 @@ function Bt_myInclude($file)
     } else {
         throw new IncludeFileError($file);
     }
+}
+
+/**
+ * Get the current date to process
+ *
+ * @return nothing
+ */
+function Bt_getCurrentDateToProcess()
+{
+    $req = "select param_value_date from parameters where id = "
+         . "'". $GLOBALS['batchName'] . "_" . $GLOBALS['policy'] 
+         . "_" . $GLOBALS['cycle'] . "_current_date'";
+    $GLOBALS['db']->query($req);
+    $reqResult = $GLOBALS['db']->fetch_object();
+    if ($reqResult->param_value_date == '') {
+        $req = "insert into parameters(id, param_value_date) values "
+             . "('" . $GLOBALS['batchName'] . "_" . $GLOBALS['policy'] 
+             . "_" . $GLOBALS['cycle'] . "_current_date', '" 
+             . $GLOBALS['startDateRecovery'] . "')";
+        $GLOBALS['db']->query($req);
+        $GLOBALS['currentDate'] = $GLOBALS['startDateRecovery'];
+    } else {
+        $resultDate = formatDateFromDb($reqResult->param_value_date);
+        if (
+            $GLOBALS['func']->compare_date(
+                $GLOBALS['startDateRecovery'], 
+                $resultDate
+            ) == 'date1'
+        ) {
+            $GLOBALS['currentDate'] = $GLOBALS['startDateRecovery'];
+        } else {
+            $GLOBALS['currentDate'] = $resultDate;
+        }
+    }
+}
+
+/**
+ * Update the database with the current date to process
+ *
+ * @return nothing
+ */
+function Bt_updateCurrentDateToProcess()
+{
+    $req = "update parameters set param_value_date  = '" . $GLOBALS['currentDate'] . "' "
+         . "where id = '" . $GLOBALS['batchName'] . "_" . $GLOBALS['policy'] 
+         . "_" . $GLOBALS['cycle'] . "_current_date'";
+    $GLOBALS['db']->query($req);
+}
+
+/**
+ * Compute the end current date to process
+ *
+ * @return nothing
+ */
+function Bt_getEndCurrentDateToProcess()
+{
+    $dateArray = array();
+    $tabDate = explode('/' , $GLOBALS['currentDate']);
+    $theDate  = $tabDate[2] . '-' . $tabDate[1] . '-' . $tabDate[0];
+    $dateArray = date_parse($theDate);
+    $GLOBALS['endCurrentDate'] = strftime("%d/%m/%Y", mktime(0, 0, 0, $dateArray['month'] +1 , 0, $dateArray['year']));
+}
+
+/**
+ * Compute the next month currentDate
+ *
+ * @return nothing
+ */
+function Bt_computeNextMonthCurrentDate()
+{
+    $tabDate = array();
+    $tabDate = explode('/' , $GLOBALS['currentDate']);
+    $theDate = $tabDate[2] . '-' . $tabDate[1] . '-' . $tabDate[0];
+    $GLOBALS['currentDate'] = date("d/m/Y", strtotime('+1 month', strtotime($theDate)));
+    Bt_getEndCurrentDateToProcess();
+}
+
+/**
+ * Compute the creation date clause
+ *
+ * @return nothing
+ */
+function Bt_computeCreationDateClause()
+{
+    $GLOBALS['creationDateClause'] = '';
+    if ($GLOBALS['currentDate'] <> '') {
+        $GLOBALS['creationDateClause'] = " and (creation_date >= '" . $GLOBALS['currentDate'] . "'";
+        if ($GLOBALS['endCurrentDate'] <> '') {
+            $GLOBALS['creationDateClause'] .= " and creation_date <= '" . $GLOBALS['endCurrentDate'] . "'";
+        }
+        $GLOBALS['creationDateClause'] .= ")";
+    }
+}
+
+/**
+* Formats a datetime to a dd/mm/yyyy format (date)
+*
+* @param    $date datetime The date to format
+* @return   datetime The formated date
+*/
+function formatDateFromDb($date)
+{
+    $lastDate = '';
+    if ($date <> "") {
+        if (strpos($date," ")) {
+            $date_ex = explode(" ",$date);
+            $theDate = explode("-",$date_ex[0]);
+            $lastDate = $theDate[0] . "/" . $theDate[1] . "/" . $theDate[2];
+        } else {
+            $theDate = explode("-",$date);
+            $lastDate = $theDate[0] . "/" . $theDate[1] . "/" . $theDate[2];
+        }
+    }
+    return $lastDate;
 }

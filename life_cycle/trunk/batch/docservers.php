@@ -1,7 +1,7 @@
 <?php
  
-/* 
- *  Copyright 2008-2011 Maarch
+/*
+ *  Copyright 2008-2015 Maarch
  *
  *  This file is part of Maarch Framework.
  *
@@ -227,7 +227,8 @@ function controlIntegrityOfSource($currentRecordInStack)
 {
     $sourceFilePath = getSourceResourcePath($currentRecordInStack);
     $query = "select fingerprint from " . $GLOBALS['table'] 
-           . " where res_id = " . $currentRecordInStack;
+           . " where res_id = " . $currentRecordInStack
+           . $GLOBALS['creationDateClause'];
     Bt_doQuery($GLOBALS['db'], $query);
     $resRecordset = $GLOBALS['db']->fetch_object();
     if (Ds_doFingerprint(

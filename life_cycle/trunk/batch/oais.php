@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright 2008-2011 Maarch
+ *  Copyright 2008-2015 Maarch
  *
  *  This file is part of Maarch Framework.
  *
@@ -89,8 +89,12 @@ function createAip($resInContainer)
     $newSourceFilePath = doCompression('CI', $arrayOfFileToCompress, $tmpDir);
     $result['resInContainer'] = $resInContainer;
     $result['newSourceFilePath'] = $newSourceFilePath;
-    createPDIHistory($resInContainer);
-    createPDI($resInContainer);
+    if ($GLOBALS['enableHistory']) {
+        createPDIHistory($resInContainer);
+    }
+    if ($GLOBALS['enablePdi']) {
+        createPDI($resInContainer);
+    }
     $piArray = array();
     $piArray['CIFingerprint'] =
         Ds_doFingerprint(
@@ -106,41 +110,55 @@ function createAip($resInContainer)
         );
     $piArray['compressionModeCI'] =
         $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode'];
-    $piArray['pdiName'] = 'PDI.' 
-        . strtolower(
-            $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']
-        );
-    $piArray['pdiHistoryName'] = 'PDI_HISTORY.' 
-        . strtolower(
-            $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']
-        );
+    if ($GLOBALS['enablePdi']) {
+        $piArray['pdiName'] = 'PDI.' 
+            . strtolower(
+                $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']
+            );
+    }
+    if ($GLOBALS['enableHistory']) {
+        $piArray['pdiHistoryName'] = 'PDI_HISTORY.' 
+            . strtolower(
+                $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode']
+            );
+    }
     $piArray['compressionModeHistory'] =
         $GLOBALS['docservers'][$GLOBALS['currentStep']]['compression_mode'];
     //PDI compression
-    $pdiName = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR . 'pdi.xml';
-    $pdiName = doCompression('PDI', $pdiName);
-    $piArray['PDIFingerprint'] = Ds_doFingerprint(
-        $pdiName, 
-        $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']
-    );
-    //PDI_HISTORY compression
-    $pdiHistoryName = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR .
-         'pdi_history.xml';
-    $pdiHistoryName = doCompression('PDI_HISTORY', $pdiHistoryName);
-    $piArray['PDIHISTORYFingerprint'] =
-        Ds_doFingerprint(
-            $pdiHistoryName, 
+    if ($GLOBALS['enablePdi']) {
+        $pdiName = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR . 'pdi.xml';
+        $pdiName = doCompression('PDI', $pdiName);
+        $piArray['PDIFingerprint'] = Ds_doFingerprint(
+            $pdiName, 
             $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']
         );
+    }
+    //PDI_HISTORY compression
+    if ($GLOBALS['enableHistory']) {
+        $pdiHistoryName = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR .
+             'pdi_history.xml';
+        $pdiHistoryName = doCompression('PDI_HISTORY', $pdiHistoryName);
+        $piArray['PDIHISTORYFingerprint'] =
+            Ds_doFingerprint(
+                $pdiHistoryName, 
+                $GLOBALS['docservers'][$GLOBALS['currentStep']]['fingerprint_mode']
+            );
+    }
+    
     createPackagingInformation($piArray);
+    
     //AIP compression
     //$aipName = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR . mt_rand();
     $piName = $GLOBALS['tmpDirectory'] . DIRECTORY_SEPARATOR 
         . 'packaging_information.xml';
     $arrayOfFileToCompress = array();
     array_push($arrayOfFileToCompress, $newSourceFilePath);
-    array_push($arrayOfFileToCompress, $pdiHistoryName);
-    array_push($arrayOfFileToCompress, $pdiName);
+    if ($GLOBALS['enableHistory']) {
+        array_push($arrayOfFileToCompress, $pdiHistoryName);
+    }
+    if ($GLOBALS['enablePdi']) {
+        array_push($arrayOfFileToCompress, $pdiName);
+    }
     array_push($arrayOfFileToCompress, $piName);
     $newSourceFilePath = doCompression('AIP', $arrayOfFileToCompress);
     rename(

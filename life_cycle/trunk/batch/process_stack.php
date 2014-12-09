@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright 2008-2011 Maarch
+ *  Copyright 2008-2015 Maarch
  *
  *  This file is part of Maarch Framework.
  *
@@ -70,7 +70,7 @@
 
 date_default_timezone_set('Europe/Paris');
 try {
-    include('load_process_stack.php');
+    //include('load_process_stack.php');
     include('resources.php');
     include('docservers.php');
     include('oais.php');
@@ -86,9 +86,9 @@ try {
     echo "Maarch_CLITools required ! \n (pear.maarch.org)\n";
     exit(106);
 }
-
 /******************************************************************************/
 /* beginning */
+$GLOBALS['steps'] = array();
 $GLOBALS['state'] = "CONTROL_STACK";
 while ($GLOBALS['state'] <> "END") {
     if (isset($GLOBALS['logger'])) {
@@ -102,7 +102,8 @@ while ($GLOBALS['state'] <> "END") {
         case "CONTROL_STACK" :
             $query = "select * from " . _LC_STACK_TABLE_NAME 
                    . " where policy_id = '" . $GLOBALS['policy'] 
-                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
+                   . "' and cycle_id = '" . $GLOBALS['cycle'] 
+                   . "' and work_batch = '" . $GLOBALS['wb'] . "'";
             Bt_doQuery($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() == 0) {
                 Bt_exitBatch(107, 'stack empty for your request');
@@ -111,7 +112,8 @@ while ($GLOBALS['state'] <> "END") {
             Bt_updateWorkBatch();
             $GLOBALS['logger']->write("Batch number:".$GLOBALS['wb'], 'INFO');
             $query = "update " . _LC_STACK_TABLE_NAME 
-                   . " set status = 'I' where status = 'W'";
+                   . " set status = 'I' where status = 'W'"
+                   . " and work_batch = '" . $GLOBALS['wb'] . "'";
             Bt_doQuery($GLOBALS['db'], $query);
             $GLOBALS['state'] = "GET_STEPS";
             break;
@@ -224,7 +226,8 @@ while ($GLOBALS['state'] <> "END") {
                            . "' and cycle_id = '" . $GLOBALS['cycle'] 
                            . "' and cycle_step_id = '".$GLOBALS['currentStep'] 
                            . "' and status = 'I' and coll_id = '" 
-                           . $GLOBALS['collection'] . "'";
+                           . $GLOBALS['collection'] . "'"
+                           . " and work_batch = '" . $GLOBALS['wb'] . "'";
                     Bt_doQuery($GLOBALS['db'], $query);
                     $cptRecordsTotalInStep = $GLOBALS['db']->nb_result();
                     $GLOBALS['logger']->write(
@@ -247,7 +250,9 @@ while ($GLOBALS['state'] <> "END") {
                                . "' and cycle_step_id = '" 
                                . $GLOBALS['currentStep'] 
                                . "' and status = 'I' and coll_id = '" 
-                               . $GLOBALS['collection'] . "')";
+                               . $GLOBALS['collection'] . "'" 
+                               . " and work_batch = '" . $GLOBALS['wb'] . "')"
+                               . $GLOBALS['creationDateClause'];
                         Bt_doQuery($GLOBALS['db'], $query);
                         $resSum = $GLOBALS['db']->fetch_object();
                         $reasonableLimitSize =
@@ -321,7 +326,8 @@ while ($GLOBALS['state'] <> "END") {
                    . "' and cycle_id = '" . $GLOBALS['cycle'] 
                    . "' and cycle_step_id = '" . $GLOBALS['currentStep'] 
                    . "' and status = 'I' and coll_id = '" 
-                   . $GLOBALS['collection'] . "'";
+                   . $GLOBALS['collection'] . "'"
+                   . " and work_batch = '" . $GLOBALS['wb'] . "'";
             Bt_doQuery($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() == 0) {
                 foreach ($GLOBALS['steps'] as $key => $value) {
@@ -355,7 +361,11 @@ while ($GLOBALS['state'] <> "END") {
                     || $GLOBALS['steps'][$GLOBALS['currentStep']]
                     ['step_operation'] == "MOVE"
                 ) {
-                    controlIntegrityOfSource($currentRecordInStack['res_id']);
+                    if ($GLOBALS['enableFingerprintControl']) {
+                        controlIntegrityOfSource($currentRecordInStack['res_id']);
+                    } else {
+                        Ds_washTmp($GLOBALS['tmpDirectory'], true);
+                    }
                     $sourceFilePath = getSourceResourcePath(
                         $currentRecordInStack['res_id']
                     );
@@ -366,12 +376,14 @@ while ($GLOBALS['state'] <> "END") {
                         $GLOBALS['state'] = "END";
                         break;
                     } else {
-                        $currentRecordInStack['fingerprint'] =
-                            Ds_doFingerprint(
-                                $sourceFilePath, 
-                                $GLOBALS['docservers'][$GLOBALS['currentStep']]
-                                ['fingerprint_mode']
-                            );
+                        //if ($GLOBALS['enableFingerprintControl']) {
+                            $currentRecordInStack['fingerprint'] =
+                                Ds_doFingerprint(
+                                    $sourceFilePath, 
+                                    $GLOBALS['docservers'][$GLOBALS['currentStep']]
+                                    ['fingerprint_mode']
+                                );
+                        //}
                         $GLOBALS['logger']->write(
                             "current record:" . $currentRecordInStack['res_id'],
                             'DEBUG'
@@ -636,16 +648,19 @@ while ($GLOBALS['state'] <> "END") {
             }
             if (!$dontProcessTheCurrentRecord) {
                 $cptResInContainer++;
+                //if ($GLOBALS['enableFingerprintControl']) {
+                    $fingerprintOfCurrentRecord = Ds_doFingerprint(
+                        $sourceFilePath, 
+                        $GLOBALS['docservers'][$GLOBALS['currentStep']]
+                        ['fingerprint_mode']
+                    );
+                //}
                 array_push(
                     $resInContainer, 
                     array(
                         "res_id" => $currentRecordInStack['res_id'], 
                         "source_path" => $sourceFilePath, 
-                        "fingerprint" => Ds_doFingerprint(
-                            $sourceFilePath, 
-                            $GLOBALS['docservers'][$GLOBALS['currentStep']]
-                            ['fingerprint_mode']
-                        ),
+                        "fingerprint" => $fingerprintOfCurrentRecord,
                     )
                 );
                 $offsetDoc = "";
@@ -655,7 +670,8 @@ while ($GLOBALS['state'] <> "END") {
                        . $GLOBALS['cycle'] . "' and cycle_step_id = '" 
                        . $GLOBALS['currentStep'] . "' and coll_id = '" 
                        . $GLOBALS['collection'] . "' and res_id = " 
-                       . $currentRecordInStack['res_id'];
+                       . $currentRecordInStack['res_id']
+                       . " and work_batch = '" . $GLOBALS['wb'] . "'";
                 Bt_doQuery($GLOBALS['db'], $query);
                 if (
                     $cptResInContainer >= $GLOBALS['docservers']
@@ -750,7 +766,8 @@ while ($GLOBALS['state'] <> "END") {
             $query = "select * from " . _LC_STACK_TABLE_NAME 
                    . " where status <> 'P' and "
                    . " policy_id = '" . $GLOBALS['policy'] 
-                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
+                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'"
+                   . " and work_batch = '" . $GLOBALS['wb'] . "'";
             Bt_doQuery($GLOBALS['db'], $query);
             if ($GLOBALS['db']->nb_result() > 0) {
                 Bt_exitBatch(108, 'There are still documents to be processed');
@@ -758,7 +775,8 @@ while ($GLOBALS['state'] <> "END") {
             $query = "delete from " . _LC_STACK_TABLE_NAME 
                    . " where status = 'P' and "
                    . " policy_id = '" . $GLOBALS['policy'] 
-                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'";
+                   . "' and cycle_id = '" . $GLOBALS['cycle'] . "'"
+                   . " and work_batch = '" . $GLOBALS['wb'] . "'";
             Bt_doQuery($GLOBALS['db'], $query);
             $GLOBALS['state'] = "END";
             break;

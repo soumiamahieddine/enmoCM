@@ -1,7 +1,7 @@
 <?php
 
 /*
- *  Copyright 2008-2011 Maarch
+ *  Copyright 2008-2015 Maarch
  *
  *  This file is part of Maarch Framework.
  *
@@ -99,7 +99,8 @@ function createPDI($resInContainer)
             new DOMAttr('RES_ID', $resInContainer[$cptRes]['res_id'])
         );
         $query = "select * from " . $GLOBALS['view'] 
-               . " where res_id = ".$resInContainer[$cptRes]['res_id'];
+               . " where res_id = ".$resInContainer[$cptRes]['res_id'] 
+               . $GLOBALS['creationDateClause'];
         Bt_doQuery($GLOBALS['db3'], $query);
         while ($resRecordset = $GLOBALS['db3']->fetch_object()) {
             //a record
@@ -225,18 +226,20 @@ function createPDI($resInContainer)
             }
             $isIngoing->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
             $provenance->appendChild($isIngoing);
-            if (isset($resRecordset->history)) {
-                $history = $docXML->createElement(
-                    'HISTORY', $resRecordset->history
-                );
-            } else {
-                $history = $docXML->createElement('HISTORY', '');
+            if ($GLOBALS['enableHistory']) {
+                if (isset($resRecordset->history)) {
+                    $history = $docXML->createElement(
+                        'HISTORY', $resRecordset->history
+                    );
+                } else {
+                    $history = $docXML->createElement('HISTORY', '');
+                }
+                $history->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
+                $provenance->appendChild($history);
+                $commentString = _PDI_COMMENT_HISTORY;
+                $commentNodeHistory = $docXML->createComment($commentString);
+                $history->appendChild($commentNodeHistory);
             }
-            $history->setAttributeNode(new DOMAttr('SOURCE', 'RES'));
-            $provenance->appendChild($history);
-            $commentString = _PDI_COMMENT_HISTORY;
-            $commentNodeHistory = $docXML->createComment($commentString);
-            $history->appendChild($commentNodeHistory);
             //a reference
             $reference = $docXML->createElement('REFERENCE');
             $pdi->appendChild($reference);
