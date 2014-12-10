@@ -148,7 +148,7 @@ $list = new list_show();
 					$tab[$i][$j]["value"]=$contact->get_label_contact($tab[$i][$j]['value'], $_SESSION['tablename']['contact_types']);
 				}
 				if($tab[$i][$j][$value] == "society"){
-					$tab[$i][$j]["label"]=_SOCIETY;
+					$tab[$i][$j]["label"]=_STRUCTURE_ORGANISM;
 					$tab[$i][$j]["size"]="20";
 					$tab[$i][$j]["label_align"]="left";
 					$tab[$i][$j]["align"]="left";
