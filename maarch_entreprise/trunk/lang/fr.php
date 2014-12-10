@@ -892,6 +892,8 @@ if (!defined('_MULTI_CONTACT')) define( '_MULTI_CONTACT', '<b><i>Multi contacts<
 if (!defined('_SHOW_MULTI_CONTACT')) define( '_SHOW_MULTI_CONTACT', 'Voir les contacts');
 if (!defined('_STRUCTURE_ORGANISM')) define( '_STRUCTURE_ORGANISM', 'Structure');
 if (!defined('_TYPE_OF_THE_CONTACT')) define( '_TYPE_OF_THE_CONTACT', 'Quelle est le type du contact ?');
+if (!defined('_WRITE_IN_UPPER')) define( '_WRITE_IN_UPPER', 'Saisir en majuscule');
+if (!defined('_EXAMPLE_PURPOSE')) define( '_EXAMPLE_PURPOSE', 'Exemple : Direction g&eacute;n&eacute;rale/Domicile');
 
 if (!defined('_MANAGE_DUPLICATES'))  define('_MANAGE_DUPLICATES', 'Gestion des doublons');
 if (!defined('_DUPLICATES_BY_SOCIETY'))  define('_DUPLICATES_BY_SOCIETY', 'Doublons par organisme/soci&eacute;t&eacute;');

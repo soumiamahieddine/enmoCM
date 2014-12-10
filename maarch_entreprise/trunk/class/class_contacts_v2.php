@@ -1219,7 +1219,7 @@ class contacts_v2 extends dbquery
                                                                 ?>><?php echo $contact_purposes[$key];?></option><?php
                                                             }?>
                                                         </select> -->
-                                <input name="new_id" id="new_id" onblur="purposeCheck();";
+                                <input name="new_id" id="new_id" onfocus="$('rule_purpose').style.display='table-row'" onblur="purposeCheck();$('rule_purpose').style.display='none'";
                                     <?php if(isset($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']) && $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] <> '')
                                         {
                                             echo 'value="'.$this->get_label_contact($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'],$_SESSION['tablename']['contact_purposes']).'"';
@@ -1240,7 +1240,10 @@ class contacts_v2 extends dbquery
                                 />
                             </td>
                             <td class="indexing_field"><span class="red_asterisk" style="visibility:visible;" id="contact_purposes_mandatory">*</span></td>
-                        </tr> 
+                        </tr>
+                        <tr style="display:none;" id="rule_purpose">
+                            <td colspan="3" align="right" ><i><?php echo _EXAMPLE_PURPOSE; ?></i></td>
+                        </tr>
                         <tr id="purpose_to_create" style="display:none">
                             <td colspan="4">
                                 <em><?php echo _CONTACT_PURPOSE_WILL_BE_CREATED;?></em>
@@ -1279,8 +1282,11 @@ class contacts_v2 extends dbquery
                         <tr id="lastname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ echo $display_value;}?>">
                             <td><label for="lastname"><?php echo _LASTNAME; ?> : </label></td>
                             <td>&nbsp;</td>
-                            <td class="indexing_field"><input name="lastname" type="text"  id="lastname" value="<?php if(isset($_SESSION['m_admin']['address']['LASTNAME'])){ echo $func->show_str($_SESSION['m_admin']['address']['LASTNAME']);} ?>"/></td>
+                            <td class="indexing_field"><input name="lastname" type="text" onfocus="$('rule_lastname').style.display='table-row'" onblur="$('rule_lastname').style.display='none';" id="lastname" value="<?php if(isset($_SESSION['m_admin']['address']['LASTNAME'])){ echo $func->show_str($_SESSION['m_admin']['address']['LASTNAME']);} ?>"/></td>
                             <td>&nbsp;</td>
+                        </tr>
+                        <tr style="display:none;" id="rule_lastname">
+                            <td colspan="3" align="right"><i><?php echo _WRITE_IN_UPPER; ?></i></td>
                         </tr>
                         <tr id="firstname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ echo $display_value;}?>">
                             <td><label for="firstname"><?php echo _FIRSTNAME; ?>&nbsp;: </label></td>
@@ -1327,14 +1333,20 @@ class contacts_v2 extends dbquery
                         <tr>
                             <td><label for="town"><?php echo _TOWN; ?> : </label></td>
                             <td>&nbsp;</td>
-                            <td class="indexing_field"><input name="town" type="text" id="town" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_TOWN'])){ echo $func->show_str($_SESSION['m_admin']['address']['ADD_TOWN']);} ?>"/></td>
+                            <td class="indexing_field"><input name="town" type="text" id="town" onfocus="$('rule_town').style.display='table-row'" onblur="$('rule_town').style.display='none';" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_TOWN'])){ echo $func->show_str($_SESSION['m_admin']['address']['ADD_TOWN']);} ?>"/></td>
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
+                        </tr>
+                        <tr style="display:none;" id="rule_town">
+                            <td colspan="3" align="right"><i><?php echo _WRITE_IN_UPPER; ?></i></td>
                         </tr>
                         <tr>
                             <td><label for="country"><?php echo _COUNTRY; ?> : </label></td>
                             <td>&nbsp;</td>
-                            <td class="indexing_field"><input name="country" type="text"  id="country" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_COUNTRY'])){ echo $func->show_str($_SESSION['m_admin']['address']['ADD_COUNTRY']); }?>"/></td>
+                            <td class="indexing_field"><input name="country" type="text" onfocus="$('rule_country').style.display='table-row'" onblur="$('rule_country').style.display='none';" id="country" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_COUNTRY'])){ echo $func->show_str($_SESSION['m_admin']['address']['ADD_COUNTRY']); }?>"/></td>
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
+                        </tr>
+                        <tr style="display:none;" id="rule_country">
+                            <td colspan="3" align="right"><i><?php echo _WRITE_IN_UPPER; ?></i></td>
                         </tr>
                         <tr >
                             <td><label for="phone"><?php echo _PHONE; ?>&nbsp;: </label></td>
