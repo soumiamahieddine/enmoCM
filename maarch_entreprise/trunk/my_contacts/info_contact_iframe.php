@@ -92,6 +92,9 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false)) {
 	$_SESSION['contact']['current_contact_id'] = $_GET['contactid'];
 	$_SESSION['contact']['current_address_id'] = $_GET['addressid'];
 	$from_iframe = true;
+	if (isset($_REQUEST['popup'])) {
+		$_SESSION['info_contact_popup'] = "true";
+	}
 	include_once 'apps/' . $_SESSION['config']['app_id'] . '/my_contacts/my_contact_up.php';
 } else {
 	require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");

@@ -1168,7 +1168,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                             $data[$arr[$i]]['show_value'] .= ', '.$res->address_num .' ' . $res->address_street .' ' . strtoupper($res->address_town);
                         }         
                     }
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&contactid=' . $line-> $arr[$i] . '&addressid='.$addressId.'\', \'contact_info\', \'height=800, width=700,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
+                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&popup&contactid=' . $line-> $arr[$i] . '&addressid='.$addressId.'\', \'contact_info\', \'height=800, width=700,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
                 } else {
                     unset ($data[$arr[$i]]);
                 }

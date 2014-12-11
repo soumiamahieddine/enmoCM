@@ -607,10 +607,16 @@ class contacts_v2 extends dbquery
                     if(!$admin) {
                         $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&amp;dir=my_contacts&amp;load';
                     }
-                    if($iframe) { ?>    
-                        <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div'));new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return false;" />
-                    <?php
-                    } else {
+                    if($iframe) { ?>
+                    	<input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" 
+
+                <?php   if($_SESSION['info_contact_popup'] == "true"){?>
+                			onclick="self.close();" 
+                <?php   } else { ?>
+                			onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div'));new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return false;"
+                <?php   } ?>
+                 		/>
+              <?php } else {
                         if ($mode == 'view') { ?>
                             <input type="button" class="button"  name="cancel" value="<?php echo _BACK_TO_RESULTS_LIST; ?>" onclick="history.go(-1);" />
                     <?php } else {
