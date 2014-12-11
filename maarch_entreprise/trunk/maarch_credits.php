@@ -52,9 +52,9 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
             <a target="blank" href="http://www.gnu.org/licenses/gpl-3.0-standalone.html">licence GNU GPLv3</a>.</p>
         <div>
             <ul>
-                <li><?php echo _OFFICIAL_WEBSITE;?> : <a target="blank" href="http://www.maarch.com">http://www.maarch.com</a></li>
-                <li><?php echo _COMMUNITY;?> : <a target="blank" href="http://www.maarch.org">http://www.maarch.org</a></li>
-                <li><?php echo _DOCUMENTATION;?> : <a target="blank" href="http://wiki.maarch.org/Accueil">http://wiki.maarch.org/Accueil</a></li>
+                <li><?php echo _OFFICIAL_WEBSITE;?> : <a target="blank" href="http://www.maarch.com">www.maarch.com</a></li>
+                <li><?php echo _COMMUNITY;?> : <a target="blank" href="http://forum.maarch.org">forum.maarch.org</a></li>
+                <li><?php echo _DOCUMENTATION;?> : <a target="blank" href="http://wiki.maarch.org/Accueil">wiki.maarch.org</a></li>
             </ul>
         </div>
         <p>&nbsp;</p>
