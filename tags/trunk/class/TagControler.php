@@ -516,9 +516,12 @@ class tag_controler
         if ($core_tools->test_service('add_tag_to_res', 'tags',false) == 1)
         {
             $this->delete_tags($res_id, $coll_id);
-            foreach($tag_array as $this_taglabel)
-            {
-                $this->add_this_tag($res_id,$coll_id,$this_taglabel);
+            
+            if ($tag_array) {
+                foreach($tag_array as $this_taglabel)
+                {
+                    $this->add_this_tag($res_id,$coll_id,$this_taglabel);
+                }
             }
         }
     }
