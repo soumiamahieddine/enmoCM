@@ -520,14 +520,34 @@ class contacts_v2 extends dbquery
                             </select></td>
                         <td><span class="red_asterisk" style="visibility:visible;" id="contact_types_mandatory">*</span></td>
                     </tr>
+                    <?php
+                    if (defined('_EXAMPLE_SELECT_CONTACT_TYPE') && _EXAMPLE_SELECT_CONTACT_TYPE <> "") { ?>
+	                    <tr>
+	                        <td colspan="3"><i>&nbsp;<?php echo _EXAMPLE_SELECT_CONTACT_TYPE; ?></i></td>
+	                    </tr>
+              <?php } ?>
+
                     <tr id="contacts_created_tr" style="display:none">
-                        <td><?php echo _CONTACT_ALREADY_CREATED; ?> : </td>
-                        <td>&nbsp;</td>
-                        <td class="indexing_field">
-                            <select id="contacts_created">
-                            </select>
-                        </td>
+	                    <td colspan="3">
+		                    <table width="100%" style="border-collapse:collapse;">
+		                    	<tr>
+			                        <td><?php echo _CONTACT_ALREADY_CREATED; ?> : </td>
+			                        <td>&nbsp;</td>
+			                        <td class="indexing_field">
+			                            <select id="contacts_created">
+			                            </select>
+			                        </td>
+		                        </tr>
+			                    <?php
+			                    if (defined('_HELP_SELECT_CONTACT_CREATED') && _HELP_SELECT_CONTACT_CREATED <> "") { ?>
+				                    <tr>
+				                        <td colspan="3"><i>&nbsp;<?php echo _HELP_SELECT_CONTACT_CREATED; ?></i></td>
+				                    </tr>
+			              <?php } ?>
+		                    </table>
+	                    </td>
                     </tr>
+
                     <tr>
                         <td><label for="society"><?php echo _STRUCTURE_ORGANISM; ?> : </label></td>
                         <td>&nbsp;</td>
