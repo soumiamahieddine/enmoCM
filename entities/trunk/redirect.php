@@ -138,7 +138,7 @@ require_once('modules/entities/class/class_manage_entities.php');;
     }
     $frm_str .='<hr />';
     $frm_str .='<div align="center">';
-            $frm_str .='<input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="destroyModal(\'modal_'.$id_action.'\');"/>';
+            $frm_str .='<input type="button" name="cancel" id="cancel" class="button"  value="'._CANCEL.'" onclick="pile_actions.action_pop();destroyModal(\'modal_'.$id_action.'\');"/>';
     $frm_str .='</div>';
     return addslashes($frm_str);
  }
