@@ -47,7 +47,7 @@ $func = new functions();
 $select[$_SESSION['tablename']['contact_addresses']] = array();
 array_push(
     $select[$_SESSION['tablename']['contact_addresses']],
-    "id", "contact_id", "contact_purpose_id", "departement", "lastname", "firstname", "function", "address_town", "phone", "email"
+    "id", "contact_id", "contact_purpose_id", "departement", "lastname", "firstname", "function", "is_private","address_num", "address_street", "address_postal_code", "address_town", "phone", "email"
 );
 $what = "";
 $where = "contact_id = " . $_SESSION['contact']['current_contact_id'];
@@ -128,7 +128,11 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["label_align"]="left";
                 $tab[$i][$j]["align"]="left";
                 $tab[$i][$j]["valign"]="bottom";
-                $tab[$i][$j]["show"]=true;
+                if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == "Y") {
+                    $tab[$i][$j]["show"]=true;
+                } else {
+                    $tab[$i][$j]["show"]=false;
+                }
                 $tab[$i][$j]["order"]= "lastname";
             }
             if($tab[$i][$j][$value]=="firstname")
@@ -139,7 +143,11 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["label_align"]="left";
                 $tab[$i][$j]["align"]="left";
                 $tab[$i][$j]["valign"]="bottom";
-                $tab[$i][$j]["show"]=true;
+                if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == "Y") {
+                    $tab[$i][$j]["show"]=true;
+                } else {
+                    $tab[$i][$j]["show"]=false;
+                }
                 $tab[$i][$j]["order"]= "firstname";
             }
             if($tab[$i][$j][$value]=="function")
@@ -151,11 +159,69 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["label_align"]="left";
                 $tab[$i][$j]["align"]="left";
                 $tab[$i][$j]["valign"]="bottom";
-                $tab[$i][$j]["show"]=true;
+                if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == "Y") {
+                    $tab[$i][$j]["show"]=true;
+                } else {
+                    $tab[$i][$j]["show"]=false;
+                }
                 $tab[$i][$j]["order"]= "function";
+            }
+            if($tab[$i][$j][$value]=="is_private")
+            {
+                $is_private = $tab[$i][$j]['value'];
+                $tab[$i][$j]["show"]=false;
+            }
+            if($tab[$i][$j][$value]=="address_num")
+            {
+                $address_num = $tab[$i][$j]['value'];
+                $tab[$i][$j]["show"]=false;
+            }
+            if($tab[$i][$j][$value]=="address_street")
+            {
+                if ($is_private == "Y") {
+                    $tab[$i][$j]['value'] = "Confidentielle";
+                } else {
+                    $tab[$i][$j]['value'] = $address_num . " " . $request->show_string($tab[$i][$j]['value']);                    
+                }
+
+                $tab[$i][$j]["address_street"]= $tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]= _ADDRESS;
+                $tab[$i][$j]["size"]="15";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == "Y") {
+                    $tab[$i][$j]["show"]=false;
+                } else {
+                    $tab[$i][$j]["show"]=true;
+                }
+                $tab[$i][$j]["order"]= "address_street";
+            }
+            if($tab[$i][$j][$value]=="address_postal_code")
+            {
+                if ($is_private == "Y") {
+                    $tab[$i][$j]['value'] = "Confidentiel";
+                } else {
+                    $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
+                }
+                $tab[$i][$j]["address_postal_code"]=$tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_POSTAL_CODE;
+                $tab[$i][$j]["size"]="15";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+               if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == "Y") {
+                    $tab[$i][$j]["show"]=false;
+                } else {
+                    $tab[$i][$j]["show"]=true;
+                }
+                $tab[$i][$j]["order"]= "address_postal_code";
             }
             if($tab[$i][$j][$value]=="address_town")
             {
+                if ($is_private == "Y") {
+                    $tab[$i][$j]['value'] = "Confidentielle";
+                }
                 $tab[$i][$j]["address_town"]= $request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["label"]=_TOWN;
                 $tab[$i][$j]["size"]="15";
@@ -167,7 +233,11 @@ for ($i = 0; $i < count($tab); $i ++) {
             }
             if($tab[$i][$j][$value]=="phone")
             {
-                $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
+                if ($is_private == "Y") {
+                    $tab[$i][$j]['value'] = "Confidentiel";
+                } else {
+                    $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
+                }
                 $tab[$i][$j]["phone"]=$tab[$i][$j]['value'];
                 $tab[$i][$j]["label"]=_PHONE;
                 $tab[$i][$j]["size"]="15";
@@ -179,6 +249,9 @@ for ($i = 0; $i < count($tab); $i ++) {
             }
             if($tab[$i][$j][$value]=="email")
             {
+                if ($is_private == "Y") {
+                    $tab[$i][$j]['value'] = "Confidentiel";
+                }
                 $tab[$i][$j]["email"]= $request->show_string($tab[$i][$j]['value']);
                 $tab[$i][$j]["label"]=_MAIL;
                 $tab[$i][$j]["size"]="15";

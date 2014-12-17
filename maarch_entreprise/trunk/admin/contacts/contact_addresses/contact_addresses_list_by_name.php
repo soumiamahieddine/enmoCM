@@ -49,7 +49,18 @@ $db->query($query);
 $listArray = array();
 while($line = $db->fetch_object())
 {
-	$listArray[$line->id] = $contact->get_label_contact($line->contact_purpose_id, $_SESSION['tablename']['contact_purposes']) . ' : ' . $line->tag . ' '. $line->firstname;
+	$listArray[$line->id] = $contact->get_label_contact($line->contact_purpose_id, $_SESSION['tablename']['contact_purposes']);
+	
+	if ($line->tag <> "" || $line->firstname) {
+		$listArray[$line->id] .= " :";
+		if ($line->tag <> "") {
+			$listArray[$line->id] .= " " . $line->tag;
+		}
+		if ($line->firstname <> "") {
+			$listArray[$line->id] .= " " . $line->firstname;
+		}
+	}
+
 }
 echo "<ul>\n";
 $authViewList = 0;

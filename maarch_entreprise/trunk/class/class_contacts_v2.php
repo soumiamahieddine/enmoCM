@@ -1194,6 +1194,9 @@ class contacts_v2 extends dbquery
                 } else if($iframe == "iframe_add_up") {
                     $action = $_SESSION['config']['businessappurl']."index.php?display=false&page=contact_addresses_up_db&mycontact=iframe_add_up";
                 }
+                if (isset($_SESSION['contact_address']['fromContactAddressesList']) && $_SESSION['contact_address']['fromContactAddressesList'] <> "") {
+                    $action = $_SESSION['config']['businessappurl'].'index.php?display=true&page=contact_addresses_up_db&fromContactAddressesList';
+                }
                 ?>
                 <form name="frmcontact" id="frmcontact" method="post" action="<?php echo $action;?>" class="forms">
                     <input type="hidden" name="display"  value="true" />
@@ -1462,6 +1465,10 @@ class contacts_v2 extends dbquery
                     } else if($iframe == 'iframe_add_up'){
                         $cancel_target = $_SESSION['config']['businessappurl'].'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
                     }
+                    if (isset($_SESSION['contact_address']['fromContactAddressesList']) && $_SESSION['contact_address']['fromContactAddressesList'] <> "") {
+                        $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=contact_addresses_list';
+                        $_SESSION['contact_address']['fromContactAddressesList'] = "";
+                    }
                     ?>
                     <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $cancel_target;?>';" />
                     </p>
@@ -1529,6 +1536,11 @@ class contacts_v2 extends dbquery
                                           . 'index.php?display=false&dir=my_contacts&page=update_address_iframe';
             }
 
+        }
+        if (isset($_SESSION['contact_address']['fromContactAddressesList']) && $_SESSION['contact_address']['fromContactAddressesList'] <> "") {
+            $path_contacts = $_SESSION['config']['businessappurl'] . 'index.php?page=contact_addresses_list';
+            $path_contacts_up_errors = $_SESSION['config']['businessappurl'] . 'index.php?page=contact_addresses_up&fromContactAddressesList';
+            $_SESSION['contact_address']['fromContactAddressesList'] = "";
         }
         if (! empty($_SESSION['error'])) {
             if ($mode == 'up') {

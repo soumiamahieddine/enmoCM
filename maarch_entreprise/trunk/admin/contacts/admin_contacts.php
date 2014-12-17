@@ -71,6 +71,12 @@ unset($_SESSION['m_admin']);
          </div>
     </div>
 
+    <div class="admin_item" id="admin_contacts_v2" title="<?php  echo _MANAGE_CONTACT_ADDRESSES_LIST_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_addresses_list';">
+        <div class="sum_margin">
+                <strong><?php  echo _MANAGE_CONTACT_ADDRESSES_LIST;?></strong>
+         </div>
+    </div>
+
     <div class="admin_item" id="view_tree_contacts" title="<?php  echo _VIEW_TREE_CONTACTS_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_contacts';">
         <div class="sum_margin">
                 <strong><?php  echo _VIEW_TREE_CONTACTS;?></strong>

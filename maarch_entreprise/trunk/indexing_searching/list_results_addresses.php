@@ -46,30 +46,17 @@ if(isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 || $_REQUEST['level'] =
 {
     $level = $_REQUEST['level'];
 }
-$page_path = $_SESSION['config']['businessappurl'].'index.php?page=list_results_contacts&dir=indexing_searching';
-$page_label = _RESULTS;
-$page_id = "search_contacts_result";
+$page_path = $_SESSION['config']['businessappurl'].'index.php?page=list_results_addresses&dir=indexing_searching';
+$page_label = _ADDRESSES_LIST;
+$page_id = "list_results_addresses";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 
-$saveTool       = true;
+$saveTool       = false;
 $useTemplate    = false;
 $exportTool     = true;
 
 //List
-$target = $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&dir=my_contacts&mode=search';
+$target = $_SESSION['config']['businessappurl'].'index.php?page=addresses_list&dir=indexing_searching';
 $listContent = $list->loadList($target, true, 'divList', 'false');
-
-?>
-
-    <table width="100%" style="margin-bottom: -10px">
-        <tr>
-            <td align="right">
-                <input class="button" type="button" align="right" value="<?php echo _SEARCH_ADDRESSES;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] . 'index.php?page=list_results_addresses&dir=indexing_searching&fromSearchContacts'?>'"/>      
-            </td>
-        </tr>
-    </table>
-
-<?php
-
-echo $listContent;
+echo '<br />'.$listContent;

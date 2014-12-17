@@ -31,6 +31,7 @@
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
+
 $return = $core_tools->test_admin('admin_contacts', 'apps', false);
 if (!$return) {
     $return = $core_tools->test_admin('create_contacts', 'apps', false);
@@ -38,6 +39,10 @@ if (!$return) {
 
 if (!$return) {
     $return = $core_tools->test_admin('my_contacts', 'apps', false);
+}
+
+if (!$return) {
+    $return = $core_tools->test_admin('search_contacts', 'apps', false);
 }
 
 if (!$return) {
@@ -49,6 +54,7 @@ if (!$return) {
 }
 
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
+require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR . "class_request.php";
 
 $func = new functions();
 
@@ -84,4 +90,45 @@ if(isset($_GET['mycontact']) && $_GET['mycontact'] <> ''){
 }
 
 $contact = new contacts_v2();
-$contact->formaddress("up",$id, $admin);
+$db = new request;
+
+if (isset($_REQUEST['fromContactAddressesList']) || isset($_REQUEST['fromSearchContacts'])) {
+    $db->connect();
+    $query = "select contact_id from contact_addresses where id = ".$id;
+    $db->query($query);
+    $result = $db->fetch_object();
+    $db->query("select * from contacts_v2 where contact_id = ".$result->contact_id);
+
+    $_SESSION['m_admin']['contact'] = array();
+    $line = $db->fetch_object();
+    $_SESSION['m_admin']['contact']['ID'] = $line->contact_id;
+    $_SESSION['m_admin']['contact']['TITLE'] = $db->show_string($line->title);
+    $_SESSION['m_admin']['contact']['LASTNAME'] = $db->show_string($line->lastname);
+    $_SESSION['m_admin']['contact']['FIRSTNAME'] = $db->show_string($line->firstname);
+    $_SESSION['m_admin']['contact']['SOCIETY'] = $db->show_string($line->society);
+    $_SESSION['m_admin']['contact']['SOCIETY_SHORT'] = $db->show_string($line->society_short);
+    $_SESSION['m_admin']['contact']['FUNCTION'] = $db->show_string($line->function);
+    $_SESSION['m_admin']['contact']['OTHER_DATA'] = $db->show_string($line->other_data);
+    $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = $db->show_string($line->is_corporate_person);
+    $_SESSION['m_admin']['contact']['CONTACT_TYPE'] = $line->contact_type;
+    $_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
+    if($admin && !empty($_SESSION['m_admin']['contact']['OWNER']))
+    {
+        $db->query("select lastname, firstname from ".$_SESSION['tablename']['users']." where user_id = '".$_SESSION['m_admin']['contact']['OWNER']."'");
+        $res = $db->fetch_object();
+        $_SESSION['m_admin']['contact']['OWNER'] = $res->lastname.', '.$res->firstname.' ('.$_SESSION['m_admin']['contact']['OWNER'].')';
+    }
+    $_SESSION['contact_address']['fromContactAddressesList'] = "yes";
+    
+}
+
+if (isset($_REQUEST['fromSearchContacts'])) {
+    ?>
+    <script>
+        window.top.location='<?php echo $_SESSION['config']['businessappurl'] . "index.php?dir=indexing_searching&page=contact_address_view&addressid=".$id;?>';
+    </script>
+    <?php
+    exit;
+} else {
+    $contact->formaddress("up",$id, $admin);
+}

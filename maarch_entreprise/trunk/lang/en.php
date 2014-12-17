@@ -1257,8 +1257,14 @@ if (!defined('_MANAGE_CONTACTS_PURPOSES')) define( '_MANAGE_CONTACTS_PURPOSES','
 if (!defined('_MANAGE_CONTACTS_DESC')) define( '_MANAGE_CONTACTS_DESC','Manage contacts');
 if (!defined('_MANAGE_CONTACTS')) define( '_MANAGE_CONTACTS','Manage contacts');
 
+if (!defined('_MANAGE_CONTACT_ADDRESSES_LIST_DESC')) define( '_MANAGE_CONTACT_ADDRESSES_LIST_DESC','Manage addresses');
+if (!defined('_MANAGE_CONTACT_ADDRESSES_LIST')) define( '_MANAGE_CONTACT_ADDRESSES_LIST','Manage addresses');
+
 if (!defined('_VIEW_TREE_CONTACTS_DESC')) define( '_VIEW_TREE_CONTACTS_DESC','Contacts tree');
 if (!defined('_VIEW_TREE_CONTACTS')) define( '_VIEW_TREE_CONTACTS','Contacts tree');
+
+if (!defined('_ADDRESSES_LIST')) define( '_ADDRESSES_LIST','Addresses list');
+if (!defined('_SEARCH_ADDRESSES')) define( '_SEARCH_ADDRESSES','Search name/address');
 
 if (!defined('_CONTACT_TYPES_LIST')) define( '_CONTACT_TYPES_LIST','Contact types list');
 if (!defined('_DESC_CONTACT_TYPES')) define( '_DESC_CONTACT_TYPES','Contact type');
@@ -1315,7 +1321,7 @@ if (!defined('_MANAGE_CONTACT_ADDRESSES')) define( '_MANAGE_CONTACT_ADDRESSES','
 if (!defined('_DEPARTEMENT')) define( '_DEPARTEMENT','Department');
 if (!defined('_ADDITION_ADDRESS')) define( '_ADDITION_ADDRESS','Add an address');
 if (!defined('_THE_ADDRESS')) define( '_THE_ADDRESS','The address');
-if (!defined('_MODIFY_ADDRESS')) define( '_MODIFY_ADDRESS','The address');
+if (!defined('_MODIFY_ADDRESS')) define( '_MODIFY_ADDRESS','Modify the address');
 if (!defined('_CHOOSE_CONTACT_PURPOSES')) define( '_CHOOSE_CONTACT_PURPOSES','Choose a purpose');
 if (!defined('_WEBSITE')) define( '_WEBSITE','Website');
 if (!defined('_OCCUPANCY')) define( '_OCCUPANCY','Floor, office, door');

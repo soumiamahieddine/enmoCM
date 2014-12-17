@@ -939,8 +939,14 @@ if (!defined('_MANAGE_CONTACT_PURPOSES')) define( '_MANAGE_CONTACT_PURPOSES','Ge
 if (!defined('_MANAGE_CONTACTS_DESC')) define( '_MANAGE_CONTACTS_DESC','Gestion des contacts');
 if (!defined('_MANAGE_CONTACTS')) define( '_MANAGE_CONTACTS','Gestion des contacts <br/>(Niveau 2)');
 
+if (!defined('_MANAGE_CONTACT_ADDRESSES_LIST_DESC')) define( '_MANAGE_CONTACT_ADDRESSES_LIST_DESC','Gestion des adresses');
+if (!defined('_MANAGE_CONTACT_ADDRESSES_LIST')) define( '_MANAGE_CONTACT_ADDRESSES_LIST','Gestion des adresses');
+
 if (!defined('_VIEW_TREE_CONTACTS_DESC')) define( '_VIEW_TREE_CONTACTS_DESC','Arborescence des contacts');
 if (!defined('_VIEW_TREE_CONTACTS')) define( '_VIEW_TREE_CONTACTS','Arborescence des contacts');
+
+if (!defined('_ADDRESSES_LIST')) define( '_ADDRESSES_LIST','Liste des adresses');
+if (!defined('_SEARCH_ADDRESSES')) define( '_SEARCH_ADDRESSES','Rechercher Nom/Adresse');
 
 if (!defined('_CONTACT_TYPES_LIST')) define( '_CONTACT_TYPES_LIST','Liste des types de contact');
 if (!defined('_DESC_CONTACT_TYPES')) define( '_DESC_CONTACT_TYPES','Type de contact');
@@ -1012,7 +1018,7 @@ if (!defined('_MANAGE_CONTACT_ADDRESSES_IMG')) define( '_MANAGE_CONTACT_ADDRESSE
 if (!defined('_DEPARTEMENT')) define( '_DEPARTEMENT','D&eacute;partement');
 if (!defined('_ADDITION_ADDRESS')) define( '_ADDITION_ADDRESS','Ajouter une adresse');
 if (!defined('_THE_ADDRESS')) define( '_THE_ADDRESS','L&rsquo;adresse');
-if (!defined('_MODIFY_ADDRESS')) define( '_MODIFY_ADDRESS','L&rsquo;adresse');
+if (!defined('_MODIFY_ADDRESS')) define( '_MODIFY_ADDRESS','Modification de l&rsquo;adresse');
 if (!defined('_CHOOSE_CONTACT_PURPOSES')) define( '_CHOOSE_CONTACT_PURPOSES','Choisissez une d&eacute;nomination');
 if (!defined('_WEBSITE')) define( '_WEBSITE','Site internet');
 if (!defined('_OCCUPANCY')) define( '_OCCUPANCY','Etage, bureau, porte');

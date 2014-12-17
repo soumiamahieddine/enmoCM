@@ -65,19 +65,26 @@ $_SESSION['fromContactTree'] = "";
 ?>
 <table width="100%">
     <tr>
-        <td>
-            <a href="<?php 
-                echo $_SESSION['config']['businessappurl']
-                ;?>index.php?admin=contacts&page=manage_duplicates">
-                <h2>
-                    <img src="<?php echo $_SESSION['config']['businessappurl'];
-                    ?>static.php?filename=manage_duplicates.png" alt="" /><?php 
-                    echo _MANAGE_DUPLICATES;?>
-                </h2>
-            </a>
+        <?php if ($admin->test_admin('admin_contacts', 'apps', false)) { ?>
+        <td width="33%">
+
+                <a href="<?php 
+                    echo $_SESSION['config']['businessappurl']
+                    ;?>index.php?admin=contacts&page=manage_duplicates">
+                    <h2>
+                        <img src="<?php echo $_SESSION['config']['businessappurl'];
+                        ?>static.php?filename=manage_duplicates.png" alt="" /><?php 
+                        echo _MANAGE_DUPLICATES;?>
+                    </h2>
+                </a>
+
+        </td>
+        <?php } ?>
+        <td align="left">
+            <input class="button" type="button" value="<?php echo _EXPORT_CONTACT;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=admin&page=export_admin_list'?>');"/>      
         </td>
         <td align="right">
-            <input class="button" type="button" value="<?php echo _EXPORT_CONTACT;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=admin&page=export_admin_list'?>');"/>      
+            <input class="button" type="button" value="<?php echo _MANAGE_CONTACT_ADDRESSES_LIST;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] . 'index.php?page=contact_addresses_list'?>'"/>      
         </td>
    </tr>
 </table>

@@ -887,7 +887,7 @@ class list_show extends functions
             $start = 0;
         }
         $param_comp .= "&amp;start=".$start;
-        if($name == "structures" || $name == "subfolders" || $name == "types"  || $name == "contact_types" || $name == "contact_purposes" || $name == "contacts_v2" || $name == "contacts_v2_up")
+        if($name == "structures" || $name == "subfolders" || $name == "types"  || $name == "contact_types" || $name == "contact_purposes" || $name == "contacts_v2" || $name == "contacts_v2_up" || $name == "contact_addresses_list")
         {
             $link = $_SESSION['config']['businessappurl']."index.php?page=".$name;
         }
@@ -1108,7 +1108,7 @@ class list_show extends functions
                 {
                     $height = "250";
                 }
-                if($admin == "types" || $admin == "structures" || $admin == "subfolders" || $admin == "contact_types" || $admin == "contact_purposes" || $admin == "contacts_v2" || $admin == "contact_addresses")
+                if($admin == "types" || $admin == "structures" || $admin == "subfolders" || $admin == "contact_types" || $admin == "contact_purposes" || $admin == "contacts_v2" || $admin == "contact_addresses" || $admin == "contact_addresses_list")
                 {
                     //$path_root = $_SESSION['config']['businessappurl']."admin/architecture/".$admin."/";
                     $path_root = $_SESSION['config']['businessappurl']."index.php?display=true";
@@ -1390,7 +1390,7 @@ class list_show extends functions
                         }
 
 
-                if($admin == "types" || $admin == "structures" || $admin == "subfolders" || $admin == "contact_types" || $admin == "contact_purposes" || $admin == "contacts_v2" || $admin == "contact_addresses")
+                if($admin == "types" || $admin == "structures" || $admin == "subfolders" || $admin == "contact_types" || $admin == "contact_purposes" || $admin == "contacts_v2" || $admin == "contact_addresses" || $admin == "contact_addresses_list")
                 {
                     $path_up2 = $_SESSION['config']['businessappurl']."index.php?display=true&amp;page=".$page_name_up."&amp;mode=up&amp;id=".$result[$theline][0][$key];
                     $path_del2 = $_SESSION['config']['businessappurl']."index.php?display=true&amp;page=".$page_name_del."&amp;id=".$result[$theline][0][$key];

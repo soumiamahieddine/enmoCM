@@ -159,9 +159,18 @@ if (count($queries) > 0) { ?>
         $contact_types[$res->id] = $conn->show_string($res->label); 
     }
     ?>
+    <table width="100%">
         <tr>
-            <td colspan="2" ><h2><?php echo _SEARCH_CONTACTS; ?></h2></td>
+            <td align="right">
+                <input class="button" type="button" align="right" value="<?php echo _SEARCH_ADDRESSES;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] . 'index.php?page=list_results_addresses&dir=indexing_searching&fromSearchContacts'?>'"/>      
+            </td>
         </tr>
+    </table>
+    <table width="100%">
+        <tr>
+            <td><h2><?php echo _SEARCH_CONTACTS; ?></h2></td>
+        </tr>
+    </table>
         <tr >
             <td >
             <div class="block">
@@ -213,7 +222,7 @@ if (count($queries) > 0) { ?>
                         </td>
                         <td><em><?php echo ""; ?></em></td>
                     </tr>
-                    <tr>
+<!--                     <tr>
                         <td width="70%"><label for="contact_purpose" class="bold"><?php echo _CONTACT_PURPOSE;?> :</label>
                             <input type="text" name="contact_purpose" id="contact_purpose" onkeyup="erase_contact_external_id('contact_purpose', 'contact_purposes_id');"/>
                             <input type="hidden" name="meta[]" value="contact_purpose#contact_purpose#input_text" />
@@ -225,10 +234,10 @@ if (count($queries) > 0) { ?>
                             <input type="hidden" id="contact_purposes_id" name="contact_purposes_id" />
                         </td>
                         <td><em><?php echo ""; ?></em></td>
-                    </tr>
+                    </tr> -->
                 </table>
                 </div>
-                <div class="block_end">&nbsp;</div>
+                <div class="block_end" style="margin-top:-20px">&nbsp;</div>
             </td>
         </tr>
         <tr><td colspan="2"><hr/></td></tr>

@@ -68,5 +68,9 @@ if(isset($_GET['mycontact']) && $_GET['mycontact'] <> ''){
 	$admin = true;
 }
 
+if (isset($_REQUEST['fromContactAddressesList'])) {
+    $_SESSION['contact_address']['fromContactAddressesList'] = "yes";
+}
+
 $contact->addupaddress($_POST['mode'], $admin, $iframe);
 ?>
