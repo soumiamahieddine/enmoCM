@@ -28,8 +28,7 @@
 * @ingroup admin
 */
 
-require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-    . 'class_request.php';
+require_once 'core' . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_request.php';
 $db = new dbquery();
 $db->connect();
 
