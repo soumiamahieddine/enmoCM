@@ -65,31 +65,31 @@ $db->query("SELECT is_corporate_person,
 $res = $db->fetch_object();
 
 $address = '';
-$address = $db->protect_string_db($res->address_num) . ' ' . $db->protect_string_db($res->address_street) . ' ' . $db->protect_string_db($res->address_postal_code) . ' ' . strtoupper($db->protect_string_db($res->address_town));
+$address = $res->address_num . ' ' . $res->address_street . ' ' . $res->address_postal_code . ' ' . strtoupper($res->address_town);
 
 if($res->is_corporate_person == 'N') {
-	$contact = $db->protect_string_db($res->contact_lastname) . ' ' . $db->protect_string_db($res->contact_firstname);
+	$contact = $res->contact_lastname . ' ' . $res->contact_firstname;
 	if($res->society_short <> '') {
-		$contact .= ' (' . $db->protect_string_db($res->society_short) . ')';
+		$contact .= ' (' . $res->society_short . ')';
 	} else if($res->society <> '') {
-		$contact .= ' (' . $db->protect_string_db($res->society) . ')';
+		$contact .= ' (' . $res->society . ')';
 	}
 
 } else {
-	$contact = $db->protect_string_db($res->society);
+	$contact = $res->society;
 	if($res->society_short <> '') {
-		$contact .= ' (' . $db->protect_string_db($res->society_short) . ')';
+		$contact .= ' (' . $res->society_short . ')';
 	}
 }
 
-$contact .= ' '. $db->protect_string_db($res->contact_purpose_label) ;
+$contact .= ' '. $res->contact_purpose_label ;
 
 if ($res->departement <> '') {
-	$contact .= ' : ' . $db->protect_string_db($res->departement);
+	$contact .= ' : ' . $res->departement;
 }
 
 if ($res->lastname <> '' || $res->firstname <> '') {
-	$contact .= ' - ' . $db->protect_string_db($res->lastname) . ' ' . $db->protect_string_db($res->firstname);
+	$contact .= ' - ' . $res->lastname . ' ' . $res->firstname;
 }
 
 $trimed = trim($address);
@@ -100,5 +100,5 @@ if (!empty($trimed)) {
 $contactId = $res->contact_id;
 $addressId = $res->ca_id;
 
-echo "{ status: 1, contactName: '" . $contact . "', contactId: '" . $contactId . "', addressId: '" . $addressId . "'}";
+echo "{ status: 1, contactName: '" . addslashes($contact) . "', contactId: '" . $contactId . "', addressId: '" . $addressId . "'}";
 exit;
