@@ -88,7 +88,7 @@ if (isset($_GET['mode']) && $_GET['mode'] <> '') {
 	$mode = '';
 }
 
-if ($core_tools2->test_admin('update_contacts', 'apps', false)) {
+if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view") {
 	$_SESSION['contact']['current_contact_id'] = $_GET['contactid'];
 	$_SESSION['contact']['current_address_id'] = $_GET['addressid'];
 	$from_iframe = true;
