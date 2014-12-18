@@ -167,7 +167,7 @@ function updateProcessDate(path_manage_script)
     }
 }
 
-function checkRealDate(arg) {  
+function checkRealDate(arg) {
 
     var cat = $('category_id').options[$('category_id').selectedIndex].value
 
@@ -184,6 +184,7 @@ function checkRealDate(arg) {
 			date1.setDate(admissionDate.substr(0,2));
 			date1.setHours(0);
 			date1.setMinutes(0);
+
 			var d1_admissionDate=date1.getTime();
         }
 
@@ -198,17 +199,31 @@ function checkRealDate(arg) {
 			var d2_docDate=date2.getTime();
         }
 
-        if(admissionDate!="" && docDate!="" && d2_docDate>d1_admissionDate){          
-            alert("La date du courrier doit être antérieur à la date d'arrivée du courrier ");
-            if(arg=='admissionDate'){
+        if(admissionDate != "" && docDate != "" && d2_docDate > d1_admissionDate) {          
+            alert("La date du courrier doit être antérieure à la date d'arrivée du courrier ");
+            if(arg == 'admissionDate'){
                 $('admission_date').value = "";
             }
-            if(arg=='docDate'){
+            if(arg == 'docDate'){
                 $('doc_date').value = "";
             }    
         }
+
+        var date = new Date();
+        var date3 = new Date();
+        date.setFullYear(date3.getFullYear());
+        date.setMonth(date3.getMonth()+1);
+        date.setDate(date3.getDate()); 
+        current_date = date.getTime();
+
+        if (d1_admissionDate > current_date) {
+            alert("La date d'arrivée doit être antérieure à la date du jour ");
+            var current_month = date3.getMonth()+1;
+            $('admission_date').value = date3.getDate() + "-" + current_month + "-" + date3.getFullYear();
+        }
     }
 }
+
 /**
  * Activates / Desactivates the process date limit
  *
