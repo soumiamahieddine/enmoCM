@@ -311,20 +311,47 @@ class lists extends dbquery
             
             case 'contact':
                 if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
-                    $contact = $_SESSION['filters']['contact']['VALUE'];
+
+                    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+                    $db = new dbquery();
+                    $db->connect();
+
+                    $query = "select society, lastname, firstname, is_corporate_person, society_short from "
+                        .$_SESSION['tablename']['contacts_v2']." where contact_id = ".$_SESSION['filters']['contact']['VALUE'];
+                    
+                    $db->query($query);
+                    $line = $db->fetch_object();
+
+                    if($line->is_corporate_person == 'N'){
+                        $contact = $db->show_string($line->lastname)." ".$db->show_string($line->firstname);
+                        if($line->society <> ''){
+                            $contact .= ' ('.$line->society.')';
+                        }
+                    } else {
+                        $contact .= $line->society;
+                        if($line->society_short <> ''){
+                            $contact .= ' ('.$line->society_short.')';
+                        }
+                    }
+
                 } else {
                     $contact = '['._CONTACT.']';
                 }
                 $filters .='<input type="text" name="contact_id" id="contact_id" value="'.$contact.'" size="40" '
                             .'onfocus="if(this.value==\'['._CONTACT.']\'){this.value=\'\';}" '
                             .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
-                            .'&filter=contact&value=\' + this.value, \''.$this->divListId.'\', '
+                            .'&filter=contact&value=\' + $(\'contactid\').value, \''.$this->divListId.'\', '
                             .$this->modeReturn.');" />&nbsp;';
                 //Autocompletion script and div 
                 $filters .='<div id="contactListByName" class="autocomplete"></div>';
-                $filters .='<script type="text/javascript">initList(\'contact_id\', \'contactListByName\', \''
+                $filters .='<script type="text/javascript">initList_hidden_input(\'contact_id\', \'contactListByName\', \''
                             .$_SESSION['config']['businessappurl'].'index.php?display=true&page='
-                            .'contact_list_by_name\', \'what\', \'2\');</script>';
+                            .'contacts_v2_list_by_name\', \'what\', \'2\', \'contactid\');</script>';
+                $filters .= '<input type="hidden" id="contactid" name="contactid" ';
+                if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
+                    $filters .= 'value="'.$_SESSION['filters']['contact']['VALUE'].'"';
+                }
+                $filters .='/>';
             break;
             case 'contactBusiness':
                 if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
@@ -549,7 +576,7 @@ class lists extends dbquery
                        
                     } else if ($_REQUEST['filter'] == 'contact') {
                     
-                        $contactTmp = str_replace(')', '', 
+/*                        $contactTmp = str_replace(')', '', 
                             substr($_SESSION['filters']['contact']['VALUE'], 
                             strrpos($_SESSION['filters']['contact']['VALUE'],'(')+1));
                         $find1 = strpos($contactTmp, ':');
@@ -560,7 +587,8 @@ class lists extends dbquery
                             $_SESSION['filters']['contact']['CLAUSE'] = "(exp_user_id = '".$contactId."' or dest_user_id = '".$contactId."')";
                         } else if($contactType == "contact") {
                             $_SESSION['filters']['contact']['CLAUSE'] = "(exp_contact_id = '".$contactId."' or dest_contact_id = '".$contactId."')";
-                        }
+                        }*/
+                        $_SESSION['filters']['contact']['CLAUSE'] = "(exp_contact_id = '".$_SESSION['filters']['contact']['VALUE']."' or dest_contact_id = '".$_SESSION['filters']['contact']['VALUE']."')";
                     } else if ($_REQUEST['filter'] == 'contactBusiness') {
                     
                         $contactTmp = str_replace(')', '', 
