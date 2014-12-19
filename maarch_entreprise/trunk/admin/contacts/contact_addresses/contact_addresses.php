@@ -44,6 +44,12 @@ require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . "class_list_show.php";
 $func = new functions();
 
+if (isset($_REQUEST['fromMyContactsList']) || isset($_REQUEST['fromSearchContactsList'])) {
+    $_REQUEST['what'] = "";
+    $_REQUEST['order'] = "";
+    $_REQUEST['order_field'] = "";
+}
+
 $select[$_SESSION['tablename']['contact_addresses']] = array();
 array_push(
     $select[$_SESSION['tablename']['contact_addresses']],

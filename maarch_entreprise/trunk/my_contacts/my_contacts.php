@@ -80,6 +80,7 @@ $contact    = new contacts_v2();
     </div>
     <?php
 } else {
+
     //Table
     $table = $_SESSION['tablename']['contacts_v2'];
     $select[$table]= array(); 
@@ -268,7 +269,7 @@ $contact    = new contacts_v2();
         
         $update = array(
                 "script"        => "window.top.location='".$_SESSION['config']['businessappurl']
-                                        ."index.php?dir=my_contacts&page=my_contact_up&id=@@contact_id@@&what=".$what."&start=".$start."'",
+                                        ."index.php?dir=my_contacts&page=my_contact_up&fromMyContactsList&id=@@contact_id@@&what=".$what."&start=".$start."'",
                 "class"         =>  "change",
                 "label"         =>  _MODIFY,
                 "tooltip"       =>  _MODIFY
@@ -286,7 +287,7 @@ $contact    = new contacts_v2();
     } else {
         $view = array(
                 "script"        => "window.top.location='".$_SESSION['config']['businessappurl']
-                                        ."index.php?dir=indexing_searching&page=contacts_view&id=@@contact_id@@&what=".$what."&start=".$start."'",
+                                        ."index.php?dir=indexing_searching&page=contacts_view&fromSearchContactsList&id=@@contact_id@@&what=".$what."&start=".$start."'",
                 "class"         =>  "change",
                 "label"         =>  _VIEW,
                 "tooltip"       =>  _MODIFY
