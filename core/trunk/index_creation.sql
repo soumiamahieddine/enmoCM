@@ -7,6 +7,8 @@ CREATE INDEX status_idx ON res_letterbox (status);
 CREATE INDEX destination_idx ON res_letterbox (destination);
 CREATE INDEX dest_user_idx ON res_letterbox (dest_user);
 CREATE INDEX custom_t15_idx ON res_letterbox (custom_t15);
+CREATE INDEX res_letterbox_docserver_id_idx ON res_letterbox (docserver_id);
+CREATE INDEX res_letterbox_filename_idx ON res_letterbox (filename);
 
 -- res_business
 CREATE INDEX business_type_id_idx ON res_business (type_id);
@@ -22,6 +24,8 @@ CREATE INDEX business_custom_t3_idx ON res_business (custom_t3);
 CREATE INDEX business_custom_t4_idx ON res_business (custom_t4);
 CREATE INDEX business_custom_t5_idx ON res_business (custom_t5);
 CREATE INDEX business_custom_t6_idx ON res_business (custom_t6);
+CREATE INDEX res_business_docserver_id_idx ON res_business (docserver_id);
+CREATE INDEX res_business_filename_idx ON res_business (filename);
 
 -- res_attachments
 CREATE INDEX res_id_master_idx ON res_attachments (res_id_master);
