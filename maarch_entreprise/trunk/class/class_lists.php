@@ -316,22 +316,31 @@ class lists extends dbquery
                     $db = new dbquery();
                     $db->connect();
 
-                    $query = "select society, lastname, firstname, is_corporate_person, society_short from "
-                        .$_SESSION['tablename']['contacts_v2']." where contact_id = ".$_SESSION['filters']['contact']['VALUE'];
-                    
-                    $db->query($query);
-                    $line = $db->fetch_object();
+                    if (is_numeric($_SESSION['filters']['contact']['VALUE'])) {
+                        $query = "SELECT society, lastname, firstname, is_corporate_person, society_short FROM "
+                            . $_SESSION['tablename']['contacts_v2'] . " WHERE contact_id = ".$_SESSION['filters']['contact']['VALUE'];
+                        
+                        $db->query($query);
+                        $line = $db->fetch_object();
 
-                    if($line->is_corporate_person == 'N'){
-                        $contact = $db->show_string($line->lastname)." ".$db->show_string($line->firstname);
-                        if($line->society <> ''){
-                            $contact .= ' ('.$line->society.')';
+                        if($line->is_corporate_person == 'N'){
+                            $contact = $db->show_string($line->lastname)." ".$db->show_string($line->firstname);
+                            if($line->society <> ''){
+                                $contact .= ' ('.$line->society.')';
+                            }
+                        } else {
+                            $contact .= $line->society;
+                            if($line->society_short <> ''){
+                                $contact .= ' ('.$line->society_short.')';
+                            }
                         }
                     } else {
-                        $contact .= $line->society;
-                        if($line->society_short <> ''){
-                            $contact .= ' ('.$line->society_short.')';
-                        }
+                        $query = "SELECT lastname, firstname FROM users WHERE user_id = '".$_SESSION['filters']['contact']['VALUE']."'";
+                        
+                        $db->query($query);
+                        $line = $db->fetch_object();
+
+                        $contact .= $db->show_string($line->firstname) . " " . $db->show_string($line->lastname);
                     }
 
                 } else {
@@ -340,14 +349,14 @@ class lists extends dbquery
                 $filters .='<input type="text" name="contact_id" id="contact_id" value="'.$contact.'" size="40" '
                             .'onfocus="if(this.value==\'['._CONTACT.']\'){this.value=\'\';}" '
                             .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
-                            .'&filter=contact&value=\' + $(\'contactid\').value, \''.$this->divListId.'\', '
+                            .'&filter=contact&value=\' + $(\'contactidFilters\').value, \''.$this->divListId.'\', '
                             .$this->modeReturn.');" />&nbsp;';
                 //Autocompletion script and div 
                 $filters .='<div id="contactListByName" class="autocomplete"></div>';
                 $filters .='<script type="text/javascript">initList_hidden_input(\'contact_id\', \'contactListByName\', \''
                             .$_SESSION['config']['businessappurl'].'index.php?display=true&page='
-                            .'contacts_v2_list_by_name\', \'what\', \'2\', \'contactid\');</script>';
-                $filters .= '<input type="hidden" id="contactid" name="contactid" ';
+                            .'contacts_v2_list_by_name_filters&dir=indexing_searching\', \'what\', \'2\', \'contactidFilters\');</script>';
+                $filters .= '<input type="hidden" id="contactidFilters" name="contactidFilters" ';
                 if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
                     $filters .= 'value="'.$_SESSION['filters']['contact']['VALUE'].'"';
                 }
@@ -588,7 +597,12 @@ class lists extends dbquery
                         } else if($contactType == "contact") {
                             $_SESSION['filters']['contact']['CLAUSE'] = "(exp_contact_id = '".$contactId."' or dest_contact_id = '".$contactId."')";
                         }*/
-                        $_SESSION['filters']['contact']['CLAUSE'] = "(exp_contact_id = '".$_SESSION['filters']['contact']['VALUE']."' or dest_contact_id = '".$_SESSION['filters']['contact']['VALUE']."')";
+                        if(is_numeric($_SESSION['filters']['contact']['VALUE'])){
+                            $_SESSION['filters']['contact']['CLAUSE'] = "(exp_contact_id = '".$_SESSION['filters']['contact']['VALUE']."' or dest_contact_id = '".$_SESSION['filters']['contact']['VALUE']."')";
+                        } else {
+                            $_SESSION['filters']['contact']['CLAUSE'] = "(exp_user_id = '".$_SESSION['filters']['contact']['VALUE']."' or dest_user_id = '".$_SESSION['filters']['contact']['VALUE']."')";
+                        }
+                        
                     } else if ($_REQUEST['filter'] == 'contactBusiness') {
                     
                         $contactTmp = str_replace(')', '', 
