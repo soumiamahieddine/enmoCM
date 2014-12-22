@@ -80,6 +80,30 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     }
 
     /**
+    * Returns an user object based on a user identifier with PDO
+    *
+    * @param  $userId string  User identifier
+    * @param  $compWhere string  where clause arguments
+    *               (must begin with and or or)
+    * @return user object with properties from the database or null
+    */
+    public function getWithPDO($userId, $compWhere='', $params=array())
+    {
+        self::set_foolish_ids(array('user_id', 'docserver_location_id'));
+        self::set_specific_id('user_id');
+        $user = self::advanced_getWithPDO($userId, USERS_TABLE, $compWhere, $params);
+
+        if (isset($user)
+            && ($user->__get('status') == 'OK' 
+            || $user->__get('status') == 'ABS')
+        ) {
+            return $user;
+        } else {
+            return null;
+        }
+    }
+
+    /**
     * Returns all users (enabled by default) from the database in an array
     *   of user objects (ordered by id by default)
     *

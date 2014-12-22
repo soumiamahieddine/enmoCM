@@ -273,6 +273,66 @@ abstract class ObjectControler
         return $object;
     }
 
+    /**
+     * Get object of given class with given id from
+     * good table and according with given class name.
+     * Can return null if no corresponding object.
+     * @param long $id Id of object to get
+     * @param string $class_name
+     * @return unknown_type
+     */
+    protected function advanced_getWithPDO($id, $table_name, $whereComp='', $params=array())
+    {
+        if (strlen($id) == 0) {
+            return null;
+        }
+
+        $object_name = $table_name;
+        $table_id = $table_name . '_id';
+
+        if(isset(self::$specific_id) && !empty(self::$specific_id)) {
+            $table_id = self::$specific_id;
+        }
+
+        require_once 'core/class/class_db_pdo.php';
+        $database = new Database();
+        $theQuery = "SELECT * FROM $table_name WHERE $table_id = :id " . $whereComp;
+        $database->query($theQuery);
+        $database->bind(':id', $id);
+
+        if (count($params > 0)) {
+            foreach ($params as $keyParam => $keyValue) {
+                $database->bind(":" . $keyParam, $keyValue);
+            }
+        }
+        $database->execute();
+        
+        if ($database->rowCount() == 0) {
+            return null;
+        } else {
+            // Constructing result
+            $object = new $object_name();
+            $rows = $database->resultset();    
+            
+            for ($cpt=0;$cpt<count($rows);$cpt++) {
+                print_r($rows[$cpt]);
+                foreach ($rows[$cpt] as $key => $value) {
+                    if (_ADVANCED_DEBUG) {
+                        echo "Getting property: $key with value: $value // ";
+                    }
+                    if ($value == 't') {          /* BUG FROM PGSQL DRIVER! */
+                        $value = true;            /*                        */
+                    } elseif ($value == 'f') {    /*                        */
+                        $value = false;           /*                        */
+                    }                            /**************************/
+                    $object->$key = $value;
+                }
+            }
+        }
+
+        return $object;
+    }
+
      /**
      * Delete given object from given table, according with
      * given table id name.
