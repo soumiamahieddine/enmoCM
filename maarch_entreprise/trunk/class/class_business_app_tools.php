@@ -104,6 +104,7 @@ class business_app_tools extends dbquery
             $_SESSION['config']['cookietime'] = (string) $config->CookieTime;
             $_SESSION['config']['ldap'] = (string) $config->ldap;
             $_SESSION['config']['userdefaultpassword'] = (string) $config->userdefaultpassword;
+            $_SESSION['config']['usePDO'] = (string) $config->usePDO;
             if (isset($config->showfooter)) {
                 $_SESSION['config']['showfooter'] = (string) $config->showfooter;
             } else {

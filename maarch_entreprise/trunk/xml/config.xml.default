@@ -20,6 +20,7 @@
         <CookieTime>20</CookieTime> <!-- minutes -->
         <ldap>false</ldap> <!-- if true, ldap authentification, see ldap xml config file -->
         <userdefaultpassword>maarch</userdefaultpassword> <!-- default user's password -->
+        <usePDO>false</usePDO>
     </CONFIG>
     <CRYPT>
         <encrypt>false</encrypt>

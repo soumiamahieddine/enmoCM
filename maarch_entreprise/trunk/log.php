@@ -131,6 +131,7 @@ if (! empty($_SESSION['error'])) {
         }
         
         if ($ad -> authenticate($loginToAd, $password)) {
+            //TODO: protect sql injection with PDO
             $db = new dbquery();
             $db->connect();
             
