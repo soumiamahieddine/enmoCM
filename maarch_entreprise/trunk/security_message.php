@@ -51,7 +51,9 @@ $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $lev
 <?php echo _SECURITY_MESSAGE;?></h1>
 <div id="inner_content" class="clearfix">
 <?php
-echo '<p>' . _SECURITY_MESSAGE_DETAILS . ':</p>';
-echo $_SESSION['securityMessage'];
+echo '<h3>' . _SECURITY_MESSAGE_DETAILS . ' !</h3>';
+if ($_SESSION['config']['debug'] == 'true') {
+    echo $_SESSION['securityMessage'];
+}
 ?>
 </div>

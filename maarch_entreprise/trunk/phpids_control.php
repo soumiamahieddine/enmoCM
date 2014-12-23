@@ -36,7 +36,9 @@ try {
     $result = $ids->run();
 
     if (!$result->isEmpty()) {
-        echo $result;
+        if ($_SESSION['config']['debug'] == 'true') {
+            echo $result;
+        }
         $_SESSION['securityMessage'] = (string) $result;
         $varRedirect = '<script language="javascript">window.location.href=\'' 
             . $_SESSION['config']['businessappurl'] 
