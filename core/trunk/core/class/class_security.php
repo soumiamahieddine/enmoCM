@@ -177,7 +177,7 @@ class security extends dbquery
                 setcookie(
                     'maarch', 'UserId=' . $array['UserId'] . '&key='
                     . $user->__get('cookie_key'), time() - 3600000,
-                    0, 0, 0, 1
+                    0, 0, $_SERVER["HTTPS"], 1
                 );
                 $key = md5(
                     time() . '%' . $array['FirstName'] . '%' . $array['UserId']
@@ -196,7 +196,7 @@ class security extends dbquery
                 setcookie(
                     'maarch', 'UserId=' . $array['UserId'] . '&key='
                     . $key, time() + ($_SESSION['config']['cookietime'] * 1000),
-                    0, 0, 0, 1
+                    0, 0, $_SERVER["HTTPS"], 1
                 );
                 $array['primarygroup'] = $ugc ->getPrimaryGroup(
                     $array['UserId']
@@ -321,7 +321,7 @@ class security extends dbquery
                 $_SESSION['user']['Mail'] = $user->__get('mail');
                 $_SESSION['user']['department'] = $user->__get('department');
                 $_SESSION['error'] =  "";
-                setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$line->cookie_key,time()-3600000, 0, 0, 0, 1);
+                setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$line->cookie_key,time()-3600000, 0, 0, $_SERVER["HTTPS"], 1);
                 $key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
 
                 $user->__set('cookie_key', functions::protect_string_db($key));
@@ -331,7 +331,7 @@ class security extends dbquery
                     $user->__set('cookie_date',date("Y-m-d")." ".date("H:m:i"));
 
                 $uc->save($user, 'up');
-                setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*60), 0, 0, 0, 1);
+                setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*60), 0, 0, $_SERVER["HTTPS"], 1);
 
                 $_SESSION['user']['primarygroup'] =  $ugc->getPrimaryGroup($_SESSION['user']['UserId']);
                 $sec_controler = new SecurityControler();
