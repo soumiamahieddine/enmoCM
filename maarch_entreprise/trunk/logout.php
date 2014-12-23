@@ -16,7 +16,6 @@ require_once 'core/core_tables.php';
 $core = new core_tools();
 $core->load_lang();
 $name = 'maarch';
-// TODO: test + forge
 //setcookie("maarch", "", time() - 3600000);
 setcookie ($name, "", 1);
 setcookie ($name, false);

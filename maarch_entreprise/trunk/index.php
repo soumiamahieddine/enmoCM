@@ -88,6 +88,7 @@ if (isset($_SESSION['user']['UserId']) && isset($_GET['page'])
         time() + ($_SESSION['config']['cookietime'] * 1000),
         0, 0, $_SERVER["HTTPS"], 1
     );
+    
 }
 
 
