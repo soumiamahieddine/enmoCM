@@ -15,7 +15,13 @@ require_once 'core/class/class_history.php';
 require_once 'core/core_tables.php';
 $core = new core_tools();
 $core->load_lang();
-setcookie("maarch", "", time() - 3600000);
+$name = 'maarch';
+// TODO: test + forge
+//setcookie("maarch", "", time() - 3600000);
+setcookie ($name, "", 1);
+setcookie ($name, false);
+unset($_COOKIE[$name]);
+
 $_SESSION['error'] = _NOW_LOGOUT;
 if (isset($_GET['abs_mode'])) {
     $_SESSION['error'] .= ', ' . _ABS_LOG_OUT;
