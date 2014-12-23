@@ -132,17 +132,30 @@ if (! empty($_SESSION['error'])) {
         
         if ($ad -> authenticate($loginToAd, $password)) {
             //TODO: protect sql injection with PDO
-            $db = new dbquery();
-            $db->connect();
-            
-            $login = end(explode('\\', $login));
+            if ($_SESSION['config']['usePDO'] == 'true') {
+                require_once 'core/class/class_db_pdo.php';
 
-            $query = 'select * from ' . USERS_TABLE
-                       . " where user_id like '"
-                       . $this->protect_string_db($login) . "' ";
+                // Instantiate database.
+                $database = new Database();
+                $database->query("SELECT * FROM users WHERE user_id LIKE :login");
+                $database->bind(':login', $login);
+                $database->execute();
+                $result = $database->single();
+            } else {
+                $db = new dbquery();
+                $db->connect();
+                
+                $login = end(explode('\\', $login));
 
-            $db->query($query);
-            if ($db->fetch_object()) {
+                $query = 'select * from ' . USERS_TABLE
+                           . " where user_id like '"
+                           . $this->protect_string_db($login) . "' ";
+
+                $db->query($query);
+                $result= $db->fetch_object();
+            }
+
+            if ($result) {
                 $_SESSION['error'] = '';
                 $pass = md5($password);
                 $res = $sec->login($login, $pass, 'ldap');
