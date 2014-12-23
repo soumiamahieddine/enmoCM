@@ -1344,3 +1344,6 @@ if (!defined('_CREATE_CONTACTS')) define( '_CREATE_CONTACTS','Create a contact')
 
 if (!defined('_CLOSE_MAIL_AND_INDEX')) define( '_CLOSE_MAIL_AND_INDEX', 'Close this document and store another one');
 if (!defined('_DOC_NOT_CLOSED')) define('_DOC_NOT_CLOSED', 'This mail is not closed');
+
+if (!defined('_SECURITY_MESSAGE')) define('_SECURITY_MESSAGE', 'Security message');
+if (!defined('_SECURITY_MESSAGE_DETAILS')) define('_SECURITY_MESSAGE_DETAILS', 'XSS query not allowed');

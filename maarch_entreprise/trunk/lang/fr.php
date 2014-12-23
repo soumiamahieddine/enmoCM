@@ -1682,3 +1682,6 @@ if (!defined('_ONLY_ALPHABETIC')) define('_ONLY_ALPHABETIC', 'Seuls les caract&e
 
 if (!defined('_CLOSE_MAIL_AND_INDEX')) define( '_CLOSE_MAIL_AND_INDEX', 'Cl&ocirc;turer un courrier et lancer l\'indexation');
 if (!defined('_DOC_NOT_CLOSED')) define('_DOC_NOT_CLOSED', 'Ce courrier n\'est pas cl&ocirc;tur&eacute;');
+
+if (!defined('_SECURITY_MESSAGE')) define('_SECURITY_MESSAGE', 'Message de s&eacute;curit&eacute;');
+if (!defined('_SECURITY_MESSAGE_DETAILS')) define('_SECURITY_MESSAGE_DETAILS', 'Requ&ecirc;te de type XSS non permise');

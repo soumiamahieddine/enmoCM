@@ -31,6 +31,11 @@
 */
 include_once('../../core/class/class_functions.php');
 include_once '../../core/init.php';
+
+if ($_SESSION['config']['usePHPIDS'] == 'true') {
+    include 'apps/maarch_entreprise/phpids_control.php';
+}
+
 if (isset($_SESSION['config']['corepath'])) {
     require_once 'core/class/class_functions.php';
     require_once 'core/class/class_db.php';
@@ -64,6 +69,7 @@ if (isset($_SESSION['config']['corepath'])) {
         );
     }
 }
+
 if (isset($_SESSION['user']['UserId']) && isset($_GET['page'])
     && ! empty($_SESSION['user']['UserId']) && $_GET['page'] <> 'login'
     && $_GET['page'] <> 'log' && $_GET['page'] <> 'logout'
@@ -88,7 +94,7 @@ if (isset($_SESSION['user']['UserId']) && isset($_GET['page'])
         time() + ($_SESSION['config']['cookietime'] * 1000),
         0, 0, $_SERVER["HTTPS"], 1
     );
-    
+
 }
 
 
