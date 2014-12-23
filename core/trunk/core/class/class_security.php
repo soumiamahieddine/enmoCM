@@ -117,20 +117,20 @@ class security extends dbquery
                     $comp =" and STATUS <> 'DEL'";
                 } else {
                     if ($ra_code <> false) {
-                        $comp = " and password = :param1 and ra_code = '" 
+                        $comp = " and password = :password and ra_code = '" 
                           . md5($ra_code) . "' and ra_expiration_date >= '" . date('Y-m-d 00:00:00') . "' and STATUS <> 'DEL' "
                           . "and (loginmode = 'standard' or loginmode  = 'sso')";
                     }
                     else {
-                    $comp = " and password = :param1 and STATUS <> 'DEL' "
+                    $comp = " and password = :password and STATUS <> 'DEL' "
                           . "and (loginmode = 'standard' or loginmode  = 'sso')";
                     }
+                    $params = array('password' => $pass);
                 }
             } else {
-                $comp = " and password = :param1 and STATUS <> 'DEL'";
+                $comp = " and password = :password and STATUS <> 'DEL'";
+                $params = array('password' => $pass);
             }
-            $params = array('param1' => $pass);
-            
             $user = $uc->getWithPDO($s_login, $comp, $params);
         } else {
             // #TODO : Not usefull anymore, loginmode field is always in users table
@@ -176,7 +176,8 @@ class security extends dbquery
                // $_SESSION['error'] =  '';
                 setcookie(
                     'maarch', 'UserId=' . $array['UserId'] . '&key='
-                    . $user->__get('cookie_key'), time() - 3600000
+                    . $user->__get('cookie_key'), time() - 3600000,
+                    0, 0, 0, 1
                 );
                 $key = md5(
                     time() . '%' . $array['FirstName'] . '%' . $array['UserId']
@@ -194,7 +195,8 @@ class security extends dbquery
                 $uc->save($user, 'up');
                 setcookie(
                     'maarch', 'UserId=' . $array['UserId'] . '&key='
-                    . $key, time() + ($_SESSION['config']['cookietime'] * 1000)
+                    . $key, time() + ($_SESSION['config']['cookietime'] * 1000),
+                    0, 0, 0, 1
                 );
                 $array['primarygroup'] = $ugc ->getPrimaryGroup(
                     $array['UserId']
@@ -319,7 +321,7 @@ class security extends dbquery
                 $_SESSION['user']['Mail'] = $user->__get('mail');
                 $_SESSION['user']['department'] = $user->__get('department');
                 $_SESSION['error'] =  "";
-                setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$line->cookie_key,time()-3600000);
+                setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$line->cookie_key,time()-3600000, 0, 0, 0, 1);
                 $key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
 
                 $user->__set('cookie_key', functions::protect_string_db($key));
@@ -329,7 +331,7 @@ class security extends dbquery
                     $user->__set('cookie_date',date("Y-m-d")." ".date("H:m:i"));
 
                 $uc->save($user, 'up');
-                setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*60));
+                setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$key,time()+($_SESSION['config']['cookietime']*60), 0, 0, 0, 1);
 
                 $_SESSION['user']['primarygroup'] =  $ugc->getPrimaryGroup($_SESSION['user']['UserId']);
                 $sec_controler = new SecurityControler();

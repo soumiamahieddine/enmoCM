@@ -315,7 +315,6 @@ abstract class ObjectControler
             $rows = $database->resultset();    
             
             for ($cpt=0;$cpt<count($rows);$cpt++) {
-                print_r($rows[$cpt]);
                 foreach ($rows[$cpt] as $key => $value) {
                     if (_ADVANCED_DEBUG) {
                         echo "Getting property: $key with value: $value // ";
