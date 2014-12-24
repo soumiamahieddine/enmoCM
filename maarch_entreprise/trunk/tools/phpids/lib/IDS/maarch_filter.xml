@@ -242,7 +242,7 @@
     </filter>	
     <filter>
         <id>23</id>
-        <rule><![CDATA[(?:\.\s*\w+\W*=)|(?:\W\s*(?:location|document)\s*\W[^({[;]+[({[;])|(?:\(\w+\?[:\w]+\))|(?:\w{2,}\s*=\s*\d+[^&\w]\w+)|(?:\]\s*\(\s*\w+)]]></rule>
+        <rule><![CDATA[(?:\.\s*\w+\W*=)|(?:\W\s*(?:location)\s*\W[^({[;]+[({[;])|(?:\(\w+\?[:\w]+\))|(?:\]\s*\(\s*\w+)]]></rule>
         <description>Detects JavaScript location/document property access and window access obfuscation</description>
         <tags>
             <tag>xss</tag>
