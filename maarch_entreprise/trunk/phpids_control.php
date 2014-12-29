@@ -53,7 +53,7 @@ if ($processIDS) {
 
         if (!$result->isEmpty()) {
             if ($_SESSION['config']['debug'] == 'true') {
-                //echo $result;
+                echo $result;
             }
             $_SESSION['securityMessage'] = (string) $result;
             $varRedirect = '<script language="javascript">window.location.href=\'' 
