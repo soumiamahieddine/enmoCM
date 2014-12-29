@@ -298,6 +298,10 @@ class business_app_tools extends dbquery
             }
             $this->_loadActionsPages();
         }
+
+        if ($_SESSION['config']['usePHPIDS'] == 'true') {
+            $this->_loadPHPIDSExludes();
+        }
     }
 
     /**
@@ -970,6 +974,51 @@ class business_app_tools extends dbquery
                         'GOTOLIST'          => $pathToList
                     );
                 }
+            }
+        }
+    }
+
+    /**
+    * Load phpids excludes in session
+    */
+    private function _loadPHPIDSExludes()
+    {
+        if (isset($_SESSION['config']['corepath'])
+            && isset($_SESSION['config']['app_id'])
+        ) {
+            $core = new core_tools();
+            if (file_exists(
+                $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+                . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+                . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
+                . 'tools' . DIRECTORY_SEPARATOR . 'phpids' . DIRECTORY_SEPARATOR
+                . 'lib' . DIRECTORY_SEPARATOR . 'IDS' . DIRECTORY_SEPARATOR
+                . 'maarch_exclude.xml'
+            )
+            ) {
+                $path = $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+                        . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+                        . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
+                        . 'tools' . DIRECTORY_SEPARATOR . 'phpids' . DIRECTORY_SEPARATOR
+                        . 'lib' . DIRECTORY_SEPARATOR . 'IDS' . DIRECTORY_SEPARATOR
+                        . 'maarch_exclude.xml';
+            } else {
+                $path = 'apps'
+                        . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
+                        . 'tools' . DIRECTORY_SEPARATOR . 'phpids' . DIRECTORY_SEPARATOR
+                        . 'lib' . DIRECTORY_SEPARATOR . 'IDS' . DIRECTORY_SEPARATOR
+                        . 'maarch_exclude.xml';
+            }
+            $xmlfile = simplexml_load_file($path);
+            $_SESSION['PHPIDS_EXCLUDES'] = array();
+            foreach ($xmlfile->exclude as $exclude) {
+                array_push(
+                    $_SESSION['PHPIDS_EXCLUDES'], 
+                    array(
+                        'TARGET' => (string) $exclude->target,
+                        'PAGE'   => (string) $exclude->page,
+                    )
+                );
             }
         }
     }

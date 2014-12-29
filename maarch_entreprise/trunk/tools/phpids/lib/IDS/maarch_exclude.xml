@@ -1,0 +1,18 @@
+<excludes>
+    <exclude>
+        <target>groups</target>
+        <page>check_access</page>
+    </exclude>
+    <exclude>
+        <target>groups</target>
+        <page>manage_access</page>
+    </exclude>
+    <exclude>
+        <target>basket</target>
+        <page>basket_up</page>
+    </exclude>
+    <exclude>
+        <target>templates</target>
+        <page>templates_management_controler</page>
+    </exclude>
+</excludes>
