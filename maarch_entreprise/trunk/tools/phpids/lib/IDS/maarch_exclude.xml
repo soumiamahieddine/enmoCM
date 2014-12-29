@@ -16,6 +16,22 @@
         <page>basket_add_db</page>
     </exclude>
     <exclude>
+        <target>fileplan</target>
+        <page>positions_checked_list_autocompletion</page>
+    </exclude>
+    <exclude>
+        <target>fileplan</target>
+        <page>positions_tree_childs</page>
+    </exclude>
+    <exclude>
+        <target>fileplan</target>
+        <page>positions_documents_list</page>
+    </exclude>
+    <exclude>
+        <target>fileplan</target>
+        <page>fileplan_ajax_script</page>
+    </exclude>
+    <exclude>
         <target>templates</target>
         <page>templates_management_controler</page>
     </exclude>

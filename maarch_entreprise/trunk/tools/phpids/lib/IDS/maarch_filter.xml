@@ -500,16 +500,6 @@
         <impact>6</impact>
     </filter>
     <filter>
-        <id>49</id>
-        <rule><![CDATA[(?:"\s+and\s*=\W)|(?:\(\s*select\s*\w+\s*\()|(?:\*\/from)|(?:\+\s*\d+\s*\+\s*@)|(?:\w"\s*(?:[-+=|@]+\s*)+[\d(])|(?:coalesce\s*\(|@@\w+\s*[^\w\s])|(?:\W!+"\w)|(?:";\s*(?:if|while|begin))|(?:"[\s\d]+=\s*\d)|(?:order\s+by\s+if\w*\s*\()|(?:[\s(]+case\d*\W.+[tw]hen[\s(])]]></rule>
-        <description>Detects chained SQL injection attempts 2/2</description>
-        <tags>
-            <tag>sqli</tag>
-            <tag>id</tag>
-        </tags>
-        <impact>6</impact>
-    </filter>
-    <filter>
         <id>50</id>
         <rule><![CDATA[(?:(select|;)\s+(?:benchmark|if|sleep)\s*?\(\s*\(?\s*\w+)]]></rule>
         <description>Detects SQL benchmark and sleep injection attempts including conditional queries</description>
