@@ -9,10 +9,14 @@
     </exclude>
     <exclude>
         <target>basket</target>
-        <page>basket_up</page>
+        <page>basket_up_db</page>
     </exclude>
     <exclude>
         <target>templates</target>
         <page>templates_management_controler</page>
+    </exclude>
+    <exclude>
+        <target>life_cycle</target>
+        <page>lc_cycles_management_controler</page>
     </exclude>
 </excludes>
