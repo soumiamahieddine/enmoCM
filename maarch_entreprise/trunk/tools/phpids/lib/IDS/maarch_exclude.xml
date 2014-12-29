@@ -12,6 +12,10 @@
         <page>basket_up_db</page>
     </exclude>
     <exclude>
+        <target>basket</target>
+        <page>basket_add_db</page>
+    </exclude>
+    <exclude>
         <target>templates</target>
         <page>templates_management_controler</page>
     </exclude>
