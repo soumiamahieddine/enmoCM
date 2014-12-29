@@ -106,12 +106,7 @@ foreach ($_REQUEST as $name => $value) {
     }
 }
 
-if (isset($_REQUEST['display'])) {
-     $core->insert_page();
-     exit();
-}
-
-if (! isset($_SESSION['user']['UserId'])) {
+if (! isset($_SESSION['user']['UserId']) && $_REQUEST['page'] <> 'login' && $_REQUEST['page'] <> 'log' ) {
 
     $_SESSION['HTTP_REFERER'] = Url::requestUri();
     if (trim($_SERVER['argv'][0]) <> '') {
@@ -120,6 +115,11 @@ if (! isset($_SESSION['user']['UserId'])) {
         header('location: reopen.php');
     }
     exit();
+}
+
+if (isset($_REQUEST['display'])) {
+     $core->insert_page();
+     exit();
 }
 
 if (isset($_GET['show'])) {
