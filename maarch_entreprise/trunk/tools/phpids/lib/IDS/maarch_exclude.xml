@@ -20,6 +20,10 @@
         <page>templates_management_controler</page>
     </exclude>
     <exclude>
+        <target>templates</target>
+        <page>manage_generated_attachment</page>
+    </exclude>
+    <exclude>
         <target>life_cycle</target>
         <page>lc_cycles_management_controler</page>
     </exclude>
