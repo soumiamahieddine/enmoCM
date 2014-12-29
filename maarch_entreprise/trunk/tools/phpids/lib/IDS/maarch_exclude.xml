@@ -27,4 +27,8 @@
         <target>life_cycle</target>
         <page>lc_cycles_management_controler</page>
     </exclude>
+    <exclude>
+        <target>sendmail</target>
+        <page>sendmail_ajax_content</page>
+    </exclude>
 </excludes>
