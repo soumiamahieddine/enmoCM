@@ -220,6 +220,18 @@ if($mode == 'normal') {
                         . 'res_id not in (SELECT res_child FROM res_linked WHERE res_parent = '.$_SESSION['excludeId'].'))';
         unset($_SESSION['excludeId']);
     }
+
+    $status = $status_obj->get_not_searchable_status();   
+
+    if(count($status) > 0) {    
+        $status_tab = array();
+        $status_str = '';
+        for($i=0; $i<count($status);$i++){
+                array_push($status_tab, "'".$status[$i]['ID']."'");
+        }
+        $status_str = implode(' ,', $status_tab);
+        $where_tab[] = "status not in (".$status_str.")";
+    }
     
     //From searching comp query
     if(isset($_SESSION['searching']['comp_query']) && trim($_SESSION['searching']['comp_query']) <> '') {
@@ -235,18 +247,6 @@ if($mode == 'normal') {
         $add_security = false;
         
     } else {
-        $status = $status_obj->get_not_searchable_status();   
-
-        if(count($status) > 0) {    
-            $status_tab = array();
-            $status_str = '';
-            for($i=0; $i<count($status);$i++){
-                    array_push($status_tab, "'".$status[$i]['ID']."'");
-            }
-            $status_str = implode(' ,', $status_tab);
-            $where_tab[] = "status not in (".$status_str.")";
-        }
-
         $where_request = implode(' and ', $where_tab);
         $add_security = true;
     }
