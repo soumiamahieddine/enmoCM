@@ -47,9 +47,12 @@ class class_users extends dbquery
         $_SESSION['user']['LastName'] = $this->wash(
             $_POST['LastName'], 'no', _LASTNAME
         );
-        $_SESSION['user']['pass1'] = $this->wash(
-            $_POST['pass1'], 'no', _FIRST_PSW
-        );
+
+        if ($_SESSION['config']['ldap'] != "true") {
+            $_SESSION['user']['pass1'] = $this->wash(
+                $_POST['pass1'], 'no', _FIRST_PSW
+            );
+        }
 
         if(!empty($_POST['Phone'])){
             $_SESSION['user']['Phone'] = $this->wash(
@@ -92,15 +95,20 @@ class class_users extends dbquery
                 $_SESSION['user']['department']
             );
             $this->connect();
-            $this->query(
-                "update " . USERS_TABLE . " set password = '"
-                . md5($_SESSION['user']['pass1']) . "', firstname = '"
+
+            $query = "update " . USERS_TABLE . " set";
+
+            if ($_SESSION['config']['ldap'] != "true") {
+                $query .= " password = '" . md5($_SESSION['user']['pass1']) . "',";
+            }
+
+            $query .= " firstname = '"
                 . $firstname . "', lastname = '" . $lastname . "', phone = '"
                 . $_SESSION['user']['Phone'] . "', mail = '"
                 . $_SESSION['user']['Mail'] . "' , department = '" . $department
-                . "' where user_id = '" . $_SESSION['user']['UserId'] . "'"
-            );
+                . "' where user_id = '" . $_SESSION['user']['UserId'] . "'"; 
 
+            $this->query($query);
 
             if ($_SESSION['history']['usersup'] == 'true') {
                 require_once 'core' . DIRECTORY_SEPARATOR . 'class'
