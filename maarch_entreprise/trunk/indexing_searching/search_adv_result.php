@@ -375,7 +375,7 @@ if (count($_REQUEST['meta']) > 0) {
                 }
             }
             // PRIORITY
-            elseif ($tab_id_fields[$j] == 'priority' && (!empty($_REQUEST['priority']) ||$_REQUEST['priority'] == 0) )
+            elseif ($tab_id_fields[$j] == 'priority' && ($_REQUEST['priority'] <> ""))
             {
                 $json_txt .= " 'priority' : ['".addslashes(trim($_REQUEST['priority']))."'],";
                 $where_request .= " priority  = ".$_REQUEST['priority']." and ";
