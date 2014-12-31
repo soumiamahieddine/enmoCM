@@ -96,8 +96,13 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
        $contactTypeRequest = " AND contact_type = '" . $_REQUEST['contact_type'] . "'";
    }
    
-    $args = explode(' ', $_REQUEST['Input']);
-    $args[] = $_REQUEST['Input'];
+    $Input = $_REQUEST['Input'];
+    $boldInput = strtoupper($Input);
+    $ucwordsInput = ucwords($Input);
+    $Input = $Input . ' ' . $boldInput . ' ' . $ucwordsInput;
+    
+    $args = explode(' ', $Input);
+    $args[] = $Input;
     $args_bold = array();
     foreach ($args as $key => $value) {
         $args_bold[$key] = '<b>'. $value . '</b>';
@@ -196,9 +201,9 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         if ($i%2==1) $color = 'LightYellow';
         else $color = 'white';
         echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'>"
-                . ucwords(strtolower(str_ireplace($args, $args_bold, $res->result))) 
+                . str_replace($args, $args_bold, $res->result) 
                 ."<br/> "
-                . ucwords(strtolower(str_ireplace($args, $args_bold, $res->address)))
+                . str_replace($args, $args_bold, $res->address)
             ."</li>";
     }
     if($nb == 0) echo "<li></li>";
@@ -230,13 +235,19 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
        //     $contactTypeRequest = " AND contact_type = '" . $_REQUEST['contact_type'] . "'";
        // }
        
-        $args = explode(' ', $_REQUEST['Input']);
-        $args[] = $_REQUEST['Input'];
+        $Input = $_REQUEST['Input'];
+        $boldInput = strtoupper($Input);
+        $ucwordsInput = ucwords($Input);
+        $Input = $Input . ' ' . $boldInput . ' ' . $ucwordsInput;
+
+        $args = explode(' ', $Input);
+        $args[] = $Input;
         $args_bold = array();
         foreach ($args as $key => $value) {
             $args_bold[$key] = '<b>'. $value . '</b>';
         }
         $num_args = count($args);
+
         if ($num_args == 0) return "<ul></ul>"; 
            
         $query = "SELECT result, SUM(confidence) AS score, count(1) AS num, address, contact_id, ca_id FROM (";
@@ -329,9 +340,9 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
             if ($i%2==1) $color = 'LightYellow';
             else $color = 'white';
             echo "<li id='".$res->contact_id.",".$res->ca_id."' style='font-size:8pt; background-color:$color;' title='confiance:".$score."%'>"
-                    . ucwords(strtolower(str_ireplace($args, $args_bold, $res->result))) 
+                    . str_replace($args, $args_bold, $res->result) 
                     ."<br/> "
-                    . ucwords(strtolower(str_ireplace($args, $args_bold, $res->address)))
+                    . str_replace($args, $args_bold, $res->address)
                 ."</li>";
         }
         if($nb == 0) echo "<li></li>";
