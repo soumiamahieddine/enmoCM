@@ -2175,22 +2175,22 @@ class contacts_v2 extends dbquery
                         <td class="indexing_field" align="right"><input disabled name="departement" type="text"  id="departement" value="<?php if(isset($_SESSION['m_admin']['address']['DEPARTEMENT'])){ echo $func->show_str($_SESSION['m_admin']['address']['DEPARTEMENT']);} ?>"/></td>
                     </tr>
             <?php } ?>                     
-                    <tr id="title_p" >
+                    <tr id="title_p" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'style="display:none"';}?>>
                         <td><?php echo _TITLE2; ?> : </td>
                         <td>&nbsp;</td>
                         <td class="indexing_field" align="right"><input disabled disabled name="title" type="text"  id="title" value="<?php if(isset($_SESSION['m_admin']['contact']['TITLE'])){ echo $business->get_label_title($_SESSION['m_admin']['contact']['TITLE']); }?>"/></td>
                     </tr>
-                    <tr id="lastname_p" >
+                    <tr id="lastname_p" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'style="display:none"';}?>>
                         <td><label for="lastname"><?php echo _LASTNAME; ?>&nbsp;: </label></td>
                         <td>&nbsp;</td>
                         <td class="indexing_field" align="right"><input disabled name="lastname" type="text"  id="lastname" value="<?php if(isset($_SESSION['m_admin']['address']['LASTNAME'])){ echo $func->show_str($_SESSION['m_admin']['address']['LASTNAME']);} ?>"/></td>
                     </tr>
-                    <tr id="firstname_p" >
+                    <tr id="firstname_p" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'style="display:none"';}?>>
                         <td><label for="firstname"><?php echo _FIRSTNAME; ?>&nbsp;: </label></td>
                         <td>&nbsp;</td>
                         <td class="indexing_field" align="right"><input disabled name="firstname" type="text"  id="firstname" value="<?php if(isset($_SESSION['m_admin']['address']['FIRSTNAME'])){ echo $func->show_str($_SESSION['m_admin']['address']['FIRSTNAME']);} ?>"/></td>
                     </tr>
-                    <tr id="function_p" >
+                    <tr id="function_p" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'style="display:none"';}?>>
                         <td><label for="function"><?php echo _FUNCTION; ?>&nbsp;: </label></td>
                         <td>&nbsp;</td>
                         <td class="indexing_field" align="right"><input disabled name="function" type="text"  id="function" value="<?php if(isset($_SESSION['m_admin']['address']['FUNCTION'])){echo $func->show_str($_SESSION['m_admin']['address']['FUNCTION']);} ?>"/></td>
