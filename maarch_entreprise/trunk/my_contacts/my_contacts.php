@@ -44,6 +44,7 @@ $contact    = new contacts_v2();
  if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) $parameters .= '&order='.$_REQUEST['order'];
  if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) $parameters .= '&order_field='.$_REQUEST['order_field'];
  if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what='.$_REQUEST['what'];
+ if (isset($_REQUEST['selectedObject']) && !empty($_REQUEST['selectedObject'])) $parameters .= '&selectedObject='.$_REQUEST['selectedObject'];
  if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
  if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) $parameters .= '&mode='.$_REQUEST['mode'];
 
@@ -102,7 +103,10 @@ $contact    = new contacts_v2();
 
     //Filtre alphabetique et champ de recherche
     $what = $list->getWhatSearch();
-    if (!empty($what)) {
+
+    if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) {
+        $where_tab[] = " contact_id = ".$_REQUEST['selectedObject'];
+    } elseif (!empty($what)) {
         // $where_tab[] = "(lower(lastname) like lower('"
         //                 .$request->protect_string_db($what)
         //                 ."%') or lower(society) like lower('"
@@ -251,6 +255,7 @@ $contact    = new contacts_v2();
         $paramsTab['searchBoxAutoCompletionUrl'] .= "&my_contact=Y";
     }           
     $paramsTab['searchBoxAutoCompletionMinChars'] = 2;                                  //Nombre minimum de caractere pour activer l'autocompletion (1 par defaut)
+    $paramsTab['searchBoxAutoCompletionUpdate'] = true;
 
     // $paramsTab['addButtonLink'] = $_SESSION['config']['businessappurl']
         // ."index.php?dir=my_contacts&page=my_contact_add";                            //Lien sur le bouton nouveau (1)

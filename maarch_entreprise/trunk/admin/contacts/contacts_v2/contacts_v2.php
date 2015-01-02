@@ -98,8 +98,9 @@ array_push($select[$_SESSION['tablename']['contacts_v2']],"contact_id", "is_corp
 $what = "";
 
 $where =" ";
-if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
-{
+if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) {
+    $where .= " contact_id = ".$_REQUEST['selectedObject'];
+} elseif(isset($_REQUEST['what']) && !empty($_REQUEST['what'])) {
     $what = $func->protect_string_db($func->wash($_REQUEST['what'], "alphanum", "", "no"));
 
     $what = str_replace("  ", "", $func->protect_string_db($_REQUEST['what']));
@@ -244,6 +245,7 @@ $title = _CONTACTS_LIST." : ".$i." "._CONTACTS;
 $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&page=contacts_v2_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
+$autoCompletionArray["searchBoxAutoCompletionUpdate"] = true;
 
 $list->admin_list($tab, $i, $title, 'contact_id','contacts_v2','contacts_v2','contact_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_CONTACTS, _CONTACT, $_SESSION['config']['businessappurl'].'static.php?filename=manage_contact_b.gif', false, true, true, true, $what, true, $autoCompletionArray, false, true);
 $_SESSION['m_admin']['contacts'] = array();

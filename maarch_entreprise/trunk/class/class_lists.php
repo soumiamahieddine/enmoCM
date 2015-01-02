@@ -67,6 +67,7 @@
         [searchBoxAutoCompletionUrl]        string      Autocompletion url used by search box
         [searchBoxAutoCompletionMinChars]   integer     Number minimum of charactere to activate show autocompletion list (default: 1)
         [searchBoxAutoCompletionParamName]  string      Name of the parameter passed in autocompletion url (default: what)
+        [searchBoxAutoCompletionUpdate]     boolean     Search on ID after autocompletion select
         [bool_checkBox]                     boolean     Add checkbox to row (checkbox name : field[])
         [bool_radioButton]                  boolean     Add radio button to row (radio name : field)
         [bool_standaloneForm]               boolean     Add standalone form (no MEP actions needed)
@@ -1778,17 +1779,27 @@ class lists extends dbquery
             if ($this->params['bool_showSearchBox']) {
                 $searchTools .= '<form id="frmletters" name="frmletters" method="post" action="#"><div>';
                 (strlen($this->whatSearch) > 1)? $what = $this->whatSearch : $what ='';
-                $searchTools .= '<input type="text" name="what" id="what" size="15" value="'.$what.'" />&nbsp;';
+                $searchTools .= '<input type="text" name="what" id="what" size="15" value="'.$what.'" onkeyup="erase_contact_external_id(\'what\', \'selectedObject\');"/>&nbsp;';
                 if(isset($this->params['searchBoxAutoCompletionUrl']) && !empty($this->params['searchBoxAutoCompletionUrl'])) {
                     $searchTools .= '<div id="whatList" class="autocomplete"></div>';
-                    $searchTools .= '<script type="text/javascript">initList(\'what\', \'whatList\', \''
-                        .$this->params['searchBoxAutoCompletionUrl'].'\', \''
-                        .$this->params['searchBoxAutoCompletionParamName'].'\', \''
-                        .$this->params['searchBoxAutoCompletionMinChars'].'\');</script>';
+                    $searchTools .= '<script type="text/javascript">';
+                    if ($this->params['searchBoxAutoCompletionUpdate'] == true) {
+                        $searchTools .= 'launch_autocompleter_update(\''
+                            .$this->params['searchBoxAutoCompletionUrl'].'\', \'what\', \'whatList\', \''
+                            .$this->params['searchBoxAutoCompletionMinChars'].'\', \'selectedObject\');';
+                    } else {
+                        $searchTools .= 'initList(\'what\', \'whatList\', \''
+                            .$this->params['searchBoxAutoCompletionUrl'].'\', \''
+                            .$this->params['searchBoxAutoCompletionParamName'].'\', \''
+                            .$this->params['searchBoxAutoCompletionMinChars'].'\');';
+                    }
+
+                    $searchTools .= '</script>';
+                    $searchTools .= '<input type="hidden" name="selectedObject" id="selectedObject" />';
                 }
                 $searchTools .= '<input name="submit" class="button" type="button" value="'
                     ._SEARCH.'" onClick="loadList(\''
-                    .$this->link.'&what=\' + document.getElementById(\'what\').value, \''
+                    .$this->link.'&what=\' + document.getElementById(\'what\').value+\'&selectedObject=\' + document.getElementById(\'selectedObject\').value, \''
                     .$this->divListId.'\', '.$this->modeReturn.');"/><div></form>';
             }
             $searchTools .= '</td>';
@@ -2829,6 +2840,7 @@ class lists extends dbquery
         if (!isset($parameters['divListId'])){ $parameters['divListId']= 'divList'; }
         if (!isset($parameters['searchBoxAutoCompletionParamName'])){ $parameters['searchBoxAutoCompletionParamName']= 'what'; }
         if (!isset($parameters['searchBoxAutoCompletionMinChars'])){ $parameters['searchBoxAutoCompletionMinChars']= 1; }
+        if (!isset($parameters['searchBoxAutoCompletionUpdate'])){ $parameters['searchBoxAutoCompletionUpdate']= false; }
         if (!isset($parameters['viewDocumentLink'])){ $parameters['viewDocumentLink'] = $_SESSION['config']['businessappurl']
             .'index.php?display=true&dir=indexing_searching&page=view_resource_controler';}
         if (!isset($parameters['viewDetailsLink'])){ $parameters['viewDetailsLink'] = $_SESSION['config']['businessappurl']

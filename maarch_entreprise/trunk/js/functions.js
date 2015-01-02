@@ -2135,6 +2135,26 @@ function launch_autocompleter(path_script, id_text, id_div, minCharSearch)
 }
 
 /**
+ * Launch the Ajax autocomplete object to activate autocompletion on a field and then update an input field
+ *
+ * @param path_script String Path to the Ajax script
+ **/
+function launch_autocompleter_update(path_script, id_text, id_div, minCharSearch, updateElement){
+    var input  = id_text || 'contact';
+    var div    = id_div  || 'show_contacts';
+    var minCharSearch = minCharSearch ||  2;
+
+    contact_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
+        method:'get',
+        paramName:'what',
+        minChars: minCharSearch,
+        afterUpdateElement: function (text, li){
+            $(updateElement).value = li.id;
+        }
+    });
+}
+
+/**
  * Gets the indexes for a given collection and fills a div with it
  *
  * @param url String Url to the Ajax script

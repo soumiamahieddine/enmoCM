@@ -69,7 +69,9 @@ array_push(
 $what = "";
 $where = "";
 
-if (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
+if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) {
+    $where .= " ca_id = ".$_REQUEST['selectedObject'];
+} elseif (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
     $what = $func->protect_string_db($_REQUEST['what']);
 
     $what = str_replace("  ", "", $func->protect_string_db($_REQUEST['what']));
@@ -246,6 +248,7 @@ $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']
     . "index.php?display=true&page=contact_addresses_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
+$autoCompletionArray["searchBoxAutoCompletionUpdate"] = true;
 
 $title = _ADDRESSES_LIST." : ".$i." "._ADDRESSES;
 

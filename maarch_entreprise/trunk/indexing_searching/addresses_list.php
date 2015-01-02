@@ -44,6 +44,7 @@ $contact    = new contacts_v2();
  if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) $parameters .= '&order='.$_REQUEST['order'];
  if (isset($_REQUEST['order_field']) && !empty($_REQUEST['order_field'])) $parameters .= '&order_field='.$_REQUEST['order_field'];
  if (isset($_REQUEST['what']) && !empty($_REQUEST['what'])) $parameters .= '&what='.$_REQUEST['what'];
+ if (isset($_REQUEST['selectedObject']) && !empty($_REQUEST['selectedObject'])) $parameters .= '&selectedObject='.$_REQUEST['selectedObject'];
  if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&start='.$_REQUEST['start'];
  if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) $parameters .= '&mode='.$_REQUEST['mode'];
 
@@ -93,7 +94,9 @@ if (!$return) {
     $what = "";
     $where = "";
 
-    if (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
+    if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) {
+        $where .= " ca_id = ".$_REQUEST['selectedObject'];
+    } elseif (isset($_REQUEST['what']) && ! empty($_REQUEST['what'])) {
         $what = $request->protect_string_db($_REQUEST['what']);
 
         $what = str_replace("  ", "", $request->protect_string_db($_REQUEST['what']));
@@ -273,7 +276,7 @@ if (!$return) {
                     ."index.php?display=true&page=contact_addresses_list_by_name";            //Script pour l'autocompletion
           
     $paramsTab['searchBoxAutoCompletionMinChars'] = 2;                                  //Nombre minimum de caractere pour activer l'autocompletion (1 par defaut)
-
+    $paramsTab['searchBoxAutoCompletionUpdate'] = true;
     //Action icons array
     $paramsTab['actionIcons'] = array();
     //get start

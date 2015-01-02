@@ -785,8 +785,13 @@ class list_show extends functions
                         ?>
                         <div id="<?php echo $whatListinput ;?>" class="autocomplete"></div>
                         <script type="text/javascript">
-                            initList('<?php echo $whatinput ;?>', '<?php echo $whatListinput ;?>', '<?php  echo $autoCompletionArray2['list_script_url'];?>', 'what', '<?php  echo $autoCompletionArray2['number_to_begin'];?>');
+                        <?php if ($autoCompletionArray2['searchBoxAutoCompletionUpdate']) { ?>
+                                launch_autocompleter_update('<?php  echo $autoCompletionArray2['list_script_url'];?>', '<?php echo $whatinput ;?>', '<?php echo $whatListinput ;?>', '<?php  echo $autoCompletionArray2['number_to_begin'];?>', 'selectedObject')
+                            <?php } else { ?>
+                                initList('<?php echo $whatinput ;?>', '<?php echo $whatListinput ;?>', '<?php  echo $autoCompletionArray2['list_script_url'];?>', 'what', '<?php  echo $autoCompletionArray2['number_to_begin'];?>');
+                            <?php } ?>
                         </script>
+                        <input type="hidden" name="selectedObject" id="selectedObject" />
                         <?php
                     }
                     ?>
