@@ -327,7 +327,8 @@ class contacts_v2 extends dbquery
                 }
                 $this->clearcontactinfos();
                 $_SESSION['info'] = _CONTACT_MODIFIED;
-                if (isset($_SESSION['fromContactTree'])) {
+                if (isset($_SESSION['fromContactTree']) && $_SESSION['fromContactTree'] == "yes") {
+                    unset($_SESSION['fromContactTree']);
                     header("location: ".$_SESSION['config']['businessappurl']. 'index.php?page=view_tree_contacts');
                     exit(); 
                 } else {
@@ -642,7 +643,7 @@ class contacts_v2 extends dbquery
                     <?php } else {
                                 if (isset($_SESSION['fromContactTree']) && $_SESSION['fromContactTree'] == "yes"){
                                     ?><input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_contacts';" /><?php
-                                    $_SESSION['fromContactTree'] = "";
+                                    // $_SESSION['fromContactTree'] = "";
                                 } else {?>
                                     <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $cancel_target;?>';" />                 
                     <?php       }

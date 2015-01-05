@@ -61,7 +61,7 @@ $page_label = _CONTACTS_LIST;
 $page_id = "contacts_v2";
 $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
-$_SESSION['fromContactTree'] = "";
+unset($_SESSION['fromContactTree']);
 ?>
 <table width="100%">
     <tr>

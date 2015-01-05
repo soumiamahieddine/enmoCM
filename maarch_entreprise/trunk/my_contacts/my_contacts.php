@@ -49,6 +49,7 @@ $contact    = new contacts_v2();
  if (isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])) $parameters .= '&mode='.$_REQUEST['mode'];
 
  $_SESSION['origin']="contacts_list";
+ unset($_SESSION['fromContactTree']);
 
  if (isset($_REQUEST['load'])) {
     $_SESSION['m_admin'] = array();
