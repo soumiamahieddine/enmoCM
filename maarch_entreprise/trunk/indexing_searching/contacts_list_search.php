@@ -32,7 +32,7 @@
 require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php";
 require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php";
 require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
-            ."class".DIRECTORY_SEPARATOR."class_contacts.php";
+            ."class".DIRECTORY_SEPARATOR."class_contacts_v2.php";
 require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php";
 require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
             ."class".DIRECTORY_SEPARATOR."class_lists.php";
@@ -41,7 +41,7 @@ $status_obj = new manage_status();
 $sec        = new security();
 $core_tools = new core_tools();
 $request    = new request();
-$contact    = new contacts();
+$contact    = new contacts_v2();
 $list       = new lists();
 
 //Labels
