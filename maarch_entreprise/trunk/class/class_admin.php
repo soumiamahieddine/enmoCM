@@ -51,27 +51,41 @@ class admin extends functions
 	    if (preg_match("/MSIE 6.0/", $_SERVER['HTTP_USER_AGENT']))
 			$debug_style =  'style="height:100px;"';
 
-		echo '<h2 class="admin_subtitle block" >Application</h2>';
-		echo '<div  id="admin_apps">';
+		$display_app_services = false;
 		for($i=0;$i<count($app_services);$i++)
 		{
 			if ($app_services[$i]['servicetype'] == "admin"
 			    && isset($_SESSION['user']['services'][$app_services[$i]['id']])
 			    && $_SESSION['user']['services'][$app_services[$i]['id']]
 			) {
-				?>
-                <div class="admin_item" id="<?php  echo $app_services[$i]['style'];?>" title="<?php  echo $app_services[$i]['comment'];?>" onclick="window.top.location='<?php  echo $app_services[$i]['servicepage'];?>';">
-                    <div class="sum_margin" <?php echo $debug_style; ?>>
-
-                            <strong><?php  echo $app_services[$i]['name'];?></strong>
-                           <!-- <em><br/><?php  echo $app_services[$i]['comment'];?></em>-->
-
-                    </div>
-                </div>
-                <?php
+				$display_app_services = true;
+				break;
 			}
 		}
-		echo '</div>';
+
+		if ($display_app_services) {
+			echo '<h2 class="admin_subtitle block" >Application</h2>';		
+			echo '<div  id="admin_apps">';
+			for($i=0;$i<count($app_services);$i++)
+			{
+				if ($app_services[$i]['servicetype'] == "admin"
+				    && isset($_SESSION['user']['services'][$app_services[$i]['id']])
+				    && $_SESSION['user']['services'][$app_services[$i]['id']]
+				) {
+					?>
+	                <div class="admin_item" id="<?php  echo $app_services[$i]['style'];?>" title="<?php  echo $app_services[$i]['comment'];?>" onclick="window.top.location='<?php  echo $app_services[$i]['servicepage'];?>';">
+	                    <div class="sum_margin" <?php echo $debug_style; ?>>
+
+	                            <strong><?php  echo $app_services[$i]['name'];?></strong>
+	                           <!-- <em><br/><?php  echo $app_services[$i]['comment'];?></em>-->
+
+	                    </div>
+	                </div>
+	                <?php
+				}
+			}
+			echo '</div>';
+		}
 	}
 
 	/**
@@ -85,17 +99,18 @@ class admin extends functions
 	    if (preg_match("/MSIE 6.0/", $_SERVER['HTTP_USER_AGENT'])) {
 			$debug_style =  'style="height:100px;"';
 	    }
-		echo '<h2 class="admin_subtitle block">Modules</h2>';
-		echo '<div id="admin_modules">';
+		// echo '<h2 class="admin_subtitle block">Modules</h2>';
+		// echo '<div id="admin_modules">';
+		$nb = 0;
 		foreach (array_keys($modules_services) as $value) {
-			$nb = 0;
 			for ($i = 0; $i < count($modules_services[$value]); $i ++) {
 				if (isset($_SESSION['user']['services'][$modules_services[$value][$i]['id']])
 				    && $modules_services[$value][$i]['servicetype'] == "admin"
 				    && $_SESSION['user']['services'][$modules_services[$value][$i]['id']]
 				) {
 					if ($nb == 0) {
-						//echo '<h2 class="admin_subtitle">Module : '.$value.'</h2>';
+						echo '<h2 class="admin_subtitle block">Modules</h2>';
+						echo '<div id="admin_modules">';
 					}
 					$nb ++;
 					?>
@@ -111,7 +126,10 @@ class admin extends functions
 				}
 			}
 		}
-		echo '</div>';
+		if ($nb > 0) {
+			echo '</div>';
+		}
+		
 	}
 }
 ?>
