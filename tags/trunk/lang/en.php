@@ -45,7 +45,7 @@ if (!defined('_MODIFY_TAG'))
 if (!defined('_MANAGE_TAGS'))
     define('_MANAGE_TAGS', 'Manage Tags');
 if (!defined('_ADMIN_TAGS'))
-    define('_ADMIN_TAGS', 'Tags Administration');
+    define('_ADMIN_TAGS', 'Tags');
 if (!defined('_ADMIN_TAGS_DESC'))
     define('_ADMIN_TAGS_DESC', 'Update, delete, add or join Tags');
 if (!defined('_ALL_TAGS'))

@@ -44,7 +44,7 @@ if (!defined('_MODIFY_TAG'))
 if (!defined('_MANAGE_TAGS'))
     define('_MANAGE_TAGS', 'G&eacute;rer les Mots-cl&eacute;s');
 if (!defined('_ADMIN_TAGS'))
-    define('_ADMIN_TAGS', 'Administration des Mots-cl&eacute;s');
+    define('_ADMIN_TAGS', 'Mots-cl&eacute;s');
 if (!defined('_ADMIN_TAGS_DESC'))
     define('_ADMIN_TAGS_DESC', 'Permet de modifier, supprimer, ajouter ou fusionner des Mots-cl&eacute;s');
 if (!defined('_ALL_TAGS'))
