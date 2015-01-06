@@ -97,7 +97,7 @@ if (!defined('_TEMPLATE_CONTENT'))
 if (!defined('_TEMPLATES'))
     define('_TEMPLATES', 'mod&egrave;le(s)');
 if (!defined('_ADMIN_TEMPLATES'))
-    define('_ADMIN_TEMPLATES','Administrer les mod&egrave;les de document');
+    define('_ADMIN_TEMPLATES','Mod&egrave;les de document');
 if (!defined('_LOADED_FILE'))
     define('_LOADED_FILE', 'Fichier import&eacute;');
 if (!defined('_GENERATED_FILE'))

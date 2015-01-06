@@ -100,7 +100,7 @@ if (!defined('_TEMPLATE_CONTENT'))
 if (!defined('_TEMPLATES'))
     define('_TEMPLATES', 'template(s)');
 if (!defined('_ADMIN_TEMPLATES'))
-    define('_ADMIN_TEMPLATES','Manage document templates');
+    define('_ADMIN_TEMPLATES','Document templates');
 if (!defined('_LOADED_FILE'))
     define('_LOADED_FILE', 'The file has been saved');
 if (!defined('_GENERATED_FILE'))
