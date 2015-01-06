@@ -21,7 +21,7 @@
 
 /*************************** Report management *****************/
 if (!defined('_ADMIN_REPORTS'))
-    define('_ADMIN_REPORTS','Manage reports');
+    define('_ADMIN_REPORTS','Reports');
 if (!defined('_ADMIN_REPORTS_DESC'))
     define('_ADMIN_REPORTS_DESC','Manage reports');
 if (!defined('_REPORTS'))
