@@ -95,8 +95,8 @@ $func = new functions();
                                     }?>
                                     </span>
                                 </div>
-                                <div align="right" onclick="new Effect.toggle('access_info_<?php echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID'];?>', 'blind', {delay:0.2});return false;" >
-                                 <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="<?php _MORE_INFOS;?>" title="<?php _MORE_INFOS;?>" /><span class="lb1-details">&nbsp;</span>
+                                <div align="right" onclick="new Effect.toggle('access_info_<?php echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID'];?>', 'blind', {delay:0.2});return false;">
+                                 <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="<?php _MORE_INFOS;?>" title="<?php _MORE_INFOS;?>" onmouseover="this.style.cursor='pointer';"/><span class="lb1-details">&nbsp;</span>
                                 </div>
                                 <div style="display:none;" id="access_info_<?php echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID'];?>" class="access_info desc">
                                     <div class="ref-unit">

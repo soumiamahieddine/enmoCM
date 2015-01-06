@@ -41,7 +41,7 @@ if ($mode == 'list') {
             <?php
         if ($mode == 'up') {
             if (count($users) > 0) {
-                ?><div onclick="new Effect.toggle('users_list', 'blind', {delay:0.2});return false;" >
+                ?><div onclick="new Effect.toggle('users_list', 'blind', {delay:0.2});return false;" onmouseover="this.style.cursor='pointer';">
                 &nbsp;<img src="<?php
                 echo $_SESSION['config']['businessappurl'];
                 ?>static.php?filename=membres_groupe_b.gif" alt="" /><i><?php
@@ -108,7 +108,7 @@ if ($mode == 'list') {
             }
             if ($GLOBALS['basket_loaded'] && count($baskets) > 0) {
                     ?>
-                    <div onclick="new Effect.toggle('baskets_list2', 'blind', {delay:0.2});return false;" >
+                    <div onclick="new Effect.toggle('baskets_list2', 'blind', {delay:0.2});return false;" onmouseover="this.style.cursor='pointer';" >
                 &nbsp;<img src="<?php
                 echo $_SESSION['config']['businessappurl'];
                 ?>static.php?filename=membres_groupe_b.gif" alt="" /><i><?php
@@ -296,7 +296,7 @@ if ($mode == 'list') {
                 echo $_SESSION['cpt'];
                 ?>)" id="h2<?php
                 echo $_SESSION['cpt'];
-                 ?>" class="categorie">
+                 ?>" class="categorie" onmouseover="this.style.cursor='pointer';">
                   <img src="<?php
                  echo $_SESSION['config']['businessappurl'];
                  ?>static.php?filename=plus.png" alt="" />&nbsp;<b><?php
