@@ -101,7 +101,7 @@ Mods
                                             <tr>
                                                 <td style="text-align:right; vertical-align:top">##defineLang|_ENTITY## :</td><td style="text-align:right">##loadValue|entity_label##</td>
                                             </tr>
-                                            ##ifStatement|#isModuleLoaded|cases#===true|<tr><td style="text-align:right"><b>#defineLang|_CASE# :</b></td><td  style="text-align:right"><b>#loadValue|case_label#</b></td></tr>| ##
+											##ifStatement|'#loadValue|case_label#'!=null|<tr><td style="text-align:right"><b>#defineLang|_CASE# :</b></td><td style="text-align:right">#loadValue|case_label#</td></tr>|##
                                         </table>
                                     </td>
                                 </tr>
