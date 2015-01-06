@@ -477,6 +477,9 @@ if (!defined('_ARCHITECTURE')) define( '_ARCHITECTURE', 'Plan de classement');
 /************************* Messages d'erreurs ***********************************/
 if (!defined('_MORE_INFOS')) define( '_MORE_INFOS', 'Pour plus d&rsquo;informations, contactez votre administrateur ');
 if (!defined('_ALREADY_EXISTS')) define( '_ALREADY_EXISTS', 'existe d&eacute;j&agrave; !');
+if (!defined('_DOCSERVER_ERROR')) define( '_DOCSERVER_ERROR', 'Erreur avec le docserver');
+if (!defined('_NO_AVAILABLE_DOCSERVER')) define( '_NO_AVAILABLE_DOCSERVER', 'Pas de docserver disponible');
+if (!defined('_NOT_ENOUGH_DISK_SPACE')) define( '_NOT_ENOUGH_DISK_SPACE', 'Pas assez de place disponible sur le serveur');
 
 // class usergroups
 if (!defined('_NO_GROUP')) define( '_NO_GROUP', 'Le groupe n&rsquo;existe pas !');
