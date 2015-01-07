@@ -11,7 +11,7 @@ case 'recipients':
 		. " FROM listinstance li JOIN users us ON li.item_id = us.user_id " 
             . " JOIN notes ON notes.coll_id = li.coll_id AND notes.identifier = li.res_id "
 		. " WHERE notes.coll_id = 'letterbox_coll' AND notes.id = ".$event->record_id
-        . "   AND item_type='user_id' AND item_mode = 'cc'";
+        . "   AND item_type='user_id' AND item_mode = 'cc'"
         . " AND li.item_id != notes.user_id";
 
 	$dbRecipients = new dbquery();
