@@ -1090,6 +1090,7 @@ if (!defined('_ANSWER_TYPES_DONE')) define( '_ANSWER_TYPES_DONE', 'Type(s) de r&
 if (!defined('_CLOSING_DATE')) define( '_CLOSING_DATE', 'Date de cl&ocirc;ture');
 if (!defined('_FULLTEXT')) define( '_FULLTEXT', 'Plein texte');
 if (!defined('_FULLTEXT_HELP')) define( '_FULLTEXT_HELP', 'Recherche plein texte avec le moteur Luc&egrave;ne...');
+if (!defined('_FULLTEXT_ERROR')) define( '_FULLTEXT_ERROR', 'Entr&eacute;es invalides pour la recherche plein texte. Si vous avez mis le signe "*", il doit y avoir au moins 3 caract&egrave;res devant, et pas de signes comme ,\':!+');
 if (!defined('_FILE_NOT_SEND')) define( '_FILE_NOT_SEND', 'Le fichier n&rsquo;a pas &eacute;t&eacute; envoy&eacute;');
 if (!defined('_TRY_AGAIN')) define( '_TRY_AGAIN', 'Veuillez r&eacute;essayer');
 if (!defined('_INDEX_UPDATED')) define( '_INDEX_UPDATED', 'Index mis &agrave; jour');

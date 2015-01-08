@@ -447,6 +447,7 @@ if (!defined('_FOUND_LOGS')) define('_FOUND_LOGS', 'logs file(s) found');
 if (!defined('_FOUND_INVOICES')) define('_FOUND_INVOICES', ' Invoice(s) found');
 if (!defined('_FULLTEXT')) define('_FULLTEXT', 'Full text search');
 if (!defined('_FULLTEXT_HELP')) define('_FULLTEXT_HELP', '');
+if (!defined('_FULLTEXT_ERROR')) define( '_FULLTEXT_ERROR', 'Invalid entries for the full text field. If you type the sign "*", there must be at least 3 characters before and not sign like ,\':!+');
 if (!defined('_FUNCTION')) define('_FUNCTION', 'Role');
 if (!defined('_GB'))  define('_GB', 'Gigabytes ');
 if (!defined('_GED_NUM')) define('_GED_NUM', 'DMS nb. ');

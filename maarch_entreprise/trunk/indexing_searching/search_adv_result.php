@@ -282,44 +282,61 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " lower(subject) like lower('%".$func->protect_string_db($_REQUEST['subject'])."%') and ";
             } elseif ($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext'])
             ) {
-                // FULLTEXT
-                $fulltext_request = $_REQUEST['fulltext'];
-                $json_txt .= " 'fulltext' : ['" 
-                    . addslashes(trim($_REQUEST['fulltext'])) . "'],";
-                set_include_path('apps' . DIRECTORY_SEPARATOR 
-                    . $_SESSION['config']['app_id'] 
-                    . DIRECTORY_SEPARATOR . 'tools' 
-                    . DIRECTORY_SEPARATOR . PATH_SEPARATOR . get_include_path()
-                );
-                require_once('Zend/Search/Lucene.php');
-                Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-                    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive() // we need utf8 for accents
-                );
-                Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(Zend_Search_Lucene_Search_QueryParser::B_AND);
-                Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
-                
-                $_SESSION['search']['plain_text'] = $_REQUEST['fulltext'];
 
-                $path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
-                if (is_dir($path_to_lucene_index))
-                {
-                    if (!$func->isDirEmpty($path_to_lucene_index)) {
-                        $index = Zend_Search_Lucene::open($path_to_lucene_index);
-                        $hits = $index->find(urldecode($fulltext_request));
-                        $Liste_Ids = "0";
-                        $cptIds = 0;
-                        foreach ($hits as $hit) {
-                            if ($cptIds < 500) {
-                                $Liste_Ids .= ", '". $hit->Id ."'";
-                            } else {
-                                break;
-                            }
-                            $cptIds ++;
-                        }
-                        $where_request .= " res_id IN ($Liste_Ids) and ";
+                $query_fulltext = explode(" ", trim($_REQUEST['fulltext']));
+                $error_fulltext = false;
+
+                foreach ($query_fulltext as $value) {
+                    if (strpos($value, "*") !== false && 
+                        (strlen(substr($value, 0, strpos($value, "*"))) < 3 || preg_match("([,':!+])", $value) === 1 )
+                        ) {
+                        $error_fulltext = true;
+                        break;
                     }
+                }
+
+                if ($error_fulltext == true ) {
+                    $_SESSION['error_search'] = _FULLTEXT_ERROR;
                 } else {
-                    $where_request .= " 1=-1 and ";
+                    // FULLTEXT
+                    $fulltext_request = $_REQUEST['fulltext'];
+                    $json_txt .= " 'fulltext' : ['" 
+                        . addslashes(trim($_REQUEST['fulltext'])) . "'],";
+                    set_include_path('apps' . DIRECTORY_SEPARATOR 
+                        . $_SESSION['config']['app_id'] 
+                        . DIRECTORY_SEPARATOR . 'tools' 
+                        . DIRECTORY_SEPARATOR . PATH_SEPARATOR . get_include_path()
+                    );
+                    require_once('Zend/Search/Lucene.php');
+                    Zend_Search_Lucene_Analysis_Analyzer::setDefault(
+                        new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive() // we need utf8 for accents
+                    );
+                    Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(Zend_Search_Lucene_Search_QueryParser::B_AND);
+                    Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
+                    
+                    $_SESSION['search']['plain_text'] = $_REQUEST['fulltext'];
+
+                    $path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
+                    if (is_dir($path_to_lucene_index))
+                    {
+                        if (!$func->isDirEmpty($path_to_lucene_index)) {
+                            $index = Zend_Search_Lucene::open($path_to_lucene_index);
+                            $hits = $index->find(urldecode($fulltext_request));
+                            $Liste_Ids = "0";
+                            $cptIds = 0;
+                            foreach ($hits as $hit) {
+                                if ($cptIds < 500) {
+                                    $Liste_Ids .= ", '". $hit->Id ."'";
+                                } else {
+                                    break;
+                                }
+                                $cptIds ++;
+                            }
+                            $where_request .= " res_id IN ($Liste_Ids) and ";
+                        }
+                    } else {
+                        $where_request .= " 1=-1 and ";
+                    }                    
                 }
             }
             // TAGS
@@ -346,32 +363,49 @@ if (count($_REQUEST['meta']) > 0) {
                     . DIRECTORY_SEPARATOR . 'tools' 
                     . DIRECTORY_SEPARATOR . PATH_SEPARATOR . get_include_path()
                 );
-                require_once('Zend/Search/Lucene.php');
-                Zend_Search_Lucene_Analysis_Analyzer::setDefault(
-                    new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive() // we need utf8 for accents
-                );
-                Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(Zend_Search_Lucene_Search_QueryParser::B_AND);
-                Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
-                $path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
-                if (is_dir($path_to_lucene_index) && !$func->isDirEmpty($path_to_lucene_index))
-                {
-                    if (!$func->isDirEmpty($path_to_lucene_index)) {
-                        $index = Zend_Search_Lucene::open($path_to_lucene_index);
-                        $hits = $index->find($welcome);
-                        $Liste_Ids = "0";
-                        $cptIds = 0;
-                        foreach ($hits as $hit) {
-                            if ($cptIds < 500) {
-                                $Liste_Ids .= ", '". $hit->Id ."'";
-                            } else {
-                                break;
-                            }
-                            $cptIds ++;
-                        }
-                        $where_request_welcome .= " res_id IN ($Liste_Ids) or ".$where_multifield_request. " and ";
+                
+                $query_fulltext = explode(" ", trim($_REQUEST['welcome']));
+                $error_fulltext = false;
+
+                foreach ($query_fulltext as $value) {
+                    if (strpos($value, "*") !== false && 
+                        (strlen(substr($value, 0, strpos($value, "*"))) < 3 || preg_match("([,':!+])", $value) === 1 )
+                        ) {
+                        $error_fulltext = true;
+                        break;
                     }
+                }
+
+                if ($error_fulltext == true ) {
+                    $_SESSION['error_search'] = _FULLTEXT_ERROR;
                 } else {
-                    $where_request_welcome .= " ".$where_multifield_request." and ";
+                    require_once('Zend/Search/Lucene.php');
+                    Zend_Search_Lucene_Analysis_Analyzer::setDefault(
+                        new Zend_Search_Lucene_Analysis_Analyzer_Common_Utf8Num_CaseInsensitive() // we need utf8 for accents
+                    );
+                    Zend_Search_Lucene_Search_QueryParser::setDefaultOperator(Zend_Search_Lucene_Search_QueryParser::B_AND);
+                    Zend_Search_Lucene_Search_QueryParser::setDefaultEncoding('utf-8');
+                    $path_to_lucene_index = $_SESSION['collections'][0]['path_to_lucene_index'];
+                    if (is_dir($path_to_lucene_index) && !$func->isDirEmpty($path_to_lucene_index))
+                    {
+                        if (!$func->isDirEmpty($path_to_lucene_index)) {
+                            $index = Zend_Search_Lucene::open($path_to_lucene_index);
+                            $hits = $index->find($welcome);
+                            $Liste_Ids = "0";
+                            $cptIds = 0;
+                            foreach ($hits as $hit) {
+                                if ($cptIds < 500) {
+                                    $Liste_Ids .= ", '". $hit->Id ."'";
+                                } else {
+                                    break;
+                                }
+                                $cptIds ++;
+                            }
+                            $where_request_welcome .= " res_id IN ($Liste_Ids) or ".$where_multifield_request. " and ";
+                        }
+                    } else {
+                        $where_request_welcome .= " ".$where_multifield_request." and ";
+                    }
                 }
             }
             // PRIORITY
@@ -782,14 +816,14 @@ exit();
 */
 
 $_SESSION['current_search_query'] = $json_txt;
-if (!empty($_SESSION['error'])) {
+if (!empty($_SESSION['error_search'])) {
     if ($mode == 'normal') {
-        $_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
+        $_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
         ?>
         <script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&dir=indexing_searching';?>';</script>
         <?php
     } else {
-        $_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv&mode='.$mode.'">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
+        $_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv&mode='.$mode.'">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
         ?>
         <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_error&mode='.$mode;?>';</script>
         <?php
