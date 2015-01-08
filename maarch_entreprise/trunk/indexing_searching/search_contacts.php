@@ -110,13 +110,6 @@ $core_tools->load_js();
     var loaded_query = <?php if(isset($_SESSION['current_search_query']) && !empty($_SESSION['current_search_query']))
     { echo $_SESSION['current_search_query'];}else{ echo '{}';}?>;
 
-    function del_query_confirm()
-    {
-        if(confirm('<?php echo _REALLY_DELETE.' '._THIS_SEARCH.'?';?>')) {
-            del_query_db($('query').options[$('query').selectedIndex], 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=manage_query';?>');
-            return false;
-        }
-    }
 -->
 </script>
 
