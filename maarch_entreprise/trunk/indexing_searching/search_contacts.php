@@ -62,14 +62,6 @@ $page_id = "search_contacts";
 $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 
-// load saved queries for the current user in an array
-$conn->query("select query_id, query_name from ".$_SESSION['tablename']['saved_queries']." where user_id = '".$_SESSION['user']['UserId']."' order by query_name");
-$queries = array();
-while($res = $conn->fetch_object())
-{
-    array_push($queries, array('ID'=>$res->query_id, 'LABEL' => $res->query_name));
-}
-
 //Check if web brower is ie_6 or not
 if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"])) {
     $browser_ie = 'true';
@@ -130,22 +122,6 @@ $core_tools->load_js();
 
 <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_search_b.gif" alt="" /> <?php echo _SEARCH_CONTACTS; ?></h1>
 <div id="inner_content">
-
-<?php 
-if (count($queries) > 0) { ?>
-    <form name="choose_query" id="choose_query" action="#" method="post" >
-        <div align="center" style="display:block;" id="div_query">
-            <label for="query"><?php echo _MY_SEARCHES;?> : </label>
-            <select name="query" id="query" onchange="load_query_db(this.options[this.selectedIndex].value, 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=manage_query';?>');return false;" >
-                <option id="default_query" value=""><?php echo _CHOOSE_SEARCH;?></option>
-                <?php for($i=0; $i< count($queries);$i++)
-                {
-                ?><option value="<?php echo $queries[$i]['ID'];?>" id="query_<?php echo $queries[$i]['ID'];?>"><?php echo $queries[$i]['LABEL'];?></option><?php }?>
-            </select>
-            <input name="del_query" id="del_query" value="<?php echo _DELETE_QUERY;?>" type="button"  onclick="del_query_confirm();" class="button" style="display:none" />
-        </div>
-    </form>
-<?php } ?>
 
 <form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_contacts_result';?>"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
     <input type="hidden" name="dir" value="indexing_searching" />
