@@ -51,6 +51,12 @@ if (isset($_REQUEST['res_id']) && !empty($_REQUEST['res_id'])) {
 	//
 	$resIdArray = array();
 	$resIdArray = explode (',', $_REQUEST['res_id']);
+
+	if(count($resIdArray)>1){
+		$multi_doc=true;
+	}else{
+		$multi_doc=false;
+	}
 	//Get uuthorized fileplans
 	$authorizedFileplans =  $fileplan->getAuthorizedFileplans();
 	
@@ -76,14 +82,14 @@ if (!empty($_REQUEST['fileplan_id'])) {
 		$html = "<form id='formFileplan'>";
 		$html .= "\n<ul id='positionsList'>\n";
 		$where=" and translate(
-    LOWER(position_label),
-    'âãäåÁÂÃÄÅèééêëÈÉÉÊËìíîïìÌÍÎÏÌóôõöÒÓÔÕÖùúûüÙÚÛÜ',
-    'aaaaAAAAAeeeeeEEEEEiiiiiIIIIIooooOOOOOuuuuUUUU'
-) like translate(
-    '%".strtolower($_REQUEST['param'])."%',
-    'âãäåÁÂÃÄÅèééêëÈÉÉÊËìíîïìÌÍÎÏÌóôõöÒÓÔÕÖùúûüÙÚÛÜ',
-    'aaaaAAAAAeeeeeEEEEEiiiiiIIIIIooooOOOOOuuuuUUUU'
-) ";
+		    LOWER(position_label),
+		    'âãäåÁÂÃÄÅèééêëÈÉÉÊËìíîïìÌÍÎÏÌóôõöÒÓÔÕÖùúûüÙÚÛÜ',
+		    'aaaaAAAAAeeeeeEEEEEiiiiiIIIIIooooOOOOOuuuuUUUU'
+		) like translate(
+		    '%".strtolower($_REQUEST['param'])."%',
+		    'âãäåÁÂÃÄÅèééêëÈÉÉÊËìíîïìÌÍÎÏÌóôõöÒÓÔÕÖùúûüÙÚÛÜ',
+		    'aaaaAAAAAeeeeeEEEEEiiiiiIIIIIooooOOOOOuuuuUUUU'
+		) ";
 		$_SESSION['origin_positions']='';
 		$fileplan_id = $_REQUEST['fileplan_id'];
 		$db->connect();
@@ -102,22 +108,31 @@ if (!empty($_REQUEST['fileplan_id'])) {
 		{
 			$tmp = explode('@@', $_REQUEST['res_id']);
 			$db2     = new dbquery();
-
 			$db2->connect();
-			$db2->query(
-				"select fileplan_id, position_id from fp_res_fileplan_positions where res_id = '".$tmp[1]."' and position_id='".$noeud['fileplan_id']."'"
-				);
-			$row2 = $db2->fetch_array();
-			if(!$row2){
-				$html .= "<li style='margin-left:10px;'><input type='checkbox' name='position[]' id='position_".$noeud['fileplan_id']."' value='".$noeud['fileplan_id']."' onClick=\"saveCheckedState('". $_SESSION['config']['businessappurl']
-					."index.php?display=true&module=fileplan&page=fileplan_ajax_script"
-					. "&fileplan_id=".$_REQUEST['fileplan_id']."&mode=checkPosition', this);\"/>" . $noeud['nom_fileplan'];
+
+			if($multi_doc==false){
+				$db2->query(
+					"select fileplan_id, position_id from fp_res_fileplan_positions where res_id = '".$tmp[1]."' and position_id='".$noeud['fileplan_id']."'"
+					);
+				$row2 = $db2->fetch_array();
+				if(!$row2){
+					$html .= "<li style='margin-left:10px;'><input type='checkbox' name='position[]' id='position_".$noeud['fileplan_id']."' value='".$noeud['fileplan_id']."' onClick=\"saveCheckedState('". $_SESSION['config']['businessappurl']
+						."index.php?display=true&module=fileplan&page=fileplan_ajax_script"
+						. "&fileplan_id=".$_REQUEST['fileplan_id']."&mode=checkPosition', this);\"/>" . $noeud['nom_fileplan'];
+				}else{
+					$_SESSION['origin_positions'][]=$noeud['fileplan_id'];
+					$html .= "<li style='margin-left:10px;'><input type='checkbox' name='position[]' id='position_".$noeud['fileplan_id']."' value='".$noeud['fileplan_id']."' checked='checked' onClick=\"saveCheckedState('". $_SESSION['config']['businessappurl']
+						."index.php?display=true&module=fileplan&page=fileplan_ajax_script"
+						. "&fileplan_id=".$_REQUEST['fileplan_id']."&mode=checkPosition', this);\"/>" . $noeud['nom_fileplan'];
+				}
+
 			}else{
-				$_SESSION['origin_positions'][]=$noeud['fileplan_id'];
-				$html .= "<li style='margin-left:10px;'><input type='checkbox' name='position[]' id='position_".$noeud['fileplan_id']."' value='".$noeud['fileplan_id']."' checked='checked' onClick=\"saveCheckedState('". $_SESSION['config']['businessappurl']
-					."index.php?display=true&module=fileplan&page=fileplan_ajax_script"
-					. "&fileplan_id=".$_REQUEST['fileplan_id']."&mode=checkPosition', this);\"/>" . $noeud['nom_fileplan'];
+				$html .= "<li style='margin-left:10px;'><input type='checkbox' name='position[]' id='position_".$noeud['fileplan_id']."' value='".$noeud['fileplan_id']."' onClick=\"saveCheckedState('". $_SESSION['config']['businessappurl']
+						."index.php?display=true&module=fileplan&page=fileplan_ajax_script"
+						. "&fileplan_id=".$_REQUEST['fileplan_id']."&mode=checkPosition', this);\"/>" . $noeud['nom_fileplan'];
 			}
+
+
 			$html .= "</li>\n";
 		}
 		$html .= "</ul>\n";
@@ -140,10 +155,10 @@ if (!empty($_REQUEST['fileplan_id'])) {
 				);
 		}
 
-		echo afficher_arbo(0, 0, $categories);
+		echo afficher_arbo(0, 0, $categories, $multi_doc);
 	}
 }
-function afficher_arbo($parent, $niveau, $array)
+function afficher_arbo($parent, $niveau, $array, $multi_doc)
 {
 	$html = "<form id='formFileplan'>";
 	$niveau_precedent = 0;
@@ -157,8 +172,9 @@ function afficher_arbo($parent, $niveau, $array)
 			if ($niveau_precedent < $niveau) $html .= "\n<ul>\n";
 			$tmp = explode('@@', $_REQUEST['res_id']);
 			$db2     = new dbquery();
-
 			$db2->connect();
+
+			if($multi_doc==false){
 			$db2->query(
 				"select fileplan_id, position_id from fp_res_fileplan_positions where res_id = '".$tmp[1]."' and position_id='".$noeud['fileplan_id']."'"
 				);
@@ -173,9 +189,14 @@ function afficher_arbo($parent, $niveau, $array)
 					."index.php?display=true&module=fileplan&page=fileplan_ajax_script"
 					. "&fileplan_id=".$_REQUEST['fileplan_id']."&mode=checkPosition', this);\"/>" . $noeud['nom_fileplan'];
 			}
+		}else{
+			$html .= "<li style='margin-left:20px;'><input type='checkbox' name='position[]' id='position_".$noeud['fileplan_id']."' value='".$noeud['fileplan_id']."' onClick=\"saveCheckedState('". $_SESSION['config']['businessappurl']
+					."index.php?display=true&module=fileplan&page=fileplan_ajax_script"
+					. "&fileplan_id=".$_REQUEST['fileplan_id']."&mode=checkPosition', this);\"/>" . $noeud['nom_fileplan'];
+		}
 
 		$niveau_precedent = $niveau;
-		$html .= afficher_arbo($noeud['fileplan_id'], ($niveau + 1), $array);
+		$html .= afficher_arbo($noeud['fileplan_id'], ($niveau + 1), $array, $multi_doc);
 		}
 	}
 
