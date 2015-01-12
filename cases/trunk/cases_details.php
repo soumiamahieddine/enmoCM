@@ -84,12 +84,12 @@ else
 $where_request = str_replace("()", "(1=-1)", $where_request);
 $where_request = str_replace("and ()", "", $where_request);
 
-
+//if in basket
 if ($_SESSION['current_basket']['clause'] <> '' )
 {
 	$where_request =" case_id = '".$case_id."' ";
 	$where_request .= " and (".$_SESSION['current_basket']['clause'].") ";
-}
+}else
 
 //if search adv
 if(isset($_SESSION['searching']['comp_query']) && trim($_SESSION['searching']['comp_query']) <> '') {
@@ -104,7 +104,7 @@ if(isset($_SESSION['searching']['comp_query']) && trim($_SESSION['searching']['c
 
 //$request = new request();
 //$tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype']);
- 
+
 $db_external->query("select res_id, status, subject, dest_user, type_label, creation_date, entity_label, category_id, exp_user_id, category_id as category_img, process_limit_date, priority  from ".$_SESSION['collections'][0]['view']." where ".$where_request." order by res_id" );
 
 if ($db_external->nb_result() >0)
