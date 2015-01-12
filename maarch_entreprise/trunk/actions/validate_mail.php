@@ -1771,11 +1771,11 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 			// $contact_id = str_replace(')', '', substr($contact, strrpos($contact,'(')+1));
 			if($contact_type == 'internal')
 			{
-				if($cat_id == 'incoming')
+				if($cat_id == 'incoming' || $cat_id == 'internal')
 				{
 					$query_ext .= ", exp_user_id = '".$db->protect_string_db($contact_id)."'";
 				}
-				else if($cat_id == 'outgoing' || $cat_id == 'internal')
+				else if($cat_id == 'outgoing')
 				{
 					$query_ext .= ", dest_user_id = '".$db->protect_string_db($contact_id)."'";
 				}
