@@ -33,6 +33,8 @@ require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_reque
 require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
             ."class".DIRECTORY_SEPARATOR."class_lists.php";
 require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
+            ."class".DIRECTORY_SEPARATOR."class_list_show.php";
+require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
             ."class".DIRECTORY_SEPARATOR."class_contacts_v2.php";
 
 $core_tools = new core_tools();
@@ -113,7 +115,8 @@ if (!$return) {
         $where .= " or " . implode(' OR ', $sql_society) . ") ";
     }
 
-    // $list = new list_show();
+    $list_show = new list_show();
+
     $order = 'asc';
     if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
         $order = trim($_REQUEST['order']);
@@ -123,7 +126,7 @@ if (!$return) {
         $field = trim($_REQUEST['order_field']);
     }
 
-    // $orderstr = $list->define_order($order, $field);
+    $orderstr = $list_show->define_order($order, $field);
 
     $request = new request;
     $tab = $request->select(
