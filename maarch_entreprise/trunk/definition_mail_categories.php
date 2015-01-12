@@ -390,7 +390,7 @@ $_ENV['categories']['internal']['other_cases']['process_limit_date'] = array (
 $_ENV['categories']['internal']['type_contact'] = array (
     'type_form' => 'radio',
     'mandatory' => true,
-    'label' => _DEST_TYPE,
+    'label' => _SHIPPER_TYPE,
     'table' => 'none',
     'values' => array (
         'internal',
@@ -402,9 +402,9 @@ $_ENV['categories']['internal']['other_cases']['contact'] = array (
     'type_form' => 'string',
     'type_field' => 'string',
     'mandatory' => true,
-    'label' => _DEST,
+    'label' => _SHIPPER,
     'table' => 'coll_ext',
-    'special' => 'dest_user_id,dest_contact_id',
+    'special' => 'exp_user_id,exp_contact_id',
     'modify' => false
 );
 
