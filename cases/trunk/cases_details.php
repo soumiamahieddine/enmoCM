@@ -87,7 +87,19 @@ $where_request = str_replace("and ()", "", $where_request);
 
 if ($_SESSION['current_basket']['clause'] <> '' )
 {
-		$where_request .= " and (".$_SESSION['current_basket']['clause'].") ";
+	$where_request =" case_id = '".$case_id."' ";
+	$where_request .= " and (".$_SESSION['current_basket']['clause'].") ";
+}
+
+//if search adv
+if(isset($_SESSION['searching']['comp_query']) && trim($_SESSION['searching']['comp_query']) <> '') {
+	$where_security = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
+	$where_request .= ' and (('.$where_security.') or ('.$_SESSION['searching']['comp_query'].'))';
+
+//if no extend basket security
+}else{
+	$where_security = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
+	$where_request .= ' and ('.$where_security.')';
 }
 
 //$request = new request();
