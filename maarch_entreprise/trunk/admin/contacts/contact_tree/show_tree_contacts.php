@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2014 Maarch
+*    Copyright 2014-2015 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -19,7 +19,7 @@
 */
 
 /**
-* @brief Show the tree
+* @brief Show the contact tree
 *
 * @file
 * @author <dev@maarch.org>
@@ -34,14 +34,8 @@ require_once("apps".DIRECTORY_SEPARATOR."maarch_entreprise".DIRECTORY_SEPARATOR.
 $core_tools = new core_tools();
 $core_tools->load_lang();
 $func = new functions();
-$db = new dbquery();
-$db->connect();
 $db1 = new dbquery();
 $db1->connect();
-$db2 = new dbquery();
-$db2->connect();
-$db3 = new dbquery();
-$db3->connect();
 
 $core_tools->load_html();
 $core_tools->load_header('', true, false);
@@ -65,43 +59,30 @@ $db1->query($query);
 $contactv2 = new contacts_v2();
 while($res1 = $db1->fetch_object())
 {
-    $s_level = array();
-    $db2->query("select contact_id, society, society_short, lastname, firstname, is_corporate_person from ".$_SESSION['tablename']['contacts_v2']." where contact_type = ".$res1->id." group by contact_id, society, society_short, lastname, firstname, is_corporate_person ");
-    while($res2 = $db2->fetch_object())
-    {
-        $doctypes = array();
-        $db3->query("select id, contact_purpose_id, lastname, firstname, address_num, address_street, address_town, address_postal_code from ".$_SESSION['tablename']['contact_addresses']." where contact_id = ".$res2->contact_id." order by lastname, firstname, address_num");
-        while($res3 = $db3->fetch_object())
-        {
-            $results = array();
-            $address = '';
-            $address = '('.$contactv2->get_label_contact($res3->contact_purpose_id, $_SESSION['tablename']['contact_purposes']).') ';
-            if ($res3->lastname <> '' || $res3->firstname <> ''){
-                $address .= strtoupper($func->show_string($res3->lastname, true)) . ' ' . $func->show_string($res3->firstname, true) . ' : ';
-            }
-            $address .= $func->show_string($res3->address_num, true) . ' ' . $func->show_string($res3->address_street, true) . ' ' . $func->show_string($res3->address_postal_code, true) . ' ' . $func->show_string($res3->address_town, true);
-            array_push($doctypes, array('type_id' => $res3->id, 'description' => $address, "results" => $results));
-        }
-        $contact = '';
-        if($res2->is_corporate_person == 'Y'){
-            $contact = ucfirst($func->show_string($res2->society, true));
-            if ($res2->society_short <> '') {
-               $contact .= ' ('.$res2->society_short.')';
-            }
-        } else {
-            $contact = strtoupper($func->show_string($res2->lastname, true)) . ' ' . $func->show_string($res2->firstname, true);
-            if ($res2->society <> '') {
-               $contact .= ' ('.$res2->society.')';
-            }
-        }
-        array_push($s_level, array('contact_id' => $res2->contact_id, 'contact_label' => $contact, 'doctypes' => $doctypes));
-    }
+    $s_level = array(array());
     array_push($f_level, array('contact_type_id' => $res1->id, 'contact_type_label' => ucfirst($func->show_string($res1->label, true)), 'second_level' => $s_level));
 }
 
 array_push($search_customer_results, array('contact' => _VIEW_TREE_CONTACTS . ' ' . _TREE_INFO, 'content' => $f_level));
 
 //$core_tools->show_array($search_customer_results);
+
+if (file_exists(
+    $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+    . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+    . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR . 'contacts'
+    . DIRECTORY_SEPARATOR . 'contact_tree' . DIRECTORY_SEPARATOR . 'get_tree_children_contact.php'
+)
+) {
+    $openlink = '../../custom/'
+           . $_SESSION['custom_override_id']
+          . '/apps/' . $_SESSION['config']['app_id'] 
+          . '/admin/contacts/contact_tree/get_tree_children_contact.php';
+} else {
+    $openlink = 'admin/contacts/contact_tree/get_tree_children_contact.php';
+}
+
 ?>
 <script type="text/javascript">
 
@@ -208,40 +189,11 @@ array_push($search_customer_results, array('contact' => _VIEW_TREE_CONTACTS . ' 
                                         ?>
                                         {
                                             'id':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_id']);?>',
-                                            // 'txt':'<a onmouseover="this.style.cursor=\'pointer\';" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types_up&id=<?php echo $search_customer_results[$i]['content'][$j]['contact_type_id'];?>&fromContactTree\');"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_label']);?></a>',
                                             'txt':'<a href="#" onclick="window.top.location.href=\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types_up&id=<?php echo $search_customer_results[$i]['content'][$j]['contact_type_id'];?>\'"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_label']);?></a>',
-                                            'items':[
-                                                        <?php
-                                                        for($k=0;$k<count($search_customer_results[$i]['content'][$j]['second_level']);$k++)
-                                                        {
-                                                            ?>
-                                                            {
-                                                                'id':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_id']);?>',
-                                                                // 'txt':'<a onmouseover="this.style.cursor=\'pointer\';" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2_up&id=<?php echo $search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_id'];?>&fromContactTree\');"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_label']);?></a>',
-                                                                'txt':'<a onmouseover="this.style.cursor=\'pointer\';" onclick="window.top.location.href=\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2_up&id=<?php echo $search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_id'];?>\'"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['contact_label']);?></a>',
-                                                                'items':[
-                                                                            <?php
-                                                                            for($l=0;$l<count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes']);$l++)
-                                                                            {
-                                                                                ?>
-                                                                                {
-                                                                                    <?php
-                                                                                    ?>
-                                                                                    'txt':'<span style="font-style:italic;"><small><small><?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']);?></small></small></span>',
-                                                                                    'img':'empty.gif'
-                                                                                }
-                                                                                <?php
-                                                                                if($l <> count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes']) - 1)
-                                                                                echo ',';
-                                                                            } ?>
-                                                                        ]
-                                                            }
-                                                            <?php
-                                                            if($k <> count($search_customer_results[$i]['content'][$j]['second_level']) - 1)
-                                                            echo ',';
-                                                        }
-                                                        ?>
-                                                    ]
+                                            'onopenpopulate' : funcOpen,
+                                            'openlink' : '<?php echo $openlink;?>',
+                                            'canhavechildren' : true,
+                                            'branch_level_id' : 1
                                         }
                                         <?php
                                         if($j <> count($search_customer_results[$i]['content']) - 1)
@@ -261,14 +213,12 @@ array_push($search_customer_results, array('contact' => _VIEW_TREE_CONTACTS . ' 
             'generate' : true,
             'imgBase' : '<?php  echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>imgs/',
             'defaultImg' : 'folder.gif',
-            //'defaultImg' : 'page.gif',
             'defaultImgOpen' : 'folderopen.gif',
-            'defaultImgClose' : 'folder.gif',
-            'onOpenPopulate' : [funcOpen, 'get_tree_children.php?IdTree=<?php  echo $_SESSION['doctypes_chosen_tree'];?>']
+            'defaultImgClose' : 'folder.gif'
         });
 
-        //open all branches
-        tree.expend();
+        //close all branches
+        tree.collapse();
     };
 </script>
 <div id="trees_div"></div>
