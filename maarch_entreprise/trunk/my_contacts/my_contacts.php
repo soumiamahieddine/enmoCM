@@ -84,11 +84,11 @@ $contact    = new contacts_v2();
 } else {
 
     //Table
-    $table = $_SESSION['tablename']['contacts_v2'];
+    $table = "view_contacts";
     $select[$table]= array(); 
     
     //Fields
-    array_push($select[$table],"contact_id", "is_corporate_person", "contact_type", "society","lastname","firstname", 'user_id');
+    array_push($select[$table],"contact_id", "is_corporate_person", "contact_type", "society","contact_lastname","contact_firstname", "contact_user_id", "contact_type_label");
     
     //Where clause
     $where_tab = array();
@@ -99,7 +99,7 @@ $contact    = new contacts_v2();
     }
 
     if ($_REQUEST['mode'] <> 'search') {
-        $where_tab[] = "(user_id  = '".$_SESSION['user']['UserId']."')";
+        $where_tab[] = "(contact_user_id  = '".$_SESSION['user']['UserId']."')";
     }  
 
     //Filtre alphabetique et champ de recherche
@@ -119,7 +119,7 @@ $contact    = new contacts_v2();
         $what_table = explode(" ", $what);
 
         foreach($what_table as $what_a){
-            $sql_lastname[] = " lower(lastname) LIKE lower('".$what_a."%')";
+            $sql_lastname[] = " lower(contact_lastname) LIKE lower('".$what_a."%')";
             // $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
             $sql_society[] = " lower(society) LIKE lower('".$what_a."%')";
         }
@@ -139,12 +139,12 @@ $contact    = new contacts_v2();
         $orderstr = "order by ".$order_field." ".$order;
     else  {
         $list->setOrder('asc');
-        $list->setOrderField('lastname');
-        $orderstr = "order by lastname, society asc";
+        $list->setOrderField('contact_lastname');
+        $orderstr = "order by contact_lastname, society asc";
     }
 
     //Request
-    $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype']);
+    $tab=$request->select($select,$where,$orderstr,$_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
     // $request->show();
     
     //Result array    
@@ -175,7 +175,7 @@ $contact    = new contacts_v2();
                     $tab[$i][$j]["align"]="left";
                     $tab[$i][$j]["valign"]="bottom";
                     $tab[$i][$j]["show"]=true;
-                    $tab[$i][$j]["order"]= "contact_type";
+                    $tab[$i][$j]["order"]= "contact_type_label";
                 }
                 if($tab[$i][$j][$value]=="is_corporate_person")
                 {
@@ -200,39 +200,39 @@ $contact    = new contacts_v2();
                     $tab[$i][$j]["show"]=true;
                     $tab[$i][$j]["order"]= "society";
                 }
-                if($tab[$i][$j][$value]=="lastname")
+                if($tab[$i][$j][$value]=="contact_lastname")
                 {
                     $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
-                    $tab[$i][$j]["lastname"]=$tab[$i][$j]['value'];
+                    $tab[$i][$j]["contact_lastname"]=$tab[$i][$j]['value'];
                     $tab[$i][$j]["label"]=_LASTNAME;
                     $tab[$i][$j]["size"]="15";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
                     $tab[$i][$j]["valign"]="bottom";
                     $tab[$i][$j]["show"]=true;
-                    $tab[$i][$j]["order"]= "lastname";
+                    $tab[$i][$j]["order"]= "contact_lastname";
                 }
-                if($tab[$i][$j][$value]=="firstname")
+                if($tab[$i][$j][$value]=="contact_firstname")
                 {
-                    $tab[$i][$j]["firstname"]= $tab[$i][$j]['value'];
+                    $tab[$i][$j]["contact_firstname"]= $tab[$i][$j]['value'];
                     $tab[$i][$j]["label"]=_FIRSTNAME;
                     $tab[$i][$j]["size"]="15";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
                     $tab[$i][$j]["valign"]="bottom";
                     $tab[$i][$j]["show"]=true;
-                    $tab[$i][$j]["order"]= "firstname";
+                    $tab[$i][$j]["order"]= "contact_firstname";
                 }
-                if($tab[$i][$j][$value]=="user_id")
+                if($tab[$i][$j][$value]=="contact_user_id")
                 {
-                    $tab[$i][$j]["user_id"]= $tab[$i][$j]['value'];
+                    $tab[$i][$j]["contact_user_id"]= $tab[$i][$j]['value'];
                     $tab[$i][$j]["label"]=_CREATE_BY;
                     $tab[$i][$j]["size"]="15";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
                     $tab[$i][$j]["valign"]="bottom";
                     $tab[$i][$j]["show"]=true;
-                    $tab[$i][$j]["order"]= "user_id";
+                    $tab[$i][$j]["order"]= "contact_user_id";
                 }
             }
         }
@@ -286,7 +286,7 @@ $contact    = new contacts_v2();
                 "class"         =>  "delete",
                 "label"         =>  _DELETE,
                 "tooltip"       =>  _DELETE,
-                "alertText"     =>  _REALLY_DELETE.": @@society@@ @@lastname@@ @@firstname@@ ?"
+                "alertText"     =>  _REALLY_DELETE.": @@society@@ @@contact_lastname@@ @@contact_firstname@@ ?"
                 );
         array_push($paramsTab['actionIcons'], $update);          
         array_push($paramsTab['actionIcons'], $delete);

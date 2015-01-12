@@ -91,7 +91,7 @@ if (!$return) {
     $select["view_contacts"] = array();
     array_push(
         $select["view_contacts"],
-        "ca_id", "contact_id", "society", "contact_purpose_id", "departement", "lastname", "firstname", "function", "address_town", "phone", "email"
+        "ca_id", "contact_id", "society", "contact_purpose_id", "departement", "lastname", "firstname", "function", "address_town", "phone", "email", "contact_purpose_label"
     );
     $what = "";
     $where = "";
@@ -175,7 +175,7 @@ if (!$return) {
                     $tab[$i][$j]["align"] = "left";
                     $tab[$i][$j]["valign"] = "bottom";
                     $tab[$i][$j]["show"] = true;
-                    $tab[$i][$j]["order"] = 'contact_purpose_id';
+                    $tab[$i][$j]["order"] = 'contact_purpose_label';
                 }
                 if ($tab[$i][$j][$value] == "departement") {
                     $tab[$i][$j]['value'] = $request->show_string(
