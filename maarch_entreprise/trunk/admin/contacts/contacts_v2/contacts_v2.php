@@ -135,7 +135,8 @@ array_push($select2[$_SESSION['tablename']['contacts_v2']], 'contact_id as "'._I
 
 $request= new request;
 
-$tab_export = $request->select($select2,$where,$orderstr,$_SESSION['config']['databasetype']);
+$tab_export = $request->select($select2,$where,$orderstr,$_SESSION['config']['databasetype'], 20000);
+// $request->show();
 
 $_SESSION['export_admin_list'] = array();
 $_SESSION['export_admin_list'] = $tab_export;
