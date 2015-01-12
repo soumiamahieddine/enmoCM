@@ -1869,11 +1869,11 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                 $formValues, 'contactid'
             );
 			if ($contactType == 'internal') {
-				if ($catId == 'incoming') {
+				if ($catId == 'incoming' || $catId == 'internal') {
 					$queryExtFields .= 'exp_user_id,';
 					$queryExtValues .= "'" . $db->protect_string_db($contactId)
 									. "',";
-				} else if ($catId == 'outgoing' || $catId == 'internal') {
+				} else if ($catId == 'outgoing') {
 					$queryExtFields .= 'dest_user_id,';
 					$queryExtValues .= "'" . $db->protect_string_db($contactId)
 									. "',";
