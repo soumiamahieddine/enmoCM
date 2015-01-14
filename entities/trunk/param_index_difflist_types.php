@@ -34,7 +34,7 @@ if($_SESSION['service_tag'] == 'group_basket') {
     <table align="center" width="100%" id="index_difflist_types_baskets" >
         <tr>
             <td width="40%" align="center">
-                <select name="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist[]" id="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist" size="7" ondblclick='moveclick(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen"));' multiple="multiple"  class="difflist_types">
+                <select name="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist[]" id="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist" size="7" ondblclick='moveclick(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen"));' multiple="multiple"  class="difflist_types" style="width:100%;">
                 <?php
                 // Browse all the difflist_types
                 foreach($difflist_types as $difflist_type_id => $difflist_type_label) {
@@ -76,7 +76,7 @@ if($_SESSION['service_tag'] == 'group_basket') {
                 <input type="button" class="button" value="&lt;&lt; <?php  echo _REMOVE; ?>" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist"));' />
             </td>
             <td width="40%" align="center">
-                <select name="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen[]" id="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen" size="7" ondblclick='moveclick(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist"));' multiple="multiple"   class="difflist_types">
+                <select name="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen[]" id="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen" size="7" ondblclick='moveclick(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist"));' multiple="multiple"   class="difflist_types" style="width:100%;">
                 <?php
                 foreach($difflist_types as $difflist_type_id => $difflist_type_label) {
                     $state_difflist_type = false;
