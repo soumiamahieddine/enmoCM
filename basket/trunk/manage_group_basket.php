@@ -189,7 +189,7 @@ else
 
 if(!empty($_SESSION['error']))
 {
-	header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=groupbasket_popup");
+	header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=groupbasket_popup&id=".$groupe);
 	exit();
 }
 $_SESSION['service_tag'] = '';
