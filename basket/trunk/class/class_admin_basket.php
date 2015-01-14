@@ -200,7 +200,7 @@ class admin_basket extends dbquery
         <div id="inner_content" class="clearfix">
             <div id="add_box_diff_list" >
                 <div class="block">
-                <p><iframe name="groupbasket_form" id="groupbasket_form" src="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=groupbasket_form";?>"  frameborder="0" class="frameform2" width="280px"></iframe></p>
+                <p><iframe name="groupbasket_form" id="groupbasket_form" src="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=groupbasket_form";?>"  frameborder="0" class="frameform2" width="280px" style="width:100%;"></iframe></p>
                 </div>
             <div class="block_end">&nbsp;</div>
             </div>
@@ -373,10 +373,10 @@ class admin_basket extends dbquery
             && ! empty($_REQUEST['basketclause'])) {
             $_SESSION['m_admin']['basket']['clause'] = trim($_REQUEST['basketclause']);
         }
-        if (isset($_SESSION['m_admin']['basket']['groups'])
+        /*if (isset($_SESSION['m_admin']['basket']['groups'])
             && count($_SESSION['m_admin']['basket']['groups']) < 1) {
             $this->add_error(_BELONGS_TO_NO_GROUP, "");
-        }
+        }*/
         if ( isset($_REQUEST['is_visible']) && !empty($_REQUEST['is_visible'])) {
             $_SESSION['m_admin']['basket']['is_visible'] = $_REQUEST['is_visible'];
         } else {
