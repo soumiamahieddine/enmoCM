@@ -314,7 +314,6 @@ class core_tools extends functions
         if (file_exists($pathname)) {
             include($pathname);
         }
-
     }
 
     /**
