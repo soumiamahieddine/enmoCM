@@ -308,7 +308,9 @@ for ($i = 0; $i < count($tab); $i ++) {
 $pageName = "contact_addresses";
 $pageNameUp = "contact_addresses_up";
 $pageNameAdd = "contact_addresses_add";
-$pageNameDel = "contact_addresses_del";
+if ($core_tools->test_admin('admin_contacts', 'apps', false)) {
+    $pageNameDel = "contact_addresses_del";
+}
 $pageNameVal = "";
 $tableName = $_SESSION['tablename']['contact_addresses'];
 $pageNameBan = "";
