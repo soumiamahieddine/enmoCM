@@ -5,7 +5,7 @@
         <column>custom_t6</column>
         <label>Utilisateur contributeur</label>
         <type>string</type>
-        <img>default_string.gif</img> 
+        <img>cat_doc_human_resources.png</img> 
         <table>
             <table_name>users</table_name>
             <foreign_key>user_id</foreign_key>
@@ -19,7 +19,7 @@
         <column>custom_t7</column>
         <label>Service contributeur</label>
         <type>string</type>
-        <img>default_string.gif</img> 
+        <img>picto_service_b.gif</img> 
         <table>
             <table_name>entities</table_name>
             <foreign_key>entity_id</foreign_key>
