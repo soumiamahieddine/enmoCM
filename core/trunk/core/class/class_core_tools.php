@@ -106,7 +106,10 @@ class core_tools extends functions
                     . DIRECTORY_SEPARATOR . "config.xml";
             }
 
-            include_once 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+            if (file_exists('modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php')) {
+                include_once 'modules'.DIRECTORY_SEPARATOR.$modules[$i]['moduleid'].DIRECTORY_SEPARATOR.'lang'.DIRECTORY_SEPARATOR.$_SESSION['config']['lang'].'.php';
+            }
+            
             // Reads the config.xml file of the current module
             $xmlconfig = simplexml_load_file($configPath);
             // Loads into $_SESSION['modules_loaded'] module's informations
@@ -297,8 +300,8 @@ class core_tools extends functions
             }
             if (isset($_SESSION['config']['lang']) && file_exists($file_path)) {
                 include($file_path);
-            } else {
-                $_SESSION['error'] .= "Language file missing for module : "
+            } else if ($_SESSION['config']['debug'] === "true") {
+                $_SESSION['info'] .= "Language file missing for module : "
                 . $modules[$i]['moduleid']."<br/>";
             }
         }
