@@ -43,6 +43,18 @@ $request    = new request();
 $contact    = new contacts();
 $list       = new lists();
 
+//Templates
+    $defaultTemplate = 'cases_list_search_adv';
+    $selectedTemplate = $list->getTemplate();
+    if  (empty($selectedTemplate)) {
+        if (!empty($defaultTemplate)) {
+            $list->setTemplate($defaultTemplate);
+            $selectedTemplate = $list->getTemplate();
+        }
+    }
+    $template_list = array();
+    array_push($template_list, 'documents_list_search_adv');
+    if($core_tools->is_module_loaded('cases')) array_push($template_list, 'cases_list_search_adv');
 
 //Create sql request
  $_SESSION['collection_id_choice'] = 'letterbox_coll';
@@ -61,20 +73,21 @@ $list       = new lists();
    
     //From case join
     $where_tab[] = $_SESSION['tablename']['cases'] . ".case_id = " . $view . ".case_id";
-    
+
     //From search
     if (!empty($_SESSION['searching']['where_request'])) $where_tab[] = $_SESSION['searching']['where_request']. '(1=1)';
     
     //From searching comp query
     if(isset($_SESSION['searching']['comp_query']) && trim($_SESSION['searching']['comp_query']) <> '') {
 
-        $where_clause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
+        $where_security = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
 
         if(count($where_tab) <> 0) {
             $where = implode(' and ', $where_tab);
-            $where_request = '('.$where.') and (('.$where_clause.') or ('.$_SESSION['searching']['comp_query'].'))';
+            $where_request = '('.$where.') and (('.$where_security.') or ('.$_SESSION['searching']['comp_query'].'))';
+
         } else {
-            $where_request = '('.$where_clause.' or '.$_SESSION['searching']['comp_query'].')';
+            $where_request = '('.$where_security.' or '.$_SESSION['searching']['comp_query'].')';
         }
         $add_security = false;
         
@@ -107,8 +120,8 @@ $list       = new lists();
     }
     
 //Query       
-    $tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'], "default", false, "", "", "", true, false, true);
-    // $request->show();
+    $tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'], "default", false, "", "", "", $add_security, false, true);
+    //$request->show();
 //Result
     for ($i=0;$i<count($tab);$i++)
     {
@@ -206,9 +219,14 @@ if (count($tab) > 0) {
     $paramsTab = array();
     $paramsTab['bool_modeReturn'] = false;                                                  //Desactivation du mode return (vs echo)
     $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_CASE;                  //Titre de la page
+    $paramsTab['pagePicto'] =  $_SESSION['config']['businessappurl']
+        ."static.php?filename=picto_search_b.gif"; 
     $paramsTab['bool_sortColumn'] = true;                                                   //Affichage Tri
-    $paramsTab['templates'] = array('cases_list_search_adv');                               //Templates
-    $paramsTab['defaultTemplate'] = 'cases_list_search_adv';                                //Default template
+    $paramsTab['defaultTemplate'] = 'cases_list_search_adv';  
+    if (count($template_list) >0 ) {                                    //Templates
+        $paramsTab['templates'] = array();
+        $paramsTab['templates'] = $template_list;
+    }                              //Default template
     $paramsTab['bool_showTemplateDefaultList'] = true;                                      //Default list (no template)
     $paramsTab['tools'] = array();                                                          //Icones dans la barre d'outils
     $export = array(
