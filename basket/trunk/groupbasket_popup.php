@@ -149,8 +149,7 @@ $time = $core_tools->get_session_time_expire();
         <div id="lock_rules_div" style="display:none;">
         <table border="0" width="60%" align="center"> 
             <tr>
-                <td><?php echo _PRINCIPAL_LIST;?> :</td>
-                <td height="1%">
+                <td><?php echo _PRINCIPAL_LIST;?> :<br/>
                     <textarea name="list_whrere_clause" id="list_whrere_clause"  rows="4"><?php echo $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['LOCK_LIST'];?></textarea>
                 </td>
                 <td rowspan="2">
@@ -167,7 +166,7 @@ $time = $core_tools->get_session_time_expire();
                     <div class='block_end'>&nbsp;</div>
                 </td>
             </tr>
-            <tr><td valign="top"><?php echo _SUBLIST;?> :<td valign="top">
+            <tr><td valign="top"><?php echo _SUBLIST;?> :<br/>
                 <textarea name="sublist_whrere_clause" id="sublist_whrere_clause" rows="4"><?php echo $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['LOCK_SUBLIST'];?></textarea>
             </td></tr>
         </table>
