@@ -1058,17 +1058,17 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         $planClassement= $fileplanLabel." / ".$positionLabel;
                     ?>
              
-					<?php if ($core->is_module_loaded('fileplan') && ($core->test_service('put_doc_in_fileplan', 'fileplan', false) == 1)) { ?>
+					<?php if ($core->is_module_loaded('fileplan') && ($core->test_service('put_doc_in_fileplan', 'fileplan', false) == 1) && $fileplanLabel <> "") { ?>
                     <div>
-                        <h2>Plan de classement</h2><br><?php echo $_SESSION['IMG_SRC']?>
+                        <h2><?php  echo _FILEPLAN; ?></h2><br>
                         <div class="block">                              
                             <table>
                                 <tr class="col">
                                     <th align="left" class="picto">
-                                        <img alt="Plan de classement" src="<?php echo "../../modules/fileplan/img/tool_fileplan.gif"; ?>" title="Plan de classement" alt="Plan de classement"/>
+                                        <img src="<?php echo "../../modules/fileplan/img/tool_fileplan.gif"; ?>" title="<?php  echo _FILEPLAN; ?>" alt="<?php  echo _FILEPLAN; ?>"/>
                                     </th>
                                     <td align="left" width="200px">
-                                        <?php  echo "Plan de classement"; ?> :
+                                        <?php  echo _FILEPLAN; ?> :
                                     </td>
                                     <td>
                                         <input type="text" class="readonly" readonly="readonly" value="<?php  echo $planClassement; ?>" size="110"  />
