@@ -37,7 +37,7 @@ if (isset($case_properties['case_id']) && $case_properties['case_id'] <> '') {
 </h2>
 <?php
 echo "<p align='right'><b><img src='".$_SESSION['config']['businessappurl']
-    . "static.php?filename=big_case.gif&dir=indexing_searching' border='0' alt='' /> <a href = '"
+    . "static.php?filename=big_case.gif&dir=img' border='0' height='24' alt='' /> <a href = '"
     . $_SESSION['config']['businessappurl']
     . "index.php?page=details_cases&module=cases&id="
     . $case_properties['case_id'] . "'>(" . _CLICK_HERE_TO_ACCESS_CASE.
