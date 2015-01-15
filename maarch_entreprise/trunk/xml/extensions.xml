@@ -26,6 +26,11 @@
         <index_frame_show>false</index_frame_show>
     </FORMAT>
     <FORMAT>
+        <name>XLS</name>
+        <mime>application/vnd.ms-excel</mime>
+        <index_frame_show>false</index_frame_show>
+    </FORMAT>
+    <FORMAT>
         <name>PPT</name>
         <mime>application/vnd.ms-powerpoint</mime>
         <index_frame_show>false</index_frame_show>
