@@ -86,16 +86,17 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];//Col
     }
 
 //Templates
-    $defaultTemplate = 'none';
-    $selectedTemplate = $list->getTemplate();
-    if  (empty($selectedTemplate)) {
-        if (!empty($defaultTemplate)) {
-            $list->setTemplate($defaultTemplate);
-            $selectedTemplate = $list->getTemplate();
-        }
+$defaultTemplate = 'cases_list';
+$selectedTemplate = $list->getTemplate();
+if  (empty($selectedTemplate)) {
+    if (!empty($defaultTemplate)) {
+        $list->setTemplate($defaultTemplate);
+        $selectedTemplate = $list->getTemplate();
     }
-    $template_list = array();
-    array_push($template_list, 'cases_list');
+}
+$template_list = array();
+array_push($template_list, 'documents_list_with_attachments');
+if($core_tools->is_module_loaded('cases')) array_push($template_list, 'cases_list');
         
 
 //Request  
@@ -204,7 +205,7 @@ $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_CASE;          
 $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
 $paramsTab['bool_bigPageTitle'] = false;                                            //Affichage du titre en grand
 $paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id'];         //Parametres d'url supplementaires
-if (count($template_list) > 0 ) {                                                   //Templates
+if (count($template_list) >0 ) {                                                    //Templates
     $paramsTab['templates'] = array();
     $paramsTab['templates'] = $template_list;
 }
