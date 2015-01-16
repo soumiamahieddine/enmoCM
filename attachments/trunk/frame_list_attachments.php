@@ -139,7 +139,7 @@ if (isset($_REQUEST['mode']) && $_REQUEST['mode'] == 'normal') {
 }
 
 ?>
-<body <?php
+<body style="height:auto;" <?php
 if ($mode == 'small') {
     echo 'id="iframe"';
 }
