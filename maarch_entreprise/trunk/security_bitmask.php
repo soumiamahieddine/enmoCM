@@ -76,7 +76,7 @@ if ($core->is_module_loaded('moreq')) {
     define('ADD_RECORD', 1);
     define('DATA_MODIFICATION', 8);
     define('DELETE_RECORD', 16);
-    define('VIEW_LOG', 128);
+    // define('VIEW_LOG', 128);
 
     // If you add new bitmask, don't forget to increase this constant
     define('MAX_BITMASK', 255);
@@ -103,13 +103,13 @@ if ($core->is_module_loaded('moreq')) {
         	'LABEL' => _DELETE_RECORD_LABEL,
         )
     );
-    array_push(
+/*    array_push(
         $_ENV['security_bitmask'],
         array(
         	'ID' => VIEW_LOG,
         	'LABEL' => _VIEW_LOG_LABEL,
         )
-    );
+    );*/
 }
 
 function getTaskLabel($taskId, $tasksArray)
