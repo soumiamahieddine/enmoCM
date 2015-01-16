@@ -144,11 +144,16 @@ if ($_SESSION['origin'] == "scan") {
 		    . " (" . round($filesize / 1024, 2) . "Ko Max)</div>";
 	} else {
 	    echo "<br/><br/><div class=\"advertissement\">" . $_SESSION['error']
-	        . " <br/>" . _ONLY_FILETYPES_AUTHORISED . " <br/><ul>";
+	        . " <br/>" . _ONLY_FILETYPES_AUTHORISED . " :<br/><ul>";
 		$displayedExtList = '';
+		$extension_array = array();
 		for ($i = 0; $i < count($extList); $i ++) {
-			$displayedExtList .= $extList[$i].", ";
+			if (!array_search($extList[$i], $extension_array)) {
+				$extension_array[] = $extList[$i];
+				$displayedExtList .= $extList[$i].", ";
+			}
 		}
+
 		echo "<li>" . substr($displayedExtList, 0 , - 2) . "</li>";
 		echo "</ul></div>";
 	}
