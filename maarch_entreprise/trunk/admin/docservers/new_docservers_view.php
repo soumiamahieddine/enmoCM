@@ -155,7 +155,7 @@
         );
     
     //Titre de la page
-        $titleImageSource = $_SESSION['config']['businessappurl'].'static.php?filename=favicon.png';
+        $titleImageSource = $_SESSION['config']['businessappurl'].'static.php?filename=admin_docservers.png';
         $messageController = new MessageController();
         $messageController->loadMessageFile($params['viewLocation'] . '/xml/' . $params['objectName'] . '_Messages.xml');
         

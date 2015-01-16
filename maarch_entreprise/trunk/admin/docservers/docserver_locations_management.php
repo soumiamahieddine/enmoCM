@@ -15,7 +15,7 @@ if ($mode == "list") {
         $docserverLocationsList['label_add'], false, false,
         _ALL_DOCSERVER_LOCATIONS, _DOCSERVER_LOCATION,
         $_SESSION['config']['businessappurl']
-        . 'static.php?filename=favicon.png', false, true, false, true,
+        . 'static.php?filename=admin_docservers.png', false, true, false, true,
         $docserverLocationsList['what'], true,
         $docserverLocationsList['autoCompletionArray']
     );
@@ -25,7 +25,7 @@ if ($mode == "list") {
     ?>
     <h1><img src="<?php
     echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=favicon.png" alt="" />
+    ?>static.php?filename=admin_docservers.png" alt="" />
         <?php
     if ($mode == "add") {
         echo _DOCSERVER_LOCATION_ADDITION;

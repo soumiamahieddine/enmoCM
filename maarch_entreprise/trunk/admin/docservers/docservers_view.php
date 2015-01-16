@@ -4,7 +4,7 @@ if ($params['mode'] == 'list') {
     ?>
     <h1><img src="<?php
     echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=favicon.png" alt="" />
+    ?>static.php?filename=admin_docservers.png" alt="" />
     <?php
     echo _DOCSERVERS_LIST. ' : ' . count($dataObjectList->$params['objectName']) 
         . ' ' . _DOCSERVERS;
@@ -17,7 +17,7 @@ if ($params['mode'] == 'list') {
     ?>
     <h1><img src="<?php
     echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=favicon.png" alt="" />
+    ?>static.php?filename=admin_docservers.png" alt="" />
         <?php
     if ($params['mode'] == 'create') {
         echo _DOCSERVER_ADDITION;
