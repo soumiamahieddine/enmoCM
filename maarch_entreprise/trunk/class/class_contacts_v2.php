@@ -715,12 +715,9 @@ class contacts_v2 extends dbquery
                                 </select>
                                 <span class="red_asterisk">*</span>
                             </td>
-                            <td>&nbsp;</td>
-                            <td>
-                                <input class="button" type="button" value="<?php echo _CHOOSE_THIS_CONTACT; ?>" onclick="putInSessionContact('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=my_contacts&page=put_in_session');" />
-                            </td>
                         </tr>
                     </table>
+                    <div style="text-align:center;"><input class="button" type="button" value="<?php echo _CHOOSE_THIS_CONTACT; ?>" onclick="putInSessionContact('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=my_contacts&page=put_in_session');" /></div>
                 </form>
             <!-- <input id="contactid" type="hidden"/> -->
             <?php
