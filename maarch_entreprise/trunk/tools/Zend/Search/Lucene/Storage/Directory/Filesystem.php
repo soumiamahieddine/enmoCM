@@ -346,8 +346,7 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
     {
         $fullFilename = $this->_dirPath . '/' . $filename;
         if (!file_exists('Zend/Search/Lucene/Storage/File/Filesystem.php')) {
-            set_include_path($_SESSION['config']['corepath'] . 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                . DIRECTORY_SEPARATOR . 'tools' . DIRECTORY_SEPARATOR . PATH_SEPARATOR 
+            set_include_path( $_ENV['maarch_tools_path'] . PATH_SEPARATOR 
                 . get_include_path()
             );
         }
@@ -365,4 +364,3 @@ class Zend_Search_Lucene_Storage_Directory_Filesystem extends Zend_Search_Lucene
         return $this->_fileHandlers[$filename];
     }
 }
-
