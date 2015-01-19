@@ -49,7 +49,7 @@ if ($mode == "list") {
                 ?><div onclick="new Effect.toggle('users_list', 'blind', {delay:0.2});return false;" >
                 &nbsp;<img src="<?php
                 echo $_SESSION['config']['businessappurl'];
-                ?>static.php?filename=manage_doctypes_b.gif" alt="" /><i><?php
+                ?>static.php?filename=manage_doctypes_b.gif" alt="" /><i onmouseover="this.style.cursor='pointer';"><?php
                 echo _SEE_DOCSERVERS_LOCATION;
                 ?></i> <img src="<?php
                 echo $_SESSION['config']['businessappurl'];
@@ -241,6 +241,7 @@ if ($mode == "list") {
         ?>index.php?page=docserver_locations_management_controler&amp;admin=docservers&amp;mode=list';"/>
         </p>
         </form>
+        </div>
         <?php
     }
     ?>
