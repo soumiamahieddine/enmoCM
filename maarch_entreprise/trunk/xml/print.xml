@@ -84,6 +84,14 @@
             <DATABASE_FIELD>contact_society</DATABASE_FIELD>
         </FIELD>
         <FIELD>
+            <LIBELLE>Nom du contact interne</LIBELLE>
+            <DATABASE_FIELD>user_lastname</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
+            <LIBELLE>Prénom du contact interne</LIBELLE>
+            <DATABASE_FIELD>user_firstname</DATABASE_FIELD>
+        </FIELD>
+        <FIELD>
             <LIBELLE>Service destinataire</LIBELLE>
             <DATABASE_FIELD>entity_label</DATABASE_FIELD>
         </FIELD>
