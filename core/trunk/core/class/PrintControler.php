@@ -342,6 +342,24 @@ class PrintControler extends PrintFunctions
                     
                     $pdf->MultiCell(182,5,utf8_decode($contactInfos),1, 'C', false);
 				}
+
+                //UNIQUE INTERNAL CONTACT
+				if ($this->array_print[$cpt]['user_lastname'] <> '') {
+                    //BREAK A LINE
+                    $pdf->SetY($pdf->GetY()+4);
+                    //BREAK A LINE
+                    $pdf->SetY($pdf->GetY()+4);
+                    
+                    $pdf->SetFont('Arial','B',11);
+				    
+                    //CONTACT
+                    $pdf->Cell(182,5,utf8_decode(_PRINT_CONTACT),0,1, 'C', false);
+                
+                    $pdf->SetFont('Arial','',11);
+                    
+                    $pdf->MultiCell(182,5,utf8_decode($this->array_print[$cpt]['user_firstname'] . " " . $this->array_print[$cpt]['user_lastname']),1, 'C', false);
+				}
+
 				/**********************************************************************/
 				//MULTI CONTACT
 				if ($this->array_print[$cpt]['retrieve_multi_contacts'] <> '') {
@@ -604,14 +622,14 @@ class PrintFunctions
         foreach($this->object_print as $line_name => $line_value) {
             $return = false;
             $res_id = $line_value->res_id;
-            $queryContacts = str_replace('##res_id##', $res_id, $queryContacts);
-            $db->query($queryContacts);
+            $queryContacts_tmp = str_replace('##res_id##', $res_id, $queryContacts);
+            $db->query($queryContacts_tmp);
             //$db->show();
             while($result = $db->fetch_object()) {
                 $return .= "Contact : " . $this->getContactInfos($result->contact_id, $result->address_id);
             }
-            $queryUsers = str_replace('##res_id##', $res_id, $queryUsers);
-            $db->query($queryUsers);
+            $queryUsers_tmp = str_replace('##res_id##', $res_id, $queryUsers);
+            $db->query($queryUsers_tmp);
             //$db->show();
             while($result = $db->fetch_object()) {
                 $return .= "Utilisateur : " . $this->getUserInfo($result->user_id) . "\r\n";
