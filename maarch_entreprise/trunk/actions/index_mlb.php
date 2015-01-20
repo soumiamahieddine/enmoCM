@@ -784,7 +784,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td class="indexing_field"><input name="process_limit_date" '
             . 'type="text" id="process_limit_date" value="" '
             . 'onclick="showCalender(this);" '
-            . 'onchange="clear_error(\'frm_error_' . $actionId . '\');"/></td>';
+            . 'onchange="clear_error(\'frm_error_' . $actionId . '\');checkRealLimitDate(\'process_limit_date\');" onFocus="checkRealLimitDate(\'process_limit_date\');"/></td>';
     $frmStr .= '<td><span class="red_asterisk" id="process_limit_date_mandatory"'
             . ' style="display:inline;">*</span>&nbsp;</td>';
     $frmStr .= '</tr>';
