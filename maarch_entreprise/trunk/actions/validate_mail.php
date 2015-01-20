@@ -717,7 +717,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<tr id="process_limit_date_tr" style="display:'.$display_value.';">';
             $frm_str .='<td class="indexing_label"><label for="process_limit_date" class="form_title" >'._PROCESS_LIMIT_DATE.'</label></td>';
             $frm_str .='<td>&nbsp;</td>';
-            $frm_str .='<td class="indexing_field"><input name="process_limit_date" type="text" id="process_limit_date"  onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);" value="';
+            $frm_str .='<td class="indexing_field"><input name="process_limit_date" type="text" id="process_limit_date"  onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);checkRealLimitDate(\'process_limit_date\');" onFocus="checkRealLimitDate(\'process_limit_date\');" value="';
             if(isset($data['process_limit_date'])&& !empty($data['process_limit_date']))
             {
                 $frm_str .= $data['process_limit_date'];
