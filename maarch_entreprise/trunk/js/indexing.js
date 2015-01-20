@@ -224,6 +224,58 @@ function checkRealDate(arg) {
     }
 }
 
+function checkRealLimitDate(arg) {
+
+    var process_limit_date;
+    var admission_date;
+    if ($('process_limit_date')) {
+        process_limit_date = $('process_limit_date').value;
+        var date1 = new Date();
+        date1.setFullYear(process_limit_date.substr(6,4));
+        date1.setMonth(process_limit_date.substr(3,2));
+        date1.setDate(process_limit_date.substr(0,2));
+        date1.setHours(0);
+        date1.setMinutes(0);
+
+        var d1_process_limit_date=date1.getTime();
+    }
+
+    if($('admission_date')) {
+        admission_date = $('admission_date').value;
+        var date2 = new Date();
+        date2.setFullYear(admission_date.substr(6,4));
+        date2.setMonth(admission_date.substr(3,2));
+        date2.setDate(admission_date.substr(0,2));
+        date2.setHours(0);
+        date2.setMinutes(0);
+        var d2_admission_date=date2.getTime();
+    }
+
+    if(process_limit_date != "" && admission_date != "" && d2_admission_date > d1_process_limit_date) {          
+        alert("La date limite de traitement doit être supérieur à la date d'arrivée du courrier ");
+        if(arg == 'process_limit_date'){
+            $('process_limit_date').value = "";
+        }
+        if(arg == 'admission_date'){
+            $('admission_date').value = "";
+        }    
+    }
+
+    var date = new Date();
+    var date3 = new Date();
+    date.setFullYear(date3.getFullYear());
+    date.setMonth(date3.getMonth()+1);
+    date.setDate(date3.getDate()); 
+    current_date = date.getTime();
+
+    if (d1_admissionDate > current_date) {
+        alert("La date d'arrivée doit être antérieure à la date du jour ");
+        var current_month = date3.getMonth()+1;
+        $('admission_date').value = date3.getDate() + "-" + current_month + "-" + date3.getFullYear();
+    }
+
+}
+
 /**
  * Activates / Desactivates the process date limit
  *
@@ -559,7 +611,7 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'doctype_tr', type:'tr', state:'display'},
         {id:'subject_tr', type:'tr', state:'display'},
 		{id:'box_id_tr', type:'tr', state:'hide'},
-		{id:'type_id_tr', type:'tr', state:'hide'},
+		{id:'type_id_tr', type:'tr', state:'display'},
 		{id:'appraisal_code_tr', type:'tr', state:'hide'},
 		{id:'appraisal_duration_tr', type:'tr', state:'hide'},
 		{id:'access_restriction_code_tr', type:'tr', state:'hide'},
