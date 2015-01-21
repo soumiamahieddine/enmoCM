@@ -134,7 +134,7 @@ if ($mode == 'list') {
                 </optgroup>
             </select>
         </p>
-        <p>
+        <p style="display:none">
             <label><?php echo _NOTIFICATION_MODE;?> :</label>
             <input type="radio" name="notification_mode" value="EMAIL"
                 onClick="javascript:window.document.getElementById('template_div').style.display = 'block';
