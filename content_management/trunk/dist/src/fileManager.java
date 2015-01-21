@@ -110,7 +110,7 @@ public class fileManager {
                     } else if ("mac".equals(os)) {
                         out.write("open -W " + pathToFileToLaunch + fileToLaunch);
                     } else if ("linux".equals(os)) {
-                        out.write("gnome-open " + pathToFileToLaunch + fileToLaunch);
+                        out.write("libreoffice " + pathToFileToLaunch + fileToLaunch + " || ooffice " + pathToFileToLaunch + fileToLaunch +"& wait");
                     }
                     out.close();
                     File file = new File(pathToBatFile);
