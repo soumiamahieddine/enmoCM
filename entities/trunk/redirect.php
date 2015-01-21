@@ -64,6 +64,9 @@ require_once('modules/entities/class/class_manage_entities.php');;
     $frm_str .= '</h2><br/><br/>';
     if(!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']))
     {
+        /** Note add **/
+        $frm_str .='<div style="text-align:center;"><a href="javascript://" onclick="showNotesForm(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;module=notes&amp;page=notes_ajax_content&amp;mode=add&amp;identifier='.$values_str.'&amp;origin=document&amp;coll_id=' . $coll_id . '&amp;size=medium\')" title="Ajouter une note"><img src="http://localhost/maarch_entreprise_trunk/apps/maarch_entreprise/static.php?filename=tool_note.gif&amp;module=notes" alt="Ajouter une note" border="0" style="margin-bottom:-6px;margin-right:10px;">'._ADD_NOTE.'</a></div>';
+        
         $EntitiesIdExclusion = array();
         $entities = $entity_ctrl->getAllEntities();
         $countEntities = count($entities);
@@ -80,7 +83,7 @@ require_once('modules/entities/class/class_manage_entities.php');;
         );
         //var_dump($allEntitiesTree);
         $frm_str .= '<hr />';
-        $frm_str .='<div id="form2">';
+        $frm_str .='<div id="form2" style="border:none;">';
         $frm_str .= '<form name="frm_redirect_dep" id="frm_redirect_dep" method="post" class="forms" action="#">';
         $frm_str .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
                 $frm_str .='<p>';
