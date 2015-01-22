@@ -138,7 +138,8 @@ require_once('modules/entities/class/class_manage_entities.php');;
         $frm_str .='</div>';
     }
     /** Note add **/
-    $frm_str .='<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=note_add&mode=add&identifier=' . $values_str . '&origin=document&coll_id=' . $coll_id . '&redirect" style="width:100%;border:none;height:67%;"></iframe>';
+    $frm_str .='<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=note_add&mode=add&identifier=' . $values_str . '&origin=document&coll_id=' . $coll_id . '&redirect" style="width:100%;border:none;height:70%;"></iframe>';
+    
     $frm_str .='<hr />';
 
     $frm_str .='<div align="center">';
