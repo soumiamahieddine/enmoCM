@@ -158,7 +158,7 @@ switch ($mode) {
                 . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&module=sendmail&page=mail_form&identifier='
                 . $identifier.'&origin=document&coll_id='.$collId.'&mode='.$mode.$parameters.'" '
-                . 'frameborder="0" width="100%" style="height:545px;padding:0px;overflow-x:hidden;overflow-y: auto;"></iframe>';
+                . 'frameborder="0" width="100%" style="height:540px;padding:0px;overflow-x:hidden;overflow-y: auto;"></iframe>';
         }
     break;
         
