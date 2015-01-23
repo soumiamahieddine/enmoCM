@@ -426,21 +426,17 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '<option value="">' . _CHOOSE_TYPE . '</option>';
 if ($_SESSION['features']['show_types_tree'] == 'true') {
         for ($i = 0; $i < count($doctypes); $i ++) {
-            $frmStr .= '<option value="" class="' //doctype_level1
-                    . $doctypes[$i]['style'] . '" title="'
-                    . $doctypes[$i]['label'] . '" label="'
-                    . $doctypes[$i]['label'] . '" >' . $doctypes[$i]['label']
-                    . '</option>';
+            $frmStr .= '<optgroup value="" class="' //doctype_level1
+                    . $doctypes[$i]['style'] . '" label="'
+                    . $doctypes[$i]['label'] . '" >';
             for ($j = 0; $j < count($doctypes[$i]['level2']); $j ++) {
-                $frmStr .= '<option value="" class="' //doctype_level2
-                        . $doctypes[$i]['level2'][$j]['style'] .'" title="'
-                        . $doctypes[$i]['level2'][$j]['label'] . '" label="'
-                        . $doctypes[$i]['level2'][$j]['label'] . '" >&nbsp;&nbsp;'
-                        . $doctypes[$i]['level2'][$j]['label'] .'</option>';
+                $frmStr .= '<optgroup value="" class="' //doctype_level2
+                        . $doctypes[$i]['level2'][$j]['style'] .'" label="&nbsp;&nbsp;'
+                        . $doctypes[$i]['level2'][$j]['label'] . '" >';
                 for ($k = 0; $k < count($doctypes[$i]['level2'][$j]['types']);
                     $k ++
                 ) {
-                    $frmStr .= '<option value="'
+                    $frmStr .= '<option style="color: #666;" value="'
                             . $doctypes[$i]['level2'][$j]['types'][$k]['id']
                             . '" title="'
                             . $doctypes[$i]['level2'][$j]['types'][$k]['label']
@@ -450,7 +446,9 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                             . $doctypes[$i]['level2'][$j]['types'][$k]['label']
                             . '</option>';
                 }
+                $frmStr .= '</optgroup>'; 
             }
+            $frmStr .= '</optgroup>'; 
         }
     } else {
         for ($i = 0; $i < count($doctypes); $i ++) {
