@@ -10,6 +10,35 @@ var addEmailAdress = function (idField, idList, theUrlToListScript, paramNameSrv
              afterUpdateElement:extractEmailAdress
          });
  };
+
+/*
+function addTemplateToEmail(modele){
+    $(body_from_html).value = modele + '<br>';
+    tinyMCE.execCommand('mceInsertContent',false,modele);  
+}
+*/
+
+function addTemplateToEmail(templateMails, path){
+
+    new Ajax.Request(path,
+    {
+        method      :'post',
+        parameters  :{
+                        templateId : templateMails
+                     },
+        onSuccess   :function(answer){
+            eval("response = " + answer.responseText);
+            if (response.status == 0) {
+                var strContent = response.content;
+                var reg = new RegExp(/\\n/gi);
+                var strContentReplace = strContent.replace(reg, '\n') + '<p></p>';
+                tinyMCE.execCommand('mceInsertContent',false,strContentReplace); 
+            } else {
+                window.top.$('main_error').innerHTML = response.error;
+            }
+        }
+    });
+}
  
 function showEmailForm(path, width, height) {
     

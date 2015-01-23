@@ -124,3 +124,9 @@ if (!defined('_REALLY_REMOVE_EMAIL'))
     define('_REALLY_REMOVE_EMAIL', 'Voulez-vous supprimez le message');
 if (!defined('_EMAIL_REMOVED'))
     define('_EMAIL_REMOVED', 'Email supprim&eacute;');
+
+
+if (!defined('_Label_ADD_TEMPLATE_MAIL'))
+    define('_Label_ADD_TEMPLATE_MAIL', 'Modèle de mail');
+if (!defined('_ADD_TEMPLATE_MAIL'))
+    define('_ADD_TEMPLATE_MAIL', 'Sélectionnez le modèle désiré');
