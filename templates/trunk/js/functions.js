@@ -67,7 +67,7 @@ function setradiobutton(target)
     $("span_office").style.display="inline";
     $("span_txt").style.display="inline";
 
-    if(target=="notes") {
+    if(target=="notes"|| target=="sendmail") {
         $("html").style.display="none";
         $("span_html").style.display="none";
         $("txt").click();
