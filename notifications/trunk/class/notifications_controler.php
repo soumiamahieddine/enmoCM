@@ -209,8 +209,12 @@ class notifications_controler extends ObjectControler implements ObjectControler
                 }
             } else { //mode == add
                 if ($this->insert($notification)) {
+                    $dbConn = new dbquery();
+                    $dbConn->connect();
+                    $dbConn->query("SELECT notification_sid FROM notifications ORDER BY notification_sid DESC limit 1");
+                    $result_sid = $dbConn->fetch_object(); 
                     $control = array('status' => 'ok',
-                                     'value'  => $notification->notification_sid);
+                                     'value'  => $result_sid->notification_sid);
                     //log
                     if ($params['log_notif_add'] == 'true') {
                         $history = new history();

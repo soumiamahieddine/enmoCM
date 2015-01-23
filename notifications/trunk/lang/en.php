@@ -230,3 +230,44 @@ if (!defined('_ENTITY'))
     define('_ENTITY', 'Entity');
 if (!defined('_NOTIFICATIONS_CONTACT_DIFF_TYPE'))
     define('_NOTIFICATIONS_CONTACT_DIFF_TYPE', 'Send to the mail sender');
+if (!defined('_SCHEDULE_NOTIFICATIONS'))
+    define('_SCHEDULE_NOTIFICATIONS', 'Schedule notifications');
+if (!defined('_HOUR'))
+    define('_HOUR', 'Hour');
+if (!defined('_MINUTE'))
+    define('_MINUTE', 'Minute');
+if (!defined('_DAY'))
+    define('_DAY', 'Day');
+if (!defined('_WEEKDAY'))
+    define('_WEEKDAY', 'Weekday');
+if (!defined('_NOTIF_DESCRIPTION'))
+    define('_NOTIF_DESCRIPTION', 'Notification description');
+if (!defined('_CRONTAB_SAVED'))
+    define('_CRONTAB_SAVED', 'Schedule notification was saved');
+if (!defined('_MONDAY'))
+    define('_MONDAY', 'Monday');
+if (!defined('_TUESDAY'))
+    define('_TUESDAY', 'Tuesday');
+if (!defined('_WEDNESDAY'))
+    define('_WEDNESDAY', 'Wednesday');
+if (!defined('_THURSDAY'))
+    define('_THURSDAY', 'Thursday');
+if (!defined('_FRIDAY'))
+    define('_FRIDAY', 'Friday');
+if (!defined('_SATURDAY'))
+    define('_SATURDAY', 'Saturday');
+if (!defined('_SUNDAY'))
+    define('_SUNDAY', 'Sunday');
+if (!defined('_HELP_CRON'))
+    define('_HELP_CRON', 'This part help you to define when the notifications are send.
+        <br/><br/>If you choose * in all lists, notifications will be send every minutes 365 days per year.
+        <br/><br/>Exemple : 
+        <br/>
+        <br/>14 30 * * &nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp; [Mail] New mail for treatment : The notification will be send every day at 2.30pm
+        <br/>&nbsp;&nbsp;9 30 * * Monday [Mail] New mail for treatment : The notification will be send every monday at 9.30am');
+if (!defined('_CHOOSE_NOTIF'))
+    define('_CHOOSE_NOTIF', 'Choose a notification');
+if (!defined('_NO_NOTIF'))
+    define('_NO_NOTIF', 'No notification scheduled');
+if (!defined('_CREATE_NOTIF_SCRIPT'))
+    define('_CREATE_NOTIF_SCRIPT', 'Create the script');

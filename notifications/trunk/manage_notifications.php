@@ -272,7 +272,21 @@ if ($mode == 'list') {
          echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php
          echo $_SESSION['config']['businessappurl'];
          ?>index.php?page=manage_notifications_controler&amp;mode=list&amp;module=notifications'"/>
+            <?php
 
+        $filename = "notification";
+        if (isset($_SESSION['custom_override_id']) && $_SESSION['custom_override_id']<>"") {
+            $filename.="_".str_replace(" ", "", $_SESSION['custom_override_id']);
+        }
+        $filename.="_".$notification_sid.".sh";
+        
+        if ($mode == 'up' && PHP_OS == "Linux" && !file_exists($_SESSION['config']['corepath'].'modules/notifications/batch/scripts/'.$filename)) {?>
+            <input class="button" type="button" name="create_notif_script" id="create_notif_script" value="<?php echo _CREATE_NOTIF_SCRIPT; ?>" 
+            onclick="createNotifScript('<?php echo $_SESSION['config']['businessappurl'];
+         ?>index.php?display=true&amp;page=create_notif_script&amp;module=notifications', '<?php echo $_SESSION['m_admin']['notification']['notification_sid'];?>', '<?php echo $_SESSION['m_admin']['notification']['notification_id'];?>')"/>
+            <?php
+        }
+        ?>
     </p>
     </form >
 <?php

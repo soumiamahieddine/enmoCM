@@ -234,3 +234,44 @@ if (!defined('_ENTITY'))
     define('_ENTITY', 'Entit&eacute;');
 if (!defined('_NOTIFICATIONS_CONTACT_DIFF_TYPE'))
     define('_NOTIFICATIONS_CONTACT_DIFF_TYPE', 'Envoi &agrave; l\'exp&eacute;diteur du courrier');
+if (!defined('_SCHEDULE_NOTIFICATIONS'))
+    define('_SCHEDULE_NOTIFICATIONS', 'Planifier les notifications');
+if (!defined('_HOUR'))
+    define('_HOUR', 'Heure');
+if (!defined('_MINUTE'))
+    define('_MINUTE', 'Minute');
+if (!defined('_DAY'))
+    define('_DAY', 'Jour');
+if (!defined('_WEEKDAY'))
+    define('_WEEKDAY', 'Jour de la semaine');
+if (!defined('_NOTIF_DESCRIPTION'))
+    define('_NOTIF_DESCRIPTION', 'Description de la notification');
+if (!defined('_CRONTAB_SAVED'))
+    define('_CRONTAB_SAVED', 'La t&acirc;che planifi&eacute;e &agrave; &eacute;t&eacute; sauvegard&eacute;e');
+if (!defined('_MONDAY'))
+    define('_MONDAY', 'Lundi');
+if (!defined('_TUESDAY'))
+    define('_TUESDAY', 'Mardi');
+if (!defined('_WEDNESDAY'))
+    define('_WEDNESDAY', 'Mercredi');
+if (!defined('_THURSDAY'))
+    define('_THURSDAY', 'Jeudi');
+if (!defined('_FRIDAY'))
+    define('_FRIDAY', 'Vendredi');
+if (!defined('_SATURDAY'))
+    define('_SATURDAY', 'Samedi');
+if (!defined('_SUNDAY'))
+    define('_SUNDAY', 'Dimanche');
+if (!defined('_HELP_CRON'))
+    define('_HELP_CRON', 'Cette partie permet de d&eacute;finir quand seront envoyées les notifications.
+        <br/><br/>Si vous choisissez * dans toutes les listes déroulantes, la notification sera envoy&eacute;e toutes les minutes 365 jours par an.
+        <br/><br/>Exemple de fréquence : 
+        <br/>
+        <br/>14 30 * * &nbsp;&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp; [courrier] Nouveaux courriers à traiter : La notification sera envoy&eacute;e tous les jours à 14h30
+        <br/>&nbsp;&nbsp;9 30 * * Lundi [courrier] Nouveaux courriers à traiter : La notification sera envoy&eacute;e tous les lundi à 9h30');
+if (!defined('_CHOOSE_NOTIF'))
+    define('_CHOOSE_NOTIF', 'Choisissez une notification');
+if (!defined('_NO_NOTIF'))
+    define('_NO_NOTIF', 'Aucune notification planifi&eacute;e');
+if (!defined('_CREATE_NOTIF_SCRIPT'))
+    define('_CREATE_NOTIF_SCRIPT', 'Cr&eacute;er le script');

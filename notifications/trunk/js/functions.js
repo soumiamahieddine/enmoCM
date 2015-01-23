@@ -204,3 +204,24 @@ function launch_autocompleter_users(path_script, user)
 		}
 	}
 }
+
+function del(id) {
+	$("state-"+id).value = 'deleted';
+	$("row-"+id).style.display='none';
+}
+
+function createNotifScript(path_manage_script, notification_sid, notification_id){
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: { notification_sid : notification_sid,
+                      notification_id : notification_id
+                },
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            if(response.status == 0 ) {
+                $('create_notif_script').style.display="none";
+            }
+        }
+    });
+}

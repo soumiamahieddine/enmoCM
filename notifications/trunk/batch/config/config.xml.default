@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
+
+<!-- le nom du fichier doit etre config.xml ou config_{custom_id}.xml -->
+
     <CONFIG>
         <Lang>fr</Lang> <!-- fr, en-->
         <MaarchDirectory>C:\xampp\htdocs\maarch_entreprise\</MaarchDirectory>

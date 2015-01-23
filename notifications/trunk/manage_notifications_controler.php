@@ -18,14 +18,14 @@ try{
     require_once 'modules/templates/class/templates_controler.php' ;
     require_once 'modules/notifications/class/notifications_controler.php';
     require_once 'modules/notifications/class/diffusion_type_controler.php';
-
+    require_once 'modules/notifications/class/class_schedule_notifications.php';
     
     if ($mode == 'list') {
         require_once 'core/class/class_request.php' ;
         require_once 'apps' . DIRECTORY_SEPARATOR
                      . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
                      . 'class' . DIRECTORY_SEPARATOR . 'class_list_show.php' ;
-    }else if($mode == 'add' || $mode == 'up'){
+    }else if($mode == 'add' || $mode == 'up' || $mode == 'del'){
         require_once 'core/class/class_request.php' ;
     }
 } catch (Exception $e) {
@@ -164,6 +164,18 @@ function display_add()
  * Initialize session parameters for list display
  */
 function display_list() {
+
+    if (PHP_OS == "Linux") {
+	?>
+    	<table width="100%">
+    	    <tr>
+    	        <td align="right">
+    	            <input class="button" type="button" value="<?php echo _SCHEDULE_NOTIFICATIONS;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] . 'index.php?page=schedule_notifications&module=notifications'?>'"/>      
+    	        </td>
+    	   </tr>
+    	</table>
+    <?php
+    }
     $_SESSION['m_admin'] = array();
     $list = new list_show();
     $func = new functions();
@@ -266,6 +278,33 @@ function display_del($notification_sid) {
             $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         } else {
             $_SESSION['error'] = _NOTIF_DELETED.' : '.$notification_sid;
+
+            if (PHP_OS == "Linux") {
+                // delete scheduled notification
+                $filename = "notification";
+                if (isset($_SESSION['custom_override_id']) && $_SESSION['custom_override_id']<>"") {
+                    $filename.="_".str_replace(" ", "", $_SESSION['custom_override_id']);
+                }
+                $filename.="_".$notification_sid.".sh";
+
+                $scheduleNotification = new ScheduleNotifications();
+                $cronTab = $scheduleNotification->getCrontab();
+
+                $flagCron = false;
+                foreach ($cronTab as $key => $value) {
+                    if($value['cmd'] == $_SESSION['config']['corepath'].'modules/notifications/batch/scripts/'.$filename){
+                        $cronTab[$key]['state'] = 'deleted';
+                        $flagCron = true;
+                        break;
+                    }
+                }
+
+                if ($flagCron) {
+                    $scheduleNotification->saveCrontab($cronTab, true);
+                }
+                
+                shell_exec("rm -f ".$_SESSION['config']['corepath'].'modules/notifications/batch/scripts/'.$filename);
+            }
         }
         ?><script type="text/javascript">window.top.location='<?php
             echo $_SESSION['config']['businessappurl']
@@ -398,6 +437,11 @@ function validate_notif_submit() {
     } else {
         if ($mode == 'add') {
             $_SESSION['error'] = _NOTIF_ADDED;
+
+            if (PHP_OS == "Linux") {
+                $ScheduleNotifications = new ScheduleNotifications();
+                $ScheduleNotifications->createScriptNotification($control['value'], $notifObj->notification_id);
+            }
         } else {
             $_SESSION['error'] = _NOTIF_MODIFIED;
         }
