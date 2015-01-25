@@ -513,16 +513,24 @@ while ($GLOBALS['state'] <> "END") {
                     if (!file_exists($sourceFilePath) 
                         && $sourceFilePath <> ""
                     ) {
-                        Bt_exitBatch(
+                        /*Bt_exitBatch(
                             27, 'Resource not found for purge:' 
                             . $sourceFilePath . ' res_id:' 
                             . $currentRecordInStack['res_id'] 
                             . ' docserver_id:' 
                             . $GLOBALS['docservers'][$GLOBALS['currentStep']]
                             ['docserver'][$cptDs]['docserver_id']
+                        );*/
+                        $GLOBALS['logger']->write(
+                            '27 Resource not found for purge:' 
+                            . $sourceFilePath . ' res_id:' 
+                            . $currentRecordInStack['res_id'] 
+                            . ' docserver_id:' 
+                            . $GLOBALS['docservers'][$GLOBALS['currentStep']]
+                            ['docserver'][$cptDs]['docserver_id'], 'WARNING'
                         );
-                        $GLOBALS['state'] = "END";
-                        break;
+                        //$GLOBALS['state'] = "END";
+                        //break;
                     } else {
                         if (str_replace(
                             $GLOBALS['docserverSourcePath'], "", 
@@ -530,22 +538,26 @@ while ($GLOBALS['state'] <> "END") {
                         ) <> ""
                         ) {
                             // WARNING unlink file
-                            array_push(
+                            /*array_push(
                                 $dsToUpdate, 
                                 array(
                                     "docserverId" => $GLOBALS['docservers']
                                     [$GLOBALS['currentStep']]['docserver']
                                     [$cptDs]['docserver_id'],
                                 )
-                            );
+                            );*/
                             $currentFileSize = filesize($sourceFilePath);
                             if (!(unlink($sourceFilePath))) {
-                                Bt_exitBatch(
+                                /*Bt_exitBatch(
                                     26, 'File deletion impossible:'
                                     . $sourceFilePath
+                                );*/
+                                $GLOBALS['logger']->write(
+                                    '26 File deletion impossible:'
+                                    . $sourceFilePath, 'WARNING'
                                 );
-                                $GLOBALS['state'] = "END";
-                                break;
+                                //$GLOBALS['state'] = "END";
+                                //break;
                             } else {
                                 $GLOBALS['logger']->write(
                                     'Purge file:' . $sourceFilePath, 'DEBUG'
@@ -568,6 +580,14 @@ while ($GLOBALS['state'] <> "END") {
                             }
                         }
                     }
+                    array_push(
+                        $dsToUpdate, 
+                        array(
+                            "docserverId" => $GLOBALS['docservers']
+                            [$GLOBALS['currentStep']]['docserver']
+                            [$cptDs]['docserver_id'],
+                        )
+                    );
                 }
             }
             break;

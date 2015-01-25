@@ -45,9 +45,10 @@ function Bt_doQuery($dbConn, $queryTxt, $transaction=false)
             $GLOBALS['logger']->write('ROLLBACK', 'INFO');
             $dbConn->query('ROLLBACK', true);
         }
-        Bt_exitBatch(
+        /*Bt_exitBatch(
             104, 'SQL Query error:' . $queryTxt
-        );
+        );*/
+        $GLOBALS['logger']->write('SQL query error:' . $queryTxt, 'WARNING');
     }
     $GLOBALS['logger']->write('SQL query:' . $queryTxt, 'DEBUG');
     return true;
