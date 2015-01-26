@@ -275,3 +275,5 @@ if (!defined('_NO_NOTIF'))
     define('_NO_NOTIF', 'Aucune notification planifi&eacute;e');
 if (!defined('_CREATE_NOTIF_SCRIPT'))
     define('_CREATE_NOTIF_SCRIPT', 'Cr&eacute;er le script');
+if (!defined('_PB_CRON_COMMAND'))
+    define('_PB_CRON_COMMAND', 'Une tache planifi&eacute;e n\'a pas &eacute;t&eacute; modifi&eacute;e correctement. Merci de recommencer.');

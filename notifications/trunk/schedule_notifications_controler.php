@@ -33,11 +33,18 @@
 $core_tools = new core_tools();
 $core_tools->test_user();
 $core_tools->test_admin('admin_notif', 'notifications');
+$core_tools->load_lang();
 
 require_once 'modules/notifications/class/class_schedule_notifications.php';
 $schedule = new ScheduleNotifications();
 
-$return = $schedule->saveCrontab($_POST['data']);
+$checkResult = $schedule->checkCrontab($_POST['data']);
+
+if ($checkResult === 0) {
+	$return = $schedule->saveCrontab($_POST['data']);
+} else {
+	$_SESSION['error'] = _PB_CRON_COMMAND;
+}
 
 header(
     'location: ' . $_SESSION['config']['businessappurl']

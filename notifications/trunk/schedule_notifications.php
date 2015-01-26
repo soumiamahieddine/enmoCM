@@ -69,6 +69,7 @@ $schedule = new ScheduleNotifications();
 
 $data = $schedule->getCrontab();
 $notifications = $schedule->getAuthorizedNotifications();
+$flag_notif = false;
 
 ?>
 
@@ -166,7 +167,7 @@ $notifications = $schedule->getAuthorizedNotifications();
 						<?php } ?>\
 						</select></td>\
 					<td width=\"20px\" align=\"center\">\
-						<input type='hidden' id='state-"+linecount+"' name='data["+linecount+"][state]' value='normal' />\
+						<input type='hidden' id='state-"+linecount+"' name='data["+linecount+"][state]' value='new' />\
 						<img onclick='del("+linecount+");' alt='X' src='<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_delete.gif' onmouseover=\"this.style.cursor='pointer'\"/>\
 					</td>\
 				</tr>";
@@ -191,7 +192,37 @@ $notifications = $schedule->getAuthorizedNotifications();
 				<td width="40%" style="color:#16adeb"><?php echo _NOTIF_DESCRIPTION ?></td>
 				<td></td>
 			</tr>
-		<?php foreach ($data as $id => $e) { ?>
+		<?php foreach ($data as $id => $e) { 
+
+				if ($e['state'] == "hidden") {?>
+					<tr id='row-<?php echo $id; ?>' style="display:none">
+						<td>
+							<input name='data[<?php echo $id; ?>][h]' value="<?php echo $e['h']; ?>">
+						</td>
+						<td width="10%">
+							<input name='data[<?php echo $id; ?>][m]' value="<?php echo $e['m']; ?>">
+						</td>
+						<td width="10%">						
+							<input name='data[<?php echo $id; ?>][dom]' value="<?php echo $e['dom']; ?>">
+						</td>
+						<td width="15%">
+							<input name='data[<?php echo $id; ?>][mon]' value="<?php echo $e['mon']; ?>">
+						</td>
+						<td width="20%">
+							<input name='data[<?php echo $id; ?>][dow]' value="<?php echo $e['dow']; ?>">
+						</td>
+						<td width="40%">
+							<input name='data[<?php echo $id; ?>][cmd]' value="<?php echo $e['cmd']; ?>">
+						</td>
+						<td width="20px" align="center">
+							<input type='hidden' id='state-<?php echo $id; ?>' name='data[<?php echo $id; ?>][state]' value='hidden' />
+						</td>
+					</tr>
+				<?php
+				} else {
+					$flag_notif = true;
+
+			?>
 				<tr id='row-<?php echo $id; ?>'>
 					<td>
 						<select name='data[<?php echo $id; ?>][h]'>
@@ -287,9 +318,13 @@ $notifications = $schedule->getAuthorizedNotifications();
 						<img onclick='del(<?php echo $id; ?>);' alt='X' src='<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_delete.gif' onmouseover="this.style.cursor='pointer'"/>
 					</td>
 				</tr>
-		<?php } ?>
+		<?php
+			}
+		} ?>
 		</table>
-		<span id="no_notif"><i><?php echo _NO_NOTIF;?></i></span><br/>
+		<span <?php if($flag_notif){?> style="display:none" <?php } ;?> id="no_notif">
+			<i><?php echo _NO_NOTIF;?></i>
+		</span><br/>
 		<img class='addbutton' onclick='add_cronLine();' src='<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=add_schedule_notif.gif' onmouseover="this.style.cursor='pointer'" alt='+' />
 		<br />
 		<br />

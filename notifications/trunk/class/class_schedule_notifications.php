@@ -38,6 +38,10 @@ class ScheduleNotifications{
 				'dow' => $dow,
 				'cmd' => $cmd,
 			);
+
+			if ( strpos($data[$id]['cmd'], $_SESSION['config']['corepath'].'modules/notifications/batch/scripts/') !== 0 ) {
+				$data[$id]['state'] = 'hidden';
+			}
 		}
 
 		return $data;
@@ -132,6 +136,32 @@ class ScheduleNotifications{
         fwrite($file_open, "\n");
         fclose($file_open);
         shell_exec("chmod +x " . $_SESSION['config']['corepath'].'modules/notifications/batch/scripts/'.$filename);
+	}
+
+	function checkCrontab($crontabToSave){
+
+		$crontabBeforeSave = $this->getCrontab();
+		$error = 0;
+		foreach ($crontabToSave as $id => $e) {
+			if ($e['state'] == "deleted"){
+				// nothing to do
+			} else if($e['state'] == "new" || $e['state'] == "normal"){
+				if(strpos($crontabToSave[$id]['cmd'], $_SESSION['config']['corepath'].'modules/notifications/batch/scripts/') !== 0) {
+					$error = 1;
+					break;
+				}
+			} else if($e['state'] == "hidden"){
+				if ($e['cmd'] != $crontabBeforeSave[$id]['cmd']) {
+					$error = 1;
+					break;
+				}
+			} else {
+				$error = 1;
+				break;
+			}
+		}
+
+		return $error;
 	}
 
 }

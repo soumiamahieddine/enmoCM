@@ -271,3 +271,5 @@ if (!defined('_NO_NOTIF'))
     define('_NO_NOTIF', 'No notification scheduled');
 if (!defined('_CREATE_NOTIF_SCRIPT'))
     define('_CREATE_NOTIF_SCRIPT', 'Create the script');
+if (!defined('_PB_CRON_COMMAND'))
+    define('_PB_CRON_COMMAND', 'A scheduled task was modified incorrectly.');
