@@ -85,7 +85,7 @@ require_once('modules/entities/class/class_manage_entities.php');;
         $frm_str .= '<form name="frm_redirect_dep" id="frm_redirect_dep" method="post" class="forms" action="#">';
         $frm_str .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
                 $frm_str .='<p>';
-                    $frm_str .= '<label><b>'._REDIRECT_TO_OTHER_DEP.' :</b></label>';
+                    $frm_str .= '<b>'._REDIRECT_TO_OTHER_DEP.' :</b>';
                     $frm_str .= '<select name="department" id="department" onchange="change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\', \'diff_list_div_redirect\', \'redirect\');">';
                         $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
                        /*for($i=0; $i < count($services); $i++)
@@ -138,7 +138,7 @@ require_once('modules/entities/class/class_manage_entities.php');;
         $frm_str .='</div>';
     }
     /** Note add **/
-    $frm_str .='<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=note_add&mode=add&identifier=' . $values_str . '&origin=document&coll_id=' . $coll_id . '&redirect" style="width:100%;border:none;height:70%;"></iframe>';
+    $frm_str .='<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=note_add&mode=add&identifier=' . $values_str . '&origin=document&coll_id=' . $coll_id . '&redirect" style="width:100%;border:none;height:65%;" scrolling="no"></iframe>';
     
     $frm_str .='<hr />';
 
