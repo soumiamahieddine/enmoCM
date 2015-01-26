@@ -30,8 +30,9 @@ function addTemplateToEmail(templateMails, path){
             eval("response = " + answer.responseText);
             if (response.status == 0) {
                 var strContent = response.content;
-                var reg = new RegExp(/\\n/gi);
-                var strContentReplace = strContent.replace(reg, '\n') + '<p></p>';
+                //var reg = new RegExp(/\\n/gi);
+                //var strContentReplace = strContent.replace(reg, '\n') + '<p></p>';
+                var strContentReplace = strContent.replace(/\\n/g, '<p>') + '<p><p>';
                 tinyMCE.execCommand('mceInsertContent',false,strContentReplace); 
             } else {
                 window.top.$('main_error').innerHTML = response.error;
