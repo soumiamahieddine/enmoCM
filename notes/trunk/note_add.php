@@ -198,7 +198,7 @@ if(isset($_GET['redirect'])){
           echo $identifier;?>" name="identifier" id="identifier">
           <input type="hidden" value="<?php
           echo $extendUrlValue;?>" name="size" id="size">
-          <textarea  cols="65" rows="10"  name="notes"  id="notes" style="width:99%;"></textarea>
+          <textarea  cols="65" rows="5"  name="notes"  id="notes" style="width:99%;"></textarea>
           <br/>
           <p class="buttons">
             <input type="submit" name="Submit" value="<?php
