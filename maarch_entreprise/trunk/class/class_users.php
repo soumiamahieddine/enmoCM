@@ -155,7 +155,7 @@ class class_users extends dbquery
                       <?php
             $this->connect();
             $this->query(
-                "SELECT u.group_desc FROM " . USERGROUP_CONTENT_TABLE . " uc, "
+                "SELECT u.group_desc, uc.primary_group FROM " . USERGROUP_CONTENT_TABLE . " uc, "
                 . USERGROUPS_TABLE ." u where uc.user_id ='"
                 . $_SESSION['user']['UserId'] . "' and uc.group_id = u.group_id"
                 . " order by u.group_desc"
@@ -165,7 +165,11 @@ class class_users extends dbquery
                 echo _USER_BELONGS_NO_GROUP . ".";
             } else {
                 while ($line = $this->fetch_object()) {
-                    echo "<li>" . $line->group_desc . " </li>";
+                    if($line->primary_group == 'Y'){
+                        echo "<li style='list-style-image: url(http://localhost/maarch_entreprise_trunk/apps/maarch_entreprise/static.php?filename=arrow_primary.gif);list-style-position:inside;'>".$line->group_desc." </li>";
+                    }else{
+                        echo "<li>".$line->group_desc." </li>";
+                    }
                 }
             }
                          ?>
@@ -175,9 +179,8 @@ class class_users extends dbquery
                          <h2 class="tit"><?php  echo _USER_ENTITIES_TITLE;?> : </h2>
                             <ul id="my_profil">
                          <?php
-                            $this->query("SELECT e.entity_label FROM ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e
+                            $this->query("SELECT e.entity_label, ue.primary_entity FROM ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e
                             where ue.user_id ='".$_SESSION['user']['UserId']."' and ue.entity_id = e.entity_id order by e.entity_label");
-
                             if($this->nb_result() < 1)
                             {
                                 echo _USER_BELONGS_NO_ENTITY.".";
@@ -186,8 +189,11 @@ class class_users extends dbquery
                             {
                                 while($line = $this->fetch_object())
                                 {
-
-                                 echo "<li>".$line->entity_label." </li>";
+                                    if($line->primary_entity == 'Y'){
+                                        echo "<li style='list-style-image: url(http://localhost/maarch_entreprise_trunk/apps/maarch_entreprise/static.php?filename=arrow_primary.gif);list-style-position:inside;'>".$line->entity_label." </li>";
+                                    }else{
+                                        echo "<li>".$line->entity_label." </li>";
+                                    }
                                 }
                             }
                          ?>
