@@ -124,6 +124,10 @@ if (!defined('_MAIL'))    define( '_MAIL', 'Courriel');
 if (!defined('_EMAIL')) define( '_EMAIL', 'Courriel');
 if (!defined('_DOCTYPE'))    define( '_DOCTYPE', 'Type de document');
 if (!defined('_TYPE'))    define( '_TYPE', 'Type');
+if (!defined('_WARNING_MESSAGE_DEL_TYPE'))
+    define('_WARNING_MESSAGE_DEL_TYPE', 'Avertissement :<br> La suppression d&rsquo;un type de document entraine la r&eacute;affectation des documents &agrave un nouveau type mais r&eacute;affecte &eacute;galement les documents (courriers) en attente de traitement.');
+if (!defined('_DOCS_IN_DOCTYPES'))    define( '_DOCS_IN_DOCTYPES', 'document(s) de ce type');
+if (!defined('_CHOOSE_REPLACEMENT_DOCTYPES'))    define( '_CHOOSE_REPLACEMENT_DOCTYPES', 'Choisissez un type de document de remplacement');
 if (!defined('_SELECT_ALL'))    define( '_SELECT_ALL', 'S&eacute;lectionner tout');
 if (!defined('_DATE'))    define( '_DATE', 'Date');
 if (!defined('_ACTION'))    define( '_ACTION', 'Action');
