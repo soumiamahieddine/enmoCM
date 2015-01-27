@@ -1299,7 +1299,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $arr_id[0], 'user_id' => $_SESSION['user']['UserId'], 'concat_list' => true, 'only_cc' => true);
         $list->load_list_db($_SESSION['process']['diff_list'], $params); //pb enchainement avec action redirect
     }
-    $_SESSION['process']['diff_list'] = array();
+    //$_SESSION['process']['diff_list'] = array();
     $_SESSION['redirect']['diff_list'] = array();
     unset($_SESSION['redirection']);
     unset($_SESSION['redirect']);
