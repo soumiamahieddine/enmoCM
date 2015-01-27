@@ -35,6 +35,9 @@ require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
 $core_tools = new core_tools();
 $list       = new lists();
 
+//reset session current_basket clause
+$_SESSION['current_basket']['clause']='';
+
 //Parameters
 $urlParameters = '';
     //Mode
