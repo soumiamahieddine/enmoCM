@@ -365,6 +365,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     {
         $error = "";
         $f = new functions();
+
+        if (strpos($user->user_id, "'") !== false) {
+            $error .= _USER_ID . ' '._WRONG_FORMAT . '#';
+        }
+
         $user->user_id = $f->protect_string_db(
             $f->wash($user->user_id, 'no', _THE_ID, 'yes', 0, 128)
         );
