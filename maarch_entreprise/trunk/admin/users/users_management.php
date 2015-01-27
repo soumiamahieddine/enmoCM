@@ -66,7 +66,8 @@ elseif($mode == "up" || $mode == "add")
             <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){ echo $_REQUEST['start'];}?>" />
             <p>
                 <label for="user_id"><?php  echo _ID; ?> :</label>
-                    <?php  if($mode == "up" && isset($_SESSION['m_admin']['users']['user_id'])) { echo functions::show_string($_SESSION['m_admin']['users']['user_id']); }else{ echo '<br/>'; } ?><input name="user_id"  type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="user_id" value="<?php  if(isset($_SESSION['m_admin']['users']['user_id'])) {echo functions::show_string($_SESSION['m_admin']['users']['user_id']);} ?>" /><span class="red_asterisk">*</span>
+                    <?php  if($mode == "up" && isset($_SESSION['m_admin']['users']['user_id'])) { echo functions::show_string($_SESSION['m_admin']['users']['user_id']); }else{ echo '<br/>'; } ?><input name="user_id"  type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="user_id" value="<?php  if(isset($_SESSION['m_admin']['users']['user_id'])) {echo functions::show_string($_SESSION['m_admin']['users']['user_id']);} ?>" />
+                    <span class="red_asterisk"><?php  if($mode != "up"){?>*<?php } ?></span>
                     <!--<input type="hidden"  name="id" id="id" value="<?php  echo $id; ?>" />-->
             </p>
             <p>
@@ -78,7 +79,7 @@ elseif($mode == "up" || $mode == "add")
                 <input name="FirstName" id="FirstName"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['firstname'])){ echo functions::show_string($_SESSION['m_admin']['users']['firstname']); }?>" /><span class="red_asterisk">*</span>
             </p>
             <p>
-                <label for="Phone"><?php  echo _PHONE_NUMBER; ?> :</label><br/>
+                <?php  echo _PHONE_NUMBER; ?> :<br/>
                 <input name="Phone" id="Phone"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['phone'])){ echo $_SESSION['m_admin']['users']['phone']; }?>" />
             </p>
             <p>
@@ -86,7 +87,7 @@ elseif($mode == "up" || $mode == "add")
                 <input name="Mail" id="Mail"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['mail'])){ echo $_SESSION['m_admin']['users']['mail']; }?>" /><span class="red_asterisk">*</span>
             </p>
             <p>
-                <label for="LoginMode"><?php  echo _LOGIN_MODE; ?> :</label><br/>
+                <?php  echo _LOGIN_MODE; ?>&nbsp;:<br/>
                 <?php
                 echo '<select name="LoginMode" id="LoginMode">';
 
