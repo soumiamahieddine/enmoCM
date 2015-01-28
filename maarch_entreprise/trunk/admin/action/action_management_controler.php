@@ -54,8 +54,8 @@ $page_ids = array(
 
 try {
     require_once('core/class/ActionControler.php');
+    require_once('core/class/class_request.php');
     if ($mode == 'list') {
-        require_once('core/class/class_request.php');
         require_once('apps' . DIRECTORY_SEPARATOR 
             . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'class'
             . DIRECTORY_SEPARATOR . 'class_list_show.php');
@@ -187,12 +187,16 @@ if (isset($_REQUEST['action_submit'])) {
         ActionControler::razActionPage();
 
         if ($_SESSION['history']['actionadd'] == 'true' && $mode == 'add') {
+            $db = new request();
+            $db->connect();
+            $db->query("SELECT id FROM actions ORDER BY id desc limit 1");
+            $last_insert = $db->fetch_object();
+
             require_once('core/class/class_history.php');
             $hist = new history();
             $hist->add($_SESSION['tablename']['actions'], 
-                $_SESSION['m_admin']['action']['ID'], 'ADD', 'actionadd',
-                _ACTION_ADDED . ' : ' . functions::protect_string_db(
-                    $_SESSION['m_admin']['action']['ID']), 
+                $last_insert->id, 'ADD', 'actionadd',
+                _ACTION_ADDED . ' : ' . $last_insert->id, 
                 $_SESSION['config']['databasetype']
             );
         } elseif ($_SESSION['history']['actionup'] == 'true' && $mode == 'up') {
@@ -374,6 +378,13 @@ if ($mode == 'up') {
 } elseif ($mode == 'del') {
     ActionControler::delete($action_id);
     $_SESSION['error'] = _ACTION_DELETED . ' ' . $action_id;
+
+    if($_SESSION['history']['actiondel'] == 'true') {
+        require_once('core'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_history.php');
+        $hist = new history();
+        $hist->add($_SESSION['tablename']['actions'], $action_id, "DEL", 'actiondel', _ACTION_DELETED.' : '.$action_id, $_SESSION['config']['databasetype']);
+    }
+
     ?><script type="text/javascript">window.top.location='<?php 
         echo $_SESSION['config']['businessappurl'] 
         . 'index.php?page=action_management_controler&mode=list&admin=action'
