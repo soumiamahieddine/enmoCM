@@ -513,7 +513,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
         $db = new dbquery();
         $db->connect();
         $query = "select template_id from " . _TEMPLATES_TABLE_NAME
-            . " where template_label = '" . $db->protect_string_db($templateLabel) . "'"
+            . " where template_label = '" . $templateLabel . "'"
             . " order by template_id desc";
         $db->query($query);
         $queryResult = $db->fetch_object();
