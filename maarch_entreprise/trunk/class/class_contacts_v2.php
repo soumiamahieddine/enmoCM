@@ -173,19 +173,35 @@ class contacts_v2 extends dbquery
         $what = $_SESSION['m_admin']['contact']['what'];
         $start = $_SESSION['m_admin']['contact']['start'];
 
-        $path_contacts = $_SESSION['config']['businessappurl']
-                       . 'index.php?page=contacts_v2&order='
-                       . $order . '&order_field=' . $order_field . '&start='
-                       . $start . '&what=' . $what;
+        if ($mode == 'add') {
+            $path_contacts = $_SESSION['config']['businessappurl']
+                           . 'index.php?page=contact_addresses_add&order='
+                           . $order . '&order_field=' . $order_field . '&start='
+                           . $start . '&what=' . $what;
+        } else {
+            $path_contacts = $_SESSION['config']['businessappurl']
+                           . 'index.php?page=contacts_v2&order='
+                           . $order . '&order_field=' . $order_field . '&start='
+                           . $start . '&what=' . $what;                
+        }
+
         $path_contacts_add_errors = $_SESSION['config']['businessappurl']
                                   . 'index.php?page=contacts_v2_add';
         $path_contacts_up_errors = $_SESSION['config']['businessappurl']
                                  . 'index.php?page=contacts_v2_up';
         if (! $admin) {
-            $path_contacts = $_SESSION['config']['businessappurl']
-                           . 'index.php?page=my_contacts&dir=my_contacts&load&order='
-                           . $order . '&order_field=' . $order_field . '&start='
-                           . $start . '&what=' . $what;
+            if ($mode == 'add') {
+                $path_contacts = $_SESSION['config']['businessappurl']
+                               . 'index.php?page=contact_addresses_add&mycontact=Y&order='
+                               . $order . '&order_field=' . $order_field . '&start='
+                               . $start . '&what=' . $what;
+            } else {
+                $path_contacts = $_SESSION['config']['businessappurl']
+                               . 'index.php?page=my_contacts&dir=my_contacts&load&order='
+                               . $order . '&order_field=' . $order_field . '&start='
+                               . $start . '&what=' . $what;                
+            }
+
             $path_contacts_add_errors = $_SESSION['config']['businessappurl']
                                       . 'index.php?page=my_contact_add&dir='
                                       . 'my_contacts&load';
@@ -281,7 +297,7 @@ class contacts_v2 extends dbquery
                     $hist = new history();
                     $hist->add($_SESSION['tablename']['contacts_v2'], $id,"ADD",'contacts_v2_add',$msg, $_SESSION['config']['databasetype']);
                 }
-                if($mycontact = 'iframe'){
+                // if($mycontact = 'iframe'){
                     $this->query("select contact_id, creation_date from ".$_SESSION['tablename']['contacts_v2']
                         ." where lastname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])
                         ."' and firstname = '".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])
@@ -292,8 +308,10 @@ class contacts_v2 extends dbquery
                     $res = $this->fetch_object();
                     $id = $res->contact_id;
                     $_SESSION['contact']['current_contact_id'] = $id;
-                }
-                $this->clearcontactinfos();
+                // } else {
+                //     $this->clearcontactinfos();
+                // }
+                
                 $_SESSION['info'] = _CONTACT_ADDED;
                 header("location: ".$path_contacts);
                 exit;
