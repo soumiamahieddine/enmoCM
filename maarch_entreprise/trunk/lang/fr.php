@@ -1202,7 +1202,7 @@ if (!defined('_CLOSE_MAIL')) define( '_CLOSE_MAIL', 'Cl&ocirc;turer un courrier'
 
 
 /************** R&eacute;ouverture courrier **************/
-if (!defined('_MAIL_SENTENCE2')) define( '_MAIL_SENTENCE2', 'En saisissant n&deg; chrono ou le n&deg;GED du document, vous passerez le  statut de ce dernier &agrave; &quot;En cours&quot;.');
+if (!defined('_MAIL_SENTENCE2')) define( '_MAIL_SENTENCE2', 'En saisissant le n&deg; chrono ou le n&deg;GED du document, vous passerez le  statut de ce dernier &agrave; &quot;En cours&quot;.');
 if (!defined('_MAIL_SENTENCE3')) define( '_MAIL_SENTENCE3', 'Cette fonction a pour but d&rsquo;ouvrir un courrier ferm&eacute; pr&eacute;matur&eacute;ment.');
 if (!defined('_MAIL_SENTENCE4')) define( '_MAIL_SENTENCE4', 'Le statut "En cours" et la liste de diffusion telle qu\'elle &eacute;tait d&eacute;finie au moment de la cl&ocirc;ture du courrier permettent de d&eacute;duire les');
 if (!defined('_MAIL_SENTENCE5')) define( '_MAIL_SENTENCE5', 'd\'accueil suite à la r&eacute;ouverture du courrier.');

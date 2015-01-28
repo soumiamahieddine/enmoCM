@@ -95,7 +95,7 @@ elseif($mode == 'up' || $mode == 'add'){
                 </select>
             </p>
             <p>
-                <label for="keyword"><?php echo _KEYWORD.' ('._SYSTEM_PARAMETERS.')';?> : </label>
+                <label for="keyword"><?php echo _KEYWORD.' ('._SYSTEM_PARAMETERS.')';?>:</label>
                 <select name="keyword" id="keyword">
                     <option value=" "><?php echo _NO_KEYWORD; ?></option>
                     <option value="redirect" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'redirect'){ echo 'selected="selected"';}?>><?php echo _REDIRECT; ?></option>
@@ -219,24 +219,14 @@ elseif($mode == 'up' || $mode == 'add'){
                 </table>
    
             <p class="buttons">
-        <?php
-            if($mode == 'up'){
-            ?>
-                <input class="button" type="submit" name="action_submit" onclick ="javascript:selectall($(categories_chosen));" value="<?php
-                echo _MODIFY_ACTION; ?>" />
-            <?php
-            }
-            elseif($mode == 'add'){
-            ?>
-                <input type="submit" class="button"  name="action_submit" onclick ="javascript:selectall($(categories_chosen));" value="<?php
-                echo _ADD_ACTION; ?>" />
-                <?php
-            }
-            ?>
-            <input type="button" class="button"  name="cancel" value="<?php
-            echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php
-            echo $_SESSION['config']['businessappurl'];
-            ?>index.php?page=action_management_controler&amp;mode=list&amp;admin=action';"/>
+
+                <input type="submit" class="button" name="action_submit" onclick ="javascript:selectall($(categories_chosen));" value="<?php
+                echo _VALIDATE; ?>" />
+
+                <input type="button" class="button"  name="cancel" value="<?php
+                echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php
+                echo $_SESSION['config']['businessappurl'];
+                ?>index.php?page=action_management_controler&amp;mode=list&amp;admin=action';"/>
             </p>
         </form >
         <div class="infos"><?php echo _INFOS_ACTIONS;?></div>

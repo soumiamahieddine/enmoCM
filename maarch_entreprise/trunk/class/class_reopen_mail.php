@@ -178,7 +178,7 @@ class ReopenMail extends dbquery
 
             <br/>
             <p class="buttons">
-                    <input type="submit" name="Submit" value="<?php echo _MODIFY_STATUS;?>" class="button"/>
+                    <input type="submit" name="Submit" value="<?php echo _VALIDATE;?>" class="button"/>
                     <input type="button" name="close" value="<?php echo _CANCEL;?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=admin';" class="button"/>
                 </p>
 

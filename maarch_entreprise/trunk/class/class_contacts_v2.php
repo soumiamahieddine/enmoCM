@@ -628,20 +628,12 @@ class contacts_v2 extends dbquery
                 </table>
                         <input name="mode" type="hidden" value="<?php echo $mode; ?>" />
                         <br/>
-                        <em>(<?php echo _YOU_SHOULD_ADD_AN_ADDRESS;?>)</em>
-                    <p class="buttons">
-                    <?php
+                        <em style="display:none">(<?php echo _YOU_SHOULD_ADD_AN_ADDRESS;?>)</em>
+                    <p>
 
-                    if($mode == "up") { ?>
-                        <input class="button" type="submit" name="Submit" value="<?php echo _MODIFY_CONTACT; ?>" />
-                        <?php
-                    }
-                    elseif($mode == "add")
-                    {
-                        ?>
-                        <input type="submit" class="button"  name="Submit" value="<?php echo _ADD_CONTACT; ?>" />
-                        <?php
-                    }
+                        <input class="button" type="submit" name="Submit" value="<?php echo _VALIDATE; ?>" />
+
+                    <?php
                     $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2';
                     if(!$admin) {
                         $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&amp;dir=my_contacts&amp;load';
@@ -1455,21 +1447,11 @@ class contacts_v2 extends dbquery
                     </table>
                 </div>
                         <input name="mode" type="hidden" value="<?php echo $mode; ?>" />
-                    <p class="buttons">
-                    <?php
+                    <p>
 
-                    if($mode == "up")
-                    {
-                        ?>
-                        <input class="button" type="submit" name="Submit" value="<?php echo _EDIT_ADDRESS; ?>" />
+                        <input class="button" type="submit" name="Submit" value="<?php echo _VALIDATE; ?>" />
                         <?php
-                    }
-                    elseif($mode == "add")
-                    {
-                        ?>
-                        <input type="submit" class="button"  name="Submit" value="<?php echo _ADD_ADDRESS; ?>" />
-                        <?php
-                    }
+
                     $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2_up';
                     if(!$admin)
                     {

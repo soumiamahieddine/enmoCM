@@ -136,15 +136,9 @@ if ($mode == 'list') {
             </p>
         <?php } ?>
         <p class="buttons">
-            <?php
-        if ($mode == 'up') {?>
-            <input class="button" type="submit" name="status_submit" value="<?php echo _MODIFY_STATUS; ?>" />
-            <?php
-        } elseif ($mode == 'add') {?>
-            <input type="submit" class="button"  name="status_submit" value="<?php echo _ADD_STATUS; ?>" />
-            <?php
-        }
-        ?>
+
+            <input type="submit" class="button"  name="status_submit" value="<?php echo _VALIDATE; ?>" />
+
         <input type="button" class="button"  name="cancel" value="<?php
          echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php
          echo $_SESSION['config']['businessappurl'];
