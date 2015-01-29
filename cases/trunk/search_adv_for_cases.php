@@ -810,7 +810,7 @@ function del_query_confirm()
     </dd>
 </dl>
 </div>
-<div align="center"><input type="button" class="button" name="close" id="close" value="<?php echo _CLOSE_WINDOW;?>" onclick="self.close();" /></div>
+<!-- <div align="center"><input type="button" class="button" name="close" id="close" value="<?php echo _CLOSE_WINDOW;?>" onclick="self.close();" /></div> -->
 </div>
 
 <script type="text/javascript">
