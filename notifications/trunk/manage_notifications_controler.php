@@ -220,17 +220,17 @@ function display_list() {
             switch ($item['column']) {
                 case 'notification_sid':
                     format_item(
-                        $item, _ID, '18', 'left', 'left', 'bottom', true
+                        $item, _ID, '15', 'left', 'left', 'bottom', true
                     );
                     break;
                 case 'notification_id':
                     format_item(
-                        $item, _NOTIFICATION_ID, '50', 'left', 'left', 'bottom', true
+                        $item, _NOTIFICATION_ID, '30', 'left', 'left', 'bottom', true
                     );
                     break;
                 case 'description':
                     format_item(
-                        $item, _DESC, '255', 'left', 'left', 'bottom', true
+                        $item, _DESC, '45', 'left', 'left', 'bottom', true
                     );
                     break;
             }
