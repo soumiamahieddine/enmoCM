@@ -1442,6 +1442,17 @@ class list_show extends functions
             $doc_converter = new doc_converter();
             $doc_converter->convert_list($result);
         }
+?>
+
+        <script>
+            $$('#container')[0].setAttribute('style', 'width: 90%; min-width: 1000px;');
+            $$('#content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');
+            $$('#inner_content')[0].setAttribute('style', 'width: auto; min-width: 1000px;');
+            // $$('table#test')[0].setAttribute('style', 'width: 100%; min-width: 900px; margin: 0;');
+            $$('table.listing')[0].setAttribute('style', 'width: 100%; min-width: 900px;');
+        </script>
+
+<?php
     }
 
 

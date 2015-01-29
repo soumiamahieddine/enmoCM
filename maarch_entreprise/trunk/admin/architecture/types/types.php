@@ -88,7 +88,7 @@ for ($i = 0; $i < count($tab); $i ++) {
             if ($tab[$i][$j][$value] == "type_id") {
                 $tab[$i][$j]["type_id"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["label"] = _ID;
-                $tab[$i][$j]["size"] = "10";
+                $tab[$i][$j]["size"] = "20";
                 $tab[$i][$j]["label_align"] = "left";
                 $tab[$i][$j]["align"] = "left";
                 $tab[$i][$j]["valign"] = "bottom";
@@ -101,7 +101,7 @@ for ($i = 0; $i < count($tab); $i ++) {
                 );
                 $tab[$i][$j]["description"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["label"] = _DESC;
-                $tab[$i][$j]["size"] = "80";
+                $tab[$i][$j]["size"] = "70";
                 $tab[$i][$j]["label_align"] = "left";
                 $tab[$i][$j]["align"] = "left";
                 $tab[$i][$j]["valign"] = "bottom";

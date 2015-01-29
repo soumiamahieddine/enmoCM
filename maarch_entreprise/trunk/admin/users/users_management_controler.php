@@ -208,15 +208,15 @@ function display_list(){
         foreach($tab[$i] as &$item) {
             switch ($item['column']){
                 case "user_id":
-                    format_item($item,_ID,"10","left","left","bottom",true); break;
+                    format_item($item,_ID,"20","left","left","bottom",true); break;
                 case "lastname":
-                    format_item($item,_LASTNAME,"10","left","left","bottom",true); break;
+                    format_item($item,_LASTNAME,"20","left","left","bottom",true); break;
                 case "firstname":
-                    format_item($item,_FIRSTNAME,"10","left","left","bottom",true); break;
+                    format_item($item,_FIRSTNAME,"20","left","left","bottom",true); break;
                 case "enabled":
                     format_item($item,_STATUS,"3","left","center","bottom",true); break;
                 case "mail":
-                    format_item($item,_MAIL,"10","left","left","bottom",true); break;
+                    format_item($item,_MAIL,"27","left","left","bottom",true); break;
                 case "status":
                     if($item['value'] == "ABS")
                         $item['value'] = "<em>("._MISSING.")</em>";

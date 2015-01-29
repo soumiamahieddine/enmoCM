@@ -1,7 +1,7 @@
 <?php
 /*
 *
-*    Copyright 2008,2012 Maarch
+*    Copyright 2008,2015 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -89,7 +89,7 @@ for ($i=0;$i<count($tab);$i++)
         {
             $tab[$i][$j]["id"]=$tab[$i][$j]['value'];
             $tab[$i][$j]["label"]= _ID;
-            $tab[$i][$j]["size"]="30";
+            $tab[$i][$j]["size"]="20";
             $tab[$i][$j]["label_align"]="left";
             $tab[$i][$j]["align"]="left";
             $tab[$i][$j]["order"]=$tab[$i][$j][$col];
@@ -102,7 +102,7 @@ for ($i=0;$i<count($tab);$i++)
             $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
             $tab[$i][$j]["description"]=$tab[$i][$j]['value'];
             $tab[$i][$j]["label"]=_DESC;
-            $tab[$i][$j]["size"]="50";
+            $tab[$i][$j]["size"]="30";
             $tab[$i][$j]["label_align"]="left";
             $tab[$i][$j]["align"]="left";
             $tab[$i][$j]["order"]=$tab[$i][$j][$col];
@@ -110,10 +110,22 @@ for ($i=0;$i<count($tab);$i++)
             $tab[$i][$j]["show"]=true;
         }
         
-        if($tab[$i][$j]['column']=="param_value_string" && (string)$tab[$i][$j]['value'] != '')
+        if($tab[$i][$j]['column']=="param_value_string" && (string)$tab[$i][$j]['value'] <> "")
         {
             $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
-            $tab[$i][$j]["label"]=_VALUE;
+            // $tab[$i][$j]["label"]=_VALUE;
+            $tab[$i][$j]["size"]="30";
+            $tab[$i][$j]["label_align"]="left";
+            $tab[$i][$j]["align"]="left";
+            $tab[$i][$j]["order"]=$tab[$i][$j][$col];
+            $tab[$i][$j]["valign"]="bottom";
+            $tab[$i][$j]["show"]=true;
+            $value_shown = true;
+        }
+        if($tab[$i][$j]['column']=="param_value_int" && (string)$tab[$i][$j]['value'] <> "")
+        {
+            $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
+            // $tab[$i][$j]["label"]=_VALUE;
             $tab[$i][$j]["size"]="50";
             $tab[$i][$j]["label_align"]="left";
             $tab[$i][$j]["align"]="left";
@@ -122,22 +134,10 @@ for ($i=0;$i<count($tab);$i++)
             $tab[$i][$j]["show"]=true;
             $value_shown = true;
         }
-        if($tab[$i][$j]['column']=="param_value_int" && (string)$tab[$i][$j]['value'] != '')
+        if($tab[$i][$j]['column']=="param_value_date" && (string)$tab[$i][$j]['value'] <> "")
         {
             $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
-            $tab[$i][$j]["label"]=_VALUE;
-            $tab[$i][$j]["size"]="50";
-            $tab[$i][$j]["label_align"]="left";
-            $tab[$i][$j]["align"]="left";
-            $tab[$i][$j]["order"]=$tab[$i][$j][$col];
-            $tab[$i][$j]["valign"]="bottom";
-            $tab[$i][$j]["show"]=true;
-            $value_shown = true;
-        }
-        if($tab[$i][$j]['column']=="param_value_date" && (string)$tab[$i][$j]['value'] != '')
-        {
-            $tab[$i][$j]['value']=$request->show_string($tab[$i][$j]['value']);
-            $tab[$i][$j]["label"]=_VALUE;
+            // $tab[$i][$j]["label"]=_VALUE;
             $tab[$i][$j]["size"]="50";
             $tab[$i][$j]["label_align"]="left";
             $tab[$i][$j]["align"]="left";
@@ -147,6 +147,7 @@ for ($i=0;$i<count($tab);$i++)
             $value_shown = true;
         }
     }
+
     if(!$value_shown) {
         $tab[$i][2]['column'] = 'param_value_string';
         $tab[$i][2]['value']='';
@@ -160,6 +161,8 @@ for ($i=0;$i<count($tab);$i++)
     }
 
 }
+
+$tab[0][2]["label"]=_VALUE;
 
 $page_name = "admin_parameters";
 $page_name_up = "admin_parameter&mode=up";
