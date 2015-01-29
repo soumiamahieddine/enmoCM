@@ -47,7 +47,7 @@ if (!defined('_CASE_CLOSED'))
 if (!defined('_CASE_NUMBER'))
     define('_CASE_NUMBER', 'Num&eacute;ro de l&rsquo;affaire');
 if (!defined('_CASE_NUMBER_HELP'))
-    define('_CASE_NUMBER_HELP', 'Recherche sur une affaire comprenant plusieurs courriers...');
+    define('_CASE_NUMBER_HELP', 'Recherchez sur une affaire comprenant plusieurs courriers...');
 if (!defined('_N_CASE'))
     define('_N_CASE', 'num&eacute;ro de l&rsquo;affaire');
 if (!defined('_CANT_SHOW_THIS_CASE'))
