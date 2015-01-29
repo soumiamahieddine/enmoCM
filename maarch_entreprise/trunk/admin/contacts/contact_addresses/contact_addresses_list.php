@@ -64,7 +64,12 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
 $select["view_contacts"] = array();
 array_push(
     $select["view_contacts"],
-    "ca_id", "contact_id", "society", "contact_purpose_id", "departement", "lastname", "firstname", "function", "address_town", "phone", "email"
+    "ca_id", "contact_id", "society", "contact_purpose_id"
+    , "departement
+    , case when view_contacts.contact_lastname <> '' then view_contacts.contact_lastname else view_contacts.lastname end as \"lastname\"
+    , case when view_contacts.contact_firstname <> '' then view_contacts.contact_firstname else view_contacts.firstname end as \"firstname\"
+    , case when view_contacts.contact_function <> '' then view_contacts.contact_function else view_contacts.function end as \"function\""
+    , "address_town", "phone", "email"
 );
 $what = "";
 $where = "";
@@ -81,11 +86,15 @@ if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) 
         $sql_lastname[] = " lower(lastname) LIKE lower('".$what_a."%')";
         $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
         $sql_society[] = " lower(departement) LIKE lower('".$what_a."%')";
+        $sql_contact_firstname[] = " lower(contact_firstname) LIKE lower('".$what_a."%')";
+        $sql_contact_lastname[] = " lower(contact_lastname) LIKE lower('".$what_a."%')";
     }
 
     $where .= " (" . implode(' OR ', $sql_lastname) . " ";
     $where .= " or " . implode(' OR ', $sql_firstname) . " ";
-    $where .= " or " . implode(' OR ', $sql_society) . ") ";
+    $where .= " or " . implode(' OR ', $sql_society) . " ";
+    $where .= " or " . implode(' OR ', $sql_contact_firstname) . " ";
+    $where .= " or " . implode(' OR ', $sql_contact_lastname) . ") ";
 }
 
 $list = new list_show();
@@ -93,10 +102,21 @@ $order = 'asc';
 if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
     $order = trim($_REQUEST['order']);
 }
+
+//use to pass the next condition in order_field. Then we need to delete them.
+array_push(
+    $select["view_contacts"],
+    "lastname", "firstname", "function"
+);
+
 $field = 'contact_purpose_id';
 if (isset($_REQUEST['order_field']) && ! empty($_REQUEST['order_field']) && in_array($_REQUEST['order_field'], $select["view_contacts"])) {
     $field = trim($_REQUEST['order_field']);
 }
+
+array_pop($select["view_contacts"]);
+array_pop($select["view_contacts"]);
+array_pop($select["view_contacts"]);
 
 $orderstr = $list->define_order($order, $field);
 
@@ -104,6 +124,7 @@ $request = new request;
 $tab = $request->select(
     $select, $where, $orderstr, $_SESSION['config']['databasetype']
 );
+// $request->show();
 
 for ($i = 0; $i < count($tab); $i ++) {
     for ($j = 0; $j < count($tab[$i]); $j ++) {
