@@ -419,6 +419,47 @@ abstract class ObjectControler
     }
 
     /**
+     * Reactivate given object from given table, according with
+     * given table id name.
+     * Return true if succeeded.
+     * @param Any $object
+     * @return boolean
+     */
+    protected function advanced_reactivate($object)
+    {
+        if (!isset($object)) {
+            return false;
+        }
+        $table_name = get_class($object);
+        $table_id = $table_name . '_id';
+
+        if (isset(self::$specific_id) && !empty(self::$specific_id)) {
+            $table_id = self::$specific_id;
+        }
+        self::$db = new dbquery();
+        self::$db->connect();
+        if (in_array($table_id, self::$foolish_ids) ){
+             $query = "update $table_name set status = 'OK' where $table_id='"
+                    . $object->$table_id . "'";
+        } else {
+            $query="update $table_name set status = 'OK' where $table_id=".$object->$table_id;
+        }
+        try{
+            if(_DEBUG){
+                echo "enable: $query // ";
+            }
+            self::$db->query($query);
+            $result = true;
+        } catch (Exception $e) {
+            echo 'Impossible to enable object with id=' . $object->$table_id
+                . ' // ';
+            $result = false;
+        }
+        self::$db->disconnect();
+        return $result;
+    }
+
+    /**
      * Disable given object from given table, according with
      * given table id name.
      * Return true if succeeded.
