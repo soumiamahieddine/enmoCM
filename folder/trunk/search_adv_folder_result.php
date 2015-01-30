@@ -44,7 +44,6 @@ $view = $_SESSION['view']['view_folders'];
 $where_request = "";
 $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 
-
 //Foldertype
     if(isset($_REQUEST['foldertype_id']) && !empty($_REQUEST['foldertype_id']))
     {
@@ -53,7 +52,11 @@ $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
     }
     else
     {
-        $_SESSION['folder_search']['foldertype_id'] = "";
+        if(!empty($_SESSION['folder_search']['foldertype_id'])){
+            $where_request .= " ".$view.".foldertype_id = ".$_SESSION['folder_search']['foldertype_id']." and ";
+        }else{
+            $_SESSION['folder_search']['foldertype_id'] = "";
+        }
     }
     
 //Foldername
@@ -71,7 +74,18 @@ $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
     }
     else
     {
-        $_SESSION['folder_search']['folder_name'] = "";
+        if(!empty($_SESSION['folder_search']['folder_name'])){
+            if($_SESSION['config']['databasetype'] == "POSTGRESQL")
+            {
+                $where_request .= " ".$view.".folder_name ilike '%".$func->protect_string_db($_SESSION['folder_search']['folder_name'],$_SESSION['config']['databasetype'])."%' and ";
+            }
+            else
+            {
+                $where_request .= " ".$view.".folder_name like '%".$func->protect_string_db($_SESSION['folder_search']['folder_name'],$_SESSION['config']['databasetype'])."%' and ";
+            }
+        }else{
+            $_SESSION['folder_search']['folder_name'] = "";
+        }
     }
     
 //Folder id
@@ -89,11 +103,23 @@ $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
     }
     else
     {
-        $_SESSION['folder_search']['folder_id'] = '';
+        if(!empty($_SESSION['folder_search']['foldertype_id'])){
+            
+            if($_SESSION['config']['databasetype'] == "POSTGRESQL")
+            {
+                $where_request .= " ".$view.".folder_id ilike '".$func->protect_string_db($_SESSION['folder_search']['folder_id'],$_SESSION['config']['databasetype'])."%' and ";
+            }
+            else
+            {
+                $where_request .= " ".$view.".folder_id like '".$func->protect_string_db($_SESSION['folder_search']['folder_id'],$_SESSION['config']['databasetype'])."%' and ";
+            }    
+        }else{
+            $_SESSION['folder_search']['folder_id'] = "";
+        }
     }
 
 //Creation date
-    $_SESSION['folder_search']['creation_date_start'] = '';
+    //$_SESSION['folder_search']['creation_date_start'] = '';
     if(!empty($_REQUEST['creation_date_start']) && isset($_REQUEST['creation_date_start']))
     {
         if( preg_match($date_pattern,$_REQUEST['creation_date_start'])==false )
@@ -106,8 +132,14 @@ $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
             $_SESSION['folder_search']['creation_date_start'] = $func->format_date_db($_REQUEST['creation_date_start']);
             $where_request .= " (".$req->extract_date($view.'.creation_date')." >= '".$_SESSION['folder_search']['creation_date_start']."') and ";
         }
+    }else{
+        if(!empty($_SESSION['folder_search']['creation_date_start'])){
+            $where_request .= " (".$req->extract_date($view.'.creation_date')." >= '".$_SESSION['folder_search']['creation_date_start']."') and ";
+        }
     }
-    $_SESSION['folder_search']['creation_date_end'] ='';
+
+
+    //$_SESSION['folder_search']['creation_date_end'] ='';
     if(!empty($_REQUEST['creation_date_end']) && isset($_REQUEST['creation_date_end']))
     {
         if( preg_match($date_pattern,$_REQUEST['creation_date_end'])==false )
@@ -117,6 +149,10 @@ $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
         else
         {
             $_SESSION['folder_search']['creation_date_end'] = $func->format_date_db($_REQUEST['creation_date_end']);
+            $where_request .= " (".$req->extract_date($view.'.creation_date')." <= '".$_SESSION['folder_search']['creation_date_end']."') and ";
+        }
+    }else{
+        if(!empty($_SESSION['folder_search']['creation_date_end'])){
             $where_request .= " (".$req->extract_date($view.'.creation_date')." <= '".$_SESSION['folder_search']['creation_date_end']."') and ";
         }
     }

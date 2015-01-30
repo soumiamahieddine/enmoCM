@@ -244,6 +244,8 @@ if ($chooseColl) {
     <div class="block_end"></div>
     </form>
 
+    <?php unset($_SESSION['folder_search']); ?>
+
     <script type="text/javascript">
     var foldertypes = $('foldertype_id');
     if(foldertypes)
