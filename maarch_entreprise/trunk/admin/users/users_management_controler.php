@@ -8,7 +8,6 @@ $entities_loaded = false;
 if(core_tools::is_module_loaded('entities')){
     $entities_loaded = true;
 }
-
 // Default mode is add
 $mode = 'add';
 if(isset($_REQUEST['mode']) && !empty($_REQUEST['mode'])){
@@ -52,7 +51,7 @@ if(isset($_REQUEST['user_submit'])){
             location_bar_management($mode);
             break;
         case "add" :
-            display_add();
+            display_add();  
             $_SESSION['service_tag'] = 'user_init';
             core_tools::execute_modules_services($_SESSION['modules_services'], 'user_init', "include");
             $_SESSION['m_admin']['nbgroups']  = $ugc->getUsergroupsCount();
@@ -393,7 +392,6 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show,$orde
  * up to saving object
  */
 function validate_user_submit(){
-
     $uc = new users_controler();
     $pageName = "users_management_controler";
 
@@ -401,6 +399,12 @@ function validate_user_submit(){
     $user = new users();
     $user->user_id=$_REQUEST['user_id'];
     $_SESSION['m_admin']['users']['user_id']=$_REQUEST['user_id'];
+
+    if(isset($_REQUEST['reactivate'])){
+        $mode='up';
+        $uc->reactivate($user);
+    }
+
     if($mode == "add"){
         if(isset($_SESSION['config']['userdefaultpassword']) && !empty($_SESSION['config']['userdefaultpassword'])){
             $user->password = $_SESSION['config']['userdefaultpassword'];
@@ -453,7 +457,6 @@ function validate_user_submit(){
         $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         put_in_session("status", $status);
         put_in_session("users",$user->getArray());
-
         switch ($mode) {
             case "up":
                 if(!empty($user->user_id)) {
