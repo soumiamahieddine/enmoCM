@@ -70,8 +70,6 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         $user = self::advanced_get($userId, USERS_TABLE, $compWhere);
 
         if (isset($user)
-            && ($user->__get('status') == 'OK' 
-            || $user->__get('status') == 'ABS')
         ) {
             return $user;
         } else {
@@ -386,6 +384,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             if (self::userExists($user->user_id)) {
                 $error .= _USER . ' ' . _ALREADY_EXISTS . '#';
             }
+
+            if (self::userDeleted($user->user_id)) {
+                $url = "'".$_SESSION['config']['businessappurl']."index.php?admin=users&page=users_management_controler&mode=up&reactivate=true'";
+                $error .= _USER . '  ' . _ALREADY_CREATED_AND_DELETED .' (<a style="cursor:pointer;" onclick="document.getElementById(\'frmuser\').action ='.$url.';document.getElementById(\'user_submit\').click();">' . _REACTIVATE .' ?</a>)'. '#';
+            }
         }
 
         $user->firstname = $f->protect_string_db(
@@ -530,6 +533,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         self::$db->disconnect();
         if ($ok) {
             $control = self::cleanUsergroupContent($user->user_id);
+            $control = self::cleanUserentityContent($user->user_id);
         }
 
         if ($control['status'] == 'ok') {
@@ -591,6 +595,46 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     }
 
     /**
+    * Cleans the users_entities table in the database from a given user
+    *   (user_id)
+    *
+    * @param  $userId string  User identifier
+    * @return bool true if the cleaning is complete, false otherwise
+    */
+    public function cleanUserentityContent($userId)
+    {
+        $control = array();
+        if (! isset($userId) || empty($userId)) {
+            $control = array(
+                'status' => 'ko',
+                'value' => '',
+                'error' => _USER_ID_EMPTY,
+            );
+            return $control;
+        }
+
+        self::$db = new dbquery();
+        self::$db->connect();
+        $func = new functions();
+        $query = "delete from users_entities where user_id='"
+               . $func->protect_string_db($userId) . "'";
+        try{
+            self::$db->query($query);
+            $control = array(
+                'status' => 'ok',
+                'value'  => $userId,
+            );
+        } catch (Exception $e){
+            $control = array(
+                'status' => 'ko',
+                'value'  => '',
+                'error'  => _CANNOT_CLEAN_USERENTITY_CONTENT . ' ' . $userId,
+            );
+        }
+        self::$db->disconnect();
+        return $control;
+    }
+    /**
     * Asserts if a given user (user_id) exists in the database
     *
     * @param  $userId String User identifier
@@ -606,7 +650,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         self::$db->connect();
         $func = new functions();
         $query = 'select user_id from ' . USERS_TABLE . " where user_id = '"
-               . $func->protect_string_db($userId) . "'";
+               . $func->protect_string_db($userId) . "' and status<>'DEL'";
 
         try{
             self::$db->query($query);
@@ -775,5 +819,58 @@ class users_controler extends ObjectControler implements ObjectControlerIF
             . $func->protect_string_db($newPassword) 
             . "', change_password = 'Y' where user_id = '".$userId."'";
         return self::$db->query($query, true);
+    }
+
+
+    /**
+    * Asserts if a given user (user_id) is deleted in the database
+    *
+    * @param  $userId String User identifier
+    * @return bool true if the user is deleted, false otherwise
+    */
+    public function userDeleted($userId)
+    {
+        if (! isset($userId) || empty($userId)) {
+            return false;
+        }
+
+        self::$db = new dbquery();
+        self::$db->connect();
+        $func = new functions();
+        $query = 'select user_id from ' . USERS_TABLE . " where user_id = '"
+               . $func->protect_string_db($userId) . "' and status = 'DEL'";
+
+        try{
+            self::$db->query($query);
+        } catch (Exception $e){
+            echo _UNKNOWN . ' ' . _USER . ' ' . $userId . ' // ';
+        }
+
+        if (self::$db->nb_result() > 0) {
+            self::$db->disconnect();
+            return true;
+        }
+        self::$db->disconnect();
+        return false;
+    }
+
+    /**
+    * Reactivate a given user
+    *
+    * @param  $user user object
+    * @return bool true if activate is complete, false otherwise
+    */
+    public function reactivate($user)
+    {
+        $user = self::_isAUser($user);
+        self::set_foolish_ids(array('user_id', 'docserver_location_id'));
+        self::set_specific_id('user_id');
+
+        if(self::advanced_reactivate($user)){
+            return true;
+
+        }else{
+          return false;
+        }
     }
 }
