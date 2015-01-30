@@ -33,7 +33,7 @@ if($mode == "list")
                 );
 }
 elseif($mode == "up" || $mode == "add")
-{
+{  
     ?><script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=users_management.js"></script><?php
     if($mode == "add")
     {
@@ -116,7 +116,7 @@ elseif($mode == "up" || $mode == "add")
                     <?php
                 }
                 ?><br/>
-                <input type="submit" name="user_submit" value="<?php  echo _VALIDATE; ?>" class="button"/>
+                <input type="submit" name="user_submit" id="user_submit" value="<?php  echo _VALIDATE; ?>" class="button"/>
                  <input type="button" class="button"  name="cancel" value="<?php  echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=users_management_controler&amp;mode=list&amp;admin=users';"/>
             </p>
             </div>
