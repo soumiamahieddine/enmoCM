@@ -16,7 +16,10 @@ if($_SESSION['service_tag'] == 'user_init' && isset($_SESSION['m_admin']['users'
             $tmp_array[$i]['SHORT_LABEL'] = $ent->__get('short_label');
         }
     }
-    $_SESSION['m_admin']['entity']['entities'] = $tmp_array;
+    if(!empty($tmp_array)){
+        $_SESSION['m_admin']['entity']['entities'] = $tmp_array;
+    }
+    
     unset($tmp_array);
 }
 elseif($_SESSION['service_tag'] == 'formuser')
