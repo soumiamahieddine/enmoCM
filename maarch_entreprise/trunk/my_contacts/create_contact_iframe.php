@@ -70,7 +70,7 @@ $contact->formcontact("add", "", false, true);
 if(isset($_GET['created']) && $_GET['created'] <> ''){
 ?>
 	<script type="text/javascript">
-		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address';?>", "create_contact_div");
+		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address';?>", "create_contact_div", "true");
 	</script>
 <?php
 }

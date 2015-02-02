@@ -1239,7 +1239,7 @@ if (!defined('_DOC_LOCKER_RES_ID')) define('_DOC_LOCKER_RES_ID', 'You can not op
 if (!defined('_DOC_LOCKER_USER')) define('_DOC_LOCKER_USER', ', it is already processing by :');
 
 //EXPORT CONTACT
-if (!defined('_EXPORT_CONTACT')) define('_EXPORT_CONTACT', 'Exporter contacts');
+if (!defined('_EXPORT_CONTACT')) define('_EXPORT_CONTACT', 'Export contacts');
 
 //INDEXATION WITHOUT FILE
 if (!defined('_WITHOUT_FILE')) define('_WITHOUT_FILE', 'Without file');
@@ -1322,6 +1322,8 @@ if (!defined('_NEW_CONTACT_ADDRESS')) define( '_NEW_CONTACT_ADDRESS','Add a new 
 if (!defined('_A_CONTACT_ADDRESS')) define( '_A_CONTACT_ADDRESS','an address');
 if (!defined('_ALL_CONTACT_ADDRESSES')) define( '_ALL_CONTACT_ADDRESSES','All addresses');
 if (!defined('_THE_CONTACT')) define( '_THE_CONTACT','The contact');
+
+if (!defined('_SEE_ALL_ADDRESSES')) define( '_SEE_ALL_ADDRESSES','See all addresses');
 
 if (!defined('_MANAGE_CONTACT_ADDRESSES')) define( '_MANAGE_CONTACT_ADDRESSES','<h2>Manage associated addresses</h2>');
 if (!defined('_DEPARTEMENT')) define( '_DEPARTEMENT','Department');

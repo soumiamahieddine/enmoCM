@@ -63,7 +63,10 @@ if(isset($_GET['mycontact']) && $_GET['mycontact'] <> ''){
 		$iframe = 1;
 	} else if ($_GET['mycontact'] == 'iframe_add_up') {
 		$iframe = 2;
-	}
+	} else if ($_GET['mycontact'] == 'fromContactIframe') {
+        $iframe = 3;
+    }
+
 } else {
 	$admin = true;
 }

@@ -948,6 +948,8 @@ if (!defined('_MANAGE_CONTACT_PURPOSES')) define( '_MANAGE_CONTACT_PURPOSES','Ge
 if (!defined('_MANAGE_CONTACTS_DESC')) define( '_MANAGE_CONTACTS_DESC','Gestion des contacts');
 if (!defined('_MANAGE_CONTACTS')) define( '_MANAGE_CONTACTS','Gestion des contacts <br/>(Niveau 2)');
 
+if (!defined('_SEE_ALL_ADDRESSES')) define( '_SEE_ALL_ADDRESSES','Voir toutes les adresses');
+
 if (!defined('_MANAGE_CONTACT_ADDRESSES_LIST_DESC')) define( '_MANAGE_CONTACT_ADDRESSES_LIST_DESC','Gestion des adresses');
 if (!defined('_MANAGE_CONTACT_ADDRESSES_LIST')) define( '_MANAGE_CONTACT_ADDRESSES_LIST','Gestion des adresses');
 
@@ -1672,7 +1674,7 @@ if (!defined('_DOC_LOCKER_USER')) define('_DOC_LOCKER_USER', ', il est déjà en
 if (!defined('_MONITORING_NUMBER')) define('_MONITORING_NUMBER', 'N&deg; recommand&eacute;');
 
 //EXPORT CONTACT
-if (!defined('_EXPORT_CONTACT')) define('_EXPORT_CONTACT', 'Exporter contacts');
+if (!defined('_EXPORT_CONTACT')) define('_EXPORT_CONTACT', 'Exporter les contacts');
 
 //INDEXATION WITHOUT FILE
 if (!defined('_WITHOUT_FILE')) define('_WITHOUT_FILE', 'Sans fichier');

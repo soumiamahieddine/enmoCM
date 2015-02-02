@@ -296,7 +296,7 @@ for ($i = 0; $i < count($tab); $i ++) {
     $paramsTab['addButtonLabel'] = _NEW_CONTACT_ADDRESS;                                //Libellé du bouton Nouveau
     if ($from_iframe) {
 	    $paramsTab['addButtonScript'] = "window.location='".$_SESSION['config']['businessappurl']
-	        ."index.php?display=false&dir=my_contacts&page=create_address_iframe&iframe=iframe_up_add'";
+	        ."index.php?display=false&dir=my_contacts&page=create_address_iframe&iframe=fromContactIframe'";
     } else {
         if($mode <> 'view'){
         $paramsTab['addButtonScript'] = "window.top.location='".$_SESSION['config']['businessappurl']
@@ -312,7 +312,7 @@ for ($i = 0; $i < count($tab); $i ++) {
        if ($from_iframe) {
 	        $update = array(
 	                "script"        => "window.location='".$_SESSION['config']['businessappurl']
-	                                        ."index.php?display=false&dir=my_contacts&page=update_address_iframe&id=@@id@@'",
+	                                        ."index.php?display=false&dir=my_contacts&page=update_address_iframe&id=@@id@@&fromContactIframe'",
 	                "class"         =>  "change",
 	                "label"         =>  _MODIFY,
 	                "tooltip"       =>  _MODIFY
@@ -331,7 +331,7 @@ for ($i = 0; $i < count($tab); $i ++) {
 
 		if ($from_iframe) {
 	        $use = array(
-	                "script"        => "set_new_contact_address('".$_SESSION['config']['businessappurl'] . "index.php?display=false&dir=my_contacts&page=get_last_contact_address&contactid=".$_SESSION['contact']['current_contact_id']."&addressid=@@id@@', 'info_contact_div')",
+	                "script"        => "set_new_contact_address('".$_SESSION['config']['businessappurl'] . "index.php?display=false&dir=my_contacts&page=get_last_contact_address&contactid=".$_SESSION['contact']['current_contact_id']."&addressid=@@id@@', 'info_contact_div', 'true')",
 	                "class"         =>  "change",
 	                "label"         =>  _USE
 	                );

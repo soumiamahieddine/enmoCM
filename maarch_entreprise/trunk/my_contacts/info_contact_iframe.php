@@ -82,6 +82,19 @@ $query = "select * from ".$_SESSION['tablename']['contacts_v2']." where contact_
 $request->query($query);
 $line = $request->fetch_object();
 
+$_SESSION['m_admin']['contact'] = array();
+$_SESSION['m_admin']['contact']['ID'] = $line->contact_id;
+$_SESSION['m_admin']['contact']['TITLE'] = $request->show_string($line->title);
+$_SESSION['m_admin']['contact']['LASTNAME'] = $request->show_string($line->lastname);
+$_SESSION['m_admin']['contact']['FIRSTNAME'] = $request->show_string($line->firstname);
+$_SESSION['m_admin']['contact']['SOCIETY'] = $request->show_string($line->society);
+$_SESSION['m_admin']['contact']['SOCIETY_SHORT'] = $request->show_string($line->society_short);
+$_SESSION['m_admin']['contact']['FUNCTION'] = $request->show_string($line->function);
+$_SESSION['m_admin']['contact']['OTHER_DATA'] = $request->show_string($line->other_data);
+$_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = $request->show_string($line->is_corporate_person);
+$_SESSION['m_admin']['contact']['CONTACT_TYPE'] = $line->contact_type;
+$_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
+
 if (isset($_GET['mode']) && $_GET['mode'] <> '') {
 	$mode = $_GET['mode'];
 } else {
@@ -95,24 +108,18 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
 	if (isset($_REQUEST['popup'])) {
 		$_SESSION['info_contact_popup'] = "true";
 	}
-	include_once 'apps/' . $_SESSION['config']['app_id'] . '/my_contacts/my_contact_up.php';
+
+	if (isset($_GET['seeAllAddresses'])) {
+		include_once 'apps/' . $_SESSION['config']['app_id'] . '/my_contacts/my_contact_up.php';
+	} else {
+		$_GET['id'] = $_GET['addressid'];
+		include_once 'apps/' . $_SESSION['config']['app_id'] . '/my_contacts/update_address_iframe.php';
+	}
+
 } else {
 	require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 	require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
 	$contact = new contacts_v2();
-
-	$_SESSION['m_admin']['contact'] = array();
-	$_SESSION['m_admin']['contact']['ID'] = $line->contact_id;
-	$_SESSION['m_admin']['contact']['TITLE'] = $request->show_string($line->title);
-	$_SESSION['m_admin']['contact']['LASTNAME'] = $request->show_string($line->lastname);
-	$_SESSION['m_admin']['contact']['FIRSTNAME'] = $request->show_string($line->firstname);
-	$_SESSION['m_admin']['contact']['SOCIETY'] = $request->show_string($line->society);
-	$_SESSION['m_admin']['contact']['SOCIETY_SHORT'] = $request->show_string($line->society_short);
-	$_SESSION['m_admin']['contact']['FUNCTION'] = $request->show_string($line->function);
-	$_SESSION['m_admin']['contact']['OTHER_DATA'] = $request->show_string($line->other_data);
-	$_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = $request->show_string($line->is_corporate_person);
-	$_SESSION['m_admin']['contact']['CONTACT_TYPE'] = $line->contact_type;
-	$_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
 
 	$query = "select * from ".$_SESSION['tablename']['contact_addresses']." where id = ".$_GET['addressid'];
 	$request->query($query);
@@ -160,10 +167,22 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
 	</script>
 <?php
 
-if(isset($_GET['created']) && $_GET['created'] <> ''){
+if ($_GET['created'] == "open") {
+	?>
+		<script type="text/javascript">
+			set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up';?>", "info_contact_div", "false");
+		</script>
+	<?php
+} else if(isset($_GET['created']) && $_GET['created'] == 'add'){
 ?>
 	<script type="text/javascript">
-		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up';?>", "info_contact_div");
+		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address';?>", "info_contact_div", "true");
+	</script>
+<?php
+} else if(isset($_GET['created']) && $_GET['created'] <> ''){
+?>
+	<script type="text/javascript">
+		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up';?>", "info_contact_div", "true");
 	</script>
 <?php
 }

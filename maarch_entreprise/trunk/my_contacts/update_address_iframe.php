@@ -66,7 +66,14 @@ else
     $id = "";
 }
 
-$contact->formaddress("up", $id, false, "iframe_add_up");
+if (isset($_GET['fromContactIframe'])) {
+	$iframe_txt = "fromContactIframe";
+	$_SESSION['contact']['current_address_id'] = $id;
+} else {
+	$iframe_txt = "iframe_add_up";
+}
+
+$contact->formaddress("up", $id, false, $iframe_txt);
 
 
 ?>
