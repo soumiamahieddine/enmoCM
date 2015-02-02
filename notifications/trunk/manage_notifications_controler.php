@@ -167,6 +167,8 @@ function display_list() {
 
     if (PHP_OS == "Linux") {
 	?>
+        <table>
+        </table>
     	<table width="100%">
     	    <tr>
     	        <td align="right">

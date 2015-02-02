@@ -227,7 +227,7 @@ if (!defined('_NOTIF_MODIFIED'))
 if (!defined('_NOTIF_EMPTY'))
     define('_NOTIF_EMPTY', 'Notification vide');
 if (!defined('_ALL_NOTIFS'))
-    define('_ALL_NOTIFS', 'Toutes les notifications');
+    define('_ALL_NOTIFS', 'Toutes');
 if (!defined('_SYSTEM'))
     define('_SYSTEM', 'Syst&egrave;me');
 if (!defined('_ENTITY'))
