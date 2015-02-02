@@ -470,6 +470,7 @@ if (!defined('_GROUP_MODIFICATION')) define('_GROUP_MODIFICATION', 'Edit a group
 if (!defined('_GROUP_SUSPENSION')) define('_GROUP_SUSPENSION', 'Disable a group');
 if (!defined('_GROUP_UPDATE')) define('_GROUP_UPDATE', 'Modify a group');
 if (!defined('_GROUP_UPDATED')) define('_GROUP_UPDATED', 'Group modified');
+if (!defined('_CHOOSE_GROUP_ADMIN')) define( '_CHOOSE_GROUP_ADMIN', 'Choose a group');
 if (!defined('_GZIP_COMPRESSION_MODE'))  define('_GZIP_COMPRESSION_MODE', 'GZIP compression mode (tar.gz) only avaible for the consultation');
 if (!defined('_HAS_BEEN_RESET')) define('_HAS_BEEN_RESET', 'has been reset');
 if (!defined('_HAS_JUST_OCCURED')) define('_HAS_JUST_OCCURED', 'just occured');

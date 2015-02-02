@@ -286,6 +286,8 @@ if (!defined('_ADD_GRANT')) define( '_ADD_GRANT', 'Ajouter acc&egrave;s');
 if (!defined('_UP_GRANT')) define( '_UP_GRANT', 'Modifier acc&egrave;s');
 if (!defined('_USERS_LIST_IN_GROUP')) define( '_USERS_LIST_IN_GROUP', 'Liste des utilisateurs du groupe');
 
+if (!defined('_CHOOSE_GROUP_ADMIN')) define( '_CHOOSE_GROUP_ADMIN', 'Choisir un groupe');
+
 /************** Utilisateurs : Liste + Formulaire**************/
 
 if (!defined('_USERS_LIST')) define( '_USERS_LIST', 'Liste des utilisateurs');

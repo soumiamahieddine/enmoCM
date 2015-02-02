@@ -69,7 +69,7 @@ unset($tab);
 <h2 class="tit"><?php  echo _ADD_GROUP;?></h2>
 <form name="chooseGroup" id="chooseGroup" method="get" action="#" class="forms">
 <p>
-    <label for="group_id"> <?php  echo _CHOOSE_GROUP;?> : </label>
+    <label for="group_id"> <?php  echo _CHOOSE_GROUP_ADMIN;?>&nbsp; : &nbsp;  &nbsp; </label>
     <select name="group_id" id="group_id" >
 <?php
 
