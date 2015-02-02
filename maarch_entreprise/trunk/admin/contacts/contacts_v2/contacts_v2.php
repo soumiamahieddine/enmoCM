@@ -63,6 +63,8 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 unset($_SESSION['fromContactTree']);
 ?>
+<table>
+</table>
 <table width="100%">
     <tr>
         <?php if ($admin->test_admin('admin_contacts', 'apps', false)) { ?>
