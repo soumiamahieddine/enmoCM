@@ -134,7 +134,7 @@ unset($entities);
 <form name="chooseEntity" id="chooseEntity" method="get" action="#" class="forms">
 <p>
     <label for="entity_id"> <?php  echo _CHOOSE_ENTITY;?> : </label>
-    <select name="entity_id" id="entity_id" size="30">
+    <select name="entity_id" id="entity_id" size="30" style="width: auto">
     <?php
         /*for($i=0; $i<count($entities);$i++)
         {
