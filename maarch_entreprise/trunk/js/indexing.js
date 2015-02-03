@@ -219,7 +219,7 @@ function checkRealDate(arg) {
         if (d1_admissionDate > current_date) {
             alert("La date d'arrivée doit être antérieure à la date du jour ");
             var current_month = date3.getMonth()+1;
-            $('admission_date').value = date3.getDate() + "-" + current_month + "-" + date3.getFullYear();
+            $('admission_date').value = (("0" + date3.getDate()).slice(-2)) + "-" + ("0" + current_month).slice(-2) + "-" + date3.getFullYear();
         }
     }
 }
