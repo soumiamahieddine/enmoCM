@@ -1121,31 +1121,35 @@ class contacts_v2 extends dbquery
             }
             else
             {
-                $_SESSION['m_admin']['address'] = array();
-                $line = $this->fetch_object();
-                $_SESSION['m_admin']['address']['ID'] = $line->id;
-                $_SESSION['m_admin']['address']['CONTACT_ID'] = $line->contact_id;
-                $_SESSION['m_admin']['address']['TITLE'] = $this->show_string($line->title);
-                $_SESSION['m_admin']['address']['LASTNAME'] = $this->show_string($line->lastname);
-                $_SESSION['m_admin']['address']['FIRSTNAME'] = $this->show_string($line->firstname);
-                $_SESSION['m_admin']['address']['FUNCTION'] = $this->show_string($line->function);
-                $_SESSION['m_admin']['address']['OTHER_DATA'] = $this->show_string($line->other_data);
-                $_SESSION['m_admin']['address']['OWNER'] = $line->user_id;
-                $_SESSION['m_admin']['address']['DEPARTEMENT'] = $this->show_string($line->departement);
-                $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = $line->contact_purpose_id;
-                $_SESSION['m_admin']['address']['OCCUPANCY'] = $this->show_string($line->occupancy);
-                $_SESSION['m_admin']['address']['ADD_NUM'] = $this->show_string($line->address_num);
-                $_SESSION['m_admin']['address']['ADD_STREET'] = $this->show_string($line->address_street);
-                $_SESSION['m_admin']['address']['ADD_COMP'] = $this->show_string($line->address_complement);
-                $_SESSION['m_admin']['address']['ADD_TOWN'] = $this->show_string($line->address_town);
-                $_SESSION['m_admin']['address']['ADD_CP'] = $this->show_string($line->address_postal_code);
-                $_SESSION['m_admin']['address']['ADD_COUNTRY'] = $this->show_string($line->address_country);
-                $_SESSION['m_admin']['address']['PHONE'] = $this->show_string($line->phone);
-                $_SESSION['m_admin']['address']['MAIL'] = $this->show_string($line->email);
-                $_SESSION['m_admin']['address']['WEBSITE'] = $this->show_string($line->website);
-                $_SESSION['m_admin']['address']['IS_PRIVATE'] = $this->show_string($line->is_private);
-                $_SESSION['m_admin']['address']['SALUTATION_HEADER'] = $this->show_string($line->salutation_header);
-                $_SESSION['m_admin']['address']['SALUTATION_FOOTER'] = $this->show_string($line->salutation_footer);
+                if (!isset($_SESSION['address_up_error'])) {
+                    $_SESSION['m_admin']['address'] = array();
+                    $line = $this->fetch_object();
+                    $_SESSION['m_admin']['address']['ID'] = $line->id;
+                    $_SESSION['m_admin']['address']['CONTACT_ID'] = $line->contact_id;
+                    $_SESSION['m_admin']['address']['TITLE'] = $this->show_string($line->title);
+                    $_SESSION['m_admin']['address']['LASTNAME'] = $this->show_string($line->lastname);
+                    $_SESSION['m_admin']['address']['FIRSTNAME'] = $this->show_string($line->firstname);
+                    $_SESSION['m_admin']['address']['FUNCTION'] = $this->show_string($line->function);
+                    $_SESSION['m_admin']['address']['OTHER_DATA'] = $this->show_string($line->other_data);
+                    $_SESSION['m_admin']['address']['OWNER'] = $line->user_id;
+                    $_SESSION['m_admin']['address']['DEPARTEMENT'] = $this->show_string($line->departement);
+                    $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = $line->contact_purpose_id;
+                    $_SESSION['m_admin']['address']['OCCUPANCY'] = $this->show_string($line->occupancy);
+                    $_SESSION['m_admin']['address']['ADD_NUM'] = $this->show_string($line->address_num);
+                    $_SESSION['m_admin']['address']['ADD_STREET'] = $this->show_string($line->address_street);
+                    $_SESSION['m_admin']['address']['ADD_COMP'] = $this->show_string($line->address_complement);
+                    $_SESSION['m_admin']['address']['ADD_TOWN'] = $this->show_string($line->address_town);
+                    $_SESSION['m_admin']['address']['ADD_CP'] = $this->show_string($line->address_postal_code);
+                    $_SESSION['m_admin']['address']['ADD_COUNTRY'] = $this->show_string($line->address_country);
+                    $_SESSION['m_admin']['address']['PHONE'] = $this->show_string($line->phone);
+                    $_SESSION['m_admin']['address']['MAIL'] = $this->show_string($line->email);
+                    $_SESSION['m_admin']['address']['WEBSITE'] = $this->show_string($line->website);
+                    $_SESSION['m_admin']['address']['IS_PRIVATE'] = $this->show_string($line->is_private);
+                    $_SESSION['m_admin']['address']['SALUTATION_HEADER'] = $this->show_string($line->salutation_header);
+                    $_SESSION['m_admin']['address']['SALUTATION_FOOTER'] = $this->show_string($line->salutation_footer);
+                } else {
+                    unset($_SESSION['address_up_error']);
+                }
                 if($admin && !empty($_SESSION['m_admin']['address']['OWNER']))
                 {
                     $this->query("select lastname, firstname from ".$_SESSION['tablename']['users']." where user_id = '".$_SESSION['m_admin']['address']['OWNER']."'");
@@ -1565,6 +1569,7 @@ class contacts_v2 extends dbquery
         if (! empty($_SESSION['error'])) {
             if ($mode == 'up') {
                 if (! empty($_SESSION['m_admin']['address']['ID'])) {
+                    $_SESSION['address_up_error'] = "true";
                     header(
                         'location: ' . $path_contacts_up_errors . '&id='
                         . $_SESSION['m_admin']['address']['ID']
