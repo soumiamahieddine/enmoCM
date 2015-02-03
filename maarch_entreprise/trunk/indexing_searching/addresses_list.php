@@ -91,7 +91,7 @@ if (!$return) {
     $select["view_contacts"] = array();
     array_push(
         $select["view_contacts"],
-        "ca_id", "contact_id", "society", "contact_purpose_id", "departement
+        "ca_id", "contact_id", "society", "contact_purpose_id", "is_private", "departement
     , case when view_contacts.contact_lastname <> '' then view_contacts.contact_lastname else view_contacts.lastname end as \"lastname\"
     , case when view_contacts.contact_firstname <> '' then view_contacts.contact_firstname else view_contacts.firstname end as \"firstname\"
     , case when view_contacts.contact_function <> '' then view_contacts.contact_function else view_contacts.function end as \"function\""
@@ -197,10 +197,18 @@ if (!$return) {
                     $tab[$i][$j]["show"] = true;
                     $tab[$i][$j]["order"] = 'contact_purpose_label';
                 }
+	            if($tab[$i][$j][$value]=="is_private")
+	            {
+	                $is_private = $tab[$i][$j]['value'];
+	                $tab[$i][$j]["show"]=false;
+	            }
                 if ($tab[$i][$j][$value] == "departement") {
-                    $tab[$i][$j]['value'] = $request->show_string(
-                        $tab[$i][$j]['value']
-                    );
+	                if ($is_private == "Y") {
+	                    $tab[$i][$j]['value'] = "Confidentiel";
+	                } else {
+	                    $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);                   
+	                }
+
                     $tab[$i][$j]["departement"] = $tab[$i][$j]['value'];
                     $tab[$i][$j]["label"] = _SERVICE;
                     $tab[$i][$j]["size"] = "20";
@@ -247,7 +255,12 @@ if (!$return) {
                 }
                 if($tab[$i][$j][$value]=="address_town")
                 {
-                    $tab[$i][$j]["address_town"]= $request->show_string($tab[$i][$j]['value']);
+	                if ($is_private == "Y") {
+	                    $tab[$i][$j]['value'] = "Confidentiel";
+	                } else {
+	                    $tab[$i][$j]['value'] = $request->show_string($tab[$i][$j]['value']);                   
+	                }
+                    $tab[$i][$j]["address_town"]= $tab[$i][$j]['value'];
                     $tab[$i][$j]["label"]=_TOWN;
                     $tab[$i][$j]["size"]="10";
                     $tab[$i][$j]["label_align"]="center";
