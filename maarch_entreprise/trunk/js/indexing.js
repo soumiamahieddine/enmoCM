@@ -1328,6 +1328,9 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
     if(empty_contact)
     {
         $(contact_id).value='';
+        $("contactid").value='';
+        $("contactcheck").value='success';
+
     }
     display_contact_card('hidden');
     update_contact_autocompleter();
