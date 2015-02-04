@@ -261,7 +261,7 @@ function checkRealLimitDate(arg) {
         }    
     }
 
-    var date = new Date();
+/*    var date = new Date();
     var date3 = new Date();
     date.setFullYear(date3.getFullYear());
     date.setMonth(date3.getMonth()+1);
@@ -272,7 +272,7 @@ function checkRealLimitDate(arg) {
         alert("La date d'arrivée doit être antérieure à la date du jour ");
         var current_month = date3.getMonth()+1;
         $('admission_date').value = date3.getDate() + "-" + current_month + "-" + date3.getFullYear();
-    }
+    }*/
 
 }
 
