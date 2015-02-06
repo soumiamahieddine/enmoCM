@@ -1,8 +1,8 @@
 <?php
 /*
-*    Copyright 2008-2011 Maarch
+*   Copyright 2008-2015 Maarch
 *
-*  This file is part of Maarch Framework.
+*   This file is part of Maarch Framework.
 *
 *   Maarch Framework is free software: you can redistribute it and/or modify
 *   it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
 *   GNU General Public License for more details.
 *
 *   You should have received a copy of the GNU General Public License
-*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /**
@@ -873,4 +873,31 @@ class users_controler extends ObjectControler implements ObjectControlerIF
           return false;
         }
     }
+
+    /**
+    * Check if the user exist in the database given his mail
+    *
+    * @param  $userMail string user mail
+    * @return bool true if user exists, false otherwise
+    */
+    public function checkUserMail($userMail)
+    {
+        self::$db = new dbquery();
+        self::$db->connect();
+        $func = new functions();
+
+        $queryUser = "select user_id from users where mail = "
+            . "'" . $func->protect_string_db($userMail) . "'";
+        self::$db->query($queryUser);
+        $userIdFound = self::$db->fetch_object();
+        if (!empty($userIdFound->user_id)) {
+            $isUser = true;
+        } else {
+            $isUser = false;
+        }
+
+        self::$db->disconnect();
+        return $isUser;
+    }
+
 }

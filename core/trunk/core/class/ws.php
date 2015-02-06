@@ -177,6 +177,11 @@ $SOAP_dispatch_map['userGet'] = array(
                                         'out' => array('out' => '{urn:MySoapServer}users'),
                                         'method' => "core#users::getWs"
                                     );
+$SOAP_dispatch_map['checkUserMail'] = array(
+                                        'in'  => array('userMail' => 'string'),
+                                        'out' => array('out' => 'boolean'),
+                                        'method' => "core#users::checkUserMail"
+                                        );
 
 #####################################
 ## Web Service de versement de données issue du gros scanner

@@ -1,6 +1,6 @@
 <?php
 /*
-*   Copyright 2011 Maarch
+*   Copyright 2011-2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -260,6 +260,9 @@ class resources_controler
         $typistFound = false;
         $typeIdFound = false;
         $toAddressFound = false;
+        $userPrimaryEntity = false;
+        $destinationFound = false;
+        $initiatorFound = false;
         $dbQuery = new dbquery();
         for ($i=0;$i<count($data);$i++) {
             if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'FLOAT') {
@@ -281,6 +284,12 @@ class resources_controler
             if (strtoupper($data[$i]['column']) == strtoupper('type_id')) {
                 $typeIdFound = true;
             }
+            if (strtoupper($data[$i]['column']) == strtoupper('destination')) {
+                $destinationFound = true;
+            }            
+            if (strtoupper($data[$i]['column']) == strtoupper('initiator')) {
+                $initiatorFound = true;
+            }
             if (strtoupper($data[$i]['column']) == strtoupper('custom_t10')) {
                 require_once 'core/class/class_db.php';
                 $dbQuery = new dbquery();
@@ -295,10 +304,18 @@ class resources_controler
                 if (!empty($userIdFound->user_id)) {
                     $toAddressFound = true;
                     $destUser = $userIdFound->user_id;
+
+	                $queryUserEntity = "select entity_id from users_entities where primary_entity = 'Y' and user_id = '".$destUser."'";
+	                $dbQuery->query($queryUserEntity);
+	                $userEntityId = $dbQuery->fetch_object();
+	                if (!empty($userEntityId->entity_id)) {
+	                	$userEntity = $userEntityId->entity_id;
+	                	$userPrimaryEntity = true;
+	                }
                 }
             }
         }
-        if (!$typistFound) {
+        if (!$typistFound && !$toAddressFound) {
             array_push(
                 $data,
                 array(
@@ -337,7 +354,35 @@ class resources_controler
                     'type' => 'string',
                 )
             );
+            array_push(
+                $data,
+                array(
+                    'column' => 'typist',
+                    'value' => $destUser,
+                    'type' => 'string',
+                )
+            );
         }
+        if ($userPrimaryEntity && !$destinationFound) {
+            array_push(
+                $data,
+                array(
+                    'column' => 'destination',
+                    'value' => $userEntity,
+                    'type' => 'string',
+                )
+            );
+        }
+        if ($userPrimaryEntity && !$initiatorFound) {
+            array_push(
+                $data,
+                array(
+                    'column' => 'initiator',
+                    'value' => $userEntity,
+                    'type' => 'string',
+                )
+            );
+        }        
         array_push(
             $data,
             array(
@@ -379,50 +424,84 @@ class resources_controler
     public function storeExtResource($resId, $data, $table)
     {
         try {
-            $func = new functions();
-            $data = $func->object2array($data);
-            $queryExtFields = '(';
-            $queryExtValues = '(';
-            for ($i=0;$i<count($data);$i++) {
-                if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'FLOAT') {
-                    if ($data[$i]['value'] == '') {
-                        $data[$i]['value'] = '0';
-                    }
-                    $data[$i]['value'] = str_replace(',' , '.', $data[$i]['value']);
-                }
-                //COLUMN
-                $data[$i]['column'] = strtolower($data[$i]['column']);
-                $queryExtFields .= $data[$i]['column'] . ',';
-                //VALUE
-                if ($data[$i]['type'] == 'string' || $data[$i]['type'] == 'date') {
-                    $queryExtValues .= "'" . $data[$i]['value'] . "',";
-                } else {
-                    $queryExtValues .= $data[$i]['value'] . ",";
-                }
-            }
-            $queryExtFields = preg_replace('/,$/', ',res_id)', $queryExtFields);
-            $queryExtValues = preg_replace(
-                '/,$/', ',' . $resId . ')', $queryExtValues
-            );
-            $queryExt = " insert into " . $table . " " . $queryExtFields
-                   . ' values ' . $queryExtValues ;
-            $returnCode = 0;
-            $db = new dbquery();
-            $db->connect();
-            if ($db->query($queryExt)) {
-                $returnResArray = array(
-                    'returnCode' => (int) 0,
-                    'resId' => $resId,
-                    'error' => '',
-                );
+        	if ($resId <> "") {
+	            $func = new functions();
+	            $data = $func->object2array($data);
+	            $queryExtFields = '(';
+	            $queryExtValues = '(';
+	            $db = new dbquery();
+	            $db->connect();
+	            for ($i=0;$i<count($data);$i++) {
+	                if (strtoupper($data[$i]['type']) == 'INTEGER' || strtoupper($data[$i]['type']) == 'FLOAT') {
+	                    if ($data[$i]['value'] == '') {
+	                        $data[$i]['value'] = '0';
+	                    }
+	                    $data[$i]['value'] = str_replace(',' , '.', $data[$i]['value']);
+	                }
+		            if (strtoupper($data[$i]['column']) == strtoupper('category_id')) {
+		                $categoryId = $data[$i]['value'];
+		            }
+		            if (strtoupper($data[$i]['column']) == strtoupper('alt_identifier') && $data[$i]['value'] == "") {
+		            	require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+    						. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
+		            	$chronoX = new chrono();
+		            	for ($iColl=0; $iColl<=count($_SESSION['collections']); $iColl++) {
+		            		if ($_SESSION['collections'][$iColl]['extensions'][0] == $table) {
+		            			$resViewTable = $_SESSION['collections'][$iColl]['view'];
+		            			break;
+		            		}
+		            	}
+		            	$db->query("SELECT destination, type_id FROM ".$resViewTable." WHERE res_id = " . $resId);
+		            	$resView = $db->fetch_object();
+				        $myVars = array(
+				            'entity_id' => $resView->destination,
+				            'arbox_id' => "",
+				            'type_id' => $resView->type_id,
+				            'category_id' => $categoryId,
+				            'folder_id' => "",
+				        );
+				        $myChrono = $chronoX->generate_chrono($categoryId, $myVars, 'false');
+				        $data[$i]['value'] = $db->protect_string_db($myChrono);		                
+		            }
+	                //COLUMN
+	                $data[$i]['column'] = strtolower($data[$i]['column']);
+	                $queryExtFields .= $data[$i]['column'] . ',';
+	                //VALUE
+	                if ($data[$i]['type'] == 'string' || $data[$i]['type'] == 'date') {
+	                    $queryExtValues .= "'" . $data[$i]['value'] . "',";
+	                } else {
+	                    $queryExtValues .= $data[$i]['value'] . ",";
+	                }
+	            }
+	            $queryExtFields = preg_replace('/,$/', ',res_id)', $queryExtFields);
+	            $queryExtValues = preg_replace(
+	                '/,$/', ',' . $resId . ')', $queryExtValues
+	            );
+	            $queryExt = " insert into " . $table . " " . $queryExtFields
+	                   . ' values ' . $queryExtValues ;
+	            $returnCode = 0;
+	            if ($db->query($queryExt)) {
+	                $returnResArray = array(
+	                    'returnCode' => (int) 0,
+	                    'resId' => $resId,
+	                    'error' => '',
+	                );
+	            } else {
+	                $returnResArray = array(
+	                    'returnCode' => (int) -2,
+	                    'resId' => '',
+	                    'error' => 'Pb with SQL insertion',
+	                );
+	            }
+	            return $returnResArray;
             } else {
-                $returnResArray = array(
-                    'returnCode' => (int) -2,
-                    'resId' => '',
-                    'error' => 'Pb with SQL insertion',
-                );
+	            $returnResArray = array(
+	                'returnCode' => (int) -3,
+	                'resId' => '',
+	                'error' => 'resId is not set',
+	            );
+	            return $returnResArray;            	
             }
-            return $returnResArray;
         } catch (Exception $e) {
             $returnResArray = array(
                 'returnCode' => (int) -1,
