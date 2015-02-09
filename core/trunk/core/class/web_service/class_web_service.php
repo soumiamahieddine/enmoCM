@@ -169,8 +169,20 @@ class webService {
                 $_SESSION['user']['UserId'] = $_SERVER["PHP_AUTH_USER"];
                 $password = $_SERVER["PHP_AUTH_PW"];
             }
+
+            $userID = str_replace('\'', '', $_SESSION['user']['UserId']);
+            $userID = str_replace('=', '', $userID);
+            $userID = str_replace('"', '', $userID);
+            $userID = str_replace('*', '', $userID);
+            $userID = str_replace(';', '', $userID);
+            $userID = str_replace('--', '', $userID);
+            $userID = str_replace(',', '', $userID);
+            $userID = str_replace('$', '', $userID);
+            $userID = str_replace('>', '', $userID);
+            $userID = str_replace('<', '', $userID);
+
             $connexion->query("select * from " . $_SESSION['tablename']['users']
-                . " where user_id = '" . $_SESSION['user']['UserId']
+                . " where user_id = '" . $userID
                 . "' and password = '" . md5($password) . "' and STATUS <> 'DEL'");
             //$connexion->show();exit;
             if ($connexion->nb_result() > 0) {
