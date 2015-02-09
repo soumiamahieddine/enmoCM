@@ -322,7 +322,7 @@ class basket extends dbquery
      * @param   $groupId string  Users group identifier
      * @return array actions
      */
-    private function _getActionsFromGroupbaket($basketId, $groupId)
+    private function _getActionsFromGroupbaket($basketId, $groupId, $userId = '')
     {
         $actions = array();
         $this->connect();
@@ -338,7 +338,18 @@ class basket extends dbquery
         );
         require_once('core/class/ActionControler.php');
         $actionControler = new actionControler();
+        $sec = new security();
+        $secCtrl = new SecurityControler();
+
         while ($res = $this->fetch_object()) {
+            if ($res->where_clause <> '') {
+                $whereClause = $secCtrl->process_security_where_clause(
+                    $res->where_clause, $userId
+                );
+                $whereClause = substr($whereClause,-strlen($whereClause)+6); 
+            } else {
+                $whereClause = $res->where_clause;
+            }
             $categories = array();
             $categories = $actionControler->getAllCategoriesLinkedToAction($res->id_action);
             array_push(
@@ -346,7 +357,7 @@ class basket extends dbquery
                 array(
                     'ID' => $res->id_action,
                     'LABEL' => $res->label_action,
-                    'WHERE' => $res->where_clause,
+                    'WHERE' => $whereClause,
                     'MASS_USE' => $res->used_in_basketlist,
                     'PAGE_USE' => $res->used_in_action_page,
                     'ID_STATUS' => $res->id_status,
@@ -880,7 +891,7 @@ class basket extends dbquery
             $basketId, $primaryGroup
         );
         $tab['actions'] = $this->_getActionsFromGroupbaket(
-            $basketId, $primaryGroup
+            $basketId, $primaryGroup, $userId
         );
 
         $tab['abs_basket'] = $absBasket;
@@ -1024,7 +1035,7 @@ class basket extends dbquery
             $basketId, $primaryGroup
         );
         $tab['actions'] = $this->_getActionsFromGroupbaket(
-            $basketId, $primaryGroup
+            $basketId, $primaryGroup, $userId
         );
 
         $tab['is_virtual'] = $isVirtual;
