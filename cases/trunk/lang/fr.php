@@ -128,4 +128,6 @@ if (!defined('_CLICK_HERE_TO_ACCESS_CASE'))
     define('_CLICK_HERE_TO_ACCESS_CASE','Cliquez ici pour acc&eacute;der &agrave; la fiche d&eacute;taill&eacute;e de l&rsquo;affaire');
 if (!defined('_LABEL_MANDATORY'))
     define('_LABEL_MANDATORY','libell&eacute; de l&rsquo;affaire obligatoire');
+if (!defined('_UNLINK_CASE'))
+    define('_UNLINK_CASE','Dissocier le document de l&rsquo;affaire');
 ?>

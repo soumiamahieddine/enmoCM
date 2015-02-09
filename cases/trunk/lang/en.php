@@ -126,4 +126,6 @@ if (!defined('_ACCESS_LIST_CASE'))
     define('_ACCESS_LIST_CASE','Sort by case');
 if (!defined('_CLICK_HERE_TO_ACCESS_CASE'))
     define('_CLICK_HERE_TO_ACCESS_CASE','View all information for this case');
+if (!defined('_UNLINK_CASE'))
+    define('_UNLINK_CASE','Unlink document to case');
 ?>
