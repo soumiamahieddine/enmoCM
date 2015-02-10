@@ -47,4 +47,8 @@
         <target>sendmail</target>
         <page>sendmail_ajax_content</page>
     </exclude>
+    <exclude>
+        <target>entities</target>
+        <page>get_tree_childs</page>
+    </exclude>
 </excludes>
