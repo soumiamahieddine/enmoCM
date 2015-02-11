@@ -637,7 +637,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
                 /*** Recommande ***/
                 $frm_str .= '<tr id="reference_number_tr" style="display:none;">';
-                    $frm_str .= '<td ><label for="reference_number" class="form_title" ><FONT size="5"> &rarr;</font> ' ._MONITORING_NUMBER.'</label></td>';
+                    $frm_str .= '<td ><label for="reference_number" class="form_title" >' ._MONITORING_NUMBER.'</label></td>';
                     $frm_str .= '<td>&nbsp;</td>';
                     $frm_str .= '<td><input type="text" name="reference_number" id="reference_number"';
                         if (isset($data['reference_number']) && $data['reference_number'] <> '') {

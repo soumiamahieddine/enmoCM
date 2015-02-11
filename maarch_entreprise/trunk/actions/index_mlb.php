@@ -693,7 +693,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
 
     /****** RECOMMANDE ******/
     $frmStr .= '<tr id="reference_number_tr" style="display:none;">';
-    $frmStr .= '<td ><label for="reference_number" class="form_title" ><FONT size="5"> &rarr;</font> ' ._MONITORING_NUMBER.'</label></td>';
+    $frmStr .= '<td ><label for="reference_number" class="form_title" >' ._MONITORING_NUMBER.'</label></td>';
     $frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td><input type="text" name="reference_number" id="reference_number"/></td>';
 
