@@ -1,0 +1,10 @@
+Installation 
+
+pour Windows :
+http://wiki.maarch.org/Guide_d%27installation_de_Maarch_sous_Windows
+
+pour GNU/Linux (Debian/Ubuntu)
+http://wiki.maarch.org/Guide_d%27installation_de_Maarch_sous_Debian/Ubuntu
+
+
+
