@@ -94,7 +94,7 @@ $func = new functions();
 $select[$_SESSION['tablename']['contact_addresses']] = array();
 array_push(
     $select[$_SESSION['tablename']['contact_addresses']],
-    "id", "contact_id", "contact_purpose_id", "departement", "lastname", "firstname", "function", "address_num", "address_street", "address_postal_code", "address_town", "phone", "email"
+    "id", "contact_id", "contact_purpose_id", "departement", "lastname", "firstname", "function", "address_num", "address_street", "address_postal_code", "address_town", "phone", "email", "enabled"
 );
 $what = "";
 $where = "contact_id = " . $id;
@@ -302,20 +302,34 @@ for ($i = 0; $i < count($tab); $i ++) {
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]= "email";
             }
+            if($tab[$i][$j][$value]=="enabled")
+            {
+                $tab[$i][$j]["enabled"]= $tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_STATUS;
+                $tab[$i][$j]["size"]="5";
+                $tab[$i][$j]["label_align"]="center";
+                $tab[$i][$j]["align"]="center";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]= "enabled";
+            }
         }
     }
 }
 $pageName = "contact_addresses";
 $pageNameUp = "contact_addresses_up";
 $pageNameAdd = "contact_addresses_add";
+$pageNameVal = "";
+$pageNameBan = "";
+
 if ($core_tools->test_admin('admin_contacts', 'apps', false)) {
     $pageNameDel = "contact_addresses_del";
+    $pageNameBan = "contact_addresses_status&mode=ban";
+    $pageNameVal = "contact_addresses_status&mode=allow";
 }
-$pageNameVal = "";
-$tableName = $_SESSION['tablename']['contact_addresses'];
-$pageNameBan = "";
-$addLabel = _NEW_CONTACT_ADDRESS;
 
+$tableName = $_SESSION['tablename']['contact_addresses'];
+$addLabel = _NEW_CONTACT_ADDRESS;
 $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']
     . "index.php?display=true&page=contact_addresses_list_by_name&idContact=".$id;

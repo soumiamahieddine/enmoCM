@@ -1282,7 +1282,11 @@ class list_show extends functions
                                 if(!$is_part_of_module)
                                  {
                                     //$path_auth = $_SESSION['config']['businessappurl'].'admin/'.$admin.'/'.$page_name_val.".php?id=".$result[$theline][0][$key];
-                                    $path_auth = $_SESSION['config']['businessappurl'].'index.php?display=true&amp;admin='.$admin.'&amp;page='.$page_name_val."&amp;id=".$result[$theline][0][$key];
+                                    if (strpos($page_name_val, "contacts_v2_status") !== false  || strpos($page_name_ban, "contact_addresses_status") !== false) {
+                                        $path_auth = $_SESSION['config']['businessappurl'].'index.php?page='.$page_name_val."&amp;id=".$result[$theline][0][$key];
+                                    } else {
+                                        $path_auth = $_SESSION['config']['businessappurl'].'index.php?display=true&amp;admin='.$admin.'&amp;page='.$page_name_val."&amp;id=".$result[$theline][0][$key];
+                                    }
                                  }
                                  else
                                  {
@@ -1308,8 +1312,12 @@ class list_show extends functions
                                 {
                                  if(!$is_part_of_module)
                                  {
-                                 // $path_ban = $_SESSION['config']['businessappurl'].'admin/'.$admin.'/'.$page_name_ban.".php?id=".$result[$theline][0][$key];
-                                    $path_ban = $_SESSION['config']['businessappurl'].'index.php?display=true&amp;admin='.$admin.'&amp;page='.$page_name_ban."&id=".$result[$theline][0][$key];
+                                    if (strpos($page_name_ban, "contacts_v2_status") !== false || strpos($page_name_ban, "contact_addresses_status") !== false) {
+                                        $path_ban = $_SESSION['config']['businessappurl'].'index.php?page='.$page_name_ban."&amp;id=".$result[$theline][0][$key];
+                                    } else {
+                                        // $path_ban = $_SESSION['config']['businessappurl'].'admin/'.$admin.'/'.$page_name_ban.".php?id=".$result[$theline][0][$key];
+                                        $path_ban = $_SESSION['config']['businessappurl'].'index.php?display=true&amp;admin='.$admin.'&amp;page='.$page_name_ban."&id=".$result[$theline][0][$key];
+                                    }
                                  }
                                  else
                                  {

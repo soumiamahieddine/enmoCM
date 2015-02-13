@@ -174,6 +174,22 @@ $list = new list_show();
 					$tab[$i][$j]["show"]=true;
 					$tab[$i][$j]["value"]=$tab[$i][$j]['value'];
 				}
+	            if($tab[$i][$j][$value]=="enabled")
+	            {
+	            	if ($tab[$i][$j]['value'] == "Y") {
+	            		$tab[$i][$j]['value'] = _ENABLED;
+	            	} else {
+	            		$tab[$i][$j]['value'] = _DISABLED;
+	            	}
+	                $tab[$i][$j]["enabled"]= $tab[$i][$j]['value'];
+	                $tab[$i][$j]["label"]=_STATUS;
+	                $tab[$i][$j]["size"]="5";
+	                $tab[$i][$j]["label_align"]="center";
+	                $tab[$i][$j]["align"]="center";
+	                $tab[$i][$j]["valign"]="bottom";
+	                $tab[$i][$j]["show"]=true;
+	                $tab[$i][$j]["order"]= "enabled";
+	            }
 			}
 		}
 	}

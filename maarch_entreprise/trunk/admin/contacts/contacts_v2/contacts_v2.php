@@ -96,7 +96,7 @@ require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 $contact = new contacts_v2();
 $select[$_SESSION['tablename']['contacts_v2']] = array();
-array_push($select[$_SESSION['tablename']['contacts_v2']],"contact_id", "is_corporate_person", "contact_type", "society","lastname","firstname", 'user_id');
+array_push($select[$_SESSION['tablename']['contacts_v2']],"contact_id", "is_corporate_person", "contact_type", "society","lastname","firstname", "user_id", "enabled");
 $what = "";
 
 $where =" ";
@@ -231,16 +231,31 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["show"]=true;
                 $tab[$i][$j]["order"]= "user_id";
             }
+            if($tab[$i][$j][$value]=="enabled")
+            {
+                $tab[$i][$j]["enabled"]= $tab[$i][$j]['value'];
+                $tab[$i][$j]["label"]=_STATUS;
+                $tab[$i][$j]["size"]="5";
+                $tab[$i][$j]["label_align"]="center";
+                $tab[$i][$j]["align"]="center";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=true;
+                $tab[$i][$j]["order"]= "enabled";
+            }
         }
     }
 }
 $page_name = "contacts_v2";
 $page_name_up = "contacts_v2_up";
+$page_name_ban = "";
+$page_name_val= "";
+
 if ($admin->test_admin('admin_contacts', 'apps', false)) {
     $page_name_del = "contacts_v2_del";
+    $page_name_ban = "contacts_v2_status&mode=ban";
+    $page_name_val = "contacts_v2_status&mode=allow";
 }
-$page_name_val= "";
-$page_name_ban = "";
+
 $page_name_add = "contacts_v2_add";
 $label_add = _CONTACT_ADDITION;
 $_SESSION['m_admin']['init'] = true;

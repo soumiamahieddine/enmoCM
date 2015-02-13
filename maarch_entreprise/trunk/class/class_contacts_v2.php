@@ -138,12 +138,12 @@ class contacts_v2 extends dbquery
         $this->connect();
         $query = '';
         if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){
-            $query = "select contact_id, contact_type, society, firstname, lastname from ".$_SESSION['tablename']['contacts_v2']." 
+            $query = "select contact_id, contact_type, society, firstname, lastname, enabled from ".$_SESSION['tablename']['contacts_v2']." 
                 where lower(firstname) = lower('".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])."')
                   and lower(lastname) = lower('".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])."')";
 
         } else if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){
-            $query = "select contact_id, contact_type, society, firstname, lastname from ".$_SESSION['tablename']['contacts_v2']." 
+            $query = "select contact_id, contact_type, society, firstname, lastname, enabled from ".$_SESSION['tablename']['contacts_v2']." 
                 where lower(society) = lower('".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])."')";
 
         }
@@ -710,7 +710,7 @@ class contacts_v2 extends dbquery
                                 <select id="contactSelect">
                                     <option value=""><?php echo _CHOOSE_A_CONTACT;?></option>
                                     <?php
-                                        $this->query("SELECT contact_id, society, firstname, lastname, is_corporate_person FROM contacts_v2 ORDER BY is_corporate_person desc, society, lastname");
+                                        $this->query("SELECT contact_id, society, firstname, lastname, is_corporate_person FROM contacts_v2 WHERE enabled = 'Y' ORDER BY is_corporate_person desc, society, lastname");
                                         while ($res_contact = $this->fetch_object()){
                                             ?><option value="<?php echo $res_contact->contact_id;?>"><?php
                                             if ($res_contact->is_corporate_person == "Y") {
@@ -2313,6 +2313,17 @@ class contacts_v2 extends dbquery
             <?php } ?>
         </form>
     <?php
+    }
+
+    function contactEnabled($userId, $mode) {
+        $this->connect();
+        $this->query("UPDATE contacts_v2 SET enabled = '".$mode."' WHERE contact_id = '".$userId."'");
+        $this->query("UPDATE contact_addresses SET enabled = '".$mode."' WHERE contact_id = '".$userId."'");
+    }
+
+    function addressEnabled($addressId, $mode) {
+        $this->connect();
+        $this->query("UPDATE contact_addresses SET enabled = '".$mode."' WHERE id = '".$addressId."'");
     }
 
 }

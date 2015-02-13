@@ -71,7 +71,7 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 	$where = "";
 
 	if($branch_level_id == "1") {
-		$db->query("select contact_id, society, society_short, lastname, firstname, is_corporate_person from ".$_SESSION['tablename']['contacts_v2']." where contact_type = ".$_REQUEST['branch_id']." order by society, lastname ");
+		$db->query("select contact_id, society, society_short, lastname, firstname, is_corporate_person, enabled from ".$_SESSION['tablename']['contacts_v2']." where contact_type = ".$_REQUEST['branch_id']." order by society, lastname ");
 		$children = array();
 		while($res = $db->fetch_object()) {
 	        $contact = '';
@@ -86,7 +86,7 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 	               $contact .= ' ('.$res->society.')';
 	            }
 	        }
-	        array_push($children, array('id' => $res->contact_id, 'contact_label' => $contact));
+	        array_push($children, array('id' => $res->contact_id, 'contact_label' => $contact, 'enabled' => $res->enabled));
 		}
 		if(count($children) > 0) {
 			if (file_exists(
@@ -106,8 +106,12 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 			}
 			echo "[";
 			for($cpt_level2=0; $cpt_level2< count($children); $cpt_level2++) {
+				$color = "";
+				if ($children[$cpt_level2]['enabled'] ==  'N') {
+					$color = "style=\"color:red;\"";
+				}
 				echo "{'id':'".$children[$cpt_level2]['id']."', 
-						'txt':'<a onmouseover=\'this.style.cursor=\"pointer\";\' onclick=\"window.top.location.href=\'". $_SESSION['config']['businessappurl']."index.php?page=contacts_v2_up&id=".$children[$cpt_level2]['id']."&fromContactTree\';\">".addslashes($children[$cpt_level2]['contact_label'])."</a>',
+						'txt':'<a ".$color." onmouseover=\'this.style.cursor=\"pointer\";\' onclick=\"window.top.location.href=\'". $_SESSION['config']['businessappurl']."index.php?page=contacts_v2_up&id=".$children[$cpt_level2]['id']."&fromContactTree\';\">".addslashes($children[$cpt_level2]['contact_label'])."</a>',
 						'onopenpopulate' : funcOpen, 
 						'openlink' : '".$openlink."', 
 						'canhavechildren' : true,
@@ -121,7 +125,7 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 		}
 	}
 	if($branch_level_id == "2") {
-		$db->query("select id, contact_purpose_id, lastname, firstname, address_num, address_street, address_town, address_postal_code from ".$_SESSION['tablename']['contact_addresses']." where contact_id = ".$_REQUEST['branch_id']." order by lastname, firstname, address_num");
+		$db->query("select id, contact_purpose_id, lastname, firstname, address_num, address_street, address_town, address_postal_code, enabled from ".$_SESSION['tablename']['contact_addresses']." where contact_id = ".$_REQUEST['branch_id']." order by lastname, firstname, address_num");
 		$children = array();
 		while($res = $db->fetch_object()) {
 			$address = '';
@@ -130,12 +134,19 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 			    $address .= strtoupper($func->show_string($res->lastname, true)) . ' ' . $func->show_string($res->firstname, true) . ' : ';
 			}
 			$address .= $func->show_string($res->address_num, true) . ' ' . $func->show_string($res->address_street, true) . ' ' . $func->show_string($res->address_postal_code, true) . ' ' . $func->show_string($res->address_town, true);
-			array_push($children, array('id' => $res->id, 'address_label' => $address));
+			array_push($children, array('id' => $res->id, 'address_label' => $address, 'enabled' => $res->enabled));
 		}
 		if(count($children) > 0) {
 			echo "[";
 			for($cpt_level3=0; $cpt_level3< count($children); $cpt_level3++) {
-				echo "{'id':'".$children[$cpt_level3]['id']."', 'txt':'".trim(addslashes($children[$cpt_level3]['address_label']))."', 'canhavechildren' : false, 'img' : 'page.gif'}";
+				$color = "";
+				if ($children[$cpt_level3]['enabled'] ==  'N') {
+					$color = "style=\"color:red;\"";
+				}
+				echo "{'id':'".$children[$cpt_level3]['id']."', 
+						'txt':'<span ".$color.">".trim(addslashes($children[$cpt_level3]['address_label']))."</span>', 
+						'canhavechildren' : false, 
+						'img' : 'page.gif'}";
 				if(isset($children[$cpt_level3+1]['id']) && !empty($children[$cpt_level3+1]['id'])) {
 					echo ',';
 				}

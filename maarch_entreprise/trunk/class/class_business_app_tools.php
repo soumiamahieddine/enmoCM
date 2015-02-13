@@ -678,7 +678,7 @@ class business_app_tools extends dbquery
             return $path;
         } else if ($name == 'contacts_v2' || $name == 'contacts_v2_list_by_name'
             || $name == 'contacts_v2_up' || $name == 'contacts_v2_del' || $name == 'contacts_v2_add'
-            || $name == 'contacts_v2_up_db' || $name == 'contacts_v2_confirm'
+            || $name == 'contacts_v2_up_db' || $name == 'contacts_v2_confirm' || $name == 'contacts_v2_status'
         ) {
             $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
                   . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
@@ -687,7 +687,7 @@ class business_app_tools extends dbquery
             return $path;
         } else if ($name == 'contact_addresses' || $name == 'contact_addresses_list_by_name'
             || $name == 'contact_addresses_up' || $name == 'contact_addresses_del' || $name == 'contact_addresses_add'
-            || $name == 'contact_addresses_up_db' || $name == 'contact_addresses_list'
+            || $name == 'contact_addresses_up_db' || $name == 'contact_addresses_list' || $name == 'contact_addresses_status'
         ) {
             $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
                   . DIRECTORY_SEPARATOR . 'admin' . DIRECTORY_SEPARATOR
