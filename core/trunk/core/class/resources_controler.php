@@ -284,12 +284,6 @@ class resources_controler
             if (strtoupper($data[$i]['column']) == strtoupper('type_id')) {
                 $typeIdFound = true;
             }
-            if (strtoupper($data[$i]['column']) == strtoupper('destination')) {
-                $destinationFound = true;
-            }            
-            if (strtoupper($data[$i]['column']) == strtoupper('initiator')) {
-                $initiatorFound = true;
-            }
             if (strtoupper($data[$i]['column']) == strtoupper('custom_t10')) {
                 require_once 'core/class/class_db.php';
                 $dbQuery = new dbquery();
@@ -363,26 +357,48 @@ class resources_controler
                 )
             );
         }
-        if ($userPrimaryEntity && !$destinationFound) {
-            array_push(
-                $data,
-                array(
-                    'column' => 'destination',
-                    'value' => $userEntity,
-                    'type' => 'string',
-                )
-            );
+        if ($userPrimaryEntity) {
+            for ($i=0;$i<count($data);$i++) {
+                if (strtoupper($data[$i]['column']) == strtoupper('destination')) {
+                    if ($data[$i]['value'] == "") {
+                        $data[$i]['value'] = $userEntity;
+                    }
+                    $destinationFound = true;
+                    break;
+                }
+            }
+            if (!$destinationFound) {
+                array_push(
+                    $data,
+                    array(
+                        'column' => 'destination',
+                        'value' => $userEntity,
+                        'type' => 'string',
+                    )
+                );
+            }
         }
-        if ($userPrimaryEntity && !$initiatorFound) {
-            array_push(
-                $data,
-                array(
-                    'column' => 'initiator',
-                    'value' => $userEntity,
-                    'type' => 'string',
-                )
-            );
-        }        
+        if ($userPrimaryEntity) {
+            for ($i=0;$i<count($data);$i++) {
+                if (strtoupper($data[$i]['column']) == strtoupper('initiator')) {
+                    if ($data[$i]['value'] == "") {
+                        $data[$i]['value'] = $userEntity;
+                    }
+                    $initiatorFound = true;
+                    break;
+                }
+            }
+            if (!$initiatorFound) {
+                array_push(
+                    $data,
+                    array(
+                        'column' => 'initiator',
+                        'value' => $userEntity,
+                        'type' => 'string',
+                    )
+                );
+            }
+        }    
         array_push(
             $data,
             array(
