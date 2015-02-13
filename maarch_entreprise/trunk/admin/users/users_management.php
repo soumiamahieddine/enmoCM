@@ -72,11 +72,13 @@ elseif($mode == "up" || $mode == "add")
             </p>
             <p>
                 <label for="LastName"><?php  echo _LASTNAME; ?> :</label><br/>
-                <input name="LastName" id="LastName"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['lastname'])){echo functions::show_string($_SESSION['m_admin']['users']['lastname']);} ?>" /><span class="red_asterisk">*</span>
+                <input name="LastName" id="LastName"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['lastname'])){echo functions::show_string($_SESSION['m_admin']['users']['lastname']);} ?>" />
+                <span class="red_asterisk">*</span>
             </p>
             <p>
                 <label for="FirstName"><?php  echo _FIRSTNAME; ?> :</label><br/>
-                <input name="FirstName" id="FirstName"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['firstname'])){ echo functions::show_string($_SESSION['m_admin']['users']['firstname']); }?>" /><span class="red_asterisk">*</span>
+                <input name="FirstName" id="FirstName"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['firstname'])){ echo functions::show_string($_SESSION['m_admin']['users']['firstname']); }?>" />
+                <span class="red_asterisk">*</span>
             </p>
             <p>
                 <?php  echo _PHONE_NUMBER; ?> :<br/>
@@ -84,7 +86,8 @@ elseif($mode == "up" || $mode == "add")
             </p>
             <p>
                 <label for="Mail"><?php  echo _MAIL; ?> :</label><br/>
-                <input name="Mail" id="Mail"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['mail'])){ echo $_SESSION['m_admin']['users']['mail']; }?>" /><span class="red_asterisk">*</span>
+                <input name="Mail" id="Mail"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['mail'])){ echo $_SESSION['m_admin']['users']['mail']; }?>" />
+                <span class="red_asterisk">*</span>
             </p>
             <p>
                 <?php  echo _LOGIN_MODE; ?>&nbsp;:<br/>
