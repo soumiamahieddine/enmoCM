@@ -604,12 +604,13 @@ input.detail_box {
 /* more particular cases  */
 
 input.button {
-    /*border: 1px solid #1481A5;*/
-    border: 1px solid #C2B8A0;
-    border: 1px solid;
-    /*color: #1481A5;*/
+
+    border: 1px solid #FDD16C;
     color: #756666;
-    background: white url(static.php?filename=bg_but.gif) top left repeat-x;
+
+    background-color: #FDD16C;
+
+    border-radius: 3px;
     cursor: pointer;
     width: auto;
     padding: 0.2em 0.5em;

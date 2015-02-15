@@ -131,11 +131,11 @@ echo '<form id="formlogin" method="post" action="'
                         }
                 }
                 echo '<p>';
-                    echo '<br/><label for="login">'._ID.' :</label>';
+                    echo '<br/><label for="login">'._ID.'</label>';
                     echo '<input name="login" id="login" value="'.$userId.'" type="text"  />';
                 echo '</p>';
                 echo '<p>';
-                    echo '<label for="pass">'._PASSWORD.' :</label>';
+                    echo '<label for="pass">'._PASSWORD.'</label>';
                     echo '<input name="pass" id="pass" value="" type="password"  />';
                 echo '</p>';
                 if ($ipNotAllowed && $ra_code) {
@@ -144,7 +144,8 @@ echo '<form id="formlogin" method="post" action="'
                         echo '<input name="ra_code" id="pass" value="" type="password"  />';
                     echo '</p><br />';
                 }
-                echo '<p class="buttons">';
+                echo '<p>';
+                echo '<label>&nbsp;</label>';
                     echo '<input type="submit" class="button" name="submit" value="'._CONNECT.'" />';
                 echo '</p>';
             echo '<div class="error">';
