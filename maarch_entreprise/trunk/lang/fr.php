@@ -1284,7 +1284,7 @@ if (!defined('_CLASS_SCHEME')) define( '_CLASS_SCHEME', 'Plan de classement');
 if (!defined('_DOCS')) define( '_DOCS', 'Documents');
 if (!defined('_GO_MANAGE_USER')) define( '_GO_MANAGE_USER', 'Modifier');
 if (!defined('_GO_MANAGE_DOCSERVER')) define( '_GO_MANAGE_DOCSERVER', 'Modifier');
-if (!defined('_TASKS')) define( '_TASKS', 'Actions disponibles');
+if (!defined('_TASKS')) define( '_TASKS', 'Actions disponibles sur les documents');
 if (!defined('_PERIOD')) define( '_PERIOD', 'P&eacute;riode');
 if (!defined('_COMMENTS_MANDATORY')) define( '_COMMENTS_MANDATORY', 'Description obligatoire');
 
@@ -1292,7 +1292,7 @@ if (!defined('_COMMENTS_MANDATORY')) define( '_COMMENTS_MANDATORY', 'Description
 
 if (!defined('_ADD_RECORD_LABEL')) define ('_ADD_RECORD_LABEL','Ajouter un document');
 if (!defined('_DATA_MODIFICATION_LABEL')) define ('_DATA_MODIFICATION_LABEL','Modifier');
-if (!defined('_DELETE_RECORD_LABEL')) define ('_DELETE_RECORD_LABEL','Supprimer un document');
+if (!defined('_DELETE_RECORD_LABEL')) define ('_DELETE_RECORD_LABEL','Supprimer');
 if (!defined('_VIEW_LOG_LABEL')) define ('_VIEW_LOG_LABEL','Voir les journaux');
 
 
