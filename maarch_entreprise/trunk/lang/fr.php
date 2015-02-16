@@ -410,7 +410,7 @@ if (!defined('_NEW_SUBFOLDER')) define( '_NEW_SUBFOLDER', 'Nouvelle sous-chemise
 if (!defined('_STRUCTURE_MANDATORY')) define( '_STRUCTURE_MANDATORY', 'La chemise est obligatoire');
 if (!defined('_SUBFOLDER_DESC_MISSING')) define( '_SUBFOLDER_DESC_MISSING', 'Il manque la description de la sous-chemise');
 
-if (!defined('_ATTACH_STRUCTURE')) define( '_ATTACH_STRUCTURE', 'Rattachement &agrave; une chemise');
+if (!defined('_ATTACH_STRUCTURE')) define( '_ATTACH_STRUCTURE', 'Rattacher &agrave; une chemise');
 if (!defined('_CHOOSE_STRUCTURE')) define( '_CHOOSE_STRUCTURE', 'Choissisez une chemise');
 
 if (!defined('_DEL_SUBFOLDER')) define( '_DEL_SUBFOLDER', 'Suppression de la sous-chemise');
