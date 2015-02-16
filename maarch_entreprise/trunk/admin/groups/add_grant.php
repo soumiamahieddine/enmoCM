@@ -119,7 +119,7 @@ else
     </p>
     <br/>
     <p>
-        <label><?php  echo _DESC;?>: </label>
+        <label><?php  echo _DESC;?> : </label>
         <input type="text" name="comment" id="comment" value="<?php  echo $comment;?>" />
         <span class="red_asterisk" >*</span>
     </p>
