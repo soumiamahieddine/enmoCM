@@ -280,7 +280,7 @@ for ($i = 0; $i < count($fontColors); $i ++) {
      </p>
        <p>&nbsp;</p>*/?>
 	<p>
-		<label><?php  echo _ATTACH_STRUCTURE;?> :</label>
+		<label><?php  echo _ATTACH_STRUCTURE;?></label>
 			<select name="structure" >
 				<option value=""><?php  echo _CHOOSE_STRUCTURE;?></option>
 				<?php 	

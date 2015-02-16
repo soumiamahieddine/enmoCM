@@ -392,10 +392,10 @@ if ($folderModuleLoaded) {
     <td width="10%" align="center">
 	<input type="button" class="button" value="<?php
 	echo _ADD;
-	?>" onclick="Move($('foldertypeslist'),$('foldertypes'));" align="middle"/>
+	?> &gt;&gt;" onclick="Move($('foldertypeslist'),$('foldertypes'));" align="middle"/>
 	<br />
 	<br />
-	<input type="button" class="button"  value="<?php
+	<input type="button" class="button"  value="&lt;&lt; <?php
 	echo _REMOVE;
 	?>" onclick="Move($('foldertypes'),$('foldertypeslist'));" align="middle"/>
 	</td>
