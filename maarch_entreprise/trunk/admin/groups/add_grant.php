@@ -96,7 +96,7 @@ else
 
   ?></h2>
 <div id="frm_error" class="error"></div>
-<table  width="100%">
+<table width="100%">
 <tr>
 <td>
 <div class="popup_content">
@@ -125,7 +125,8 @@ else
     </p>
     <br/>
     <p>
-        <label><?php echo _WHERE_CLAUSE_TARGET;?> : </label>
+        <?php echo _WHERE_CLAUSE_TARGET;?> :<br/>
+        <div style="margin-left:5%;">
         <?php if($target_all)
         {?>
         <input type="radio"  class="check" name="target"  value="ALL" id="target_ALL" <?php if($target == 'ALL'){ echo 'checked="checked"';}?>  /><?php echo _ALL;?> <?php }
@@ -134,17 +135,18 @@ else
             <input type="radio"  class="check" name="target"  value="<?php echo $key;?>" id="target_<?php echo $key;?>"  <?php if($target == $key || (!$target_all && $key == 'DOC')){ echo 'checked="checked"';}?>  /><?php echo $_ENV['targets'][$key];?>
         <?php } ?>
             <span class="red_asterisk" >*</span>
+            </div>
     </p>
     <br/>
     <p>
-        <label><?php  echo _WHERE_CLAUSE;?> : </label>
-        <textarea rows="6" cols="100" name="where" id="where" /><?php  echo $clause;?></textarea>
+        <label><?php  echo _WHERE_CLAUSE;?> :</label><br/>
+        <textarea rows="6" style="width:80%" name="where" id="where" /><?php  echo $clause;?></textarea>
         <span class="red_asterisk" >*</span>
     </p>
     <br/>
     <p >
-        <label><?php echo _TASKS;?> : </label><br/>
-        <div style="margin-left:40%;">
+        <?php echo _TASKS;?> :<br/>
+        <div style="margin-left:5%;">
         <?php  for($k=0;$k<count($_ENV['security_bitmask']); $k++)
         {
             ?>

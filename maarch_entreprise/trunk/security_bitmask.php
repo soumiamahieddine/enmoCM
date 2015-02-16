@@ -73,7 +73,7 @@ if ($core->is_module_loaded('moreq')) {
         )
     );
 } else {
-    define('ADD_RECORD', 1);
+    // define('ADD_RECORD', 1);
     define('DATA_MODIFICATION', 8);
     define('DELETE_RECORD', 16);
     // define('VIEW_LOG', 128);
@@ -82,13 +82,13 @@ if ($core->is_module_loaded('moreq')) {
     define('MAX_BITMASK', 255);
 
     $_ENV['security_bitmask'] = array();
-    array_push(
+/*    array_push(
         $_ENV['security_bitmask'],
         array(
         	'ID' => ADD_RECORD,
         	'LABEL' => _ADD_RECORD_LABEL,
         )
-    );
+    );*/
     array_push(
         $_ENV['security_bitmask'],
         array(
