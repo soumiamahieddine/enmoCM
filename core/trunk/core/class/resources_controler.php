@@ -292,7 +292,7 @@ class resources_controler
                 $theString = str_replace(">", "", $data[$i]['value']);
                 $mail = explode("<", $theString);
                 $queryUser = "select user_id from users where mail = "
-                    . "'" . $dbQuery->protect_string_db($mail[count($mail) -1]) . "'";
+                    . "'" . $dbQuery->protect_string_db($mail[count($mail) -1]) . "' and status = 'OK'";
                 $dbQuery->query($queryUser);
                 $userIdFound = $dbQuery->fetch_object();
                 if (!empty($userIdFound->user_id)) {
