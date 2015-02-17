@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008,2015 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -65,99 +65,100 @@ $erreur = "";
 if (isset($_REQUEST['valid'])) {
 	if (isset($_REQUEST['css_style']) && !empty($_REQUEST['css_style'])) {
 	    $cssStyle = $db->protect_string_db($_REQUEST['css_style']);
-	} else {
-	    $erreur .= _FONT_COLOR. ' ' . _MISSING . '.<br/>';
-	}
-	
-	if (isset($_REQUEST['desc_sd']) && ! empty($_REQUEST['desc_sd'])) {
-		$desc = $db->protect_string_db($_REQUEST['desc_sd']);
-		$db->query(
-			"select * from " . $_SESSION['tablename']['doctypes_second_level']
-			. " where doctypes_second_level_label = '" . $desc
-			. "' and enabled = 'Y'"
-		);
-		//$db->show();
-		if ($db->nb_result() > 1) {
-			$erreur .= _THE_SUBFOLDER . " " . _ALREADY_EXISTS . ".";
-		} else {
-			if (isset($_REQUEST['structure']) 
-				&& ! empty($_REQUEST['structure'])
-			) {
-				$structure = $_REQUEST['structure'];
-				if ($mode == "up") {
-					if (isset($_REQUEST['ID_sd']) 
-						&& ! empty($_REQUEST['ID_sd'])
-					) {
-						$id = $db->protect_string_db($_REQUEST['ID_sd']);
+
+		if (isset($_REQUEST['desc_sd']) && ! empty($_REQUEST['desc_sd'])) {
+			$desc = $db->protect_string_db($_REQUEST['desc_sd']);
+			$db->query(
+				"select * from " . $_SESSION['tablename']['doctypes_second_level']
+				. " where doctypes_second_level_label = '" . $desc
+				. "' and enabled = 'Y'"
+			);
+			//$db->show();
+			if ($db->nb_result() < 2) {
+				if (isset($_REQUEST['structure']) 
+					&& ! empty($_REQUEST['structure'])
+				) {
+					$structure = $_REQUEST['structure'];
+					if ($mode == "up") {
+						if (isset($_REQUEST['ID_sd']) 
+							&& ! empty($_REQUEST['ID_sd'])
+						) {
+							$id = $db->protect_string_db($_REQUEST['ID_sd']);
+							$db->query(
+								"UPDATE " 
+								. $_SESSION['tablename']['doctypes_second_level']
+								. " set doctypes_second_level_label = '" . $desc
+								. "', doctypes_first_level_id = " . $structure
+								. ", css_style = '".$cssStyle."' "
+								. " where doctypes_second_level_id = " . $id . ""
+							);
+							$db->query(
+								"update " . $_SESSION['tablename']['doctypes']
+								. " set doctypes_first_level_id = " . $structure
+								. " where doctypes_second_level_id = " . $id
+							);
+							if ($_SESSION['history']['subfolderup'] == "true") {
+								$hist = new history();
+								$hist->add(
+									$_SESSION['tablename']['doctypes_second_level'],
+									$id, "UP", 'subfolderup', _SUBFOLDER_MODIF . " " 
+									. strtolower(_NUM) . $id . " (" . $info . ")", 
+									$_SESSION['config']['databasetype']
+								);
+							}
+							$_SESSION['error'] .= _SUBFOLDER_MODIF . " : " . $id
+											   . "<br/>";
+						} else {
+							$erreur .= _SUBFOLDER_ID_PB . ".";
+						}
+					} else {
+						$desc = $db->protect_string_db($_REQUEST['desc_sd']);
 						$db->query(
-							"UPDATE " 
+							"INSERT INTO "
 							. $_SESSION['tablename']['doctypes_second_level']
-							. " set doctypes_second_level_label = '" . $desc
-							. "', doctypes_first_level_id = " . $structure
-							. ", css_style = '".$cssStyle."' "
-							. " where doctypes_second_level_id = " . $id . ""
+							. " ( css_style, doctypes_second_level_label, "
+							. "doctypes_first_level_id) VALUES ( '".$cssStyle 
+							."',  '" . $desc . "', ". $structure . ")"
 						);
 						$db->query(
-							"update " . $_SESSION['tablename']['doctypes']
-							. " set doctypes_first_level_id = " . $structure
-							. " where doctypes_second_level_id = " . $id
+							"select doctypes_first_level_id from "
+							. $_SESSION['tablename']['doctypes_second_level']
+							. " where doctypes_second_level_label =  '" . $desc
+							. "' and doctypes_first_level_id= " . $structure
 						);
-						if ($_SESSION['history']['subfolderup'] == "true") {
+						$res = $db->fetch_object();
+						if ($_SESSION['history']['subfolderadd'] == "true") {
 							$hist = new history();
 							$hist->add(
-								$_SESSION['tablename']['doctypes_second_level'],
-								$id, "UP", 'subfolderup', _SUBFOLDER_MODIF . " " 
-								. strtolower(_NUM) . $id . " (" . $info . ")", 
+								$_SESSION['tablename']['doctypes_second_level'], 
+								$res->doctypes_first_level_id, "ADD",'subfolderadd',
+								_SUBFOLDER_ADDED . " (" . $desc . ")", 
 								$_SESSION['config']['databasetype']
 							);
 						}
-						$_SESSION['error'] .= _SUBFOLDER_MODIF . " : " . $id
+						$_SESSION['error'] .= _NEW_SUBFOLDER . " : " . $desc 
 										   . "<br/>";
-					} else {
-						$erreur .= _SUBFOLDER_ID_PB . ".";
+					}
+					if (empty($erreur)) {
+						unset($_SESSION['m_admin']);
+						?>
+						<script type="text/javascript">window.opener.location.reload();self.close();</script>
+						<?php
 					}
 				} else {
-					$desc = $db->protect_string_db($_REQUEST['desc_sd']);
-					$db->query(
-						"INSERT INTO "
-						. $_SESSION['tablename']['doctypes_second_level']
-						. " ( css_style, doctypes_second_level_label, "
-						. "doctypes_first_level_id) VALUES ( '".$cssStyle 
-						."',  '" . $desc . "', ". $structure . ")"
-					);
-					$db->query(
-						"select doctypes_first_level_id from "
-						. $_SESSION['tablename']['doctypes_second_level']
-						. " where doctypes_second_level_label =  '" . $desc
-						. "' and doctypes_first_level_id= " . $structure
-					);
-					$res = $db->fetch_object();
-					if ($_SESSION['history']['subfolderadd'] == "true") {
-						$hist = new history();
-						$hist->add(
-							$_SESSION['tablename']['doctypes_second_level'], 
-							$res->doctypes_first_level_id, "ADD",'subfolderadd',
-							_SUBFOLDER_ADDED . " (" . $desc . ")", 
-							$_SESSION['config']['databasetype']
-						);
-					}
-					$_SESSION['error'] .= _NEW_SUBFOLDER . " : " . $desc 
-									   . "<br/>";
-				}
-				if (empty($erreur)) {
-					unset($_SESSION['m_admin']);
-					?>
-					<script type="text/javascript">window.opener.location.reload();self.close();</script>
-					<?php
+					$erreur .= _STRUCTURE_MANDATORY . '.<br/>';
 				}
 			} else {
-				$erreur .= _STRUCTURE_MANDATORY . '.<br/>';
-			}
+				$erreur .= _THE_SUBFOLDER . " " . _ALREADY_EXISTS;
+			} 
+		} else {
+			$erreur .= _SUBFOLDER_DESC_MISSING . ".<br/>";
 		}
 	} else {
-		$erreur .= _SUBFOLDER_DESC_MISSING . ".<br/>";
+	    $erreur .= _FONT_COLOR. ' ' . _MISSING . '.<br/>';
 	}
 }
+
 if (file_exists(
     $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
     . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
@@ -174,8 +175,8 @@ if (file_exists(
     $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
           . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'htmlColors.xml';
 }
-/*
 $fontColors = array();
+
 $xml = simplexml_load_file($path);
 if ($xml <> false) {
     foreach ($xml->color as $color) {
@@ -183,7 +184,7 @@ if ($xml <> false) {
             $fontColors,
             array(
        	        'id' => (string) $color->id,
-                'label' => (string) $color->label,
+                'label' => constant($color->label),
             )
         );
    }
@@ -191,8 +192,8 @@ if ($xml <> false) {
 array_push(
     $fontColors,
     array(
-    	'id' => '#000000',
-        'label' => _BLACK,
+    	'id' => 'default_style',
+        'label' => _DEFAULT_STYLE,
     )
 );
 
@@ -200,7 +201,8 @@ function cmpColors($a, $b)
 {
     return strcmp(strtolower($a['label']), strtolower($b['label']));
 }
-usort($fontColors, 'cmpColors');*/
+usort($fontColors, 'cmpColors');
+
 $core->load_html('', true, false);
 
 if ($mode == "up") {
@@ -240,9 +242,7 @@ if ($mode == "up") {
 	?>
 	<p>
     	<label><?php  echo _ID.' '._SUBFOLDER;?>	</label>
-		<input type="text" name="ID_sd"  value="<?php  
-	echo $id; 
-	?>" readonly="readonly" class="readonly" />
+		<input type="text" name="ID_sd"  value="<?php echo $id; ?>" readonly="readonly" class="readonly" />
 	</p>
     <p>&nbsp;</p>
 	<?php  
@@ -255,51 +255,43 @@ if ($mode == "up") {
     <p>&nbsp;</p>
     <p>
     	<label><?php  echo _CSS_STYLE;?></label>
-		<input type="text" name="css_style" id="css_style" value="<?php  echo $cssStyle; ?>" />
-	</p>
-    <p>&nbsp;</p>
-   <?php /*
-     <p>
-        <label><?php
-echo _FONT_COLOR;
-        ?> :</label>
-        <select name="font_color" id="font_color">
-            <option value=""><?php
-echo _CHOOSE;
-            ?></option>
+		<!-- <input type="text" name="css_style" id="css_style" value="<?php  echo $cssStyle; ?>" /> -->
+        <select name="css_style" id="css_style">
+            <option value=""><?php echo _CHOOSE_STYLE; ?></option>
             <?php
-for ($i = 0; $i < count($fontColors); $i ++) {
-    echo '<option value="' . $fontColors[$i]['id'] . '" ';
-    if ($fontColors[$i]['id'] == $fontColor) {
-        echo ' selected="selected" ';
-    }
-    echo   ' style="color:' . $fontColors[$i]['id'] . ';">' . $fontColors[$i]['label'] . '</option>';
-}
+				for ($i = 0; $i < count($fontColors); $i ++) {
+				    echo '<option value="' . $fontColors[$i]['id'] . '" ';
+				    if ($fontColors[$i]['id'] == $cssStyle) {
+				        echo ' selected="selected" ';
+				    }
+				    echo   ' class="' . $fontColors[$i]['id'] . '">' . $fontColors[$i]['label'] . '</option>';
+				}
             ?>
         </select>
-     </p>
-       <p>&nbsp;</p>*/?>
+	</p>
+    <p>&nbsp;</p>
 	<p>
 		<label><?php  echo _ATTACH_STRUCTURE;?></label>
-			<select name="structure" >
-				<option value=""><?php  echo _CHOOSE_STRUCTURE;?></option>
-				<?php 	
-for ($i = 0; $i < count($_SESSION['m_admin']['structures']); $i ++) {
-	?>
-	<option value="<?php  
-	echo $_SESSION['m_admin']['structures'][$i]['ID'];
-	?>" <?php  
-	if ($structureId == $_SESSION['m_admin']['structures'][$i]['ID']) { 
-		echo 'selected="selected"'; 
-	}
-	?>><?php  
-	echo $_SESSION['m_admin']['structures'][$i]['LABEL'];
-	?></option>
-	<?php
-}
-?>
-			</select>
+		<select name="structure" >
+			<option value=""><?php  echo _CHOOSE_STRUCTURE;?></option>
+			<?php 	
+				for ($i = 0; $i < count($_SESSION['m_admin']['structures']); $i ++) {
+					?>
+					<option value="<?php  
+					echo $_SESSION['m_admin']['structures'][$i]['ID'];
+					?>" <?php  
+					if ($structureId == $_SESSION['m_admin']['structures'][$i]['ID']) { 
+						echo 'selected="selected"'; 
+					}
+					?>><?php  
+					echo $_SESSION['m_admin']['structures'][$i]['LABEL'];
+					?></option>
+					<?php
+				}
+				?>
+		</select>
 	</p>
+	<br/>
 	<p class="buttons">
     	<input type="submit" class="button" name="valid" value="<?php  
 echo _VALIDATE;

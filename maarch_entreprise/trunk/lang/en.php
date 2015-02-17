@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *    Copyright 2008-2012 Maarch
+ *    Copyright 2008-2015 Maarch
  *
  *  This file is part of Maarch Framework.
  *
@@ -436,6 +436,25 @@ if (!defined('_FOLDERTYPE_ADDED')) define('_FOLDERTYPE_ADDED', 'New file type ad
 if (!defined('_FOLDERTYPE_DELETION')) define('_FOLDERTYPE_DELETION', 'File type deleted');
 if (!defined('_FONT_COLOR'))    define('_FONT_COLOR', 'Font color');
 if (!defined('_FONT_SIZE'))    define('_FONT_SIZE', 'Font size');
+if (! defined('_CSS_STYLE'))    define('_CSS_STYLE', 'Style');
+if (! defined('_CHOOSE_STYLE'))    define('_CHOOSE_STYLE', 'Choose a style');
+if (! defined('_DEFAULT_STYLE'))    define('_DEFAULT_STYLE', 'Default style');
+
+/********************** colors style ***************************/
+if (! defined('_BEIGE'))    define('_BEIGE', 'Beige');
+if (! defined('_BLUE'))    define('_BLUE', 'Blue');
+if (! defined('_BLUE_BOLD'))    define('_BLUE_BOLD', 'Blue (bold)');
+if (! defined('_GREY'))    define('_GREY', 'Grey');
+if (! defined('_YELLOW'))    define('_YELLOW', 'Yellow');
+if (! defined('_BROWN'))    define('_BROWN', 'Brown');
+if (! defined('_BLACK_BOLD'))    define('_BLACK_BOLD', 'Black (bold)');
+if (! defined('_ORANGE'))    define('_ORANGE', 'Orange');
+if (! defined('_ORANGE_BOLD'))    define('_ORANGE_BOLD', 'Orange (bold)');
+if (! defined('_PINK'))    define('_PINK', 'Pink');
+if (! defined('_RED'))    define('_RED', 'Red');
+if (! defined('_GREEN'))    define('_GREEN', 'Green');
+if (! defined('_PURPLE'))    define('_PURPLE', 'Purple');
+
 if (!defined('_FOR')) define('_FOR','To');
 if (!defined('_FORMAT')) define('_FORMAT','Format');
 if (!defined('_FOR_CONTACT_C')) define('_FOR_CONTACT_C', 'To');

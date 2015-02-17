@@ -1,43 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
     <color>
-        <id>#0000FF</id>
-        <label>Bleu</label>
+        <id>beige_style</id>
+        <label>_BEIGE</label>
     </color>
     <color>
-        <id>#FFFF00</id>
-        <label>Jaune</label>
+        <id>blue_style</id>
+        <label>_BLUE</label>
     </color>
     <color>
-        <id>#008000</id>
-        <label>Vert</label>
+        <id>blue_style_big</id>
+        <label>_BLUE_BOLD</label>
     </color>
     <color>
-        <id>#D2B48C</id>
-        <label>Beige</label>
+        <id>grey_style</id>
+        <label>_GREY</label>
     </color>
     <color>
-        <id>#FF00FF</id>
-        <label>Rose</label>
+        <id>yellow_style</id>
+        <label>_YELLOW</label>
+    </color>   
+    <color>
+        <id>brown_style</id>
+        <label>_BROWN</label>
     </color>
     <color>
-        <id>#FF0000</id>
-        <label>Rouge</label>
+        <id>black_style</id>
+        <label>_BLACK</label>
+    </color> 
+    <color>
+        <id>black_style_big</id>
+        <label>_BLACK_BOLD</label>
+    </color>    
+    <color>
+        <id>orange_style</id>
+        <label>_ORANGE</label>
     </color>
     <color>
-        <id>#800080</id>
-        <label>Violet</label>
+        <id>orange_style_big</id>
+        <label>_ORANGE_BOLD</label>
     </color>
     <color>
-        <id>#808080</id>
-        <label>Gris</label>
+        <id>pink_style</id>
+        <label>_PINK</label>
     </color>
     <color>
-        <id>#FF4500</id>
-        <label>Orange</label>
-    </color>
+        <id>red_style</id>
+        <label>_RED</label>
+    </color> 
     <color>
-        <id>#800000</id>
-        <label>Marron</label>
+        <id>green_style</id>
+        <label>_GREEN</label>
+    </color>   
+    <color>
+        <id>violet_style</id>
+        <label>_PURPLE</label>
     </color>
 </root>

@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008,2015 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -221,7 +221,7 @@ if (file_exists(
     $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
           . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'htmlColors.xml';
 }
-/*$fontColors = array();
+$fontColors = array();
 
 $xml = simplexml_load_file($path);
 if ($xml <> false) {
@@ -230,7 +230,7 @@ if ($xml <> false) {
             $fontColors,
             array(
        	        'id' => (string) $color->id,
-                'label' => (string) $color->label,
+                'label' => constant($color->label),
             )
         );
    }
@@ -238,8 +238,8 @@ if ($xml <> false) {
 array_push(
     $fontColors,
     array(
-    	'id' => '#000000',
-        'label' => _BLACK,
+    	'id' => 'default_style',
+        'label' => _DEFAULT_STYLE,
     )
 );
 
@@ -248,7 +248,7 @@ function cmpColors($a, $b)
     return strcmp(strtolower($a['label']), strtolower($b['label']));
 }
 usort($fontColors, 'cmpColors');
-*/
+
 $core->load_html();
 
 if ($mode == "up") {
@@ -283,63 +283,44 @@ if ($mode == "up") {
 
 <br/>
 <form method="post" name="frmstructure" id="frmstructure" class="forms" action="<?php
-echo $_SESSION['config']['businessappurl'];
-?>index.php?display=true&page=structure_up">
+	echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=structure_up">
 	<input type="hidden" name="display" value="true" />
     <input type="hidden" name="page" value="structure_up" />
 	<?php
-if ($mode == "up") {
-    ?>
-	<p>
-    	<label><?php
-    echo _ID . ' ' . _STRUCTURE;
-    ?> :</label>
-		<input type="text" class="readonly" name="ID_structure" value="<?php
-	echo $id;
-	?>" readonly="readonly" />
-     </p>
-     <p>&nbsp;</p>
-	<?php
-}
-?>
+	if ($mode == "up") {
+	?>
+		<p>
+	    	<label><?php echo _ID . ' ' . _STRUCTURE; ?> :</label>
+			<input type="text" class="readonly" name="ID_structure" value="<?php echo $id; ?>" readonly="readonly" />
+	    </p>
+	    <p>&nbsp;</p>
+		<?php
+	} ?>
 
 	<p>
-    	<label><?php
-echo _DESC . ' ' . _STRUCTURE;
-?> :</label>
-	   <input type="text"  name="desc_structure" value="<?php
-echo $desc;
-?>" />
-     </p>
-      <p>&nbsp;</p>
-     <p>
-    	<label><?php
-echo _CSS_STYLE;
-?> :</label>
-	   <input type="text"  name="css_style" id="css_style" value="<?php
-echo $cssStyle;
-?>" />
-     </p>
-<?php /*
-     <p>
-        <label><?php
-echo _FONT_COLOR;
-        ?> :</label>
-        <select name="font_color" id="font_color">
-            <option value=""><?php
-echo _CHOOSE;
-            ?></option>
+    	<label><?php echo _DESC . ' ' . _STRUCTURE; ?> :</label>
+	   	<input type="text"  name="desc_structure" value="<?php echo $desc; ?>" />
+    </p>
+    <p>&nbsp;</p>
+    
+    <p>
+    	<label><?php echo _CSS_STYLE; ?> :</label>
+	   <!-- <input type="text"  name="css_style" id="css_style" value="<?php echo $cssStyle; ?>" /> -->
+        <select name="css_style" id="css_style">
+            <option value=""><?php echo _CHOOSE_STYLE; ?></option>
             <?php
-for ($i = 0; $i < count($fontColors); $i ++) {
-    echo '<option value="' . $fontColors[$i]['id'] . '" ';
-    if ($fontColors[$i]['id'] == $fontColor) {
-        echo ' selected="selected" ';
-    }
-    echo   ' style="color:' . $fontColors[$i]['id'] . ';">' . $fontColors[$i]['label'] . '</option>';
-}
+				for ($i = 0; $i < count($fontColors); $i ++) {
+				    echo '<option value="' . $fontColors[$i]['id'] . '" ';
+				    if ($fontColors[$i]['id'] == $cssStyle) {
+				        echo ' selected="selected" ';
+				    }
+				    echo   ' class="' . $fontColors[$i]['id'] . '">' . $fontColors[$i]['label'] . '</option>';
+				}
             ?>
         </select>
-     </p>*/?>
+    </p>
+    <br/>
+
 <?php
 if ($folderModuleLoaded) {
     ?>
@@ -359,31 +340,31 @@ if ($folderModuleLoaded) {
 		 <td width="45%" align="center" valign="top">
 			<select name="foldertypeslist[]" id="foldertypeslist" class="multiple_list" ondblclick="moveclick($('foldertypeslist'),$('foldertypes'));" multiple="multiple">
 			<?php
-	for ($i = 0; $i < count($_SESSION['m_admin']['foldertypes']); $i ++) {
-	    $foldertypesState = false;
+				for ($i = 0; $i < count($_SESSION['m_admin']['foldertypes']); $i ++) {
+				    $foldertypesState = false;
 
-		for ($j = 0; $j < count($foldertypesArr); $j ++) {
-			if (trim($_SESSION['m_admin']['foldertypes'][$i]['id']) == trim(
-			    $foldertypesArr[$j]
-			)
-			) {
-				$foldertypesState = true;
-			}
-		}
-		if ($foldertypesState == false) {
-			?>
-			<option value="<?php
-			echo $_SESSION['m_admin']['foldertypes'][$i]['id'];
-			?>" alt="<?php
-			echo $_SESSION['m_admin']['foldertypes'][$i]['label'];
-			?>" title="<?php
-			echo $_SESSION['m_admin']['foldertypes'][$i]['label'];
-			?>"><?php
-			echo $_SESSION['m_admin']['foldertypes'][$i]['label'];
-			?></option>
-			<?php
-		}
-	}
+					for ($j = 0; $j < count($foldertypesArr); $j ++) {
+						if (trim($_SESSION['m_admin']['foldertypes'][$i]['id']) == trim(
+						    $foldertypesArr[$j]
+						)
+						) {
+							$foldertypesState = true;
+						}
+					}
+					if ($foldertypesState == false) {
+						?>
+						<option value="<?php
+						echo $_SESSION['m_admin']['foldertypes'][$i]['id'];
+						?>" alt="<?php
+						echo $_SESSION['m_admin']['foldertypes'][$i]['label'];
+						?>" title="<?php
+						echo $_SESSION['m_admin']['foldertypes'][$i]['label'];
+						?>"><?php
+						echo $_SESSION['m_admin']['foldertypes'][$i]['label'];
+						?></option>
+						<?php
+					}
+				}
 		?>
    		</select>
 	<br/><br/>

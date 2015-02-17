@@ -1,7 +1,7 @@
 <?php
 /*
  *
- *    Copyright 2008-2012 Maarch
+ *    Copyright 2008-2015 Maarch
  *
  *  This file is part of Maarch Framework.
  *
@@ -392,8 +392,26 @@ if (!defined('_STRUCTURE_DEL')) define( '_STRUCTURE_DEL', 'Suppression de la che
 if (!defined('_DELETED_STRUCTURE')) define( '_DELETED_STRUCTURE', 'Chemise supprim&eacute;e');
 if (! defined('_FONT_COLOR'))    define('_FONT_COLOR', 'Couleur de la police');
 if (! defined('_FONT_SIZE'))    define('_FONT_SIZE', 'Taille de la police');
+if (! defined('_CSS_STYLE'))    define('_CSS_STYLE', 'Style');
+if (! defined('_CHOOSE_STYLE'))    define('_CHOOSE_STYLE', 'Choisissez un style');
+if (! defined('_DEFAULT_STYLE'))    define('_DEFAULT_STYLE', 'Style par d&eacute;faut');
+
+/********************** colors style ***************************/
 if (! defined('_BLACK'))    define('_BLACK', 'Noir');
-if (! defined('_CSS_STYLE'))    define('_CSS_STYLE', 'Classe css');
+if (! defined('_BEIGE'))    define('_BEIGE', 'Beige');
+if (! defined('_BLUE'))    define('_BLUE', 'Bleu');
+if (! defined('_BLUE_BOLD'))    define('_BLUE_BOLD', 'Bleu (gras)');
+if (! defined('_GREY'))    define('_GREY', 'Gris');
+if (! defined('_YELLOW'))    define('_YELLOW', 'Jaune');
+if (! defined('_BROWN'))    define('_BROWN', 'Marron');
+if (! defined('_BLACK_BOLD'))    define('_BLACK_BOLD', 'Noir (gras)');
+if (! defined('_ORANGE'))    define('_ORANGE', 'Orange');
+if (! defined('_ORANGE_BOLD'))    define('_ORANGE_BOLD', 'Orange (gras)');
+if (! defined('_PINK'))    define('_PINK', 'Rose');
+if (! defined('_RED'))    define('_RED', 'Rouge');
+if (! defined('_GREEN'))    define('_GREEN', 'Vert');
+if (! defined('_PURPLE'))    define('_PURPLE', 'Violet');
+
 /************** sous-dossiers : Liste + Formulaire**************/
 if (!defined('_SUBFOLDER_LIST')) define( '_SUBFOLDER_LIST', 'Liste des sous-chemises');
 if (!defined('_SUBFOLDERS')) define( '_SUBFOLDERS', 'sous-chemise(s)');
