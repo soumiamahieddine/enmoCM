@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008,2015 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -32,7 +32,9 @@
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $db = new dbquery();
 $db->connect();
-$db->query("select description as tag from ".$_SESSION['tablename']['doctypes']." where lower(description) like lower('".$_REQUEST['what']."%') order by description");
+$db->query("SELECT description as tag FROM "
+	.$_SESSION['tablename']['doctypes']
+	." WHERE lower(description) like lower('".$_REQUEST['what']."%') and enabled = 'Y' ORDER BY description");
 
 $listArray = array();
 while($line = $db->fetch_object())

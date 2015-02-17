@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2008,2009 Maarch
+*    Copyright 2008,2015 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -32,7 +32,9 @@
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 $db = new dbquery();
 $db->connect();
-$db->query("select doctypes_first_level_label as tag from ".$_SESSION['tablename']['doctypes_first_level']." where lower(doctypes_first_level_label) like lower('".$_REQUEST['what']."%') order by doctypes_first_level_label");
+$db->query("SELECT doctypes_first_level_label as tag FROM "
+	.$_SESSION['tablename']['doctypes_first_level']
+	." WHERE lower(doctypes_first_level_label) like lower('".$_REQUEST['what']."%') and enabled = 'Y' ORDER BY doctypes_first_level_label");
 
 $listArray = array();
 while($line = $db->fetch_object())
