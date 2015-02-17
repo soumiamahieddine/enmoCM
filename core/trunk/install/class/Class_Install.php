@@ -327,7 +327,7 @@ class Install extends functions
             exit;
         }
 
-        if (!$this->executeSQLScript('structure.sql')) {
+        if (!$this->executeSQLScript('sql/structure.sql')) {
             return false;
             exit;
         }
@@ -403,7 +403,7 @@ class Install extends functions
     public function getDataList()
     {
         $sqlList = array();
-        foreach(glob('data*.sql') as $fileSqlPath) {
+        foreach(glob('sql/data*.sql') as $fileSqlPath) {
             $sqlFile = str_replace('.sql', '', end(explode('/', $fileSqlPath)));
             array_push($sqlList, $sqlFile);
         }
