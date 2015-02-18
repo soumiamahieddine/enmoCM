@@ -88,7 +88,7 @@ if ($_REQUEST['action'] == 'testConnect') {
 } elseif ($_REQUEST['action'] == 'loadDatas') {
 
     $loadDatas = $Class_Install->createData(
-        $_REQUEST['dataFilename'].'.sql'
+        'sql/'.$_REQUEST['dataFilename'].'.sql'
     );
 
     if (!$loadDatas) {
