@@ -177,9 +177,27 @@ $SOAP_dispatch_map['userGet'] = array(
                                         'out' => array('out' => '{urn:MySoapServer}users'),
                                         'method' => "core#users::getWs"
                                     );
+
+$SOAP_typedef['returnArrayUser'] = array(   'userEntities'=>'{urn:MySoapServer}arrayOfEntities',
+                                            'isUser'=>'boolean',
+                                    );
+
+$SOAP_typedef['arrayOfEntities'] = array(
+    array(
+        'arrayOfEntitiesContent' => '{urn:MySoapServer}arrayOfEntitiesContent'
+    )
+);
+
+$SOAP_typedef['arrayOfEntitiesContent'] = array(
+    'USER_ID' => 'string',
+    'ENTITY_ID' => 'string',
+    'PRIMARY' => 'string',
+    'ROLE' => 'string',
+);
+
 $SOAP_dispatch_map['checkUserMail'] = array(
                                         'in'  => array('userMail' => 'string'),
-                                        'out' => array('out' => 'boolean'),
+                                        'out' => array('out' => '{urn:MySoapServer}returnArrayUser'),
                                         'method' => "core#users::checkUserMail"
                                         );
 

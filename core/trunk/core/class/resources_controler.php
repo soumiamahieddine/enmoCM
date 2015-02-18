@@ -291,7 +291,7 @@ class resources_controler
                 $mail = array();
                 $theString = str_replace(">", "", $data[$i]['value']);
                 $mail = explode("<", $theString);
-                $queryUser = "select user_id from users where mail = "
+                $queryUser = "SELECT user_id FROM users WHERE mail = "
                     . "'" . $dbQuery->protect_string_db($mail[count($mail) -1]) . "' and status = 'OK'";
                 $dbQuery->query($queryUser);
                 $userIdFound = $dbQuery->fetch_object();
@@ -299,7 +299,7 @@ class resources_controler
                     $toAddressFound = true;
                     $destUser = $userIdFound->user_id;
 
-	                $queryUserEntity = "select entity_id from users_entities where primary_entity = 'Y' and user_id = '".$destUser."'";
+	                $queryUserEntity = "SELECT entity_id FROM users_entities WHERE primary_entity = 'Y' and user_id = '".$destUser."'";
 	                $dbQuery->query($queryUserEntity);
 	                $userEntityId = $dbQuery->fetch_object();
 	                if (!empty($userEntityId->entity_id)) {

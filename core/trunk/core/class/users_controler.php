@@ -878,7 +878,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     * Check if the user exist in the database given his mail
     *
     * @param  $userMail string user mail
-    * @return bool true if user exists, false otherwise
+    * @return Array or null
     */
     public function checkUserMail($userMail)
     {
@@ -886,18 +886,74 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         self::$db->connect();
         $func = new functions();
 
-        $queryUser = "select user_id from users where mail = "
-            . "'" . $func->protect_string_db($userMail) . "'";
+        $queryUser = "SELECT user_id FROM users WHERE mail = "
+            . "'" . $func->protect_string_db($userMail) . "' and status = 'OK'";
         self::$db->query($queryUser);
         $userIdFound = self::$db->fetch_object();
+        $UserEntities = array();
+
         if (!empty($userIdFound->user_id)) {
             $isUser = true;
+            $UserEntities = $this->getEntities($userIdFound->user_id);
         } else {
             $isUser = false;
         }
 
         self::$db->disconnect();
-        return $isUser;
+        
+        $return = array();
+        array_push(
+            $return, 
+            array(
+                'isUser' => $isUser,
+                'userEntities' => $UserEntities
+            )
+        );
+
+        return $return;
+    }
+
+    /**
+    * Returns in an array all the entities associated with a user (user_id,
+    * entity_id, primary and role)
+    *
+    * @param  $userId string  User identifier
+    * @return Array or null
+    */
+    public function getEntities($userId)
+    {
+        $entities = array();
+        if (empty($userId)) {
+            return null;
+        }
+
+        self::$db = new dbquery();
+        self::$db->connect();
+        $func = new functions();
+        $query = "SELECT ue.entity_id, ue.user_role, ue.primary_entity 
+                    FROM users_entities ue, entities e 
+                    WHERE ue.user_id = '" . $func->protect_string_db($userId) . "' and e.enabled = 'Y' and e.entity_id = ue.entity_id
+                    ORDER BY primary_entity desc";
+                    // set primary entity to the first row
+        try{
+            self::$db->query($query);
+        } catch (Exception $e){
+            echo _NO_USER_WITH_ID.' '.$userId.' // ';
+        }
+
+        while ($res = self::$db->fetch_object()) {
+            array_push(
+                $entities, 
+                array(
+                    'USER_ID' => $userId,
+                    'ENTITY_ID' => $res->entity_id,
+                    'PRIMARY' => $res->primary_entity,
+                    'ROLE' => $res->user_role,
+                )
+            );
+        }
+        // self::$db->disconnect();
+        return $entities;
     }
 
 }
