@@ -226,6 +226,71 @@ class lists extends dbquery
                             .'<option value="none">'._CHOOSE_ENTITY.'</option>'
                             .$options.'</select>&nbsp;';
             break;
+
+            case 'entity_subentities':
+                require_once "modules" . DIRECTORY_SEPARATOR . "entities" . DIRECTORY_SEPARATOR
+                    . "class" . DIRECTORY_SEPARATOR . "class_manage_entities.php";
+                require_once "modules" . DIRECTORY_SEPARATOR . "entities" . DIRECTORY_SEPARATOR
+                    . "entities_tables.php";
+                    
+                $ent = new entity();
+                $sec = new security();
+                
+                $db2 = new dbquery();
+                $db2->connect();
+
+                $view = $sec->retrieve_view_from_table($this->params['tableName']);
+                if (empty($view)) {
+                    $view = $this->params['tableName'];
+                }
+                if (!empty($view)) {
+                    if (! empty($this->params['basketClause'])) $where = 'where '.$this->params['basketClause'];
+
+                    $db->query(
+                        "select distinct(r.destination) as entity_id, count(distinct r.res_id)"
+                        . " as total, e.entity_label , e.short_label from " 
+                        . $view. " r left join " . ENT_ENTITIES
+                        . " e on e.entity_id = r.destination " .$where
+                        . " group by e.entity_label,  e.short_label, r.destination order by e.entity_label"
+                    );
+                    while ($res = $db->fetch_object()) {
+                        
+                        if (isset($_SESSION['filters']['entity_subentities']['VALUE']) 
+                            && $_SESSION['filters']['entity_subentities']['VALUE'] == $res->entity_id
+                            )  $selected = 'selected="selected"'; else $selected =  '';
+                            
+                        if ($ent->is_user_in_entity($_SESSION['user']['UserId'], $res->entity_id)) $style = 'style="font-weight:bold;"';  else $style =  '';
+
+                        $subEntities_tmp = array();
+                        $subEntities = array();
+                        $subEntities_tmp = $ent->getEntityChildrenTree($subEntities_tmp, $res->entity_id);
+
+                        for($iSubEntities=0;$iSubEntities<count($subEntities_tmp);$iSubEntities++){
+                            array_push($subEntities, "'".$subEntities_tmp[$iSubEntities]['ID']."'");
+                        }
+                        array_push($subEntities, "'" . $res->entity_id . "'");
+                        $view_tmp = $sec->retrieve_view_from_table($this->params['tableName']);
+
+                        if(isset($_SESSION['current_basket']['view']) && $_SESSION['current_basket']['view'] <> ""){
+                            $filter_view = $_SESSION['current_basket']['view'];
+                        } else if (!empty($view_tmp)) {
+                            $filter_view = $view_tmp;
+                        } else {
+                            $filter_view = $this->params['tableName'];
+                        }
+
+                        $db2->query("SELECT count(res_id) as total FROM ".$filter_view." WHERE (".$this->params['basketClause'].") and destination in (" . implode(",",$subEntities) . ")");
+                        $res2 = $db2->fetch_object();
+
+                        $options .='<option value="'.$res->entity_id.'" '.$selected.' '.$style.'>'.$res->short_label.' ('.$res2->total.')</option>';
+                    }
+                }
+                $filters .='<select name="entity_subentities" id="entity_subentities" onChange="loadList(\''.$this->link
+                            .'&filter=entity_subentities&value=\' + document.filters.entity_subentities.value, \''
+                            .$this->divListId.'\', '.$this->modeReturn.');">'
+                            .'<option value="none">'._CHOOSE_ENTITY_SUBENTITIES.'</option>'
+                            .$options.'</select>&nbsp;';
+            break;
             
             case 'typist':
                 $sec = new security();
@@ -575,6 +640,23 @@ class lists extends dbquery
                     } else if ($_REQUEST['filter'] == 'entity') {
                     
                        $_SESSION['filters']['entity']['CLAUSE'] = "destination = '".$_SESSION['filters']['entity']['VALUE']."'";
+                    
+                    } else if ($_REQUEST['filter'] == 'entity_subentities') {
+                        require_once "modules" . DIRECTORY_SEPARATOR . "entities" . DIRECTORY_SEPARATOR
+                            . "class" . DIRECTORY_SEPARATOR . "class_manage_entities.php";
+
+                        $entities = new entity();
+                        $subEntities_tmp = array();
+                        $subEntities = array();
+
+                        $subEntities_tmp = $entities->getEntityChildrenTree($subEntities_tmp, $_SESSION['filters']['entity_subentities']['VALUE']);
+
+                        for($iSubEntities=0;$iSubEntities<count($subEntities_tmp);$iSubEntities++){
+                            array_push($subEntities, "'".$subEntities_tmp[$iSubEntities]['ID']."'");
+                        }
+                        array_push($subEntities, "'" . $_SESSION['filters']['entity_subentities']['VALUE'] . "'");
+
+                        $_SESSION['filters']['entity_subentities']['CLAUSE'] = "destination in (" . implode(",",$subEntities) . ")";
                     
                     } else if ($_REQUEST['filter'] == 'typist') {
                     

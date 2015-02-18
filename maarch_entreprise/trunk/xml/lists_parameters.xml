@@ -7,6 +7,11 @@
             <ENABLED>true</ENABLED>
         </FILTER>
         <FILTER>
+            <ID>entity_subentities</ID>
+            <LABEL>_SUBENTITY</LABEL>
+            <ENABLED>true</ENABLED>
+        </FILTER>
+        <FILTER>
             <ID>entity</ID>
             <LABEL>_ENTITY</LABEL>
             <ENABLED>true</ENABLED>
