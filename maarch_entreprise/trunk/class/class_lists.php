@@ -269,17 +269,12 @@ class lists extends dbquery
                             array_push($subEntities, "'".$subEntities_tmp[$iSubEntities]['ID']."'");
                         }
                         array_push($subEntities, "'" . $res->entity_id . "'");
-                        $view_tmp = $sec->retrieve_view_from_table($this->params['tableName']);
 
                         if(isset($_SESSION['current_basket']['view']) && $_SESSION['current_basket']['view'] <> ""){
-                            $filter_view = $_SESSION['current_basket']['view'];
-                        } else if (!empty($view_tmp)) {
-                            $filter_view = $view_tmp;
-                        } else {
-                            $filter_view = $this->params['tableName'];
+                            $view = $_SESSION['current_basket']['view'];
                         }
 
-                        $db2->query("SELECT count(res_id) as total FROM ".$filter_view." WHERE (".$this->params['basketClause'].") and destination in (" . implode(",",$subEntities) . ")");
+                        $db2->query("SELECT count(res_id) as total FROM ".$view." WHERE (".$this->params['basketClause'].") and destination in (" . implode(",",$subEntities) . ")");
                         $res2 = $db2->fetch_object();
 
                         $options .='<option value="'.$res->entity_id.'" '.$selected.' '.$style.'>'.$res->short_label.' ('.$res2->total.')</option>';
