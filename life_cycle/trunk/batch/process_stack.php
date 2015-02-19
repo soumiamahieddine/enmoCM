@@ -238,6 +238,8 @@ while ($GLOBALS['state'] <> "END") {
                     if ($cptRecordsTotalInStep <> 0 
                     && $GLOBALS['steps'][$GLOBALS['currentStep']]
                         ['step_operation'] <> "PURGE"
+                    && $GLOBALS['steps'][$GLOBALS['currentStep']]
+                        ['step_operation'] <> "NONE"
                     ) {
                         // Check size of the docserver 
                         // (stop the program if the docserver will be 
