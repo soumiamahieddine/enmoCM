@@ -712,6 +712,7 @@ class folder extends request
 		$data = array();
 		$foldertype = new foldertype();
 		$request = new request();
+		$func = new functions();
 		$foldertype_id =  $values['foldertype_id'];
 		if(!empty($foldertype_id))
 		{
@@ -721,22 +722,29 @@ class folder extends request
 			{
 				$val_indexes[$indexes[$i]] =  $values[$indexes[$i]];
 			}
+			//var_dump($val_indexes);
 			$test_type = $foldertype->check_indexes($foldertype_id, $val_indexes );
 			if($test_type)
 			{
 				$data = $foldertype->fill_data_array($foldertype_id, $val_indexes, $data);
 			}
+			//var_dump($data);
 		}
 		else
 		{
 			$_SESSION['error'] .= _FOLDERTYPE.' '._IS_EMPTY;
 		}
+
+		$func->wash($values['folder_name'], "no", _FOLDERNAME, "yes", "", "255", '', '');
+
 		if(empty($_SESSION['error']))
 		{
 			$where = " folders_system_id = ".$id_to_update;
+			array_push($data, array('column' => 'folder_name', 		  'value' =>$values['folder_name'],		   'type' =>"string"));
 			array_push($data, array('column' => 'last_modified_date', 'value' => $request->current_datetime(), 'type' => "date"));
+			
 			$request->update($_SESSION['tablename']['fold_folders'], $data, $where, $_SESSION['config']['databasetype']);
-
+			//$request->show();
 			$_SESSION['error'] = _FOLDER_INDEX_UPDATED." (".strtolower(_NUM).$values['folder_id'].")";
 			if($_SESSION['history']['folderup'])
 			{

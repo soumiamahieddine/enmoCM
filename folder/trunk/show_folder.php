@@ -148,7 +148,11 @@ if (isset($_POST['delete_folder'])) {
                         <td ><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folderArray['folder_id'] ; ?>" size="40" id="folder_id" name="folder_id" /></td>
                         <th align="left" class="picto" >&nbsp;</th>
                         <th ><?php  echo _FOLDERNAME; ?> :</th>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folderArray['folder_name']; ?>" id="folder_name" name="folder_name" /></td>
+                        <?php if ($updateRight) { ?>
+                            <td><input type="text" value="<?php  echo $folderArray['folder_name']; ?>" id="folder_name" name="folder_name" /></td>
+                        <?php } else { ?>
+                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folderArray['folder_name']; ?>" id="folder_name" name="folder_name" /></td>
+                        <?php } ?>
                     </tr>
                     <tr>
                         <th align="left" class="picto" >&nbsp;</th>
