@@ -21,6 +21,8 @@
         <Id>res_coll</Id>
         <Table>res_x</Table>
         <View>res_view</View>
+        <ExtTable></ExtTable>
+        <VersionTable>res_version_letterbox</VersionTable>
         <Adr>adr_x</Adr>
     </COLLECTION>
     <LOG4PHP>

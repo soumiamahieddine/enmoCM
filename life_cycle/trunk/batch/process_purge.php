@@ -229,19 +229,62 @@ while ($GLOBALS['state'] <> "END") {
                 $deleteNotesQuery = '';
                 $GLOBALS['logger']->write('Prepare sql deletion for res_id:' 
                     . $resourcesArray[$cptRes]["res_id"], 'INFO');
+
                 $deleteResQuery = "delete from " . $GLOBALS['table']
                    . " where res_id = " . $resourcesArray[$cptRes]["res_id"];
                 //echo $deleteResQuery . PHP_EOL;
                 Bt_doQuery($GLOBALS['db'], $deleteResQuery);
-                $deleteAdrQuery = "delete from " . $GLOBALS['adrTable']
-                   . " where res_id = " . $resourcesArray[$cptRes]["res_id"];
-                //echo $deleteAdrQuery . PHP_EOL;
-                Bt_doQuery($GLOBALS['db'], $deleteAdrQuery);
+
+                if ($GLOBALS['extensionTable'] <> "") {
+                    $deleteExtQuery = "delete from " . $GLOBALS['extensionTable']
+                       . " where res_id = " . $resourcesArray[$cptRes]["res_id"];
+                    //echo $deleteExtQuery . PHP_EOL;
+                    Bt_doQuery($GLOBALS['db'], $deleteExtQuery);
+                }
+
+                if ($GLOBALS['versionTable'] <> "") {
+                    $deleteVersionQuery = "delete from " . $GLOBALS['versionTable']
+                       . " where res_id_master = " . $resourcesArray[$cptRes]["res_id"];
+                    //echo $deleteVersionQuery . PHP_EOL;
+                    Bt_doQuery($GLOBALS['db'], $deleteVersionQuery);
+                }
+
+                if ($GLOBALS['adrTable'] <> "") {
+                    $deleteAdrQuery = "delete from " . $GLOBALS['adrTable']
+                       . " where res_id = " . $resourcesArray[$cptRes]["res_id"];
+                    //echo $deleteAdrQuery . PHP_EOL;
+                    Bt_doQuery($GLOBALS['db'], $deleteAdrQuery);
+                }
+
                 $deleteNotesQuery = "delete from notes "
                    . " where coll_id = '" . $GLOBALS['collection'] . "' "
                    . " and identifier = '" . $resourcesArray[$cptRes]["res_id"] . "'";
                 //echo $deleteNotesQuery . PHP_EOL;
                 Bt_doQuery($GLOBALS['db'], $deleteNotesQuery);
+
+                $deleteLinkedQuery = "delete from res_linked "
+                   . " where coll_id = '" . $GLOBALS['collection'] . "' "
+                   . " and (res_child = '" . $resourcesArray[$cptRes]["res_id"] . "' or res_parent = '" . $resourcesArray[$cptRes]["res_id"] . "')";
+                //echo $deleteLinkedQuery . PHP_EOL;
+                Bt_doQuery($GLOBALS['db'], $deleteLinkedQuery);
+
+                $deleteTagsQuery = "delete from tags "
+                   . " where coll_id = '" . $GLOBALS['collection'] . "' "
+                   . " and res_id = '" . $resourcesArray[$cptRes]["res_id"] . "'";
+                //echo $deleteTagsQuery . PHP_EOL;
+                Bt_doQuery($GLOBALS['db'], $deleteTagsQuery);
+
+                $deleteAttachmentsQuery = "delete from res_attachments "
+                   . " where coll_id = '" . $GLOBALS['collection'] . "' "
+                   . " and res_id_master = '" . $resourcesArray[$cptRes]["res_id"] . "'";
+                //echo $deleteAttachmentsQuery . PHP_EOL;
+                Bt_doQuery($GLOBALS['db'], $deleteAttachmentsQuery);
+
+                $deleteCasesQuery = "delete from cases_res "
+                   . " where res_id = '" . $resourcesArray[$cptRes]["res_id"] . "' ";
+                //echo $deleteCasesQuery . PHP_EOL;
+                Bt_doQuery($GLOBALS['db'], $deleteCasesQuery);
+
             }
             $state = 'END';
             break;
