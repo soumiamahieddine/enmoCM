@@ -200,7 +200,7 @@ class webService {
         require_once('core/class/web_service/class_soap_server.php');
         require_once('core/class/web_service/class_xmlrpc_server.php');
         $restServer = new MyRestServer();
-        $soapServer = new MySoapServer();
+        $soapServer = new MaarchSoapServer();
         $xmlRPC = new MyXmlRPCServer();
         $wsMode = explode('/', $_SERVER['QUERY_STRING']);
         

@@ -42,7 +42,7 @@ if(!isset ($SOAP_typedef)) {
 /**
  * Class for manage SOAP web service
  */
-class MySoapServer extends webService {
+class MaarchSoapServer extends webService {
     
     var $__dispatch_map;
     var $__typedef;
@@ -96,7 +96,7 @@ class MySoapServer extends webService {
      */
     function launchSOAPServer() {
         $server = new SOAP_Server();
-        $webservice = new MySoapServer();
+        $webservice = new MaarchSoapServer();
         //var_dump($webservice);
         $server->addObjectMap($webservice, 'urn:MaarchSoapServer');
         return $server;
