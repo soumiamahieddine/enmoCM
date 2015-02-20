@@ -293,7 +293,7 @@ if (isset($_POST['delete_folder'])) {
                 </table>
                 <br/>
                 <p class="buttons" align="center">
-                    <?php if($updateRight && count($folderArray['index']) > 0)
+                    <?php if($updateRight > 0)
                     {
                         ?><input type="submit" class="button" name="update_folder" id="update_folder" value="<?php echo _UPDATE_FOLDER;?>" /><?php
                     }?>
