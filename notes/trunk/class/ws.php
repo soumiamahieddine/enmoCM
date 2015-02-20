@@ -9,7 +9,7 @@ $SOAP_dispatch_map['addNote'] = array(
         'collId' => 'string',
         'noteContent' => 'string',
     ),
-    'out' => array('out' => '{urn:MySoapServer}returnArray'),
+    'out' => array('out' => '{urn:MaarchSoapServer}returnArray'),
     'method' => "modules/notes#notes::addNote"
 );
 
