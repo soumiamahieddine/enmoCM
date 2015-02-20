@@ -3,10 +3,10 @@
 $db = new dbquery();
 $db->connect();
 
-$query = "SELECT contact_id, society, firstname, lastname, is_corporate_person FROM contacts_v2";
+$query = "SELECT contact_id, society, firstname, lastname, is_corporate_person FROM contacts_v2 WHERE enabled = 'Y'";
 
 if ($_REQUEST['type_id'] <> "all") {
-	$query .= " WHERE contact_type = ".$_REQUEST['type_id'];
+	$query .= " AND contact_type = ".$_REQUEST['type_id'];
 }
 
 $query .= " ORDER BY is_corporate_person desc, society, lastname";
