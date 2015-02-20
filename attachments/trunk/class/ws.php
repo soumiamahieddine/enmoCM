@@ -11,6 +11,6 @@ $SOAP_dispatch_map['storeAttachmentResource'] = array(
         'fileFormat' => 'string',
         'title' => 'string',
     ),
-    'out' => array('out' => '{urn:MySoapServer}returnResArray'),
+    'out' => array('out' => '{urn:MaarchSoapServer}returnResArray'),
     'method' => "modules/attachments#attachments::storeAttachmentResource"
 );
