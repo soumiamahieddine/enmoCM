@@ -25,7 +25,7 @@ $SOAP_typedef['searchParams'] = array(
 );
 
 $SOAP_typedef['complexContactOut'] = array( 'status'=>'string',
-                                            'value'=>'{urn:MySoapServer}listOfContacts',
+                                            'value'=>'{urn:MaarchSoapServer}listOfContacts',
                                             'error'=>'string'
                                            );
 
@@ -50,8 +50,8 @@ $SOAP_typedef['listOfContacts'] = array(    'contact_id'=>'long',
                                         );
 
 $SOAP_dispatch_map['listContacts'] = Array(
-                                     'in' => Array('searchParams'=>'{urn:MySoapServer}searchParams'),
-                                     'out' => Array('out'=> '{urn:MySoapServer}complexContactOut'),
+                                     'in' => Array('searchParams'=>'{urn:MaarchSoapServer}searchParams'),
+                                     'out' => Array('out'=> '{urn:MaarchSoapServer}complexContactOut'),
                                      'method' => "apps#contacts::listContacts"
                                      );
 
