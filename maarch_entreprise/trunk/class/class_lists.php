@@ -633,10 +633,17 @@ class lists extends dbquery
                         }
                         
                     } else if ($_REQUEST['filter'] == 'entity') {
+
+                        $_SESSION['filters']['entity_subentities']['VALUE'] = '';
+                        $_SESSION['filters']['entity_subentities']['CLAUSE'] = '';
                     
                        $_SESSION['filters']['entity']['CLAUSE'] = "destination = '".$_SESSION['filters']['entity']['VALUE']."'";
                     
                     } else if ($_REQUEST['filter'] == 'entity_subentities') {
+
+                        $_SESSION['filters']['entity']['VALUE'] = '';
+                        $_SESSION['filters']['entity']['CLAUSE'] = '';
+
                         require_once "modules" . DIRECTORY_SEPARATOR . "entities" . DIRECTORY_SEPARATOR
                             . "class" . DIRECTORY_SEPARATOR . "class_manage_entities.php";
 
