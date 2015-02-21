@@ -223,69 +223,138 @@ while ($GLOBALS['state'] <> "END") {
         /*                                                                    */
         /**********************************************************************/
         case "DELETE_RES_ON_DB" :
+
+            $arrayEntityId = array();
+            $arrayEntityNbDocs = array();
+            $arraySubEntitiesNbDocs = array();
+
+            array_push($arrayEntityId, 'Nom de l\'entité');
+            array_push($arrayEntityNbDocs, 'Nombre de document dans l\'entité');
+            array_push($arraySubEntitiesNbDocs, 'Nombre de document dans l\'entité et sous entités');
+
             for ($cptRes = 0;$cptRes < $countRA;$cptRes++) {
+
+                $queryDestination = "SELECT destination FROM " . $GLOBALS['table'] 
+                   . " WHERE res_id = " . $resourcesArray[$cptRes]["res_id"];
+                Bt_doQuery($GLOBALS['db2'], $queryDestination);
+
+                if ($GLOBALS['db2']->nb_result() > 0) {
+
+                    $destinationRes = $GLOBALS['db2']->fetch_object();
+
+                    if (!in_array($destinationRes->destination, $arrayEntityId)) {
+                        array_push($arrayEntityId, $destinationRes->destination);
+                        array_push($arrayEntityNbDocs, 1);
+                    } else {
+                        $keyEntity = array_search($destinationRes->destination, $arrayEntityId);
+                        $arrayEntityNbDocs[$keyEntity]++;
+                    }
+                }
+
                 $deleteResQuery = '';
                 $deleteAdrQuery = '';
                 $deleteNotesQuery = '';
                 $GLOBALS['logger']->write('Prepare sql deletion for res_id:' 
                     . $resourcesArray[$cptRes]["res_id"], 'INFO');
 
-                $deleteResQuery = "delete from " . $GLOBALS['table']
-                   . " where res_id = " . $resourcesArray[$cptRes]["res_id"];
+                $deleteResQuery = "DELETE FROM " . $GLOBALS['table']
+                   . " WHERE res_id = " . $resourcesArray[$cptRes]["res_id"];
                 //echo $deleteResQuery . PHP_EOL;
-                Bt_doQuery($GLOBALS['db'], $deleteResQuery);
+                 Bt_doQuery($GLOBALS['db'], $deleteResQuery);
 
                 if ($GLOBALS['extensionTable'] <> "") {
-                    $deleteExtQuery = "delete from " . $GLOBALS['extensionTable']
-                       . " where res_id = " . $resourcesArray[$cptRes]["res_id"];
+                    $deleteExtQuery = "DELETE FROM " . $GLOBALS['extensionTable']
+                       . " WHERE res_id = " . $resourcesArray[$cptRes]["res_id"];
                     //echo $deleteExtQuery . PHP_EOL;
                     Bt_doQuery($GLOBALS['db'], $deleteExtQuery);
                 }
 
                 if ($GLOBALS['versionTable'] <> "") {
-                    $deleteVersionQuery = "delete from " . $GLOBALS['versionTable']
-                       . " where res_id_master = " . $resourcesArray[$cptRes]["res_id"];
+                    $deleteVersionQuery = "DELETE FROM " . $GLOBALS['versionTable']
+                       . " WHERE res_id_master = " . $resourcesArray[$cptRes]["res_id"];
                     //echo $deleteVersionQuery . PHP_EOL;
                     Bt_doQuery($GLOBALS['db'], $deleteVersionQuery);
                 }
 
                 if ($GLOBALS['adrTable'] <> "") {
-                    $deleteAdrQuery = "delete from " . $GLOBALS['adrTable']
-                       . " where res_id = " . $resourcesArray[$cptRes]["res_id"];
+                    $deleteAdrQuery = "DELETE FROM " . $GLOBALS['adrTable']
+                       . " WHERE res_id = " . $resourcesArray[$cptRes]["res_id"];
                     //echo $deleteAdrQuery . PHP_EOL;
                     Bt_doQuery($GLOBALS['db'], $deleteAdrQuery);
                 }
 
-                $deleteNotesQuery = "delete from notes "
-                   . " where coll_id = '" . $GLOBALS['collection'] . "' "
+                $deleteNotesQuery = "DELETE FROM notes "
+                   . " WHERE coll_id = '" . $GLOBALS['collection'] . "' "
                    . " and identifier = '" . $resourcesArray[$cptRes]["res_id"] . "'";
                 //echo $deleteNotesQuery . PHP_EOL;
                 Bt_doQuery($GLOBALS['db'], $deleteNotesQuery);
 
-                $deleteLinkedQuery = "delete from res_linked "
-                   . " where coll_id = '" . $GLOBALS['collection'] . "' "
+                $deleteLinkedQuery = "DELETE FROM res_linked "
+                   . " WHERE coll_id = '" . $GLOBALS['collection'] . "' "
                    . " and (res_child = '" . $resourcesArray[$cptRes]["res_id"] . "' or res_parent = '" . $resourcesArray[$cptRes]["res_id"] . "')";
                 //echo $deleteLinkedQuery . PHP_EOL;
                 Bt_doQuery($GLOBALS['db'], $deleteLinkedQuery);
 
-                $deleteTagsQuery = "delete from tags "
-                   . " where coll_id = '" . $GLOBALS['collection'] . "' "
+                $deleteTagsQuery = "DELETE FROM tags "
+                   . " WHERE coll_id = '" . $GLOBALS['collection'] . "' "
                    . " and res_id = '" . $resourcesArray[$cptRes]["res_id"] . "'";
                 //echo $deleteTagsQuery . PHP_EOL;
                 Bt_doQuery($GLOBALS['db'], $deleteTagsQuery);
 
-                $deleteAttachmentsQuery = "delete from res_attachments "
-                   . " where coll_id = '" . $GLOBALS['collection'] . "' "
+                $deleteAttachmentsQuery = "DELETE FROM res_attachments "
+                   . " WHERE coll_id = '" . $GLOBALS['collection'] . "' "
                    . " and res_id_master = '" . $resourcesArray[$cptRes]["res_id"] . "'";
                 //echo $deleteAttachmentsQuery . PHP_EOL;
                 Bt_doQuery($GLOBALS['db'], $deleteAttachmentsQuery);
 
-                $deleteCasesQuery = "delete from cases_res "
-                   . " where res_id = '" . $resourcesArray[$cptRes]["res_id"] . "' ";
+                $deleteCasesQuery = "DELETE FROM cases_res "
+                   . " WHERE res_id = '" . $resourcesArray[$cptRes]["res_id"] . "' ";
                 //echo $deleteCasesQuery . PHP_EOL;
                 Bt_doQuery($GLOBALS['db'], $deleteCasesQuery);
 
             }
+
+            $repertoiredujour = date('Y-m-d');
+            $chemin = $GLOBALS['exportFolder'].'DocsSupprimesEntites'.$repertoiredujour.'.csv';
+            $delimiteur = ";";
+
+            $fichier_csv = fopen($chemin, 'w+');
+
+            fprintf($fichier_csv, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            foreach($arrayEntityId as $key => $value){
+                if ($key > 0) {
+                    $subEntities_tmp = array();
+                    $subEntities = array();
+                    $subEntities_tmp = getEntityChildrenTree($subEntities_tmp, $value);
+
+                    for($iSubEntities=0;$iSubEntities<count($subEntities_tmp);$iSubEntities++){
+                        if (in_array($subEntities_tmp[$iSubEntities]['ID'], $arrayEntityId)) {
+                            array_push($subEntities, $subEntities_tmp[$iSubEntities]['ID']);
+                        }
+                    }
+                    array_push($subEntities, $value);
+
+                    $nbDocsSubEntities = 0;
+
+                    foreach ($subEntities as $value2) {
+                        $SubEntitiesKeys = array_search($value2, $arrayEntityId);
+                        $nbDocsSubEntities = $nbDocsSubEntities + $arrayEntityNbDocs[$SubEntitiesKeys];
+                    }
+
+                    $queryEntityLabel = "SELECT entity_label FROM entities WHERE entity_id = '" . $value."'";
+                    Bt_doQuery($GLOBALS['db2'], $queryEntityLabel);
+                    $EntityDB = $GLOBALS['db2']->fetch_object();
+
+                    fputcsv($fichier_csv, array($EntityDB->entity_label, $arrayEntityNbDocs[$key], $nbDocsSubEntities), $delimiteur);
+                } else {
+                    fputcsv($fichier_csv, array($value, $arrayEntityNbDocs[$key], $arraySubEntitiesNbDocs[$key]), $delimiteur);
+                }
+                
+            }
+
+            fclose($fichier_csv);
+
             $state = 'END';
             break;
     }

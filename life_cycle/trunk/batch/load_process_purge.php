@@ -195,6 +195,7 @@ $GLOBALS['logger']->set_threshold_level($logLevel);
 $DisplayedLogLevel = (string) $CONFIG->DisplayedLogLevel;
 $GLOBALS['databasetype'] = (string) $xmlconfig->CONFIG_BASE->databasetype;
 $GLOBALS['whereClause'] = (string) $CONFIG->WhereClause;
+$GLOBALS['exportFolder'] = (string) $CONFIG->ExportFolder;
 
 if (empty($GLOBALS['whereClause'])) {
     $GLOBALS['logger']->write('whereClause is empty', 'ERROR', 1);
@@ -323,3 +324,35 @@ Bt_getWorkBatch();
 $GLOBALS['wb'] = rand() . $GLOBALS['wbCompute'];
 Bt_updateWorkBatch();
 $GLOBALS['logger']->write('Batch number:' . $GLOBALS['wb'], 'INFO');
+
+function getEntityChildrenTree($entities, $parent = '', $tabspace = '', $except = array(), $where = '')
+{
+    if($GLOBALS['db2']->protect_string_db(trim($parent)) == "") {
+
+        $query = "SELECT entity_id FROM entities WHERE enabled = 'Y' and (parent_entity_id ='' or parent_entity_id is null) ".$where;
+        Bt_doQuery($GLOBALS['db2'], $query);
+    } else {
+        $query = "SELECT entity_id FROM entities WHERE enabled = 'Y' and parent_entity_id = '".$GLOBALS['db2']->protect_string_db(trim($parent))."'".$where;
+        Bt_doQuery($GLOBALS['db2'], $query);
+    }
+
+    if($GLOBALS['db2']->nb_result() > 0) {
+        $espace = $tabspace.'&emsp;';
+
+        while($line = $GLOBALS['db2']->fetch_object()) {
+            if (!in_array($line->entity_id, $except)) {
+                 array_push($entities, array('ID' =>$line->entity_id, 'KEYWORD' => false));
+
+                $query2 ="select entity_id from entities where enabled = 'Y' and parent_entity_id = '".$GLOBALS['db2']->protect_string_db(trim($line->entity_id))."'".$where;
+                Bt_doQuery($GLOBALS['db'], $query2);
+                $tmp = array();
+                if($GLOBALS['db']->nb_result() > 0) {
+                    $tmp = getEntityChildrenTree($tmp,$line->entity_id,  $espace, $except);
+                    $entities = array_merge($entities, $tmp);
+                }
+            }
+        }
+    }
+    // var_dump($parent);
+    return $entities;
+}

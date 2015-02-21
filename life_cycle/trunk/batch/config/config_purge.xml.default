@@ -8,6 +8,7 @@
         <DisplayedLogLevel>INFO</DisplayedLogLevel> <!-- DEBUG, INFO, NOTICE, WARNING, ERROR-->
         <StackSizeLimit>10000</StackSizeLimit> <!-- on doc -->
         <WhereClause>status = 'PUR' and current_date &gt;= custom_d1</WhereClause>
+        <ExportFolder>c:\xampp\htdocs\mep12\modules\</ExportFolder>
     </CONFIG>
     <CONFIG_BASE>
         <databaseserver>127.0.0.1</databaseserver>
