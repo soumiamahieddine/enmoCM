@@ -247,7 +247,7 @@ if (!defined('_WEEKDAY'))
 if (!defined('_NOTIF_DESCRIPTION'))
     define('_NOTIF_DESCRIPTION', 'Description de la notification');
 if (!defined('_CRONTAB_SAVED'))
-    define('_CRONTAB_SAVED', 'La t&acirc;che planifi&eacute;e &agrave; &eacute;t&eacute; sauvegard&eacute;e');
+    define('_CRONTAB_SAVED', 'La t&acirc;che planifi&eacute;e a &eacute;t&eacute; sauvegard&eacute;e');
 if (!defined('_MONDAY'))
     define('_MONDAY', 'Lundi');
 if (!defined('_TUESDAY'))
