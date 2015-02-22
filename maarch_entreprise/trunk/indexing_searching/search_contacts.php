@@ -167,6 +167,12 @@ $core_tools->load_js();
                         </td>
                     </tr>
                     <tr>
+                        <td width="70%"><label for="society_short" class="bold" ><?php echo _SOCIETY_SHORT;?> :</label>
+                            <input type="text" name="society_short" id="society_short" <?php echo $size; ?>  />
+                            <input type="hidden" name="meta[]" value="society_short#society_short#input_text" />
+                        </td>
+                    </tr>
+                    <tr>
                         <td width="70%"><label for="lastname" class="bold"><?php echo _LASTNAME;?> :</label>
                             <input type="text" name="lastname" id="lastname" <?php echo $size; ?>  />
                             <input type="hidden" name="meta[]" value="lastname#lastname#input_text" />

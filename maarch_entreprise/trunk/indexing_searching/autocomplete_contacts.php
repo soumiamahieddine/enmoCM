@@ -149,6 +149,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
                 . " LOWER(contact_lastname) LIKE LOWER('%s')"
                 . " OR LOWER(contact_firstname) LIKE LOWER('%s')"
                 . " OR LOWER(society) LIKE LOWER('%s')"
+                . " OR LOWER(society_short) LIKE LOWER('%s')"
                 . " OR LOWER(lastname) LIKE LOWER('%s')"
                 . " OR LOWER(firstname) LIKE LOWER('%s')"
                 . " OR LOWER(contact_purpose_label) LIKE LOWER('%s')"
@@ -163,17 +164,17 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
         # Full match of one given arg
         $expr = $arg;
         $conf = 100;
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
+        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
 
         # Partial match (starts with)
         $expr = $arg . "%"; ;
         $conf = 34; # If found, partial match contains will also be so score is sum of both confidences, i.e. 67)
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
+        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
       
         # Partial match (contains)
         $expr = "%" . $arg . "%";
         $conf = 33;
-        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
+        $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
     }
     $query .= implode (' UNION ALL ', $queryParts);
     $query .= ") matches" 
@@ -288,6 +289,7 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
                     . " LOWER(contact_lastname) LIKE LOWER('%s')"
                     . " OR LOWER(contact_firstname) LIKE LOWER('%s')"
                     . " OR LOWER(society) LIKE LOWER('%s')"
+                    . " OR LOWER(society_short) LIKE LOWER('%s')"
                     . " OR LOWER(lastname) LIKE LOWER('%s')"
                     . " OR LOWER(firstname) LIKE LOWER('%s')"
                     . " OR LOWER(contact_purpose_label) LIKE LOWER('%s')"
@@ -302,17 +304,17 @@ if ($_SESSION['is_multi_contact'] == 'OK') {
             # Full match of one given arg
             $expr = $arg;
             $conf = 100;
-            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
+            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
 
             # Partial match (starts with)
             $expr = $arg . "%"; ;
             $conf = 34; # If found, partial match contains will also be so score is sum of both confidences, i.e. 67)
-            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
+            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
           
             # Partial match (contains)
             $expr = "%" . $arg . "%";
             $conf = 33;
-            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
+            $queryParts[] = sprintf($subQuery, $conf, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr, $expr); 
         }
         $query .= implode (' UNION ALL ', $queryParts);
         $query .= ") matches" 

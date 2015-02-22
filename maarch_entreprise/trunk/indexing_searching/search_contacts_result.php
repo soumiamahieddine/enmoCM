@@ -108,6 +108,12 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= " 'society' : ['".addslashes(trim($_REQUEST['society']))."'],";
                 $where_request .= " lower(society) like lower('%".$func->protect_string_db($_REQUEST['society'])."%') and ";
             }
+            // SOCIETY SHORT
+            elseif ($tab_id_fields[$j] == 'society_short' && (!empty($_REQUEST['society_short']) || $_REQUEST['society_short'] <> '') )
+            {
+                $json_txt .= " 'society_short' : ['".addslashes(trim($_REQUEST['society_short']))."'],";
+                $where_request .= " lower(society_short) like lower('%".$func->protect_string_db($_REQUEST['society_short'])."%') and ";
+            }
             // LASTNAME
             elseif ($tab_id_fields[$j] == 'lastname' && (!empty($_REQUEST['lastname']) ||$_REQUEST['lastname'] <> '') )
             {
