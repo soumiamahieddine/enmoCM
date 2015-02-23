@@ -1266,6 +1266,8 @@ class contacts_v2 extends dbquery
                                     <?php if(isset($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']) && $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] <> '')
                                         {
                                             echo 'value="'.$this->get_label_contact($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'],$_SESSION['tablename']['contact_purposes']).'"';
+                                        } else {
+                                            echo 'value="'._MAIN_ADDRESS.'"';
                                         } 
                                     ?>
                                 />
@@ -1587,8 +1589,13 @@ class contacts_v2 extends dbquery
         } else {
             $this->connect();
             if ($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] == "") {
-                $this->query("INSERT INTO contact_purposes (label) VALUES ('".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."')");
+
                 $this->query("SELECT id FROM contact_purposes WHERE label = '".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."'");
+                if ($this->nb_result() == 0) {
+                    $this->query("INSERT INTO contact_purposes (label) VALUES ('".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."')");
+                    $this->query("SELECT id FROM contact_purposes WHERE label = '".$this->protect_string_db($_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'])."'");
+                }
+
                 $res_purpose = $this->fetch_object();
                 $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] = $res_purpose->id;
             } else if($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] <> "" && $_SESSION['m_admin']['address']['CONTACT_PURPOSE_NAME'] <> ""){

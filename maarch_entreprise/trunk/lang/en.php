@@ -1342,6 +1342,7 @@ if (!defined('_NEW_CONTACT_ADDRESS')) define( '_NEW_CONTACT_ADDRESS','Add a new 
 if (!defined('_A_CONTACT_ADDRESS')) define( '_A_CONTACT_ADDRESS','an address');
 if (!defined('_ALL_CONTACT_ADDRESSES')) define( '_ALL_CONTACT_ADDRESSES','All addresses');
 if (!defined('_THE_CONTACT')) define( '_THE_CONTACT','The contact');
+if (!defined('_MAIN_ADDRESS')) define( '_MAIN_ADDRESS','Main address');
 
 if (!defined('_SEE_ALL_ADDRESSES')) define( '_SEE_ALL_ADDRESSES','See all addresses');
 

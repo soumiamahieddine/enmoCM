@@ -1043,6 +1043,7 @@ if (!defined('_VIEW_CONTACT')) define( '_VIEW_CONTACT','Visualisation du contact
 if (!defined('_VIEW_ADDRESS')) define( '_VIEW_ADDRESS','Visualisation de l&rsquo;adresse');
 if (!defined('_TREE_INFO')) define( '_TREE_INFO','(Types de contact/Contacts/Adresses)');
 if (!defined('_CONFIDENTIAL_ADDRESS')) define( '_CONFIDENTIAL_ADDRESS','coordonn&eacute;es confidentielles');
+if (!defined('_MAIN_ADDRESS')) define( '_MAIN_ADDRESS','Adresse principale');
 
 if (!defined('_MANAGE_CONTACT_ADDRESSES')) define( '_MANAGE_CONTACT_ADDRESSES','<h2>G&eacute;rer les adresses associ&eacute;es</h2>');
 if (!defined('_MANAGE_CONTACT_ADDRESSES_IMG')) define( '_MANAGE_CONTACT_ADDRESSES_IMG','G&eacute;rer les adresses associ&eacute;es');
