@@ -174,6 +174,7 @@ CREATE TABLE user_baskets_secondary
   CONSTRAINT user_baskets_secondary_pkey PRIMARY KEY (system_id)
 );
 
+
 -- ************************************************************************* --
 --                               NEW COLUMNS IN EXTENSIONS TABLE             --
 -- ************************************************************************* --
