@@ -178,12 +178,12 @@ $core_tools->test_service('quicklaunch', "apps");
             $displayed_adv_search_invoice = true;
         }
         //physical archive
-        if ($element['id'] == 'physical_archive' && $element['show'] == true && (!isset($displayed_physical_archive) || isset($displayed_physical_archive) && $displayed_physical_archive <> true)) {
-            echo '<a href="index.php?page=boxes&amp;module=physical_archive&amp;reinit=true"><div class="quiclaunch_div bighome_physical_archive"><span>'
-                ._PHYSICAL_ARCHIVE.'</span></div></a>';
-            $nb_max++;
-            $displayed_physical_archive = true;
-        }
+        // if ($element['id'] == 'physical_archive' && $element['show'] == true && (!isset($displayed_physical_archive) || isset($displayed_physical_archive) && $displayed_physical_archive <> true)) {
+        //     echo '<a href="index.php?page=boxes&amp;module=physical_archive&amp;reinit=true"><div class="quiclaunch_div bighome_physical_archive"><span>'
+        //         ._PHYSICAL_ARCHIVE.'</span></div></a>';
+        //     $nb_max++;
+        //     $displayed_physical_archive = true;
+        // }
     }
     ?>
     <a href="index.php?page=modify_user&amp;admin=users&amp;reinit=true">
