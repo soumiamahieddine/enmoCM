@@ -39,6 +39,13 @@ $core_tools->test_user();
 $core_tools->load_lang();
 
 $_SESSION['search']['plain_text'] = "";
+$_SESSION['fromContactCheck'] = "";
+
+if (isset($_REQUEST['fromValidateMail'])) {
+    $_SESSION['fromValidateMail'] = "ok";
+} else {
+    $_SESSION['fromValidateMail'] = "";
+}
 
 $type = new types();
 $func = new functions();
