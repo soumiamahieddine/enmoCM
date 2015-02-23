@@ -1,5 +1,6 @@
 
 //document.write('<script type="text/javascript" src="js/scrollbox.js"></script>');
+
  function show_config_action( id_action, inside_scrollbox, show_when_disabled)
  {
     //var div_to_show = $('action_'+id_action);

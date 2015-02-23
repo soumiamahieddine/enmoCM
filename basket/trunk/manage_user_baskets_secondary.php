@@ -29,6 +29,7 @@
 * @ingroup basket
 */
 
+
 $_SESSION['error'] = "";
 $core_tools = new core_tools();
 $core_tools->load_lang();
