@@ -139,9 +139,30 @@ class entities extends dbquery
 	            $arr2 = $this->load_redirect_groupbasket_session_for_abs(
 	                $userData['UserId']
 	            );
-	            $_SESSION['user']['redirect_groupbasket']  = array_merge(
-	                $arr1, $arr2
-	            );
+                $arrSecondary = array();
+                for ($cptB=0;$cptB<count($_SESSION['user']['baskets']);$cptB++) {
+                    $arrTmp = array();
+                    if ($_SESSION['user']['baskets'][$cptB]['is_secondary']) {
+                        $arrTmp = $this->load_redirect_groupbasket_secondary_session(
+                            $_SESSION['user']['baskets'][$cptB]['id'],
+                            $_SESSION['user']['baskets'][$cptB]['group_id'],
+                            $userData['UserId']
+                        );
+                        //$this->show_array($arr3);
+                    }
+                    if (!empty($arrTmp[$_SESSION['user']['baskets'][$cptB]['id']])) {
+                        $arrSecondary = array_merge($arrSecondary, $arrTmp);
+                    }
+                }
+                if (!empty($arrSecondary)) {
+                    $_SESSION['user']['redirect_groupbasket']  = array_merge(
+                        $arr1, $arr2, $arrSecondary
+                    );
+                } else {
+                    $_SESSION['user']['redirect_groupbasket']  = array_merge(
+                        $arr1, $arr2
+                    );
+                }
             }
         }
 
@@ -586,6 +607,37 @@ class entities extends dbquery
                 $arr[$basketId][$actionId]['users_entities'] = $tmpArr['users'];
             }
         }
+        return $arr;
+    }
+
+    public function load_redirect_groupbasket_secondary_session($basketId, $groupId, $userId)
+    {
+        $arr = array();
+        $this->connect();
+
+        $db = new dbquery();
+        $db->connect();
+        $arr[$basketId] = array();
+
+        $db->query(
+            "select distinct action_id from " . ENT_GROUPBASKET_REDIRECT
+            . " where group_id = '" . $this->protect_string_db(
+                trim($groupId)
+            ) . "' and basket_id = '" . $this->protect_string_db(
+                trim($basketId)
+            ) . "'"
+        );
+        while ($line = $db->fetch_object()) {
+            $actionId = $line->action_id;
+            $arr[$basketId][$actionId]['entities'] = '';
+            $arr[$basketId][$actionId]['users_entities'] = '';
+            $tmpArr = $this->get_redirect_groupbasket(
+                $groupId, $basketId, $userId, $actionId
+            );
+            $arr[$basketId][$actionId]['entities'] = $tmpArr['entities'];
+            $arr[$basketId][$actionId]['users_entities'] = $tmpArr['users'];
+        }
+
         return $arr;
     }
 
