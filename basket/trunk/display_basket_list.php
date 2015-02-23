@@ -77,6 +77,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
             <ul class="basket_elem">
             <?php
             $countColl = count($collWithUserBaskets);
+            $currentGroup = '';
             for ($cpt=0;$cpt<$countColl;$cpt++) {
                 echo '<h4><img src="' . $_SESSION['config']['businessappurl']
                     . 'static.php?filename=box.gif" alt=""/>&nbsp;'
@@ -87,6 +88,12 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                         && $_SESSION['user']['baskets'][$i]['id_page'] <> 'redirect_to_action'
                         && $_SESSION['user']['baskets'][$i]['coll_id'] == $collWithUserBaskets[$cpt]['coll_id'] 
                     ) {
+                        if ($_SESSION['user']['baskets'][$i]['group_desc'] <> $currentGroup) {
+                            $currentGroup = $_SESSION['user']['baskets'][$i]['group_desc'];
+                            echo '<br /><img src="' . $_SESSION['config']['businessappurl']
+                                . 'static.php?filename=groupsmall.gif&amp;" alt=""/>&nbsp;'
+                                . '<small><i>' . $currentGroup . '</i></small><br />';
+                        }
                         if (
                             $_SESSION['user']['baskets'][$i]['abs_basket'] == true
                             && !$abs_basket

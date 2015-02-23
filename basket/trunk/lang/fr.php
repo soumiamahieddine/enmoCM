@@ -416,3 +416,12 @@ if (!defined('_END_OF_THE_WF'))
 
 if (!defined('_BASKET_VISIBLE_ONLY_ON_SEARCH'))
     define('_BASKET_VISIBLE_ONLY_ON_SEARCH', 'Corbeille de recherche uniquement');
+
+if (!defined('_MANAGE_SECONDARY_USER_BASKETS'))
+    define('_MANAGE_SECONDARY_USER_BASKETS', 'G&eacute;rer l&rsquo;acc&egrave;s aux corbeilles des groupes secondaires.');
+if (!defined('_MANAGE_SECONDARY_USER_BASKETS_TEXT'))
+    define('_MANAGE_SECONDARY_USER_BASKETS_TEXT', 'Permet de g&eacute;rer l&rsquo;acc&egrave;s &agrave; des corbeilles des groupes secondaires de l&rsquo;utilisateur.');
+if (!defined('_MANAGE_SECONDARY_USER_BASKETS_HELP'))
+    define('_MANAGE_SECONDARY_USER_BASKETS_HELP', 'L&rsquo;utilisateur doit avoir au moins un groupe secondaire ayant des corbeilles pour acc&eacute;der &agrave; cette fonctionnalit&eacute;.');
+if (!defined('_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL'))
+    define('_MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL', '(Ajouter un groupe secondaire ayant des corbeilles puis enregistrer l&rsquo;utilisateur avant de revenir sur cet &eacute;cran).');

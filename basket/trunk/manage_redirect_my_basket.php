@@ -127,7 +127,7 @@ else
 	else
 	{
 		?>
-		<script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=users&admin=users';</script>
+		<script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=users_management_controler&admin=users&mode=list';</script>
 		<?php
 	}
 	exit();

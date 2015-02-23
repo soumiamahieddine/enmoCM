@@ -293,7 +293,7 @@ if (isset($_SESSION['current_basket']['page_include'])
     // include($_SESSION['current_basket']['page_include']);
     $redirect_to_action = $bask->is_redirect_to_action_basket(
         $_SESSION['current_basket']['id'],  
-        $_SESSION['user']['primarygroup'] 
+        $_SESSION['current_basket']['group_id'] 
     );
     
     if ($redirect_to_action) {

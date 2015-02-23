@@ -1,8 +1,8 @@
 <?php
 /*
- *    Copyright 2008,2009 Maarch
+ *   Copyright 2008-2015 Maarch
  *
- *  This file is part of Maarch Framework.
+ *   This file is part of Maarch Framework.
  *
  *   Maarch Framework is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -15,7 +15,7 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+ *   along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 /**
@@ -116,7 +116,7 @@ class basket extends dbquery
         $this->_loadActivityUser($userData['UserId']);
         $this->_loadBasketsPages();
 
-        if ( isset($userData['primarygroup']) && isset($userData['UserId']) ) {
+        if (isset($userData['primarygroup']) && isset($userData['UserId'])) {
             $basketsArr = $this->load_basket(
                 $userData['primarygroup'], $userData['UserId']
             );
@@ -126,7 +126,25 @@ class basket extends dbquery
                 $basketsArr, $absBasketsArr
             );
         }
-
+        //secondary baskets
+        $db = new dbquery();
+        $db->connect();
+        $checkedBasket = false;
+        $query = "select ubs.group_id, ubs.basket_id, ug.group_desc"
+               . " from user_baskets_secondary ubs, usergroups ug"
+               . " where ubs.group_id = ug.group_id and ubs.user_id = '" 
+               . $userData['UserId'] . "' order by ug.group_desc";
+        $db->query($query);
+        while($resQuery = $db->fetch_object()) {
+            array_push($_SESSION['user']['baskets'], $this->loadBasketSecondary(
+                    $userData['UserId'], $resQuery->group_id, $resQuery->basket_id
+                )
+            );
+        }
+        /*echo '<pre>';
+        print_r($_SESSION['user']['baskets']);
+        echo '</pre>';
+        exit;*/
     }
 
     /**
@@ -292,6 +310,20 @@ class basket extends dbquery
         return $arr;
     }
 
+    /**
+     * Loads the baskets secondary datas into session variables
+     *
+     */
+    public function loadBasketSecondary($userId, $groupId, $basketId)
+    {
+        $isSecondary = true;
+        $tmp = $this->get_baskets_data(
+            $basketId, $userId, $groupId, $isSecondary
+        );
+        
+        return $tmp;
+    }
+
     public function load_basket_abs($userId)
     {
         $db = new dbquery();
@@ -432,6 +464,8 @@ class basket extends dbquery
             $_SESSION['current_basket']['is_folder_basket'] = $_SESSION['user']['baskets'][$ind]['is_folder_basket'];
             $_SESSION['current_basket']['lock_list'] = $_SESSION['user']['baskets'][$ind]['lock_list'];
             $_SESSION['current_basket']['lock_sublist'] = $_SESSION['user']['baskets'][$ind]['lock_suvlist'];
+            $_SESSION['current_basket']['group_id'] = $_SESSION['user']['baskets'][$ind]['group_id'];
+            $_SESSION['current_basket']['group_desc'] = $_SESSION['user']['baskets'][$ind]['group_desc'];
         }
     }
 
@@ -811,7 +845,7 @@ class basket extends dbquery
      * @param  $basketId string Basket identifier
      * @param  $userId string User identifier
      */
-    public function get_baskets_data($basketId, $userId)
+    public function get_baskets_data($basketId, $userId, $groupId, $isSecondary = false)
     {
         $tab = array();
         $this->connect();
@@ -845,27 +879,20 @@ class basket extends dbquery
         $basketOwner = '';
         $absBasket = false;
 
-        /// TO DO : Test if tmp_user is empty
-        // if($userId <> $_SESSION['user']['UserId'])
-        // {
-        // Primary group already in session?
-                $this->query(
-                    "select group_id from "
-                    . $_SESSION['tablename']['usergroup_content']
-                    . " where primary_group = 'Y' and user_id = '".$userId."'"
-                );
-                $res = $this->fetch_object();
-                $primaryGroup = $res->group_id;
-           // }
-           // else
-           // {
-            //    $primaryGroup = $_SESSION['user']['primarygroup'];
-           // }
+        if (!$isSecondary) {
+            $this->query(
+                "select group_id from "
+                . $_SESSION['tablename']['usergroup_content']
+                . " where primary_group = 'Y' and user_id = '".$userId."'"
+            );
+            $res = $this->fetch_object();
+            $groupId = $res->group_id;
+        }
         $this->query(
             "select sequence, can_redirect, can_delete, can_insert, "
             . "result_page, list_lock_clause, sublist_lock_clause, "
             ."redirect_basketlist, redirect_grouplist from "
-            . GROUPBASKET_TABLE . " where group_id = '" . $primaryGroup
+            . GROUPBASKET_TABLE . " where group_id = '" . $groupId
             . "' and basket_id = '" . $basketId . "' "
         );
         $res = $this->fetch_object();
@@ -888,10 +915,10 @@ class basket extends dbquery
         // Gets actions of the basket
         // #TODO : make one method to get all actions : merge _getDefaultAction and _getActionsFromGroupbaket
         $tab['default_action'] = $this->_getDefaultAction(
-            $basketId, $primaryGroup
+            $basketId, $groupId
         );
         $tab['actions'] = $this->_getActionsFromGroupbaket(
-            $basketId, $primaryGroup, $userId
+            $basketId, $groupId, $userId
         );
 
         $tab['abs_basket'] = $absBasket;
@@ -912,6 +939,22 @@ class basket extends dbquery
         );
         
 		$tab['lock_sublist'] = str_replace('where', '', $tab['lock_sublist']);
+
+        $db = new dbquery();
+        $db->connect();
+        $db->query(
+            "select group_desc from "
+            . USERGROUPS_TABLE
+            . " where group_id = '" . $groupId . "'"
+        );
+        $res = $db->fetch_object();
+        $groupDesc = $res->group_desc;
+
+        $tab['group_id'] = $groupId;
+
+        $tab['group_desc'] = $groupDesc;
+
+        $tab['is_secondary'] = $isSecondary;
 		
         return $tab;
     }
@@ -1292,12 +1335,12 @@ class basket extends dbquery
         }
     }
     
-    public function is_redirect_to_action_basket($basketId, $primaryGroup) 
+    public function is_redirect_to_action_basket($basketId, $groupId) 
     {
         $this->connect();
         $this->query(
                 "select result_page from " . GROUPBASKET_TABLE 
-                . " where group_id = '" . $primaryGroup
+                . " where group_id = '" . $groupId
                 . "' and basket_id = '" . $basketId . "' "
             );
         $res = $this->fetch_object();
@@ -1601,5 +1644,115 @@ class basket extends dbquery
                 . " and item_id = '" . $userId . "')"
         );
         //$db->show();exit;
+    }
+
+    /**
+     * Returns in an array the baskets of a given user
+     *  (Including the redirected baskets)
+     *
+     * @param  $userId string Owner of the baskets (identifier)
+     */
+    public function getBasketsOfSecondaryProfiles($userId)
+    {
+        $this->connect();
+        $db = new dbquery();
+        $db->connect();
+        $query = "select b.basket_id, b.basket_name, u.group_desc, u.group_id from " . BASKET_TABLE . " b, "
+                . USERGROUP_CONTENT_TABLE . " uc, " . GROUPBASKET_TABLE . " gb, "
+                . USERGROUPS_TABLE . " u where uc.user_id = '" . $userId
+                . "' and uc.primary_group <> 'Y' and gb.group_id = uc.group_id "
+                . "and b.basket_id = gb.basket_id and u.group_id = gb.group_id "
+                . "and u.enabled = 'Y' "
+                . "and b.basket_id not in ("
+                . "select b.basket_id from " . BASKET_TABLE . " b, "
+                . USERGROUP_CONTENT_TABLE . " uc, " . GROUPBASKET_TABLE . " gb, "
+                . USERGROUPS_TABLE . " u where uc.user_id = '" . $userId
+                . "' and uc.primary_group = 'Y' and gb.group_id = uc.group_id "
+                . "and b.basket_id = gb.basket_id and u.group_id = gb.group_id "
+                . "and u.enabled = 'Y')";
+        $this->query($query);
+        //$this->show();
+        $arr = array();
+        while ($res = $this->fetch_object()) {
+            $checkedBasket = false;
+            $query = "select count(system_id) as result from user_baskets_secondary where user_id = '" 
+                . $userId . "' and group_id = '" . $res->group_id 
+                . "' and basket_id = '" . $res->basket_id . "'";
+            $db->query($query);
+            $resQuery = $db->fetch_object();
+            if ($resQuery->result == 1) {
+                $checkedBasket = true;
+            }
+            array_push(
+                $arr,
+                array(
+                    'id'            => $res->basket_id,
+                    'name'          => $res->basket_name,
+                    'group_id'      => $res->group_id,
+                    'group_desc'    => $res->group_desc,
+                    'checked_basket'=> $checkedBasket,
+                )
+            );
+        }
+        return $arr;
+    }
+
+    /**
+     * Returns in a string the form to choose secondary baskets to users
+     *
+     * @param  $result array Array of the baskets to choose
+     * @param  $nbTotal integer Number of baskets to choose
+     * @param  $userId string Owner of the baskets (identifier)
+     * @param  $used_css string CSS to use in displaying
+     */
+    public function chooseSecondaryBasketsList($result, $nbTotal, $userId,
+    $used_css='listing spec')
+    {
+        $nbShow = $_SESSION['config']['nblinetoshow'];
+        if ($nbTotal > 0) {
+            ob_start();
+            ?><h2><?php
+            echo _MANAGE_SECONDARY_USER_BASKETS;
+            ?></h2><div align="center"><form name="secondary_baskets" id="secondary_baskets" method="post" action="<?php
+            echo $_SESSION['config']['businessappurl'];
+            ?>index.php?display=true&amp;module=basket&amp;page=manage_user_baskets_secondary"><input type="hidden" name="display" id="display" value="true" /><input type="hidden" name="page" id="page" value="manage_redirect_my_basket" /><input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="baskets_owner" id="baskets_owner" value="<?php echo $userId;?>" /><table border="0" cellspacing="0" class="<?php echo $used_css;?>"><thead><tr><th><?php echo _ID; ?></th><th><?php echo _NAME; ?></th><th><?php echo _GROUP; ?></th><th><?php echo _CHOOSE; ?></th></tr></thead><tbody><?php
+            $color = "";
+            for ($theline = 0; $theline < $nbTotal ; $theline ++) {
+                if ($color == ' class="col"') {
+                    $color = '';
+                } else {
+                    $color = ' class="col"';
+                }
+                ?><tr <?php echo $color; ?>><td> <?php
+                echo $result[$theline]['id'];
+                ?></td><td><?php
+                echo $result[$theline]['name'];
+                ?></td><td><?php
+                echo $result[$theline]['group_desc'];
+                ?></td><td><input type="checkbox" value="<?php
+                echo $result[$theline]['id'] . "##" 
+                    . $result[$theline]['group_id'];
+                ?>" name="basketId[]" <?php
+                if ($result[$theline]['checked_basket']) { 
+                    echo 'checked="checked"';
+                }
+                ?> /><div id="options_<?php
+                echo $theline;?>" ></div></td></tr><?php
+            }
+            ?></tbody></table><p class="buttons"><input type="button" onclick="test_form_secondary();" name="valid" value="<?php
+            echo _VALIDATE;
+            ?>" class="button"/> <input type="button" name="cancel" value="<?php
+            echo _CANCEL;
+            ?>" onclick="destroyModal('modal_secondary_baskets');" class="button"/></p></form></div><?php
+
+            $content = ob_get_clean();
+        } else {
+            ob_start();
+            ?><h2><?php
+            echo _NO_BASKET;
+            ?></h2><?php
+            $content = ob_get_clean();
+        }
+        return $content;
     }
 }

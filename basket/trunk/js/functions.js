@@ -212,6 +212,31 @@ function check_form_baskets(id_form)
 
 }
 
+function check_form_baskets_secondary(id_form)
+{
+    var form = $(id_form);
+    var reg_user = new RegExp("^.+, .+ (.+)$");
+    if (typeof(form) != 'undefined') {
+        var found = false;
+        var elems = document.getElementsByTagName('INPUT');
+        for (var i=0; i<elems.length;i++) {
+            if (elems[i].type == "checkbox") {
+                if(elems[i].checked == true)
+                {
+                    found=true;
+                }
+            }
+        }
+        if (found == true) {
+            return 1;
+        } else {
+            return 4; // no basket checked
+        }
+    } else {
+        return 5; // Error with the form id
+    }
+}
+
 /**
  * Validates the groupbasket popup form, selects all list options ending with _chosen (type select_multiple) to avoid missing elements
  *
