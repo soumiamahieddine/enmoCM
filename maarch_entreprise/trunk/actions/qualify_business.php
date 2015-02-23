@@ -211,7 +211,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         //LOADING DIFFLIST TYPES
         $groupbasket_difflist_types = 
             $diff_list->list_groupbasket_difflist_types(
-                $_SESSION['user']['primarygroup'],
+                $_SESSION['current_basket']['group_id'],
                 $_SESSION['current_basket']['id'],
                 $id_action
             );

@@ -13,8 +13,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $db->connect();
     $query = "SELECT difflist_role_id FROM " . ENT_GROUPBASKET_DIFFLIST_ROLES
         . " where basket_id= '" . $_SESSION['current_basket']['id']
-        . "' and group_id = '" . $_SESSION['user']['primarygroup']
-        . "' and action_id = " . $id_action;
+        . "' and group_id = '"  . $_SESSION['current_basket']['group_id']
+        . "' and action_id = "  . $id_action;
     $db->query($query);
 
     if($db->nb_result() > 0) {
@@ -224,8 +224,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             . GROUPBASKET_STATUS . " left join " . $_SESSION['tablename']['status']
             . " on status_id = id "
             . " where basket_id= '" . $_SESSION['current_basket']['id']
-            . "' and group_id = '" . $_SESSION['user']['primarygroup']
-            . "' and action_id = " . $id_action;
+            . "' and group_id = '"  . $_SESSION['current_basket']['group_id']
+            . "' and action_id = "  . $id_action;
         $db->query($query);
         if($db->nb_result() > 0) {
             $status = $db->fetch_object();

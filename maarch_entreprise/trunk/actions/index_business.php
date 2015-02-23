@@ -149,7 +149,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         
         $groupbasket_difflist_types = 
             $diffList->list_groupbasket_difflist_types(
-                $_SESSION['user']['primarygroup'],
+                $_SESSION['current_basket']['group_id'],
                 $_SESSION['current_basket']['id'],
                 $actionId
             );
