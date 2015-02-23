@@ -3470,6 +3470,24 @@ CREATE TABLE actions_categories
   CONSTRAINT actions_categories_pkey PRIMARY KEY (action_id,category_id)
 );
 
+DROP SEQUENCE IF EXISTS user_baskets_secondary_seq;
+CREATE SEQUENCE user_baskets_secondary_seq
+INCREMENT 1
+MINVALUE 1
+MAXVALUE 9223372036854775807
+START 1
+CACHE 1;
+
+DROP TABLE IF EXISTS user_baskets_secondary;
+CREATE TABLE user_baskets_secondary
+(
+  system_id bigint NOT NULL DEFAULT nextval('user_baskets_secondary_seq'::regclass),
+  user_id character varying(128) NOT NULL,
+  group_id character varying(32) NOT NULL,
+  basket_id character varying(32) NOT NULL,
+  CONSTRAINT user_baskets_secondary_pkey PRIMARY KEY (system_id)
+);
+
 --VIEWS
 --view for demo
 DROP VIEW IF EXISTS res_view;
