@@ -722,13 +722,12 @@ class folder extends request
 			{
 				$val_indexes[$indexes[$i]] =  $values[$indexes[$i]];
 			}
-			//var_dump($val_indexes);
+
 			$test_type = $foldertype->check_indexes($foldertype_id, $val_indexes );
 			if($test_type)
 			{
 				$data = $foldertype->fill_data_array($foldertype_id, $val_indexes, $data);
 			}
-			//var_dump($data);
 		}
 		else
 		{
@@ -745,7 +744,7 @@ class folder extends request
 			
 			$request->update($_SESSION['tablename']['fold_folders'], $data, $where, $_SESSION['config']['databasetype']);
 			//$request->show();
-			$_SESSION['error'] = _FOLDER_INDEX_UPDATED." (".strtolower(_NUM).$values['folder_id'].")";
+			$_SESSION['error'] = _FOLDER_INDEX_UPDATED." (".$values['folder_id'].")";
 			if($_SESSION['history']['folderup'])
 			{
 				$hist = new history();
@@ -760,7 +759,7 @@ class folder extends request
 			var error_div = $('main_error');
 			if(error_div)
 			{
-				error_div.innerHTML = '<?php echo $_SESSION['error_page'];?>';
+				error_div.innerHTML = '<?php echo addslashes($_SESSION['error_page']);?>';
 			}
 		</script>
 		<?php

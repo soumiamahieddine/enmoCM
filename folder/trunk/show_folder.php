@@ -37,6 +37,16 @@ if (isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
     $s_id = addslashes($func->wash($_REQUEST['id'], 'num', _THE_FOLDER));
 }
 
+$db = new dbquery;
+$db->connect();
+$db->query("select folder_id from folders where folders_system_id=" . $s_id);
+$res_folder_id = $db->fetch_object();
+$folder_id = $res_folder_id->folder_id;
+
+if(isset($folder_id) && !empty($folder_id)) {
+    $folder_id = $func->wash($folder_id, 'no', _FOLDERID_LONG);
+}
+
 /****************Management of the location bar  ************/
 $init = false;
 if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
@@ -82,16 +92,17 @@ if (isset($_POST['delete_folder'])) {
 }
 
 ?>
+
 <div id="details_div" style="display:none;">
 
     <h1 class="titdetail">
         <img src="<?php
             echo $_SESSION['config']['businessappurl'];
             ?>static.php?filename=picto_detail_b.gif" alt="" /><?php
-            echo _DETAILS . " : " . _FOLDER . ' ' . strtolower(_NUM);
+            echo _DETAILS . " : " . _FOLDER . ' "';
             ?><?php
-            echo $s_id;
-            ?>
+            echo $folder_id . '"';
+            ?> 
     </h1>
     <div id="inner_content" class="clearfix">
 

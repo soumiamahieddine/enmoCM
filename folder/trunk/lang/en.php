@@ -67,7 +67,7 @@ if (!defined('_FOLDERID'))
 if (!defined('_FOLDERSYSTEMID'))
     define('_FOLDERSYSTEMID', 'Maarch System Number');
 if (!defined('_FOLDERID_LONG'))
-    define('_FOLDERID_LONG', 'Folder number');
+    define('_FOLDERID_LONG', 'Folder identifiant');
 if (!defined('_FOLDERNAME'))
     define('_FOLDERNAME', 'Folder name');
 if (!defined('_FOLDERDATE'))

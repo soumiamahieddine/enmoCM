@@ -67,7 +67,7 @@ if (!defined('_FOLDERID'))
 if (!defined('_FOLDERSYSTEMID'))
     define('_FOLDERSYSTEMID', 'Num&eacute;ro syst&egrave;me Maarch');
 if (!defined('_FOLDERID_LONG'))
-    define('_FOLDERID_LONG', 'Num&eacute;ro de dossier');
+    define('_FOLDERID_LONG', 'Identifiant du dossier');
 if (!defined('_FOLDERNAME'))
     define('_FOLDERNAME', 'Nom du Dossier');
 if (!defined('_FOLDERDATE'))
