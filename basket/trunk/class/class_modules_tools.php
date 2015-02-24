@@ -118,14 +118,10 @@ class basket extends dbquery
         $this->_loadBasketsPages();
 
         if (isset($userData['primarygroup']) && isset($userData['UserId'])) {
-            $basketsArr = $this->load_basket(
+            $_SESSION['user']['baskets'] = $this->load_basket(
                 $userData['primarygroup'], $userData['UserId']
             );
-            //$this->show_array($basketsArr);
-            $absBasketsArr = $this->load_basket_abs($userData['UserId']);
-            $_SESSION['user']['baskets'] = array_merge(
-                $basketsArr, $absBasketsArr
-            );
+            
         }
         //secondary baskets
         $db = new dbquery();
@@ -140,6 +136,13 @@ class basket extends dbquery
             array_push($_SESSION['user']['baskets'], $this->loadBasketSecondary(
                     $userData['UserId'], $resQuery->group_id, $resQuery->basket_id
                 )
+            );
+        }
+
+        if (isset($userData['primarygroup']) && isset($userData['UserId'])) {
+            $absBasketsArr = $this->load_basket_abs($userData['UserId']);
+            $_SESSION['user']['baskets'] = array_merge(
+               $_SESSION['user']['baskets'], $absBasketsArr
             );
         }
         /*echo '<pre>';
