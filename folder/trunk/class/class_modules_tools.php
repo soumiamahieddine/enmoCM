@@ -739,12 +739,13 @@ class folder extends request
 		if(empty($_SESSION['error']))
 		{
 			$where = " folders_system_id = ".$id_to_update;
-			array_push($data, array('column' => 'folder_name', 		  'value' =>$values['folder_name'],		   'type' =>"string"));
+			array_push($data, array('column' => 'folder_name', 		  'value' =>$this->protect_string_db($values['folder_name']),		   'type' =>"string"));
 			array_push($data, array('column' => 'last_modified_date', 'value' => $request->current_datetime(), 'type' => "date"));
 			
 			$request->update($_SESSION['tablename']['fold_folders'], $data, $where, $_SESSION['config']['databasetype']);
 			//$request->show();
-			$_SESSION['error'] = _FOLDER_INDEX_UPDATED." (".$values['folder_id'].")";
+			//$_SESSION['error'] = _FOLDER_INDEX_UPDATED." (".$values['folder_id'].")";
+			$_SESSION['error'] = _FOLDER_UPDATED." (".$values['folder_id'].")";
 			if($_SESSION['history']['folderup'])
 			{
 				$hist = new history();

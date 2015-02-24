@@ -254,6 +254,8 @@ if (!defined('_UPDATE_FOLDER'))
     define('_UPDATE_FOLDER', 'Modifier des informations');
 if (!defined('_FOLDER_INDEX_UPDATED'))
     define('_FOLDER_INDEX_UPDATED', 'Index du dossier modifi&eacute;s');
+if (!defined('_FOLDER_UPDATED'))
+    define('_FOLDER_UPDATED', 'Mise à jour du dossier effectu&eacute;e');
 if (!defined('_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED'))
     define('_ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED', 'tous les documents de ce dossier, ainsi que tous les sous-dossiers seront &eacute;galement supprim&eacute;s !');
 if (!defined('_STRING'))
