@@ -4,6 +4,6 @@
 		<id>view_baskets</id>
 		<libconst>_VIEW_BASKETS</libconst>
 		<url>index.php?page=view_baskets&amp;module=basket</url>
-		<style>view_baskets</style>
+		<style>fa fa-tasks</style>
 	</MENU>
 </root>

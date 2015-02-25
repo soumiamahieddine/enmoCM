@@ -74,32 +74,34 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                 <h2><?php echo _MY_BASKETS; ?> : </h2>
             </div>
             <br />
-            <ul class="basket_elem">
+            
             <?php
             $countColl = count($collWithUserBaskets);
             $currentGroup = '';
             for ($cpt=0;$cpt<$countColl;$cpt++) {
-                echo '<h4><img src="' . $_SESSION['config']['businessappurl']
-                    . 'static.php?filename=box.gif" alt=""/>&nbsp;'
+                echo '<h4><i class="fa fa-inbox fa-2x"></i>&nbsp;'
                     . $collWithUserBaskets[$cpt]['coll_label'] . '</h4>';
                 $abs_basket = false;
+                echo '<ul class="fa-ul">';
                 for ($i=0;$i<count($_SESSION['user']['baskets']);$i++) {
                     if ($_SESSION['user']['baskets'][$i]['is_visible'] === 'Y' 
                         && $_SESSION['user']['baskets'][$i]['id_page'] <> 'redirect_to_action'
                         && $_SESSION['user']['baskets'][$i]['coll_id'] == $collWithUserBaskets[$cpt]['coll_id'] 
                     ) {
-                        if ($_SESSION['user']['baskets'][$i]['group_desc'] <> $currentGroup) {
+                        if (
+                            $_SESSION['user']['baskets'][$i]['group_desc'] <> $currentGroup
+                            && $_SESSION['user']['baskets'][$i]['group_desc'] <> ''
+                        ) {
                             $currentGroup = $_SESSION['user']['baskets'][$i]['group_desc'];
-                            echo '<br /><img src="' . $_SESSION['config']['businessappurl']
-                                . 'static.php?filename=groupsmall.gif&amp;" alt=""/>&nbsp;'
-                                . '<small><i>' . $currentGroup . '</i></small><br />';
+                            echo '<li><i class="fa-li fa fa-users"></i>'
+                                . '<small>' . $currentGroup . '</small></li>';
                         }
                         if (
                             $_SESSION['user']['baskets'][$i]['abs_basket'] == true
                             && !$abs_basket
                         ) {
-                            echo '</ul><h3>' . _OTHER_BASKETS
-                                . ' :</h3><ul class="basket_elem">';
+                            echo '</ul><br /><h3>' . _OTHER_BASKETS
+                                . ' :</h3><ul class="fa-ul">';
                             $abs_basket = true;
                         }
                         $nb = '';
@@ -127,36 +129,30 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                                     . $_SESSION['config']['businessappurl']
                                     . 'index.php?page=view_baskets&amp;module=basket&amp;baskets='
                                     . $_SESSION['user']['baskets'][$i]['id']
-                                    . '"><img src="' . $_SESSION['config']['businessappurl']
-                                    . 'static.php?filename=basket_folders_b.gif&amp;module=folder" alt=""/> '
-                                    . $_SESSION['user']['baskets'][$i]['name']
-                                    . '  <b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id'] 
+                                    . '"><b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id'] 
                                     . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']
-                                    . '"><img src="' . $_SESSION['config']['businessappurl']
-                                    . 'static.php?filename=loading.gif" width="14" height="14" alt="loading" title="loading"/>'
-                                    . '</span></b></a></li>';
+                                    . '"><i class="fa-li fa fa-spinner fa-spin"></i>'
+                                    . '</span></b> <i class="fa-li fa fa-folder"></i>'
+                                    . $_SESSION['user']['baskets'][$i]['name']
+                                    . ' </a></li>';
                             } else {
                                 echo '<li><a href="'
                                     . $_SESSION['config']['businessappurl']
                                     . 'index.php?page=view_baskets&amp;module=basket&amp;baskets='
                                     . $_SESSION['user']['baskets'][$i]['id']
-                                    . '"><img src="' . $_SESSION['config']['businessappurl']
-                                    . 'static.php?filename=manage_baskets_off.gif&amp;module=basket" alt=""/> '
-                                    . $_SESSION['user']['baskets'][$i]['name']
-                                    . '  <b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id'] 
+                                    . '"><b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id'] 
                                     . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']
-                                    . '"><img src="' . $_SESSION['config']['businessappurl']
-                                    . 'static.php?filename=loading.gif" width="14" height="14" alt="loading" title="loading"/>'
-                                    . '</span></b></a></li>';
+                                    . '"><i class="fa-li fa fa-spinner fa-spin"></i>'
+                                    . '</span></b> <i class="fa-li fa fa-tasks"></i> '
+                                    . $_SESSION['user']['baskets'][$i]['name']
+                                    . ' </a></li>';
                             }
                         }
                     }
                 }
                 echo '<hr />';
+                echo '</ul>';
             }
-            ?>
-            </ul>
-            <?php
         }
         ?>
     <div class="blank_space">&nbsp;</div>
