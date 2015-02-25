@@ -5,6 +5,9 @@
 #menunav li#reports.on span span {
 	background-image: url(static.php?module=reports&filename=menu_reports_on.gif);
 }
+td#reports {
+  background: url(static.php?module=reports&filename=menu_reports_off.gif) no-repeat;
+}
 
 /* admin modules board */
 #admin_reports{

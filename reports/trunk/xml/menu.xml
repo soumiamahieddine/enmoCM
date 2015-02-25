@@ -4,6 +4,6 @@
 		<id>reports</id>
 		<libconst>_REPORTS</libconst>
 		<url>index.php?page=reports&amp;module=reports</url>
-		<style>reports</style>
+		<style>fa fa-area-chart</style>
 	</MENU>
 </root>
