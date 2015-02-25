@@ -663,7 +663,7 @@ input.button {
 
 .listing, .spec {
     margin: 10px 0px 0;
-    width: 990px;
+    min-width: 990px;
 }
 
 .listingIndex {
@@ -1113,8 +1113,9 @@ left: -100em;
 }
 
 #container {
-    width: 1000px;
+    min-width: 1000px;
     margin: 0 auto;
+    padding-left: 10px;
     text-align: left;
     min-height: 400px;
     height: 80%;
@@ -1288,8 +1289,9 @@ left: -100em;
 
 #menunav li span span {
     background: transparent bottom left no-repeat;
-    padding: 6px 10px 5px 30px;
-    display: block;
+    /*padding: 6px 10px 5px 30px;*/
+    display: inline;
+    position: relative;
     margin: 0px;
 }
 
@@ -1311,12 +1313,19 @@ li#admin .menu_item {
 li#admin.on .menu_item {
     background-image: url(static.php?filename=picto_menu_admin_on.gif);
 }
+td#admin {
+  background: url(static.php?filename=picto_menu_admin.gif) no-repeat;
+}
+
 
 li#aide .menu_item {
     background-image: url(static.php?filename=picto_menu_help.gif);
 }
 li#aide.on .menu_item  {
     background-image: url(static.php?filename=picto_menu_help_on.gif);
+}
+td#aide {
+  background: url(static.php?filename=picto_menu_help.gif) no-repeat;
 }
 
 li#add .menu_item {
@@ -1325,12 +1334,18 @@ li#add .menu_item {
 li#add.on .menu_item{
     background-image: url(static.php?filename=picto_menu_fileindex_on.gif);
 }
+td#add {
+  background: url(static.php?filename=picto_menu_fileindex.gif) no-repeat;
+}
 
 li#post .menu_item {
     background-image: url(static.php?filename=picto_menu_postindex.gif);
 }
 li#post.on .menu_item {
     background-image: url(static.php?filename=picto_menu_postindex_on.gif);
+}
+td#post {
+  background: url(static.php?filename=picto_menu_postindex.gif) no-repeat;
 }
 
 li#browse .menu_item  {
@@ -1339,12 +1354,18 @@ li#browse .menu_item  {
 li#browse.on .menu_item {
     background-image: url(static.php?filename=stats_menu_on.gif);
 }
+td#browse {
+  background: url(static.php?filename=stats_menu_off.gif) no-repeat;
+}
 
 li#valid_mail .menu_item  {
     background-image: url(static.php?filename=valid_menu_off.gif);
 }
 li#valid_mail.on .menu_item  {
     background-image: url(static.php?filename=valid_menu_on.gif);
+}
+td#valid_mail {
+  background: url(static.php?filename=valid_menu_off.gif) no-repeat;
 }
 
 li#maarch_credits .menu_item  {
@@ -1353,12 +1374,18 @@ li#maarch_credits .menu_item  {
  li#maarch_credits.on .menu_item  {
     background-image: url(static.php?filename=picto_menu_help_on.gif);
 }
+td#maarch_credits {
+  background: url(static.php?filename=picto_menu_help.gif) no-repeat;
+}
 
 li#logout .menu_item  {
     background-image: url(static.php?filename=logout_off.gif);
 }
 li#logout.on .menu_item {
     background-image: url(static.php?filename=logout_on.gif);
+}
+td#logout {
+  background: url(static.php?filename=logout_off.gif) no-repeat;
 }
 
 li#manbask .menu_item  {
@@ -1367,12 +1394,18 @@ li#manbask .menu_item  {
 li#manbask.on .menu_item {
     background-image: url(static.php?filename=manage_baskets_on.gif);
 }
+td#manbask {
+  background: url(static.php?filename=manage_baskets_off.gif) no-repeat;
+}
 
 li#searching .menu_item {
     background-image: url(static.php?filename=searching_off.gif);
 }
 li#searching.on .menu_item {
     background-image: url(static.php?filename=searching_on.gif);
+}
+td#searching {
+  background: url(static.php?filename=searching_off.gif) no-repeat;
 }
 
 li#market_search .menu_item {
@@ -1381,12 +1414,18 @@ li#market_search .menu_item {
 li#market_search.on .menu_item {
     background-image: url(static.php?filename=search_proj_on.gif);
 }
+td#market_search {
+  background: url(static.php?filename=search_proj_off.gif) no-repeat;
+}
 
 li#account .menu_item{
     background-image: url(static.php?filename=account_off.gif);
 }
 li#account.on .menu_item {
     background-image: url(static.php?filename=account_on.gif);
+}
+td#account {
+  background: url(static.php?filename=account_off.gif) no-repeat;
 }
 
 li#my_contacts .menu_item{
@@ -1395,12 +1434,18 @@ li#my_contacts .menu_item{
 li#my_contacts.on .menu_item {
     background-image: url(static.php?filename=my_contacts_on.gif);
 }
+td#my_contacts {
+  background: url(static.php?filename=my_contacts_off.gif) no-repeat;
+}
 
 li#indexing .menu_item{
     background-image: url(static.php?filename=indexing_off.gif);
 }
 li#indexing.on .menu_item{
     background-image: url(static.php?filename=indexing_on.gif);
+}
+td#indexing {
+  background: url(static.php?filename=indexing_off.gif) no-repeat;
 }
 
 #menunav li ol {
@@ -1469,7 +1514,7 @@ li#indexing.on .menu_item{
 /* content */
 
 #content {
-    width: 1000px;
+    min-width: 1000px;
 }
 #iframe #content{
 
@@ -1486,7 +1531,7 @@ li#indexing.on .menu_item{
     border-top: none;
     border-bottom: none;
     padding: 15px 0px 0px;
-    width: 1000px;
+    min-width: 1000px;
     min-height: 370px;
     height: auto;
     margin-left: 0px;
@@ -2538,7 +2583,7 @@ margin-left: 10px;
 
 #folder_search
 {
-text-align:right;
+text-align:left;
 }
 
 #form1
@@ -3128,7 +3173,7 @@ hr{
     display:                   inline-block;
     /*height:                    auto!important;*/
     height: 650px;
-    width : 995px;
+    min-width : 995px;
     margin:                    0 auto 1em;
     /*max-width:                 40em;*/
     padding:                   5px 0 0 5px;
@@ -3511,7 +3556,7 @@ padding:0;
 #welcome_box_right{
     border: 1px;
     float: right;
-    width: 200px;
+    min-width: 40%;
     margin: 0 10px 0 13px;
     display:inline;
     /*position:absolute;*/
@@ -3526,14 +3571,14 @@ padding:0;
 #welcome_box_left_quick_lunch{
     border: 1px;
     float: left;
-    width: 750px;
+    min-width: 55%;
     margin: 0 10px 0 13px;
     /*display:relative;*/
 }
 #welcome_box_left_baskets{
     border: 1px;
     float: left;
-    width: 750px;
+    min-width: 55%;
     margin: 0 10px 0 13px;
     /*display:relative;*/
 }
@@ -3748,7 +3793,7 @@ a.legend hr
 {
  width:100%;
  height:95px;
- background-image: url(static.php?filename=illustr_home.jpg);
+ /*background-image: url(static.php?filename=illustr_home.jpg);*/
 }
 
 #welcome_title
