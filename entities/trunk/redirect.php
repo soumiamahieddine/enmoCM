@@ -2,7 +2,7 @@
 $confirm = false;
 $etapes = array('form');
 $frm_width='355px';
-$frm_height = '800px';
+$frm_height = 'auto';
 require("modules/entities/entities_tables.php");
 require_once("modules/entities/class/EntityControler.php");
 require_once('modules/entities/class/class_manage_entities.php');;
@@ -62,6 +62,10 @@ require_once('modules/entities/class/class_manage_entities.php');;
     $values_str = preg_replace('/, $/', '', $values_str);
     $frm_str .= $values_str;
     $frm_str .= '</h2><br/><br/>';
+    require 'modules/templates/class/templates_controler.php';
+    $templatesControler = new templates_controler();
+    $templates = array();
+
     if(!empty($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$id_action]['entities']))
     {
       
@@ -79,14 +83,38 @@ require_once('modules/entities/class/class_manage_entities.php');;
         $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
             $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
         );
+        if ($destination <> '') {
+            $templates = $templatesControler->getAllTemplatesForProcess($destination);
+        } else {
+            $templates = $templatesControler->getAllTemplatesForSelect();
+        } 
+        $frm_str .='<br/><b>'._REDIRECT_NOTE.':</b><br/>';
+        $frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
+                    . 'onchange="addTemplateToNote($(\'templateNotes\').value, \''
+                    . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+                    . '&module=templates&page=templates_ajax_content_for_notes\');document.getElementById(\'notes\').focus();">';
+        $frm_str .= '<option value="">' . _SELECT_NOTE_TEMPLATE . '</option>';
+            for ($i=0;$i<count($templates);$i++) {
+                if ($templates[$i]['TYPE'] == 'TXT' && ($templates[$i]['TARGET'] == 'notes' || $templates[$i]['TARGET'] == '')) {
+                    $frm_str .= '<option value="';
+                    $frm_str .= $templates[$i]['ID'];
+                    $frm_str .= '">';
+                    $frm_str .= $templates[$i]['LABEL'];
+                }
+                $frm_str .= '</option>';
+            }
+        $frm_str .= '</select><br />';
+
+        $frm_str .= '<textarea style="width:98%;height:60px;resize:none;" name="notes"  id="notes" onblur="document.getElementById(\'note_content_to_dep\').value=document.getElementById(\'notes\').value;document.getElementById(\'note_content_to_user\').value=document.getElementById(\'notes\').value;"></textarea>';
         //var_dump($allEntitiesTree);
         $frm_str .= '<hr />';
         $frm_str .='<div id="form2" style="border:none;">';
         $frm_str .= '<form name="frm_redirect_dep" id="frm_redirect_dep" method="post" class="forms" action="#">';
         $frm_str .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
+        $frm_str .= '<input type="hidden" name="note_content_to_dep" id="note_content_to_dep" />';
                 $frm_str .='<p>';
-                    $frm_str .= '<b>'._REDIRECT_TO_OTHER_DEP.' :</b>';
-                    $frm_str .= '<select name="department" id="department" onchange="change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\', \'diff_list_div_redirect\', \'redirect\');">';
+                    $frm_str .= '<b>'._REDIRECT_TO_OTHER_DEP.' :</b><br/>';
+                    $frm_str .= '<select name="department" id="department" onchange="change_entity(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=load_listinstance'.'\', \'diff_list_div_redirect\', \'redirect\');" style="float:left;">';
                         $frm_str .='<option value="">'._CHOOSE_DEPARTMENT.'</option>';
                        /*for($i=0; $i < count($services); $i++)
                        {
@@ -107,9 +135,9 @@ require_once('modules/entities/class/class_manage_entities.php');;
                             }
                         }
                     $frm_str .='</select>';
-                    $frm_str .=' <input type="button" name="redirect_dep" value="'._REDIRECT.'" id="redirect_dep" class="button" onclick="valid_action_form( \'frm_redirect_dep\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$values_str.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');" />';
-
-                $frm_str .= '<div id="diff_list_div_redirect" class="scroll_div" style="height:450px;display:none;"></div>';
+                    $frm_str .=' <input type="button" style="float:right;margin:0px;" name="redirect_dep" value="'._REDIRECT.'" id="redirect_dep" class="button" onclick="valid_action_form( \'frm_redirect_dep\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$values_str.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');" />';
+                    $frm_str .='<div style="clear:both;"></div>';
+                $frm_str .= '<div id="diff_list_div_redirect" class="scroll_div" style="height:auto;"></div>';
                 $frm_str .='</p>';
             $frm_str .='</form>';
         $frm_str .='</div>';
@@ -120,26 +148,28 @@ require_once('modules/entities/class/class_manage_entities.php');;
             $frm_str .='<div id="form3">';
                 $frm_str .= '<form name="frm_redirect_user" id="frm_redirect_user" method="post" class="forms" action="#">';
                 $frm_str .= '<input type="hidden" name="chosen_action" id="chosen_action" value="end_action" />';
+                $frm_str .= '<input type="hidden" name="note_content_to_user" id="note_content_to_user" value="" />';
                 $frm_str .='<p>';
                     $frm_str .='<label><b>'._REDIRECT_TO_USER.' :</b></label>';
-                    $frm_str .='<select name="user" id="user">';
+                    $frm_str .='<select name="user" id="user" style="float:left;">';
                         $frm_str .='<option value="">'._CHOOSE_USER2.'</option>';
                         for($i=0; $i < count($users); $i++)
                        {
                         $frm_str .='<option value="'.$users[$i]['ID'].'">'.$users[$i]['NOM'].' '.$users[$i]['PRENOM'].'</option>';
                        }
                     $frm_str .='</select>';
-                    $frm_str .=' <input type="button" name="redirect_user" id="redirect_user" value="'
+                    $frm_str .=' <input type="button" style="float:right;margin:0px;" name="redirect_user" id="redirect_user" value="'
                         ._REDIRECT
                         . '" class="button" onclick="valid_action_form( \'frm_redirect_user\', \''
                         . $path_manage_action . '\', \'' . $id_action . '\', \'' . $values_str . '\', \'' . $table . '\', \'' . $module . '\', \'' . $coll_id . '\', \'' . $mode . '\');"  />';
                 $frm_str .='</p>';
+                $frm_str .='<div style="clear:both;"></div>';
             $frm_str .='</form>';
         $frm_str .='</div>';
     }
     /** Note add **/
-    $frm_str .='<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=note_add&mode=add&identifier=' . $values_str . '&origin=document&coll_id=' . $coll_id . '&redirect" style="width:100%;border:none;height:65%;" scrolling="no"></iframe>';
-    
+    //$frm_str .='<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=note_add&mode=add&identifier=' . $values_str . '&origin=document&coll_id=' . $coll_id . '&redirect" style="width:100%;border:none;height:65%;" scrolling="no"></iframe>';
+
     $frm_str .='<hr />';
 
     $frm_str .='<div align="center">';
@@ -238,7 +268,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     #   - do not change destination
     if(isset($formValues['redirect_user'])) {
         $userId = $formValues['user'];
-        
+
         # Select new_dest user info
         $db->query(
             "select u.user_id, u.firstname, u.lastname, e.entity_id, e.entity_label "
@@ -262,7 +292,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
                 'visible' => 'Y',
                 'difflist_type' => 'entity_id'
             );
-        
         $message = _REDIRECT_TO_USER_OK . ' ' . $userId;
     }
     # 2 : Redirect to departement (+ dest user)
@@ -282,6 +311,21 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         # update dest_user
         $new_dest = $_SESSION['redirect']['diff_list']['dest']['users'][0]['user_id'];
         if($new_dest) {
+            if($formValues['note_content_to_user'] != ''){
+                //Add notes
+                $userIdTypist = $_SESSION['user']['UserId'];
+                $content_note = $formValues['note_content_to_user'];
+                $content_note = str_replace(";", ".", $content_note);
+                $content_note = str_replace("--", "-", $content_note);
+                $content_note = $db->protect_string_db($content_note);
+                $date = $db->current_datetime();
+                
+                $db->query(
+                    "INSERT INTO notes (identifier, tablename, user_id, "
+                            . "date_note, note_text, coll_id ) VALUES ('" . $res_id . "','" . $table . "','" . $userIdTypist . "'," . $date . ",'" . $content_note . "','" . $coll_id . "')"
+                );
+            }
+            
             $db->query("update ".$table." set dest_user = '".$new_dest."' where res_id = ".$res_id);
             # If new dest was in other roles, get number of views
             $db->query(
@@ -295,8 +339,23 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
         }
         
         # Update destination if needed
-        if($entityId)
+        if($entityId){
+            if($formValues['note_content_to_dep'] != ''){
+                //Add notes
+                $userIdTypist = $_SESSION['user']['UserId'];
+                $content_note = $formValues['note_content_to_dep'];
+                $content_note = str_replace(";", ".", $content_note);
+                $content_note = str_replace("--", "-", $content_note);
+                $content_note = $db->protect_string_db($content_note);
+                $date = $db->current_datetime();
+                
+                $db->query(
+                    "INSERT INTO notes (identifier, tablename, user_id, "
+                            . "date_note, note_text, coll_id ) VALUES ('" . $res_id . "','" . $table . "','" . $userIdTypist . "'," . $date . ",'" . $content_note . "','" . $coll_id . "')"
+                );
+            }
             $db->query("update ".$table." set destination = '".$entityId."' where res_id = ".$res_id); 
+        }
 		
 		# Put all existing copies in copy
 		# Get old copies for users
