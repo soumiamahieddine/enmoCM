@@ -380,3 +380,6 @@ if (!defined('_NO_FILTER'))
 
 if (!defined('_AUTO_FILTER')) 
     define('_AUTO_FILTER', 'Liste sugg&eacute;r&eacute;e');
+
+if (!defined('_REDIRECT_NOTE')) 
+    define('_REDIRECT_NOTE', 'Motif de redirection (optionnel)');
