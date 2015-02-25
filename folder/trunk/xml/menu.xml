@@ -4,18 +4,18 @@
 		<id>create_folder</id>
 		<libconst>_CREATE_FOLDER</libconst>
 		<url>index.php?page=create_folder_form&amp;module=folder</url>
-		<style>create_folder</style>
+		<style>fa fa-folder-open</style>
 	</MENU>
 	<MENU>
 		<id>folder_search</id>
 		<libconst>_FOLDER_SEARCH</libconst>
 		<url>index.php?page=search_adv_folder&amp;module=folder</url>
-		<style>folder_search</style>
+		<style>fa fa-folder</style>
 	</MENU>
 	<MENU>
 		<id>view_folder_tree</id>
 		<libconst>_VIEW_FOLDER_TREE</libconst>
 		<url>index.php?page=search_folder_tree&amp;module=folder</url>
-		<style>market_search</style>
+		<style>fa fa-code-fork</style>
 	</MENU>
 </root>
