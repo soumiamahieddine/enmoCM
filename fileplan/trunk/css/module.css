@@ -12,6 +12,10 @@
 	text-align:left;
 }
 
+td#fileplan {
+  background: url(static.php?module=fileplan&filename=fileplan_off.gif) no-repeat;
+}
+
 input.fileplan_position {
     width: 300px;
 }
