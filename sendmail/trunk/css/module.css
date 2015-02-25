@@ -10,6 +10,10 @@
 	text-align:left;
 }
 
+td#emails {
+  background: url(static.php?module=sendmail&filename=emails_off.gif) no-repeat;
+}
+
 .emailInput {
     -moz-appearance: textfield;
     -webkit-appearance: textfield;
