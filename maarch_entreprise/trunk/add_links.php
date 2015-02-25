@@ -1,6 +1,6 @@
 <?php
-
 if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
+
     $res_child = $_REQUEST['res_id_child'];
     if (!empty($_REQUEST['res_id'])) {
         require_once('core/class/class_core_tools.php');
@@ -19,16 +19,25 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
             $self = false;
             if ($res_child == $res_parent) {
                 $self = true;
-            } else {
+            } elseif(count($_SESSION['stockCheckbox'])==1){
                 $queryTest = "SELECT * FROM res_linked WHERE res_parent=".$res_parent." AND res_child=".$res_child." AND coll_id='".$_SESSION['collection_id_choice']."'";
                 $db->query($queryTest);
                 $i = 0;
                 while($test = $db->fetch_object()) {
                     $i++;
                 }
+            }elseif(count($_SESSION['stockCheckbox'])>1){
+              for($j=0;$j<count($_SESSION['stockCheckbox']);$j++){
+                $queryTest = "SELECT * FROM res_linked WHERE res_parent=".$_SESSION['stockCheckbox'][$j]." AND res_child=".$res_child." AND coll_id='".$_SESSION['collection_id_choice']."'";
+                $db->query($queryTest);
+                $i = 0;
+                while($test = $db->fetch_object()) {
+                    $i++;
+                   }
+                }
             }
             
-            if ($i == 0 && !$self) {
+            if ($i == 0 && !$self && count($_SESSION['stockCheckbox'])==1) {
                 $queryAddLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES('" . $res_parent . "', '" . $res_child . "', '" . $_SESSION['collection_id_choice'] . "')";
 
                 $db->query($queryAddLink);
@@ -54,8 +63,36 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                    $_SESSION['config']['databasetype'],
                    'apps'
                 );
-            }
+            }elseif($i == 0 && !$self && count($_SESSION['stockCheckbox'])>1){
+                for($j=0;$j<count($_SESSION['stockCheckbox']);$j++){
+                $queryAddLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES('" . $_SESSION['stockCheckbox'][$j] . "', '" . $res_child . "', '" . $_SESSION['collection_id_choice'] . "')";
 
+                $db->query($queryAddLink);
+
+                $hist2 = new history();
+                $hist2->add(
+                    $_REQUEST['tableHist'],
+                   $res_child,
+                   "ADD",
+                   'linkadd',
+                   _LINKED_TO . $res_parent,
+                   $_SESSION['config']['databasetype'],
+                   'apps'
+                );
+
+                $hist3 = new history();
+                $hist3->add(
+                    $_REQUEST['tableHist'],
+                    $res_parent,
+                   "ADD",
+                   'linkup',
+                   _THE_DOCUMENT_LINK . $res_child . ' ' . _NOW_LINK_WITH_THIS_ONE,
+                   $_SESSION['config']['databasetype'],
+                   'apps'
+                );
+
+              }
+            }
         } elseif($_REQUEST['mode'] == 'del') {
             $queryDelLink = "DELETE FROM res_linked WHERE res_parent=".$res_parent." AND res_child=".$res_child." and coll_id='".$_SESSION['collection_id_choice']."'";
 
@@ -142,11 +179,11 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
         );
 
         echo "{status : 0, links : '" . addslashes($formatText) . "', nb : '".$nb."'}";
-        exit ();
+        //exit ();
 
-    }
+    
     //header("Location: index.php?page=".$_REQUEST['pageHeader']."&dir=".$_REQUEST['dirHeader']."&id=".$res_child);
-
+}
 } else {
     $Links .= '<h2>';
         $Links .= _ADD_A_LINK;

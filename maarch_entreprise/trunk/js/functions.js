@@ -2351,6 +2351,7 @@ function addLinks(path_manage_script, child, parent, action, tableHist) {
 
                         },
                 onSuccess: function(answer){
+
                 eval("response = "+answer.responseText);
                 if(response.status == 0 || response.status == 1) {
                     if(response.status == 0) {
@@ -2369,6 +2370,21 @@ function addLinks(path_manage_script, child, parent, action, tableHist) {
             }
         });
     }
+}
+
+function stockCheckbox(url,value){
+        new Ajax.Request(url,
+    {
+        method:'post',
+        parameters: { courrier_purpose : value},
+        onSuccess: function(answer){
+          
+            monTableauJS =  JSON.parse(answer.responseText);
+
+
+        }
+    });
+
 }
 
 function loadRepList(id)
@@ -2791,4 +2807,9 @@ function purposeCheck(){
             }
         });
     }
+}
+
+
+function test(){
+alert('test');
 }

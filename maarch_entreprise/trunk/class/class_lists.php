@@ -633,17 +633,10 @@ class lists extends dbquery
                         }
                         
                     } else if ($_REQUEST['filter'] == 'entity') {
-
-                        $_SESSION['filters']['entity_subentities']['VALUE'] = '';
-                        $_SESSION['filters']['entity_subentities']['CLAUSE'] = '';
                     
                        $_SESSION['filters']['entity']['CLAUSE'] = "destination = '".$_SESSION['filters']['entity']['VALUE']."'";
                     
                     } else if ($_REQUEST['filter'] == 'entity_subentities') {
-
-                        $_SESSION['filters']['entity']['VALUE'] = '';
-                        $_SESSION['filters']['entity']['CLAUSE'] = '';
-
                         require_once "modules" . DIRECTORY_SEPARATOR . "entities" . DIRECTORY_SEPARATOR
                             . "class" . DIRECTORY_SEPARATOR . "class_manage_entities.php";
 
@@ -2003,7 +1996,7 @@ class lists extends dbquery
                 $start_next = $start + $this->params['linesToShow'];
                 $next = ' <a href="javascript://" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='
-                    .$start_next.'\', \''.$this->divListId.'\', '.$this->modeReturn.');">'._NEXT.'</a> >';
+                    .$start_next.'\', \''.$this->divListId.'\', '.$this->modeReturn.'); ">'._NEXT.'</a> >';
             }
             $toolbar .= '<div class="block" style="height:'.$height.';" align="center" >';
             $toolbar .= '<table width="100%" border="0"><tr>';
@@ -2773,7 +2766,9 @@ class lists extends dbquery
                             ._TOGGLE.'" id ="toggle" border="0"style="vertical-align: middle;" /></a></div></td>';
                 }
             }
-            
+
+
+
             //If disable or checkbox or radio button
             if ($lineIsDisabled === true && ($this->params['bool_checkBox'] === true|| $this->params['bool_radioButton'] === true)) {
                 $content .= '<td width="1%"><div align="center"><img src="'.$_SESSION['config']['businessappurl']
@@ -2783,8 +2778,21 @@ class lists extends dbquery
                 $content .= '<td width="1%"><div align="center"><input type="checkbox" name="field[]" id="field" class="check" value="'
                     .$keyValue.'" /></div></td>';
             } else if($this->params['bool_radioButton'] === true) {
-                $content .= '<td width="1%"><div align="center"><input type="radio" name="field" id="field" class="check" value="'
+                if($_SESSION['stockCheckbox'] != null){
+                $key = in_array($keyValue, $_SESSION['stockCheckbox']);
+                if($key==true){
+                  $content .= '<td width="1%"><div align="center"><input type="Checkbox" checked="yes" name="field[]" id="field" class="check" onclick="stockCheckbox(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=multiLink\','.$keyValue.');" value="'
+                    .$keyValue.'" /></div></td>';  
+                }else{
+
+                    $content .= '<td width="1%"><div align="center"><input type="Checkbox" name="field[]" id="field" class="check" onclick="stockCheckbox(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=multiLink\','.$keyValue.');" value="'
                     .$keyValue.'" /></div></td>';
+                    }
+                }else{
+                    $content .= '<td width="1%"><div align="center"><input type="Checkbox" name="field[]" id="field" class="check" onclick="stockCheckbox(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=multiLink\','.$keyValue.');" value="'
+                    .$keyValue.'" /></div></td>';
+                }
+
             }
             
             //Show document icon
@@ -3050,6 +3058,7 @@ class lists extends dbquery
                 $B_form .= '<form name="'.$parameters['formName'].'" id="'
                         .$this->formId.'" action="'.$parameters['formAction'].'" method="'
                         .$parameters['formMethod'].'" class="'.$parameters['formClass'].'">';
+                $B_form .='<input type="hidden" value=""/>';
                 
                 //Get hidden fields
                 $gridContent .= $this->_createHiddenFields();
