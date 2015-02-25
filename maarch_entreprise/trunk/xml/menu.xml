@@ -4,57 +4,57 @@
         <id>admin</id>
         <libconst>_ADMIN</libconst>
         <url>index.php?page=admin</url>
-        <style>admin</style>
+        <style>fa fa-puzzle-piece</style>
     </MENU>
     <MENU>
         <id>my_contacts</id>
         <libconst>_MY_CONTACTS</libconst>
         <url>index.php?page=my_contacts&amp;dir=my_contacts&amp;load</url>
-        <style>my_contacts</style>
+        <style>fa fa-child</style>
     </MENU>
     <MENU>
         <id>create_contacts</id>
         <libconst>_CREATE_CONTACTS</libconst>
         <url>index.php?page=contacts_v2</url>
-        <style>my_contacts</style>
+        <style>fa fa-plus</style>
     </MENU>
 <!-- LETTERBOX -->
     <MENU>
         <id>index_mlb</id>
         <libconst>_INDEXING_MLB</libconst>
         <url>index.php?page=view_baskets&amp;module=basket&amp;baskets=IndexingBasket</url>
-        <style>indexing</style>
+        <style>fa fa-plus</style>
     </MENU>
     <MENU>
         <id>adv_search_mlb</id>
         <libconst>_ADV_SEARCH_MLB</libconst>
         <url>index.php?page=search_adv&amp;dir=indexing_searching</url>
-        <style>searching</style>
+        <style>fa fa-search</style>
     </MENU>
 <!-- COLD -->
     <MENU>
         <id>adv_search_invoices</id>
         <libconst>_ADV_SEARCH_INVOICES</libconst>
         <url>index.php?page=search_adv_invoices&amp;dir=indexing_searching</url>
-        <style>searching</style>
+        <style>fa fa-search</style>
     </MENU>
 <!-- BUSINESS -->
     <MENU>
         <id>index_business</id>
         <libconst>_INDEXING_BUSINESS</libconst>
         <url>index.php?page=view_baskets&amp;module=basket&amp;baskets=BusinessIndexation</url>
-        <style>indexing</style>
+        <style>fa fa-plus</style>
     </MENU>
     <MENU>
         <id>adv_search_business</id>
         <libconst>_ADV_SEARCH_BUSINESS</libconst>
         <url>index.php?page=search_adv_business&amp;dir=indexing_searching</url>
-        <style>searching</style>
+        <style>fa fa-search</style>
     </MENU>
     <MENU>
         <id>search_contacts</id>
         <libconst>_SEARCH_CONTACTS</libconst>
         <url>index.php?page=search_contacts&amp;dir=indexing_searching</url>
-        <style>searching</style>
+        <style>fa fa-search</style>
     </MENU>
 </ROOT>

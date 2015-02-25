@@ -1,7 +1,7 @@
 <?php
 
 /*
-*   Copyright 2008-2013 Maarch
+*   Copyright 2008-2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -49,7 +49,7 @@ $core_tools->test_service('quicklaunch', "apps");
             <br />
             <table>
                 <tr>
-                    <td style="text-align:right;width:35%" >
+                    <td>
                         <select id="collection" name="collection" onchange="updateActionForm(this.options[this.selectedIndex].value);">
                             <?php
                             foreach ($_SESSION['user']['security'] as $key => $value) {
@@ -66,10 +66,8 @@ $core_tools->test_service('quicklaunch', "apps");
                         <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple" />
                         <input type="hidden" name="meta[]" value="welcome#welcome#welcome" />
                         <input type="hidden" name="baskets_clause" value="true" />
-                        <input class="button_search_adv_text" type="submit"  value="<?php echo _SEARCH; ?>" name ="Submit" >
-                        <img src = "<?php echo $_SESSION['config']['businessappurl'];
-                            ?>static.php?filename=picto_menu_search_small.gif" alt="<?php
-                                echo _HELP_GLOBAL_SEARCH; ?>" title="<?php echo _HELP_GLOBAL_SEARCH; ?>" />
+                        <input class="button" type="submit"  value="<?php echo _SEARCH; ?>" name ="Submit" >
+                        <i class="fa fa-search" title="<?php echo _HELP_GLOBAL_SEARCH; ?>"></i>
                     </td>
                 <tr/>
             </table>
@@ -107,6 +105,8 @@ $core_tools->test_service('quicklaunch', "apps");
 </div>
 <br />
 <?php
+    $core_tools->build_quicklaunch($_SESSION['quicklaunch']);
+    /*
     $nb_max = 0;
     $menu_array = $_SESSION['menu'];
     $tag = false;
@@ -178,17 +178,20 @@ $core_tools->test_service('quicklaunch', "apps");
             $displayed_adv_search_invoice = true;
         }
         //physical archive
-        // if ($element['id'] == 'physical_archive' && $element['show'] == true && (!isset($displayed_physical_archive) || isset($displayed_physical_archive) && $displayed_physical_archive <> true)) {
-        //     echo '<a href="index.php?page=boxes&amp;module=physical_archive&amp;reinit=true"><div class="quiclaunch_div bighome_physical_archive"><span>'
-        //         ._PHYSICAL_ARCHIVE.'</span></div></a>';
-        //     $nb_max++;
-        //     $displayed_physical_archive = true;
-        // }
+        if ($element['id'] == 'physical_archive' && $element['show'] == true && (!isset($displayed_physical_archive) || isset($displayed_physical_archive) && $displayed_physical_archive <> true)) {
+            echo '<a href="index.php?page=boxes&amp;module=physical_archive&amp;reinit=true"><div class="quiclaunch_div bighome_physical_archive"><span>'
+                ._PHYSICAL_ARCHIVE.'</span></div></a>';
+            $nb_max++;
+            $displayed_physical_archive = true;
+        }
     }
+    */
     ?>
+    <!--
     <a href="index.php?page=modify_user&amp;admin=users&amp;reinit=true">
         <div class="quiclaunch_div bighome_userinfo">
             <span><?php echo _MY_INFO; ?></span>
         </div>
     </a>
+    -->
 </div>
