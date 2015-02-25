@@ -323,8 +323,58 @@ class core_tools extends functions
     */
     public function load_menu($modules)
     {
-        // Browses the enabled modules array
         $k = 0;
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+            . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'menu.xml'
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom'
+                . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
+                . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml'
+                . DIRECTORY_SEPARATOR . 'menu.xml';
+        } else {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'menu.xml';
+        }
+        // Reads the apps/apps_name/xml/menu.xml file  and loads into session
+        $xmlconfig = simplexml_load_file($path);
+        foreach ($xmlconfig->MENU as $MENU2) {
+            $_SESSION['menu'][$k]['id'] = (string) $MENU2->id;
+            if (isset($_SESSION['menu'][$k]['id'])
+                && isset($_SESSION['user']['services'][$_SESSION['menu'][$k]['id']])
+                && $_SESSION['user']['services'][$_SESSION['menu'][$k]['id']] == true
+            ) { // Menu Identifier must be equal to the Service identifier
+                $libmenu = (string) $MENU2->libconst;
+                if ( !empty($libmenu) && defined($libmenu)
+                    && constant($libmenu) <> NULL
+                ) {
+                    $libmenu  = constant($libmenu);
+                }
+                $_SESSION['menu'][$k]['libconst'] = $libmenu;
+                $_SESSION['menu'][$k]['url'] = $_SESSION['config']['businessappurl']
+                    . (string) $MENU2->url;
+                if (trim((string) $MENU2->target) <> "") {
+                    $tmp = preg_replace(
+                        '/\/core\/$/', '/', $_SESSION['urltocore']
+                    );
+                    $_SESSION['menu'][$k]['url'] = $tmp. (string) $MENU2->url;
+                    $_SESSION['menu'][$k]['target'] = (string) $MENU2->target;
+                }
+                $_SESSION['menu'][$k]['style'] = (string) $MENU2->style;
+                $_SESSION['menu'][$k]['show'] = true;
+            } else {
+                $_SESSION['menu'][$k]['libconst'] ='';
+                $_SESSION['menu'][$k]['url'] ='';
+                $_SESSION['menu'][$k]['style'] = '';
+                $_SESSION['menu'][$k]['show'] = false;
+            }
+            $k ++;
+        }
+        // Browses the enabled modules array
         for ($i = 0; $i < count($modules); $i ++) {
             if (file_exists(
                 $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
@@ -392,56 +442,7 @@ class core_tools extends functions
                 }
             }
         }
-        if (file_exists(
-            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
-            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-            . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'menu.xml'
-        )
-        ) {
-            $path = $_SESSION['config']['corepath'] . 'custom'
-                . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
-                . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
-                . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml'
-                . DIRECTORY_SEPARATOR . 'menu.xml';
-        } else {
-            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-                . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'menu.xml';
-        }
-        // Reads the apps/apps_name/xml/menu.xml file  and loads into session
-        $xmlconfig = simplexml_load_file($path);
-        foreach ($xmlconfig->MENU as $MENU2) {
-            $_SESSION['menu'][$k]['id'] = (string) $MENU2->id;
-            if (isset($_SESSION['menu'][$k]['id'])
-                && isset($_SESSION['user']['services'][$_SESSION['menu'][$k]['id']])
-                && $_SESSION['user']['services'][$_SESSION['menu'][$k]['id']] == true
-            ) { // Menu Identifier must be equal to the Service identifier
-                $libmenu = (string) $MENU2->libconst;
-                if ( !empty($libmenu) && defined($libmenu)
-                    && constant($libmenu) <> NULL
-                ) {
-                    $libmenu  = constant($libmenu);
-                }
-                $_SESSION['menu'][$k]['libconst'] = $libmenu;
-                $_SESSION['menu'][$k]['url'] = $_SESSION['config']['businessappurl']
-                    . (string) $MENU2->url;
-                if (trim((string) $MENU2->target) <> "") {
-                    $tmp = preg_replace(
-                        '/\/core\/$/', '/', $_SESSION['urltocore']
-                    );
-                    $_SESSION['menu'][$k]['url'] = $tmp. (string) $MENU2->url;
-                    $_SESSION['menu'][$k]['target'] = (string) $MENU2->target;
-                }
-                $_SESSION['menu'][$k]['style'] = (string) $MENU2->style;
-                $_SESSION['menu'][$k]['show'] = true;
-            } else {
-                $_SESSION['menu'][$k]['libconst'] ='';
-                $_SESSION['menu'][$k]['url'] ='';
-                $_SESSION['menu'][$k]['style'] = '';
-                $_SESSION['menu'][$k]['show'] = false;
-            }
-            $k ++;
-        }
+        $this->load_quicklaunch($modules);
     }
 
     /**
@@ -468,16 +469,242 @@ class core_tools extends functions
                 }
                 $tmp = htmlentities  ( $tmp,ENT_COMPAT, 'UTF-8', true); // Encodes
                 ?>
-                <li id="<?php  echo $menu[$i]['style'];?>" onmouseover="this.className='on';" onmouseout="this.className='';"><a href="#" onclick="window.open('<?php  echo $tmp;?>', '<?php  if(isset($menu[$i]['target']) && $menu[$i]['target'] <> ''){echo $menu[$i]['target'];}else{echo '_self';}?>');"><span><span class="menu_item"><?php  echo trim($menu[$i]['libconst']);?></span></span></a></li>
+                <li onmouseover="this.className='on';" onmouseout="this.className='';">
+                <a href="#" onclick="window.open('<?php  echo $tmp;?>', '<?php 
+                    if(isset($menu[$i]['target']) && $menu[$i]['target'] <> '') {
+                        echo $menu[$i]['target'];
+                    } else {
+                        echo '_self';
+                    }?>');"><span><i class="<?php 
+                        echo $menu[$i]['style'] . ' fa-2x';
+                        ?>"></i><span><?php 
+                        echo trim($menu[$i]['libconst']);?></span></span></a></li>
                 <?php
             }
         }
 
         // Menu items always displayed
-        echo '<li id="account" onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
-        <a href="'.$_SESSION['config']['businessappurl'].'index.php?page=modify_user&amp;admin=users&amp;reinit=true"><span><span  class="menu_item">'._MY_INFO.'</span></span></a></li>';
-        echo '<li id="logout" onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
-        <a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;page=logout&amp;coreurl='.$_SESSION['config']['coreurl'].'&amp;logout=true"><span><span  class="menu_item">'._LOGOUT.'</span></span></a></li>';
+        echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
+        <a href="'.$_SESSION['config']['businessappurl']
+            . 'index.php?page=modify_user&amp;admin=users&amp;reinit=true"><span><i class="fa fa-user fa-2x"></i><span>'._MY_INFO.'</span></span></a></li>';
+        echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
+        <a href="'.$_SESSION['config']['businessappurl']
+            . 'index.php?display=true&amp;page=logout&amp;coreurl='
+            . $_SESSION['config']['coreurl'].'&amp;logout=true"><span><i class="fa fa-power-off fa-2x"></i><span>'._LOGOUT.'</span></span></a></li>';
+    }
+
+    /**
+    * Loads menu items of each module and the application into session from menu.xml files
+    *
+    * @param $modules array Enabled modules of the application
+    */
+    public function load_quicklaunch($modules)
+    {
+        $k = 0;
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+            . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'menu.xml'
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom'
+                . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
+                . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml'
+                . DIRECTORY_SEPARATOR . 'menu.xml';
+        } else {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR . 'menu.xml';
+        }
+        // Reads the apps/apps_name/xml/menu.xml file  and loads into session
+        $xmlconfig = simplexml_load_file($path);
+        foreach ($xmlconfig->MENU as $MENU2) {
+            $_SESSION['quicklaunch'][$k]['id'] = (string) $MENU2->id;
+            if (isset($_SESSION['quicklaunch'][$k]['id'])
+                && isset($_SESSION['user']['services'][$_SESSION['quicklaunch'][$k]['id']])
+                && $_SESSION['user']['services'][$_SESSION['quicklaunch'][$k]['id']] == true
+            ) { // Menu Identifier must be equal to the Service identifier
+                $libmenu = (string) $MENU2->libconst;
+                if ( !empty($libmenu) && defined($libmenu)
+                    && constant($libmenu) <> NULL
+                ) {
+                    $libmenu  = constant($libmenu);
+                }
+                $_SESSION['quicklaunch'][$k]['libconst'] = $libmenu;
+                $_SESSION['quicklaunch'][$k]['url'] = $_SESSION['config']['businessappurl']
+                    . (string) $MENU2->url;
+                if (trim((string) $MENU2->target) <> "") {
+                    $tmp = preg_replace(
+                        '/\/core\/$/', '/', $_SESSION['urltocore']
+                    );
+                    $_SESSION['quicklaunch'][$k]['url'] = $tmp. (string) $MENU2->url;
+                    $_SESSION['quicklaunch'][$k]['target'] = (string) $MENU2->target;
+                }
+                $_SESSION['quicklaunch'][$k]['style'] = (string) $MENU2->style;
+                $_SESSION['quicklaunch'][$k]['show'] = true;
+            } else {
+                $_SESSION['quicklaunch'][$k]['libconst'] ='';
+                $_SESSION['quicklaunch'][$k]['url'] ='';
+                $_SESSION['quicklaunch'][$k]['style'] = '';
+                $_SESSION['quicklaunch'][$k]['show'] = false;
+            }
+            $k ++;
+        }
+        // Browses the enabled modules array
+        for ($i = 0; $i < count($modules); $i ++) {
+            if (file_exists(
+                $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+                . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
+                . 'modules' . DIRECTORY_SEPARATOR . $modules[$i]['moduleid']
+                . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR . "menu.xml"
+                )
+            ) {
+                $menuPath = $_SESSION['config']['corepath'] . 'custom'
+                    . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                    . DIRECTORY_SEPARATOR . 'modules' . DIRECTORY_SEPARATOR
+                    . $modules[$i]['moduleid'] . DIRECTORY_SEPARATOR . "xml"
+                    . DIRECTORY_SEPARATOR . "menu.xml";
+            } else {
+                $menuPath = 'modules' . DIRECTORY_SEPARATOR
+                    . $modules[$i]['moduleid'] . DIRECTORY_SEPARATOR . "xml"
+                    . DIRECTORY_SEPARATOR . "menu.xml";
+            }
+
+            if (file_exists(
+                $_SESSION['config']['corepath'] . 'modules'
+                . DIRECTORY_SEPARATOR . $modules[$i]['moduleid']
+                . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR . "menu.xml"
+            ) || file_exists(
+                $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+                . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
+                . 'modules' . DIRECTORY_SEPARATOR . $modules[$i]['moduleid']
+                . DIRECTORY_SEPARATOR . "xml" . DIRECTORY_SEPARATOR . "menu.xml"
+            )
+            ) {
+                $xmlconfig = simplexml_load_file($menuPath);
+                foreach ($xmlconfig->MENU as $MENU) {
+                    $_SESSION['quicklaunch'][$k]['id'] = (string) $MENU->id;
+                    if (isset(
+                        $_SESSION['user']['services'][$_SESSION['quicklaunch'][$k]['id']]
+                    )
+                    && $_SESSION['user']['services'][$_SESSION['quicklaunch'][$k]['id']] == true
+                    ) {
+                        $libmenu = (string) $MENU->libconst;
+                        if ( !empty($libmenu) && defined($libmenu)
+                            && constant($libmenu) <> NULL
+                        ) {
+                            $libmenu  = constant($libmenu);
+                        }
+                        $_SESSION['quicklaunch'][$k]['libconst'] = $libmenu;
+                        $_SESSION['quicklaunch'][$k]['url'] = $_SESSION['config']['businessappurl']
+                            . (string) $MENU->url;
+                        if (trim((string) $MENU->target) <> "") {
+                            $tmp = preg_replace(
+                                '/\/core\/$/', '/', $_SESSION['urltocore']
+                            );
+                            $_SESSION['quicklaunch'][$k]['url'] = $tmp
+                                . (string) $MENU->url;
+                            $_SESSION['quicklaunch'][$k]['target'] = (string) $MENU->target;
+                        }
+                        $_SESSION['quicklaunch'][$k]['style'] = (string) $MENU->style;
+                        $_SESSION['quicklaunch'][$k]['show'] = true;
+                    } else {
+                        $_SESSION['quicklaunch'][$k]['libconst'] = '';
+                        $_SESSION['quicklaunch'][$k]['url'] = '';
+                        $_SESSION['quicklaunch'][$k]['style'] = '';
+                        $_SESSION['quicklaunch'][$k]['show'] = false;
+                    }
+                    $k ++;
+                }
+            }
+        }
+        
+    }
+
+    /**
+    * Builds the application quicklaunch from the session var quicklaunch
+    *
+    * @param  $quicklaunch array Enabled quicklaunch items
+    */
+    public function build_quicklaunch($quicklaunch)
+    {
+        //$this->show_array($quicklaunch);
+        // Browses the quicklaunch items
+        $arrTmpQuicklaunch = array();
+        for ($i=0;$i<count($quicklaunch);$i++) {
+            if ($quicklaunch[$i]['show'] == true) {
+                array_push($arrTmpQuicklaunch, $quicklaunch[$i]);
+            }
+        }
+        echo '<table  cellpadding="2" width="95%">';
+        echo '<tr>';
+        for ($i=0;$i<count($arrTmpQuicklaunch);$i++) {
+            if ($arrTmpQuicklaunch[$i]['show'] == true) {
+                if ($i%2) {
+                    //echo 'impair'.$i.'<br>';
+                } else {
+                    echo '<tr>';
+                }
+                $tmp = $arrTmpQuicklaunch[$i]['url'];
+                if (preg_match('/php$/', $tmp)) {
+                    $tmp .= "?reinit=true";
+                } else {
+                    $tmp .= "&reinit=true";
+                }
+                $tmp = htmlentities($tmp, ENT_COMPAT, 'UTF-8', true); // Encodes
+                ?>
+                <td id="<?php 
+                    echo $arrTmpQuicklaunch[$i]['style'];
+                    ?>" >
+                    <i class="<?php 
+                        echo $arrTmpQuicklaunch[$i]['style'] . ' fa-2x'
+                        ;?>"></i>
+                </td>
+                <td>
+                    <a href="#" onclick="window.open('<?php 
+                        echo $tmp;
+                        ?>', '<?php 
+                        if(
+                            isset($arrTmpQuicklaunch[$i]['target']) 
+                            && $arrTmpQuicklaunch[$i]['target'] <> ''
+                        ) {
+                            echo $arrTmpQuicklaunch[$i]['target'];
+                        } else {
+                            echo '_self';
+                        }?>');">
+                        <span>
+                            <span><?php 
+                            echo trim($arrTmpQuicklaunch[$i]['libconst']);
+                            ?>
+                            </span>
+                        </span>
+                    </a>
+                </td>
+                <?php
+                if ($i%2) {
+                    echo '</tr>';
+                }
+            } else {
+                //$this->show_array($arrTmpQuicklaunch[$i]);
+            }
+        }
+        echo '</tr>';
+        echo '<tr>';
+        // quicklaunch items always displayed
+        echo '<td><i class="fa fa-user fa-2x"></i></td><td>
+            <a href="' . $_SESSION['config']['businessappurl']
+                . 'index.php?page=modify_user&amp;admin=users&amp;reinit=true"><span><span>'
+                . _MY_INFO . '</span></span></a>';
+        echo '</td>';
+        echo '<td><i class="fa fa-power-off fa-2x"></i></td><td>
+            <a href="' . $_SESSION['config']['businessappurl']
+            . 'index.php?display=true&amp;page=logout&amp;coreurl='
+            . $_SESSION['config']['coreurl'].'&amp;logout=true"><span><span>'
+            . _LOGOUT . '</span></span></a>';
+        echo '</td>';
+        echo '</tr>';
+        echo '</table>';
     }
 
     /**
@@ -1332,6 +1559,8 @@ class core_tools extends functions
     private function load_css()
     {
         ?>
+        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
+            . 'css/font-awesome/css/font-awesome.css'; ?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php'; ?>" media="screen" />
         <!--[if lt  IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie'; ?>" media="screen" />  <![endif]-->
         <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie7'; ?>" media="screen" />  <![endif]-->
