@@ -6,6 +6,10 @@
     background-image: url(static.php?filename=exploit_template_answer_on.gif&module=templates);
 }
 
+td#exploit_template_answer {
+  background: url(static.php?filename=exploit_template_answer_off.gif&module=templates) no-repeat;
+}
+
 /* admin modules board */
 #admin_template_answer {
     background:  url(static.php?filename=manage_template_answer.gif&module=templates) 2px center no-repeat;
