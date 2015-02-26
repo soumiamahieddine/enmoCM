@@ -1857,10 +1857,9 @@ class lists extends dbquery
                     }              
                     //Image
                     if(isset($this->params['tools'][$i]['icon'])) {
-                       $tools .= '<i class="fa fa-' . $this->params['tools'][$i]['icon'] . ' fa-2x" title="' . $this->params['tools'][$i]['tooltip'] . '"></i>'; 
+                        $tools .= '<i class="fa fa-' . $this->params['tools'][$i]['icon'] . ' fa-2x" title="' . $this->params['tools'][$i]['tooltip'] . '"></i>&nbsp;'; 
                     } else {
-                        $tools .= '<img src="'.$_SESSION['config']['businessappurl']
-                        .'static.php?filename=tools.gif" alt="NO_IMAGE" border="0"/>'; 
+                        $tools .= '<i class="fa fa-ban fa-2x" title="NO_IMAGE"></i>&nbsp;'; 
                     }
                     $tools .= '</a>&nbsp;';
                 }
