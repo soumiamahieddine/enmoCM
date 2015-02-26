@@ -276,7 +276,7 @@ if (isset($_REQUEST['id']) && !empty($_REQUEST['id']))
                     $tab[$i][$j]["show"]=false;
                     $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
                     $my_imgcat = get_img_cat($tab[$i][$j]['value'],$extension_icon);
-                    $tab[$i][$j]['value'] = "<img src = '".$my_imgcat."' alt = '' title = ''>";
+                    $tab[$i][$j]['value'] = $my_imgcat;
                     $tab[$i][$j]["value"] = $tab[$i][$j]['value'];
                     $tab[$i][$j]["order"]="category_id";
                 }

@@ -162,7 +162,7 @@ $_SESSION['error_page'] = '';
         $paramsTab['tools'] = array();                                                  //Icones dans la barre d'outils
         $export = array(
             "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
-            "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_export.gif",
+            "icon"          =>  'file-excel-o',
             "tooltip"       =>  _EXPORT_LIST,
             "disabledRules" =>  count($tab)." == 0"
             );

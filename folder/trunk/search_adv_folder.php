@@ -97,9 +97,8 @@ echo $_SESSION['config']['businessappurl'] . "static.php?module=folder"
     <tr>
         <td><a href="javascript://" onclick="javascript:window.top.location.href='<?php echo $_SESSION['config']['businessappurl'] 
             .'index.php?page=search_adv_folder&module=folder&reinit=true&erase=true';?>';">
-            <img src="<?php  echo $_SESSION['config']['businessappurl']
-                ."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> 
-                <?php  echo _CLEAR_SEARCH; ?></a></td>
+            <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_SEARCH; ?>"></i>
+        </td>
         <td align="right">
             <input class="button_search_adv" name="imageField" id="searchButton" type="submit" value="" 
                 onclick="this.form.submit();" /><br/>

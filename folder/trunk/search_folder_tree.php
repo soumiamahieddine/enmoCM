@@ -93,9 +93,9 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
         <br>
         <a href="javascript://" onClick="window.top.location.href='<?php
                 echo $_SESSION['config']['businessappurl'];
-                ?>index.php?page=search_folder_tree&module=folder&erase=true';"><img src="<?php
-                echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";
-                ?>" alt="" height="15px" width="15px" /><?php  echo _NEW_SEARCH; ?></a>
+                ?>index.php?page=search_folder_tree&module=folder&erase=true';">
+                <i class="fa fa-refresh fa-4x" title="<?php echo _NEW_SEARCH; ?>"></i>
+        </a>
     </div>
     <!-- Display the layout of search_folder_tree -->
     <table width="100%" height="100%" cellspacing="5" style="border:1px solid #999999;">
