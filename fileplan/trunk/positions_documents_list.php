@@ -297,7 +297,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 											. "&actual_position_id=". $position_id.$parameters
 											. "', 'formList', '600px', '510px', '"
                                             . _CHOOSE_ONE_DOC."')",
-                    "icon"          =>  $_SESSION['config']['businessappurl']."static.php?module=fileplan&filename=tool_fileplan.gif",
+                    "icon"          =>  'bookmark',
                     "tooltip"       =>  _FILEPLAN,
                     "disabledRules" =>  count($tab)." == 0 || ".(int)$change_fileplan." == 0"
                 );  
