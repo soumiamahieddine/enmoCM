@@ -82,7 +82,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                 echo '<h4><i class="fa fa-inbox fa-2x"></i>&nbsp;'
                     . $collWithUserBaskets[$cpt]['coll_label'] . '</h4>';
                 $abs_basket = false;
-                echo '<ul class="fa-ul">';
+                echo '<ul class="fa-ul" style="font-size:14px;">';
                 for ($i=0;$i<count($_SESSION['user']['baskets']);$i++) {
                     if ($_SESSION['user']['baskets'][$i]['is_visible'] === 'Y' 
                         && $_SESSION['user']['baskets'][$i]['id_page'] <> 'redirect_to_action'
@@ -93,7 +93,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                             && $_SESSION['user']['baskets'][$i]['group_desc'] <> ''
                         ) {
                             $currentGroup = $_SESSION['user']['baskets'][$i]['group_desc'];
-                            echo '<li><i class="fa-li fa fa-users"></i>'
+                            echo '<li style="padding-top: 5px;padding-bottom: 5px;"><i class="fa-li fa fa-users" style="padding-top: 5px;padding-bottom: 5px;"></i>'
                                 . '<small>' . $currentGroup . '</small></li>';
                         }
                         if (
@@ -125,25 +125,25 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                                 $core_tools->is_module_loaded('folder') 
                                 && $_SESSION['user']['baskets'][$i]['is_folder_basket'] == 'Y'
                             ) {
-                                echo '<li><a href="'
+                                echo '<li style="padding-top: 5px;padding-bottom: 5px;"><a href="'
                                     . $_SESSION['config']['businessappurl']
                                     . 'index.php?page=view_baskets&amp;module=basket&amp;baskets='
                                     . $_SESSION['user']['baskets'][$i]['id']
                                     . '"><b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id'] 
                                     . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']
-                                    . '"><i class="fa-li fa fa-spinner fa-spin"></i>'
-                                    . '</span></b> <i class="fa-li fa fa-folder"></i>'
+                                    . '"><i class="fa-li fa fa-spinner fa-spin" style="padding-top: 5px;padding-bottom: 5px;"></i>'
+                                    . '</span></b> <i class="fa-li fa fa-folder" style="padding-top: 5px;padding-bottom: 5px;"></i>'
                                     . $_SESSION['user']['baskets'][$i]['name']
                                     . ' </a></li>';
                             } else {
-                                echo '<li><a href="'
+                                echo '<li style="padding-top: 5px;padding-bottom: 5px;"><a href="'
                                     . $_SESSION['config']['businessappurl']
                                     . 'index.php?page=view_baskets&amp;module=basket&amp;baskets='
                                     . $_SESSION['user']['baskets'][$i]['id']
-                                    . '"><b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id'] 
+                                    . '"><b><span class="nb_res" id="nb_' . $_SESSION['user']['baskets'][$i]['id'] 
                                     . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']
                                     . '"><i class="fa-li fa fa-spinner fa-spin"></i>'
-                                    . '</span></b> <i class="fa-li fa fa-tasks"></i> '
+                                    . '</span></b> <i class="fa-li fa fa-tasks" style="padding-top: 5px;padding-bottom: 5px;"></i> '
                                     . $_SESSION['user']['baskets'][$i]['name']
                                     . ' </a></li>';
                             }
@@ -176,7 +176,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
             onSuccess: function(answer)
             {
                 eval('response = '+answer.responseText);
-                $(response.idSpan).innerHTML = '<b>(' + response.nb + ')</b>';
+                $(response.idSpan).innerHTML = '' + response.nb + '';
             }
         });
     }
