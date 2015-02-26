@@ -452,6 +452,16 @@ class core_tools extends functions
     */
     public function build_menu($menu)
     {
+        //menu tri
+        $i=0;
+        foreach ($menu as $key => $row) {
+            $label[$i] = $row['libconst'];
+            $i++;
+        }
+        // Trie les données par volume décroissant, edition croissant
+        // Ajoute $data en tant que dernier paramètre, pour trier par la clé commune
+        array_multisort($label, SORT_ASC, $label, SORT_ASC, $menu);
+        
         // Browses the menu items
         for($i=0;$i<count($menu);$i++)
         {
@@ -475,9 +485,9 @@ class core_tools extends functions
                         echo $menu[$i]['target'];
                     } else {
                         echo '_self';
-                    }?>');"><span><i class="<?php 
+                    }?>');"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="<?php 
                         echo $menu[$i]['style'] . ' fa-2x';
-                        ?>"></i><span><?php 
+                        ?>"></i></span><span><?php 
                         echo trim($menu[$i]['libconst']);?></span></span></a></li>
                 <?php
             }
@@ -486,11 +496,11 @@ class core_tools extends functions
         // Menu items always displayed
         echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
         <a href="'.$_SESSION['config']['businessappurl']
-            . 'index.php?page=modify_user&amp;admin=users&amp;reinit=true"><span><i class="fa fa-user fa-2x"></i><span>'._MY_INFO.'</span></span></a></li>';
+            . 'index.php?page=modify_user&amp;admin=users&amp;reinit=true"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-user fa-2x"></i></span><span>'._MY_INFO.'</span></span></a></li>';
         echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
         <a href="'.$_SESSION['config']['businessappurl']
             . 'index.php?display=true&amp;page=logout&amp;coreurl='
-            . $_SESSION['config']['coreurl'].'&amp;logout=true"><span><i class="fa fa-power-off fa-2x"></i><span>'._LOGOUT.'</span></span></a></li>';
+            . $_SESSION['config']['coreurl'].'&amp;logout=true"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-power-off fa-2x"></i></span><span>'._LOGOUT.'</span></span></a></li>';
     }
 
     /**
