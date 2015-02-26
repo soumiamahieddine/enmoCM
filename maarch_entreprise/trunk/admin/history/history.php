@@ -323,7 +323,11 @@ $list->admin_list($tab, $nb, '&nbsp;', 'id','history','history','id', true, '', 
             <input type="button" class="button"  name="cancel" value="<?php  echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin';"/>
             </p>
         </td>
-        <td align="right"><a href="#" onclick="clear_form('frm_search_hist');$('frm_search_hist').submit();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_FORM;?>" /> <?php  echo _CLEAR_FORM; ?></a></td>
+        <td align="center">
+            <a href="#" onclick="clear_form('frm_search_hist');$('frm_search_hist').submit();">
+            <i class="fa fa-refresh fa-2x" title="<?php  echo _CLEAR_FORM; ?>"></i>
+            </a>
+        </td>
     </tr>
     </table>
 </div>

@@ -360,10 +360,18 @@ if (isset($_REQUEST['nodetails'])) {
 ?>
 <table align="center" border="0" width="100%">
     <tr>
-        <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();changeCategory('purchase');"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
+        <td>
+            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();changeCategory('purchase');">
+                <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_FORM; ?>"></i>
+            </a>
+        </td>
         <td align="right">
-            <input class="button_search_adv" name="imageField" type="submit" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" /><br/>
-            <input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" />
+            <span style="display:none;">
+                <input name="imageField" type="submit" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" />
+            </span>
+            <a href="#" onclick="valid_search_form('frmsearch2');$('frmsearch2').submit();">
+                <i class="fa fa-search fa-4x" title="<?php echo _SEARCH; ?>"></i>
+            </a>
         </td>
     </tr>
 </table>
@@ -589,11 +597,15 @@ if (isset($_REQUEST['nodetails'])) {
 </table>
 <table align="center" border="0" width="100%">
     <tr>
-        <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();changeCategory('purchase');">
-                <img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
+        <td>
+            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();changeCategory('purchase');">
+                <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_FORM; ?>"></i>
+            </a>
+        </td>
         <td align="right">
-            <input class="button_search_adv" name="imageField" type="submit" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" /><br/>
-            <input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" />
+            <a href="#" onclick="valid_search_form('frmsearch2');$('frmsearch2').submit();">
+                <i class="fa fa-search fa-4x" title="<?php echo _SEARCH; ?>"></i>
+            </a>
         </td>
     </tr>
 </table>

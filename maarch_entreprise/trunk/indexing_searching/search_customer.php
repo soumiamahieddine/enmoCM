@@ -86,9 +86,9 @@ echo _SEARCH;
         <br>
         <a href="<?php
 echo $_SESSION['config']['businessappurl'];
-?>index.php?page=search_customer&dir=indexing_searching&erase=true"><img src="<?php
-echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";
-?>" alt="" height="15px" width="15px" /><?php  echo _NEW_SEARCH; ?></a>
+?>index.php?page=search_customer&dir=indexing_searching&erase=true">
+            <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_FORM; ?>"></i>
+        </a>
     </div>
     <!-- Display the layout of search_customer -->
     <table width="100%" height="100%" border="1">

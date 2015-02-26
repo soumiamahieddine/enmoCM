@@ -1092,8 +1092,18 @@ class list_show extends functions
                 ?>
                 <tfoot>
                     <tr>
-                        <td colspan="9" class="price"><span class="add clearfix">
-                        <a href="<?php  echo $path_add.$param_comp;?>"  ><span><?php  echo $label_add;?></span></a></span></td>
+                        <td colspan="9" class="price">
+                            <!--<span class="add clearfix">
+                                <a href="<?php  echo $path_add.$param_comp;?>">
+                                    <span>
+                                        <?php  echo $label_add;?>
+                                    </span>
+                                </a>
+                            </span>-->
+                            <a href="<?php  echo $path_add.$param_comp;?>">
+                                <i class="fa fa-plus-square fa-3x" title="<?php echo $label_add;?>"></i>
+                            </a>
+                        </td>
                     </tr>
                 </tfoot>
                 <?php
@@ -1137,7 +1147,30 @@ class list_show extends functions
                     <tfoot>
                          <tr>
                             <td colspan="<?php  if($name <> 'types'){ echo'7';} else{ echo '5'; }
-                            ?>" class="price"><span class="add clearfix"><a href="javascript://" onclick="window.open('<?php  echo $path_root; if($name <> 'types' && $name <> 'contacts_v2' && $name <> 'contact_addresses'){ echo '&amp;page='.$page_name_up;?>&amp;mode=add<?php  } else{ echo  '&amp;page='.$page_name_add; }?>','add','height=250, width=500, resizable=yes, scrollbars=yes');" ><span><?php  echo $label_add;?></span></a></span></td>
+                            ?>" class="price">
+                                <!--<span class="add clearfix">
+                                    <a href="javascript://" onclick="window.open('<?php 
+                                        echo $path_root; 
+                                        if($name <> 'types' && $name <> 'contacts_v2' && $name <> 'contact_addresses') { 
+                                            echo '&amp;page='.$page_name_up;
+                                            ?>&amp;mode=add<?php
+                                        } else { 
+                                            echo  '&amp;page='.$page_name_add; 
+                                        }?>','add','height=250, width=500, resizable=yes, scrollbars=yes');" >
+                                        <span><?php echo $label_add;?></span>
+                                    </a>
+                                </span>-->
+                                <a href="javascript://" onclick="window.open('<?php 
+                                    echo $path_root; 
+                                    if($name <> 'types' && $name <> 'contacts_v2' && $name <> 'contact_addresses') { 
+                                        echo '&amp;page='.$page_name_up;
+                                        ?>&amp;mode=add<?php
+                                    } else { 
+                                        echo  '&amp;page='.$page_name_add; 
+                                    }?>','add','height=250, width=500, resizable=yes, scrollbars=yes');" >
+                                    <i class="fa fa-plus-square fa-3x" title="<?php echo $label_add;?>"></i>
+                                </a>
+                            </td>
                         </tr>
                     </tfoot>
                     <?php
@@ -1187,14 +1220,13 @@ class list_show extends functions
                                     if($result[$theline][$count_column]['enabled'] == "N")
                                      {
                                     ?>
-
-                                    <img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_stat_disabled.gif" alt="<?php  echo _NOT_ENABLED;?>" title="<?php  echo _NOT_ENABLED;?>"/>
+                                    <i class="fa fa-pause fa-2x" title="<?php echo _NOT_ENABLED; ?>"></i>
                                     <?php
                                      }
                                     elseif($result[$theline][$count_column]['enabled'] == "Y")
                                     {
                                     ?>
-                                    <img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_stat_enabled.gif" alt="<?php  echo _ENABLED; ?>" title="<?php  echo _ENABLED; ?>"/>
+                                    <i class="fa fa-check fa-2x" title="<?php echo _ENABLED; ?>"></i>
                                     <?php
                                     }
                                 }
@@ -1268,7 +1300,7 @@ class list_show extends functions
                         {
                             $path_up = preg_replace("/(&(?!amp;))/", "&amp;", $path_up);
                         ?>
-                        <a href="<?php  echo $path_up.$param_comp; ?>" class="change"><?php  echo _MODIFY;?></a>
+                        <a href="<?php echo $path_up.$param_comp; ?>" class="actionList"><i class="fa fa-edit fa-2x" title="<?php echo _MODIFY;?>"></i><?php //echo _MODIFY;?></a>
                         <?php
 
                         }?>
@@ -1301,8 +1333,8 @@ class list_show extends functions
                                 {
                                     $path_auth = preg_replace("/(&(?!amp;))/", "&amp;", $path_auth);
                             ?>
-                                <a href="<?php  echo $path_auth.$param_comp;?>" class="authorize" onclick="return(confirm('<?php  echo _REALLY_AUTHORIZE." "; if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
-                                 else { echo $admin_id; } ?> ?'));"><?php  echo _AUTHORIZE;?></a>
+                                <a href="<?php  echo $path_auth.$param_comp;?>" class="actionList" onclick="return(confirm('<?php  echo _REALLY_AUTHORIZE." "; if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
+                                 else { echo $admin_id; } ?> ?'));"><i class="fa fa-check fa-2x" title="<?php  echo _AUTHORIZE;?>"></i></a>
                                 <?php
                                 }
                             }
@@ -1332,7 +1364,7 @@ class list_show extends functions
                                 {
                                     $path_ban = preg_replace("/(&(?!amp;))/", "&amp;", $path_ban);
                                 ?>
-                            <a href="<?php  echo $path_ban.$param_comp; ?>" class="suspend" onclick="return(confirm('<?php  echo _REALLY_SUSPEND." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} else { echo $admin_id; } ?> ?'));"><?php  echo _SUSPEND;?></a><?php  }
+                            <a href="<?php  echo $path_ban.$param_comp; ?>" class="actionList" onclick="return(confirm('<?php  echo _REALLY_SUSPEND." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} else { echo $admin_id; } ?> ?'));"><i class="fa fa-pause fa-2x" title="<?php  echo _SUSPEND;?>"></i></a><?php  }
                                 }
                             }
                             ?>
@@ -1378,9 +1410,9 @@ class list_show extends functions
                         {
                             $path_del = preg_replace("/(&(?!amp;))/", "&amp;", $path_del);
                         ?>
-                            <a href="<?php  echo $path_del.$param_comp;?>"  class="delete"
+                            <a href="<?php  echo $path_del.$param_comp;?>"  class="actionList"
                         onclick="return(confirm('<?php  echo _REALLY_DELETE." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
-                                 else { echo $admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"><?php  echo _DELETE;?></a>
+                                 else { echo $admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"><i class="fa fa-remove fa-2x" title="<?php  echo _DELETE;?>"></i></a>
                         <?php
                         }
                     }
@@ -1423,13 +1455,13 @@ class list_show extends functions
                 $path_del2 = preg_replace("/(&(?!amp;))/", "&amp;", $path_del2);
                         ?>
                         <td class="action">
-                        <a  href="javascript://" class="change" onclick="window.open('<?php  echo $path_up2;?>','','height=<?php echo $height;?>, width=450,scrollbars=yes,resizable=yes');" ><?php  echo _MODIFY;?></a>
+                        <a  href="javascript://" class="actionList" onclick="window.open('<?php  echo $path_up2;?>','','height=<?php echo $height;?>, width=450,scrollbars=yes,resizable=yes');" ><i class="fa fa-edit fa-2x" title="<?php  echo _MODIFY;?>"></i></a>
                     </td>
 
                     <td class="action" >
-                        <a href="<?php  echo $path_del2.$param_comp;?>" class="delete"
+                        <a href="<?php  echo $path_del2.$param_comp;?>" class="actionList"
                     onclick="return(confirm('<?php  echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
-                             else { echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"><?php  echo _DELETE;?></a>
+                             else { echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"><i class="fa fa-remove fa-2x" title="<?php  echo _DELETE;?>"></i></a>
                     </td>
                     <?php  } ?>
               </tr>
@@ -1584,7 +1616,7 @@ class list_show extends functions
                 }
                 if ($bool_modify) {
                     $str .= '<td class="action">';
-                        $str .= '<a  href="javascript://" class="change" onclick="window.open(\''
+                        $str .= '<a  href="javascript://" class="actionList" onclick="window.open(\''
                             . $page_modify;
                         if(preg_match('/\?/',$page_modify)){
                             $str .= '&amp;';
@@ -1594,7 +1626,7 @@ class list_show extends functions
                         $str .= 'id=' . $result[$theline][0][$key] . '\',\'\',\'height='
                             . $height_page_modify . ', width=' . $width_page_modify
                             . ',scrollbars=yes,resizable=yes\');">'
-                            . _MODIFY . '</a>';
+                            . '<i class="fa fa-edit fa-2x" title="' . _MODIFY . '"></i></a>';
                     $str .= '</td>';
                 } else {
                     $str .= '<td class="action">&nbsp;</td>';

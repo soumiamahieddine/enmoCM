@@ -463,17 +463,19 @@ if(isset($_REQUEST['nodetails']))
 }?>
 <table align="center" border="0" width="100%">
     <tr>
-        <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
-        <td align="right">
-            <input class="button_search_adv" name="imageField" type="submit" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" /><br/>
-            <input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" />
+        <td>
+            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();">
+                <i class="fa fa-refresh fa-4x" title="<?php  echo _CLEAR_SEARCH; ?>"></i>
+            </a>
         </td>
-        <!--td align="left"><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
-        <td  width="75%" align="right" ><?php if($core_tools->is_module_loaded("basket") == true){?><span class="bold"><?php echo _SPREAD_SEARCH_TO_BASKETS;?></span>
-            <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause_false,baskets_clause_true#radio" />
-            <input type="radio" name="baskets_clause" id="baskets_clause_false" class="check"  value="false" checked="checked" /><?php echo _NO;?>
-            <input type="radio" name="baskets_clause" id="baskets_clause_true" class="check"  value="true"  /><?php echo _YES; }?>
-        </td-->
+        <td align="right">
+            <span style="display:none;">
+                <input name="imageField" type="submit" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" />
+            </span>
+            <a href="#" onclick="valid_search_form('frmsearch2');$('frmsearch2').submit();">
+                <i class="fa fa-search fa-4x" title="<?php echo _SEARCH; ?>"></i>
+            </a>
+        </td>
     </tr>
 </table>
 <table align="center" border="0" width="100%">
@@ -674,21 +676,23 @@ if(isset($_REQUEST['nodetails']))
 
 <table align="center" border="0" width="100%">
     <tr>
-        <td><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
+        <td>
+            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();">
+             <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_FORM; ?>"></i>
+            </a>
+        </td>
         <td align="right">
-            <input class="button_search_adv" name="imageField" type="submit" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" /><br/>
-            <input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" />
+            <a href="#" onclick="valid_search_form('frmsearch2');$('frmsearch2').submit();">
+                <i class="fa fa-search fa-4x" title="<?php echo _SEARCH; ?>"></i>
+            </a>
         </td>
     </tr>
 </table>
 
 </form>
 <br/>
-<div align="right">
-<!--<input class="button" name="submit" type="button" value="<?php echo _SEARCH;?>" onclick="valid_search_form('frmsearch2');document.getElementById('frmsearch2').submit();"  />-->
- <!--<input class="button" name="clear" type="button" value="<?php echo _CLEAR_SEARCH;?>" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"  />-->
 </div>
- </div>
+
 <script type="text/javascript">
 load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
 <?php if(isset($_REQUEST['init_search']))

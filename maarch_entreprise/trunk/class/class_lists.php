@@ -633,10 +633,17 @@ class lists extends dbquery
                         }
                         
                     } else if ($_REQUEST['filter'] == 'entity') {
+
+                        $_SESSION['filters']['entity_subentities']['VALUE'] = '';
+                        $_SESSION['filters']['entity_subentities']['CLAUSE'] = '';
                     
                        $_SESSION['filters']['entity']['CLAUSE'] = "destination = '".$_SESSION['filters']['entity']['VALUE']."'";
                     
                     } else if ($_REQUEST['filter'] == 'entity_subentities') {
+
+                        $_SESSION['filters']['entity']['VALUE'] = '';
+                        $_SESSION['filters']['entity']['CLAUSE'] = '';
+
                         require_once "modules" . DIRECTORY_SEPARATOR . "entities" . DIRECTORY_SEPARATOR
                             . "class" . DIRECTORY_SEPARATOR . "class_manage_entities.php";
 
@@ -1070,9 +1077,7 @@ class lists extends dbquery
         //Show document icon
         $href = $this->_buildMyLink($this->params['viewDocumentLink'], $resultTheLine, $listKey);
         $return .= '<div align="center"><a href="'.$href.'" target="_blank" title="'
-                ._VIEW_DOC.'"><img src="'.$_SESSION['config']['businessappurl']
-                .'static.php?filename=picto_dld.gif" alt="'._VIEW_DOC
-                .'" border="0"/></a></div>';
+                ._VIEW_DOC.'"><i class="fa fa-download fa-2x" title=' . _VIEW_DOC . '></a></div>';
            
         return $return;
     }
@@ -1084,9 +1089,7 @@ class lists extends dbquery
 
        $href = $this->_buildMyLink($this->params['viewDetailsLink'], $resultTheLine, $listKey);
        $return .= '<div align="center"><a href="javascript://" onClick="javascript:window.top.location=\''
-                .$href.'\'; return false;" title="'._DETAILS.'"><img src="'
-                .$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif" alt="'
-                ._DETAILS.'" border="0"/></a></div>';
+                .$href.'\'; return false;" title="'._DETAILS.'"><i class="fa fa-info-circle fa-2x" title=' . _DETAILS . '></a></div>';
 
         
         return $return;
@@ -1996,7 +1999,7 @@ class lists extends dbquery
                 $start_next = $start + $this->params['linesToShow'];
                 $next = ' <a href="javascript://" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='
-                    .$start_next.'\', \''.$this->divListId.'\', '.$this->modeReturn.'); ">'._NEXT.'</a> >';
+                    .$start_next.'\', \''.$this->divListId.'\', '.$this->modeReturn.');">'._NEXT.'</a> >';
             }
             $toolbar .= '<div class="block" style="height:'.$height.';" align="center" >';
             $toolbar .= '<table width="100%" border="0"><tr>';
@@ -2374,8 +2377,8 @@ class lists extends dbquery
                 $filters .='&nbsp;&nbsp;<a href="javascript://"  title="'._CLEAR_SEARCH.'" onfocus="this.blur()" '
                             .'onclick="javascript:loadList(\''.$this->link
                             .'&filter=reset\', \''.$this->divListId.'\', '
-                            .$this->modeReturn.');"><img src="'.$_SESSION['config']['businessappurl']
-                            .'static.php?filename=reset.gif" alt="'._CLEAR_SEARCH.'" style="vertical-align: middle;"/></a>';
+                            .$this->modeReturn.');">'
+                            .'<i class="fa fa-refresh fa-2x" title="' . _CLEAR_SEARCH . '"></i></a>';
                 $filters .='</form></div>';
             } else {
                 $filters = _NO_CORRESPONDING_FILTERS;
@@ -2409,7 +2412,8 @@ class lists extends dbquery
     
     private function _displayAddButton() {
         $addButton = '';
-        $addButton .= '<tr><td class="price" colspan="'.$this->countTd.'"><span class="add clearfix">';
+        //$addButton .= '<tr><td class="price" colspan="'.$this->countTd.'"><span class="add clearfix">';
+        $addButton .= '<tr><td class="price" colspan="'.$this->countTd.'">';
         if(isset($this->params['addButtonScript']) && !empty($this->params['addButtonScript'])) { //Script
             $addButtonScript = 'onClick="javascript:'.$this->params['addButtonScript'].'"';
             $addButtonLink = 'javascript://';
@@ -2420,7 +2424,9 @@ class lists extends dbquery
             $addButtonLink  = '#';
             //ERROR RETURN
         }
-        $addButton .= '<a href="'.$addButtonLink.'" '.$addButtonScript.'><span>'.$this->params['addButtonLabel'].'</span></a></span>';
+        //$addButton .= '<a href="'.$addButtonLink.'" '.$addButtonScript.'><span>'.$this->params['addButtonLabel'].'</span></a></span>';
+        $addButton .= '<a href="'.$addButtonLink.'" '.$addButtonScript
+            .'><span><i class="fa fa-plus-square fa-3x" title="' . $this->params['addButtonLabel'] . '"></i></span></a>';
         $addButton .= '</td></tr>';
         
         return $addButton;
@@ -2691,8 +2697,23 @@ class lists extends dbquery
             }
         }
         //Style
-        if(isset($actualButton['class']))   { 
-            $icon .= ' class="'.$actualButton['class'].'">';    
+        $showLabel = true;
+        if (isset($actualButton['class']))   { 
+            //$icon .= ' class="'.$actualButton['class'].'">';
+            $icon .= '>';
+            if ($actualButton['class'] == 'change') {
+                $icon .= '<i class="fa fa-edit fa-2x" title="' . _MODIFY . '"></i>';
+                $showLabel = false;
+            } elseif($actualButton['class'] == 'delete') {
+                $icon .= '<i class="fa fa-remove fa-2x" title="' . _DELETE . '"></i>';
+                $showLabel = false;
+            } elseif($actualButton['class'] == 'suspend') {
+                $icon .= '<i class="fa fa-pause fa-2x" title="' . _SUSPEND . '"></i>';
+                $showLabel = false;
+            } elseif($actualButton['class'] == 'authorize') {
+                $icon .= '<i class="fa fa-check fa-2x" title="' . _AUTHORIZE . '"></i>';
+                $showLabel = false;
+            }
         } else { 
             $icon .= '>'; 
         }
@@ -2701,7 +2722,7 @@ class lists extends dbquery
            $icon .= '<img src="'.$actualButton['icon'].'" alt="'.$actualButton['tooltip'].'" border="0"/>'; 
         }
         //Label
-        if(isset($actualButton['label'])) { 
+        if (isset($actualButton['label']) && $showLabel) { 
            $icon .= '&nbsp;'.$actualButton['label']; 
         }
         $icon .= '</a>';
@@ -2766,9 +2787,7 @@ class lists extends dbquery
                             ._TOGGLE.'" id ="toggle" border="0"style="vertical-align: middle;" /></a></div></td>';
                 }
             }
-
-
-
+            
             //If disable or checkbox or radio button
             if ($lineIsDisabled === true && ($this->params['bool_checkBox'] === true|| $this->params['bool_radioButton'] === true)) {
                 $content .= '<td width="1%"><div align="center"><img src="'.$_SESSION['config']['businessappurl']
@@ -2778,20 +2797,12 @@ class lists extends dbquery
                 $content .= '<td width="1%"><div align="center"><input type="checkbox" name="field[]" id="field" class="check" value="'
                     .$keyValue.'" /></div></td>';
             } else if($this->params['bool_radioButton'] === true) {
-                if($_SESSION['stockCheckbox'] != null){
-                $key = in_array($keyValue, $_SESSION['stockCheckbox']);
-                if($key==true){
-                  $content .= '<td width="1%"><div align="center"><input type="Checkbox" checked="yes" name="field[]" id="field" class="check" onclick="stockCheckbox(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=multiLink\','.$keyValue.');" value="'
-                    .$keyValue.'" /></div></td>';  
-                }else{
-
-                    $content .= '<td width="1%"><div align="center"><input type="Checkbox" name="field[]" id="field" class="check" onclick="stockCheckbox(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=multiLink\','.$keyValue.');" value="'
+                $content .= '<td width="1%"><div align="center"><input type="radio" name="field" id="field" class="check" value="'
                     .$keyValue.'" /></div></td>';
-                    }
-                }else{
-                    $content .= '<td width="1%"><div align="center"><input type="Checkbox" name="field[]" id="field" class="check" onclick="stockCheckbox(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=multiLink\','.$keyValue.');" value="'
-                    .$keyValue.'" /></div></td>';
-                }
+            } else {
+                $content .= '<td width="1%"><div align="center"><input type="Checkbox" name="field[]" id="field" class="check" onclick="stockCheckbox(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=multiLink\','.$keyValue.');" value="'
+                .$keyValue.'" /></div></td>';
+            }
 
             }
             
@@ -2799,8 +2810,8 @@ class lists extends dbquery
             if($this->params['bool_showIconDocument']){
                 $href = $this->_buildMyLink($this->params['viewDocumentLink'], $resultTheLine, $listKey);
                 $content .= '<td width="1%"><div align="center"><a href="'.$href.'" target="_blank" title="'
-                    ._VIEW_DOC.'"><img src="'.$_SESSION['config']['businessappurl']
-                    .'static.php?filename=picto_dld.gif" alt="'._VIEW_DOC.'" border="0"/></a></div></td>';
+                    ._VIEW_DOC.'">
+                    <i class="fa fa-download fa-2x" title=' . _VIEW_DOC . '></i></a></div></td>';
             }
             
             //Show the rows (loop into columns)
@@ -2891,7 +2902,7 @@ class lists extends dbquery
                     .$this->countTd.'" style="background-color: white;"><div id="div_'
                     .$keyValue.'" class="more_ressources"></div></td></tr>';
             }
-        }
+        
         $content .= '</tbody>';
         
         return  $content;

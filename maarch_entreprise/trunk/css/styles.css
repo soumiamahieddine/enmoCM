@@ -333,10 +333,10 @@ acronym, abbr {
 
 a.next, a.change, a.suspend, a.delete, a.authorize, a.prev, a.up, a.down, a.view {
     padding-left: 20px;
-    background: transparent url(static.php?filename=puce_prev.gif) 10px center no-repeat;
+    /*background: transparent url(static.php?filename=puce_prev.gif) 10px center no-repeat;*/
+    background: transparent 10px center no-repeat;
     color: #16ADEB;
 }
-
 
 a.up {
     background-image: url(static.php?filename=arrow_up.gif);
@@ -363,7 +363,7 @@ a.change, a.suspend, a.delete, a.authorize, a.up, a.down, a.view {
 }
 
 a.change {
-    background-image: url(static.php?filename=picto_change.gif);
+    /*background-image: url(static.php?filename=picto_change.gif);*/
     padding-left: 25px;
 }
 
@@ -3949,4 +3949,12 @@ table.listing  {
 
 #post #inner_content_contact {
     padding: 0 4px 0px 0px;
+}
+
+
+/*added by lgi*/
+a.actionList {
+    padding-left: 20px;
+    background: transparent 10px center no-repeat;
+    color: #16ADEB;
 }
