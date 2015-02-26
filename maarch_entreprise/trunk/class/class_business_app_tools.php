@@ -844,7 +844,7 @@ class business_app_tools extends dbquery
         $_SESSION['html_templates']['none'] = array(
             'ID'        =>  'none',
             'LABEL'     =>  _DOCUMENTS_LIST,
-            'IMG'       =>  'list.gif',
+            'IMG'       =>  'fa fa-list-alt fa-2x',
             'ENABLED'   =>  'true',
             'PATH'      =>  '',
             'GOTOLIST'  =>  ''

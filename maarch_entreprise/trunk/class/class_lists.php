@@ -826,9 +826,9 @@ class lists extends dbquery
                     
                     //Selected template
                     if ($this->template == $_SESSION['html_templates'][$this->params['templates'][$i]]['ID']) {
-                        $selected = 'class="selectedIcon"'; 
+                        $selected = 'border:2px solid #FBC110'; 
                     } else {
-                        $selected = 'border="0"';
+                        $selected = '';
                     }
                     
                     //Template link
@@ -847,16 +847,16 @@ class lists extends dbquery
 
                         }
                     }
-                    
+
                     //Templates
                     $templates .= '<a href="javascript://" onClick="loadList(\''
-                                .$_SESSION['url_templates'][$this->params['templates'][$i]].'\', \''
-                                .$this->divListId.'\', '.$this->modeReturn.');" title="'
-                                .$_SESSION['html_templates'][$this->params['templates'][$i]]['LABEL'].'">'
-                                .'<img src="'.$_SESSION['config']['businessappurl']
-                                .'static.php?filename='.$_SESSION['html_templates'][$this->params['templates'][$i]]['IMG']
-                                .'" alt="'.$_SESSION['html_templates'][$this->params['templates'][$i]]['LABEL']
-                                .'" style="vertical-align: middle;" '.$selected.'/></a>&nbsp;';
+                        . $_SESSION['url_templates'][$this->params['templates'][$i]].'\', \''
+                        . $this->divListId.'\', '.$this->modeReturn.');" title="'
+                        . $_SESSION['html_templates'][$this->params['templates'][$i]]['LABEL'].'">'
+                        . '<i class="'
+                        . $_SESSION['html_templates'][$this->params['templates'][$i]]['IMG'] . '" title="'
+                        . $_SESSION['html_templates'][$this->params['templates'][$i]]['LABEL'] . '" '
+                        . 'style="vertical-align: middle;' . $selected . '"></i></a>&nbsp;&nbsp;';
                 }
             }
         }

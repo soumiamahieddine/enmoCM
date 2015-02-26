@@ -98,10 +98,10 @@
             <ENABLED>true</ENABLED>
             <GOTOLIST></GOTOLIST>
         </TEMPLATE>
-         <TEMPLATE>
+        <TEMPLATE>
             <ID>documents_list_with_attachments</ID>
             <LABEL>_DOCUMENTS_LIST_WITH_ATTACHMENTS</LABEL>
-            <IMG>extend_list2.gif</IMG>
+            <IMG>fa fa-list-ul fa-2x</IMG>
             <NAME>documents_list_with_attachments</NAME>
             <ORIGIN>apps</ORIGIN>
             <MODULE></MODULE>
@@ -121,7 +121,7 @@
         <TEMPLATE>
             <ID>cases_list</ID>
             <LABEL>_CASES_LIST</LABEL>
-            <IMG>case_list.gif</IMG>
+            <IMG>fa fa-suitcase fa-2x</IMG>
             <NAME>group_cases_for_basket</NAME>
             <ORIGIN>module</ORIGIN>
             <MODULE>cases</MODULE>
@@ -137,7 +137,7 @@
         <TEMPLATE>
             <ID>cases_list_search_adv</ID>
             <LABEL>_CASES_LIST</LABEL>
-            <IMG>case_list.gif</IMG>
+            <IMG>fa fa-suitcase fa-2x</IMG>
             <NAME>group_cases</NAME>
             <ORIGIN>module</ORIGIN>
             <MODULE>cases</MODULE>
@@ -153,7 +153,7 @@
         <TEMPLATE>
             <ID>folder_documents_list</ID>
             <LABEL>_FOLDER_DOCUMENTS_LIST</LABEL>
-            <IMG>list.gif</IMG>
+            <IMG>fa fa-list-ul fa-2x</IMG>
             <NAME>folder_documents_list</NAME>
             <ORIGIN>module</ORIGIN>
             <MODULE>folder</MODULE>
