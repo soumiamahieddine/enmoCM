@@ -3556,7 +3556,8 @@ padding:0;
 #welcome_box_right{
     border: 1px;
     float: right;
-    min-width: 40%;
+    /*min-width: 40%;*/
+    width: 40%;
     margin: 0 10px 0 13px;
     display:inline;
     /*position:absolute;*/
