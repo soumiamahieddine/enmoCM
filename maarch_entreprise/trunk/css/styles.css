@@ -3958,3 +3958,10 @@ a.actionList {
     background: transparent 10px center no-repeat;
     color: #16ADEB;
 }
+
+.nb_res{
+    background: #666;
+    color: white;
+    padding: 3px;
+    border-radius: 7px;  
+}
