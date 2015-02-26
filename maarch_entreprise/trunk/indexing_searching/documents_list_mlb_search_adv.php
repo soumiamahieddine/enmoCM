@@ -194,7 +194,7 @@ if($mode == 'normal') {
     array_push($select[$view],  "res_id as is_labeled", "res_id", "status", "subject", "category_id as category_img", 
                                 "contact_firstname", "contact_lastname", "contact_society", 
                                 "user_lastname", "user_firstname", "dest_user", "type_label", 
-                                "creation_date", "entity_label", "category_id, exp_user_id", "is_multicontacts");
+                                "creation_date", "entity_label", "category_id, exp_user_id", "count_attachment", "is_multicontacts");
     //Cases
     if($core_tools->is_module_loaded("cases") == true) {
         array_push($select[$view], "case_id", "case_label", "case_description");
@@ -471,6 +471,16 @@ if($mode == 'normal') {
                     $tab[$i][$j]['value'] = $my_imgcat;
                     $tab[$i][$j]["value"] = $tab[$i][$j]['value'];
                     $tab[$i][$j]["order"]="category_id";
+                }
+                if($tab[$i][$j][$value]=="count_attachment")
+                {
+                    $tab[$i][$j]["label"]=_ATTACHMENTS;
+                    $tab[$i][$j]["size"]="12";
+                    $tab[$i][$j]["label_align"]="left";
+                    $tab[$i][$j]["align"]="left";
+                    $tab[$i][$j]["valign"]="bottom";
+                    $tab[$i][$j]["show"]=false;
+                    $tab[$i][$j]["order"]='count_attachment';
                 }
                 
                 if($tab[$i][$j][$value]=="contact_firstname")
