@@ -359,7 +359,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                                         . "index.php?display=true&module=notes&page=notes_ajax_content"
                                         . "&mode=add&identifier=".$identifier."&origin=".$origin
                                         . $parameters."')",
-                "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_note.gif&module=notes",
+                "icon"          =>  'pencil',
                 "tooltip"       =>  _ADD_NOTE,
                 "alwaysVisible" =>  true
                 );
