@@ -73,8 +73,7 @@ $_ENV['date_pattern'] = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
 $_ENV['categories'] = array ();
 ///////////////////////////// RM_ARCHIVE ////////////////////////////////////////////////
 $_ENV['categories']['rm_archive'] = array ();
-$_ENV['categories']['rm_archive']['img_cat'] = $_SESSION['config']['businessappurl'] 
-    . 'static.php?filename=cat_doc_incoming.gif';
+$_ENV['categories']['rm_archive']['img_cat'] = '<i class="fa fa-archive fa-2x"></i>';
 $_ENV['categories']['rm_archive']['other_cases'] = array ();
 
 $_ENV['categories']['rm_archive']['originating_agency_entity_id'] = array (

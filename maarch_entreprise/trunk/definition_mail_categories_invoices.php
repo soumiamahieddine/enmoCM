@@ -76,7 +76,7 @@ $_ENV['categories'] = array ();
 
 ///////////////////////////// INCOMING ////////////////////////////////////////////////
 $_ENV['categories']['incoming'] = array ();
-$_ENV['categories']['incoming']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_incoming.gif';
+$_ENV['categories']['incoming']['img_cat'] = '<i class="fa fa-arrow-right fa-2x"></i>';
 $_ENV['categories']['incoming']['other_cases'] = array ();
 $_ENV['categories']['incoming']['priority'] = array (
     'type_form' => 'integer',
@@ -121,7 +121,7 @@ $_ENV['categories']['incoming']['subject'] = array (
 
 ///////////////////////////// OUTGOING ////////////////////////////////////////////////
 $_ENV['categories']['outgoing'] = array ();
-$_ENV['categories']['outgoing']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_outgoing.gif';
+$_ENV['categories']['outgoing']['img_cat'] = '<i class="fa fa-arrow-left fa-2x"></i>';
 $_ENV['categories']['outgoing']['other_cases'] = array ();
 $_ENV['categories']['outgoing']['priority'] = array (
     'type_form' => 'integer',
@@ -226,7 +226,7 @@ $_ENV['categories']['outgoing']['other_cases']['contact'] = array (
 
 ///////////////////////////// INTERNAL ////////////////////////////////////////////////
 $_ENV['categories']['internal'] = array ();
-$_ENV['categories']['internal']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_internal.gif';
+$_ENV['categories']['internal']['img_cat'] = '<i class="fa fa-arrow-down fa-2x"></i>';
 $_ENV['categories']['internal']['other_cases'] = array ();
 $_ENV['categories']['internal']['priority'] = array (
     'type_form' => 'integer',
@@ -320,7 +320,7 @@ $_ENV['categories']['internal']['other_cases']['contact'] = array (
 
 /////////////////////////////FOLDER DOCUMENT////////////////////////////////////////////////
 $_ENV['categories']['folder_document'] = array ();
-$_ENV['categories']['folder_document']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_folder.gif';
+$_ENV['categories']['folder_document']['img_cat'] = '<i class="fa fa-folder fa-2x"></i>';
 $_ENV['categories']['folder_document']['other_cases'] = array ();
 $_ENV['categories']['folder_document']['type_id'] = array (
     'type_form' => 'integer',
@@ -365,7 +365,7 @@ $_ENV['categories']['folder_document']['author'] = array (
 
 /////////////////////////////EMPTY////////////////////////////////////////////////
 $_ENV['categories']['empty'] = array ();
-$_ENV['categories']['empty']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_folder.gif';
+$_ENV['categories']['empty']['img_cat'] = '<i class="fa fa-circle-thin fa-2x"></i>';
 $_ENV['categories']['empty']['other_cases'] = array ();
 $_ENV['categories']['empty']['type_id'] = array (
     'type_form' => 'integer',

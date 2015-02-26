@@ -75,7 +75,7 @@ $_ENV['categories'] = array ();
 
 ///////////////////////////// PURCHASE ////////////////////////////////////////////////
 $_ENV['categories']['purchase'] = array ();
-$_ENV['categories']['purchase']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_purchase.png';
+$_ENV['categories']['purchase']['img_cat'] = '<i class="fa fa-shopping-cart fa-2x"></i>';
 $_ENV['categories']['purchase']['other_cases'] = array ();
 
 $_ENV['categories']['purchase']['type_id'] = array (
@@ -200,7 +200,7 @@ $_ENV['categories']['purchase']['other_cases']['process_limit_date'] = array (
 
 ///////////////////////////// SELL ////////////////////////////////////////////////
 $_ENV['categories']['sell'] = array ();
-$_ENV['categories']['sell']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_sell.png';
+$_ENV['categories']['sell']['img_cat'] = '<i class="fa fa-dollar fa-2x"></i>';
 $_ENV['categories']['sell']['other_cases'] = array ();
 
 $_ENV['categories']['sell']['type_id'] = array (
@@ -325,7 +325,7 @@ $_ENV['categories']['sell']['other_cases']['process_limit_date'] = array (
 
 ///////////////////////////// ENTERPRISE DOCUMENT ////////////////////////////////////////////////
 $_ENV['categories']['enterprise_document'] = array ();
-$_ENV['categories']['enterprise_document']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_enterprise_document.png';
+$_ENV['categories']['enterprise_document']['img_cat'] = '<i class="fa fa-building fa-2x"></i>';
 $_ENV['categories']['enterprise_document']['other_cases'] = array ();
 
 $_ENV['categories']['enterprise_document']['type_id'] = array (
@@ -438,7 +438,7 @@ $_ENV['categories']['enterprise_document']['folder_id'] = array (
 
 ///////////////////////////// HUMAN RESOURCES ////////////////////////////////////////////////
 $_ENV['categories']['human_resources'] = array ();
-$_ENV['categories']['human_resources']['img_cat'] = $_SESSION['config']['businessappurl'] . 'static.php?filename=cat_doc_human_resources.png';
+$_ENV['categories']['human_resources']['img_cat'] = '<i class="fa fa-user fa-2x"></i>';
 $_ENV['categories']['human_resources']['other_cases'] = array ();
 
 $_ENV['categories']['human_resources']['type_id'] = array (
