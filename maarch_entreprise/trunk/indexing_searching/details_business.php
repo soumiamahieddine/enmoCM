@@ -436,7 +436,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                             } else {
                                 echo '-1';
                             }
-                            echo ');" class="back">' .  _BACK . '</a>';
+                            echo ');"><i class="fa fa-backward fa-2x" title="' .  _BACK . '"></i></a>';
                         }
                     }
                     ?>
@@ -455,11 +455,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                         echo $_SESSION['config']['businessappurl'];
                         ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
                         echo $s_id;
-                        ?>" target="_blank"><img alt="<?php echo _VIEW_DOC;?>" src="<?php echo
-                            $_SESSION['config']['businessappurl'];
-                            ?>static.php?filename=picto_dld.gif" border="0" alt="" />&nbsp;<?php
+                        ?>" target="_blank"><i class="fa fa-download fa-2x" title="<?php
                         echo _VIEW_DOC;
-                        ?></a>
+                        ?>"></i></a>
                 </p>
                 </b>&nbsp;
             </div>

@@ -282,7 +282,7 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
                     if (isset($_POST['up_res_id']) && !$_POST['up_res_id']) {
                         if ($_SESSION['indexation'] == false) {
                             ?>
-                            <a href="#" onclick="history.go(-1);" class="back"><?php  echo _BACK; ?></a>
+                            <a href="#" onclick="history.go(-1);" class="back"><i class="fa fa-backward fa-2x" title="' .  _BACK . '"></i></a>
                             <?php
                         }
                     }
@@ -290,11 +290,9 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
                     </p>
                     <p id="viewdoc">
                         <a href="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php  echo $s_id; ?>" target="_blank">
-                        <img alt="<?php echo _VIEW_DOC;?>" src="<?php echo
-                            $_SESSION['config']['businessappurl'];
-                            ?>static.php?filename=picto_dld.gif" border="0" alt="" />&nbsp;<?php
+                        <i class="fa fa-download fa-2x" title="<?php
                         echo _VIEW_DOC;
-                        ?>
+                        ?>"></i>
                         </a> &nbsp;| &nbsp;
                     </p></b>&nbsp;
                 </div>
