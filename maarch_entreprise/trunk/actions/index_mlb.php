@@ -1982,11 +1982,11 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
 
     if ($attach) {
         $idDoc = get_value_fields($formValues, 'res_id');
-        $queryLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES('" . $idDoc . "', '" . $resId . "', '" . $_SESSION['collection_id_choice'] . "')";
-
+        for($i=0;$i<count($_SESSION['stockCheckbox']);$i++){
+        $queryLink = "INSERT INTO res_linked (res_parent, res_child, coll_id) VALUES('" . $_SESSION['stockCheckbox'][$i] . "', '" . $resId . "', '" . $_SESSION['collection_id_choice'] . "')";
         $db->connect();
         $db->query($queryLink);
-
+        }
         $hist2 = new history();
         $hist2->add($table,
            $resId,
