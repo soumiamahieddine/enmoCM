@@ -145,7 +145,7 @@ $paramsTab['tools'] = array();                                                  
 if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching')  {
     $save = array(
             "script"        =>  "createModal(form_txt, 'save_search', '100px', '500px');window.location.href='#top';",
-            "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_save.gif",
+            "icon"          =>  'save',
             "tooltip"       =>  _SAVE_QUERY,
             "disabledRules" =>  count($tab)." == 0"
             );      
@@ -153,7 +153,7 @@ if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching')  {
 }
 $export = array(
         "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
-        "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_export.gif",
+        "icon"          =>  'file-excel-o',
         "tooltip"       =>  _EXPORT_LIST,
         "disabledRules" =>  count($tab)." == 0"
         );

@@ -81,7 +81,7 @@
         <TEMPLATE>
             <ID>documents_list_search_adv</ID>
             <LABEL>_DOCUMENTS_LIST_SEARCH</LABEL>
-            <IMG>extend_list.gif</IMG>
+            <IMG>fa fa-list-ul fa-2x</IMG>
             <NAME>documents_list_search_adv</NAME>
             <ORIGIN>apps</ORIGIN>
             <MODULE></MODULE>
@@ -91,7 +91,7 @@
          <TEMPLATE>
             <ID>documents_list_extend</ID>
             <LABEL>_DOCUMENTS_LIST_EXTEND</LABEL>
-            <IMG>extend_list.gif</IMG>
+            <IMG>fa fa-list-ul fa-2x</IMG>
             <NAME>documents_list_extend</NAME>
             <ORIGIN>apps</ORIGIN>
             <MODULE></MODULE>
@@ -111,7 +111,7 @@
         <TEMPLATE>
             <ID>documents_list_copies</ID>
             <LABEL>_DOCUMENTS_LIST_COPIES</LABEL>
-            <IMG>copy_list.gif</IMG>
+            <IMG>fa fa-list-ul fa-2x</IMG>
             <NAME>documents_list_copies</NAME>
             <ORIGIN>apps</ORIGIN>
             <MODULE></MODULE>
@@ -164,7 +164,7 @@
     <TEMPLATE>
             <ID>documents_business_list</ID>
             <LABEL>_BUSINESS_LIST</LABEL>
-            <IMG>extend_list2.gif</IMG>
+            <IMG>fa fa-list-ul fa-2x</IMG>
             <NAME>documents_business_list</NAME>
             <ORIGIN>apps</ORIGIN>
             <MODULE></MODULE>
@@ -174,7 +174,7 @@
         <TEMPLATE>
             <ID>documents_list_search_adv_business</ID>
             <LABEL>_DOCUMENTS_LIST_SEARCH_BUSINESS</LABEL>
-            <IMG>extend_list.gif</IMG>
+            <IMG>fa fa-list-ul fa-2x</IMG>
             <NAME>documents_list_search_adv_business</NAME>
             <ORIGIN>apps</ORIGIN>
             <MODULE></MODULE>
@@ -184,7 +184,7 @@
         <TEMPLATE>
             <ID>ios_list_extend_with_items</ID>
             <LABEL>_IOS</LABEL>
-            <IMG>extend_list.gif</IMG>
+            <IMG>fa fa-list-ul fa-2x</IMG>
             <NAME>ios_list_extend_with_items</NAME>
             <ORIGIN>apps</ORIGIN>
             <MODULE></MODULE>
@@ -194,7 +194,7 @@
         <TEMPLATE>
             <ID>item_list_extend_new</ID>
             <LABEL>_ITEM</LABEL>
-            <IMG>extend_list.gif</IMG>
+            <IMG>fa fa-list-ul fa-2x</IMG>
             <NAME>item_list_extend_new</NAME>
             <ORIGIN>apps</ORIGIN>
             <MODULE></MODULE>
@@ -204,7 +204,7 @@
         <TEMPLATE>
             <ID>rm_documents_list_extend</ID>
             <LABEL>_ITEMS</LABEL>
-            <IMG>extend_list.gif</IMG>
+            <IMG>fa fa-list-ul fa-2x</IMG>
             <NAME>rm_documents_list_extend</NAME>
             <ORIGIN>apps</ORIGIN>
             <MODULE></MODULE>

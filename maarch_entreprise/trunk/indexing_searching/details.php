@@ -1065,7 +1065,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             <table>
                                 <tr class="col">
                                     <th align="left" class="picto">
-                                        <img src="<?php echo "../../modules/fileplan/img/tool_fileplan.gif"; ?>" title="<?php  echo _FILEPLAN; ?>" alt="<?php  echo _FILEPLAN; ?>"/>
+                                        <i class="fa fa-bookmark fa-2x" title="<?php echo _FILEPLAN; ?>"/>
                                     </th>
                                     <td align="left" width="200px">
                                         <?php  echo _FILEPLAN; ?> :

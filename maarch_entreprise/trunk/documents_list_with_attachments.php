@@ -453,7 +453,7 @@ if ($core_tools->test_service('fileplan', 'fileplan', false)) {
                                         . "&mode=setPosition&origin=basket&coll_id=".$_SESSION['current_basket']['coll_id']
                                         . $parameters."', 'formList', '600px', '510px', '"
                                         . _CHOOSE_ONE_DOC."')",
-                "icon"          =>  $_SESSION['config']['businessappurl']."static.php?module=fileplan&filename=tool_fileplan.gif",
+                "icon"          =>  'bookmark',
                 "tooltip"       =>  _FILEPLAN,
                 "disabledRules" =>  count($tab)." == 0 || ".$selectedTemplate." == 'cases_list_search_adv'"
                 );      
@@ -463,7 +463,7 @@ if ($core_tools->test_service('fileplan', 'fileplan', false)) {
 if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching')  {
     $save = array(
             "script"        =>  "createModal(form_txt, 'save_search', '100px', '500px');window.location.href='#top';",
-            "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_save.gif",
+            "icon"          =>  'save',
             "tooltip"       =>  _SAVE_QUERY,
             "disabledRules" =>  count($tab)." == 0"
             );      
@@ -471,7 +471,7 @@ if (isset($_REQUEST['origin']) && $_REQUEST['origin'] == 'searching')  {
 }
 $export = array(
         "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
-        "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_export.gif",
+        "icon"          =>  'file-excel-o',
         "tooltip"       =>  _EXPORT_LIST,
         "disabledRules" =>  count($tab)." == 0"
         );
@@ -479,7 +479,7 @@ array_push($paramsTab['tools'],$export);
 if ($core_tools->test_service('print_doc_details_from_list', 'apps', false)) {
 	$print = array(
 			"script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=print', '_blank');",
-			"icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_print.gif",
+			"icon"          =>  'print',
 			"tooltip"       =>  _PRINT_LIST,
 			"disabledRules" =>  count($tab)." == 0"
 			);
