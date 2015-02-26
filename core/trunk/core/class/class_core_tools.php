@@ -461,7 +461,7 @@ class core_tools extends functions
         // Trie les données par volume décroissant, edition croissant
         // Ajoute $data en tant que dernier paramètre, pour trier par la clé commune
         array_multisort($label, SORT_ASC, $label, SORT_ASC, $menu);
-        
+
         // Browses the menu items
         for($i=0;$i<count($menu);$i++)
         {
@@ -647,15 +647,9 @@ class core_tools extends functions
                 array_push($arrTmpQuicklaunch, $quicklaunch[$i]);
             }
         }
-        echo '<table  cellpadding="2" width="95%">';
-        echo '<tr>';
+        echo '<div style="width: 85%;margin: auto;">';
         for ($i=0;$i<count($arrTmpQuicklaunch);$i++) {
             if ($arrTmpQuicklaunch[$i]['show'] == true) {
-                if ($i%2) {
-                    //echo 'impair'.$i.'<br>';
-                } else {
-                    echo '<tr>';
-                }
                 $tmp = $arrTmpQuicklaunch[$i]['url'];
                 if (preg_match('/php$/', $tmp)) {
                     $tmp .= "?reinit=true";
@@ -664,15 +658,7 @@ class core_tools extends functions
                 }
                 $tmp = htmlentities($tmp, ENT_COMPAT, 'UTF-8', true); // Encodes
                 ?>
-                <td id="<?php 
-                    echo $arrTmpQuicklaunch[$i]['style'];
-                    ?>" >
-                    <i class="<?php 
-                        echo $arrTmpQuicklaunch[$i]['style'] . ' fa-2x'
-                        ;?>"></i>
-                </td>
-                <td>
-                    <a href="#" onclick="window.open('<?php 
+                <a href="#" style="display: inline-block;width: 45%;float:left;" onclick="window.open('<?php 
                         echo $tmp;
                         ?>', '<?php 
                         if(
@@ -684,37 +670,52 @@ class core_tools extends functions
                             echo '_self';
                         }?>');">
                         <span>
-                            <span><?php 
+                <span style="width:30px;height:30px;display:inline-block;text-align:center;" id="<?php 
+                    echo $arrTmpQuicklaunch[$i]['style'];
+                    ?>" >
+                    <i style="width:30px;height:30px;" class="<?php 
+                        echo $arrTmpQuicklaunch[$i]['style'] . ' fa-2x'
+                        ;?>"></i>
+                </span>
+                <span>
+                       
+                            <?php 
                             echo trim($arrTmpQuicklaunch[$i]['libconst']);
                             ?>
-                            </span>
-                        </span>
-                    </a>
-                </td>
+                    
+                </span>
+                </span>
+                </a>
                 <?php
-                if ($i%2) {
-                    echo '</tr>';
-                }
             } else {
                 //$this->show_array($arrTmpQuicklaunch[$i]);
             }
+            if($i%2){
+                echo '<div style="clear:both;"></div>';
+            }
+            
         }
-        echo '</tr>';
-        echo '<tr>';
+        echo '</div>';
+
+        echo '<div style="clear:both;"></div>';
         // quicklaunch items always displayed
-        echo '<td><i class="fa fa-user fa-2x"></i></td><td>
-            <a href="' . $_SESSION['config']['businessappurl']
-                . 'index.php?page=modify_user&amp;admin=users&amp;reinit=true"><span><span>'
-                . _MY_INFO . '</span></span></a>';
-        echo '</td>';
-        echo '<td><i class="fa fa-power-off fa-2x"></i></td><td>
-            <a href="' . $_SESSION['config']['businessappurl']
+        echo '<div style="width: 85%;margin: auto;">';
+        echo '<a style="display: inline-block;width: 45%;float: left;" href="' . $_SESSION['config']['businessappurl']
+                . 'index.php?page=modify_user&amp;admin=users&amp;reinit=true">';
+        echo '<span>';
+        echo '<span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-user fa-2x"></i></span>';
+        echo '<span>'. _MY_INFO . '</span>';
+        echo '</a>';
+
+        echo '<a style="display: inline-block;width: 45%;float: left;" href="' . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&amp;page=logout&amp;coreurl='
-            . $_SESSION['config']['coreurl'].'&amp;logout=true"><span><span>'
-            . _LOGOUT . '</span></span></a>';
-        echo '</td>';
-        echo '</tr>';
-        echo '</table>';
+            . $_SESSION['config']['coreurl'].'&amp;logout=true">';
+        echo '<span>';
+        echo '<span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-power-off fa-2x"></i></span>';
+        echo '<span>'. _LOGOUT . '</span>';
+        echo '</a>';
+        echo '<div style="clear:both;"></div>';
+        echo '</div>';
     }
 
     /**
