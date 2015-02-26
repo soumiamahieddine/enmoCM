@@ -1124,6 +1124,36 @@ class lists extends dbquery
             }
         }
     }
+
+    private function _tmplt_showActionFA($parameter, $resultTheLine) {
+    //var_dump($parameter);exit;
+        $my_explode= explode ("|", $parameter);
+        
+        if (!$my_explode[1]) {
+            return _WRONG_PARAM_FOR_LOAD_VALUE;
+        } else {
+            if (count($my_explode) >= 4 ) {
+                //Init
+                $actionIsDisabled = false;
+                
+                //Check if action is disabled
+                if (isset($my_explode[4]) && !empty($my_explode[4])) {
+                    $actionIsDisabled = $this->_checkDisabledRules($my_explode[4], $resultTheLine);
+                }
+                //If disabled, return blank
+                if ($actionIsDisabled) {
+                    return '&nbsp;';
+                } else {
+                    //return action icon
+                    return '<a href="javascript://" onClick="'.$my_explode[3]
+                        .'" title="'.$my_explode[1].'"><i class="fa fa-' 
+                        . $my_explode[2] . ' fa-2x" title="' . $my_explode[1] . '"></i></a>';
+                }
+            } else {
+                return _WRONG_PARAM_FOR_LOAD_VALUE;
+            }
+        }
+    }
     
     private function _tmplt_clickOnLine($resultTheLine, $listKey, $lineIsDisabled) {
         
@@ -1249,7 +1279,8 @@ class lists extends dbquery
     {
         $return = '';
         if ($resultTheLine[0]['hasNotes'] || $resultTheLine[1]['hasNotes']) {
-            $return .= '<img src="static.php?filename=modif_note_small.gif&module=notes" style="cursor: pointer;" title="Afficher les notes" onclick="loadNoteList(' . $resultTheLine[0]['value'] . ');" />';
+            //$return .= '<img src="static.php?filename=modif_note_small.gif&module=notes" style="cursor: pointer;" title="Afficher les notes" onclick="loadNoteList(' . $resultTheLine[0]['value'] . ');" />';
+            $return .= '<i class="fa fa-pencil fa-2x" style="cursor: pointer;" title="' . _NOTES . '" onclick="loadNoteList(' . $resultTheLine[0]['value'] . ');"></i>';
         }
         return $return;
     }
@@ -1338,6 +1369,9 @@ class lists extends dbquery
         ##showActionIcon## : show action icon
         } elseif (preg_match("/^showActionIcon\|/", $parameter)) {
             $var = $this->_tmplt_showActionIcon($parameter, $resultTheLine);
+        ##showActionFA## : show action Font Awesome
+        } elseif (preg_match("/^showActionFA\|/", $parameter)) {
+            $var = $this->_tmplt_showActionFA($parameter, $resultTheLine);
         ##clickOnLine## : Action on click under the line
         } elseif (preg_match("/^clickOnLine$/", $parameter)) {
             $var = $this->_tmplt_clickOnLine($resultTheLine, $listKey, $lineIsDisabled);
