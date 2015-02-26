@@ -2818,8 +2818,7 @@ class lists extends dbquery
             if($this->params['bool_showIconDocument']){
                 $href = $this->_buildMyLink($this->params['viewDocumentLink'], $resultTheLine, $listKey);
                 $content .= '<td width="1%"><div align="center"><a href="'.$href.'" target="_blank" title="'
-                    ._VIEW_DOC.'">
-                    <i class="fa fa-download fa-2x" title=' . _VIEW_DOC . '></i></a></div></td>';
+                    ._VIEW_DOC.'"><i class="fa fa-download fa-2x" title=' . _VIEW_DOC . '></i></a></div></td>';
             }
             
             //Show the rows (loop into columns)
