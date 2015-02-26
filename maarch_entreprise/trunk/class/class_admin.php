@@ -73,7 +73,8 @@ class admin extends functions
 				    && $_SESSION['user']['services'][$app_services[$i]['id']]
 				) {
 					?>
-	                <div class="admin_item" id="<?php  echo $app_services[$i]['style'];?>" title="<?php  echo $app_services[$i]['comment'];?>" onclick="window.top.location='<?php  echo $app_services[$i]['servicepage'];?>';">
+	                <div class="admin_item" title="<?php  echo $app_services[$i]['comment'];?>" onclick="window.top.location='<?php  echo $app_services[$i]['servicepage'];?>';">
+	                    <i class="<?php  echo $app_services[$i]['style'];?> fa-4x"></i>
 	                    <div class="sum_margin" <?php echo $debug_style; ?>>
 
 	                            <strong><?php  echo $app_services[$i]['name'];?></strong>
