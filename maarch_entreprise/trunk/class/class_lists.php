@@ -2797,12 +2797,20 @@ class lists extends dbquery
                 $content .= '<td width="1%"><div align="center"><input type="checkbox" name="field[]" id="field" class="check" value="'
                     .$keyValue.'" /></div></td>';
             } else if($this->params['bool_radioButton'] === true) {
-                $content .= '<td width="1%"><div align="center"><input type="radio" name="field" id="field" class="check" value="'
+                if($_SESSION['stockCheckbox'] != null){
+                $key = in_array($keyValue, $_SESSION['stockCheckbox']);
+                if($key==true){
+                  $content .= '<td width="1%"><div align="center"><input type="Checkbox" checked="yes" name="field[]" id="field" class="check" onclick="stockCheckbox(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=multiLink\','.$keyValue.');" value="'
+                    .$keyValue.'" /></div></td>';  
+                }else{
+
+                    $content .= '<td width="1%"><div align="center"><input type="Checkbox" name="field[]" id="field" class="check" onclick="stockCheckbox(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=multiLink\','.$keyValue.');" value="'
                     .$keyValue.'" /></div></td>';
-            } else {
-                $content .= '<td width="1%"><div align="center"><input type="Checkbox" name="field[]" id="field" class="check" onclick="stockCheckbox(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=multiLink\','.$keyValue.');" value="'
-                .$keyValue.'" /></div></td>';
-            }
+                    }
+                }else{
+                    $content .= '<td width="1%"><div align="center"><input type="Checkbox" name="field[]" id="field" class="check" onclick="stockCheckbox(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=multiLink\','.$keyValue.');" value="'
+                    .$keyValue.'" /></div></td>';
+                }
 
             }
             
@@ -2902,7 +2910,7 @@ class lists extends dbquery
                     .$this->countTd.'" style="background-color: white;"><div id="div_'
                     .$keyValue.'" class="more_ressources"></div></td></tr>';
             }
-        
+        }
         $content .= '</tbody>';
         
         return  $content;
