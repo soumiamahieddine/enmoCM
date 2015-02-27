@@ -57,7 +57,7 @@ class LinkController
                     $return .= '<tr>';
                         $return .= '<td>';
                             $return .= '<a href="index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=' . $key . '" target="_blank">';
-                                $return .= '<img src="static.php?filename=picto_dld.gif">';
+                                $return .= '<i class="fa fa-download fa-2x"></i>';
                             $return .= '</a>';
                         $return .= '</td>';
                         $return .= '<td>';
@@ -131,7 +131,7 @@ class LinkController
 
                                   $return .= ');';
                                 $return .= '">';
-                                    $return .= '<img src="static.php?filename=picto_delete.gif" />';
+                                    $return .= '<i class="fa fa-remove fa-2x" style="cursor:pointer;"></i>';
                                 $return .= '</span>';
                             $return .= '</td>';
                         }
