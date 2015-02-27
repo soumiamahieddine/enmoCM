@@ -310,7 +310,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                                         . "index.php?display=true&module=sendmail&page=sendmail_ajax_content"
                                         . "&mode=add&identifier=".$identifier."&origin=".$origin
                                         . $parameters."')",
-                "icon"          =>  $_SESSION['config']['businessappurl']."static.php?filename=tool_sendmail.gif&module=sendmail",
+                "icon"          =>  'envelope',
                 "tooltip"       =>  _NEW_EMAIL,
                 "alwaysVisible" =>  true
                 );
