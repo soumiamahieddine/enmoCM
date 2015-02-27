@@ -115,7 +115,8 @@ class admin extends functions
 					}
 					$nb ++;
 					?>
-					<div class="admin_item" id="<?php  echo $modules_services[$value][$i]['style'];?>" title="<?php  echo 'Module '.$value.' : '.$modules_services[$value][$i]['comment'];?>" onclick="window.top.location='<?php  echo $modules_services[$value][$i]['servicepage'];?>';">
+					<div class="admin_item" title="<?php  echo 'Module '.$value.' : '.$modules_services[$value][$i]['comment'];?>" onclick="window.top.location='<?php  echo $modules_services[$value][$i]['servicepage'];?>';">
+						<i class="<?php  echo $modules_services[$value][$i]['style'];?> fa-4x"></i>
 						<div class="sum_margin" <?php echo $debug_style; ?> >
 
 								<strong><?php  echo $modules_services[$value][$i]['name'];?></strong><!--<br/>
