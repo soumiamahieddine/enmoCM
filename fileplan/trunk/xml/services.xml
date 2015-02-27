@@ -7,7 +7,7 @@
 		<servicepage>index.php?page=fileplan_admin&amp;module=fileplan&amp;load</servicepage>
 		<servicetype>admin</servicetype>
 		<system_service>false</system_service>
-		<style>fileplan_admin</style>
+		<style>fa fa-tag</style>
 		<enabled>true</enabled>
 		<WHEREAMIUSED>
 			<page>admin.php</page>
