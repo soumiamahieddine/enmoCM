@@ -7,7 +7,7 @@
         <servicepage>index.php?page=admin_entities&amp;module=entities</servicepage>
         <servicetype>admin</servicetype>
         <system_service>false</system_service>
-        <style>fa fa-key</style>
+        <style>fa fa-sitemap</style>
         <enabled>true</enabled>
          <WHEREAMIUSED>
          <page>admin.php</page>
@@ -21,7 +21,7 @@
         <servicepage>index.php?page=admin_difflist_types&amp;module=entities</servicepage>
         <servicetype>use</servicetype>
         <system_service>false</system_service>
-        <style>fa fa-key</style>
+        <style>fa fa-sitemap</style>
         <enabled>true</enabled>
          <WHEREAMIUSED>
          <page>admin.php</page>
@@ -35,7 +35,7 @@
         <servicepage>index.php?page=admin_listmodels&amp;module=entities</servicepage>
         <servicetype>use</servicetype>
         <system_service>false</system_service>
-        <style>fa fa-key</style>
+        <style>fa fa-sitemap</style>
         <enabled>true</enabled>
          <WHEREAMIUSED>
          <page>admin.php</page>
