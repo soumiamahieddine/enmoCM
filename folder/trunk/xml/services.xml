@@ -81,7 +81,7 @@
    <servicepage>index.php?page=foldertypes&amp;module=folder</servicepage>
    <servicetype>admin</servicetype>
     <system_service>false</system_service>
-   <style>fold_admin_foldertypes</style>
+   <style>fa fa-briefcase</style>
    <enabled>true</enabled>
  </SERVICE>
   <SERVICE>
