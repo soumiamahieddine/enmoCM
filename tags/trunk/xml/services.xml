@@ -7,7 +7,7 @@
 		<servicepage>index.php?page=manage_tag_list_controller&amp;module=tags</servicepage>
 		<servicetype>admin</servicetype>
 		<system_service>false</system_service>
-		<style>tag_admin</style>
+		<style>fa fa-tags</style>
 		<enabled>true</enabled>
 		<WHEREAMIUSED>
 			<page>admin.php</page>
