@@ -1001,6 +1001,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '</b></span>';
             $frm_str .= '</td>';
         }
+              
+        if ($core_tools->is_module_loaded('entities')) {
+            $frm_str .= '<td>';
+            $frm_str .= '<span class="diff_list_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="hideOtherDiv(\'diff_list_history_div\');new Effect.toggle(\'diff_list_history_div\', \'appear\', {delay:0.2});whatIsTheDivStatus(\'diff_list_history_div\', \'divStatus_diff_list_history_div\');return false;">';
+                $frm_str .= '<span id="divStatus_diff_list_history_div" style="color:#1C99C5;"><<</span>';
+                $frm_str .= '<b>&nbsp;<small>'._DIFF_LIST_HISTORY.'</small></b>';
+            $frm_str .= '</span>';
+            $frm_str .= '</td>';
+        }
         
         //LINKS
         $frm_str .= '<td>';
@@ -1161,6 +1170,18 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . 'frameborder="0" width="100%" height="450px"></iframe>';
             $frm_str .= '<hr />';
             $frm_str .= '</div>';
+        }
+
+        if ($core_tools->is_module_loaded('entities')) {
+            $frm_str .= '<div id="diff_list_history_div" style="display:none">';
+                $frm_str .= '<center><h2>';
+                $frm_str .= _DIFF_LIST_HISTORY;
+                $frm_str .= '</h2></center>';
+                $s_id = $res_id;
+                $return_mode = true;
+                require_once('modules/entities/difflist_history_display.php');
+
+            $frm_str .= '</div>';            
         }
         
         //LINKS

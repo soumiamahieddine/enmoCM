@@ -234,7 +234,7 @@ if (isset($_POST['submit_index_doc'])) {
         ); //pb enchainement avec action redirect*/
         $diff_list->save_listinstance(
                 $_SESSION['details']['diff_list'], 
-                $_SESSION['details']['diff_list']['object_type'],
+                $_SESSION['details']['diff_list']['difflist_type'],
                 $coll_id, 
                 $s_id, 
                 $_SESSION['user']['UserId']
@@ -865,7 +865,23 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                                 echo '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl']
                                     . 'index.php?display=true&module=entities&page=manage_listinstance&origin=details\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" title="'._UPDATE_LIST_DIFF.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._UPDATE_LIST_DIFF.'" />'._UPDATE_LIST_DIFF.'</a>';
                             }
-                            ?>
+                            ?> 
+
+                            <br/> 
+                            <br/> 
+                            <br/> 
+                            <br/>                
+                            <span class="diff_list_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor='pointer';" onclick="new Effect.toggle('diff_list_history_div', 'blind', {delay:0.2});whatIsTheDivStatus('diff_list_history_div', 'divStatus_diff_list_history_div');return false;">
+                                <span id="divStatus_diff_list_history_div" style="color:#1C99C5;"><<</span>
+                                <b>&nbsp;<small><?php  echo _DIFF_LIST_HISTORY; ?></small></b>
+                            </span>
+
+                            <div id="diff_list_history_div" style="display:none">
+
+                                <?php require_once('modules/entities/difflist_history_display.php');?>
+
+                            </div>
+
                         </div>
                     </dd>
                 <?php

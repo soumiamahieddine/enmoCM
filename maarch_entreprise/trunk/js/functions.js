@@ -14,8 +14,8 @@ function whatIsTheDivStatus(theDiv, divStatus)
 
 function hideOtherDiv(theDiv)
 {
-    var DivTable = ["create_contact_div","history_div", "notes_div", "emails_div", "diff_list_div", "versions_div", "links_div", "list_answers_div", "cases_div"];
-    var DivStatusTable = ["divStatus_create_contact_div","divStatus_history_div", "divStatus_notes_div", "divStatus_emails_div", "divStatus_diff_list_div", "divStatus_versions_div", "divStatus_links_div", "divStatus_done_answers_div", "divStatus_cases_div"];
+    var DivTable = ["create_contact_div","history_div", "notes_div", "emails_div", "diff_list_div", "versions_div", "links_div", "list_answers_div", "cases_div", "diff_list_history_div"];
+    var DivStatusTable = ["divStatus_create_contact_div","divStatus_history_div", "divStatus_notes_div", "divStatus_emails_div", "divStatus_diff_list_div", "divStatus_versions_div", "divStatus_links_div", "divStatus_done_answers_div", "divStatus_cases_div", "divStatus_diff_list_history_div"];
 
     for(var i = 0; i < DivTable.length; i++){
         if($(DivTable[i]) && $(DivStatusTable[i]) && DivTable[i] != theDiv && $(DivTable[i]).style.display != 'none'){
@@ -2763,6 +2763,23 @@ function loadNoteList(id)
         onSuccess: function(answer){
             eval("response = "+answer.responseText);
             $('divNoteList_'+id).innerHTML = response.toShow;
+        }
+    });
+}
+
+function loadDiffListHistory(listinstance_history_id)
+{
+    new Effect.toggle('diffListHistory_'+listinstance_history_id, 'appear' , {delay:0.2});
+
+    var path_manage_script = 'index.php?module=entities&page=loadDiffListHistory&display=true';
+
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: { listinstance_history_id : listinstance_history_id},
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            $('divDiffListHistory_'+listinstance_history_id).innerHTML = response.toShow;
         }
     });
 }

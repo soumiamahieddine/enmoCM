@@ -678,6 +678,9 @@ if (!defined('_INDEX_BUSINESS_FILE')) define('_INDEX_BUSINESS_FILE', 'Enregistre
 if (!defined('_FILING')) define('_FILING', 'Typologie');
 
 if (!defined('_CHOOSE_DIFFUSION_LIST')) define('_CHOOSE_DIFFUSION_LIST', 'Choisissez une liste de diffusion');
+if (!defined('_DIFF_LIST_HISTORY')) define('_DIFF_LIST_HISTORY', 'Historique de diffusion');
+if (!defined('_MODIFY_BY')) define('_MODIFY_BY', 'Modifi&eacute; par');
+if (!defined('_DIFFLIST_NEVER_MODIFIED')) define('_DIFFLIST_NEVER_MODIFIED', 'La liste de diffusion n\'a jamais &eacute;t&eacute; modifi&eacute;e');
 
 //BITMASK
 if (!defined('_BITMASK_VALUE_ALREADY_EXIST')) define( '_BITMASK_VALUE_ALREADY_EXIST' , 'Bitmask d&eacute;j&agrave; utilis&eacute; dans un autre type');

@@ -211,5 +211,15 @@
             <ENABLED>true</ENABLED>
             <GOTOLIST></GOTOLIST>
         </TEMPLATE>
+        <TEMPLATE>
+            <ID>history_list_diff</ID>
+            <LABEL>_ITEMS</LABEL>
+            <IMG>extend_list.gif</IMG>
+            <NAME>history_list_diff</NAME>
+            <ORIGIN>apps</ORIGIN>
+            <MODULE></MODULE>
+            <ENABLED>true</ENABLED>
+            <GOTOLIST></GOTOLIST>
+        </TEMPLATE>
     </TEMPLATES>
 </root>

@@ -1376,3 +1376,7 @@ if (!defined('_DOC_NOT_CLOSED')) define('_DOC_NOT_CLOSED', 'This mail is not clo
 
 if (!defined('_SECURITY_MESSAGE')) define('_SECURITY_MESSAGE', 'Security message');
 if (!defined('_SECURITY_MESSAGE_DETAILS')) define('_SECURITY_MESSAGE_DETAILS', 'XSS query not allowed');
+
+if (!defined('_DIFF_LIST_HISTORY')) define('_DIFF_LIST_HISTORY', 'Diffusion history');
+if (!defined('_MODIFY_BY')) define('_MODIFY_BY', 'Modify by');
+if (!defined('_DIFFLIST_NEVER_MODIFIED')) define('_DIFFLIST_NEVER_MODIFIED', 'The diffusion list never changed');
