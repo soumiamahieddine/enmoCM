@@ -7,7 +7,7 @@
    <servicepage>index.php?page=basket&amp;module=basket</servicepage>
    <servicetype>admin</servicetype>
     <system_service>false</system_service>
-   <style>bask_admin_baskets</style>
+   <style>fa fa-inbox</style>
    <enabled>true</enabled>
    <WHEREAMIUSED>
      <page>admin.php</page>
