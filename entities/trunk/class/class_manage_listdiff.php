@@ -338,7 +338,7 @@ class diffusion_list extends dbquery
         $creatorEntity = ""
     ) {
         $oldListInst = $this->get_listinstance($resId, false, $collId);
-        /*echo 'old<br/>';
+/*        echo 'old<br/>';
         var_dump($oldListInst);
         echo 'new<br/>';
         var_dump($diffList);*/
@@ -347,12 +347,78 @@ class diffusion_list extends dbquery
 
         require_once 'core/class/class_history.php';
         $hist = new history();
-        
+
+        $roles = $this->list_difflist_roles();
+
+        $this->query("SELECT listinstance_id FROM listinstance WHERE res_id = " . $resId . " and coll_id = '". $collId . "' and difflist_type = '" . $difflistType."'");
+
+        $diffUser = false;
+        $diffCopyUsers = false;
+        $diffCopyEntities = false;
+
+        foreach($roles as $role_id => $role_label) {
+            if ($this->nb_result() > 0 && (isset($oldListInst[$role_id]) || isset($diffList[$role_id]) )) {
+
+                //compare old and new difflist
+                for($iOld=0; $iOld<count($oldListInst['users']); $iOld++){
+                    foreach($oldListInst['users'][$iOld] as $key => $value){
+                        if ($value != $diffList['users'][$iOld][$key]) {
+                            $diffUser = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!$diffUser && isset($oldListInst[$role_id]['users'])) {
+                    if (count($oldListInst[$role_id]['users']) != count($diffList[$role_id]['users']) ) {
+                        $diffCopyUsers = true;
+                    }
+                    for($iOld=0; $iOld<count($oldListInst[$role_id]['users']); $iOld++){
+                        foreach($oldListInst[$role_id]['users'][$iOld] as $key => $value){
+                            if ($value != $diffList[$role_id]['users'][$iOld][$key]) {
+                                $diffCopyUsers = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                if (!$diffUser && !$diffCopyEntities && isset($oldListInst[$role_id]['entities'])) {
+                    if (count($oldListInst[$role_id]['entities']) != count($diffList[$role_id]['entities']) ) {
+                        $diffCopyEntities = true;
+                    }
+                    for($iOld=0; $iOld<count($oldListInst[$role_id]['entities']); $iOld++){
+                        foreach($oldListInst[$role_id]['entities'][$iOld] as $key => $value){
+                            if ($value != $diffList[$role_id]['entities'][$iOld][$key]) {
+                                $diffCopyEntities = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // check add/remove all copy users
+                if ( (isset($diffList[$role_id]['users']) && !isset($oldListInst[$role_id]['users'])) || (!isset($diffList[$role_id]['users']) && isset($oldListInst[$role_id]['users']))) {
+                    $diffCopyUsers = true;
+                }
+
+                // check add/remove all copy entities
+                if ( (isset($diffList[$role_id]['entities']) && !isset($oldListInst[$role_id]['entities'])) || (!isset($diffList[$role_id]['entities']) && isset($oldListInst[$role_id]['entities']))) {
+                    $diffCopyUsers = true;
+                }
+
+            }
+        }
+
+        if ($diffUser || $diffCopyUsers || $diffCopyEntities) {
+            $this->save_listinstance_history($collId, $resId, $difflistType);
+        }
+
         # Delete previous listinstance
         $this->query(
             "DELETE FROM " . ENT_LISTINSTANCE
             . " WHERE coll_id = '" . $collId . "'"
-                . " AND res_id = " . $resId
+                . " AND res_id = " . $resId . " AND difflist_type = '". $difflistType."'"
         );
         
         $roles = $this->list_difflist_roles();
@@ -438,9 +504,9 @@ class diffusion_list extends dbquery
                 }
                 
                 $this->query(
-                    "insert into " . ENT_LISTINSTANCE
+                    "INSERT INTO " . ENT_LISTINSTANCE
                         . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type) "
-                    . "values ("
+                    . "VALUES ("
                         . "'" . $collId . "', "
                         . $resId . ", "
                         . "'DOC', "
@@ -470,6 +536,38 @@ class diffusion_list extends dbquery
                     );
                 }
             }
+        }
+    }
+
+    function save_listinstance_history($coll_id, $res_id, $difflistType){
+
+        $dbListinstance = new dbquery();
+        $dbListinstance->connect();
+
+        $this->query("INSERT INTO listinstance_history (coll_id, res_id, updated_by_user, updated_date) VALUES ('" . $coll_id . "', " . $res_id . ", '".$_SESSION['user']['UserId']."', current_timestamp)");
+        $listinstance_history_id = $this->last_insert_id('listinstance_history_id_seq'); 
+
+        $this->query("SELECT * FROM listinstance WHERE res_id = " . $res_id . " and coll_id = '". $coll_id . "' and difflist_type = '" . $difflistType."'");
+        // $this->show();
+        while ($resListinstance = $this->fetch_object()){
+            $dbListinstance->query(
+                "INSERT INTO listinstance_history_details 
+                    (listinstance_history_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type) "
+                . "VALUES ('".$listinstance_history_id."',"
+                    . "'" . $resListinstance->coll_id . "', "
+                    . $res_id . ", "
+                    . "'DOC', "
+                    . $resListinstance->sequence . ", "
+                    . "'" . $resListinstance->item_id . "', " 
+                    . "'".$resListinstance->item_type."' , "
+                    . "'".$resListinstance->item_mode."', "
+                    . "'" . $resListinstance->added_by_user . "', "
+                    . "'" . $resListinstance->added_by_entity . "', "
+                    . "'" . $resListinstance->visible . "',"
+                    . $resListinstance->viewed. ", "
+                    . "'" . $resListinstance->difflist_type . "'"
+                . " )"
+            );
         }
     }
     
