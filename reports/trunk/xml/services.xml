@@ -7,7 +7,7 @@
 		<servicepage>index.php?page=admin_reports&amp;module=reports</servicepage>
 		<servicetype>admin</servicetype>
 		<system_service>false</system_service>
-		<style>admin_reports</style>
+		<style>fa fa-area-chart</style>
 		<enabled>true</enabled>
 		<WHEREAMIUSED>
 			<page>admin.php</page>
