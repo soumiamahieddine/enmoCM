@@ -7,7 +7,7 @@
    <servicepage>index.php?page=templates_management_controler&amp;module=templates</servicepage>
    <servicetype>admin</servicetype>
    <system_service>false</system_service>
-   <style>temp_admin_templates</style>
+   <style>fa fa-file-text-o</style>
    <enabled>true</enabled>
    <WHEREAMIUSED>
      <page>admin.php</page>
