@@ -3488,6 +3488,54 @@ CREATE TABLE user_baskets_secondary
   CONSTRAINT user_baskets_secondary_pkey PRIMARY KEY (system_id)
 );
 
+DROP SEQUENCE IF EXISTS listinstance_history_id_seq;
+CREATE SEQUENCE listinstance_history_id_seq
+INCREMENT 1
+MINVALUE 1
+MAXVALUE 9223372036854775807
+START 1
+CACHE 1;
+
+DROP TABLE IF EXISTS listinstance_history;
+CREATE TABLE listinstance_history
+(
+listinstance_history_id bigint NOT NULL DEFAULT nextval('listinstance_history_id_seq'::regclass),
+coll_id character varying(50) NOT NULL,
+res_id bigint NOT NULL,
+updated_by_user character varying(128) NOT NULL,
+updated_date timestamp without time zone NOT NULL,
+CONSTRAINT listinstance_history_pkey PRIMARY KEY (listinstance_history_id)
+)
+WITH ( OIDS=FALSE );
+
+DROP SEQUENCE IF EXISTS listinstance_history_details_id_seq;
+CREATE SEQUENCE listinstance_history_details_id_seq
+INCREMENT 1
+MINVALUE 1
+MAXVALUE 9223372036854775807
+START 1
+CACHE 1;
+
+DROP TABLE IF EXISTS listinstance_history_details;
+CREATE TABLE listinstance_history_details
+(
+listinstance_history_details_id bigint NOT NULL DEFAULT nextval('listinstance_history_details_id_seq'::regclass),
+listinstance_history_id bigint NOT NULL,
+coll_id character varying(50) NOT NULL,
+res_id bigint NOT NULL,
+listinstance_type character varying(50) DEFAULT 'DOC'::character varying,
+sequence bigint NOT NULL,
+item_id character varying(128) NOT NULL,
+item_type character varying(255) NOT NULL,
+item_mode character varying(50) NOT NULL,
+added_by_user character varying(128) NOT NULL,
+added_by_entity character varying(50) NOT NULL,
+visible character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
+viewed bigint,
+difflist_type character varying(50),
+CONSTRAINT listinstance_history_details_pkey PRIMARY KEY (listinstance_history_details_id)
+) WITH ( OIDS=FALSE );
+
 
 --VIEWS
 --view for demo
