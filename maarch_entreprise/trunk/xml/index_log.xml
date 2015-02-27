@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+h<?xml version="1.0" encoding="utf-8"?>
 <ROOT>  <!-- If id are numbers, always start with 1, never with 0 -->
 <!--
 <INDEX>
     <column>custom_t1</column>
     <label>index metier 1</label>
     <type>string</type>
-    <img>plus.png</img>
+    <img>arrow-right</img>
 </INDEX>
     <INDEX>
         <column>custom_t2</column>

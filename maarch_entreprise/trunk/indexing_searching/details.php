@@ -2,7 +2,7 @@
 
 
 /*
-*   Copyright 2008-2012 Maarch
+*   Copyright 2008-2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -330,9 +330,7 @@ if (empty($_SESSION['error']) || $_SESSION['indexation']) {
 ?>
 <div id="details_div" style="display:block;">
 <h1 class="titdetail">
-    <img src="<?php
-        echo $_SESSION['config']['businessappurl'];
-        ?>static.php?filename=picto_detail_b.gif" alt="" /><?php
+    <i class="fa fa-info-circle fa-2x"></i><?php
         echo _DETAILS . " : " . _DOC . ' ' . strtolower(_NUM);
         ?><?php
         echo $s_id;
@@ -575,21 +573,21 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 										{
 											echo "<a href='".$_SESSION['config']['businessappurl']."index.php?page=show_folder&module=folder&id=".$folder_id."'>";
 											?>
-											<img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  /></a>
+											<i class="fa fa-<?php echo $data[$key]['img'];?> fa-2x" title="<?php echo $data[$key]['label'];?>"></i>
+                                            </a>
 											<?php
 										} else if($key == 'is_multicontacts'){
 											?>
 											
-												<img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  												
-														onclick = "previsualiseAdminRead(event, <?php echo $frameContacts; ?>);" style="cursor: pointer;"
-												/>
+												<i class="fa fa-<?php echo $data[$key]['img'];?> fa-2x" title="<?php echo $data[$key]['label'];?>"
+													onclick = "previsualiseAdminRead(event, <?php echo $frameContacts; ?>);" style="cursor: pointer;"></i>
 											</a>
 											<?php
 										}
 										else
 										{
 											?>
-											<img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  /></a>
+                                            <i class="fa fa-<?php echo $data[$key]['img'];?> fa-2x" title="<?php echo $data[$key]['label'];?>"></i>
 											<?php
 										}
 										?>
@@ -809,7 +807,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         <!--</tr>
                         <tr class="col">-->
                             <th align="left" class="picto">
-                                <img alt="<?php echo _CHRONO_NUMBER; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=chrono.gif" />
+                                <i class="fa fa-compass fa-2x" title="<?php echo _CHRONO_NUMBER; ?>" ></i>
                             </th>
                             <td align="left" width="200px">
                                 <?php  echo _CHRONO_NUMBER; ?> :
@@ -820,7 +818,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         </tr>
                         <tr class="col">
                             <th align="left" class="picto">
-                                <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?module=entities&filename=manage_entities_b_small.gif" title="<?php echo _INITIATOR; ?>" alt="<?php  echo _INITIATOR; ?>"/>
+                                <i class="fa fa-sitemap fa-2x" title="<?php echo _INITIATOR; ?>" ></i>
                             </th>
                             <td align="left" width="200px">
                                 <?php  echo _INITIATOR; ?> :
@@ -875,7 +873,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     {
                                         //$detailsExport .= "<img alt='".$indexes[$key]['label']."' title='".$indexes[$key]['label']."' src='".$indexes[$key]['img']."'  />";
                                         ?>
-                                        <img alt="<?php echo $indexes[$key]['label'];?>" title="<?php echo $indexes[$key]['label'];?>" src="<?php echo $indexes[$key]['img'];?>"  /></a>
+                                        <i class="fa fa-<?php echo $indexes[$key]['img'];?> fa-2x" title="<?php echo $indexes[$key]['label'];?>" ></i>
                                         <?php
                                     }
                                     $detailsExport .= "</th>";
@@ -943,53 +941,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         <?php  } ?>
                     </div>
                     <br/>
-
-                    <!--<h2>
-                    <span class="date">
-                        <b><?php  echo _FILE_PROPERTIES;?></b>
-                    </span>
-                    </h2>
-                    <br/>
-
-                    <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
-                        <tr>
-                            <th align="left" class="picto">
-                                <img alt="<?php echo _TYPIST; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif" />
-                            </th>
-                            <td align="left" width="200px"><?php  echo _TYPIST; ?> :</td>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $typist; ?>"  /></td>
-                            <th align="left" class="picto">
-                                <img alt="<?php echo _SIZE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=weight.gif" />
-                            </th>
-                            <td align="left" width="200px"><?php  echo _SIZE; ?> :</td>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $filesize." "._BYTES." ( ".round($filesize/1024,2)."K )"; ?>" /></td>
-                        </tr>
-                        <tr class="col">
-                            <th align="left" class="picto">
-                                <img alt="<?php echo _FORMAT; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=mini_type.gif" />
-                            </th>
-                            <td align="left"><?php  echo _FORMAT; ?> :</td>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $format; ?>" size="40"  /></td>
-                            <th align="left" class="picto">
-                                <img alt="<?php echo _CREATION_DATE; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=small_calend.gif" />
-                            </th>
-                            <td align="left"><?php  echo _CREATION_DATE; ?> :</td>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $func->format_date_db($creation_date, false); ?>"/></td>
-                        </tr>
-                        <tr>
-                            <th align="left" class="picto">
-                                <img alt="<?php echo _MD5; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=md5.gif" />
-                            </th>
-                            <td align="left"><?php  echo _MD5; ?> :</td>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $fingerprint; ?>"  title="<?php  echo $fingerprint; ?>" alt="<?php  echo $fingerprint; ?>" /></td>
-
-                            <th align="left" class="picto">
-                                <img alt="<?php echo _WORK_BATCH; ?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=lot.gif" />
-                            </th>
-                            <td align="left"><?php  echo _WORK_BATCH; ?> :</td>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $work_batch; ?>" title="<?php  echo $work_batch; ?>" alt="<?php  echo $work_batch; ?>" /></td>
-                        </tr>
-                    </table>-->
                     <br/>
                     <div align="center">
                         <?php if ($printDetails) {
@@ -1507,9 +1458,9 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
                             echo $s_id;
                             ?>&original" target="_blank">
-                            <img alt="<?php echo _VIEW_ORIGINAL;?>" src="<?php echo
-                                    $_SESSION['config']['businessappurl'];
-                                    ?>static.php?filename=picto_dld.gif" border="0" alt="" />&nbsp;<?php
+                            <i class="fa fa-download fa-2x" title="<?php
+                                echo _VIEW_ORIGINAL;
+                                ?>"></i>&nbsp;<?php
                             echo _VIEW_ORIGINAL;
                             ?></a> &nbsp;|&nbsp;
                         <?php
@@ -1573,7 +1524,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 'desc'
                             );
                             if ($nbLinkDesc > 0) {
-                                $Links .= '<img src="static.php?filename=cat_doc_incoming.gif" />';
+                                $Links .= '<i class="fa fa-long-arrow-right fa-2x"></i>';
                                 $Links .= $Class_LinkController->formatMap(
                                     $Class_LinkController->getMap(
                                         $_SESSION['doc_id'],
@@ -1591,7 +1542,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 'asc'
                             );
                             if ($nbLinkAsc > 0) {
-                                $Links .= '<img src="static.php?filename=cat_doc_outgoing.gif" />';
+                                $Links .= '<i class="fa fa-long-arrow-left fa-2x"></i>';
                                 $Links .= $Class_LinkController->formatMap(
                                     $Class_LinkController->getMap(
                                         $_SESSION['doc_id'],

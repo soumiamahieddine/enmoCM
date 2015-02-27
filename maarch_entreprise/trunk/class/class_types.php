@@ -805,8 +805,7 @@ class types extends dbquery
                     'column' => (string) $item->column,
                     'label' => $label,
                     'type' => (string) $item->type,
-                    'img' => $_SESSION['config']['businessappurl']
-                    . 'static.php?filename=' . $img,
+                    'img' => $img,
                     'type_field' => 'select',
                     'values' => $values,
                     'default_value' => $default
@@ -843,8 +842,7 @@ class types extends dbquery
                     'column' => (string) $item->column,
                     'label' => $label,
                     'type' => (string) $item->type,
-                    'img' => $_SESSION['config']['businessappurl']
-                    . 'static.php?filename=' . $img,
+                    'img' => $img,
                     'type_field' => 'select',
                     'values' => $values,
                     'default_value' => $default,
@@ -854,8 +852,7 @@ class types extends dbquery
                     'column' => (string) $item->column,
                     'label' => $label,
                     'type' => (string) $item->type,
-                    'img' => $_SESSION['config']['businessappurl']
-                    . 'static.php?filename=' . $img,
+                    'img' => $img,
                     'type_field' => 'input',
                     'default_value' => $default,
                 );
@@ -966,8 +963,7 @@ class types extends dbquery
                     $indexes[$col] = array(
                         'label' => $label,
                         'type' => (string) $item->type,
-                        'img' => $_SESSION['config']['businessappurl']
-                        . 'static.php?filename=' . $img,
+                        'img' => $img,
                         'type_field' => 'select',
                         'values' => $values,
                         'default_value' => $default,
@@ -1004,8 +1000,7 @@ class types extends dbquery
                     $indexes[$col] = array(
                         'label' => $label,
                         'type' => (string) $item->type,
-                        'img' => $_SESSION['config']['businessappurl']
-                        . 'static.php?filename=' . $img,
+                        'img' => $img,
                         'type_field' => 'select',
                         'values' => $values,
                         'default_value' => $default,
@@ -1015,8 +1010,7 @@ class types extends dbquery
                     $indexes[$col] = array(
                         'label' => $label,
                         'type' => (string) $item->type,
-                        'img' => $_SESSION['config']['businessappurl']
-                        . 'static.php?filename=' . $img,
+                        'img' => $img,
                         'type_field' => 'input',
                         'default_value' => $default,
 						'origin' => 'document'

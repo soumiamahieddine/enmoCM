@@ -2,7 +2,7 @@
 
 
 /*
-*   Copyright 2008-2013 Maarch
+*   Copyright 2008-2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -294,9 +294,7 @@ if (empty($_SESSION['error']) || $_SESSION['indexation']) {
 <!--<div id="details_div" style="display:none;">-->
 <div id="details_div">
 <h1 class="titdetail">
-    <img src="<?php
-        echo $_SESSION['config']['businessappurl'];
-        ?>static.php?filename=picto_detail_b.gif" alt="" /><?php
+    <i class="fa fa-info-circle fa-2x"></i><?php
         echo _DETAILS . " : " . _DOC . ' ' . strtolower(_NUM);
         ?><?php
         echo $s_id;
@@ -509,13 +507,14 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                                     {
                                         echo "<a href='".$_SESSION['config']['businessappurl']."index.php?page=show_folder&module=folder&id=".$folder_id."'>";
                                         ?>
-                                        <img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  /></a>
+                                        <i class="fa fa-<?php echo $data[$key]['img'];?> fa-2x" title="<?php echo $data[$key]['label'];?>" ></i></a>
                                         <?php
                                     }
                                     else
                                     {
                                         ?>
-                                        <img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  /></a>
+                                        <!--<img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  />-->
+                                        <i class="fa fa-<?php echo $data[$key]['img'];?> fa-2x" title="<?php echo $data[$key]['label'];?>" ></i>
                                         <?php
                                     }
                                     ?>
@@ -684,7 +683,18 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                         <!--</tr>
                         <tr class="col">-->
                             <th align="left" class="picto">
-                                <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?module=entities&filename=manage_entities_b_small.gif" title="<?php echo _INITIATOR; ?>" alt="<?php  echo _INITIATOR; ?>"/>
+                                <i class="fa fa-compass fa-2x" title="<?php echo _CHRONO_NUMBER; ?>" ></i>
+                            </th>
+                            <td align="left" width="200px">
+                                <?php  echo _CHRONO_NUMBER; ?> :
+                            </td>
+                            <td>
+                                <input type="text" class="readonly" readonly="readonly" value="<?php  echo $chrono_number; ?>" size="40" title="<?php  echo $chrono_number; ?>" alt="<?php  echo $chrono_number; ?>" />
+                            </td>
+                        </tr>
+                        <tr class="col">
+                            <th align="left" class="picto">
+                                <i class="fa fa-sitemap fa-2x" title="<?php echo _INITIATOR; ?>" ></i>
                             </th>
                             <td align="left" width="200px">
                                 <?php  echo _INITIATOR; ?> :
@@ -722,7 +732,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                                     if (isset($indexes[$key]['img']))
                                     {
                                         ?>
-                                        <img alt="<?php echo $indexes[$key]['label'];?>" title="<?php echo $indexes[$key]['label'];?>" src="<?php echo $indexes[$key]['img'];?>"  /></a>
+					                    <i class="fa fa-<?php echo $indexes[$key]['img'];?> fa-2x" title="<?php echo $indexes[$key]['label'];?>" ></i>
                                         <?php
                                     }
                                     ?>

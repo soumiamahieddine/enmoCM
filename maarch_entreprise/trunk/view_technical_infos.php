@@ -120,12 +120,14 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
         <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
             <tr>
                 <th align="left" class="picto">
-                    <img alt="<?php echo _TYPIST;?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_users_entities_b_small.gif" />
+                    <i class="fa fa-user fa-2x" title="<?php echo _TYPIST;?>"></i>
                 </th>
                 <td align="left" width="200px"><?php echo _TYPIST;?> :</td>
-                <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $typist;?>"  /></td>
+                <td>
+                    <input type="text" class="readonly" readonly="readonly" value="<?php echo $typist;?>"  />
+                </td>
                 <th align="left" class="picto">
-                    <img alt="<?php echo _SIZE;?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=weight.gif" />
+                    <i class="fa fa-square fa-2x" title="<?php echo _SIZE;?>"></i>
                 </th>
                 <td align="left" width="200px"><?php echo _SIZE;?> :</td>
                 <?php
@@ -138,25 +140,25 @@ if ($coreTools->test_service('view_technical_infos', 'apps', false)) {
             </tr>
             <tr class="col">
                 <th align="left" class="picto">
-                    <img alt="<?php echo _FORMAT;?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=mini_type.gif" />
+                    <i class="fa fa-file-image-o fa-2x" title="<?php echo _FORMAT;?>"></i>
                 </th>
                 <td align="left"><?php echo _FORMAT;?> :</td>
                 <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $format;?>" size="40"  /></td>
                 <th align="left" class="picto">
-                    <img alt="<?php echo _CREATION_DATE;?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=small_calend.gif" />
+                    <i class="fa fa-calendar fa-2x" title="<?php echo _CREATION_DATE;?>"></i>
                 </th>
                 <td align="left"><?php echo _CREATION_DATE;?> :</td>
                 <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $func->format_date_db($creationDate, false);?>"/></td>
             </tr>
             <tr>
                 <th align="left" class="picto">
-                    <img alt="<?php echo _FINGERPRINT;?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=md5.gif" />
+                    <i class="fa fa-lock fa-2x" title="<?php echo _FINGERPRINT;?>"></i>
                 </th>
                 <td align="left"><?php echo _FINGERPRINT;?> :</td>
                 <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $fingerprint;?>"  title="<?php echo $fingerprint;?>" alt="<?php echo $fingerprint;?>" /></td>
 
                 <th align="left" class="picto">
-                    <img alt="<?php echo _WORK_BATCH;?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=lot.gif" />
+                    <i class="fa fa-gears fa-2x" title="<?php echo _WORK_BATCH;?>"></i>
                 </th>
                 <td align="left"><?php echo _WORK_BATCH;?> :</td>
                 <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $workBatch;?>" title="<?php echo $workBatch;?>" alt="<?php echo $workBatch;?>" /></td>

@@ -317,7 +317,9 @@ function del_query_confirm()
 -->
 </script>
 
-<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_search_b.gif" alt="" /> <?php echo _ADV_SEARCH_BUSINESS; ?></h1>
+<h1>
+    <i class="fa fa-search fa-2x"></i>  <?php echo _ADV_SEARCH_BUSINESS; ?>
+</h1>
 <div id="inner_content">
 
 <?php 
@@ -388,11 +390,11 @@ if (isset($_REQUEST['nodetails'])) {
                     <table border="0" width="100%">
                         <tr>
                             <td style="width:30px;align:center;">
-                                <img src="<?php 
+                                <!--<img src="<?php 
                                         echo $_SESSION['config']['businessappurl'] ;
                                         ?>static.php?filename=manage_baskets_off.gif&module=basket" alt="<?php 
                                         echo  _BASKET;
-                                    ?>"/>
+                                    ?>"/>-->
                             </td>
                             <td width="70%">
                                 <label for="baskets" class="bold" ><?php echo _SPREAD_SEARCH_TO_BASKETS;?>:</label>
@@ -488,11 +490,11 @@ if (isset($_REQUEST['nodetails'])) {
                 </tr>
                 <tr>
                     <td style="width:30px;align:center;">
-                        <img src="<?php 
+                        <!--<img src="<?php 
                             echo $_SESSION['config']['businessappurl'] ;
                             ?>static.php?filename=subject.png" alt="<?php 
                             echo  _SUBJECT;
-                        ?>"/>
+                        ?>"/>-->
                     </td>
                     <td width="70%"><label for="subject" class="bold"><?php echo _SUBJECT;?>:</label>
                         <input type="text" name="subject" id="subject" <?php echo $size; ?>  />
@@ -502,11 +504,11 @@ if (isset($_REQUEST['nodetails'])) {
                 </tr>
                 <tr>
                     <td style="width:30px;align:center;">
-                        <img src="<?php 
+                        <!--<img src="<?php 
                             echo $_SESSION['config']['businessappurl'] ;
                             ?>static.php?filename=identifier.png" alt="<?php 
                             echo  _IDENTIFIER;
-                        ?>"/>
+                        ?>"/>-->
                     </td>
                     <td width="70%"><label for="identifier" class="bold"><?php echo _IDENTIFIER;?>:</label>
                         <input type="text" name="identifier" id="identifier" <?php echo $size; ?>  />
@@ -516,11 +518,11 @@ if (isset($_REQUEST['nodetails'])) {
                 </tr>
                 <tr id="totalSumMin">
                     <td style="width:30px;align:center;">
-                        <img src="<?php 
+                        <!--<img src="<?php 
                                 echo $_SESSION['config']['businessappurl'] ;
                                 ?>static.php?filename=amount.png" alt="<?php 
                                 echo  _TOTAL_SUM;
-                            ?>"/>
+                            ?>"/>-->
                     </td>
                     <td width="70%"><label for="total_sum_min" class="bold"><?php echo _TOTAL_SUM_MIN;?>:</label>
                         <input type="text" name="total_sum_min" id="total_sum_min" <?php echo $size; ?>  />
@@ -530,11 +532,11 @@ if (isset($_REQUEST['nodetails'])) {
                 </tr>
                 <tr id="totalSumMax">
                     <td style="width:30px;align:center;">
-                        <img src="<?php 
+                        <!--<img src="<?php 
                                 echo $_SESSION['config']['businessappurl'] ;
                                 ?>static.php?filename=amount.png" alt="<?php 
                                 echo  _TOTAL_SUM;
-                            ?>"/>
+                            ?>"/>-->
                     </td>
                     <td width="70%"><label for="total_sum_max" class="bold"><?php echo _TOTAL_SUM_MAX;?>:</label>
                         <input type="text" name="total_sum_max" id="total_sum_max" <?php echo $size; ?>  />
@@ -545,7 +547,7 @@ if (isset($_REQUEST['nodetails'])) {
                 <tr>
                     <td style="width:30px;align:center;">
                         <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=fulltext_search_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=300,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');">
-                            <img src = "<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_search.gif" alt="<?php echo _HELP_FULLTEXT_SEARCH; ?>" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>" /></a>
+                            <!--<img src = "<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_search.gif" alt="<?php echo _HELP_FULLTEXT_SEARCH; ?>" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>" /></a>-->
                     </td>
                     <td width="70%"><label for="fulltext" class="bold"><?php echo _FULLTEXT;?>:</label>
                         <input type="text" name="fulltext" id="fulltext" <?php echo $size; ?>  />
@@ -575,11 +577,11 @@ if (isset($_REQUEST['nodetails'])) {
  <table border = "0" width="100%">
     <tr>
         <td style="width:30px;align:center;">
-            <img src="<?php 
+            <!--<img src="<?php 
                 echo $_SESSION['config']['businessappurl'] ;
                 ?>static.php?filename=picto_add_b.gif" alt="<?php 
                 echo  _ADD_PARAMETERS;
-            ?>"/>
+            ?>"/>-->
         </td>
         <td width="70%">
             <label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
@@ -631,58 +633,58 @@ function changeCategory(catId)
     if (catId == 'purchase') {
         $('totalSumMin').style.display = '';
         $('totalSumMax').style.display = '';
-        $('imgCat').innerHTML = '<img src="<?php 
+        $('imgCat').innerHTML = '<!--<img src="<?php 
             echo $_SESSION['config']['businessappurl'] ;
             ?>static.php?filename=cat_doc_purchase.png" alt="<?php 
             echo  _PURCHASE;
-        ?>"/>';
-        $('imgContact').innerHTML = '<img src="<?php 
+        ?>"/>-->';
+        $('imgContact').innerHTML = '<!--<img src="<?php 
             echo $_SESSION['config']['businessappurl'] ;
             ?>static.php?filename=supplier.png" alt="<?php 
             echo  _SUPPLIER;
-        ?>"/>';
+        ?>"/>-->';
         $('labelContact').innerHTML = '<?php echo  _SUPPLIER;?>';
     } else if (catId == 'sell') {
         $('totalSumMin').style.display = '';
         $('totalSumMax').style.display = '';
-        $('imgCat').innerHTML = '<img src="<?php 
+        $('imgCat').innerHTML = '<!--<img src="<?php 
             echo $_SESSION['config']['businessappurl'] ;
             ?>static.php?filename=cat_doc_sell.png" alt="<?php 
             echo  _SELL;
-        ?>"/>';
-        $('imgContact').innerHTML = '<img src="<?php 
+        ?>"/>-->';
+        $('imgContact').innerHTML = '<!--<img src="<?php 
             echo $_SESSION['config']['businessappurl'] ;
             ?>static.php?filename=purchaser.png" alt="<?php 
             echo  _PURCHASER;
-        ?>"/>';
+        ?>"/>-->';
         $('labelContact').innerHTML = '<?php echo  _PURCHASER;?>';
     } else if (catId == 'enterprise_document') {
         $('totalSumMin').style.display = 'none';
         $('totalSumMax').style.display = 'none';
-        $('imgCat').innerHTML = '<img src="<?php 
+        $('imgCat').innerHTML = '<!--<img src="<?php 
             echo $_SESSION['config']['businessappurl'] ;
             ?>static.php?filename=cat_doc_enterprise_document.png" alt="<?php 
             echo  _ENTERPRISE_DOCUMENT;
-        ?>"/>';
-        $('imgContact').innerHTML = '<img src="<?php 
+        ?>"/>-->';
+        $('imgContact').innerHTML = '<!--<img src="<?php 
             echo $_SESSION['config']['businessappurl'] ;
             ?>static.php?filename=my_contacts_off.gif" alt="<?php 
             echo  _CONTACT;
-        ?>"/>';
+        ?>"/>-->';
         $('labelContact').innerHTML = '<?php echo  _CONTACT;?>';
     } else if (catId == 'human_resources') {
         $('totalSumMin').style.display = 'none';
         $('totalSumMax').style.display = 'none';
-        $('imgCat').innerHTML = '<img src="<?php 
+        $('imgCat').innerHTML = '<!--<img src="<?php 
             echo $_SESSION['config']['businessappurl'] ;
             ?>static.php?filename=cat_doc_human_resources.png" alt="<?php 
             echo  _PURCHASE;
-        ?>"/>';
-        $('imgContact').innerHTML = '<img src="<?php 
+        ?>"/>-->';
+        $('imgContact').innerHTML = '<!--<img src="<?php 
             echo $_SESSION['config']['businessappurl'] ;
             ?>static.php?filename=employee.png" alt="<?php 
             echo  _HUMAN_RESOURCES;
-        ?>"/>';
+        ?>"/>-->';
         $('labelContact').innerHTML = '<?php echo  _EMPLOYEE;?>';
     }
 }

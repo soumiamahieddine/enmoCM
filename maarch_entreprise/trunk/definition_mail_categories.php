@@ -82,7 +82,7 @@ $_ENV['categories']['incoming']['priority'] = array (
     'mandatory' => false,
     'label' => _PRIORITY,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'exclamation',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -92,7 +92,7 @@ $_ENV['categories']['incoming']['type_id'] = array (
     'mandatory' => true,
     'label' => _DOCTYPE_MAIL,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'file',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -102,7 +102,7 @@ $_ENV['categories']['incoming']['doc_date'] = array (
     'mandatory' => true,
     'label' => _MAIL_DATE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
+    'img' => 'calendar-o',
     'modify' => true,
     'form_show' => 'date'
 );
@@ -112,7 +112,7 @@ $_ENV['categories']['incoming']['admission_date'] = array (
     'mandatory' => true,
     'label' => _RECEIVING_DATE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arriv.gif',
+    'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date'
 );
@@ -122,7 +122,7 @@ $_ENV['categories']['incoming']['nature_id'] = array (
     'mandatory' => true,
     'label' => _NATURE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
+    'img' => 'envelope',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -132,7 +132,7 @@ $_ENV['categories']['incoming']['reference_number'] = array (
     'mandatory' => false,
     'label' => _MONITORING_NUMBER,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
+    'img' => 'barcode',
     'modify' => false,
     'form_show' => 'textfield'
 );
@@ -142,7 +142,7 @@ $_ENV['categories']['incoming']['subject'] = array (
     'mandatory' => true,
     'label' => _SUBJECT,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => 'info',
     'modify' => true,
     'form_show' => 'textarea'
 );
@@ -162,7 +162,7 @@ $_ENV['categories']['incoming']['other_cases']['process_limit_date'] = array (
     'type_field' => 'date',
     'label' => _PROCESS_LIMIT_DATE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arriv.gif',
+    'img' => 'bell',
     'modify' => true,
     'form_show' => 'date'
 );
@@ -197,7 +197,7 @@ $_ENV['categories']['outgoing']['priority'] = array (
     'mandatory' => false,
     'label' => _PRIORITY,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'exclamation',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -207,7 +207,7 @@ $_ENV['categories']['outgoing']['type_id'] = array (
     'mandatory' => true,
     'label' => _DOCTYPE_MAIL,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'file',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -217,7 +217,7 @@ $_ENV['categories']['outgoing']['doc_date'] = array (
     'mandatory' => true,
     'label' => _MAIL_DATE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=small_calend.gif',
+    'img' => 'calendar-o',
     'modify' => true,
     'form_show' => 'date'
 );
@@ -227,7 +227,7 @@ $_ENV['categories']['outgoing']['nature_id'] = array (
     'mandatory' => true,
     'label' => _NATURE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
+    'img' => 'envelope',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -237,7 +237,7 @@ $_ENV['categories']['outgoing']['reference_number'] = array (
     'mandatory' => false,
     'label' => _MONITORING_NUMBER,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
+    'img' => 'barcode',
     'modify' => false,
     'form_show' => 'textfield'
 );
@@ -247,7 +247,7 @@ $_ENV['categories']['outgoing']['subject'] = array (
     'mandatory' => true,
     'label' => _SUBJECT,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => 'info',
     'modify' => true,
     'form_show' => 'textarea'
 );
@@ -257,7 +257,7 @@ $_ENV['categories']['outgoing']['other_cases']['chrono_number'] = array (
     'mandatory' => true,
     'label' => _CHRONO_NUMBER,
     'table' => 'none',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => 'compass',
     'modify' => false,
     'form_show' => 'textfield'
 );
@@ -277,7 +277,7 @@ $_ENV['categories']['outgoing']['other_cases']['process_limit_date'] = array (
     'type_field' => 'date',
     'label' => _PROCESS_LIMIT_DATE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_limit.gif',
+    'img' => 'bell',
     'modify' => false,
     'form_show' => 'date'
 );
@@ -300,7 +300,7 @@ $_ENV['categories']['outgoing']['other_cases']['contact'] = array (
     'label' => _DEST,
     'table' => 'coll_ext',
     'special' => 'dest_user_id,dest_contact_id,is_multicontacts',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif',
+    'img' => 'book',
     'modify' => false
 );
 
@@ -314,7 +314,7 @@ $_ENV['categories']['internal']['priority'] = array (
     'mandatory' => false,
     'label' => _PRIORITY,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'exclamation',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -324,7 +324,7 @@ $_ENV['categories']['internal']['type_id'] = array (
     'mandatory' => true,
     'label' => _DOCTYPE_MAIL,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'file',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -334,7 +334,7 @@ $_ENV['categories']['internal']['doc_date'] = array (
     'mandatory' => true,
     'label' => _MAIL_DATE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
+    'img' => 'calendar-o',
     'modify' => true,
     'form_show' => 'date'
 );
@@ -344,7 +344,7 @@ $_ENV['categories']['internal']['nature_id'] = array (
     'mandatory' => true,
     'label' => _NATURE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
+    'img' => 'envelope',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -354,7 +354,7 @@ $_ENV['categories']['internal']['reference_number'] = array (
     'mandatory' => false,
     'label' => _MONITORING_NUMBER,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
+    'img' => 'barcode',
     'modify' => false,
     'form_show' => 'textfield'
 );
@@ -364,7 +364,7 @@ $_ENV['categories']['internal']['subject'] = array (
     'mandatory' => true,
     'label' => _SUBJECT,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => 'info',
     'modify' => true,
     'form_show' => 'textarea'
 );
@@ -384,7 +384,7 @@ $_ENV['categories']['internal']['other_cases']['process_limit_date'] = array (
     'type_field' => 'date',
     'label' => _PROCESS_LIMIT_DATE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_limit.gif',
+    'img' => 'bell',
     'modify' => false
 );
 $_ENV['categories']['internal']['type_contact'] = array (
@@ -418,7 +418,7 @@ $_ENV['categories']['folder_document']['type_id'] = array (
     'mandatory' => true,
     'label' => _DOCTYPE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'file',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -428,7 +428,7 @@ $_ENV['categories']['folder_document']['doc_date'] = array (
     'mandatory' => true,
     'label' => _DOC_DATE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=small_calend.gif',
+    'img' => 'calendar-o',
     'modify' => true,
     'form_show' => 'date'
 );
@@ -438,7 +438,7 @@ $_ENV['categories']['folder_document']['subject'] = array (
     'mandatory' => true,
     'label' => _SUBJECT,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => 'info',
     'modify' => true,
     'form_show' => 'textarea'
 );
@@ -448,7 +448,7 @@ $_ENV['categories']['folder_document']['author'] = array (
     'mandatory' => true,
     'label' => _AUTHOR,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=author.gif',
+    'img' => 'pencil-square-o',
     'modify' => true,
     'form_show' => 'textfield'
 );
@@ -463,7 +463,7 @@ $_ENV['categories']['postindexing_document']['type_id'] = array (
     'mandatory' => true,
     'label' => _DOCTYPE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'file',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -473,7 +473,7 @@ $_ENV['categories']['postindexing_document']['priority'] = array (
     'mandatory' => false,
     'label' => _PRIORITY,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'exclamation',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -483,7 +483,7 @@ $_ENV['categories']['postindexing_document']['admission_date'] = array (
     'mandatory' => true,
     'label' => _RECEIVING_DATE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arriv.gif',
+    'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date'
 );
@@ -493,7 +493,7 @@ $_ENV['categories']['postindexing_document']['nature_id'] = array (
     'mandatory' => true,
     'label' => _NATURE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
+    'img' => 'envelope',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -503,7 +503,7 @@ $_ENV['categories']['postindexing_document']['doc_date'] = array (
     'mandatory' => true,
     'label' => _DOC_DATE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=small_calend.gif',
+    'img' => 'calendar-o',
     'modify' => true,
     'form_show' => 'date'
 );
@@ -513,7 +513,7 @@ $_ENV['categories']['postindexing_document']['subject'] = array (
     'mandatory' => true,
     'label' => _SUBJECT,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => 'info',
     'modify' => true,
     'form_show' => 'textarea'
 );
@@ -547,7 +547,7 @@ $_ENV['categories']['empty']['type_id'] = array (
     'mandatory' => true,
     'label' => _DOCTYPE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'file',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -557,7 +557,7 @@ $_ENV['categories']['empty']['doc_date'] = array (
     'mandatory' => true,
     'label' => _DOC_DATE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=small_calend.gif',
+    'img' => 'calendar-o',
     'modify' => true,
     'form_show' => 'date'
 );
@@ -567,7 +567,7 @@ $_ENV['categories']['empty']['title'] = array (
     'mandatory' => true,
     'label' => _INVOICE_NUMBER,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=title.gif',
+    'img' => 'info',
     'modify' => true,
     'form_show' => 'textfield'
 );
@@ -577,7 +577,7 @@ $_ENV['categories']['empty']['identifier'] = array (
     'mandatory' => true,
     'label' => _INVOICE_NUMBER,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=identifier.gif',
+    'img' => 'compass',
     'modify' => true,
     'form_show' => 'textfield'
 );
@@ -592,7 +592,7 @@ if ($core->is_module_loaded('entities')) {
         'mandatory' => true,
         'label' => _DEPARTMENT_DEST,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'img' => 'sitemap',
         'modify' => false,
         'form_show' => 'textarea'
     );
@@ -610,7 +610,7 @@ if ($core->is_module_loaded('entities')) {
         'mandatory' => true,
         'label' => _DEPARTMENT_EXP,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'img' => 'sitemap',
         'modify' => false,
         'form_show' => 'textarea'
     );
@@ -628,7 +628,7 @@ if ($core->is_module_loaded('entities')) {
         'mandatory' => true,
         'label' => _DEPARTMENT_DEST,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'img' => 'sitemap',
         'modify' => false,
         'form_show' => 'textarea'
     );
@@ -646,7 +646,7 @@ if ($core->is_module_loaded('entities')) {
         'mandatory' => true,
         'label' => _DEPARTMENT_DEST,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'img' => 'sitemap',
         'modify' => false,
         'form_show' => 'textarea'
     );
@@ -665,7 +665,7 @@ if ($core->is_module_loaded('physical_archive')) {
         'mandatory' => false,
         'label' => _BOX_ID,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
+        'img' => 'archive',
         'modify' => false,
         'form_show' => 'select'
     );
@@ -676,7 +676,7 @@ if ($core->is_module_loaded('physical_archive')) {
         'mandatory' => false,
         'label' => _BOX_ID,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
+        'img' => 'archive',
         'modify' => false,
         'form_show' => 'select'
     );
@@ -687,7 +687,7 @@ if ($core->is_module_loaded('physical_archive')) {
         'mandatory' => false,
         'label' => _BOX_ID,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
+        'img' => 'archive',
         'modify' => false,
         'form_show' => 'select'
     );
@@ -698,7 +698,7 @@ if ($core->is_module_loaded('physical_archive')) {
         'mandatory' => false,
         'label' => _BOX_ID,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
+        'img' => 'archive',
         'modify' => false,
         'form_show' => 'select'
     );
@@ -709,7 +709,7 @@ if ($core->is_module_loaded('physical_archive')) {
         'mandatory' => false,
         'label' => _BOX_ID,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=physical_archive&filename=pa_boxes.gif',
+        'img' => 'archive',
         'modify' => false,
         'form_show' => 'select'
     );
@@ -723,7 +723,7 @@ if ($core->is_module_loaded('folder')) {
         'mandatory' => false,
         'label' => _FOLDER,
         'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_folder.gif',
+        'img' => 'folder',
         'modify' => true,
         'form_show' => 'autocomplete'
     );
@@ -734,7 +734,7 @@ if ($core->is_module_loaded('folder')) {
         'mandatory' => false,
         'label' => _FOLDER,
         'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_folder.gif',
+        'img' => 'folder',
         'modify' => true,
         'form_show' => 'autocomplete'
     );
@@ -745,7 +745,7 @@ if ($core->is_module_loaded('folder')) {
         'mandatory' => false,
         'label' => _FOLDER,
         'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_folder.gif',
+        'img' => 'folder',
         'modify' => true,
         'form_show' => 'autocomplete'
     );
@@ -756,7 +756,7 @@ if ($core->is_module_loaded('folder')) {
         'mandatory' => false,
         'label' => _FOLDER,
         'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_folder.gif',
+        'img' => 'folder',
         'modify' => true,
         'form_show' => 'autocomplete'
     );
@@ -767,7 +767,7 @@ if ($core->is_module_loaded('folder')) {
         'mandatory' => false,
         'label' => _FOLDER,
         'table' => 'none',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_folder.gif',
+        'img' => 'folder',
         'modify' => true,
         'form_show' => 'autocomplete'
     );
@@ -1132,7 +1132,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     $db2->query('select lastname, firstname from ' . $_SESSION['tablename']['users'] . " where user_id = '" . $line-> $arr[$i] . "'");
                     $res = $db2->fetch_object();
                     $data[$arr[$i]]['show_value'] = $res->lastname . ' ' . $res->firstname;
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=user_info&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=400, width=600,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
+                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&page=user_info&id=' . $line-> $arr[$i] . '\', \'contact_info\', \'height=400, width=600,scrollbars=yes,resizable=yes\');" ><i class="fa fa-book fa-2x" title="' . _CONTACT_CARD . '"></i></a>';
                 } else {
                     unset ($data[$arr[$i]]);
                 }
@@ -1168,7 +1168,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                             $data[$arr[$i]]['show_value'] .= ', '.$res->address_num .' ' . $res->address_street .' ' . $res->address_postal_code .' ' . strtoupper($res->address_town);
                         }         
                     }
-                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&popup&contactid=' . $line-> $arr[$i] . '&addressid='.$addressId.'\', \'contact_info\', \'height=800, width=700,scrollbars=yes,resizable=yes\');" ><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>';
+                    $data[$arr[$i]]['addon'] = '<a href="#" id="contact_card" title="' . _CONTACT_CARD . '" onclick="window.open(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=my_contacts&page=info_contact_iframe&mode=view&popup&contactid=' . $line-> $arr[$i] . '&addressid='.$addressId.'\', \'contact_info\', \'height=800, width=700,scrollbars=yes,resizable=yes\');" ><i class="fa fa-book fa-2x" title="' . _CONTACT_CARD . '"></i></a>';
                 } else {
                     unset ($data[$arr[$i]]);
                 }

@@ -373,10 +373,10 @@
         <moduleid>sendmail</moduleid>
         <comment>_SENDMAIL_COMMENT</comment>
     </MODULES>
-	<MODULES>
+	<!--<MODULES>
         <moduleid>photo_capture</moduleid>
         <comment>_PHOTO_CAPTURE_COMMENT</comment>
-    </MODULES>
+    </MODULES>-->
     <MODULES>
         <moduleid>fileplan</moduleid>
         <comment>_FILEPLAN_COMMENT</comment>

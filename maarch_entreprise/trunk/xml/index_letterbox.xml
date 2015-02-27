@@ -5,7 +5,7 @@
         <column>custom_t6</column>
         <label>Utilisateur contributeur</label>
         <type>string</type>
-        <img>cat_doc_human_resources.png</img> 
+        <img>user</img> 
         <table>
             <table_name>users</table_name>
             <foreign_key>user_id</foreign_key>
@@ -19,7 +19,7 @@
         <column>custom_t7</column>
         <label>Service contributeur</label>
         <type>string</type>
-        <img>picto_service_b.gif</img> 
+        <img>sitemap</img> 
         <table>
             <table_name>entities</table_name>
             <foreign_key>entity_id</foreign_key>
@@ -33,31 +33,31 @@
         <column>custom_t10</column>
         <label>_EMAIL_FROM_ADDRESS</label>
         <type>string</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
     </INDEX>
     <INDEX>
         <column>custom_t11</column>
         <label>_EMAIL_TO_ADDRESS</label>
         <type>string</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
     </INDEX>
     <INDEX>
         <column>custom_t12</column>
         <label>_EMAIL_CC_ADDRESS</label>
         <type>string</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
     </INDEX>
     <INDEX>
         <column>custom_t13</column>
         <label>_EMAIL_ID</label>
         <type>string</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
     </INDEX>
     <INDEX>
         <column>custom_t14</column>
         <label>_EMAIL_ACCOUNT</label>
         <type>string</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
     </INDEX>
 <!--
     <INDEX>

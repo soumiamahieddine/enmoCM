@@ -5,7 +5,7 @@
         <column>custom_t1</column>
         <label>_INVOICE_TYPE_ID</label>
         <type>string</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
         <table>
             <table_name>invoice_types</table_name>
             <foreign_key>invoice_type_id</foreign_key>
@@ -19,62 +19,62 @@
         <column>custom_t2</column>
         <label>_VOUCHER_IDENTIFIER</label>
         <type>string</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
     </INDEX>
     <INDEX>
         <!-- last_date -->
         <column>custom_d1</column>
         <label>_LAST_DATE</label>
         <type>date</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
     </INDEX>
     <INDEX>
         <!-- accounting_period -->
         <column>custom_t3</column>
         <label>_ACCOUNTING_PERIOD</label>
         <type>string</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
     </INDEX>
     <INDEX>
         <!-- order_identifier -->
         <column>custom_t4</column>
         <label>_ORDER_IDENTIFIER</label>
         <type>string</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
     </INDEX>
     <INDEX>
         <!-- accounting_date -->
         <column>custom_d2</column>
         <label>_ACCOUNTIG_DATE</label>
         <type>date</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
     </INDEX>
     <INDEX>
         <!-- ref_identifier -->
         <column>custom_t5</column>
         <label>_REF_IDENTIFIER</label>
         <type>string</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
     </INDEX>
     <INDEX>
         <!-- contract_identifier -->
         <column>custom_t6</column>
         <label>_CONTRACT_IDENTIFIER</label>
         <type>string</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
     </INDEX>
     <INDEX>
         <!-- payment_date -->
         <column>custom_d3</column>
         <label>_PAYMENT_DATE</label>
         <type>date</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
     </INDEX>
     <INDEX>
         <!-- delivery_note_identifier -->
         <column>custom_t7</column>
         <label>_DELIVERY_NOTE_IDENTIFIER</label>
         <type>string</type>
-        <img>plus.png</img>
+        <img>arrow-right</img>
     </INDEX>
 </ROOT>

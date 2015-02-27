@@ -129,7 +129,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
             'desc'
         );
         if ($nbLinkDesc > 0) {
-            $formatText .= '<img src="static.php?filename=cat_doc_incoming.gif" />';
+            $formatText .= '<i class="fa fa-long-arrow-right fa-2x"></i>';
             $formatText .= $Class_LinkController->formatMap(
                 $Class_LinkController->getMap(
                     $_SESSION['doc_id'],
@@ -147,7 +147,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
             'asc'
         );
         if ($nbLinkAsc > 0) {
-            $formatText .= '<img src="static.php?filename=cat_doc_outgoing.gif" />';
+            $formatText .= '<i class="fa fa-long-arrow-left fa-2x"></i>';
             $formatText .= $Class_LinkController->formatMap(
                 $Class_LinkController->getMap(
                     $_SESSION['doc_id'],

@@ -85,15 +85,18 @@ Mods
                     <td width="90%" align="center" style="padding : 0px; vertical-align:top" ##clickOnLine##>
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                                 <tr>
-                                    <td width="33%" style="font-size:12px;"><img src="##loadImage|subject.png##" title="##defineLang|_SUBJECT##">&nbsp;<em>##loadValue|subject##</em></td>
+                                    <td width="33%" style="font-size:12px;"><i class="fa fa-info fa-2x" title="##defineLang|_SUBJECT##"></i>&nbsp;<em>##loadValue|subject##</em></td>
                                     <td width="17%">
                                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                             <tr>
-                                                <td style="text-align:right"><img src="##loadImage|identifier.png##"  title="##defineLang|_IDENTIFIER##"></td>
+                                                <td style="text-align:right">
+                                                <i class="fa fa-barcode fa-2x" title="##defineLang|_IDENTIFIER##"></i>
                                                 <td width="56%" style="text-align:left">##loadValue|identifier##</td>
                                             </tr>
                                             <tr>
-                                                <td style="text-align:right; vertical-align:top"><img src="##loadImage|amount.png##"  title="##defineLang|_TOTAL_SUM##"></td>
+                                                <td style="text-align:right; vertical-align:top">
+                                                <i class="fa fa-calculator fa-2x" title="##defineLang|_TOTAL_SUM##"></i>
+                                                </td>
                                                 <td width="65%" style="text-align:left">##loadValue|total_sum##</td>
                                             </tr>
                                         </table>
@@ -101,11 +104,13 @@ Mods
                                     <td width="50%">
                                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                             <tr>
-                                                <td style="text-align:right">##loadValue|contact_img##</td>
+                                                <td style="text-align:right"><i class="fa fa-book fa-2x" title="##defineLang|_CONTACT##"></i></td>
                                                 <td width="56%" style="text-align:left">##loadValue|contact_id##</td>
                                             </tr>
                                             <tr>
-                                                <td style="text-align:right; vertical-align:top"><img src="##loadImage|department.png|entities##"  title="##defineLang|_DESTINATION##"></td>
+                                                <td style="text-align:right; vertical-align:top">
+                                                <i class="fa fa-sitemap fa-2x" title="##defineLang|_DEPARTMENT_OWNER##"></i>
+                                                </td>
                                                 <td width="65%" style="text-align:left">##loadValue|entity_label##</td>
                                             </tr>
                                         </table>
@@ -120,15 +125,22 @@ Mods
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                                     <tr>
                                         <td style="font-size:10px;">##loadValue|priority##</td>
-                                        <td style="font-size:10px;" width ="30px" alt="##defineLang|_CATEGORY##" title="##defineLang|_CATEGORY##" ##clickOnLine##>##loadValue|category_img##</td>
+                                        <td style="font-size:10px;" width ="30px" alt="##defineLang|_CATEGORY##" title="##defineLang|_CATEGORY##" ##clickOnLine##>
+                                        <i class="fa fa-##loadValue|category_img## fa-2x"></i></td>
                                         <td style="font-size:10px;" width ="100px" >##loadValue|category_id##</td>
-                                        <td style="font-size:10px;" width ="30px" alt="##defineLang|_DOC_DATE##" title="##defineLang|_DOC_DATE##" ##clickOnLine##><img src="##loadImage|date_arriv.gif##"> </td>
+                                        <td style="font-size:10px;" width ="30px" alt="##defineLang|_DOC_DATE##" title="##defineLang|_DOC_DATE##" ##clickOnLine##>
+                                        <i class="fa fa-calendar fa-2x" title="##defineLang|_DOC_DATE##"></i> 
+                                        </td>
                                         <td style="font-size:10px;" width ="100px" >##loadValue|doc_date##</td>
-                                        <td style="font-size:10px;" width ="30px" alt="##defineLang|_PROCESS_LIMIT_DATE##" title="##defineLang|_PROCESS_LIMIT_DATE##" ##clickOnLine##><img src="##loadImage|date_limit.gif##"> </td>
+                                        <td style="font-size:10px;" width ="30px" alt="##defineLang|_PROCESS_LIMIT_DATE##" title="##defineLang|_PROCESS_LIMIT_DATE##" ##clickOnLine##>
+                                        <i class="fa fa-bell fa-2x" title="##defineLang|_PROCESS_LIMIT_DATE##"></i> </td>
                                         <td style="font-size:10px;" width ="100px" >##loadValue|process_limit_date##</td>
-                                        <td style="font-size:10px;text-align:right" width ="30px" alt="##defineLang|_DEST_USER##" title="##defineLang|_DEST_USER##" ##clickOnLine##><img src="##loadImage|manage_users_entities_b_small.gif##"></td>
+                                        <td style="font-size:10px;text-align:right" width ="30px" alt="##defineLang|_DEST_USER##" title="##defineLang|_DEST_USER##" ##clickOnLine##>
+                                        <i class="fa fa-user fa-2x" title="##defineLang|_DEST_USER##"></i>
+                                        </td>
                                         <td style="font-size:10px;" width ="110px" > ##loadValue|dest_user##</td>
-                                        <td style="font-size:10px;text-align:right" width ="30px"  alt="##defineLang|_TYPE##" title="##defineLang|_TYPE##" ##clickOnLine##><img src="##loadImage|mini_type.gif##">
+                                        <td style="font-size:10px;text-align:right" width ="30px"  alt="##defineLang|_TYPE##" title="##defineLang|_TYPE##" ##clickOnLine##>
+                                        <i class="fa fa-file fa-2x" title="##defineLang|_TYPE##"></i>
                                         <td style="font-size:10px;text-align:left"  ##clickOnLine##>##loadValue|type_label##</td>
                                         <td style="font-size:10px;" width ="30px">##func_bool_see_notes##</td>
                                         <td style="font-size:10px;" width ="30px">##showActionFA|#defineLang|_ATTACHMENTS#|paperclip|loadRepList('#loadValue|res_id#')|#loadValue|count_attachment# == 0##</td>

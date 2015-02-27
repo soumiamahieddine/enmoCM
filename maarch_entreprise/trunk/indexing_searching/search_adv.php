@@ -427,7 +427,9 @@ function del_query_confirm()
 -->
 </script>
 
-<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_search_b.gif" alt="" /> <?php echo _ADV_SEARCH_MLB; ?></h1>
+<h1>
+    <i class="fa fa-search fa-2x"></i> <?php echo _ADV_SEARCH_MLB; ?>
+</h1>
 <div id="inner_content">
 
 <?php if (count($queries) > 0)
