@@ -8,7 +8,7 @@
 			<servicepage>index.php?page=manage_notifications_controler&amp;module=notifications&amp;mode=list</servicepage>
 			<servicetype>admin</servicetype>
 			<system_service>false</system_service>
-			<style>notif_admin_notifications</style>
+			<style>fa fa-bell</style>
 			<enabled>true</enabled>
 			<WHEREAMIUSED>
 				<page>admin.php</page>
