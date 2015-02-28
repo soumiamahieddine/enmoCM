@@ -179,7 +179,7 @@ if (!defined('_UPDATE_LIST_DIFF_IN_DETAILS'))
 if (!defined('_UPDATE_LIST_DIFF'))
     define('_UPDATE_LIST_DIFF', 'Modifier la liste de diffusion');
 if (!defined('_DIFF_LIST_COPY'))
-    define('_DIFF_LIST_COPY', 'Liste de diffusion, copies');
+    define('_DIFF_LIST_COPY', 'Liste de diffusion');
 if (!defined('_NO_COPY'))
     define('_NO_COPY', 'Pas de copies');
 if (!defined('_DIFF_LIST'))
