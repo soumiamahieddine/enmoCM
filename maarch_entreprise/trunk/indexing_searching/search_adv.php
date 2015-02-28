@@ -467,7 +467,7 @@ if(isset($_REQUEST['nodetails']))
 <table align="center" border="0" width="100%">
     <tr>
         <td>
-            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();">
+            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');">
                 <i class="fa fa-refresh fa-4x" title="<?php  echo _CLEAR_SEARCH; ?>"></i>
             </a>
         </td>
@@ -680,7 +680,7 @@ if(isset($_REQUEST['nodetails']))
 <table align="center" border="0" width="100%">
     <tr>
         <td>
-            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();">
+            <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');">
              <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_FORM; ?>"></i>
             </a>
         </td>
@@ -700,7 +700,7 @@ if(isset($_REQUEST['nodetails']))
 load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
 <?php if(isset($_REQUEST['init_search']))
 {
-    ?>clear_search_form('frmsearch2','select_criteria');clear_q_list(); <?php
+    ?>clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id'); <?php
 }?>
 </script>
 
