@@ -1,8 +1,38 @@
 <?php
+/*
+*
+*    Copyright 2014-2015 Maarch
+*
+*  This file is part of Maarch Framework.
+*
+*   Maarch Framework is free software: you can redistribute it and/or modify
+*   it under the terms of the GNU General Public License as published by
+*   the Free Software Foundation, either version 3 of the License, or
+*   (at your option) any later version.
+*
+*   Maarch Framework is distributed in the hope that it will be useful,
+*   but WITHOUT ANY WARRANTY; without even the implied warranty of
+*   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*   GNU General Public License for more details.
+*
+*   You should have received a copy of the GNU General Public License
+*    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/**
+* @brief   load Notes in results list 
+*
+* @file
+* @author <dev@maarch.org>
+* @date $date$
+* @version $Revision$
+* @ingroup apps
+*/
 
 require_once('core/class/class_core_tools.php');
 $Core_Tools = new core_tools;
 $Core_Tools->load_lang();
+$Core_Tools->test_user();
 
 $return = '';
 
@@ -10,7 +40,7 @@ if (isset($_REQUEST['identifier'])) {
     $status = 0;
     $return .= '<td>';
         $return .= '<div align="center">';
-            $return .= '<table width="100%">';
+            $return .= '<table width="97%%">';
 
                 $db = new dbquery();
                 $db->connect();
@@ -70,20 +100,20 @@ if (isset($_REQUEST['identifier'])) {
                     }
 
                     $return .= '<tr>';
-                        $return .= '<td style="background: transparent; border: 1px dashed rgb(200, 200, 200);">';
-                            $return .= '<blockquote style="padding: 1px;">';
-                                $return .= '<div style="text-align: right; background-color: rgb(230, 230, 230); padding: 5px;">';
-                                    $return .= 'Par: ';
+                        $return .= '<td style="background: transparent; padding-left:30px; padding-right:30px; border: 1px dashed rgb(200, 200, 200);">';
+                            // $return .= '<blockquote style="padding: 1px;">';
+                                $return .= '<div style="text-align: right; background-color: rgb(230, 230, 230); padding: 2px;">';
+                                    $return .= ucfirst(_BY) . ' : ';
                                     $return .= $firstname . ' ' . $lastname;
                                     $return .= ', ';
-                                    $return .= $return_db->date_note;
+                                    $return .= $Core_Tools->format_date_db($return_db->date_note);
                                 $return .= '</div>';
-                                $return .= '<br />';
-                                $return .= '<div>';
+                                // $return .= '<br />';
+                                $return .= '<div style="padding-top:2px;padding-bottom:2px;">';
                                     $note_text = str_replace(array("\r", "\n"), array("<br />", "<br />"), $return_db->note_text);
                                     $return .= str_replace('<br /><br />', '<br />', $note_text);
                                 $return .= '</div>';
-                            $return .= '</blockquote>';
+                            // $return .= '</blockquote>';
                         $return .= '</td>';
                     $return .= '</tr>';
                 }
