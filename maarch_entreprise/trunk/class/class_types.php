@@ -207,7 +207,6 @@ class types extends dbquery
                 $_SESSION['app_services'], 'doctype_up', 'include'
             );
             ?>
-            </div>
             <div class="block_end">&nbsp;</div>
             <br/>
             <?php
@@ -239,6 +238,7 @@ class types extends dbquery
             echo $_SESSION['config']['businessappurl'];
             ?>index.php?page=types';"/>
             </p>
+            </div>
             </form>
             </div>
                 <script type="text/javascript">
