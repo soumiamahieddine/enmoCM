@@ -52,7 +52,8 @@ unset($_SESSION['m_admin']);
 ?>
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_contact_b.gif" alt="" /> <?php  echo _ADMIN_CONTACTS_DESC;?></h1>
 <div id="inner_content" class="clearfix">
-    <h2 class="admin_subtitle block" ><?php  echo _ADMIN_CONTACTS;?></h2>
+<div class="block">
+    <h2><?php  echo _ADMIN_CONTACTS;?></h2>
     <div  class="admin_item" id="admin_contact_types" title="<?php  echo _MANAGE_CONTACT_TYPES_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types';">
         <div class="sum_margin">
                 <strong><?php  echo _MANAGE_CONTACT_TYPES;?></strong>
@@ -82,5 +83,6 @@ unset($_SESSION['m_admin']);
                 <strong><?php  echo _VIEW_TREE_CONTACTS;?></strong>
          </div>
     </div>
-
+    <div class="clearfix"></div>
+</div>
 </div>
