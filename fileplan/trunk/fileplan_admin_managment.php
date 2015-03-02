@@ -80,17 +80,13 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 			<?php echo _MANAGE_FILEPLAN;?></h1>
 		<div id="inner_content">
 			<div class="block">
-				<b>
-				<p id="back_list">
+				<h2>
 					<a href="<?php  echo $_SESSION['config']['businessappurl'];
 					?>index.php?page=fileplan_admin_positions&module=fileplan&fileplan_id=<?php
 					echo $fileplan_id;?>" class="back"><?php 
 					echo _VIEW_FILEPLAN;?></a>&nbsp;/&nbsp;
 					<span class="selected_link"><?php echo _MANAGE_FILEPLAN;?></span>            
-				</p>
-				</b>&nbsp;
-			</div>
-			<br />
+				</h2>&nbsp;
 			<?php
 			$parameters = '';
 			if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) $parameters .= '&order='.$_REQUEST['order'];
@@ -325,6 +321,7 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 		echo '<br/>';
 		$list->showList($tab, $paramsTab, 'position_id');
 	}
+	echo '</div>';
 } else {
 	echo '<script type="text/javascript">window.top.location.href=\'' 
 			. $_SESSION['config']['businessappurl']
