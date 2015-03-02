@@ -91,12 +91,15 @@ if($_SESSION['service_tag_form'] == 'formentity') {
 	$_SESSION['service_tag_form'] = "";
     ?>
 	<!--div id="inner_content" class="clearfix"-->
-	<div id="listmodel_box" class="block"> <?php 
+	<div id="listmodel_box" class="block" style="height:550px;"> 
+	<?php 
 	if(count($_SESSION['m_admin']['entity']['listmodel']) > 0) { ?>
 		<h2 class="tit"><?php echo _LINKED_DIFF_LIST;?> : </h2><?php
         $difflist = $_SESSION['m_admin']['entity']['listmodel'];
+        echo '<div style="max-height:490px;overflow:auto;">';
         require_once 'modules/entities/difflist_display.php';?>
-		<p class="buttons">
+        </div>
+		<p class="buttons" style="text-align:center;margin-top:5px;">
 			<input type="button" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=';?>manage_listmodel&what=A&objectType=entity_id&objectId=<?php echo $_SESSION['m_admin']['entity']['entityId'];?>', '', 'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no');" class="button" value="<?php echo _MODIFY_LIST;?>" />
 		</p> <?php 
 	} else { ?>
