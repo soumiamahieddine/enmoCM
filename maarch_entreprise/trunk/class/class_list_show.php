@@ -1015,7 +1015,7 @@ class list_show extends functions
         {
             echo '<h1>';
             if(!empty($picto_path))
-            { echo '<img src="'.$picto_path.'" alt="" class="title_img" /> ';}
+            { echo '<i class="fa fa-'.$picto_path.' fa-2x"></i> ';}
             echo $title.'</h1>';
             ?><div id="inner_content" class="clearfix"><?php
         }
@@ -1023,7 +1023,7 @@ class list_show extends functions
         {
             echo '<h2>';
             if(!empty($picto_path))
-            { echo '<img src="'.$picto_path.'" alt="" class="title_img" /> ';}
+            { echo '<i class="fa fa-'.$picto_path.' fa-2x"></i> ';}
             echo $title.'</h2>';
                 echo ' <div class="text-align">';
         }

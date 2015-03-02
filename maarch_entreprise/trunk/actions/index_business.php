@@ -1,7 +1,7 @@
 <?php
 
 /*
-*   Copyright 2008-2013 Maarch
+*   Copyright 2008-2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -248,9 +248,8 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
 
     $frmStr .= '<div id="validleft">';
     $frmStr .= '<div id="index_div" style="display:none;";>';
-    $frmStr .= '<h1 class="tit" id="action_title"><img src="'
-            . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-            . 'file_index_b.gif"  align="middle" alt="" />' . _INDEXING_BUSINESS;
+    $frmStr .= '<h1 class="tit" id="action_title">' 
+            . _INDEXING_BUSINESS;
     $frmStr .= '</h1>';
     $frmStr .= '<div id="frm_error_' . $actionId . '" class="indexing_error">'
             . '</div>';
@@ -302,18 +301,10 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             . 'id="indexing_fields" style="display:block;">';
     /*** category ***/
     $frmStr .= '<tr id="category_tr" style="display:' . $displayValue . ';">';
-    $frmStr .= '<td style="width:30px;align:center;align=center;"><span id="category_img_purchase" style="display:' . $displayValue . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'cat_doc_purchase.png" alt="' . _PURCHASE . '"/></span>'
-            . '<span id="category_img_sell" style="display:' . $displayValue . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'cat_doc_sell.png" alt="' . _SELL . '"/></span>'
-            . '<span id="category_img_enterprise_document" style="display:' . $displayValue . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'cat_doc_enterprise_document.png" alt="' . _ENTERPRISE_DOCUMENT . '"/></span>'
-            . '<span id="category_img_human_resources" style="display:' . $displayValue . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'cat_doc_human_resources.png" alt="' . _HUMAN_RESOURCES . '"/></span></td>';
+    $frmStr .= '<td style="width:30px;align:center;align=center;"><span id="category_img_purchase" style="display:' . $displayValue . ';"></span>'
+            . '<span id="category_img_sell" style="display:' . $displayValue . ';"></span>'
+            . '<span id="category_img_enterprise_document" style="display:' . $displayValue . ';"></span>'
+            . '<span id="category_img_human_resources" style="display:' . $displayValue . ';"></span></td>';
     $frmStr .= '<td style="width:200px;"><label for="category_id" class="form_title" >' . _CATEGORY . '</label></td>';
     //$frmStr .= '<td style="width:1px;">&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><select name="category_id" '
@@ -345,9 +336,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     /*** doctype ***/
     $frmStr .= '<tr id="doctype_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td style="width:30px;align:center;"><span class="form_title" '
-            . 'id="doctype_res"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'document.png" alt="' . _FILING . '"/>'
+            . 'id="doctype_res">'
             . '</span></td><td><label for="type_id">' . _FILING . '</label></td>';
     //$frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><select name="type_id" id="type_id" '
@@ -399,9 +388,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</tr>';
     /*** subject ***/
     $frmStr .= '<tr id="subject_tr" style="display:' . $displayValue . ';">';
-    $frmStr .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'subject.png" alt="' . _SUBJECT . '"/></td><td class="indexing_label"><label for="subject" class="form_title" >' . _SUBJECT
+    $frmStr .= '<td style="width:30px;align:center;"></td><td class="indexing_label"><label for="subject" class="form_title" >' . _SUBJECT
             . '</label></td>';
     $frmStr .= '<td class="indexing_field"><textarea name="subject" '
             . 'id="subject"  rows="2" onchange="clear_error(\'frm_error_'
@@ -418,21 +405,13 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;"><span id="contact_purchase_img" style="display:' 
-        . $displayValue . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'supplier.png" alt="' . _SUPPLIER . '"/></span>'
+        . $displayValue . ';"></span>'
             . '<span id="contact_sell_img" style="display:' 
-                . $displayValue . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'purchaser.png" alt="' . _PURCHASER . '"/></span>'
+                . $displayValue . ';"></span>'
             . '<span id="contact_enterprise_document_img" style="display:' 
-                . $displayValue . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'my_contacts_off.gif" alt="' . _AUTHOR . '"/></span>'
+                . $displayValue . ';"></span>'
             . '<span id="contact_human_resources_img" style="display:' 
-                . $displayValue . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'employee.png" alt="' . _EMPLOYEE . '"/></span></td>'
+                . $displayValue . ';"></span></td>'
             . '<td><label for="contact" class="form_title" >'
             . '<span id="contact_label_purchase" style="display:' 
                 . $displayValue . ';">' . _SUPPLIER . '</span>'
@@ -449,9 +428,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= ' <a href="#" id="create_contact" title="' . _CREATE_CONTACT
                 . '" onclick="new Effect.toggle(\'create_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;" '
-                . 'style="display:inline;" ><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'modif_liste.png" alt="' . _CREATE_CONTACT . '"/></a>';
+                . 'style="display:inline;" ><i class="fa fa-pencil" title="' 
+                . _CREATE_CONTACT . '"></i></a>';
     }
     $frmStr .= '</label></td>';
     $frmStr .= '<td class="indexing_field"><input type="text" name="contact" '
@@ -465,10 +443,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<input type="hidden" id="addressid" />';
     /*** Identifier ***/
     $frmStr .= '<tr id="identifier_tr" style="display:' . $displayValue . ';">';
-    $frmStr .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'identifier.png" alt="' . _IDENTIFIER 
-                . '"/></td><td><label for="identifier" class="form_title" >' . _IDENTIFIER
+    $frmStr .= '<td style="width:30px;align:center;"></td><td><label for="identifier" class="form_title" >' 
+            . _IDENTIFIER
             . '</label></td>';
     //$frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><input name="identifier" type="text" '
@@ -479,10 +455,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</tr>';
     /*** doc_date ***/
     $frmStr .= '<tr id="doc_date_tr" style="display:' . $displayValue . ';">';
-    $frmStr .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'date.png" alt="' . _DOC_DATE 
-                . '"/></td><td><label for="doc_date" class="form_title" '
+    $frmStr .= '<td style="width:30px;align:center;"></td><td><label for="doc_date" class="form_title" '
             . 'id="doc_date_label">' . _DOC_DATE
             . '</label></td>';
     //$frmStr .= '<td>&nbsp;</td>';
@@ -494,10 +467,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</tr >';
     /*** currency ***/
     $frmStr .= '<tr id="currency_tr" style="display:' . $displayValue . ';">';
-    $frmStr .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'currency.png" alt="' . _CURRENCY 
-                . '"/></td><td><label for="currency" class="form_title">' . _CURRENCY
+    $frmStr .= '<td style="width:30px;align:center;"></td><td><label for="currency" class="form_title">' 
+            . _CURRENCY
             . '</label></td>';
     $frmStr .= '<td class="indexing_field">'
         . '<select id="currency" name="currency" onchange="clear_error(\'frm_error_' . $actionId
@@ -523,10 +494,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</tr>';
     /*** net_sum ***/
     $frmStr .= '<tr id="net_sum_tr" style="display:' . $displayValue . ';">';
-    $frmStr .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'amount.png" alt="' . _NET_SUM 
-                . '"/></td><td><label for="net_sum_use" class="form_title" >' . _NET_SUM
+    $frmStr .= '<td style="width:30px;align:center;"></td><td><label for="net_sum_use" class="form_title" >' 
+            . _NET_SUM
             . '</label></td>';
     $frmStr .= '<td class="indexing_field">'
         . '<input name="net_sum_use" type="text" '
@@ -582,10 +551,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     /*** Entities : department + diffusion list ***/
     if ($core->is_module_loaded('entities')) {
         $frmStr .= '<tr id="department_tr" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename='
-                . 'department.png" alt="' . _DEPARTMENT_OWNER 
-                . '"/></td><td><label for="department" class="form_title" '
+        $frmStr .= '<td style="width:30px;align:center;"></td><td><label for="department" class="form_title" '
                 . 'id="label_dep_dest" style="display:inline;" >'
                 . _DEPARTMENT_OWNER . '</label></td>';
         //$frmStr .= '<td>&nbsp;</td>';
@@ -613,10 +579,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         
         # Diffusion list model
         $frmStr .= '<tr id="difflist_tr" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename='
-                . 'department.png" alt="' . _DIFFUSION_LIST 
-                . '"/></td><td><label for="difflist" class="form_title" '
+        $frmStr .= '<td style="width:30px;align:center;"></td><td><label for="difflist" class="form_title" '
                 . 'id="label_dep_dest" style="display:inline;" >'
                 . _DIFFUSION_LIST . '</label></td>';
         //$frmStr .= '<td>&nbsp;</td>';
@@ -673,10 +636,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</tr>';
     $frmStr .= '<tr id="process_limit_date_tr" style="display:' . $displayValue
             . ';">';
-    $frmStr .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'process_limit_date.png" alt="' . _PROCESS_LIMIT_DATE 
-                . '"/></td><td><label for="process_limit_date" class="form_title" >'
+    $frmStr .= '<td style="width:30px;align:center;"></td><td><label for="process_limit_date" class="form_title" >'
             . _PROCESS_LIMIT_DATE . '</label></td>';
     //$frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><input name="process_limit_date" '
@@ -749,10 +709,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
 	    /*** Folder ***/
     if ($core->is_module_loaded('folder')) {
         $frmStr .= '<tr id="folder_tr" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?module=folder&filename='
-                . 'folders.gif" alt="' . _FOLDER 
-                . '"/></td><td><label for="folder" class="form_title" >' . _FOLDER
+        $frmStr .= '<td style="width:30px;align:center;"></td><td><label for="folder" class="form_title" >' . _FOLDER
                 . '</label></td>';
         $frmStr .= '<td class="indexing_field"><input type="text" '
                 . 'name="folder" id="folder" onblur="clear_error(\'frm_error_'
@@ -860,9 +817,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= '<table width="100%" align="center" border="0" >';
         $frmStr .= '<tr id="attachment_tr" style="display:' . $displayValue
                 . ';">';
-        $frmStr .= '<td style="width:24px;align:left;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'link.png" alt="' . _LINK_TO_DOC . '"  title="' . _LINK_TO_DOC . '"/>'
+        $frmStr .= '<td style="width:24px;align:left;">'
             . '</td><td style="width:200px;align:left;"><label for="attachment" class="form_title" >'
                 . _LINK_TO_DOC . ' </label></td>';
         $frmStr .= '<td class="indexing_field"><input type="radio" '
@@ -890,11 +845,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                   $frmStr .= ' title="' . _SEARCH . '"';
                 $frmStr .= '>';
                     $frmStr .= '<span style="font-weight: bold;">';
-                        $frmStr .= '<img ';
-                          $frmStr .= 'src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=folder_search.gif" ';
-                          $frmStr .= 'width="20px" ';
-                          $frmStr .= 'height="20px" ';
-                        $frmStr .= '/>';
+                        $frmStr .= '<i class="fa fa-link"></i>';
                     $frmStr .= '</span>';
                 $frmStr .= '</a>';
             $frmStr .= '</td>';

@@ -1,6 +1,6 @@
 <?php
 /*
-*   Copyright 2008-2013 Maarch
+*   Copyright 2008-2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -232,8 +232,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 */
     $frm_str .= '<div id="validleft">';
     $frm_str .= '<div id="valid_div" style="display:none;";>';
-        $frm_str .= '<h1 class="tit" id="action_title"><img src="'
-            .$_SESSION['config']['businessappurl'].'static.php?filename=file_index_b.gif"  align="middle" alt="" />'
+        $frm_str .= '<h1 class="tit" id="action_title">'
                 . _VALIDATE_QUALIF . ' ' . _NUM . $res_id;
                     $frm_str .= '</h1>';
                     $frm_str .= '<div id="frm_error_'.$id_action.'" class="indexing_error"></div>';
@@ -265,18 +264,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     /*** category ***/
     $frm_str .= '<tr id="category_tr" style="display:' . $display_value . ';">';
-    $frm_str .= '<td style="width:30px;align:center;align=center;"><span id="category_img_purchase" style="display:' . $display_value . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'cat_doc_purchase.png" alt="' . _PURCHASE . '"/></span>'
-            . '<span id="category_img_sell" style="display:' . $display_value . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'cat_doc_sell.png" alt="' . _SELL . '"/></span>'
-            . '<span id="category_img_enterprise_document" style="display:' . $display_value . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'cat_doc_enterprise_document.png" alt="' . _ENTERPRISE_DOCUMENT . '"/></span>'
-            . '<span id="category_img_human_resources" style="display:' . $display_value . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'cat_doc_human_resources.png" alt="' . _HUMAN_RESOURCES . '"/></span></td>';
+    $frm_str .= '<td style="width:30px;align:center;align=center;"><span id="category_img_purchase" style="display:' . $display_value . ';"></span>'
+            . '<span id="category_img_sell" style="display:' . $display_value . ';"></span>'
+            . '<span id="category_img_enterprise_document" style="display:' . $display_value . ';"></span>'
+            . '<span id="category_img_human_resources" style="display:' . $display_value . ';"></span></td>';
     $frm_str .= '<td style="width:200px;"><label for="category_id" class="form_title" >' . _CATEGORY . '</label></td>';
     //$frm_str .= '<td style="width:1px;">&nbsp;</td>';
     $frm_str .= '<td class="indexing_field"><select name="category_id" '
@@ -315,9 +306,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     /*** Doctype ***/
     $frm_str .= '<tr id="doctype_tr" style="display:'.$display_value.';">';
     $frm_str .= '<td style="width:30px;align:center;"><span class="form_title" '
-            . 'id="doctype_res"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'document.png" alt="' . _FILING . '"/>'
+            . 'id="doctype_res">'
             . '</span></td><td class="indexing_label"><label for="type_id"><span class="form_title" id="doctype_res" style="display:none;">' 
         . _DOCTYPE . '</span><span class="form_title" id="doctype_mail" style="display:inline;" >'._FILING.'</span></label></td>';
     $frm_str .='<td class="indexing_field"><select name="type_id" id="type_id" onchange="clear_error(\'frm_error_' 
@@ -370,10 +359,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     /*** Subject ***/
     $frm_str .= '<tr id="subject_tr" style="display:'.$display_value.';">';
-        $frm_str .='<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'subject.png" alt="' . _SUBJECT 
-                . '"/></td><td class="indexing_label">'
+        $frm_str .='<td style="width:30px;align:center;"></td><td class="indexing_label">'
                 . '<label for="subject" class="form_title" >'._SUBJECT.'</label></td>';
         $frm_str .='<td class="indexing_field"><textarea name="subject" id="subject" rows="2" onchange="clear_error(\'frm_error_'.$id_action.'\');" >';
         if (isset($data['subject']) && !empty($data['subject'])) {
@@ -392,21 +378,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             . '" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;"><span id="contact_purchase_img" style="display:' 
-        . $display_value . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'supplier.png" alt="' . _SUPPLIER . '"/></span>'
+        . $display_value . ';"></span>'
             . '<span id="contact_sell_img" style="display:' 
-                . $display_value . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'purchaser.png" alt="' . _PURCHASER . '"/></span>'
+                . $display_value . ';"></span>'
             . '<span id="contact_enterprise_document_img" style="display:' 
-                . $display_value . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'my_contacts_off.gif" alt="' . _CONTACT . '"/></span>'
+                . $display_value . ';"></span>'
             . '<span id="contact_human_resources_img" style="display:' 
-                . $display_value . ';"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'employee.png" alt="' . _EMPLOYEE . '"/></span></td>'
+                . $display_value . ';"></span></td>'
             . '<td><label for="contact" class="form_title" >'
             . '<span id="contact_label_purchase" style="display:' 
                 . $display_value . ';">' . _SUPPLIER . '</span>'
@@ -424,9 +402,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= ' <a href="#" id="create_contact" title="' . _CREATE_CONTACT
                 . '" onclick="new Effect.toggle(\'create_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;" '
-                . 'style="display:inline;" ><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'modif_liste.png" alt="' . _CREATE_CONTACT . '"/></a>';
+                . 'style="display:inline;" ><i class="fa fa-pencil" title="' 
+                . _CREATE_CONTACT . '"></a>';
     }
 
     $frm_str .= '</label></td>';
@@ -454,10 +431,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     /*** Identifier ***/
     $frm_str .= '<tr id="identifier_tr" style="display:' . $display_value . ';">';
-    $frm_str .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'identifier.png" alt="' . _IDENTIFIER 
-                . '"/></td><td><label for="identifier" class="form_title" >' . _IDENTIFIER
+    $frm_str .= '<td style="width:30px;align:center;"></td><td><label for="identifier" class="form_title" >' . _IDENTIFIER
             . '</label></td>';
     $frm_str .= '<td class="indexing_field"><input name="identifier" type="text" '
             . 'id="identifier" onchange="clear_error(\'frm_error_' . $id_action
@@ -472,10 +446,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     /*** Doc date ***/
     $frm_str .= '<tr id="doc_date_tr" style="display:'.$display_value.';">';
-        $frm_str .='<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'date.png" alt="' . _DOC_DATE 
-                . '"/></td><td class="indexing_label">'
+        $frm_str .='<td style="width:30px;align:center;"></td><td class="indexing_label">'
                 . '<label for="doc_date" class="form_title" id="mail_date_label" style="display:inline;" >'
                 ._DOC_DATE.'</label><label for="doc_date" class="form_title" id="doc_date_label" style="display:none;" >'._DOC_DATE.'</label></td>';
         $frm_str .='<td class="indexing_field"><input name="doc_date" type="text" id="doc_date" value="';
@@ -490,10 +461,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     /*** currency ***/
     $frm_str .= '<tr id="currency_tr" style="display:' . $display_value . ';">';
-    $frm_str .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'currency.png" alt="' . _CURRENCY 
-                . '"/></td><td><label for="currency" class="form_title">' . _CURRENCY
+    $frm_str .= '<td style="width:30px;align:center;"></td><td><label for="currency" class="form_title">' . _CURRENCY
             . '</label></td>';
     $frm_str .= '<td class="indexing_field">'
         . '<select id="currency" name="currency" onchange="clear_error(\'frm_error_' . $id_action
@@ -513,10 +481,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     /*** net_sum ***/
     $frm_str .= '<tr id="net_sum_tr" style="display:' . $display_value . ';">';
-    $frm_str .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'amount.png" alt="' . _NET_SUM 
-                . '"/></td><td><label for="net_sum_use" class="form_title" >' . _NET_SUM
+    $frm_str .= '<td style="width:30px;align:center;"></td><td><label for="net_sum_use" class="form_title" >' . _NET_SUM
             . '</label></td>';
     $frm_str .= '<td class="indexing_field">'
         . '<input name="net_sum_use" type="text" '
@@ -590,10 +555,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     if ($core_tools->is_module_loaded('entities')) {
         $_SESSION['validStep'] = "ok";
         $frm_str .= '<tr id="department_tr" style="display:'.$display_value.';">';
-        $frm_str .= '<td style="width:30px;align:center;"><img src="'
-            . $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename='
-            . 'department.png" alt="' . _DEPARTMENT_OWNER
-            . '"/></td><td><label for="department" class="form_title" '
+        $frm_str .= '<td style="width:30px;align:center;"></td><td><label for="department" class="form_title" '
             . 'id="label_dep_dest" style="display:inline;" >'
             . _DEPARTMENT_OWNER . '</label></td>';
         $frm_str .='<td class="indexing_field">'
@@ -622,10 +584,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
       
         # Diffusion list model            
         $frm_str .= '<tr id="difflist_tr" style="display:' . $display_value . ';">';
-        $frm_str .= '<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename='
-                . 'department.png" alt="' . _DIFFUSION_LIST 
-                . '"/></td><td><label for="difflist" class="form_title" '
+        $frm_str .= '<td style="width:30px;align:center;"></td><td><label for="difflist" class="form_title" '
                 . 'id="label_dep_dest" style="display:inline;" >'
                 . _DIFFUSION_LIST . '</label></td>';
         //$frm_str .= '<td>&nbsp;</td>';
@@ -683,10 +642,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_use_mandatory" style="display:inline;">*</span>&nbsp;</td>';
     $frm_str .= '</tr>';
     $frm_str .= '<tr id="process_limit_date_tr" style="display:'.$display_value.';">';
-    $frm_str .='<td style="width:30px;align:center;"><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'process_limit_date.png" alt="' . _PROCESS_LIMIT_DATE 
-                . '"/></td><td class="indexing_label"><label for="process_limit_date" class="form_title" >'
+    $frm_str .='<td style="width:30px;align:center;"></td><td class="indexing_label"><label for="process_limit_date" class="form_title" >'
                 . _PROCESS_LIMIT_DATE.'</label></td>';
     $frm_str .='<td class="indexing_field"><input name="process_limit_date" type="text" id="process_limit_date"  onclick="clear_error(\'frm_error_'
         . $id_action.'\');showCalender(this);" value="';
@@ -782,10 +738,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $folder = $data['folder'];
         }
         $frm_str .= '<tr id="folder_tr" style="display:'.$display_value.';">';
-        $frm_str .= '<td style="width:30px;align:center;"><img src="'
-            . $_SESSION['config']['businessappurl'] . 'static.php?module=folder&filename='
-            . 'folders.gif" alt="' . _FOLDER 
-            . '"/></td><td><label for="folder" class="form_title" >' . _FOLDER . '</label></td>';
+        $frm_str .= '<td style="width:30px;align:center;"></td><td><label for="folder" class="form_title" >' . _FOLDER . '</label></td>';
         $frm_str .='<td><input type="text" name="folder" id="folder" value="'
             . $folder . '" onblur=""/><div id="show_folder" class="autocomplete"></div>';
         $frm_str .= '</tr>';
@@ -1138,9 +1091,7 @@ $frm_str .= '</div>';
                             $frm_str .= 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&original&id=';
                             $frm_str .= $res_id;
                             $frm_str .= '" target="_blank">';
-                            $frm_str .= '<img alt="' . _VIEW_ORIGINAL . '" src="';
-                            $frm_str .= $_SESSION['config']['businessappurl'];
-                            $frm_str .= 'static.php?filename=picto_dld.gif" border="0" alt="" />';
+                            $frm_str .= '<i class="fa fa-download fa-2x" title="' . _VIEW_ORIGINAL . '"></i>';
                             $frm_str .= _VIEW_ORIGINAL . ' | ';
                         $frm_str .= '</a>';
                         if ($addNewVersion) {
@@ -1171,7 +1122,7 @@ $frm_str .= '</div>';
             'desc'
         );
         if ($nbLinkDesc > 0) {
-            $frm_str .= '<img src="static.php?filename=cat_doc_incoming.gif"/>';
+            $frm_str .= '<i class="fa fa-long-arrow-right fa-2x"></i>';
             $frm_str .= $Class_LinkController->formatMap(
                 $Class_LinkController->getMap(
                     $res_id,
@@ -1188,7 +1139,7 @@ $frm_str .= '</div>';
             'asc'
         );
         if ($nbLinkAsc > 0) {
-            $frm_str .= '<img src="static.php?filename=cat_doc_outgoing.gif" />';
+            $frm_str .= '<i class="fa fa-long-arrow-left fa-2x"></i>';
             $frm_str .= $Class_LinkController->formatMap(
                 $Class_LinkController->getMap(
                     $res_id,
