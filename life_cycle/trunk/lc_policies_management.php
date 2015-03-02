@@ -97,7 +97,6 @@ if($mode == "list"){
                    <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_policies_management_controler&amp;module=life_cycle&amp;mode=list';"/>
                 </p>
             </form>
-            </div>
             <?php
         }
         if (
@@ -244,6 +243,7 @@ if($mode == "list"){
             }
         }
         ?>
+        </div>
     </div>
     <?php
 }
