@@ -253,13 +253,13 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             );
         }
     }
-
-    $frmStr .= '<div id="validleft">';
-    $frmStr .= '<div id="index_div" style="display:none;";>';
-    $frmStr .= '<h1 class="tit" id="action_title"><img src="'
+    $frmStr .= '<h2 class="tit" id="action_title"><img src="'
             . $_SESSION['config']['businessappurl'] . 'static.php?filename='
             . 'file_index_b.gif"  align="middle" alt="" />' . _INDEXING_MLB;
-    $frmStr .= '</h1>';
+    $frmStr .= '</h2>';
+    $frmStr .= '<div id="validleft">';
+    $frmStr .= '<div id="index_div" style="display:none;";>';
+    
     $frmStr .= '<div id="frm_error_' . $actionId . '" class="indexing_error">'
             . '</div>';
     $frmStr .= '<form name="index_file" method="post" id="index_file" action="#"'
