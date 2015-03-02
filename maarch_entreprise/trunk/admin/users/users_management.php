@@ -53,8 +53,8 @@ elseif($mode == "up" || $mode == "add")
         echo "<br /><br /><br /><br />"._USER.' '._UNKNOWN."<br /><br /><br /><br />";
     else
     {?>
-        <form  id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&amp;admin=users&amp;page=users_management_controler&amp;mode=<?php echo $mode;?>" class="forms addforms" style="width:300px">
-            <div>
+        <form  id="frmuser" class="block" method="post" action="<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&amp;admin=users&amp;page=users_management_controler&amp;mode=<?php echo $mode;?>" class="forms addforms" style="width:60%;height:330px;">
+            <div class="content" style="width:330px;margin:auto;">
             <input type="hidden" name="display" value="true" />
             <input type="hidden" name="admin" value="users" />
             <input type="hidden" name="page" value="users_management_controler" />
@@ -72,27 +72,27 @@ elseif($mode == "up" || $mode == "add")
             </p>
             <p>
                 <label for="LastName"><?php  echo _LASTNAME; ?> :</label><br/>
-                <input name="LastName" id="LastName"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['lastname'])){echo functions::show_string($_SESSION['m_admin']['users']['lastname']);} ?>" />
+                <input name="LastName" id="LastName" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['lastname'])){echo functions::show_string($_SESSION['m_admin']['users']['lastname']);} ?>" />
                 <span class="red_asterisk">*</span>
             </p>
             <p>
                 <label for="FirstName"><?php  echo _FIRSTNAME; ?> :</label><br/>
-                <input name="FirstName" id="FirstName"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['firstname'])){ echo functions::show_string($_SESSION['m_admin']['users']['firstname']); }?>" />
+                <input name="FirstName" style="width: 95%;" id="FirstName"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['firstname'])){ echo functions::show_string($_SESSION['m_admin']['users']['firstname']); }?>" />
                 <span class="red_asterisk">*</span>
             </p>
             <p>
                 <?php  echo _PHONE_NUMBER; ?> :<br/>
-                <input name="Phone" id="Phone"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['phone'])){ echo $_SESSION['m_admin']['users']['phone']; }?>" />
+                <input name="Phone" id="Phone" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['phone'])){ echo $_SESSION['m_admin']['users']['phone']; }?>" />
             </p>
             <p>
                 <label for="Mail"><?php  echo _MAIL; ?> :</label><br/>
-                <input name="Mail" id="Mail"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['mail'])){ echo $_SESSION['m_admin']['users']['mail']; }?>" />
+                <input name="Mail" id="Mail" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['mail'])){ echo $_SESSION['m_admin']['users']['mail']; }?>" />
                 <span class="red_asterisk">*</span>
             </p>
             <p>
                 <?php  echo _LOGIN_MODE; ?>&nbsp;:<br/>
                 <?php
-                echo '<select name="LoginMode" id="LoginMode">';
+                echo '<select name="LoginMode" style="width: 95%;"  id="LoginMode">';
 
                     foreach($_SESSION['login_method_memory'] as $METHOD)
                     {
