@@ -54,7 +54,8 @@ unset($_SESSION['m_admin']);
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_entities_b.gif&module=entities" alt="" /> <?php  echo _ENTITIES;?></h1>
 
 <div id="inner_content" class="clearfix">
-<h2 class="admin_subtitle block" ><?php  echo _ENTITIES;?></h2>
+<div class="block">
+<h2 style="text-align:center;"><?php  echo _ENTITIES;?></h2>
     <div class="admin_item" id="admin_entities_sub" title="<?php  echo _MANAGE_ENTITIES_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=manage_entities&amp;module=entities';">
         <div class="sum_margin" >
                 <strong><?php  echo _MANAGE_ENTITIES;?></strong>
@@ -79,4 +80,6 @@ unset($_SESSION['m_admin']);
          </div>
     </div>
     <?php } ?>
+<div class="clearfix"></div>
+    </div>
 </div>
