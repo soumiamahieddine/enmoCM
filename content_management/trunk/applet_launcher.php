@@ -145,10 +145,8 @@ $_SESSION['error'] = '';
 ?>
 <div id="maarchcmdiv">
     <h3><?php echo _MAARCH_CM_APPLET;?></h3>
-    <br><?php echo _DONT_CLOSE;?>
-    <img alt="<?php echo _LOADING;?>" src="<?php echo 
-        $_SESSION['config']['businessappurl'];
-        ?>static.php?filename=loading_big.gif" border="0" alt="" width="200px" height="200px" />
+    <br><?php echo _DONT_CLOSE;?><br /><br />
+    <center><i <i class="fa fa-spinner fa-pulse fa-5x" title="<?php echo _DONT_CLOSE;?>"></i></center>
     <div id="maarchcm_error" class="error"></div>
     <applet ARCHIVE="<?php 
             echo $_SESSION['config']['coreurl'];?>modules/content_management/dist/maarchCM.jar" 

@@ -107,9 +107,7 @@ $createDiv = '<a href="#" onClick="window.open(\''
     . '&resMaster='
     . $_SESSION['doc_id']
     . '\', \'\', \'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no\');">'
-    . '<img alt="' . _CREATE_NEW_VERSION . '" src="'
-    . $_SESSION['config']['businessappurl']
-    . 'static.php?filename=modif_note.png&module=notes" border="0" alt="" />'
+    . '<i class="fa fa-pencil fa-2x" title="' . _CREATE_NEW_VERSION . '"></i>'
     . _CREATE_NEW_VERSION
     . '</a>';
 
