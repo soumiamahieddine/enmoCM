@@ -49,12 +49,12 @@ while($res = $db->fetch_object())
     <table width="100%" border="0">
         <tr>
             <td>
-                <iframe name="choose_tree" id="choose_tree" width="550" height="40" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=choose_tree";?>"></iframe>
+                <iframe name="choose_tree" id="choose_tree" width="550" height="40" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=choose_tree";?>" style="width:100%;"></iframe>
             </td>
         </tr>
         <tr>
             <td>
-                <iframe name="show_trees" id="show_trees" width="550" height="600" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=show_trees";?>"></iframe>
+                <iframe name="show_trees" class="block" id="show_trees" width="550" height="600" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=show_trees";?>" style="width:99%;"></iframe>
             </td>
         </tr>
     </table>
