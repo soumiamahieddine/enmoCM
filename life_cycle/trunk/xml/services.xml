@@ -7,7 +7,7 @@
    <servicepage>index.php?page=life_cycle_administration&amp;module=life_cycle</servicepage>
    <servicetype>admin</servicetype>
    <system_service>false</system_service>
-   <style>fa fa-archive</style>
+   <style>fa fa-recycle</style>
    <enabled>true</enabled>
    <WHEREAMIUSED>
      <page>admin.php</page>

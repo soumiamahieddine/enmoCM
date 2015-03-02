@@ -32,7 +32,7 @@ if($mode == "list"){
         false,
         _ALL_LC_POLICIES,
         _LC_POLICY,
-        $_SESSION['config']['businessappurl'].'static.php?filename=manage_lc_b.gif&module=life_cycle',
+        'recycle',
         true,
         true,
         false,
@@ -43,7 +43,7 @@ if($mode == "list"){
     );
 } elseif($mode == "up" || $mode == "add") {
     ?>
-    <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_lc_b.gif&module=life_cycle" alt="" />
+    <h1><i class="fa fa-recycle fa-2x"></i>
         <?php
         if($mode == "add") {
             echo _LC_POLICY_ADDITION;
@@ -135,9 +135,8 @@ if($mode == "list"){
                             . 'module=life_cycle&id=' . $_SESSION['m_admin']['lc_policies']
                             ['tabWf']['value']['cycles'][$cptCycles]
                             ['cycle_id'] . '">';
-                        $content .= '<img src="' . $_SESSION['config']['businessappurl'] 
-                            . 'static.php?filename=lot.gif" title="' . _SETUP . ' ' 
-                            . _LC_CYCLE . '" /></a>&nbsp;';
+                        $content .= '<i class="fa fa-gears fa-2x" title="' . _SETUP . ' ' 
+                            . _LC_CYCLE . '"></i></a>&nbsp;';
                         $content .= $link;
                         $content .= $_SESSION['m_admin']['lc_policies']
                             ['tabWf']['value']['cycles'][$cptCycles]
@@ -204,9 +203,8 @@ if($mode == "list"){
                                     . 'module=life_cycle&id=' . $_SESSION['m_admin']['lc_policies']
                                     ['tabWf']['value']['cycles'][$cptCycles]
                                     ['steps'][$cptSteps]['cycle_step_id'] . '">';
-                                $content .= '<img src="' . $_SESSION['config']['businessappurl'] 
-                                    . 'static.php?filename=lot.gif" title="' . _SETUP . ' ' 
-                                    . _LC_CYCLE_STEP . '" /></a>&nbsp;';
+                                $content .= '<i class="fa fa-gears fa-2x" title="' . _SETUP . ' ' 
+                                         . _LC_CYCLE_STEP . '"></i></a>&nbsp;';
                                 $content .= $_SESSION['m_admin']['lc_policies']
                                     ['tabWf']['value']['cycles'][$cptCycles]
                                     ['steps'][$cptSteps]['cycle_step_id'];

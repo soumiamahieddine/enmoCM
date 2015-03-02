@@ -21,7 +21,7 @@ if ($mode == "list") {
                     false,
                     _ALL_LC_CYCLES,
                     _LC_CYCLE,
-                    $_SESSION['config']['businessappurl'].'static.php?filename=manage_lc_b.gif&module=life_cycle',
+                    'recycle',
                     true,
                     true,
                     false,
@@ -32,7 +32,7 @@ if ($mode == "list") {
                 );
 } elseif($mode == "up" || $mode == "add") {
     ?>
-    <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_lc_b.gif&module=life_cycle" alt="" />
+    <h1><i class="fa fa-recycle fa-2x"></i>
         <?php
         if ($mode == "add") {
             echo _LC_CYCLE_ADDITION;
@@ -62,9 +62,8 @@ if ($mode == "list") {
                     echo '<p><a href="' . $_SESSION['config']['businessappurl']
                         . '?page=lc_policies_management_controler&mode=up&'
                         . 'module=life_cycle&id=' . $_SESSION['m_admin']['lc_cycles']['policy_id'] 
-                        . '"><img src="' . $_SESSION['config']['businessappurl'] 
-                        . 'static.php?filename=lot.gif" title="' . _VIEW_GENERAL_PARAMETERS_OF_THE_POLICY . ' ' 
-                        . _LC_CYCLE_STEP . '" />&nbsp;' . _VIEW_GENERAL_PARAMETERS_OF_THE_POLICY . '</a></p>';
+                        . '"><i class="fa fa-gears fa-2x" title="' . _VIEW_GENERAL_PARAMETERS_OF_THE_POLICY . ' ' 
+                        . _LC_CYCLE_STEP . '"></i>&nbsp;' . _VIEW_GENERAL_PARAMETERS_OF_THE_POLICY . '</a></p>';
                     ?>
                     <p>
                         <label for="policy_id"><?php echo _POLICY_ID; ?> : </label>
