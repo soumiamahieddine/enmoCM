@@ -438,7 +438,7 @@ function del_query_confirm()
 <div align="center" style="display:block;" id="div_query">
 
 <label for="query"><?php echo _MY_SEARCHES;?> : </label>
-<select name="query" id="query" onchange="load_query_db(this.options[this.selectedIndex].value, 'select_criteria', 'frmsearch2', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=manage_query';?>');return false;" >
+<select name="query" id="query" onchange="load_query_db(this.options[this.selectedIndex].value, 'select_criteria', 'parameters_tab', '<?php echo _SQL_ERROR;?>', '<?php echo _SERVER_ERROR;?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=manage_query';?>');return false;" >
     <option id="default_query" value=""><?php echo _CHOOSE_SEARCH;?></option>
     <?php for($i=0; $i< count($queries);$i++)
     {
@@ -485,12 +485,13 @@ if(isset($_REQUEST['nodetails']))
 <?php
             if($core_tools->is_module_loaded("basket") == true) { ?>
              <tr>
-                <td colspan="2" ><h2><?php echo _SEARCH_SCOPE; ?></h2></td>
+                <td colspan="2" ></td>
             </tr>
             <tr>
                 <td>
                     <div class="block">
-                    <table border="0" width="100%">
+                    <h2><?php echo _SEARCH_SCOPE; ?></h2>
+                    <table border="0" width="100%" class="content">
                         <tr>
                             <td width="70%">
                                 <label for="baskets" class="bold" ><?php echo _SPREAD_SEARCH_TO_BASKETS;?>:</label>
@@ -528,7 +529,6 @@ if(isset($_REQUEST['nodetails']))
                         </tr>
                     </table>
                     </div>
-                    <div class ="block_end">&nbsp;</div>
                 </td>
                 <td>
                     <p align="center">
@@ -541,12 +541,13 @@ if(isset($_REQUEST['nodetails']))
             if($core_tools->is_module_loaded("cases") == true)
             { ?>
              <tr>
-                <td colspan="2" ><h2><?php echo _CASE_INFO; ?></h2></td>
+                <td colspan="2" ></td>
             </tr>
             <tr>
                 <td>
                     <div class="block">
-                    <table border="0" width="100%">
+                    <h2><?php echo _CASE_INFO; ?></h2>
+                    <table border="0" width="100%" class="content">
 
                         <tr>
                             <td width="70%"><label for="numcase" class="bold" ><?php echo _CASE_NUMBER;?>:</label>
@@ -574,7 +575,6 @@ if(isset($_REQUEST['nodetails']))
                         </tr>
                     </table>
                     </div>
-                    <div class ="block_end">&nbsp;</div>
                 </td>
                 <td>
                     <p align="center">
@@ -588,12 +588,13 @@ if(isset($_REQUEST['nodetails']))
 
 
     <tr>
-        <td colspan="2" ><h2><?php echo _LETTER_INFO; ?></h2></td>
+        <td colspan="2" ></td>
     </tr>
     <tr >
         <td >
         <div class="block">
-            <table border = "0" width="100%">
+        <h2><?php echo _LETTER_INFO; ?></h2>
+            <table border = "0" width="100%" class="content">
                 <tr>
                     <td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT;?>:</label>
                         <input type="text" name="subject" id="subject" <?php echo $size; ?>  />
@@ -651,29 +652,22 @@ if(isset($_REQUEST['nodetails']))
                 </tr>
             </table>
             </div>
-            <div class="block_end">&nbsp;</div>
         </td>
     </tr>
     <tr><td colspan="2"><hr/></td></tr>
 <tr>
 <td >
 <div class="block">
-<h2 id="bottom">&nbsp;</h2>
-<table border = "0" width="100%">
-       <tr>
-     <td width="70%">
-        <label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
-        <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php 
+<h2><?php echo _ADD_PARAMETERS; ?>&nbsp;:&nbsp;<select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'parameters_tab', <?php 
         echo $browser_ie;?>, '<?php echo _ERROR_IE_SEARCH;?>');window.location.href = '#bottom';">
             <?php echo $src_tab; ?>
-        </select>
-     </td>
-
-        <td width="30%"><em><?php echo _ADD_PARAMETERS_HELP; ?></em></td>
+        </select></h2>
+<table border = "0" width="100%" class="content" id="parameters_tab">
+       <tr>
+        <td width="100%" colspan="3" style="text-align:center;"><em><?php echo _ADD_PARAMETERS_HELP; ?></em></td>
         </tr>
  </table>
  </div>
- <div class="block_end">&nbsp;</div>
 </td></tr>
 </table>
 
@@ -697,7 +691,7 @@ if(isset($_REQUEST['nodetails']))
 </div>
 
 <script type="text/javascript">
-load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
+load_query(valeurs, loaded_query, 'parameters_tab', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
 <?php if(isset($_REQUEST['init_search']))
 {
     ?>clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id'); <?php
