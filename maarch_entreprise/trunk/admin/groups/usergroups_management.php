@@ -37,7 +37,7 @@ if ($mode == 'list') {
     } else {
         ?>
         <div id="inner_content" class="clearfix">
-        <div id="group_box" class="bloc" >
+        <div id="group_box" class="bloc" style="width:35%;">
             <?php
         if ($mode == 'up') {
             if (count($users) > 0) {
@@ -180,6 +180,7 @@ if ($mode == 'list') {
         }
             ?><div id="access"></div>
         </div>
+        <div class="block" style="float:left;width:60%;">
         <form id="formgroup" method="post"  class="forms" action="<?php
         echo  $_SESSION['config']['businessappurl']
             ."index.php?display=true&admin=groups&page=usergroups_management_controler&mode="
@@ -212,7 +213,7 @@ if ($mode == 'list') {
         }
         ?>" />
 
-                <table border="0" summary="">
+                <h2><table border="0" summary="">
                     <tr>
                         <td  align="left">
                             <?php  echo _GROUP; ?> :
@@ -259,7 +260,7 @@ if ($mode == 'list') {
         ?>"/>
             </td>
         </tr>
-        </table>
+        </table></h2>
         <br/>
         <div class="center_text">
             <i><?php echo _AVAILABLE_SERVICES;?> :</i>
@@ -371,10 +372,9 @@ if ($mode == 'list') {
         echo $_SESSION['config']['businessappurl'];
         ?>index.php?page=usergroups_management_controler&amp;mode=list&amp;admin=groups';"/>
          </p>
-         <p>&nbsp;</p>
-         <p>&nbsp;</p>
          </div>
          </form>
+         </div>
          </div>
          <script type="text/javascript">updateContent('<?php
          echo $_SESSION['config']['businessappurl'];
