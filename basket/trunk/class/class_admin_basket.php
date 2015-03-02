@@ -198,9 +198,9 @@ class admin_basket extends dbquery
         }
         ?>
         <div id="inner_content" class="clearfix">
-            <div id="add_box_diff_list" >
-                <div class="block">
-                <p><iframe name="groupbasket_form" id="groupbasket_form" src="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=groupbasket_form";?>"  frameborder="0" class="frameform2" width="280px" style="width:100%;"></iframe></p>
+            <div id="add_box_diff_list" style="width:25%;">
+                <div class="block" style="height:350px;">
+                <iframe name="groupbasket_form" id="groupbasket_form" src="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=groupbasket_form";?>"  frameborder="0" class="frameform2" width="280px" style="width:100%;"></iframe>
                 </div>
             <div class="block_end">&nbsp;</div>
             </div>
@@ -213,7 +213,8 @@ class admin_basket extends dbquery
             else
             {
             ?>
-            <form name="formbasket" id="formbasket" method="post" action="<?php if($mode == "up") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_up_db"; } elseif($mode == "add") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_add_db"; } ?>" class="forms addforms">
+            <div class="block" style="float:left;width:70%;height:350px;">
+            <form name="formbasket" id="formbasket" method="post" style="margin:auto;" action="<?php if($mode == "up") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_up_db"; } elseif($mode == "add") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_add_db"; } ?>" class="forms addforms">
                 <input type="hidden" name="display"  value="true" />
                 <input type="hidden" name="module"  value="basket" />
                 <?php 
@@ -312,11 +313,12 @@ class admin_basket extends dbquery
                 }
                 ?>
                 <p></p>
-                <p class="buttons">
+                <p class="buttons" style="text-align:center;">
                     &nbsp;<input type="submit" name="Submit" value="<?php echo _VALIDATE; ?>" class="button" />&nbsp;
                     <input type="button" name="cancel" value="<?php echo _CANCEL; ?>" class="button"  onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=basket&amp;module=basket';"/>
                 </p>
             </form>
+            </div>
             <script language="javascript">
                 updateCollection($('collection').value, 'false');
                 function updateCollection(collId, isReloadGroups)
