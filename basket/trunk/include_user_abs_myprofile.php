@@ -65,6 +65,6 @@
 		<script type="text/javascript">
 			var modal_content = '<?php echo addslashes($modal_content);?>';
 		</script>
-		<h2><a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($_SESSION['user']['baskets']) >0) {?>'400px', '950px'<?php }else{?>'100px', '300px'<?php }?>);window.location.href='#top';autocomplete(<?php echo count($_SESSION['user']['baskets']);?>, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=autocomplete_users_list')"><img src = "<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=missing_user_big_on.gif&module=basket" alt="" /> <?php echo _MY_ABS; ?> </a></h2>
+		<h2><a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($_SESSION['user']['baskets']) >0) {?>'400px', '950px'<?php }else{?>'100px', '300px'<?php }?>);window.location.href='#top';autocomplete(<?php echo count($_SESSION['user']['baskets']);?>, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=autocomplete_users_list')"><i class = "fa fa-user-times fa-3x" title="" /></i> <?php echo _MY_ABS; ?> </a></h2>
          <p id="abs"><?php echo _MY_ABS_TXT; ?></p>
     </div>
