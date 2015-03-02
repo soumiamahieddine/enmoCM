@@ -82,7 +82,7 @@ $core_tools->load_header('', true, false);
 	{
 		$_SESSION['m_admin']['basket']['groups'] = array_values($_SESSION['m_admin']['basket']['groups']);
 		?>
-		<ul>
+		<ul style="max-height: 220px;overflow:auto;">
 		<?php
 		for($i=0; $i < count($_SESSION['m_admin']['basket']['groups']); $i++)
 		{?>
