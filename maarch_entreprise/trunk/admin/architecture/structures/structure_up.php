@@ -268,7 +268,8 @@ echo $erreur;
 $erreur = "";
 ?>
 </div>
-<h2 class="tit">
+<div class="block">
+<h2>
 &nbsp;<img src="<?php
 echo $_SESSION['config']['businessappurl'];
 ?>static.php?filename=manage_structures_b.gif" alt="" valign="center"/> <?php
@@ -278,10 +279,6 @@ if ($mode == "up") {
     echo _NEW_STRUCTURE_ADDED;
 }
 ?></h2>
-<div class="block">
-<br/>
-
-<br/>
 <form method="post" name="frmstructure" id="frmstructure" class="forms" action="<?php
 	echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=structure_up">
 	<input type="hidden" name="display" value="true" />
