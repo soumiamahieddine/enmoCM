@@ -144,8 +144,9 @@ if(isset($_GET['id']) && !empty($_GET['id']))
             </script>
 
         <div id="inner_content" class="clearfix">
+        <div class="block">
+        <h2>
         <form name="choose_a_group" id="choose_a_group" method="post">
-        <div class="block" align="center">
             <label><?php echo ucwords( _GROUPS);?> :</label>
             <select name="group_id" id="group_id" onchange="listReportsUpdate();" class="listext_big">
             <option value=""><?php echo _CHOOSE_GROUP; ?></option>
@@ -169,10 +170,10 @@ if(isset($_GET['id']) && !empty($_GET['id']))
             ?>
             </select>
 
-        </div><div class="block_end">&nbsp;</div>
+        <div class="block_end">&nbsp;</div>
     </form>
-    <br />
-    <div>
+    </h2>
+
     <div id="loading" style="display:none;text-align:center;"><p><img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=ajax_loader.gif&module=reports'; ?>" alt=""/></p></div>
 
     <div id="listReports">
