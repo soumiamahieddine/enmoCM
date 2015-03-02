@@ -52,7 +52,8 @@ unset($_SESSION['m_admin']);
 ?>
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_architecture_b.gif" alt="" /> <?php  echo _ADMIN_ARCHI;?></h1>
 <div id="inner_content" class="clearfix">
-    <h2 class="admin_subtitle block" ><?php  echo _ARCHITECTURE;?></h2>
+<div class="block">
+    <h2 style="text-align:center;"><?php  echo _ARCHITECTURE;?></h2>
     <div  class="admin_item" id="admin_structures" title="<?php  echo _MANAGE_STRUCTURE_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=structures';">
         <div class="sum_margin">
                 <strong><?php  echo _MANAGE_STRUCTURE;?></strong><!--<br/>
@@ -80,5 +81,6 @@ unset($_SESSION['m_admin']);
                 <em><?php  echo _VIEW_TREE_DOCTYPES_DESC;?></em>-->
          </div>
     </div>
-
+<div class="clearfix"></div>
+</div>
 </div>
