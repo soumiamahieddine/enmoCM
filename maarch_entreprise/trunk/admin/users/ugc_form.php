@@ -31,9 +31,10 @@
 core_tools::load_lang();
 header("Content-Type: text/html", true);
 ?>
-<div class="block">
+<div class="block" style="height:330px;position:relative;">
 <form name="usergroup_content" method="get" action="#" >
- <h2 class="tit"> <?php  echo html_entity_decode(_USER_GROUPS_TITLE); ?> :</h2>
+ <h2> <?php  echo html_entity_decode(_USER_GROUPS_TITLE); ?> :</h2>
+ <div class="content" style="height:150px;overflow:auto;">
 <?php
 
 	if(empty($_SESSION['m_admin']['users']['groups'])   )
@@ -57,7 +58,7 @@ header("Content-Type: text/html", true);
 				<input type="checkbox"  class="check" name="groups[]" value="<?php  echo  $_SESSION['m_admin']['users']['groups'][$theline]['GROUP_ID']; ?>" /><?php  echo $_SESSION['m_admin']['users']['groups'][$theline]['LABEL'] ; ?><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><?php  echo $_SESSION['m_admin']['users']['groups'][$theline]['ROLE']; ?></i><br/></input>
 				<?php
 		}
-		 ?> <br/><input class="button" type="button" name="removeUsergroup" id="removeUsergroup" value="<?php  echo _DELETE_GROUPS; ?>" onclick="doActionGroup('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;admin=users&amp;page=remove_group', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;admin=users&amp;page=ugc_form')"/><br/><br/>
+		 ?> <div style="position: absolute;bottom: 10px;"><input class="button" type="button" name="removeUsergroup" id="removeUsergroup" value="<?php  echo _DELETE_GROUPS; ?>" onclick="doActionGroup('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;admin=users&amp;page=remove_group', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;admin=users&amp;page=ugc_form')"/><br/><br/>
 <?php 	}
 
 	if (count($_SESSION['m_admin']['users']['groups']) < $_SESSION['m_admin']['nbgroups']  || empty($_SESSION['m_admin']['users']['groups']))
@@ -76,5 +77,7 @@ header("Content-Type: text/html", true);
 	<?php
 	}
 	?>
+	</div>
 	</form>
+	</div>
 	</div>
