@@ -279,10 +279,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     print_r($data);
     echo '</pre>';exit;
 */
+    $frm_str .= '<h2 class="tit" id="action_title"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=file_index_b.gif"  align="middle" alt="" />'._VALIDATE_MAIL.' '._NUM.$res_id;
+    $frm_str .= '</h2>';
     $frm_str .= '<div id="validleft">';
     $frm_str .= '<div id="valid_div" style="display:none;";>';
-        $frm_str .= '<h1 class="tit" id="action_title"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=file_index_b.gif"  align="middle" alt="" />'._VALIDATE_MAIL.' '._NUM.$res_id;
-                    $frm_str .= '</h1>';
                     $frm_str .= '<div id="frm_error_'.$id_action.'" class="indexing_error"></div>';
                     $frm_str .= '<form name="index_file" method="post" id="index_file" action="#" class="forms indexingform" style="text-align:left;">';
 
