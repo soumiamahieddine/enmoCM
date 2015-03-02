@@ -10,8 +10,7 @@ if ($mode == "list") {
         $docserversList['page_name_val'], $docserversList['page_name_ban'],
         $docserversList['page_name_del'], $docserversList['page_name_add'],
         $docserversList['label_add'], false, false, _ALL_DOCSERVERS, _DOCSERVER,
-        $_SESSION['config']['businessappurl']
-        . 'static.php?filename=admin_docservers.png&admin=docservers', false, true,
+        'hdd-o', false, true,
         false, true, $docserversList['what'], true,
         $docserversList['autoCompletionArray']
     );
@@ -30,9 +29,7 @@ if ($mode == "list") {
         }
     }
     ?>
-    <h1><img src="<?php
-    echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=admin_docservers.png" alt="" />
+    <h1><i class="fa fa-hdd-o fa-2x"></i>
         <?php
     if ($mode == "add") {
         echo _DOCSERVER_ADDITION;

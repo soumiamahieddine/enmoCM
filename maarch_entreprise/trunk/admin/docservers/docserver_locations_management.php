@@ -14,8 +14,7 @@ if ($mode == "list") {
         $docserverLocationsList['page_name_add'],
         $docserverLocationsList['label_add'], false, false,
         _ALL_DOCSERVER_LOCATIONS, _DOCSERVER_LOCATION,
-        $_SESSION['config']['businessappurl']
-        . 'static.php?filename=admin_docservers.png', false, true, false, true,
+        'hdd-o', false, true, false, true,
         $docserverLocationsList['what'], true,
         $docserverLocationsList['autoCompletionArray']
     );
@@ -23,9 +22,7 @@ if ($mode == "list") {
 	$coreTools = new core_tools();
 	$func = new functions();
     ?>
-    <h1><img src="<?php
-    echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=admin_docservers.png" alt="" />
+    <h1><i class="fa fa-hdd-o fa-2x"></i>
         <?php
     if ($mode == "add") {
         echo _DOCSERVER_LOCATION_ADDITION;
@@ -47,13 +44,9 @@ if ($mode == "list") {
         if ($mode == "up") {
             if (count($docservers) > 0) {
                 ?><div onclick="new Effect.toggle('users_list', 'blind', {delay:0.2});return false;" >
-                &nbsp;<img src="<?php
-                echo $_SESSION['config']['businessappurl'];
-                ?>static.php?filename=manage_doctypes_b.gif" alt="" /><i onmouseover="this.style.cursor='pointer';"><?php
+                &nbsp;<i class="fa fa-gears fa-2x"></i><i onmouseover="this.style.cursor='pointer';"><?php
                 echo _SEE_DOCSERVERS_LOCATION;
-                ?></i> <img src="<?php
-                echo $_SESSION['config']['businessappurl'];
-                ?>static.php?filename=plus.png" alt="" />
+                ?></i> <i class="fa fa-arrow-right"></i>
                     <span class="lb1-details">&nbsp;</span>
                 </div>
                 <div class="desc" id="users_list" style="display:none;">

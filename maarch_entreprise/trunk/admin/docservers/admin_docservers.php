@@ -49,22 +49,25 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 unset($_SESSION['m_admin']);
 ?>
-<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=admin_docservers.png" alt="" /> <?php  echo _ADMIN_DOCSERVERS;?></h1>
+<h1><i class="fa fa-hdd-o fa-2x"></i> <?php  echo _ADMIN_DOCSERVERS;?></h1>
 <div id="inner_content" class="clearfix">
 <div class="block">
 	<h2><?php  echo _ADMIN_DOCSERVERS;?></h2>
-	<div class="admin_item" id="admin_docservers_locations" title="<?php  echo _MANAGE_DOCSERVERS_LOCATIONS_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docserver_locations_management_controler&mode=list&admin=docservers';">
-		<div class="sum_margin" >
+	<div class="admin_item" title="<?php  echo _MANAGE_DOCSERVERS_LOCATIONS_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docserver_locations_management_controler&mode=list&admin=docservers';">
+		<div>
+			<i class="fa fa-hdd-o fa-4x"></i><br />
 			<strong><?php  echo _MANAGE_DOCSERVERS_LOCATIONS;?></strong>
 		</div>
 	</div>
-	<div class="admin_item" id="admin_docservers" title="<?php  echo _MANAGE_DOCSERVERS_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docservers_management_controler&mode=list&admin=docservers';">
-		<div class="sum_margin" >
+	<div class="admin_item" title="<?php  echo _MANAGE_DOCSERVERS_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docservers_management_controler&mode=list&admin=docservers';">
+		<div>
+			<i class="fa fa-hdd-o fa-4x"></i><br />
 			<strong><?php  echo _MANAGE_DOCSERVERS;?></strong>
 		</div>
 	</div>
-	<div class="admin_item" id="admin_docserver_types" title="<?php  echo _MANAGE_DOCSERVER_TYPES_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docserver_types_management_controler&mode=list&admin=docservers';">
-		<div class="sum_margin" >
+	<div class="admin_item" title="<?php  echo _MANAGE_DOCSERVER_TYPES_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docserver_types_management_controler&mode=list&admin=docservers';">
+		<div>
+			<i class="fa fa-hdd-o fa-4x"></i><br />
 			<strong><?php  echo _MANAGE_DOCSERVER_TYPES;?></strong>
 		</div>
 	</div>

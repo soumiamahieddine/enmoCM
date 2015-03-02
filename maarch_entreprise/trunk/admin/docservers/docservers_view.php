@@ -2,9 +2,7 @@
 /* View */
 if ($params['mode'] == 'list') {
     ?>
-    <h1><img src="<?php
-    echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=admin_docservers.png" alt="" />
+    <h1><i class="fa fa-hdd-o fa-2x"></i>
     <?php
     echo _DOCSERVERS_LIST. ' : ' . count($dataObjectList->$params['objectName']) 
         . ' ' . _DOCSERVERS;
@@ -15,9 +13,7 @@ if ($params['mode'] == 'list') {
 } elseif ($params['mode'] == 'create' || $params['mode'] == 'read' || $params['mode'] == 'update') {
     $func = new functions();
     ?>
-    <h1><img src="<?php
-    echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=admin_docservers.png" alt="" />
+    <h1><i class="fa fa-hdd-o fa-2x"></i>
         <?php
     if ($params['mode'] == 'create') {
         echo _DOCSERVER_ADDITION;

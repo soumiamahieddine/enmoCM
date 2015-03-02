@@ -273,16 +273,16 @@ function display_list() {
                     format_item($item,_DOCSERVER_TYPE_LABEL,"15","left","left","bottom",true); break;
                 case "is_container":
                     if ($item['value'] == "Y") {
-                        $item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_enabled.gif' alt='"._CONTAINER."' title='"._CONTAINER."'/>";
+                        $item['value'] = "<i class='fa fa-check fa-2x' title='"._CONTAINER."'></i>";
                     } elseif ($item['value'] == "N") {
-                        $item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_disabled.gif' alt='"._NOT_CONTAINER."' title='"._NOT_CONTAINER."'/>";
+                        $item['value'] = "<i class='fa fa-remove fa-2x' title='"._NOT_CONTAINER."'></i>";
                     }
                     format_item($item,_IS_CONTAINER,"5","left","left","bottom",true); break;
                 case "is_compressed":
                     if ($item['value'] == "Y") {
-                        $item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_enabled.gif' alt='"._COMPRESSED."' title='"._COMPRESSED."'/>";
+                        $item['value'] = "<i class='fa fa-check fa-2x' title='"._COMPRESSED."'></i>";
                     } elseif ($item['value'] == "N") {
-                        $item['value'] = "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_stat_disabled.gif' alt='"._NOT_COMPRESSED."' title='"._NOT_COMPRESSED."'/>";
+                        $item['value'] = "<i class='fa fa-remove fa-2x' title='"._NOT_COMPRESSED."'></i>";
                     }
                     format_item($item,_IS_COMPRESSED,"5","left","left","bottom",true); break;
                 case "enabled":
