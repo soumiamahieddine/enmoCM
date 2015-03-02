@@ -71,9 +71,7 @@ if (!empty($arrBasketsSecondProfile)) {
                     ?>'600px', '1000px'<?php 
                 }else{
                     ?>'100px', '320px'<?php 
-                }?>);window.location.href='#top';"><img src="<?php 
-                    echo $_SESSION['config']['businessappurl'];
-                ?>static.php?filename=manage_baskets.gif&amp;module=basket" alt="" /> <?php 
+                }?>);window.location.href='#top';"><i class="fa fa-inbox fa-3x" title="" /></i> <?php 
                     echo _MANAGE_SECONDARY_USER_BASKETS; 
                 ?> </a>
         </div>
@@ -86,9 +84,7 @@ if (!empty($arrBasketsSecondProfile)) {
     ?>
     <div>
         <div class="h2_title">
-            <img src="<?php 
-                echo $_SESSION['config']['businessappurl'];
-            ?>static.php?filename=manage_baskets.gif&amp;module=basket" alt="" /> <?php 
+            <i class="fa fa-inbox fa-3x" title="" /></i> <?php 
                 echo _MANAGE_SECONDARY_USER_BASKETS; 
             ?>
         </div>
