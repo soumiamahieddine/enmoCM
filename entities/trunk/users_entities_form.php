@@ -14,11 +14,11 @@
 core_tools::load_lang();
 header("Content-Type: text/html", true);
 ?>
-<div class="block">
+<div class="block" style="height:330px;position:relative;">
 <form name="userEntity" method="get" action="#" >
 
- <h2 class="tit"> <?php  echo _USER_ENTITIES_TITLE; ?> :</h2>
-
+ <h2> <?php  echo _USER_ENTITIES_TITLE; ?> :</h2>
+<div class="content" style="height:150px;overflow:auto;">
 <?php
 
     if(empty($_SESSION['m_admin']['entity']['entities'])   )
@@ -41,7 +41,7 @@ header("Content-Type: text/html", true);
                 <input type="checkbox"  class="check" name="entities[]" value="<?php  echo $_SESSION['m_admin']['entity']['entities'][$theline]['ENTITY_ID']; ?>" ><?php if(isset($_SESSION['m_admin']['entity']['entities'][$theline]['SHORT_LABEL']) && !empty($_SESSION['m_admin']['entity']['entities'][$theline]['SHORT_LABEL'])){ echo $_SESSION['m_admin']['entity']['entities'][$theline]['SHORT_LABEL'] ; }elseif(isset($_SESSION['m_admin']['entity']['entities'][$theline]['LABEL'])){ echo $_SESSION['m_admin']['entity']['entities'][$theline]['LABEL'];}?><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><?php  echo $_SESSION['m_admin']['entity']['entities'][$theline]['ROLE']; ?></i><br/></input>
                 <?php
         }
-         ?> <br/><input class="button" type="button" name="removeEntities" id="removeEntities" value="<?php  echo _DELETE_ENTITY; ?>" onclick="doActionEntity('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=entities&amp;page=remove_user_entities', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=entities&amp;page=users_entities_form');" /><br/><br/>
+         ?> <div style="position: absolute;bottom: 10px;"><input class="button" type="button" name="removeEntities" id="removeEntities" value="<?php  echo _DELETE_ENTITY; ?>" onclick="doActionEntity('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=entities&amp;page=remove_user_entities', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=entities&amp;page=users_entities_form');" /><br/><br/>
 <?php   }
 
     //if (!isset($_SESSION['m_admin']['entity']['entities'])|| (count($_SESSION['m_admin']['entity']['entities']) < $_SESSION['m_admin']['nbentities']  || empty($_SESSION['m_admin']['entity']['entities'])))
@@ -59,6 +59,8 @@ header("Content-Type: text/html", true);
     <?php
     }
     ?>
+    </div>
     </form>
+    </div>
     </div>
 
