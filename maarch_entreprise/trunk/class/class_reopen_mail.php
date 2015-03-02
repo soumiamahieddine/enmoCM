@@ -161,7 +161,7 @@ class ReopenMail extends dbquery
         <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=default_status_big.gif" alt="" border="0" /> <?php echo _REOPEN_MAIL;?></h1>
 
         <div id="inner_content" class="clearfix" align="center">
-        <br /><br />
+        <div class="block">
         <p ><?php echo _MAIL_SENTENCE2 . '<br />' . _MAIL_SENTENCE3 . '<br />' . _MAIL_SENTENCE4 . ' ' . _BASKETS . ' ' . _MAIL_SENTENCE5;?> </p>
           <br/>
           <p ><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=separateur_1.jpg" width="90%" height="1" alt="" /></p>
@@ -183,6 +183,7 @@ class ReopenMail extends dbquery
                 </p>
 
           </form>
+          </div>
         </div>
     <?php
     }
