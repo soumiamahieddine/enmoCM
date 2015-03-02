@@ -303,17 +303,6 @@ acronym, abbr {
     padding-top: 20px;
 }
 
-.tit {
-    font-size: 1.4em;
-    color: #1B99C4;
-    padding-bottom: 1em;
-
-}
-
-#desc_box .tit, #user_box .tit, #ugc .tit {
-    /*color: #FFC200;*/
-    color: #1B99C4;
-}
 
 .sstit {
     color: #1B99C4;
@@ -663,7 +652,7 @@ input.button {
 
 .listing, .spec {
     margin: 10px 0px 0;
-    min-width: 990px;
+    /*min-width: 990px;*/
 }
 
 .listingIndex {
@@ -839,7 +828,7 @@ width: 770px;
 }
 
 .listing td {
-    background-color: #93D1E4;
+    background-color: #6ab1de;
 }
 
 .listingIndex td {
@@ -1116,6 +1105,7 @@ left: -100em;
     min-width: 1000px;
     margin: 0 auto;
     padding-left: 10px;
+    padding-right: 10px;
     text-align: left;
     min-height: 400px;
     height: 80%;
@@ -1883,7 +1873,7 @@ padding-left :15px;
 
 #ugc {
     height: 350px;
-    width: 300px;
+    width: 18%;
 }
 
 #group_box
@@ -2149,7 +2139,7 @@ color: #CCC;
 
 #formgroup .buttons
 {
-margin-left: 30%;
+/*margin-left: 30%;*/
 }
 
 #pop .forms p {
@@ -2535,7 +2525,7 @@ margin-left: 10px;
     padding-left: 5px;
     padding-right: 5px;
     vertical-align:top;
-    float: left;
+    float: right;
     /*margin: 0 0 1em 2em;*/
     position: relative;
 }
@@ -2876,15 +2866,32 @@ input[type="checkbox"] , input[type="radio"]
 
 .block /* Propriétés qui s'appliquent au cadre d'habillage en général */
 {
-background-image:url("static.php?filename=border_top.gif");
-background-repeat:repeat-x;
-background-position:top center;
-padding-top : 8px;
-padding-left : 5px;
-padding-right : 5px;
-padding-bottom : 12px;
-background-color: #deedf3;
+padding: 0px;
+color: #666;
+background-color: #DEEDF3;
+border-top: solid 2px #FDD16C;
+border-bottom: solid 2px #FDD16C;
+padding:10px;
 }
+
+.block h2
+{
+/*background-color: #2980b9;*/
+background-color: #009DC5;
+padding: 0.5em;
+margin-left: -10px;
+margin-right: -10px;
+margin-top: -10px;
+margin-bottom: 10px;
+color:#ffffff;
+}
+
+.block .content/* Propriétés qui s'appliquent au cadre d'habillage en général */
+{
+color: #666;
+padding: 10px;
+}
+
 
 .block_bottom 
 {
@@ -2905,6 +2912,7 @@ background-position:bottom;
 padding-bottom : 7px;
 /*margin-left: 12px;
 margin-right: 12px;*/
+display:none;
 }
 
 .mini_box_left{
@@ -3284,14 +3292,20 @@ hr{
 /* admin services board */
 
 .admin_item {
-    width: 315px;
+    width: 16.6%;
     min-height: 80px;
     /*margin: 0px 0px 15px;*/
     display: block;
     float: left;
      cursor: pointer;
     /*background-color: #deedf3;*/
+    text-align:center;
 }
+
+.admin_item:hover {
+    opacity: 0.5;
+}
+
 .admin_item  div
 {
  height: 80px;
@@ -3435,17 +3449,33 @@ height: 100%;*/
 .modal{
     position:absolute;
     display:block;
+    padding:10px;
     /*z-index:3000;*/
     margin-left:auto;
     margin-right:auto;
     background-color:white;
-    border: 3px solid ;
-    padding: 10px;
+    background-color: #DEEDF3;
+    border-top: solid 2px #FDD16C;
+    border-bottom: solid 2px #FDD16C;
     overflow: auto;
+    -moz-box-shadow: 0px 0px 5px 0px #656565;
+    -webkit-box-shadow: 0px 0px 5px 0px #656565;
+    -o-box-shadow: 0px 0px 5px 0px #656565;
+    box-shadow: 0px 0px 5px 0px #656565;
+    filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=NaN, Strength=5);
 }
 
 .modal h2 {
-margin-bottom: 15px;
+background-color: #2980b9;
+padding: 0.5em;
+color: #ffffff;
+background-color: #2980b9;
+padding: 0.5em;
+color: #ffffff;
+margin-top: -10px;
+margin-left: -10px;
+margin-right: -10px;
+margin-bottom: 10px;
 }
 
 #content_process
@@ -3557,7 +3587,7 @@ padding:0;
     border: 1px;
     float: right;
     /*min-width: 40%;*/
-    width: 40%;
+    width: 38%;
     margin: 0 10px 0 13px;
     display:inline;
     /*position:absolute;*/
@@ -3668,8 +3698,7 @@ padding : 4px 3px 1px 1px;
 }
 
 .popup_content{
-margin-left:10px;
-margin-top:10px;
+/*padding: 10px;*/
 }
 
 .block .check
