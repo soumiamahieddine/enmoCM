@@ -143,6 +143,12 @@ if(isset($_REQUEST['branch_id']) && !empty($_REQUEST['branch_id']) && isset($_RE
 				if ($children[$cpt_level3]['enabled'] ==  'N') {
 					$color = "style=\"color:red;\"";
 				}
+
+				//PB : if id in contact_addresses = 100, the address is not display in the contacts tree
+				if ($children[$cpt_level3]['id'] == 100) {
+					$children[$cpt_level3]['id'] = 10;
+				}
+				
 				echo "{'id':'".$children[$cpt_level3]['id']."', 
 						'txt':'<span ".$color.">".trim(addslashes($children[$cpt_level3]['address_label']))."</span>', 
 						'canhavechildren' : false, 
