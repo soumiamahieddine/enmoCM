@@ -7,6 +7,7 @@
     $roles = list of available roles
     $onlyCC =  hide 'dest';
 */
+    echo '<div style="max-height:490px;overflow:auto;">';
 foreach($roles as $role_id => $role_label) {
     if($role_id == 'dest' && $onlyCC) continue;
     if(count($difflist[$role_id]['users']) > 0
@@ -70,4 +71,6 @@ foreach($roles as $role_id => $role_label) {
     } ?>
     <br/><?php
     }
-} ?>
+} 
+echo '</div>';
+?>
