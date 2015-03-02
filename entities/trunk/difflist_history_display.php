@@ -148,7 +148,7 @@ $urlParameters = '';
                     $db->connect();
                     $db->query("SELECT firstname, lastname FROM users WHERE user_id = '".$tab[$i][$j]['value']."'");
                     $user = $db->fetch_object();
-                    $tab[$i][$j]['value'] = $request->show_string(ucfirst($user->firstname) . " " . ucwords($user->lastname));
+                    $tab[$i][$j]['value'] =  ucwords($user->lastname) . " " . $request->show_string(ucfirst($user->firstname));
                     $tab[$i][$j]["size"]="15";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
