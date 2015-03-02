@@ -56,7 +56,7 @@ if (isset($_POST['value']) && $_POST['value'] == "submit")
 	exit();
 }
 ?>
-<h1 ><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_help_b.gif"  align="middle" /><?php echo _MISSING_ADVERT_TITLE; ?></h1>
+<h1 ><i class="fa fa-question-circle"  align="middle" /></i><?php echo _MISSING_ADVERT_TITLE; ?></h1>
 <div id="inner_content" class="clearfix">
 <h2 class="tit" align="center"><?php echo _MISSING_ADVERT_01; ?></h2>
 <p align="center"><?php echo _MISSING_ADVERT_02; ?> </p>
