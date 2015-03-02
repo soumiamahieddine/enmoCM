@@ -35,7 +35,7 @@ if(isset($_SESSION['m_admin']['users']['status']) && $_SESSION['m_admin']['users
 
  ?><script >var abs_content = '<?php echo addslashes($content);?>';</script>
     <div>
-        <div class="h2_title"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=missing_user_big.gif&amp;module=basket" alt="" /> <?php echo _ADMIN_ABS; ?> </a></div>
+        <div class="h2_title"><i class="fa fa-user-times fa-2x" title="" /></i> <?php echo _ADMIN_ABS; ?> </a></div>
         <p id="abs"><?php echo _USER_ABS; ?></p>
         <p><input type="button" onclick="createModal(abs_content, 'modal_cancel_abs', '100px', '300px');window.location.href='#top';" value="<?php echo _CANCEL_ABS;?>" class="button"/></p>
     </div>
@@ -81,7 +81,8 @@ if(isset($_SESSION['m_admin']['users']['status']) && $_SESSION['m_admin']['users
         <script type="text/javascript">
             var modal_content = '<?php echo preg_replace("/'/", "\'",$modal_content);?>';
         </script>
-         <div class="h2_title"><a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($arr_baskets) >0) {?>'400px', '800px'<?php }else{?>'100px', '320px'<?php }?>);window.location.href='#top';autocomplete(<?php echo count($arr_baskets);?>, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=basket&amp;page=autocomplete_users_list')"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=missing_user_big.gif&amp;module=basket" alt="" /> <?php echo _ADMIN_ABS; ?> </a></div>
+         <div class="h2_title">
+			 <a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($arr_baskets) >0) {?>'400px', '800px'<?php }else{?>'100px', '320px'<?php }?>);window.location.href='#top';autocomplete(<?php echo count($arr_baskets);?>, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=basket&amp;page=autocomplete_users_list')"><i class="fa fa-user-times fa-2x"></i> <?php echo _ADMIN_ABS; ?> </a></div>
         <p id="abs"><?php echo _ADMIN_ABS_TXT; ?></p>
     </div>
 <?php } ?>
