@@ -49,6 +49,8 @@ else
 }
 ?>
 <body>
+<div class="block">
+    <h2>
 	<form name="frm_choose_tree" id="frm_choose_tree" method="get" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=architecture&page=choose_tree">
     	<input type="hidden" name="display" value="true" />
     	<input type="hidden" name="admin" value="architecture" />
@@ -68,6 +70,8 @@ else
             </select>
         </p>
     </form>
+    </h2>
+</div>
 <?php $core_tools->load_js();?>
 </body>
 </html>
