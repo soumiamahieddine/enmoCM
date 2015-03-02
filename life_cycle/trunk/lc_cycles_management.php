@@ -48,7 +48,8 @@ if ($mode == "list") {
             echo "<br /><br />"._THE_LC_CYCLE." "._UNKOWN."<br /><br /><br /><br />";
         } else {
             ?>
-            <form name="formdocserver" method="post" class="forms" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&page=lc_cycles_management_controler&module=life_cycle&mode=".$mode;?>">
+            <div class="block">
+            <form name="formdocserver" method="post" class="forms" style="width:400px;" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&page=lc_cycles_management_controler&module=life_cycle&mode=".$mode;?>">
                 <input type="hidden" name="display" value="value" />
                 <input type="hidden" name="module" value="life_cycle" />
                 <input type="hidden" name="page" value="lc_cycles_management_controler" />
@@ -129,6 +130,7 @@ if ($mode == "list") {
                    <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_cycles_management_controler&amp;module=life_cycle&amp;mode=list';"/>
                 </p>
             </form>
+            </div>
             <?php
         }
         ?>
