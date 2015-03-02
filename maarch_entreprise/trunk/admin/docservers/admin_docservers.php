@@ -51,7 +51,8 @@ unset($_SESSION['m_admin']);
 ?>
 <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=admin_docservers.png" alt="" /> <?php  echo _ADMIN_DOCSERVERS;?></h1>
 <div id="inner_content" class="clearfix">
-	<h2 class="admin_subtitle block" ><?php  echo _ADMIN_DOCSERVERS;?></h2>
+<div class="block">
+	<h2><?php  echo _ADMIN_DOCSERVERS;?></h2>
 	<div class="admin_item" id="admin_docservers_locations" title="<?php  echo _MANAGE_DOCSERVERS_LOCATIONS_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=docserver_locations_management_controler&mode=list&admin=docservers';">
 		<div class="sum_margin" >
 			<strong><?php  echo _MANAGE_DOCSERVERS_LOCATIONS;?></strong>
@@ -66,5 +67,7 @@ unset($_SESSION['m_admin']);
 		<div class="sum_margin" >
 			<strong><?php  echo _MANAGE_DOCSERVER_TYPES;?></strong>
 		</div>
+	</div>
+	<div class="clearfix"></div>
 	</div>
 </div>
