@@ -239,17 +239,16 @@ if($mode != 'del') { ?>
     ?>
 </h1>
 <br/>
-<h2><?php echo _ADMIN_LISTMODEL_TITLE; ?></h2>
-<div id="listmodel_box" class="block">
+<div id="listmodel_box" class="block" style="height:550px;">
 	<h2 class="tit"><?php echo _LINKED_DIFF_LIST;?> : </h2><?php
     $difflist = $_SESSION['m_admin']['entity']['listmodel'];
     require_once 'modules/entities/difflist_display.php'; ?>
-	<p class="buttons">
+	<p class="buttons" style="text-align:center;margin-top:5px;">
 		<input type="button" onclick="listmodel_open()" class="button" value="<?php echo _MODIFY_LIST;?>" />
 	</p>
 </div> 
-<div>
-    <table width="50%">
+<div class="block" style="float:left;width:65%;height:550px;">
+    <table style="margin:auto;">
         <tr height="20px;">
             <td>
                 <input type="hidden" id="mode" value="<?php echo $_REQUEST['mode']; ?>" />
@@ -302,15 +301,16 @@ if($mode != 'del') { ?>
                 <span id="objectType_info"><?php echo trim($_SESSION['m_admin']['entity']['difflist_type']->difflist_type_roles); ?></span>
             </td>
         </tr>
-    </table> 
+    </table>
     <br/>
     <br/>
-    <p class="buttons"><?php
+    <p class="buttons" style="text-align:center;"><?php
         if($objectType && $objectId) { ?>
 		<input type="button" onclick="listmodel_save();" class="button" value="<?php echo _SAVE_LISTMODEL;?>" /><?php
         } ?>
         <input type="button" onclick="goTo('index.php?module=entities&page=admin_listmodels');" class="button" value="<?php echo _CANCEL;?>" />
 	</p>
+    </div> 
 </div><?php
 }
 # DEL => REDIRECT TO AJAX SAVE
