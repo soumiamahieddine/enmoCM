@@ -73,12 +73,13 @@ if ($mode == 'list') {
         }?>
     </h1>
     <div id="inner_content" class="clearfix" align="center">
-        <br /><br />
+        <br />
     <?php
     if ($state == false) {
         echo '<br /><br /><br /><br />' . _THIS_EVENT . ' ' . _IS_UNKNOWN
         . '<br /><br /><br /><br />';
     } else { ?>
+    <div class="block">
         <form name="frmevent" id="frmevent" method="post" action="<?php
             echo $_SESSION['config']['businessappurl'] . 'index.php?display=true'
             . '&amp;module=tags&amp;page=manage_tag_list_controller&amp;mode='
@@ -209,6 +210,7 @@ if ($mode == 'list') {
                 } ?>
             </p>
         </form >
+        </div>
     <?php
     }
     ?></div><?php
