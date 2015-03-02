@@ -72,8 +72,6 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
             ?>
             <div class="block">
                 <h2><?php echo _MY_BASKETS; ?> : </h2>
-            </div>
-            <br />
             
             <?php
             $countColl = count($collWithUserBaskets);
@@ -152,6 +150,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                 }
                 echo '<hr />';
                 echo '</ul>';
+                echo '</div>';
             }
         }
         ?>
