@@ -49,7 +49,8 @@ if ($mode == "list") {
             . "<br /><br /><br /><br />";
     } else {
         ?>
-        <form name="formdocserver" method="post" class="forms" action="<?php
+        <div class="block">
+        <form name="formdocserver" method="post" style="width:650px;" class="forms" action="<?php
         echo $_SESSION['config']['businessappurl'] . "index.php?display=true&"
             . "page=docservers_management_controler&admin=docservers&mode="
             . $mode;
@@ -492,6 +493,7 @@ if ($mode == "list") {
         ?>index.php?page=docservers_management_controler&amp;admin=docservers&amp;mode=list';"/>
         </p>
             </form>
+            </div>
             <script type="text/javascript">
                 //on load in GB
                 $('size_limit_number').value = $('size_limit_number').value / (1000 * 1000 * 1000)
