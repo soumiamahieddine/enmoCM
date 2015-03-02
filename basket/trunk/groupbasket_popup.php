@@ -76,8 +76,8 @@ $time = $core_tools->get_session_time_expire();
 <body onload="setTimeout(window.close, <?php echo $time;?>*60*1000);">
 
     <div class="error"><?php echo $_SESSION['error']; $_SESSION['error'] = '';?></div>
-    <br/>
-    <h2 class="title"><?php echo _ADD_TO_BASKET;
+    <div class="block">
+    <h2><?php echo _ADD_TO_BASKET;
     if(!empty($_SESSION['m_admin']['basket']['basketId']))
     {
         echo ' "'.$_SESSION['m_admin']['basket']['name'].'" ';
@@ -283,11 +283,12 @@ $time = $core_tools->get_session_time_expire();
                manage_actions('<?php if(isset($_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'])){ echo $_SESSION['m_admin']['basket']['groups'][$_SESSION['m_admin']['basket']['ind_group']]['DEFAULT_ACTION'];}?>', true, '<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=check_action";?>');
             </script>
             <p>&nbsp;</p>
-            <p class="buttons">
+            <p class="buttons" style="text-align:center;">
                 <input type="button" name="submit_form" class="button" value="<?php if(empty($group)){ echo _ADD_THIS_GROUP;}else{ echo _MODIFY_THIS_GROUP;}?>" onclick="valid_actions_param('group_basket');this.form.submit();" />
                 <input type="submit" name="cancel" value="<?php echo _CANCEL;?>"  class="button"/>
             </p>
     </form>
+</div>
 </div>
 </body>
 </html>
