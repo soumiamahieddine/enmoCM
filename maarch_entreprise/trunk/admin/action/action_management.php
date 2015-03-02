@@ -31,6 +31,7 @@ elseif($mode == 'up' || $mode == 'add'){
             . '<br /><br /><br /><br />';
     }
     else{?>
+        <div class="block">
         <form name="frmaction" id="frmaction" method="post" action="<?php
         echo $_SESSION['config']['businessappurl'] . 'index.php?'
             . 'page=action_management_controler&admin=action&mode=' . $mode . '&id=' . $_REQUEST['id'];
@@ -230,6 +231,7 @@ elseif($mode == 'up' || $mode == 'add'){
             </p>
         </form >
         <div class="infos"><?php echo _INFOS_ACTIONS;?></div>
+        </div>
     </div>
     <?php
     }
