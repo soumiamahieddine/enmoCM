@@ -705,7 +705,7 @@ function resize_frame_process(id_modal, id_frame, resize_width, resize_height)
         
         var newwidth = modal.getWidth();
         var newheight = modal.getHeight();
-        newheight = newheight - 60;
+        newheight = newheight - 120;
         
         if (resize_width == true && frame2 != null) {         
             navName = BrowserDetect.browser;
