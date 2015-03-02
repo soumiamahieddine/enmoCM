@@ -42,12 +42,12 @@ if ($mode == 'list') {
         }?>
     </h1>
     <div id="inner_content" class="clearfix" align="center">
-        <br /><br />
     <?php
     if ($state == false) {
         echo '<br /><br /><br /><br />' . _THE_STATUS . ' ' . _UNKNOWN
         . '<br /><br /><br /><br />';
     } else {?>
+    <div class="block">
     <form name="frmstatus" id="frmstatus" method="post" action="<?php
         echo $_SESSION['config']['businessappurl'] . 'index.php?display=true'
         . '&amp;admin=status&amp;page=status_management_controler&amp;mode='
@@ -145,6 +145,7 @@ if ($mode == 'list') {
 ?>index.php?page=status_management_controler&amp;mode=list&amp;admin=status';"/>
         </p>
      </form >
+     </div>
 <?php
     }
    ?></div><?php
