@@ -50,7 +50,8 @@ if ($mode == "list") {
             ."<br /><br /><br /><br />";
     } else {
             ?>
-            <form name="formdocserver" method="post" class="forms" 
+            <div class="block">
+            <form name="formdocserver" method="post" style="width:580px;" class="forms" 
             action="<?php echo $_SESSION['config']['businessappurl']
                 ."index.php?display=true&page="
                 ."lc_cycle_steps_management_controler&module=life_cycle&mode="
@@ -203,6 +204,7 @@ if ($mode == "list") {
                    <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_cycle_steps_management_controler&amp;module=life_cycle&amp;mode=list';"/>
                 </p>
             </form>
+            </div>
             <?php
             ?>
             <script type="text/javascript">
