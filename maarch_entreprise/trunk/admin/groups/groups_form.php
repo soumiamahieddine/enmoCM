@@ -96,7 +96,7 @@ $func = new functions();
                                     </span>
                                 </div>
                                 <div align="right" onclick="new Effect.toggle('access_info_<?php echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID'];?>', 'blind', {delay:0.2});return false;">
-                                 <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="<?php _MORE_INFOS;?>" title="<?php _MORE_INFOS;?>" onmouseover="this.style.cursor='pointer';"/><span class="lb1-details">&nbsp;</span>
+                                 <i class="fa fa-plus-square fa-2x" title="<?php _MORE_INFOS;?>" onmouseover="this.style.cursor='pointer';"/></i><span class="lb1-details">&nbsp;</span>
                                 </div>
                                 <div style="display:none;" id="access_info_<?php echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID'];?>" class="access_info desc">
                                     <div class="ref-unit">
@@ -119,16 +119,16 @@ $func = new functions();
                                                 <?php
                                                 for($k=0;$k<count($_ENV['security_bitmask']); $k++)
                                                 {
-                                                    echo '<div class="task"><img ';
+                                                    echo '<div class="task"><i class="fa fa-';
                                                     if(check_right($_SESSION['m_admin']['groups']['security'][$i]['RIGHTS_BITMASK'] , $_ENV['security_bitmask'][$k]['ID']))
                                                     {
-                                                        echo 'src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_stat_enabled.gif" alt="'._ENABLED.'"';
+                                                        echo 'check';
                                                     }
                                                     else
                                                     {
-                                                        echo 'src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_stat_disabled.gif" alt="'._DISABLED.'"';
+                                                        echo 'remove';
                                                     }
-                                                    echo ' />&nbsp;';
+                                                    echo ' fa-2x"></i>&nbsp;';
                                                     echo $_ENV['security_bitmask'][$k]['LABEL'].'</div>';
                                                 } ?>
 

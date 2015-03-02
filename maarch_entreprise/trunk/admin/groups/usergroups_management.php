@@ -10,17 +10,14 @@ if ($mode == 'list') {
         $groupsList['page_name_val'], $groupsList['page_name_ban'],
         $groupsList['page_name_del'], $groupsList['page_name_add'],
         $groupsList['label_add'], false, false, _ALL_GROUPS, _GROUP,
-        $_SESSION['config']['businessappurl']
-        . 'static.php?filename=manage_groups_b.gif', false, true, false, true,
+        'users', false, true, false, true,
         $groupsList['what'], true, $groupsList['autoCompletionArray']
     );
 } else if ($mode == 'up' || $mode == 'add') {
     ?><script type="text/javascript" src="<?php
     echo $_SESSION['config']['businessappurl'];
     ?>static.php?filename=usergroups_management.js"></script>
-    <h1><img src="<?php
-    echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=manage_groupe_b.gif" alt="" />
+    <h1><i class="fa fa-users fa-2x"></i>
     <?php
     if ($mode == 'add') {
         echo _GROUP_ADDITION;
@@ -42,13 +39,9 @@ if ($mode == 'list') {
         if ($mode == 'up') {
             if (count($users) > 0) {
                 ?><div onclick="new Effect.toggle('users_list', 'blind', {delay:0.2});return false;" onmouseover="this.style.cursor='pointer';">
-                &nbsp;<img src="<?php
-                echo $_SESSION['config']['businessappurl'];
-                ?>static.php?filename=membres_groupe_b.gif" alt="" /><i><?php
+                &nbsp;<i class="fa fa-user fa-2x"></i><i><?php
                 echo _SEE_GROUP_MEMBERS;
-                ?></i> <img src="<?php
-                echo $_SESSION['config']['businessappurl'];
-                ?>static.php?filename=plus.png" alt="" />
+                ?></i> <i class="fa fa-angle-right"></i>
                 <span class="lb1-details">&nbsp;</span></div>
                 <div class="desc" id="users_list" style="display:none;">
                     <div class="ref-unit">
@@ -109,13 +102,9 @@ if ($mode == 'list') {
             if ($GLOBALS['basket_loaded'] && count($baskets) > 0) {
                     ?>
                     <div onclick="new Effect.toggle('baskets_list2', 'blind', {delay:0.2});return false;" onmouseover="this.style.cursor='pointer';" >
-                &nbsp;<img src="<?php
-                echo $_SESSION['config']['businessappurl'];
-                ?>static.php?filename=membres_groupe_b.gif" alt="" /><i><?php
+                &nbsp;<i class="fa fa-inbox fa-2x"></i><i><?php
                 echo _SEE_BASKETS_RELATED;
-                ?></i> <img src="<?php
-                echo $_SESSION['config']['businessappurl'];
-                ?>static.php?filename=plus.png" alt="" />
+                ?></i> <i class="fa fa-angle-right"></i>
                 <span class="lb1-details">&nbsp;</span></div>
                 <div class="desc" id="baskets_list2" style="display:none;">
                     <div class="ref-unit">
