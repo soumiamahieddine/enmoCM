@@ -94,8 +94,8 @@ if ($mode == "list") {
             <?php
             }
         }?>
-            <br/><br/>
-            <form name="formdocserver" method="post" class="forms" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&page=docserver_types_management_controler&admin=docservers&mode=".$mode;?>">
+            <div class="block">
+            <form name="formdocserver" method="post" class="forms" style="width:600px;" action="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&page=docserver_types_management_controler&admin=docservers&mode=".$mode;?>">
                 <input type="hidden" name="display" value="value" />
                 <input type="hidden" name="admin" value="docservers" />
                 <input type="hidden" name="page" value="docserver_types_management_controler" />
@@ -313,6 +313,7 @@ if ($mode == "list") {
                 echo _GZIP_COMPRESSION_MODE;
                 ?>
             </form>
+            </div>
             <script type="text/javascript">
                 //on load hide inputs
                 <?php
