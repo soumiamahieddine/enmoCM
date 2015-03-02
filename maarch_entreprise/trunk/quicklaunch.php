@@ -45,8 +45,6 @@ $core_tools->test_service('quicklaunch', "apps");
         <form name="choose_query" id="choose_query"  method="post" action="" class="<?php echo $class_for_form;?>" >
             <div class="block">
                 <h2><?php echo _QUICK_SEARCH;?> :</h2>
-            </div>
-            <br />
             <table>
                 <tr>
                     <td>
@@ -70,6 +68,7 @@ $core_tools->test_service('quicklaunch', "apps");
                     </td>
                 <tr/>
             </table>
+            </div>
         </form>
         <script language="javascript">
             if ($('collection').value) {
@@ -101,8 +100,6 @@ $core_tools->test_service('quicklaunch', "apps");
 <div id="welcome_box_right">
 <div class="block">
     <h2><?php echo _QUICKLAUNCH;?> :</h2>
-</div>
-<br />
 <?php
     $core_tools->build_quicklaunch($_SESSION['quicklaunch']);
     /*
@@ -193,4 +190,5 @@ $core_tools->test_service('quicklaunch', "apps");
         </div>
     </a>
     -->
+    </div>
 </div>
