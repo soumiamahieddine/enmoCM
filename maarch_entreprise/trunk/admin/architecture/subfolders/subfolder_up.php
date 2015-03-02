@@ -221,7 +221,8 @@ echo $erreur;
 $erreur = "";
 ?>
 </div>
-<h2 class="tit"> &nbsp;<img src="<?php  
+<div class="block">
+<h2> &nbsp;<img src="<?php  
 echo $_SESSION['config']['businessappurl'];
 ?>static.php?filename=manage_structures_b.gif" alt="" valign="center"/> <?php  
 if ($mode == "up") { 
@@ -230,8 +231,6 @@ if ($mode == "up") {
 	echo _SUBFOLDER_CREATION;
 }
 ?></h2>
-<div class="block">
-<br/>
 <form method="post" name="modif" id="modif" class="forms" action="<?php 
 echo $_SESSION['config']['businessappurl'];
 ?>index.php?display=true&page=subfolder_up">
