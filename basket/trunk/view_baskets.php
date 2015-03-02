@@ -177,10 +177,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
         <form name="select_basket" method="get" id="select_basket" action="<?php
     echo $_SESSION['config']['businessappurl'];
     ?>index.php">
-        <img src="<?php
-    echo $_SESSION['config']['businessappurl']
-        . "static.php?filename=picto_basket_b.gif&module=basket";
-    ?>" alt="" /> <?php echo _VIEW_BASKETS_TITLE; ?> :
+        <i class ="fa fa-inbox fa-2x" title="" /></i> <?php echo _VIEW_BASKETS_TITLE; ?> :
             <input type="hidden" name="page" id="page" value="view_baskets" />
             <input type="hidden" name="module" id="module" value="basket" />
 
@@ -273,10 +270,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
     */
 } else {
     ?>
-    <img src="<?php
-    echo $_SESSION['config']['businessappurl']
-        . "static.php?filename=picto_basket_b.gif&module=basket";
-    ?>" alt="" /> <?php echo _VIEW_BASKETS_TITLE;
+    <i class="fa fa-inbox fa-2x" title="" /></i> <?php echo _VIEW_BASKETS_TITLE;
 }
 ?>
 </h1>
