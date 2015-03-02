@@ -159,6 +159,7 @@ class foldertype extends dbquery
             $db3 = new dbquery();
             $db3->connect();
             ?>
+            <div class="block">
             <form name="formfoldertype" id="formfoldertype" method="post" action="<?php  
             if ($mode == "up") { 
             	echo $_SESSION['config']['businessappurl']
@@ -204,7 +205,7 @@ class foldertype extends dbquery
             <?php
             if ($mode == "up") {
             	?>
-                <p>
+                <p style="width: 400px;margin: auto;">
                 	<label><?php  echo _ID;?> : </label>
                     <input name="foldertypeId" id="foldertypeId" type="text" value="<?php  
                 echo $func->show_str(
@@ -224,7 +225,7 @@ class foldertype extends dbquery
             if ($mode == "up") {
             	if (isset($totalDoc) && $totalDoc > 0) {
                 	?>
-                    <p>
+                    <p style="width: 400px;margin: auto;">
                     	<label><?php  echo _COLLECTION; ?> : </label>
                         <input name="collection_show" id="collection_show" type="text" value="<?php  
                     echo $func->show_str(
@@ -246,7 +247,7 @@ class foldertype extends dbquery
                      <?php
                  } else {
                  	?>
-                    <p>
+                    <p style="width: 400px;margin: auto;">
                     	<label for="collection"><?php  echo _COLLECTION;?> : </label>
                         <select name="collection" id="collection">
                         	<option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>
@@ -271,7 +272,7 @@ class foldertype extends dbquery
                 }
             } else {
             	?>
-                <p>
+                <p style="width: 400px;margin: auto;">
                 	<label for="collection"><?php  echo _COLLECTION;?> : </label>
                     <select name="collection" id="collection" >
                     	<option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>
@@ -295,13 +296,13 @@ class foldertype extends dbquery
                 <?php
             }
             ?>
-            <p>
+            <p style="width: 400px;margin: auto;">
             	<label><?php  echo _DESC; ?> : </label>
                 <input name="desc"  type="text" id="desc" value="<?php  
             echo $func->show_str($_SESSION['m_admin']['foldertype']['desc']); 
             ?>" />
             </p>
-            <p>
+            <p style="width: 400px;margin: auto;">
             	<label><?php  echo _COMMENTS; ?> : </label>
                 <textarea  cols="30" rows="4"  name="comment"  id="comment" ><?php  
             echo $func->show_str($_SESSION['m_admin']['foldertype']['comment']); 
@@ -317,11 +318,12 @@ class foldertype extends dbquery
                 echo $_SESSION['config']['businessappurl'];
                 ?>index.php?display=true&module=folder&page=choose_doctypes" frameborder="0" width="900px" height="250px" scrolling="no"></iframe>
                     </div> -->
-                <p class="buttons">
+                <p class="buttons" style="text-align:center;">
                 	<input type="submit" name="Submit" value="<?php  echo _VALIDATE; ?>" class="button" />
                     <input type="button" name="cancel" value="<?php  echo _CANCEL; ?>" class="button"  onclick="javascript:window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=foldertypes&amp;module=folder';"/>
                 </p>
            </form>
+           </div>
            <script type="text/javascript">
                 	get_ft_opt_index('<?php
             			echo $_SESSION['config']['businessappurl'];
