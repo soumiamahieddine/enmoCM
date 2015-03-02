@@ -74,16 +74,16 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 
 	<div id="inner_content">
 		<div class="block">
-			<p id="back_list"><b>
+		<h2>
+			
 				<span class="selected_link"><?php echo _VIEW_FILEPLAN;?></span>
 				&nbsp;/&nbsp;
 				<a href="<?php echo $_SESSION['config']['businessappurl'];
 				?>index.php?page=fileplan_admin_managment&module=fileplan&fileplan_id=<?php
 				echo $fileplan_id;?>&load" class="back">
 				<?php echo _MANAGE_FILEPLAN;?></a>                
-			</b></p>
+			</h2>
 			&nbsp;
-		</div>
 		<table width="100%" border="0" cellspacing="0">
 			<tr>
 				<td valign="top" nowrap>
@@ -178,6 +178,7 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 				</td>
 			</tr>
 		</table>
+		</div>
 	</div>
 <?php
 } else {
