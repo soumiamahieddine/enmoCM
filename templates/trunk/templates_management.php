@@ -58,7 +58,8 @@ if ($mode == 'list') {
         } else {
             ?>
             <div class="error" id="divError" name="divError"></div>
-            <form id="adminform" method="post" class="forms" action="<?php
+            <div class="block">
+            <form id="adminform" method="post" class="forms" style="width: 540px;" action="<?php
                 echo $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&page=templates_management_controler&module=templates&mode='
                 . $mode;
@@ -350,12 +351,12 @@ if ($mode == 'list') {
                         </td>
                         <td width="20%" align="center">
                             <input type="button" class="button" value="<?php
-                                echo _ADD;
+                                
                                 ?> &gt;&gt;" onclick='Move($(entitieslist), $(entities_chosen));' />
                             <br />
                             <br />
                             <input type="button" class="button" value="&lt;&lt; <?php
-                                echo _REMOVE;
+                                
                                 ?>" onclick='Move($(entities_chosen), $(entitieslist));' />
                         </td>
                         <td width="40%" align="center">
@@ -390,7 +391,7 @@ if ($mode == 'list') {
                         </td>
                     </tr>
                 </table>
-
+                <br/>
                 <p class="buttons">
                     <?php
                     if ($mode == "up") {
@@ -414,6 +415,7 @@ if ($mode == 'list') {
                         ?>index.php?page=templates_management_controler&amp;module=templates&amp;mode=list';"/>
                 </p>
             </form>
+            </div>
             <?php
             if($_SESSION['m_admin']['templates']['template_type'] == 'HTML') {
                 ?>
