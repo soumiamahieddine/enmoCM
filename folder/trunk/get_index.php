@@ -30,7 +30,7 @@ $indexes = $ft->get_all_indexes();
 //$core->show_array($indexes);
 if (count($indexes) > 0) {
     $content .= '<hr/>';
-    $content .= '<table border="1" rules="rows">';
+    $content .= '<table border="1" rules="rows" style="width:100%;">';
         $content .= '<tr>';
             $content .= '<th width="400px">'._FIELD.'</th>';
             $content .= '<th align="center" width="100px">'._USED.'</th>';
