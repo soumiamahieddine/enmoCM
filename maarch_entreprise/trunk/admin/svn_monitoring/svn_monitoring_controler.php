@@ -96,15 +96,12 @@ $formatText .= '</h1>';
 //                         Titre dans la page                                 //
 ////////////////////////////////////////////////////////////////////////////////
 $formatText .= '<br />';
-$formatText .= '<div class="block" align="center">';
-    $formatText .= '<h2>'._MANAGE_MEP_RELEASE.'</h2>';
+$formatText .= '<div class="block">';
+    $formatText .= '<h2 style="text-align:center;">'._MANAGE_MEP_RELEASE.'</h2>';
     $formatText .= '&nbsp;';
-$formatText .= '</div>';
 ////////////////////////////////////////////////////////////////////////////////
 //                         Titre dans la page                                 //
 ////////////////////////////////////////////////////////////////////////////////
-$formatText  .= '&nbsp;<br />';
-$formatText .= '<div class="block">';
 $formatText .= '<img ';
 $formatText .= 'src="'.$_SESSION['config']['businessappurl'].'static.php?filename=puce_next.gif" ';
 $formatText .= 'width="0" ';
