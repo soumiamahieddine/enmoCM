@@ -22,7 +22,7 @@ if($mode == "list")
                     false,
                     _ALL_USERS,
                     _USER,
-                    $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_b.gif',
+                    'user',
                     false,
                     true,
                     false,
@@ -37,11 +37,11 @@ elseif($mode == "up" || $mode == "add")
     ?><script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=users_management.js"></script><?php
     if($mode == "add")
     {
-        echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_user_b.gif" alt="" />'._USER_ADDITION.'</h1>';
+        echo '<h1><i class="fa fa-user fa-2x"></i> '._USER_ADDITION.'</h1>';
     }
     elseif($mode == "up")
     {
-        echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_user_b.gif" alt="" /> '._USER_MODIFICATION.'</h1>';
+        echo '<h1><i class="fa fa-user fa-2x"></i> '._USER_MODIFICATION.'</h1>';
     }
     echo '<br/>';
     $_SESSION['service_tag'] = 'formuser';

@@ -48,7 +48,7 @@ header("Content-Type: text/html", true);
 		{
 				if( $_SESSION['m_admin']['users']['groups'][$theline]['PRIMARY'] == 'Y')
 				{
-					?><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=arrow_primary.gif" alt="<?php  echo _PRIMARY_GROUP;?>" title="<?php  echo _PRIMARY_GROUP;?>" /> <?php
+					?><i class="fa fa-arrow-right" title="<?php  echo _PRIMARY_GROUP;?>"></i> <?php
 				}
 				else
 				{
