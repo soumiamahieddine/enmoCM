@@ -41,13 +41,13 @@ if ($mode == 'list') {
             echo _ADD_NOTIF;
         }?>
     </h1>
-    <div id="inner_content" class="clearfix" align="center">
-        <br /><br />
+    <div id="inner_content" class="clearfix" align="center">   
     <?php
     if ($state == false) {
         echo '<br /><br /><br /><br />' . _NOTIFICATION_ID . ' ' . $_SESSION['m_admin']['notification']['notification_sid'] . ' ' . _UNKNOWN
         . '<br /><br /><br /><br />';
     } else {?>
+    <div class="block">
     <form name="frmevent" id="frmevent" method="post" action="<?php
         echo $_SESSION['config']['businessappurl'] . 'index.php?display=true'
         . '&amp;module=notifications&amp;page=manage_notifications_controler&amp;mode='
@@ -289,6 +289,7 @@ if ($mode == 'list') {
         ?>
     </p>
     </form >
+    </div>
 <?php
     }
    ?></div><?php
