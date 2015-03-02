@@ -115,8 +115,8 @@ if ($mode == "list") {
             }
         }
         ?>
-        <br/><br/>
-        <form name="formdocserver" method="post" class="forms" action="<?php
+        <div class="block">
+        <form name="formdocserver" method="post" class="forms" style="width:610px;" action="<?php
         echo $_SESSION['config']['businessappurl'] . "index.php?display=true"
             . "&page=docserver_locations_management_controler&admin=docservers"
             . "&mode=" . $mode;
@@ -241,6 +241,7 @@ if ($mode == "list") {
         ?>index.php?page=docserver_locations_management_controler&amp;admin=docservers&amp;mode=list';"/>
         </p>
         </form>
+        </div>
         </div>
         <?php
     }
