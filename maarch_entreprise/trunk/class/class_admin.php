@@ -64,8 +64,9 @@ class admin extends functions
 		}
 
 		if ($display_app_services) {
-			echo '<h2 class="admin_subtitle block" >Application</h2>';		
-			echo '<div  id="admin_apps">';
+			echo '<div class="block">';
+			echo '<h2 style="text-align:center;">Application</h2>';		
+			echo '<div class="content" id="admin_apps">';
 			for($i=0;$i<count($app_services);$i++)
 			{
 				if ($app_services[$i]['servicetype'] == "admin"
@@ -74,8 +75,8 @@ class admin extends functions
 				) {
 					?>
 	                <div class="admin_item" title="<?php  echo $app_services[$i]['comment'];?>" onclick="window.top.location='<?php  echo $app_services[$i]['servicepage'];?>';">
-	                    <i class="<?php  echo $app_services[$i]['style'];?> fa-4x"></i>
-	                    <div class="sum_margin" <?php echo $debug_style; ?>>
+	                    <div><i class="<?php  echo $app_services[$i]['style'];?> fa-4x"></i></div>
+	                    <div <?php echo $debug_style; ?>>
 
 	                            <strong><?php  echo $app_services[$i]['name'];?></strong>
 	                           <!-- <em><br/><?php  echo $app_services[$i]['comment'];?></em>-->
@@ -85,6 +86,8 @@ class admin extends functions
 	                <?php
 				}
 			}
+			echo '<div class="clearfix"></div>';
+			echo '</div>';
 			echo '</div>';
 		}
 	}
@@ -110,14 +113,15 @@ class admin extends functions
 				    && $_SESSION['user']['services'][$modules_services[$value][$i]['id']]
 				) {
 					if ($nb == 0) {
-						echo '<h2 class="admin_subtitle block">Modules</h2>';
-						echo '<div id="admin_modules">';
+						echo '<div class="block" style="margin-top:10px;">';
+						echo '<h2 style="text-align:center;">Modules</h2>';
+						echo '<div class="content" id="admin_modules">';
 					}
 					$nb ++;
 					?>
 					<div class="admin_item" title="<?php  echo 'Module '.$value.' : '.$modules_services[$value][$i]['comment'];?>" onclick="window.top.location='<?php  echo $modules_services[$value][$i]['servicepage'];?>';">
 						<i class="<?php  echo $modules_services[$value][$i]['style'];?> fa-4x"></i>
-						<div class="sum_margin" <?php echo $debug_style; ?> >
+						<div <?php echo $debug_style; ?> >
 
 								<strong><?php  echo $modules_services[$value][$i]['name'];?></strong><!--<br/>
                                 <em><?php  echo $modules_services[$value][$i]['comment'];?></em>-->
@@ -129,6 +133,8 @@ class admin extends functions
 			}
 		}
 		if ($nb > 0) {
+			echo '</div>';
+			echo '<div class="clearfix"></div>';
 			echo '</div>';
 		}
 		
