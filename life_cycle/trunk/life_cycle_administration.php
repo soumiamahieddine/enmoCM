@@ -56,7 +56,8 @@ unset($_SESSION['m_admin']);
 <h1><i class="fa fa-recycle fa-2x"></i> 
 <?php  echo _ADMIN_LIFE_CYCLE_SHORT;?></h1>
 <div id="inner_content" class="clearfix">
-<h2 class="admin_subtitle block" ><?php echo _ADMIN_LIFE_CYCLE;?></h1></h2>
+<div class="block">
+<h2 style="text-align:center;"><?php echo _ADMIN_LIFE_CYCLE;?></h1></h2>
     <div class="admin_item" title="
     <?php  echo _MANAGE_LC_POLICIES;?>" 
     onclick="
@@ -81,5 +82,8 @@ unset($_SESSION['m_admin']);
                 <i class="fa fa-recycle fa-4x"></i><br />
                 <strong><?php  echo _MANAGE_LC_CYCLE_STEPS;?></strong>
         </div>
+    </div>
+    <div class="clearfix"></div>
+    </div>
     </div>
 </div>
