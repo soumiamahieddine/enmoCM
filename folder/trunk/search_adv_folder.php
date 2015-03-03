@@ -83,10 +83,7 @@ if (isset($_REQUEST['erase']) && $_REQUEST['erase'] == 'true') {
 ?>
 <div id="inner_content">
 
-<h1><img src="<?php
-echo $_SESSION['config']['businessappurl'] . "static.php?module=folder"
-    . "&filename=picto_search_b.gif";
-?>" alt="" /> <?php  echo _ADV_SEARCH_FOLDER_TITLE; ?></h1>
+<h1><i class="fa fa-search fa-2x" title="" /></i> <?php  echo _ADV_SEARCH_FOLDER_TITLE; ?></h1>
 
 <form name="search_folder_frm" id="search_folder_frm" method="post" action="<?php echo $_SESSION['config']['businessappurl'] 
             .'index.php?page=search_adv_folder_result&module=folder';?>" class="forms2">
