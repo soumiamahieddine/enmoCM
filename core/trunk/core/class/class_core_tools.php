@@ -675,7 +675,7 @@ class core_tools extends functions
                     ?>" >
                     <i style="width:30px;height:30px;" class="<?php 
                         echo $arrTmpQuicklaunch[$i]['style'] . ' fa-2x'
-                        ;?> mCdarkBlack"></i>
+                        ;?> mCdarkGrey"></i>
                 </span>
                 <span>
                        
@@ -704,7 +704,7 @@ class core_tools extends functions
                 . 'index.php?page=modify_user&amp;admin=users&amp;reinit=true">';
         echo '<span>';
         echo '<span style="width:30px;height:30px;display:inline-block;text-align:center;">'
-            .'<i class="fa fa-user fa-2x mCdarkBlack"></i></span>';
+            .'<i class="fa fa-user fa-2x mCdarkGrey"></i></span>';
         echo '<span>'. _MY_INFO . '</span>';
         echo '</a>';
 
@@ -713,7 +713,7 @@ class core_tools extends functions
             . $_SESSION['config']['coreurl'].'&amp;logout=true">';
         echo '<span>';
         echo '<span style="width:30px;height:30px;display:inline-block;text-align:center;">'
-            .'<i class="fa fa-power-off fa-2x mCdarkBlack"></i></span>';
+            .'<i class="fa fa-power-off fa-2x mCdarkGrey"></i></span>';
         echo '<span>'. _LOGOUT . '</span>';
         echo '</a>';
         echo '<div style="clear:both;"></div>';
