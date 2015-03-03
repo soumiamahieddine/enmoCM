@@ -1124,11 +1124,33 @@ left: -100em;
     padding-right: 0px;
     padding-top: 0px;
 }
-#gauchemenu {
-    float: left;
+
+#nav #logo{
+    float: right;
+    right: 0px;
+    position: absolute;
     margin: 0px;
     padding-right: 0px;
     padding-top: 0px;
+    height: 70px;
+    width: 236px;
+    background: url(static.php?filename=default_maarch.gif) #ffffff;
+    background-size: 90%;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+}
+#gauchemenu {
+    position: absolute;
+    margin: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    background: white;
+    width: 80%;
+    height: 40px;
+    top: 30px;
+    border-top-left-radius: 10px;
+    left: 171px;
 }
 
 
@@ -1182,13 +1204,15 @@ left: -100em;
 #nav {
     clear: both;
     position: relative;
-    width: 100%;
+    width: 99.8%;
     margin-bottom: 0px;
     margin-left: 1px;
     height: 70px;
-    background: url(static.php?filename=bando_tete2.gif) repeat-x left top;
     margin-top: 3px;
     min-width: 1000px;
+    border:solid 2px #009DC5;
+    background: #009DC5;
+    border-radius: 10px;
 }
 #foot {
     clear: both;
