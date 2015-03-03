@@ -190,11 +190,11 @@ class admin_basket extends dbquery
         {
             echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'basket_add.php', "include");
             echo $core_tools->execute_app_services($_SESSION['app_services'], 'basket_add.php', "include");
-            echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_basket_b.gif&module=basket" alt="" /> '._BASKET_ADDITION.'</h1>';
+            echo '<h1><i class="fa fa-inbox fa-2x" title="" /></i> '._BASKET_ADDITION.'</h1>';
         }
         elseif($mode == "up")
         {
-            echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_basket_b.gif&module=basket" alt="" /> '._BASKET_MODIFICATION.'</h1>';
+            echo '<h1><i class="fa fa-inbox fa-2x" title="" /></i> '._BASKET_MODIFICATION.'</h1>';
         }
         ?>
         <div id="inner_content" class="clearfix">
@@ -270,7 +270,7 @@ class admin_basket extends dbquery
                 <?php } ?>
                 <p>
                     <label><?php echo _BASKET_VIEW;?> : </label>
-                    <textarea  cols="30" rows="4"  name="basketclause" id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause']; ?></textarea> <a href="#" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=keywords_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><img src = "<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_help.gif" alt="<?php echo _HELP_KEYWORDS; ?>" title="<?php echo _HELP_KEYWORDS; ?>" /></a>
+                    <textarea  cols="30" rows="4"  name="basketclause" id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause']; ?></textarea> <a href="#" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=keywords_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><i class = "fa fa-question-circle fa-2x" title="<?php echo _HELP_KEYWORDS; ?>" ></i></a>
                 </p>
                 <p>
                     <label><?php echo _BASKET_VISIBLE_ONLY_ON_SEARCH;?> : </label>
