@@ -3,9 +3,10 @@
 require_once 'modules/attachments/attachments_tables.php';
 $dbAttachment = new dbquery();
 $dbAttachment->connect();
-$dbAttachment->query(
-    'select docserver_id, path, filename, format from '
-    . RES_ATTACHMENTS_TABLE . ' where res_id = ' . $objectId
+$dbAttachment->query("SELECT relation, docserver_id, path, filename, format 
+                        FROM res_view_attachments 
+                        WHERE (res_id = " . $objectId . " OR res_id_version = ".$objectId.") AND res_id_master = ".$_SESSION['doc_id']
+                         ." ORDER BY relation desc"
 );
 
 if ($dbAttachment->nb_result() == 0) {

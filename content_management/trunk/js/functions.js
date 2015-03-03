@@ -23,7 +23,7 @@ function sendAppletMsg(theMsg)
 function endOfApplet(objectType, theMsg)
 {
     $('divError').innerHTML = theMsg;
-    if (objectType == 'template' || objectType == 'templateStyle') {
+    if (objectType == 'template' || objectType == 'templateStyle' || objectType == 'attachmentVersion' || objectType == 'attachmentUpVersion') {
         endTemplate();
     } else if (objectType == 'resource') {
         endResource();

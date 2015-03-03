@@ -17,7 +17,7 @@ if ($objectType == 'templateStyle') {
         );
         createXML('ERROR', $result);
     }
-} elseif ($objectType == 'template' || $objectType == 'attachmentFromTemplate') {
+} elseif ($objectType == 'template' || $objectType == 'attachmentFromTemplate' || $objectType == 'attachmentVersion') {
     if ($_SESSION['m_admin']['templates']['current_style'] <> '') {
         // edition in progress
         $fileExtension = $func->extractFileExt(
@@ -41,7 +41,7 @@ if ($objectType == 'templateStyle') {
             'res_view' => $res_view,
             'res_table' => $objectTable
             );
-        if ($objectType == 'attachmentFromTemplate') {
+        if ($objectType == 'attachmentFromTemplate' || $objectType == 'attachmentVersion') {
             $filePathOnTmp = $templateCtrl->merge($objectId, $params, 'file');
             $templateObj = $templateCtrl->get($objectId);
             $_SESSION['cm']['templateStyle'] = $templateObj->template_style;

@@ -92,10 +92,12 @@ if (
             && $objectType <> 'templateStyle'
             && $objectType <> 'attachmentFromTemplate'
             && $objectType <> 'attachment'
+            && $objectType <> 'attachmentVersion'
+            && $objectType <> 'attachmentUpVersion'
         ) {
             //case of res -> master or version
             include 'modules/content_management/retrieve_res_from_cm.php';
-        } elseif ($objectType == 'attachment') {
+        } elseif ($objectType == 'attachment' || $objectType == 'attachmentUpVersion') {
             //case of res -> update attachment
             include 'modules/content_management/retrieve_attachment_from_cm.php';
         } else {
@@ -104,7 +106,7 @@ if (
         }
         $status = 'ok';
         $content = file_get_contents($filePathOnTmp, FILE_BINARY);
-        $encodedContent = base64_encode($content);
+		$encodedContent = base64_encode($content);
         $fileContent = $encodedContent;
         $result = array(
             'STATUS' => $status,
@@ -157,6 +159,8 @@ if (
                     include 'modules/content_management/save_attach_from_cm.php';
                 } elseif ($objectType == 'templateStyle' || $objectType == 'template') {
                     include 'modules/content_management/save_template_from_cm.php';
+                }  elseif ($objectType == 'attachmentVersion' || $objectType == 'attachmentUpVersion') {
+                    include 'modules/content_management/save_attachment_from_cm.php';
                 }
                 //THE RETURN
                 if (!empty($_SESSION['error'])) {
