@@ -39,8 +39,10 @@ if (! empty($_SESSION['error'])) {
     $db->connect();
 
     $db->query(
-        "select coll_id, res_id_master from " . RES_ATTACHMENTS_TABLE
-        . " where res_id = " . $sId
+        "SELECT coll_id, res_id_master 
+            FROM res_view_attachments 
+            WHERE (res_id = " . $sId . " OR res_id_version = ".$sId.") AND res_id_master = ".$_REQUEST['res_id_master']
+            ." ORDER BY relation desc"
     );
     $res = $db->fetch_object();
     $collId = $res->coll_id;
@@ -56,7 +58,7 @@ if (! empty($_SESSION['error'])) {
 
     $table = $sec->retrieve_table_from_coll($collId);
     $db->query(
-        "select res_id from " . $table . " where res_id = " . $resIdMaster
+        "SELECT res_id FROM " . $table . " WHERE res_id = " . $resIdMaster
     );
     //$db->show();
     if ($db->nb_result() == 0) {
@@ -67,8 +69,10 @@ if (! empty($_SESSION['error'])) {
         exit();
     } else {
         $db->query(
-            "select docserver_id, path, filename, format from "
-            . RES_ATTACHMENTS_TABLE . " where res_id = " . $sId
+            "SELECT docserver_id, path, filename, format 
+                FROM res_view_attachments 
+                WHERE (res_id = " . $sId . " OR res_id_version = ".$sId.") AND res_id_master = ".$_REQUEST['res_id_master']
+                        ." ORDER BY relation desc"
         );
 
         if ($db->nb_result() == 0) {

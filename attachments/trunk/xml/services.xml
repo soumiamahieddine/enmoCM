@@ -56,8 +56,30 @@
   </SERVICE>
    <SERVICE>
    <id>edit_attachments_from_detail</id>
-   <name>_EDIT_ATTACHMENTS_FROM_DETAILS</name>
-   <comment>_EDIT_ATTACHMENTS_FROM_DETAILS</comment>
+   <name>_CREATE_ATTACHMENTS_FROM_DETAILS</name>
+   <comment>_CREATE_ATTACHMENTS_FROM_DETAILS</comment>
+   <servicetype>use</servicetype>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
+   <WHEREAMIUSED>
+        <page>frame_list_attachments.php</page>
+    </WHEREAMIUSED>
+  </SERVICE>
+  <SERVICE>
+   <id>modify_attachments</id>
+   <name>_MODIFY_ATTACHMENTS</name>
+   <comment>_MODIFY_ATTACHMENTS</comment>
+   <servicetype>use</servicetype>
+   <system_service>false</system_service>
+   <enabled>true</enabled>
+   <WHEREAMIUSED>
+        <page>frame_list_attachments.php</page>
+    </WHEREAMIUSED>
+ </SERVICE>
+  <SERVICE>
+   <id>delete_attachments</id>
+   <name>_DELETE_ATTACHMENTS</name>
+   <comment>_DELETE_ATTACHMENTS</comment>
    <servicetype>use</servicetype>
    <system_service>false</system_service>
    <enabled>true</enabled>
