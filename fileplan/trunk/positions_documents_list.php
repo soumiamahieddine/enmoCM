@@ -321,7 +321,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 				$viewDoc = array(
 						"script"    => "window.top.location='".$_SESSION['config']['businessappurl']
 										."index.php?page=@@page_details@@&dir=indexing_searching&coll_id=@@coll_id@@&id=@@res_id@@'",
-						"icon"      => $_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif",
+						"icon"      => "info",
 						"tooltip"   => _DETAILS,
 						"disabledRules" => "@@right_doc@@ == 'false'"
 						);
