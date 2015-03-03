@@ -150,7 +150,7 @@ $time = $core->get_session_time_expire();
         <div id="nav">
             <div id="menu" onmouseover="ShowHideMenu('menunav','on');" onmouseout="ShowHideMenu('menunav','off');" class="off">
                 <p>
-                    <img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=but_menu.gif" alt="<?php  echo _MENU;?>" />
+                    <span style="background: url(static.php?filename=logo_menu.png) #9CE2FF;background-position: 10px;background-repeat: no-repeat;height: 30px;font-weight: bold;width: 85px;display: block;border-top-left-radius: 10px;border-top-right-radius: 10px;font-size: 23px;padding-left: 50px;padding-top: 4px;color: #009DC5;">Menu</span>
                 </p>
                 <div id="menunav" style="display: none;">
                 <?php
@@ -170,8 +170,8 @@ $time = $core->get_session_time_expire();
             </div>
             <div><p id="ariane"><?php
             ?></p></div>
-            <p id="gauchemenu"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=bando_tete_gche.gif" alt=""/></p>
-            <p id="logo"><a href="index.php"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=bando_tete_dte.gif" alt="<?php  echo _LOGO_ALT;?>" /></a></p>
+            <p id="gauchemenu"></p>
+            <a href="index.php"><p id="logo"></p></a>
        </div>
 </div>
     <div id="container">
