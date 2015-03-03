@@ -898,15 +898,15 @@ class lists extends dbquery
             return  _WRONG_PARAM_FOR_LOAD_VALUE;
         } else {
             $column = $my_explode[1];
-            ($this->order == 'desc' && (strpos($this->orderField, $column) !== false))? $sortImgDown = 'tri_down_on.gif' : $sortImgDown = 'tri_down.gif';
-            ($this->order == 'asc' && (strpos($this->orderField, $column) !== false))? $sortImgUp = 'tri_up_on.gif' : $sortImgUp = 'tri_up.gif';
+            ($this->order == 'desc' && (strpos($this->orderField, $column) !== false))? $sortImgDown = 'mCdarkOrange' : $sortImgDown = 'mCdarkBlue';
+            ($this->order == 'asc' && (strpos($this->orderField, $column) !== false))? $sortImgUp = 'mCdarkOrange' : $sortImgUp = 'mCdarkBlue';
 
             $return .= '<a href="javascript://" onClick="loadList(\''.$this->link
                         .'&order=desc&order_field='.$column.'\', \''.$this->divListId.'\', '.$this->modeReturn.');" title="'
-                        ._DESC_SORT.'"><i class="fa fa-angle-down fa-2x" title="'._DESC_SORT.'"></i></a>';
+                        ._DESC_SORT.'"><i class="fa fa-angle-down fa-2x ' . $sortImgDown . '" title="'._DESC_SORT.'"></i></a>';
             $return .= '<a href="javascript://" onClick="loadList(\''.$this->link
                         .'&order=asc&order_field='.$column.'\', \''.$this->divListId.'\', '.$this->modeReturn.');" title="'
-                        ._ASC_SORT.'"><i class="fa fa-angle-up fa-2x" title="'._ASC_SORT.'"></i></a>';
+                        ._ASC_SORT.'"><i class="fa fa-angle-up fa-2x ' . $sortImgUp . '" title="'._ASC_SORT.'"></i></a>';
         }
         return $return;
     }

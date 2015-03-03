@@ -243,13 +243,13 @@ class extended_list_show extends dbquery
 			
 			if ($this->params['bool_list_is_ajax'] === true)
 			{
-				$return = '<a href="#" onClick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;start='.$this->start.'&amp;order=desc&amp;order_field='.$col_id.'&amp;listreinit=true\', \''.$this->params['div_list_ajax'].'\');" title="'. _DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif" border="0" alt="'._DESC_SORT.'" /></a>';
-				$return .= '<a href="#" onClick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;start='.$this->start.'&amp;order=asc&amp;order_field='.$col_id.'&amp;listreinit=true\', \''.$this->params['div_list_ajax'].'\');" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif" border="0" alt="'._ASC_SORT.'" /></a>';
+				$return = '<a href="#" onClick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;start='.$this->start.'&amp;order=desc&amp;order_field='.$col_id.'&amp;listreinit=true\', \''.$this->params['div_list_ajax'].'\');" title="'. _DESC_SORT.'"><i class="fa fa-angle-down fa-2x" title="' . _DESC_SORT . '"></i></a>';
+				$return .= '<a href="#" onClick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;start='.$this->start.'&amp;order=asc&amp;order_field='.$col_id.'&amp;listreinit=true\', \''.$this->params['div_list_ajax'].'\');" title="'._ASC_SORT.'"> <i class="fa fa-angle-up fa-2x" title="' . _ASC_SORT . '"></i></a>';
 			}
 			else
 			{
-				$return = '<a href="'.$this->the_link.'&amp;start='.$this->start.$this->the_template.'&amp;order=desc&amp;order_field='.$col_id.'&amp;listreinit=true" title="'. _DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif" border="0" alt="'._DESC_SORT.'" /></a>';
-				$return .= '<a href="'.$this->the_link.'&amp;start='.$this->start.$this->the_template.'&amp;order=asc&amp;order_field='.$col_id.'&amp;listreinit=true" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif" border="0" alt="'._ASC_SORT.'" /></a>';
+				$return = '<a href="'.$this->the_link.'&amp;start='.$this->start.$this->the_template.'&amp;order=desc&amp;order_field='.$col_id.'&amp;listreinit=true" title="'. _DESC_SORT.'"><i class="fa fa-angle-down fa-2x" title="' . _DESC_SORT . '"></i></a>';
+				$return .= '<a href="'.$this->the_link.'&amp;start='.$this->start.$this->the_template.'&amp;order=asc&amp;order_field='.$col_id.'&amp;listreinit=true" title="'._ASC_SORT.'"> <i class="fa fa-angle-up fa-2x" title="' . _ASC_SORT . '"></i></a>';
 			}
 						
 			return $return;
@@ -757,14 +757,14 @@ class extended_list_show extends dbquery
 						if($this->params['bool_list_is_ajax'] && !empty($this->params['div_list_ajax']))
 						{
 							$header .= '<br/><br/>';
-							$header .= '<a href="#" onClick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;listreinit=true&amp;start='.$this->the_start.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'\', \''.$this->params['div_list_ajax'].'\');" title="'._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif" border="0" alt="'._DESC_SORT.'" /></a>';
-							$header .= '<a href="#" onClick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;listreinit=true&amp;start='.$this->the_start.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'\', \''.$this->params['div_list_ajax'].'\');" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif" border="0" alt="'._ASC_SORT.'" /></a>';
+							$header .= '<a href="#" onClick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;listreinit=true&amp;start='.$this->the_start.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'\', \''.$this->params['div_list_ajax'].'\');" title="'._DESC_SORT.'"><i class="fa fa-angle-down fa-2x" title="' . _DESC_SORT . '"></i></a>';
+							$header .= '<a href="#" onClick="goToLink(\''.$this->the_link.'&amp;display=true'.$this->the_template.'&amp;listreinit=true&amp;start='.$this->the_start.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'\', \''.$this->params['div_list_ajax'].'\');" title="'._ASC_SORT.'"> <i class="fa fa-angle-up fa-2x" title="' . _ASC_SORT . '"></i></a>';
 						}
 						else //Put normal href link
 						{
 							$header .= '<br/><br/>';
-							$header .= '<a href="'.$this->the_link.'&amp;start='.$this->the_start.'&amp;listreinit=true'.$this->the_template.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'" title="'._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif" border="0" alt="'._DESC_SORT.'" /></a>';
-							$header .= '<a href="'.$this->the_link.'&amp;start='.$this->the_start.'&amp;listreinit=true'.$this->the_template.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif" border="0" alt="'._ASC_SORT.'" /></a>';				
+							$header .= '<a href="'.$this->the_link.'&amp;start='.$this->the_start.'&amp;listreinit=true'.$this->the_template.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'" title="'._DESC_SORT.'"><i class="fa fa-angle-down fa-2x" title="' . _DESC_SORT . '"></i></a>';
+							$header .= '<a href="'.$this->the_link.'&amp;start='.$this->the_start.'&amp;listreinit=true'.$this->the_template.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'" title="'._ASC_SORT.'"> <i class="fa fa-angle-up fa-2x" title="' . _ASC_SORT . '"></i></a>';				
 						}
 					}
 
