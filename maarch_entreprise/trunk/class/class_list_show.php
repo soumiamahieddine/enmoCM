@@ -308,13 +308,13 @@ class list_show extends functions
                 if($start > 0)
                 {
                     $start_prev = $start - $nb_show;
-                    $previous = "&lt; <a id=\"previous_items\" href=\"".$link."&amp;start=".$start_prev."\">"._PREVIOUS."</a> ";
+                    $previous = " <a id=\"previous_items\" href=\"".$link."&amp;start=".$start_prev."\"><i class=\"fa fa-backward\" title=\"" . _PREVIOUS . "\"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
                 }
 
                 if($start <> $lastpage)
                 {
                     $start_next = $start + $nb_show;
-                    $next = " <a id=\"next_items\" href=\"".$link."&amp;start=".$start_next."\">"._NEXT."</a> >";
+                    $next = " <a id=\"next_items\" href=\"".$link."&amp;start=".$start_next."\"><i class=\"fa fa-forward\" title=\"" . _NEXT . "\"></i></a>";
                 }
             }
         $page_list1 = '<div class="block" style="height:30px;vertical" align="center" ><table width="100%" border="0" summary=""><tr><td align="center" width="15%"><b>'.$previous.'</b></td><td align="center" width="15%"><b>'.$next.'</b></td><td width="10px">|</td><td align="center" width="30%">'.$page_list1.'</td><td width="10px">|</td><td width="210px" align="center">'.$disp_dc.'</td><td width="10px">|</td><td align="right">'.$tdeto.'</td></tr></table></b></div>';
@@ -453,7 +453,7 @@ class list_show extends functions
                                 if($bool_order)
                                 {
 
-                                    $str .= ' <br/><br/> <a class="order_items" href="'.$link.'&amp;start='.$start.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'" title="'._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_down.gif"  alt="'._DESC_SORT.'" /> </a> <a class="order_items" href="'.$link.'&amp;start='.$start.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'" title="'._ASC_SORT.'"> <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=tri_up.gif"  alt="'._ASC_SORT.'" /></a>';
+                                    $str .= ' <br/><br/> <a class="order_items" href="'.$link.'&amp;start='.$start.'&amp;order=desc&amp;order_field='.$ordercol[$count_column].'" title="'._DESC_SORT.'"><i class="fa fa-angle-down fa-2x" title="'._DESC_SORT.'" ></i> </a> <a class="order_items" href="'.$link.'&amp;start='.$start.'&amp;order=asc&amp;order_field='.$ordercol[$count_column].'" title="'._ASC_SORT.'"> <i class="fa fa-angle-up fa-2x" title="'._ASC_SORT.'" ></i></a>';
                                 }
                             $str .= ' </span></th>';
 
@@ -1000,13 +1000,13 @@ class list_show extends functions
             if($start > 0)
             {
                 $start_prev = $start - $nb_show;
-                $previous = "<a href=\"".$link."&amp;start=".$start_prev."\" class=\"prev\">"._PREVIOUS."</a> ";
+                $previous = "<a href=\"".$link."&amp;start=".$start_prev."\"><i class=\"fa fa-backward\" title=\"" . _PREVIOUS . "\"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
             }
 
             if($start <> $lastpage)
             {
                 $start_next = $start + $nb_show;
-                $next = " <a href=\"".$link."&amp;start=".$start_next."\" class=\"next\">"._NEXT."</a>";
+                $next = " <a href=\"".$link."&amp;start=".$start_next."\"><i class=\"fa fa-forward\" title=\"" . _NEXT . "\"></i></a>";
             }
 
             $page_list1 .= $previous." ".$next.'</p></form>';
@@ -1057,7 +1057,7 @@ class list_show extends functions
                         <th <?php if(isset($result[0][$count_column]['size'])){?>style="width:<?php echo $result[0][$count_column]['size'];?>%;"<?php } if(isset($result[0][$count_column]['valign'])){?> valign="<?php echo $result[0][$count_column]['valign'];?>"<?php } if(isset($result[0][$count_column]['label_align'])){?> align="<?php  echo $result[0][$count_column]['label_align'];?>"<?php } ?>
                          ><span>&nbsp;<?php  echo $listcolumn[$count_column]?>
                          <?php  if($bool_order && !empty($ordercol[$count_column]))
-                        { ?> <br/> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=desc&amp;order_field=<?php  echo $result['0'][$count_column]['column'];?>" title="<?php  echo _DESC_SORT;?>"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=tri_down.gif"  alt="<?php  echo _DESC_SORT; ?>" /> </a> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=asc&amp;order_field=<?php  echo $result['0'][$count_column]['column'];?>" title="<?php  echo _ASC_SORT;?>"> <img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=tri_up.gif" alt="<?php  echo _ASC_SORT; ?>" /></a> <?php  }
+                        { ?> <br/> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=desc&amp;order_field=<?php  echo $result['0'][$count_column]['column'];?>" title="<?php  echo _DESC_SORT;?>"><i class="fa fa-angle-down fa-2x" title="<?php  echo _DESC_SORT;?>" ></i> </a> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=asc&amp;order_field=<?php  echo $result['0'][$count_column]['column'];?>" title="<?php  echo _ASC_SORT;?>"> <i class="fa fa-angle-up fa-2x" title="<?php  echo _ASC_SORT;?>" ></i></a> <?php  }
 
                         ?></span></th>
                         <?php

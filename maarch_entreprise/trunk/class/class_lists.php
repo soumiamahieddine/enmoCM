@@ -2022,9 +2022,10 @@ class lists extends dbquery
             //Previous
             if($start > 0) {
                 $start_prev = $start - $this->params['linesToShow'];
-                $previous = '&lt; <a href="javascript://" onClick="loadList(\''.$this->link.'&order='
+                $previous = '<a href="javascript://" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='.$start_prev
-                    .'\', \''.$this->divListId.'\', '.$this->modeReturn.');">'._PREVIOUS.'</a>';
+                    .'\', \''.$this->divListId.'\', '.$this->modeReturn
+                    .');"><i class="fa fa-backward" title="' . _PREVIOUS . '"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;';
 
             }
             //Next link
@@ -2032,7 +2033,8 @@ class lists extends dbquery
                 $start_next = $start + $this->params['linesToShow'];
                 $next = ' <a href="javascript://" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='
-                    .$start_next.'\', \''.$this->divListId.'\', '.$this->modeReturn.');">'._NEXT.'</a> >';
+                    .$start_next.'\', \''.$this->divListId.'\', '.$this->modeReturn
+                    .');"><i class="fa fa-forward" title="' . _NEXT . '"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;';
             }
             $toolbar .= '<div class="block" style="height:'.$height.';" align="center" >';
             $toolbar .= '<table width="100%" border="0"><tr>';
@@ -2202,9 +2204,10 @@ class lists extends dbquery
             //Previous
             if($start > 0) {
                 $start_prev = $start - $this->params['linesToShow'];
-                $previous = '&lt; <a href="javascript://" onClick="loadList(\''.$this->link.'&order='
+                $previous = '<a href="javascript://" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='.$start_prev
-                    .'\', \''.$this->divListId.'\', '.$this->modeReturn.');">'._PREVIOUS.'</a>';
+                    .'\', \''.$this->divListId.'\', '.$this->modeReturn
+                    .');"><i class="fa fa-backward" title="' . _PREVIOUS . '"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;';
             }
             
             //Next link
@@ -2212,7 +2215,8 @@ class lists extends dbquery
                 $start_next = $start + $this->params['linesToShow'];
                 $next = ' <a href="javascript://" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='
-                    .$start_next.'\', \''.$this->divListId.'\', '.$this->modeReturn.');">'._NEXT.'</a> >';
+                    .$start_next.'\', \''.$this->divListId.'\', '.$this->modeReturn
+                    .');"><i class="fa fa-forward" title="' . _NEXT . '"></i></a>';
             }
 
             //Toolbar
@@ -2357,7 +2361,8 @@ class lists extends dbquery
                 $start_prev = $start - $this->params['linesToShow'];
                 $previous .= '<a href="javascript://" alt="'._PREVIOUS.'" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='.$start_prev
-                    .'\', \''.$this->divListId.'\', '.$this->modeReturn.');">&nbsp;&lt;</a>';
+                    .'\', \''.$this->divListId.'\', '.$this->modeReturn
+                    .');"><i class="fa fa-backward" title="' . _PREVIOUS . '"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;';
             }
             
             //Next
@@ -2365,7 +2370,8 @@ class lists extends dbquery
                 $start_next = $start + $this->params['linesToShow'];
                 $next = ' <a href="javascript://" alt="'._NEXT.'" onClick="loadList(\''.$this->link.'&order='
                     .$this->order.'&order_field='.$this->orderField.'&start='
-                    .$start_next.'\', \''.$this->divListId.'\', '.$this->modeReturn.');">&nbsp;></a>';
+                    .$start_next.'\', \''.$this->divListId.'\', '.$this->modeReturn
+                    .');"><i class="fa fa-forward" title="' . _NEXT . '"></i></a>';
             }
             
             //Loading image

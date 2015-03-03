@@ -1735,11 +1735,11 @@ class extended_list_show extends dbquery
 				//If Ajax link, call javascript redirection function
 				if($parameters['bool_list_is_ajax'] && !empty($parameters['div_list_ajax']))
 				{
-					$previous = "&lt; <a href=\"#\" onClick=\"goToLink('".$link."&amp;display=true".$this->the_template."&amp;start=".$start_prev."','".$parameters['div_list_ajax']."');\">"._PREVIOUS."</a> ";
+					$previous = "<a href=\"#\" onClick=\"goToLink('".$link."&amp;display=true".$this->the_template."&amp;start=".$start_prev."','".$parameters['div_list_ajax']."');\"><i class=\"fa fa-backward\" title=\"" . _PREVIOUS . "\"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
 				}
 				else //Put normal href link
 				{
-					$previous = "&lt; <a href=\"".$link.$this->the_template."&amp;start=".$start_prev."\">"._PREVIOUS."</a> ";
+					$previous = "<a href=\"".$link.$this->the_template."&amp;start=".$start_prev."\"><i class=\"fa fa-backward\" title=\"" . _PREVIOUS . "\"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
 				}
 			}
 			
@@ -1750,11 +1750,11 @@ class extended_list_show extends dbquery
 				//If Ajax link, call javascript redirection function
 				if($parameters['bool_list_is_ajax'] && !empty($parameters['div_list_ajax']))
 				{
-					$next = " <a href=\"#\" onClick=\"goToLink('".$link."&amp;display=true".$this->the_template."&amp;start=".$start_next."','".$parameters['div_list_ajax']."');\">"._NEXT."</a> >";
+					$next = " <a href=\"#\" onClick=\"goToLink('".$link."&amp;display=true".$this->the_template."&amp;start=".$start_next."','".$parameters['div_list_ajax']."');\"><i class=\"fa fa-forward\" title=\"" . _NEXT . "\"></i></a>";
 				}
 				else //Put normal href link
 				{
-					$next = " <a href=\"".$link.$this->the_template."&amp;start=".$start_next."\">"._NEXT."</a> >";
+					$next = " <a href=\"".$link.$this->the_template."&amp;start=".$start_next."\"><i class=\"fa fa-forward\" title=\"" . _NEXT . "\"></i></a>";
 				}
 			}
 		

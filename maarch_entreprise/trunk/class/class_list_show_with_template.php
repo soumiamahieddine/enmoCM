@@ -866,13 +866,13 @@ class list_show_with_template extends list_show
             if($start > 0)
             {
                 $start_prev = $start - $nb_show;
-                $previous = "&lt; <a href=\"".$link."&amp;start=".$start_prev."\">"._PREVIOUS."</a> ";
+                $previous = "<a href=\"".$link."&amp;start=".$start_prev."\"><i class=\"fa fa-backward\" title=\"" . _PREVIOUS . "\"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;";
             }
             if($start <> $lastpage)
             {
                 $start_next = $start + $nb_show;
                 //$next = " <div class='list_next' ><a href=\"".$link."&amp;start=".$start_next."\">"._NEXT."</a> ></div>";
-                $next = "<a href=\"".$link."&amp;start=".$start_next."\">"._NEXT."</a> >";
+                $next = "<a href=\"".$link."&amp;start=".$start_next."\"><i class=\"fa fa-forward\" title=\"" . _NEXT . "\"></i></a>";
             }
             $page_list1 = '<div class="block" style="height:30px;vertical" '
                     . 'align="center" ><table width="100%" border="0"><tr>'
