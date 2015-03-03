@@ -421,6 +421,23 @@ class business_app_tools extends dbquery
             }
             $_SESSION['default_mail_nature'] = (string) $mailNatures->default_nature;
         }
+
+        $_SESSION['attachment_types'] = array();
+        $_SESSION['attachment_types_attribute'] = array();
+        $attachmentTypes = $xmlfile->attachment_types;
+        if (count($attachmentTypes) > 0) {
+            foreach ($attachmentTypes->type as $type ) {
+                $label = (string) $type->label;
+                $attribute = (string) $type->attributes();
+                if (!empty($label) && defined($label)
+                    && constant($label) <> NULL
+                 ) {
+                    $label = constant($label);
+                }
+                $_SESSION['attachment_types'][(string) $type->id] = $label;
+                $_SESSION['attachment_types_attribute'][(string) $type->id] = $attribute;
+            }
+        }
         
         $_SESSION['mail_priorities'] = array();
         $_SESSION['mail_priorities_attribute'] = array();

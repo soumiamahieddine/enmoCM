@@ -79,6 +79,16 @@
     </FILTERS>
     <TEMPLATES>
         <TEMPLATE>
+            <ID>documents_list_attachments</ID>
+            <LABEL>_DOCUMENTS_LIST_SEARCH</LABEL>
+            <IMG>fa fa-list-ul fa-2x</IMG>
+            <NAME>documents_list_attachments</NAME>
+            <ORIGIN>apps</ORIGIN>
+            <MODULE></MODULE>
+            <ENABLED>true</ENABLED>
+            <GOTOLIST></GOTOLIST>
+        </TEMPLATE>
+        <TEMPLATE>
             <ID>documents_list_search_adv</ID>
             <LABEL>_DOCUMENTS_LIST_SEARCH</LABEL>
             <IMG>fa fa-list-ul fa-2x</IMG>
@@ -214,7 +224,7 @@
         <TEMPLATE>
             <ID>history_list_diff</ID>
             <LABEL>_ITEMS</LABEL>
-            <IMG>extend_list.gif</IMG>
+            <IMG>fa fa-list-ul fa-2x</IMG>
             <NAME>history_list_diff</NAME>
             <ORIGIN>apps</ORIGIN>
             <MODULE></MODULE>

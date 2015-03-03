@@ -1275,6 +1275,94 @@ class lists extends dbquery
         }
         return $return;
     }
+
+    public function tmplt_func_delete($resultTheLine)
+    {
+        $return = "";
+
+        $nbresult_I = count($resultTheLine);
+        for($iresults=0;$iresults<$nbresult_I;$iresults++){
+            if($resultTheLine[$iresults]['typist_id']){
+                $typist = $resultTheLine[$iresults]['typist_id'];
+            }
+            if($resultTheLine[$iresults]['fromDetail']){
+                $fromDetail = $resultTheLine[$iresults]['fromDetail'];
+            }
+        }
+
+        $core_tools = new core_tools();
+        if ($core_tools->test_service('delete_attachments', 'attachments', false) || $typist == $_SESSION['user']['UserId']) {
+            $return = '<a href="' . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+                            . '&module=attachments&page=del_attachment&relation=' . $resultTheLine[1]['value'] . '&id=' . $resultTheLine[0]['value'].'&fromDetail='.$fromDetail.'" class="delete"'
+                            . 'onclick="return(confirm(\'' . _REALLY_DELETE . ' ?\n\r\n\r'
+                            . _DEFINITIVE_ACTION . '\'));">'
+                            . _DELETE . '</a>';
+        }
+        return $return;
+    }
+
+    public function tmplt_func_modify($resultTheLine)
+    {
+        $return = "";
+        $nbresult_I = count($resultTheLine);
+        for($iresults=0;$iresults<$nbresult_I;$iresults++){
+            if($resultTheLine[$iresults]['typist_id']){
+                $typist = $resultTheLine[$iresults]['typist_id'];
+            }
+            if($resultTheLine[$iresults]['relation']){
+                $relation = $resultTheLine[$iresults]['relation'];
+            }
+            if($resultTheLine[$iresults]['fromDetail']){
+                $fromDetail = $resultTheLine[$iresults]['fromDetail'];
+            }
+            if($resultTheLine[$iresults]['value_bis']){
+                $status = $resultTheLine[$iresults]['value_bis'];
+            }
+        }
+
+        $core_tools = new core_tools();
+        if (($core_tools->test_service('modify_attachments', 'attachments', false) || $typist == $_SESSION['user']['UserId']) && $status <> "TRA") {
+            $return = '<a href="javascript://" class="change" onclick="modifyAttachmentsForm(\'' . $_SESSION['config']['businessappurl']
+                            . 'index.php?display=true&module=attachments&page=attachments_content&id=' . $resultTheLine[0]['value'] . '&relation='.$relation.'&fromDetail='.$fromDetail.'\');">'
+                                . _MODIFY . '</a>';
+        }
+
+        return $return;
+    }
+
+    public function tmplt_func_previous_version($resultTheLine)
+    {
+        $return = "";
+        if ((int)$resultTheLine[1]['value'] > 1) {
+            $return .= '<img src="static.php?filename=document.png" onclick="showPreviousAttachments(\'' . $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&module=attachments&page=previous_attachments\',\''. $resultTheLine[0]['value'] . '\');" style="cursor: pointer;" title="'._SHOW_PREVIOUS_VERSION.'" />';
+        }
+
+        return $return;
+    }
+
+    public function tmplt_func_final_version($resultTheLine)
+    {
+        $nbresult_I = count($resultTheLine);
+        for($iresults=0;$iresults<$nbresult_I;$iresults++){
+            if($resultTheLine[$iresults]['relation']){
+                $relation = $resultTheLine[$iresults]['relation'];
+            }
+            if($resultTheLine[$iresults]['fromDetail']){
+                $fromDetail = $resultTheLine[$iresults]['fromDetail'];
+            }
+        }
+        $return = '<input type="checkbox" name="final" id="final" ';
+
+        if ($resultTheLine[2]['value_bis'] == "TRA") {
+            $return .= 'checked ';
+        }
+
+        $return .= 'onclick="setFinalVersion(\'' . $_SESSION['config']['businessappurl']
+                        . 'index.php?display=true&module=attachments&page=setFinalVersion&relation='.$resultTheLine[1]['value'].'&id=' . $resultTheLine[0]['value'] . '&relation='.$relation.'&fromDetail='.$fromDetail.'\');"/>'
+                            . _FINAL_VERSION;
+        return $return;
+    }
 	
 	public function tmplt_func_bool_see_multi_contacts($resultTheLine)
     {
@@ -1387,6 +1475,14 @@ class lists extends dbquery
             $var = $this->_tmplt_ifStatement($parameter);   
         } elseif (preg_match("/^func_bool_see_multi_contacts$/", $parameter)){
             $var = $this->tmplt_func_bool_see_multi_contacts($resultTheLine);
+        } elseif (preg_match("/^func_delete$/", $parameter)){
+            $var = $this->tmplt_func_delete($resultTheLine);
+        } elseif (preg_match("/^func_modify$/", $parameter)){
+            $var = $this->tmplt_func_modify($resultTheLine);
+        } elseif (preg_match("/^func_final_version$/", $parameter)){
+            $var = $this->tmplt_func_final_version($resultTheLine);
+        } elseif (preg_match("/^func_previous_version$/", $parameter)){
+            $var = $this->tmplt_func_previous_version($resultTheLine);
         } elseif (preg_match("/^func_bool_see_notes$/", $parameter)){
             $var = $this->tmplt_func_bool_see_notes($resultTheLine);
         } elseif (preg_match("/^func_cadenas\|/", $parameter)){

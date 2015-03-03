@@ -1005,6 +1005,51 @@ function launch_autocompleter_contacts_v2(path_script, id_text, id_div, cat_id, 
     else return false;
 }
 
+function launch_autocompleter2_contacts_v2(path_script, id_text, id_div, cat_id, contact_id, address_id, path_script2)
+{
+    var input  = id_text || 'contact';
+    var div    = id_div  || 'show_contacts';
+    
+    // var params = get_contacts_params();
+    
+    if (contact_autocompleter && contact_autocompleter.element == $$('#' + input)[0])
+        contact_autocompleter.options.defaultParams = params;
+    else if(path_script)
+        contact_autocompleter = new Ajax.Autocompleter2(input, div, path_script, {
+            method:'get',
+            paramName:'Input',
+            parameters: 'table=contacts&contact_type=letter',
+            minChars: 2,
+            afterUpdateElement: function (text, li){
+                var all_li = li.id;
+                var res = all_li.split(",");
+                parent.$(contact_id).value = res[0];
+                parent.$(address_id).value = res[1];
+                if (path_script2 && res[1]) {
+                    getDepartment(path_script2, res[1]);
+                };
+                
+            }
+        });
+    else return false;
+}
+
+function getDepartment(path_script, address_id) {
+    new Ajax.Request(path_script,
+    {
+        method:'post',
+        parameters: { address_id : address_id
+                    },
+            onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            if(response.status == 0 ) {
+                parent.$("department_number").value = response.departement_name;
+                parent.$("department_number_id").value = response.departement_id;
+            }
+        }
+    });
+}
+
 function launch_autocompleter_choose_contact(path_script, id_text, id_div, cat_id, contact_id){
     var input  = id_text || 'contact';
     var div    = id_div  || 'show_contacts';
@@ -1365,7 +1410,12 @@ function display_contact_card(mode, id)
 		var contact_card = $('contact_card');
 	}
 
-    var contactid = $('contactid').value;
+    if ($('contactidAttach')) {
+        var contactid = $('contactidAttach').value;
+    } else {
+        var contactid = $('contactid').value;
+    }
+    
 
     if(contact_card && (mode == 'hidden' || mode == 'visible') && contactid != '')
     {
@@ -1617,14 +1667,26 @@ function set_new_contact_address(path_manage_script, id_div, close){
         parameters: {},
         onSuccess: function(answer){
             eval("response = "+answer.responseText);
-            parent.$('contact').value = response.contactName;
-            parent.$('contactid').value = response.contactId;
-            parent.$('addressid').value = response.addressId;
+            if (parent.$('contact_attach')) {
+                parent.$('contact_attach').value = response.contactName;
+            } else if (parent.$('contact')) {
+                parent.$('contact').value = response.contactName;
+            }
+            if (parent.$('contactidAttach')) {
+                parent.$('contactidAttach').value = response.contactId;
+            } else if (parent.$('contactid')){
+                parent.$('contactid').value = response.contactId;
+            }
+            if (parent.$('addressidAttach')) {
+                parent.$('addressidAttach').value = response.addressId;
+            } else if (parent.$('addressid')){
+                parent.$('addressid').value = response.addressId;
+            }
         }       
     });  
 }
 
-function check_date_exp(path_manage_script){
+function check_date_exp(path_manage_script, path_link){
     var contact_id = $('contactid').value;
     var res_id = $('values').value;
     var check_days_before = $('check_days_before').value;
@@ -1637,15 +1699,15 @@ function check_date_exp(path_manage_script){
         },
         onSuccess: function(answer){
             if(answer.responseText == "success"){
-                document.getElementById('contact').style.backgroundColor='#ffffff';
-                document.getElementById('contact_check').style.display='none';
-                document.getElementById('contactcheck').value = answer.responseText;
-            } else {
-                document.getElementById('contact').style.backgroundColor='#ffe09b';
-                document.getElementById('contact_check').style.display='table-row';
-                document.getElementById("contact_check").innerHTML = "<td colspan=\"3\" style=\"font-size: 9px;text-align: center;color:#ea0000;\">Un courrier enregistré dans les "+check_days_before+" derniers jours a déjà été enregistré pour le même expéditeur</td>";
-                document.getElementById('contactcheck').value = answer.responseText;
-            }
+        	    document.getElementById('contact').style.backgroundColor='#ffffff';
+        	    document.getElementById('contact_check').style.display='none';
+        	    document.getElementById('contactcheck').value = answer.responseText;
+     		} else {
+        	    document.getElementById('contact').style.backgroundColor='#ffe09b';
+        	    document.getElementById('contact_check').style.display='table-row';
+        	    document.getElementById("contact_check").innerHTML = "<td colspan=\"3\" style=\"font-size: 9px;text-align: center;color:#ea0000;\">Au moins un courrier enregistré dans les "+check_days_before+" derniers jours a déjà été enregistré pour le même contact.</td>";
+        	    document.getElementById('contactcheck').value = answer.responseText;
+    	    }
         }       
     });  
 }
@@ -1654,4 +1716,49 @@ function reset_check_date_exp(){
 	document.getElementById('contact').style.backgroundColor='#ffffff';
 	document.getElementById('contact_check').style.display='none';
 	document.getElementById('contactcheck').value = 'success';
+}
+
+function hideSelectFile(){
+    var e = $("category_id");
+    var category = e.options[e.selectedIndex].value;
+    if (category == "outgoing") {
+        // $('choose_file_div').style.display='none';
+        window.frames["choose_file"].$('with_file_true').click();       
+    } else {
+        // $('choose_file_div').style.display='block';
+        window.frames["choose_file"].$('with_file_false').click(); 
+    };
+}
+
+function affiche_chrono(){
+    
+    var type_id = document.getElementById('attachment_types').options[document.getElementById('attachment_types').selectedIndex];
+
+    if (type_id.getAttribute('with_chrono') == 'true') {      
+        $('chrono_label').setStyle({display: 'inline'});
+        $('chrono').setStyle({display: 'inline'});
+    } else {
+        $('chrono_label').setStyle({display: 'none'});
+        $('chrono').setStyle({display: 'none'});
+        $('chrono').value='';
+    }
+}
+
+function showEditButton(){
+
+    var modele_id = document.getElementById('templateOffice').options[document.getElementById('templateOffice').selectedIndex];
+
+    if (modele_id.value != '') {
+        $('edit').setStyle({display: 'inline'});
+        $('not_enabled').setStyle({display: 'inline'});
+        $('choose_file').setStyle({display: 'none'});
+        $('file_loaded').setStyle({display: 'none'});
+        // $('title').value = modele_id.text;
+    } else {
+        $('edit').setStyle({display: 'none'});
+        $('not_enabled').setStyle({display: 'none'});
+        $('choose_file').setStyle({display: 'inline'});
+        $('file_loaded').setStyle({display: 'none'});
+        // $('title').value = '';
+    }
 }

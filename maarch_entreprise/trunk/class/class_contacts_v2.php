@@ -643,7 +643,9 @@ class contacts_v2 extends dbquery
 
                 <?php   if($_SESSION['info_contact_popup'] == "true"){?>
                 			onclick="self.close();" 
-                <?php   } else { ?>
+                <?php   } else if ($_SESSION['AttachmentContact'] == "1") {?>
+                            onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div_attach'));new Effect.BlindUp(parent.document.getElementById('info_contact_div_attach'));simpleAjax('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=unsetAttachmentContact');return false;" <?php
+                        } else { ?>
                 			onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div'));new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return false;"
                 <?php   } ?>
                  		/>
@@ -1370,7 +1372,7 @@ class contacts_v2 extends dbquery
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr>
-                            <td><label for="cp"><?php echo _POSTAL_CODE; ?>&nbsp;: </label></td>
+                            <td><?php echo _POSTAL_CODE; ?>&nbsp;:</td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="cp" type="text" id="cp" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_CP'])){echo $func->show_str($_SESSION['m_admin']['address']['ADD_CP']); }?>"/></td>
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
@@ -1406,7 +1408,7 @@ class contacts_v2 extends dbquery
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr>
-                            <td><label for="website"><?php echo _WEBSITE; ?>&nbsp;: </label></td>
+                            <td><?php echo _WEBSITE; ?>&nbsp;:</td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="website" type="text" id="website" value="<?php if(isset($_SESSION['m_admin']['address']['WEBSITE'])){ echo $func->show_str($_SESSION['m_admin']['address']['WEBSITE']);} ?>"/></td>
                             <td>&nbsp;</td>
@@ -1478,8 +1480,14 @@ class contacts_v2 extends dbquery
 
                     if($iframe == 'iframe_add_up'){
                         $see_all_addresses = $_SESSION['config']['businessappurl'].'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
-                        ?>
-                        <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div'));new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return false;" />
+                        if ($_SESSION['AttachmentContact'] == "1") {
+                            ?>
+                            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div_attach'));new Effect.BlindUp(parent.document.getElementById('info_contact_div_attach'));simpleAjax('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=unsetAttachmentContact');return false;" />
+                            <?php
+                        } else {
+                            ?>
+                            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div'));new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return false;" />
+                        <?php } ?>
                         <input type="button" class="button"  name="cancel" value="<?php echo _SEE_ALL_ADDRESSES; ?>" onclick="javascript:window.location.href='<?php echo $see_all_addresses;?>';" />
                         <?php
                     } else {

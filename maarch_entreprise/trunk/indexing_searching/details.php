@@ -1165,7 +1165,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         . $_SESSION['tablename']['attach_res_attachments'] 
                         . " where res_id_master = " . $_SESSION['doc_id'] 
                         . " and coll_id ='" . $_SESSION['collection_id_choice'] 
-                        . "' and status <> 'DEL'";
+                        . "' and status <> 'DEL' and attachment_type <> 'response_project' and attachment_type <> 'outgoing_mail_signed'";
                     $req->query($countAttachments);
                     if ($req->nb_result() > 0) {
                         $nb_attach = ' (' . $req->nb_result() . ')';
@@ -1284,7 +1284,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 					<?php
                 /*if ($core->is_module_loaded('templates') && (!isset($_SESSION['current_basket']['id']) && $core->test_service('edit_attachments_from_detail', 'attachments', false)) || isset($_SESSION['current_basket']['id'])) { */
                 if ($core->is_module_loaded('templates') && ($core->test_service('edit_attachments_from_detail', 'attachments', false))) {
-					$objectTable = $security->retrieve_table_from_coll($coll_id);
+					/*$objectTable = $security->retrieve_table_from_coll($coll_id);
 					echo _GENERATE_ATTACHMENT_FROM;?><br />
 					<select name="templateOffice" id="templateOffice" style="width:250px" 
 								onchange="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=content_management&page=applet_popup_launcher'
@@ -1299,9 +1299,12 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 	                                <?php } ?>
 	 								</option>
 	                        <?php } ?>
-                    </select>&nbsp;|&nbsp;
+                    </select>&nbsp;|&nbsp;*/
+                        ?><input type="button" name="attach" id="attach" class="button" value="<?php echo _CREATE_PJ;?>"
+                             onclick="showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
+                            . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create';?>')" />
 
-					<select name="templateHtml" id="templateHtml" style="width:250px"                                 
+					<!--<select name="templateHtml" id="templateHtml" style="width:250px"                                 
 								onchange="checkBeforeOpenBlank('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=templates&page=generate_attachment_html&mode=add'
                                 + '&template=' + $('templateHtml').value + '&res_id=<?php echo $s_id;?>&coll_id=<?php echo $coll_id;?>', $('templateHtml').value);">
 	                    <option value=""><?php echo _HTML;?></option>
@@ -1319,17 +1322,49 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <br>
                     <?php echo _OR ;?>&nbsp;
 					<input type="button" name="attach" id="attach" class="button" value="<?php echo _ATTACH_FROM_HDD;?>" 
-						onclick="javascript:window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=join_file','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200');" />                   
+						onclick="javascript:window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=join_file','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200');" />  -->                 
                 <?php } ?>
                 </center>
                         <label><?php echo _ATTACHED_DOC;?> : </label>
-                        <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal&view_only=true" frameborder="0" width="100%" height="450px"></iframe>
+                    <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&view_only=true&load&attach_type_exclude=response_project,outgoing_mail_signed&fromDetail=attachments" frameborder="0" width="100%" height="510px"></iframe>
                         </div>
                         <?php
  					}
                     $detailsExport .= "<br><br><br>";
                     ?>
                 </dd>
+                <?php
+                        $req = new dbquery;
+                        $req->connect();
+                        
+                        $countAttachments = "select res_id, creation_date, title, format from " 
+                                . $_SESSION['tablename']['attach_res_attachments'] 
+                                . " where res_id_master = " . $_SESSION['doc_id'] 
+                                . " and coll_id ='" . $_SESSION['collection_id_choice'] 
+                                . "' and status <> 'DEL' and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed')";
+                            $req->query($countAttachments);
+                            if ($req->nb_result() > 0) {
+                                $nb_rep = ' <span id="answer_number">(' . ($req->nb_result()). ')</span>';
+                            }
+                    
+                        ?>
+                <dt id="onglet_rep"><?php echo _DONE_ANSWERS .$nb_rep;?></dt>
+                <dd id="page_rep">
+                    <center>
+                        <?php
+                    if ($core->is_module_loaded('templates') && ($core->test_service('edit_attachments_from_detail', 'attachments', false))) {
+                            ?><input type="button" name="attach" id="attach" class="button" value="<?php echo _CREATE_PJ;?>"
+                                 onclick="showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
+                                . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create';?>')" />
+
+                    <?php } ?>
+                    </center>
+                    <iframe name="list_attach" id="list_attach" src="<?php echo
+                     $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed&fromDetail=response';?>" 
+                    frameborder="0" width="100%" height="600px">
+                    </iframe>
+                </dd>
+
                 <?php
                     //SERVICE TO VIEW DOC HISTORY
                     if ($viewDocHistory) {
@@ -1567,7 +1602,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             </dl>
     <?php
 }
-?>
+?> 
 </div>
 </div>
 <script type="text/javascript">

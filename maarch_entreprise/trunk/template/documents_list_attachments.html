@@ -1,0 +1,165 @@
+<!--
+
+* list attachments
+*
+*
+* @package  Maarch Entreprise 1.5
+* @version 1.5
+* @since 11/2014
+* @license GPL
+*
+
+
+
+Parts :
+    ##HEAD< : Begining of the head part
+    ##HEAD> : End of the head part
+
+    ##RESULT< : Begining of result list
+    ##RESULT> : End fo result list
+
+Functions :
+
+
+    ##cssLine|arg1|arg2##                   : load css style for line. arg1,arg2 : switch beetwin style on line one or line two
+    ##cssLineReload##                       : reload last css style loaded by cssLine
+    ##sortColumn|arg##                      : sort list. arg = sort;
+    ##defineLang|arg##                      : show label. arg = constant define in lang.php;
+    ##loadImage|arg1|arg2##                 : show loaded image; arg1= name of img file, arg2 = name of the module (if image in module)
+    ##loadValue|arg##                       : load value in the db; arg= column's value  identifier
+    ##showActionIcon|arg1|arg2|arg3|arg4##  : action icon. arg1 = label, arg2  = image , arg3 = action (javascript), arg4 = disabled rule
+    ##includeFile|arg1|arg2##               : include file. arg1 = name of the file, arg2  = name of the module (if file in module)
+    ##setListParameter|arg1|arg2##          : set parameter's value for actual list. arg1 = name of parameter, arg2  = new value
+    ##getListParameter|arg##                : get parameter's value for actual list. arg1 = name of parameter
+    ##ifStatement|arg1|arg2|arg3|arg4##     : allow conditional execution . arg1=condition, arg2= statement 1, arg3 = statement 2
+    ##isModuleLoaded|arg##                  : test if module is loaded. arg = module id
+
+Mods 
+
+
+    ##radioButton##         : display radio
+    ##checkBox##            : display checkbox
+    ##checkUncheckAll##     : display checkbox for check/uncheck All
+    ##clickOnLine##         : action on click under the line
+    ##showIconDocument##    : view document icon
+    ##showIconDetails##     : view detail's page icon
+    ##getBusinessAppUrl##   : get business app url
+	
+
+-->
+
+
+#!#TABLE
+<!-- ----------------------------------------------------------------------- -->
+        <table border="0" cellspacing="0" class="listing spec zero_padding" id='test'  style="width: 100%; min-width: 900px; margin: 0;">
+
+#!#HEAD
+<!-- ----------------------------------------------------------------------- -->
+             <thead border ="1">
+                <tr>
+                    <th  width="100%" colspan="2">
+                        <div align="center" style="border:1px solid; height:20px;margin-bottom:10px;padding-top:10px;vertical-align:middle;">
+                                ##defineLang|_CHRONO_NUMBER##
+                                ##sortColumn|identifier##
+                                &nbsp;
+                                ##defineLang|_STATUS##
+                                ##sortColumn|status##
+                                &nbsp;
+                                ##defineLang|_ATTACHMENT_TYPES##
+                                ##sortColumn|attachment_type##
+                                &nbsp;
+                                ##defineLang|_OBJECT##
+                                ##sortColumn|title##
+                                &nbsp;
+                                ##defineLang|_DEST##
+                                ##sortColumn|dest_contact_id##
+                                &nbsp;
+                                ##defineLang|_BACK_DATE##
+                                ##sortColumn|validation_date##
+                                &nbsp;
+                                ##defineLang|_CREATION_DATE##
+                                ##sortColumn|creation_date##
+                                &nbsp;
+                                ##defineLang|_BBY##
+                                ##sortColumn|typist##
+                                &nbsp;
+                                ##defineLang|_UPDATED_DATE##
+                                ##sortColumn|doc_date##
+                                &nbsp;
+                                ##defineLang|_BBY##
+                                ##sortColumn|updated_by##
+                                &nbsp;
+                                ##defineLang|_FORMAT##
+                                ##sortColumn|format##
+                                &nbsp;
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+#!#RESULT
+<!-- ----------------------------------------------------------------------- -->
+
+               <tr  class="##cssLine|col|white ##" >
+                    <td width="15%" style="text-align:center">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                            <tr>
+                                <td style="text-align:center;width:25px"><b>##loadValue|relation##</b></td>
+                                <td style="text-align:center;font-size:13px;width:100px">##loadValue|status##</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="85%" align="center" style="padding : 0px" >
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                                <tr>
+                                    <td style="text-align:left" width="15%">##loadValue|attachment_type##</td>
+                                    <td style="text-align:left;" width="55%"><b></b><em>##loadValue|title##</em> </td>
+                                    <td style="text-align:left" width="15%">##loadValue|dest_contact_id##</td>
+                                    <td style="text-align:left" width="8%">##loadValue|validation_date##</td>
+                                    <td style="text-align:left" width="3%">##loadValue|format##</td>
+                                </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr class="##cssLineReload##">
+                    <td width="15%" style="text-align:center">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                            <tr>
+                                <td width="25px">##showIconDocument##</td>
+                                <td style="text-align:center;width:100px"><b>##loadValue|identifier##</b></td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="85%" style="text-align:center">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                            <tr>
+                                <td style="text-align:left">
+                                    <table>
+                                        <td width="27%">##func_delete##</td>
+                                        <td width="27%">##func_modify##</td>
+                                        <td width="35%">##func_final_version##</td>
+                                        <td width="11%" style="text-align:right">##func_previous_version##</td>
+                                    </table>
+                                </td>
+                                <td style="text-align:center" width="10%">##loadValue|creation_date##</td>
+                                <td style="text-align:left" width="17%">##loadValue|typist##</td>
+                                <td style="text-align:left" width="10%">##loadValue|doc_date##</td>
+                                <td style="text-align:left" width="17%">##loadValue|updated_by##</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr >
+                <tr id="attachList_##loadValue|res_id##" name="attachList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: #FFF;" width="100%">
+                    <td colspan="2" style="background-color: white;">
+                        <div id="divAttachList_##loadValue|res_id##" align="center" style="color: grey;">
+                            <img src="##loadImage|loading.gif##" /><br />
+                            ##defineLang|_LOADING_INFORMATIONS##
+                        </div>
+                    </td>
+                </tr>
+
+ #!#FOOTER
+ <!--   ----------------------------------------------------------------------- -->
+            </tbody>
+        </table>

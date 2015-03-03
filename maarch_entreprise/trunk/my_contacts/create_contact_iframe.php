@@ -52,6 +52,11 @@ $_SESSION['info'] = '';
 if ((!isset($_GET['created']) || $_GET['created'] == '') && $_SESSION['error'] <> '') {
 	$_SESSION['m_admin']['contact'] = '';
 }
+
+if (isset($_GET['fromAttachmentContact']) && $_GET['fromAttachmentContact'] == "Y") {
+	$_SESSION['AttachmentContact'] = "1";
+}
+
 $core_tools2->load_js();
 $contact->chooseContact();
 ?>
@@ -67,12 +72,19 @@ $contact->formcontact("add", "", false, true);
 	</script>
 <?php
 
+if ($_SESSION['AttachmentContact'] == "1") {
+	$createContactDiv = "create_contact_div_attach";
+} else {
+	$createContactDiv = "create_contact_div";
+}
+
 if(isset($_GET['created']) && $_GET['created'] <> ''){
-?>
-	<script type="text/javascript">
-		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address';?>", "create_contact_div", "true");
-	</script>
-<?php
+	?>
+		<script type="text/javascript">
+			set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address';?>", "<?php echo $createContactDiv;?>", "true");
+			simpleAjax("<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&page=unsetAttachmentContact' ;?>");
+		</script>
+	<?php
 }
 
 ?>

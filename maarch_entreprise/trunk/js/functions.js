@@ -2784,6 +2784,20 @@ function loadDiffListHistory(listinstance_history_id)
     });
 }
 
+function showPreviousAttachments(path_manage_script, id){
+    new Effect.toggle('attachList_'+id, 'appear' , {delay:0.2});
+
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: { res_id_version : id},
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            $('divAttachList_'+id).innerHTML = response.toShow;
+        }
+    });
+}
+
 function affiche_reference(){
     
 var nature = document.getElementById('nature_id').options[document.getElementById('nature_id').selectedIndex];
@@ -2826,6 +2840,12 @@ function purposeCheck(){
     }
 }
 
+function simpleAjax(url){
+        new Ajax.Request(url,
+        {
+            method:'post'
+        });
+}
 
 function test(){
 alert('test');

@@ -1,8 +1,12 @@
 <?php
 
 require_once('core/class/class_core_tools.php');
+require_once "apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR
+            ."class".DIRECTORY_SEPARATOR."class_users.php";
 $Core_Tools = new core_tools;
 $Core_Tools->load_lang();
+
+$users = new class_users();
 
 $return = '';
 
@@ -17,7 +21,10 @@ if (isset($_REQUEST['res_id_master'])) {
                         $return .= _STATUS;
                     $return .= '</th>';
                     $return .= '<th style="font-weight: bold; color: black;">';
-                        $return .= _DATE;
+                        $return .= _VERSION;
+                    $return .= '</th>';
+                    $return .= '<th style="font-weight: bold; color: black;">';
+                        $return .= _CREATION_DATE;
                     $return .= '</th>';
                     $return .= '<th style="font-weight: bold; color: black;">';
                         $return .= _SUBJECT;
@@ -34,8 +41,8 @@ if (isset($_REQUEST['res_id_master'])) {
                 $db = new dbquery();
                 $db->connect();
 
-                $query = "SELECT * FROM res_attachments WHERE res_id_master = "
-                    . $_REQUEST['res_id_master']." AND status <> 'DEL' and coll_id = '" . $_SESSION['collection_id_choice'] . "'";
+                $query = "SELECT * FROM res_view_attachments WHERE res_id_master = "
+                    . $_REQUEST['res_id_master']." AND status <> 'DEL' and status <> 'OBS' and coll_id = '" . $_SESSION['collection_id_choice'] . "' ORDER BY creation_date desc";
 
                 $db->query($query);
 
@@ -50,6 +57,10 @@ if (isset($_REQUEST['res_id_master'])) {
                             while ($status_db = $db2->fetch_object()) {
                                 $return .= $status_db->label_status;
                             }
+                        $return .= '</td>';
+                        $return .= '<td>';
+                            $return .= '&nbsp;&nbsp;';
+                            $return .= $return_db->relation;
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
@@ -78,13 +89,19 @@ if (isset($_REQUEST['res_id_master'])) {
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
-                            $return .= $return_db->typist;
+                            $current_user = $users->get_user($return_db->typist);
+                            $return .= $current_user['firstname'] . ' ' . $current_user['lastname'];
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
                             $return .= '<a ';
                             $return .= 'href="';
-                              $return .= 'index.php?display=true&module=attachments&page=view_attachment&id='.$return_db->res_id;
+                            if ($return_db->res_id <> 0) {
+                                $id = $return_db->res_id;
+                            } else {
+                                $id = $return_db->res_id_version;
+                            }
+                              $return .= 'index.php?display=true&module=attachments&page=view_attachment&id='.$id.'&res_id_master='.$_REQUEST['res_id_master'];
                             $return .= '" ';
                             $return .= 'target="_blank" ';
                             $return .= '>';
