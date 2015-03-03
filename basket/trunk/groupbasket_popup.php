@@ -154,7 +154,7 @@ $time = $core_tools->get_session_time_expire();
                 </td>
                 <td rowspan="2">
                     <div class="block small_text" >
-                    <h3><img src ="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_detail_b.gif" />
+                    <h3><i class ="fa fa-info" ></i>
                     <?php echo _HELP_LIST_KEYWORDS; ?></h3>
                         <p align="justify">
                         <?php echo _HELP_LIST_KEYWORD_EXEMPLE_TITLE;?><br/>
