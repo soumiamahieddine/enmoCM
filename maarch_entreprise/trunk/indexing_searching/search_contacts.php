@@ -135,14 +135,10 @@ $core_tools->load_js();
             </td>
         </tr>
     </table>
-    <table width="100%">
-        <tr>
-            <td><h2><?php echo _SEARCH_CONTACTS; ?></h2></td>
-        </tr>
-    </table>
         <tr >
             <td >
             <div class="block">
+                <h2><?php echo _SEARCH_CONTACTS; ?></h2>
                 <table border = "0" width="100%">
                     <tr>
                         <td width="70%">
@@ -215,7 +211,6 @@ $core_tools->load_js();
                 <div class="block_end" style="margin-top:-20px">&nbsp;</div>
             </td>
         </tr>
-        <tr><td colspan="2"><hr/></td></tr>
 
     <select name="select_criteria" id="select_criteria" style="display: none;"></select>
 
