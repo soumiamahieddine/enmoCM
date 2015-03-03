@@ -75,8 +75,7 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 		$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 		/***********************************************************/
 		?>
-		<h1><img src="<?php echo $_SESSION['config']['businessappurl'];
-			?>static.php?module=fileplan&filename=manage_fileplan_b.gif" alt="" />
+		<h1><i class="fa fa-files-o fa-2x" title="" /></i>
 			<?php echo _MANAGE_FILEPLAN;?></h1>
 		<div id="inner_content">
 			<div class="block">
