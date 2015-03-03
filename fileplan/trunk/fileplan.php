@@ -64,7 +64,7 @@ if (count($fileplans_array) > 0)  {
 	/***********************************************************/
 
 	?>
-	<h1><i class="fa fa-files-o fa-3x" title="" /></i>
+	<h1><i class="fa fa-files-o fa-2x" title="" /></i>
 		<?php echo _FILEPLAN;?></h1>
 
 	<div id="inner_content">
