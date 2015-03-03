@@ -76,9 +76,8 @@ if (empty($fileplan_id)) {
 	
 	?>
 	<div id="inner_content">
-	<h1><img src="<?php echo $_SESSION['config']['businessappurl'];
-		?>static.php?module=fileplan&filename=manage_fileplan_b.gif" alt="<?php
-		echo _ADD_FILEPLAN;?>" /><?php echo _ADD_FILEPLAN;?></h1>
+	<h1><i class="fa fa-files-o fa-2x" title="<?php
+		echo _ADD_FILEPLAN;?>"></i><?php echo _ADD_FILEPLAN;?></h1>
 	<h3> <?php echo _CREATE_YOUR_PERSONNAL_FILEPLAN.".<br/><br/>"._ASKED_ONLY_ONCE.".";?>  </h3>
 	<div class="blank_space">&nbsp;</div>
 	
@@ -132,9 +131,8 @@ if (empty($fileplan_id)) {
 		$core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 		/***********************************************************/
 		?>
-		<h1><img src="<?php echo $_SESSION['config']['businessappurl'];
-			?>static.php?module=fileplan&filename=manage_fileplan_b.gif" alt="" />
-			<?php echo _FILEPLAN;?></h1>
+		<h1><!-- i class="fa fa-files-o fa-2x" title=""></i-->
+			<?php //echo _FILEPLAN;?></h1>
 		<div id="inner_content">
 			<div class="block">
 				<b>
@@ -365,8 +363,7 @@ if (empty($fileplan_id)) {
 		$paramsTab['bool_modeReturn'] = false;                                              //Desactivation du mode return (vs echo)
 		$paramsTab['pageTitle'] =  _FILEPLAN_SHORT." : "
 			.count($tab).' '._FILEPLAN_POSITIONS;              								//Titre de la page
-		$paramsTab['pagePicto'] = $_SESSION['config']['businessappurl']
-			."static.php?module=fileplan&filename=manage_fileplan_b.gif";               	//Image (pictogramme) de la page
+		$paramsTab['pagePicto'] = "files-o";               	//Image (pictogramme) de la page
 		$paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
 		$paramsTab['bool_showSearchTools'] = true;                                          //Affiche le filtre alphabetique et le champ de recherche
 		$paramsTab['searchBoxAutoCompletionUrl'] = $_SESSION['config']['businessappurl']
