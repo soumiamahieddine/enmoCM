@@ -138,7 +138,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                                     . $_SESSION['config']['businessappurl']
                                     . 'index.php?page=view_baskets&amp;module=basket&amp;baskets='
                                     . $_SESSION['user']['baskets'][$i]['id']
-                                    . '"><b><span class="nb_res" id="nb_' . $_SESSION['user']['baskets'][$i]['id'] 
+                                    . '"><b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id'] 
                                     . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']
                                     . '"><i class="fa-li fa fa-spinner fa-spin"></i>'
                                     . '</span></b> <i class="fa-li fa fa-tasks" style="padding-top: 5px;padding-bottom: 5px;"></i> '
@@ -175,7 +175,12 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
             onSuccess: function(answer)
             {
                 eval('response = '+answer.responseText);
-                $(response.idSpan).innerHTML = '' + response.nb + '';
+                if (response.nb > 0 ) {
+                    $(response.idSpan).innerHTML = '<span class="nbRes">' + response.nb + '</span>';
+                } else {
+                    $(response.idSpan).innerHTML = '<span class="nbResZero">' + response.nb + '</span>';
+                }
+                
             }
         });
     }
