@@ -150,7 +150,16 @@ $time = $core->get_session_time_expire();
         <div id="nav">
             <div id="menu" onmouseover="ShowHideMenu('menunav','on');" onmouseout="ShowHideMenu('menunav','off');" class="off">
                 <p>
-                    <span style="background: url(static.php?filename=logo_menu.png) #9CE2FF;background-position: 10px;background-repeat: no-repeat;height: 30px;font-weight: bold;width: 85px;display: block;border-top-left-radius: 10px;border-top-right-radius: 10px;font-size: 23px;padding-left: 50px;padding-top: 4px;color: #009DC5;">Menu</span>
+                    <span style="background:url(static.php?filename=logo_menu.png);background-position: 10px 2px;background-size:25%;
+background-repeat: no-repeat;
+height: 30px;
+font-weight: bold;
+width: 85px;
+display: block;
+font-size: 23px;
+padding-left: 65px;
+padding-top: 4px;
+color: #ffffff;">Menu</span>
                 </p>
                 <div id="menunav" style="display: none;">
                 <?php
