@@ -318,7 +318,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
     exit();
 }
 ?>
-<h1><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?module=folder&filename=view_folder_b.gif";?>" alt="" /> <?php  echo strtoupper(_SEARCH_FOLDER);?></h1>
+<h1><i class="fa fa-folder-o" title="" /></i> <?php  echo strtoupper(_SEARCH_FOLDER);?></h1>
 <div id="inner_content">
 <table width="100%" border="0">
     <tr>
