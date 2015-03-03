@@ -304,8 +304,7 @@ if (!$return) {
     if ($_REQUEST['mode'] == 'search') {
         $paramsTab['urlParameters'] .= "&mode=search";
     } 
-    $paramsTab['pagePicto'] = $_SESSION['config']['businessappurl']
-            ."static.php?filename=manage_contact_b.gif";                                //Image (pictogramme) de la page
+    $paramsTab['pagePicto'] = 'street-view';                                //Image (pictogramme) de la page
     $paramsTab['bool_sortColumn'] = true;                                               //Affichage Tri
     $paramsTab['bool_showSearchTools'] = true;                                          //Afficle le filtre alphabetique et le champ de recherche
     $paramsTab['searchBoxAutoCompletionUrl'] = $_SESSION['config']['businessappurl']

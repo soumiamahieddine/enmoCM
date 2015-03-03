@@ -1010,9 +1010,7 @@ class lists extends dbquery
         
             //If disable or checkbox
             if ($lineIsDisabled === true || empty($keyValue)) {
-                $return .= '<div align="center"><img src="'.$_SESSION['config']['businessappurl']
-                            .'static.php?filename=locked.gif" alt="'
-                            ._LOCKED.'" title="'._LOCKED.'" border="0"/></div>';
+                $return .= '<div align="center"><i class="fa fa-lock fa-2x" title="'._LOCKED.'"></i></div>';
             } else {
                 $return .= '<div align="center"><input type="checkbox" name="field[]" id="field" class="check" value="'
                             .$keyValue.'" /></div>';
@@ -1045,9 +1043,7 @@ class lists extends dbquery
         if ($this->params['bool_radioButton'] === true) {
             //If disable or radio button
             if ($lineIsDisabled === true || empty($keyValue)) {
-                $return .= '<div align="center"><img src="'.$_SESSION['config']['businessappurl']
-                            .'static.php?filename=locked.gif" alt="'
-                            ._LOCKED.'" title="'._LOCKED.'" border="0"/></div>';
+                $return .= '<div align="center"><i class="fa fa-lock fa-2x" title="'._LOCKED.'"></i></div>';
             } else {
                 $return .= '<div align="center"><input type="radio" name="field" id="field" class="check" value="'
                             .$keyValue.'" /></div>';
@@ -1062,9 +1058,7 @@ class lists extends dbquery
         //Show document icon
         $href = $this->_buildMyLink('index.php?page=view_baskets&module=basket&baskets=MyBasket&directLinkToAction', $resultTheLine, $listKey);
         $return .= '<div align="center"><a href="'.$href.'" target="_blank" title="'
-                ._PROCESS.'"><img src="'.$_SESSION['config']['businessappurl']
-                .'static.php?filename=lot.gif" alt="'._PROCESS
-                .'" border="0"/></a></div>';
+                ._PROCESS.'"><i class="fa fa-gear fa-2x" title="'._PROCESS.'"></i></a></div>';
            
         return $return;
     }
@@ -1114,8 +1108,8 @@ class lists extends dbquery
                 } else {
                     //return action icon
                     return '<a href="javascript://" onClick="'.$my_explode[3]
-                        .'" title="'.$my_explode[1].'"><img src="'.$my_explode[2]
-                        .'" alt="'.$my_explode[1].'" border="0"/></a>';
+                        .'" title="'.$my_explode[1]
+                        .'"><i class="fa fa-'.$my_explode[2].' fa-2x" title="'.$my_explode[1].'"></i></a>';
                 }
             } else {
                 return _WRONG_PARAM_FOR_LOAD_VALUE;
@@ -1277,7 +1271,6 @@ class lists extends dbquery
     {
         $return = '';
         if ($resultTheLine[0]['hasNotes'] || $resultTheLine[1]['hasNotes']) {
-            //$return .= '<img src="static.php?filename=modif_note_small.gif&module=notes" style="cursor: pointer;" title="Afficher les notes" onclick="loadNoteList(' . $resultTheLine[0]['value'] . ');" />';
             $return .= '<i class="fa fa-pencil fa-2x" style="cursor: pointer;" title="' . _NOTES . '" onclick="loadNoteList(' . $resultTheLine[0]['value'] . ');"></i>';
         }
         return $return;
@@ -1298,7 +1291,8 @@ class lists extends dbquery
 		}
 		
         if ($isMultiContacts == 'Y') {
-            $return .= '<img src="static.php?filename=manage_groups_b.gif" style="cursor: pointer;" title="Afficher les contacts" onclick="loadContactsList(' . $resMultiContacts . ');" />';
+            $return .= '<i class="fa fa-book fa-2x" title="' 
+                . _VIEW_CONTACTS . '"onclick="loadContactsList(' . $resMultiContacts . ');" ></i>';
         }
 
         return $return;
@@ -1318,7 +1312,7 @@ class lists extends dbquery
         } else if ($my_explode[1] == $_SESSION['user']['UserId'] ) {
             return '';
         } else if ($my_explode[2] > $now ) {
-            return '<img src="static.php?filename=cadenas_rouge.png">';
+            return '<i class="fa fa-lock fa-2x"></i>';
         } else {
             return '';
         }
@@ -1924,11 +1918,8 @@ class lists extends dbquery
         $start = $end = 0;
         
         //Loading image
-        $loading = '<div id="loading" style="display:none;"><img src="'
-                    . $_SESSION['config']['businessappurl']
-                    . 'static.php?filename=loading2.gif" width="16" '
-                    . 'height="16" style="vertical-align: middle;" alt='
-                    . '"loading..." title="loading..."></div>';
+        $loading = '<div id="loading" style="display:none;">'
+                    . '<i class="fa fa-spinner fa-2x" style="vertical-align: middle;" title="loading..."></i></div>';
         
         //Lines to show
         if(isset($_REQUEST['lines']) && !empty($_REQUEST['lines'])) {
@@ -2108,11 +2099,8 @@ class lists extends dbquery
         $start = $end = 0;
         
         //Loading image
-        $loading = '<div id="loading" style="display:none;"><img src="'
-                    . $_SESSION['config']['businessappurl']
-                    . 'static.php?filename=loading2.gif" width="16" '
-                    . 'height="16" style="vertical-align: middle;" alt='
-                    . '"loading..." title="loading..."></div>';
+        $loading = '<div id="loading" style="display:none;">'
+        . '<i class="fa fa-spinner fa-2x" style="vertical-align: middle;" title="loading..."></i></div>';
         
         //Lines to show
         if(isset($_REQUEST['lines']) && !empty($_REQUEST['lines'])) {
@@ -2135,9 +2123,7 @@ class lists extends dbquery
         
         //Go to top link
         $goToTop ='<a href="javascript://" onclick="new Effect.ScrollTo(\'topOfTheList\');'
-            . 'return false;" alt="Top"><img src="'. $_SESSION['config']['businessappurl']
-            . 'static.php?filename=goToTop.png" width="20"'
-            . ' height="20" style="vertical-align: middle;" alt="Top" title="Top"></a>';
+            . 'return false;" alt="Top"><i class="fa fa-arrow-up fa-2x" style="vertical-align: middle;" title="Top"></a>';
         
         //Build dropdown lines object
         $linesDropdownList = '';
@@ -2373,11 +2359,8 @@ class lists extends dbquery
             }
             
             //Loading image
-            $loading = '<div id="loading" style="display:none;"><img src="'
-                    . $_SESSION['config']['businessappurl']
-                    . 'static.php?filename=loading.gif" width="14" '
-                    . 'height="14" style="vertical-align: middle;" alt='
-                    . '"loading..." title="loading..."></div>';
+            $loading = '<div id="loading" style="display:none;">'
+                . '<i class="fa fa-spinner fa-2x" style="vertical-align: middle;" title="loading..."></i></div>';
                     
             //Small toolbar
             $toolbar .= '<table width="100%" border="0" cellspacing="0" class="zero_padding"><tr>';
@@ -2756,7 +2739,7 @@ class lists extends dbquery
         }
         //Image
         if(isset($actualButton['icon'])) {
-           $icon .= '<img src="'.$actualButton['icon'].'" alt="'.$actualButton['tooltip'].'" border="0"/>'; 
+           $icon .= '<i class="fa fa-'.$actualButton['icon'].' fa-2x" title="'.$actualButton['tooltip'].'"></i>'; 
         }
         //Label
         if (isset($actualButton['label']) && $showLabel) { 
@@ -2813,23 +2796,18 @@ class lists extends dbquery
             //Show sublist toggle icon
             if($this->params['bool_showSublist'] && !empty($this->params['sublistUrl'])){
                 if ($lineIsDisabled === true) {
-                    $content .= '<td width="1%"><div align="center"><img src="'
-                        .$_SESSION['config']['businessappurl'].'static.php?filename=moins.gif" alt="'
-                        ._TOGGLE.'" border="0" style="vertical-align: middle;"/></div></td>';
+                    $content .= '<td width="1%"><div align="center"><i class="fa fa-minus fa-2x" style="vertical-align: middle;"></i></div></td>';
                 } else {
                     $sublist = $this->_buildMyLink($this->params['sublistUrl'], $resultTheLine, $listKey);
                     $content .= '<td width="1%"><div align="center"><a href="javascript://" onclick="loadValueInDiv(\''
-                            .$keyValue.'\',\''.$sublist.'\')" title="'._TOGGLE.'"><img src="'
-                            .$_SESSION['config']['businessappurl'].'static.php?filename=toggle.png" alt="'
-                            ._TOGGLE.'" id ="toggle" border="0"style="vertical-align: middle;" /></a></div></td>';
+                            .$keyValue.'\',\''.$sublist.'\')" title="'._TOGGLE
+                            .'"><i class="fa fa-minus fa-2x" style="vertical-align: middle;"></i></a></div></td>';
                 }
             }
             
             //If disable or checkbox or radio button
             if ($lineIsDisabled === true && ($this->params['bool_checkBox'] === true|| $this->params['bool_radioButton'] === true)) {
-                $content .= '<td width="1%"><div align="center"><img src="'.$_SESSION['config']['businessappurl']
-                        .'static.php?filename=locked.gif" alt="'._LOCKED.'" title="'
-                        ._LOCKED.'" border="0" style="vertical-align: middle;" /></div></td>';
+                $content .= '<td width="1%"><div align="center"><i class="fa fa-lock fa-2x" style="vertical-align: middle;" title="'._LOCKED.'"></i></div></td>';
             } else if($this->params['bool_checkBox'] === true) {
                 $content .= '<td width="1%"><div align="center"><input type="checkbox" name="field[]" id="field" class="check" value="'
                     .$keyValue.'" /></div></td>';
@@ -2931,9 +2909,7 @@ class lists extends dbquery
             if($this->params['bool_showIconDetails']) {
                 $href = $this->_buildMyLink($this->params['viewDetailsLink'], $resultTheLine, $listKey);
                 $content .= '<td width="1%"><div align="center"><a href="javascript://" onClick="javascript:window.top.location=\''
-                    .$href.'\'; return false;" title="'._DETAILS.'"><img src="'
-                    .$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif" alt="'
-                    ._DETAILS.'" border="0"/></a></div></td>';
+                    .$href.'\'; return false;" title="'._DETAILS.'"><i class="fa fa-info fa-2x" title="' . _DETAILS . '"></i></a></div></td>';
             }
             
             //End of line
@@ -3042,7 +3018,7 @@ class lists extends dbquery
         }
         
         //Page picto
-        if(isset($parameters['pagePicto'])) $picto_path = '<img src="'.$parameters['pagePicto'].'" alt="" class="title_img" /> ';
+        if(isset($parameters['pagePicto'])) $picto_path = '<i class="fa fa-' . $parameters['pagePicto'] . ' fa-2x"></i> ';
         
         //Top anchor
         $grid .= '<div id="topOfTheList"></div>';
@@ -3192,7 +3168,7 @@ class lists extends dbquery
         
         //Show loading image?
         if ($showLoading === true) {
-            $loading = '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=loading.gif" />';
+            $loading = '<i class="fa fa-spinner fa-2x"></i>';
         }
         
         //Content div
