@@ -233,13 +233,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frameContacts = substr($frameContacts, 0, -2);
 	$frameContacts .= "}";
 	
-    /********************************* LEFT PART **************************************/
-    $frm_str = '<div id="validleftprocess">';
-        $frm_str .= '<h2 id="action_title"><img src="'
+    $frm_str = '<h2 id="action_title"><img src="'
             . $_SESSION['config']['businessappurl']
             . 'static.php?filename=file_index_b.gif"  align="middle" alt="" />'
             . _PROCESS . _LETTER_NUM . ' ' . $res_id;
                 $frm_str .= '</h2>';
+    /********************************* LEFT PART **************************************/
+    $frm_str .= '<div id="validleftprocess">';
                 $frm_str .= '<div id="frm_error_' . $id_action . '" class="error"></div>';
                 $frm_str .= '<form name="process" method="post" id="process" action="#" '
                           . 'class="formsProcess addformsProcess" style="text-align:left;">';
@@ -721,7 +721,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $templates = $templatesControler->getAllTemplatesForProcess($data['destination']['value']);
         //var_dump($templates);
         $frm_str .= '<div id="list_answers_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
-            $frm_str .= '<div>';
+            $frm_str .= '<div class="block" style="margin-top:-2px;">';
                 $frm_str .= '<div id="processframe" name="processframe">';
                     $frm_str .= '<center><h2 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});';
                     $frm_str .= 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});';
@@ -807,7 +807,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //DIFFUSION FRAME
     if ($core_tools->is_module_loaded('entities')) {
         $frm_str .= '<div id="diff_list_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
-            $frm_str .= '<div>';
+            $frm_str .= '<div class="block" style="margin-top:-2px;">';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'diff_list_div\', \'blind\', {delay:0.2});';
                 $frm_str .= 'whatIsTheDivStatus(\'diff_list_div\', \'divStatus_diff_list_div\');';
                 $frm_str .= 'return false;">' . _DIFF_LIST_COPY . '</h2></center>';
@@ -875,7 +875,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //NOTES FRAME
     if ($core_tools->is_module_loaded('notes')) {
         $frm_str .= '<div class="desc" id="notes_div" style="display:none;">';
-        $frm_str .= '<div class="ref-unit">';
+        $frm_str .= '<div class="ref-unit block" style="margin-top:-2px;">';
         $frm_str .= '<center><h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});';
         $frm_str .= 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');';
         $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _NOTES. '</h2></center>';
@@ -894,7 +894,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //SENDMAIL FRAME
     if ($core_tools->test_service('sendmail', 'sendmail', false) === true) {
         $frm_str .= '<div class="desc" id="emails_div" style="display:none;">';
-        $frm_str .= '<div class="ref-unit">';
+        $frm_str .= '<div class="ref-unit block" style="margin-top:-2px;">';
         $frm_str .= '<center><h2 onclick="new Effect.toggle(\'emails_div\', \'blind\', {delay:0.2});';
         $frm_str .= 'whatIsTheDivStatus(\'emails_div\', \'divStatus_emails_div\');';
         $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _SENDED_EMAILS. '</h2></center>';
@@ -917,7 +917,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $case_properties['case_description'] = '';
         }
         $frm_str .= '<div id="cases_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
-            $frm_str .= '<div>';
+            $frm_str .= '<div class="block" style="margin-top:-2px;">';
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'cases_div\', \'blind\', {delay:0.2});';
                 $frm_str .= 'whatIsTheDivStatus(\'cases_div\', \'divStatus_cases_div\');';
                 $frm_str .= 'return false;">' . _CASE . '</h2></center>';
@@ -973,7 +973,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     //LINKS FRAME
     $frm_str .= '<div id="links_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
-        $frm_str .= '<div style="text-align: left;">';
+        $frm_str .= '<div class="block" style="text-align: left;margin-top:-2px;">';
             $frm_str .= '<h2 onclick="new Effect.toggle(\'links_div\', \'blind\', {delay:0.2});';
             $frm_str .= 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');';
                 $frm_str .= 'return false;">';
@@ -1030,7 +1030,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $addNewVersion = true;
     }
     $frm_str .= '<div id="versions_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
-        $frm_str .= '<div>';
+        $frm_str .= '<div class="block" style="margin-top:-2px;">';
                 //$frm_str .= '<center><h2>' . _VERSIONS . '</h2></center>';
                 $frm_str .= '<h2 onclick="new Effect.toggle(\'versions_div\', \'blind\', {delay:0.2});';
                 $frm_str .= 'whatIsTheDivStatus(\'versions_div\', \'divStatus_versions_div\');';
@@ -1067,7 +1067,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //RESOURCE FRAME
     $frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
-        . $res_id . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%"></iframe>';
+        . $res_id . '" name="viewframe" id="viewframe" scrolling="auto" frameborder="0" width="100%" style="width:100% !important;"></iframe>';
 
     $frm_str .= '</div>';
 
