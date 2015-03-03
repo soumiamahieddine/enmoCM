@@ -1074,7 +1074,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         if ($core_tools->is_module_loaded('notes')) {
             //Iframe notes
             $frm_str .= '<div id="notes_div" style="display:none;">';
-            $frm_str .= '<div class="ref-unit">';
+            $frm_str .= '<div class="ref-unit block" style="margin-top:-2px;">';
             $frm_str .= '<center><h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});';
             $frm_str .= 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');';
             $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _NOTES. '</h2></center>';
@@ -1095,7 +1095,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $templates = array();
             $templates = $templatesControler->getAllTemplatesForProcess($data['destination']);
             
-            $frm_str .= '<div id="list_answers_div" style="display:none">';
+            $frm_str .= '<div id="list_answers_div" class="block" style="display:none;margin-top:-2px;">';
 
             $frm_str .= '<center><h2>';
             $frm_str .= _ATTACHMENTS . ', ' . _DONE_ANSWERS . '</h2></center>';
@@ -1173,7 +1173,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
 
         if ($core_tools->is_module_loaded('entities')) {
-            $frm_str .= '<div id="diff_list_history_div" style="display:none">';
+            $frm_str .= '<div id="diff_list_history_div" class="block" style="display:none;margin-top:-2px;">';
                 $frm_str .= '<center><h2>';
                 $frm_str .= _DIFF_LIST_HISTORY;
                 $frm_str .= '</h2></center>';
@@ -1186,7 +1186,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         
         //LINKS
         $frm_str .= '<div id="links_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
-        $frm_str .= '<div style="text-align: left;">';
+        $frm_str .= '<div class="block" style="text-align: left;margin-top:-2px;">';
         $frm_str .= '<h2>';
         $frm_str .= '<center>' . _LINK_TAB . '</center>';
         $frm_str .= '</h2>';
@@ -1237,7 +1237,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         //DOCUMENT VIEWER
         $path_file = get_file_path($res_id, $coll_id);
         $frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&id='
-            . $res_id.'&coll_id='.$coll_id.'" name="viewframevalid" id="viewframevalid"  scrolling="auto" frameborder="0" ></iframe>';
+            . $res_id.'&coll_id='.$coll_id.'" name="viewframevalid" id="viewframevalid"  scrolling="auto" frameborder="0" style="width:100% !important;"></iframe>';
             
         //END RIGHT DIV
         $frm_str .= '</div>';
