@@ -186,7 +186,7 @@ $listKey = 'folders_system_id';
 
 //Initialiser le tableau de paramètres
 $paramsTab = array();
-$paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_FOLDER;        //Titre de la page
+$paramsTab['pageTitle'] =  _RESULTSfdd." : ".count($tab).' '._FOUND_FOLDER;        //Titre de la page
 $paramsTab['bool_sortColumn'] = true;                                           //Affichage Tri
 $paramsTab['bool_bigPageTitle'] = false;                                        //Affichage de l'icone de la page de details
 $paramsTab['urlParameters'] = 'baskets='.$_SESSION['current_basket']['id'];     //Parametres d'url supplementaires
