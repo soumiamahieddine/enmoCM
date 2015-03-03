@@ -113,8 +113,7 @@ if($mode == 'normal') {
     $url_search = $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';
 
      //error 
-    $_SESSION['error_search'] = '<p class="error"><img src="'
-        .$_SESSION['config']['businessappurl'].'static.php?filename=noresult.gif" /><br />'
+    $_SESSION['error_search'] = '<p class="error"><i class="fa fa-remove fa-2x"></i><br />'
         ._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="javascript://" '
         .' onclick = "window.top.location.href=\''.$url_search.'\'">'._MAKE_NEW_SEARCH.'</a></strong></div>';
 
@@ -176,8 +175,7 @@ if($mode == 'normal') {
         .'&page=search_adv&load&mode='.$mode.$urlParameters;
     
     //Displayed error text
-    $_SESSION['error_search'] = '<p class="error"><img src="'
-        .$_SESSION['config']['businessappurl'].'static.php?filename=noresult.gif" /><br />'
+    $_SESSION['error_search'] = '<p class="error"><i class="fa fa-remove fa-2x"></i><br />'
         ._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="javascript://" '
         .' onclick = "window.top.location.href=\''.$url_search.'\'">'._MAKE_NEW_SEARCH.'</a></strong></div>';
 }
@@ -601,8 +599,7 @@ if (count($tab) > 0) {
     $paramsTab['listCss'] = 'listing largerList spec';                                  //css
     $paramsTab['urlParameters'] =  $urlParameters.'&dir=indexing_searching';            //Parametres supplémentaires
     $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_DOCS;              //Titre de la page
-    $paramsTab['pagePicto'] =  $_SESSION['config']['businessappurl']
-        ."static.php?filename=picto_search_b.gif";                                      //Image de la page
+    $paramsTab['pagePicto'] =  'search';                                      //Image de la page
     $paramsTab['bool_bigPageTitle'] = $bigPageTitle;                                    //Titre de la page en grand
     $paramsTab['bool_showIconDocument'] =  true;                                        //Affichage de l'icone du document
     $paramsTab['bool_showIconDetails'] =  $showIconDetails;                             //Affichage de l'icone de la page de details
@@ -717,7 +714,7 @@ if (count($tab) > 0) {
             if(form)
             {
                 var q_name = form.query_name.value;
-                $('modal').innerHTML = '<img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=loading.gif" />';
+                $('modal').innerHTML = '<i class="fa fa-spinner fa-2x"></i>';
 
                 new Ajax.Request('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=manage_query',
                 {

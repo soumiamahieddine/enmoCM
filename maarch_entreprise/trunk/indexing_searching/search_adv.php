@@ -606,7 +606,7 @@ if(isset($_REQUEST['nodetails']))
                     <td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT;?>:</label>
                         <input type="text" name="fulltext" id="fulltext" <?php echo $size; ?>  />
                         <input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
-                        <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=fulltext_search_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=300,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><img src = "<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_menu_search.gif" alt="<?php echo _HELP_FULLTEXT_SEARCH; ?>" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>" /></a>
+                        <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=fulltext_search_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=300,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><i class="fa fa-search" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>"></i></a>
                     </td>
                     <td><em><?php echo _FULLTEXT_HELP; ?></em></td>
                 </tr>
