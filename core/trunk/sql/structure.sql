@@ -614,6 +614,12 @@ CREATE TABLE res_attachments
   dest_user character varying(128) DEFAULT NULL::character varying,
   coll_id character varying(32) NOT NULL,
   res_id_master bigint,
+  attachment_type character varying(255) DEFAULT NULL::character varying,
+  dest_contact_id bigint,
+  dest_address_id bigint,
+  updated_by character varying(128) DEFAULT NULL::character varying,
+  is_multicontacts character(1),
+  is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
   CONSTRAINT res_attachments_pkey PRIMARY KEY (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1453,6 +1459,7 @@ CREATE TABLE templates
   template_style character varying(255),
   template_datasource character varying(32),
   template_target character varying(255),
+  template_attachment_type character varying(255) DEFAULT NULL::character varying,
   CONSTRAINT templates_pkey PRIMARY KEY (template_id)
 )
 WITH (OIDS=FALSE);
@@ -1949,6 +1956,7 @@ CREATE TABLE res_letterbox
   esign_date timestamp without time zone,
   locker_user_id character varying(255) DEFAULT NULL::character varying,
   locker_time timestamp without time zone,
+  confidentiality character(1),
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -3695,7 +3703,7 @@ CREATE VIEW res_view_letterbox AS
     f.status AS fold_status, f.subject AS fold_subject,
     f.parent_id AS fold_parent_id, f.folder_level, f.folder_name,
     f.creation_date AS fold_creation_date, r.initiator, r.destination,
-    r.dest_user, mlb.category_id, mlb.exp_contact_id, mlb.exp_user_id,
+    r.dest_user, r.confidentiality, mlb.category_id, mlb.exp_contact_id, mlb.exp_user_id,
     mlb.dest_user_id, mlb.dest_contact_id, mlb.address_id, mlb.nature_id, mlb.alt_identifier,
     mlb.admission_date, mlb.answer_type_bitmask, mlb.other_answer_desc,
     mlb.process_limit_date, mlb.closing_date, mlb.alarm1_date, mlb.alarm2_date,
@@ -3819,3 +3827,146 @@ CREATE OR REPLACE VIEW view_contacts AS
    RIGHT JOIN contact_addresses ca ON c.contact_id = ca.contact_id
    LEFT JOIN contact_purposes cp ON ca.contact_purpose_id = cp.id
    LEFT JOIN contact_types ct ON c.contact_type = ct.id;
+
+DROP TABLE IF EXISTS res_version_attachments;
+DROP SEQUENCE IF EXISTS res_id_version_attachments_seq;
+
+   CREATE SEQUENCE res_id_version_attachments_seq
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 100
+  CACHE 1;
+
+CREATE TABLE res_version_attachments
+(
+  res_id bigint NOT NULL DEFAULT nextval('res_id_version_attachments_seq'::regclass),
+  title character varying(255) DEFAULT NULL::character varying,
+  subject text,
+  description text,
+  publisher character varying(255) DEFAULT NULL::character varying,
+  contributor character varying(255) DEFAULT NULL::character varying,
+  type_id bigint NOT NULL,
+  format character varying(50) NOT NULL,
+  typist character varying(128) NOT NULL,
+  creation_date timestamp without time zone NOT NULL,
+  fulltext_result character varying(10) DEFAULT NULL::character varying,
+  ocr_result character varying(10) DEFAULT NULL::character varying,
+  converter_result character varying(10) DEFAULT NULL::character varying,
+  author character varying(255) DEFAULT NULL::character varying,
+  author_name text,
+  identifier character varying(255) DEFAULT NULL::character varying,
+  source character varying(255) DEFAULT NULL::character varying,
+  doc_language character varying(50) DEFAULT NULL::character varying,
+  relation bigint,
+  coverage character varying(255) DEFAULT NULL::character varying,
+  doc_date timestamp without time zone,
+  docserver_id character varying(32) NOT NULL,
+  folders_system_id bigint,
+  arbox_id character varying(32) DEFAULT NULL::character varying,
+  path character varying(255) DEFAULT NULL::character varying,
+  filename character varying(255) DEFAULT NULL::character varying,
+  offset_doc character varying(255) DEFAULT NULL::character varying,
+  logical_adr character varying(255) DEFAULT NULL::character varying,
+  fingerprint character varying(255) DEFAULT NULL::character varying,
+  filesize bigint,
+  is_paper character(1) DEFAULT NULL::bpchar,
+  page_count integer,
+  scan_date timestamp without time zone,
+  scan_user character varying(50) DEFAULT NULL::character varying,
+  scan_location character varying(255) DEFAULT NULL::character varying,
+  scan_wkstation character varying(255) DEFAULT NULL::character varying,
+  scan_batch character varying(50) DEFAULT NULL::character varying,
+  burn_batch character varying(50) DEFAULT NULL::character varying,
+  scan_postmark character varying(50) DEFAULT NULL::character varying,
+  envelop_id bigint,
+  status character varying(10) NOT NULL,
+  destination character varying(50) DEFAULT NULL::character varying,
+  approver character varying(50) DEFAULT NULL::character varying,
+  validation_date timestamp without time zone,
+  work_batch bigint,
+  origin character varying(50) DEFAULT NULL::character varying,
+  is_ingoing character(1) DEFAULT NULL::bpchar,
+  priority smallint,
+  arbatch_id bigint,
+  policy_id character varying(32),
+  cycle_id character varying(32),
+  is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
+  is_frozen character(1) NOT NULL DEFAULT 'N'::bpchar,
+  custom_t1 text,
+  custom_n1 bigint,
+  custom_f1 numeric,
+  custom_d1 timestamp without time zone,
+  custom_t2 character varying(255) DEFAULT NULL::character varying,
+  custom_n2 bigint,
+  custom_f2 numeric,
+  custom_d2 timestamp without time zone,
+  custom_t3 character varying(255) DEFAULT NULL::character varying,
+  custom_n3 bigint,
+  custom_f3 numeric,
+  custom_d3 timestamp without time zone,
+  custom_t4 character varying(255) DEFAULT NULL::character varying,
+  custom_n4 bigint,
+  custom_f4 numeric,
+  custom_d4 timestamp without time zone,
+  custom_t5 character varying(255) DEFAULT NULL::character varying,
+  custom_n5 bigint,
+  custom_f5 numeric,
+  custom_d5 timestamp without time zone,
+  custom_t6 character varying(255) DEFAULT NULL::character varying,
+  custom_d6 timestamp without time zone,
+  custom_t7 character varying(255) DEFAULT NULL::character varying,
+  custom_d7 timestamp without time zone,
+  custom_t8 character varying(255) DEFAULT NULL::character varying,
+  custom_d8 timestamp without time zone,
+  custom_t9 character varying(255) DEFAULT NULL::character varying,
+  custom_d9 timestamp without time zone,
+  custom_t10 character varying(255) DEFAULT NULL::character varying,
+  custom_d10 timestamp without time zone,
+  custom_t11 character varying(255) DEFAULT NULL::character varying,
+  custom_t12 character varying(255) DEFAULT NULL::character varying,
+  custom_t13 character varying(255) DEFAULT NULL::character varying,
+  custom_t14 character varying(255) DEFAULT NULL::character varying,
+  custom_t15 character varying(255) DEFAULT NULL::character varying,
+  tablename character varying(32) DEFAULT 'res_version_attachments'::character varying,
+  initiator character varying(50) DEFAULT NULL::character varying,
+  dest_user character varying(128) DEFAULT NULL::character varying,
+  video_batch integer,
+  video_time integer,
+  video_user character varying(128) DEFAULT NULL::character varying,
+  video_date timestamp without time zone,
+  cycle_date timestamp without time zone,
+  coll_id character varying(32) NOT NULL,
+  attachment_type character varying(255) DEFAULT NULL::character varying,
+  dest_contact_id bigint,
+  dest_address_id bigint,
+  updated_by character varying(128) DEFAULT NULL::character varying,
+  is_multicontacts character(1),
+  res_id_master bigint,
+  attachment_id_master bigint,
+  CONSTRAINT res_version_attachments_pkey PRIMARY KEY (res_id)
+)
+WITH (
+  OIDS=FALSE
+);
+
+-- view for attachments
+DROP VIEW IF EXISTS res_view_attachments;
+CREATE VIEW res_view_attachments AS
+  SELECT '0' as res_id, res_id as res_id_version, title, subject, description, publisher, contributor, type_id, format, typist,
+  creation_date, fulltext_result, ocr_result, author, author_name, identifier, source,
+  doc_language, relation, coverage, doc_date, docserver_id, folders_system_id, arbox_id, path,
+  filename, offset_doc, logical_adr, fingerprint, filesize, is_paper, page_count,
+  scan_date, scan_user, scan_location, scan_wkstation, scan_batch, burn_batch, scan_postmark,
+  envelop_id, status, destination, approver, validation_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
+  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, attachment_id_master
+  FROM res_version_attachments
+  UNION ALL
+  SELECT res_id, '0' as res_id_version, title, subject, description, publisher, contributor, type_id, format, typist,
+  creation_date, fulltext_result, ocr_result, author, author_name, identifier, source,
+  doc_language, relation, coverage, doc_date, docserver_id, folders_system_id, arbox_id, path,
+  filename, offset_doc, logical_adr, fingerprint, filesize, is_paper, page_count,
+  scan_date, scan_user, scan_location, scan_wkstation, scan_batch, burn_batch, scan_postmark,
+  envelop_id, status, destination, approver, validation_date, work_batch, origin, is_ingoing, priority, initiator, dest_user,
+  coll_id, dest_contact_id, dest_address_id, updated_by, is_multicontacts, is_multi_docservers, res_id_master, attachment_type, '0'
+  FROM res_attachments;
