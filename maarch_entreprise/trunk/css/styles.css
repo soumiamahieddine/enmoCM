@@ -3989,11 +3989,18 @@ a.actionList {
     color: #16ADEB;
 }
 
-.nb_res{
+.nbResZero{
     background: #666;
     color: white;
     padding: 3px;
-    border-radius: 7px;  
+    border-radius: 7px;
+}
+
+.nbRes{
+    background: #FFC200;
+    color: white;
+    padding: 3px;
+    border-radius: 7px;
 }
 
 .mCdarkGrey{
