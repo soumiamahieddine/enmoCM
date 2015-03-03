@@ -245,12 +245,11 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $folder_select
     );
 	
-
+    $frmStr .= '<h2 id="action_title">' 
+            . _INDEXING_BUSINESS;
+    $frmStr .= '</h2>';
     $frmStr .= '<div id="validleft">';
     $frmStr .= '<div id="index_div" style="display:none;";>';
-    $frmStr .= '<h1 class="tit" id="action_title">' 
-            . _INDEXING_BUSINESS;
-    $frmStr .= '</h1>';
     $frmStr .= '<div id="frm_error_' . $actionId . '" class="indexing_error">'
             . '</div>';
     $frmStr .= '<form name="index_file" method="post" id="index_file" action="#"'
@@ -279,7 +278,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $frmStr .= '<iframe src="' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&dir=indexing_searching&page='
                 . 'choose_file" name="choose_file" id="choose_file" '
-                . 'frameborder="0" scrolling="no" width="100%" height="25">'
+                . 'frameborder="0" scrolling="no" width="100%" height="40">'
                 . '</iframe>';
         $frmStr .= '</div>';
     }
@@ -739,7 +738,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
 	$frmStr .= '<tr id="type_id_tr" style="display:' . $displayValue . ';">';
 			$frmStr .= '<td style="width:30px;align:center;"></td>';
 		$frmStr .= '<td>';
-			$frmStr .= '<label for="schedule">';
+			$frmStr .= '<label for="schedule" style="width:auto;">';
 				$frmStr .= '<span class="form_title" id="doctype_res" style="display:none;">';
 					$frmStr .= _RM_DOCTYPE;
 				$frmStr .= '</span>';
