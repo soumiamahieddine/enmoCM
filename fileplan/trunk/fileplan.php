@@ -64,8 +64,7 @@ if (count($fileplans_array) > 0)  {
 	/***********************************************************/
 
 	?>
-	<h1><img src="<?php echo $_SESSION['config']['businessappurl'];
-		?>static.php?module=fileplan&filename=manage_fileplan_b.gif" alt="" />
+	<h1><i class="fa fa-files-o fa-3x" title="" /></i>
 		<?php echo _FILEPLAN;?></h1>
 
 	<div id="inner_content">
@@ -241,9 +240,8 @@ if (count($fileplans_array) > 0)  {
 	
 	?>
 	<div id="inner_content">
-	<h1><img src="<?php echo $_SESSION['config']['businessappurl'];
-		?>static.php?module=fileplan&filename=manage_fileplan_b.gif" alt="<?php
-		echo _ADD_FILEPLAN;?>" /><?php echo _ADD_FILEPLAN;?></h1>
+	<h1><i class="fa fa-files-o" title="<?php
+		echo _ADD_FILEPLAN;?>" /></i><?php echo _ADD_FILEPLAN;?></h1>
 	<h3> <?php echo _CREATE_YOUR_PERSONNAL_FILEPLAN.".<br/><br/>"._ASKED_ONLY_ONCE.".";?>  </h3>
 	<div class="blank_space">&nbsp;</div>
 	
