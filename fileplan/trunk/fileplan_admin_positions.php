@@ -68,8 +68,7 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 	/***********************************************************/
 
 	?>
-	<h1><img src="<?php echo $_SESSION['config']['businessappurl'];
-		?>static.php?module=fileplan&filename=manage_fileplan_b.gif" alt="" />
+	<h1><i class="fa fa-files-o fa-2x" alt="" /></i>
 		<?php echo _MANAGE_FILEPLAN;?></h1>
 
 	<div id="inner_content">
