@@ -903,12 +903,10 @@ class lists extends dbquery
 
             $return .= '<a href="javascript://" onClick="loadList(\''.$this->link
                         .'&order=desc&order_field='.$column.'\', \''.$this->divListId.'\', '.$this->modeReturn.');" title="'
-                        ._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl']
-                        .'static.php?filename='.$sortImgDown.'" border="0" alt="'._DESC_SORT.'" /></a>';
+                        ._DESC_SORT.'"><i class="fa fa-angle-down fa-2x" title="'._DESC_SORT.'"></i></a>';
             $return .= '<a href="javascript://" onClick="loadList(\''.$this->link
                         .'&order=asc&order_field='.$column.'\', \''.$this->divListId.'\', '.$this->modeReturn.');" title="'
-                        ._ASC_SORT.'"><img src="'.$_SESSION['config']['businessappurl']
-                        .'static.php?filename='.$sortImgUp.'" border="0" alt="'._ASC_SORT.'" /></a>';
+                        ._ASC_SORT.'"><i class="fa fa-angle-up fa-2x" title="'._ASC_SORT.'"></i></a>';
         }
         return $return;
     }
@@ -1742,22 +1740,22 @@ class lists extends dbquery
                     if( $sortColumn[$actualColumn] !== false) {
                         //Change color of sort icon
                         ($this->order == 'desc' && (strpos($this->orderField, $sortColumn[$actualColumn]) !== false))? 
-                            $sortImgDown = 'tri_down_on.gif' : $sortImgDown = 'tri_down.gif';
+                            $sortImgDown = 'mCdarkOrange' : $sortImgDown = 'mCdarkBlue';
                         ($this->order == 'asc' && (strpos($this->orderField, $sortColumn[$actualColumn]) !== false))? 
-                            $sortImgUp = 'tri_up_on.gif' : $sortImgUp = 'tri_up.gif';
+                            $sortImgUp = 'mCdarkOrange' : $sortImgUp = 'mCdarkBlue';
                         $column .= '<br/><br/>';
 
                         //Build header
                         $column .= '<a href="javascript://" onClick="loadList(\''.$this->link
                         .'&order=desc&order_field='.$sortColumn[$actualColumn].'\', \''
                         .$this->divListId.'\', '.$this->modeReturn.');" title="'
-                        ._DESC_SORT.'"><img src="'.$_SESSION['config']['businessappurl']
-                        .'static.php?filename='.$sortImgDown.'" border="0" alt="'._DESC_SORT.'" /></a>';
+                        ._DESC_SORT.'"><i class="fa fa-angle-down fa-2x ' 
+                        . $sortImgDown . '" title="'._DESC_SORT.'"></i></a>';
                         $column .= '<a href="javascript://" onClick="loadList(\''.$this->link
                         .'&order=asc&order_field='.$sortColumn[$actualColumn].'\', \''
                         .$this->divListId.'\', '.$this->modeReturn.');" title="'
-                        ._ASC_SORT.'"><img src="'.$_SESSION['config']['businessappurl']
-                        .'static.php?filename='.$sortImgUp.'" border="0" alt="'._ASC_SORT.'" /></a>';
+                        ._ASC_SORT.'"><i class="fa fa-angle-up fa-2x ' 
+                        . $sortImgUp . '" title="'._ASC_SORT.'"></i></a>';
                     }
                 }
                 $column .= '</div></th>';

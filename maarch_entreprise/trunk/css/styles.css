@@ -3995,3 +3995,43 @@ a.actionList {
     padding: 3px;
     border-radius: 7px;  
 }
+
+.mCdarkGrey{
+    color: #58585A;
+}
+
+.mClightGrey{
+    color: #87888A;
+}
+
+.mCdarkBlue{
+    color: #0487C1;
+}
+
+.mCdarkMediumBlue{
+    color: #1C99C5;
+}
+
+.mClightMediumBlue{
+    color: #93D1E4;
+}
+
+.mClightBlue{
+    color: #CEE9F1;
+}
+
+.mCpaleBlue{
+    color: #DEEDF3;
+}
+
+.mCdarkOrange{
+    color: #FFC200;
+}
+
+.mClightOrange{
+    color: #FFE09B;
+}
+
+.mCyellow{
+    color: #FFDC1F;
+}
