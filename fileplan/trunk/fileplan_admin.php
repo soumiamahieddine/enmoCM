@@ -72,8 +72,7 @@ if (isset($_REQUEST['load'])) {
 	/***********************************************************/
 
 	?>
-	<h1><img src="<?php echo $_SESSION['config']['businessappurl'];
-		?>static.php?module=fileplan&filename=manage_fileplan_b.gif" alt="" />
+	<h1><i class="fa fa-files-o fa-2x" title="" /></i>
 		<?php echo _ADMIN_MODULE_FILEPLAN;?></h1>
 	<div id="inner_content">
 	<?php
