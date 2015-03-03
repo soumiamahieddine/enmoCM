@@ -1138,7 +1138,7 @@ left: -100em;
     background-size: 90%;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: 10px;
+    /*border-radius: 10px;*/
 }
 #gauchemenu {
     position: absolute;
@@ -1149,8 +1149,8 @@ left: -100em;
     width: 80%;
     height: 40px;
     top: 30px;
-    border-top-left-radius: 10px;
-    left: 171px;
+    border-top-left-radius: 3px;
+    left: 262px;
 }
 
 
@@ -1212,7 +1212,7 @@ left: -100em;
     min-width: 1000px;
     border:solid 2px #009DC5;
     background: #009DC5;
-    border-radius: 10px;
+    /*border-radius: 10px;*/
 }
 #foot {
     clear: both;
@@ -1273,15 +1273,14 @@ left: -100em;
 */
 
 #menunav {
-    width: 100%;;
+    width: 262px;
     background: #D8F4FF;
     position: absolute;
-    top: 29px;
-    left: 0px;
+    left: -12px;
     padding: 0px;
     z-index: 10;
     margin: 0px;
-    border: 1px solid #16ADEB;
+    border: 1px solid #009DC5;
 }
 
 #menunav li {
@@ -1562,7 +1561,7 @@ td#indexing {
     position: absolute;
     padding: 0px;
     top: 38px;
-    left: 190px;
+    left: 280px;
     width: 80%;
 }
 #nav h1 {
@@ -2545,7 +2544,7 @@ margin-left: 10px;
 
 #validright
 {
-    width: 70% !important;
+    /*width: 70% !important;*/
     padding-left: 5px;
     padding-right: 5px;
     vertical-align:top;
@@ -3048,7 +3047,8 @@ height:30px;
 }
 
 .header_menu{
-background-color: #1B91BA;
+    display:none;
+background-color: #009DC5;
 height:23px;
 color:white;
 
@@ -3080,6 +3080,7 @@ height:10px;
 }
 .user_name_menu{
 padding:3px;
+display:none;
 }
 
 
