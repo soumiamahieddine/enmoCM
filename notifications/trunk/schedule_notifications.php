@@ -59,7 +59,7 @@ require_once 'modules/notifications/class/class_schedule_notifications.php';
 
 ?>
 <h1>
-	<img class="title_img" alt="" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=view_history_b.gif">
+	<i class='fa fa-clock-o fa-2x'></i>
 	<?php echo _SCHEDULE_NOTIFICATIONS;?>
 </h1>
 
@@ -168,7 +168,7 @@ $flag_notif = false;
 						</select></td>\
 					<td width=\"20px\" align=\"center\">\
 						<input type='hidden' id='state-"+linecount+"' name='data["+linecount+"][state]' value='new' />\
-						<img onclick='del("+linecount+");' alt='X' src='<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_delete.gif' onmouseover=\"this.style.cursor='pointer'\"/>\
+						<i class='fa fa-remove fa-1x' onclick='del("+linecount+");' onmouseover=\"this.style.cursor='pointer'\" ></i>\
 					</td>\
 				</tr>";
 		linecount++;
@@ -315,7 +315,7 @@ $flag_notif = false;
 					</td>
 					<td width="20px" align="center">
 						<input type='hidden' id='state-<?php echo $id; ?>' name='data[<?php echo $id; ?>][state]' value='normal' />
-						<img onclick='del(<?php echo $id; ?>);' alt='X' src='<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_delete.gif' onmouseover="this.style.cursor='pointer'"/>
+						<i class='fa fa-remove fa-2x' onclick='del(<?php echo $id; ?>);' onmouseover="this.style.cursor='pointer'"></i>
 					</td>
 				</tr>
 		<?php
@@ -325,7 +325,7 @@ $flag_notif = false;
 		<span <?php if($flag_notif){?> style="display:none" <?php } ;?> id="no_notif">
 			<i><?php echo _NO_NOTIF;?></i>
 		</span><br/>
-		<img class='addbutton' onclick='add_cronLine();' src='<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=add_schedule_notif.gif' onmouseover="this.style.cursor='pointer'" alt='+' />
+		<i class='fa fa-plus-square fa-2x' onclick='add_cronLine();' onmouseover="this.style.cursor='pointer'"></i>
 		<br />
 		<br />
 		<input type='submit' value='<?php echo _VALIDATE; ?>' name='save' class="button" />

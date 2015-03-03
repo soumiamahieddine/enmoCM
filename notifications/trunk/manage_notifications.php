@@ -20,8 +20,7 @@ if ($mode == 'list') {
         false,
         _ALL_NOTIFS,
         _NOTIF,
-        $_SESSION['config']['businessappurl']
-        . 'static.php?filename=manage_notifications_b.gif',
+        'bell',
         true,
         true,
         false,
@@ -31,9 +30,7 @@ if ($mode == 'list') {
         $notifsList['autoCompletionArray']
     );
 } elseif ($mode == 'up' || $mode == 'add') {
-    ?><h1><img src="<?php
-    echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=manage_notifications_b.gif" alt="" />
+    ?><h1><i class='fa fa-bell fa-2x'></i>
     <?php
         if ($mode == 'up') {
             echo _MODIFY_NOTIF;
