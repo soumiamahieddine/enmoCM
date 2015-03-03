@@ -20,8 +20,8 @@ function show_helper($mode)
     <div class="block small_text" >
 
 
-    <h3><img src ="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_detail_b.gif" /> <?php echo _HELP_KEYWORDS; ?></h3>
-    <?php
+    <h3><i class ="fa fa-info-circle fa-3x" ></i> <?php echo _HELP_KEYWORDS; ?></h3>
+    <?php  
 
         echo "<p align='right'>";
             echo "<b><u>"._HELP_BY_CORE.":</u></b><br/><br/>";
