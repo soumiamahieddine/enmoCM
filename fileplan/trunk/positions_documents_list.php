@@ -311,7 +311,7 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
 												. "&mode=remove&origin=fileplan&fileplan_id=".$fileplan_id
 												. "&actual_position_id=". $position_id."&res_id=@@res_id@@"
 												. "&coll_id=@@coll_id@@".$parameters."')",
-						"icon"          => $_SESSION['config']['businessappurl']."static.php?module=fileplan&filename=remove_doc.gif",
+						"icon"          => "files-o",
 						"tooltip"       => _REMOVED_DOC_FROM_POSITION,
 						"alertText"     =>  _REALLY_REMOVE_DOC_FROM_POSITION.": ".$description."?", 
 						//"disabledRules" => (int)$change_fileplan." == 0"
