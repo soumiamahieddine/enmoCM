@@ -189,6 +189,11 @@ function validate_cs_submit($mode)
         = $_REQUEST['template_datasource'];
     if (isset($_REQUEST['template_target'])) {
         $templates->template_target = $_REQUEST['template_target'];
+        if ($_REQUEST['template_target'] == "") {
+        	$templates->template_attachment_type = "all";
+        } else {
+        	$templates->template_attachment_type = $_REQUEST['template_attachment_type'];        	
+        }
     }
     if (isset($_REQUEST['template_type'])) {
         $templates->template_type = $_REQUEST['template_type'];

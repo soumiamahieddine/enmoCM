@@ -152,6 +152,29 @@ if ($mode == 'list') {
                         ?>
                     </select>
                 </p>
+                <div id="template_attachment_type_tr" style="display:none">
+                <p>
+                    <label for="template_attachment_type"><?php echo _ATTACHMENT_TYPES; ?> : </label>
+                    <select name="template_attachment_type" id="template_attachment_type">
+                        <option value="all" ><?php echo _ALL_ATTACHMENT_TYPES; ?></option>
+                        <?php
+		                    foreach(array_keys($_SESSION['attachment_types']) as $attachmentType) {
+		                        ?><option value="<?php echo $attachmentType;?>" <?php
+
+	                            if (isset($_SESSION['m_admin']['templates']['template_attachment_type'])
+	                                && 
+	                                $_SESSION['m_admin']['templates']['template_attachment_type'] == $attachmentType
+	                            ) {
+	                                echo 'selected="selected"';
+	                            }
+	                            ?> >
+		                            <?php echo $_SESSION['attachment_types'][$attachmentType];?>
+		                        </option>
+		                    <?php }
+                        ?>
+                    </select>
+                </p>
+                </div>
                 <p>
                     <label><?php echo _TEMPLATE_TYPE;?> :</label>
                     <input type="radio" name="template_type" value="OFFICE" id="office"
@@ -453,6 +476,15 @@ if ($mode == 'list') {
                 ?>
                 <script>
                     setradiobutton("notifications");
+                </script>
+                <?php                
+            } else if (isset($_SESSION['m_admin']['templates']['template_target'])
+                && $_SESSION['m_admin']['templates']['template_target']
+                    == "attachments"
+            ) {
+                ?>
+                <script>
+                    setradiobutton("attachments");
                 </script>
                 <?php                
             }

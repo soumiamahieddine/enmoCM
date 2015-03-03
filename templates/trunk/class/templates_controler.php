@@ -606,6 +606,7 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
                     'LABEL' => $res->template_label,
                     'TYPE' => $res->template_type,
                     'TARGET' => $res->template_target,
+                    'ATTACHMENT_TYPE' => $res->template_attachment_type,
                 )
             );
         }
