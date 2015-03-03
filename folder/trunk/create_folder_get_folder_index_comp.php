@@ -9,6 +9,6 @@ if (count($folders) > 0) {
 				$content .= '<option value="'.$folders[$i]['SYS_ID'].'">'.$folders[$i]['ID'].' - '.$folders[$i]['NAME'].'</option>';
 			}
 		$content .= '</select>';
-		$content .= ' <img src = "'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_menu_help.gif" alt="'._FOLDER_PARENT_DESC.'" title="'._FOLDER_PARENT_DESC.'"/>';
+		$content .= ' <i class= fa fa-help" title="'._FOLDER_PARENT_DESC.'"/></i>';
 	$content .= '</p>';
 }
