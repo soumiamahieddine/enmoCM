@@ -138,13 +138,11 @@ class foldertype extends dbquery
         }
         //$this->show_array($_SESSION['m_admin']);
         if ($mode == "add") {
-            echo '<h1><img src="' . $_SESSION['config']['businessappurl']
-            	. 'static.php?module=folder&filename=manage_foldertypes_b.gif"'
-            	. ' alt="" /> ' . _FOLDERTYPE_ADDITION . '</h1>';
+            echo '<h1><i class="fa fa-briefcase fa-2x"'
+            	. ' title="" /></i> ' . _FOLDERTYPE_ADDITION . '</h1>';
         } else if ($mode == "up") {
-            echo '<h1><img src="' . $_SESSION['config']['businessappurl']
-            	. 'static.php?module=folder&filename=manage_foldertypes_b.gif"'
-            	. ' alt="" /> ' . _FOLDERTYPE_MODIFICATION . '</h1>';
+            echo '<h1><i class="fa fa-briefcase fa-2x"'
+            	. ' title="" /></i> ' . _FOLDERTYPE_MODIFICATION . '</h1>';
         }
         ?>
         <div id="inner_content" class="clearfix">
