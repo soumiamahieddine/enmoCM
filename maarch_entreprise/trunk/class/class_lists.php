@@ -1069,7 +1069,7 @@ class lists extends dbquery
         //Show document icon
         $href = $this->_buildMyLink($this->params['viewDocumentLink'], $resultTheLine, $listKey);
         $return .= '<div align="center"><a href="'.$href.'" target="_blank" title="'
-                ._VIEW_DOC.'"><i class="fa fa-download fa-2x" title=' . _VIEW_DOC . '></a></div>';
+                ._VIEW_DOC.'"><i class="fa fa-download fa-2x" title=' . _VIEW_DOC . '></i></a></div>';
            
         return $return;
     }
@@ -1081,7 +1081,7 @@ class lists extends dbquery
 
        $href = $this->_buildMyLink($this->params['viewDetailsLink'], $resultTheLine, $listKey);
        $return .= '<div align="center"><a href="javascript://" onClick="javascript:window.top.location=\''
-                .$href.'\'; return false;" title="'._DETAILS.'"><i class="fa fa-info-circle fa-2x" title=' . _DETAILS . '></a></div>';
+                .$href.'\'; return false;" title="'._DETAILS.'"><i class="fa fa-info-circle fa-2x" title=' . _DETAILS . '></i></a></div>';
 
         
         return $return;
