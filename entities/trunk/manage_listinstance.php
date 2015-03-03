@@ -662,8 +662,8 @@ $linkwithwhat =
         || (isset($_GET['what_services']) && !empty($_GET['what_services']))
         || ( !empty($user_roles) || !empty($entity_roles))
     ) {*/ ?>
-		<div id="diff_list" align="center">
-		<h2 class="tit"><?php 
+		<div id="diff_list" class="block" align="center">
+		<h2><?php 
 			echo _DIFFUSION_LIST . '&nbsp;';
             if ($_SESSION[$origin]['difflist_object']['object_label'] <> '') {
                 echo $_SESSION[$origin]['difflist_object']['object_label'];
@@ -680,7 +680,7 @@ $linkwithwhat =
 			&& ! empty($_SESSION[$origin]['diff_list']['dest']['user_id'])
 			&& ! $onlyCc
 		) { ?>
-		<h2 class="sstit"><?php echo _PRINCIPAL_RECIPIENT;?></h2>
+		<h3 class="sstit"><?php echo _PRINCIPAL_RECIPIENT;?></h3>
 		<table cellpadding="0" cellspacing="0" border="0" class="listing spec">
 			<tr >
 				<td>
@@ -710,7 +710,7 @@ $linkwithwhat =
 			if (count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0
 			 || count($_SESSION[$origin]['diff_list'][$role_id]['entities']) > 0
 			) { ?>
-				<h2 class="sstit"><?php echo $role_label;?></h2>
+				<h3 class="sstit"><?php echo $role_label;?></h3>
 				<table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php
 				#**************************************************************************
 				# OTHER ROLE USERS
@@ -891,7 +891,7 @@ $linkwithwhat =
         if (count($users) > 0) {
             ?>
 			<div align="center">
-				<h2 class="tit"><?php echo _USERS_LIST;?></h2>
+				<h3 class="tit"><?php echo _USERS_LIST;?></h3>
 				<table cellpadding="0" cellspacing="0" border="0" class="listing spec">
 					<thead>
 						<tr>
@@ -955,7 +955,7 @@ $linkwithwhat =
 			if (count($entities) > 0) {
                 if($allow_entities) { ?>
                 <div align="center"> 
-                    <h2 class="tit"><?php echo _ENTITIES_LIST;?></h2>
+                    <h3 class="tit"><?php echo _ENTITIES_LIST;?></h3>
                     <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
                         <thead>
                             <tr>
