@@ -145,7 +145,7 @@ class class_users extends dbquery
     {
         $core = new core_tools();
         ?>
-        <h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_user_b.gif" alt="" /> <?php  echo _MY_INFO; ?></h1>
+        <h1><i class="fa fa-user fa-2x" title=""></i> <?php  echo _MY_INFO; ?></h1>
 
         <div id="inner_content" class="clearfix">
             <div id="user_box" >
