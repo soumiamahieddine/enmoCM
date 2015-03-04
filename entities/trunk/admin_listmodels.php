@@ -155,5 +155,5 @@ $_SESSION['m_admin']['init'] = true;
 $title = _LISTMODELS." : ".$i." "._LISTMODEL;
 $autoCompletionArray = false;//array();
 
-$list->admin_list($tab, $i, $title, 'list_id','admin_listmodels','entities', 'list_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_LISTMODELS, _LISTMODEL, $_SESSION['config']['businessappurl'].'static.php?module=entities&filename=manage_entities_b.gif', true, true, false, true, "", true, $autoCompletionArray, false, true);
+$list->admin_list($tab, $i, $title, 'list_id','admin_listmodels','entities', 'list_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_LISTMODELS, _LISTMODEL, "share-alt-square", true, true, false, true, "", true, $autoCompletionArray, false, true);
 ?>
