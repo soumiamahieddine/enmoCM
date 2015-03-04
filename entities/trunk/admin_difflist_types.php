@@ -136,5 +136,5 @@ $_SESSION['m_admin']['init'] = true;
 $title = _DIFFLIST_TYPES." : ".$i." "._DIFFLIST_TYPE;
 $autoCompletionArray = false;//array();
 
-$list->admin_list($tab, $i, $title, 'difflist_type_id','admin_difflist_types','entities', 'difflist_type_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_DIFFLIST_TYPES, _DIFFLIST_TYPE, $_SESSION['config']['businessappurl'].'static.php?module=entities&filename=manage_entities_b.gif', true, true, false, true, "", true, $autoCompletionArray, false, true);
+$list->admin_list($tab, $i, $title, 'difflist_type_id','admin_difflist_types','entities', 'difflist_type_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_DIFFLIST_TYPES, _DIFFLIST_TYPE, "share-alt", true, true, false, true, "", true, $autoCompletionArray, false, true);
 ?>
