@@ -47,3 +47,12 @@ if (! defined('APPS_CONTACTS')) {
 if (! defined('GROUPBASKET_STATUS')) {
     define('GROUPBASKET_STATUS', 'groupbasket_status');
 }
+if (! defined('APPS_CONTACTS_V2')) {
+    define('APPS_CONTACTS_V2', 'contacts_v2');
+}
+if (! defined('APPS_CONTACTS_ADDRESSES')) {
+    define('APPS_CONTACTS_ADDRESSES', 'contact_addresses');
+}
+if (! defined('APPS_CONTACTS_PURPOSES')) {
+    define('APPS_CONTACTS_PURPOSES', 'contact_purposes');
+}

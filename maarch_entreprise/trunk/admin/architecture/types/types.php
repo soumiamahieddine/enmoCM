@@ -153,7 +153,6 @@ $list->admin_list(
 	$tab, $i, $title, 'type_id', 'types', 'architecture/types', 'type_id', true, 
 	$pageNameUp, $pageNameVal, $pageNameBan, $pageNameDel, $pageNameAdd, 
 	$addLabel, false, false, _ALL_DOCTYPES, _TYPE, 
-	$_SESSION['config']['businessappurl'] 
-	. 'static.php?filename=manage_doctypes_b.gif', false, true, true, true, "", 
+	'files-o', false, true, true, true, "", 
 	true, $autoCompletionArray
 );

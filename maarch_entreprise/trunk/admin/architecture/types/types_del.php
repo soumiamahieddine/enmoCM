@@ -147,7 +147,7 @@ else
         $pageId = "types";
         $admin->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
         /***********************************************************/
-        echo '<h1><img src="'.$_SESSION["config"]["businessappurl"].'static.php?filename=manage_entities_b.gif&module=entities" alt="" />'._DOCTYPE_DELETION.'</h1>';
+        echo '<h1><i class="fa fa-files-o fa-2x"></i>'._DOCTYPE_DELETION.'</h1>';
         echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
         $_SESSION['error'] = "";
         ?>

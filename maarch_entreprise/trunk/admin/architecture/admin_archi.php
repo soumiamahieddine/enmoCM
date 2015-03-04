@@ -50,7 +50,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 unset($_SESSION['m_admin']);
 ?>
-<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_architecture_b.gif" alt="" /> <?php  echo _ADMIN_ARCHI;?></h1>
+<h1><i class="fa fa-suitcase fa-2x"></i> <?php  echo _ADMIN_ARCHI;?></h1>
 <div id="inner_content" class="clearfix">
 <div class="block">
     <h2 style="text-align:center;"><?php  echo _ARCHITECTURE;?></h2>

@@ -96,9 +96,7 @@ class types extends dbquery
             $_SESSION['service_tag'] = '';
         }
         ?>
-        <h1><img src="<?php
-        echo $_SESSION['config']['businessappurl'];
-        ?>static.php?filename=manage_doctypes_b.gif" alt="" />
+        <h1><i class="fa fa-files-o fa-2x"></i>
         <?php
         if ($mode == "up") {
             echo _DOCTYPE_MODIFICATION;

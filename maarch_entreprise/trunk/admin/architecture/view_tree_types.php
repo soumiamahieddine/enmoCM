@@ -64,7 +64,7 @@ else
 
 }
 ?>
-<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_architecture_b.gif" alt="" /> <?php  echo _VIEW_TREE_DOCTYPES;?></h1>
+<h1><i class="fa fa-suitcase fa-2x"></i> <?php  echo _VIEW_TREE_DOCTYPES;?></h1>
 <div id="inner_content" class="clearfix">
     <table width="100%" border="0">
     <?php if($admin->is_module_loaded('folder') == true)

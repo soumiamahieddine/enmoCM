@@ -222,9 +222,7 @@ $erreur = "";
 ?>
 </div>
 <div class="block">
-<h2> &nbsp;<img src="<?php  
-echo $_SESSION['config']['businessappurl'];
-?>static.php?filename=manage_structures_b.gif" alt="" valign="center"/> <?php  
+<h2> &nbsp;<i class="fa fa-briefcase fa-2x"></i> <?php  
 if ($mode == "up") { 
 	echo _SUBFOLDER_MODIF;
 } else { 
