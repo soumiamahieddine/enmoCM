@@ -51,8 +51,7 @@ if ($mode == 'list') {
         false,
         _ALL_TAGS,
         _TAG,
-        $_SESSION['config']['businessappurl']
-        . 'static.php?filename=manage_tags_b.gif',
+        'tags',
         true,
         true,
         false,
@@ -62,9 +61,7 @@ if ($mode == 'list') {
         $eventsList['autoCompletionArray']
     );
 } elseif ($mode == 'up' || $mode == 'add') {
-    ?><h1><img src="<?php
-        echo $_SESSION['config']['businessappurl'];
-        ?>static.php?filename=manage_tags_b.gif" alt="" />
+    ?><h1><i class="fa fa-tags fa-2x"> </i>
         <?php
         if ($mode == 'up') {
             echo _MODIFY_TAG;
