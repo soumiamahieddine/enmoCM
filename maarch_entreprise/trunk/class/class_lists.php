@@ -2122,7 +2122,7 @@ class lists extends dbquery
                     .$start_next.'\', \''.$this->divListId.'\', '.$this->modeReturn
                     .');"><i class="fa fa-forward" title="' . _NEXT . '"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;';
             }
-            $toolbar .= '<div class="block" style="height:'.$height.';" align="center" >';
+            $toolbar .= '<div class="block" style="height:'.$height.';" align="center" ><h3>';
             $toolbar .= '<table width="100%" border="0"><tr>';
             $toolbar .= '<td align="left" width="20px" nowrap>'.$loading.'</td>';
             $toolbar .= '<td align="center" width="15%" nowrap><b>'.$previous.'</b></td>';
@@ -2138,7 +2138,7 @@ class lists extends dbquery
             $toolbar .= '</tr>';
             $toolbar .= $filters;
             $toolbar .= '</table>';
-            $toolbar .= '</div>';
+            $toolbar .= '</h3></div>';
         } else {
             //Show toolbar if templates, tools or filters
             if (
@@ -2162,7 +2162,7 @@ class lists extends dbquery
                 }
                 //Toolbar
                 // if ($showToolbar) {
-                    $toolbar .= '<div class="block" style="height:'.$height.';" align="center" >';
+                    $toolbar .= '<div class="block" style="height:'.$height.';" align="center" ><h3>';
                     $toolbar .= '<table width="100%" border="0"><tr>';
                     $toolbar .= '<td align="left" width="20px" nowrap>'.$loading.'</td>';
                     $toolbar .= '<td align="center" width="15%" nowrap><b>&nbsp;</b></td>';
@@ -2178,7 +2178,7 @@ class lists extends dbquery
                     $toolbar .= '</tr>';
                     $toolbar .= $filters;
                     $toolbar .= '</table>';
-                    $toolbar .= '</div>';
+                    $toolbar .= '</h3></div>';
                 // }
             }
         }
@@ -2302,7 +2302,7 @@ class lists extends dbquery
 
             //Toolbar
             $bottomToolbar .= '<br/>';
-            $bottomToolbar .= '<div class="block_bottom" align="center" >';
+            $bottomToolbar .= '<div class="block_bottom" align="center" ><h3>';
             $bottomToolbar .= '<table width="100%" border="0"><tr>';
             $bottomToolbar .= '<td align="left" width="20px" nowrap>'.$loading.'</td>';
             $bottomToolbar .= '<td align="center" width="15%" nowrap><b>'.$previous.'</b></td>';
@@ -2319,7 +2319,7 @@ class lists extends dbquery
             $bottomToolbar .= '<td align="right" width="20px">'.$goToTop.'</td>';
             $bottomToolbar .= '</tr>';
             $bottomToolbar .= '</table>';
-            $bottomToolbar .= '</div>';
+            $bottomToolbar .= '</h3></div>';
         } else {
             //Show toolbar if templates or tools
             if (
@@ -2329,7 +2329,7 @@ class lists extends dbquery
             ) 
            {
                 //Toolbar
-                $bottomToolbar .= '<div class="block_bottom" align="center" >';
+                $bottomToolbar .= '<div class="block_bottom" align="center" ><h3>';
                 $bottomToolbar .= '<table width="100%" border="0"><tr>';
                 $bottomToolbar .= '<td align="left" width="20px" nowrap>'.$loading.'</td>';
                 $bottomToolbar .= '<td align="center" width="15%" nowrap><b>&nbsp;</b></td>';
@@ -2346,7 +2346,7 @@ class lists extends dbquery
                 $bottomToolbar .= '<td align="right" width="20px">'.$goToTop.'</td>';
                 $bottomToolbar .= '</tr>';
                 $bottomToolbar .= '</table>';
-                $bottomToolbar .= '</div>';
+                $bottomToolbar .= '</h3></div>';
             }
         }
         

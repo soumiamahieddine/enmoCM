@@ -2909,6 +2909,18 @@ margin-bottom: 10px;
 color:#ffffff;
 }
 
+.block h3
+{
+/*background-color: #2980b9;*/
+background-color: #93D1E4;
+padding: 0.5em;
+margin-left: -10px;
+margin-right: -10px;
+margin-top: -10px;
+margin-bottom: 10px;
+color:#ffffff;
+}
+
 .block .content/* Propriétés qui s'appliquent au cadre d'habillage en général */
 {
 color: #666;
