@@ -121,8 +121,7 @@ if ($onlyCC) {
 }
 $content_standard = '<center><b>' . _DIFF_LIST . '</b> | ';
 $content_standard .= '<span class="button" >';
-$content_standard .= '<img src="' . $_SESSION['config']['businessappurl']
-         . 'static.php?filename=modif_liste.png&module=entities" alt="" />'
+$content_standard .= '<i class="fa fa-edit fa-2x" title="'.$labelButton.'"></i>'
          . '<a href="javascript://" onclick="window.open(\''
          . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
          . '&module=entities&page=manage_listinstance&origin=' . $origin . $arg
