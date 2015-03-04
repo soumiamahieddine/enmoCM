@@ -74,7 +74,8 @@ echo $_SESSION['config']['businessappurl'];
 echo _REPORTS;
 ?></h1>
 <div id="inner_content" class="clearfix">
-<p>
+<div class="block">
+<h2>
     <img src="<?php 
 echo $_SESSION['config']['businessappurl'];
 ?>static.php?filename=contrat_mini.png" alt=""  /> <?php 
@@ -90,10 +91,10 @@ if ($rep->is_module_loaded('folder')) {
     ?> : <b><?php echo $countFolder->total; ?></b><?php
 }
 ?>
-    </p>
+    </h2>
 <?php 
 include 'modules' . DIRECTORY_SEPARATOR . 'reports' . DIRECTORY_SEPARATOR
 	. 'user_reports.php';
 ?>
-
+</div>
 </div>
