@@ -684,11 +684,11 @@ $linkwithwhat =
 		<table cellpadding="0" cellspacing="0" border="0" class="listing spec">
 			<tr >
 				<td>
-					<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_users_entities_b.gif&module=entities" alt="<?php echo _USER; ?>" title="<?php echo _USER;?>" /> 
+					<i class="fa fa-user fa-2x" title="<?php echo _USER; ?>"></i> 
 				</td>
 				<td><?php
 				if($_SESSION[$origin]['diff_list']['dest']['visible'] == 'Y') { ?>
-					<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" /> <?php
+					<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE; ?>"></i> <?php
 				} ?>
 				</td>
 				<td><?php echo $_SESSION[$origin]['diff_list']['dest']['lastname'] . " " . $_SESSION[$origin]['diff_list']['dest']['firstname'];?></td>
@@ -726,16 +726,16 @@ $linkwithwhat =
 					else $color = ' class="col"'; ?>
 					<tr <?php echo $color; ?> >
 						<td>
-							<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER . " " . $role_label ;?>" title="<?php echo _USER . " " . $role_label; ?>" />
+							<i class="fa fa-user fa-2x" title="<?php echo _USER.' '.$role_label; ?>"></i> 
 						</td>
 						<td><?php
 						if($user['visible'] == 'Y') { ?>
 							<a href="<?php echo $linkwithwhat;?>&action=make_user_unvisible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
-								<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" />
+								<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE; ?>"></i>
 							</a><?php
 						} else {?>
 							<a href="<?php echo $linkwithwhat;?>&action=make_user_visible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
-								<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_delete.gif&module=entities" alt="<?php echo _NOT_VISIBLE; ?>" title="<?php echo _NOT_VISIBLE;?>" />
+								<i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE; ?>"></i>
 							</a><?php
 						} ?>
 						</td>
@@ -780,16 +780,16 @@ $linkwithwhat =
 					else $color = ' class="col"'; ?>
 					<tr <?php echo $color; ?> >
 						<td>
-							<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY . " " . $role_label;?>" title="<?php echo _ENTITY . " " . $role_label; ?>" />
+							<i class="fa fa-sitemap fa-2x" title="<?php echo _ENTITY.' '.$role_label; ?>"></i> 
 						</td>
 						<td><?php
 						if($entity['visible'] == 'Y') { ?>
 							<a href="<?php echo $linkwithwhat;?>&action=make_entity_unvisible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
-								<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" />
+								<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE; ?>"></i>
 							</a><?php
 						} else {?>
 							<a href="<?php echo $linkwithwhat;?>&action=make_entity_visible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
-								<img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_delete.gif&module=entities" alt="<?php echo _NOT_VISIBLE; ?>" title="<?php echo _NOT_VISIBLE;?>" />
+								<i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE; ?>"></i>
 							</a><?php
 						} ?>
 						</td>
