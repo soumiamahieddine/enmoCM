@@ -440,15 +440,12 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     ?>
                 </p>
                 <p id="viewdoc">
-                    <!--<a href="<?php
+                        <!--<a href="<?php
                         echo $_SESSION['config']['businessappurl'];
                         ?>index.php?page=view_baskets&module=basket&baskets=MyBasket&directLinkToAction&resid=<?php
                         echo $s_id;
-                        ?>" target="_blank"><img alt="<?php echo _PROCESS_DOC;?>" src="<?php echo
-                            $_SESSION['config']['businessappurl'];
-                            ?>static.php?filename=lot.gif" border="0" alt="" />&nbsp;<?php
-                        echo _PROCESS_DOC;
-                        ?></a>-->
+                        ?>" target="_blank"><i class="fa fa-gears fa-2x" title="<?php 
+                        echo _PROCESS;?>"></i></a>&nbsp;-->
                     <a href="<?php
                         echo $_SESSION['config']['businessappurl'];
                         ?>index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=<?php
@@ -873,7 +870,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                             
                             if ($core->test_service('update_list_diff_in_details', 'entities', false)) {
                                 echo '<a href="#" onclick="window.open(\''.$_SESSION['config']['businessappurl']
-                                    . 'index.php?display=true&module=entities&page=manage_listinstance&origin=details\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" title="'._UPDATE_LIST_DIFF.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._UPDATE_LIST_DIFF.'" />'._UPDATE_LIST_DIFF.'</a>';
+                                    . 'index.php?display=true&module=entities&page=manage_listinstance&origin=details\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1280,height=980,location=no\');" title="'._UPDATE_LIST_DIFF.'"><i class="fa fa-pencil fa-2x" title="'
+                                    ._UPDATE_LIST_DIFF.'"></i>'._UPDATE_LIST_DIFF.'</a>';
                             }
                             ?> 
 
@@ -1072,7 +1070,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                                     'desc'
                                 );
                                 if ($nbLinkDesc > 0) {
-                                    $Links .= '<img src="static.php?filename=cat_doc_incoming.gif" />';
+                                    $Links .= '<i class="fa fa-long-arrow-right fa-2x"></i>';
                                     $Links .= $Class_LinkController->formatMap(
                                         $Class_LinkController->getMap(
                                             $_SESSION['doc_id'],
@@ -1090,7 +1088,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                                     'asc'
                                 );
                                 if ($nbLinkAsc > 0) {
-                                    $Links .= '<img src="static.php?filename=cat_doc_outgoing.gif" />';
+                                    $Links .= '<i class="fa fa-long-arrow-left fa-2x"></i>';
                                     $Links .= $Class_LinkController->formatMap(
                                         $Class_LinkController->getMap(
                                             $_SESSION['doc_id'],

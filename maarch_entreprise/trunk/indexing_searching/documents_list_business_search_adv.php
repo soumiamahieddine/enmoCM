@@ -261,14 +261,8 @@ for ($i=0;$i<count($tab);$i++) {
             )
             {
                 $str_label = $labels->get_labels_resid($tab[$i][$j]['value'], $_SESSION['collection_id_choice']);
-                if (!empty($str_label))  $tab[$i][$j]['value'] = '<img src="'
-                    .$_SESSION['config']['businessappurl']
-                    .'static.php?module=labels&filename=labels.gif" width="24px" height="24px" title="'
-                    .$str_label.'"/>'; else  $tab[$i][$j]['value'] = '&nbsp;';
-                $tab[$i][$j]["label"]='<img src="'
-                    .$_SESSION['config']['businessappurl']
-                    .'static.php?filename=star.png" width="16px" height="16px" title="'
-                    ._LABELS.'"/>';
+                if (!empty($str_label))  $tab[$i][$j]['value'] = ''; else  $tab[$i][$j]['value'] = '&nbsp;';
+                $tab[$i][$j]["label"]=_LABELS;
                 $tab[$i][$j]["size"]="4";
                 $tab[$i][$j]["label_align"]="left";
                 $tab[$i][$j]["align"]="left";
@@ -427,23 +421,6 @@ for ($i=0;$i<count($tab);$i++) {
                 $tab[$i][$j]["align"]="left";
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=false;
-                if ($catId == 'purchase') {
-                    $contactImg = '<img src="'
-                        . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                        . 'supplier.png" alt="' . _SUPPLIER . '" title="' . _SUPPLIER . '"/>';
-                } elseif ($catId == 'sell') {
-                    $contactImg = '<img src="'
-                        . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                        . 'purchaser.png" alt="' . _PURCHASER . '" title="' . _PURCHASER . '"/>';
-                } elseif ($catId == 'enterprise_document') {
-                    $contactImg = '<img src="'
-                        . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                        . 'my_contacts_off.gif" alt="' . _CONTACT . '" title="' . _CONTACT . '"/>';
-                } elseif ($catId == 'human_resources') {
-                    $contactImg = '<img src="'
-                        . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                        . 'employee.png" alt="' . _EMPLOYEE . '" title="' . _EMPLOYEE . '"/>';
-                }
                 $tab[$i][$j]['value'] = $contactImg;
                 $tab[$i][$j]["value"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["order"]=false;

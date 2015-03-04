@@ -291,14 +291,8 @@ if($mode == 'normal') {
                 )
                 {
                     $str_label = $labels->get_labels_resid($tab[$i][$j]['value'], $_SESSION['collection_id_choice']);
-                    if (!empty($str_label))  $tab[$i][$j]['value'] = '<img src="'
-                        .$_SESSION['config']['businessappurl']
-                        .'static.php?module=labels&filename=labels.gif" width="24px" height="24px" title="'
-                        .$str_label.'"/>'; else  $tab[$i][$j]['value'] = '&nbsp;';
-                    $tab[$i][$j]["label"]='<img src="'
-                        .$_SESSION['config']['businessappurl']
-                        .'static.php?filename=star.png" width="16px" height="16px" title="'
-                        ._LABELS.'"/>';
+                    if (!empty($str_label))  $tab[$i][$j]['value'] = ''; else  $tab[$i][$j]['value'] = '&nbsp;';
+                    $tab[$i][$j]["label"]=_LABELS;
                     $tab[$i][$j]["size"]="4";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";

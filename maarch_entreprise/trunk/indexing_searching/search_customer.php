@@ -55,9 +55,7 @@ if (isset($_REQUEST['name_folder']) && $_REQUEST['name_folder'] <> '') {
 <script type="text/javascript" >
     BASE_URL = "<?php echo $_SESSION['config']['businessappurl'] ?>";
 </script>
-<h1><img src="<?php
-echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_off.gif";
-?>" alt="" /> <?php  echo _SEARCH_CUSTOMER_TITLE; ?></h1>
+<h1><i class="fa fa-search fa-2x"></i> <?php  echo _SEARCH_CUSTOMER_TITLE; ?></h1>
 <div id="inner_content" align="center">
     <div class="block">
         <table width="100%" border="0">

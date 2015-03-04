@@ -662,7 +662,7 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
             $tab_notes = $request_notes->select($select_notes, $where_notes, "order by " . $_SESSION['tablename']['not_notes'] . ".date_note desc", $_SESSION['config']['databasetype'], "500", true, $_SESSION['tablename']['not_notes'], $_SESSION['tablename']['users'], "user_id");
             ?>
                                     <div style="text-align:center;">
-                                        <img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=modif_note.png&module=notes" border="0" alt="" /><a href="javascript://" onclick="ouvreFenetre('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=note_add&size=full&identifier=<?php echo $s_id;?>&coll_id=<?php echo $coll_id;?>', 450, 300)" ><?php echo _ADD_NOTE;?></a>
+                                        <i class="fa fa-pencil fa-2x"></i><a href="javascript://" onclick="ouvreFenetre('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=note_add&size=full&identifier=<?php echo $s_id;?>&coll_id=<?php echo $coll_id;?>', 450, 300)" ><?php echo _ADD_NOTE;?></a>
                                     </div>
                                     <iframe name="list_notes_doc" id="list_notes_doc" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notes&page=frame_notes_doc&size=full" frameborder="0" width="100%" height="520px"></iframe>
                                 </dd>

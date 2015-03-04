@@ -113,7 +113,7 @@ $core_tools->load_js();
 -->
 </script>
 
-<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_search_b.gif" alt="" /> <?php echo _SEARCH_CONTACTS; ?></h1>
+<h1><i class="fa fa-search fa-2x"></i> <?php echo _SEARCH_CONTACTS; ?></h1>
 <div id="inner_content">
 
 <form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_contacts_result';?>"  id="frmsearch2" class="<?php echo $class_for_form; ?>">

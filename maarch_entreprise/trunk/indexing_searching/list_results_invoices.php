@@ -300,7 +300,7 @@ if (count($tab) > 0) {
         $found_type = _FOUND_DOC;
     ?>
 
-<h1><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." ".$found_type;?></h1>
+<h1><i class="fa fa-search fa-2x"></i> <?php  echo _SEARCH_RESULTS." - ".count($tab)." ".$found_type;?></h1>
     <div id="inner_content">
     <?php
 
@@ -376,13 +376,13 @@ $list->list_doc($tab, $i, '', 'res_id', $name, 'res_id', 'details_invoices&dir=i
 
 } else {
     if ($mode == 'normal') {
-        $_SESSION['error_search'] = '<p class="error"><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=noresult.gif" /><br />' . _NO_RESULTS . '</p><br/><br/><div align="center"><strong><a href="' . $_SESSION['config']['businessappurl'] . 'index.php?page=search_adv_invoices&dir=indexing_searching">' . _MAKE_NEW_SEARCH . '</a></strong></div>';
+        $_SESSION['error_search'] = '<p class="error"><i class="fa fa-remove fa-2x"></i><br />' . _NO_RESULTS . '</p><br/><br/><div align="center"><strong><a href="' . $_SESSION['config']['businessappurl'] . 'index.php?page=search_adv_invoices&dir=indexing_searching">' . _MAKE_NEW_SEARCH . '</a></strong></div>';
         ?>
         <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error_invoices&dir=indexing_searching';?>';</script>
         <?php
 
 } else {
-    $_SESSION['error_search'] = '<p class="error"><img src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=noresult.gif" /><br />' . _NO_RESULTS . '</p><br/><br/><div align="center"><strong><a href="' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv_invoices&mode=' . $mode . '">' . _MAKE_NEW_SEARCH . '</a></strong></div>';
+    $_SESSION['error_search'] = '<p class="error"><i class="fa fa-remove fa-2x"></i><br />' . _NO_RESULTS . '</p><br/><br/><div align="center"><strong><a href="' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page=search_adv_invoices&mode=' . $mode . '">' . _MAKE_NEW_SEARCH . '</a></strong></div>';
     ?>
         <script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_error_invoices&mode='.$mode;?>';</script>
         <?php
@@ -402,7 +402,7 @@ if ($mode == 'popup' || $mode == 'frame') {
         if(form)
         {
             var q_name = form.query_name.value;
-            $('modal').innerHTML = '<img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=loading.gif" />';
+            $('modal').innerHTML = '<i class="fa fa-spinner fa-2x"></i>';
 
             new Ajax.Request('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=manage_query',
             {

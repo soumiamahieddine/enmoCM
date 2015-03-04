@@ -86,7 +86,7 @@ if(count($indexes) > 0)
 
 		if(isset($indexes[$key]['img']))
 		{
-			$opt_indexes .= '<img alt="'.$indexes[$key]['label'].'" title="'.$indexes[$key]['label'].'" src="'.$indexes[$key]['img'].'"  /></a>';
+			$opt_indexes .= '<i title="'.$indexes[$key]['label'].'" class="fa fa-'.$indexes[$key]['img'].' fa-2x"></i></a>';
 		}
 		$opt_indexes .= '</th>';
 		$opt_indexes .= '<td align="left" width="200px">';

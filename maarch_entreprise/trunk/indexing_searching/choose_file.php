@@ -152,15 +152,11 @@ $upFileOK = false;
                 !empty($_SESSION['upfile']['local_path'])
                 && empty($_SESSION['error'])
             ) {
-                ?><img src="<?php
-                    echo $_SESSION['config']['businessappurl'];
-                    ?>static.php?filename=picto_stat_enabled.gif" />
+                ?><i class="fa fa-check-square fa-2x"></i>
                 <?php
                 echo  _DOWNLOADED_FILE;
             } else {
-                ?><img src="<?php
-                    echo $_SESSION['config']['businessappurl'];
-                    ?>static.php?filename=picto_stat_disabled.gif" />
+                ?><i class="fa fa-remove fa-2x"></i>
                     <?php
                     echo _CHOOSE_FILE;
             }
