@@ -219,8 +219,7 @@ if (count($tab) > 0) {
     $paramsTab = array();
     $paramsTab['bool_modeReturn'] = false;                                                  //Desactivation du mode return (vs echo)
     $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_CASE;                  //Titre de la page
-    $paramsTab['pagePicto'] =  $_SESSION['config']['businessappurl']
-        ."static.php?filename=picto_search_b.gif"; 
+    $paramsTab['pagePicto'] = 'search'; 
     $paramsTab['bool_sortColumn'] = true;                                                   //Affichage Tri
     $paramsTab['defaultTemplate'] = 'cases_list_search_adv';  
     if (count($template_list) >0 ) {                                    //Templates
@@ -244,8 +243,7 @@ if (count($tab) > 0) {
     $paramsTab['currentPageUrl'] = $_SESSION['current_basket']['page_no_frame']."&display=true";
 
     // Process instructions
-    $paramsTab['processInstructions'] = _CLICK_ICON_TO_TOGGLE.'  <img src="'
-        .$_SESSION['config']['businessappurl'].'static.php?filename=extend_button.gif">';
+    $paramsTab['processInstructions'] = _CLICK_ICON_TO_TOGGLE.'  <i class="fa fa-arrow-down fa-2x"></i>';
     
     //Afficher la liste
     $list->showList($tab, $paramsTab, $listKey);
@@ -262,8 +260,7 @@ if (count($tab) > 0) {
         .'&page=search_adv'.$urlParameters;
     
     //error
-    $_SESSION['error_search'] = '<p class="error"><img src="'
-        .$_SESSION['config']['businessappurl'].'static.php?filename=noresult.gif" /><br />'
+    $_SESSION['error_search'] = '<p class="error"><i class="fa fa-remove fa-2x"></i>"<br />'
         ._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="javascript://" '
         .' onclick = "window.top.location.href=\''.$url_search.'\'">'._MAKE_NEW_SEARCH.'</a></strong></div>'; 
     
