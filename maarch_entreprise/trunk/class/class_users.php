@@ -148,36 +148,12 @@ class class_users extends dbquery
         <h1><i class="fa fa-user fa-2x" title=""></i> <?php  echo _MY_INFO; ?></h1>
 
         <div id="inner_content" class="clearfix">
-            <div id="user_box" >
-                <div class="block">
-                 <h2 class="tit"><?php  echo _USER_GROUPS_TITLE;?> : </h2>
-                     <ul id="my_profil">
-                      <?php
-            $this->connect();
-            $this->query(
-                "SELECT u.group_desc, uc.primary_group FROM " . USERGROUP_CONTENT_TABLE . " uc, "
-                . USERGROUPS_TABLE ." u where uc.user_id ='"
-                . $_SESSION['user']['UserId'] . "' and uc.group_id = u.group_id"
-                . " order by u.group_desc"
-            );
-
-            if ($this->nb_result() < 1) {
-                echo _USER_BELONGS_NO_GROUP . ".";
-            } else {
-                while ($line = $this->fetch_object()) {
-                    if($line->primary_group == 'Y'){
-                        echo "<li style='list-style-position:inside;'><i class=\"fa fa-arrow-right\"></i>".$line->group_desc." </li>";
-                    }else{
-                        echo "<li>".$line->group_desc." </li>";
-                    }
-                }
-            }
-                         ?>
-                         </ul>
+            <div id="user_box" style="float:right;width:17%;">
+                <div class="block" style="height:330px;">
                          <?php if($core->is_module_loaded("entities") )
                         {?>
                          <h2 class="tit"><?php  echo _USER_ENTITIES_TITLE;?> : </h2>
-                            <ul id="my_profil">
+                            <ul id="my_profil" style="height:280px;overflow:auto;">
                          <?php
                             $this->query("SELECT e.entity_label, ue.primary_entity FROM ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e
                             where ue.user_id ='".$_SESSION['user']['UserId']."' and ue.entity_id = e.entity_id order by e.entity_label");
@@ -202,8 +178,37 @@ class class_users extends dbquery
                      </div>
                      <div class="block_end">&nbsp;</div>
                      </div>
+                     <div id="user_box_2" style="float:right;width:17%;">
+                <div class="block" style="height:330px;">
+                 <h2 class="tit"><?php  echo _USER_GROUPS_TITLE;?> : </h2>
+                     <ul id="my_profil" style="height:280px;overflow:auto;">
+                      <?php
+            $this->connect();
+            $this->query(
+                "SELECT u.group_desc, uc.primary_group FROM " . USERGROUP_CONTENT_TABLE . " uc, "
+                . USERGROUPS_TABLE ." u where uc.user_id ='"
+                . $_SESSION['user']['UserId'] . "' and uc.group_id = u.group_id"
+                . " order by u.group_desc"
+            );
 
-                        <form name="frmuser" id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=user_modif" class="forms addforms">
+            if ($this->nb_result() < 1) {
+                echo _USER_BELONGS_NO_GROUP . ".";
+            } else {
+                while ($line = $this->fetch_object()) {
+                    if($line->primary_group == 'Y'){
+                        echo "<li style='list-style-position:inside;'><i class=\"fa fa-arrow-right\"></i>".$line->group_desc." </li>";
+                    }else{
+                        echo "<li>".$line->group_desc." </li>";
+                    }
+                }
+            }
+                         ?>
+                         </ul>
+                     </div>
+                     <div class="block_end">&nbsp;</div>
+                     </div>
+                        <div class="block" style="float:left;width:60%;height:330px;">
+                        <form name="frmuser" style="margin:auto;" id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=user_modif" class="forms addforms">
                             <input type="hidden" name="display" value="true" />
                             <input type="hidden" name="admin" value="users" />
                             <input type="hidden" name="page" value="user_modif" />
@@ -245,13 +250,14 @@ class class_users extends dbquery
                         <input name="Mail"  type="text" id="Mail" size="45" value="<?php  echo $_SESSION['user']['Mail']; ?>" />
                       </p>
 
-                      <p class="buttons">
+                      <p class="buttons" style="text-align:center;">
                             <input type="submit" name="Submit" value="<?php  echo _VALIDATE; ?>" class="button" />
                             <input type="button" name="cancel" value="<?php  echo _CANCEL; ?>" class="button" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';" />
                     </p>
                     </div>
 
                     </form>
+                    </div>
                     <div class="blank_space"></div>
                 <?php
 
