@@ -21,8 +21,7 @@ if ($mode == 'list') {
         false,
         _ALL_TEMPLATES,
         _TEMPLATES,
-        $_SESSION['config']['businessappurl']
-            . 'static.php?filename=manage_architecture_b.gif',
+        'file-text-o',
         true,
         true,
         false,
@@ -37,9 +36,7 @@ if ($mode == 'list') {
     echo '</pre>';*/
     include('modules/templates/load_editor.php');
     ?>
-    <h1><img src="<?php
-        echo $_SESSION['config']['businessappurl'];
-            ?>static.php?filename=manage_lc_b.gif&module=life_cycle" alt="" />
+    <h1><i class="fa fa-file-text-o fa-2x"></i>
         <?php
         if ($mode == 'add') {
             echo _TEMPLATE_ADDITION;
@@ -312,9 +309,7 @@ if ($mode == 'list') {
                                 ?>
                                 <a href="#" onClick="<?php echo $strAction;?>">
                                 
-                                <img alt="<?php echo _EDIT_TEMPLATE;?>" src="<?php echo
-                                    $_SESSION['config']['businessappurl'];
-                                    ?>static.php?filename=modif_note.png&module=notes" border="0" alt="" />
+                                    <i class="fa fa-pencil fa-2x"></i>
                                 <?php echo _EDIT_TEMPLATE;?>
                             </a>
                         </div>
