@@ -826,7 +826,7 @@ class lists extends dbquery
                     
                     //Selected template
                     if ($this->template == $_SESSION['html_templates'][$this->params['templates'][$i]]['ID']) {
-                        $selected = 'border:2px solid #FBC110'; 
+                        $selected = 'color: #FBC110'; 
                     } else {
                         $selected = '';
                     }
