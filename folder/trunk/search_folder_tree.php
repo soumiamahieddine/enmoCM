@@ -64,6 +64,7 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
 ?>" alt="" /> <?php  echo _VIEW_FOLDER_TREE; ?></h1>
 <div id="inner_content" align="center">
     <div class="block">
+        <h2>
 		<form method="post" name="form_search_folder" id="form_search_folder" action="#">
         <table width="100%" border="0">
             <tr>
@@ -72,7 +73,7 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
             ?> :</label></td>
                             <td class="indexing_field">
                                 <input type="text" name="folder" id="folder" size="45" onKeyPress="if(event.keyCode == 13) submitForm();" />
-                                <div id="show_folder" class="autocomplete"></div>
+                                <div id="show_folder" class="autocomplete" style="color:#666;"></div>
                             </td>
                             <!-- <td align="right"><label for="subfolder"><?php  echo _SUBFOLDER;?> :</label></td>
                             <td>
@@ -84,21 +85,19 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
             echo _SEARCH;
             ?>" onclick="javascript:submitForm();" class="button">
                 </td>
-				<td width="50%">&nbsp;</td>
-            </tr>
-        </table>
-		</form>
-    </div>
-    <div class="clearsearch">
+				<td width="50%"><div style="font-size: 8px;margin-top: -11px;">
         <br>
         <a href="javascript://" onClick="window.top.location.href='<?php
                 echo $_SESSION['config']['businessappurl'];
                 ?>index.php?page=search_folder_tree&module=folder&erase=true';">
-                <i class="fa fa-refresh fa-4x" title="<?php echo _NEW_SEARCH; ?>"></i>
+                <i class="fa fa-refresh fa-4x" style="color: #ffffff;" title="<?php echo _NEW_SEARCH; ?>"></i>
         </a>
-    </div>
-    <!-- Display the layout of search_folder_tree -->
-    <table width="100%" height="100%" cellspacing="5" style="border:1px solid #999999;">
+    </div></td>
+            </tr>
+        </table>
+		</form>
+        </h2>
+        <table width="100%" height="100%" cellspacing="5" style="border:1px solid #999999;">
         <tr>
             <td width="55%" height="720px" style="vertical-align: top; text-align: left;border-right:1px solid #999999;">
                 <div id="loading" style="display:none;"><img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=loading.gif" alt="loading..." width="24px" height="24px" /></div>
@@ -111,6 +110,8 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
             </td>
         </tr>
     </table>
+    </div>
+    <!-- Display the layout of search_folder_tree -->
 </div>
 <script type="text/javascript">
 
