@@ -47,7 +47,7 @@ else
 <!--     <script type="text/javascript">window.resizeTo(500, 350);</script> -->
 <div class="popup_content" align="center">
     <br/>
-    <h2 align="center"><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=account_off.gif" alt="<?php echo _USER_DATA;?>" /> <?php echo _USER_DATA;?></h2>   <br/>
+    <h2 align="center"><i class="fa fa-user fa-2x"></i> <?php echo _USER_DATA;?></h2>   <br/>
     <form name="frmuserdata" id="frmuserdata" method="post" action="#" class="forms addforms">
 
          <p id="lastname_p">

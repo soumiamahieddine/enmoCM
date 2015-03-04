@@ -47,7 +47,6 @@ $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $lev
 /***********************************************************/
 ?>
 <h1>
-<img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_welcome_b.gif" alt="" />
 <?php echo _SECURITY_MESSAGE;?></h1>
 <div id="inner_content" class="clearfix">
 <?php

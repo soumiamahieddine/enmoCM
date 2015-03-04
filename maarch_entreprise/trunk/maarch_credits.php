@@ -39,9 +39,7 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
 /***********************************************************/
 ?>
 
-<h1><img src="<?php 
-    echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=picto_menu_help.gif" alt="" /> <?php echo _MAARCH_CREDITS; ?>
+<h1><i class="fa fa-info-circle fa-2x"></i> <?php echo _MAARCH_CREDITS; ?>
 </h1>
 <div id="inner_content" class="clearfix">
     <div class="maarch_credits_left_box" style="height:520px;">
