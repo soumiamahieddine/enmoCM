@@ -24,7 +24,7 @@ header('Content-type: text/css; charset=utf-8');
 
 ob_start("compress");
 
-if (isset($_GET['ie'])) {
+if (isset($_GET['ie']) && file_exists('apps/' . $_SESSION['config']['app_id'] . '/css/style_ie.css')) {
     include 'apps/' . $_SESSION['config']['app_id'] . '/css/style_ie.css';
     foreach (array_keys($_SESSION['modules_loaded']) as $value) {
         if (file_exists(
@@ -48,7 +48,7 @@ if (isset($_GET['ie'])) {
                 . '/css/module.css';
         }
     }
-} else if (isset($_GET['ie7'])) {
+} else if (isset($_GET['ie7']) && file_exists('apps/' . $_SESSION['config']['app_id'] . '/css/style_ie7.css')) {
     include 'apps/' . $_SESSION['config']['app_id'] . '/css/style_ie7.css';
     foreach (array_keys($_SESSION['modules_loaded']) as $value) {
         if (file_exists(
@@ -67,7 +67,7 @@ if (isset($_GET['ie'])) {
                 . '/css/module_IE7.css';
         }
     }
-} else if (isset($_GET['ie8'])) {
+} else if (isset($_GET['ie8']) && file_exists('apps/' . $_SESSION['config']['app_id'] . '/css/style_ie8.css')) {
     include 'apps/' . $_SESSION['config']['app_id'] . '/css/style_ie8.css';
     foreach (array_keys($_SESSION['modules_loaded']) as $value) {
         if (file_exists(
@@ -86,7 +86,7 @@ if (isset($_GET['ie'])) {
                 . '/css/module_IE8.css';
         }
     }
-} else if (isset($_GET['ie9'])) {
+} else if (isset($_GET['ie9']) && file_exists('apps/' . $_SESSION['config']['app_id'] . '/css/style_ie9.css')) {
     include 'apps/' . $_SESSION['config']['app_id'] . '/css/style_ie9.css';
     foreach (array_keys($_SESSION['modules_loaded']) as $value) {
         if (file_exists(
