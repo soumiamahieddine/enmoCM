@@ -27,13 +27,13 @@ foreach($roles as $role_id => $role_label) {
             else $color = ' class="col"'; ?>
             <tr <?php echo $color; ?> >
                 <td style="width:15%;text-align:center;">
-                    <img src="<?php echo $_SESSION['config']['businessappurl'] ?>static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="<?php echo _USER . " " . $role_label ;?>" title="<?php echo _USER . " " . $role_label ; ?>" />
+                    <i class="fa fa-user fa-2x" title="<?php echo _USER; ?>"></i>
                 </td>
                 <td style="width:10%;"><?php
                 if($user['visible'] == 'Y') { ?>
-                    <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" /><?php
+                    <i class="fa fa-check fa-2x" title="<?php echo _VISIBLE; ?>"></i> <?php
                 } else {?>
-                    <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_delete.gif&module=entities" alt="<?php echo _NOT_VISIBLE; ?>" title="<?php echo _NOT_VISIBLE;?>" /><?php
+                    <i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE; ?>"></i><?php
                 } ?>
                 </td>
                 <td style="width:37%;"><?php echo $user['lastname'] . " " . $user['firstname'];?></td>
@@ -54,13 +54,13 @@ foreach($roles as $role_id => $role_label) {
             else $color = ' class="col"';?>
             <tr <?php echo $color; ?> >
                 <td style="width:15%;text-align:center;">
-                    <img src="<?php echo $_SESSION['config']['businessappurl'] ?>static.php?filename=manage_entities_b_small.gif&module=entities" alt="<?php echo _ENTITY . " " . $role_label ;?>" title="<?php echo _ENTITY . " " . $role_label ; ?>" />
+                    <i class="fa fa-sitemap fa-2x" title="<?php echo _ENTITY . " " . $role_label ; ?>" ></i>
                 </td>
                 <td style="width:10%;"><?php
                 if($entity['visible'] == 'Y') { ?>
-                    <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_authorize.gif&module=entities" alt="<?php echo _VISIBLE; ?>" title="<?php echo _VISIBLE;?>" /><?php
+                    <i class="fa fa-check fa-2x" title="<?php echo _VISIBLE; ?>"></i><?php
                 } else {?>
-                    <img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=picto_delete.gif&module=entities" alt="<?php echo _NOT_VISIBLE; ?>" title="<?php echo _NOT_VISIBLE;?>" /><?php
+                    <i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE; ?>"></i><?php
                 } ?>
                 </td>
                 <td style="width:37%;"><?php echo $entity['entity_id']; ?></td>
