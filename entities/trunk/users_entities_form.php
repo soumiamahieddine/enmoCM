@@ -31,7 +31,7 @@ header("Content-Type: text/html", true);
         {
                 if( $_SESSION['m_admin']['entity']['entities'][$theline]['PRIMARY'] == 'Y')
                 {
-                    ?><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=arrow_primary.gif&amp;module=entities" alt="<?php  echo _PRIMARY_ENTITY;?>" title="<?php  echo _PRIMARY_ENTITY;?>" /> <?php
+                    ?><i class="fa fa-arrow-right" title="<?php echo _PRIMARY_ENTITY; ?>"></i> <?php
                 }
                 else
                 {
