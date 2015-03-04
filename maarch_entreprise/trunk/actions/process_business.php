@@ -197,9 +197,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     //  to activate locking decomment these lines
     /*if ($b->reserve_doc($_SESSION['user']['UserId'], $res_id, $coll_id) == false) {
         $frm_str = '<div>';
-        $frm_str .= '<h1 class="tit" id="action_title"><img src="'
-        * . $_SESSION['config']['businessappurl']
-        * . 'static.php?filename=file_index_b.gif"  align="middle" alt="" />'._DOC_NUM." ".$res_id ;
+        $frm_str .= '<h1 class="tit" id="action_title">'._DOC_NUM." ".$res_id ;
                     $frm_str .= '</h1>';
             $frm_str .= '<div>'._DOC_ALREADY_RSV.'</div>';
             $frm_str .= '<div><input type="button" name="close" id="close" value="'
@@ -208,9 +206,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
     } else {
     */
-    $frm_str = '<h2 id="action_title"><img src="'
-        . $_SESSION['config']['businessappurl']
-        . 'static.php?filename=file_index_b.gif"  align="middle" alt="" />'
+    $frm_str = '<h2 id="action_title">'
         . _PROCESS . _DOC_NUM . ' ' . $res_id;
     $frm_str .= '</h2>';
     /********************************* LEFT PART **************************************/
@@ -242,8 +238,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     // Displays the document indexes
     foreach (array_keys($data) as $key) {
         $frm_str .= '<tr>';
-            $frm_str .= '<td style="width:10%;align:center;"><img src="'
-                . $data[$key]['img'] . '" title="' .  $data[$key]['label'] . '"/></td>';
+            $frm_str .= '<td style="width:10%;align:center;"></td>';
             $frm_str .= '<td width="40%" align="left"><span class="form_title_process">'
                 . $data[$key]['label'] . ' </span></td>';
             $frm_str .= '<td>';
@@ -643,11 +638,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         . '&origin=process&only_cc\', \'\', \'scrollbars=yes,menubar=no,'
                         . 'toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" title="'
                         . _UPDATE_LIST_DIFF
-                        . '"><img src="'
-                        . $_SESSION['config']['businessappurl']
-                        . 'static.php?filename=modif_liste.png" alt="'
-                        . _UPDATE_LIST_DIFF
-                        . '" />'
+                        . '"><i class="fa fa-pencil" title="' 
+                        . _UPDATE_LIST_DIFF . '"></i>&nbsp;'
                         . _UPDATE_LIST_DIFF
                         . '</a><br/>';
                 }
@@ -703,21 +695,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '<center><h2 onclick="new Effect.toggle(\'notes_div\', \'blind\', {delay:0.2});';
                 $frm_str .= 'whatIsTheDivStatus(\'notes_div\', \'divStatus_notes_div\');';
                 $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _NOTES. '</h2></center>';
-                // $frm_str .= '<div style="text-align:center;">';
-                    // $frm_str .= '<img src="'.$_SESSION['config']['businessappurl']
-                        // . 'static.php?module=notes&filename=modif_note.png" border="0" alt="" />';
-                            // $frm_str .= '<a href="javascript://" onclick="ouvreFenetre(\''
-                                // . $_SESSION['config']['businessappurl']
-                                // . 'index.php?display=true&module=notes&page=note_add&identifier='
-                                // . $_SESSION['doc_id'] . '&coll_id='
-                                // . $_SESSION['collection_id_choice'].'\', 1024, 650)" >';
-                                // $frm_str .= _ADD_NOTE;
-                            // $frm_str .= '</a>';
-                // $frm_str .= '</div>';
-                // $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'
-                    // . $_SESSION['config']['businessappurl']
-                    // . 'index.php?display=true&module=notes&page=frame_notes_doc&size=middle" '
-                    // . 'frameborder="0" width="100%" height="1000px"></iframe>';
                 $frm_str .= '<iframe name="list_notes_doc" id="list_notes_doc" src="'
                     . $_SESSION['config']['businessappurl']
                     . 'index.php?display=true&module=notes&page=notes&identifier='
@@ -761,7 +738,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     'desc'
                 );
                 if ($nbLinkDesc > 0) {
-                    $frm_str .= '<img src="static.php?filename=cat_doc_incoming.gif"/>';
+                    $frm_str .= '<i class="fa fa-long-arrow-right fa-2x"></i>';
                     $frm_str .= $Class_LinkController->formatMap(
                         $Class_LinkController->getMap(
                             $_SESSION['doc_id'],
@@ -778,7 +755,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     'asc'
                 );
                 if ($nbLinkAsc > 0) {
-                    $frm_str .= '<img src="static.php?filename=cat_doc_outgoing.gif" />';
+                    $frm_str .= '<i class="fa fa-long-arrow-left fa-2x"></i>';
                     $frm_str .= $Class_LinkController->formatMap(
                         $Class_LinkController->getMap(
                             $_SESSION['doc_id'],
@@ -819,9 +796,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         $frm_str .= 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&original&id=';
                         $frm_str .= $res_id;
                         $frm_str .= '" target="_blank">';
-                        $frm_str .= '<img alt="' . _VIEW_ORIGINAL . '" src="';
-                        $frm_str .= $_SESSION['config']['businessappurl'];
-                        $frm_str .= 'static.php?filename=picto_dld.gif" border="0" alt="" />';
+                        $frm_str .= '<i class="fa fa-download fa-2x" title="' . _VIEW_ORIGINAL . '"></i>&nbsp;';
                         $frm_str .= _VIEW_ORIGINAL . ' | ';
                     $frm_str .= '</a>';
                     if ($addNewVersion) {
