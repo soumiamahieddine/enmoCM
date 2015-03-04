@@ -281,7 +281,6 @@
         );
     
         //Titre de la page
-        $titleImageSource = $_SESSION['config']['businessappurl'].'static.php?filename=favicon.png';
         $messageController = new MessageController();
         $messageController->loadMessageFile($params['viewLocation'] . '/xml/' . $params['objectName'] . '_Messages.xml');
         
@@ -452,7 +451,6 @@
 
 </script>
 <h1>
-    <img src="<?php echo $titleImageSource; ?>" />
     <?php echo $titleText; ?>
 </h1>
 <div class="<?php echo $params['objectName'] ?>">
