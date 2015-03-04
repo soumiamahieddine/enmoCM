@@ -2282,10 +2282,10 @@ height:auto;
 
 .red_asterisk
 {
-    color: #FF0000;
+    color: #FFC200;
     font-weight: bold;
-    font-size: 14px;
-    vertical-align:top;
+    font-size: 7px;
+    vertical-align:middle;
 }
 
 .green_asterisk

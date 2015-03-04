@@ -253,9 +253,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
             );
         }
     }
-    $frmStr .= '<h2 class="tit" id="action_title"><img src="'
-            . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-            . 'file_index_b.gif"  align="middle" alt="" />' . _INDEXING_MLB;
+    $frmStr .= '<h2 class="tit" id="action_title">' . _INDEXING_MLB;
     $frmStr .= '</h2>';
     $frmStr .= '<div id="validleft">';
     $frmStr .= '<div id="index_div" style="display:none;";>';
@@ -323,7 +321,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                 . ' /> '
                 . _NO . '</td>';
         $frmStr .= ' <td><span class="red_asterisk" id="attachment_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
+                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
 
         $frmStr .= '<tr id="attach_show" style="display:none;">';
@@ -339,11 +337,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                   $frmStr .= ' title="' . _SEARCH . '"';
                 $frmStr .= '>';
                     $frmStr .= '<span style="font-weight: bold;">';
-                        $frmStr .= '<img ';
-                          $frmStr .= 'src="' . $_SESSION['config']['businessappurl'] . 'static.php?filename=folder_search.gif" ';
-                          $frmStr .= 'width="20px" ';
-                          $frmStr .= 'height="20px" ';
-                        $frmStr .= '/>';
+                        $frmStr .= '<i class="fa fa-link"></i>';
                     $frmStr .= '</span>';
                 $frmStr .= '</a>';
             $frmStr .= '</td>';
@@ -405,7 +399,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     }
     $frmStr .= '</select></td>';
     $frmStr .= '<td><span class="red_asterisk" id="category_id_mandatory" '
-            . 'style="display:inline;">*</span></td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr>';
     /*** Doctype ***/
     $frmStr .= '<tr id="type_id_tr" style="display:' . $displayValue . ';">';
@@ -458,7 +452,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     }
     $frmStr .= '</select></td>';
     $frmStr .= '<td><span class="red_asterisk" id="type_id_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     /*** Priority ***/
     $frmStr .= '<tr id="priority_tr" style="display:' . $displayValue . ';">';
@@ -482,7 +476,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     }
     $frmStr .= '</select></td>';
     $frmStr .= '<td><span class="red_asterisk" id="priority_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     /*** Doc date ***/
     $frmStr .= '<tr id="doc_date_tr" style="display:' . $displayValue . ';">';
@@ -496,7 +490,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'id="doc_date" value="" onfocus="checkRealDate(\'docDate\');" onChange="checkRealDate(\'docDate\');"  onclick="clear_error(\'frm_error_'
             . $actionId . '\');showCalender(this);" /></td>';
     $frmStr .= '<td><span class="red_asterisk" id="doc_date_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr >';
     /*** Author ***/
     $frmStr .= '<tr id="author_tr" style="display:' . $displayValue . ';">';
@@ -507,7 +501,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'id="author" onchange="clear_error(\'frm_error_' . $actionId
             . '\');"/></td>';
     $frmStr .= '<td><span class="red_asterisk" id="author_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     /*** Admission date ***/
     $frmStr .= '<tr id="admission_date_tr" style="display:' . $displayValue
@@ -524,7 +518,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
             . '&dir=indexing_searching&page=update_process_date\');"/></td>';
     $frmStr .= '<td><span class="red_asterisk" id="admission_date_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
 	
     /*** Contact ***/
@@ -582,9 +576,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= ' <a href="#" id="create_contact" title="' . _CREATE_CONTACT
                 . '" onclick="new Effect.toggle(\'create_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;" '
-                . 'style="display:inline;" ><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'modif_liste.png" alt="' . _CREATE_CONTACT . '"/></a>';
+                . 'style="display:inline;" ><i class="fa fa-pencil" title="' 
+                . _CREATE_CONTACT . '"></i></a>';
     } else {
         $frmStr .= ' <a href="#" id="create_contact"/></a>';       
     }
@@ -598,15 +591,14 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;"'
-            . 'style="visibility:hidden;" ><img src="'
-            . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-            . 'my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>&nbsp;</td>';
+            . 'style="visibility:hidden;" ><i class="fa fa-book fa-2x" title="' 
+                . _CONTACT_CARD . '"></i></a>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><input type="text" name="contact" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');"'
             . 'id="contact" onblur="clear_error(\'frm_error_' . $actionId . '\');'
             . 'display_contact_card(\'visible\');if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\');}" /><div id="show_contacts" '
             . 'class="autocomplete autocompleteIndex"></div></td>';
     $frmStr .= '<td><span class="red_asterisk" id="contact_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
 	$frmStr .= '<tr style="display:none" id="contact_check"><td></td></tr>';
     $frmStr .= '<input type="hidden" id="contactid" />';
@@ -632,9 +624,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         $frmStr .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
                 . '" onclick="new Effect.toggle(\'create_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;" '
-                . 'style="display:inline;" ><img src="'
-                . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                . 'modif_liste.png" alt="' . _CREATE_CONTACT . '"/></a>';
+                . 'style="display:inline;" ><i class="fa fa-pencil" title="' 
+                . _CREATE_CONTACT . '"></i></a>';
     }
     $frmStr .= '</label></td>';
     $contact_mode = "view";
@@ -643,9 +634,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . '" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;" '
-            . 'style="visibility:hidden;" ><img src="'
-            . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-            . 'my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>&nbsp;</td>';
+            . 'style="visibility:hidden;" ><i class="fa fa-book" title="' 
+                . _CONTACT_CARD . '"></i></a>&nbsp;</td>';
 	$frmStr .= '<td><input type="text" name="email" id="email" value="" onblur="clear_error(\'frm_error_' . $actionId . '\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
     $frmStr .= '<div id="multiContactList" class="autocomplete"></div>';
     $frmStr .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
@@ -661,13 +651,10 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td align="right" nowrap width="10%" id="to_multi_contact"><label>'
         ._SEND_TO_SHORT.'</label></td>';
     $frmStr .= '<td>&nbsp;</td><td ><div name="to" id="to"  style="width:200px;" class="multicontactInput">'
-        .'<div id="loading_to" style="display:none;"><img src="'
-        . $_SESSION['config']['businessappurl']
-        . 'static.php?filename=loading.gif" width="12" '
-        . 'height="12" style="vertical-align: middle;" alt='
-        . '"loading..." title="loading..."></div></div></td>';
+        .'<div id="loading_to" style="display:none;"><i class="fa fa-spinner fa-2x" '
+        .'style="vertical-align: middle;" title="loading..."></div></div></td>';
     $frmStr .= '<td><span class="red_asterisk" id="contact_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';	
 	
     /*** Nature ***/
@@ -688,7 +675,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     }
     $frmStr .= '</select></td>';
     $frmStr .= '<td><span class="red_asterisk" id="nature_id_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
 
     /****** RECOMMANDE ******/
@@ -707,7 +694,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'id="subject"  rows="4" onchange="clear_error(\'frm_error_'
             . $actionId . '\');" ></textarea></td>';
     $frmStr .= '<td><span class="red_asterisk" id="subject_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     /*** Entities : department + diffusion list ***/
     if ($core->is_module_loaded('entities')) {
@@ -742,7 +729,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         }
         $frmStr .= '</select></td>';
         $frmStr .= '<td><span class="red_asterisk" id="destination_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
+                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
         
         $frmStr .= '<tr id="diff_list_tr" style="display:none;">';
@@ -771,7 +758,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'activate_process_date(false, \'' . $displayValue . '\');"/>'
             . _NO . '</td>';
     $frmStr .= '<td><span class="red_asterisk" '
-            . 'id="process_limit_date_use_mandatory" style="display:inline;">*'
+            . 'id="process_limit_date_use_mandatory" style="display:inline;"><i class="fa fa-star"></i>'
             . '</span>&nbsp;</td>';
     $frmStr .= '</tr>';
     $frmStr .= '<tr id="process_limit_date_tr" style="display:' . $displayValue
@@ -784,7 +771,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'onclick="showCalender(this);" '
             . 'onchange="clear_error(\'frm_error_' . $actionId . '\');checkRealLimitDate(\'process_limit_date\');" onFocus="checkRealLimitDate(\'process_limit_date\');"/></td>';
     $frmStr .= '<td><span class="red_asterisk" id="process_limit_date_mandatory"'
-            . ' style="display:inline;">*</span>&nbsp;</td>';
+            . ' style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     
     /*** Status ***/
@@ -805,7 +792,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             $frmStr .= '>' . $statuses[$i]['LABEL'] . '</option>';
         }
         $frmStr .= '</select></td><td><span class="red_asterisk" id="market_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
+                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
     }
     
@@ -842,7 +829,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'name="chrono_number" id="chrono_number" '
             . 'onchange="clear_error(\'frm_error_' . $actionId . '\');"/></td>';
     $frmStr .= '<td><span class="red_asterisk" id="chrono_number_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     
     /*** Physical_archive : Arbox ***/
@@ -861,7 +848,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         }
         $frmStr .= '</select></td>';
         $frmStr .= '<td><span class="red_asterisk" id="arbox_id_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
+                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
     }
 
@@ -876,7 +863,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . $actionId . '\');return false;" /><div id="show_folder" '
                 . 'class="autocomplete"></div></td>';
         $frmStr .= '<td><span class="red_asterisk" id="folder_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
+                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
     }
 

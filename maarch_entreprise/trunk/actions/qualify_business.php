@@ -300,7 +300,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     $frm_str .= '</select></td>';
     $frm_str .= '<td><span class="red_asterisk" id="category_id_mandatory" '
-            . 'style="display:inline;">*</span></td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span></td>';
     $frm_str .= '</tr>';
     
     /*** Doctype ***/
@@ -354,7 +354,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 }
             }
             $frm_str .='</select>';
-            $frm_str .= '<td><span class="red_asterisk" id="type_id_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+            $frm_str .= '<td><span class="red_asterisk" id="type_id_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr>';
     
     /*** Subject ***/
@@ -366,7 +366,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= $data['subject'];
         }
          $frm_str .= '</textarea></td>';
-         $frm_str .= '<td><span class="red_asterisk" id="subject_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+         $frm_str .= '<td><span class="red_asterisk" id="subject_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr>';
     
     /*** Contact ***/
@@ -416,7 +416,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
      $frm_str .= '/><div id="show_contacts" '
             . 'class="autocomplete autocompleteIndex"></div></td>';
     $frm_str .= '<td><span class="red_asterisk" id="contact_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr>';
     $frm_str .= '<input type="hidden" id="contactid" ';
         if(isset($data['contactId']) && !empty($data['contactId'])){
@@ -441,7 +441,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     }
     $frm_str .= '"/></td>';
     $frm_str .= '<td><span class="red_asterisk" id="identifier_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr>';
     
     /*** Doc date ***/
@@ -456,7 +456,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= $today;
         }
         $frm_str .= '" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/></td>';
-        $frm_str .= '<td><span class="red_asterisk" id="doc_date_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+        $frm_str .= '<td><span class="red_asterisk" id="doc_date_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr >';
     
     /*** currency ***/
@@ -476,7 +476,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     $frm_str .= '</select></td>';
     $frm_str .= '<td><span class="red_asterisk" id="currency_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr>';
     
     /*** net_sum ***/
@@ -500,7 +500,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . '<input name="net_sum" id="net_sum" type="hidden" />'
         . '</td>';
     $frm_str .= '<td><span class="red_asterisk" id="net_sum_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr>';
     
     /*** tax_sum ***/
@@ -524,7 +524,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . '<input name="tax_sum" id="tax_sum" type="hidden" />'
         . '</td>';
     $frm_str .= '<td><span class="red_asterisk" id="tax_sum_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr>';
     
     /*** total_sum ***/
@@ -548,7 +548,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . '<input name="total_sum" id="total_sum" type="hidden" />'
         . '</td>';
     $frm_str .= '<td><span class="red_asterisk" id="total_sum_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr>';
     
      /*** Entities : department + diffusion list ***/
@@ -579,7 +579,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             }
         }
         $frm_str .='</select></td>';
-        $frm_str .= '<td><span class="red_asterisk" id="destination_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+        $frm_str .= '<td><span class="red_asterisk" id="destination_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frm_str .= '</tr>';
       
         # Diffusion list model            
@@ -613,7 +613,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         }
         $frm_str .= '</select></td>';
         $frm_str .= '<td><span class="red_asterisk" id="destination_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
+                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frm_str .= '</tr>';
         $frm_str .= '<tr id="diff_list_tr" style="display:none;">';
         $frm_str .= '<td colspan="4">';
@@ -639,7 +639,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .=' checked="checked"';
     }
     $frm_str .='/>'._NO.'</td>';
-    $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_use_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+    $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_use_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr>';
     $frm_str .= '<tr id="process_limit_date_tr" style="display:'.$display_value.';">';
     $frm_str .='<td style="width:30px;align:center;"></td><td class="indexing_label"><label for="process_limit_date" class="form_title" >'
@@ -650,7 +650,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= $data['process_limit_date'];
     }
     $frm_str .='"/></td>';
-    $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+    $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frm_str .= '</tr>';
     
     /*** Status ***/
@@ -701,7 +701,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .= '>' . $statuses[$i]['LABEL'] . '</option>';
         }
         $frm_str .= '</select></td><td><span class="red_asterisk" id="market_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
+                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frm_str .= '</tr>';
     }
     

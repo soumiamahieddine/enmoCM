@@ -330,7 +330,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     }
     $frmStr .= '</select></td>';
     $frmStr .= '<td><span class="red_asterisk" id="category_id_mandatory" '
-            . 'style="display:inline;">*</span></td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr>';
     /*** doctype ***/
     $frmStr .= '<tr id="doctype_tr" style="display:' . $displayValue . ';">';
@@ -383,7 +383,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     }
     $frmStr .= '</select></td>';
     $frmStr .= '<td><span class="red_asterisk" id="type_id_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     /*** subject ***/
     $frmStr .= '<tr id="subject_tr" style="display:' . $displayValue . ';">';
@@ -393,7 +393,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'id="subject"  rows="2" onchange="clear_error(\'frm_error_'
             . $actionId . '\');" ></textarea></td>';
     $frmStr .= '<td><span class="red_asterisk" id="subject_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     /*** Contact ***/
     $contact_mode = "view";
@@ -436,7 +436,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'display_contact_card(\'visible\');" /><div id="show_contacts" '
             . 'class="autocomplete autocompleteIndex"></div></td>';
     $frmStr .= '<td><span class="red_asterisk" id="contact_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     $frmStr .= '<input type="hidden" id="contactid" />';
     $frmStr .= '<input type="hidden" id="addressid" />';
@@ -450,7 +450,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'id="identifier" onchange="clear_error(\'frm_error_' . $actionId
             . '\');"/></td>';
     $frmStr .= '<td><span class="red_asterisk" id="identifier_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     /*** doc_date ***/
     $frmStr .= '<tr id="doc_date_tr" style="display:' . $displayValue . ';">';
@@ -462,7 +462,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'id="doc_date" value="" onclick="clear_error(\'frm_error_'
             . $actionId . '\');showCalender(this);" /></td>';
     $frmStr .= '<td><span class="red_asterisk" id="doc_date_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr >';
     /*** currency ***/
     $frmStr .= '<tr id="currency_tr" style="display:' . $displayValue . ';">';
@@ -489,7 +489,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '</select>'
         . '</td>';
     $frmStr .= '<td><span class="red_asterisk" id="currency_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     /*** net_sum ***/
     $frmStr .= '<tr id="net_sum_tr" style="display:' . $displayValue . ';">';
@@ -507,7 +507,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         . '<input name="net_sum" id="net_sum" type="hidden" />'
         . '</td>';
     $frmStr .= '<td><span class="red_asterisk" id="net_sum_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     /*** tax_sum ***/
     $frmStr .= '<tr id="tax_sum_tr" style="display:' . $displayValue . ';">';
@@ -526,7 +526,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         . '<input name="tax_sum" id="tax_sum" type="hidden" />'
         . '</td>';
     $frmStr .= '<td><span class="red_asterisk" id="tax_sum_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     /*** total_sum ***/
     $frmStr .= '<tr id="total_sum_tr" style="display:' . $displayValue . ';">';
@@ -545,7 +545,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         . '<input name="total_sum" id="total_sum" type="hidden" />'
         . '</td>';
     $frmStr .= '<td><span class="red_asterisk" id="total_sum_mandatory" '
-            . 'style="display:inline;">*</span>&nbsp;</td>';
+            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     /*** Entities : department + diffusion list ***/
     if ($core->is_module_loaded('entities')) {
@@ -573,7 +573,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             }
         $frmStr .= '</select></td>';
         $frmStr .= '<td><span class="red_asterisk" id="destination_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
+                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
         
         # Diffusion list model
@@ -602,7 +602,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         }
         $frmStr .= '</select></td>';
         $frmStr .= '<td><span class="red_asterisk" id="difflist_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
+                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
         $frmStr .= '<tr id="diff_list_tr" style="display:none;">';
         $frmStr .= '<td colspan="4">';
@@ -630,7 +630,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'activate_process_date(false, \'' . $displayValue . '\');"/>'
             . _NO . '</td>';
     $frmStr .= '<td><span class="red_asterisk" '
-            . 'id="process_limit_date_use_mandatory" style="display:inline;">*'
+            . 'id="process_limit_date_use_mandatory" style="display:inline;"><i class="fa fa-star"></i>'
             . '</span>&nbsp;</td>';
     $frmStr .= '</tr>';
     $frmStr .= '<tr id="process_limit_date_tr" style="display:' . $displayValue
@@ -643,7 +643,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'onclick="showCalender(this);" '
             . 'onchange="clear_error(\'frm_error_' . $actionId . '\');"/></td>';
     $frmStr .= '<td><span class="red_asterisk" id="process_limit_date_mandatory"'
-            . ' style="display:inline;">*</span>&nbsp;</td>';
+            . ' style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
     
     /*** Status ***/
@@ -663,7 +663,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             $frmStr .= '>' . $statuses[$i]['LABEL'] . '</option>';
         }
         $frmStr .= '</select></td><td><span class="red_asterisk" id="market_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
+                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
     }
     
@@ -715,7 +715,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . $actionId . '\');return false;" /><div id="show_folder" '
                 . 'class="autocomplete"></div></td>';
         $frmStr .= '<td><span class="red_asterisk" id="folder_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
+                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
     }
 	
@@ -829,7 +829,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . ' /> '
                 . _NO . '</td>';
         $frmStr .= ' <td><span class="red_asterisk" id="attachment_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
+                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
         $frmStr .= '<tr id="attach_show" style="display:none;">';
             $frmStr .= '<td>&nbsp;</td>';

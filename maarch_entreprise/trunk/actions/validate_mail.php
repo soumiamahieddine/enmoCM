@@ -336,7 +336,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                 }
                             }
                         $frm_str.='</select></td>';
-                        $frm_str .= '<td><span class="red_asterisk" id="category_id_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+                        $frm_str .= '<td><span class="red_asterisk" id="category_id_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
                   $frm_str .= '</tr>';
                    /*** Doctype ***/
                   $frm_str .= '<tr id="type_id_tr" style="display:'.$display_value.';">';
@@ -384,7 +384,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                 }
                             }
                             $frm_str .='</select>';
-                            $frm_str .= '<td><span class="red_asterisk" id="type_id_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+                            $frm_str .= '<td><span class="red_asterisk" id="type_id_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
                   $frm_str .= '</tr>';
                 /*** Priority ***/
                   $frm_str .= '<tr id="priority_tr" style="display:'.$display_value.';">';
@@ -409,7 +409,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                     $frm_str .='>'.$_SESSION['mail_priorities'][$i].'</option>';
                                 }
                             $frm_str .='</select></td>';
-                            $frm_str .= '<td><span class="red_asterisk" id="priority_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+                            $frm_str .= '<td><span class="red_asterisk" id="priority_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
                   $frm_str .= '</tr>';
                   
                   /*** Doc date ***/
@@ -426,7 +426,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $frm_str .= $today;
                         }
                         $frm_str .= '" onfocus="checkRealDate(\'docDate\');" onChange="checkRealDate(\'docDate\');" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/></td>';
-                        $frm_str .= '<td><span class="red_asterisk" id="doc_date_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+                        $frm_str .= '<td><span class="red_asterisk" id="doc_date_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
                   $frm_str .= '</tr >';
                   /*** Author ***/
                    $frm_str .= '<tr id="author_tr" style="display:'.$display_value.';">';
@@ -442,7 +442,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $frm_str .= ' value="" ';
                         }
                         $frm_str .= '/></td>';
-                        $frm_str .= '<td><span class="red_asterisk" id="author_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+                        $frm_str .= '<td><span class="red_asterisk" id="author_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
                   $frm_str .= '</tr>';
                   /*** Admission date ***/
                   $frm_str .= '<tr id="admission_date_tr" style="display:'.$display_value.';">';
@@ -458,7 +458,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $frm_str .= $today;
                         }
                         $frm_str .= '" onfocus="checkRealDate(\'admissionDate\');" onChange="checkRealDate(\'admissionDate\');" onclick="clear_error(\'frm_error_'.$id_action.'\');showCalender(this);"/></td>';
-                        $frm_str .= '<td><span class="red_asterisk" id="admission_date_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+                        $frm_str .= '<td><span class="red_asterisk" id="admission_date_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
                   $frm_str .= '</tr>';
 				  
                 /*** Contact ***/
@@ -535,7 +535,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                       $frm_str .= ' value="'.$data['contact'].'" ';
                     }
                    $frm_str .=  ' /><div id="show_contacts" class="autocomplete autocompleteIndex"></div></td>';
-                   $frm_str .= '<td><span class="red_asterisk" id="contact_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+                   $frm_str .= '<td><span class="red_asterisk" id="contact_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
                      $frm_str .= '</tr>';
 		   $frm_str .= '<tr style="display:none" id="contact_check"><td></td></tr>';
                     $frm_str .= '<input type="hidden" id="contactid" ';
@@ -614,7 +614,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					
 					$frm_str .= '</div></td>';
 					$frm_str .= '<td><span class="red_asterisk" id="contact_mandatory" '
-							. 'style="display:inline;">*</span>&nbsp;</td>';
+							. 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
 					$frm_str .= '</tr>';	
 					
                 /*** Nature ***/
@@ -632,7 +632,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                 $frm_str .='>'.$_SESSION['mail_natures'][$nature].'</option>';
                             }
                         $frm_str .= '</select></td>';
-                        $frm_str .= '<td><span class="red_asterisk" id="nature_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+                        $frm_str .= '<td><span class="red_asterisk" id="nature_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
                   $frm_str .= '</tr>';
 
                 /*** Recommande ***/
@@ -656,7 +656,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                               $frm_str .= $data['subject'];
                             }
                          $frm_str .= '</textarea></td>';
-                         $frm_str .= '<td><span class="red_asterisk" id="subject_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+                         $frm_str .= '<td><span class="red_asterisk" id="subject_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
                   $frm_str .= '</tr>';
                 
                 /*** Entities : department + diffusion list ***/
@@ -686,7 +686,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         }
                     }
                     $frm_str .='</select></td>';
-                    $frm_str .= '<td><span class="red_asterisk" id="destination_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+                    $frm_str .= '<td><span class="red_asterisk" id="destination_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
                     $frm_str .= '</tr>';
                     $frm_str .= '<tr id="diff_list_tr" style="display:none;">';
                     $frm_str .= '<td colspan="3">';
@@ -710,7 +710,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .=' checked="checked"';
             }
             $frm_str .='/>'._NO.'</td>';
-            $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_use_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+            $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_use_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frm_str .= '</tr>';
         $frm_str .= '<tr id="process_limit_date_tr" style="display:'.$display_value.';">';
             $frm_str .='<td class="indexing_label"><label for="process_limit_date" class="form_title" >'._PROCESS_LIMIT_DATE.'</label></td>';
@@ -721,7 +721,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= $data['process_limit_date'];
             }
             $frm_str .='"/></td>';
-            $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+            $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frm_str .= '</tr>';
         
         /*** Status ***/
@@ -791,7 +791,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '>' . $statuses[$i]['LABEL'] . '</option>';
             }
             $frm_str .= '</select></td><td><span class="red_asterisk" id="market_mandatory" '
-                . 'style="display:inline;">*</span>&nbsp;</td>';
+                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
             $frm_str .= '</tr>';
         }
         
@@ -831,7 +831,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .='<td>&nbsp;</td>';
             $frm_str .='<td class="indexing_field"><input type="text" name="chrono_number" value="' 
                 . $chrono_number . '" id="chrono_number" onchange="clear_error(\'frm_error_'.$id_action.'\');"/></td>';
-            $frm_str .='<td><span class="red_asterisk" id="chrono_number_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+            $frm_str .='<td><span class="red_asterisk" id="chrono_number_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frm_str .= '</tr>';
     
         /*** Physical_archive : Arbox ***/
@@ -858,7 +858,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= ' >'.$db->show_string($boxes[$i]['LABEL']).'</option>';
             }
             $frm_str .='</select></td>';
-            $frm_str .= '<td><span class="red_asterisk" id="arbox_id_mandatory" style="display:inline;">*</span>&nbsp;</td>';
+            $frm_str .= '<td><span class="red_asterisk" id="arbox_id_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
           $frm_str .= '</tr>';
         }
         
