@@ -173,8 +173,8 @@ color: #ffffff;">Menu</span>
                 </ul>
                      <?php
                     echo '<div class="header_menu_blank">&nbsp;</div>';
-                    echo '<div class="footer_menu"><a style="color:white;" href="'.$_SESSION['config']['businessappurl'].'index.php?page=maarch_credits">';
-                    echo ''._MAARCH_CREDITS.'</a></div>';?>
+                    echo '<div class="footer_menu"><span style="color:white;float:left;">'.$_SESSION['user']['UserId'].'</span><a style="color:white;float:right;" href="'.$_SESSION['config']['businessappurl'].'index.php?page=maarch_credits">';
+                    echo ''._MAARCH_CREDITS.'</a><div style="clear:both;"></div></div>';?>
                 </div>
             </div>
             <div><p id="ariane"><?php
