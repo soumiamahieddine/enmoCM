@@ -113,6 +113,7 @@ case 'add':
     
 case 'up':
     # difflist_type id
+    echo '<h1><i class="fa fa-share-alt fa-2x"></i> '._MODIFY.' '._DIFFLIST_TYPE.' ('.$difflist_type->difflist_type_id.')</h1>';
     $difflist_type_id = $view->getElementById("difflist_type_id");
     $difflist_type_id->setAttribute('value', $difflist_type->difflist_type_id);
     $difflist_type_id->setAttribute('readonly', 'true');
