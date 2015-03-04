@@ -1274,7 +1274,7 @@ left: -100em;
 
 #menunav {
     width: 262px;
-    background: #D8F4FF;
+    background: #DEEDF3;
     position: absolute;
     left: -12px;
     padding: 0px;
@@ -3071,8 +3071,14 @@ position:relative;
 bottom:0;
 }
 
+.footer_menu span{
+    padding-left: 10px;
+    padding-top: 2px;
+}
+
 .footer_menu a{
-margin-top:15px;
+    padding-right: 10px;
+    padding-top: 2px;
 }
 
 .header_menu_blank{
