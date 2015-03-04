@@ -232,7 +232,7 @@ function listmodel_del(
     
 </script><?php
 if($mode != 'del') { ?>
-<h1 class="tit"><?php 
+<h1><i class="fa fa-share-alt-square fa-2x"></i> <?php 
     echo _ADMIN_LISTMODEL;
     if($objectType) echo ' : ' . $difflistTypes[$objectType];
     if($objectId) echo " " . $objectId;
