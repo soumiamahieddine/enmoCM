@@ -952,9 +952,9 @@ class lists extends dbquery
             return _WRONG_PARAM_FOR_LOAD_VALUE;
         } else {
             if (count($my_explode) == 2 ) {
-                return $_SESSION['config']['businessappurl'].'static.php?filename='.$my_explode[1];
+                return '<i class="fa fa-' . $my_explode[1] . '"></i>';
             } else if (count($my_explode) >= 3) {
-                 return $_SESSION['config']['businessappurl'].'static.php?module='.$my_explode[2].'&filename='.$my_explode[1];
+                 return '<i class="fa fa-' . $my_explode[1] . '"></i>';
             } else {
                 return _WRONG_PARAM_FOR_LOAD_VALUE;
             }
@@ -1334,8 +1334,9 @@ class lists extends dbquery
     {
         $return = "";
         if ((int)$resultTheLine[1]['value'] > 1) {
-            $return .= '<img src="static.php?filename=document.png" onclick="showPreviousAttachments(\'' . $_SESSION['config']['businessappurl']
-                        . 'index.php?display=true&module=attachments&page=previous_attachments\',\''. $resultTheLine[0]['value'] . '\');" style="cursor: pointer;" title="'._SHOW_PREVIOUS_VERSION.'" />';
+            $return .= '<i class="fa fa-file" onclick="showPreviousAttachments(\'' . $_SESSION['config']['businessappurl']
+                . 'index.php?display=true&module=attachments&page=previous_attachments\',\''
+                . $resultTheLine[0]['value'] . '\');" style="cursor: pointer;" title="'._SHOW_PREVIOUS_VERSION.'" ></i>';
         }
 
         return $return;

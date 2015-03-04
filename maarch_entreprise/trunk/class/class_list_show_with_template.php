@@ -107,7 +107,7 @@ class list_show_with_template extends list_show
         }
         else
         {
-            return $_SESSION['config']['businessappurl']."static.php?filename=".$my_explode[1];
+            return '<i class="fa fa-' . $my_explode[1] . '"></i>';
         }
     }
 
@@ -215,8 +215,9 @@ class list_show_with_template extends list_show
         if ($this->bool_detail == true)
         {
 
-            $return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=".$this->detail_destination."&amp;id=".$result[$theline][0][$key]."' title='". _DETAILS."'>
-            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'   border='0' /></a>";
+            $return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page="
+            .$this->detail_destination."&amp;id=".$result[$theline][0][$key]
+            ."' title='". _DETAILS."'><i class='fa fa-info fa-2x' title='"._DETAILS."'></i></a>";
 
             return $return;
         }
@@ -229,8 +230,9 @@ class list_show_with_template extends list_show
 
         if ($this->bool_detail == true)
         {
-            $return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=details_rm&amp;module=records_management&amp;id=".$result[$theline][0][$key]."' title='". _DETAILS."'>
-            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'   border='0' /></a>";
+            $return = "<a href='".$_SESSION['config']['businessappurl']
+            ."index.php?page=details_rm&amp;module=records_management&amp;id=".$result[$theline][0][$key]
+            ."' title='". _DETAILS."'><i class='fa fa-info fa-2x' title='"._DETAILS."'></i></a>";
 
             return $return;
         }
@@ -242,8 +244,9 @@ class list_show_with_template extends list_show
     {
         $key = 'io_id';
         if ($this->bool_detail == true) {
-            $return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=ArchiveTransfer__detail&amp;module=records_management&amp;objectId=".$result[$theline][0][$key]."' title='". _DETAILS."'>
-            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'   border='0' /></a>";
+            $return = "<a href='".$_SESSION['config']['businessappurl']
+            ."index.php?page=ArchiveTransfer__detail&amp;module=records_management&amp;objectId="
+            .$result[$theline][0][$key]."' title='". _DETAILS."'><i class='fa fa-info fa-2x' title='"._DETAILS."'></i></a>";
             return $return;
         }
     }
@@ -254,13 +257,8 @@ class list_show_with_template extends list_show
 
         $return = '';
         if ($result[$theline][0]['aDesReps']) {
-            $return .= '<img ';
-            $return .= 'src="';
-              $return .= 'static.php?filename=voir_rep.gif';
-            $return .= '" ';
-            $return .= 'height="';
-                $return .= '27px';
-            $return .= '" ';
+            $return .= '<i ';
+            $return .= 'class="fa fa-gears fa-2x" ';
             $return .= 'style="';
                 $return .= 'cursor: pointer;';
             $return .= '" ';
@@ -269,7 +267,7 @@ class list_show_with_template extends list_show
                 $return .= $result[$theline][0]['value'];
               $return .= ');';
             $return .= '" ';
-            $return .= '/>';
+            $return .= '></i>';
         }
 
         return $return;
@@ -279,13 +277,8 @@ class list_show_with_template extends list_show
     {
         $return = '';
         //if ($result[$theline][0]['aDesReps']) {
-            $return .= '<img ';
-            $return .= 'src="';
-              $return .= 'static.php?filename=view_archives.png&module=records_management';
-            $return .= '" ';
-            $return .= 'height="';
-                $return .= '20px';
-            $return .= '" ';
+            $return .= '<i ';
+            $return .= 'class="fa fa-info fa-2x" ';
             $return .= 'style="';
                 $return .= 'cursor: pointer;';
             $return .= '" title="' . _VIEW_ARCHIVES . '"';
@@ -294,7 +287,7 @@ class list_show_with_template extends list_show
                 $return .= $result[$theline][0]['value'];
               $return .= ');';
             $return .= '" ';
-            $return .= '/>';
+            $return .= '></i>';
         //}
         return $return;
     }
@@ -302,9 +295,9 @@ class list_show_with_template extends list_show
     public function tmplt_func_see_persistent($actual_string, $theline, $result, $key)
     {
         if (isset($result[$theline][0]['isPersistent']) && $result[$theline][0]['isPersistent']) {
-            $return = '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=persistentLock.gif" width="27" height="27" title="persistance activée">';
+            $return = '<i class="fa fa-lock fa-2x" title="persistance activée"></i>';
         } else {
-            $return = '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=persistentUnlock.gif" width="27" height="27" title="persistance desactivée">';
+            $return = '<i class="fa fa-unlock fa-2x" title="persistance désactivée"></i>';
         }
 
         return $return;
@@ -316,7 +309,7 @@ class list_show_with_template extends list_show
         if ($this->bool_detail == true)
         {
             $return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=details_cases&module=cases&amp;id=".$result[$theline][0]['case_id']."' title='". _DETAILS_CASES."'>
-            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'  border='0' /></a>";
+            <i class='fa fa-info fa-2x' title='"._DETAILS."'></i></a>";
 
             return $return;
         }
@@ -332,7 +325,7 @@ class list_show_with_template extends list_show
         {
 
             $return = "<a href='".$_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=view_resource_controler&id=".$result[$theline][0][$key]."' target=\"_blank\" title='"._VIEW_DOC."'>
-                            <img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a>";
+                       <i class='fa fa-download fa-2x' title='"._VIEW_DOC."'></i></a>";
             return $return;
         }
 

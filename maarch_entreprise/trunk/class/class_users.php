@@ -166,7 +166,7 @@ class class_users extends dbquery
             } else {
                 while ($line = $this->fetch_object()) {
                     if($line->primary_group == 'Y'){
-                        echo "<li style='list-style-image: url(". $_SESSION['config']['businessappurl'] . "static.php?filename=arrow_primary.gif);list-style-position:inside;'>".$line->group_desc." </li>";
+                        echo "<li style='list-style-position:inside;'><i class=\"fa fa-arrow-right\"></i>".$line->group_desc." </li>";
                     }else{
                         echo "<li>".$line->group_desc." </li>";
                     }
@@ -190,7 +190,7 @@ class class_users extends dbquery
                                 while($line = $this->fetch_object())
                                 {
                                     if($line->primary_entity == 'Y'){
-                                        echo "<li style='list-style-image: url(". $_SESSION['config']['businessappurl'] . "static.php?filename=arrow_primary.gif);list-style-position:inside;'>".$line->entity_label." </li>";
+                                        echo "<li style='list-style-position:inside;'><i class=\"fa fa-arrow-right\"></i>".$line->entity_label." </li>";
                                     }else{
                                         echo "<li>".$line->entity_label." </li>";
                                     }
