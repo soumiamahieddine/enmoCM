@@ -1109,7 +1109,7 @@ class lists extends dbquery
                     //return action icon
                     return '<a href="javascript://" onClick="'.$my_explode[3]
                         .'" title="'.$my_explode[1]
-                        .'"><i class="fa fa-'.$my_explode[2].' fa-2x" title="'.$my_explode[1].'"></i></a>';
+                        .'">'.$my_explode[2].'</a>';
                 }
             } else {
                 return _WRONG_PARAM_FOR_LOAD_VALUE;
