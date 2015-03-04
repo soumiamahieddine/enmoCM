@@ -92,7 +92,7 @@ Mods
                 <tr class="##cssLineReload##">
                     <td style="text-align:center" style="font-size:13px;">
                         <div align="center">
-                            <img src="##loadImage|big_case.gif##" alt="##loadValue|status##" title="##loadValue|status##" >
+                            <i class="fa fa-briefcase fa-2x" title="##loadValue|status##" ></i>
                         </div>
                     </td>
                     <td style="text-align:left">
@@ -100,8 +100,8 @@ Mods
                     </td>
                     <td>
                         <p align="right">
-                            <img src="##loadImage|extend_button.gif##" class="case_img" alt="##defineLang|_TOGGLE##" title="##defineLang|_TOGGLE##" onclick="loadValueInDiv('##loadValue|case_id##', '##getBusinessAppUrl##index.php?module=cases&page=cases_details&display=true');" onmouseover="document.body.style.cursor='pointer';" onmouseout="document.body.style.cursor='auto';">
-                            &nbsp;&nbsp;&nbsp;##showActionIcon|#defineLang|_DETAILS_CASES#|#loadImage|picto_infos.gif#|window.top.location='index.php?page=details_cases&module=cases&amp;id=#loadValue|case_id#'##
+                            <i class="fa fa-angle-down fa-2x" onclick="loadValueInDiv('##loadValue|case_id##', '##getBusinessAppUrl##index.php?module=cases&display=true&page=cases_details');" onmouseover="document.body.style.cursor='pointer';" onmouseout="document.body.style.cursor='auto';"></i>
+                            &nbsp;&nbsp;&nbsp;##showActionIcon|#defineLang|_DETAILS_CASES#|#loadImage|info-circle fa-2x#|window.top.location='index.php?page=details_cases&module=cases&amp;id=#loadValue|case_id#'##
                         </p>
                     </td>
                 </tr>
