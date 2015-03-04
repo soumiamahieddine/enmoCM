@@ -1724,3 +1724,6 @@ if (!defined('_SECURITY_MESSAGE_DETAILS')) define('_SECURITY_MESSAGE_DETAILS', '
 
 if (!defined('_CHOOSE_ENTITY_SUBENTITIES'))
     define('_CHOOSE_ENTITY_SUBENTITIES', 'Choisissez une entit&eacute; (+ sous-entit&eacute;(s))');
+
+if(!defined('_TAG_ADMIN'))
+	define('_TAG_ADMIN', 'Administration des mots cl&eacute;s');

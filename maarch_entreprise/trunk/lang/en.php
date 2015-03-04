@@ -1380,3 +1380,6 @@ if (!defined('_SECURITY_MESSAGE_DETAILS')) define('_SECURITY_MESSAGE_DETAILS', '
 if (!defined('_DIFF_LIST_HISTORY')) define('_DIFF_LIST_HISTORY', 'Diffusion history');
 if (!defined('_MODIFY_BY')) define('_MODIFY_BY', 'Modify by');
 if (!defined('_DIFFLIST_NEVER_MODIFIED')) define('_DIFFLIST_NEVER_MODIFIED', 'The diffusion list never changed');
+
+if(!defined('_TAG_ADMIN'))
+	define('_TAG_ADMIN', 'Tag Admin');
