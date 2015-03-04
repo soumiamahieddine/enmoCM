@@ -492,7 +492,7 @@ class list_show extends functions
                          ) {
                              $str .= '<input type="radio"  class="check" name="field" value="'.$result[$theline][0]['value'].'" class="check" />&nbsp;&nbsp;';
                          } else {
-                             $str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
+                             $str .= '<i class="fa fa-lock fa-2x" title="'._DOC_LOCKED.'"></i>';
                          }
                      } else if ($bool_check_form) {
                         if (! $bool_show_actions_list ) {
@@ -503,7 +503,7 @@ class list_show extends functions
                             ) {
                                 $str .= '<input type="checkbox"  class="check" name="field" class="check" value="'.$result[$theline][0]['value'].'" />&nbsp;&nbsp;';
                             } else {
-                                $str .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
+                                $str .= '<i class="fa fa-lock fa-2x" title="'._DOC_LOCKED.'"></i>';
                             }
                         }
                     }
@@ -515,7 +515,7 @@ class list_show extends functions
                     $str .= ' <div align="center">';
                     if ($bool_view_document) {
                         $str .= '<a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&amp;dir=indexing_searching&amp;page=view_resource_controler&amp;id='.$result[$theline][0][$key].'" target="_blank" title="'._VIEW_DOC.'">';
-                        $str .= ' <img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_dld.gif" alt="'._VIEW_DOC.'" border="0"/></a>';
+                        $str .= ' <i class="fa fa-download fa-2x" title="'._VIEW_DOC.'"></i></a>';
                     }
                     $str .= ' </div>';
                     $str .= ' </td>';
@@ -588,19 +588,19 @@ class list_show extends functions
                     if($bool_frame && $open_details_popup)
                     {
                         $str .= ' <td style="width:4%;"  align="center"><div align="right">';
-                                $str .= ' <a href="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'\',\'_parent\',\'_parent\');" title="'._DETAILS.'"><img  src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif" alt="'._DETAILS.'" width="25" height="25" border="0" /></a></div>';
+                                $str .= ' <a href="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'\',\'_parent\',\'_parent\');" title="'._DETAILS.'"><i class="fa fa-info fa-2x" title="'._DETAILS.'"></i></a></div>';
                             $str .= ' </td>';
                     }
                     elseif($bool_frame && !$open_details_popup)
                     {
                         $str .= '<td style="width:4%;"  align="center">';
-                            $str .= '<a href="#" title="'._DETAILS.'" onclick="javascript:window.top.location=\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'\';return false;"><img  src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif" alt="'._DETAILS.'" width="25" height="25" border="0" /></a>';
+                            $str .= '<a href="#" title="'._DETAILS.'" onclick="javascript:window.top.location=\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'\';return false;"><i class="fa fa-info fa-2x" title="'._DETAILS.'"></a>';
                             $str .= ' </td>';
                     }
                     else
                     {
                         $str .= ' <td style="width:4%;"  align="center"><div align="right">
-                                <a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'" title="'._DETAILS.'"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif"  alt="'._DETAILS.'"  width="25" height="25" border="0" /></a></div>';
+                                <a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'" title="'._DETAILS.'"><i class="fa fa-info fa-2x" title="'._DETAILS.'"></i></a></div>';
                         $str .= ' </td>';
                     }
                 }
@@ -1588,9 +1588,8 @@ class list_show extends functions
                     $str .= " <td><a href='" . $page_view . "&amp;id="
                         . $result[$theline][0][$key]
                         . "' target=\"_blank\" title='" . _VIEW_DOC . "'>"
-                        . "<img src='" . $_SESSION['config']['businessappurl']
-                        . "static.php?filename=picto_dld.gif' alt='" . _VIEW_DOC
-                        . "' /></a></td>";
+                        . '<i class="fa fa-download fa-2x" title="'._VIEW_DOC.'"></i>'
+                        . "</a></td>";
                  }
                 $bool_modify = false;
                 $bool_del = false;
@@ -1732,9 +1731,8 @@ class list_show extends functions
                     $str .= " <td><a href='" . $page_view . "&amp;id="
                         . $result[$theline][0][$key]
                         . "' target=\"_blank\" title='" . _VIEW_DOC . "'>"
-                        . "<img src='" . $_SESSION['config']['businessappurl']
-                        . "static.php?filename=picto_dld.gif' alt='" . _VIEW_DOC
-                        . "' /></a></td>";
+                        . '<i class="fa fa-download fa-2x" title="'._VIEW_DOC.'"></i>'
+                        . "</a></td>";
                  }
                 $bool_modify = false;
                 $bool_del = false;

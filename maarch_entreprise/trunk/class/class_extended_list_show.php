@@ -92,7 +92,7 @@ class extended_list_show extends dbquery
 		}
 		else
 		{
-			return $_SESSION['config']['businessappurl']."static.php?filename=".$my_explode[1];
+			return '<i class="fa fa-' . $my_explode[1] . ' fa-2x"></i>';
 		}
 	}
 
@@ -155,7 +155,7 @@ class extended_list_show extends dbquery
 	{
 		if ($this->disabled_line === true)
 		{
-			$return = '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
+			$return = '<i class="fa fa-lock fa-2x" title="'._DOC_LOCKED.'"></i>';
 		}
 		else
 		{
@@ -171,7 +171,7 @@ class extended_list_show extends dbquery
 
 		if ($this->disabled_line === true)
 		{
-			$return = '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
+			$return = '<i class="fa fa-lock fa-2x" title="'._DOC_LOCKED.'"></i>';
 		}
 		else
 		{
@@ -186,14 +186,14 @@ class extended_list_show extends dbquery
 	{
 		if ($this->disabled_line == true)
 		{
-			$return = '<td width="1%"><div align="center"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/></div></td>';
+			$return = '<td width="1%"><div align="center"><i class="fa fa-lock fa-2x" title="'._DOC_LOCKED.'"></i></div></td>';
 		}
 		else
 		{
 			$return = '<td width="1%" onclick="new Effect.toggle(\'info'.$result[$theline][0][$key].'\', \'blind\');" 
 							onmouseover="document.body.style.cursor=\'pointer\';" onmouseout="document.body.style.cursor=\'auto\';">
 							<div align="center">
-							<img id="hideShow" name="hideShow" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=moins.png" alt="'._SHOW_HIDE.'" border="0" class="" />
+							<i class="fa fa-minus fa-2x" title="'._SHOW_HIDE.'"></i>
 							</div></td>';
 		}
 		
@@ -281,7 +281,7 @@ class extended_list_show extends dbquery
 			$return = '<a href="#" OnClick="javascript:window.top.location=\''.$href_details.'\';return false;" title="'. _DETAILS.'">';
 		}
 		
-		$return .= "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS."'   border='0' /></a>";
+		$return .= "<i class='fa fa-info fa-2x' title='"._DETAILS."'></i></a>";
 
 		return $return;
 	}
@@ -298,7 +298,7 @@ class extended_list_show extends dbquery
 		{
 			$return = '<a href="#" OnClick="javascript:window.top.location=\''.$_SESSION['config']['businessappurl']."index.php?page=details_cases&module=cases&amp;id=".$result[$theline][0]['case_id'].'\';return false;" title="'. _DETAILS_CASES.'">';
 		}
-		$return  .= "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif'  alt='"._DETAILS_CASES."'  border='0' /></a>";
+		$return .= "<i class='fa fa-info fa-2x' title='"._DETAILS."'></i></a>";
 
 		return $return;
 	}
@@ -308,7 +308,7 @@ class extended_list_show extends dbquery
 	private function tmplt_func_bool_view_doc($actual_string, $theline, $result, $key)
 	{
         $href_view = $this->build_link($result, $theline, $this->params['view_destination'], $key);
-		$return = "<a href='".$href_view."' target=\"_blank\" title='"._VIEW_DOC."'><img src='".$_SESSION['config']['businessappurl']."static.php?filename=picto_dld.gif' alt='"._VIEW_DOC."' border='0'/></a>";
+		$return = "<a href='".$href_view."' target=\"_blank\" title='"._VIEW_DOC."'><i class='fa fa-download fa-2x' title='"._VIEW_DOC."'></i></a>";
 		return $return;
 	}
 
@@ -458,7 +458,7 @@ class extended_list_show extends dbquery
 				if(isset($this->actions_link[$action_id]['class'])) { $action_href .= ' class="'.$this->actions_link[$action_id]['class'].'">';}else {$action_href .= '>';} //End of link
 				
 				//Image
-				if(isset($this->actions_link[$action_id]['icon'])) { $action_href .= '<img src="'.$this->actions_link[$action_id]['icon'].'" alt="'.$this->actions_link[$action_id]['tooltip'].'" border="0"/>'; }
+				if(isset($this->actions_link[$action_id]['icon'])) { $action_href .= '<i class="fa fa-'.$this->actions_link[$action_id]['icon'].' fa-2x"></i>'; }
 				
 				//Label
 				if(isset($this->actions_link[$action_id]['label'])) { $action_href .= '&nbsp;'.$this->actions_link[$action_id]['label'];}
@@ -840,7 +840,7 @@ class extended_list_show extends dbquery
 
 			if ($disabled_line)
 			{
-				$content .= '<td width="1%"><div align="center"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/></div></td>';
+				$content .= '<td width="1%"><div align="center"><i class="fa fa-lock fa-2x" title="'._DOC_LOCKED.'"></i></div></td>';
 			}
 			else
 			{
@@ -849,12 +849,12 @@ class extended_list_show extends dbquery
                     $content .= '<td width="1%" onclick="new Effect.toggle(\'info'.$result[$theline][0][$key].'\', \'blind\');" 
 								onmouseover="document.body.style.cursor=\'pointer\';" onmouseout="document.body.style.cursor=\'auto\';">
 								<div align="center">
-								<img id="hideShow" name="hideShow" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=plus.gif" alt="'._SHOW_HIDE.'" border="0" class="" />
+								<i class="fa fa-minus fa-2x" title="'._SHOW_HIDE.'"></i>
 								</div></td>';
                 }
                 else
                 {
-                    $content .= '<td width="1%"><div align="center"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=moins.gif" alt="'._SHOW_HIDE.'" border="0" class="" /></div></td>'; 
+                    $content .= '<td width="1%"><div align="center"><i class="fa fa-minus fa-2x" title="'._SHOW_HIDE.'"></i></div></td>'; 
                 }
 			}
 		}
@@ -865,7 +865,7 @@ class extended_list_show extends dbquery
 
 			if ($disabled_line)
 			{
-				$content .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
+				$content .= '<i class="fa fa-lock fa-2x" title="'._DOC_LOCKED.'"></i>';
 			}
 			else
 			{
@@ -882,7 +882,7 @@ class extended_list_show extends dbquery
 			
 			if ($disabled_line)
 			{
-				$content .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/>';
+				$content .= '<i class="fa fa-lock fa-2x" title="'._DOC_LOCKED.'"></i>';
 			}
 			else
 			{
@@ -899,7 +899,7 @@ class extended_list_show extends dbquery
 			$content .= '<td width="3%">';
 	        $content .= '<div align="center">';
 		    $content .= '<a href="'.$href_view.'" target="_blank" title="'._VIEW_DOC.'">';
-			$content .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_dld.gif" alt="'._VIEW_DOC.'" border="0"/>';
+			$content .= '<i class="fa fa-download fa-2x" title="'._VIEW_DOC.'"></i>';
 			$content .= '</a>';
 	        $content .= '</div>';
 	        $content .= '</td>';
@@ -974,7 +974,7 @@ class extended_list_show extends dbquery
 						if(isset($this->actions_link[$i]['class_on']))	{ $content .= ' class="'.$this->actions_link[$i]['class_on'].'">';	} else { $content .= '>'; } //End of link
 						
 						//Image
-						if(isset($this->actions_link[$i]['icon_on'])) { $content .= '<img src="'.$this->actions_link[$i]['icon_on'].'" alt="'.$this->actions_link[$i]['tooltip_on'].'" border="0"/>'; }
+						if(isset($this->actions_link[$i]['icon_on'])) { $content .= '<i class="fa fa-'.$this->actions_link[$i]['icon_on'].' fa-2x"></i>'; }
 						
 						//Label
 						if(isset($this->actions_link[$i]['label_on'])) { $content .= '&nbsp;'.$this->actions_link[$i]['label_on']; }
@@ -1000,7 +1000,7 @@ class extended_list_show extends dbquery
 						if(isset($this->actions_link[$i]['class_off']))	{ $content .= ' class="'.$this->actions_link[$i]['class_off'].'">';	} else { $content .= '>'; } //End of link
 						
 						//Image
-						if(isset($this->actions_link[$i]['icon_off'])) { $content .= '<img src="'.$this->actions_link[$i]['icon_off'].'" alt="'.$this->actions_link[$i]['tooltip_off'].'" border="0"/>'; }
+						if(isset($this->actions_link[$i]['icon_off'])) { $content .= '<i class="fa fa-'.$this->actions_link[$i]['icon_off'].' fa-2x"></i>'; }
 						
 						//Label
 						if(isset($this->actions_link[$i]['label_off'])) { $content .= '&nbsp;'.$this->actions_link[$i]['label_off']; }
@@ -1038,7 +1038,7 @@ class extended_list_show extends dbquery
 					if(isset($this->actions_link[$i]['class']))	{ $content .= ' class="'.$this->actions_link[$i]['class'].'">';	} else { $content .= '>'; } //End of link
 					
 					//Image
-					if(isset($this->actions_link[$i]['icon'])) { $content .= '<img src="'.$this->actions_link[$i]['icon'].'" alt="'.$this->actions_link[$i]['tooltip'].'" border="0"/>'; }
+					if(isset($this->actions_link[$i]['icon'])) { $content .= '<i class="fa fa-'.$this->actions_link[$i]['icon'].' fa-2x"></i>'; }
 					
 					//Label
 					if(isset($this->actions_link[$i]['label'])) { $content .= '&nbsp;'.$this->actions_link[$i]['label']; }
@@ -1070,7 +1070,7 @@ class extended_list_show extends dbquery
 				$content .= '<a href="#" OnClick="javascript:window.top.location=\''.$href_details.'\'; return false;" title="'._DETAILS.'">';
 			}
 			
-			$content .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos.gif"  alt="'._DETAILS.'" width="25" height="25" border="0" /></a>';
+			$content .= '<i class="fa fa-info fa-2x" title="'._DETAILS.'"></i></a>';
 			$content .= '</div>';
             $content .= '</td>';
         }
@@ -1196,7 +1196,7 @@ class extended_list_show extends dbquery
 			
 			if ($disabled_line)
 			{
-				$sublist .= '<td width="1%"><div align="center"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=cadenas_rouge.png" alt="'._DOC_LOCKED.'" border="0"/></div></td>';
+				$sublist .= '<td width="1%"><div align="center"><i class="fa fa-lock fa-2x" title="'._DOC_LOCKED.'"></i></div></td>';
 			}
 			else
 			{
@@ -1229,7 +1229,7 @@ class extended_list_show extends dbquery
                 $sublist .= '<td width="1%">';
                 $sublist .= '<div align="center">';
                 $sublist .= '<a href="'.$href_view.'" target="_blank" title="'._VIEW_DOC.'">';
-                $sublist .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_dld_small.gif" alt="'._VIEW_DOC.'" title="'._VIEW_DOC.'" border="0"/>';
+                $sublist .= '<i class="fa fa-download" title="'._VIEW_DOC.'"></i>';
                 $sublist .= '</a>';
                 $sublist .= '</div>';
                 $sublist .= '</td>';
@@ -1241,7 +1241,7 @@ class extended_list_show extends dbquery
 				$sublist .= '<td width="1%"  align="center">';
 				$sublist .= '<div align="right">';
 				$sublist .= '<a href="#" OnClick="javascript:window.top.location=\''.$_SESSION['config']['businessappurl'].'index.php?page=details&amp;dir=indexing_searching&amp;id='.$result[$i][0][$key].'\'; return false;" title="'._VIEW_DOC.'">';
-				$sublist .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_infos_small.gif"  alt="'._DETAILS.'" title="'._DETAILS.'" border="0" /></a>';
+				$sublist .= '<i class="fa fa-info" title="'._DETAILS.'"></i>';
 				$sublist .= '</a>';
 				$sublist .= '</div>';
 				$sublist .= '</td>';
@@ -1834,7 +1834,7 @@ class extended_list_show extends dbquery
 		//Page picto
 		if(isset($parameters['page_picto']))
 		{
-			$picto_path = '<img src="'.$parameters['page_picto'].'" alt="" class="title_img" /> ';
+			$picto_path = '<i class="fa fa-'.$parameters['page_picto'].' fa-2x"></i> ';
 		}
 		
 		//Page title
@@ -2042,7 +2042,7 @@ class extended_list_show extends dbquery
 							onLoading: function(answer)
 							{
 								var div_to_fill = $(divId);
-								div_to_fill.innerHTML = '<img src="<?php echo $_SESSION['config']['businessappurl'].'static.php?filename=loading_b.gif" border="0" alt="Loading..." />';?>';
+								div_to_fill.innerHTML = '<i class="fa fa-spinner fa-2x"></i>';
 							},
 							onSuccess: function(answer){
 								//alert(answer.responseText);
@@ -2234,7 +2234,7 @@ class extended_list_show extends dbquery
 		{
 		?>
 			<br/><em>
-			<a href="#" class="legend"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_legend.gif"  alt=" <?php echo _LEGEND; ?>" border="0" align="absmiddle" /><?php echo _LEGEND; ?>
+			<a href="#" class="legend"><i class="fa fa-info fa-2x"></i><?php echo _LEGEND; ?>
 			<br/><span><?php echo $parameters['legend_title']; ?><hr/><?php echo $parameters['legend']; ?></span>
 			<a>
 			</em>
@@ -2508,18 +2508,18 @@ class extended_list_show extends dbquery
 		{
 			if (empty ($actual_template) || $actual_template == 'none')
 			{
-				$tmpl .= "<img src='".$_SESSION['config']['businessappurl']."static.php?filename=no_template_on.gif' alt='"._NO_TEMPLATE."' >";
+				$tmpl .= "<i class='fa fa-file fa-2x'></i>";
 			}
 			else
 			{
 				//If Ajax
 				if($this->params['bool_list_is_ajax'] && !empty($this->params['div_list_ajax']))
 				{
-					$tmpl .= '<a href="javascript://" onClick="goToLink(\''.$link.'&amp;display=true&amp;template=none\', \''.$this->params['div_list_ajax'].'\');"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=no_template.gif" alt="'._ACCESS_LIST_STANDARD.'" ></a>';
+					$tmpl .= '<a href="javascript://" onClick="goToLink(\''.$link.'&amp;display=true&amp;template=none\', \''.$this->params['div_list_ajax'].'\');"><i class="fa fa-file fa-2x"></i></a>';
 				}
 				else //Put normal href link
 				{
-					$tmpl .= "<a href='".$link."&amp;template=none'><img src='".$_SESSION['config']['businessappurl']."static.php?filename=no_template.gif' alt='"._ACCESS_LIST_STANDARD."' ></a>";
+					$tmpl .= "<a href='".$link."&amp;template=none'><i class='fa fa-file fa-2x'></i></a>";
 				}
 			}
 			
@@ -2530,11 +2530,11 @@ class extended_list_show extends dbquery
 				//If Ajax
 				if($this->params['bool_list_is_ajax'] && !empty($this->params['div_list_ajax']))
 				{
-					$tmpl .= '<a href="javascript://" onClick="goToLink(\''.$link.'&amp;display=true&amp;template='.$temp['name'].'\', \''.$this->params['div_list_ajax'].'\');"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename='.$img.'" alt="'.$temp['label'].'" title="'.$temp['label'].'"></a>';
+					$tmpl .= '<a href="javascript://" onClick="goToLink(\''.$link.'&amp;display=true&amp;template='.$temp['name'].'\', \''.$this->params['div_list_ajax'].'\');"><i class="fa fa-'.$img.' fa-2x" title="'.$temp['label'].'"></i></a>';
 				}
 				else //Put normal href link
 				{
-					$tmpl .= "&nbsp;<a href='".$link."&amp;template=".$temp['name']."'> <img src='".$_SESSION['config']['businessappurl']."static.php?filename=".$img."' alt='".$temp['label']."' title='".$temp['label']."'></a>";
+					$tmpl .= "&nbsp;<a href='".$link."&amp;template=".$temp['name']."'> <i class='fa fa-" . $img . " fa-2x' title='".$temp['label']."'></i></a>";
 				}
 			}
 		}
