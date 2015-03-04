@@ -144,7 +144,7 @@ if ($_SESSION['origin'] == "scan") {
 		    . " (" . round($filesize / 1024, 2) . "Ko Max)</div>";
 	} else {
 	    echo "<br/><br/><div class=\"advertissement\">" . $_SESSION['error']
-	        . " <br/>" . _ONLY_FILETYPES_AUTHORISED . " :<br/><ul>";
+	        . " " . _ONLY_FILETYPES_AUTHORISED . " :<br/><ul>";
 		$displayedExtList = '';
 		$extension_array = array();
 		for ($i = 0; $i < count($extList); $i ++) {

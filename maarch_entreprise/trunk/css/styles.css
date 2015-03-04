@@ -1552,7 +1552,7 @@ td#indexing {
 
 #content h1 {
     color: #16ADEB;
-    font-style: italic;
+    /*font-style: italic;*/
     font-weight: bold;
     font-size: 1.3em;
     text-align: left;
@@ -2959,14 +2959,14 @@ height:30px;
 .advertissement{
 width:95%;
 border:1px;
-background-color: #ffe09b;
+/*background-color: #ffe09b;*/
 color: #333333;
-font-style: italic;
+/*font-style: italic;*/
 font-weight: bold;
 letter-spacing: 0.1em;
 border: 1px solid #FFC200;
 position: absolute;
-padding: 0px;
+padding: 2px;
 top: 0px;
 left: 5px;
 }
