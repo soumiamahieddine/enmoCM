@@ -279,7 +279,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     print_r($data);
     echo '</pre>';exit;
 */
-    $frm_str .= '<h2 class="tit" id="action_title"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=file_index_b.gif"  align="middle" alt="" />'._VALIDATE_MAIL.' '._NUM.$res_id;
+    $frm_str .= '<h2 class="tit" id="action_title">'._VALIDATE_MAIL.' '._NUM.$res_id;
     $frm_str .= '</h2>';
     $frm_str .= '<div id="validleft">';
     $frm_str .= '<div id="valid_div" style="display:none;";>';
@@ -510,7 +510,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                    // if($_SESSION['features']['personal_contact'] == "true") //  && $core_tools->test_service('my_contacts','apps', false))
                    // {
                     if ($core->test_admin('my_contacts', 'apps', false)) {
-                        $frm_str .=' <a href="#" id="create_contact" title="'._CREATE_CONTACT.'" onclick="new Effect.toggle(\'create_contact_div\', \'blind\', {delay:0.2});return false;" style="display:inline;" ><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=modif_liste.png" alt="'._CREATE_CONTACT.'"/></a>';
+                        $frm_str .=' <a href="#" id="create_contact" title="'._CREATE_CONTACT.'" onclick="new Effect.toggle(\'create_contact_div\', \'blind\', {delay:0.2});return false;" style="display:inline;" >'
+                            .'<i class="fa fa-pencil" title="' . _CREATE_CONTACT . '"></i></a>';
                     } else {
                         $frm_str .= ' <a href="#" id="create_contact"/></a>';       
                     }
@@ -520,7 +521,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                    $frm_str .='<td><a href="#" id="contact_card" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
                         . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
                         . '\'blind\', {delay:0.2});return false;"'
-                        . ' style="visibility:hidden;" ><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=my_contacts_off.gif" alt="'._CONTACT_CARD.'" /></a>&nbsp;</td>';
+                        . ' style="visibility:hidden;" ><i class="fa fa-book fa-2x" title="' . _CONTACT_CARD . '"></i></a>&nbsp;</td>';
 		//Path to actual script
     $path_to_script = $_SESSION['config']['businessappurl']
 		."index.php?display=true&dir=indexing_searching&page=contact_check&coll_id=".$collId;
@@ -567,9 +568,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 						$frm_str .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
 								. '" onclick="new Effect.toggle(\'create_contact_div\', '
 								. '\'blind\', {delay:0.2});return false;" '
-								. 'style="display:inline;" ><img src="'
-								. $_SESSION['config']['businessappurl'] . 'static.php?filename='
-								. 'modif_liste.png" alt="' . _CREATE_CONTACT . '"/></a>';
+								. 'style="display:inline;" ><i class="fa fa-pencil fa-2x" title="' . _CREATE_CONTACT . '"></i></a>';
 					}
 					$frm_str .= '</label></td>';
 					$contact_mode = "view";
@@ -578,9 +577,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 							. '" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
                 . '\'blind\', {delay:0.2});return false;" '
-							. 'style="visibility:hidden;" ><img src="'
-							. $_SESSION['config']['businessappurl'] . 'static.php?filename='
-							. 'my_contacts_off.gif" alt="' . _CONTACT_CARD . '" /></a>&nbsp;</td>';
+							. 'style="visibility:hidden;" ><i class="fa fa-book fa-2x" title="' 
+                            . _CONTACT_CARD . '"></i></a>&nbsp;</td>';
 					$frm_str .= '<td><input type="text" name="email" id="email" value="" onblur="clear_error(\'frm_error_' . $actionId . '\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
 					$frm_str .= '<div id="multiContactList" class="autocomplete"></div>';
 					$frm_str .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
@@ -1211,7 +1209,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             'desc'
         );
         if ($nbLinkDesc > 0) {
-            $frm_str .= '<img src="static.php?filename=cat_doc_incoming.gif"/>';
+            $frm_str .= '<i class="fa fa-long-arrow-right fa-2x"></i>';
             $frm_str .= $Class_LinkController->formatMap(
                 $Class_LinkController->getMap(
                     $res_id,
@@ -1228,7 +1226,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             'asc'
         );
         if ($nbLinkAsc > 0) {
-            $frm_str .= '<img src="static.php?filename=cat_doc_outgoing.gif" />';
+            $frm_str .= '<i class="fa fa-long-arrow-left fa-2x"></i>';
             $frm_str .= $Class_LinkController->formatMap(
                 $Class_LinkController->getMap(
                     $res_id,
