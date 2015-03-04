@@ -564,16 +564,17 @@ if (isset ($_REQUEST['nodetails'])) {
             <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause_false,baskets_clause_true#radio" />
             <input type="radio" name="baskets_clause" id="baskets_clause_false" class="check"  value="false" checked="checked" /><?php echo _NO;?>
             <input type="radio" name="baskets_clause" id="baskets_clause_true" class="check"  value="true"  /><?php echo _YES; }*/?>
+            <a href="#" onclick="valid_search_form('frmsearch2');$('frmsearch2').submit();">
+                    <i class="fa fa-search fa-4x" title="<?php echo _SEARCH; ?>"></i>
+                </a>
         </td>
     </tr>
 </table>
 <table align="center" border="0" width="100%">
-    <tr>
-        <td colspan="2" ><h2><?php echo _FILE_DATA; ?></h2></td>
-    </tr>
     <tr >
         <td >
         <div class="block">
+            <h2><?php echo _FILE_DATA; ?></h2>
             <table border = "0" width="100%">
                 <!--<tr>
                     <td width="40%"><label for="type" class="bold" ><?php echo _DOCTYPE;?>:</label></td>
@@ -659,9 +660,7 @@ if (isset ($_REQUEST['nodetails'])) {
                 <span style="display:none;">
                     <input name="imageField" type="submit" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" />
                 </span>
-                <a href="#" onclick="valid_search_form('frmsearch2');$('frmsearch2').submit();">
-                    <i class="fa fa-search fa-4x" title="<?php echo _SEARCH; ?>"></i>
-                </a>
+                
             </p>
          </td>
     </tr>
@@ -669,16 +668,14 @@ if (isset ($_REQUEST['nodetails'])) {
 <tr>
 <td  >
 <div class="block">
- <table border = "0" width="100%">
-       <tr>
-     <td width="70%">
-        <label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
-        <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php echo $browser_ie;?>, '<?php echo _ERROR_IE_SEARCH;?>');">
+<h2><label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
+        <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'parameters_tab', <?php echo $browser_ie;?>, '<?php echo _ERROR_IE_SEARCH;?>');">
             <?php echo $src_tab; ?>
-        </select>
-     </td>
+        </select></h2>
+ <table border = "0" width="100%" id="parameters_tab">
+       <tr>
 
-        <td width="30%"><em><?php echo _ADD_PARAMETERS_HELP; ?></em></td>
+        <td colspan="3"><em><?php echo _ADD_PARAMETERS_HELP; ?></em></td>
         </tr>
  </table>
  </div>
@@ -694,11 +691,11 @@ if (isset ($_REQUEST['nodetails'])) {
 </div>
  </div>
 <script type="text/javascript">
-load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
+load_query(valeurs, loaded_query, 'parameters_tab', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
 <?php
 
 if (isset ($_REQUEST['init_search'])) {
-    ?>clear_search_form('frmsearch2','select_criteria');clear_q_list(); <?php
+    ?>clear_search_form('parameters_tab','select_criteria');clear_q_list(); <?php
 
 }
 ?>
