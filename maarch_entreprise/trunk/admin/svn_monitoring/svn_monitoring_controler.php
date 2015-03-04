@@ -84,12 +84,7 @@ if (isset($_REQUEST['show']) && !empty($_REQUEST['show'])) {
 //                      Titre de la page dans header                          //
 ////////////////////////////////////////////////////////////////////////////////
 $formatText  = '<h1>';
-    $formatText .= '<img ';
-     $formatText .= 'src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_svn.gif" ';
-     $formatText .= 'width="32" ';
-     $formatText .= 'height="32" ';
-     $formatText .= 'alt="" ';
-    $formatText .= '/>';
+    $formatText .= '<i class="fa fa-binoculars fa-2x"></i>';
     $formatText .= '&nbsp;&nbsp;'._SVN_MONITORING;
 $formatText .= '</h1>';
 ////////////////////////////////////////////////////////////////////////////////
@@ -149,7 +144,7 @@ for ($i=0; $i<count($svnDirToCheck); $i++) {
       $formatText .= 'font-size: 13px;';
      $formatText .= '" ';
     $formatText .= '>';
-        $formatText .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=puce_next.gif" alt="" />';
+        $formatText .= '<i class="fa fa-caret-right"></i>';
         $formatText .= ' '.$dirName[$i].' (v. '.$version.') ';
     $formatText .= '</h5>';
     $formatText .= '<div>&nbsp;</div>'; // Space for divs
