@@ -16,7 +16,6 @@ $content .='<div id="params">';
 	$content .='<input type="hidden" name="id_report" id="id_report" value="'.$id.'" />';
 	$content .='<table width="100%" border="0">';
         $content .='<tr>';
-          $content .='<td><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=stats_parameters.gif" alt="'._ADV_OPTIONS.'"  /></td>';
           $content .='<td align="left">';
           $content .='<p>';
             $content .='<span>'._SHOW_FORM_RESULT.' : </span> <input type="radio" name="form_report" id="report_graph"  value="graph" checked="checked" /><label for="report_graph"> ' . _GRAPH . ' </label><input type="radio" name="form_report" id="report_array" value="array" /><label for="report_array"> '. _ARRAY . '</label>' ;
