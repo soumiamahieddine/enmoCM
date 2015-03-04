@@ -101,6 +101,7 @@ $difflist_roles = $difflist->list_difflist_roles();
 switch($_REQUEST['mode']) {
 case 'add':
     # difflist_type_roles
+    echo '<h1><i class="fa fa-share-alt fa-2x"></i> '._ADD.' '._DIFFLIST_TYPE.'</h1>';
     $all_roles = $view->getElementById("all_roles");
     foreach($difflist_roles as $role_id => $role_label) {
         $option = $view->createElement('option', $role_label);
