@@ -381,12 +381,10 @@ if (isset($_REQUEST['nodetails'])) {
 <table align="center" border="0" width="100%">
 <?php
             if ($core_tools->is_module_loaded("basket") == true) { ?>
-             <tr>
-                <td colspan="2" ><h2><?php echo _SEARCH_SCOPE; ?></h2></td>
-            </tr>
             <tr>
                 <td>
                     <div class="block">
+                    <h2><?php echo _SEARCH_SCOPE; ?></h2>
                     <table border="0" width="100%">
                         <tr>
                             <td style="width:30px;align:center;">
@@ -463,11 +461,9 @@ if (isset($_REQUEST['nodetails'])) {
             }
     ?>
     <tr>
-        <td colspan="2"><h2><?php echo _DOCUMENT_INFO; ?></h2></td>
-    </tr>
-    <tr>
         <td>
         <div class="block">
+            <h2><?php echo _DOCUMENT_INFO; ?></h2>
             <table border = "0" width="100%">
                 <tr>
                     <td style="width:30px;align:center;"><span id="imgContact" name="imgContact" /></td>
@@ -548,19 +544,14 @@ if (isset($_REQUEST['nodetails'])) {
 <tr>
 <td>
 <div class="block">
-<h2 id="bottom">&nbsp;</h2>
- <table border = "0" width="100%">
-    <tr>
-        <td style="width:30px;align:center;">
-        </td>
-        <td width="70%">
-            <label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
-            <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php 
+<h2 id="bottom"><label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
+            <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'parameters_tab', <?php 
                 echo $browser_ie;?>, '<?php echo _ERROR_IE_SEARCH;?>');window.location.href = '#bottom';">
                 <?php echo $src_tab; ?>
-            </select>
-        </td>
-        <td><em><?php echo _ADD_PARAMETERS_HELP; ?></em></td>
+            </select></h2>
+ <table border = "0" width="100%" id="parameters_tab">
+    <tr>
+        <td colspan="3"><em style="text-align:center;display:block;"><?php echo _ADD_PARAMETERS_HELP; ?></em></td>
     </tr>
 </table>
 </div>
@@ -588,10 +579,10 @@ if (isset($_REQUEST['nodetails'])) {
 </div>
  </div>
 <script type="text/javascript">
-load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
+load_query(valeurs, loaded_query, 'parameters_tab', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
 <?php 
 if (isset($_REQUEST['init_search'])) {
-    ?>clear_search_form('frmsearch2','select_criteria');clear_q_list();changeCategory('purchase'); <?php
+    ?>clear_search_form('parameters_tab','select_criteria');clear_q_list();changeCategory('purchase'); <?php
 }
 ?>
 
