@@ -234,10 +234,7 @@ for ($i = 0; $i < count($tab); $i ++) {
 $list = new list_show();
 $nb = count($tab);
 ?>
-<h1><img src="<?php
-    echo $_SESSION['config']['businessappurl']
-        .'static.php?filename=view_history_b.gif';
-?>" alt="" /> <?php  echo _HISTORY_BATCH_TITLE.' : '. $nb.' '._RESULTS; ?></h1>
+<h1><i class="fa fa-history fa-2x"></i> <?php  echo _HISTORY_BATCH_TITLE.' : '. $nb.' '._RESULTS; ?></h1>
 <div id="inner_content">
 <?php
 $list->admin_list(
