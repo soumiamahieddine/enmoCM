@@ -134,11 +134,7 @@ if ($mode == 'add') {
     $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk">*</span><label>'
         ._SEND_TO_SHORT.'</label></td>';
     $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput">'
-        .'<div id="loading_to" style="display:none;"><img src="'
-        . $_SESSION['config']['businessappurl']
-        . 'static.php?filename=loading.gif" width="12" '
-        . 'height="12" style="vertical-align: middle;" alt='
-        . '"loading..." title="loading..."></div></div></td>';
+        .'<div id="loading_to" style="display:none;"><i class="fa fa-spinner fa-spin" title="loading..."></div></div></td>';
     $content .= '</tr>';
     $content .= '<tr><td colspan="3"><a href="javascript://" '
 		.'onclick="new Effect.toggle(\'tr_cc\', \'blind\', {delay:0.2});'
@@ -147,20 +143,12 @@ if ($mode == 'add') {
     $content .= '<tr id="tr_cc" style="display:none">';
     $content .= '<td align="right" nowrap><label>'._COPY_TO_SHORT.'</label></td>';
     $content .= '<td colspan="2"><div name="cc" id="cc" class="emailInput">'
-        .'<div id="loading_cc" style="display:none;"><img src="'
-        . $_SESSION['config']['businessappurl']
-        . 'static.php?filename=loading.gif" width="12" '
-        . 'height="12" style="vertical-align: middle;" alt='
-        . '"loading..." title="loading..."></div></div></td>';
+        .'<div id="loading_cc" style="display:none;"><i class="fa fa-spinner fa-spin" title="loading..."></div></div></td>';
     $content .= '</tr>';
     $content .= '<tr id="tr_cci" style="display:none">';
     $content .= '<td align="right" nowrap><label>'._COPY_TO_INVISIBLE_SHORT.'</label></td>';
     $content .= '<td colspan="2"><div name="cci" id="cci" class="emailInput">'
-        .'<div id="loading_cci" style="display:none;"><img src="'
-        . $_SESSION['config']['businessappurl']
-        . 'static.php?filename=loading.gif" width="12" '
-        . 'height="12" style="vertical-align: middle;" alt='
-        . '"loading..." title="loading..."></div></div></td>';
+        .'<div id="loading_cci" style="display:none;"><i class="fa fa-spinner fa-spin" title="loading..."></div></div></td>';
     $content .= '</tr>';
     $content .= '<tr>';
     $content .= '<td align="right" nowrap><span class="red_asterisk">*</span><label>'._EMAIL_OBJECT.' </label></td>';

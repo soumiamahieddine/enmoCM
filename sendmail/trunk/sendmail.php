@@ -238,11 +238,8 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                     if($tab[$i][$j][$value]=="id")
                     {
                         $tab[$i][$j]["value"] = ($sendmail_tools->haveJoinedFiles($tab[$i][$j]["value"]))? 
-                        '<img src="'
-                            .$_SESSION['config']['businessappurl']
-                            .'static.php?module=sendmail&filename=attachment.png" title="'
-                            ._JOINED_FILES.'" width="14" height="14" />' : 
-                            '';
+                            '<i class="fa fa-paperclip fa-2x" title="'. _JOINED_FILES.'"></i>' : 
+                                '';
                         $tab[$i][$j]["label"]=false;
                         $tab[$i][$j]["size"]="1";
                         $tab[$i][$j]["label_align"]="left";

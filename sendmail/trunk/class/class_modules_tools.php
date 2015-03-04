@@ -337,11 +337,7 @@ class sendmail extends dbquery
     public function updateAdressInputField($ajaxPath, $adressArray, $inputField, $readOnly=false) {
         $content = '';
         //Init with loading div
-        $content .= '<div id="loading_'.$inputField.'" style="display:none;"><img src="'
-            . $_SESSION['config']['businessappurl']
-            . 'static.php?filename=loading.gif" width="12" '
-            . 'height="12" style="vertical-align: middle;" alt='
-            . '"loading..." title="loading..."></div>';
+        $content .= '<div id="loading_'.$inputField.'" style="display:none;"><i class="fa fa-spinner fa-spin" title="loading..."></i></div>';
         // $content .=  print_r($adressArray, true);
         //Get info from session array and display tag
         if (isset($adressArray[$inputField]) && count($adressArray[$inputField]) > 0) {
