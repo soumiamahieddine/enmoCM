@@ -113,13 +113,13 @@ foreach($roles as $role_id => $role_label) {
             else $color = ' class="col"'; 
             $return .= '<tr '. $color.' >';
                 $return .= '<td style="width:15%;text-align:center;">';
-                    $return .= '<img src="'. $_SESSION['config']['businessappurl'].'static.php?filename=manage_users_entities_b_small.gif&module=entities" alt="'._USER . ' ' . $role_label .'" title="'. _USER . ' ' . $role_label.'" />';
+                $return .= '<i class="fa fa-user fa-2x" title="'._USER.' '.$role_label.'"></i>';
                 $return .= '</td>';
                 $return .= '<td style="width:10%;">';
                 if($user['visible'] == 'Y') { 
-                    $return .= '<img src="'. $_SESSION['config']['businessappurl'].'static.php?filename=picto_authorize.gif&module=entities" alt="'._VISIBLE.'" title="'._VISIBLE.'" />';
+                    $return .= '<i class="fa fa-check fa-2x" title="'._VISIBLE.'"></i>';
                 } else {
-                    $return .= '<img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_delete.gif&module=entities" alt="'. _NOT_VISIBLE.'" title="'._NOT_VISIBLE.'" />';
+                    $return .= '<i class="fa fa-times fa-2x" title="'._NOT_VISIBLE.'"></i>';
                 } 
                 $return .= '</td>';
                 $return .= '<td style="width:37%;">'. $user['lastname'] . ' ' . $user['firstname'].'</td>';
@@ -140,13 +140,13 @@ foreach($roles as $role_id => $role_label) {
             else $color = ' class="col"';
             $return .= '<tr'. $color.'>';
                 $return .= '<td style="width:15%;text-align:center;">';
-                    $return .= '<img src="'. $_SESSION['config']['businessappurl'].'static.php?filename=manage_entities_b_small.gif&module=entities" alt="'. _ENTITY . ' ' . $role_label.'" title="'. _ENTITY . ' ' . $role_label.'" />';
+                    $return .= '<i class="fa fa-sitemap fa-2x" title="'._ENTITY . ' ' . $role_label.'" ></i>';
                 $return .= '</td>';
                 $return .= '<td style="width:10%;">';
                 if($entity['visible'] == 'Y') { 
-                    $return .= '<img src="'. $_SESSION['config']['businessappurl'].'static.php?filename=picto_authorize.gif&module=entities" alt="'. _VISIBLE.'" title="'. _VISIBLE.'" />';
+                    $return .= '<i class="fa fa-check fa-2x" title="'._VISIBLE.'"></i>';
                 } else {
-                    $return .= '<img src="'. $_SESSION['config']['businessappurl'].'static.php?filename=picto_delete.gif&module=entities" alt="'. _NOT_VISIBLE.'" title="'. _NOT_VISIBLE.'" />';
+                    $return .= '<i class="fa fa-times fa-2x" title="'._NOT_VISIBLE.'"></i>';
                 }
                 $return .= '</td>';
                 $return .= '<td style="width:37%;">'. $entity['entity_id'].'</td>';
