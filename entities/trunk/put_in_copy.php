@@ -2,7 +2,7 @@
 $confirm = false;
 $etapes = array('form');
 $frm_width='355px';
-$frm_height = '500px';
+$frm_height = 'auto';
 require('modules/entities/entities_tables.php');
 require_once('modules/entities/class/class_manage_listdiff.php');
 function get_form_txt(
@@ -41,7 +41,7 @@ function get_form_txt(
                         $color = ' class="col"';
                     }
                     $frm_str .= '<tr '.$color.' >';
-                    $frm_str .= '<td><img src="'.$_SESSION['config']['businessappurl'].'static.php?module=entities&filename=manage_entities_b_small.gif" alt="'._ENTITY.'" title="'._ENTITY.'" /></td>';
+                    $frm_str .= '<td><i class="fa fa-sitemap fa-2x" title="'._ENTITY.'"></i></td>';
                     $frm_str .= '<td >'.$_SESSION['process']['diff_list']['copy']['entities'][$i]['entity_id'].'</td>';
                     $frm_str .= '<td colspan="2">'.$_SESSION['process']['diff_list']['copy']['entities'][$i]['entity_label'].'</td>';
                     $frm_str .= '</tr>';
@@ -53,7 +53,7 @@ function get_form_txt(
                         $color = ' class="col"';
                     }
                     $frm_str .= '<tr '.$color.' >';
-                        $frm_str .= '<td><img src="'.$_SESSION['config']['businessappurl'].'static.php?module=entities&filename=manage_users_entities_b_small.gif" alt="'._USER.'" title="'._USER.'" /></td>';
+                        $frm_str .= '<td><i class="fa fa-user fa-2x" title="'._USER.'"></i></td>';
                         $frm_str .= '<td >'.$_SESSION['process']['diff_list']['copy']['users'][$i]['firstname'].'</td>';
                         $frm_str .= '<td >'.$_SESSION['process']['diff_list']['copy']['users'][$i]['lastname'].'</td>';
                         $frm_str .= '<td>'.$_SESSION['process']['diff_list']['copy']['users'][$i]['entity_label'].'</td>';
@@ -68,9 +68,7 @@ function get_form_txt(
               . 'index.php?display=true&module=entities&page=manage_listinstance'
               . '&origin=process&only_cc&no_delete\', \'\', \'scrollbars=yes,menubar=no,'
               . 'toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no\');" '
-              . 'title="' . _ADD_COPIES . '"><img src="' 
-              . $_SESSION['config']['businessappurl'] 
-              . 'static.php?filename=modif_liste.png" alt="'._ADD_COPIES.'" />'
+              . 'title="' . _ADD_COPIES . '"><i class="fa fa-edit fa-2x" title="'._ADD_COPIES.'"></i>'
               . _ADD_COPIES . '</a>';
     $frm_str .='<hr />';
     $frm_str .='<div align="center">';
