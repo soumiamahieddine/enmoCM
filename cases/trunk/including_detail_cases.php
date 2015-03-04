@@ -36,12 +36,11 @@ if (isset($case_properties['case_id']) && $case_properties['case_id'] <> '') {
 	</span>
 </h2>
 <?php
-echo "<p align='right'><b><img src='".$_SESSION['config']['businessappurl']
-    . "static.php?filename=big_case.gif&dir=img' border='0' height='24' alt='' /> <a href = '"
+echo "<p align='right'><b><a href = '"
     . $_SESSION['config']['businessappurl']
     . "index.php?page=details_cases&module=cases&id="
-    . $case_properties['case_id'] . "'>(" . _CLICK_HERE_TO_ACCESS_CASE.
-    " )</a></b></p>";
+    . $case_properties['case_id'] . "'><i class='fa fa-briefcase fa-2x'></i> " . _CLICK_HERE_TO_ACCESS_CASE.
+    "</a></b></p>";
 ?>
 <br/>
 <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">

@@ -260,7 +260,7 @@ if (count($tab) > 0) {
         .'&page=search_adv'.$urlParameters;
     
     //error
-    $_SESSION['error_search'] = '<p class="error"><i class="fa fa-remove fa-2x"></i>"<br />'
+    $_SESSION['error_search'] = '<p class="error"><i class="fa fa-remove fa-2x"></i><br />'
         ._NO_RESULTS.'</p><br/><br/><div align="center"><strong><a href="javascript://" '
         .' onclick = "window.top.location.href=\''.$url_search.'\'">'._MAKE_NEW_SEARCH.'</a></strong></div>'; 
     

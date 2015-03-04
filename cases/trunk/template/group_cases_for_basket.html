@@ -100,15 +100,16 @@ Mods
                     </td>
                     <td>
                         <p align="right">
-                            <i class="fa fa-angle-down fa-2x" onclick="loadValueInDiv('##loadValue|case_id##', '##getBusinessAppUrl##index.php?module=cases&display=true&page=cases_details');" onmouseover="document.body.style.cursor='pointer';" onmouseout="document.body.style.cursor='auto';"></i>
-                            &nbsp;&nbsp;&nbsp;##showActionIcon|#defineLang|_DETAILS_CASES#|#loadImage|info-circle fa-2x#|window.top.location='index.php?page=details_cases&module=cases&amp;id=#loadValue|case_id#'##
+                            ##showActionFA|#defineLang|_TOGGLE#|chevron-down|loadValueInDiv('#loadValue|case_id#', '#getBusinessAppUrl#index.php?module=cases&display=true&page=cases_details')##
+                            &nbsp;&nbsp;&nbsp;##showActionFA|#defineLang|_DETAILS_CASES#|info-circle|window.top.location='index.php?page=details_cases&module=cases&amp;id=#loadValue|case_id#'##
                         </p>
                     </td>
                 </tr>
                  <tr  class="##cssLineReload##"  id="subList_##loadValue|case_id##" name="subList_##loadValue|case_id##" style="display: none;" >
                     <td colspan="3" class="white">
                         <div class="more_ressources" id="div_##loadValue|case_id##">
-                            <img src="##loadImage|loading2.gif##" width="20" height="20" alt="loading..." title="loading..." /><br />
+
+                            <i class="fa fa-spinner fa-spin" title="loading..."></i><br />
                             ##defineLang|_LOADING_INFORMATIONS##
                         </div>
                     </td>

@@ -74,7 +74,7 @@ else
             <td width="50%">
                 <table width="100%" border ="0">
                     <tr>
-                        <td><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_big.gif"; ?>" width="250px"> </td></p>
+                        <td><p align="center"><i class="fa fa-briefcase fa-5x"></i></p></td>
                     </tr>
                     <tr>
                         <td>
@@ -92,7 +92,7 @@ else
             <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
             <tr class="col">
                 <th align="left" class="picto">
-                    <img alt="<?php echo _CASE_ID.' : '.$case_indexes['case_id'];?>" src="<?php echo $_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_id.gif"; ?>" title="<?php  echo _CASE_ID; ?>" alt="<?php  echo _CASE_ID; ?>"/>
+                    <i class="fa fa-briefcase fa-2x" title="<?php  echo _CASE_ID; ?>"></i>
                 </th>
                 <td align="left" width="200px">
                     <?php  echo _CASE_ID; ?> :
@@ -104,7 +104,7 @@ else
 
             <tr class="col">
                 <th align="left" class="picto">
-                    <img alt="<?php echo _CASE_LABEL.' : '.$case_indexes['case_label'];?>" src="<?php echo$_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_label.gif"; ?>" title="<?php  echo _CASE_LABEL; ?>" alt="<?php  echo _CASE_LABEL; ?>"/>
+                    <i class="fa fa-pencil fa-2x" title="<?php  echo _CASE_LABEL; ?>"></i>
                 </th>
                 <td align="left" width="200px">
                     <?php  echo _CASE_LABEL; ?> :
@@ -120,7 +120,7 @@ else
 
             <tr class="col">
                 <th align="left" class="picto">
-                    <img alt="<?php echo _CASE_DESCRIPTION.' : '.$case_indexes['case_description'];?>" src="<?php echo $_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_description.gif"; ?>" title="<?php  echo _CASE_DESCRIPTION; ?>" alt="<?php  echo _CASE_DESCRIPTION; ?>"/>
+                    <i class="fa fa-file fa-2x" title="<?php  echo _CASE_DESCRIPTION; ?>"></i>
                 </th>
                 <td align="left" width="200px">
                     <?php  echo _CASE_DESCRIPTION; ?> :
@@ -137,7 +137,7 @@ else
 
             <tr class="col">
                 <th align="left" class="picto">
-                    <img alt="<?php echo _CASE_TYPIST.' : '.$case_indexes['case_typist'];?>" src="<?php echo $_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_author.gif"; ?>" title="<?php  echo _CASE_TYPIST; ?>" alt="<?php  echo _CASE_TYPIST; ?>"/>
+                    <i class="fa fa-user fa-2x" title="<?php echo _CASE_TYPIST;?>"></i>
                 </th>
                 <td align="left" width="200px">
                     <?php  echo _CASE_TYPIST; ?> :
@@ -150,7 +150,7 @@ else
 
             <tr class="col">
                 <th align="left" class="picto">
-                    <img alt="<?php echo _CASE_CREATION_DATE.' : '.$case_indexes['case_creation_date'];?>" src="<?php echo $_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_creation_date.gif"; ?>" title="<?php  echo _CASE_CREATION_DATE; ?>" alt="<?php  echo _CASE_CREATION_DATE; ?>"/>
+                    <i class="fa fa-calendar-o fa-2x" title="<?php  echo _CASE_CREATION_DATE; ?>"></i>
                 </th>
                 <td align="left" width="200px">
                     <?php  echo _CASE_CREATION_DATE; ?> :
@@ -163,7 +163,7 @@ else
 
             <tr class="col">
                 <th align="left" class="picto">
-                    <img alt="<?php echo _CASE_LAST_UPDATE_DATE.' : '.$case_indexes['case_last_update_date'];?>" src="<?php echo $_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_last_update.gif"; ?>" title="<?php  echo _CASE_LAST_UPDATE_DATE; ?>" alt="<?php  echo _CASE_LAST_UPDATE_DATE; ?>"/>
+                    <i class="fa fa-clock-o fa-2x" title="<?php  echo _CASE_LAST_UPDATE_DATE; ?>"></i>
                 </th>
                 <td align="left" width="200px">
                     <?php  echo _CASE_LAST_UPDATE_DATE; ?> :
@@ -176,7 +176,7 @@ else
 
             <tr class="col">
                 <th align="left" class="picto">
-                    <img alt="<?php echo _CASE_CLOSING_DATE.' : '.$case_indexes['case_closing_date'];?>" src="<?php echo $_SESSION['config']['businessappurl']."static.php?module=cases&filename=case_closing_date.gif"; ?>" title="<?php  echo _CASE_CLOSING_DATE; ?>" alt="<?php  echo _CASE_CLOSING_DATE; ?>"/>
+                    <i class="fa fa-lock fa-2x" title="<?php  echo _CASE_CLOSING_DATE; ?>"></i>
                 </th>
                 <td align="left" width="200px">
                     <?php  echo _CASE_CLOSING_DATE; ?> :

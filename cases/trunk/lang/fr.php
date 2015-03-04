@@ -125,7 +125,7 @@ if (!defined('_LINK_TO_CASE'))
 if (!defined('_ACCESS_LIST_CASE'))
     define('_ACCESS_LIST_CASE','Regroupement par affaire');
 if (!defined('_CLICK_HERE_TO_ACCESS_CASE'))
-    define('_CLICK_HERE_TO_ACCESS_CASE','Cliquez ici pour acc&eacute;der &agrave; la fiche d&eacute;taill&eacute;e de l&rsquo;affaire');
+    define('_CLICK_HERE_TO_ACCESS_CASE','Voir la fiche d&eacute;taill&eacute;e de l&rsquo;affaire');
 if (!defined('_LABEL_MANDATORY'))
     define('_LABEL_MANDATORY','libell&eacute; de l&rsquo;affaire obligatoire');
 if (!defined('_UNLINK_CASE'))

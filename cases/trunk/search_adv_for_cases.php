@@ -555,7 +555,7 @@ function del_query_confirm()
                 ?>
                 <dt><?php echo _CREATE_NEW_CASE; ?></dt>
                 <dd>
-                    <h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" /> <?php echo _CREATE_NEW_CASE; ?><p></h4>
+                    <h4><p align="center"><i class="fa fa-plus fa-2x"></i> <?php echo _CREATE_NEW_CASE; ?><p></h4>
                     <p class="error"><?php if (isset($_SESSION['cases_error'])){ echo $_SESSION['cases_error'];}$_SESSION['cases_error'] = "";?></p>
                     <div class="blank_space">&nbsp;</div>
                     <form name="create_case" id="create_case" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=create_case" method="post" >
@@ -566,25 +566,25 @@ function del_query_confirm()
                         <input type="hidden" name="searched_item" value="<?php echo $_GET['searched_item']; ?>" />
                         <input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value']; ?>" />
 
-                        <div align="center" style="display:block;" id="div_query">
+                        <div align="center" style="display:block;" id="div_query" class="block">
                             <table align="center" border="0" width="100%" class="<?php echo $formClass; ?>">
 
                                 <tr >
                                     <td >
                                         <table border = "0" width="100%">
                                         <tr>
-                                            <td width="70%"><label for="subject" class="bold" ><?php echo _CASE_LABEL;?>:</label>
+                                            <td width="70%"><label for="subject" class="bold" ><?php echo _CASE_LABEL;?> :</label>
                                                 <input type="text" name="case_label" id="case_label" size="40"  />
                                             </td>
                                         </tr>
                                         <tr >
-                                            <td width="70%"><label for="subject" class="bold" ><?php echo _CASE_DESCRIPTION;?>:</label>
+                                            <td width="70%"><label for="subject" class="bold" ><?php echo _CASE_DESCRIPTION;?> :</label>
                                                 <!--<textarea name="case_description" id="case_description"  rows="4" ></textarea>-->
                                                 <input type="text" name="case_description" id="case_description" size="40" maxlength="255"/>
                                             </td>
                                             <td>
                                                 <p align="center">
-                                                <input class="button" name="imageField" type="button" value="<?php echo _CREATE_CASE; ?>" onclick="this.form.submit();" /></p>
+                                                <input class="button" name="imageField" type="button" value="<?php echo _VALIDATE; ?>" onclick="this.form.submit();" /></p>
                                              </td>
                                         </tr>
                                         </table>
@@ -613,8 +613,9 @@ function del_query_confirm()
 
             <dt><?php echo $title_search ; ?></dt>
             <dd>
-                <h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_search_b.gif" alt="" /> <?php  echo $title_search ; ?></h4></p>
-                <hr/>
+                <h4><p align="center"><i class="fa fa-search fa-2x"></i> <?php  echo $title_search ; ?></h4></p>
+                <!-- <hr/> -->
+                <br/>
         <?php if (count($queries) > 0)
         {?>
         <!--
@@ -691,7 +692,7 @@ function del_query_confirm()
                     <table border="0" width="100%">
 
                         <tr>
-                            <td width="70%"><label for="numcase" class="bold" ><?php echo _CASE_NUMBER;?>:</label>
+                            <td width="70%"><label for="numcase" class="bold" ><?php echo _CASE_NUMBER;?> :</label>
                                 <input type="text" name="numcase" id="numcase" <?php echo $size; ?>  />
                                 <input type="hidden" name="meta[]" value="numcase#numcase#input_text" />
                             </td>
@@ -699,7 +700,7 @@ function del_query_confirm()
                             <td>&nbsp;</td>
                         </tr>
                         <tr>
-                            <td width="70%"><label for="labelcase" class="bold" ><?php echo _CASE_LABEL;?>:</label>
+                            <td width="70%"><label for="labelcase" class="bold" ><?php echo _CASE_LABEL;?> :</label>
                                 <input type="text" name="labelcase" id="labelcase" <?php echo $size; ?>  />
                                 <input type="hidden" name="meta[]" value="labelcase#labelcase#input_text" />
                             </td>
@@ -707,7 +708,7 @@ function del_query_confirm()
                             <td>&nbsp;</td>
                         </tr>
                         <tr>
-                            <td width="70%"><label for="descriptioncase" class="bold" ><?php echo _CASE_DESCRIPTION;?>:</label>
+                            <td width="70%"><label for="descriptioncase" class="bold" ><?php echo _CASE_DESCRIPTION;?> :</label>
                                 <input type="text" name="descriptioncase" id="descriptioncase" <?php echo $size; ?>  />
                                 <input type="hidden" name="meta[]" value="descriptioncase#descriptioncase#input_text" />
                             </td>
@@ -722,13 +723,6 @@ function del_query_confirm()
                     <p align="center">
                     </p>
                 </td>
-                <td>
-                    <p align="center">
-                        <input class="button_search_adv" name="imageField" type="button" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" />
-                        <br/>
-                        <input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" />
-                    </p>
-                 </td>
             </tr>
         <?php
     }    ?>
@@ -793,9 +787,16 @@ function del_query_confirm()
          </table>
          </div>
          <div class="block_end">&nbsp;</div>
-        </td></tr>
+        </td></tr> -->
         </table>
--->
+            <p align="right">
+<!--                         <input class="button_search_adv" name="imageField" type="button" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" />
+                <br/>
+                <input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" /> -->
+                <a onclick="valid_search_form('frmsearch2');$('frmsearch2').submit();" href="#">
+                    <i class="fa fa-search fa-5x" title="<?php echo _SEARCH;?>"></i>
+                </a>
+            </p>
         </form>
 
 

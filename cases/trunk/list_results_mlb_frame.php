@@ -420,7 +420,7 @@ if (count($tab) > 0) {
     } 
     ?>
 
-    <h4><p align="center"><img src="<?php echo $_SESSION['config']['businessappurl']."static.php?filename=picto_search_b.gif";?>" alt="" /> <?php  echo _SEARCH_RESULTS." - ".count($tab)." "._FOUND_DOC;?></h4></p>
+    <h4><p align="center"><i class="fa fa-search fa-2x"></i> <?php  echo _SEARCH_RESULTS." - ".count($tab)." "._FOUND_DOC;?></h4></p>
         <div id="inner_content">
             <?php
             $details = 'details';
@@ -430,7 +430,7 @@ if (count($tab) > 0) {
         </div>
         <?php
 } else {
-    echo "<p class=\"error\"><img src=\"" . $_SESSION['config']['businessappurl'] . "static.php?filename=noresult.gif\" /><br />" . _NO_RESULTS . "</p><p align='center'><a href=\"" . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=' . $_GET['searched_item'] . '&searched_value=' . $_GET['searched_value'] . '">' . _MAKE_NEW_SEARCH . '</a></strong></div></p>';
+    echo "<br/><br/><br/><p class=\"error\"><i class='fa fa-close fa-2x'></i><br />" . _NO_RESULTS . "</p><br/><p align='center'><a href=\"" . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=' . $_GET['searched_item'] . '&searched_value=' . $_GET['searched_value'] . '">' . _MAKE_NEW_SEARCH . '</a></strong></div></p>';
 }
 $core_tools->load_js();
 ?>
