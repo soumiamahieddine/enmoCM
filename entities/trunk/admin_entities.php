@@ -56,26 +56,30 @@ unset($_SESSION['m_admin']);
 <div id="inner_content" class="clearfix">
 <div class="block">
 <h2 style="text-align:center;"><?php  echo _ENTITIES;?></h2>
-    <div class="admin_item" id="admin_entities_sub" title="<?php  echo _MANAGE_ENTITIES_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=manage_entities&amp;module=entities';">
-        <div class="sum_margin" >
+    <div class="admin_item" title="<?php  echo _MANAGE_ENTITIES_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=manage_entities&amp;module=entities';">
+        <div><i class="fa fa-sitemap fa-4x"></i></div>
+        <div>
                 <strong><?php  echo _MANAGE_ENTITIES;?></strong>
         </div>
     </div>
-    <div class="admin_item" id="admin_entities_tree_sub" title="<?php  echo _ENTITY_TREE_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_entities&amp;module=entities';">
-        <div class="sum_margin">
+    <div class="admin_item" title="<?php  echo _ENTITY_TREE_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_entities&amp;module=entities';">
+        <div><i class="fa fa-code-fork fa-4x"></i></div>
+        <div>
                 <strong><?php  echo _ENTITY_TREE;?></strong>
          </div>
     </div>
     <?php if($admin->test_admin('admin_difflist_types', 'entities', false)){ ?>
-    <div class="admin_item" id="admin_difflist_types" title="<?php  echo _DIFFLIST_TYPES_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin_difflist_types&amp;module=entities';">
-        <div class="sum_margin">
+    <div class="admin_item" title="<?php  echo _DIFFLIST_TYPES_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin_difflist_types&amp;module=entities';">
+        <div><i class="fa fa-share-alt fa-4x"></i></div>
+        <div>
                 <strong><?php  echo _DIFFLIST_TYPES;?></strong>
          </div>
     </div>
     <?php } ?>
     <?php if($admin->test_admin('admin_listmodels', 'entities', false)){ ?>
-    <div class="admin_item" id="admin_listmodels" title="<?php  echo _LISTMODELS_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin_listmodels&amp;module=entities';">
-        <div class="sum_margin">
+    <div class="admin_item" title="<?php  echo _LISTMODELS_DESC;?>" onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin_listmodels&amp;module=entities';">
+        <div><i class="fa fa-share-alt-square fa-4x"></i></div>
+        <div>
                 <strong><?php  echo _LISTMODELS;?></strong>
          </div>
     </div>
