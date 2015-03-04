@@ -82,7 +82,7 @@ if(isset($_SESSION['m_admin']['users']['status']) && $_SESSION['m_admin']['users
             var modal_content = '<?php echo preg_replace("/'/", "\'",$modal_content);?>';
         </script>
          <div class="h2_title">
-			 <a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($arr_baskets) >0) {?>'400px', '800px'<?php }else{?>'100px', '320px'<?php }?>);window.location.href='#top';autocomplete(<?php echo count($arr_baskets);?>, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=basket&amp;page=autocomplete_users_list')"><i class="fa fa-user-times fa-2x"></i> <?php echo _ADMIN_ABS; ?> </a></div>
+			 <a href="javascript://" onclick="createModal(modal_content, 'modal_redirect', <?php if(count($arr_baskets) >0) {?>'auto', '800px'<?php }else{?>'100px', '320px'<?php }?>);window.location.href='#top';autocomplete(<?php echo count($arr_baskets);?>, '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;module=basket&amp;page=autocomplete_users_list')"><i class="fa fa-user-times fa-2x"></i> <?php echo _ADMIN_ABS; ?> </a></div>
         <p id="abs"><?php echo _ADMIN_ABS_TXT; ?></p>
     </div>
 <?php } ?>
