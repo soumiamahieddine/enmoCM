@@ -222,7 +222,7 @@ if ($_GET['searched_item'] == 'case')
 if ($_REQUEST['template'] == 'group_case')
     array_push($template_list, array (
         "name" => "group_case",
-        "img" => "case_list.gif",
+        "img" => "fa fa-briefcase fa-2x",
         "label" => _ACCESS_LIST_CASE
     ));
 
