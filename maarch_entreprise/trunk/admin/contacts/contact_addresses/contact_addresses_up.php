@@ -130,5 +130,7 @@ if (isset($_REQUEST['fromSearchContacts'])) {
     <?php
     exit;
 } else {
+    echo '<div class="block" style="margin-top:15px;">';
     $contact->formaddress("up",$id, $admin);
+    echo '</div>';
 }
