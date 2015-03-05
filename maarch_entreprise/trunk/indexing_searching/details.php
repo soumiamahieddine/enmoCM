@@ -1011,7 +1011,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             <table>
                                 <tr class="col">
                                     <th align="left" class="picto">
-                                        <i class="fa fa-bookmark fa-2x" title="<?php echo _FILEPLAN; ?>"/>
+                                        <i class="fa fa-bookmark fa-2x" title="<?php echo _FILEPLAN; ?>"></i>
                                     </th>
                                     <td align="left" width="200px">
                                         <?php  echo _FILEPLAN; ?> :
