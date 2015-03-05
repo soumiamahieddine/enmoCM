@@ -82,8 +82,7 @@ $_ENV['categories']['rm_archive']['originating_agency_entity_id'] = array (
     'mandatory' => true,
     'label' => _ENTITE_PRODUCTRICE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] 
-        . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+    'img' => 'sitemap',
     'modify' => false,
     'form_show' => 'select'
 );
@@ -93,31 +92,17 @@ $_ENV['categories']['rm_archive']['dest_user'] = array (
     'mandatory' => true,
     'label' => _SERVICE_PRODUCTEUR,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] 
-        . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+    'img' => 'user',
     'modify' => false,
     'form_show' => 'select'
 );
-/*
-$_ENV['categories']['rm_archive']['destination'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _SERVICE_VERSANT,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] 
-        . 'static.php?module=entities&filename=manage_entities_b_small.gif',
-    'modify' => false,
-    'form_show' => 'select'
-);
-*/
 $_ENV['categories']['rm_archive']['type_id'] = array (
     'type_form' => 'integer',
     'type_field' => 'integer',
     'mandatory' => true,
     'label' => _TYPE_DARCHIVE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'file',
     'modify' => false,
     'form_show' => 'select'
 );
@@ -127,7 +112,7 @@ $_ENV['categories']['rm_archive']['appraisal_code'] = array (
     'mandatory' => true,
     'label' => _REGLE_GESTION,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=contrat_mini.gif',
+    'img' => 'thumbs-up',
     'modify' => false,
     'form_show' => 'select'
 );
@@ -137,7 +122,7 @@ $_ENV['categories']['rm_archive']['appraisal_duration'] = array (
     'mandatory' => true,
     'label' => _DUA,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
+    'img' => 'clock-o',
     'modify' => false,
     'form_show' => 'textfield'
 );
@@ -148,7 +133,7 @@ $_ENV['categories']['rm_archive']['doc_date'] = array (
     'mandatory' => false,
     'label' => _DATE_DE_LA_PIECE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
+    'img' => 'calendar',
     'modify' => false,
     'form_show' => 'date'
 );
@@ -158,7 +143,7 @@ $_ENV['categories']['rm_archive']['other_cases']['folder'] = array (
     'mandatory' => false,
     'label' => _FOLDER,
     'table' => 'none',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=doc_folder.gif',
+    'img' => 'folder',
     'modify' => true,
     'form_show' => 'autocomplete'
 );
@@ -168,7 +153,7 @@ $_ENV['categories']['rm_archive']['name'] = array (
     'mandatory' => true,
     'label' => _INTITULE_ANALYSE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => 'info',
     'modify' => true,
     'form_show' => 'textarea'
 );
@@ -178,7 +163,7 @@ $_ENV['categories']['rm_archive']['item_type'] = array (
     'mandatory' => false,
     'label' => _ITEM_TYPE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => 'file-archive-o',
     'modify' => false,
     'form_show' => 'textfield'
 );
