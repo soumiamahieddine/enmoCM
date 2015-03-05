@@ -305,7 +305,7 @@ ALTER TABLE templates DROP COLUMN IF EXISTS template_attachment_type;
 ALTER TABLE templates ADD template_attachment_type character varying(255) DEFAULT NULL::character varying;
 
 ALTER TABLE users DROP COLUMN IF EXISTS typeview;
-ALTER TABLE users ADD typeview character varying(20) DEFAULT 'split'::character varying,
+ALTER TABLE users ADD typeview character varying(20) DEFAULT 'split'::character varying;
 
 DELETE FROM status WHERE id = 'A_TRA';
 INSERT INTO status (id, label_status, is_system) VALUES ('A_TRA', 'A traiter', 'N');
