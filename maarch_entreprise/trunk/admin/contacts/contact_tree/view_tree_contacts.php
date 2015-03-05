@@ -53,6 +53,7 @@ unset($_SESSION['m_admin']);
 
 <h1><i class="fa fa-code-fork fa-2x"></i> <?php  echo _VIEW_TREE_CONTACTS;?></h1>
 <div id="inner_content" class="clearfix">
+	<div class="block">
     <table width="100%" border="0">
         <tr>
             <td>
@@ -60,4 +61,5 @@ unset($_SESSION['m_admin']);
             </td>
         </tr>
     </table>
+    </div>
 </div>
