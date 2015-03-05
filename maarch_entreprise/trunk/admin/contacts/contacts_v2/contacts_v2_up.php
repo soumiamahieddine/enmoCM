@@ -82,7 +82,7 @@ $contact = new contacts_v2();
 $contact->formcontact("up",$id);
 
 // GESTION DES ADDRESSES
-echo '<h2><img alt="" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_contact_b.gif"> &nbsp;' . _MANAGE_CONTACT_ADDRESSES_IMG . '</h2>';
+echo '<h2><i class="fa fa-home fa-2x"></i> &nbsp;' . _MANAGE_CONTACT_ADDRESSES_IMG . '</h2>';
 
 require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
     . "class_request.php";
@@ -345,8 +345,7 @@ $list->admin_list(
     'contact_id"', 'contacts_v2_up', 'contacts_v2',
     'id', true, $pageNameUp, $pageNameVal, $pageNameBan,
     $pageNameDel, $pageNameAdd, $addLabel, FALSE, FALSE, _ALL_CONTACT_ADDRESSES,
-    _A_CONTACT_ADDRESS, $_SESSION['config']['businessappurl']
-    . 'static.php?filename=manage_contact_b.gif', false, true, true, true,
+    _A_CONTACT_ADDRESS, '', false, true, true, true,
     $what, true, $autoCompletionArray, false, false, 'what2', 'whatListInput2'
 );
 

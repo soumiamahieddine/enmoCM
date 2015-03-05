@@ -91,7 +91,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 ?>
 
-<h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" />
+<h1><i class="fa fa-users fa-2x"></i>
 	<?php if($_GET['mode'] == 'up'){
 		echo _CONTACTS_CONFIRMATION_MODIFICATION;
 	} else {

@@ -130,7 +130,6 @@ $list->admin_list(
     'contact_purposes_id"', 'contact_purposes', 'contact_purposes',
     'contact_purposes_id', true, $pageNameUp, $pageNameVal, $pageNameBan,
     $pageNameDel, $pageNameAdd, $addLabel, FALSE, FALSE, _ALL_CONTACT_PURPOSES,
-    _A_CONTACT_PURPOSE, $_SESSION['config']['businessappurl']
-    . 'static.php?filename=manage_contact_b.gif', false, true, true, true,
+    _A_CONTACT_PURPOSE, 'tags', false, true, true, true,
     "", true, $autoCompletionArray
 );

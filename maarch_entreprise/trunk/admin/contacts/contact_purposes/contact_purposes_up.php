@@ -270,12 +270,12 @@ $erreur = "";
 ?>
 </div>
 <h1 class="tit">
-&nbsp;<img src="<?php
-echo $_SESSION['config']['businessappurl'];
-?>static.php?filename=manage_contact_b.gif" alt="" valign="center"/> <?php
+<?php
 if ($mode == "up") {
+	?><i class="fa fa-edit fa-2x"></i> <?php
     echo _CONTACT_PURPOSE_MODIF;
 } else {
+	?><i class="fa fa-plus fa-2x"></i> <?php
     echo _NEW_CONTACT_PURPOSE_ADDED;
 }
 ?></h1>

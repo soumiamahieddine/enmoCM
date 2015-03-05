@@ -131,7 +131,6 @@ $list->admin_list(
     'contact_types_id"', 'contact_types', 'contact_types',
     'contact_types_id', true, $pageNameUp, $pageNameVal, $pageNameBan,
     $pageNameDel, $pageNameAdd, $addLabel, FALSE, FALSE, _ALL_CONTACT_TYPES,
-    _A_CONTACT_TYPE, $_SESSION['config']['businessappurl']
-    . 'static.php?filename=manage_contact_b.gif', false, true, true, true,
+    _A_CONTACT_TYPE, 'share-alt', false, true, true, true,
     "", true, $autoCompletionArray
 );

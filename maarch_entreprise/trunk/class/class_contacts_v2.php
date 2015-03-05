@@ -441,15 +441,18 @@ class contacts_v2 extends dbquery
         }
 
         ?>
-        <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" />
+        <h1>
             <?php
             if($mode == "up") {
+                ?><i class="fa fa-edit fa-2x"></i><?php
                 echo '&nbsp;' . _MODIFY_CONTACT;
             }
             elseif($mode == "add") {
+                ?><i class="fa fa-plus fa-2x"></i><?php
                 echo '&nbsp;' . _ADD_NEW_CONTACT;
             }
             elseif($mode == "view") {
+                ?><i class="fa fa-users fa-2x"></i><?php
                 echo '&nbsp;' . _VIEW;
             }
             ?>
@@ -678,7 +681,7 @@ class contacts_v2 extends dbquery
     public function chooseContact(){
         $this->connect();
         ?>
-        <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" />
+        <h1><i class="fa fa-plus fa-2x"></i>
             <?php
                 echo '&nbsp;' . _ADD_ADDRESS_TO_CONTACT;
             ?>
@@ -858,7 +861,8 @@ class contacts_v2 extends dbquery
                 <br>
                 <br>
                 
-                <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_contact_b.gif" alt="" />
+                <h1>
+                    <i class="fa fa-remove fa-2x"></i>
                     <?php echo _CONTACT_DELETION;?>
                 </h1>
                 
@@ -2009,7 +2013,7 @@ class contacts_v2 extends dbquery
                 <br>
                 <br>
                 
-                <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_contact_b.gif" alt="" />
+                <h1><i class="fa fa-remove fa-2x"></i>
                     <?php
                         echo $title; 
                     ?>

@@ -51,7 +51,7 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 unset($_SESSION['m_admin']);
 ?>
 
-<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_architecture_b.gif" alt="" /> <?php  echo _VIEW_TREE_CONTACTS;?></h1>
+<h1><i class="fa fa-code-fork fa-2x"></i> <?php  echo _VIEW_TREE_CONTACTS;?></h1>
 <div id="inner_content" class="clearfix">
     <table width="100%" border="0">
         <tr>

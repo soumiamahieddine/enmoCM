@@ -35,7 +35,7 @@ $core_tools2->manage_location_bar($page_path, $page_label, $page_id, $init, $lev
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 
 $contact = new contacts_v2();
-echo '<h1><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=picto_add_b.gif" alt="" />'._CONTACT.'</h1>';
+echo '<h1><i class="fa fa-plus fa-2x"></i>'._CONTACT.'</h1>';
 echo '<div style="margin-top:10px;">';
 $contact->formcontact("add", '', false);
 echo '</div>';
