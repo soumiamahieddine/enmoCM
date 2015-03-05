@@ -456,8 +456,9 @@ class contacts_v2 extends dbquery
                 echo '&nbsp;' . _VIEW;
             }
             ?>
-        </h1>
-        <div id="inner_content_contact" class="clearfix" align="center">
+        </h2>
+        <div id="inner_content_contact" class="clearfix" align="center" style="margin-bottom:15px;">
+            <div class="block">
             <?php
             if($state == false)
             {
@@ -675,6 +676,8 @@ class contacts_v2 extends dbquery
             }
             ?>
         </div>
+        </div>
+        </div>
     <?php
     }
 
@@ -685,7 +688,7 @@ class contacts_v2 extends dbquery
             <?php
                 echo '&nbsp;' . _ADD_ADDRESS_TO_CONTACT;
             ?>
-        </h1>
+        </h2>
         <br/>
             <span style="margin-left:30px;">
                 <?php echo '&nbsp;'. _ADD_ADDRESS_TO_CONTACT_DESC; ?>
@@ -734,6 +737,7 @@ class contacts_v2 extends dbquery
                     </table>
                     <div style="text-align:center;"><input class="button" type="button" value="<?php echo _CHOOSE_THIS_CONTACT; ?>" onclick="putInSessionContact('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=my_contacts&page=put_in_session');" /></div>
                 </form>
+                </div>
             <!-- <input id="contactid" type="hidden"/> -->
             <?php
 
