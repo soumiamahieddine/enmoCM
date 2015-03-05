@@ -229,6 +229,6 @@ $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 
-$list->admin_list($tab, $i, $title, 'basket_id','basket','basket','basket_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_BASKETS, _BASKET,$_SESSION['config']['businessappurl'].'static.php?module=basket&filename=picto_basket_b.gif', TRUE ,true, false, true, $what, true, $autoCompletionArray);
+$list->admin_list($tab, $i, $title, 'basket_id','basket','basket','basket_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_BASKETS, _BASKET,'inbox', TRUE ,true, false, true, $what, true, $autoCompletionArray);
 
 ?>
