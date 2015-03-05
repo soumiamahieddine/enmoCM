@@ -228,12 +228,16 @@ ALTER TABLE res_business ADD locker_user_id character varying(255) DEFAULT NULL:
 ALTER TABLE res_business DROP COLUMN IF EXISTS locker_time; 
 ALTER TABLE res_business ADD locker_time timestamp without time zone;
 
+ALTER TABLE lc_stack DROP COLUMN IF EXISTS work_batch;
 ALTER TABLE lc_stack ADD COLUMN work_batch bigint;
+
+ALTER TABLE lc_stack DROP COLUMN IF EXISTS regex;
 ALTER TABLE lc_stack ADD COLUMN regex character varying(32);
 
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS confidentiality; 
 ALTER TABLE res_letterbox ADD confidentiality character(1);
 
+DROP TABLE IF EXISTS listinstance_history;
 DROP SEQUENCE IF EXISTS listinstance_history_id_seq;
 CREATE SEQUENCE listinstance_history_id_seq
 INCREMENT 1
@@ -242,7 +246,6 @@ MAXVALUE 9223372036854775807
 START 1
 CACHE 1;
 
-DROP TABLE IF EXISTS listinstance_history;
 CREATE TABLE listinstance_history
 (
 listinstance_history_id bigint NOT NULL DEFAULT nextval('listinstance_history_id_seq'::regclass),
@@ -254,6 +257,7 @@ CONSTRAINT listinstance_history_pkey PRIMARY KEY (listinstance_history_id)
 )
 WITH ( OIDS=FALSE );
 
+DROP TABLE IF EXISTS listinstance_history_details;
 DROP SEQUENCE IF EXISTS listinstance_history_details_id_seq;
 CREATE SEQUENCE listinstance_history_details_id_seq
 INCREMENT 1
@@ -262,7 +266,6 @@ MAXVALUE 9223372036854775807
 START 1
 CACHE 1;
 
-DROP TABLE IF EXISTS listinstance_history_details;
 CREATE TABLE listinstance_history_details
 (
 listinstance_history_details_id bigint NOT NULL DEFAULT nextval('listinstance_history_details_id_seq'::regclass),
