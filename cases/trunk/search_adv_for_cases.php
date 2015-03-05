@@ -665,19 +665,6 @@ function del_query_confirm()
 
         <!-- #############################################################################-->
 
-
-<!--
-        <table align="center" border="0" width="100%">
-            <tr>
-                <td align="left"><a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();"><img src="<?php  echo $_SESSION['config']['businessappurl']."static.php?filename=reset.gif";?>" alt="<?php echo _CLEAR_SEARCH;?>" /> <?php  echo _CLEAR_SEARCH; ?></a></td>
-                <td  width="75%" align="right" ><span class="bold"><?php echo _SEARCH_COPY_MAIL;?></span>
-                    <input type="hidden" name="meta[]" value="copies#copies_false,copies_true#radio" />
-                    <input type="radio" name="copies" id="copies_false" class="check"  value="false" checked="checked" /><?php echo _NO;?>
-                    <input type="radio" name="copies" id="copies_true" class="check"  value="true"  /><?php echo _YES;?>
-                </td>
-            </tr>
-        </table>
--->
         <table align="center" border="0" width="100%">
 
             <?php
