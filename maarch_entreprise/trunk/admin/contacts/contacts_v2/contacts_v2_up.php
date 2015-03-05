@@ -82,8 +82,8 @@ $contact = new contacts_v2();
 $contact->formcontact("up",$id);
 
 // GESTION DES ADDRESSES
+echo '<div class="block">';
 echo '<h2><i class="fa fa-home fa-2x"></i> &nbsp;' . _MANAGE_CONTACT_ADDRESSES_IMG . '</h2>';
-
 require_once "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
     . "class_request.php";
 require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
@@ -350,5 +350,5 @@ $list->admin_list(
 );
 
 $_SESSION['m_admin']['address'] = array();
-
+echo '</div>';
 ?>
