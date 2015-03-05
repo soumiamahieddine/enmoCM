@@ -110,8 +110,8 @@ if (isset($_REQUEST['erase']) && $_REQUEST['erase'] == 'true') {
 <?php
 if ($chooseColl) {
     ?>
-    <h2><?php echo _COLLECTION; ?></h2>
     <div class="block">
+    <h2><?php echo _COLLECTION; ?></h2>
     <table width="100%" border="0" cellpadding="3">
         <tr>
             <td width="70%">
@@ -150,8 +150,8 @@ if ($chooseColl) {
 ?>
 
 <div id="folder_search_div" style="display:<?php if ($chooseColl) {echo "none"; } else {echo "block";}?>">
-    <h2><?php  echo _INFOS_FOLDERS;?></h2>
     <div class="block">
+        <h2><?php  echo _INFOS_FOLDERS;?></h2>
         <br/>
         <table width="100%" border="0" cellpadding="3">
             <tr>
