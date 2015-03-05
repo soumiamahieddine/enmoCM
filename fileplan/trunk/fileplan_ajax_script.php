@@ -1286,8 +1286,7 @@ switch ($mode) {
 				.'&fileplan_id=\' + document.formFileplan.fileplan_id.value);" /><br/><br/>';
 			//Content 
             $content .= '<div style="width:585px; height:300px; border:1px solid; overflow-x:hidden; overflow-y:auto; padding:5px;">'; 
-            $content .= '<div id="loadingFileplan" style="display:none;"><img src="'.$_SESSION['config']['businessappurl']
-                .'static.php?filename=loading.gif" width="24px" height="24px" /></div>';
+            $content .= '<div id="loadingFileplan" style="display:none;"><i class="fa fa-spinner fa-2x"></i></div>';
             $content .= '<div id="positionsList"></div>';
             $content .='</div>';
             
