@@ -86,9 +86,7 @@ for ($indAtt1 = 0; $indAtt1 < count($attachArr); $indAtt1 ++) {
 
 ?>
 <h2 onclick="change(100)" id="h2100" class="categorie">
-	<img src="<?php
-echo $_SESSION['config']['businessappurl'];
-?>static.php?filename=plus.png" alt="" />&nbsp;<b><?php
+	<i class="fa fa-plus fa-2x"></i>&nbsp;<b><?php
 echo _ATTACHMENTS;
 ?> :</b>
 	<span class="lb1-details">&nbsp;</span>
