@@ -278,8 +278,7 @@ $list->admin_list(
     'contact_id', 'contact_addresses_list', 'contact_addresses',
     'id', true, $pageNameUp, $pageNameVal, $pageNameBan,
     $pageNameDel, $pageNameAdd, $addLabel, FALSE, FALSE, _ALL_CONTACT_ADDRESSES,
-    _A_CONTACT_ADDRESS, $_SESSION['config']['businessappurl']
-    . 'static.php?filename=manage_contact_b.gif', false, true, true, true,
+    _A_CONTACT_ADDRESS, 'home', false, true, true, true,
     $what, true, $autoCompletionArray, false, true);
 
 $_SESSION['m_admin']['address'] = array();

@@ -50,36 +50,51 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 unset($_SESSION['m_admin']);
 ?>
-<h1><img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_contact_b.gif" alt="" /> <?php  echo _ADMIN_CONTACTS_DESC;?></h1>
+<h1><i class="fa fa-book fa-2x"></i> <?php  echo _ADMIN_CONTACTS_DESC;?></h1>
 <div id="inner_content" class="clearfix">
 <div class="block">
     <h2><?php  echo _ADMIN_CONTACTS;?></h2>
-    <div  class="admin_item" id="admin_contact_types" title="<?php  echo _MANAGE_CONTACT_TYPES_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types';">
-        <div class="sum_margin">
+    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types';">
+        <div>
+            <i class="fa fa-share-alt fa-4x" title="<?php  echo _MANAGE_CONTACT_TYPES_DESC;?>" ></i>
+        </div>
+        <div>
                 <strong><?php  echo _MANAGE_CONTACT_TYPES;?></strong>
         </div>
     </div>
 
-    <div class="admin_item" id="admin_contacts_v2" title="<?php  echo _MANAGE_CONTACTS_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2';">
-        <div class="sum_margin">
+    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2';">
+        <div>
+            <i class="fa fa-users fa-4x" title="<?php  echo _MANAGE_CONTACTS_DESC;?>" ></i>
+        </div>
+        <div>
                 <strong><?php  echo _MANAGE_CONTACTS;?></strong>
          </div>
     </div>
     
-    <div class="admin_item" id="admin_contact_purposes" title="<?php  echo _MANAGE_CONTACT_PURPOSES_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_purposes';">
-        <div class="sum_margin">
+    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_purposes';">
+        <div>
+            <i class="fa fa-tags fa-4x" title="<?php  echo _MANAGE_CONTACT_PURPOSES_DESC;?>" ></i>
+        </div>
+        <div>
                 <strong><?php  echo _MANAGE_CONTACT_PURPOSES;?></strong>
          </div>
     </div>
 
-    <div class="admin_item" id="admin_contacts_v2" title="<?php  echo _MANAGE_CONTACT_ADDRESSES_LIST_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_addresses_list';">
-        <div class="sum_margin">
+    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_addresses_list';">
+        <div>
+            <i class="fa fa-home fa-4x" title="<?php  echo _MANAGE_CONTACT_ADDRESSES_LIST_DESC;?>" ></i>
+        </div>
+        <div>
                 <strong><?php  echo _MANAGE_CONTACT_ADDRESSES_LIST;?></strong>
          </div>
     </div>
 
-    <div class="admin_item" id="view_tree_contacts" title="<?php  echo _VIEW_TREE_CONTACTS_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_contacts';">
-        <div class="sum_margin">
+    <div class="admin_item" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_contacts';">
+        <div>
+            <i class="fa fa-code-fork fa-4x" title="<?php  echo _VIEW_TREE_CONTACTS_DESC;?>" ></i>
+        </div>
+        <div>
                 <strong><?php  echo _VIEW_TREE_CONTACTS;?></strong>
          </div>
     </div>

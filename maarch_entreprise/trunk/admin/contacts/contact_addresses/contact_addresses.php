@@ -29,7 +29,7 @@
 */
 
 // GESTION DES ADDRESSES
-echo '<h2><img alt="" src="'.$_SESSION['config']['businessappurl'].'static.php?filename=manage_contact_b.gif"> &nbsp;'; 
+echo '<h2><i class="fa fa-home fa-2x"></i> &nbsp;'; 
     if ($mode <> 'view') { 
         echo _MANAGE_CONTACT_ADDRESSES_IMG;
     } else {

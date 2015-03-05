@@ -265,7 +265,7 @@ $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl'].
 $autoCompletionArray["number_to_begin"] = 1;
 $autoCompletionArray["searchBoxAutoCompletionUpdate"] = true;
 
-$list->admin_list($tab, $i, $title, 'contact_id','contacts_v2','contacts_v2','contact_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_CONTACTS, _CONTACT, $_SESSION['config']['businessappurl'].'static.php?filename=manage_contact_b.gif', false, true, true, true, $what, true, $autoCompletionArray, false, true);
+$list->admin_list($tab, $i, $title, 'contact_id','contacts_v2','contacts_v2','contact_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, FALSE, _ALL_CONTACTS, _CONTACT, 'users', false, true, true, true, $what, true, $autoCompletionArray, false, true);
 $_SESSION['m_admin']['contacts'] = array();
 $_SESSION['m_admin']['contacts']['id'] = "";
 $_SESSION['m_admin']['contacts']['title'] = "";

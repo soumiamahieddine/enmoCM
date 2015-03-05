@@ -1177,14 +1177,14 @@ class contacts_v2 extends dbquery
         }
 
         ?>
-        <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_add_b.gif" alt="" />
+        <h1>
             <?php
             if($mode == "up")
-            {
+            {?><i class="fa fa-edit fa-2x"></i> <?php
                 echo _MODIFY_ADDRESS;
             }
             elseif($mode == "add")
-            {
+            {?><i class="fa fa-plus fa-2x"></i> <?php
                 echo _ADDITION_ADDRESS;
             }
             ?>
