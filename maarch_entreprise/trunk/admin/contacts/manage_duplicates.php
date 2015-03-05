@@ -78,9 +78,7 @@ function randomColor($lastColor)
     return $val;
 }
 
-echo '<h1><img src="' 
-        . $_SESSION['config']['businessappurl'] 
-        . 'static.php?filename=manage_duplicates.png" alt="" />' 
+echo '<h1><i class="fa fa-magic fa-2x"></i>&nbsp;' 
         . _MANAGE_DUPLICATES 
     . '</h1>';
 echo '<center>';

@@ -74,8 +74,7 @@ unset($_SESSION['fromContactTree']);
                     echo $_SESSION['config']['businessappurl']
                     ;?>index.php?admin=contacts&page=manage_duplicates">
                     <h2>
-                        <img src="<?php echo $_SESSION['config']['businessappurl'];
-                        ?>static.php?filename=manage_duplicates.png" alt="" /><?php 
+                        <i class="fa fa-magic fa-2x"></i>&nbsp;<?php 
                         echo _MANAGE_DUPLICATES;?>
                     </h2>
                 </a>
