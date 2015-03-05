@@ -43,7 +43,7 @@ $_SESSION['location_bar']['level4']['label'] = "";
 $_SESSION['location_bar']['level4']['id'] = "";
 $core_tools->manage_location_bar();
 ?>
-<h1><i class="fa fa-bullseye fa-2x mCyellow"></i> <?php echo _WELCOME;?></h1>
+<h1><?php echo _WELCOME;?></h1>
 <div id="inner_content" class="clearfix">
 <?php
 $core_tools->execute_app_services($_SESSION['app_services'], "welcome.php");
