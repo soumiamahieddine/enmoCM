@@ -350,13 +350,13 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
                                         {
                                             echo "<a href='".$_SESSION['config']['businessappurl']."index.php?page=show_folder&module=folder&id=".$folder_id."'>";
                                             ?>
-                                            <img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  /></a>
+                                            <i class="fa fa-<?php echo $data[$key]['img'];?> fa-2x" title="<?php echo $data[$key]['label'];?>"></i>
                                             <?php
                                         }
                                         else
                                         {
                                             ?>
-                                            <img alt="<?php echo $data[$key]['label'];?>" title="<?php echo $data[$key]['label'];?>" src="<?php echo $data[$key]['img'];?>"  /></a>
+                                            <i class="fa fa-<?php echo $data[$key]['img'];?> fa-2x" title="<?php echo $data[$key]['label'];?>"></i>
                                             <?php
                                         }
                                         ?>
@@ -540,7 +540,7 @@ if (empty ($_SESSION['error']) || $_SESSION['indexation']) {
 
             if (isset ($indexes[$key]['img'])) {
                 ?>
-                                                    <img alt="<?php echo $indexes[$key]['label'];?>" title="<?php echo $indexes[$key]['label'];?>" src="<?php echo $indexes[$key]['img'];?>"  /></a>
+                                                    <i class="fa fa-<?php echo $indexes[$key]['img'];?> fa-2x" title="<?php echo $indexes[$key]['label'];?>" ></i>
                                                     <?php
 
             }

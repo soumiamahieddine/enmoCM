@@ -84,7 +84,7 @@ $_ENV['categories']['incoming']['priority'] = array (
     'mandatory' => false,
     'label' => _PRIORITY,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'exclamation',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -94,7 +94,7 @@ $_ENV['categories']['incoming']['type_id'] = array (
     'mandatory' => true,
     'label' => _DOCTYPE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'file',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -104,7 +104,7 @@ $_ENV['categories']['incoming']['doc_date'] = array (
     'mandatory' => true,
     'label' => _DOC_DATE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
+    'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date'
 );
@@ -114,7 +114,7 @@ $_ENV['categories']['incoming']['subject'] = array (
     'mandatory' => true,
     'label' => _DESCRIPTION,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => 'info',
     'modify' => true,
     'form_show' => 'textfield'
 );
@@ -129,7 +129,7 @@ $_ENV['categories']['outgoing']['priority'] = array (
     'mandatory' => false,
     'label' => _PRIORITY,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'exclamation',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -139,7 +139,7 @@ $_ENV['categories']['outgoing']['type_id'] = array (
     'mandatory' => true,
     'label' => _DOCTYPE_MAIL,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'file',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -149,7 +149,7 @@ $_ENV['categories']['outgoing']['doc_date'] = array (
     'mandatory' => true,
     'label' => _MAIL_DATE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=small_calend.gif',
+    'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date'
 );
@@ -159,7 +159,7 @@ $_ENV['categories']['outgoing']['nature_id'] = array (
     'mandatory' => true,
     'label' => _NATURE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
+    'img' => 'envelope',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -169,7 +169,7 @@ $_ENV['categories']['outgoing']['subject'] = array (
     'mandatory' => true,
     'label' => _SUBJECT,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => 'info',
     'modify' => true,
     'form_show' => 'textfield'
 );
@@ -179,7 +179,7 @@ $_ENV['categories']['outgoing']['other_cases']['chrono_number'] = array (
     'mandatory' => true,
     'label' => _CHRONO_NUMBER,
     'table' => 'none',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => 'compass',
     'modify' => false,
     'form_show' => 'textfield'
 );
@@ -199,7 +199,7 @@ $_ENV['categories']['outgoing']['other_cases']['process_limit_date'] = array (
     'type_field' => 'date',
     'label' => _PROCESS_LIMIT_DATE,
     'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_limit.gif',
+    'img' => 'calendar',
     'modify' => false,
     'form_show' => 'date'
 );
@@ -224,145 +224,6 @@ $_ENV['categories']['outgoing']['other_cases']['contact'] = array (
     'modify' => false
 );
 
-///////////////////////////// INTERNAL ////////////////////////////////////////////////
-$_ENV['categories']['internal'] = array ();
-$_ENV['categories']['internal']['img_cat'] = '<i class="fa fa-arrow-down fa-2x"></i>';
-$_ENV['categories']['internal']['other_cases'] = array ();
-$_ENV['categories']['internal']['priority'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => false,
-    'label' => _PRIORITY,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['internal']['type_id'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => true,
-    'label' => _DOCTYPE_MAIL,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['internal']['doc_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'mandatory' => true,
-    'label' => _MAIL_DATE,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
-    'modify' => true,
-    'form_show' => 'date'
-);
-$_ENV['categories']['internal']['nature_id'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _NATURE,
-    'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=nature_send.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['internal']['subject'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _SUBJECT,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
-    'modify' => true,
-    'form_show' => 'textfield'
-);
-$_ENV['categories']['internal']['process_limit_date_use'] = array (
-    'type_form' => 'radio',
-    'mandatory' => true,
-    'label' => _PROCESS_LIMIT_DATE_USE,
-    'table' => 'none',
-    'values' => array (
-        'Y',
-        'N'
-    ),
-    'modify' => false
-);
-$_ENV['categories']['internal']['other_cases']['process_limit_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'label' => _PROCESS_LIMIT_DATE,
-    'table' => 'coll_ext',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_limit.gif',
-    'modify' => false
-);
-$_ENV['categories']['internal']['type_contact'] = array (
-    'type_form' => 'radio',
-    'mandatory' => true,
-    'label' => _DEST_TYPE,
-    'table' => 'none',
-    'values' => array (
-        'internal',
-        'external'
-    ),
-    'modify' => false
-);
-$_ENV['categories']['internal']['other_cases']['contact'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _DEST,
-    'table' => 'coll_ext',
-    'special' => 'dest_user_id,dest_contact_id',
-    'modify' => false
-);
-
-/////////////////////////////FOLDER DOCUMENT////////////////////////////////////////////////
-$_ENV['categories']['folder_document'] = array ();
-$_ENV['categories']['folder_document']['img_cat'] = '<i class="fa fa-folder fa-2x"></i>';
-$_ENV['categories']['folder_document']['other_cases'] = array ();
-$_ENV['categories']['folder_document']['type_id'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => true,
-    'label' => _DOCTYPE,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['folder_document']['doc_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'mandatory' => true,
-    'label' => _DOC_DATE,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=small_calend.gif',
-    'modify' => true,
-    'form_show' => 'date'
-);
-$_ENV['categories']['folder_document']['subject'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _SUBJECT,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
-    'modify' => true,
-    'form_show' => 'textarea'
-);
-$_ENV['categories']['folder_document']['author'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _AUTHOR,
-    'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=author.gif',
-    'modify' => true,
-    'form_show' => 'textfield'
-);
-
 /////////////////////////////EMPTY////////////////////////////////////////////////
 $_ENV['categories']['empty'] = array ();
 $_ENV['categories']['empty']['img_cat'] = '<i class="fa fa-circle-thin fa-2x"></i>';
@@ -373,7 +234,7 @@ $_ENV['categories']['empty']['type_id'] = array (
     'mandatory' => true,
     'label' => _DOCTYPE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=mini_type.gif',
+    'img' => 'file',
     'modify' => true,
     'form_show' => 'select'
 );
@@ -383,7 +244,7 @@ $_ENV['categories']['empty']['doc_date'] = array (
     'mandatory' => true,
     'label' => _DOC_DATE,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=date_arr.gif',
+    'img' => 'calendar',
     'modify' => true,
     'form_show' => 'date'
 );
@@ -393,7 +254,7 @@ $_ENV['categories']['empty']['subject'] = array (
     'mandatory' => true,
     'label' => _DESCRIPTION,
     'table' => 'res',
-    'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=object.gif',
+    'img' => 'info',
     'modify' => true,
     'form_show' => 'textfield'
 );
@@ -431,7 +292,7 @@ if ($core->is_module_loaded('entities')) {
         'mandatory' => true,
         'label' => _DEPARTMENT_EXP,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'img' => 'sitemap',
         'modify' => false,
         'form_show' => 'select'
     );
@@ -449,7 +310,7 @@ if ($core->is_module_loaded('entities')) {
         'mandatory' => true,
         'label' => _DEPARTMENT_DEST,
         'table' => 'res',
-        'img' => $_SESSION['config']['businessappurl'] . 'static.php?module=entities&filename=manage_entities_b_small.gif',
+        'img' => 'sitemap',
         'modify' => false,
         'form_show' => 'select'
     );

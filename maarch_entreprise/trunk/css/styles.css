@@ -1274,7 +1274,7 @@ left: -100em;
 
 #menunav {
     width: 262px;
-    background: #DEEDF3;
+    background: #CEE9F1;
     position: absolute;
     left: -12px;
     padding: 0px;
@@ -2891,7 +2891,7 @@ input[type="checkbox"] , input[type="radio"]
 {
 padding: 0px;
 color: #666;
-background-color: #DEEDF3;
+background-color: #CEE9F1;
 border-top: solid 2px #FDD16C;
 border-bottom: solid 2px #FDD16C;
 padding:10px;
@@ -3207,7 +3207,7 @@ hr{
 /**** TABRICATOR ****/
 .tabricator
 {
-    background:                #93D1E4;
+    background:                #009DC5;
     border:                    1px solid #000;
     display:                   inline-block;
     /*height:                    auto!important;*/
