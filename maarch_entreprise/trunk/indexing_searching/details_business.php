@@ -268,7 +268,6 @@ if (isset($_POST['put_doc_on_validation'])) {
     exit();
 }
 
-
 if (empty($_SESSION['error']) || $_SESSION['indexation']) {
     $comp_fields = '';
     $db->query("select type_id from ".$table." where res_id = ".$s_id);
@@ -895,223 +894,93 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     </dd>
                 <?php
                 }
-                //$detailsExport .= "<h2>"._PROCESS."</h2>";
-                $nb_attach = '';
-                if ($core->is_module_loaded('attachments'))
-                {
-                    $req = new dbquery;
-                    $req->connect();
-                    $countAttachments = "select res_id, creation_date, title, format from " 
-                        . $_SESSION['tablename']['attach_res_attachments'] 
-                        . " where res_id_master = " . $_SESSION['doc_id'] 
-                        . " and coll_id ='" . $_SESSION['collection_id_choice'] 
-                        . "' and status <> 'DEL' and attachment_type <> 'response_project' and attachment_type <> 'outgoing_mail_signed'";
-                    $req->query($countAttachments);
-                    if ($req->nb_result() > 0) {
-                        $nb_attach = ' (' . $req->nb_result() . ')';
-                    } else {
-
-                        $nb_attach = '';
-                    }
+                $req = new dbquery;
+                $req->connect();
+                $countAttachments = "select res_id, creation_date, title, format from " 
+                    . $_SESSION['tablename']['attach_res_attachments'] 
+                    . " where res_id_master = " . $_SESSION['doc_id'] 
+                    . " and coll_id ='" . $_SESSION['collection_id_choice'] 
+                    . "' and status <> 'DEL'";
+                $req->query($countAttachments);
+                if ($req->nb_result() > 0) {
+                    $nb_attach = $req->nb_result();
+                } else {
+                    $nb_attach = 0;
                 }
                 ?>
-                <dt><?php echo _ATTACHMENTS .  '<span id="nb_attach">'. $nb_attach . '</span>';?></dt>
+                <dt><?php echo _ATTACHMENTS . ' (<span id="nb_attach">' . $nb_attach . '</span>)';?></dt>
                 <dd>
-                    <div>
-                        <table width="100%">
-                            <tr>
-                                <td><label for="answer_types"><?php echo _ANSWER_TYPES_DONE;?> : </label></td>
-                                <td>
-                                    <?php
-                                    /*$detailsExport .= "<table width='100%'>";
-                                    $detailsExport .= "<tr>";
-                                    $detailsExport .= "<td><label for='answer_types'>"._ANSWER_TYPES_DONE." : </label></td>";*/
-                                    $answer_type = "";
-                                    if ($process_data['simple_mail'] == true)
-                                    {
-                                        $answer_type .=  _SIMPLE_MAIL.', ';
-                                    }
-                                    if ($process_data['registered_mail'] == true)
-                                    {
-                                        $answer_type .=  _REGISTERED_MAIL.', ';
-                                    }
-                                    if ($process_data['direct_contact'] == true)
-                                    {
-                                        $answer_type .=  _DIRECT_CONTACT.', ';
-                                    }
-                                    if ($process_data['email'] == true)
-                                    {
-                                        $answer_type .=  _EMAIL.', ';
-                                    }
-                                    if ($process_data['fax'] == true)
-                                    {
-                                        $answer_type .=  _FAX.', ';
-                                    }
-                                    if ($process_data['no_answer'] == true)
-                                    {
-                                        $answer_type =  _NO_ANSWER.', ';
-                                    }
-                                    if ($process_data['other'] == true)
-                                    {
-                                        $answer_type .=  " ".$process_data['other_answer_desc']."".', ';
-                                    }
-                                    $answer_type = preg_replace('/, $/', '', $answer_type);
-                                    //$detailsExport .= $answer_type."</td></tr>";
-                                    ?>
-                                    <input name="answer_types" type="text" readonly="readonly" class="readonly" value="<?php echo $answer_type;?>" style="width:500px;" />
-                                </td>
-                            </tr>
-                            <?php
-                            /*$detailsExport .= "<tr>";
-                            $detailsExport .= "<td><label for='process_notes'>"._PROCESS_NOTES." : </label></td>";
-                            $detailsExport .= $db->show_string($process_data['process_notes'])."</td></tr>";*/
-                            ?>
-                            <!--<tr>
-                                <td><label for="process_notes"><?php echo _PROCESS_NOTES;?> : </label></td>
-                                <td><textarea name="process_notes" id="process_notes" readonly="readonly" style="width:500px;"><?php echo $db->show_string($process_data['process_notes']);?></textarea></td>
-                            </tr>-->
-                            <?php
-                            if (isset($closing_date) && !empty($closing_date))
-                            {
-                                /*$detailsExport .= "<tr>";
-                                $detailsExport .= "<td><label for='closing_date'>"._CLOSING_DATE." : </label></td>";
-                                $detailsExport .= $closing_date."</td></tr>";*/
-                                ?>
-                                <tr>
-                                    <td><label for="closing_date"><?php echo _CLOSING_DATE;?> : </label></td>
-                                    <td><input name="closing_date" type="text" readonly="readonly" class="readonly" value="<?php echo $closing_date;?>" /></td></td>
-                                </tr>
-                                <?php
-                            }
-                            //$detailsExport .= "</table>";
-                            ?>
-                        </table>
-                    </div>
                     <?php
                     if ($core->is_module_loaded('attachments'))
                     {
 
-		            require 'modules/templates/class/templates_controler.php';
-		            $templatesControler = new templates_controler();
-		            $templates = array();
-		            $templates = $templatesControler->getAllTemplatesForProcess($data['destination']['value']);
+                        require 'modules/templates/class/templates_controler.php';
+                        $templatesControler = new templates_controler();
+                        $templates = array();
+                        $templates = $templatesControler->getAllTemplatesForProcess($data['destination']['value']);
 
-                        $detailsExport .= "<h3>"._ATTACHED_DOC." : </h3>";
-                        $selectAttachments = "select res_id, creation_date, title, format from ".$_SESSION['tablename']['attach_res_attachments']." where res_id_master = ".$_SESSION['doc_id']." and coll_id ='".$_SESSION['collection_id_choice']."' and status <> 'DEL'";
-
-
+                        $selectAttachments = "select res_id, creation_date, title, format from " 
+                            . $_SESSION['tablename']['attach_res_attachments'] 
+                            . " where res_id_master = ".$_SESSION['doc_id']." and coll_id ='".$_SESSION['collection_id_choice']."' and status <> 'DEL'";
                         $dbAttachments = new dbquery();
                         $dbAttachments->connect();
                         $dbAttachments->query($selectAttachments);
-                        /*$detailsExport .= "<table width='100%'>";
-                        $detailsExport .= "<tr>";
-                        $detailsExport .= "<td>"._ID."</td>";
-                        $detailsExport .= "<td>"._DATE."</td>";
-                        $detailsExport .= "<td>"._TITLE."</td>";
-                        $detailsExport .= "<td>"._FORMAT."</td>";
-                        $detailsExport .= "</tr>";
-                        while($resAttachments = $dbAttachments->fetch_object())
-                        {
-                            $detailsExport .= "<tr>";
-                            $detailsExport .= "<td>".$resAttachments->res_id."</td>";
-                            $detailsExport .= "<td>".$resAttachments->creation_date."</td>";
-                            $detailsExport .= "<td>".$resAttachments->title."</td>";
-                            $detailsExport .= "<td>".$resAttachments->format."</td>";
-                            $detailsExport .= "</tr>";
-                        }
-                        $detailsExport .= "</table>";*/
                         ?>
-
-
-
-
-
-
+<!--                         <div>
+                        <label><?php echo _ATTACHED_DOC;?> : </label>
+                        <iframe name="list_attach" id="list_attach" src="<?php 
+                            echo $_SESSION['config']['businessappurl'];
+                                ?>index.php?display=true&module=attachments&page=frame_list_attachments&view_only&mode=normal" frameborder="0" width="100%" height="300px"></iframe>
+                        </div> -->
                         <div>
-					<br />
-				<center>
-					<?php
-                /*if ($core->is_module_loaded('templates') && (!isset($_SESSION['current_basket']['id']) && $core->test_service('edit_attachments_from_detail', 'attachments', false)) || isset($_SESSION['current_basket']['id'])) { */
-                if ($core->is_module_loaded('templates') && ($core->test_service('edit_attachments_from_detail', 'attachments', false))) {
-					/*$objectTable = $security->retrieve_table_from_coll($coll_id);
-					echo _GENERATE_ATTACHMENT_FROM;?><br />
-					<select name="templateOffice" id="templateOffice" style="width:250px" 
-								onchange="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=content_management&page=applet_popup_launcher'
-								+ '&objectType=attachmentFromTemplate&objectId=' + $('templateOffice').value + '&objectTable=<?php echo $objectTable;?>&resMaster=<?php echo $s_id;?>', '', 'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no');">
-	                    <option value=""><?php echo _OFFICE ;?></option>
-	                        <?php for ($i=0;$i<count($templates);$i++) {
+                    <br />
+                <center>
+                    <?php 
+                if ($core->is_module_loaded('templates') && (!isset($_SESSION['current_basket']['id']) && $core->test_service('edit_attachments_from_detail', 'attachments', false)) || isset($_SESSION['current_basket']['id'])) {
+                        $objectTable = $security->retrieve_table_from_coll($coll_id);
+                    echo _GENERATE_ATTACHMENT_FROM;?><br />
+                    <select name="templateOffice" id="templateOffice" style="width:250px" 
+                                onchange="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentFromTemplate'
+                                + '&objectId=' + $('templateOffice').value + '&objectTable=<?php echo $objectTable;?>&resMaster=<?php echo $s_id;?>', '', 'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no');">
+                        <option value=""><?php echo _OFFICE ;?></option>
+                            <?php for ($i=0;$i<count($templates);$i++) {
                                 if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
-	                                ?> <option value="
-	                                    <?php echo $templates[$i]['ID'];?>
-	                                    ">
-	                                    <?php echo $templates[$i]['LABEL'];?>
-	                                <?php } ?>
-	 								</option>
-	                        <?php } ?>
-                    </select>&nbsp;|&nbsp;*/
-                        ?><input type="button" name="attach" id="attach" class="button" value="<?php echo _CREATE_PJ;?>"
-                             onclick="showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
-                            . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create';?>')" />
+                                    ?> <option value="
+                                        <?php echo $templates[$i]['ID'];?>
+                                        ">
+                                        <?php echo $templates[$i]['LABEL'];?>
+                                    <?php } ?>
+                                    </option>
+                            <?php } ?>
+                    </select>&nbsp;|&nbsp;
 
-					<!--<select name="templateHtml" id="templateHtml" style="width:250px"                                 
-								onchange="checkBeforeOpenBlank('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=templates&page=generate_attachment_html&mode=add'
+                    <select name="templateHtml" id="templateHtml" style="width:250px" 
+                                onchange="checkBeforeOpenBlank('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=templates&page=generate_attachment_html&mode=add'
                                 + '&template=' + $('templateHtml').value + '&res_id=<?php echo $s_id;?>&coll_id=<?php echo $coll_id;?>', $('templateHtml').value);">
-	                    <option value=""><?php echo _HTML;?></option>
-	                    <?php
-	                        for ($i=0;$i<count($templates);$i++) {
+                        <option value=""><?php echo _HTML;?></option>
+                        <?php
+                            for ($i=0;$i<count($templates);$i++) {
                                 if ($templates[$i]['TYPE'] == 'HTML' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
-	                                ?><option value="
-	                                    <?php echo $templates[$i]['ID'];?>
-	                                    ">
-	                                    <?php echo $templates[$i]['LABEL'];?>
-	                                <?php } ?>
-	                            </option>
-	                        <?php } ?>
+                                    ?><option value="
+                                        <?php echo $templates[$i]['ID'];?>
+                                        ">
+                                        <?php echo $templates[$i]['LABEL'];?>
+                                    <?php } ?>
+                                </option>
+                            <?php } ?>
                     </select>
                     <br>
                     <?php echo _OR ;?>&nbsp;
-					<input type="button" name="attach" id="attach" class="button" value="<?php echo _ATTACH_FROM_HDD;?>" 
-						onclick="javascript:window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=join_file','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200');" />  -->                 
+                    <input type="button" name="attach" id="attach" class="button" value="<?php echo _ATTACH_FROM_HDD;?>" 
+                        onclick="javascript:window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=join_file','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200');" />                   
                 <?php } ?>
                 </center>
                         <label><?php echo _ATTACHED_DOC;?> : </label>
-                    <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&view_only=true&load&attach_type_exclude=response_project,outgoing_mail_signed&fromDetail=attachments" frameborder="0" width="100%" height="510px"></iframe>
+                        <iframe name="list_attach" id="list_attach" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal&view_only=true" frameborder="0" width="100%" height="450px"></iframe>
                         </div>
                         <?php
- 					}
-                    $detailsExport .= "<br><br><br>";
+                    }
                     ?>
-                </dd>
-                <?php
-                        $req = new dbquery;
-                        $req->connect();
-                        
-                        $countAttachments = "select res_id, creation_date, title, format from " 
-                                . $_SESSION['tablename']['attach_res_attachments'] 
-                                . " where res_id_master = " . $_SESSION['doc_id'] 
-                                . " and coll_id ='" . $_SESSION['collection_id_choice'] 
-                                . "' and status <> 'DEL' and (attachment_type = 'response_project' or attachment_type = 'outgoing_mail_signed')";
-                            $req->query($countAttachments);
-                            if ($req->nb_result() > 0) {
-                                $nb_rep = ' <span id="answer_number">(' . ($req->nb_result()). ')</span>';
-                            }
-                    
-                        ?>
-                <dt id="onglet_rep"><?php echo _DONE_ANSWERS .$nb_rep;?></dt>
-                <dd id="page_rep">
-                    <center>
-                        <?php
-                    if ($core->is_module_loaded('templates') && ($core->test_service('edit_attachments_from_detail', 'attachments', false))) {
-                            ?><input type="button" name="attach" id="attach" class="button" value="<?php echo _CREATE_PJ;?>"
-                                 onclick="showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
-                                . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create';?>')" />
-
-                    <?php } ?>
-                    </center>
-                    <iframe name="list_attach" id="list_attach" src="<?php echo
-                     $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type=response_project,outgoing_mail_signed&fromDetail=response';?>" 
-                    frameborder="0" width="100%" height="600px">
-                    </iframe>
                 </dd>
                 <?php
                     //SERVICE TO VIEW DOC HISTORY
