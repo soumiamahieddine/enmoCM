@@ -1187,9 +1187,7 @@ class basket extends dbquery
                  echo $theline;
                  ?>" class="users_to redirect" /><span id="indicator_<?php
                  echo $theline;
-                 ?>" style="display: none"><img src="<?php
-                 echo $_SESSION['config']['businessappurl'];
-                 ?>static.php?filename=loading.gif" alt="Working..." /></span><div id="options_<?php
+                 ?>" style="display: none"><i class="fa fa-spinner fa-2x"></i></span><div id="options_<?php
                  echo $theline;?>" class="autocomplete"></div></td></tr><?php
             }
             ?></tbody></table><p class="buttons"><input type="button" onclick="test_form();" name="valid" value="<?php
