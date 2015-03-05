@@ -223,7 +223,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                 'show_value' => $_SESSION['coll_categories']['rm_coll'][$cat_id],
                 'label' => _CATEGORY,
                 'display' => 'textinput',
-                'img' => $_SESSION['config']['businessappurl'] . 'static.php?filename=picto_change.gif'
+                'img' => 'arrows'
             );
         } else {
             $data['category_id'] = array (
