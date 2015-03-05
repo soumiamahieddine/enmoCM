@@ -289,7 +289,7 @@ class admin_reports extends dbquery
                 {
                     ?>
                     <h5 onclick="change(<?php  echo $_SESSION['cpt'];?>);" id="h2<?php  echo $_SESSION['cpt'];?>" class="categorie">
-                        <img src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=plus.png" alt="" />&nbsp;<b><?php  echo $enabled_reports_sort_by_parent[$value][0]['module_label'];?></b>
+                        <i class='fa fa-plus fa-2x'></i>&nbsp;<b><?php  echo $enabled_reports_sort_by_parent[$value][0]['module_label'];?></b>
                         <span class="lb1-details">&nbsp;</span>
                     </h5>
                     <br/>
