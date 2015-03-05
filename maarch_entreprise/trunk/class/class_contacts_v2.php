@@ -456,9 +456,9 @@ class contacts_v2 extends dbquery
                 echo '&nbsp;' . _VIEW;
             }
             ?>
-        </h2>
+        </h1>
         <div id="inner_content_contact" class="clearfix" align="center" style="margin-bottom:15px;">
-            <div class="block">
+        <div class="block">
             <?php
             if($state == false)
             {
@@ -675,7 +675,6 @@ class contacts_v2 extends dbquery
                 }
             }
             ?>
-        </div>
         </div>
         </div>
     <?php
