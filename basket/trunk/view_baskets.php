@@ -219,7 +219,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
                     if(form)
                     {
                         var q_name = form.query_name.value;
-                        $('modal').innerHTML = '<img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=loading.gif" />';
+                        $('modal').innerHTML = '<i class="fa fa-spinner fa-2x"></i>';
 
                         new Ajax.Request('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=manage_query',
                         {
@@ -312,9 +312,7 @@ if (isset($_SESSION['current_basket']['page_include'])
          echo "<p align = 'justify'>
          <table width='100%'>
              <tr>
-                 <td width='80px'><img src='"
-         . $_SESSION['config']['businessappurl']
-         . "static.php?filename=lunch_guide.gif'> </td>
+                 <td width='80px'><i class='fa fa-question-circle fa-2x'></i> </td>
                  <td> <div class='block' align='center'>"
          . _BASKET_WELCOME_TXT1 . "<br/>" . _BASKET_WELCOME_TXT2
          . ".<div class='block_end'>&nbsp;</div></div></td>
