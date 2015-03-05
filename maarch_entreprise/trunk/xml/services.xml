@@ -196,7 +196,7 @@
    <id>my_contacts</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
    <name>_MY_CONTACTS</name>
    <comment>_MY_CONTACTS</comment>
-   <servicetype>menu</servicetype>
+   <servicetype>use</servicetype>
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
@@ -222,7 +222,7 @@
    <comment>_REOPEN_MAIL_DESC</comment>
   <servicepage>index.php?page=reopen_mail&amp;admin=reopen_mail</servicepage>
    <servicetype>admin</servicetype>
-   <style>fa fa-clipboard</style>
+   <style>fa fa-envelope-square</style>
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
