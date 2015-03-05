@@ -617,7 +617,7 @@ input.button {
     float: left;
     display: block;
     text-align: left;
-    width: auto;
+    width: 40%;
     margin-right: 1em;
     vertical-align: middle;
 }
