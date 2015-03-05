@@ -539,17 +539,19 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $templatesControler = new templates_controler();
         $templates = array();
         $templates = $templatesControler->getAllTemplatesForProcess($data['destination']['value']);
+        $_SESSION['destination_entity'] = $data['destination']['value'];
+        //var_dump($templates);
         $frm_str .= '<div id="list_answers_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
-            $frm_str .= '<div style="margin-top:-2px;">';
-                $frm_str .= '<div id="processframe" name="processframe" class="block">';
+            $frm_str .= '<div class="block" style="margin-top:-2px;">';
+                $frm_str .= '<div id="processframe" name="processframe">';
                     $frm_str .= '<center><h2 onclick="new Effect.toggle(\'list_answers_div\', \'blind\', {delay:0.2});';
                     $frm_str .= 'new Effect.toggle(\'done_answers_div\', \'blind\', {delay:0.2});';
                     $frm_str .= 'whatIsTheDivStatus(\'done_answers_div\', \'divStatus_done_answers_div\');';
-                    $frm_str .= 'return false;">' . _ATTACHMENTS . ', ' . _DONE_ANSWERS . '</h2></center>';
+                    $frm_str .= 'return false;">' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
                     $req = new request;
                     $req->connect();
                     $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
-                        . " where status = 'NEW' and res_id_master = " . $res_id . " and coll_id = '" . $coll_id ."'");
+                        . " where (status = 'A_TRA' or status = 'TRA') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
                     //$req->show();
                     $nb_attach = 0;
                     if ($req->nb_result() > 0) {
@@ -558,9 +560,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<div class="ref-unit">';
                     $frm_str .= '<center>';
                     if ($core_tools->is_module_loaded('templates')) {
-                        $objectTable = $sec->retrieve_table_from_coll($coll_id);
-                        $frm_str .= _GENERATE_ATTACHMENT_FROM
-                            . ' <br><select name="templateOffice" id="templateOffice" style="width:250px" onchange="';
+/*                        $objectTable = $sec->retrieve_table_from_coll($coll_id);
+
+
+                        $frm_str .= _GENERATE_ATTACHMENT_FROM . ' <br><select name="templateOffice" id="templateOffice" style="width:250px" onchange="';
                         //$frm_str .= 'loadApplet(\''
                         $frm_str .= 'window.open(\''
                             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
@@ -605,17 +608,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                         }
                                     $frm_str .= '</option>';
                                 }
-                        $frm_str .= '</select><br>' . _OR . '&nbsp;';
+                        $frm_str .= '</select><br>' . _OR . '&nbsp;';*/
                         $frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'
-                            . _ATTACH_FROM_HDD
-                            . '" onclick="javascript:window.open(\'' . $_SESSION['config']['businessappurl']
+
+                            . _CREATE_PJ
+/*                            . '" onclick="javascript:window.open(\'' . $_SESSION['config']['businessappurl']
                             . 'index.php?display=true&module=attachments&page=join_file\',\'\', \'scrollbars=yes,'
-                            . 'menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200\');" />';
+                            . 'menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=600\');" />';*/
+                            .'" onclick="showAttachmentsForm(\'' . $_SESSION['config']['businessappurl']
+                            . 'index.php?display=true&module=attachments&page=attachments_content\')" />';
                     }
                     $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'
                     . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=attachments&page=frame_list_attachments" '
-                    . 'frameborder="0" width="100%" height="450px"></iframe>';
+                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load" '
+                    . 'frameborder="0" width="100%" height="600px"></iframe>';
                     $frm_str .= '</div>';
                 $frm_str .= '</div>';
                 //$frm_str .= '<hr class="hr_process"/>';
