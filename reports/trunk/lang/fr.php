@@ -21,7 +21,7 @@
 
 /*************************** Report management *****************/
 if (!defined('_ADMIN_REPORTS'))
-    define('_ADMIN_REPORTS','&Eacute;tats et &eacute;ditions');
+    define('_ADMIN_REPORTS','Etats et &eacute;ditions');
 if (!defined('_ADMIN_REPORTS_DESC'))
     define('_ADMIN_REPORTS_DESC','Administration des &eacute;tats et des &eacute;ditions');
 if (!defined('_REPORTS'))

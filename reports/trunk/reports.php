@@ -68,25 +68,19 @@ if ($rep->is_module_loaded('folder')) {
 }
 //$db->show();
 ?>
-<h1><img src="<?php 
-echo $_SESSION['config']['businessappurl'];
-?>static.php?filename=reports_b.gif&module=reports" alt="" /> <?php 
+<h1><i class="fa fa-area-chart fa-2x"></i> <?php 
 echo _REPORTS;
 ?></h1>
 <div id="inner_content" class="clearfix">
 <div class="block">
 <h2>
-    <img src="<?php 
-echo $_SESSION['config']['businessappurl'];
-?>static.php?filename=contrat_mini.png" alt=""  /> <?php 
+    <i class="fa fa-file fa-2x"></i> <?php 
 echo _NB_TOTAL_DOC;
 ?> : <b><?php echo $countPiece->total; ?></b>
     <?php 
 if ($rep->is_module_loaded('folder')) {
 	?>
-    &nbsp;&nbsp; <img src="<?php 
-    echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=folder_documents_mini.png" alt=""  /> <?php 
+    &nbsp;&nbsp; <i class="fa fa-folder fa-2x"></i> <?php 
     echo _NB_TOTAL_FOLDER;
     ?> : <b><?php echo $countFolder->total; ?></b><?php
 }

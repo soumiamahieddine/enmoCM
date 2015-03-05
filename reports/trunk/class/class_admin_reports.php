@@ -218,13 +218,9 @@ class admin_reports extends dbquery
             if (count($users) > 0) {
                 ?>
                 <div onclick="new Effect.toggle('users_list', 'blind', {delay:0.2});return false;" >
-                &nbsp;<img src="<?php
-                echo $_SESSION['config']['businessappurl'];
-                ?>static.php?filename=membres_groupe_b.gif" alt="" /><i><?php
+                &nbsp;<i class="fa fa-users fa-2x"></i> <i><?php
                 echo _SEE_GROUP_MEMBERS;
-                ?></i> <img src="<?php
-                echo $_SESSION['config']['businessappurl'];
-                ?>static.php?filename=plus.png" alt="" />
+                ?></i> <i class="fa fa-angle-right"></i>
                 <span class="lb1-details">&nbsp;</span></div>
                 <div class="desc" id="users_list" style="display:none;">
                     <div class="ref-unit">
