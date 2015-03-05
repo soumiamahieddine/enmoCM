@@ -100,7 +100,7 @@ echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_of
         <table width="100%" height="100%" cellspacing="5" style="border:1px solid #999999;">
         <tr>
             <td width="55%" height="720px" style="vertical-align: top; text-align: left;border-right:1px solid #999999;">
-                <div id="loading" style="display:none;"><img src="<?php echo $_SESSION['config']['businessappurl']; ?>static.php?filename=loading.gif" alt="loading..." width="24px" height="24px" /></div>
+                <div id="loading" style="display:none;"><i class="fa fa-spinner fa-2x"></i></div>
                 <div id="myTree" style="height: 100%;overflow: auto;">&nbsp;</div>
             </td>
             <td width="45%" style="vertical-align: top;">
