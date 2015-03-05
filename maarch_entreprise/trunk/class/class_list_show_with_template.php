@@ -597,10 +597,7 @@ class list_show_with_template extends list_show
         $extend = "";
         foreach ($template_list as $temp) {
             $extend .= "&nbsp;<a href='" . $link . "&amp;template="
-                    .$temp['name'] . "'> <img src='"
-                    . $_SESSION['config']['businessappurl']
-                    . "static.php?filename=" . $temp['img'] . "' alt='"
-                    . $temp['label'] . "' title='" . $temp['label'] . "'></a>";
+                    .$temp['name'] . "'> <i class='" . $temp['img'] . "' title='" . $temp['label'] . "'></i></a>";
         }
         return $standard." ".$extend."";
     }
