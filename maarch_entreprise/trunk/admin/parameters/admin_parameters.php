@@ -174,5 +174,5 @@ $_SESSION['m_admin']['init'] = true;
 $title = _PARAMETERS." : ".$i." "._PARAMETER_S;
 $autoCompletionArray = false;//array();
 
-$list->admin_list($tab, $i, $title, 'id','admin_parameters','parameters', 'id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_PARAMETERS, _PARAMETER, $_SESSION['config']['businessappurl'].'static.php?picto_help_admin.gif', false, true, false, true, "", true, $autoCompletionArray, false, true);
+$list->admin_list($tab, $i, $title, 'id','admin_parameters','parameters', 'id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, false, false, _ALL_PARAMETERS, _PARAMETER, 'wrench', false, true, false, true, "", true, $autoCompletionArray, false, true);
 ?>

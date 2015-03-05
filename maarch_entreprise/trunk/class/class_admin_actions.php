@@ -241,7 +241,7 @@ class AdminActions extends dbquery
             }
         }
         ?>
-        <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=manage_actions_b.gif" alt="" />
+        <h1><i class="fa fa-exchange fa-2x"></i>
                 <?php
                 if($mode == "up")
                 {
