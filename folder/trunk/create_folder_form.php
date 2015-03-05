@@ -74,6 +74,7 @@ $init = false;
 
 <h1><i class="fa fa-folder-open fa-2x" title="" /></i> <?php  echo _CREATE_FOLDER;?></h1>
 <div id="inner_content">
+    <div class="block">
     <form name="create_folder" id="create_folder" action="<?php
 echo $_SESSION['config']['businessappurl'];
 ?>index.php?display=true&module=folder&page=manage_create_folder" method="post" class="forms">
@@ -106,7 +107,7 @@ for ($i = 0; $i < count($foldertypes); $i ++) {
     <?php
     }
 ?>
-            </select> <span class="red_asterisk">*</span>
+            </select> <i class="red_asterisk fa fa-asterisk mCyellow"></i>
         </p>
         <p>
             <label for="folder_id"><?php echo _ID;?></label>
@@ -114,7 +115,7 @@ for ($i = 0; $i < count($foldertypes); $i ++) {
 if (isset($_SESSION['m_admin']['folder']['folder_id'])) {
     echo $_SESSION['m_admin']['folder']['folder_id'];
 }
-?>" /> <span class="red_asterisk">*</span>
+?>" /> <i class="red_asterisk fa fa-asterisk mCyellow"></i>
         </p>
         <p>
             <label for="folder_name"><?php echo _FOLDERNAME;?></label>
@@ -122,10 +123,10 @@ if (isset($_SESSION['m_admin']['folder']['folder_id'])) {
 if (isset($_SESSION['m_admin']['folder']['folder_name'])) {
     echo $_SESSION['m_admin']['folder']['folder_name'];
 }
-?>" /> <span class="red_asterisk">*</span>
+?>" /> <i class="red_asterisk fa fa-asterisk mCyellow"></i>
         </p>
         <div id="folder_indexes"></div>
-        <p class="buttons">
+        <p class="buttons" style="text-align:center;">
             <input type="submit" name="validate" id="validate" value="<?php
 echo _VALIDATE;
 ?>" class="button"/>
@@ -136,6 +137,7 @@ echo $_SESSION['config']['businessappurl'];
 ?>index.php';" />
         </p>
     </form>
+    </div>
     <?php
 if ((isset($_SESSION['m_admin']['folder']['foldertype_id'])
     && ! empty($_SESSION['m_admin']['folder']['foldertype_id'] ))
