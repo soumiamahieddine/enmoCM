@@ -64,7 +64,7 @@ else
 
 }
 ?>
-<h1><i class="fa fa-suitcase fa-2x"></i> <?php  echo _VIEW_TREE_DOCTYPES;?></h1>
+<h1><i class="fa fa-code-fork fa-2x"></i> <?php  echo _VIEW_TREE_DOCTYPES;?></h1>
 <div id="inner_content" class="clearfix">
     <table width="100%" border="0">
     <?php if($admin->is_module_loaded('folder') == true)

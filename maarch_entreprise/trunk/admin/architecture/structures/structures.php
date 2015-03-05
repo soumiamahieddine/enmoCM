@@ -164,7 +164,6 @@ $list->admin_list(
     'doctypes_first_level_id"', 'structures', 'structures',
     'doctypes_first_level_id', true, $pageNameUp, $pageNameVal, $pageNameBan,
     $pageNameDel, $pageNameAdd, $addLabel, FALSE, TRUE, _ALL_STRUCTURES,
-    _STRUCTURE, $_SESSION['config']['businessappurl']
-    . 'static.php?filename=manage_structures_b.gif', false, true, false, true,
+    _STRUCTURE, 'folder', false, true, false, true,
     "", true, $autoCompletionArray
 );

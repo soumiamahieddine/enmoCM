@@ -270,7 +270,7 @@ $erreur = "";
 </div>
 <div class="block">
 <h2>
-&nbsp;<i class="fa fa-briefcase fa-2x"></i> <?php
+&nbsp;<i class="fa fa-folder fa-2x"></i> <?php
 if ($mode == "up") {
     echo _STRUCTURE_MODIF;
 } else {

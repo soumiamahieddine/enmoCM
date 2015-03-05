@@ -54,29 +54,35 @@ unset($_SESSION['m_admin']);
 <div id="inner_content" class="clearfix">
 <div class="block">
     <h2 style="text-align:center;"><?php  echo _ARCHITECTURE;?></h2>
-    <div  class="admin_item" id="admin_structures" title="<?php  echo _MANAGE_STRUCTURE_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=structures';">
-        <div class="sum_margin">
+    <div  class="admin_item" title="<?php  echo _MANAGE_STRUCTURE_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=structures';">
+               <div><i class="fa fa-folder fa-4x"></i> </div>
+        <div>
                 <strong><?php  echo _MANAGE_STRUCTURE;?></strong><!--<br/>
                 <em><?php  echo _MANAGE_STRUCTURE_DESC;?></em>-->
         </div>
     </div>
 
-    <div class="admin_item" id="admin_subfolders" title="<?php  echo _MANAGE_SUBFOLDER_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=subfolders';">
-        <div class="sum_margin">
+    <div class="admin_item" title="<?php  echo _MANAGE_SUBFOLDER_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=subfolders';">
+             <div><i class="fa fa-folder-open fa-4x"></i></div>
+        <div>
                 <strong><?php  echo _MANAGE_SUBFOLDER;?></strong><!--<br/>
                 <em><?php  echo _MANAGE_SUBFOLDER_DESC;?></em>-->
          </div>
     </div>
 
-    <div class="admin_item" id="admin_types" title="<?php  echo _MANAGE_DOCTYPES_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=types';">
-        <div class="sum_margin">
+    <div class="admin_item" title="<?php  echo _MANAGE_DOCTYPES_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=types';">
+        <div><i class="fa fa-file-text-o fa-4x"></i></div>
+        <div>
+        
                 <strong><?php  echo _MANAGE_DOCTYPES;?></strong><!--<br/>
                 <em><?php  echo _MANAGE_DOCTYPES_DESC;?></em>-->
          </div>
     </div>
 
-    <div class="admin_item" id="view_tree_types" title="<?php  echo _VIEW_TREE_DOCTYPES_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_types&admin=architecture';">
-        <div class="sum_margin">
+    <div class="admin_item" title="<?php  echo _VIEW_TREE_DOCTYPES_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_types&admin=architecture';">
+        <div><i class="fa fa-code-fork fa-4x"></i></div> 
+        <div>
+        
                 <strong><?php  echo _VIEW_TREE_DOCTYPES;?></strong><!--<br/>
                 <em><?php  echo _VIEW_TREE_DOCTYPES_DESC;?></em>-->
          </div>
@@ -84,3 +90,5 @@ unset($_SESSION['m_admin']);
 <div class="clearfix"></div>
 </div>
 </div>
+
+

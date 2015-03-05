@@ -222,7 +222,7 @@ $erreur = "";
 ?>
 </div>
 <div class="block">
-<h2> &nbsp;<i class="fa fa-briefcase fa-2x"></i> <?php  
+<h2> &nbsp;<i class="fa fa-folder-open fa-2x"></i> <?php  
 if ($mode == "up") { 
 	echo _SUBFOLDER_MODIF;
 } else { 

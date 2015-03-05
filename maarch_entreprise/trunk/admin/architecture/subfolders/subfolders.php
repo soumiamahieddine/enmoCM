@@ -119,5 +119,5 @@ $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']."index.php?display=true&page=subfolders_list_by_name";
 $autoCompletionArray["number_to_begin"] = 1;
 
-$list->admin_list($tab, $i, _SUBFOLDER_LIST.' : '.$i." ".strtolower(_SUBFOLDERS), 'doctypes_second_level_id','subfolders','subfolders','doctypes_second_level_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, TRUE, _ALL_SUBFOLDERS, _SUBFOLDER, $_SESSION['config']['businessappurl'].'static.php?filename=gerer_sous-dossiers_b.gif', false, true, false, true, "", true, $autoCompletionArray);
+$list->admin_list($tab, $i, _SUBFOLDER_LIST.' : '.$i." ".strtolower(_SUBFOLDERS), 'doctypes_second_level_id','subfolders','subfolders','doctypes_second_level_id', true, $page_name_up, $page_name_val, $page_name_ban, $page_name_del, $page_name_add, $label_add, FALSE, TRUE, _ALL_SUBFOLDERS, _SUBFOLDER, 'folder-open', false, true, false, true, "", true, $autoCompletionArray);
 ?>
