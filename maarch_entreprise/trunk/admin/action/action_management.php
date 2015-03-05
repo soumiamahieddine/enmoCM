@@ -6,14 +6,12 @@ if($mode == 'list'){
         'action_management_controler&mode=list','action','id', true,
         $page_name_up, $page_name_val, $page_name_ban, $page_name_del,
         $page_name_add, $label_add, FALSE, FALSE, _ALL_ACTIONS, _ACTION,
-        $_SESSION['config']['businessappurl']
-        . 'static.php?filename=manage_actions_b.gif', false, true, false, true,
+        'exchange', false, true, false, true,
         $what, true, $autoCompletionArray
     );
 }
 elseif($mode == 'up' || $mode == 'add'){
-    ?><h1><img src="<?php echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=manage_actions_b.gif" alt="" />
+    ?><h1><i class="fa fa-exchange fa-2x"></i>
         <?php
         if($mode == 'up'){
             echo _MODIFY_ACTION;

@@ -20,8 +20,7 @@ if ($mode == 'list') {
         false,
         _ALL_STATUS,
         _STATUS,
-        $_SESSION['config']['businessappurl']
-        . 'static.php?filename=manage_users_b.gif',
+        'check-circle',
         false,
         true,
         false,
@@ -31,9 +30,7 @@ if ($mode == 'list') {
         $statusList['autoCompletionArray']
     );
 } elseif ($mode == 'up' || $mode == 'add') {
-    ?><h1><img src="<?php
-    echo $_SESSION['config']['businessappurl'];
-    ?>static.php?filename=manage_status_b.gif" alt="" />
+    ?><h1><i class="fa fa-check-circle fa-2x"></i>
     <?php
         if ($mode == 'up') {
             echo _MODIFY_STATUS;
