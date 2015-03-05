@@ -370,7 +370,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         $preview = array(
                     "type"      =>  "preview",
                     "class"     =>  "preview",
-                    "icon"      =>  $_SESSION['config']['businessappurl']."static.php?filename=showFrameAdminList.png",
+                    "icon"      =>  "comment-o",
                     "tooltip"   =>  _NOTES,
                     "content"   =>  '{"identifierDetailFrame" : "@@id@@", "'._DATE.'" : "@@date_note@@", "'._USER.'" : "@@lastname@@", "'._NOTES.'" : "@@note_text@@"}'
                 );
@@ -382,7 +382,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                                     ."&mode=up&id=@@id@@&identifier=".$identifier."&origin=".$origin
                                     . $parameters."');",
             "class"         =>  "read",
-            "icon"          =>  $_SESSION['config']['businessappurl']."static.php?module=notes&filename=modif_note_small.gif",
+            "icon"          =>  "pencil",
             // "label"         =>  _UPDATE.'/'._DELETE,
             "tooltip"       =>  _UPDATE.'/'._DELETION,
             "disabledRules" => "@@user_id@@ != '".$_SESSION['user']['UserId']."'"
