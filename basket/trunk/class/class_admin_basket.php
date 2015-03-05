@@ -199,7 +199,7 @@ class admin_basket extends dbquery
         ?>
         <div id="inner_content" class="clearfix">
             <div id="add_box_diff_list" style="width:25%;">
-                <div class="block" style="height:350px;">
+                <div class="block" style="height:400px;">
                 <iframe name="groupbasket_form" id="groupbasket_form" src="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=groupbasket_form";?>"  frameborder="0" class="frameform2" width="280px" style="width:100%;"></iframe>
                 </div>
             <div class="block_end">&nbsp;</div>
@@ -213,7 +213,7 @@ class admin_basket extends dbquery
             else
             {
             ?>
-            <div class="block" style="float:left;width:70%;height:350px;">
+            <div class="block" style="float:left;width:70%;height:400px;overflow:auto;">
             <form name="formbasket" id="formbasket" method="post" style="margin:auto;" action="<?php if($mode == "up") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_up_db"; } elseif($mode == "add") { echo $_SESSION['config']['businessappurl']."index.php?display=true&module=basket&page=basket_add_db"; } ?>" class="forms addforms">
                 <input type="hidden" name="display"  value="true" />
                 <input type="hidden" name="module"  value="basket" />
@@ -259,7 +259,7 @@ class admin_basket extends dbquery
                 </p>
                 <p>
                     <label><?php echo _DESC; ?> : </label>
-                    <textarea  cols="30" rows="4"  name="basketdesc"  id="basketdesc" ><?php echo $_SESSION['m_admin']['basket']['desc']; ?></textarea>
+                    <textarea  cols="30" rows="4"  name="basketdesc"  style="width:200px;" id="basketdesc" ><?php echo $_SESSION['m_admin']['basket']['desc']; ?></textarea>
                 </p>
                 <?php if($_SESSION['m_admin']['basket']['is_generic'] == 'Y')
                 {
@@ -270,7 +270,7 @@ class admin_basket extends dbquery
                 <?php } ?>
                 <p>
                     <label><?php echo _BASKET_VIEW;?> : </label>
-                    <textarea  cols="30" rows="4"  name="basketclause" id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause']; ?></textarea> <a href="#" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=keywords_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><i class = "fa fa-question-circle fa-2x" title="<?php echo _HELP_KEYWORDS; ?>" ></i></a>
+                    <textarea  cols="30" rows="4" style="width:415px;" name="basketclause" id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause']; ?></textarea> <a href="#" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=keywords_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><i class = "fa fa-question-circle fa-2x" title="<?php echo _HELP_KEYWORDS; ?>" ></i></a>
                 </p>
                 <p>
                     <label><?php echo _BASKET_VISIBLE_ONLY_ON_SEARCH;?> : </label>
