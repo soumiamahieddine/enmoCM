@@ -121,16 +121,17 @@ Mods
                                     <td style="font-size:10px;">##loadValue|priority##</td>
                                     <td style="font-size:10px;" width ="30px" alt="##defineLang|_CATEGORY##" title="##defineLang|_CATEGORY##" ##clickOnLine##>##loadValue|category_img##</td>
                                     <td style="font-size:10px;" width ="150px" >##loadValue|category_id##</td>
-                                    <td style="font-size:10px;" width ="30px" alt="##defineLang|_CREATION_DATE##" title="##defineLang|_CREATION_DATE##" ##clickOnLine##><img src="##loadImage|date_arriv.gif##"> </td>
+                                    <td style="font-size:10px;" width ="30px" alt="##defineLang|_CREATION_DATE##" title="##defineLang|_CREATION_DATE##" ##clickOnLine##><i class="fa fa-calendar fa-2x"></i> </td>
                                     <td style="font-size:10px;" width ="100px" >##loadValue|creation_date##</td>
-                                    <td style="font-size:10px;" width ="30px" alt="##defineLang|_PROCESS_LIMIT_DATE##" title="##defineLang|_PROCESS_LIMIT_DATE##" ##clickOnLine##><img src="##loadImage|date_limit.gif##"> </td>
+                                    <td style="font-size:10px;" width ="30px" alt="##defineLang|_PROCESS_LIMIT_DATE##" title="##defineLang|_PROCESS_LIMIT_DATE##" ##clickOnLine##><i class="fa fa-bell fa-2x"></i> </td>
                                     <td style="font-size:10px;" width ="100px" >##loadValue|process_limit_date##</td>
-                                    <td style="font-size:10px;text-align:right" width ="30px" alt="##defineLang|_DEST_USER##" title="##defineLang|_DEST_USER##" ##clickOnLine##><img src="##loadImage|manage_users_entities_b_small.gif##"></td>
+                                    <td style="font-size:10px;text-align:right" width ="30px" alt="##defineLang|_DEST_USER##" title="##defineLang|_DEST_USER##" ##clickOnLine##><i class="fa fa-user fa-2x"></i></td>
                                     <td style="font-size:10px;" width ="110px" > ##loadValue|dest_user##</td>
-                                    <td style="font-size:10px;text-align:right" width ="30px" alt="##defineLang|_TYPE##" title="##defineLang|_TYPE##" ##clickOnLine##><img src="##loadImage|mini_type.gif##">
+                                    <td style="font-size:10px;text-align:right" width ="30px" alt="##defineLang|_TYPE##" title="##defineLang|_TYPE##" ##clickOnLine##><i class="fa fa-file fa-2x"></i>
                                     <td style="font-size:10px;text-align:left" width ="410px" ##clickOnLine##>##loadValue|type_label##</td>
                                     <td >##func_bool_see_notes##</td>
-                                    <td width ="30px"><img src="##ifStatement|#loadValue|is_persistent#==true|#loadImage|persistentLock.gif#|#loadImage|persistentUnlock.gif#|##" width="27" height="27"></td>
+                                    <!-- Désactivation de l'image permettant de visualiser la persistance -->
+                                    <!-- td width ="30px"><img src="##ifStatement|#loadValue|is_persistent#==true|#loadImage|persistentLock.gif#|#loadImage|persistentUnlock.gif#|##" width="27" height="27"></td -->
                                     <td width ="30px">##showIconDetails##</td>
                                     <td style="font-size:12px; color:red;" width="15px">##loadValue|viewed##</td>
                                </tr>                         
