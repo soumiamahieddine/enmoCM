@@ -158,7 +158,7 @@ class ReopenMail extends dbquery
     public function formreopenmail()
     {
         ?>
-        <h1><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=default_status_big.gif" alt="" border="0" /> <?php echo _REOPEN_MAIL;?></h1>
+        <h1><i class="fa fa-envelope-square fa-2x"></i> <?php echo _REOPEN_MAIL;?></h1>
 
         <div id="inner_content" class="clearfix" align="center">
         <div class="block">
