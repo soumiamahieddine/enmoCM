@@ -426,10 +426,11 @@ function del_query_confirm()
 }
 -->
 </script>
-
+<?php if($_GET['mode']!='popup'){ ?>
 <h1>
     <i class="fa fa-search fa-2x"></i> <?php echo _ADV_SEARCH_MLB; ?>
 </h1>
+<?php } ?>
 <div id="inner_content">
 
 <?php if (count($queries) > 0)
@@ -606,7 +607,7 @@ if(isset($_REQUEST['nodetails']))
                     <td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT;?>:</label>
                         <input type="text" name="fulltext" id="fulltext" <?php echo $size; ?>  />
                         <input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
-                        <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=fulltext_search_help&mode=popup','modify','toolbar=no,status=no,width=500,height=259,left=300,top=300,scrollbars=auto,location=no,directories=no,menubar=no,resizable=yes');"><i class="fa fa-search" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>"></i></a>
+                        <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=fulltext_search_help&mode=popup','modify','toolbar=no,status=no,width=500,height=270,left=300,top=300,scrollbars=auto,location=no,directories=no,menubar=no,resizable=yes');"><i class="fa fa-search" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>"></i></a>
                     </td>
                     <td><em><?php echo _FULLTEXT_HELP; ?></em></td>
                 </tr>
