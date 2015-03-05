@@ -72,7 +72,7 @@ $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = $request->show_string($
 $_SESSION['m_admin']['contact']['CONTACT_TYPE'] = $line->contact_type;
 $_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
 ?>
-	<h1> <?php echo _VIEW_CONTACT; ?></h1>
+	<h1><i class="fa fa-users fa-2x"></i>&nbsp;<?php echo _VIEW_CONTACT; ?></h1>
 	<div id="test" class="clearfix" align="center">
 <?php
 		$contact->get_contact_form();

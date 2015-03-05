@@ -337,7 +337,7 @@ for ($i = 0; $i < count($tab); $i ++) {
             }
 	        $use = array(
 	                "script"        => "set_new_contact_address('".$_SESSION['config']['businessappurl'] . "index.php?display=false&dir=my_contacts&page=get_last_contact_address&contactid=".$_SESSION['contact']['current_contact_id']."&addressid=@@id@@', '".$infoContactDiv."', 'true');simpleAjax('".$_SESSION['config']['businessappurl']."index.php?display=true&page=unsetAttachmentContact');",
-	                "class"         =>  "change",
+	                "class"         =>  "use",
 	                "label"         =>  _USE,
                     "tooltip"       =>  _USE
 	                );
@@ -357,9 +357,9 @@ for ($i = 0; $i < count($tab); $i ++) {
         $view = array(
                 "script"        => "window.top.location='".$_SESSION['config']['businessappurl']
                                         ."index.php?dir=indexing_searching&page=contact_address_view&addressid=@@id@@&what=".$what."&start=".$start."'",
-                "class"         =>  "change",
+                "class"         =>  "view",
                 "label"         =>  _VIEW,
-                "tooltip"       =>  _MODIFY
+                "tooltip"       =>  _VIEW
                 );
         array_push($paramsTab['actionIcons'], $view);
     }

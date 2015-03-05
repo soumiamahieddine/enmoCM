@@ -293,9 +293,9 @@ $contact    = new contacts_v2();
         $view = array(
                 "script"        => "window.top.location='".$_SESSION['config']['businessappurl']
                                         ."index.php?dir=indexing_searching&page=contacts_view&fromSearchContactsList&id=@@contact_id@@&what=".$what."&start=".$start."'",
-                "class"         =>  "change",
+                "class"         =>  "view",
                 "label"         =>  _VIEW,
-                "tooltip"       =>  _MODIFY
+                "tooltip"       =>  _VIEW
                 );
         array_push($paramsTab['actionIcons'], $view);
     }

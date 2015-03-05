@@ -2830,6 +2830,12 @@ class lists extends dbquery
             } elseif($actualButton['class'] == 'authorize') {
                 $icon .= '<i class="fa fa-check fa-2x" title="' . _AUTHORIZE . '"></i>';
                 $showLabel = false;
+            }  elseif($actualButton['class'] == 'view') {
+                $icon .= '<i class="fa fa-eye fa-2x" title="' . _VIEW . '"></i>';
+                $showLabel = false;
+            }  elseif($actualButton['class'] == 'use') {
+                $icon .= '<i class="fa fa-dot-circle-o fa-2x" title="' . _USE . '"></i>';
+                $showLabel = false;
             }
         } else { 
             $icon .= '>'; 

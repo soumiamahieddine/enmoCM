@@ -320,9 +320,9 @@ if (!$return) {
     $view = array(
             "script"        => "window.top.location='".$_SESSION['config']['businessappurl']
                                     ."index.php?page=contact_addresses_up&fromSearchContacts&id=@@ca_id@@&what=".$what."&start=".$start."'",
-            "class"         =>  "change",
+            "class"         =>  "view",
             "label"         =>  _VIEW,
-            "tooltip"       =>  _MODIFY
+            "tooltip"       =>  _VIEW
             );
     array_push($paramsTab['actionIcons'], $view);
     
