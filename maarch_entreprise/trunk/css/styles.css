@@ -617,7 +617,7 @@ input.button {
     float: left;
     display: block;
     text-align: left;
-    width: 40%;
+    width: auto;
     margin-right: 1em;
     vertical-align: middle;
 }
@@ -828,7 +828,7 @@ width: 770px;
 }
 
 .listing td {
-    background-color: #6ab1de;
+    background-color: #93D1E4;
 }
 
 .listingIndex td {
