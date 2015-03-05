@@ -320,7 +320,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                                     ."index.php?display=true&module=sendmail&page=sendmail_ajax_content"
                                     ."&mode=read&id=@@email_id@@&identifier=".$identifier."&origin=".$origin
                                     . $parameters."');",
-            "icon"      =>  $_SESSION['config']['businessappurl']."static.php?filename=icon_read.png",
+            "icon"      =>  'eye',
             "tooltip"   =>  _READ
         );
         array_push($paramsTab['actionIcons'], $read);  
@@ -339,7 +339,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                                     ."index.php?display=true&module=sendmail&page=sendmail_ajax_content"
                                     ."&mode=transfer&id=@@email_id@@&identifier=".$identifier."&origin=".$origin
                                     . $parameters."');",
-            "icon"      =>  $_SESSION['config']['businessappurl']."static.php?filename=nature_send.gif",
+            "icon"      =>  "mail-forward",
             "tooltip"       =>  _TRANSFER_EMAIL,
             "disabledRules" => "@@user_id@@ != '".$_SESSION['user']['UserId']."' || @@email_status@@ != 'S'"
         );
