@@ -71,7 +71,7 @@ unset($_SESSION['m_admin']);
     </div>
 
     <div class="admin_item" title="<?php  echo _MANAGE_DOCTYPES_DESC;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=types';">
-        <div><i class="fa fa-file-text-o fa-4x"></i></div>
+        <div><i class="fa fa-files-o fa-4x"></i></div>
         <div>
         
                 <strong><?php  echo _MANAGE_DOCTYPES;?></strong><!--<br/>
