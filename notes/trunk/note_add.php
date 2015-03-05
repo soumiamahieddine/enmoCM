@@ -176,9 +176,7 @@ if(isset($_GET['redirect'])){
 }
 } else {
     ?>
-    <h2 class="tit" style="padding:10px;"><img src="<?php
-        echo $_SESSION['config']['businessappurl'];
-        ?>static.php?filename=picto_add_b.gif" alt=""/> <?php
+    <h2 class="tit" style="padding:10px;"><i class="fa fa-pencil fa-2x" title="<?php echo _ADD_NOTE; ?>"></i> <?php
         echo _ADD_NOTE;
         ?> </h2>
         <?php if($redirect<>'' && isset($_GET['success'])){ ?><div class="error"><?php echo _NOTES_ADDED ?></div><?php } ?>
