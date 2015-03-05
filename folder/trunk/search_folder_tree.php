@@ -59,9 +59,7 @@ $_SESSION['origin'] = "search_folder_tree";
 <script type="text/javascript" >
     BASE_URL = "<?php echo $_SESSION['config']['businessappurl'] ?>";
 </script>
-<h1><img src="<?php
-echo $_SESSION['config']['businessappurl'] . "static.php?filename=search_proj_off.gif";
-?>" alt="" /> <?php  echo _VIEW_FOLDER_TREE; ?></h1>
+<h1><i class="fa fa-search fa-2x"></i> <?php  echo _VIEW_FOLDER_TREE; ?></h1>
 <div id="inner_content" align="center">
     <div class="block">
         <h2>

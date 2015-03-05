@@ -96,9 +96,7 @@ if (isset($_POST['delete_folder'])) {
 <div id="details_div" style="display:none;">
 
     <h1 class="titdetail">
-        <img src="<?php
-            echo $_SESSION['config']['businessappurl'];
-            ?>static.php?filename=picto_detail_b.gif" alt="" /><?php
+        <i class="fa fa-info-circle fa-2x"></i> <?php
             echo _DETAILS . " : " . _FOLDER . ' "';
             ?><?php
             echo $folder_id . '"';

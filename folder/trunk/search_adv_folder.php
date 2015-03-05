@@ -97,10 +97,12 @@ if (isset($_REQUEST['erase']) && $_REQUEST['erase'] == 'true') {
             <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_SEARCH; ?>"></i>
         </td>
         <td align="right">
-            <input class="button_search_adv" name="imageField" id="searchButton" type="submit" value="" 
-                onclick="this.form.submit();" /><br/>
-            <input class="button_search_adv_text" name="imageField" type="button" 
-                value="<?php echo _SEARCH; ?>" onclick="this.form.submit();" />
+            <span style="display:none;">
+                <input name="imageField" type="submit" value="" onclick="$('search_folder_frm').form.submit();" />
+            </span>
+            <a href="#" onclick="$('search_folder_frm').submit();">
+                <i class="fa fa-search fa-4x" title="<?php echo _SEARCH; ?>"></i>
+            </a>
         </td>
     </tr>
 </table>

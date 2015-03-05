@@ -157,8 +157,7 @@ $_SESSION['error_page'] = '';
         $paramsTab['bool_modeReturn'] = false;                                          //Desactivation du mode return (vs echo)
         $paramsTab['pageTitle'] =  _RESULTS." : ".count($tab).' '._FOUND_FOLDER;        //Titre de la page
         $paramsTab['bool_sortColumn'] = true;                                           //Affichage Tri
-        $paramsTab['pagePicto'] =  $_SESSION['config']['businessappurl']
-        ."static.php?filename=picto_search_b.gif";                                      //Image de la page
+        $paramsTab['pagePicto'] =  'search';                                      //Image de la page
         $paramsTab['tools'] = array();                                                  //Icones dans la barre d'outils
         $export = array(
             "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
@@ -173,7 +172,7 @@ $_SESSION['error_page'] = '';
         $details = array(
                 "script"    => "window.top.location='".$_SESSION['config']['businessappurl']
                                 ."index.php?page=show_folder&module=folder&id=@@folders_system_id@@'",
-                "icon"      => $_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif",
+                "icon"      => 'info-circle',
                 "tooltip"   => _DETAILS
                 );
         array_push($paramsTab['actionIcons'], $details);

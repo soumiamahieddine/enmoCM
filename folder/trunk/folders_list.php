@@ -204,7 +204,7 @@ $paramsTab['sublistUrl'] = 'index.php?display=true&page='
 $paramsTab['actionIcons'] = array();
 $details = array(
 		"script"    => "window.top.location='".$_SESSION['config']['businessappurl']."index.php?page=show_folder&module=folder&id=@@folders_system_id@@'",
-        "icon"      => $_SESSION['config']['businessappurl']."static.php?filename=picto_infos.gif",
+        "icon"      => 'info-circle',
         "tooltip"   => _DETAILS
         );
 array_push($paramsTab['actionIcons'], $details);          
