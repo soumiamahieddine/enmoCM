@@ -106,11 +106,7 @@ if (isset($_REQUEST['res_id_version'])) {
                             $return .= '" ';
                             $return .= 'target="_blank" ';
                             $return .= '>';
-                                $return .= '<img ';
-                                $return .= 'src="';
-                                    $return .= 'static.php?filename=picto_dld.gif';
-                                $return .= '" ';
-                                $return .= '/>';
+                                $return .= '<i class="fa fa-download fa-2x"></i>';
                             $return .= '</a>';
                         $return .= '</td>';
                     $return .= '</tr>';

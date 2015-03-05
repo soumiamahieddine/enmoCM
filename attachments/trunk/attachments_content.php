@@ -858,7 +858,7 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
             $content .= '<iframe style="width:210px" name="choose_file" id="choose_file" frameborder="0" scrolling="no" height="25" src="' . $_SESSION['config']['businessappurl']
                             . 'index.php?display=true&module=attachments&page=choose_attachment"></iframe>';
             $content .= '<input type="text" name="not_enabled" id="not_enabled" disabled value="'. _ALREADY_MODEL_SELECTED.'" style="display:none" />';
-            $content .= '<img id="file_loaded" style="display:none;margin-top:-15px" src="'. $_SESSION['config']['businessappurl'].'static.php?filename=picto_stat_enabled.gif" />';
+            $content .= '<i class="fa fa-check-square fa-2x" style="display:none;margin-top:-15px" id="file_loaded"></i>';
         $content .= '</p>';
         $content .= '<br/>';
     }
@@ -893,14 +893,12 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
                 $content .= ' <a href="#" id="create_multi_contact" title="' . _CREATE_CONTACT
                         . '" onclick="new Effect.toggle(\'create_contact_div_attach\', '
                         . '\'blind\', {delay:0.2});return false;" '
-                        . 'style="display:inline;" ><img src="'
-                        . $_SESSION['config']['businessappurl'] . 'static.php?filename='
-                        . 'modif_liste.png" alt="' . _CREATE_CONTACT . '"/></a>';
+                        . 'style="display:inline;" ><i class="fa fa-pencil fa-2x" title="' . _CREATE_CONTACT . '"></i></a>';
             }
            $content .='<a href="#" id="contact_card_attach" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe_attach\').src=\'' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactidAttach\').value+\'&addressid=\'+document.getElementById(\'addressidAttach\').value+\'&fromAttachmentContact=Y\';new Effect.toggle(\'info_contact_div_attach\', '
                 . '\'blind\', {delay:0.2});return false;"'
-                . ' style="visibility:hidden;padding-left:35%"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=my_contacts_off.gif" alt="'._CONTACT_CARD.'" /></a>';
+                . ' style="visibility:hidden;padding-left:35%"><i class="fa fa-book fa-2x"></i></a>';
             $content .= '</label>';
             $content .= '<input type="text" name="contact_attach" onblur="display_contact_card(\'visible\', \'contact_card_attach\');" onkeyup="erase_contact_external_id(\'contact_attach\', \'contactidAttach\');erase_contact_external_id(\'contact_attach\', \'addressidAttach\');" id="contact_attach" value="';
                 $content .= $data_contact;
