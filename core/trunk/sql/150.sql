@@ -158,6 +158,7 @@ CREATE TABLE actions_categories
 --                  RELATION BETWEEN USERS AND BASKETS OF SECONDARY PROFILES --
 -- ************************************************************************* --
 
+DROP TABLE IF EXISTS user_baskets_secondary;
 DROP SEQUENCE IF EXISTS user_baskets_secondary_seq;
 CREATE SEQUENCE user_baskets_secondary_seq
 INCREMENT 1
@@ -166,7 +167,6 @@ MAXVALUE 9223372036854775807
 START 1
 CACHE 1;
 
-DROP TABLE IF EXISTS user_baskets_secondary;
 CREATE TABLE user_baskets_secondary
 (
   system_id bigint NOT NULL DEFAULT nextval('user_baskets_secondary_seq'::regclass),
