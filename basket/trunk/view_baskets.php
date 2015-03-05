@@ -312,7 +312,7 @@ if (isset($_SESSION['current_basket']['page_include'])
          echo "<p align = 'justify'>
          <table width='100%'>
              <tr>
-                 <td width='80px'><i class='fa fa-question-circle fa-2x'></i> </td>
+                 <td width='80px'><i class='fa fa-question-circle fa-4x'></i> </td>
                  <td> <div class='block' align='center'>"
          . _BASKET_WELCOME_TXT1 . "<br/>" . _BASKET_WELCOME_TXT2
          . ".<div class='block_end'>&nbsp;</div></div></td>
