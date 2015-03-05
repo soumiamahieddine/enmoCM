@@ -185,8 +185,7 @@ $_SESSION['error_page'] = '';
     }
     else
     {
-        $func->echo_error(_ADV_SEARCH_FOLDER_TITLE,"<p class=\"error\"><img src=\""
-            .$_SESSION['config']['businessappurl']."static.php?filename=noresult.gif\" /><br />"
+        $func->echo_error(_ADV_SEARCH_FOLDER_TITLE,"<p class=\"error\"><i class=\"fa fa-remove fa-2x\"></i><br />"
             ._NO_RESULTS."</p>", 'title',  $_SESSION['config']['businessappurl']
             ."static.php?module=folder&filename=picto_search_b.gif");
     }

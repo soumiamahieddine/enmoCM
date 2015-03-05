@@ -354,7 +354,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                             $status = $folder_object->get_field('status');
                             if($status == 'DEL')
                             {
-                                echo "</br><p class=\"error\"><img src=\"".$_SESSION['config']['businessappurl']."static.php?filename=noresult.gif\" /><br />"._NO_FOLDER_FOUND.".</p>";
+                                echo "</br><p class=\"error\"><i class=\"fa fa-remove fa-2x\"></i><br />"._NO_FOLDER_FOUND.".</p>";
                             }
                             else
                             {
@@ -381,7 +381,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                                 }
                                 else
                                 {
-                                    echo "</br><p class=\"error\"><img src=\"".$_SESSION['config']['businessappurl']."static.php?filename=noresult.gif\" /><br />"._NO_FOLDER_FOUND.".</p>";
+                                    echo "</br><p class=\"error\"><i class=\"fa fa-remove fa-2x\"></i><br />"._NO_FOLDER_FOUND.".</p>";
                                 }
                             }
                         }
