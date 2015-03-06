@@ -18,8 +18,8 @@ if (
 }
 
 ?>
-
-<body>
+<style type="text/css">html{overflow:hidden}</style>
+<body style="height:179px;width:231px;">
     <div id="container">
         <div id="content">
             <div class="error" id="divError" name="divError"></div>
