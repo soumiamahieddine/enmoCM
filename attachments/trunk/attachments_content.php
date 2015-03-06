@@ -949,11 +949,11 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
             if (isset($_REQUEST['id'])) {
                     $content .= '" name="edit" id="edit" class="button" onclick="window.open(\''
                                     . $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentUpVersion&objectId='.$_REQUEST['id'].'&objectTable=res_view_attachments&resMaster='.$_SESSION['doc_id']
-                                    .'\', \'\', \'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
+                                    .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
             } else {
                 $content .= '" name="edit" id="edit" style="display:none" class="button" '
                                 .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&objectTable='. $objectTable .'&resMaster='.$_SESSION['doc_id']
-                                .'\', \'\', \'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';            
+                                .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';            
             }
 
         $content .= '</p>';
