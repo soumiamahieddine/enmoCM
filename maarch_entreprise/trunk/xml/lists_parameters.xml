@@ -131,7 +131,7 @@
         <TEMPLATE>
             <ID>cases_list</ID>
             <LABEL>_CASES_LIST</LABEL>
-            <IMG>fa fa-suitcase fa-2x</IMG>
+            <IMG>fa fa-briefcase fa-2x</IMG>
             <NAME>group_cases_for_basket</NAME>
             <ORIGIN>module</ORIGIN>
             <MODULE>cases</MODULE>
@@ -147,7 +147,7 @@
         <TEMPLATE>
             <ID>cases_list_search_adv</ID>
             <LABEL>_CASES_LIST</LABEL>
-            <IMG>fa fa-suitcase fa-2x</IMG>
+            <IMG>fa fa-briefcase fa-2x</IMG>
             <NAME>group_cases</NAME>
             <ORIGIN>module</ORIGIN>
             <MODULE>cases</MODULE>
