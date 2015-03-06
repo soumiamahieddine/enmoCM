@@ -1170,7 +1170,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             . 'index.php?display=true&module=attachments&page=join_file\',\'\', \'scrollbars=yes,'
                             . 'menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=600\');" />';*/
                             .'" onclick="showAttachmentsForm(\'' . $_SESSION['config']['businessappurl']
-                            . 'index.php?display=true&module=attachments&page=attachments_content\')" />';
+                            . 'index.php?display=true&module=attachments&page=attachments_content\',\'98%\',\'auto\')" />';
                     }
                     $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'
                     . $_SESSION['config']['businessappurl']
