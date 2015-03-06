@@ -785,7 +785,7 @@ if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id 
     }
 }
 
-$content .= '<div class="block" style="width:2000px">';
+//$content .= '<div class="block" style="width:2000px">';
     $content .= '<div class="error" >' . $_SESSION['error'];
     $_SESSION['error'] = "";
 
@@ -795,16 +795,14 @@ $content .= '<div class="block" style="width:2000px">';
 //$templates = $templatesControler->getAllTemplatesForProcess($_SESSION['destination_entity']);
 $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice']);
     $content .= '</div>';
-    $content .= '<br/>';
-
     if (isset($_REQUEST['id'])) {
         $title = _MODIFY_ANSWER;
     } else {
         $title = _ATTACH_ANSWER;        
     }
-    $content .= '<h2 class="tit" style="margin-bottom:-10px">&nbsp;' . $title . '</h2>'; 
+    $content .= '<h2>&nbsp;' . $title . '</h2>'; 
 
-    $content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:30%;height:550px;float:left;margin-left:-5px;background-color:#deedf3">';
+    $content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:30%;float:left;margin-left:-5px;background-color:#deedf3">';
     $content .= '<hr style="width:85%;margin-left:0px">';
         $content .= '<input type="hidden" id="category_id" value="outgoing"/>';
     if (isset($_REQUEST['id'])) {
@@ -984,7 +982,7 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
                 . ' scrolling="auto" frameborder="0" style="display:block;">'
                 . '</iframe>';
     $content .= '</div>';
-$content .= '</div>';
+//$content .= '</div>';
 
 echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
 exit ();
