@@ -106,7 +106,7 @@ $createDiv = '<a href="#" onClick="window.open(\''
     . $objectTable
     . '&resMaster='
     . $_SESSION['doc_id']
-    . '\', \'\', \'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no\');">'
+    . '\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');">'
     . '<i class="fa fa-pencil fa-2x" title="' . _CREATE_NEW_VERSION . '"></i>'
     . _CREATE_NEW_VERSION
     . '</a>';
