@@ -936,9 +936,9 @@ $frm_str .= '</div>';
            /**** Contact form start *******/
         if ($core->test_admin('my_contacts', 'apps', false)) {
             $frm_str .= '<div id="create_contact_div" style="display:none">';
-                $frm_str .= '<iframe width="100%" height="450" src="' . $_SESSION['config']['businessappurl']
+                $frm_str .= '<iframe width="100%" height="570" src="' . $_SESSION['config']['businessappurl']
                         . 'index.php?display=false&dir=my_contacts&page=create_contact_iframe" name="contact_iframe" id="contact_iframe"'
-                        . ' scrolling="auto" frameborder="0" style="display:block;">'
+                        . ' scrolling="auto" frameborder="0" style="display:block;height:570px !important">'
                         . '</iframe>';
             $frm_str .= '</div>';
         }
@@ -1022,7 +1022,7 @@ $frm_str .= '</div>';
                     . '&resMaster='
                     . $res_id
                     //. '\', $(\'templateOffice\').value);">';
-                    . '\', \'\', \'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no\');">';
+                    . '\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');">';
                     $frm_str .= '<option value="">' . _OFFICE . '</option>';
                         for ($i=0;$i<count($templates);$i++) {
                             if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
