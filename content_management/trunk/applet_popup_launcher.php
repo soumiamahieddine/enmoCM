@@ -38,6 +38,7 @@ if (
                     echo $_SESSION['custom_override_id'];
                     ?>');
             </script>
+            <style type="text/css">#CMApplet{top:5% !important;left:3% !important;}</style>
         </div>
     </div>
 </body>
