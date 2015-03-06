@@ -305,7 +305,7 @@ if ($mode == 'list') {
                                     . $objectId
                                     . '&objectTable='
                                     . $objectTable
-                                    . '\', \'\', \'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no\');';
+                                    . '\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');';
                                 ?>
                                 <a href="#" onClick="<?php echo $strAction;?>">
                                 
