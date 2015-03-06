@@ -1760,7 +1760,7 @@ class list_show extends functions
                     $str .= '<td class="action">';
                         $str .= '<a  href="javascript://" class="change" onclick="modifyAttachmentsForm(\'' . $_SESSION['config']['businessappurl']
                             . 'index.php?display=true&module=attachments&page=attachments_content';
-                        $str .= '&id=' . $result[$theline][0][$key] . '\');">'
+                        $str .= '&id=' . $result[$theline][0][$key] . '\',\'98%\',\'auto\');">'
                             . _MODIFY . '</a>';
                     $str .= '</td>';
                 } else {
