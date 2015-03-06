@@ -386,6 +386,10 @@ if ($core_tools->is_module_loaded('physical_archive') == true)
 
 }
 
+ //Addresses contact externe
+    $arr_tmp2 = array('label' => _ADDRESSES, 'type' => 'input_text', 'param' => array('field_label' => _ADDRESSES));
+    $param['addresses_id'] = $arr_tmp2;
+
 //Answers types
 $arr_tmp = array(array('ID' => 'simple_mail','VALUE'=> 'true', 'LABEL' =>_SIMPLE_MAIL),array('ID' => 'AR','VALUE'=> 'true', 'LABEL' =>_REGISTERED_MAIL),array('ID' => 'fax','VALUE'=> 'true', 'LABEL' =>_FAX),array('ID' => 'courriel','VALUE'=> 'true', 'LABEL' =>_MAIL)
 ,array('ID' => 'direct','VALUE'=> 'true', 'LABEL' =>_DIRECT_CONTACT),array('ID' => 'autre','VALUE'=> 'true', 'LABEL' =>_OTHER),array('ID' => 'norep','VALUE'=> 'true', 'LABEL' =>_NO_ANSWER));
@@ -405,6 +409,8 @@ $tab = $search_obj->send_criteria_data($param);
 
 // criteria list options
 $src_tab = $tab[0];
+
+//$core_tools->show_array($param);
 
 $core_tools->load_js();
 ?>
@@ -607,7 +613,7 @@ if(isset($_REQUEST['nodetails']))
                     <td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT;?>:</label>
                         <input type="text" name="fulltext" id="fulltext" <?php echo $size; ?>  />
                         <input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
-                        <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=fulltext_search_help&mode=popup','modify','toolbar=no,status=no,width=500,height=270,left=300,top=300,scrollbars=auto,location=no,directories=no,menubar=no,resizable=yes');"><i class="fa fa-search" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>"></i></a>
+                        <a href="javascript::" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=fulltext_search_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=300,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><i class="fa fa-search" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>"></i></a>
                     </td>
                     <td><em><?php echo _FULLTEXT_HELP; ?></em></td>
                 </tr>

@@ -707,6 +707,25 @@ if (count($_REQUEST['meta']) > 0) {
                     $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."')) and ";
                 // }
             }
+            elseif ($tab_id_fields[$j] == 'addresses_id' && !empty($_REQUEST['addresses_id']))
+            {
+                $json_txt .= " 'addresses_id' : ['".addslashes(trim($_REQUEST['addresses_id']))."'], 'addresses_id' : ['".addslashes(trim($_REQUEST['addresses_id']))."'],";
+                //$where_request .= "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
+                // $contactTmp = str_replace(')', '', substr($_REQUEST['contactid'], strrpos($_REQUEST['contactid'],'(')+1));
+                // $find1 = strpos($contactTmp, ':');
+                // $find2 =  $find1 + 1;
+                // $contact_type = substr($contactTmp, 0, $find1);
+                // $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
+                // if ($contact_type == "user")
+                // {
+                //     $where_request .= " (exp_user_id = '".$contact_id."' or dest_user_id = '".$contact_id."') and ";
+                // }
+                // elseif ($contact_type == "contact")
+                // {
+                    $addresses_id = $_REQUEST['addresses_id'];
+                    $where_request .= " address_id in (select address_id from view_contacts where lastname ilike '%".$addresses_id."%' or firstname ilike '%".$addresses_id."%' ) and ";
+                // }
+            }
             // CONTACTS INTERNAL
             elseif ($tab_id_fields[$j] == 'contactid_internal' && !empty($_REQUEST['contact_internal_id']))
             {
