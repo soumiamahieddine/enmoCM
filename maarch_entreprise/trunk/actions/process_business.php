@@ -572,7 +572,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             . '&resMaster='
                             . $res_id
                             //. '\', $(\'templateOffice\').value);">';
-                            . '\', \'\', \'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no\');">';
+                            . '\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');">';
                             $frm_str .= '<option value="">' . _OFFICE . '</option>';
                                 for ($i=0;$i<count($templates);$i++) {
                                     if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
