@@ -1303,7 +1303,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     </select>&nbsp;|&nbsp;*/
                         ?><input type="button" name="attach" id="attach" class="button" value="<?php echo _CREATE_PJ;?>"
                              onclick="showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
-                            . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create';?>')" />
+                            . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create';?>','98%','auto')" />
 
 					<!--<select name="templateHtml" id="templateHtml" style="width:250px"                                 
 								onchange="checkBeforeOpenBlank('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=templates&page=generate_attachment_html&mode=add'
@@ -1356,7 +1356,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     if ($core->is_module_loaded('templates') && ($core->test_service('edit_attachments_from_detail', 'attachments', false))) {
                             ?><input type="button" name="attach" id="attach" class="button" value="<?php echo _CREATE_PJ;?>"
                                  onclick="showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
-                                . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create';?>')" />
+                                . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create';?>','98%','auto')" />
 
                     <?php } ?>
                     </center>
