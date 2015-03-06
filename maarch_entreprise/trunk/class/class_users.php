@@ -166,9 +166,9 @@ class class_users extends dbquery
                                 while($line = $this->fetch_object())
                                 {
                                     if($line->primary_entity == 'Y'){
-                                        echo "<li style='list-style-position:inside;'><i class=\"fa fa-arrow-right\"></i>".$line->entity_label." </li>";
+                                        echo "<li style='list-style-position:inside;padding:5px;'><i class=\"fa fa-arrow-right\"></i> ".$line->entity_label." </li>";
                                     }else{
-                                        echo "<li>".$line->entity_label." </li>";
+                                        echo "<li style='padding:5px;'>".$line->entity_label." </li>";
                                     }
                                 }
                             }
@@ -196,9 +196,9 @@ class class_users extends dbquery
             } else {
                 while ($line = $this->fetch_object()) {
                     if($line->primary_group == 'Y'){
-                        echo "<li style='list-style-position:inside;'><i class=\"fa fa-arrow-right\"></i>".$line->group_desc." </li>";
+                        echo "<li style='list-style-position:inside;padding:5px;'><i class=\"fa fa-arrow-right\"></i> ".$line->group_desc." </li>";
                     }else{
-                        echo "<li>".$line->group_desc." </li>";
+                        echo "<li style='padding:5px;'>".$line->group_desc." </li>";
                     }
                 }
             }
@@ -207,7 +207,7 @@ class class_users extends dbquery
                      </div>
                      <div class="block_end">&nbsp;</div>
                      </div>
-                        <div class="block" style="float:left;width:60%;height:330px;">
+                        <div class="block" style="float:left;width:55%;height:330px;">
                         <form name="frmuser" style="margin:auto;" id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=user_modif" class="forms addforms">
                             <input type="hidden" name="display" value="true" />
                             <input type="hidden" name="admin" value="users" />
