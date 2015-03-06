@@ -941,7 +941,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                     echo _GENERATE_ATTACHMENT_FROM;?><br />
                     <select name="templateOffice" id="templateOffice" style="width:250px" 
                                 onchange="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentFromTemplate'
-                                + '&objectId=' + $('templateOffice').value + '&objectTable=<?php echo $objectTable;?>&resMaster=<?php echo $s_id;?>', '', 'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no');">
+                                + '&objectId=' + $('templateOffice').value + '&objectTable=<?php echo $objectTable;?>&resMaster=<?php echo $s_id;?>', '', 'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no');">
                         <option value=""><?php echo _OFFICE ;?></option>
                             <?php for ($i=0;$i<count($templates);$i++) {
                                 if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
