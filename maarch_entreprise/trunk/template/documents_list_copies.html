@@ -133,7 +133,9 @@ Mods
                                     <!-- Désactivation de l'image permettant de visualiser la persistance -->
                                     <!-- td width ="30px"><img src="##ifStatement|#loadValue|is_persistent#==true|#loadImage|persistentLock.gif#|#loadImage|persistentUnlock.gif#|##" width="27" height="27"></td -->
                                     <td width ="30px">##showIconDetails##</td>
-                                    <td style="font-size:12px; color:red;" width="15px">##loadValue|viewed##</td>
+                                    <td style="font-size:12px; color:red;" width="15px">
+                                        <span style="cursor:pointer;background: #FFC200;color: white;padding: 3px;border-radius: 7px;font-weight:bold;">##loadValue|viewed##</span>
+                                    </td>
                                </tr>                         
                         </table>
                     </td>
