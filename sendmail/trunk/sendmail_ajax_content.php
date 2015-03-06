@@ -240,8 +240,8 @@ switch ($mode) {
                                 );
                                 
                                 //Last insert ID from sequence
-                                $id = $request->last_insert_id('app_emails_email_id_seq');
-                                
+                                $id = $request->last_insert_id('sendmail_email_id_seq');
+
                                 //History
                                 if ($_SESSION['history']['mailadd']) {
                                     $hist = new history();
