@@ -322,13 +322,13 @@ function add_criteria(elem_comp, id_form, ie_browser, error_txt_ie)
             var node = document.createElement('div');
             node.setAttribute('id', 'search_parameters_' + elem);
             tmp = '<table width="100%" border="0"><tr><td width="30%">';
-            tmp += '<img src="img/puce_next.gif" /> ' + valeur['label'];
+            tmp += '<i class="fa fa-angle-right"></i> ' + valeur['label'];
             tmp += '</td><td>';
             tmp += valeur['value'];
             tmp += '</td><td width="30px">';
             tmp += '<a href="#" onclick="delete_criteria(\'' + elem + '\', \''
             tmp += id_form + '\');return false;">';
-            tmp += '<img src="img/picto_stat_disabled.gif"></a>';
+            tmp += '<i class="fa fa-remove fa-2x"></i></a>';
             tmp += '</td></tr></table>';
             // Loading content in the page
             node.innerHTML = tmp;

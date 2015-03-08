@@ -158,7 +158,7 @@ width: 85px;
 display: block;
 font-size: 23px;
 padding-left: 65px;
-padding-top: 4px;
+top: 38px;
 color: #ffffff;">Menu</span>
                 </p>
                 <div id="menunav" style="display: none;">

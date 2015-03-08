@@ -330,7 +330,7 @@ if (empty($_SESSION['error']) || $_SESSION['indexation']) {
 ?>
 <div id="details_div" style="display:block;">
 <h1 class="titdetail">
-    <i class="fa fa-info-circle fa-2x"></i><?php
+    <i class="fa fa-info-circle fa-2x"></i>&nbsp;<?php
         echo _DETAILS . " : " . _DOC . ' ' . strtolower(_NUM);
         ?><?php
         echo $s_id;
