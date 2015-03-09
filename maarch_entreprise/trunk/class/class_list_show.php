@@ -1172,7 +1172,7 @@ class list_show extends functions
                                         ?>&amp;mode=add<?php
                                     } else { 
                                         echo  '&amp;page='.$page_name_add; 
-                                    }?>','add','height=250, width=500, resizable=yes, scrollbars=yes');" >
+                                    }?>','add','height=<?php echo $height; ?>, width=<?php echo $width; ?>, resizable=yes, scrollbars=yes');" >
                                     <i class="fa fa-plus-square fa-3x" title="<?php echo $label_add;?>"></i>
                                 </a>
                             </td>
