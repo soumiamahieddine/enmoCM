@@ -53,6 +53,7 @@ $_SESSION['error_search'] = '';
 $_SESSION['searching']['comp_query'] = '';
 $_SESSION['save_list']['fromDetail'] = "false";
 
+
 // define the row of the start
 if (isset($_REQUEST['start'])) {
     $start = $_REQUEST['start'];
@@ -707,6 +708,27 @@ if (count($_REQUEST['meta']) > 0) {
                     $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."')) and ";
                 // }
             }
+            //recherche sur les contacts externes en fonction de ce que la personne a saisi
+            elseif ($tab_id_fields[$j] == 'contactid' && empty($_REQUEST['contactid_external']) && !empty($_REQUEST['contactid']))
+            {
+                $json_txt .= " 'contactid_external' : ['".addslashes(trim($_REQUEST['contactid_external']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
+                //$where_request .= "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
+                // $contactTmp = str_replace(')', '', substr($_REQUEST['contactid'], strrpos($_REQUEST['contactid'],'(')+1));
+                // $find1 = strpos($contactTmp, ':');
+                // $find2 =  $find1 + 1;
+                // $contact_type = substr($contactTmp, 0, $find1);
+                // $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
+                // if ($contact_type == "user")
+                // {
+                //     $where_request .= " (exp_user_id = '".$contact_id."' or dest_user_id = '".$contact_id."') and ";
+                // }
+                // elseif ($contact_type == "contact")
+                // {
+                    $contact_id = $_REQUEST['contactid'];
+                    $where_request .= "contact_id in (select contact_id from view_contacts where society ilike '%".$contact_id."%' or contact_firstname ilike '%".$contact_id."%' or contact_lastname ilike '%".$contact_id."%') and ";
+                    
+                // }
+            }
             elseif ($tab_id_fields[$j] == 'addresses_id' && !empty($_REQUEST['addresses_id']))
             {
                 $json_txt .= " 'addresses_id' : ['".addslashes(trim($_REQUEST['addresses_id']))."'], 'addresses_id' : ['".addslashes(trim($_REQUEST['addresses_id']))."'],";
@@ -741,6 +763,23 @@ if (count($_REQUEST['meta']) > 0) {
                 	$contact_id = $_REQUEST['contact_internal_id'];
                     $where_request .= " ((exp_user_id = '".$contact_id."' or dest_user_id = '".$contact_id."') or ";
                     $where_request .= " (res_id in (select res_id from contacts_res where contact_id = '".$contact_id."' and coll_id = '" . $coll_id . "'))) and ";
+                //}
+            }
+            //recherche sur les contacts internes en fonction de ce que la personne a saisi
+            elseif ($tab_id_fields[$j] == 'contactid_internal' && empty($_REQUEST['contact_internal_id']) && !empty($_REQUEST['contactid_internal']))
+            {
+                $json_txt .= " 'contactid_internal' : ['".addslashes(trim($_REQUEST['contactid_internal']))."'], 'contact_internal_id' : ['".addslashes(trim($_REQUEST['contactid_internal']))."']";
+                //$where_request .= "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
+/*                $contactTmp = str_replace(')', '', substr($_REQUEST['contactid_internal'], strrpos($_REQUEST['contactid_internal'],'(')+1));
+                $find1 = strpos($contactTmp, ':');
+                $find2 =  $find1 + 1;
+                $contact_type = substr($contactTmp, 0, $find1);
+                $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
+                if ($contact_type == "user")
+                {*/
+                    $contactid_internal = $_REQUEST['contactid_internal'];
+                    //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
+                    $where_request .= " (exp_user_id in (select user_id from users where firstname ilike '%".$contactid_internal."' or lastname ilike '%".$contactid_internal."' )) and ";
                 //}
             }
             // SEARCH IN BASKETS
