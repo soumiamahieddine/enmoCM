@@ -2846,7 +2846,3 @@ function simpleAjax(url){
             method:'post'
         });
 }
-
-function test(){
-alert('test');
-}
