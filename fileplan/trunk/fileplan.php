@@ -76,8 +76,6 @@ if (count($fileplans_array) > 0)  {
 				?>index.php?page=fileplan_managment&module=fileplan&load" class="back">
 				<?php echo _MANAGE_PERSONNAL_FILEPLAN;?></a>                
 			</b></h2>
-			&nbsp;
-		</div>
 		<table width="100%" border="0">
 			<tr>
 				<td style="width:25%;" valign="top" nowrap>
@@ -212,6 +210,7 @@ if (count($fileplans_array) > 0)  {
 				</td>
 			</tr>
 		</table>
+		</div>
 	</div>
 <?php
 } else {
