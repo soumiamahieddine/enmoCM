@@ -569,9 +569,8 @@ $linkwithwhat =
             goTo('<?php echo $linkwithwhat; ?>&action=add_entity&id='+entity_id+'&role='+role);        
         }
     </script>
-    <br/>
-    <div id="diff_list" align="center">
-        <h2 class="tit"><?php 
+    <div id="diff_list" class="block" align="center">
+        <h2><?php 
             echo _DIFFUSION_LIST . ' - ';
             echo $description;
         ?></h2><?php 
@@ -581,7 +580,7 @@ $linkwithwhat =
         if(1==2 && isset($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id']) 
             && !empty($_SESSION['m_admin']['entity']['listmodel']['dest']['user_id'])
         ) { ?>
-        <h2 class="sstit"><?php echo _PRINCIPAL_RECIPIENT;?></h2>
+        <h3 class="sstit"><?php echo _PRINCIPAL_RECIPIENT;?></h3>
         <table cellpadding="0" cellspacing="0" border="0" class="listing spec">
             <tr>
                 <td>
@@ -611,7 +610,7 @@ $linkwithwhat =
             if (count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']) > 0
              || count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']) > 0
             ) { ?>
-                <h2 class="sstit"><?php echo $role_label;?></h2>
+                <h3 class="sstit"><?php echo $role_label;?></h3>
                 <table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php
                 #**************************************************************************
                 # OTHER ROLE USERS
