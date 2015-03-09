@@ -357,7 +357,8 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 $where_multifield_request .= "( lower(subject) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
                     ."or lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%') "
-                    ."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%')) ";
+                    ."or lower(title) LIKE lower('%".$func->protect_string_db($_REQUEST['welcome'])."%')) "
+                    ."or contact_id in (select contact_id from view_contacts where society ilike '%".$_REQUEST['welcome']."%' or contact_firstname ilike '%".$_REQUEST['welcome']."%' or contact_lastname ilike '%".$_REQUEST['welcome']."%') or (exp_user_id in (select user_id from users where firstname ilike '%".$_REQUEST['welcome']."%' or lastname ilike '%".$_REQUEST['welcome']."%' ))";
                 $welcome = $_REQUEST['welcome'];
                 set_include_path('apps' . DIRECTORY_SEPARATOR 
                     . $_SESSION['config']['app_id'] 
@@ -779,7 +780,7 @@ if (count($_REQUEST['meta']) > 0) {
                 {*/
                     $contactid_internal = $_REQUEST['contactid_internal'];
                     //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
-                    $where_request .= " (exp_user_id in (select user_id from users where firstname ilike '%".$contactid_internal."' or lastname ilike '%".$contactid_internal."' )) and ";
+                    $where_request .= " (exp_user_id in (select user_id from users where firstname ilike '%".$contactid_internal."%' or lastname ilike '%".$contactid_internal."%' )) and ";
                 //}
             }
             // SEARCH IN BASKETS
