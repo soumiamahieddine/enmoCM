@@ -1111,7 +1111,12 @@ class list_show extends functions
             }
             elseif($bool_simple_list)
             {
-                if($page_name_up == "contrat_up" || $name == 'structures' || $name == 'contacts_v2')
+                $width = "450";
+                if($name == 'structures'){
+                    $height = "570";
+                    $width = "600";
+                }
+                elseif($page_name_up == "contrat_up"  || $name == 'contacts_v2')
                 {
                     $height = "750";
                 }
@@ -1421,7 +1426,12 @@ class list_show extends functions
                     <?php  }
                     else if($bool_simple_list)
                     {
-                        if($page_name_up == "contrat_up" || $name == 'structures')
+                        $width = "450";
+                        if($name == 'structures'){
+                            $height = "570";
+                            $width = "600";
+                        }
+                        elseif($page_name_up == "contrat_up")
                         {
                             $height = "750";
                         }
@@ -1455,7 +1465,7 @@ class list_show extends functions
                 $path_del2 = preg_replace("/(&(?!amp;))/", "&amp;", $path_del2);
                         ?>
                         <td class="action">
-                        <a  href="javascript://" class="actionList" onclick="window.open('<?php  echo $path_up2;?>','','height=<?php echo $height;?>, width=450,scrollbars=yes,resizable=yes');" ><i class="fa fa-edit fa-2x" title="<?php  echo _MODIFY;?>"></i></a>
+                        <a  href="javascript://" class="actionList" onclick="window.open('<?php  echo $path_up2;?>','','height=<?php echo $height;?>, width=<?php echo $width;?>,scrollbars=yes,resizable=yes');" ><i class="fa fa-edit fa-2x" title="<?php  echo _MODIFY;?>"></i></a>
                     </td>
 
                     <td class="action" >
