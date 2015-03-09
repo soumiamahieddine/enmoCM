@@ -345,6 +345,13 @@ function displayList(){
 function displayDel($groupId)
 {
     $ugc = new usergroups_controler();
+
+    //information users exists in groups
+    if(!empty($ugc->getUsers($groupId))){
+        $usersGroups=implode(",", $ugc->getUsers($groupId));
+        echo '<script type="text/javascript">alert("Pour Information,\n\nLes utilisateurs suivants ont \u00e9t\u00e9 dissoci\u00e9s du groupe :\n'.$usersGroups.'")</script>';
+    }
+
     $group = $ugc->get($groupId);
     if (isset($group) && isset($groupId) && ! empty($groupId)) {
         $control = array();
