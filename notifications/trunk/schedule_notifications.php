@@ -175,13 +175,14 @@ $flag_notif = false;
 		$('no_notif').style.display="none";
 	}
 </script>
+<div class="block" style="margin-top:15px;">
 <br/>
 <br/>
 <?php echo _HELP_CRON;?>
 <br/>
 <br/>
 <div class='crontab'>
-	<form method='POST' action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notifications&page=schedule_notifications_controler">
+	<form method='POST' class="forms" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notifications&page=schedule_notifications_controler">
 		<table id='cron'>
 			<tr>
 				<td style="color:#16adeb"><?php echo _HOUR ?></td>
@@ -331,4 +332,5 @@ $flag_notif = false;
 		<input type='submit' value='<?php echo _VALIDATE; ?>' name='save' class="button" />
 		<input type="button" class="button" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=manage_notifications_controler&mode=list&module=notifications'" value="<?php echo _CANCEL; ?>" name="cancel">
 	</form>
+</div>
 </div>
