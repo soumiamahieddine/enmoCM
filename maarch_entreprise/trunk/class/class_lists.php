@@ -1406,6 +1406,21 @@ class lists extends dbquery
             return '';
         }
     }
+
+    public function tmplt_showDefaultAction($parameter) 
+    {
+        //Db query
+        $db = new dbquery();
+        $db->connect();
+        
+        //Load action name   
+        $db->query(
+            "select label_action from actions where id = ".$_SESSION['current_basket']['default_action']
+        );
+        $res = $db->fetch_object();
+
+        return $res->label_action;
+    }
     
     private function _tmplt_loadVarSys($parameter, $resultTheLine=array(), $listKey='', $lineIsDisabled=false) {
         ##loadValue|arg1##: load value in the db; arg1= column's value identifier
@@ -1488,11 +1503,14 @@ class lists extends dbquery
             $var = $this->tmplt_func_bool_see_notes($resultTheLine);
         } elseif (preg_match("/^func_cadenas\|/", $parameter)){
             $var = $this->tmplt_func_cadenas($parameter);
+        } elseif (preg_match("/^showDefaultAction$/", $parameter)){
+            $var = $this->tmplt_showDefaultAction($parameter);
         } else {
             $var = _WRONG_FUNCTION_OR_WRONG_PARAMETERS;
         }
         return $var;
     }
+
     
     private function _buildTemplate($templateFile, $resultArray, $listKey) {
         
