@@ -439,10 +439,10 @@ abstract class ObjectControler
         self::$db = new dbquery();
         self::$db->connect();
         if (in_array($table_id, self::$foolish_ids) ){
-             $query = "update $table_name set status = 'OK' where $table_id='"
-                    . $object->$table_id . "'";
+             $query = "update $table_name set status = 'OK' where lower($table_id)=lower('"
+                    . $object->$table_id . "')";
         } else {
-            $query="update $table_name set status = 'OK' where $table_id=".$object->$table_id;
+            $query="update $table_name set status = 'OK' where lower($table_id)=lower(".$object->$table_id.")";
         }
         try{
             if(_DEBUG){

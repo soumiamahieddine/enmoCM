@@ -837,8 +837,8 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         self::$db = new dbquery();
         self::$db->connect();
         $func = new functions();
-        $query = 'select user_id from ' . USERS_TABLE . " where user_id = '"
-               . $func->protect_string_db($userId) . "' and status = 'DEL'";
+        $query = 'select user_id from ' . USERS_TABLE . " where lower(user_id) = lower('"
+               . $func->protect_string_db($userId) . "') and status = 'DEL'";
 
         try{
             self::$db->query($query);
@@ -867,6 +867,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         self::set_specific_id('user_id');
 
         if(self::advanced_reactivate($user)){
+            self::$db = new dbquery();
+            self::$db->connect();
+            $query = "update users set user_id = '".$user->user_id."' where lower(user_id)=lower('"
+                . $user->user_id . "')";
+            self::$db->query($query);
             return true;
 
         }else{
