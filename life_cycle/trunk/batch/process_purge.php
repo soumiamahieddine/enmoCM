@@ -314,8 +314,8 @@ while ($GLOBALS['state'] <> "END") {
 
             }
 
-            $repertoiredujour = date('Y-m-d');
-            $chemin = $GLOBALS['exportFolder'].'DocsSupprimesEntites'.$repertoiredujour.'.csv';
+            $repertoiredujour = date('Y-m-d-Hi');
+            $chemin = $GLOBALS['exportFolder'].'DocsSupprimesEntites-'.$repertoiredujour.'.csv';
             $delimiteur = ";";
 
             $fichier_csv = fopen($chemin, 'w+');
