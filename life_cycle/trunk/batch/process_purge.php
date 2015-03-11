@@ -232,6 +232,15 @@ while ($GLOBALS['state'] <> "END") {
             array_push($arrayEntityNbDocs, 'Nombre de document dans l\'entité');
             array_push($arraySubEntitiesNbDocs, 'Nombre de document dans l\'entité et sous entités');
 
+            $repertoiredujour = date('Y-m-d-Hi');
+            $chemin = $GLOBALS['exportFolder'].'DocumentsSupprimes-'.$repertoiredujour.'.csv';
+            $delimiteur = ";";
+
+            $DeletedFiles = fopen($chemin, 'w+');
+
+            fprintf($DeletedFiles, chr(0xEF).chr(0xBB).chr(0xBF));
+            fputcsv($DeletedFiles, array("Res id", "Num Chrono", "Type de document", "Service destinataire", "Objet"), $delimiteur);
+
             for ($cptRes = 0;$cptRes < $countRA;$cptRes++) {
 
                 $queryDestination = "SELECT destination FROM " . $GLOBALS['table'] 
@@ -256,6 +265,15 @@ while ($GLOBALS['state'] <> "END") {
                 $deleteNotesQuery = '';
                 $GLOBALS['logger']->write('Prepare sql deletion for res_id:' 
                     . $resourcesArray[$cptRes]["res_id"], 'INFO');
+
+                $queryDeletedFile = "SELECT res_id, alt_identifier, dt.description as \"type_id_label\", entity_label, subject 
+                                        FROM " . $GLOBALS['view'] . " r 
+                                        LEFT JOIN doctypes dt ON r.type_id = dt.type_id 
+                                        WHERE res_id = " . $resourcesArray[$cptRes]["res_id"];
+                Bt_doQuery($GLOBALS['db2'], $queryDeletedFile);
+                $DataDeletedFile = $GLOBALS['db2']->fetch_object();
+
+                fputcsv($DeletedFiles, array($DataDeletedFile->res_id, $DataDeletedFile->alt_identifier, $DataDeletedFile->type_id_label, $DataDeletedFile->entity_label, $DataDeletedFile->subject), $delimiteur);
 
                 $deleteResQuery = "DELETE FROM " . $GLOBALS['table']
                    . " WHERE res_id = " . $resourcesArray[$cptRes]["res_id"];
@@ -314,9 +332,9 @@ while ($GLOBALS['state'] <> "END") {
 
             }
 
-            $repertoiredujour = date('Y-m-d-Hi');
-            $chemin = $GLOBALS['exportFolder'].'DocsSupprimesEntites-'.$repertoiredujour.'.csv';
-            $delimiteur = ";";
+            fclose($DeletedFiles);
+
+            $chemin = $GLOBALS['exportFolder'].'DocumentsSupprimesParEntites-'.$repertoiredujour.'.csv';
 
             $fichier_csv = fopen($chemin, 'w+');
 
