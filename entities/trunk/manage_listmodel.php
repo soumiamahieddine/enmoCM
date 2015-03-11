@@ -594,10 +594,10 @@ $linkwithwhat =
                 <td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['lastname'] . " " . $_SESSION['m_admin']['entity']['listmodel']['dest']['firstname'];?></td>
                 <td><?php echo $_SESSION['m_admin']['entity']['listmodel']['dest']['entity_label']; ?></td>
                 <td class="action_entities"><!-- Remove dest -->
-                    <a href="<?php echo $linkwithwhat; ?>&action=remove_dest" class="delete"><?php echo _DELETE;?></a>
+                    <a href="<?php echo $linkwithwhat; ?>&action=remove_dest"><i class="fa fa-remove fa-2x"></i><?php echo _DELETE;?></a>
                 </td>
                 <td class="action_entities"><!-- Move dest to copy -->
-                    <a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy" class="down"><?php echo _TO_CC;?></a>
+                    <a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy" ><i class="fa fa-arrow-down fa-2x"></i><?php echo _TO_CC;?></a>
                 </td>
             </tr>
         </table><?php 
@@ -642,23 +642,23 @@ $linkwithwhat =
                         <td ><?php echo $user['lastname'] . " " . $user['firstname'];?></td>
                         <td><?php echo $user['entity_label']; ?></td>
                         <td class="action_entities"><!-- Remove user -->
-                            <a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>" class="delete"><?php echo _DELETE; ?></a>
+                            <a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>"><i class="fa fa-remove fa-2x"></i><?php echo _DELETE; ?></a>
                         </td>
                         <td class="action_entities"><!-- Switch copy to dest --><?php
                         if($role_id == 'dest'  && isset($roles['copy']) ) { ?>
-                            <a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy" class="down"><?php echo _TO_CC;?></a><?php
+                            <a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy" ><i class="fa fa-arrow-down fa-2x"></i><?php echo _TO_CC;?></a><?php
                         } elseif($role_id == 'copy' && isset($roles['dest'])) { ?>
-                            <a href="<?php echo $linkwithwhat;?>&action=copy_to_dest&role=copy&rank=<?php echo $i;?>" class="up"><?php echo _TO_DEST;?></a><?php
+                            <a href="<?php echo $linkwithwhat;?>&action=copy_to_dest&role=copy&rank=<?php echo $i;?>" ><i class="fa fa-arrow-up fa-2x"></i><?php echo _TO_DEST;?></a><?php
                         } else echo '&nbsp;'?>
                         </td>
                         <td class="action_entities"><!-- Move up in list --><?php 
                         if($i > 0) { ?>
-                            <a href="<?php echo $linkwithwhat;?>&action=move_user_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php
+                            <a href="<?php echo $linkwithwhat;?>&action=move_user_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" ><i class="fa fa-arrow-up fa-2x"></i></a><?php
                         } ?>
                         </td>
                         <td class="action_entities"><!-- Move down in list --><?php 
                         if($i < $l-1) { ?>
-                            <a href="<?php echo $linkwithwhat;?>&action=move_user_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php
+                            <a href="<?php echo $linkwithwhat;?>&action=move_user_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" ><i class="fa fa-arrow-down fa-2x"></i></a><?php
                         } ?>
                         </td>
                     </tr> <?php
@@ -691,19 +691,19 @@ $linkwithwhat =
                         <td ><?php echo $entity['entity_id']; ?></td>
                         <td ><?php echo $entity['entity_label']; ?></td>
                         <td class="action_entities">
-                            <a href="<?php echo $linkwithwhat; ?>&action=remove_entity&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $entity['entity_id'];?>" class="delete">
-                                <?php echo _DELETE; ?>
+                            <a href="<?php echo $linkwithwhat; ?>&action=remove_entity&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $entity['entity_id'];?>" >
+                                <i class="fa fa-remove fa-2x"></i><?php echo _DELETE; ?>
                             </a>
                         </td>
                         <td class="action_entities">&nbsp;</td>
                         <td class="action_entities"><!-- Move up in list --><?php 
                         if($i > 0) { ?>
-                            <a href="<?php echo $linkwithwhat;?>&action=move_entity_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="up"></a><?php
+                            <a href="<?php echo $linkwithwhat;?>&action=move_entity_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" ><i class="fa fa-arrow-up fa-2x"></i></a><?php
                         } ?>
                         </td>
                         <td class="action_entities"><!-- Move down in list --><?php 
                         if($i < $l-1) { ?>
-                            <a href="<?php echo $linkwithwhat;?>&action=move_entity_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" class="down"></a><?php
+                            <a href="<?php echo $linkwithwhat;?>&action=move_entity_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" ><i class="fa fa-arrow-down fa-2x"></i></a><?php
                         } ?>
                         </td>
                     </tr><?php
@@ -817,8 +817,8 @@ $linkwithwhat =
                                 <option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
                             } ?>
                             </select>&nbsp;
-                            <span onclick="add_user(<?php echo $j; ?>);" class="change"/> 
-                                <?php echo _ADD;?>
+                            <span onclick="add_user(<?php echo $j; ?>);" /> 
+                                <i class="fa fa-plus fa-2x"></i><?php echo _ADD;?>
                             </span><?php
                         } else echo _NO_AVAILABLE_ROLE; ?>
                         </td>
@@ -870,8 +870,8 @@ $linkwithwhat =
                                     <option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
                                 } ?>
                                 </select>&nbsp;
-                                <span onclick="add_entity(<?php echo $j; ?>);" class="change"/> 
-                                    <?php echo _ADD;?>
+                                <span onclick="add_entity(<?php echo $j; ?>);" /> 
+                                    <i class="fa fa-plus fa-2x"></i><?php echo _ADD;?>
                                 </span><?php
                             } else echo _NO_AVAILABLE_ROLE; ?>               
                             </td>
