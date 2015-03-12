@@ -47,7 +47,7 @@ $db->connect();
                 . " WHERE enabled ='Y' AND "
 		. "(LOWER(lastname) LIKE LOWER('%s') OR LOWER(firstname) LIKE LOWER('%s') OR LOWER(user_id) LIKE LOWER('%s') OR LOWER(mail) LIKE LOWER('%s'))";
 
-    $subQuery[2]= 
+   /* $subQuery[2]= 
         "SELECT "
             . "(CASE "
                 . " WHEN is_corporate_person = 'Y' THEN society"
@@ -62,7 +62,25 @@ $db->connect();
                 . " OR LOWER(firstname) LIKE LOWER('%s')"
                 . " OR LOWER(society) LIKE LOWER('%s')"
 		. " OR LOWER(email) LIKE LOWER('%s')"
-            .")";
+            .")";*/
+
+    $subQuery[2]= 
+        "SELECT "
+            . "( "
+                . " UPPER(lastname)) || ' '|| firstname || "
+            . "' (' || email || ')' AS result, "
+            . ' %d AS confidence, email'
+        . " FROM contact_addresses"
+        . " WHERE  "
+            . " enabled = 'Y' AND email <> ''"
+            . " AND ("
+                . " LOWER(lastname) LIKE LOWER('%s')"
+                . " OR LOWER(firstname) LIKE LOWER('%s')"
+        . " OR LOWER(email) LIKE LOWER('%s')"
+            .")"
+        ."and (is_private = 'N' or ( user_id = '".$db->protect_string_db($_SESSION['user']['UserId'])."' and is_private = 'Y'))";
+
+
 
     $queryParts = array();
 for($i=1;$i<3;$i++){
