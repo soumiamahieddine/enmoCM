@@ -588,19 +588,19 @@ class list_show extends functions
                     if($bool_frame && $open_details_popup)
                     {
                         $str .= ' <td style="width:4%;"  align="center"><div align="right">';
-                                $str .= ' <a href="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'\',\'_parent\',\'_parent\');" title="'._DETAILS.'"><i class="fa fa-info fa-2x" title="'._DETAILS.'"></i></a></div>';
+                                $str .= ' <a href="javascript:window.open(\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'\',\'_parent\',\'_parent\');" title="'._DETAILS.'"><i class="fa fa-info-circle fa-2x" title="'._DETAILS.'"></i></a></div>';
                             $str .= ' </td>';
                     }
                     elseif($bool_frame && !$open_details_popup)
                     {
                         $str .= '<td style="width:4%;"  align="center">';
-                            $str .= '<a href="#" title="'._DETAILS.'" onclick="javascript:window.top.location=\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'\';return false;"><i class="fa fa-info fa-2x" title="'._DETAILS.'"></a>';
+                            $str .= '<a href="#" title="'._DETAILS.'" onclick="javascript:window.top.location=\''.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'\';return false;"><i class="fa fa-info-circle fa-2x" title="'._DETAILS.'"></a>';
                             $str .= ' </td>';
                     }
                     else
                     {
                         $str .= ' <td style="width:4%;"  align="center"><div align="right">
-                                <a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'" title="'._DETAILS.'"><i class="fa fa-info fa-2x" title="'._DETAILS.'"></i></a></div>';
+                                <a href="'.$_SESSION['config']['businessappurl'].'index.php?page='.$detail_destination.'&amp;id='.$result[$theline][0][$key].'" title="'._DETAILS.'"><i class="fa fa-info-circle fa-2x" title="'._DETAILS.'"></i></a></div>';
                         $str .= ' </td>';
                     }
                 }

@@ -3030,7 +3030,7 @@ class lists extends dbquery
             if($this->params['bool_showIconDetails']) {
                 $href = $this->_buildMyLink($this->params['viewDetailsLink'], $resultTheLine, $listKey);
                 $content .= '<td width="1%"><div align="center"><a href="javascript://" onClick="javascript:window.top.location=\''
-                    .$href.'\'; return false;" title="'._DETAILS.'"><i class="fa fa-info fa-2x" title="' . _DETAILS . '"></i></a></div></td>';
+                    .$href.'\'; return false;" title="'._DETAILS.'"><i class="fa fa-info-circle fa-2x" title="' . _DETAILS . '"></i></a></div></td>';
             }
             
             //End of line

@@ -217,7 +217,7 @@ class list_show_with_template extends list_show
 
             $return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page="
             .$this->detail_destination."&amp;id=".$result[$theline][0][$key]
-            ."' title='". _DETAILS."'><i class='fa fa-info fa-2x' title='"._DETAILS."'></i></a>";
+            ."' title='". _DETAILS."'><i class='fa fa-info-circle fa-2x' title='"._DETAILS."'></i></a>";
 
             return $return;
         }
@@ -232,7 +232,7 @@ class list_show_with_template extends list_show
         {
             $return = "<a href='".$_SESSION['config']['businessappurl']
             ."index.php?page=details_rm&amp;module=records_management&amp;id=".$result[$theline][0][$key]
-            ."' title='". _DETAILS."'><i class='fa fa-info fa-2x' title='"._DETAILS."'></i></a>";
+            ."' title='". _DETAILS."'><i class='fa fa-info-circle fa-2x' title='"._DETAILS."'></i></a>";
 
             return $return;
         }
@@ -246,7 +246,7 @@ class list_show_with_template extends list_show
         if ($this->bool_detail == true) {
             $return = "<a href='".$_SESSION['config']['businessappurl']
             ."index.php?page=ArchiveTransfer__detail&amp;module=records_management&amp;objectId="
-            .$result[$theline][0][$key]."' title='". _DETAILS."'><i class='fa fa-info fa-2x' title='"._DETAILS."'></i></a>";
+            .$result[$theline][0][$key]."' title='". _DETAILS."'><i class='fa fa-info-circle fa-2x' title='"._DETAILS."'></i></a>";
             return $return;
         }
     }
@@ -278,7 +278,7 @@ class list_show_with_template extends list_show
         $return = '';
         //if ($result[$theline][0]['aDesReps']) {
             $return .= '<i ';
-            $return .= 'class="fa fa-info fa-2x" ';
+            $return .= 'class="fa fa-info-circle fa-2x" ';
             $return .= 'style="';
                 $return .= 'cursor: pointer;';
             $return .= '" title="' . _VIEW_ARCHIVES . '"';
@@ -309,7 +309,7 @@ class list_show_with_template extends list_show
         if ($this->bool_detail == true)
         {
             $return = "<a href='".$_SESSION['config']['businessappurl']."index.php?page=details_cases&module=cases&amp;id=".$result[$theline][0]['case_id']."' title='". _DETAILS_CASES."'>
-            <i class='fa fa-info fa-2x' title='"._DETAILS."'></i></a>";
+            <i class='fa fa-info-circle fa-2x' title='"._DETAILS."'></i></a>";
 
             return $return;
         }

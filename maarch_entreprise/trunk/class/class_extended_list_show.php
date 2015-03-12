@@ -281,7 +281,7 @@ class extended_list_show extends dbquery
 			$return = '<a href="#" OnClick="javascript:window.top.location=\''.$href_details.'\';return false;" title="'. _DETAILS.'">';
 		}
 		
-		$return .= "<i class='fa fa-info fa-2x' title='"._DETAILS."'></i></a>";
+		$return .= "<i class='fa fa-info-circle fa-2x' title='"._DETAILS."'></i></a>";
 
 		return $return;
 	}
@@ -298,7 +298,7 @@ class extended_list_show extends dbquery
 		{
 			$return = '<a href="#" OnClick="javascript:window.top.location=\''.$_SESSION['config']['businessappurl']."index.php?page=details_cases&module=cases&amp;id=".$result[$theline][0]['case_id'].'\';return false;" title="'. _DETAILS_CASES.'">';
 		}
-		$return .= "<i class='fa fa-info fa-2x' title='"._DETAILS."'></i></a>";
+		$return .= "<i class='fa fa-info-circle fa-2x' title='"._DETAILS."'></i></a>";
 
 		return $return;
 	}
@@ -1070,7 +1070,7 @@ class extended_list_show extends dbquery
 				$content .= '<a href="#" OnClick="javascript:window.top.location=\''.$href_details.'\'; return false;" title="'._DETAILS.'">';
 			}
 			
-			$content .= '<i class="fa fa-info fa-2x" title="'._DETAILS.'"></i></a>';
+			$content .= '<i class="fa fa-info-circle fa-2x" title="'._DETAILS.'"></i></a>';
 			$content .= '</div>';
             $content .= '</td>';
         }
@@ -2234,7 +2234,7 @@ class extended_list_show extends dbquery
 		{
 		?>
 			<br/><em>
-			<a href="#" class="legend"><i class="fa fa-info fa-2x"></i><?php echo _LEGEND; ?>
+			<a href="#" class="legend"><i class="fa fa-info-circle fa-2x"></i><?php echo _LEGEND; ?>
 			<br/><span><?php echo $parameters['legend_title']; ?><hr/><?php echo $parameters['legend']; ?></span>
 			<a>
 			</em>
