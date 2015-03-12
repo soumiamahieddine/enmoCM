@@ -25,3 +25,4 @@ svn checkout http://svn.maarch.org/reports/trunk                    modules/repo
 svn checkout http://svn.maarch.org/sendmail/trunk                   modules/sendmail
 svn checkout http://svn.maarch.org/tags/trunk                       modules/tags
 svn checkout http://svn.maarch.org/templates/trunk                  modules/templates
+svn checkout http://svn.maarch.org/visa/trunk                       modules/visa
