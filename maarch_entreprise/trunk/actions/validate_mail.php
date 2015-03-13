@@ -1904,7 +1904,16 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         {
             require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_listdiff.php');
             $diff_list = new diffusion_list();
-            $params = array('mode'=> 'listinstance', 'table' => $_SESSION['tablename']['ent_listinstance'], 'coll_id' => $coll_id, 'res_id' => $res_id, 'user_id' => $_SESSION['user']['UserId']);
+
+
+            $params = array(
+                'mode'=> 'listinstance', 
+                'table' => $_SESSION['tablename']['ent_listinstance'], 
+                'coll_id' => $coll_id, 
+                'res_id' => $res_id, 
+                'user_id' => $_SESSION['user']['UserId'],
+                'fromQualif' => true
+            );
             $diff_list->load_list_db($_SESSION['indexing']['diff_list'], $params);
         }
     }
