@@ -98,7 +98,7 @@ if (count($indexes) > 0) {
 		}
 
 		if (in_array($key, $mandatory)) {
-			$content .= ' <span class="red_asterisk">*</span>';
+			$content .= ' <span class="red_asterisk"><i class="fa fa-star"></i></span>';
 		}
 		$content .= '</p>';
 	}
