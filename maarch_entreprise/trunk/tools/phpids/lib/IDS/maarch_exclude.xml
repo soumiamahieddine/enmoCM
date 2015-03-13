@@ -51,4 +51,12 @@
         <target>entities</target>
         <page>get_tree_childs</page>
     </exclude>
+    <exclude>
+        <target>autofoldering</target>
+        <page>check_group</page>
+    </exclude>
+    <exclude>
+        <target>autofoldering</target>
+        <page>manage_group</page>
+    </exclude>
 </excludes>
