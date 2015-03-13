@@ -62,7 +62,7 @@ else
 				<option value="<?php  echo $entities[$i]['ID'];?>" <?php  if($entities[$i]['ID']== $_SESSION['m_admin']['entity']['entityId']){ echo 'selected="selected"'; }?> ><?php  echo $entities[$i]['LABEL'];?></option><?php
 			}
 			?>
-		</select><span class="red_asterisk">*</span>
+		</select><span class="red_asterisk"><i class="fa fa-star"></i></span>
 	</p>
 </form>
 <?php $core_tools->load_js();?>

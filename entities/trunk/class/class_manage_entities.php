@@ -109,7 +109,7 @@ class entity extends dbquery
                         ?>
                         <p style="text-align:right;">
                             <label><?php  echo _ID;?> : </label>
-                            <input name="entityId" id="entityId" type="text" value="<?php  echo $_SESSION['m_admin']['entity']['entityId']; ?>" readonly="readonly" class="readonly" /><span class="red_asterisk">*</span>
+                            <input name="entityId" id="entityId" type="text" value="<?php  echo $_SESSION['m_admin']['entity']['entityId']; ?>" readonly="readonly" class="readonly" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
                             <input type="hidden"  name="id" value="<?php  echo $id; ?>" />
                             <input type="hidden"  name="mode" value="<?php  echo $mode; ?>" />
                         </p>
@@ -120,18 +120,18 @@ class entity extends dbquery
                         ?>
                         <p style="text-align:right;">
                             <label><?php  echo _ID;?> : </label>
-                            <input name="entityId" id="entityId" type="text" value="<?php if(isset($_SESSION['m_admin']['entity']['entityId'])){ echo $_SESSION['m_admin']['entity']['entityId'];} ?>" /><span class="red_asterisk">*</span>
+                            <input name="entityId" id="entityId" type="text" value="<?php if(isset($_SESSION['m_admin']['entity']['entityId'])){ echo $_SESSION['m_admin']['entity']['entityId'];} ?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
                         </p>
                         <?php
                     }
                     ?>
                     <p style="text-align:right;">
                         <label><?php  echo _ENTITY_LABEL; ?> : </label>
-                        <input name="label"  type="text" id="label" value="<?php if(isset($_SESSION['m_admin']['entity']['label'])){ echo $_SESSION['m_admin']['entity']['label'];} ?>" /><span class="red_asterisk">*</span>
+                        <input name="label"  type="text" id="label" value="<?php if(isset($_SESSION['m_admin']['entity']['label'])){ echo $_SESSION['m_admin']['entity']['label'];} ?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
                     </p>
                     <p style="text-align:right;">
                         <label><?php  echo _SHORT_LABEL; ?> : </label>
-                        <input name="short_label"  type="text" id="short_label" value="<?php if(isset($_SESSION['m_admin']['entity']['short_label'])){ echo $_SESSION['m_admin']['entity']['short_label'];} ?>" /><span class="red_asterisk">*</span>
+                        <input name="short_label"  type="text" id="short_label" value="<?php if(isset($_SESSION['m_admin']['entity']['short_label'])){ echo $_SESSION['m_admin']['entity']['short_label'];} ?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
                     </p>
                     <p style="text-align:right;">
                         <label><?php  echo _ENTITY_ADR_1; ?> : </label>
@@ -192,7 +192,7 @@ class entity extends dbquery
                             <?php
                                 }
                             ?>
-                        </select><span class="red_asterisk">*</span>
+                        </select><span class="red_asterisk"><i class="fa fa-star"></i></span>
                     </p>
                     <?php
                     //echo $_SESSION['m_admin']['entity']['parent'];
@@ -235,7 +235,7 @@ class entity extends dbquery
                                     }
                             }
                             ?>
-                        </select><span class="red_asterisk" >*</span>
+                        </select><span class="red_asterisk" ><i class="fa fa-star"></i></span>
                     </p>
 
                     <p class="buttons" style="text-align:center;">
