@@ -1255,7 +1255,7 @@ left: -100em;
 }
 
 #menu p {
-    height: 30px;
+    height: 28px;
     overflow: hidden;
     cursor: pointer;
 }
@@ -1273,6 +1273,8 @@ left: -100em;
 */
 
 #menunav {
+    display: block !important;
+    overflow: hidden;
     width: 260px;
     background: #CEE9F1;
     position: absolute;
@@ -1281,6 +1283,20 @@ left: -100em;
     z-index: 10;
     margin: 0px;
     border: 2px solid #009DC5;
+    -moz-transition: .8s max-height .3s;
+    -webkit-transition: .8s max-height .3s;
+    transition: .8s max-height .3s;
+    max-height: 0px;
+    top: 30px;
+    border-bottom: none;
+}
+
+#menu:hover #menunav {
+
+    -moz-transition: .8s max-height .3s;
+    -webkit-transition: .8s max-height .3s;
+    transition: .8s max-height .3s;
+    max-height:1000px;
 }
 
 #menunav li {
