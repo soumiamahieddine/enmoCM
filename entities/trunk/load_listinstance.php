@@ -95,7 +95,7 @@ if (! $onlyCC) {
     if (isset($_SESSION['validStep']) && $_SESSION['validStep'] == 'ok') {
         $content .= "";
     } else {
-        $content .= '<h2>' . _LINKED_DIFF_LIST . ' : </h2>';
+        //$content .= '<h2>' . _LINKED_DIFF_LIST . ' : </h2>';
     }
 }
 
