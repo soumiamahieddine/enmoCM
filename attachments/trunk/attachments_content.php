@@ -824,7 +824,7 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
                         $content .= '</option>';
                     }
 
-            $content .= '</select>&nbsp;<span class="red_asterisk" id="attachment_types_mandatory">*</span>';
+            $content .= '</select>&nbsp;<span class="red_asterisk" id="attachment_types_mandatory"><i class="fa fa-star"></i></span>';
         $content .= '</p>';
         $content .= '<br/>';
         $content .= '<p>';
@@ -843,7 +843,7 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
                         }
                         $content .= '</option>';
                     }*/
-            $content .= '</select>&nbsp;<span class="red_asterisk" id="templateOffice_mandatory">*</span>';
+            $content .= '</select>&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
         $content .= '</p>';
         $content .= '<br/>';
         $content .= '<p>';
@@ -868,7 +868,7 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
             } else {
                 $content .= $req->show_string($data_attachment->subject);
             }
-            $content .= '"/>&nbsp;<span class="red_asterisk" id="templateOffice_mandatory">*</span>';
+            $content .= '"/>&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
         $content .= '</p>';
         if (!isset($_REQUEST['id'])) {
             $content .= '<hr style="width:85%;margin-left:0px">';
