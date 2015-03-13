@@ -319,13 +319,20 @@ class diffusion_list extends dbquery
         
         $objectType = $this->protect_string_db(trim($objectType));
         
+        if (isset($params['fromQualif']) && $params['fromQualif'] == true) {
+            $fromQualif = true;
+        } else {
+            $fromQualif = false;
+        }
+
         $this->save_listinstance(
             $diffList,
             $objectType,
             $collId,
             $resId,
             $creatorUser,
-            $creatorEntity
+            $creatorEntity,
+            $fromQualif
         );
     }
     
@@ -335,7 +342,8 @@ class diffusion_list extends dbquery
         $collId,
         $resId,
         $creatorUser = "",
-        $creatorEntity = ""
+        $creatorEntity = "",
+        $fromQualif = false
     ) {
         $oldListInst = $this->get_listinstance($resId, false, $collId);
 /*        echo 'old<br/>';
@@ -470,7 +478,7 @@ class diffusion_list extends dbquery
                     . " )"
                 );
                 
-                if (!$userFound) {
+                if (!$userFound || $fromQualif) {
                     # History
                     $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
                     $hist->add(
@@ -522,7 +530,7 @@ class diffusion_list extends dbquery
                     . " )"
                 );
                 
-                if (!$entityFound) {
+                if (!$entityFound || $fromQualif) {
                     # History
                     $listinstance_id = $this->last_insert_id('listinstance_id_seq');      
                     $hist->add(
