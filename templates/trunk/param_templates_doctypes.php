@@ -44,7 +44,7 @@ if ($_SESSION['service_tag'] == 'doctype_up') {
                     echo '>'.$templates[$i]['label'].'</option>';
                 }
             ?>
-        </select><span class="red_asterisk">*</span>
+        </select><span class="red_asterisk"><i class="fa fa-star"></i></span>
     </div>
     <?php
 } elseif ($_SESSION['service_tag'] == "doctype_info") {
