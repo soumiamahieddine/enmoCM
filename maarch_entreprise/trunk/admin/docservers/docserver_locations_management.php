@@ -153,7 +153,7 @@ if ($mode == "list") {
         if ($mode == "up") {
             echo " readonly='readonly' class='readonly'";
         }
-        ?>/><span class="red_asterisk">*</span>
+        ?>/><span class="red_asterisk"><i class="fa fa-star"></i></span>
         </p>
         <p class = "bulle">
             <label for="ipv4"><?php echo _IPV4; ?> <small>(e.g: 127.0.0.1)</small> : </label>

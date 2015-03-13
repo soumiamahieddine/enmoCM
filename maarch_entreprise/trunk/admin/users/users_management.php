@@ -73,12 +73,12 @@ elseif($mode == "up" || $mode == "add")
             <p>
                 <label for="LastName"><?php  echo _LASTNAME; ?> :</label><br/>
                 <input name="LastName" id="LastName" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['lastname'])){echo functions::show_string($_SESSION['m_admin']['users']['lastname']);} ?>" />
-                <span class="red_asterisk">*</span>
+                <span class="red_asterisk"><i class="fa fa-star"></i></span>
             </p>
             <p>
                 <label for="FirstName"><?php  echo _FIRSTNAME; ?> :</label><br/>
                 <input name="FirstName" style="width: 95%;" id="FirstName"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['firstname'])){ echo functions::show_string($_SESSION['m_admin']['users']['firstname']); }?>" />
-                <span class="red_asterisk">*</span>
+                <span class="red_asterisk"><i class="fa fa-star"></i></span>
             </p>
             <p>
                 <?php  echo _PHONE_NUMBER; ?> :<br/>
@@ -87,7 +87,7 @@ elseif($mode == "up" || $mode == "add")
             <p>
                 <label for="Mail"><?php  echo _MAIL; ?> :</label><br/>
                 <input name="Mail" id="Mail" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['mail'])){ echo $_SESSION['m_admin']['users']['mail']; }?>" />
-                <span class="red_asterisk">*</span>
+                <span class="red_asterisk"><i class="fa fa-star"></i></span>
             </p>
             <p>
                 <?php  echo _LOGIN_MODE; ?>&nbsp;:<br/>
@@ -108,7 +108,7 @@ elseif($mode == "up" || $mode == "add")
 
                 echo '</select>';
                 ?>
-                <span class="red_asterisk">*</span>
+                <span class="red_asterisk"><i class="fa fa-star"></i></span>
             </p>
             <p class="buttons">
             <?php

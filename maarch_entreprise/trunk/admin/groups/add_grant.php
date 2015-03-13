@@ -115,13 +115,13 @@ else
                 }
                 ?>
         </select>
-        <span class="red_asterisk" >*</span>
+        <span class="red_asterisk" ><i class="fa fa-star"></i></span>
     </p>
     <br/>
     <p>
         <label><?php  echo _DESC;?> : </label>
         <input type="text" name="comment" id="comment" value="<?php  echo $comment;?>" />
-        <span class="red_asterisk" >*</span>
+        <span class="red_asterisk" ><i class="fa fa-star"></i></span>
     </p>
     <br/>
     <p>
@@ -134,14 +134,14 @@ else
         {?>
             <input type="radio"  class="check" name="target"  value="<?php echo $key;?>" id="target_<?php echo $key;?>"  <?php if($target == $key || (!$target_all && $key == 'DOC')){ echo 'checked="checked"';}?>  /><?php echo $_ENV['targets'][$key];?>
         <?php } ?>
-            <span class="red_asterisk" >*</span>
+            <span class="red_asterisk" ><i class="fa fa-star"></i></span>
             </div>
     </p>
     <br/>
     <p>
         <label><?php  echo _WHERE_CLAUSE;?> :</label><br/>
         <textarea rows="6" style="width:80%" name="where" id="where" /><?php  echo $clause;?></textarea>
-        <span class="red_asterisk" >*</span>
+        <span class="red_asterisk" ><i class="fa fa-star"></i></span>
     </p>
     <br/>
     <p >

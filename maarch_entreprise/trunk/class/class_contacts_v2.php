@@ -541,7 +541,7 @@ class contacts_v2 extends dbquery
                                         </option><?php
                                     }?>
                             </select></td>
-                        <td><span class="red_asterisk" style="visibility:visible;" id="contact_types_mandatory">*</span></td>
+                        <td><span class="red_asterisk" style="visibility:visible;" id="contact_types_mandatory"><i class="fa fa-star"></i></span></td>
                     </tr>
                     <?php
                     if (defined('_EXAMPLE_SELECT_CONTACT_TYPE') && _EXAMPLE_SELECT_CONTACT_TYPE <> "") { ?>
@@ -575,7 +575,7 @@ class contacts_v2 extends dbquery
                         <td><label for="society"><?php echo _STRUCTURE_ORGANISM; ?> : </label></td>
                         <td>&nbsp;</td>
                         <td class="indexing_field"><input name="society" type="text"  id="society" value="<?php if(isset($_SESSION['m_admin']['contact']['SOCIETY'])){ echo $func->show_str($_SESSION['m_admin']['contact']['SOCIETY']); }?>"/></td>
-                        <td class="indexing_field" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ echo $display_value;}?>"><span class="red_asterisk" style="visibility:visible;" id="society_mandatory">*</span></td>
+                        <td class="indexing_field" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ echo $display_value;}?>"><span class="red_asterisk" style="visibility:visible;" id="society_mandatory"><i class="fa fa-star"></i></span></td>
                     </tr>
                     <tr>
                         <td><?php echo _SOCIETY_SHORT; ?> :</td>
@@ -609,13 +609,13 @@ class contacts_v2 extends dbquery
                         <td><label for="lastname"><?php echo _LASTNAME; ?> : </label></td>
                         <td>&nbsp;</td>
                         <td class="indexing_field"><input name="lastname" type="text" id="lastname" value="<?php if(isset($_SESSION['m_admin']['contact']['LASTNAME'])){ echo $func->show_str($_SESSION['m_admin']['contact']['LASTNAME']);} ?>"/></td>
-                        <td><span id="lastname_mandatory" class="red_asterisk" style="visibility:none;">*</span></td>
+                        <td><span id="lastname_mandatory" class="red_asterisk" style="visibility:none;"><i class="fa fa-star"></i></span></td>
                     </tr>
                     <tr id="firstname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
                         <td><label for="firstname"><?php echo _FIRSTNAME; ?> : </label></td>
                         <td>&nbsp;</td>
                         <td class="indexing_field"><input name="firstname" type="text" id="firstname" value="<?php if(isset($_SESSION['m_admin']['contact']['FIRSTNAME'])){ echo $func->show_str($_SESSION['m_admin']['contact']['FIRSTNAME']);} ?>"/></td>
-                        <td><span id="firstname_mandatory" class="red_asterisk" style="visibility:none;">*</span></td>
+                        <td><span id="firstname_mandatory" class="red_asterisk" style="visibility:none;"><i class="fa fa-star"></i></span></td>
                     </tr>
                     <tr id="function_p" style="display:<?php if(isset($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON']) && $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
                         <td><label for="function"><?php echo _FUNCTION; ?> : </label></td>
@@ -730,7 +730,7 @@ class contacts_v2 extends dbquery
                                         }
                                     ?>
                                 </select>
-                                <span class="red_asterisk">*</span>
+                                <span class="red_asterisk"><i class="fa fa-star"></i></span>
                             </td>
                         </tr>
                     </table>
@@ -1293,7 +1293,7 @@ class contacts_v2 extends dbquery
                                     ?>
                                 />
                             </td>
-                            <td class="indexing_field"><span class="red_asterisk" style="visibility:visible;" id="contact_purposes_mandatory">*</span></td>
+                            <td class="indexing_field"><span class="red_asterisk" style="visibility:visible;" id="contact_purposes_mandatory"><i class="fa fa-star"></i></span></td>
                         </tr>
                         <tr style="display:none;" id="rule_purpose">
                             <td colspan="3" align="right" ><i><?php echo _EXAMPLE_PURPOSE; ?></i></td>

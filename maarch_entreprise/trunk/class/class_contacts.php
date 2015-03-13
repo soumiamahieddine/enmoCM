@@ -499,7 +499,7 @@ class contacts extends dbquery
                         <td><label for="lastname"><?php echo _LASTNAME; ?> : </label></td>
                         <td>&nbsp;</td>
                         <td class="indexing_field"><input name="lastname" type="text"  id="lastname" value="<?php if(isset($_SESSION['m_admin']['contact']['LASTNAME'])){ echo $func->show_str($_SESSION['m_admin']['contact']['LASTNAME']);} ?>"/></td>
-                        <td><span id="lastname_mandatory" class="red_asterisk" style="visibility:hidden;">*</span></td>
+                        <td><span id="lastname_mandatory" class="red_asterisk" style="visibility:hidden;"><i class="fa fa-star"></i></span></td>
                     </tr>
                     <tr id="firstname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
                         <td><label for="firstname"><?php echo _FIRSTNAME; ?> : </label></td>
@@ -511,7 +511,7 @@ class contacts extends dbquery
                         <td><label for="society"><?php echo _SOCIETY; ?> : </label></td>
                         <td>&nbsp;</td>
                         <td class="indexing_field"><input name="society" type="text"  id="society" value="<?php if(isset($_SESSION['m_admin']['contact']['SOCIETY'])){ echo $func->show_str($_SESSION['m_admin']['contact']['SOCIETY']); }?>"/></td>
-                        <td class="indexing_field"><span class="red_asterisk" style="visibility:visible;" id="society_mandatory">*</span></td>
+                        <td class="indexing_field"><span class="red_asterisk" style="visibility:visible;" id="society_mandatory"><i class="fa fa-star"></i></span></td>
                     </tr>
                     <tr id="function_p" style="display:<?php if(isset($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON']) && $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
                         <td><label for="function"><?php echo _FUNCTION; ?> : </label></td>

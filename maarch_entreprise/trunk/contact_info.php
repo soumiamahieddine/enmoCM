@@ -366,7 +366,7 @@ $core->load_js();
          </p>
          <p id="lastname_p" style="<?php if($contact_info['IS_CORPORATE_PERSON'] == 'Y') echo 'display:none;'; else echo 'display:inline;'; ?>">
             <label for="label"><?php echo _LASTNAME; ?> : </label>
-            <input name="lastname" type="text"  id="lastname" value="<?php echo $func->show_str($contact_info['LASTNAME']); ?>" <?php if($readonly){ echo 'readonly="readonly"';}?> /> <?php if(!$readonly){?><span class="red_asterisk" id="lastname_mandatory" style="display:none;">*</span><?php } ?>
+            <input name="lastname" type="text"  id="lastname" value="<?php echo $func->show_str($contact_info['LASTNAME']); ?>" <?php if($readonly){ echo 'readonly="readonly"';}?> /> <?php if(!$readonly){?><span class="red_asterisk" id="lastname_mandatory" style="display:none;"><i class="fa fa-star"></i></span><?php } ?>
          </p>
          <p id="firstname_p" style="<?php if($contact_info['IS_CORPORATE_PERSON'] == 'Y') echo 'display:none;'; else echo 'display:inline ;'; ?>">
             <label for="label"><?php echo _FIRSTNAME; ?> : </label>
@@ -374,7 +374,7 @@ $core->load_js();
          </p>
          <p >
             <label for="label"><?php echo _SOCIETY; ?> : </label>
-            <input name="society" type="text"  id="society" value="<?php echo $func->show_str($contact_info['SOCIETY']); ?>" <?php if($readonly){ echo 'readonly="readonly"';}?>/> <?php if(!$readonly){?><span class="red_asterisk" id="society_mandatory" style="display:inline;">*</span><?php } ?>
+            <input name="society" type="text"  id="society" value="<?php echo $func->show_str($contact_info['SOCIETY']); ?>" <?php if($readonly){ echo 'readonly="readonly"';}?>/> <?php if(!$readonly){?><span class="red_asterisk" id="society_mandatory" style="display:inline;"><i class="fa fa-star"></i></span><?php } ?>
          </p>
           <p id="function_p" style="<?php if($contact_info['IS_CORPORATE_PERSON'] == 'Y')  echo 'display:none;'; else echo 'display:inline;'; ?>">
             <label for="label"><?php echo _FUNCTION; ?> : </label>
