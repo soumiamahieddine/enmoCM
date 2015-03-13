@@ -131,7 +131,7 @@ if ($mode == 'add') {
     $content .= '</td>';
     $content .= '</tr>';
     $content .= '<tr>';
-    $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk">*</span><label>'
+    $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'
         ._SEND_TO_SHORT.'</label></td>';
     $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput">'
         .'<div id="loading_to" style="display:none;"><i class="fa fa-spinner fa-spin" title="loading..."></div></div></td>';
@@ -151,7 +151,7 @@ if ($mode == 'add') {
         .'<div id="loading_cci" style="display:none;"><i class="fa fa-spinner fa-spin" title="loading..."></div></div></td>';
     $content .= '</tr>';
     $content .= '<tr>';
-    $content .= '<td align="right" nowrap><span class="red_asterisk">*</span><label>'._EMAIL_OBJECT.' </label></td>';
+    $content .= '<td align="right" nowrap><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'._EMAIL_OBJECT.' </label></td>';
     $content .= '<td colspan="2"><input name="object" id="object" class="emailInput" type="text" value="" /></td>';
     $content .= '</tr>';
     $content .= '</table><br />';
@@ -367,7 +367,7 @@ if ($mode == 'add') {
                 $_SESSION['adresses']['to'] = $emailArray['to'];
             }
             $content .= '<tr>';
-            $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk">*</span><label>'
+            $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'
                 ._SEND_TO_SHORT.'</label></td>';
             $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput">';
             $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'to');
@@ -401,7 +401,7 @@ if ($mode == 'add') {
             $content .= '</tr>';
             //Object
             $content .= '<tr>';
-            $content .= '<td align="right" nowrap><span class="red_asterisk">*</span><label>'._EMAIL_OBJECT.' </label></td>';
+            $content .= '<td align="right" nowrap><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'._EMAIL_OBJECT.' </label></td>';
             $content .= '<td colspan="2"><input name="object" id="object" class="emailInput" type="text" value="'
                 .(($mode == 'transfer')? 'Fw: '.$emailArray['object'] : $emailArray['object']).'" /></td>';
             $content .= '</tr>';
@@ -628,7 +628,7 @@ if ($mode == 'add') {
                 $_SESSION['adresses']['to'] = $emailArray['to'];
             }
             $content .= '<tr>';
-            $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk">*</span><label>'
+            $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'
                 ._SEND_TO_SHORT.'</label></td>';
             $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput">';
             $content .= $sendmail_tools->updateAdressInputField($path_to_script, $_SESSION['adresses'], 'to', true);
@@ -658,7 +658,7 @@ if ($mode == 'add') {
             $content .= '</tr>';   
             //Object
             $content .= '<tr>';
-            $content .= '<td align="right" nowrap><span class="red_asterisk">*</span><label>'._EMAIL_OBJECT.' </label></td>';
+            $content .= '<td align="right" nowrap><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'._EMAIL_OBJECT.' </label></td>';
             $content .= '<td colspan="2"><div name="object" id="object" class="emailInput">'
                 .$emailArray['object'].'</div></td>';
             $content .= '</tr>';
