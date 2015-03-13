@@ -87,13 +87,13 @@ if (empty($fileplan_id)) {
 		<label ><?php echo _FILEPLAN_NAME;?> : </label>
 		<input name="fileplan_label" type="text" id="fileplan_label" class="fileplan_position" value="<?php  
 			echo _PERSONNAL_FILEPLAN.' ('.	$userInfo['FirstName'].' '.$userInfo['LastName']
-			.')'; ?>" /><span class="red_asterisk">*</span>
+			.')'; ?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
 	</p>
 	<p>
 		<label ><?php echo _IS_SERIAL_ID;?> : </label>
 		<input name="is_serial" type="radio" id="is_serial" value="Y" checked="ckecked" /><?php echo _YES;?>
 		<input name="is_serial" type="radio" id="is_serial" value="N" /><?php echo _NO;?>
-		<span class="red_asterisk">*</span>
+		<span class="red_asterisk"><i class="fa fa-star"></i></span>
 	</p>
 	<p class="buttons">
 		<input type="button" name="valid" value="<?php  

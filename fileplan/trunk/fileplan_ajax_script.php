@@ -111,7 +111,7 @@ switch ($mode) {
 		$content .='<label nowrap>'._FILEPLAN_NAME.': </label>';
 		$content .='<input name="fileplan_label" type="text" '
 			.'id="fileplan_label" class="fileplan_position" value="'
-			.'" /><span class="red_asterisk">*</span>';
+			.'" /><span class="red_asterisk"><i class="fa fa-star"></i></span>';
 		$content .='</p>';
 		//Entity if needed
 		/*
@@ -243,7 +243,7 @@ switch ($mode) {
 			$content .='<input name="fileplan_label" type="text" '
 				.'id="fileplan_label" class="fileplan_position" value="'
 				.$fileplan_array['LABEL']
-				.'" /><span class="red_asterisk">*</span>';
+				.'" /><span class="red_asterisk"><i class="fa fa-star"></i></span>';
 			$content .='</p>';
 			//Entity if needed
 			/*
@@ -289,7 +289,7 @@ switch ($mode) {
 				$content .='<label >'._IS_SERIAL_ID.': </label>';
 				$content .='<input name="is_serial" type="radio" id="is_serial" value="Y" '.$checkedYes.' />'._YES;
 				$content .='<input name="is_serial" type="radio" id="is_serial" value="N" '.$checkedNo.' />'._NO;
-				$content .='<span class="red_asterisk">*</span>';
+				$content .='<span class="red_asterisk"><i class="fa fa-star"></i></span>';
 				$content .='</p>';
 			}
 			$content .= '</div>';
