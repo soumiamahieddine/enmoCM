@@ -404,6 +404,16 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             $indexes = $type->get_indexes($type_id, $coll_id);
             $entityLabel = $res->entity_label;
 
+            $dbUser = new dbquery();
+            $queryUser = "select firstname, lastname from users where user_id = '" . $typist ."'";
+            $dbUser->query($queryUser);
+            $resultUser = $dbUser->fetch_object();
+            if ($resultUser->lastname <> '') {
+                $typistLabel = $resultUser->firstname . ' ' . $resultUser->lastname;
+            } else {
+                $typistLabel = $typist;
+            }
+
             if ($core->is_module_loaded('cases') == true) {
                 require_once('modules/cases/class/class_modules_tools.php');
                 $case = new cases();
@@ -822,6 +832,17 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             </td>
                             <td>
                                 <textarea rows="2" style="width: 200px; max-width: 200px;" class="readonly" readonly="readonly"><?php  echo $initiator; ?></textarea>
+                            </td>
+                            <!-- typist -->
+                            <th align="left" class="picto">
+                                <i class="fa fa-user fa-2x"></i>
+                            </th>
+                            <td align="left" width="200px">
+                                <?php  echo _TYPIST; ?> :
+                            </td>
+                            <td>
+                                <input type="text" class="readonly" readonly="readonly" value="<?php echo $typistLabel; 
+                                ?>" size="40" title="<?php echo $typistLabel; ?>" alt="<?php echo $typistLabel; ?>" />
                             </td>
                         </tr>
 
