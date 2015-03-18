@@ -300,4 +300,60 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
+	<!-- ACTIONS AJOUTEES PAR DIS -->
+	<ACTIONPAGE>
+        <ID>prepare_visa</ID>
+        <LABEL>_PREPARE_VISA</LABEL>
+        <NAME>prepare_visa</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>visa</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
+	<ACTIONPAGE>
+        <ID>visa_mail</ID>
+        <LABEL>_VISA_MAIL</LABEL>
+        <NAME>visa_mail</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>visa</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
+	<ACTIONPAGE>
+        <ID>visa_workflow</ID>
+        <LABEL>_PROCEED_WORKFLOW</LABEL>
+        <NAME>visa_workflow</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>visa</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
+	<ACTIONPAGE>
+        <ID>print_folder</ID>
+        <LABEL>_IMPRIM_DOSSIER</LABEL>
+        <NAME>print_folder</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>visa</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
+	<ACTIONPAGE>
+        <ID>send_email</ID>
+        <LABEL>_SEND_MAIL</LABEL>
+        <NAME>send_email</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>visa</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
 </ROOT>
