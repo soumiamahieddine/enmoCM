@@ -442,6 +442,7 @@ class diffusion_list extends dbquery
             for ($i=0;$i<$cptUsers;$i++) {
                 $userFound = false;
                 $userId = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['user_id']));
+                $processComment = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['processComment']));
                 $visible = $diffList[$role_id]['users'][$i]['visible'];
                 $viewed = (integer)$diffList[$role_id]['users'][$i]['viewed'];
                 $cptOldUsers = count($oldListInst[$role_id]['users']);
@@ -461,7 +462,7 @@ class diffusion_list extends dbquery
 					
                 $this->query(
                     "insert into " . ENT_LISTINSTANCE
-                        . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type) "
+                        . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment) "
                     . "values ("
                         . "'" . $collId . "', "
                         . $resId . ", "
@@ -474,7 +475,8 @@ class diffusion_list extends dbquery
                         . "'" . $creatorEntity. "', "
                         . "'" . $visible . "', "
                         . $viewed . ", "
-                        . "'" . $difflistType . "'"
+                        . "'" . $difflistType . "', "
+                        . "'" . $processComment . "'"
                     . " )"
                 );
                 
@@ -560,7 +562,7 @@ class diffusion_list extends dbquery
         while ($resListinstance = $this->fetch_object()){
             $dbListinstance->query(
                 "INSERT INTO listinstance_history_details 
-                    (listinstance_history_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type) "
+                    (listinstance_history_id, coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment) "
                 . "VALUES ('".$listinstance_history_id."',"
                     . "'" . $resListinstance->coll_id . "', "
                     . $res_id . ", "
@@ -573,7 +575,8 @@ class diffusion_list extends dbquery
                     . "'" . $resListinstance->added_by_entity . "', "
                     . "'" . $resListinstance->visible . "',"
                     . $resListinstance->viewed. ", "
-                    . "'" . $resListinstance->difflist_type . "'"
+                    . "'" . $resListinstance->difflist_type . "', "
+                    . "'" . $resListinstance->process_comment . "'"
                 . " )"
             );
         }
@@ -604,7 +607,8 @@ class diffusion_list extends dbquery
     public function get_listinstance(
         $resId, 
         $modeCc = false, 
-        $collId = 'letterbox_coll'
+        $collId = 'letterbox_coll',
+        $typeList = 'entity_id'
     ) {
         $this->connect();
         $roles = $this->list_difflist_roles();
@@ -667,7 +671,7 @@ class diffusion_list extends dbquery
             . " ue where l.coll_id = '" . $collId . "' "
             . " and l.item_type = 'user_id' and l.item_id = u.user_id "
             . " and l.item_id = ue.user_id and ue.user_id=u.user_id "
-            . " and e.entity_id = ue.entity_id and l.res_id = " . $resId
+            . " and e.entity_id = ue.entity_id and l.difflist_type = '" . $typeList . "' and l.res_id = " . $resId
             . " and ue.primary_entity = 'Y' order by l.sequence "
         );
         //$this->show();
@@ -794,7 +798,12 @@ class diffusion_list extends dbquery
         
         $roles['dest'] = _DEST_USER;
         $roles['copy'] = _TO_CC;
-        
+		
+		/* AJOUT DES ROLES POUR LE CIRCUIT DE VISA */
+		$roles['visa'] = _VISA_USER;
+        $roles['sign'] = _TO_SIGN;
+        /*******************************************/
+		
         while($usergroup = $this->fetch_object()) {
             $group_id = $usergroup->group_id;
             $roles[$group_id] = $usergroup->group_desc;
