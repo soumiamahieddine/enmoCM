@@ -679,6 +679,10 @@ if (!defined('_FILING')) define('_FILING', 'Typologie');
 
 if (!defined('_CHOOSE_DIFFUSION_LIST')) define('_CHOOSE_DIFFUSION_LIST', 'Choisissez une liste de diffusion');
 if (!defined('_DIFF_LIST_HISTORY')) define('_DIFF_LIST_HISTORY', 'Historique de diffusion');
+if (!defined('_DIFF_LIST_VISA_HISTORY')) define('_DIFF_LIST_VISA_HISTORY', 'Historique du circuit de visa');
+if (!defined('_DIFF_LIST_AVIS_HISTORY')) define('_DIFF_LIST_AVIS_HISTORY', 'Historique du circuit d\'avis');
+
+
 if (!defined('_MODIFY_BY')) define('_MODIFY_BY', 'Modifi&eacute; par');
 if (!defined('_DIFFLIST_NEVER_MODIFIED')) define('_DIFFLIST_NEVER_MODIFIED', 'La liste de diffusion n\'a jamais &eacute;t&eacute; modifi&eacute;e');
 
@@ -802,6 +806,7 @@ if (!defined('_CHOOSE_STATUS')) define( '_CHOOSE_STATUS','Choisissez un statut')
 if (!defined('_PROCESS_RECEIPT')) define( '_PROCESS_RECEIPT','Destinataire(s) pour traitement');
 if (!defined('_CHOOSE_RECEIPT')) define( '_CHOOSE_RECEIPT','Choisissez un destinataire');
 if (!defined('_TO_CC')) define( '_TO_CC','En copie');
+if (!defined('_TO_SIGN')) define( '_TO_SIGN','Pour signature');
 if (!defined('_ADD_CC')) define( '_ADD_CC','En copie');
 if (!defined('_ADD_COPIES')) define( '_ADD_COPIES','Ajouter des personnes en copie');
 //if (!defined('_ANSWER_TYPE')) define( '_ANSWER_TYPE','Type(s) de r&eacute;ponse');
@@ -833,6 +838,7 @@ if (!defined('_SAVE_QUERY')) define( '_SAVE_QUERY', 'Enregistrer ma recherche');
 if (!defined('_SAVE_QUERY_TITLE')) define( '_SAVE_QUERY_TITLE', 'Enregistrement de recherche');
 if (!defined('_QUERY_NAME')) define( '_QUERY_NAME', 'Nom de ma recherche');
 if (!defined('_QUERY_SAVED')) define( '_QUERY_SAVED', 'Recherche sauvegard&eacute;e');
+if (!defined('_VISA_USER'))    define('_VISA_USER', 'Pour visa');
 
 //if (!defined('_SQL_ERROR')) define( '_SQL_ERROR', 'Erreur SQL lors de l&acute;enregistrement de la recherche');
 if (!defined('_LOAD_QUERY')) define( '_LOAD_QUERY', 'Charger la recherche');

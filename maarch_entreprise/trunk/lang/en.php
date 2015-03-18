@@ -992,6 +992,7 @@ if (!defined('_TOTAL_ERRORS')) define('_TOTAL_ERRORS', 'Total errors');
 if (!defined('_TOTAL_PROCESSED')) define('_TOTAL_PROCESSED', 'Total processed');
 if (!defined('_TOWN')) define('_TOWN', 'Town');
 if (!defined('_TO_CC')) define('_TO_CC','In copy');
+if (!defined('_TO_SIGN')) define('_TO_SIGN','In signature');
 if (!defined('_TO_CONTACT_C')) define('_TO_CONTACT_C', 'From');
 if (!defined('_TO_GET_LOG_PLEASE_CONNECT'))     define( '_TO_GET_LOG_PLEASE_CONNECT', 'Please connect to get the full log informations');
 if (!defined('_TO_KNOW_ID')) define('_TO_KNOW_ID', 'To get the document number, perform a search or ask your administrator');
@@ -1069,6 +1070,7 @@ if (!defined('_VIEW_TECHNICAL_INFORMATIONS'))  define('_VIEW_TECHNICAL_INFORMATI
 if (!defined('_VIEW_TREE_DOCTYPES')) define('_VIEW_TREE_DOCTYPES', 'Tree view of classification scheme');
 if (!defined('_VIEW_TREE_DOCTYPES_DESC')) define('_VIEW_TREE_DOCTYPES_DESC', 'Tree view of your classification scheme (type of file, sub-file and type of documents)');
 if (!defined('_VIEW_VERSIONS'))    define('_VIEW_VERSIONS', 'View document versions');
+if (!defined('_VISA_USER'))    define('_VISA_USER', 'Look at an answer');
 if (!defined('_VISIT_DATE')) define('_VISIT_DATE', 'Attendance date');
 if (!defined('_WAITING_FLOAT')) define( '_WAITING_FLOAT', 'Floating number awaited');
 if (!defined('_WAITING_INTEGER')) define('_WAITING_INTEGER', 'Integer expected');
@@ -1378,6 +1380,8 @@ if (!defined('_SECURITY_MESSAGE')) define('_SECURITY_MESSAGE', 'Security message
 if (!defined('_SECURITY_MESSAGE_DETAILS')) define('_SECURITY_MESSAGE_DETAILS', 'XSS query not allowed');
 
 if (!defined('_DIFF_LIST_HISTORY')) define('_DIFF_LIST_HISTORY', 'Diffusion history');
+if (!defined('_DIFF_LIST_VISA_HISTORY')) define('_DIFF_LIST_VISA_HISTORY', 'Diffusion history (visa workflow)');
+if (!defined('_DIFF_LIST_AVIS_HISTORY')) define('_DIFF_LIST_AVIS_HISTORY', 'Diffusion history (notice workflow)');
 if (!defined('_MODIFY_BY')) define('_MODIFY_BY', 'Modify by');
 if (!defined('_DIFFLIST_NEVER_MODIFIED')) define('_DIFFLIST_NEVER_MODIFIED', 'The diffusion list never changed');
 
