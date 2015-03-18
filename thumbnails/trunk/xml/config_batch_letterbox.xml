@@ -1,7 +1,7 @@
 <ROOT>
 	<CONFIG>
 		<CONFIG_NAME>create_tnl_letterbox</CONFIG_NAME>
-		<CORE_PATH>/var/www/maarch15_dis/core/</CORE_PATH>
+		<CORE_PATH>/var/www/maarch_entreprise/core/</CORE_PATH>
 		<LOCATION>localhost</LOCATION>
 		<DATABASE_PORT>5432</DATABASE_PORT>
 		<DATABASE>maarch</DATABASE>
