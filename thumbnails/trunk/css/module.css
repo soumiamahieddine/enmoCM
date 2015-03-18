@@ -1,0 +1,24 @@
+.big {
+  display: none;
+}
+.tnl {
+  display: block;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+.big {
+  position: absolute;
+  left: 0;
+  top: 100%;
+  z-index: 1;
+}
+.tnl:focus {
+  outline: 0;
+}
+.tnl:focus .small {
+  box-shadow: 0 0 4px black;
+}
+.tnl:hover .big, .tnl:active .big, .tnl:focus .big  {
+  display: block;
+}
