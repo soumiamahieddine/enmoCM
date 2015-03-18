@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+    <CONFIG>
+        <name>visa</name>
+        <comment>_VISA_WORKFLOW_COMMENT</comment>
+        <loaded>true</loaded>
+        <routing_template>modules/visa/Bordereau_visa_modele.pdf</routing_template>
+    </CONFIG>
+</root>
