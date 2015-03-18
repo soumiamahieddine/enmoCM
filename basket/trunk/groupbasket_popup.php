@@ -256,13 +256,14 @@ $time = $core_tools->get_session_time_expire();
                         </tr>
                     </table>
                 </div>
+               
                 <?php
                 $keyword = $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['KEYWORD'];
                 echo $core_tools->execute_modules_services($_SESSION['modules_services'], 'groupbasket_popup.php', "include");
 				echo $core_tools->execute_app_services($_SESSION['app_services'], 'groupbasket_popup.php', "include");
                 
-                if($_SESSION['m_admin']['show_where_clause'] )
-                {
+                /*if($_SESSION['m_admin']['show_where_clause'] )
+                {*/
                     if(isset( $_SESSION['m_admin']['basket_popup']['actions'][$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']]['WHERE']))
                     {
                         $tmp_where = $_SESSION['m_admin']['basket_popup']['actions'][$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']]['WHERE'];
@@ -272,7 +273,7 @@ $time = $core_tools->get_session_time_expire();
                     <br/>
                     <textarea name="whereclause_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>" rows="10" style="width:500px;"><?php if(empty($tmp_where)){echo $bask->get_infos_groupbasket_session($_SESSION['m_admin']['basket']['ind_group'],$_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'], 'WHERE' );}else{ echo $tmp_where;} ?></textarea>
                 <?php
-                } ?></div><?php
+                /*}*/ ?></div><?php
         }
         $core_tools->load_js();
 
