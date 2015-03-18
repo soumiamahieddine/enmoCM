@@ -54,6 +54,11 @@ $frm_height = '';
 */
 $mode_form = 'fullscreen';
 
+require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
+			. "class" . DIRECTORY_SEPARATOR
+			. "class_modules_tools.php";
+			
+			
 include('apps/' . $_SESSION['config']['app_id']. '/definition_mail_categories.php');
 
 
@@ -704,7 +709,28 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
          . '&nbsp;<small>' . _LINK_TAB . ' (<span id="nbLinks">' . $nbLink . '</span>)</small>';
     $frm_str .= '</b></span>';
     $frm_str .= '</td>';
+	
+	//VISA CIRCUIT
+    $frm_str .= '<td>';
     
+    $frm_str .= '<span onclick="new Effect.toggle(\'visa_div\', \'appear\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'visa_div\', \'divStatus_visa_div\');hideOtherDiv(\'visa_div\');return false;" '
+        . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+    $frm_str .= '<span id="divStatus_visa_div" style="color:#1C99C5;"><<</span><b>'
+         . '&nbsp;<small>' . _VISA_WORKFLOW . '</small>';
+    $frm_str .= '</b></span>';
+    $frm_str .= '</td>';
+	
+	//AVIS CIRCUIT
+    $frm_str .= '<td>';
+    
+    $frm_str .= '<span onclick="new Effect.toggle(\'avis_div\', \'appear\', {delay:0.2});'
+        . 'whatIsTheDivStatus(\'avis_div\', \'divStatus_avis_div\');hideOtherDiv(\'avis_div\');return false;" '
+        . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
+    $frm_str .= '<span id="divStatus_avis_div" style="color:#1C99C5;"><<</span><b>'
+         . '&nbsp;<small>' . _AVIS_WORKFLOW . '</small>';
+    $frm_str .= '</b></span>';
+    $frm_str .= '</td>';
     //END TOOLBAR
     $frm_str .= '</table>';
     $frm_str .= '</div>';
@@ -841,6 +867,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
                         $s_id = $res_id;
                         $return_mode = true;
+						$diffListType = 'entity_id';
                         require_once('modules/entities/difflist_history_display.php');
 
                     $frm_str .= '</div>';
@@ -1053,6 +1080,70 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $frm_str .= $_SESSION['urltomodules'];
                             $frm_str .= 'content_management/list_versions.php")';
                     $frm_str .= '</script>';
+                $frm_str .= '</div><br>';
+        $frm_str .= '</div>';
+        $frm_str .= '<hr />';
+    $frm_str .= '</div>';
+
+	
+	//VISA CIRCUIT FRAME
+    $modifVisaWorkflow = false;
+    if ($core->test_service('config_visa_workflow', 'visa', false)) {
+        $modifVisaWorkflow = true;
+    }
+    $frm_str .= '<div id="visa_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
+        $frm_str .= '<div class="block" style="margin-top:-2px;">';
+                $frm_str .= '<h2 onclick="new Effect.toggle(\'visa_div\', \'blind\', {delay:0.2});';
+                $frm_str .= 'whatIsTheDivStatus(\'visa_div\', \'divStatus_visa_div\');';
+                    $frm_str .= 'return false;">';
+                    $frm_str .= '<center>' . _VISA_WORKFLOW . '</center>';
+                $frm_str .= '</h2>';
+                $frm_str .= '<div class="error" id="divError" name="divError"></div>';
+                $frm_str .= '<div style="text-align:center;">';
+                $visa = new visa();
+				$frm_str .= $visa->getList($res_id, $coll_id, $modifVisaWorkflow, 'VISA_CIRCUIT');
+                
+                $frm_str .= '</div><br>';
+				/* Historique diffusion visa */
+				$frm_str .= '<br/>'; 
+                    $frm_str .= '<br/>';                
+                    $frm_str .= '<span class="diff_list_visa_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'diff_list_visa_history_div\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'diff_list_visa_history_div\', \'divStatus_diff_list_visa_history_div\');return false;">';
+                        $frm_str .= '<span id="divStatus_diff_list_visa_history_div" style="color:#1C99C5;"><<</span>';
+                        $frm_str .= '<b>&nbsp;<small>'._DIFF_LIST_VISA_HISTORY.'</small></b>';
+                    $frm_str .= '</span>';
+
+                    $frm_str .= '<div id="diff_list_visa_history_div" style="display:none">';
+
+                        $s_id = $res_id;
+                        $return_mode = true;
+						$diffListType = 'VISA_CIRCUIT';
+                        require_once('modules/entities/difflist_visa_history_display.php');
+						
+
+                    $frm_str .= '</div>';
+					
+				/****************************/
+        $frm_str .= '</div>';
+        $frm_str .= '<hr />';
+    $frm_str .= '</div>';
+	
+	//AVIS CIRCUIT FRAME
+    $modifVisaWorkflow = false;
+    if ($core->test_service('config_avis_workflow', 'visa', false)) {
+        $modifVisaWorkflow = true;
+    }
+    $frm_str .= '<div id="avis_div" style="display:none" onmouseover="this.style.cursor=\'pointer\';">';
+        $frm_str .= '<div class="block" style="margin-top:-2px;">';
+                $frm_str .= '<h2 onclick="new Effect.toggle(\'avis_div\', \'blind\', {delay:0.2});';
+                $frm_str .= 'whatIsTheDivStatus(\'avis_div\', \'divStatus_avis_div\');';
+                    $frm_str .= 'return false;">';
+                    $frm_str .= '<center>' . _AVIS_WORKFLOW . '</center>';
+                $frm_str .= '</h2>';
+                $frm_str .= '<div class="error" id="divError" name="divError"></div>';
+                $frm_str .= '<div style="text-align:center;">';
+                    $visa = new visa();
+					$frm_str .= $visa->getList($res_id, $coll_id, $modifVisaWorkflow,'AVIS_CIRCUIT');
+					
                 $frm_str .= '</div><br>';
         $frm_str .= '</div>';
         $frm_str .= '<hr />';
