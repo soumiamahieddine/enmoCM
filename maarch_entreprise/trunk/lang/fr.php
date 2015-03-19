@@ -126,6 +126,12 @@ if (!defined('_DOCTYPE'))    define( '_DOCTYPE', 'Type de document');
 if (!defined('_TYPE'))    define( '_TYPE', 'Type');
 if (!defined('_WARNING_MESSAGE_DEL_TYPE'))
     define('_WARNING_MESSAGE_DEL_TYPE', 'Avertissement :<br> La suppression d&rsquo;un type de document entraine la r&eacute;affectation des documents &agrave un nouveau type.');
+if (!defined('_WARNING_MESSAGE_DEL_GROUP'))
+    define('_WARNING_MESSAGE_DEL_GROUP', 'Avertissement :<br> La suppression du groupe entraine la désaffectation sur les utilisateurs suivants');
+if (!defined('_USERS_IN_GROUPS'))
+    define('_USERS_IN_GROUPS', 'utilisateur(s) dans le groupe');
+if (!defined('_NO_REPLACEMENT'))
+    define('_NO_REPLACEMENT', 'AUCUN REMPLACEMENT');
 if (!defined('_DOCS_IN_DOCTYPES'))    define( '_DOCS_IN_DOCTYPES', 'document(s) de ce type');
 if (!defined('_CHOOSE_REPLACEMENT_DOCTYPES'))    define( '_CHOOSE_REPLACEMENT_DOCTYPES', 'Choisissez un type de document de remplacement');
 if (!defined('_SELECT_ALL'))    define( '_SELECT_ALL', 'S&eacute;lectionner tout');
@@ -923,7 +929,7 @@ if (!defined('_TITLE2')) define( '_TITLE2', 'Civilit&eacute;');
 if (!defined('_WARNING_MESSAGE_DEL_CONTACT'))  define('_WARNING_MESSAGE_DEL_CONTACT', 'Avertissement :<br> La suppression d&rsquo;un contact entraine la r&eacute;affectation des documents et des courriers &agrave un nouveau contact.');
 if (!defined('_CONTACT_DELETION'))  define('_CONTACT_DELETION', 'Suppression de contact');
 if (!defined('_CONTACT_REAFFECT'))  define('_CONTACT_REAFFECT', 'R&eacute;affectation des documents et des courriers');
-if (!defined('_UPDATE_CONTACTS')) define( '_UPDATE_CONTACTS', 'Mise &agrave; jour contact depuis indexation/qualification');
+if (!defined('_UPDATE_CONTACTS')) define( '_UPDATE_CONTACTS', 'Mise &agrave; jour contact depuis une corbeille');
 if (!defined('_CONTACT_TYPE')) define( '_CONTACT_TYPE', 'Type de contact');
 if (!defined('_MULTI_EXTERNAL')) define( '_MULTI_EXTERNAL', 'Multi externe');
 if (!defined('_MULTI_CONTACT')) define( '_MULTI_CONTACT', '<b><i>Multi contacts<i><b>');
@@ -1087,14 +1093,14 @@ if (!defined('_WHICH_CONTACT')) define( '_WHICH_CONTACT','A quel contact voulez-
 if (!defined('_CHOOSE_THIS_CONTACT')) define( '_CHOOSE_THIS_CONTACT','Choisir ce contact');
 if (!defined('_CHOOSE_A_CONTACT')) define( '_CHOOSE_A_CONTACT','Choisissez un contact');
 
-if (!defined('_CREATE_CONTACTS')) define( '_CREATE_CONTACTS','Enregistrer un contact');
+if (!defined('_CREATE_CONTACTS')) define( '_CREATE_CONTACTS','Tous les contacts');
 
 //// INDEXING SEARCHING
 if (!defined('_NO_COLLECTION_ACCESS_FOR_THIS_USER')) define( '_NO_COLLECTION_ACCESS_FOR_THIS_USER', 'Aucun acc&egrave;s aux collections documentaires pour cet utilisateur');
 if (!defined('_CREATION_DATE')) define( '_CREATION_DATE', 'Date de cr&eacute;ation');
 if (!defined('_NO_RESULTS')) define( '_NO_RESULTS', 'Aucun r&eacute;sultat');
 if (!defined('_FOUND_DOCS')) define( '_FOUND_DOCS', 'document(s) trouv&eacute;(s)');
-if (!defined('_MY_CONTACTS')) define( '_MY_CONTACTS', 'Mes contacts');
+if (!defined('_MY_CONTACTS')) define( '_MY_CONTACTS', 'Créer des contacts depuis indexation/qualification');
 if (!defined('_MAARCH_INFO')) define( '_MAARCH_INFO', 'Nous Contacter');
 if (!defined('_MY_COLLEAGUES')) define( '_MY_COLLEAGUES', 'Mes collegues');
 if (!defined('_DETAILLED_PROPERTIES')) define( '_DETAILLED_PROPERTIES', 'Propri&eacute;t&eacute;s d&eacute;taill&eacute;es');

@@ -85,6 +85,9 @@ if (isset($_REQUEST['group_submit'])) {
             $groupsList = displayList();
             locationBarManagement($mode);
             break;
+        case "check_del" :
+            displayDelCheck($groupId);
+            break;
     }
     include('usergroups_management.php');
 }
@@ -349,9 +352,12 @@ function displayDel($groupId)
     //information users exists in groups
     $userExists = $ugc->getUsers($groupId);
     if(!empty($userExists)){
-        $usersGroups=implode(",", $ugc->getUsers($groupId));
-        echo '<script type="text/javascript">alert("Pour Information,\n\nLes utilisateurs suivants ont \u00e9t\u00e9 dissoci\u00e9s du groupe :\n'.$usersGroups.'")</script>';
-    }
+        $usersGroups=implode(",", $ugc->getUsers($groupId)); ?>
+        <script type="text/javascript">window.top.location='<?php
+        echo $_SESSION['config']['businessappurl'] . 'index.php?page='
+            . 'usergroups_management_controler&mode=check_del&admin=groups&id=' . $groupId;
+        ?>';</script>
+    <?php exit(); }
 
     $group = $ugc->get($groupId);
     if (isset($group) && isset($groupId) && ! empty($groupId)) {
@@ -392,6 +398,105 @@ function displayDel($groupId)
         // Error management
         $_SESSION['error'] = _GROUP . ' ' . _UNKNOWN;
     }
+}
+
+
+/**
+ * Delete given usergroup if exists and initialize session parameters
+ * @param unknown_type $groupId
+ */
+function displayDelCheck($groupId)
+{
+    /****************Management of the location bar  ************/
+        $admin = new core_tools();
+        $init = false;
+        if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
+            $init = true;
+        }
+        $level = "";
+        if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 
+            || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 
+            || $_REQUEST['level'] == 1)
+        ) {
+            $level = $_REQUEST['level'];
+        }
+        $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?page=types';
+        $pageLabel = _DELETION;
+        $pageId = "types";
+        $admin->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
+        /***********************************************************/
+        if(isset($_POST['group_id'])){
+            $old_group=$_POST['id'];
+            $new_group=$_POST['group_id'];
+            $ugc = new usergroups_controler();
+            $users = $ugc->getUsers($old_group);
+            $users_sql = "'".implode("','", $users)."'";
+            $db = new dbquery();
+            $db->query("delete from usergroup_content WHERE group_id='".$old_group."' AND user_id in (".$users_sql.")" );
+            if($_POST['group_id'] != 'no_group'){
+                foreach ($users as $key => $value) {
+                    $db->query("INSERT INTO usergroup_content(group_id, user_id,primary_group) values ('".$new_group."', '".$value."','N')" );
+                } 
+
+                $_SESSION['error'] = _DELETED_GROUP.' : '.$old_group;
+             } ?>
+            <script type="text/javascript">window.top.location='<?php
+        echo $_SESSION['config']['businessappurl'] . 'index.php?page='
+            . 'usergroups_management_controler&mode=del&admin=groups&id=' . $groupId;
+        ?>';</script> <?php
+        }
+        $ugc = new usergroups_controler();
+        $userExists = $ugc->getUsers($groupId);
+        echo '<h1><i class="fa fa-files-o fa-2x"></i>'._GROUP_DELETION.': <i>'.$groupId.'</i></h1>';
+        echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
+        $_SESSION['error'] = "";
+        ?>
+        <br>
+        <div class="block">
+        <div id="main_error" style="text-align:center;">
+            <b><?php
+            echo _WARNING_MESSAGE_DEL_GROUP;
+            ?></b>
+        </div>
+        <br/>
+        <form name="entity_del" id="entity_del" style="width: 250px;margin:auto;" method="post" class="forms">
+            <input type="hidden" value="<?php echo $groupId;?>" name="id">
+            <?php
+
+                echo "<h3>".count($userExists)." "._USERS_IN_GROUPS .":</h3>";
+                echo "<ul>";
+                foreach ($userExists as $key => $value) {
+                   echo "<li>".$value."</li>";
+                }
+                echo "</ul>";
+                ?>
+                <br>
+                <br>
+                <select name="group_id" id="group_id" onchange=''>
+                    <option value="no_group"><?php echo _NO_REPLACEMENT;?></option>
+                    <?php
+                    $db = new dbquery();
+                    $db->query("select * from usergroups order by group_desc ASC");
+                    while($groups = $db->fetch_object())
+                    {
+                        if($groups->group_id != $groupId){
+                         ?>
+                        <option value="<?php echo $groups->group_id; ?>"><?php echo $groups->group_desc; ?></option>
+                        <?php
+                        }
+                       
+                    }
+                    ?>
+                </select>
+                 <p class="buttons">
+                    <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick='if(document.getElementById("doc_type_id").options[document.getElementById("doc_type_id").selectedIndex].value == ""){alert("<?php echo _CHOOSE_REPLACEMENT_DOCTYPES ?> !");return false;}else{return(confirm("<?php echo _REALLY_DELETE.$s_id; ?> \n\r\n\r<?php echo _DEFINITIVE_ACTION?>"));}'/>
+                    <input type="button" value="<?php echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=usergroups_management_controler&mode=list&admin=groups&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>';"/>
+                </p>
+            </form>
+            </div>
+            <script type="text/javascript"></script>
+        <?php
+        exit();
 }
 
 /**
