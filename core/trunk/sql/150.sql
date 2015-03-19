@@ -282,6 +282,8 @@ added_by_entity character varying(50) NOT NULL,
 visible character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
 viewed bigint,
 difflist_type character varying(50),
+process_date timestamp without time zone,
+process_comment timestamp without time zone,
 CONSTRAINT listinstance_history_details_pkey PRIMARY KEY (listinstance_history_details_id)
 ) WITH ( OIDS=FALSE );
 
