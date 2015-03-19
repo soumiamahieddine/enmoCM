@@ -789,7 +789,7 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                        . $func->protect_string_db($userId) . "', '"
                        . $func->protect_string_db($array[$i]['GROUP_ID'])
                        . "', '". $func->protect_string_db($array[$i]['PRIMARY'])
-                       . "', '" . $func->protect_string_db($array[0]['ROLE'])
+                       . "', '" . $func->protect_string_db($array[$i]['ROLE'])
                        . "')";
                 try{
                     self::$db->query($query);
