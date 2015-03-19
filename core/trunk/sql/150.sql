@@ -237,6 +237,9 @@ ALTER TABLE lc_stack ADD COLUMN regex character varying(32);
 ALTER TABLE res_letterbox DROP COLUMN IF EXISTS confidentiality; 
 ALTER TABLE res_letterbox ADD confidentiality character(1);
 
+ALTER TABLE listinstance DROP COLUMN IF EXISTS process_comment;
+ALTER TABLE listinstance ADD process_comment character varying(255);
+
 DROP TABLE IF EXISTS listinstance_history;
 DROP SEQUENCE IF EXISTS listinstance_history_id_seq;
 CREATE SEQUENCE listinstance_history_id_seq
@@ -283,7 +286,7 @@ visible character varying(1) NOT NULL DEFAULT 'Y'::bpchar,
 viewed bigint,
 difflist_type character varying(50),
 process_date timestamp without time zone,
-process_comment timestamp without time zone,
+process_comment character varying(255),
 CONSTRAINT listinstance_history_details_pkey PRIMARY KEY (listinstance_history_details_id)
 ) WITH ( OIDS=FALSE );
 
