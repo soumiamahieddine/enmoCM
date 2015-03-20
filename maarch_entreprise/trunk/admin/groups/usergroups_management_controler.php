@@ -447,7 +447,7 @@ function displayDelCheck($groupId)
         }
         $ugc = new usergroups_controler();
         $userExists = $ugc->getUsers($groupId);
-        echo '<h1><i class="fa fa-files-o fa-2x"></i>'._GROUP_DELETION.': <i>'.$groupId.'</i></h1>';
+        echo '<h1><i class="fa fa-users fa-2x"></i>'._GROUP_DELETION.': <i>'.$groupId.'</i></h1>';
         echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
         $_SESSION['error'] = "";
         ?>
