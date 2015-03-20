@@ -1,0 +1,53 @@
+#visa_listDoc{
+	border:2px solid red;
+	height:95%;
+	width:21%;
+	float: left;
+}
+
+#visa_left{
+	border:2px solid blue;
+	height:95%;
+	width:38%;
+	margin-left:1%;
+	float: left;
+}
+
+#visa_right{
+	border:2px solid green;
+	height:95%;
+	width:38%;
+	margin-left:1%;
+	float: left;
+}
+
+.listDocsBasket{
+	width:100%;
+	border-collapse: collapse;
+	border: medium solid #6495ed;
+}
+
+.unselectedId{
+	background-color:#009DC5;
+}
+
+.selectedId{
+	background-color:#FDD16C;
+}
+
+
+.listDocsBasket dl {
+    margin-bottom:50px;
+}
+ 
+.listDocsBasket dl dt {
+    float:left;
+    font-weight:bold;
+    margin-right:10px;
+    padding:5px; 
+}
+ 
+.listDocsBasket dl dd {
+    margin:2px 0;
+    padding:5px 0;
+}
