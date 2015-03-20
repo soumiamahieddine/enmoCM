@@ -56,7 +56,7 @@ class class_users extends dbquery
 
         if(!empty($_POST['Phone'])){
             $_SESSION['user']['Phone'] = $this->wash(
-                $_POST['Phone'], 'num', _PHONE, "no", "",32
+                $_POST['Phone'], 'phone', _PHONE, "no", "",32
             );
         }
 

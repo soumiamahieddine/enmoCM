@@ -1860,7 +1860,7 @@ class contacts_v2 extends dbquery
         }
         if ($_REQUEST['phone'] <> '') {
             $_SESSION['m_admin']['address']['PHONE'] = $func->wash(
-                $_REQUEST['phone'], 'num', _PHONE, 'yes', 0, 20
+                $_REQUEST['phone'], 'phone', _PHONE, 'yes', 0, 20
             );
         } else {
             $_SESSION['m_admin']['address']['PHONE'] = '';
