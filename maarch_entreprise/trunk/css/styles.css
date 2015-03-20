@@ -472,8 +472,13 @@ input, select, textarea, .forms img {
     background-color: White;
     border: 1px solid #999;
     color: #666;
-    width: 150px;
+    /*width: 150px;*/
     text-align:left;
+}
+
+.formsProcess input{
+    width: 150px;
+
 }
 
 .physicalform input, .physicalform select, .physicalform textarea {
