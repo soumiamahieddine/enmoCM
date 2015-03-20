@@ -1068,8 +1068,8 @@ class lists extends dbquery
         $return = '';
         //Show document icon
         $href = $this->_buildMyLink($this->params['viewDocumentLink'], $resultTheLine, $listKey);
-        $return .= '<div align="center"><a href="'.$href.'" target="_blank" title="'
-                ._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i></a></div>';
+        $return .= '<div align="center" class="iconDoc"><a href="'.$href.'" target="_blank" title="'
+                ._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span><img src="index.php?page=doc_thumb&module=thumbnails&res_id='.$resultTheLine[0][$listKey].'&coll_id=letterbox_coll&display=true"></span></a></div>';
            
         return $return;
     }
