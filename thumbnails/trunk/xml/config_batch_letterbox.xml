@@ -1,19 +1,20 @@
 <ROOT>
 	<CONFIG>
-		<CONFIG_NAME>create_tnl_letterbox</CONFIG_NAME>
+		<CONFIG_NAME>create_tnl_letterbox</CONFIG_NAME> 
 		<CORE_PATH>/var/www/maarch_entreprise/core/</CORE_PATH>
-		<LOCATION>localhost</LOCATION>
+		<MaarchDirectory>/var/www/maarch_entreprise/</MaarchDirectory>
+		<LOCATION>localhost</LOCATION> <!-- Serveur BDD -->
 		<DATABASE_PORT>5432</DATABASE_PORT>
 		<DATABASE>maarch</DATABASE>
 		<DATABASETYPE>POSTGRESQL</DATABASETYPE>
 		<USER_NAME>maarch</USER_NAME>
 		<PASSWORD>maarch</PASSWORD> 
-		<TABLE_NAME>res_letterbox</TABLE_NAME>
-		<PATH_COLUMN_NAME>tnl_path</PATH_COLUMN_NAME>
-		<FILENAME_COLUMN_NAME>tnl_filename</FILENAME_COLUMN_NAME>
+		<TABLE_NAME>res_letterbox</TABLE_NAME> <!-- Table a surveiller pour les documents à convertir -->
+		<PATH_COLUMN_NAME>tnl_path</PATH_COLUMN_NAME> <!-- Nom du champ où stocker le path de la miniature -->
+		<FILENAME_COLUMN_NAME>tnl_filename</FILENAME_COLUMN_NAME> <!-- Nom du champ où stocker le nom de fichier de la miniature -->
 		
-		<OUTPUT_DOCSERVER>FASTHD_TNL</OUTPUT_DOCSERVER>
+		<OUTPUT_DOCSERVER>FASTHD_TNL</OUTPUT_DOCSERVER> <!-- Identifiant du Docserveur dans lequel sont stockés les miniatures -->
 		
-		<MAX_BATCH_SIZE>500</MAX_BATCH_SIZE>
+		<MAX_BATCH_SIZE>500</MAX_BATCH_SIZE> <!-- Nombre d'occurences max pour les conversions -->
 	</CONFIG>
 </ROOT>

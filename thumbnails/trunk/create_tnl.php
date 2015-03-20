@@ -24,6 +24,16 @@ $_ENV['db'] = "";
 */
 $_ENV['db2'] = "";
 
+// Class to manage files includes errors
+class IncludeFileError extends Exception
+{
+    public function __construct($file)
+    {
+        $this->file = $file;
+        parent::__construct("Include File \"$file\" is missing!", 1);
+    }
+}
+
 /**
 * Creation of the log file
 */
@@ -62,6 +72,15 @@ function writeLog($EventInfo)
         . "\r\n"
     );
     fclose($logFileOpened);
+}
+
+function MyInclude($file)
+{
+    if (file_exists($file)) {
+        include_once($file);
+    } else {
+        throw new IncludeFileError($file);
+    }
 }
 
 function r_mkdir($path, $mode = 0777, $recursive = true) {
@@ -117,6 +136,7 @@ foreach ($xmlconfig->CONFIG as $CONFIG) {
     //$_ENV['input_ds'] = $CONFIG->INPUT_DOCSERVER;
     $_ENV['output_ds'] = $CONFIG->OUTPUT_DOCSERVER;
 	$_ENV['max_batch_size'] = $CONFIG->MAX_BATCH_SIZE;
+	$maarchDirectory = (string) $CONFIG->MaarchDirectory;
 }
 if (DIRECTORY_SEPARATOR == "/") {
     $_ENV['osname'] = "UNIX";
@@ -130,7 +150,29 @@ writeLog("Loading the xml config file");
 writeLog("Config name : " . $_ENV['config_name']);
 writeLog("Conversion launched for table : " . $_ENV['tablename']);
 
-require("class_db.php");
+/*set_include_path(get_include_path() . PATH_SEPARATOR . $maarchDirectory);
+try {
+	MyInclude(
+		$maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class'
+		. DIRECTORY_SEPARATOR . 'class_functions.php'
+	);
+	MyInclude(
+		$maarchDirectory . 'core' . DIRECTORY_SEPARATOR . 'class'
+		. DIRECTORY_SEPARATOR . 'class_db.php'
+	);
+	
+	
+} catch(IncludeFileError $e) {
+	writeLog(
+		'Problem with the php include path : ' . get_include_path()
+	);
+	exit();
+}
+	*/
+require('class_db.php');
+	
+	
+	
 $_ENV['db'] = new dbquery();
 $_ENV['db']->connect();
 $_ENV['db2'] = new dbquery();

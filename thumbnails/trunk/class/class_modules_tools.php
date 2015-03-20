@@ -33,6 +33,7 @@ class thumbnails extends dbquery
 		
 
 		$_SESSION['modules_loaded']['thumbnails']['docserver_id'] = $docserver_id;
+		$_SESSION['modules_loaded']['thumbnails']['no_file'] = (string) $conf->no_file;
 	}
 
 }

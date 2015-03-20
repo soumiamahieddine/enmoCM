@@ -33,7 +33,9 @@
 	$path=$docserver->path_template . DIRECTORY_SEPARATOR . $tnlPath . $tnlFilename;
 	$path = str_replace("//","/",$path);
 	
-	if (is_file($path)){
+		if (!is_file($path)){
+			$path = $_SESSION['modules_loaded']['thumbnails']['no_file'];
+		}
 		$mime_type = 'image/png';	
 		$date = mktime(0,0,0,date("m" ) + 2  ,date("d" ) ,date("Y" )  );
 		$date = date("D, d M Y H:i:s", $date);
@@ -48,8 +50,5 @@
 		readfile($path);
 			
 		exit();
-	}
-	else {
-		echo "La miniature n'a pas encore été générée";
-	}
+	
 ?>

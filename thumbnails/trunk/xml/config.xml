@@ -5,5 +5,6 @@
         <comment>_THUMBNAILS_COMMENT</comment>
         <loaded>true</loaded>
         <docserver_id>FASTHD_TNL</docserver_id>
+        <no_file>/var/www/maarch_entreprise/modules/thumbnails/no_thumb.png</no_file>
     </CONFIG>
 </ROOT>
