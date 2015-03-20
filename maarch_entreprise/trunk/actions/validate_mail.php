@@ -599,7 +599,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 
 					if($nbContacts > 0){
 						for($icontacts = 0; $icontacts < $nbContacts; $icontacts++){
-							$frm_str .= '<div class="email_element" id="'.$icontacts.'_'.$_SESSION['adresses']['to'][$icontacts].'">'.$_SESSION['adresses']['to'][$icontacts];
+							$frm_str .= '<div class="multicontact_element" id="'.$icontacts.'_'.$_SESSION['adresses']['to'][$icontacts].'">'.$_SESSION['adresses']['to'][$icontacts];
 							//if ($readOnly === false) {
 								$frm_str .= '&nbsp;<div class="email_delete_button" id="'.$icontacts.'"'
 									. 'onclick="updateMultiContacts(\''.$path_to_script

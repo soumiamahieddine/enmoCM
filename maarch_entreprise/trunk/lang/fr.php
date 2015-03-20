@@ -1055,6 +1055,7 @@ if (!defined('_ALL_CONTACT_ADDRESSES')) define( '_ALL_CONTACT_ADDRESSES','Toutes
 if (!defined('_THE_CONTACT')) define( '_THE_CONTACT','Le contact');
 if (!defined('_CONTACT_ADDRESSES_ASSOCIATED')) define( '_CONTACT_ADDRESSES_ASSOCIATED','Adresses associ&eacute;es &agrave; ce contact');
 if (!defined('_VIEW_CONTACT')) define( '_VIEW_CONTACT','Visualisation du contact');
+if (!defined('_VIEW_CONTACTS')) define( '_VIEW_CONTACTS','Voir les contacts');
 if (!defined('_VIEW_ADDRESS')) define( '_VIEW_ADDRESS','Visualisation de l&rsquo;adresse');
 if (!defined('_TREE_INFO')) define( '_TREE_INFO','(Types de contact/Contacts/Adresses)');
 if (!defined('_CONFIDENTIAL_ADDRESS')) define( '_CONFIDENTIAL_ADDRESS','coordonn&eacute;es confidentielles');

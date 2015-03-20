@@ -4024,6 +4024,15 @@ table.listing  {
     padding: 0 4px 0px 0px;
 }
 
+.multicontact_element {
+    display:inline-block; 
+    margin:3px;
+    padding: 1px 3px 2px 3px;
+    /*color:white;*/
+    font-size: .8em;
+    background-color: #BAD1E2;
+    border-radius: 5px;
+}
 
 /*added by lgi*/
 a.actionList {

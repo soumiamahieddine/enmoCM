@@ -50,7 +50,7 @@ class multicontacts extends dbquery
         if (isset($contactsArray[$inputField]) && count($contactsArray[$inputField]) > 0) {
             foreach($contactsArray[$inputField] as $key => $contacts) {
                 if (!empty($contacts)) {
-                    $content .= '<div class="email_element" id="'.$key.'_'.$contacts.'">'.$contacts;
+                    $content .= '<div class="multicontact_element" id="'.$key.'_'.$contacts.'">'.$contacts;
                     if ($readOnly === false) {
                         $content .= '&nbsp;<div class="email_delete_button" id="'.$key.'"'
                             . 'onclick="updateMultiContacts(\''.$ajaxPath
