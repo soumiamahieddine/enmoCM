@@ -322,6 +322,16 @@ class functions
                         $this->add_error($msg_error, _WRONG_FORMAT);
                         return "";
                     }
+                case "phone":
+                    if (preg_match("/^[\+0-9\-\.\(\)\s]*$/",$w_var))
+                    {
+                        return $w_var;
+                    }
+                    else
+                    {
+                        $this->add_error($msg_error, _WRONG_FORMAT);
+                        return "";
+                    }
                 case "date":
                     $date_pattern = "/^[0-3][0-9]-[0-1][0-9]-[1-2][0-9][0-9][0-9]$/";
                     if(preg_match($date_pattern,$w_var))
