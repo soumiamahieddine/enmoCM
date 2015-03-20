@@ -127,7 +127,7 @@ if (!defined('_TYPE'))    define( '_TYPE', 'Type');
 if (!defined('_WARNING_MESSAGE_DEL_TYPE'))
     define('_WARNING_MESSAGE_DEL_TYPE', 'Avertissement :<br> La suppression d&rsquo;un type de document entraine la r&eacute;affectation des documents &agrave un nouveau type.');
 if (!defined('_WARNING_MESSAGE_DEL_GROUP'))
-    define('_WARNING_MESSAGE_DEL_GROUP', 'Avertissement :<br> La suppression du groupe entraine la désaffectation sur les utilisateurs suivants');
+    define('_WARNING_MESSAGE_DEL_GROUP', 'Avertissement :<br> Il existe des utilisateurs associés à ce groupe. Choisissez un groupe de remplacement :');
 if (!defined('_USERS_IN_GROUPS'))
     define('_USERS_IN_GROUPS', 'utilisateur(s) dans le groupe');
 if (!defined('_NO_REPLACEMENT'))
