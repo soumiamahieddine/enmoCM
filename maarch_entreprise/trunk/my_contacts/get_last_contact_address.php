@@ -1,6 +1,6 @@
 <?php
 /*
-*    Copyright 2014 Maarch
+*    Copyright 2014-2015 Maarch
 *
 *  This file is part of Maarch Framework.
 *
@@ -73,7 +73,6 @@ if($res->is_corporate_person == 'N') {
 	} else if($res->society <> '') {
 		$contact .= ' (' . $res->society . ')';
 	}
-
 } else {
 	$contact = $res->society;
 	if($res->society_short <> '') {
@@ -81,14 +80,18 @@ if($res->is_corporate_person == 'N') {
 	}
 }
 
-$contact .= ' '. $res->contact_purpose_label ;
+$contact .= ' - '. $res->contact_purpose_label ;
+
+if ($res->departement <> '' || $res->lastname <> '' || $res->firstname <> '' || !empty($trimed)) {
+	$contact .= ' :';
+}
 
 if ($res->departement <> '') {
-	$contact .= ' : ' . $res->departement;
+	$contact .= ' ' . $res->departement . ' -';
 }
 
 if ($res->lastname <> '' || $res->firstname <> '') {
-	$contact .= ' - ' . $res->lastname . ' ' . $res->firstname;
+	$contact .= ' ' . $res->lastname . ' ' . $res->firstname;
 }
 
 $trimed = trim($address);
