@@ -620,6 +620,8 @@ CREATE TABLE res_attachments
   updated_by character varying(128) DEFAULT NULL::character varying,
   is_multicontacts character(1),
   is_multi_docservers character(1) NOT NULL DEFAULT 'N'::bpchar,
+  tnl_path character varying(255) DEFAULT NULL::character varying,
+  tnl_filename character varying(255) DEFAULT NULL::character varying,
   CONSTRAINT res_attachments_pkey PRIMARY KEY (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1829,6 +1831,8 @@ CREATE TABLE res_x
   esign_date timestamp without time zone,
   locker_user_id character varying(255) DEFAULT NULL::character varying,
   locker_time timestamp without time zone,
+  tnl_path character varying(255) DEFAULT NULL::character varying,
+  tnl_filename character varying(255) DEFAULT NULL::character varying,
   CONSTRAINT res_x_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -1959,6 +1963,8 @@ CREATE TABLE res_letterbox
   locker_user_id character varying(255) DEFAULT NULL::character varying,
   locker_time timestamp without time zone,
   confidentiality character(1),
+  tnl_path character varying(255) DEFAULT NULL::character varying,
+  tnl_filename character varying(255) DEFAULT NULL::character varying,
   CONSTRAINT res_letterbox_pkey PRIMARY KEY  (res_id)
 )
 WITH (OIDS=FALSE);
@@ -2113,6 +2119,8 @@ CREATE TABLE res_version_letterbox
   cycle_date timestamp without time zone,
   coll_id character varying(32) NOT NULL,
   res_id_master bigint,
+  tnl_path character varying(255) DEFAULT NULL::character varying,
+  tnl_filename character varying(255) DEFAULT NULL::character varying,
   CONSTRAINT res_version_letterbox_pkey PRIMARY KEY (res_id)
 )
 WITH (
@@ -2226,6 +2234,8 @@ CREATE TABLE res_version_x
   cycle_date timestamp without time zone,
   coll_id character varying(32) NOT NULL,
   res_id_master bigint,
+  tnl_path character varying(255) DEFAULT NULL::character varying,
+  tnl_filename character varying(255) DEFAULT NULL::character varying,
   CONSTRAINT res_version_x_pkey PRIMARY KEY (res_id)
 )
 WITH (

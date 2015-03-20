@@ -324,6 +324,20 @@ INSERT INTO status (id, label_status, is_system) VALUES ('TRA', 'Traité', 'N');
 DELETE FROM status WHERE id = 'OBS';
 INSERT INTO status (id, label_status, is_system) VALUES ('OBS', 'Obsolète', 'N');
 
+-- tumbnails
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_path;
+ALTER TABLE res_letterbox DROP COLUMN IF EXISTS tnl_filename;
+ALTER TABLE res_letterbox ADD tnl_path character varying(255) DEFAULT NULL::character varying;
+ALTER TABLE res_letterbox ADD tnl_filename character varying(255) DEFAULT NULL::character varying;
+ALTER TABLE res_business DROP COLUMN IF EXISTS tnl_path;
+ALTER TABLE res_business DROP COLUMN IF EXISTS tnl_filename;
+ALTER TABLE res_business ADD tnl_path character varying(255) DEFAULT NULL::character varying;
+ALTER TABLE res_business ADD tnl_filename character varying(255) DEFAULT NULL::character varying;
+ALTER TABLE res_x DROP COLUMN IF EXISTS tnl_path;
+ALTER TABLE res_x DROP COLUMN IF EXISTS tnl_filename;
+ALTER TABLE res_x ADD tnl_path character varying(255) DEFAULT NULL::character varying;
+ALTER TABLE res_x ADD tnl_filename character varying(255) DEFAULT NULL::character varying;
+
 DROP TABLE IF EXISTS res_version_attachments;
 DROP SEQUENCE IF EXISTS res_id_version_attachments_seq;
 
