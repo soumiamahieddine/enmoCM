@@ -243,7 +243,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	//Load Multicontacts
 	//CONTACTS
-    $query = "select c.firstname, c.lastname, c.society, c.contact_id, c.ca_id ";
+    $query = "select c.is_corporate_person, c.is_private, c.contact_lastname, c.contact_firstname, c.society, c.society_short, c.contact_purpose_id, c.address_num, c.address_street, c.address_postal_code, c.address_town, c.lastname, c.firstname, c.contact_id, c.ca_id ";
 		$query .= "from view_contacts c, contacts_res cres ";
 		$query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$res_id." AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id";			
 	$db->query($query);
@@ -253,7 +253,32 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$_SESSION['adresses']['contactid'] = array();
 	
 	while($res = $db->fetch_object()){
-		$addContact = $res->firstname . $res->lastname . $res->society;
+
+        if ($res->is_corporate_person == 'Y') {
+            $addContact = $res->society . ' ' ;
+            if (!empty ($res->society_short)) {
+                $addContact .= '('.$res->society_short.') ';
+            }
+        } else {
+            $addContact = $res->contact_lastname . ' ' . $res->contact_firstname . ' ';
+            if (!empty ($res->society)) {
+                $addContact .= '(' .$res->society . ') ';
+            }                        
+        }
+        if ($res->is_private == 'Y') {
+            $addContact .= '('._CONFIDENTIAL_ADDRESS.')';
+        } else {
+            require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
+            $contact = new contacts_v2();
+            $addContact .= '- ' . $contact->get_label_contact($res->contact_purpose_id, $_SESSION['tablename']['contact_purposes']).' : ';
+            if (!empty($res->lastname) || !empty($res->firstname)) {
+                $addContact .= $res->lastname . ' ' . $res->firstname;
+            }
+            if (!empty($res->address_num) || !empty($res->address_street) || !empty($res->address_town) || !empty($res->address_postal_code)) {
+                $addContact .= ', '.$res->address_num .' ' . $res->address_street .' ' . $res->address_postal_code .' ' . strtoupper($res->address_town);
+            }         
+        }
+
          array_push($_SESSION['adresses']['to'], $addContact);
          array_push($_SESSION['adresses']['addressid'], $res->ca_id);
 		 array_push($_SESSION['adresses']['contactid'], $res->contact_id);
@@ -584,7 +609,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
 						.$_SESSION['config']['businessappurl']
 						.'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'Input\', \'2\', \'contactid\', \'addressid\');</script>';
-					$frm_str .=' <input type="button" name="add" value="&nbsp;'._ADD
+					$frm_str .='<input type="button" name="add" value="&nbsp;'._ADD
 									.'&nbsp;" id="valid_multi_contact" class="button" onclick="updateMultiContacts(\''.$path_to_script
 									.'&mode=adress\', \'add\', document.getElementById(\'email\').value, '
 									.'\'to\', false, document.getElementById(\'addressid\').value, document.getElementById(\'contactid\').value);display_contact_card(\'hidden\', \'multi_contact_card\');" />&nbsp;';
@@ -593,7 +618,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .= '<tr id="show_multi_contact_tr">';
 					$frm_str .= '<td align="right" nowrap width="10%" id="to_multi_contact"><label>'
 						._SEND_TO_SHORT.'</label></td>';
-					$frm_str .= '<td>&nbsp;</td><td ><div name="to" id="to"  style="width:200px;" class="multicontactInput">';
+					$frm_str .= '<td>&nbsp;</td><td style="width:200px"><div name="to" id="to" style="width:200px;" class="multicontactInput">';
 					
 					$nbContacts = count($_SESSION['adresses']['to']);
 
@@ -838,6 +863,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str .='<td class="indexing_label"><label for="arbox_id" class="form_title" id="label_box" style="display:inline;" >'._BOX_ID.'</label></td>';
             $frm_str .='<td>&nbsp;</td>';
             $frm_str .='<td class="indexing_field"><select name="arbox_id" id="arbox_id" onchange="clear_error(\'frm_error_'.$id_action.'\');" ';
+
+
+
+
+
+
 
 
             //if($data['arbox_id'] <> "" && $data['arbox_id'] <> 1 )
@@ -1729,6 +1760,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         $val_indexes[$indexes[$i]] =  get_value_fields($values_form, $indexes[$i]);
     }
     $query_res .=  $type->get_sql_update($type_id, $coll_id, $val_indexes);
+
+
+
+
 
 
 
