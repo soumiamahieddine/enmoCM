@@ -1064,12 +1064,15 @@ class lists extends dbquery
     }
 	
     private function _tmplt_showIconDocument($resultTheLine, $listKey) {
-        
+        $core = new core_tools();
         $return = '';
         //Show document icon
         $href = $this->_buildMyLink($this->params['viewDocumentLink'], $resultTheLine, $listKey);
-        $return .= '<div align="center" class="iconDoc"><a href="'.$href.'" target="_blank" title="'
-                ._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span><img src="index.php?page=doc_thumb&module=thumbnails&res_id='.$resultTheLine[0][$listKey].'&coll_id=letterbox_coll&display=true"></span></a></div>';
+		if ($core->is_module_loaded('thumbnails') === true)
+			$return .= '<div align="center" class="iconDoc"><a href="'.$href.'" target="_blank" title="'
+					._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i><span><img src="index.php?page=doc_thumb&module=thumbnails&res_id='.$resultTheLine[0]['res_id'].'&coll_id=letterbox_coll&display=true"></span></a></div>';
+		else $return .= '<div align="center" class="iconDoc"><a href="'.$href.'" target="_blank" title="'
+					._VIEW_DOC.'"><i class="fa fa-download fa-2x" title="' . _VIEW_DOC . '"></i></a></div>';
            
         return $return;
     }
