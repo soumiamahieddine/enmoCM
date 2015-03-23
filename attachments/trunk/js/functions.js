@@ -60,9 +60,8 @@ function showAttachmentsForm(path, width, height) {
             eval("response = "+answer.responseText);
            
             if(response.status == 0){
-             
                 var modal_content = convertToTextVisibleNewLine(response.content);
-                createModal(modal_content, 'form_attachments', height, width); 
+                createModal(modal_content, 'form_attachments', height, width, 'fullscreen'); 
             } else {
                 window.top.$('main_error').innerHTML = response.error;
             }
