@@ -1276,7 +1276,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
  * @return string Icon Url
  **/
 function get_img_cat($cat_id) {
-    $default = $_SESSION['config']['businessappurl'] . 'static.php?filename=picto_delete.gif';
+    $default = '<i class="fa fa-remove fa-2x"></i>';
     if (empty ($cat_id)) {
 
         return $default;
