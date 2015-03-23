@@ -1688,6 +1688,7 @@ function set_new_contact_address(path_manage_script, id_div, close){
 
 function check_date_exp(path_manage_script, path_link){
     var contact_id = $('contactid').value;
+    var address_id = $('addressid').value;
     var res_id = $('values').value;
     var check_days_before = $('check_days_before').value;
     new Ajax.Request(path_manage_script,
@@ -1695,6 +1696,7 @@ function check_date_exp(path_manage_script, path_link){
         method:'post',
         parameters: {
             contact_id : contact_id, 
+            address_id : address_id, 
             res_id : res_id
         },
         onSuccess: function(answer){
