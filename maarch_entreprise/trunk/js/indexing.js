@@ -1375,7 +1375,8 @@ function change_contact_type(path_autocomplete, empty_contact_div, id_internal, 
         $(contact_id).value='';
         $("contactid").value='';
         $("contactcheck").value='success';
-
+        $("contact_check").innerHTML = "";
+        $("contact").style.backgroundColor='#ffffff';
     }
     display_contact_card('hidden');
     update_contact_autocompleter();
