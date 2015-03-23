@@ -160,8 +160,8 @@ if($mode == 'normal') {
            
     //error and search url
     $url_error = $_SESSION['config']['businessappurl']
-        .'index.php?display=true&dir=indexing_searching'
-        .'&page=search_adv_error';
+        .'index.php?page=search_adv_error'
+        .'&dir=indexing_searching';
 
     if (isset($_REQUEST['exclude'])) {
         $_SESSION['excludeId'] = $_REQUEST['exclude'];
