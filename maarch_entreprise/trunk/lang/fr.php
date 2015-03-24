@@ -128,8 +128,12 @@ if (!defined('_WARNING_MESSAGE_DEL_TYPE'))
     define('_WARNING_MESSAGE_DEL_TYPE', 'Avertissement :<br> La suppression d&rsquo;un type de document entraine la r&eacute;affectation des documents &agrave un nouveau type.');
 if (!defined('_WARNING_MESSAGE_DEL_GROUP'))
     define('_WARNING_MESSAGE_DEL_GROUP', 'Avertissement :<br> Il existe des utilisateurs associés à ce groupe. Choisissez un groupe de remplacement :');
+if (!defined('_WARNING_MESSAGE_DEL_USER'))
+    define('_WARNING_MESSAGE_DEL_USER', 'Avertissement :<br> Il existe des listes de diffusion associés à cet utilisateur. Choisissez un utilisateur de remplacement :');
 if (!defined('_USERS_IN_GROUPS'))
     define('_USERS_IN_GROUPS', 'utilisateur(s) dans le groupe');
+if (!defined('_LISTE_DIFFUSION_IN_USER'))
+    define("_LISTE_DIFFUSION_IN_USER", "liste(s) de diffusion pour l'utilisateur");
 if (!defined('_NO_REPLACEMENT'))
     define('_NO_REPLACEMENT', 'AUCUN REMPLACEMENT');
 if (!defined('_DOCS_IN_DOCTYPES'))    define( '_DOCS_IN_DOCTYPES', 'document(s) de ce type');
