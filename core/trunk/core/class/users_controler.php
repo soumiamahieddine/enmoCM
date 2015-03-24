@@ -36,6 +36,7 @@ try {
     require_once 'core/class/ObjectControlerAbstract.php';
     require_once 'core/class/ObjectControlerIF.php';
     require_once 'core/class/class_history.php';
+    require_once 'modules/entities/class/class_users_entities.php';
 } catch (Exception $e){
     echo $e->getMessage() . ' // ';
 }
@@ -492,6 +493,8 @@ class users_controler extends ObjectControler implements ObjectControlerIF
     */
     public function delete($user, $params=array())
     {
+        $core_tools = new core_tools();
+        
         $control = array();
         if (! isset($user) || empty($user)) {
             $control = array(
