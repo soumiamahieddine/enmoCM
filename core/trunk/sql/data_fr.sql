@@ -79,13 +79,41 @@ INSERT INTO parameters (id, param_value_string, param_value_int, param_value_dat
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('postindexing_workbatch', NULL, 40, NULL);
 INSERT INTO parameters (id, param_value_string, param_value_int, param_value_date) VALUES ('database_version', NULL, 150, NULL);
 
+------------------
+--CONTACTS_TYPES--
+------------------
+INSERT INTO contact_types VALUES (100, 'Particuliers');
+INSERT INTO contact_types VALUES (101, 'Gouvernement');
+INSERT INTO contact_types VALUES (102, 'Collectivités territoriales');
+INSERT INTO contact_types VALUES (103, 'Associations');
+INSERT INTO contact_types VALUES (104, 'Entreprises');
+INSERT INTO contact_types VALUES (105, 'Autorités juridictionnelles');
+INSERT INTO contact_types VALUES (106, 'Organisations syndicales');
+
 ------------
 --CONTACTS--
 ------------
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (108, '', '', 'LA POSTE', '', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', 'title1', NULL, NULL, NULL, NULL, 'letter', 'Y', 'N');
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (109, '', '', 'FRANCE TELECOM', '', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', 'title1', NULL, NULL, NULL, NULL, 'letter', 'Y', 'N');
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (110, '', '', 'Transport Choisy', '', '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', 'title1', NULL, NULL, NULL, NULL, 'letter', 'Y', 'N');
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (131, NULL, NULL, 'Maarch', NULL, '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', NULL, NULL, NULL, NULL, NULL, 'letter', 'Y', 'N');
+INSERT INTO contacts_v2 VALUES (201, 100, 'N', '', '', 'Boris', 'Bourdon', 'title1', '', '', 'superadmin', 'SUPERADMIN', '2015-03-23 09:13:15.011225', NULL, 'Y');
+INSERT INTO contacts_v2 VALUES (202, 103, 'Y', 'La Ruche Qui Dit Oui', 'LRQDO', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:47:12.329697', NULL, 'Y');
+INSERT INTO contacts_v2 VALUES (203, 101, 'Y', 'Premier Ministère', 'P.M', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:47:40.066242', NULL, 'Y');
+INSERT INTO contacts_v2 VALUES (204, 104, 'Y', 'LA POSTE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:48:09.679356', NULL, 'Y');
+INSERT INTO contacts_v2 VALUES (205, 104, 'Y', 'MAARCH', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:48:09.679356', NULL, 'Y');
+
+---------------------
+--CONTACTS_PURPOSES--
+---------------------
+INSERT INTO contact_purposes VALUES (100, 'Adresse principale');
+INSERT INTO contact_purposes VALUES (101, 'Agence');
+INSERT INTO contact_purposes VALUES (102, 'Siège Social');
+
+
+---------------------
+--CONTACTS_ADRESSES--
+---------------------
+INSERT INTO contact_addresses VALUES (102, 202, 101, '', '', '', '', '', '', '5', 'rue Tournefort', '', 'PARIS', '75005', 'FRANCE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', 'N', 'Y');
+INSERT INTO contact_addresses VALUES (103, 203, 100, '', 'Manuel', 'VALLS', 'title1', 'Premier ministre', '', '', '', '', 'PARIS', '', 'FRANCE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', 'N', 'Y');
+INSERT INTO contact_addresses VALUES (104, 204, 101, '', '', '', '', '', '', '1', 'Boulevard Auriol', '', 'NANTES', '92000', 'FRANCE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', 'N', 'Y');
+
 
 ------------
 --DIFFLIST_TYPES--
