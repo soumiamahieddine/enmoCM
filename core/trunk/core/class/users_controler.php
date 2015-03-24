@@ -534,6 +534,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF
         if ($ok) {
             $control = self::cleanUsergroupContent($user->user_id);
             $control = self::cleanUserentityContent($user->user_id);
+
+            if ($core_tools->is_module_loaded('entities')){
+                $listModels = new users_entities();
+                $listModels->cleanListModelsContent($user->user_id);
+            }
         }
 
         if ($control['status'] == 'ok') {
