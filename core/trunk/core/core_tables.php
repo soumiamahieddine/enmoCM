@@ -104,6 +104,9 @@ if (! defined('USERGROUP_CONTENT_TABLE')) {
 if (! defined('USERGROUPS_SERVICES_TABLE')) {
     define('USERGROUPS_SERVICES_TABLE', 'usergroups_services');
 }
+if(! defined('LISTMODELS_CONTENT_TABLE')) {
+    define('LISTMODELS_CONTENT_TABLE', 'listmodels');
+}
 if (! defined('USERS_TABLE')) {
     define('USERS_TABLE', 'users');
 }
