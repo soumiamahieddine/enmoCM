@@ -71,6 +71,9 @@ if(isset($_REQUEST['user_submit'])){
             $_SESSION['m_admin']['nbgroups']  = $ugc->getUsergroupsCount();
             location_bar_management($mode);
             break;
+        case "check_del" :
+            display_del_check($user_id);
+            break;
     }
     include('apps/maarch_entreprise/admin/users/users_management.php');
 }
@@ -256,6 +259,28 @@ function display_list(){
  */
 function display_del($user_id){
     $uc = new users_controler();
+    
+
+    // information liste(s) de diffusion exists in users
+    $listDiffusion=array();
+    $db = new dbquery();
+    $db->connect();
+    $db->query("select * from listmodels WHERE item_id='".$user_id."' AND item_mode='dest'" );
+    while ($res = $db->fetch_object()) {
+            array_push($listDiffusion, $res->description);
+        }
+    $db->disconnect();
+
+    if(!empty($listDiffusion)){ ?>
+        <script type="text/javascript">window.top.location='<?php
+        echo $_SESSION['config']['businessappurl'] . 'index.php?page='
+            . 'users_management_controler&mode=check_del&admin=users&id=' . $user_id;
+        ?>';</script>   
+    <?php exit(); }
+
+
+
+
     $user = $uc->get($user_id);
     if(isset($user)) {
         // Deletion
@@ -271,13 +296,132 @@ function display_del($user_id){
         }
 
         ?><script type="text/javascript">window.top.location='<?php echo $_SESSION['config']['businessappurl']."index.php?page=users_management_controler&mode=list&admin=users&order=".$_REQUEST['order']."&order_field=".$_REQUEST['order_field']."&start=".$_REQUEST['start']."&what=".$_REQUEST['what'];?>';</script>
-        <?php
+        <?php 
         exit;
     }
     else{
         // Error management
         $_SESSION['error'] = _USER.' '._UNKNOWN;
     }
+}
+
+
+function display_del_check($user_id){
+
+
+/****************Management of the location bar  ************/
+        $admin = new core_tools();
+        $init = false;
+        if (isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true") {
+            $init = true;
+        }
+        $level = "";
+        if (isset($_REQUEST['level']) && ($_REQUEST['level'] == 2 
+            || $_REQUEST['level'] == 3 || $_REQUEST['level'] == 4 
+            || $_REQUEST['level'] == 1)
+        ) {
+            $level = $_REQUEST['level'];
+        }
+        $pagePath = $_SESSION['config']['businessappurl'] . 'index.php?page=users';
+        $pageLabel = _DELETION;
+        $pageId = "users";
+        $admin->manage_location_bar($pagePath, $pageLabel, $pageId, $init, $level);
+
+    
+        /***********************************************************/
+        if(isset($_POST['user_id'])){
+            $old_user=$_POST['id'];
+            $new_user=$_POST['user_id'];
+
+            $listDiffusion=array();
+            $db = new dbquery();
+            $db->connect();
+            $db->query("select * from listmodels WHERE item_id='".$user_id."' AND item_mode='dest'" );
+            while ($res = $db->fetch_object()) {
+                    array_push($listDiffusion, $res->object_id);
+                }
+            $db->disconnect();
+
+
+            // Mise à jour des enregistrements (egal suppression puis insertion)
+            $listDiffusion_sql = "'".implode("','", $listDiffusion)."'";
+            $db = new dbquery();
+            $db->connect();
+            $db->query("update listmodels set item_id='" .$new_user. "' where item_id='" .$old_user. "' and object_id in (" .$listDiffusion_sql. ")");
+            //echo "update listmodels set item_id='" .$new_user. "' where item_id='" .$old_user. "' and object_id in (" .$listDiffusion_sql. ")";
+            $db->disconnect();
+
+
+            $_SESSION['error'] = _DELETED_USER.' : '.$old_user;
+
+           ?>
+
+
+            <script type="text/javascript">window.top.location='<?php
+        echo $_SESSION['config']['businessappurl'] . 'index.php?page='
+            . 'users_management_controler&mode=del&admin=users&id=' . $user_id;
+        ?>';</script> <?php
+        }
+
+        $listDiffusion=array();
+        $db = new dbquery();
+        $db->connect();
+        $db->query("select * from listmodels WHERE item_id='".$user_id."' AND item_mode='dest'" );
+        while ($res = $db->fetch_object()) {
+            array_push($listDiffusion, $res->object_id);
+        }
+        $db->disconnect();
+
+        echo '<h1><i class="fa fa-users fa-2x"></i>'._USER_DELETION2.': <i>'.$user_id.'</i></h1>';
+        echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
+        $_SESSION['error'] = "";
+        ?>
+        <br>
+        <div class="block">
+        <div id="main_error" style="text-align:center;">
+            <b><?php
+            echo _WARNING_MESSAGE_DEL_USER;
+            ?></b>
+        </div>
+        <br/>
+        <form name="user_del" id="user_del" style="width: 250px;margin:auto;" method="post" class="forms">
+            <input type="hidden" value="<?php echo $user_id;?>" name="id">
+            <?php
+
+                echo "<h3>".count($listDiffusion)." "._LISTE_DIFFUSION_IN_USER .":</h3>";
+                echo "<ul>";
+                foreach ($listDiffusion as $key => $value) {
+                   echo "<li>".$value."</li>";
+                }
+                echo "</ul>";
+                ?>
+                <br>
+                <br>
+                <select name="user_id" id="user_id" onchange=''>
+                    <option value="no_user"><?php echo _NO_REPLACEMENT;?></option>
+                    <?php
+                    $db = new dbquery();
+                    $db->query("select * from users order by user_id ASC");
+                    while($users = $db->fetch_object())
+                    {
+                        if($users->user_id != $user_id){
+                         ?>
+                        <option value="<?php echo $users->user_id; ?>"><?php echo $users->lastname . " " . $users->firstname; ?></option>
+                        <?php
+                        }
+                       
+                    }
+                    ?>
+                </select>
+                 <p class="buttons">
+                    <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick='if(document.getElementById("doc_type_id").options[document.getElementById("doc_type_id").selectedIndex].value == ""){alert("<?php echo _CHOOSE_REPLACEMENT_DOCTYPES ?> !");return false;}else{return(confirm("<?php echo _REALLY_DELETE.$s_id; ?> \n\r\n\r<?php echo _DEFINITIVE_ACTION?>"));}'/>
+                    <input type="button" value="<?php echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=usergroups_management_controler&mode=list&admin=groups&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>';"/>
+                </p>
+            </form>
+            </div>
+            <script type="text/javascript"></script>
+        <?php
+        exit();  
 }
 
 /**
