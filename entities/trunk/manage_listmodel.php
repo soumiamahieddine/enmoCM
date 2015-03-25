@@ -817,7 +817,7 @@ $linkwithwhat =
                                 <option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
                             } ?>
                             </select>&nbsp;
-                            <span onclick="add_user(<?php echo $j; ?>);" /> 
+                            <span onclick="add_user(<?php echo $j; ?>);" style="cursor: pointer"/> 
                                 <i class="fa fa-plus fa-2x"></i><?php echo _ADD;?>
                             </span><?php
                         } else echo _NO_AVAILABLE_ROLE; ?>
@@ -870,7 +870,7 @@ $linkwithwhat =
                                     <option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
                                 } ?>
                                 </select>&nbsp;
-                                <span onclick="add_entity(<?php echo $j; ?>);" /> 
+                                <span onclick="add_entity(<?php echo $j; ?>);" style="cursor: pointer"/> 
                                     <i class="fa fa-plus fa-2x"></i><?php echo _ADD;?>
                                 </span><?php
                             } else echo _NO_AVAILABLE_ROLE; ?>               
