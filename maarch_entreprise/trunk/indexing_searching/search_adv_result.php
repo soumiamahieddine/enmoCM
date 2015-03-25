@@ -725,7 +725,7 @@ if (count($_REQUEST['meta']) > 0) {
                 // }
                 // elseif ($contact_type == "contact")
                 // {
-                    $contact_id = $_REQUEST['contactid'];
+                    $contact_id = pg_escape_string($_REQUEST['contactid']);
                     $where_request .= "contact_id in (select contact_id from view_contacts where society ilike '%".$contact_id."%' or contact_firstname ilike '%".$contact_id."%' or contact_lastname ilike '%".$contact_id."%') and ";
                     
                 // }
@@ -778,7 +778,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
                 if ($contact_type == "user")
                 {*/
-                    $contactid_internal = $_REQUEST['contactid_internal'];
+                    $contactid_internal = pg_escape_string($_REQUEST['contactid_internal']);
                     //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
                     $where_request .= " (exp_user_id in (select user_id from users where firstname ilike '%".$contactid_internal."%' or lastname ilike '%".$contactid_internal."%' )) and ";
                 //}
