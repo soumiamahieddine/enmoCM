@@ -1708,7 +1708,7 @@ function check_date_exp(path_manage_script, path_link){
      		} else {
         	    document.getElementById('contact').style.backgroundColor='#ffe09b';
         	    document.getElementById('contact_check').style.display='table-row';
-        	    document.getElementById("contact_check").innerHTML = "<td colspan=\"3\" style=\"font-size: 9px;text-align: center;color:#ea0000;\">Au moins un courrier enregistré dans les "+check_days_before+" derniers jours a déjà été enregistré pour le même contact.</td>";
+        	    document.getElementById("contact_check").innerHTML = "<td colspan=\"3\" style=\"font-size: 9px;text-align: center;color:#ea0000;\">Au moins un courrier enregistré dans les "+check_days_before+" derniers jours est affecté au même contact.</td>";
         	    document.getElementById('contactcheck').value = answer.responseText;
     	    }
         }       

@@ -1385,5 +1385,6 @@ if (!defined('_DIFF_LIST_AVIS_HISTORY')) define('_DIFF_LIST_AVIS_HISTORY', 'Diff
 if (!defined('_MODIFY_BY')) define('_MODIFY_BY', 'Modify by');
 if (!defined('_DIFFLIST_NEVER_MODIFIED')) define('_DIFFLIST_NEVER_MODIFIED', 'The diffusion list never changed');
 
-if(!defined('_TAG_ADMIN'))
-	define('_TAG_ADMIN', 'Tag Admin');
+if(!defined('_TAG_ADMIN')) define('_TAG_ADMIN', 'Tag Admin');
+
+if (!defined('_CONTACT_CHECK'))  define('_CONTACT_CHECK', 'A lest one mail was recently affected to the same contact.');
