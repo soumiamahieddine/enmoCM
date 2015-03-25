@@ -31,11 +31,13 @@ require_once("apps".DIRECTORY_SEPARATOR."maarch_entreprise".DIRECTORY_SEPARATOR.
 $contact = new contacts_v2();
 $db = new dbquery();
 $db->connect();
-$query = "select id, lastname as tag, firstname, contact_purpose_id from ".$_SESSION['tablename']['contact_addresses']." 
-			where (lower(lastname) like lower('%".$db->protect_string_db($_REQUEST['what'])."%')
+$query = "SELECT ca.id, ca.lastname as tag, ca.firstname, ca.contact_purpose_id, cp.label 
+			FROM ".$_SESSION['tablename']['contact_addresses']." ca
+			LEFT JOIN contact_purposes cp on ca.contact_purpose_id = cp.id	
+			WHERE (lower(lastname) like lower('%".$db->protect_string_db($_REQUEST['what'])."%')
 			or lower(firstname) like lower('%".$db->protect_string_db($_REQUEST['what'])."%')
-			or lower(address_town) like lower('%".$db->protect_string_db($_REQUEST['what'])."%'))";
-
+			or lower(address_town) like lower('%".$db->protect_string_db($_REQUEST['what'])."%')
+			or lower(label) like lower('%".$db->protect_string_db($_REQUEST['what'])."%'))";
 if(isset($_GET['id']) &&  $_GET['id'] <> ''){
 	$query .= ' and id <> '.$_GET['id'].' and contact_id = '.$_SESSION['contact']['current_contact_id'];
 } else if (isset($_REQUEST['idContact']) &&  $_REQUEST['idContact'] <> ''){
