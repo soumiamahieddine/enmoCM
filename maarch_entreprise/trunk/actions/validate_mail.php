@@ -963,20 +963,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<table width="95%" cellpadding="0" cellspacing="0">';
         $frm_str .= '<tr align="center">';
         
-        //CONTACT
-        //  if ($_SESSION['features']['personal_contact'] == "true"
-        // ) {
-        if ($core->test_admin('my_contacts', 'apps', false)) {
-            $frm_str .= '<td>';
-            $frm_str .= '<span onclick="hideOtherDiv(\'create_contact_div\');new Effect.toggle(\'create_contact_div\', \'appear\', {delay:0.2});'
-                . 'whatIsTheDivStatus(\'create_contact_div\', \'divStatus_create_contact_div\');return false;" '
-                . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-            $frm_str .= '<span id="divStatus_create_contact_div" style="color:#1C99C5;"><<</span><b>'
-                . '&nbsp;<small>' . _CREATE_CONTACT . '</small>';
-            $frm_str .= '</b></span>';
-            $frm_str .= '</td>';
-        }
-        
         // HISTORY
         if ($core_tools->test_service('view_doc_history', 'apps', false)) {
             $frm_str .= '<td>';
