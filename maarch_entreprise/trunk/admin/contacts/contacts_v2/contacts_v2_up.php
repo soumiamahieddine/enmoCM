@@ -91,14 +91,16 @@ require_once "apps" . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . "class_list_show.php";
 $func = new functions();
 
-$select[$_SESSION['tablename']['contact_addresses']] = array();
+$select['view_contacts'] = array();
 array_push(
-    $select[$_SESSION['tablename']['contact_addresses']],
-    "id", "contact_id", "contact_purpose_id", "departement", "lastname", "firstname", "function", "address_num", "address_street", "address_postal_code", "address_town", "phone", "email", "enabled"
+    $select['view_contacts'],
+    "ca_id as id", "contact_id", "contact_purpose_id", "departement", "lastname", "firstname", "function", "address_num", "address_street", "address_postal_code", "address_town", "phone", "email", "enabled", "contact_purpose_label"
 );
 $what = "";
 $where = "contact_id = " . $id;
-if (isset($_REQUEST['what2']) && ! empty($_REQUEST['what2'])) {
+if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) {
+    $where .= " and ca_id = ".$_REQUEST['selectedObject'];
+} elseif (isset($_REQUEST['what2']) && ! empty($_REQUEST['what2'])) {
     $what = $func->protect_string_db($_REQUEST['what2']);
     // $where .= " and (lower(lastname) like lower('" . $what. "%') 
     //                 or lower(firstname) like lower('" . $what. "%') 
@@ -109,13 +111,17 @@ if (isset($_REQUEST['what2']) && ! empty($_REQUEST['what2'])) {
     $what_table = explode(" ", $what);
 
     foreach($what_table as $what_a){
-        $sql_lastname[] = " lower(lastname) LIKE lower('".$what_a."%')";
-        $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
-        $sql_society[] = " lower(departement) LIKE lower('".$what_a."%')";
+        if (strlen($what_a) > 2) {
+            $sql_lastname[] = " lower(lastname) LIKE lower('".$what_a."%')";
+            $sql_firstname[] = " lower(firstname) LIKE lower('".$what_a."%')";
+            $sql_society[] = " lower(departement) LIKE lower('".$what_a."%')";
+            $sql_purpose[] = " lower(contact_purpose_label) LIKE lower('%".$what_a."%')";
+        }
     }
 
     $where .= " and (" . implode(' OR ', $sql_lastname) . " ";
     $where .= " or " . implode(' OR ', $sql_firstname) . " ";
+    $where .= " or " . implode(' OR ', $sql_purpose) . " ";
     $where .= " or " . implode(' OR ', $sql_society) . ") ";
 }
 
@@ -334,6 +340,7 @@ $autoCompletionArray = array();
 $autoCompletionArray["list_script_url"] = $_SESSION['config']['businessappurl']
     . "index.php?display=true&page=contact_addresses_list_by_name&idContact=".$id;
 $autoCompletionArray["number_to_begin"] = 1;
+$autoCompletionArray["searchBoxAutoCompletionUpdate"] = true;
 
 if ($_SESSION['origin']=='contacts_list') {
     $_REQUEST['start']='';
