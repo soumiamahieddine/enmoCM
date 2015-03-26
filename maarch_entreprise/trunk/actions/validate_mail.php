@@ -649,7 +649,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             foreach(array_keys($_SESSION['mail_natures']) as $nature)
                             {
                                 $frm_str .='<option value="'.$nature.'"  with_reference = "'.$_SESSION['mail_natures_attribute'][$nature].'"';
-                                if($_SESSION['default_mail_nature'] == $nature || (isset($data['nature_id']) && $data['nature_id'] == $nature)) {
+                                if(isset($data['nature_id']) && $data['nature_id'] == $nature) {
+                                    $frm_str .='selected="selected"';
+                                } else if ($data['nature_id'] == "" && $_SESSION['default_mail_nature'] == $nature) {
                                     $frm_str .='selected="selected"';
                                 }
                                 $frm_str .='>'.$_SESSION['mail_natures'][$nature].'</option>';
