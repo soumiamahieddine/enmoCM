@@ -29,7 +29,7 @@
 * @ingroup basket
 */
  $urlParameters = '';
- 
+ $_SESSION['stockCheckbox']= '';
 if (isset($_SESSION['search']['plain_text'])) {
 
     $_SESSION['search']['plain_text'] = "";
