@@ -1007,14 +1007,45 @@ class lists extends dbquery
         
          //If checkbox is activated (is it important if template???)
         if ($this->params['bool_checkBox'] === true) {
-        
+
+            if($_SESSION['stockCheckbox'] != null){
+                $key = in_array($keyValue, $_SESSION['stockCheckbox']);
+            
             //If disable or checkbox
+            if($key == true){            
+                if ($lineIsDisabled === true || empty($keyValue)) {
+                    $return .= '<div align="center"><i class="fa fa-lock fa-2x" title="'._LOCKED.'"></i></div>';
+                } else {
+                    $return .= '<div align="center"><input type="checkbox" checked="yes" name="field[]" id="field" class="check" onclick="stockCheckbox(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=multiLink\','.$keyValue.');" value="'
+                                .$keyValue.'" /></div>';
+                }
+            }else{ 
+                if ($lineIsDisabled === true || empty($keyValue)) {
+                    $return .= '<div align="center"><i class="fa fa-lock fa-2x" title="'._LOCKED.'"></i></div>';
+                } else {
+                    $return .= '<div align="center"><input type="checkbox" name="field[]" id="field" class="check" onclick="stockCheckbox(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=multiLink\','.$keyValue.');" value="'
+                                .$keyValue.'" /></div>';
+                }
+            }
+                            }else{ 
+
+                            //If disable or checkbox
             if ($lineIsDisabled === true || empty($keyValue)) {
                 $return .= '<div align="center"><i class="fa fa-lock fa-2x" title="'._LOCKED.'"></i></div>';
             } else {
-                $return .= '<div align="center"><input type="checkbox" name="field[]" id="field" class="check" value="'
+                $return .= '<div align="center"><input type="checkbox" name="field[]" id="field" class="check" onclick="stockCheckbox(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=multiLink\','.$keyValue.');" value="'
                             .$keyValue.'" /></div>';
             }
+
+
+
+            }
+
+
+
+
+        
+
         }
         return $return;
     }
