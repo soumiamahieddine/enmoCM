@@ -55,9 +55,17 @@ require_once('modules/entities/class/class_manage_entities.php');;
         $frm_str .= '<h2 class="title">'._REDIRECT_MAIL.' '._NUM;
     }
     $values_str = '';
+    if(empty($_SESSION['stockCheckbox'])){
     for($i=0; $i < count($values);$i++)
-    {
-        $values_str .= $values[$i].', ';
+        {
+            $values_str .= $values[$i].', ';
+        }
+    }else{ 
+
+    for($i=0; $i < count($_SESSION['stockCheckbox']);$i++)
+        {
+            $values_str .= $_SESSION['stockCheckbox'][$i].', ';
+        }
     }
     $values_str = preg_replace('/, $/', '', $values_str);
     $frm_str .= $values_str;
