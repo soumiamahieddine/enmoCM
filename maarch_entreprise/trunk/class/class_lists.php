@@ -1383,7 +1383,7 @@ class lists extends dbquery
 		}
 		
         if ($isMultiContacts == 'Y') {
-            $return .= '<i class="fa fa-book fa-2x" title="' 
+            $return .= '<i class="fa fa-book fa-2x" style="cursor: pointer;" title="' 
                 . _VIEW_CONTACTS . '"onclick="loadContactsList(' . $resMultiContacts . ');" ></i>';
         }
 
