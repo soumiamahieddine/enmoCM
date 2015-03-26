@@ -1041,6 +1041,7 @@ if (!defined('_SEARCH_CONTACTS')) define( '_SEARCH_CONTACTS','Rechercher un cont
 
 if (!defined('_YOU_SHOULD_ADD_AN_ADDRESS')) define( '_YOU_SHOULD_ADD_AN_ADDRESS','Apr&egrave;s avoir valid&eacute;, n\'oubliez pas d\'ajouter une adresse &agrave; ce contact');
 if (!defined('_ADDRESSES')) define( '_ADDRESSES','adresse(s)');
+if (!defined('_ADDRESSES_MAJ')) define( '_ADDRESSES_MAJ','Adresse');
 if (!defined('_DOC_S')) define( '_DOC_S','document(s)');
 if (!defined('_CONTACTS_CONFIRMATION')) define( '_CONTACTS_CONFIRMATION','Confirmation de cr&eacute;ation');
 if (!defined('_YOUR_CONTACT_LOOKS_LIKE_ANOTHER')) define( '_YOUR_CONTACT_LOOKS_LIKE_ANOTHER','<b>Votre contact ressemble &agrave; un ou des contacts d&eacute;j&agrave; existants :</b>');

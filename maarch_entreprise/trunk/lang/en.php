@@ -1329,6 +1329,7 @@ if (!defined('_CONTACT_PURPOSE_REAFFECT')) define( '_CONTACT_PURPOSE_REAFFECT','
 if (!defined('_WARNING_MESSAGE_DEL_CONTACT_PURPOSE')) define( '_WARNING_MESSAGE_DEL_CONTACT_PURPOSE','Caution :<br> When you delete a contact purpose, you must reaffect address to a new contact purpose.');
 
 if (!defined('_ADDRESSES')) define( '_ADDRESSES','address(es)');
+if (!defined('_ADDRESSES_MAJ')) define( '_ADDRESSES_MAJ','Address');
 if (!defined('_DOC_S')) define( '_DOC_S','document(s)');
 if (!defined('_CONTACTS_CONFIRMATION')) define( '_CONTACTS_CONFIRMATION','Confirm the creation');
 if (!defined('_YOUR_CONTACT_LOOKS_LIKE_ANOTHER')) define( '_YOUR_CONTACT_LOOKS_LIKE_ANOTHER','<b>Your contact looks like to a contact already created :</b>');

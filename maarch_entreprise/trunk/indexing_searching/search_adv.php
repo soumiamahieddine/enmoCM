@@ -387,7 +387,7 @@ if ($core_tools->is_module_loaded('physical_archive') == true)
 }
 
  //Addresses contact externe
-    $arr_tmp2 = array('label' => _ADDRESSES, 'type' => 'input_text', 'param' => array('field_label' => _ADDRESSES));
+    $arr_tmp2 = array('label' => _ADDRESSES_MAJ, 'type' => 'input_text', 'param' => array('field_label' => _ADDRESSES_MAJ));
     $param['addresses_id'] = $arr_tmp2;
 
 //Answers types
