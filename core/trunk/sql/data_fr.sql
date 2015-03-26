@@ -68,6 +68,13 @@ INSERT INTO status VALUES ('VIS', 'A viser', 'N', 'N', '', 'apps', 'Y', 'Y');
 
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SMART', 'Nouvelle demande Allo Mairie', 'N', '', 'apps', 'Y', 'N');
 
+---------------
+-- PJ STATUS --
+---------------
+
+INSERT INTO status (id, label_status, is_system) VALUES ('A_TRA', 'A traiter', 'N');
+INSERT INTO status (id, label_status, is_system) VALUES ('TRA', 'Traité', 'N');
+INSERT INTO status (id, label_status, is_system) VALUES ('OBS', 'Obsolète', 'N');
 
 ------------
 --PARAMETERS--
