@@ -39,7 +39,7 @@ $query = "SELECT ca.id, ca.lastname as tag, ca.firstname, ca.contact_purpose_id,
 			or lower(address_town) like lower('%".$db->protect_string_db($_REQUEST['what'])."%')
 			or lower(label) like lower('%".$db->protect_string_db($_REQUEST['what'])."%'))";
 if(isset($_GET['id']) &&  $_GET['id'] <> ''){
-	$query .= ' and id <> '.$_GET['id'].' and contact_id = '.$_SESSION['contact']['current_contact_id'];
+	$query .= ' and ca.id <> '.$_GET['id'].' and contact_id = '.$_SESSION['contact']['current_contact_id'];
 } else if (isset($_REQUEST['idContact']) &&  $_REQUEST['idContact'] <> ''){
 	$query .= ' and contact_id = '.$_REQUEST['idContact'];
 }
