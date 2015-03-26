@@ -2305,16 +2305,19 @@ function loadSvnLog(path_manage_script, onlineVersion, localVersion, divName) {
 
 function checkAll() {
     $$('input[type=checkbox]').without($('all')).each(
-        function(e) {
+        function(e) {if(e.checked != true){ stockCheckbox('index.php?display=true&dir=indexing_searching&page=multiLink',e.value);}
             e.checked = true;
+            
         }
     )
 }
+
 
 function uncheckAll(){
     $$('input[type=checkbox]').without($('all')).each(
         function(e) {
             e.checked = false;
+            stockCheckbox('index.php?display=true&dir=indexing_searching&page=multiLink',e.value);
         }
     )
 }
@@ -2373,7 +2376,9 @@ function addLinks(path_manage_script, child, parent, action, tableHist) {
 }
 
 function stockCheckbox(url,value){
+    if(value != ''){
         new Ajax.Request(url,
+    
     {
         method:'post',
         parameters: { courrier_purpose : value},
@@ -2383,7 +2388,8 @@ function stockCheckbox(url,value){
 
 
         }
-    });
+    })
+    };
 
 }
 
@@ -2686,6 +2692,7 @@ function CheckUncheckAll(id)
 {
     if ($(id).checked) {
         checkAll();
+
     } else {
         uncheckAll();
     }
@@ -2845,4 +2852,12 @@ function simpleAjax(url){
         {
             method:'post'
         });
+}
+
+
+
+function test(){ 
+valeur2 = <?php echo json_encode($_SESSION['keysValuesForAllCheckBox']) ?>;
+alert(valeur2);
+
 }
