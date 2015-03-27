@@ -366,13 +366,13 @@ function display_del_check($user_id){
         $listDiffusion=array();
         $db = new dbquery();
         $db->connect();
-        $db->query("select * from listmodels WHERE item_id='".$user_id."' AND item_mode='dest'" );
+        $db->query("select * from listmodels list, entities it WHERE list.object_id = it.entity_id and item_id='".$user_id."' AND item_mode='dest'" );
         while ($res = $db->fetch_object()) {
-            array_push($listDiffusion, $res->object_id);
+            array_push($listDiffusion, $res->entity_label);
         }
         $db->disconnect();
 
-        echo '<h1><i class="fa fa-users fa-2x"></i>'._USER_DELETION2.': <i>'.$user_id.'</i></h1>';
+        echo '<h1><i class="fa fa-users fa-2x"></i>'._USER_DELETION.': <i>'.$user_id.'</i></h1>';
         echo "<div class='error' id='main_error'>".$_SESSION['error']."</div>";
         $_SESSION['error'] = "";
         ?>
@@ -384,7 +384,7 @@ function display_del_check($user_id){
             ?></b>
         </div>
         <br/>
-        <form name="user_del" id="user_del" style="width: 250px;margin:auto;" method="post" class="forms">
+        <form name="user_del" id="user_del" style="width: 350px;margin:auto;" method="post" class="forms">
             <input type="hidden" value="<?php echo $user_id;?>" name="id">
             <?php
 
