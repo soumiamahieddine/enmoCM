@@ -50,6 +50,14 @@
         </FIELD>
         <FUNCTIONS>
             <FUNCTION>
+                <LIBELLE>Statut</LIBELLE>
+                <CALL>get_status</CALL>
+            </FUNCTION>
+            <FUNCTION>
+                <LIBELLE>Priorité</LIBELLE>
+                <CALL>get_priority</CALL>
+            </FUNCTION>
+            <FUNCTION>
                 <LIBELLE>Services en copie</LIBELLE>
                 <CALL>retrieve_copies</CALL>
             </FUNCTION>
