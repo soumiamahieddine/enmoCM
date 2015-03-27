@@ -131,7 +131,7 @@ if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {
     $order = trim($_REQUEST['order']);
 }
 $field = 'lastname';
-if (isset($_REQUEST['order_field']) && ! empty($_REQUEST['order_field']) && in_array($_REQUEST['order_field'], $select[$_SESSION['tablename']['contact_addresses']])) {
+if (isset($_REQUEST['order_field']) && ! empty($_REQUEST['order_field']) && in_array($_REQUEST['order_field'], $select['view_contacts'])) {
     $field = trim($_REQUEST['order_field']);
 }
 
