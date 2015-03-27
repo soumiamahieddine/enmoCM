@@ -399,6 +399,49 @@ class users_entities extends dbquery
     }
 
     /**
+    * Cleans the listmodels_content table in the database from a given user
+    *   (user_id)
+    *
+    * @param  $userId string  User identifier
+    * @return bool true if the cleaning is complete, false otherwise
+    */
+
+    public function cleanListModelsContent($userId){
+
+        $control = array();
+        if (! isset($userId) || empty($userId)) {
+            $control = array(
+                'status' => 'ko',
+                'value' => '',
+                'error' => _USER_ID_EMPTY,
+            );
+            return $control;
+        }
+
+        $this->connect();
+        $func = new functions();
+        $query = 'delete from ' . LISTMODELS_CONTENT_TABLE . " where item_id='"
+               . $func->protect_string_db($userId) . "'";
+        
+        try{
+            $this->query($query);
+            $control = array(
+                'status' => 'ok',
+                'value'  => $userId,
+            );
+        } catch (Exception $e){
+            $control = array(
+                'status' => 'ko',
+                'value'  => '',
+                'error'  => _CANNOT_CLEAN_USERGROUP_CONTENT . ' ' . $userId,
+            );
+        }
+
+        $this->disconnect();
+        return $control;
+    }
+
+    /**
     * Clear the users add or modification vars
     */
     private function clearuserinfos()
