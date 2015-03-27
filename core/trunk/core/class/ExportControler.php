@@ -325,4 +325,75 @@ class ExportFunctions
             $line_value->makeLink_detail = $link;
         }
     }
+
+    function get_priority($libelle)
+    {
+
+        $endLastQuery = substr(
+            $_SESSION['last_select_query'], 
+            strpos(
+                $_SESSION['last_select_query'], 
+                'FROM'
+            )
+        );
+
+        $query_priority = "SELECT priority FROM res_view_letterbox WHERE res_id = ##res_id## ";
+
+        $db = new dbquery();
+        $db->connect();
+
+        $i=0;
+        foreach($this->object_export as $line_name => $line_value) {
+            if ($i == 0) {
+                $line_value->get_priority = $libelle;
+                $i++;
+                continue;
+            }
+
+            $res_id = $line_value->res_id;
+            $query = str_replace('##res_id##', $res_id, $query_priority);
+            $db->query($query);
+
+            $result = $db->fetch_object();
+
+            $link_label = $_SESSION['mail_priorities'][$result->priority];
+
+            $line_value->get_priority = $link_label;
+        }
+    }
+
+    function get_status($libelle)
+    {
+
+        $endLastQuery = substr(
+            $_SESSION['last_select_query'], 
+            strpos(
+                $_SESSION['last_select_query'], 
+                'FROM'
+            )
+        );
+
+        $query_status = "SELECT label_status FROM res_view_letterbox LEFT JOIN status on res_view_letterbox.status = status.id WHERE res_id = ##res_id## ";
+
+        $db = new dbquery();
+        $db->connect();
+
+        $i=0;
+        foreach($this->object_export as $line_name => $line_value) {
+            if ($i == 0) {
+                $line_value->get_status = $libelle;
+                $i++;
+                continue;
+            }
+
+            $res_id = $line_value->res_id;
+            $query = str_replace('##res_id##', $res_id, $query_status);
+            $db->query($query);
+
+            $result = $db->fetch_object();
+
+            $line_value->get_status = $result->label_status;
+        }
+    }
+
 }
