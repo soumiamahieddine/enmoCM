@@ -129,7 +129,7 @@ if (!defined('_WARNING_MESSAGE_DEL_TYPE'))
 if (!defined('_WARNING_MESSAGE_DEL_GROUP'))
     define('_WARNING_MESSAGE_DEL_GROUP', 'Avertissement :<br> Il existe des utilisateurs associés à ce groupe. Choisissez un groupe de remplacement :');
 if (!defined('_WARNING_MESSAGE_DEL_USER'))
-    define('_WARNING_MESSAGE_DEL_USER', 'Avertissement :<br> Il existe des listes de diffusion associés à cet utilisateur. Choisissez un utilisateur de remplacement :');
+    define('_WARNING_MESSAGE_DEL_USER', 'Avertissement :<br> Il existe des listes de diffusion associées à cet utilisateur. Choisissez un utilisateur de remplacement :');
 if (!defined('_USERS_IN_GROUPS'))
     define('_USERS_IN_GROUPS', 'utilisateur(s) dans le groupe');
 if (!defined('_LISTE_DIFFUSION_IN_USER'))
@@ -542,7 +542,7 @@ if (!defined('_WRONG_SECOND_PSW')) define( '_WRONG_SECOND_PSW', 'Le deuxi&egrave
 if (!defined('_AUTORIZED_USER')) define( '_AUTORIZED_USER', 'Utilisateur autoris&eacute;');
 if (!defined('_SUSPENDED_USER')) define( '_SUSPENDED_USER', 'Utilisateur suspendu');
 if (!defined('_DELETED_USER')) define( '_DELETED_USER', 'Utilisateur supprim&eacute;');
-if (!defined('_USER_DELETION')) define( '_USER_DELETION', 'Suppression de l&rsquo;utilisateur;');
+if (!defined('_USER_DELETION')) define( '_USER_DELETION', 'Suppression de l&rsquo;utilisateur');
 if (!defined('_USER_AUTORIZATION')) define( '_USER_AUTORIZATION', 'Autorisation de l&rsquo;utilisateur');
 if (!defined('_USER_SUSPENSION')) define( '_USER_SUSPENSION', 'Suspension de l&rsquo;utilisateur');
 if (!defined('_USER_UPDATED')) define( '_USER_UPDATED', 'Utilisateur modifi&eacute;');
