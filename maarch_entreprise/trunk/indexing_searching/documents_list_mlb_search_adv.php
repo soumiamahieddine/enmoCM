@@ -120,6 +120,20 @@ if($mode == 'normal') {
 
 } elseif($mode == 'popup' || $mode == 'frame') {
 
+    $core_tools->load_html();
+    $core_tools->load_header('', true, false);
+    $core_tools->load_js();
+    $time = $core_tools->get_session_time_expire();
+    ?><body>
+    <div id="container" style="height:auto;">
+        <div class="error" id="main_error">
+                <?php  echo $_SESSION['error'];?>
+        </div>
+        <div class="info" id="main_info">
+            <?php  echo $_SESSION['info'];?>
+        </div>
+        <div id="divList"><?php
+		
     $saveTool       = false;
     $useTemplate    = false;
     $exportTool     = false;
@@ -145,12 +159,27 @@ if($mode == 'normal') {
                 .$_REQUEST['action_form'];
         }
         
-        $buttons = array();                                        
-        array_push( $buttons, array('ID'        => 'valid', 
-                                    'LABEL'     => _VALIDATE, 
-                                    'ACTION'    => 'formList.submit();'
-                                   )
-                    );
+        $buttons = array();
+        if (isset($_REQUEST['fromValidateMail'])) {
+            array_push( $buttons, array('ID'        => 'valid', 
+                                        'LABEL'     => _VALIDATE, 
+                                        'ACTION'    => 'formList.submit();opener.$(\'to_link\').click();'
+                                       )
+                        );
+        } else if ($_SESSION['fromValidateMail'] == "ok") {
+            array_push( $buttons, array('ID'        => 'valid', 
+                                        'LABEL'     => _VALIDATE, 
+                                        'ACTION'    => 'formList.submit();'
+                                       )
+                        );
+        } else {
+            array_push( $buttons, array('ID'        => 'valid', 
+                                        'LABEL'     => _VALIDATE, 
+                                        'ACTION'    => 'formList.submit();opener.$(\'attach\').click();'
+                                       )
+                        );            
+        }                                      
+
         array_push( $buttons, array('ID'        => 'close', 
                                     'LABEL'     => _CLOSE_WINDOW, 
                                     'ACTION'    => 'window.top.close();'
@@ -273,6 +302,11 @@ if($mode == 'normal') {
     if (!empty($start)) $parameters .= '&start='.$start;
     $_SESSION['save_list']['start'] = $start;
         
+    if (isset($_SESSION['where_from_contact_check']) && $_SESSION['where_from_contact_check'] <> '' && (isset($_REQUEST['fromContactCheck']) || $_SESSION['fromContactCheck'] == 'ok')) {
+        $_SESSION['fromContactCheck'] = "ok";
+        $where_request .= $_SESSION['where_from_contact_check'];
+    }
+
 //Query    
     $tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
     // $request->show();
@@ -357,7 +391,6 @@ if($mode == 'normal') {
                         $tab[$i][$j]['hasNotes'] = $db->fetch_object();
 						$tab[$i][$j]['res_multi_contacts'] = $_SESSION['mlb_search_current_res_id'];
                 }
-                
                 if($tab[$i][$j][$value]=="type_label")
                 {
                     $tab[$i][$j]["label"]=_TYPE;
@@ -751,4 +784,10 @@ if (count($tab) > 0) {
     
     echo '<script type="text/javascript">window.top.location.href=\''.$url_error.'\';</script>';
     exit();
+}
+
+if($mode == 'popup' || $mode == 'frame') {
+    echo '</div>';
+    echo '</div>';
+    echo '</body>';
 }

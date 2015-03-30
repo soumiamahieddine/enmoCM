@@ -361,11 +361,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                 }
                             }
                         $frm_str.='</select></td>';
-                        $frm_str .= '<td><span class="red_asterisk" id="category_id_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+                        $frm_str .= '<td><span class="red_asterisk" id="category_id_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
                   $frm_str .= '</tr>';
                    /*** Doctype ***/
                   $frm_str .= '<tr id="type_id_tr" style="display:'.$display_value.';">';
-                    $frm_str .='<td class="indexing_label"><label for="type_id"><span class="form_title" id="doctype_res" style="display:none;">'._DOCTYPE.'</span><span class="form_title" id="doctype_mail" style="display:inline;" >'._DOCTYPE_MAIL.'</span></label></td>';
+                    $frm_str .='<td class="indexing_label"><span class="form_title" id="doctype_res" style="display:none;">'._DOCTYPE.'</span><span class="form_title" id="doctype_mail" style="display:inline;" >'._DOCTYPE_MAIL.'</span></td>';
                     $frm_str .='<td>&nbsp;</td>';
                     $frm_str .='<td class="indexing_field"><select name="type_id" id="type_id" onchange="clear_error(\'frm_error_'.$id_action.'\');change_doctype(this.options[this.selectedIndex].value, \''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=change_doctype\', \''._ERROR_DOCTYPE.'\', \''.$id_action.'\', \''.$_SESSION['config']['businessappurl'].'index.php?display=true&page=get_content_js\' , \''.$display_value.'\','.$res_id.', \''.$coll_id.'\');">';
                             $frm_str .='<option value="">'._CHOOSE_TYPE.'</option>';
@@ -409,7 +409,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                 }
                             }
                             $frm_str .='</select>';
-                            $frm_str .= '<td><span class="red_asterisk" id="type_id_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+                            $frm_str .= '<td><span class="red_asterisk" id="type_id_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
                   $frm_str .= '</tr>';
                 /*** Priority ***/
                   $frm_str .= '<tr id="priority_tr" style="display:'.$display_value.';">';
@@ -419,7 +419,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                     . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
                                     . '&dir=indexing_searching&page=update_process_date\');" onFocus="updateProcessDate(\''
                                     . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-                                    . '&dir=indexing_searching&page=update_process_date\');clear_error(\'frm_error_' . $actionId
+                                    . '&dir=indexing_searching&page=update_process_date\');clear_error(\'frm_error_' . $id_action
                                     . '\');">';
                             $frm_str .='<option value="">'._CHOOSE_PRIORITY.'</option>';
                                 for($i=0; $i<count($_SESSION['mail_priorities']);$i++)
@@ -517,7 +517,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 						$frm_str .= '<td>&nbsp;</td>';
 						$frm_str .= '<td class="indexing_field"><input type="radio" name="type_contact" '
 								. 'id="type_multi_contact_external" value="multi_external" '
-								. 'onclick="clear_error(\'frm_error_' . $actionId . '\');'
+								. 'onclick="clear_error(\'frm_error_' . $id_action . '\');'
 								. 'change_contact_type(\'' . $_SESSION['config']['businessappurl']
 								. 'index.php?display=true&dir=indexing_searching'
 								. '&autocomplete_contacts\', true);update_contact_type_session(\''
@@ -550,18 +550,20 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		//Path to actual script
     $path_to_script = $_SESSION['config']['businessappurl']
 		."index.php?display=true&dir=indexing_searching&page=contact_check&coll_id=".$collId;
+    $path_check_date_link = $_SESSION['config']['businessappurl']
+        .'index.php?display=true&dir=indexing_searching&page=documents_list_mlb_search_adv&mode=popup&action_form=show_res_id&modulename=attachments&init_search&nodetails&fromContactCheck&fromValidateMail';
     //check functions on load page
 /*        if (condition) {
             $frm_str.="<script>check_date_exp('".$path_to_script."');</script>";
         }*/
 
-                   $frm_str .='<td class="indexing_field"><input type="text" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');" onblur="if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\');}"';
+                   $frm_str .='<td class="indexing_field"><input type="text" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');" onblur="if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\',\''.$path_check_date_link.'\');}"';
                     if(isset($data['contact']) && !empty($data['contact']))
                    {
                       $frm_str .= ' value="'.$data['contact'].'" ';
                     }
                    $frm_str .=  ' /><div id="show_contacts" class="autocomplete autocompleteIndex"></div></td>';
-                   $frm_str .= '<td><span class="red_asterisk" id="contact_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+                   $frm_str .= '<td><span class="red_asterisk" id="contact_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
                      $frm_str .= '</tr>';
 		   $frm_str .= '<tr style="display:none" id="contact_check"><td></td></tr>';
                     $frm_str .= '<input type="hidden" id="contactid" ';
@@ -604,7 +606,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . '\'blind\', {delay:0.2});return false;" '
 							. 'style="visibility:hidden;" ><i class="fa fa-book fa-2x" title="' 
                             . _CONTACT_CARD . '"></i></a>&nbsp;</td>';
-					$frm_str .= '<td><input type="text" name="email" id="email" value="" onblur="clear_error(\'frm_error_' . $actionId . '\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
+					$frm_str .= '<td><input type="text" name="email" id="email" onblur="clear_error(\'frm_error_' . $id_action . '\');display_contact_card(\'visible\', \'multi_contact_card\');"/>';
 					$frm_str .= '<div id="multiContactList" class="autocomplete"></div>';
 					$frm_str .= '<script type="text/javascript">addMultiContacts(\'email\', \'multiContactList\', \''
 						.$_SESSION['config']['businessappurl']
@@ -612,13 +614,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					$frm_str .='<input type="button" name="add" value="&nbsp;'._ADD
 									.'&nbsp;" id="valid_multi_contact" class="button" onclick="updateMultiContacts(\''.$path_to_script
 									.'&mode=adress\', \'add\', document.getElementById(\'email\').value, '
-									.'\'to\', false, document.getElementById(\'addressid\').value, document.getElementById(\'contactid\').value);display_contact_card(\'hidden\', \'multi_contact_card\');" />&nbsp;';
+									.'\'to\', false, document.getElementById(\'addressid\').value, document.getElementById(\'contactid\').value);display_contact_card(\'hidden\', \'multi_contact_card\');" />';
 					$frm_str .= '</td>';
 					$frm_str .= '</tr>';
 					$frm_str .= '<tr id="show_multi_contact_tr">';
 					$frm_str .= '<td align="right" nowrap width="10%" id="to_multi_contact"><label>'
 						._SEND_TO_SHORT.'</label></td>';
-					$frm_str .= '<td>&nbsp;</td><td style="width:200px"><div name="to" id="to" style="width:200px;" class="multicontactInput">';
+					$frm_str .= '<td>&nbsp;</td><td style="width:200px"><div name="to" id="to" class="multicontactInput">';
 					
 					$nbContacts = count($_SESSION['adresses']['to']);
 
@@ -637,7 +639,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 					
 					$frm_str .= '</div></td>';
 					$frm_str .= '<td><span class="red_asterisk" id="contact_mandatory" '
-							. 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+							. 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
 					$frm_str .= '</tr>';	
 					
                 /*** Nature ***/
@@ -657,7 +659,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                 $frm_str .='>'.$_SESSION['mail_natures'][$nature].'</option>';
                             }
                         $frm_str .= '</select></td>';
-                        $frm_str .= '<td><span class="red_asterisk" id="nature_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+                        $frm_str .= '<td><span class="red_asterisk" id="nature_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
                   $frm_str .= '</tr>';
 
                 /*** Recommande ***/
@@ -681,7 +683,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                               $frm_str .= $data['subject'];
                             }
                          $frm_str .= '</textarea></td>';
-                         $frm_str .= '<td><span class="red_asterisk" id="subject_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+                         $frm_str .= '<td><span class="red_asterisk" id="subject_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
                   $frm_str .= '</tr>';
                 
                 /*** Entities : department + diffusion list ***/
@@ -711,7 +713,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                         }
                     }
                     $frm_str .='</select></td>';
-                    $frm_str .= '<td><span class="red_asterisk" id="destination_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+                    $frm_str .= '<td><span class="red_asterisk" id="destination_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
                     $frm_str .= '</tr>';
                     $frm_str .= '<tr id="diff_list_tr" style="display:none;">';
                     $frm_str .= '<td colspan="3">';
@@ -735,7 +737,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .=' checked="checked"';
             }
             $frm_str .='/>'._NO.'</td>';
-            $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_use_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+            $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_use_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
         $frm_str .= '</tr>';
         $frm_str .= '<tr id="process_limit_date_tr" style="display:'.$display_value.';">';
             $frm_str .='<td class="indexing_label"><label for="process_limit_date" class="form_title" >'._PROCESS_LIMIT_DATE.'</label></td>';
@@ -746,7 +748,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= $data['process_limit_date'];
             }
             $frm_str .='"/></td>';
-            $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+            $frm_str .= '<td><span class="red_asterisk" id="process_limit_date_mandatory" style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
         $frm_str .= '</tr>';
         
         /*** Status ***/
@@ -1037,7 +1039,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $coll_id,
             'all'
         );
-        $frm_str .= '<span onclick="hideOtherDiv(\'links_div\');new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
+        $frm_str .= '<span id="to_link" onclick="hideOtherDiv(\'links_div\');new Effect.toggle(\'links_div\', \'appear\', {delay:0.2});'
             . 'whatIsTheDivStatus(\'links_div\', \'divStatus_links_div\');return false;" '
             . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
         $frm_str .= '<span id="divStatus_links_div" style="color:#1C99C5;"><<</span><b>'
@@ -1317,7 +1319,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         ."index.php?display=true&dir=indexing_searching&page=contact_check&coll_id=".$collId;
         //check functions on load page
         if ($data['type_contact'] != 'internal') {
-            $frm_str.="check_date_exp('".$path_to_script."');";
+            $frm_str.="check_date_exp('".$path_to_script."','".$path_check_date_link."');";
         }
         $frm_str .='launch_autocompleter_contacts_v2(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'\', \'\', \'\', \'contactid\', \'addressid\');update_contact_type_session(\''
         .$_SESSION['config']['businessappurl']
@@ -1485,7 +1487,7 @@ function process_category_check($cat_id, $values)
         {
             if((empty($contact) && $contact_type != 'multi_external') || ($nb_multi_contact == 0 && $contact_type == 'multi_external'))
             {
-                $_SESSION['action_error'] = $_ENV['categories'][$cat_id]['contact']['label'].' '._IS_EMPTY;
+                $_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label'].' '._IS_EMPTY;
                 return false;
             }
         }

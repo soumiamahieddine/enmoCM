@@ -308,8 +308,8 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $frmStr .= '<table width="100%" align="center" border="0" >';
         $frmStr .= '<tr id="attachment_tr" style="display:' . $displayValue
                 . ';">';
-        $frmStr .= '<td><label for="attachment" class="form_title" >'
-                . _LINK_TO_DOC . ' </label></td>';
+        $frmStr .= '<td>'
+                . _LINK_TO_DOC . '</td>';
         $frmStr .= '<td>&nbsp;</td>';
         $frmStr .= '<td class="indexing_field"><input type="radio" '
                 . 'name="attachment" id="attach" value="true" '
@@ -321,7 +321,7 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
                 . ' /> '
                 . _NO . '</td>';
         $frmStr .= ' <td><span class="red_asterisk" id="attachment_mandatory" '
-                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+                . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span>&nbsp;</td>';
         $frmStr .= '</tr>';
 
         $frmStr .= '<tr id="attach_show" style="display:none;">';
@@ -587,6 +587,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     //Path to actual script
     $path_to_script = $_SESSION['config']['businessappurl']
 		."index.php?display=true&dir=indexing_searching&page=contact_check&coll_id=".$collId;
+    $path_check_date_link = $_SESSION['config']['businessappurl']
+        .'index.php?display=true&dir=indexing_searching&page=documents_list_mlb_search_adv&mode=popup&action_form=show_res_id&modulename=attachments&init_search&nodetails&fromContactCheck';
     $frmStr .= '<td><a href="#" id="contact_card" title="' . _CONTACT_CARD
             . '" onclick="document.getElementById(\'info_contact_iframe\').src=\'' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactid\').value+\'&addressid=\'+document.getElementById(\'addressid\').value;new Effect.toggle(\'info_contact_div\', '
@@ -595,7 +597,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . _CONTACT_CARD . '"></i></a>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><input type="text" name="contact" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');"'
             . 'id="contact" onblur="clear_error(\'frm_error_' . $actionId . '\');'
-            . 'display_contact_card(\'visible\');if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\');}" /><div id="show_contacts" '
+            . 'display_contact_card(\'visible\');if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\', \''.$path_check_date_link.'\');}" /><div id="show_contacts" '
             . 'class="autocomplete autocompleteIndex"></div></td>';
     $frmStr .= '<td><span class="red_asterisk" id="contact_mandatory" '
             . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';

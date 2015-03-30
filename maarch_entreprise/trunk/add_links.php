@@ -204,7 +204,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
                     $Links .= '<input ';
                       $Links .= 'onclick="window.open(';
                         $Links .= '\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=indexing_searching&page='
-                            . $searchAdv . '&mode=popup&action_form=show_res_id&modulename=attachments&init_search&exclude='.$_SESSION['doc_id'].'&nodetails\', ';
+                            . $searchAdv . '&mode=popup&action_form=show_res_id&modulename=attachments&init_search&exclude='.$_SESSION['doc_id'].'&nodetails&fromValidateMail\', ';
                         $Links .= '\'search_doc_for_attachment\', ';
                         $Links .= '\'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1100,height=775\'';
                         $Links .= ');"';
