@@ -348,7 +348,7 @@ while ($res=$conn->fetch_object())
 {
     array_push($arr_tmp, array('VALUE' => $res->type_id, 'LABEL' => $conn->show_string($res->description)));
 }
-$arr_tmp2 = array('label' => _DOCTYPES, 'type' => 'select_multiple', 'param' => array('field_label' => _DOCTYPE,'label_title' => _CHOOSE_DOCTYPES_SEARCH_TITLE, 'id' => 'doctypes', 'options' => $arr_tmp));
+$arr_tmp2 = array('label' => _DOCTYPES_MAIL, 'type' => 'select_multiple', 'param' => array('field_label' => _DOCTYPES_MAIL,'label_title' => _CHOOSE_DOCTYPES_MAIL_SEARCH_TITLE, 'id' => 'doctypes', 'options' => $arr_tmp));
 $param['doctype'] = $arr_tmp2;
 
 //category

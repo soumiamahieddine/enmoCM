@@ -123,6 +123,7 @@ if (!defined('_PHONE_NUMBER'))    define( '_PHONE_NUMBER', 'Num&eacute;ro de t&e
 if (!defined('_MAIL'))    define( '_MAIL', 'Courriel');
 if (!defined('_EMAIL')) define( '_EMAIL', 'Courriel');
 if (!defined('_DOCTYPE'))    define( '_DOCTYPE', 'Type de document');
+if (!defined('_DOCTYPES_MAIL'))    define( '_DOCTYPES_MAIL', 'Type(s) de courrier');
 if (!defined('_TYPE'))    define( '_TYPE', 'Type');
 if (!defined('_WARNING_MESSAGE_DEL_TYPE'))
     define('_WARNING_MESSAGE_DEL_TYPE', 'Avertissement :<br> La suppression d&rsquo;un type de document entraine la r&eacute;affectation des documents &agrave un nouveau type.');
@@ -837,6 +838,7 @@ if (!defined('_ADD_PARAMETERS')) define( '_ADD_PARAMETERS', 'Ajouter des crit&eg
 if (!defined('_CHOOSE_PARAMETERS')) define( '_CHOOSE_PARAMETERS', 'Choisissez vos crit&egrave;res');
 if (!defined('_CHOOSE_ENTITES_SEARCH_TITLE')) define( '_CHOOSE_ENTITES_SEARCH_TITLE', 'Ajoutez le/les service(s) d&eacute;sir&eacute;(s) pour restreindre la recherche');
 if (!defined('_CHOOSE_DOCTYPES_SEARCH_TITLE')) define( '_CHOOSE_DOCTYPES_SEARCH_TITLE', 'Ajoutez le(s) type(s) de document d&eacute;sir&eacute;(s) pour restreindre la recherche');
+if (!defined('_CHOOSE_DOCTYPES_MAIL_SEARCH_TITLE')) define( '_CHOOSE_DOCTYPES_MAIL_SEARCH_TITLE', 'Ajoutez le(s) type(s) de courrier d&eacute;sir&eacute;(s) pour restreindre la recherche');
 if (!defined('_DESTINATION_SEARCH')) define( '_DESTINATION_SEARCH', 'Service(s) affect&eacute;(s)');
 if (!defined('_ADD_PARAMETERS_HELP')) define( '_ADD_PARAMETERS_HELP', 'Pour affiner le r&eacute;sultat, vous pouvez ajouter des crit&egrave;res &agrave; votre recherche... ');
 if (!defined('_MAIL_OBJECT_HELP')) define( '_MAIL_OBJECT_HELP', 'Saisissez les mots cl&eacute;s de l&rsquo;objet du courrier... ');
