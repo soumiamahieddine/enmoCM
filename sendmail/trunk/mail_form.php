@@ -270,7 +270,7 @@ if ($mode == 'add') {
     $content .= '<select name="templateMail" id="templateMail" style="width:200px" '
                 . 'onchange="addTemplateToEmail($(\'templateMail\').value, \''
                             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-                            . '&module=templates&page=templates_ajax_content_for_mails\');">';
+                            . '&module=templates&page=templates_ajax_content_for_mails&id=' . $_REQUEST['identifier'] . '\');">';
 
     $content .= '<option value="">' . _ADD_TEMPLATE_MAIL . '</option>';
     $db->connect();
