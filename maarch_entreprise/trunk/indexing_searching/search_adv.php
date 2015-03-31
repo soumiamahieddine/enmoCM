@@ -322,6 +322,10 @@ $param['chrono'] = $arr_tmp2;
 $arr_tmp2 = array('label' => _REFERENCE_MAIL, 'type' => 'input_text', 'param' => array('field_label' => _REFERENCE_MAIL, 'other' => $size));
 $param['identifier'] = $arr_tmp2;
 
+// description
+$arr_tmp2 = array('label' => _OTHERS_INFORMATIONS, 'type' => 'input_text', 'param' => array('field_label' => _OTHERS_INFORMATIONS, 'other' => $size));
+$param['description'] = $arr_tmp2;
+
 // Monitoring number
 $arr_tmp2 = array('label' => _MONITORING_NUMBER, 'type' => 'input_text', 'param' => array('field_label' => _MONITORING_NUMBER, 'other' => $size));
 $param['reference_number'] = $arr_tmp2;

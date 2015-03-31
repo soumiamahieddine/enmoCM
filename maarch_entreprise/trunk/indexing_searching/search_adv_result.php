@@ -188,6 +188,11 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= "'identifier' : ['".addslashes(trim($_REQUEST['identifier']))."'],";
                 $where_request .=" (lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['identifier'])."%') ) and ";
             }
+            // DESCRIPTION
+            elseif ($tab_id_fields[$j] == 'description' && !empty($_REQUEST['description'])) {
+                $json_txt .= "'description' : ['".addslashes(trim($_REQUEST['description']))."'],";
+                $where_request .=" (lower(description) LIKE lower('%".$func->protect_string_db($_REQUEST['description'])."%') ) and ";
+            }
             // REFERENCE NUMBER
             elseif ($tab_id_fields[$j] == 'reference_number' && !empty($_REQUEST['reference_number'])) {
                 $json_txt .= "'reference_number' : ['".addslashes(trim($_REQUEST['reference_number']))."'],";
