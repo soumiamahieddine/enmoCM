@@ -183,6 +183,16 @@ if (count($_REQUEST['meta']) > 0) {
                 $s_process_notes = $func->wash($_REQUEST['process_notes'], "no", _PROCESS_NOTES,"no");
                 $where_request .= " (lower(process_notes) LIKE lower('%".$func->protect_string_db($s_process_notes)."%') ) and ";
             }
+            // IDENTIFIER
+            elseif ($tab_id_fields[$j] == 'identifier' && !empty($_REQUEST['identifier'])) {
+                $json_txt .= "'identifier' : ['".addslashes(trim($_REQUEST['identifier']))."'],";
+                $where_request .=" (lower(identifier) LIKE lower('%".$func->protect_string_db($_REQUEST['identifier'])."%') ) and ";
+            }
+            // REFERENCE NUMBER
+            elseif ($tab_id_fields[$j] == 'reference_number' && !empty($_REQUEST['reference_number'])) {
+                $json_txt .= "'reference_number' : ['".addslashes(trim($_REQUEST['reference_number']))."'],";
+                $where_request .=" (lower(reference_number) LIKE lower('%".$func->protect_string_db($_REQUEST['reference_number'])."%') ) and ";
+            }
             // NOTES
             elseif ($tab_id_fields[$j] == 'doc_notes' && !empty($_REQUEST['doc_notes']))
             {

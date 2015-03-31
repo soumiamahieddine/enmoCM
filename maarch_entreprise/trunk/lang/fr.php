@@ -1742,8 +1742,8 @@ if (!defined('_DOC_NOT_CLOSED')) define('_DOC_NOT_CLOSED', 'Ce courrier n\'est p
 if (!defined('_SECURITY_MESSAGE')) define('_SECURITY_MESSAGE', 'Message de s&eacute;curit&eacute;');
 if (!defined('_SECURITY_MESSAGE_DETAILS')) define('_SECURITY_MESSAGE_DETAILS', 'Requ&ecirc;te de type XSS non permise');
 
-if (!defined('_CHOOSE_ENTITY_SUBENTITIES'))
-    define('_CHOOSE_ENTITY_SUBENTITIES', 'Choisissez une entit&eacute; (+ sous-entit&eacute;(s))');
+if (!defined('_CHOOSE_ENTITY_SUBENTITIES')) define('_CHOOSE_ENTITY_SUBENTITIES', 'Choisissez une entit&eacute; (+ sous-entit&eacute;(s))');
 
-if(!defined('_TAG_ADMIN'))
-	define('_TAG_ADMIN', 'Administration des mots cl&eacute;s');
+if(!defined('_TAG_ADMIN')) define('_TAG_ADMIN', 'Administration des mots cl&eacute;s');
+
+if(!defined('_REFERENCE_MAIL')) define( '_REFERENCE_MAIL', 'R&eacute;f&eacute;rence courrier exp&eacute;diteur');

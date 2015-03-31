@@ -318,6 +318,14 @@ $param['process_notes'] = $arr_tmp2;
 $arr_tmp2 = array('label' => _CHRONO_NUMBER, 'type' => 'input_text', 'param' => array('field_label' => _CHRONO_NUMBER, 'other' => $size));
 $param['chrono'] = $arr_tmp2;
 
+// identifier
+$arr_tmp2 = array('label' => _REFERENCE_MAIL, 'type' => 'input_text', 'param' => array('field_label' => _REFERENCE_MAIL, 'other' => $size));
+$param['identifier'] = $arr_tmp2;
+
+// Monitoring number
+$arr_tmp2 = array('label' => _MONITORING_NUMBER, 'type' => 'input_text', 'param' => array('field_label' => _MONITORING_NUMBER, 'other' => $size));
+$param['reference_number'] = $arr_tmp2;
+
 //status
 $status = $status_obj->get_searchable_status();
 $arr_tmp = array();
