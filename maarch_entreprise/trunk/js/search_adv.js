@@ -358,7 +358,8 @@ function delete_criteria(id_elem, id_form)
     label.style.display = '';
 //  label.disabled = !label.disabled;
     tmp = (id_elem.indexOf('option_') >= 0) ? id_elem.substring(7, id_elem.length) : id_elem;
-    form.removeChild($('search_parameters_'+tmp));
+   //form.removeChild($('search_parameters_'+tmp));
+    $('search_parameters_'+tmp).parentElement.removeChild( $('search_parameters_'+tmp));
 }
 
 /**
