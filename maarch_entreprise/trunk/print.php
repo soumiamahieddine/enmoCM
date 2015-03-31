@@ -30,7 +30,7 @@ if (!empty($_SESSION['error'])) {
 		header('Content-Type: application/pdf');
 		header('Content-Disposition: inline; filename=print_maarch.pdf;');
 		//header('Content-Transfer-Encoding: binary');
-		readfile($_SESSION['config']['businessappurl'] . 'tmp/' . $_SESSION['print']['filename']);
+		readfile($_SESSION['config']['tmppath'] . $_SESSION['print']['filename']);
 		unlink($_SESSION['config']['tmppath'] . $_SESSION['print']['filename']);
 	} else {
 		echo _NO_DOC_OR_NO_RIGHTS;

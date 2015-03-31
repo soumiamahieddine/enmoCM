@@ -19,7 +19,7 @@ if (!empty($_SESSION['error'])) {
     header('Content-Type: application/vnd.ms-excel');
     header('Content-Disposition: inline; filename=export_maarch.csv;');
     //header('Content-Transfer-Encoding: binary');
-    readfile($_SESSION['config']['businessappurl'] . 'tmp/' . $_SESSION['export']['filename']);
+    readfile($_SESSION['config']['tmppath'] . $_SESSION['export']['filename']);
     unlink($_SESSION['config']['tmppath'] . $_SESSION['export']['filename']);
     exit;
 }
