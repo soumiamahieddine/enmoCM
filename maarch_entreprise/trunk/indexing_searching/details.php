@@ -389,8 +389,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             $filesize = $res->filesize;
             $creation_date = $db->format_date_db($res->creation_date, false);
             $chrono_number = $res->alt_identifier;
-            //$initiator = $res->initiator;
-            $initiator = $res->entity_label;
+            $initiator = $res->initiator;
             $fingerprint = $res->fingerprint;
             $work_batch = $res->work_batch;
             $page_count = $res->page_count;
@@ -832,7 +831,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <?php  echo _INITIATOR; ?> :
                             </td>
                             <td>
-                                <textarea rows="2" style="width: 200px; max-width: 200px;" class="readonly" readonly="readonly"><?php  echo $initiator; ?></textarea>
+                                <textarea rows="2" style="width: 200px; max-width: 200px;" class="readonly" readonly="readonly"><?php  echo $entityLabel; ?></textarea>
                             </td>
                             <!-- typist -->
                             <th align="left" class="picto">
