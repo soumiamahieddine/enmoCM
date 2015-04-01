@@ -389,7 +389,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             $filesize = $res->filesize;
             $creation_date = $db->format_date_db($res->creation_date, false);
             $chrono_number = $res->alt_identifier;
-            $initiator = $res->initiator;
+            //$initiator = $res->initiator;
+            $initiator = $res->entity_label;
             $fingerprint = $res->fingerprint;
             $work_batch = $res->work_batch;
             $page_count = $res->page_count;
