@@ -118,19 +118,19 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'lastname' && (!empty($_REQUEST['lastname']) ||$_REQUEST['lastname'] <> '') )
             {
                 $json_txt .= " 'lastname' : ['".addslashes(trim($_REQUEST['lastname']))."'],";
-                $where_request .= " lower(lastname) like lower('%".$func->protect_string_db($_REQUEST['lastname'])."%') and ";
+                $where_request .= " lower(contact_lastname) like lower('%".$func->protect_string_db($_REQUEST['lastname'])."%') and ";
             }
             // FIRSTNAME
             elseif ($tab_id_fields[$j] == 'firstname' && (!empty($_REQUEST['firstname']) ||$_REQUEST['firstname'] <> '') )
             {
                 $json_txt .= " 'firstname' : ['".addslashes(trim($_REQUEST['firstname']))."'],";
-                $where_request .= " lower(firstname) like lower('%".$func->protect_string_db($_REQUEST['firstname'])."%') and ";
+                $where_request .= " lower(contact_firstname) like lower('%".$func->protect_string_db($_REQUEST['firstname'])."%') and ";
             }
             // CREATED BY
             elseif ($tab_id_fields[$j] == 'created_by' && !empty($_REQUEST['created_by_id']))
             {
                 $json_txt .= " 'created_by' : ['".addslashes(trim($_REQUEST['created_by']))."'], 'created_by_id' : ['".addslashes(trim($_REQUEST['created_by_id']))."'],";
-                $where_request .= " user_id = '".$func->protect_string_db($_REQUEST['created_by_id'])."' and ";
+                $where_request .= " contact_user_id = '".$func->protect_string_db($_REQUEST['created_by_id'])."' and ";
             }
             // CONTACTS PURPOSE
             elseif ($tab_id_fields[$j] == 'contact_purpose' && !empty($_REQUEST['contact_purposes_id']))
