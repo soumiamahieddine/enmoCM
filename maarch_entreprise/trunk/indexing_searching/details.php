@@ -408,6 +408,14 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             $queryUser = "select firstname, lastname from users where user_id = '" . $typist ."'";
             $dbUser->query($queryUser);
             $resultUser = $dbUser->fetch_object();
+
+            $dbEntities = new dbquery();
+            $queryEntities = "select entity_label from entities where entity_id = '" . $initiator . "'";
+            $dbEntities->query($queryEntities);
+            $resultEntities = $dbEntities->fetch_object();
+            $entities = $resultEntities->entity_label;
+
+
             if ($resultUser->lastname <> '') {
                 $typistLabel = $resultUser->firstname . ' ' . $resultUser->lastname;
             } else {
@@ -831,7 +839,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 <?php  echo _INITIATOR; ?> :
                             </td>
                             <td>
-                                <textarea rows="2" style="width: 200px; max-width: 200px;" class="readonly" readonly="readonly"><?php  echo $entityLabel; ?></textarea>
+                                <textarea rows="2" style="width: 200px; max-width: 200px;" class="readonly" readonly="readonly"><?php  echo $entities; ?></textarea>
                             </td>
                             <!-- typist -->
                             <th align="left" class="picto">
