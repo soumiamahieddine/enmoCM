@@ -1749,3 +1749,5 @@ if(!defined('_TAG_ADMIN')) define('_TAG_ADMIN', 'Administration des mots cl&eacu
 if(!defined('_REFERENCE_MAIL')) define( '_REFERENCE_MAIL', 'R&eacute;f&eacute;rence courrier exp&eacute;diteur');
 
 if(!defined('_OTHERS_INFORMATIONS')) define( '_OTHERS_INFORMATIONS', 'Autres informations (signataires, consignes, etc...)');
+
+if(!defined('_ALL_HISTORY')) define( '_ALL_HISTORY', 'Historique complet');

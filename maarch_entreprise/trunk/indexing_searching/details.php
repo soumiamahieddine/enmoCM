@@ -1402,10 +1402,22 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 <dt><?php echo _DOC_HISTORY;?></dt>
                 <dd>
                     <!--<h2><?php echo _HISTORY;?></h2>-->
+                    <h2><?php echo _WF ;?></h2>
+                    <iframe src="<?php echo $_SESSION['config']['businessappurl'];
+                    ?>index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=<?php
+                    echo $s_id;?>&coll_id=<?php echo $coll_id;?>&load&size=full" name="workflow_history_document" width="100%" 
+                    height="550px" align="left" scrolling="yes" frameborder="0" id="workflow_history_document"></iframe>
+                    <br/> 
+                    <br/> 
+              
+                    <span style="cursor: pointer;" onmouseover="this.style.cursor='pointer';" onclick="new Effect.toggle('history_document', 'blind', {delay:0.2});whatIsTheDivStatus('history_document', 'divStatus_all_history_div');return false;">
+                        <span id="divStatus_all_history_div" style="color:#1C99C5;"><<</span>
+                        <b>&nbsp;<?php echo _ALL_HISTORY; ?></b>
+                    </span>
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&dir=indexing_searching&page=document_history&id=<?php
                     echo $s_id;?>&coll_id=<?php echo $coll_id;?>&load&size=full" name="history_document" width="100%" 
-                    height="590px" align="left" scrolling="yes" frameborder="0" id="history_document"></iframe>
+                    height="620px" align="left" scrolling="yes" frameborder="0" id="history_document" style="display:none;"></iframe>
                 </dd>
                 <?php
                     }
