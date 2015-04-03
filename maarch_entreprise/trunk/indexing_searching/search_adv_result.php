@@ -761,7 +761,7 @@ if (count($_REQUEST['meta']) > 0) {
                 // elseif ($contact_type == "contact")
                 // {
                     $addresses_id = $_REQUEST['addresses_id'];
-                    $where_request .= " address_id in (select address_id from view_contacts where lastname ilike '%".$addresses_id."%' or firstname ilike '%".$addresses_id."%' ) and ";
+                    $where_request .= " address_id in (select ca_id from view_contacts where lastname ilike '%".$addresses_id."%' or firstname ilike '%".$addresses_id."%' ) and ";
                 // }
             }
             // CONTACTS INTERNAL
