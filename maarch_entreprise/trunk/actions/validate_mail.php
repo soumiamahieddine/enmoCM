@@ -1078,13 +1078,26 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= '<div class="ref-unit">';
         $frm_str .= '<center><h2 onclick="new Effect.toggle(\'history_div\', \'blind\', {delay:0.2});';
         $frm_str .= 'whatIsTheDivStatus(\'history_div\', \'divStatus_history_div\');';
-        $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _HISTORY. '</h2></center>';
+        $frm_str .= 'return false;" onmouseover="this.style.cursor=\'pointer\';">' . _WF. '</h2></center>';
+        $frm_str .= '<iframe src="'
+            . $_SESSION['config']['businessappurl']
+            . 'index.php?display=true&dir=indexing_searching&page=document_workflow_history&id='
+            . $res_id . '&coll_id=' . $coll_id . '&load&size=medium" '
+            . 'name="hist_wf_doc_process" id="hist_wf_doc_process" width="100%" height="690px" align="center" '
+            . 'scrolling="auto" frameborder="0" style="height: 690px; max-height: 690px; overflow: scroll;"></iframe>';
+
+            $frm_str .= '<br/>';
+
+            $frm_str .= '<span style="cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'hist_doc_process\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'hist_doc_process\', \'divStatus_all_history_div\');return false;">'
+            . '<span id="divStatus_all_history_div" style="color:#1C99C5;"><<</span>'
+            . '<b>&nbsp;'. _ALL_HISTORY.'</b>'
+        . '</span>';
         $frm_str .= '<iframe src="'
             . $_SESSION['config']['businessappurl']
             . 'index.php?display=true&dir=indexing_searching&page=document_history&id='
             . $res_id . '&coll_id=' . $coll_id . '&load&size=medium" '
-            . 'name="hist_doc_process" width="100%" height="690px" align="center" '
-            . 'scrolling="auto" frameborder="0" id="hist_doc_process" style="height: 690px; max-height: 690px; overflow: scroll;"></iframe>';
+            . 'name="hist_doc_process" id="hist_doc_process" width="100%" height="690px" align="center" '
+            . 'scrolling="auto" frameborder="0" style="height: 690px; max-height: 690px; overflow: scroll;display:none;" ></iframe>';
         $frm_str .= '</div>';
         $frm_str .= '<hr />';
         $frm_str .= '</div>';
@@ -1750,6 +1763,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         $val_indexes[$indexes[$i]] =  get_value_fields($values_form, $indexes[$i]);
     }
     $query_res .=  $type->get_sql_update($type_id, $coll_id, $val_indexes);
+
+
 
 
 
