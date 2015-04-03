@@ -9,6 +9,10 @@
 		<label>_ENTITIES_JUST_BELOW</label>
 	</keyword>
 	<keyword>
+		<id>_ENTITIES_BELOW</id>
+		<label>_ENTITIES_BELOW</label>
+	</keyword>
+	<keyword>
 		<id>ENTITIES_JUST_UP</id>
 		<label>_ENTITIES_JUST_UP</label>
 	</keyword>
