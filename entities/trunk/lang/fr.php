@@ -154,6 +154,8 @@ if (!defined('_ALL_ENTITIES_BELOW'))
     define('_ALL_ENTITIES_BELOW', 'Inf&eacute;rieures &agrave; l&rsquo;entit&eacute; primaire');
 if (!defined('_ENTITIES_JUST_UP'))
     define('_ENTITIES_JUST_UP', 'Imm&eacute;diatement sup&eacute;rieures  &agrave; l&rsquo;entit&eacute; primaire');
+if (!defined('_ENTITIES_BELOW'))
+    define('_ENTITIES_BELOW', 'Inf&eacute;rieures &agrave toutes mes entit&eacute;s');
 if (!defined('_MY_ENTITIES'))
     define('_MY_ENTITIES', 'Toutes les entit&eacute;s de l&rsquo;utilisateur');
 if (!defined('_MY_PRIMARY_ENTITY'))
