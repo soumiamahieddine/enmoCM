@@ -888,8 +888,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         . $_SESSION['config']['businessappurl']
         . 'index.php?display=true&dir=indexing_searching&page=document_workflow_history&id='
         . $res_id . '&coll_id=' . $coll_id . '&load&size=medium" '
-        . 'name="hist_wf_doc_process" id="hist_wf_doc_process" width="100%" height="650px" align="center" '
-        . 'scrolling="auto" frameborder="0" style="height: 650px; max-height: 650px; overflow: scroll;"></iframe>';
+        . 'name="hist_wf_doc_process" id="hist_wf_doc_process" width="100%" height="500px" align="center" '
+        . 'scrolling="auto" frameborder="0" style="height: 500px; max-height: 500px; overflow: scroll;"></iframe>';
 
         $frm_str .= '<br/>';
 

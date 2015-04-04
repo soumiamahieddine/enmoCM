@@ -1406,7 +1406,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&dir=indexing_searching&page=document_workflow_history&id=<?php
                     echo $s_id;?>&coll_id=<?php echo $coll_id;?>&load&size=full" name="workflow_history_document" width="100%" 
-                    height="550px" align="left" scrolling="yes" frameborder="0" id="workflow_history_document"></iframe>
+                    height="530px" align="left" scrolling="yes" frameborder="0" id="workflow_history_document"></iframe>
                     <br/> 
                     <br/> 
               

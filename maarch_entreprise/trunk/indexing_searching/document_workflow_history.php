@@ -91,7 +91,7 @@ if (isset($_REQUEST['load'])) {
         $sizeText = "30";
         $css = "listing spec";
         $cutString = 200;
-        $linesToShow  = 15;
+        // $linesToShow  = 15;
     } else if (isset($_REQUEST['size']) 
         && ($_REQUEST['size'] == "medium")
     ) {
@@ -226,11 +226,9 @@ if (isset($_REQUEST['load'])) {
             $paramsTab['bool_bigPageTitle'] = false;                                    //Affichage du titre en grand
             $paramsTab['urlParameters'] = 'dir=indexing_searching&id='
                 .$id.'&display=true'.$parameters;                                       //Parametres d'url supplementaires 
-            $paramsTab['listHeight'] = '100%';                                         //Hauteur de la liste
-            // $paramsTab['bool_showSmallToolbar'] = true;                                 //Mini barre d'outils
-            $paramsTab['linesToShow'] = $linesToShow;                                             //Nombre de ligne a afficher
-            $paramsTab['divListId'] = 'divList_wf_history'; 
-            $paramsTab['formId'] = 'formList_wf_history'; 
+            $paramsTab['listHeight'] = '100%';                                          //Hauteur de la liste
+            // $paramsTab['bool_showSmallToolbar'] = true;                              //Mini barre d'outils
+            // $paramsTab['linesToShow'] = $linesToShow;                                //Nombre de ligne a afficher 
      
             //Output
             $status = 0;
