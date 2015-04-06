@@ -156,7 +156,7 @@ $list = new list_show();
 					$tab[$i][$j]["show"]=true;
 					$tab[$i][$j]["value"]=$tab[$i][$j]['value'];
 				}
-				if($tab[$i][$j][$value] == "firstname"){
+				if($tab[$i][$j][$value] == "contact_firstname"){
 					$tab[$i][$j]["label"]=_FIRSTNAME;
 					$tab[$i][$j]["size"]="20";
 					$tab[$i][$j]["label_align"]="left";
@@ -165,7 +165,7 @@ $list = new list_show();
 					$tab[$i][$j]["show"]=true;
 					$tab[$i][$j]["value"]=$tab[$i][$j]['value'];
 				}
-				if($tab[$i][$j][$value] == "lastname"){
+				if($tab[$i][$j][$value] == "contact_lastname"){
 					$tab[$i][$j]["label"]=_LASTNAME;
 					$tab[$i][$j]["size"]="20";
 					$tab[$i][$j]["label_align"]="left";
@@ -174,7 +174,7 @@ $list = new list_show();
 					$tab[$i][$j]["show"]=true;
 					$tab[$i][$j]["value"]=$tab[$i][$j]['value'];
 				}
-	            if($tab[$i][$j][$value]=="enabled")
+	            if($tab[$i][$j][$value]=="contact_enabled")
 	            {
 	            	if ($tab[$i][$j]['value'] == "Y") {
 	            		$tab[$i][$j]['value'] = _ENABLED;
@@ -188,7 +188,7 @@ $list = new list_show();
 	                $tab[$i][$j]["align"]="center";
 	                $tab[$i][$j]["valign"]="bottom";
 	                $tab[$i][$j]["show"]=true;
-	                $tab[$i][$j]["order"]= "enabled";
+	                $tab[$i][$j]["order"]= "contact_enabled";
 	            }
 			}
 		}

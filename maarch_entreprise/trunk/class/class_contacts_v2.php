@@ -138,13 +138,13 @@ class contacts_v2 extends dbquery
         $this->connect();
         $query = '';
         if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){
-            $query = "select contact_id, contact_type, society, firstname, lastname, enabled from ".$_SESSION['tablename']['contacts_v2']." 
-                where lower(firstname) = lower('".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])."')
-                  and lower(lastname) = lower('".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])."')";
+            $query = "SELECT contact_id, contact_type, society, contact_firstname, contact_lastname, contact_enabled FROM view_contacts 
+                WHERE lower(contact_firstname) = lower('".$this->protect_string_db($_SESSION['m_admin']['contact']['FIRSTNAME'])."')
+                  and lower(contact_lastname) = lower('".$this->protect_string_db($_SESSION['m_admin']['contact']['LASTNAME'])."')";
 
         } else if ($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){
-            $query = "select contact_id, contact_type, society, firstname, lastname, enabled from ".$_SESSION['tablename']['contacts_v2']." 
-                where lower(society) = lower('".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])."')";
+            $query = "SELECT contact_id, contact_type, society, contact_firstname, contact_lastname, contact_enabled FROM view_contacts 
+                WHERE lower(society) = lower('".$this->protect_string_db($_SESSION['m_admin']['contact']['SOCIETY'])."')";
 
         }
         if ($mode == 'up'){
@@ -682,6 +682,7 @@ class contacts_v2 extends dbquery
 
     public function chooseContact(){
         $this->connect();
+        $this->clearcontactinfos();
         ?>
         <h1><i class="fa fa-plus fa-2x"></i>
             <?php
