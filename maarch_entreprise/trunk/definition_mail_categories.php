@@ -1160,7 +1160,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     } else {
                         require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
                         $contact = new contacts_v2();
-                        $data[$arr[$i]]['show_value'] .= ': (' . $contact->get_label_contact($res->contact_purpose_id, $_SESSION['tablename']['contact_purposes']).') ';
+                        $data[$arr[$i]]['show_value'] .= '- ' . $contact->get_label_contact($res->contact_purpose_id, $_SESSION['tablename']['contact_purposes']).' : ';
                         if (!empty($res->lastname) || !empty($res->firstname)) {
                             $data[$arr[$i]]['show_value'] .= $res->lastname . ' ' . $res->firstname . ' ';
                         }
@@ -1217,18 +1217,15 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     $db2->query("select address_id from mlb_coll_ext where res_id = ".$res_id);
                     $resAddress = $db2->fetch_object();
                     $addressId = $resAddress->address_id;
-                    $db2->query('select is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_postal_code, address_town, lastname, firstname from view_contacts where contact_id = ' . $line-> $arr[$i] . ' and ca_id = ' . $addressId);
+                    $db2->query('select is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, contact_purpose_id, address_num, address_street, address_postal_code, address_town, lastname, firstname from view_contacts where contact_id = ' . $line-> $arr[$i] . ' and ca_id = ' . $addressId);
                     $res = $db2->fetch_object();
                     if ($res->is_corporate_person == 'Y') {
                         $data['contact'] = $res->society . ' ' ;
                         if (!empty ($res->society_short)) {
                             $data['contact'] .= '('.$res->society_short.') ';
                         }
-                        if (!empty($res->lastname) || !empty($res->firstname)) {
-                            $data['contact'] .= '- ' . $res->lastname . ' ' . $res->firstname . ' ';
-                        }
                     } else {
-                        $data['contact'] .= $res->contact_lastname . ' ' . $res->contact_firstname . ' ';
+                        $data['contact'] = $res->contact_lastname . ' ' . $res->contact_firstname . ' ';
                         if (!empty ($res->society)) {
                             $data['contact'] .= '(' .$res->society . ') ';
                         }                        
@@ -1236,13 +1233,21 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                     if ($res->is_private == 'Y') {
                         $data['contact'] .= '('._CONFIDENTIAL_ADDRESS.')';
                     } else {
-                        $data['contact'] .= $res->address_num .' ' . $res->address_street .' ' . $res->address_postal_code .' ' . strtoupper($res->address_town);                         
+                        require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
+                        $contact = new contacts_v2();
+                        $data['contact'] .= '- ' . $contact->get_label_contact($res->contact_purpose_id, $_SESSION['tablename']['contact_purposes']).' : ';
+                        if (!empty($res->lastname) || !empty($res->firstname)) {
+                            $data['contact'] .= $res->lastname . ' ' . $res->firstname . ' ';
+                        }
+                        if (!empty($res->address_num) || !empty($res->address_street) || !empty($res->address_town) || !empty($res->address_postal_code)) {
+                            $data['contact'] .= ', '.$res->address_num .' ' . $res->address_street .' ' . $res->address_postal_code .' ' . strtoupper($res->address_town);
+                        }         
                     }
-
                     $data['contactId'] = $line-> $arr[$i];
                     $data['addressId'] = $addressId;
                 }
                 unset ($data[$arr[$i]]);
+                
             } else if ($arr[$i] == 'is_multicontacts') {
                 if (!empty ($line-> $arr[$i])) {
                     $data['type_contact'] = 'multi_external';
