@@ -39,7 +39,8 @@ if ($objectType == 'templateStyle') {
             'res_id' => $_SESSION['cm']['resMaster'],
             'coll_id' => $_SESSION['cm']['collId'],
             'res_view' => $res_view,
-            'res_table' => $objectTable
+            'res_table' => $objectTable,
+            'res_contact_id' => $_SESSION['cm']['contact_id']
             );
         if ($objectType == 'attachmentFromTemplate' || $objectType == 'attachmentVersion') {
             $filePathOnTmp = $templateCtrl->merge($objectId, $params, 'file');
