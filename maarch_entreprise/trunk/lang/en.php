@@ -849,6 +849,7 @@ if (!defined('_REMOVE')) define('_REMOVE', 'Remove');
 if (!defined('_REMOVE_ACCESS')) define('_REMOVE_ACCESS', 'Remove access');
 if (!defined('_REOPEN_MAIL')) define('_REOPEN_MAIL', 'Reopen mail');
 if (!defined('_REOPEN_THIS_MAIL')) define('_REOPEN_THIS_MAIL', 'Reopen the mail');
+if (!defined('_MODIFICATION_FROM_THIS_MAIL')) define('_MODIFICATION_FROM_THIS_MAIL', 'Modification from the mail');
 if (!defined('_RESET')) define('_RESET', 'Reset');
 if (!defined('_RESSOURCES_COLLECTION')) define('_RESSOURCES_COLLECTION','Document collection');
 if (!defined('_RESULTS')) define('_RESULTS', 'Results');

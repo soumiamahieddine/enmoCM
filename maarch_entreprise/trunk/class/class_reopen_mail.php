@@ -21,6 +21,7 @@
 * @version 2.0
 */
 
+
 class ReopenMail extends dbquery
 {
 
@@ -76,6 +77,7 @@ class ReopenMail extends dbquery
             exit();
         } else {
             require_once 'core/class/class_security.php';
+
             $sec = new security();
             $ind_coll = $sec->get_ind_collection('letterbox_coll');
             $table = $_SESSION['collections'][$ind_coll]['table'];
@@ -106,7 +108,7 @@ class ReopenMail extends dbquery
             } else {
                 $resultRes = $this->fetch_object();
 
-                if ($resultRes->status <> "END" && $resultRes->status <> "CLO" && $resultRes->status <> "CLOS") {
+                if ($resultRes->status <> "END" && $resultRes->status <> "CLO" && $resultRes->status <> "CLOS" && $resultRes->status <> "VAL" && $resultRes->status <> "NEW" && $resultRes->status <> "DEL" && $resultRes->status <> "COU") {
                     $_SESSION['error'] = _DOC_NOT_CLOSED;
                     header(
                         'location: ' . $_SESSION['config']['businessappurl']
@@ -119,11 +121,11 @@ class ReopenMail extends dbquery
             }
             
             $this->query(
-                'update ' . $table . " set status = 'COU' where res_id = "
+                'update ' . $table . " set status = '".$_REQUEST['status_id']."' where res_id = "
                 . $resultRes->res_id
             );
             
-            $historyMsg = _REOPEN_THIS_MAIL . ' : ';
+            $historyMsg = _MODIFICATION_FROM_THIS_MAIL . ' : ';
             if ($resultRes->alt_identifier <> '') {
                 $historyMsg .= $resultRes->alt_identifier . ' (' . $resultRes->res_id . ')';
             } else {
@@ -157,6 +159,17 @@ class ReopenMail extends dbquery
     */
     public function formreopenmail()
     {
+        $db = new dbquery();
+        $db->connect();
+
+        $db->query(
+            "SELECT  id from status where is_system = 'Y' ");
+
+        $notesList = '';
+        if ($db->nb_result() < 1) {
+            $notesList = 'no contact or error query';
+        }
+
         ?>
         <h1><i class="fa fa-envelope-square fa-2x"></i> <?php echo _REOPEN_MAIL;?></h1>
 
@@ -172,6 +185,14 @@ class ReopenMail extends dbquery
             <?php echo _ENTER_DOC_ID;?> :  
                 <input type="text" name="id" id="id" value="<?php if(isset($_SESSION['m_admin']['reopen_mail']['ID'])){ echo $_SESSION['m_admin']['reopen_mail']['ID'];}?>" />
           </p>
+          <?php echo _CHOOSE_STATUS;?> : 
+                                        <SELECT NAME='status_id'>
+                                        <?php 
+                                        while ( $line = $db->fetch_object()) {
+                                            echo "<OPTION VALUE='".$line->id."'>".$line->id."</OPTION>";
+                                        }
+                                        ?>
+                                        </SELECT>
              <br/>
 
            <p >(<?php echo _TO_KNOW_ID;?>) </p>
