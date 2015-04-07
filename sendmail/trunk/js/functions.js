@@ -41,7 +41,7 @@ function addTemplateToEmail(templateMails, path){
     });
 }
  
-function showEmailForm(path, width, height) {
+function showEmailForm(path, width, height, iframe_container_id) {
     
     if(typeof(width)==='undefined'){
         var width = '820px';
@@ -50,7 +50,10 @@ function showEmailForm(path, width, height) {
     if(typeof(height)==='undefined'){
         var height = '545px';
     }  
-    
+	
+    if(typeof(iframe_container_id)==='undefined'){
+        var iframe_container_id = '';
+    }  
     new Ajax.Request(path,
     {
         method:'post',
@@ -60,9 +63,10 @@ function showEmailForm(path, width, height) {
             eval("response = "+answer.responseText);
            
             if(response.status == 0){
-             
+				console.log('Height = '+height);
+				console.log('Width = '+width);
                 var modal_content = convertToTextVisibleNewLine(response.content);
-                createModal(modal_content, 'form_email', height, width); 
+                createModal(modal_content, 'form_email', height, width,'',iframe_container_id); 
             } else {
                 window.top.$('main_error').innerHTML = response.error;
             }
