@@ -34,6 +34,8 @@ if (
                     echo $_REQUEST['objectTable'];
                     ?>&resMaster=<?php
                     echo $_REQUEST['resMaster'];
+                    ?>&contactId=<?php
+                    echo $_REQUEST['contactId'];
                     ?>&custom_override_id=<?php 
                     echo $_SESSION['custom_override_id'];
                     ?>');

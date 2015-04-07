@@ -85,6 +85,13 @@ if (isset($_REQUEST['objectId'])) {
 } else {
     $objectId = '';
 }
+
+if (isset($_REQUEST['contactId'])) {
+    $_SESSION['cm']['contact_id'] = $_REQUEST['contactId'];
+} else {
+    $contactId = '';
+}
+//$_SESSION['cm']['contact_id'] ='200';
 if ($_REQUEST['resMaster'] <> '') {
     $_SESSION['cm']['resMaster'] = $_REQUEST['resMaster'];
     $reservationObjectId = $_SESSION['cm']['resMaster'];
