@@ -180,4 +180,16 @@ public class fileManager {
         );
         return proc;
     }
+    
+    public Process launchAppBis(final String pathToFileToLaunch, final String fileToLaunch) throws PrivilegedActionException {
+        Process proc = (Process) AccessController.doPrivileged(
+            new PrivilegedExceptionAction() {
+                public Object run() throws IOException {
+                    return Runtime.getRuntime().exec("cmd /C start /WAIT \"\" \"" + pathToFileToLaunch + fileToLaunch + "\"");
+                }
+            }
+        );
+        return proc;
+    }
+    
 }
