@@ -10,6 +10,18 @@ $core_tools->load_lang();
 $db = new dbquery();
 $db->connect();
 
+if (
+    file_exists(
+        $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+        . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'modules'
+        . DIRECTORY_SEPARATOR . 'content_management' . DIRECTORY_SEPARATOR . 'applet_launcher.php'
+    )
+) {
+    $path = 'custom/'. $_SESSION['custom_override_id'] .'/modules/content_management/applet_launcher.php';
+} else {
+    $path = 'modules/content_management/applet_launcher.php';
+}
+
 if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
     $id = $_REQUEST['id'];
     $_SESSION['cm']['collId'] = $_REQUEST['collId'];
@@ -41,8 +53,8 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
                         <div class="error" id="divError" name="divError"></div>
                         <script language="javascript">
                             loadApplet('<?php 
-                                echo $_SESSION['config']['coreurl'];
-                                ?>modules/content_management/applet_launcher.php?objectType=attachment&objectId=<?php 
+								echo $_SESSION['config']['coreurl'] .''.$path;
+								?>?objectType=attachment&objectId=<?php 
                                 echo $id;
                                 ?>&objectTable=<?php 
                                 echo RES_ATTACHMENTS_TABLE;
