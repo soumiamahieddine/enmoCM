@@ -25,6 +25,7 @@ $core->load_lang();
 $sec = new security();
 $func = new functions();
 $req = new request();
+$req2 = new request();
 $docserverControler = new docservers_controler();
 
 $req->connect();
@@ -748,6 +749,7 @@ if (isset($_REQUEST['id'])) {
     unset($_SESSION['upfile']);
 }
 
+
 if ($data_attachment->dest_contact_id <> "") {
     $req->connect();
     $req->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
@@ -783,7 +785,56 @@ if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id 
     } else {
         $data_contact .= $res->address_num .' ' . $res->address_street .' ' . strtoupper($res->address_town);                         
     }
+//si multicontact
+}else{
+    $req->query("SELECT cr.address_id, c.contact_id, c.is_corporate_person, c.society, c.society_short, c.firstname, c.lastname,ca.is_private,ca.address_street, ca.address_num, ca.address_town FROM contacts_res cr, contacts_v2 c, contact_addresses ca WHERE cr.res_id = ".$_SESSION['doc_id']." and c.contact_id = cast(cr.contact_id as integer) and ca.contact_id=c.contact_id and ca.id=cr.address_id");
+    $i=0;
+    while($data_attachment = $req->fetch_object()){
+            $format_contact='';
+            $req2->connect();
+            $req2->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
+                            FROM view_contacts 
+                            WHERE contact_id = ' . $data_attachment->contact_id . ' and ca_id = ' . $data_attachment->address_id);
+    
+            $res = $req2->fetch_object();
+            if ($res->is_corporate_person == 'Y') {
+                $format_contact = $res->society;
+                if (!empty ($res->society_short)) {
+                    $format_contact .= ' ('.$res->society_short.')';
+                }
+                if (!empty($res->lastname) || !empty($res->firstname)) {
+                    $format_contact .= ' - ' . $res->lastname . ' ' . $res->firstname;
+                }
+                $format_contact .= ', ';
+            } else {
+                $format_contact .= $res->contact_lastname . ' ' . $res->contact_firstname;
+                if (!empty ($res->society)) {
+                    $format_contact .= ' (' .$res->society . ')';
+                }
+                $format_contact .= ', ';
+            }
+            if ($res->is_private == 'Y') {
+                $format_contact .= '('._CONFIDENTIAL_ADDRESS.')';
+            } else {
+                $format_contact .= $res->address_num .' ' . $res->address_street .' ' . strtoupper($res->address_town);                         
+            }
+        $contacts[] = array(
+            'contact_id' => $data_attachment->contact_id,
+            'firstname' => $data_attachment->firstname,
+            'lastname' => $data_attachment->lastname,
+            'society' => $data_attachment->society,
+            'address_id' => $data_attachment->address_id,
+            'format_contact' => $format_contact
+        );
+
+        if($i==0){
+            $data_contact=$format_contact; 
+            $data_attachment->exp_contact_id=$data_attachment->contact_id;
+        }
+        $i++;
+    } 
 }
+
 
 //$content .= '<div class="block" style="width:2000px">';
     $content .= '<div class="error" >' . $_SESSION['error'];
@@ -800,7 +851,23 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
     } else {
         $title = _ATTACH_ANSWER;        
     }
-    $content .= '<h2>&nbsp;' . $title . '</h2>'; 
+
+    $content .= '<h2>&nbsp;' . $title;
+
+    //multicontact
+    if (!empty($contacts)) {
+        $content .= ' pour le contact : <select style="background-color: #FFF;border: 1px solid #999;color: #666;text-align: left;" id="selectContactIdRes" onchange="loadSelectedContact()">';
+
+    foreach ($contacts as $key => $value) {
+        $content .= '<option value="'.$value['contact_id'].'#'.$value['address_id'].'#'.$value['format_contact'].'">'.$value['format_contact'].'</option>';
+        //$content .= '<input type="hidden" id="format_list_contact_'.$value['contact_id'].'_res" value="'.$value['format_contact'].'"/>';
+    } 
+    $content .= '</select>';
+    $content .= '<script>$("contactidAttach").value='.$value['contact_id'].';$("addressidAttach").value='.$value['address_id'].';launch_autocompleter2_contacts_v2("'. $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts", "contact_attach", "show_contacts_attach", "", "contactidAttach", "addressidAttach")</script>';
+    }
+    
+    $content .= '</h2>';
+    
 
     $content .= '<form enctype="multipart/form-data" method="post" name="formAttachment" id="formAttachment" action="#" class="forms" style="width:30%;float:left;margin-left:-5px;background-color:#deedf3">';
     $content .= '<hr style="width:85%;margin-left:0px">';
@@ -952,7 +1019,7 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
                                     .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
             } else {
                 $content .= '" name="edit" id="edit" style="display:none" class="button" '
-                                .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&objectTable='. $objectTable .'&resMaster='.$_SESSION['doc_id']
+                                .'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&resMaster='.$_SESSION['doc_id']
                                 .'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';            
             }
 

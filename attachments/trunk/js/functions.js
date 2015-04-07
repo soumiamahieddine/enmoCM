@@ -137,6 +137,15 @@ var check = $('final').value;
     });
 }
 
+function loadSelectedContact() {
+    ContactAndAddress = $('selectContactIdRes').value;
+    value = ContactAndAddress.split("#");  
+    $('contactidAttach').value=value[0];
+    $('addressidAttach').value=value[1];
+    $('contact_attach').value=value[2];
+    $('contact_attach').focus();
+}
+
 function createModalinAttachmentList(txt, id_mod, height, width, mode_frm){
     if(height == undefined || height=='') {
         height = '100px';
