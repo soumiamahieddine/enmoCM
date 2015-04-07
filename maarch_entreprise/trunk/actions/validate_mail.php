@@ -557,7 +557,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str.="<script>check_date_exp('".$path_to_script."');</script>";
         }*/
 
-                   $frm_str .='<td class="indexing_field"><input type="text" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');" onblur="if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\',\''.$path_check_date_link.'\');}"';
+                   $frm_str .='<td class="indexing_field"><input type="text" onkeyup="erase_contact_external_id(\'contact\', \'contactid\');erase_contact_external_id(\'contact\', \'addressid\');" name="contact" id="contact" onchange="clear_error(\'frm_error_'.$id_action.'\');display_contact_card(\'visible\');" onblur="display_contact_card(\'visible\');if(document.getElementById(\'type_contact_external\').checked == true){check_date_exp(\''.$path_to_script.'\',\''.$path_check_date_link.'\');}"';
                     if(isset($data['contact']) && !empty($data['contact']))
                    {
                       $frm_str .= ' value="'.$data['contact'].'" ';
