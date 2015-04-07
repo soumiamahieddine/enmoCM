@@ -295,14 +295,21 @@ public class MaarchCM extends JApplet {
             Process procVbs = fM.launchApp("cmd /c wscript //B " + vbsPath);
             procVbs.waitFor();*/
             
-            this.logger.log("LAUNCH THE EDITOR !", Level.INFO);
-            final String exec = "\""+this.appPath+"\"";
-            //this.logger.log("EXEC PATH : " + exec, Level.INFO);
-            this.logger.log("EXEC PATH : " + this.userLocalDirTmp + fileToEdit, Level.INFO);
-            //Process proc = fM.launchApp(exec);
-            this.logger.log("cmd /C start /WAIT \"\" \"" + this.userLocalDirTmp + fileToEdit + "\"", Level.INFO);
-            Process proc = fM.launchAppBis(this.userLocalDirTmp, fileToEdit);
+            final String exec;
+            Process proc;
             
+            this.logger.log("LAUNCH THE EDITOR !", Level.INFO);
+            if (isUnix) {
+                exec = this.appPath;
+                proc = fM.launchApp(exec);
+            }else{
+                exec = "\""+this.appPath+"\"";
+                //this.logger.log("EXEC PATH : " + exec, Level.INFO);
+                this.logger.log("EXEC PATH : " + this.userLocalDirTmp + fileToEdit, Level.INFO);
+                //Process proc = fM.launchApp(exec);
+                this.logger.log("cmd /C start /WAIT \"\" \"" + this.userLocalDirTmp + fileToEdit + "\"", Level.INFO);
+                proc = fM.launchAppBis(this.userLocalDirTmp, fileToEdit);
+            }
 
             proc.waitFor();
             
