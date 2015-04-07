@@ -892,8 +892,9 @@ function displayModal(url, id_mod, height, width, mode_frm )
  * @param height String Modal Height in px
  * @param width String Modal width in px
  * @param mode_frm String Modal mode : fullscreen or ''
+ * @param iframe_container_id Iframe container if function is called in a frame : id_frame or ''
  */
-function createModal(txt, id_mod, height, width, mode_frm){
+function createModal(txt, id_mod, height, width, mode_frm, iframe_container_id){
     if(height == undefined || height=='')
     {
         height = '100px';
@@ -901,6 +902,10 @@ function createModal(txt, id_mod, height, width, mode_frm){
     if(width == undefined || width=='')
     {
         width = '400px';
+    }
+	if(iframe_container_id == undefined || iframe_container_id=='')
+    {
+        iframe_container_id = '';
     }
     if( mode_frm == 'fullscreen')
     {
@@ -945,8 +950,16 @@ function createModal(txt, id_mod, height, width, mode_frm){
         var fenetre = new Element('div', {'id' :id_mod,'class' : 'modal', 'style' :'top:0px;left:0px;'+'width:'+width+';height:'+height+";z-index:"+get_z_indexes()['modal']+";margin-top:0px;margin-left:0px;position:absolute;" });
     }
 
-    Element.insert(document.body,layer);
-    Element.insert(document.body,fenetre);
+    if (iframe_container_id != ''){
+		var iframe_container = document.getElementById(iframe_container_id);
+		Element.insert(iframe_container.contentWindow.document.body,layer);
+		Element.insert(iframe_container.contentWindow.document.body,fenetre);
+	}
+	else {
+		
+		Element.insert(document.body,layer);
+		Element.insert(document.body,fenetre);
+	}
 
     if( mode_frm == 'fullscreen')
     {
