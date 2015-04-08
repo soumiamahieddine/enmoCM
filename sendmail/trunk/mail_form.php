@@ -528,6 +528,23 @@ if ($mode == 'add') {
             $content .= '</div>';
             $content .='<hr />';
 
+            $content .= '<tr>';
+            $content .= '<td><label style="padding-right:10px">' . _Label_ADD_TEMPLATE_MAIL . '</label></td>';
+            $content .= '<select name="templateMail" id="templateMail" style="width:200px" '
+                        . 'onchange="addTemplateToEmail($(\'templateMail\').value, \''
+                                    . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+                                    . '&module=templates&page=templates_ajax_content_for_mails&id=' . $_REQUEST['identifier'] . '\');">';
+
+            $content .= '<option value="">' . _ADD_TEMPLATE_MAIL . '</option>';
+            $db->connect();
+            $db->query("select template_id, template_label, template_content from templates where template_target = 'sendmail'");
+            while ( $result=$db->fetch_object()) {
+                $content .= "<option value='" . $result->template_id ."'>" . $result->template_label . "</option>";
+            }
+            $content .='</select>';
+            $content .= '</tr></br></br>';
+
+
             //Body
             if ($emailArray['isHtml'] == 'Y') {
                 $displayRaw = 'none';

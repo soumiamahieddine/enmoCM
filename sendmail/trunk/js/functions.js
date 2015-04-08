@@ -34,9 +34,13 @@ function addTemplateToEmail(templateMails, path){
                 //var strContentReplace = strContent.replace(reg, '\n') + '<p></p>';
                 var strContentReplace = strContent.replace(/\\n/g, '<p>') + '<p><p>';
                 tinyMCE.execCommand('mceInsertContent',false,strContentReplace); 
-            } else {
+            } 
+
+            /*
+            else {
                 window.top.$('main_error').innerHTML = response.error;
             }
+            */
         }
     });
 }
