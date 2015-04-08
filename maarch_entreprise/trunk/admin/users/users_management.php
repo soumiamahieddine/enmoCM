@@ -54,7 +54,7 @@ elseif($mode == "up" || $mode == "add")
     else
     {?>
         <form  id="frmuser" class="block" method="post" action="<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&amp;admin=users&amp;page=users_management_controler&amp;mode=<?php echo $mode;?>" class="forms addforms" style="width:55%;height:330px;">
-            <div class="content" style="width:330px;margin:auto;">
+            <div class="content" style="width:400px;margin:auto;">
             <input type="hidden" name="display" value="true" />
             <input type="hidden" name="admin" value="users" />
             <input type="hidden" name="page" value="users_management_controler" />
