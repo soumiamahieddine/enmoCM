@@ -240,6 +240,7 @@ class entities extends dbquery
             $where = str_replace("@my_primary_entity", $primEntity, $where);
             //echo "<br>".$where."<br>";
         }
+
         $total = preg_match_all(
         	"|@subentities\[('[^\]]*')\]|", $where, $tmpArr, PREG_PATTERN_ORDER
         );
@@ -765,6 +766,8 @@ class entities extends dbquery
             return '@all_entities';
         } else if ($keyword == 'ENTITIES_JUST_BELOW') {
             return '@immediate_children[@my_primary_entity]';
+        } else if ($keyword == 'ENTITIES_BELOW') {
+            return '@subentities[@my_entities]';
         } else if ($keyword == 'ALL_ENTITIES_BELOW') {
             return '@subentities[@my_primary_entity]';
         } else if ($keyword == 'ENTITIES_JUST_UP') {
