@@ -694,7 +694,7 @@ $linkwithwhat =
 				<td><?php echo $_SESSION[$origin]['diff_list']['dest']['lastname'] . " " . $_SESSION[$origin]['diff_list']['dest']['firstname'];?></td>
 				<td><?php echo $_SESSION[$origin]['diff_list']['dest']['entity_label'];?></td>
 				<td class="action_entities"><!-- Remove dest -->
-					<a href="<?php echo $linkwithwhat;?>&action=remove_dest"><i class="fa fa-remove fa-2x"></i><?php echo _DELETE;?></a>
+					<a href="<?php echo $linkwithwhat;?>&action=remove_dest"><!-- i class="fa fa-remove fa-2x"></i --><?php echo _DELETE;?></a>
 				</td>
 				<td class="action_entities"><!-- Move dest to copy -->
 					<a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down fa-2x"></i><?php echo _TO_CC;?></a>
@@ -744,7 +744,7 @@ $linkwithwhat =
 						<td class="action_entities"><?php 
 							/*if (!$noDelete && ($role_id != 'dest' && !$onlyCc)) { */
 							if (!$noDelete && !$onlyCc) { ?>
-								<a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>"><i class="fa fa-remove"></i><?php echo _DELETE; ?></a><?php
+								<a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>"><!-- i class="fa fa-remove"></i --><?php echo _DELETE; ?></a><?php
 							} ?>
 						</td>
 						<td class="action_entities"><!-- Switch copy to dest --><?php
@@ -798,7 +798,7 @@ $linkwithwhat =
 						<td class="action_entities"><?php 
 						if (!$noDelete && !$onlyCc) { ?>
 							<a href="<?php echo $linkwithwhat; ?>&action=remove_entity&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $entity['entity_id'];?>">
-								<i class="fa fa-remove"></i><?php echo _DELETE; ?>
+								<!--i class="fa fa-remove"></i--><?php echo _DELETE; ?>
 							</a><?php
 						} ?>
 						</td>
