@@ -847,6 +847,7 @@ CREATE TABLE listmodels
   item_type character varying(255) NOT NULL,
   item_mode character varying(50) NOT NULL,
   listmodel_type character varying(50) DEFAULT 'DOC'::character varying,
+  title character varying(255),
   description character varying(255),
   visible character varying(1) NOT NULL DEFAULT 'Y'::bpchar
 )
