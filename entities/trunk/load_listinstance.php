@@ -53,7 +53,6 @@ if (empty($_REQUEST['collId']) && $_REQUEST['load_from_model'] == 'true') {
     echo "{status : 2, error_txt : '" . addslashes($_SESSION['error']) . "'}";
     exit();
 }
-
 $onlyCC = false;
 
 
@@ -98,7 +97,6 @@ if (! $onlyCC) {
         //$content .= '<h2>' . _LINKED_DIFF_LIST . ' : </h2>';
     }
 }
-
 if(!empty($_SESSION[$origin]['diff_list'])) {
     $roles = $diffList->list_difflist_roles();
     $difflist = $_SESSION[$origin]['diff_list'];
@@ -119,16 +117,31 @@ if(!empty($_SESSION[$origin]['diff_list'])) {
 if ($onlyCC) {
     $arg .= '&only_cc';
 }
-$content_standard = '<center><b>' . _DIFF_LIST . '</b> | ';
-$content_standard .= '<span class="button" >';
-$content_standard .= '<i class="fa fa-edit fa-2x" title="'.$labelButton.'"></i>'
-         . '<a href="javascript://" onclick="window.open(\''
-         . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-         . '&module=entities&page=manage_listinstance&origin=' . $origin . $arg
-         . '\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,'
-         . 'resizable=yes,width=1280,height=800,location=no\');"><small>'
-         . $labelButton . '</small></a>';
-$content_standard .= '</span></center>';
+
+if($origin != 'process'){
+    $content_standard = '<center><b>' . _DIFF_LIST . '</b> | ';
+    $content_standard .= '<span class="button" >';
+    $content_standard .= '<i class="fa fa-edit fa-2x" title="'.$labelButton.'"></i>'
+             . '<a href="javascript://" onclick="window.open(\''
+             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+             . '&module=entities&page=manage_listinstance&origin=' . $origin . $arg
+             . '\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,'
+             . 'resizable=yes,width=1280,height=800,location=no\');"><small>'
+             . $labelButton . '</small></a>';
+    $content_standard .= '</span></center>';
+}else{
+    $content_standard .= '<h2 style="margin:0;">' . _DIFF_LIST . ' : </h2>';
+    $content_standard .= '<br/>';
+    $content_standard .= '<span class="button" >';
+    $content_standard .= '<i class="fa fa-pencil" title="'.$labelButton.'"></i>'
+             . '<a href="javascript://" onclick="window.open(\''
+             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
+             . '&module=entities&page=manage_listinstance&origin=' . $origin . $arg
+             . '\', \'\', \'scrollbars=yes,menubar=no,toolbar=no,status=no,'
+             . 'resizable=yes,width=1280,height=800,location=no\');"> '
+             . $labelButton . '</a>';
+    $content_standard .= '</span>';
+}
 echo "{status : 0, div_content : '" . addslashes($content_standard . $content . '<br>') 
     . "', div_content_action : '" . addslashes($content) . "'}";
 exit();
