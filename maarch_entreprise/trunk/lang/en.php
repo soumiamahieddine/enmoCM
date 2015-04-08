@@ -1390,3 +1390,5 @@ if (!defined('_DIFFLIST_NEVER_MODIFIED')) define('_DIFFLIST_NEVER_MODIFIED', 'Th
 if(!defined('_TAG_ADMIN')) define('_TAG_ADMIN', 'Tag Admin');
 
 if (!defined('_CONTACT_CHECK'))  define('_CONTACT_CHECK', 'A lest one mail was recently affected to the same contact.');
+
+if (!defined('_DESCRIPTION')) define('_DESCRIPTION', 'Description');
