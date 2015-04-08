@@ -44,7 +44,13 @@ if ($core_tools->test_service('add_tag_to_res', 'tags',false) == 1)
 	$frm_str .='<textarea rows="2" cols="'.$tag_customcols.'" id="tag_userform" '
 			 .'style="width:'.$tag_customsize.';" >'.$tag.'</textarea>&nbsp;';
 	$frm_str .='<div id="show_tags" class="autocomplete"></div>';
-	$frm_str .='<input type="button" class="button tagbutton" value="'._ADD.'" onclick="add_this_tags('.$route_tag_add_tags_from_res.', '.$route_tag_ui_script.')">';
+	echo count($_SESSION['modules_services']['tags']);
+	if($_SESSION['user']['services']['create_tag'] == 1){
+		$frm_str .='<input type="button" class="button tagbutton" value="'._ADD.'" onclick="add_this_tags('.$route_tag_add_tags_from_res.', '.$route_tag_ui_script.')">';
+	}else{
+		$frm_str .='<input type="button" class="button tagbutton" value="'._ADD.'" onclick="add_this_tags('.$route_tag_just_add_tags_from_res.', '.$route_tag_ui_script.')">';
+}
+
 	$frm_str .='<p class="tinyminihelp" align="center">'._TAG_SEPARATOR_HELP.'</p>';
 	
 	$frm_str .= '<script type="text/javascript">launch_autocompleter_tags(\''

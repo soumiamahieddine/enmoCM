@@ -67,6 +67,8 @@ if (!defined('_ADD_TAG'))
     define('_ADD_TAG', 'Ajouter un '._TAG_DEFAULT);
 if (!defined('_ADD_TAG_TO_RES'))
     define('_ADD_TAG_TO_RES', 'Ajouter des '._TAGS_DEFAULT.' &agrave; une ressource');
+if (!defined('_CREATE_TAG'))
+    define('_CREATE_TAG', 'Cr&eacute;er des '._TAGS_DEFAULT);
 if (!defined('_ADD_TAG_TO_RES_DESC'))
     define('_ADD_TAG_TO_RES_DESC', 'Permet d&rsquo;ajouter des '._TAGS_DEFAULT.' &agrave; une ressource');
 if (!defined('_DELETE_TAG_TO_RES'))

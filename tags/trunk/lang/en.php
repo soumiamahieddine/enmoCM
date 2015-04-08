@@ -30,6 +30,8 @@
 * @version $Revision$
 */
 /*********************** TAGS ***********************************/
+if (!defined('_CREATE_TAG'))
+    define('_CREATE_TAG', 'Create some '._TAGS_DEFAULT);
 if (!defined('_TAG_DEFAULT'))
     define('_TAG_DEFAULT', 'Tag');
 if (!defined('_TAGS_DEFAULT'))
