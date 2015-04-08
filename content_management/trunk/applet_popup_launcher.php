@@ -36,6 +36,8 @@ if (
                     echo $_REQUEST['resMaster'];
                     ?>&contactId=<?php
                     echo $_REQUEST['contactId'];
+                    ?>&chronoAttachment=<?php
+                    echo $_REQUEST['chronoAttachment'];
                     ?>&custom_override_id=<?php 
                     echo $_SESSION['custom_override_id'];
                     ?>');

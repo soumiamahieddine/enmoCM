@@ -88,9 +88,12 @@ if (isset($_REQUEST['objectId'])) {
 
 if (isset($_REQUEST['contactId'])) {
     $_SESSION['cm']['contact_id'] = $_REQUEST['contactId'];
-} else {
-    $contactId = '';
 }
+
+if (isset($_REQUEST['chronoAttachment'])) {
+    $_SESSION['cm']['chronoAttachment'] = $_REQUEST['chronoAttachment'];
+}
+
 //$_SESSION['cm']['contact_id'] ='200';
 if ($_REQUEST['resMaster'] <> '') {
     $_SESSION['cm']['resMaster'] = $_REQUEST['resMaster'];
