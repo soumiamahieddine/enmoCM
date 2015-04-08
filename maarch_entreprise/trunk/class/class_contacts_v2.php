@@ -1948,6 +1948,21 @@ class contacts_v2 extends dbquery
         return $this->show_string($res->label);
     }
 
+    public function get_civility_contact($title){
+        $xml = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.'maarch_entreprise'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'entreprise.xml');
+        if ($xml <> false) {
+            $result = $xml->xpath('/ROOT/titles');
+            foreach ($result as $key => $value) {
+                foreach ($value as $key2 => $value2) {
+                    if($value2->id==$title){
+                        $title_value=$value2->label;
+                    }
+                }
+            }
+        }
+        return $this->show_string($title_value);
+    }
+
     public function type_purpose_address_del($id, $admin = true, $tablename, $mode='contact_type', $deleted_sentence, $warning_sentence, $title, $reaffect_sentence, $new_sentence, $choose_sentence, $page_return, $page_del, $name){
         $nb_elements = 0;
         $this->connect();
