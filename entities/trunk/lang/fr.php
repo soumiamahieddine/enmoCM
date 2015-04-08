@@ -337,7 +337,10 @@ if (!defined('_CONFIRM_LISTMODEL_SAVE'))
     define('_CONFIRM_LISTMODEL_SAVE', 'Sauvegarder la liste ?'); 
 
 if (!defined('_ENTER_DESCRIPTION'))
-    define('_ENTER_DESCRIPTION', 'Description obligatoire'); 
+    define('_ENTER_DESCRIPTION', 'Description obligatoire');
+if (!defined('_ENTER_TITLE'))
+    define('_ENTER_TITLE', 'Titre obligatoire');
+
 
     
 if (!defined('_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS')) define('_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS', 'Param&eacute;trer les types de modèle de liste de diffusion pour l&rsquo;indexation');

@@ -54,17 +54,17 @@ class diffusion_list extends dbquery
         $this->connect();
         
         $query = 
-            "SELECT distinct object_type, object_id, description"
+            "SELECT distinct object_type, object_id, description, title"
             . " FROM " . ENT_LISTMODELS
             . " WHERE object_type = '".$objectType."'" 
-            . " GROUP BY object_type, object_id, description " 
+            . " GROUP BY object_type, object_id, description, title  " 
             . " ORDER BY object_type ASC, object_id ASC";
 
         $this->query($query);
         
         while ($listmodel = $this->fetch_array()) {
-            if($listmodel['description'] == '')
-                $listmodel['description'] = $listmodel['object_id'];
+            if($listmodel['title'] == '')
+                $listmodel['title'] = $listmodel['object_id'];
                 
             $listmodels[] = $listmodel;
         }
@@ -110,11 +110,11 @@ class diffusion_list extends dbquery
         
         # Load header
         $query = 
-            "SELECT distinct object_type, object_id, description"
+            "SELECT distinct object_type, object_id,  description, title"
             . " FROM " . ENT_LISTMODELS
             . " WHERE object_type = '".$objectType."'" 
                 . "and object_id = '" . $objectId . "'"
-            . " GROUP BY object_type, object_id, description";
+            . " GROUP BY object_type, object_id,  description, title";
 
         $this->query($query);
         
@@ -198,6 +198,7 @@ class diffusion_list extends dbquery
         $diffList, 
         $objectType = 'entity_id',
         $objectId,
+        $title = false,
         $description = false
     ) {
         $this->connect();
@@ -206,8 +207,11 @@ class diffusion_list extends dbquery
         require_once 'core/class/class_history.php';
         $hist = new history();
         
+        //echo "bug"; print_r($description); exit;
+
         $objectType = $this->protect_string_db(trim($objectType));
         $objectId = $this->protect_string_db(trim($objectId));
+        $title = $this->protect_string_db(trim($title));
         $description = $this->protect_string_db(trim($description));
         
         # Delete all and replace full list
@@ -231,9 +235,10 @@ class diffusion_list extends dbquery
                 $i++
             ) {
                 $user = $diffList[$role_id]['users'][$i];
+            //print_r($description); exit;
                 $this->query(
                     "insert into " . ENT_LISTMODELS
-                        . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible ) "
+                        . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, title, visible ) "
                     . " values ("
                         . "'any', "
                         . "'" . $objectId . "' , " 
@@ -244,6 +249,7 @@ class diffusion_list extends dbquery
                         . "'".$item_mode."', "
                         . "null, "
                         . "'" . $description . "',"
+                        . "'" . $title . "',"
                         . "'" . $user['visible']. "'"
                     . ")"
                 );
@@ -252,9 +258,10 @@ class diffusion_list extends dbquery
             #**********************************************************************
             for ($i=0, $l=count($diffList[$role_id]['entities']); $i<$l ; $i++) {
                 $entity = $diffList[$role_id]['entities'][$i];
+                //print_r($description); exit;
                 $this->query(
                     "insert into " . ENT_LISTMODELS
-                        . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible ) "
+                        . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, title, visible ) "
                     . " values ("
                         . "'any', "
                         . "'" . $objectId . "' , " 
@@ -265,6 +272,7 @@ class diffusion_list extends dbquery
                         . "'".$item_mode."', "
                         . "null, "
                         . "'" . $description . "', "
+                        . "'" . $title . "',"
                         . "'" . $entity['visible'] . "'"
                     . ")"
                 );

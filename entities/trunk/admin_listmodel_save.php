@@ -11,7 +11,9 @@ case 'add':
         $_SESSION['m_admin']['entity']['listmodel'], 
         $objectType = $_REQUEST['objectType'],
         $objectId = $_REQUEST['objectId'],
+        $title = $_REQUEST['title'],
         $description = $_REQUEST['description']
+        
     );
     break;
     

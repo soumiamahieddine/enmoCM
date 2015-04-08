@@ -68,6 +68,11 @@ if (!defined('_ENTITY_IS_RELATED'))
 if (!defined('_TYPE'))
     define('_TYPE', 'Type');
 
+if (!defined('_ENTER_DESCRIPTION'))
+    define('_ENTER_DESCRIPTION', 'Description obligatoire');
+if (!defined('_ENTER_TITLE'))
+    define('_ENTER_TITLE', 'Titre obligatoire');
+
 /*************************** Users - Entites management *****************/
 if (!defined('_ENTITY_USER_DESC'))
     define('_ENTITY_USER_DESC', 'Attach users to departments');

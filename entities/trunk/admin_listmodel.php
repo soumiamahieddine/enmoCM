@@ -48,12 +48,14 @@ if(!isset($_SESSION['m_admin']['entity']['listmodel'])) {
             $objectType,
             $objectId
         );
+    $title =  $_SESSION['m_admin']['entity']['listmodel']['title'];
     $description =  $_SESSION['m_admin']['entity']['listmodel']['description'];
 } else {
     # list already loaded and managed (reload after update of list)
     $objectType = $_SESSION['m_admin']['entity']['listmodel']['object_type'];
     $objectId = $_SESSION['m_admin']['entity']['listmodel']['object_id'];
-    $description = $_SESSION['m_admin']['entity']['listmodel']['description'];
+    $title = $_SESSION['m_admin']['entity']['listmodel']['title'];
+    $description =  $_SESSION['m_admin']['entity']['listmodel']['description'];
 }
 
 
@@ -140,6 +142,7 @@ function listmodel_validate() {
     var mode = $('mode').value; 
     var objectType = $('objectType').value; 
     var objectId = $('objectId').value; 
+    var title = $('title').value;
     var description = $('description').value; 
     
     main_error.innerHTML = "";
@@ -154,6 +157,7 @@ function listmodel_validate() {
 				mode : mode,
                 objectType : objectType,
                 objectId : objectId,
+                title : title,
                 description : description 
 			},
             onSuccess: function(answer) {
@@ -173,8 +177,10 @@ function listmodel_save()
 {
     var mode = $('mode').value;  
     var objectType = $('objectType').value; 
-    var objectId = $('objectId').value; 
+    var objectId = $('objectId').value;
+    var title = $('title').value; 
     var description = $('description').value; 
+    
     
     // Validate form
     var valid = listmodel_validate();
@@ -191,6 +197,7 @@ function listmodel_save()
 				mode : mode,
                 objectType : objectType,
                 objectId : objectId,
+                title : title,
                 description : description
 			},
             onSuccess: function(answer){
@@ -283,6 +290,14 @@ if($mode != 'del') { ?>
                     </script><?php
                 } ?>
                 </div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="title" ><?php echo _TITLE; ?> : </label>
+            </td>
+            <td>
+                <textarea id="title"><?php echo $title; ?></textarea>
             </td>
         </tr>
         <tr>

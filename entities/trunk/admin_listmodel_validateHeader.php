@@ -15,14 +15,17 @@ $mode = $_REQUEST['mode'];
 $objectType = $_REQUEST['objectType'];
 $objectId = $_REQUEST['objectId'];
 $description = $_REQUEST['description'];
+$title = $_REQUEST['title'];
+
+//print_r($description); exit;
 
 $return = "";
 
 if($objectId == '' || $objectType == '')
     $return .= _SELECT_OBJECT_TYPE_AND_ID . "<br/>";
     
-if($description == '')
-    $return .= _ENTER_DESCRIPTION . "<br/>";
+if($title == '')
+    $return .= _ENTER_TITLE . "<br/>";
     
 if($mode == 'add' && $objectId && $objectType && $collId) {
     $request->query(
@@ -39,6 +42,6 @@ if($mode == 'add' && $objectId && $objectType && $collId) {
 $_SESSION['m_admin']['entity']['listmodel']['object_type'] = $objectType;
 $_SESSION['m_admin']['entity']['listmodel']['object_id'] = $objectId;
 $_SESSION['m_admin']['entity']['listmodel']['description'] = $description;
-
+$_SESSION['m_admin']['entity']['listmodel']['title'] = $title;
 # Return messages
 echo $return;
