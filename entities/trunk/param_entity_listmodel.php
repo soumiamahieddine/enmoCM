@@ -91,7 +91,7 @@ if($_SESSION['service_tag_form'] == 'formentity') {
 	$_SESSION['service_tag_form'] = "";
     ?>
 	<!--div id="inner_content" class="clearfix"-->
-	<div id="listmodel_box" class="block" style="height:550px;"> 
+	<div id="listmodel_box" class="block" style="height:600px;"> 
 	<?php 
 	if(count($_SESSION['m_admin']['entity']['listmodel']) > 0) { ?>
 		<h2 class="tit"><?php echo _LINKED_DIFF_LIST;?> : </h2><?php

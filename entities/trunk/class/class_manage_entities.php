@@ -87,7 +87,7 @@ class entity extends dbquery
             else
             {
                 ?>
-                <div class="block" style="float:left;width:65%;height:550px;">
+                <div class="block" style="float:left;width:65%;height:600px;">
                 <form name="formentity" id="formentity" method="post" style="width:500px;margin:auto;" action="<?php  if($mode == 'up') { echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=entity_up_db'; } elseif($mode == 'add') { echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=entity_add_db'; } ?>" class="forms">
                     <input type="hidden" name="display" value="true" />
                     <input type="hidden" name="module" value="entities" />
