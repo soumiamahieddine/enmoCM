@@ -15,9 +15,9 @@ if (isset($_REQUEST['res_id'])) {
                 $db = new dbquery();
                 $db->connect();
                       
-                $query = "select c.contact_firstname, c.contact_lastname, c.firstname, c.lastname, c.society, c.address_num, c.address_street, c.address_complement, c.address_town, c.address_postal_code, c.address_country ";
-                        $query .= "from view_contacts c, contacts_res cres  ";
-                        $query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['res_id']." AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id";
+                $query = "SELECT c.is_corporate_person, c.is_private, c.contact_firstname, c.contact_lastname, c.firstname, c.lastname, c.society, c.society_short, c.contact_purpose_label, c.address_num, c.address_street, c.address_complement, c.address_town, c.address_postal_code, c.address_country ";
+                        $query .= "FROM view_contacts c, contacts_res cres  ";
+                        $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['res_id']." AND cast (c.contact_id as varchar) = cres.contact_id AND c.ca_id = cres.address_id";
                         
                 $db->query($query);
 
@@ -28,29 +28,32 @@ if (isset($_REQUEST['res_id'])) {
                         $return .= '<td style="background: transparent; border: 0px dashed rgb(200, 200, 200);">';
                             
                                 $return .= '<div style="text-align: left; background-color: rgb(230, 230, 230); padding: 3px; margin-left: 20px; margin-top: -6px;">';
-                                    $return .= '(contact)' . $res->contact_lastname . ' ' . $res->contact_firstname . ' ' . $res->firstname . ' ' . $res->lastname . ' ' . $res->society;
-                                    
-                                    if(isset($res->address_num) && !empty($res->address_num)){
-                                        $return .= ': ' . $res->address_num;
-                                    }                                   
-                                    if(isset($res->address_street) && !empty($res->address_street)){
-                                        $return .= ', ' . $res->address_street;
-                                    }                                   
-                                    if(isset($res->address_complement) && !empty($res->address_complement)){
-                                        $return .= ', ' . $res->address_complement;
-                                    }                                   
-                                    if(isset($res->address_postal_code) && !empty($res->address_postal_code)){
-                                        $return .= ', ' . $res->address_postal_code;
-                                    }                                   
-                                    if(isset($res->address_town) && !empty($res->address_town)){
-                                        $return .= ' ' . $res->address_town;
-                                    }                                   
-                                    if(isset($res->address_country) && !empty($res->address_country)){
-                                        $return .= ', ' . $res->address_country;
+                                    $return .= '(contact) ';
+
+                                    if ($res->is_corporate_person == 'Y') {
+                                        $return .= $res->society . ' ' ;
+                                        if (!empty ($res->society_short)) {
+                                            $return .= '('.$res->society_short.') ';
+                                        }
+                                    } else {
+                                        $return = $res->contact_lastname . ' ' . $res->contact_firstname . ' ';
+                                        if (!empty ($res->society)) {
+                                            $return .= '(' .$res->society . ') ';
+                                        }                        
                                     }
-                                                
+                                    if ($res->is_private == 'Y') {
+                                        $return .= '('._CONFIDENTIAL_ADDRESS.')';
+                                    } else {
+                                        $return .= "- " . $res->contact_purpose_label." : ";
+                                        if (!empty($res->lastname) || !empty($res->firstname)) {
+                                            $return .= $res->lastname . ' ' . $res->firstname;
+                                        }
+                                        if (!empty($res->address_num) || !empty($res->address_street) || !empty($res->address_town) || !empty($res->address_postal_code)) {
+                                            $return .= ', '.$res->address_num .' ' . $res->address_street .' ' . $res->address_postal_code .' ' . strtoupper($res->address_town);
+                                        }         
+                                    }
+          
                                 $return .= '</div>';
-                                //$return .= '<br />';
                             
                         $return .= '</td>';
                     $return .= '</tr>';
@@ -59,9 +62,9 @@ if (isset($_REQUEST['res_id'])) {
                 $db = new dbquery();
                 $db->connect();
                       
-                $query = "select u.firstname, u.lastname, u.user_id ";
-                        $query .= "from users u, contacts_res cres  ";
-                        $query .= "where cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['res_id']." AND cast (u.user_id as varchar) = cres.contact_id";
+                $query = "SELECT u.firstname, u.lastname, u.user_id ";
+                        $query .= "FROM users u, contacts_res cres  ";
+                        $query .= "WHERE cres.coll_id = 'letterbox_coll' AND cres.res_id = ".$_REQUEST['res_id']." AND cast (u.user_id as varchar) = cres.contact_id";
                         
                 $db->query($query);
 
