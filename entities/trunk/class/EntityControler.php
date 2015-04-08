@@ -644,7 +644,7 @@ class EntityControler
         {
             if($ok)
             {
-                $query = "INSERT INTO ".self::$users_entities_table." (user_id, entity_id, primary_entity, user_role) VALUES ('".$func->protect_string_db($user_id)."', '".$func->protect_string_db($array[$i]['ENTITY_ID'])."', '".$func->protect_string_db($array[$i]['PRIMARY'])."', '".$func->protect_string_db($array[0]['ROLE'])."')";
+                $query = "INSERT INTO ".self::$users_entities_table." (user_id, entity_id, primary_entity, user_role) VALUES ('".$func->protect_string_db($user_id)."', '".$func->protect_string_db($array[$i]['ENTITY_ID'])."', '".$func->protect_string_db($array[$i]['PRIMARY'])."', '".$func->protect_string_db($array[$i]['ROLE'])."')";
                 try{
                     if($_ENV['DEBUG'])
                         echo $query.' // ';
