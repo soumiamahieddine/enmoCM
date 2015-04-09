@@ -240,7 +240,8 @@ ALTER TABLE res_letterbox ADD confidentiality character(1);
 ALTER TABLE listinstance DROP COLUMN IF EXISTS process_comment;
 ALTER TABLE listinstance ADD process_comment character varying(255);
 
-ALTER TABLE listmodels RENAME COLUMN description to title;
+ALTER TABLE listmodels DROP COLUMN IF EXISTS title;
+ALTER TABLE listmodels ADD COLUMN title varchar(255);
 
 ALTER TABLE listmodels DROP COLUMN IF EXISTS description;
 ALTER TABLE listmodels ADD COLUMN description varchar(255);
