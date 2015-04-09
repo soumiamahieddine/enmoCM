@@ -40,9 +40,9 @@ if ((! isset($_REQUEST['objectType']) || empty($_REQUEST['objectType']))
 if ((! isset($_REQUEST['objectId']) || empty($_REQUEST['objectId']))
     && $_REQUEST['load_from_model'] == 'true'
 ) {
-    if ($_REQUEST['mandatory'] <> 'none') {
-        $_SESSION['error'] = _ENTITY_ID . ' ' . _IS_EMPTY;
-    }
+    // if ($_REQUEST['mandatory'] <> 'none') {
+    //     $_SESSION['error'] = _ENTITY_ID . ' ' . _IS_EMPTY;
+    // }
     $_SESSION[$origin]['diff_list'] = array();
     echo "{status : 1, error_txt : '" . addslashes($_SESSION['error']) . "'}";
     exit();
