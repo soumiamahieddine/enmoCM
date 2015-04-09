@@ -1479,6 +1479,17 @@ function process_category_check($cat_id, $values)
         }
     }
 
+    if (isset($_ENV['categories'][$cat_id]['priority'])) {
+        $priority = get_value_fields(
+            $values, 'priority'
+        );
+
+        if ($priority === '') {
+            $_SESSION['action_error'] = $_ENV['categories'][$cat_id]['priority']['label']
+                . " " . _MANDATORY;
+            return false;
+        }
+    }
 
     // Contact
     if(isset($_ENV['categories'][$cat_id]['other_cases']['contact'])){

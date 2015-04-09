@@ -1323,6 +1323,18 @@ function process_category_check($catId, $values)
         }
     }
 
+    if (isset($_ENV['categories'][$catId]['priority'])) {
+        $priority = get_value_fields(
+            $values, 'priority'
+        );
+
+        if ($priority === '') {
+            $_SESSION['action_error'] = $_ENV['categories'][$catId]['priority']['label']
+                . " " . _MANDATORY;
+            return false;
+        }
+    }
+
     // Contact
     if (isset($_ENV['categories'][$catId]['other_cases']['contact'])) {
         $contactType = get_value_fields($values, 'type_contact_external');
