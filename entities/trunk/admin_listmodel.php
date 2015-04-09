@@ -297,15 +297,15 @@ if($mode != 'del') { ?>
                 <label for="title" ><?php echo _TITLE; ?> : </label>
             </td>
             <td>
-                <textarea id="title"><?php echo $title; ?></textarea>
+                <textarea id="title" style="width:294px;"><?php echo $title; ?></textarea>
             </td>
         </tr>
         <tr>
             <td>
-                <label for="description" ><?php echo _DESCRIPTION; ?> : </label>
+                <label for="description"  ><?php echo _DESCRIPTION; ?> : </label>
             </td>
             <td>
-                <textarea id="description"><?php echo $description; ?></textarea>
+                <textarea id="description" style="width:294px;"><?php echo $description; ?></textarea>
             </td>
         </tr>
         <tr>
