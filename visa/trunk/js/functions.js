@@ -76,16 +76,20 @@ function addRow(id_tableau)
 	//colonne2.innerHTML += "</select>";
 
 	var colonne3 = ligne.insertCell(1);
-	colonne3.innerHTML += "<img src=\"static.php?filename=DownUser.png&module=visa\" id=\"down_"+position+"\" name=\"down_"+position+"\" onclick=\"deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2, '"+id_tableau+"')\" style=\"visibility:hidden;\"/>";
+	//colonne3.innerHTML += "<img src=\"static.php?filename=DownUser.png&module=visa\" id=\"down_"+position+"\" name=\"down_"+position+"\" onclick=\"deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2, '"+id_tableau+"')\" style=\"visibility:hidden;\"/>";
+	colonne3.innerHTML += "<a href=\"javascript://\"  id=\"down_"+position+"\" name=\"down_"+position+"\" onclick=\"deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2, '"+id_tableau+"')\" style=\"visibility:hidden;\" ><i class=\"fa fa-arrow-down fa-2x\"></i></a>";
 
 	var colonne4 = ligne.insertCell(2);
-	colonne4.innerHTML += "<img src=\"static.php?filename=UpUser.png&module=visa\" id=\"up_"+position+"\" name=\"up_"+position+"\" onclick=\"deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1, '"+id_tableau+"')\" style=\"visibility:visible;\"/>";
+	//colonne4.innerHTML += "<img src=\"static.php?filename=UpUser.png&module=visa\" id=\"up_"+position+"\" name=\"up_"+position+"\" onclick=\"deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1, '"+id_tableau+"')\" style=\"visibility:visible;\"/>";
+	colonne4.innerHTML += "<a href=\"javascript://\" id=\"up_"+position+"\" name=\"up_"+position+"\" onclick=\"deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1, '"+id_tableau+"')\" style=\"visibility:visible;\" ><i class=\"fa fa-arrow-up fa-2x\"></i></a>";
 
 	var colonne5 = ligne.insertCell(3);
-	colonne5.innerHTML += "<img src=\"static.php?filename=SupprUser.png&module=visa\" id=\"suppr_"+position+"\" name=\"suppr_"+position+"\" onclick=\"delRow(this.parentNode.parentNode.rowIndex, '"+id_tableau+"')\" style=\"visibility:visible;\"/>";
+	//colonne5.innerHTML += "<img src=\"static.php?filename=SupprUser.png&module=visa\" id=\"suppr_"+position+"\" name=\"suppr_"+position+"\" onclick=\"delRow(this.parentNode.parentNode.rowIndex, '"+id_tableau+"')\" style=\"visibility:visible;\"/>";
+	colonne5.innerHTML += "<a href=\"javascript://\" onclick=\"delRow(this.parentNode.parentNode.rowIndex, '"+id_tableau+"')\" id=\"suppr_"+position+"\" name=\"suppr_"+position+"\" style=\"visibility:visible;\" ><i class=\"fa fa-user-times fa-2x\"></i></a>";
 	
 	var colonne6 = ligne.insertCell(4);
-	colonne6.innerHTML += "<img src=\"static.php?filename=AjoutUser.png&module=visa\" id=\"add_"+position+"\" name=\"add_"+position+"\" onclick=\"addRow('"+id_tableau+"')\"style=\"visibility:visible;\"/>";
+	//colonne6.innerHTML += "<img src=\"static.php?filename=AjoutUser.png&module=visa\" id=\"add_"+position+"\" name=\"add_"+position+"\" onclick=\"addRow('"+id_tableau+"')\"style=\"visibility:visible;\"/>";
+	colonne6.innerHTML += "<a href=\"javascript://\" id=\"add_"+position+"\" name=\"add_"+position+"\" onclick=\"addRow('"+id_tableau+"')\"style=\"visibility:visible;\" ><i class=\"fa fa-user-plus fa-2x\"></i></a>";
 	
 	var colonne7 = ligne.insertCell(5);
 	colonne7.innerHTML += "<input type=\"text\" id=\"consigne_"+position+"\" name=\"consigne_"+position+"\" style=\"width:100%;\"/>";
@@ -174,35 +178,114 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau){
 
 //Fonction permettant de lancer les 2 modules Tabricator côte à côte pour les différentes pages d'action (formation circuit de visa, visa ..)
 function launchTabri(){
-    var tabricator2 = new Tabricator('tabricator2', 'DT');
-    var tabricator1 = new Tabricator('tabricator1', 'DT');
-	var tabricator0 = new Tabricator('tabricator0', 'DT');
+    var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
+	var tabricatorLeft = new Tabricator('tabricatorLeft', 'DT');
 }
 
-function previousDoc(){
-	var prevId = $('prevDoc').value;
-	var actionId = $('action_id').value;
-	destroyModal('modal_'+actionId);
-	validForm( 'page', prevId, actionId);
+
+
+function loadNewId(path_update,newId, collId){
+	/* Modification dans la liste de gauche */
+	var zone_old = 'list_doc_'+$('cur_resId').value;
+	var zone_new = 'list_doc_'+newId;
+	console.log(zone_new);
+	$(zone_old).className = 'unselectedId';
+	$(zone_new).className = 'selectedId';
+	$('cur_resId').value=newId;
+	$('numIdDocPage').innerHTML=newId;
+	console.log($("send"));
+	
+	/****************************************/
+	
+	
+	
+	//Modification de l'affichage du document
+	$('viewframevalidDoc').setAttribute('src','index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='+newId+'&coll_id='+collId);
+	
+	//Modification des autres zones
+	new Ajax.Request(path_update,
+	{
+			method:'post',
+			parameters: { 
+				res_id : newId,
+				coll_id : collId,
+				action : $('action_id').value
+						},
+			asynchronous: false,
+			onSuccess: function(answer){
+				eval("response = "+answer.responseText);
+				//console.log(response);
+				if (response.status == 1){ //page de visa
+					$('page_avancement').innerHTML = response.avancement;
+					$('page_circuit').innerHTML = response.circuit;
+					$('onglet_notes').innerHTML = response.notes_dt;
+					$('page_notes').innerHTML = response.notes_dd;
+					$('tabricatorRight').innerHTML = response.right_html;
+					$("send_action").setAttribute('onclick',response.valid_button);
+					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
+				}
+				
+				if (response.status == 2){ //page préparation circuit
+					$('page_avancement').innerHTML = response.avancement;
+					$('onglet_notes').innerHTML = response.notes_dt;
+					$('page_notes').innerHTML = response.notes_dd;
+					$('tabricatorRight').innerHTML = response.right_html;
+					//console.log("'"+response.valid_button+"'");
+					$("send_action").setAttribute('onclick',response.valid_button);
+					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
+					console.log("MAJ OK");
+				}
+				
+				if (response.status == 3){ //page envoi mail
+					$('page_avancement').innerHTML = response.avancement;
+					$('onglet_notes').innerHTML = response.notes_dt;
+					$('page_notes').innerHTML = response.notes_dd;
+					$('onglet_pj').innerHTML = response.pj_dt;
+					$('page_pj').innerHTML = response.pj_dd;
+					$('tabricatorRight').innerHTML = response.right_html;
+					$("send_action").setAttribute('onclick',response.valid_button);
+					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
+					
+					showEmailForm('index.php?display=true&module=sendmail&page=sendmail_ajax_content&mode=add&identifier='+newId+'&origin=document&coll_id='+collId+'&size=medium', '820px', '545px', 'sendmail_iframe');
+				}
+			}
+	});
+	
 }
 
-function nextDoc(){
-	var nextId = $('nextDoc').value;
-	var actionId = $('action_id').value;
-	destroyModal('modal_'+actionId);
-	validForm( 'page', nextId, actionId);
+function previousDoc(path_update,collId){
+	var list = $('list_docs').value;
+	var tab_docs = list.split("#");
+	var current = $('cur_resId').value;
+	console.log(tab_docs);
+	
+	for (var i=0; i < tab_docs.length-1 ; i++){
+		if (tab_docs[i] == current && i != 0) loadNewId(path_update,tab_docs[i-1], collId);
+	}
+}
+
+function nextDoc(path_update,collId){
+	var list = $('list_docs').value;
+	var tab_docs = list.split("#");
+	var current = $('cur_resId').value;
+	console.log(tab_docs);
+	
+	for (var i=0; i < tab_docs.length-1 ; i++){
+		if (tab_docs[i] == current && i != tab_docs.length-2 ) loadNewId(path_update,tab_docs[i+1], collId);
+	}
 }
 
 function updateFunctionModifRep(idReponse, num_rep){
-	document.getElementById("uni_update_rep_link").setAttribute('onclick','window.open(\'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId=letterbox_coll&id='+idReponse+'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');');	
-	document.getElementById("split_update_rep_link").setAttribute('onclick','window.open(\'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId=letterbox_coll&id='+idReponse+'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');');	
+	//document.getElementById("uni_update_rep_link").setAttribute('onclick','window.open(\'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId=letterbox_coll&id='+idReponse+'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');');	
+	document.getElementById("update_rep_link").setAttribute('onclick','window.open(\'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId=letterbox_coll&id='+idReponse+'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');');	
 	document.getElementById("cur_idAffich").setAttribute('value',num_rep);
+	document.getElementById("cur_rep").setAttribute('value',idReponse);
 }
 
-function generateBordereau(resId)
+function generateWaybill(resId)
 {
 	console.log("Génération du bordereau");
-	new Ajax.Request("index.php?display=true&module=visa&page=remplir_bordereau",
+	new Ajax.Request("index.php?display=true&module=visa&page=visa_waybill",
 	{
 		
 			method:'post',

@@ -146,6 +146,7 @@ class visa extends dbquery
 		$circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
 		
 		$str .= '<div align="center">';
+		//$str .= '<pre>'.print_r($circuit,true).'</pre>';
 		$str .= '<div class="error" id="divErrorVisa" name="divErrorVisa"></div>';
 		$str .= '<table class="listing spec detailtabricatordebug" cellspacing="0" border="0" id="'.$id_tab.'">';
 		$str .= '<thead><tr>';
@@ -181,10 +182,12 @@ class visa extends dbquery
 					$str .= '</select>';
 				}
 				$str .= '</td>';
-				$str .= '<td><img src="static.php?filename=DownUser.png&module=visa"  id="down_'.$j.'" name="down_'.$j.'" style="visibility:hidden;" onclick="deplacerLigne(0,1,\''.$id_tab.'\')"/></td>';
-				$str .= '<td><img src="static.php?filename=UpUser.png&module=visa" id="up_'.$j.'" name="up_'.$j.'" style="visibility:hidden;"/></td>';
-				$str .= '<td><img src="static.php?filename=SupprUser.png&module=visa" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:hidden;" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" /></td>';
-				$str .= '<td><img src="static.php?filename=AjoutUser.png&module=visa" id="add_'.$j.'" name="add_'.$j.'" style="visibility:visible;" onclick="addRow(\''.$id_tab.'\')"/></td>';
+				//$str .= '<td><img src="static.php?filename=DownUser.png&module=visa"  id="down_'.$j.'" name="down_'.$j.'" style="visibility:hidden;" onclick="deplacerLigne(0,1,\''.$id_tab.'\')"/></td>';
+				$str .= '<td><a href="javascript://" id="down_'.$j.'" name="down_'.$j.'" style="visibility:hidden;" onclick="deplacerLigne(0,1,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
+				//$str .= '<td><img src="static.php?filename=UpUser.png&module=visa" id="up_'.$j.'" name="up_'.$j.'" style="visibility:hidden;"/></td>';
+				$str .= '<td><a href="javascript://" id="up_'.$j.'" name="up_'.$j.'" style="visibility:hidden;" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
+				$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:hidden;" ><i class="fa fa-user-times fa-2x"></i></a></td>';
+				$str .= '<td><a href="javascript://" style="visibility:visible;"  id="add_'.$j.'" name="add_'.$j.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
 				$str .= '<td><input type="text" id="consigne_'.$j.'" name="consigne_'.$j.'" style="width:100%;"/></td>';
 				$str .= '</tr>';
 			}
@@ -220,19 +223,21 @@ class visa extends dbquery
 								$up = ' style="visibility:hidden"';
 							}
 							
-							$str .= '<td><img src="static.php?filename=DownUser.png&module=visa" '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" /></td>';
-							$str .= '<td><img src="static.php?filename=UpUser.png&module=visa" '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" /></td>';
-							$str .= '<td><img src="static.php?filename=SupprUser.png&module=visa" style="visibility:visible" id="suppr_'.$seq.'" name="suppr_'.$seq.'" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" /></td>';
-							$str .= '<td><img src="static.php?filename=AjoutUser.png&module=visa" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')"/></td>';
-							$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="" style="width:100%;"/></td>';							
+							//$str .= '<td><img src="static.php?filename=DownUser.png&module=visa" '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" /></td>';
+							$str .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
+							//$str .= '<td><img src="static.php?filename=UpUser.png&module=visa" '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" /></td>';
+							$str .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
+							$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:visible;" ><i class="fa fa-user-times fa-2x"></i></a></td>';
+							$str .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
+							$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$step['process_comment'].'" style="width:100%;"/></td>';							
 						}
 						else{
 							$str .= '<td>'.$step['firstname'].' '.$step['lastname'];
 							$str .= '</td>';
-							$str .= '<td></td>';	
+							$str .= '<td>'.$step['process_comment'].'</td>';	
 							$currentStep = $this->getCurrentStep($res_id, $coll_id, $typeList);
-							if ($currentStep > $seq) $str .= '<td><img src="static.php?filename=icon_check.png"></td>';		
-							elseif ($currentStep == $seq) $str .= '<td><img src="static.php?filename=icon_process.png"></td>';		
+							if ($currentStep > $seq) $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
+							elseif ($currentStep == $seq) $str .= '<td><i class="fa fa-spinner fa-2x"></i></td>';		
 							else $str .= '<td></td>';		
 						}
 						$str .= '</tr>';
@@ -268,19 +273,21 @@ class visa extends dbquery
 						$down = ' style="visibility:hidden"';
 						$add = ' style="visibility:visible"';
 											
-						$str .= '<td><img src="static.php?filename=DownUser.png&module=visa" '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" /></td>';
-						$str .= '<td><img src="static.php?filename=UpUser.png&module=visa" '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" /></td>';
-						$str .= '<td><img src="static.php?filename=SupprUser.png&module=visa" style="visibility:visible" id="suppr_'.$seq.'" name="suppr_'.$seq.'" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" /></td>';
-						$str .= '<td><img src="static.php?filename=AjoutUser.png&module=visa" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')"/></td>';
-						$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="" style="width:100%;"/></td>';							
+						//$str .= '<td><img src="static.php?filename=DownUser.png&module=visa" '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" /></td>';
+						//$str .= '<td><img src="static.php?filename=UpUser.png&module=visa" '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" /></td>';
+						$str .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
+						$str .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
+						$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:visible;" ><i class="fa fa-user-times fa-2x"></i></a></td>';
+						$str .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
+						$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_comment'].'" style="width:100%;"/></td>';							
 					}
 					else{
 						$str .= '<td>'.$circuit['sign']['users'][0]['firstname'].' '.$circuit['sign']['users'][0]['lastname'];
 						$str .= '</td>';
-						$str .= '<td></td>';	
+						$str .= '<td>'.$circuit['sign']['users'][0]['process_comment'].'</td>';	
 						$currentStep = $this->getCurrentStep($res_id, $coll_id, $typeList);
-						if ($currentStep > $seq) $str .= '<td><img src="static.php?filename=icon_check.png"></td>';		
-						elseif ($currentStep == $seq) $str .= '<td><img src="static.php?filename=icon_process.png"></td>';		
+						if ($currentStep > $seq) $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
+						elseif ($currentStep == $seq) $str .= '<td><i class="fa fa-spinner fa-2x"></i></td>';		
 						else $str .= '<td></td>';		
 					}
 					$str .= '</tr>';
@@ -289,7 +296,7 @@ class visa extends dbquery
 		
 		$str .= '</tbody>';
 		$str .= '</table>';
-		$str .= '<input type="button" name="send" id="send" value="Sauvegarder" class="button" onclick="saveVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\');" />';
+		if ($bool_modif) $str .= '<input type="button" name="send" id="send" value="Sauvegarder" class="button" onclick="saveVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\');" />';
 		$str .= '</div>';
 		return $str;
 	}

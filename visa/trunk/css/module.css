@@ -1,45 +1,72 @@
 #visa_listDoc{
-	border:2px solid red;
+	border:1px solid black;
 	height:95%;
-	width:21%;
+	width:15%;
 	float: left;
 }
 
 #visa_left{
-	border:2px solid blue;
+	/*border:1px solid blue;*/
 	height:95%;
-	width:38%;
+	width:41%;
 	margin-left:1%;
 	float: left;
+}
+
+#tabricatorLeft{
+	height:99.5%;
+	min-width:0;
+	width:99.5%;
 }
 
 #visa_right{
-	border:2px solid green;
+	/*border:1px solid green;*/
 	height:95%;
-	width:38%;
+	width:41%;
 	margin-left:1%;
 	float: left;
 }
 
-.listDocsBasket{
+#tabricatorRight{
+	height:90%;
+	min-width:0;
+	width:99.5%;
+}
+
+#visa_listDoc .toolbar{
+	height: 8%;
+	width: 100%;
+}
+
+#visa_listDoc .toolbar table{
+	text-align:center;
 	width:100%;
+}
+
+
+.listDocsBasket{
 	border-collapse: collapse;
-	border: medium solid #6495ed;
+	height: 92%;
+	width: 100%;
+	overflow-y: scroll;
+	overflow-x: none;
+}
+
+.listDocsBasket div{
+	width:100%;
+	height:25%;
+	margin-top:-10px;
+	border-bottom: thin solid black;
 }
 
 .unselectedId{
-	background-color:#009DC5;
+	background-color:#DEEDF3;
 }
 
 .selectedId{
 	background-color:#FDD16C;
 }
 
-
-.listDocsBasket dl {
-    margin-bottom:50px;
-}
- 
 .listDocsBasket dl dt {
     float:left;
     font-weight:bold;
@@ -49,5 +76,5 @@
  
 .listDocsBasket dl dd {
     margin:2px 0;
-    padding:5px 0;
+    padding:8px;
 }

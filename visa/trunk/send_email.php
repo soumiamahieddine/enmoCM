@@ -110,24 +110,20 @@ function getInfosUser($user_id){
 	return $user;
 }
 
-function getDocsBasket($curr_id){
+function getDocsBasket(){
 	$db = new dbquery();
 	$db->connect();
-	$requete = "select res_id from ".$_SESSION['current_basket']['view']." where " . $_SESSION['current_basket']['clause'];
+	$requete = "select res_id from ".$_SESSION['current_basket']['view']." where " . $_SESSION['current_basket']['clause'] . " order by process_limit_date asc";
 	$db->query($requete, true);
 	$tab_docs = array();
-	$cpt = 1;
 	while($res = $db->fetch_object()){
-		$tab_docs[$cpt] = $res->res_id;
-		if ($res->res_id == $curr_id) $tab_docs['cur_cpt']=$cpt;
-		$cpt++;
+		array_push($tab_docs,$res->res_id);
 	}
 	return $tab_docs;
 }
 
 function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
 {
-	
 	
     if (preg_match("/MSIE 6.0/", $_SERVER["HTTP_USER_AGENT"]))
     {
@@ -144,14 +140,33 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $browser_ie = false;
         $display_value = 'table-row';
     }
+    unset($_SESSION['m_admin']['contact']);
     $_SESSION['req'] = "action";
     $res_id = $values[0];
-	
-	$tab_docs = getDocsBasket($res_id);
-	//writeLogIndex(print_r($tab_docs,true));
-	
     $_SESSION['doc_id'] = $res_id;
+
+		// Ouverture de la modal
+
+	$docLockerCustomPath = 'apps/maarch_entreprise/actions/docLocker.php';
+    $docLockerPath = $_SESSION['config']['businessappurl'] . '/actions/docLocker.php';
+    if (is_file($docLockerCustomPath))
+        require_once $docLockerCustomPath;
+    else if (is_file($docLockerPath))
+        require_once $docLockerPath;
+    else
+        exit("can't find docLocker.php");
+
+    $docLocker = new docLocker($res_id);
+    if (!$docLocker->canOpen()) {
+        $docLockerscriptError = '<script>';
+            $docLockerscriptError .= 'destroyModal("modal_' . $id_action . '");';
+            $docLockerscriptError .= 'alert("'._DOC_LOCKER_RES_ID.''.$res_id.''._DOC_LOCKER_USER.' ' . $_SESSION['userLock'] . '");';
+        $docLockerscriptError .= '</script>';
+        return $docLockerscriptError;
+    }
+
     $frm_str = '';
+	//$frm_str .= '<pre>'.print_r($_ENV['categories']['incoming'],true).'</pre>';
     require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
     require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_business_app_tools.php");
     require_once("modules".DIRECTORY_SEPARATOR."basket".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_modules_tools.php");
@@ -163,227 +178,187 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $b = new basket();
     $type = new types();
     $business = new business_app_tools();
-
-	$bannetteCourante = $_SESSION['current_basket']['id'];
-	//en cas de délégation, le login de la personne est derrière
-	if($_SESSION['current_basket']['basket_owner'] != $_SESSION['user']['UserId']){
-		$bannette = explode('_',$bannetteCourante);
-		$bannette = $bannette[0];
-	}
-	else $bannette = $bannetteCourante;
 	
+	/*check_category($coll_id, $res_id);
+    $data = get_general_data($coll_id, $res_id, 'minimal');*/
+/*
+    echo '<pre>';
+    print_r($data);
+    echo '</pre>';exit;
+*/
 	$db = new dbquery();
     $db->connect();
-	
 	$view = $sec->retrieve_view_from_coll_id($coll_id);
 	$db->query("select alt_identifier from " 
 		. $view 
 		. " where res_id = " . $res_id);
 	$resChrono = $db->fetch_object();
-	
-	$data = get_general_data($coll_id, $res_id, 'minimal');
-	
-	$typeAffichage = $_SESSION['user']['typeview'];
-	if ($typeAffichage == "split"){
-		$affichageSplit = "display:block;";
-		$affichageUni = "display:none;";
-	}
-	elseif ($typeAffichage == "uni"){
-		$affichageUni = "display:block;";
-		$affichageSplit = "display:none;";
-	}
-	
-	
-	//PARTIE GAUCHE
-	$frm_str .= '<form name="index_file" method="post" id="index_file" action="#" class="forms " style="text-align:left;">';
-	$frm_str .= '<input type="hidden" name="typeView" id="typeView" value="'.$typeAffichage.'" />';
-	$frm_str .= '<div id="validleftSplit" style="width:48%;height:95%;margin-top:7px;'.$affichageSplit.'">';
-    $frm_str .= '<div id="valid_div">';
-	$frm_str .= '<h1 class="tit" id="action_title"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=logo_action_18.png"  align="middle" alt="" />'._SEND_MAIL.' '._NUM.$resChrono->alt_identifier;
-	$frm_str .= '</h1>';
-	
-	
-
-	$frm_str .= '<input type="hidden" name="values" id="values" value="'.$res_id.'" />';
-	$frm_str .= '<input type="hidden" name="action_id" id="action_id" value="'.$id_action.'" />';
-	$frm_str .= '<input type="hidden" name="mode" id="mode" value="'.$mode.'" />';
-	$frm_str .= '<input type="hidden" name="table" id="table" value="'.$table.'" />';
-	$frm_str .= '<input type="hidden" name="coll_id" id="coll_id" value="'.$coll_id.'" />';
-	$frm_str .= '<input type="hidden" name="module" id="module" value="'.$module.'" />';
-	$frm_str .= '<input type="hidden" name="category_id" id="category_id" value="'.$data['category_id']['value'].'" />';
-	$frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
-	
-	
-	$frm_str .= '<input type="hidden" name="prevDoc" id="prevDoc" value="';
-	$prevFileExists = false;
-	if (isset($tab_docs[$tab_docs['cur_cpt']-1])){
-		$prevFileExists = true;
-		$frm_str .= $tab_docs[$tab_docs['cur_cpt']-1];
-	}
-	$frm_str .= '" />';
-	$frm_str .= '<input type="hidden" name="nextDoc" id="nextDoc" value="';
-	$nextFileExists = false;
-	if (isset($tab_docs[$tab_docs['cur_cpt']+1])){
-		$nextFileExists = true;
-		$frm_str .= $tab_docs[$tab_docs['cur_cpt']+1];
-	}
-	$frm_str .= '" />';
-	
-	
-
-	$frm_str .= '<div  style="display:block">';
-
-	$frm_str .= '<dl id="tabricator0" >';
-	
-		if ($data['category_id']['value'] == "incoming") $frm_str .= '<dt id="onglet_entrant">'._ENTRANT.'</dt><dd>';
-		else $frm_str .= '<dt id="onglet_entrant">'._SPONTANEOUS.'</dt><dd>';
-		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='. $res_id.'&coll_id='.$coll_id.'" name="viewframevalidDoc" id="viewframevalidDoc"  scrolling="auto" frameborder="0"  style="width:100%;height:100%;" ></iframe></dd>';
+	$chrono_number = $resChrono->alt_identifier;
 		
-		$frm_str .= '</dd>';
 		
+    $frm_str .= '<h2 class="tit" id="action_title">'._VISA_MAIL.' '._NUM.'<span id="numIdDocPage">'.$res_id.'</span>';
+    $frm_str .= '</h2>';
 	
-	$frm_str .= '<dt>Détails</dt><dd>';
+	$frm_str .= '<div id="visa_listDoc">';
+	$frm_str .= '<div class="listDocsBasket">';
+	$tab_docs = getDocsBasket();
+	//$frm_str .= '<pre>'.print_r($tab_docs,true).'</pre>';
+	//$selectedCat = '';
+	$list_docs = '';
+	foreach($tab_docs as $num=>$res_id_doc){
+		$list_docs .= $res_id_doc."#";
+		if ($res_id_doc == $res_id){
+			$classLine = ' class="selectedId" ';
+		}
+		else $classLine = ' class="unselectedId" ';
+		$frm_str .= '<div '.$classLine.' onclick="loadNewId(\'index.php?display=true&module=visa&page=update_sendMail\','.$res_id_doc.',\''.$coll_id.'\');" id="list_doc_'.$res_id_doc.'">';
+		check_category($coll_id, $res_id_doc);
+		$data = get_general_data($coll_id, $res_id_doc, 'minimal');
+		
+		if ($res_id_doc == $res_id){
+			$selectedCat = $data['category_id']['value'];
+			$curNumDoc = $num;
+			$curdest = $data['destination'];
+			/*if (isset($tab_docs[$num-1])) $prevId = $tab_docs[$num-1];
+			if (isset($tab_docs[$num+1])) $nextId = $tab_docs[$num+1];*/
+		}
+		$frm_str .= '<dl>';
+		
+		$frm_str .= '<dt></dt>';
+		$frm_str .= '<dd>'.$chrono_number . ' - ' .$res_id_doc.'</dd>';
+		
+		$frm_str .= '<dt><i class="fa fa-user fa-2x"></i></dt>';
+		if(isset($data['contact']) && !empty($data['contact']))
+        {
+			$frm_str .= '<dd>'.$data['contact'].'</dd>';
+		}
+		
+		$frm_str .= '<dt></dt>';
+		if(isset($data['subject']) && !empty($data['subject']))
+        {
+			$frm_str .= '<dd><i>'.$data['subject'].'</i></dd>';
+		}
+		
+		$frm_str .= '<dt><i class="fa fa-calendar fa-2x"></i></dt>';
+		if(isset($data['admission_date'])&& !empty($data['admission_date']))
+		{
+			$frm_str .= '<dd>'.$data['admission_date'].'</dd>';
+		}
+		 else
+		{
+			$frm_str .= '<dd>'.date('d-m-Y').'</dd>';
+		}
+		
+		/*$frm_str .= '<dt>'._CATEGORY.' : </dt>';
+		if(isset($data['category_id']['value'])&& !empty($data['category_id']['value']))
+        {
+			$frm_str .= '<dd>'.$data['category_id']['value'].'</dd>';
+		}*/
+		
+		$frm_str .= '<dt><i class="fa fa-bell fa-2x"></i></dt>';
+		if(isset($data['process_limit_date'])&& !empty($data['process_limit_date']))
+        {
+			$frm_str .= '<dd>'.$data['process_limit_date'].'</dd>';
+		}
+		$frm_str .= '</dl>';
+		
+		$frm_str .= '</div>';
+	}
+	$frm_str .= '</div>';
 	
-	$table = '';
-	if (!isset($_REQUEST['coll_id']) || empty($_REQUEST['coll_id'])) {
-		//$_SESSION['error'] = _COLL_ID.' '._IS_MISSING;
-		$coll_id = $_SESSION['collections'][0]['id'];
-		$table = $_SESSION['collections'][0]['view'];
-		$is_view = true;
-	} else {
-		$coll_id = $_REQUEST['coll_id'];
-		$table = $sec->retrieve_view_from_coll_id($coll_id);
-		$is_view = true;
-		if (empty($table)) {
-			$table = $sec->retrieve_table_from_coll($coll_id);
-			$is_view = false;
-		}
-	}
-
-
-	$param_data = array(
-                'img_category_id' => true,
-                'img_priority' => true,
-                'img_type_id' => true,
-                'img_doc_date' => true,
-                'img_admission_date' => true,
-                'img_nature_id' => true,
-                'img_subject' => true,
-                'img_process_limit_date' => true,
-                'img_author' => true,
-                'img_destination' => true,
-                'img_arbox_id' => true,
-				/*'img_operator' => true,
-                'img_city' => true,*/
-                'img_folder' => true
-                );
-	 $db->query(
-        "select status, format, typist, creation_date, fingerprint, filesize, "
-        . "res_id, work_batch, page_count, is_paper, scan_date, scan_user, "
-        . "scan_location, scan_wkstation, scan_batch, source, doc_language, "
-        . "description, closing_date, alt_identifier, initiator, entity_label from " . $table . " where res_id = "
-        . $res_id
-    );
-	$data = get_general_data($coll_id, $res_id, 'full', $param_data );
-	//$frm_str .= '<pre>'.print_r($data,true).'</pre>';
-	//writeLogIndex(print_r($data,true));
-	$frm_str .= '<h2>Détails du document</h2>';
-	$frm_str .= '<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">';
-	$frm_str .= '<tbody>';
-	$cpt_i = 0;
-	foreach($data as $key=>$d){
-		if ($key != 'folder'){
-			if ($cpt_i%2 == 0){
-				$frm_str .= '<tr class="col">';
-			}
-			$frm_str .= '<th class="picto" align="left"><img src="'.$data[$key]['img'].'" title="'.$data[$key]['label'].'" alt="'.$data[$key]['label'].'" /></th>';
-			$frm_str .= '<td width="170px" align="left">'.$data[$key]['label'].'</td>';
-			$frm_str .= '<td width="200px" align="left">'.$data[$key]['show_value'].'</td>';
-			
-			if ($cpt_i%2 == 1){
-				$frm_str .= '</tr>';
-			}
-			$cpt_i++;
-		}
-	}
-	$frm_str .= '</tbody>';
-	$frm_str .= '</table>';
+	$frm_str .= '<div class="toolbar">';
+	$frm_str .= '<table>';	
+	$frm_str .= '<tr>';
+		$frm_str .= '<td style="width:33%";">';	
+		$frm_str .= '<a href="javascript://" id="previous_doc" onclick="previousDoc(\'index.php?display=true&module=visa&page=update_sendMail\',\''.$coll_id.'\');"><i class="fa fa-chevron-up fa-4x" title="Précédent"></i></a>';
+		
+		$frm_str .= '</td>';
+		
+		$frm_str .= '<td style="width:33%";">';	
+		$frm_str .= '<a href="javascript://" id="next_doc" onclick="nextDoc(\'index.php?display=true&module=visa&page=update_sendMail\',\''.$coll_id.'\');"><i class="fa fa-chevron-down fa-4x" title="Suivant"></i></a>';
+		
+		$frm_str .= '</td>';
+		
+		$frm_str .= '<td style="width:33%";">';	
+		$frm_str .= '<a href="javascript://" id="cancel" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"><i class="fa fa-undo fa-4x" title="Annuler"></i></a>';
+		
+		$frm_str .= '</td>';
+	$frm_str .= '</tr>';	
+	$frm_str .= '</table>';	
+	$frm_str .= '</div>';
+	$frm_str .= '</div>';
+	
+	$frm_str .= '<div id="visa_left">';
+	
+	$frm_str .= '<dl id="tabricatorLeft" >';
+	
+	//Onglet document
+	$frm_str .= '<dt id="onglet_entrant">'._INCOMING.'</dt><dd>';
+	$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='. $res_id.'&coll_id='.$coll_id.'" name="viewframevalidDoc" id="viewframevalidDoc"  scrolling="auto" frameborder="0"  style="width:100%;height:100%;" ></iframe></dd>';
+	
 	$frm_str .= '</dd>';
 	
-	
-	if ($core->is_module_loaded('notes')){
-		require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
-							. "class" . DIRECTORY_SEPARATOR
-							. "class_modules_tools.php";
-		$notes_tools    = new notes();
-						
-		//Count notes
-		$nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
-		if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
-		//Notes iframe
-		$frm_str .= '<dt>'. _NOTES.$nbr_notes .'</dt><dd><h2>'. _NOTES .'</h2><iframe name="list_notes_doc" id="list_notes_doc" src="'. $_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=notes&identifier='. $res_id .'&origin=document&coll_id='.$coll_id.'&load&size=full" frameborder="0" scrolling="no" width="99%" height="570px"></iframe></dd> ';	
-	}
-	
-	
-	if ($core->is_module_loaded('attachments'))
-	{
-		$req = new dbquery;
-		$req->connect();
-		
-		$countAttachments = "select res_id, creation_date, title, format from " 
-				. $_SESSION['tablename']['attach_res_attachments'] 
-				. " where res_id_master = " . $_SESSION['doc_id'] 
-				. " and coll_id ='" . $_SESSION['collection_id_choice'] 
-				. "' and status <> 'DEL' and status='NEW' ";
-			$req->query($countAttachments);
-			if ($req->nb_result() > 0) {
-				$nb_rep = ' (' . ($req->nb_result()). ')';
-			}
-	
-		$frm_str .= '<dt>'. _DONE_ANSWERS .$nb_rep.'</dt><dd><iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&no_modify&view_only&mode=normal&status=NEW&resId='.$res_id.'" name="list_answ" width="100%" height="590px" align="left" scrolling="no" frameborder="0" id="list_answ"></iframe></dd>';
-	
-	
-		$countAttachments = "select res_id, creation_date, title, format from " 
+	$countAttachments = "select res_id, creation_date, title, format from " 
 			. $_SESSION['tablename']['attach_res_attachments'] 
-			. " where res_id_master = " . $_SESSION['doc_id'] 
-			. " and coll_id ='" . $_SESSION['collection_id_choice'] 
-			. "' and status <> 'DEL' and status='PJ' ";
-		$req->query($countAttachments);
-		if ($req->nb_result() > 0) {
-			$nb_attach = ' (' . ($req->nb_result()). ')';
+			. "  where (status = 'A_TRA' or status = 'TRA') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'";
+		$dbAttach = new dbquery();
+		$dbAttach->query($countAttachments);
+		if ($dbAttach->nb_result() > 0) {
+			$nb_attach = ' (' . ($dbAttach->nb_result()). ')';
 		}
 	
-		$frm_str .= '<dt>'. _ATTACHED_DOC .$nb_attach.'</dt><dd><iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&no_modify&view_only&mode=normal&status=PJ&resId='.$res_id.'" name="list_answ" width="100%" height="590px" align="left" scrolling="no" frameborder="0" id="list_answ"></iframe></dd>';
+		$frm_str .= '<dt id="onglet_pj">'. _ATTACHED_DOC .$nb_attach.'</dt><dd id="page_pj">';
 		
-	}
-		
-	/*if ($core->test_service('sendmail', 'sendmail', false) === true) {
-		require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
-			. "class" . DIRECTORY_SEPARATOR
-			. "class_modules_tools.php";
-		$sendmail_tools    = new sendmail();
-		 //Count mails
-		$nbr_emails = $sendmail_tools->countUserEmails($res_id, $coll_id);
-		if ($nbr_emails > 0 ) $nbr_emails = ' ('.$nbr_emails.')';  else $nbr_emails = '';
-	   
-		
-		$frm_str .= '<dt>' . _SENDED_EMAILS.$nbr_emails .'</dt><dd>';
-		//Emails iframe
-		$frm_str .=  $core->execute_modules_services(
-			$_SESSION['modules_services'], 'details', 'frame', 'sendmail', 'sendmail'
-		);
-		
-		$frm_str .= '</dd>';
-	}*/
+		if ($core_tools->is_module_loaded('attachments')) {
+        require 'modules/templates/class/templates_controler.php';
+        $templatesControler = new templates_controler();
+        $templates = array();
+        $templates = $templatesControler->getAllTemplatesForProcess($curdest);
+        $_SESSION['destination_entity'] = $curdest;
+        //var_dump($templates);
+        $frm_str .= '<div id="list_answers_div" onmouseover="this.style.cursor=\'pointer\';">';
+            $frm_str .= '<div class="block" style="margin-top:-2px;">';
+                $frm_str .= '<div id="processframe" name="processframe">';
+                    $frm_str .= '<center><h2>' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
+                    $req = new request;
+                    $req->connect();
+                    $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
+                        . " where (status = 'A_TRA' or status = 'TRA') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
+                    //$req->show();
+                    $nb_attach = 0;
+                    if ($req->nb_result() > 0) {
+                        $nb_attach = $req->nb_result();
+                    }
+                    $frm_str .= '<div class="ref-unit">';
+                    $frm_str .= '<center>';
+                    if ($core_tools->is_module_loaded('templates')) {
+                        $frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'
+                            . _CREATE_PJ
+                            .'" onclick="showAttachmentsForm(\'' . $_SESSION['config']['businessappurl']
+                            . 'index.php?display=true&module=attachments&page=attachments_content\')" />';
+                    }
+                    $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'
+                    . $_SESSION['config']['businessappurl']
+                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load" '
+                    . 'frameborder="0" width="100%" height="600px"></iframe>';
+                    $frm_str .= '</div>';
+                $frm_str .= '</div>';
+            $frm_str .= '</div>';
+            $frm_str .= '<hr />';
+        $frm_str .= '</div>';
+    }
 	
+	
+		$frm_str .= '</dd>';
+		
+	//Onglet Avancement 
 	$frm_str .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement">';
 	$frm_str .= '<h2>Workflow</h2>';
 	$visa = new visa();
-	$workflow = $visa->getVisaWorkflow($res_id, $coll_id);
-	$current_step = $visa->getCurrentVisaStep($res_id, $table);
+	$workflow = $visa->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
+	$current_step = $visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT');
 	
 	$tab_histo = getHistoryActions($res_id);
-	//writeLogIndex(print_r($tab_histo,true));
 	$frm_str .= '<table class="listing spec detailtabricatordebug" cellspacing="0" border="0" id="tab_visaWorkflow">';
 	$frm_str .= '<thead><tr>';
 	$frm_str .= '<th style="width:15%;" align="left" valign="bottom"><span>Date</span></th>';
@@ -393,11 +368,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '<th style="width:20%;" align="left" valign="bottom"><span>Acteur</span></th>';
 	$frm_str .= '</tr></thead><tbody>';
 	$color = "";
-	$visaEnCours = false;
+	//$visaEnCours = false;
 	foreach($tab_histo as $action){
 		$act = getInfosAction($action->event_id);
 		$us = getInfosUser($action->user_id);
-		if (($act['status'] != "" || $visaEnCours) && $action->event_id != 401 && $action->event_id != 405){
+		if (($act['status'] != "")/* && $action->event_id != 401 && $action->event_id != 405*/){
 		if($color == ' class="col"') {
 			$color = '';
 		} else {
@@ -408,9 +383,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$date = explode("-",$date[0]);
 		$frm_str .= '<tr ' . $color . '>';
 		$frm_str .= '<td>'.$date[2]."/".$date[1]."/".$date[0].'</td>';
-		//$frm_str .= '<td>'.$act['label'].' ['.$action->event_id.']</td>';
 		$frm_str .= '<td>'.$act['label'].'</td>';
-		if ($action->event_id == 403) $visaEnCours = true;
 		$frm_str .= '<td>'.$us['groupe'].'</td>';
 		$frm_str .= '<td>'.$us['entite'].'</td>';
 		$frm_str .= '<td>'.$us['prenom'].' '.$us['nom'].'</td>';
@@ -426,53 +399,31 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '</div>';
 	$frm_str .= '</dd>';
 	
+	
+	
+	//Onglet notes
+	if ($core_tools->is_module_loaded('notes')){
+		require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
+							. "class" . DIRECTORY_SEPARATOR
+							. "class_modules_tools.php";
+		$notes_tools    = new notes();
+						
+		//Count notes
+		$nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
+		if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
+		//Notes iframe
+		$frm_str .= '<dt id="onglet_notes">'. _NOTES.$nbr_notes .'</dt><dd id="page_notes"><h2>'. _NOTES .'</h2><iframe name="list_notes_doc" id="list_notes_doc" src="'. $_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=notes&identifier='. $res_id .'&origin=document&coll_id='.$coll_id.'&load&size=full" frameborder="0" scrolling="no" width="99%" height="570px"></iframe></dd> ';	
+	}
+		
+	
 	$frm_str .= '</dl>';
 	$frm_str .= '</div>';
-		
-	$frm_str .= '<div class="toolsSplit">';	
-		$frm_str .= '<table style="width:45%;">';	
-		
-		$frm_str .= '<tr>';
-		$frm_str .= '<td style="width:5%">';	
-		if ($prevFileExists)
-			$frm_str .= '<a href="javascript://" onclick="javascript:previousDoc();"><img src="static.php?filename=FlecheGaucheBleue.png"/></a>';
-		$frm_str .= '</td>';
-		
-		$frm_str .= '<td style="width:20%">';	
-		$nb_docs_tot = count($tab_docs)-1;
-		$frm_str .= 'Page '.$tab_docs['cur_cpt'].' sur '.$nb_docs_tot;
-		$frm_str .= '</td>';
-		
-		$frm_str .= '<td style="width:5%">';	
-		if ($nextFileExists)
-			$frm_str .= '<a href="javascript://" onclick="javascript:nextDoc();"><img src="static.php?filename=FlecheDroiteBleue.png"/></a>';
-		$frm_str .= '</td>';
-		
-		/*$frm_str .= '<td style="width:5%">';	
-		$frm_str .= '<a href="javascript://" onclick="javascript:switchViewTab(1);"><img src="static.php?filename=splitView.png" title="Rassembler les vues"/></a>';
-		$frm_str .= '</td>';*/
-		
-		$frm_str .= '<td style="width:5%">';	
-		$frm_str .= '<a href="javascript://" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"><img src="static.php?filename=flecheRetourOrange.png" title="Annuler"/></a>';
-		$frm_str .= '</td>';
-		
-		
-		$frm_str .= '</tr>';	
-		$frm_str .= '</table>';	
-		$frm_str .= '</div>';
-		
-    $frm_str .= '</div>';        
-    $frm_str .= '</div>';        
-			
-	//PARTIE DROITE
-	$frm_str .= '<div id="validrightSplit" style="width:48%;height:95%;margin-top:45px;'.$affichageSplit.'">';
-    $frm_str .= '<div id="valid_div" style="display:block;">';
 	
+	$frm_str .= '<form name="index_file" method="post" id="index_file" action="#" class="forms " style="text-align:left;height:95%;" >';
+	$frm_str .= '<div id="visa_right">';
 	
-	$frm_str .= '<div  style="display:block">';
-
-	$frm_str .= '<dl id="tabricator1" >';
-	//Onglet préparation du circuit de visa
+	$frm_str .= '<dl id="tabricatorRight"  style="height:98%;">';
+	
 	if ($core->test_service('sendmail', 'sendmail', false) === true) {
 		require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
 			. "class" . DIRECTORY_SEPARATOR
@@ -489,319 +440,57 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$_SESSION['modules_services'], 'details', 'frame', 'sendmail', 'sendmail'
 		);
 		
-		$frm_str .= '</dd>';
-	}
-	
-	
-	
-	$frm_str .= '</dl>';
-	$frm_str .= '</div>';
-	
-	$frm_str .= '<div class="toolsSplit">';	
-		$frm_str .= '<table style="width:100%;">';	
-		
-		$frm_str .= '<tr>';	
-		$frm_str .= '<td>';	
-		
-		$frm_str .= '<b>'._ACTIONS.' : </b>';
-
-		$actions  = $b->get_actions_from_current_basket($res_id, $coll_id, 'PAGE_USE');
-		if(count($actions) > 0)
-		{
-			$frm_str .='<select name="chosen_action" id="split_chosen_action">';
-				$frm_str .='<option value="">'._CHOOSE_ACTION.'</option>';
-				for($ind_act = 0; $ind_act < count($actions);$ind_act++)
-				{
-					$frm_str .='<option value="'.$actions[$ind_act]['VALUE'].'"';
-					if($ind_act==0)
-					{
-						$frm_str .= 'selected="selected"';
-					}
-					$frm_str .= '>'.$actions[$ind_act]['LABEL'].'</option>';
-				}
-			$frm_str .='</select> ';
-			$table = $sec->retrieve_table_from_coll($coll_id);
-			$frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
-		}
-		
-		$frm_str .= '</td>';
-		$frm_str .= '</tr>';	
-		$frm_str .= '</table>';	
-		$frm_str .= '</div>';
-	
-	$frm_str .= '</div>';        
-    $frm_str .= '</div>';  
-	
-	/**
-	* FORMULAIRE UNIFIE
-	**/
-	$frm_str .= '<div id="validUnified" style="width:99%;height:95%;margin-top:7px;'.$affichageUni.'">';
-	$frm_str .= '<div id="valid_div">';
-	$frm_str .= '<h1 class="tit" id="action_title"><img src="'.$_SESSION['config']['businessappurl'].'static.php?filename=logo_action_18.png"  align="middle" alt="" />'._SEND_MAIL.' '._NUM.$resChrono->alt_identifier;
-	$frm_str .= '</h1>';
-	
-	
-
-	$frm_str .= '<input type="hidden" name="values" id="values" value="'.$res_id.'" />';
-	$frm_str .= '<input type="hidden" name="action_id" id="action_id" value="'.$id_action.'" />';
-	$frm_str .= '<input type="hidden" name="mode" id="mode" value="'.$mode.'" />';
-	$frm_str .= '<input type="hidden" name="table" id="table" value="'.$table.'" />';
-	$frm_str .= '<input type="hidden" name="coll_id" id="coll_id" value="'.$coll_id.'" />';
-	$frm_str .= '<input type="hidden" name="module" id="module" value="'.$module.'" />';
-	$frm_str .= '<input type="hidden" name="category_id" id="category_id" value="'.$data['category_id']['value'].'" />';
-	$frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
-	
-	
-	$frm_str .= '<input type="hidden" name="prevDoc" id="prevDoc" value="';
-	$prevFileExists = false;
-	if (isset($tab_docs[$tab_docs['cur_cpt']-1])){
-		$prevFileExists = true;
-		$frm_str .= $tab_docs[$tab_docs['cur_cpt']-1];
-	}
-	$frm_str .= '" />';
-	$frm_str .= '<input type="hidden" name="nextDoc" id="nextDoc" value="';
-	$nextFileExists = false;
-	if (isset($tab_docs[$tab_docs['cur_cpt']+1])){
-		$nextFileExists = true;
-		$frm_str .= $tab_docs[$tab_docs['cur_cpt']+1];
-	}
-	$frm_str .= '" />';
-	
-	
-
-	$frm_str .= '<div  style="display:block">';
-
-	$frm_str .= '<dl id="tabricator2" >';
-	//Onglet préparation du circuit de visa
-	if ($core->test_service('sendmail', 'sendmail', false) === true) {
-		require_once "modules" . DIRECTORY_SEPARATOR . "sendmail" . DIRECTORY_SEPARATOR
-			. "class" . DIRECTORY_SEPARATOR
-			. "class_modules_tools.php";
-		$sendmail_tools    = new sendmail();
-		 //Count mails
-		$nbr_emails = $sendmail_tools->countUserEmails($res_id, $coll_id);
-		if ($nbr_emails > 0 ) $nbr_emails = ' ('.$nbr_emails.')';  else $nbr_emails = '';
-	   
-		
-		$frm_str .= '<dt>' . _SENDED_EMAILS.$nbr_emails .'</dt><dd>';
-		//Emails iframe
-		$frm_str .=  $core->execute_modules_services(
-			$_SESSION['modules_services'], 'details', 'frame', 'sendmail', 'sendmail'
-		);
 		
 		$frm_str .= '</dd>';
 	}
 	
-	if ($data['category_id']['value'] == "incoming") $frm_str .= '<dt id="onglet_entrant">'._ENTRANT.'</dt><dd>';
-		else $frm_str .= '<dt id="onglet_entrant">'._SPONTANEOUS.'</dt><dd>';
-		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='. $res_id.'&coll_id='.$coll_id.'" name="viewframevalidDoc" id="viewframevalidDoc"  scrolling="auto" frameborder="0"  style="width:100%;height:100%;" ></iframe></dd>';
 	
-	$frm_str .= '</dd>';
-		
+	//Onglet Circuit 
+	$frm_str .= '<dt id="onglet_circuit">'._VISA_WORKFLOW.'</dt><dd id="page_circuit">';
+	$frm_str .= '<h2>'._VISA_WORKFLOW.'</h2>';
 	
-	$frm_str .= '<dt>Détails</dt><dd>';
-	
-	$table = '';
-	if (!isset($_REQUEST['coll_id']) || empty($_REQUEST['coll_id'])) {
-		//$_SESSION['error'] = _COLL_ID.' '._IS_MISSING;
-		$coll_id = $_SESSION['collections'][0]['id'];
-		$table = $_SESSION['collections'][0]['view'];
-		$is_view = true;
-	} else {
-		$coll_id = $_REQUEST['coll_id'];
-		$table = $sec->retrieve_view_from_coll_id($coll_id);
-		$is_view = true;
-		if (empty($table)) {
-			$table = $sec->retrieve_table_from_coll($coll_id);
-			$is_view = false;
-		}
-	}
-
-
-	$param_data = array(
-                'img_category_id' => true,
-                'img_priority' => true,
-                'img_type_id' => true,
-                'img_doc_date' => true,
-                'img_admission_date' => true,
-                'img_nature_id' => true,
-                'img_subject' => true,
-                'img_process_limit_date' => true,
-                'img_author' => true,
-                'img_destination' => true,
-                'img_arbox_id' => true,
-				/*'img_operator' => true,
-                'img_city' => true,*/
-                'img_folder' => true
-                );
-	 $db->query(
-        "select status, format, typist, creation_date, fingerprint, filesize, "
-        . "res_id, work_batch, page_count, is_paper, scan_date, scan_user, "
-        . "scan_location, scan_wkstation, scan_batch, source, doc_language, "
-        . "description, closing_date, alt_identifier, initiator, entity_label from " . $table . " where res_id = "
-        . $res_id
-    );
-	$data = get_general_data($coll_id, $res_id, 'full', $param_data );
-	//$frm_str .= '<pre>'.print_r($data,true).'</pre>';
-	//writeLogIndex(print_r($data,true));
-	$frm_str .= '<h2>Détails du document</h2>';
-	$frm_str .= '<table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">';
-	$frm_str .= '<tbody>';
-	$cpt_i = 0;
-	foreach($data as $key=>$d){
-		if ($key != 'folder'){
-			if ($cpt_i%2 == 0){
-				$frm_str .= '<tr class="col">';
-			}
-			$frm_str .= '<th class="picto" align="left"><img src="'.$data[$key]['img'].'" title="'.$data[$key]['label'].'" alt="'.$data[$key]['label'].'" /></th>';
-			$frm_str .= '<td width="170px" align="left">'.$data[$key]['label'].'</td>';
-			$frm_str .= '<td width="200px" align="left">'.$data[$key]['show_value'].'</td>';
-			
-			if ($cpt_i%2 == 1){
-				$frm_str .= '</tr>';
-			}
-			$cpt_i++;
-		}
-	}
-	$frm_str .= '</tbody>';
-	$frm_str .= '</table>';
-	$frm_str .= '</dd>';
-	
-	
-	if ($core->is_module_loaded('notes')){
-		require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
-							. "class" . DIRECTORY_SEPARATOR
-							. "class_modules_tools.php";
-		$notes_tools    = new notes();
-						
-		//Count notes
-		$nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
-		if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
-		//Notes iframe
-		$frm_str .= '<dt>'. _NOTES.$nbr_notes .'</dt><dd><h2>'. _NOTES .'</h2><iframe name="list_notes_doc" id="list_notes_doc" src="'. $_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=notes&identifier='. $res_id .'&origin=document&coll_id='.$coll_id.'&load&size=full" frameborder="0" scrolling="no" width="99%" height="570px"></iframe></dd> ';	
-	}
-	
-	
-	if ($core->is_module_loaded('attachments'))
-	{
-		$req = new dbquery;
-		$req->connect();
-		
-		$countAttachments = "select res_id, creation_date, title, format from " 
-				. $_SESSION['tablename']['attach_res_attachments'] 
-				. " where res_id_master = " . $_SESSION['doc_id'] 
-				. " and coll_id ='" . $_SESSION['collection_id_choice'] 
-				. "' and status <> 'DEL' and status='NEW' ";
-			$req->query($countAttachments);
-			if ($req->nb_result() > 0) {
-				$nb_rep = ' (' . ($req->nb_result()). ')';
-			}
-	
-		$frm_str .= '<dt>'. _DONE_ANSWERS .$nb_rep.'</dt><dd><iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&no_modify&view_only&mode=normal&status=NEW&resId='.$res_id.'" name="list_answ" width="100%" height="590px" align="left" scrolling="no" frameborder="0" id="list_answ"></iframe></dd>';
-	
-	
-		$countAttachments = "select res_id, creation_date, title, format from " 
-			. $_SESSION['tablename']['attach_res_attachments'] 
-			. " where res_id_master = " . $_SESSION['doc_id'] 
-			. " and coll_id ='" . $_SESSION['collection_id_choice'] 
-			. "' and status <> 'DEL' and status='PJ' ";
-		$req->query($countAttachments);
-		if ($req->nb_result() > 0) {
-			$nb_attach = ' (' . ($req->nb_result()). ')';
-		}
-	
-		$frm_str .= '<dt>'. _ATTACHED_DOC .$nb_attach.'</dt><dd><iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&no_modify&view_only&mode=normal&status=PJ&resId='.$res_id.'" name="list_answ" width="100%" height="590px" align="left" scrolling="no" frameborder="0" id="list_answ"></iframe></dd>';
-		
-	}
-		
-	
-	
-	$frm_str .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement">';
-	$frm_str .= '<h2>Workflow</h2>';
+	$modifVisaWorkflow = false;
+    if ($core_tools->test_service('config_visa_workflow', 'visa', false)) {
+        $modifVisaWorkflow = true;
+    }
 	$visa = new visa();
-	$workflow = $visa->getVisaWorkflow($res_id, $coll_id);
-	$current_step = $visa->getCurrentVisaStep($res_id, $table);
 	
-	$tab_histo = getHistoryActions($res_id);
-	//writeLogIndex(print_r($tab_histo,true));
-	$frm_str .= '<table class="listing spec detailtabricatordebug" cellspacing="0" border="0" id="tab_visaWorkflow">';
-	$frm_str .= '<thead><tr>';
-	$frm_str .= '<th style="width:15%;" align="left" valign="bottom"><span>Date</span></th>';
-	$frm_str .= '<th style="width:25%;" align="left" valign="bottom"><span>Action</span></th>';
-	$frm_str .= '<th style="width:20%;" align="left" valign="bottom"><span>Profil</span></th>';
-	$frm_str .= '<th style="width:20%;" align="left" valign="bottom"><span>Service</span></th>';
-	$frm_str .= '<th style="width:20%;" align="left" valign="bottom"><span>Acteur</span></th>';
-	$frm_str .= '</tr></thead><tbody>';
-	$color = "";
-	$visaEnCours = false;
-	foreach($tab_histo as $action){
-		$act = getInfosAction($action->event_id);
-		$us = getInfosUser($action->user_id);
-		if (($act['status'] != "" || $visaEnCours) && $action->event_id != 401 && $action->event_id != 405){
-		if($color == ' class="col"') {
-			$color = '';
-		} else {
-			$color = ' class="col"';
-		}
-		$date = $action->event_date;
-		$date = explode(" ",$date);
-		$date = explode("-",$date[0]);
-		$frm_str .= '<tr ' . $color . '>';
-		$frm_str .= '<td>'.$date[2]."/".$date[1]."/".$date[0].'</td>';
-		//$frm_str .= '<td>'.$act['label'].' ['.$action->event_id.']</td>';
-		$frm_str .= '<td>'.$act['label'].'</td>';
-		if ($action->event_id == 403) $visaEnCours = true;
-		$frm_str .= '<td>'.$us['groupe'].'</td>';
-		$frm_str .= '<td>'.$us['entite'].'</td>';
-		$frm_str .= '<td>'.$us['prenom'].' '.$us['nom'].'</td>';
-		$frm_str .= '</tr>';
-		}
-	}
-	$frm_str .= '</tbody></table><br/>';
-	$frm_str .= '<h2 onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'frame_histo_div\', \'blind\', {delay:0.2}); whatIsTheDivStatus(\'frame_histo_div\', \'frame_histo_div_status\');return false;">';
-	$frm_str .= ' <span id="frame_histo_div_status" style="color:#1C99C5;"><<</span>';
-	$frm_str .= ' Historique complet</h2>';
-	$frm_str .= '<div id="frame_histo_div" style="display:none" >';
-	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="history_document" width="100%" height="590px" align="left" scrolling="no" frameborder="0" id="history_document"></iframe>';
+	$frm_str .= '<div class="error" id="divError" name="divError"></div>';
+	$frm_str .= '<div style="text-align:center;">';
+	$frm_str .= $visa->getList($res_id, $coll_id, $modifVisaWorkflow, 'VISA_CIRCUIT');
+                
+	$frm_str .= '</div><br>';
+	/* Historique diffusion visa */
+	$frm_str .= '<br/>'; 
+		$frm_str .= '<br/>';                
+		$frm_str .= '<span class="diff_list_visa_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'diff_list_visa_history_div\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'diff_list_visa_history_div\', \'divStatus_diff_list_visa_history_div\');return false;">';
+			$frm_str .= '<span id="divStatus_diff_list_visa_history_div" style="color:#1C99C5;"><<</span>';
+			$frm_str .= '<b>&nbsp;<small>'._DIFF_LIST_VISA_HISTORY.'</small></b>';
+		$frm_str .= '</span>';
+
+		$frm_str .= '<div id="diff_list_visa_history_div" style="display:none">';
+
+			$s_id = $res_id;
+			$return_mode = true;
+			$diffListType = 'VISA_CIRCUIT';
+			require_once('modules/entities/difflist_visa_history_display.php');
+						
 	$frm_str .= '</div>';
 	$frm_str .= '</dd>';
 	
+
 	$frm_str .= '</dl>';
-	$frm_str .= '</div>';
-		
-	$frm_str .= '<div class="toolsSplit">';	
-		$frm_str .= '<table style="width:90%;">';	
-		
-		$frm_str .= '<tr>';
-		$frm_str .= '<td style="width:5%">';	
-		if ($prevFileExists)
-			$frm_str .= '<a href="javascript://" onclick="javascript:previousDoc();"><img src="static.php?filename=FlecheGaucheBleue.png"/></a>';
-		$frm_str .= '</td>';
-		
-		$frm_str .= '<td style="width:20%">';	
-		$nb_docs_tot = count($tab_docs)-1;
-		$frm_str .= 'Page '.$tab_docs['cur_cpt'].' sur '.$nb_docs_tot;
-		$frm_str .= '</td>';
-		
-		$frm_str .= '<td style="width:5%">';	
-		if ($nextFileExists)
-			$frm_str .= '<a href="javascript://" onclick="javascript:nextDoc();"><img src="static.php?filename=FlecheDroiteBleue.png"/></a>';
-		$frm_str .= '</td>';
-		
-		
-		
-		$frm_str .= '<td style="width:5%">';	
-		$frm_str .= '<a href="javascript://" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"><img src="static.php?filename=flecheRetourOrange.png" title="Annuler"/></a>';
-		$frm_str .= '</td>';
-		
-		$frm_str .= '<td>';	
+	$frm_str .= '<div class="toolbar">';
+	$frm_str .= '<table style="width:90%;">';	
+	
+	$frm_str .= '<tr>';
+	$frm_str .= '<td>';	
 		
 		$frm_str .= '<b>'._ACTIONS.' : </b>';
-
 		$actions  = $b->get_actions_from_current_basket($res_id, $coll_id, 'PAGE_USE');
 		if(count($actions) > 0)
 		{
-			$frm_str .='<select name="chosen_action" id="uni_chosen_action">';
+			$frm_str .='<select name="chosen_action" id="chosen_action">';
 				$frm_str .='<option value="">'._CHOOSE_ACTION.'</option>';
 				for($ind_act = 0; $ind_act < count($actions);$ind_act++)
 				{
@@ -814,20 +503,43 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				}
 			$frm_str .='</select> ';
 			$table = $sec->retrieve_table_from_coll($coll_id);
-			$frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
+			$frm_str .= '<input type="button" name="send" id="send_action" value="'._VALIDATE.'" class="button" onclick="if (document.getElementById(\'chosen_action\').value == 403 || document.getElementById(\'chosen_action\').value == 404 || document.getElementById(\'chosen_action\').value == 414) generateWaybill('.$res_id.');valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
 		}
 		
-		$frm_str .= '</td>';
 		
+		$frm_str .= '<input type="hidden" name="cur_rep" id="cur_rep" value="'.$tab_path_rep_file[0]['res_id'].'" >';
+		$frm_str .= '<input type="hidden" name="cur_idAffich" id="cur_idAffich" value="1" >';
+		$frm_str .= '<input type="hidden" name="cur_resId" id="cur_resId" value="'.$res_id.'" >';
+		$frm_str .= '<input type="hidden" name="list_docs" id="list_docs" value="'.$list_docs.'" >';
+		
+		$frm_str .= '<input type="hidden" name="values" id="values" value="'.$res_id.'" />';
+		$frm_str .= '<input type="hidden" name="action_id" id="action_id" value="'.$id_action.'" />';
+		$frm_str .= '<input type="hidden" name="mode" id="mode" value="'.$mode.'" />';
+		$frm_str .= '<input type="hidden" name="table" id="table" value="'.$table.'" />';
+		$frm_str .= '<input type="hidden" name="coll_id" id="coll_id" value="'.$coll_id.'" />';
+		$frm_str .= '<input type="hidden" name="module" id="module" value="'.$module.'" />';
+		$frm_str .= '<input type="hidden" name="category_id" id="category_id" value="'.$data['category_id']['value'].'" />';
+		$frm_str .= '<input type="hidden" name="req" id="req" value="second_request" />';
+	
+	
+		//$frm_str .= '<input type="hidden" name="next_resId" id="next_resId" value="'.$nextId.'" >';
+		
+		$frm_str .= '</td>';
+		$frm_str .= '<td style="width:5%;">';	
+		$frm_str .= '<a href="javascript://" id="update_rep_link" onclick="';
+		$frm_str .= 'window.open(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId='.$coll_id.'&id='.$tab_path_rep_file[0]['res_id'].'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');';
+		$frm_str .= '"><i class="fa fa-pencil-square-o fa-4x" title="Modifier la réponse"></i></a>';
+		
+		$frm_str .= '</td>';
 		$frm_str .= '</tr>';	
-		$frm_str .= '</table>';	
-		$frm_str .= '</div>';
-	$frm_str .= '</div>';        
-    $frm_str .= '</div>';  
+	$frm_str .= '</table>';	
+	
+	$frm_str .= '</div>';	
+	
+	$frm_str .= '</div>';
+	$frm_str .= '</form>';
 	/*** Extra javascript ***/
-	
-	//showEmailForm(\'index.php?display=true&module=sendmail&page=sendmail_ajax_content&mode=add&identifier='.$res_id.'&origin=document&coll_id=letterbox_coll&size=medium\', \'\', \'\', \'sendmail_iframe\');
-	$frm_str .= '<script type="text/javascript">launchTabri();window.scrollTo(0,0);showEmailForm(\'index.php?display=true&module=sendmail&page=sendmail_ajax_content&mode=add&identifier='.$res_id.'&origin=document&coll_id=letterbox_coll&size=medium\', \'\', \'\', \'sendmail_iframe\'); ';
+	$frm_str .= '<script type="text/javascript">launchTabri();window.scrollTo(0,0);showEmailForm(\'index.php?display=true&module=sendmail&page=sendmail_ajax_content&mode=add&identifier='.$res_id.'&origin=document&coll_id='.$coll_id.'&size=medium\', \'820px\', \'545px\', \'sendmail_iframe\');';
 	$frm_str .='</script>';
 	return addslashes($frm_str);
 }
@@ -875,16 +587,7 @@ function get_value_fields($values, $field)
     return false;
 }
 
-function get_circuit($values){
-	$tab_circuit = array();
-	foreach($values as $key=>$val){
-		$vals = explode("_",$val['ID']);
-		if (isset($vals[0]) && $vals[0] == "conseiller"){
-			array_push($tab_circuit,array('sequence'=>$vals[1], 'vis_user'=>$val['VALUE'], 'consigne'=>get_value_fields($values, 'consigne_'.$vals[1])));
-		}
-	}	
-	return $tab_circuit;
-}
+
 /**
  * Action of the form : update the database
  *
@@ -901,11 +604,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 {
 	//writeLogIndex("GO MANAGE !!");
 	$res_id = $arr_id[0];
-	$dir_field = get_value_fields($values_form, 'directeur');
+	/*$dir_field = get_value_fields($values_form, 'directeur');
 	$type_view = get_value_fields($values_form, 'typeView');
 	$action_chosen = get_value_fields($values_form, $type_view.'_chosen_action');
 	writeLogIndex("Action choisie = ".$action_chosen);
-	//writeLogIndex($action_chosen);
 	$dir_field_split = explode('-',$dir_field);
 	
 	$dir_user = $dir_field_split[0];
@@ -915,7 +617,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	$sec = new security();
 	$table = $sec->retrieve_table_from_coll($coll_id);
 	
-	/*$circuit_visa = new visa();
+	$circuit_visa = new visa();
 	$circuit_visa->saveWorkflow($res_id, $coll_id, get_circuit($values_form));*/
    
     return array('result' => $res_id.'#', 'history_msg' => '');

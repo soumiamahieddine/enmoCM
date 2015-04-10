@@ -1,11 +1,11 @@
 <?php
 $core_path = $_SESSION['config']['corepath'];
 $core_path = str_replace("\\", "/", $core_path);
-define('FPDF_FONTPATH','modules/visa/class/font/');
+define('FPDF_FONTPATH',$core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/font/');
 //above line is import to define, otherwise it gives an error : Could not include font metric file
-require('modules/visa/class/fpdf.php');
-require('modules/visa/class/fpdi.php');
-require('modules/visa/class/php-barcode.php');
+require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdf.php');
+require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdi.php');
+require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/php-barcode.php');
 
 
   

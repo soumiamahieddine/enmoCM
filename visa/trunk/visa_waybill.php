@@ -97,9 +97,7 @@ class ChargePdf extends FPDI
 	{
 		// Lecture des lignes du fichier
 		$data = array();
-		/*foreach($lines as $line)
-			$data[] = explode(';',trim($line));*/
-		for ($i = 1; $i <= count($tab); $i++){
+		/*for ($i = 1; $i <= count($tab); $i++){
 			$user = getInfosUser($tab[$i]['user_visa']);
 			if ($tab[$i]['note'] == "") {
 				if ($i == count($tab))
@@ -114,7 +112,33 @@ class ChargePdf extends FPDI
 				
 				$data[] = array(utf8_decode($user['prenom']).' '.utf8_decode($user['nom']).",\n ".utf8_decode($user['groupe']),utf8_decode($tab[$i]['note']),$date[2]."/".$date[1]."/".$date[0],utf8_decode('Visé'));
 			}
+		}*/
+		
+		
+		if (isset($tab['visa']['users'])){
+			foreach($tab['visa']['users'] as $seq=>$step){
+				if (isset($step['process_date']) && $step['process_date'] != ''){
+					$date_visa = explode(" ",$step['process_date']);
+					$date = explode("-",$date_visa[0]);
+					$data[] = array(utf8_decode($step['firstname']).' '.utf8_decode($step['lastname']), utf8_decode($step['process_comment']),$date[2]."/".$date[1]."/".$date[0],utf8_decode('Visé'));
+				}
+				else {
+					$data[] = array(utf8_decode($step['firstname']).' '.utf8_decode($step['lastname']), utf8_decode($step['process_comment']),'','');
+				}
+			}
 		}
+		if (isset($tab['sign']['users'])){
+			foreach($tab['sign']['users'] as $seq=>$step){
+				if (isset($step['process_date']) && $step['process_date'] != ''){
+					$date_visa = explode(" ",$step['process_date']);
+					$data[] = array(utf8_decode($step['firstname']).' '.utf8_decode($step['lastname']), utf8_decode($step['process_comment']),$date_visa[0],utf8_decode('Visé'));
+				}
+				else {
+					$data[] = array(utf8_decode($step['firstname']).' '.utf8_decode($step['lastname']), utf8_decode($step['process_comment']),'','');
+				}
+			}
+		}
+		// Ajout de 2 lignes vides
 		for ($j = 0; $j < 2; $j++){
 			$data[] = array('','','','');
 		}
@@ -215,7 +239,7 @@ $db->connect();
 $db->query("select alt_identifier, identifier from res_view_letterbox where res_id = " . $res_id);
 $res = $db->fetch_object();
 $resChrono = $res->alt_identifier;
-$barcode = /*$res->identifier;*/'BORD'.str_replace("/","",$resChrono);
+$barcode = 'MIVI12345678';
 	
 	
 $pdf->SetY(10);
@@ -245,7 +269,7 @@ $pdf->Cell(0,12,utf8_decode($data['subject']['show_value']), 0);
 
 
 $visa_circuit = new visa();
-$workflow = $visa_circuit->getVisaWorkflow($res_id,"letterbox_coll");
+$workflow = $visa_circuit->getWorkflow($res_id, 'letterbox_coll', 'VISA_CIRCUIT');
 
 $data = $pdf->LoadData($workflow);
 $header = array('Nom', 'Consigne', 'Date', 'Visa');
