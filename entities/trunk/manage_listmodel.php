@@ -642,23 +642,23 @@ $linkwithwhat =
                         <td ><?php echo $user['lastname'] . " " . $user['firstname'];?></td>
                         <td><?php echo $user['entity_label']; ?></td>
                         <td class="action_entities"><!-- Remove user -->
-                            <a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>"><i class="fa fa-remove fa-2x"></i><?php echo _DELETE; ?></a>
+                            <a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>"><!--i class="fa fa-remove fa-2x"></i--><?php echo _DELETE; ?></a>
                         </td>
                         <td class="action_entities"><!-- Switch copy to dest --><?php
                         if($role_id == 'dest'  && isset($roles['copy']) ) { ?>
-                            <a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy" ><i class="fa fa-arrow-down fa-2x"></i><?php echo _TO_CC;?></a><?php
+                            <a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy" ><i class="fa fa-arrow-down"></i><?php echo _TO_CC;?></a><?php
                         } elseif($role_id == 'copy' && isset($roles['dest'])) { ?>
-                            <a href="<?php echo $linkwithwhat;?>&action=copy_to_dest&role=copy&rank=<?php echo $i;?>" ><i class="fa fa-arrow-up fa-2x"></i><?php echo _TO_DEST;?></a><?php
+                            <a href="<?php echo $linkwithwhat;?>&action=copy_to_dest&role=copy&rank=<?php echo $i;?>" ><i class="fa fa-arrow-up"></i><?php echo _TO_DEST;?></a><?php
                         } else echo '&nbsp;'?>
                         </td>
                         <td class="action_entities"><!-- Move up in list --><?php 
                         if($i > 0) { ?>
-                            <a href="<?php echo $linkwithwhat;?>&action=move_user_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" ><i class="fa fa-arrow-up fa-2x"></i></a><?php
+                            <a href="<?php echo $linkwithwhat;?>&action=move_user_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" ><i class="fa fa-arrow-up"></i></a><?php
                         } ?>
                         </td>
                         <td class="action_entities"><!-- Move down in list --><?php 
                         if($i < $l-1) { ?>
-                            <a href="<?php echo $linkwithwhat;?>&action=move_user_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" ><i class="fa fa-arrow-down fa-2x"></i></a><?php
+                            <a href="<?php echo $linkwithwhat;?>&action=move_user_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" ><i class="fa fa-arrow-down"></i></a><?php
                         } ?>
                         </td>
                     </tr> <?php
@@ -692,18 +692,18 @@ $linkwithwhat =
                         <td ><?php echo $entity['entity_label']; ?></td>
                         <td class="action_entities">
                             <a href="<?php echo $linkwithwhat; ?>&action=remove_entity&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $entity['entity_id'];?>" >
-                                <i class="fa fa-remove fa-2x"></i><?php echo _DELETE; ?>
+                                <!-- i class="fa fa-remove fa-2x"></i--><?php echo _DELETE; ?>
                             </a>
                         </td>
                         <td class="action_entities">&nbsp;</td>
                         <td class="action_entities"><!-- Move up in list --><?php 
                         if($i > 0) { ?>
-                            <a href="<?php echo $linkwithwhat;?>&action=move_entity_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" ><i class="fa fa-arrow-up fa-2x"></i></a><?php
+                            <a href="<?php echo $linkwithwhat;?>&action=move_entity_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" ><i class="fa fa-arrow-up"></i></a><?php
                         } ?>
                         </td>
                         <td class="action_entities"><!-- Move down in list --><?php 
                         if($i < $l-1) { ?>
-                            <a href="<?php echo $linkwithwhat;?>&action=move_entity_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" ><i class="fa fa-arrow-down fa-2x"></i></a><?php
+                            <a href="<?php echo $linkwithwhat;?>&action=move_entity_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>" ><i class="fa fa-arrow-down"></i></a><?php
                         } ?>
                         </td>
                     </tr><?php
