@@ -673,7 +673,7 @@ class diffusion_list extends dbquery
         #**********************************************************************
         $this->query(
             "select l.item_id, u.firstname, u.lastname, e.entity_id, "
-            . "e.entity_label, l.visible, l.viewed, l.item_mode, l.difflist_type from "
+            . "e.entity_label, l.visible, l.viewed, l.item_mode, l.difflist_type, l.process_date, l.process_comment  from "
             . ENT_LISTINSTANCE . " l, " . USERS_TABLE
             . " u, " . ENT_ENTITIES . " e, " . ENT_USERS_ENTITIES
             . " ue where l.coll_id = '" . $collId . "' "
@@ -701,7 +701,9 @@ class diffusion_list extends dbquery
                     'entity_label' => $this->show_string($res->entity_label),
                     'visible' => $this->show_string($res->visible),
                     'viewed' => $this->show_string($res->viewed),
-                    'difflist_type' => $this->show_string($res->difflist_type)
+                    'difflist_type' => $this->show_string($res->difflist_type),
+                    'process_date' => $this->show_string($res->process_date),
+                    'process_comment' => $this->show_string($res->process_comment)
                 )
             );
         }
@@ -709,7 +711,7 @@ class diffusion_list extends dbquery
         # OTHER ROLES ENTITIES
         #**********************************************************************
         $this->query(
-            "select l.item_id,  e.entity_label, l.visible, l.viewed, l.item_mode, l.difflist_type from " . ENT_LISTINSTANCE
+            "select l.item_id,  e.entity_label, l.visible, l.viewed, l.item_mode, l.difflist_type, l.process_date, l.process_comment  from " . ENT_LISTINSTANCE
             . " l, " . ENT_ENTITIES . " e where l.coll_id =  '" . $collId . "' "
             . "and l.item_type = 'entity_id' and l.item_id = e.entity_id "
             . "and l.res_id = " . $resId . " order by l.sequence "
@@ -730,7 +732,9 @@ class diffusion_list extends dbquery
                     'entity_label' => $this->show_string($res->entity_label),
                     'visible' => $this->show_string($res->visible),
                     'viewed' => $this->show_string($res->viewed),
-                    'difflist_type' => $this->show_string($res->difflist_type)
+                    'difflist_type' => $this->show_string($res->difflist_type),
+					 'process_date' => $this->show_string($res->process_date),
+                    'process_comment' => $this->show_string($res->process_comment)
                 )
             );
         }
