@@ -37,7 +37,7 @@ $db->connect();
 if ($_SESSION['config']['databasetype'] == 'POSTGRESQL') {
     $db->query("select template_label as tag from " 
                . _TEMPLATES_TABLE_NAME . " where template_label ilike '" 
-               . $_REQUEST['what'] . "%' order by template_label");
+               . $db->protect_string_db($_REQUEST['what']) . "%' order by template_label");
 } else {
     $db->query("select template_label as tag from " 
                . _TEMPLATES_TABLE_NAME . " where template_label like '" 
