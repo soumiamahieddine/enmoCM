@@ -105,7 +105,7 @@ class ReopenMail extends dbquery
                     . '&admin=reopen_mail'
                 );
                 exit();
-            } else {
+            } /*else {
                 $resultRes = $this->fetch_object();
 
                 if ($resultRes->status <> "END" && $resultRes->status <> "CLO" && $resultRes->status <> "CLOS" && $resultRes->status <> "VAL" && $resultRes->status <> "NEW" && $resultRes->status <> "DEL" && $resultRes->status <> "COU") {
@@ -118,11 +118,11 @@ class ReopenMail extends dbquery
                     );
                     exit();
                 }
-            }
+            }*/
             
             $this->query(
                 'update ' . $table . " set status = '".$_REQUEST['status_id']."' where res_id = "
-                . $resultRes->res_id
+                . $_SESSION['m_admin']['reopen_mail']['ID']
             );
             
             $historyMsg = _MODIFICATION_FROM_THIS_MAIL . ' : ';
@@ -163,7 +163,7 @@ class ReopenMail extends dbquery
         $db->connect();
 
         $db->query(
-            "SELECT  id from status where is_system = 'Y' ");
+            "SELECT  id, label_status from status where is_system = 'Y' ");
 
         $notesList = '';
         if ($db->nb_result() < 1) {
@@ -189,7 +189,7 @@ class ReopenMail extends dbquery
                                         <SELECT NAME='status_id'>
                                         <?php 
                                         while ( $line = $db->fetch_object()) {
-                                            echo "<OPTION VALUE='".$line->id."'>".$line->id."</OPTION>";
+                                            echo "<OPTION VALUE='".$line->id."'>".$line->label_status."</OPTION>";
                                         }
                                         ?>
                                         </SELECT>

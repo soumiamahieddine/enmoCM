@@ -1250,9 +1250,9 @@ if (!defined('_CLOSE_MAIL')) define( '_CLOSE_MAIL', 'Cl&ocirc;turer un courrier'
 
 
 /************** R&eacute;ouverture courrier **************/
-if (!defined('_MAIL_SENTENCE2')) define( '_MAIL_SENTENCE2', 'En saisissant le n&deg; chrono ou le n&deg;GED du document, vous passerez le  statut de ce dernier &agrave; &quot;En cours&quot;.');
-if (!defined('_MAIL_SENTENCE3')) define( '_MAIL_SENTENCE3', 'Cette fonction a pour but d&rsquo;ouvrir un courrier ferm&eacute; pr&eacute;matur&eacute;ment.');
-if (!defined('_MAIL_SENTENCE4')) define( '_MAIL_SENTENCE4', 'Le statut "En cours" et la liste de diffusion telle qu\'elle &eacute;tait d&eacute;finie au moment de la cl&ocirc;ture du courrier permettent de d&eacute;duire les');
+if (!defined('_MAIL_SENTENCE2')) define( '_MAIL_SENTENCE2', 'En saisissant le n&deg; chrono ou le n&deg;GED du document, vous modifierez le status du courrier.');
+if (!defined('_MAIL_SENTENCE3')) define( '_MAIL_SENTENCE3', 'Cette fonction a pour but de changer le status d&rsquo; un courrier.');
+if (!defined('_MAIL_SENTENCE4')) define( '_MAIL_SENTENCE4', 'Le courrier sera disponible dans la corbeille des utilisateurs auquel il &eacute;tait affect&eacute; suivant le status que vous aurez d&eacute;fini.');
 if (!defined('_MAIL_SENTENCE5')) define( '_MAIL_SENTENCE5', 'd\'accueil suite à la r&eacute;ouverture du courrier.');
 if (!defined('_ENTER_DOC_ID')) define( '_ENTER_DOC_ID', ' ou le n&deg; GED du document ');
 if (!defined('_ENTER_REF_ID')) define( '_ENTER_REF_ID', 'Saisissez le n&deg; chrono');
@@ -1261,7 +1261,7 @@ if (!defined('_REF_ID')) define( '_REF_ID', 'n&deg; chrono');
 if (!defined('_GED_ID')) define( '_GED_ID', 'n&deg; GED');
 if (!defined('_TO_KNOW_ID')) define( '_TO_KNOW_ID', 'Pour conna&icirc;tre l&rsquo;identifiant du document, effectuez une recherche ou demandez-le &agrave; l&rsquo;op&eacute;rateur');
 
-if (!defined('_REOPEN_MAIL')) define( '_REOPEN_MAIL', 'R&eacute;ouverture de courrier');
+if (!defined('_REOPEN_MAIL')) define( '_REOPEN_MAIL', 'Changement de status de courrier');
 if (!defined('_REOPEN_THIS_MAIL')) define( '_REOPEN_THIS_MAIL', 'R&eacute;ouverture du courrier');
 if (!defined('_MODIFICATION_FROM_THIS_MAIL')) define( '_MODIFICATION_FROM_THIS_MAIL', 'Modification du courrier');
 if (!defined('_OWNER')) define( '_OWNER', 'Propri&eacute;taire');
