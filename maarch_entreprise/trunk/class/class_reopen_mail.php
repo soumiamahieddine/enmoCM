@@ -127,9 +127,9 @@ class ReopenMail extends dbquery
             
             $historyMsg = _MODIFICATION_FROM_THIS_MAIL . ' : ';
             if ($resultRes->alt_identifier <> '') {
-                $historyMsg .= $resultRes->alt_identifier . ' (' . $resultRes->res_id . ')';
+                $historyMsg .= $resultRes->alt_identifier . ' (' . $_SESSION['m_admin']['reopen_mail']['ID'] . ')';
             } else {
-                $historyMsg .= $resultRes->res_id;
+                $historyMsg .= $_SESSION['m_admin']['reopen_mail']['ID'];
             }
             
             if ($_SESSION['history']['resup'] == true) {
