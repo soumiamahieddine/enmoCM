@@ -34,9 +34,9 @@ function add_this_tags(action_script, ui_script)
 					//span.innerHTML ="<font color=\"red\">vous n avez pas les droits pour ajouter ce mot clé !</font>";
 					//alert("<?php echo _ADD_TAG; ?>");
 					if(response.value == 'fr'){
-						alert("Vous ne pouvez pas ajouter ce mot clé !");
+						alert("Vous devez utiliser les mots clés existants!");
 					}else if(response.value == 'en'){
-						alert("You can not add this word !");
+						alert("You must use the tags exists !");
 					}
 				} else
 				{
