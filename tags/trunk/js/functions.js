@@ -29,8 +29,16 @@ function add_this_tags(action_script, ui_script)
 				{
 					//load_tags(ui_script,res_id,coll_id)
 					load_tags(ui_script)
-				}
-				else
+				} else if (response.status == 1 ){
+					//var span = document.getElementById('show_tags');
+					//span.innerHTML ="<font color=\"red\">vous n avez pas les droits pour ajouter ce mot clé !</font>";
+					//alert("<?php echo _ADD_TAG; ?>");
+					if(response.value == 'fr'){
+						alert("Vous ne pouvez pas ajouter ce mot clé !");
+					}else if(response.value == 'en'){
+						alert("You can not add this word !");
+					}
+				} else
 				{
 					if(console)
 					{

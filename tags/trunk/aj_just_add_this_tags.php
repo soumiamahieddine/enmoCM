@@ -95,11 +95,20 @@ foreach($new_tags as $new_tag){
 			//	exit();	
 			//}
 		}
+		echo "{status : 0, value : 'ok'}";
+		exit();
+	}else{
+		if($_SESSION['config']['lang'] == 'fr'){
+		echo "{status : 1, value : 'fr'}";
+		exit();	
+		}elseif($_SESSION['config']['lang'] == 'en'){
+		echo "{status : 1, value : 'en'}";
+		exit();
+		}
 	}
 
 }
 
-echo "{status : 0, value : 'ok'}";
-exit();
+
 
 ?>
