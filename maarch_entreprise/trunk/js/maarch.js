@@ -140,7 +140,7 @@ function change(id){
     if (!initialized ){
         initialise()
     }
-    alert(etat[id]["etat"]);
+    // alert(etat[id]["etat"]);
     if (etat[id]["etat"]){
         ferme(id);
     }else{
@@ -173,7 +173,7 @@ function change3(id){
     if (!initialized ){
         initialise()
     }
-    alert(etat[id]["etat"]);
+    // alert(etat[id]["etat"]);
     if (etat[id]["etat"]){
         ferme3(id);
     }else{
