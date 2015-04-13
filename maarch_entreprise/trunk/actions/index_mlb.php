@@ -1350,15 +1350,16 @@ function process_category_check($catId, $values)
             return false;
         }
         $contact = get_value_fields($values, 'contactid');
-
 		$nb_multi_contact = count($_SESSION['adresses']['to']);
-        if ($_ENV['categories'][$catId]['other_cases']['contact']['mandatory'] == true) {
-            if ((empty($contact) && $contactType != 'multi_external') || ($nb_multi_contact == 0 && $contactType == 'multi_external')) {
-                $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
-                    . ' ' . _IS_EMPTY;
-                return false;
-            }
+
+        $contact_field = get_value_fields($values, 'contact');
+
+        if ($contact_field <> "" && empty($contact)) {
+            $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
+                . ' ' . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;
+            return false;
         }
+
         // if (! empty($contact)) {
         //     if ($contactType == 'external'
         //         && preg_match('/\([0-9]+\)$/', $contact) == 0
@@ -1374,6 +1375,15 @@ function process_category_check($catId, $values)
         //         return false;
         //     }
         // }
+
+        if ($_ENV['categories'][$catId]['other_cases']['contact']['mandatory'] == true) {
+            if ((empty($contact) && $contactType != 'multi_external') || ($nb_multi_contact == 0 && $contactType == 'multi_external')) {
+                $_SESSION['action_error'] = $_ENV['categories'][$catId]['other_cases']['contact']['label']
+                    . ' ' . _IS_EMPTY;
+                return false;
+            }
+        }
+
     }
 
     if ($core->is_module_loaded('entities')) {

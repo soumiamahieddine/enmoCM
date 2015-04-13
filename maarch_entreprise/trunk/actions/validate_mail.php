@@ -1505,8 +1505,16 @@ function process_category_check($cat_id, $values)
             return false;
         }
         $contact = get_value_fields($values, 'contactid');
-		
 		$nb_multi_contact = count($_SESSION['adresses']['to']);
+
+        $contact_field = get_value_fields($values, 'contact');
+
+        if ($contact_field <> "" && empty($contact)) {
+            $_SESSION['action_error'] = $_ENV['categories'][$cat_id]['other_cases']['contact']['label']
+                . ' ' . _WRONG_FORMAT . ".<br/>" . _USE_AUTOCOMPLETION;
+            return false;
+        }
+        
         if($_ENV['categories'][$cat_id]['other_cases']['contact']['mandatory'] == true)
         {
             if((empty($contact) && $contact_type != 'multi_external') || ($nb_multi_contact == 0 && $contact_type == 'multi_external'))
