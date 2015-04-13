@@ -124,11 +124,23 @@ function ouvre2(id){
     etat[id]["etat"] = 1;
 }
 
+function ferme3(id){
+    Effect.SlideUp(etat[id]["desc"]);
+    //ChangeH2(etat[id]["h2"]);
+    etat[id]["etat"] = 0;
+}
+
+function ouvre3(id){
+    Effect.SlideDown(etat[id]["desc"]);
+    //ChangeH2(etat[id]["h2"])
+    etat[id]["etat"] = 1;
+}
+
 function change(id){
     if (!initialized ){
         initialise()
     }
-    //alert(etat[id]["etat"]);
+    alert(etat[id]["etat"]);
     if (etat[id]["etat"]){
         ferme(id);
     }else{
@@ -154,6 +166,23 @@ function change2(id){
             }
         }
         ouvre2(id);
+    }
+}
+
+function change3(id){
+    if (!initialized ){
+        initialise()
+    }
+    alert(etat[id]["etat"]);
+    if (etat[id]["etat"]){
+        ferme3(id);
+    }else{
+        for (i=0;i<etat.length;i++){
+            if (etat[i]["etat"]){
+                ferme3(i);
+            }
+        }
+        ouvre3(id);
     }
 }
 
