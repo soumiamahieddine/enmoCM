@@ -399,15 +399,15 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     }
     $frmStr .= '</select></td>';
     $frmStr .= '<td><span class="red_asterisk" id="category_id_mandatory" '
-            . 'style="display:inline;"><i class="fa fa-star"></i></span></td>';
+            . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr>';
     /*** Doctype ***/
     $frmStr .= '<tr id="type_id_tr" style="display:' . $displayValue . ';">';
-    $frmStr .= '<td><label for="type_id"><span class="form_title" '
+    $frmStr .= '<td><span class="form_title" '
             . 'id="doctype_res" style="display:none;">' . _DOCTYPE
             . '</span><span class="form_title" id="doctype_mail" '
             . 'style="display:inline;">' . _DOCTYPE_MAIL
-            . '</span></label></td>';
+            . '</span></td>';
     $frmStr .= '<td>&nbsp;</td>';
     $frmStr .= '<td class="indexing_field"><select name="type_id" id="type_id" '
             . 'onchange="clear_error(\'frm_error_' . $actionId . '\');'
@@ -452,7 +452,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     }
     $frmStr .= '</select></td>';
     $frmStr .= '<td><span class="red_asterisk" id="type_id_mandatory" '
-            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+            . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr>';
     /*** Priority ***/
     $frmStr .= '<tr id="priority_tr" style="display:' . $displayValue . ';">';
@@ -476,7 +476,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     }
     $frmStr .= '</select></td>';
     $frmStr .= '<td><span class="red_asterisk" id="priority_mandatory" '
-            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+            . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr>';
     /*** Doc date ***/
     $frmStr .= '<tr id="doc_date_tr" style="display:' . $displayValue . ';">';
@@ -490,7 +490,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . 'id="doc_date" value="" onfocus="checkRealDate(\'docDate\');" onChange="checkRealDate(\'docDate\');"  onclick="clear_error(\'frm_error_'
             . $actionId . '\');showCalender(this);" /></td>';
     $frmStr .= '<td><span class="red_asterisk" id="doc_date_mandatory" '
-            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+            . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr >';
     /*** Author ***/
     $frmStr .= '<tr id="author_tr" style="display:' . $displayValue . ';">';
@@ -518,7 +518,7 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
             . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
             . '&dir=indexing_searching&page=update_process_date\');"/></td>';
     $frmStr .= '<td><span class="red_asterisk" id="admission_date_mandatory" '
-            . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
+            . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr>';
 	
     /*** Contact ***/
