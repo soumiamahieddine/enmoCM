@@ -288,13 +288,18 @@ class admin_reports extends dbquery
                 foreach(array_keys($enabled_reports_sort_by_parent) as $value)
                 {
                     ?>
-                    <h5 onclick="change(<?php  echo $_SESSION['cpt'];?>);" id="h2<?php  echo $_SESSION['cpt'];?>" class="categorie">
-                        <i class='fa fa-plus fa-2x'></i>&nbsp;<b><?php  echo $enabled_reports_sort_by_parent[$value][0]['module_label'];?></b>
-                        <span class="lb1-details">&nbsp;</span>
-                    </h5>
-                    <br/>
-                    <div class="desc block_light" id="desc<?php  echo $_SESSION['cpt'];?>" style="display:none">
-                        <div class="ref-unit">
+                    <h5 onclick="change3(<?php
+                echo $_SESSION['cpt'];
+                ?>)" id="h2<?php
+                echo $_SESSION['cpt'];
+                 ?>" class="categorie">
+                  <i class='fa fa-plus fa-2x'></i>&nbsp;<b><?php  echo $enabled_reports_sort_by_parent[$value][0]['module_label'];?></b>
+                <span class="lb1-details">&nbsp;</span>
+                </h5><br/>
+                <div class="desc block_light admin" id="desc<?php
+                 echo $_SESSION['cpt'];
+                 ?>" style="display:none">
+                <div class="ref-unit">
                             <table>
                                 <?php
                                 for($i=0; $i<count($enabled_reports_sort_by_parent[$value]); $i++)
