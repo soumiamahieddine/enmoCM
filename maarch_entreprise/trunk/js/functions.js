@@ -143,7 +143,7 @@ function repost(php_file,update_divs,fields,action,timeout)
     var day=newDate.getDate();
     var currentDay=0, currentDayZero=0;
     var month=monthZero, year=yearZero;
-    var yearMin=1950, yearMax=2050;
+    var yearMin=1910, yearMax=2060;
     var target='';
     var hoverEle=false;
 /***************************************
