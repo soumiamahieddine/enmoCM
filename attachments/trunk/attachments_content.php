@@ -863,7 +863,7 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
         //$content .= '<input type="hidden" id="format_list_contact_'.$value['contact_id'].'_res" value="'.$value['format_contact'].'"/>';
     } 
     $content .= '</select>';
-    $content .= '<script>$("contactidAttach").value='.$value['contact_id'].';$("addressidAttach").value='.$value['address_id'].';launch_autocompleter2_contacts_v2("'. $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts", "contact_attach", "show_contacts_attach", "", "contactidAttach", "addressidAttach")</script>';
+    $content .= '<script>$("contactidAttach").value='.$contacts[0]['contact_id'].';$("addressidAttach").value='.$contacts[0]['address_id'].';launch_autocompleter2_contacts_v2("'. $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts", "contact_attach", "show_contacts_attach", "", "contactidAttach", "addressidAttach")</script>';
     }
     
     $content .= '</h2>';
