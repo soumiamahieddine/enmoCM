@@ -163,7 +163,7 @@ class ReopenMail extends dbquery
         $db->connect();
 
         $db->query(
-            "SELECT  id, label_status from status where is_system = 'Y' ");
+            "SELECT  id, label_status from status where is_folder_status = 'N' ");
 
         $notesList = '';
         if ($db->nb_result() < 1) {
