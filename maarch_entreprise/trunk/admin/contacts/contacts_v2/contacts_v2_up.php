@@ -118,11 +118,13 @@ if (isset($_REQUEST['selectedObject']) && ! empty($_REQUEST['selectedObject'])) 
             $sql_purpose[] = " lower(contact_purpose_label) LIKE lower('%".$what_a."%')";
         }
     }
+    if ($sql_lastname <> "") {
+        $where .= " and (" . implode(' OR ', $sql_lastname) . " ";
+        $where .= " or " . implode(' OR ', $sql_firstname) . " ";
+        $where .= " or " . implode(' OR ', $sql_purpose) . " ";
+        $where .= " or " . implode(' OR ', $sql_society) . ") ";
+    }
 
-    $where .= " and (" . implode(' OR ', $sql_lastname) . " ";
-    $where .= " or " . implode(' OR ', $sql_firstname) . " ";
-    $where .= " or " . implode(' OR ', $sql_purpose) . " ";
-    $where .= " or " . implode(' OR ', $sql_society) . ") ";
 }
 
 $list = new list_show();
