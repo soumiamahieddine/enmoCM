@@ -41,30 +41,37 @@ if (isset($_REQUEST['contact_id'])) {
         $db->query($selectDuplicates);
         //$db->show();
         $contactList = array();
+        array_push($contactList, "Selectionner un contact");
         while($lineDoubl = $db->fetch_object()) {
             array_push($contactList, $lineDoubl->contact_id);
         }
     }
     if ($flagResAttached) {
-        $return .= _RES_ATTACHED . ' ' . _SELECT_CONTACT_TO_REPLACE;
-        $return .= '&nbsp;<select id="selectContact_'
+        $return .= _RES_ATTACHED . '. ' . _SELECT_CONTACT_TO_REPLACE;
+        $return .= ' : <br/>'._NEW_CONTACT.' : <select onchange="loadAddressAttached(this.options[this.selectedIndex].value, '.$_REQUEST['contact_id'].')" id="selectContact_'
             . $_REQUEST['contact_id'] . '" name="selectContact_'
             . $_REQUEST['contact_id'] . '">"';
         for ($cpt=0;$cpt<count($contactList);$cpt++) {
             $return .= '<option value="' . $contactList[$cpt] . '">' 
                 . $contactList[$cpt] . '</option>';
         }
-        $return .= '</select><br/>';
+        $return .= '</select>';
+
+        $return .= '<br/>' . _NEW_ADDRESS. ' : <select id="selectContactAddress_'
+            . $_REQUEST['contact_id'] . '" name="selectContactAddress_'
+            . $_REQUEST['contact_id'] . '">"';
+        $return .= '</select>';
+        $return .= '<br/>';
     }
     $return .= _ARE_YOU_SURE_TO_DELETE_CONTACT;
     if ($flagResAttached) {
         $return .= '&nbsp;<input type="button" value="' . _YES . '"'
             . ' onclick="deleteContact(' . $_REQUEST['contact_id'] 
-            . ', $(\'selectContact_' . $_REQUEST['contact_id'] . '\').value);" />';
+            . ', $(\'selectContact_' . $_REQUEST['contact_id'] . '\').value, $(\'selectContactAddress_' . $_REQUEST['contact_id'] . '\').value);" />';
     } else {
         $return .= '&nbsp;<input type="button" value="' . _YES . '"'
             . ' onclick="deleteContact(' . $_REQUEST['contact_id'] 
-            . ', false);" />';
+            . ', false, false);" />';
     }
     $return .= '&nbsp;<input type="button" value="' . _NO . '"'
         . ' onclick="new Effect.toggle(\'deleteContactDiv_\'+' 

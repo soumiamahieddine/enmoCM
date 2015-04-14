@@ -2566,7 +2566,7 @@ function loadDeleteContactDiv(id, society, lastnameFirstname)
 
 
 
-function deleteContact(id, replaced_contact_id)
+function deleteContact(id, replaced_contact_id, replaced_address_id)
 {
     //alert(id+' '+replaced_contact_id);
     var path_manage_script = 'index.php?admin=contacts&page=ajaxDeleteContact&display=true';
@@ -2574,7 +2574,7 @@ function deleteContact(id, replaced_contact_id)
     new Ajax.Request(path_manage_script,
     {
         method:'post',
-        parameters: { contactId : id, replacedContactId : replaced_contact_id},
+        parameters: { contactId : id, replacedContactId : replaced_contact_id, replacedAddressId : replaced_address_id},
         onSuccess: function(answer){
             eval("response = "+answer.responseText);
             //alert(response.status);
@@ -2584,7 +2584,7 @@ function deleteContact(id, replaced_contact_id)
                 new Effect.toggle('divDocList_'+id, 'blind' , {delay:0.2});
                 new Effect.toggle('tr_'+id, 'blind' , {delay:0.2});
             } else {
-                alert('choose replaced contact first!!');
+                alert('Choisissez une adresse et un contact d\'abord');
             }
         }
     });
@@ -2873,4 +2873,19 @@ function test(){
 valeur2 = <?php echo json_encode($_SESSION['keysValuesForAllCheckBox']) ?>;
 alert(valeur2);
 
+}
+
+function loadAddressAttached(contact_id, select){
+    var path_manage_script = 'index.php?display=true&page=select_attachedAddress';
+    new Ajax.Request(path_manage_script,
+    {
+        method:'post',
+        parameters: { 
+        contact_id : contact_id,
+        select : select
+    },
+        onSuccess: function(answer){
+            $('selectContactAddress_'+select).innerHTML = answer.responseText;
+        }
+    });
 }

@@ -101,13 +101,11 @@ $htmlTabSoc .= '<CAPTION>' . _DUPLICATES_BY_SOCIETY . '</CAPTION>';
 $htmlTabSoc .= '<tr>';
 $htmlTabSoc .= '<th>&nbsp;</th>';
 $htmlTabSoc .= '<th>' . _ID . '</th>';
-$htmlTabSoc .= '<th>' . _IS_PRIVATE . '</th>';
 $htmlTabSoc .= '<th>' . _SOCIETY . '</th>';
 $htmlTabSoc .= '<th>' . _SOCIETY_SHORT . '</th>';
 $htmlTabSoc .= '<th>' . _IS_CORPORATE_PERSON . '</th>';
 $htmlTabSoc .= '<th>' . _LASTNAME . '</th>';
 $htmlTabSoc .= '<th>' . _FIRSTNAME . '</th>';
-$htmlTabSoc .= '<th>' . _ADDRESS . '</th>';
 $htmlTabSoc .= '<th>&nbsp;</th>';
 $htmlTabSoc .= '</tr>';
 
@@ -120,11 +118,7 @@ $cptSoc = 0;
 while($lineDoublSoc = $db->fetch_object()) {
     if ($lineDoublSoc->contact_id <> '') {
         $cptSoc++;
-        if($lineDoublSoc->user_id <> '') {
-			$is_private = 'Y';
-		}
-		else
-			$is_private = 'N';
+
         //USE AJAX REQUEST TO KNOW IF RES ATTACHED
         /*$selectResAttached = "select res_id from res_view_letterbox where "
             . "exp_contact_id = " . $lineDoublSoc->contact_id . " or "
@@ -146,6 +140,7 @@ while($lineDoublSoc = $db->fetch_object()) {
             $colorNumber = randomColor($colorNumber);
             $colorToUse = $color[$colorNumber];
         }
+        $corporatePeople = ($lineDoublSoc->is_corporate_person == "Y")? _YES : _NO;
         $socCompare = $lineDoublSoc->lowsoc;
         $htmlTabSoc .= '<tr style="background-color: ' 
             . $colorToUse . ';" id="tr_' . $lineDoublSoc->contact_id . '">';
@@ -155,10 +150,9 @@ while($lineDoublSoc = $db->fetch_object()) {
             . _IS_ATTACHED_TO_DOC . '" onclick="loadDocList('
             . $lineDoublSoc->contact_id . ');" style="cursor: pointer;"/></td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->contact_id . '</td>';
-        $htmlTabSoc .= '<td>' . $is_private. '</td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->society . '</td>';
         $htmlTabSoc .= '<td align="center">' . $lineDoublSoc->society_short . '</td>';
-        $htmlTabSoc .= '<td>' . $lineDoublSoc->is_corporate_person . '</td>';
+        $htmlTabSoc .= '<td>' . $corporatePeople . '</td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->lastname . '</td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->firstname . '</td>';
         $htmlTabSoc .= '<td><img onclick="loadDeleteContactDiv('
@@ -202,6 +196,7 @@ if ($cptSoc == 0) {
 } else {
     echo $htmlTabSoc;
 }
+?><br><?php
 /***********************************************************************/
 //duplicates by name
 $selectDuplicatesByName = "SELECT contact_id, lower(lastname||' '||firstname) as lastname_firstname, society, society_short,"
@@ -255,6 +250,9 @@ while($lineDoublName = $db->fetch_object()) {
             $colorNumber = randomColor($colorNumber);
             $colorToUse = $color[$colorNumber];
         }
+
+        $corporatePeople = ($lineDoublName->is_corporate_person == "Y")? _YES : _NO;
+
         $nameCompare = $lineDoublName->lastname_firstname;
         $htmlTabName .= '<tr style="background-color: ' 
             . $colorToUse . ';" id="tr_' . $lineDoublName->contact_id . '">';
@@ -269,7 +267,7 @@ while($lineDoublName = $db->fetch_object()) {
         $htmlTabName .= '<td>' . $lineDoublName->firstname . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->society . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->society_short . '</td>';
-        $htmlTabName .= '<td>' . $lineDoublName->is_corporate_person . '</td>';
+        $htmlTabName .= '<td>' . $corporatePeople . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->address_num;
         $htmlTabName .= ' ' . $lineDoublName->address_street;
         $htmlTabName .= ' ' . $lineDoublName->address_town . '</td>';
