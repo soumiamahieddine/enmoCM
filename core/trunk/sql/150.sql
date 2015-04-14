@@ -240,6 +240,9 @@ ALTER TABLE res_letterbox ADD confidentiality character(1);
 ALTER TABLE listinstance DROP COLUMN IF EXISTS process_comment;
 ALTER TABLE listinstance ADD process_comment character varying(255);
 
+ALTER TABLE listinstance DROP COLUMN IF EXISTS process_date;
+ALTER TABLE listinstance ADD process_date timestamp without time zone;
+
 ALTER TABLE listmodels DROP COLUMN IF EXISTS title;
 ALTER TABLE listmodels ADD COLUMN title varchar(255);
 
