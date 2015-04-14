@@ -42,11 +42,13 @@ if(isset($_GET['id']) &&  $_GET['id'] <> ''){
 	$query .= ' and ca.id <> '.$_GET['id'].' and contact_id = '.$_SESSION['contact']['current_contact_id'];
 } else if (isset($_REQUEST['idContact']) &&  $_REQUEST['idContact'] <> ''){
 	$query .= ' and contact_id = '.$_REQUEST['idContact'];
+} else if (isset($_REQUEST['reaffectAddress']) &&  $_REQUEST['reaffectAddress'] <> ''){
+	$query .= ' and contact_id = '.$_REQUEST['reaffectAddress'] .' and ca.id <> '.$_SESSION['contact']['current_address_id'];
 }
 
 $query .= " order by lastname";
 $db->query($query);
-// $db->show();
+ // $db->show();
 
 $listArray = array();
 while($line = $db->fetch_object())

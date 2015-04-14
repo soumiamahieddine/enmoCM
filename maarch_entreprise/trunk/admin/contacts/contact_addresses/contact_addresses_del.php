@@ -49,6 +49,7 @@ if (!$return) {
 }
 $core_tools->load_lang();
 $db = new dbquery();
+$db2 = new dbquery();
 
 /****************Management of the location bar  ************/
 $init = false;
@@ -82,14 +83,28 @@ if(isset($_GET['mycontact']) && $_GET['mycontact'] <> ''){
 
 if ($_REQUEST['valid']) {
 	$id = $_POST['id'];
-	if ($_POST['new']){
+
+	if ($_POST['new'] && $_POST['new_contact_id']){
 		$newid = $_POST['new'];
+		$new_contact_id = $_POST['new_contact_id'];
 		$db->connect();
+		$db2->connect();
 
 		// delete contact types
 		$db->query("DELETE FROM ".$_SESSION['tablename']['contact_addresses']." WHERE id = ".$id);
+
+		$db->query("SELECT res_id, exp_contact_id, dest_contact_id FROM mlb_coll_ext WHERE address_id = ".$id);
+
+		while($res = $db->fetch_object()){
+			if ($res->exp_contact_id <> "") {
+				$db2->query("UPDATE mlb_coll_ext SET exp_contact_id = ".$new_contact_id." WHERE res_id = ".$res->res_id);
+			} else {
+				$db2->query("UPDATE mlb_coll_ext SET dest_contact_id = ".$new_contact_id." WHERE res_id = ".$res->res_id);
+			}
+		}
+
 		$db->query("UPDATE mlb_coll_ext SET address_id = ".$newid." WHERE address_id = ".$id);
-		$db->query("UPDATE contacts_res SET address_id = ".$newid." WHERE address_id = ".$id);
+		$db->query("UPDATE contacts_res SET contact_id = ".$new_contact_id.", address_id = ".$newid." WHERE address_id = ".$id);
 
 		if($_SESSION['history']['contact_addresses_del'] == "true")
 		{
@@ -104,7 +119,10 @@ if ($_REQUEST['valid']) {
 	            window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2_up&order='.$_REQUEST['order'].'&order_field='.$_REQUEST['order_field'].'&start='.$_REQUEST['start'].'&what='.$_REQUEST['what'];?>";
 	        </script>	
 	    <?php
-	} else {
+	} else if (!$_POST['new_contact_id']) {
+		$_SESSION['error'] = _NEW_CONTACT.' '._IS_EMPTY.". ". _USE_AUTOCOMPLETION;
+		$contact->type_purpose_address_del($id, $admin, $_SESSION['tablename']['contact_addresses'], 'contact_address', _DELETED_ADDRESS, _WARNING_MESSAGE_DEL_CONTACT_ADDRESS, _ADDRESS_DEL, _CONTACT_ADDRESS_REAFFECT, _NEW_ADDRESS, _CHOOSE_CONTACT_ADDRESS, 'contacts_v2_up', 'contact_addresses_del', _CONTACT_ADDRESS);
+	} else if (!$_POST['new']) {
 		$_SESSION['error'] = _NEW_ADDRESS.' '._IS_EMPTY.". ". _USE_AUTOCOMPLETION;
 		$contact->type_purpose_address_del($id, $admin, $_SESSION['tablename']['contact_addresses'], 'contact_address', _DELETED_ADDRESS, _WARNING_MESSAGE_DEL_CONTACT_ADDRESS, _ADDRESS_DEL, _CONTACT_ADDRESS_REAFFECT, _NEW_ADDRESS, _CHOOSE_CONTACT_ADDRESS, 'contacts_v2_up', 'contact_addresses_del', _CONTACT_ADDRESS);
 	}

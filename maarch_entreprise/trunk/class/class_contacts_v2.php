@@ -2018,11 +2018,13 @@ class contacts_v2 extends dbquery
                     </script>   
                 <?php
 
-            }
-            else
-            {
-
-                ?> 
+            } else { ?> 
+                <div class="error">
+                    <b><?php
+                        echo $_SESSION['error'];
+                        $_SESSION['error'] = "";
+                    ?></b>
+                </div>
                 <br>
                 <div id="main_error">
                     <b><?php
@@ -2054,16 +2056,60 @@ class contacts_v2 extends dbquery
                     ?>
                         <br>
                         <br>
+
+                        <?php
+                            if($mode == 'contact_address'){ 
+
+                                $this->query("SELECT * FROM ".$_SESSION['tablename']['contacts_v2'] 
+                                . " WHERE contact_id = ". $_SESSION['contact']['current_contact_id'] );                                
+                                while($line = $this->fetch_object())
+                                {
+                                    $CurrentContact = $this->get_label_contact($line->contact_type, $_SESSION['tablename']['contact_types']) . ' : ';
+                                    if($line->is_corporate_person == 'N'){
+                                        $CurrentContact = $this->show_string($line->lastname)." ".$this->show_string($line->firstname);
+                                        if($line->society <> ''){
+                                            $CurrentContact .= ' ('.$line->society.')';
+                                        }
+                                    } else {
+                                        $CurrentContact .= $line->society;
+                                        if($line->society_short <> ''){
+                                            $CurrentContact .= ' ('.$line->society_short.')';
+                                        }
+                                    }
+                                }
+                                ?> 
+
+                                <td>
+                                    <label for="contact"><?php echo _NEW_CONTACT; ?> : </label>
+                                </td>
+                                
+                                <td class="indexing_field">
+                                    <input name="new_contact" id="new_contact" value="<?php echo $CurrentContact; ?>" onchange="erase_contact_external_id('new_contact', 'new_contact_id')"/>
+                                    <div id="show_contact_label" class="autocomplete">
+                                        <script type="text/javascript">
+                                            initList_hidden_input('new_contact', 'show_contact_label', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contacts_v2_list_by_name', 'what', '2', 'new_contact_id');
+                                        </script>
+                                    </div>
+                                    <input type="hidden" id="new_contact_id" name="new_contact_id" value="<?php echo $_SESSION['contact']['current_contact_id'];?>"/>
+                                </td>
+                                <br>
+                                <br>
+                                
+                                <?php
+                            } ?>
+
                         <td>
                             <label for="contact"><?php echo $new_sentence; ?> : </label>
                         </td>
                         <td class="indexing_field">
                             <?php 
                             if($mode == 'contact_address'){
-                                ?> <input name="new_id" id="new_id" value=""/>
+                                $_SESSION['contact']['current_address_id'] = $id;
+                                ?> 
+                                <input name="new_id" id="new_id" value=""/>
                                     <div id="show_contact" class="autocomplete">
                                         <script type="text/javascript">
-                                            initList_hidden_input('new_id', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_addresses_list_by_name&id=<?php echo $id; ?>', 'what', '2', 'new');
+                                            initList_hidden_input_before('new_id', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_addresses_list_by_name', 'what', '2', 'new', 'reaffectAddress', 'new_contact_id');
                                         </script>
                                     </div>
                                     <input type="hidden" id="new" name="new" />

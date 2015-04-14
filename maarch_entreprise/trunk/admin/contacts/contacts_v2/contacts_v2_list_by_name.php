@@ -56,7 +56,18 @@ $db->query($query);
 if(isset($_GET['id']) &&  $_GET['id'] <> ''){
     while($line = $db->fetch_object())
     {
-        $listArray[$line->contact_id] = $contact->get_label_contact($line->contact_type, $_SESSION['tablename']['contact_types']) . ' : ' . $line->society . ', '. $line->lastname . ' '. $line->firstname;
+        $listArray[$line->contact_id] = $contact->get_label_contact($line->contact_type, $_SESSION['tablename']['contact_types']) . ' : ';
+        if($line->is_corporate_person == 'N'){
+            $listArray[$line->contact_id] = $db->show_string($line->lastname)." ".$db->show_string($line->firstname);
+            if($line->society <> ''){
+                $listArray[$line->contact_id] .= ' ('.$line->society.')';
+            }
+        } else {
+            $listArray[$line->contact_id] .= $line->society;
+            if($line->society_short <> ''){
+                $listArray[$line->contact_id] .= ' ('.$line->society_short.')';
+            }
+        }
     }
 } else {
     while ($line = $db->fetch_object()) {
