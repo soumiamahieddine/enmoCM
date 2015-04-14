@@ -161,6 +161,11 @@
         <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
+        <name>HTM</name>
+        <mime>text/html</mime>
+        <index_frame_show>true</index_frame_show>
+    </FORMAT>
+    <FORMAT>
         <name>HTML</name>
         <mime>text/html</mime>
         <index_frame_show>true</index_frame_show>
