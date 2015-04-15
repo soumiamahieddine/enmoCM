@@ -256,11 +256,11 @@ if ($mode == 'list') {
         <p class="buttons">
             <?php
         if ($mode == 'up') {?>
-            <input class="button" type="submit" name="notif_submit" style="width:190px;" value=
-            "<?php echo _MODIFY_NOTIF; ?>" />
+            <input type="submit" class="button" name="notif_submit" value=
+            "<?php echo _VALIDATE; ?>" />
             <?php
         } elseif ($mode == 'add') {?>
-            <input type="submit" class="button"  name="notif_submit" value=
+            <input type="submit" class="button" name="notif_submit" value=
             "<?php echo _ADD; ?>" />
             <?php
         }
