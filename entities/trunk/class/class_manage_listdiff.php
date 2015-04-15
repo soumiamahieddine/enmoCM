@@ -496,7 +496,7 @@ class diffusion_list extends dbquery
                         $listinstance_id,
                         'ADD',
                         'diff'.$role_id.'user',
-                        'Diffusion of document '.$resId.' to '. $userId . ' as ' . $role_id,
+                        'Diffusion du document '.$resId.' à '. $userId . ' en tant que "' . $role_id .'"',
                         $_SESSION['config']['databasetype'],
                         'entities'
                     );
