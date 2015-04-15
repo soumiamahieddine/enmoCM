@@ -38,17 +38,17 @@ if (!defined('_TAGS_DEFAULT'))
 if (!defined('_TAGS_COMMENT'))
     define('_TAGS_COMMENT', 'Mots-cl&eacute;s');
 if (!defined('_TAGS_LIST'))
-    define('_TAGS_LIST', 'Liste des Mot-cl&eacute;');
+    define('_TAGS_LIST', 'Liste des mots-cl&eacute;s');
 if (!defined('_MODIFY_TAG'))
-    define('_MODIFY_TAG', 'Modifier le Mot-cl&eacute;');
+    define('_MODIFY_TAG', 'Modifier le mot-cl&eacute;');
 if (!defined('_MANAGE_TAGS'))
-    define('_MANAGE_TAGS', 'G&eacute;rer les Mots-cl&eacute;s');
+    define('_MANAGE_TAGS', 'G&eacute;rer les mots-cl&eacute;s');
 if (!defined('_ADMIN_TAGS'))
     define('_ADMIN_TAGS', 'Mots-cl&eacute;s');
 if (!defined('_ADMIN_TAGS_DESC'))
-    define('_ADMIN_TAGS_DESC', 'Permet de modifier, supprimer, ajouter ou fusionner des Mots-cl&eacute;s');
+    define('_ADMIN_TAGS_DESC', 'Permet de modifier, supprimer, ajouter ou fusionner des mots-cl&eacute;s');
 if (!defined('_ALL_TAGS'))
-    define('_ALL_TAGS', 'Tous les '._TAG_DEFAULT);
+    define('_ALL_TAGS', 'Tous les mots-cl&eacute;s');
 if (!defined('_TAG_DELETED'))
     define('_TAG_DELETED', _TAG_DEFAULT.' supprim&eacute;');
 if (!defined('_TAG_ADDED'))
