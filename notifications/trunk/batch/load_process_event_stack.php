@@ -224,6 +224,10 @@ try {
         'modules' . DIRECTORY_SEPARATOR . 'templates' 
 		. DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'templates_controler.php'
     );  
+    Bt_myInclude(
+        'apps' . DIRECTORY_SEPARATOR . 'maarch_entreprise' 
+        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_contacts_v2.php'
+    );
    
 } catch (IncludeFileError $e) {
     $logger->write(
