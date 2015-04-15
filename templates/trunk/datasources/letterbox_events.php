@@ -15,6 +15,8 @@
 $dbDatasource = new dbquery();
 $dbDatasource->connect();
 
+$contacts = new contacts_v2();
+
 $datasources['recipient'][0] = (array)$recipient;
 
 $datasources['res_letterbox'] = array();
@@ -61,6 +63,26 @@ foreach($events as $event) {
 
     // Insertion
     $datasources['res_letterbox'][] = $res;
+    
+		//multicontact
+		$dbDatasource->query("SELECT * FROM contacts_res WHERE res_id = " . $res['res_id'] . " AND contact_id ='".$res['contact__id']."'");
+		$datasources['res_letterbox_contact'][] = $dbDatasource->fetch_assoc();
+		if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
+		    $datasources['contact'] = array();
+		    $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ".$datasources['res_letterbox_contact'][0]['contact_id']." and ca_id = ".$datasources['res_letterbox_contact'][0]['address_id']);
+		    $myContact = $dbDatasource->fetch_array();
+			$myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
+		    $datasources['contact'][] = $myContact;
+		// single Contact
+		}else{
+
+		    $datasources['contact'] = array();
+		    $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ".$datasources['res_letterbox'][0]['contact_id']." and ca_id = ".$datasources['res_letterbox'][0]['address_id']);
+		    $myContact = $dbDatasource->fetch_array();
+		    $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
+		    $datasources['contact'][] = $myContact;
+		}
+
 }
 
 $datasources['images'][0]['imgdetail'] = $maarchUrl . '/apps/' . $maarchApps . '/img/object.gif';
