@@ -126,6 +126,62 @@ if ($_REQUEST['valid']) {
 		$_SESSION['error'] = _NEW_ADDRESS.' '._IS_EMPTY.". ". _USE_AUTOCOMPLETION;
 		$contact->type_purpose_address_del($id, $admin, $_SESSION['tablename']['contact_addresses'], 'contact_address', _DELETED_ADDRESS, _WARNING_MESSAGE_DEL_CONTACT_ADDRESS, _ADDRESS_DEL, _CONTACT_ADDRESS_REAFFECT, _NEW_ADDRESS, _CHOOSE_CONTACT_ADDRESS, 'contacts_v2_up', 'contact_addresses_del', _CONTACT_ADDRESS);
 	}
+} else if($_REQUEST['move']) {
+
+	if ($_POST['new_contact_id_reaffect']) {
+		$id = $_POST['id'];
+		$db->query("UPDATE contact_addresses set contact_id = ".$_POST['new_contact_id_reaffect']." WHERE id = ".$id);
+		$db->query("UPDATE contacts_res set contact_id = '".$_POST['new_contact_id_reaffect']."' WHERE address_id = ".$id);
+
+		$db->query("SELECT res_id, exp_contact_id, dest_contact_id FROM mlb_coll_ext WHERE address_id = ".$id);
+
+		while($res = $db->fetch_object()){
+			if ($res->exp_contact_id <> "") {
+				$db2->query("UPDATE mlb_coll_ext SET exp_contact_id = ".$_POST['new_contact_id_reaffect']." WHERE res_id = ".$res->res_id);
+			} else {
+				$db2->query("UPDATE mlb_coll_ext SET dest_contact_id = ".$_POST['new_contact_id_reaffect']." WHERE res_id = ".$res->res_id);
+			}
+		}
+
+		if($_SESSION['history']['contact_addresses_del'] == "true")
+		{
+			require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+			$users = new history();
+			$users->add($_SESSION['tablename']['contact_addresses'], $id,"DEL",'contact_addresses_del', _ADDRESS_MOVED." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
+		}
+		$_SESSION['error'] = _ADDRESS_MOVED.".";
+		unset($_SESSION['m_admin']);
+		?>
+	        <script type="text/javascript">
+	            window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2_up&order='.$_REQUEST['order'].'&order_field='.$_REQUEST['order_field'].'&start='.$_REQUEST['start'].'&what='.$_REQUEST['what'];?>";
+	        </script>	
+	    <?php
+
+	} else {
+		$_SESSION['error'] = _NEW_CONTACT.' '._IS_EMPTY.". ". _USE_AUTOCOMPLETION;
+		$contact->type_purpose_address_del($id, $admin, $_SESSION['tablename']['contact_addresses'], 'contact_address', _DELETED_ADDRESS, _WARNING_MESSAGE_DEL_CONTACT_ADDRESS, _ADDRESS_DEL, _CONTACT_ADDRESS_REAFFECT, _NEW_ADDRESS, _CHOOSE_CONTACT_ADDRESS, 'contacts_v2_up', 'contact_addresses_del', _CONTACT_ADDRESS);		
+	}
+
+
+} else if($_REQUEST['delete']) {
+
+	$id = $_POST['id'];
+	$db->query("DELETE FROM contact_addresses WHERE id = ".$id);
+
+	if($_SESSION['history']['contact_addresses_del'] == "true")
+	{
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_history.php");
+		$users = new history();
+		$users->add($_SESSION['tablename']['contact_addresses'], $id,"DEL",'contact_addresses_del', _ADDRESS_DEL." ".strtolower(_NUM).$id."", $_SESSION['config']['databasetype']);
+	}
+	$_SESSION['error'] = _DELETED_ADDRESS.".";
+	unset($_SESSION['m_admin']);
+	?>
+        <script type="text/javascript">
+            window.location.href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=contacts_v2_up&order='.$_REQUEST['order'].'&order_field='.$_REQUEST['order_field'].'&start='.$_REQUEST['start'].'&what='.$_REQUEST['what'];?>";
+        </script>	
+    <?php
+
 } else {
 	$contact->type_purpose_address_del($id, $admin, $_SESSION['tablename']['contact_addresses'], 'contact_address', _DELETED_ADDRESS, _WARNING_MESSAGE_DEL_CONTACT_ADDRESS, _ADDRESS_DEL, _CONTACT_ADDRESS_REAFFECT, _NEW_ADDRESS, _CHOOSE_CONTACT_ADDRESS, 'contacts_v2_up', 'contact_addresses_del', _CONTACT_ADDRESS);
 }

@@ -1753,3 +1753,11 @@ if(!defined('_OTHERS_INFORMATIONS')) define( '_OTHERS_INFORMATIONS', 'Autres inf
 if(!defined('_ALL_HISTORY')) define( '_ALL_HISTORY', 'Historique complet');
 
 if (!defined('_DESCRIPTION')) define('_DESCRIPTION', 'Description');
+
+if (!defined('_MOVE_CONTACT_ADDRESS')) define('_MOVE_CONTACT_ADDRESS', 'D&eacute;placement de l\'adresse vers un autre contact');
+if (!defined('_INFO_MOVE_CONTACT_ADDRESS')) define('_INFO_MOVE_CONTACT_ADDRESS', 'Cette partie est utilis&eacute;e si vous souhaitez d&eacute;placer l\'adresse vers un nouveau contact. Les documents (s\'il y en a) resteront attach&eacute;s &agrave; cette même adresse.');
+
+if (!defined('_MOVE')) define('_MOVE', 'D&eacute;placer');
+if (!defined('_DELETE_CONTACT_ADDRESS')) define('_DELETE_CONTACT_ADDRESS', 'Supprimer l\'adresse');
+if (!defined('_REALLY_MOVE')) define('_REALLY_MOVE', 'Voulez-vous vraiment d&eacute;placer ');
+

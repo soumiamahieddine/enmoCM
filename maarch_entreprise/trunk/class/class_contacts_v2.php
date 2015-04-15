@@ -1997,10 +1997,16 @@ class contacts_v2 extends dbquery
                 $this->query("select address_id from contacts_res where address_id = ". $id );
                 if($this->nb_result() > 0)$nb_elements = $nb_elements + $this->nb_result();
             }
-                         
-            if ($nb_elements == 0)
+                ?>
+                <h1><i class="fa fa-remove fa-2x"></i>
+                    <?php
+                        echo $title; 
+                    ?>
+                </h1><?php
+
+            if ($nb_elements == 0 && $mode != "contact_address" )
             {
-                $this->query("DELETE FROM ".$tablename." where id = ".$id);
+                $this->query("DELETE FROM ".$tablename." WHERE id = ".$id);
 
                 if($_SESSION['history'][$page_del] == "true")
                 {
@@ -2018,7 +2024,7 @@ class contacts_v2 extends dbquery
                     </script>   
                 <?php
 
-            } else { ?> 
+            } else if ($nb_elements > 0) { ?> 
                 <div class="error">
                     <b><?php
                         echo $_SESSION['error'];
@@ -2033,12 +2039,6 @@ class contacts_v2 extends dbquery
                 </div>
                 <br>
                 <br>
-                
-                <h1><i class="fa fa-remove fa-2x"></i>
-                    <?php
-                        echo $title; 
-                    ?>
-                </h1>
                 
                 <form name="contact_type_del" id="contact_type_del" method="post" class="forms" action="<?php echo $path_del?>">
                     <input type="hidden" value="<?php echo $id;?>" name="id">
@@ -2144,9 +2144,8 @@ class contacts_v2 extends dbquery
                             } ?>
                         </td>
                             
+                        <br/>  
                         <br/>
-                      
-                    <br/>
                     <p class="buttons">
                         <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick="return(confirm('<?php  echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"/>
                         <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $path;?>';" class="button" />
@@ -2155,9 +2154,61 @@ class contacts_v2 extends dbquery
                     }
                     ?>
                 </form>
-                <?php
-                exit;
+                
+                <hr/>
+                <?php 
             }
+
+            if ($mode == 'contact_address'){ ?>
+                <br>
+                <br>
+                
+                <h2><i class="fa fa-share"></i>
+                    <?php
+                        echo _MOVE_CONTACT_ADDRESS; 
+                    ?>
+                </h2>
+
+                <br>
+                <?php echo _INFO_MOVE_CONTACT_ADDRESS;?>
+
+                    <br>
+                    <br>
+                    <form name="contact_type_del" id="contact_type_del" method="post" class="forms" action="<?php echo $path_del?>">
+                        <input type="hidden" value="<?php echo $id;?>" name="id">
+                        <td>
+                            <label for="new_contact_reaffect"><?php echo _NEW_CONTACT; ?> : </label>
+                        </td>
+                        
+                        <td class="indexing_field">
+                            <input name="new_contact_reaffect" id="new_contact_reaffect" value="" onchange="erase_contact_external_id('new_contact_reaffect', 'new_contact_id_reaffect')"/>
+                            <div id="show_contact_label_reaffect" class="autocomplete">
+                                <script type="text/javascript">
+                                    initList_hidden_input('new_contact_reaffect', 'show_contact_label_reaffect', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contacts_v2_list_by_name', 'what', '2', 'new_contact_id_reaffect');
+                                </script>
+                            </div>
+                            <input type="hidden" id="new_contact_id_reaffect" name="new_contact_id_reaffect"/>
+                        </td>
+                        <br/>  
+                        <br/>
+                        <p class="buttons">
+                            <input type="submit" value="<?php echo _MOVE;?>" name="move" class="button" onclick="return(confirm('<?php  echo _REALLY_MOVE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"/>
+                            
+                            <?php if($nb_elements == 0){ ?>
+                                    <input type="submit" value="<?php echo _DELETE_CONTACT_ADDRESS;?>" name="delete" class="button" onclick="return(confirm('<?php  echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"/>
+                                <?php }
+                            ?>
+
+                            <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $path;?>';" class="button" />
+                        </p>
+                    </form>
+                    <br>
+                    <br>
+
+            <?php
+            }
+            exit;
+            
         } else {
             $_SESSION['error'] = $name.' '._EMPTY;
         }
