@@ -128,8 +128,9 @@ if ($_REQUEST['valid']) {
 	}
 } else if($_REQUEST['move']) {
 
+	$id = $_POST['id'];
+	
 	if ($_POST['new_contact_id_reaffect']) {
-		$id = $_POST['id'];
 		$db->query("UPDATE contact_addresses set contact_id = ".$_POST['new_contact_id_reaffect']." WHERE id = ".$id);
 		$db->query("UPDATE contacts_res set contact_id = '".$_POST['new_contact_id_reaffect']."' WHERE address_id = ".$id);
 

@@ -1761,3 +1761,5 @@ if (!defined('_MOVE')) define('_MOVE', 'D&eacute;placer');
 if (!defined('_DELETE_CONTACT_ADDRESS')) define('_DELETE_CONTACT_ADDRESS', 'Supprimer l\'adresse');
 if (!defined('_REALLY_MOVE')) define('_REALLY_MOVE', 'Voulez-vous vraiment d&eacute;placer ');
 
+if (!defined('_ADDRESS_MOVED')) define('_ADDRESS_MOVED', 'Adresse d&eacute;plac&eacute;e');
+

@@ -1998,6 +1998,15 @@ class contacts_v2 extends dbquery
                 if($this->nb_result() > 0)$nb_elements = $nb_elements + $this->nb_result();
             }
                 ?>
+
+                <div class="error">
+                    <b><?php
+                        echo $_SESSION['error'];
+                        $_SESSION['error'] = "";
+                    ?></b>
+                </div>
+                <br>
+
                 <h1><i class="fa fa-remove fa-2x"></i>
                     <?php
                         echo $title; 
@@ -2025,13 +2034,7 @@ class contacts_v2 extends dbquery
                 <?php
 
             } else if ($nb_elements > 0) { ?> 
-                <div class="error">
-                    <b><?php
-                        echo $_SESSION['error'];
-                        $_SESSION['error'] = "";
-                    ?></b>
-                </div>
-                <br>
+
                 <div id="main_error">
                     <b><?php
                         echo $warning_sentence;                       
@@ -2184,7 +2187,7 @@ class contacts_v2 extends dbquery
                             <input name="new_contact_reaffect" id="new_contact_reaffect" value="" onchange="erase_contact_external_id('new_contact_reaffect', 'new_contact_id_reaffect')"/>
                             <div id="show_contact_label_reaffect" class="autocomplete">
                                 <script type="text/javascript">
-                                    initList_hidden_input('new_contact_reaffect', 'show_contact_label_reaffect', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contacts_v2_list_by_name', 'what', '2', 'new_contact_id_reaffect');
+                                    initList_hidden_input('new_contact_reaffect', 'show_contact_label_reaffect', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contacts_v2_list_by_name&id=<?php echo $_SESSION['contact']['current_contact_id'];?>', 'what', '2', 'new_contact_id_reaffect');
                                 </script>
                             </div>
                             <input type="hidden" id="new_contact_id_reaffect" name="new_contact_id_reaffect"/>
