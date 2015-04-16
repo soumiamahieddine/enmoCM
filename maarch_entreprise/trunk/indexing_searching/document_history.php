@@ -49,6 +49,16 @@ if(isset($_REQUEST['id']) && !empty($_REQUEST['id'])) {
     exit();
 }
 
+//var_dump($_REQUEST);
+$small = false;
+$smallQuery = '';
+if ($_REQUEST['small'] == 'true') {
+    $small = true;
+    $smallQuery = "&small=true";
+} else {
+    $small = false;
+}
+
 //Collection ID
 if(isset($_REQUEST['coll_id']) && !empty($_REQUEST['coll_id'])) {
     $table = $sec->retrieve_table_from_coll($_REQUEST['coll_id']);
@@ -73,7 +83,7 @@ if (isset($_REQUEST['load'])) {
     $core_tools->load_js();
     
     //Load list
-    $target = $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='.$id.$parameters;
+    $target = $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id=' . $id . $parameters . $smallQuery;
     $listContent = $list->loadList($target);
     echo $listContent;
     
@@ -226,11 +236,18 @@ if (isset($_REQUEST['load'])) {
             $paramsTab['bool_bigPageTitle'] = false;                                    //Affichage du titre en grand
             $paramsTab['urlParameters'] = 'dir=indexing_searching&id='
                 .$id.'&display=true'.$parameters;                                       //Parametres d'url supplementaires
-            $paramsTab['filters'] = array('user', 'history_action', 'history_date');    //Filtres    
+
+            if ($small) {
+                $paramsTab['filters'] = array('user', 'history_action');                //Filtres
+            } else {
+                $paramsTab['filters'] = array('user', 'history_action', 'history_date');    //Filtres    
+            }
+            
+            
             $paramsTab['listHeight'] = '100%';                                         //Hauteur de la liste
             // $paramsTab['bool_showSmallToolbar'] = true;                                 //Mini barre d'outils
             $paramsTab['linesToShow'] = $linesToShow;                                             //Nombre de ligne a afficher
-            
+
             //Output
             $status = 0;
             $content = $list->showList($tab, $paramsTab, $listKey);
