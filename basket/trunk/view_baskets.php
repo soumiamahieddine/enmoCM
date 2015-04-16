@@ -29,6 +29,26 @@
 * @ingroup basket
 */
  $urlParameters = '';
+
+    if($_SESSION['save_list']['fromDetail'] == "true") {
+
+        $urlParameters .= '&start='.$_SESSION['save_list']['start'];
+        $urlParameters .= '&lines='.$_SESSION['save_list']['lines'];
+        $urlParameters .= '&order='.$_SESSION['save_list']['order'];
+        $urlParameters .= '&order_field='.$_SESSION['save_list']['order_field'];
+        if ($_SESSION['save_list']['template'] <> "") {
+            $urlParameters .= '&template='.$_SESSION['save_list']['template'];
+        }
+        $_SESSION['save_list']['fromDetail'] = "false";
+        $_SESSION['save_list']['url'] = $urlParameters;
+    }
+    $_SESSION['save_list']['start'] = "";
+    $_SESSION['save_list']['lines'] = "";
+    $_SESSION['save_list']['order'] = "";
+    $_SESSION['save_list']['order_field'] = "";
+    $_SESSION['save_list']['template'] = "";  
+
+
  $_SESSION['stockCheckbox']= '';
 if (isset($_SESSION['search']['plain_text'])) {
 
@@ -181,7 +201,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
             <input type="hidden" name="page" id="page" value="view_baskets" />
             <input type="hidden" name="module" id="module" value="basket" />
 
-            <select name="baskets"id="baskets" onchange="this.form.submit();" class="listext_big" >
+            <select name="baskets"id="baskets" onchange="cleanSessionBasket('<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=basket&page=cleanSessionBasket','ok'); this.form.submit();" class="listext_big" >
                 <option value=""><?php echo _CHOOSE_BASKET;?></option>
                 <?php
     for ($i = 0; $i < count($_SESSION['user']['baskets']); $i ++) {
@@ -279,7 +299,6 @@ if (count($_SESSION['user']['baskets']) > 0) {
 if (count($_SESSION['user']['baskets']) == 0) {
     ?><div align="center"><?php echo _NO_BASKET_DEFINED_FOR_YOU;?></div><?php
 }
-
 if (isset($_SESSION['current_basket']['page_include'])
     && ! empty($_SESSION['current_basket']['page_include'])
 ) {
@@ -322,5 +341,7 @@ if (isset($_SESSION['current_basket']['page_include'])
          ?></div><?php
     }
 }
+
+
 
 ?></div>

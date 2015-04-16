@@ -36,6 +36,8 @@ require_once('core/class/class_request.php');
 require_once('modules/basket/class/class_modules_tools.php');
 $core_tools = new core_tools();
 $core_tools->test_user();
+
+$_SESSION['basket_used'] = '';
 if (!isset($_REQUEST['noinit'])) {
     $_SESSION['current_basket'] = array();
 }
