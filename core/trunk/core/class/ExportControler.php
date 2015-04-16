@@ -94,6 +94,15 @@ class ExportControler extends ExportFunctions
                     $this->object_export->$i = $this->retrieve_header();
                     $i = 1;
                 }
+                if ($line->doc_date) {
+                    $line->doc_date = substr($line->doc_date, 0,10);
+                }
+                if ($line->admission_date) {
+                    $line->admission_date = substr($line->admission_date, 0,10);
+                }
+                if ($line->process_limit_date) {
+                    $line->process_limit_date = substr($line->process_limit_date, 0,10);
+                }
                 $this->object_export->$i = $line;
                 $i++;
             }
