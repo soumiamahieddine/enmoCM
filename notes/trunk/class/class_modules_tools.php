@@ -172,9 +172,9 @@ class notes extends dbquery
     
     public function getNotes($noteId, $userId, $userPrimaryEntity)
     {
-        $query = "select id from notes where id in ("
-            . "select note_id from ". NOTE_ENTITIES_TABLE. " where (item_id = '" 
-            . $userPrimaryEntity . "' and note_id = " . $noteId . "))"
+        $query = "SELECT id FROM notes WHERE id in ("
+                  . "SELECT note_id FROM ". NOTE_ENTITIES_TABLE. " WHERE (item_id in ("
+                      ."SELECT entity_id FROM users_entities WHERE user_id = '" . $userId . "') and note_id = " . $noteId . "))"
             . "or (id = " . $noteId . " and user_id = '" . $userId . "')";
         $db = new dbquery();
         $db->connect();
@@ -219,9 +219,9 @@ class notes extends dbquery
             $not_nbr++;
            else
            {
-             $db->query( "select id from notes where id in ("
-                . "select note_id from ". NOTE_ENTITIES_TABLE. " where (item_id = '" 
-                . $_SESSION['user']['primaryentity']['id'] . "' and note_id = " . $res->id . "))"
+             $db->query( "SELECT id FROM notes WHERE id in ("
+                . "SELECT note_id FROM ". NOTE_ENTITIES_TABLE. " WHERE (item_id in ("
+                      ."SELECT entity_id FROM users_entities WHERE user_id = '" . $_SESSION['user']['UserId'] . "') and note_id = " . $res->id . "))"
                 . "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')");
 
             
@@ -264,8 +264,8 @@ class notes extends dbquery
                 );
            } else {
              $db->query( "select id from notes where id in ("
-                . "select note_id from ". NOTE_ENTITIES_TABLE. " where (item_id = '" 
-                . $_SESSION['user']['primaryentity']['id'] . "' and note_id = " . $res->id . "))"
+                . "select note_id from ". NOTE_ENTITIES_TABLE. " where (item_id in ("
+                      ."SELECT entity_id FROM users_entities WHERE user_id = '" . $_SESSION['user']['UserId'] . "') and note_id = " . $res->id . "))"
                 . "or (id = " . $res->id . " and user_id = '" . $_SESSION['user']['UserId'] . "')");
 
             
@@ -286,10 +286,10 @@ class notes extends dbquery
 	
 	public function isUserNote($noteId, $userId, $userPrimaryEntity)
     {
-        $query = "select id from notes where id in ("
-            . "select note_id from note_entities where (item_id = '" 
-            . $userPrimaryEntity . "' and note_id = " . $noteId . "))"
-            . "or (id = " . $noteId . " and user_id = '" . $userId . "')";
+        $query = "SELECT id FROM notes WHERE id in ("
+                  . "SELECT note_id FROM note_entities WHERE (item_id in ("
+                      ."SELECT entity_id FROM users_entities WHERE user_id = '" . $userId . "') and note_id = " . $noteId . "))"
+                  . "or (id = " . $noteId . " and user_id = '" . $userId . "')";
         $db = new dbquery();
         $db->connect();
         $db->query($query);
