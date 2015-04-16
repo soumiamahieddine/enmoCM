@@ -594,11 +594,31 @@ class lists extends dbquery
     }
     
     private function _resetFilter() {
-    
-        foreach ($_SESSION['filters'] as $key => $val) {
-            $_SESSION['filters'][$key]['VALUE'] = '';
-            $_SESSION['filters'][$key]['CLAUSE'] = '';
-        }
+
+        if($_SESSION['basket_used'] != $_SESSION['current_basket']['id']){
+
+            foreach ($_SESSION['filters'] as $key => $val) {
+                $_SESSION['filters'][$key]['VALUE'] = '';
+                $_SESSION['filters'][$key]['CLAUSE'] = '';
+                }
+        }/*elseif($_SESSION['basket_used'] == $_GET['baskets']){
+            foreach ($_SESSION['filters'] as $key => $val) {
+                $_SESSION['filters'][$key]['VALUE'] = '';
+                $_SESSION['filters'][$key]['CLAUSE'] = '';
+                }
+
+        }*/
+
+        
+    }
+
+    private function _resetFilter2() {
+
+            foreach ($_SESSION['filters'] as $key => $val) {
+                $_SESSION['filters'][$key]['VALUE'] = '';
+                $_SESSION['filters'][$key]['CLAUSE'] = '';
+                }
+           
     }
     
     private function _manageFilters() {
@@ -606,7 +626,7 @@ class lists extends dbquery
         //Reset all filters
         if ($_REQUEST['filter'] == 'reset'){
         
-           $this->_resetFilter();
+           $this->_resetFilter2();
            
         } else { //Init filter value and clause
             if(isset($_REQUEST['value']) && !empty($_REQUEST['value'])) {
@@ -2544,7 +2564,7 @@ class lists extends dbquery
                 $filters .= $filtersControl;
                 //Clear icon
                 $filters .='&nbsp;&nbsp;<a href="javascript://"  title="'._CLEAR_SEARCH.'" onfocus="this.blur()" '
-                            .'onclick="javascript:loadList(\''.$this->link
+                            .'onclick="javascript:loadList2(\''.$this->link
                             .'&filter=reset\', \''.$this->divListId.'\', '
                             .$this->modeReturn.');">'
                             .'<i class="fa fa-refresh fa-2x" title="' . _CLEAR_SEARCH . '"></i></a>';
@@ -3320,6 +3340,29 @@ class lists extends dbquery
         
         //Create javascript load list function
         $list .= '<script type="text/javascript">loadList(\''.$target.'&display=true\', \''.$divListId.'\', '.$returnMode.', '.$init.');</script>';
+        
+        //Show loading image?
+        if ($showLoading === true) {
+            $loading = '<i class="fa fa-spinner fa-2x"></i>';
+        }
+        
+        //Content div
+        $list .= '<div id="'.$divListId.'" name="'.$divListId.'">'.$loading.'</div>';
+        
+        return $list;
+        
+    }
+    public function loadList2($target, $showLoading=true, $divListId='divList', $returnMode = 'true', $init='true') {
+        $list = "\n";
+        $loading ='';
+        //Reset filters
+        $this->_resetFilter2();
+        
+        //Reset html template list url
+        $this->_resetUrlTemplates();
+        
+        //Create javascript load list function
+        $list .= '<script type="text/javascript">loadList2(\''.$target.'&display=true\', \''.$divListId.'\', '.$returnMode.', '.$init.');</script>';
         
         //Show loading image?
         if ($showLoading === true) {

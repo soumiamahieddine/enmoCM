@@ -2406,6 +2406,26 @@ function stockCheckbox(url,value){
 
 }
 
+function cleanSessionBasket(url,value){
+    //fait appel à l'ajax cleanSessionBasket du module basket pour vider la $_SESSION['basket_used']
+    if(value != ''){
+        new Ajax.Request(url,
+    
+    {
+        method:'post',
+        parameters: { courrier_purpose : value},
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            //monTableauJS =  JSON.parse(answer.responseText);
+
+
+        }
+    })
+    };
+
+}
+
+
 function loadRepList(id)
 {
     new Effect.toggle('repList_'+id, 'appear' , {delay:0.2});
@@ -2679,7 +2699,48 @@ function loadList(path, inDiv, modeReturn, init) {
         }
     });
 }
+function loadList2(path, inDiv, modeReturn, init) {
 
+ //alert (modeReturn);
+    if(typeof(inDiv)==='undefined'){
+        var div = 'divList';
+    } else {
+        var div = inDiv;
+    }
+    if(typeof(modeReturn)==='undefined'){
+        var modeReturn = false;
+    }
+    if(typeof(init)==='undefined'){
+        window.top.$('main_error').innerHTML = '';
+        window.top.$('main_info').innerHTML = '';
+    }
+    path = path.replace('#', '%23');
+    new Ajax.Request(path,
+    {
+        method:'post',
+        parameters: { url : path
+                    },   
+       /* onLoading: function(answer) {
+                //show loading image in toolbar
+                $('loading').style.display='block';
+        },*/                        
+        onSuccess: function(answer){
+                if (modeReturn !== false) {
+                    eval("response = "+answer.responseText);
+                    if(response.status == 0){                      
+                        $(div).innerHTML = convertToHTMLVisibleNewline(response.content);
+                        evalMyScripts(div);
+                    } else {
+                        window.top.$('main_error').innerHTML = response.error;
+                    }
+                } else {
+                    $(div).innerHTML = answer.responseText;
+                    evalMyScripts(div);
+                }
+               // $('loading').style.display='none';
+        }
+    });
+}
 function loadValueInDiv(theId, url) {
     
     new Effect.toggle('subList_' + theId, 'appear' , {delay:0.2});

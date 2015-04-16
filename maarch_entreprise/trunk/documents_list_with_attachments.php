@@ -44,6 +44,23 @@ $list       = new lists();
 //Include definition fields
 include_once('apps/' . $_SESSION['config']['app_id'] . '/definition_mail_categories.php');
 
+//Order
+    $order = $order_field = '';
+    $order = $list->getOrder();
+    $order_field = $list->getOrderField();
+    $_SESSION['save_list']['order'] = $order;
+    $_SESSION['save_list']['order_field'] = $order_field;
+ //URL extra Parameters  
+    $parameters = '';
+    $start = $list->getStart();
+    if (!empty($order_field) && !empty($order)) $parameters .= '&order='.$order.'&order_field='.$order_field;
+    if (!empty($what)) $parameters .= '&what='.$what;
+    if (!empty($selectedTemplate)) $parameters .= '&template='.$selectedTemplate;
+    if (!empty($start)) $parameters .= '&start='.$start;
+    $_SESSION['save_list']['start'] = $start; 
+
+
+
 //Keep some parameters
 $parameters = '';
 if (isset($_REQUEST['order']) && !empty($_REQUEST['order'])) {

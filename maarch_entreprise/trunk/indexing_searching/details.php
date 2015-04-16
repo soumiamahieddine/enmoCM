@@ -45,6 +45,8 @@ require_once 'core/class/LinkController.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_indexing_searching_app.php';
 require_once 'apps/' . $_SESSION['config']['app_id'] . '/class/class_types.php';
 
+$_SESSION['basket_used'] = $_SESSION['current_basket']['id'];
+
 if (file_exists(
     $_SESSION['config']['corepath'] . 'custom/apps/' . $_SESSION['config']['app_id']
     . '/definition_mail_categories.php'
@@ -1659,6 +1661,8 @@ $detailsExport .= "</body></html>";
 $_SESSION['doc_convert'] = array();
 $_SESSION['doc_convert']['details_result'] = $detailsExport;
 $core = new core_tools();
+
+
 
 /*if ($printDetails) {
     $Fnm = $_SESSION['config']['tmppath']. '/export_details_'
