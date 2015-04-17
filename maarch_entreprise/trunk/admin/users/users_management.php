@@ -53,7 +53,7 @@ elseif($mode == "up" || $mode == "add")
         echo "<br /><br /><br /><br />"._USER.' '._UNKNOWN."<br /><br /><br /><br />";
     else
     {?>
-        <form  id="frmuser" class="block" method="post" action="<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&amp;admin=users&amp;page=users_management_controler&amp;mode=<?php echo $mode;?>" class="forms addforms" style="width:55%;height:330px;">
+        <form  id="frmuser" class="block" method="post" action="<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&amp;admin=users&amp;page=users_management_controler&amp;mode=<?php echo $mode;?>" class="forms addforms" style="width:55%;height:400px;">
             <div class="content" style="width:400px;margin:auto;">
             <input type="hidden" name="display" value="true" />
             <input type="hidden" name="admin" value="users" />
@@ -89,6 +89,17 @@ elseif($mode == "up" || $mode == "add")
                 <input name="Mail" id="Mail" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['mail'])){ echo $_SESSION['m_admin']['users']['mail']; }?>" />
                 <span class="red_asterisk"><i class="fa fa-star"></i></span>
             </p>
+			
+			<?php
+			if (isset($_SESSION['modules_loaded']['visa'])){
+			?>
+			 <p>
+			  <label for="thumbprint"><?php  echo _THUMBPRINT;  ?> : </label><br/>
+				<textarea name="thumbprint" id="thumbprint" style="width: 95%;" ><?php if(isset($_SESSION['m_admin']['users']['thumbprint'])){ echo $_SESSION['m_admin']['users']['thumbprint']; }?></textarea>
+			  </p>
+			<?php
+			}
+			?>
             <p>
                 <?php  echo _LOGIN_MODE; ?>&nbsp;:<br/>
                 <?php

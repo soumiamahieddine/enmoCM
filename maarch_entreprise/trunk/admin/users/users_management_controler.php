@@ -571,7 +571,9 @@ function validate_user_submit(){
     if(isset($_REQUEST['Mail']) && !empty($_REQUEST['Mail'])){
         $user->mail  = $_REQUEST['Mail'];
     }
-
+	if(isset($_REQUEST['thumbprint']) && !empty($_REQUEST['thumbprint'])){
+        $user->thumbprint  = $_REQUEST['thumbprint'];
+    }
     $status= array();
     $status['order']=$_REQUEST['order'];
     $status['order_field']=$_REQUEST['order_field'];

@@ -149,7 +149,7 @@ class class_users extends dbquery
 
         <div id="inner_content" class="clearfix">
             <div id="user_box" style="float:right;width:17%;">
-                <div class="block" style="height:330px;">
+                <div class="block" style="height:400px;">
                          <?php if($core->is_module_loaded("entities") )
                         {?>
                          <h2 class="tit"><?php  echo _USER_ENTITIES_TITLE;?> : </h2>
@@ -179,7 +179,7 @@ class class_users extends dbquery
                      <div class="block_end">&nbsp;</div>
                      </div>
                      <div id="user_box_2" style="float:right;width:17%;">
-                <div class="block" style="height:330px;">
+                <div class="block" style="height:400px;">
                  <h2 class="tit"><?php  echo _USER_GROUPS_TITLE;?> : </h2>
                      <ul id="my_profil" style="height:280px;overflow:auto;">
                       <?php
@@ -207,7 +207,7 @@ class class_users extends dbquery
                      </div>
                      <div class="block_end">&nbsp;</div>
                      </div>
-                        <div class="block" style="float:left;width:55%;height:330px;">
+                        <div class="block" style="float:left;width:55%;height:400px;">
                         <form name="frmuser" style="margin:auto;" id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=user_modif" class="forms addforms">
                             <input type="hidden" name="display" value="true" />
                             <input type="hidden" name="admin" value="users" />

@@ -31,7 +31,7 @@
 core_tools::load_lang();
 header("Content-Type: text/html", true);
 ?>
-<div class="block" style="height:330px;position:relative;">
+<div class="block" style="height:400px;position:relative;">
 <form name="usergroup_content" method="get" action="#" >
  <h2> <?php  echo html_entity_decode(_USER_GROUPS_TITLE); ?> :</h2>
  <div class="content" style="height:150px;overflow:auto;">
