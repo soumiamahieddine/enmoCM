@@ -14,7 +14,7 @@
 core_tools::load_lang();
 header("Content-Type: text/html", true);
 ?>
-<div class="block" style="height:330px;position:relative;">
+<div class="block" style="height:400px;position:relative;">
 <form name="userEntity" method="get" action="#" >
 
  <h2> <?php  echo _USER_ENTITIES_TITLE; ?> :</h2>
