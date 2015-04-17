@@ -24,7 +24,7 @@ $sec = new security();
 $whereClause = $sec->get_where_clause_from_coll_id($_SESSION['collection_id_choice']);
 if($_POST['FOLDER_TREE']){
 	$folders = array();
-	$db->query('select folders_system_id, folder_name, parent_id, folder_level from folders WHERE foldertype_id not in (100) AND parent_id='.$_POST["folders_system_id"].' order by folder_id asc');
+	$db->query('select folders_system_id, folder_name, parent_id, folder_level from folders WHERE foldertype_id not in (100) AND parent_id='.$_POST["folders_system_id"].' AND status NOT IN (\'DEL\') order by folder_id asc');
 	while($row=$db->fetch_array()){
 	
 		$db2->query(
@@ -32,7 +32,7 @@ if($_POST['FOLDER_TREE']){
 				);
 		$row2 = $db2->fetch_array();
 		$db3->query(
-		"select count(*) as total from folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].")"
+		"select count(*) as total from folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].") AND status NOT IN ('DEL')"
 		);
 		$row3 = $db3->fetch_array();
 		$folders[] = array(
@@ -48,14 +48,14 @@ if($_POST['FOLDER_TREE']){
 	exit();
 }else if($_POST['FOLDER_TREE_RESET']){
 	$folders = array();
-	$db->query('select folders_system_id, folder_name, parent_id, folder_level from folders WHERE foldertype_id not in (100) AND folders_system_id='.$_POST["folders_system_id"].' order by folder_id asc');
+	$db->query('select folders_system_id, folder_name, parent_id, folder_level from folders WHERE foldertype_id not in (100) AND folders_system_id='.$_POST["folders_system_id"].' AND status NOT IN (\'DEL\') order by folder_id asc');
 	while($row=$db->fetch_array()){
 		$db2->query(
 				"select count(*) as total from res_view_letterbox WHERE folders_system_id in ('".$_POST['folders_system_id']."') AND (".$whereClause.") AND status NOT IN ('DEL')"
 				);
 		$row2 = $db2->fetch_array();
 		$db3->query(
-		"select count(*) as total from folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].")"
+		"select count(*) as total from folders WHERE foldertype_id not in (100) AND parent_id IN (".$row['folders_system_id'].")  AND status NOT IN ('DEL')"
 		);
 		$row3 = $db3->fetch_array();
 		$folders[] = array(
@@ -203,7 +203,7 @@ if(!isset($_REQUEST['id_subfolder']) || empty($_REQUEST['id_subfolder']))
 	echo "{status : 1, error_txt : '".addslashes( _SUBFOLDER.' '._IS_EMPTY)."'}";
 	exit();
 }
-$db->query('select parent_id from '.$_SESSION['tablename']['fold_folders'].' where folders_system_id = '.$_REQUEST['id_subfolder']);
+$db->query('select parent_id from '.$_SESSION['tablename']['fold_folders'].' where folders_system_id = '.$_REQUEST['id_subfolder']. ' AND status NOT IN (\'DEL\')');
 
 if($db->nb_result() < 1)
 {
@@ -213,7 +213,7 @@ if($db->nb_result() < 1)
 }
 $res = $db->fetch_object();
 $parent_id = $res->parent_id;
-$db->query('select folder_name, subject, folders_system_id from '.$_SESSION['tablename']['fold_folders'].' where folders_system_id = '.$parent_id);
+$db->query('select folder_name, subject, folders_system_id from '.$_SESSION['tablename']['fold_folders'].' where folders_system_id = '.$parent_id. '  AND status NOT IN (\'DEL\')');
 
 if($db->nb_result() < 1)
 {
