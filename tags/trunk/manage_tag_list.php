@@ -160,7 +160,7 @@ if ($mode == 'list') {
             <p class="buttons">
                 <?php
                 if ($mode == 'up') { ?>
-                    <input class="button" type="submit" name="tag_submit" style="width:100px;" value=
+                    <input class="button" type="submit" name="tag_submit" value=
                     "<?php echo _MODIFY_TAG; ?>" />
                     <?php
                 } elseif ($mode == 'add') { ?>
