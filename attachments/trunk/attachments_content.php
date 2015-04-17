@@ -296,7 +296,7 @@ if (isset($_POST['add']) && $_POST['add']) {
                         );
 						
 						//copie de la version PDF de la pièce si mode de conversion sur le client
-						if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "client" && $_SESSION['upfile']['fileNamePdfOnTmp'] != ''){
+						if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != ''){
 							$file = $_SESSION['config']['tmppath'].$_SESSION['upfile']['fileNamePdfOnTmp'];
 							$newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
 							
