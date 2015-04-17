@@ -1,4 +1,7 @@
 <?php
+if (!defined('_SIGN_DOCS'))
+    define('_SIGN_DOCS', 'Signer les documents');
+
 // CIRCUIT DE VISA
 if (!defined('_VISA_WORKFLOW'))
     define('_VISA_WORKFLOW', 'Circuit de visa');
@@ -26,4 +29,7 @@ if (!defined('_CONFIG_AVIS_WORKFLOW'))
     define('_CONFIG_AVIS_WORKFLOW', 'Configuration du circuit d\'avis');
 if (!defined('_CONFIG_AVIS_WORKFLOW_DESC'))
     define('_CONFIG_AVIS_WORKFLOW_DESC', 'Permet de configurer le circuit d\'avis du courrier');
+
+if (!defined('_THUMBPRINT'))
+    define('_THUMBPRINT', 'Empreinte numérique');
 ?>

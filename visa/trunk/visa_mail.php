@@ -156,7 +156,9 @@ function get_rep_path($res_id, $coll_id)
 function getDocsBasket(){
 	$db = new dbquery();
 	$db->connect();
-	$requete = "select res_id from ".$_SESSION['current_basket']['view']." where " . $_SESSION['current_basket']['clause'] . " order by process_limit_date asc";
+	$orderstr = "order by creation_date desc";
+	if (isset($_SESSION['last_order_basket'])) $orderstr = $_SESSION['last_order_basket'];
+	$requete = "select res_id from ".$_SESSION['current_basket']['view']." where " . $_SESSION['current_basket']['clause'] . " $orderstr";
 	$db->query($requete, true);
 	$tab_docs = array();
 	while($res = $db->fetch_object()){
@@ -289,23 +291,26 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			if (isset($tab_docs[$num+1])) $nextId = $tab_docs[$num+1];*/
 		}
 		$frm_str .= '<dl>';
-		
 		$frm_str .= '<dt></dt>';
 		$frm_str .= '<dd>'.$chrono_number . ' - ' .$res_id_doc.'</dd>';
 		
-		$frm_str .= '<dt><i class="fa fa-user fa-2x"></i></dt>';
+		$frm_str .= '<dt><i class="fa fa-user" title="Contact"></i></dt>';
 		if(isset($data['contact']) && !empty($data['contact']))
         {
-			$frm_str .= '<dd>'.$data['contact'].'</dd>';
+			if (strlen($data['contact']) > 30) $contact = substr($data['contact'],0,30).'...';
+			else $contact = $data['contact'];
+			$frm_str .= '<dd>'.$contact.'</dd>';
 		}
 		
 		$frm_str .= '<dt></dt>';
 		if(isset($data['subject']) && !empty($data['subject']))
         {
-			$frm_str .= '<dd><i>'.$data['subject'].'</i></dd>';
+			if (strlen($data['subject']) > 30) $subject = substr($data['subject'],0,30).'...';
+			else $subject = $data['subject'];
+			$frm_str .= '<dd><i>'.$subject.'</i></dd>';
 		}
 		
-		$frm_str .= '<dt><i class="fa fa-calendar fa-2x"></i></dt>';
+		$frm_str .= '<dt><i class="fa fa-calendar " title="Date d\'arrivée"></i></dt>';
 		if(isset($data['admission_date'])&& !empty($data['admission_date']))
 		{
 			$frm_str .= '<dd>'.$data['admission_date'].'</dd>';
@@ -314,14 +319,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		{
 			$frm_str .= '<dd>'.date('d-m-Y').'</dd>';
 		}
-		
-		/*$frm_str .= '<dt>'._CATEGORY.' : </dt>';
-		if(isset($data['category_id']['value'])&& !empty($data['category_id']['value']))
-        {
-			$frm_str .= '<dd>'.$data['category_id']['value'].'</dd>';
-		}*/
-		
-		$frm_str .= '<dt><i class="fa fa-bell fa-2x"></i></dt>';
+				
+		$frm_str .= '<dt><i class="fa fa-bell" title="Date limite"></i></dt>';
 		if(isset($data['process_limit_date'])&& !empty($data['process_limit_date']))
         {
 			$frm_str .= '<dd>'.$data['process_limit_date'].'</dd>';
@@ -336,17 +335,17 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '<table>';	
 	$frm_str .= '<tr>';
 		$frm_str .= '<td style="width:33%";">';	
-		$frm_str .= '<a href="javascript://" id="previous_doc" onclick="previousDoc(\'index.php?display=true&module=visa&page=update_visaPage\', \''.$coll_id.'\');"><i class="fa fa-chevron-up fa-4x" title="Précédent"></i></a>';
+		$frm_str .= '<a href="javascript://" id="previous_doc" onclick="previousDoc(\'index.php?display=true&module=visa&page=update_visaPage\', \''.$coll_id.'\');"><i class="fa fa-chevron-up fa-3x" title="Précédent"></i></a>';
 		
 		$frm_str .= '</td>';
 		
 		$frm_str .= '<td style="width:33%";">';	
-		$frm_str .= '<a href="javascript://" id="next_doc" onclick="nextDoc(\'index.php?display=true&module=visa&page=update_visaPage\', \''.$coll_id.'\');"><i class="fa fa-chevron-down fa-4x" title="Suivant"></i></a>';
+		$frm_str .= '<a href="javascript://" id="next_doc" onclick="nextDoc(\'index.php?display=true&module=visa&page=update_visaPage\', \''.$coll_id.'\');"><i class="fa fa-chevron-down fa-3x" title="Suivant"></i></a>';
 		
 		$frm_str .= '</td>';
 		
 		$frm_str .= '<td style="width:33%";">';	
-		$frm_str .= '<a href="javascript://" id="cancel" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"><i class="fa fa-undo fa-4x" title="Annuler"></i></a>';
+		$frm_str .= '<a href="javascript://" id="cancel" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"><i class="fa fa-undo fa-3x" title="Annuler"></i></a>';
 		
 		$frm_str .= '</td>';
 	$frm_str .= '</tr>';	
@@ -358,13 +357,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '<dl id="tabricatorLeft" >';
 	
 	//Onglet document
-	$frm_str .= '<dt id="onglet_entrant">'._INCOMING.'</dt><dd>';
+	$frm_str .= '<dt id="onglet_entrant">'._INCOMING.'</dt><dd style="overflow-y: hidden;">';
 	$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='. $res_id.'&coll_id='.$coll_id.'" name="viewframevalidDoc" id="viewframevalidDoc"  scrolling="auto" frameborder="0"  style="width:100%;height:100%;" ></iframe></dd>';
 	
 	$frm_str .= '</dd>';
 	
 	//Onglet Avancement 
-	$frm_str .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement">';
+	$frm_str .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement" style="overflow-x: hidden;">';
 	$frm_str .= '<h2>Workflow</h2>';
 	$visa = new visa();
 	$workflow = $visa->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
@@ -403,16 +402,18 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		}
 	}
 	$frm_str .= '</tbody></table><br/>';
-	$frm_str .= '<h2 onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'frame_histo_div\', \'blind\', {delay:0.2}); whatIsTheDivStatus(\'frame_histo_div\', \'frame_histo_div_status\');return false;">';
-	$frm_str .= ' <span id="frame_histo_div_status" style="color:#1C99C5;"><<</span>';
-	$frm_str .= ' Historique complet</h2>';
+		$frm_str .= '<span style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'frame_histo_div\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'frame_histo_div\', \'frame_histo_div_status\');return false;">';
+		$frm_str .= '<span id="frame_histo_div_status" style="color:#1C99C5;"><<</span>';
+		$frm_str .= '<b>&nbsp;<small>Historique complet</small></b>';
+	$frm_str .= '</span>';
+
 	$frm_str .= '<div id="frame_histo_div" style="display:none" >';
-	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="history_document" width="100%" height="590px" align="left" scrolling="no" frameborder="0" id="history_document"></iframe>';
+	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full&small=true" name="history_document" width="100%" height="590px" align="left" scrolling="no" frameborder="0" id="history_document"></iframe>';
 	$frm_str .= '</div>';
 	$frm_str .= '</dd>';
 	
 	//Onglet Circuit 
-	$frm_str .= '<dt id="onglet_circuit">'._VISA_WORKFLOW.'</dt><dd id="page_circuit">';
+	$frm_str .= '<dt id="onglet_circuit">'._VISA_WORKFLOW.'</dt><dd id="page_circuit" style="overflow-x: hidden;">';
 	$frm_str .= '<h2>'._VISA_WORKFLOW.'</h2>';
 	
 	$modifVisaWorkflow = false;
@@ -457,7 +458,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
 		if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
 		//Notes iframe
-		$frm_str .= '<dt id="onglet_notes">'. _NOTES.$nbr_notes .'</dt><dd id="page_notes"><h2>'. _NOTES .'</h2><iframe name="list_notes_doc" id="list_notes_doc" src="'. $_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=notes&identifier='. $res_id .'&origin=document&coll_id='.$coll_id.'&load&size=full" frameborder="0" scrolling="no" width="99%" height="570px"></iframe></dd> ';	
+		$frm_str .= '<dt id="onglet_notes">'. _NOTES.$nbr_notes .'</dt><dd id="page_notes" style="overflow-x: hidden;"><h2>'. _NOTES .'</h2><iframe name="list_notes_doc" id="list_notes_doc" src="'. $_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=notes&identifier='. $res_id .'&origin=document&coll_id='.$coll_id.'&load&size=full" frameborder="0" scrolling="no" width="99%" height="570px"></iframe></dd> ';	
 	}
 		
 	
@@ -472,7 +473,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		if (strlen($tab_path_rep_file[$i]['title']) > 20) $titleRep = substr($tab_path_rep_file[$i]['title'],0,20).'...';
 		else $titleRep = $tab_path_rep_file[$i]['title'];
 		$frm_str .= '<dt onclick="updateFunctionModifRep(\''.$tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.');">'.$titleRep.'</dt><dd>';
-		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_doc&path='
+		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=visa&page=view_doc&path='
 			. $tab_path_rep_file[$i]['path'].'" name="viewframevalidRep'.$num_rep.'" id="viewframevalidRep'.$num_rep.'"  scrolling="auto" frameborder="0" style="width:100%;height:100%;" ></iframe>';
 		 $frm_str .= '</dd>';
 	}
@@ -636,8 +637,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		//$frm_str .= '<input type="hidden" name="next_resId" id="next_resId" value="'.$nextId.'" >';
 		$frm_str .= '</form>';
 		$frm_str .= '</td>';
-		$frm_str .= '<td style="width:5%";">';	
-		$frm_str .= '<a href="javascript://" id="update_rep_link" onclick="';
+		$frm_str .= '<td style="width:15%";">';	
+		if ($core->test_service('sign_document', 'visa', false)) {
+			$frm_str .= '<a href="javascript://" id="sign_link" onclick="';
+			$frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].');';
+			$frm_str .= '"><i class="fa fa-check fa-4x" title="Signer ces projets de réponse"></i></a>';
+		}
+		$frm_str .= ' <a href="javascript://" id="update_rep_link" onclick="';
 		$frm_str .= 'window.open(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId='.$coll_id.'&id='.$tab_path_rep_file[0]['res_id'].'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');';
 		$frm_str .= '"><i class="fa fa-pencil-square-o fa-4x" title="Modifier la réponse"></i></a>';
 		
@@ -649,7 +655,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '</div>';
 	
 	/*** Extra javascript ***/
-	$frm_str .= '<script type="text/javascript">launchTabri();window.scrollTo(0,0);';
+	$frm_str .= '<script type="text/javascript">launchTabri();window.scrollTo(0,0);$(\'divList\').style.display = \'none\';';
 	$frm_str .='</script>';
 	return addslashes($frm_str);
 }

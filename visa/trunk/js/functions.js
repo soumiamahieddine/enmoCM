@@ -53,6 +53,7 @@ function refreshIcones(id_tableau){
 	}
 }
 
+
 function addRow(id_tableau)
 {
 	var tableau = document.getElementById(id_tableau);	
@@ -280,6 +281,29 @@ function updateFunctionModifRep(idReponse, num_rep){
 	document.getElementById("update_rep_link").setAttribute('onclick','window.open(\'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId=letterbox_coll&id='+idReponse+'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');');	
 	document.getElementById("cur_idAffich").setAttribute('value',num_rep);
 	document.getElementById("cur_rep").setAttribute('value',idReponse);
+}
+
+function signFile(res_id){
+	new Ajax.Request("index.php?display=true&module=visa&page=checkPinCode",
+	{
+		method:'post',
+		onSuccess: function(answer){
+			eval("response = "+answer.responseText);
+			if (response.status == 1){
+				window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
+			}
+			else if (response.status == 0){
+				var pinCode = prompt("Code PIN :", "");
+				console.log("Code PIN :"+pinCode);
+				window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&pinCode='+pinCode,'','height=301, width=301,scrollbars=yes,resizable=yes');
+			}
+		}
+	});
+}
+
+//load applet in a modal
+function loadAppletSign(url){
+    displayModal(url, 'VisaApplet', 300, 300);
 }
 
 function generateWaybill(resId)

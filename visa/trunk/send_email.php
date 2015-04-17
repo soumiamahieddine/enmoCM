@@ -113,7 +113,9 @@ function getInfosUser($user_id){
 function getDocsBasket(){
 	$db = new dbquery();
 	$db->connect();
-	$requete = "select res_id from ".$_SESSION['current_basket']['view']." where " . $_SESSION['current_basket']['clause'] . " order by process_limit_date asc";
+	$orderstr = "order by creation_date desc";
+	if (isset($_SESSION['last_order_basket'])) $orderstr = $_SESSION['last_order_basket'];
+	$requete = "select res_id from ".$_SESSION['current_basket']['view']." where " . $_SESSION['current_basket']['clause'] . " $orderstr";
 	$db->query($requete, true);
 	$tab_docs = array();
 	while($res = $db->fetch_object()){
@@ -223,23 +225,26 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			if (isset($tab_docs[$num+1])) $nextId = $tab_docs[$num+1];*/
 		}
 		$frm_str .= '<dl>';
-		
 		$frm_str .= '<dt></dt>';
 		$frm_str .= '<dd>'.$chrono_number . ' - ' .$res_id_doc.'</dd>';
 		
-		$frm_str .= '<dt><i class="fa fa-user fa-2x"></i></dt>';
+		$frm_str .= '<dt><i class="fa fa-user" title="Contact"></i></dt>';
 		if(isset($data['contact']) && !empty($data['contact']))
         {
-			$frm_str .= '<dd>'.$data['contact'].'</dd>';
+			if (strlen($data['contact']) > 30) $contact = substr($data['contact'],0,30).'...';
+			else $contact = $data['contact'];
+			$frm_str .= '<dd>'.$contact.'</dd>';
 		}
 		
 		$frm_str .= '<dt></dt>';
 		if(isset($data['subject']) && !empty($data['subject']))
         {
-			$frm_str .= '<dd><i>'.$data['subject'].'</i></dd>';
+			if (strlen($data['subject']) > 30) $subject = substr($data['subject'],0,30).'...';
+			else $subject = $data['subject'];
+			$frm_str .= '<dd><i>'.$subject.'</i></dd>';
 		}
 		
-		$frm_str .= '<dt><i class="fa fa-calendar fa-2x"></i></dt>';
+		$frm_str .= '<dt><i class="fa fa-calendar " title="Date d\'arrivée"></i></dt>';
 		if(isset($data['admission_date'])&& !empty($data['admission_date']))
 		{
 			$frm_str .= '<dd>'.$data['admission_date'].'</dd>';
@@ -248,14 +253,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		{
 			$frm_str .= '<dd>'.date('d-m-Y').'</dd>';
 		}
-		
-		/*$frm_str .= '<dt>'._CATEGORY.' : </dt>';
-		if(isset($data['category_id']['value'])&& !empty($data['category_id']['value']))
-        {
-			$frm_str .= '<dd>'.$data['category_id']['value'].'</dd>';
-		}*/
-		
-		$frm_str .= '<dt><i class="fa fa-bell fa-2x"></i></dt>';
+				
+		$frm_str .= '<dt><i class="fa fa-bell" title="Date limite"></i></dt>';
 		if(isset($data['process_limit_date'])&& !empty($data['process_limit_date']))
         {
 			$frm_str .= '<dd>'.$data['process_limit_date'].'</dd>';
@@ -270,17 +269,17 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '<table>';	
 	$frm_str .= '<tr>';
 		$frm_str .= '<td style="width:33%";">';	
-		$frm_str .= '<a href="javascript://" id="previous_doc" onclick="previousDoc(\'index.php?display=true&module=visa&page=update_sendMail\',\''.$coll_id.'\');"><i class="fa fa-chevron-up fa-4x" title="Précédent"></i></a>';
+		$frm_str .= '<a href="javascript://" id="previous_doc" onclick="previousDoc(\'index.php?display=true&module=visa&page=update_sendMail\',\''.$coll_id.'\');"><i class="fa fa-chevron-up fa-3x" title="Précédent"></i></a>';
 		
 		$frm_str .= '</td>';
 		
 		$frm_str .= '<td style="width:33%";">';	
-		$frm_str .= '<a href="javascript://" id="next_doc" onclick="nextDoc(\'index.php?display=true&module=visa&page=update_sendMail\',\''.$coll_id.'\');"><i class="fa fa-chevron-down fa-4x" title="Suivant"></i></a>';
+		$frm_str .= '<a href="javascript://" id="next_doc" onclick="nextDoc(\'index.php?display=true&module=visa&page=update_sendMail\',\''.$coll_id.'\');"><i class="fa fa-chevron-down fa-3x" title="Suivant"></i></a>';
 		
 		$frm_str .= '</td>';
 		
 		$frm_str .= '<td style="width:33%";">';	
-		$frm_str .= '<a href="javascript://" id="cancel" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"><i class="fa fa-undo fa-4x" title="Annuler"></i></a>';
+		$frm_str .= '<a href="javascript://" id="cancel" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"><i class="fa fa-undo fa-3x" title="Annuler"></i></a>';
 		
 		$frm_str .= '</td>';
 	$frm_str .= '</tr>';	
@@ -293,7 +292,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '<dl id="tabricatorLeft" >';
 	
 	//Onglet document
-	$frm_str .= '<dt id="onglet_entrant">'._INCOMING.'</dt><dd>';
+	$frm_str .= '<dt id="onglet_entrant">'._INCOMING.'</dt><dd style="overflow-y: hidden;">';
 	$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=view_resource_controler&visu&id='. $res_id.'&coll_id='.$coll_id.'" name="viewframevalidDoc" id="viewframevalidDoc"  scrolling="auto" frameborder="0"  style="width:100%;height:100%;" ></iframe></dd>';
 	
 	$frm_str .= '</dd>';
@@ -352,7 +351,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '</dd>';
 		
 	//Onglet Avancement 
-	$frm_str .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement">';
+	$frm_str .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement" style="overflow-x: hidden;">';
 	$frm_str .= '<h2>Workflow</h2>';
 	$visa = new visa();
 	$workflow = $visa->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
@@ -391,9 +390,10 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		}
 	}
 	$frm_str .= '</tbody></table><br/>';
-	$frm_str .= '<h2 onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'frame_histo_div\', \'blind\', {delay:0.2}); whatIsTheDivStatus(\'frame_histo_div\', \'frame_histo_div_status\');return false;">';
-	$frm_str .= ' <span id="frame_histo_div_status" style="color:#1C99C5;"><<</span>';
-	$frm_str .= ' Historique complet</h2>';
+	$frm_str .= '<span style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'frame_histo_div\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'frame_histo_div\', \'frame_histo_div_status\');return false;">';
+		$frm_str .= '<span id="frame_histo_div_status" style="color:#1C99C5;"><<</span>';
+		$frm_str .= '<b>&nbsp;<small>Historique complet</small></b>';
+	$frm_str .= '</span>';
 	$frm_str .= '<div id="frame_histo_div" style="display:none" >';
 	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full" name="history_document" width="100%" height="590px" align="left" scrolling="no" frameborder="0" id="history_document"></iframe>';
 	$frm_str .= '</div>';
@@ -412,7 +412,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$nbr_notes = $notes_tools->countUserNotes($res_id, $coll_id);
 		if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
 		//Notes iframe
-		$frm_str .= '<dt id="onglet_notes">'. _NOTES.$nbr_notes .'</dt><dd id="page_notes"><h2>'. _NOTES .'</h2><iframe name="list_notes_doc" id="list_notes_doc" src="'. $_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=notes&identifier='. $res_id .'&origin=document&coll_id='.$coll_id.'&load&size=full" frameborder="0" scrolling="no" width="99%" height="570px"></iframe></dd> ';	
+		$frm_str .= '<dt id="onglet_notes">'. _NOTES.$nbr_notes .'</dt><dd id="page_notes" style="overflow-x: hidden;"><h2>'. _NOTES .'</h2><iframe name="list_notes_doc" id="list_notes_doc" src="'. $_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=notes&identifier='. $res_id .'&origin=document&coll_id='.$coll_id.'&load&size=full" frameborder="0" scrolling="no" width="99%" height="570px"></iframe></dd> ';	
 	}
 		
 	
@@ -446,7 +446,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	
 	//Onglet Circuit 
-	$frm_str .= '<dt id="onglet_circuit">'._VISA_WORKFLOW.'</dt><dd id="page_circuit">';
+	$frm_str .= '<dt id="onglet_circuit">'._VISA_WORKFLOW.'</dt><dd id="page_circuit" style="overflow-x: hidden;">';
 	$frm_str .= '<h2>'._VISA_WORKFLOW.'</h2>';
 	
 	$modifVisaWorkflow = false;
@@ -539,7 +539,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '</div>';
 	$frm_str .= '</form>';
 	/*** Extra javascript ***/
-	$frm_str .= '<script type="text/javascript">launchTabri();window.scrollTo(0,0);showEmailForm(\'index.php?display=true&module=sendmail&page=sendmail_ajax_content&mode=add&identifier='.$res_id.'&origin=document&coll_id='.$coll_id.'&size=medium\', \'820px\', \'545px\', \'sendmail_iframe\');';
+	$frm_str .= '<script type="text/javascript">launchTabri();window.scrollTo(0,0);$(\'divList\').style.display = \'none\';showEmailForm(\'index.php?display=true&module=sendmail&page=sendmail_ajax_content&mode=add&identifier='.$res_id.'&origin=document&coll_id='.$coll_id.'&size=medium\', \'820px\', \'545px\', \'sendmail_iframe\');';
 	$frm_str .='</script>';
 	return addslashes($frm_str);
 }
@@ -602,23 +602,8 @@ function get_value_fields($values, $field)
  **/
 function manage_form($arr_id, $history, $id_action, $label_action, $status,  $coll_id, $table, $values_form )
 {
-	//writeLogIndex("GO MANAGE !!");
 	$res_id = $arr_id[0];
-	/*$dir_field = get_value_fields($values_form, 'directeur');
-	$type_view = get_value_fields($values_form, 'typeView');
-	$action_chosen = get_value_fields($values_form, $type_view.'_chosen_action');
-	writeLogIndex("Action choisie = ".$action_chosen);
-	$dir_field_split = explode('-',$dir_field);
 	
-	$dir_user = $dir_field_split[0];
-	$dir_ent = $dir_field_split[1];
-	
-	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-	$sec = new security();
-	$table = $sec->retrieve_table_from_coll($coll_id);
-	
-	$circuit_visa = new visa();
-	$circuit_visa->saveWorkflow($res_id, $coll_id, get_circuit($values_form));*/
    
     return array('result' => $res_id.'#', 'history_msg' => '');
 }

@@ -34,7 +34,7 @@
 }
 
 #visa_listDoc .toolbar{
-	height: 8%;
+	height: 5%;
 	width: 100%;
 }
 
@@ -46,7 +46,7 @@
 
 .listDocsBasket{
 	border-collapse: collapse;
-	height: 92%;
+	height: 95%;
 	width: 100%;
 	overflow-y: scroll;
 	overflow-x: none;
@@ -54,7 +54,7 @@
 
 .listDocsBasket div{
 	width:100%;
-	height:25%;
+	height:20%;
 	margin-top:-10px;
 	border-bottom: thin solid black;
 }
@@ -76,5 +76,5 @@
  
 .listDocsBasket dl dd {
     margin:2px 0;
-    padding:8px;
+    padding:5px;
 }
