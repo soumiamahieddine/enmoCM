@@ -171,6 +171,7 @@ class security extends dbquery
                     'Phone'       => $user->__get('phone'),
                     'Mail'        => $user->__get('mail'),
                     'department' => $user->__get('department'),
+                    'thumbprint' => $user->__get('thumbprint'),
                     'Status' => $user->__get('status'),
                 );
                // $_SESSION['error'] =  '';
@@ -320,6 +321,7 @@ class security extends dbquery
                 $_SESSION['user']['Phone'] = $user->__get('phone');
                 $_SESSION['user']['Mail'] = $user->__get('mail');
                 $_SESSION['user']['department'] = $user->__get('department');
+                $_SESSION['user']['thumbprint'] = $user->__get('thumbprint');
                 $_SESSION['error'] =  "";
                 setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$line->cookie_key,time()-3600000, 0, 0, $_SERVER["HTTPS"], 1);
                 $key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
