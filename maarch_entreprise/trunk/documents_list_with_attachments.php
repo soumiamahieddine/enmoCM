@@ -120,12 +120,15 @@ $where_tab = array();
 $order = $order_field = '';
 $order = $list->getOrder();
 $order_field = $list->getOrderField();
-if (!empty($order_field) && !empty($order)) 
+if (!empty($order_field) && !empty($order)) {
     $orderstr = "order by ".$order_field." ".$order;
+	$_SESSION['last_order_basket'] = $orderstr;
+}
 else  {
     $list->setOrder();
     $list->setOrderField('creation_date');
     $orderstr = "order by creation_date desc";
+	$_SESSION['last_order_basket'] = $orderstr;
 }
 
 //Request
