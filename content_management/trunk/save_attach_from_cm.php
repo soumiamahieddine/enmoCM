@@ -58,7 +58,7 @@ if (empty($docserver)) {
                 . "where res_id = " . $objectId;
 				
 			//copie de la version PDF de la pièce si mode de conversion sur le client
-			if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "client" && $tmpFilePdfName != ''){
+			if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $tmpFilePdfName != ''){
 				$file = $_SESSION['config']['tmppath'].$tmpFilePdfName;
 				$newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
 				

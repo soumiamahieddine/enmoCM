@@ -20,6 +20,6 @@ $_SESSION['m_admin']['templates']['applet'] = true;
 
 $_SESSION['upfile']['upAttachment'] = true;
 
-if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "client"){
+if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true){
 	$_SESSION['upfile']['fileNamePdfOnTmp'] = $tmpFilePdfName;
 }

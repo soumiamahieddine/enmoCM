@@ -29,7 +29,7 @@ function endOfApplet(objectType, theMsg)
         endResource();
     } else if (objectType == 'attachmentFromTemplate') {
         endAttachmentFromTemplate();
-    } else if (objectType == 'attachment') {
+    } else if (objectType == 'attachment' || objectType == 'ans_project') {
         endAttachment();
     }
     //destroyModal('CMApplet');
