@@ -53,7 +53,7 @@ if ($tag_list){
 
 		
 		$styledisplay="";
-		$aja_str .= '<div class="tag_element_word" id="taglabel_'.$this_tag.'">'
+		$aja_str .= '<div class="tag_element_word" id="taglabel_'.$this_tag.'" onmouseover="this.style.cursor=\'pointer\';">'
 			.$this_tag;
 			
 		if ($core_tools->test_service('delete_tag_to_res', 'tags',false) == 1)
