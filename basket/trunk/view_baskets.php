@@ -326,22 +326,14 @@ if (isset($_SESSION['current_basket']['page_include'])
             $_SESSION['modules_services'], 'view_basket', "include"
         );
         echo '<p style="border:0px solid;padding-left:250px;"></p>';
-        ?><div align="left"  style="width:500px;"><?php
-
-         echo "<p align = 'justify'>
-         <table width='100%'>
-             <tr>
-                 <td width='80px' style='text-align:center;'><i class='fa fa-question-circle fa-4x'></i> </td>
-                 <td> <div class='block' align='center'>"
-         . _BASKET_WELCOME_TXT1 . "<br/>" . _BASKET_WELCOME_TXT2
-         . ".<div class='block_end'>&nbsp;</div></div></td>
-             </tr>
-         </table>
-         </p>";
-         ?></div><?php
+        ?>
+        <div align="left" style="width:500px;"><?php
+            echo "<p align = 'justify'>
+            </p>";
+        ?>
+        </div><?php
     }
 }
-
 
 
 ?></div>
