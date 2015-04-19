@@ -299,6 +299,7 @@ CREATE TABLE users
   status character varying(10) NOT NULL DEFAULT 'OK'::character varying,
   loginmode character varying(50) DEFAULT NULL::character varying,
   docserver_location_id character varying(32) DEFAULT NULL::character varying,
+  thumbprint text DEFAULT NULL::character varying,
   CONSTRAINT users_pkey PRIMARY KEY (user_id)
 )
 WITH (OIDS=FALSE);
