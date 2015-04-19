@@ -101,7 +101,7 @@ if (!defined('_CREATE_NEW_CASE'))
 if (!defined('_ADD_CASES'))
     define('_ADD_CASES','Cr&eacute;er des affaires');
 if (!defined('_CASE_DESCRIPTION_HELP'))
-    define('_CASE_DESCRIPTION_HELP','Saisissez les mots cl&eacute;s de la description de l&rsquo;affaire...');
+    define('_CASE_DESCRIPTION_HELP','Saisissez un mot ou un groupe de mots de la description de l&rsquo;affaire...');
 if (!defined('_CASE_LABEL_HELP'))
     define('_CASE_LABEL_HELP','Recherchez sur le libell&eacute; de l&rsquo;affaire...');
 if (!defined('_FOUND_CASE'))
