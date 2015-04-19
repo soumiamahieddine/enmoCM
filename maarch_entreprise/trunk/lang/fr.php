@@ -841,7 +841,7 @@ if (!defined('_CHOOSE_DOCTYPES_SEARCH_TITLE')) define( '_CHOOSE_DOCTYPES_SEARCH_
 if (!defined('_CHOOSE_DOCTYPES_MAIL_SEARCH_TITLE')) define( '_CHOOSE_DOCTYPES_MAIL_SEARCH_TITLE', 'Ajoutez le(s) type(s) de courrier d&eacute;sir&eacute;(s) pour restreindre la recherche');
 if (!defined('_DESTINATION_SEARCH')) define( '_DESTINATION_SEARCH', 'Service(s) affect&eacute;(s)');
 if (!defined('_ADD_PARAMETERS_HELP')) define( '_ADD_PARAMETERS_HELP', 'Pour affiner le r&eacute;sultat, vous pouvez ajouter des crit&egrave;res &agrave; votre recherche... ');
-if (!defined('_MAIL_OBJECT_HELP')) define( '_MAIL_OBJECT_HELP', 'Saisissez les mots cl&eacute;s de l&rsquo;objet du courrier... ');
+if (!defined('_MAIL_OBJECT_HELP')) define( '_MAIL_OBJECT_HELP', 'Saisissez un mot ou un groupe de mots de l\'objet du courrier');
 if (!defined('_N_GED_HELP')) define( '_N_GED_HELP', '');
 if (!defined('_CHOOSE_RECIPIENT_SEARCH_TITLE')) define( '_CHOOSE_RECIPIENT_SEARCH_TITLE', 'Ajoutez le/les destinataire(s) d&eacute;sir&eacute;(s) pour restreindre la recherche');
 if (!defined('_MULTI_FIELD')) define( '_MULTI_FIELD','Multi-champs');
@@ -1141,7 +1141,7 @@ if (!defined('_DONE')) define( '_DONE','Actions effectu&eacute;es');
 if (!defined('_ANSWER_TYPES_DONE')) define( '_ANSWER_TYPES_DONE', 'Type(s) de r&eacute;ponses effectu&eacute;es');
 if (!defined('_CLOSING_DATE')) define( '_CLOSING_DATE', 'Date de cl&ocirc;ture');
 if (!defined('_FULLTEXT')) define( '_FULLTEXT', 'Plein texte');
-if (!defined('_FULLTEXT_HELP')) define( '_FULLTEXT_HELP', 'Recherche plein texte avec le moteur Luc&egrave;ne...');
+if (!defined('_FULLTEXT_HELP')) define( '_FULLTEXT_HELP', 'Recherche dans le contenu des courriers');
 if (!defined('_FULLTEXT_ERROR')) define( '_FULLTEXT_ERROR', 'Entr&eacute;es invalides pour la recherche plein texte. Si vous avez mis le signe "*", il doit y avoir au moins 3 caract&egrave;res devant, et pas de signes comme ,\':!+');
 if (!defined('_FILE_NOT_SEND')) define( '_FILE_NOT_SEND', 'Le fichier n&rsquo;a pas &eacute;t&eacute; envoy&eacute;');
 if (!defined('_TRY_AGAIN')) define( '_TRY_AGAIN', 'Veuillez r&eacute;essayer');
