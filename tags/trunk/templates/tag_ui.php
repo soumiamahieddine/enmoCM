@@ -69,10 +69,10 @@ if ($tag_list){
 		
 	}
 }
-else
-{
-	$aja_str .='<td><div class="notag" align="center">'._NO_TAG.'</div>';
-}
+// else
+// {
+// 	$aja_str .='<td><div class="notag" align="center">'._NO_TAG.'</div>';
+// }
 
 
 $aja_str .='</td>';
