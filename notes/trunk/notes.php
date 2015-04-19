@@ -367,14 +367,14 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         
         //Action icons array
         $paramsTab['actionIcons'] = array();
-        $preview = array(
-                    "type"      =>  "preview",
-                    "class"     =>  "preview",
-                    "icon"      =>  "comment-o",
-                    "tooltip"   =>  _NOTES,
-                    "content"   =>  '{"identifierDetailFrame" : "@@id@@", "'._DATE.'" : "@@date_note@@", "'._USER.'" : "@@lastname@@", "'._NOTES.'" : "@@note_text@@"}'
-                );
-        array_push($paramsTab['actionIcons'], $preview);        
+        // $preview = array(
+        //             "type"      =>  "preview",
+        //             "class"     =>  "preview",
+        //             "icon"      =>  "comment-o",
+        //             "tooltip"   =>  _NOTES,
+        //             "content"   =>  '{"identifierDetailFrame" : "@@id@@", "'._DATE.'" : "@@date_note@@", "'._USER.'" : "@@lastname@@", "'._NOTES.'" : "@@note_text@@"}'
+        //         );
+        // array_push($paramsTab['actionIcons'], $preview);        
         
         $read = array(
             "script"        => "showNotesForm('".$_SESSION['config']['businessappurl']
