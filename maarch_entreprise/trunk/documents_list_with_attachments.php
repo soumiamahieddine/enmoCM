@@ -212,7 +212,7 @@ for ($i=0;$i<count($tab);$i++)
             }
             if($tab[$i][$j][$value]=="creation_date")
             {
-                $tab[$i][$j]["value"]=$core_tools->format_date_db($tab[$i][$j]["value"], false);
+                $tab[$i][$j]["value"]=$core_tools->format_date_db($tab[$i][$j]["value"], false, '', true);
                 $tab[$i][$j]["label"]=_CREATION_DATE;
                 $tab[$i][$j]["size"]="10";
                 $tab[$i][$j]["label_align"]="left";
