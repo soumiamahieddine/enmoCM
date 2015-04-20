@@ -135,35 +135,35 @@ class entity extends dbquery
                     </p>
                     <p style="text-align:right;">
                         <label><?php  echo _ENTITY_ADR_1; ?> : </label>
-                        <input name="adrs1"  type="text" id="adrs1" value="<?php if(isset( $_SESSION['m_admin']['entity']['adrs1'])){echo $_SESSION['m_admin']['entity']['adrs1']; }?>" />
+                        <input name="adrs1"  style="margin-right: 7px" type="text" id="adrs1" value="<?php if(isset( $_SESSION['m_admin']['entity']['adrs1'])){echo $_SESSION['m_admin']['entity']['adrs1']; }?>" />
                     </p>
                     <p style="text-align:right;">
                         <label><?php  echo _ENTITY_ADR_2; ?> : </label>
-                        <input name="adrs2"  type="text" id="adrs2" value="<?php if(isset($_SESSION['m_admin']['entity']['adrs2'])){ echo $_SESSION['m_admin']['entity']['adrs2'];} ?>" />
+                        <input name="adrs2"  style="margin-right: 7px" type="text" id="adrs2" value="<?php if(isset($_SESSION['m_admin']['entity']['adrs2'])){ echo $_SESSION['m_admin']['entity']['adrs2'];} ?>" />
                     </p>
                     <p style="text-align:right;">
                         <label><?php  echo _ENTITY_ADR_3; ?> : </label>
-                        <input name="adrs3"  type="text" id="adrs3" value="<?php if(isset($_SESSION['m_admin']['entity']['adrs3'])){ echo $_SESSION['m_admin']['entity']['adrs3'];} ?>" />
+                        <input name="adrs3"  style="margin-right: 7px" type="text" id="adrs3" value="<?php if(isset($_SESSION['m_admin']['entity']['adrs3'])){ echo $_SESSION['m_admin']['entity']['adrs3'];} ?>" />
                     </p>
                     <p style="text-align:right;">
                         <label><?php  echo _ENTITY_ZIPCODE; ?> : </label>
-                        <input name="zcode"  type="text" id="zcode" value="<?php if(isset($_SESSION['m_admin']['entity']['zcode'])){ echo $_SESSION['m_admin']['entity']['zcode'];} ?>" />
+                        <input name="zcode"  style="margin-right: 7px" type="text" id="zcode" value="<?php if(isset($_SESSION['m_admin']['entity']['zcode'])){ echo $_SESSION['m_admin']['entity']['zcode'];} ?>" />
                     </p>
                     <p style="text-align:right;">
                         <label><?php  echo _ENTITY_CITY; ?> : </label>
-                        <input name="city"  type="text" id="city" value="<?php if(isset($_SESSION['m_admin']['entity']['city'])){ echo $_SESSION['m_admin']['entity']['city']; }?>" />
+                        <input name="city"  style="margin-right: 7px" type="text" id="city" value="<?php if(isset($_SESSION['m_admin']['entity']['city'])){ echo $_SESSION['m_admin']['entity']['city']; }?>" />
                     </p>
                     <p style="text-align:right;">
                         <label><?php  echo _ENTITY_COUNTRY; ?> : </label>
-                        <input name="country"  type="text" id="country" value="<?php if(isset($_SESSION['m_admin']['entity']['country'])){ echo $_SESSION['m_admin']['entity']['country'];} ?>" />
+                        <input name="country"  style="margin-right: 7px" type="text" id="country" value="<?php if(isset($_SESSION['m_admin']['entity']['country'])){ echo $_SESSION['m_admin']['entity']['country'];} ?>" />
                     </p>
                     <p style="text-align:right;">
                         <label><?php  echo _ENTITY_EMAIL; ?> : </label>
-                        <input name="email"  type="text" id="email" value="<?php if(isset($_SESSION['m_admin']['entity']['email'])){ echo $_SESSION['m_admin']['entity']['email'];} ?>" />
+                        <input name="email"  style="margin-right: 7px" type="text" id="email" value="<?php if(isset($_SESSION['m_admin']['entity']['email'])){ echo $_SESSION['m_admin']['entity']['email'];} ?>" />
                     </p>
                     <p style="text-align:right;">
                         <label><?php  echo _ENTITY_BUSINESS; ?> : </label>
-                        <input name="business"  type="text" id="business" value="<?php if(isset($_SESSION['m_admin']['entity']['business'])){ echo $_SESSION['m_admin']['entity']['business']; }?>" />
+                        <input name="business"  style="margin-right: 7px" type="text" id="business" value="<?php if(isset($_SESSION['m_admin']['entity']['business'])){ echo $_SESSION['m_admin']['entity']['business']; }?>" />
                     </p>
                     <p style="text-align:right;">
                         <label><?php  echo _ENTITY_TYPE;
@@ -235,7 +235,7 @@ class entity extends dbquery
                                     }
                             }
                             ?>
-                        </select><span class="red_asterisk" ><i class="fa fa-star"></i></span>
+                        </select>
                     </p>
 
                     <p class="buttons" style="text-align:center;">
