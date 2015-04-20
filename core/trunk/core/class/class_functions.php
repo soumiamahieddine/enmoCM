@@ -864,12 +864,14 @@ class functions
     * @param  $insert bool If true format the date to insert in the database (true by default)
     * @return Formated date or empty string if any error
     */
-    function format_date_db($date, $insert=true, $databasetype= '')
+    function format_date_db($date, $insert=true, $databasetype= '', $withTimeZone=false)
     {
         if (isset($_SESSION['config']['databasetype'])
             && ! empty($_SESSION['config']['databasetype'])) {
             $databasetype = $_SESSION['config']['databasetype'];
         }
+
+       
 
         if ($date <> "" ) {
             $var = explode('-', $date) ;
@@ -877,29 +879,49 @@ class functions
             if (preg_match('/\s/', $var[2])) {
                 $tmp = explode(' ', $var[2]);
                 $var[2] = $tmp[0];
+                $var[3] = substr($tmp[1],0,8);
+
             }
+
             if (preg_match('/^[0-3][0-9]$/', $var[0])) {
                 $day = $var[0];
                 $month = $var[1];
                 $year = $var[2];
+                $hours = $var[3];
             } else {
                 $year = $var[0];
                 $month = $var[1];
                 $day = substr($var[2], 0, 2);
+                $hours = $var[3];
+
+                
             }
             if ($year <= "1900") {
                 return '';
             } else {
                 if ($databasetype == "SQLSERVER") {
-                    return  $day . "-" . $month . "-" . $year;
+                    if ($withTimeZone=true) {
+                        return  $day . "-" . $month . "-" . $year . " &nbsp;  " . $hours;
+                    }else{
+                        return  $day . "-" . $month . "-" . $year;
+                    }
+                    
                 } else if ($databasetype == "POSTGRESQL") {
                     if ($_SESSION['config']['lang'] == "fr") {
-                        return $day . "-" . $month . "-" . $year;
+                        if ($withTimeZone = true) {
+                            return $day . "-" . $month . "-" . $year . "  &nbsp; " . $hours;
+                        }else{
+                            return $day . "-" . $month . "-" . $year;
+                        }
                     } else {
-                        return $year . "-" . $month . "-" . $day;
+                        if ($withTimeZone=true) {
+                            return $year . "-" . $month . "-" . $day . "  &nbsp; " . $hours;
+                        }else{
+                            return $year . "-" . $month . "-" . $day;
+                        }
                     }
                 } else if ($databasetype == "ORACLE") {
-
+                    
                     return  $day . "-" . $month . "-" . $year;
                 } else if ($databasetype == "MYSQL" && $insert) {
                     return $year . "-" . $month . "-" . $day;
