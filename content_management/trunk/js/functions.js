@@ -29,9 +29,9 @@ function endOfApplet(objectType, theMsg)
         endResource();
     } else if (objectType == 'attachmentFromTemplate') {
         endAttachmentFromTemplate();
-    } else if (objectType == 'attachment' || objectType == 'ans_project') {
+    } else if (objectType == 'attachment') {
         endAttachment();
-    }
+    } 
     //destroyModal('CMApplet');
 }
 
@@ -46,6 +46,11 @@ function endAttachmentFromTemplate()
 
 function endAttachment()
 {
+	if (window.opener.$('cur_idAffich')) var num_rep = window.opener.$('cur_idAffich').value;
+
+	if(window.opener.$('viewframevalidRep'+num_rep)) {
+		window.opener.$('viewframevalidRep'+num_rep).src = "index.php?display=true&module=visa&page=view_doc&path=last";			
+	}
     window.close();
 }
 

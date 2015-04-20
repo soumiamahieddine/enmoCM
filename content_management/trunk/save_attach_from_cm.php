@@ -63,6 +63,7 @@ if (empty($docserver)) {
 				$newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
 				
 				copy($file, $newfile);
+				$_SESSION['generated_file'] = $newfile;
 			}
             $dbAttachment = new dbquery();
             $dbAttachment->connect();
