@@ -900,7 +900,7 @@ class functions
                 return '';
             } else {
                 if ($databasetype == "SQLSERVER") {
-                    if ($withTimeZone=true) {
+                    if ($withTimeZone) {
                         return  $day . "-" . $month . "-" . $year . " &nbsp;  " . $hours;
                     }else{
                         return  $day . "-" . $month . "-" . $year;
@@ -908,13 +908,13 @@ class functions
                     
                 } else if ($databasetype == "POSTGRESQL") {
                     if ($_SESSION['config']['lang'] == "fr") {
-                        if ($withTimeZone = true) {
+                        if ($withTimeZone) {
                             return $day . "-" . $month . "-" . $year . "  &nbsp; " . $hours;
                         }else{
                             return $day . "-" . $month . "-" . $year;
                         }
                     } else {
-                        if ($withTimeZone=true) {
+                        if ($withTimeZone) {
                             return $year . "-" . $month . "-" . $day . "  &nbsp; " . $hours;
                         }else{
                             return $year . "-" . $month . "-" . $day;
