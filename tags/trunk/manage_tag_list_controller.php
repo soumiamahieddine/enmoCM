@@ -260,7 +260,7 @@ function display_list() {
             switch ($item['column']) {
                 case 'tag_label':
                     format_item(
-                        $item, _ID, '18', 'left', 'left', 'bottom', true
+                        $item, _NAME_TAGS, '18', 'left', 'left', 'bottom', true
                     );
                     break;
                 case 'coll_id':

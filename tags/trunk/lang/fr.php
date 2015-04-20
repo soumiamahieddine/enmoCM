@@ -107,4 +107,6 @@ if (!defined('_ALL_TAG_DELETED_FOR_RES_ID'))
     define('_ALL_TAG_DELETED_FOR_RES_ID', 'Tous les tags sont supprim&eacute; pour la ressource');
 if (!defined('_TAGCLICKTODEL'))
     define('_TAGCLICKTODEL', 'supprimer');
+if (!defined('_NAME_TAGS'))
+    define('_NAME_TAGS', 'Nom du mot-cl&eacute');
 ?>

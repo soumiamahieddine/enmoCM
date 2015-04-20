@@ -98,7 +98,7 @@ if ($mode == 'list') {
                 echo $_REQUEST['start'];?>" />
 
             <p>
-                <label for="label"><?php echo _NAME; ?> : </label>
+                <label for="label"><?php echo _NAME_TAGS; ?> : </label>
                 <input name="tag_label" type="text"  id="tag_label_id" value="<?php
                     echo functions::show_str(
                         $_SESSION['m_admin']['tag']['tag_label']
