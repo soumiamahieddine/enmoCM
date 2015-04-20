@@ -234,11 +234,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 . _VALIDATE_QUALIF . ' ' . _NUM . $res_id;
                     $frm_str .= '</h2>';
     $frm_str .='<i onmouseover="this.style.cursor=\'pointer\';" '
-             .'onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] 
-                . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' 
-                . $res_id . '}, onSuccess: function(answer){window.location.href=\'' 
-                . $_SESSION['config']['businessappurl']. 'index.php?page=view_baskets&module=basket&baskets=' 
-                . $_SESSION['current_basket']['id'] . '\';} });$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"'
+             .'onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'
+            . $id_action.'\');reinit();"'
              .' class="fa fa-times fa-2x closeModale" title="'._CLOSE.'"/>';
     $frm_str .='</i>';
     $frm_str .= '<div id="validleft">';
@@ -912,7 +909,7 @@ $frm_str .= '</div>';
             $frm_str .= '<span onclick="new Effect.toggle(\'versions_div\', \'appear\', {delay:0.2});'
                 . 'whatIsTheDivStatus(\'versions_div\', \'divStatus_versions_div\');return false;" '
                 . 'onmouseover="this.style.cursor=\'pointer\';" class="categorie" style="width:90%;">';
-            $frm_str .= '<span id="divStatus_versions_div" style="color:#1C99C5;"><<</span><b>'
+            $frm_str .= '<span id="divStatus_versions_div" style="color:#1C99C5;"><<</span> <b>'
                 . '<small>' . _VERSIONS . ' (<span id="nbVersions">' . $extend_title_for_versions . '</span>)</small>';
             $frm_str .= '</b></span>';
             $frm_str .= '</td>';
