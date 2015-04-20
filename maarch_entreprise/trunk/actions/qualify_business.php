@@ -233,6 +233,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '<h2 id="action_title">'
                 . _VALIDATE_QUALIF . ' ' . _NUM . $res_id;
                     $frm_str .= '</h2>';
+    $frm_str .='<i onmouseover="this.style.cursor=\'pointer\';" '
+             .'onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] 
+                . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' 
+                . $res_id . '}, onSuccess: function(answer){window.location.href=\'' 
+                . $_SESSION['config']['businessappurl']. 'index.php?page=view_baskets&module=basket&baskets=' 
+                . $_SESSION['current_basket']['id'] . '\';} });$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"'
+             .' class="fa fa-times fa-2x closeModale" title="'._CLOSE.'"/>';
+    $frm_str .='</i>';
     $frm_str .= '<div id="validleft">';
     $frm_str .= '<div id="valid_div" style="display:none;";>';
                     $frm_str .= '<div id="frm_error_'.$id_action.'" class="indexing_error"></div>';

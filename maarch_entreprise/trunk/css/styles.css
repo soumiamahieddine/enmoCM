@@ -4096,3 +4096,10 @@ a.actionList {
     color: #070B19;
 }
 
+.closeModale{
+  padding: 0.5em;
+  color: #ffffff;
+  right: 0px;
+  top: -7px;
+  position: absolute;
+}

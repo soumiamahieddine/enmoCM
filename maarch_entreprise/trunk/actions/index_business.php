@@ -248,6 +248,10 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $frmStr .= '<h2 id="action_title">' 
             . _INDEXING_BUSINESS;
     $frmStr .= '</h2>';
+    $frmStr .='<i onmouseover="this.style.cursor=\'pointer\';" '.
+             'onclick="javascript:window.top.location.href=\''
+            . $_SESSION['config']['businessappurl'] . 'index.php\';reinit();" class="fa fa-times fa-2x closeModale" title="'._CLOSE.'"/>';
+    $frmStr .='</i>';
     $frmStr .= '<div id="validleft">';
     $frmStr .= '<div id="index_div" style="display:none;";>';
     $frmStr .= '<div id="frm_error_' . $actionId . '" class="indexing_error">'
