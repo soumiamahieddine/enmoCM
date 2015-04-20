@@ -86,6 +86,10 @@ class class_users extends dbquery
         if (isset($_POST['Mail']) && ! empty($_POST['Mail'])) {
             $_SESSION['user']['Mail']  = $_POST['Mail'];
         }
+		
+		if (isset($_POST['thumbprint']) && ! empty($_POST['thumbprint'])) {
+            $_SESSION['user']['thumbprint']  = $_POST['thumbprint'];
+        }
         if (empty($_SESSION['error'])) {
             $firstname = $this->protect_string_db(
                 $_SESSION['user']['FirstName']
@@ -250,7 +254,12 @@ class class_users extends dbquery
                         <input name="Mail"  type="text" id="Mail" size="45" value="<?php  echo $_SESSION['user']['Mail']; ?>" />
                       </p>
 
-                      <p class="buttons" style="text-align:center;">
+					   <p>
+                        <label for="thumbprint"><?php  echo _THUMBPRINT;  ?> : </label>
+						<textarea name="thumbprint" id="thumbprint"></textarea>
+                      </p>
+					  
+                      <p class="buttons">
                             <input type="submit" name="Submit" value="<?php  echo _VALIDATE; ?>" class="button" />
                             <input type="button" name="cancel" value="<?php  echo _CANCEL; ?>" class="button" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';" />
                     </p>
@@ -279,7 +288,7 @@ class class_users extends dbquery
         if (!empty($user_id)) {
             $this->connect();
             $this->query(
-                "select user_id, firstname, lastname, mail, phone, status from " 
+                "select user_id, firstname, lastname, mail, phone, status, thumbprint from " 
                 . USERS_TABLE . " where user_id = '" . $user_id . "'"
             );
             if ($this->nb_result() >0) {
@@ -290,7 +299,8 @@ class class_users extends dbquery
                         'lastname' => $this->show_string($line->lastname),
                         'mail' => $line->mail,
                         'phone' => $line->phone,
-                        'status' => $line->status
+                        'status' => $line->status,
+						'thumbprint' => $line->thumbprint
                     );
                 return $user;
             } else {
