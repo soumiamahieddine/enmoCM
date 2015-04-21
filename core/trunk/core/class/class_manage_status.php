@@ -88,6 +88,8 @@ class manage_status extends dbquery
 			{
 				$status_txt = $id_status;
 			}
+			$img_path = $img_name;
+			$big_img_path = $img_name;
 			array_push($this->statusArr, array('ID' => $id_status, 'LABEL' => $status_txt, 'IMG_SRC' => $img_path , 'IMG_SRC_BIG' => $big_img_path));
 		}
 	}
