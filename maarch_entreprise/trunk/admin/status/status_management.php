@@ -1,4 +1,39 @@
 <?php
+/*Récupération de status*/
+require_once 'core/class/class_manage_status.php';
+if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."apps".DIRECTORY_SEPARATOR."maarch_entreprise"
+				.DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."status.xml"))
+	{
+		$path = $_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."apps".DIRECTORY_SEPARATOR."maarch_entreprise"
+				.DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."status.xml";
+	} else {
+		$path = "apps".DIRECTORY_SEPARATOR."maarch_entreprise".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."status.xml";
+	}
+$xmlconfig = simplexml_load_file($path);
+  
+if ($xmlconfig <> false) {
+	$result = $xmlconfig->xpath('/ROOT/status');
+    foreach ($result as $key => $value) {
+		$status_img[]=$value->img_filename;
+    }
+} 
+        
+$status_obj = new manage_status();
+$db = new dbquery();
+$db->connect();
+$status_tab = array();
+$i=0;
+$status_query = "SELECT DISTINCT ON (img_filename) img_filename, id FROM status WHERE img_filename <> '' and img_filename <> 'Y' ";
+$db->query($status_query);
+while ($line = $db->fetch_object()) {
+	 array_push(
+            $status_tab,
+            array(
+                'IMG_FILENAME'  => $line->img_filename,
+                'ID' => $line->id
+				)
+            );
+}
 /* Affichage */
 if ($mode == 'list') {
     $list = new list_show();
@@ -132,6 +167,18 @@ if ($mode == 'list') {
                 } ?> /><?php echo _NO;?>
             </p>
         <?php } ?>
+        
+        <p>
+            <label ><?php echo _IMG_RELATED; ?> : </label>
+            <div style="width:570px;">
+            <?php for ($i=0;$i<count($status_img);$i++) {  ?> 	
+					 <input type="radio"  class="check" name="img_related" value="<?php echo $status_img[$i]?>" 
+					 <?php if ($_SESSION['m_admin']['status']['img_filename'] == $status_img[$i]) { ?> checked="checked" <?php } ?> /><?php
+					$img = "<i class = 'fa fa-".$status_img[$i]."'></i>";
+					echo $img;
+				} ?>
+			</div> 	
+        </p>
         <p class="buttons">
 
             <input type="submit" class="button"  name="status_submit" value="<?php echo _VALIDATE; ?>" />
