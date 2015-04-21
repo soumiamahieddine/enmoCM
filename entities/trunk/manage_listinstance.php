@@ -938,7 +938,7 @@ $linkwithwhat =
 								}?>
 								</select>&nbsp;
 								<span onclick="add_user(<?php echo $j; ?>);" style="cursor: pointer"/> 
-									<i class="fa fa-plus fa-2x"></i><?php echo _ADD;?>
+									<!--i class="fa fa-plus fa-2x"></i--><?php echo _ADD;?>
 								</span> <?php 
 							} else echo _NO_AVAILABLE_ROLE; ?>
 							</td>
@@ -991,7 +991,7 @@ $linkwithwhat =
                                     } ?>
                                     </select>&nbsp;
                                     <span onclick="add_entity(<?php echo $j; ?>);" style="cursor: pointer"/> 
-                                        <i class="fa fa-plus fa-2x"></i><?php echo _ADD;?>
+                                        <!--i class="fa fa-plus fa-2x"--></i><?php echo _ADD;?>
                                     </span> <?php 
                                 } else echo _NO_AVAILABLE_ROLE; ?>  
                                 </td>
