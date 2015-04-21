@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ROOT>
+	<status>
+        <img_filename>phone</img_filename>
+    </status>
+    <status> 
+        <img_filename>camera</img_filename>
+    </status>
+    <status>
+        <img_filename>music</img_filename>
+    </status>
+    <status>
+        <img_filename>film</img_filename>
+    </status>
+    <status>
+		<img_filename>user</img_filename>
+    </status>
+</ROOT>
