@@ -148,8 +148,13 @@ if (count($_REQUEST['meta']) > 0) {
                 // CASE_NUMBER
                 $json_txt .= "'numcase' : ['".addslashes(trim($_REQUEST['numcase']))."'],";
                 //$where_request .= "res_view_letterbox.case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
-                $where_request .= " ".$_SESSION['collections'][0]['view'].".case_id = ".$func->wash($_REQUEST['numcase'], "num", _N_CASE,"no")." and ";
+                $where_request .= " ".$_SESSION['collections'][0]['view'].".case_id = ". $_REQUEST['numcase'] ." and ";
                 $case_view=true;
+
+                if (!is_integer($_REQUEST['numcase'])) {
+                    $_SESSION['error_search'] = _CASE_NUMBER;
+                }
+
             } elseif ($tab_id_fields[$j] == 'labelcase' && !empty($_REQUEST['labelcase'])) {
                 // CASE_LABEL
                 $json_txt .= "'labelcase' : ['".addslashes(trim($_REQUEST['labelcase']))."'],";
@@ -270,7 +275,11 @@ if (count($_REQUEST['meta']) > 0) {
                 if ($view <> '') {
                     $view .= '.';
                 }
-                $where_request .= $view . "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
+                $where_request .= $view . "res_id = ". $_REQUEST['numged'] ." and ";
+
+                if (!is_integer($_REQUEST['numged'])) {
+                    $_SESSION['error_search'] = _NUMERO_GED;
+                }
             }
             // DEST_USER
             elseif ($tab_id_fields[$j] == 'destinataire_chosen' && !empty($_REQUEST['destinataire_chosen']))
@@ -888,6 +897,8 @@ echo $json_txt;
 echo '<br/>'.$where_request;
 exit();
 */
+
+
 
 $_SESSION['current_search_query'] = $json_txt;
 if (!empty($_SESSION['error_search'])) {
