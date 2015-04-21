@@ -545,30 +545,30 @@ class contacts_v2 extends dbquery
                     </tr>
                     <?php
                     if (defined('_EXAMPLE_SELECT_CONTACT_TYPE') && _EXAMPLE_SELECT_CONTACT_TYPE <> "") { ?>
-	                    <tr>
-	                        <td colspan="3"><i>&nbsp;<?php echo _EXAMPLE_SELECT_CONTACT_TYPE; ?></i></td>
-	                    </tr>
+                        <tr>
+                            <td colspan="3"><i>&nbsp;<?php echo _EXAMPLE_SELECT_CONTACT_TYPE; ?></i></td>
+                        </tr>
               <?php } ?>
 
                     <tr id="contacts_created_tr" style="display:none">
-	                    <td colspan="3">
-		                    <table width="100%" style="border-collapse:collapse;">
-		                    	<tr>
-			                        <td><?php echo _CONTACT_ALREADY_CREATED; ?> : </td>
-			                        <td>&nbsp;</td>
-			                        <td class="indexing_field">
-			                            <select id="contacts_created">
-			                            </select>
-			                        </td>
-		                        </tr>
-			                    <?php
-			                    if (defined('_HELP_SELECT_CONTACT_CREATED') && _HELP_SELECT_CONTACT_CREATED <> "") { ?>
-				                    <tr>
-				                        <td colspan="3"><i>&nbsp;<?php echo _HELP_SELECT_CONTACT_CREATED; ?></i></td>
-				                    </tr>
-			              <?php } ?>
-		                    </table>
-	                    </td>
+                        <td colspan="3">
+                            <table width="100%" style="border-collapse:collapse;">
+                                <tr>
+                                    <td><?php echo _CONTACT_ALREADY_CREATED; ?> : </td>
+                                    <td>&nbsp;</td>
+                                    <td class="indexing_field">
+                                        <select id="contacts_created">
+                                        </select>
+                                    </td>
+                                </tr>
+                                <?php
+                                if (defined('_HELP_SELECT_CONTACT_CREATED') && _HELP_SELECT_CONTACT_CREATED <> "") { ?>
+                                    <tr>
+                                        <td colspan="3"><i>&nbsp;<?php echo _HELP_SELECT_CONTACT_CREATED; ?></i></td>
+                                    </tr>
+                          <?php } ?>
+                            </table>
+                        </td>
                     </tr>
 
                     <tr>
@@ -643,16 +643,16 @@ class contacts_v2 extends dbquery
                         $cancel_target = $_SESSION['config']['businessappurl'].'index.php?page=my_contacts&amp;dir=my_contacts&amp;load';
                     }
                     if($iframe) { ?>
-                    	<input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" 
+                        <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" 
 
                 <?php   if($_SESSION['info_contact_popup'] == "true"){?>
-                			onclick="self.close();" 
+                            onclick="self.close();" 
                 <?php   } else if ($_SESSION['AttachmentContact'] == "1") {?>
                             onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div_attach'));new Effect.BlindUp(parent.document.getElementById('info_contact_div_attach'));simpleAjax('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=unsetAttachmentContact');return false;" <?php
                         } else { ?>
-                			onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div'));new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return false;"
+                            onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div'));new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return false;"
                 <?php   } ?>
-                 		/>
+                        />
               <?php } else {
                         if ($mode == 'view') { ?>
                             <input type="button" class="button"  name="cancel" value="<?php echo _BACK_TO_RESULTS_LIST; ?>" onclick="history.go(-1);" />
@@ -1379,16 +1379,33 @@ class contacts_v2 extends dbquery
                             <td class="indexing_field"><input name="add_comp" type="text"  id="add_comp" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_COMP'])){ echo $func->show_str($_SESSION['m_admin']['address']['ADD_COMP']); }?>"/></td>
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
-                        <tr>
+                        <!--tr>
                             <td><?php echo _POSTAL_CODE; ?>&nbsp;:</td>
                             <td>&nbsp;</td>
-                            <td class="indexing_field"><input name="cp" type="text" id="cp" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_CP'])){echo $func->show_str($_SESSION['m_admin']['address']['ADD_CP']); }?>"/></td>
+                            <td class="indexing_field"><input name="cp" type="text" id="cp" onkeyup="showVille('<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&dir=indexing_searching&page=ajaxShowVille',this.value);" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_CP'])){echo $func->show_str($_SESSION['m_admin']['address']['ADD_CP']); }?>"/></td>
+                            <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
+                        </tr-->
+                        <tr>
+                            <td><label for="code_postal"><?php echo _POSTAL_CODE; ?>&nbsp;: </label></td>
+                            <td>&nbsp;</td>
+                            <td class="indexing_field"><input name="new_id2" type="text" id="new_id2" />
+                                <div id="show_town" class="autocomplete">
+                                    <script type="text/javascript">
+                                        initList_hidden_input2('new_id2', 'show_town', '<?php $_SESSION['config']['businessappurl']; ?>index.php?display=true&dir=indexing_searching&page=ajaxShowVille&id=<?php echo $id; ?>', 'what', '2', 'town', 'new_id2');
+                                    </script>
+                                </div>
+                            </td>
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr>
                             <td><label for="town"><?php echo _TOWN; ?> : </label></td>
                             <td>&nbsp;</td>
-                            <td class="indexing_field"><input name="town" type="text" id="town" onfocus="$('rule_town').style.display='table-row'" onblur="$('rule_town').style.display='none';" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_TOWN'])){ echo $func->show_str($_SESSION['m_admin']['address']['ADD_TOWN']);} ?>"/></td>
+                            <td class="indexing_field"><input name="town" type="text" id="town" onfocus="$('rule_town').style.display='table-row'" onblur="$('rule_town').style.display='none';"/></td>
+                                <div id="show_postal_code" class="autocomplete">
+                                    <script type="text/javascript">
+                                        initList_hidden_input3('town', 'show_postal_code', '<?php $_SESSION['config']['businessappurl']; ?>index.php?display=true&dir=indexing_searching&page=ajaxShowCodePostal&id=<?php echo $id; ?>', 'what', '2', 'new_id2', 'town');
+                                    </script>
+                                </div>
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr>
                         <tr style="display:none;" id="rule_town">
