@@ -9,7 +9,7 @@ while (($data = fgetcsv($handle, 1000, ";")) !== FALSE) {
     for ($c=0; $c < $num; $c++) {
     	$pos = strpos($data[2], $_POST['what']);
     	if ($pos === 0) {
-    	echo "<li id='".$data[2].",".$data[3]."'>".$data[2]." - ".$data[3]."</li>\n";
+    	echo "<li id='".$data[2].",".trim($data[3])."'>".$data[2]." - ".trim($data[3])."</li>\n";
     	break;
 		}
     }
