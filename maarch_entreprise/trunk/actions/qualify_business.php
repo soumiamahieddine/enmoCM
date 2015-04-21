@@ -236,7 +236,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .='<i onmouseover="this.style.cursor=\'pointer\';" '
              .'onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'
             . $id_action.'\');reinit();"'
-             .' class="fa fa-times fa-2x closeModale" title="'._CLOSE.'"/>';
+             .' class="fa fa-undo fa-2x closeModale" title="'._BACK.'"/>';
     $frm_str .='</i>';
     $frm_str .= '<div id="validleft">';
     $frm_str .= '<div id="valid_div" style="display:none;";>';

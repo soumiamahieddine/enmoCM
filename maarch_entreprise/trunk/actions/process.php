@@ -247,7 +247,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $frm_str .= 'if (tmp_ent){tmp_ent.style.visibility=\'visible\';} var tmp_cat =$(\'category\');';
         $frm_str .= 'if (tmp_cat){tmp_cat.style.visibility=\'visible\';}destroyModal(\'modal_'
             . $id_action . '\');reinit();"'
-             .' class="fa fa-times fa-2x closeModale" title="'._CLOSE.'"/>';
+             .' class="fa fa-undo fa-2x closeModale" title="'._BACK.'"/>';
     $frm_str .='</i>';
     /********************************* LEFT PART **************************************/
     $frm_str .= '<div id="validleftprocess">';
