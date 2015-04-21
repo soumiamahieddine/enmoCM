@@ -152,7 +152,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $case_view=true;
 
                 if (!is_integer($_REQUEST['numcase'])) {
-                    $_SESSION['error_search'] = _CASE_NUMBER;
+                    $_SESSION['error_search'] = _CASE_NUMBER_ERROR;
                 }
 
             } elseif ($tab_id_fields[$j] == 'labelcase' && !empty($_REQUEST['labelcase'])) {

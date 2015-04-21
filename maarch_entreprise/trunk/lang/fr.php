@@ -1168,8 +1168,8 @@ if (!defined('_CHRONO_NUMBER')) define( '_CHRONO_NUMBER', 'Num&eacute;ro chrono'
 if (!defined('_NO_CHRONO_NUMBER_DEFINED')) define( '_NO_CHRONO_NUMBER_DEFINED', 'Le num&eacute;ro chrono n&rsquo;est pas d&eacute;fini');
 if (!defined('_FOR_CONTACT_C')) define( '_FOR_CONTACT_C', 'Pour');
 if (!defined('_TO_CONTACT_C')) define( '_TO_CONTACT_C', 'De');
-if (!defined('_CASE_NUMBER')) define ('_CASE_NUMBER', ' Numero de l’affaire n’est pas dans le bon format : Entier attendu');
-if (!defined('_NUMERO_GED')) define ('_NUMERO_GED', ' Numero de GED n’est pas dans le bon format : Entier attendu');
+if (!defined('_CASE_NUMBER_ERROR')) define ('_CASE_NUMBER_ERROR', 'Numero de l\'affaire n’est pas dans le bon format : Entier attendu');
+if (!defined('_NUMERO_GED')) define ('_NUMERO_GED', 'Numero GED n\'est pas dans le bon format : Entier attendu');
 
 if (!defined('_APPS_COMMENT')) define( '_APPS_COMMENT', 'Application Maarch');
 if (!defined('_CORE_COMMENT')) define( '_CORE_COMMENT', 'Coeur du Framework');
