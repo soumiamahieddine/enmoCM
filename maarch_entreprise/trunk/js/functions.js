@@ -115,6 +115,42 @@ function repost(php_file,update_divs,fields,action,timeout)
             });
     };
 
+    var initList_hidden_input2 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
+    {
+        new Ajax.Autocompleter(
+            idField,
+            idList,
+            theUrlToListScript,
+            {
+                paramName: paramNameSrv,
+                minChars: minCharsSrv,
+                afterUpdateElement: function (text, li){
+                    var str = li.id;
+                    var res = str.split(",");
+                    $(new_value).value = res[1];
+                    $(actual_value).value = res[0];
+                }
+            });
+    };
+
+    var initList_hidden_input3 = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, actual_value)
+    {
+        new Ajax.Autocompleter(
+            idField,
+            idList,
+            theUrlToListScript,
+            {
+                paramName: paramNameSrv,
+                minChars: minCharsSrv,
+                afterUpdateElement: function (text, li){
+                    var str = li.id;
+                    var res = str.split(",");
+                    $(new_value).value = res[0];
+                    $(actual_value).value = res[1];
+                }
+            });
+    };
+
     var initList_hidden_input_before = function (idField, idList, theUrlToListScript, paramNameSrv, minCharsSrv, new_value, previous_name, previous_field)
     {
         new Ajax.Autocompleter(
@@ -132,6 +168,7 @@ function repost(php_file,update_divs,fields,action,timeout)
                 }
             });
     };
+
 
 /*********** Init vars for the calendar ****************/
     var allMonth=[31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
@@ -2407,6 +2444,26 @@ function stockCheckbox(url,value){
 }
 
 function cleanSessionBasket(url,value){
+    //fait appel à l'ajax cleanSessionBasket du module basket pour vider la $_SESSION['basket_used']
+    if(value != ''){
+        new Ajax.Request(url,
+    
+    {
+        method:'post',
+        parameters: { courrier_purpose : value},
+        onSuccess: function(answer){
+            eval("response = "+answer.responseText);
+            //monTableauJS =  JSON.parse(answer.responseText);
+
+
+        }
+    })
+    };
+
+}
+
+
+function showVille(url,value){
     //fait appel à l'ajax cleanSessionBasket du module basket pour vider la $_SESSION['basket_used']
     if(value != ''){
         new Ajax.Request(url,
