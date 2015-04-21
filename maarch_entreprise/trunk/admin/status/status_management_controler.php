@@ -292,7 +292,7 @@ function validate_status_submit()
     if (isset($_REQUEST['is_system']) && !empty($_REQUEST['is_system'])) {
         $statusObj->is_system = $_REQUEST['is_system'];
     }
-    $statusObj->img_filename = $_REQUEST['img_filename'];
+    $statusObj->img_filename = $_REQUEST['img_related'];
     $statusObj->maarch_module = 'apps';
     $statusObj->can_be_searched = 'Y';
     if (isset($_REQUEST['can_be_searched'])) {
@@ -306,7 +306,11 @@ function validate_status_submit()
     if (isset($_REQUEST['is_folder_status'])) {
         $statusObj->is_folder_status = $_REQUEST['is_folder_status'];
     }
+    if (isset($_REQUEST['img_related'])) {
+        $statusObj->img_filename = $_REQUEST['img_related'];
+    }
 
+	//print_r($statusObj);exit;
     $status = array();
     $status['order'] = $_REQUEST['order'];
     $status['order_field'] = $_REQUEST['order_field'];
