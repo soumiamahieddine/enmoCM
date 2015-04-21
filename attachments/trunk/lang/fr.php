@@ -83,6 +83,8 @@ if (!defined('_ATTACHMENT_TYPES'))
     define( '_ATTACHMENT_TYPES', 'Type d\'attachement');
 if (!defined('_RESPONSE_PROJECT'))
     define( '_RESPONSE_PROJECT', 'Projet de r&eacute;ponse');
+if (!defined('_SIGNED_RESPONSE'))
+	define( '_SIGNED_RESPONSE', 'R&eacute;ponse sign&eacute;e');
 if (!defined('_ROUTING'))
     define( '_ROUTING', 'Fiche de circulation');
 if (!defined('_OUTGOING_MAIL_SIGNED'))
