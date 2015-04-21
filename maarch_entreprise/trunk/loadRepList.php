@@ -17,13 +17,16 @@ if (isset($_REQUEST['res_id_master'])) {
         $return .= '<div align="center">';
             $return .= '<table width="100%" style="background-color: rgba(100, 200, 213, 0.2);">';
                 $return .= '<tr style="font-weight: bold;">';
+                    $return .= '<th style="font-weight: bold; color: black;" width="150px">';
+                        $return .= _CHRONO_NUMBER;
+                    $return .= '</th>';
                     $return .= '<th style="font-weight: bold; color: black;">';
                         $return .= _STATUS;
                     $return .= '</th>';
-                    $return .= '<th style="font-weight: bold; color: black;">';
+                    $return .= '<th style="font-weight: bold; color: black;" width="50px">';
                         $return .= _VERSION;
                     $return .= '</th>';
-                    $return .= '<th style="font-weight: bold; color: black;">';
+                    $return .= '<th style="font-weight: bold; color: black;" width="200px">';
                         $return .= _CREATION_DATE;
                     $return .= '</th>';
                     $return .= '<th style="font-weight: bold; color: black;">';
@@ -32,7 +35,7 @@ if (isset($_REQUEST['res_id_master'])) {
                     $return .= '<th style="font-weight: bold; color: black;">';
                         $return .= _AUTHOR;
                     $return .= '</th>';
-                    $return .= '<th style="font-weight: bold; color: black;">';
+                    $return .= '<th style="font-weight: bold; color: black;" width="40px">';
                         $return .= _CONSULT;
                     $return .= '</th>';
                 $return .= '</tr>';
@@ -48,6 +51,10 @@ if (isset($_REQUEST['res_id_master'])) {
 
                 while ($return_db = $db->fetch_object()) {
                     $return .= '<tr style="border: 1px solid;" style="background-color: #FFF;">';
+                        $return .= '<td>';
+                            $return .= '&nbsp;&nbsp;';
+                            $return .= $return_db->identifier;
+                        $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
                             $db2 = new dbquery;
@@ -105,7 +112,7 @@ if (isset($_REQUEST['res_id_master'])) {
                             $return .= '" ';
                             $return .= 'target="_blank" ';
                             $return .= '>';
-                                $return .= '<i class="fa fa-download fa-2x"></i>';
+                                $return .= '<i class="fa fa-download fa-2x" title="'._VIEW_DOC.'"></i>';
                             $return .= '</a>';
                         $return .= '</td>';
                     $return .= '</tr>';
