@@ -223,6 +223,7 @@ function loadNewId(path_update,newId, collId){
 					$('page_notes').innerHTML = response.notes_dd;
 					$('tabricatorRight').innerHTML = response.right_html;
 					$("send_action").setAttribute('onclick',response.valid_button);
+					updateFunctionModifRep(response.id_rep, 1);
 					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
 				}
 				
@@ -248,6 +249,20 @@ function loadNewId(path_update,newId, collId){
 					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
 					
 					showEmailForm('index.php?display=true&module=sendmail&page=sendmail_ajax_content&mode=add&identifier='+newId+'&origin=document&coll_id='+collId+'&size=medium', '820px', '545px', 'sendmail_iframe');
+				}
+				
+				if (response.status == 4){ //page impression dossier
+					$('page_avancement').innerHTML = response.avancement;
+					$('onglet_notes').innerHTML = response.notes_dt;
+					$('page_notes').innerHTML = response.notes_dd;
+					$('onglet_pj').innerHTML = response.pj_dt;
+					$('page_pj').innerHTML = response.pj_dd;
+					console.log(response.right_html);
+					$('tabricatorRight').innerHTML = response.right_html;
+					//console.log("'"+response.valid_button+"'");
+					$("send_action").setAttribute('onclick',response.valid_button);
+					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
+					console.log("MAJ OK");
 				}
 			}
 	});
@@ -277,8 +292,35 @@ function nextDoc(path_update,collId){
 }
 
 function updateFunctionModifRep(idReponse, num_rep){
-	//document.getElementById("uni_update_rep_link").setAttribute('onclick','window.open(\'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId=letterbox_coll&id='+idReponse+'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');');	
-	document.getElementById("update_rep_link").setAttribute('onclick','window.open(\'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId=letterbox_coll&id='+idReponse+'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');');	
+	new Ajax.Request("index.php?display=true&page=checkSignFile&module=visa&res_id="+idReponse,
+	{
+		method:'post',
+		onSuccess: function(answer){
+			eval("response = "+answer.responseText);
+			if (response.status == 1){
+				if (document.getElementById("sign_link")){
+					document.getElementById("sign_link").setAttribute('onclick','');	
+					document.getElementById("sign_link").style.color = 'green';
+				}
+				
+				if (document.getElementById("update_rep_link")) {
+					document.getElementById("update_rep_link").style.display = 'none';
+				}
+			}
+			else if (response.status == 0){
+				if (document.getElementById("sign_link")){
+					document.getElementById("sign_link").setAttribute('onclick','signFile('+idReponse+');');	
+					document.getElementById("sign_link").style.color = '';
+				}
+				if (document.getElementById("update_rep_link")) {
+					document.getElementById("update_rep_link").style.display = '';
+					document.getElementById("update_rep_link").setAttribute('onclick','window.open(\'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId=letterbox_coll&id='+idReponse+'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');');	
+				}
+			}
+		}
+	});
+	
+	
 	document.getElementById("cur_idAffich").setAttribute('value',num_rep);
 	document.getElementById("cur_rep").setAttribute('value',idReponse);
 }
@@ -306,6 +348,40 @@ function loadAppletSign(url){
     displayModal(url, 'VisaApplet', 300, 300);
 }
 
+//destroy the modal of the applet and launch an ajax script
+function endOfAppletSign(objectType, theMsg, newId)
+{
+    if (objectType == 'ans_project') {
+        endAttachmentSign(newId);
+    }
+    //destroyModal('CMApplet');
+}
+
+function endAttachmentSign(newId)
+{
+	if (window.opener.$('cur_idAffich')) var num_rep = window.opener.$('cur_idAffich').value;
+	if (window.opener.$('cur_rep')){
+		var oldRep = window.opener.$('cur_rep').value;
+		window.opener.$('cur_rep').value = newId;
+	}
+	if (window.opener.$('cur_resId')) var num_idMaster = window.opener.$('cur_resId').value;
+	
+	if (window.opener.$('update_rep_link')){
+		window.opener.$('update_rep_link').style.display = 'none';
+	}
+	if (window.opener.$('sign_link')){
+		window.opener.$('sign_link').style.color = 'green';
+		window.opener.$('sign_link').setAttribute('onclick','');	
+	}
+	if(window.opener.$('viewframevalidRep'+num_rep)) {
+		window.opener.$('viewframevalidRep'+num_rep).src = "index.php?display=true&module=attachments&page=view_attachment&res_id_master="+num_idMaster+"&id="+newId;			
+	}
+	
+	if(window.opener.$('ans_'+num_rep)) {
+		window.opener.$('ans_'+num_rep).setAttribute('onclick','updateFunctionModifRep(\''+newId+'\', '+num_rep+');');			
+	}
+    window.close();
+}
 function generateWaybill(resId)
 {
 	console.log("Génération du bordereau");

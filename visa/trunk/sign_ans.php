@@ -29,12 +29,13 @@ if (!empty($_REQUEST['pinCode'])) {
 
 if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
     $id = $_REQUEST['id'];
-    $db->query("select res_id, format, res_id_master from ".RES_ATTACHMENTS_TABLE." where attachment_type = 'response_project' and res_id = " . $id);
+    $db->query("select res_id, format, res_id_master, title from ".RES_ATTACHMENTS_TABLE." where attachment_type = 'response_project' and res_id = " . $id);
     if ($db->nb_result() < 1) {
         echo _FILE . ' ' . _UNKNOWN.".<br/>";
     } else {
         $line = $db->fetch_object();
-		$_SESSION['visa']['last_resId_signed'] = $line->res_id_master;
+		$_SESSION['visa']['last_resId_signed']['res_id'] = $line->res_id_master;
+		$_SESSION['visa']['last_resId_signed']['title'] = $line->title;
             $core_tools->load_html();
             $core_tools->load_header();
             //$core_tools->load_js();

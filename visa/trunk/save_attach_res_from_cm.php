@@ -98,7 +98,7 @@ if (empty($docserver)) {
                 $_SESSION['data'],
                 array(
                     'column' => 'title',
-                    'value' => 'Reponse signee',
+                    'value' => $_SESSION['visa']['last_resId_signed']['title'],
                     'type' => 'string',
                 )
             );
@@ -115,7 +115,7 @@ if (empty($docserver)) {
                 $_SESSION['data'],
                 array(
                     'column' => 'res_id_master',
-                    'value' => $_SESSION['visa']['last_resId_signed'],
+                    'value' => $_SESSION['visa']['last_resId_signed']['res_id'],
                     'type' => 'integer',
                 )
             );
@@ -136,6 +136,14 @@ if (empty($docserver)) {
                     'type' => 'string',
                 )
             );
+			array_push(
+                $_SESSION['data'],
+                array(
+                    'column' => 'attachment_type',
+                    'value' => 'signed_response',
+                    'type' => 'string',
+                )
+            );
             //$_SESSION['error'] = 'test';
             $id = $resAttach->load_into_db(
                 RES_ATTACHMENTS_TABLE,
@@ -147,6 +155,7 @@ if (empty($docserver)) {
                 $_SESSION['config']['databasetype']
             );
 			
+			$_SESSION['visa']['last_ans_signed'] = $id;
             if ($id == false) {
                 $_SESSION['error'] = $resAttach->get_error();
                 //echo $resource->get_error();

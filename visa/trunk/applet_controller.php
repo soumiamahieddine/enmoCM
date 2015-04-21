@@ -144,9 +144,12 @@ if (
                     include 'modules/visa/save_attach_res_from_cm.php';
                 //THE RETURN
 				$result = array(
+					'NEW_ID' => $_SESSION['visa']['last_ans_signed'],
 					'END_MESSAGE' => $_SESSION['error'] . _END_OF_EDITION,
 				);
+				
 				createXML('ERROR', $result);
+				//unset($_SESSION['visa']['last_ans_signed']);
             }
         } else {
             $result = array(

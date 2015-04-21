@@ -194,7 +194,7 @@ $tab_path_rep_file = get_rep_path($res_id, $coll_id);
 		$num_rep = $i+1;
 		if (strlen($tab_path_rep_file[$i]['title']) > 20) $titleRep = substr($tab_path_rep_file[$i]['title'],0,20).'...';
 		else $titleRep = $tab_path_rep_file[$i]['title'];
-		$right_html .= '<dt onclick="updateFunctionModifRep(\\\''.$tab_path_rep_file[$i]['res_id'].'\\\', '.$num_rep.');">'.$titleRep.'</dt><dd>';
+		$right_html .= '<dt id="ans_'.$num_rep.'" onclick="updateFunctionModifRep(\\\''.$tab_path_rep_file[$i]['res_id'].'\\\', '.$num_rep.');">'.$titleRep.'</dt><dd>';
 		$right_html .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=visa&page=view_doc&path='
 			. $tab_path_rep_file[$i]['path'].'" name="viewframevalidRep'.$num_rep.'" id="viewframevalidRep'.$num_rep.'"  scrolling="auto" frameborder="0" style="width:100%;height:100%;" ></iframe>';
 		 $right_html .= '</dd>';
@@ -314,6 +314,6 @@ $tab_path_rep_file = get_rep_path($res_id, $coll_id);
 
 	$valid_but = 'valid_action_form( \\\'index_file\\\', \\\'index.php?display=true&page=manage_action&module=core\\\', \\\''.$_REQUEST['action'].'\\\', \\\''.$res_id.'\\\', \\\'res_letterbox\\\', \\\'null\\\', \\\''.$coll_id.'\\\', \\\'page\\\');';
 //echo "{status : 1,avancement:'".$avancement_html."',circuit:'".$circuit_html."',notes_dt:'".$notes_html_dt."',notes_dd:'".$notes_html_dd."'}";
-echo "{status : 1,notes_dt:'".$notes_html_dt."',notes_dd:'".$notes_html_dd."',circuit:'".$circuit_html."',avancement:'".$avancement_html."',right_html:'".$right_html."',valid_button:'".$valid_but."'}";
+echo "{status : 1,notes_dt:'".$notes_html_dt."',notes_dd:'".$notes_html_dd."',circuit:'".$circuit_html."',avancement:'".$avancement_html."',right_html:'".$right_html."',valid_button:'".$valid_but."',id_rep:'".$tab_path_rep_file[0]['res_id']."'}";
 exit();
 ?>

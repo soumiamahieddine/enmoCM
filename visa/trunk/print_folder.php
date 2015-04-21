@@ -519,7 +519,7 @@ function ajout_bdd($dossier_imp, $res_id){
 	
 	
 
-	$req =  "INSERT INTO res_attachments (title, type_id, format, typist, creation_date, identifier, docserver_id, path, filename, fingerprint, filesize, status, coll_id,res_id_master, attachment_type) VALUES ('".$title."', '0', 'pdf', '".$_SESSION['user']['UserId']."', CURRENT_TIMESTAMP, '1', 'FASTHD_MAN', '".$dossier_imp['path']."', '".$dossier_imp['filename']."', '".$fingerprint."', '".$filesize."', 'TRA', 'letterbox_coll','".$res_id."', 'waybill');";
+	$req =  "INSERT INTO res_attachments (title, type_id, format, typist, creation_date, identifier, docserver_id, path, filename, fingerprint, filesize, status, coll_id,res_id_master, attachment_type) VALUES ('".$title."', '0', 'pdf', '".$_SESSION['user']['UserId']."', CURRENT_TIMESTAMP, '1', 'FASTHD_MAN', '".$dossier_imp['path']."', '".$dossier_imp['filename']."', '".$fingerprint."', '".$filesize."', 'TRA', 'letterbox_coll','".$res_id."', 'print_folder');";
 
 	$db->query($req, false, true);
 }
@@ -629,11 +629,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$db = new dbquery();
     $db->connect();
 	$view = $sec->retrieve_view_from_coll_id($coll_id);
-	$db->query("select alt_identifier from " 
+	$db->query("select alt_identifier,typist from " 
 		. $view 
 		. " where res_id = " . $res_id);
 	$resChrono = $db->fetch_object();
 	$chrono_number = $resChrono->alt_identifier;
+	$typist = getInfosUser($resChrono->typist);
+	$typist = $typist['prenom'].' '.$typist['nom'];
 	
     $frm_str .= '<h2 class="tit" id="action_title">'._VISA_MAIL.' '._NUM.'<span id="numIdDocPage">'.$res_id.'</span>';
     $frm_str .= '</h2>';
@@ -650,54 +652,51 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$classLine = ' class="selectedId" ';
 		}
 		else $classLine = ' class="unselectedId" ';
-		$frm_str .= '<div '.$classLine.' onclick="loadNewId(\'index.php?display=true&module=visa&page=update_printFolder\','.$res_id_doc.',\''.$coll_id.'\');" id="list_doc_'.$res_id_doc.'">';
+		$frm_str .= '<div '.$classLine.' onmouseover="this.style.cursor=\'pointer\';"  onclick="loadNewId(\'index.php?display=true&module=visa&page=update_printFolder\','.$res_id_doc.',\''.$coll_id.'\');" id="list_doc_'.$res_id_doc.'">';
 		check_category($coll_id, $res_id_doc);
 		$data = get_general_data($coll_id, $res_id_doc, 'minimal');
-		
 		if ($res_id_doc == $res_id){
 			$selectedCat = $data['category_id']['value'];
+			$curContact = $data['contact'];
+			$curSubject = $data['subject'];
+			$curDate = $data['doc_date'];
 			$curNumDoc = $num;
 			$curdest = $data['destination'];
-			/*if (isset($tab_docs[$num-1])) $prevId = $tab_docs[$num-1];
-			if (isset($tab_docs[$num+1])) $nextId = $tab_docs[$num+1];*/
 		}
-		$frm_str .= '<dl>';
 		
-		$frm_str .= '<dt></dt>';
-		$frm_str .= '<dd>'.$chrono_number . ' - ' .$res_id_doc.'</dd>';
+		$frm_str .= '<ul>';
+		$frm_str .= '<li><b>';
+		$frm_str .= $chrono_number . ' - ' .$res_id_doc;
+		$frm_str .= '</b></li>';
 		
-		$frm_str .= '<dt><i class="fa fa-user" title="Contact"></i></dt>';
+		$frm_str .= '<li>';
+		$frm_str .= '<i class="fa fa-user" title="Contact"></i> ';
 		if(isset($data['contact']) && !empty($data['contact']))
         {
-			if (strlen($data['contact']) > 30) $contact = substr($data['contact'],0,30).'...';
+			if (strlen($data['contact']) > 35) $contact = substr($data['contact'],0,35).'...';
 			else $contact = $data['contact'];
-			$frm_str .= '<dd>'.$contact.'</dd>';
+			$frm_str .= $contact;
 		}
+		$frm_str .= '</li>';
 		
-		$frm_str .= '<dt></dt>';
+		$frm_str .= '<li>';
+		$frm_str .= '<i class="fa fa-file" title="Objet"></i> ';
 		if(isset($data['subject']) && !empty($data['subject']))
         {
-			if (strlen($data['subject']) > 30) $subject = substr($data['subject'],0,30).'...';
+			if (strlen($data['subject']) > 80) $subject = substr($data['subject'],0,80).'...';
 			else $subject = $data['subject'];
-			$frm_str .= '<dd><i>'.$subject.'</i></dd>';
+			$frm_str .= $subject;
 		}
+		$frm_str .= '</li>';
 		
-		$frm_str .= '<dt><i class="fa fa-calendar " title="Date d\'arrivée"></i></dt>';
-		if(isset($data['admission_date'])&& !empty($data['admission_date']))
-		{
-			$frm_str .= '<dd>'.$data['admission_date'].'</dd>';
-		}
-		 else
-		{
-			$frm_str .= '<dd>'.date('d-m-Y').'</dd>';
-		}
-				
-		$frm_str .= '<dt><i class="fa fa-bell" title="Date limite"></i></dt>';
-		if(isset($data['process_limit_date'])&& !empty($data['process_limit_date']))
-        {
-			$frm_str .= '<dd>'.$data['process_limit_date'].'</dd>';
-		}
-		$frm_str .= '</dl>';
+		$frm_str .= '<li>';
+		$frm_str .= '<i class="fa fa-calendar " title="Date d\'arrivée"></i> ';
+		$frm_str .= $data['admission_date'];
+		$frm_str .= ' <i class="fa fa-bell" title="Date limite"></i> ';
+		$frm_str .= $data['process_limit_date'];
+		$frm_str .= '</li>';
+		
+		$frm_str .= '</ul>';
 		
 		$frm_str .= '</div>';
 	}
@@ -863,13 +862,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	$frm_str .= '<dl id="tabricatorRight"  style="height:98%;">';
 	
-	$frm_str .= '<dt>Dossier</dt><dd>';
+	$frm_str .= '<dt>Dossier</dt><dd style="overflow-x: hidden;">';
 	
 	$frm_str .= '<div id="frm_error_'.$id_action.'" class="indexing_error"></div>';		
 	$frm_str .= '<h2>Contenu du dossier de réponse</h2>';
 	
-	$frm_str .= '<p><b>Requérent</b> : '.$data['contact'].'</p>';
-	$frm_str .= '<p><b>Objet</b> : '.$data['subject'].'</p>';
+	$frm_str .= '<p><b>Requérent</b> : '.$curContact.'</p>';
+	$frm_str .= '<p><b>Objet</b> : '.$curSubject.'</p>';
 	$frm_str .= '<hr/>';
 	
 	/*$circuit_visa = new visa();
@@ -878,13 +877,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '<table style="width:99%;">';
 	$frm_str .= '<thead><tr><th style="width:25%;"></th><th style="width:40%;">Titre</th><th style="width:20%;">Rédacteur</th><th style="width:10%;">Date</th><th style="width:5%;"></th></tr></thead>';
 	$frm_str .= '<tbody>';
-	if ($data['category_id']['value'] == "incoming"){
+	if ($selectedCat == "incoming"){
 	$frm_str .= '<tr><td><h3>+ Courrier entrant</h3></td><td></td><td></td><td></td><td></td></tr>';
-	$frm_str .= '<tr><td></td><td>'.$data['subject'].'</td><td>'.$data['exp_contact_id']['show_value'].'</td><td>'.$data['doc_date'].'</td><td><input id="contenu_dossier" type="checkbox" name="dossier[]" value="initial_'.$res_id.'" checked></input></td></tr>';	
+	$frm_str .= '<tr><td></td><td>'.$curSubject.'</td><td>'.$curContact.'</td><td>'.$curDate.'</td><td><input id="contenu_dossier" type="checkbox" name="dossier[]" value="initial_'.$res_id.'" checked></input></td></tr>';	
 	}
 	else{
 		$frm_str .= '<tr><td><h3>+ Courrier sortant</h3></td><td></td><td></td><td></td><td></td></tr>';
-		$frm_str .= '<tr><td></td><td>'.$data['subject'].'</td><td>'.$typist.'</td><td>'.$data['doc_date'].'</td><td><input id="contenu_dossier" type="checkbox" name="dossier[]" value="initial_'.$res_id.'" checked></input></td></tr>';	
+		$frm_str .= '<tr><td></td><td>'.$curSubject.'</td><td>'.$typist.'</td><td>'.$curDate.'</td><td><input id="contenu_dossier" type="checkbox" name="dossier[]" value="initial_'.$res_id.'" checked></input></td></tr>';	
 	}
 	$currentStat = "";
 	//$frm_str .= print_r($tab_attach_file,true);
@@ -996,7 +995,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				}
 			$frm_str .='</select> ';
 			$table = $sec->retrieve_table_from_coll($coll_id);
-			$frm_str .= '<input type="button" name="send" id="send_action" value="'._VALIDATE.'" class="button" onclick="if (document.getElementById(\'chosen_action\').value == 403 || document.getElementById(\'chosen_action\').value == 404 || document.getElementById(\'chosen_action\').value == 414) generateWaybill('.$res_id.');valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
+			$frm_str .= '<input type="button" name="send" id="send_action" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
 		}
 		
 		
@@ -1018,7 +1017,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		//$frm_str .= '<input type="hidden" name="next_resId" id="next_resId" value="'.$nextId.'" >';
 		
 		$frm_str .= '</td>';
-		$frm_str .= '<td style="width:5%;">';	
+		$frm_str .= '<td style="width:5%;display:none;">';	
 		$frm_str .= '<a href="javascript://" id="update_rep_link" onclick="';
 		$frm_str .= 'window.open(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId='.$coll_id.'&id='.$tab_path_rep_file[0]['res_id'].'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');';
 		$frm_str .= '"><i class="fa fa-pencil-square-o fa-4x" title="Modifier la réponse"></i></a>';
@@ -1110,7 +1109,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 		'result' => $res_id.'#',
 		'history_msg' => '',
         'page_result' => $_SESSION['config']['businessappurl']
-                         . 'index.php?page=view_parapheur_controller&dir=indexing_searching'
+                         . 'index.php?page=view_parapheur_controller&module=visa'
                          . '&res_id=' . $res_id
 	);
 }

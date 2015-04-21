@@ -136,7 +136,7 @@ function get_rep_path($res_id, $coll_id)
 	$db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver_id."'");
     $res = $db->fetch_object();
     $docserver_path = $res->path_template;
-	$db->query("select filename, path,title,res_id  from res_view_attachments where res_id_master = " . $res_id . " AND status <> 'OBS' AND status <> 'DEL' and attachment_type = 'response_project' order by creation_date asc");
+	$db->query("select filename, path,title,res_id  from res_view_attachments where res_id_master = " . $res_id . " AND status <> 'OBS' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response') order by creation_date asc");
 	$array_reponses = array();
 	$cpt_rep = 0;
 	while ($res2 = $db->fetch_object()){
@@ -278,54 +278,49 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$classLine = ' class="selectedId" ';
 		}
 		else $classLine = ' class="unselectedId" ';
-		$frm_str .= '<div '.$classLine.' onclick="loadNewId(\'index.php?display=true&module=visa&page=update_visaPage\','.$res_id_doc.',\''.$coll_id.'\');" id="list_doc_'.$res_id_doc.'">';
+		$frm_str .= '<div '.$classLine.' onmouseover="this.style.cursor=\'pointer\';" onclick="loadNewId(\'index.php?display=true&module=visa&page=update_visaPage\','.$res_id_doc.',\''.$coll_id.'\');" id="list_doc_'.$res_id_doc.'">';
 		check_category($coll_id, $res_id_doc);
 		$data = get_general_data($coll_id, $res_id_doc, 'minimal');
 		
 		if ($res_id_doc == $res_id){
-			//$frm_str .= '<pre>'.print_r($data,true).'</pre>';
 			$selectedCat = $data['category_id']['value'];
 			$curNumDoc = $num;
 			$curdest = $data['destination'];
-			/*if (isset($tab_docs[$num-1])) $prevId = $tab_docs[$num-1];
-			if (isset($tab_docs[$num+1])) $nextId = $tab_docs[$num+1];*/
 		}
-		$frm_str .= '<dl>';
-		$frm_str .= '<dt></dt>';
-		$frm_str .= '<dd>'.$chrono_number . ' - ' .$res_id_doc.'</dd>';
 		
-		$frm_str .= '<dt><i class="fa fa-user" title="Contact"></i></dt>';
+		$frm_str .= '<ul>';
+		$frm_str .= '<li><b>';
+		$frm_str .= $chrono_number . ' - ' .$res_id_doc;
+		$frm_str .= '</b></li>';
+		
+		$frm_str .= '<li>';
+		$frm_str .= '<i class="fa fa-user" title="Contact"></i> ';
 		if(isset($data['contact']) && !empty($data['contact']))
         {
-			if (strlen($data['contact']) > 30) $contact = substr($data['contact'],0,30).'...';
+			if (strlen($data['contact']) > 35) $contact = substr($data['contact'],0,35).'...';
 			else $contact = $data['contact'];
-			$frm_str .= '<dd>'.$contact.'</dd>';
+			$frm_str .= $contact;
 		}
+		$frm_str .= '</li>';
 		
-		$frm_str .= '<dt></dt>';
+		$frm_str .= '<li>';
+		$frm_str .= '<i class="fa fa-file" title="Objet"></i> ';
 		if(isset($data['subject']) && !empty($data['subject']))
         {
-			if (strlen($data['subject']) > 30) $subject = substr($data['subject'],0,30).'...';
+			if (strlen($data['subject']) > 80) $subject = substr($data['subject'],0,80).'...';
 			else $subject = $data['subject'];
-			$frm_str .= '<dd><i>'.$subject.'</i></dd>';
+			$frm_str .= $subject;
 		}
+		$frm_str .= '</li>';
 		
-		$frm_str .= '<dt><i class="fa fa-calendar " title="Date d\'arrivée"></i></dt>';
-		if(isset($data['admission_date'])&& !empty($data['admission_date']))
-		{
-			$frm_str .= '<dd>'.$data['admission_date'].'</dd>';
-		}
-		 else
-		{
-			$frm_str .= '<dd>'.date('d-m-Y').'</dd>';
-		}
-				
-		$frm_str .= '<dt><i class="fa fa-bell" title="Date limite"></i></dt>';
-		if(isset($data['process_limit_date'])&& !empty($data['process_limit_date']))
-        {
-			$frm_str .= '<dd>'.$data['process_limit_date'].'</dd>';
-		}
-		$frm_str .= '</dl>';
+		$frm_str .= '<li>';
+		$frm_str .= '<i class="fa fa-calendar " title="Date d\'arrivée"></i> ';
+		$frm_str .= $data['admission_date'];
+		$frm_str .= ' <i class="fa fa-bell" title="Date limite"></i> ';
+		$frm_str .= $data['process_limit_date'];
+		$frm_str .= '</li>';
+		
+		$frm_str .= '</ul>';
 		
 		$frm_str .= '</div>';
 	}
@@ -472,7 +467,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$num_rep = $i+1;
 		if (strlen($tab_path_rep_file[$i]['title']) > 20) $titleRep = substr($tab_path_rep_file[$i]['title'],0,20).'...';
 		else $titleRep = $tab_path_rep_file[$i]['title'];
-		$frm_str .= '<dt onclick="updateFunctionModifRep(\''.$tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.');">'.$titleRep.'</dt><dd>';
+		$frm_str .= '<dt id="ans_'.$num_rep.'" onclick="updateFunctionModifRep(\''.$tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.');">'.$titleRep.'</dt><dd>';
 		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=visa&page=view_doc&path='
 			. $tab_path_rep_file[$i]['path'].'" name="viewframevalidRep'.$num_rep.'" id="viewframevalidRep'.$num_rep.'"  scrolling="auto" frameborder="0" style="width:100%;height:100%;" ></iframe>';
 		 $frm_str .= '</dd>';

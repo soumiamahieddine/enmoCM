@@ -50,6 +50,62 @@ function get_rep_path($res_id, $coll_id)
 	}
     return $array_reponses;
 }
+function getNotes($res_id){
+	$db = new dbquery();
+    $db->connect();
+	$req_notes = "select * from notes where identifier = '".$res_id."'";
+	$db->query($req_notes);
+
+	$tab_notes = array();
+	 while ($notes = $db->fetch_object()) {
+		$note = "Note de ".$notes->user_id.", le ".$notes->date_note." : ".$notes->note_text;
+		//array_push($tab_notes, $note);
+		array_push($tab_notes, array('id_note'=>$notes->id,'user_id'=>$notes->user_id,'date_note'=>$notes->date_note,'note_text'=>$notes->note_text));
+	}
+	
+	return $tab_notes;
+}
+function get_attach_path($res_id, $coll_id)
+{
+    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+    require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docservers_controler.php");
+	$docserverControler = new docservers_controler();
+    $sec =new security();
+    $view = $sec->retrieve_view_from_coll_id($coll_id);
+    if(empty($view))
+    {
+        $view = $sec->retrieve_table_from_coll($coll_id);
+    }
+    $db = new dbquery();
+    $db->connect();
+
+    $db->query("select docserver_id, path, filename from ".$view." where res_id = ".$res_id);
+    $res = $db->fetch_object();
+    $docserver_id = $res->docserver_id;
+	
+	
+	$db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver_id."'");
+    $res = $db->fetch_object();
+    $docserver_path = $res->path_template;
+	$db->query("select filename, path,title,res_id,status,typist,creation_date,format,attachment_type from res_view_attachments where status <> 'DEL' AND status = 'TRA' AND res_id_master = " . $res_id . " order by status, creation_date asc");
+	$array_attach = array();
+	$cpt_rep = 0;
+	while ($res2 = $db->fetch_object()){
+		$filename=$res2->filename;
+		$path = preg_replace('/#/', DIRECTORY_SEPARATOR, $res2->path);
+		$filename_pdf = str_replace(pathinfo($filename, PATHINFO_EXTENSION), "pdf",$filename);
+		$array_attach[$cpt_rep]['path'] = $docserver_path.$path.$filename_pdf;
+		$array_attach[$cpt_rep]['title'] = $res2->title;
+		$array_attach[$cpt_rep]['res_id'] = $res2->res_id;
+		$array_attach[$cpt_rep]['attachment_type'] = $res2->attachment_type;
+		$array_attach[$cpt_rep]['format'] = $res2->format;
+		$array_attach[$cpt_rep]['typist'] = $res2->typist;
+		$date = explode(" ",$res2->creation_date);
+		$array_attach[$cpt_rep]['date'] = $date[0];
+		$cpt_rep++;
+	}
+    return $array_attach;
+}
 
 function getInfosAction($action_id){
 	$db=new dbquery();
@@ -86,6 +142,7 @@ require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 			. "class" . DIRECTORY_SEPARATOR
 			. "class_modules_tools.php";
 include('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'definition_mail_categories.php');
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 
 $core =new core_tools();
 
@@ -160,15 +217,145 @@ if ($core->is_module_loaded('notes')){
 	$notes_html_dd = '<h2>'. _NOTES .'</h2><iframe name="list_notes_doc" id="list_notes_doc" src="'. $_SESSION['config']['businessappurl'].'index.php?display=true&module=notes&page=notes&identifier='. $res_id .'&origin=document&coll_id='.$coll_id.'&load&size=full" frameborder="0" scrolling="no" width="99%" height="570px"></iframe> ';	
 }
 
+
+
+//PJ
+
+$countAttachments = "select res_id, creation_date, title, format from " 
+			. $_SESSION['tablename']['attach_res_attachments'] 
+			. "  where (status = 'A_TRA' or status = 'TRA') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'";
+		$dbAttach = new dbquery();
+		$dbAttach->query($countAttachments);
+		if ($dbAttach->nb_result() > 0) {
+			$nb_attach = ' (' . ($dbAttach->nb_result()). ')';
+		}
+	
+		$pj_html_dt =  _ATTACHED_DOC .$nb_attach;
+		
+		$pj_html_dd = '';
+		
+		if ($core->is_module_loaded('attachments')) {
+        require 'modules/templates/class/templates_controler.php';
+        $templatesControler = new templates_controler();
+        $templates = array();
+        $templates = $templatesControler->getAllTemplatesForProcess($curdest);
+        $_SESSION['destination_entity'] = $curdest;
+        //var_dump($templates);
+        $pj_html_dd .= '<div id="list_answers_div" onmouseover="this.style.cursor=\\\'pointer\\\';">';
+            $pj_html_dd .= '<div class="block" style="margin-top:-2px;">';
+                $pj_html_dd .= '<div id="processframe" name="processframe">';
+                    $pj_html_dd .= '<center><h2>' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
+					
+                    $req = new request;
+                    $req->connect();
+                    $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
+                        . " where (status = 'A_TRA' or status = 'TRA') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
+                    //$req->show();
+                    $nb_attach = 0;
+                    if ($req->nb_result() > 0) {
+                        $nb_attach = $req->nb_result();
+                    }
+                    $pj_html_dd .= '<div class="ref-unit">';
+                    $pj_html_dd .= '<center>';
+                    if ($core->is_module_loaded('templates')) {
+                        $pj_html_dd .= '<input type="button" name="attach" id="attach" class="button" value="'
+                            . _CREATE_PJ
+                            .'" onclick="showAttachmentsForm(\\\'' . $_SESSION['config']['businessappurl']
+                            . 'index.php?display=true&module=attachments&page=attachments_content\\\')" />';
+                    }
+                    $pj_html_dd .= '</center><iframe name="list_attach" id="list_attach" src="'
+                    . $_SESSION['config']['businessappurl']
+                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&resId='.$res_id.'" '
+                    . 'frameborder="0" width="100%" height="600px"></iframe>';
+                    $pj_html_dd .= '</div>';
+                $pj_html_dd .= '</div>';
+            $pj_html_dd .= '</div>';
+            $pj_html_dd .= '<hr />';
+        $pj_html_dd .= '</div>';
+    }
+	
+	
+		
+		
 /* Partie droite */
 $right_html = '';
 
-//CIRCUIT 
-$right_html = '';
+$right_html .= '<dt>Dossier</dt><dd style="overflow-x: hidden;">';
+	
+	$right_html .= '<div id="frm_error_'.$id_action.'" class="indexing_error"></div>';		
+	$right_html .= '<h2>Contenu du dossier de réponse</h2>';
+	
+	$right_html .= '<p><b>Requérent</b> : '.$data['contact'].'</p>';
+	$right_html .= '<p><b>Objet</b> : '.$data['subject'].'</p>';
+	$right_html .= '<hr/>';
+	
+	
+	$tab_attach_file = get_attach_path($res_id, $coll_id);
+	$right_html .= '<table style="width:99%;">';
+	$right_html .= '<thead><tr><th style="width:25%;"></th><th style="width:40%;">Titre</th><th style="width:20%;">Rédacteur</th><th style="width:10%;">Date</th><th style="width:5%;"></th></tr></thead>';
+	$right_html .= '<tbody>';
+	if ($data['category_id']['value'] == "incoming"){
+	$right_html .= '<tr><td><h3>+ Courrier entrant</h3></td><td></td><td></td><td></td><td></td></tr>';
+	$right_html .= '<tr><td></td><td>'.$data['subject'].'</td><td>'.$data['contact'].'</td><td>'.$data['doc_date'].'</td><td><input id="contenu_dossier" type="checkbox" name="dossier[]" value="initial_'.$res_id.'" checked></input></td></tr>';	
+	}
+	else{
+		$right_html .= '<tr><td><h3>+ Courrier sortant</h3></td><td></td><td></td><td></td><td></td></tr>';
+		$right_html .= '<tr><td></td><td>'.$data['subject'].'</td><td>'.$typist.'</td><td>'.$data['doc_date'].'</td><td><input id="contenu_dossier" type="checkbox" name="dossier[]" value="initial_'.$res_id.'" checked></input></td></tr>';	
+	}
+	$currentStat = "";
 
+	$bordereauExists = false;
+	for ($i=0; $i<count($tab_attach_file);$i++){
+		$auteur = getInfosUser($tab_attach_file[$i]['typist']);
+		if ($tab_attach_file[$i]['attachment_type'] != $currentStat){
+			
+			if ($tab_attach_file[$i]['attachment_type'] == "response_project"){
+				$right_html .= '<tr><td><h3>+ Réponse(s) effectuée(s)</h3></td><td></td><td></td><td></td><td></td></tr>';			
+				$checked = " checked";				
+			}
+			if ($tab_attach_file[$i]['attachment_type'] == "simple_attachment"){
+				$right_html .= '<tr><td><h3>+ Pièce(s) jointe(s)</h3></td><td></td><td></td><td></td><td></td></tr>';	
+				$checked = " ";	
+			}
+			if ($tab_attach_file[$i]['attachment_type'] == "routing"){
+				$right_html .= '<tr><td><h3>+ Fiche de circulation</h3></td><td></td><td></td><td></td><td></td></tr>';	
+				$checked = " checked ";
+				$bordereauExists = true;
+			}
+				
+			$currentStat = $tab_attach_file[$i]['attachment_type'];
+		}
+		
+		if ($tab_attach_file[$i]['attachment_type'] == "simple_attachment" && $tab_attach_file[$i]['format'] != "pdf") $disabled = " disabled title=\"Il n'est pas possible d'imprimer une pièce d'un autre format que pdf\" ";	
+		else  $disabled = " ";	
+		
+		$right_html .= '<tr><td></td><td><a href="index.php?display=true&module=attachments&page=view_attachment&id='.$tab_attach_file[$i]['res_id'].'&res_id_master='.$res_id.'" target="_blank">'.$tab_attach_file[$i]['title'].'</a></td><td>'.$auteur['prenom'].' '.$auteur['nom'].'</td><td>'.$tab_attach_file[$i]['date'].'</td><td><input type="checkbox" id="contenu_dossier" name="dossier[]" value="attach_'.$tab_attach_file[$i]['res_id'].'" '.$checked.' '.$disabled.'></input></td></tr>';	
+	}
+	
+	if (!$bordereauExists){
+		$right_html .= "<tr><td><h3 id=\"tit_bord\" onclick=\"window.open('".$_SESSION['config']['businessappurl']."/index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=bordereauFromTemplate&objectId=113&objectTable=res_letterbox&resMaster=".$res_id."', '', 'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no');\" ". "onmouseover=\"this.style.cursor='pointer';\" >+ Générer la fiche de circulation</h3></td><td></td><td></td><td></td><td></td></tr>";	
+		$right_html .= '<tr id="line_bord"><td></td><td></td><td></td><td></td><td><input type="checkbox" name="dossier[]" value="attach_" checked></input></td></tr>';	
+	}
+	
+	$tab_notes = getNotes($res_id);
+	if (count($tab_notes) > 0){
+		$right_html .= '<tr><td><h3>+ Notes</h3></td><td></td><td></td><td></td><td></td></tr>';	
+		
+		foreach($tab_notes as $note){
+			$auteur = getInfosUser($note['user_id']);
+			$right_html .= '<tr><td></td><td>'.$note['note_text'].'</td><td>'.$auteur['prenom'].' '.$auteur['nom'].'</td><td>'.$note['date_note'].'</td><td><input type="checkbox" id="contenu_dossier" name="dossier[]" value="note_'.$note['id_note'].'"  ></input></td></tr>';	
+		}
+	}
+	
+	
+	$right_html .= '</tbody>';
+	$right_html .= '</table>';
+	$right_html .= '<hr/>';
+	$right_html .= '</dd>';
 
+	$right_html = str_replace("'", "\\'",$right_html);
 //Onglet Circuit 
-	$right_html .= '<dt id="onglet_circuit">Circuit de visa</dt><dd id="page_circuit">';
+	$right_html .= '<dt id="onglet_circuit">Circuit de visa</dt><dd id="page_circuit" style="overflow-x: hidden;">';
 	$right_html .= '<h2>Circuit de visa</h2>';
 	
 	$modifVisaWorkflow = false;
@@ -200,129 +387,8 @@ $right_html = '';
 	$right_html .= '</div>';
 	$right_html .= '</dd>';
 
-$tab_path_rep_file = get_rep_path($res_id, $coll_id);
-	for ($i=0; $i<count($tab_path_rep_file);$i++){
-		$num_rep = $i+1;
-		if (strlen($tab_path_rep_file[$i]['title']) > 20) $titleRep = substr($tab_path_rep_file[$i]['title'],0,20).'...';
-		else $titleRep = $tab_path_rep_file[$i]['title'];
-		$right_html .= '<dt onclick="updateFunctionModifRep(\\\''.$tab_path_rep_file[$i]['res_id'].'\\\', '.$num_rep.');">'.$titleRep.'</dt><dd>';
-		$right_html .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=visa&page=view_doc&path='
-			. $tab_path_rep_file[$i]['path'].'" name="viewframevalidRep'.$num_rep.'" id="viewframevalidRep'.$num_rep.'"  scrolling="auto" frameborder="0" style="width:100%;height:100%;" ></iframe>';
-		 $right_html .= '</dd>';
-	}
-	
-	$countAttachments = "select res_id, creation_date, title, format from " 
-			. $_SESSION['tablename']['attach_res_attachments'] 
-			. "  where (status = 'A_TRA' or status = 'TRA') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'";
-		$dbAttach = new dbquery();
-		$dbAttach->query($countAttachments);
-		if ($dbAttach->nb_result() > 0) {
-			$nb_attach = ' (' . ($dbAttach->nb_result()). ')';
-		}
-	
-		$right_html .= '<dt id="onglet_pj">'. _ATTACHED_DOC .$nb_attach.'</dt><dd id="page_pj">';
-		
-		if ($core_tools->is_module_loaded('attachments')) {
-        require 'modules/templates/class/templates_controler.php';
-        $templatesControler = new templates_controler();
-        $templates = array();
-        $templates = $templatesControler->getAllTemplatesForProcess($curdest);
-        $_SESSION['destination_entity'] = $curdest;
-        //var_dump($templates);
-        $right_html .= '<div id="list_answers_div" onmouseover="this.style.cursor=\\\'pointer\\\';">';
-            $right_html .= '<div class="block" style="margin-top:-2px;">';
-                $right_html .= '<div id="processframe" name="processframe">';
-                    $right_html .= '<center><h2>' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
-                    $req = new request;
-                    $req->connect();
-                    $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
-                        . " where (status = 'A_TRA' or status = 'TRA') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
-                    //$req->show();
-                    $nb_attach = 0;
-                    if ($req->nb_result() > 0) {
-                        $nb_attach = $req->nb_result();
-                    }
-                    $right_html .= '<div class="ref-unit">';
-                    $right_html .= '<center>';
-                    if ($core_tools->is_module_loaded('templates')) {
-                        $right_html .= '<input type="button" name="attach" id="attach" class="button" value="'
-                            . _CREATE_PJ
-                            .'" onclick="showAttachmentsForm(\\\'' . $_SESSION['config']['businessappurl']
-                            . 'index.php?display=true&module=attachments&page=attachments_content\\\')" />';
-                    }
-                    $right_html .= '</center><iframe name="list_attach" id="list_attach" src="'
-                    . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&resId='.$res_id.'" '
-                    . 'frameborder="0" width="100%" height="600px"></iframe>';
-                    $right_html .= '</div>';
-                $right_html .= '</div>';
-            $right_html .= '</div>';
-            $right_html .= '<hr />';
-        $right_html .= '</div>';
-    }
-	
-	
-		$right_html .= '</dd>';
-					
-		if ( $core->is_module_loaded('content_management') && $data['category_id']['value'] == 'outgoing') {
-        $versionTable = $sec->retrieve_version_table_from_coll_id(
-            $coll_id
-        );
-        $selectVersions = "select res_id from "
-            . $versionTable . " where res_id_master = "
-            . $res_id . " and status <> 'DEL' order by res_id desc";
-        $dbVersions = new dbquery();
-        $dbVersions->connect();
-        $dbVersions->query($selectVersions);
-        $nb_versions_for_title = $dbVersions->nb_result();
-        $lineLastVersion = $dbVersions->fetch_object();
-        $lastVersion = $lineLastVersion->res_id;
-        if ($lastVersion <> '') {
-            $objectId = $lastVersion;
-            $objectTable = $versionTable;
-        } else {
-            $objectTable = $sec->retrieve_table_from_coll(
-                $coll_id
-            );
-            $objectId = $res_id;
-            $_SESSION['cm']['objectId4List'] = $res_id;
-        }
-        if ($nb_versions_for_title == 0) {
-            $extend_title_for_versions = '0';
-        } else {
-            $extend_title_for_versions = $nb_versions_for_title;
-        }
-        $_SESSION['cm']['resMaster'] = '';
-		$right_html .= '<dt>' . _VERSIONS . ' (<span id="nbVersions">' . $extend_title_for_versions . '</span>)</dt><dd>';
-		$right_html .= '<h2>';
-			$right_html .= '<center>' . _VERSIONS . '</center>';
-		$right_html .= '</h2>';
-		$right_html .= '<div class="error" id="divError" name="divError"></div>';
-		$right_html .= '<div style="text-align:center;">';
-			$right_html .= '<a href="';
-				$right_html .=  $_SESSION['config']['businessappurl'];
-				$right_html .= 'index.php?display=true&dir=indexing_searching&page=view_resource_controler&original&id=';
-				$right_html .= $res_id;
-				$right_html .= '" target="_blank">';
-				$right_html .= '<img alt="' . _VIEW_ORIGINAL . '" src="';
-				$right_html .= $_SESSION['config']['businessappurl'];
-				$right_html .= 'static.php?filename=picto_dld.gif" border="0" alt="" />';
-				$right_html .= _VIEW_ORIGINAL . ' | ';
-			$right_html .= '</a>';
-			if ($core->test_service('add_new_version_init', 'apps', false)) {
-				$_SESSION['cm']['objectTable'] = $objectTable;
-				$right_html .= '<div id="createVersion" style="display: inline;"></div>';
-			}
-			$right_html .= '<div id="loadVersions"></div>';
-			$right_html .= '<script language="javascript">';
-				$right_html .= 'showDiv("loadVersions", "nbVersions", "createVersion", "';
-					$right_html .= $_SESSION['urltomodules'];
-					$right_html .= 'content_management/list_versions.php")';
-			$right_html .= '</script>';
-		$right_html .= '</div><br>';
-		$right_html .= '</dd>';
-    }
+
 $valid_but = 'valid_action_form( \\\'index_file\\\', \\\'index.php?display=true&page=manage_action&module=core\\\', \\\''.$_REQUEST['action'].'\\\', \\\''.$res_id.'\\\', \\\'res_letterbox\\\', \\\'null\\\', \\\''.$coll_id.'\\\', \\\'page\\\');';
-echo "{status : 2,notes_dt:'".$notes_html_dt."',notes_dd:'".$notes_html_dd."',avancement:'".$avancement_html."',right_html:'".$right_html."',valid_button:'".$valid_but."'}";
+echo "{status : 4,notes_dt:'".$notes_html_dt."',notes_dd:'".$notes_html_dd."',pj_dt:'".$pj_html_dt."',pj_dd:'".$pj_html_dd."',avancement:'".$avancement_html."',right_html:'".$right_html."',valid_button:'".$valid_but."'}";
 exit();
 ?>
