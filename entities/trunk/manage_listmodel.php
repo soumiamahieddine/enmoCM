@@ -610,7 +610,7 @@ $linkwithwhat =
             if (count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['users']) > 0
              || count($_SESSION['m_admin']['entity']['listmodel'][$role_id]['entities']) > 0
             ) { ?>
-                <h3 class="sstit"><?php echo $role_label;?></h3>
+                <h3 class="sstit"  style="font-size:1.5em; text-align:left; margin-left:100px; margin-bottom: -10px"><?php echo $role_label;?></h3>
                 <table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php
                 #**************************************************************************
                 # OTHER ROLE USERS

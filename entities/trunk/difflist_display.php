@@ -13,7 +13,7 @@ foreach($roles as $role_id => $role_label) {
     if(count($difflist[$role_id]['users']) > 0
         || count($difflist[$role_id]['entities']) > 0
     ) { ?>
-        <h3 class="sstit"><?php echo $role_label; ?></h3><?php
+        <h3 class="sstit" style="font-size: 1.2em;"><?php echo $role_label; ?></h3><?php
     if(count($difflist[$role_id]['users']) > 0) { ?>
         <table cellpadding="0" cellspacing="0" border="0" class="listingsmall liste_diff spec" style="width:100%;margin:0;"><?php
         $color = ' class="col"';
