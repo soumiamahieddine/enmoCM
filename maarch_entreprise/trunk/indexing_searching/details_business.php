@@ -819,7 +819,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))) {
                         <?php }
                         if ($modify_doc)
                         {?>
-                        <input type="submit" class="button"  value="<?php  echo _MODIFY_DOC;?>" name="submit_index_doc" />
+                        <input type="submit" class="button"  value="<?php  echo _SAVE_MODIFICATION;?>" name="submit_index_doc" />
                         <?php  } ?>
                             <input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php echo _BACK_TO_WELCOME;?>" onclick="window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';" />
 
