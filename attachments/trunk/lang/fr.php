@@ -98,7 +98,7 @@ if (!defined('_FILE_MISSING'))
 if (!defined('_FILE_EMPTY'))
     define( '_FILE_EMPTY', 'Le fichier est vide');
 if (!defined('_EDIT_MODEL'))
-    define( '_EDIT_MODEL', 'Editer le mod&egrave;le');
+    define( '_EDIT_MODEL', 'Editer');
 if (!defined('_ALREADY_MODEL_SELECTED'))
     define( '_ALREADY_MODEL_SELECTED', 'Mod&egrave;le d&eacute;j&agrave s&eacute;lectionn&eacute;');
 if (!defined('_MODIFY_ANSWER'))
