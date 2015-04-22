@@ -1,10 +1,21 @@
 <?php
-
+session_start();
 require 'modules/templates/class/templates_controler.php';
+require_once 'core/class/class_db.php';
+$db = new dbquery();
+$db->connect();
+$db->query("select destination from ".RES_VIEW_LETTERBOX." where res_id = " .$_SESSION['doc_id']);
+if ($db->nb_result() > 0) {
+        $res = $db->fetch_object();
+        $destination_entity = $res->destination;
+}
 $templatesControler = new templates_controler();
 $templates = array();
-$templates = $templatesControler->getAllTemplatesForProcess($_SESSION['destination_entity']);
-
+if (isset($_SESSION['destination_entity']) && !empty($_SESSION['destination_entity'])) {
+ $templates = $templatesControler->getAllTemplatesForProcess($_SESSION['destination_entity']);
+} else {
+	$templates = $templatesControler->getAllTemplatesForProcess($destination_entity);
+}
 $frmStr ="";
 $frmStr .= '<option value="">S&eacute;lectionnez le mod&egrave;le</option>';  
 for ($i=0;$i<count($templates);$i++) {
