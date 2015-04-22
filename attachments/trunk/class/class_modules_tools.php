@@ -42,6 +42,9 @@ class attachments
         foreach ($xmlconfig->TABLENAME as $tableName) {
             $_SESSION['tablename']['attach_res_attachments'] = (string) $tableName->attach_res_attachments;
         }
+		$conf = $xmlconfig->CONFIG;
+		$_SESSION['modules_loaded']['attachments']['convertPdf'] = (string) $conf->convertPdf;
+		 
         $hist = $xmlconfig->HISTORY;
         $_SESSION['history']['attachadd'] = (string) $hist->attachadd;
         $_SESSION['history']['attachup'] = (string) $hist->attachup;

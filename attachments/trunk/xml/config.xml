@@ -4,6 +4,7 @@
 		<name>attachments</name>
 		<comment>_ATTACHMENTS_COMMENT</comment>
 		<file_prefix>attach</file_prefix>
+		<convertPdf>true</convertPdf> <!-- true = applet DIS, false = applet Maarch -->
 		<loaded>true</loaded>
 	</CONFIG>
 	<TABLENAME>
