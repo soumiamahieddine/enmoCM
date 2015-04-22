@@ -1198,6 +1198,7 @@ class contacts_v2 extends dbquery
             ?>
         </h1>
         <div id="inner_content_contact" class="clearfix" align="center">
+        <div class="block">
             <?php
             if($state == false)
             {
@@ -1528,6 +1529,7 @@ class contacts_v2 extends dbquery
                 }
             }
             ?>
+        </div>
         </div>
     <?php
     }
