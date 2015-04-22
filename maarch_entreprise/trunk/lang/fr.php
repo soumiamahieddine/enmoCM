@@ -1109,6 +1109,7 @@ if (!defined('_CREATION_DATE')) define( '_CREATION_DATE', 'Date de cr&eacute;ati
 if (!defined('_NO_RESULTS')) define( '_NO_RESULTS', 'Aucun r&eacute;sultat');
 if (!defined('_FOUND_DOCS')) define( '_FOUND_DOCS', 'document(s) trouv&eacute;(s)');
 if (!defined('_MY_CONTACTS')) define( '_MY_CONTACTS', 'Créer des contacts depuis indexation/qualification');
+if (!defined('_MY_CONTACTS_MENU')) define( '_MY_CONTACTS_MENU', 'Mes contacts');
 if (!defined('_MAARCH_INFO')) define( '_MAARCH_INFO', 'Nous Contacter');
 if (!defined('_MY_COLLEAGUES')) define( '_MY_COLLEAGUES', 'Mes collegues');
 if (!defined('_DETAILLED_PROPERTIES')) define( '_DETAILLED_PROPERTIES', 'Propri&eacute;t&eacute;s d&eacute;taill&eacute;es');

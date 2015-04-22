@@ -8,7 +8,7 @@
     </MENU>
     <MENU>
         <id>my_contacts</id>
-        <libconst>_MY_CONTACTS</libconst>
+        <libconst>_MY_CONTACTS_MENU</libconst>
         <url>index.php?page=my_contacts&amp;dir=my_contacts&amp;load</url>
         <style>fa fa-book</style>
     </MENU>

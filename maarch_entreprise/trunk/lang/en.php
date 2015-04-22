@@ -693,6 +693,7 @@ if (!defined('_MUST_CORRECT_ERRORS')) define('_MUST_CORRECT_ERRORS', 'Please cor
 if (!defined('_MUST_DEFINE_ANSWER_TYPE')) define('_MUST_DEFINE_ANSWER_TYPE', 'You must set the type of the answer');
 if (!defined('_MUST_MAKE_AT_LEAST')) define('_MUST_MAKE_AT_LEAST', 'must contain at least' );
 if (!defined('_MY_CONTACTS')) define('_MY_CONTACTS', 'My contacts');
+if (!defined('_MY_CONTACTS_MENU')) define('_MY_CONTACTS_MENU', 'My contacts');
 if (!defined('_MY_COLLEAGUES')) define( '_MY_COLLEAGUES', 'Mes collegues');
 if (!defined('_MY_INFO')) define('_MY_INFO', 'My account');
 if (!defined('_MY_SEARCHES')) define('_MY_SEARCHES', 'My searches');
