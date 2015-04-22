@@ -1,6 +1,15 @@
 <?php
 
-include_once '../../core/init.php';
+if (
+    file_exists('..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR. '..' 
+                . DIRECTORY_SEPARATOR . 'core'. DIRECTORY_SEPARATOR . 'init.php'
+    )
+) {
+    include_once '../../../../core/init.php';
+} else {
+    include_once '../../core/init.php';
+}
+
 require_once 'core/class/class_portal.php';
 require_once 'core/class/class_functions.php';
 require_once 'core/class/class_db.php';
@@ -108,17 +117,50 @@ if (
         $content = file_get_contents($filePathOnTmp, FILE_BINARY);
 		$encodedContent = base64_encode($content);
         $fileContent = $encodedContent;
-        $result = array(
-            'STATUS' => $status,
-            'OBJECT_TYPE' => $objectType,
-            'OBJECT_TABLE' => $objectTable,
-            'OBJECT_ID' => $objectId,
-            'APP_PATH' => $appPath,
-            'FILE_CONTENT' => $fileContent,
-            'FILE_EXTENSION' => $fileExtension,
-            'ERROR' => '',
-            'END_MESSAGE' => '',
-        );
+		
+		if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
+			//Transmission du fichier VBS de conversion
+			if (
+				file_exists('custom'.DIRECTORY_SEPARATOR. $_SESSION['custom_override_id']
+							. DIRECTORY_SEPARATOR . 'modules'. DIRECTORY_SEPARATOR . 'content_management'
+							. DIRECTORY_SEPARATOR . 'DOC2PDF_VBS.vbs'
+				)
+			) {
+				$vbsFile = 'custom/'. $_SESSION['custom_override_id'] .'/modules/content_management/DOC2PDF_VBS.vbs';
+			} else {
+				$vbsFile = 'modules/content_management/DOC2PDF_VBS.vbs';
+			}		
+			$content_vbsFile = file_get_contents($vbsFile, FILE_BINARY);
+			$encodedContent_vbsFile = base64_encode($content_vbsFile);
+		}
+		        
+		if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
+			$result = array(
+				'STATUS' => $status,
+				'OBJECT_TYPE' => $objectType,
+				'OBJECT_TABLE' => $objectTable,
+				'OBJECT_ID' => $objectId,
+				'APP_PATH' => $appPath,
+				'FILE_CONTENT' => $fileContent,
+				'FILE_CONTENT_VBS' => $encodedContent_vbsFile,
+				'FILE_EXTENSION' => $fileExtension,
+				'ERROR' => '',
+				'END_MESSAGE' => '',
+			);
+		}
+		else{
+			$result = array(
+				'STATUS' => $status,
+				'OBJECT_TYPE' => $objectType,
+				'OBJECT_TABLE' => $objectTable,
+				'OBJECT_ID' => $objectId,
+				'APP_PATH' => $appPath,
+				'FILE_CONTENT' => $fileContent,
+				'FILE_EXTENSION' => $fileExtension,
+				'ERROR' => '',
+				'END_MESSAGE' => '',
+			);
+		}
         unlink($filePathOnTmp);
         createXML('SUCCESS', $result);
     } elseif ($_REQUEST['action'] == 'saveObject') {
@@ -139,6 +181,23 @@ if (
             $inF = fopen($_SESSION['config']['tmppath'] . $tmpFileName, 'w');
             fwrite($inF, $fileContent);
             fclose($inF);
+			
+			//Récupération de la version pdf du document
+			if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true" && ($objectType == 'attachmentFromTemplate' || $objectType == 'attachment' || $objectType == 'attachmentUpVersion' || $objectType == 'attachmentVersion')){
+				$pdfEncodedContent = str_replace(
+					' ',
+					'+',
+					$_REQUEST['pdfContent']
+				);
+				$pdfContent = base64_decode($pdfEncodedContent);
+				//copy file on Maarch tmp dir
+				$tmpFilePdfName = 'cm_tmp_file_pdf_' . $_SESSION['user']['UserId']
+					. '_' . rand() . '.pdf';
+				$inFpdf = fopen($_SESSION['config']['tmppath'] . $tmpFilePdfName, 'w');
+				fwrite($inFpdf, $pdfContent);
+				fclose($inFpdf);
+			}
+			
             $arrayIsAllowed = array();
             $arrayIsAllowed = Ds_isFileTypeAllowed(
                 $_SESSION['config']['tmppath'] . $tmpFileName

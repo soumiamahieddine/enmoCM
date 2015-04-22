@@ -93,8 +93,6 @@ if (isset($_REQUEST['contactId'])) {
 if (isset($_REQUEST['chronoAttachment'])) {
     $_SESSION['cm']['chronoAttachment'] = $_REQUEST['chronoAttachment'];
 }
-
-//$_SESSION['cm']['contact_id'] ='200';
 if ($_REQUEST['resMaster'] <> '') {
     $_SESSION['cm']['resMaster'] = $_REQUEST['resMaster'];
     $reservationObjectId = $_SESSION['cm']['resMaster'];
@@ -151,7 +149,7 @@ if ($objectType <> 'templateStyle') {
 
 //init error session
 $_SESSION['error'] = '';
-
+if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "false"){
 ?>
 <div id="maarchcmdiv">
     <h3><?php echo _MAARCH_CM_APPLET;?></h3>
@@ -183,3 +181,44 @@ $_SESSION['error'] = '';
         echo _CLOSE;
         ?>" class="button" onclick="destroyModal('CMApplet');"/>
 </p>
+
+<?php 
+}
+
+else if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
+?>
+<div id="maarchcmdiv">
+    <h3><?php echo _MAARCH_CM_APPLET;?></h3>
+    <br><?php echo _DONT_CLOSE;?>
+    <img alt="<?php echo _LOADING;?>" src="<?php echo 
+        $_SESSION['config']['businessappurl'];
+        ?>static.php?filename=loading_big.gif" border="0" alt="" width="200px" height="200px" />
+    <div id="maarchcm_error" class="error"></div>
+    <applet ARCHIVE="<?php 
+            echo $_SESSION['config']['coreurl'];?>modules/content_management/dist/DisCM.jar" 
+        code="discm.DisCM" name="maarchcmapplet" id="maarchcmapplet" 
+        WIDTH="1" HEIGHT="1" version = "1.7">
+        <param name="url" value="<?php 
+            echo $_SESSION['config']['coreurl'].$path;
+        ?>">
+        <param name="objectType" value="<?php echo $objectType;?>">
+        <param name="objectTable" value="<?php echo $objectTable;?>">
+        <param name="objectId" value="<?php echo $objectId;?>">
+        <param name="userMaarch" value="<?php 
+            echo $cMFeatures['CONFIG']['userMaarchOnClient'];
+        ?>">
+        <param name="userMaarchPwd" value="<?php 
+            echo $cMFeatures['CONFIG']['userPwdMaarchOnClient'];
+        ?>">
+        <param name="psExecMode" value="<?php echo $cMFeatures['CONFIG']['psExecMode'];?>">
+        <param name="mayscript" value="mayscript" />
+    </applet>
+</div>
+<p class="buttons">
+    <input type="button" name="cancel" value="<?php 
+        echo _CLOSE;
+        ?>" class="button" onclick="destroyModal('CMApplet');"/>
+</p>
+<?php
+}
+
