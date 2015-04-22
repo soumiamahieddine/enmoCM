@@ -161,7 +161,7 @@ $_SESSION['error_page'] = '';
         $paramsTab['tools'] = array();                                                  //Icones dans la barre d'outils
         $export = array(
             "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
-            "icon"          =>  'file-excel-o',
+            "icon"          =>  'cloud-download',
             "tooltip"       =>  _EXPORT_LIST,
             "disabledRules" =>  count($tab)." == 0"
             );
