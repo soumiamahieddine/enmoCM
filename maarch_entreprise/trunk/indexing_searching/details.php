@@ -814,7 +814,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         ?>
                         <tr class="col">
                             <th align="left" class="picto">
-                                <img alt="<?php echo _STATUS.' : '.$res_status['LABEL'];?>" src="<?php echo $res_status['IMG_SRC'];?>" title="<?php  echo $res_status['LABEL']; ?>" alt="<?php  echo $res_status['LABEL']; ?>"/>
+                                <!--img alt="<?php echo _STATUS.' : '.$res_status['LABEL'];?>" src="<?php echo $res_status['IMG_SRC'];?>" title="<?php  echo $res_status['LABEL']; ?>" alt="<?php  echo $res_status['LABEL']; ?>"/-->
+                                <i class = "fa fa-<?php echo $res_status['IMG_SRC']; ?> fa-2x" alt = "<?php echo $res_status['LABEL'];?>" title = "<?php echo $res_status['LABEL']; ?>"></i>
                             </th>
                             <td align="left" width="200px">
                                 <?php  echo _STATUS; ?> :
