@@ -408,7 +408,8 @@ if($mode == 'normal') {
                 {
                     $tab[$i][$j]["label"]=_STATUS;
                     $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
-                    $tab[$i][$j]['value'] = '<img src = "'.$res_status['IMG_SRC'].'" alt = "'.$res_status['LABEL'].'" title = "'.$res_status['LABEL'].'">';
+                    //$tab[$i][$j]['value'] = '<img src = "'.$res_status['IMG_SRC'].'" alt = "'.$res_status['LABEL'].'" title = "'.$res_status['LABEL'].'">';
+                    $tab[$i][$j]['value'] = "<i class = 'fa fa-".$res_status['IMG_SRC']." fa-2x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
                     $tab[$i][$j]["size"]="5";
                     $tab[$i][$j]["label_align"]="left";
                     $tab[$i][$j]["align"]="left";
