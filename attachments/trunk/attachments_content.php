@@ -912,13 +912,13 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
                     }*/
             $content .= '</select>&nbsp;<span class="red_asterisk" id="templateOffice_mandatory"><i class="fa fa-star"></i></span>';
             $content .= '<label>&nbsp;</label>';
-            $content .= '<input type="button" value="';
+            if(!isset($_REQUEST['id'])){
+				$content .= '<input type="button" value="';
 					$content .= _EDIT_MODEL;
-					if(!isset($_REQUEST['id'])){
-						$content .= '" name="edit" id="edit" style="display:none" class="button" '
+					$content .= '" name="edit" id="edit" style="display:none" class="button" '
 									.'onclick="window.open(\''. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentVersion&objectId=\'+$(\'templateOffice\').value+\'&objectTable='. $objectTable .'&contactId=\'+$(\'contactidAttach\').value+\'&chronoAttachment=\'+$(\'chrono\').value+\'&resMaster='.$_SESSION['doc_id']
 									.'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';            
-					}
+			}
 		$content .= '</p>';
 		$content .= '<br/>';
         $content .= '<p>';
@@ -1019,11 +1019,9 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
                 $content .= '&nbsp;';
                 $content .= '&nbsp;';
                 $content .= '<label>&nbsp;</label>';
-			$content .= '<input type="button" value="';
-					$content .= _EDIT_MODEL;
-
-					if (isset($_REQUEST['id'])) {
-						 
+                if (isset($_REQUEST['id'])) {
+						$content .= '<input type="button" value="';
+						$content .= _EDIT_MODEL;
 						$content .= '" name="edit" id="edit" class="button" onclick="window.open(\''
 										. $_SESSION['config']['businessappurl'] . 'index.php?display=true&module=content_management&page=applet_popup_launcher&objectType=attachmentUpVersion&objectId='.$_REQUEST['id'].'&objectTable=res_view_attachments&resMaster='.$_SESSION['doc_id']
 										.'\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');"/>';
