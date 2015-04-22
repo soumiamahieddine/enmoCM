@@ -240,6 +240,7 @@ class security extends dbquery
                     $navigateur = addslashes($_SERVER['HTTP_USER_AGENT']);
                     $_SESSION['user']['UserId'] = $s_login;
                     $_SESSION['user']['department'] = $array['department'];
+					$_SESSION['user']['thumbprint'] = $array['thumbprint'];
                     $_SESSION['user']['primarygroup'] = $array['primarygroup'];
                     /*echo '<pre>';
                     print_r($_SESSION['user']);
