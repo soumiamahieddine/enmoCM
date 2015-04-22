@@ -308,7 +308,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     											.$data[$key]['show_value']
     										.'</textarea>';
                             }
-						}
+						}  else if ($data[$key]['field_type'] == 'radio') {
+                            for($k=0; $k<count($data[$key]['radio']);$k++) {
+                                $frm_str .= '<input name ="'. $key .'" ';
+                                 if ($data[$key]['value'] == $data[$key]['radio'][$k]['ID']){ 
+                                    $frm_str .= 'checked';
+                                }
+                                $frm_str .= ' type="radio" id="'. $key .'_' . $data[$key]['radio'][$k]['ID'].'" value="'. $data[$key]['radio'][$k]['ID'].'" disabled >'. $data[$key]['radio'][$k]['LABEL'];
+                            }
+                        }
 						
 						if($key == 'type_id'){
 							$_SESSION['category_id_session'] = $data[$key]['value'];
