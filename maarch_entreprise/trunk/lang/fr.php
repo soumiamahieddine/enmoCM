@@ -1768,3 +1768,6 @@ if (!defined('_ADDRESS_MOVED')) define('_ADDRESS_MOVED', 'Adresse d&eacute;plac&
 if (!defined('_SAVE_MODIFICATION')) define( '_SAVE_MODIFICATION', 'Enregistrer les modifications');
 
 if (!defined('_CONFIDENTIALITY')) define( '_CONFIDENTIALITY', 'Courrier confidentiel');
+
+if (!defined('_SIGNATORY_NAME')) define( '_SIGNATORY_NAME', 'Nom du signataire');
+if (!defined('_SIGNATORY_GROUP')) define( '_SIGNATORY_GROUP', 'Groupe du signataire');

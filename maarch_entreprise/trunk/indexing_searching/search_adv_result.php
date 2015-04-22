@@ -170,9 +170,9 @@ if (count($_REQUEST['meta']) > 0) {
             } elseif ($tab_id_fields[$j] == 'chrono' && !empty($_REQUEST['chrono'])) {
                 $json_txt .= " 'chrono' : ['".addslashes(trim($_REQUEST['chrono']))."'],";
                 $chrono = $func->wash($_REQUEST['chrono'],"no",_CHRONO_NUMBER,"no");
-                $where_request .= " lower(alt_identifier) like lower('%".$chrono."%') ";
+                $where_request .= " (lower(alt_identifier) like lower('%".$chrono."%') or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE coll_id = 'letterbox_coll' AND lower(identifier) like lower('%".$chrono."%') )))";
                 $where_request .=" and  ";
-            }
+            } 
             // PRIORITY
             elseif ($tab_id_fields[$j] == 'priority' && !empty($_REQUEST['priority']))
             {
@@ -181,6 +181,23 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " priority = ".$prio." ";
                 $where_request .=" and  ";
             }
+            // SIGNATORY GROUP
+            elseif ($tab_id_fields[$j] == 'signatory_group' && !empty($_REQUEST['signatory_group']))
+            {
+                $json_txt .= " 'signatory_group' : ['".addslashes(trim($_REQUEST['signatory_group']))."'],";
+                $where_request .= " (res_id in (select res_id from listinstance where item_id in (select user_id from usergroup_content where group_id = '".$_REQUEST['signatory_group']."') "
+                        ."and coll_id = '" . $coll_id . "' and item_mode = 'sign' and difflist_type = 'VISA_CIRCUIT')) ";
+                $where_request .=" and  ";
+            }
+
+            // TYPE D'ATTACHEMENT
+            elseif ($tab_id_fields[$j] == 'attachment_types' && !empty($_REQUEST['attachment_types']))
+            {
+                $json_txt .= " 'attachment_types' : ['".addslashes(trim($_REQUEST['attachment_types']))."'],";
+                $where_request .= " (res_id in (SELECT res_id_master FROM res_view_attachments WHERE attachment_type = '".$_REQUEST['attachment_types']."') )";
+                $where_request .=" and  ";
+            }
+
             // PROCESS NOTES
             elseif ($tab_id_fields[$j] == 'process_notes' && !empty($_REQUEST['process_notes']))
             {
@@ -304,7 +321,8 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'subject' && !empty($_REQUEST['subject']))
             {
                 $json_txt .= " 'subject' : ['".addslashes(trim($_REQUEST['subject']))."'],";
-                $where_request .= " lower(subject) like lower('%".$func->protect_string_db($_REQUEST['subject'])."%') and ";
+                $where_request .= " (lower(subject) like lower('%".$func->protect_string_db($_REQUEST['subject'])."%') "
+                    ."or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE coll_id = 'letterbox_coll' AND lower(title) like lower('%".$func->protect_string_db($_REQUEST['subject'])."%') ))) and ";
             } elseif ($tab_id_fields[$j] == 'fulltext' && !empty($_REQUEST['fulltext'])
             ) {
 
@@ -502,6 +520,32 @@ if (count($_REQUEST['meta']) > 0) {
             {
                 $json_txt .= "'mail_nature' : ['".addslashes(trim($_REQUEST['mail_nature']))."'],";
                 $where_request .= " nature_id = '".$func->protect_string_db($_REQUEST['mail_nature'])."' and ";
+            }
+            // CREATION DATE PJ : FROM
+            elseif ($tab_id_fields[$j] == 'creation_date_pj_from' && !empty($_REQUEST['creation_date_pj_from']))
+            {
+                if ( preg_match($_ENV['date_pattern'],$_REQUEST['creation_date_pj_from'])==false )
+                {
+                    $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['creation_date_pj_from'];
+                }
+                else
+                {
+                    $where_request .= " res_id in (SELECT res_id_master FROM res_view_attachments WHERE (".$req->extract_date("creation_date")." >= '".$func->format_date_db($_REQUEST['creation_date_pj_from'])."') ) and ";
+                    $json_txt .= " 'creation_date_pj_from' : ['".trim($_REQUEST['creation_date_pj_from'])."'],";
+                }
+            }
+            // CREATION DATE PJ : TO
+            elseif ($tab_id_fields[$j] == 'creation_date_pj_to' && !empty($_REQUEST['creation_date_pj_to']))
+            {
+                if ( preg_match($_ENV['date_pattern'],$_REQUEST['creation_date_pj_to'])==false )
+                {
+                    $_SESSION['error'] .= _WRONG_DATE_FORMAT.' : '.$_REQUEST['creation_date_pj_to'];
+                }
+                else
+                {
+                    $where_request .= " res_id in (SELECT res_id_master FROM res_view_attachments WHERE (".$req->extract_date("creation_date")." <= '".$func->format_date_db($_REQUEST['creation_date_pj_to'])."') )and ";
+                    $json_txt .= " 'creation_date_pj_to' : ['".trim($_REQUEST['creation_date_pj_to'])."'],";
+                }
             }
             // CREATION DATE : FROM
             elseif ($tab_id_fields[$j] == 'creation_date_from' && !empty($_REQUEST['creation_date_from']))
@@ -722,96 +766,55 @@ if (count($_REQUEST['meta']) > 0) {
             elseif ($tab_id_fields[$j] == 'contactid' && !empty($_REQUEST['contactid_external']))
             {
                 $json_txt .= " 'contactid_external' : ['".addslashes(trim($_REQUEST['contactid_external']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
-                //$where_request .= "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
-                // $contactTmp = str_replace(')', '', substr($_REQUEST['contactid'], strrpos($_REQUEST['contactid'],'(')+1));
-                // $find1 = strpos($contactTmp, ':');
-                // $find2 =  $find1 + 1;
-                // $contact_type = substr($contactTmp, 0, $find1);
-                // $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
-                // if ($contact_type == "user")
-                // {
-                //     $where_request .= " (exp_user_id = '".$contact_id."' or dest_user_id = '".$contact_id."') and ";
-                // }
-                // elseif ($contact_type == "contact")
-                // {
                     $contact_id = $_REQUEST['contactid_external'];
 					$where_request .= " (res_id in (select res_id from contacts_res where contact_id = '".$contact_id."' and coll_id = '" . $coll_id . "') or ";
-                    $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."')) and ";
-                // }
+                    $where_request .= " (exp_contact_id = '".$contact_id."' or dest_contact_id = '".$contact_id."') or (res_id in (SELECT res_id_master FROM res_view_attachments WHERE dest_contact_id = ".$contact_id.") )) and ";
             }
             //recherche sur les contacts externes en fonction de ce que la personne a saisi
             elseif ($tab_id_fields[$j] == 'contactid' && empty($_REQUEST['contactid_external']) && !empty($_REQUEST['contactid']))
             {
                 $json_txt .= " 'contactid_external' : ['".addslashes(trim($_REQUEST['contactid_external']))."'], 'contactid' : ['".addslashes(trim($_REQUEST['contactid']))."'],";
-                //$where_request .= "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
-                // $contactTmp = str_replace(')', '', substr($_REQUEST['contactid'], strrpos($_REQUEST['contactid'],'(')+1));
-                // $find1 = strpos($contactTmp, ':');
-                // $find2 =  $find1 + 1;
-                // $contact_type = substr($contactTmp, 0, $find1);
-                // $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
-                // if ($contact_type == "user")
-                // {
-                //     $where_request .= " (exp_user_id = '".$contact_id."' or dest_user_id = '".$contact_id."') and ";
-                // }
-                // elseif ($contact_type == "contact")
-                // {
                     $contact_id = pg_escape_string($_REQUEST['contactid']);
-                    $where_request .= "contact_id in (select contact_id from view_contacts where society ilike '%".$contact_id."%' or contact_firstname ilike '%".$contact_id."%' or contact_lastname ilike '%".$contact_id."%') and ";
-                    
-                // }
+                    $where_request .= " (contact_id in (select contact_id from view_contacts where society ilike '%".$contact_id."%' or contact_firstname ilike '%".$contact_id."%' or contact_lastname ilike '%".$contact_id."%') ".
+                        " or res_id in (SELECT res_id_master FROM res_view_attachments WHERE dest_contact_id in (select contact_id from view_contacts where society ilike '%".$contact_id."%' or contact_firstname ilike '%".$contact_id."%' or contact_lastname ilike '%".$contact_id."%') ) ) and ";
             }
             elseif ($tab_id_fields[$j] == 'addresses_id' && !empty($_REQUEST['addresses_id']))
             {
                 $json_txt .= " 'addresses_id' : ['".addslashes(trim($_REQUEST['addresses_id']))."'], 'addresses_id' : ['".addslashes(trim($_REQUEST['addresses_id']))."'],";
-                //$where_request .= "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
-                // $contactTmp = str_replace(')', '', substr($_REQUEST['contactid'], strrpos($_REQUEST['contactid'],'(')+1));
-                // $find1 = strpos($contactTmp, ':');
-                // $find2 =  $find1 + 1;
-                // $contact_type = substr($contactTmp, 0, $find1);
-                // $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
-                // if ($contact_type == "user")
-                // {
-                //     $where_request .= " (exp_user_id = '".$contact_id."' or dest_user_id = '".$contact_id."') and ";
-                // }
-                // elseif ($contact_type == "contact")
-                // {
                     $addresses_id = $_REQUEST['addresses_id'];
                     $where_request .= " address_id in (select ca_id from view_contacts where lastname ilike '%".$addresses_id."%' or firstname ilike '%".$addresses_id."%' ) and ";
-                // }
             }
             // CONTACTS INTERNAL
             elseif ($tab_id_fields[$j] == 'contactid_internal' && !empty($_REQUEST['contact_internal_id']))
             {
                 $json_txt .= " 'contactid_internal' : ['".addslashes(trim($_REQUEST['contactid_internal']))."'], 'contact_internal_id' : ['".addslashes(trim($_REQUEST['contact_internal_id']))."']";
-                //$where_request .= "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
-/*                $contactTmp = str_replace(')', '', substr($_REQUEST['contactid_internal'], strrpos($_REQUEST['contactid_internal'],'(')+1));
-                $find1 = strpos($contactTmp, ':');
-                $find2 =  $find1 + 1;
-                $contact_type = substr($contactTmp, 0, $find1);
-                $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
-                if ($contact_type == "user")
-                {*/
                 	$contact_id = $_REQUEST['contact_internal_id'];
                     $where_request .= " ((exp_user_id = '".$contact_id."' or dest_user_id = '".$contact_id."') or ";
                     $where_request .= " (res_id in (select res_id from contacts_res where contact_id = '".$contact_id."' and coll_id = '" . $coll_id . "'))) and ";
-                //}
             }
             //recherche sur les contacts internes en fonction de ce que la personne a saisi
             elseif ($tab_id_fields[$j] == 'contactid_internal' && empty($_REQUEST['contact_internal_id']) && !empty($_REQUEST['contactid_internal']))
             {
                 $json_txt .= " 'contactid_internal' : ['".addslashes(trim($_REQUEST['contactid_internal']))."'], 'contact_internal_id' : ['".addslashes(trim($_REQUEST['contactid_internal']))."']";
-                //$where_request .= "res_id = ".$func->wash($_REQUEST['numged'], "num", _N_GED,"no")." and ";
-/*                $contactTmp = str_replace(')', '', substr($_REQUEST['contactid_internal'], strrpos($_REQUEST['contactid_internal'],'(')+1));
-                $find1 = strpos($contactTmp, ':');
-                $find2 =  $find1 + 1;
-                $contact_type = substr($contactTmp, 0, $find1);
-                $contact_id = substr($contactTmp, $find2, strlen($contactTmp));
-                if ($contact_type == "user")
-                {*/
                     $contactid_internal = pg_escape_string($_REQUEST['contactid_internal']);
                     //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
                     $where_request .= " (exp_user_id in (select user_id from users where firstname ilike '%".$contactid_internal."%' or lastname ilike '%".$contactid_internal."%' )) and ";
-                //}
+            }
+            // Nom du signataire
+            elseif ($tab_id_fields[$j] == 'signatory_name' && !empty($_REQUEST['signatory_name_id']))
+            {
+                $json_txt .= " 'signatory_name' : ['".addslashes(trim($_REQUEST['signatory_name']))."'], 'signatory_name_id' : ['".addslashes(trim($_REQUEST['signatory_name_id']))."']";
+                    $signatory_name = $_REQUEST['signatory_name_id'];
+                    $where_request .= " (res_id in (select res_id from listinstance where item_id = '".$signatory_name."' and coll_id = '" . $coll_id . "' and item_mode = 'sign' and difflist_type = 'VISA_CIRCUIT')) and ";
+            }
+            //recherche sur les signataires en fonction de ce que la personne a saisi
+            elseif ($tab_id_fields[$j] == 'signatory_name' && empty($_REQUEST['signatory_name_id']) && !empty($_REQUEST['signatory_name']))
+            {
+                $json_txt .= " 'signatory_name' : ['".addslashes(trim($_REQUEST['signatory_name']))."']";
+                    $signatory_name = pg_escape_string($_REQUEST['signatory_name']);
+                    //$where_request .= " ((user_firstname = '".$contactid_internal."' or user_lastname = '".$contactid_internal."') or ";
+                    $where_request .= " (res_id in (select res_id from listinstance where item_id in (select user_id from users where firstname ilike '%".$signatory_name."%' or lastname ilike '%".$signatory_name."%') "
+                        ."and coll_id = '" . $coll_id . "' and item_mode = 'sign' and difflist_type = 'VISA_CIRCUIT')) and ";
             }
             // SEARCH IN BASKETS
             else if ($tab_id_fields[$j] == 'baskets_clause' && !empty($_REQUEST['baskets_clause'])) {

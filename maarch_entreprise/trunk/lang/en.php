@@ -1392,3 +1392,10 @@ if(!defined('_TAG_ADMIN')) define('_TAG_ADMIN', 'Tag Admin');
 if (!defined('_CONTACT_CHECK'))  define('_CONTACT_CHECK', 'A lest one mail was recently affected to the same contact.');
 
 if (!defined('_DESCRIPTION')) define('_DESCRIPTION', 'Description');
+
+if (!defined('_SAVE_MODIFICATION')) define( '_SAVE_MODIFICATION', 'Save modifications');
+
+if (!defined('_CONFIDENTIALITY')) define( '_CONFIDENTIALITY', 'Confidential mail');
+
+if (!defined('_SIGNATORY_NAME')) define( '_SIGNATORY_NAME', 'Signatory name');
+if (!defined('_SIGNATORY_GROUP')) define( '_SIGNATORY_GROUP', 'Signatory group');

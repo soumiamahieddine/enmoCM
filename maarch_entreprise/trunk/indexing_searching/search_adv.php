@@ -32,6 +32,7 @@
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
+require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."usergroups_controler.php");
 require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_indexing_searching_app.php");
 require_once('apps'.DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR."class_types.php");
 $core_tools = new core_tools();
@@ -205,6 +206,10 @@ $param['doc_date'] = $arr_tmp2;
 $arr_tmp2 = array('label' => _LIMIT_DATE_PROCESS, 'type' => 'date_range', 'param' => array('field_label' => _LIMIT_DATE_PROCESS, 'id1' => 'process_limit_date_from', 'id2' =>'process_limit_date_to'));
 $param['process_limit_date'] = $arr_tmp2;
 
+//Creation date pj
+$arr_tmp2 = array('label' => "("._PJ.") " . _CREATION_DATE, 'type' => 'date_range', 'param' => array('field_label' => "("._PJ.") " . _CREATION_DATE, 'id1' => 'creation_date_pj_from', 'id2' =>'creation_date_pj_to'));
+$param['creation_date_pj'] = $arr_tmp2;
+
 //destinataire
 $arr_tmp = array();
 for($i=0; $i < count($users_list); $i++)
@@ -232,6 +237,16 @@ foreach(array_keys($_SESSION['mail_priorities']) as $priority)
 }
 $arr_tmp2 = array('label' => _PRIORITY, 'type' => 'select_simple', 'param' => array('field_label' => _MAIL_PRIORITY,'default_label' => addslashes(_CHOOSE_PRIORITY), 'options' => $arr_tmp));
 $param['priority'] = $arr_tmp2;
+
+//Type de pièce jointe
+$arr_tmp = array();
+foreach(array_keys($_SESSION['attachment_types']) as $attachment_types)
+{
+    array_push($arr_tmp, array('VALUE' => $attachment_types, 'LABEL' => $_SESSION['attachment_types'][$attachment_types]));
+}
+$arr_tmp2 = array('label' => "("._PJ.") "._ATTACHMENT_TYPES, 'type' => 'select_simple', 'param' => array('field_label' => "("._PJ.") "._ATTACHMENT_TYPES,'default_label' => addslashes(_CHOOSE_ATTACHMENT_TYPE), 'options' => $arr_tmp));
+$param['attachment_types'] = $arr_tmp2;
+
 
 // dest
 /*$arr_tmp2 = array('label' => _DEST, 'type' => 'input_text', 'param' => array('field_label' => _DEST, 'other' => $size));
@@ -315,7 +330,7 @@ $arr_tmp2 = array('label' => _PROCESS_NOTES, 'type' => 'textarea', 'param' => ar
 $param['process_notes'] = $arr_tmp2;
 
 // chrono
-$arr_tmp2 = array('label' => _CHRONO_NUMBER, 'type' => 'input_text', 'param' => array('field_label' => _CHRONO_NUMBER, 'other' => $size));
+$arr_tmp2 = array('label' => _CHRONO_NUMBER, 'type' => 'input_text', 'param' => array('field_label' => _CHRONO_NUMBER.' <span class="red_asterisk" ><i class="fa fa-star" style="vertical-align:50%"></i></span>', 'other' => $size));
 $param['chrono'] = $arr_tmp2;
 
 // identifier
@@ -386,6 +401,24 @@ foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $cat_id) 
 }
 $arr_tmp2 = array('label' => _CATEGORY, 'type' => 'select_simple', 'param' => array('field_label' => _CATEGORY,'default_label' => '', 'options' => $arr_tmp));
 $param['category'] = $arr_tmp2;//Arbox_id ; for physical_archive
+
+$usergroups_controler = new usergroups_controler();
+$array_groups = $usergroups_controler->getAllUsergroups("", false);
+
+//signatory group
+$arr_tmp = array();
+for($iGroups=0; $iGroups< count($array_groups);$iGroups++) {
+    array_push($arr_tmp, array('VALUE' => $array_groups[$iGroups]->group_id, 'LABEL' => $array_groups[$iGroups]->group_desc));
+}
+$arr_tmp2 = array('label' => _SIGNATORY_GROUP, 'type' => 'select_simple', 'param' => array('field_label' => _SIGNATORY_GROUP,'default_label' => addslashes(_CHOOSE_GROUP), 'options' => $arr_tmp));
+$param['signatory_group'] = $arr_tmp2;
+
+// signatory name
+$arr_tmp2 = array('label' => _SIGNATORY_NAME, 'type' => 'input_text', 'param' => array('field_label' => _SIGNATORY_NAME, 'other' => $size));
+$param['signatory_name'] = $arr_tmp2;
+
+
+//Arbox_id ; for physical_archive
 if ($core_tools->is_module_loaded('physical_archive') == true)
 {
     //arbox_id
@@ -624,7 +657,7 @@ if(isset($_REQUEST['nodetails']))
                 <tr>
                     <td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT;?>:</label>
                         <input type="text" name="subject" id="subject" <?php echo $size; ?>  />
-                        <input type="hidden" name="meta[]" value="subject#subject#input_text" />
+                        <input type="hidden" name="meta[]" value="subject#subject#input_text" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
                     </td>
                     <td><em><?php echo _MAIL_OBJECT_HELP; ?></em></td>
                 </tr>
@@ -653,7 +686,7 @@ if(isset($_REQUEST['nodetails']))
                 <tr>
                     <td width="70%"><label for="contactid" class="bold"><?php echo _CONTACT_EXTERNAL;?>:</label>
                         <input type="text" name="contactid" id="contactid" onkeyup="erase_contact_external_id('contactid', 'contactid_external');"/>
-                        <input type="hidden" name="meta[]" value="contactid#contactid#input_text" />
+                        <input type="hidden" name="meta[]" value="contactid#contactid#input_text" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
                         <div id="contactListByName" class="autocomplete"></div>
                         <script type="text/javascript">
                             initList_hidden_input('contactid', 'contactListByName', '<?php 
@@ -679,6 +712,9 @@ if(isset($_REQUEST['nodetails']))
             </table>
             </div>
         </td>
+    </tr>
+    <tr>
+        <td><span class="red_asterisk"><i class="fa fa-star" style="vertical-align:50%"></i></span> indique que la recherche se fait sur les courriers et les pi&egrave;ces jointes.</td>
     </tr>
     <tr><td colspan="2"><hr/></td></tr>
 <tr>
@@ -733,4 +769,3 @@ load_query(valeurs, loaded_query, 'parameters_tab', '<?php echo $browser_ie;?>, 
     }
     echo '</body></html>';
 }
-
