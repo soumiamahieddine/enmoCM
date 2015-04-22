@@ -383,6 +383,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 'img_arbox_id' => true,
                 'img_folder' => true,
                 'img_contact' => true,
+                'img_confidentiality' => true,
                 );
 
             $res = $db->fetch_object();

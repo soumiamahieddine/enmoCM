@@ -187,6 +187,20 @@ $_ENV['categories']['incoming']['other_cases']['contact'] = array (
     'modify' => false
 );
 
+$_ENV['categories']['incoming']['confidentiality'] = array (
+    'type_form' => 'radio',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _CONFIDENTIALITY,
+    'table' => 'res',
+    'values' => array (
+        'Y',
+        'N'
+    ),
+    'img' => 'exclamation-triangle',
+    'modify' => false,
+);
+
 ///////////////////////////// OUTGOING ////////////////////////////////////////////////
 $_ENV['categories']['outgoing'] = array ();
 $_ENV['categories']['outgoing']['img_cat'] = '<i class="fa fa-arrow-left fa-2x"></i>';
@@ -302,6 +316,19 @@ $_ENV['categories']['outgoing']['other_cases']['contact'] = array (
     'special' => 'dest_user_id,dest_contact_id,is_multicontacts',
     'img' => 'book',
     'modify' => false
+);
+$_ENV['categories']['outgoing']['confidentiality'] = array (
+    'type_form' => 'radio',
+    'type_field' => 'string',
+    'mandatory' => false,
+    'label' => _CONFIDENTIALITY,
+    'table' => 'res',
+    'values' => array (
+        'Y',
+        'N'
+    ),
+    'img' => 'exclamation-triangle',
+    'modify' => false,
 );
 
 ///////////////////////////// INTERNAL ////////////////////////////////////////////////
@@ -918,6 +945,37 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
         }
     }
     // Special cases :  fields are put in a string to make a query
+        // Special cases :  fields are put in a string to make a query
+    //confidentiality
+    if (isset ($_ENV['categories'][$cat_id]['confidentiality']) && count($_ENV['categories'][$cat_id]['confidentiality']) > 0 )
+    {
+        $data['confidentiality'] = array (
+                    /*  'value' => '',
+                  'show_value' => '',
+                    'label' => $_ENV['categories'][$cat_id]['other_cases']['process_limit_date']['label'],
+                    'display' => 'textinput',*/
+                    'img' => $_ENV['categories'][$cat_id]['confidentiality']['img'],
+                    'modify' => true,
+                    'label' => $_ENV['categories'][$cat_id]['confidentiality']['label'],
+                    'form_show' => 'radio',
+                    'field_type' => 'radio',
+                    'readonly' => true
+                );
+                
+        // ajout du test suivant pour permettre de rendre le champs non modifiable
+        if ($mode == 'form' && $_ENV['categories'][$cat_id]['confidentiality']['modify']) {
+                $data['confidentiality']['readonly'] = false;
+        }
+         $data['confidentiality']['radio'] = array();
+         array_push($data['confidentiality']['radio'], array (
+                'ID' => 'Y',
+                'LABEL' => _YES
+        ));
+         array_push($data['confidentiality']['radio'], array (
+                'ID' => 'N',
+                'LABEL' => _NO
+        ));
+    }
     // Process limit date
     if (isset ($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']) && count($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']) > 0 && (!isset ($params['show_process_limit_date']) || $params['show_process_limit_date'] == true)) {
         $fields .= 'process_limit_date,';

@@ -1766,3 +1766,5 @@ if (!defined('_REALLY_MOVE')) define('_REALLY_MOVE', 'Voulez-vous vraiment d&eac
 if (!defined('_ADDRESS_MOVED')) define('_ADDRESS_MOVED', 'Adresse d&eacute;plac&eacute;e');
 
 if (!defined('_SAVE_MODIFICATION')) define( '_SAVE_MODIFICATION', 'Enregistrer les modifications');
+
+if (!defined('_CONFIDENTIALITY')) define( '_CONFIDENTIALITY', 'Courrier confidentiel');

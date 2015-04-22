@@ -444,7 +444,22 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             $frm_str .='</select></td>';
                             $frm_str .= '<td><span class="red_asterisk" id="priority_mandatory" style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
                   $frm_str .= '</tr>';
-                  
+
+                  /*** Confidentiality ***/
+                    $frm_str .= '<tr id="confidentiality_tr" style="display:' . $display_value
+                            . ';">';
+                    $frm_str .= '<td><label for="confidentiality" class="form_title" >'
+                            . _CONFIDENTIALITY . ' </label></td>';
+                    $frm_str .= '<td>&nbsp;</td>';
+                    $frm_str .= '<td class="indexing_field"><input type="radio" '
+                            . 'name="confidentiality" id="confidential" value="Y" />'
+                            . _YES . ' <input type="radio" name="confidentiality" id="no_confidential"'
+                            . ' value="N" checked="checked" />'
+                            . _NO . '</td>';
+                    $frm_str .= ' <td><span class="red_asterisk" id="confidentiality_mandatory" '
+                            . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span>&nbsp;</td>';
+                    $frm_str .= '</tr>';
+
                   /*** Doc date ***/
                    $frm_str .= '<tr id="doc_date_tr" style="display:'.$display_value.';">';
                         $frm_str .='<td class="indexing_label"><label for="doc_date" class="form_title" id="mail_date_label" style="display:inline;" >'._MAIL_DATE.'</label><label for="doc_date" class="form_title" id="doc_date_label" style="display:none;" >'._DOC_DATE.'</label></td>';
@@ -1330,6 +1345,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             }
             $frm_str .= ');';
         }
+        if ($data['confidentiality'] == 'Y') {
+            $frm_str .='$(\'confidential\').checked=true;';
+        } else if ($data['confidentiality'] == 'N') {           
+            $frm_str .='$(\'no_confidential\').checked=true;';
+        }
+
         if ($data['type_contact'] == 'internal') {
             $frm_str .='$(\'type_contact_internal\').checked=true;';
         } else if ($data['type_contact'] == 'external') {           
@@ -1791,13 +1812,15 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     }
     $query_res .=  $type->get_sql_update($type_id, $coll_id, $val_indexes);
 
+    // Confidentiality
+    $confidentiality_yes = get_value_fields($values_form, 'confidential');
 
-
-
-
-
-
-
+    if (!empty($confidentiality_yes)) {
+        $query_res .= ", confidentiality = '" . $confidentiality_yes . "'";
+    } else {
+        $confidentiality_no = get_value_fields($values_form, 'no_confidential');
+        $query_res .= ", confidentiality = '" . $confidentiality_no . "'";
+    }
 
     // Process limit Date
     if(isset($_ENV['categories'][$cat_id]['other_cases']['process_limit_date']))

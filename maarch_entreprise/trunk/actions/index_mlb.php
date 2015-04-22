@@ -482,6 +482,22 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td><span class="red_asterisk" id="priority_mandatory" '
             . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span></td>';
     $frmStr .= '</tr>';
+
+    /*** Confidentiality ***/
+    $frmStr .= '<tr id="confidentiality_tr" style="display:' . $displayValue
+            . ';">';
+    $frmStr .= '<td><label for="confidentiality" class="form_title" >'
+            . _CONFIDENTIALITY . ' </label></td>';
+    $frmStr .= '<td>&nbsp;</td>';
+    $frmStr .= '<td class="indexing_field"><input type="radio" '
+            . 'name="confidentiality" id="confidential" value="Y" />'
+            . _YES . ' <input type="radio" name="confidentiality" id="no_confidential"'
+            . ' value="N" checked="checked" />'
+            . _NO . '</td>';
+    $frmStr .= ' <td><span class="red_asterisk" id="confidentiality_mandatory" '
+            . 'style="display:inline;vertical-align:text-top"><i class="fa fa-star"></i></span>&nbsp;</td>';
+    $frmStr .= '</tr>';
+
     /*** Doc date ***/
     $frmStr .= '<tr id="doc_date_tr" style="display:' . $displayValue . ';">';
     $frmStr .= '<td><label for="doc_date" class="form_title" '
@@ -1579,6 +1595,30 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
             )
         );
     }
+
+    $confidentiality_yes = get_value_fields($formValues, 'confidential');
+
+    if (!empty($confidentiality_yes)) {
+        array_push(
+            $_SESSION['data'],
+            array(
+                'column' => 'confidentiality',
+                'value' => $confidentiality_yes,
+                'type' => 'string',
+            )
+        );
+    } else {
+        $confidentiality_no = get_value_fields($formValues, 'no_confidential');
+        array_push(
+            $_SESSION['data'],
+            array(
+                'column' => 'confidentiality',
+                'value' => $confidentiality_no,
+                'type' => 'string',
+            )
+        );
+    }
+
     //store the initiator entity
     if (isset($_SESSION['user']['primaryentity']['id'])) {
         array_push(
