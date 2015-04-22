@@ -350,6 +350,13 @@ usort($arr_tmp, "cmp_status");
 $arr_tmp2 = array('label' => _STATUS_PLUR, 'type' => 'select_multiple', 'param' => array('field_label' => _STATUS,'label_title' => _CHOOSE_STATUS_SEARCH_TITLE,'id' => 'status',  'options' => $arr_tmp));
 $param['status'] = $arr_tmp2;
 
+//confidentifality
+$arr_tmp = array();
+array_push($arr_tmp,  array('VALUE'=> 'Y', 'LABEL' =>_YES));
+array_push($arr_tmp,  array('VALUE'=> 'N', 'LABEL' =>_NO));
+$arr_tmp2 = array('label' => _CONFIDENTIALITY, 'type' => 'select_simple', 'param' => array('field_label' => _CONFIDENTIALITY,'id' => 'confidentiality',  'options' => $arr_tmp));
+$param['confidentiality'] = $arr_tmp2;
+
 //doc_type
 $conn->query("select type_id, description  from  " 
     . $_SESSION['tablename']['doctypes'] . " where enabled = 'Y' and coll_id = '" 

@@ -440,6 +440,12 @@ if (count($_REQUEST['meta']) > 0) {
                 $json_txt .= " 'priority' : ['".addslashes(trim($_REQUEST['priority']))."'],";
                 $where_request .= " priority  = ".$_REQUEST['priority']." and ";
             }
+            // CONFIDENTIALITY
+            elseif ($tab_id_fields[$j] == 'confidentiality' && ($_REQUEST['confidentiality'] <> ""))
+            {
+                $json_txt .= " 'confidentiality' : ['".addslashes(trim($_REQUEST['confidentiality']))."'],";
+                $where_request .= " confidentiality  = '".$_REQUEST['confidentiality']."' and ";
+            }
             // DOCTYPES
             elseif ($tab_id_fields[$j] == 'doctypes_chosen' && !empty($_REQUEST['doctypes_chosen']))
             {
