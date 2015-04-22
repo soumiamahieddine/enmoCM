@@ -81,7 +81,9 @@ function randomColor($lastColor)
 echo '<h1><i class="fa fa-magic fa-2x"></i>&nbsp;' 
         . _MANAGE_DUPLICATES 
     . '</h1>';
-echo '<center>';
+
+echo '<div id="inner_content">';
+echo '<div class="block" style="text-align:center;">';
 //TODO: ENABLE THIS FUNCTION FOR ALL COLLECTION USING CONTACTS
 
 //update NULL to ''
@@ -96,7 +98,7 @@ $selectDuplicatesBySociety = "SELECT contact_id, user_id, society, lower(society
     . "SELECT lower(society) FROM contacts_v2 GROUP BY lower(society), user_id "
     . "     HAVING Count(lower(society)) > 1 and lower(society) <> '' ) "
     . "order by lower(society)";
-$htmlTabSoc = '<table>';
+$htmlTabSoc = '<table style="width:100%;">';
 $htmlTabSoc .= '<CAPTION>' . _DUPLICATES_BY_SOCIETY . '</CAPTION>';
 $htmlTabSoc .= '<tr>';
 $htmlTabSoc .= '<th>&nbsp;</th>';
@@ -142,8 +144,7 @@ while($lineDoublSoc = $db->fetch_object()) {
         }
         $corporatePeople = ($lineDoublSoc->is_corporate_person == "Y")? _YES : _NO;
         $socCompare = $lineDoublSoc->lowsoc;
-        $htmlTabSoc .= '<tr style="background-color: ' 
-            . $colorToUse . ';" id="tr_' . $lineDoublSoc->contact_id . '">';
+        $htmlTabSoc .= '<tr style="background-color: #ffffff;" id="tr_' . $lineDoublSoc->contact_id . '">';
         $htmlTabSoc .= '<td><img src="'
             . $_SESSION['config']['businessappurl']
             . 'static.php?filename=view_folder.gif" title="'
@@ -308,8 +309,10 @@ while($lineDoublName = $db->fetch_object()) {
 //$func->show_array($tabName);
 $htmlTabName .= '</table>';
 if ($cptName == 0) {
+    echo '<hr/>'; 
     echo _NO_NAME_DUPLICATES . '<br>';
 } else {
     echo $htmlTabName;
 }
-echo '</center>';
+echo '</div>';
+echo '</div>';
