@@ -608,8 +608,12 @@ class contacts_v2 extends dbquery
                     <tr id="lastname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
                         <td><label for="lastname"><?php echo _LASTNAME; ?> : </label></td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input name="lastname" type="text" id="lastname" value="<?php if(isset($_SESSION['m_admin']['contact']['LASTNAME'])){ echo $func->show_str($_SESSION['m_admin']['contact']['LASTNAME']);} ?>"/></td>
+                        <td class="indexing_field"><input name="lastname" type="text" onfocus="$('rule_lastname').style.display='table-row'" onblur="$('rule_lastname').style.display='none';" id="lastname" value="<?php if(isset($_SESSION['m_admin']['contact']['LASTNAME'])){ echo $func->show_str($_SESSION['m_admin']['contact']['LASTNAME']);} ?>"/></td>
                         <td><span id="lastname_mandatory" class="red_asterisk" style="visibility:none;"><i class="fa fa-star"></i></span></td>
+                        <td>&nbsp;</td>
+                        <tr style="display:none;" id="rule_lastname">
+                            <td colspan="3" align="right"><i><?php echo _WRITE_IN_UPPER; ?></i></td>
+                        </tr>
                     </tr>
                     <tr id="firstname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){ echo 'none';}else{ echo $display_value;}?>">
                         <td><label for="firstname"><?php echo _FIRSTNAME; ?> : </label></td>
@@ -1309,9 +1313,14 @@ class contacts_v2 extends dbquery
                         <tr id="departement_p">
                             <td><label for="departement"><?php echo _SERVICE; ?>&nbsp;: </label></td>
                             <td>&nbsp;</td>
-                            <td class="indexing_field"><input name="departement" type="text"  id="departement" value="<?php if(isset($_SESSION['m_admin']['address']['DEPARTEMENT'])){ echo $func->show_str($_SESSION['m_admin']['address']['DEPARTEMENT']);} ?>"/></td>
+                            <td class="indexing_field"><input name="departement" type="text" onkeyup="this.value=this.value.toUpperCase()" onfocus="$('rule_departement').style.display='table-row'" onblur="$('rule_departement').style.display='none';" id="departement" style="text-transformvalue="<?php if(isset($_SESSION['m_admin']['address']['DEPARTEMENT'])){ echo $func->show_str($_SESSION['m_admin']['address']['DEPARTEMENT']);} ?>"/></td>
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
+                            <td>&nbsp;</td>
+							<tr style="display:none;" id="rule_departement">
+								<td colspan="3" align="right"><i><?php echo _WRITE_IN_UPPER; ?></i></td>
+							</tr>
                         </tr>
+                        
                         <tr id="title_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ echo $display_value;}?>">
                             <td><label for="title"><?php echo _TITLE2; ?>&nbsp;: </label></td>
                             <td>&nbsp;</td>
@@ -1338,7 +1347,7 @@ class contacts_v2 extends dbquery
                         <tr id="lastname_p" style="display:<?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){ echo 'none';}else{ echo $display_value;}?>">
                             <td><label for="lastname"><?php echo _LASTNAME; ?> : </label></td>
                             <td>&nbsp;</td>
-                            <td class="indexing_field"><input name="lastname" type="text" onfocus="$('rule_lastname').style.display='table-row'" onblur="$('rule_lastname').style.display='none';" id="lastname" value="<?php if(isset($_SESSION['m_admin']['address']['LASTNAME'])){ echo $func->show_str($_SESSION['m_admin']['address']['LASTNAME']);} ?>"/></td>
+                            <td class="indexing_field"><input name="lastname" type="text" onkeyup="this.value=this.value.toUpperCase()" onfocus="$('rule_lastname').style.display='table-row'" onblur="$('rule_lastname').style.display='none';" id="lastname" value="<?php if(isset($_SESSION['m_admin']['address']['LASTNAME'])){ echo $func->show_str($_SESSION['m_admin']['address']['LASTNAME']);} ?>"/></td>
                             <td>&nbsp;</td>
                         </tr>
                         <tr style="display:none;" id="rule_lastname">
