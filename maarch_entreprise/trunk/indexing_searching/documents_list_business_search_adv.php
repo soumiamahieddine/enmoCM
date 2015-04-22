@@ -629,7 +629,7 @@ if (count($tab) > 0) {
         if($exportTool) { 
             $export = array(
                     "script"        =>  "window.open('".$_SESSION['config']['businessappurl']."index.php?display=true&page=export', '_blank');",
-                    "icon"          =>  'file-excel-o',
+                    "icon"          =>  'cloud-download',
                     "tooltip"       =>  _EXPORT_LIST,
                     "disabledRules" =>  count($tab)." == 0"
                     );
