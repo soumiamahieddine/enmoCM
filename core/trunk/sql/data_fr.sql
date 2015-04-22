@@ -89,37 +89,37 @@ INSERT INTO parameters (id, param_value_string, param_value_int, param_value_dat
 ------------------
 --CONTACTS_TYPES--
 ------------------
-INSERT INTO contact_types VALUES (100, 'Particuliers');
-INSERT INTO contact_types VALUES (101, 'Gouvernement');
-INSERT INTO contact_types VALUES (102, 'Collectivités territoriales');
-INSERT INTO contact_types VALUES (103, 'Associations');
-INSERT INTO contact_types VALUES (104, 'Entreprises');
-INSERT INTO contact_types VALUES (105, 'Autorités juridictionnelles');
-INSERT INTO contact_types VALUES (106, 'Organisations syndicales');
+INSERT INTO contact_types VALUES (10, 'Particuliers');
+INSERT INTO contact_types VALUES (20, 'Gouvernement');
+INSERT INTO contact_types VALUES (30, 'Collectivités territoriales');
+INSERT INTO contact_types VALUES (40, 'Associations');
+INSERT INTO contact_types VALUES (50, 'Entreprises');
+INSERT INTO contact_types VALUES (60, 'Autorités juridictionnelles');
+INSERT INTO contact_types VALUES (70, 'Organisations syndicales');
 
 ------------
 --CONTACTS--
 ------------
-INSERT INTO contacts_v2 VALUES (201, 100, 'N', '', '', 'Boris', 'Bourdon', 'title1', '', '', 'superadmin', 'SUPERADMIN', '2015-03-23 09:13:15.011225', NULL, 'Y');
-INSERT INTO contacts_v2 VALUES (202, 103, 'Y', 'La Ruche Qui Dit Oui', 'LRQDO', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:47:12.329697', NULL, 'Y');
-INSERT INTO contacts_v2 VALUES (203, 101, 'Y', 'Premier Ministère', 'P.M', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:47:40.066242', NULL, 'Y');
-INSERT INTO contacts_v2 VALUES (204, 104, 'Y', 'LA POSTE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:48:09.679356', NULL, 'Y');
-INSERT INTO contacts_v2 VALUES (205, 104, 'Y', 'MAARCH', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:48:09.679356', NULL, 'Y');
+INSERT INTO contacts_v2 VALUES (100, 10, 'N', '', '', 'Boris', 'Bourdon', 'title1', '', '', 'superadmin', 'SUPERADMIN', '2015-03-23 09:13:15.011225', NULL, 'Y');
+INSERT INTO contacts_v2 VALUES (101, 40, 'Y', 'La Ruche Qui Dit Oui', 'LRQDO', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:47:12.329697', NULL, 'Y');
+INSERT INTO contacts_v2 VALUES (102, 20, 'Y', 'Premier Ministère', 'P.M', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:47:40.066242', NULL, 'Y');
+INSERT INTO contacts_v2 VALUES (103, 50, 'Y', 'LA POSTE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:48:09.679356', NULL, 'Y');
+INSERT INTO contacts_v2 VALUES (104, 50, 'Y', 'MAARCH', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:48:09.679356', NULL, 'Y');
 
 ---------------------
 --CONTACTS_PURPOSES--
 ---------------------
-INSERT INTO contact_purposes VALUES (100, 'Adresse principale');
-INSERT INTO contact_purposes VALUES (101, 'Agence');
-INSERT INTO contact_purposes VALUES (102, 'Siège Social');
+INSERT INTO contact_purposes VALUES (10, 'Adresse principale');
+INSERT INTO contact_purposes VALUES (20, 'Agence');
+INSERT INTO contact_purposes VALUES (30, 'Siège Social');
 
 
 ---------------------
 --CONTACTS_ADRESSES--
 ---------------------
-INSERT INTO contact_addresses VALUES (102, 202, 101, '', '', '', '', '', '', '5', 'rue Tournefort', '', 'PARIS', '75005', 'FRANCE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', 'N', 'Y');
-INSERT INTO contact_addresses VALUES (103, 203, 100, '', 'Manuel', 'VALLS', 'title1', 'Premier ministre', '', '', '', '', 'PARIS', '', 'FRANCE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', 'N', 'Y');
-INSERT INTO contact_addresses VALUES (104, 204, 101, '', '', '', '', '', '', '1', 'Boulevard Auriol', '', 'NANTES', '92000', 'FRANCE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', 'N', 'Y');
+INSERT INTO contact_addresses VALUES (10, 101, 20, '', '', '', '', '', '', '5', 'rue Tournefort', '', 'PARIS', '75005', 'FRANCE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', 'N', 'Y');
+INSERT INTO contact_addresses VALUES (20, 102, 10, '', 'Manuel', 'VALLS', 'title1', 'Premier ministre', '', '', '', '', 'PARIS', '', 'FRANCE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', 'N', 'Y');
+INSERT INTO contact_addresses VALUES (30, 104, 20, '', '', '', '', '', '', '1', 'Boulevard Auriol', '', 'NANTES', '92000', 'FRANCE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', 'N', 'Y');
 
 
 ------------
