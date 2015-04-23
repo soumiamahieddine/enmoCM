@@ -143,16 +143,20 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau){
 	var conseillers = "";
 	var consignes = "";
 	
+	var cons_empty = false;
 	while(i<longueur)
 	{
 		
 		var num = i-1;
+		if (document.getElementById("conseiller_"+num).value == "" ) cons_empty = true;
 		conseillers += document.getElementById("conseiller_"+num).value + "#";
 		consignes += document.getElementById("consigne_"+num).value + "#";
 		
 		i++;
 	}
 	
+	if (cons_empty) $('divErrorVisa').innerHTML = 'Au moins un conseiller est vide';
+	else
 	new Ajax.Request("index.php?display=true&module=visa&page=saveVisaWF",
 	{
 		
