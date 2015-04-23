@@ -95,7 +95,7 @@ array_push($select[$table],"res_id", "status", "category_id", "category_id as ca
                         "contact_firstname", "contact_lastname", "contact_society", "user_lastname", 
                         "user_firstname", "priority", "creation_date", "admission_date", "subject", 
                         "process_limit_date", "entity_label", "dest_user", "type_label", 
-                        "exp_user_id", "count_attachment", "is_multicontacts", "locker_user_id", "locker_time");
+                        "exp_user_id", "count_attachment", "alt_identifier","is_multicontacts", "locker_user_id", "locker_time");
                         
 if($core_tools->is_module_loaded("cases") == true) {
     array_push($select[$table], "case_id", "case_label", "case_description");
@@ -341,6 +341,23 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["show"]=false;
                 $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
                 $tab[$i][$j]["value"] = $contact->get_contact_information_from_view($_SESSION['mlb_search_current_category_id'], $contact_lastname, $contact_firstname, $contact_society, $user_lastname, $user_firstname);
+                $tab[$i][$j]["order"]=false;
+            }
+            if($tab[$i][$j][$value]=="dest_user")
+            {
+                $tab[$i][$j]["label"]="dest_user";
+                $tab[$i][$j]["size"]="10";
+                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["align"]="left";
+                $tab[$i][$j]["valign"]="bottom";
+                $tab[$i][$j]["show"]=false;
+                $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+                if($_SESSION['mlb_search_current_category_id']=="outgoing"){
+                    $tab[$i][$j]["value"] = "<b>"._TO_CONTACT_C."</b>".$tab[$i][$j]['value'];
+                }else{
+                   $tab[$i][$j]["value"] = "<b>"._FOR_CONTACT_C."</b>".$tab[$i][$j]['value'];
+ 
+                }
                 $tab[$i][$j]["order"]=false;
             }
             if($tab[$i][$j][$value]=="is_multicontacts")
