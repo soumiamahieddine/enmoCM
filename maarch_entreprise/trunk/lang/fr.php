@@ -473,6 +473,9 @@ if (!defined('_CAN_BE_SEARCHED')) define( '_CAN_BE_SEARCHED', 'Recherche');
 if (!defined('_CAN_BE_MODIFIED')) define( '_CAN_BE_MODIFIED', 'Modification des index');
 if (!defined('_THE_STATUS')) define( '_THE_STATUS', 'Le statut ');
 if (!defined('_ADMIN_STATUS')) define( '_ADMIN_STATUS', 'Statuts');
+if (!defined('_IMG_RELATED')) define( '_IMG_RELATED', 'Image associ&eacute;e');
+
+
 /************* Actions **************/
 
 if (!defined('_ACTION_LIST')) define( '_ACTION_LIST', 'Liste des actions');
