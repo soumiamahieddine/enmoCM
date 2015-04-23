@@ -122,6 +122,8 @@ if (isset($_REQUEST['display'])) {
      exit();
 }
 
+//var_dump($_SESSION['info']);exit;
+
 if (isset($_GET['show'])) {
     $show = $_GET['show'];
 } else {
@@ -185,13 +187,52 @@ color: #ffffff;">Menu</span>
 </div>
     <div id="container">
         <div id="content">
-            <div class="error" id="main_error">
-                <?php  echo $_SESSION['error'];?>
-            </div>
-            <div class="info" id="main_info">
-                <?php  if(isset($_SESSION['info'])){echo $_SESSION['info'];}?>
-            </div>
             <?php
+            if(isset($_SESSION['error'])) {
+                ?>
+                <div class="error" id="main_error" onclick="this.hide();">
+                    <?php
+                    echo $_SESSION['error'];
+                    ?>
+                </div>
+                <?php
+            }
+
+            if(isset($_SESSION['info'])) {
+                ?>
+                <div class="info" id="main_info" onclick="this.hide();">
+                    <?php
+                    echo $_SESSION['info'];
+                    ?>
+                </div>
+                <?php
+            }
+            ?>
+            <?php
+            if(isset($_SESSION['error']) && $_SESSION['error'] <> '') {
+                ?>
+                <script>
+                    var main_error = $('main_error');
+                    if (main_error != null) {
+                        main_error.style.display = 'table-cell';
+                        Element.hide.delay(10, 'main_error');
+                    }
+                </script>
+                <?php
+            }
+
+            if(isset($_SESSION['info']) && $_SESSION['info'] <> '') {
+                ?>
+                <script>
+                    var main_info = $('main_info');
+                    if (main_info != null) {
+                        main_info.style.display = 'table-cell';
+                        Element.hide.delay(10, 'main_info');
+                    }
+                </script>
+                <?php
+            }
+
             if ($core->is_module_loaded('basket')
                 && isset($_SESSION['abs_user_status'])
                 && $_SESSION['abs_user_status'] == true) {

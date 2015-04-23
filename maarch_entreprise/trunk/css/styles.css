@@ -395,19 +395,67 @@ a.authorize {
 }
 
 .error {
-    color: #ea0000;
+    /*color: #ea0000;*/
     font-weight: bold;
     text-align: center;
-    font-size: 1.4em;
+    font-size: 1.5em;
+
+    background: #FFC200;
+    color: white;
+    padding: 3px;
+    border-radius: 7px;
+    display: none;
+    width: 250px;
+    /*height: 50px;*/
+    min-height: 50px;
+    position: absolute;
+    z-index: 10;
+    vertical-align: middle;
+    right: 20px;
+    opacity: 0.9;
+    cursor: pointer;
 }
 
 .info {
-    color: #FBEFCE;
-    color: #16ADEB;
-    font-weight: normal;
     font-weight: bold;
     text-align: center;
-    font-size: 1.2em;
+    font-size: 1.5em;
+
+    background: #FFC200;
+    color: white;
+    padding: 3px;
+    border-radius: 7px;
+    display: none;
+    width: 250px;
+    /*height: 50px;*/
+    min-height: 50px;
+    position: absolute;
+    z-index: 10;
+    vertical-align: middle;
+    right: 20px;
+    opacity: 0.9;
+    cursor: pointer;
+}
+
+.infoBasket {
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.5em;
+
+    background: #FFC200;
+    color: white;
+    padding: 3px;
+    border-radius: 7px;
+    display: none;
+    width: 250px;
+    /*height: 50px;*/
+    min-height: 50px;
+    position: absolute;
+    z-index: 10;
+    vertical-align: middle;
+    right: 20px;
+    opacity: 0.9;
+    cursor: pointer;
 }
 
 
