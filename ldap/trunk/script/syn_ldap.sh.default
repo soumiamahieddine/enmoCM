@@ -1,3 +1,11 @@
 #!/bin/bash
-php {path to maarch entreprise}/modules/ldap/ldap_to_xml.php {path to config.xml} {path to ldap.xml}
-php {path to maarch entreprise}/modules/ldap/xml_to_maarch_entreprise.php {path to config.xml} {path to ldap.xml}
+cd /var/www/html/maarch_entreprise/modules/ldap/script/
+
+#generation des fichiers xml
+php /var/www/html/maarch_entreprise/modules/ldap/process_ldap_to_xml.php /var/www/html/maarch_entreprise/modules/ldap/xml/config.xml
+
+
+#mise a jour bdd
+php /var/www/html/maaarch_entreprise/modules/ldap/process_entities_to_maarch.php /var/www/html/maarch_entreprise_dev/modules/ldap/xml/config.xml
+php /var/www/html/maarch_entreprise/modules/ldap/process_users_to_maarch.php /var/www/html/maarch_entreprise_dev/modules/ldap/xml/config.xml
+php /var/www/html/maarch_entreprise/modules/ldap/process_users_entities_to_maarch.php /var/www/html/maarch_entreprise_dev/modules/ldap/xml/config.xml
