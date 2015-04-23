@@ -729,6 +729,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $frm_str .= '</td>';
 	
 	//VISA CIRCUIT
+	if ($core->test_service('config_visa_workflow', 'visa', false)){
     $frm_str .= '<td>';
     
     $frm_str .= '<span onclick="new Effect.toggle(\'visa_div\', \'appear\', {delay:0.2});'
@@ -738,8 +739,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
          . '&nbsp;<small>' . _VISA_WORKFLOW . '</small>';
     $frm_str .= '</b></span>';
     $frm_str .= '</td>';
-	
+	}
 	//AVIS CIRCUIT
+	if ($core->test_service('config_avis_workflow', 'visa', false)){
     $frm_str .= '<td>';
     
     $frm_str .= '<span onclick="new Effect.toggle(\'avis_div\', \'appear\', {delay:0.2});'
@@ -749,6 +751,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
          . '&nbsp;<small>' . _AVIS_WORKFLOW . '</small>';
     $frm_str .= '</b></span>';
     $frm_str .= '</td>';
+	}
     //END TOOLBAR
     $frm_str .= '</table>';
     $frm_str .= '</div>';
