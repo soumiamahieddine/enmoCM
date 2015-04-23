@@ -36,7 +36,7 @@ if (isset($_REQUEST['res_id'])) {
                                             $return .= '('.$res->society_short.') ';
                                         }
                                     } else {
-                                        $return = $res->contact_lastname . ' ' . $res->contact_firstname . ' ';
+                                        $return .= $res->contact_lastname . ' ' . $res->contact_firstname . ' ';
                                         if (!empty ($res->society)) {
                                             $return .= '(' .$res->society . ') ';
                                         }                        
