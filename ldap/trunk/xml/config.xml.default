@@ -5,10 +5,10 @@
         <type_ldap>adLDAP</type_ldap>
         <!-- Prefixe les group_id de letterbox par -->
         <group_prefix_ldap>LDAP</group_prefix_ldap>
-        <!-- nom de domaine ex : maarch.org -->
-        <domain>192.168.10.14</domain>
+        <!-- nom / ip du serveur ldap -->
+        <domain>192.168.1.1</domain>
         <!-- prefixe les logins si saisi -->
-        <prefix_login>MAARCHLESBAINS</prefix_login>
+        <prefix_login>MAARCH</prefix_login>
         <!-- login admnistrateur du domaine -->
         <login_admin>Administrateur</login_admin>
         <!-- mot de passe administrateur annuaire ldap -->
@@ -39,17 +39,41 @@
             <memberof>memberof</memberof>
         </group>
     </mapping>
+   <!-- Est utile uniquement pour la synchroniqation des donnees -->
+    <config_base>
+        <databaseserver>localhost</databaseserver>
+        <databaseserverport>5432</databaseserverport>
+        <databasetype>POSTGRESQL</databasetype>
+        <databasename>maarch_entreprise</databasename>
+        <databaseuser>postgres</databaseuser>
+        <databasepassword>maarch</databasepassword>
+    </config_base>
+    <mapping>
+        <user ext_id="objectguid">
+            <user_id>samaccountname</user_id>
+            <firstname>givenname</firstname>
+            <lastname>sn</lastname>
+            <phone>telephonenumber</phone>
+            <mail>mail</mail>
+            <fonction>title</fonction>
+            <enabled>useraccountcontrol</enabled><!--Depend du type d'annuaire-->
+            <user_entity role="">memberof</user_entity>
+        </user>
+        <entity>
+            <ldap_id>objectguid</ldap_id>
+            <entity_label>samaccountname</entity_label>
+            <parent_entity>memberof</parent_entity>
+        </entity>
+    </mapping>
     <filter>
-    <!-- Arbre invers&eacute; dont les feuilles sont des users -->
-         <dn id="OU=,DC=,DC=" type="organization">
+        <!-- Chemin ou se trouve les utilisateurs de l'application -->
+         <dn id="OU=Utilisateurs,DC=maarch,DC=com" type="users">
             <user>(cn=*)</user>
             <group>(cn=*)</group>
-            <security><!-- Perimetre documentaire : -->
-                <coll_id>letterbox_coll</coll_id>
-                <where_clause>(DESTINATION = @my_primary_entity or DESTINATION in (@subentities[@my_primary_entity])) or DESTINATION is NULL</where_clause>
-            </security>
         </dn>
-        <dn id="OU=,OU=,DC=,DC=" type="rights">
+
+        <!-- Chemin ou se trouve les entités de l'application -->
+        <dn id="OU=Services,DC=maarch,DC=com" type="entities">
             <user>(cn=*)</user>
             <group>(cn=*)</group>
         </dn>
