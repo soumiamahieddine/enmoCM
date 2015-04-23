@@ -4,7 +4,7 @@
 .iconDoc:hover span { 
 	display: inline;
 	position:absolute;
-	margin-left:-212px;
+	margin-left:-235px;
 	border:2px solid black;
 	z-index:100;
 }

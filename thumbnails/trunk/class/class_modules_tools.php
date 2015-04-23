@@ -29,11 +29,7 @@ class thumbnails extends dbquery
 		
 		$xmlconfig = simplexml_load_file($configPath);
 		$conf = $xmlconfig->CONFIG;
-		$docserver_id = (string) $conf->docserver_id;
 		
-
-		$_SESSION['modules_loaded']['thumbnails']['docserver_id'] = $docserver_id;
-		$_SESSION['modules_loaded']['thumbnails']['no_file'] = (string) $conf->no_file;
 	}
 
 }

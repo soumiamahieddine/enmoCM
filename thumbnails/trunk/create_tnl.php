@@ -123,7 +123,6 @@ $conf = $argv[1];
 $xmlconfig = simplexml_load_file($conf);
 foreach ($xmlconfig->CONFIG as $CONFIG) {
     $_ENV['config_name'] = $CONFIG->CONFIG_NAME;
-    $_ENV['core_path'] = $CONFIG->CORE_PATH;
     $_ENV['databaseserver'] = $CONFIG->LOCATION;
     $_ENV['databaseport'] = $CONFIG->DATABASE_PORT;
     $_ENV['database'] = $CONFIG ->DATABASE;
@@ -131,12 +130,14 @@ foreach ($xmlconfig->CONFIG as $CONFIG) {
     $_ENV['databaseuser'] = $CONFIG -> USER_NAME;
     $_ENV['databasepwd'] = $CONFIG->PASSWORD;
     $_ENV['tablename'] = $CONFIG->TABLE_NAME;
-    $path_column_name = $CONFIG->PATH_COLUMN_NAME;
-    $filename_column_name = $CONFIG->FILENAME_COLUMN_NAME;
+    $_ENV['collection'] = $CONFIG->COLLECTION;
+    /*$path_column_name = $CONFIG->PATH_COLUMN_NAME;
+    $filename_column_name = $CONFIG->FILENAME_COLUMN_NAME;*/
     //$_ENV['input_ds'] = $CONFIG->INPUT_DOCSERVER;
-    $_ENV['output_ds'] = $CONFIG->OUTPUT_DOCSERVER;
+   // $_ENV['output_ds'] = $CONFIG->OUTPUT_DOCSERVER;
 	$_ENV['max_batch_size'] = $CONFIG->MAX_BATCH_SIZE;
 	$maarchDirectory = (string) $CONFIG->MaarchDirectory;
+	$_ENV['core_path'] = $maarchDirectory . 'core' . DIRECTORY_SEPARATOR;
 }
 if (DIRECTORY_SEPARATOR == "/") {
     $_ENV['osname'] = "UNIX";
@@ -179,6 +180,15 @@ $_ENV['db2'] = new dbquery();
 $_ENV['db2']->connect();
 writeLog("connection on the DB server OK !");
 
+
+$query = "select priority_number, docserver_id from docservers where is_readonly = 'N' and "
+	   . " enabled = 'Y' and coll_id = '".$_ENV['collection']."' and docserver_type_id = 'TNL' order by priority_number";
+	   
+$_ENV['db']->query($query);
+$docserverId = $_ENV['db']->fetch_object()->docserver_id;
+
+writeLog($query);
+writeLog($docserverId);
 $docServers = "select docserver_id, path_template from docservers";
 $_ENV['db']->query($docServers);
 writeLog("docServers found : ");
@@ -187,19 +197,18 @@ while ($queryResult=$_ENV['db']->fetch_array()) {
   writeLog($queryResult[0]. '-' .$queryResult[1]);
 }
 
-if (is_dir($pathToDocServer[(string)$_ENV['output_ds']])){
-	$pathOutput = $pathToDocServer[(string)$_ENV['output_ds']];
+if (is_dir($pathToDocServer[(string)$docserverId])){
+	$pathOutput = $pathToDocServer[(string)$docserverId];
 	writeLog("path of output docserver : ".$pathOutput);
 }
 else {
-	writeLog("output docserver unknown ! : ".$_ENV['output_ds']);
+	writeLog("output docserver unknown ! : ".$docserverId);
 	exit();
 }
 $cpt_batch_size=0;
 
 $queryMakeThumbnails = "select res_id, docserver_id, path, filename, format from "
-    . $_ENV['tablename'] . " where "
-    . $filename_column_name . " = '' or " . $filename_column_name . " is null ";
+    . $_ENV['tablename'] . " where tnl_filename = '' or tnl_filename is null ";
 writeLog("query to found document with no thumbnail : ".$queryMakeThumbnails);
 $_ENV['db']->query($queryMakeThumbnails);
 while ($queryResult=$_ENV['db']->fetch_array()) {
