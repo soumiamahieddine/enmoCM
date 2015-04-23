@@ -372,6 +372,8 @@ else
                 {
                     $what .= $res_action['history_msg'];
                 }
+                $_SESSION['info_basket'] .= $what . '<br /><br />';
+                $_SESSION['cpt_info_basket'] = 0;
                 $hist->add(
                     $_POST['table'],
                     $arr_res[$i],'ACTION#'.$id_action, $id_action,
