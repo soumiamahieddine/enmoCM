@@ -297,7 +297,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '<i class="fa fa-user" title="Contact"></i> ';
 		if(isset($data['contact']) && !empty($data['contact']))
         {
-			if (strlen($data['contact']) > 35) $contact = substr($data['contact'],0,35).'...';
+			if (strlen($data['contact']) > 25) $contact = substr($data['contact'],0,25).'...';
 			else $contact = $data['contact'];
 			$frm_str .= $contact;
 		}
@@ -592,7 +592,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '<tr>';
 	$frm_str .= '<td>';	
 		$frm_str .= '<form name="index_file" method="post" id="index_file" action="#" class="forms " style="text-align:left;">';
-		$frm_str .= 'Consigne <input type="text" value="" style="width:30%;"/><br/>';
+		$frm_str .= 'Consigne <input type="text" value="'.$visa->getConsigne($res_id, $coll_id, $_SESSION['user']['UserId']).'" style="width:30%;" readonly/><br/>';
 		$frm_str .= '<b>'._ACTIONS.' : </b>';
 		$actions  = $b->get_actions_from_current_basket($res_id, $coll_id, 'PAGE_USE');
 		if(count($actions) > 0)

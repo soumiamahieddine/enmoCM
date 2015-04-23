@@ -133,7 +133,23 @@ class visa extends dbquery
 		return $tab_users;
 	}
 	
+	public function getConsigne($res_id, $coll_id, $userId){
+		$circuit = $this->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
+		foreach($circuit['visa']['users'] as $seq=>$step){
+			if ($step['user_id'] == $userId){
+				return $step['process_comment'];
+			}
+		}
+		foreach($circuit['sign']['users'] as $seq=>$step){
+			if ($step['user_id'] == $userId){
+				return $step['process_comment'];
+			}
+		}
+		return '';
+	}
+	
 	public function getList($res_id, $coll_id, $bool_modif=false, $typeList){
+		$core_tools =new core_tools();
 		if ( $typeList == 'VISA_CIRCUIT'){
 			$id_tab="tab_visaSetWorkflow";
 			$id_form="form_visaSetWorkflow";
@@ -144,13 +160,16 @@ class visa extends dbquery
 		}
 				
 		$circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
+		if (!isset($circuit['visa']['users']) && !isset($circuit['sign']['users']) && !$core_tools->test_service('config_visa_workflow', 'visa', false)){
+			$str .= '<div class="error" id="divErrorVisa" name="divErrorVisa">'._EMPTY_USER_LIST.'</div>';
+		}
+		else{
 		
 		$str .= '<div align="center">';
 		//$str .= '<pre>'.print_r($circuit,true).'</pre>';
 		$str .= '<div class="error" id="divErrorVisa" name="divErrorVisa"></div>';
 		$str .= '<table class="listing spec detailtabricatordebug" cellspacing="0" border="0" id="'.$id_tab.'">';
 		$str .= '<thead><tr>';
-		//$str .= '<th style="width:5%;"><span>Pos</span></th>';
 		$str .= '<th style="width:30%;" align="left" valign="bottom"><span>Visa</span></th>';
 		if ($bool_modif){
 			$str .= '<th style="width:5%;"></th>';
@@ -182,9 +201,7 @@ class visa extends dbquery
 					$str .= '</select>';
 				}
 				$str .= '</td>';
-				//$str .= '<td><img src="static.php?filename=DownUser.png&module=visa"  id="down_'.$j.'" name="down_'.$j.'" style="visibility:hidden;" onclick="deplacerLigne(0,1,\''.$id_tab.'\')"/></td>';
 				$str .= '<td><a href="javascript://" id="down_'.$j.'" name="down_'.$j.'" style="visibility:hidden;" onclick="deplacerLigne(0,1,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
-				//$str .= '<td><img src="static.php?filename=UpUser.png&module=visa" id="up_'.$j.'" name="up_'.$j.'" style="visibility:hidden;"/></td>';
 				$str .= '<td><a href="javascript://" id="up_'.$j.'" name="up_'.$j.'" style="visibility:hidden;" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
 				$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:hidden;" ><i class="fa fa-user-times fa-2x"></i></a></td>';
 				$str .= '<td><a href="javascript://" style="visibility:visible;"  id="add_'.$j.'" name="add_'.$j.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
@@ -298,6 +315,7 @@ class visa extends dbquery
 		$str .= '</table>';
 		if ($bool_modif) $str .= '<input type="button" name="send" id="send" value="Sauvegarder" class="button" onclick="saveVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\');" />';
 		$str .= '</div>';
+		}
 		return $str;
 	}
 }
