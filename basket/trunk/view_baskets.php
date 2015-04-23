@@ -296,6 +296,29 @@ if (count($_SESSION['user']['baskets']) > 0) {
 </h1>
 <div id="inner_content">
 <?php
+
+if(isset($_SESSION['info_basket'])) {
+    ?>
+    <div class="infoBasket" id="mainInfoBasket" onclick="this.hide();">
+        <?php
+        echo $_SESSION['info_basket'];
+        ?>
+    </div>
+    <?php
+}
+
+if(isset($_SESSION['info_basket']) && $_SESSION['info_basket'] <> '') {
+    ?>
+    <script>
+        var main_info = $('mainInfoBasket');
+        if (main_info != null) {
+            main_info.style.display = 'table-cell';
+            Element.hide.delay(10, 'mainInfoBasket');
+        }
+    </script>
+    <?php
+}
+
 if (count($_SESSION['user']['baskets']) == 0) {
     ?><div align="center"><?php echo _NO_BASKET_DEFINED_FOR_YOU;?></div><?php
 }
@@ -335,5 +358,10 @@ if (isset($_SESSION['current_basket']['page_include'])
     }
 }
 
+if ($_SESSION['cpt_info_basket'] > 0) {
+    $_SESSION['info_basket'] = '';    
+} else {
+    $_SESSION['cpt_info_basket']++;
+}
 
 ?></div>
