@@ -167,18 +167,20 @@ if ($mode == 'list') {
                 } ?> /><?php echo _NO;?>
             </p>
         <?php } ?>
-        
-        <p>
+            <div>
             <label ><?php echo _IMG_RELATED; ?> : </label>
-            <div style="width:570px;">
-            <?php for ($i=0;$i<count($status_img);$i++) {  ?> 	
+            <ul style="  width: 220px;text-align: left;float: left;margin-left: 40px;height: 200px;overflow: auto;">
+            <?php for ($i=0;$i<count($status_img);$i++) {  ?>
+                    <li style="display:inline-block;width:50px;padding:5px;"> 	
 					 <input type="radio"  class="check" name="img_related" value="<?php echo $status_img[$i]?>" 
 					 <?php if ($_SESSION['m_admin']['status']['img_filename'] == $status_img[$i]) { ?> checked="checked" <?php } ?> /><?php
-					$img = "<i class = 'fa fa-".$status_img[$i]."'></i>";
+					$img = "<i class = 'fa fa-".$status_img[$i]."' style='font-size:20px;'></i>";
 					echo $img;
+                    echo "</li>";
 				} ?>
-			</div> 	
-        </p>
+                </ul>
+                </div>	
+                
         <p class="buttons">
 
             <input type="submit" class="button"  name="status_submit" value="<?php echo _VALIDATE; ?>" />
