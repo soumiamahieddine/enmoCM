@@ -280,6 +280,7 @@ class lists extends dbquery
                             $view = $_SESSION['current_basket']['view'];
                         }
 
+                        $this->params['basketClause'] = str_replace('r.', 'res_view_letterbox.', $this->params['basketClause']);
                         $db2->query("SELECT count(res_id) as total FROM ".$view." WHERE (".$this->params['basketClause'].") and destination in (" . implode(",",$subEntities) . ")");
                         $res2 = $db2->fetch_object();
 
