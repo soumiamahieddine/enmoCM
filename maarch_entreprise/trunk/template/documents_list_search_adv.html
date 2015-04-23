@@ -99,24 +99,26 @@ Mods
 
                     <td width="10%">
                         <!--<div align="center"><img src="##loadImage|contact_maarch.gif##" alt="##loadValue|status##" title="##loadValue|status##"> </div>-->
-                        <div align="center">##loadValue|status##</div>
+                        <div align="center" style ="color:#FDD16C;">##loadValue|status##</div>
                     </td>
-                    <td width="90%" align="center" style="padding : 0px; vertical-align:top" colspan="3" >
+                    <td width="90%" align="center" style="padding : 0px; vertical-align:top" ##clickOnLine##>
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                                 <tr>
-                                    <td width="65%"   style="font-size:12px;"><b><!--##defineLang|_SUBJECT## :--></b><em>##loadValue|subject##</em> </td>
-                                    <td width="35%">
+                                    <td width="65%"   style="font-size:14px;font-weight:bold;color:#5C7C89;font-style: italic;">##loadValue|subject##</td>
+                                    <td width="17.5%" style="font-size:14px;font-weight:bold;color:#5C7C89;font-style: italic;">
+                                        ##loadValue|alt_identifier##
+                                    </td>
+                                    <td width="17.5%">
                                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                                             <tr>
-                                                <td width="40%" style="text-align:right">##defineLang|_CONTACT## :</td><td  style="text-align:right">##loadValue|exp_user_id####loadValue|is_multicontacts##</td>
+                                                <td style="text-align:right">##loadValue|exp_user_id####loadValue|is_multicontacts##</td>
                                             </tr>
+
                                             <tr><td> </td><td></td></tr>
                                             <tr>
-                                                <td style="text-align:right; vertical-align:top;">##defineLang|_ENTITY## :</td><td  style="text-align:right">##loadValue|entity_label##</td>
+                                                <td style="text-align:right">##loadValue|dest_user##</td>
                                             </tr>
-											 ##ifStatement|'#loadValue|folders_system_id#'!=null|<tr><td style="text-align:right"><b>#defineLang|_FOLDER# :</b></td><td style="text-align:right">#loadValue|folder_name#</td></tr>|##
-                                            <!--##ifStatement|#isModuleLoaded|cases#===true|<tr><td style="text-align:right"><b>#defineLang|_CASE# :</b></td><td style="text-align:right"><b>#loadValue|case_label#</b></td></tr>| ##-->
-											##ifStatement|'#loadValue|case_label#'!=null|<tr><td style="text-align:right"><b>#defineLang|_CASE# :</b></td><td style="text-align:right">#loadValue|case_label#</td></tr>|##
+                                            ##ifStatement|'#loadValue|case_label#'!=null|<tr><td style="text-align:right"><b>#defineLang|_CASE# :</b></td><td style="text-align:right">#loadValue|case_label#</td></tr>|##
                                         </table>
                                     </td>
                                 </tr>
@@ -132,8 +134,8 @@ Mods
                                         <td width ="150px">##loadValue|category_id##</td>
                                         <td width ="30px" alt="##defineLang|_CREATION_DATE##" title="##defineLang|_CREATION_DATE##"><i class="fa fa-calendar fa-2x"></i> </td>
                                         <td width ="100px">##loadValue|creation_date##</td>
-                                        <td width ="30px" style="text-align:right" alt="##defineLang|_DEST_USER##" title="##defineLang|_DEST_USER##"><i class="fa fa-user fa-2x"></i></td>
-                                        <td width ="100px">##loadValue|dest_user##</td>
+                                        <td style="font-size:10px;text-align:center" width ="40px" alt="##defineLang|_ENTITY##" title="##defineLang|_ENTITY##" ##clickOnLine##><i class="fa fa-sitemap fa-2x"></i></td>
+                                        <td style="font-size:10px;" width ="110px" > ##loadValue|entity_label##</td>
                                         <td width ="30px" style="text-align:right" alt="##defineLang|_TYPE##" title="##defineLang|_TYPE##"><i class="fa fa-file fa-2x"></i>
                                         <td width="100px" style="text-align:left" >##loadValue|type_label##</td>
                                         <td width="50px" style="font-size:10px;" >##func_bool_see_multi_contacts##</td>
