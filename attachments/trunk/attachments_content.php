@@ -590,6 +590,16 @@ if (isset($_POST['add']) && $_POST['add']) {
                     $storeResult['docserver_id'], $_SESSION['data'],
                     $_SESSION['config']['databasetype']
                 );
+				
+				//copie de la version PDF de la pièce si mode de conversion sur le client
+				if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != ''){
+					$file = $_SESSION['config']['tmppath'].$_SESSION['upfile']['fileNamePdfOnTmp'];
+					$newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
+					
+					copy($file, $newfile);
+				}
+						
+						
                 $req->connect();
                 if ($previous_attachment->relation == 1) {
                     $req->query("UPDATE res_attachments set status = 'OBS' WHERE res_id = ".$_REQUEST['res_id']);
@@ -644,6 +654,14 @@ if (isset($_POST['add']) && $_POST['add']) {
                 $set_update .= ", path = '".$storeResult['destination_dir']."'";
                 $set_update .= ", filename = '".$storeResult['file_destination_name']."'";
                 // $set_update .= ", docserver_id = ".$storeResult['docserver_id'];
+				
+				//copie de la version PDF de la pièce si mode de conversion sur le client
+				if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == true && $_SESSION['upfile']['fileNamePdfOnTmp'] != ''){
+					$file = $_SESSION['config']['tmppath'].$_SESSION['upfile']['fileNamePdfOnTmp'];
+					$newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
+					
+					copy($file, $newfile);
+				}
             }
 
             $set_update .= ", doc_date = ".$req->current_datetime().", updated_by = '".$_SESSION['user']['UserId']."'";
