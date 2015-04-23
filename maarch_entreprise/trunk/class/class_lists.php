@@ -200,7 +200,10 @@ class lists extends dbquery
                     $view = $this->params['tableName'];
                 }
                 if (!empty($view)) {
-                    if (! empty($this->params['basketClause'])) $where = 'where '.$this->params['basketClause'];
+                    if (! empty($this->params['basketClause'])) {
+                        $this->params['basketClause'] = str_replace('res_view_letterbox.', 'r.', $this->params['basketClause']);
+                        $where = 'where ' . $this->params['basketClause'];
+                    }
 
                     $db->query(
                         "select distinct(r.destination) as entity_id, count(distinct r.res_id)"
@@ -244,7 +247,10 @@ class lists extends dbquery
                     $view = $this->params['tableName'];
                 }
                 if (!empty($view)) {
-                    if (! empty($this->params['basketClause'])) $where = 'where '.$this->params['basketClause'];
+                    if (! empty($this->params['basketClause'])) {
+                        $this->params['basketClause'] = str_replace('res_view_letterbox.', 'r.', $this->params['basketClause']);
+                        $where = 'where ' . $this->params['basketClause'];
+                    }
 
                     $db->query(
                         "select distinct(r.destination) as entity_id, count(distinct r.res_id)"
