@@ -266,3 +266,41 @@ function validate_difflist_type() {
   );
   
 }
+
+function saveListDiff(
+    mode,
+    table, 
+    collId, 
+    resId,
+    userId,
+    concatList,
+    onlyCC
+) {
+    new Ajax.Request(
+        'index.php?display=true&module=entities&page=save_list_diff',
+        {
+            method:'post',
+            parameters: {
+                mode : mode,
+                table : table,
+                collId : collId,
+                resId : resId,
+                userId : userId,
+                concatList : concatList,
+                onlyCC : onlyCC,
+            },
+            onSuccess: function(answer){
+                eval("response = "+answer.responseText);
+                //alert(answer.responseText);
+                if (response.status == 0) {
+                    //alert(window.opener.document);
+                    var div_diff_list_message = $('div_diff_list_message');
+                    if (div_diff_list_message != null) {
+                        div_diff_list_message.innerHTML = response.div_content;
+                        Element.hide.delay(2, 'div_diff_list_message');
+                    }
+                }
+            }
+        }
+    );
+}

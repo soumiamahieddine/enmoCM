@@ -388,3 +388,9 @@ if (!defined('_AUTO_FILTER'))
 
 if (!defined('_REDIRECT_NOTE')) 
     define('_REDIRECT_NOTE', 'Motif de redirection (optionnel)');
+
+if (!defined('_STORE_DIFF_LIST'))
+    define('_STORE_DIFF_LIST', 'Enregistrer la lise de diffusion');
+
+if (!defined('_DIFF_LIST_STORED'))
+    define('_DIFF_LIST_STORED', 'Liste de diffusion enregistr&eacute;e');

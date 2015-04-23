@@ -280,3 +280,9 @@ if (!defined('_NO_FILTER'))
 
 if (!defined('_AUTO_FILTER')) 
     define('_AUTO_FILTER', 'Suggested list');
+
+if (!defined('_STORE_DIFF_LIST'))
+    define('_STORE_DIFF_LIST', 'Store diffusion list');
+
+if (!defined('_DIFF_LIST_STORED'))
+    define('_DIFF_LIST_STORED', 'Diffusion list stored');
