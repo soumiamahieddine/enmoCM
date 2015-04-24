@@ -131,7 +131,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                                     . $_SESSION['user']['baskets'][$i]['id']
                                     . '"><b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id'] 
                                     . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']
-                                    . '"><i class="fa-li fa fa-spinner fa-spin" style="padding-top: 5px;padding-bottom: 5px;"></i>'
+                                    . '"><i class="fa-li fa fa-spinner fa-spin" style="margin-left: -10px;position: inherit;margin-right: -7px;"></i>'
                                     . '</span></b> <i class="fa-li fa fa-folder" style="padding-top: 5px;padding-bottom: 5px;"></i>'
                                     . $_SESSION['user']['baskets'][$i]['name']
                                     . ' </a></li>';
@@ -142,7 +142,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                                     . $_SESSION['user']['baskets'][$i]['id']
                                     . '"><b><span id="nb_' . $_SESSION['user']['baskets'][$i]['id'] 
                                     . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']
-                                    . '"><i class="fa-li fa fa-spinner fa-spin"></i>'
+                                    . '"><i class="fa-li fa fa-spinner fa-spin" style=";margin-left: -10px;position: inherit;margin-right: -7px;"></i>'
                                     . '</span></b> <i class="fa-li fa fa-tasks" style="padding-top: 5px;padding-bottom: 5px;"></i> '
                                     . $_SESSION['user']['baskets'][$i]['name']
                                     . ' </a></li>';
