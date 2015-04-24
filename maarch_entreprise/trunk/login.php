@@ -137,9 +137,51 @@ if (isset($_SESSION['error'])) {
             </h3>
         </div>
         <?php
+            if(isset($_SESSION['error'])) {
+                ?>
+                <div class="error" id="main_error_popup" onclick="this.hide();">
+                    <?php
+                    echo $_SESSION['error'];
+                    ?>
+                </div>
+                <?php
+            }
+
+            if(isset($_SESSION['info'])) {
+                ?>
+                <div class="info" id="main_info" onclick="this.hide();">
+                    <?php
+                    echo $_SESSION['info'];
+                    ?>
+                </div>
+                <?php
+            }
+
+            if(isset($_SESSION['error']) && $_SESSION['error'] <> '') {
+                ?>
+                <script>
+                    var main_error = $('main_error_popup');
+                    if (main_error != null) {
+                        main_error.style.display = 'table-cell';
+                        Element.hide.delay(10, 'main_error_popup');
+                    }
+                </script>
+                <?php
+            }
+
+            if(isset($_SESSION['info']) && $_SESSION['info'] <> '') {
+                ?>
+                <script>
+                    var main_info = $('main_info');
+                    if (main_info != null) {
+                        main_info.style.display = 'table-cell';
+                        Element.hide.delay(10, 'main_info');
+                    }
+                </script>
+                <?php
+            }
         $loginObj->execute_login_script($loginMethods);
         ?>
     </div>
-
 </body>
 </html>
