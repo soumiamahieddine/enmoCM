@@ -1433,8 +1433,11 @@ class contacts_v2 extends dbquery
                         <tr >
                             <td><label for="phone"><?php echo _PHONE; ?>&nbsp;: </label></td>
                             <td>&nbsp;</td>
-                            <td class="indexing_field"><input name="phone" type="text"  id="phone" value="<?php if(isset($_SESSION['m_admin']['address']['PHONE'])){echo $func->show_str($_SESSION['m_admin']['address']['PHONE']);} ?>"/></td>
+                            <td class="indexing_field"><input name="phone" type="text" onfocus="$('rule_phone').style.display='table-row'" onblur="$('rule_phone').style.display='none';" id="phone" value="<?php if(isset($_SESSION['m_admin']['address']['PHONE'])){echo $func->show_str($_SESSION['m_admin']['address']['PHONE']);} ?>"/></td>
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
+                        </tr>
+                        <tr style="display:none;" id="rule_phone">
+                            <td colspan="3" align="right"><i><?php echo _FORMAT_PHONE; ?></i></td>
                         </tr>
                         <tr>
                             <td><label for="mail"><?php echo _MAIL; ?>&nbsp;: </label></td>
