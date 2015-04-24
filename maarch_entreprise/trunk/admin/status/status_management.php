@@ -174,7 +174,7 @@ if ($mode == 'list') {
                     <li style="display:inline-block;width:50px;padding:5px;"> 	
 					 <input type="radio"  class="check" name="img_related" value="<?php echo $status_img[$i]?>" 
 					 <?php if ($_SESSION['m_admin']['status']['img_filename'] == $status_img[$i]) { ?> checked="checked" <?php } ?> /><?php
-					$img = "<i class = 'fa fa-".$status_img[$i]."' style='font-size:20px;'></i>";
+					$img = "<i class = 'fm ".$status_img[$i]."' style='font-size:20px;'></i>";
 					echo $img;
                     echo "</li>";
 				} ?>
