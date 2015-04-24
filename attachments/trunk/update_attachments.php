@@ -22,11 +22,18 @@ if (
     $path = 'modules/content_management/applet_launcher.php';
 }
 
+
 if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
     $id = $_REQUEST['id'];
     $_SESSION['cm']['collId'] = $_REQUEST['collId'];
-    $db->query("select res_id, format from " 
-        . RES_ATTACHMENTS_TABLE . " where res_id = " . $id);
+	$tableName = 'res_view_attachments';
+    if (!isset($_REQUEST['isVersion'])){
+		$db->query("select res_id, format from " . $tableName . " where res_id = " . $id);
+	}
+	else{
+		$db->query("select res_id_version, format from " . $tableName . " where res_id_version = " . $id);
+	}
+	
     if ($db->nb_result() < 1) {
         echo _FILE . ' ' . _UNKNOWN.".<br/>";
     } else {
@@ -57,7 +64,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
 								?>?objectType=attachment&objectId=<?php 
                                 echo $id;
                                 ?>&objectTable=<?php 
-                                echo RES_ATTACHMENTS_TABLE;
+                                echo $tableName;
                                 ?>');
                         </script>
                     </div>

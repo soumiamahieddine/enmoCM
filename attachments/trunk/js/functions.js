@@ -81,12 +81,21 @@ function ValidAttachmentsForm (path, form_id) {
             eval("response = "+answer.responseText);
             if(response.status == 0){
                 destroyModal('form_attachments'); 
+				
+				if ($('cur_idAffich')) var num_rep = $('cur_idAffich').value;
+
+				if($('viewframevalidRep'+num_rep)) {
+					$('viewframevalidRep'+num_rep).src = "index.php?display=true&module=visa&page=view_doc&path=last";			
+				}
+	
+	
                 eval(response.exec_js);
             } else {
                 alert(response.error);
             }
         }
     });
+	
 }
 
 function modifyAttachmentsForm(path, width, height) {
