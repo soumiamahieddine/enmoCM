@@ -1,9 +1,16 @@
+.errorVisa{
+	color: #ea0000;
+    font-weight: bold;
+    text-align: center;
+    font-size: 1.4em;
+}
 #visa_listDoc{
 	border:1px solid black;
 	height:95%;
 	width:15%;
 	float: left;
 }
+
 
 #visa_left{
 	/*border:1px solid blue;*/

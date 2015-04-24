@@ -155,7 +155,9 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau){
 		i++;
 	}
 	
-	if (cons_empty) $('divErrorVisa').innerHTML = 'Au moins un conseiller est vide';
+	if (cons_empty){
+		$('divErrorVisa').innerHTML = 'Au moins un conseiller est vide';
+	}
 	else
 	new Ajax.Request("index.php?display=true&module=visa&page=saveVisaWF",
 	{

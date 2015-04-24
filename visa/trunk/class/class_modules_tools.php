@@ -161,13 +161,13 @@ class visa extends dbquery
 				
 		$circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
 		if (!isset($circuit['visa']['users']) && !isset($circuit['sign']['users']) && !$core_tools->test_service('config_visa_workflow', 'visa', false)){
-			$str .= '<div class="error" id="divErrorVisa" name="divErrorVisa">'._EMPTY_USER_LIST.'</div>';
+			$str .= '<div class="errorVisa" id="divErrorVisa" name="divErrorVisa">'._EMPTY_USER_LIST.'</div>';
 		}
 		else{
 		
 		$str .= '<div align="center">';
 		//$str .= '<pre>'.print_r($circuit,true).'</pre>';
-		$str .= '<div class="error" id="divErrorVisa" name="divErrorVisa"></div>';
+		$str .= '<div class="errorVisa" id="divErrorVisa" name="divErrorVisa"></div>';
 		$str .= '<table class="listing spec detailtabricatordebug" cellspacing="0" border="0" id="'.$id_tab.'">';
 		$str .= '<thead><tr>';
 		$str .= '<th style="width:30%;" align="left" valign="bottom"><span>Visa</span></th>';

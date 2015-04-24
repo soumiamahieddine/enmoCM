@@ -650,15 +650,18 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$frm_str .= '"><i class="fa fa-check fa-4x" title="Signer ces projets de réponse"></i></a>';
 		}
 		
-		if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response'){
-		$frm_str .= ' <a href="javascript://" id="update_rep_link" onclick="';
+		$displayModif = ' style="" ';
+		if ($tab_path_rep_file[0]['attachment_type'] == 'signed_response')
+			$displayModif = ' style="display:none;" ';
+		
+		$frm_str .= ' <a href="javascript://" id="update_rep_link" '.$displayModif.'onclick="';
 		/*if ($tab_path_rep_file[0]['is_version'] == 0) $frm_str .= 'window.open(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId='.$coll_id.'&id='.$tab_path_rep_file[0]['res_id'].'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');';
 		else  $frm_str .= 'window.open(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId='.$coll_id.'&id='.$tab_path_rep_file[0]['res_id'].'isVersion\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');';*/
 		if ($tab_path_rep_file[0]['is_version'] == 0) $frm_str .= 'modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=1&fromDetail=\',\'98%\',\'auto\');';
 		else  $frm_str .= 'modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=2&fromDetail=\',\'98%\',\'auto\');';
 		
 		$frm_str .= '"><i class="fa fa-pencil-square-o fa-4x" title="Modifier la réponse"></i></a>';
-		}
+		
 		$frm_str .= '</td>';
 		$frm_str .= '</tr>';	
 	$frm_str .= '</table>';	
