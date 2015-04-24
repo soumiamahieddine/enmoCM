@@ -24,6 +24,12 @@ body {
     width: 99.9%;
     height: 99%;
 }
+select{
+   background: white;
+  border: solid 1px #009DC5;  
+}
+
+
 
 #validation_page
 {
@@ -1335,8 +1341,9 @@ left: -100em;
     z-index: 10;
     margin: 0px;
     border: 2px solid #009DC5;
-    top: 29px;
+    top: 28px;
     border-bottom: none;
+    border-top: solid 3px #009DC5;
 }
 
 #menunav li {
