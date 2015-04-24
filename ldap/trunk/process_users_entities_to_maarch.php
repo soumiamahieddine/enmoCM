@@ -266,6 +266,16 @@ function infoBalise($description, $balise)
 
   function insertUserEntity($pseudo, $entity_id, $db){
 
+    $is_primary='Y';
+    $qry=$db->prepare("SELECT * from users_entities where user_id = ?");
+    $qry->execute(array($pseudo));
+    $result = $qry->fetchAll();
+    if(empty($result)){
+        $is_primary='Y';
+    }else{
+        $is_primary='N';
+    }
+
     $qry=$db->prepare("SELECT * from users_entities where user_id = ? and entity_id = ? ");
     $result = null;
     $qry->execute(array($pseudo,$entity_id));
@@ -274,13 +284,13 @@ function infoBalise($description, $balise)
     if($result != null){
         echo "les donnees de users_entities sont a jour \n";
     }else{
-        echo "les donnes de users_entities doivent etre mis a jour!";
-        $qry2=$db->prepare("INSERT into users_entities (user_id,entity_id, primary_entity) values (?,?, 'Y')");
-        $result2 = $qry2->execute(array($pseudo, $entity_id));
+        echo "les donnees de users_entities doivent etre mis a jour!";
+        $qry2=$db->prepare("INSERT into users_entities (user_id,entity_id, primary_entity) values (?,?,?)");
+        $result2 = $qry2->execute(array($pseudo, $entity_id, $is_primary));
         //print_r($qry2->errorInfo());
         $result2 = $qry2->fetchAll();
         if($result2 ==null){
-            echo "Error, aucune users_entities n'a ete ajoute \n";
+            echo "Error, aucun users_entities n'a ete ajoute \n";
         }else{ echo "Insertion du users_entities effectue! \n";}
     }
 }
