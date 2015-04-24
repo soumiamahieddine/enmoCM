@@ -90,6 +90,63 @@ class class_users extends dbquery
 		if (isset($_POST['thumbprint']) && ! empty($_POST['thumbprint'])) {
             $_SESSION['user']['thumbprint']  = $_POST['thumbprint'];
         }
+
+        if (isset($_FILES['signature']['name']) && !empty($_FILES['signature']['name'])) {
+            $extension = explode(".", $_FILES['signature']['name']);
+            $count_level = count($extension)-1;
+            $the_ext = $extension[$count_level];
+            $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
+                . '_' . rand() . '.' . strtolower($the_ext);
+            $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+            
+            if (!is_uploaded_file($_FILES['signature']['tmp_name'])) {
+                    $_SESSION['error'] = _FILE_NOT_SEND . ". " . _TRY_AGAIN
+                        . ". " . _MORE_INFOS . " (<a href=\"mailto:"
+                        . $_SESSION['config']['adminmail'] . "\">"
+                        . $_SESSION['config']['adminname'] . "</a>)";
+            } elseif (!@move_uploaded_file($_FILES['signature']['tmp_name'], $filePathOnTmp)) {
+                $_SESSION['error'] = _FILE_NOT_SEND . ". " . _TRY_AGAIN . ". "
+                    . _MORE_INFOS . " (<a href=\"mailto:"
+                    . $_SESSION['config']['adminmail'] . "\">"
+                    . $_SESSION['config']['adminname'] . "</a>)";
+            } else {
+                require_once 'core/docservers_tools.php';
+                $arrayIsAllowed = array();
+                $arrayIsAllowed = Ds_isFileTypeAllowed($filePathOnTmp);
+                if ($arrayIsAllowed['status'] == false) {
+                    $_SESSION['error'] = _WRONG_FILE_TYPE . ' ' . $arrayIsAllowed['mime_type'];
+                    $_SESSION['upfile'] = array();
+                } else {
+                    include_once 'core/class/docservers_controler.php';
+                    $docservers_controler = new docservers_controler();
+                    $fileTemplateInfos = array(
+                        'tmpDir'      => $_SESSION['config']['tmppath'],
+                        'size'        => $_FILES['signature']['size'],
+                        'format'      => $the_ext,
+                        'tmpFileName' => $fileNameOnTmp,
+                    );
+                    $storeInfos = $docservers_controler->storeResourceOnDocserver(
+                        'templates',
+                        $fileTemplateInfos
+                    );
+                    if (!file_exists(
+                            $storeInfos['path_template']
+                            .  str_replace("#", DIRECTORY_SEPARATOR, $storeInfos['destination_dir'])
+                            . $storeInfos['file_destination_name']
+                        )
+                    ) {
+                        $_SESSION['error'] = _FILE_NOT_EXISTS . ' : ' . $storeInfos['path_template']
+                            .  str_replace("#", DIRECTORY_SEPARATOR, $storeInfos['destination_dir'])
+                            . $storeInfos['file_destination_name'];
+                        return false;
+                    } else {
+                        $_SESSION['user']['signature_path'] = $storeInfos['destination_dir'];
+                        $_SESSION['user']['signature_file_name']  = $storeInfos['file_destination_name'];
+                    }
+                }
+            }
+        }
+
         if (empty($_SESSION['error'])) {
             $firstname = $this->protect_string_db(
                 $_SESSION['user']['FirstName']
@@ -111,6 +168,8 @@ class class_users extends dbquery
                 . $_SESSION['user']['Phone'] . "', mail = '"
                 . $_SESSION['user']['Mail'] . "' , department = '" . $department
                 . "', thumbprint = '" . $_SESSION['user']['thumbprint']
+                . "', signature_path = '" . $_SESSION['user']['signature_path']
+                . "', signature_file_name = '" . $_SESSION['user']['signature_file_name']
                 . "' where user_id = '" . $_SESSION['user']['UserId'] . "'"; 
 
             $this->query($query);
@@ -212,8 +271,8 @@ class class_users extends dbquery
                      </div>
                      <div class="block_end">&nbsp;</div>
                      </div>
-                        <div class="block" style="float:left;width:55%;height:400px;">
-                        <form name="frmuser" style="margin:auto;" id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=user_modif" class="forms addforms">
+                        <div class="block" style="float:left;width:55%;height:auto;">
+                        <form name="frmuser" style="margin:auto;" enctype="multipart/form-data" id="frmuser" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=users&page=user_modif" class="forms addforms">
                             <input type="hidden" name="display" value="true" />
                             <input type="hidden" name="admin" value="users" />
                             <input type="hidden" name="page" value="user_modif" />
@@ -259,8 +318,58 @@ class class_users extends dbquery
                         <label for="thumbprint"><?php  echo _THUMBPRINT;  ?> : </label>
 						<textarea name="thumbprint" id="thumbprint"><?php  echo $_SESSION['user']['thumbprint']; ?></textarea>
                       </p>
-					  
-                      <p class="buttons">
+					  <p>
+                        <label for="signature"><?php  echo _SIGNATURE;  ?> : </label>
+                        <input type="file" name="signature" id="signature"/>
+                        <br />
+                        <br />
+                        <?php
+                        if (file_exists($_SESSION['user']['pathToSignature'])) {
+                            $extension = explode(".", $_SESSION['user']['pathToSignature']);
+                            $count_level = count($extension)-1;
+                            $the_ext = $extension[$count_level];
+                            $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
+                                . '_' . rand() . '.' . strtolower($the_ext);
+                            $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+
+                            if (copy($_SESSION['user']['pathToSignature'], $filePathOnTmp)) {
+                                ?>
+                                 <img src="<?php 
+                                    echo $_SESSION['config']['businessappurl'] 
+                                        . '/tmp/' . $fileNameOnTmp;
+                                    ?>" alt="signature" id="signFromDs"/> 
+                                <?php
+                            } else {
+                                echo _COPY_ERROR;
+                            }
+                        }
+                        ?>
+                        <canvas id="imageCanvas" style="display:none;"></canvas>
+                        <script>
+                            var signature = document.getElementById('signature');
+                                signature.addEventListener('change', handleImage, false);
+                            var canvas = document.getElementById('imageCanvas');
+                            var signFromDs = document.getElementById('signFromDs');
+                            var ctx = canvas.getContext('2d');
+
+                            function handleImage(e){
+                                var reader = new FileReader();
+                                reader.onload = function(event){
+                                    var img = new Image();
+                                    img.onload = function(){
+                                        canvas.width = img.width;
+                                        canvas.height = img.height;
+                                        ctx.drawImage(img,0,0);
+                                        canvas.style.display = 'block';
+                                        signFromDs.style.display = 'none';
+                                    }
+                                    img.src = event.target.result;
+                                }
+                                reader.readAsDataURL(e.target.files[0]);     
+                            }
+                        </script>  
+                    </p>
+                    <p class="buttons">
                             <input type="submit" name="Submit" value="<?php  echo _VALIDATE; ?>" class="button" />
                             <input type="button" name="cancel" value="<?php  echo _CANCEL; ?>" class="button" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';" />
                     </p>
@@ -289,20 +398,41 @@ class class_users extends dbquery
         if (!empty($user_id)) {
             $this->connect();
             $this->query(
-                "select user_id, firstname, lastname, mail, phone, status, thumbprint from " 
+                "select user_id, firstname, lastname, mail, phone, status, thumbprint, signature_path, signature_file_name from " 
                 . USERS_TABLE . " where user_id = '" . $user_id . "'"
             );
             if ($this->nb_result() >0) {
                 $line = $this->fetch_object();
+                if ($line->signature_path <> '' 
+                    && $line->signature_file_name <> '' 
+                ) {
+                    $db = new dbquery();
+                    $db->connect();
+                    $query = "select path_template from " 
+                        . _DOCSERVERS_TABLE_NAME 
+                        . " where docserver_id = 'TEMPLATES'";
+                    $db->query($query);
+                    $resDs = $db->fetch_object();
+                    $pathToDs = $resDs->path_template;
+                    $pathToSignature = $pathToDs . str_replace(
+                            "#", 
+                            DIRECTORY_SEPARATOR, 
+                            $line->signature_path
+                        )
+                        . $line->signature_file_name;
+                }
                 $user = array(
-                        'id' => $line->user_id,
-                        'firstname' => $this->show_string($line->firstname),
-                        'lastname' => $this->show_string($line->lastname),
-                        'mail' => $line->mail,
-                        'phone' => $line->phone,
-                        'status' => $line->status,
-						'thumbprint' => $line->thumbprint
-                    );
+                    'id' => $line->user_id,
+                    'firstname' => $this->show_string($line->firstname),
+                    'lastname' => $this->show_string($line->lastname),
+                    'mail' => $line->mail,
+                    'phone' => $line->phone,
+                    'status' => $line->status,
+                    'thumbprint' => $line->thumbprint,
+                    'signature_path' => $line->signature_path,
+                    'signature_file_name' => $line->signature_file_name,
+					'pathToSignature' => $pathToSignature,
+                );
                 return $user;
             } else {
                 return false;

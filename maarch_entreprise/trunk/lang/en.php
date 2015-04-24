@@ -1401,3 +1401,6 @@ if (!defined('_CONFIDENTIALITY')) define( '_CONFIDENTIALITY', 'Confidential mail
 
 if (!defined('_SIGNATORY_NAME')) define( '_SIGNATORY_NAME', 'Signatory name');
 if (!defined('_SIGNATORY_GROUP')) define( '_SIGNATORY_GROUP', 'Signatory group');
+
+if (!defined('_SIGNATURE')) define( '_SIGNATURE','Signature');
+

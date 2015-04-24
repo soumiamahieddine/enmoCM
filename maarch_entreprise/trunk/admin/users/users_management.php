@@ -53,7 +53,10 @@ elseif($mode == "up" || $mode == "add")
         echo "<br /><br /><br /><br />"._USER.' '._UNKNOWN."<br /><br /><br /><br />";
     else
     {?>
-        <form  id="frmuser" class="block" method="post" action="<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&amp;admin=users&amp;page=users_management_controler&amp;mode=<?php echo $mode;?>" class="forms addforms" style="width:55%;height:400px;">
+        <form  id="frmuser" class="block" method="post" enctype="multipart/form-data" action="<?php 
+            echo $_SESSION['config']['businessappurl']; 
+            ?>index.php?display=true&amp;admin=users&amp;page=users_management_controler&amp;mode=<?php 
+            echo $mode;?>" class="forms addforms" style="width:55%;height:auto;">
             <div class="content" style="width:400px;margin:auto;">
             <input type="hidden" name="display" value="true" />
             <input type="hidden" name="admin" value="users" />
@@ -91,12 +94,66 @@ elseif($mode == "up" || $mode == "add")
             </p>
 			
 			<?php
-			if (isset($_SESSION['modules_loaded']['visa'])){
+			if (isset($_SESSION['modules_loaded']['visa'])) {
 			?>
 			 <p>
 			  <label for="thumbprint"><?php  echo _THUMBPRINT;  ?> : </label><br/>
-				<textarea name="thumbprint" id="thumbprint" style="width: 95%;" ><?php if(isset($_SESSION['m_admin']['users']['thumbprint'])){ echo $_SESSION['m_admin']['users']['thumbprint']; }?></textarea>
+				<textarea name="thumbprint" id="thumbprint" style="width: 95%;" ><?php 
+                    if(isset($_SESSION['m_admin']['users']['thumbprint'])) { 
+                        echo $_SESSION['m_admin']['users']['thumbprint']; 
+                    }?></textarea>
 			  </p>
+              <p>
+                <label for="signature"><?php  echo _SIGNATURE;  ?> : </label><br/>
+                <input type="file" name="signature" id="signature"/>
+                <br />
+                <br />
+                <?php
+                if (file_exists($_SESSION['m_admin']['users']['pathToSignature'])) {
+                    $extension = explode(".", $_SESSION['m_admin']['users']['pathToSignature']);
+                    $count_level = count($extension)-1;
+                    $the_ext = $extension[$count_level];
+                    $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
+                        . '_' . rand() . '.' . strtolower($the_ext);
+                    $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+
+                    if (copy($_SESSION['m_admin']['users']['pathToSignature'], $filePathOnTmp)) {
+                        ?>
+                         <img src="<?php 
+                            echo $_SESSION['config']['businessappurl'] 
+                                . '/tmp/' . $fileNameOnTmp;
+                            ?>" alt="signature" id="signFromDs"/> 
+                        <?php
+                    } else {
+                        echo _COPY_ERROR;
+                    }
+                }
+                ?>
+                <canvas id="imageCanvas" style="display:none;"></canvas>
+                <script>
+                    var signature = document.getElementById('signature');
+                        signature.addEventListener('change', handleImage, false);
+                    var canvas = document.getElementById('imageCanvas');
+                    var signFromDs = document.getElementById('signFromDs');
+                    var ctx = canvas.getContext('2d');
+
+                    function handleImage(e){
+                        var reader = new FileReader();
+                        reader.onload = function(event){
+                            var img = new Image();
+                            img.onload = function(){
+                                canvas.width = img.width;
+                                canvas.height = img.height;
+                                ctx.drawImage(img,0,0);
+                                canvas.style.display = 'block';
+                                signFromDs.style.display = 'none';
+                            }
+                            img.src = event.target.result;
+                        }
+                        reader.readAsDataURL(e.target.files[0]);     
+                    }
+                </script>  
+            </p>
 			<?php
 			}
 			?>

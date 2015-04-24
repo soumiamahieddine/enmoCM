@@ -1778,3 +1778,5 @@ if (!defined('_SIGNATORY_NAME')) define( '_SIGNATORY_NAME', 'Nom du signataire')
 if (!defined('_SIGNATORY_GROUP')) define( '_SIGNATORY_GROUP', 'Groupe du signataire');
 
 if (!defined('_FORMAT_PHONE')) define( '_FORMAT_PHONE', 'Format : 06 01 02 03 04');
+
+if (!defined('_SIGNATURE')) define( '_SIGNATURE','Signature');

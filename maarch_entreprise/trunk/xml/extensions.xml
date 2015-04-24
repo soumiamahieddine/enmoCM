@@ -151,6 +151,11 @@
         <index_frame_show>true</index_frame_show>
     </FORMAT>
     <FORMAT>
+        <name>PNG</name>
+        <mime>image/png</mime>
+        <index_frame_show>true</index_frame_show>
+    </FORMAT>
+    <FORMAT>
         <name>RTF</name>
         <mime>text/rtf</mime>
         <index_frame_show>false</index_frame_show>

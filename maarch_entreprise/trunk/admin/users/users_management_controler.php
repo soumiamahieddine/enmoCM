@@ -112,14 +112,33 @@ function display_up($user_id){
     $ugc = new usergroups_controler();
     $state=true;
     $user = $uc->get($user_id );
-    if(empty($user)){
+    if (empty($user)){
         $state = false;
-    }
-    else{
+    } else {
+        if ($user->signature_path <> '' 
+            && $user->signature_file_name <> '' 
+        ) {
+            $db = new dbquery();
+            $db->connect();
+            $query = "select path_template from " 
+                . _DOCSERVERS_TABLE_NAME 
+                . " where docserver_id = 'TEMPLATES'";
+            $db->query($query);
+            $resDs = $db->fetch_object();
+            $pathToDs = $resDs->path_template;
+            $user->pathToSignature = $pathToDs . str_replace(
+                    "#", 
+                    DIRECTORY_SEPARATOR, 
+                    $user->signature_path
+                )
+                . $user->signature_file_name;
+        }
         put_in_session("users",$user->getArray());
     }
 
-    if (($_SESSION['m_admin']['load_group'] == true || ! isset($_SESSION['m_admin']['load_group'] )) && $_SESSION['m_admin']['users']['user_id'] <> "superadmin"){
+    if (
+        ($_SESSION['m_admin']['load_group'] == true || ! isset($_SESSION['m_admin']['load_group'] )) 
+        && $_SESSION['m_admin']['users']['user_id'] <> "superadmin"){
         $tmp_array = $uc->getGroups($_SESSION['m_admin']['users']['user_id']);
         for($i=0; $i<count($tmp_array);$i++){
             $group = $ugc->get($tmp_array[$i]['GROUP_ID']);
@@ -535,7 +554,8 @@ function format_item(&$item,$label,$size,$label_align,$align,$valign,$show,$orde
  * Validate a submit (add or up),
  * up to saving object
  */
-function validate_user_submit(){
+function validate_user_submit()
+{
     $uc = new users_controler();
     $pageName = "users_management_controler";
 
@@ -574,6 +594,63 @@ function validate_user_submit(){
 	if(isset($_REQUEST['thumbprint']) && !empty($_REQUEST['thumbprint'])){
         $user->thumbprint  = $_REQUEST['thumbprint'];
     }
+
+    if (isset($_FILES['signature']['name']) && !empty($_FILES['signature']['name'])) {
+        $extension = explode(".", $_FILES['signature']['name']);
+        $count_level = count($extension)-1;
+        $the_ext = $extension[$count_level];
+        $fileNameOnTmp = 'tmp_file_' . $_SESSION['user']['UserId']
+            . '_' . rand() . '.' . strtolower($the_ext);
+        $filePathOnTmp = $_SESSION['config']['tmppath'] . $fileNameOnTmp;
+        
+        if (!is_uploaded_file($_FILES['signature']['tmp_name'])) {
+                $_SESSION['error'] = _FILE_NOT_SEND . ". " . _TRY_AGAIN
+                    . ". " . _MORE_INFOS . " (<a href=\"mailto:"
+                    . $_SESSION['config']['adminmail'] . "\">"
+                    . $_SESSION['config']['adminname'] . "</a>)";
+        } elseif (!@move_uploaded_file($_FILES['signature']['tmp_name'], $filePathOnTmp)) {
+            $_SESSION['error'] = _FILE_NOT_SEND . ". " . _TRY_AGAIN . ". "
+                . _MORE_INFOS . " (<a href=\"mailto:"
+                . $_SESSION['config']['adminmail'] . "\">"
+                . $_SESSION['config']['adminname'] . "</a>)";
+        } else {
+            require_once 'core/docservers_tools.php';
+            $arrayIsAllowed = array();
+            $arrayIsAllowed = Ds_isFileTypeAllowed($filePathOnTmp);
+            if ($arrayIsAllowed['status'] == false) {
+                $_SESSION['error'] = _WRONG_FILE_TYPE . ' ' . $arrayIsAllowed['mime_type'];
+                $_SESSION['upfile'] = array();
+            } else {
+                include_once 'core/class/docservers_controler.php';
+                $docservers_controler = new docservers_controler();
+                $fileTemplateInfos = array(
+                    'tmpDir'      => $_SESSION['config']['tmppath'],
+                    'size'        => $_FILES['signature']['size'],
+                    'format'      => $the_ext,
+                    'tmpFileName' => $fileNameOnTmp,
+                );
+                $storeInfos = $docservers_controler->storeResourceOnDocserver(
+                    'templates',
+                    $fileTemplateInfos
+                );
+                if (!file_exists(
+                        $storeInfos['path_template']
+                        .  str_replace("#", DIRECTORY_SEPARATOR, $storeInfos['destination_dir'])
+                        . $storeInfos['file_destination_name']
+                    )
+                ) {
+                    $_SESSION['error'] = _FILE_NOT_EXISTS . ' : ' . $storeInfos['path_template']
+                        .  str_replace("#", DIRECTORY_SEPARATOR, $storeInfos['destination_dir'])
+                        . $storeInfos['file_destination_name'];
+                    return false;
+                } else {
+                    $user->signature_path  = $storeInfos['destination_dir'];
+                    $user->signature_file_name  = $storeInfos['file_destination_name'];
+                }
+            }
+        }
+    }
+    
     $status= array();
     $status['order']=$_REQUEST['order'];
     $status['order_field']=$_REQUEST['order_field'];
@@ -598,7 +675,7 @@ function validate_user_submit(){
     if (isset($_SESSION['m_admin']['users']['groups'])) {
         $control = $uc->save($user, $_SESSION['m_admin']['users']['groups'], $mode, $params);
     }
-    if(!empty($control['error']) && $control['error'] <> 1) {
+    if (!empty($control['error']) && $control['error'] <> 1) {
         // Error management depending of mode
         $_SESSION['error'] = str_replace("#", "<br />", $control['error']);
         put_in_session("status", $status);
@@ -626,7 +703,6 @@ function validate_user_submit(){
         header("location: ".$_SESSION['config']['businessappurl']."index.php?page=".$pageName."&mode=list&admin=users&order=".$status['order']."&order_field=".$status['order_field']."&start=".$status['start']."&what=".$status['what']);
     }
 }
-
 
 function init_session(){
     $_SESSION['m_admin']['users'] = array();
