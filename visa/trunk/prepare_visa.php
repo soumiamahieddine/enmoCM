@@ -136,7 +136,7 @@ function get_rep_path($res_id, $coll_id)
 	$db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver_id."'");
     $res = $db->fetch_object();
     $docserver_path = $res->path_template;
-	$db->query("select filename, path,title,res_id  from res_view_attachments where res_id_master = " . $res_id . " AND status <> 'OBS' AND status <> 'DEL' and attachment_type = 'response_project' order by creation_date asc");
+	$db->query("select filename, path,title,res_id,res_id_version  from res_view_attachments where res_id_master = " . $res_id . " AND status <> 'OBS' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response') order by creation_date asc");
 	$array_reponses = array();
 	$cpt_rep = 0;
 	while ($res2 = $db->fetch_object()){
@@ -146,7 +146,14 @@ function get_rep_path($res_id, $coll_id)
 		if (is_file($docserver_path.$path.$filename_pdf)){
 			$array_reponses[$cpt_rep]['path'] = $docserver_path.$path.$filename_pdf;
 			$array_reponses[$cpt_rep]['title'] = $res2->title;
-			$array_reponses[$cpt_rep]['res_id'] = $res2->res_id;
+			if ($res2->res_id_version == 0){
+				$array_reponses[$cpt_rep]['res_id'] = $res2->res_id;
+				$array_reponses[$cpt_rep]['is_version'] = 0;
+			}
+			else{
+				$array_reponses[$cpt_rep]['res_id'] = $res2->res_id_version;
+				$array_reponses[$cpt_rep]['is_version'] = 1;
+			}
 			$cpt_rep++;
 		}
 	}
@@ -329,17 +336,17 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '<table>';	
 	$frm_str .= '<tr>';
 		$frm_str .= '<td style="width:33%";">';	
-		$frm_str .= '<a href="javascript://" id="previous_doc" onclick="previousDoc(\'index.php?display=true&module=visa&page=update_preparePage\',\''.$coll_id.'\');"><i class="fa fa-chevron-up fa-3x" title="Précédent"></i></a>';
+		$frm_str .= '<a href="javascript://" id="previous_doc" onclick="previousDoc(\'index.php?display=true&module=visa&page=update_preparePage\',\''.$coll_id.'\');"><i class="fa fa-chevron-up fa-2x" title="Précédent"></i></a>';
 		
 		$frm_str .= '</td>';
 		
 		$frm_str .= '<td style="width:33%";">';	
-		$frm_str .= '<a href="javascript://" id="next_doc" onclick="nextDoc(\'index.php?display=true&module=visa&page=update_preparePage\',\''.$coll_id.'\');"><i class="fa fa-chevron-down fa-3x" title="Suivant"></i></a>';
+		$frm_str .= '<a href="javascript://" id="next_doc" onclick="nextDoc(\'index.php?display=true&module=visa&page=update_preparePage\',\''.$coll_id.'\');"><i class="fa fa-chevron-down fa-2x" title="Suivant"></i></a>';
 		
 		$frm_str .= '</td>';
 		
 		$frm_str .= '<td style="width:33%";">';	
-		$frm_str .= '<a href="javascript://" id="cancel" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"><i class="fa fa-undo fa-3x" title="Annuler"></i></a>';
+		$frm_str .= '<a href="javascript://" id="cancel" onclick="javascript:$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"><i class="fa fa-undo fa-2x" title="Annuler"></i></a>';
 		
 		$frm_str .= '</td>';
 	$frm_str .= '</tr>';	
@@ -469,22 +476,23 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$num_rep = $i+1;
 		if (strlen($tab_path_rep_file[$i]['title']) > 20) $titleRep = substr($tab_path_rep_file[$i]['title'],0,20).'...';
 		else $titleRep = $tab_path_rep_file[$i]['title'];
-		$frm_str .= '<dt onclick="updateFunctionModifRep(\''.$tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.');">'.$titleRep.'</dt><dd>';
+		$frm_str .= '<dt onclick="updateFunctionModifRep(\''.$tab_path_rep_file[$i]['res_id'].'\', '.$num_rep.', '.$tab_path_rep_file[$i]['is_version'].');">'.$titleRep.'</dt><dd>';
 		$frm_str .= '<iframe src="'.$_SESSION['config']['businessappurl'].'index.php?display=true&module=visa&page=view_doc&path='
 			. $tab_path_rep_file[$i]['path'].'" name="viewframevalidRep'.$num_rep.'" id="viewframevalidRep'.$num_rep.'"  scrolling="auto" frameborder="0" style="width:100%;height:100%;" ></iframe>';
 		 $frm_str .= '</dd>';
 	}
 	
-	$countAttachments = "select res_id, creation_date, title, format from " 
-			. $_SESSION['tablename']['attach_res_attachments'] 
-			. "  where (status = 'A_TRA' or status = 'TRA') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'";
+	
+		$countAttachments = "select res_id from "
+            . $_SESSION['tablename']['attach_res_attachments']
+            . " where status NOT IN ('DEL','OBS') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'";
 		$dbAttach = new dbquery();
 		$dbAttach->query($countAttachments);
 		if ($dbAttach->nb_result() > 0) {
 			$nb_attach = ' (' . ($dbAttach->nb_result()). ')';
 		}
 	
-		$frm_str .= '<dt id="onglet_pj">'. _ATTACHED_DOC .$nb_attach.'</dt><dd id="page_pj">';
+		$frm_str .= '<dt id="onglet_pj" onclick="$(\'cur_idAffich\').value=0;">'. _ATTACHED_DOC .$nb_attach.'</dt><dd id="page_pj">';
 		
 		if ($core_tools->is_module_loaded('attachments')) {
         require 'modules/templates/class/templates_controler.php';
@@ -634,8 +642,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '</form>';
 		$frm_str .= '</td>';
 		$frm_str .= '<td style="width:5%;">';	
-		$frm_str .= '<a href="javascript://" id="update_rep_link" onclick="';
-		$frm_str .= 'window.open(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId='.$coll_id.'&id='.$tab_path_rep_file[0]['res_id'].'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');';
+		$frm_str .= ' <a href="javascript://" id="update_rep_link" onclick="';
+		/*if ($tab_path_rep_file[0]['is_version'] == 0) $frm_str .= 'window.open(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId='.$coll_id.'&id='.$tab_path_rep_file[0]['res_id'].'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');';
+		else  $frm_str .= 'window.open(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId='.$coll_id.'&id='.$tab_path_rep_file[0]['res_id'].'isVersion\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');';*/
+		if ($tab_path_rep_file[0]['is_version'] == 0) $frm_str .= 'modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=1&fromDetail=\',\'98%\',\'auto\');';
+		else  $frm_str .= 'modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=2&fromDetail=\',\'98%\',\'auto\');';
+		
 		$frm_str .= '"><i class="fa fa-pencil-square-o fa-4x" title="Modifier la réponse"></i></a>';
 		
 		$frm_str .= '</td>';

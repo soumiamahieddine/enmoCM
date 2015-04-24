@@ -295,7 +295,7 @@ function nextDoc(path_update,collId){
 	}
 }
 
-function updateFunctionModifRep(idReponse, num_rep){
+function updateFunctionModifRep(idReponse, num_rep, is_version){
 	new Ajax.Request("index.php?display=true&page=checkSignFile&module=visa&res_id="+idReponse,
 	{
 		method:'post',
@@ -313,12 +313,19 @@ function updateFunctionModifRep(idReponse, num_rep){
 			}
 			else if (response.status == 0){
 				if (document.getElementById("sign_link")){
-					document.getElementById("sign_link").setAttribute('onclick','signFile('+idReponse+');');	
+					document.getElementById("sign_link").setAttribute('onclick','signFile('+idReponse+','+is_version+');');	
 					document.getElementById("sign_link").style.color = '';
 				}
 				if (document.getElementById("update_rep_link")) {
 					document.getElementById("update_rep_link").style.display = '';
-					document.getElementById("update_rep_link").setAttribute('onclick','window.open(\'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId=letterbox_coll&id='+idReponse+'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');');	
+					/*if (is_version == 0) document.getElementById("update_rep_link").setAttribute('onclick','window.open(\'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId=letterbox_coll&id='+idReponse+'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');');	
+					else document.getElementById("update_rep_link").setAttribute('onclick','window.open(\'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId=letterbox_coll&id='+idReponse+'&isVersion\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');');	*/
+					
+					//modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=1&fromDetail=\',\'98%\',\'auto\');
+					console.log(is_version);
+					if (is_version == 0) document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=1&fromDetail=\',\'98%\',\'auto\');');	
+					else document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=2&fromDetail=\',\'98%\',\'auto\');');	
+					
 				}
 			}
 		}
@@ -329,19 +336,21 @@ function updateFunctionModifRep(idReponse, num_rep){
 	document.getElementById("cur_rep").setAttribute('value',idReponse);
 }
 
-function signFile(res_id){
+function signFile(res_id,isVersion){
 	new Ajax.Request("index.php?display=true&module=visa&page=checkPinCode",
 	{
 		method:'post',
 		onSuccess: function(answer){
 			eval("response = "+answer.responseText);
 			if (response.status == 1){
-				window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
+				if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
+				else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
 			}
 			else if (response.status == 0){
 				var pinCode = prompt("Code PIN :", "");
 				console.log("Code PIN :"+pinCode);
-				window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&pinCode='+pinCode,'','height=301, width=301,scrollbars=yes,resizable=yes');
+				if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
+				else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
 			}
 		}
 	});
@@ -382,7 +391,7 @@ function endAttachmentSign(newId)
 	}
 	
 	if(window.opener.$('ans_'+num_rep)) {
-		window.opener.$('ans_'+num_rep).setAttribute('onclick','updateFunctionModifRep(\''+newId+'\', '+num_rep+');');			
+		window.opener.$('ans_'+num_rep).setAttribute('onclick','updateFunctionModifRep(\''+newId+'\', '+num_rep+', 0);');			
 	}
     window.close();
 }

@@ -82,7 +82,7 @@ function ajout_bdd($bordereau, $res_id){
 	$date = date("Y-m-d H:i:s").".000";
 
 	if (!bordExists($res_id, 'letterbox_coll')){
-		$req =  "INSERT INTO res_attachments (title, type_id, format, typist, creation_date, identifier, docserver_id, path, filename, fingerprint, filesize, status, coll_id,res_id_master,attachment_type) VALUES ('".$title."', '0', 'pdf', '".$_SESSION['user']['UserId']."', '".$date."', '1', 'FASTHD_MAN', '".$bordereau['path']."', '".$bordereau['filename']."', '".$fingerprint."', '".$filesize."', 'TRA', 'letterbox_coll','".$res_id."','routing');";
+		$req =  "INSERT INTO res_attachments (title, type_id, format, typist, creation_date, identifier, docserver_id, path, filename, fingerprint, filesize, status, coll_id,res_id_master,attachment_type, relation) VALUES ('".$title."', '0', 'pdf', '".$_SESSION['user']['UserId']."', '".$date."', '1', 'FASTHD_MAN', '".$bordereau['path']."', '".$bordereau['filename']."', '".$fingerprint."', '".$filesize."', 'TRA', 'letterbox_coll','".$res_id."','routing', 1);";
 	}
 	else {
 		$req =  "UPDATE res_attachments SET path='".$bordereau['path']."', filename='".$bordereau['filename']."', fingerprint='".$fingerprint."', filesize='".$filesize."' WHERE res_id_master = $res_id and attachment_type='routing' ";

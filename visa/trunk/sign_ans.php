@@ -29,7 +29,10 @@ if (!empty($_REQUEST['pinCode'])) {
 
 if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
     $id = $_REQUEST['id'];
-    $db->query("select res_id, format, res_id_master, title from ".RES_ATTACHMENTS_TABLE." where attachment_type = 'response_project' and res_id = " . $id);
+	$tableName = 'res_view_attachments';
+    if (!isset($_REQUEST['isVersion'])) $db->query("select res_id, format, res_id_master, title from ".$tableName." where attachment_type = 'response_project' and res_id = " . $id);
+    else $db->query("select res_id_version, format, res_id_master, title from ".$tableName." where attachment_type = 'response_project' and res_id_version = " . $id);
+	
     if ($db->nb_result() < 1) {
         echo _FILE . ' ' . _UNKNOWN.".<br/>";
     } else {

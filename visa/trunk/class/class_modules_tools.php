@@ -253,7 +253,7 @@ class visa extends dbquery
 							$str .= '</td>';
 							$str .= '<td>'.$step['process_comment'].'</td>';	
 							$currentStep = $this->getCurrentStep($res_id, $coll_id, $typeList);
-							if ($currentStep > $seq) $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
+							if ($currentStep > $seq || $step['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
 							elseif ($currentStep == $seq) $str .= '<td><i class="fa fa-spinner fa-2x"></i></td>';		
 							else $str .= '<td></td>';		
 						}
@@ -303,7 +303,7 @@ class visa extends dbquery
 						$str .= '</td>';
 						$str .= '<td>'.$circuit['sign']['users'][0]['process_comment'].'</td>';	
 						$currentStep = $this->getCurrentStep($res_id, $coll_id, $typeList);
-						if ($currentStep > $seq) $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
+						if ($currentStep > $seq || $circuit['sign']['users'][0]['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
 						elseif ($currentStep == $seq) $str .= '<td><i class="fa fa-spinner fa-2x"></i></td>';		
 						else $str .= '<td></td>';		
 					}

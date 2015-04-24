@@ -16,6 +16,7 @@ $docserver = $docserverControler->getDocserverToInsert(
     'letterbox_coll'
 );
 
+
 $collId =  'letterbox_coll';
 
 if (empty($docserver)) {
@@ -44,6 +45,20 @@ if (empty($docserver)) {
         if (isset($storeResult['error']) && $storeResult['error'] <> '') {
             $_SESSION['error'] = $storeResult['error'];
         } else {
+			
+			require_once "core/class/class_request.php";
+			$req = new request();
+			$req->connect();
+			if ($_SESSION['visa']['repSignRel'] > 1) {
+                $req->query("UPDATE res_version_attachments set status = 'OBS' WHERE res_id = ".$_SESSION['visa']['repSignId']);
+            } else {
+               $req->query("UPDATE res_attachments set status = 'OBS' WHERE res_id = ".$_SESSION['visa']['repSignId']);
+            }
+						
+			unset($_SESSION['visa']['repSignRel']);
+			unset($_SESSION['visa']['repSignId']);
+			
+			
             $resAttach = new resource();
             $_SESSION['data'] = array();
             array_push(
@@ -102,6 +117,14 @@ if (empty($docserver)) {
                     'type' => 'string',
                 )
             );
+			array_push(
+                $_SESSION['data'],
+                array(
+                    'column' => 'relation',
+                    'value' => 1,
+                    'type' => 'integer',
+                )
+            );
             $_SESSION['cm']['templateStyle'] = '';
             array_push(
                 $_SESSION['data'],
@@ -154,6 +177,8 @@ if (empty($docserver)) {
                 $_SESSION['data'],
                 $_SESSION['config']['databasetype']
             );
+			
+			
 			
 			$_SESSION['visa']['last_ans_signed'] = $id;
             if ($id == false) {
