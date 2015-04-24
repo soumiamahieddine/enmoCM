@@ -56,16 +56,16 @@ INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUE
 ------------
 --STATUS-
 ------------
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('COU', 'En cours', 'Y', 'mail.gif', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('DEL', 'Supprimé', 'Y', NULL, 'apps', 'N', 'Y');
-INSERT INTO status VALUES ('END', 'Clos / fin du workflow', 'Y', 'N', 'mail_end.gif', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('NEW', 'Nouveau', 'Y', 'mail_new.gif', 'apps', 'Y', 'Y');
-INSERT INTO status VALUES ('RET', 'Retour courrier ou document en qualification', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('COU', 'En cours', 'Y', 'fm-letter-status-inprogress', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('DEL', 'Supprimé', 'Y', NULL, 'fm-letter-del', 'N', 'Y');
+INSERT INTO status VALUES ('END', 'Clos / fin du workflow', 'Y', 'N', 'fm-letter-status-end', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('NEW', 'Nouveau', 'Y', 'fm-letter-status-new', 'apps', 'Y', 'Y');
+INSERT INTO status VALUES ('RET', 'Retour courrier ou document en qualification', 'N', 'N', 'fm-letter-status-rejected', 'apps', 'Y', 'Y');
 INSERT INTO status VALUES ('SIG', 'A signer', 'N', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('UNS', 'Rejeté', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('VAL', 'A Valider', 'Y', '', 'apps', 'Y', 'Y');
-INSERT INTO status VALUES ('INIT', 'Nouveau courrier ou document non qualifié', 'Y', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status VALUES ('VIS', 'A viser', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('UNS', 'Rejeté', 'N', 'fm-letter-status-rejected', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('VAL', 'A Valider', 'Y', '', 'fm-letter-status-aval', 'Y', 'Y');
+INSERT INTO status VALUES ('INIT', 'Nouveau courrier ou document non qualifié', 'Y', 'N', 'fm-letter-status-attr', 'apps', 'Y', 'Y');
+INSERT INTO status VALUES ('VIS', 'A viser', 'N', 'N', 'fm-letter-status-aval', 'apps', 'Y', 'Y');
 
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SMART', 'Nouvelle demande Allo Mairie', 'N', '', 'apps', 'Y', 'N');
 
