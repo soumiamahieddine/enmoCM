@@ -110,6 +110,7 @@ class class_users extends dbquery
                 . $firstname . "', lastname = '" . $lastname . "', phone = '"
                 . $_SESSION['user']['Phone'] . "', mail = '"
                 . $_SESSION['user']['Mail'] . "' , department = '" . $department
+                . "', thumbprint = '" . $_SESSION['user']['thumbprint']
                 . "' where user_id = '" . $_SESSION['user']['UserId'] . "'"; 
 
             $this->query($query);
@@ -256,7 +257,7 @@ class class_users extends dbquery
 
 					   <p>
                         <label for="thumbprint"><?php  echo _THUMBPRINT;  ?> : </label>
-						<textarea name="thumbprint" id="thumbprint"></textarea>
+						<textarea name="thumbprint" id="thumbprint"><?php  echo $_SESSION['user']['thumbprint']; ?></textarea>
                       </p>
 					  
                       <p class="buttons">
