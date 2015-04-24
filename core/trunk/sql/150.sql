@@ -324,6 +324,12 @@ ALTER TABLE templates ADD template_attachment_type character varying(255) DEFAUL
 ALTER TABLE users DROP COLUMN IF EXISTS thumbprint;
 ALTER TABLE users ADD thumbprint text;
 
+ALTER TABLE users DROP COLUMN IF EXISTS signature_path;
+ALTER TABLE users ADD signature_path character varying(255) DEFAULT NULL::character varying;
+
+ALTER TABLE users DROP COLUMN IF EXISTS signature_file_name;
+ALTER TABLE users ADD signature_file_name character varying(255) DEFAULT NULL::character varying;
+
 DELETE FROM status WHERE id = 'A_TRA';
 INSERT INTO status (id, label_status, is_system) VALUES ('A_TRA', 'A traiter', 'N');
 

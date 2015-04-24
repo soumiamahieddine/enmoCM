@@ -300,6 +300,8 @@ CREATE TABLE users
   loginmode character varying(50) DEFAULT NULL::character varying,
   docserver_location_id character varying(32) DEFAULT NULL::character varying,
   thumbprint text DEFAULT NULL::character varying,
+  signature_path character varying(255) DEFAULT NULL::character varying,
+  signature_file_name character varying(255) DEFAULT NULL::character varying,
   CONSTRAINT users_pkey PRIMARY KEY (user_id)
 )
 WITH (OIDS=FALSE);

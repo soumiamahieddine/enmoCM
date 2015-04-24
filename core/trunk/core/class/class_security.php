@@ -163,6 +163,28 @@ class security extends dbquery
                 $ugc = new usergroups_controler();
                 $sec_controler = new SecurityControler();
                 $serv_controler = new ServiceControler();
+                if (isset($_SESSION['modules_loaded']['visa'])) {
+                    if ($user->__get('signature_path') <> '' 
+                        && $user->__get('signature_file_name') <> '' 
+                    ) {
+                        $_SESSION['user']['signature_path'] = $user->__get('signature_path');
+                        $_SESSION['user']['signature_file_name'] = $user->__get('signature_file_name');
+                        $db = new dbquery();
+                        $db->connect();
+                        $query = "select path_template from " 
+                            . _DOCSERVERS_TABLE_NAME 
+                            . " where docserver_id = 'TEMPLATES'";
+                        $db->query($query);
+                        $resDs = $db->fetch_object();
+                        $pathToDs = $resDs->path_template;
+                        $_SESSION['user']['pathToSignature'] = $pathToDs . str_replace(
+                                "#", 
+                                DIRECTORY_SEPARATOR, 
+                                $_SESSION['user']['signature_path']
+                            )
+                            . $_SESSION['user']['signature_file_name'];
+                    }
+                }
                 $array = array(
                     'change_pass' => $user->__get('change_password'),
                     'UserId'      => $user->__get('user_id'),
@@ -172,9 +194,12 @@ class security extends dbquery
                     'Mail'        => $user->__get('mail'),
                     'department' => $user->__get('department'),
                     'thumbprint' => $user->__get('thumbprint'),
+                    'signature_path' => $user->__get('signature_path'),
+                    'signature_file_name' => $user->__get('signature_file_name'),
+                    'pathToSignature' => $_SESSION['user']['pathToSignature'],
                     'Status' => $user->__get('status'),
                 );
-               // $_SESSION['error'] =  '';
+                // $_SESSION['error'] =  '';
                 setcookie(
                     'maarch', 'UserId=' . $array['UserId'] . '&key='
                     . $user->__get('cookie_key'), time() - 3600000,
@@ -309,7 +334,6 @@ class security extends dbquery
         $comp = " and cookie_key = '".$s_key."' and STATUS <> 'DEL'";
         $uc = new users_controler();
         $user = users_controler::get($s_login, $comp);
-
         if(isset($user))
         {
             if($user->__get('enabled')  == "Y")
@@ -323,6 +347,29 @@ class security extends dbquery
                 $_SESSION['user']['Mail'] = $user->__get('mail');
                 $_SESSION['user']['department'] = $user->__get('department');
                 $_SESSION['user']['thumbprint'] = $user->__get('thumbprint');
+                if (isset($_SESSION['modules_loaded']['visa'])) {
+                    if ($user->__get('signature_path') <> '' 
+                        && $user->__get('signature_file_name') <> '' 
+                    ) {
+                        $_SESSION['user']['signature_path'] = $user->__get('signature_path');
+                        $_SESSION['user']['signature_file_name'] = $user->__get('signature_file_name');
+                        $db = new dbquery();
+                        $db->connect();
+                        $query = "select path_template from " 
+                            . _DOCSERVERS_TABLE_NAME 
+                            . " where docserver_id = 'TEMPLATES'";
+                        $db->query($query);
+                        $resDs = $db->fetch_object();
+                        $pathToDs = $resDs->path_template;
+                        $_SESSION['user']['pathToSignature'] = $pathToDs . str_replace(
+                                "#", 
+                                DIRECTORY_SEPARATOR, 
+                                $_SESSION['user']['signature_path']
+                            )
+                            . $_SESSION['user']['signature_file_name'];
+                    }
+                }
+
                 $_SESSION['error'] =  "";
                 setcookie("maarch", "UserId=".$_SESSION['user']['UserId']."&key=".$line->cookie_key,time()-3600000, 0, 0, $_SERVER["HTTPS"], 1);
                 $key = md5(time()."%".$_SESSION['user']['FirstName']."%".$_SESSION['user']['UserId']."%".$_SESSION['user']['UserId']."%".date("dmYHmi")."%");
