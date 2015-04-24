@@ -1313,7 +1313,7 @@ class contacts_v2 extends dbquery
                         <tr id="departement_p">
                             <td><label for="departement"><?php echo _SERVICE; ?>&nbsp;: </label></td>
                             <td>&nbsp;</td>
-                            <td class="indexing_field"><input name="departement" type="text" onkeyup="this.value=this.value.toUpperCase()" onfocus="$('rule_departement').style.display='table-row'" onblur="$('rule_departement').style.display='none';" id="departement" style="text-transformvalue="<?php if(isset($_SESSION['m_admin']['address']['DEPARTEMENT'])){ echo $func->show_str($_SESSION['m_admin']['address']['DEPARTEMENT']);} ?>"/></td>
+                            <td class="indexing_field"><input name="departement" type="text" onkeyup="this.value=this.value.toUpperCase()" onfocus="$('rule_departement').style.display='table-row'" onblur="$('rule_departement').style.display='none';" id="departement" value="<?php if(isset($_SESSION['m_admin']['address']['DEPARTEMENT'])){ echo $func->show_str($_SESSION['m_admin']['address']['DEPARTEMENT']);} ?>"/></td>
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                             <td>&nbsp;</td>
 							<tr style="display:none;" id="rule_departement">
