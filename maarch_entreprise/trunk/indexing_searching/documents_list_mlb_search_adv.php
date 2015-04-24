@@ -310,7 +310,6 @@ if($mode == 'normal') {
 //Query    
     $tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype'],"default", false, "", "", "", $add_security);
     // $request->show();
-    
 //Result array
     for ($i=0;$i<count($tab);$i++)
     {
@@ -436,24 +435,6 @@ if($mode == 'normal') {
                     $tab[$i][$j]["order"]="subject";
                 }
                 
-                if($tab[$i][$j][$value]=="dest_user")
-                {
-                    $tab[$i][$j]["label"]="dest_user";
-                    $tab[$i][$j]["size"]="10";
-                    $tab[$i][$j]["label_align"]="left";
-                    $tab[$i][$j]["align"]="left";
-                    $tab[$i][$j]["valign"]="bottom";
-                    $tab[$i][$j]["show"]=false;
-                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                    if($_SESSION['mlb_search_current_category_id']=="outgoing"){
-                        $tab[$i][$j]["value"] = "<b>"._TO_CONTACT_C."</b>".$tab[$i][$j]['value'];
-                    }else{
-                       $tab[$i][$j]["value"] = "<b>"._FOR_CONTACT_C."</b>".$tab[$i][$j]['value'];
-     
-                    }
-                    $tab[$i][$j]["order"]=false;
-                }
-                
                 if($tab[$i][$j][$value]=="creation_date")
                 {
                     $tab[$i][$j]["label"]=_REG_DATE;
@@ -483,6 +464,7 @@ if($mode == 'normal') {
                 if($tab[$i][$j][$value]=="category_id")
                 {
                     $_SESSION['mlb_search_current_category_id'] = $tab[$i][$j]['value'];
+                    $cat = $tab[$i][$j]['value'];
                     $tab[$i][$j]["value"] = $_SESSION['coll_categories']['letterbox_coll'][$tab[$i][$j]['value']];
                     $tab[$i][$j]["label"]=_CATEGORY;
                     $tab[$i][$j]["size"]="10";
@@ -508,6 +490,25 @@ if($mode == 'normal') {
                     $tab[$i][$j]["value"] = $tab[$i][$j]['value'];
                     $tab[$i][$j]["order"]="category_id";
                 }
+
+                if($tab[$i][$j][$value]=="dest_user")
+                {
+                    $tab[$i][$j]["label"]="dest_user";
+                    $tab[$i][$j]["size"]="10";
+                    $tab[$i][$j]["label_align"]="left";
+                    $tab[$i][$j]["align"]="left";
+                    $tab[$i][$j]["valign"]="bottom";
+                    $tab[$i][$j]["show"]=false;
+                    $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
+                    if($tab[$i][14]['value']=="outgoing"){
+                        $tab[$i][$j]["value"] = "<b>"._TO_CONTACT_C."</b>".$tab[$i][$j]['value'];
+                    }else{
+                       $tab[$i][$j]["value"] = "<b>"._FOR_CONTACT_C."</b>".$tab[$i][$j]['value'];
+     
+                    }
+                    $tab[$i][$j]["order"]=false;
+                }
+
                 if($tab[$i][$j][$value]=="count_attachment")
                 {
                     $tab[$i][$j]["label"]=_ATTACHMENTS;

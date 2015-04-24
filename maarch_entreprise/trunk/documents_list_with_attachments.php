@@ -91,10 +91,10 @@ $_SESSION['collection_id_choice'] = $_SESSION['current_basket']['coll_id'];//Col
 $select[$table]= array(); 
 
 //Fields
-array_push($select[$table],"res_id", "status", "category_id", "category_id as category_img", 
+array_push($select[$table],"res_id", "status", "category_id as category_img", 
                         "contact_firstname", "contact_lastname", "contact_society", "user_lastname", 
                         "user_firstname", "priority", "creation_date", "admission_date", "subject", 
-                        "process_limit_date", "entity_label", "dest_user", "type_label", 
+                        "process_limit_date", "entity_label", "dest_user", "category_id", "type_label", 
                         "exp_user_id", "count_attachment", "alt_identifier","is_multicontacts", "locker_user_id", "locker_time");
                         
 if($core_tools->is_module_loaded("cases") == true) {
@@ -134,7 +134,6 @@ else  {
 //Request
 $tab=$request->select($select, $where, $orderstr, $_SESSION['config']['databasetype'], $_SESSION['config']['databasesearchlimit'], false, "", "", "", false, false, 'distinct');
 // $request->show(); exit;
-
 //Templates
 $defaultTemplate = 'documents_list_with_attachments';
 $selectedTemplate = $list->getTemplate();
@@ -352,7 +351,7 @@ for ($i=0;$i<count($tab);$i++)
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=false;
                 $tab[$i][$j]["value_export"] = $tab[$i][$j]['value'];
-                if($_SESSION['mlb_search_current_category_id']=="outgoing"){
+                if($tab[$i][15]["value"]=='outgoing'){
                     $tab[$i][$j]["value"] = "<b>"._TO_CONTACT_C."</b>".$tab[$i][$j]['value'];
                 }else{
                    $tab[$i][$j]["value"] = "<b>"._FOR_CONTACT_C."</b>".$tab[$i][$j]['value'];
@@ -408,7 +407,7 @@ for ($i=0;$i<count($tab);$i++)
             {
                 $tab[$i][$j]["label"]=_CATEGORY;
                 $tab[$i][$j]["size"]="10";
-                $tab[$i][$j]["label_align"]="left";
+                $tab[$i][$j]["label_align"]="right";
                 $tab[$i][$j]["align"]="left";
                 $tab[$i][$j]["valign"]="bottom";
                 $tab[$i][$j]["show"]=false;
@@ -454,7 +453,6 @@ for ($i=0;$i<count($tab);$i++)
         }
     }
 }
-
 //Clé de la liste
 $listKey = 'res_id';
 
