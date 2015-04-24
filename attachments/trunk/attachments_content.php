@@ -811,6 +811,7 @@ if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id 
     }
 //si multicontact
 }else{
+    $req->connect();
     $req->query("SELECT cr.address_id, c.contact_id, c.is_corporate_person, c.society, c.society_short, c.firstname, c.lastname,ca.is_private,ca.address_street, ca.address_num, ca.address_town FROM contacts_res cr, contacts_v2 c, contact_addresses ca WHERE cr.res_id = ".$_SESSION['doc_id']." and c.contact_id = cast(cr.contact_id as integer) and ca.contact_id=c.contact_id and ca.id=cr.address_id");
     $i=0;
     while($data_attachment = $req->fetch_object()){
@@ -910,9 +911,11 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
                 . 'select_templates\', this.options[this.selectedIndex].value)"/>';
                 $content .= '<option value="">' . _CHOOSE_ATTACHMENT_TYPE . '</option>';
                     foreach(array_keys($_SESSION['attachment_types']) as $attachmentType) {
-                        $content .= '<option value="' . $attachmentType . '" with_chrono = "'. $_SESSION['attachment_types_attribute'][$attachmentType].'">';
-                            $content .= $_SESSION['attachment_types'][$attachmentType];
-                        $content .= '</option>';
+                        if($_SESSION['attachment_types_show'][$attachmentType] == "true"){
+                            $content .= '<option value="' . $attachmentType . '" with_chrono = "'. $_SESSION['attachment_types_with_chrono'][$attachmentType].'">';
+                                $content .= $_SESSION['attachment_types'][$attachmentType];
+                            $content .= '</option>';
+                        }
                     }
 
             $content .= '</select>&nbsp;<span class="red_asterisk" id="attachment_types_mandatory"><i class="fa fa-star"></i></span>';
@@ -920,7 +923,8 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
         $content .= '<br/>';
         $content .= '<p>';
             $content .= '<label id="chrono_label" style="display:none">'. _CHRONO_NUMBER.'</label>';
-            $content .= '<input type="text" name="chrono" id="chrono" style="display:none"/>';
+            $content .= '<input type="text" name="chrono_display" id="chrono_display" style="display:none" disabled class="readonly"/>';
+            $content .= '<input type="hidden" name="chrono" id="chrono" />';
         $content .= '</p>';
         $content .= '<br/>';
         $content .= '<p>';
