@@ -1574,6 +1574,8 @@ class core_tools extends functions
         ?>
         <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
             . 'css/font-awesome/css/font-awesome.css'; ?>" media="screen" />
+        <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
+            . 'css/font-awesome/css/font-maarch.css'; ?>" media="screen" />
         <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php'; ?>" media="screen" />
         <!--[if lt  IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie'; ?>" media="screen" />  <![endif]-->
         <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie7'; ?>" media="screen" />  <![endif]-->
