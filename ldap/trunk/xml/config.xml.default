@@ -22,23 +22,7 @@
         <!-- Si LDAP est desactive alors le pass de chaque utilisateur est son login -->
         <pass_is_login>true</pass_is_login>
     </config>
-    <mapping>
-        <user ext_id="objectguid">
-            <user_id>samaccountname</user_id>
-            <firstname>givenname</firstname>
-            <lastname>sn</lastname>
-            <phone>telephonenumber</phone>
-            <mail>mail</mail>
-            <fonction>title</fonction>
-            <enabled>useraccountcontrol</enabled><!--Depend du type d'annuaire-->
-            <memberof role="">memberof</memberof>
-        </user>
-        <group ext_id="objectguid">
-            <group_id>samaccountname</group_id>
-            <group_desc>cn</group_desc>
-            <memberof>memberof</memberof>
-        </group>
-    </mapping>
+    
    <!-- Est utile uniquement pour la synchroniqation des donnees -->
     <config_base>
         <databaseserver>localhost</databaseserver>
