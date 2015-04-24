@@ -648,7 +648,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		if ($tab_path_rep_file[0]['is_version'] == 0) $frm_str .= 'modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=1&fromDetail=\',\'98%\',\'auto\');';
 		else  $frm_str .= 'modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=2&fromDetail=\',\'98%\',\'auto\');';
 		
-		$frm_str .= '"><i class="fa fa-pencil-square-o fa-4x" title="Modifier la réponse"></i></a>';
+		$frm_str .= '"><i class="fa fa-pencil-square-o fa-3x" title="Modifier la réponse"></i></a>';
 		
 		$frm_str .= '</td>';
 		$frm_str .= '</tr>';	

@@ -610,12 +610,14 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				$frm_str .='<option value="">'._CHOOSE_ACTION.'</option>';
 				for($ind_act = 0; $ind_act < count($actions);$ind_act++)
 				{
-					$frm_str .='<option value="'.$actions[$ind_act]['VALUE'].'"';
-					if($ind_act==0)
-					{
-						$frm_str .= 'selected="selected"';
+					if (!($actions[$ind_act]['VALUE'] == "end_action" && $visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT') == $visa->nbVisa($res_id, $coll_id))){
+						$frm_str .='<option value="'.$actions[$ind_act]['VALUE'].'"';
+						if($ind_act==0)
+						{
+							$frm_str .= 'selected="selected"';
+						}
+						$frm_str .= '>'.$actions[$ind_act]['LABEL'].'</option>';
 					}
-					$frm_str .= '>'.$actions[$ind_act]['LABEL'].'</option>';
 				}
 			$frm_str .='</select> ';
 			$table = $sec->retrieve_table_from_coll($coll_id);
@@ -647,7 +649,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			if ($tab_path_rep_file[0]['attachment_type'] = 'signed_response') $color = ' style="color:green" ';
 			$frm_str .= '<a href="javascript://" id="sign_link" '.$color.' onclick="';
 			$frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].');';
-			$frm_str .= '"><i class="fa fa-check fa-4x" title="Signer ces projets de réponse"></i></a>';
+			$frm_str .= '"><i class="fa fa-check fa-3x" title="Signer ces projets de réponse"></i></a>';
 		}
 		
 		$displayModif = ' style="" ';
@@ -660,7 +662,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		if ($tab_path_rep_file[0]['is_version'] == 0) $frm_str .= 'modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=1&fromDetail=\',\'98%\',\'auto\');';
 		else  $frm_str .= 'modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=2&fromDetail=\',\'98%\',\'auto\');';
 		
-		$frm_str .= '"><i class="fa fa-pencil-square-o fa-4x" title="Modifier la réponse"></i></a>';
+		$frm_str .= '"><i class="fa fa-pencil-square-o fa-3x" title="Modifier la réponse"></i></a>';
 		
 		$frm_str .= '</td>';
 		$frm_str .= '</tr>';	
