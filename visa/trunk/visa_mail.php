@@ -671,6 +671,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '</div>';	
 	$frm_str .= '</div>';
 	
+	$frm_str .= '<div id="modalPIN">';
+	$frm_str .= '<label for="valuePIN">Saisissez votre code PIN</label>';
+	$frm_str .= '<input type="password" name="valuePIN" id="valuePIN"/><br/>';
+	$frm_str .= '<input type="button" name="sendPIN" id="sendPIN" value="'._VALIDATE.'" class="button" onclick="signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].', $(\'valuePIN\').value);" />';
+	$frm_str .= '</div>';
+	
+	
 	/*** Extra javascript ***/
 	$frm_str .= '<script type="text/javascript">launchTabri();window.scrollTo(0,0);$(\'divList\').style.display = \'none\';';
 	$frm_str .='</script>';

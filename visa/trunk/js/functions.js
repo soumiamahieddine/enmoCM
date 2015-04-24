@@ -316,6 +316,7 @@ function updateFunctionModifRep(idReponse, num_rep, is_version){
 			else if (response.status == 0){
 				if (document.getElementById("sign_link")){
 					document.getElementById("sign_link").setAttribute('onclick','signFile('+idReponse+','+is_version+');');	
+					document.getElementById("sendPIN").setAttribute('onclick','signFile('+idReponse+','+is_version+', $(\'valuePIN\').value);');	
 					document.getElementById("sign_link").style.color = '';
 				}
 				if (document.getElementById("update_rep_link")) {
@@ -338,7 +339,11 @@ function updateFunctionModifRep(idReponse, num_rep, is_version){
 	document.getElementById("cur_rep").setAttribute('value',idReponse);
 }
 
-function signFile(res_id,isVersion){
+function signFile(res_id,isVersion, pinCode){
+	if(pinCode == undefined || pinCode=='')
+    {
+        pinCode='';
+    }
 	new Ajax.Request("index.php?display=true&module=visa&page=checkPinCode",
 	{
 		method:'post',
@@ -349,10 +354,17 @@ function signFile(res_id,isVersion){
 				else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
 			}
 			else if (response.status == 0){
-				var pinCode = prompt("Code PIN :", "");
-				console.log("Code PIN :"+pinCode);
-				if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
-				else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
+				//var pinCode = prompt("Code PIN :", "");
+				
+				if (pinCode != ''){
+					$('modalPIN').style.display = 'none';
+					if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&pinCode='+pinCode,'','height=301, width=301,scrollbars=yes,resizable=yes');
+					else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&pinCode='+pinCode,'','height=301, width=301,scrollbars=yes,resizable=yes');
+				}
+				else {
+						$('modalPIN').style.display = 'block';
+						console.log("Code PIN :"+pinCode);
+				}
 			}
 		}
 	});
