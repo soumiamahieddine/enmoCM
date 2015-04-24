@@ -323,7 +323,7 @@ class functions
                         return "";
                     }
                 case "phone":
-                    if (preg_match("/^[\+0-9\-\.\(\)\s]*$/",$w_var))
+                    if (preg_match("/^[\+0-9\(\)\s]*$/",$w_var))
                     {
                         return $w_var;
                     }
