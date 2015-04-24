@@ -103,14 +103,16 @@ function infoBalise($description, $balise)
 
     function insertThisEntity($entityId, $entity_label,$xml_ldap_id, $db){
         $short_label = substr($entity_label, 0, 49);
-        $qry = $db->prepare("INSERT into entities (entity_id, entity_label, short_label, ldap_id, enabled) values (?,?,?,?,?) ");
-        $qry->execute(array($entityId,$entity_label,$short_label,$xml_ldap_id,'Y'));
+        $qry = $db->prepare("INSERT into entities (entity_id, entity_label, short_label,entity_type,ldap_id, enabled) values (?,?,?,?,?,?) ");
+        $qry->execute(array($entityId,$entity_label,$short_label,'Direction',$xml_ldap_id,'Y'));
         $result = $qry->fetchAll();
         if($result==null){
             echo "/!\ Error : L'entité $entity_label n'a pas été insérée !\n";
 
+
         }else{
             echo "... L'entité $entity_label a été insérée ...\n";
+
         }
 
     }
@@ -281,6 +283,7 @@ for($k = 0; $k<$m ; $k++)
         echo "... insertion de l'entité ...\n";
         insertThisEntity($entityId, $xml_entity_label, $xml_ldap_id, $db);
 
+
     }else{
         echo "L'entite existe deja ...\n";
         $entityId = seekEntityId($xml_ldap_id,$db);
@@ -295,8 +298,9 @@ for($k = 0; $k<$m ; $k++)
     $listsParent = $listItem->getElementsByTagName("xml_parent_entity")->item(0);
 
     /*On compte le nombre d'item xml dans la balise xml_user_entity. Ceci est réalisé car le nom de la balise est item suivi d'un chiffre*/
-    //$nb_parents = $listsParent->getElementsByTagName($parentEntity)->length;
-    $nb_parents = $listsParent->lastChild->previousSibling->tagName;
+    
+    //$nb_parents = $listsParent->lastChild->previousSibling->tagName;
+    $nb_parents = $listsParent->lastChild->tagName;
 
     //exit('NOMBRE PARENTS : '.$nb_parents);
     if($nb_parents != ''){
@@ -317,6 +321,7 @@ for($k = 0; $k<$m ; $k++)
                 $xml_parent_entity_label = $ad->group_info($parent_entityDn,array('samaccountname'),$DnsEntities[0]);
 
                 if(empty($xml_entity_label) || empty($xml_parent_entity_ldap_id)){
+                    echo "Entité non trouvé dans le LDAP!";
                     break;
                 }
 
