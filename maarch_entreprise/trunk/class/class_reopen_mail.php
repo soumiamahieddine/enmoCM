@@ -82,11 +82,14 @@ class ReopenMail extends dbquery
             $ind_coll = $sec->get_ind_collection('letterbox_coll');
             $table = $_SESSION['collections'][$ind_coll]['table'];
             $this->connect();
-            if (!empty($_SESSION['m_admin']['reopen_mail']['REF_ID'])) {
+            if (!empty($_SESSION['m_admin']['reopen_mail']['REF_ID'])) { 
                 $this->query(
                     "select res_id, alt_identifier, status from res_view_letterbox where alt_identifier = '" 
                         . $_SESSION['m_admin']['reopen_mail']['REF_ID'] . "'"
                 );
+                $result_object=$this->fetch_object();
+                $res_id = $result_object->res_id;
+                $_SESSION['m_admin']['reopen_mail']['ID'] = $res_id;
                 $errorMsg = _REF_ID . ' ' . _UNKNOWN;
             } elseif (!empty($_SESSION['m_admin']['reopen_mail']['ID'])) {
                 $this->query(
@@ -124,8 +127,13 @@ class ReopenMail extends dbquery
                 'update ' . $table . " set status = '".$_REQUEST['status_id']."' where res_id = "
                 . $_SESSION['m_admin']['reopen_mail']['ID']
             );
-            
-            $historyMsg = _MODIFICATION_FROM_THIS_MAIL . ' : ';
+            $db = new dbquery();
+            $db->connect();
+
+            $db->query("SELECT  id, label_status from status where id = '".$_REQUEST['status_id']."'");
+            while ( $line = $db->fetch_object()) {$label_status = $line->label_status;}
+
+            $historyMsg = _MODIFICATION_OF_THE_STATUS_FROM_THIS_MAIL .$label_status. ' du courrier ';
             if ($resultRes->alt_identifier <> '') {
                 $historyMsg .= $resultRes->alt_identifier . ' (' . $_SESSION['m_admin']['reopen_mail']['ID'] . ')';
             } else {

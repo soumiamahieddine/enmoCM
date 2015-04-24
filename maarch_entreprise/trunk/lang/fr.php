@@ -1270,6 +1270,7 @@ if (!defined('_TO_KNOW_ID')) define( '_TO_KNOW_ID', 'Pour conna&icirc;tre l&rsqu
 if (!defined('_REOPEN_MAIL')) define( '_REOPEN_MAIL', 'Changement de statut de courrier');
 if (!defined('_REOPEN_THIS_MAIL')) define( '_REOPEN_THIS_MAIL', 'R&eacute;ouverture du courrier');
 if (!defined('_MODIFICATION_FROM_THIS_MAIL')) define( '_MODIFICATION_FROM_THIS_MAIL', 'Modification du courrier');
+if (!defined('_MODIFICATION_OF_THE_STATUS_FROM_THIS_MAIL')) define( '_MODIFICATION_OF_THE_STATUS_FROM_THIS_MAIL', 'Modification du statut du courrier par l\'administration. Passage au statut ');
 if (!defined('_OWNER')) define( '_OWNER', 'Propri&eacute;taire');
 if (!defined('_CONTACT_OWNER_COMMENT')) define( '_CONTACT_OWNER_COMMENT', 'Laisser vide pour rendre ce contact public.');
 
