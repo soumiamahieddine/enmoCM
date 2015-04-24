@@ -13,6 +13,7 @@ html {
 }
 body {
     color: #666;
+    background: #f2f2f2;
     /*background: white url(static.php?filename=bg_body.gif) top center repeat-y;*/
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: 12px;
@@ -1193,7 +1194,7 @@ left: -100em;
     padding-top: 0px;
     height: 70px;
     width: 236px;
-    background: url(static.php?filename=default_nav_logo_maarch.gif) #ffffff;
+    background: url(static.php?filename=default_nav_logo_maarch.gif) #f2f2f2;
     background-size: 90%;
     background-position: center;
     background-repeat: no-repeat;
@@ -1204,7 +1205,7 @@ left: -100em;
     margin: 0px;
     padding-right: 0px;
     padding-top: 0px;
-    background: white;
+    background: #f2f2f2;
     width: 80%;
     height: 40px;
     top: 30px;
