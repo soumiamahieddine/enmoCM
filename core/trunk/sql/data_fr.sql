@@ -36,11 +36,12 @@ INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, i
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OAIS_MAIN', 'Main OAIS store', 'Y', 'Y', 100, 'Y', '7Z', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OFFLINE', 'Off line tape', 'Y', 'Y', 1000, 'Y', '7Z', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('OAIS_SAFE', 'Distant backup OAIS store', 'Y', 'Y', 20, 'Y', 'ZIP', 'Y', 'OAIS_std.dtd', 'Y', 'log_std.dtd', 'Y', 'SHA512');
-
+INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('TNL', 'Thumbnails', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'Y', 'NONE');
 ------------
 --DOCSERVERS-
 ------------
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TEMPLATES', 'TEMPLATES', '[system] Templates', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\templates\\', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'templates', 1, 'NANTERRE', 1);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TEMPLATES', 'TEMPLATES', '[system] Templates', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/templates/', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'templates', 1, 'NANTERRE', 1);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('TNL', 'TNL', '[courrier] Server for thumbnails of documents', 'N', 'Y', 50000000000, 0, '/opt/maarch/docservers/thumbnails_mlb/', NULL, NULL, NULL, '2015-03-16 14:47:49.197164', NULL, 'letterbox_coll', 11, 'NANTERRE', 3);
 
 ------------
 --USERS-
@@ -89,37 +90,21 @@ INSERT INTO parameters (id, param_value_string, param_value_int, param_value_dat
 ------------------
 --CONTACTS_TYPES--
 ------------------
-INSERT INTO contact_types VALUES (10, 'Particuliers');
-INSERT INTO contact_types VALUES (20, 'Gouvernement');
-INSERT INTO contact_types VALUES (30, 'Collectivités territoriales');
-INSERT INTO contact_types VALUES (40, 'Associations');
-INSERT INTO contact_types VALUES (50, 'Entreprises');
-INSERT INTO contact_types VALUES (60, 'Autorités juridictionnelles');
-INSERT INTO contact_types VALUES (70, 'Organisations syndicales');
+INSERT INTO contact_types VALUES (100, 'Particuliers');
+INSERT INTO contact_types VALUES (101, 'Gouvernement');
+INSERT INTO contact_types VALUES (102, 'Collectivités territoriales');
+INSERT INTO contact_types VALUES (103, 'Associations');
+INSERT INTO contact_types VALUES (104, 'Entreprises');
+INSERT INTO contact_types VALUES (105, 'Autorités juridictionnelles');
+INSERT INTO contact_types VALUES (106, 'Organisations syndicales');
 
-------------
---CONTACTS--
-------------
-INSERT INTO contacts_v2 VALUES (100, 10, 'N', '', '', 'Boris', 'Bourdon', 'title1', '', '', 'superadmin', 'SUPERADMIN', '2015-03-23 09:13:15.011225', NULL, 'Y');
-INSERT INTO contacts_v2 VALUES (101, 40, 'Y', 'La Ruche Qui Dit Oui', 'LRQDO', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:47:12.329697', NULL, 'Y');
-INSERT INTO contacts_v2 VALUES (102, 20, 'Y', 'Premier Ministère', 'P.M', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:47:40.066242', NULL, 'Y');
-INSERT INTO contacts_v2 VALUES (103, 50, 'Y', 'LA POSTE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:48:09.679356', NULL, 'Y');
-INSERT INTO contacts_v2 VALUES (104, 50, 'Y', 'MAARCH', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', '2015-03-24 10:48:09.679356', NULL, 'Y');
+INSERT INTO contact_purposes (id, label) VALUES (1, 'Siège social France');
+INSERT INTO contact_purposes (id, label) VALUES (2, 'Siège social Sénégal');
 
----------------------
---CONTACTS_PURPOSES--
----------------------
-INSERT INTO contact_purposes VALUES (10, 'Adresse principale');
-INSERT INTO contact_purposes VALUES (20, 'Agence');
-INSERT INTO contact_purposes VALUES (30, 'Siège Social');
+INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short, firstname, lastname, title, function, other_data, user_id, entity_id, creation_date, update_date, enabled) VALUES (1, 104, 'Y', 'MAARCH', '', '', '', '', '', 'Editeur du logiciel libre Maarch', 'bblier', 'VILLE', '2015-04-24 12:43:54.97424', NULL, 'Y');
 
-
----------------------
---CONTACTS_ADRESSES--
----------------------
-INSERT INTO contact_addresses VALUES (10, 101, 20, '', '', '', '', '', '', '5', 'rue Tournefort', '', 'PARIS', '75005', 'FRANCE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', 'N', 'Y');
-INSERT INTO contact_addresses VALUES (20, 102, 10, '', 'Manuel', 'VALLS', 'title1', 'Premier ministre', '', '', '', '', 'PARIS', '', 'FRANCE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', 'N', 'Y');
-INSERT INTO contact_addresses VALUES (30, 104, 20, '', '', '', '', '', '', '1', 'Boulevard Auriol', '', 'NANTES', '92000', 'FRANCE', '', '', '', '', '', '', 'superadmin', 'SUPERADMIN', 'N', 'Y');
+INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (1, 1, 1, '', '', '', '', '', '', '11', 'Boulevard du Sud-Est', '', 'NANTERRE', '', '', '', 'info@maarch.org', 'http://www.maarch.com', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
+INSERT INTO contact_addresses (id, contact_id, contact_purpose_id, departement, firstname, lastname, title, function, occupancy, address_num, address_street, address_complement, address_town, address_postal_code, address_country, phone, email, website, salutation_header, salutation_footer, other_data, user_id, entity_id, is_private, enabled) VALUES (2, 1, 2, '', '', '', '', '', '', '', 'Sacré Coeur 3', 'Villa 9653 4ème phase', 'DAKAR', '', 'SENEGAL', '', '', '', '', '', '', 'bblier', 'VILLE', 'N', 'Y');
 
 
 ------------
@@ -185,8 +170,7 @@ INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ppruvost', 'AGENT', 'Y', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ddur', 'ELU', 'Y', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('eerina', 'AGENT', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ppetit', 'RESP_COURRIER', 'Y', '');
-INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ppetit', 'RESPONSABLE', 'N', '');
+INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ppetit', 'RESPONSABLE', 'Y', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ssaporta', 'AGENT', 'Y', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ttong', 'AGENT', 'Y', '');
 INSERT INTO usergroup_content (user_id, group_id, primary_group, role) VALUES ('ccharles', 'AGENT', 'Y', '');
@@ -220,6 +204,10 @@ INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'add_new_version');
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'add_tag_to_res');
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'view_baskets');
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'sendmail');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'edit_attachments_from_detail');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'modify_attachments');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'delete_attachments');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'adv_search_mlb');
 
 INSERT INTO usergroups_services VALUES ('AGENT', 'adv_search_mlb');
 INSERT INTO usergroups_services VALUES ('AGENT', 'index_mlb');
@@ -241,6 +229,9 @@ INSERT INTO usergroups_services VALUES ('AGENT', 'add_new_version');
 INSERT INTO usergroups_services VALUES ('AGENT', 'tag_view');
 INSERT INTO usergroups_services VALUES ('AGENT', 'add_tag_to_res');
 INSERT INTO usergroups_services VALUES ('AGENT', 'sendmail');
+INSERT INTO usergroups_services VALUES ('AGENT', 'edit_attachments_from_detail');
+INSERT INTO usergroups_services VALUES ('AGENT', 'modify_attachments');
+INSERT INTO usergroups_services VALUES ('AGENT', 'delete_attachments');
 
 INSERT INTO usergroups_services VALUES ('COURRIER', 'admin');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'adv_search_mlb');
@@ -377,46 +368,46 @@ INSERT INTO users_entities (user_id, entity_id, user_role, primary_entity) VALUE
 ------------
 --LISTMODELS--
 ------------
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'COM', 'entity_id', 0, 'sstar', 'user_id', 'dest', 'DOC', NULL, 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'DRS', 'entity_id', 0, 'bboule', 'user_id', 'dest', 'DOC', NULL, 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'DSP', 'entity_id', 0, 'bbain', 'user_id', 'dest', 'DOC', NULL, 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'COM', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', NULL, 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'DRS', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', NULL, 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'DSP', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', NULL, 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'CAB', 'entity_id', 0, 'ppetit', 'user_id', 'dest', 'DOC', 'CAB:Cabinet du Maire', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'CAB', 'entity_id', 0, 'eerina', 'user_id', 'cc', 'DOC', 'CAB:Cabinet du Maire', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'DSI', 'entity_id', 0, 'ccordy', 'user_id', 'cc', 'DOC', 'DGSDSI:Direction des Systèmes d''Information', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'DSI', 'entity_id', 0, 'ssissoko', 'user_id', 'dest', 'DOC', 'DGSDSI:Direction des Systèmes d''Information', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'PCU', 'entity_id', 0, 'bboule', 'user_id', 'dest', 'DOC', 'DGSDGAPCU:Pôle Culturel', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'PTE', 'entity_id', 0, 'ccharles', 'user_id', 'dest', 'DOC', 'DGSPAAPTE:Pôle Technique', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'PJS', 'entity_id', 0, 'bbain', 'user_id', 'dest', 'DOC', 'DGSDGAPJS:Pôle Jeunesse et Sport', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'COU', 'entity_id', 0, 'bblier', 'user_id', 'dest', 'DOC', 'DGSDSGCOU:Service Courrier et Archive', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'FIN', 'entity_id', 0, 'sstar', 'user_id', 'dest', 'DOC', 'DGSFIN:Direction des Finances', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'FIN', 'entity_id', 0, 'jjane', 'user_id', 'cc', 'DOC', 'DGSFIN:Direction des Finances', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'DGA', 'entity_id', 0, 'mmanfred', 'user_id', 'dest', 'DOC', 'DGSDGA:Direction Générale Adjointe', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'DGA', 'entity_id', 0, 'kkaar', 'user_id', 'cc', 'DOC', 'DGSDGA:Direction Générale Adjointe', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'DGS', 'entity_id', 0, 'rrenaud', 'user_id', 'dest', 'DOC', 'DGS:Direction Générale des Services', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'PE', 'entity_id', 0, 'ssaporta', 'user_id', 'dest', 'DOC', 'DGSDGAPJSPE:Petite enfance', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'PSF', 'entity_id', 0, 'aackermann', 'user_id', 'dest', 'DOC', 'DGSPSF:Pôle des Services Fonctionnels', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'PSO', 'entity_id', 0, 'nnataliu', 'user_id', 'dest', 'DOC', 'DGSDGAPSO:Pôle Social', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'DSG', 'entity_id', 0, 'ddaull', 'user_id', 'dest', 'DOC', 'DGSDSG:Secrétariat Général', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'SP', 'entity_id', 0, 'ttong', 'user_id', 'dest', 'DOC', 'DGSDGAPJSSP:Sport', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'DRH', 'entity_id', 0, 'ppruvost', 'user_id', 'dest', 'DOC', 'DGSDRH:Direction des Ressources Humaines', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'PJU', 'entity_id', 0, 'jjonasz', 'user_id', 'dest', 'DOC', 'DGSFINPJU:Pôle Juridique', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'CAB', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'CAB:Cabinet du Maire', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'DSI', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDSI:Direction des Systèmes d''Information', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'PCU', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDGAPCU:Pôle Culturel', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'PTE', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSPAAPTE:Pôle Technique', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'PJS', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDGAPJS:Pôle Jeunesse et Sport', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'COU', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDSGCOU:Service Courrier et Archive', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'FIN', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSFIN:Direction des Finances', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'DGA', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDGA:Direction Générale Adjointe', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'PE', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDGAPJSPE:Petite enfance', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'PSF', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSPSF:Pôle des Services Fonctionnels', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'PSO', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDGAPSO:Pôle Social', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'SP', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDGAPJSSP:Sport', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'DRH', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDRH:Direction des Ressources Humaines', 'Y', '');
-INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, title, visible, description) VALUES ('letterbox_coll', 'PJU', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSFINPJU:Pôle Juridique', 'Y', '');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'COM', 'entity_id', 0, 'sstar', 'user_id', 'dest', 'DOC', NULL, 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'DRS', 'entity_id', 0, 'bboule', 'user_id', 'dest', 'DOC', NULL, 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'DSP', 'entity_id', 0, 'bbain', 'user_id', 'dest', 'DOC', NULL, 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'COM', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', NULL, 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'DRS', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', NULL, 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'DSP', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', NULL, 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'CAB', 'entity_id', 0, 'ppetit', 'user_id', 'dest', 'DOC', 'CAB:Cabinet du Maire', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'CAB', 'entity_id', 0, 'eerina', 'user_id', 'cc', 'DOC', 'CAB:Cabinet du Maire', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'DSI', 'entity_id', 0, 'ccordy', 'user_id', 'cc', 'DOC', 'DGSDSI:Direction des Systèmes d''Information', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'DSI', 'entity_id', 0, 'ssissoko', 'user_id', 'dest', 'DOC', 'DGSDSI:Direction des Systèmes d''Information', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'PCU', 'entity_id', 0, 'bboule', 'user_id', 'dest', 'DOC', 'DGSDGAPCU:Pôle Culturel', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'PTE', 'entity_id', 0, 'ccharles', 'user_id', 'dest', 'DOC', 'DGSPAAPTE:Pôle Technique', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'PJS', 'entity_id', 0, 'bbain', 'user_id', 'dest', 'DOC', 'DGSDGAPJS:Pôle Jeunesse et Sport', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'COU', 'entity_id', 0, 'bblier', 'user_id', 'dest', 'DOC', 'DGSDSGCOU:Service Courrier et Archive', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'FIN', 'entity_id', 0, 'sstar', 'user_id', 'dest', 'DOC', 'DGSFIN:Direction des Finances', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'FIN', 'entity_id', 0, 'jjane', 'user_id', 'cc', 'DOC', 'DGSFIN:Direction des Finances', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'DGA', 'entity_id', 0, 'mmanfred', 'user_id', 'dest', 'DOC', 'DGSDGA:Direction Générale Adjointe', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'DGA', 'entity_id', 0, 'kkaar', 'user_id', 'cc', 'DOC', 'DGSDGA:Direction Générale Adjointe', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'DGS', 'entity_id', 0, 'rrenaud', 'user_id', 'dest', 'DOC', 'DGS:Direction Générale des Services', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'PE', 'entity_id', 0, 'ssaporta', 'user_id', 'dest', 'DOC', 'DGSDGAPJSPE:Petite enfance', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'PSF', 'entity_id', 0, 'aackermann', 'user_id', 'dest', 'DOC', 'DGSPSF:Pôle des Services Fonctionnels', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'PSO', 'entity_id', 0, 'nnataliu', 'user_id', 'dest', 'DOC', 'DGSDGAPSO:Pôle Social', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'DSG', 'entity_id', 0, 'ddaull', 'user_id', 'dest', 'DOC', 'DGSDSG:Secrétariat Général', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'SP', 'entity_id', 0, 'ttong', 'user_id', 'dest', 'DOC', 'DGSDGAPJSSP:Sport', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'DRH', 'entity_id', 0, 'ppruvost', 'user_id', 'dest', 'DOC', 'DGSDRH:Direction des Ressources Humaines', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'PJU', 'entity_id', 0, 'jjonasz', 'user_id', 'dest', 'DOC', 'DGSFINPJU:Pôle Juridique', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'CAB', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'CAB:Cabinet du Maire', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'DSI', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDSI:Direction des Systèmes d''Information', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'PCU', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDGAPCU:Pôle Culturel', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'PTE', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSPAAPTE:Pôle Technique', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'PJS', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDGAPJS:Pôle Jeunesse et Sport', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'COU', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDSGCOU:Service Courrier et Archive', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'FIN', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSFIN:Direction des Finances', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'DGA', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDGA:Direction Générale Adjointe', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'PE', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDGAPJSPE:Petite enfance', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'PSF', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSPSF:Pôle des Services Fonctionnels', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'PSO', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDGAPSO:Pôle Social', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'SP', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDGAPJSSP:Sport', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'DRH', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSDRH:Direction des Ressources Humaines', 'Y');
+INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, visible) VALUES ('letterbox_coll', 'PJU', 'entity_id', 0, 'DSG', 'entity_id', 'cc', 'DOC', 'DGSFINPJU:Pôle Juridique', 'Y');
 
 ------------
 --BASKETS--
@@ -538,10 +529,10 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'AGENT', 'LateMailBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (21, '', 'AGENT', 'LateMailBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'AGENT', 'LateMailBasket', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (101, '', 'AGENT', 'UnsignedBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (414, '', 'AGENT', 'UnsignedBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'AGENT', 'UnsignedBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (101, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (414, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'AGENT', 'MyBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'AGENT', 'ContribBasket', 'N', 'N', 'Y');
@@ -560,9 +551,9 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'RESPONSABLE', 'MyBasket', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (101, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (414, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'RESPONSABLE', 'ContribBasket', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (101, '', 'RESPONSABLE', 'UnsignedBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (414, '', 'RESPONSABLE', 'UnsignedBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'RESPONSABLE', 'UnsignedBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (112, '', 'RESPONSABLE', 'IndexingBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'RESP_COURRIER', 'CopyMailBasket', 'N', 'N', 'Y');
@@ -574,7 +565,7 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'RESP_COURRIER', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (3, '', 'RESP_COURRIER', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'RESP_COURRIER', 'MyBasket', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (101, '', 'RESP_COURRIER', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (414, '', 'RESP_COURRIER', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (3, '', 'RESP_COURRIER', 'ValidationBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (18, '', 'RESP_COURRIER', 'ValidationBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'RESP_COURRIER', 'ValidationBasket', 'N', 'Y', 'N');
@@ -1048,6 +1039,9 @@ INSERT INTO templates VALUES (101, '[allo mairie] Clôture de demande', '[allo m
 </tr>
 </tbody>
 </table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'doctypes');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (102, 'Passer me voir', 'Passer me voir', 'Passer me voir à mon bureau, merci.', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
+
+
 
 ------------
 --NOTIFICATIONS--
@@ -1110,11 +1104,33 @@ INSERT INTO templates_association VALUES (118, 101, 'destination', 'VILLE', 'ent
 INSERT INTO templates_association VALUES (119, 101, 'destination', 'CCAS', 'entities');
 INSERT INTO templates_association VALUES (120, 101, 'destination', 'AD06', 'entities');
 
+INSERT INTO templates_association VALUES (50, 102, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association VALUES (51, 102, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association VALUES (52, 102, 'destination', 'DGA', 'entities');
+INSERT INTO templates_association VALUES (53, 102, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association VALUES (54, 102, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association VALUES (55, 102, 'destination', 'PE', 'entities');
+INSERT INTO templates_association VALUES (56, 102, 'destination', 'SP', 'entities');
+INSERT INTO templates_association VALUES (57, 102, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association VALUES (58, 102, 'destination', 'DRH', 'entities');
+INSERT INTO templates_association VALUES (59, 102, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association VALUES (60, 102, 'destination', 'COU', 'entities');
+INSERT INTO templates_association VALUES (61, 102, 'destination', 'COR', 'entities');
+INSERT INTO templates_association VALUES (62, 102, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association VALUES (63, 102, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association VALUES (64, 102, 'destination', 'PJU', 'entities');
+INSERT INTO templates_association VALUES (65, 102, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association VALUES (66, 102, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association VALUES (67, 102, 'destination', 'ELUS', 'entities');
+INSERT INTO templates_association VALUES (68, 102, 'destination', 'VILLE', 'entities');
+INSERT INTO templates_association VALUES (69, 102, 'destination', 'CCAS', 'entities');
+INSERT INTO templates_association VALUES (70, 102, 'destination', 'AD06', 'entities');
+
 
 ------------
 --DOCSERVERS--
 ------------
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_MAN', 'FASTHD', '[courrier] Fast internal disc bay for letterbox mode', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\manual\\', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'letterbox_coll', 10, 'NANTERRE', 2);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('FASTHD_MAN', 'FASTHD', '[courrier] Fast internal disc bay for letterbox mode', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/FASTHD_MAN/', NULL, NULL, NULL, '2011-01-13 14:47:49.197164', NULL, 'letterbox_coll', 10, 'NANTERRE', 2);
 
 -- *************************************************************************************************************************************************************************************************************************** --
 -- *************************************************************************************************************************************************************************************************************************** --
@@ -1329,15 +1345,15 @@ VALUES ('OAIS_RM', 'OAIS_RM', 'Y', 'Y', 100, 'Y', '7Z', 'Y', 'OAIS_std.dtd', 'Y'
 --DOCSERVERS--
 --------------
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('FASTHD_RM_BATCH', 'FASTHD', '[archivage] FASTHD RM BATCH', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\RM_BATCH\\', '', '', '', '2012-08-23 00:00:00', NULL, 'rm_coll', 2, 'NANTERRE', 3);
+VALUES ('FASTHD_RM_BATCH', 'FASTHD', '[archivage] FASTHD RM BATCH', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/RM_BATCH/', '', '', '', '2012-08-23 00:00:00', NULL, 'rm_coll', 2, 'NANTERRE', 3);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('FASTHD_RM_MAN', 'FASTHD', '[archivage] FASTHD RM MANUAL', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\RM_MAN\\', '', '', '', '2012-08-23 00:00:00', NULL, 'rm_coll', 1, 'NANTERRE', 4);
+VALUES ('FASTHD_RM_MAN', 'FASTHD', '[archivage] FASTHD RM MANUAL', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/RM_MAN/', '', '', '', '2012-08-23 00:00:00', NULL, 'rm_coll', 1, 'NANTERRE', 4);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('IOS', 'IOS', '[archivage] IOS', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\IOS\\', NULL, NULL, NULL, '2012-08-28 15:43:05.922', NULL, 'io_coll', 1, 'NANTERRE', 1);
+VALUES ('IOS', 'IOS', '[archivage] IOS', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/IOS/', NULL, NULL, NULL, '2012-08-28 15:43:05.922', NULL, 'io_coll', 1, 'NANTERRE', 1);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('OAIS_RM', 'OAIS_RM', '[archivage] Zone de stockage OAIS des archives', 'N', 'Y', 100000000000, 1, 'C:\\maarch\\docservers\\entreprise\\OAIS_RM\\', '', '', '', '2012-08-23 00:00:00', NULL, 'rm_coll', 3, 'NANTERRE', 3);
+VALUES ('OAIS_RM', 'OAIS_RM', '[archivage] Zone de stockage OAIS des archives', 'N', 'Y', 100000000000, 1, '/opt/maarch/docservers/OAIS_RM/', '', '', '', '2012-08-23 00:00:00', NULL, 'rm_coll', 3, 'NANTERRE', 3);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('LOG', 'FASTHD', '[archivage] Zone de stockage des logs', 'N', 'Y', 10000000000, 1, 'C:\\maarch\\docservers\\entreprise\\LOG\\', '', '', '', '2012-08-23 00:00:00', NULL, 'log_coll', 100, 'NANTERRE', 100);
+VALUES ('LOG', 'FASTHD', '[archivage] Zone de stockage des logs', 'N', 'Y', 10000000000, 1, '/opt/maarch/docservers/LOG/', '', '', '', '2012-08-23 00:00:00', NULL, 'log_coll', 100, 'NANTERRE', 100);
 
 ---------------
 --FOLDERTYPES--
@@ -3385,19 +3401,6 @@ INSERT INTO baskets VALUES ('business_coll', 'BusinessAvoirDemande', '[business]
 INSERT INTO baskets VALUES ('business_coll', 'BusinessValidation', '[business] 01 - Validation des factures', '01 - Validation des factures', 'status = ''VAL'' and res_id in (select res_id from listinstance WHERE coll_id = ''business_coll'' and item_mode = ''VALIDATEUR'' and item_id = @user and visible=''Y'')', 'N', 'Y', 'N', 'Y');
 
 ------------
---CONTACTS--
-------------
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (130, NULL, NULL, 'GRAS SAVOYE', NULL, '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', NULL, NULL, NULL, NULL, NULL, 'supplier', 'Y', 'N');
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (132, NULL, NULL, 'Stella Telecom', NULL, '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', NULL, NULL, NULL, NULL, NULL, 'supplier', 'Y', 'N');
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (134, NULL, NULL, 'IBM', NULL, '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', NULL, NULL, NULL, NULL, NULL, 'supplier', 'Y', 'N');
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (138, NULL, NULL, 'Orange Business Services', NULL, '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', NULL, NULL, NULL, NULL, NULL, 'supplier', 'Y', 'N');
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (139, NULL, NULL, 'Orange', NULL, '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', NULL, NULL, NULL, NULL, NULL, 'supplier', 'Y', 'N');
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (137, NULL, NULL, 'NQI', NULL, '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', NULL, NULL, NULL, NULL, NULL, 'supplier', 'Y', 'N');
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (136, NULL, NULL, 'Ricoh', NULL, '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', NULL, NULL, NULL, NULL, NULL, 'supplier', 'Y', 'N');
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (135, NULL, NULL, 'Lexmark', NULL, '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', NULL, NULL, NULL, NULL, NULL, 'supplier', 'Y', 'N');
-INSERT INTO contacts (contact_id, lastname, firstname, society, function, address_num, address_street, address_complement, address_town, address_postal_code, address_country, email, phone, other_data, is_corporate_person, user_id, title, business_id, ref_identifier, acc_number, entity_id, contact_type, enabled, is_private) VALUES (133, NULL, NULL, 'COLT', NULL, '', '', '', '', '', '', 'info@maarch.org', '', '', 'Y', '', NULL, NULL, NULL, NULL, NULL, 'supplier', 'Y', 'N');
-
-------------
 --GROUPBASKET--
 ------------
 INSERT INTO groupbasket VALUES ('COMPTABLES', 'BusinessIndexation', 13, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N', '', '');
@@ -3502,7 +3505,7 @@ INSERT INTO difflist_types VALUES ('WORKFLOW_FACTURE', 'Workflow des factures', 
 --DOCSERVERS--
 ------------
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('BUSINESS_MAN', 'FASTHD', '[business] Business manual docserver', 'N', 'Y', 50000000000, 1397206, 'C:\\maarch\\docservers\\entreprise\\BUSINESS_MAN\\', NULL, NULL, NULL, '2013-02-25 18:36:59.38', NULL, 'business_coll', 50, 'NANTERRE', 50);
+VALUES ('BUSINESS_MAN', 'FASTHD', '[business] Business manual docserver', 'N', 'Y', 50000000000, 1397206, '/opt/maarch/docservers/BUSINESS_MAN/', NULL, NULL, NULL, '2013-02-25 18:36:59.38', NULL, 'business_coll', 50, 'NANTERRE', 50);
 
 ------------
 --DOCTYPES_FIRST_LEVEL--
@@ -3788,13 +3791,13 @@ INSERT INTO af_security VALUES (1365019862985, 'all access', 'FACTURES_CLIENTS',
 --DOCSERVERS-
 ------------
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('OFFLINE_1', 'OFFLINE', 'Off line tape', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\offline\\', NULL, NULL, NULL, '2011-01-13 16:58:24.00929', NULL, 'res_coll', 30, 'NANTERRE', 4);
+VALUES ('OFFLINE_1', 'OFFLINE', 'Off line tape', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/offline/', NULL, NULL, NULL, '2011-01-13 16:58:24.00929', NULL, 'res_coll', 30, 'NANTERRE', 4);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('FASTHD_AI', 'FASTHD', 'Fast internal disc bay for autoimport', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\ai\\', NULL, NULL, NULL, '2011-01-07 13:43:48.696644', NULL, 'res_coll', 11, 'NANTERRE', 1);
+VALUES ('FASTHD_AI', 'FASTHD', 'Fast internal disc bay for autoimport', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/ai/', NULL, NULL, NULL, '2011-01-07 13:43:48.696644', NULL, 'res_coll', 11, 'NANTERRE', 1);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES 
-('OAIS_MAIN_1', 'OAIS_MAIN', 'Main OAIS store', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\OAIS_main\\', NULL, NULL, NULL, '2011-01-13 14:48:27.901368', NULL, 'res_coll', 20, 'NANTERRE', 2);
+('OAIS_MAIN_1', 'OAIS_MAIN', 'Main OAIS store', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/OAIS_main/', NULL, NULL, NULL, '2011-01-13 14:48:27.901368', NULL, 'res_coll', 20, 'NANTERRE', 2);
 INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) 
-VALUES ('OAIS_SAFE_1', 'OAIS_SAFE', 'Distant backup OAIS store', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\OAIS_safe\\', NULL, NULL, NULL, '2011-01-13 14:49:05.095119', NULL, 'res_coll', 20, 'NICE', 3);
+VALUES ('OAIS_SAFE_1', 'OAIS_SAFE', 'Distant backup OAIS store', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/OAIS_safe/', NULL, NULL, NULL, '2011-01-13 14:49:05.095119', NULL, 'res_coll', 20, 'NICE', 3);
 
 ------------
 --DOCTYPES-
@@ -3902,10 +3905,88 @@ INSERT INTO users_entities VALUES ('vvictoire', 'ACME', '', 'Y');
 --PHOTO_CAPTURE--
 -----------------
 INSERT INTO docserver_types (docserver_type_id, docserver_type_label, enabled, is_container, container_max_number, is_compressed, compression_mode, is_meta, meta_template, is_logged, log_template, is_signed, fingerprint_mode) VALUES ('PHOTO_CAPTURE', 'PHOTO_CAPTURE', 'Y', 'N', 0, 'N', 'NONE', 'N', 'NONE', 'N', 'NONE', 'N', 'NONE');
-INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('PHOTO_CAPTURE', 'PHOTO_CAPTURE', 'Photo capture', 'N', 'Y', 50000000000, 1, 'C:\\maarch\\docservers\\entreprise\\photo_capture\\', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'photo_capture', 1, 'NANTERRE', 1);
+INSERT INTO docservers (docserver_id, docserver_type_id, device_label, is_readonly, enabled, size_limit_number, actual_size_number, path_template, ext_docserver_info, chain_before, chain_after, creation_date, closing_date, coll_id, priority_number, docserver_location_id, adr_priority_number) VALUES ('PHOTO_CAPTURE', 'PHOTO_CAPTURE', 'Photo capture', 'N', 'Y', 50000000000, 1, '/opt/maarch/docservers/photo_capture/', NULL, NULL, NULL, '2012-04-01 14:49:05.095119', NULL, 'photo_capture', 1, 'NANTERRE', 1);
 
 ---------------------------------
 --Ajout dossiers pour Business --
 ---------------------------------
 INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date, destination, dest_user, folder_out_id, video_status, video_user, is_frozen, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_d11, custom_t12, custom_d12, custom_t13, custom_d13, custom_t14, custom_d14, custom_t15, is_complete, is_folder_out, last_modified_date) VALUES (41, 'AVOIRS', 102, 0, 'Avoirs', NULL, NULL, NULL, 'superadmin', 'FOLDNEW', 1, '2013-04-11 19:33:25.562', NULL, NULL, NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', '2013-04-11 19:33:25.562');
 INSERT INTO folders (folders_system_id, folder_id, foldertype_id, parent_id, folder_name, subject, description, author, typist, status, folder_level, creation_date, destination, dest_user, folder_out_id, video_status, video_user, is_frozen, custom_t1, custom_n1, custom_f1, custom_d1, custom_t2, custom_n2, custom_f2, custom_d2, custom_t3, custom_n3, custom_f3, custom_d3, custom_t4, custom_n4, custom_f4, custom_d4, custom_t5, custom_n5, custom_f5, custom_d5, custom_t6, custom_d6, custom_t7, custom_d7, custom_t8, custom_d8, custom_t9, custom_d9, custom_t10, custom_d10, custom_t11, custom_d11, custom_t12, custom_d12, custom_t13, custom_d13, custom_t14, custom_d14, custom_t15, is_complete, is_folder_out, last_modified_date) VALUES (42, 'FACTURES', 102, 0, 'Factures', NULL, NULL, NULL, 'superadmin', 'FOLDNEW', 1, '2013-04-11 19:34:15.015', NULL, NULL, NULL, NULL, NULL, 'N', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'N', 'N', '2013-04-11 19:34:15.015');
+
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+-- *************************************************************************************************************************************************************************************************************************** --
+
+-- ************************************************************************* --
+--                                                                           --
+--                  VISAS AND E-SIGNATURE                                --
+--                                                                           --
+-- ************************************************************************* --
+-- AJOUT DU TYPE DE LISTE DE DIFFUSION POUR LE CIRCUIT DE VISA
+INSERT INTO difflist_types VALUES ('VISA_CIRCUIT', 'Circuit de visa', 'visa sign ', 'N', 'N');
+
+-- AJOUT DES BANNETTES 
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled)
+ VALUES ('letterbox_coll', 'EvisBasket', '[courrier] 12 - Courriers à e-viser', 'Courriers à e-viser', 'status=''EVIS'' and (res_id,@user) IN (SELECT res_id, item_id FROM listinstance
+ 	WHERE item_mode = ''visa'' and process_date ISNULL and res_view_letterbox.res_id = res_id order by listinstance_id asc limit 1)', 'N', 'Y', 'N', 'Y');
+
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled)
+ VALUES ('letterbox_coll', 'EsigBasket', '[courrier] 13 - Courriers à e-signer', 'Courriers à e-signer', 'status=''ESIG'' and (res_id,@user) IN (SELECT res_id, item_id FROM listinstance
+WHERE item_mode = ''sign'' and process_date ISNULL and res_view_letterbox.res_id = res_id order by listinstance_id asc limit 1)', 'N', 'Y', 'N', 'Y');
+
+
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'PvalBasket', '[courrier] Circuit visa des courriers à préparer', 'Circuit visa des courriers à préparer', 'status=''PVAL''', 'N', 'Y', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'CvalBasket', '[courrier] Circuit visa des courriers à valider', 'Circuit visa des courriers à valider', 'status=''CVAL''', 'N', 'Y', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'DimpBasket', '[courrier] Circuit visa des courriers à imprimer', 'Circuit visa des courriers à imprimer', 'status=''DIMP''', 'N', 'Y', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'EenvBasket', '[courrier] 13 - Courriers à e-envoyer', 'Courriers à e-envoyer', 'status=''EENV''', 'N', 'Y', 'N', 'Y');
+
+-- AJOUT DES STATUS 
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('DIMP', 'Dossier à imprimer', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('EENV', 'A e-envoyer', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('ESIG', 'A e-signer', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('EVIS', 'A e-viser', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('PVAL', 'Projet de réponse à valider', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('CVAL', 'Circuit de visa à valider', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('WAIT', 'En attente  de la réponse signée', 'N', 'N', '', 'apps', 'Y', 'Y');
+
+-- AJOUT DES ACTIONS
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (400, '', '[courrier] Envoyer le projet de réponse', 'PVAL', 'N', 'Y', '', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (401, '', '[courrier] Préparer le circuit de visa', '_NOSTATUS_', 'N', 'Y', 'prepare_visa', 'Y', 'visa', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (402, '', '[courrier] Transmettre le circuit de visa', 'CVAL', 'N', 'Y', '', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (403, '', '[courrier] Envoyer pour e-visa et signature papier', 'EVIS', 'N', 'Y', '', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (404, '', '[courrier] Valider et envoyer pour impression', 'DIMP', 'N', 'Y', '', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (405, '', '[courrier] Viser le courrier', '_NOSTATUS_', 'N', 'Y', 'visa_mail', 'Y', 'visa', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (407, '', '[courrier] Renvoyer pour traitement', 'COU', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (408, '', '[courrier] Demander une révision mineure', 'REV', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (409, '', '[courrier] E-Parapheur à imprimer', 'DIMP', 'N', 'Y', '', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (410, '', '[courrier] Signer et transmettre pour e-envoi', 'EENV', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (411, '', '[courrier] Transmettre pour classement', 'CLAS', 'N', 'Y', '', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (412, '', '[courrier] Imprimer le dossier', 'WAIT', 'N', 'Y', 'print_folder', 'Y', 'visa', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (413, '', '[courrier] E-envoyer un dossier', '_NOSTATUS_', 'N', 'Y', 'send_email', 'Y', 'visa', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (414, '', '[courrier] Envoyer pour e-visa et e-signature', 'EVIS', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
+
+-- SERVICES POUR VISA
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'config_visa_workflow');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'config_avis_workflow');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'config_visa_workflow');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'config_avis_workflow');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'visa_documents');
+INSERT INTO usergroups_services (group_id, service_id) VALUES ('RESPONSABLE', 'sign_document');
+
+-- AFFECTATION BANNETTES
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'EvisBasket', 13, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'EsigBasket', 13, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'EenvBasket', 13, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
+-- ACTIONS
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (408, '', 'RESPONSABLE', 'EvisBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (407, '', 'RESPONSABLE', 'EvisBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (405, '', 'RESPONSABLE', 'EvisBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (405, '', 'RESPONSABLE', 'EsigBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (408, '', 'RESPONSABLE', 'EsigBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (407, '', 'RESPONSABLE', 'EsigBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (410, '', 'RESPONSABLE', 'EsigBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'COURRIER', 'EenvBasket', 'N', 'N', 'Y');
+-- BANNETTE SECONDAIRE POUR LE GROUPE DES SUPERVISEURS DE COURRIERINSERT INTO user_baskets_secondary (system_id, user_id, group_id, basket_id) VALUES (1, 'ddaull', 'RESPONSABLE', 'EvisBasket');
+INSERT INTO user_baskets_secondary (system_id, user_id, group_id, basket_id) VALUES (1, 'ddaull', 'RESPONSABLE', 'EvisBasket');
