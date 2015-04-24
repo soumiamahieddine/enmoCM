@@ -391,9 +391,9 @@ for ($i=0;$i<count($tab);$i++)
                 $statusCmp = $tab[$i][$j]['value'];
                 //$tab[$i][$j]['value'] = "<img src = '".$res_status['IMG_SRC']."' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'>";
                 if (!isset($res_status['IMG_SRC']) ||  empty($res_status['IMG_SRC'])){
-                 $tab[$i][$j]['value'] = "<i class = 'fa fa-question fa-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
+                 $tab[$i][$j]['value'] = "<i class = 'fm fm-letter-status-new fm-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
 				} else {
-					$tab[$i][$j]['value'] = "<i class = 'fa fa-".$res_status['IMG_SRC']." fa-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
+					$tab[$i][$j]['value'] = "<i class = 'fm ".$res_status['IMG_SRC']." fm-3x' alt = '".$res_status['LABEL']."' title = '".$res_status['LABEL']."'></i>";
 				}
                 $tab[$i][$j]["label"]=_STATUS;
                 $tab[$i][$j]["size"]="4";
