@@ -423,19 +423,22 @@ class business_app_tools extends dbquery
         }
 
         $_SESSION['attachment_types'] = array();
-        $_SESSION['attachment_types_attribute'] = array();
+        $_SESSION['attachment_types_with_chrono'] = array();
+        $_SESSION['attachment_types_show'] = array();
         $attachmentTypes = $xmlfile->attachment_types;
         if (count($attachmentTypes) > 0) {
             foreach ($attachmentTypes->type as $type ) {
                 $label = (string) $type->label;
-                $attribute = (string) $type->attributes();
+                $with_chrono = (string) $type['with_chrono'];
+                $show_attachment_type = (string) $type['show'];
                 if (!empty($label) && defined($label)
                     && constant($label) <> NULL
                  ) {
                     $label = constant($label);
                 }
                 $_SESSION['attachment_types'][(string) $type->id] = $label;
-                $_SESSION['attachment_types_attribute'][(string) $type->id] = $attribute;
+                $_SESSION['attachment_types_with_chrono'][(string) $type->id] = $with_chrono;
+                $_SESSION['attachment_types_show'][(string) $type->id] = $show_attachment_type;
             }
         }
         

@@ -1741,10 +1741,24 @@ function affiche_chrono(){
 
     if (type_id.getAttribute('with_chrono') == 'true') {      
         $('chrono_label').setStyle({display: 'inline'});
-        $('chrono').setStyle({display: 'inline'});
+        $('chrono_display').setStyle({display: 'inline'});
+            new Ajax.Request('index.php?display=true&module=attachments&page=get_chrono_attachment',
+                {
+                    method:'post',
+                    parameters:
+                    {
+                        type_id : type_id
+                    },
+                     onSuccess: function(answer){
+                        eval("response = "+answer.responseText);
+                        $('chrono_display').value=response.chronoNB;
+                        $('chrono').value=response.chronoNB;
+                    }
+                });
     } else {
         $('chrono_label').setStyle({display: 'none'});
-        $('chrono').setStyle({display: 'none'});
+        $('chrono_display').setStyle({display: 'none'});
+        $('chrono_display').value='';
         $('chrono').value='';
     }
 }
