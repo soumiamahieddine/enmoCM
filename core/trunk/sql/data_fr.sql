@@ -61,7 +61,7 @@ INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, ca
 INSERT INTO status VALUES ('END', 'Clos / fin du workflow', 'Y', 'N', 'fm-letter-status-end', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('NEW', 'Nouveau', 'Y', 'fm-letter-status-new', 'apps', 'Y', 'Y');
 INSERT INTO status VALUES ('RET', 'Retour courrier ou document en qualification', 'N', 'N', 'fm-letter-status-rejected', 'apps', 'Y', 'Y');
-INSERT INTO status VALUES ('SIG', 'A signer', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status VALUES ('SIG', 'A signer', 'N', 'N', 'fm-file-fingerprint', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('UNS', 'Rejeté', 'N', 'fm-letter-status-rejected', 'apps', 'Y', 'Y');
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('VAL', 'A Valider', 'Y', '', 'fm-letter-status-aval', 'Y', 'Y');
 INSERT INTO status VALUES ('INIT', 'Nouveau courrier ou document non qualifié', 'Y', 'N', 'fm-letter-status-attr', 'apps', 'Y', 'Y');
@@ -412,11 +412,9 @@ INSERT INTO listmodels (coll_id, object_id, object_type, sequence, item_id, item
 ------------
 --BASKETS--
 ------------
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'SignedBasket', '[courrier] 05 - Courriers visés par la direction', 'Corbeilles des courriers visés, à imprimer', 'status=''SIG'' and DEST_USER = @user', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'SigningBasket', '[courrier] 11 - Courriers à viser', 'Corbeille des courriers à approuver', 'STATUS = ''VIS'' and DESTINATION in (@subentities[@my_entities])', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'QualificationBasket', '[courrier] 22 - Courriers à qualifier', 'Corbeille de qualification', 'status=''ATT''', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'IndexingBasket', '[courrier] 00 - Courriers à indexer', 'Corbeille d''indexation', ' ', 'N', 'Y', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'UnsignedBasket', '[courrier] 06 - Courriers réponses rejetés', 'Corbeille des courriers rejetés', 'status=''UNS'' and DEST_USER=@user and type_id not in (94,96)', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'CopyMailBasket', '[courrier] 03 - Courriers en copie', 'Corbeille d''information', '(res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''user_id'' and item_id = @user and item_mode = ''cc'') or res_id in (select res_id from listinstance WHERE coll_id = ''letterbox_coll'' and item_type = ''entity_id'' and item_mode = ''cc'' and item_id in (@my_entities))) and status <> ''DEL''', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'RetourCourrier', '[courrier] 21 - Retours Courrier', 'Courriers retournés au service Courrier', 'STATUS=''RET''', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'InitBasket', '[courrier] 20 - Courriers pour validation DSG', 'Courriers en attente d envoi en validation', 'STATUS=''INIT''', 'N', 'Y', 'Y');
@@ -426,8 +424,7 @@ INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'LateMailBasket', '[courrier] 02 - Courriers en retard', 'Courriers en retard', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'') and (now() > process_limit_date)', 'N', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'DepartmentBasket', '[courrier] 10 - Courriers de ma direction', 'Corbeille de supervision', 'destination in (@my_entities, @subentities[@my_primary_entity]) and (status <> ''DEL'' AND status <> ''REP'' and status <> ''VAL'')', 'N', 'Y', 'Y');
 
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'MyEmailsToQualify', '[courrier] 100 - Mes emails à qualifier', 'Mes emails à qualifier', 'status=''MAQUAL'' and (dest_user = @user or doc_custom_t14 = @email)', 'N', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'EmailsToQualify', '[courrier] 100 - Emails à qualifier', 'Emails à qualifier', 'status=''MAQUAL'' and (dest_user = '''' or dest_user is null)', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, enabled) VALUES ('letterbox_coll', 'EmailsToQualify', '[courrier] 100 - Courriels à qualifier', 'Courriels à qualifier', 'status=''MAQUAL'' and (dest_user = '''' or dest_user is null)', 'N', 'Y');
 
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersMyBasket', '[dossier] 90 - Mes dossiers à traiter', 'Dossiers à traiter', 'status = ''FOLDNEW'' and count_document > 0 and dest_user = @user', 'N', 'Y', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersValidationBasket', '[dossier] 91 - Dossiers à valider', 'Corbeilles des dossiers à valider', 'status = ''FOLDVAL'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
@@ -468,37 +465,33 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, is_folder_
 ------------
 INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('MAQUAL', '[courrier] Email à qualifier', 'N', '', 'apps', 'Y', 'Y');
 
-INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDNEW', '[dossier] Nouveau dossier', 'N', 'Y', 'basket_folders_b.gif', 'folder', 'N', 'Y');
-INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDVAL', '[dossier] Dossier validé', 'N', 'Y', '', 'folder', 'N', 'Y');
-INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDREJ', '[dossier] Dossier rejeté', 'N', 'Y', '', 'folder', 'N', 'Y');
-INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDTRT', '[dossier] Dossier traité', 'N', 'Y', '', 'folder', 'N', 'Y');
-INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDNOT', '[dossier] Dossier incomplet', 'N', 'Y', '', 'folder', 'N', 'Y');
-INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDDEL', '[dossier] Dossier supprimé', 'N', 'Y', '', 'folder', 'N', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDNEW', '[dossier] Nouveau dossier', 'N', 'Y', 'fm-classification-plan-l1', 'folder', 'N', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDVAL', '[dossier] Dossier validé', 'N', 'Y', 'fm-classification-plan-l1', 'folder', 'N', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDREJ', '[dossier] Dossier rejeté', 'N', 'Y', 'fm-classification-plan-l1', 'folder', 'N', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDTRT', '[dossier] Dossier traité', 'N', 'Y', 'fm-classification-plan-l1', 'folder', 'N', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDNOT', '[dossier] Dossier incomplet', 'N', 'Y', 'fm-classification-plan-l1', 'folder', 'N', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('FOLDDEL', '[dossier] Dossier supprimé', 'N', 'Y', 'fm-classification-plan-l1', 'folder', 'N', 'Y');
 
 ------------
 --GROUPBASKET--
 ------------
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'SignedBasket', 14, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'LateMailBasket', 1, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'UnsignedBasket', 9, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'CopyMailBasket', 3, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'MyBasket', 21, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'ContribBasket', 27, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'IndexingBasket', 29, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'SignedBasket', 13, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'DepartmentBasket', 14, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'CopyMailBasket', 3, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'SigningBasket', 15, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'MyBasket', 17, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'ContribBasket', 23, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'UnsignedBasket', 9, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'IndexingBasket', 24, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'IndexingBasket', 112, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESP_COURRIER', 'SigningBasket', 4, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESP_COURRIER', 'ValidationBasket', 8, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESP_COURRIER', 'RetourCourrier', 2, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESP_COURRIER', 'CopyMailBasket', 6, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESP_COURRIER', 'MyBasket', 17, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESP_COURRIER', 'IndexingBasket', 24, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
+INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESP_COURRIER', 'IndexingBasket', 112, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'InitBasket', 4, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'QualificationBasket', 18, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'IndexingBasket', 16, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
@@ -507,8 +500,6 @@ INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, red
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ELU', 'CopyMailBasket', 2, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ELU', 'MyBasket', 4, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('ELU', 'IndexingBasket', 5, NULL, NULL, 'redirect_to_action', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'MyEmailsToQualify', 31, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
-INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('AGENT', 'MyEmailsToQualify', 32, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('COURRIER', 'EmailsToQualify', 33, NULL, NULL, 'list_with_attachments', 'N', 'N', 'N');
 
 INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, redirect_grouplist, result_page, can_redirect, can_delete, can_insert) VALUES ('RESPONSABLE', 'FoldersDepartmentBasket', 1, NULL, NULL, 'list_folders', 'N', 'N', 'N');
@@ -522,23 +513,17 @@ INSERT INTO groupbasket (group_id, basket_id, sequence, redirect_basketlist, red
 ------------
 --ACTIONS_GROUPBASKETS--
 ------------
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'AGENT', 'SignedBasket', 'Y', 'N', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'AGENT', 'SignedBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (3, '', 'AGENT', 'CopyMailBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (3, '', 'AGENT', 'LateMailBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'AGENT', 'LateMailBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (21, '', 'AGENT', 'LateMailBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'AGENT', 'LateMailBasket', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (414, '', 'AGENT', 'UnsignedBasket', 'N', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'AGENT', 'UnsignedBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (414, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'AGENT', 'MyBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'AGENT', 'ContribBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (112, '', 'AGENT', 'IndexingBasket', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'RESPONSABLE', 'SignedBasket', 'Y', 'N', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'RESPONSABLE', 'SignedBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'RESPONSABLE', 'CopyMailBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (113, '', 'RESPONSABLE', 'CopyMailBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'RESPONSABLE', 'ValidAnswerBasket', 'N', 'N', 'Y');
@@ -553,8 +538,6 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'RESPONSABLE', 'MyBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (414, '', 'RESPONSABLE', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'RESPONSABLE', 'ContribBasket', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (414, '', 'RESPONSABLE', 'UnsignedBasket', 'N', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'RESPONSABLE', 'UnsignedBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (112, '', 'RESPONSABLE', 'IndexingBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'RESP_COURRIER', 'CopyMailBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (21, '', 'RESP_COURRIER', 'RetourCourrier', 'N', 'N', 'Y');
@@ -569,8 +552,6 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (3, '', 'RESP_COURRIER', 'ValidationBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (18, '', 'RESP_COURRIER', 'ValidationBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'RESP_COURRIER', 'ValidationBasket', 'N', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'RESP_COURRIER', 'SignedBasket', 'Y', 'N', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'RESP_COURRIER', 'SignedBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (112, '', 'RESP_COURRIER', 'IndexingBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (21, '', 'COURRIER', 'RetourCourrier', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (22, '', 'COURRIER', 'QualificationBasket', 'N', 'N', 'Y');
@@ -583,8 +564,6 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (112, '', 'ELU', 'IndexingBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (18, '', 'COURRIER', 'InitBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (22, '', 'COURRIER', 'EmailsToQualify', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (22, '', 'RESPONSABLE', 'MyEmailsToQualify', 'N', 'N', 'Y');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (22, '', 'AGENT', 'MyEmailsToQualify', 'N', 'N', 'Y');
 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (300, '', 'RESPONSABLE', 'FoldersDepartmentBasket', 'Y', 'N', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (301, '', 'RESPONSABLE', 'FoldersDepartmentBasket', 'Y', 'N', 'N');
@@ -621,8 +600,6 @@ INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, ent
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (153, 'RESPONSABLE', 'IndexingBasket', 21, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (154, 'RESPONSABLE', 'IndexingBasket', 112, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (155, 'COURRIER', 'EmailsToQualify', 22, '', 'ALL_ENTITIES', 'ENTITY');
-INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (156, 'RESPONSABLE', 'MyEmailsToQualify', 22, '', 'ALL_ENTITIES', 'ENTITY');
-INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (157, 'AGENT', 'MyEmailsToQualify', 22, '', 'ENTITIES_JUST_BELOW', 'ENTITY');
 
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (160, 'RESPONSABLE', 'FoldersDepartmentBasket', 300, '', 'ALL_ENTITIES', 'ENTITY');
 INSERT INTO groupbasket_redirect (system_id, group_id, basket_id, action_id, entity_id, keyword, redirect_mode) VALUES (161, 'RESPONSABLE', 'FoldersDepartmentBasket', 300, '', 'ALL_ENTITIES', 'USERS');
@@ -3943,13 +3920,13 @@ INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'EenvBasket', '[courrier] 13 - Courriers à e-envoyer', 'Courriers à e-envoyer', 'status=''EENV''', 'N', 'Y', 'N', 'Y');
 
 -- AJOUT DES STATUS 
-INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('DIMP', 'Dossier à imprimer', 'N', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('EENV', 'A e-envoyer', 'N', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('ESIG', 'A e-signer', 'N', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('EVIS', 'A e-viser', 'N', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('PVAL', 'Projet de réponse à valider', 'N', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('CVAL', 'Circuit de visa à valider', 'N', 'N', '', 'apps', 'Y', 'Y');
-INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('WAIT', 'En attente  de la réponse signée', 'N', 'N', '', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('DIMP', 'Dossier à imprimer', 'N', 'N', 'fm-letter-status-aimp', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('EENV', 'A e-envoyer', 'N', 'N', 'fm-letter-status-aenv', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('ESIG', 'A e-signer', 'N', 'N', 'fm-file-fingerprint', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('EVIS', 'A e-viser', 'N', 'N', 'fm-letter-status-aval', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('PVAL', 'Projet de réponse à valider', 'N', 'N', 'fm-letter-status-aval', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('CVAL', 'Circuit de visa à valider', 'N', 'N', 'fm-file-cycle-policy', 'apps', 'Y', 'Y');
+INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('WAIT', 'En attente  de la réponse signée', 'N', 'N', 'fm-letter-status-wait', 'apps', 'Y', 'Y');
 
 -- AJOUT DES ACTIONS
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (400, '', '[courrier] Envoyer le projet de réponse', 'PVAL', 'N', 'Y', '', 'Y', 'apps', 'N');
@@ -3961,7 +3938,7 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, a
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (407, '', '[courrier] Renvoyer pour traitement', 'COU', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (408, '', '[courrier] Demander une révision mineure', 'REV', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (409, '', '[courrier] E-Parapheur à imprimer', 'DIMP', 'N', 'Y', '', 'Y', 'apps', 'N');
-INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (410, '', '[courrier] Signer et transmettre pour e-envoi', 'EENV', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (410, '', '[courrier] Transmettre la réponse signée', 'EENV', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (411, '', '[courrier] Transmettre pour classement', 'CLAS', 'N', 'Y', '', 'Y', 'apps', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (412, '', '[courrier] Imprimer le dossier', 'WAIT', 'N', 'Y', 'print_folder', 'Y', 'visa', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (413, '', '[courrier] E-envoyer un dossier', '_NOSTATUS_', 'N', 'Y', 'send_email', 'Y', 'visa', 'N');
