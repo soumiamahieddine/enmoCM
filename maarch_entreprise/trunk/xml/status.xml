@@ -48,4 +48,28 @@
     <status>
         <img_filename>fm-letter-status-aarch</img_filename>
     </status>
+    <status>
+        <img_filename>fm-letter</img_filename>
+    </status>
+    <status>
+        <img_filename>fm-letter-add</img_filename>
+    </status>
+    <status>
+        <img_filename>fm-letter-search</img_filename>
+    </status>
+    <status>
+        <img_filename>fm-letter-del</img_filename>
+    </status>
+    <status>
+        <img_filename>fm-letter-incoming</img_filename>
+    </status>
+    <status>
+        <img_filename>fm-letter-outgoing</img_filename>
+    </status>
+    <status>
+        <img_filename>fm-letter-internal</img_filename>
+    </status>
+    <status>
+        <img_filename>fm-file-fingerprint</img_filename>
+    </status>
 </ROOT>
