@@ -58,15 +58,11 @@ For developper :
         </ELEMENT>
         <ELEMENT>
             <type>text</type>
-            <value>/</value>
+            <value>/MAARCH/</value>
         </ELEMENT>
         <ELEMENT>
             <type>maarch_functions</type>
-            <value>category_char</value>
-        </ELEMENT>
-        <ELEMENT>
-            <type>maarch_functions</type>
-            <value>chr_by_category</value>
+            <value>chr_global</value>
         </ELEMENT>
     </CHRONO>
 
