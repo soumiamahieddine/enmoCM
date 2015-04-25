@@ -415,11 +415,11 @@ class entity extends dbquery
         if ($this->protect_string_db(trim($parent)) == "") {
             $this->query('select entity_id, entity_label, short_label from ' 
                 . ENT_ENTITIES 
-                . " where enabled = 'Y' and (parent_entity_id ='' or parent_entity_id is null) " . $where);
+                . " where enabled = 'Y' and (parent_entity_id ='' or parent_entity_id is null) " . $where . " order by short_label");
         } else {
             $this->query('select entity_id, entity_label, short_label from ' 
             . ENT_ENTITIES . " where enabled = 'Y' and parent_entity_id = '" 
-            . $this->protect_string_db(trim($parent)) . "'" . $where);
+            . $this->protect_string_db(trim($parent)) . "'" . $where . " order by short_label");
         }
         //$this->show();
         if ($this->nb_result() > 0) {
