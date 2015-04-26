@@ -187,12 +187,41 @@ class PrintControler extends PrintFunctions
 			}
 			
 			$pdf= new fpdi();//create a new document PDF
+
 			$cptResToPrint = count($this->array_print);
 			
 			for ($cpt=0;$cpt<$cptResToPrint;$cpt++) {
 				$y = 0;
 				
-				$pdf->addPage(); //Add a blank page
+				//$pdf->addPage(); //Add a blank page
+
+	            // Retrieve id to create paths (app & custom)
+	            $id_app = $_SESSION['config']['app_id'];
+	            $id_custom = false;
+	            if (!empty($_SESSION['custom_override_id']))
+	                $id_custom = $_SESSION['custom_override_id'];
+
+	            // Retrieve name for template file
+	            $fileName_pdfTemplate = 'TemplatePrint.pdf';
+	            
+	            // Make paths to pdf dir
+	            $pathToDir_pdfTemplate = 'apps/' . $id_app . '/indexing_searching/';
+	            $pathToDir_custom_pdfTemplate = 'custom/' . $id_custom . '/' . $pathToDir_pdfTemplate;
+	            
+	            $pathToFile_pdfTemplate = $pathToDir_pdfTemplate . $fileName_pdfTemplate;
+	            $pathToFile_custom_pdfTemplate = $pathToDir_custom_pdfTemplate . $fileName_pdfTemplate;
+	            
+	            // Load the pdf template file
+	            if ($id_custom && file_exists($pathToFile_custom_pdfTemplate))
+	                $pdfTemplate = $pathToFile_custom_pdfTemplate;
+	            else
+	                $pdfTemplate = $pathToFile_pdfTemplate;
+
+				$pageCount = $pdf->setSourceFile($pdfTemplate);
+				$tplIdx = $pdf->importPage(1);
+
+				$pdf->addPage();
+				$pdf->useTemplate($tplIdx);
 			
 				/**********************************************************************/
 				
