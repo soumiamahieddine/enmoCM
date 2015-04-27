@@ -643,13 +643,17 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		//$frm_str .= '<input type="hidden" name="next_resId" id="next_resId" value="'.$nextId.'" >';
 		$frm_str .= '</form>';
 		$frm_str .= '</td>';
-		$frm_str .= '<td style="width:15%";">';	
+		$frm_str .= '<td style="width:25%";">';	
 		if ($core->test_service('sign_document', 'visa', false) && $visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT') == $visa->nbVisa($res_id, $coll_id)) {
 			$color = ' style="" ';
-			if ($tab_path_rep_file[0]['attachment_type'] = 'signed_response') $color = ' style="color:green" ';
-			$frm_str .= '<a href="javascript://" id="sign_link" '.$color.' onclick="';
-			$frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].');';
-			$frm_str .= '"><i class="fa fa-check fa-3x" title="Signer ces projets de réponse"></i></a>';
+			if ($tab_path_rep_file[0]['attachment_type'] == 'signed_response') $color = ' style="color:green" ';
+			$frm_str .= '<a href="javascript://" id="sign_link_certif" '.$color.' onclick="';
+			$frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',0);';
+			$frm_str .= '"><i class="fm fm-file-fingerprint fm-3x" title="Signer ces projets de réponse (avec certificat)"></i></a>';
+			
+			$frm_str .= ' <a href="javascript://" id="sign_link" '.$color.' onclick="';
+			$frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',1);';
+			$frm_str .= '"><i class="fa fa-check fa-3x" title="Signer ces projets de réponse (sans certificat)"></i></a>';
 		}
 		
 		$displayModif = ' style="" ';
@@ -657,11 +661,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$displayModif = ' style="display:none;" ';
 		
 		$frm_str .= ' <a href="javascript://" id="update_rep_link" '.$displayModif.'onclick="';
-		/*if ($tab_path_rep_file[0]['is_version'] == 0) $frm_str .= 'window.open(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId='.$coll_id.'&id='.$tab_path_rep_file[0]['res_id'].'\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');';
-		else  $frm_str .= 'window.open(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId='.$coll_id.'&id='.$tab_path_rep_file[0]['res_id'].'isVersion\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');';*/
 		if ($tab_path_rep_file[0]['is_version'] == 0) $frm_str .= 'modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=1&fromDetail=\',\'98%\',\'auto\');';
 		else  $frm_str .= 'modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=2&fromDetail=\',\'98%\',\'auto\');';
-		
 		$frm_str .= '"><i class="fa fa-pencil-square-o fa-3x" title="Modifier la réponse"></i></a>';
 		
 		$frm_str .= '</td>';
@@ -674,7 +675,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '<div id="modalPIN">';
 	$frm_str .= '<label for="valuePIN">Saisissez votre code PIN</label>';
 	$frm_str .= '<input type="password" name="valuePIN" id="valuePIN"/><br/>';
-	$frm_str .= '<input type="button" name="sendPIN" id="sendPIN" value="'._VALIDATE.'" class="button" onclick="signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].', $(\'valuePIN\').value);" />';
+	$frm_str .= '<input type="button" name="sendPIN" id="sendPIN" value="'._VALIDATE.'" class="button" onclick="signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',\'\', $(\'valuePIN\').value);" />';
 	$frm_str .= '</div>';
 	
 	

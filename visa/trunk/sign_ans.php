@@ -27,8 +27,10 @@ if (!empty($_REQUEST['pinCode'])) {
 	$_SESSION['sign']['indexKey'] = '-1';
 }
 
-if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
+
+if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId']) && isset($_REQUEST['modeSign'])) {
     $id = $_REQUEST['id'];
+    $modeSign = $_REQUEST['modeSign'];
 	$tableName = 'res_view_attachments';
     if (!isset($_REQUEST['isVersion'])) $db->query("select res_id, format, res_id_master, title from ".$tableName." where attachment_type = 'response_project' and res_id = " . $id);
     else $db->query("select res_id_version, format, res_id_master, title from ".$tableName." where attachment_type = 'response_project' and res_id_version = " . $id);
@@ -54,6 +56,8 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
                                 echo $id;
                                 ?>&objectTable=<?php 
                                 echo RES_ATTACHMENTS_TABLE;
+                                ?>&modeSign=<?php 
+                                echo $modeSign;
                                 ?>');
                         </script>
                     </div>

@@ -5,5 +5,9 @@
         <comment>_VISA_WORKFLOW_COMMENT</comment>
         <loaded>true</loaded>
         <routing_template>modules/visa/Bordereau_visa_modele.pdf</routing_template>
+		
+		<exeSign>C:/Maarch/DIS/DISPDFSigner.exe</exeSign>
+		<reason>Signé et approuvé par </reason>
+		<location>Miviludes, Services du Premier Ministre</location>
     </CONFIG>
 </root>

@@ -68,8 +68,9 @@ if (isset($_REQUEST['objectId'])) {
     $objectId = '';
 }
 
+$modeSign = $_REQUEST['modeSign'];
 
-if ($objectType == '' || $objectTable == '' || $objectId == '') {
+if ($objectType == '' || $objectTable == '' || $objectId == '' || $modeSign == '') {
     $_SESSION['error'] = _PARAM_MISSING_FOR_MAARCHCM_APPLET . ' ' 
     . $objectType . ' ' . $objectTable . ' ' . $objectId;
     //echo $_SESSION['error'];exit;
@@ -84,7 +85,6 @@ echo 'objectType : ' . $objectType . '<br>';
 echo 'objectTable : ' . $objectTable . '<br>';
 echo 'objectId : ' . $objectId . '<br>';
 */
-
 
 //init error session
 $_SESSION['error'] = '';
@@ -105,6 +105,7 @@ $_SESSION['error'] = '';
         <param name="objectType" value="<?php echo $objectType;?>">
         <param name="objectTable" value="<?php echo $objectTable;?>">
         <param name="objectId" value="<?php echo $objectId;?>">
+        
 		
 		<!--mis en commentaires par agnes 17 04 2015 -->
         <!--param name="userMaarch" value="<!--?php 
@@ -122,11 +123,11 @@ $_SESSION['error'] = '';
         <param name="pinCode" value="<?php echo $_SESSION['sign']['encodedPinCode'];?>">
 		<param name="pinCodeIdx" value="<?php echo $_SESSION['sign']['indexKey'];?>">
 		<param name="timeStamp" value="0">
-		<param name="reason" value="signé et approuvé par <?php echo $_SESSION['user']['FirstName']." ".$_SESSION['user']['LastName'];?>">
-		<param name="location" value="Miviludes, Services du Premier Ministre">
+		<param name="reason" value="<?php echo $_SESSION['modules_loaded']['visa']['reason'];?>">
+		<param name="location" value="<?php echo $_SESSION['modules_loaded']['visa']['location'];?>">
 		
-		<param name="exeSign" value="G:/Projets/SPM/DISPDFSigner/DISPDFSigner.exe">
-		<param name="mode" value="0">
+		<param name="exeSign" value="<?php echo $_SESSION['modules_loaded']['visa']['exeSign'];?>">
+		<param name="mode" value="<?php echo $modeSign;?>">
 		
     </applet>
 </div>

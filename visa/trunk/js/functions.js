@@ -306,7 +306,9 @@ function updateFunctionModifRep(idReponse, num_rep, is_version){
 			if (response.status == 1){
 				if (document.getElementById("sign_link")){
 					document.getElementById("sign_link").setAttribute('onclick','');	
+					document.getElementById("sign_link_certif").setAttribute('onclick','');	
 					document.getElementById("sign_link").style.color = 'green';
+					document.getElementById("sign_link_certif").style.color = 'green';
 				}
 				
 				if (document.getElementById("update_rep_link")) {
@@ -315,9 +317,11 @@ function updateFunctionModifRep(idReponse, num_rep, is_version){
 			}
 			else if (response.status == 0){
 				if (document.getElementById("sign_link")){
-					document.getElementById("sign_link").setAttribute('onclick','signFile('+idReponse+','+is_version+');');	
-					document.getElementById("sendPIN").setAttribute('onclick','signFile('+idReponse+','+is_version+', $(\'valuePIN\').value);');	
+					document.getElementById("sign_link").setAttribute('onclick','signFile('+idReponse+','+is_version+',1);');	
+					document.getElementById("sign_link_certif").setAttribute('onclick','signFile('+idReponse+','+is_version+',0);');	
+					document.getElementById("sendPIN").setAttribute('onclick','signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
 					document.getElementById("sign_link").style.color = '';
+					document.getElementById("sign_link_certif").style.color = '';
 				}
 				if (document.getElementById("update_rep_link")) {
 					document.getElementById("update_rep_link").style.display = '';
@@ -339,7 +343,8 @@ function updateFunctionModifRep(idReponse, num_rep, is_version){
 	document.getElementById("cur_rep").setAttribute('value',idReponse);
 }
 
-function signFile(res_id,isVersion, pinCode){
+function signFile(res_id,isVersion, mode, pinCode){
+	console.log("Mode = "+mode);
 	if(pinCode == undefined || pinCode=='')
     {
         pinCode='';
@@ -350,18 +355,20 @@ function signFile(res_id,isVersion, pinCode){
 		onSuccess: function(answer){
 			eval("response = "+answer.responseText);
 			if (response.status == 1){
-				if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
-				else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
+				if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&modeSign='+mode+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
+				else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&modeSign='+mode+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
 			}
 			else if (response.status == 0){
 				//var pinCode = prompt("Code PIN :", "");
 				
 				if (pinCode != ''){
 					$('modalPIN').style.display = 'none';
-					if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&pinCode='+pinCode,'','height=301, width=301,scrollbars=yes,resizable=yes');
-					else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&pinCode='+pinCode,'','height=301, width=301,scrollbars=yes,resizable=yes');
+					if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&modeSign='+mode+'&pinCode='+pinCode,'','height=301, width=301,scrollbars=yes,resizable=yes');
+					else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&modeSign='+mode+'&pinCode='+pinCode,'','height=301, width=301,scrollbars=yes,resizable=yes');
 				}
 				else {
+						var attr = document.getElementById("sendPIN").getAttribute('onclick').split(',');	
+						document.getElementById("sendPIN").setAttribute('onclick',attr[0]+','+attr[1]+','+mode+','+attr[3]);	
 						$('modalPIN').style.display = 'block';
 						console.log("Code PIN :"+pinCode);
 				}
@@ -398,7 +405,9 @@ function endAttachmentSign(newId)
 	}
 	if (window.opener.$('sign_link')){
 		window.opener.$('sign_link').style.color = 'green';
+		window.opener.$('sign_link_certif').style.color = 'green';
 		window.opener.$('sign_link').setAttribute('onclick','');	
+		window.opener.$('sign_link_certif').setAttribute('onclick','');	
 	}
 	if(window.opener.$('viewframevalidRep'+num_rep)) {
 		window.opener.$('viewframevalidRep'+num_rep).src = "index.php?display=true&module=attachments&page=view_attachment&res_id_master="+num_idMaster+"&id="+newId;			
@@ -407,7 +416,7 @@ function endAttachmentSign(newId)
 	if(window.opener.$('ans_'+num_rep)) {
 		window.opener.$('ans_'+num_rep).setAttribute('onclick','updateFunctionModifRep(\''+newId+'\', '+num_rep+', 0);');			
 	}
-    window.close();
+    //window.close();
 }
 function generateWaybill(resId)
 {

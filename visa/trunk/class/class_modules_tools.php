@@ -56,6 +56,10 @@ class visa extends dbquery
 		
 		$xmlconfig = simplexml_load_file($configPath);
 		$conf = $xmlconfig->CONFIG;
+		$_SESSION['modules_loaded']['visa']['exeSign'] = (string) $conf->exeSign;
+		$_SESSION['modules_loaded']['visa']['reason'] = (string) $conf->reason;
+		$_SESSION['modules_loaded']['visa']['location'] = (string) $conf->location;
+		
 		$routing_template = (string) $conf->routing_template;
 		
 		if (file_exists(
