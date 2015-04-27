@@ -814,12 +814,12 @@ if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id 
     $req->connect();
     $req->query("SELECT cr.address_id, c.contact_id, c.is_corporate_person, c.society, c.society_short, c.firstname, c.lastname,ca.is_private,ca.address_street, ca.address_num, ca.address_town FROM contacts_res cr, contacts_v2 c, contact_addresses ca WHERE cr.res_id = ".$_SESSION['doc_id']." and c.contact_id = cast(cr.contact_id as integer) and ca.contact_id=c.contact_id and ca.id=cr.address_id");
     $i=0;
-    while($data_attachment = $req->fetch_object()){
+    while($multi_contacts_attachment = $req->fetch_object()){
             $format_contact='';
             $req2->connect();
             $req2->query('SELECT is_corporate_person, is_private, contact_lastname, contact_firstname, society, society_short, address_num, address_street, address_town, lastname, firstname 
                             FROM view_contacts 
-                            WHERE contact_id = ' . $data_attachment->contact_id . ' and ca_id = ' . $data_attachment->address_id);
+                            WHERE contact_id = ' . $multi_contacts_attachment->contact_id . ' and ca_id = ' . $multi_contacts_attachment->address_id);
     
             $res = $req2->fetch_object();
             if ($res->is_corporate_person == 'Y') {
@@ -844,17 +844,17 @@ if ($data_attachment->exp_contact_id <> '' || $data_attachment->dest_contact_id 
                 $format_contact .= $res->address_num .' ' . $res->address_street .' ' . strtoupper($res->address_town);                         
             }
         $contacts[] = array(
-            'contact_id' => $data_attachment->contact_id,
-            'firstname' => $data_attachment->firstname,
-            'lastname' => $data_attachment->lastname,
-            'society' => $data_attachment->society,
-            'address_id' => $data_attachment->address_id,
+            'contact_id' => $multi_contacts_attachment->contact_id,
+            'firstname' => $multi_contacts_attachment->firstname,
+            'lastname' => $multi_contacts_attachment->lastname,
+            'society' => $multi_contacts_attachment->society,
+            'address_id' => $multi_contacts_attachment->address_id,
             'format_contact' => $format_contact
         );
 
         if($i==0){
             $data_contact=$format_contact; 
-            $data_attachment->exp_contact_id=$data_attachment->contact_id;
+            $data_attachment->exp_contact_id=$multi_contacts_attachment->contact_id;
         }
         $i++;
     } 
