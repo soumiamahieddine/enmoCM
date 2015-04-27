@@ -416,7 +416,7 @@ function endAttachmentSign(newId)
 	if(window.opener.$('ans_'+num_rep)) {
 		window.opener.$('ans_'+num_rep).setAttribute('onclick','updateFunctionModifRep(\''+newId+'\', '+num_rep+', 0);');			
 	}
-    //window.close();
+    window.close();
 }
 function generateWaybill(resId)
 {
