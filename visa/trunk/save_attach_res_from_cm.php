@@ -53,14 +53,14 @@ if (empty($docserver)) {
 			require_once "core/class/class_request.php";
 			$req = new request();
 			$req->connect();
-			if ($_SESSION['visa']['repSignRel'] > 1) {
+			/*if ($_SESSION['visa']['repSignRel'] > 1) {
                 $req->query("UPDATE res_version_attachments set status = 'OBS' WHERE res_id = ".$_SESSION['visa']['repSignId']);
             } else {
                $req->query("UPDATE res_attachments set status = 'OBS' WHERE res_id = ".$_SESSION['visa']['repSignId']);
             }
 						
 			unset($_SESSION['visa']['repSignRel']);
-			unset($_SESSION['visa']['repSignId']);
+			unset($_SESSION['visa']['repSignId']);*/
 			
 			
             $resAttach = new resource();

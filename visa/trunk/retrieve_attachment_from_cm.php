@@ -25,8 +25,8 @@ if ($dbAttachment->nb_result() == 0) {
     $func = new functions();
     $lineDoc = $dbAttachment->fetch_object();
 	
-	$_SESSION['visa']['repSignRel'] = $lineDoc->relation;
-	$_SESSION['visa']['repSignId'] = $objectId;
+	/*$_SESSION['visa']['repSignRel'] = $lineDoc->relation;
+	$_SESSION['visa']['repSignId'] = $objectId;*/
 	
     $docserver = $lineDoc->path_template;
     $fileOnDs = $docserver . $path . str_replace(pathinfo($filename, PATHINFO_EXTENSION), "pdf",$filename);;
