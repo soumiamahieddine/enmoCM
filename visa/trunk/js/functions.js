@@ -360,8 +360,11 @@ function signFile(res_id,isVersion, mode, pinCode){
 			}
 			else if (response.status == 0){
 				//var pinCode = prompt("Code PIN :", "");
-				
-				if (pinCode != ''){
+				if (mode == 1){
+					if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&modeSign='+mode+'&pinCode=null','','height=301, width=301,scrollbars=yes,resizable=yes');
+					else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&modeSign='+mode+'&pinCode=null','','height=301, width=301,scrollbars=yes,resizable=yes');
+				}
+				else if (pinCode != ''){
 					$('modalPIN').style.display = 'none';
 					if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&modeSign='+mode+'&pinCode='+pinCode,'','height=301, width=301,scrollbars=yes,resizable=yes');
 					else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&modeSign='+mode+'&pinCode='+pinCode,'','height=301, width=301,scrollbars=yes,resizable=yes');

@@ -383,10 +383,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '</tr></thead><tbody>';
 	$color = "";
 	//$visaEnCours = false;
+	//echo "<pre>".print_r($tab_histo,true)."</pre>";
 	foreach($tab_histo as $action){
 		$act = getInfosAction($action->event_id);
 		$us = getInfosUser($action->user_id);
-		if (($act['status'] != "")/* && $action->event_id != 401 && $action->event_id != 405*/){
+		//if (($act['status'] != "")){
 		if($color == ' class="col"') {
 			$color = '';
 		} else {
@@ -402,7 +403,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '<td>'.$us['entite'].'</td>';
 		$frm_str .= '<td>'.$us['prenom'].' '.$us['nom'].'</td>';
 		$frm_str .= '</tr>';
-		}
+		//}
 	}
 	$frm_str .= '</tbody></table><br/>';
 		$frm_str .= '<span style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'frame_histo_div\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'frame_histo_div\', \'frame_histo_div_status\');return false;">';

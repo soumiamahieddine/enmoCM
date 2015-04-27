@@ -22,7 +22,7 @@ if (
     $path = 'modules/visa/applet_launcher.php';
 }
 
-if (!empty($_REQUEST['pinCode'])) {
+if (!empty($_REQUEST['pinCode']) && $_REQUEST['pinCode'] != 'null') {
 	$_SESSION['sign']['encodedPinCode'] = $_REQUEST['pinCode'];
 	$_SESSION['sign']['indexKey'] = '-1';
 }
