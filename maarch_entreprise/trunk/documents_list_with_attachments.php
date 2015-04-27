@@ -392,7 +392,7 @@ for ($i=0;$i<count($tab);$i++)
                 }else if($tab[$i][8]["value"]=='1'){
                     $style="style='color:orange;'";
                 }else{
-                    $style="color:'#009DC5;'";
+                    $style="style='color:#009DC5;'";
                 }
                 $res_status = $status_obj->get_status_data($tab[$i][$j]['value'],$extension_icon);
                 $statusCmp = $tab[$i][$j]['value'];
