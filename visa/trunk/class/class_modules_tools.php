@@ -139,9 +139,11 @@ class visa extends dbquery
 	
 	public function getConsigne($res_id, $coll_id, $userId){
 		$circuit = $this->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
-		foreach($circuit['visa']['users'] as $seq=>$step){
-			if ($step['user_id'] == $userId){
-				return $step['process_comment'];
+		if (isset($circuit['visa'])) {
+			foreach($circuit['visa']['users'] as $seq=>$step){
+				if ($step['user_id'] == $userId){
+					return $step['process_comment'];
+				}
 			}
 		}
 		foreach($circuit['sign']['users'] as $seq=>$step){

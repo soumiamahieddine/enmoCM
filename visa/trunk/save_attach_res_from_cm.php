@@ -117,7 +117,7 @@ if (empty($docserver)) {
                 $_SESSION['data'],
                 array(
                     'column' => 'title',
-                    'value' => $_SESSION['visa']['last_resId_signed']['title'],
+                    'value' => str_replace("'","''",$_SESSION['visa']['last_resId_signed']['title']),
                     'type' => 'string',
                 )
             );
