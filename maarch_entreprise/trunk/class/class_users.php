@@ -113,7 +113,7 @@ class class_users extends dbquery
                 require_once 'core/docservers_tools.php';
                 $arrayIsAllowed = array();
                 $arrayIsAllowed = Ds_isFileTypeAllowed($filePathOnTmp);
-                if (strtolower($the_ext) <> 'jpg') {
+                if (strtolower($the_ext) <> 'jpg' && strtolower($the_ext) <> 'jpeg') {
                     $_SESSION['error'] = _WRONG_FILE_TYPE . ' ' . $arrayIsAllowed['mime_type'];
                     $_SESSION['upfile'] = array();
                 } else if ($arrayIsAllowed['status'] == false) {
