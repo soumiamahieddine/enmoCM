@@ -75,21 +75,27 @@ Mods
                         ##ifStatement|#isModuleLoaded|cases#===true|&nbsp;#defineLang|_CASE# #sortColumn|case_label#| ##
                     </div>
                 </th>-->
-                <td style="text-align:center" style="font-size:13px;" >##defineLang|_NUM_GED##<br/>##sortColumn|res_id##</td>
-                        <td style="text-align:center" >
+                <th>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" >
+                                    <tr>
+                <th style="text-align:center">##defineLang|_NUM_GED##<br/>##sortColumn|res_id##</th>
+                </tr>
+                </table>
+                </th>
+                        <th style="text-align:center" >
                             <table width="100%" border="0" cellspacing="0" cellpadding="0" >
                                     <tr>
                                         
-                                        <td style="font-size:10px;" width ="35px">##defineLang|_SUBJECT##<br/>##sortColumn|subject##</td>
-                                        <td style="font-size:10px;text-align:left;" width ="115px">##defineLang|_CATEGORY##<br/>##sortColumn|category_id##</td>
-                                        <td style="font-size:10px;" width ="90px" >##defineLang|_CREATION_DATE##<br/>##sortColumn|creation_date##</td>
-                                        <td style="font-size:10px;" width ="100px" >##defineLang|_PROCESS_LIMIT_DATE##<br/>##sortColumn|process_limit_date##</td>
-                                        <td style="font-size:10px;" width ="110px" >##defineLang|_ENTITY##<br/>##sortColumn|entity_label##</td>
-                                        <td style="font-size:10px;" width ="220px" >##defineLang|_TYPE##<br/>##sortColumn|type_label##</td>
+                                        <th style="font-size:9px;" width ="35px">##defineLang|_SUBJECT##<br/>##sortColumn|subject##</th>
+                                        <th style="font-size:9px;text-align:left;" width ="115px">##defineLang|_CATEGORY##<br/>##sortColumn|category_id##</th>
+                                        <th style="font-size:9px;" width ="90px" >##defineLang|_CREATION_DATE##<br/>##sortColumn|creation_date##</th>
+                                        <th style="font-size:9px;" width ="100px" >##defineLang|_PROCESS_LIMIT_DATE##<br/>##sortColumn|process_limit_date##</th>
+                                        <th style="font-size:9px;" width ="110px" >##defineLang|_ENTITY##<br/>##sortColumn|entity_label##</th>
+                                        <th style="font-size:9px;" width ="220px" >##defineLang|_TYPE##<br/>##sortColumn|type_label##</th>
                                      
                                     </tr>                         
                             </table>
-                        </td>
+                        </th>
             </tr>
         </thead>
 
@@ -101,7 +107,7 @@ Mods
 
                     <td width="10%" ##clickOnLine##>
                         <!--<div align="center"><img src="##load_img|contact_maarch.gif##" alt="##loadValue|status##" title="##loadValue|status##"> </div>-->
-                        <div align="center" style ="color:#FDD16C;">##loadValue|status## </div>
+                        <div align="center" style ="color:#009DC5;">##loadValue|status## </div>
                     </td>
                     <td width="90%" align="center" style="padding : 0px; vertical-align:top" ##clickOnLine##>
                         <table width="100%" border="0" cellspacing="0" cellpadding="0" >
@@ -156,32 +162,35 @@ Mods
                         </td>
                 </tr>
 			   <tr id="noteList_##loadValue|res_id##" name="noteList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: white;" width="100%">
-					<td colspan="6" style="background-color: white;">
-						<div id="divNoteList_##loadValue|res_id##" align="center" style="color: grey;">
+					<td colspan="6" style="background-color: #f2f2f2;">
+						<div id="divNoteList_##loadValue|res_id##" align="center" style="color: grey;margin:10px;padding:10px;
+  border: 1px dashed #009DC5;">
 							<i class="fa fa-spinner fa-2x"></i><br />
 							##define_lang|_LOADING_INFORMATIONS##
 						</div>
 					</td>
 				</tr>	
 			   <tr id="contactsList_##loadValue|res_id##" name="contactsList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: white;" width="100%">
-					<td colspan="6" style="background-color: white;">
-						<div id="divContactsList_##loadValue|res_id##" align="center" style="color: grey;">
+					<td colspan="6" style="background-color: #f2f2f2;">
+						<div id="divContactsList_##loadValue|res_id##" align="center" style="color: grey;margin:10px;padding:10px;border: 1px dashed #009DC5;">
 							<i class="fa fa-spinner fa-2x"></i><br />
 							##define_lang|_LOADING_INFORMATIONS##
 						</div>
 					</td>
 				</tr>	
                 <tr id="repList_##loadValue|res_id##" name="repList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: #FFF;" width="100%">
-                    <td colspan="2" style="background-color: white;">
-                        <div id="divRepList_##loadValue|res_id##" align="center" style="color: grey;">
+                    <td colspan="2" style="background-color: #f2f2f2;">
+                        <div id="divRepList_##loadValue|res_id##" align="center" style="color: grey;margin:10px;padding:10px;
+  border: 1px dashed #009DC5;">
                             <i class="fa fa-spinner fa-2x"></i><br />
                             ##defineLang|_LOADING_INFORMATIONS##
                         </div>
                     </td>
                 </tr>
-                <tr id="diffList_##loadValue|res_id##" name="diffList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black; background-color: #FFF;" width="100%">
-                    <td colspan="2" style="background-color: white;">
-                        <div id="divDiffList_##loadValue|res_id##" align="center" style="color: grey;">
+                <tr id="diffList_##loadValue|res_id##" name="diffList_##loadValue|res_id##" style="display: none; border-bottom: solid 1px black;" width="100%">
+                    <td colspan="2" style="background-color: #f2f2f2;">
+                        <div id="divDiffList_##loadValue|res_id##" align="center" style="color: grey;margin:10px;padding:10px;
+  border: 1px dashed #009DC5;">
                             <i class="fa fa-spinner fa-2x"></i><br />
                             ##defineLang|_LOADING_INFORMATIONS##
                         </div>
