@@ -80,6 +80,14 @@ if ($objectType == '' || $objectTable == '' || $objectId == '' || $modeSign == '
     exit();
 }
 
+if (!isset($_SESSION['sign']['encodedPinCode'])){
+	$pinCode = '0000';
+	$index = '-1';
+}
+else {
+	$pinCode = $_SESSION['sign']['encodedPinCode'];
+	$index = $_SESSION['sign']['indexKey'];
+}
 /*
 echo 'objectType : ' . $objectType . '<br>';
 echo 'objectTable : ' . $objectTable . '<br>';
@@ -120,8 +128,8 @@ $_SESSION['error'] = '';
 		<!--nouveaux paramètres pour la signature -->
 		<param name="thumbPrint" value="<?php echo $_SESSION['user']['thumbprint'];?>">
         <param name="thumprintkeyIdx" value="-1">
-        <param name="pinCode" value="<?php echo $_SESSION['sign']['encodedPinCode'];?>">
-		<param name="pinCodeIdx" value="<?php echo $_SESSION['sign']['indexKey'];?>">
+        <param name="pinCode" value="<?php echo $pinCode;?>">
+		<param name="pinCodeIdx" value="<?php echo $index;?>">
 		<param name="timeStamp" value="0">
 		<param name="reason" value="<?php echo utf8_decode($_SESSION['modules_loaded']['visa']['reason']);?>">
 		<param name="location" value="<?php echo $_SESSION['modules_loaded']['visa']['location'];?>">

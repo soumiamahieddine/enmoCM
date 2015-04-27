@@ -16,7 +16,7 @@ require_once 'modules/content_management/class/class_content_manager_tools.php';
 
 function writeLogIndex($EventInfo)
 {
-    $logFileOpened = fopen($_SESSION['config']['corepath'] . "/modules/visa/log/applet_controller.log", 'a');
+    $logFileOpened = fopen($_SESSION['config']['corepath'] . '/modules/visa/log/appletController_' . date('Y') . '_' . date('m'). '_' . date('d') . '.log', 'a');
     fwrite($logFileOpened, '[' . date('d') . '/' . date('m') . '/' . date('Y')
         . ' ' . date('H') . ':' . date('i') . ':' . date('s') . '] ' . $EventInfo
         . "\r\n"
