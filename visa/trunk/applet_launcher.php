@@ -123,7 +123,7 @@ $_SESSION['error'] = '';
         <param name="pinCode" value="<?php echo $_SESSION['sign']['encodedPinCode'];?>">
 		<param name="pinCodeIdx" value="<?php echo $_SESSION['sign']['indexKey'];?>">
 		<param name="timeStamp" value="0">
-		<param name="reason" value="<?php echo $_SESSION['modules_loaded']['visa']['reason'];?>">
+		<param name="reason" value="<?php echo utf8_decode($_SESSION['modules_loaded']['visa']['reason']);?>">
 		<param name="location" value="<?php echo $_SESSION['modules_loaded']['visa']['location'];?>">
 		
 		<param name="exeSign" value="<?php echo $_SESSION['modules_loaded']['visa']['exeSign'];?>">

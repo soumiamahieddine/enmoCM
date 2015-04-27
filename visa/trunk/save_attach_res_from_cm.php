@@ -2,6 +2,8 @@
 
 //FOR ADD NEW ATTACHMENTS
 
+
+
 require_once 'modules/attachments/attachments_tables.php';
 
 //new attachment from a template
@@ -167,6 +169,13 @@ if (empty($docserver)) {
                     'type' => 'string',
                 )
             );
+			writeLogIndex("Insertion BDD");
+			writeLogIndex("Paramètres load into DB");
+			writeLogIndex("destination dir = ".$storeResult['destination_dir']);
+			writeLogIndex("file_destination_name = ".$storeResult['file_destination_name']);
+			writeLogIndex("path_template = ".$storeResult['path_template']);
+			writeLogIndex("docserver_id = ".$storeResult['docserver_id']);
+			writeLogIndex("data = ".print_r($_SESSION['data'],true));
             //$_SESSION['error'] = 'test';
             $id = $resAttach->load_into_db(
                 RES_ATTACHMENTS_TABLE,
@@ -178,7 +187,7 @@ if (empty($docserver)) {
                 $_SESSION['config']['databasetype']
             );
 			
-			
+			writeLogIndex("Fin insertion BDD");
 			
 			$_SESSION['visa']['last_ans_signed'] = $id;
             if ($id == false) {

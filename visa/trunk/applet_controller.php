@@ -16,7 +16,7 @@ require_once 'modules/content_management/class/class_content_manager_tools.php';
 
 function writeLogIndex($EventInfo)
 {
-    $logFileOpened = fopen("/var/www/maarch15_dis/modules/visa/log/applet_controller.log", 'a');
+    $logFileOpened = fopen($_SESSION['config']['corepath'] . "/modules/visa/log/applet_controller.log", 'a');
     fwrite($logFileOpened, '[' . date('d') . '/' . date('m') . '/' . date('Y')
         . ' ' . date('H') . ':' . date('i') . ':' . date('s') . '] ' . $EventInfo
         . "\r\n"
@@ -141,13 +141,15 @@ if (
                 createXML('ERROR', $result);
             } else {
                 //depending on the type of object, the action is not the same
+					writeLogIndex("Lancement sauvegarde");
                     include 'modules/visa/save_attach_res_from_cm.php';
+					writeLogIndex("Fin sauvegarde");
                 //THE RETURN
 				$result = array(
 					'NEW_ID' => $_SESSION['visa']['last_ans_signed'],
 					'END_MESSAGE' => $_SESSION['error'] . _END_OF_EDITION,
 				);
-				
+				writeLogIndex(print_r($result,true));
 				createXML('ERROR', $result);
 				//unset($_SESSION['visa']['last_ans_signed']);
             }

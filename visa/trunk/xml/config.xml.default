@@ -7,7 +7,7 @@
         <routing_template>modules/visa/Bordereau_visa_modele.pdf</routing_template>
 		
 		<exeSign>C:/Maarch/DIS/DISPDFSigner.exe</exeSign>
-		<reason>Signé et approuvé par </reason>
+		<reason>Signe et approuve par </reason>
 		<location>Miviludes, Services du Premier Ministre</location>
     </CONFIG>
 </root>
