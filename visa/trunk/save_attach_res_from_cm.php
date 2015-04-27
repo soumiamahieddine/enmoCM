@@ -13,13 +13,15 @@ if (isset($_SESSION['cm']['resMaster']) && $_SESSION['cm']['resMaster'] <> '') {
 
 $_SESSION['cm']['resMaster'] = '';
 
+$collId =  $_SESSION['current_basket']['coll_id'];
+
 $docserverControler = new docservers_controler();
 $docserver = $docserverControler->getDocserverToInsert(
-    'letterbox_coll'
+   $collId
 );
 
 
-$collId =  'letterbox_coll';
+
 
 if (empty($docserver)) {
     $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
