@@ -479,6 +479,29 @@ class resources_controler
 				        $myChrono = $chronoX->generate_chrono($categoryId, $myVars, 'false');
 				        $data[$i]['value'] = $db->protect_string_db($myChrono);		                
 		            }
+                    if (strtoupper($data[$i]['column']) == strtoupper('exp_contact_id') && $data[$i]['value'] <> "" && !is_numeric($data[$i]['value'])) {
+                        $theString = str_replace(">", "", $data[$i]['value']);
+                        $mail = explode("<", $theString);
+                        $db->query("SELECT contact_id FROM view_contacts WHERE email = '" . $db->protect_string_db($mail[count($mail) -1]) . "' and enabled = 'Y'");
+                        $contact = $db->fetch_object();
+
+                        if ($contact->contact_id <> "") {
+                            $data[$i]['value'] = $contact->contact_id;
+                        } else {
+                            $data[$i]['value'] = 0;
+                        }
+                    }
+                    if (strtoupper($data[$i]['column']) == strtoupper('address_id') && $data[$i]['value'] <> "" && !is_numeric($data[$i]['value'])) {
+                        $theString = str_replace(">", "", $data[$i]['value']);
+                        $mail = explode("<", $theString);
+                        $db->query("SELECT ca_id FROM view_contacts WHERE email = '" . $db->protect_string_db($mail[count($mail) -1]) . "' and enabled = 'Y'");
+                        $contact = $db->fetch_object();
+                        if ($contact->ca_id <> "") {
+                            $data[$i]['value'] = $contact->ca_id;
+                        } else {
+                            $data[$i]['value'] = 0;
+                        }
+                    }
 	                //COLUMN
 	                $data[$i]['column'] = strtolower($data[$i]['column']);
 	                $queryExtFields .= $data[$i]['column'] . ',';
