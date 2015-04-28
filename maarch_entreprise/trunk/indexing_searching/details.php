@@ -1175,6 +1175,48 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     </dd>
                 <?php
                 }
+				if ($core->is_module_loaded('visa')) {
+					require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
+					. "class" . DIRECTORY_SEPARATOR
+					. "class_modules_tools.php";
+					?>
+				<dt id="onglet_circuit"><?php echo _VISA_WORKFLOW; ?></dt><dd id="page_circuit" style="overflow-x: hidden;">
+				<h2><?php echo _VISA_WORKFLOW; ?></h2>
+				<?php
+				$modifVisaWorkflow = false;
+				if ($core->test_service('config_visa_workflow', 'visa', false)) {
+					$modifVisaWorkflow = true;
+				}
+				$visa = new visa();
+				?>
+				<div class="error" id="divError" name="divError"></div>
+				<div style="text-align:center;">
+				<?php
+				echo $visa->getList($s_id, $coll_id, $modifVisaWorkflow, 'VISA_CIRCUIT');
+				?>
+				</div>
+				
+				<br/>
+				<br/>
+					<br/>
+					<span class="diff_list_visa_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor='pointer';" onclick="new Effect.toggle('diff_list_visa_history_div', 'blind', {delay:0.2});whatIsTheDivStatus('diff_list_visa_history_div', 'divStatus_diff_list_visa_history_div');return false;">
+						<span id="divStatus_diff_list_visa_history_div" style="color:#1C99C5;"><<</span>
+						<b>&nbsp;<small><?php echo _DIFF_LIST_VISA_HISTORY; ?></small></b>
+					</span>
+
+					<div id="diff_list_visa_history_div" style="display:none">
+						<?php
+						//$return_mode = true;
+						$diffListType = 'VISA_CIRCUIT';
+						require_once('modules/entities/difflist_visa_history_display.php');
+						?>
+									
+					</div>
+				</dd>
+				<?php
+				 }
+				
+				
                 //$detailsExport .= "<h2>"._PROCESS."</h2>";
                 $nb_attach = '';
                 if ($core->is_module_loaded('attachments'))
@@ -1411,6 +1453,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 </dd>
                 <?php
                     }
+				
                 if ($core->is_module_loaded('notes')) {
                     require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
                         . "class" . DIRECTORY_SEPARATOR
