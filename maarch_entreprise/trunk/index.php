@@ -187,6 +187,7 @@ color: #ffffff;">Menu</span>
 </div>
     <div id="container">
         <div id="content">
+            <div class="error" id="main_error" onclick="this.hide();"></div>
             <?php
             if(isset($_SESSION['error'])) {
                 ?>
