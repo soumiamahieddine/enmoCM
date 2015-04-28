@@ -143,7 +143,7 @@ $core->load_header();
 $time = $core->get_session_time_expire();
 
 ?>
-<body onload="session_expirate(<?php echo $time;?>, '<?php 
+<body style="background: #f2f2f2;" onload="session_expirate(<?php echo $time;?>, '<?php 
     echo $_SESSION['config']['businessappurl'];
     ?>index.php?display=true&page=logout&coreurl=<?php 
     echo $_SESSION['config']['coreurl'];
@@ -190,7 +190,7 @@ color: #ffffff;">Menu</span>
             <?php
             if(isset($_SESSION['error'])) {
                 ?>
-                <div class="error" id="main_error" onclick="this.hide();">
+                <div class="error" id="main_error_popup" onclick="this.hide();">
                     <?php
                     echo $_SESSION['error'];
                     ?>
@@ -208,14 +208,15 @@ color: #ffffff;">Menu</span>
                 <?php
             }
             ?>
+
             <?php
             if(isset($_SESSION['error']) && $_SESSION['error'] <> '') {
                 ?>
                 <script>
-                    var main_error = $('main_error');
+                    var main_error = $('main_error_popup');
                     if (main_error != null) {
                         main_error.style.display = 'table-cell';
-                        Element.hide.delay(10, 'main_error');
+                        Element.hide.delay(10, 'main_error_popup');
                     }
                 </script>
                 <?php
