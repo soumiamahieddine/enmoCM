@@ -117,7 +117,7 @@ if (empty($docserver)) {
                 $_SESSION['data'],
                 array(
                     'column' => 'title',
-                    'value' => str_replace("'","''",$_SESSION['visa']['last_resId_signed']['title']),
+                    'value' => $req->protect_string_db($_SESSION['visa']['last_resId_signed']['title']),
                     'type' => 'string',
                 )
             );
