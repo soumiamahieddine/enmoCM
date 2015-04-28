@@ -105,4 +105,106 @@ class contacts_controler extends ObjectControler implements ObjectControlerIF
     {
         return true;
     }
+
+    public function CreateContact($data){
+
+        try {
+            $func = new functions();
+            $data = $func->object2array($data);
+            $db = new dbquery();
+            $db->connect();
+            $queryContactFields = '(';
+            $queryContactValues = '(';
+            $queryAddressFields = '(';
+            $queryAddressValues = '(';
+            $iContact = 0;
+            $iAddress = 0;
+            $currentContactId = "0";
+            $currentAddressId = "0";
+
+            for ($i=0;$i<count($data);$i++) {
+                if (strtoupper($data[$i]['column']) == strtoupper('email') && $data[$i]['value'] <> "") {
+                    $theString = str_replace(">", "", $data[$i]['value']);
+                    $mail = explode("<", $theString);
+                    $db->query("SELECT contact_id, ca_id FROM view_contacts WHERE email = '" . $db->protect_string_db($mail[count($mail) -1]) . "' and enabled = 'Y'");
+                    $contact = $db->fetch_object();
+                    if ($contact->ca_id <> "") {
+                        $contact_exists = true;
+
+                        $returnResArray = array(
+                            'returnCode' => (int) 0,
+                            'contactId' => $contact->contact_id,
+                            'addressId' => $contact->ca_id,
+                            'error' => '',
+                        );
+                        return $returnResArray;
+                        
+                    } else {
+                        $contact_exists = false;
+                    }
+                }
+
+                $data[$i]['column'] = strtolower($data[$i]['column']);
+
+                if ($data[$i]['table'] == "contacts_v2") {
+                    //COLUMN
+                    $queryContactFields .= $data[$i]['column'] . ',';
+                    //VALUE
+                    if ($data[$i]['type'] == 'string' || $data[$i]['type'] == 'date') {
+                        $queryContactValues .= "'" . $data[$i]['value'] . "',";
+                    } else {
+                        $queryContactValues .= $data[$i]['value'] . ",";
+                    }
+                } else if ($data[$i]['table'] == "contact_addresses") {
+                    //COLUMN
+                    $queryAddressFields .= $data[$i]['column'] . ',';
+                    //VALUE
+                    if ($data[$i]['type'] == 'string' || $data[$i]['type'] == 'date') {
+                        $queryAddressValues .= "'" . $data[$i]['value'] . "',";
+                    } else {
+                        $queryAddressValues .= $data[$i]['value'] . ",";
+                    }
+                }
+            }
+
+            $queryContactFields .= "user_id, entity_id, creation_date)";
+            $queryContactValues .= "'superadmin', 'SUPERADMIN', current_timestamp)";
+
+            if (!$contact_exists) {
+                $queryContact = " INSERT INTO contacts_v2 " . $queryContactFields
+                       . ' values ' . $queryContactValues ;
+
+                $db->query($queryContact);
+
+                $currentContactId = $db->last_insert_id('contact_v2_id_seq');
+
+                $queryAddressFields .= "contact_id, user_id, entity_id)";
+                $queryAddressValues .=  $currentContactId . ", 'superadmin', 'SUPERADMIN')";
+
+                $queryAddress = " INSERT INTO contact_addresses " . $queryAddressFields
+                       . ' values ' . $queryAddressValues ;
+
+                $db->query($queryAddress);
+                $currentAddressId = $db->last_insert_id('contact_addresses_id_seq');
+            }
+
+            $returnResArray = array(
+                'returnCode' => (int) 0,
+                'contactId' => $currentContactId,
+                'addressId' => $currentAddressId,
+                'error' => '',
+            );
+            
+            return $returnResArray;
+            
+        } catch (Exception $e) {
+            $returnResArray = array(
+                'returnCode' => (int) -1,
+                'contactId' => '',
+                'addressId' => '',
+                'error' => 'unknown error' . $e->getMessage(),
+            );
+            return $returnResArray;
+        }
+    }
 }
