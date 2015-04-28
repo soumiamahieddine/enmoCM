@@ -1398,10 +1398,10 @@ class contacts_v2 extends dbquery
                         <tr>
                             <td><label for="code_postal"><?php echo _POSTAL_CODE; ?>&nbsp;: </label></td>
                             <td>&nbsp;</td>
-                            <td class="indexing_field"><input name="new_id2" type="text" id="new_id2" />
+                            <td class="indexing_field"><input name="cp" type="text" id="cp" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_CP'])){echo $func->show_str($_SESSION['m_admin']['address']['ADD_CP']); }?>"/>
                                 <div id="show_town" class="autocomplete">
                                     <script type="text/javascript">
-                                        initList_hidden_input2('new_id2', 'show_town', '<?php $_SESSION['config']['businessappurl']; ?>index.php?display=true&dir=indexing_searching&page=ajaxShowVille&id=<?php echo $id; ?>', 'what', '2', 'town', 'new_id2');
+                                        initList_hidden_input2('cp', 'show_town', '<?php $_SESSION['config']['businessappurl']; ?>index.php?display=true&dir=indexing_searching&page=ajaxShowVille&id=<?php echo $id; ?>', 'what', '2', 'town', 'cp');
                                     </script>
                                 </div>
                             </td>
@@ -1410,10 +1410,10 @@ class contacts_v2 extends dbquery
                         <tr>
                             <td><label for="town"><?php echo _TOWN; ?> : </label></td>
                             <td>&nbsp;</td>
-                            <td class="indexing_field"><input name="town" type="text" id="town" onfocus="$('rule_town').style.display='table-row'" onblur="$('rule_town').style.display='none';"/></td>
+                            <td class="indexing_field"><input name="town" type="text" id="town" onfocus="$('rule_town').style.display='table-row'" onblur="$('rule_town').style.display='none';"value="<?php if(isset($_SESSION['m_admin']['address']['ADD_TOWN'])){echo $func->show_str($_SESSION['m_admin']['address']['ADD_TOWN']); }?>"/></td>
                                 <div id="show_postal_code" class="autocomplete">
                                     <script type="text/javascript">
-                                        initList_hidden_input3('town', 'show_postal_code', '<?php $_SESSION['config']['businessappurl']; ?>index.php?display=true&dir=indexing_searching&page=ajaxShowCodePostal&id=<?php echo $id; ?>', 'what', '2', 'new_id2', 'town');
+                                        initList_hidden_input3('town', 'show_postal_code', '<?php $_SESSION['config']['businessappurl']; ?>index.php?display=true&dir=indexing_searching&page=ajaxShowCodePostal&id=<?php echo $id; ?>', 'what', '2', 'cp', 'town');
                                     </script>
                                 </div>
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
