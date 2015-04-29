@@ -734,6 +734,9 @@ class htmlMimeMail
 	                if (!empty($this->return_path)) {
 	                    $returnPath = '-f' . $this->return_path;
 	                }
+                    if(ini_get('sendmail_path') <> ""){
+                      $this->setSendmailPath(ini_get('sendmail_path'));  
+                    }
 	 
 	                $pipe = popen($this->sendmail_path . " " . $returnPath, 'w');
 	                    $bytes = fputs($pipe, implode(CRLF, $headers) . CRLF . CRLF . $this->output);
