@@ -53,16 +53,7 @@ function writeLogIndex($EventInfo)
 }
 
 
-function getHistoryActions($res_id){
-	$db=new dbquery();
-	$db->connect();
-	$db->query("SELECT * from history where record_id='$res_id' and event_type LIKE 'ACTION#%'");
-	$tab_histo = array();
-	while($res = $db->fetch_object()){
-		array_push($tab_histo, $res);
-	}
-	return $tab_histo;
-}
+
 
 /**
  * Gets the path of the file to displays
@@ -173,32 +164,6 @@ function getDocsBasket(){
 		array_push($tab_docs,$res->res_id);
 	}
 	return $tab_docs;
-}
-function getInfosAction($action_id){
-	$db=new dbquery();
-	$db->connect();
-	$db->query("SELECT id_status, status.label_status from actions,status where actions.id_status = status.id and actions.id=$action_id");
-	$action = array();
-	$res = $db->fetch_object();
-	$action['status'] = $res->id_status;
-	$action['label_status'] = $res->label_status;
-	$db->query("SELECT label_action from actions where actions.id=$action_id");
-	$res = $db->fetch_object();
-	$action['label'] = $res->label_action;
-	return $action;
-}
-
-function getInfosUser($user_id){
-	$db=new dbquery();
-	$db->connect();
-	$db->query("SELECT firstname, lastname, group_id, entity_id from users u, usergroup_content uc, users_entities ue where u.user_id = '$user_id' AND uc.user_id = u.user_id AND ue.user_id = u.user_id AND ue.primary_entity='Y' AND uc.primary_group = 'Y' ");
-	$user = array();
-	$res = $db->fetch_object();
-	$user['prenom'] = $res->firstname;
-	$user['nom'] = $res->lastname;
-	$user['groupe'] = $res->group_id;
-	$user['entite'] = $res->entity_id;
-	return $user;
 }
 
 function get_form_txt($values, $path_manage_action,  $id_action, $table, $module, $coll_id, $mode )
@@ -366,54 +331,19 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '</dd>';
 	
 	//Onglet Avancement 
-	$frm_str .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement" style="overflow-x: hidden;">';
-	$frm_str .= '<h2>Workflow</h2>';
-	$visa = new visa();
-	$workflow = $visa->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
-	$current_step = $visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT');
 	
-	$tab_histo = getHistoryActions($res_id);
-	$frm_str .= '<table class="listing spec detailtabricatordebug" cellspacing="0" border="0" id="tab_visaWorkflow">';
-	$frm_str .= '<thead><tr>';
-	$frm_str .= '<th style="width:15%;" align="left" valign="bottom"><span>Date</span></th>';
-	$frm_str .= '<th style="width:25%;" align="left" valign="bottom"><span>Action</span></th>';
-	$frm_str .= '<th style="width:20%;" align="left" valign="bottom"><span>Profil</span></th>';
-	$frm_str .= '<th style="width:20%;" align="left" valign="bottom"><span>Service</span></th>';
-	$frm_str .= '<th style="width:20%;" align="left" valign="bottom"><span>Acteur</span></th>';
-	$frm_str .= '</tr></thead><tbody>';
-	$color = "";
-	//$visaEnCours = false;
-	//echo "<pre>".print_r($tab_histo,true)."</pre>";
-	foreach($tab_histo as $action){
-		$act = getInfosAction($action->event_id);
-		$us = getInfosUser($action->user_id);
-		//if (($act['status'] != "")){
-		if($color == ' class="col"') {
-			$color = '';
-		} else {
-			$color = ' class="col"';
-		}
-		$date = $action->event_date;
-		$date = explode(" ",$date);
-		$date = explode("-",$date[0]);
-		$frm_str .= '<tr ' . $color . '>';
-		$frm_str .= '<td>'.$date[2]."/".$date[1]."/".$date[0].'</td>';
-		$frm_str .= '<td>'.$act['label'].'</td>';
-		$frm_str .= '<td>'.$us['groupe'].'</td>';
-		$frm_str .= '<td>'.$us['entite'].'</td>';
-		$frm_str .= '<td>'.$us['prenom'].' '.$us['nom'].'</td>';
-		$frm_str .= '</tr>';
-		//}
-	}
-	$frm_str .= '</tbody></table><br/>';
-		$frm_str .= '<span style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'frame_histo_div\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'frame_histo_div\', \'frame_histo_div_status\');return false;">';
-		$frm_str .= '<span id="frame_histo_div_status" style="color:#1C99C5;"><<</span>';
-		$frm_str .= '<b>&nbsp;<small>Historique complet</small></b>';
+	$frm_str .= '<dt id="onglet_avancement">Avancement</dt><dd id="page_avancement" style="overflow-x: hidden;">';
+	$frm_str .= '<h2>'. _WF .'</h2>';
+	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_workflow_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full&small=true" name="workflow_history_document" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="workflow_history_document"></iframe>';
+	$frm_str .= '<br/>';
+	$frm_str .= '<br/>';
+	
+	$frm_str .= '<span style="cursor: pointer;" onmouseover="this.style.cursor=\'pointer\';" onclick="new Effect.toggle(\'history_document\', \'blind\', {delay:0.2});whatIsTheDivStatus(\'history_document\', \'divStatus_all_history_div\');return false;">';
+	$frm_str .= '<span id="divStatus_all_history_div" style="color:#1C99C5;"><<</span>';
+	$frm_str .= '<b>&nbsp;'. _ALL_HISTORY .'</b>';
 	$frm_str .= '</span>';
+	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full&small=true" name="history_document" width="100%" height="620px" align="left" scrolling="yes" frameborder="0" id="history_document" style="display:none;"></iframe>';
 
-	$frm_str .= '<div id="frame_histo_div" style="display:none" >';
-	$frm_str .= '<iframe src="' . $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=document_history&id='. $res_id .'&coll_id='. $coll_id.'&load&size=full&small=true" name="history_document" width="100%" height="590px" align="left" scrolling="no" frameborder="0" id="history_document"></iframe>';
-	$frm_str .= '</div>';
 	$frm_str .= '</dd>';
 	
 	//Onglet Circuit 
