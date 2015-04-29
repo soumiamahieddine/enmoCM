@@ -151,7 +151,7 @@ if (count($_REQUEST['meta']) > 0) {
                 $where_request .= " ".$_SESSION['collections'][0]['view'].".case_id = ". $_REQUEST['numcase'] ." and ";
                 $case_view=true;
 
-                if (!is_integer($_REQUEST['numcase'])) {
+                if (!is_numeric($_REQUEST['numcase'])) {
                     $_SESSION['error_search'] = _CASE_NUMBER_ERROR;
                 }
 
@@ -294,7 +294,7 @@ if (count($_REQUEST['meta']) > 0) {
                 }
                 $where_request .= $view . "res_id = ". $_REQUEST['numged'] ." and ";
 
-                if (!is_integer($_REQUEST['numged'])) {
+                if (!is_numeric($_REQUEST['numged'])) {
                     $_SESSION['error_search'] = _NUMERO_GED;
                 }
             }
@@ -911,15 +911,14 @@ exit();
 
 $_SESSION['current_search_query'] = $json_txt;
 if (!empty($_SESSION['error_search'])) {
+    $_SESSION['error'] = _MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'</strong>';
     if ($mode == 'normal') {
-        $_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
         ?>
-        <script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&dir=indexing_searching';?>';</script>
+        <script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
         <?php
     } else {
-        $_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv&mode='.$mode.'">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
         ?>
-        <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_error&mode='.$mode;?>';</script>
+        <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv&mode='.$mode;?>';</script>
         <?php
     }
     exit();
@@ -959,3 +958,4 @@ if (empty($_SESSION['error_search'])) {
     <?php
     exit();
 }
+$_SESSION['error_search'] = '';
