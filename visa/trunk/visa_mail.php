@@ -676,22 +676,5 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 {
 	$res_id = $arr_id[0];
 	
-	$action_chosen = get_value_fields($values_form, 'chosen_action');
-	
-	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
-	$sec = new security();
-	$table = $sec->retrieve_table_from_coll($coll_id);
-	
-	$db = new dbquery();
-	$db->connect();
-	$up_request = "UPDATE listinstance SET process_date = CURRENT_TIMESTAMP WHERE res_id = $res_id AND item_id='".$_SESSION['user']['UserId']."' AND difflist_type = 'VISA_CIRCUIT'";
-	$db->query($up_request);
-	
-	$circuit_visa = new visa();
-	if ($circuit_visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT') == $circuit_visa->nbVisa($res_id, $coll_id)){
-		$up_request = "UPDATE res_letterbox SET status='ESIG' WHERE res_id = $res_id";
-		$db->query($up_request);
-	}
-	
     return array('result' => $res_id.'#', 'history_msg' => '');
 }

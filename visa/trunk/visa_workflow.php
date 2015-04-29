@@ -49,13 +49,11 @@
 {
 	$_SESSION['action_error'] = '';
 	$result = '';
-	$coll_id = "letterbox_coll";
+	$coll_id = $_SESSION['current_basket']['coll_id'];
 	$res_id = $arr_id[0];
 	require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
 	$sec = new security();
 	$table = $sec->retrieve_table_from_coll($coll_id);
-	
-	
 	
 	$db = new dbquery();
 	$db->connect();
