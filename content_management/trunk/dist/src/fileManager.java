@@ -1,6 +1,7 @@
 package maarchcm;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.security.AccessController;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
@@ -170,26 +171,72 @@ public class fileManager {
         return buffer;
     }
     
-    public Process launchApp(final String launchPath) throws PrivilegedActionException {
+    public Process launchApp(final String launchCommand) throws PrivilegedActionException {
         Process proc = (Process) AccessController.doPrivileged(
             new PrivilegedExceptionAction() {
                 public Object run() throws IOException {
-                    return Runtime.getRuntime().exec(launchPath);
+                    return Runtime.getRuntime().exec(launchCommand);
                 }
             }
         );
         return proc;
     }
     
-    public Process launchAppBis(final String pathToFileToLaunch, final String fileToLaunch) throws PrivilegedActionException {
-        Process proc = (Process) AccessController.doPrivileged(
-            new PrivilegedExceptionAction() {
-                public Object run() throws IOException {
-                    return Runtime.getRuntime().exec("cmd /C start /WAIT \"\" \"" + pathToFileToLaunch + fileToLaunch + "\"");
-                }
+    public String findGoodProgramWithExt(String ext) {
+        String program = "";
+        if ("docx".equals(ext.toLowerCase()) || "doc".equals(ext.toLowerCase())) {
+            program = "winword.exe";
+        } else if ("xlsx".equals(ext.toLowerCase()) || "xls".equals(ext.toLowerCase())) {
+            program = "excel.exe";
+        } else if ("pptx".equals(ext.toLowerCase()) || "ppt".equals(ext.toLowerCase())) {
+            program = "powerpnt.exe";
+        } else if ("pptx".equals(ext.toLowerCase()) || "ppt".equals(ext.toLowerCase())) {
+            program = "powerpnt.exe";
+        } else {
+            program = "soffice.exe";
+        }
+        
+        return program;
+    }
+    
+    public String findPathProgramInRegistry(String program) throws IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        String path;
+        path =  WinRegistry.readString (
+                WinRegistry.HKEY_LOCAL_MACHINE,                                                     //HKEY
+                "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\" + program,              //Key
+                "");
+        return "\"" + path + "\"";
+    }
+    
+    public String findGoodOptionsToEdit(String ext) {
+        String options = "";
+        if ("docx".equals(ext.toLowerCase()) || "doc".equals(ext.toLowerCase())) {
+            options = " /n /dde ";
+        } else if ("xlsx".equals(ext.toLowerCase()) || "xls".equals(ext.toLowerCase())) {
+            options = " /n /dde ";
+        } else if ("pptx".equals(ext.toLowerCase()) || "ppt".equals(ext.toLowerCase())) {
+            options = " /n /dde ";
+        } else if ("pptx".equals(ext.toLowerCase()) || "ppt".equals(ext.toLowerCase())) {
+            options = " /n /dde ";
+        } else {
+            options = " -env:UserInstallation=$SYSUSERCONFIG ";
+        }
+        
+        return options;
+    }
+    
+    public static void deleteFilesOnDir (String directory, String pattern) throws IOException {
+        File dir = new File(directory);
+        File[] directoryListing = dir.listFiles();
+        if (directoryListing != null) {
+          for (File child : directoryListing) {
+            System.out.println("a file : " + child);
+            if (child.toString().contains(pattern)) {
+                System.out.println("a file with pattern : " + child);
+                child.delete();
             }
-        );
-        return proc;
+          }
+        }
     }
     
 }

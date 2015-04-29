@@ -1,12 +1,21 @@
 package maarchcm;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.PrivilegedActionException;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JApplet;
@@ -51,6 +60,9 @@ public class MaarchCM extends JApplet {
     protected String fileContentTosend;
     
     public myLogger logger;
+    
+    public fileManager fM;
+    public String fileToEdit;
     
     public void init() throws JSException
     {
@@ -205,8 +217,8 @@ public class MaarchCM extends JApplet {
         //this.userLocalDirTmp = "c:\\maarch";
         //this.userLocalDirTmp = "\\\\192.168.21.100\\Public\\montage_nas\\avec espaces";
         
-        fileManager fM = new fileManager();
-        fM.createUserLocalDirTmp(this.userLocalDirTmp);
+        this.fM = new fileManager();
+        this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
         if (isWindows) {
             System.out.println("This is Windows");
             this.userLocalDirTmp = this.userLocalDirTmp + "\\maarchTmp\\";
@@ -230,15 +242,19 @@ public class MaarchCM extends JApplet {
         System.out.println("APP PATH: " + this.appPath);
         System.out.println("----------BEGIN LOCAL DIR TMP IF NOT EXISTS----------");
         
-        fM.createUserLocalDirTmp(this.userLocalDirTmp);
+        this.fM.createUserLocalDirTmp(this.userLocalDirTmp);
         System.out.println("----------END LOCAL DIR TMP IF NOT EXISTS----------");
+        
         
         System.out.println("Create the logger");
         this.logger = new myLogger(this.userLocalDirTmp);
         
+        this.logger.log("Delete thefile if exists", Level.INFO);
+        this.fM.deleteFilesOnDir(this.userLocalDirTmp, "thefile");
+        
         if (this.psExecMode.equals("OK")) {
             this.logger.log("----------BEGIN PSEXEC MODE----------", Level.INFO);
-            boolean isPsExecExists = fM.isPsExecFileExists(this.userLocalDirTmp + "PsExec.exe");
+            boolean isPsExecExists = this.fM.isPsExecFileExists(this.userLocalDirTmp + "PsExec.exe");
             if (!isPsExecExists) {
                 this.logger.log("----------BEGIN TRANSFER OF PSEXEC----------", Level.INFO);
                 String urlToSend = this.url + "?action=sendPsExec&objectType=" + this.objectType
@@ -248,7 +264,7 @@ public class MaarchCM extends JApplet {
                 this.logger.log("MESSAGE RESULT : ", Level.INFO);
                 this.processReturn(this.messageResult);
                 this.logger.log("CREATE THE FILE : " + this.userLocalDirTmp + "PsExec.exe", Level.INFO);
-                fM.createFile(this.fileContent, this.userLocalDirTmp + "PsExec.exe");
+                this.fM.createFile(this.fileContent, this.userLocalDirTmp + "PsExec.exe");
                 this.fileContent = "";
                 this.logger.log("----------END TRANSFER OF PSEXEC----------", Level.INFO);
             }
@@ -264,14 +280,19 @@ public class MaarchCM extends JApplet {
         this.processReturn(this.messageResult);
         this.logger.log("----------END OPEN REQUEST----------", Level.INFO);
         
-        String fileToEdit = "thefile." + this.fileExtension;
+        Integer randomNum;
+        Integer minimum = 1;
+        Integer maximum = 1000;
+        
+        randomNum = minimum + (int)(Math.random()*maximum); 
+        this.fileToEdit = "thefile_" + randomNum + "." + this.fileExtension;
         
         this.logger.log("----------BEGIN CREATE THE BAT TO LAUNCH IF NECESSARY----------", Level.INFO);
         this.logger.log("create the file : "  + this.appPath, Level.INFO);
-        fM.createBatFile(
+        this.fM.createBatFile(
             this.appPath, 
             this.userLocalDirTmp, 
-            fileToEdit, 
+            this.fileToEdit, 
             this.os,
             this.userMaarch,
             this.userMaarchPwd,
@@ -285,38 +306,40 @@ public class MaarchCM extends JApplet {
             
             this.logger.log("----------BEGIN EXECUTION OF THE EDITOR----------", Level.INFO);
             this.logger.log("CREATE FILE IN LOCAL PATH", Level.INFO);
-            fM.createFile(this.fileContent, this.userLocalDirTmp + fileToEdit);
+            this.fM.createFile(this.fileContent, this.userLocalDirTmp + this.fileToEdit);
             
-            //this.logger.log("CREATE FILE TO CHANGE RIGHTS IN THE TMP DIR", Level.INFO);
-            //fM.createRightsFile(this.userLocalDirTmp, this.userMaarch);
+            Thread theThread;
+            theThread = new Thread(new ProcessLoop(this));
             
-            /*this.logger.log("LAUNCH VBS TO CHANGE RIGHTS IN THE TMP DIR", Level.INFO);
-            final String vbsPath = this.userLocalDirTmp + "setRights.vbs";
-            Process procVbs = fM.launchApp("cmd /c wscript //B " + vbsPath);
-            procVbs.waitFor();*/
+            //theThread.logger = this.logger;
             
-            final String exec;
-            Process proc;
+            theThread.start();
             
-            this.logger.log("LAUNCH THE EDITOR !", Level.INFO);
-            if (isUnix) {
-                exec = this.appPath;
-                proc = fM.launchApp(exec);
-            }else{
-                exec = "\""+this.appPath+"\"";
-                //this.logger.log("EXEC PATH : " + exec, Level.INFO);
-                this.logger.log("EXEC PATH : " + this.userLocalDirTmp + fileToEdit, Level.INFO);
-                //Process proc = fM.launchApp(exec);
-                this.logger.log("cmd /C start /WAIT \"\" \"" + this.userLocalDirTmp + fileToEdit + "\"", Level.INFO);
-                proc = fM.launchAppBis(this.userLocalDirTmp, fileToEdit);
+            String actualContent;
+            this.fileContentTosend = "";
+            do {
+                theThread.sleep(1000);
+                actualContent = this.fM.encodeFile(this.userLocalDirTmp + this.fileToEdit);
+                if (!this.fileContentTosend.equals(actualContent)) {
+                    this.fileContentTosend = actualContent;
+                    this.logger.log("----------[SECURITY BACKUP] BEGIN SEND OF THE OBJECT----------", Level.INFO);
+                    String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType 
+                                + "&objectTable=" + this.objectTable + "&objectId=" + this.objectId;
+                    this.logger.log("[SECURITY BACKUP] URL TO SAVE : " + urlToSave, Level.INFO);
+                    sendHttpRequest(urlToSave, this.fileContentTosend);
+                    this.logger.log("[SECURITY BACKUP] MESSAGE STATUS : " + this.messageStatus.toString(), Level.INFO);
+                }
             }
-
-            proc.waitFor();
+            while (theThread.isAlive());
+            
+            theThread.interrupt();
             
             this.logger.log("----------END EXECUTION OF THE EDITOR----------", Level.INFO);
             
             this.logger.log("----------BEGIN RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
-            this.fileContentTosend = fM.encodeFile(this.userLocalDirTmp + "thefile." + this.fileExtension);
+
+            this.fileContentTosend = this.fM.encodeFile(this.userLocalDirTmp + this.fileToEdit);
+            
             this.logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
             
             String urlToSave = this.url + "?action=saveObject&objectType=" + this.objectType 
@@ -338,6 +361,64 @@ public class MaarchCM extends JApplet {
         }
         this.logger.log("----------END EDIT OBJECT----------", Level.INFO);
         return "ok";
+    }
+    
+    public class ProcessLoop extends Thread {
+        public MaarchCM maarchCM;
+        
+        public ProcessLoop(MaarchCM maarchCM){
+            this.maarchCM = maarchCM;
+        }
+
+        public void run() {
+            try {
+                maarchCM.launchProcess();
+            } catch (PrivilegedActionException ex) {
+                Logger.getLogger(MaarchCM.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MaarchCM.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalArgumentException ex) {
+                Logger.getLogger(MaarchCM.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IllegalAccessException ex) {
+                Logger.getLogger(MaarchCM.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (InvocationTargetException ex) {
+                Logger.getLogger(MaarchCM.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+    public boolean launchProcess() throws PrivilegedActionException, InterruptedException, IllegalArgumentException, IllegalAccessException, InvocationTargetException
+    {
+        final String exec;
+        Process proc;
+
+        this.logger.log("LAUNCH THE EDITOR !", Level.INFO);
+        if ("linux".equals(this.os)) {
+            exec = this.appPath;
+            proc = this.fM.launchApp(exec);
+        } else {
+            this.logger.log("FILE TO EDIT : " + this.userLocalDirTmp + this.fileToEdit, Level.INFO);
+            
+            String programName;
+            programName = this.fM.findGoodProgramWithExt(this.fileExtension);
+            this.logger.log("PROGRAM NAME TO EDIT : " + programName, Level.INFO);
+            String pathProgram;
+            pathProgram = this.fM.findPathProgramInRegistry(programName);
+            this.logger.log("PROGRAM PATH TO EDIT : " + pathProgram, Level.INFO);
+            String options;
+            options = this.fM.findGoodOptionsToEdit(this.fileExtension);
+            this.logger.log("OPTION PROGRAM TO EDIT " + options, Level.INFO);
+            String pathCommand;
+            pathCommand = pathProgram + " " + options + this.userLocalDirTmp + this.fileToEdit;
+            this.logger.log("PATH COMMAND TO EDIT " + pathCommand, Level.INFO);
+            proc = this.fM.launchApp(pathCommand);
+        }
+        
+        this.logger.log("WAIT END OF THE PROCESS", Level.INFO);
+        proc.waitFor();
+        this.logger.log("END OF THE PROCESS", Level.INFO);
+        
+        return true;
     }
     
     public void sendJsMessage(String message) throws JSException
