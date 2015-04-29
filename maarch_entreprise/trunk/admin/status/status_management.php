@@ -169,7 +169,7 @@ if ($mode == 'up') {
              <?php } ?>
              <div>
                 <label ><?php echo _IMG_RELATED; ?> : </label>
-                <ul style="  width: 220px;text-align: left;float: left;margin-left: 40px;height: 200px;overflow: auto;">
+                <ul style="  width: auto;text-align: left;float: left;margin-left: 40px;height: auto;overflow: auto;">
                     <?php 
                     $nb_status=count($status_img);
                     for ($i=0;$i<count($status_img);$i++) {  ?>  
