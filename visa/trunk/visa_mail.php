@@ -231,11 +231,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$db = new dbquery();
     $db->connect();
 	$view = $sec->retrieve_view_from_coll_id($coll_id);
-	$db->query("select alt_identifier from " 
+	$db->query("select alt_identifier, status from " 
 		. $view 
 		. " where res_id = " . $res_id);
 	$resChrono = $db->fetch_object();
 	$chrono_number = $resChrono->alt_identifier;
+	$currentStatus = $resChrono->status;
     $frm_str .= '<h2 class="tit" id="action_title">'._VISA_MAIL.' '._NUM.'<span id="numIdDocPage">'.$res_id.'</span>';
     $frm_str .= '</h2>';
 	
@@ -575,7 +576,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		$frm_str .= '</form>';
 		$frm_str .= '</td>';
 		$frm_str .= '<td style="width:25%";">';	
-		if ($core->test_service('sign_document', 'visa', false) && $visa->getCurrentStep($res_id, $coll_id, 'VISA_CIRCUIT') == $visa->nbVisa($res_id, $coll_id)) {
+		//modifier en fonction du statut URGENT
+		if ($core->test_service('sign_document', 'visa', false) && $currentStatus == 'ESIG') {
 			$color = ' style="" ';
 			if ($tab_path_rep_file[0]['attachment_type'] == 'signed_response') $color = ' style="color:green" ';
 			$frm_str .= '<a href="javascript://" id="sign_link_certif" '.$color.' onclick="';
