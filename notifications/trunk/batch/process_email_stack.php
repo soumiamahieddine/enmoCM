@@ -76,7 +76,8 @@ while ($state <> 'END') {
                 }
             }
             $return = $GLOBALS['mailer']->send(array($email->recipient), (string)$mailerParams->type);
-            if($return == 1) {
+            // if($return == 1) {
+            if( ($return == 1 && ((string)$mailerParams->type == "smtp" || (string)$mailerParams->type == "mail" )) || ($return == 0 && (string)$mailerParams->type == "sendmail")) {
                 $exec_result = 'SENT';
                 
             } else {
