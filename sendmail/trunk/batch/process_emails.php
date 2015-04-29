@@ -175,10 +175,11 @@ while ($state <> 'END') {
 					}
 				}
 			
+
 			//Now send the mail
 			$return = $GLOBALS['mailer']->send($to, (string)$mailerParams->type);
 
-			if($return == 1) {
+			if( ($return == 1 && ((string)$mailerParams->type == "smtp" || (string)$mailerParams->type == "mail" )) || ($return == 0 && (string)$mailerParams->type == "sendmail")) {
 				$exec_result = 'S';
 			} else {
 				//$GLOBALS['logger']->write("Errors when sending message through SMTP :" . implode(', ', $GLOBALS['mailer']->errors), 'ERROR');
