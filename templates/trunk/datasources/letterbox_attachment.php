@@ -29,7 +29,8 @@ if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
     $myContact = $dbDatasource->fetch_array();
     $myContact['contact_type'] = $contacts->get_label_contact($myContact['contact_type'], $_SESSION['tablename']['contact_types']);
     $myContact['contact_purpose_id'] = $contacts->get_label_contact($myContact['contact_purpose_id'], $_SESSION['tablename']['contact_purposes']);
-	$myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
+    $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
+	$myContact['title'] = $contacts->get_civility_contact($myContact['title']);
     $datasources['contact'][] = $myContact;
 // single Contact
 }else{
@@ -40,6 +41,7 @@ if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
     $myContact['contact_type'] = $contacts->get_label_contact($myContact['contact_type'], $_SESSION['tablename']['contact_types']);
     $myContact['contact_purpose_id'] = $contacts->get_label_contact($myContact['contact_purpose_id'], $_SESSION['tablename']['contact_purposes']);
     $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
+    $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
     $datasources['contact'][] = $myContact;
 }
 // Notes
