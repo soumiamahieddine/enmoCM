@@ -98,97 +98,31 @@ $core_tools->test_service('quicklaunch', "apps");
 </div>
 
 <div id="welcome_box_right">
-<div class="block">
+    <div class="block">
+
     <h2><?php echo _QUICKLAUNCH;?> :</h2>
 <?php
     $core_tools->build_quicklaunch($_SESSION['quicklaunch']);
-    /*
-    $nb_max = 0;
-    $menu_array = $_SESSION['menu'];
-    $tag = false;
-    foreach ($menu_array as $element) {
-        if ($nb_max > 3) {
-            echo '<br />';
-        }
-        if ($_SESSION['user']['UserId'] == 'superadmin' && !$tag) {
-            $tag = true;
-            echo '<a href="index.php?page=admin&amp;reinit=true"><div class="quiclaunch_div bighome_userinfo"><span>'._ADMIN.'</span></div></a>';
-            $nb_max++;
-            $displayed_admin = true;
-        }
-        if ($_SESSION['user']['UserId'] <> 'superadmin' && ($element['id'] == 'index_mlb' && $element['show'] == true &&
-            (!isset($displayed_index_mlb) || $displayed_index_mlb <> true))) {
-            echo '<a href="index.php?page=view_baskets&amp;module=basket&amp;baskets=IndexingBasket"><div class="quiclaunch_div bighome_indexing"><span>'
-                ._INDEXING_MLB.'</span></div></a>';
-            $nb_max++;
-            $displayed_index_mlb = true;
-        }
-        if ($element['id'] == 'adv_search_mlb' && $element['show'] == true &&
-            (!isset($displayed_adv_search_mlb) || isset($displayed_index_mlb) && $displayed_adv_search_mlb <> true)) {
-            echo '<a href="index.php?page=search_adv&amp;dir=indexing_searching&amp;reinit=true"><div class="quiclaunch_div bighome_search_adv"><span>'
-                ._ADV_SEARCH_MLB.'</span></div></a>';
-            $nb_max++;
-            $displayed_adv_search_mlb = true;
-        }
-        //business collection
-        if ($_SESSION['user']['UserId'] <> 'superadmin' && ($element['id'] == 'index_business' && $element['show'] == true &&
-            (!isset($displayed_index_business) || $displayed_index_business <> true))) {
-            echo '<a href="index.php?page=view_baskets&amp;module=basket&amp;baskets=BusinessIndexation"><div class="quiclaunch_div bighome_indexing"><span>'
-                ._INDEXING_BUSINESS.'</span></div></a>';
-            $nb_max++;
-            $displayed_index_business = true;
-        }
-        if ($element['id'] == 'adv_search_business' && $element['show'] == true &&
-            (!isset($displayed_adv_search_business) || isset($displayed_index_business) && $displayed_adv_search_business <> true)) {
-            echo '<a href="index.php?page=search_adv_business&amp;dir=indexing_searching&amp;reinit=true"><div class="quiclaunch_div bighome_search_adv"><span>' ._ADV_SEARCH_BUSINESS.'</span></div></a>';
-            $nb_max++;
-            $displayed_adv_search_business = true;
-        }
-        //rm collection
-         if ($_SESSION['user']['UserId'] <> 'superadmin' && ($element['id'] == 'ArchiveTransferCreation' && $element['show'] == true &&
-            (!isset($displayed_create_io) || $displayed_create_io <> true))) {
-            echo '<a href="index.php?page=view_baskets&amp;module=basket&amp;baskets=BRCreation"><div class="quiclaunch_div bighome_createio"><span>'
-                ._ARCHIVE_TRANSFER_CREATE.'</span></div></a>';
-            $nb_max++;
-            $displayed_create_io = true;
-        }
-         if ($_SESSION['user']['UserId'] <> 'superadmin' && ($element['id'] == 'index_rm' && $element['show'] == true &&
-            (!isset($displayed_index_rm) || $displayed_index_rm <> true))) {
-            echo '<a href="index.php?page=view_baskets&amp;module=basket&amp;baskets=INDEXARCHIVE"><div class="quiclaunch_div bighome_indexing"><span>'
-                ._INDEXING_RM.'</span></div></a>';
-            $nb_max++;
-            $displayed_index_rm = true;
-        }
-        if ($element['id'] == 'adv_search_rm' && $element['show'] == true &&
-            (!isset($displayed_adv_search_rm) || isset($displayed_index_rm) && $displayed_adv_search_rm <> true)) {
-            echo '<a href="index.php?page=search_adv_rm&amp;module=records_management&amp;reinit=true"><div class="quiclaunch_div bighome_search_adv"><span>'
-            ._ADV_SEARCH_RM.'</span></div></a>';
-            $nb_max++;
-            $displayed_adv_search_rm = true;
-        }
-        //cold collection
-        if ($element['id'] == 'adv_search_invoices' && $element['show'] == true &&
-            (!isset($displayed_adv_search_invoice) || isset($displayed_adv_search_invoice) && $displayed_adv_search_invoice <> true)) {
-            echo '<a href="index.php?page=search_adv_invoices&amp;dir=indexing_searching&amp;reinit=true"><div class="quiclaunch_div bighome_search_adv"><span>' ._ADV_SEARCH_INVOICES.'</span></div></a>';
-            $nb_max++;
-            $displayed_adv_search_invoice = true;
-        }
-        //physical archive
-        if ($element['id'] == 'physical_archive' && $element['show'] == true && (!isset($displayed_physical_archive) || isset($displayed_physical_archive) && $displayed_physical_archive <> true)) {
-            echo '<a href="index.php?page=boxes&amp;module=physical_archive&amp;reinit=true"><div class="quiclaunch_div bighome_physical_archive"><span>'
-                ._PHYSICAL_ARCHIVE.'</span></div></a>';
-            $nb_max++;
-            $displayed_physical_archive = true;
-        }
-    }
-    */
+   
     ?>
-    <!--
-    <a href="index.php?page=modify_user&amp;admin=users&amp;reinit=true">
-        <div class="quiclaunch_div bighome_userinfo">
-            <span><?php echo _MY_INFO; ?></span>
-        </div>
-    </a>
-    -->
+
     </div>
+
+    <div class="block" style="margin-top:14px;">
+    <h2><?php echo _VIEW_LAST_COURRIERS;?> :</h2>
+        <div id="welcome_box_right_last_mails">
+
+
+        <script language="javascript">
+        <?php 
+        echo "loadList('";
+        echo $_SESSION['config']['businessappurl'];
+        echo "index.php?display=true&dir=indexing_searching&page=loadFiveLastMails','divList2', true, true);";
+        ?>
+        </script>
+        <div id="divList2" name="history_recent2"></div>
+        </div>
+    </div>
+
+  
 </div>

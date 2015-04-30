@@ -2256,7 +2256,7 @@ class lists extends dbquery
                     }
                 }
                 //Toolbar
-                // if ($showToolbar) {
+                 //if ($this->params['bool_showToolbar']) {
                     $toolbar .= '<div class="block" style="height:'.$height.';" align="center" >';
                     $toolbar .= '<table width="100%" border="0"><tr>';
                     $toolbar .= '<td align="left" width="20px" nowrap>'.$loading.'</td>';
@@ -3141,6 +3141,7 @@ class lists extends dbquery
         }
         
         //Default values
+        if (!isset($parameters['bool_showToolbar'])){ $parameters['bool_showToolbar'] = true; }
         if (!isset($parameters['bool_bigPageTitle'])){ $parameters['bool_bigPageTitle'] = true; }
         if (!isset($parameters['bool_checkBox'])){ $parameters['bool_checkBox']= false; }
         if (!isset($parameters['bool_radioButton'])){ $parameters['bool_radioButton']= false; }
