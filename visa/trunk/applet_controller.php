@@ -66,6 +66,7 @@ $objectTable = '';
 $objectId = '';
 $appPath = '';
 $fileContent = '';
+$signfileContent = '';
 $fileExtension = '';
 $error = '';
 
@@ -94,6 +95,23 @@ if (
         $content = file_get_contents($filePathOnTmp, FILE_BINARY);
 		$encodedContent = base64_encode($content);
         $fileContent = $encodedContent;
+		
+		/* RECUPERATION IMAGE SIGNATURE */
+		$dbAttachment->query(
+			"select path_template from " . _DOCSERVERS_TABLE_NAME
+			. " where docserver_id = 'TEMPLATES'"
+			);
+		$lineDoc = $dbAttachment->fetch_object();
+		$docserver_sign = $lineDoc->path_template;
+		$signfileOnDs = $docserver_sign . $_SESSION['user']['signature_path'] . $_SESSION['user']['signature_file_name'];
+		$signfileOnDs = str_replace('#', DIRECTORY_SEPARATOR, $signfileOnDs);
+		
+		$content_sign = file_get_contents($signfileOnDs, FILE_BINARY);
+		$encodedContentSign = base64_encode($content_sign);
+        $signfileContent = $encodedContentSign;
+		/********************************/
+		
+		
         $result = array(
             'STATUS' => $status,
             'OBJECT_TYPE' => $objectType,
@@ -101,7 +119,9 @@ if (
             'OBJECT_ID' => $objectId,
             'APP_PATH' => $appPath,
             'FILE_CONTENT' => $fileContent,
+            'IMG_FILE_CONTENT' => $signfileContent,
             'FILE_EXTENSION' => $fileExtension,
+            'LICENCE_NUM' => $_SESSION['modules_loaded']['visa']['licence_number'],
             'ERROR' => '',
             'END_MESSAGE' => '',
         );
@@ -168,7 +188,9 @@ if (
         'OBJECT_ID' => $objectId,
         'APP_PATH' => $appPath,
         'FILE_CONTENT' => $fileContent,
+        'IMG_FILE_CONTENT' => $signfileContent,
         'FILE_EXTENSION' => $fileExtension,
+		'LICENCE_NUM' => $_SESSION['modules_loaded']['visa']['licence_number'],
         'ERROR' => 'missing parameters, action:' . $_REQUEST['action']
             . ', objectType:' . $_REQUEST['objectType']
             . ', objectTable:' . $_REQUEST['objectTable']

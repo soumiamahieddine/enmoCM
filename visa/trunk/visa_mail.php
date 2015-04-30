@@ -431,7 +431,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         $templates = $templatesControler->getAllTemplatesForProcess($curdest);
         $_SESSION['destination_entity'] = $curdest;
         //var_dump($templates);
-        $frm_str .= '<div id="list_answers_div" onmouseover="this.style.cursor=\'pointer\';">';
+        $frm_str .= '<div id="list_answers_div" onmouseover="this.style.cursor=\'pointer\';" style="width:920px;">';
             $frm_str .= '<div class="block" style="margin-top:-2px;">';
                 $frm_str .= '<div id="processframe" name="processframe">';
                     $frm_str .= '<center><h2>' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
@@ -456,7 +456,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '</center><iframe name="list_attach" id="list_attach" src="'
                     . $_SESSION['config']['businessappurl']
                     . 'index.php?display=true&module=attachments&page=frame_list_attachments&load" '
-                    . 'frameborder="0" width="100%" height="600px"></iframe>';
+                    . 'frameborder="0" width="900px" scrolling="yes" height="600px" scrolling="yes" ></iframe>';
                     $frm_str .= '</div>';
                 $frm_str .= '</div>';
             $frm_str .= '</div>';
@@ -678,5 +678,23 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 {
 	$res_id = $arr_id[0];
 	
+	$act_chosen = get_value_fields($values_form, 'chosen_action');
+	
+	if ($act_chosen == "end_action"){
+		require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_security.php");
+		$sec = new security();
+		$table = $sec->retrieve_table_from_coll($coll_id);
+		
+		$db = new dbquery();
+		$db->connect();
+		$up_request = "UPDATE listinstance SET process_date = CURRENT_TIMESTAMP WHERE res_id = $res_id AND item_id='".$_SESSION['user']['UserId']."' AND difflist_type = 'VISA_CIRCUIT'";
+		$db->query($up_request);
+		
+		$circuit_visa = new visa();
+		if ($circuit_visa->allUserVised($res_id, $coll_id, 'VISA_CIRCUIT')){
+			$up_request = "UPDATE res_letterbox SET status='ESIG' WHERE res_id = $res_id";
+			$db->query($up_request);
+		}
+	}
     return array('result' => $res_id.'#', 'history_msg' => '');
 }

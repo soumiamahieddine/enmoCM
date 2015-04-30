@@ -59,6 +59,7 @@ class visa extends dbquery
 		$_SESSION['modules_loaded']['visa']['exeSign'] = (string) $conf->exeSign;
 		$_SESSION['modules_loaded']['visa']['reason'] = (string) $conf->reason;
 		$_SESSION['modules_loaded']['visa']['location'] = (string) $conf->location;
+		$_SESSION['modules_loaded']['visa']['licence_number'] = (string) $conf->licence_number;
 		
 		$routing_template = (string) $conf->routing_template;
 		
@@ -98,6 +99,20 @@ class visa extends dbquery
             $_SESSION['user']['UserId'],
             $_SESSION['user']['primaryentity']['id']
         );    
+		
+	}
+	
+	public function saveModelWorkflow($id_list, $workflow, $typeList, $title){
+		require_once('modules/entities/class/class_manage_listdiff.php');
+		$diff_list = new diffusion_list();
+
+		
+		$diff_list->save_listmodel(
+            $workflow, 
+			$typeList,
+			$id_list,
+			$title
+        );    
 	}
 	
 	public function deleteWorkflow($res_id, $coll_id){
@@ -123,7 +138,7 @@ class visa extends dbquery
 		return $res->sequence;
 	}
 	
-	private function getUsersVis(){
+	public function getUsersVis(){
 		$requete_users = "SELECT users.user_id, users.firstname, users.lastname from users, usergroup_content WHERE users.user_id = usergroup_content.user_id AND group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = 'visa_documents') ORDER BY users.lastname";
 		$db_users = new dbquery();
 		$db_users->connect();
@@ -135,6 +150,19 @@ class visa extends dbquery
 			array_push($tab_users,array('id'=>$res->user_id, 'firstname'=>$res->firstname,'lastname'=>$res->lastname));
 		}
 		return $tab_users;
+	}
+	
+	public function allUserVised($res_id, $coll_id, $typeList){
+		$circuit = $this->getWorkflow($res_id, $coll_id, 'VISA_CIRCUIT');
+		if (isset($circuit['visa'])) {
+			foreach($circuit['visa']['users'] as $seq=>$step){
+				if ($step['process_date'] == ''){
+					return false;
+				}
+			}
+		}
+		
+		return true;
 	}
 	
 	public function getConsigne($res_id, $coll_id, $userId){
@@ -170,10 +198,23 @@ class visa extends dbquery
 			$str .= '<div class="errorVisa" id="divErrorVisa" name="divErrorVisa">'._EMPTY_USER_LIST.'</div>';
 		}
 		else{
+			require_once('modules/entities/class/class_manage_listdiff.php');
+			$diff_list = new diffusion_list();
+			$listModels = $diff_list->select_listmodels($typeList);
 		
 		$str .= '<div align="center">';
-		//$str .= '<pre>'.print_r($circuit,true).'</pre>';
+		//$str .= '<pre>'.print_r($listModels,true).'</pre>';
+		
 		$str .= '<div class="errorVisa" id="divErrorVisa" name="divErrorVisa"></div>';
+		
+		if (!empty($listModels) && $bool_modif){
+		$str .= '<select name="modelList" id="modelList" onchange="load_listmodel_visa(this.options[this.selectedIndex], \''.$typeList.'\', \''.$id_tab.'\');">';
+		$str .= '<option value="">Sélectionnez un modèle</option>';
+		foreach($listModels as $lm){
+			$str .= '<option value="'.$lm['object_id'].'">'.$lm['title'].'</option>';
+		}
+		$str .= '</select>';
+		}
 		$str .= '<table class="listing spec detailtabricatordebug" cellspacing="0" border="0" id="'.$id_tab.'">';
 		$str .= '<thead><tr>';
 		$str .= '<th style="width:30%;" align="left" valign="bottom"><span>Visa</span></th>';
@@ -258,9 +299,8 @@ class visa extends dbquery
 							$str .= '<td>'.$step['firstname'].' '.$step['lastname'];
 							$str .= '</td>';
 							$str .= '<td>'.$step['process_comment'].'</td>';	
-							$currentStep = $this->getCurrentStep($res_id, $coll_id, $typeList);
-							if ($currentStep > $seq || $step['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
-							elseif ($currentStep == $seq) $str .= '<td><i class="fa fa-spinner fa-2x"></i></td>';		
+							if ($step['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
+							elseif ($step['user_id'] == $_SESSION['user']['UserId']) $str .= '<td><i class="fa fa-spinner fa-2x"></i></td>';		
 							else $str .= '<td></td>';		
 						}
 						$str .= '</tr>';
@@ -308,9 +348,8 @@ class visa extends dbquery
 						$str .= '<td>'.$circuit['sign']['users'][0]['firstname'].' '.$circuit['sign']['users'][0]['lastname'];
 						$str .= '</td>';
 						$str .= '<td>'.$circuit['sign']['users'][0]['process_comment'].'</td>';	
-						$currentStep = $this->getCurrentStep($res_id, $coll_id, $typeList);
-						if ($currentStep > $seq || $circuit['sign']['users'][0]['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
-						elseif ($currentStep == $seq) $str .= '<td><i class="fa fa-spinner fa-2x"></i></td>';		
+						if ($circuit['sign']['users'][0]['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
+						elseif ($circuit['sign']['users'][0]['user_id'] == $_SESSION['user']['UserId']) $str .= '<td><i class="fa fa-spinner fa-2x"></i></td>';		
 						else $str .= '<td></td>';		
 					}
 					$str .= '</tr>';
@@ -319,10 +358,107 @@ class visa extends dbquery
 		
 		$str .= '</tbody>';
 		$str .= '</table>';
-		if ($bool_modif) $str .= '<input type="button" name="send" id="send" value="Sauvegarder" class="button" onclick="saveVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\');" />';
+		if ($bool_modif){
+			$str .= '<input type="button" name="send" id="send" value="Sauvegarder" class="button" onclick="saveVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\');" /> ';
+			$str .= '<input type="button" name="save" id="save" value="Enregistrer comme modèle" class="button" onclick="$(\'modalSaveVisaModel\').style.display = \'block\';" />';
+			
+		
+			
+			$str .= '<div id="modalSaveVisaModel" >';
+			$str .= '<h3>Sauvegarder le circuit de visa</h3>';
+			$str .= '<input type="hidden" value="'.$typeList . '_' . strtoupper(base_convert(date('U'), 10, 36)).'" name="objectId_input" id="objectId_input"/><br/>';
+			$str .= '<label for="titleModel">Titre</label> ';
+			$str .= '<input type="text" name="titleModel" id="titleModel"/><br/>';
+			$str .= '<input type="button" name="saveModel" id="saveModel" value="'._VALIDATE.'" class="button" onclick="saveVisaModel(\''.$id_tab.'\');" /> ';
+			$str .= '<input type="button" name="cancelModel" id="cancelModel" value="'._CANCEL.'" class="button" onclick="$(\'modalSaveVisaModel\').style.display = \'none\';" />';
+			$str .= '</div>';
+		}
 		$str .= '</div>';
 		}
 		return $str;
 	}
 }
+
+/* EXEMPLE TAB VISA_CIRCUIT
+
+Array
+(
+    [coll_id] => letterbox_coll
+    [res_id] => 190
+    [difflist_type] => entity_id
+    [sign] => Array
+        (
+            [users] => Array
+                (
+                    [0] => Array
+                        (
+                            [user_id] => sgros
+                            [lastname] => GROS
+                            [firstname] => Sébastien
+                            [entity_id] => CHEFCABINET
+                            [entity_label] => Chefferie
+                            [visible] => Y
+                            [viewed] => 0
+                            [difflist_type] => VISA_CIRCUIT
+                            [process_date] => 
+                            [process_comment] => 
+                        )
+
+                )
+
+        )
+
+    [visa] => Array
+        (
+            [users] => Array
+                (
+                    [0] => Array
+                        (
+                            [user_id] => sbes
+                            [lastname] => BES
+                            [firstname] => Stéphanie
+                            [entity_id] => CHEFCABINET
+                            [entity_label] => Chefferie
+                            [visible] => Y
+                            [viewed] => 0
+                            [difflist_type] => VISA_CIRCUIT
+                            [process_date] => 
+                            [process_comment] => 
+                        )
+
+                    [1] => Array
+                        (
+                            [user_id] => fbenrabia
+                            [lastname] => BENRABIA
+                            [firstname] => Fadela
+                            [entity_id] => POLESOCIAL
+                            [entity_label] => Pôle social
+                            [visible] => Y
+                            [viewed] => 0
+                            [difflist_type] => VISA_CIRCUIT
+                            [process_date] => 
+                            [process_comment] => 
+                        )
+
+                    [2] => Array
+                        (
+                            [user_id] => bpont
+                            [lastname] => PONT
+                            [firstname] => Brieuc
+                            [entity_id] => POLEAFFAIRESETRANGERES
+                            [entity_label] => Pôle affaires étrangères
+                            [visible] => Y
+                            [viewed] => 0
+                            [difflist_type] => VISA_CIRCUIT
+                            [process_date] => 
+                            [process_comment] => 
+                        )
+
+                )
+
+        )
+
+)
+
+*/
 ?>

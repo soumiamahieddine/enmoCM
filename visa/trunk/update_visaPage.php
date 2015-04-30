@@ -157,7 +157,7 @@ $tab_path_rep_file = get_rep_path($res_id, $coll_id);
         $templates = $templatesControler->getAllTemplatesForProcess($curdest);
         $_SESSION['destination_entity'] = $curdest;
         //var_dump($templates);
-        $right_html .= '<div id="list_answers_div" onmouseover="this.style.cursor=\\\'pointer\\\';">';
+        $right_html .= '<div id="list_answers_div" onmouseover="this.style.cursor=\\\'pointer\\\';" style="width:920px;">';
             $right_html .= '<div class="block" style="margin-top:-2px;">';
                 $right_html .= '<div id="processframe" name="processframe">';
                     $right_html .= '<center><h2>' . _PJ . ', ' . _ATTACHEMENTS . '</h2></center>';
@@ -181,7 +181,7 @@ $tab_path_rep_file = get_rep_path($res_id, $coll_id);
                     $right_html .= '</center><iframe name="list_attach" id="list_attach" src="'
                     . $_SESSION['config']['businessappurl']
                     . 'index.php?display=true&module=attachments&page=frame_list_attachments&load&resId='.$res_id.'" '
-                    . 'frameborder="0" width="100%" height="600px"></iframe>';
+                    . 'frameborder="0" width="900px" scrolling="yes" height="600px"></iframe>';
                     $right_html .= '</div>';
                 $right_html .= '</div>';
             $right_html .= '</div>';

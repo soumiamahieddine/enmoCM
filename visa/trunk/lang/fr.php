@@ -34,5 +34,6 @@ if (!defined('_CONFIG_AVIS_WORKFLOW_DESC'))
 if (!defined('_THUMBPRINT'))
     define('_THUMBPRINT', 'Empreinte numérique');
 
-
+if (!defined('_DISSMARTCARD_SIGNER_APPLET'))
+    define('_DISSMARTCARD_SIGNER_APPLET', 'Signature électronique en cours...');
 ?>
