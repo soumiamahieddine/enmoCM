@@ -2256,7 +2256,7 @@ class lists extends dbquery
                     }
                 }
                 //Toolbar
-                 //if ($this->params['bool_showToolbar']) {
+                 if ($this->params['bool_showToolbar']) {
                     $toolbar .= '<div class="block" style="height:'.$height.';" align="center" >';
                     $toolbar .= '<table width="100%" border="0"><tr>';
                     $toolbar .= '<td align="left" width="20px" nowrap>'.$loading.'</td>';
@@ -2274,7 +2274,7 @@ class lists extends dbquery
                     $toolbar .= $filters;
                     $toolbar .= '</table>';
                     $toolbar .= '</div>';
-                // }
+                 }
             }
         }
         

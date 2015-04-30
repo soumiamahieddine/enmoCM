@@ -200,7 +200,7 @@ $listKey = 'res_id';
 
 //Initialiser le tableau de paramètres
 $paramsTab = array();
-$paramsTab['bool_showSmallToolbar'] = false;
+$paramsTab['bool_showToolbar'] = false;
 
 $paramsTab['tools'] = array();                                                      //Icones dans la barre d'outils
 
