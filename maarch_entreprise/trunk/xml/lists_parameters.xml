@@ -89,6 +89,16 @@
             <GOTOLIST></GOTOLIST>
         </TEMPLATE>
         <TEMPLATE>
+            <ID>welcome_five_courriers</ID>
+            <LABEL>_DOCUMENTS_LIST_SEARCH</LABEL>
+            <IMG>fa fa-list-ul fa-4x</IMG>
+            <NAME>welcome_five_courriers</NAME>
+            <ORIGIN>apps</ORIGIN>
+            <MODULE></MODULE>
+            <ENABLED>true</ENABLED>
+            <GOTOLIST></GOTOLIST>
+        </TEMPLATE>
+        <TEMPLATE>
             <ID>documents_list_search_adv</ID>
             <LABEL>_DOCUMENTS_LIST_SEARCH</LABEL>
             <IMG>fa fa-list-ul fa-2x</IMG>

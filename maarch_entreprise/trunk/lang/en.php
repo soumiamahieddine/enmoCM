@@ -18,7 +18,8 @@
  *   You should have received a copy of the GNU General Public License
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+if (!defined('_VIEW_LAST_COURRIERS'))
+    define('_VIEW_HYSTORY_LAST_COURRIERS', 'History of my last courriers');
 if (!defined('MUST_BE_LESS_THAN')) define('MUST_BE_LESS_THAN', 'must not be longer than');
 if (!defined('_ACCESS_LIST_EXTEND')) define('_ACCESS_LIST_EXTEND', 'Display extended lists');
 if (!defined('_ACCESS_LIST_STANDARD')) define('_ACCESS_LIST_STANDARD', 'Display simple lists');

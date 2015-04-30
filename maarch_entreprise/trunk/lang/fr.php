@@ -22,6 +22,8 @@
 if (!defined('_MEP_VERSION')) define('_MEP_VERSION', 'Maarch v1.5');
 
 /************** Administration **************/
+if (!defined('_VIEW_LAST_COURRIERS'))
+    define('_VIEW_LAST_COURRIERS', 'Mes derniers courriers');
 if (!defined('_ADMIN_USERS'))    define( '_ADMIN_USERS', 'Utilisateurs');
 if (!defined('_ADMIN_DOCSERVERS'))    define( '_ADMIN_DOCSERVERS', 'Zones de stockage');
 if (!defined('_ADMIN_USERS_DESC'))    define( '_ADMIN_USERS_DESC', 'Ajouter, suspendre, ou modifier des profils utilisateurs. Placer les utilisateurs dans leurs groupes d&rsquo;appartenance et définir leur groupe primaire.');
