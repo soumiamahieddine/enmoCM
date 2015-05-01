@@ -33,7 +33,7 @@ if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
 	$myContact['title'] = $contacts->get_civility_contact($myContact['title']);
     $datasources['contact'][] = $myContact;
 // single Contact
-}else{
+}else if (isset($datasources['res_letterbox'][0]['contact_id']) && isset($datasources['res_letterbox'][0]['address_id'])) {
 
     $datasources['contact'] = array();
     $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ".$datasources['res_letterbox'][0]['contact_id']." and ca_id = ".$datasources['res_letterbox'][0]['address_id']);
@@ -42,6 +42,11 @@ if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
     $myContact['contact_purpose_id'] = $contacts->get_label_contact($myContact['contact_purpose_id'], $_SESSION['tablename']['contact_purposes']);
     $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
     $myContact['title'] = $contacts->get_civility_contact($myContact['title']);
+    $datasources['contact'][] = $myContact;
+} else {
+    $datasources['contact'] = array();
+    $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = 0");
+    $myContact = $dbDatasource->fetch_array();
     $datasources['contact'][] = $myContact;
 }
 // Notes
