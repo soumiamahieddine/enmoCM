@@ -1396,7 +1396,7 @@ class contacts_v2 extends dbquery
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
                         </tr-->
                         <tr>
-                            <td><label for="code_postal"><?php echo _POSTAL_CODE; ?>&nbsp;: </label></td>
+                            <td><?php echo _POSTAL_CODE; ?>&nbsp;:</td>
                             <td>&nbsp;</td>
                             <td class="indexing_field"><input name="cp" type="text" id="cp" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_CP'])){echo $func->show_str($_SESSION['m_admin']['address']['ADD_CP']); }?>"/>
                                 <div id="show_town" class="autocomplete">
