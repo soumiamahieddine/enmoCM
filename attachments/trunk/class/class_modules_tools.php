@@ -44,6 +44,8 @@ class attachments
         }
 		$conf = $xmlconfig->CONFIG;
 		$_SESSION['modules_loaded']['attachments']['convertPdf'] = (string) $conf->convertPdf;
+		$_SESSION['modules_loaded']['attachments']['vbs_convert_path'] = (string) $conf->vbs_convert_path;
+		$_SESSION['modules_loaded']['attachments']['useExeConvert'] = (string) $conf->useExeConvert;
 		 
         $hist = $xmlconfig->HISTORY;
         $_SESSION['history']['attachadd'] = (string) $hist->attachadd;

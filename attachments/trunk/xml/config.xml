@@ -5,6 +5,8 @@
 		<comment>_ATTACHMENTS_COMMENT</comment>
 		<file_prefix>attach</file_prefix>
 		<convertPdf>false</convertPdf> <!-- true = applet DIS, false = applet Maarch -->
+		<vbs_convert_path></vbs_convert_path> <!-- Path to VBS file if necessary. ex: C:\Program Files (x86)\Outils SPM\DOC2PDF_VBS.vbs . Default : %HOME_DIR%\maarchTmp\DOC2PDF_VBS.vbs -->
+		<useExeConvert>false</useExeConvert> 
 		<loaded>true</loaded>
 	</CONFIG>
 	<TABLENAME>
