@@ -32,8 +32,8 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId']) && isset($_REQUEST['m
     $id = $_REQUEST['id'];
     $modeSign = $_REQUEST['modeSign'];
 	$tableName = 'res_view_attachments';
-    if (!isset($_REQUEST['isVersion'])) $db->query("select res_id, format, res_id_master, title from ".$tableName." where attachment_type = 'response_project' and res_id = " . $id);
-    else $db->query("select res_id_version, format, res_id_master, title from ".$tableName." where attachment_type = 'response_project' and res_id_version = " . $id);
+    if (!isset($_REQUEST['isVersion'])) $db->query("select res_id, format, res_id_master, title, identifier from ".$tableName." where attachment_type = 'response_project' and res_id = " . $id);
+    else $db->query("select res_id_version, format, res_id_master, title, identifier from ".$tableName." where attachment_type = 'response_project' and res_id_version = " . $id);
 	
     if ($db->nb_result() < 1) {
         echo _FILE . ' ' . _UNKNOWN.".<br/>";
@@ -41,6 +41,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId']) && isset($_REQUEST['m
         $line = $db->fetch_object();
 		$_SESSION['visa']['last_resId_signed']['res_id'] = $line->res_id_master;
 		$_SESSION['visa']['last_resId_signed']['title'] = $line->title;
+		$_SESSION['visa']['last_resId_signed']['identifier'] = $line->identifier;
             $core_tools->load_html();
             $core_tools->load_header();
             //$core_tools->load_js();

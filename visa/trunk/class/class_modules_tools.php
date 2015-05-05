@@ -174,10 +174,12 @@ class visa extends dbquery
 				}
 			}
 		}
+		if (isset($circuit['sign'])) {
 		foreach($circuit['sign']['users'] as $seq=>$step){
 			if ($step['user_id'] == $userId){
 				return $step['process_comment'];
 			}
+		}
 		}
 		return '';
 	}

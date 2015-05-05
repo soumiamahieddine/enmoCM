@@ -53,14 +53,17 @@ if (empty($docserver)) {
 			require_once "core/class/class_request.php";
 			$req = new request();
 			$req->connect();
-			/*if ($_SESSION['visa']['repSignRel'] > 1) {
-                $req->query("UPDATE res_version_attachments set status = 'OBS' WHERE res_id = ".$_SESSION['visa']['repSignId']);
+			writeLogIndex("Relation = ".$_SESSION['visa']['repSignRel']);
+			if ($_SESSION['visa']['repSignRel'] > 1) {
+				writeLogIndex("UPDATE res_version_attachments set status = 'SIGN' WHERE res_id = ".$_SESSION['visa']['repSignId']);
+                $req->query("UPDATE res_version_attachments set status = 'SIGN' WHERE res_id = ".$_SESSION['visa']['repSignId']);
             } else {
-               $req->query("UPDATE res_attachments set status = 'OBS' WHERE res_id = ".$_SESSION['visa']['repSignId']);
+				writeLogIndex("UPDATE res_attachments set status = 'SIGN' WHERE res_id = ".$_SESSION['visa']['repSignId']);
+				$req->query("UPDATE res_attachments set status = 'SIGN' WHERE res_id = ".$_SESSION['visa']['repSignId']);
             }
 						
 			unset($_SESSION['visa']['repSignRel']);
-			unset($_SESSION['visa']['repSignId']);*/
+			unset($_SESSION['visa']['repSignId']);
 			
 			
             $resAttach = new resource();
@@ -93,7 +96,7 @@ if (empty($docserver)) {
                 $_SESSION['data'],
                 array(
                     'column' => 'status',
-                    'value' => 'SIGN',
+                    'value' => 'TRA',
                     'type' => 'string',
                 )
             );
@@ -146,7 +149,7 @@ if (empty($docserver)) {
                     'type' => 'integer',
                 )
             );
-			unset($_SESSION['visa']['last_resId_signed']);
+			
             array_push(
                 $_SESSION['data'],
                 array(
@@ -159,7 +162,7 @@ if (empty($docserver)) {
                 $_SESSION['data'],
                 array(
                     'column' => 'identifier',
-                    'value' => '1',
+                    'value' => $req->protect_string_db($_SESSION['visa']['last_resId_signed']['identifier']),
                     'type' => 'string',
                 )
             );
@@ -171,6 +174,7 @@ if (empty($docserver)) {
                     'type' => 'string',
                 )
             );
+			unset($_SESSION['visa']['last_resId_signed']);
 			writeLogIndex("Insertion BDD");
 			writeLogIndex("Paramètres load into DB");
 			writeLogIndex("destination dir = ".$storeResult['destination_dir']);

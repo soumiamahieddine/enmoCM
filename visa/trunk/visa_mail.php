@@ -127,7 +127,7 @@ function get_rep_path($res_id, $coll_id)
 	$db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver_id."'");
     $res = $db->fetch_object();
     $docserver_path = $res->path_template;
-	$db->query("select filename, path,title,res_id,res_id_version,attachment_type  from res_view_attachments where res_id_master = " . $res_id . " AND status <> 'OBS' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response') order by creation_date asc");
+	$db->query("select filename, path,title,res_id,res_id_version,attachment_type  from res_view_attachments where res_id_master = " . $res_id . " AND status <> 'OBS' AND status <> 'SIGN' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response') order by creation_date asc");
 	$array_reponses = array();
 	$cpt_rep = 0;
 	while ($res2 = $db->fetch_object()){
@@ -413,9 +413,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		 $frm_str .= '</dd>';
 	}
 	
-		$countAttachments = "select res_id from "
-            . $_SESSION['tablename']['attach_res_attachments']
-            . " where status NOT IN ('DEL','OBS') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'";
+		$countAttachments = "select res_id from res_view_attachments where status NOT IN ('DEL','OBS') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'";
 		$dbAttach = new dbquery();
 		$dbAttach->query($countAttachments);
 		if ($dbAttach->nb_result() > 0) {
@@ -438,7 +436,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $req = new request;
                     $req->connect();
                     $req->query("select res_id from ".$_SESSION['tablename']['attach_res_attachments']
-                        . " where (status = 'A_TRA' or status = 'TRA') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
+                        . " where (status = 'A_TRA' or status = 'TRA' or status = 'SIGN') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'");
                     //$req->show();
                     $nb_attach = 0;
                     if ($req->nb_result() > 0) {

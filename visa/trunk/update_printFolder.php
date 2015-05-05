@@ -174,9 +174,7 @@ if ($core->is_module_loaded('notes')){
 
 //PJ
 
-$countAttachments = "select res_id from "
-            . $_SESSION['tablename']['attach_res_attachments']
-            . " where status NOT IN ('DEL','OBS') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'";
+$countAttachments = "select res_id from res_view_attachments where status NOT IN ('DEL','OBS') and res_id_master = " . $res_id . " and coll_id = '" . $coll_id . "'";
 		$dbAttach = new dbquery();
 		$dbAttach->query($countAttachments);
 		if ($dbAttach->nb_result() > 0) {

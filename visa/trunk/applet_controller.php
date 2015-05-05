@@ -109,6 +109,7 @@ if (
 		$content_sign = file_get_contents($signfileOnDs, FILE_BINARY);
 		$encodedContentSign = base64_encode($content_sign);
         $signfileContent = $encodedContentSign;
+			
 		/********************************/
 		
 		
