@@ -119,34 +119,71 @@ if (
         $fileContent = $encodedContent;
 		
 		if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
-			//Transmission du fichier VBS de conversion
-			if (
-				file_exists('custom'.DIRECTORY_SEPARATOR. $_SESSION['custom_override_id']
-							. DIRECTORY_SEPARATOR . 'modules'. DIRECTORY_SEPARATOR . 'content_management'
-							. DIRECTORY_SEPARATOR . 'DOC2PDF_VBS.vbs'
-				)
-			) {
-				$vbsFile = 'custom/'. $_SESSION['custom_override_id'] .'/modules/content_management/DOC2PDF_VBS.vbs';
-			} else {
-				$vbsFile = 'modules/content_management/DOC2PDF_VBS.vbs';
-			}		
-			$content_vbsFile = file_get_contents($vbsFile, FILE_BINARY);
-			$encodedContent_vbsFile = base64_encode($content_vbsFile);
+			
+			if ($_SESSION['modules_loaded']['attachments']['useExeConvert'] == "false"){
+				//Transmission du fichier VBS de conversion
+				if (
+					file_exists('custom'.DIRECTORY_SEPARATOR. $_SESSION['custom_override_id']
+								. DIRECTORY_SEPARATOR . 'modules'. DIRECTORY_SEPARATOR . 'content_management'
+								. DIRECTORY_SEPARATOR . 'DOC2PDF_VBS.vbs'
+					)
+				) {
+					$vbsFile = 'custom/'. $_SESSION['custom_override_id'] .'/modules/content_management/DOC2PDF_VBS.vbs';
+				} else {
+					$vbsFile = 'modules/content_management/DOC2PDF_VBS.vbs';
+				}		
+				$content_vbsFile = file_get_contents($vbsFile, FILE_BINARY);
+				$encodedContent_vbsFile = base64_encode($content_vbsFile);
+			}
+			else{
+				if (
+					file_exists('custom'.DIRECTORY_SEPARATOR. $_SESSION['custom_override_id']
+								. DIRECTORY_SEPARATOR . 'modules'. DIRECTORY_SEPARATOR . 'content_management'
+								. DIRECTORY_SEPARATOR . 'dist' . DIRECTORY_SEPARATOR . 'Word2Pdf.exe'
+					)
+				) {
+					$exeFile = 'custom/'. $_SESSION['custom_override_id'] .'/modules/content_management/dist/Word2Pdf.exe';
+				} else {
+					$exeFile = 'modules/content_management/dist/Word2Pdf.exe';
+				}		
+				$content_exeFile = file_get_contents($exeFile, FILE_BINARY);
+				$encodedContent_exeFile = base64_encode($content_exeFile);
+			}
+			
 		}
 		        
 		if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
-			$result = array(
-				'STATUS' => $status,
-				'OBJECT_TYPE' => $objectType,
-				'OBJECT_TABLE' => $objectTable,
-				'OBJECT_ID' => $objectId,
-				'APP_PATH' => $appPath,
-				'FILE_CONTENT' => $fileContent,
-				'FILE_CONTENT_VBS' => $encodedContent_vbsFile,
-				'FILE_EXTENSION' => $fileExtension,
-				'ERROR' => '',
-				'END_MESSAGE' => '',
-			);
+			if ($_SESSION['modules_loaded']['attachments']['useExeConvert'] == "false"){
+				$result = array(
+					'STATUS' => $status,
+					'OBJECT_TYPE' => $objectType,
+					'OBJECT_TABLE' => $objectTable,
+					'OBJECT_ID' => $objectId,
+					'APP_PATH' => $appPath,
+					'FILE_CONTENT' => $fileContent,
+					'FILE_CONTENT_VBS' => $encodedContent_vbsFile,
+					'VBS_PATH' => $_SESSION['modules_loaded']['attachments']['vbs_convert_path'],
+					'USE_EXE_CONVERT' => "false",
+					'FILE_EXTENSION' => $fileExtension,
+					'ERROR' => '',
+					'END_MESSAGE' => '',
+				);
+			}
+			else{
+				$result = array(
+					'STATUS' => $status,
+					'OBJECT_TYPE' => $objectType,
+					'OBJECT_TABLE' => $objectTable,
+					'OBJECT_ID' => $objectId,
+					'APP_PATH' => $appPath,
+					'FILE_CONTENT' => $fileContent,
+					'FILE_CONTENT_EXE' => $encodedContent_exeFile,
+					'USE_EXE_CONVERT' => "true",
+					'FILE_EXTENSION' => $fileExtension,
+					'ERROR' => '',
+					'END_MESSAGE' => '',
+				);
+			}
 		}
 		else{
 			$result = array(
