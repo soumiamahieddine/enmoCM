@@ -30,7 +30,7 @@
 */
  $urlParameters = '';
 
-    if($_SESSION['save_list']['fromDetail'] == "true") {
+    if($_SESSION['save_list']['fromDetail'] == "true" || $_SESSION['save_list']['fromValidateMail'] == "true" || $_SESSION['save_list']['fromProcess'] == "true") {
 
         $urlParameters .= '&start='.$_SESSION['save_list']['start'];
         $urlParameters .= '&lines='.$_SESSION['save_list']['lines'];
@@ -40,6 +40,8 @@
             $urlParameters .= '&template='.$_SESSION['save_list']['template'];
         }
         $_SESSION['save_list']['fromDetail'] = "false";
+        $_SESSION['save_list']['fromValidateMail'] = "false";
+        $_SESSION['save_list']['fromProcess'] = "false";
         $_SESSION['save_list']['url'] = $urlParameters;
     }
     $_SESSION['save_list']['start'] = "";
