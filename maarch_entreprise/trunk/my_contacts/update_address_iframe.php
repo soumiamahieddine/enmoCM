@@ -31,7 +31,9 @@
 $core_tools2 = new core_tools();
 $core_tools2->load_lang();
 if(!$core_tools2->test_service('my_contacts', 'apps', false)){
-    $core_tools2->test_service('update_contacts', 'apps');
+    if(!$core_tools2->test_service('update_contacts', 'apps', false)){
+    	$core_tools2->test_service('my_contacts_menu', 'apps');
+    }
 }
 $core_tools2->load_html();
 $core_tools2->load_header('', true, false);

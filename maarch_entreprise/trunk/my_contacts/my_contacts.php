@@ -53,7 +53,9 @@ $contact    = new contacts_v2();
 
  if (isset($_REQUEST['load'])) {
     $_SESSION['m_admin'] = array();
-    $core_tools->test_service('my_contacts', 'apps');
+    if(!$core_tools->test_service('my_contacts', 'apps', false)){
+        $core_tools->test_service('my_contacts_menu', 'apps');
+    }
 
     /****************Management of the location bar  ************/
     $init = false;

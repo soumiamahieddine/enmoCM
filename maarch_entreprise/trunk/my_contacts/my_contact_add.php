@@ -14,7 +14,9 @@
 $core_tools2 = new core_tools();
 //here we loading the lang vars
 $core_tools2->load_lang();
-$core_tools2->test_service('my_contacts', 'apps');
+if(!$core_tools2->test_service('my_contacts', 'apps', false)){
+	$core_tools2->test_service('my_contacts_menu', 'apps');
+}
 /****************Management of the location bar  ************/
 $init = false;
 if(isset($_REQUEST['reinit']) && $_REQUEST['reinit'] == "true")

@@ -31,7 +31,9 @@
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
-$core_tools->test_service('my_contacts', 'apps');
+if(!$core_tools->test_service('my_contacts', 'apps', false)){
+    $core_tools->test_service('my_contacts_menu', 'apps');
+}
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_contacts_v2.php");
 
  /****************Management of the location bar  ************/

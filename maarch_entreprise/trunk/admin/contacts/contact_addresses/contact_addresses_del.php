@@ -39,6 +39,9 @@ if (!$return) {
 if (!$return) {
     $return = $core_tools->test_admin('my_contacts', 'apps', false);
 }
+if (!$return) {
+    $return = $core_tools->test_admin('my_contacts_menu', 'apps', false);
+}
 
 if (!$return) {
     $_SESSION['error'] = _SERVICE . ' ' . _UNKNOWN;

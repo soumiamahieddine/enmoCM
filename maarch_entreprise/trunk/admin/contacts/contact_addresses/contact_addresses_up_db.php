@@ -45,6 +45,10 @@ if (!$return) {
 }
 
 if (!$return) {
+    $return = $core_tools->test_admin('my_contacts_menu', 'apps', false);
+}
+
+if (!$return) {
     $_SESSION['error'] = _SERVICE . ' ' . _UNKNOWN;
     ?>
     <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>

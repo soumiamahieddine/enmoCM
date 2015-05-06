@@ -32,7 +32,9 @@ require "core" . DIRECTORY_SEPARATOR . "class" . DIRECTORY_SEPARATOR
     . "class_history.php";
 $core = new core_tools();
 if(!$core->test_admin('admin_contacts', 'apps', false)){
-	$core->test_admin('my_contacts', 'apps');
+	if(!$core->test_admin('my_contacts', 'apps', false)){
+		$core->test_admin('my_contacts_menu', 'apps');
+	}
 }
 $core->load_lang();
 

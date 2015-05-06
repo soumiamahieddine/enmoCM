@@ -7,7 +7,7 @@
         <style>fa fa-cogs</style>
     </MENU>
     <MENU>
-        <id>my_contacts</id>
+        <id>my_contacts_menu</id>
         <libconst>_MY_CONTACTS_MENU</libconst>
         <url>index.php?page=my_contacts&amp;dir=my_contacts&amp;load</url>
         <style>fa fa-book</style>
