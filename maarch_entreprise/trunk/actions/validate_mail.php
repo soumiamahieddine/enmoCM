@@ -175,6 +175,8 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $type = new types();
     $business = new business_app_tools();
 
+    $_SESSION['save_list']['fromValidateMail'] = "true";
+
     if($_SESSION['features']['show_types_tree'] == 'true')
     {
         $doctypes = $type-> getArrayStructTypes($coll_id);

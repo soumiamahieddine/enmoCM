@@ -160,6 +160,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     $b = new basket();
     $is = new indexing_searching_app();
     $cr = new chrono();
+    $_SESSION['save_list']['fromProcess'] = "true";
     $data = array();
     $params_data = array('show_folder' => false);
     $data = get_general_data($coll_id, $res_id, 'full', $params_data);
