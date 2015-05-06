@@ -247,6 +247,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	//$selectedCat = '';
 	$list_docs = '';
 	foreach($tab_docs as $num=>$res_id_doc){
+		
+		$db->query("select alt_identifier, status from " 
+		. $view 
+		. " where res_id = " . $res_id_doc);
+		$resChrono_doc = $db->fetch_object();
+		$chrono_number_doc = $resChrono_doc->alt_identifier;
 		$list_docs .= $res_id_doc."#";
 		if ($res_id_doc == $res_id){
 			$classLine = ' class="selectedId" ';
@@ -264,7 +270,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		
 		$frm_str .= '<ul>';
 		$frm_str .= '<li><b>';
-		$frm_str .= $chrono_number . ' - ' .$res_id_doc;
+		$frm_str .= $chrono_number_doc . ' - ' .$res_id_doc;
 		$frm_str .= '</b></li>';
 		
 		$frm_str .= '<li>';
