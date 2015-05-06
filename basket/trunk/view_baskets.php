@@ -294,7 +294,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
 }
 ?>
 </h1>
-<div id="inner_content">
+<div id="inner_content" class="clearfix">
 <?php
 
 if(isset($_SESSION['info_basket'])) {
