@@ -270,7 +270,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		
 		$frm_str .= '<ul>';
 		$frm_str .= '<li><b>';
-		$frm_str .= $chrono_number_doc . ' - ' .$res_id_doc;
+		$frm_str .= $chrono_number_doc /*. ' - ' .$res_id_doc*/;
 		$frm_str .= '</b></li>';
 		
 		$frm_str .= '<li>';
