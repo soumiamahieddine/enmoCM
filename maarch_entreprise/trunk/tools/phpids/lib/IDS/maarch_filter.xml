@@ -182,7 +182,7 @@
     </filter>-->
     <filter>
         <id>18</id>
-        <rule><![CDATA[([^*:\s\w,.\/?+-]\s*)?(?<![a-z]\s)(?<![a-z\/_@\-\|])(\s*return\s*)?(?:join|pop|push|reverse|reduce|concat|map|shift|sp?lice|sort|unshift)(?(1)[^\w%"]|(?:\s*[^@\s\w%,.+\-]))]]></rule>
+        <rule><![CDATA[([^*:\s\w,.\/?+-]\s*)?(?<![a-z]\s)(?<![a-z\/_@\-\|])(\s*return\s*)?(?:join|pop|push|reverse|reduce|concat|shift|sp?lice|sort|unshift)(?(1)[^\w%"]|(?:\s*[^@\s\w%,.+\-]))]]></rule>
         <description>Detects JavaScript array properties and methods</description>
         <tags>
             <tag>xss</tag>
