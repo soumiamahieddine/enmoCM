@@ -330,7 +330,7 @@ $arr_tmp2 = array('label' => _PROCESS_NOTES, 'type' => 'textarea', 'param' => ar
 $param['process_notes'] = $arr_tmp2;
 
 // chrono
-$arr_tmp2 = array('label' => _CHRONO_NUMBER, 'type' => 'input_text', 'param' => array('field_label' => _CHRONO_NUMBER.' <span class="red_asterisk" ><i class="fa fa-star" style="vertical-align:50%"></i></span>', 'other' => $size));
+$arr_tmp2 = array('label' => _CHRONO_NUMBER, 'type' => 'input_text', 'param' => array('field_label' => _CHRONO_NUMBER.' <span class="green_asterisk" ><i class="fa fa-star" style="vertical-align:50%"></i></span>', 'other' => $size));
 $param['chrono'] = $arr_tmp2;
 
 // identifier
@@ -657,7 +657,7 @@ if(isset($_REQUEST['nodetails']))
                 <tr>
                     <td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT;?>:</label>
                         <input type="text" name="subject" id="subject" <?php echo $size; ?>  />
-                        <input type="hidden" name="meta[]" value="subject#subject#input_text" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
+                        <input type="hidden" name="meta[]" value="subject#subject#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
                     </td>
                     <td><em><?php echo _MAIL_OBJECT_HELP; ?></em></td>
                 </tr>
@@ -693,7 +693,7 @@ if(isset($_REQUEST['nodetails']))
                 <tr>
                     <td width="70%"><label for="contactid" class="bold"><?php echo _CONTACT_EXTERNAL;?>:</label>
                         <input type="text" name="contactid" id="contactid" onkeyup="erase_contact_external_id('contactid', 'contactid_external');"/>
-                        <input type="hidden" name="meta[]" value="contactid#contactid#input_text" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
+                        <input type="hidden" name="meta[]" value="contactid#contactid#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
                         <div id="contactListByName" class="autocomplete"></div>
                         <script type="text/javascript">
                             initList_hidden_input('contactid', 'contactListByName', '<?php 
@@ -721,7 +721,7 @@ if(isset($_REQUEST['nodetails']))
         </td>
     </tr>
     <tr>
-        <td><span class="red_asterisk"><i class="fa fa-star" style="vertical-align:50%"></i></span> indique que la recherche se fait sur les courriers et les pi&egrave;ces jointes.</td>
+        <td><span class="green_asterisk"><i class="fa fa-star" style="vertical-align:50%"></i></span> indique que la recherche se fait sur les courriers et les pi&egrave;ces jointes.</td>
     </tr>
     <tr><td colspan="2"><hr/></td></tr>
 <tr>
