@@ -451,6 +451,7 @@ class diffusion_list extends dbquery
                 $userFound = false;
                 $userId = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['user_id']));
                 $processComment = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['processComment']));
+                $processDate = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['processDate']));
                 $visible = $diffList[$role_id]['users'][$i]['visible'];
                 $viewed = (integer)$diffList[$role_id]['users'][$i]['viewed'];
                 $cptOldUsers = count($oldListInst[$role_id]['users']);
@@ -467,26 +468,51 @@ class diffusion_list extends dbquery
                 //Modification du dest_user dans la table res_letterbox
                 if($role_id == 'dest' && $collId == 'letterbox_coll')
 					$this->query("update ".RES_LETTERBOX." set dest_user = '".$userId."' where res_id = ".$resId);
+				
+				if ($processDate != ''){
+					$this->query(
+						"insert into " . ENT_LISTINSTANCE
+							. " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment, process_date) "
+						. "values ("
+							. "'" . $collId . "', "
+							. $resId . ", "
+							. "'DOC', "
+							. $i . ", "
+							. "'" . $userId . "', " 
+							. "'user_id' , "
+							. "'".$item_mode."', "
+							. "'" . $creatorUser . "', "
+							. "'" . $creatorEntity. "', "
+							. "'" . $visible . "', "
+							. $viewed . ", "
+							. "'" . $difflistType . "', "
+							. "'" . $processComment . "', "
+							. "'" . $processDate . "'"
+						. " )"
+					);
+				}
+				else {
+					$this->query(
+						"insert into " . ENT_LISTINSTANCE
+							. " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment) "
+						. "values ("
+							. "'" . $collId . "', "
+							. $resId . ", "
+							. "'DOC', "
+							. $i . ", "
+							. "'" . $userId . "', " 
+							. "'user_id' , "
+							. "'".$item_mode."', "
+							. "'" . $creatorUser . "', "
+							. "'" . $creatorEntity. "', "
+							. "'" . $visible . "', "
+							. $viewed . ", "
+							. "'" . $difflistType . "', "
+							. "'" . $processComment . "'"
+						. " )"
+					);
+				}
 					
-                $this->query(
-                    "insert into " . ENT_LISTINSTANCE
-                        . " (coll_id, res_id, listinstance_type, sequence, item_id, item_type, item_mode, added_by_user, added_by_entity, visible, viewed, difflist_type, process_comment) "
-                    . "values ("
-                        . "'" . $collId . "', "
-                        . $resId . ", "
-                        . "'DOC', "
-                        . $i . ", "
-                        . "'" . $userId . "', " 
-                        . "'user_id' , "
-                        . "'".$item_mode."', "
-                        . "'" . $creatorUser . "', "
-                        . "'" . $creatorEntity. "', "
-                        . "'" . $visible . "', "
-                        . $viewed . ", "
-                        . "'" . $difflistType . "', "
-                        . "'" . $processComment . "'"
-                    . " )"
-                );
                 
                 if (!$userFound || $fromQualif) {
                     # History
