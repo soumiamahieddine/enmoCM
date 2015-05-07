@@ -482,7 +482,7 @@ class resources_controler
                     if (strtoupper($data[$i]['column']) == strtoupper('exp_contact_id') && $data[$i]['value'] <> "" && !is_numeric($data[$i]['value'])) {
                         $theString = str_replace(">", "", $data[$i]['value']);
                         $mail = explode("<", $theString);
-                        $db->query("SELECT contact_id FROM view_contacts WHERE email = '" . $db->protect_string_db($mail[count($mail) -1]) . "' and enabled = 'Y'");
+                        $db->query("SELECT contact_id FROM view_contacts WHERE email = '" . $db->protect_string_db($mail[count($mail) -1]) . "' and enabled = 'Y' order by creation_date asc");
                         $contact = $db->fetch_object();
 
                         if ($contact->contact_id <> "") {
@@ -494,7 +494,7 @@ class resources_controler
                     if (strtoupper($data[$i]['column']) == strtoupper('address_id') && $data[$i]['value'] <> "" && !is_numeric($data[$i]['value'])) {
                         $theString = str_replace(">", "", $data[$i]['value']);
                         $mail = explode("<", $theString);
-                        $db->query("SELECT ca_id FROM view_contacts WHERE email = '" . $db->protect_string_db($mail[count($mail) -1]) . "' and enabled = 'Y'");
+                        $db->query("SELECT ca_id FROM view_contacts WHERE email = '" . $db->protect_string_db($mail[count($mail) -1]) . "' and enabled = 'Y' order by creation_date asc");
                         $contact = $db->fetch_object();
                         if ($contact->ca_id <> "") {
                             $data[$i]['value'] = $contact->ca_id;
