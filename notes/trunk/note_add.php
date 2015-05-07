@@ -206,7 +206,7 @@ if(isset($_GET['redirect'])){
         </p>
     </br>
     <div>
-        <h3 class="sstit"><?php echo _THIS_NOTE_IS_VISIBLE_BY; ?></h3>
+        <h3 class="sstit" style="color: red"><?php echo _THIS_NOTE_IS_VISIBLE_BY; ?></h3>
     </div>
     <div>
         <?php 

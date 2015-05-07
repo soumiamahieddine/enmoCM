@@ -166,7 +166,7 @@ switch ($mode) {
                 }
             $content .= '</select><br />';
             $content .= '<textarea style="width:500px" cols="70" rows="10"  name="notes"  id="notes" ></textarea>';
-            $content .= '<h3 class="sstit">'._THIS_NOTE_IS_VISIBLE_BY.'</h3>';
+            $content .= '<h3 class="sstit" style="color: red">'._THIS_NOTE_IS_VISIBLE_BY.'</h3>';
             $content .= '<table align="center" width="100%" id="template_entities">';
             $content .= '<tr><td width="20%" align="center">';
             $content .= '<select name="entitieslist[]" id="entitieslist" size="7" style="width: 206px" ';
@@ -367,7 +367,7 @@ switch ($mode) {
                 }
                 $content .= '</select><br />';
                 $content .= '<textarea style="width:500px" cols="70" rows="10"  name="notes"  id="notes">'.$notes.'</textarea>';
-                $content .= '<h3 class="sstit">'._THIS_NOTE_IS_VISIBLE_BY.'</h3>';
+                $content .= '<h3 class="sstit" style="color: red">'._THIS_NOTE_IS_VISIBLE_BY.'</h3>';
                 $content .= '<table align="center" width="100%" id="template_entities">';
                 $content .= '<tr><td width="20%" align="center">';
                 $content .= '<select name="entitieslist[]" id="entitieslist" size="7" style="width: 206px" ';
