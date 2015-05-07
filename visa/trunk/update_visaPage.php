@@ -90,7 +90,7 @@ $visa = new visa();
 
 $circuit_html .= '<div class="error" id="divError" name="divError"></div>';
 $circuit_html .= '<div style="text-align:center;">';
-$circuit_html .= $visa->getList($res_id, $coll_id, $modifVisaWorkflow, 'VISA_CIRCUIT');
+$circuit_html .= $visa->getList($res_id, $coll_id, $modifVisaWorkflow, 'VISA_CIRCUIT', true);
 			
 $circuit_html .= '</div><br>';
 /* Historique diffusion visa */
@@ -251,6 +251,6 @@ $tab_path_rep_file = get_rep_path($res_id, $coll_id);
 
 	$valid_but = 'valid_action_form( \\\'index_file\\\', \\\'index.php?display=true&page=manage_action&module=core\\\', \\\''.$_REQUEST['action'].'\\\', \\\''.$res_id.'\\\', \\\'res_letterbox\\\', \\\'null\\\', \\\''.$coll_id.'\\\', \\\'page\\\');';
 //echo "{status : 1,avancement:'".$avancement_html."',circuit:'".$circuit_html."',notes_dt:'".$notes_html_dt."',notes_dd:'".$notes_html_dd."'}";
-echo "{status : 1,notes_dt:'".$notes_html_dt."',notes_dd:'".$notes_html_dd."',circuit:'".addslashes($circuit_html)."',avancement:'".$avancement_html."',right_html:'".$right_html."',valid_button:'".$valid_but."',id_rep:'".$tab_path_rep_file[0]['res_id']."'}";
+echo "{status : 1,notes_dt:'".$notes_html_dt."',notes_dd:'".$notes_html_dd."',circuit:'".addslashes($circuit_html)."',avancement:'".$avancement_html."',right_html:'".$right_html."',valid_button:'".$valid_but."',id_rep:'".$tab_path_rep_file[0]['res_id']."',is_vers_rep:'".$tab_path_rep_file[0]['is_version']."'}";
 exit();
 ?>

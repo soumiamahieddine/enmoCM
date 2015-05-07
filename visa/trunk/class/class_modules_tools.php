@@ -138,6 +138,18 @@ class visa extends dbquery
 		return $res->sequence;
 	}
 	
+	public function myPosVisa($res_id, $coll_id, $listDiffType){
+		$this->connect();
+		
+		$this->query("SELECT sequence, item_mode from listinstance WHERE res_id=$res_id and coll_id = '$coll_id' and difflist_type = '$listDiffType' and item_id = '".$_SESSION['user']['UserId']."' ORDER BY listinstance_id ASC LIMIT 1");
+		
+		$res=$this->fetch_object();
+		if ($res->item_mode == 'sign'){
+			return $this->nbVisa($res_id, $coll_id);
+		}
+		return $res->sequence;
+	}
+	
 	public function getUsersVis(){
 		$requete_users = "SELECT users.user_id, users.firstname, users.lastname from users, usergroup_content WHERE users.user_id = usergroup_content.user_id AND group_id IN (SELECT group_id FROM usergroups_services WHERE service_id = 'visa_documents') ORDER BY users.lastname";
 		$db_users = new dbquery();
@@ -184,7 +196,7 @@ class visa extends dbquery
 		return '';
 	}
 	
-	public function getList($res_id, $coll_id, $bool_modif=false, $typeList){
+	public function getList($res_id, $coll_id, $bool_modif=false, $typeList, $isVisaStep = false){
 		$core_tools =new core_tools();
 		if ( $typeList == 'VISA_CIRCUIT'){
 			$id_tab="tab_visaSetWorkflow";
@@ -194,6 +206,8 @@ class visa extends dbquery
 			$id_tab="tab_avisSetWorkflow";
 			$id_form="form_avisSetWorkflow";
 		}
+		
+		
 				
 		$circuit = $this->getWorkflow($res_id, $coll_id, $typeList);
 		if (!isset($circuit['visa']['users']) && !isset($circuit['sign']['users']) && !$core_tools->test_service('config_visa_workflow', 'visa', false)){
@@ -205,11 +219,10 @@ class visa extends dbquery
 			$listModels = $diff_list->select_listmodels($typeList);
 		
 		$str .= '<div align="center">';
-		//$str .= '<pre>'.print_r($listModels,true).'</pre>';
 		
 		$str .= '<div class="errorVisa" id="divErrorVisa" name="divErrorVisa"></div>';
 		
-		if (!empty($listModels) && $bool_modif){
+		if (!empty($listModels) && $bool_modif && !$isVisaStep){
 		$str .= '<select name="modelList" id="modelList" onchange="load_listmodel_visa(this.options[this.selectedIndex], \''.$typeList.'\', \''.$id_tab.'\');">';
 		$str .= '<option value="">Sélectionnez un modèle</option>';
 		foreach($listModels as $lm){
@@ -226,6 +239,8 @@ class visa extends dbquery
 			$str .= '<th style="width:5%;"></th>';
 			$str .= '<th style="width:5%;"></th>';
 			$str .= '<th style="width:45%;" align="left" valign="bottom"><span>Consigne</span></th>';
+			$str .= '<th style="width:0%;" align="left" valign="bottom"></th>';
+			$str .= '<th style="width:0%;" align="center" valign="bottom"></th>';
 		}
 		else{
 			$str .= '<th style="width:55%;" align="left" valign="bottom"><span>Consigne</span></th>';
@@ -255,9 +270,14 @@ class visa extends dbquery
 				$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:hidden;" ><i class="fa fa-user-times fa-2x"></i></a></td>';
 				$str .= '<td><a href="javascript://" style="visibility:visible;"  id="add_'.$j.'" name="add_'.$j.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
 				$str .= '<td><input type="text" id="consigne_'.$j.'" name="consigne_'.$j.'" style="width:100%;"/></td>';
+				$str .= '<td><input type="hidden" id="date_'.$j.'" name="date_'.$j.'"/></td>';
+				
+				$str .= '<td><input type="checkbox" id="isSign_'.$j.'" name="isSign_'.$j.'" style="visibility:hidden;" /></td>';
 				$str .= '</tr>';
 			}
 			else{
+				
+				if ($isVisaStep) $myPosVisa = $this->myPosVisa($res_id, $coll_id, $typeList);
 				if (isset($circuit['visa']['users'])){
 					foreach($circuit['visa']['users'] as $seq=>$step){
 						if($color == ' class="col"') {
@@ -271,7 +291,12 @@ class visa extends dbquery
 						if ($bool_modif){
 							$str .= '<td>';
 							$tab_users = $this->getUsersVis();
-							$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" >';
+							
+							if ($isVisaStep && $myPosVisa >= $seq) $disabled = ' disabled ';
+							else $disabled = '';
+						
+						
+							$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" '.$disabled.'>';
 							$str .= '<option value="" >Sélectionnez un utilisateur</option>';
 							foreach($tab_users as $user){
 								$selected = " ";
@@ -283,19 +308,36 @@ class visa extends dbquery
 							
 							$str .= '</td>';
 							$up = ' style="visibility:visible"';
-							$down = ' style="visibility:visible"';
-							$add = ' style="visibility:hidden"';
-							if ($seq == 0){
+							$displayCB = ' style="visibility:hidden"';
+							$checkCB = '';
+							if ($isVisaStep && $myPosVisa >= $seq) $down = ' style="visibility:hidden"';
+							else $down = ' style="visibility:visible"';
+							if ($isVisaStep && $myPosVisa >= $seq) $del = ' style="visibility:hidden"';
+							else $del = ' style="visibility:visible"';
+							if (empty($circuit['sign']['users']) && $seq == count ($circuit['visa']['users'])-1){
+								$add = ' style="visibility:visible"';
+								$down = ' style="visibility:hidden"';
+								$displayCB = ' style="visibility:hidden"';
+								$checkCB = ' checked';
+							}
+							else{
+								$add = ' style="visibility:hidden"';
+							}
+							if ($isVisaStep && $myPosVisa >= $seq) $displayCB = ' style="visibility:hidden"';
+							
+							if ($seq == 0 || ($isVisaStep && $myPosVisa+1 >= $seq)){
 								$up = ' style="visibility:hidden"';
 							}
-							
-							//$str .= '<td><img src="static.php?filename=DownUser.png&module=visa" '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" /></td>';
 							$str .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
-							//$str .= '<td><img src="static.php?filename=UpUser.png&module=visa" '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" /></td>';
 							$str .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
-							$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:visible;" ><i class="fa fa-user-times fa-2x"></i></a></td>';
+							$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" '.$del.' ><i class="fa fa-user-times fa-2x"></i></a></td>';
 							$str .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
-							$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$step['process_comment'].'" style="width:100%;"/></td>';							
+							$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$step['process_comment'].'" style="width:100%;" '.$disabled.'/></td>';							
+							$str .= '<td><input type="hidden" value="'.$step['process_date'].'" id="date_'.$seq.'" name="date_'.$seq.'"/></td>';
+							
+							
+							$str .= '<td><input type="checkbox" id="isSign_'.$seq.'" name="isSign_'.$seq.'" '.$displayCB.' '.$checkCB.'/></td>';
+							
 						}
 						else{
 							$str .= '<td>'.$step['firstname'].' '.$step['lastname'];
@@ -310,51 +352,63 @@ class visa extends dbquery
 				}
 					//ajout signataire
 					
-					$seq = count ($circuit['visa']['users']);
-					
-					if($color == ' class="col"') {
-						$color = '';
-					} else {
-						$color = ' class="col"';
-					}
-					
-					$str .= '<tr ' . $color . '>';
-					//$str .= '<td>' . $seq+1 . '</td>';
-					if ($bool_modif){
-						$str .= '<td>';
-						$tab_users = $this->getUsersVis();
-						$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" >';
-						$str .= '<option value="" >Sélectionnez un utilisateur</option>';
-						foreach($tab_users as $user){
-							$selected = " ";
-							if ($user['id'] == $circuit['sign']['users'][0]['user_id'])
-								$selected = " selected";
-							$str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+					if (!empty($circuit['sign']['users'])){
+						$seq = count ($circuit['visa']['users']);
+						if($color == ' class="col"') {
+							$color = '';
+						} else {
+							$color = ' class="col"';
 						}
-						$str .= '</select>';
 						
-						$str .= '</td>';
-						$up = ' style="visibility:visible"';
-						$down = ' style="visibility:hidden"';
-						$add = ' style="visibility:visible"';
-											
-						//$str .= '<td><img src="static.php?filename=DownUser.png&module=visa" '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" /></td>';
-						//$str .= '<td><img src="static.php?filename=UpUser.png&module=visa" '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" /></td>';
-						$str .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
-						$str .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
-						$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:visible;" ><i class="fa fa-user-times fa-2x"></i></a></td>';
-						$str .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
-						$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_comment'].'" style="width:100%;"/></td>';							
+						$str .= '<tr ' . $color . '>';
+						if ($bool_modif){
+							if ($isVisaStep && $myPosVisa >= $seq) $disabled = ' disabled ';
+							else $disabled = '';
+							
+							$str .= '<td>';
+							$tab_users = $this->getUsersVis();
+							$str .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" '.$disabled.'>';
+							$str .= '<option value="" >Sélectionnez un utilisateur</option>';
+							foreach($tab_users as $user){
+								$selected = " ";
+								if ($user['id'] == $circuit['sign']['users'][0]['user_id'])
+									$selected = " selected";
+								$str .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+							}
+							$str .= '</select>';
+							
+							$str .= '</td>';
+							if ($isVisaStep && ($myPosVisa+1 == $seq || $myPosVisa == $seq)) $up = ' style="visibility:hidden"';
+							else $up = ' style="visibility:visible"';
+							$down = ' style="visibility:hidden"';
+							if ($isVisaStep && $myPosVisa == $seq) $add = ' style="visibility:hidden"';
+							else $add = ' style="visibility:visible"';
+							
+							if ($isVisaStep && $myPosVisa == $seq) $del = ' style="visibility:hidden"';
+							else $del = ' style="visibility:visible"';
+							
+							$displayCB = ' style="visibility:hidden"';
+							if ($isVisaStep && $myPosVisa == $seq) $displayCB = ' style="visibility:hidden"';
+							
+							$str .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
+							$str .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
+							$str .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" '.$del.' ><i class="fa fa-user-times fa-2x"></i></a></td>';
+							$str .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
+							$str .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_comment'].'" style="width:100%;" '.$disabled.'/></td>';							
+							$str .= '<td><input type="hidden" id="date_'.$seq.'" name="date_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_date'].'" /></td>';		
+
+							$str .= '<td><input type="checkbox" id="isSign_'.$seq.'" name="isSign_'.$seq.'" '.$displayCB.' checked/></td>';
+						}
+						else{
+							$str .= '<td>'.$circuit['sign']['users'][0]['firstname'].' '.$circuit['sign']['users'][0]['lastname'];
+							$str .= '</td>';
+							$str .= '<td>'.$circuit['sign']['users'][0]['process_comment'].'</td>';	
+							if ($circuit['sign']['users'][0]['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
+							elseif ($circuit['sign']['users'][0]['user_id'] == $_SESSION['user']['UserId']) $str .= '<td><i class="fa fa-spinner fa-2x"></i></td>';		
+							else $str .= '<td></td>';		
+						}
+						$str .= '</tr>';
 					}
-					else{
-						$str .= '<td>'.$circuit['sign']['users'][0]['firstname'].' '.$circuit['sign']['users'][0]['lastname'];
-						$str .= '</td>';
-						$str .= '<td>'.$circuit['sign']['users'][0]['process_comment'].'</td>';	
-						if ($circuit['sign']['users'][0]['process_date'] != '') $str .= '<td><i class="fa fa-check fa-2x"></i></td>';		
-						elseif ($circuit['sign']['users'][0]['user_id'] == $_SESSION['user']['UserId']) $str .= '<td><i class="fa fa-spinner fa-2x"></i></td>';		
-						else $str .= '<td></td>';		
-					}
-					$str .= '</tr>';
 			}
 		}
 		
@@ -362,18 +416,16 @@ class visa extends dbquery
 		$str .= '</table>';
 		if ($bool_modif){
 			$str .= '<input type="button" name="send" id="send" value="Sauvegarder" class="button" onclick="saveVisaWorkflow(\''.$res_id.'\', \''.$coll_id.'\', \''.$id_tab.'\');" /> ';
-			$str .= '<input type="button" name="save" id="save" value="Enregistrer comme modèle" class="button" onclick="$(\'modalSaveVisaModel\').style.display = \'block\';" />';
 			
-		
-			
-			$str .= '<div id="modalSaveVisaModel" >';
-			$str .= '<h3>Sauvegarder le circuit de visa</h3>';
-			$str .= '<input type="hidden" value="'.$typeList . '_' . strtoupper(base_convert(date('U'), 10, 36)).'" name="objectId_input" id="objectId_input"/><br/>';
-			$str .= '<label for="titleModel">Titre</label> ';
-			$str .= '<input type="text" name="titleModel" id="titleModel"/><br/>';
-			$str .= '<input type="button" name="saveModel" id="saveModel" value="'._VALIDATE.'" class="button" onclick="saveVisaModel(\''.$id_tab.'\');" /> ';
-			$str .= '<input type="button" name="cancelModel" id="cancelModel" value="'._CANCEL.'" class="button" onclick="$(\'modalSaveVisaModel\').style.display = \'none\';" />';
-			$str .= '</div>';
+				$str .= '<input type="button" name="save" id="save" value="Enregistrer comme modèle" class="button" onclick="$(\'modalSaveVisaModel\').style.display = \'block\';" />';
+				$str .= '<div id="modalSaveVisaModel" >';
+				$str .= '<h3>Sauvegarder le circuit de visa</h3>';
+				$str .= '<input type="hidden" value="'.$typeList . '_' . strtoupper(base_convert(date('U'), 10, 36)).'" name="objectId_input" id="objectId_input"/><br/>';
+				$str .= '<label for="titleModel">Titre</label> ';
+				$str .= '<input type="text" name="titleModel" id="titleModel"/><br/>';
+				$str .= '<input type="button" name="saveModel" id="saveModel" value="'._VALIDATE.'" class="button" onclick="saveVisaModel(\''.$id_tab.'\');" /> ';
+				$str .= '<input type="button" name="cancelModel" id="cancelModel" value="'._CANCEL.'" class="button" onclick="$(\'modalSaveVisaModel\').style.display = \'none\';" />';
+				$str .= '</div>';
 		}
 		$str .= '</div>';
 		}

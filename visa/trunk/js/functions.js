@@ -8,6 +8,7 @@ function refreshIcones(id_tableau){
 	
 	while(i<longueur)
 	{
+		var disabledLine = false;
 		//Maj de la couleur de ligne
 		if(i % 2 == 0)
 		{
@@ -19,18 +20,22 @@ function refreshIcones(id_tableau){
 		}
 		
 		var num = i-1;
+		
+		if (arrayLignes[i].cells[0].childNodes[0].disabled == true) disabledLine = true;
 		//MAJ id et name
 		//arrayLignes[i].cells[0].innerHTML = i;
 		arrayLignes[i].cells[0].childNodes[0].name = "conseiller_"+num;	arrayLignes[i].cells[0].childNodes[0].id="conseiller_"+num;
 		arrayLignes[i].cells[1].childNodes[0].name = "down_"+num;	arrayLignes[i].cells[1].childNodes[0].id="down_"+num;		
 		document.getElementById("down_"+num).setAttribute('onclick','deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2, \''+id_tableau+'\');');
-		
+				
 		arrayLignes[i].cells[2].childNodes[0].name = "up_"+num;	arrayLignes[i].cells[2].childNodes[0].id="up_"+num;
 		document.getElementById("up_"+num).setAttribute('onclick','deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1, \''+id_tableau+'\');');
 		
 		arrayLignes[i].cells[3].childNodes[0].name = "suppr_"+num;	arrayLignes[i].cells[3].childNodes[0].id="suppr_"+num;
 		arrayLignes[i].cells[4].childNodes[0].name = "add_"+num;	arrayLignes[i].cells[4].childNodes[0].id="add_"+num;
 		arrayLignes[i].cells[5].childNodes[0].name = "consigne_"+num;	arrayLignes[i].cells[5].childNodes[0].id="consigne_"+num;
+		arrayLignes[i].cells[6].childNodes[0].name = "date_"+num;	arrayLignes[i].cells[6].childNodes[0].id="date_"+num;
+		arrayLignes[i].cells[7].childNodes[0].name = "isSign_"+num;	arrayLignes[i].cells[7].childNodes[0].id="isSign_"+num;
 		
 		if (longueur > 2) document.getElementById("suppr_"+num).style.visibility="visible";
 		else document.getElementById("suppr_"+num).style.visibility="hidden";
@@ -42,12 +47,33 @@ function refreshIcones(id_tableau){
 		
 		if (i != longueur-1){
 			document.getElementById("add_"+num).style.visibility="hidden";
+			document.getElementById("isSign_"+num).style.visibility="hidden";
+			
+			document.getElementById("isSign_"+num).checked=false;
+			
 			document.getElementById("down_"+num).style.visibility="visible";
 		}
 		else {
 			document.getElementById("add_"+num).style.visibility="visible";
+			
+			document.getElementById("isSign_"+num).style.visibility="hidden";
+			document.getElementById("isSign_"+num).checked=true;
+			
 			document.getElementById("down_"+num).style.visibility="hidden";
 		}
+		
+		/* Ajout des conditions pour les lignes disabled */
+		if (disabledLine){
+			document.getElementById("suppr_"+num).style.visibility="hidden";
+			document.getElementById("down_"+num).style.visibility="hidden";
+			document.getElementById("up_"+num).style.visibility="hidden";
+			document.getElementById("isSign_"+num).style.visibility="hidden";
+		}
+		if (num > 0) {
+			if (arrayLignes[i-1].cells[0].childNodes[0].disabled == true)
+				document.getElementById("up_"+num).style.visibility="hidden";
+		}
+		/*************************************************/
 		
 		i++;
 	}
@@ -95,6 +121,12 @@ function addRow(id_tableau)
 	var colonne7 = ligne.insertCell(5);
 	colonne7.innerHTML += "<input type=\"text\" id=\"consigne_"+position+"\" name=\"consigne_"+position+"\" style=\"width:100%;\"/>";
 	
+	var colonne8 = ligne.insertCell(6);
+	colonne8.innerHTML += "<input type=\"hidden\" id=\"date_"+position+"\" name=\"date_"+position+"\"/>";
+	
+	var colonne9 = ligne.insertCell(7);
+	colonne9.innerHTML += "<input type=\"checkbox\" id=\"isSign_"+position+"\" name=\"isSign_"+position+"\"/>";
+	
 	refreshIcones(id_tableau);
 }
 
@@ -108,7 +140,6 @@ function delRow(num, id_tableau){
 
 function deplacerLigne(source, cible, id_tableau)
 {
-	console.log("Déplacement de la ligne "+source+" vers la ligne "+cible);
 
 	var tableau = document.getElementById(id_tableau);
 	//on initialise nos variables
@@ -142,6 +173,8 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau){
 	
 	var conseillers = "";
 	var consignes = "";
+	var dates = "";
+	var isSign = "";
 	
 	var cons_empty = false;
 	while(i<longueur)
@@ -151,10 +184,14 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau){
 		if (document.getElementById("conseiller_"+num).value == "" ) cons_empty = true;
 		conseillers += document.getElementById("conseiller_"+num).value + "#";
 		consignes += document.getElementById("consigne_"+num).value + "#";
+		dates += document.getElementById("date_"+num).value + "#";
+		if (document.getElementById("isSign_"+num).checked == true) isSign += "1#";
+		else isSign += "0#";
+		
 		
 		i++;
 	}
-	
+
 	if (cons_empty){
 		$('divErrorVisa').innerHTML = 'Au moins un conseiller est vide';
 	}
@@ -167,7 +204,9 @@ function saveVisaWorkflow(res_id, coll_id, id_tableau){
 				res_id : res_id,
 				coll_id : coll_id,
 				conseillers : conseillers,
-				consignes : consignes
+				consignes : consignes,
+				dates : dates,
+				list_sign : isSign
 			},
 			onSuccess: function(answer){
 				eval("response = "+answer.responseText);
@@ -223,6 +262,7 @@ function saveVisaModel(id_tableau){
 	
 	var conseillers = "";
 	var consignes = "";
+	var isSign = "";
 	
 	var cons_empty = false;
 	while(i<longueur)
@@ -232,6 +272,9 @@ function saveVisaModel(id_tableau){
 		if (document.getElementById("conseiller_"+num).value == "" ) cons_empty = true;
 		conseillers += document.getElementById("conseiller_"+num).value + "#";
 		consignes += document.getElementById("consigne_"+num).value + "#";
+		
+		if (document.getElementById("isSign_"+num).checked == true) isSign += "1#";
+		else isSign += "0#";
 		
 		i++;
 	}
@@ -248,7 +291,8 @@ function saveVisaModel(id_tableau){
 				id_list : $('objectId_input').value,
 				title : $('titleModel').value,
 				conseillers : conseillers,
-				consignes : consignes
+				consignes : consignes,
+				list_sign : isSign
 			},
 			onSuccess: function(answer){
 				eval("response = "+answer.responseText);
@@ -274,8 +318,20 @@ function loadNewId(path_update,newId, collId){
 	var zone_old = 'list_doc_'+$('cur_resId').value;
 	var zone_new = 'list_doc_'+newId;
 	console.log(zone_new);
-	$(zone_old).className = 'unselectedId';
-	$(zone_new).className = 'selectedId';
+	if (hasAllAnsSigned($('cur_resId').value) == 1){
+		$(zone_old).className = 'unselectedId allAnsSigned';
+	}
+	else{
+		$(zone_old).className = 'unselectedId';
+	}
+	
+	if (hasAllAnsSigned(newId) == 1){
+		$(zone_new).className = 'selectedId allAnsSigned';
+	}
+	else{
+		$(zone_new).className = 'selectedId';
+	}
+	
 	$('cur_resId').value=newId;
 	$('numIdDocPage').innerHTML=newId;
 	console.log($("send"));
@@ -312,7 +368,7 @@ function loadNewId(path_update,newId, collId){
 					$('tabricatorRight').innerHTML = response.right_html;
 					console.log("Modification bouton action");
 					$("send_action").setAttribute('onclick',response.valid_button);
-					updateFunctionModifRep(response.id_rep, 1);
+					updateFunctionModifRep(response.id_rep, 1, response.is_vers_rep);
 					
 					console.log("Initialisation onglets de la partie droite");
 					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
@@ -431,6 +487,20 @@ function updateFunctionModifRep(idReponse, num_rep, is_version){
 	document.getElementById("cur_rep").setAttribute('value',idReponse);
 }
 
+function hasAllAnsSigned(id_doc){
+	var retour = 'null';
+	new Ajax.Request("index.php?display=true&page=checkAllAnsSigned&module=visa&res_id="+id_doc,
+	{
+		method:'post',
+		asynchronous:false,
+		onSuccess: function(answer){
+			eval("response = "+answer.responseText);
+			retour = response.status;
+		}
+	});
+	return retour;
+}
+
 function signFile(res_id,isVersion, mode, pinCode){
 	console.log("Mode = "+mode);
 	if(pinCode == undefined || pinCode=='')
@@ -466,6 +536,9 @@ function signFile(res_id,isVersion, mode, pinCode){
 			}
 		}
 	});
+	
+	
+	
 }
 
 //load applet in a modal
@@ -507,6 +580,16 @@ function endAttachmentSign(newId)
 	if(window.opener.$('ans_'+num_rep)) {
 		window.opener.$('ans_'+num_rep).setAttribute('onclick','updateFunctionModifRep(\''+newId+'\', '+num_rep+', 0);');			
 	}
+	
+	var zone_id = 'list_doc_'+window.opener.$('cur_resId').value;
+	if (hasAllAnsSigned(window.opener.$('cur_resId').value) == 1){
+		window.opener.$(zone_id).className = 'selectedId allAnsSigned';
+	}
+	else{
+		window.opener.$(zone_id).className = 'selectedId';
+	}
+	
+	
     window.close();
 }
 function generateWaybill(resId)

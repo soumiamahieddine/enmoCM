@@ -38,34 +38,39 @@
 	$title = $_REQUEST['title'];
 	$conseillers = explode('#',$_REQUEST['conseillers']);
 	$consignes = explode('#',$_REQUEST['consignes']);
+	$list_sign = explode('#',$_REQUEST['list_sign']);
 	
 	$visa = new visa();
 	
 	$_SESSION['visa_wf']['diff_list']['visa']['users'] = array();
-	
-	for ($i = 0; $i < count($conseillers) - 2; $i++){
-		array_push(
-			$_SESSION['visa_wf']['diff_list']['visa']['users'], 
-			array(
-			'user_id' => $conseillers[$i], 
-			'processComment' => $consignes[$i], 
-			'viewed' => 0,
-			'visible' => 'Y',
-			'difflist_type' => 'VISA_CIRCUIT'
-			)
-		);
-	}
 	$_SESSION['visa_wf']['diff_list']['sign']['users'] = array();
-	array_push(
-			$_SESSION['visa_wf']['diff_list']['sign']['users'], 
-			array(
-			'user_id' => $conseillers[count($conseillers) - 2], 
-			'processComment' => $consignes[count($consignes) - 2], 
-			'viewed' => 0,
-			'visible' => 'Y',
-			'difflist_type' => 'VISA_CIRCUIT'
-			)
-		);
+	
+	for ($i = 0; $i < count($conseillers) - 1; $i++){
+		if ($list_sign[$i] == 0){
+			array_push(
+				$_SESSION['visa_wf']['diff_list']['visa']['users'], 
+				array(
+				'user_id' => $conseillers[$i], 
+				'processComment' => $consignes[$i], 
+				'viewed' => 0,
+				'visible' => 'Y',
+				'difflist_type' => 'VISA_CIRCUIT'
+				)
+			);
+		}
+		else {
+			array_push(
+				$_SESSION['visa_wf']['diff_list']['sign']['users'], 
+				array(
+				'user_id' => $conseillers[$i], 
+				'processComment' => $consignes[$i], 
+				'viewed' => 0,
+				'visible' => 'Y',
+				'difflist_type' => 'VISA_CIRCUIT'
+				)
+			);
+		}
+	}
 		
 	$visa->saveModelWorkflow($id_list, $_SESSION['visa_wf']['diff_list'], 'VISA_CIRCUIT', $title);
 	

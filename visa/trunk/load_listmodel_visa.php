@@ -24,7 +24,7 @@ $diffList = new diffusion_list();
 
 $objectType = $_REQUEST['objectType'];
 $objectId = $_REQUEST['objectId'];
-$origin = 'process';
+$origin = 'visa';
 
 // Get listmodel_parameters
 $_SESSION[$origin]['difflist_type'] = $diffList->get_difflist_type($objectType);
@@ -67,6 +67,9 @@ $content .= '<th style="width:5%;"></th>';
 $content .= '<th style="width:5%;"></th>';
 $content .= '<th style="width:5%;"></th>';
 $content .= '<th style="width:45%;" align="left" valign="bottom"><span>Consigne</span></th>';
+$content .= '<th style="width:0%;" align="left" valign="bottom"></th>';
+$content .= '<th style="width:0%;" align="center" valign="bottom">Signataire</th>';
+
 $content .= '</tr></thead>';
 $content .= '<tbody>';
 $color = "";
@@ -95,8 +98,16 @@ if (isset($circuit['visa']['users'])){
 			
 			$content .= '</td>';
 			$up = ' style="visibility:visible"';
+			$displayCB = ' style="visibility:hidden"';
 			$down = ' style="visibility:visible"';
-			$add = ' style="visibility:hidden"';
+			if (empty($circuit['sign']['users']) && $seq == count ($circuit['visa']['users'])-1){
+				$add = ' style="visibility:visible"';
+				$down = ' style="visibility:hidden"';
+				$displayCB = ' style="visibility:visible"';
+			}
+			else{
+				$add = ' style="visibility:hidden"';
+			}
 			if ($seq == 0){
 				$up = ' style="visibility:hidden"';
 			}
@@ -106,46 +117,55 @@ if (isset($circuit['visa']['users'])){
 			$content .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:visible;" ><i class="fa fa-user-times fa-2x"></i></a></td>';
 			$content .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
 			$content .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="" style="width:100%;"/></td>';	
+			
+			$content .= '<td><input type="hidden" value="'.$step['process_date'].'" id="date_'.$seq.'" name="date_'.$seq.'"/></td>';
+			$content .= '<td><input type="checkbox" id="isSign_'.$seq.'" name="isSign_'.$seq.'" '.$displayCB.'/></td>';
+			
 		$content .= '</tr>';
 	}
 }
 
 //ajout signataire
-					
-	$seq = count ($circuit['visa']['users']);
-
-	if($color == ' class="col"') {
-		$color = '';
-	} else {
-		$color = ' class="col"';
-	}
-
-	$content .= '<tr ' . $color . '>';
-		$content .= '<td>';
-		$tab_users = $visa->getUsersVis();
-		$content .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" >';
-		$content .= '<option value="" >S&eacute;lectionnez un utilisateur</option>';
-		foreach($tab_users as $user){
-			$selected = " ";
-			if ($user['id'] == $circuit['sign']['users'][0]['user_id'])
-				$selected = " selected";
-			$content .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
-		}
-		$content .= '</select>';
+	if (!empty($circuit['sign']['users'])){				
+		$seq = count ($circuit['visa']['users']);
 		
-		$content .= '</td>';
-		$up = ' style="visibility:visible"';
-		$down = ' style="visibility:hidden"';
-		$add = ' style="visibility:visible"';
-							
-		$content .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
-		$content .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
-		$content .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:visible;" ><i class="fa fa-user-times fa-2x"></i></a></td>';
-		$content .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
-		$content .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="" style="width:100%;"/></td>';							
-	
-	$content .= '</tr>';
+		if($color == ' class="col"') {
+			$color = '';
+		} else {
+			$color = ' class="col"';
+		}
 
+		$content .= '<tr ' . $color . '>';
+			$content .= '<td>';
+			$tab_users = $visa->getUsersVis();
+			$content .= '<select id="conseiller_'.$seq.'" name="conseiller_'.$seq.'" >';
+			$content .= '<option value="" >S&eacute;lectionnez un utilisateur</option>';
+			foreach($tab_users as $user){
+				$selected = " ";
+				if ($user['id'] == $circuit['sign']['users'][0]['user_id'])
+					$selected = " selected";
+				$content .= '<option value="'.$user['id'].'" '.$selected.'>'.$user['lastname'].', '.$user['firstname'].'</option>';
+			}
+			$content .= '</select>';
+			
+			$content .= '</td>';
+			$up = ' style="visibility:visible"';
+			$down = ' style="visibility:hidden"';
+			$add = ' style="visibility:visible"';
+			$displayCB = ' style="visibility:visible"';
+								
+			$content .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
+			$content .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
+			$content .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:visible;" ><i class="fa fa-user-times fa-2x"></i></a></td>';
+			$content .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
+			$content .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="" style="width:100%;"/></td>';							
+		
+			$content .= '<td><input type="hidden" id="date_'.$seq.'" name="date_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_date'].'" /></td>';	
+			
+			$content .= '<td><input type="checkbox" id="isSign_'.$seq.'" name="isSign_'.$seq.'" '.$displayCB.' checked/></td>';
+			
+		$content .= '</tr>';
+	}
 $content .= '</tbody>';
 
 

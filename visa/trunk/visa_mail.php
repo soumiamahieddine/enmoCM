@@ -253,11 +253,24 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		. " where res_id = " . $res_id_doc);
 		$resChrono_doc = $db->fetch_object();
 		$chrono_number_doc = $resChrono_doc->alt_identifier;
-		$list_docs .= $res_id_doc."#";
-		if ($res_id_doc == $res_id){
-			$classLine = ' class="selectedId" ';
+		
+		$allAnsSigned = true;
+		$db->query("SELECT status from res_view_attachments where attachment_type='response_project' and res_id_master = ".$res_id_doc);
+		while($line = $db->fetch_object()){
+			if ($line->status == 'TRA' || $line->status == 'A_TRA' ){
+				$allAnsSigned = false;		
+			}
 		}
-		else $classLine = ' class="unselectedId" ';
+	
+		if ($allAnsSigned) $classSign = "allAnsSigned";
+		else $classSign = "";
+		
+		$list_docs .= $res_id_doc."#";
+		
+		if ($res_id_doc == $res_id){
+			$classLine = ' class="selectedId '.$classSign.'" ';
+		}
+		else $classLine = ' class="unselectedId '.$classSign.'" ';
 		$frm_str .= '<div '.$classLine.' onmouseover="this.style.cursor=\'pointer\';" onclick="loadNewId(\'index.php?display=true&module=visa&page=update_visaPage\','.$res_id_doc.',\''.$coll_id.'\');" id="list_doc_'.$res_id_doc.'">';
 		check_category($coll_id, $res_id_doc);
 		$data = get_general_data($coll_id, $res_id_doc, 'minimal');
@@ -365,7 +378,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	
 	$frm_str .= '<div class="error" id="divError" name="divError"></div>';
 	$frm_str .= '<div style="text-align:center;">';
-	$frm_str .= $visa->getList($res_id, $coll_id, $modifVisaWorkflow, 'VISA_CIRCUIT');
+	$frm_str .= $visa->getList($res_id, $coll_id, $modifVisaWorkflow, 'VISA_CIRCUIT', true);
                 
 	$frm_str .= '</div><br>';
 	/* Historique diffusion visa */
