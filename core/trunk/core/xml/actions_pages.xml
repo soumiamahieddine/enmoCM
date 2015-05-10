@@ -26,6 +26,19 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
+        <ID>redirect_visa_sign</ID>
+        <LABEL>_REDIRECTION_VISA_SIGN</LABEL>
+        <NAME>redirect_visa_sign</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>visa</MODULE>
+        <KEYWORD>redirect</KEYWORD>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+            <!--<COLL_ID>business_coll</COLL_ID>-->
+        </COLLECTIONS>
+    </ACTIONPAGE>
+    <ACTIONPAGE>
         <ID>put_in_copy</ID>
         <LABEL>_PUT_IN_COPY</LABEL>
         <NAME>put_in_copy</NAME>
