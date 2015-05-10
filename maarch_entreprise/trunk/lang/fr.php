@@ -1789,3 +1789,7 @@ if (!defined('_IMPRIM_DOSSIER'))    define( '_IMPRIM_DOSSIER', 'Impression du do
 if (!defined('_PROCEED_WORKFLOW'))    define( '_PROCEED_WORKFLOW', 'Poursuivre le circuit de visa');
 if (!defined('_VISA_MAIL'))    define( '_VISA_MAIL', 'Viser le courrier');
 if (!defined('_PREPARE_VISA'))    define( '_PREPARE_VISA', 'Préparer le circuit de visa');
+if (!defined('_REDIRECTION_VISA_SIGN'))    define( '_REDIRECTION_VISA_SIGN', 'Redirection pour signature');
+
+if (!defined('_MAIL_WILL_DISAPPEAR'))    define( '_MAIL_WILL_DISAPPEAR', 'Ce courrier sort de votre p&eacute;rim&egrave;tre. Vous ne pourrez plus y acc&eacute;der ensuite.');
+

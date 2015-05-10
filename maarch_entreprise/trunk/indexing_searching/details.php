@@ -163,23 +163,36 @@ $db = new dbquery();
 $db->connect();
 $db->query("select res_id from mlb_coll_ext where res_id = " . $s_id);
 if ($db->nb_result() <= 0) {
-    echo '<div class="error">' . _QUALIFY_FIRST . '</div>';exit;
+    $_SESSION['error'] = _QUALIFY_FIRST;
     ?>
-        <script language="javascript" type="text/javascript">window.top.location.href='<?php
-            echo $_SESSION['config']['businessappurl']
-            . 'index.php';
-            ?>';</script>
+        <script type="text/javascript">window.top.location.href='<?php
+            echo $_SESSION['config']['businessappurl'];?>index.php';</script>
     <?php
+    exit();
 }
 $_SESSION['doc_id'] = $s_id;
 $right = $security->test_right_doc($coll_id, $s_id);
 //$_SESSION['error'] = 'coll '.$coll_id.', res_id : '.$s_id;
+
+$db->query("select typist, creation_date from ".$table." where res_id = " . $s_id);
+$info_mail = $db->fetch_object();
+
+$date1 = new DateTime($info_mail->creation_date);
+$date2 = new DateTime();
+$date2->sub(new DateInterval('PT1M'));
+
+if (!$right && $_SESSION['user']['UserId'] == $info_mail->typist && $date1 > $date2) {
+    $right = true;
+    $_SESSION['info'] = _MAIL_WILL_DISAPPEAR;
+}
+
 if (!$right) {
+    $_SESSION['error'] = _NO_RIGHT_TXT;
     ?>
     <script type="text/javascript">
     window.top.location.href = '<?php
         echo $_SESSION['config']['businessappurl'];
-        ?>index.php?page=no_right';
+        ?>index.php';
     </script>
     <?php
     exit();
@@ -327,7 +340,6 @@ if (empty($_SESSION['error']) || $_SESSION['indexation']) {
         . $s_id
     );
     //$db->show();
-
 }
 ?>
 <div id="details_div" style="display:block;">
@@ -368,6 +380,27 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
             </div>
             <?php
         } else {
+            ?>
+            <div id="info_detail" class="info" onclick="this.hide();">
+                <?php  echo $_SESSION['info'];?>
+                <br />
+                <br />
+            </div>
+            <?php
+            if(isset($_SESSION['info']) && $_SESSION['info'] <> '') {
+                ?>
+
+                <script>
+                    var info_detail = $('info_detail');
+                    if (info_detail != null) {
+                        info_detail.style.display = 'table-cell';
+                        Element.hide.delay(10, 'info_detail');
+                    }
+                </script>
+                <?php
+                $_SESSION['info'] = "";
+            }
+    
             $param_data = array(
                 'img_category_id' => true,
                 'img_priority' => true,
@@ -671,8 +704,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     echo '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" style="width: 200px; max-width: 200px;">'
                                         .$data[$key]['show_value']
                                     .'</textarea>';
-									
-									
                                 }
                                 else
 								
@@ -1175,6 +1206,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     </dd>
                 <?php
                 }
+
 				if ($core->is_module_loaded('visa')) {
 					require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 					. "class" . DIRECTORY_SEPARATOR
@@ -1453,7 +1485,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 </dd>
                 <?php
                     }
-				
                 if ($core->is_module_loaded('notes')) {
                     require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
                         . "class" . DIRECTORY_SEPARATOR
@@ -1695,7 +1726,6 @@ $core = new core_tools();
 
 $_SESSION['info_basket'] = '';
 $_SESSION['info'] = '';
-
 
 /*if ($printDetails) {
     $Fnm = $_SESSION['config']['tmppath']. '/export_details_'
