@@ -450,8 +450,8 @@ class diffusion_list extends dbquery
             for ($i=0;$i<$cptUsers;$i++) {
                 $userFound = false;
                 $userId = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['user_id']));
-                $processComment = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['processComment']));
-                $processDate = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['processDate']));
+                $processComment = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['process_comment']));
+                $processDate = $this->protect_string_db(trim($diffList[$role_id]['users'][$i]['process_date']));
                 $visible = $diffList[$role_id]['users'][$i]['visible'];
                 $viewed = (integer)$diffList[$role_id]['users'][$i]['viewed'];
                 $cptOldUsers = count($oldListInst[$role_id]['users']);
