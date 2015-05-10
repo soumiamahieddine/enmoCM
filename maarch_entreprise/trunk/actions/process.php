@@ -432,7 +432,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
               . 'whatIsTheDivStatus(\'done_answers_div\', \'divStatus_done_answers_div\');hideOtherDiv(\'list_answers_div\');return false;" '
               . 'onmouseover="this.style.cursor=\'pointer\';" style="width:90%;">';
     $frm_str .= ' <span id="divStatus_done_answers_div" style="color:#1C99C5;"><<</span>';
-    $frm_str .= '&nbsp;<b>' . _PJ . ', ' . _ATTACHEMENTS . ' (<span id="nb_attach">'. $nb_attach . '</span>)</b>';
+    $frm_str .= '&nbsp;<b>' . _PJ . ' (<span id="nb_attach">'. $nb_attach . '</span>)</b>';
     $frm_str .= '<span class="lb1-details">&nbsp;</span>';
     $frm_str .= '</h3>';
     $frm_str .= '<div class="desc" id="done_answers_div" style="display:none;width:90%;">';
