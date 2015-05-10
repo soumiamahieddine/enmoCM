@@ -52,8 +52,8 @@
 				$_SESSION['visa_wf']['diff_list']['visa']['users'], 
 				array(
 				'user_id' => $conseillers[$i], 
-				'processComment' => $consignes[$i], 
-				'processDate' => $dates[$i], 
+				'process_comment' => $consignes[$i], 
+				'process_date' => $dates[$i], 
 				'viewed' => 0,
 				'visible' => 'Y',
 				'difflist_type' => 'VISA_CIRCUIT'
@@ -65,8 +65,8 @@
 				$_SESSION['visa_wf']['diff_list']['sign']['users'], 
 				array(
 				'user_id' => $conseillers[$i], 
-				'processComment' => $consignes[$i], 
-				'processDate' => $dates[$i], 
+				'process_comment' => $consignes[$i], 
+				'process_date' => $dates[$i], 
 				'viewed' => 0,
 				'visible' => 'Y',
 				'difflist_type' => 'VISA_CIRCUIT'
