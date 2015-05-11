@@ -95,7 +95,7 @@ $selectDuplicatesBySociety = "SELECT contact_id, user_id, society, lower(society
     // . "address_num, address_street, address_town "
     . "from contacts_v2 "
     . "WHERE lower(society) in ("
-    . "SELECT lower(society) FROM contacts_v2 GROUP BY lower(society), user_id "
+    . "SELECT lower(society) FROM contacts_v2 GROUP BY lower(society) "
     . "     HAVING Count(lower(society)) > 1 and lower(society) <> '' ) "
     . "order by lower(society)";
 $htmlTabSoc = '<table style="width:100%;">';
@@ -116,6 +116,7 @@ $socCompare = '';
 $colorToUse = '';
 $colorNumber = '2';
 $db->query($selectDuplicatesBySociety);
+//$db->show();
 $cptSoc = 0;
 while($lineDoublSoc = $db->fetch_object()) {
     if ($lineDoublSoc->contact_id <> '') {
