@@ -299,7 +299,7 @@ switch ($mode) {
                 }
                 
                 //Reload and show message
-                $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTES_ADDED."';";
+                $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTES_ADDED."';window.top.$('main_info').style.display = 'table-cell';Element.hide.delay(10, 'info_detail');";
 
                 //Count notes
                 $nb_notes = $notesTools->countUserNotes($identifier, $collId); 
