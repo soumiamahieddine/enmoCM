@@ -318,19 +318,9 @@ function loadNewId(path_update,newId, collId){
 	var zone_old = 'list_doc_'+$('cur_resId').value;
 	var zone_new = 'list_doc_'+newId;
 	console.log(zone_new);
-	if (hasAllAnsSigned($('cur_resId').value) == 1){
-		$(zone_old).className = 'unselectedId allAnsSigned';
-	}
-	else{
-		$(zone_old).className = 'unselectedId';
-	}
 	
-	if (hasAllAnsSigned(newId) == 1){
-		$(zone_new).className = 'selectedId allAnsSigned';
-	}
-	else{
-		$(zone_new).className = 'selectedId';
-	}
+	$(zone_old).className = 'unselectedId';
+	$(zone_new).className = 'selectedId';
 	
 	$('cur_resId').value=newId;
 	$('numIdDocPage').innerHTML=newId;
@@ -581,12 +571,12 @@ function endAttachmentSign(newId)
 		window.opener.$('ans_'+num_rep).setAttribute('onclick','updateFunctionModifRep(\''+newId+'\', '+num_rep+', 0);');			
 	}
 	
-	var zone_id = 'list_doc_'+window.opener.$('cur_resId').value;
+	var zone_id = 'signedDoc_'+window.opener.$('cur_resId').value;
 	if (hasAllAnsSigned(window.opener.$('cur_resId').value) == 1){
-		window.opener.$(zone_id).className = 'selectedId allAnsSigned';
+		window.opener.$(zone_id).style.visibility = 'visible';
 	}
 	else{
-		window.opener.$(zone_id).className = 'selectedId';
+		window.opener.$(zone_id).style.visibility = 'hidden';
 	}
 	
 	

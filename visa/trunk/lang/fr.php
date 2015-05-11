@@ -36,4 +36,8 @@ if (!defined('_THUMBPRINT'))
 
 if (!defined('_DISSMARTCARD_SIGNER_APPLET'))
     define('_DISSMARTCARD_SIGNER_APPLET', 'Signature électronique en cours...');
+
+
+if (!defined('_IMG_SIGN_MISSING'))
+    define('_IMG_SIGN_MISSING', 'Image de signature manquante');
 ?>
