@@ -208,6 +208,7 @@ INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'edit_attachments_from_de
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'modify_attachments');
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'delete_attachments');
 INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'adv_search_mlb');
+INSERT INTO usergroups_services VALUES ('RESPONSABLE', 'view_doc_history');
 
 INSERT INTO usergroups_services VALUES ('AGENT', 'adv_search_mlb');
 INSERT INTO usergroups_services VALUES ('AGENT', 'index_mlb');
@@ -260,6 +261,7 @@ INSERT INTO usergroups_services VALUES ('COURRIER', 'reports');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'add_new_version');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'tag_view');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'add_tag_to_res');
+INSERT INTO usergroups_services VALUES ('COURRIER', 'create_tag');
 INSERT INTO usergroups_services VALUES ('COURRIER', 'sendmail');
 
 
@@ -520,6 +522,7 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'AGENT', 'LateMailBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (414, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (415, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (1, '', 'AGENT', 'MyBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'AGENT', 'MyBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (19, '', 'AGENT', 'ContribBasket', 'N', 'N', 'Y');
@@ -1017,6 +1020,7 @@ INSERT INTO templates VALUES (101, '[allo mairie] Clôture de demande', '[allo m
 </tbody>
 </table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'doctypes');
 INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (102, 'Passer me voir', 'Passer me voir', 'Passer me voir à mon bureau, merci.', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
+INSERT INTO templates (template_id, template_label, template_comment, template_content, template_type, template_path, template_file_name, template_style, template_datasource, template_target, template_attachment_type) VALUES (103, 'Compléter', 'Compléter', 'Le projet de réponse doit être complété/révisé sur les points suivants : \n\n- ', 'TXT', NULL, NULL, 'XLSX: demo_spreadsheet_msoffice', '', 'notes', 'all');
 
 
 
@@ -1103,6 +1107,27 @@ INSERT INTO templates_association VALUES (68, 102, 'destination', 'VILLE', 'enti
 INSERT INTO templates_association VALUES (69, 102, 'destination', 'CCAS', 'entities');
 INSERT INTO templates_association VALUES (70, 102, 'destination', 'AD06', 'entities');
 
+INSERT INTO templates_association VALUES (71, 103, 'destination', 'CAB', 'entities');
+INSERT INTO templates_association VALUES (72, 103, 'destination', 'DGS', 'entities');
+INSERT INTO templates_association VALUES (73, 103, 'destination', 'DGA', 'entities');
+INSERT INTO templates_association VALUES (74, 103, 'destination', 'PCU', 'entities');
+INSERT INTO templates_association VALUES (75, 103, 'destination', 'PJS', 'entities');
+INSERT INTO templates_association VALUES (76, 103, 'destination', 'PE', 'entities');
+INSERT INTO templates_association VALUES (77, 103, 'destination', 'SP', 'entities');
+INSERT INTO templates_association VALUES (78, 103, 'destination', 'PSO', 'entities');
+INSERT INTO templates_association VALUES (79, 103, 'destination', 'DRH', 'entities');
+INSERT INTO templates_association VALUES (80, 103, 'destination', 'DSG', 'entities');
+INSERT INTO templates_association VALUES (81, 103, 'destination', 'COU', 'entities');
+INSERT INTO templates_association VALUES (82, 103, 'destination', 'COR', 'entities');
+INSERT INTO templates_association VALUES (83, 103, 'destination', 'DSI', 'entities');
+INSERT INTO templates_association VALUES (84, 103, 'destination', 'FIN', 'entities');
+INSERT INTO templates_association VALUES (85, 103, 'destination', 'PJU', 'entities');
+INSERT INTO templates_association VALUES (86, 103, 'destination', 'PTE', 'entities');
+INSERT INTO templates_association VALUES (87, 103, 'destination', 'PSF', 'entities');
+INSERT INTO templates_association VALUES (88, 103, 'destination', 'ELUS', 'entities');
+INSERT INTO templates_association VALUES (89, 103, 'destination', 'VILLE', 'entities');
+INSERT INTO templates_association VALUES (90, 103, 'destination', 'CCAS', 'entities');
+INSERT INTO templates_association VALUES (91, 103, 'destination', 'AD06', 'entities');
 
 ------------
 --DOCSERVERS--
@@ -3917,7 +3942,7 @@ WHERE item_mode = ''sign'' and process_date ISNULL and res_view_letterbox.res_id
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'PvalBasket', '[courrier] Circuit visa des courriers à préparer', 'Circuit visa des courriers à préparer', 'status=''PVAL''', 'N', 'Y', 'N', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'CvalBasket', '[courrier] Circuit visa des courriers à valider', 'Circuit visa des courriers à valider', 'status=''CVAL''', 'N', 'Y', 'N', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'DimpBasket', '[courrier] Circuit visa des courriers à imprimer', 'Circuit visa des courriers à imprimer', 'status=''DIMP''', 'N', 'Y', 'N', 'Y');
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'EenvBasket', '[courrier] 13 - Courriers à e-envoyer', 'Courriers à e-envoyer', 'status=''EENV''', 'N', 'Y', 'N', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'EenvBasket', '[courrier] 14 - Courriers à e-envoyer', 'Courriers à e-envoyer', 'status=''EENV''', 'N', 'Y', 'N', 'Y');
 
 -- AJOUT DES STATUS 
 INSERT INTO status (id, label_status, is_system, is_folder_status, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('DIMP', 'Dossier à imprimer', 'N', 'N', 'fm-letter-status-aimp', 'apps', 'Y', 'Y');
@@ -3943,6 +3968,7 @@ INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, a
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (412, '', '[courrier] Imprimer le dossier', 'WAIT', 'N', 'Y', 'print_folder', 'Y', 'visa', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (413, '', '[courrier] E-envoyer un dossier', '_NOSTATUS_', 'N', 'Y', 'send_email', 'Y', 'visa', 'N');
 INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (414, '', '[courrier] Envoyer pour e-visa et e-signature', 'EVIS', 'N', 'Y', 'confirm_status', 'Y', 'apps', 'N');
+INSERT INTO actions (id, keyword, label_action, id_status, is_system, enabled, action_page, history, origin, create_id) VALUES (415, '', '[courrier] Envoyer pour e-signature', 'ESIG', 'N', 'Y', 'redirect_visa_sign', 'Y', 'apps', 'N');
 
 -- SERVICES POUR VISA
 INSERT INTO usergroups_services (group_id, service_id) VALUES ('AGENT', 'config_visa_workflow');
@@ -3963,7 +3989,8 @@ INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, 
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (405, '', 'RESPONSABLE', 'EsigBasket', 'N', 'N', 'Y');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (408, '', 'RESPONSABLE', 'EsigBasket', 'N', 'Y', 'N');
 INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (407, '', 'RESPONSABLE', 'EsigBasket', 'N', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (410, '', 'RESPONSABLE', 'EsigBasket', 'N', 'Y', 'N');
-INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'COURRIER', 'EenvBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (410, '', 'RESPONSABLE', 'EsigBasket', 'Y', 'N', 'N');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (100, '', 'COURRIER', 'EenvBasket', 'N', 'N', 'Y');
+INSERT INTO actions_groupbaskets (id_action, where_clause, group_id, basket_id, used_in_basketlist, used_in_action_page, default_action_list) VALUES (20, '', 'COURRIER', 'EenvBasket', 'Y', 'N', 'N');
 -- BANNETTE SECONDAIRE POUR LE GROUPE DES SUPERVISEURS DE COURRIERINSERT INTO user_baskets_secondary (system_id, user_id, group_id, basket_id) VALUES (1, 'ddaull', 'RESPONSABLE', 'EvisBasket');
 INSERT INTO user_baskets_secondary (system_id, user_id, group_id, basket_id) VALUES (1, 'ddaull', 'RESPONSABLE', 'EvisBasket');
