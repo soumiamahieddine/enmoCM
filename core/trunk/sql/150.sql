@@ -249,6 +249,9 @@ ALTER TABLE listmodels ADD COLUMN title varchar(255);
 ALTER TABLE listmodels DROP COLUMN IF EXISTS description;
 ALTER TABLE listmodels ADD COLUMN description varchar(255);
 
+ALTER TABLE listmodels DROP COLUMN IF EXISTS process_comment;
+ALTER TABLE listmodels ADD COLUMN process_comment varchar(255);
+
 DROP TABLE IF EXISTS listinstance_history;
 DROP SEQUENCE IF EXISTS listinstance_history_id_seq;
 CREATE SEQUENCE listinstance_history_id_seq

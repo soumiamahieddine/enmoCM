@@ -852,6 +852,7 @@ CREATE TABLE listmodels
   listmodel_type character varying(50) DEFAULT 'DOC'::character varying,
   title character varying(255),
   description character varying(255),
+  process_comment character varying(255),
   visible character varying(1) NOT NULL DEFAULT 'Y'::bpchar
 )
 WITH (OIDS=FALSE);
