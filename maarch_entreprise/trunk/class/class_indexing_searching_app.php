@@ -433,7 +433,7 @@ class indexing_searching_app extends dbquery
             {
                 $request->update($table_ext, $data_ext, $where, $_SESSION['config']['databasetype']);
             }
-            $_SESSION['error'] = _INDEX_UPDATED." (".strtolower(_NUM).$id_to_update.")";
+            $_SESSION['info'] = _INDEX_UPDATED." (".strtolower(_NUM).$id_to_update.")";
 
             //$hist->add($table, $id_to_update, "UP", $_SESSION['error'], $_SESSION['config']['databasetype'],'apps');
             $hist->add(
@@ -441,15 +441,17 @@ class indexing_searching_app extends dbquery
                 $id_to_update,
                 'UP',
                 'resup',
-                $_SESSION['error'],
+                $_SESSION['info'],
                 $_SESSION['config']['databasetype'],
                 'apps'
             );
+            
+            $_SESSION['info'] = _INDEX_UPDATED;
         }
         //$_SESSION['error_page'] = $_SESSION['error'];
-        $error = $_SESSION['error'];
-        $_SESSION['error']= '';
-        ?>
+        //$error = $_SESSION['error'];
+        // $_SESSION['error']= '';
+/*        ?>
         <script type="text/javascript">
             //window.opener.reload();
             var error_div = $('main_error');
@@ -458,7 +460,7 @@ class indexing_searching_app extends dbquery
                 error_div.innerHTML = '<?php echo $error;?>';
             }
         </script>
-        <?php
+        <?php*/
     }
 
     public function update_rm($post, $typeform, $id_to_update, $coll_id)
