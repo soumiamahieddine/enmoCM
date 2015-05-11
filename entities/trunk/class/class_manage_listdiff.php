@@ -129,7 +129,7 @@ class diffusion_list extends dbquery
             
             # Users
             $this->query(
-                "SELECT l.item_id, l.item_mode, u.firstname, u.lastname, e.entity_id, e.entity_label, l.visible "
+                "SELECT l.item_id, l.item_mode, u.firstname, u.lastname, e.entity_id, e.entity_label, l.visible, l.process_comment "
                 . " FROM " . ENT_LISTMODELS . " l "
                     . " JOIN " . USERS_TABLE . " u ON l.item_id = u.user_id " 
                     . " JOIN " . ENT_USERS_ENTITIES . " ue ON u.user_id = ue.user_id " 
@@ -157,7 +157,8 @@ class diffusion_list extends dbquery
                         'firstname' => $this->show_string($user->firstname),
                         'entity_id' => $this->show_string($user->entity_id),
                         'entity_label' => $this->show_string($user->entity_label),
-                        'visible' => $user->visible
+                        'visible' => $user->visible,
+                        'process_comment' => $user->process_comment
                     )
                 );
             }
@@ -238,7 +239,7 @@ class diffusion_list extends dbquery
             //print_r($description); exit;
                 $this->query(
                     "insert into " . ENT_LISTMODELS
-                        . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, title, visible ) "
+                        . " (coll_id, object_id, object_type, sequence, item_id, item_type, item_mode, listmodel_type, description, title, visible, process_comment ) "
                     . " values ("
                         . "'any', "
                         . "'" . $objectId . "' , " 
@@ -250,7 +251,8 @@ class diffusion_list extends dbquery
                         . "null, "
                         . "'" . $description . "',"
                         . "'" . $title . "',"
-                        . "'" . $user['visible']. "'"
+                        . "'" . $user['visible']. "',"
+                        . "'" . $user['process_comment']. "'"
                     . ")"
                 );
             }
