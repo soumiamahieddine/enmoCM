@@ -262,15 +262,15 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			}
 		}
 	
-		if ($allAnsSigned) $classSign = "allAnsSigned";
-		else $classSign = "";
+		if ($allAnsSigned) $classSign = "visibility:visible;";
+		else $classSign = "visibility:hidden;";
 		
 		$list_docs .= $res_id_doc."#";
 		
 		if ($res_id_doc == $res_id){
-			$classLine = ' class="selectedId '.$classSign.'" ';
+			$classLine = ' class="selectedId " ';
 		}
-		else $classLine = ' class="unselectedId '.$classSign.'" ';
+		else $classLine = ' class="unselectedId " ';
 		$frm_str .= '<div '.$classLine.' onmouseover="this.style.cursor=\'pointer\';" onclick="loadNewId(\'index.php?display=true&module=visa&page=update_visaPage\','.$res_id_doc.',\''.$coll_id.'\');" id="list_doc_'.$res_id_doc.'">';
 		check_category($coll_id, $res_id_doc);
 		$data = get_general_data($coll_id, $res_id_doc, 'minimal');
@@ -283,7 +283,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 		
 		$frm_str .= '<ul>';
 		$frm_str .= '<li><b>';
-		$frm_str .= $chrono_number_doc /*. ' - ' .$res_id_doc*/;
+		$frm_str .= $chrono_number_doc . ' <i class="fa fa-certificate" id="signedDoc_'.$res_id_doc.'" style="'.$classSign.'" ></i> '/*. ' - ' .$res_id_doc*/;
 		$frm_str .= '</b></li>';
 		
 		$frm_str .= '<li>';

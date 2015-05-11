@@ -68,7 +68,7 @@ $content .= '<th style="width:5%;"></th>';
 $content .= '<th style="width:5%;"></th>';
 $content .= '<th style="width:45%;" align="left" valign="bottom"><span>Consigne</span></th>';
 $content .= '<th style="width:0%;" align="left" valign="bottom"></th>';
-$content .= '<th style="width:0%;" align="center" valign="bottom">Signataire</th>';
+$content .= '<th style="width:0%;" align="center" valign="bottom"></th>';
 
 $content .= '</tr></thead>';
 $content .= '<tbody>';
@@ -103,7 +103,7 @@ if (isset($circuit['visa']['users'])){
 			if (empty($circuit['sign']['users']) && $seq == count ($circuit['visa']['users'])-1){
 				$add = ' style="visibility:visible"';
 				$down = ' style="visibility:hidden"';
-				$displayCB = ' style="visibility:visible"';
+				$displayCB = ' style="visibility:hidden"';
 			}
 			else{
 				$add = ' style="visibility:hidden"';
@@ -116,7 +116,7 @@ if (isset($circuit['visa']['users'])){
 			$content .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
 			$content .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:visible;" ><i class="fa fa-user-times fa-2x"></i></a></td>';
 			$content .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
-			$content .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="" style="width:100%;"/></td>';	
+			$content .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$step['process_comment'].'" style="width:100%;"/></td>';	
 			
 			$content .= '<td><input type="hidden" value="'.$step['process_date'].'" id="date_'.$seq.'" name="date_'.$seq.'"/></td>';
 			$content .= '<td><input type="checkbox" id="isSign_'.$seq.'" name="isSign_'.$seq.'" '.$displayCB.'/></td>';
@@ -152,13 +152,13 @@ if (isset($circuit['visa']['users'])){
 			$up = ' style="visibility:visible"';
 			$down = ' style="visibility:hidden"';
 			$add = ' style="visibility:visible"';
-			$displayCB = ' style="visibility:visible"';
+			$displayCB = ' style="visibility:hidden"';
 								
 			$content .= '<td><a href="javascript://"  '.$down.' id="down_'.$seq.'" name="down_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex+2,\''.$id_tab.'\')" ><i class="fa fa-arrow-down fa-2x"></i></a></td>';
 			$content .= '<td><a href="javascript://"   '.$up.' id="up_'.$seq.'" name="up_'.$seq.'" onclick="deplacerLigne(this.parentNode.parentNode.rowIndex, this.parentNode.parentNode.rowIndex-1,\''.$id_tab.'\')" ><i class="fa fa-arrow-up fa-2x"></i></a></td>';
 			$content .= '<td><a href="javascript://" onclick="delRow(this.parentNode.parentNode.rowIndex,\''.$id_tab.'\')" id="suppr_'.$j.'" name="suppr_'.$j.'" style="visibility:visible;" ><i class="fa fa-user-times fa-2x"></i></a></td>';
 			$content .= '<td><a href="javascript://" '.$add.'  id="add_'.$seq.'" name="add_'.$seq.'" onclick="addRow(\''.$id_tab.'\')" ><i class="fa fa-user-plus fa-2x"></i></a></td>';
-			$content .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="" style="width:100%;"/></td>';							
+			$content .= '<td><input type="text" id="consigne_'.$seq.'" name="consigne_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_comment'].'" style="width:100%;"/></td>';							
 		
 			$content .= '<td><input type="hidden" id="date_'.$seq.'" name="date_'.$seq.'" value="'.$circuit['sign']['users'][0]['process_date'].'" /></td>';	
 			
