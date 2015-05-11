@@ -82,10 +82,7 @@ if ($objectType == '' || $objectTable == '' || $objectId == '' || $modeSign == '
 
 if (!isset($_SESSION['user']['pathToSignature']) ||$_SESSION['user']['pathToSignature'] == '') {
     $_SESSION['error'] = _IMG_SIGN_MISSING;
-    header('location: ' . $_SESSION['config']['businessappurl'] 
-        . 'index.php'
-    );
-    exit();
+	echo $_SESSION['error'];exit;
 }
 
 if (!isset($_SESSION['sign']['encodedPinCode'])){
