@@ -1446,6 +1446,9 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
                     }
                     //console.log('action_send_first_request OK');
                     end_actions();
+					if (response.newResultId != ''){
+						res_id_values = response.newResultId;
+					}
                     close_action(id_action, page_result, path_manage_script, mode_req, res_id_values, tablename, id_coll);
 
                 }
