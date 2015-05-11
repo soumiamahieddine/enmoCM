@@ -809,6 +809,11 @@ class users_controler extends ObjectControler implements ObjectControlerIF
                 break;
             }
         }
+        if($ok == true){
+            $query = "delete from ".USER_BASKETS_SECONDARY_TABLE." where system_id in (select system_id from ".USER_BASKETS_SECONDARY_TABLE." where  group_id not in 
+            (select group_id from ".USERGROUP_CONTENT_TABLE." where user_id = '".$userId."'))";
+            self::$db->query($query);  
+        }
         self::$db->disconnect();
         return $ok;
     }
