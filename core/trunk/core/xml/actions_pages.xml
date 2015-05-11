@@ -369,4 +369,15 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
+	<ACTIONPAGE>
+        <ID>send_signed_docs</ID>
+        <LABEL>_SEND_SIGNED_DOCS</LABEL>
+        <NAME>send_signed_docs</NAME>
+        <ORIGIN>module</ORIGIN>
+        <MODULE>visa</MODULE>
+        <FLAG_CREATE>false</FLAG_CREATE>
+        <COLLECTIONS>
+            <COLL_ID>letterbox_coll</COLL_ID>
+        </COLLECTIONS>
+    </ACTIONPAGE>
 </ROOT>

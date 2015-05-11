@@ -343,6 +343,17 @@ else
             {
                 $comp .= ", table : '".$res_action['table_dest']."'";
             }
+			
+			
+			if(isset($res_action['newResultId']) && !empty($res_action['newResultId']))
+            {
+                $comp .= ", newResultId : '".$res_action['newResultId']."'";
+            }
+			if(isset($res_action['action_status']) && !empty($res_action['action_status']))
+            {
+                $comp .= ", action_status : '".$res_action['action_status']."'";
+            }
+			
             $_SESSION['action_error'] = _ACTION_DONE.' : '.$label_action;
             echo "{status : 0, error_txt : '".addslashes($_SESSION['action_error'])."'".$comp.", result_id : '".$res_action['result']."'}";
         }
