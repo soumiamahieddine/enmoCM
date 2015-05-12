@@ -75,7 +75,7 @@
             <default_category>incoming</default_category>
         </categories>
     </COLLECTION>
-    <COLLECTION>
+    <!--<COLLECTION>
         <id>business_coll</id>
         <label>_BUSINESS</label>
         <table>res_business</table>
@@ -168,7 +168,7 @@
             <table/>
         </extensions>
         <path_to_lucene_index/>
-    </COLLECTION>
+    </COLLECTION>-->
     <COLLECTION>
         <id>apa_coll</id>
         <label>_APA_COLL</label>
@@ -185,7 +185,7 @@
         </extensions>
         <path_to_lucene_index/>
     </COLLECTION>
-    <COLLECTION>
+    <!--<COLLECTION>
         <id>res_coll</id>
         <label>_OUTGOING_INVOICE</label>
         <table>res_x</table>
@@ -201,7 +201,7 @@
             <table/>
         </extensions>
         <path_to_lucene_index>C:\Maarch\docservers\indexes\res_coll\</path_to_lucene_index>
-    </COLLECTION>
+    </COLLECTION>-->
     <HISTORY>
         <usersdel>true</usersdel>
         <usersban>true</usersban>
@@ -298,10 +298,10 @@
         <id>LOGOUT</id>
         <label>_LOGOUT</label>
     </KEYWORDS>
-    <MODULES>
+    <!--<MODULES>
         <moduleid>advanced_physical_archive</moduleid>
         <comment>_APA_COMMENT</comment>
-    </MODULES>
+    </MODULES>-->
     <MODULES>
         <moduleid>attachments</moduleid>
         <comment>_ATTACHMENTS_COMMENT</comment>
@@ -313,7 +313,8 @@
     <MODULES>
         <moduleid>basket</moduleid>
         <comment>_BASKETS_COMMENT</comment>
-    </MODULES><MODULES>
+    </MODULES>
+    <MODULES>
         <moduleid>cases</moduleid>
         <comment>_CASES_COMMENT</comment>
     </MODULES>
@@ -337,10 +338,10 @@
         <moduleid>notifications</moduleid>
         <comment>_NOTIFICATIONS_COMMENT</comment>
     </MODULES>
-    <MODULES>
+    <!--<MODULES>
         <moduleid>physical_archive</moduleid>
         <comment>_PHYSICAL_ARCHIVE_COMMENT</comment>
-    </MODULES>
+    </MODULES>-->
     <MODULES>
         <moduleid>templates</moduleid>
         <comment>_TEMPLATES_COMMENT</comment>
@@ -353,10 +354,10 @@
         <moduleid>postindexing</moduleid>
         <comment>_POSTINDEXING</comment>
     </MODULES>
-    <MODULES>
+    <!--<MODULES>
         <moduleid>life_cycle</moduleid>
         <comment>_LIFE_CYCLE_COMMENT</comment>
-    </MODULES>
+    </MODULES>-->
     <MODULES>
         <moduleid>content_management</moduleid>
         <comment>_CONTENT_MANAGEMENT_COMMENT</comment>
@@ -365,10 +366,10 @@
         <moduleid>tags</moduleid>
         <comment>_TAGS_COMMENT</comment>
     </MODULES>
-    <MODULES>
+    <!--<MODULES>
         <moduleid>records_management</moduleid>
         <comment>_RECORDS_MANAGEMENT_COMMENT</comment>
-    </MODULES>
+    </MODULES>-->
     <MODULES>
         <moduleid>sendmail</moduleid>
         <comment>_SENDMAIL_COMMENT</comment>
