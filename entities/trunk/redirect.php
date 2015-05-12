@@ -307,7 +307,13 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     #   - get entity_id that will update destination
     elseif(isset($formValues['redirect_dep'])) {
         $entityId = $formValues['department'];
-        $message = _REDIRECT_TO_DEP_OK . " " . $entityId;
+        //$message = _REDIRECT_TO_DEP_OK . " " . $entityId;
+
+        $db->query("SELECT entity_label FROM entities WHERE entity_id ='".$entityId."'");
+        $list = $db->fetch_object();
+        $entity_label = $list->entity_label;
+        $message = _REDIRECT_TO_DEP_OK . " " . $entity_label;
+
     }
     
     # 1 + 2 :
