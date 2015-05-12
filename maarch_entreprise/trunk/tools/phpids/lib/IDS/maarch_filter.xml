@@ -81,7 +81,7 @@
     </filter>
     <filter>
         <id>9</id>
-        <rule><![CDATA[(?:\\u00[a-f0-9]{2})|(?:\\x0*[a-f0-9]{2})|(?:\\\d{2,3})]]></rule>
+        <rule><![CDATA[(?:\\u00[a-f0-9]{2})|(?:\\x0*[a-f0-9]{2})]]></rule>
         <description>Detects the IE octal, hex and unicode entities</description>
         <tags>
             <tag>xss</tag>
@@ -390,7 +390,7 @@
         </tags>
         <impact>4</impact>
     </filter>   
-    <filter>
+<!--     <filter>
         <id>39</id>
         <rule><![CDATA[(?:\\x[01fe][\db-ce-f])|(?:%[01fe][\db-ce-f])|(?:&#[01fe][\db-ce-f])|(?:\\[01fe][\db-ce-f])|(?:&#x[01fe][\db-ce-f])]]></rule>
         <description>Detects nullbytes and other dangerous characters</description>
@@ -400,7 +400,7 @@
             <tag>xss</tag>
         </tags>
         <impact>5</impact>
-    </filter>   
+    </filter>    -->
     <filter>
         <id>40</id>
         <rule><![CDATA[(?:\)\s*when\s*\d+\s*then)|(?:"\s*(?:#|--|{))|(?:\/\*!\s?\d+)|(?:ch(?:a)?r\s*\(\s*\d)|(?:(?:(n?and|x?or|not)\s+|\|\||\&\&)\s*\w+\()]]></rule>
