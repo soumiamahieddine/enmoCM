@@ -350,10 +350,10 @@
         <moduleid>reports</moduleid>
         <comment>_REPORTS_COMMENT</comment>
     </MODULES>
-    <MODULES>
+    <!--<MODULES>
         <moduleid>postindexing</moduleid>
         <comment>_POSTINDEXING</comment>
-    </MODULES>
+    </MODULES>-->
     <!--<MODULES>
         <moduleid>life_cycle</moduleid>
         <comment>_LIFE_CYCLE_COMMENT</comment>
