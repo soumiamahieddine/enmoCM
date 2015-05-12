@@ -335,7 +335,7 @@ switch ($mode) {
                 $line = $request->fetch_object();
                 
                 $user = $request->show_string($line->lastname . " " . $line->firstname);
-                $notes = $request->show_string($line->note_text);
+                $notes = $line->note_text;
                 $userId = $line->user_id;
                 $date = $line->date_note;
                 $identifier = $line->identifier;
@@ -408,7 +408,7 @@ switch ($mode) {
                          .$path_to_script.'&mode=updated\', \'formNotes\');" />&nbsp;';
                 $content .=' <input type="button" name="valid" value="&nbsp;'._DELETE
                          .'&nbsp;" id="valid" class="button" onclick="if(confirm(\''._REALLY_DELETE.': '
-                         .$request->cut_string(str_replace(array("'", "\n"),array("\'", " "), $notes), 20).' ?\')) validNotesForm(\''
+                         .$request->cut_string(str_replace(array("'", "\n","\""),array("\'", " ", "&quot;"), $notes), 250).' ?\')) validNotesForm(\''
                          .$path_to_script.'&mode=del\', \'formNotes\');" />&nbsp;';
                 $content .='<input type="button" name="cancel" id="cancel" class="button" value="'
                     ._CANCEL.'" onclick="destroyModal(\'form_notes\');"/>';
