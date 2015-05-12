@@ -2738,24 +2738,33 @@ function loadList(path, inDiv, modeReturn, init) {
         method:'post',
         parameters: { url : path
                     },   
-       /* onLoading: function(answer) {
+        onLoading: function(answer) {
                 //show loading image in toolbar
-                $('loading').style.display='block';
-        },*/                        
+            if(typeof(inDiv)!=='undefined'){
+            var div = 'loading';
+            $('loading').style.display='block';
+            }
+                
+        },                        
         onSuccess: function(answer){
                 if (modeReturn !== false) {
                     eval("response = "+answer.responseText);
                     if(response.status == 0){                      
                         $(div).innerHTML = convertToHTMLVisibleNewline(response.content);
                         evalMyScripts(div);
-                    } else {
+
+                        if(typeof(inDiv)!=='undefined'){
+                        $('loading').style.display='none';
+                        }
+
+                    }else {
                         window.top.$('main_error').innerHTML = response.error;
-                    }
+                    } 
                 } else {
                     $(div).innerHTML = answer.responseText;
                     evalMyScripts(div);
                 }
-               // $('loading').style.display='none';
+                
         }
     });
 }
