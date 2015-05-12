@@ -492,7 +492,7 @@ switch ($mode) {
                     }
                     
                     //Reload and show message
-                    $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTE_UPDATED."';"; 
+                    $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTE_UPDATED."';window.top.$('main_info').style.display = 'table-cell';setTimeout(function(){ window.top.$('main_info').style.display = 'none'; }, 10000);";
                 }
             }
         } else {
@@ -533,7 +533,7 @@ switch ($mode) {
             }
             
             //Reload and show message
-            $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTES_DELETED."';";
+            $js =  $list_origin."window.top.$('main_info').innerHTML = '"._NOTES_DELETED."';window.top.$('main_info').style.display = 'table-cell';setTimeout(function(){ window.top.$('main_info').style.display = 'none'; }, 10000);";
             
             //Count notes
             $nb_notes = $notesTools->countUserNotes($identifier, $collId); 
