@@ -185,6 +185,19 @@
                         <?php echo _XMLRPC; ?>
                     </td>
                 </tr>
+                <tr>
+                    <td class="voyantPrerequisites">
+                        <?php echo $Class_Install->checkPrerequisites(
+                            $Class_Install->isPhpRequirements(
+                                'imagick'
+                            ), false
+                        ); ?>
+                    </td>
+                    <td>
+                        <?php echo _IMAGICK; ?>
+                    </td>
+                </tr>
+                
                 <?php if (DIRECTORY_SEPARATOR != '/') { ?>
                     <tr>
                         <td class="voyantPrerequisites">
