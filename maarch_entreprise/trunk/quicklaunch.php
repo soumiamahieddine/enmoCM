@@ -111,7 +111,7 @@ $core_tools->test_service('quicklaunch', "apps");
     <div class="block" style="margin-top:14px;">
     <h2><?php echo _VIEW_LAST_COURRIERS;?> :</h2>
         <div id="welcome_box_right_last_mails">
-
+        <div id="loading"><i class="fa fa-spinner fa-2x"></i></div>
 
         <script language="javascript">
         <?php 
