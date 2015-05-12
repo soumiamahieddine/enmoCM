@@ -1633,27 +1633,51 @@ function change_category_actions(path_manage_script, resId, collId)
 {
     var category_id = $('category_id');
     if(category_id.value != '') {
-        new Ajax.Request(path_manage_script,
-        {
-            method:'post',
-            parameters: { category_id : category_id.value, resId : resId, collId : collId
-                        },
-                onSuccess: function(answer){
-                eval("response = "+answer.responseText);
-                if(response.status == 0 || response.status == 1) {
-                    if(response.status == 0) {
-                        $('actionSpan').innerHTML = response.selectAction;
+        if (resId === undefined && collId === undefined) {
+            new Ajax.Request(path_manage_script,
+            {
+                method:'post',
+                parameters: { category_id : category_id.value
+                            },
+                    onSuccess: function(answer){
+                    eval("response = "+answer.responseText);
+                    if(response.status == 0 || response.status == 1) {
+                        if(response.status == 0) {
+                            $('actionSpan').innerHTML = response.selectAction;
+                        } else {
+                            //
+                        }
                     } else {
-                        //
+                        try {
+                            $('actionSpan').innerHTML = response.error_txt;
+                        }
+                        catch(e){}
                     }
-                } else {
-                    try {
-                        $('actionSpan').innerHTML = response.error_txt;
-                    }
-                    catch(e){}
                 }
-            }
-        });
+            });
+        } else {
+            new Ajax.Request(path_manage_script,
+            {
+                method:'post',
+                parameters: { category_id : category_id.value, resId : resId, collId : collId
+                            },
+                    onSuccess: function(answer){
+                    eval("response = "+answer.responseText);
+                    if(response.status == 0 || response.status == 1) {
+                        if(response.status == 0) {
+                            $('actionSpan').innerHTML = response.selectAction;
+                        } else {
+                            //
+                        }
+                    } else {
+                        try {
+                            $('actionSpan').innerHTML = response.error_txt;
+                        }
+                        catch(e){}
+                    }
+                }
+            });
+        }
     }
 }
 
