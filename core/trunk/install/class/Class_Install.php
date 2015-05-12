@@ -130,6 +130,12 @@ class Install extends functions
         if (!$this->isPhpRequirements('gd')) {
             return false;
         }
+        if (!$this->isPhpRequirements('imagick')) {
+            return false;
+        }
+        /*if (!$this->isPhpRequirements('ghostscript')) {
+            return false;
+        }*/
         if (!$this->isPearRequirements('System.php')) {
             return false;
         }
@@ -295,6 +301,7 @@ class Install extends functions
         $databasename
     )
     {
+		
         $connect  = 'host='.$_SESSION['config']['databaseserver'] . ' ';
         $connect .= 'port='.$_SESSION['config']['databaseserverport'] . ' ';
         $connect .= 'user='.$_SESSION['config']['databaseuser'] . ' ';
@@ -326,21 +333,21 @@ class Install extends functions
             return false;
             exit;
         }
-
+		
         if (!$this->executeSQLScript('sql/structure.sql')) {
             return false;
             exit;
         }
 
-        if (!$this->setConfigXml()) {
+       if (!$this->setConfigXml()) {
             return false;
             exit;
         }
         
-        if (!$this->setDatasourcesXsd()) {
+       /*if (!$this->setDatasourcesXsd()) {
             return false;
             exit;
-        }
+        }*/
         
         return true;
     }
@@ -348,6 +355,7 @@ class Install extends functions
     private function setConfigXml()
     {
         $xmlconfig = simplexml_load_file('apps/maarch_entreprise/xml/config.xml.default');
+        //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
         $CONFIG = $xmlconfig->CONFIG;
 
         $CONFIG->databaseserver = $_SESSION['config']['databaseserver'];
