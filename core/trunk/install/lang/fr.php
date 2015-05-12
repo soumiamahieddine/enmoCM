@@ -89,6 +89,9 @@ if (!defined('_FILEINFO')) {
 if (!defined('_GETTEXT')) {
     define('_GETTEXT', "librairie gettext");
 }
+if (!defined('_IMAGICK')) {
+    define('_IMAGICK', "librairie ImageMagick");
+}
 if (!defined('_PEAR')) {
     define('_PEAR', "PEAR");
 }
