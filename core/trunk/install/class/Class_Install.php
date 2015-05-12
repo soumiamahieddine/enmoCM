@@ -390,7 +390,7 @@ class Install extends functions
         //TODO fill the file...
 
         $res = $xmlconfig->asXML();
-        $fp = @fopen("modules/visa/xml/config.xml.", "w+");
+        $fp = @fopen("modules/visa/xml/config.xml", "w+");
         if (!$fp) {
             return false;
             exit;
