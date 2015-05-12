@@ -130,9 +130,9 @@ class Install extends functions
         if (!$this->isPhpRequirements('gd')) {
             return false;
         }
-        if (!$this->isPhpRequirements('imagick')) {
+        /*if (!$this->isPhpRequirements('imagick')) {
             return false;
-        }
+        }*/
         /*if (!$this->isPhpRequirements('ghostscript')) {
             return false;
         }*/
@@ -343,6 +343,11 @@ class Install extends functions
             return false;
             exit;
         }
+
+        if (!$this->setConfigXmlVisa()) {
+            return false;
+            exit;
+        }
         
        /*if (!$this->setDatasourcesXsd()) {
             return false;
@@ -366,6 +371,26 @@ class Install extends functions
         $CONFIG->lang = $_SESSION['lang'];
         $res = $xmlconfig->asXML();
         $fp = @fopen("apps/maarch_entreprise/xml/config.xml", "w+");
+        if (!$fp) {
+            return false;
+            exit;
+        }
+        $write = fwrite($fp,$res);
+        if (!$write) {
+            return false;
+            exit;
+        }
+        return true;
+    }
+
+    private function setConfigXmlVisa()
+    {
+        $xmlconfig = simplexml_load_file('modules/visa/xml/config.xml.default');
+        $CONFIG = $xmlconfig->CONFIG;
+        //TODO fill the file...
+
+        $res = $xmlconfig->asXML();
+        $fp = @fopen("modules/visa/xml/config.xml.", "w+");
         if (!$fp) {
             return false;
             exit;

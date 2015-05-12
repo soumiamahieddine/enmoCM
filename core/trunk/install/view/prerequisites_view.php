@@ -185,7 +185,7 @@
                         <?php echo _XMLRPC; ?>
                     </td>
                 </tr>
-                <tr>
+                <!--<tr>
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isPhpRequirements(
@@ -196,7 +196,7 @@
                     <td>
                         <?php echo _IMAGICK; ?>
                     </td>
-                </tr>
+                </tr>-->
                 
                 <?php if (DIRECTORY_SEPARATOR != '/') { ?>
                     <tr>
