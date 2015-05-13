@@ -2740,9 +2740,9 @@ function loadList(path, inDiv, modeReturn, init) {
                     },   
         onLoading: function(answer) {
                 //show loading image in toolbar
-            if(typeof(inDiv)!=='undefined'){
-            var div = 'loading';
-            $('loading').style.display='block';
+            if(document.getElementById("loading")){
+            document.getElementById("loading").style.display='block';
+
             }
                 
         },                        
@@ -2753,10 +2753,9 @@ function loadList(path, inDiv, modeReturn, init) {
                         $(div).innerHTML = convertToHTMLVisibleNewline(response.content);
                         evalMyScripts(div);
 
-                        if(typeof(inDiv)!=='undefined'){
-                        $('loading').style.display='none';
+                        if(document.getElementById("loading")){
+                            document.getElementById("loading").style.display='none';
                         }
-
                     }else {
                         window.top.$('main_error').innerHTML = response.error;
                     } 
