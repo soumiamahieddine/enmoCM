@@ -82,6 +82,7 @@ $db->query("SELECT ir.record_id as res_id, ir.subject, ir.doc_date, ir.event_dat
 FROM
 (SELECT DISTINCT ON (h.record_id) h.record_id, h.event_date, r.subject, r.doc_date, r.creation_date, r.alt_identifier FROM history h, res_view_letterbox r
   WHERE h.user_id = '".$_SESSION['user']['UserId']."' 
+  AND event_id !='linkup'
   AND (h.table_name='res_letterbox' OR h.table_name='res_view_letterbox')
   AND CAST(h.record_id AS INT) = r.res_id
   ORDER BY h.record_id, h.event_date desc) AS ir
