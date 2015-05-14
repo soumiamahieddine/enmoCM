@@ -20,15 +20,15 @@
  */
 
 if (!defined('_SENDMAIL'))
-    define('_SENDMAIL', 'Envoi de mails');
+    define('_SENDMAIL', 'Envoi de courriels');
 if (!defined('_SENDMAIL_COMMENT'))
-    define('_SENDMAIL_COMMENT', 'Envoi de mails');
+    define('_SENDMAIL_COMMENT', 'Envoi de courriels');
 if (!defined('_EMAIL_LIST'))
-    define('_EMAIL_LIST', 'Emails');
+    define('_EMAIL_LIST', 'Courriels');
 if (!defined('_EMAIL_LIST_DESC'))
-    define('_EMAIL_LIST_DESC', 'Liste des  emails');
+    define('_EMAIL_LIST_DESC', 'Liste des courriels');
 if (!defined('_SENDED_EMAILS'))
-    define('_SENDED_EMAILS', 'Emails envoy&eacute;s');
+    define('_SENDED_EMAILS', 'Courriels');
  
 //STATUS
 if (!defined('_EMAIL_DRAFT'))
@@ -72,12 +72,12 @@ if (!defined('_DEFAULT_BODY'))
 if (!defined('_NOTES_FILE'))
     define('_NOTES_FILE', 'Notes du document');
 if (!defined('_EMAIL_WRONG_FORMAT'))
-    define('_EMAIL_WRONG_FORMAT', 'L\'adresse email n&rsquo;est pas dans le bon format');
+    define('_EMAIL_WRONG_FORMAT', 'L\'adresse courriel n&rsquo;est pas dans le bon format');
     
     
 //ERROR
 if (!defined('_EMAIL_NOT_EXIST'))
-    define('_EMAIL_NOT_EXIST', 'Cet email n&rsquo;existe pas');
+    define('_EMAIL_NOT_EXIST', 'Ce courriel n&rsquo;existe pas');
 
 //ADD
 if (!defined('_NEW_EMAIL'))
@@ -85,7 +85,7 @@ if (!defined('_NEW_EMAIL'))
 if (!defined('_CREATE_EMAIL'))
     define('_CREATE_EMAIL', 'Cr&eacute;er');
 if (!defined('_EMAIL_ADDED'))
-    define('_EMAIL_ADDED', 'Email ajout&eacute;');
+    define('_EMAIL_ADDED', 'Courriel ajout&eacute;');
     
 //SEND
 if (!defined('_SEND_EMAIL'))
@@ -99,15 +99,15 @@ if (!defined('_SAVE_EMAIL'))
     
 //READ
 if (!defined('_READ_EMAIL'))
-    define('_READ_EMAIL','Afficher le mail');
+    define('_READ_EMAIL','Afficher le courriel');
     
 //TRANSFER
 if (!defined('_TRANSFER_EMAIL'))
-    define('_TRANSFER_EMAIL','Transf&eacute;rer le mail');
+    define('_TRANSFER_EMAIL','Transf&eacute;rer le courriel');
     
 //EDIT    
 if (!defined('_EDIT_EMAIL'))
-    define('_EDIT_EMAIL', 'Modifier le mail');
+    define('_EDIT_EMAIL', 'Modifier le courriel');
 if (!defined('_SAVE_EMAIL'))
     define('_SAVE_EMAIL', 'Enregistrer');
 if (!defined('_SAVE_COPY_EMAIL'))
@@ -119,14 +119,14 @@ if (!defined('_EMAIL_UPDATED'))
 if (!defined('_REMOVE_EMAIL'))
     define('_REMOVE_EMAIL', 'Supprimer');
 if (!defined('_REMOVE_EMAILS'))
-    define('_REMOVE_EMAILS', 'Supprimer les mails');
+    define('_REMOVE_EMAILS', 'Supprimer les courriels');
 if (!defined('_REALLY_REMOVE_EMAIL'))
     define('_REALLY_REMOVE_EMAIL', 'Voulez-vous supprimez le message');
 if (!defined('_EMAIL_REMOVED'))
-    define('_EMAIL_REMOVED', 'Email supprim&eacute;');
+    define('_EMAIL_REMOVED', 'Courriel supprim&eacute;');
 
 
 if (!defined('_Label_ADD_TEMPLATE_MAIL'))
-    define('_Label_ADD_TEMPLATE_MAIL', 'Modèle de mail');
+    define('_Label_ADD_TEMPLATE_MAIL', 'Modèle de courriel');
 if (!defined('_ADD_TEMPLATE_MAIL'))
     define('_ADD_TEMPLATE_MAIL', 'Sélectionnez le modèle désiré');
