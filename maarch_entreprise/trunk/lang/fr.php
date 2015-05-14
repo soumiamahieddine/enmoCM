@@ -800,8 +800,8 @@ if (!defined('_LOW')) define( '_LOW', 'Basse');
 if (!defined('_VERY_LOW')) define( '_VERY_LOW', 'Tr&egrave;s Basse');
 
 
-if (!defined('_INDEXING_MLB')) define( '_INDEXING_MLB', '[courrier] Enregistrer un courrier');
-if (!defined('_ADV_SEARCH_MLB')) define( '_ADV_SEARCH_MLB', '[courrier] Rechercher un courrier');
+if (!defined('_INDEXING_MLB')) define( '_INDEXING_MLB', 'Enregistrer un courrier');
+if (!defined('_ADV_SEARCH_MLB')) define( '_ADV_SEARCH_MLB', 'Rechercher un courrier');
 if (!defined('_ADV_SEARCH_INVOICES')) define( '_ADV_SEARCH_INVOICES', '[cold] Rechercher une facture client');
 
 if (!defined('_ADV_SEARCH_TITLE')) define( '_ADV_SEARCH_TITLE', 'Recherche avanc&eacute;e de document');
