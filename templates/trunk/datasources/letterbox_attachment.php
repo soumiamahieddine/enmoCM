@@ -15,8 +15,23 @@ $contacts = new contacts_v2();
 $datasources['res_letterbox'] = array();
 $dbDatasource->query("SELECT * FROM " . $res_view . " WHERE res_id = " . $res_id . "");
 $doc = $dbDatasource->fetch_array();
+
 $date = new DateTime($doc['doc_date']);
 $doc['doc_date']=$date->format('d/m/Y');
+
+$admission_date = new DateTime($doc['admission_date']);
+$doc['admission_date']=$admission_date->format('d/m/Y');
+
+$creation_date = new DateTime($doc['creation_date']);
+$doc['creation_date']=$creation_date->format('d/m/Y');
+
+$process_limit_date = new DateTime($doc['process_limit_date']);
+$doc['process_limit_date']=$process_limit_date->format('d/m/Y');
+
+$doc['category_id'] = html_entity_decode($_SESSION['coll_categories']['letterbox_coll'][$doc['category_id']]);
+
+$doc['nature_id'] = $_SESSION['mail_natures'][$doc['nature_id']];
+
 $datasources['res_letterbox'][] = $doc;
 
 
