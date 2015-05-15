@@ -999,7 +999,7 @@ $objectTable = $sec->retrieve_table_from_coll($_SESSION['collection_id_choice'])
            $content .='<a href="#" id="contact_card_attach" title="'._CONTACT_CARD.'" onclick="document.getElementById(\'info_contact_iframe_attach\').src=\'' . $_SESSION['config']['businessappurl']
                 . 'index.php?display=false&dir=my_contacts&page=info_contact_iframe&contactid=\'+document.getElementById(\'contactidAttach\').value+\'&addressid=\'+document.getElementById(\'addressidAttach\').value+\'&fromAttachmentContact=Y\';new Effect.toggle(\'info_contact_div_attach\', '
                 . '\'blind\', {delay:0.2});return false;"'
-                . ' style="visibility:hidden;padding-left:35%"><i class="fa fa-book fa-2x"></i></a>';
+                . ' style="visibility:hidden;padding-left:30%"><i class="fa fa-book fa-2x"></i></a>';
             $content .= '</label>';
             $content .= '<input type="text" name="contact_attach" onblur="display_contact_card(\'visible\', \'contact_card_attach\');" onkeyup="erase_contact_external_id(\'contact_attach\', \'contactidAttach\');erase_contact_external_id(\'contact_attach\', \'addressidAttach\');" id="contact_attach" value="';
                 $content .= $data_contact;
