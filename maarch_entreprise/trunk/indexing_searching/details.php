@@ -703,7 +703,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 {
                                     echo '<textarea name="'.$key.'" id="'.$key.'" rows="3" readonly="readonly" class="readonly" style="width: 200px; max-width: 200px;">'
                                         .$data[$key]['show_value']
-                                    .'</textarea>';
+                                    .'</textarea>';								
+                                } else if ($data[$key]['field_type'] == 'radio') {
+                                    for($k=0; $k<count($data[$key]['radio']);$k++) {
+                                        ?><input name ="<?php echo $key; ?>" <?php if ($data[$key]['value'] ==$data[$key]['radio'][$k]['ID']){ echo 'checked';}?> type="radio" id="<?php echo $key .'_' . $data[$key]['radio'][$k]['ID'];?>" value="<?php echo $data[$key]['radio'][$k]['ID'];?>" disabled ><?php echo $data[$key]['radio'][$k]['LABEL'];
+                                    }
                                 }
                                 else
 								
@@ -791,7 +795,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     ?>
                                     </select>
                                     <?php
-                                }
+                                } else if ($data[$key]['field_type'] == 'radio') {
+                                    for($k=0; $k<count($data[$key]['radio']);$k++) {
+                                        ?><input name ="<?php echo $key; ?>" <?php if ($data[$key]['value'] ==$data[$key]['radio'][$k]['ID']){ echo 'checked';}?> type="radio" id="<?php echo $key .'_' . $data[$key]['radio'][$k]['ID'];?>" value="<?php echo $data[$key]['radio'][$k]['ID'];?>" ><?php echo $data[$key]['radio'][$k]['LABEL'];
+                                    }
+                                } 
                                 else if ($data[$key]['field_type'] == 'autocomplete')
                                 {
                                     if ($key == 'folder')
@@ -1206,7 +1214,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     </dd>
                 <?php
                 }
-
+				
 				if ($core->is_module_loaded('visa')) {
 					require_once "modules" . DIRECTORY_SEPARATOR . "visa" . DIRECTORY_SEPARATOR
 					. "class" . DIRECTORY_SEPARATOR
@@ -1247,8 +1255,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 				</dd>
 				<?php
 				 }
-				
-				
+				 
+				 
                 //$detailsExport .= "<h2>"._PROCESS."</h2>";
                 $nb_attach = '';
                 if ($core->is_module_loaded('attachments'))
