@@ -423,7 +423,7 @@
         </tags>
         <impact>6</impact>
     </filter>   
-    <filter>
+<!--     <filter>
         <id>42</id>
         <rule><![CDATA[(?:"\s*or\s*"?\d)|(?:\\x(?:23|27|3d))|(?:^.?"$)|(?:(?:^["\\]*(?:[\d"]+|[^"]+"))+\s*(not|\|\||\&\&)\s*[\w"[+&!@(),.-])|(?:[^\w\s]\w+\s*[|-]\s*"\s*\w)|(?:@\w+\s+(and|or)\s*["\d]+)|(?:@[\w-]+\s(and|or)\s*[^\w\s])|(?:[^\w\s:]\s*\d\W+[^\w\s]\s*".)|(?:\Winformation_schema|table_name\W)]]></rule>
         <description>Detects classic SQL injection probings 1/2</description>
@@ -433,7 +433,7 @@
             <tag>lfi</tag>
         </tags>
         <impact>6</impact>
-    </filter>  
+    </filter>  --> 
 
     <filter>
         <id>44</id>
