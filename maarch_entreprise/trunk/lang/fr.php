@@ -940,7 +940,7 @@ if (!defined('_TITLE2')) define( '_TITLE2', 'Civilit&eacute;');
 if (!defined('_WARNING_MESSAGE_DEL_CONTACT'))  define('_WARNING_MESSAGE_DEL_CONTACT', 'Avertissement :<br> La suppression d&rsquo;un contact entraine la r&eacute;affectation des documents et des courriers &agrave un nouveau contact.');
 if (!defined('_CONTACT_DELETION'))  define('_CONTACT_DELETION', 'Suppression de contact');
 if (!defined('_CONTACT_REAFFECT'))  define('_CONTACT_REAFFECT', 'R&eacute;affectation des documents et des courriers');
-if (!defined('_UPDATE_CONTACTS')) define( '_UPDATE_CONTACTS', 'Mise &agrave; jour contact depuis une corbeille');
+if (!defined('_UPDATE_CONTACTS')) define( '_UPDATE_CONTACTS', 'Mise &agrave; jour contact depuis indexation/qualification');
 if (!defined('_CONTACT_TYPE')) define( '_CONTACT_TYPE', 'Type de contact');
 if (!defined('_MULTI_EXTERNAL')) define( '_MULTI_EXTERNAL', 'Multi externe');
 if (!defined('_MULTI_CONTACT')) define( '_MULTI_CONTACT', '<b><i>Multi contacts<i><b>');
