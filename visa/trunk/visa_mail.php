@@ -134,7 +134,7 @@ function get_rep_path($res_id, $coll_id)
 		$filename=$res2->filename;
 		$path = preg_replace('/#/', DIRECTORY_SEPARATOR, $res2->path);
 		$filename_pdf = str_replace(pathinfo($filename, PATHINFO_EXTENSION), "pdf",$filename);
-		if (is_file($docserver_path.$path.$filename_pdf)){
+		if (file_exists($docserver_path.$path.$filename_pdf)){
 			$array_reponses[$cpt_rep]['path'] = $docserver_path.$path.$filename_pdf;
 			$array_reponses[$cpt_rep]['title'] = $res2->title;
 			$array_reponses[$cpt_rep]['attachment_type'] = $res2->attachment_type;
