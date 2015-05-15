@@ -175,7 +175,8 @@ if($mode == 'normal') {
         } else {
             array_push( $buttons, array('ID'        => 'valid', 
                                         'LABEL'     => _VALIDATE, 
-                                        'ACTION'    => 'formList.submit();opener.$(\'attach\').click();'
+                                        //'ACTION'    => 'formList.submit();opener.$(\'attach\').click();'
+                                        'ACTION'    => 'formList.submit();'
                                        )
                         );            
         }                                      
