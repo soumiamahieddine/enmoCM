@@ -1980,7 +1980,27 @@ class contacts_v2 extends dbquery
     }
 
     public function get_civility_contact($title){
-        $xml = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.'maarch_entreprise'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'entreprise.xml');
+        // $core = new core_tools();
+        if (file_exists(
+            $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
+            . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
+            . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+            . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+            . 'entreprise.xml'
+        )
+        ) {
+            $path = $_SESSION['config']['corepath'] . 'custom'
+                  . DIRECTORY_SEPARATOR . $_SESSION['custom_override_id']
+                  . DIRECTORY_SEPARATOR . 'apps' . DIRECTORY_SEPARATOR
+                  . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR . 'xml'
+                  . DIRECTORY_SEPARATOR . 'entreprise.xml';
+        } else {
+            $path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
+                  . DIRECTORY_SEPARATOR . 'xml' . DIRECTORY_SEPARATOR
+                  . 'entreprise.xml';
+        }
+        $xml = simplexml_load_file($path);
+        // $xml = simplexml_load_file('apps'.DIRECTORY_SEPARATOR.'maarch_entreprise'.DIRECTORY_SEPARATOR.'xml'.DIRECTORY_SEPARATOR.'entreprise.xml');
         if ($xml <> false) {
             $result = $xml->xpath('/ROOT/titles');
             foreach ($result as $key => $value) {
