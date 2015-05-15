@@ -550,7 +550,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '<tr>';
 	$frm_str .= '<td>';	
 		$frm_str .= '<form name="index_file" method="post" id="index_file" action="#" class="forms " style="text-align:left;">';
-		$frm_str .= 'Consigne <input type="text" value="'.$visa->getConsigne($res_id, $coll_id, $_SESSION['user']['UserId']).'" style="width:30%;" readonly/><br/>';
+		$frm_str .= 'Consigne &nbsp;<input type="text" value="'.$visa->getConsigne($res_id, $coll_id, $_SESSION['user']['UserId']).'" style="width:50%;" readonly/><br/>';
 		$frm_str .= '<b>'._ACTIONS.' : </b>';
 		$actions  = $b->get_actions_from_current_basket($res_id, $coll_id, 'PAGE_USE');
 		if(count($actions) > 0)
