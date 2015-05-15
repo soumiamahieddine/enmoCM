@@ -79,7 +79,7 @@ require_once('modules/visa/class/class_modules_tools.php');
     } else {
         $templates = $templatesControler->getAllTemplatesForSelect();
     } 
-    $frm_str .='<b>'._REDIRECT_NOTE.':</b><br/>';
+    $frm_str .='<b>'._SUBMIT_COMMENT.':</b><br/>';
     $frm_str .= '<select name="templateNotes" id="templateNotes" style="width:98%;margin-bottom: 10px;background-color: White;border: 1px solid #999;color: #666;text-align: left;" '
                 . 'onchange="addTemplateToNote($(\'templateNotes\').value, \''
                 . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
@@ -113,7 +113,7 @@ require_once('modules/visa/class/class_modules_tools.php');
                    }
                 $frm_str .='</select>';
                 $frm_str .=' <input type="button" style="float:right;margin:0px;" name="redirect_user" id="redirect_user" value="'
-                    ._REDIRECT
+                    ._SEND_TO_SIGNATURE
                     . '" class="button" onclick="valid_action_form( \'frm_redirect_user\', \''
                     . $path_manage_action . '\', \'' . $id_action . '\', \'' . $values_str . '\', \'' . $table . '\', \'' . $module . '\', \'' . $coll_id . '\', \'' . $mode . '\');"  />';
             $frm_str .='</p>';

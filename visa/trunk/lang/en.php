@@ -26,4 +26,11 @@ if (!defined('_CONFIG_AVIS_WORKFLOW'))
     define('_CONFIG_AVIS_WORKFLOW', 'Configuration of avis workflow');
 if (!defined('_CONFIG_AVIS_WORKFLOW_DESC'))
     define('_CONFIG_AVIS_WORKFLOW_DESC', 'Allow to set the avis workflow of the mail');
+if (!defined('_SEND_TO_SIGNATURE'))
+    define('_SEND_TO_SIGNATURE', 'Send to signature');
+
+if (!defined('_SUBMIT_COMMENT'))
+    define('_SUBMIT_COMMENT', 'Commentaire de visa (optionnel) ');
+
+
 ?>

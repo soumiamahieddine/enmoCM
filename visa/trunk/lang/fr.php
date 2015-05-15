@@ -40,4 +40,12 @@ if (!defined('_DISSMARTCARD_SIGNER_APPLET'))
 
 if (!defined('_IMG_SIGN_MISSING'))
     define('_IMG_SIGN_MISSING', 'Image de signature manquante');
+
+if (!defined('_SEND_TO_SIGNATURE'))
+    define('_SEND_TO_SIGNATURE', 'Soumettre');
+
+if (!defined('_SUBMIT_COMMENT'))
+    define('_SUBMIT_COMMENT', 'Commentaire de visa (optionnel) ');
+
+
 ?>
