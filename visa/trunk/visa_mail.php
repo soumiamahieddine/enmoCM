@@ -119,12 +119,14 @@ function get_rep_path($res_id, $coll_id)
     $db = new dbquery();
     $db->connect();
 
-    $db->query("select docserver_id, path, filename from ".$view." where res_id = ".$res_id);
-    $res = $db->fetch_object();
-    $docserver_id = $res->docserver_id;
-	
-	
-	$db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver_id."'");
+    //$db->query("select docserver_id, path, filename from ".$view." where res_id = ".$res_id);
+    $db->query("select docserver_id from res_view_attachments where res_id_master = " . $res_id . " order by res_id desc");
+    while ($res = $db->fetch_object()) {
+        $docserver_id = $res->docserver_id;
+        break;
+    }
+
+    $db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver_id."'");
     $res = $db->fetch_object();
     $docserver_path = $res->path_template;
 	$db->query("select filename, path,title,res_id,res_id_version,attachment_type  from res_view_attachments where res_id_master = " . $res_id . " AND status <> 'OBS' AND status <> 'SIGN' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response') order by creation_date asc");
