@@ -15,24 +15,27 @@ function get_rep_path($res_id, $coll_id)
     $db = new dbquery();
     $db->connect();
 
-    $db->query("select docserver_id, path, filename from ".$view." where res_id = ".$res_id);
-    $res = $db->fetch_object();
-    $docserver_id = $res->docserver_id;
-	
-	
-	$db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver_id."'");
+    //$db->query("select docserver_id, path, filename from ".$view." where res_id = ".$res_id);
+    $db->query("select docserver_id from res_view_attachments where res_id_master = " . $res_id . " order by res_id desc");
+    while ($res = $db->fetch_object()) {
+        $docserver_id = $res->docserver_id;
+        break;
+    }
+
+    $db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver_id."'");
     $res = $db->fetch_object();
     $docserver_path = $res->path_template;
-	$db->query("select filename, path,title,res_id,res_id_version  from res_view_attachments where res_id_master = " . $res_id . " AND status <> 'OBS' AND status <> 'DEL' AND status <> 'SIGN' and attachment_type IN ('response_project','signed_response') order by creation_date asc");
+	$db->query("select filename, path,title,res_id,res_id_version,attachment_type  from res_view_attachments where res_id_master = " . $res_id . " AND status <> 'OBS' AND status <> 'SIGN' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response') order by creation_date asc");
 	$array_reponses = array();
 	$cpt_rep = 0;
 	while ($res2 = $db->fetch_object()){
 		$filename=$res2->filename;
 		$path = preg_replace('/#/', DIRECTORY_SEPARATOR, $res2->path);
 		$filename_pdf = str_replace(pathinfo($filename, PATHINFO_EXTENSION), "pdf",$filename);
-		if (is_file($docserver_path.$path.$filename_pdf)){
+		if (file_exists($docserver_path.$path.$filename_pdf)){
 			$array_reponses[$cpt_rep]['path'] = $docserver_path.$path.$filename_pdf;
 			$array_reponses[$cpt_rep]['title'] = $res2->title;
+			$array_reponses[$cpt_rep]['attachment_type'] = $res2->attachment_type;
 			if ($res2->res_id_version == 0){
 				$array_reponses[$cpt_rep]['res_id'] = $res2->res_id;
 				$array_reponses[$cpt_rep]['is_version'] = 0;

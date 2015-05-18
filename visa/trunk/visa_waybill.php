@@ -42,7 +42,13 @@ function getInfosUser($user_id){
 	return $user;
 }
 
-function getOutputName(){
+
+function ajout_bdd($fnameTmp, $res_id){
+	$db = new dbquery();
+	$db->connect();
+	$collId = 'letterbox_coll';
+
+	require_once 'modules/attachments/attachments_tables.php';
 	require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docservers_controler.php";
 	require_once "core".DIRECTORY_SEPARATOR."docservers_tools.php";
 	require_once 'core/class/docserver_types_controler.php';
@@ -51,44 +57,202 @@ function getOutputName(){
 	$docserv_control = new docservers_controler();
 	$docserverTypeControler = new docserver_types_controler();
 	
-	$docserv = $docserv_control->getDocserverToInsert("letterbox_coll");
-	$docserverTypeObject = $docserverTypeControler->get($docserv->docserver_type_id);
-	$storeFolder = $docserv->path_template;
-	$pathOnDocserver = Ds_createPathOnDocServer(
-            $storeFolder
-        );
-	$storeFolder = str_replace("//", "/", $pathOnDocserver['destinationDir']);
-	$pathondocserver = $storeFolder;
-	$fname_tab = $docserv_control->getNextFileNameInDocserver($pathondocserver);	
-	$outputFile = array();
-	$outputFile['filepath'] = $fname_tab['destinationDir'].$fname_tab['fileDestinationName'].".pdf";
+	$docserver = $docserv_control->getDocserverToInsert($collId);
 	
-	$path_bdd=explode("/",$fname_tab['destinationDir']);
-	$outputFile['path'] = $path_bdd[count($path_bdd)-4]."#".$path_bdd[count($path_bdd)-3] . "#" . $path_bdd[count($path_bdd)-2]."#";
-	$outputFile['filename'] = $fname_tab['fileDestinationName'].".pdf";
-	
+	if (empty($docserver)) {
+    $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
+        . _NO_AVAILABLE_DOCSERVER . '. ' . _MORE_INFOS;
+	} else {
+		
+		$newSize = $docserv_control->checkSize(
+			$docserver, $filesize
+		);
+		if ($newSize == 0) {
+        $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
+            . _NOT_ENOUGH_DISK_SPACE . '. ' . _MORE_INFOS . '.';
+		} else {
+			$title = "Fiche de circulation du document n°".$res_id;
+			
+			$fileInfos = array(
+            'tmpDir'      => $_SESSION['config']['tmppath'],
+            'size'        => filesize ($_SESSION['config']['tmppath'].$fnameTmp),
+            'format'      => 'pdf',
+            'tmpFileName' => $fnameTmp,
+			);
 
-	return $outputFile;
-}
+			$storeResult = array();
+			$storeResult = $docserv_control->storeResourceOnDocserver(
+				$collId, $fileInfos
+			);
+			
+			if (isset($storeResult['error']) && $storeResult['error'] <> '') {
+				$_SESSION['error'] = $storeResult['error'];
+			} else {
+				require_once "core/class/class_request.php";
+				$req = new request();
+				$req->connect();
+				
+				$resAttach = new resource();
+				$_SESSION['data'] = array();
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'typist',
+						'value' => $_SESSION['user']['UserId'],
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'format',
+						'value' => 'pdf',
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'docserver_id',
+						'value' => $storeResult['docserver_id'],
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'status',
+						'value' => 'TRA',
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'offset_doc',
+						'value' => ' ',
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'logical_adr',
+						'value' => ' ',
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'title',
+						'value' => $req->protect_string_db($title),
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'relation',
+						'value' => 1,
+						'type' => 'integer',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'coll_id',
+						'value' => $collId,
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'res_id_master',
+						'value' => $res_id,
+						'type' => 'integer',
+					)
+				);
+				
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'type_id',
+						'value' => 0,
+						'type' => 'int',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'identifier',
+						'value' => '1',
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'attachment_type',
+						'value' => 'routing',
+						'type' => 'string',
+					)
+				);
 
-function ajout_bdd($bordereau, $res_id){
-	$db = new dbquery();
-	$db->connect();
-	$title = "Fiche de circulation du document n°".$res_id;
-
-	
-	$fingerprint = hash_file(strtolower("SHA256"), $bordereau['filepath']);
-	$filesize = filesize ($bordereau['filepath']);
-	$date = date("Y-m-d H:i:s").".000";
-
-	if (!bordExists($res_id, 'letterbox_coll')){
-		$req =  "INSERT INTO res_attachments (title, type_id, format, typist, creation_date, identifier, docserver_id, path, filename, fingerprint, filesize, status, coll_id,res_id_master,attachment_type, relation) VALUES ('".$title."', '0', 'pdf', '".$_SESSION['user']['UserId']."', '".$date."', '1', 'FASTHD_MAN', '".$bordereau['path']."', '".$bordereau['filename']."', '".$fingerprint."', '".$filesize."', 'TRA', 'letterbox_coll','".$res_id."','routing', 1);";
+				$id = $resAttach->load_into_db(
+					RES_ATTACHMENTS_TABLE,
+					$storeResult['destination_dir'],
+					$storeResult['file_destination_name'] ,
+					$storeResult['path_template'],
+					$storeResult['docserver_id'], 
+					$_SESSION['data'],
+					$_SESSION['config']['databasetype']
+				);
+				
+				$complete_path = $storeResult['path_template'].str_replace('#',DIRECTORY_SEPARATOR,$storeResult['destination_dir']).$storeResult['file_destination_name'];
+				
+				if ($id == false) {
+					$_SESSION['error'] = $resAttach->get_error();
+				} else {
+					if ($_SESSION['history']['attachadd'] == "true") {
+						$hist = new history();
+						$sec = new security();
+						$view = $sec->retrieve_view_from_coll_id(
+							$collId
+						);
+						$hist->add(
+							$view, $res_id, 'ADD', 'attachadd',
+							ucfirst(_DOC_NUM) . $id . ' '
+							. _NEW_ATTACH_ADDED . ' ' . _TO_MASTER_DOCUMENT
+							. $res_id,
+							$_SESSION['config']['databasetype'],
+							'apps'
+						);
+						$hist->add(
+							RES_ATTACHMENTS_TABLE, $id, 'ADD','attachadd',
+							$_SESSION['error'] 
+							. _NEW_ATTACHMENT,
+							$_SESSION['config']['databasetype'],
+							'attachments'
+						);
+					}
+				}
+				
+				return $complete_path;
+			}
+			
+			return 'null';
+			/*if (!bordExists($res_id, 'letterbox_coll')){
+				$req =  "INSERT INTO res_attachments (title, type_id, format, typist, creation_date, identifier, docserver_id, path, filename, fingerprint, filesize, status, coll_id,res_id_master,attachment_type, relation) VALUES ('".$title."', '0', 'pdf', '".$_SESSION['user']['UserId']."', '".$date."', '1', '".$docserver->docserver_id."', '".$bordereau['path']."', '".$bordereau['filename']."', '".$fingerprint."', '".$filesize."', 'TRA', 'letterbox_coll','".$res_id."','routing', 1);";
+				$db->query($req, false, true);
+			}
+			else {
+				$req =  "UPDATE res_attachments SET path='".$bordereau['path']."', filename='".$bordereau['filename']."', fingerprint='".$fingerprint."', filesize='".$filesize."' WHERE res_id_master = $res_id and attachment_type='routing' ";
+				$db->query($req, false, true);
+			}*/
+		}
 	}
-	else {
-		$req =  "UPDATE res_attachments SET path='".$bordereau['path']."', filename='".$bordereau['filename']."', fingerprint='".$fingerprint."', filesize='".$filesize."' WHERE res_id_master = $res_id and attachment_type='routing' ";
-	}
-	
-	$db->query($req, false, true);
 }
 
 class ChargePdf extends FPDI
@@ -97,22 +261,6 @@ class ChargePdf extends FPDI
 	{
 		// Lecture des lignes du fichier
 		$data = array();
-		/*for ($i = 1; $i <= count($tab); $i++){
-			$user = getInfosUser($tab[$i]['user_visa']);
-			if ($tab[$i]['note'] == "") {
-				if ($i == count($tab))
-					$tab[$i]['note'] = "Pour signature";
-				else $tab[$i]['note'] = "Pour visa";
-			}
-			
-			if (utf8_decode($tab[$i]['date_visa']) == "") $data[] = array(utf8_decode($user['prenom']).' '.utf8_decode($user['nom']).",\n ".utf8_decode($user['groupe']),utf8_decode($tab[$i]['note']),'','');
-			else {
-				$date_visa = explode(" ",$tab[$i]['date_visa']);
-				$date = explode("-",$date_visa[0]);
-				
-				$data[] = array(utf8_decode($user['prenom']).' '.utf8_decode($user['nom']).",\n ".utf8_decode($user['groupe']),utf8_decode($tab[$i]['note']),$date[2]."/".$date[1]."/".$date[0],utf8_decode('Visé'));
-			}
-		}*/
 		
 		
 		if (isset($tab['visa']['users'])){
@@ -286,10 +434,12 @@ foreach($data as $d){
 }
 
   
-$out = getOutputName();
-$pdf->Output($out['filepath'], 'F');
+$tmpFileName = 'tmp_file_' . $_SESSION['user']['UserId']
+            . '_' . rand() . '.pdf';
+$filePathOnTmp = $_SESSION['config']['tmppath'] . $tmpFileName;
+$pdf->Output($filePathOnTmp, 'F');
 
-ajout_bdd($out,$res_id);
-echo "{status : 1,path:'".$out['filepath']."',code:'".$barcode."'}";
+$filepath_out = ajout_bdd($tmpFileName,$res_id);
+echo "{status : 1,path:'".$filepath_out."',code:'".$barcode."'}";
 exit();
 ?>

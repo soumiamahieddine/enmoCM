@@ -426,7 +426,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				}
 			$frm_str .='</select> ';
 			$table = $sec->retrieve_table_from_coll($coll_id);
-			$frm_str .= '<input type="button" name="send" id="send_action" value="'._VALIDATE.'" class="button" onclick="if (document.getElementById(\'chosen_action\').value == 403 || document.getElementById(\'chosen_action\').value == 404 || document.getElementById(\'chosen_action\').value == 414) generateWaybill('.$res_id.');valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
+			$frm_str .= '<input type="button" name="send" id="send_action" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
 		}
 		
 		

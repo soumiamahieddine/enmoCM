@@ -276,24 +276,27 @@ function get_rep_path($res_id, $coll_id)
     $db = new dbquery();
     $db->connect();
 
-    $db->query("select docserver_id, path, filename from ".$view." where res_id = ".$res_id);
-    $res = $db->fetch_object();
-    $docserver_id = $res->docserver_id;
-	
-	
-	$db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver_id."'");
+    //$db->query("select docserver_id, path, filename from ".$view." where res_id = ".$res_id);
+    $db->query("select docserver_id from res_view_attachments where res_id_master = " . $res_id . " order by res_id desc");
+    while ($res = $db->fetch_object()) {
+        $docserver_id = $res->docserver_id;
+        break;
+    }
+
+    $db->query("select path_template from ".$_SESSION['tablename']['docservers']." where docserver_id = '".$docserver_id."'");
     $res = $db->fetch_object();
     $docserver_path = $res->path_template;
-	$db->query("select filename, path,title,res_id,res_id_version  from res_view_attachments where res_id_master = " . $res_id . " AND status <> 'OBS' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response') order by creation_date asc");
+	$db->query("select filename, path,title,res_id,res_id_version,attachment_type  from res_view_attachments where res_id_master = " . $res_id . " AND status <> 'OBS' AND status <> 'SIGN' AND status <> 'DEL' and attachment_type IN ('response_project','signed_response') order by creation_date asc");
 	$array_reponses = array();
 	$cpt_rep = 0;
 	while ($res2 = $db->fetch_object()){
 		$filename=$res2->filename;
 		$path = preg_replace('/#/', DIRECTORY_SEPARATOR, $res2->path);
 		$filename_pdf = str_replace(pathinfo($filename, PATHINFO_EXTENSION), "pdf",$filename);
-		if (is_file($docserver_path.$path.$filename_pdf)){
+		if (file_exists($docserver_path.$path.$filename_pdf)){
 			$array_reponses[$cpt_rep]['path'] = $docserver_path.$path.$filename_pdf;
 			$array_reponses[$cpt_rep]['title'] = $res2->title;
+			$array_reponses[$cpt_rep]['attachment_type'] = $res2->attachment_type;
 			if ($res2->res_id_version == 0){
 				$array_reponses[$cpt_rep]['res_id'] = $res2->res_id;
 				$array_reponses[$cpt_rep]['is_version'] = 0;
@@ -402,31 +405,218 @@ function concat_files($dossier, $res_id){
 			$cmd .= $d['path']." ";
 	}
 	
+	$tmpFileName = 'tmp_file_' . $_SESSION['user']['UserId']
+            . '_' . rand() . '.pdf';
+	$filePathOnTmp = $_SESSION['config']['tmppath'] . $tmpFileName;
 	
+	$cmd .= " cat output ".$filePathOnTmp;
+	exec($cmd);
+	
+	ajout_bdd($tmpFileName,$res_id);
+}
+
+function ajout_bdd($fnameTmp, $res_id){
+	$db = new dbquery();
+	$db->connect();
+	$collId = 'letterbox_coll';
+
+	require_once 'modules/attachments/attachments_tables.php';
+	require_once "core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."docservers_controler.php";
+	require_once "core".DIRECTORY_SEPARATOR."docservers_tools.php";
+	require_once 'core/class/docserver_types_controler.php';
+
 	
 	$docserv_control = new docservers_controler();
 	$docserverTypeControler = new docserver_types_controler();
 	
-	$docserv = $docserv_control->getDocserverToInsert("letterbox_coll");
-	$docserverTypeObject = $docserverTypeControler->get($docserv->docserver_type_id);
-	$storeFolder = $docserv->path_template;
-	$pathOnDocserver = Ds_createPathOnDocServer(
-            $storeFolder
-        );
-	$storeFolder = str_replace("//", "/", $pathOnDocserver['destinationDir']);
-	$pathondocserver = $storeFolder;
-	$fname_tab = $docserv_control->getNextFileNameInDocserver($pathondocserver);	
-	$outputFile = array();
-	$outputFile['filepath'] = $fname_tab['destinationDir'].$fname_tab['fileDestinationName'].".pdf";
+	$docserver = $docserv_control->getDocserverToInsert($collId);
 	
-	$path_bdd=explode("/",$fname_tab['destinationDir']);
-	$cmd .= " cat output ".$outputFile['filepath'];
-	$outputFile['path'] = $path_bdd[count($path_bdd)-4]."#".$path_bdd[count($path_bdd)-3] . "#" . $path_bdd[count($path_bdd)-2]."#";
-	$outputFile['filename'] = $fname_tab['fileDestinationName'].".pdf";
-	exec($cmd);
-	
-	ajout_bdd($outputFile,$res_id);
-	return $outputFile;
+	if (empty($docserver)) {
+    $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
+        . _NO_AVAILABLE_DOCSERVER . '. ' . _MORE_INFOS;
+	} else {
+		
+		$newSize = $docserv_control->checkSize(
+			$docserver, $filesize
+		);
+		if ($newSize == 0) {
+        $_SESSION['error'] = _DOCSERVER_ERROR . ' : '
+            . _NOT_ENOUGH_DISK_SPACE . '. ' . _MORE_INFOS . '.';
+		} else {
+			$title = "Dossier du document n°".$res_id;
+			
+			$fileInfos = array(
+            'tmpDir'      => $_SESSION['config']['tmppath'],
+            'size'        => filesize ($_SESSION['config']['tmppath'].$fnameTmp),
+            'format'      => 'pdf',
+            'tmpFileName' => $fnameTmp,
+			);
+
+			$storeResult = array();
+			$storeResult = $docserv_control->storeResourceOnDocserver(
+				$collId, $fileInfos
+			);
+			
+			if (isset($storeResult['error']) && $storeResult['error'] <> '') {
+				$_SESSION['error'] = $storeResult['error'];
+			} else {
+				require_once "core/class/class_request.php";
+				$req = new request();
+				$req->connect();
+				
+				$resAttach = new resource();
+				$_SESSION['data'] = array();
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'typist',
+						'value' => $_SESSION['user']['UserId'],
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'format',
+						'value' => 'pdf',
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'docserver_id',
+						'value' => $storeResult['docserver_id'],
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'status',
+						'value' => 'TRA',
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'offset_doc',
+						'value' => ' ',
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'logical_adr',
+						'value' => ' ',
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'title',
+						'value' => $req->protect_string_db($title),
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'relation',
+						'value' => 1,
+						'type' => 'integer',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'coll_id',
+						'value' => $collId,
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'res_id_master',
+						'value' => $res_id,
+						'type' => 'integer',
+					)
+				);
+				
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'type_id',
+						'value' => 0,
+						'type' => 'int',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'identifier',
+						'value' => '1',
+						'type' => 'string',
+					)
+				);
+				array_push(
+					$_SESSION['data'],
+					array(
+						'column' => 'attachment_type',
+						'value' => 'print_folder',
+						'type' => 'string',
+					)
+				);
+
+				$id = $resAttach->load_into_db(
+					RES_ATTACHMENTS_TABLE,
+					$storeResult['destination_dir'],
+					$storeResult['file_destination_name'] ,
+					$storeResult['path_template'],
+					$storeResult['docserver_id'], 
+					$_SESSION['data'],
+					$_SESSION['config']['databasetype']
+				);
+				
+				$complete_path = $storeResult['path_template'].str_replace('#',DIRECTORY_SEPARATOR,$storeResult['destination_dir']).$storeResult['file_destination_name'];
+				
+				if ($id == false) {
+					$_SESSION['error'] = $resAttach->get_error();
+				} else {
+					if ($_SESSION['history']['attachadd'] == "true") {
+						$hist = new history();
+						$sec = new security();
+						$view = $sec->retrieve_view_from_coll_id(
+							$collId
+						);
+						$hist->add(
+							$view, $res_id, 'ADD', 'attachadd',
+							ucfirst(_DOC_NUM) . $id . ' '
+							. _NEW_ATTACH_ADDED . ' ' . _TO_MASTER_DOCUMENT
+							. $res_id,
+							$_SESSION['config']['databasetype'],
+							'apps'
+						);
+						$hist->add(
+							RES_ATTACHMENTS_TABLE, $id, 'ADD','attachadd',
+							$_SESSION['error'] 
+							. _NEW_ATTACHMENT,
+							$_SESSION['config']['databasetype'],
+							'attachments'
+						);
+					}
+				}
+				
+				return $complete_path;
+			}
+			
+			return 'null';
+		}
+	}
 }
 
 function get_attach_path($res_id, $coll_id)
@@ -502,24 +692,7 @@ function get_attach_path_id($id_attach, $id_doc, $coll_id)
 	return $docserver_path.$path.$filename_pdf;
 }
 
-function ajout_bdd($dossier_imp, $res_id){
-	$db = new dbquery();
-	$db->connect();
-	$title = "Dossier du document n°".$res_id;
 
-	
-	$fingerprint = hash_file(strtolower("SHA256"), $dossier_imp['filepath']);
-	
-	
-	$filesize = filesize ($dossier_imp['filepath']);
-	$date = date("Y-m-d H:i:s").".000";
-	
-	
-
-	$req =  "INSERT INTO res_attachments (title, type_id, format, typist, creation_date, identifier, docserver_id, path, filename, fingerprint, filesize, status, coll_id,res_id_master, attachment_type) VALUES ('".$title."', '0', 'pdf', '".$_SESSION['user']['UserId']."', CURRENT_TIMESTAMP, '1', 'FASTHD_MAN', '".$dossier_imp['path']."', '".$dossier_imp['filename']."', '".$fingerprint."', '".$filesize."', 'TRA', 'letterbox_coll','".$res_id."', 'print_folder');";
-
-	$db->query($req, false, true);
-}
 
 function getDocsBasket(){
 	$db = new dbquery();
@@ -1061,7 +1234,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
 	$dossier = getDossier($values_form);
 	
 	$dossier = getPaths($dossier, $res_id);
-	$output = concat_files($dossier,$res_id);
+	concat_files($dossier,$res_id);
     return array(
 		'result' => $res_id.'#',
 		'history_msg' => '',
