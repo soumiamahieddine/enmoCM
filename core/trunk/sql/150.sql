@@ -752,3 +752,9 @@ UPDATE mlb_coll_ext m SET address_id = adr.id FROM contact_addresses adr WHERE m
 -- attachments
 UPDATE res_attachments SET relation = 1, attachment_type='response_project';
 
+
+-- templates
+UPDATE templates SET template_target = 'attachments', template_attachment_type = 'response_project';
+
+UPDATE templates SET template_target = 'notifications', template_attachment_type = NULL WHERE lower(template_label) LIKE '%notification%';
+
