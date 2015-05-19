@@ -88,7 +88,7 @@ function r_mkdir($path, $mode = 0777, $recursive = true) {
 		return false;
 	 
 	if($recursive) {
-		$toDo = substr($path, 0, strrpos($path, '/'));
+		$toDo = substr($path, 0, strrpos($path, DIRECTORY_SEPARATOR));
 		if($toDo !== '.' && $toDo !== '..')
 			r_mkdir($toDo, $mode);
 	}
