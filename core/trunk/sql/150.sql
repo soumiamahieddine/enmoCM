@@ -726,3 +726,29 @@ CREATE VIEW res_view_attachments AS
 
 
 UPDATE parameters SET param_value_int = 150 where id='database_version';
+
+
+
+-- ************************************************************************* --
+--                               DATA MIGRATION                              --
+-- ************************************************************************* --
+
+-- confidentiality
+UPDATE res_letterbox SET confidentiality = 'N';
+
+-- contacts_v2
+INSERT INTO contacts_v2 (contact_id, contact_type, is_corporate_person, society, society_short,firstname,lastname,title,function,other_data,user_id,entity_id,creation_date,update_date,enabled)
+SELECT contact_id, '1', is_corporate_person, society, '', firstname, lastname, title,function, other_data,'superadmin','',CURRENT_DATE,CURRENT_DATE,enabled FROM contacts;
+
+INSERT INTO contact_addresses (contact_id, contact_purpose_id, departement,firstname,lastname,title,function,occupancy,address_num,address_street, address_complement, address_town, address_postal_code,address_country,phone,email,website,salutation_header,salutation_footer,other_data,user_id,entity_id,is_private, enabled)
+SELECT contact_id,'1','','','','','','',address_num,address_street,address_complement,address_town,address_postal_code,address_country,phone,email,'','','','','superadmin','',is_private,enabled from contacts;
+
+INSERT INTO contact_purposes (id,label) VALUES ('1','Adresse Principale');
+
+INSERT INTO contact_types (id,label) VALUES ('1','Courriers');
+
+UPDATE mlb_coll_ext m SET address_id = adr.id FROM contact_addresses adr WHERE m.exp_contact_id = adr.contact_id OR m.dest_contact_id = adr.contact_id;
+
+-- attachments
+UPDATE res_attachments SET relation = 1, attachment_type='response_project';
+
