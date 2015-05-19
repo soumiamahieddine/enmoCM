@@ -246,8 +246,8 @@ ALTER TABLE listinstance ADD process_date timestamp without time zone;
 ALTER TABLE listmodels DROP COLUMN IF EXISTS title;
 ALTER TABLE listmodels ADD COLUMN title varchar(255);
 
-ALTER TABLE listmodels DROP COLUMN IF EXISTS description;
-ALTER TABLE listmodels ADD COLUMN description varchar(255);
+-- ALTER TABLE listmodels DROP COLUMN IF EXISTS description;
+-- ALTER TABLE listmodels ADD COLUMN description varchar(255);
 
 ALTER TABLE listmodels DROP COLUMN IF EXISTS process_comment;
 ALTER TABLE listmodels ADD COLUMN process_comment varchar(255);
@@ -758,3 +758,5 @@ UPDATE templates SET template_target = 'attachments', template_attachment_type =
 
 UPDATE templates SET template_target = 'notifications', template_attachment_type = NULL WHERE lower(template_label) LIKE '%notification%';
 
+-- listmodels
+UPDATE listmodels SET title=description, description='';
