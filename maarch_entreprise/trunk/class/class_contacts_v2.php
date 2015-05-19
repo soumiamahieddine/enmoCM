@@ -1520,11 +1520,24 @@ class contacts_v2 extends dbquery
                         $see_all_addresses = $_SESSION['config']['businessappurl'].'index.php?display=false&dir=my_contacts&page=info_contact_iframe&seeAllAddresses&contactid='.$_SESSION['contact']['current_contact_id'].'&addressid='.$_SESSION['contact']['current_address_id'];
                         if ($_SESSION['AttachmentContact'] == "1") {
                             ?>
-                            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div_attach'));new Effect.BlindUp(parent.document.getElementById('info_contact_div_attach'));simpleAjax('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=unsetAttachmentContact');return false;" />
-                            <?php
+                            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" <?php
+                            $core_tools = new core_tools();
+                            if($core_tools->test_service('my_contacts', 'apps', false)){
+                                ?>onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div_attach'));new Effect.BlindUp(parent.document.getElementById('info_contact_div_attach'));simpleAjax('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=unsetAttachmentContact');return false;" <?php
+                            } else { 
+                                ?>onclick="new Effect.BlindUp(parent.document.getElementById('info_contact_div_attach'));simpleAjax('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=unsetAttachmentContact');return false;" <?php
+                            } ?>
+                             /> <?php
                         } else {
                             ?>
-                            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div'));new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return false;" />
+                            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>"  <?php
+                            $core_tools = new core_tools();
+                            if($core_tools->test_service('my_contacts', 'apps', false)){
+                                ?>onclick="new Effect.BlindUp(parent.document.getElementById('create_contact_div'));new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return false;" <?php
+                            } else { 
+                                ?>onclick="new Effect.BlindUp(parent.document.getElementById('info_contact_div'));return false;" <?php
+                            } ?>
+                             /> 
                         <?php } ?>
                         <input type="button" class="button"  name="cancel" value="<?php echo _SEE_ALL_ADDRESSES; ?>" onclick="javascript:window.location.href='<?php echo $see_all_addresses;?>';" />
                         <?php
