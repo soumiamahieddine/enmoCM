@@ -41,6 +41,9 @@ if (!defined('_DISSMARTCARD_SIGNER_APPLET'))
 if (!defined('_IMG_SIGN_MISSING'))
     define('_IMG_SIGN_MISSING', 'Image de signature manquante');
 
+if (!defined('_THUMBPRINT_MISSING'))
+    define('_THUMBPRINT_MISSING', 'Empreinte numérique manquante');
+
 if (!defined('_SEND_TO_SIGNATURE'))
     define('_SEND_TO_SIGNATURE', 'Soumettre');
 

@@ -10,6 +10,47 @@ $core_tools->load_lang();
 $db = new dbquery();
 $db->connect();
 
+$tabKey = array(                        // Tableau contenant les 20 clé de cyptages
+			"4A3GdU+0v91aT9nm",
+			"kyCJfwxl9dpFvvHE",
+			"WsE,0TRu56h3pp82",
+			"8pcaf6r8JLT,Umz:",
+			"ap2znvTS69ebmSPR",
+			"jdkyCJfwxl9dpFvv",
+			"Jfwxl9dpFvvHEI69",
+			"pQ*2k23S5ywSkRs!",
+			"bMFABR07ypWHnh:b",
+			"3v+ze:RjUXhHkG?k",
+			"gRGhBiTtETxVrAsJ",
+			"KEfQRkD0YuZ67dR9",
+			"8Y2X8KxN!IjMCgk3",
+			"oPzxdErYWplXw7Nv",
+			"jOC8nxDdKiW,nOFs",
+			"YIAEDxt?GdykTkZ0",
+			"LDwZ8HXWI0wA2ZDy",
+			"?PSzdIcAhScEnerK",
+			":V4rm9rFdOSmdWdj",
+			"FNSOj0RUGP93zj2r"
+		);
+				
+function encrypt($text, $key) { // fonction retournant la variable cryptée à partir d'une variable ($text) à crypter et d'une cle de cryptage
+	$iv = "5AFTI85aDzR5570098ZezT9MmACTazR8"; // le vecteur d'initialisation
+	if (in_array('mcrypt', get_loaded_extensions())){
+		$crypttext = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $text, MCRYPT_MODE_CBC, $iv);
+		return base64_encode($crypttext);
+	}
+	else return '';
+}
+	
+function decrypt($input, $key) {// fonction retournant la variable décryptée à partir d'une variable ($input) à décrypter et d'une cle de cryptage
+        $iv = "5AFTI85aDzR5570098ZezT9MmACTazR8"; // le vecteur d'initialisation
+		if (in_array('mcrypt', get_loaded_extensions())){
+			$dectext = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, base64_decode($input), MCRYPT_MODE_CBC, $iv);
+			return $dectext;
+		}
+		else return '';
+    }
+	
 if (
     file_exists(
         $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
@@ -23,9 +64,25 @@ if (
 }
 
 if (!empty($_REQUEST['pinCode']) && $_REQUEST['pinCode'] != 'null') {
-	$_SESSION['sign']['encodedPinCode'] = $_REQUEST['pinCode'];
-	$_SESSION['sign']['indexKey'] = '-1';
+	$_SESSION['sign']['indexKey'] = rand(0,20);
+	$encoded = encrypt($_REQUEST['pinCode'], $tabKey[$_SESSION['sign']['indexKey']]);
+	$_SESSION['sign']['encodedPinCode'] = $encoded;
+	
+	if ($encoded == ''){
+		$_SESSION['sign']['encodedPinCode'] = $_REQUEST['pinCode'];
+		$_SESSION['sign']['indexKey'] = '-1';
+	}
 }
+
+$_SESSION['sign']['indexKey_thumbprint'] = rand(0,20);
+$encoded_tp = encrypt($_SESSION['user']['thumbprint'], $tabKey[$_SESSION['sign']['indexKey_thumbprint']]);
+$_SESSION['sign']['encoded_thumbprint'] = $encoded_tp;
+
+if ($encoded_tp == ''){
+	$_SESSION['sign']['encoded_thumbprint'] = $_SESSION['user']['thumbprint'];
+	$_SESSION['sign']['indexKey_thumbprint'] = '-1';
+}
+	
 
 
 if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId']) && isset($_REQUEST['modeSign'])) {

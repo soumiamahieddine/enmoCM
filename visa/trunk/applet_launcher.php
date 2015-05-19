@@ -85,6 +85,11 @@ if (!isset($_SESSION['user']['pathToSignature']) ||$_SESSION['user']['pathToSign
 	echo $_SESSION['error'];exit;
 }
 
+if ($modeSign == '0' && (!isset($_SESSION['user']['thumbprint']) ||$_SESSION['user']['thumbprint'] == '')) {
+    $_SESSION['error'] = _THUMBPRINT_MISSING;
+	echo $_SESSION['error'];exit;
+}
+
 if (!isset($_SESSION['sign']['encodedPinCode'])){
 	$pinCode = '0000';
 	$index = '-1';
@@ -131,8 +136,8 @@ $_SESSION['error'] = '';
         <param name="mayscript" value="mayscript" /-->
 		
 		<!--nouveaux paramètres pour la signature -->
-		<param name="thumbPrint" value="<?php echo $_SESSION['user']['thumbprint'];?>">
-        <param name="thumprintkeyIdx" value="-1">
+		<param name="thumbPrint" value="<?php echo $_SESSION['sign']['encoded_thumbprint'];?>">
+        <param name="thumprintkeyIdx" value="<?php echo $_SESSION['sign']['indexKey_thumbprint'];?>">
         <param name="pinCode" value="<?php echo $pinCode;?>">
 		<param name="pinCodeIdx" value="<?php echo $index;?>">
 		<param name="timeStamp" value="0">
