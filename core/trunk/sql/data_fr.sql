@@ -67,7 +67,7 @@ INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, ca
 INSERT INTO status VALUES ('INIT', 'Nouveau courrier ou document non qualifié', 'Y', 'N', 'fm-letter-status-attr', 'apps', 'Y', 'Y');
 INSERT INTO status VALUES ('VIS', 'A viser', 'N', 'N', 'fm-letter-status-aval', 'apps', 'Y', 'Y');
 
-INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SMART', 'Nouvelle demande Allo Mairie', 'N', '', 'apps', 'Y', 'N');
+INSERT INTO status (id, label_status, is_system, img_filename, maarch_module, can_be_searched, can_be_modified) VALUES ('SMART', 'Nouvelle demande Maarch Mairie', 'N', '', 'apps', 'Y', 'N');
 
 ---------------
 -- PJ STATUS --
@@ -435,7 +435,7 @@ INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersTreatBasket', '[dossier] 94 - Dossiers traités', 'Corbeille des dossiers traités', 'status = ''FOLDTRT'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
 INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, is_folder_basket, enabled) VALUES ('letterbox_coll', 'FoldersDepartmentBasket', '[dossier] 95 - Dossiers', 'Corbeille de dossiers', 'status = ''FOLDNEW'' and count_document > 0', 'N', 'Y', 'Y', 'Y');
 
-INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'AlloMairieBasket', 'Demandes Allo Mairie', 'Corbeilles des demandes Allo Mairie', 'status = ''SMART''', 'N', 'Y', 'Y');
+INSERT INTO baskets (coll_id, basket_id, basket_name, basket_desc, basket_clause, is_generic, is_visible, enabled) VALUES ('letterbox_coll', 'AlloMairieBasket', 'Demandes Maarch Mairie', 'Corbeilles des demandes Maarch Mairie', 'status = ''SMART''', 'N', 'Y', 'Y');
 
 ------------
 --ACTIONS--
@@ -616,7 +616,7 @@ VALUES (5, 'Les courriers', '', NULL, '0000000000', '0000000000', '0000000000', 
 ------------
 --DOCTYPES_FIRST_LEVEL--
 ------------
-INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (20, 'ALLO MAIRIE', 'black_style_big', 'Y');
+INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (20, 'MAARCH MAIRIE', 'black_style_big', 'Y');
 INSERT INTO doctypes_first_level (doctypes_first_level_id, doctypes_first_level_label, css_style, enabled) VALUES (10, 'Courriers des services', 'blue_style_big', 'Y');
 ALTER SEQUENCE doctypes_first_level_id_seq RESTART WITH 201;
 ------------
@@ -654,7 +654,7 @@ INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_lev
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 85, 'Demande Environnement', 'Y', 20, 50, NULL, NULL);
 INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 90, 'Demande Urbanisme', 'Y', 20, 50, NULL, NULL);
 
-INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 99, 'Demande Allo Mairie', 'Y', 10, 10, NULL, NULL);
+INSERT INTO doctypes (coll_id, type_id, description, enabled, doctypes_first_level_id, doctypes_second_level_id, primary_retention, secondary_retention) VALUES ('letterbox_coll', 99, 'Demande Maarch Mairie', 'Y', 10, 10, NULL, NULL);
 ------------
 --DOCTYPES_INDEXES--
 ------------
@@ -929,7 +929,7 @@ VALUES (8, '[notification courrier] Nouvelle annotation', '[notification] Nouvel
 </tr>
 </tbody>
 </table>', 'HTML', NULL, NULL, 'ODP: open_office_presentation', 'notes', 'notifications');
-INSERT INTO templates VALUES (100, '[allo mairie] Enregistrement demande - DIVERS', '[allo mairie] Enregistrement demande - DIVERS', '<p style="text-align: center###"><span style="font-size: small### text-decoration: underline###">ENREGISTREMENT DEMANDE Allo Mairie - DIVERS</span></p>
+INSERT INTO templates VALUES (100, '[maarch mairie] Enregistrement demande - DIVERS', '[maarch mairie] Enregistrement demande - DIVERS', '<p style="text-align: center###"><span style="font-size: small### text-decoration: underline###">ENREGISTREMENT DEMANDE Maarch Mairie - DIVERS</span></p>
 <p style="text-align: center###">&nbsp###</p>
 <table style="border: 1pt solid #000000### width: 800px### background-color: #40a497###" border="1" cellspacing="1" cellpadding="5">
 <tbody>
@@ -976,7 +976,7 @@ INSERT INTO templates VALUES (100, '[allo mairie] Enregistrement demande - DIVER
 </tr>
 </tbody>
 </table>', 'HTML', NULL, NULL, 'DOCX: demo_document_msoffice', '', 'doctypes');
-INSERT INTO templates VALUES (101, '[allo mairie] Clôture de demande', '[allo mairie] Clôture de demande', '<p style="text-align: left###"><span style="font-size: small###">&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###</span><span style="text-decoration: underline###"><span style="font-size: small###">CLOTURE DEMANDE Allo Mairie - [res_letterbox.type_label] - [res_letterbox.res_id] </span></span></p>
+INSERT INTO templates VALUES (101, '[maarch mairie] Clôture de demande', '[maarch mairie] Clôture de demande', '<p style="text-align: left###"><span style="font-size: small###">&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###&nbsp###</span><span style="text-decoration: underline###"><span style="font-size: small###">CLOTURE DEMANDE Maarch Mairie - [res_letterbox.type_label] - [res_letterbox.res_id] </span></span></p>
 <p style="text-align: center###">&nbsp###</p>
 <table style="background-color: #a8c33c### width: 800px### border: #000000 1pt solid###" border="1" cellspacing="1" cellpadding="5">
 <tbody>
