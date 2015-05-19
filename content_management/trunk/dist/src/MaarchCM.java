@@ -308,11 +308,24 @@ public class MaarchCM extends JApplet {
             this.logger.log("CREATE FILE IN LOCAL PATH", Level.INFO);
             this.fM.createFile(this.fileContent, this.userLocalDirTmp + this.fileToEdit);
             
+
+
             Thread theThread;
             theThread = new Thread(new ProcessLoop(this));
             
+
+
+
+
             //theThread.logger = this.logger;
             
+
+
+
+
+
+
+
             theThread.start();
             
             String actualContent;
@@ -332,6 +345,7 @@ public class MaarchCM extends JApplet {
             }
             while (theThread.isAlive());
             
+
             theThread.interrupt();
             
             this.logger.log("----------END EXECUTION OF THE EDITOR----------", Level.INFO);
@@ -409,7 +423,7 @@ public class MaarchCM extends JApplet {
             options = this.fM.findGoodOptionsToEdit(this.fileExtension);
             this.logger.log("OPTION PROGRAM TO EDIT " + options, Level.INFO);
             String pathCommand;
-            pathCommand = pathProgram + " " + options + this.userLocalDirTmp + this.fileToEdit;
+            pathCommand = pathProgram + " " + options + "\""+this.userLocalDirTmp + this.fileToEdit+"\"";
             this.logger.log("PATH COMMAND TO EDIT " + pathCommand, Level.INFO);
             proc = this.fM.launchApp(pathCommand);
         }
