@@ -131,7 +131,7 @@ function addRow(id_tableau)
 }
 
 function delRow(num, id_tableau){
-	console.log("Suppression de la ligne "+num);
+	//console.log("Suppression de la ligne "+num);
 	
 	document.getElementById(id_tableau).deleteRow(num);
 	
@@ -239,7 +239,7 @@ function load_listmodel_visa(
                 eval("response = "+answer.responseText);
                 //alert(answer.responseText);
                 if(response.status == 0 ) {
-					console.log("Recup liste");
+					//console.log("Recup liste");
 					diff_list_div.innerHTML = response.div_content;
                 }
                 else {
@@ -317,14 +317,14 @@ function loadNewId(path_update,newId, collId){
 	/* Modification dans la liste de gauche */
 	var zone_old = 'list_doc_'+$('cur_resId').value;
 	var zone_new = 'list_doc_'+newId;
-	console.log(zone_new);
+	//console.log(zone_new);
 	
 	$(zone_old).className = 'unselectedId';
 	$(zone_new).className = 'selectedId';
 	
 	$('cur_resId').value=newId;
 	$('numIdDocPage').innerHTML=newId;
-	console.log($("send"));
+	//console.log($("send"));
 	
 	/****************************************/
 	
@@ -347,20 +347,20 @@ function loadNewId(path_update,newId, collId){
 				eval("response = "+answer.responseText);
 				//console.log(response);
 				if (response.status == 1){ //page de visa
-					console.log("MAJ Avancement");
+					//console.log("MAJ Avancement");
 					$('page_avancement').innerHTML = response.avancement;
-					console.log("MAJ circuit");
+					//console.log("MAJ circuit");
 					$('page_circuit').innerHTML = response.circuit;
-					console.log("MAJ Notes");
+					//console.log("MAJ Notes");
 					$('onglet_notes').innerHTML = response.notes_dt;
 					$('page_notes').innerHTML = response.notes_dd;
-					console.log("MAJ Partie droite");
+					//console.log("MAJ Partie droite");
 					$('tabricatorRight').innerHTML = response.right_html;
-					console.log("Modification bouton action");
+					//console.log("Modification bouton action");
 					$("send_action").setAttribute('onclick',response.valid_button);
 					updateFunctionModifRep(response.id_rep, 1, response.is_vers_rep);
 					
-					console.log("Initialisation onglets de la partie droite");
+					//console.log("Initialisation onglets de la partie droite");
 					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
 				}
 				
@@ -372,7 +372,7 @@ function loadNewId(path_update,newId, collId){
 					//console.log("'"+response.valid_button+"'");
 					$("send_action").setAttribute('onclick',response.valid_button);
 					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
-					console.log("MAJ OK");
+					//console.log("MAJ OK");
 				}
 				
 				if (response.status == 3){ //page envoi mail
@@ -394,16 +394,16 @@ function loadNewId(path_update,newId, collId){
 					$('page_notes').innerHTML = response.notes_dd;
 					$('onglet_pj').innerHTML = response.pj_dt;
 					$('page_pj').innerHTML = response.pj_dd;
-					console.log(response.right_html);
+					//console.log(response.right_html);
 					$('tabricatorRight').innerHTML = response.right_html;
 					//console.log("'"+response.valid_button+"'");
 					$("send_action").setAttribute('onclick',response.valid_button);
 					var tabricatorRight = new Tabricator('tabricatorRight', 'DT');
-					console.log("MAJ OK");
+					//console.log("MAJ OK");
 				}
 			},
 			 onFailure: function(){ 
-				console.log("Probleme de Mise à jour !");
+				//console.log("Probleme de Mise à jour !");
 			 }
 	});
 	
@@ -413,7 +413,7 @@ function previousDoc(path_update,collId){
 	var list = $('list_docs').value;
 	var tab_docs = list.split("#");
 	var current = $('cur_resId').value;
-	console.log(tab_docs);
+	//console.log(tab_docs);
 	
 	for (var i=0; i < tab_docs.length-1 ; i++){
 		if (tab_docs[i] == current && i != 0) loadNewId(path_update,tab_docs[i-1], collId);
@@ -424,7 +424,7 @@ function nextDoc(path_update,collId){
 	var list = $('list_docs').value;
 	var tab_docs = list.split("#");
 	var current = $('cur_resId').value;
-	console.log(tab_docs);
+	//console.log(tab_docs);
 	
 	for (var i=0; i < tab_docs.length-1 ; i++){
 		if (tab_docs[i] == current && i != tab_docs.length-2 ) loadNewId(path_update,tab_docs[i+1], collId);
@@ -463,7 +463,7 @@ function updateFunctionModifRep(idReponse, num_rep, is_version){
 					else document.getElementById("update_rep_link").setAttribute('onclick','window.open(\'index.php?display=true&module=attachments&page=update_attachments&mode=up&collId=letterbox_coll&id='+idReponse+'&isVersion\',\'\',\'height=301, width=301,scrollbars=yes,resizable=yes\');');	*/
 					
 					//modifyAttachmentsForm(\''.$_SESSION['config']['businessappurl'] . 'index.php?display=true&module=attachments&page=attachments_content&id='.$tab_path_rep_file[0]['res_id'].'&relation=1&fromDetail=\',\'98%\',\'auto\');
-					console.log(is_version);
+					//console.log(is_version);
 					if (is_version == 0) document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=1&fromDetail=\',\'98%\',\'auto\');');	
 					else document.getElementById("update_rep_link").setAttribute('onclick','modifyAttachmentsForm(\'index.php?display=true&module=attachments&page=attachments_content&id='+idReponse+'&relation=2&fromDetail=\',\'98%\',\'auto\');');	
 					
@@ -492,7 +492,7 @@ function hasAllAnsSigned(id_doc){
 }
 
 function signFile(res_id,isVersion, mode, pinCode){
-	console.log("Mode = "+mode);
+	//console.log("Mode = "+mode);
 	if(pinCode == undefined || pinCode=='')
     {
         pinCode='';
@@ -521,7 +521,7 @@ function signFile(res_id,isVersion, mode, pinCode){
 						var attr = document.getElementById("sendPIN").getAttribute('onclick').split(',');	
 						document.getElementById("sendPIN").setAttribute('onclick',attr[0]+','+attr[1]+','+mode+','+attr[3]);	
 						$('modalPIN').style.display = 'block';
-						console.log("Code PIN :"+pinCode);
+						//console.log("Code PIN :"+pinCode);
 				}
 			}
 		}
@@ -584,7 +584,7 @@ function endAttachmentSign(newId)
 }
 function generateWaybill(resId)
 {
-	console.log("Génération du bordereau");
+	//console.log("Génération du bordereau");
 	new Ajax.Request("index.php?display=true&module=visa&page=visa_waybill",
 	{
 		
@@ -595,8 +595,8 @@ function generateWaybill(resId)
 			onSuccess: function(answer){
 				eval("response = "+answer.responseText);
 				if (response.status == 1){
-					console.log("path = "+response.path);
-					console.log("code = "+response.code);
+					//console.log("path = "+response.path);
+					//console.log("code = "+response.code);
 					new Ajax.Request("index.php?display=true&module=visa&page=put_barcode",
 					{
 						
@@ -609,7 +609,7 @@ function generateWaybill(resId)
 							onSuccess: function(answer){
 								eval("response2 = "+answer.responseText);
 								if (response2.status == 1){
-									console.log("path = "+response2.path);
+									//console.log("path = "+response2.path);
 								}
 							}
 					});
