@@ -41,7 +41,7 @@ else
         $user_data['LASTNAME'] = $func->show_string($line->lastname);
         $user_data['FIRSTNAME'] = $func->show_string($line->firstname);
         $user_data['PHONE'] = $func->show_string($line->phone);
-        $user_data['MAIL'] = $func->show_string($line->email);
+        $user_data['MAIL'] = $func->show_string($line->mail);
     }
     ?>
 <!--     <script type="text/javascript">window.resizeTo(500, 350);</script> -->
