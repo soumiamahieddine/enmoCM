@@ -159,7 +159,7 @@ if ($mode == 'add') {
     if($address_id != null){
         $db = new dbquery();
         $db->connect();
-        $db->query("select email from contact_addresses where contact_purpose_id = ".$address_id);
+        $db->query("select email from contact_addresses where id = ".$address_id);
         $adr = $db->fetch_object();
         $adress_mail = $adr->email;
     }elseif($exp_user_id != null){
