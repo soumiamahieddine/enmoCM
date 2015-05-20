@@ -133,8 +133,60 @@ if ($mode == 'add') {
     $content .= '<tr>';
     $content .= '<td align="right" nowrap width="10%"><span class="red_asterisk"><i class="fa fa-star"></i></span><label>'
         ._SEND_TO_SHORT.'</label></td>';
+
+
+
+    $exp_contact_id = null;
+    $dest_contact_id = null;
+    $exp_user_id = null;
+    $dest_user_id = null;
+    $adresse_mail = null;
+    $db = new dbquery();
+    $db->connect();
+    $db->query("select address_id, exp_user_id, dest_user_id
+                from mlb_coll_ext 
+                where (( exp_contact_id is not null 
+                or dest_contact_id is not null 
+                or exp_user_id is not null 
+                or dest_user_id is not null) 
+                and  res_id = ".$_SESSION['doc_id'].")");
+    $res = $db->fetch_object();
+    
+    $address_id = $res->address_id;
+    $exp_user_id = $res->exp_user_id;
+    $dest_user_id = $res->dest_user_id;
+
+    if($address_id != null){
+        $db = new dbquery();
+        $db->connect();
+        $db->query("select email from contact_addresses where contact_purpose_id = ".$address_id);
+        $adr = $db->fetch_object();
+        $adress_mail = $adr->email;
+    }elseif($exp_user_id != null){
+        $db = new dbquery();
+        $db->connect();
+        $db->query("select mail from users where user_id = '".$exp_user_id."'");
+        $adr = $db->fetch_object();
+        $adress_mail = $adr->mail;
+    }elseif($dest_user_id != null){
+        $db = new dbquery();
+        $db->connect();
+        $db->query("select mail from users where user_id = '".$dest_user_id."'");
+        $adr = $db->fetch_object();
+        $adress_mail = $adr->mail;
+    }
+    if($adress_mail != null and ($_SESSION['user']['UserId'] != $exp_user_id and $_SESSION['user']['UserId'] != $dest_user_id)){
+    $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput"><div id="loading_to" style="display:none;"></div><div class="email_element" id="0_'.$adress_mail.'">'.$adress_mail.'&nbsp;<div class="email_delete_button" id="0" onclick="updateAdress(\'http://localhost/maarch_trunk/apps/maarch_entreprise/index.php?display=true&amp;module=sendmail&amp;page=sendmail_ajax_content&amp;identifier=106&amp;origin=document&amp;coll_id=letterbox_coll&amp;size=full&amp;mode=adress\', \'del\', \''.$adress_mail.'\', \'to\', this.id);"
+         alt=\"Supprimer\" title=\"Supprimer\">x</div></div></div>'
+        .'<div id="loading_to" style="display:none;"><i class="fa fa-spinner fa-spin" title="loading..."></div></div></td>';
+    $_SESSION['adresses']['to'][0] = $adress_mail;
+        }else{
     $content .= '<td width="90%" colspan="2"><div name="to" id="to" class="emailInput">'
         .'<div id="loading_to" style="display:none;"><i class="fa fa-spinner fa-spin" title="loading..."></div></div></td>';
+             }
+
+
+
     $content .= '</tr>';
     $content .= '<tr><td colspan="3"><a href="javascript://" '
 		.'onclick="new Effect.toggle(\'tr_cc\', \'blind\', {delay:0.2});'
