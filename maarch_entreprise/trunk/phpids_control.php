@@ -52,15 +52,40 @@ if ($processIDS) {
         $result = $ids->run();
 
         if (!$result->isEmpty()) {
+            require_once 'core/class/class_core_tools.php';
+            require_once 'core/class/class_history.php';
+            $hist = new history();
+            $ip = $_SERVER['REMOTE_ADDR'];
+            $hist->add(
+                $_SESSION['tablename']['users'],
+                $_SESSION['user']['UserId'],
+                'PHPIDS','phpidscontrol',
+                ' PHPIDS CONTROL, USER : ' . $_SESSION['user']['UserId'] . ' IP : ' . $ip  
+                    . ' MESSAGE : ' 
+                    . (string) $result,
+                $_SESSION['config']['databasetype'],
+                'admin'
+                 ,
+                false,
+                _OK,
+                _LEVEL_ERROR
+            );
             if ($_SESSION['config']['debug'] == 'true') {
                 echo $result;
+                $_SESSION['securityMessage'] = (string) $result;
+                $varRedirect = '<script language="javascript">window.location.href=\'' 
+                    . $_SESSION['config']['businessappurl'] 
+                    . "index.php?page=security_message';</script>";
+                echo $varRedirect;
+                exit;
+            } elseif ($result->getImpact() >= 30) {
+                $_SESSION['securityMessage'] = (string) $result;
+                $varRedirect = '<script language="javascript">window.location.href=\'' 
+                    . $_SESSION['config']['businessappurl'] 
+                    . "index.php?page=security_message';</script>";
+                echo $varRedirect;
+                exit;
             }
-            $_SESSION['securityMessage'] = (string) $result;
-            $varRedirect = '<script language="javascript">window.location.href=\'' 
-                . $_SESSION['config']['businessappurl'] 
-                . "index.php?page=security_message';</script>";
-            echo $varRedirect;
-            exit;
         }
     } catch (Exception $e) {
         /*
