@@ -625,9 +625,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '</div>';
 	
 	$frm_str .= '<div id="modalPIN">';
+	$frm_str .= '<p id="badPin" style="display:none;color:red;font-weight:bold;text-align:center;margin-top: -20px">'. _BAD_PIN .'</p>';
 	$frm_str .= '<label for="valuePIN">Saisissez votre code PIN</label>';
-	$frm_str .= '<input type="password" name="valuePIN" id="valuePIN"/><br/>';
+	$frm_str .= '<input type="password" name="valuePIN" id="valuePIN" onKeyPress="if (event.keyCode == 13) signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',\'\', $(\'valuePIN\').value);"/><br/>';
 	$frm_str .= '<input type="button" name="sendPIN" id="sendPIN" value="'._VALIDATE.'" class="button" onclick="signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',\'\', $(\'valuePIN\').value);" />';
+	$frm_str .= '&nbsp;<input type="button" name="cancelPIN" id="cancelPIN" value="'._CANCEL.'" class="button" onclick="$(\'badPin\').style.display = \'none\';$(\'modalPIN\').style.display = \'none\';" />';
 	$frm_str .= '</div>';
 	
 	

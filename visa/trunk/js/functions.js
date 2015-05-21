@@ -453,7 +453,11 @@ function updateFunctionModifRep(idReponse, num_rep, is_version){
 				if (document.getElementById("sign_link")){
 					document.getElementById("sign_link").setAttribute('onclick','signFile('+idReponse+','+is_version+',1);');	
 					document.getElementById("sign_link_certif").setAttribute('onclick','signFile('+idReponse+','+is_version+',0);');	
+					
 					document.getElementById("sendPIN").setAttribute('onclick','signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
+					
+					document.getElementById("valuePIN").setAttribute('onKeyPress','if (event.keyCode == 13) signFile('+idReponse+','+is_version+',\'\', $(\'valuePIN\').value);');	
+					
 					document.getElementById("sign_link").style.color = '';
 					document.getElementById("sign_link_certif").style.color = '';
 				}
@@ -492,34 +496,44 @@ function hasAllAnsSigned(id_doc){
 }
 
 function signFile(res_id,isVersion, mode, pinCode){
-	//console.log("Mode = "+mode);
 	if(pinCode == undefined || pinCode=='')
     {
         pinCode='';
     }
+	else {
+		$('modalPIN').style.display = 'none';
+		new Ajax.Request("index.php?display=true&module=visa&page=encodePinCode",
+		{
+			method:'post',
+			asynchronous:false,
+			parameters: { 
+				pinCode : pinCode
+			}			
+		});
+	}
 	new Ajax.Request("index.php?display=true&module=visa&page=checkPinCode",
 	{
 		method:'post',
 		onSuccess: function(answer){
 			eval("response = "+answer.responseText);
 			if (response.status == 1){
-				if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&modeSign='+mode+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
-				else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&modeSign='+mode+'&pinCode='+response.pin,'','height=301, width=301,scrollbars=yes,resizable=yes');
+				$('badPin').style.display = 'none';
+				if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&modeSign='+mode,'','height=301, width=301,scrollbars=yes,resizable=yes');
+				else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&modeSign='+mode,'','height=301, width=301,scrollbars=yes,resizable=yes');
 			}
 			else if (response.status == 0){
-				//var pinCode = prompt("Code PIN :", "");
 				if (mode == 1){
-					if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&modeSign='+mode+'&pinCode=null','','height=301, width=301,scrollbars=yes,resizable=yes');
-					else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&modeSign='+mode+'&pinCode=null','','height=301, width=301,scrollbars=yes,resizable=yes');
+					if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&modeSign='+mode,'','height=301, width=301,scrollbars=yes,resizable=yes');
+					else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&modeSign='+mode,'','height=301, width=301,scrollbars=yes,resizable=yes');
 				}
-				else if (pinCode != ''){
-					$('modalPIN').style.display = 'none';
-					if (isVersion == 0) window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&id='+res_id+'&modeSign='+mode+'&pinCode='+pinCode,'','height=301, width=301,scrollbars=yes,resizable=yes');
-					else window.open('index.php?display=true&module=visa&page=sign_ans&collId=letterbox_coll&isVersion&id='+res_id+'&modeSign='+mode+'&pinCode='+pinCode,'','height=301, width=301,scrollbars=yes,resizable=yes');
-				}
+				
 				else {
 						var attr = document.getElementById("sendPIN").getAttribute('onclick').split(',');	
 						document.getElementById("sendPIN").setAttribute('onclick',attr[0]+','+attr[1]+','+mode+','+attr[3]);	
+						
+						var attr2 = document.getElementById("valuePIN").getAttribute('onKeyPress').split(',');	
+						document.getElementById("valuePIN").setAttribute('onKeyPress',attr2[0]+','+attr2[1]+','+mode+','+attr2[3]);	
+						
 						$('modalPIN').style.display = 'block';
 						//console.log("Code PIN :"+pinCode);
 				}
@@ -536,11 +550,51 @@ function loadAppletSign(url){
     displayModal(url, 'VisaApplet', 300, 300);
 }
 
+
+function translateError(key){
+	var message = "";
+	switch(key){
+		case "99" :
+			message = "Erreur lors de la signature numérique";break;
+		case "98" :
+			message = "Code PIN erroné";break;
+		case "97" :
+			message = "Trop de tentatives infructueuses pour le code PIN. Veuillez contacter votre administrateur.";break;
+		case "12" :
+			message = "Le répertoire PDF destination n'a pas de droit d'écriture. Veuillez contacter votre administrateur";break;
+		case "16" :
+			message = "Le code PIN doit comporter 4 chiffres";break;
+		case "51" :
+			message = "Anomalie lors de l'incrustation de l'imagette de signature";break;
+		default :
+			message = "";break;
+	}
+	return message;
+}
+
+
 //destroy the modal of the applet and launch an ajax script
 function endOfAppletSign(objectType, theMsg, newId)
 {
     if (objectType == 'ans_project') {
-        endAttachmentSign(newId);
+		if (newId != 0){
+			endAttachmentSign(newId);
+		}
+		else{
+			//console.log("erreur d'exécution = "+theMsg);
+			if (theMsg != '' && theMsg != ' ') {
+				if ($('maarchcm_error')) {
+					$('maarchcm_error').innerHTML = translateError(theMsg);
+					$('maarchcm_error').style.display = "block";
+				}
+				if (theMsg == "98" || theMsg == "16"){
+					//console.log("Recup mauvais PIN");
+					window.opener.$('modalPIN').style.display = 'block';
+					window.opener.$('badPin').style.display = 'block';
+					window.close();
+				}
+			}
+		}
     }
     //destroyModal('CMApplet');
 }

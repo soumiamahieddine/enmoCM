@@ -132,7 +132,15 @@ if (
         unlink($filePathOnTmp);
         createXML('SUCCESS', $result);
     } elseif ($_REQUEST['action'] == 'saveObject') {
-        if (
+		if (!empty($_REQUEST['errorCode'])
+            && !empty($_REQUEST['errorCode'])){
+			$result = array(
+				'NEW_ID' => 0,
+                'END_MESSAGE' => $_REQUEST['errorCode'],
+            );
+            createXML('ERROR', $result);
+		}
+        elseif (
             !empty($_REQUEST['fileContent'])
             && !empty($_REQUEST['fileExtension'])
         ) {

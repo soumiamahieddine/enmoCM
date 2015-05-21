@@ -51,4 +51,6 @@ if (!defined('_SUBMIT_COMMENT'))
     define('_SUBMIT_COMMENT', 'Commentaire de visa (optionnel) ');
 
 
+if (!defined('_BAD_PIN'))
+    define('_BAD_PIN', 'Code PIN incorrect. Attention, 3 essais maximum !');
 ?>

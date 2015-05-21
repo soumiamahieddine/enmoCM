@@ -63,17 +63,6 @@ if (
     $path = 'modules/visa/applet_launcher.php';
 }
 
-if (!empty($_REQUEST['pinCode']) && $_REQUEST['pinCode'] != 'null') {
-	$_SESSION['sign']['indexKey'] = rand(0,20);
-	$encoded = encrypt($_REQUEST['pinCode'], $tabKey[$_SESSION['sign']['indexKey']]);
-	$_SESSION['sign']['encodedPinCode'] = $encoded;
-	
-	if ($encoded == ''){
-		$_SESSION['sign']['encodedPinCode'] = $_REQUEST['pinCode'];
-		$_SESSION['sign']['indexKey'] = '-1';
-	}
-}
-
 $_SESSION['sign']['indexKey_thumbprint'] = rand(0,20);
 $encoded_tp = encrypt($_SESSION['user']['thumbprint'], $tabKey[$_SESSION['sign']['indexKey_thumbprint']]);
 $_SESSION['sign']['encoded_thumbprint'] = $encoded_tp;

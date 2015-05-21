@@ -152,5 +152,5 @@ $_SESSION['error'] = '';
 <p class="buttons">
     <input type="button" name="cancel" value="<?php 
         echo _CLOSE;
-        ?>" class="button" onclick="destroyModal('CMApplet');"/>
+        ?>" class="button" onclick="window.close();"/>
 </p>
