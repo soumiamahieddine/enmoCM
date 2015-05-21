@@ -88,7 +88,7 @@ class class_users extends dbquery
         }
 		
 		if (isset($_POST['thumbprint']) && ! empty($_POST['thumbprint'])) {
-            $_SESSION['user']['thumbprint']  = $_POST['thumbprint'];
+            $_SESSION['user']['thumbprint']  = trim($_POST['thumbprint']);
         }
 
         if (isset($_FILES['signature']['name']) && !empty($_FILES['signature']['name'])) {

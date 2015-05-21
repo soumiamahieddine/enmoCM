@@ -592,7 +592,7 @@ function validate_user_submit()
         $user->mail  = $_REQUEST['Mail'];
     }
 	if(isset($_REQUEST['thumbprint']) && !empty($_REQUEST['thumbprint'])){
-        $user->thumbprint  = $_REQUEST['thumbprint'];
+        $user->thumbprint  = trim($_REQUEST['thumbprint']);
     }
 
     if (isset($_FILES['signature']['name']) && !empty($_FILES['signature']['name'])) {
