@@ -361,7 +361,12 @@ if (isset($_POST['add']) && $_POST['add']) {
         $error = $_SESSION['error'];
         $status = 1;
     }
-    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
+	
+	$majFrame = 0;
+	if (isset($_SESSION['generated_file']) && $_SESSION['generated_file'] != ""){
+		$majFrame = 1;
+	}
+    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', majFrame : ".$majFrame.", exec_js : '".addslashes($js)."'}";
     exit();
 } else if (isset($_POST['edit']) && $_POST['edit']) {
     $title = '';
@@ -729,7 +734,7 @@ if (isset($_POST['add']) && $_POST['add']) {
         $status = 1;
     }
 
-    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
+    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', title : '" . addslashes($title) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
     exit();
 }
 

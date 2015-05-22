@@ -84,10 +84,12 @@ function ValidAttachmentsForm (path, form_id) {
 				
 				if ($('cur_idAffich')) var num_rep = $('cur_idAffich').value;
 
-				if($('viewframevalidRep'+num_rep)) {
+				if($('viewframevalidRep'+num_rep) && response.majFrame == 1) {
 					$('viewframevalidRep'+num_rep).src = "index.php?display=true&module=visa&page=view_doc&path=last";			
 				}
-	
+				if($('ans_'+num_rep)) {
+					$('ans_'+num_rep).innerHTML = response.title;			
+				}
 	
                 eval(response.exec_js);
             } else {
