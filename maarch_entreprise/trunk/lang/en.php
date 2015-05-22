@@ -18,6 +18,7 @@
  *   You should have received a copy of the GNU General Public License
  *    along with Maarch Framework.  If not, see <http://www.gnu.org/licenses/>.
  */
+if (!defined('_SENDER'))    define( '_SENDER', 'Sendeur');
 if (!defined('_VIEW_LAST_COURRIERS'))
     define('_VIEW_HYSTORY_LAST_COURRIERS', 'History of my last courriers');
 if (!defined('MUST_BE_LESS_THAN')) define('MUST_BE_LESS_THAN', 'must not be longer than');

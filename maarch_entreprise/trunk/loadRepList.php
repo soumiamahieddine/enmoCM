@@ -20,11 +20,11 @@ if (isset($_REQUEST['res_id_master'])) {
                     $return .= '<th style="font-weight: bold; color: black;" width="150px">';
                         $return .= _CHRONO_NUMBER;
                     $return .= '</th>';
-                    $return .= '<th style="font-weight: bold; color: black;">';
+                    $return .= '<th style="font-weight: bold; color: black;" width="130px">';
                         $return .= _STATUS;
                     $return .= '</th>';
-                    $return .= '<th style="font-weight: bold; color: black;" width="50px">';
-                        $return .= _VERSION;
+                    $return .= '<th style="font-weight: bold; color: black;" width="200px">';
+                        $return .= _ATTACHMENT_TYPE;
                     $return .= '</th>';
                     $return .= '<th style="font-weight: bold; color: black;" width="200px">';
                         $return .= _CREATION_DATE;
@@ -32,7 +32,7 @@ if (isset($_REQUEST['res_id_master'])) {
                     $return .= '<th style="font-weight: bold; color: black;">';
                         $return .= _SUBJECT;
                     $return .= '</th>';
-                    $return .= '<th style="font-weight: bold; color: black;">';
+                    $return .= '<th style="font-weight: bold; color: black;" width="200px">';
                         $return .= _AUTHOR;
                     $return .= '</th>';
                     $return .= '<th style="font-weight: bold; color: black;" width="40px">';
@@ -67,7 +67,8 @@ if (isset($_REQUEST['res_id_master'])) {
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
-                            $return .= $return_db->relation;
+                            $attachment_types_valeur = $return_db->attachment_type;
+                            $return .= $_SESSION['attachment_types'][$attachment_types_valeur];
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
