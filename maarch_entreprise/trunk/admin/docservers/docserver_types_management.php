@@ -105,12 +105,12 @@ if ($mode == "list") {
                 <input type="hidden" name="what" id="what" value="<?php if (isset($_REQUEST['what'])) echo $_REQUEST['what'];?>" />
                 <input type="hidden" name="start" id="start" value="<?php if (isset($_REQUEST['start'])) echo $_REQUEST['start'];?>" />
                 <p>
-                    <label for="id"><?php echo _DOCSERVER_TYPE_ID; ?> (*): </label>
-                    <input name="id" type="text"  id="id" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['docserver_type_id'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['docserver_type_id']); ?>" <?php if ($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+                    <label for="id"><?php echo _DOCSERVER_TYPE_ID; ?> : </label>
+                    <input name="id" type="text"  id="id" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['docserver_type_id'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['docserver_type_id']); ?>" <?php if ($mode == "up") echo " readonly='readonly' class='readonly'";?> style="margin-left:6px;"/><i class="fa fa-star red_asterisk"></i> 
                 </p>
                 <p>
-                    <label for="docserver_type_label"><?php echo _DOCSERVER_TYPE_LABEL; ?> (*): </label>
-                    <input name="docserver_type_label" type="text"  id="docserver_type_label" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['docserver_type_label'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['docserver_type_label']); ?>"/>
+                    <label for="docserver_type_label"><?php echo _DOCSERVER_TYPE_LABEL; ?> : </label>
+                    <input name="docserver_type_label" type="text"  id="docserver_type_label" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['docserver_type_label'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['docserver_type_label']); ?>" style="margin-left:6px;"/><i class="fa fa-star red_asterisk"></i>  
                 </p>
                 <?php
                 if ($_SESSION['m_admin']['docserver_types']['link_exists']) {

@@ -87,7 +87,7 @@ if ($mode == "list") {
         }
         ?>" id="actual_size_hidden"/>
         <p>
-            <label for="id"><?php echo _DOCSERVER_ID; ?> (*): </label>
+            <label for="id"><?php echo _DOCSERVER_ID; ?> : </label>
             <input name="id" type="text"  id="id" value="<?php
         if (isset($_SESSION['m_admin']['docservers']['docserver_id'])) {
             echo $func->show_str(
@@ -98,16 +98,16 @@ if ($mode == "list") {
         if ($mode == "up") {
             echo " readonly='readonly' class='readonly'";
         }
-        ?>/>
+        ?> style="margin-left:7px;"/><i class="fa fa-star red_asterisk"></i>
         </p>
         <p>
-            <label for="docserver_type_id"><?php echo _DOCSERVER_TYPES;?> (*): </label>
+            <label for="docserver_type_id"><?php echo _DOCSERVER_TYPES;?> : </label>
             <?php
             /*if (isset($_SESSION['m_admin']['docservers']['docserver_type_id'])
                     && $_SESSION['m_admin']['docservers']['docserver_type_id'] == 'TEMPLATES' */
             if($isModuleDocserver) {
                 ?>
-                <input name="docserver_type_id" type="text"  id="docserver_type_id" value="<?php echo $_SESSION['m_admin']['docservers']['docserver_type_id']; ?>" readonly="readonly" class="readonly"/>
+                <input name="docserver_type_id" type="text"  id="docserver_type_id" value="<?php echo $_SESSION['m_admin']['docservers']['docserver_type_id']; ?>" readonly="readonly" class="readonly" style="margin-left:7px;"/><i class="fa fa-star red_asterisk"></i>
                 <?php
             } else {
                 for ($cptTypes = 0; $cptTypes < count($docserverTypesArray);
@@ -131,7 +131,7 @@ if ($mode == "list") {
                     <?php
                 } else {
                     ?>
-                    <select name="docserver_type_id" id="docserver_type_id">
+                    <select name="docserver_type_id" id="docserver_type_id" style="margin-left:7px;">
                         <option value=""><?php echo _DOCSERVER_TYPES;?></option>
                         <?php
                     for ($cptTypes = 0; $cptTypes < count($docserverTypesArray);
@@ -148,21 +148,21 @@ if ($mode == "list") {
                         <?php
                     }
                     ?>
-                    </select>
+                    </select><i class="fa fa-star red_asterisk"></i>
                     <?php
                 }
             }
             ?>
         </p>
         <p>
-            <label for="device_label"><?php echo _DEVICE_LABEL; ?> (*): </label>
+            <label for="device_label"><?php echo _DEVICE_LABEL; ?> : </label>
             <input name="device_label" type="text"  id="device_label" value="<?php
         if (isset($_SESSION['m_admin']['docservers']['device_label'])) {
             echo $func->show_str(
                 $_SESSION['m_admin']['docservers']['device_label']
             );
         }
-        ?>"/>
+        ?>" style="margin-left:7px;"/><i class="fa fa-star red_asterisk"></i>
         </p>
         <p>
             <label><?php echo _IS_READONLY; ?> : </label>
@@ -359,7 +359,7 @@ if ($mode == "list") {
             </select>
         </p>-->
         <p>
-            <label for="coll_id"><?php echo _COLLECTION; ?> (*): </label>
+            <label for="coll_id"><?php echo _COLLECTION; ?> : </label>
             <?php
             for ($cptCollection = 0; $cptCollection < count(
                 $_SESSION['collections']
@@ -387,11 +387,11 @@ if ($mode == "list") {
                 //    && $_SESSION['m_admin']['docservers']['coll_id'] == 'templates'
                 if($isModuleDocserver) {
                     ?>
-                    <input name="coll_id" type="text"  id="coll_id" value="<?php echo $_SESSION['m_admin']['docservers']['coll_id']; ?>" readonly="readonly" class="readonly"/>
+                    <input name="coll_id" type="text"  id="coll_id" value="<?php echo $_SESSION['m_admin']['docservers']['coll_id']; ?>" readonly="readonly" class="readonly" style="margin-left:7px;"/><i class="fa fa-star red_asterisk"></i>
                     <?php
                 } else {
                     ?>
-                <select name="coll_id" id="coll_id">
+                <select name="coll_id" id="coll_id" style="margin-left:7px;">
                     <option value=""><?php echo _CHOOSE_COLLECTION;?></option>
                     <?php
                     for ($cptCollection = 0; $cptCollection < count(
@@ -414,7 +414,7 @@ if ($mode == "list") {
                         <?php
                     }
                     ?>
-                </select>
+                </select><i class="fa fa-star red_asterisk"></i>
                     <?php
                 }
             }
@@ -433,8 +433,8 @@ if ($mode == "list") {
         <p>
             <label for="docserver_location_id"><?php
         echo _DOCSERVER_LOCATIONS;
-        ?> (*): </label>
-            <select name="docserver_location_id" id="docserver_location_id">
+        ?> : </label>
+            <select name="docserver_location_id" id="docserver_location_id" style="margin-left:7px;">
                 <option value=""><?php echo _DOCSERVER_LOCATIONS;?></option>
         <?php
         for ($cptLocation = 0; $cptLocation < count($docserverLocationsArray);
@@ -453,19 +453,19 @@ if ($mode == "list") {
             <?php
         }
         ?>
-           </select>
+           </select><i class="fa fa-star red_asterisk"></i>
         </p>
         <p>
            <label for="adr_priority_number"><?php
         echo _ADR_PRIORITY;
-        ?> : (*)</label>
+        ?>&nbsp;: </label>
             <input name="adr_priority_number" type="text"  id="adr_priority_number" value="<?php
         if (isset($_SESSION['m_admin']['docservers']['adr_priority_number'])) {
             echo $func->show_str(
                 $_SESSION['m_admin']['docservers']['adr_priority_number']
             );
         }
-        ?>"/>
+        ?>" style="margin-left:7px;"/><i class="fa fa-star red_asterisk"></i>
         </p>
         <p class="buttons">
         <?php
