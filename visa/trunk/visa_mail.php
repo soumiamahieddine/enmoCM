@@ -600,11 +600,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 			$color = ' style="" ';
 			if ($tab_path_rep_file[0]['attachment_type'] == 'signed_response') $color = ' style="color:green" ';
 			$frm_str .= '<a href="javascript://" id="sign_link_certif" '.$color.' onclick="';
-			$frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',0);';
+			if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response') $frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',0);';
 			$frm_str .= '"><i class="fm fm-file-fingerprint fm-3x" title="Signer ces projets de réponse (avec certificat)"></i></a>';
 			
 			$frm_str .= ' <a href="javascript://" id="sign_link" '.$color.' onclick="';
-			$frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',1);';
+			if ($tab_path_rep_file[0]['attachment_type'] != 'signed_response') $frm_str .= 'signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',1);';
 			$frm_str .= '"><i class="fa fa-check fa-3x" title="Signer ces projets de réponse (sans certificat)"></i></a>';
 		}
 		
@@ -625,7 +625,7 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 	$frm_str .= '</div>';
 	
 	$frm_str .= '<div id="modalPIN">';
-	$frm_str .= '<p id="badPin" style="display:none;color:red;font-weight:bold;text-align:center;margin-top: -20px">'. _BAD_PIN .'</p>';
+	$frm_str .= '<p id="badPin" style="display:none;color:red;font-weight:bold;text-align:center;margin-top: -15px">'. _BAD_PIN .'</p>';
 	$frm_str .= '<label for="valuePIN">Saisissez votre code PIN</label>';
 	$frm_str .= '<input type="password" name="valuePIN" id="valuePIN" onKeyPress="if (event.keyCode == 13) signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',\'\', $(\'valuePIN\').value);"/><br/>';
 	$frm_str .= '<input type="button" name="sendPIN" id="sendPIN" value="'._VALIDATE.'" class="button" onclick="signFile('.$tab_path_rep_file[0]['res_id'].','.$tab_path_rep_file[0]['is_version'].',\'\', $(\'valuePIN\').value);" />';

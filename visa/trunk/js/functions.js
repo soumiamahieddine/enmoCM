@@ -496,10 +496,17 @@ function hasAllAnsSigned(id_doc){
 }
 
 function signFile(res_id,isVersion, mode, pinCode){
+	var reg = /^[0-9]{4}$/;
 	if(pinCode == undefined || pinCode=='')
     {
         pinCode='';
     }
+	else if (!reg.test(pinCode)){
+		//alert("Le code PIN doit comporter 4 chiffres");
+		$('badPin').style.display = 'block';
+		$('badPin').innerHTML = 'Le format est incorrect (4 chiffres)';
+		$('valuePIN').value = "";
+	}
 	else {
 		$('modalPIN').style.display = 'none';
 		new Ajax.Request("index.php?display=true&module=visa&page=encodePinCode",
@@ -581,15 +588,14 @@ function endOfAppletSign(objectType, theMsg, newId)
 			endAttachmentSign(newId);
 		}
 		else{
-			//console.log("erreur d'exécution = "+theMsg);
 			if (theMsg != '' && theMsg != ' ') {
 				if ($('maarchcm_error')) {
 					$('maarchcm_error').innerHTML = translateError(theMsg);
 					$('maarchcm_error').style.display = "block";
 				}
-				if (theMsg == "98" || theMsg == "16"){
-					//console.log("Recup mauvais PIN");
+				if (theMsg == "98"){
 					window.opener.$('modalPIN').style.display = 'block';
+					window.opener.$('badPin').innerHTML = 'Code PIN incorrect (3 essais maximum)';
 					window.opener.$('badPin').style.display = 'block';
 					window.close();
 				}
