@@ -47,9 +47,15 @@ function get_values_in_array($val)
     for($i=0; $i<count($tab);$i++)
     {
         $tmp = explode('#', $tab[$i]);
+
+        $val_tmp=array();
+        for($idiese=1;$idiese<count($tmp);$idiese++){
+                $val_tmp[]=$tmp[$idiese];
+            }
+            $valeurDiese = implode("#",$val_tmp);
         if(isset($tmp[1]))
         {
-            array_push($values, array('ID' => $tmp[0], 'VALUE' => trim($tmp[1])));
+            array_push($values, array('ID' => $tmp[0], 'VALUE' => $valeurDiese));
         }
     }
     return $values;
