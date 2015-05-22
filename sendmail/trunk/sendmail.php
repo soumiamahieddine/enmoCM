@@ -125,9 +125,9 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
         
     //Fields
         array_push($select[EMAILS_TABLE], "email_id", "res_id", "creation_date", "user_id", 
-            "email_object", "email_object as email_object_short", "email_id as id", 
+            "email_object", "email_object as email_object_short", "user_id as email_expediteur", "to_list as email_destinataire",  "email_id as id", 
             "coll_id", "email_status", "email_status as status_img", "email_status as status_label");    //Emails
-        array_push($select[USERS_TABLE], "user_id", "firstname", "lastname");  //Users
+        array_push($select[USERS_TABLE], "user_id", "firstname", "lastname","mail");  //Users
         
     //Where clause
         $where_tab = array();
@@ -174,7 +174,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                         $tab[$i][$j]["label_align"]="left";
                         $tab[$i][$j]["align"]="left";
                         $tab[$i][$j]["valign"]="bottom";
-                        $tab[$i][$j]["show"]=true;
+                        $tab[$i][$j]["show"]=false;
                         $tab[$i][$j]["order"]='id';
                     }
                     if($tab[$i][$j][$value]=="creation_date")
@@ -210,8 +210,20 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                         $tab[$i][$j]["label_align"]="left";
                         $tab[$i][$j]["align"]="left";
                         $tab[$i][$j]["valign"]="bottom";
-                        $tab[$i][$j]["show"]=true;
+                        $tab[$i][$j]["show"]=false;
                         $tab[$i][$j]["order"]='lastname';
+                    }
+                    
+                    if($tab[$i][$j][$value]=="email_destinataire")
+                    {
+                        $tab[$i][$j]["value"] = $tab[$i][$j]['value'];
+                        $tab[$i][$j]["label"]=_RECIPIENT;
+                        $tab[$i][$j]["size"]=$sizeObject;
+                        $tab[$i][$j]["label_align"]="left";
+                        $tab[$i][$j]["align"]="left";
+                        $tab[$i][$j]["valign"]="bottom";
+                        $tab[$i][$j]["show"]=true;
+                        $tab[$i][$j]["order"]='email_destinataire';
                     }
                     if($tab[$i][$j][$value]=="email_object")
                     {
@@ -234,29 +246,6 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                         $tab[$i][$j]["valign"]="bottom";
                         $tab[$i][$j]["show"]=true;
                         $tab[$i][$j]["order"]='email_object_short';
-                    }
-                    if($tab[$i][$j][$value]=="id")
-                    {
-                        $tab[$i][$j]["value"] = ($sendmail_tools->haveJoinedFiles($tab[$i][$j]["value"]))? 
-                            '<i class="fa fa-paperclip fa-2x" title="'. _JOINED_FILES.'"></i>' : 
-                                '';
-                        $tab[$i][$j]["label"]=false;
-                        $tab[$i][$j]["size"]="1";
-                        $tab[$i][$j]["label_align"]="left";
-                        $tab[$i][$j]["align"]="left";
-                        $tab[$i][$j]["valign"]="bottom";
-                        $tab[$i][$j]["show"]=true;
-                        $tab[$i][$j]["order"]=false;
-                    }
-                    if($tab[$i][$j][$value]=="email_status")
-                    {
-                        $tab[$i][$j]["label"]=_STATUS;
-                        $tab[$i][$j]["size"]="1";
-                        $tab[$i][$j]["label_align"]="left";
-                        $tab[$i][$j]["align"]="left";
-                        $tab[$i][$j]["valign"]="bottom";
-                        $tab[$i][$j]["show"]=false;
-                        $tab[$i][$j]["order"]='email_status';
                     }
                     if($tab[$i][$j][$value]=="status_label")
                     {
@@ -282,6 +271,56 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
                         $tab[$i][$j]["valign"]="bottom";
                         $tab[$i][$j]["show"]=true;
                         $tab[$i][$j]["order"]='status_img';
+                    }
+                    if($tab[$i][$j][$value]=="mail")
+                    {
+                        $tab[$i][$j]["value"] = $request->show_string($tab[$i][$j]["value"]) ;
+                        $tab[$i][$j]["label"]=_SENDER;
+                        $tab[$i][$j]["size"]=$sizeUser;
+                        $tab[$i][$j]["label_align"]="left";
+                        $tab[$i][$j]["align"]="left";
+                        $tab[$i][$j]["valign"]="bottom";
+                        $tab[$i][$j]["show"]=false;
+                        $tab[$i][$j]["order"]='sender';
+                    }
+                    if($tab[$i][$j][$value]=="email_expediteur")
+                    {
+                        $db = new dbquery();
+                        $db->connect();
+                        $db->query("select mail from users where user_id = '".$request->show_string($tab[$i][$j]["value"])."'");
+                        $line = $db->fetch_object();
+                        $email_expediteur = $line->mail;
+                        $tab[$i][$j]["value"] = $email_expediteur;
+                        $tab[$i][$j]["label"]=_SENDER;
+                        $tab[$i][$j]["size"]="20";
+                        $tab[$i][$j]["label_align"]="left";
+                        $tab[$i][$j]["align"]="left";
+                        $tab[$i][$j]["valign"]="bottom";
+                        $tab[$i][$j]["show"]=true;
+                        $tab[$i][$j]["order"]='email_expediteur';
+                    }
+                    if($tab[$i][$j][$value]=="id")
+                    {
+                        $tab[$i][$j]["value"] = ($sendmail_tools->haveJoinedFiles($tab[$i][$j]["value"]))? 
+                            '<i class="fa fa-paperclip fa-2x" title="'. _JOINED_FILES.'"></i>' : 
+                                '';
+                        $tab[$i][$j]["label"]=false;
+                        $tab[$i][$j]["size"]="1";
+                        $tab[$i][$j]["label_align"]="left";
+                        $tab[$i][$j]["align"]="left";
+                        $tab[$i][$j]["valign"]="bottom";
+                        $tab[$i][$j]["show"]=true;
+                        $tab[$i][$j]["order"]=false;
+                    }
+                    if($tab[$i][$j][$value]=="email_status")
+                    {
+                        $tab[$i][$j]["label"]=_STATUS;
+                        $tab[$i][$j]["size"]="1";
+                        $tab[$i][$j]["label_align"]="left";
+                        $tab[$i][$j]["align"]="left";
+                        $tab[$i][$j]["valign"]="bottom";
+                        $tab[$i][$j]["show"]=false;
+                        $tab[$i][$j]["order"]='email_status';
                     }
                 }
             }
