@@ -56,7 +56,7 @@ if ($mode == 'list') {
             ?>
             <div class="error" id="divError" name="divError"></div>
             <div class="block">
-            <form id="adminform" method="post" class="forms" style="width: 540px;" action="<?php
+            <form id="adminform" method="post" class="forms" style="width: 620px;" action="<?php
                 echo $_SESSION['config']['businessappurl']
                 . 'index.php?display=true&page=templates_management_controler&module=templates&mode='
                 . $mode;
