@@ -1,24 +1,34 @@
-<?php  $theme = "maarch";
-$show_maarch_list = false;
-if($_SESSION['mode_editor'])
+<?php  
+// $theme = "maarch";
+// $show_maarch_list = false;
+/*if($_SESSION['mode_editor'])
 {
     //$theme = trim($_SESSION['mode_editor']);
     $show_maarch_list = true;
-}
+}*/
 ?>
 <!-- tinyMCE -->
-<script  type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'].'tools/';?>tiny_mce/tiny_mce.js"></script>
+<script  type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'].'tools/';?>tiny_mce/tinymce.min.js"></script>
 <script type="text/javascript">
-    tinyMCE.init({
-        theme : "<?php  echo $theme;?>",
-        mode : "exact",
-        elements : "template_content",
-        language : "fr",
+    tinymce.init({
+        // theme : "<?php  echo $theme;?>",
+        selector: "textarea#template_content",
+        statusbar : false,
+        // mode : "exact",
+        // elements : "template_content",
+        language : "fr_FR",
+        height : "300",
+        plugins: [
+                 "advlist autolink link lists charmap print preview hr",
+                 "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime nonbreaking",
+                 "save table contextmenu directionality paste textcolor"
+        ],
+        toolbar: "undo redo | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | preview fullpage | forecolor backcolor", 
         //save_callback : "customSave",
         //apply_source_formatting : true,
         //convert_newlines_to_brs : true,
         //preformatted : true,
-        convert_fonts_to_spans : false,
+/*        convert_fonts_to_spans : false,
         verify_html : true,
         //content_css : "example_advanced.css",
         extended_valid_elements : "a[href|target|name]",
@@ -31,9 +41,9 @@ if($_SESSION['mode_editor'])
         theme_<?php  echo $theme;?>_toolbar_align : "left",
         theme_advanced_toolbar_location : "top",
         //invalid_elements : "a",
-        theme_<?php  echo $theme;?>_styles : "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1" // Theme specific setting CSS classes
+        theme_<?php  echo $theme;?>_styles : "Header 1=header1;Header 2=header2;Header 3=header3;Table Row=tableRow1" // Theme specific setting CSS classes*/
         <?php  
-        if($show_maarch_list)
+/*        if($show_maarch_list)
         {
             //echo ', mapping_file : "'.$_SESSION['config']['coreurl'].'modules/templates/xml/mapping_file.xml"';
             if(file_exists($_SESSION['config']['corepath'].'custom'.DIRECTORY_SEPARATOR.$_SESSION['custom_override_id'].DIRECTORY_SEPARATOR."modules".DIRECTORY_SEPARATOR."templates".DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."mapping_file.xml"))
@@ -44,7 +54,7 @@ if($_SESSION['mode_editor'])
             {
                 echo ', mapping_file : "'.$_SESSION['config']['coreurl'].'modules/templates/xml/mapping_file.xml"';
             }
-        }
+        }*/
         ?>
     });
 
