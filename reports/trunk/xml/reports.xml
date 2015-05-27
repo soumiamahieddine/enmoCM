@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ROOT>
-	<REPORT>
+<!-- 	<REPORT>
 		<ID>apa_print_inventory_list_customer_nat</ID>
 		<LABEL>_APA_PRINT_INVENTORY_LIST_CUSTOMER_NAT</LABEL>
 		<DESCRIPTION>_APA_PRINT_INVENTORY_LIST_CUSTOMER_NAT_DESC</DESCRIPTION>
 		<URL>apa_print_form_report&amp;id=cust_nat</URL>
-		<IN_MENU_REPORTS>true</IN_MENU_REPORTS><!--  the report can be accessed by the menu report -->
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
 		<ENABLED>true</ENABLED>
-		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<ORIGIN>module</ORIGIN>
 		<MODULE>advanced_physical_archive</MODULE>
 		<MODULE_LABEL>_APA</MODULE_LABEL>
 	</REPORT>
@@ -18,7 +18,7 @@
 		<URL>apa_print_form_report&amp;id=cust_uc</URL>
 		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
 		<ENABLED>true</ENABLED>
-		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<ORIGIN>module</ORIGIN>
 		<MODULE>advanced_physical_archive</MODULE>
 		<MODULE_LABEL>_APA</MODULE_LABEL>
 	</REPORT>
@@ -29,7 +29,7 @@
 		<URL>apa_print_form_report&amp;id=ret_date</URL>
 		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
 		<ENABLED>true</ENABLED>
-		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<ORIGIN>module</ORIGIN>
 		<MODULE>advanced_physical_archive</MODULE>
 		<MODULE_LABEL>_APA</MODULE_LABEL>
     </REPORT>
@@ -40,7 +40,7 @@
 		<URL>apa_print_form_report&amp;id=out_date</URL>
 		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
 		<ENABLED>true</ENABLED>
-		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<ORIGIN>module</ORIGIN>
 		<MODULE>advanced_physical_archive</MODULE>
 		<MODULE_LABEL>_APA</MODULE_LABEL>
 	</REPORT>
@@ -51,7 +51,7 @@
 		<URL>apa_print_form_report&amp;id=del_uc</URL>
 		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
 		<ENABLED>true</ENABLED>
-		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<ORIGIN>module</ORIGIN>
 		<MODULE>advanced_physical_archive</MODULE>
 		<MODULE_LABEL>_APA</MODULE_LABEL>
 	</REPORT>
@@ -62,7 +62,7 @@
 		<URL>apa_print_form_report&amp;id=nbr_res</URL>
 		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
 		<ENABLED>true</ENABLED>
-		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<ORIGIN>module</ORIGIN>
 		<MODULE>advanced_physical_archive</MODULE>
 		<MODULE_LABEL>_APA</MODULE_LABEL>
 	</REPORT>
@@ -73,7 +73,7 @@
 		<URL>apa_print_form_report&amp;id=ratio_site</URL>
 		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
 		<ENABLED>true</ENABLED>
-		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<ORIGIN>module</ORIGIN>
 		<MODULE>advanced_physical_archive</MODULE>
 		<MODULE_LABEL>_APA</MODULE_LABEL>
 	</REPORT>
@@ -84,7 +84,7 @@
 		<URL>apa_print_form_report&amp;id=in_out_date</URL>
 		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
 		<ENABLED>true</ENABLED>
-		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<ORIGIN>module</ORIGIN>
 		<MODULE>advanced_physical_archive</MODULE>
 		<MODULE_LABEL>_APA</MODULE_LABEL>
 	</REPORT>
@@ -95,27 +95,16 @@
 		<URL>apa_print_form_report&amp;id=docket_rsv</URL>
 		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
 		<ENABLED>true</ENABLED>
-		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<ORIGIN>module</ORIGIN>
 		<MODULE>advanced_physical_archive</MODULE>
 		<MODULE_LABEL>_APA</MODULE_LABEL>
-	</REPORT>
+	</REPORT> -->
 	<REPORT>
 		<ID>folder_view_stat</ID>
 		<LABEL>_FOLDER_VIEW_STAT</LABEL>
 		<DESCRIPTION>_FOLDER_VIEW_STAT_DESC</DESCRIPTION>
 		<URL>folder_view_stats</URL>
-		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
-		<ENABLED>true</ENABLED>
-		<ORIGIN>module</ORIGIN> <!-- apps or module -->
-		<MODULE>folder</MODULE>
-		<MODULE_LABEL>_FOLDERS_COMMENT</MODULE_LABEL>
-	</REPORT>
-	<REPORT>
-		<ID>folder_view_stat</ID>
-		<LABEL>_FOLDER_VIEW_STAT</LABEL>
-		<DESCRIPTION>_FOLDER_VIEW_STAT_DESC</DESCRIPTION>
-		<URL>folder_view_stats</URL>
-		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
+		<IN_MENU_REPORTS>true</IN_MENU_REPORTS><!--  the report can be accessed by the menu report -->
 		<ENABLED>true</ENABLED>
 		<ORIGIN>module</ORIGIN> <!-- apps or module -->
 		<MODULE>folder</MODULE>
@@ -209,15 +198,15 @@
 		<MODULE>application</MODULE>
 		<MODULE_LABEL>_APPS_COMMENT</MODULE_LABEL>
 	</REPORT>
-  <REPORT>
+<!--   <REPORT>
 		<ID>RecordsByPeriod</ID>
 		<LABEL>_RECORDS_BY_PERIOD</LABEL>
 		<DESCRIPTION>_RECORDS_BY_PERIOD_DESC</DESCRIPTION>
 		<URL>RecordsByPeriod&amp;id=RecordsByPeriod</URL>
 		<IN_MENU_REPORTS>true</IN_MENU_REPORTS>
 		<ENABLED>true</ENABLED>
-		<ORIGIN>module</ORIGIN> <!-- apps or module -->
+		<ORIGIN>module</ORIGIN>
 		<MODULE>records_management</MODULE>
 		<MODULE_LABEL>_RECORDS_MANAGEMENT_COMMENT</MODULE_LABEL>
-	</REPORT>
+	</REPORT> -->
 </ROOT>
