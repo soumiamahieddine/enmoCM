@@ -220,7 +220,7 @@ if (
             fclose($inF);
 			
 			//Récupération de la version pdf du document
-			if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true" && ($objectType == 'attachmentFromTemplate' || $objectType == 'attachment' || $objectType == 'attachmentUpVersion' || $objectType == 'attachmentVersion')){
+			if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true" && ($objectType == 'attachmentFromTemplate' || $objectType == 'attachment' || $objectType == 'attachmentUpVersion' || $objectType == 'attachmentVersion') && isset($_REQUEST['pdfContent'])){
 				$pdfEncodedContent = str_replace(
 					' ',
 					'+',
