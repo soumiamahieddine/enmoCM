@@ -226,19 +226,24 @@ $str_status = '(';
 			if( $db->nb_result() > 0)
 			{
 				$tmp = 0;
+				$nbDoc=0;
 				while($res = $db->fetch_object())
 				{
-					$tmp = $tmp + $res->delay;
+					if($res->delay <> ""){
+						$tmp = $tmp + $res->delay;
+						$nbDoc++;
+					}
 				}
+				if ($nbDoc == 0) $nbDoc = 1;
 				if($report_type == 'graph')
 				{
-					array_push($val_an, (string)$tmp / $db->nb_result());
+					array_push($val_an, (string)$tmp / $nbDoc);
 				}
 				elseif($report_type == 'array')
 				{
-					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $db->nb_result(),2)));
+					array_push($data, array('SSCHEMISE' => $res2->doctypes_second_level_label, 'LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,2)));
 				}
-				if($tmp / $db->nb_result() > 0)
+				if($tmp / $nbDoc > 0)
 				{
 					$has_data = true;
 				}
@@ -298,8 +303,10 @@ $str_status = '(';
 		{
 			if($report_type == 'graph')
 			{
-				?>
-				<div style="overflow:auto"><img src="<?php echo $src1;?>" alt="<?php echo $title;?>" id="src1"/></div><?php
+				echo "{label: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['labels1']))))."'] ".
+					", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['GRAPH']['VALUES']))))."']".
+					", title: '".addslashes($title)."'}";
+				exit;
 			}
 			elseif($report_type == 'array')
 			{
@@ -365,20 +372,24 @@ $str_status = '(';
 				{
 					
 					$tmp = 0;
+					$nbDoc = 0;
 					while($elm = $db->fetch_array())
 					{
-						$tmp = $tmp + $elm[0];
-
+						if ($elm[0] <> "") {
+							$tmp = $tmp + $elm[0];
+							$nbDoc++;
+						}
 					}
+					if ($nbDoc == 0) $nbDoc = 1;
 					if($report_type == 'graph')
 					{
-						array_push($val_an, (string)$tmp / $db->nb_result());
+						array_push($val_an, (string)$tmp / $nbDoc);
 					}
 					elseif($report_type == 'array')
 					{
-						array_push($data, array('LABEL' => $_SESSION['month'][$i], 'VALUE' => (string)round($tmp / $db->nb_result(),2)));
+						array_push($data, array('LABEL' => $_SESSION['month'][$i], 'VALUE' => (string)round($tmp / $nbDoc,2)));
 					}
-					if($tmp / $db->nb_result() > 0)
+					if($tmp / $nbDoc > 0)
 					{
 						$has_data = true;
 					}
@@ -433,22 +444,27 @@ $str_status = '(';
 			for($i=1; $i<= $max; $i++)
 			{
 				
-				$db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." FROM ".$view." WHERE status in ".$str_status." and date_part( 'month', creation_date)  = ".$_REQUEST['the_month']." and date_part( 'year', creation_date)  = ".date('Y')." and date_part( 'day', creation_date)  = ".$i." AND STATUS = 'END'");
+				$db->query("SELECT ".$req->get_date_diff('closing_date', 'creation_date' )." FROM ".$view." WHERE status in ".$str_status." and date_part( 'month', creation_date)  = ".$_REQUEST['the_month']." and date_part( 'year', creation_date)  = ".date('Y')." and date_part( 'day', creation_date)  = ".$i." and ".$view.".closing_date is not null");
 				
 				if( $db->nb_result() > 0)
 				{
 					$tmp = 0;
+					$nbDoc = 0;
 					while($elm = $db->fetch_array())
 					{
-						$tmp = $tmp + $elm[0];
+						if ($elm[0] <> "") {
+							$tmp = $tmp + $elm[0];
+							$nbDoc++;
+						}
 					}
+					if ($nbDoc == 0) $nbDoc = 1;
 					if($report_type == 'graph')
 					{
-						array_push($val_mois, (string) $tmp / $db->nb_result());
+						array_push($val_mois, (string) $tmp / $nbDoc);
 					}
 					elseif($report_type == 'array')
 					{
-						array_push($data, array('LABEL' => $i, 'VALUE' => (string) $tmp / $db->nb_result()));
+						array_push($data, array('LABEL' => $i, 'VALUE' => (string) $tmp / $nbDoc));
 					}
 					$has_data = true;
 				}
@@ -471,9 +487,11 @@ $str_status = '(';
 				
 				$src2 = $_SESSION['config']['businessappurl']."index.php?display=true&module=reports&page=graphs&type=courbe&largeur=1000&hauteur=406&title=".$title2."&labelX="._DAYS."&labelY="._N_DAYS;
 				
+				$label_month = array();
 				for($k=1;$k<=$max;$k++)
 				{
 					$src2 .= "&labels[]=".$k;
+					$label_month[$k] = $k;
 				}
 				for($l=0;$l<count($val_mois);$l++)
 				{
@@ -494,8 +512,11 @@ $str_status = '(';
 		{
 			if($report_type == 'graph')
 			{
-				?>
-				<img src="<?php echo $src1;?>" alt="<?php echo $title1;?>"/><?php }
+				echo "{label: ['".html_entity_decode(str_replace(",", "','", addslashes(implode(",", $_SESSION['labels1']))))."'] ".
+					", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $val_an))))."']".
+					", title: '".addslashes($title1)."'}";
+				exit;
+			}
 				elseif($report_type  == 'array')
 				{
 					$data2=urlencode(serialize($data));
@@ -504,13 +525,17 @@ $str_status = '(';
 
 					$graph->show_stats_array($title1, $data);
 				}
-			}
+		}
 			elseif ($period_type == 'period_month' && $has_data)
 			{
 				if($report_type == 'graph')
-					{?>
-				<img src="<?php echo $src2;?>" alt="<?php echo $title;?>"/>
-				<?php }
+				{
+					// var_dump($val_mois);
+					echo "{label: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $label_month))))."'] ".
+						", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $val_mois))))."']".
+						", title: '".addslashes($title2)."'}";
+					exit;
+				}
 				elseif($report_type == 'array')
 				{
 					$data2=urlencode(serialize($data));
@@ -627,9 +652,10 @@ $str_status = '(';
 			{
 				if($report_type == 'graph')
 				{
-					?>
-					<div style="overflow:auto"><img src="<?php echo $src1;?>" alt="" id="src1"/></div><br/><br/>
-					<?php
+					echo "{label: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['labels1']))))."'] ".
+						", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['GRAPH']['VALUES']))))."']".
+						", title: '".addslashes($title)."'}";
+					exit;
 				}
 				elseif($report_type == 'array')
 				{
@@ -719,9 +745,10 @@ $str_status = '(';
 			{
 				if($report_type == 'graph')
 				{
-					?>
-					<img src="<?php echo $src1;?>" alt=""/><br/><br/>
-					<?php
+					echo "{label: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['labels1']))))."'] ".
+						", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['GRAPH']['VALUES']))))."']".
+						", title: '".addslashes($title)."'}";
+					exit;
 				}
 				elseif($report_type == 'array')
 				{

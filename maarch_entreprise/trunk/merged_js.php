@@ -24,6 +24,7 @@ include_once('../../core/init.php');
     include('apps/'.$_SESSION['config']['app_id'] .'/js/indexing.js');
     include('apps/'.$_SESSION['config']['app_id'] .'/js/maarch.js');
     include('apps/'.$_SESSION['config']['app_id'] .'/js/keypress.js');
+    include('apps/'.$_SESSION['config']['app_id'] .'/js/Chart.js');
 
     foreach(array_keys($_SESSION['modules_loaded']) as $value)
     {
