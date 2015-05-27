@@ -113,29 +113,33 @@ public class DisCM extends JApplet {
 			
 			String cmd = "";
 			if (docxFile.contains(".odt") || docxFile.contains(".ods") || docxFile.contains(".ODT") || docxFile.contains(".ODS")) {
-				cmd = "start /wait soffice.exe --headless --convert-to pdf --outdir \""+this.userLocalDirTmp+"\" \""+docxFile+"\" \r\n";
+				String convertProgram;
+				convertProgram = this.fM.findPathProgramInRegistry("soffice.exe");
+	            
+				cmd = convertProgram+" -env:UserInstallation=$SYSUSERCONFIG --headless --convert-to pdf --outdir \""+this.userLocalDirTmp.substring(0,this.userLocalDirTmp.length()-1)+"\" \""+docxFile+"\" \r\n";
 			}
 			else{
 				if (this.useExeConvert.equals("false"))
-					cmd = "cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
+					cmd = "cmd /C cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
 				else{
 					
 					StringBuffer buffer = new StringBuffer(docxFile);
 					buffer.replace(buffer.lastIndexOf("."),	buffer.length(), ".pdf");
 					String pdfOut = buffer.toString();
 					
-					cmd = " \""+this.userLocalDirTmp+"Word2Pdf.exe\" \""+docxFile+"\" \""+pdfOut+"\" \r\n";
+					cmd = "cmd /C \""+this.userLocalDirTmp+"Word2Pdf.exe\" \""+docxFile+"\" \""+pdfOut+"\" \r\n";
 				}
 			}
 			
 			
 			
             
-            this.logger.log("EXEC PATH : " + "cmd /C "+cmd, Level.INFO);
+            this.logger.log("EXEC PATH : " +cmd, Level.INFO);
             fileManager fM = new fileManager();
                       
                         Process proc_vbs;
             if (isUnix){
+            	cmd = "cscript \""+this.vbsPath+"\" \""+docxFile+"\" /nologo \r\n";
             	final Writer outBat;
     			outBat = new OutputStreamWriter(new FileOutputStream(this.appPath_convert), "CP850");
     			this.logger.log("--- cmd bat  --- "+cmd, Level.INFO);
@@ -164,7 +168,7 @@ public class DisCM extends JApplet {
             	proc_vbs = fM.launchApp(exec_vbs);
             }
             else {
-            	proc_vbs = fM.launchApp("cmd /C "+cmd);
+            	proc_vbs = fM.launchApp(cmd);
             }
             proc_vbs.waitFor();
             
@@ -458,8 +462,14 @@ public class DisCM extends JApplet {
             String pdfFile = this.userLocalDirTmp + "thefile_" + randomNum + ".pdf";
             
             this.logger.log("----------BEGIN RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
-            this.pdfContentTosend = fileManager.encodeFile(pdfFile);
-            this.logger.log("PDF CONTENT : " + this.pdfContentTosend, Level.INFO);
+            if (this.fM.isPsExecFileExists(pdfFile)){           
+          	  this.pdfContentTosend = fileManager.encodeFile(pdfFile);
+            }
+            else {
+            	this.pdfContentTosend = "null";
+            	this.logger.log("ERREUR DE CONVERSION PDF !", Level.INFO);
+            }
+            
             this.logger.log("----------END RETRIEVE CONTENT OF THE OBJECT----------", Level.INFO);
             
             this.logger.log("---------- FIN CONVERSION PDF----------", Level.INFO);
@@ -566,7 +576,11 @@ public class DisCM extends JApplet {
         HttpOpenRequest.setRequestMethod("POST");
         if (!"none".equals(postRequest)) {
             OutputStreamWriter writer = new OutputStreamWriter(HttpOpenRequest.getOutputStream());
-            if (endProcess) writer.write("fileContent=" + this.fileContentTosend + "&fileExtension=" + this.fileExtension+ "&pdfContent=" + this.pdfContentTosend);
+            if (endProcess){
+            	if (!this.pdfContentTosend.equals("null"))
+            		writer.write("fileContent=" + this.fileContentTosend + "&fileExtension=" + this.fileExtension+ "&pdfContent=" + this.pdfContentTosend);
+            	else writer.write("fileContent=" + this.fileContentTosend + "&fileExtension=" + this.fileExtension);
+            }
             else writer.write("fileContent=" + this.fileContentTosend + "&fileExtension=" + this.fileExtension);
             writer.flush();
         } else {
