@@ -175,25 +175,33 @@ for($i=0; $i<count($doctypes);$i++)
     if ($valid == 'true' || $_SESSION['user']['UserId'] == "superadmin")
     {
 
-        $db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date' )." AS delay from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id WHERE ".$view.".destination = '".$doctypes[$i]['ID']."' ".$where_date);
+        $db->query("SELECT ".$req->get_date_diff($view.'.closing_date', $view.'.creation_date' )." AS delay, res_view_letterbox.creation_date
+                    FROM ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id 
+                    WHERE ".$view.".destination = '".$doctypes[$i]['ID']."' ".$where_date." and ".$view.".status not in ('DEL','BAD')");
         //$db->show();
 
         if( $db->nb_result() > 0)
         {
             $tmp = 0;
+            $nbDoc=0;
             while($res = $db->fetch_object())
             {
-                $tmp = $tmp + $res->delay;
+                if ($res->delay <> "") {
+                    $tmp = $tmp + $res->delay;
+                    $nbDoc++;
+                }
+                
             }
+            if ($nbDoc == 0) $nbDoc = 1;
             if($report_type == 'graph')
             {
-                array_push($val_an, (string)$tmp / $db->nb_result());
+                array_push($val_an, (string)$tmp / $nbDoc);
             }
             elseif($report_type == 'array')
             {
-                array_push($data, array('LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $db->nb_result(),2)));
+                array_push($data, array('LABEL' => $db->show_string($doctypes[$i]['LABEL']), 'VALUE' => (string)round($tmp / $nbDoc,2)));
             }
-            if($tmp / $db->nb_result() > 0)
+            if($tmp / $nbDoc > 0)
             {
                 $has_data = true;
             }
@@ -244,8 +252,10 @@ if ( $has_data)
 {
     if($report_type == 'graph')
     {
-    ?>
-        <div style="overflow:auto"><img src="<?php echo $src1;?>" alt="<?php echo $title;?>" id="src1"/></div><?php
+        echo "{label: ['".str_replace(",", "','", addslashes(implode(",", $_SESSION['labels1'])))."'] ".
+            ", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['GRAPH']['VALUES']))))."']".
+            ", title: '".addslashes($title)."'}";
+        exit;
      }
     elseif($report_type == 'array')
     {

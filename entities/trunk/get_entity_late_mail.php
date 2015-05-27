@@ -90,7 +90,9 @@ for($i=0; $i<count($entities);$i++)
 /*
     $this->query("select l.res_id  from ".$_SESSION['ressources']['letterbox_view']." r, ".$_SESSION['tablename']['listinstance']." l  where r.res_id=l.res_id and l.item_id='".$user['ID']."'  and item_type = 'user_id' and  r.flag_alarm1 = 'N' and (r.status = 'NEW' or r.status = 'COU') and date(r.alarm1_date) =date(now()) and l.item_mode = 'dest' and item_type='user_id'");
 */
-        $db->query("SELECT count(*) AS total from ".$view." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id where destination = '".$entities[$i]['ID']."' and ".$view.".status not in ('DEL','BAD') and date(".$view.".process_limit_date) <= date(now()) ");
+        $db->query("SELECT count(*) AS total FROM ".$view
+                    ." inner join mlb_coll_ext on ".$view.".res_id = mlb_coll_ext.res_id 
+                    WHERE destination = '".$entities[$i]['ID']."' and ".$view.".status not in ('DEL','BAD') and date(".$view.".process_limit_date) <= date(now()) and ".$view.".closing_date is null");
         //$db->show();
 
 		if( $db->nb_result() > 0)
@@ -163,8 +165,10 @@ elseif($report_type == 'array')
 
 if ($has_data) {
     if($report_type == 'graph') {
-    ?>
-        <div style="overflow:auto"><img src="<?php echo $src1;?>" alt="<?php echo $title;?>" id="src1"/></div><?php
+        echo "{label: ['".str_replace(",", "','", addslashes(implode(",", $_SESSION['labels1'])))."'] ".
+            ", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['GRAPH']['VALUES']))))."']".
+            ", title: '".addslashes($title)."'}";
+        exit;
     } elseif($report_type == 'array') {
 	
 		$data2=urlencode(serialize($data));

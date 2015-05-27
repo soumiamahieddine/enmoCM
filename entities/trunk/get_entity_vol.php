@@ -260,9 +260,10 @@ if($has_data)
 {
 	if($report_type == 'graph')
 	{
-		?>
-			<div style="overflow:auto"><img src="<?php echo $src1;?>" alt="" id="src1" /></div><br/><br/>
-		<?php
+		echo "{label: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['labels1']))))."'] ".
+			", data: ['".utf8_encode(str_replace(",", "','", addslashes(implode(",", $_SESSION['GRAPH']['VALUES']))))."']".
+			", title: '".addslashes($title)."'}";
+		exit;
 	}
 	elseif($report_type == 'array')
 	{
