@@ -9,8 +9,8 @@ require_once('core/class/class_history.php');
 require_once('apps/maarch_entreprise/class/class_business_app_tools.php');
 require_once('core/class/class_security.php');
 
-require_once('apps/maarch_entreprise/tools/PDFMerger/fpdf/fpdf.php');
-require_once('apps/maarch_entreprise/tools/PDFMerger/fpdi/fpdi.php');
+require_once('apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdf.php');
+require_once('apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdi.php');
 
 class EmptyObject {
     function __construct()
