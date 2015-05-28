@@ -561,6 +561,8 @@ function loadAppletSign(url){
 function translateError(key){
 	var message = "";
 	switch(key){
+		case "300" :
+			message = "L'exécutable de signature est introuvable. Veuillez contacter votre administrateur.";break;
 		case "99" :
 			message = "Erreur lors de la signature numérique";break;
 		case "98" :
