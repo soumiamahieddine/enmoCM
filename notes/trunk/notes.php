@@ -270,9 +270,10 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 		for ($cptUnset=0;$cptUnset<count($arrayToUnset);$cptUnset++ ) {
 			unset($tabNotes[$arrayToUnset[$cptUnset]]);
 		}
-		array_multisort($tabNotes, SORT_DESC);
+        // array_multisort($tabNotes, SORT_DESC);
+        $tabNotes = array_merge($tabNotes);
 		
-		//$request->show_array($tabNotes);
+		// $request->show_array($tabNotes);
 		for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
 			for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
 				foreach (array_keys($tabNotes[$indNotes1][$indNotes2]) as $value) {
@@ -283,7 +284,8 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 						$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
-						$tabNotes[$indNotes1][$indNotes2]["show"] = false;
+                        $tabNotes[$indNotes1][$indNotes2]["show"] = false;
+						$tabNotes[$indNotes1][$indNotes2]["order"] = "id";
 						$indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
 					}
 					if ($tabNotes[$indNotes1][$indNotes2][$value] == "user_id") {
@@ -294,6 +296,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
 						$tabNotes[$indNotes1][$indNotes2]["show"] = false;
+                        $tabNotes[$indNotes1][$indNotes2]["order"] = "user_id";
 					}
 					if ($tabNotes[$indNotes1][$indNotes2][$value] == "lastname") {
 						$tabNotes[$indNotes1][$indNotes2]['value'] = $request->show_string(
@@ -306,6 +309,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
 						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
+                        $tabNotes[$indNotes1][$indNotes2]["order"] = "lastname";
 					}
 					if ($tabNotes[$indNotes1][$indNotes2][$value] == "date_note") {
 						$tabNotes[$indNotes1][$indNotes2]["date_note"] = $tabNotes[$indNotes1][$indNotes2]['value'];
@@ -315,6 +319,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
 						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
+                        $tabNotes[$indNotes1][$indNotes2]["order"] = "date_note";
 					}
 					if ($tabNotes[$indNotes1][$indNotes2][$value] == "firstname") {
 						$tabNotes[$indNotes1][$indNotes2]["firstname"] = $tabNotes[$indNotes1][$indNotes2]['value'];
@@ -324,6 +329,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 						$tabNotes[$indNotes1][$indNotes2]["align"] = "center";
 						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
 						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
+                        $tabNotes[$indNotes1][$indNotes2]["order"] = "firstname";
 					}
 					if ($tabNotes[$indNotes1][$indNotes2][$value] == "note_text") {
 						//$tabNotes[$indNotes1][$indNotes2]["note_text"] = $tabNotes[$indNotes1][$indNotes2]['value'];
@@ -334,6 +340,7 @@ if (isset($_REQUEST['start']) && !empty($_REQUEST['start'])) $parameters .= '&st
 						$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
 						$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
 						$tabNotes[$indNotes1][$indNotes2]["show"] = true;
+                        $tabNotes[$indNotes1][$indNotes2]["order"] = "note_text";
 					}
 				}
 			}
