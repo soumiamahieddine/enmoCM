@@ -405,6 +405,19 @@ function validate_tag_submit() {
         );
 		exit();
 	}
+
+    $func->wash(
+            $new_tag_label, 'no', _NAME_TAGS, 'yes', 0, 50
+        );
+    
+    if($_SESSION['error'] <> ''){
+        header(
+              'location: ' . $_SESSION['config']['businessappurl']
+            . 'index.php?page=' . $pageName . '&mode='.$mode.'&id='
+            . $tag->tag_label . '&module=tags'
+        );
+        exit();
+    }
 	
     $tag = $tagObj->store($_SESSION['m_admin']['tag']['tag_label'], $mode, $params);
 	
