@@ -83,14 +83,20 @@ function ValidAttachmentsForm (path, form_id) {
                 destroyModal('form_attachments'); 
 				
 				if ($('cur_idAffich')) var num_rep = $('cur_idAffich').value;
-
-				if($('viewframevalidRep'+num_rep) && response.majFrame == 1) {
-					$('viewframevalidRep'+num_rep).src = "index.php?display=true&module=visa&page=view_doc&path=last";			
+				if ($('cur_resId')) var res_id_master = $('cur_resId').value;
+				
+				if($('viewframevalidRep'+num_rep)) {
+					if (response.majFrameId > 0){
+						$('viewframevalidRep'+num_rep).src = "index.php?display=true&module=visa&page=view_pdf_attachement&res_id_master="+res_id_master+"&id="+response.majFrameId;	
+						if ($('cur_rep')) $('cur_rep').value = response.majFrameId;
+					}
+					else $('viewframevalidRep'+num_rep).src = $('viewframevalidRep'+num_rep).src;
 				}
 				if($('ans_'+num_rep)) {
-					$('ans_'+num_rep).innerHTML = response.title;			
+					$('ans_'+num_rep).innerHTML = response.title;
+					if (response.isVersion) $('ans_'+num_rep).setAttribute('onclick','updateFunctionModifRep(\''+response.majFrameId+'\', '+num_rep+', '+response.isVersion+');');			
 				}
-	
+					
                 eval(response.exec_js);
             } else {
                 alert(response.error);

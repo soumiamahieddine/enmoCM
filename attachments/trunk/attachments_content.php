@@ -301,7 +301,7 @@ if (isset($_POST['add']) && $_POST['add']) {
 							$newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
 							
 							copy($file, $newfile);
-							$_SESSION['generated_file'] = $newfile;
+							$_SESSION['new_id'] = $id;
 							unset($_SESSION['upfile']['fileNamePdfOnTmp']);
 						}
 						
@@ -361,12 +361,9 @@ if (isset($_POST['add']) && $_POST['add']) {
         $error = $_SESSION['error'];
         $status = 1;
     }
-	
-	$majFrame = 0;
-	if (isset($_SESSION['generated_file']) && $_SESSION['generated_file'] != ""){
-		$majFrame = 1;
-	}
-    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', majFrame : ".$majFrame.", exec_js : '".addslashes($js)."'}";
+	if (!isset($_SESSION['new_id'])) $_SESSION['new_id'] = 0;
+    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', majFrameId : ".$_SESSION['new_id'].", exec_js : '".addslashes($js)."'}";
+	unset($_SESSION['new_id']);
     exit();
 } else if (isset($_POST['edit']) && $_POST['edit']) {
     $title = '';
@@ -380,7 +377,7 @@ if (isset($_POST['add']) && $_POST['add']) {
 
     if ($status <> 1) {
         if ($_REQUEST['new_version'] == "yes") {
-
+			$isVersion = 1;
             if ((int)$_REQUEST['relation'] > 1) {
                 $column_res = 'res_id_version';
             } else {
@@ -604,7 +601,7 @@ if (isset($_POST['add']) && $_POST['add']) {
 					$newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
 					
 					copy($file, $newfile);
-					$_SESSION['generated_file'] = $newfile;
+					$_SESSION['new_id'] = $id;
 					unset($_SESSION['upfile']['fileNamePdfOnTmp']);
 				}
 						
@@ -618,6 +615,7 @@ if (isset($_POST['add']) && $_POST['add']) {
 
             }
         } else {
+			$isVersion = 0;
             $set_update = "";
             $set_update = " title = '".$title."'";
 
@@ -670,7 +668,7 @@ if (isset($_POST['add']) && $_POST['add']) {
 					$newfile = $storeResult['path_template'].str_replace('#',"/",$storeResult['destination_dir']).substr ($storeResult['file_destination_name'], 0, strrpos  ($storeResult['file_destination_name'], "." )).".pdf";
 					
 					copy($file, $newfile);
-					$_SESSION['generated_file'] = $newfile;
+					$_SESSION['new_id'] = $id;
 					unset($_SESSION['upfile']['fileNamePdfOnTmp']);
 				}
             }
@@ -734,8 +732,10 @@ if (isset($_POST['add']) && $_POST['add']) {
         $status = 1;
     }
 
-    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', title : '" . addslashes($title) . "', error : '" . addslashes($error) . "', exec_js : '".addslashes($js)."'}";
-    exit();
+	if (!isset($_SESSION['new_id'])) $_SESSION['new_id'] = 0;
+    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', title : '" . addslashes($title) . "', isVersion : " . $isVersion . ", error : '" . addslashes($error) . "', majFrameId : ".$_SESSION['new_id'].", exec_js : '".addslashes($js)."'}";
+	unset($_SESSION['new_id']);
+	exit();
 }
 
 if (isset($_REQUEST['id'])) {
