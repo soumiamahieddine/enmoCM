@@ -65,10 +65,10 @@ function writeLogIndex($EventInfo)
 
 function createPdfNotes($list_notes){
 	
-	define('FPDF_FONTPATH','modules/visa/class/font/');
+	define('FPDF_FONTPATH',$core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/font/');
 	//above line is import to define, otherwise it gives an error : Could not include font metric file
-	require('modules/visa/class/fpdf.php');
-	require('modules/visa/class/fpdi.php');
+	require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdf.php');
+	require($core_path.'apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdi.php');
 	class ChargePdf extends FPDI
 	{
 	function LoadData($tab)
