@@ -106,21 +106,21 @@ if(isset($_GET['labels']))
 	}
 }
 
-if($_GET['type'] == "histo")
-{
-	$graphi->histo($width, $height, $_SESSION['GRAPH']['VALUES'], $title, $_SESSION['labels1'], $margin_bottom,$labelX,$labelY);
-}
-elseif($_GET['type'] == "courbe")
-{
-	$graphi->courbe($width, $height, $values, $title, $labels, $labelX, $labelY);
-}
-elseif($_GET['type'] == "2courbes")
-{
-	$graphi->groupe_courbes($width, $height, $values, $title, $labels, $labelX, $labelY, $courbe2, $plot1_legend, $plot2_legend);
-}
-elseif($_GET['type'] == "pie")
-{
-	$graphi->camembert($width, $height, $values, $title, $_SESSION['labels1']);
-}
+// if($_GET['type'] == "histo")
+// {
+// 	$graphi->histo($width, $height, $_SESSION['GRAPH']['VALUES'], $title, $_SESSION['labels1'], $margin_bottom,$labelX,$labelY);
+// }
+// elseif($_GET['type'] == "courbe")
+// {
+// 	$graphi->courbe($width, $height, $values, $title, $labels, $labelX, $labelY);
+// }
+// elseif($_GET['type'] == "2courbes")
+// {
+// 	$graphi->groupe_courbes($width, $height, $values, $title, $labels, $labelX, $labelY, $courbe2, $plot1_legend, $plot2_legend);
+// }
+// elseif($_GET['type'] == "pie")
+// {
+// 	$graphi->camembert($width, $height, $values, $title, $_SESSION['labels1']);
+// }
 
 ?>
