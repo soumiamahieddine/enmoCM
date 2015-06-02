@@ -61,6 +61,8 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
         <em><?php echo _THANKS_TO_EXT_DEV;?></em>
         <p>&nbsp;</p>
         <ul>
+            <li><a target="blank" href="http://www.chartjs.org/">Chart.js</a></li>
+            <li><a target="blank" href="http://fortawesome.github.io/Font-Awesome/">Font Awesome</a></li>
             <li><a target="blank" href="http://www.fpdf.org/">Fpdf</a></li>
             <li><a target="blank" href="http://www.setasign.de/products/pdf-php-solutions/fpdi/">fpdi</a></li>
             <li><a target="blank" href="http://logging.apache.org/log4php/">log4php</a></li>
@@ -68,7 +70,7 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
             <li><a target="blank" href="http://www.foolabs.com/xpdf/">Pdftotext</a></li>
             <li><a target="blank" href="http://www.prototypejs.org/">Prototype</a></li>
             <li><a target="blank" href="http://script.aculo.us/">Script.aculo.us</a></li>
-            <li><a target="blank" href="http://www.cyber-sandbox.com/">Tabricator</a></li>
+            <li>Tabricator</li>
             <li><a target="blank" href="http://tafel.developpez.com">Tafel Tree</a></li>
             <li><a target="blank" href="http://www.tinybutstrong.com/">Tiny But Strong</a></li>
             <li><a target="blank" href="http://www.tinymce.com/">TinyMCE</a></li>
