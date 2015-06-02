@@ -321,9 +321,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     #   - move former dest user to copy if requested
     #   - finally save listinstance 
     for($i=0; $i<count($arr_id); $i++) {
+
+    	$new_difflist = $_SESSION['redirect']['diff_list'];
+
         $res_id = $arr_id[$i];
         # update dest_user
-        $new_dest = $_SESSION['redirect']['diff_list']['dest']['users'][0]['user_id'];
+        $new_dest = $new_difflist['dest']['users'][0]['user_id'];
         if($new_dest) {
             if($formValues['note_content_to_user'] != ''){
                 //Add notes
@@ -349,7 +352,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             );
             $res = $db->fetch_object();
             $viewed = $res->viewed;
-            $_SESSION['redirect']['diff_list']['dest']['users'][0]['viewed'] = (integer)$viewed;
+            $new_difflist['dest']['users'][0]['viewed'] = (integer)$viewed;
         }
         
         # Update destination if needed
@@ -376,21 +379,21 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 		$db->query(
 			"select * "
 			. " from " . $_SESSION['tablename']['ent_listinstance'] 
-			. " where coll_id = '". $coll_id ."' and res_id = " . $res_id . " and item_type = 'user_id' and item_mode = 'cc'"
+			. " where coll_id = '". $coll_id ."' and res_id = ".$res_id." and item_type = 'user_id' and item_mode = 'cc'"
 		);
-		if (!is_array($_SESSION['redirect']['diff_list']['copy'])) {
-			$_SESSION['redirect']['diff_list']['copy'] = array();
+		if (!is_array($new_difflist['copy'])) {
+			$new_difflist['copy'] = array();
 		}
-		if (!is_array($_SESSION['redirect']['diff_list']['copy']['users'])) {
-			$_SESSION['redirect']['diff_list']['copy']['users'] = array();
+		if (!is_array($new_difflist['copy']['users'])) {
+			$new_difflist['copy']['users'] = array();
 		}
-		if (!is_array($_SESSION['redirect']['diff_list']['copy']['entities'])) {
-			$_SESSION['redirect']['diff_list']['copy']['entities'] = array();
+		if (!is_array($new_difflist['copy']['entities'])) {
+			$new_difflist['copy']['entities'] = array();
 		}
 		while ($old_copiesU = $db->fetch_object()) {
 			$found = false;
-			for ($cptU=0;$cptU<count($_SESSION['redirect']['diff_list']['copy']['users']);$cptU++) {
-				if ($_SESSION['redirect']['diff_list']['copy']['users'][$cptU]['user_id'] == $old_copiesU->item_id) {
+			for ($cptU=0;$cptU<count($new_difflist['copy']['users']);$cptU++) {
+				if ($new_difflist['copy']['users'][$cptU]['user_id'] == $old_copiesU->item_id) {
 					//echo $_SESSION['redirect']['diff_list']['copy']['users'][$cptU]['user_id'] . " found" . PHP_EOL;
 					$found = true;
 					break;
@@ -400,12 +403,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 			if (!$found) {
 				//echo $old_copiesU->item_id . " not found" . PHP_EOL;
 				array_push(
-					$_SESSION['redirect']['diff_list']['copy']['users'], 
+					$new_difflist['copy']['users'], 
 					array(
 						'user_id' => $old_copiesU->item_id, 
 						'viewed' => (integer)$old_copiesU->viewed,
 						'visible' => 'Y',
-						'difflist_type' => $_SESSION['redirect']['diff_list']['difflist_type']
+						'difflist_type' => $new_difflist['difflist_type']
 					)
 				);
 			}
@@ -418,8 +421,8 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 		);
 		while ($old_copiesE = $db->fetch_object()) {
 			$found = false;
-			for ($cptE=0;$cptE<count($_SESSION['redirect']['diff_list']['copy']['entities']);$cptE++) {
-				if ($_SESSION['redirect']['diff_list']['copy']['entities'][$cptE]['entity_id'] == $old_copiesE->item_id) {
+			for ($cptE=0;$cptE<count($new_difflist['copy']['entities']);$cptE++) {
+				if ($new_difflist['copy']['entities'][$cptE]['entity_id'] == $old_copiesE->item_id) {
 					$found = true;
 					break;
 				}
@@ -427,7 +430,7 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
 			//if not found, add the old copy in the new diff list
 			if (!$found) {
 				array_push(
-					$_SESSION['redirect']['diff_list']['copy']['entities'], 
+					$new_difflist['copy']['entities'], 
 					array(
 						'entity_id' => $old_copiesE->item_id, 
 						'visible' => 'Y',
@@ -448,54 +451,56 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
             //exit();
             $old_dest = $db->fetch_object();
             
-            if($old_dest && isset($_SESSION['redirect']['diff_list']['copy']['users'])) {
+            if($old_dest && isset($new_difflist['copy']['users'])) {
                 # try to find old dest in copies already
                 $found = false;
-                for($ci=0; $ci<count($_SESSION['redirect']['diff_list']['copy']['users']);$ci++) {
+                for($ci=0; $ci<count($new_difflist['copy']['users']);$ci++) {
                     
                     # If in copies before, add number of views as dest to number of views as copy
-					if($_SESSION['redirect']['diff_list']['copy']['users'][$ci]['user_id'] == $old_dest->item_id) {
+					if($new_difflist['copy']['users'][$ci]['user_id'] == $old_dest->item_id) {
                         $found = true;
-                        $_SESSION['redirect']['diff_list']['copy']['users'][$ci]['viewed'] = 
-                            $_SESSION['redirect']['diff_list']['copy']['users'][$ci]['viewed'] + (integer)$old_dest->viewed;
+                        $new_difflist['copy']['users'][$ci]['viewed'] = 
+                            $new_difflist['copy']['users'][$ci]['viewed'] + (integer)$old_dest->viewed;
                         break;
                     }
                 }
                 
                 //re-built session without dest in copy
                 $tab=array();
-                for($ci=0; $ci<count($_SESSION['redirect']['diff_list']['copy']['users']);$ci++) {
-                    if($_SESSION['redirect']['diff_list']['copy']['users'][$ci]['user_id'] != $new_dest){
+                for($ci=0; $ci<count($new_difflist['copy']['users']);$ci++) {
+                    if($new_difflist['copy']['users'][$ci]['user_id'] != $new_dest){
                     array_push(
                         $tab, 
                         array(
-						'user_id' => $_SESSION['redirect']['diff_list']['copy']['users'][$ci]['user_id'], 
-						'viewed' => (integer)$_SESSION['redirect']['diff_list']['copy']['users'][$ci]['viewed'],
+						'user_id' => $new_difflist['copy']['users'][$ci]['user_id'], 
+						'viewed' => (integer)$new_difflist['copy']['users'][$ci]['viewed'],
 						'visible' => 'Y',
-						'difflist_type' => $_SESSION['redirect']['diff_list']['copy']['users'][$ci]['viewed']
+						'difflist_type' => $new_difflist['copy']['users'][$ci]['viewed']
                         )
                     );
                     }
                 }
-                $_SESSION['redirect']['diff_list']['copy']['users']=$tab;
+                $new_difflist['copy']['users']=$tab;
                 
                 if(!$found) {
                     array_push(
-                        $_SESSION['redirect']['diff_list']['copy']['users'], 
+                        $new_difflist['copy']['users'], 
                         array(
 						'user_id' => $old_dest->item_id, 
 						'viewed' => (integer)$old_dest->viewed,
 						'visible' => 'Y',
-						'difflist_type' => $_SESSION['redirect']['diff_list']['difflist_type']
+						'difflist_type' => $new_difflist['difflist_type']
                         )
                     );
                 }
             }
         }
+        //print_r($_SESSION['redirect']['diff_list']['copy']['entities']);exit();
+
         # Save listinstance
         $diffList->save_listinstance(
-            $_SESSION['redirect']['diff_list'], 
-            $_SESSION['redirect']['diff_list']['difflist_type'],
+            $new_difflist, 
+            $new_difflist['difflist_type'],
             $coll_id, 
             $res_id, 
             $_SESSION['user']['UserId']
@@ -505,10 +510,10 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status, $col
     # Pb with action chain : main action page is saved after this. 
     #   if process, $_SESSION['process']['diff_list'] will override this one
     
-    $_SESSION['process']['diff_list'] = $_SESSION['redirect']['diff_list'];
+    $_SESSION['process']['diff_list'] = $new_difflist;
     $_SESSION['action_error'] = $message;
     return array('result' => implode('#', $arr_id), 'history_msg' => $message);
-    
+
     #
     # OLD SCRIPT
     #
