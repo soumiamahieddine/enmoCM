@@ -242,7 +242,8 @@ class sendmail extends dbquery
         $text = str_replace("\r\n", PHP_EOL, $text);
         $text = str_replace("\r", PHP_EOL, $text);
         //
-        $text = str_replace(PHP_EOL, "<br />", $text);
+
+        //$text = str_replace(PHP_EOL, "<br />", $text);
         //
         return $text;
     }
