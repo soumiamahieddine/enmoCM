@@ -989,9 +989,31 @@ class docservers_controler
             $docinfo,
             $docserverTypeObject->fingerprint_mode
         );
+
         if (isset($copyResultArray['error']) && $copyResultArray['error'] <> '') {
-            $storeInfos = array('error' => $copyResultArray['error']);
-            return $storeInfos;
+            //second chance
+            $docinfo = array();
+            $copyResultArray = array();
+            $docinfo = $this->getNextFileNameInDocserver(
+                $pathOnDocserver['destinationDir']
+            );
+            if ($docinfo['error'] <> '') {
+                 $_SESSION['error'] = _FILE_SEND_ERROR . '. '._TRY_AGAIN . '. '
+                                    . _MORE_INFOS . ' : <a href=\'mailto:'
+                                    . $_SESSION['config']['adminmail'] . '\'>'
+                                    . $_SESSION['config']['adminname'] . '</a>';
+            }
+            $docinfo['fileDestinationName'] .= '.'
+                . strtolower($func->extractFileExt($tmpSourceCopy));
+            $copyResultArray = Ds_copyOnDocserver(
+                $tmpSourceCopy,
+                $docinfo,
+                $docserverTypeObject->fingerprint_mode
+            );
+            if (isset($copyResultArray['error']) && $copyResultArray['error'] <> '') {
+                $storeInfos = array('error' => $copyResultArray['error']);
+                return $storeInfos;
+            }
         }
         $destinationDir = $copyResultArray['destinationDir'];
         $fileDestinationName = $copyResultArray['fileDestinationName'];
