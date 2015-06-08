@@ -274,16 +274,18 @@ elseif($_SESSION['service_tag'] == 'load_basket_db')
                 . "' and group_id = '" . $db->protect_string_db(trim($GroupBasket['GROUP_ID']))
                 . "' and action_id = " . $GroupBasketAction['ID_ACTION']);
 
-                for ($k = 0; $k < count($GroupBasketAction['ID_ACTION']['difflist_types']); $k++) {
-                    $difflist_type = $GroupBasketAction['ID_ACTION']['difflist_types'][$k];
-                    $db->query(
-                        "INSERT INTO " . ENT_GROUPBASKET_DIFFLIST_TYPES
-                        . " (group_id, basket_id, action_id, difflist_type_id) values ('" 
-                        . $db->protect_string_db(trim($GroupBasket['GROUP_ID'])) . "', '" 
-                        . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId'])) . "', "
-                        . $GroupBasketAction['ID_ACTION'] . ", '" 
-                        . $difflist_type['difflist_type_id']. "')"
-                    );
+                if (isset($GroupBasketAction['ID_ACTION']['difflist_types'])) {
+                    for ($k = 0; $k < count($GroupBasketAction['ID_ACTION']['difflist_types']); $k++) {
+                        $difflist_type = $GroupBasketAction['ID_ACTION']['difflist_types'][$k];
+                        $db->query(
+                            "INSERT INTO " . ENT_GROUPBASKET_DIFFLIST_TYPES
+                            . " (group_id, basket_id, action_id, difflist_type_id) values ('" 
+                            . $db->protect_string_db(trim($GroupBasket['GROUP_ID'])) . "', '" 
+                            . $db->protect_string_db(trim($_SESSION['m_admin']['basket']['basketId'])) . "', "
+                            . $GroupBasketAction['ID_ACTION'] . ", '" 
+                            . $difflist_type['difflist_type_id']. "')"
+                        );
+                    }
                 }
             }
         }
