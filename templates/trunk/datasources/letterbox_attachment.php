@@ -78,4 +78,23 @@ while ($attachment = $dbDatasource->fetch_array()) {
     $datasources['attachments'][] = $attachment;
 }*/
 $myAttachment['chrono'] = $chronoAttachment;
+
+$img_file_name = $_SESSION['config']['tmppath'].$_SESSION['user']['UserId'].time().rand()."_barcode_attachment.png";
+
+require_once('apps/maarch_entreprise/tools/pdfb/barcode/pi_barcode.php');
+$objCode = new pi_barcode();
+
+$objCode->setCode($chronoAttachment);
+$objCode->setType('C128');
+$objCode->setSize(30, 50);
+  
+$objCode->setText($chronoAttachment);
+  
+$objCode->hideCodeType();
+  
+$objCode->setFiletype('PNG');               
+
+$objCode->writeBarcodeFile($img_file_name);
+
+$myAttachment['chronoBarCode'] = $img_file_name;
 $datasources['attachments'][] = $myAttachment;
