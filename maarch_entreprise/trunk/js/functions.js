@@ -1216,6 +1216,12 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                       req : 'valid_form',
                       form_values : frm_values
                     },
+                    onLoading: function(answer) {
+                    //show loading image in toolbar
+                        $('send').disabled=true;
+                        $('send').style.opacity="0.5";
+                        $('send').value="traitement...";
+                    },
                     onSuccess: function(answer){
                     //console.log('valid form answer  '+answer.responseText);
                     //alert('valid form answer  '+answer.responseText);
@@ -1248,6 +1254,7 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                             }
                             action_send_form_confirm_result(path_manage_script, mode, id_action, values, table, module, coll_id, frm_values);
                         }
+
                     }
                     else //  Form Params errors
                     {
@@ -1257,6 +1264,9 @@ function valid_action_form(current_form_id, path_manage_script, id_action, value
                             }
                         catch(e){}
                     }
+                    $('send').disabled=false;
+                    $('send').style.opacity="1";
+                    $('send').value="valider";
                 },
                 onFailure: function(){
                 }
