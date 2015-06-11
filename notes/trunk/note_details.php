@@ -287,6 +287,7 @@ echo _CLOSE_WINDOW;
     </p>
     <?php
 
+if ($canModify) {
     ?>
     <div>
         <h3 class="sstit" style="color: red"><?php echo _THIS_NOTE_IS_VISIBLE_BY; ?></h3>
@@ -375,6 +376,9 @@ if ($canModify) {
             </td>
         </tr>
     </table>
+    <?php
+    }
+    ?>
       </form>
     </div>
     <div class="block_end">&nbsp;</div>
