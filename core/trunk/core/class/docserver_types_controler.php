@@ -132,7 +132,7 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
         }
         $docserver_types->docserver_type_label=$f->protect_string_db($f->wash($docserver_types->docserver_type_label, "no", _DOCSERVER_TYPE_LABEL." ", 'yes', 0, 255));
         $docserver_types->is_container=$f->protect_string_db($f->wash($docserver_types->is_container, "no", _IS_CONTAINER." ", 'yes', 0, '5'));
-        if ($docserver_types->is_container == "false") {
+        if ($docserver_types->is_container == "false" || $docserver_types->is_container == "N") {
             $docserver_types->is_container=false;
             $docserver_types->container_max_number = 0;
         } else {
@@ -140,7 +140,7 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
             $docserver_types->container_max_number=$f->protect_string_db($f->wash($docserver_types->container_max_number, "no", _CONTAINER_MAX_NUMBER." ", 'yes', 0, 6));
         }
         $docserver_types->is_compressed=$f->protect_string_db($f->wash($docserver_types->is_compressed, "no", _IS_COMPRESSED." ", 'yes', 0, '5'));
-        if ($docserver_types->is_compressed == "false") {
+        if ($docserver_types->is_compressed == "false" || $docserver_types->is_compressed == "N") {
             $docserver_types->is_compressed=false;
             $docserver_types->compression_mode = "NONE";
         } else {
@@ -148,7 +148,7 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
             $docserver_types->compression_mode=$f->protect_string_db($f->wash($docserver_types->compression_mode, "no", _COMPRESSION_MODE." ", 'yes', 0, 32));
         }
         $docserver_types->is_meta=$f->protect_string_db($f->wash($docserver_types->is_meta, "no", _IS_META." ", 'yes', 0, '5'));
-        if ($docserver_types->is_meta == "false") {
+        if ($docserver_types->is_meta == "false" || $docserver_types->is_meta == "N") {
             $docserver_types->is_meta=false;
             $docserver_types->meta_template = "NONE";
         } else {
@@ -156,7 +156,7 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
             $docserver_types->meta_template=$f->protect_string_db($f->wash($docserver_types->meta_template, "no", _META_TEMPLATE." ", 'yes', 0, 32));
         }
         $docserver_types->is_logged=$f->protect_string_db($f->wash($docserver_types->is_logged, "no", _IS_LOGGED." ", 'yes', 0, '5'));
-        if ($docserver_types->is_logged == "false") {
+        if ($docserver_types->is_logged == "false" || $docserver_types->is_logged == "N") {
             $docserver_types->is_logged=false;
             $docserver_types->log_template = "NONE";
         } else {
@@ -164,7 +164,7 @@ class docserver_types_controler extends ObjectControler implements ObjectControl
             $docserver_types->log_template=$f->protect_string_db($f->wash($docserver_types->log_template, "no", _LOG_TEMPLATE." ", 'yes', 0, 32));
         }
         $docserver_types->is_signed=$f->protect_string_db($f->wash($docserver_types->is_signed, "no", _IS_SIGNED." ", 'yes', 0, '5'));
-        if ($docserver_types->is_signed == "false") {
+        if ($docserver_types->is_signed == "false" || $docserver_types->is_signed == "N") {
             $docserver_types->is_signed=false;
             $docserver_types->fingerprint_mode = "NONE";
         } else {
