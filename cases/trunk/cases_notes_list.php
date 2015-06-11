@@ -16,6 +16,9 @@ require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_manage_status.php");
 
 require_once("modules".DIRECTORY_SEPARATOR."cases".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_modules_tools.php');
+require_once "modules" . DIRECTORY_SEPARATOR . "notes" . DIRECTORY_SEPARATOR
+    . "class" . DIRECTORY_SEPARATOR
+    . "class_modules_tools.php";
 
 $core_tools = new core_tools();
 $core_tools->load_lang();
@@ -24,6 +27,7 @@ $func = new functions();
 $cases = new cases();
 $status_obj = new manage_status();
 $sec = new security();
+$notes_tools = new notes();
 
 
 if(empty($_SESSION['collection_id_choice']))
@@ -133,6 +137,44 @@ else
 	$cut_string = 20;
 	$extend_url = "";
 }
+
+$arrayToUnset = array();
+
+for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
+	for ($indNotes2 = 0; $indNotes2 < count($tabNotes[$indNotes1]); $indNotes2 ++) {
+		foreach (array_keys($tabNotes[$indNotes1][$indNotes2]) as $value) {
+			if ($tabNotes[$indNotes1][$indNotes2][$value] == "id") {
+				$tabNotes[$indNotes1][$indNotes2]["id"] = $tabNotes[$indNotes1][$indNotes2]['value'];
+				$tabNotes[$indNotes1][$indNotes2]["label"] = 'ID';
+				$tabNotes[$indNotes1][$indNotes2]["size"] = $sizeSmall;
+				$tabNotes[$indNotes1][$indNotes2]["label_align"] = "left";
+				$tabNotes[$indNotes1][$indNotes2]["align"] = "left";
+				$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
+				$tabNotes[$indNotes1][$indNotes2]["show"] = true;
+				$indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
+				//echo $tabNotes[$indNotes1][$indNotes2]['value'] . '<br>';
+				if (!$notes_tools->isUserNote(
+					$tabNotes[$indNotes1][$indNotes2]['value'], 
+					$_SESSION['user']['UserId'], 
+					$_SESSION['user']['primaryentity']['id']
+					)
+				) {
+					//unset($tabNotes[$indNotes1]);
+					//echo 'sort ' . $indNotes1 . '<br>';
+					array_push($arrayToUnset, $indNotes1);
+				} else {
+					//echo 'garde ' . $indNotes1 . '<br>';
+				}
+			}
+		}
+	}
+}
+
+for ($cptUnset=0;$cptUnset<count($arrayToUnset);$cptUnset++ ) {
+	unset($tabNotes[$arrayToUnset[$cptUnset]]);
+}
+// array_multisort($tabNotes, SORT_DESC);
+$tabNotes = array_merge($tabNotes);
 
 for ($ind_notes1=0;$ind_notes1<count($tabNotes);$ind_notes1++)
 {

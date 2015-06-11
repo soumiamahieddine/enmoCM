@@ -201,7 +201,7 @@ else
             foreach($ressources_status as $r)
             {
                 $temp =  $status_obj->get_status_data($r['status']);
-                echo '<td><img src="'.$temp['IMG_SRC'].'"></td>';
+                echo '<td><i class="fm '.$temp['IMG_SRC'].' fm-2x"></i></td>';
                 echo '<td>'.$temp['LABEL'].' : </td>';
                 echo '<td><b>'.$r['nb_docs'].'</b></td>';
                 echo '<td width="40px;">&nbsp;</td>';
