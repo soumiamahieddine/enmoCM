@@ -449,8 +449,10 @@ class core_tools extends functions
     * Builds the application menu from the session var menu
     *
     * @param  $menu array Enabled menu items
+    * @param  $myProfil boolean Enabled my profil item
+    * @param  $logout boolean Enabled logout item
     */
-    public function build_menu($menu)
+    public function build_menu($menu, $myProfil = true, $logout = true)
     {
         //menu tri
         $i=0;
@@ -494,13 +496,17 @@ class core_tools extends functions
         }
 
         // Menu items always displayed
+        if ($myProfil) {
         echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
         <a href="'.$_SESSION['config']['businessappurl']
             . 'index.php?page=modify_user&amp;admin=users&amp;reinit=true"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-user fa-2x"></i></span><span>'._MY_INFO.'</span></span></a></li>';
+        }
+        if ($logout) {
         echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
         <a href="'.$_SESSION['config']['businessappurl']
             . 'index.php?display=true&amp;page=logout&amp;coreurl='
             . $_SESSION['config']['coreurl'].'&amp;logout=true"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-power-off fa-2x"></i></span><span>'._LOGOUT.'</span></span></a></li>';
+        }
     }
 
     /**

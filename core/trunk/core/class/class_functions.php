@@ -268,6 +268,17 @@ class functions
                         return "";
                     }
 
+                case "alphanumunderscore":
+                    if (preg_match("/^[a-zA-Z0-9_]+$/",$w_var))
+                    {
+                        return $w_var;
+                    }
+                    else
+                    {
+                        $this->add_error($msg_error,_WRONG_FORMAT);
+                        return "";
+                    }   
+
                 case "nick":
                     if (preg_match("/^[_a-zA-Z0-9.-]+$/",$w_var))
                     {
