@@ -70,7 +70,7 @@ function endResource()
         'loadVersions',
         'nbVersions',
         'createVersion',
-        '../../modules/content_management/list_versions.php'
+        'index.php?display=false&module=content_management&page=list_versions'
     );
     if (window.opener.$('viewframe')) {
         window.opener.$('viewframe').src = window.opener.$('viewframe').src;

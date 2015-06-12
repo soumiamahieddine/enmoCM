@@ -5,7 +5,7 @@
 if ($_SESSION['cm']['resMaster'] <> '') {
     $resMaster = $_SESSION['cm']['resMaster'];
 } else {
-    $resMaster = $objectId;
+    $resMaster = $_SESSION['doc_id'];
 }
 
 $_SESSION['cm']['resMaster'] = '';
