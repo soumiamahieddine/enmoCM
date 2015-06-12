@@ -292,11 +292,11 @@ $tab_path_rep_file = get_rep_path($res_id, $coll_id);
 				$right_html .= '<div id="createVersion" style="display: inline;"></div>';
 			}
 			$right_html .= '<div id="loadVersions"></div>';
-			$right_html .= '<script language="javascript">';
-				$right_html .= 'showDiv("loadVersions", "nbVersions", "createVersion", "';
-					$right_html .= $_SESSION['urltomodules'];
-					$right_html .= 'content_management/list_versions.php")';
-			$right_html .= '</script>';
+            $right_html .= '<script language="javascript">';
+                $right_html .= 'showDiv("loadVersions", "nbVersions", "createVersion", "';
+                    $right_html .= $_SESSION['config']['businessappurl'];
+                    $right_html .= 'index.php?display=false&module=content_management&page=list_versions")';
+            $right_html .= '</script>';
 		$right_html .= '</div><br>';
 		$right_html .= '</dd>';
     }

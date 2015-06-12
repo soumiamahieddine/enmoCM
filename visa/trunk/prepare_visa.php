@@ -514,11 +514,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
 				$frm_str .= '<div id="createVersion" style="display: inline;"></div>';
 			}
 			$frm_str .= '<div id="loadVersions"></div>';
-			$frm_str .= '<script language="javascript">';
-				$frm_str .= 'showDiv("loadVersions", "nbVersions", "createVersion", "';
-					$frm_str .= $_SESSION['urltomodules'];
-					$frm_str .= 'content_management/list_versions.php")';
-			$frm_str .= '</script>';
+            $frm_str .= '<script language="javascript">';
+                $frm_str .= 'showDiv("loadVersions", "nbVersions", "createVersion", "';
+                    $frm_str .= $_SESSION['config']['businessappurl'];
+                    $frm_str .= 'index.php?display=false&module=content_management&page=list_versions")';
+            $frm_str .= '</script>';
 		$frm_str .= '</div><br>';
 		$frm_str .= '</dd>';
     }
