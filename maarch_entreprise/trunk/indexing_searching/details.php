@@ -1624,8 +1624,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                     <div id="loadVersions"></div>
                     <script language="javascript">
                         showDiv("loadVersions", "nbVersions", "createVersion", "<?php
-                            echo $_SESSION['urltomodules'] ;
-                            ?>content_management/list_versions.php");
+                            echo $_SESSION['config']['businessappurl'];
+                            ?>index.php?display=false&module=content_management&page=list_versions");
                     </script>
                 </dd>
                 <?php 
