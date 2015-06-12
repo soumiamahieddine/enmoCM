@@ -1151,7 +1151,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             } else if (isset($_ENV['categories'][$cat_id][$arr[$i]]['type_field'])
                 && $_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'string'
             ) {
-                $data[$arr[$i]]['show_value'] = $db->show_string($line-> $arr[$i], true);
+                $data[$arr[$i]]['show_value'] = $db->show_string($line-> $arr[$i], true, '', '', false);
             }
             // special cases :
             if ($arr[$i] == 'priority') {
@@ -1254,7 +1254,7 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
                 $data[$arr[$i]] = $db->format_date_db($line-> $arr[$i], false);
             }
             elseif ($_ENV['categories'][$cat_id][$arr[$i]]['type_field'] == 'string') {
-                $data[$arr[$i]] = $db->show_string($line-> $arr[$i], true);
+                $data[$arr[$i]] = $db->show_string($line-> $arr[$i], true, '', '', false);
             }
             // special cases :
             // Contact
