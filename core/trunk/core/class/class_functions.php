@@ -984,7 +984,7 @@ class functions
     * @param  $string string String to format
     * @return Formated string
     */
-    public function show_string($string, $replace_CR = false, $chars_to_escape = array(), $databasetype = '')
+    public function show_string($string, $replace_CR = false, $chars_to_escape = array(), $databasetype = '', $escape_quote = true)
     {
         if(isset($string) && !empty($string) && is_string($string))
         {
@@ -1017,7 +1017,11 @@ class functions
             {
                 $string = str_replace($chars_to_escape[$i], '\\'.$chars_to_escape, $string);
             }
-            $string = str_replace('"', "'", $string);
+
+            if ($escape_quote) {
+                $string = str_replace('"', "'", $string);
+            }
+            
             $string = trim($string);
         }
         return $string;
