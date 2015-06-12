@@ -346,9 +346,9 @@ if (!defined('_ENTER_TITLE'))
 if (!defined('_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS')) define('_PARAM_AVAILABLE_LISTMODELS_ON_GROUP_BASKETS', 'Param&eacute;trer les types de modèle de liste de diffusion pour l&rsquo;indexation');
 if (!defined('_INDEXING_DIFFLIST_TYPES')) define('_INDEXING_DIFFLIST_TYPES', 'Types de liste de diffusion');
 
-if (!defined('_ADMIN_DIFFLIST_TYPES')) define('_ADMIN_DIFFLIST_TYPES', 'Types de liste de diffusion (Admin)');
+if (!defined('_ADMIN_DIFFLIST_TYPES')) define('_ADMIN_DIFFLIST_TYPES', 'Types de liste de diffusion (Administration)');
 if (!defined('_ADMIN_DIFFLIST_TYPES_DESC')) define('_ADMIN_DIFFLIST_TYPES_DESC', 'Administrer les différents types de liste de diffusion');
-if (!defined('_ADMIN_LISTMODELS')) define('_ADMIN_LISTMODELS', 'Modèle de diffusion (Admin)');
+if (!defined('_ADMIN_LISTMODELS')) define('_ADMIN_LISTMODELS', 'Modèle de diffusion (Administration)');
 if (!defined('_ADMIN_LISTMODELS_DESC')) define('_ADMIN_LISTMODELS_DESC', 'Administrer les différents modèles de diffusion');
 
 /******************** RM ENTITIES ************/
