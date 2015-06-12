@@ -240,7 +240,7 @@ if ($mode == 'list') {
                         } else {
                             ?>
                             <select name="template_style" id="template_style" onChange="javascript:changeStyle($('template_style'), '<?php
-                                echo $_SESSION['config']['coreurl'] . 'modules/templates/change_template_style.php';?>');">
+                                echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&module=templates&page=change_template_style';?>');">
                                 <?php
                                 // if user don't choose a style
                                 if (!isset($_SESSION['m_admin']['templates']['current_style'])) {
