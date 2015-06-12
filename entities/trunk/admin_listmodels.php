@@ -43,9 +43,10 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 
 require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_list_show.php");
 require_once("core".DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR."class_request.php");
+require_once('modules'.DIRECTORY_SEPARATOR.'entities'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_manage_entities.php');
 require_once 'modules/entities/class/class_manage_listdiff.php';
 require_once("modules/entities/entities_tables.php");
-
+$ent = new entity();
 $func = new functions();
 $request = new request;
 
@@ -62,6 +63,14 @@ if(isset($_REQUEST['what']) && !empty($_REQUEST['what']))
 {
     $what = $func->protect_string_db($_REQUEST['what']);
 	$where = " lower(object_id) like lower('".$what."%') and ";
+}
+
+if($_SESSION['user']['UserId'] != 'superadmin') {
+    $my_tab_entities_id = $ent->get_all_entities_id_user($_SESSION['user']['entities']);
+    if (count($my_tab_entities_id)>0) {
+        //we need all entities that are managed by connected user
+        $where.= '('.ENT_LISTMODELS.'.object_id in ('.join(',', $my_tab_entities_id).')) and';
+    }
 }
 
 $order = 'asc';
