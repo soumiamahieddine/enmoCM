@@ -163,6 +163,8 @@ chdir($maarchDirectory);
 $maarchUrl = (string)$config->MaarchUrl;
 $maarchApps = (string) $config->MaarchApps;
 
+$_SESSION['config']['app_id'] = $maarchApps;
+
 $_SESSION['config']['tmppath'] = (string)$config->TmpDirectory;
 if(!is_dir($_SESSION['config']['tmppath'])) {
 	mkdir($_SESSION['config']['tmppath'], 0777);
