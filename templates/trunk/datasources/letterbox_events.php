@@ -1,6 +1,25 @@
 <?php
 
 /*
+ *   Copyright 2008-2015 Maarch
+ *
+ *   This file is part of Maarch Framework.
+ *
+ *   Maarch Framework is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   Maarch Framework is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with Maarch Framework. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
 * @requires
 *   $res_view   = Name of res view
 *   $maarchApps = name of app
@@ -20,6 +39,7 @@ $contacts = new contacts_v2();
 $datasources['recipient'][0] = (array)$recipient;
 
 $datasources['res_letterbox'] = array();
+$datasources['contact'] = array();
 
 foreach($events as $event) {
     $res = array();
@@ -64,30 +84,28 @@ foreach($events as $event) {
     // Insertion
     $datasources['res_letterbox'][] = $res;
     
-		//multicontact
-		$dbDatasource->query("SELECT * FROM contacts_res WHERE res_id = " . $res['res_id'] . " AND contact_id ='".$res['contact__id']."'");
-		$datasources['res_letterbox_contact'][] = $dbDatasource->fetch_assoc();
-		if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
-		    $datasources['contact'] = array();
-		    $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ".$datasources['res_letterbox_contact'][0]['contact_id']." and ca_id = ".$datasources['res_letterbox_contact'][0]['address_id']);
-		    $myContact = $dbDatasource->fetch_array();
-			$myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
-		    $datasources['contact'][] = $myContact;
-		// single Contact
-		}else if (isset($datasources['res_letterbox'][0]['contact_id']) && isset($datasources['res_letterbox'][0]['address_id'])) {
+	//multicontact
+	$dbDatasource->query("SELECT * FROM contacts_res WHERE res_id = " . $res['res_id'] . " AND contact_id ='".$res['contact_id']."'");
+	$datasources['res_letterbox_contact'][] = $dbDatasource->fetch_assoc();
+	if ($datasources['res_letterbox_contact'][0]['contact_id'] <> '') {
+	    // $datasources['contact'] = array();
+	    $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ".$datasources['res_letterbox_contact'][0]['contact_id']." and ca_id = ".$datasources['res_letterbox_contact'][0]['address_id']);
+	    $myContact = $dbDatasource->fetch_array();
+		$myContact['contact_title'] = $contacts->get_civility_contact($myContact->contact_title);
+	    $datasources['contact'][] = $myContact;
 
-		    $datasources['contact'] = array();
-		    $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ".$datasources['res_letterbox'][0]['contact_id']." and ca_id = ".$datasources['res_letterbox'][0]['address_id']);
-		    $myContact = $dbDatasource->fetch_array();
-		    $myContact['contact_title'] = $contacts->get_civility_contact($myContact['contact_title']);
-		    $datasources['contact'][] = $myContact;
-		} else {
-            $datasources['contact'] = array();
-            $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = 0");
-            $myContact = $dbDatasource->fetch_array();
-            $datasources['contact'][] = $myContact;
-        }
-
+	// single Contact
+	}else if (isset($res['contact_id']) && isset($res['address_id'])) {
+	    $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = ".$res['contact_id']." and ca_id = ".$res['address_id']);
+	    $myContact = $dbDatasource->fetch_array();
+	    $myContact['contact_title'] = $contacts->get_civility_contact($myContact->contact_title);
+	    $datasources['contact'][] = $myContact;
+        
+	} else {
+        $dbDatasource->query("SELECT * FROM view_contacts WHERE contact_id = 0");
+        $myContact = $dbDatasource->fetch_array();
+        $datasources['contact'][] = $myContact;
+    }
 }
 
 $datasources['images'][0]['imgdetail'] = $maarchUrl . '/apps/' . $maarchApps . '/img/object.gif';
