@@ -911,44 +911,6 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             $data['folder'] = '';
         }
     }
-    // Arboxes
-    if (isset ($_ENV['categories'][$cat_id]['other_cases']['arbox_id']) && count($_ENV['categories'][$cat_id]['other_cases']['arbox_id']) > 0 && (!isset ($params['show_arbox_id']) || $params['show_arbox_id'] == true)) {
-        $fields .= 'arbox_id,';
-        if ($mode == 'full' || $mode == 'form') {
-            if ($params['img_arbox_id'] == true) {
-                $data['arbox_id'] = array (
-                    'value' => '',
-                    'show_value' => '',
-                    'label' => $_ENV['categories'][$cat_id]['other_cases']['arbox_id']['label'],
-                    'display' => 'textinput',
-                    'img' => $_ENV['categories'][$cat_id]['other_cases']['arbox_id']['img']
-                );
-            } else {
-                $data['arbox_id'] = array (
-                    'value' => '',
-                    'show_value' => '',
-                    'label' => $_ENV['categories'][$cat_id]['other_cases']['arbox_id']['label'],
-                    'display' => 'textinput'
-                );
-            }
-            $data['arbox_id']['readonly'] = true;
-            if ($mode == 'form' && $_ENV['categories'][$cat_id]['other_cases']['arbox_id']['modify']) {
-                $data['arbox_id']['field_type'] = $_ENV['categories'][$cat_id]['other_cases']['arbox_id']['form_show'];
-                $data['arbox_id']['readonly'] = false;
-                $data['arbox_id']['select'] = array ();
-                $db->query("select arbox_id, title from " . $_SESSION['tablename']['ar_boxes'] . " where status ='NEW' order by title");
-                while ($res = $db->fetch_object()) {
-                    array_push($data['arbox_id']['select'], array (
-                        'ID' => $res->arbox_id,
-                        'LABEL' => $res->title . ' (' . $res->arbox_id . ')'
-                    ));
-                }
-            }
-        } else {
-            $data['arbox_id'] = '';
-        }
-        array_push($arr, 'arbox_id');
-    }
 
     if ($mode == 'full' || $mode == 'form') {
         $fields = preg_replace('/,$/', ',type_label', $fields);
@@ -1005,15 +967,6 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
             }
             elseif ($arr[$i] == 'type_id') {
                 $data[$arr[$i]]['show_value'] = $db->show_string($line->type_label);
-            }
-            // Arboxe
-            elseif ($arr[$i] == 'arbox_id') {
-                if (isset ($line->arbox_id) && !empty ($line->arbox_id)) {
-                    $db2->query('select title from ' . $_SESSION['tablename']['ar_boxes'] . " where arbox_id = " . $line->arbox_id . "");
-
-                    $res = $db2->fetch_object();
-                    $data[$arr[$i]]['show_value'] = $db->show_string($res->title . ' (' . $line->arbox_id . ')');
-                }
             }
             // Contact
             elseif ($arr[$i] == 'dest_user_id' || $arr[$i] == 'exp_user_id') {

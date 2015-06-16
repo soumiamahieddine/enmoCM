@@ -44,7 +44,7 @@ For developper :
     Just use this code by exemple:
                                     require_once($_SESSION['config']['businessapppath']."class".DIRECTORY_SEPARATOR."class_chrono.php");
                                     $chrono_x = new chrono();
-                                    $my_vars = array("entity_id"=>'DGS', "arbox_id"=>"52", "type_id"=>"type", "category_id"=>"incoming");
+                                    $my_vars = array("entity_id"=>'DGS', "type_id"=>"type", "category_id"=>"incoming");
                                     $my_function = $chrono_x->generate_chrono('chrono_id', $my_vars);
 
 -->

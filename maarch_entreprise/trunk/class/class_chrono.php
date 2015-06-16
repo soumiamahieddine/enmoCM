@@ -125,9 +125,7 @@ class chrono
             if (isset($chronoArray[$i]['TYPE'])
             && $chronoArray[$i]['TYPE'] == "maarch_var"
             ) {
-                if ($chronoArray[$i]['VALUE'] == "arbox_id") {
-                    $chronoArray[$i]['VALUE'] = $phpVar['arbox_id'];
-                } else if ($chronoArray[$i]['VALUE'] == "entity_id") {
+                if ($chronoArray[$i]['VALUE'] == "entity_id") {
                     $chronoArray[$i]['VALUE'] = $phpVar['entity_id'];;
                 } else if ($chronoArray[$i]['VALUE'] == "type_id") {
                     $chronoArray[$i]['VALUE'] = $phpVar['type_id'];;

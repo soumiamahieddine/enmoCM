@@ -49,10 +49,6 @@
             <LIBELLE>Dossier</LIBELLE>
             <DATABASE_FIELD>folder_name</DATABASE_FIELD>
         </FIELD>
-        <FIELD>
-            <LIBELLE>Boite d'archive</LIBELLE>
-            <DATABASE_FIELD>arbox_id</DATABASE_FIELD>
-        </FIELD>
         <!-- line 6 -->
         <FIELD>
             <LIBELLE>Statut</LIBELLE>

@@ -1783,7 +1783,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
     if ($resId <> false) {
         //Create chrono number
         //######
-        $cBoxId = get_value_fields($formValues, 'arbox_id');
         $cTypeId = get_value_fields($formValues, 'type_id');
         $cEntity = get_value_fields($formValues, 'destination');
 
@@ -1791,7 +1790,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         $chronoX = new chrono();
         $myVars = array(
             'entity_id' => $cEntity,
-            'arbox_id' => $cBoxId,
             'type_id' => $cTypeId,
             'category_id' => $catId,
             'folder_id' => $folderId,

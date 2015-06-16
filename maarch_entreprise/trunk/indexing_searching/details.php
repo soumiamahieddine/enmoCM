@@ -413,7 +413,6 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                 'img_process_limit_date' => true,
                 'img_author' => true,
                 'img_destination' => true,
-                'img_arbox_id' => true,
                 'img_folder' => true,
                 'img_contact' => true,
                 'img_confidentiality' => true,

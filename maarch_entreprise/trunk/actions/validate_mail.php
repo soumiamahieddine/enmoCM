@@ -1877,7 +1877,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
     
     $query_res = preg_replace('/set ,/', 'set ', $query_res);
     //$query_res = substr($query_res, strpos($query_string, ','));
-    $_SESSION['arbox_id'] = "";
     $db->connect();
     $db->query($query_res." where res_id =".$res_id);
     $db->query($query_ext." where res_id =".$res_id);
@@ -1913,14 +1912,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         if ($resultChrono->alt_identifier == '' OR $resultChrono->alt_identifier == NULL) {
         require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
             . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
-        $cBoxId = get_value_fields($values_form, 'arbox_id');
         $cTypeId = get_value_fields($values_form, 'type_id');
         $cEntity = get_value_fields($values_form, 'destination');
         $cChronoOut = get_value_fields($values_form, 'chrono_number');
         $chronoX = new chrono();
         $myVars = array(
             'entity_id' => $cEntity,
-            'arbox_id' => $cBoxId,
             'type_id' => $cTypeId,
             'category_id' => $cat_id,
         );
@@ -1942,14 +1939,12 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
         if ($resultChrono->alt_identifier == '' OR $resultChrono->alt_identifier == NULL) {
             require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
                 . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR . 'class_chrono.php';
-            $cBoxId = get_value_fields($values_form, 'arbox_id');
             $cTypeId = get_value_fields($values_form, 'type_id');
             $cEntity = get_value_fields($values_form, 'destination');
             $cChronoOut = get_value_fields($values_form, 'chrono_number');
             $chronoX = new chrono();
             $myVars = array(
                 'entity_id' => $cEntity,
-                'arbox_id' => $cBoxId,
                 'type_id' => $cTypeId,
                 'category_id' => $cat_id,                
                 'res_id' => $res_id
