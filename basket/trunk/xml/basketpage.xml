@@ -72,15 +72,4 @@
             <COLL_ID>*</COLL_ID>
         </COLLECTIONS>
     </BASKETPAGE>
-    <!-- business lists -->
-    <BASKETPAGE>
-        <ID>documents_business_list</ID>
-        <LABEL>_BUSINESS_LIST</LABEL>
-        <NAME>documents_business_list</NAME>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <COLLECTIONS>
-            <COLL_ID>business_coll</COLL_ID>
-        </COLLECTIONS>
-    </BASKETPAGE>
 </ROOT>
