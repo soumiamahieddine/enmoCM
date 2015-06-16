@@ -471,7 +471,6 @@ class resources_controler
 		            	$resView = $db->fetch_object();
 				        $myVars = array(
 				            'entity_id' => $resView->destination,
-				            'arbox_id' => "",
 				            'type_id' => $resView->type_id,
 				            'category_id' => $categoryId,
 				            'folder_id' => "",

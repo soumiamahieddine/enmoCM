@@ -332,11 +332,9 @@ class PrintControler extends PrintFunctions
 				}
 				
 				//LINE 5
-				if ($this->array_print[$cpt]['folder_name'] <> '' || $this->array_print[$cpt]['arbox_id'] <> '') {
+				if ($this->array_print[$cpt]['folder_name'] <> '') {
 					//FOLDER
 					$pdf->Cell(91,5,utf8_decode(_PRINT_FOLDER . ' : ' . $this->array_print[$cpt]['folder_name']),1,0, 'L', false);
-					//ARBOX
-					$pdf->Cell(91,5,utf8_decode(_PRINT_ARBOX . ' : ' . $this->array_print[$cpt]['arbox_id']),1,1, 'L', false);
 				}
 				
 				//LINE 6
