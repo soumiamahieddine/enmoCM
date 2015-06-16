@@ -1373,18 +1373,6 @@ class entity extends dbquery
             $nb_listinstances = 0;
             $nb_redirect_baskets = 0;
         }
-        if($admin->is_module_loaded('advanced_physical_archive'))
-        {
-            $nb_boxes = 0;
-            $nb_containers = 0;
-            $nb_headers = 0;
-            $nb_natures = 0;
-            $nb_sites = 0;
-        }
-        elseif($admin->is_module_loaded('physical_archive'))
-        {
-            $nb_boxes = 0;
-        }
         if(!empty($s_id))
         {
             if($this->havechild($s_id))
@@ -1449,48 +1437,6 @@ class entity extends dbquery
                     $nb_listmodels = $this->nb_result();
                 }
             }
-            if($admin->is_module_loaded('advanced_physical_archive'))
-            {
-                $this->query("select arbox_id from ".$_SESSION['tablename']['apa_boxes']." where entity_id = '".$this->protect_string_db($s_id)."'");
-                if($this->nb_result() > 0)
-                {
-                    $element_found = true;
-                    $nb_boxes = $this->nb_result();
-                }
-                $this->query("select arcontainer_id from ".$_SESSION['tablename']['apa_containers']." where entity_id = '".$this->protect_string_db($s_id)."'");
-                if($this->nb_result() > 0)
-                {
-                    $element_found = true;
-                    $nb_containers = $this->nb_result();
-                }
-                $this->query("select header_id from ".$_SESSION['tablename']['apa_header']." where entity_id = '".$this->protect_string_db($s_id)."'");
-                if($this->nb_result() > 0)
-                {
-                    $element_found = true;
-                    $nb_headers = $this->nb_result();
-                }
-                $this->query("select arnature_id from ".$_SESSION['tablename']['apa_natures']." where entity_id = '".$this->protect_string_db($s_id)."'");
-                if($this->nb_result() > 0)
-                {
-                    $element_found = true;
-                    $nb_natures = $this->nb_result();
-                }
-                $this->query("select site_id from ".$_SESSION['tablename']['apa_sites']." where entity_id = '".$this->protect_string_db($s_id)."'");
-                if($this->nb_result() > 0)
-                {
-                    $element_found = true;
-                    $nb_sites = $this->nb_result();
-                }
-            }
-            elseif($admin->is_module_loaded('physical_archive'))
-            {
-                $this->query("select count(*) from ".$_SESSION['tablename']['ar_boxes']." where entity_id = '".$this->protect_string_db($s_id)."'");
-                if($this->nb_result() > 0)
-                {
-                    $element_found = true;
-                    $nb_boxes = $this->nb_result();
-                }
-            }
         }
         if($element_found)
         {
@@ -1527,18 +1473,6 @@ class entity extends dbquery
                     {
                         echo "<br> - ".$nb_templates." "._TEMPLATES_LINKED_TO;
 
-                    }
-                    if($admin->is_module_loaded('advanced_physical_archive'))
-                    {
-                        echo "<br> - ".$nb_boxes." "._BOXES_IN_THE_DEPARTMENT;
-                        echo "<br> - ".$nb_containers." "._CONTAINERS_IN_THE_DEPARTMENT;
-                        echo "<br> - ".$nb_headers." "._HEADERS_IN_THE_DEPARTMENT;
-                        echo "<br> - ".$nb_natures." "._NATURES_IN_THE_DEPARTMENT;
-                        echo "<br> - ".$nb_sites." "._SITES_IN_THE_DEPARTMENT;
-                    }
-                    elseif($admin->is_module_loaded('physical_archive'))
-                    {
-                        echo "<br> - ".$nb_boxes." "._BOXES_IN_THE_DEPARTMENT;
                     }
                     ?>
                     <br>

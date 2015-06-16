@@ -131,31 +131,7 @@ if(isset($_REQUEST['valid']))
             $db->query("update ".$_SESSION['tablename']['temp_templates_association']." set value_field = '".$db->protect_string_db($entity_id_up)."' where value_field = '".$db->protect_string_db($s_id)."' and what = 'destination'");
             //$db->show();
         }
-
-        if($admin->is_module_loaded('advanced_physical_archive'))
-        {
-            //ar_boxes
-            $db->query("update ".$_SESSION['tablename']['apa_boxes']." set entity_id = '".$db->protect_string_db($entity_id_up)."' where entity_id = '".$db->protect_string_db($s_id)."'");
-            //$db->show();
-            //ar_containers
-            $db->query("update ".$_SESSION['tablename']['apa_containers']." set entity_id = '".$db->protect_string_db($entity_id_up)."' where entity_id = '".$db->protect_string_db($s_id)."'");
-            //$db->show();
-            //ar_header
-            $db->query("update ".$_SESSION['tablename']['apa_header']." set entity_id = '".$db->protect_string_db($entity_id_up)."' where entity_id = '".$db->protect_string_db($s_id)."'");
-            //$db->show();
-            //ar_natures
-            $db->query("update ".$_SESSION['tablename']['apa_natures']." set entity_id = '".$db->protect_string_db($entity_id_up)."' where entity_id = '".$db->protect_string_db($s_id)."'");
-            //$db->show();
-            //ar_sites
-            $db->query("update ".$_SESSION['tablename']['apa_sites']." set entity_id = '".$db->protect_string_db($entity_id_up)."' where entity_id = '".$db->protect_string_db($s_id)."'");
-            //$db->show();
-        }
-        elseif($admin->is_module_loaded('physical_archive'))
-        {
-            //ar_boxes
-            $db->query("update ".$_SESSION['tablename']['ar_boxes']." set entity_id = '".$db->protect_string_db($entity_id_up)."' where entity_id = '".$db->protect_string_db($s_id)."'");
-            //$db->show();
-        }
+        
         //exit;
         $ent->adminentity($s_id, 'del');
     }
