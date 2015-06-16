@@ -121,28 +121,6 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>postindex_documents</ID>
-        <LABEL>_POSTINDEXING_PAGE</LABEL>
-        <NAME>postindex_documents</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>postindexing</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>postindex_folders</ID>
-        <LABEL>_POSTINDEXING_FOLDER_PAGE</LABEL>
-        <NAME>postindex_folders</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>postindexing</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
         <ID>set_persistent_mode_on</ID>
         <LABEL>_SET_PERSISTENT_MODE_ON</LABEL>
         <NAME>set_persistent_mode_on</NAME>
