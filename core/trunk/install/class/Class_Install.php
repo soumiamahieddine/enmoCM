@@ -55,7 +55,6 @@ class Install extends functions
         array('OAIS_RM', 'OAIS_RM'),
         array('LOG', 'LOG'),
         array('BUSINESS_MAN', 'BUSINESS_MAN'),
-        array('PHOTO_CAPTURE', 'photo_capture'),
     );
 
     function __construct()
