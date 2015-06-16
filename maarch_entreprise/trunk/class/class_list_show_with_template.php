@@ -223,33 +223,6 @@ class list_show_with_template extends list_show
         }
 
     }
-    
-    //Load view_doc if this parameters is loaded in list_show and list_show_with_template
-    public function tmplt_func_bool_detail_rm($actual_string, $theline, $result, $key)
-    {
-
-        if ($this->bool_detail == true)
-        {
-            $return = "<a href='".$_SESSION['config']['businessappurl']
-            ."index.php?page=details_rm&amp;module=records_management&amp;id=".$result[$theline][0][$key]
-            ."' title='". _DETAILS."'><i class='fa fa-info-circle fa-2x' title='"._DETAILS."'></i></a>";
-
-            return $return;
-        }
-
-    }
-
-    //Load view_doc if this parameters is loaded in list_show and list_show_with_template
-    public function tmplt_func_bool_detail_io($actual_string, $theline, $result, $key)
-    {
-        $key = 'io_id';
-        if ($this->bool_detail == true) {
-            $return = "<a href='".$_SESSION['config']['businessappurl']
-            ."index.php?page=ArchiveTransfer__detail&amp;module=records_management&amp;objectId="
-            .$result[$theline][0][$key]."' title='". _DETAILS."'><i class='fa fa-info-circle fa-2x' title='"._DETAILS."'></i></a>";
-            return $return;
-        }
-    }
 
     //Show img.eye if attachments on the doc
     public function tmplt_func_bool_see_attachments($actual_string, $theline, $result, $key)

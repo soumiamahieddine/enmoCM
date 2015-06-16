@@ -79,12 +79,6 @@ $core_tools->test_service('quicklaunch', "apps");
                 var targetAction;
                 if (collId == 'letterbox_coll') {
                     targetAction = 'index.php?display=true&dir=indexing_searching&page=search_adv_result';
-                } else if (collId == 'business_coll') {
-                     targetAction = 'index.php?display=true&dir=indexing_searching&page=search_adv_result_business';
-                } else if (collId == 'rm_coll') {
-                     targetAction = 'index.php?display=true&module=records_management&page=search_adv_result_rm';
-                } else if (collId == 'res_coll') {
-                     targetAction = 'index.php?display=true&dir=indexing_searching&page=search_adv_result_invoices';
                 } else {
                     window.alert('no global search for this collection');
                 }
