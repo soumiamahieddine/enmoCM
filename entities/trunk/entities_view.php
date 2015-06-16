@@ -361,49 +361,6 @@
         return "";
     }
     
-    function saveWithXSD(object) {
-        var returnConfirm = false;
-        returnConfirm = confirm('Êtes-vous sûr ?');
-        
-        if (returnConfirm) {
-        
-            for(i in object) {
-                if ($(i)) {
-                    $(i).style.backgroundColor = 'white';
-                    $(i).style.color = 'black';
-                }
-            }
-            
-            var path_php = 'index.php?display=true&page=admin_standard_ajax&dir=admin';
-            
-            new Ajax.Request(path_php,
-            {
-                method:'post',
-                parameters: object,
-                onSuccess: function(answer){
-                    eval("response = "+answer.responseText);
-                    if (response.status == 1) {
-                        goTo('<?php echo $noModeUri; ?>');
-                    } else {
-                        //alert(response.messages);
-                        $('returnAjax').update(response.messages);
-                        $('returnAjax').innerHtml;
-                        for(var i=0; i < response.failFields.length; i++) {
-                            $(response.failFields[i]).style.backgroundColor = '#f6bf36';
-                            $(response.failFields[i]).style.color = '#459ed1';
-                        }
-                        if (response.alert.length > 0) {
-
-                            alert(response.alert);
-                        }
-                    }
-                }
-            });
-            
-        }
-        return;
-    }
-    
 <?php if ($modeList) { ?>
 
     function show_goToTop() {

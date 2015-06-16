@@ -59,7 +59,4 @@ if (isset($_REQUEST['orderField'])) {
 //actions to show in the list
 $actions = array('create', 'read', 'update', 'delete');
 
-include_once 'apps/' . $_SESSION['config']['app_id'] . '/admin/' 
-    . 'admin_standard_page_controller.php';
-
 include_once 'modules/entities/entities_view.php';
