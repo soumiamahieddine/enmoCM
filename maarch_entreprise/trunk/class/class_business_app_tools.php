@@ -482,22 +482,6 @@ class business_app_tools extends dbquery
             }
             $_SESSION['default_mail_title'] = (string) $mailTitles->default_title;
         }
-		
-		$_SESSION['currency'] = array();
-        $currency = $xmlfile->currency;
-        if (count($currency) > 0) {
-            $i = 0;
-            foreach ($currency->cur as $cur ) {
-                $label = (string) $cur->label;
-                if (!empty($label) && defined($label)
-                    && constant($label) <> NULL
-                ) {
-                    $label = constant($label);
-                }
-                $_SESSION['currency'][(string)$cur->id] = $label;
-            }
-            $_SESSION['default_currency'] = (string) $currency->default_currency;
-        }
         
     }
 
@@ -555,11 +539,9 @@ class business_app_tools extends dbquery
     {
         $_SESSION['features'] = array();
         //Defines all features by  default at 'false'
-        $_SESSION['features']['personal_contact'] = "false";
         $_SESSION['features']['search_notes'] = "false";
         $_SESSION['features']['dest_to_copy_during_redirection'] = "false";
         $_SESSION['features']['show_types_tree'] = "false";
-        $_SESSION['features']['create_public_contact'] = "false";
         if (file_exists(
             $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR
             . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR
@@ -576,11 +558,9 @@ class business_app_tools extends dbquery
         $xmlfeatures = simplexml_load_file($path);
         if ($xmlfeatures) {
             $feats = $xmlfeatures->FEATURES;
-            $_SESSION['features']['personal_contact'] = (string) $feats->personal_contact;
             $_SESSION['features']['search_notes'] = (string) $feats->search_notes;
             $_SESSION['features']['dest_to_copy_during_redirection'] = (string) $feats->dest_to_copy_during_redirection;
             $_SESSION['features']['show_types_tree'] = (string) $feats->show_types_tree;
-            $_SESSION['features']['create_public_contact'] = (string) $feats->create_public_contact;
         }
     }
 

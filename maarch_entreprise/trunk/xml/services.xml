@@ -16,14 +16,6 @@
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
- <!--<SERVICE>
-   <id>adv_search_invoices</id>
-   <name>_ADV_SEARCH_INVOICES</name>
-   <comment>_ADV_SEARCH_INVOICES</comment>
-   <servicetype>menu</servicetype>
-   <system_service>false</system_service>
-   <enabled>true</enabled>
- </SERVICE>-->
 <SERVICE>
    <id>index_mlb</id> <!-- if servicetype = menu, this id must be equal to the id of the menu item -->
    <name>_INDEXING_MLB</name>
@@ -117,16 +109,6 @@
    <servicepage>index.php?page=action_management_controler&amp;mode=list&amp;admin=action</servicepage>
    <servicetype>admin</servicetype>
    <style>fa fa-exchange</style>
-   <system_service>false</system_service>
-   <enabled>true</enabled>
- </SERVICE>
- <SERVICE>
-   <id>manage_svn</id>
-   <name>_SVN_MONITORING</name>
-   <comment>_SVN_MONITORING</comment>
-   <servicepage>index.php?page=svn_monitoring_controler&amp;admin=svn_monitoring</servicepage>
-   <servicetype>admin</servicetype>
-   <style>fa fa-binoculars</style>
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
@@ -349,24 +331,6 @@
    <system_service>false</system_service>
    <enabled>true</enabled>
  </SERVICE>
- <!-- business collection -->
- <!--<SERVICE>
-   <id>index_business</id>
-   <name>_INDEXING_BUSINESS</name>
-   <comment>_INDEXING_BUSINESS</comment>
-   <servicetype>menu</servicetype>
-   <system_service>false</system_service>
-   <enabled>true</enabled>
- </SERVICE>
- <SERVICE>
-   <id>adv_search_business</id>
-   <name>_ADV_SEARCH_BUSINESS</name>
-   <comment>_ADV_SEARCH_BUSINESS</comment>
-   <servicetype>menu</servicetype>
-   <system_service>false</system_service>
-   <enabled>true</enabled>
- </SERVICE>-->
- <!-- general -->
  <SERVICE>
    <id>print_details</id>
    <name>_PRINT_DETAILS_SERVICE</name>

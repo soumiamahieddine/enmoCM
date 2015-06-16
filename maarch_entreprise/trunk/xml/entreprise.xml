@@ -111,27 +111,4 @@
         </title>
         <default_title></default_title>
     </titles>
-	<currency>
-		<cur>
-			<id>EUR</id>
-			<label>EURO €</label>
-		</cur>
-		<cur>
-			<id>USD</id>
-			<label>DOLLAR $</label>
-		</cur>
-		<cur>
-			<id>JPY</id>
-			<label>YEN ¥</label>
-		</cur>
-		<cur>
-			<id>GBP</id>
-			<label>POUND £</label>
-		</cur>
-		<cur>
-			<id>XOF</id>
-			<label>CFA F</label>
-		</cur>
-		<default_currency>EUR</default_currency>
-	</currency>
 </ROOT>
