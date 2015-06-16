@@ -85,7 +85,7 @@ if($_POST['FOLDER_TREE']){
 	}
 	echo json_encode($docs);
 	exit();
-}else if($_POST['AUTOFOLDERS_TREE']){
+}else if($_POST['AUTOFOLDERS_TREE'] && $admin->is_module_loaded('autofoldering')) {
 	$config_autofoldering = "modules/autofoldering/xml/autofoldering.xml";
 	$xml=simplexml_load_file($config_autofoldering);
 	//print_r($xml->tree);
@@ -101,7 +101,7 @@ if($_POST['FOLDER_TREE']){
 	}
 	echo json_encode($autofolders);
 	exit();
-}else if($_POST['AUTOFOLDER_FOLDERS']){
+}else if($_POST['AUTOFOLDER_FOLDERS'] && $admin->is_module_loaded('autofoldering')) {
 	$config_autofoldering = "modules/autofoldering/xml/autofoldering.xml";
 	$xml=simplexml_load_file($config_autofoldering);
 	$path_folder = explode(";", $_POST['path_folder']);	
@@ -153,7 +153,7 @@ if($_POST['FOLDER_TREE']){
 	}
 	echo json_encode($folders);
 	exit();
-}else if($_POST['AUTOFOLDER_FOLDER_DOCS']){
+}else if($_POST['AUTOFOLDER_FOLDER_DOCS'] && $admin->is_module_loaded('autofoldering')) {
 	$config_autofoldering = "modules/autofoldering/xml/autofoldering.xml";
 	$xml=simplexml_load_file($config_autofoldering);
 	$path_folder = explode(";", $_POST['path_folder']);
