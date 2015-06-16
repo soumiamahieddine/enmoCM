@@ -394,3 +394,29 @@ if (!defined('_STORE_DIFF_LIST'))
 
 if (!defined('_DIFF_LIST_STORED'))
     define('_DIFF_LIST_STORED', 'Liste de diffusion enregistr&eacute;e');
+
+/////////////print_sep
+if (!defined('_PRINT_SEP'))
+    define('_PRINT_SEP' , 'Impression du s&eacute;parateur');
+if (!defined('_PRINT_SEP_TITLE'))
+    define('_PRINT_SEP_TITLE' , 'Separateur de type');
+if (!defined('_COMMENT_FOR_SEP1'))
+    define('_COMMENT_FOR_SEP1' , 'Placez ce separateur sur la pile de ');
+if (!defined('_COMMENT_FOR_SEP2'))
+    define('_COMMENT_FOR_SEP2' , 'documents du type : ');
+if (!defined('_PRINT_SEP_WILL_BE_START'))
+    define('_PRINT_SEP_WILL_BE_START', 'L&rsquo;impression des documents va d&eacute;buter automatiquement.');
+
+//print sep for mlb
+if (!defined('_PRINT_SEPS'))
+    define('_PRINT_SEPS', 'Impression des s&eacute;parateurs');
+if (!defined('_CHOOSE_ENTITIES'))
+    define('_CHOOSE_ENTITIES', 'Choisissez les services');
+if (!defined('_PRINT_SEPS_BUTTON'))
+    define('_PRINT_SEPS_BUTTON', 'Imprimer les s&eacute;parateurs');
+if (!defined('_ENTITIES_PRINT_SEP_MLB'))
+    define('_ENTITIES_PRINT_SEP_MLB', 'Imprimer des s&eacute;parateurs par service');
+if (!defined('_ENTITIES_PRINT_SEP_MLB_GENERIC'))
+    define('_ENTITIES_PRINT_SEP_MLB_GENERIC', 'Imprimer s&eacute;parateur g&eacute;n&eacute;rique COURRIER');
+if (!defined('_SELECT_BARCODE_TYPE'))
+    define('_SELECT_BARCODE_TYPE', 'Type de code &agrave; barres');

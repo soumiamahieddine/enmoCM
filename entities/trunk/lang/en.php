@@ -286,3 +286,27 @@ if (!defined('_STORE_DIFF_LIST'))
 
 if (!defined('_DIFF_LIST_STORED'))
     define('_DIFF_LIST_STORED', 'Diffusion list stored');
+
+/////////////print_sep
+if (!defined('_PRINT_SEP'))
+    define('_PRINT_SEP' , 'Print the separator');
+if (!defined('_PRINT_SEP_TITLE'))
+    define('_PRINT_SEP_TITLE' , 'sub-file separator');
+if (!defined('_COMMENT_FOR_SEP1'))
+    define('_COMMENT_FOR_SEP1' , 'Put this separator on the pile of ');
+if (!defined('_COMMENT_FOR_SEP2'))
+    define('_COMMENT_FOR_SEP2' , 'documents including types : ');
+if (!defined('_PRINT_SEP_WILL_BE_START'))
+    define('_PRINT_SEP_WILL_BE_START', 'Seperator printing will start automatically.');
+
+//print sep for mlb
+if (!defined('_PRINT_SEPS'))
+    define('_PRINT_SEPS', 'Print barcode separators');
+if (!defined('_CHOOSE_ENTITIES'))
+    define('_CHOOSE_ENTITIES', 'Select entities');
+if (!defined('_PRINT_SEPS_BUTTON'))
+    define('_PRINT_SEPS_BUTTON', 'Print separator sheets');
+if (!defined('_ENTITIES_PRINT_SEP_MLB'))
+    define('_ENTITIES_PRINT_SEP_MLB', 'Print entities separator sheets');
+if (!defined('_SELECT_BARCODE_TYPE'))
+    define('_SELECT_BARCODE_TYPE', 'Select the barcode type');

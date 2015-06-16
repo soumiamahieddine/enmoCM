@@ -308,5 +308,12 @@
             <nature>include</nature>
         </WHEREAMIUSED>
     </SERVICE>
-  
+    <SERVICE>
+       <id>entities_print_sep_mlb</id>
+       <name>_ENTITIES_PRINT_SEP_MLB</name>
+       <comment>_ENTITIES_PRINT_SEP_MLB</comment>
+       <servicetype>menu</servicetype>
+       <system_service>false</system_service>
+       <enabled>true</enabled>
+    </SERVICE>
 </root>
