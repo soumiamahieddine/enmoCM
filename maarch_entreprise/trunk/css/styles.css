@@ -29,8 +29,6 @@ select{
   border: solid 1px #009DC5;  
 }
 
-
-
 #validation_page
 {
     background: white;
@@ -51,12 +49,6 @@ h2
 h3
 {
     font-size: 14px;
-}
-
-.h3_admin
-{
-    cursor: pointer;
-    color:#FFC200;
 }
 
 .small_text
@@ -84,22 +76,6 @@ a:hover {
 .bloc {
     padding: 0px 0;
     margin: 0 12px;
-}
-
-
-
-#admin_types {
-    background:  url(static.php?filename=manage_doctypes.gif) no-repeat 2px top;
-    width: 315px;
-    min-height: 110px;
-    float: left;
-    padding-top: 0px;
-    padding-right: 18px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin: 0px 0px 15px;
-    position: relative;
-    display: block;
 }
 
 #admin_structures {
@@ -144,48 +120,6 @@ a:hover {
     display: block;
 }
 
-#admin_contact_types {
-    background:  url(static.php?filename=manage_doctypes.gif) no-repeat 2px top;
-    width: 315px;
-    min-height: 110px;
-    float: left;
-    padding-top: 0px;
-    padding-right: 18px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin: 0px 0px 15px;
-    position: relative;
-    display: block;
-}
-
-#admin_contact_purposes {
-    background:  url(static.php?filename=manage_structures.gif) no-repeat 2px top;
-    width: 315px;
-    min-height: 110px;
-    float: left;
-    padding-top: 0px;
-    padding-right: 18px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin: 0px 0px 15px;
-    position: relative;
-    display: block;
-}
-
-#admin_contacts_v2 {
-    background:  url(static.php?filename=manage_subfolders.gif) no-repeat 2px top;
-    width: 315px;
-    min-height: 110px;
-    float: left;
-    padding-top: 0px;
-    padding-right: 18px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin: 0px 0px 15px;
-    position: relative;
-    display: block;
-}
-
 #view_tree_contacts {
     background:  url(static.php?filename=manage_architecture.gif) no-repeat 2px top;
     width: 315px;
@@ -201,35 +135,8 @@ a:hover {
 }
 
 /*admin docservers CSS*/
-#admin_docservers_locations {
-    background:  url(static.php?filename=maarch_box_tmp.gif) no-repeat 2px top;
-    width: 315px;
-    min-height: 110px;
-    float: left;
-    padding-top: 0px;
-    padding-right: 18px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin: 0px 0px 15px;
-    position: relative;
-    display: block;
-}
 
 #admin_docservers {
-    background:  url(static.php?filename=maarch_box_tmp.gif) no-repeat 2px top;
-    width: 315px;
-    min-height: 110px;
-    float: left;
-    padding-top: 0px;
-    padding-right: 18px;
-    padding-bottom: 0px;
-    padding-left: 0px;
-    margin: 0px 0px 15px;
-    position: relative;
-    display: block;
-}
-
-#admin_docserver_types {
     background:  url(static.php?filename=maarch_box_tmp.gif) no-repeat 2px top;
     width: 315px;
     min-height: 110px;
@@ -254,23 +161,9 @@ a:hover {
     overflow: hidden;
 }
 
-.floatl {
-    width: 1000px;float: left;
-    margin: 0 2em 1em 0;
-    position: relative;
-}
-
-.floatr {
-    float: right;
-    margin: 0 0 1em 2em;
-    position: relative;
-}
-
-
 .inline {
     display: inline !important;
 }
-
 
 /* Typos */
 
@@ -289,12 +182,6 @@ acronym, abbr {
 .oblig {
     text-align: right;
     float: right;
-}
-
-.no_doctypes {
-    font-weight: bold;
-    font-size: .9em;
-    color: #16ADEB;
 }
 
 .nota {
@@ -376,7 +263,6 @@ a.view {
 a.authorize {
     background-image: url(static.php?filename=picto_authorize.gif);
 }
-
 
 .add {
     background: transparent url(static.php?filename=bg_but_add_left.gif) top left no-repeat;
@@ -478,7 +364,6 @@ a.authorize {
     min-height: 0px;
 }
 
-
 /* Forms */
 
 form, fieldset {
@@ -502,17 +387,10 @@ form, fieldset {
     width: 450px;
 }
 
-.indexingformBusiness{
-    width: 450px;
-}
-
 .physicalform{
     width: 900px;
 }
 
-.addforms3{
-    width: 520px;
-}
 label, .label {
     cursor: pointer;
     vertical-align: middle;
@@ -522,10 +400,6 @@ input, select, textarea, .forms img {
     vertical-align: middle;
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: .9em;
-}
-
-.smallforms {
-    padding: 0 12px;
 }
 
 .forms input, .forms select, .forms textarea, .smallforms select, .smallforms input {
@@ -1107,25 +981,6 @@ th.ref {
     background-color: transparent;
 }
 
-#titless {
-    float: left;
-    font-size: 1em;
-    margin-left: 12px;
-    padding-top: 1.4em;
-    color: #FFC200;
-}
-
-#titless2{
-    float: left;
-    font-size: 1em;
-    margin-left: 5px;
-
-}
-
-#titless input {
-    font-weight: normal;
-}
-
 #viewdoc {
     float: right;
     text-align: right;
@@ -1134,11 +989,6 @@ th.ref {
 
 #viewdoc img {
     vertical-align: middle;
-}
-
-#viewfolder {
-    float: right;
-    margin-right: 0px;
 }
 
 #back_list {
@@ -1152,10 +1002,6 @@ th.ref {
     vertical-align: middle;
 }
 
-#viewfolder img {
-    vertical-align: middle;
-}
-
 #detaildescr .label {
     width: 31%;
     margin-right: .5em;
@@ -1166,13 +1012,7 @@ th.ref {
     height: 80px;
 }
 
-
 /* Structure */
-
-#prelude {
-position: absolute;
-left: -100em;
-}
 
 #container {
     min-width: 1000px;
@@ -1226,23 +1066,6 @@ left: -100em;
     left: 262px;
 }
 
-
-#this_user_name {
-
-    margin-top: 60px;
-    margin-right: 30px;
-    color: #009ddf;
-    color:black;
-}
-
-
-#quicksearchform {
-    margin-top: 80px;
-    margin-left: 338px;
-    color: #009ddf;
-    width: 350px;
-}
-
 #quicksearchform #search {
     font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
     font-size: .9em;
@@ -1287,6 +1110,7 @@ left: -100em;
     background: #009DC5;
     /*border-radius: 10px;*/
 }
+
 #foot {
     clear: both;
     position: relative;
@@ -1298,8 +1122,6 @@ left: -100em;
     min-width: 1000px;
     float: left;
 }
-
-
 
 #nav #baskets {
     text-align: right;
@@ -1332,18 +1154,6 @@ left: -100em;
     overflow: hidden;
     cursor: pointer;
 }
-
-/*
-#menu p.off img {
-    margin-top: 0 !important;
-}
-*/
-
-/*
-#menu.on p img {
-    margin-top: -30px;
-}
-*/
 
 #menunav {
     overflow: hidden;
@@ -1565,9 +1375,6 @@ td#indexing {
 }
 
 
-
-
-
 /* ariane */
 
 #ariane {
@@ -1582,22 +1389,6 @@ td#indexing {
 
 
 #ariane a {
-    color: White;
-}
-
-/* texte footer */
-
-#footext {
-    color: White;
-    position: absolute;
-    left: 100px;
-    top: 0px;
-    font-size: 0.9em;
-    margin-top: 10px;
-}
-
-
-#footext a {
     color: White;
 }
 
@@ -1959,16 +1750,6 @@ padding-left :15px;
     height: 10em;
 }
 
-
-.frameform3 {
-    height: 330px;
-    width: 410px;
-}
-.frameform4 {
-    height: 330px;
-    width: 445px;
-}
-
 /* add/change a group, user or document type (width iframes) */
 
 #ugc {
@@ -2011,17 +1792,6 @@ padding-left :15px;
     width: 150px;
 }
 
-.multiple_list_entities
-{
-    height: 250px;
-    width: 150px;
-}
-
-.multiple_list_doctypes
-{
-    height: 250px;
-    width: 250px;
-}
 /* admin summary */
 
 #summary {
@@ -2035,35 +1805,6 @@ padding-left :15px;
 }
 
 /* admin core board */
-.summary_admin_users {
-    background:  url(static.php?filename=gerer_utilisateurs.gif) no-repeat 2px top;
-    height:65px;
-}
-
-.summary_admin_groups {
-    background:  url(static.php?filename=manage_groupe.gif) no-repeat 2px top;
-    height:80px;
-}
-
-.summary_admin_contacts {
-    background:  url(static.php?filename=manage_contacts.gif) no-repeat 2px top;
-    height:80px;
-}
-
-.summary_admin_doctypes {
-    background:  url(static.php?filename=picto_managed_superb.gif) no-repeat 2px top;
-    height:80px;
-}
-
-.summary_admin_modules {
-    background:  url(static.php?filename=gerer_structures.gif) no-repeat 2px top;
-    height:80px;
-}
-
-.summary_view_history {
-    background:  url(static.php?filename=historique.gif) no-repeat 2px top;
-    height:80px;
-}
 
 .sum_margin{
     margin-left:85px;
@@ -2093,50 +1834,6 @@ padding-left :15px;
 }
 
 #summary img {
-    display: block;
-    margin: 0 auto;
-}
-/* admin app board */
-
-
-
-/* Stats summary */
-
-#statssummary {
-    padding: 10px 40px;
-}
-
-#statssummary li {
-    width: 110px;
-    text-align: center;
-    float: left;
-    margin-bottom: 10px;
-}
-
-#statssummary .imp {
-    margin-right: 20px;
-}
-
-#statssummary h2 {
-    font-size: 1.3em;
-}
-
-#statssummary li span {
-    display: block;
-    font-size: 1.1em;
-    margin-top: .5em;
-    color: #666;
-}
-
-#statssummary a {
-    color: #1B99C4;
-}
-
-#statssummary a:hover {
-    color: #666;
-}
-
-#statssummary img {
     display: block;
     margin: 0 auto;
 }
@@ -2253,10 +1950,6 @@ color: #CCC;
 .clearfix { display:block; }
 /* Hides from IE-mac \*/ * html .clearfix { display:block; } /* End hide from IE-mac */
 
-.withcalend
-{
-    position:relative;
-}
 
 #pop_up p
 {
@@ -2269,7 +1962,6 @@ color: #CCC;
 {
     text-align: center;
 }
-
 
 
 .form_title
@@ -2290,15 +1982,6 @@ color: #CCC;
     float: left*/
 }
 
-/*
-.form_desc
-{
-    text-align: left;
-    width: 50%;
-    float: right;
-height:auto;
-}
-*/
 
 .indexingform .form_title
 {
@@ -2341,22 +2024,6 @@ height:auto;
     text-align: right;
 }
 
-
-#nota_bene
-{
-    text-align: center;
-    width: 60%;
-    float: right;
-
-}
-
-.bloc_trait
-{
-    margin-left: 2%;
-    margin-right: 2%;
-    margin-bottom: 15px;
-}
-
 .red_asterisk
 {
     color: #FFC200;
@@ -2381,20 +2048,6 @@ height:auto;
     vertical-align:top;
 }
 
-#welcome_desc
-{
-    float:left;
-    width: 50%;
-    /*height: 375px;*/
-    padding-top: 10px;
-    border: 1px solid #BBBBBB;
-    background-color: White;
-    padding-bottom: 20px;
-    margin: 10px 15px 15px 15px;
-    padding: 5px 5px 2px 5px;
-    line-height: 1.8em;
-}
-
 #baskets_list
 {
     width: 300px;
@@ -2405,26 +2058,7 @@ height:auto;
     margin-top: 20px;
 }
 
-#welcome_stats
-{
-    float:left;
-    width: 300px;
-    margin:  10px 10px 10px 10px;
-}
-
 /*************************************************************************/
-#help_text
-{
-    display: block;
-    float:none;
-    clear:both;
-}
-
-#guide_summary
-{
-    margin: 20px 20px 20px 20px;
-    text-align:left;
-}
 
 #guide_summary .chapitre
 {
@@ -2451,15 +2085,9 @@ height:auto;
 }
 
 
-#browse_page
-{
-    margin-top: 30px;
-
-}
 #prev
 {
     text-align:left;
-
     margin-right: 282px;
 }
 
@@ -2503,30 +2131,6 @@ height:auto;
         color: #666;
 }
 
-#help_guide
-{
-    margin-left: 300px;
-    margin-bottom: 20px;
-    width: 205px;
-    text-align:center;
-}
-
-#help_guide h2 a
-{
-    color: #1B99C4;
-}
-
-#help_guide img {
-    display: block;
-    margin: 0 auto;
-}
-#help_guide  span {
-    display: block;
-    font-size: 1.1em;
-    margin-top: .5em;
-    color: #666;
-}
-
 .listing a:hover
 {
     color: #666665;
@@ -2552,17 +2156,6 @@ height:auto;
     height: 25px;
     margin-top: 2px;
 
-}
-
-#nom_prenom
-{
-    margin-bottom: 5px;
-}
-
-.form_elem
-{
-    margin-bottom: 5px;
-    margin-top: 2px;
 }
 
 #allowed_actions li
@@ -2595,7 +2188,6 @@ margin-left: 10px;
 {
     margin-left: 150px;
 }
-
 
 
 #validleft
@@ -2649,7 +2241,6 @@ margin-left: 10px;
     padding: 5px 5px 2px 5px;
     line-height: 1.8em;
 }
-
 
 
 #info_user .button, #select_folder .button
@@ -2723,12 +2314,6 @@ text-align:left;
     width: 200px;
 }
 
-#welcome_label
-{
-    font-size:18px;
-    font-weight:bold;
-    color: #0099CC;
-}
 .forms2 input, .forms2 select, .forms2 textarea{
     background-color: White;
     border: 1px solid #999;
@@ -2838,23 +2423,6 @@ text-align:left;
     width: 226px;
 }
 
-.indexingformBusiness select
-{
-    width: 226px;
-}
-
-.indexingformBusiness .amountLeft
-{
-    text-align: right;
-    width:89px;
-}
-
-.indexingformBusiness .amountRight
-{
-    text-align: right;
-    width:120px;
-}
-
 .indexingform .amountLeft
 {
     text-align: right;
@@ -2954,15 +2522,6 @@ input[type="checkbox"] , input[type="radio"]
     list-style-type:disc;
     margin-left: 80px;
 }
-.input_expert_hide
-{
-    display:none;
-}
-
-.input_expert_show
-{
-
-}
 
 .block /* Propriétés qui s'appliquent au cadre d'habillage en général */
 {
@@ -3015,20 +2574,6 @@ margin-right: 12px;*/
 display:none;
 }
 
-.mini_box_left{
-width:450px;
-height:150px;
-/*position:relative;*/
-display: block;
-float: left;
-}
-.mini_box_right{
-width:450px;
-height:150px;
-/*position:relative;*/
-display: block;
-float: right;
-}
 .blank_space{
 height:30px;
 }
@@ -3075,28 +2620,6 @@ cursor:pointer;
  vertical-align: middle;
 }
 
-.bighome_search_adv{
-background:  url(static.php?filename=big_home_search.gif) no-repeat top;
-}
-
-.bighome_userinfo{
-background:  url(static.php?filename=big_home_account.gif) no-repeat top;
-}
-
-.bighome_workflow{
-background:  url(static.php?filename=big_home_workflow.gif) no-repeat top;
-
-}
-.bighome_indexing{
-background:  url(static.php?filename=big_home_indexing.gif) no-repeat top;
-}
-.bighome_createio{
-background:  url(static.php?filename=big_home_rm_ios.gif) no-repeat top;
-}
-.bighome_physical_archive{
-background:  url(static.php?filename=big_home_physical.gif) no-repeat top;
-}
-
 .bighome_search_adv span, .bighome_userinfo span, .bighome_workflow span, .bighome_indexing span, .bighome_physical_archive span, .bighome_createio span {
     vertical-align: middle;
     margin-top: 15px;
@@ -3110,42 +2633,30 @@ margin-right:120px;
 font-size: 14px;
 }
 
-.welcome_details{
-/*border: 1px solid #FFC200; */
-margin-right:120px;
-padding-top:10px;
-font-size: 11px;
-}
-
-.advertissement_for_welcome{
-background:  url(static.php?filename=picto_menu_help.gif) no-repeat top left;
-padding-left:30px;
-height:30px;
-}
-
 .header_menu{
     display:none;
-background-color: #009DC5;
-height:23px;
-color:white;
+    background-color: #009DC5;
+    height:23px;
+    color:white;
 
-font-weight: bold;
-font-size: 1.3em;
-text-align: right;
-border-bottom: 2px solid #FFFFFF;
+    font-weight: bold;
+    font-size: 1.3em;
+    text-align: right;
+    border-bottom: 2px solid #FFFFFF;
 }
+
 .footer_menu{
-background-color: #1B91BA;
-height:15px;
-width:100%;
-font-weight: bold;
-font-size: 0.8em;
-text-align: right;
-padding-right:0px;
-padding-top:0px;
-border-top: 2px solid #FFFFFF;
-position:relative;
-bottom:0;
+    background-color: #1B91BA;
+    height:15px;
+    width:100%;
+    font-weight: bold;
+    font-size: 0.8em;
+    text-align: right;
+    padding-right:0px;
+    padding-top:0px;
+    border-top: 2px solid #FFFFFF;
+    position:relative;
+    bottom:0;
 }
 
 .footer_menu span{
@@ -3173,16 +2684,11 @@ float: left;
 width:680px;
 height:660px;
 }
+
 .credits_list{
 text-align:center;
 float: right;
 width:300px;
-}
-
-.credits_bloc_img{
-padding:4px;
-background:white;
-border: 2px solid #16ADEB;
 }
 
 .img_credits_maarch_box{
@@ -3240,13 +2746,6 @@ div.autocomplete ul li span.informal {
     margin-right:10px;
 }
 
-/* frame for search*/
-.frameforsearch {
-    background-color:#D1EDF3;
-    width:1000px;
-    height:550px;
-}
-
 /* HR */
 hr{
   border: none;
@@ -3257,29 +2756,6 @@ hr{
 .hr_process{
     width: 80%;
     text-align: center;
-}
-.hr_admin{
-    border: none;
-    width: 100%;
-    height: 2px;
-    background-color: #1C99C5;
-    text-align: left;
-    padding: 0;
-    margin: 0;
-}
-
-/* TIPS  */
-.newTipbox {
-    background-color: #deedf3;
-    margin: 0 auto 15px auto;
-}
-
-.newTipContentbox {
-    color:#999999;
-    width: 100%;
-    font-weight:normal;
-    text-align:left;
-    padding:0 8px 0 8px;
 }
 
 /**** TABRICATOR ****/
@@ -3448,26 +2924,11 @@ hr{
     background-position : 2px top;
 }
 
-#admin_reopen_mail {
-    background-image : url(static.php?filename=file_status.gif);
-    background-repeat: no-repeat;
-    background-position : 2px top;
-}
-
 #admin_parameters {
 /*  background:  url(static.php?filename=manage_architecture.gif) no-repeat 2px top;*/
     background-image : url(static.php?filename=manage_parameters.gif);
     background-repeat: no-repeat;
     background-position : 2px top;
-}
-
-#help_welcome_basket {
-    background-repeat: no-repeat;
-    background-position : 2px top;
-    padding: 10px;
-    height: 120px;
-    width: 250px;
-    color: grey;
 }
 
 #view_history, #view_history_batch {
@@ -3484,14 +2945,8 @@ hr{
     background-position : 2px top;
 }
 
-#admin_types {
-    background:  url(static.php?filename=manage_doctypes.gif) no-repeat 2px top;
-
-}
-
 #admin_structures {
     background:  url(static.php?filename=manage_structures.gif) no-repeat 2px top;
-
 }
 
 #admin_subfolders {
@@ -3504,12 +2959,6 @@ hr{
     background-position : 2px top;
     /*background:  url(static.php?filename=manage_users.gif) no-repeat 2px top;*/
 }
-#svn_monitoring {
-    background-image : url(static.php?filename=manage_svn.gif);
-    background-repeat: no-repeat;
-    background-position : 2px top;
-    /*background:  url(static.php?filename=manage_users.gif) no-repeat 2px top;*/
-}
 
 #admin_status {
     background-image : url(static.php?filename=manage_status.gif);
@@ -3517,6 +2966,7 @@ hr{
     background-position : 2px top;
     /*background:  url(static.php?filename=manage_users.gif) no-repeat 2px top;*/
 }
+
 #view_tree_types {
     background:  url(static.php?filename=manage_architecture.gif) no-repeat 2px top;
 
@@ -3535,11 +2985,6 @@ hr{
     text-align: center;
     background-color: #deedf3;
 }
-/*#admin_modules, #admin_apps
-{
-    float: left;
-    margin-bottom: 10px;
-}*/
 
 /* Modal */
 div.lb1-layer{
@@ -3598,7 +3043,6 @@ background: url(static.php?filename=scrollbox_blank.gif) top left no-repeat;
 
 }
 
-
 .scrollbox_up_button {
 background:  url(static.php?filename=scrollbox_up.png) no-repeat scroll right top;
     /*_background:none;
@@ -3645,13 +3089,6 @@ padding:0;
     width: 550px;
 }
 
-.img_upload_doc
-{
-    position:absolute;
-    margin-left:50px;
-}
-
-
 #content h1 a.back {
     float: right;
     display: block;
@@ -3659,28 +3096,6 @@ padding:0;
     font-size: 14px;
     color:#666;
     text-align:right;
-}
-.list_previous{
-    width:33%;
-    text-align:left;
-    /*position:relative;*/
-    float:left;
-}
-
-.list_next{
-    width:33%;
-    text-align:right;
-    float:right;
-    display:inline;
-}
-
-.list_show_page
-{
-    width:33%;
-    /*float:left;*/
-    text-align:center;
-    position:relative;
-    display:inline;
 }
 
 .thisword
@@ -3697,13 +3112,7 @@ padding:0;
     display:inline;
     /*position:absolute;*/
 }
-#welcome_box_right_notes{
-    border: 1px;
-    float: left;
-    width: 600px;
-    margin: 0 10px 0 13px;
-    display:block;
-}
+
 #welcome_box_left_quick_lunch{
     border: 1px;
     float: left;
@@ -3936,11 +3345,6 @@ a.legend hr
     font-size: 14px;
 }
 
-.underlined
-{
-    text-decoration:underline;
-}
-
 .center
 {
     margin: auto auto;
@@ -3960,12 +3364,6 @@ a.legend hr
     clear:both;
 }
 
-.quiclaunch_div
-{
-    float:left;
-    width: 190px;
-    padding-bottom : 10px;
-}
 #myTree
 {
     /*width: 520px;*/
@@ -4019,9 +3417,6 @@ table.listing  {
     overflow-y: auto;
 }
 
-.selectedIcon{
-    border:2px solid #FBC110;
-}
 .separator1{
     color:#999999;
 }
@@ -4030,28 +3425,6 @@ table.listing  {
 }
 
 /*** NEW WF ***/
-
-.tdButton {
-    background-color: #CEE9F1;
-    text-align: center;
-    font-weight: bold;
-    border: solid black 1px;
-}
-
-.tdButtonRed {
-    background-color: #F78181;
-    text-align: center;
-    color: #EFFBF5;
-    font-weight: bold;
-    border: solid black 1px;
-}
-
-.tdButtonGreen {
-    background-color: #A9F5A9;
-    text-align: center;
-    font-weight: bold;
-    border: solid black 1px;
-}
 
 .multicontactInput {
     /*-moz-appearance: textfield;
