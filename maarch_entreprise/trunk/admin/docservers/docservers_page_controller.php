@@ -63,7 +63,4 @@ if (isset($_REQUEST['orderField'])) {
 $actions = array('create', 'read', 'update', 'delete');
 
 include_once 'apps/' . $_SESSION['config']['app_id'] . '/admin/' 
-    . 'admin_standard_page_controller.php';
-
-include_once 'apps/' . $_SESSION['config']['app_id'] . '/admin/' 
     . 'docservers/new_docservers_view.php';
