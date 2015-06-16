@@ -79,7 +79,3 @@ $SOAP_dispatch_map['CreateContact'] = Array(
                                      'out' => Array('out' => '{urn:MaarchSoapServer}returnId'),
                                      'method' => "apps#contacts::CreateContact"
                                      );
-
-$REST_dispatch_map['res'] = Array(
-    'pathToController' => "apps/maarch_entreprise/class/cmis_res_controller.php"
-);
