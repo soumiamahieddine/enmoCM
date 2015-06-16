@@ -167,62 +167,6 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>index_rm</ID>
-        <LABEL>_INDEX_ARCHIVE</LABEL>
-        <NAME>index_rm</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>records_management</MODULE>
-        <KEYWORD>indexing</KEYWORD>
-        <FLAG_CREATE>true</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>rm_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>ArchiveTransferCreation</ID>
-        <LABEL>ArchiveTransferCreation</LABEL>
-        <NAME>ArchiveTransferCreation</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>records_management</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>io_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>ArchiveTransferUpdate</ID>
-        <LABEL>ArchiveTransferUpdate</LABEL>
-        <NAME>ArchiveTransferUpdate</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>records_management</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>io_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>ArchiveTransferValidation</ID>
-        <LABEL>ArchiveTransferValidation</LABEL>
-        <NAME>ArchiveTransferValidation</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>records_management</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>io_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>ArchiveObjectsTransfer</ID>
-        <LABEL>_RM_ITEMS_TRANSFER</LABEL>
-        <NAME>ArchiveObjectsTransfer</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>records_management</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>rm_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
         <ID>confirm_folder_status</ID>
         <LABEL>_CONFIRM_FOLDER_STATUS</LABEL>
         <NAME>confirm_folder_status</NAME>
