@@ -11,26 +11,6 @@
         </COLLECTIONS>
     </BASKETPAGE>
     <!-- letters lists -->
-    <!--<BASKETPAGE>
-        <ID>list</ID>
-        <LABEL>_DOCUMENTS_LIST</LABEL>
-        <NAME>documents_list</NAME>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </BASKETPAGE>-->
-    <!--<BASKETPAGE>
-        <ID>list_with_filters</ID>
-        <LABEL>_DOCUMENTS_LIST_WITH_FILTERS</LABEL>
-        <NAME>documents_list_with_filters</NAME>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <COLLECTIONS>
-            <COLL_ID>letterbox_coll</COLL_ID>
-        </COLLECTIONS>
-    </BASKETPAGE>-->
     <BASKETPAGE>
         <ID>list_with_attachments</ID>
         <LABEL>_DOCUMENTS_LIST_WITH_ATTACHMENTS</LABEL>
