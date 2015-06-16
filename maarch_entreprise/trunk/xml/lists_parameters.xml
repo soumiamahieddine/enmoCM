@@ -180,17 +180,6 @@
             <ENABLED>true</ENABLED>
             <GOTOLIST></GOTOLIST>
         </TEMPLATE>
-        <!-- maarch for business -->
-        <TEMPLATE>
-            <ID>item_list_extend_new</ID>
-            <LABEL>_ITEM</LABEL>
-            <IMG>fa fa-list-ul fa-2x</IMG>
-            <NAME>item_list_extend_new</NAME>
-            <ORIGIN>apps</ORIGIN>
-            <MODULE></MODULE>
-            <ENABLED>true</ENABLED>
-            <GOTOLIST></GOTOLIST>
-        </TEMPLATE>
         <TEMPLATE>
             <ID>history_list_diff</ID>
             <LABEL>_ITEMS</LABEL>
