@@ -109,10 +109,8 @@ function infoBalise($description, $balise)
         if($result==null){
             echo "/!\ Error : L'entité $entity_label n'a pas été insérée !\n";
 
-
         }else{
             echo "... L'entité $entity_label a été insérée ...\n";
-
         }
 
     }
@@ -256,7 +254,7 @@ Lecture du fichier ldap.xml des entités pour mise à jours des données de la t
 $array_ldap_id = array();
 
 
-for($k = 0; $k<$m ; $k++)
+for($k = 0; $k<$m; $k++)
 {
     $valeurLastInsert = seekLastInsertId($db);
 
@@ -275,7 +273,7 @@ for($k = 0; $k<$m ; $k++)
     echo "+ entity_label : $xml_entity_label\n";
     echo("--------------------------------------\n\n");
     $db_ldap_id = seekLdapId($xml_ldap_id,$db);
-    if($db_ldap_id == ''){
+    if($db_ldap_id == '' || $db_ldap_id == NULL){
         $entityId++;
         $entityId = 'ldap'.$entityId;
         echo "L'entite entity_label n'existe pas ...";
@@ -296,7 +294,6 @@ for($k = 0; $k<$m ; $k++)
 
     //Recuperation de la branche des parent_entity
     $listsParent = $listItem->getElementsByTagName("xml_parent_entity")->item(0);
-
     /*On compte le nombre d'item xml dans la balise xml_user_entity. Ceci est réalisé car le nom de la balise est item suivi d'un chiffre*/
     
     //$nb_parents = $listsParent->lastChild->previousSibling->tagName;
@@ -321,7 +318,7 @@ for($k = 0; $k<$m ; $k++)
                 $xml_parent_entity_label = $ad->group_info($parent_entityDn,array('samaccountname'),$DnsEntities[0]);
 
                 if(empty($xml_entity_label) || empty($xml_parent_entity_ldap_id)){
-                    echo "Entité non trouvé dans le LDAP!";
+                    echo "Entité non trouvé dans l'AD!";
                     break;
                 }
 
