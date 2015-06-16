@@ -121,17 +121,6 @@ An action page is described in a ACTIONPAGE tag :
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
-        <ID>confirm_apa</ID>
-        <LABEL>_APA_CONFIRM_IN_OUT</LABEL>
-        <NAME>confirm_apa</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>advanced_physical_archive</MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>apa_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
         <ID>postindex_documents</ID>
         <LABEL>_POSTINDEXING_PAGE</LABEL>
         <NAME>postindex_documents</NAME>
