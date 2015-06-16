@@ -389,38 +389,6 @@ class indexing_searching_app extends dbquery
             }
         }
 
-        if ($core->is_module_loaded('physical_archive'))
-        {
-            // Arbox id
-            $box_id = '';
-            if (isset($post['arbox_id']))
-            {
-                $box_id = $post['arbox_id'];
-            }
-
-            if (isset($_ENV['categories'][$cat_id]['other_cases']['arbox_id']) && $_ENV['categories'][$cat_id]['other_cases']['arbox_id']['mandatory'] == true)
-            {
-                if ($box_id == false)
-                {
-                    $_SESSION['error'] .= _NO_BOX_SELECTED.' <br/>';
-                }
-            }
-            if ($box_id != false && preg_match('/^[0-9]+$/', $box_id))
-            {
-                require_once('modules'.DIRECTORY_SEPARATOR.'physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
-                $physical_archive = new physical_archive();
-                $pa_return_value = $physical_archive->load_box_db($box_id, $cat_id, $_SESSION['user']['UserId']);
-                if ($pa_return_value == false)
-                {
-                    $_SESSION['error'] .= _ERROR_TO_INDEX_NEW_BATCH_WITH_PHYSICAL_ARCHIVE.'<br/>';
-                }
-                else
-                {
-                    array_push($data_res, array('column' => 'arbox_id', 'value' => $box_id, 'type' => "integer"));
-                    array_push($data_res, array('column' => 'arbatch_id', 'value' => $pa_return_value, 'type' => "integer"));
-                }
-            }
-        }
 
         //$this->show_array($post);
         if (empty($_SESSION['error']))
@@ -1266,31 +1234,6 @@ class indexing_searching_app extends dbquery
                 )
             );
         }
-		if (!empty($post['arbox_id'])) {
-            array_push(
-                $data_res, 
-                array(
-                    'column' => 'arbox_id', 
-                    'value' => $post['arbox_id'], 
-                    'type' => "string"
-                )
-            );
-        
-			require_once('modules'.DIRECTORY_SEPARATOR.'physical_archive'.DIRECTORY_SEPARATOR.'class'.DIRECTORY_SEPARATOR.'class_modules_tools.php');
-			$physicalArchive = new physical_archive();
-				$paReturnValue = $physicalArchive->load_box_db_business(
-					$post['arbox_id'], $cat_id, $_SESSION['user']['UserId']
-				);
-				array_push(
-					$data_res,
-					array(
-						'column' => 'arbatch_id',
-						'value' => $paReturnValue,
-						'type' => 'integer',
-					)
-				);
-        
-		}
 		
         if ($core->is_module_loaded('folder')) {
             $request->connect();

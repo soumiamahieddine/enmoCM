@@ -73,12 +73,6 @@ if ($core->is_module_loaded('entities')) {
 if ($core->is_module_loaded('folder')) {
     require_once 'modules/folder/folder_tables.php';
 }
-if ($core->is_module_loaded('physical_archive')) {
-    require_once 'modules' . DIRECTORY_SEPARATOR . 'physical_archive'
-        . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
-        . 'class_modules_tools.php';
-    require_once 'modules/physical_archive/physical_archive_tables.php';
-}
 require_once 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
     . DIRECTORY_SEPARATOR . 'apps_tables.php';
 /**
@@ -202,26 +196,6 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     echo '</pre>';exit;
 */
 
-
-    if ($core->is_module_loaded('physical_archive')) {
-        $boxes = array();
-        $db = new dbquery();
-        $db->connect();
-
-        $db->query(
-            "select arbox_id, title from " . PA_AR_BOXES
-            . " where status = 'NEW' order by title"
-        );
-        while ($res = $db->fetch_object()) {
-            array_push(
-                $boxes,
-                array(
-                    'ID' => $res->arbox_id,
-                    'LABEL' => $db->show_string($res->title),
-                )
-            );
-        }
-    }
     // Select statuses from groupbasket
     $statuses = array();
     $db = new dbquery();
@@ -853,26 +827,6 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
     $frmStr .= '<td><span class="red_asterisk" id="chrono_number_mandatory" '
             . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
     $frmStr .= '</tr>';
-    
-    /*** Physical_archive : Arbox ***/
-    if ($core->is_module_loaded('physical_archive')) {
-        $frmStr .= '<tr id="box_id_tr" style="display:' . $displayValue . ';">';
-        $frmStr .= '<td><label for="arbox_id" class="form_title" id="label_box"'
-                . ' style="display:inline;" >' . _BOX_ID . '</label></td>';
-        $frmStr .= '<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
-        $frmStr .= '<td class="indexing_field"><select name="arbox_id" '
-                . 'id="arbox_id" onchange="clear_error(\'frm_error_' . $actionId
-                . '\');" >';
-        $frmStr .= '<option value="">' . _CHOOSE_BOX . '</option>';
-        for ($i = 0; $i < count($boxes); $i ++) {
-            $frmStr .= '<option value="' . $boxes[$i]['ID'] . '" >'
-                    . $db->show_string($boxes[$i]['LABEL']) . '</option>';
-        }
-        $frmStr .= '</select></td>';
-        $frmStr .= '<td><span class="red_asterisk" id="arbox_id_mandatory" '
-                . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
-        $frmStr .= '</tr>';
-    }
 
     /*** Folder ***/
     if ($core->is_module_loaded('folder')) {
@@ -1405,29 +1359,6 @@ function process_category_check($catId, $values)
         }
     }
 
-    if ($core->is_module_loaded('physical_archive')) {
-        // Arbox id
-        $boxId = get_value_fields($values, 'arbox_id');
-        if (isset($_ENV['categories'][$catId]['other_cases']['arbox_id'])
-            && $_ENV['categories'][$catId]['other_cases']['arbox_id']['mandatory'] == true
-        ) {
-            if ($boxId == false) {
-                $_SESSION['action_error'] = _NO_BOX_SELECTED . ' ';
-                return false;
-            }
-        }
-        if ($boxId != false && preg_match('/^[0-9]+$/', $boxId)) {
-            $physicalArchive = new physical_archive();
-            $paReturnValue = $physicalArchive->load_box_db(
-                $boxId, $catId, $_SESSION['user']['UserId']
-            );
-            if ($paReturnValue == false) {
-                $_SESSION['action_error'] = _ERROR_TO_INDEX_NEW_BATCH_WITH_PHYSICAL_ARCHIVE;
-                return false;
-            }
-        }
-    }
-
     //For specific case => chrono number
     $chronoOut = get_value_fields($values, 'chrono_number');
     if (isset($_ENV['categories'][$catId]['other_cases']['chrono_number'])
@@ -1765,32 +1696,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         }
     }
 
-    if ($core->is_module_loaded('physical_archive')) {
-        // Arbox_id + Arbatch_id
-        $boxId = get_value_fields($formValues, 'arbox_id');
-        if ($boxId <> '') {
-            array_push(
-                $_SESSION['data'],
-                array(
-                    'column' => 'arbox_id',
-                    'value' => $boxId,
-                    'type' => 'integer',
-                )
-            );
-            $physicalArchive = new physical_archive();
-            $paReturnValue = $physicalArchive->load_box_db(
-                $boxId, $catId, $_SESSION['user']['UserId']
-            );
-            array_push(
-                $_SESSION['data'],
-                array(
-                    'column' => 'arbatch_id',
-                    'value' => $paReturnValue,
-                    'type' => 'integer',
-                )
-            );
-        }
-    }
     //print_r($_SESSION['data']);
     $resId = $resource->load_into_db(
         $table, $_SESSION['indexing']['destination_dir'],

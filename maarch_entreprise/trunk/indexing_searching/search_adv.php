@@ -400,7 +400,7 @@ foreach (array_keys($_SESSION['coll_categories']['letterbox_coll']) as $cat_id) 
     }
 }
 $arr_tmp2 = array('label' => _CATEGORY, 'type' => 'select_simple', 'param' => array('field_label' => _CATEGORY,'default_label' => '', 'options' => $arr_tmp));
-$param['category'] = $arr_tmp2;//Arbox_id ; for physical_archive
+$param['category'] = $arr_tmp2;
 
 $usergroups_controler = new usergroups_controler();
 $array_groups = $usergroups_controler->getAllUsergroups("", false);
@@ -417,26 +417,6 @@ $param['signatory_group'] = $arr_tmp2;
 $arr_tmp2 = array('label' => _SIGNATORY_NAME, 'type' => 'input_text', 'param' => array('field_label' => _SIGNATORY_NAME, 'other' => $size));
 $param['signatory_name'] = $arr_tmp2;
 
-
-//Arbox_id ; for physical_archive
-if ($core_tools->is_module_loaded('physical_archive') == true)
-{
-    //arbox_id
-    $conn->query("select arbox_id, title from  ".$_SESSION['tablename']['ar_boxes']." where status <> 'DEL' order by description asc");
-    $arr_tmp = array();
-    while ($res=$conn->fetch_object())
-    {
-        array_push($arr_tmp, array('VALUE' => $res->arbox_id, 'LABEL' => $conn->show_string($res->title)));
-    }
-    $arr_tmp2 = array('label' => _ARBOXES, 'type' => 'select_multiple', 'param' => array('field_label' =>_ARBOXES,'label_title' => _CHOOSE_BOXES_SEARCH_TITLE, 'id' => 'arboxes', 'options' => $arr_tmp));
-    $param['arbox_id'] = $arr_tmp2;
-
-
-    $arr_tmp2 = array('label' => _ARBATCHES, 'type' => 'input_text', 'param' => array('field_label' => _ARBATCHES, 'other' => $size));
-    $param['arbatch_id'] = $arr_tmp2;
-
-
-}
 
  //Addresses contact externe
     $arr_tmp2 = array('label' => _ADDRESSES_MAJ, 'type' => 'input_text', 'param' => array('field_label' => _ADDRESSES_MAJ));

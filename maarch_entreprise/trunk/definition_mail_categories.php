@@ -583,53 +583,6 @@ if ($core->is_module_loaded('entities')) {
     );
 
 }
-if ($core->is_module_loaded('physical_archive')) {
-    //Physical Archive (incoming)
-    $_ENV['categories']['incoming']['other_cases']['arbox_id'] = array (
-        'type_form' => 'interger',
-        'type_field' => 'integer',
-        'mandatory' => false,
-        'label' => _BOX_ID,
-        'table' => 'res',
-        'img' => 'archive',
-        'modify' => false,
-        'form_show' => 'select'
-    );
-    // Physical Archive (outgoing)
-    $_ENV['categories']['outgoing']['other_cases']['arbox_id'] = array (
-        'type_form' => 'interger',
-        'type_field' => 'integer',
-        'mandatory' => false,
-        'label' => _BOX_ID,
-        'table' => 'res',
-        'img' => 'archive',
-        'modify' => false,
-        'form_show' => 'select'
-    );
-    // Physical Archive (internal)
-    $_ENV['categories']['internal']['other_cases']['arbox_id'] = array (
-        'type_form' => 'interger',
-        'type_field' => 'integer',
-        'mandatory' => false,
-        'label' => _BOX_ID,
-        'table' => 'res',
-        'img' => 'archive',
-        'modify' => false,
-        'form_show' => 'select'
-    );
-    // Physical Archive (folder_document)
-    $_ENV['categories']['folder_document']['other_cases']['arbox_id'] = array (
-        'type_form' => 'interger',
-        'type_field' => 'integer',
-        'mandatory' => false,
-        'label' => _BOX_ID,
-        'table' => 'res',
-        'img' => 'archive',
-        'modify' => false,
-        'form_show' => 'select'
-    );
-
-}
 
 if ($core->is_module_loaded('folder')) {
     //Folder (incoming)
