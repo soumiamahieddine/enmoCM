@@ -1,19 +1,6 @@
 // Fonction pour gérer les changements dynamiques de sous-menu.
 // Prend en variable le numéro du sous-menu à afficher.
 
-function ChangeMenu(idsm){
-    if(document.getElementById("sm"+idsm).style.visibility!='visible'){ // si le sous-menu est déjà affiché, on ne fait rien. Sinon :
-        for(i=1;i<=7;i++){ // boucle pour détécter quel menu est affiché
-            if(document.getElementById("sm"+i).style.visibility=='visible'){
-                ActiveSM=i
-                break;
-            }
-        }
-        document.getElementById("sm"+ActiveSM).style.visibility='hidden' // on cache le sous menu affiché
-        document.getElementById("sm"+idsm).style.visibility='visible' // on affiche le nouveau
-    }
-}
-
 function ChangeH2(objet){
     if(objet.getElementsByTagName('img')[0].src.indexOf("plus")>-1){
         objet.getElementsByTagName('img')[0].src="img/moins.png";
@@ -57,28 +44,6 @@ function getScrollXY() {
     scrOfX = document.documentElement.scrollLeft;
   }
   return new Array(scrOfX,scrOfY);
-}
-
-function afficheImage(nom){
-    var idCalque=document.getElementById('lb1-layer');
-    var idIMG=document.getElementById('lb1-img');
-    
-    idCalque.style.width=document.getElementsByTagName('html')[0].offsetWidth+"px";
-    idCalque.style.height=document.getElementsByTagName('body')[0].offsetHeight+"px";
-    idIMG.style.width=idCalque.style.width;
-    idIMG.style.marginTop=getScrollXY()[1]+15+'px';
-    
-    
-    afficheCalque(idCalque);
-    afficheCalque(idIMG);
-    idIMG.innerHTML="<span style='color:white;font-weight:bold'>Cliquez sur l'image pour fermer</span><br /><br /><img src=\"img/lb1/"+nom+"\" id=\"lb1-image\" onclick=\"masqueCalque(document.getElementById('lb1-layer'));masqueCalque(document.getElementById('lb1-img'));\" />";
-}
-
-function DetailsOn(objet){
-    objet.style.visibility="visible";
-}
-function DetailsOff(objet){
-    objet.style.visibility="hidden";
 }
 
 var initialized = 0;
@@ -186,26 +151,11 @@ function change3(id){
     }
 }
 
-function affDetails(obj){
-    document.getElementById("conteneurDetails").innerHTML = obj.parentNode.parentNode.getElementsByTagName("div")[0].innerHTML;
-}
-
 function show_special_form(id, var_visible)
 {
     var elem = window.document.getElementById(id);
     if(elem != null)
     {
         elem.style.display = var_visible;
-    }
-}
-
-function showHideDiv(elem)
-{
-    if ($(elem) != null) {
-        if ($(elem).style.display == "none") {
-            $(elem).style.display = "inline";
-        } else {
-            $(elem).style.display = "none";
-        }
     }
 }

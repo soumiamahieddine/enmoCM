@@ -392,22 +392,6 @@ function repost(php_file,update_divs,fields,action,timeout)
 
     if(document.createElement) window.onload = initMenu;
 
-    function cacher_menu() {
-        with ($('menu_container')){
-            if (className=='active')
-            {
-                className='inactive';
-                $('limage').src="images/sortirmenu.gif";
-            }
-            else
-            {
-                className='active';
-                $('limage').src="images/rentrermenu.gif";
-            }
-        }
-    }
-
-
     /************** fonction pour afficher/cacher le menu     ***********/
 
     function ShowHideMenu(menu,onouoff) {
@@ -454,49 +438,8 @@ function repost(php_file,update_divs,fields,action,timeout)
         }
     }
 
-    function HideMenu(menu) {
-        var massnav = null ;
-        if (typeof($) == 'function') {
 
-            if (menu == "ssnav")
-            {
-                massnav = $("ssnav");
-            }
-            else if (menu == "ssnavaide")
-            {
-                massnav = $("ssnavaide");
-            }
-        }
-        else if(document.all) {
-            if (menu == "ssnav")
-            {
-                massnav = document.all["ssnav"];
-            }
-            else if (menu == "ssnavaide")
-            {
-                massnav = document.all["ssnavaide"];
-            }
-        }
-        else return;
-
-        if(massnav != null)
-        {
-            massnav.style.display = "none";
-        }
-    }
 /****************************************/
-
-    function changeCouleur(ligne,couleurPolice,isBold) { //, couleurFond
-            //ligne.style.backgroundColor = couleurFond;
-            ligne.style.color=couleurPolice;
-            }
-
-    function changeCouleur2(cellule,couleurPolice,isBold)
-    {
-        var ligne = cellule.parentNode;
-        ligne.style.color=couleurPolice;
-    }
-
 
 
 function ouvreFenetre(page, largeur, hauteur)
@@ -897,11 +840,6 @@ function opentab(eleframe, url)
     eleframe1.src = url;
 }
 
-function opentab_window(eleframe, url)
-{
-    var eleframe1 = window.top.$(eleframe);
-    eleframe1.src = url;
-}
 /********************************/
 
 /*************** Modal functions *****************/
@@ -1502,36 +1440,6 @@ function action_send_first_request( path_manage_script, mode_req,  id_action, re
 }
 
 /**
- * Gets an item (DOM object)) from its identifier
- *
- * @param elem_id String  Item identifier
- * @return DOM Object or false
- */
-function get_elem( elem_id)
-{
-     if ($(elem_id))
-     {
-         return $(elem_id);
-     }
-     else
-     {
-        var tab = window.frames;
-         for(var i=0; i < tab.length;i++)
-         {
-            if(tab[i].document)
-            {
-                return tab[i].$(elem_id);
-            }
-            else if(tab[i].contentDocument)
-            {
-                return tab[i].content$(elem_id);
-            }
-         }
-     }
-     return false;
-}
-
-/**
  * Sends the second ajax request to process a form
  *
  * @param path_manage_script String  Path to the php script called in the Ajax object
@@ -1707,33 +1615,7 @@ function clean_xml_doc(xml)
     return xml;
 }
 
-/**
- * Loads an XML File
- *
- * @param xmlfile String Path or URL of the xml file to load
- */
-function load_xml_file(xmlfile)
-{
-    var xml;
-    if( window.ActiveXObject && /Win/.test(navigator.userAgent) )
-    {
-        xml= new ActiveXObject("Microsoft.XMLDOM");
-        xml.async = false;
-        xml.load(xmlfile);
-        return clean_xml_doc(xml);
-    }
-    else if( document.implementation && document.implementation.createDocument )
-    {
-        xml = document.implementation.createDocument("", "", null);
-        xml.async = false;
-        xml.load(xmlfile);
-        return clean_xml_doc(xml);
-    }
-    else
-    {
-       return false;
-    }
-}
+
 /***********************************************************************/
 
 /**
@@ -1813,31 +1695,6 @@ function print_r(x, max, sep, l) {
         return r;
 
     }
-
-/**
- * Includes a javascript file
- *
- * @param file_url String  Url of the js file to include
- * @param in_html Bool  The Html is already loaded (true) or not (false)
- */
-function include_js(file_url, in_html)
-{
-    if(in_html == true)
-    {
-        var head = $$("head")[0];
-        //var head = document.getElementsByTagName("head")[0];
-        var node = document.createElement("script");
-        node.setAttribute('type','text/javascript');
-        node.setAttribute('src',file_url);
-        head.insert(node);
-
-        //head.appendChild(node);
-    }
-    else
-    {
-        document.write('<script type="text/javascript" src="'+file_url+'"></script>');
-    }
-}
 
 /**
  * Unlock a basket using Ajax
@@ -2365,37 +2222,6 @@ function hideIndex(mode_hide, display_val) {
     }
 }
 
-
-function loadSvnLog(path_manage_script, onlineVersion, localVersion, divName) {
-    //window.alert(path_manage_script+' '+onlineVersion+' '+localVersion+' '+divName);
-    if(onlineVersion != '' && localVersion != '') {
-        new Ajax.Request(path_manage_script,
-        {
-            method:'post',
-            parameters: { onlineVersion : onlineVersion,
-                          localVersion  : localVersion,
-                          divName       : divName
-                        },
-                onSuccess: function(answer){
-                eval("response = "+answer.responseText);
-                if(response.status == 0 || response.status == 1) {
-                    if(response.status == 0) {
-
-                        $('div_'+divName).innerHTML = response.svnLog;
-                    } else {
-                        //
-                    }
-                } else {
-                    try {
-                        $('frm_error').innerHTML = response.error_txt;
-                    }
-                    catch(e){}
-                }
-            }
-        });
-    }
-}
-
 function checkAll() {
     $$('input[type=checkbox]').without($('all')).each(
         function(e) {if(e.checked != true){ stockCheckbox('index.php?display=true&dir=indexing_searching&page=multiLink',e.value);}
@@ -2684,8 +2510,6 @@ function loadDeleteContactDiv(id, society, lastnameFirstname)
     });
 }
 
-
-
 function deleteContact(id, replaced_contact_id, replaced_address_id)
 {
     //alert(id+' '+replaced_contact_id);
@@ -2897,15 +2721,6 @@ function convertAmount(currency, amount)
     }
 }
 
-function updateActionForWF()
-{
-    if ($('chosen_action').value != '') {
-        if ($('combinatedAction')) {
-            $('combinatedAction').innerHTML = $('chosen_action').options[$('chosen_action').selectedIndex].text;
-        }
-    }
-}
-
 function loadDiffList(id)
 {
     new Effect.toggle('diffList_'+id, 'appear' , {delay:0.2});
@@ -2989,7 +2804,7 @@ function showPreviousAttachments(path_manage_script, id){
 
 function affiche_reference(){
     
-var nature = document.getElementById('nature_id').options[document.getElementById('nature_id').selectedIndex];
+    var nature = document.getElementById('nature_id').options[document.getElementById('nature_id').selectedIndex];
 
     if (nature.getAttribute('with_reference') == 'true') {      
         $('reference_number_tr').setStyle({display: 'table-row'});
@@ -3034,14 +2849,6 @@ function simpleAjax(url){
         {
             method:'post'
         });
-}
-
-
-
-function test(){ 
-valeur2 = <?php echo json_encode($_SESSION['keysValuesForAllCheckBox']) ?>;
-alert(valeur2);
-
 }
 
 function loadAddressAttached(contact_id, select){

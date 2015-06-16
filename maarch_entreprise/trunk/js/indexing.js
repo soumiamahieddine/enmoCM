@@ -331,33 +331,8 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
     if (typeContactInternal == 'not_checked' && typeContactExternal == 'not_checked' && typeMultiContactExternal == 'not_checked') {
         typeContactExternal = 'checked';
     }
-    //Category = RM
-    if(cat_id == 'rm_archive')
-    {
-        var category = [
-        {id:'doctype_mail', type:'label', state:'display'},
-        {id:'doctype_res', type:'label', state:'hide'},
-        {id:'doc_date_label', type:'label', state:'display'},
-        {id:'originating_entity_tr', type:'tr', state:'display'},
-        {id:'originating_subentity_tr', type:'tr', state:'display'},
-        {id:'requesting_entity_tr', type:'tr', state:'display'},
-        {id:'appraisal_code_tr', type:'tr', state:'display'},
-        {id:'apparaisal_duration_tr', type:'tr', state:'display'},
-        {id:'folder_id_tr', type:'tr', state:'display'},
-        {id:'category_id_mandatory', type:'label', state:'display'},
-        {id:'type_id_mandatory', type:'label', state:'display'},
-        {id:'doc_date_mandatory', type:'label', state:'display'},
-        {id:'name_mandatory', type:'label', state:'display'},
-        {id:'originating_entity_mandatory', type:'label', state:'display'},
-        {id:'originating_subentity_mandatory', type:'label', state:'hide'},
-        {id:'requesting_entity_mandatory', type:'label', state:'display'},
-        {id:'appraisal_code_mandatory', type:'label', state:'display'},
-        {id:'apparaisal_duration_mandatory', type:'label', state:'display'},
-        {id:'folder_id_mandatory', type:'label', state:'hide'}
-        ];
-    }
     //Category = INCOMING
-    else if(cat_id == 'incoming')
+    if(cat_id == 'incoming')
     {
         var category = [
         {id:'doctype_mail', type:'label', state:'display'},
@@ -542,120 +517,6 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'chrono_number', type:'label', state:'hide'},
         {id:'chrono_number_tr', type:'tr', state:'hide'},
         {id:'chrono_number_mandatory', type:'label', state:'hide'},
-        {id:'folder_mandatory', type:'label', state:'hide'}
-        ];
-    }
-    //Category = PURCHASE
-    else if(cat_id == 'purchase')
-    {
-        var category = [
-        {id:'category_img_purchase', type:'label', state:'display'},
-        {id:'category_img_sell', type:'label', state:'hide'},
-        {id:'category_img_enterprise_document', type:'label', state:'hide'},
-        {id:'category_img_human_resources', type:'label', state:'hide'},
-        
-        {id:'doctype_tr', type:'tr', state:'display'},
-        {id:'subject_tr', type:'tr', state:'display'},
-		{id:'box_id_tr', type:'tr', state:'hide'},
-		{id:'type_id_tr', type:'tr', state:'display'},
-		{id:'appraisal_code_tr', type:'tr', state:'hide'},
-		{id:'appraisal_duration_tr', type:'tr', state:'hide'},
-		{id:'access_restriction_code_tr', type:'tr', state:'hide'},
-		{id:'project_tr', type:'tr', state:'hide'},
-        
-        {id:'contact_id_tr', type:'tr', state:'display'},
-        {id:'contact_label_purchase', type:'label', state:'display'},
-        {id:'contact_label_sell', type:'label', state:'hide'},
-        {id:'contact_label_enterprise_document', type:'label', state:'hide'},
-        {id:'contact_label_human_resources', type:'label', state:'hide'},
-        {id:'contact_purchase_img', type:'label', state:'display'},
-        {id:'contact_sell_img', type:'label', state:'hide'},
-        {id:'contact_enterprise_document_img', type:'label', state:'hide'},
-        {id:'contact_human_resources_img', type:'label', state:'hide'},
-        
-        {id:'identifier_tr', type:'tr', state:'display'},
-        {id:'doc_date_tr', type:'tr', state:'display'},
-        {id:'currency_tr', type:'tr', state:'display'},
-        {id:'net_sum_tr', type:'tr', state:'display'},
-        {id:'tax_sum_tr', type:'tr', state:'display'},
-        {id:'total_sum_tr', type:'tr', state:'display'},
-        {id:'process_limit_date_use_tr', type:'tr', state:'display'},
-        {id:'process_limit_date_tr', type:'tr', state:'display'},
-        {id:'department_tr', type:'tr', state:'display'},
-        {id:'folder_tr', type:'tr', state:'display'},
-		{id:'difflist_tr', type:'tr', state:'display'},
-        
-        {id:'category_id_mandatory', type:'label', state:'display'},
-        {id:'type_id_mandatory', type:'label', state:'display'},
-        {id:'subject_mandatory', type:'label', state:'hide'},
-        {id:'contact_mandatory', type:'label', state:'display'},
-        {id:'identifier_mandatory', type:'label', state:'display'},
-        {id:'doc_date_mandatory', type:'label', state:'display'},
-        {id:'currency_mandatory', type:'label', state:'hide'},
-        {id:'net_sum_mandatory', type:'label', state:'hide'},
-        {id:'tax_sum_mandatory', type:'label', state:'hide'},
-        {id:'total_sum_mandatory', type:'label', state:'hide'},
-        {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
-        {id:'process_limit_date_mandatory', type:'label', state:'hide'},
-        {id:'destination_mandatory', type:'label', state:'display'},
-        {id:'difflist_mandatory', type:'label', state:'display'},
-        {id:'folder_mandatory', type:'label', state:'hide'}
-        ];
-    }
-    //Category = SELL
-    else if(cat_id == 'sell')
-    {
-        var category = [
-        {id:'category_img_purchase', type:'label', state:'hide'},
-        {id:'category_img_sell', type:'label', state:'display'},
-        {id:'category_img_enterprise_document', type:'label', state:'hide'},
-        {id:'category_img_human_resources', type:'label', state:'hide'},
-        
-        {id:'doctype_tr', type:'tr', state:'display'},
-        {id:'subject_tr', type:'tr', state:'display'},
-		{id:'box_id_tr', type:'tr', state:'hide'},
-		{id:'type_id_tr', type:'tr', state:'hide'},
-		{id:'appraisal_code_tr', type:'tr', state:'hide'},
-		{id:'appraisal_duration_tr', type:'tr', state:'hide'},
-		{id:'access_restriction_code_tr', type:'tr', state:'hide'},
-		{id:'project_tr', type:'tr', state:'hide'},		
-        
-        {id:'contact_id_tr', type:'tr', state:'display'},
-        {id:'contact_label_purchase', type:'label', state:'hide'},
-        {id:'contact_label_sell', type:'label', state:'display'},
-        {id:'contact_label_enterprise_document', type:'label', state:'hide'},
-        {id:'contact_label_human_resources', type:'label', state:'hide'},
-        {id:'contact_purchase_img', type:'label', state:'hide'},
-        {id:'contact_sell_img', type:'label', state:'display'},
-        {id:'contact_enterprise_document_img', type:'label', state:'hide'},
-        {id:'contact_human_resources_img', type:'label', state:'hide'},
-        
-        {id:'identifier_tr', type:'tr', state:'display'},
-        {id:'doc_date_tr', type:'tr', state:'display'},
-        {id:'currency_tr', type:'tr', state:'display'},
-        {id:'net_sum_tr', type:'tr', state:'display'},
-        {id:'tax_sum_tr', type:'tr', state:'display'},
-        {id:'total_sum_tr', type:'tr', state:'display'},
-        {id:'process_limit_date_use_tr', type:'tr', state:'display'},
-        {id:'process_limit_date_tr', type:'tr', state:'display'},
-        {id:'department_tr', type:'tr', state:'display'},
-        {id:'folder_tr', type:'tr', state:'display'},
-		{id:'difflist_tr', type:'tr', state:'display'},
-        
-        {id:'category_id_mandatory', type:'label', state:'display'},
-        {id:'type_id_mandatory', type:'label', state:'display'},
-        {id:'subject_mandatory', type:'label', state:'hide'},
-        {id:'contact_mandatory', type:'label', state:'display'},
-        {id:'identifier_mandatory', type:'label', state:'display'},
-        {id:'doc_date_mandatory', type:'label', state:'display'},
-        {id:'currency_mandatory', type:'label', state:'hide'},
-        {id:'net_sum_mandatory', type:'label', state:'hide'},
-        {id:'tax_sum_mandatory', type:'label', state:'hide'},
-        {id:'total_sum_mandatory', type:'label', state:'hide'},
-        {id:'process_limit_date_use_mandatory', type:'label', state:'hide'},
-        {id:'process_limit_date_mandatory', type:'label', state:'hide'},
-        {id:'destination_mandatory', type:'label', state:'display'},
-        {id:'difflist_mandatory', type:'label', state:'display'},
         {id:'folder_mandatory', type:'label', state:'hide'}
         ];
     }
@@ -1439,52 +1300,6 @@ function getIframeContent(path_manage_script)
                 }
             }
         }
-    }
-}
-
-function convertAllBusinessAmount()
-{
-    if ($('net_sum_use')) {
-        if ($('net_sum_use').value != '') {
-            $('net_sum_preformatted').value = convertAmount($('currency').value, $('net_sum_use').value);
-            $('net_sum').value = convertAmount('', $('net_sum_use').value);
-        }
-    }
-    if ($('tax_sum_use')) {
-        if ($('tax_sum_use').value != '') {
-            $('tax_sum_preformatted').value = convertAmount($('currency').value, $('tax_sum_use').value);
-            $('tax_sum').value = convertAmount('', $('tax_sum_use').value);
-        }
-    }
-    if ($('total_sum_use')) {
-        if ($('total_sum_use').value != '') {
-            $('total_sum_preformatted').value = convertAmount($('currency').value, $('total_sum_use').value);
-            $('total_sum').value = convertAmount('', $('total_sum_use').value);
-        }
-    }
-}
-
-function controlTotalAmount()
-{
-    if ($('net_sum') && $('tax_sum')) {
-        if ($('net_sum').value != '' && $('tax_sum').value != '') {
-            var total = parseFloat($('net_sum').value) + parseFloat($('tax_sum').value);
-            //console.log(total);
-            if (total != $('total_sum').value) {
-                window.alert('total_sum <> net_sum + tax_sum');
-            }
-        }
-    }
-}
-
-function computeTotalAmount()
-{
-    if ($('net_sum') && $('tax_sum')) {
-        var total = parseFloat($('net_sum').value) + parseFloat($('tax_sum').value);
-        $('total_sum').value = total;
-        $('total_sum_use').value = total;
-        $('total_sum_preformatted').value = convertAmount($('currency').value, total);
-        //console.log(total);
     }
 }
 
