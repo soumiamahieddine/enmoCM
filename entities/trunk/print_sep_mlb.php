@@ -17,8 +17,8 @@ require_once('core/class/class_db.php');
 require_once('core/class/class_request.php');
 require_once('core/class/class_core_tools.php');
 require_once('modules/entities/pi_barcode.php');
-require('apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdf.php');
-require('apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdi.php');
+require_once('apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdf.php');
+require_once('apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdi.php');
 require_once('modules/entities/class/class_get_barcode.php');
 require_once('modules/entities/class/class_print_sep.php');
 if ($_REQUEST['typeBarcode'] == '') {
