@@ -61,38 +61,6 @@
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </BASKETPAGE>
-    <!-- ios lists -->
-    <BASKETPAGE>
-        <ID>io_basket_list</ID>
-        <LABEL>_IO_BASKET_LIST</LABEL>
-        <NAME>io_basket_list</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>records_management</MODULE>
-        <COLLECTIONS>
-            <COLL_ID>io_coll</COLL_ID>
-        </COLLECTIONS>
-    </BASKETPAGE>
-    <BASKETPAGE>
-        <ID>item_basket_list</ID>
-        <LABEL>_ITEM_BASKET_LIST</LABEL>
-        <NAME>item_basket_list</NAME>
-        <ORIGIN>module</ORIGIN>
-        <MODULE>records_management</MODULE>
-        <COLLECTIONS>
-            <COLL_ID>rm_coll</COLL_ID>
-        </COLLECTIONS>
-    </BASKETPAGE>
-    <!-- logs lists -->
-    <BASKETPAGE>
-        <ID>logs_list</ID>
-        <LABEL>_LOGS_LIST</LABEL>
-        <NAME>logs_list</NAME>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <COLLECTIONS>
-            <COLL_ID>log_coll</COLL_ID>
-        </COLLECTIONS>
-    </BASKETPAGE>
     <!-- folders lists -->
     <BASKETPAGE>
         <ID>list_folders</ID>
