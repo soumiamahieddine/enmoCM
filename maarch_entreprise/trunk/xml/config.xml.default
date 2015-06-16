@@ -298,17 +298,9 @@
         <id>LOGOUT</id>
         <label>_LOGOUT</label>
     </KEYWORDS>
-    <!--<MODULES>
-        <moduleid>advanced_physical_archive</moduleid>
-        <comment>_APA_COMMENT</comment>
-    </MODULES>-->
     <MODULES>
         <moduleid>attachments</moduleid>
         <comment>_ATTACHMENTS_COMMENT</comment>
-    </MODULES>
-    <MODULES>
-        <moduleid>autofoldering</moduleid>
-        <comment>_AUTOFOLDERING</comment>
     </MODULES>
     <MODULES>
         <moduleid>basket</moduleid>
@@ -338,10 +330,6 @@
         <moduleid>notifications</moduleid>
         <comment>_NOTIFICATIONS_COMMENT</comment>
     </MODULES>
-    <!--<MODULES>
-        <moduleid>physical_archive</moduleid>
-        <comment>_PHYSICAL_ARCHIVE_COMMENT</comment>
-    </MODULES>-->
     <MODULES>
         <moduleid>templates</moduleid>
         <comment>_TEMPLATES_COMMENT</comment>
@@ -350,14 +338,10 @@
         <moduleid>reports</moduleid>
         <comment>_REPORTS_COMMENT</comment>
     </MODULES>
-    <!--<MODULES>
-        <moduleid>postindexing</moduleid>
-        <comment>_POSTINDEXING</comment>
-    </MODULES>-->
-    <!--<MODULES>
+    <MODULES>
         <moduleid>life_cycle</moduleid>
         <comment>_LIFE_CYCLE_COMMENT</comment>
-    </MODULES>-->
+    </MODULES>
     <MODULES>
         <moduleid>content_management</moduleid>
         <comment>_CONTENT_MANAGEMENT_COMMENT</comment>
@@ -366,18 +350,10 @@
         <moduleid>tags</moduleid>
         <comment>_TAGS_COMMENT</comment>
     </MODULES>
-    <!--<MODULES>
-        <moduleid>records_management</moduleid>
-        <comment>_RECORDS_MANAGEMENT_COMMENT</comment>
-    </MODULES>-->
     <MODULES>
         <moduleid>sendmail</moduleid>
         <comment>_SENDMAIL_COMMENT</comment>
     </MODULES>
-	<!--<MODULES>
-        <moduleid>photo_capture</moduleid>
-        <comment>_PHOTO_CAPTURE_COMMENT</comment>
-    </MODULES>-->
     <MODULES>
         <moduleid>fileplan</moduleid>
         <comment>_FILEPLAN_COMMENT</comment>
