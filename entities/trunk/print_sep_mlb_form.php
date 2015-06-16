@@ -93,7 +93,7 @@ $_SESSION['separator']['entities'] = array();
         <div align="center">
             <?php echo _SELECT_BARCODE_TYPE;?> :
             <select name="typeBarcode" id="typeBarcode">
-                <option value="C39">C39</option>
+                <!--<option value="C39">C39</option>-->
                 <option value="C128">C128</option>
             </select>
             <br/>
