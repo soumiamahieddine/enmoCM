@@ -548,56 +548,6 @@ function change_category(cat_id, display_value_tr, path_manage_script,get_js_scr
         {id:'chrono_number_mandatory', type:'label', state:'hide'},
         {id:'folder_mandatory', type:'label', state:'hide'}
         ];
-    }//Category = POSTINDEXING DOCUMENT
-    else if(cat_id == 'postindexing_document')
-    {
-        var category = [
-        {id:'attachment_tr', type:'tr', state:'hide'},
-        {id:'attachment_mandatory', type:'label', state:'hide'},
-        {id:'category_tr', type:'tr', state:'hide'},
-        {id:'doctype_mail', type:'label', state:'display'},
-        {id:'doctype_res', type:'label', state:'hide'},
-        {id:'priority_tr', type:'tr', state:'display'},
-        {id:'doc_date_label', type:'label', state:'hide'},
-        {id:'mail_date_label', type:'label', state:'display'},
-        {id:'author_tr', type:'tr', state:'hide'},
-        {id:'admission_date_tr', type:'tr', state:'display'},
-        {id:'nature_id_tr', type:'tr', state:'display'},
-        {id:'label_dep_dest', type:'label', state:'display'},
-        {id:'label_dep_exp', type:'label', state:'hide'},
-        {id:'process_limit_date_use_tr', type:'tr', state:'display'},
-        {id:'process_limit_date_tr', type:'tr', state:'display'},
-        {id:'department_tr', type:'tr', state:'display'},
-        {id:'box_id_tr', type:'tr', state:'display'},
-        {id:'contact_choose_tr', type:'tr', state:'display'},
-        {id:'dest_contact_choose_label', type:'label', state:'hide'},
-        {id:'exp_contact_choose_label', type:'label', state:'display'},
-        {id:'contact_id_tr', type:'tr', state:'display'},
-        {id:'dest_contact', type:'label', state:'hide'},
-        {id:'exp_contact', type:'label', state:'display'},
-        {id:'type_contact_internal', type:'radiobutton', state:typeContactInternal},
-        {id:'type_contact_external', type:'radiobutton', state:typeContactExternal},
-        {id:'folder_tr', type:'tr', state:'display'},
-        {id:'category_id_mandatory', type:'label', state:'display'},
-        {id:'type_id_mandatory', type:'label', state:'display'},
-        {id:'priority_mandatory', type:'label', state:'display'},
-        {id:'doc_date_mandatory', type:'label', state:'display'},
-        {id:'author_mandatory', type:'label', state:'hide'},
-        {id:'admission_date_mandatory', type:'label', state:'display'},
-        {id:'type_contact_mandatory', type:'label', state:'display'},
-        {id:'contact_mandatory', type:'label', state:'display'},
-        {id:'nature_id_mandatory', type:'label', state:'display'},
-        {id:'subject_mandatory', type:'label', state:'display'},
-        {id:'destination_mandatory', type:'label', state:'display'},
-        {id:'diff_list_tr', type:'tr', state:'display'},
-        {id:'arbox_id_mandatory', type:'label', state:'hide'},
-        {id:'process_limit_date_use_mandatory', type:'label', state:'display'},
-        {id:'process_limit_date_mandatory', type:'label', state:'display'},
-        {id:'chrono_number', type:'label', state:'hide'},
-        {id:'chrono_number_mandatory', type:'label', state:'hide'},
-        {id:'chrono_number_tr', type:'tr', state:'hide'},
-        {id:'folder_mandatory', type:'label', state:'hide'}
-        ];
     }
     //Category = PURCHASE
     else if(cat_id == 'purchase')

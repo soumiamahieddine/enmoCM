@@ -480,90 +480,6 @@ $_ENV['categories']['folder_document']['author'] = array (
     'form_show' => 'textfield'
 );
 
-/////////////////////////////POSTINDEXING DOCUMENT////////////////////////////////////////////////
-$_ENV['categories']['postindexing_document'] = array ();
-$_ENV['categories']['postindexing_document']['img_cat'] = '<i class="fa fa-camera fa-2x"></i>';
-$_ENV['categories']['postindexing_document']['other_cases'] = array ();
-$_ENV['categories']['postindexing_document']['type_id'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => true,
-    'label' => _DOCTYPE,
-    'table' => 'res',
-    'img' => 'file',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['postindexing_document']['priority'] = array (
-    'type_form' => 'integer',
-    'type_field' => 'integer',
-    'mandatory' => false,
-    'label' => _PRIORITY,
-    'table' => 'res',
-    'img' => 'exclamation',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['postindexing_document']['admission_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'mandatory' => true,
-    'label' => _RECEIVING_DATE,
-    'table' => 'coll_ext',
-    'img' => 'calendar',
-    'modify' => true,
-    'form_show' => 'date'
-);
-$_ENV['categories']['postindexing_document']['nature_id'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _NATURE,
-    'table' => 'coll_ext',
-    'img' => 'envelope',
-    'modify' => true,
-    'form_show' => 'select'
-);
-$_ENV['categories']['postindexing_document']['doc_date'] = array (
-    'type_form' => 'date',
-    'type_field' => 'date',
-    'mandatory' => true,
-    'label' => _DOC_DATE,
-    'table' => 'res',
-    'img' => 'calendar-o',
-    'modify' => true,
-    'form_show' => 'date'
-);
-$_ENV['categories']['postindexing_document']['subject'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _SUBJECT,
-    'table' => 'res',
-    'img' => 'info',
-    'modify' => true,
-    'form_show' => 'textarea'
-);
-$_ENV['categories']['postindexing_document']['type_contact'] = array (
-    'type_form' => 'radio',
-    'mandatory' => true,
-    'label' => _SHIPPER_TYPE,
-    'table' => 'none',
-    'values' => array (
-        'internal',
-        'external'
-    ),
-    'modify' => false
-);
-$_ENV['categories']['postindexing_document']['other_cases']['contact'] = array (
-    'type_form' => 'string',
-    'type_field' => 'string',
-    'mandatory' => true,
-    'label' => _SHIPPER,
-    'table' => 'coll_ext',
-    'special' => 'exp_user_id,exp_contact_id',
-    'modify' => false
-);
 /////////////////////////////EMPTY////////////////////////////////////////////////
 $_ENV['categories']['empty'] = array ();
 $_ENV['categories']['empty']['img_cat'] = '<i class="fa fa-circle-thin fa-2x"></i>';
@@ -666,23 +582,6 @@ if ($core->is_module_loaded('entities')) {
         'table' => 'special'
     );
 
-    // Entities module (postindexing_document)
-    $_ENV['categories']['postindexing_document']['destination'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => true,
-        'label' => _DEPARTMENT_DEST,
-        'table' => 'res',
-        'img' => 'sitemap',
-        'modify' => false,
-        'form_show' => 'textarea'
-    );
-    $_ENV['categories']['postindexing_document']['other_cases']['diff_list'] = array (
-        'type' => 'special',
-        'mandatory' => true,
-        'label' => _DIFF_LIST,
-        'table' => 'special'
-    );
 }
 if ($core->is_module_loaded('physical_archive')) {
     //Physical Archive (incoming)
@@ -729,17 +628,7 @@ if ($core->is_module_loaded('physical_archive')) {
         'modify' => false,
         'form_show' => 'select'
     );
-    // Physical Archive (postindexing_document)
-    $_ENV['categories']['postindexing_document']['other_cases']['arbox_id'] = array (
-        'type_form' => 'interger',
-        'type_field' => 'integer',
-        'mandatory' => false,
-        'label' => _BOX_ID,
-        'table' => 'res',
-        'img' => 'archive',
-        'modify' => false,
-        'form_show' => 'select'
-    );
+
 }
 
 if ($core->is_module_loaded('folder')) {
@@ -778,17 +667,6 @@ if ($core->is_module_loaded('folder')) {
     );
     //Folder (folder_document)
     $_ENV['categories']['folder_document']['other_cases']['folder'] = array (
-        'type_form' => 'string',
-        'type_field' => 'string',
-        'mandatory' => false,
-        'label' => _FOLDER,
-        'table' => 'none',
-        'img' => 'folder',
-        'modify' => true,
-        'form_show' => 'autocomplete'
-    );
-    //Folder (postindexing_document)
-    $_ENV['categories']['postindexing_document']['other_cases']['folder'] = array (
         'type_form' => 'string',
         'type_field' => 'string',
         'mandatory' => false,
