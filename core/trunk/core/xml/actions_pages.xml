@@ -166,53 +166,6 @@ An action page is described in a ACTIONPAGE tag :
             <COLL_ID>letterbox_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
-    <!-- maarch for business -->
-    <ACTIONPAGE>
-        <ID>index_business</ID>
-        <LABEL>_INDEX_BUSINESS_FILE</LABEL>
-        <NAME>index_business</NAME>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <KEYWORD>indexing</KEYWORD>
-        <FLAG_CREATE>true</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>business_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>qualify_business</ID>
-        <LABEL>_QUALIF_BUSINESS</LABEL>
-        <NAME>qualify_business</NAME>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>business_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>process_business</ID>
-        <LABEL>_PROCESS_BUSINESS</LABEL>
-        <NAME>process_business</NAME>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>business_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
-    <ACTIONPAGE>
-        <ID>process_workflow</ID>
-        <LABEL>_PROCESS_WORKFLOW</LABEL>
-        <NAME>process_workflow</NAME>
-        <ORIGIN>apps</ORIGIN>
-        <MODULE></MODULE>
-        <KEYWORD>workflow</KEYWORD>
-        <FLAG_CREATE>false</FLAG_CREATE>
-        <COLLECTIONS>
-            <COLL_ID>business_coll</COLL_ID>
-        </COLLECTIONS>
-    </ACTIONPAGE>
     <ACTIONPAGE>
         <ID>close_mail_and_index</ID>
         <LABEL>_CLOSE_MAIL_AND_INDEX</LABEL>
