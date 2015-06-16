@@ -26,7 +26,7 @@
 * @author  Claire Figueras  <dev@maarch.org>
 * @date $date$
 * @version $Revision$
-* @ingroup physical_archive
+* @ingroup folder
 */
 
 if (! defined('FOLD_FOLDERS_TABLE')) {
