@@ -20,7 +20,6 @@ require_once('apps/maarch_entreprise/tools/pdfb/barcode/pi_barcode.php');
 require_once('apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdf.php');
 require_once('apps/maarch_entreprise/tools/pdfb/fpdf_1_7/fpdi.php');
 require_once('modules/entities/class/class_get_barcode.php');
-require_once('modules/entities/class/class_print_sep.php');
 if ($_REQUEST['typeBarcode'] == '') {
     $_REQUEST['typeBarcode'] = 'C39';
 }
