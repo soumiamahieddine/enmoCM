@@ -41,7 +41,7 @@ $status_obj = new manage_status();
 $sec        = new security();
 $core_tools = new core_tools();
 $request    = new request();
-$contact    = new contacts();
+$contact    = new contacts_v2();
 $list       = new lists();
 
 //Include definition fields
