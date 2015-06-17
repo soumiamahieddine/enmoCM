@@ -104,7 +104,7 @@ $myXML->writeAttribute('xmlns:media', "http://search.yahoo.com/mrss/");
 		
 		$myXML->writeElement('pubDate', date('d/m/Y H:i:s'));	
         //$myXML->writeElement('lastBuildDate', date('d/m/Y H:i:s'));	
-		$myXML->writeElement('image', 'http://localhost/maarch_trunk/favicon.ico');	
+		$myXML->writeElement('image', $_SESSION['config']['businessappurl'] . 'static.php?filename=favicon.png');	
 		$myXML->writeElement('language', 'Fr');	
 		//$myXML->writeElement('enclosure', 'some multimedia data');	
 		

@@ -75,7 +75,6 @@ class notifications {
 			$_SESSION['tablename']['entities'] = utf8_decode((string) $TABLENAME->entities);
 			$_SESSION['tablename']['ent_entities'] = utf8_decode((string) $TABLENAME->entities);
 			$_SESSION['tablename']['ent_users_entities'] = utf8_decode((string) $TABLENAME->users_entities);
-			$_SESSION['tablename']['contacts'] = utf8_decode((string) $TABLENAME->contacts);
 			$_SESSION['tablename']['mlb_doctype_ext'] = utf8_decode((string) $TABLENAME->mlb_doctype_ext);
 		}
 		

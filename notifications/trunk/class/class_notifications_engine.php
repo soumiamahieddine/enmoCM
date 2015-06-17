@@ -529,7 +529,7 @@ class notification_engine extends request
             
                 $column_title = "contact_id";
                 $column_value = $compar->exp_contact_id;
-                $column_join = $_SESSION['tablename']['contacts'];
+                $column_join = "contacts";
             }
             else
             {
@@ -555,7 +555,7 @@ class notification_engine extends request
                     
                     $column_title = "contact_id";
                     $column_value = $compar->dest_contact_id;
-                    $column_join = $_SESSION['tablename']['contacts'];
+                    $column_join = "contacts";
                 }
                 else
                 {
@@ -571,7 +571,7 @@ class notification_engine extends request
             return false;
         }
         //If we need to find a contact, get the society first
-        if ($column_join == $_SESSION['tablename']['contacts'])
+        if ($column_join == "contacts")
             $fields = 'c.firstname, c.lastname, c.society ';
         elseif ($column_join == $_SESSION['tablename']['users'])
             $fields = 'c.firstname, c.lastname';
