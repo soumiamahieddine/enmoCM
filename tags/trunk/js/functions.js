@@ -60,8 +60,6 @@ function add_this_tags(action_script, ui_script)
 }
 
 
-
-
 function delete_this_tag(action_script,tag_label, ui_script)
 {
 	if(tag_label == '')
@@ -153,9 +151,6 @@ function load_tags(path_script)
 	}
 }
 
-
-
-
 /** Declaration of the autocompleter object used for the folders*/
 var tag_autocompleter;
 
@@ -189,7 +184,6 @@ function launch_autocompleter_tags(path_script)
 		}
 	}
 }
-
 
 function tag_fusion(search_tag, new_tag, path_script, result_text, header_location)
 {
@@ -231,8 +225,5 @@ function tag_fusion(search_tag, new_tag, path_script, result_text, header_locati
 		
 	}
 
-	
-	
 }
-
 

@@ -145,8 +145,6 @@ class tag_controler
             return null;
         }
     }
-    
-    
   
     public function get_by_res($res_id,$coll_id)
     {
@@ -170,8 +168,6 @@ class tag_controler
         if ($return) return $return;
         else return false;
     }
-  
-  
   
     public function delete_this_tag($res_id,$coll_id,$tag_label)
     {
@@ -408,7 +404,6 @@ class tag_controler
         }
         
     }
-    
     
     
     public function add_this_tag($res_id,$coll_id,$tag_label)

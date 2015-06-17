@@ -51,8 +51,7 @@
 	   </WHEREAMIUSED>
 	</SERVICE>
 	 
-	 
-	 <SERVICE>
+	<SERVICE>
 	   <id>add_tag_to_res</id>
 	   <name>_ADD_TAG_TO_RES</name>
 	   <comment>_ADD_TAG_TO_RES_DESC</comment>
@@ -71,8 +70,8 @@
 	     <page>details.php</page>
 	     <nature>include</nature>
 	   </WHEREAMIUSED>
-	 </SERVICE>
-	 <SERVICE>
+	</SERVICE>
+	<SERVICE>
 	   <id>delete_tag_to_res</id>
 	   <name>_DELETE_TAG_TO_RES</name>
 	   <comment>_DELETE_TAG_TO_RES_DESC</comment>
@@ -91,8 +90,8 @@
 	     <page>details.php</page>
 	     <nature>include</nature>
 	   </WHEREAMIUSED>
-	 </SERVICE>
-	 <!--<SERVICE>
+	</SERVICE>
+	<!--<SERVICE>
 	   <id>new_tags_in_library_rights</id>
 	   <name>_NEW_TAG_IN_LIBRARY_RIGHTS</name>
 	   <comment>_NEW_TAG_IN_LIBRARY_RIGHTS_DESC</comment>
@@ -111,5 +110,5 @@
 	     <page>details.php</page>
 	     <nature>include</nature>
 	   </WHEREAMIUSED>
-	 </SERVICE>-->
+	</SERVICE>-->
 </root>
