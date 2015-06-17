@@ -78,7 +78,7 @@ $where_request = str_replace("and ()", "", $where_request);
 
 //$request = new request();
 //$tab=$request->select($select,$where_request,$orderstr,$_SESSION['config']['databasetype']);
-require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_contacts.php');
+require_once("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."class".DIRECTORY_SEPARATOR.'class_contacts_v2.php');
 $contact = new contacts();
 
 $db_external->query("select res_id, status, subject, contact_firstname, contact_lastname, contact_society, user_lastname, user_firstname, dest_user, type_label, creation_date, entity_label, category_id, exp_user_id, category_id as category_img, process_limit_date, priority  from ".$_SESSION['collections'][0]['view']." where ".$where_request." order by res_id" );
