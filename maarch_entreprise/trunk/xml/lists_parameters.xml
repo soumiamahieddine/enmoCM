@@ -37,11 +37,6 @@
             <ENABLED>true</ENABLED>
         </FILTER>
         <FILTER>
-            <ID>contactBusiness</ID>
-            <LABEL>_CONTACT</LABEL>
-            <ENABLED>true</ENABLED>
-        </FILTER>
-        <FILTER>
             <ID>isViewed</ID>
             <LABEL>_VIEWED</LABEL>
             <ENABLED>true</ENABLED>

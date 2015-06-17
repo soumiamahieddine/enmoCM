@@ -249,39 +249,6 @@ if (count($_REQUEST['meta']) > 0) {
                 $folder_name = $func->wash($_REQUEST['folder_name'], "no", _FOLDER_NAME,"no");
                  $where_request .= " (lower(folder_name) like lower('%".$func->protect_string_db($folder_name)."%') and ";
             }
-            // DEST
-            elseif ($tab_id_fields[$j] == 'dest' && !empty($_REQUEST['dest']))
-            {
-                $json_txt .= " 'dest' : ['".addslashes(trim($_REQUEST['dest']))."'],";
-                $dest = $func->wash($_REQUEST['dest'], "no", _DEST,"no");
-                $where_request .= " (dest_contact_id in(select contact_id from ".$_SESSION['tablename']['contacts']
-                    ." where lower(lastname) LIKE lower('".$func->protect_string_db($dest)."%') "
-                    ."or lower(firstname) LIKE lower('".$func->protect_string_db($dest)."%') "
-                    ."or lower(society) LIKE lower('".$func->protect_string_db($dest)."%') "
-                    ."or function LIKE '".$func->protect_string_db($dest)."%') "
-                    ."or dest_user_id in ("
-                        ."select user_id from ".$_SESSION['tablename']['users']
-                        ." where lower(lastname) LIKE lower('".$func->protect_string_db($dest)."%') "
-                        ."or lower(firstname) LIKE lower('".$func->protect_string_db($dest)."%') "
-                        ."or user_id LIKE '".$func->protect_string_db($dest)."%')) and ";
-            }
-            //SHIPPER
-            elseif ($tab_id_fields[$j] == 'shipper' && !empty($_REQUEST['shipper']))
-            {
-                $json_txt .= " 'shipper' : ['".addslashes(trim($_REQUEST['shipper']))."'],";
-                $shipper = $func->wash($_REQUEST['shipper'], "no", _SHIPPER,"no");
-                $where_request .= " (exp_contact_id in ("
-                    ."select contact_id from ".$_SESSION['tablename']['contacts']
-                    ." where lower(lastname) LIKE lower('".$func->protect_string_db($shipper)."%') "
-                    ."or lower(firstname) LIKE lower('".$func->protect_string_db($shipper)."%') "
-                    ."or lower(society) LIKE lower('".$func->protect_string_db($shipper)."%') "
-                    ."or lower(function) LIKE lower('".$func->protect_string_db($shipper)."%')) "
-                    ."or exp_user_id in ("
-                        ."select user_id from ".$_SESSION['tablename']['users']
-                        ." where lower(lastname) LIKE lower('".$func->protect_string_db($shipper)."%') "
-                        ."or lower(firstname) LIKE lower('".$func->protect_string_db($shipper)."%') "
-                        ."or user_id LIKE '".$func->protect_string_db($shipper)."%')) and ";
-            }
             // GED NUM
             elseif ($tab_id_fields[$j] == 'numged' && !empty($_REQUEST['numged']))
             {

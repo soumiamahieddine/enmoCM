@@ -119,7 +119,6 @@ class business_app_tools extends dbquery
             $_SESSION['tablename']['mlb_doctype_ext'] = (string) $tablename->mlb_doctype_ext;
             $_SESSION['tablename']['doctypes_indexes'] = (string) $tablename->doctypes_indexes;
             $_SESSION['tablename']['saved_queries'] = (string) $tablename->saved_queries;
-            $_SESSION['tablename']['contacts'] = (string) $tablename->contacts;
             $_SESSION['tablename']['contacts_v2'] = (string) $tablename->contacts_v2;
             $_SESSION['tablename']['contact_types'] = (string) $tablename->contact_types;
             $_SESSION['tablename']['contact_purposes'] = (string) $tablename->contact_purposes;

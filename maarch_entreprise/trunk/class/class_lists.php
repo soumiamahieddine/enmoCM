@@ -430,23 +430,6 @@ class lists extends dbquery
                 }
                 $filters .='/>';
             break;
-            case 'contactBusiness':
-                if(isset($_SESSION['filters']['contact']['VALUE']) && !empty($_SESSION['filters']['contact']['VALUE'])) {
-                    $contact = $_SESSION['filters']['contact']['VALUE'];
-                } else {
-                    $contact = '['._CONTACT.']';
-                }
-                $filters .='<input type="text" name="contact_id" id="contact_id" value="'.$contact.'" size="40" '
-                            .'onfocus="if(this.value==\'['._CONTACT.']\'){this.value=\'\';}" '
-                            .'onKeyPress="if(event.keyCode == 9 || event.keyCode == 13)loadList(\''.$this->link
-                            .'&filter=contactBusiness&value=\' + this.value, \''.$this->divListId.'\', '
-                            .$this->modeReturn.');" />&nbsp;';
-                //Autocompletion script and div 
-                $filters .='<div id="contactListByName" class="autocomplete"></div>';
-                $filters .='<script type="text/javascript">initList(\'contact_id\', \'contactListByName\', \''
-                            .$_SESSION['config']['businessappurl'].'index.php?display=true&page='
-                            .'contact_list_by_name\', \'what\', \'2\');</script>';
-            break;
             
             case 'type':
                 require_once 'core' . DIRECTORY_SEPARATOR . 'core_tables.php';
@@ -715,15 +698,6 @@ class lists extends dbquery
                             $_SESSION['filters']['contact']['CLAUSE'] = "(exp_user_id = '".$_SESSION['filters']['contact']['VALUE']."' or dest_user_id = '".$_SESSION['filters']['contact']['VALUE']."')";
                         }
                         
-                    } else if ($_REQUEST['filter'] == 'contactBusiness') {
-                    
-                        $contactTmp = str_replace(')', '', 
-                            substr($_SESSION['filters']['contactBusiness']['VALUE'], 
-                            strrpos($_SESSION['filters']['contactBusiness']['VALUE'],'(')+1));
-                        $find1 = strpos($contactTmp, ':');
-                        $find2 =  $find1 + 1;
-                        $contactId = $this->protect_string_db(substr($contactTmp, $find2, strlen($contactTmp)));
-                        $_SESSION['filters']['contact']['CLAUSE'] = "(contact_id = " . $contactId . ")";
                     } else if ($_REQUEST['filter'] == 'folder') {
                         
                         $folderId = $this->protect_string_db(str_replace(')', '', 
