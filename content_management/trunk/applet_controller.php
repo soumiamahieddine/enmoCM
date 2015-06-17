@@ -22,13 +22,6 @@ require_once 'core/class/class_resource.php';
 require_once 'core/class/docservers_controler.php';
 require_once 'core/docservers_tools.php';
 require_once 'modules/content_management/class/class_content_manager_tools.php';
-if (
-    !isset($_SESSION['user']['UserId'])
-    && empty($_SESSION['user']['UserId'])
-) {
-    //only for the test with the java editor
-    include_once 'modules/content_management/autolog_for_test.php';
-}
 
 //Create XML
 function createXML($rootName, $parameters)
