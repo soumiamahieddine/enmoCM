@@ -24,49 +24,6 @@ class alert_engine extends dbquery
     }
 
     /**
-    * Check on all open alerts insts if we can launch its
-    */
-    public function check_all_alert_insts()
-    {
-        $tab_open_alerts_insts = array();
-        $cpt_open_alerts_insts = 0;
-        $this->connect();
-        $this->query("select * from ".$_SESSION['tablename']['al_alert_insts']." where status = 'WAIT' and alert_id in(select alert_id from ".$_SESSION['tablename']['al_alerts']." where alert_status = 'OPEN')order by alert_id");
-        //$this->show();
-        while($result = $this->fetch_object())
-        {
-            $tab_open_alerts_insts[$cpt_open_alerts_insts]['alert_id'] = $result->alert_id;
-            $tab_open_alerts_insts[$cpt_open_alerts_insts]['sequence'] = $result->sequence;
-            $tab_open_alerts_insts[$cpt_open_alerts_insts]['due_date'] = $result->due_date;
-            $tab_open_alerts_insts[$cpt_open_alerts_insts]['status'] = $result->status;
-            $cpt_open_alerts_insts++;
-        }
-        //$this->show_array($tab_open_alerts_insts);
-        $this->check_launching_alerts($tab_open_alerts_insts);
-        //return $tab_open_alerts_insts;
-    }
-
-    /**
-    * Check  if we can launch alerts
-    */
-    public function check_launching_alerts($tab_open_alerts_insts)
-    {
-        for($cpt_tab=0;$cpt_tab<count($tab_open_alerts_insts);$cpt_tab++)
-        {
-            echo "\r\nalert_id : ".$tab_open_alerts_insts[$cpt_tab]['alert_id'];
-            echo "\r\nsequence : ".$tab_open_alerts_insts[$cpt_tab]['sequence'];
-            echo "\r\ndue_date : ".$tab_open_alerts_insts[$cpt_tab]['due_date'];
-            echo "\r\nstatus   : ".$tab_open_alerts_insts[$cpt_tab]['status'];
-            if($this->control_alert_due_date_lower_than_now($tab_open_alerts_insts[$cpt_tab]['due_date']))
-            {
-                echo "\n\n************************************************\n";
-                echo "\r\nalert_id : ".$tab_open_alerts_insts[$cpt_tab]['alert_id']." sequence : ".$tab_open_alerts_insts[$cpt_tab]['sequence']." due_date : ".$tab_open_alerts_insts[$cpt_tab]['due_date']." candidate to launch it!\r\n";
-                $this->launch_alert($tab_open_alerts_insts[$cpt_tab]['alert_id'], $tab_open_alerts_insts[$cpt_tab]['sequence']);
-            }
-        }
-    }
-
-    /**
     * launch alert
     */
     public function launch_alert($alert_id, $sequence)

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<messages>
-  <message id='query_error' level='3'>
-    <text lang='fr'>Erreur sql [%1$s] lors de la requête = [%2$s]</text>
-  </message>
-</messages>
