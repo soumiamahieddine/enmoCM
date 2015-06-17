@@ -105,10 +105,6 @@ class notifications {
 		}
 	}
 	
-	function check_compatibility() 
-	{
-		if ($_SESSION['tablename']['mlb_doctype_ext'] == '') $_SESSION['tablename']['mlb_doctype_ext'] = "mlb_doctype_ext";
-	}
 	
 	function build_modules_tables() {
 
@@ -133,7 +129,6 @@ class notifications {
                 .DIRECTORY_SEPARATOR."xml".DIRECTORY_SEPARATOR."config.xml";
         }
         $xmlconfig = simplexml_load_file($path);
-	
 		
 	}
 	

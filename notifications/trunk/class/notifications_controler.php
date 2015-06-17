@@ -81,20 +81,6 @@ class notifications_controler extends ObjectControler implements ObjectControler
         return $notifObj;
     }
     
-    public function getWithFilter($whereClause='1=1', $orderByClause='notification_sid') {
-        $query = "select * from " . _NOTIFICATIONS_TABLE_NAME 
-            . " where " . $whereClause
-            . " order by " . $orderByClause; 
-        $dbConn = new dbquery();
-        $dbConn->connect();
-        $dbConn->query($query);
-        while($notifObj = $dbConn->fetch_object()) {
-            $notifObjs[] = $notifObj;
-        }
-        return $notifObjs;
-    }
-    
-    
     /**
     * Deletes in the database (lc_policies related tables) a given lc_policies (policy_id)
     *

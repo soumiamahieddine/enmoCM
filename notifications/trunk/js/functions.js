@@ -160,51 +160,6 @@ function loadAttachforProperties(difftype_id, path_manage_script, updatediv_id)
     }
 }
 
-
-/**
- * Launch the Ajax autocomplete object to activate autocompletion on users 
- *
- * @param path_script String Path to the Ajax script
- * @param mode String Mode : user_id
- **/
-function launch_autocompleter_users(path_script, user)
-{
-	alert('ojo');
-	var div  =  'users';
-	var input = 'user_form_id';
-	// If the object already exists, we delete it to avoid conflict
-	//~ try
-	//~ {
-		//~ if(mode == 'market')
-		//~ {
-			//~ delete market_autocompleter;
-		//~ }
-		//~ else if(mode == 'project')
-		//~ {
-			//~ delete project_autocompleter;
-		//~ }
-	//~ }
-	//~ catch(e){ }
-//~ 
-	if( path_script)
-	{
-		user_autocompleter = new Ajax.Autocompleter(input, div, path_script, {
-		 method:'get',
-		 paramName:'Input',
-		 parameters: 'user='+user,
-		 minChars: 2
-		 });
-	
-	}
-	else
-	{
-		if(console)
-		{
-			console.log('error parameters launch_autocompleter_folder function');
-		}
-	}
-}
-
 function del(id) {
 	$("state-"+id).value = 'deleted';
 	$("row-"+id).style.display='none';
