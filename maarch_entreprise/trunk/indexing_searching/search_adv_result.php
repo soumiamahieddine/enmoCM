@@ -865,7 +865,15 @@ if (!empty($_SESSION['error_search'])) {
     $where_request = trim($where_request);
     $_SESSION['searching']['where_request'] = $where_request;
 }
-
+if (isset($_REQUEST['specific_case'])
+    && $_REQUEST['specific_case'] == "attach_to_case"
+) {
+    $page = 'list_results_mlb_frame';
+    ?>
+    <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page='.$page.'&load&searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'].'&template='.$_REQUEST['template'];?>';</script>
+    <?php
+    exit();
+}
 if(!empty($_REQUEST['baskets_clause']) && $_REQUEST['baskets_clause'] != 'false' && $_REQUEST['baskets_clause'] != 'true') {
     ?>
     <script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl']."index.php?page=view_baskets&module=basket&baskets=".$_REQUEST['baskets_clause']."&origin=searching";?>';</script>
