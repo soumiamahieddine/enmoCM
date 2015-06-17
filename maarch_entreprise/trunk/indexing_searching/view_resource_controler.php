@@ -168,77 +168,44 @@ if ($s_id == '') {
     }
     $docserverControler = new docservers_controler();
     $viewResourceArr = array();
-    $docserverLocation = array();
-    $docserverLocation =
-        $docserverControler->retrieveDocserverNetLinkOfResource(
-            $s_id, $table, $adrTable
-        );
-    if ($docserverLocation['value'] <> '' 
-        && $_SESSION['config']['coreurl'] <> $docserverLocation['value']
-    ) {
-        $connexion = new dbquery();
-        $connexion->connect();
-        $connexion->query(
-            "select password from " . $_SESSION['tablename']['users'] 
-            . " where user_id = '" . $_SESSION['user']['UserId'] . "'"
-        );
-        $resultUser = $connexion->fetch_object();
-        if ($core_tools->isEncrypted() == 'true') {
-            //$core_tools->generatePrivatePublicKey();
-            $proxyOne = $core_tools->encrypt($_SESSION['user']['UserId']);
-            $proxyTwo = $core_tools->encrypt($resultUser->password);
-            if (!$proxyOne || !$proxyTwo) {
-                $_SESSION['error'] = _PB_WITH_PUBLIC_OR_PRIVATE_KEY;
-                header('location: ' . $_SESSION['config']['businessappurl'] 
-                       . 'index.php');
-                exit();
-            }
-        } else {
-            $proxyOne = $_SESSION['user']['UserId'];
-            $proxyTwo = $resultUser->password;
-        }
-        header('location: ' . $docserverLocation['value'] . 'ws_client.php?id=' 
-               . $s_id . '&table=' . $table . '&proxy1=' . $proxyOne 
-               . '&proxy2=' . $proxyTwo);
+    
+    $viewResourceArr = $docserverControler->viewResource(
+        $s_id, 
+        $table, 
+        $adrTable, 
+        false
+    );
+    if ($viewResourceArr['error'] <> '') {
+        //...
     } else {
-        $viewResourceArr = $docserverControler->viewResource(
-            $s_id, 
-            $table, 
-            $adrTable, 
-            false
-        );
-        if ($viewResourceArr['error'] <> '') {
-            //...
-        } else {
-            //$core_tools->show_array($viewResourceArr);
-            if (strtoupper($viewResourceArr['ext']) == 'HTML' 
-                && $viewResourceArr['mime_type'] == "text/plain"
-            ) {
-                $viewResourceArr['mime_type'] = "text/html";
-            }
-            if ($viewResourceArr['called_by_ws']) {
-                $fileContent = base64_decode($viewResourceArr['file_content']);
-                $fileNameOnTmp = 'tmp_file_' . rand() . '_' 
-                    . md5($fileContent) . '.' 
-                    . strtolower($viewResourceArr['ext']);
-                $filePathOnTmp = $_SESSION['config']['tmppath'] 
-                    . DIRECTORY_SEPARATOR . $fileNameOnTmp;
-                $inF = fopen($filePathOnTmp, 'w');
-                fwrite($inF, $fileContent);
-                fclose($inF);
-            } else {
-                $filePathOnTmp = $viewResourceArr['file_path'];
-            }
-            if (strtolower(
-                $viewResourceArr['mime_type']
-            ) == 'application/maarch'
-            ) {
-                $myfile = fopen($filePathOnTmp, 'r');
-                $data = fread($myfile, filesize($filePathOnTmp));
-                fclose($myfile);
-                $content = stripslashes($data);
-            }
+        //$core_tools->show_array($viewResourceArr);
+        if (strtoupper($viewResourceArr['ext']) == 'HTML' 
+            && $viewResourceArr['mime_type'] == "text/plain"
+        ) {
+            $viewResourceArr['mime_type'] = "text/html";
         }
-        include('view_resource.php');
+        if ($viewResourceArr['called_by_ws']) {
+            $fileContent = base64_decode($viewResourceArr['file_content']);
+            $fileNameOnTmp = 'tmp_file_' . rand() . '_' 
+                . md5($fileContent) . '.' 
+                . strtolower($viewResourceArr['ext']);
+            $filePathOnTmp = $_SESSION['config']['tmppath'] 
+                . DIRECTORY_SEPARATOR . $fileNameOnTmp;
+            $inF = fopen($filePathOnTmp, 'w');
+            fwrite($inF, $fileContent);
+            fclose($inF);
+        } else {
+            $filePathOnTmp = $viewResourceArr['file_path'];
+        }
+        if (strtolower(
+            $viewResourceArr['mime_type']
+        ) == 'application/maarch'
+        ) {
+            $myfile = fopen($filePathOnTmp, 'r');
+            $data = fread($myfile, filesize($filePathOnTmp));
+            fclose($myfile);
+            $content = stripslashes($data);
+        }
     }
+    include('view_resource.php');
 }
