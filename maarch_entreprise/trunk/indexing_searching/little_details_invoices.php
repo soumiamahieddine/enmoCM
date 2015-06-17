@@ -65,22 +65,6 @@ if ($collId == 'letterbox_coll') {
 			  . DIRECTORY_SEPARATOR . 'definition_mail_categories.php';
 	}
 
-} elseif($collId == 'business_coll') {
-	if (file_exists(
-		$_SESSION['config']['corepath'] . 'custom'. DIRECTORY_SEPARATOR
-		. $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-		. DIRECTORY_SEPARATOR . $_SESSION['config']['app_id'] . DIRECTORY_SEPARATOR
-		. 'definition_mail_categories_business.php'
-	)
-	) {
-		$path = $_SESSION['config']['corepath'] . 'custom'. DIRECTORY_SEPARATOR
-			  . $_SESSION['custom_override_id'] . DIRECTORY_SEPARATOR . 'apps'
-			  . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-			  . DIRECTORY_SEPARATOR . 'definition_mail_categories_business.php';
-	} else {
-		$path = 'apps' . DIRECTORY_SEPARATOR . $_SESSION['config']['app_id']
-			  . DIRECTORY_SEPARATOR . 'definition_mail_categories_business.php';
-	}
 }
 
 include_once $path;

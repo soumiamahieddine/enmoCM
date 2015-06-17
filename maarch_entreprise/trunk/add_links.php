@@ -190,11 +190,7 @@ if (isset($_REQUEST['res_id']) && isset($_REQUEST['res_id_child'])) {
     $Links .= '</h2>';
     $Links .= '<br />';
     
-    if ($_SESSION['collection_id_choice'] == 'business_coll') {
-        $searchAdv = 'search_adv_business';
-    } else {
-        $searchAdv = 'search_adv';
-    }
+    $searchAdv = 'search_adv';
     
     //formulaire
     $Links .= '<form action="index.php" method="">';
