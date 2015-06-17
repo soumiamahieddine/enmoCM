@@ -46,7 +46,7 @@ $core_tools->load_html();
 $core_tools->load_header('', true, false);
 $sec = new security();
 $status_obj = new manage_status();
-$contact = new contacts();
+$contact = new contacts_v2();
 $obj_cases = new cases();
 
 $_SESSION['collection_id_choice'] = 'letterbox_coll';
