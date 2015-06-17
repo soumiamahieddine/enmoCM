@@ -40,9 +40,6 @@ $db2 = new dbquery();
 $db2->connect();
 $business = new business_app_tools();
 
-//delete old contacts with enabled = 'N'
-// $db->query("delete from contacts where enabled = 'N'");
-
 $_SESSION['m_admin'] = array();
 /****************Management of the location bar  ************/
 $init = false;
