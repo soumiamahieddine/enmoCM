@@ -629,41 +629,6 @@ class templates_controler extends ObjectControler implements ObjectControlerIF
             );
         }
     }
-
-    /**
-    * Displays templates according to a given entity 
-    * 
-    * @param $entityId templates entity identifier
-    * @return array templates identifier
-    */
-    public function getAllIdByEntity($entityId) 
-    {
-        $db = new dbquery();
-        $db->connect();
-        $query = "select template_id from " . _TEMPLATES_TABLE_NAME 
-            . " where entity_id = '".$entityId."'";
-        try {
-            if ($_ENV['DEBUG']) {
-                echo $query . ' // ';
-            }
-            $db->query($query);
-        } catch (Exception $e) {
-            echo _NO_TEMPLATES . ' // ';
-        }
-        if ($db->nb_result() > 0) {
-            $result = array();
-            $cptId = 0;
-            while ($queryResult = $db->fetch_object()) {
-                $result[$cptId] = $queryResult->template_id;
-                $cptId++;
-            }
-            $db->disconnect();
-            return $result;
-        } else {
-            $db->disconnect();
-            return null;
-        }
-    }
     
     public function getAllItemsLinkedToModel($templateId, $field ='')
     {

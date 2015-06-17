@@ -20,9 +20,4 @@
 		<label>[notification] Informations sur notes associées au courrier</label>
 		<script>modules/templates/datasources/mlb_notes_content.php</script>
 	</datasource>
-        <!--<datasource>
-		<id>test</id>
-		<label>test</label>
-		<script>modules/templates/datasources/test.php</script>
-	</datasource>-->
 </root>
