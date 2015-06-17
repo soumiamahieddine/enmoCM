@@ -22,14 +22,6 @@
         <Adr>adr_x</Adr>
 		<Extension>mlb_coll_ext</Extension>
     </COLLECTION>
-    <COLLECTION>
-        <Id>business_coll</Id>
-        <Table>res_business</Table>
-		<VersionTable>res_version_business</VersionTable>
-        <View>res_view_business</View>
-        <Adr>adr_business</Adr>
-		<Extension>business_coll_ext</Extension>
-    </COLLECTION>
     <CONFIG_BASE>
         <databaseserver>127.0.0.1</databaseserver>
         <databaseserverport>5432</databaseserverport>
