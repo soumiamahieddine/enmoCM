@@ -49,12 +49,6 @@ class Install extends functions
         array('OAIS_SAFE_1', 'OAIS_safe'),
         array('FASTHD_MAN', 'manual'),
         array('TEMPLATES', 'templates'),
-        array('FASTHD_RM_BATCH', 'RM_BATCH'),
-        array('FASTHD_RM_MAN', 'RM_MAN'),
-        array('IOS', 'IOS'),
-        array('OAIS_RM', 'OAIS_RM'),
-        array('LOG', 'LOG'),
-        array('BUSINESS_MAN', 'BUSINESS_MAN'),
     );
 
     function __construct()
@@ -553,30 +547,6 @@ class Install extends functions
             if (!mkdir(
                 $docserverPath . DIRECTORY_SEPARATOR
                     . 'indexes' . DIRECTORY_SEPARATOR . 'letterbox_coll')
-            ) {
-                return false;
-            }
-        }
-        //create indexes dir for business collection
-        if (!is_dir(
-            $docserverPath . DIRECTORY_SEPARATOR
-                . 'indexes' . DIRECTORY_SEPARATOR . 'business_coll')
-        ) {
-            if (!mkdir(
-                $docserverPath . DIRECTORY_SEPARATOR
-                    . 'indexes' . DIRECTORY_SEPARATOR . 'business_coll')
-            ) {
-                return false;
-            }
-        }
-        //create indexes dir for cold collection
-        if (!is_dir(
-            $docserverPath . DIRECTORY_SEPARATOR
-                . 'indexes' . DIRECTORY_SEPARATOR . 'res_coll')
-        ) {
-            if (!mkdir(
-                $docserverPath . DIRECTORY_SEPARATOR
-                    . 'indexes' . DIRECTORY_SEPARATOR . 'res_coll')
             ) {
                 return false;
             }
