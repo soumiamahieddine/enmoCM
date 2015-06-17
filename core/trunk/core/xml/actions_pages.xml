@@ -22,7 +22,6 @@ An action page is described in a ACTIONPAGE tag :
         <FLAG_CREATE>false</FLAG_CREATE>
         <COLLECTIONS>
             <COLL_ID>letterbox_coll</COLL_ID>
-            <!--<COLL_ID>business_coll</COLL_ID>-->
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
@@ -35,7 +34,6 @@ An action page is described in a ACTIONPAGE tag :
         <FLAG_CREATE>false</FLAG_CREATE>
         <COLLECTIONS>
             <COLL_ID>letterbox_coll</COLL_ID>
-            <!--<COLL_ID>business_coll</COLL_ID>-->
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
@@ -47,7 +45,6 @@ An action page is described in a ACTIONPAGE tag :
         <FLAG_CREATE>false</FLAG_CREATE>
         <COLLECTIONS>
             <COLL_ID>letterbox_coll</COLL_ID>
-            <!--<COLL_ID>business_coll</COLL_ID>-->
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
@@ -59,7 +56,6 @@ An action page is described in a ACTIONPAGE tag :
         <FLAG_CREATE>false</FLAG_CREATE>
         <COLLECTIONS>
             <COLL_ID>letterbox_coll</COLL_ID>
-            <COLL_ID>business_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
@@ -105,8 +101,6 @@ An action page is described in a ACTIONPAGE tag :
         <FLAG_CREATE>false</FLAG_CREATE>
         <COLLECTIONS>
             <COLL_ID>letterbox_coll</COLL_ID>
-            <COLL_ID>business_coll</COLL_ID>
-            <COLL_ID>rm_coll</COLL_ID>
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
@@ -129,7 +123,6 @@ An action page is described in a ACTIONPAGE tag :
         <FLAG_CREATE>false</FLAG_CREATE>
         <COLLECTIONS>
             <COLL_ID>letterbox_coll</COLL_ID>
-            <!--<COLL_ID>business_coll</COLL_ID>-->
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
@@ -141,7 +134,6 @@ An action page is described in a ACTIONPAGE tag :
         <FLAG_CREATE>false</FLAG_CREATE>
         <COLLECTIONS>
             <COLL_ID>letterbox_coll</COLL_ID>
-            <!--<COLL_ID>business_coll</COLL_ID>-->
         </COLLECTIONS>
     </ACTIONPAGE>
     <ACTIONPAGE>
