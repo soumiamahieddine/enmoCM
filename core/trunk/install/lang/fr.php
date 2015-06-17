@@ -277,3 +277,69 @@ if (!defined('_NEXT')) {
 if (!defined('_ONE_FIELD_EMPTY')) {
     define('_ONE_FIELD_EMPTY', "Au moins un champ est vide");
 }
+
+
+
+//SMTP 
+
+if (!defined('_SMTP_HOST')) {
+    define('_SMTP_HOST', "Hôte");
+}
+
+if (!defined('_SMTP_TYPE')) {
+    define('_SMTP_TYPE', "Type");
+}
+
+if (!defined('_SMTP_PORT')) {
+    define('_SMTP_PORT', "Port");
+}
+
+if (!defined('_SMTP_USER')) {
+    define('_SMTP_USER', "nom d/'utilisateur");
+}
+
+if (!defined('_SMTP_PASSWORD')) {
+    define('_SMTP_PASSWORD', "mot de passe");
+}
+
+if (!defined('_SMTP_AUTH')) {
+    define('_SMTP_AUTH', "Authentification SMTP");
+}
+
+if (!defined('_SMTP_CHARSET')) {
+    define('_SMTP_CHARSET', "Charset");
+}
+
+if (!defined('_SMTP_SECURE')) {
+    define('_SMTP_SECURE', "Secure");
+}
+
+if (!defined('_SMTP_SECURE')) {
+    define('_SMTP_SECURE', "Secure");
+}
+
+if (!defined('_SMTP_MAILFROM')) {
+    define('_SMTP_MAILFROM', "Mail de");
+}
+
+if (!defined('_SMTP_MAILTO')) {
+    define('_SMTP_MAILTO', "Votre adresse email");
+}
+
+
+if (!defined('_SMTP_EXP')) {
+    define('_SMTP_EXP', "Ici, vous pouvez remplir ce formulaire afin de configurer les modules de notifications et de sendmails.");
+}
+
+if (!defined('_VERIF_SMTP')) {
+    define('_VERIF_SMTP', "V&eacute;rification");
+}
+
+if (!defined('_SMTP')) {
+    define('_SMTP', "SMTP");
+}
+
+if (!defined('_SMTP_INFO')) {
+    define('_SMTP_INFO', "Configuration du SMTP");
+}
+

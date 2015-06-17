@@ -276,3 +276,66 @@ if (!defined('_NEXT')) {
 if (!defined('_ONE_FIELD_EMPTY')) {
     define('_ONE_FIELD_EMPTY', "You must fill all the fields");
 }
+
+
+
+
+//SMTP 
+
+if (!defined('_SMTP_HOST')) {
+    define('_SMTP_HOST', "Host");
+}
+
+if (!defined('_SMTP_TYPE')) {
+    define('_SMTP_TYPE', "Type");
+}
+
+if (!defined('_SMTP_PORT')) {
+    define('_SMTP_PORT', "Port");
+}
+
+if (!defined('_SMTP_USER')) {
+    define('_SMTP_USER', "Username");
+}
+
+if (!defined('_SMTP_PASSWORD')) {
+    define('_SMTP_PASSWORD', "password");
+}
+
+if (!defined('_SMTP_AUTH')) {
+    define('_SMTP_AUTH', "Authentification SMTP");
+}
+
+if (!defined('_SMTP_CHARSET')) {
+    define('_SMTP_CHARSET', "Charset");
+}
+
+if (!defined('_SMTP_SECURE')) {
+    define('_SMTP_SECURE', "Secure");
+}
+
+if (!defined('_SMTP_MAILFROM')) {
+    define('_SMTP_MAILFROM', "Mail from");
+}
+
+if (!defined('_SMTP_MAILTO')) {
+    define('_SMTP_MAILTO', "your mail");
+}
+
+
+if (!defined('_SMTP_EXP')) {
+    define('_SMTP_EXP', "Here, you can configure notifications and sendmails's modules.");
+}
+
+if (!defined('_VERIF_SMTP')) {
+    define('_VERIF_SMTP', "V&eacute;rification");
+}
+
+if (!defined('_SMTP')) {
+    define('_SMTP', "SMTP");
+}
+
+if (!defined('_SMTP_INFO')) {
+    define('_SMTP_INFO', "SMTP's Configuration");
+}
+

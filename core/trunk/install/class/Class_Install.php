@@ -332,6 +332,25 @@ class Install extends functions
             exit;
         }
 
+        
+        if (!$this->setConfigXmlThumbnails()) {
+            return false;
+            exit;
+        }
+        if (!$this->setConfig_batch_XmlThumbnails()) {
+            return false;
+            exit;
+        }        
+        if (!$this->setConfigScriptLaunchThumbnails()) {
+            return false;
+            exit;
+        }
+        if (!$this->setConfig_sendmail()) {
+            return false;
+            exit;
+        }
+
+
        if (!$this->setConfigXml()) {
             return false;
             exit;
@@ -341,7 +360,34 @@ class Install extends functions
             return false;
             exit;
         }
+
+        if (!$this->setScriptNotificationSendmailSh()) {
+            return false;
+            exit;
+        }
+
+        if (!$this->setScriptNotificationNctNccAndAncSh()) {
+            return false;
+            exit;
+        }
+
+        if (!$this->setScriptSendmailSendmailSh()) {
+            return false;
+            exit;
+        }
+
+        if (!$this->setConfig_LDAP()) {
+            return false;
+            exit;
+        }
+
+        if (!$this->setScript_syn_LDAP_sh()) {
+            return false;
+            exit;
+        }
         
+
+
        /*if (!$this->setDatasourcesXsd()) {
             return false;
             exit;
@@ -395,7 +441,381 @@ class Install extends functions
         }
         return true;
     }
+
+        private function setConfigXmlThumbnails()
+    {
+        $xmlconfig = simplexml_load_file('modules/thumbnails/xml/config.xml.default');
+        //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
+        $CONFIG = $xmlconfig->CONFIG;
+
+        $CONFIG->docserver_id = 'TNL';
+        $chemin_no_file = realpath('.').'/modules/thumbnails/no_thumb.png';
+        $CONFIG->no_file = $chemin_no_file;
+        $res = $xmlconfig->asXML();
+        $fp = @fopen("modules/thumbnails/xml/config.xml", "w+");
+        if (!$fp) {
+            return false;
+            exit;
+        }
+        $write = fwrite($fp,$res);
+        if (!$write) {
+            return false;
+            exit;
+        }
+        return true;
+    }
+            private function setConfig_batch_XmlThumbnails()
+    {
+        $xmlconfig = simplexml_load_file('modules/thumbnails/xml/config_batch_letterbox.xml.default');
+        //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
+        $CONFIG = $xmlconfig->CONFIG;
+
+        $chemin_core = realpath('.').'/core/';
+        $CONFIG->CORE_PATH = $chemin_core;
+        $CONFIG->MaarchDirectory = realpath('.');
+        $CONFIG->LOCATION = $_SESSION['config']['databaseserver'];
+        $CONFIG->DATABASE_PORT = $_SESSION['config']['databaseserverport'];
+        $CONFIG->DATABASE = $_SESSION['config']['databasename'];
+        $CONFIG->USER_NAME = $_SESSION['config']['databaseuser'];
+        $CONFIG->PASSWORD = $_SESSION['config']['databasepassword'];
+        $CONFIG->PATH_COLUMN_NAME = 'tnl_path';
+        $CONFIG->FILENAME_COLUMN_NAME = 'tnl_filename';
+        $CONFIG->OUTPUT_DOCSERVER = 'TNL';
+        $res = $xmlconfig->asXML();
+        $fp = @fopen("modules/thumbnails/xml/config_batch_letterbox.xml", "w+");
+        if (!$fp) {
+            return false;
+            exit;
+        }
+        $write = fwrite($fp,$res);
+        if (!$write) {
+            return false;
+            exit;
+        }
+        return true;
+    }
+
+    private function setConfig_sendmail()
+    {
+        $xmlconfig = simplexml_load_file('modules/sendmail/batch/config/config.xml.default');
+        //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
+        $CONFIG_BASE = $xmlconfig->CONFIG_BASE;
+
+        $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
+        $CONFIG_BASE->databaseserverport = $_SESSION['config']['databaseserverport'];
+        $CONFIG_BASE->databasename = $_SESSION['config']['databasename'];
+        $CONFIG_BASE->databaseuser = $_SESSION['config']['databaseuser'];
+        $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
+        $res = $xmlconfig->asXML();
+        $fp = @fopen("modules/sendmail/batch/config/config.xml", "w+");
+        if (!$fp) {
+            return false;
+            exit;
+        }
+        $write = fwrite($fp,$res);
+        if (!$write) {
+            return false;
+            exit;
+        }
+        return true;
+    }
+
+        private function setConfig_LDAP()
+    {
+        $xmlconfig = simplexml_load_file('modules/ldap/xml/config.xml.default');
+        //$xmlconfig = 'apps/maarch_entreprise/xml/config.xml.default';
+        $CONFIG_BASE = $xmlconfig->config_base;
+
+        $CONFIG_BASE->databaseserver = $_SESSION['config']['databaseserver'];
+        $CONFIG_BASE->databaseserverport = $_SESSION['config']['databaseserverport'];
+        $CONFIG_BASE->databasename = $_SESSION['config']['databasename'];
+        $CONFIG_BASE->databaseuser = $_SESSION['config']['databaseuser'];
+        $CONFIG_BASE->databasepassword = $_SESSION['config']['databasepassword'];
+        $res = $xmlconfig->asXML();
+        $fp = @fopen("modules/ldap/xml/config.xml", "w+");
+        if (!$fp) {
+            var_dump('fp error');
+            return false;
+            exit;
+        }
+        $write = fwrite($fp,$res);
+        if (!$write) {
+            var_dump('write error');
+            return false;
+            exit;
+        }
+        return true;
+    }
+
+
+        private function setScript_syn_LDAP_sh()
+    {
+        $res = '#!/bin/bash';
+        $res .= "\n";
+        $res .= "cd ".realpath('.')."/modules/ldap/script/";
+        $res .= "\n\n";
+        $res .= '#generation des fichiers xml';
+        $res .= "\n";
+        $res .= "php ".realpath('.')."/modules/ldap/process_ldap_to_xml.php ".realpath('.')."/modules/ldap/xml/config.xml";
+        $res .= "\n\n";
+        $res .= '#mise a jour bdd';
+        $res .= "\n";
+        $res .= "php ".realpath('.')."/modules/ldap/process_entities_to_maarch.php ".realpath('.')."/modules/ldap/xml/config.xml";
+        $res .= "\n";
+        $res .= "php ".realpath('.')."/modules/ldap/process_users_to_maarch.php ".realpath('.')."/modules/ldap/xml/config.xml";
+        $res .= "\n";
+        $res .= "php ".realpath('.')."/modules/ldap/process_users_entities_to_maarch.php ".realpath('.')."/modules/ldap/xml/config.xml";
+
+            $fp = @fopen("modules/ldap/script/syn_ldap.sh", "w+");
+        if (!$fp) {
+            return false;
+            exit;
+        }
+        $write = fwrite($fp,$res);
+        if (!$write) {
+            return false;
+            exit;
+        }
+        return true;
+
+    }
+
+    private function setConfigScriptLaunchThumbnails()
+    {
+        
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+
+            $res = 'cd "'.realpath('.');
+            $res .= "\n";
+            $res .= "cd ../../";
+            $res .= "\n";
+            $res .= "cd php";
+            $res .= "\n";
+            $res .= "\"php.exe\" ".realpath('.')."\modules\\thumbnails\create_tnl.php  ".realpath('.')."\modules\\thumbnails\xml\config_batch_letterbox.xml";
+            $res .= "\n";
+            $res .= "c:";
+            $res .= "\n";
+            $res .= "pause";
+
+                $fp = @fopen("modules/thumbnails/scripts/launch_batch_thumbnails.sh", "w+");
+            if (!$fp) {
+                return false;
+                exit;
+            }
+            $write = fwrite($fp,$res);
+            if (!$write) {
+                return false;
+                exit;
+            }
+            return true;
+            
+        } elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
+
+            $res = '#!/bin/bash';
+            $res .= "\n\n";
+            $res .= "php ".realpath('.')."/modules/thumbnails/create_tnl.php ".realpath('.')."/modules/thumbnails/xml/config_batch_letterbox.xml";
+
+                $fp = @fopen("modules/thumbnails/scripts/launch_batch_thumbnails.sh", "w+");
+            if (!$fp) {
+                return false;
+                exit;
+            }
+            $write = fwrite($fp,$res);
+            if (!$write) {
+                return false;
+                exit;
+            }
+            return true;
+            
+        }
+
+    }
+
+
+    private function setScriptNotificationNctNccAndAncSh()
+    {
+
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+
+            $res = 'cd "'.realpath('.');
+            $res .= "\n";
+            $res .= "cd ../../";
+            $res .= "\n";
+            $res .= "cd php";
+            $res .= "\n";
+            $res .= "\"php.exe\" \"".realpath('.')."\modules\\notifications\batch\process_event_stack.php\" -c \"".realpath('.')."\modules\\notifications\batch\config\config.xml\" -n NCT";
+            $res .= "\n";
+            $res .= "\"php.exe\" \"".realpath('.')."\modules\\notifications\batch\process_event_stack.php\" -c \"".realpath('.')."\modules\\notifications\batch\config\config.xml\" -n NCC";
+            $res .= "\n";
+            $res .= "\"php.exe\" \"".realpath('.')."\modules\\notifications\batch\process_event_stack.php\" -c \"".realpath('.')."\modules\\notifications\batch\config\config.xml\" -n ANC";
+            $res .= "\n";
+            $res .= "\"php.exe\" \"".realpath('.')."\modules\\notifications\batch\process_event_stack.php\" -c \"".realpath('.')."\modules\\notifications\batch\config\config.xml\" -n AND";
+            $res .= "\n";
+            $res .= "\"php.exe\" \"".realpath('.')."\modules\\notifications\batch\process_event_stack.php\" -c \"".realpath('.')."\modules\\notifications\batch\config\config.xml\" -n RED";
+
+                $fp = @fopen(realpath('.')."/modules/notifications/batch/scripts/nct-ncc-and-anc.bat", "w+");
+            if (!$fp) {
+                return false;
+                exit;
+            }
+            $write = fwrite($fp,$res);
+            if (!$write) {
+                return false;
+                exit;
+            }
+            return true;
+
+
+            
+        } elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
+
+            
+            $res = '#!/bin/bash';
+            $res .= "\n";
+            $res .= "eventStackPath='".realpath('.')."/modules/notifications/batch/process_event_stack.php'";
+            $res .= "\n";
+            $res .= "cd ".realpath('.')."/modules/notifications/batch/";
+            $res .= "\n";
+            $res .= 'php $eventStackPath -c '.realpath('.').'/modules/notifications/batch/config/config.xml -n NCT';
+            $res .= "\n";
+            $res .= 'php $eventStackPath -c '.realpath('.').'/modules/notifications/batch/config/config.xml -n NCC';
+            $res .= "\n";
+            $res .= 'php $eventStackPath -c '.realpath('.').'/modules/notifications/batch/config/config.xml -n ANC';
+            $res .= "\n";
+            $res .= 'php $eventStackPath -c '.realpath('.').'/modules/notifications/batch/config/config.xml -n AND';
+            $res .= "\n";
+            $res .= 'php $eventStackPath -c '.realpath('.').'/modules/notifications/batch/config/config.xml -n RED';
+
+                $fp = @fopen(realpath('.')."/modules/notifications/batch/scripts/nct-ncc-and-anc.sh", "w+");
+            if (!$fp) {
+                return false;
+                exit;
+            }
+            $write = fwrite($fp,$res);
+            if (!$write) {
+                return false;
+                exit;
+            }
+            return true;
+        }
+
+
+    }
+
+    private function setScriptNotificationSendmailSh(){
+
+
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+
+            $res = 'cd "'.realpath('.');
+            $res .= "\n";
+            $res .= "cd ../../";
+            $res .= "\n";
+            $res .= "cd php";
+            $res .= "\n";
+
+            $res .= "\"php.exe\" \"".realpath('.')."\modules\\notifications\batch\process_email_stack.php\" -c \"".realpath('.')."\modules\\notifications\batch\config\config.xml";
+            $res .= "\n";
+            $res .= "PAUSE";
+                $fp = fopen(realpath('.')."/modules/notifications/batch/scripts/sendmail.bat", "w+");
+            if (!$fp) {
+                //var_dump('FALSE');
+                return false;
+                exit;
+            }
+            $write = fwrite($fp,$res);
+            if (!$write) {
+                return false;
+                exit;
+            }
+            return true;
+
+
+            
+        } elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
+
+            $res = '#!/bin/bash';
+            $res .= "\n";
+            $res .= "cd ".realpath('.')."/modules/notifications/batch/";
+            $res .= "\n";
+            $res .= "emailStackPath='".realpath('.')."/modules/notifications/batch/process_email_stack.php'";
+            $res .= "\n";
+            $res .= 'php $emailStackPath -c '.realpath('.').'/modules/notifications/batch/config/config.xml';
+
+                $fp = fopen(realpath('.')."/modules/notifications/batch/scripts/sendmail.sh", "w+");
+
+            if (!$fp) {
+                //var_dump('FALSE');
+                return false;
+                exit;
+            }
+            $write = fwrite($fp,$res);
+            if (!$write) {
+                return false;
+                exit;
+            }
+            return true;
+            
+        }
+
+    }
     
+    private function setScriptSendmailSendmailSh()
+    {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $res = "cd ".realpath('.');
+            $res .= "\n";
+            $res .= "cd ../../";
+            $res .= "\n";
+            $res .= "cd php";
+            $res .= "\n";
+            $res .= "\"php.exe\" \"".realpath('.')."\modules\sendmail\batch\process_emails.php\" -c \"".realpath('.')."\modules\sendmail\batch\config\config.xml\"";
+            
+            $fp = fopen(realpath('.')."/modules/sendmail/batch/scripts/sendmail.bat", "w+");
+            if (!$fp) {
+                //var_dump('FALSE');
+                return false;
+                exit;
+            }
+            $write = fwrite($fp,$res);
+            if (!$write) {
+                return false;
+                exit;
+            }
+            return true;
+
+
+        } elseif(strtoupper(substr(PHP_OS, 0, 3)) === 'LIN') {
+
+           
+            $res = '#!/bin/bash';
+            $res .= "\n";
+            $res .= "cd ".realpath('.')."/modules/sendmail/batch/";
+            $res .= "\n";
+            $res .= "emailStackPath='".realpath('.')."/modules/sendmail/batch/process_emails.php'";
+            $res .= "\n";
+            $res .= 'php $emailStackPath -c '.realpath('.').'/modules/sendmail/batch/config/config.xml';
+
+
+                $fp = fopen(realpath('.')."/modules/sendmail/batch/scripts/sendmail.sh", "w+");
+            if (!$fp) {
+                //var_dump('FALSE');
+                //exit;
+                return false;
+                exit;
+            }
+            $write = fwrite($fp,$res);
+            if (!$write) {
+                return false;
+                exit;
+            }
+            return true;
+            
+        }
+
+    }
+
+
     private function setDatasourcesXsd()
     {
         $Fnm = 'apps/maarch_entreprise/xml/datasources.xsd.default';
@@ -425,6 +845,7 @@ class Install extends functions
         }
         return true;
     }
+
 
     public function getDataList()
     {
@@ -525,6 +946,18 @@ class Install extends functions
                 ) {
                     return false;
                 }
+            }
+        }
+        //create thumbnails_mlb dir
+        if (!is_dir(
+            $docserverPath . DIRECTORY_SEPARATOR
+                . 'thumbnails_mlb')
+        ) {
+            if (!mkdir(
+                $docserverPath . DIRECTORY_SEPARATOR
+                    . 'thumbnails_mlb')
+            ) {
+                return false;
             }
         }
         //create indexes dir

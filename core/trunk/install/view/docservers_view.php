@@ -110,7 +110,7 @@
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="next">
-                    <a href="#" onClick="goTo('index.php?step=password');" id="ajaxReturn_createDocservers" style=" display: none;">
+                    <a href="#" onClick="goTo('index.php?step=smtp');" id="ajaxReturn_createDocservers" style=" display: none;">
                         <?php echo _NEXT; ?>
                     </a>
                 </div>

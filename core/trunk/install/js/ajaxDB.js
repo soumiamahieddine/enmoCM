@@ -54,7 +54,7 @@ function ajaxDB(
                     $('.wait').css('display','none');
                 }
 
-            } else {
+            } else if(data.status == 0) {
                 retour_ko.html(data.text);
                 if ($('.wait')) {
                     $('.wait').css('display','none');
@@ -62,6 +62,20 @@ function ajaxDB(
                 if ($('#ajaxReturn_createDocservers_button')) {
                     $('#ajaxReturn_createDocservers_button').css('display', 'block');
                 }
+            } else if(data.status == 2){
+                retour_ko.html(data.text);
+                if ($('.wait')) {
+                    $('.wait').css('display','none');
+                }
+                if ($('#ajaxReturn_createDocservers_button')) {
+                    $('#ajaxReturn_createDocservers_button').css('display', 'block');
+                }
+                slide(divRetour);
+                $('.'+divRetour).slideToggle('slow');
+                if ($('.wait')) {
+                    $('.wait').css('display','none');
+                }
+
             }
         });
     });
