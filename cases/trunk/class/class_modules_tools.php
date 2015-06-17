@@ -283,29 +283,6 @@ class cases extends dbquery
 		}
 	}
 
-	/**
-	 *delete a case
-	 *
-	 * @param $caseId   int       Description: Id of selected case
-	 */
-	private function delete_case($caseId)
-	{
-		//Warning : This function has be use for specific case or debug case
-		$db = new dbquery();
-		$db->connect();
-
-		$query = " DELETE FROM ".$_SESSION['tablename']['cases_res']." WHERE  CASE_ID = '".$caseId."' ";
-		if(!$db->query($query))
-			echo "delete_case:: sql error 1 <br/>";
-
-		$query = " DELETE FROM ".$_SESSION['tablename']['cases']." WHERE  CASE_ID = '".$caseId."' ";
-		if(!$db->query($query))
-			echo "delete_case:: sql error 2 <br/>";
-
-	}
-
-
-
 	public function get_where_clause_from_case($caseId)
 	{
 		return " and CASE_ID ='".$caseId."' ";
