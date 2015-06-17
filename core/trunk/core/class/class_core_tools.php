@@ -1,6 +1,6 @@
 <?php
 /*
-*   Copyright 2008-2012 Maarch
+*   Copyright 2008-2015 Maarch
 *
 *   This file is part of Maarch Framework.
 *
@@ -1371,48 +1371,6 @@ class core_tools extends functions
     //  $this->show_array($executedServices);
     }
 
-
-    /**
-    * Loads the services of 'tab' nature in the page
-    *
-    * @param  $modules_services array  List of the modules services
-    * @param  $whereami string Page where to execute the service
-    */
-    public function load_first_tab($modules_services, $whereami)
-    {
-        foreach (array_keys($modules_services) as $value) {
-            for ($i = 0; $i < count($modules_services[$value]); $i ++) {
-                for ($k = 0; $k < count(
-                    $modules_services[$value][$i]['whereamiused']
-                ); $k++
-                ) {
-                    if ($modules_services[$value][$i]['whereamiused'][$k]['page'] == $whereami) {
-                        if ($modules_services[$value][$i]['whereamiused'][$k]['nature'] == "tab"
-                            && $_SESSION['user']['services'][$modules_services[$value][$i]['id']]
-                        ) {
-                            $arrLabel = $modules_services[$value][$i]['whereamiused'][$k]['tab_label'];
-
-                            if ( !empty($arrLabel) && defined($arrLabel)
-                                && constant($arrLabel) <> NULL
-                            ) {
-                                $arrLabel  = constant($arrLabel);
-                            }
-                            $arrOrder = $modules_services[$value][$i]['whereamiused'][$k]['tab_order'];
-                            $frameSrc = $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$value."&page=".$modules_services[$value][$i]['servicepage'];
-                            $tab_view[$arrOrder]['tab_label'] = $arrLabel;
-                            $tab_view[$arrOrder]['frame_src'] = $frameSrc;
-                        }
-                    }
-                }
-            }
-        }
-        for ($u = 1; $u <= count($tab_view); $u ++) {
-            if ($u == 1) {
-                $_SESSION['first_tab_to_open'] = $tab_view[$u]['frame_src'];
-            }
-        }
-    }
-
     /**
     * Executes the apps services in the page
     *
@@ -1608,7 +1566,8 @@ class core_tools extends functions
     * Cleans the page variable and looks if she exists or not before including her
     *
     */
-    public function insert_page() {
+    public function insert_page() 
+    {
         if (!isset($_SESSION['config']['app_id']) && $_SESSION['config']['app_id'] == '') {
             $_SESSION['config']['app_id'] = 'maarch_entreprise';
         }
@@ -2148,190 +2107,6 @@ class core_tools extends functions
     }
 
     /**
-    * Executes  services preprocess in background in the  page
-    *
-    * @param  $modules_services array Enabled services
-    * @param  $whereami  string Page where to execute the preprocess
-    */
-    public function execute_preprocess_of_services_in_background($modules_services, $whereami)
-    {
-        $process_view = array();
-        foreach(array_keys($modules_services) as $value)
-        {
-            for($i=0;$i<count($modules_services[$value]);$i++)
-            {
-                for($k=0;$k<count($modules_services[$value][$i]['processinbackground']);$k++)
-                {
-                    if($modules_services[$value][$i]['processinbackground'][$k]['page'] == $whereami && $modules_services[$value][$i]['processinbackground'][$k]['preprocess'] <> "")
-                    {
-                        $process_order = $modules_services[$value][$i]['processinbackground'][$k]['processorder'];
-                        $process_view[$process_order]['preprocess'] = 'modules'.DIRECTORY_SEPARATOR.$value.DIRECTORY_SEPARATOR.$modules_services[$value][$i]['processinbackground'][$k]['preprocess'];
-                        $process_view[$process_order]['id_service'] = $modules_services[$value][$i]['id'];
-                    }
-                }
-            }
-        }
-        sort($process_view);
-
-        for($u=0;$u<=count($process_view);$u++)
-        {
-            if($process_view[$u]['preprocess'] <> "")
-            {
-                include($process_view[$u]['preprocess']);
-            }
-        }
-    }
-
-    /**
-    * Executes services postprocess  in background in the page
-    *
-    * @param  $modules_services array Enabled services
-    * @param  $whereami  string Page where execute the postprocess
-    */
-    public function execute_postprocess_of_services_in_background($modules_services, $whereami)
-    {
-        $process_view = array();
-        foreach(array_keys($modules_services) as $value)
-        {
-            for($i=0;$i<count($modules_services[$value]);$i++)
-            {
-                for($k=0;$k<count($modules_services[$value][$i]['processinbackground']);$k++)
-                {
-                    if($modules_services[$value][$i]['processinbackground'][$k]['page'] == $whereami && $modules_services[$value][$i]['processinbackground'][$k]['postprocess'] <> "")
-                    {
-                        $process_order = $modules_services[$value][$i]['processinbackground'][$k]['processorder'];
-                        $process_view[$process_order]['postprocess'] = 'modules'.DIRECTORY_SEPARATOR.$value.DIRECTORY_SEPARATOR.$modules_services[$value][$i]['processinbackground'][$k]['postprocess'];
-                    }
-                }
-            }
-        }
-        sort($process_view);
-        for($u=0;$u<=count($process_view);$u++)
-        {
-            if($process_view[$u]['postprocess'] <> "")
-            {
-                include($process_view[$u]['postprocess']);
-            }
-        }
-    }
-
-    /**
-    * Executes application preprocess  services in background in the page
-    *
-    * @param  $modules_services array Enabled services
-    * @param  $whereami string Page where to execute the preprocess
-    */
-    public function execute_preprocess_of_apps_services_in_background($appServices, $whereami)
-    {
-        $process_view = array();
-        for($i=0;$i<count($appServices);$i++)
-        {
-            for($k=0;$k<count($appServices[$i]['processinbackground']);$k++)
-            {
-                if($appServices[$i]['processinbackground'][$k]['page'] == $whereami && $appServices[$i]['processinbackground'][$k]['preprocess'] <> "")
-                {
-                    $process_order = $appServices[$i]['processinbackground'][$k]['processorder'];
-                    $process_view[$process_order]['preprocess'] = 'apps/'.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$appServices[$i]['processinbackground'][$k]['preprocess'];
-                    $process_view[$process_order]['id_service'] = $appServices[$i]['id'];
-                }
-            }
-        }
-        sort($process_view);
-        for($u=0;$u<=count($process_view);$u++)
-        {
-            if($process_view[$u]['preprocess'] <> "")
-            {
-                include($process_view[$u]['preprocess']);
-            }
-        }
-    }
-
-    /**
-    * Executes the application postprocess  services in background in the page
-    *
-    * @param  $modules_services array Enabled services
-    * @param  $whereami string Page where to execute the postprocess
-    */
-    public function execute_postprocess_of_apps_services_in_background($appServices, $whereami)
-    {
-        $process_view = array();
-        for($i=0;$i<count($appServices);$i++)
-        {
-            for($k=0;$k<count($appServices[$i]['processinbackground']);$k++)
-            {
-                if($appServices[$i]['processinbackground'][$k]['page'] == $whereami && $appServices[$i]['processinbackground'][$k]['postprocess'] <> "")
-                {
-                    $process_order = $appServices[$i]['processinbackground'][$k]['processorder'];
-                    $process_view[$process_order]['postprocess'] = 'apps/'.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR.$appServices[$i]['processinbackground'][$k]['postprocess'];
-                    $process_view[$process_order]['id_service'] = $appServices[$i]['id'];
-                }
-            }
-        }
-        sort($process_view);
-
-        for($u=0;$u<=count($process_view);$u++)
-        {
-            if($process_view[$u]['postprocess'] <> "")
-            {
-                include($process_view[$u]['postprocess']);
-            }
-        }
-    }
-
-    /**
-    * Gets the page corresponding to the service
-    *
-    * @param  $id_service  string Service identifier
-    * @param  $origin string Service origin : MODULE or APPS
-    * @param  $id_module string Module identifier(empty by default)
-    * @return Service page or False
-    */
-    public function get_service_page($id_service, $origin, $id_module = '')
-    {
-        if(trim(strtoupper($origin)) == "MODULE")
-        {
-            if(empty($id_module))
-            {
-                $_SESSION['error'] = _ID_MODULE.' '._MISSING;
-                return false;
-            }
-            for($i=0; $i<count($_SESSION['modules_services'][$id_module]);$i++)
-            {
-                if($_SESSION['modules_services'][$id_module][$i]['id'] == trim($id_service))
-                {
-                    if(isset($_SESSION['modules_services'][$id_module][$i]['servicepage']) && !empty($_SESSION['modules_services'][$id_module][$i]['servicepage']))
-                    {
-                        return $_SESSION['modules_services'][$id_module][$i]['servicepage'];
-                    }
-                    else
-                    {
-                        $_SESSION['error'] = _SERVICE_PAGE_NOT_DEFINED_EMPTY;
-                        return false;
-                    }
-                }
-            }
-        }
-        elseif(trim(strtoupper($origin)) == "APPS")
-        {
-            for($i=0; $i<count($_SESSION['apps_services']);$i++)
-            {
-                if($_SESSION['apps_services'][$i]['id'] == trim($id_service))
-                {
-                    if(isset($_SESSION['apps_services'][$i]['servicepage']) && !empty($_SESSION['apps_services'][$i]['servicepage']))
-                    {
-                        return $_SESSION['apps_services'][$i]['servicepage'];
-                    }
-                    else
-                    {
-                        $_SESSION['error'] = _SERVICE_PAGE_NOT_DEFINED_EMPTY;
-                        return false;
-                    }
-                }
-            }
-        }
-    }
-
-    /**
     * Gets the path of an action
     *
     * @param  $id_service  string Action identifier
@@ -2364,47 +2139,6 @@ class core_tools extends functions
             elseif(strtoupper($_SESSION['actions_pages'][$ind]['ORIGIN']) == "MODULE")
             {
                 $path = 'modules'.DIRECTORY_SEPARATOR.$_SESSION['actions_pages'][$ind]['MODULE'].DIRECTORY_SEPARATOR.$_SESSION['actions_pages'][$ind]['NAME'].".php";
-            }
-            return $path;
-        }
-    }
-
-    /**
-    * Gets the url of an action
-    *
-    * @param  $id_service  string Action identifier
-    * @return Action url or action identifier if not found
-    */
-
-    public function get_url_action_page($action_id)
-    {
-        $found = false;
-        $ind = -1;
-        for($i=0; $i< count($_SESSION['actions_pages']); $i++)
-        {
-            if($_SESSION['actions_pages'][$i]['ID'] == $action_id)
-            {
-                $found = true;
-                $ind = $i;
-                break;
-            }
-        }
-        if(!$found)
-        {
-            return $action_id;
-        }
-        else
-        {
-            $path = $action_id;
-            if(strtoupper($_SESSION['actions_pages'][$ind]['ORIGIN']) == "APPS")
-            {
-                //$path = $_SESSION['config']['businessappurl'].$_SESSION['actions_pages'][$ind]['NAME'].".php";
-                $path = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$_SESSION['actions_pages'][$ind]['NAME'];
-            }
-            elseif(strtoupper($_SESSION['actions_pages'][$ind]['ORIGIN']) == "MODULE")
-            {
-                //$path = $_SESSION['urltomodules'].$_SESSION['actions_pages'][$ind]['MODULE'].'/'.$_SESSION['actions_pages'][$ind]['NAME'].".php";
-                $path = $_SESSION['config']['businessappurl']."index.php?display=true&page=".$_SESSION['actions_pages'][$ind]['NAME']."&module=".$_SESSION['actions_pages'][$ind]['MODULE'];
             }
             return $path;
         }
@@ -2478,12 +2212,12 @@ class core_tools extends functions
         return '';
     }
 
-    /***************************LGI TESTS******************************/
     /**
     * Detects if the user agent is a smartphone
     *
     */
-    public function detectSmartphone() {
+    public function detectSmartphone()
+    {
         $user_agent = $_SERVER['HTTP_USER_AGENT']; // get the user agent value - this should be cleaned to ensure no nefarious input gets executed
         $accept     = $_SERVER['HTTP_ACCEPT']; // get the content accept value - this should be cleaned to ensure no nefarious input gets executed
         return false

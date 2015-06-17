@@ -109,41 +109,6 @@ class manage_status extends dbquery
 		}
 		return array('ID'=> $id_status, 'LABEL'=> $status_txt, 'IMG_SRC' => $img_path);
 	}
-	
-	/*public function get_status_data($id_status,$extension = '')
-	{
-		$this->connect();
-		$this->query("select label_status, maarch_module, img_filename from ".$_SESSION['tablename']['status']." where id = '".$id_status."'");
-		$res = $this->fetch_object();
-		$status_txt = $this->show_string($res->label_status);
-		$maarch_module = $res->maarch_module;
-		$img_name = $res->img_filename;
-		if(!empty($img_name))
-		{
-			$temp_explode = explode( ".", $img_name);
-			$temp_explode[0] = $temp_explode[0].$extension;
-			$img_name = implode(".", $temp_explode);
-		}
-		if($maarch_module == 'apps' && isset($img_name) && !empty($img_name))
-		{
-			$img_path = $_SESSION['config']['businessappurl'].'static.php?filename='.$img_name;
-		}
-		else if(!empty($maarch_module) && isset($maarch_module)&& isset($img_name) && !empty($img_name))
-		{
-			$img_path = $_SESSION['config']['businessappurl'].'static.php?filename='.$img_name."&module=".$maarch_module;
-		}
-		else
-		{
-			$img_path = $_SESSION['config']['businessappurl'].'static.php?filename=default_status'.$extension.'.gif';
-		}
-
-		if(empty($status_txt) || !isset($status_txt))
-		{
-			$status_txt = $id_status;
-		}
-
-		return array('ID'=> $id_status, 'LABEL'=> $status_txt, 'IMG_SRC' => $img_path);
-	}*/
 
 	public function can_be_modified($id_status)
 	{
