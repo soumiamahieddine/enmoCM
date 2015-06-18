@@ -504,8 +504,7 @@ class core_tools extends functions
         if ($logout) {
         echo '<li onmouseover="this.className=\'on\';" onmouseout="this.className=\'\';">
         <a href="'.$_SESSION['config']['businessappurl']
-            . 'index.php?display=true&amp;page=logout&amp;coreurl='
-            . $_SESSION['config']['coreurl'].'&amp;logout=true"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-power-off fa-2x"></i></span><span>'._LOGOUT.'</span></span></a></li>';
+            . 'index.php?display=true&amp;page=logout&amp;logout=true"><span><span style="width:30px;height:30px;display:inline-block;text-align:center;"><i class="fa fa-power-off fa-2x"></i></span><span>'._LOGOUT.'</span></span></a></li>';
         }
     }
 
@@ -715,8 +714,7 @@ class core_tools extends functions
         echo '</a>';
 
         echo '<a style="display: inline-block;width: 45%;float: left;" href="' . $_SESSION['config']['businessappurl']
-            . 'index.php?display=true&amp;page=logout&amp;coreurl='
-            . $_SESSION['config']['coreurl'].'&amp;logout=true">';
+            . 'index.php?display=true&amp;page=logout&amp;logout=true">';
         echo '<span>';
         echo '<span style="width:30px;height:30px;display:inline-block;text-align:center;">'
             .'<i class="fa fa-power-off fa-2x mCdarkGrey"></i></span>';

@@ -315,8 +315,7 @@ class security extends dbquery
             return array(
                 'user'  => $array,
                 'error' => $error,
-                'url'   => 'index.php?display=true&page=login&coreurl='
-                                   . $_SESSION['config']['coreurl']
+                'url'   => 'index.php?display=true&page=login'
             );
         }
     }
@@ -439,7 +438,7 @@ class security extends dbquery
         else
         {
             $_SESSION['error'] = _ERROR;
-            header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
+            header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login");
             exit();
         }
     }
