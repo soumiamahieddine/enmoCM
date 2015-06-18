@@ -2,8 +2,9 @@
 
 require_once dirname(__file__) . '/class/Url.php';
 //dynamic session name
-$sessionName = str_replace($_SERVER['DOCUMENT_ROOT'], '', dirname(__file__));
-$sessionName = str_replace(DIRECTORY_SEPARATOR, '', $sessionName);
+$sessionName = str_replace("\\","/", dirname(__file__));
+$sessionName = str_replace($_SERVER['DOCUMENT_ROOT'], '', $sessionName);
+$sessionName = str_replace("/", '', $sessionName);
 $sessionName = str_replace('core', '', $sessionName);
 if ($sessionName == '') {
     $sessionName = 'maarch';
