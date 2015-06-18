@@ -66,7 +66,7 @@ if (isset($_POST['value']) && $_POST['value'] == "submit")
 	<p align="center">
     <input name="value" type="hidden" value="submit">
     <input name="cancel" type="submit"  value="<?php echo _CONTINUE; ?>" align="middle" class="button" />
-    <input name="cancel" type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=logout&coreurl=<?php echo $_SESSION['config']['coreurl'];?>';" align="middle" class="button" />
+    <input name="cancel" type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=logout';" align="middle" class="button" />
     </p>
 </form>
 </div>
