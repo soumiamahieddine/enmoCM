@@ -7,17 +7,12 @@ if (isset($_REQUEST['askRACode']) && $_REQUEST['askRACode'] == 'true') {
             echo '<br />';
             echo _ASK_RA_CODE_2 . '<br />';
             echo '<br />';
-            //echo '<a href="';
-            //echo $_SESSION['config']['businessappurl'].'index.php?display=true&confirmAskRACode=true&page=login&coreurl='.$_SESSION['config']['coreurl'];
-            //echo '">';
-                echo '<input onclick="window.location.href=\'' .  $_SESSION['config']['businessappurl'].'index.php?display=true&confirmAskRACode=true&page=login&coreurl='.$_SESSION['config']['coreurl'] . '\'" type="button" class="button" name="submit" value="'._SEND.'" />';
-            //echo '</a>';
+
+                echo '<input onclick="window.location.href=\'' .  $_SESSION['config']['businessappurl'].'index.php?display=true&confirmAskRACode=true&page=login' . '\'" type="button" class="button" name="submit" value="'._SEND.'" />';
             echo '&nbsp;&nbsp;';
-            //echo '<a href="';
-            //echo $_SESSION['config']['businessappurl'].'index.php?display=true&page=login&coreurl='.$_SESSION['config']['coreurl'];
-            //echo '">';
-                echo '<input onclick="window.location.href=\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&page=login&coreurl='.$_SESSION['config']['coreurl'] . '\'" type="button" class="button" name="submit" value="'._CANCEL.'" />';
-            //echo '</a>';
+
+                echo '<input onclick="window.location.href=\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&page=login' . '\'" type="button" class="button" name="submit" value="'._CANCEL.'" />';
+            
         echo '</p>';
     echo '</div>';
 }
@@ -76,7 +71,7 @@ elseif(isset($_REQUEST['confirmAskRACode']) && $_REQUEST['confirmAskRACode'] == 
     echo '<br /><br /><br /><br /><br /><br />';
     echo _CONFIRM_ASK_RA_CODE_7 . '<br /><br />';
     echo '<a href="';
-    echo $_SESSION['config']['businessappurl'].'index.php?display=true&page=login&coreurl='.$_SESSION['config']['coreurl'];
+    echo $_SESSION['config']['businessappurl'].'index.php?display=true&page=login';
     echo '">' . _CONFIRM_ASK_RA_CODE_8 . '</a>';
 }
 else {
@@ -117,13 +112,9 @@ echo '<form id="formlogin" method="post" action="'
                 if ($ipNotAllowed && $ra_code) {
                     if (!isset($_SESSION['withRA_CODE'])) {
                         echo '<br /><p class="buttons">';
-                            /*echo '<a href="';
-                                echo $_SESSION['config']['businessappurl'].'index.php?display=true&askRACode=true&page=login&coreurl='.$_SESSION['config']['coreurl'];
-                            echo '"><b>';*/
-                                echo '<input onclick="window.location.href=\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&askRACode=true&page=login&coreurl='.$_SESSION['config']['coreurl'] . '\'" type="button" class="button" name="submit" value="';
+                                echo '<input onclick="window.location.href=\'' . $_SESSION['config']['businessappurl'].'index.php?display=true&askRACode=true&page=login' . '\'" type="button" class="button" name="submit" value="';
                                 echo _ASK_AN_RA_CODE;
                                 echo '" />';
-                            //echo '</b></a>';
                             echo '&nbsp;&nbsp;';
                         echo '</p>';
                     } else {

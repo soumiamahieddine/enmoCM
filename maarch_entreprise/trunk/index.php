@@ -145,9 +145,7 @@ $time = $core->get_session_time_expire();
 ?>
 <body style="background: #f2f2f2;" onload="session_expirate(<?php echo $time;?>, '<?php 
     echo $_SESSION['config']['businessappurl'];
-    ?>index.php?display=true&page=logout&coreurl=<?php 
-    echo $_SESSION['config']['coreurl'];
-    ?>&logout=true');" id="maarch_body">
+    ?>index.php?display=true&page=logout&logout=true');" id="maarch_body">
 
 <?php
 $path = $_SESSION['config']['corepath'] . 'custom' . DIRECTORY_SEPARATOR

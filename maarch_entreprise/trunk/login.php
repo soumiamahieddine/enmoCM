@@ -12,11 +12,6 @@
 * @author  Laurent Giovannoni  <dev@maarch.org>
 */
 
-//print_r($_SERVER);
-if (trim($_GET['coreurl']) <> '') {
-    $_SESSION['config']['coreurl'] = $_GET['coreurl'];
-}
-
 //print_r($_REQUEST);
 if (isset($_GET['target_page']) && trim($_GET['target_page']) <> '') {
     $_SESSION['target_page'] = $_GET['target_page'];
@@ -33,8 +28,7 @@ if (isset($_SESSION['HTTP_REQUEST']['withRA_CODE']) && empty($_SESSION['HTTP_REQ
     $_SESSION['HTTP_REQUEST'] = array();
     header(
         'location: ' . $_SESSION['config']['businessappurl']
-        . 'index.php?display=true&page=login&coreurl='
-        . $_SESSION['config']['coreurl']
+        . 'index.php?display=true&page=login'
     );
     exit;
 }

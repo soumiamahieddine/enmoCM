@@ -71,7 +71,7 @@ $time = $core_tools->get_session_time_expire();
 	</p>
 	<p class="buttons">
 		<input type="submit" name="Submit" value="<?php  echo _VALIDATE;?>" class="button" />
-        <input type="button" name="cancel" value="<?php  echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=login&coreurl=<?php  echo $_SESSION['config']['coreurl'];?>';" />
+        <input type="button" name="cancel" value="<?php  echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=login';" />
 	</p>
 
 </form>

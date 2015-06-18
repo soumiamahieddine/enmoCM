@@ -68,8 +68,7 @@ if (count($_SESSION['config']) <= 0) {
 if (! empty($_SESSION['error'])) {
     header(
         'location: ' . $_SESSION['config']['businessappurl']
-        . 'index.php?display=true&page=login&coreurl='
-        . $_SESSION['config']['coreurl']
+        . 'index.php?display=true&page=login'
     );
     exit();
 } else {
@@ -173,8 +172,7 @@ if (! empty($_SESSION['error'])) {
                 $_SESSION['error'] = _BAD_LOGIN_OR_PSW;
                 header(
                     'location: ' . $_SESSION['config']['businessappurl']
-                    . 'index.php?display=true&page=login&coreurl='
-                    . $_SESSION['config']['coreurl']
+                    . 'index.php?display=true&page=login'
                 );
                 exit;
             }
@@ -182,8 +180,7 @@ if (! empty($_SESSION['error'])) {
             $_SESSION['error'] = _BAD_LOGIN_OR_PSW;
             header(
                 'location: ' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&page=login&coreurl='
-                . $_SESSION['config']['coreurl']
+                . 'index.php?display=true&page=login'
             );
             exit;
         }
@@ -193,8 +190,7 @@ if (! empty($_SESSION['error'])) {
             $_SESSION['error'] = _IP_NOT_ALLOWED;
             header(
                 'location: ' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&page=login&coreurl='
-                . $_SESSION['config']['coreurl']
+                . 'index.php?display=true&page=login'
             );
             exit;
         }
@@ -224,8 +220,7 @@ if (! empty($_SESSION['error'])) {
             $_SESSION['error'] = _BAD_LOGIN_OR_PSW . '...';
             header(
                 'location: ' . $_SESSION['config']['businessappurl']
-                . 'index.php?display=true&page=login&coreurl='
-                . $_SESSION['config']['coreurl']
+                . 'index.php?display=true&page=login'
             );
             exit;
         } else {
@@ -274,7 +269,7 @@ if (! empty($_SESSION['error'])) {
                     else {
                         $_SESSION['error'] = _IP_NOT_ALLOWED;
                     }
-                    $res['url'] = 'index.php?display=true&page=login&coreurl=' . $_SESSION['config']['coreurl'];
+                    $res['url'] = 'index.php?display=true&page=login';
                 }
             }
             header(

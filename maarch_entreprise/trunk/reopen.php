@@ -51,7 +51,6 @@ $_SESSION['arg_page'] = '';
 
 if(!empty($_SESSION['error']) || ($s_UserId == "1" && $s_key == ""))
 {
-    //header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
     header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login");
     exit();
 }
@@ -61,20 +60,11 @@ else
     if(trim($_SERVER['argv'][0]) <> "")
     {
         $_SESSION['requestUri'] = $_SERVER['argv'][0];
-        //header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
         header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login");
     }
     else
     {
-        //header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login&coreurl=".$_SESSION['config']['coreurl']);
         header("location: ".$_SESSION['config']['businessappurl']."index.php?display=true&page=login");
     }
     exit();
-    /*$pass = md5($s_pass);
-    require("core/class/class_security.php");
-    $sec = new security();
-    //$sec->show_array($_SESSION);
-    //$sec->build_config();
-    $sec->reopen($s_UserId,$s_key);*/
 }
-?>
