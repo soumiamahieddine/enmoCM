@@ -8,7 +8,6 @@ $sessionName = str_replace('core', '', $sessionName);
 if ($sessionName == '') {
     $sessionName = 'maarch';
 }
-$_SESSION['sessionName'] = $sessionName;
 $secure = $_SERVER["HTTPS"];
 $httponly = true;
 session_set_cookie_params(
@@ -18,8 +17,10 @@ session_set_cookie_params(
     $secure, 
     $httponly
 );
-session_name($_SESSION['sessionName']);
+session_name($sessionName);
 session_start();
+
+$_SESSION['sessionName'] = $sessionName;
 
 if (!isset($_SESSION['config']) || !isset($_SESSION['businessapps'][0]['appid'])) {
     require_once('class/class_portal.php');
