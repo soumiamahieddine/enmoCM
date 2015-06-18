@@ -15,8 +15,9 @@ require_once 'core/class/class_history.php';
 require_once 'core/core_tables.php';
 $core = new core_tools();
 $core->load_lang();
-$name = 'maarch';
-//setcookie("maarch", "", time() - 3600000);
+//$name = 'maarch';
+$name = $_SESSION['sessionName'];
+
 setcookie ($name, "", 1);
 setcookie ($name, false);
 unset($_COOKIE[$name]);

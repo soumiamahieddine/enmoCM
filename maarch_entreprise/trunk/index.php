@@ -90,7 +90,7 @@ if (isset($_SESSION['user']['UserId']) && isset($_GET['page'])
     );
 
     setcookie(
-        'maarch', 'UserId=' . $_SESSION['user']['UserId'] . '&key=' . $key,
+        $_SESSION['sessionName'], 'UserId=' . $_SESSION['user']['UserId'] . '&key=' . $key,
         time() + ($_SESSION['config']['cookietime'] * 1000),
         0, 0, $_SERVER["HTTPS"], 1
     );
