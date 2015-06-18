@@ -25,6 +25,54 @@ function load_query(valeurs, loaded_query, id_form, ie_browser, error_ie_txt)
 }
 
 /**
+ * Selects items in a mutiple list (html select object with multiple) in the search form
+ *
+ * @param values Array Values of the search criteria which must be displayed
+ **/
+function fill_field_select_multiple(values)
+{
+    for( var key in values)
+    {
+        if(key.indexOf('_chosen') >= 0)
+        {
+            var available = key.substring(0, key.length -7)+'_available';
+            var available_list = $(available);
+            for(var j=0; j <values[key].length;j++)
+            {
+                for(var i=0; i<available_list.options.length;i++)
+                {
+                    if(values[key][j] == available_list.options[i].value)
+                    {
+                        available_list.options[i].selected='selected';
+                    }
+                }
+            }
+            Move_ext(available, key);
+        }
+        if(key.indexOf('_targetlist') >= 0)
+        {
+            var available = key.substring(0, key.length -7)+'_sourcelist';
+            var available_list = $(available);
+            for(var j=0; j <values[key].length;j++)
+            {
+                if (available_list) {
+                    for(var i=0; i<available_list.options.length;i++)
+                    {
+                        if(values[key][j] == available_list.options[i].value)
+                        {
+                            available_list.options[i].selected='selected';
+                        }
+                    }
+                } 
+            }
+            if (available) {
+                Move_ext(available, key);
+            }
+        }
+    }
+}
+
+/**
  * Adds criteria in the search form
  *
  * @param elem_comp String Identifier of the option of the criteria list to displays in the search form
