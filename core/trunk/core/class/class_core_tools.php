@@ -1797,6 +1797,10 @@ class core_tools extends functions
                     <?php
                     $this->show_array($_GET);
                     ?>
+                    <h2 class="tit">SERVER</h2>
+                    <?php
+                    $this->show_array($_SERVER);
+                    ?>
             </div>
             <?php
         }

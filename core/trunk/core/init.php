@@ -2,7 +2,23 @@
 
 require_once dirname(__file__) . '/class/Url.php';
 //dynamic session name
-session_name(base64_encode(dirname(__file__)));
+$sessionName = str_replace($_SERVER['DOCUMENT_ROOT'], '', dirname(__file__));
+$sessionName = str_replace(DIRECTORY_SEPARATOR, '', $sessionName);
+$sessionName = str_replace('core', '', $sessionName);
+if ($sessionName == '') {
+    $sessionName = 'maarch';
+}
+
+$secure = $_SERVER["HTTPS"];
+$httponly = true;
+session_set_cookie_params(
+    time()+3600000, 
+    $cookieParams["path"], 
+    $cookieParams["domain"], 
+    $secure, 
+    $httponly
+);
+session_name($sessionName);
 session_start();
 
 if (!isset($_SESSION['config']) || !isset($_SESSION['businessapps'][0]['appid'])) {
