@@ -22,10 +22,6 @@ if ($processIDS) {
         . 'apps/maarch_entreprise/tools/phpids/lib/'
     );
 
-    if (!session_id()) {
-        session_start();
-    }
-
     require_once 'IDS/Init.php';
 
     try {

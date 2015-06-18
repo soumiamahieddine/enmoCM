@@ -1,5 +1,4 @@
 <?php
-session_start();
 /**
 est appelé par la function ajax multiLink. Elle permet de mettre en session les données lorsqu'on clique sur le checkbox. 
 */
