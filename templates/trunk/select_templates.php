@@ -1,5 +1,4 @@
 <?php
-session_start();
 require 'modules/templates/class/templates_controler.php';
 require_once 'core/class/class_db.php';
 $db = new dbquery();
