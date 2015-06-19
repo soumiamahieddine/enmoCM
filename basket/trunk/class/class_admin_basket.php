@@ -270,7 +270,7 @@ class admin_basket extends dbquery
                 <?php } ?>
                 <p>
                     <label><?php echo _BASKET_VIEW;?> : </label>
-                    <textarea  cols="30" rows="4" style="width:415px;" name="basketclause" id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause']; ?></textarea> <a href="#" onclick="window.open('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=keywords_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><i class = "fa fa-question-circle fa-2x" title="<?php echo _HELP_KEYWORDS; ?>" ></i></a>
+                    <textarea  cols="30" rows="4" style="width:415px;" name="basketclause" id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause']; ?></textarea> <a href="#" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=keywords_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><i class = "fa fa-question-circle fa-2x" title="<?php echo _HELP_KEYWORDS; ?>" ></i></a>
                 </p>
                 <p>
                     <label><?php echo _BASKET_VISIBLE_ONLY_ON_SEARCH;?> : </label>
