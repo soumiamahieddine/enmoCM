@@ -164,6 +164,8 @@ function listmodel_validate() {
                 if(answer.responseText) {
                     main_error.innerHTML += answer.responseText;
                     this.valid = false;
+                    main_error.style.display = 'table-cell';
+                    Element.hide.delay(10, 'main_error');
                 } else {
                     this.valid = true;
                 }
