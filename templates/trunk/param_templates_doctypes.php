@@ -28,8 +28,8 @@ if ($_SESSION['service_tag'] == 'doctype_up') {
     }
     ?>
     <p>
-        <span><input type="radio"  class="check" onclick="javascript:show_templates(false);" name="e_file" id="load_file" value="N"  <?php  if ($_SESSION['m_admin']['doctypes']['is_generated'] == 'N') { echo 'checked="checked"';} ?>/><?php  echo _LOADED_FILE;?></span>
-        <span><input type="radio" class="check" onclick="javascript:show_templates(true);" name="e_file" id="gen_file" value="Y"  <?php  if ($_SESSION['m_admin']['doctypes']['is_generated'] == 'Y') { echo 'checked="checked"';} ?> /><?php  echo _GENERATED_FILE;?></span>
+        <span><input type="radio"  class="check" onclick="javascript:show_templates(false);" name="e_file" id="load_file" value="N"  <?php  if ($_SESSION['m_admin']['doctypes']['is_generated'] == 'N') { echo 'checked="checked"';} ?>/><?php echo _LOADED_FILE;?></span>
+        <span><input type="radio" class="check" onclick="javascript:show_templates(true);" name="e_file" id="gen_file" value="Y"  <?php  if ($_SESSION['m_admin']['doctypes']['is_generated'] == 'Y') { echo 'checked="checked"';} ?> /><?php echo _GENERATED_FILE;?></span>
     </p>
     <div id="templates_div" style="display:<?php if($_SESSION['m_admin']['doctypes']['is_generated'] == 'Y'){ echo "block";}else{ echo "none";}?>">
         <span><?php echo _CHOOSE_TEMPLATE;?> :</span>

@@ -136,7 +136,7 @@ $core_tools->load_header($title, true, false);
 <?php
 $_SESSION['mode_editor'] = false;
 include('modules/templates/load_editor.php');?>
-<div class="error"><?php  echo $_SESSION['error']; $_SESSION['error']= "";?></div>
+<div class="error"><?php echo $_SESSION['error']; $_SESSION['error']= "";?></div>
 <div align="center">
     <form name="frmtemplate" id="frmtemplate" method="post" action="<?php 
         echo $_SESSION['config']['businessappurl'];
@@ -165,7 +165,7 @@ include('modules/templates/load_editor.php');?>
     </textarea>
     <br/>
     <p>
-        <label><?php  echo _ANSWER_TITLE;?> :</label>
+        <label><?php echo _ANSWER_TITLE;?> :</label>
         <input type="text" name="answer_title" id="answer_title" value="<?php 
             echo $answer['TITLE']?>" style="width: 250px;" />
     </p>

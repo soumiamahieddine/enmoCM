@@ -89,9 +89,9 @@ $time = $core_tools->get_session_time_expire();
 $core_tools->load_header(_CHOOSE_TEMPLATE, true, false);
 
 ?>
-<body id="pop_up"  onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
-<h2 class="tit"><?php  echo _CHOOSE_TEMPLATE;?> </h2>
-<div align="center"><b><?php  echo $erreur; ?></b></div>
+<body id="pop_up"  onload="setTimeout(window.close, <?php echo $time;?>*60*1000);">
+<h2 class="tit"><?php echo _CHOOSE_TEMPLATE;?> </h2>
+<div align="center"><b><?php echo $erreur; ?></b></div>
 <form enctype="multipart/form-data" method="post" name="attachment" action="<?php 
     echo $_SESSION['config']['businessappurl'];
     ?>index.php?display=true&module=templates&page=choose_template">
@@ -104,7 +104,7 @@ $core_tools->load_header(_CHOOSE_TEMPLATE, true, false);
     <input type="hidden" name="coll_id" id="coll_id" value="<?php 
         echo $_REQUEST['coll_id'];
         ?>" />
-    <p><label><?php  echo _PLEASE_SELECT_TEMPLATE;?> :</label></p>
+    <p><label><?php echo _PLEASE_SELECT_TEMPLATE;?> :</label></p>
     <br/>
     <p>
         <select name="template" id="template" style="width:150px" onchange="this.form.submit();">
