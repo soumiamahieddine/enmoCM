@@ -29,7 +29,7 @@ if($_SESSION['service_tag'] == 'group_basket') {
         // indexing difflist_types list
         ?>
     <p>
-        <label><?php  echo _INDEXING_DIFFLIST_TYPES;?> :</label>
+        <label><?php echo _INDEXING_DIFFLIST_TYPES;?> :</label>
     </p>
     <table align="center" width="100%" id="index_difflist_types_baskets" >
         <tr>
@@ -60,20 +60,20 @@ if($_SESSION['service_tag'] == 'group_basket') {
                     if($state_difflist_type == false)
                     {
                         ?>
-                        <option value="<?php  echo $difflist_type_id; ?>"><?php  echo $difflist_type_label; ?></option>
+                        <option value="<?php echo $difflist_type_id; ?>"><?php echo $difflist_type_label; ?></option>
                     <?php
                     }
                 }
                 ?>
                 </select>
                 <br/>
-                <em><a href='javascript:selectall(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist"));' ><?php  echo _SELECT_ALL; ?></a></em>
+                <em><a href='javascript:selectall(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist"));' ><?php echo _SELECT_ALL; ?></a></em>
             </td>
             <td width="20%" align="center">
-                <input type="button" class="button" value="<?php  echo _ADD; ?> &gt;&gt;" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen"));' />
+                <input type="button" class="button" value="<?php echo _ADD; ?> &gt;&gt;" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen"));' />
                 <br />
                 <br />
-                <input type="button" class="button" value="&lt;&lt; <?php  echo _REMOVE; ?>" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist"));' />
+                <input type="button" class="button" value="&lt;&lt; <?php echo _REMOVE; ?>" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist"));' />
             </td>
             <td width="40%" align="center">
                 <select name="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen[]" id="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen" size="7" ondblclick='moveclick(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_typeslist"));' multiple="multiple"   class="difflist_types" style="width:100%;">
@@ -107,7 +107,7 @@ if($_SESSION['service_tag'] == 'group_basket') {
                     if($state_difflist_type == true)
                     {
                     ?>
-                        <option value="<?php  echo $difflist_type_id; ?>" selected="selected" ><?php  echo $difflist_type_label; ?></option>
+                        <option value="<?php echo $difflist_type_id; ?>" selected="selected" ><?php echo $difflist_type_label; ?></option>
                     <?php
                     }
                 }
@@ -115,7 +115,7 @@ if($_SESSION['service_tag'] == 'group_basket') {
                 </select>
                 <br/>
                 <em><a href="javascript:selectall(document.getElementById('<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_difflist_types_chosen'));" >
-                <?php  echo _SELECT_ALL; ?></a></em>
+                <?php echo _SELECT_ALL; ?></a></em>
             </td>
         </tr>
     </table>

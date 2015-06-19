@@ -25,7 +25,7 @@ if($_SESSION['service_tag'] == 'user_init' && isset($_SESSION['m_admin']['users'
 elseif($_SESSION['service_tag'] == 'formuser')
 {
 ?>
-<script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?module=entities&amp;filename=users_entities_management.js"></script>
+<script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?module=entities&amp;filename=users_entities_management.js"></script>
 <div id="user_entities"></div>
 <script type="text/javascript">updateContent('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=users_entities_form&module=entities', 'user_entities');</script>
 

@@ -52,14 +52,14 @@ else
 <input type="hidden" name="module" value="entities" />
 <input type="hidden" name="page" value="choose_entity" />
 	<p>
-		<label for="entity_id"><?php  echo _ENTITY;?> : </label>
+		<label for="entity_id"><?php echo _ENTITY;?> : </label>
 		<select name="entityid" onchange="this.form.submit();">
-			<option value="" ><?php  echo _CHOOSE_ENTITY;?></option>
+			<option value="" ><?php echo _CHOOSE_ENTITY;?></option>
 			<?php
 			for($i=0; $i<count($entities);$i++)
 			{
 				?>
-				<option value="<?php  echo $entities[$i]['ID'];?>" <?php  if($entities[$i]['ID']== $_SESSION['m_admin']['entity']['entityId']){ echo 'selected="selected"'; }?> ><?php  echo $entities[$i]['LABEL'];?></option><?php
+				<option value="<?php echo $entities[$i]['ID'];?>" <?php  if($entities[$i]['ID']== $_SESSION['m_admin']['entity']['entityId']){ echo 'selected="selected"'; }?> ><?php echo $entities[$i]['LABEL'];?></option><?php
 			}
 			?>
 		</select><span class="red_asterisk"><i class="fa fa-star"></i></span>

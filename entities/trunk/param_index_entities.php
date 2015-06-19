@@ -16,7 +16,7 @@ if($_SESSION['service_tag'] == 'group_basket')
         // indexing entities list
         ?>
     <p>
-        <label><?php  echo _INDEXING_ENTITIES;?> :</label>
+        <label><?php echo _INDEXING_ENTITIES;?> :</label>
     </p>
     <table align="center" width="100%" id="index_entity_baskets" >
         <tr>
@@ -47,20 +47,20 @@ if($_SESSION['service_tag'] == 'group_basket')
                 if($state_entity == false)
                 {
                     ?>
-                    <option value="<?php  echo $_SESSION['m_admin']['entities'][$cpt]['ID']; ?>"><?php  echo $_SESSION['m_admin']['entities'][$cpt]['LABEL']; ?></option>
+                    <option value="<?php echo $_SESSION['m_admin']['entities'][$cpt]['ID']; ?>"><?php echo $_SESSION['m_admin']['entities'][$cpt]['LABEL']; ?></option>
                 <?php
                 }
             }
                 ?>
                 </select>
                 <br/>
-                <em><a href='javascript:selectall(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entitieslist"));' ><?php  echo _SELECT_ALL; ?></a></em>
+                <em><a href='javascript:selectall(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entitieslist"));' ><?php echo _SELECT_ALL; ?></a></em>
             </td>
             <td width="20%" align="center">
-                <input type="button" class="button" value="<?php  echo _ADD; ?> &gt;&gt;" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entitieslist"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen"));' />
+                <input type="button" class="button" value="<?php echo _ADD; ?> &gt;&gt;" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entitieslist"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen"));' />
                 <br />
                 <br />
-                <input type="button" class="button" value="&lt;&lt; <?php  echo _REMOVE; ?>" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entitieslist"));' />
+                <input type="button" class="button" value="&lt;&lt; <?php echo _REMOVE; ?>" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entitieslist"));' />
             </td>
             <td width="40%" align="center">
                 <select name="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen[]" id="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen" size="7" ondblclick='moveclick(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entitieslist"));' multiple="multiple"   class="entities_list" style="width:100%;">
@@ -94,7 +94,7 @@ if($_SESSION['service_tag'] == 'group_basket')
                     if($state_entity == true)
                     {
                     ?>
-                        <option value="<?php  echo $_SESSION['m_admin']['entities'][$cpt]['ID']; ?>" selected="selected" ><?php  echo $_SESSION['m_admin']['entities'][$cpt]['LABEL']; ?></option>
+                        <option value="<?php echo $_SESSION['m_admin']['entities'][$cpt]['ID']; ?>" selected="selected" ><?php echo $_SESSION['m_admin']['entities'][$cpt]['LABEL']; ?></option>
                     <?php
                     }
                 }
@@ -102,7 +102,7 @@ if($_SESSION['service_tag'] == 'group_basket')
                 </select>
                 <br/>
                 <em><a href="javascript:selectall(document.getElementById('<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen'));" >
-                <?php  echo _SELECT_ALL; ?></a></em>
+                <?php echo _SELECT_ALL; ?></a></em>
             </td>
         </tr>
     </table>

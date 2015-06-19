@@ -130,10 +130,10 @@ unset($entities);
 }*/
 ?>
 <div class="popup_content">
-<h2 class="tit"><?php  echo USER_ADD_ENTITY;?></h2>
+<h2 class="tit"><?php echo USER_ADD_ENTITY;?></h2>
 <form name="chooseEntity" id="chooseEntity" method="get" action="#" class="forms">
 <p>
-    <label for="entity_id"> <?php  echo _CHOOSE_ENTITY;?> : </label>
+    <label for="entity_id"> <?php echo _CHOOSE_ENTITY;?> : </label>
     <select name="entity_id" id="entity_id" size="30" style="width: auto" >
     <?php
         /*for($i=0; $i<count($entities);$i++)
@@ -148,7 +148,7 @@ unset($entities);
                 //    $entity_id = $entities[$i]->__get('entity_id');
                 //}
             ?>
-                <option value="<?php  echo $entity_id;?>" ><?php  if(isset($short_label) && !empty($short_label)){ echo $short_label;}else{echo $entities[$i]->__get('entity_label');}?></option><?php
+                <option value="<?php echo $entity_id;?>" ><?php  if(isset($short_label) && !empty($short_label)){ echo $short_label;}else{echo $entities[$i]->__get('entity_label');}?></option><?php
 
         }*/
 		
@@ -173,7 +173,7 @@ unset($entities);
 			if(isset($res[$j]) && !empty($desc))
 			{
 		?>
-			<option value="<?php  echo $res[$j]->__get('entity_id') ?>"><?php   echo $res[$j]->__get('short_label'); ?></option>
+			<option value="<?php echo $res[$j]->__get('entity_id') ?>"><?php   echo $res[$j]->__get('short_label'); ?></option>
 		<?php
 			}
 		}*/
@@ -183,13 +183,13 @@ unset($entities);
 </p>
 <br/>
 <p>
-    <label for="role"><?php  echo _ROLE;?> : </label>
+    <label for="role"><?php echo _ROLE;?> : </label>
     <input type="text"  name="role" id="role" />
 </p>
 <br/>
 <p class="buttons">
-    <input type="button" name="Submit" value="<?php  echo _VALIDATE;?>" class="button" onclick="checkUserEntity('chooseEntity', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=check_user_entities';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_user_entities';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=users_entities_form';?>');"  />
-    <input type="button" name="cancel" value="<?php  echo _CANCEL;?>" class="button"  onclick="destroyModal('add_user_entities');"/>
+    <input type="button" name="Submit" value="<?php echo _VALIDATE;?>" class="button" onclick="checkUserEntity('chooseEntity', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=check_user_entities';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=manage_user_entities';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=users_entities_form';?>');"  />
+    <input type="button" name="cancel" value="<?php echo _CANCEL;?>" class="button"  onclick="destroyModal('add_user_entities');"/>
 </p>
 
 </form>

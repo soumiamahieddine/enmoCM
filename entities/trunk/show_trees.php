@@ -131,8 +131,8 @@ if (count($_SESSION['tree_entities']) < 1) {
             function TafelTreeInit () {
                 var struct = [
                                 {
-                                'id':'<?php  echo $_SESSION['entities_chosen_tree'];?>',
-                                'txt':'<?php  echo addslashes($label);?>',
+                                'id':'<?php echo $_SESSION['entities_chosen_tree'];?>',
+                                'txt':'<?php echo addslashes($label);?>',
                                 'items':[
                                 <?php
                                 $ent2 = new entity();
@@ -151,7 +151,7 @@ if (count($_SESSION['tree_entities']) < 1) {
                                             echo $level1[$i]['id'].'_'.$_SESSION['entities_chosen_tree'];
                                         }
                                         ?>',
-                                        <?php  echo $canhavechildren;?>
+                                        <?php echo $canhavechildren;?>
                                         'txt':'<?php echo addslashes($level1[$i]['id'].' - '.$level1[$i]['label_value']);?>',
                                         'is_entity' : true
                                     },
@@ -171,8 +171,8 @@ if (count($_SESSION['tree_entities']) < 1) {
                                         echo $level1[$i]['id'].'_'.$_SESSION['entities_chosen_tree'];
                                     }
                                     ?>',
-                                    <?php  echo $canhavechildren;?>
-                                    'txt':'<?php  echo addslashes($level1[$i]['id'].' - '.$level1[$i]['label_value']);?>',
+                                    <?php echo $canhavechildren;?>
+                                    'txt':'<?php echo addslashes($level1[$i]['id'].' - '.$level1[$i]['label_value']);?>',
                                     'is_entity' : true
                                 }
                                         ]
@@ -180,7 +180,7 @@ if (count($_SESSION['tree_entities']) < 1) {
                             ];
                 tree = new TafelTree('trees_div', struct, {
                     'generate' : true,
-                    'imgBase' : '<?php  echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>imgs/',
+                    'imgBase' : '<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>imgs/',
                     'defaultImg' : 'user.gif',
                     'defaultImgOpen' : 'folderopen.gif',
                     'defaultImgClose' : 'folder.gif',
