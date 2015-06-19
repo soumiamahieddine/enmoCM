@@ -5,6 +5,8 @@ $Core_Tools = new core_tools;
 $Core_Tools->load_lang();
 $db = new dbquery();
 $db->connect();
+$db2 = new dbquery();
+$db2->connect();
 $return = '';
 if ($_REQUEST['society_label'] <> '') {
     $selectDuplicates = "SELECT contact_id, user_id, society, lower(society) as lowsoc, society_short,"
@@ -43,7 +45,13 @@ if (isset($_REQUEST['contact_id'])) {
         $contactList = array();
         array_push($contactList, "Selectionner un contact");
         while($lineDoubl = $db->fetch_object()) {
-            array_push($contactList, $lineDoubl->contact_id);
+            $db2->query("SELECT id FROM contact_addresses WHERE contact_id = " . $lineDoubl->contact_id);
+            // $db2->show();
+            $result_address = $db2->fetch_object();
+
+            if ($result_address->id <> '') {
+                array_push($contactList, $lineDoubl->contact_id);
+            }
         }
     }
     if ($flagResAttached) {
@@ -65,15 +73,15 @@ if (isset($_REQUEST['contact_id'])) {
     }
     $return .= _ARE_YOU_SURE_TO_DELETE_CONTACT;
     if ($flagResAttached) {
-        $return .= '&nbsp;<input type="button" value="' . _YES . '"'
+        $return .= '&nbsp;<input type="button" class="button" value="' . _YES . '"'
             . ' onclick="deleteContact(' . $_REQUEST['contact_id'] 
             . ', $(\'selectContact_' . $_REQUEST['contact_id'] . '\').value, $(\'selectContactAddress_' . $_REQUEST['contact_id'] . '\').value);" />';
     } else {
-        $return .= '&nbsp;<input type="button" value="' . _YES . '"'
+        $return .= '&nbsp;<input type="button" class="button" value="' . _YES . '"'
             . ' onclick="deleteContact(' . $_REQUEST['contact_id'] 
             . ', false, false);" />';
     }
-    $return .= '&nbsp;<input type="button" value="' . _NO . '"'
+    $return .= '&nbsp;<input type="button" class="button" value="' . _NO . '"'
         . ' onclick="new Effect.toggle(\'deleteContactDiv_\'+' 
         . $_REQUEST['contact_id'] . ', \'blind\' , {delay:0.2});" />';
     

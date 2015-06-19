@@ -98,14 +98,12 @@ $selectDuplicatesBySociety = "SELECT contact_id, user_id, society, lower(society
 $htmlTabSoc = '<table style="width:100%;">';
 $htmlTabSoc .= '<CAPTION>' . _DUPLICATES_BY_SOCIETY . '</CAPTION>';
 $htmlTabSoc .= '<tr>';
-$htmlTabSoc .= '<th>&nbsp;</th>';
-$htmlTabSoc .= '<th>' . _ID . '</th>';
-$htmlTabSoc .= '<th>' . _SOCIETY . '</th>';
+$htmlTabSoc .= '<th style="width:60px">&nbsp;</th>';
+$htmlTabSoc .= '<th style="width:200px">' . _ID . '</th>';
+$htmlTabSoc .= '<th>' . _STRUCTURE_ORGANISM . '</th>';
 $htmlTabSoc .= '<th>' . _SOCIETY_SHORT . '</th>';
-$htmlTabSoc .= '<th>' . _IS_CORPORATE_PERSON . '</th>';
-$htmlTabSoc .= '<th>' . _LASTNAME . '</th>';
-$htmlTabSoc .= '<th>' . _FIRSTNAME . '</th>';
-$htmlTabSoc .= '<th>&nbsp;</th>';
+$htmlTabSoc .= '<th style="width:200px">' . _IS_CORPORATE_PERSON . '</th>';
+$htmlTabSoc .= '<th style="width:50px">&nbsp;</th>';
 $htmlTabSoc .= '</tr>';
 
 $tabSoc = array();
@@ -113,26 +111,17 @@ $socCompare = '';
 $colorToUse = '';
 $colorNumber = '2';
 $db->query($selectDuplicatesBySociety);
-//$db->show();
+
 $cptSoc = 0;
 while($lineDoublSoc = $db->fetch_object()) {
-    if ($lineDoublSoc->contact_id <> '') {
+
+    $db2->query("SELECT id FROM contact_addresses WHERE contact_id = " . $lineDoublSoc->contact_id);
+    // $db2->show();
+    $result_address = $db2->fetch_object();
+
+    if ($lineDoublSoc->contact_id <> '' && $result_address->id <> '') {
         $cptSoc++;
 
-        //USE AJAX REQUEST TO KNOW IF RES ATTACHED
-        /*$selectResAttached = "select res_id from res_view_letterbox where "
-            . "exp_contact_id = " . $lineDoublSoc->contact_id . " or "
-            . "dest_contact_id = " . $lineDoublSoc->contact_id . " order by res_id";*/
-        //$db2->query($selectResAttached);
-        /*array_push($tabSoc, array('contact_id' => $lineDoublSoc->contact_id,
-            'society' => $lineDoublSoc->society,
-            'lastname' => $lineDoublSoc->lastname,
-            'firstname' => $lineDoublSoc->firstname,
-            'address_num' => $lineDoublSoc->address_num,
-            'address_street' => $lineDoublSoc->address_street,
-            'address_town' => $lineDoublSoc->address_town,
-            )
-        );*/
         if ($socCompare == $lineDoublSoc->lowsoc) {
             //echo 'doublon<br>';
         } else {
@@ -143,24 +132,18 @@ while($lineDoublSoc = $db->fetch_object()) {
         $corporatePeople = ($lineDoublSoc->is_corporate_person == "Y")? _YES : _NO;
         $socCompare = $lineDoublSoc->lowsoc;
         $htmlTabSoc .= '<tr style="background-color: #ffffff;" id="tr_' . $lineDoublSoc->contact_id . '">';
-        $htmlTabSoc .= '<td><img src="'
-            . $_SESSION['config']['businessappurl']
-            . 'static.php?filename=view_folder.gif" title="'
-            . _IS_ATTACHED_TO_DOC . '" onclick="loadDocList('
-            . $lineDoublSoc->contact_id . ');" style="cursor: pointer;"/></td>';
+        $htmlTabSoc .= '<td><i onclick="loadDocList('
+            . $lineDoublSoc->contact_id . ');" class="fa fa-search fa-2x" title="'._IS_ATTACHED_TO_DOC.'" title="'
+            . _IS_ATTACHED_TO_DOC . '" style="cursor: pointer;"></i></td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->contact_id . '</td>';
         $htmlTabSoc .= '<td>' . $lineDoublSoc->society . '</td>';
         $htmlTabSoc .= '<td align="center">' . $lineDoublSoc->society_short . '</td>';
         $htmlTabSoc .= '<td>' . $corporatePeople . '</td>';
-        $htmlTabSoc .= '<td>' . $lineDoublSoc->lastname . '</td>';
-        $htmlTabSoc .= '<td>' . $lineDoublSoc->firstname . '</td>';
-        $htmlTabSoc .= '<td><img onclick="loadDeleteContactDiv('
+        $htmlTabSoc .= '<td><i onclick="loadDeleteContactDiv('
             . $lineDoublSoc->contact_id . ', \'' 
-            . addslashes($lineDoublSoc->society) . '\', \'\');" src="'
-            . $_SESSION['config']['businessappurl']
-            . 'static.php?filename=picto_delete.gif" title="'
+            . addslashes($lineDoublSoc->society) . '\', \'\');" class="fa fa-close fa-2x" title="'._DELETE.'" title="'
             . _DELETE . ' ' . $lineDoublSoc->contact_id . ' '
-            . $lineDoublSoc->society . ' ?" style="cursor: pointer;" /></td>';
+            . $lineDoublSoc->society . ' ?" style="cursor: pointer;"></i></td>';
         $htmlTabSoc .= '</tr>';
         $htmlTabSoc .= '<tr id="deleteContactDiv_' . $lineDoublSoc->contact_id
             . '" name="deleteContactDiv_' . $lineDoublSoc->contact_id
@@ -205,19 +188,19 @@ $selectDuplicatesByName = "SELECT contact_id, lower(lastname||' '||firstname) as
     . "SELECT lower(lastname||' '||firstname) as lastname_firstname FROM contacts_v2 GROUP BY lastname_firstname "
     . "     HAVING Count(lower(lastname||' '||firstname)) > 1 and lower(lastname||' '||firstname) <> ' ') "
     . "order by lower(lastname||' '||firstname)";
-$htmlTabName = '<table>';
+$htmlTabName = '<table style="width:100%;">';
 $htmlTabName .= '<CAPTION>' . _DUPLICATES_BY_NAME . '</CAPTION>';
 $htmlTabName .= '<tr>';
-$htmlTabName .= '<th>&nbsp;</th>';
-$htmlTabName .= '<th>' . _ID . '</th>';
+$htmlTabName .= '<th style="width:60px">&nbsp;</th>';
+$htmlTabName .= '<th style="width:200px">' . _ID . '</th>';
 $htmlTabName .= '<th>' . _TITLE2 . '</th>';
 $htmlTabName .= '<th>' . _LASTNAME . '</th>';
 $htmlTabName .= '<th>' . _FIRSTNAME . '</th>';
-$htmlTabName .= '<th>' . _SOCIETY . '</th>';
+$htmlTabName .= '<th>' . _STRUCTURE_ORGANISM . '</th>';
 $htmlTabName .= '<th>' . _SOCIETY_SHORT . '</th>';
-$htmlTabName .= '<th>' . _IS_CORPORATE_PERSON . '</th>';
 $htmlTabName .= '<th>' . _ADDRESS . '</th>';
-$htmlTabName .= '<th>&nbsp;</th>';
+$htmlTabName .= '<th style="width:200px">' . _IS_CORPORATE_PERSON . '</th>';
+$htmlTabName .= '<th style="width:50px">&nbsp;</th>';
 $htmlTabName .= '</tr>';
 $tabName = array();
 $nameCompare = '';
@@ -226,22 +209,14 @@ $colorNumber = '2';
 $db->query($selectDuplicatesByName);
 $cptName = 0;
 while($lineDoublName = $db->fetch_object()) {
-    if ($lineDoublName->contact_id <> '') {
+
+    $db2->query("SELECT id FROM contact_addresses WHERE contact_id = " . $lineDoublName->contact_id);
+    // $db2->show();
+    $result_address = $db2->fetch_object();
+
+    if ($lineDoublName->contact_id <> '' && $result_address->id <> '') {
         $cptName++;
-        //USE AJAX REQUEST TO KNOW IF RES ATTACHED
-        /*$selectResAttached = "select res_id from res_view_letterbox where "
-            . "exp_contact_id = " . $lineDoublName->contact_id . " or "
-            . "dest_contact_id = " . $lineDoublName->contact_id . " order by res_id";*/
-        //$db2->query($selectResAttached);
-        /*array_push($tabName, array('contact_id' => $lineDoublName->contact_id,
-            'society' => $lineDoublName->society,
-            'lastname' => $lineDoublName->lastname,
-            'firstname' => $lineDoublName->firstname,
-            'address_num' => $lineDoublName->address_num,
-            'address_street' => $lineDoublName->address_street,
-            'address_town' => $lineDoublName->address_town,
-            )
-        );*/
+
         if ($nameCompare == $lineDoublName->lastname_firstname) {
             //echo 'doublon<br>';
         } else {
@@ -253,36 +228,32 @@ while($lineDoublName = $db->fetch_object()) {
         $corporatePeople = ($lineDoublName->is_corporate_person == "Y")? _YES : _NO;
 
         $nameCompare = $lineDoublName->lastname_firstname;
-        $htmlTabName .= '<tr style="background-color: ' 
-            . $colorToUse . ';" id="tr_' . $lineDoublName->contact_id . '">';
-        $htmlTabName .= '<td><img src="'
-            . $_SESSION['config']['businessappurl']
-            . 'static.php?filename=view_folder.gif" title="'
-            . _IS_ATTACHED_TO_DOC . '" onclick="loadDocList('
-            . $lineDoublName->contact_id . ');" style="cursor: pointer;"/></td>';
+        $htmlTabName .= '<tr style="background-color: #ffffff;" id="tr_' . $lineDoublName->contact_id . '">';
+        $htmlTabName .= '<td><i onclick="loadDocList('
+            . $lineDoublName->contact_id . ');" class="fa fa-search fa-2x" title="'._IS_ATTACHED_TO_DOC.'" title="'
+            . _IS_ATTACHED_TO_DOC . '" style="cursor: pointer;"></i></td>';
         $htmlTabName .= '<td>' . $lineDoublName->contact_id . '</td>';
         $htmlTabName .= '<td>' . $business->get_label_title($lineDoublName->title) . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->lastname . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->firstname . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->society . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->society_short . '</td>';
-        $htmlTabName .= '<td>' . $corporatePeople . '</td>';
         $htmlTabName .= '<td>' . $lineDoublName->address_num;
         $htmlTabName .= ' ' . $lineDoublName->address_street;
         $htmlTabName .= ' ' . $lineDoublName->address_town . '</td>';
-        $htmlTabName .= '<td><img onclick="loadDeleteContactDiv('
+        $htmlTabName .= '<td>' . $corporatePeople . '</td>';
+        $htmlTabName .= '<td><i onclick="loadDeleteContactDiv('
             . $lineDoublName->contact_id . ', \'\', \'' 
-            . addslashes($lineDoublName->lastname_firstname) . '\');" src="'
-            . $_SESSION['config']['businessappurl']
-            . 'static.php?filename=picto_delete.gif" title="'
+            . addslashes($lineDoublName->lastname_firstname) . '\');" class="fa fa-close fa-2x" title="'._DELETE . ' ' . $lineDoublName->contact_id . ' '
+            . $lineDoublName->society . ' ?" title="'
             . _DELETE . ' ' . $lineDoublName->contact_id . ' '
-            . $lineDoublName->society . ' ?" style="cursor: pointer;" /></td>';
+            . $lineDoublName->society . ' ?" style="cursor: pointer;"></i></td>';
         $htmlTabName .= '</tr>';
         $htmlTabName .= '<tr id="deleteContactDiv_' . $lineDoublName->contact_id
             . '" name="deleteContactDiv_' . $lineDoublName->contact_id
             . '" style="display: none; border-bottom: solid 1px black; '
             . 'background-color: #FFF;">';
-        $htmlTabName .= '<td style="background-color: white;" colspan="8">';
+        $htmlTabName .= '<td style="background-color: white;" colspan="10">';
         $htmlTabName .= '<div id="divDeleteContact_' . $lineDoublName->contact_id
             . '" align="center" style="color: grey;" width="100%">';
         $htmlTabName .= '<img width="10%" style="background-color: white; '
@@ -294,7 +265,7 @@ while($lineDoublName = $db->fetch_object()) {
             . '" name="docList_' . $lineDoublName->contact_id
             . '" style="display: none; border-bottom: solid 1px black; '
             . 'background-color: #FFF;">';
-        $htmlTabName .= '<td style="background-color: white;" colspan="9">';
+        $htmlTabName .= '<td style="background-color: white;" colspan="10">';
         $htmlTabName .= '<div id="divDocList_' . $lineDoublName->contact_id
             . '" align="center" style="color: grey;" width="100%">';
         $htmlTabName .= '<img width="10%" style="background-color: white; '

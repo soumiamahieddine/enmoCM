@@ -60,11 +60,7 @@ if (isset($_REQUEST['contact_id'])) {
                             $return .= '" ';
                             $return .= 'target="_blank" ';
                             $return .= '>';
-                                $return .= '<img ';
-                                $return .= 'src="';
-                                    $return .= 'static.php?filename=picto_view.gif';
-                                $return .= '" ';
-                                $return .= '/>';
+                                $return .= '<i class="fa fa-info-circle fa-2x" title="'._DETAILS.'"></i>';
                             $return .= '</a>';
                         $return .= '</td>';
                         $return .= '<td>';
@@ -110,11 +106,7 @@ if (isset($_REQUEST['contact_id'])) {
                             $return .= '" ';
                             $return .= 'target="_blank" ';
                             $return .= '>';
-                                $return .= '<img ';
-                                $return .= 'src="';
-                                    $return .= 'static.php?filename=picto_dld.gif';
-                                $return .= '" ';
-                                $return .= '/>';
+                                $return .= '<i class="fa fa-download fa-2x" title="'._VIEW_DOC.'"></i>';
                             $return .= '</a>';
                         $return .= '</td>';
                     $return .= '</tr>';
