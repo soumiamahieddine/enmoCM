@@ -50,20 +50,20 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 /***********************************************************/
 unset($_SESSION['m_admin']);
 ?>
-<h1><i class='fa fa-bell fa-2x'> </i> <?php  echo _ADMIN_NOTIFICATIONS;?></h1>
+<h1><i class='fa fa-bell fa-2x'> </i> <?php echo _ADMIN_NOTIFICATIONS;?></h1>
 <div id="inner_content" class="clearfix">
-    <h2 class="admin_subtitle block" ><?php  echo _ADMIN_NOTIFICATIONS;?></h2>
-    <div  class="admin_item" id="admin_structures" title="<?php  echo _MANAGE_EVENTS;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=manage_events_list_controler&module=notifications&mode=list';">
+    <h2 class="admin_subtitle block" ><?php echo _ADMIN_NOTIFICATIONS;?></h2>
+    <div  class="admin_item" id="admin_structures" title="<?php echo _MANAGE_EVENTS;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=manage_events_list_controler&module=notifications&mode=list';">
         <div class="sum_margin">
-                <strong><?php  echo _MANAGE_EVENTS;?></strong><br/>
-                <em><?php  echo _MANAGE_EVENTS_DESC;?></em>
+                <strong><?php echo _MANAGE_EVENTS;?></strong><br/>
+                <em><?php echo _MANAGE_EVENTS_DESC;?></em>
         </div>
     </div>
 
-    <div class="admin_item" id="admin_subfolders" title="<?php  echo _TEST_SENDMAIL;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=test_sendmail&module=notifications';">
+    <div class="admin_item" id="admin_subfolders" title="<?php echo _TEST_SENDMAIL;?>" onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=test_sendmail&module=notifications';">
         <div class="sum_margin">
-                <strong><?php  echo _TEST_SENDMAIL;?></strong><br/>
-                <em><?php  echo _TEST_SENDMAIL_DESC;?></em>
+                <strong><?php echo _TEST_SENDMAIL;?></strong><br/>
+                <em><?php echo _TEST_SENDMAIL_DESC;?></em>
          </div>
     </div>
 

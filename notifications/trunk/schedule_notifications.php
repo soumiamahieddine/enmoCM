@@ -330,7 +330,7 @@ $flag_notif = false;
 		<br />
 		<br />
 		<input type='submit' value='<?php echo _VALIDATE; ?>' name='save' class="button" />
-		<input type="button" class="button" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=manage_notifications_controler&mode=list&module=notifications'" value="<?php echo _CANCEL; ?>" name="cancel">
+		<input type="button" class="button" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=manage_notifications_controler&mode=list&module=notifications'" value="<?php echo _CANCEL; ?>" name="cancel">
 	</form>
 </div>
 </div>
