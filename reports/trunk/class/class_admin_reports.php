@@ -227,9 +227,9 @@ class admin_reports extends dbquery
                         <table cellpadding="0" cellspacing="0" border="0" class="listingsmall" summary="">
                             <thead>
                                 <tr>
-                                    <th><?php  echo _LASTNAME;?></th>
-                                    <th ><?php  echo _FIRSTNAME;?></th>
-                                    <!--<th  ><?php  echo _ENTITY;?></th>-->
+                                    <th><?php echo _LASTNAME;?></th>
+                                    <th ><?php echo _FIRSTNAME;?></th>
+                                    <!--<th  ><?php echo _ENTITY;?></th>-->
                                     <th></th>
                                 </tr>
                             </thead>
@@ -244,7 +244,7 @@ class admin_reports extends dbquery
                                 $color = ' class="col"';
                             }
                             ?>
-                            <tr <?php  echo $color; ?> >
+                            <tr <?php echo $color; ?> >
                                <td style="width:25%;"><?php
                                    echo $users[$i]->__get('lastname');
                                 ?></td>
@@ -268,7 +268,7 @@ class admin_reports extends dbquery
             </div>
             <form name="formgroupreport" method="post"  class="forms" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=reports&page=groupreports_up_db">
 
-                <br><center><i><?php  echo _AVAILABLE_REPORTS.'</i> '.$_SESSION['m_admin']['reports']['desc'];?> :</center>
+                <br><center><i><?php echo _AVAILABLE_REPORTS.'</i> '.$_SESSION['m_admin']['reports']['desc'];?> :</center>
                 <?php
                 $enabled_reports_sort_by_parent = array();
                 $j=0;
@@ -293,7 +293,7 @@ class admin_reports extends dbquery
                 ?>)" id="h2<?php
                 echo $_SESSION['cpt'];
                  ?>" class="categorie">
-                  <i class='fa fa-plus fa-2x'></i>&nbsp;<b><?php  echo $enabled_reports_sort_by_parent[$value][0]['module_label'];?></b>
+                  <i class='fa fa-plus fa-2x'></i>&nbsp;<b><?php echo $enabled_reports_sort_by_parent[$value][0]['module_label'];?></b>
                 <span class="lb1-details">&nbsp;</span>
                 </h5><br/>
                 <div class="desc block_light admin" id="desc<?php
@@ -306,11 +306,11 @@ class admin_reports extends dbquery
                                 {
                                     ?>
                                     <tr>
-                                        <td width="800px" align="right" title="<?php  echo $enabled_reports_sort_by_parent[$value][$i]['desc'];?>">
-                                            <?php  echo $enabled_reports_sort_by_parent[$value][$i]['label'];?> :
+                                        <td width="800px" align="right" title="<?php echo $enabled_reports_sort_by_parent[$value][$i]['desc'];?>">
+                                            <?php echo $enabled_reports_sort_by_parent[$value][$i]['label'];?> :
                                         </td>
                                         <td width="50px" align="left">
-                                            <input type="checkbox" name="reports[]" value="<?php  echo $enabled_reports_sort_by_parent[$value][$i]['id'];?>" <?php  if(in_array($enabled_reports_sort_by_parent[$value][$i]['id'],$_SESSION['m_admin']['reports']['groups'])){ echo 'checked="checked"';}?>  />
+                                            <input type="checkbox" name="reports[]" value="<?php echo $enabled_reports_sort_by_parent[$value][$i]['id'];?>" <?php  if(in_array($enabled_reports_sort_by_parent[$value][$i]['id'],$_SESSION['m_admin']['reports']['groups'])){ echo 'checked="checked"';}?>  />
                                         </td>
                                     </tr>
                                     <?php
@@ -325,8 +325,8 @@ class admin_reports extends dbquery
                 ?>
                 <br/>
                 <p class="buttons">
-                    <input id="groupbutton" type="submit"  name="Submit" value="<?php  echo _VALIDATE; ?>" class="button" />
-                    <input type="button" class="button"  name="cancel" value="<?php  echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin&reinit=true';"/>
+                    <input id="groupbutton" type="submit"  name="Submit" value="<?php echo _VALIDATE; ?>" class="button" />
+                    <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=admin&reinit=true';"/>
                 </p>
                 <p>&nbsp;</p>
                 <p>&nbsp;</p>

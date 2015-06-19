@@ -80,11 +80,11 @@ if(count($userReports) > 0)
 	foreach(array_keys($authorized_reports_sort_by_parent) as $value)
 	{
 	?>
-		<h5 onmouseover="" style="cursor: pointer;" onclick="new Effect.toggle('div_<?php  echo $authorized_reports_sort_by_parent[$value][0]['module_label'];?>', 'blind', {delay:0.2});return false;"  >
-			<i class="fa fa-plus fa-2x"></i>&nbsp;<b><?php  echo $authorized_reports_sort_by_parent[$value][0]['module_label'];?></b>
+		<h5 onmouseover="" style="cursor: pointer;" onclick="new Effect.toggle('div_<?php echo $authorized_reports_sort_by_parent[$value][0]['module_label'];?>', 'blind', {delay:0.2});return false;"  >
+			<i class="fa fa-plus fa-2x"></i>&nbsp;<b><?php echo $authorized_reports_sort_by_parent[$value][0]['module_label'];?></b>
 		</h5>
 		<br/>
-		<div class="block_light" id="div_<?php  echo $authorized_reports_sort_by_parent[$value][0]['module_label'];?>"  style="display:none">
+		<div class="block_light" id="div_<?php echo $authorized_reports_sort_by_parent[$value][0]['module_label'];?>"  style="display:none">
 			<div >
 				<ul class="reports_list">
 				<table>
@@ -93,9 +93,9 @@ if(count($userReports) > 0)
 					{
 						?>
 						<tr>
-							<!--<td nowrap align="left" title="<?php  echo $authorized_reports_sort_by_parent[$value][$i]['desc'];?>">-->
+							<!--<td nowrap align="left" title="<?php echo $authorized_reports_sort_by_parent[$value][$i]['desc'];?>">-->
 							<td nowrap align="left">
-								<li><a class="printlink" href="#" onclick="fill_report_result('<?php echo $authorized_reports_sort_by_parent[$value][$i]['url']; ?>');return false;"><?php  echo $authorized_reports_sort_by_parent[$value][$i]['label'];?> </a></li>
+								<li><a class="printlink" href="#" onclick="fill_report_result('<?php echo $authorized_reports_sort_by_parent[$value][$i]['url']; ?>');return false;"><?php echo $authorized_reports_sort_by_parent[$value][$i]['label'];?> </a></li>
 
 							</td>
 
