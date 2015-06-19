@@ -91,9 +91,9 @@ $db_hist->query($query);
 <table cellpadding="0" cellspacing="0" border="0" class="listing">
     <thead>
         <tr>
-            <th><?php  echo _DATE;?></th>
-            <th><?php  echo _USER;?> </th>
-            <th><?php  echo _DONE;?></th>
+            <th><?php echo _DATE;?></th>
+            <th><?php echo _USER;?> </th>
+            <th><?php echo _DONE;?></th>
         </tr>
     </thead>
     <tbody>
@@ -114,10 +114,10 @@ $db_hist->query($query);
             $nom = $res_hist2->lastname;
             $prenom = $res_hist2->firstname;
             ?>
-            <tr <?php  echo $color; ?>>
-                <td><span><?php  echo $func->dateformat($res_hist->event_date);?></span></td>
-                <td><span><?php  echo $prenom." ".$nom." "; ?></span></td>
-                <td><span><?php  echo $res_hist->info; ?></span></td>
+            <tr <?php echo $color; ?>>
+                <td><span><?php echo $func->dateformat($res_hist->event_date);?></span></td>
+                <td><span><?php echo $prenom." ".$nom." "; ?></span></td>
+                <td><span><?php echo $res_hist->info; ?></span></td>
             </tr>
             <?php
         }

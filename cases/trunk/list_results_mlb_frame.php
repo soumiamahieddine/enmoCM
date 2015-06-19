@@ -420,7 +420,7 @@ if (count($tab) > 0) {
     } 
     ?>
 
-    <h4><p align="center"><i class="fa fa-search fa-2x"></i> <?php  echo _SEARCH_RESULTS." - ".count($tab)." "._FOUND_DOC;?></h4></p>
+    <h4><p align="center"><i class="fa fa-search fa-2x"></i> <?php echo _SEARCH_RESULTS." - ".count($tab)." "._FOUND_DOC;?></h4></p>
         <div id="inner_content">
             <?php
             $details = 'details';

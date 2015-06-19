@@ -92,22 +92,22 @@ else
             <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
             <tr class="col">
                 <th align="left" class="picto">
-                    <i class="fa fa-briefcase fa-2x" title="<?php  echo _CASE_ID; ?>"></i>
+                    <i class="fa fa-briefcase fa-2x" title="<?php echo _CASE_ID; ?>"></i>
                 </th>
                 <td align="left" width="200px">
-                    <?php  echo _CASE_ID; ?> :
+                    <?php echo _CASE_ID; ?> :
                 </td>
                 <td>
-                    <input type="text" class="readonly" readonly="readonly" value="<?php  echo $case_indexes['case_id']; ?>" size="40"  />
+                    <input type="text" class="readonly" readonly="readonly" value="<?php echo $case_indexes['case_id']; ?>" size="40"  />
                 </td>
             </tr>
 
             <tr class="col">
                 <th align="left" class="picto">
-                    <i class="fa fa-pencil fa-2x" title="<?php  echo _CASE_LABEL; ?>"></i>
+                    <i class="fa fa-pencil fa-2x" title="<?php echo _CASE_LABEL; ?>"></i>
                 </th>
                 <td align="left" width="200px">
-                    <?php  echo _CASE_LABEL; ?> :
+                    <?php echo _CASE_LABEL; ?> :
                 </td>
                 <td>
                     <?php
@@ -120,10 +120,10 @@ else
 
             <tr class="col">
                 <th align="left" class="picto">
-                    <i class="fa fa-file fa-2x" title="<?php  echo _CASE_DESCRIPTION; ?>"></i>
+                    <i class="fa fa-file fa-2x" title="<?php echo _CASE_DESCRIPTION; ?>"></i>
                 </th>
                 <td align="left" width="200px">
-                    <?php  echo _CASE_DESCRIPTION; ?> :
+                    <?php echo _CASE_DESCRIPTION; ?> :
                 </td>
                 <td>
                 <?php
@@ -140,20 +140,20 @@ else
                     <i class="fa fa-user fa-2x" title="<?php echo _CASE_TYPIST;?>"></i>
                 </th>
                 <td align="left" width="200px">
-                    <?php  echo _CASE_TYPIST; ?> :
+                    <?php echo _CASE_TYPIST; ?> :
                 </td>
                 <td>
-                    <input type="text" class="readonly" readonly="readonly" value="<?php  echo $case_indexes['case_typist']; ?>" size="40"  />
+                    <input type="text" class="readonly" readonly="readonly" value="<?php echo $case_indexes['case_typist']; ?>" size="40"  />
                 </td>
             </tr>
 
 
             <tr class="col">
                 <th align="left" class="picto">
-                    <i class="fa fa-calendar-o fa-2x" title="<?php  echo _CASE_CREATION_DATE; ?>"></i>
+                    <i class="fa fa-calendar-o fa-2x" title="<?php echo _CASE_CREATION_DATE; ?>"></i>
                 </th>
                 <td align="left" width="200px">
-                    <?php  echo _CASE_CREATION_DATE; ?> :
+                    <?php echo _CASE_CREATION_DATE; ?> :
                 </td>
                 <td>
                     <input type="text" class="readonly" readonly="readonly" value="<?php echo $db->format_date_db($case_indexes['case_creation_date']); ?>" size="40"  />
@@ -163,10 +163,10 @@ else
 
             <tr class="col">
                 <th align="left" class="picto">
-                    <i class="fa fa-clock-o fa-2x" title="<?php  echo _CASE_LAST_UPDATE_DATE; ?>"></i>
+                    <i class="fa fa-clock-o fa-2x" title="<?php echo _CASE_LAST_UPDATE_DATE; ?>"></i>
                 </th>
                 <td align="left" width="200px">
-                    <?php  echo _CASE_LAST_UPDATE_DATE; ?> :
+                    <?php echo _CASE_LAST_UPDATE_DATE; ?> :
                 </td>
                 <td>
                     <input type="text" class="readonly" readonly="readonly" value="<?php echo $db->format_date_db($case_indexes['case_last_update_date']); ?>" size="40"  />
@@ -176,10 +176,10 @@ else
 
             <tr class="col">
                 <th align="left" class="picto">
-                    <i class="fa fa-lock fa-2x" title="<?php  echo _CASE_CLOSING_DATE; ?>"></i>
+                    <i class="fa fa-lock fa-2x" title="<?php echo _CASE_CLOSING_DATE; ?>"></i>
                 </th>
                 <td align="left" width="200px">
-                    <?php  echo _CASE_CLOSING_DATE; ?> :
+                    <?php echo _CASE_CLOSING_DATE; ?> :
                 </td>
                 <td>
                     <input type="text" class="readonly" readonly="readonly" value="<?php echo $db->format_date_db($case_indexes['case_closing_date']); ?>" size="40"  />
@@ -216,18 +216,18 @@ else
     <?php
     if ($core_tools->test_service('update_case', 'cases',false) == 1)
     { ?>
-        <input type="submit" class="button"  value="<?php  echo _MODIFY_DOC;?>" name="submit_index_doc" />
+        <input type="submit" class="button"  value="<?php echo _MODIFY_DOC;?>" name="submit_index_doc" />
     <?php
     } ?>
     <?php
     /*if ($core_tools->test_service('join_res_case', 'cases',false) == 1)
     { ?>
-        <input type="button" class="button"  value="<?php  echo _JOIN_RES_ON_THIS_CASE;?>" name="join_res" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id&searched_value=<?php echo $case_indexes['case_id'];?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/>
+        <input type="button" class="button"  value="<?php echo _JOIN_RES_ON_THIS_CASE;?>" name="join_res" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id&searched_value=<?php echo $case_indexes['case_id'];?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/>
     <?php
     }*/
     if ($core_tools->test_service('close_case', 'cases',false) == 1)
     { ?>
-        <input type="button" class="button"  value="<?php  echo _CLOSE_THIS_CASE;?>" name="join_res" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=db_close_case&case_id=<?php echo $case_indexes['case_id'];?>' "/>
+        <input type="button" class="button"  value="<?php echo _CLOSE_THIS_CASE;?>" name="join_res" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=db_close_case&case_id=<?php echo $case_indexes['case_id'];?>' "/>
     <?php
     } ?>
     </p>

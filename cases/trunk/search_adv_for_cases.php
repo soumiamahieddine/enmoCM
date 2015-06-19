@@ -613,7 +613,7 @@ function del_query_confirm()
 
             <dt><?php echo $title_search ; ?></dt>
             <dd>
-                <h4><p align="center"><i class="fa fa-search fa-2x"></i> <?php  echo $title_search ; ?></h4></p>
+                <h4><p align="center"><i class="fa fa-search fa-2x"></i> <?php echo $title_search ; ?></h4></p>
                 <!-- <hr/> -->
                 <br/>
         <?php if (count($queries) > 0)
