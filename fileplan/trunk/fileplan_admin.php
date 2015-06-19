@@ -46,7 +46,7 @@ if ($core_tools->is_module_loaded('entities') === false) {
 	?>
     <script type="text/javascript">
 		alert('Module entities not loaded. You must load entities module before create fileplan!');
-		window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin&reinit=true';
+		window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=admin&reinit=true';
 	</script>
 	<?php
 	exit();

@@ -80,7 +80,7 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 		<div id="inner_content">
 			<div class="block">
 				<h2>
-					<a href="<?php  echo $_SESSION['config']['businessappurl'];
+					<a href="<?php echo $_SESSION['config']['businessappurl'];
 					?>index.php?page=fileplan_admin_positions&module=fileplan&fileplan_id=<?php
 					echo $fileplan_id;?>" class="back"><?php 
 					echo _VIEW_FILEPLAN;?></a>&nbsp;/&nbsp;

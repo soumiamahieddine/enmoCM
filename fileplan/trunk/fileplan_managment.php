@@ -137,7 +137,7 @@ if (empty($fileplan_id)) {
 			<div class="block">
 				<b>
 				<p id="back_list">
-					<a href="<?php  echo $_SESSION['config']['businessappurl'];
+					<a href="<?php echo $_SESSION['config']['businessappurl'];
 					?>index.php?page=fileplan&module=fileplan&reinit=true" class="back"><?php 
 					echo _VIEW_FILEPLAN;?></a>&nbsp;/&nbsp;
 					<span class="selected_link"><?php echo _MANAGE_PERSONNAL_FILEPLAN;?></span>            
