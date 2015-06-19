@@ -120,9 +120,9 @@ if ($mode == 'list') {
                 $arrayColl = $_SESSION['m_admin']['tags']['coll_id'];
                 ?>
                 <p>
-                    <label for="collection"><?php  echo _COLLECTION;?> : </label>
+                    <label for="collection"><?php echo _COLLECTION;?> : </label>
                     <select disabled name="collection" id="collection" >
-                        <!--<option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>-->
+                        <!--<option value="" ><?php echo _CHOOSE_COLLECTION;?></option>-->
                     <?php
                     for ($i = 0; $i < count($arrayColl); $i ++) {
                         ?>
@@ -134,7 +134,7 @@ if ($mode == 'list') {
                         ) {
                             echo 'selected="selected"';
                         }
-                        ?> ><?php  echo $arrayColl[$i]['label'];?></option>
+                        ?> ><?php echo $arrayColl[$i]['label'];?></option>
                         <?php
                     }
 
@@ -186,7 +186,7 @@ if ($mode == 'list') {
                             foreach ($_SESSION['tmp_all_tags'] as $tmp_selectvalue_tag) {
                                 ?>
                                 <option value="<?php echo $tmp_selectvalue_tag['tag_label'].",".$tmp_selectvalue_tag['coll_id']; ?>">
-                                    <?php  echo $tmp_selectvalue_tag['tag_label']." ::".$tmp_selectvalue_tag['coll_id'];?>
+                                    <?php echo $tmp_selectvalue_tag['tag_label']." ::".$tmp_selectvalue_tag['coll_id'];?>
                                 </option>
                                 <?php
                             }
