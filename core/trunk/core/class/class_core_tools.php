@@ -482,7 +482,7 @@ class core_tools extends functions
                 $tmp = htmlentities  ( $tmp,ENT_COMPAT, 'UTF-8', true); // Encodes
                 ?>
                 <li onmouseover="this.className='on';" onmouseout="this.className='';">
-                <a href="#" onclick="window.open('<?php  echo $tmp;?>', '<?php 
+                <a href="#" onclick="window.open('<?php echo $tmp;?>', '<?php 
                     if(isset($menu[$i]['target']) && $menu[$i]['target'] <> '') {
                         echo $menu[$i]['target'];
                     } else {
@@ -1101,7 +1101,7 @@ class core_tools extends functions
                                 echo $modules_services[$id_module][$i]['name'];
                                 ?>
                                 <br />
-                                <a href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
+                                <a href='<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>' target='_blank'><?php echo _ACCESS_TO_SERVICE;?></a><br /><br />
                                 <?php
                                 break;
                             } else if ($modules_services[$id_module][$i]['whereamiused'][$k]['nature'] == "button"
@@ -1123,7 +1123,7 @@ class core_tools extends functions
                                 }
 
                                 ?>
-                                <input type="button" name="<?php  echo $modules_services[$id_module][$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo   $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>', '<?php  echo $modules_services[$id_module][$i]['id'];?>','width=<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $modules_services[$id_module][$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
+                                <input type="button" name="<?php echo $modules_services[$id_module][$i]['id'];?>" value="<?php echo $tmp;?>" onclick="window.open('<?php echo   $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>', '<?php echo $modules_services[$id_module][$i]['id'];?>','width=<?php echo $modules_services[$id_module][$i]['whereamiused'][$k]['width'];?>,height=<?php echo $modules_services[$id_module][$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
                                 <?php
                                 break;
                             } else if ($modules_services[$id_module][$i]['whereamiused'][$k]['nature'] == "include"
@@ -1291,7 +1291,7 @@ class core_tools extends functions
                                             echo $modules_services[$value][$iService]['name'];
                                             ?>
                                             <br />
-                                            <a href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$value."&page=".$modules_services[$value][$iService]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
+                                            <a href='<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$value."&page=".$modules_services[$value][$iService]['servicepage'];?>' target='_blank'><?php echo _ACCESS_TO_SERVICE;?></a><br /><br />
                                             <?php
                                         } else if ($modules_services[$value][$iService]['whereamiused'][$k]['nature'] == "button"
                                             && $_SESSION['user']['services'][$modules_services[$value][$iService]['id']]
@@ -1313,7 +1313,7 @@ class core_tools extends functions
                                                 $tmp  = constant($tmp);
                                             }
                                             ?>
-                                            <input type="button" name="<?php  echo $modules_services[$value][$iService]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$iServiced_module."&page=".$modules_services[$iServiced_module][$iService]['servicepage'];?>', '<?php  echo $modules_services[$value][$iService]['id'];?>','width=<?php  echo $modules_services[$value][$iService]['whereamiused'][$k]['width'];?>,height=<?php  echo $modules_services[$value][$iService]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
+                                            <input type="button" name="<?php echo $modules_services[$value][$iService]['id'];?>" value="<?php echo $tmp;?>" onclick="window.open('<?php echo  $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$iServiced_module."&page=".$modules_services[$iServiced_module][$iService]['servicepage'];?>', '<?php echo $modules_services[$value][$iService]['id'];?>','width=<?php echo $modules_services[$value][$iService]['whereamiused'][$k]['width'];?>,height=<?php echo $modules_services[$value][$iService]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
                                             <?php
                                         } else if ( isset($_SESSION['user']['services'][$modules_services[$value][$iService]['id']])
                                             && $modules_services[$value][$iService]['whereamiused'][$k]['nature'] == "include"
@@ -1346,8 +1346,8 @@ class core_tools extends functions
                     if ($u == 1) {
                         ?>
                         <td  class="indexingtab">
-                            <a href="javascript://" onclick="opentab('myframe', '<?php  echo $tab_view[$u]['frame_src'];?>');">
-                                <?php  echo $tab_view[$u]['tab_label'];?>
+                            <a href="javascript://" onclick="opentab('myframe', '<?php echo $tab_view[$u]['frame_src'];?>');">
+                                <?php echo $tab_view[$u]['tab_label'];?>
                             </a>
                             <?php
                             $_SESSION['first_tab_to_open'] = $tab_view[$u]['frame_src'];
@@ -1357,8 +1357,8 @@ class core_tools extends functions
                     } else {
                         ?>
                         <td  class="indexingtab">
-                            <a href="javascript://" onclick="opentab('myframe', '<?php  echo $tab_view[$u]['frame_src'];?>');">
-                                <?php  echo $tab_view[$u]['tab_label'];?>
+                            <a href="javascript://" onclick="opentab('myframe', '<?php echo $tab_view[$u]['frame_src'];?>');">
+                                <?php echo $tab_view[$u]['tab_label'];?>
                             </a>
                         </td>
                         <?php
@@ -1396,7 +1396,7 @@ class core_tools extends functions
                                 $appServices[$i]['id']
                             );
                             ?>
-                               <iframe src='<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$appServices[$i]['servicepage'];?>' name="<?php  $appServices[$i]['id'];?>" id="<?php  $appServices[$i]['id'];?>" width='<?php  echo $appServices[$i]['whereamiused'][$k]['width'];?>' height='<?php  echo $appServices[$i]['whereamiused'][$k]['height'];?>' frameborder='<?php  echo $appServices[$i]['whereamiused'][$k]['border'];?>' scrolling='<?php  echo $appServices[$i]['whereamiused'][$k]['scrolling'];?>'></iframe>
+                               <iframe src='<?php echo  $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$appServices[$i]['servicepage'];?>' name="<?php  $appServices[$i]['id'];?>" id="<?php  $appServices[$i]['id'];?>" width='<?php echo $appServices[$i]['whereamiused'][$k]['width'];?>' height='<?php echo $appServices[$i]['whereamiused'][$k]['height'];?>' frameborder='<?php echo $appServices[$i]['whereamiused'][$k]['border'];?>' scrolling='<?php echo $appServices[$i]['whereamiused'][$k]['scrolling'];?>'></iframe>
                                <?php
                         } else if ($appServices[$i]['whereamiused'][$k]['nature'] == "popup"
                             && $_SESSION['user']['services'][$appServices[$i]['id']]
@@ -1413,7 +1413,7 @@ class core_tools extends functions
                             echo $appServices[$i]['name'];
                             ?>
                             <br />
-                            <a href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$appServices[$i]['servicepage'];?>' target='_blank'><?php  echo _ACCESS_TO_SERVICE;?></a><br /><br />
+                            <a href='<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$appServices[$i]['servicepage'];?>' target='_blank'><?php echo _ACCESS_TO_SERVICE;?></a><br /><br />
                              <?php
                         } else if ($appServices[$i]['whereamiused'][$k]['nature'] == "button"
                             && $_SESSION['user']['services'][$appServices[$i]['id']]
@@ -1433,7 +1433,7 @@ class core_tools extends functions
                                 $tmp  = constant($tmp);
                             }
                             ?>
-                            <input type="button" name="<?php  echo $appServices[$i]['id'];?>" value="<?php  echo $tmp;?>" onclick="window.open('<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$appServices[$i]['servicepage']; ?>', '<?php  echo $appServices[$i]['id'];?>','width=<?php  echo $appServices[$i]['whereamiused'][$k]['width'];?>,height=<?php  echo $appServices[$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
+                            <input type="button" name="<?php echo $appServices[$i]['id'];?>" value="<?php echo $tmp;?>" onclick="window.open('<?php echo  $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$appServices[$i]['servicepage']; ?>', '<?php echo $appServices[$i]['id'];?>','width=<?php echo $appServices[$i]['whereamiused'][$k]['width'];?>,height=<?php echo $appServices[$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
                             <?php
                         } else if ($appServices[$i]['whereamiused'][$k]['nature'] == "include"
                             && isset($_SESSION['user']['services'][$appServices[$i]['id']])
@@ -1488,7 +1488,7 @@ class core_tools extends functions
         /*<?xml version="1.0" encoding="UTF-8"?>*/
         ?>
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php  echo $_SESSION['config']['lang']; ?>" lang="<?php  echo $_SESSION['config']['lang']; ?>">
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $_SESSION['config']['lang']; ?>" lang="<?php echo $_SESSION['config']['lang']; ?>">
         <?php
     }
 
@@ -1505,7 +1505,7 @@ class core_tools extends functions
         }
         ?>
         <head>
-            <title><?php  echo $title;?></title>
+            <title><?php echo $title;?></title>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
             <meta http-equiv="Content-Language" content="<?php echo $_SESSION['config']['lang'];?>" />
             <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
@@ -1538,11 +1538,11 @@ class core_tools extends functions
             . 'css/font-awesome/css/font-awesome.css'; ?>" media="screen" />
         <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
             . 'css/font-awesome/css/font-maarch.css'; ?>" media="screen" />
-        <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php'; ?>" media="screen" />
-        <!--[if lt  IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie'; ?>" media="screen" />  <![endif]-->
-        <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie7'; ?>" media="screen" />  <![endif]-->
-        <!--[if IE 8.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie8'; ?>" media="screen" />  <![endif]-->
-        <!--[if gte IE 9.0]>  <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'merged_css.php?ie9'; ?>" media="screen" />  <![endif]-->
+        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php'; ?>" media="screen" />
+        <!--[if lt  IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie'; ?>" media="screen" />  <![endif]-->
+        <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie7'; ?>" media="screen" />  <![endif]-->
+        <!--[if IE 8.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie8'; ?>" media="screen" />  <![endif]-->
+        <!--[if gte IE 9.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie9'; ?>" media="screen" />  <![endif]-->
         <?php
     }
 
@@ -1553,9 +1553,9 @@ class core_tools extends functions
     {
         ?>
         <!--<script type="text/javascript" >
-            var app_path = '<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=';
+            var app_path = '<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=';
         </script>-->
-        <script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>merged_js.php"></script>
+        <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>merged_js.php"></script>
         <?php
 
     }
@@ -1917,7 +1917,7 @@ class core_tools extends functions
                 {
                     $_SESSION['error'] = _SERVICE.' '._UNKNOWN.' : '.$id_service;
                     ?>
-                    <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+                    <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';</script>
                     <?php
                     exit();
                 }
@@ -1951,7 +1951,7 @@ class core_tools extends functions
             {
                 $_SESSION['error'] = _ADMIN_SERVICE.' '._UNKNOWN;
             ?>
-                <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+                <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';</script>
                 <?php
                 exit();
             }
@@ -1969,7 +1969,7 @@ class core_tools extends functions
                     $label = $this->retrieve_label_service($id_service);
                     $_SESSION['error'] = _NO_RIGHTS_ON.' : '.$label;
                     ?>
-                    <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+                    <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';</script>
                     <?php
                     exit();
                 }
@@ -2019,7 +2019,7 @@ class core_tools extends functions
                 {
                     $_SESSION['error'] = _SERVICE.' '._UNKNOWN.' : '.$id_service;
                 ?>
-                    <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+                    <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';</script>
                     <?php
                     exit();
 
@@ -2054,7 +2054,7 @@ class core_tools extends functions
             {
                 $_SESSION['error'] = _SERVICE.' '._UNKNOWN.' : '.$id_service;
             ?>
-                <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+                <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';</script>
                 <?php
                 exit();
 
@@ -2073,7 +2073,7 @@ class core_tools extends functions
                     $label = $this->retrieve_label_service($id_service);
                     $_SESSION['error'] = _NO_RIGHTS_ON.' : '.$label;
                     ?>
-                    <script type="text/javascript" >window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+                    <script type="text/javascript" >window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';</script>
                     <?php
                     exit();
                 }
@@ -2249,7 +2249,7 @@ class core_tools extends functions
         }
         ?>
         <head>
-            <title><?php  echo $title;?></title>
+            <title><?php echo $title;?></title>
             <meta name="apple-mobile-web-app-capable" content="yes">
             <meta name="apple-touch-fullscreen" content="yes">
             <link rel="apple-touch-icon" href="img/board.png">
@@ -2261,11 +2261,11 @@ class core_tools extends functions
             if($load_js) {
                 //$this->load_js();
                 ?>
-                <script type="application/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>smartphone/js/maarch_functions.js"></script>
-                <script type="application/x-javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>smartphone/js/iui/iui.js"></script>
-                <script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>smartphone/js/iscroll.js?v3.7.1"></script>
-                <script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>js/prototype.js"></script>
-                <script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>js/scriptaculous.js"></script>
+                <script type="application/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>smartphone/js/maarch_functions.js"></script>
+                <script type="application/x-javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>smartphone/js/iui/iui.js"></script>
+                <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>smartphone/js/iscroll.js?v3.7.1"></script>
+                <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>js/prototype.js"></script>
+                <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>js/scriptaculous.js"></script>
                 <?php
             }
             ?>
@@ -2280,10 +2280,10 @@ class core_tools extends functions
     {
         ?>
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
-        <!--<link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'smartphone/css/style.css'; ?>" media="screen" />-->
-        <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'smartphone/css/iui-panel-list.css'; ?>" media="screen" />
-        <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/iui.css'; ?>" media="screen" />
-        <link rel="stylesheet" type="text/css" href="<?php  echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/t/maarch/maarch-theme.css'; ?>" media="screen" />
+        <!--<link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/style.css'; ?>" media="screen" />-->
+        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/iui-panel-list.css'; ?>" media="screen" />
+        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/iui.css'; ?>" media="screen" />
+        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/t/maarch/maarch-theme.css'; ?>" media="screen" />
         <?php
     }
 }

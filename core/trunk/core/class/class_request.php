@@ -111,26 +111,6 @@ class request extends dbquery
 
         if($add_security)
         {
-/*
-            for($i=0; $i < count($_SESSION['user']['security']); $i++)
-            {
-                if(isset($_SESSION['user']['security'][$i]['table']) && isset($_SESSION['user']['security'][$i]['coll_id']))
-                {
-                    if(preg_match('/'.$_SESSION['user']['security'][$i]['table'].'/',$table_string) || preg_match('/'.$_SESSION['user']['security'][$i]['view'].'/',$table_string) )
-                    {
-                        if(empty($where_string))
-                        {
-                            $where_string = " where ( ".$_SESSION['user']['security'][$i]['where']." ) ";
-                        }
-                        else
-                        {
-                            $where_string = ''.$where_string." and ( ".$_SESSION['user']['security'][$i]['where']." ) ";
-                        }
-                        break;
-                    }
-                }
-            }
-*/
             foreach(array_keys($_SESSION['user']['security']) as $coll)
             {
                 if(isset($_SESSION['user']['security'][$coll]['DOC']['table']))
@@ -181,7 +161,13 @@ class request extends dbquery
             {
                 if (!is_int($resval))
                 {
-                    array_push($temp,array('column'=>$resval,'value'=>$line[$resval]));
+                    array_push(
+                        $temp,
+                        array(
+                            'column'=>$resval,
+                            'value'=>functions::xssafe($line[$resval]),
+                        )
+                    );
                 }
             }
             array_push($result,$temp);

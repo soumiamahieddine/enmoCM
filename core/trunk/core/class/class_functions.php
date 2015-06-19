@@ -517,8 +517,8 @@ class functions
             if(bar != null)
             {
                 var link1 = document.createElement("a");
-                link1.href='<?php  echo $_SESSION['location_bar']['level1']['path'];?>';
-                var label1 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level1']['label'];?>");
+                link1.href='<?php echo $_SESSION['location_bar']['level1']['path'];?>';
+                var label1 = document.createTextNode("<?php echo $_SESSION['location_bar']['level1']['label'];?>");
                 link1.appendChild(label1);
                 bar.appendChild(link1);
             }
@@ -533,11 +533,11 @@ class functions
                     if(bar != null)
                     {
                         var link1 = document.createElement("a");
-                        link1.href='<?php  echo $_SESSION['location_bar']['level1']['path'];?>';
-                        var label1 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level1']['label'];?>");
+                        link1.href='<?php echo $_SESSION['location_bar']['level1']['path'];?>';
+                        var label1 = document.createTextNode("<?php echo $_SESSION['location_bar']['level1']['label'];?>");
                         link1.appendChild(label1);
                         bar.appendChild(link1);
-                        var text1 = document.createTextNode(" > <?php  echo $_SESSION['location_bar']['level2']['label'];?>");
+                        var text1 = document.createTextNode(" > <?php echo $_SESSION['location_bar']['level2']['label'];?>");
                         bar.appendChild(text1);
                     }
                 </script><?php
@@ -551,20 +551,20 @@ class functions
                         if(bar != null)
                         {
                             var link1 = document.createElement("a");
-                            //link1.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level1']['path']);?>';
-                            link1.href='<?php  echo $_SESSION['location_bar']['level1']['path'];?>';
-                            var label1 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level1']['label'];?>");
+                            //link1.href='<?php echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level1']['path']);?>';
+                            link1.href='<?php echo $_SESSION['location_bar']['level1']['path'];?>';
+                            var label1 = document.createTextNode("<?php echo $_SESSION['location_bar']['level1']['label'];?>");
                             link1.appendChild(label1);
                             bar.appendChild(link1);
                             var text1 = document.createTextNode(" > ");
                             bar.appendChild(text1);
                             var link2 = document.createElement("a");
-                            //link2.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level2']['path']);?>';
-                            link2.href='<?php  echo $_SESSION['location_bar']['level2']['path'];?>';
-                            var label2 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level2']['label'];?>");
+                            //link2.href='<?php echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level2']['path']);?>';
+                            link2.href='<?php echo $_SESSION['location_bar']['level2']['path'];?>';
+                            var label2 = document.createTextNode("<?php echo $_SESSION['location_bar']['level2']['label'];?>");
                             link2.appendChild(label2);
                             bar.appendChild(link2);
-                            var text2 = document.createTextNode(" > <?php  echo $_SESSION['location_bar']['level3']['label'];?>");
+                            var text2 = document.createTextNode(" > <?php echo $_SESSION['location_bar']['level3']['label'];?>");
                             bar.appendChild(text2);
                         }
                     </script><?php
@@ -576,28 +576,28 @@ class functions
                         if(bar != null)
                         {
                             var link1 = document.createElement("a");
-                            //link1.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level1']['path']);?>';
-                            link1.href='<?php  echo $_SESSION['location_bar']['level1']['path'];?>';
-                            var label1 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level1']['label'];?>");
+                            //link1.href='<?php echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level1']['path']);?>';
+                            link1.href='<?php echo $_SESSION['location_bar']['level1']['path'];?>';
+                            var label1 = document.createTextNode("<?php echo $_SESSION['location_bar']['level1']['label'];?>");
                             link1.appendChild(label1);
                             bar.appendChild(link1);
                             var text1 = document.createTextNode(" > ");
                             bar.appendChild(text1);
                             var link2 = document.createElement("a");
-                        //  link2.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level2']['path']);?>';
-                            link2.href='<?php  echo $_SESSION['location_bar']['level2']['path'];?>';
-                            var label2 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level2']['label'];?>");
+                        //  link2.href='<?php echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level2']['path']);?>';
+                            link2.href='<?php echo $_SESSION['location_bar']['level2']['path'];?>';
+                            var label2 = document.createTextNode("<?php echo $_SESSION['location_bar']['level2']['label'];?>");
                             link2.appendChild(label2);
                             bar.appendChild(link2);
                             var text2 = document.createTextNode(" > ");
                             bar.appendChild(text2);
                             var link3 = document.createElement("a");
-                            //link3.href='<?php  echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level3']['path']);?>';
-                            link3.href='<?php  echo $_SESSION['location_bar']['level3']['path'];?>';
-                            var label3 = document.createTextNode("<?php  echo $_SESSION['location_bar']['level3']['label'];?>");
+                            //link3.href='<?php echo preg_replace("/(&(?!amp;))/", "&amp;",$_SESSION['location_bar']['level3']['path']);?>';
+                            link3.href='<?php echo $_SESSION['location_bar']['level3']['path'];?>';
+                            var label3 = document.createTextNode("<?php echo $_SESSION['location_bar']['level3']['label'];?>");
                             link3.appendChild(label3);
                             bar.appendChild(link3);
-                            var text3 = document.createTextNode(" > <?php  echo $_SESSION['location_bar']['level4']['label'];?>");
+                            var text3 = document.createTextNode(" > <?php echo $_SESSION['location_bar']['level4']['label'];?>");
                             bar.appendChild(text3);
                         }
                     </script><?php
@@ -1312,5 +1312,28 @@ class functions
             $formattedAmount = ' ' . number_format($amount , 2 , ',' , '.' );
         }
         return $formattedAmount;
+    }
+
+    /**
+    * xss mitigation functions
+    * Return protected chars
+    * @param  $data to encode
+    * @param  $encoding ut8 by default
+    */
+    static function xssafe($data, $encoding='UTF-8')
+    {
+        if (!is_array($data)) {
+            return htmlspecialchars($data, ENT_QUOTES | ENT_HTML401, $encoding);
+        }
+    }
+
+    /**
+    * xss mitigation functions
+    * Return protected chars
+    * @param  $data to encode
+    */
+    static function xecho($data)
+    {
+       echo functions::xssafe($data);
     }
 }
