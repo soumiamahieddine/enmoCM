@@ -236,7 +236,7 @@ if (trim($userId) == $_SESSION['user']['UserId']) {
 echo $error;
 $error = '';
 ?></div>
-<h2 class="tit" style="padding:10px;"><?php  echo _NOTES;?> </h2>
+<h2 class="tit" style="padding:10px;"><?php echo _NOTES;?> </h2>
     <h2 class="sstit" style="padding:10px;"><?php
 echo _NOTES . " " . _OF . " " . $user . " (" . $date . ") ";
 ?></h2>
@@ -257,7 +257,7 @@ if (! $canModify) {
 echo $text;
 ?></textarea>
 
-        <input type="hidden" name="id" id="id" value="<?php  echo $sId; ?>"/>
+        <input type="hidden" name="id" id="id" value="<?php echo $sId; ?>"/>
         <input type="hidden" name="identifier" id="identifier" value="<?php
 echo $identifier;
 ?>"/>
