@@ -156,11 +156,11 @@ class types extends dbquery
             </select>
             </p>
             <p>
-                <label for="collection"><?php  echo _COLLECTION;?> : </label>
+                <label for="collection"><?php echo _COLLECTION;?> : </label>
                 <select name="collection" id="collection" onchange="get_opt_index('<?php
             echo $_SESSION['config']['businessappurl'];
             ?>index.php?display=true&page=get_index', this.options[this.options.selectedIndex].value);">
-                    <option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>
+                    <option value="" ><?php echo _CHOOSE_COLLECTION;?></option>
             <?php
             for ($i = 0; $i < count($arrayColl); $i ++) {
                 ?>
@@ -172,7 +172,7 @@ class types extends dbquery
                 ) {
                     echo 'selected="selected"';
                 }
-                ?> ><?php  echo $arrayColl[$i]['label'];?></option>
+                ?> ><?php echo $arrayColl[$i]['label'];?></option>
                 <?php
             }
              ?>

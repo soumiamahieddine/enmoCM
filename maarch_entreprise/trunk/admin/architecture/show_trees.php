@@ -68,9 +68,9 @@ else
     	) || ! $folder_module)
     {
         ?>
-        <script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>js/prototype.js"></script>
-        <script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>js/scriptaculous.js"></script>
-        <script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>Tree.js"></script>
+        <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>js/prototype.js"></script>
+        <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>js/scriptaculous.js"></script>
+        <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>Tree.js"></script>
         <?php
         $search_customer_results = array();
         $f_level = array();
@@ -211,24 +211,24 @@ else
                     {
                             ?>
                             {
-                                'id':'<?php  echo addslashes($search_customer_results[$i]['folder_id']);?>',
-                                'txt':'<b><?php  echo addslashes($search_customer_results[$i]['folder_id']);?></b>',
+                                'id':'<?php echo addslashes($search_customer_results[$i]['folder_id']);?>',
+                                'txt':'<b><?php echo addslashes($search_customer_results[$i]['folder_id']);?></b>',
                                 'items':[
                                             <?php
                                             for($j=0;$j<count($search_customer_results[$i]['content']);$j++)
                                             {
                                                 ?>
                                                 {
-                                                    'id':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['doctypes_first_level_id']);?>',
-                                                    'txt':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['doctypes_first_level_label']);?>',
+                                                    'id':'<?php echo addslashes($search_customer_results[$i]['content'][$j]['doctypes_first_level_id']);?>',
+                                                    'txt':'<?php echo addslashes($search_customer_results[$i]['content'][$j]['doctypes_first_level_label']);?>',
                                                     'items':[
                                                                 <?php
                                                                 for($k=0;$k<count($search_customer_results[$i]['content'][$j]['second_level']);$k++)
                                                                 {
                                                                     ?>
                                                                     {
-                                                                        'id':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_id']);?>',
-                                                                        'txt':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_label']);?>',
+                                                                        'id':'<?php echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_id']);?>',
+                                                                        'txt':'<?php echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes_second_level_label']);?>',
                                                                         'items':[
                                                                                     <?php
                                                                                     for($l=0;$l<count($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes']);$l++)
@@ -237,7 +237,7 @@ else
                                                                                         {
                                                                                             <?php
                                                                                             ?>
-                                                                                            'txt':'<span style="font-style:italic;"><small><small><a href="#" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=types_up&id=<?php echo $search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id'];?>\');"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']);?></a></small></small></span>',
+                                                                                            'txt':'<span style="font-style:italic;"><small><small><a href="#" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=types_up&id=<?php echo $search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id'];?>\');"><?php echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']);?></a></small></small></span>',
                                                                                             'img':'empty.gif'
                                                                                         }
                                                                                         <?php
@@ -269,12 +269,12 @@ else
                             ];
                 tree = new TafelTree('trees_div', struct, {
                     'generate' : true,
-                    'imgBase' : '<?php  echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>imgs/',
+                    'imgBase' : '<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>imgs/',
                     'defaultImg' : 'folder.gif',
                     //'defaultImg' : 'page.gif',
                     'defaultImgOpen' : 'folderopen.gif',
                     'defaultImgClose' : 'folder.gif',
-                    'onOpenPopulate' : [funcOpen, 'get_tree_children.php?IdTree=<?php  echo $_SESSION['doctypes_chosen_tree'];?>']
+                    'onOpenPopulate' : [funcOpen, 'get_tree_children.php?IdTree=<?php echo $_SESSION['doctypes_chosen_tree'];?>']
                 });
 
                 //open all branches

@@ -45,7 +45,7 @@ if (!$return) {
 if (!$return) {
     $_SESSION['error'] = _SERVICE . ' ' . _UNKNOWN;
     ?>
-    <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';</script>
+    <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';</script>
     <?php
     exit();
 }

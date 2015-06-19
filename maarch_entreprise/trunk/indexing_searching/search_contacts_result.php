@@ -165,7 +165,7 @@ $_SESSION['current_search_query'] = $json_txt;
 if (!empty($_SESSION['error'])) {
     $_SESSION['error_search'] = '<br /><div class="error">'._MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'<br /><a href="'.$_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching">'._CLICK_HERE_TO_CORRECT.'</a></strong></div>';
     ?>
-    <script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&dir=indexing_searching';?>';</script>
+    <script  type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv_error&dir=indexing_searching';?>';</script>
     <?php
     exit();
 } else {

@@ -18,8 +18,8 @@ unset($_SESSION['location_bar']['level3']);
 unset($_SESSION['location_bar']['level4']);
 $core_tools->manage_location_bar();
 ?>
-<h1><?php  echo _NO_RIGHT;?></h1>
+<h1><?php echo _NO_RIGHT;?></h1>
 <div id="inner_content" class="clearfix">
 <br/><br/>
-<div class="error"><?php  echo _NO_RIGHT_TXT;?></div>
+<div class="error"><?php echo _NO_RIGHT_TXT;?></div>
 </div>

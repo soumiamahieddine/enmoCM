@@ -45,7 +45,7 @@ if(isset($_REQUEST['collection']) && !empty($_REQUEST['collection']) )
 	}
 	$_SESSION['m_admin']['doctypes']['COLL_ID'] = $_REQUEST['collection'];
 	?>
-    	<script  type="text/javascript">window.top.frames['choose_index'].location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&page=choose_index';?>';</script>
+    	<script  type="text/javascript">window.top.frames['choose_index'].location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&page=choose_index';?>';</script>
     <?php
 }
 ?>
@@ -54,13 +54,13 @@ if(isset($_REQUEST['collection']) && !empty($_REQUEST['collection']) )
 <input type="hidden" name="display" value="true" />
 <input type="hidden" name="page" value="choose_coll" />
   <p>
-	<label for="coll_id"><?php  echo _COLLECTION;?> : </label>
+	<label for="coll_id"><?php echo _COLLECTION;?> : </label>
 	<select name="collection" onchange="this.form.submit();">
-		<option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>
+		<option value="" ><?php echo _CHOOSE_COLLECTION;?></option>
 		<?php  for($i=0; $i<count($array_coll);$i++)
 		{
 		?>
-			<option value="<?php  echo $array_coll[$i]['id'];?>" <?php  if($_SESSION['m_admin']['doctypes']['COLL_ID'] == $array_coll[$i]['id']){ echo 'selected="selected"';}?> ><?php  echo $array_coll[$i]['label'];?></option>
+			<option value="<?php echo $array_coll[$i]['id'];?>" <?php  if($_SESSION['m_admin']['doctypes']['COLL_ID'] == $array_coll[$i]['id']){ echo 'selected="selected"';}?> ><?php echo $array_coll[$i]['label'];?></option>
 		<?php
 		}
 		?>

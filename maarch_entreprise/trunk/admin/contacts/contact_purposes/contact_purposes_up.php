@@ -344,7 +344,7 @@ if ($mode == "up") {
 	?>
 		/>
 	<br/><br/>
-	<input type="hidden" name="mode" value="<?php  echo $mode;?>"/>
+	<input type="hidden" name="mode" value="<?php echo $mode;?>"/>
 
 </form>
 

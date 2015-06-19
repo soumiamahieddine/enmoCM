@@ -894,7 +894,7 @@ class contacts_v2 extends dbquery
                         <br/>                     
                         <br/>
                         <p class="buttons">
-                            <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick="return(confirm('<?php  echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"/>
+                            <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick="return(confirm('<?php echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php echo _DEFINITIVE_ACTION; ?>'));"/>
                             <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $path_contacts;?>';" class="button" />
                         </p>
                       <?php
@@ -2082,7 +2082,7 @@ class contacts_v2 extends dbquery
                         <br/>  
                         <br/>
                     <p class="buttons">
-                        <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick="return(confirm('<?php  echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"/>
+                        <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick="return(confirm('<?php echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php echo _DEFINITIVE_ACTION; ?>'));"/>
                         <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $path;?>';" class="button" />
                     </p>
                       <?php
@@ -2127,10 +2127,10 @@ class contacts_v2 extends dbquery
                         <br/>  
                         <br/>
                         <p class="buttons">
-                            <input type="submit" value="<?php echo _MOVE;?>" name="move" class="button" onclick="return(confirm('<?php  echo _REALLY_MOVE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"/>
+                            <input type="submit" value="<?php echo _MOVE;?>" name="move" class="button" onclick="return(confirm('<?php echo _REALLY_MOVE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php echo _DEFINITIVE_ACTION; ?>'));"/>
                             
                             <?php if($nb_elements == 0){ ?>
-                                    <input type="submit" value="<?php echo _DELETE_CONTACT_ADDRESS;?>" name="delete" class="button" onclick="return(confirm('<?php  echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"/>
+                                    <input type="submit" value="<?php echo _DELETE_CONTACT_ADDRESS;?>" name="delete" class="button" onclick="return(confirm('<?php echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php echo _DEFINITIVE_ACTION; ?>'));"/>
                                 <?php }
                             ?>
 

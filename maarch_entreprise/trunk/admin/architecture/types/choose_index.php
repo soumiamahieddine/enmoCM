@@ -105,13 +105,13 @@ if(isset($_REQUEST['valid']) && isset($_SESSION['m_admin']['doctypes']['COLL_ID'
                     <table>
                         <tr>
                         	<th width='150'>
-                            	<?php  echo _FIELD;?>
+                            	<?php echo _FIELD;?>
                             </th>
                             <th align="center" width='100'>
-                            	<?php  echo _USED;?>
+                            	<?php echo _USED;?>
                             </th>
                             <th align="center" width='100'>
-                            	<?php  echo _MANDATORY;?>
+                            	<?php echo _MANDATORY;?>
                             </th>
                            <!-- <td align="center" width='100'>
                             	<?php  // echo _ITERATIVE;?>
@@ -126,7 +126,7 @@ if(isset($_REQUEST['valid']) && isset($_SESSION['m_admin']['doctypes']['COLL_ID'
 						echo "</td>";
 						echo "<td align='center'>";
 						?>
-                        <input name="field_<?php  echo $_SESSION['index'][$_SESSION['m_admin']['doctypes']['COLL_ID']][$i]['COLUMN'];?>" type="checkbox"  class="check"  value="Y"
+                        <input name="field_<?php echo $_SESSION['index'][$_SESSION['m_admin']['doctypes']['COLL_ID']][$i]['COLUMN'];?>" type="checkbox"  class="check"  value="Y"
                         <?php
                         if ($_SESSION['m_admin']['doctypes'][$_SESSION['index'][$_SESSION['m_admin']['doctypes']['COLL_ID']][$i]['COLUMN']] == '1100000000' || $_SESSION['m_admin']['doctypes'][$_SESSION['index'][$_SESSION['m_admin']['doctypes']['COLL_ID']][$i]['COLUMN']] == '1000000000')
                         {
@@ -136,7 +136,7 @@ if(isset($_REQUEST['valid']) && isset($_SESSION['m_admin']['doctypes']['COLL_ID'
                         />
 						</td>
                         <td align="center" width='100'>
-                        	<input name="mandatory_<?php  echo $_SESSION['index'][$_SESSION['m_admin']['doctypes']['COLL_ID']][$i]['COLUMN'];?>" type="checkbox"   class="check" value="Y"
+                        	<input name="mandatory_<?php echo $_SESSION['index'][$_SESSION['m_admin']['doctypes']['COLL_ID']][$i]['COLUMN'];?>" type="checkbox"   class="check" value="Y"
                             <?php
 							if ($_SESSION['m_admin']['doctypes'][$_SESSION['index'][$_SESSION['m_admin']['doctypes']['COLL_ID']][$i]['COLUMN']] == '1100000000')
 							{

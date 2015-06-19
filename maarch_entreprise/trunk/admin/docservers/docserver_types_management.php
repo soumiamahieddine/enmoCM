@@ -32,7 +32,7 @@ if ($mode == "list") {
 } elseif ($mode == "up" || $mode == "add") {
     $coreTools = new core_tools();
     $func = new functions();
-    ?><script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=docserver_types_management.js"></script>
+    ?><script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=docserver_types_management.js"></script>
     <h1><i class="fa fa-hdd-o fa-2x"></i>
         <?php
         if ($mode == "add") {
@@ -52,7 +52,7 @@ if ($mode == "list") {
                 if (count($docservers)>0) {
                     ?>
                     <div onclick="new Effect.toggle('users_list', 'blind', {delay:0.2});return false;" >
-                    &nbsp;<i class="fa fa-gears fa-2x"></i><i onmouseover="this.style.cursor='pointer';"><?php  echo _SEE_DOCSERVERS_;?></i> <i class="fa fa-arrow-right"></i>
+                    &nbsp;<i class="fa fa-gears fa-2x"></i><i onmouseover="this.style.cursor='pointer';"><?php echo _SEE_DOCSERVERS_;?></i> <i class="fa fa-arrow-right"></i>
                     <span class="lb1-details">&nbsp;</span></div>
                     <div class="desc" id="users_list" style="display:none;">
                         <div class="ref-unit">
@@ -75,10 +75,10 @@ if ($mode == "list") {
                                     $color = ' class="col"';
                                 }
                                 ?>
-                                 <tr <?php  echo $color; ?> >
-                                            <td style="width:25%;"><?php  echo $docservers[$i]->__get('docserver_id');?></td>
-                                            <td style="width:25%;"><?php  echo $docservers[$i]->__get('device_label');?></td>
-                                            <td style="width:25%;"><?php  echo $docservers[$i]->__get('docserver_location_id');?></td>
+                                 <tr <?php echo $color; ?> >
+                                            <td style="width:25%;"><?php echo $docservers[$i]->__get('docserver_id');?></td>
+                                            <td style="width:25%;"><?php echo $docservers[$i]->__get('device_label');?></td>
+                                            <td style="width:25%;"><?php echo $docservers[$i]->__get('docserver_location_id');?></td>
                                            <td ><?php
                                             if ($coreTools->test_service('admin_docservers', 'apps', false)) {?>
                                            <a class="change" href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=docservers_management_controler&amp;mode=up&amp;admin=docservers&amp;id='.$docservers[$i]->__get('docserver_id'); ?>"  title="<?php echo _GO_MANAGE_DOCSERVER;?>"><i><?php echo _GO_MANAGE_DOCSERVER;?></i></a><?php }?></td>

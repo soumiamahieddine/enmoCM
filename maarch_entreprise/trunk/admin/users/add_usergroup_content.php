@@ -66,10 +66,10 @@ unset($tab2);
 unset($tab);
 ?>
 <div class="popup_content">
-<h2 class="tit"><?php  echo _ADD_GROUP;?></h2>
+<h2 class="tit"><?php echo _ADD_GROUP;?></h2>
 <form name="chooseGroup" id="chooseGroup" method="get" action="#" class="forms">
 <p>
-    <label for="group_id"> <?php  echo _CHOOSE_GROUP_ADMIN;?>&nbsp; : &nbsp;  &nbsp; </label>
+    <label for="group_id"> <?php echo _CHOOSE_GROUP_ADMIN;?>&nbsp; : &nbsp;  &nbsp; </label>
     <select name="group_id" id="group_id" >
 <?php
 
@@ -79,7 +79,7 @@ for($j=0; $j<count($res); $j++)
     if(isset($res[$j]) && !empty($desc))
     {
 ?>
-    <option value="<?php  echo $res[$j]->__get('group_id') ?>"><?php   echo $res[$j]->__get('group_desc'); ?></option>
+    <option value="<?php echo $res[$j]->__get('group_id') ?>"><?php   echo $res[$j]->__get('group_desc'); ?></option>
 <?php
     }
 }
@@ -88,13 +88,13 @@ for($j=0; $j<count($res); $j++)
 </p>
 <br/>
 <p>
-    <label for="role"><?php  echo _ROLE;?> : </label>
+    <label for="role"><?php echo _ROLE;?> : </label>
     <input type="text"  name="role" id="role" />
 </p>
 <br/>
 <p class="buttons">
-    <input type="button" name="Submit" value="<?php  echo _VALIDATE;?>" class="button" onclick="checkGroup('chooseGroup', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=users&page=check_group';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&amp;admin=users&amp;page=manage_group';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&amp;admin=users&amp;page=ugc_form';?>');"  />
-    <input type="button" name="cancel" value="<?php  echo _CANCEL;?>" class="button"  onclick="destroyModal('add_ugc');"/>
+    <input type="button" name="Submit" value="<?php echo _VALIDATE;?>" class="button" onclick="checkGroup('chooseGroup', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=users&page=check_group';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&amp;admin=users&amp;page=manage_group';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&amp;admin=users&amp;page=ugc_form';?>');"  />
+    <input type="button" name="cancel" value="<?php echo _CANCEL;?>" class="button"  onclick="destroyModal('add_ugc');"/>
 </p>
 
 </form>

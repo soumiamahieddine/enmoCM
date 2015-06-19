@@ -48,7 +48,7 @@ usort($_SESSION['m_admin']['groups']['security'], "cmp");
 $func = new functions();
 ?>
 <div class="block" >
-<h2 class="tit"><small><?php  echo _MANAGE_RIGHTS;?> : </small></h2>
+<h2 class="tit"><small><?php echo _MANAGE_RIGHTS;?> : </small></h2>
 <form name="security_form" id="security_form" method="get" >
 <input type="hidden" name="display" value="true" />
 <input type="hidden" name="admin" value="groups" />
@@ -73,7 +73,7 @@ $func = new functions();
                         <td>
                             <div align="left" id="access_<?php echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID'];?>">
                                 <div style="float:left;">
-                                    <input type="checkbox"  class="check" name="security[]" value="<?php  echo $i; ?>" />
+                                    <input type="checkbox"  class="check" name="security[]" value="<?php echo $i; ?>" />
                                 </div>
                                 <div>
                                     <?php echo $func->show_string($_SESSION['m_admin']['groups']['security'][$i]['COMMENT']);?>
@@ -151,14 +151,14 @@ $func = new functions();
     if (count($_SESSION['m_admin']['groups']['security']) > 0)
     {
         ?>
-        <input type="button" name="modify_access" value="<?php  echo _MODIFY_ACCESS; ?>" class="button" onclick="modifyAccess('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&mode=up');" />
-        <input type="button" name="remove_access" value="<?php  echo _REMOVE_ACCESS; ?>" class="button" onclick="removeAccess('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=remove_access', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=groups_form');"/>
+        <input type="button" name="modify_access" value="<?php echo _MODIFY_ACCESS; ?>" class="button" onclick="modifyAccess('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&mode=up');" />
+        <input type="button" name="remove_access" value="<?php echo _REMOVE_ACCESS; ?>" class="button" onclick="removeAccess('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=remove_access', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=groups_form');"/>
         <?php
     }
         ?>
         <input type="button" name="addGrant" class="button"
-         onclick="displayModal('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&mode=add', 'add_grant', 850, 650);"
-        value="<?php  echo _ADD_GRANT; ?>" />
+         onclick="displayModal('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&admin=groups&page=add_grant&mode=add', 'add_grant', 850, 650);"
+        value="<?php echo _ADD_GRANT; ?>" />
     <br/><br/>
 </form>
 </div>

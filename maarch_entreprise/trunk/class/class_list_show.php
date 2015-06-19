@@ -760,22 +760,22 @@ class list_show extends functions
         <table width="100%" border="0" cellpadding="0" cellspacing="0" class="forms" summary="">
           <tr>
             <td >
-                <strong><?php  echo $alpha_list_text; ?></strong> :
+                <strong><?php echo $alpha_list_text; ?></strong> :
                 <?php  for($i=ord('A'); $i <= ord('Z');$i++)
                 {
                     ?>
-                    <a  href="<?php  echo $link;?>&amp;<?php echo $whatinput ;?>=<?php  echo chr($i);?>"><?php  echo chr($i);?></a>
+                    <a  href="<?php echo $link;?>&amp;<?php echo $whatinput ;?>=<?php echo chr($i);?>"><?php echo chr($i);?></a>
                     <?php
                 }
                 ?>
-                - <a href="<?php  echo $link;?>&amp;<?php echo $whatinput ;?>="><?php  echo $all_text; ?></a>
+                - <a href="<?php echo $link;?>&amp;<?php echo $whatinput ;?>="><?php echo $all_text; ?></a>
             </td>
             <td  align="right">
             <?php
             if($show_searchbox)
             {
                 ?>
-                <form action="<?php  echo $link;?>" method="post" id="frmletters">
+                <form action="<?php echo $link;?>" method="post" id="frmletters">
                     <div>
                     <input name="<?php echo $whatinput ;?>" id="<?php echo $whatinput ;?>" type="text" size="15"/>
                     <?php
@@ -786,16 +786,16 @@ class list_show extends functions
                         <div id="<?php echo $whatListinput ;?>" class="autocomplete"></div>
                         <script type="text/javascript">
                         <?php if ($autoCompletionArray2['searchBoxAutoCompletionUpdate']) { ?>
-                                launch_autocompleter_update('<?php  echo $autoCompletionArray2['list_script_url'];?>', '<?php echo $whatinput ;?>', '<?php echo $whatListinput ;?>', '<?php  echo $autoCompletionArray2['number_to_begin'];?>', 'selectedObject')
+                                launch_autocompleter_update('<?php echo $autoCompletionArray2['list_script_url'];?>', '<?php echo $whatinput ;?>', '<?php echo $whatListinput ;?>', '<?php echo $autoCompletionArray2['number_to_begin'];?>', 'selectedObject')
                             <?php } else { ?>
-                                initList('<?php echo $whatinput ;?>', '<?php echo $whatListinput ;?>', '<?php  echo $autoCompletionArray2['list_script_url'];?>', 'what', '<?php  echo $autoCompletionArray2['number_to_begin'];?>');
+                                initList('<?php echo $whatinput ;?>', '<?php echo $whatListinput ;?>', '<?php echo $autoCompletionArray2['list_script_url'];?>', 'what', '<?php echo $autoCompletionArray2['number_to_begin'];?>');
                             <?php } ?>
                         </script>
                         <input type="hidden" name="selectedObject" id="selectedObject" />
                         <?php
                     }
                     ?>
-                    <input name="Submit" class="button" type="submit" value="<?php  echo $button_text;?>"/>
+                    <input name="Submit" class="button" type="submit" value="<?php echo $button_text;?>"/>
                 </div>
                 </form>
                 <?php
@@ -1054,10 +1054,10 @@ class list_show extends functions
                     if($listshow[$count_column]==true)
                     {
                     ?>
-                        <th <?php if(isset($result[0][$count_column]['size'])){?>style="width:<?php echo $result[0][$count_column]['size'];?>%;"<?php } if(isset($result[0][$count_column]['valign'])){?> valign="<?php echo $result[0][$count_column]['valign'];?>"<?php } if(isset($result[0][$count_column]['label_align'])){?> align="<?php  echo $result[0][$count_column]['label_align'];?>"<?php } ?>
-                         ><span>&nbsp;<?php  echo $listcolumn[$count_column]?>
+                        <th <?php if(isset($result[0][$count_column]['size'])){?>style="width:<?php echo $result[0][$count_column]['size'];?>%;"<?php } if(isset($result[0][$count_column]['valign'])){?> valign="<?php echo $result[0][$count_column]['valign'];?>"<?php } if(isset($result[0][$count_column]['label_align'])){?> align="<?php echo $result[0][$count_column]['label_align'];?>"<?php } ?>
+                         ><span>&nbsp;<?php echo $listcolumn[$count_column]?>
                          <?php  if($bool_order && !empty($ordercol[$count_column]))
-                        { ?> <br/> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=desc&amp;order_field=<?php  echo $result['0'][$count_column]['column'];?>" title="<?php  echo _DESC_SORT;?>"><i class="fa fa-angle-down fa-2x" title="<?php  echo _DESC_SORT;?>" ></i> </a> <a href="<?php  echo $link; ?>&amp;start=<?php  echo $start; ?>&amp;order=asc&amp;order_field=<?php  echo $result['0'][$count_column]['column'];?>" title="<?php  echo _ASC_SORT;?>"> <i class="fa fa-angle-up fa-2x" title="<?php  echo _ASC_SORT;?>" ></i></a> <?php  }
+                        { ?> <br/> <a href="<?php echo $link; ?>&amp;start=<?php echo $start; ?>&amp;order=desc&amp;order_field=<?php echo $result['0'][$count_column]['column'];?>" title="<?php echo _DESC_SORT;?>"><i class="fa fa-angle-down fa-2x" title="<?php echo _DESC_SORT;?>" ></i> </a> <a href="<?php echo $link; ?>&amp;start=<?php echo $start; ?>&amp;order=asc&amp;order_field=<?php echo $result['0'][$count_column]['column'];?>" title="<?php echo _ASC_SORT;?>"> <i class="fa fa-angle-up fa-2x" title="<?php echo _ASC_SORT;?>" ></i></a> <?php  }
 
                         ?></span></th>
                         <?php
@@ -1094,13 +1094,13 @@ class list_show extends functions
                     <tr>
                         <td colspan="9" class="price">
                             <!--<span class="add clearfix">
-                                <a href="<?php  echo $path_add.$param_comp;?>">
+                                <a href="<?php echo $path_add.$param_comp;?>">
                                     <span>
-                                        <?php  echo $label_add;?>
+                                        <?php echo $label_add;?>
                                     </span>
                                 </a>
                             </span>-->
-                            <a href="<?php  echo $path_add.$param_comp;?>">
+                            <a href="<?php echo $path_add.$param_comp;?>">
                                 <i class="fa fa-plus-square fa-3x" title="<?php echo $label_add;?>"></i>
                             </a>
                         </td>
@@ -1197,7 +1197,7 @@ class list_show extends functions
                 $color = ' class="col"';
             }
             ?>
-            <tr <?php  echo $color; ?>>
+            <tr <?php echo $color; ?>>
                     <?php
                     $enabled = "";
                     if(isset($page_name) && $page_name == "users")
@@ -1215,7 +1215,7 @@ class list_show extends functions
                         if(isset($result[$theline][$count_column]['show']) && $result[$theline][$count_column]['show']==true)
                         {
                     ?>
-                           <td style="width:<?php  echo $result[$theline][$count_column]['size'];?>%;" align="<?php  echo $result[$theline][$count_column]['align'];?>">
+                           <td style="width:<?php echo $result[$theline][$count_column]['size'];?>%;" align="<?php echo $result[$theline][$count_column]['align'];?>">
 
                             <?php
                                 if($result[$theline][$count_column]['column'] == "enabled")
@@ -1346,8 +1346,8 @@ class list_show extends functions
                                 {
                                     $path_auth = preg_replace("/(&(?!amp;))/", "&amp;", $path_auth);
                             ?>
-                                <a href="<?php  echo $path_auth.$param_comp;?>" class="actionList" onclick="return(confirm('<?php  echo _REALLY_AUTHORIZE." "; if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
-                                 else { echo $admin_id; } ?> ?'));"><i class="fa fa-check fa-2x" title="<?php  echo _AUTHORIZE;?>"></i></a>
+                                <a href="<?php echo $path_auth.$param_comp;?>" class="actionList" onclick="return(confirm('<?php echo _REALLY_AUTHORIZE." "; if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
+                                 else { echo $admin_id; } ?> ?'));"><i class="fa fa-check fa-2x" title="<?php echo _AUTHORIZE;?>"></i></a>
                                 <?php
                                 }
                             }
@@ -1377,7 +1377,7 @@ class list_show extends functions
                                 {
                                     $path_ban = preg_replace("/(&(?!amp;))/", "&amp;", $path_ban);
                                 ?>
-                            <a href="<?php  echo $path_ban.$param_comp; ?>" class="actionList" onclick="return(confirm('<?php  echo _REALLY_SUSPEND." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} else { echo $admin_id; } ?> ?'));"><i class="fa fa-pause fa-2x" title="<?php  echo _SUSPEND;?>"></i></a><?php  }
+                            <a href="<?php echo $path_ban.$param_comp; ?>" class="actionList" onclick="return(confirm('<?php echo _REALLY_SUSPEND." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} else { echo $admin_id; } ?> ?'));"><i class="fa fa-pause fa-2x" title="<?php echo _SUSPEND;?>"></i></a><?php  }
                                 }
                             }
                             ?>
@@ -1423,9 +1423,9 @@ class list_show extends functions
                         {
                             $path_del = preg_replace("/(&(?!amp;))/", "&amp;", $path_del);
                         ?>
-                            <a href="<?php  echo $path_del.$param_comp;?>"  class="actionList"
-                        onclick="return(confirm('<?php  echo _REALLY_DELETE." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
-                                 else { echo $admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"><i class="fa fa-remove fa-2x" title="<?php  echo _DELETE;?>"></i></a>
+                            <a href="<?php echo $path_del.$param_comp;?>"  class="actionList"
+                        onclick="return(confirm('<?php echo _REALLY_DELETE." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
+                                 else { echo $admin_id; }?> ?\n\r\n\r<?php echo _DEFINITIVE_ACTION; ?>'));"><i class="fa fa-remove fa-2x" title="<?php echo _DELETE;?>"></i></a>
                         <?php
                         }
                     }
@@ -1473,13 +1473,13 @@ class list_show extends functions
                 $path_del2 = preg_replace("/(&(?!amp;))/", "&amp;", $path_del2);
                         ?>
                         <td class="action">
-                        <a  href="javascript://" class="actionList" onclick="window.open('<?php  echo $path_up2;?>','','height=<?php echo $height;?>, width=<?php echo $width;?>,scrollbars=yes,resizable=yes');" ><i class="fa fa-edit fa-2x" title="<?php  echo _MODIFY;?>"></i></a>
+                        <a  href="javascript://" class="actionList" onclick="window.open('<?php echo $path_up2;?>','','height=<?php echo $height;?>, width=<?php echo $width;?>,scrollbars=yes,resizable=yes');" ><i class="fa fa-edit fa-2x" title="<?php echo _MODIFY;?>"></i></a>
                     </td>
 
                     <td class="action" >
-                        <a href="<?php  echo $path_del2.$param_comp;?>" class="actionList"
-                    onclick="return(confirm('<?php  echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
-                             else { echo " ".$admin_id; }?> ?\n\r\n\r<?php  echo _DEFINITIVE_ACTION; ?>'));"><i class="fa fa-remove fa-2x" title="<?php  echo _DELETE;?>"></i></a>
+                        <a href="<?php echo $path_del2.$param_comp;?>" class="actionList"
+                    onclick="return(confirm('<?php echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
+                             else { echo " ".$admin_id; }?> ?\n\r\n\r<?php echo _DEFINITIVE_ACTION; ?>'));"><i class="fa fa-remove fa-2x" title="<?php echo _DELETE;?>"></i></a>
                     </td>
                     <?php  } ?>
               </tr>

@@ -213,7 +213,7 @@ if ($mode == "up") {
 $core->load_header($title);
 $time = $core->get_session_time_expire();
 ?>
-<body onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
+<body onload="setTimeout(window.close, <?php echo $time;?>*60*1000);">
 
 <div class="error">
 <?php  
@@ -238,7 +238,7 @@ echo $_SESSION['config']['businessappurl'];
 if ($mode == "up") { 
 	?>
 	<p>
-    	<label><?php  echo _ID.' '._SUBFOLDER;?>	</label>
+    	<label><?php echo _ID.' '._SUBFOLDER;?>	</label>
 		<input type="text" name="ID_sd"  value="<?php echo $id; ?>" readonly="readonly" class="readonly" />
 	</p>
     <p>&nbsp;</p>
@@ -246,13 +246,13 @@ if ($mode == "up") {
 } 
 ?>
 	<p>
-    	<label><?php  echo _DESC.' '._SUBFOLDER;?></label>
-		<input type="text" name="desc_sd" value="<?php  echo $desc; ?>" />
+    	<label><?php echo _DESC.' '._SUBFOLDER;?></label>
+		<input type="text" name="desc_sd" value="<?php echo $desc; ?>" />
 	</p>
     <p>&nbsp;</p>
     <p>
-    	<label><?php  echo _CSS_STYLE;?></label>
-		<!-- <input type="text" name="css_style" id="css_style" value="<?php  echo $cssStyle; ?>" /> -->
+    	<label><?php echo _CSS_STYLE;?></label>
+		<!-- <input type="text" name="css_style" id="css_style" value="<?php echo $cssStyle; ?>" /> -->
         <select name="css_style" id="css_style">
             <option value=""><?php echo _CHOOSE_STYLE; ?></option>
             <?php
@@ -268,9 +268,9 @@ if ($mode == "up") {
 	</p>
     <p>&nbsp;</p>
 	<p>
-		<label><?php  echo _ATTACH_STRUCTURE;?></label>
+		<label><?php echo _ATTACH_STRUCTURE;?></label>
 		<select name="structure" >
-			<option value=""><?php  echo _CHOOSE_STRUCTURE;?></option>
+			<option value=""><?php echo _CHOOSE_STRUCTURE;?></option>
 			<?php 	
 				for ($i = 0; $i < count($_SESSION['m_admin']['structures']); $i ++) {
 					?>
@@ -297,7 +297,7 @@ echo _VALIDATE;
 echo _CANCEL;
 ?>" onclick="self.close();" />
     </p>
-<input type="hidden" name="mode" value="<?php  echo $mode;?>"/>
+<input type="hidden" name="mode" value="<?php echo $mode;?>"/>
 </form>
 </div>
 <div class="block_end">&nbsp;</div>

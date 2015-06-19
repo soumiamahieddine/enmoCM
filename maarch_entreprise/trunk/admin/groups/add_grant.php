@@ -101,16 +101,16 @@ else
 <td>
 <div class="popup_content">
 <form name="addGrantForm" id="addGrantForm" method="post" action="#" class="forms">
-    <input type="hidden"  id="mode" value="<?php  echo $mode;?>" />
+    <input type="hidden"  id="mode" value="<?php echo $mode;?>" />
     <p>
-        <label><?php  echo _COLLECTION;?> :</label>
+        <label><?php echo _COLLECTION;?> :</label>
         <select name="coll_id" id="coll_id" >
-            <option value=""><?php  echo _CHOOSE_COLLECTION;?></option>
+            <option value=""><?php echo _CHOOSE_COLLECTION;?></option>
             <?php
                 for($i=0; $i < count($_SESSION['collections']); $i++)
                 {
                     ?>
-                    <option value="<?php  echo $_SESSION['collections'][$i]['id']; ?>" <?php  if ($coll_id == $_SESSION['collections'][$i]['id']) {echo 'selected="selected"'; }?>><?php  echo $_SESSION['collections'][$i]['label']; ?></option>
+                    <option value="<?php echo $_SESSION['collections'][$i]['id']; ?>" <?php  if ($coll_id == $_SESSION['collections'][$i]['id']) {echo 'selected="selected"'; }?>><?php echo $_SESSION['collections'][$i]['label']; ?></option>
                     <?php
                 }
                 ?>
@@ -119,8 +119,8 @@ else
     </p>
     <br/>
     <p>
-        <label><?php  echo _DESC;?> : </label>
-        <input type="text" name="comment" id="comment" value="<?php  echo $comment;?>" />
+        <label><?php echo _DESC;?> : </label>
+        <input type="text" name="comment" id="comment" value="<?php echo $comment;?>" />
         <span class="red_asterisk" ><i class="fa fa-star"></i></span>
     </p>
     <br/>
@@ -139,8 +139,8 @@ else
     </p>
     <br/>
     <p>
-        <label><?php  echo _WHERE_CLAUSE;?> :</label><br/>
-        <textarea rows="6" style="width:80%" name="where" id="where" /><?php  echo $clause;?></textarea>
+        <label><?php echo _WHERE_CLAUSE;?> :</label><br/>
+        <textarea rows="6" style="width:80%" name="where" id="where" /><?php echo $clause;?></textarea>
         <span class="red_asterisk" ><i class="fa fa-star"></i></span>
     </p>
     <br/>
@@ -171,8 +171,8 @@ else
     </p>
     <br/>
     <p class="buttons">
-        <input type="button" name="Submit" value="<?php  echo _VALIDATE;?>" class="button" onclick="checkAccess('addGrantForm', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=check_access';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=manage_access';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=groups_form';?>');"  />
-        <input type="button" name="cancel" value="<?php  echo _CANCEL;?>" class="button"  onclick="destroyModal('add_grant');"/>
+        <input type="button" name="Submit" value="<?php echo _VALIDATE;?>" class="button" onclick="checkAccess('addGrantForm', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=check_access';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=manage_access';?>', '<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=groups&page=groups_form';?>');"  />
+        <input type="button" name="cancel" value="<?php echo _CANCEL;?>" class="button"  onclick="destroyModal('add_grant');"/>
     </p>
 
 </form>

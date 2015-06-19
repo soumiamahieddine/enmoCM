@@ -98,7 +98,7 @@ while($result=$db->fetch_array()){
         if($j%2){
 
             $tab[$i][$x]['column']=$key; 
-            $tab[$i][$x]['value']=$value;
+            $tab[$i][$x]['value']=functions::xssafe($value);
             $x++;
         }
         $j++;

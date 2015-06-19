@@ -51,13 +51,13 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 unset($_SESSION['m_admin']);
 ?>
 
-<h1><i class="fa fa-code-fork fa-2x"></i> <?php  echo _VIEW_TREE_CONTACTS;?></h1>
+<h1><i class="fa fa-code-fork fa-2x"></i> <?php echo _VIEW_TREE_CONTACTS;?></h1>
 <div id="inner_content" class="clearfix">
 	<div class="block">
     <table width="100%" border="0">
         <tr>
             <td>
-                <iframe name="show_trees" id="show_trees" width="900px" height="650" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&page=show_tree_contacts";?>"></iframe>
+                <iframe name="show_trees" id="show_trees" width="900px" height="650" frameborder="0" scrolling="auto" src="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&page=show_tree_contacts";?>"></iframe>
             </td>
         </tr>
     </table>

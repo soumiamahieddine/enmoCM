@@ -212,14 +212,14 @@ class class_users extends dbquery
     {
         $core = new core_tools();
         ?>
-        <h1><i class="fa fa-user fa-2x" title=""></i> <?php  echo _MY_INFO; ?></h1>
+        <h1><i class="fa fa-user fa-2x" title=""></i> <?php echo _MY_INFO; ?></h1>
 
         <div id="inner_content" class="clearfix">
             <div id="user_box" style="float:right;width:17%;">
                 <div class="block" style="height:400px;">
                          <?php if($core->is_module_loaded("entities") )
                         {?>
-                         <h2 class="tit"><?php  echo _USER_ENTITIES_TITLE;?> : </h2>
+                         <h2 class="tit"><?php echo _USER_ENTITIES_TITLE;?> : </h2>
                             <ul id="my_profil" style="height:280px;overflow:auto;">
                          <?php
                             $this->query("SELECT e.entity_label, ue.primary_entity FROM ".$_SESSION['tablename']['ent_users_entities']." ue, ".$_SESSION['tablename']['ent_entities']." e
@@ -247,7 +247,7 @@ class class_users extends dbquery
                      </div>
                      <div id="user_box_2" style="float:right;width:17%;">
                 <div class="block" style="height:400px;">
-                 <h2 class="tit"><?php  echo _USER_GROUPS_TITLE;?> : </h2>
+                 <h2 class="tit"><?php echo _USER_GROUPS_TITLE;?> : </h2>
                      <ul id="my_profil" style="height:280px;overflow:auto;">
                       <?php
             $this->connect();
@@ -281,48 +281,48 @@ class class_users extends dbquery
                             <input type="hidden" name="page" value="user_modif" />
                         <div class="">
                     <p>
-                        <label><?php  echo _ID; ?> : </label>
-                        <input name="UserId"  type="text" id="UserId" value="<?php  echo $_SESSION['user']['UserId']; ?>"  readonly="readonly" />
-                        <input type="hidden"  name="id" value="<?php  echo $_SESSION['user']['UserId']; ?>" />
+                        <label><?php echo _ID; ?> : </label>
+                        <input name="UserId"  type="text" id="UserId" value="<?php echo $_SESSION['user']['UserId']; ?>"  readonly="readonly" />
+                        <input type="hidden"  name="id" value="<?php echo $_SESSION['user']['UserId']; ?>" />
                     </p>
                     <p <?php if($_SESSION['config']['ldap'] == "true"){echo 'style="display:none"';} ?> >
-                        <label for="pass1"><?php  echo _PASSWORD; ?> : </label>
+                        <label for="pass1"><?php echo _PASSWORD; ?> : </label>
                         <input name="pass1"  type="password" id="pass1"  value="" />
                     </p>
                     <p <?php if($_SESSION['config']['ldap'] == "true"){echo 'style="display:none"';} ?> >
-                        <label for="pass2"><?php  echo _REENTER_PSW; ?> : </label>
+                        <label for="pass2"><?php echo _REENTER_PSW; ?> : </label>
                         <input name="pass2"  type="password" id="pass2" value="" />
                     </p>
                     <p>
-                        <label for="LastName"><?php  echo _LASTNAME; ?> : </label>
-                        <input name="LastName"   type="text" id="LastName" size="45" value="<?php  echo $this->show_string($_SESSION['user']['LastName']); ?>" />
+                        <label for="LastName"><?php echo _LASTNAME; ?> : </label>
+                        <input name="LastName"   type="text" id="LastName" size="45" value="<?php echo $this->show_string($_SESSION['user']['LastName']); ?>" />
                     </p>
                     <p>
-                        <label for="FirstName"><?php  echo _FIRSTNAME; ?> : </label>
-                        <input name="FirstName"  type="text" id="FirstName" size="45" value="<?php  echo $this->show_string($_SESSION['user']['FirstName']); ?>" />
+                        <label for="FirstName"><?php echo _FIRSTNAME; ?> : </label>
+                        <input name="FirstName"  type="text" id="FirstName" size="45" value="<?php echo $this->show_string($_SESSION['user']['FirstName']); ?>" />
                      </p>
                      <?php if(!$core->is_module_loaded("entities") )
                         {?>
                       <p>
-                        <label for="Department"><?php  echo _DEPARTMENT;?> : </label>
-                            <input name="Department" id="Department" type="text"  disabled size="45" value="<?php  echo $this->show_string($_SESSION['user']['department']); ?>" />
+                        <label for="Department"><?php echo _DEPARTMENT;?> : </label>
+                            <input name="Department" id="Department" type="text"  disabled size="45" value="<?php echo $this->show_string($_SESSION['user']['department']); ?>" />
                         </p>
                         <?php }?>
                       <p>
-                        <label for="Phone"><?php  echo _PHONE_NUMBER; ?> : </label>
-                        <input name="Phone"  type="text" id="Phone" value="<?php  echo $_SESSION['user']['Phone']; ?>" />
+                        <label for="Phone"><?php echo _PHONE_NUMBER; ?> : </label>
+                        <input name="Phone"  type="text" id="Phone" value="<?php echo $_SESSION['user']['Phone']; ?>" />
                       </p>
                      <p>
-                        <label for="Mail"><?php  echo _MAIL; ?> : </label>
-                        <input name="Mail"  type="text" id="Mail" size="45" value="<?php  echo $_SESSION['user']['Mail']; ?>" />
+                        <label for="Mail"><?php echo _MAIL; ?> : </label>
+                        <input name="Mail"  type="text" id="Mail" size="45" value="<?php echo $_SESSION['user']['Mail']; ?>" />
                       </p>
 
 					   <p>
-                        <label for="thumbprint"><?php  echo _THUMBPRINT;  ?> : </label>
-						<textarea name="thumbprint" id="thumbprint"><?php  echo $_SESSION['user']['thumbprint']; ?></textarea>
+                        <label for="thumbprint"><?php echo _THUMBPRINT;  ?> : </label>
+						<textarea name="thumbprint" id="thumbprint"><?php echo $_SESSION['user']['thumbprint']; ?></textarea>
                       </p>
 					  <p>
-                        <label for="signature"><?php  echo _SIGNATURE;  ?> : </label>
+                        <label for="signature"><?php echo _SIGNATURE;  ?> : </label>
                         <input type="file" name="signature" id="signature"/>
                         <br />
                         <br />
@@ -373,8 +373,8 @@ class class_users extends dbquery
                         </script>  
                     </p>
                     <p class="buttons">
-                            <input type="submit" name="Submit" value="<?php  echo _VALIDATE; ?>" class="button" />
-                            <input type="button" name="cancel" value="<?php  echo _CANCEL; ?>" class="button" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php';" />
+                            <input type="submit" name="Submit" value="<?php echo _VALIDATE; ?>" class="button" />
+                            <input type="button" name="cancel" value="<?php echo _CANCEL; ?>" class="button" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php';" />
                     </p>
                     </div>
 

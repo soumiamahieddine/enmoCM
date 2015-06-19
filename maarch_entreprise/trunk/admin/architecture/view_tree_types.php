@@ -64,20 +64,20 @@ else
 
 }
 ?>
-<h1><i class="fa fa-code-fork fa-2x"></i> <?php  echo _VIEW_TREE_DOCTYPES;?></h1>
+<h1><i class="fa fa-code-fork fa-2x"></i> <?php echo _VIEW_TREE_DOCTYPES;?></h1>
 <div id="inner_content" class="clearfix">
     <table width="100%" border="0">
     <?php if($admin->is_module_loaded('folder') == true)
     {?>
         <tr>
             <td>
-                <iframe name="choose_tree" id="choose_tree" width="900px" height="40px" frameborder="0" scrolling="no" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=choose_tree";?>" style="width:100%;"></iframe>
+                <iframe name="choose_tree" id="choose_tree" width="900px" height="40px" frameborder="0" scrolling="no" src="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=choose_tree";?>" style="width:100%;"></iframe>
             </td>
         </tr>
     <?php  }?>
         <tr>
             <td>
-                <iframe name="show_trees" class="block" id="show_trees" width="900px" height="600px" frameborder="0" scrolling="auto" src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=show_trees";?>" style="width:99%;"></iframe>
+                <iframe name="show_trees" class="block" id="show_trees" width="900px" height="600px" frameborder="0" scrolling="auto" src="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&admin=architecture&page=show_trees";?>" style="width:99%;"></iframe>
             </td>
         </tr>
     </table>

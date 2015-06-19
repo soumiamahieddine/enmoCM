@@ -54,9 +54,9 @@ if ($mode == "list") {
                         <table cellpadding="0" cellspacing="0" border="0" class="listingsmall" summary="">
                             <thead>
                                 <tr>
-                                    <th><?php  echo _DOCSERVER_ID;?></th>
-                                    <th ><?php  echo _DEVICE_LABEL;?></th>
-                                    <th ><?php  echo _DOCSERVER_TYPE_ID;?></th>
+                                    <th><?php echo _DOCSERVER_ID;?></th>
+                                    <th ><?php echo _DEVICE_LABEL;?></th>
+                                    <th ><?php echo _DOCSERVER_TYPE_ID;?></th>
                                 </tr>
                             </thead>
 
@@ -71,7 +71,7 @@ if ($mode == "list") {
                         $color = ' class="col"';
                     }
                     ?>
-                    <tr <?php  echo $color; ?> >
+                    <tr <?php echo $color; ?> >
                         <td style="width:25%;"><?php
                     echo $docservers[$i]->__get('docserver_id');
                     ?></td>

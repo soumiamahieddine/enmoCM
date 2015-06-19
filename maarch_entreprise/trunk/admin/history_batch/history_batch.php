@@ -234,7 +234,7 @@ for ($i = 0; $i < count($tab); $i ++) {
 $list = new list_show();
 $nb = count($tab);
 ?>
-<h1><i class="fa fa-history fa-2x"></i> <?php  echo _HISTORY_BATCH_TITLE.' : '. $nb.' '._RESULTS; ?></h1>
+<h1><i class="fa fa-history fa-2x"></i> <?php echo _HISTORY_BATCH_TITLE.' : '. $nb.' '._RESULTS; ?></h1>
 <div id="inner_content">
 <?php
 $list->admin_list(
@@ -250,14 +250,14 @@ $list->admin_list(
         <input type="hidden" name="page" value="history_batch"/>
         <input type="hidden" name="admin" value="history_batch" />
         <p>
-            <label for="module"><?php  echo _BATCH_NAME;?> :</label>
+            <label for="module"><?php echo _BATCH_NAME;?> :</label>
             <select name="module">
-                <option value=""><?php  echo _CHOOSE_BATCH;?></option>
+                <option value=""><?php echo _CHOOSE_BATCH;?></option>
                 <?php
                 for ($i = 0; $i < count($modules); $i ++)
                 {
                     ?>
-                    <option value="<?php  echo $modules[$i]['id'];?>"><?php
+                    <option value="<?php echo $modules[$i]['id'];?>"><?php
                         echo $modules[$i]['label'];?></option>
                     <?php
                 }
@@ -265,21 +265,21 @@ $list->admin_list(
             </select>
         </p>
         <p>
-            <label for="datestart"><?php  echo _SINCE;?> :</label>
+            <label for="datestart"><?php echo _SINCE;?> :</label>
             <input name="datestart" type="text" id="datestart" onclick='showCalender(this);'/>
         </p>
         <p>
-            <label for="dateend"><?php  echo _FOR;?> :</label>
+            <label for="dateend"><?php echo _FOR;?> :</label>
             <input name="dateend" type="text" id="dateend" onclick="showCalender(this);"/>
         </p>
         <p>
-            <label for="onlyerrors"><?php  echo _ONLY_ERRORS;?> :</label>
+            <label for="onlyerrors"><?php echo _ONLY_ERRORS;?> :</label>
             <?php echo _YES;?><input name="onlyerrors"  class="check" type="radio" id="onlyerrors" value="yes" checked="checked"/> &nbsp;
             <?php echo _NO;?><input name="onlyerrors"  class="check" type="radio" id="onlyerrors" value="no"/>
         </p>
         <p class="button">
-            <input type="submit" name="search" value="<?php  echo _SEARCH;?>" class="button"/>
-            <input type="button" class="button"  name="cancel" value="<?php  echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin';"/>
+            <input type="submit" name="search" value="<?php echo _SEARCH;?>" class="button"/>
+            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=admin';"/>
         </p>
     </form>
 </div>

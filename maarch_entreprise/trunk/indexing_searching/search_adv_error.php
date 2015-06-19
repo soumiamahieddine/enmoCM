@@ -67,14 +67,14 @@ elseif($mode == 'popup' || $mode == 'frame')
     <div id="container">
 
             <div class="error" id="main_error">
-                <?php  echo $_SESSION['error'];?>
+                <?php echo $_SESSION['error'];?>
             </div>
             <div class="info" id="main_info">
-                <?php  echo $_SESSION['info'];?>
+                <?php echo $_SESSION['info'];?>
             </div><?php
 }
 ?>
-<h1><i class="fa fa-search fa-2x"></i> <?php  echo _ADV_SEARCH_TITLE; ?></h1>
+<h1><i class="fa fa-search fa-2x"></i> <?php echo _ADV_SEARCH_TITLE; ?></h1>
 <div id="inner_content">
     <p>&nbsp;</p>
     <p>&nbsp;</p>
@@ -82,7 +82,7 @@ elseif($mode == 'popup' || $mode == 'frame')
     <p>&nbsp;</p>
     <p>&nbsp;</p>
     <p>&nbsp;</p>
-    <?php  echo $_SESSION['error_search'];
+    <?php echo $_SESSION['error_search'];
     $_SESSION['error_search'] = "";
     ?>
 </div>

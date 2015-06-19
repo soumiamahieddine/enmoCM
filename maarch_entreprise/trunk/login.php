@@ -120,7 +120,7 @@ if (isset($_SESSION['error'])) {
 
 ?>
 <?php $core->load_js();?>
-<body id="bodylogin" onload="session_expirate(<?php echo $time;?>, '<?php  echo $_SESSION['config']['coreurl'];?>');">
+<body id="bodylogin" onload="session_expirate(<?php echo $time;?>, '<?php echo $_SESSION['config']['coreurl'];?>');">
     <div id="loginpage">
         <p id="logo"><img src="<?php
             echo $_SESSION['config']['businessappurl'];

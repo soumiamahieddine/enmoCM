@@ -849,11 +849,11 @@ if (!empty($_SESSION['error_search'])) {
     $_SESSION['error'] = _MUST_CORRECT_ERRORS.' : <br /><br /><strong>'.$_SESSION['error_search'].'</strong>';
     if ($mode == 'normal') {
         ?>
-        <script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
+        <script  type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
         <?php
     } else {
         ?>
-        <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv&mode='.$mode;?>';</script>
+        <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv&mode='.$mode;?>';</script>
         <?php
     }
     exit();
@@ -870,13 +870,13 @@ if (isset($_REQUEST['specific_case'])
 ) {
     $page = 'list_results_mlb_frame';
     ?>
-    <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page='.$page.'&load&searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'].'&template='.$_REQUEST['template'];?>';</script>
+    <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=cases&page='.$page.'&load&searched_item='.$_REQUEST['searched_item'].'&searched_value='.$_REQUEST['searched_value'].'&template='.$_REQUEST['template'];?>';</script>
     <?php
     exit();
 }
 if(!empty($_REQUEST['baskets_clause']) && $_REQUEST['baskets_clause'] != 'false' && $_REQUEST['baskets_clause'] != 'true') {
     ?>
-    <script  type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl']."index.php?page=view_baskets&module=basket&baskets=".$_REQUEST['baskets_clause']."&origin=searching";?>';</script>
+    <script  type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?page=view_baskets&module=basket&baskets=".$_REQUEST['baskets_clause']."&origin=searching";?>';</script>
     <?php
     exit();
 }

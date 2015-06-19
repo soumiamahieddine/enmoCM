@@ -403,7 +403,7 @@ if ($folderModuleLoaded) {
     </select>
 	<br/><br/>
 	<a href="javascript:selectall($('foldertypes'));" class="choice">
-	<?php  echo _SELECT_ALL; ?></a></td>
+	<?php echo _SELECT_ALL; ?></a></td>
 	</tr>
 	<tr> <td height="10">&nbsp;</td></tr>
 		</table>
@@ -419,7 +419,7 @@ echo _VALIDATE;
 echo _CANCEL;
 ?>" onclick="self.close();" />
 <br/><br/>
-<input type="hidden" name="mode" value="<?php  echo $mode;?>"/>
+<input type="hidden" name="mode" value="<?php echo $mode;?>"/>
 </form>
 </div>
 <div class="block_end">&nbsp;</div>

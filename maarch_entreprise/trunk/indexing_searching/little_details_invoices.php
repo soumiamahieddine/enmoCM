@@ -125,7 +125,7 @@ if(isset($_POST['delete_doc']))
 {
     $is ->delete_doc( $resId, $collId);
     ?>
-        <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
+        <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=search_adv&dir=indexing_searching';?>';</script>
     <?php
     exit();
 }
@@ -186,7 +186,7 @@ if (! empty($_SESSION['error']) ) {
             <div align="center">
                 <br />
                 <br />
-                <?php  echo _NO_DOCUMENT_CORRESPOND_TO_IDENTIFIER; ?>.
+                <?php echo _NO_DOCUMENT_CORRESPOND_TO_IDENTIFIER; ?>.
                 <br />
                 <br />
                 <br />
@@ -313,20 +313,20 @@ if (! empty($_SESSION['error']) ) {
              echo $_SESSION['config']['businessappurl'];
              ?>index.php?page=details_business&dir=indexing_searching&id=<?php
              echo $resId;
-             ?>';"><b><?php  echo _DETAILS_DOC_FULL; ?> </b></a>
+             ?>';"><b><?php echo _DETAILS_DOC_FULL; ?> </b></a>
 	<?php }else{ ?>
  <a href="javascript://"  onClick="window.top.location.href='<?php
              echo $_SESSION['config']['businessappurl'];
              ?>index.php?page=details&dir=indexing_searching&id=<?php
              echo $resId;
-             ?>';"><b><?php  echo _DETAILS_DOC_FULL; ?> </b></a>
+             ?>';"><b><?php echo _DETAILS_DOC_FULL; ?> </b></a>
 	<?php } ?>
         
          <hr/>
 
          <p>
             <label><?php echo _NUM_GED." : "; ?></label>
-            <input type="text" name="resId" id="resId" value="<?php  echo $resId;?>" class="readonly" readonly="readonly" />
+            <input type="text" name="resId" id="resId" value="<?php echo $resId;?>" class="readonly" readonly="readonly" />
          </p>
          <?php
 	    $i = 0;
@@ -378,7 +378,7 @@ if (! empty($_SESSION['error']) ) {
                     echo $data[$key]['show_value'];
                     ?>" readonly="readonly" class="readonly" size="40" title="<?php
                     echo $data[$key]['show_value'];
-                    ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
+                    ?>" alt="<?php echo $data[$key]['show_value']; ?>" />
                     <?php
                 } else {
                      ?>
@@ -388,7 +388,7 @@ if (! empty($_SESSION['error']) ) {
                      echo $data[$key]['show_value'];
                      ?>" readonly="readonly" class="readonly" size="40" title="<?php
                      echo $data[$key]['show_value'];
-                     ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
+                     ?>" alt="<?php echo $data[$key]['show_value']; ?>" />
                      <?php
                 }
             } else {
@@ -400,7 +400,7 @@ if (! empty($_SESSION['error']) ) {
                     echo $data[$key]['show_value'];
                     ?>" size="40"  title="<?php
                     echo $data[$key]['show_value'];
-                    ?>" alt="<?php  echo $data[$key]['show_value']; ?>" />
+                    ?>" alt="<?php echo $data[$key]['show_value']; ?>" />
                     <?php
                 } else if ($data[$key]['field_type'] == 'date') {
                     ?>
@@ -537,7 +537,7 @@ if (! empty($_SESSION['error']) ) {
                 }
                 ?> size="40"  title="<?php
                 echo $indexes[$key]['show_value'];
-                ?>" alt="<?php  echo $indexes[$key]['show_value']; ?>"   />
+                ?>" alt="<?php echo $indexes[$key]['show_value']; ?>"   />
                 <?php
             } else {
                 ?>
@@ -574,7 +574,7 @@ if (! empty($_SESSION['error']) ) {
         if (! empty($_SESSION['error_page'])) {
             ?>
             <script type="text/javascript">
-                alert("<?php  echo $func->wash_html($_SESSION['error_page']);?>");
+                alert("<?php echo $func->wash_html($_SESSION['error_page']);?>");
                 <?php
             if (isset($_POST['delete_doc'])) {
                  ?>

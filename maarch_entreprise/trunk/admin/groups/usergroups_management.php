@@ -48,9 +48,9 @@ if ($mode == 'list') {
                         <table cellpadding="0" cellspacing="0" border="0" class="listingsmall" summary="">
                             <thead>
                                 <tr>
-                                    <th><?php  echo _LASTNAME;?></th>
-                                    <th ><?php  echo _FIRSTNAME;?></th>
-                                    <!--<th  ><?php  echo _ENTITY;?></th>-->
+                                    <th><?php echo _LASTNAME;?></th>
+                                    <th ><?php echo _FIRSTNAME;?></th>
+                                    <!--<th  ><?php echo _ENTITY;?></th>-->
                                     <th></th>
                                 </tr>
                             </thead>
@@ -66,7 +66,7 @@ if ($mode == 'list') {
                         $color = ' class="col"';
                     }
                      ?>
-                             <tr <?php  echo $color; ?> >
+                             <tr <?php echo $color; ?> >
                                        <td style="width:25%;"><?php
                                            echo $users[$i]->__get('lastname');
                                         ?></td>
@@ -111,8 +111,8 @@ if ($mode == 'list') {
                         <table cellpadding="0" cellspacing="0" border="0" class="listingsmall" summary="">
                             <thead>
                                 <tr>
-                                    <th><?php  echo _NAME;?></th>
-                                    <th ><?php  echo _DESC;?></th>
+                                    <th><?php echo _NAME;?></th>
+                                    <th ><?php echo _DESC;?></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -127,7 +127,7 @@ if ($mode == 'list') {
                         $color = ' class="col"';
                     }
                        ?>
-                             <tr <?php  echo $color; ?> >
+                             <tr <?php echo $color; ?> >
                                        <td style="width:30%;"><?php
                                        echo $baskets[$i]->__get('basket_name');
                                        ?></td>
@@ -205,7 +205,7 @@ if ($mode == 'list') {
                 <h2><table border="0" summary="">
                     <tr>
                         <td  align="left">
-                            <?php  echo _GROUP; ?> :
+                            <?php echo _GROUP; ?> :
                         </td>
                         <td align="left">
                             <?php
@@ -231,7 +231,7 @@ if ($mode == 'list') {
       	</tr>
         <tr>
            <td align="right">
-           <?php  echo _DESC; ?> :
+           <?php echo _DESC; ?> :
            </td>
            <td align="left">
             <input name="desc" id="desc" class="text" type="text" value="<?php

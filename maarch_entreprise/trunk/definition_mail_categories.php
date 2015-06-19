@@ -1113,6 +1113,18 @@ function get_general_data($coll_id, $res_id, $mode, $params = array ()) {
     if ($mode == 'minimal' && isset ($data['process_limit_date']) && !empty ($data['process_limit_date'])) {
         $data['process_limit_date_use'] = true;
     }
+    
+    //print_r($data);
+    foreach(array_keys($data) as $key) {
+        if (is_array($data[$key])) {
+            $data[$key]['value'] = functions::xssafe($data[$key]['value']);
+            $data[$key]['show_value'] = functions::xssafe($data[$key]['show_value']);
+        } else {
+            $data[$key] = functions::xssafe($data[$key]);
+        }
+        
+    }
+                        
     return $data;
 }
 

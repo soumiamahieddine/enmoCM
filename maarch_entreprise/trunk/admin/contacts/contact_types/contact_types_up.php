@@ -323,7 +323,7 @@ if ($mode == "up") {
     		?> onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types';" /><?php
     	}?>
 	<br/><br/>
-	<input type="hidden" name="mode" value="<?php  echo $mode;?>"/>
+	<input type="hidden" name="mode" value="<?php echo $mode;?>"/>
 
 </form>
 

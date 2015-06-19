@@ -258,47 +258,47 @@ for ($i=0;$i<count($tab);$i++) {
 }
 $nb =count($tab);
 ?>
-<h1><i class="fa fa-history fa-2x"> </i> <?php  echo _HISTORY_TITLE.' : '.   $nb.' '._RESULTS; ?></h1>
+<h1><i class="fa fa-history fa-2x"> </i> <?php echo _HISTORY_TITLE.' : '.   $nb.' '._RESULTS; ?></h1>
 <div id="inner_content">
 <?php
 $list->admin_list($tab, $nb, '&nbsp;', 'id','history','history','id', true, '', '', '', '', '', '', TRUE, FALSE, '', '', '', false, false);
 ?>
 <br/>
 <div id="search_hist" class="block">
-<form id ="frm_search_hist" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=history&amp;admin=history" method="post" class="form">
+<form id ="frm_search_hist" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=history&amp;admin=history" method="post" class="form">
 <div>
     <input type="hidden" name="page" value="history"/>
     <input type="hidden" name="admin" value="history" />
     <table border="0" width="99%" class="forms" summary="">
         <tr>
             <td style="width:33%;">
-                <div><label><?php  echo _ACTIONS;?> :</label>
+                <div><label><?php echo _ACTIONS;?> :</label>
                 <select name="action" id="action">
-                <option value=""><?php  echo _CHOOSE_ACTION;?></option>
+                <option value=""><?php echo _CHOOSE_ACTION;?></option>
                 <?php  
                 for ($i=0;$i<count($_SESSION['history_keywords']);$i++) {
                     ?>
-                    <option value="<?php  echo $_SESSION['history_keywords'][$i]['id'];?>" <?php if ($history_action== $_SESSION['history_keywords'][$i]['id']) {echo 'selected="selected"';}?>><?php  echo $_SESSION['history_keywords'][$i]['label'];?></option>
+                    <option value="<?php echo $_SESSION['history_keywords'][$i]['id'];?>" <?php if ($history_action== $_SESSION['history_keywords'][$i]['id']) {echo 'selected="selected"';}?>><?php echo $_SESSION['history_keywords'][$i]['label'];?></option>
                     <?php 
                 }
                 ?>
             </select></div>
             </td>
             <td style="width:33%;">
-                <div><label><?php  echo _MODULES;?> :</label>
+                <div><label><?php echo _MODULES;?> :</label>
                  <select name="module" id="module">
-                <option value=""><?php  echo _CHOOSE_MODULE;?></option>
+                <option value=""><?php echo _CHOOSE_MODULE;?></option>
                 <?php  
                 for ($i=0;$i<count($modules);$i++) {
                     ?>
-                    <option value="<?php  echo $modules[$i]['id'];?>" <?php if ($history_module== $modules[$i]['id']) {echo 'selected="selected"';}?>><?php  echo $modules[$i]['label'];?></option>
+                    <option value="<?php echo $modules[$i]['id'];?>" <?php if ($history_module== $modules[$i]['id']) {echo 'selected="selected"';}?>><?php echo $modules[$i]['label'];?></option>
                     <?php
                 }
                 ?>
                 </select></div>
             </td>
             <td style="width:33%;">
-                <div> <label><?php  echo _USER;?> :</label>
+                <div> <label><?php echo _USER;?> :</label>
                     <input type="text" name="user" id="user" value="<?php if (isset($history_user)){ echo $history_user;}?>"  /><div id="show_user" class="autocomplete"></div>
                 </div>
             </td>
@@ -312,20 +312,20 @@ $list->admin_list($tab, $nb, '&nbsp;', 'id','history','history','id', true, '', 
     </td>
     <td colspan="2">
         <p>
-        <span ><?php  echo _FOR;?> :</span> <input name="datefin" type="text" id="datefin"  onclick="showCalender(this);" value="<?php if (isset($history_datefin)){echo $history_datefin;}?>"  />
+        <span ><?php echo _FOR;?> :</span> <input name="datefin" type="text" id="datefin"  onclick="showCalender(this);" value="<?php if (isset($history_datefin)){echo $history_datefin;}?>"  />
     </p>
     </td>
     </tr>
     <tr>
         <td colspan="2" align="left">
             <p>
-            <input type="submit" name="search" value="<?php  echo _SEARCH;?>" class="button" />
-            <input type="button" class="button"  name="cancel" value="<?php  echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=admin';"/>
+            <input type="submit" name="search" value="<?php echo _SEARCH;?>" class="button" />
+            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=admin';"/>
             </p>
         </td>
         <td align="center">
             <a href="#" onclick="clear_form('frm_search_hist');$('frm_search_hist').submit();">
-            <i class="fa fa-refresh fa-2x" title="<?php  echo _CLEAR_FORM; ?>"></i>
+            <i class="fa fa-refresh fa-2x" title="<?php echo _CLEAR_FORM; ?>"></i>
             </a>
         </td>
     </tr>

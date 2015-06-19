@@ -127,10 +127,10 @@ if($mode == 'normal') {
     ?><body>
     <div id="container" style="height:auto;">
         <div class="error" id="main_error">
-                <?php  echo $_SESSION['error'];?>
+                <?php echo $_SESSION['error'];?>
         </div>
         <div class="info" id="main_info">
-            <?php  echo $_SESSION['info'];?>
+            <?php echo $_SESSION['info'];?>
         </div>
         <div id="divList"><?php
 		

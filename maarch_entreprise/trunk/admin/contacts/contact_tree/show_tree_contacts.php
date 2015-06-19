@@ -46,9 +46,9 @@ $f_level = array();
 <?php
 
 ?>
-<script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>js/prototype.js"></script>
-<script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>js/scriptaculous.js"></script>
-<script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>Tree.js"></script>
+<script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>js/prototype.js"></script>
+<script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>js/scriptaculous.js"></script>
+<script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>Tree.js"></script>
 <?php
 $search_customer_results = array();
 $f_level = array();
@@ -180,16 +180,16 @@ if (file_exists(
             {
                     ?>
                     {
-                        'id':'<?php  echo addslashes($search_customer_results[$i]['contact']);?>',
-                        'txt':'<b><?php  echo addslashes($search_customer_results[$i]['contact']);?></b>',
+                        'id':'<?php echo addslashes($search_customer_results[$i]['contact']);?>',
+                        'txt':'<b><?php echo addslashes($search_customer_results[$i]['contact']);?></b>',
                         'items':[
                                     <?php
                                     for($j=0;$j<count($search_customer_results[$i]['content']);$j++)
                                     {
                                         ?>
                                         {
-                                            'id':'<?php  echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_id']);?>',
-                                            'txt':'<a href="#" onclick="window.top.location.href=\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types_up&id=<?php echo $search_customer_results[$i]['content'][$j]['contact_type_id'];?>\'"><?php  echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_label']);?></a>',
+                                            'id':'<?php echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_id']);?>',
+                                            'txt':'<a href="#" onclick="window.top.location.href=\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types_up&id=<?php echo $search_customer_results[$i]['content'][$j]['contact_type_id'];?>\'"><?php echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_label']);?></a>',
                                             'onopenpopulate' : funcOpen,
                                             'openlink' : '<?php echo $openlink;?>',
                                             'canhavechildren' : true,
@@ -211,7 +211,7 @@ if (file_exists(
                     ];
         tree = new TafelTree('trees_div', struct, {
             'generate' : true,
-            'imgBase' : '<?php  echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>imgs/',
+            'imgBase' : '<?php echo $_SESSION['config']['businessappurl'].'tools/tafelTree/';?>imgs/',
             'defaultImg' : 'folder.gif',
             'defaultImgOpen' : 'folderopen.gif',
             'defaultImgClose' : 'folder.gif'

@@ -43,7 +43,7 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
 </h1>
 <div id="inner_content" class="clearfix">
     <div class="maarch_credits_left_box" style="height:520px;">
-        <h3><?php  echo _MAARCH_CREDITS; ?></h3>
+        <h3><?php echo _MAARCH_CREDITS; ?></h3>
         <hr/>
         <p><em>Copyright &copy; 2008-2015 Maarch SAS.</em></p>
         <p><?php echo _MAARCH_LICENCE;?> 

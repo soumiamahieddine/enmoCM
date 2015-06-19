@@ -96,10 +96,10 @@ elseif($mode == 'popup' || $mode == 'frame')
     <div id="container" style="height:auto;">
 
             <div class="error" id="main_error">
-                <?php  echo $_SESSION['error'];?>
+                <?php echo $_SESSION['error'];?>
             </div>
             <div class="info" id="main_info">
-                <?php  echo $_SESSION['info'];?>
+                <?php echo $_SESSION['info'];?>
             </div><?php
 }
 
@@ -507,7 +507,7 @@ if(isset($_REQUEST['nodetails']))
     <tr>
         <td>
             <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');">
-                <i class="fa fa-refresh fa-4x" title="<?php  echo _CLEAR_SEARCH; ?>"></i>
+                <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_SEARCH; ?>"></i>
             </a>
         </td>
         <td align="right">

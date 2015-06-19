@@ -34,7 +34,7 @@ if($mode == "list")
 }
 elseif($mode == "up" || $mode == "add")
 {  
-    ?><script type="text/javascript" src="<?php  echo $_SESSION['config']['businessappurl'];?>static.php?filename=users_management.js"></script><?php
+    ?><script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=users_management.js"></script><?php
     if($mode == "add")
     {
         echo '<h1><i class="fa fa-user fa-2x"></i> '._USER_ADDITION.'</h1>';
@@ -68,27 +68,27 @@ elseif($mode == "up" || $mode == "add")
             <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){echo $_REQUEST['what'];}?>" />
             <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){ echo $_REQUEST['start'];}?>" />
             <p>
-                <label for="user_id"><?php  echo _ID; ?> :</label>
+                <label for="user_id"><?php echo _ID; ?> :</label>
                     <?php  if($mode == "up" && isset($_SESSION['m_admin']['users']['user_id'])) { echo functions::show_string($_SESSION['m_admin']['users']['user_id']); }else{ echo '<br/>'; } ?><input name="user_id"  type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="user_id" value="<?php  if(isset($_SESSION['m_admin']['users']['user_id'])) {echo functions::show_string($_SESSION['m_admin']['users']['user_id']);} ?>" />
                     <span class="red_asterisk"><?php  if($mode != "up"){?>*<?php } ?></span>
-                    <!--<input type="hidden"  name="id" id="id" value="<?php  echo $id; ?>" />-->
+                    <!--<input type="hidden"  name="id" id="id" value="<?php echo $id; ?>" />-->
             </p>
             <p>
-                <label for="LastName"><?php  echo _LASTNAME; ?> :</label><br/>
+                <label for="LastName"><?php echo _LASTNAME; ?> :</label><br/>
                 <input name="LastName" id="LastName" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['lastname'])){echo functions::show_string($_SESSION['m_admin']['users']['lastname']);} ?>" />
                 <span class="red_asterisk"><i class="fa fa-star"></i></span>
             </p>
             <p>
-                <label for="FirstName"><?php  echo _FIRSTNAME; ?> :</label><br/>
+                <label for="FirstName"><?php echo _FIRSTNAME; ?> :</label><br/>
                 <input name="FirstName" style="width: 95%;" id="FirstName"  type="text" value="<?php if(isset($_SESSION['m_admin']['users']['firstname'])){ echo functions::show_string($_SESSION['m_admin']['users']['firstname']); }?>" />
                 <span class="red_asterisk"><i class="fa fa-star"></i></span>
             </p>
             <p>
-                <?php  echo _PHONE_NUMBER; ?> :<br/>
+                <?php echo _PHONE_NUMBER; ?> :<br/>
                 <input name="Phone" id="Phone" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['phone'])){ echo $_SESSION['m_admin']['users']['phone']; }?>" />
             </p>
             <p>
-                <label for="Mail"><?php  echo _MAIL; ?> :</label><br/>
+                <label for="Mail"><?php echo _MAIL; ?> :</label><br/>
                 <input name="Mail" id="Mail" style="width: 95%;" type="text" value="<?php if(isset($_SESSION['m_admin']['users']['mail'])){ echo $_SESSION['m_admin']['users']['mail']; }?>" />
                 <span class="red_asterisk"><i class="fa fa-star"></i></span>
             </p>
@@ -97,14 +97,14 @@ elseif($mode == "up" || $mode == "add")
 			if (isset($_SESSION['modules_loaded']['visa'])) {
 			?>
 			 <p>
-			  <label for="thumbprint"><?php  echo _THUMBPRINT;  ?> : </label><br/>
+			  <label for="thumbprint"><?php echo _THUMBPRINT;  ?> : </label><br/>
 				<textarea name="thumbprint" id="thumbprint" style="width: 95%;" ><?php 
                     if(isset($_SESSION['m_admin']['users']['thumbprint'])) { 
                         echo $_SESSION['m_admin']['users']['thumbprint']; 
                     }?></textarea>
 			  </p>
               <p>
-                <label for="signature"><?php  echo _SIGNATURE;  ?> : </label><br/>
+                <label for="signature"><?php echo _SIGNATURE;  ?> : </label><br/>
                 <input type="file" name="signature" id="signature"/>
                 <br />
                 <br />
@@ -158,7 +158,7 @@ elseif($mode == "up" || $mode == "add")
 			}
 			?>
             <p>
-                <?php  echo _LOGIN_MODE; ?>&nbsp;:<br/>
+                <?php echo _LOGIN_MODE; ?>&nbsp;:<br/>
                 <?php
                 echo '<select name="LoginMode" style="width: 95%;"  id="LoginMode">';
 
@@ -183,12 +183,12 @@ elseif($mode == "up" || $mode == "add")
                 if($mode == "up" && $_SESSION['config']['ldap'] != "true")
                 {
                     ?>
-                    <input type="button" name="reset_pwd" value="<?php  echo _RESET.' '._PASSWORD; ?>" class="button" onclick="displayModal('<?php  echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;admin=users&amp;page=psw_changed', 'pwd_changed', 40, 150);"  />
+                    <input type="button" name="reset_pwd" value="<?php echo _RESET.' '._PASSWORD; ?>" class="button" onclick="displayModal('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&amp;admin=users&amp;page=psw_changed', 'pwd_changed', 40, 150);"  />
                     <?php
                 }
                 ?><br/>
-                <input type="submit" name="user_submit" id="user_submit" value="<?php  echo _VALIDATE; ?>" class="button"/>
-                 <input type="button" class="button"  name="cancel" value="<?php  echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=users_management_controler&amp;mode=list&amp;admin=users';"/>
+                <input type="submit" name="user_submit" id="user_submit" value="<?php echo _VALIDATE; ?>" class="button"/>
+                 <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=users_management_controler&amp;mode=list&amp;admin=users';"/>
             </p>
             </div>
         </form>
