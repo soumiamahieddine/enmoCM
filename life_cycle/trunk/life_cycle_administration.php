@@ -54,25 +54,25 @@ $admin->manage_location_bar($page_path, $page_label, $page_id, $init, $level);
 unset($_SESSION['m_admin']);
 ?>
 <h1><i class="fa fa-recycle fa-2x"></i> 
-<?php  echo _ADMIN_LIFE_CYCLE_SHORT;?></h1>
+<?php echo _ADMIN_LIFE_CYCLE_SHORT;?></h1>
 <div id="inner_content" class="clearfix">
 <div class="block">
 <h2 style="text-align:center;"><?php echo _ADMIN_LIFE_CYCLE;?></h1></h2>
     <div class="admin_item" title="
-    <?php  echo _MANAGE_LC_POLICIES;?>" 
+    <?php echo _MANAGE_LC_POLICIES;?>" 
     onclick="
-    window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_policies_management_controler&mode=list&module=life_cycle';">
+    window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_policies_management_controler&mode=list&module=life_cycle';">
         <div>
                 <i class="fa fa-recycle fa-4x"></i><br />
-                <strong><?php  echo _MANAGE_LC_POLICIES;?></strong>
+                <strong><?php echo _MANAGE_LC_POLICIES;?></strong>
         </div>
     </div>
     <div class="admin_item" title="
-    <?php  echo _MANAGE_LC_CYCLES;?>" 
-    onclick="window.top.location='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_cycles_management_controler&mode=list&module=life_cycle';">
+    <?php echo _MANAGE_LC_CYCLES;?>" 
+    onclick="window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_cycles_management_controler&mode=list&module=life_cycle';">
         <div>
                 <i class="fa fa-recycle fa-4x"></i><br />
-                <strong><?php  echo _MANAGE_LC_CYCLES;?></strong>
+                <strong><?php echo _MANAGE_LC_CYCLES;?></strong>
         </div>
     </div>
     <div class="admin_item" title="
@@ -80,7 +80,7 @@ unset($_SESSION['m_admin']);
     '<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_cycle_steps_management_controler&mode=list&module=life_cycle';">
         <div>
                 <i class="fa fa-recycle fa-4x"></i><br />
-                <strong><?php  echo _MANAGE_LC_CYCLE_STEPS;?></strong>
+                <strong><?php echo _MANAGE_LC_CYCLE_STEPS;?></strong>
         </div>
     </div>
     <div class="clearfix"></div>
