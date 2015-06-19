@@ -319,16 +319,16 @@ echo $time;
 echo $_SESSION['error'];
 $_SESSION['error'] = "";
 ?></div>
-<h2 class="tit"><?php  echo _ATTACH_ANSWER;?> </h2>
+<h2 class="tit"><?php echo _ATTACH_ANSWER;?> </h2>
 
     <form enctype="multipart/form-data" method="post" name="attachement" class="forms">
     <p>
-        <label><?php  echo _TITLE;?> : </label>
+        <label><?php echo _TITLE;?> : </label>
         <input type="text" name="title" id="title" />
     </p>
     <br/>
     <p>
-        <label><em><?php  echo _PLEASE_SELECT_FILE;?> :</em></label>
+        <label><em><?php echo _PLEASE_SELECT_FILE;?> :</em></label>
         <input type="file" name="file" id="file" />
     </p>
     <br/>
