@@ -108,27 +108,27 @@ if($_SESSION['current_folder_id'] <> "" && $folder->is_folder_exists($_SESSION['
 }
 
 ?>
-<body  onload="setTimeout(window.close, <?php  echo $time;?>*60*1000);">
+<body  onload="setTimeout(window.close, <?php echo $time;?>*60*1000);">
 <br/>
 <br/>
 
 <div class="block">
-	<form name="frm1" class="physicalform" action="<?php  echo  $_SESSION['config']['businessappurl'].'index.php?display=true&module=indexing_searching&page=file_index';?>">
+	<form name="frm1" class="physicalform" action="<?php echo  $_SESSION['config']['businessappurl'].'index.php?display=true&module=indexing_searching&page=file_index';?>">
 	
-		<b><?php  echo _SELECTED_FOLDER;?></b>
+		<b><?php echo _SELECTED_FOLDER;?></b>
 		<br/>
 		<br/>
 		<p>
-			<label><?php  echo _FOLDERTYPE;?> :</label>
-			<input type="text" value="<?php  echo $folder_data['foldertype_label'];?>" name="foldertype" readonly="readonly" class="readonly"/>
+			<label><?php echo _FOLDERTYPE;?> :</label>
+			<input type="text" value="<?php echo $folder_data['foldertype_label'];?>" name="foldertype" readonly="readonly" class="readonly"/>
 		</p>
 		<p>
-			<label><?php  echo _FOLDERID;?> :</label>
-			<input type="text" value="<?php  echo $folder_data['folder_name'];?>" name="nom_view" readonly="readonly" class="readonly "/>
+			<label><?php echo _FOLDERID;?> :</label>
+			<input type="text" value="<?php echo $folder_data['folder_name'];?>" name="nom_view" readonly="readonly" class="readonly "/>
 		</p>
 		<p>
-			<label><?php  echo _FOLDERNAME;?> :</label>
-			<input type="text" value="<?php  echo $folder_data['subject'];?>" name="nom_view" readonly="readonly" class="readonly "/>
+			<label><?php echo _FOLDERNAME;?> :</label>
+			<input type="text" value="<?php echo $folder_data['subject'];?>" name="nom_view" readonly="readonly" class="readonly "/>
 		</p>
 
 	</form>
@@ -141,7 +141,7 @@ if($_SESSION['origin'] <> "qualify")
 ?>
    <!-- <hr class="select_folder" />-->
    <div class="block">
-    <b><?php  echo _SEARCH_FOLDER;?></b>
+    <b><?php echo _SEARCH_FOLDER;?></b>
     <br/>
     <br/>
 	
@@ -150,18 +150,18 @@ if($_SESSION['origin'] <> "qualify")
 	<input type="hidden" name="module" value="folder"/>
 	<input type="hidden" name="page" value="select_folder"/>
 	    <p>
-            <label><?php  echo _PROJECT." / "._MARKET;?> :</label>
+            <label><?php echo _PROJECT." / "._MARKET;?> :</label>
             <input type="text" name="project" id="project"/>
 			<!--<div id="show_project" class="autocomplete"></div>-->
         </p>
         <!--<p>
-            <label><?php  echo _MARKET;?> :</label>
+            <label><?php echo _MARKET;?> :</label>
 			<input type="text" name="market" id="market"/>
 			<div id="show_market" class="autocomplete"></div>
         </p>-->
 		<p>
 			<label>&nbsp;</label>
-			<input type="submit" name="submit2" value="<?php  echo _SEARCH_FOLDER;?>" class="button"/>
+			<input type="submit" name="submit2" value="<?php echo _SEARCH_FOLDER;?>" class="button"/>
 		</p>
     </form>
 	</div><div class="block_end">&nbsp;</div>
@@ -171,14 +171,14 @@ if($_SESSION['origin'] <> "qualify")
     {
 		?>
 		<div align="center">
-			<iframe name="result_folder" src="<?php  echo$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=result_folder';?>" frameborder="0" width="98%" height="1000" scrolling="no"></iframe>
+			<iframe name="result_folder" src="<?php echo$_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=result_folder';?>" frameborder="0" width="98%" height="1000" scrolling="no"></iframe>
 		</div>
 		<?php
     }
     else
     {
 		?>
-        <!--<div align="center"><input type="button" name="cancel" value="<?php  echo _CLOSE_WINDOW;?>" onclick="self.close();" class="button" /></div>   -->
+        <!--<div align="center"><input type="button" name="cancel" value="<?php echo _CLOSE_WINDOW;?>" onclick="self.close();" class="button" /></div>   -->
 		<?php
     }
     ?>  <?php

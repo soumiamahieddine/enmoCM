@@ -49,7 +49,7 @@ require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".
 				?>
 
 				var eleframe1 = window.top.document.getElementById('myframe');
-				eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl']?>index.php?display=true&module=physical_archive&page=select_types_for_pa';
+				eleframe1.src = '<?php echo $_SESSION['config']['businessappurl']?>index.php?display=true&module=physical_archive&page=select_types_for_pa';
 
 				<?php
 			}
@@ -57,7 +57,7 @@ require_once("modules".DIRECTORY_SEPARATOR."folder".DIRECTORY_SEPARATOR."class".
 			{
 			?>
 				var eleframe1 = window.top.frames['index'].document.getElementById('myframe');
-				eleframe1.src = '<?php  echo $_SESSION['config']['businessappurl']?>index.php?display=true&module=physical_archive&page=select_type';
+				eleframe1.src = '<?php echo $_SESSION['config']['businessappurl']?>index.php?display=true&module=physical_archive&page=select_type';
 				
 			<?php
 			}

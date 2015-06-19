@@ -31,7 +31,7 @@ if(isset($_REQUEST['search']))
 	}
 	?>
 	<script type="text/javascript">
-		window.top.location.href='<?php  echo $_SESSION['config']['businessappurl']."index.php?module=folder&page=".$_SESSION['origin'];?>';
+		window.top.location.href='<?php echo $_SESSION['config']['businessappurl']."index.php?module=folder&page=".$_SESSION['origin'];?>';
 	</script>
     <?php 
 	$_SESSION['current_foldertype'] = '';
@@ -39,12 +39,12 @@ if(isset($_REQUEST['search']))
 }
 ?>
 <body>
-<form name="search_folder"  method="post" <?php  if($_SESSION['origin'] == 'view_folder'){?>class="forms fold_addforms"<?php  } else{?>class="forms addforms"<?php  } ?> action="<?php  echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=search_folder';?>">
+<form name="search_folder"  method="post" <?php  if($_SESSION['origin'] == 'view_folder'){?>class="forms fold_addforms"<?php  } else{?>class="forms addforms"<?php  } ?> action="<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=folder&page=search_folder';?>">
 	<input type="hidden" name="display"  value="true" />
 	<input type="hidden" name="module"  value="folder" />
 	<input type="hidden" name="page"  value="search_folder" />
 	<p>
-   		<label><?php  echo _MATRICULE;?> : </label>
+   		<label><?php echo _MATRICULE;?> : </label>
         <input type="text" name="folder_id"  id="folder_id" />
     </p>
     <?php  
@@ -53,14 +53,14 @@ if(isset($_REQUEST['search']))
 	?>
     <p>&nbsp;</p>
 	<p>
-   		<label><?php  echo $label;?> : </label>
+   		<label><?php echo $label;?> : </label>
         <input type="text" name="custom_t1"  id="custom_t1" />
     </p>
     <?php 
 	}
 	?>
     <p class="buttons">
-    	<input class="button" name="search" id="search" type="submit"  value="<?php  echo _SEARCH;?>"/>
+    	<input class="button" name="search" id="search" type="submit"  value="<?php echo _SEARCH;?>"/>
     </p>
 </form>
 <?php $core_tools->load_js();?>

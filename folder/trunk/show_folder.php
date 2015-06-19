@@ -145,33 +145,33 @@ if (isset($_POST['delete_folder'])) {
         	</div>
         <br/>
         <dl id="tabricator2">
-            <dt><?php  echo _FOLDER_DETAILLED_PROPERTIES;?></dt>
+            <dt><?php echo _FOLDER_DETAILLED_PROPERTIES;?></dt>
             <dd>
-            <form method="post" name="index_folder" id="index_folder" action="index.php?page=show_folder&module=folder&id=<?php  echo $_SESSION['current_folder_id'] ?>">
-                <h2><span class="date"><b><?php  echo _FOLDER_DETAILLED_PROPERTIES;?></b></span></h2>
+            <form method="post" name="index_folder" id="index_folder" action="index.php?page=show_folder&module=folder&id=<?php echo $_SESSION['current_folder_id'] ?>">
+                <h2><span class="date"><b><?php echo _FOLDER_DETAILLED_PROPERTIES;?></b></span></h2>
                 <br/>
                 <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                     <tr>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php  echo _FOLDERID_LONG; ?> :</th>
-                        <td ><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folderArray['folder_id'] ; ?>" size="40" id="folder_id" name="folder_id" /></td>
+                        <th ><?php echo _FOLDERID_LONG; ?> :</th>
+                        <td ><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['folder_id'] ; ?>" size="40" id="folder_id" name="folder_id" /></td>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php  echo _FOLDERNAME; ?> :</th>
+                        <th ><?php echo _FOLDERNAME; ?> :</th>
                         <?php if ($updateRight) { ?>
-                            <td><input type="text" value="<?php  echo $folderArray['folder_name']; ?>" id="folder_name" name="folder_name" /></td>
+                            <td><input type="text" value="<?php echo $folderArray['folder_name']; ?>" id="folder_name" name="folder_name" /></td>
                         <?php } else { ?>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folderArray['folder_name']; ?>" id="folder_name" name="folder_name" /></td>
+                            <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['folder_name']; ?>" id="folder_name" name="folder_name" /></td>
                         <?php } ?>
                     </tr>
                     <tr>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php  echo _FOLDERTYPE; ?> :</th>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folderArray['foldertype_label']; ?>" id="foldertype"  name="foldertype" />
-                        <input type="hidden" name="foldertype_id" id="foldertype_id" value="<?php  echo $folderArray['foldertype_id']; ?>" />
+                        <th ><?php echo _FOLDERTYPE; ?> :</th>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['foldertype_label']; ?>" id="foldertype"  name="foldertype" />
+                        <input type="hidden" name="foldertype_id" id="foldertype_id" value="<?php echo $folderArray['foldertype_id']; ?>" />
                         </td>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php  echo _STATUS; ?> :</th>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folderArray['status']; ?>" id="status" name="status" /></td>
+                        <th ><?php echo _STATUS; ?> :</th>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['status']; ?>" id="status" name="status" /></td>
                     </tr>
                 </table>
                 <?php 
@@ -180,7 +180,7 @@ if (isset($_POST['delete_folder'])) {
     		    <br/>
                 <h2>
                 	<span class="date">
-                		<b><?php  echo _OPT_INDEXES;?></b>
+                		<b><?php echo _OPT_INDEXES;?></b>
                     </span>
                 </h2>
                 <br/>
@@ -254,7 +254,7 @@ if (isset($_POST['delete_folder'])) {
                                     else
                                     {
                                     ?>
-                                        <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folderArray['index'][$key]['show_value'];?>" size="40"  title="<?php  echo $folderArray['index'][$key]['show_value']; ?>" alt="<?php  echo $folderArray['index'][$key]['show_value']; ?>" readonly="readonly" class="readonly" />
+                                        <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folderArray['index'][$key]['show_value'];?>" size="40"  title="<?php echo $folderArray['index'][$key]['show_value']; ?>" alt="<?php echo $folderArray['index'][$key]['show_value']; ?>" readonly="readonly" class="readonly" />
                                         <?php
                                     }
                                 ?>
@@ -279,25 +279,25 @@ if (isset($_POST['delete_folder'])) {
 ?>
                 <br/>
                 <h2>
-                    <span class="date"><b><?php  echo _FOLDER_PROPERTIES;?></b></span>
+                    <span class="date"><b><?php echo _FOLDER_PROPERTIES;?></b></span>
                 </h2>
                 <br/>
                 <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                     <tr>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php  echo _TYPIST; ?> :</th>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folderArray['typist']; ?>" name="typîst" id="typist" /></td>
+                        <th ><?php echo _TYPIST; ?> :</th>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['typist']; ?>" name="typîst" id="typist" /></td>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php  echo _CREATION_DATE; ?> :</th>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folderArray['creation_date']; ?>" id="creation_date" name="creation_date"  /></td>
+                        <th ><?php echo _CREATION_DATE; ?> :</th>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['creation_date']; ?>" id="creation_date" name="creation_date"  /></td>
                     </tr>
                     <tr>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php  echo _SYSTEM_ID; ?> :</th>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folderArray['system_id']; ?>" name="system_id" id="system_id" /></td>
+                        <th ><?php echo _SYSTEM_ID; ?> :</th>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['system_id']; ?>" name="system_id" id="system_id" /></td>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php  echo _MODIFICATION_DATE; ?> :</th>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php  echo $folderArray['last_modified_date']; ?>" id="modification_date" name="modification_date"  /></td>
+                        <th ><?php echo _MODIFICATION_DATE; ?> :</th>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['last_modified_date']; ?>" id="modification_date" name="modification_date"  /></td>
                     </tr>
                 </table>
                 <br/>
@@ -308,7 +308,7 @@ if (isset($_POST['delete_folder'])) {
                     }?>
                     <?php if($deleteRight)
                         {?>
-                        <input type="submit" class="button"  value="<?php  echo _DELETE_FOLDER;?>" name="delete_folder" onclick="return(confirm('<?php  echo _REALLY_DELETE.' '._THIS_FOLDER.'?\n\r\n\r'._WARNING.' '._ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED; ?>'));" />
+                        <input type="submit" class="button"  value="<?php echo _DELETE_FOLDER;?>" name="delete_folder" onclick="return(confirm('<?php echo _REALLY_DELETE.' '._THIS_FOLDER.'?\n\r\n\r'._WARNING.' '._ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED; ?>'));" />
                         <?php } ?>
                 </p>
                 </form>
@@ -353,7 +353,7 @@ if (isset($_POST['delete_folder'])) {
             }
              if (count($tab2) > 0 ) $nbr_docs = ' ('.count($tab2).')';  else $nbr_docs = '';
             ?>
-            <dt><?php  echo _ARCHIVED_DOC.$nbr_docs;?></dt>
+            <dt><?php echo _ARCHIVED_DOC.$nbr_docs;?></dt>
             <dd>
                 <table width="100%" border="0">
                     <tr>
@@ -395,7 +395,7 @@ if (isset($_POST['delete_folder'])) {
                         </div>
                     </td>
                     <td valign="top" style="border-left: 1px solid #CCCCCC;">
-                        <iframe name="view_doc" id="view_doc" src="<?php  echo $_SESSION['config']['businessappurl']
+                        <iframe name="view_doc" id="view_doc" src="<?php echo $_SESSION['config']['businessappurl']
                             ."index.php?display=true&module=folder&page=list_doc";
                             ?>" frameborder="0" scrolling="no" width="550px" height="580px"></iframe>
                     </td>
@@ -416,7 +416,7 @@ if (isset($_POST['delete_folder'])) {
                 if ($nbr_notes > 0 ) $nbr_notes = ' ('.$nbr_notes.')';  else $nbr_notes = '';
                 //Notes iframe
                 ?>
-                <dt><?php  echo _NOTES.$nbr_notes;?></dt>
+                <dt><?php echo _NOTES.$nbr_notes;?></dt>
                 <dd>
                     <h2><?php echo _NOTES;?></h2>
                     <iframe name="notes_folder" id="notes_folder" src="<?php
@@ -428,7 +428,7 @@ if (isset($_POST['delete_folder'])) {
                 <?php
             }
             ?>            
-            <dt><?php  echo _FOLDER_HISTORY;?></dt>
+            <dt><?php echo _FOLDER_HISTORY;?></dt>
             <dd>
                 <iframe name="history_folder" id="history_folder" src="<?php
                     echo $_SESSION['config']['businessappurl'];

@@ -33,12 +33,12 @@ if(isset($_REQUEST['foldertype']) && !empty($_REQUEST['foldertype']))
 	<input type="hidden" name="module"  value="folder" />
 	<input type="hidden" name="page"  value="choose_foldertype2" />
 	<p>
-    	<label><?php  echo _FOLDERTYPE;?> : </label>
+    	<label><?php echo _FOLDERTYPE;?> : </label>
         <select name="foldertype" id="foldertype" onchange="this.form.submit();">
-        	<option value=""><?php  echo _CHOOSE_FOLDERTYPE;?></option>
+        	<option value=""><?php echo _CHOOSE_FOLDERTYPE;?></option>
         	<?php  for($i=0; $i<count($types);$i++)
 			{
-				?><option value="<?php  echo $types[$i]['id'];?>" <?php  if(count($types) == 1 || $types[$i]['id'] == $_SESSION['current_foldertype']) { echo 'selected="selected"';}?>><?php  echo $types[$i]['label'];?></option><?php 
+				?><option value="<?php echo $types[$i]['id'];?>" <?php  if(count($types) == 1 || $types[$i]['id'] == $_SESSION['current_foldertype']) { echo 'selected="selected"';}?>><?php echo $types[$i]['label'];?></option><?php 
 			}
         ?>
         </select>

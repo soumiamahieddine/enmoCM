@@ -204,7 +204,7 @@ class foldertype extends dbquery
             if ($mode == "up") {
             	?>
                 <p style="width: 400px;margin: auto;">
-                	<label><?php  echo _ID;?> : </label>
+                	<label><?php echo _ID;?> : </label>
                     <input name="foldertypeId" id="foldertypeId" type="text" value="<?php  
                 echo $func->show_str(
                 	$_SESSION['m_admin']['foldertype']['foldertypeId']
@@ -214,8 +214,8 @@ class foldertype extends dbquery
                 	echo 'readonly="readonly" class="readonly"';
                 } 
                 ?> />
-                    <input type="hidden"  name="id" value="<?php  echo $id; ?>" />
-                    <input type="hidden"  name="mode" value="<?php  echo $mode; ?>" />
+                    <input type="hidden"  name="id" value="<?php echo $id; ?>" />
+                    <input type="hidden"  name="mode" value="<?php echo $mode; ?>" />
                 </p>
                 <?php
             }
@@ -224,7 +224,7 @@ class foldertype extends dbquery
             	if (isset($totalDoc) && $totalDoc > 0) {
                 	?>
                     <p style="width: 400px;margin: auto;">
-                    	<label><?php  echo _COLLECTION; ?> : </label>
+                    	<label><?php echo _COLLECTION; ?> : </label>
                         <input name="collection_show" id="collection_show" type="text" value="<?php  
                     echo $func->show_str(
                     	$sec->retrieve_coll_label_from_coll_id(
@@ -246,9 +246,9 @@ class foldertype extends dbquery
                  } else {
                  	?>
                     <p style="width: 400px;margin: auto;">
-                    	<label for="collection"><?php  echo _COLLECTION;?> : </label>
+                    	<label for="collection"><?php echo _COLLECTION;?> : </label>
                         <select name="collection" id="collection">
-                        	<option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>
+                        	<option value="" ><?php echo _CHOOSE_COLLECTION;?></option>
                             <?php  
                     for ($i = 0; $i < count($_SESSION['collections']); $i ++) {
                     	?>
@@ -271,9 +271,9 @@ class foldertype extends dbquery
             } else {
             	?>
                 <p style="width: 400px;margin: auto;">
-                	<label for="collection"><?php  echo _COLLECTION;?> : </label>
+                	<label for="collection"><?php echo _COLLECTION;?> : </label>
                     <select name="collection" id="collection" >
-                    	<option value="" ><?php  echo _CHOOSE_COLLECTION;?></option>
+                    	<option value="" ><?php echo _CHOOSE_COLLECTION;?></option>
                         <?php  
                 for ($i = 0; $i < count($_SESSION['collections']); $i ++) {
                 	?>
@@ -295,13 +295,13 @@ class foldertype extends dbquery
             }
             ?>
             <p style="width: 400px;margin: auto;">
-            	<label><?php  echo _DESC; ?> : </label>
+            	<label><?php echo _DESC; ?> : </label>
                 <input name="desc"  type="text" id="desc" value="<?php  
             echo $func->show_str($_SESSION['m_admin']['foldertype']['desc']); 
             ?>" />
             </p>
             <p style="width: 400px;margin: auto;">
-            	<label><?php  echo _COMMENTS; ?> : </label>
+            	<label><?php echo _COMMENTS; ?> : </label>
                 <textarea  cols="30" rows="4"  name="comment"  id="comment" ><?php  
             echo $func->show_str($_SESSION['m_admin']['foldertype']['comment']); 
             ?></textarea>
@@ -309,7 +309,7 @@ class foldertype extends dbquery
             <div id="opt_index"></div>
 			<!-- <div align="center">
             	<p>
-            		<h3><?php  echo _MANDATORY_DOCTYPES_COMP;?> : </h3>
+            		<h3><?php echo _MANDATORY_DOCTYPES_COMP;?> : </h3>
             	</p>
             	<br/>
                 <iframe name="doctypes_frame" src="<?php  
@@ -317,8 +317,8 @@ class foldertype extends dbquery
                 ?>index.php?display=true&module=folder&page=choose_doctypes" frameborder="0" width="900px" height="250px" scrolling="no"></iframe>
                     </div> -->
                 <p class="buttons" style="text-align:center;">
-                	<input type="submit" name="Submit" value="<?php  echo _VALIDATE; ?>" class="button" />
-                    <input type="button" name="cancel" value="<?php  echo _CANCEL; ?>" class="button"  onclick="javascript:window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=foldertypes&amp;module=folder';"/>
+                	<input type="submit" name="Submit" value="<?php echo _VALIDATE; ?>" class="button" />
+                    <input type="button" name="cancel" value="<?php echo _CANCEL; ?>" class="button"  onclick="javascript:window.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=foldertypes&amp;module=folder';"/>
                 </p>
            </form>
            </div>

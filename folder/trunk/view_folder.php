@@ -313,12 +313,12 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
     $indexing = new indexing_searching();
     $indexing->delete_doc( $_SESSION["unique_res_id"], $_SESSION['collection_choice']);
     ?>
-    <script type="text/javascript">window.top.location.href='<?php  echo $_SESSION['config']['businessappurl'].'index.php?page=view_folder&module=folder&coll_id='.$_REQUEST['coll_id'].'&type_id='.$_SESSION['type'];?>';</script>
+    <script type="text/javascript">window.top.location.href='<?php echo $_SESSION['config']['businessappurl'].'index.php?page=view_folder&module=folder&coll_id='.$_REQUEST['coll_id'].'&type_id='.$_SESSION['type'];?>';</script>
     <?php
     exit();
 }
 ?>
-<h1><i class="fa fa-folder-o" title="" /></i> <?php  echo strtoupper(_SEARCH_FOLDER);?></h1>
+<h1><i class="fa fa-folder-o" title="" /></i> <?php echo strtoupper(_SEARCH_FOLDER);?></h1>
 <div id="inner_content">
 <table width="100%" border="0">
     <tr>
@@ -331,8 +331,8 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                 <div id="form1">
                     <table border="0" width="100%">
                         <tr>
-                            <td width="45%"><iframe name="choose_foldertype2" id="choose_foldertype2" src="<?php  echo $_SESSION['config']['businessappurl']."index.php.display=true&module=folder&page=choose_foldertype2";?>" frameborder="0" width="300" height="60"></iframe></td>
-                            <td><iframe name="search_folder" id="search_folder" src="<?php  echo $_SESSION['config']['businessappurl']."index.php.display=true&module=folder&page=search_folder";?>" frameborder="0" width="100%" height="80" scrolling="no"></iframe></td>
+                            <td width="45%"><iframe name="choose_foldertype2" id="choose_foldertype2" src="<?php echo $_SESSION['config']['businessappurl']."index.php.display=true&module=folder&page=choose_foldertype2";?>" frameborder="0" width="300" height="60"></iframe></td>
+                            <td><iframe name="search_folder" id="search_folder" src="<?php echo $_SESSION['config']['businessappurl']."index.php.display=true&module=folder&page=search_folder";?>" frameborder="0" width="100%" height="80" scrolling="no"></iframe></td>
                         </tr>
                     </table>
                 </div>
@@ -388,7 +388,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                         if($_SESSION['current_folder_id'] <> "" && isset($_SESSION['FOLDER']['SEARCH']['TYPE_ID']) && !empty($_SESSION['FOLDER']['SEARCH']['TYPE_ID']))
                         {
                             ?>
-                            <h2><?php  echo _INFOS_PIECE;?> :</h2>
+                            <h2><?php echo _INFOS_PIECE;?> :</h2>
                             <?php
                         }
                     }
@@ -472,11 +472,11 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                                     $indexing_searching->retrieve_index($res);
                                     //$func->show_array($_SESSION['index_to_use']);
                                     ?>
-                                    <form method="post" name="index_doc" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_folder&amp;module=folder&amp;id=<?php  echo $_SESSION['unique_res_id'];?>" class="forms">
+                                    <form method="post" name="index_doc" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_folder&amp;module=folder&amp;id=<?php echo $_SESSION['unique_res_id'];?>" class="forms">
                                     <p>&nbsp;</p>
                                     <p>
-                                        <label><?php  echo _PIECE_TYPE;?> :</label>
-                                        <input type="text" readonly="readonly" class="readonly" value="<?php  echo $desc; ?>" />
+                                        <label><?php echo _PIECE_TYPE;?> :</label>
+                                        <input type="text" readonly="readonly" class="readonly" value="<?php echo $desc; ?>" />
                                     </p>
                                     <?php
                                     $db = new dbquery();
@@ -509,15 +509,15 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                                                             }
                                                             ?>
                                                         </label>
-                                                        <select name="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" id="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>">
-                                                        <option value=""><?php  echo _CHOOSE;?></option>
+                                                        <select name="doc_<?php echo $_SESSION['index_to_use'][$i]['column'];?>" id="doc_<?php echo $_SESSION['index_to_use'][$i]['column'];?>">
+                                                        <option value=""><?php echo _CHOOSE;?></option>
                                                         <?php
                                                         if(isset($_SESSION['index_to_use'][$i]['values']) && count($_SESSION['index_to_use'][$i]['values']) > 0)
                                                         {
                                                             for($k=0; $k < count($_SESSION['index_to_use'][$i]['values']); $k++)
                                                             {
                                                             ?>
-                                                                <option value="<?php  echo $_SESSION['index_to_use'][$i]['values'][$k]['label'];?>" <?php  if($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] == $_SESSION['index_to_use'][$i]['values'][$k]['label']){ echo 'selected="selected"'; } ?>><?php  echo $_SESSION['index_to_use'][$i]['values'][$k]['label'];?></option>
+                                                                <option value="<?php echo $_SESSION['index_to_use'][$i]['values'][$k]['label'];?>" <?php  if($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] == $_SESSION['index_to_use'][$i]['values'][$k]['label']){ echo 'selected="selected"'; } ?>><?php echo $_SESSION['index_to_use'][$i]['values'][$k]['label'];?></option>
                                                             <?php
                                                             }
                                                         }
@@ -536,7 +536,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                                                             while($res = $db->fetch_object())
                                                             {
                                                                 ?>
-                                                                <option value="<?php  echo $res->$_SESSION['index_to_use'][$i]['foreign_key'];?>" <?php  if($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] == $res->$_SESSION['index_to_use'][$i]['foreign_key']){ echo 'selected="selected"'; } ?>><?php  echo $db->show_string($res->$_SESSION['index_to_use'][$i]['foreign_label']);?></option>
+                                                                <option value="<?php echo $res->$_SESSION['index_to_use'][$i]['foreign_key'];?>" <?php  if($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']] == $res->$_SESSION['index_to_use'][$i]['foreign_key']){ echo 'selected="selected"'; } ?>><?php echo $db->show_string($res->$_SESSION['index_to_use'][$i]['foreign_label']);?></option>
                                                                 <?php
                                                             }
                                                         }
@@ -565,13 +565,13 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                                                         if($_SESSION['index_to_use'][$i]['date'])
                                                         {
                                         ?>
-                                                            <input type="text" name="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" id="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" value="<?php  echo $func->format_date_db($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']], false);?>" <?php  if($_SESSION['field_error'][$_SESSION['index_to_use'][$i]['column']]){?>style="background-color:#FF0000"<?php  }?> onclick='showCalender(this)' />
+                                                            <input type="text" name="doc_<?php echo $_SESSION['index_to_use'][$i]['column'];?>" id="doc_<?php echo $_SESSION['index_to_use'][$i]['column'];?>" value="<?php echo $func->format_date_db($_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']], false);?>" <?php  if($_SESSION['field_error'][$_SESSION['index_to_use'][$i]['column']]){?>style="background-color:#FF0000"<?php  }?> onclick='showCalender(this)' />
                                                             <?php
                                                         }
                                                         else
                                                         {
                                                             ?>
-                                                            <input type="text" name="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" id="doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" value="<?php  echo $_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']];?>" <?php  if($_SESSION['field_error'][$_SESSION['index_to_use'][$i]['column']]){?>style="background-color:#FF0000"<?php  }?> />
+                                                            <input type="text" name="doc_<?php echo $_SESSION['index_to_use'][$i]['column'];?>" id="doc_<?php echo $_SESSION['index_to_use'][$i]['column'];?>" value="<?php echo $_SESSION['indexing'][$_SESSION['index_to_use'][$i]['column']];?>" <?php  if($_SESSION['field_error'][$_SESSION['index_to_use'][$i]['column']]){?>style="background-color:#FF0000"<?php  }?> />
                                                             <?php
                                                         }
                                                         ?>
@@ -580,7 +580,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                                                         if($_SESSION['index_to_use'][$i]['mandatory'])
                                                         {
                                                             ?>
-                                                            <input type="hidden" name="mandatory_doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" id="mandatory_doc_<?php  echo $_SESSION['index_to_use'][$i]['column'];?>" value="true" />
+                                                            <input type="hidden" name="mandatory_doc_<?php echo $_SESSION['index_to_use'][$i]['column'];?>" id="mandatory_doc_<?php echo $_SESSION['index_to_use'][$i]['column'];?>" value="true" />
                                                             <?php
                                                         }
                                                         if($_SESSION['index_to_use'][$i]['date'])
@@ -597,27 +597,27 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                                         }
                                 ?>
                                 <p class="buttons">
-                                <input type="hidden" name="coll_id" value="<?php  echo $_SESSION['collection_id_choice'];?>"/>
-                                <input type="hidden" name="res_id" value="<?php  echo $_SESSION['unique_res_id'];?>" />
+                                <input type="hidden" name="coll_id" value="<?php echo $_SESSION['collection_id_choice'];?>"/>
+                                <input type="hidden" name="res_id" value="<?php echo $_SESSION['unique_res_id'];?>" />
                                     <?php
                                     if($security->collection_user_right($_SESSION['collection_id_choice'], "can_update"))
                                     {
                                         ?>
-                                        <input type="submit" class="button"  value="<?php  echo _MODIFY_DOC;?>" name="submit_index_doc" />
+                                        <input type="submit" class="button"  value="<?php echo _MODIFY_DOC;?>" name="submit_index_doc" />
                                         <?php
                                     }
                                     if($security->collection_user_right($_SESSION['collection_id_choice'], "can_delete"))
                                     {
                                         ?>
-                                        <input type="submit" class="button"  value="<?php  echo _DELETE_THE_DOC;?>" name="delete_doc" onclick="return(confirm('<?php  echo _REALLY_DELETE.' '._THIS_DOC;?> ?\n\r\n\r'));" />
+                                        <input type="submit" class="button"  value="<?php echo _DELETE_THE_DOC;?>" name="delete_doc" onclick="return(confirm('<?php echo _REALLY_DELETE.' '._THIS_DOC;?> ?\n\r\n\r'));" />
                                         <?php
                                     }
                                     ?>
                                  </p>
                                 </form>
                                 <hr/>
-                                <div  align="center"> <iframe src="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=";?>view&id=<?php  echo $_SESSION['unique_res_id'] ;?>" id="pdf_iframe" frameborder="0" marginheight="0" marginwidth="0" width="95%" height="300px" ></iframe>
-                                <a href="<?php  echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=";?>view&id=<?php  echo $_SESSION['unique_res_id'];?>" target="_blank"><?php  echo _FULL_PAGE;?></a>
+                                <div  align="center"> <iframe src="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=";?>view&id=<?php echo $_SESSION['unique_res_id'] ;?>" id="pdf_iframe" frameborder="0" marginheight="0" marginwidth="0" width="95%" height="300px" ></iframe>
+                                <a href="<?php echo $_SESSION['config']['businessappurl']."index.php?display=true&dir=indexing_searching&page=";?>view&id=<?php echo $_SESSION['unique_res_id'];?>" target="_blank"><?php echo _FULL_PAGE;?></a>
                         </div>
                             <?php
                             }
@@ -625,10 +625,10 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                             {
                                 ?>
 
-                                <form method="get" name="index_doc" action="<?php  echo $_SESSION['config']['businessappurl'];?>index.php?page=view_folder&amp;module=folder" class="forms">
-                                    <input type="hidden" name="coll_id" value="<?php  echo $_SESSION['collection_id_choice'];?>"/>
-                                    <input type="hidden" name="res_id" value="<?php  echo $_SESSION['unique_res_id'];?>" />
-                                    <input type="submit" class="button"  value="<?php  echo _DELETE_THE_DOC;?>" name="delete_doc" onclick="return(confirm('<?php  echo _REALLY_DELETE.' '._THIS_DOC;?> ?\n\r\n\r'));" />
+                                <form method="get" name="index_doc" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_folder&amp;module=folder" class="forms">
+                                    <input type="hidden" name="coll_id" value="<?php echo $_SESSION['collection_id_choice'];?>"/>
+                                    <input type="hidden" name="res_id" value="<?php echo $_SESSION['unique_res_id'];?>" />
+                                    <input type="submit" class="button"  value="<?php echo _DELETE_THE_DOC;?>" name="delete_doc" onclick="return(confirm('<?php echo _REALLY_DELETE.' '._THIS_DOC;?> ?\n\r\n\r'));" />
                                 </form>
                                 <?php
                             }
@@ -637,7 +637,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                             {
                                 ?>
                                 <script type="text/javascript">
-                                    alert("<?php  echo $func->wash_html($_SESSION['error_page']);?>");
+                                    alert("<?php echo $func->wash_html($_SESSION['error_page']);?>");
                                     <?php
                                     if(isset($_REQUEST['delete_doc']))
                                     {
@@ -661,7 +661,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                         else
                         {
                             ?>
-                            <div align="center"><?php  echo _NO_DOC_SEARCH;?>.</div>
+                            <div align="center"><?php echo _NO_DOC_SEARCH;?>.</div>
                             <?php
                         }
                     }

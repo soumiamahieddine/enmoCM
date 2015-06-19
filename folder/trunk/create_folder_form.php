@@ -72,7 +72,7 @@ while ($res = $db->fetch_object()) {
 $init = false;
 ?>
 
-<h1><i class="fa fa-folder-open fa-2x" title="" /></i> <?php  echo _CREATE_FOLDER;?></h1>
+<h1><i class="fa fa-folder-open fa-2x" title="" /></i> <?php echo _CREATE_FOLDER;?></h1>
 <div id="inner_content">
     <div class="block">
     <form name="create_folder" id="create_folder" action="<?php
@@ -87,7 +87,7 @@ echo $_SESSION['config']['businessappurl'];
 echo $_SESSION['config']['businessappurl'] . 'index.php?display=true'
     . '&module=folder&page=create_folder_get_folder_index';
 ?>', this.options[this.options.selectedIndex].value, 'folder_indexes');">
-                <option value=""><?php  echo _CHOOSE_FOLDERTYPE;?></option>
+                <option value=""><?php echo _CHOOSE_FOLDERTYPE;?></option>
                 <?php
 for ($i = 0; $i < count($foldertypes); $i ++) {
     ?><option value="<?php

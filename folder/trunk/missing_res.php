@@ -52,8 +52,8 @@ else
 		<table width="95%" class="listing" border="0" cellspacing="0">
         	<thead>
             	<tr>
-                	<th width="30%"><?php  echo _ID;?></th>
-                    <th><?php  echo _DESC;?></th>
+                	<th width="30%"><?php echo _ID;?></th>
+                    <th><?php echo _DESC;?></th>
                 </tr>
             </thead>
             <tbody>
@@ -70,12 +70,12 @@ else
 						$color = ' class="col"';
 					}
 					?>
-					<tr <?php  echo $color; ?>>
+					<tr <?php echo $color; ?>>
                    		 <td>
-							<?php  echo $missing_res[$cpt_missing_res]['ID'];?>
+							<?php echo $missing_res[$cpt_missing_res]['ID'];?>
 						</td>
 						<td>
-							<?php  echo $missing_res[$cpt_missing_res]['LABEL'];?>
+							<?php echo $missing_res[$cpt_missing_res]['LABEL'];?>
 						</td>
 					</tr>
 					<?php

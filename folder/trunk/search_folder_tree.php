@@ -59,7 +59,7 @@ $_SESSION['origin'] = "search_folder_tree";
 <script type="text/javascript" >
     BASE_URL = "<?php echo $_SESSION['config']['businessappurl'] ?>";
 </script>
-<h1><i class="fa fa-search fa-2x"></i> <?php  echo _VIEW_FOLDER_TREE; ?></h1>
+<h1><i class="fa fa-search fa-2x"></i> <?php echo _VIEW_FOLDER_TREE; ?></h1>
 <div id="inner_content" align="center">
     <div class="block">
         <h2>
@@ -73,7 +73,7 @@ $_SESSION['origin'] = "search_folder_tree";
                                 <input type="text" name="folder" id="folder" size="45" onKeyPress="if(event.keyCode == 13) submitForm();" />
                                 <div id="show_folder" class="autocomplete" style="color:#666;"></div>
                             </td>
-                            <!-- <td align="right"><label for="subfolder"><?php  echo _SUBFOLDER;?> :</label></td>
+                            <!-- <td align="right"><label for="subfolder"><?php echo _SUBFOLDER;?> :</label></td>
                             <td>
                                 <input type="text" name="subfolder" id="subfolder" size="45" onKeyPress="if(event.keyCode == 13) submitForm();" />
                                 <div id="show_subfolder" class="autocomplete"></div>

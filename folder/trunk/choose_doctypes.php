@@ -71,9 +71,9 @@ elseif(isset($_REQUEST['doctypes']) && count($_REQUEST['doctypes']) <= 0)
 	<input type="hidden" name="page"  value="choose_doctypes" />
 		<table align="left" border="0" width="100%">
 		<tr>
-			<td valign="top" width="48%"><b class="tit"><?php  echo _DOCTYPES_LIST;?></b></td>
+			<td valign="top" width="48%"><b class="tit"><?php echo _DOCTYPES_LIST;?></b></td>
 			<td width="5%" >&nbsp;</td>
-			<td valign="top" width="47%"><b class="tit"><?php  echo _SELECTED_DOCTYPES;?></b></td>
+			<td valign="top" width="47%"><b class="tit"><?php echo _SELECTED_DOCTYPES;?></b></td>
 		</tr>
 
 		<tr>
@@ -95,19 +95,19 @@ elseif(isset($_REQUEST['doctypes']) && count($_REQUEST['doctypes']) <= 0)
 			if($state_doctypes == false)
 			{
 				?>
-				<option value="<?php  echo $_SESSION['m_admin']['doctypes'][$i]['ID']; ?>"><?php  echo $_SESSION['m_admin']['doctypes'][$i]['COMMENT']; ?></option>
+				<option value="<?php echo $_SESSION['m_admin']['doctypes'][$i]['ID']; ?>"><?php echo $_SESSION['m_admin']['doctypes'][$i]['COMMENT']; ?></option>
 				<?php
 			}
 		}
 		?>
     </select>
 	<br/><br/>
-	<a href='javascript:selectall(document.forms["choose_doctypes"].elements["doctypeslist[]"]);' class="choice"><?php  echo _SELECT_ALL; ?></a></td>
+	<a href='javascript:selectall(document.forms["choose_doctypes"].elements["doctypeslist[]"]);' class="choice"><?php echo _SELECT_ALL; ?></a></td>
     <td width="10%" align="center">
-	<input type="button" class="button" value="<?php  echo _ADD; ?>" onclick='Move(document.choose_doctypes.elements["doctypeslist[]"],document.choose_doctypes.elements["doctypes[]"]);this.form.submit();' align="middle"/>
+	<input type="button" class="button" value="<?php echo _ADD; ?>" onclick='Move(document.choose_doctypes.elements["doctypeslist[]"],document.choose_doctypes.elements["doctypes[]"]);this.form.submit();' align="middle"/>
 	<br />
 	<br />
-	<input type="button" class="button"  value="<?php  echo _REMOVE; ?>" onclick='Move(document.choose_doctypes.elements["doctypes[]"],document.choose_doctypes.elements["doctypeslist[]"]);this.form.submit();' align="middle"/>
+	<input type="button" class="button"  value="<?php echo _REMOVE; ?>" onclick='Move(document.choose_doctypes.elements["doctypes[]"],document.choose_doctypes.elements["doctypeslist[]"]);this.form.submit();' align="middle"/>
 	</td>
     <td width="45%" align="center" valign="top">
 	<select name="doctypes[]" class="multiple_list" ondblclick='moveclick(document.choose_doctypes.elements["doctypes[]"],document.choose_doctypes.elements["doctypeslist"])this.form.submit();' multiple="multiple" >
@@ -128,7 +128,7 @@ elseif(isset($_REQUEST['doctypes']) && count($_REQUEST['doctypes']) <= 0)
 			if($state_doctypes == true)
 			{
 				?>
-				<option value="<?php  echo $_SESSION['m_admin']['doctypes'][$i]['ID']; ?>" ><?php  echo $_SESSION['m_admin']['doctypes'][$i]['COMMENT']; ?></option>
+				<option value="<?php echo $_SESSION['m_admin']['doctypes'][$i]['ID']; ?>" ><?php echo $_SESSION['m_admin']['doctypes'][$i]['COMMENT']; ?></option>
 				<?php
 			}
 		}
@@ -136,7 +136,7 @@ elseif(isset($_REQUEST['doctypes']) && count($_REQUEST['doctypes']) <= 0)
     </select>
 	<br/><br/>
 	<a href='javascript:selectall(document.forms["choose_doctypes"].elements["doctypes[]"]);' class="choice">
-	<?php  echo _SELECT_ALL; ?></a></td>
+	<?php echo _SELECT_ALL; ?></a></td>
 	</tr>
 	<tr> <td height="10">&nbsp;</td></tr>
 		</table>

@@ -83,7 +83,7 @@ if (isset($_REQUEST['erase']) && $_REQUEST['erase'] == 'true') {
 ?>
 <div id="inner_content">
 
-<h1><i class="fa fa-search fa-2x" title="" /></i> <?php  echo _ADV_SEARCH_FOLDER_TITLE; ?></h1>
+<h1><i class="fa fa-search fa-2x" title="" /></i> <?php echo _ADV_SEARCH_FOLDER_TITLE; ?></h1>
 
 <form name="search_folder_frm" id="search_folder_frm" method="post" action="<?php echo $_SESSION['config']['businessappurl'] 
             .'index.php?page=search_adv_folder_result&module=folder';?>" class="forms2">
@@ -151,7 +151,7 @@ if ($chooseColl) {
 
 <div id="folder_search_div" style="display:<?php if ($chooseColl) {echo "none"; } else {echo "block";}?>">
     <div class="block">
-        <h2><?php  echo _INFOS_FOLDERS;?></h2>
+        <h2><?php echo _INFOS_FOLDERS;?></h2>
         <br/>
         <table width="100%" border="0" cellpadding="3">
             <tr>
