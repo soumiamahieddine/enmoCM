@@ -83,12 +83,12 @@ $flag_notif = false;
 							<option value=\"*\">*</option>\
 							<?php
 							for($iHours=0;$iHours<24;$iHours++){?>\
-								<option value='<?php echo $iHours;?>'\
+								<option value='<?php functions::xecho($iHours);?>'\
 								<?php if ($iHours == $e['h']) { ?>\
 									selected=\"selected\"\
 								<?php } ?>\
 								>\
-								<?php echo $iHours;?>\
+								<?php functions::xecho($iHours);?>\
 								</option>\
 							<?php } ?>\
 						</select>\
@@ -98,12 +98,12 @@ $flag_notif = false;
 							<option value=\"*\">*</option>\
 							<?php
 							for($iMinutes=0;$iMinutes<60;$iMinutes++){ ?>\
-								<option value='<?php echo $iMinutes;?>'\
+								<option value='<?php functions::xecho($iMinutes);?>'\
 								<?php if ($iMinutes == $e['m']) { ?>\
 									selected=\"selected\"\
 								<?php } ?>\
 								>\
-								<?php echo $iMinutes;?>\
+								<?php functions::xecho($iMinutes);?>\
 								</option>\
 							<?php } ?>\
 						</select>\
@@ -113,12 +113,12 @@ $flag_notif = false;
 							<option value=\"*\">*</option>\
 							<?php
 							for($iDay=1;$iDay<32;$iDay++){ ?>\
-								<option value='<?php echo $iDay;?>'\
+								<option value='<?php functions::xecho($iDay);?>'\
 								<?php if ($iDay == $e['dom']) { ?>\
 									selected=\"selected\"\
 								<?php } ?>\
 								>\
-								<?php echo $iDay;?>\
+								<?php functions::xecho($iDay);?>\
 								</option>\
 							<?php } ?>\
 						</select>\
@@ -128,12 +128,12 @@ $flag_notif = false;
 							<option value =\"*\">*</option>\
 							<?php $month_array = array(1 => _JANUARY, _FEBRUARY, _MARCH, _APRIL, _MAY, _JUNE, _JULY, _AUGUST, _SEPTEMBER, _OCTOBER, _NOVEMBER, _DECEMBER);
 		                 	for($iMonth=1;$iMonth<13;$iMonth++) {
-		                 		?> <option value=\"<?php echo $iMonth;?>\"\
+		                 		?> <option value=\"<?php functions::xecho($iMonth);?>\"\
 		                 			<?php if ($iMonth == $e['mon']) { ?>\
 									selected=\"selected\"\
 								<?php } ?>\
 								>\
-								<?php echo $month_array[$iMonth];?>\
+								<?php functions::xecho($month_array[$iMonth]);?>\
 								</option>\
 		                 	<?php } ?>\
 						</select>\
@@ -143,12 +143,12 @@ $flag_notif = false;
 							<option value =\"*\">*</option>\
 							<?php $weekday_array = array(1 => _MONDAY, _TUESDAY, _WEDNESDAY, _THURSDAY, _FRIDAY, _SATURDAY, _SUNDAY);
 		                 	for($iWeekDay=1;$iWeekDay<8;$iWeekDay++) {
-		                 		?> <option value=\"<?php echo $iWeekDay;?>\"\
+		                 		?> <option value=\"<?php functions::xecho($iWeekDay);?>\"\
 		                 			<?php if ($iWeekDay == $e['dow']) { ?>\
 									selected=\"selected\"\
 								<?php } ?>\
 								>\
-								<?php echo $weekday_array[$iWeekDay];?>\
+								<?php functions::xecho($weekday_array[$iWeekDay]);?>\
 								</option>\
 		                 	<?php } ?>\
 						</select>\
@@ -157,12 +157,12 @@ $flag_notif = false;
 						<select style=\"width:100%\" name='data["+linecount+"][cmd]'>\
 							<option><?php echo _CHOOSE_NOTIF;?></option>\
 						<?php foreach ($notifications as $key => $value) {
-								?><option value=\"<?php echo $key;?>\"\
+								?><option value=\"<?php functions::xecho($key);?>\"\
 		                 			<?php if ($key == $e['cmd']) { ?>\
 										selected=\"selected\"\
 									<?php } ?>\
 									>\
-								<?php echo $value;?>\
+								<?php functions::xecho($value);?>\
 								</option>\
 						<?php } ?>\
 						</select></td>\
@@ -196,27 +196,27 @@ $flag_notif = false;
 		<?php foreach ($data as $id => $e) { 
 
 				if ($e['state'] == "hidden") {?>
-					<tr id='row-<?php echo $id;?>' style="display:none">
+					<tr id='row-<?php functions::xecho($id);?>' style="display:none">
 						<td>
-							<input name='data[<?php echo $id;?>][h]' value="<?php echo $e['h'];?>">
+							<input name='data[<?php functions::xecho($id);?>][h]' value="<?php functions::xecho($e['h']);?>">
 						</td>
 						<td width="10%">
-							<input name='data[<?php echo $id;?>][m]' value="<?php echo $e['m'];?>">
+							<input name='data[<?php functions::xecho($id);?>][m]' value="<?php functions::xecho($e['m']);?>">
 						</td>
 						<td width="10%">						
-							<input name='data[<?php echo $id;?>][dom]' value="<?php echo $e['dom'];?>">
+							<input name='data[<?php functions::xecho($id);?>][dom]' value="<?php functions::xecho($e['dom']);?>">
 						</td>
 						<td width="15%">
-							<input name='data[<?php echo $id;?>][mon]' value="<?php echo $e['mon'];?>">
+							<input name='data[<?php functions::xecho($id);?>][mon]' value="<?php functions::xecho($e['mon']);?>">
 						</td>
 						<td width="20%">
-							<input name='data[<?php echo $id;?>][dow]' value="<?php echo $e['dow'];?>">
+							<input name='data[<?php functions::xecho($id);?>][dow]' value="<?php functions::xecho($e['dow']);?>">
 						</td>
 						<td width="40%">
-							<input name='data[<?php echo $id;?>][cmd]' value="<?php echo $e['cmd'];?>">
+							<input name='data[<?php functions::xecho($id);?>][cmd]' value="<?php functions::xecho($e['cmd']);?>">
 						</td>
 						<td width="20px" align="center">
-							<input type='hidden' id='state-<?php echo $id;?>' name='data[<?php echo $id;?>][state]' value='hidden' />
+							<input type='hidden' id='state-<?php functions::xecho($id);?>' name='data[<?php functions::xecho($id);?>][state]' value='hidden' />
 						</td>
 					</tr>
 				<?php
@@ -224,99 +224,99 @@ $flag_notif = false;
 					$flag_notif = true;
 
 			?>
-				<tr id='row-<?php echo $id;?>'>
+				<tr id='row-<?php functions::xecho($id);?>'>
 					<td>
-						<select name='data[<?php echo $id;?>][h]'>
+						<select name='data[<?php functions::xecho($id);?>][h]'>
 							<option value="*">*</option>
 							<?php
 							for($iHours=0;$iHours<24;$iHours++){?>
-								<option value='<?php echo $iHours;?>'
+								<option value='<?php functions::xecho($iHours);?>'
 								<?php if ($iHours == $e['h']) { ?>
 									selected="selected"
 								<?php } ?>
 								>
-								<?php echo $iHours;?>
+								<?php functions::xecho($iHours);?>
 								</option>
 							<?php } ?>
 						</select>
 					</td>
 					<td width="10%">
-						<select name='data[<?php echo $id;?>][m]'>
+						<select name='data[<?php functions::xecho($id);?>][m]'>
 							<option value="*">*</option>
 							<?php
 							for($iMinutes=0;$iMinutes<60;$iMinutes++){ ?>
-								<option value='<?php echo $iMinutes;?>'
+								<option value='<?php functions::xecho($iMinutes);?>'
 								<?php if ($iMinutes == $e['m']) { ?>
 									selected="selected"
 								<?php } ?>
 								>
-								<?php echo $iMinutes;?>
+								<?php functions::xecho($iMinutes);?>
 								</option>
 							<?php } ?>
 						</select>
 					</td>
 					<td width="10%">						
-						<select name='data[<?php echo $id;?>][dom]'>
+						<select name='data[<?php functions::xecho($id);?>][dom]'>
 							<option value="*">*</option>
 							<?php
 							for($iDay=1;$iDay<32;$iDay++){ ?>
-								<option value='<?php echo $iDay;?>'
+								<option value='<?php functions::xecho($iDay);?>'
 								<?php if ($iDay == $e['dom']) { ?>
 									selected="selected"
 								<?php } ?>
 								>
-								<?php echo $iDay;?>
+								<?php functions::xecho($iDay);?>
 								</option>
 							<?php } ?>
 						</select>
 					</td>
 					<td width="15%">
-						<select name='data[<?php echo $id;?>][mon]'>
+						<select name='data[<?php functions::xecho($id);?>][mon]'>
 							<option value ="*">*</option>
 							<?php $month_array = array(1 => _JANUARY, _FEBRUARY, _MARCH, _APRIL, _MAY, _JUNE, _JULY, _AUGUST, _SEPTEMBER, _OCTOBER, _NOVEMBER, _DECEMBER);
 		                 	for($iMonth=1;$iMonth<13;$iMonth++) {
-		                 		?> <option value="<?php echo $iMonth;?>" 								
+		                 		?> <option value="<?php functions::xecho($iMonth);?>" 								
 		                 			<?php if ($iMonth == $e['mon']) { ?>
 									selected="selected"
 								<?php } ?>
 								>
-								<?php echo $month_array[$iMonth];?>
+								<?php functions::xecho($month_array[$iMonth]);?>
 								</option>
 		                 	<?php } ?>
 						</select>
 					</td>
 					<td width="20%">
-						<select name='data[<?php echo $id;?>][dow]'>
+						<select name='data[<?php functions::xecho($id);?>][dow]'>
 							<option value ="*">*</option>
 							<?php $weekday_array = array(1 => _MONDAY, _TUESDAY, _WEDNESDAY, _THURSDAY, _FRIDAY, _SATURDAY, _SUNDAY);
 		                 	for($iWeekDay=1;$iWeekDay<8;$iWeekDay++) {
-		                 		?> <option value="<?php echo $iWeekDay;?>" 								
+		                 		?> <option value="<?php functions::xecho($iWeekDay);?>" 								
 		                 			<?php if ($iWeekDay == $e['dow']) { ?>
 									selected="selected"
 								<?php } ?>
 								>
-								<?php echo $weekday_array[$iWeekDay];?>
+								<?php functions::xecho($weekday_array[$iWeekDay]);?>
 								</option>
 		                 	<?php } ?>
 						</select>
 					</td>
 					<td width="40%">
-						<select style="width:100%" name='data[<?php echo $id;?>][cmd]'>
+						<select style="width:100%" name='data[<?php functions::xecho($id);?>][cmd]'>
 							<option><?php echo _CHOOSE_NOTIF;?></option>
 						<?php foreach ($notifications as $key => $value) {
-								?><option value="<?php echo $key;?>"
+								?><option value="<?php functions::xecho($key);?>"
 		                 			<?php if ($key == $e['cmd']) { ?>
 										selected="selected"
 									<?php } ?>
 									>
-								<?php echo $value;?>
+								<?php functions::xecho($value);?>
 								</option>
 						<?php } ?>
 						</select>
 					</td>
 					<td width="20px" align="center">
-						<input type='hidden' id='state-<?php echo $id;?>' name='data[<?php echo $id;?>][state]' value='normal' />
-						<i class='fa fa-remove fa-2x' onclick='del(<?php echo $id;?>);' onmouseover="this.style.cursor='pointer'"></i>
+						<input type='hidden' id='state-<?php functions::xecho($id);?>' name='data[<?php functions::xecho($id);?>][state]' value='normal' />
+						<i class='fa fa-remove fa-2x' onclick='del(<?php functions::xecho($id);?>);' onmouseover="this.style.cursor='pointer'"></i>
 					</td>
 				</tr>
 		<?php

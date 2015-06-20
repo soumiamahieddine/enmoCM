@@ -54,7 +54,7 @@ if ($mode == 'list') {
         <input type="hidden" name="page" value="manage_notifications_controler" />
         <input type="hidden" name="mode" value="<?php echo $mode;?>" />
 
-        <input type="hidden" name="notification_sid" id="notification_sid" value="<?php echo $_SESSION['m_admin']['notification']['notification_sid'];?>" />
+        <input type="hidden" name="notification_sid" id="notification_sid" value="<?php functions::xecho($_SESSION['m_admin']['notification']['notification_sid']);?>" />
 
         <input type="hidden" name="order" id="order" value="<?php
             echo $_REQUEST['order'];?>" />
@@ -105,12 +105,12 @@ if ($mode == 'list') {
                 <optgroup label="<?php echo _ACTIONS;?>">
                 <?php
                 foreach($actions_list as $this_action){
-                    ?><option value="<?php echo $this_action->id;?>"
+                    ?><option value="<?php functions::xecho($this_action->id);?>"
                     <?php
                     if($_SESSION['m_admin']['notification']['event_id']
                         == $this_action->id) {
                         echo 'selected="selected"';
-                    }?>><?php echo $this_action->label_action;
+                    }?>><?php functions::xecho($this_action->label_action);
                     ?></option><?php
                 }
 
@@ -119,12 +119,12 @@ if ($mode == 'list') {
                 $newarray = array_keys($_SESSION['notif_events']);
                 ?><optgroup label="<?php echo _SYSTEM;?>"><?php
                 foreach($_SESSION['notif_events'] as $event_type_id => $event_type_label){
-                    ?><option value="<?php echo $event_type_id;?>"
+                    ?><option value="<?php functions::xecho($event_type_id);?>"
                     <?php
                     if($_SESSION['m_admin']['notification']['event_id']
                         == $event_type_id) {
                         echo 'selected="selected"';
-                    }?>><?php echo $event_type_label;
+                    }?>><?php functions::xecho($event_type_label);
                     ?></option><?php
                 }
                 ?>
@@ -157,12 +157,12 @@ if ($mode == 'list') {
                 <?php
                 foreach($templates_list as $template){
                     if ($template['TYPE'] === 'HTML' && ($template['TARGET'] == 'notifications' || $template['TARGET'] == '')) {
-                        ?><option value="<?php echo $template['ID'];?>"
+                        ?><option value="<?php functions::xecho($template['ID']);?>"
                         <?php
                         if($_SESSION['m_admin']['notification']['template_id']
                             == $template['ID']) {
                             echo 'selected="selected"';
-                        }?>><?php echo $template['LABEL'];
+                        }?>><?php functions::xecho($template['LABEL']);
                         ?></option><?php
                     }
                 }
@@ -196,12 +196,12 @@ if ($mode == 'list') {
                 <option value=""><?php echo _SELECT_DIFFUSION_TYPE;?></option>
                 <?php
                 foreach($diffusion_types as $this_diffusion){
-                    ?><option value="<?php echo $this_diffusion->id;?>"
+                    ?><option value="<?php functions::xecho($this_diffusion->id);?>"
                     <?php
                     if(trim($_SESSION['m_admin']['notification']['diffusion_type'])
                         == trim($this_diffusion->id)) {
                         echo 'selected="selected"';
-                    }?>><?php echo $this_diffusion->label;
+                    }?>><?php functions::xecho($this_diffusion->label);
                     ?></option><?php
                 }
                 ?>
@@ -236,12 +236,12 @@ if ($mode == 'list') {
                         && $this_diffusion->id != 'note_dest_user'
                         && $this_diffusion->id != 'note_copy_list'
                     ) {
-						?><option value="<?php echo $this_diffusion->id;?>"
+						?><option value="<?php functions::xecho($this_diffusion->id);?>"
 						<?php
 						if(trim($_SESSION['m_admin']['notification']['attachfor_type'])
 							== trim($this_diffusion->id)) {
 							echo 'selected="selected"';
-						}?>><?php echo $this_diffusion->label;
+						}?>><?php functions::xecho($this_diffusion->label);
 						?></option><?php
 					}
                 }
@@ -280,7 +280,7 @@ if ($mode == 'list') {
         if ($mode == 'up' && PHP_OS == "Linux" && !file_exists($_SESSION['config']['corepath'].'modules/notifications/batch/scripts/'.$filename)) {?>
             <input class="button" type="button" name="create_notif_script" id="create_notif_script" value="<?php echo _CREATE_NOTIF_SCRIPT;?>" 
             onclick="createNotifScript('<?php echo $_SESSION['config']['businessappurl'];
-         ?>index.php?display=true&amp;page=create_notif_script&amp;module=notifications', '<?php echo $_SESSION['m_admin']['notification']['notification_sid'];?>', '<?php echo $_SESSION['m_admin']['notification']['notification_id'];?>')"/>
+         ?>index.php?display=true&amp;page=create_notif_script&amp;module=notifications', '<?php functions::xecho($_SESSION['m_admin']['notification']['notification_sid']);?>', '<?php echo $_SESSION['m_admin']['notification']['notification_id'];?>')"/>
             <?php
         }
         ?>
@@ -315,7 +315,7 @@ if ($mode == 'list') {
         ?>
         <script language="javascript">
         change_properties_box(
-            '<?php echo $_SESSION['m_admin']['notification']['diffusion_type'];?>',
+            '<?php functions::xecho($_SESSION['m_admin']['notification']['diffusion_type']);?>',
             '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notifications&page=load_diffusiontype_formcontent',
             'diff_type_div',
             'notifications',
@@ -332,7 +332,7 @@ if ($mode == 'list') {
             ?>
             <script language="javascript">
             setTimeout(function(){loadDiffusionProperties(
-                '<?php echo $_SESSION['m_admin']['notification']['diffusion_type'];?>',
+                '<?php functions::xecho($_SESSION['m_admin']['notification']['diffusion_type']);?>',
                 '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notifications&page=load_diffusionproperties_formcontent'
                 )},500);
             </script>
@@ -347,7 +347,7 @@ if ($mode == 'list') {
         ?>
         <script language="javascript">
 		change_properties_box(
-            '<?php echo $_SESSION['m_admin']['notification']['attachfor_type'];?>',
+            '<?php functions::xecho($_SESSION['m_admin']['notification']['attachfor_type']);?>',
             '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notifications&page=load_attachfortype_formcontent',
             'attach_for_div',
             'notifications',
@@ -366,7 +366,7 @@ if ($mode == 'list') {
             ?>
             <script language="javascript">
                 setTimeout(function () {loadAttachforProperties(
-                '<?php echo $_SESSION['m_admin']['notification']['attachfor_type'];?>',
+                '<?php functions::xecho($_SESSION['m_admin']['notification']['attachfor_type']);?>',
                 '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notifications&page=load_attachforproperties_formcontent',
 				'attach_for_div'
                 )},500);
