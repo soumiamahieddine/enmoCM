@@ -59,7 +59,7 @@ $_SESSION['origin'] = "search_folder_tree";
 <script type="text/javascript" >
     BASE_URL = "<?php echo $_SESSION['config']['businessappurl'] ?>";
 </script>
-<h1><i class="fa fa-search fa-2x"></i> <?php echo _VIEW_FOLDER_TREE; ?></h1>
+<h1><i class="fa fa-search fa-2x"></i> <?php echo _VIEW_FOLDER_TREE;?></h1>
 <div id="inner_content" align="center">
     <div class="block">
         <h2>
@@ -88,7 +88,7 @@ $_SESSION['origin'] = "search_folder_tree";
         <a href="javascript://" onClick="window.top.location.href='<?php
                 echo $_SESSION['config']['businessappurl'];
                 ?>index.php?page=search_folder_tree&module=folder&erase=true';">
-                <i class="fa fa-refresh fa-4x" style="color: #ffffff;" title="<?php echo _NEW_SEARCH; ?>"></i>
+                <i class="fa fa-refresh fa-4x" style="color: #ffffff;" title="<?php echo _NEW_SEARCH;?>"></i>
         </a>
     </div></td>
             </tr>

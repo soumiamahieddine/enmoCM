@@ -83,7 +83,7 @@ if (isset($_REQUEST['erase']) && $_REQUEST['erase'] == 'true') {
 ?>
 <div id="inner_content">
 
-<h1><i class="fa fa-search fa-2x" title="" /></i> <?php echo _ADV_SEARCH_FOLDER_TITLE; ?></h1>
+<h1><i class="fa fa-search fa-2x" title="" /></i> <?php echo _ADV_SEARCH_FOLDER_TITLE;?></h1>
 
 <form name="search_folder_frm" id="search_folder_frm" method="post" action="<?php echo $_SESSION['config']['businessappurl'] 
             .'index.php?page=search_adv_folder_result&module=folder';?>" class="forms2">
@@ -94,14 +94,14 @@ if (isset($_REQUEST['erase']) && $_REQUEST['erase'] == 'true') {
     <tr>
         <td><a href="javascript://" onclick="javascript:window.top.location.href='<?php echo $_SESSION['config']['businessappurl'] 
             .'index.php?page=search_adv_folder&module=folder&reinit=true&erase=true';?>';">
-            <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_SEARCH; ?>"></i>
+            <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_SEARCH;?>"></i>
         </td>
         <td align="right">
             <span style="display:none;">
                 <input name="imageField" type="submit" value="" onclick="$('search_folder_frm').form.submit();" />
             </span>
             <a href="#" onclick="$('search_folder_frm').submit();">
-                <i class="fa fa-search fa-4x" title="<?php echo _SEARCH; ?>"></i>
+                <i class="fa fa-search fa-4x" title="<?php echo _SEARCH;?>"></i>
             </a>
         </td>
     </tr>
@@ -111,7 +111,7 @@ if (isset($_REQUEST['erase']) && $_REQUEST['erase'] == 'true') {
 if ($chooseColl) {
     ?>
     <div class="block">
-    <h2><?php echo _COLLECTION; ?></h2>
+    <h2><?php echo _COLLECTION;?></h2>
     <table width="100%" border="0" cellpadding="3">
         <tr>
             <td width="70%">
@@ -131,7 +131,7 @@ if ($chooseColl) {
                     ?>
                 </select>
             </td>
-            <td><em><?php echo _MUST_CHOOSE_COLLECTION_FIRST; ?></em></td>
+            <td><em><?php echo _MUST_CHOOSE_COLLECTION_FIRST;?></em></td>
             <td>&nbsp;</td>
         </tr>
     </table>
@@ -242,7 +242,7 @@ if ($chooseColl) {
     <div class="block_end"></div>
     </form>
 
-    <?php unset($_SESSION['folder_search']); ?>
+    <?php unset($_SESSION['folder_search']);?>
 
     <script type="text/javascript">
     var foldertypes = $('foldertype_id');

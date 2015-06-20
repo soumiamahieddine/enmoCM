@@ -80,7 +80,7 @@ if(isset($_REQUEST['type_report']) && $_REQUEST['type_report'] == 'foldertype')
 		}
 		$title = _NB_VIEWED_FOLDERS.' '._TITLE_STATS_CHOICE_FOLDER_TYPE;
 		?>
-		<div align="center"><?php $list->list_simple($tab, $i, $title, 'foldertype_id', 'istats_result', false, '', 'listing spec', '', 400, 500); ?></div>
+		<div align="center"><?php $list->list_simple($tab, $i, $title, 'foldertype_id', 'istats_result', false, '', 'listing spec', '', 400, 500);?></div>
 		<?php
 	}
 } // FIN 

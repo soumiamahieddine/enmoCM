@@ -153,25 +153,25 @@ if (isset($_POST['delete_folder'])) {
                 <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                     <tr>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php echo _FOLDERID_LONG; ?> :</th>
-                        <td ><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['folder_id'] ; ?>" size="40" id="folder_id" name="folder_id" /></td>
+                        <th ><?php echo _FOLDERID_LONG;?> :</th>
+                        <td ><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['folder_id'] ;?>" size="40" id="folder_id" name="folder_id" /></td>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php echo _FOLDERNAME; ?> :</th>
+                        <th ><?php echo _FOLDERNAME;?> :</th>
                         <?php if ($updateRight) { ?>
-                            <td><input type="text" value="<?php echo $folderArray['folder_name']; ?>" id="folder_name" name="folder_name" /></td>
+                            <td><input type="text" value="<?php echo $folderArray['folder_name'];?>" id="folder_name" name="folder_name" /></td>
                         <?php } else { ?>
-                            <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['folder_name']; ?>" id="folder_name" name="folder_name" /></td>
+                            <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['folder_name'];?>" id="folder_name" name="folder_name" /></td>
                         <?php } ?>
                     </tr>
                     <tr>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php echo _FOLDERTYPE; ?> :</th>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['foldertype_label']; ?>" id="foldertype"  name="foldertype" />
-                        <input type="hidden" name="foldertype_id" id="foldertype_id" value="<?php echo $folderArray['foldertype_id']; ?>" />
+                        <th ><?php echo _FOLDERTYPE;?> :</th>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['foldertype_label'];?>" id="foldertype"  name="foldertype" />
+                        <input type="hidden" name="foldertype_id" id="foldertype_id" value="<?php echo $folderArray['foldertype_id'];?>" />
                         </td>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php echo _STATUS; ?> :</th>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['status']; ?>" id="status" name="status" /></td>
+                        <th ><?php echo _STATUS;?> :</th>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['status'];?>" id="status" name="status" /></td>
                     </tr>
                 </table>
                 <?php 
@@ -226,7 +226,7 @@ if (isset($_POST['delete_folder'])) {
                                             if($folderArray['index'][$key]['type'] == 'date')
                                             {
                                                 ?>
-                                                <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $value; ?>" size="40"  title="<?php echo $value; ?>" alt="<?php echo $value; ?>" onclick="showCalender(this);" />
+                                                <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $value;?>" size="40"  title="<?php echo $value;?>" alt="<?php echo $value;?>" onclick="showCalender(this);" />
                                                 <?php
                                             }
                                             else
@@ -254,7 +254,7 @@ if (isset($_POST['delete_folder'])) {
                                     else
                                     {
                                     ?>
-                                        <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folderArray['index'][$key]['show_value'];?>" size="40"  title="<?php echo $folderArray['index'][$key]['show_value']; ?>" alt="<?php echo $folderArray['index'][$key]['show_value']; ?>" readonly="readonly" class="readonly" />
+                                        <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $folderArray['index'][$key]['show_value'];?>" size="40"  title="<?php echo $folderArray['index'][$key]['show_value'];?>" alt="<?php echo $folderArray['index'][$key]['show_value'];?>" readonly="readonly" class="readonly" />
                                         <?php
                                     }
                                 ?>
@@ -285,19 +285,19 @@ if (isset($_POST['delete_folder'])) {
                 <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                     <tr>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php echo _TYPIST; ?> :</th>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['typist']; ?>" name="typîst" id="typist" /></td>
+                        <th ><?php echo _TYPIST;?> :</th>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['typist'];?>" name="typîst" id="typist" /></td>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php echo _CREATION_DATE; ?> :</th>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['creation_date']; ?>" id="creation_date" name="creation_date"  /></td>
+                        <th ><?php echo _CREATION_DATE;?> :</th>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['creation_date'];?>" id="creation_date" name="creation_date"  /></td>
                     </tr>
                     <tr>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php echo _SYSTEM_ID; ?> :</th>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['system_id']; ?>" name="system_id" id="system_id" /></td>
+                        <th ><?php echo _SYSTEM_ID;?> :</th>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['system_id'];?>" name="system_id" id="system_id" /></td>
                         <th align="left" class="picto" >&nbsp;</th>
-                        <th ><?php echo _MODIFICATION_DATE; ?> :</th>
-                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['last_modified_date']; ?>" id="modification_date" name="modification_date"  /></td>
+                        <th ><?php echo _MODIFICATION_DATE;?> :</th>
+                        <td><input type="text" class="readonly" readonly="readonly" value="<?php echo $folderArray['last_modified_date'];?>" id="modification_date" name="modification_date"  /></td>
                     </tr>
                 </table>
                 <br/>
@@ -308,7 +308,7 @@ if (isset($_POST['delete_folder'])) {
                     }?>
                     <?php if($deleteRight)
                         {?>
-                        <input type="submit" class="button"  value="<?php echo _DELETE_FOLDER;?>" name="delete_folder" onclick="return(confirm('<?php echo _REALLY_DELETE.' '._THIS_FOLDER.'?\n\r\n\r'._WARNING.' '._ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED; ?>'));" />
+                        <input type="submit" class="button"  value="<?php echo _DELETE_FOLDER;?>" name="delete_folder" onclick="return(confirm('<?php echo _REALLY_DELETE.' '._THIS_FOLDER.'?\n\r\n\r'._WARNING.' '._ALL_DOCS_AND_SUFOLDERS_WILL_BE_DELETED;?>'));" />
                         <?php } ?>
                 </p>
                 </form>

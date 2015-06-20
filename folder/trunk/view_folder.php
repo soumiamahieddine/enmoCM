@@ -476,7 +476,7 @@ if(isset($_REQUEST['delete_doc']) && !empty($_REQUEST['coll_id']))
                                     <p>&nbsp;</p>
                                     <p>
                                         <label><?php echo _PIECE_TYPE;?> :</label>
-                                        <input type="text" readonly="readonly" class="readonly" value="<?php echo $desc; ?>" />
+                                        <input type="text" readonly="readonly" class="readonly" value="<?php echo $desc;?>" />
                                     </p>
                                     <?php
                                     $db = new dbquery();
