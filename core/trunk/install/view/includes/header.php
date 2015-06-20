@@ -30,7 +30,7 @@
 ?>
 <div class="headerName">
     <h2>
-        <?php echo $shortTitle;?>
+        <?php functions::xecho($shortTitle);?>
     </h2>
 </div>
 <div class="logo">

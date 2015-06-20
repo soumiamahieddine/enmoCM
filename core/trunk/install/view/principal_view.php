@@ -32,8 +32,8 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta http-equiv="Content-Language" content="<?php echo $Class_Install->getActualLang();?>" />
-        <title>Maarch > <?php echo $longTitle;?></title>
+        <meta http-equiv="Content-Language" content="<?php functions::xecho($Class_Install->getActualLang());?>" />
+        <title>Maarch > <?php functions::xecho($longTitle);?></title>
         <link rel="stylesheet" href="css/merged_css.css" />
         <script src="js/merged_js.js"></script>
     </head>

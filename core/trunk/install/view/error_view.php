@@ -36,7 +36,7 @@
     </div>
     <div class="contentBlock" id="infosError">
         <p>
-            <?php echo $infosError;?>
+            <?php functions::xecho($infosError);?>
         </p>
     </div>
 </div>

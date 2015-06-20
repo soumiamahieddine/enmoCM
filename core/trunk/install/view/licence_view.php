@@ -39,7 +39,7 @@
             <div align="center">
                 <div id="licenceOverflow" style="min-height: 131px; width: 880px; overflow: auto; background-color: rgba(255, 255, 255, 0.6);">
                     <br />
-                    <?php echo $txtLicence;?>
+                    <?php functions::xecho($txtLicence);?>
                     <br />
                 </div>
             </div>

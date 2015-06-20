@@ -482,7 +482,7 @@ class core_tools extends functions
                 $tmp = htmlentities  ( $tmp,ENT_COMPAT, 'UTF-8', true); // Encodes
                 ?>
                 <li onmouseover="this.className='on';" onmouseout="this.className='';">
-                <a href="#" onclick="window.open('<?php echo $tmp;?>', '<?php 
+                <a href="#" onclick="window.open('<?php functions::xecho($tmp);?>', '<?php 
                     if(isset($menu[$i]['target']) && $menu[$i]['target'] <> '') {
                         echo $menu[$i]['target'];
                     } else {
@@ -1123,7 +1123,7 @@ class core_tools extends functions
                                 }
 
                                 ?>
-                                <input type="button" name="<?php echo $modules_services[$id_module][$i]['id'];?>" value="<?php echo $tmp;?>" onclick="window.open('<?php echo   $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>', '<?php echo $modules_services[$id_module][$i]['id'];?>','width=<?php echo $modules_services[$id_module][$i]['whereamiused'][$k]['width'];?>,height=<?php echo $modules_services[$id_module][$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
+                                <input type="button" name="<?php functions::xecho($modules_services[$id_module][$i]['id']);?>" value="<?php functions::xecho($tmp);?>" onclick="window.open('<?php echo   $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$id_module."&page=".$modules_services[$id_module][$i]['servicepage'];?>', '<?php functions::xecho($modules_services[$id_module][$i]['id']);?>','width=<?php functions::xecho($modules_services[$id_module][$i]['whereamiused'][$k]['width']);?>,height=<?php functions::xecho($modules_services[$id_module][$i]['whereamiused'][$k]['height']);?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
                                 <?php
                                 break;
                             } else if ($modules_services[$id_module][$i]['whereamiused'][$k]['nature'] == "include"
@@ -1313,7 +1313,7 @@ class core_tools extends functions
                                                 $tmp  = constant($tmp);
                                             }
                                             ?>
-                                            <input type="button" name="<?php echo $modules_services[$value][$iService]['id'];?>" value="<?php echo $tmp;?>" onclick="window.open('<?php echo  $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$iServiced_module."&page=".$modules_services[$iServiced_module][$iService]['servicepage'];?>', '<?php echo $modules_services[$value][$iService]['id'];?>','width=<?php echo $modules_services[$value][$iService]['whereamiused'][$k]['width'];?>,height=<?php echo $modules_services[$value][$iService]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
+                                            <input type="button" name="<?php functions::xecho($modules_services[$value][$iService]['id']);?>" value="<?php functions::xecho($tmp);?>" onclick="window.open('<?php echo  $_SESSION['config']['businessappurl'].'index.php?display=true&module='.$iServiced_module."&page=".$modules_services[$iServiced_module][$iService]['servicepage'];?>', '<?php functions::xecho($modules_services[$value][$iService]['id']);?>','width=<?php functions::xecho($modules_services[$value][$iService]['whereamiused'][$k]['width']);?>,height=<?php functions::xecho($modules_services[$value][$iService]['whereamiused'][$k]['height']);?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
                                             <?php
                                         } else if ( isset($_SESSION['user']['services'][$modules_services[$value][$iService]['id']])
                                             && $modules_services[$value][$iService]['whereamiused'][$k]['nature'] == "include"
@@ -1346,8 +1346,8 @@ class core_tools extends functions
                     if ($u == 1) {
                         ?>
                         <td  class="indexingtab">
-                            <a href="javascript://" onclick="opentab('myframe', '<?php echo $tab_view[$u]['frame_src'];?>');">
-                                <?php echo $tab_view[$u]['tab_label'];?>
+                            <a href="javascript://" onclick="opentab('myframe', '<?php functions::xecho($tab_view[$u]['frame_src']);?>');">
+                                <?php functions::xecho($tab_view[$u]['tab_label']);?>
                             </a>
                             <?php
                             $_SESSION['first_tab_to_open'] = $tab_view[$u]['frame_src'];
@@ -1357,8 +1357,8 @@ class core_tools extends functions
                     } else {
                         ?>
                         <td  class="indexingtab">
-                            <a href="javascript://" onclick="opentab('myframe', '<?php echo $tab_view[$u]['frame_src'];?>');">
-                                <?php echo $tab_view[$u]['tab_label'];?>
+                            <a href="javascript://" onclick="opentab('myframe', '<?php functions::xecho($tab_view[$u]['frame_src']);?>');">
+                                <?php functions::xecho($tab_view[$u]['tab_label']);?>
                             </a>
                         </td>
                         <?php
@@ -1396,7 +1396,7 @@ class core_tools extends functions
                                 $appServices[$i]['id']
                             );
                             ?>
-                               <iframe src='<?php echo  $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$appServices[$i]['servicepage'];?>' name="<?php  $appServices[$i]['id'];?>" id="<?php  $appServices[$i]['id'];?>" width='<?php echo $appServices[$i]['whereamiused'][$k]['width'];?>' height='<?php echo $appServices[$i]['whereamiused'][$k]['height'];?>' frameborder='<?php echo $appServices[$i]['whereamiused'][$k]['border'];?>' scrolling='<?php echo $appServices[$i]['whereamiused'][$k]['scrolling'];?>'></iframe>
+                               <iframe src='<?php echo  $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$appServices[$i]['servicepage'];?>' name="<?php  $appServices[$i]['id'];?>" id="<?php  $appServices[$i]['id'];?>" width='<?php functions::xecho($appServices[$i]['whereamiused'][$k]['width']);?>' height='<?php functions::xecho($appServices[$i]['whereamiused'][$k]['height']);?>' frameborder='<?php functions::xecho($appServices[$i]['whereamiused'][$k]['border']);?>' scrolling='<?php functions::xecho($appServices[$i]['whereamiused'][$k]['scrolling']);?>'></iframe>
                                <?php
                         } else if ($appServices[$i]['whereamiused'][$k]['nature'] == "popup"
                             && $_SESSION['user']['services'][$appServices[$i]['id']]
@@ -1433,7 +1433,7 @@ class core_tools extends functions
                                 $tmp  = constant($tmp);
                             }
                             ?>
-                            <input type="button" name="<?php echo $appServices[$i]['id'];?>" value="<?php echo $tmp;?>" onclick="window.open('<?php echo  $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$appServices[$i]['servicepage'];?>', '<?php echo $appServices[$i]['id'];?>','width=<?php echo $appServices[$i]['whereamiused'][$k]['width'];?>,height=<?php echo $appServices[$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
+                            <input type="button" name="<?php functions::xecho($appServices[$i]['id']);?>" value="<?php functions::xecho($tmp);?>" onclick="window.open('<?php echo  $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$appServices[$i]['servicepage'];?>', '<?php functions::xecho($appServices[$i]['id']);?>','width=<?php functions::xecho($appServices[$i]['whereamiused'][$k]['width']);?>,height=<?php functions::xecho($appServices[$i]['whereamiused'][$k]['height']);?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
                             <?php
                         } else if ($appServices[$i]['whereamiused'][$k]['nature'] == "include"
                             && isset($_SESSION['user']['services'][$appServices[$i]['id']])
@@ -1488,7 +1488,7 @@ class core_tools extends functions
         /*<?xml version="1.0" encoding="UTF-8"?>*/
         ?>
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $_SESSION['config']['lang'];?>" lang="<?php echo $_SESSION['config']['lang'];?>">
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php functions::xecho($_SESSION['config']['lang']);?>" lang="<?php functions::xecho($_SESSION['config']['lang']);?>">
         <?php
     }
 
@@ -1505,9 +1505,9 @@ class core_tools extends functions
         }
         ?>
         <head>
-            <title><?php echo $title;?></title>
+            <title><?php functions::xecho($title);?></title>
             <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-            <meta http-equiv="Content-Language" content="<?php echo $_SESSION['config']['lang'];?>" />
+            <meta http-equiv="Content-Language" content="<?php functions::xecho($_SESSION['config']['lang']);?>" />
             <meta http-equiv="X-UA-Compatible" content="IE=edge" /> 
             <link rel="icon" type="image/png" href="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=favicon.png"/>
             <link href="index.php?display&page=generate_search_xml" title="Maarch <?php 
@@ -2249,7 +2249,7 @@ class core_tools extends functions
         }
         ?>
         <head>
-            <title><?php echo $title;?></title>
+            <title><?php functions::xecho($title);?></title>
             <meta name="apple-mobile-web-app-capable" content="yes">
             <meta name="apple-touch-fullscreen" content="yes">
             <link rel="apple-touch-icon" href="img/board.png">
