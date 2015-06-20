@@ -87,7 +87,7 @@ if (count($fileplans_array) > 0)  {
 					<?php
 					for($i=0; $i < count($fileplans_array); $i++) {
 						?>
-						var tree_<?php echo $fileplans_array[$i]['ID'];?> = null;
+						var tree_<?php functions::xecho($fileplans_array[$i]['ID']);?> = null;
 						<?php
 					}
 					?>
@@ -132,16 +132,16 @@ if (count($fileplans_array) > 0)  {
 							}
 							// $request->show_array( $level_1);
 							?>
-								var struct_<?php echo $fileplans_array[$i]['ID'];?> = [
+								var struct_<?php functions::xecho($fileplans_array[$i]['ID']);?> = [
 											{
-											'id':'<?php echo $fileplans_array[$i]['ID'];?>',
+											'id':'<?php functions::xecho($fileplans_array[$i]['ID']);?>',
 											'txt':'&nbsp;<?php echo empty($fileplans_array[$i]['LABEL'])? _FILEPLAN : $fileplans_array[$i]['LABEL'];?>',
 											'items':[
 													<?php
 													for($ii=0; $ii < count($level_1);$ii++) {
 														?>
 														{
-														'id' : '<?php echo $fileplans_array[$i]['ID'].'@@'.$level_1[$ii]['id'];?>',
+														'id' : '<?php functions::xecho($fileplans_array[$i]['ID']).'@@'.$level_1[$ii]['id'];?>',
 														'title' : '<?php echo addslashes($level_1[$ii]['tooltip_value']);?>',
 														'canhavechildren' : true,
 														'onclick' : 'view_document_list',
@@ -156,7 +156,7 @@ if (count($fileplans_array) > 0)  {
 												]
 											}
 										];
-								tree_<?php echo $fileplanId;?> = new TafelTree('tree_fileplan_<?php echo $fileplanId;?>', struct_<?php echo $fileplanId;?>, {
+								tree_<?php functions::xecho($fileplanId);?> = new TafelTree('tree_fileplan_<?php functions::xecho($fileplanId);?>', struct_<?php functions::xecho($fileplanId);?>, {
 									'generate' : true,
 									'imgBase' : '<?php echo $_SESSION['config']['businessappurl'];?>tools/tafelTree/imgs/',
 									'defaultImg' : 'folder.gif',
@@ -177,7 +177,7 @@ if (count($fileplans_array) > 0)  {
 						<?php
 						for($i=0; $i < count($fileplans_array); $i++) {
 							?>
-							loadedTree.push('<?php echo $fileplans_array[$i]['ID'];?>');
+							loadedTree.push('<?php functions::xecho($fileplans_array[$i]['ID']);?>');
 							<?php
 						}
 						?>
@@ -199,7 +199,7 @@ if (count($fileplans_array) > 0)  {
 					<?php
 					for($i=0; $i < count($fileplans_array); $i++) {
 						?>
-						<div id="tree_fileplan_<?php echo $fileplans_array[$i]['ID'];?>"></div>
+						<div id="tree_fileplan_<?php functions::xecho($fileplans_array[$i]['ID']);?>"></div>
 						<hr/>
 						<?php
 					}

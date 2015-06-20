@@ -148,7 +148,7 @@ if (empty($fileplan_id)) {
 			<table cellspacing="0" cellpadding="5" border="0" width="100%">
 				<tr>
 				<td nowrap><b><?php echo _FILEPLAN_NAME;?> : </b></td>
-				<td nowrap><?php echo $fileplan_label;?></td>
+				<td nowrap><?php functions::xecho($fileplan_label);?></td>
 				<td><a href="javascript://" onClick="showFileplanForm('<?php 
 					echo $_SESSION['config']['businessappurl']
 					. "index.php?display=true&module=fileplan&page=fileplan_ajax_script"

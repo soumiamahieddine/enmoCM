@@ -146,7 +146,7 @@ if (!empty($fileplan_id) && $fileplan->isPersonnalFileplan($fileplan_id) === fal
 													for($i=0; $i < count($level_1);$i++) {
 														?>
 														{
-														'id' : '<?php echo $level_1[$i]['id'];?>',
+														'id' : '<?php functions::xecho($level_1[$i]['id']);?>',
 														'title' : '<?php echo addslashes($level_1[$i]['tooltip_value']);?>',
 														'canhavechildren' : true,
 														'txt' : '<?php echo "&nbsp;".addslashes($level_1[$i]['label_value']);?>',
