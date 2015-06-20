@@ -61,4 +61,4 @@
 			?>static.php?module=fileplan&filename=manage_fileplan_b.gif" alt="" />
 			<?php echo "Impression du dossier du document ". _NUM .$_REQUEST['res_id'] ;?></h1>
 <div id="inner_content">
-			<?php showFrame($res['filename'], $docserver_path, str_replace("#","/",$res['path'])); ?></div>
+			<?php showFrame($res['filename'], $docserver_path, str_replace("#","/",$res['path']));?></div>
