@@ -136,7 +136,7 @@ $core_tools->load_header($title, true, false);
 <?php
 $_SESSION['mode_editor'] = false;
 include('modules/templates/load_editor.php');?>
-<div class="error"><?php echo $_SESSION['error']; $_SESSION['error']= "";?></div>
+<div class="error"><?php functions::xecho($_SESSION['error']); $_SESSION['error']= "";?></div>
 <div align="center">
     <form name="frmtemplate" id="frmtemplate" method="post" action="<?php 
         echo $_SESSION['config']['businessappurl'];
@@ -148,7 +148,7 @@ include('modules/templates/load_editor.php');?>
     <?php
     if ($mode == "up") {
         ?>
-        <input type="hidden" name="id" id="id" value="<?php echo $id;?>" />
+        <input type="hidden" name="id" id="id" value="<?php functions::xecho($id);?>" />
         <?php
     }
     ?>
@@ -161,7 +161,7 @@ include('modules/templates/load_editor.php');?>
     <input type="hidden" name="template_label" id="template_label" value="<?php 
         echo $answer['MODEL_LABEL'];?>" />
      <textarea name="template_content" style="width:100%" rows="50">
-        <?php echo $answer['CONTENT'];?>
+        <?php functions::xecho($answer['CONTENT']);?>
     </textarea>
     <br/>
     <p>

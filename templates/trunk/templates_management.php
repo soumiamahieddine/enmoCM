@@ -135,7 +135,7 @@ if ($mode == 'list') {
                             $cptTarget ++
                         ) {
                         ?>
-                            <option value="<?php echo $_SESSION['m_admin']['templatesTargets'][$cptTarget]['id'];?>" <?php
+                            <option value="<?php functions::xecho($_SESSION['m_admin']['templatesTargets'][$cptTarget]['id']);?>" <?php
                             if (isset($_SESSION['m_admin']['templates']['template_target'])
                                 && $_SESSION['m_admin']['templates']['template_target']
                                     == $_SESSION['m_admin']['templatesTargets'][$cptTarget]['id']
@@ -156,7 +156,7 @@ if ($mode == 'list') {
                         <option value="all" ><?php echo _ALL_ATTACHMENT_TYPES;?></option>
                         <?php
 		                    foreach(array_keys($_SESSION['attachment_types']) as $attachmentType) {
-		                        ?><option value="<?php echo $attachmentType;?>" <?php
+		                        ?><option value="<?php functions::xecho($attachmentType);?>" <?php
 
 	                            if (isset($_SESSION['m_admin']['templates']['template_attachment_type'])
 	                                && 
@@ -165,7 +165,7 @@ if ($mode == 'list') {
 	                                echo 'selected="selected"';
 	                            }
 	                            ?> >
-		                            <?php echo $_SESSION['attachment_types'][$attachmentType];?>
+		                            <?php functions::xecho($_SESSION['attachment_types'][$attachmentType]);?>
 		                        </option>
 		                    <?php }
                         ?>
@@ -195,7 +195,7 @@ if ($mode == 'list') {
                             $cptDatasource ++
                         ) {
                         ?>
-                            <option value="<?php echo $_SESSION['m_admin']['templatesDatasources'][$cptDatasource]['id'];?>" <?php
+                            <option value="<?php functions::xecho($_SESSION['m_admin']['templatesDatasources'][$cptDatasource]['id']);?>" <?php
                             if (isset($_SESSION['m_admin']['templates']['template_datasource'])
                                 && $_SESSION['m_admin']['templates']['template_datasource']
                                     == $_SESSION['m_admin']['templatesDatasources'][$cptDatasource]['id']
@@ -307,7 +307,7 @@ if ($mode == 'list') {
                                     . $objectTable
                                     . '\', \'\', \'height=200, width=250,scrollbars=no,resizable=no,directories=no,toolbar=no\');';
                                 ?>
-                                <a href="#" onClick="<?php echo $strAction;?>">
+                                <a href="#" onClick="<?php functions::xecho($strAction);?>">
                                 
                                     <i class="fa fa-pencil fa-2x"></i>
                                 <?php echo _EDIT_TEMPLATE;?>
