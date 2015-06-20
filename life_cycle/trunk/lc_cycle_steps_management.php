@@ -82,7 +82,7 @@ if ($mode == "list") {
                 . _LC_CYCLE_STEP . '"></i>&nbsp;' . _VIEW_GENERAL_PARAMETERS_OF_THE_POLICY . '</a></p>';
                     ?>
                     <p>
-                        <label for="policy_id"><?php echo _POLICY_ID; ?> : 
+                        <label for="policy_id"><?php echo _POLICY_ID;?> : 
                         </label>
                         <input name="policy_id" type="text"  id="policy_id" 
                         value="<?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['policy_id'])) { echo $func->show_str($_SESSION['m_admin']['lc_cycle_steps']['policy_id']);
@@ -93,7 +93,7 @@ if ($mode == "list") {
         } else {
                     ?>
                     <p>
-                        <label for="policy_id"><?php echo _POLICY_ID; ?> : 
+                        <label for="policy_id"><?php echo _POLICY_ID;?> : 
                         </label>
                         <select name="policy_id" id="policy_id" 
             onchange="changeCycle('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=life_cycle&page=change_cycle_list');">
@@ -124,8 +124,8 @@ if ($mode == "list") {
         ) {
             ?>
                     <p>
-                        <label for="cycle_id"><?php echo _CYCLE_ID; ?> : </label>
-                        <input name="cycle_id" type="text"  id="cycle_id" value="<?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['cycle_id'])) echo $func->show_str($_SESSION['m_admin']['lc_cycle_steps']['cycle_id']); ?>" readonly='readonly' class='readonly'/>
+                        <label for="cycle_id"><?php echo _CYCLE_ID;?> : </label>
+                        <input name="cycle_id" type="text"  id="cycle_id" value="<?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['cycle_id'])) echo $func->show_str($_SESSION['m_admin']['lc_cycle_steps']['cycle_id']);?>" readonly='readonly' class='readonly'/>
                     </p>
         <?php
         } else {
@@ -135,15 +135,15 @@ if ($mode == "list") {
         }
         ?>
                 <p>
-                    <label for="id"><?php echo _CYCLE_STEP_ID; ?> : </label>
-                    <input name="id" type="text"  id="id" value="<?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_id'])) echo $func->show_str($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+                    <label for="id"><?php echo _CYCLE_STEP_ID;?> : </label>
+                    <input name="id" type="text"  id="id" value="<?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_id'])) echo $func->show_str($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_id']);?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
                 </p>
                 <p>
-                    <label for="cycle_step_desc"><?php echo _CYCLE_STEP_DESC; ?> : </label>
-                    <textarea name="cycle_step_desc" type="text" id="cycle_step_desc" value="<?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_desc'])) echo $func->show_str($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_desc']); ?>" ><?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_desc'])) echo $_SESSION['m_admin']['lc_cycle_steps']['cycle_step_desc'];?></textarea>
+                    <label for="cycle_step_desc"><?php echo _CYCLE_STEP_DESC;?> : </label>
+                    <textarea name="cycle_step_desc" type="text" id="cycle_step_desc" value="<?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_desc'])) echo $func->show_str($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_desc']);?>" ><?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['cycle_step_desc'])) echo $_SESSION['m_admin']['lc_cycle_steps']['cycle_step_desc'];?></textarea>
                 </p>
                 <p>
-                    <label for="docserver_type_id"><?php echo _DOCSERVER_TYPE_ID; ?> : </label>
+                    <label for="docserver_type_id"><?php echo _DOCSERVER_TYPE_ID;?> : </label>
                     <select name="docserver_type_id" id="docserver_type_id">
                             <option value=""><?php echo _DOCSERVER_TYPE_ID;?></option>
                             <?php
@@ -156,12 +156,12 @@ if ($mode == "list") {
                     </select>
                 </p>
                 <!--<p>
-                    <label><?php echo _IS_ALLOW_FAILURE; ?> : </label>
+                    <label><?php echo _IS_ALLOW_FAILURE;?> : </label>
                     <input type="radio" class="check" name="is_allow_failure" value="true" <?php if (isset($_SESSION['m_admin']['docservers']['is_allow_failure']) && $_SESSION['m_admin']['docservers']['is_allow_failure']) {?> checked="checked"<?php } ?> /><?php echo _YES;?>
                     <input type="radio" class="check" name="is_allow_failure" value="false" <?php if (isset($_SESSION['m_admin']['docservers']['is_allow_failure']) && (!$_SESSION['m_admin']['docservers']['is_allow_failure'] || $_SESSION['m_admin']['docservers']['is_allow_failure'] == '')) {?> checked="checked"<?php } elseif (!isset($_SESSION['m_admin']['docservers']['is_allow_failure'])) {?> checked="checked"<?php }?> /><?php echo _NO;?>
                 </p>-->
                 <p>
-                    <label for="step_operation"><?php echo _STEP_OPERATION; ?> : </label>
+                    <label for="step_operation"><?php echo _STEP_OPERATION;?> : </label>
                     <select name="step_operation" id="step_operation">
                         <?php
                         for ($cptStepOperation = 0;$cptStepOperation < count($_SESSION['lifeCycleFeatures']['LIFE_CYCLE']['PROCESS']['MODE']);$cptStepOperation++){
@@ -173,35 +173,35 @@ if ($mode == "list") {
                     </select>
                 </p>
                 <p>
-                    <label for="sequence_number"><?php echo _SEQUENCE_NUMBER; ?> : </label>
-                    <input name="sequence_number" type="text"  id="sequence_number" value="<?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['sequence_number'])) echo $func->show_str($_SESSION['m_admin']['lc_cycle_steps']['sequence_number']); ?>" />
+                    <label for="sequence_number"><?php echo _SEQUENCE_NUMBER;?> : </label>
+                    <input name="sequence_number" type="text"  id="sequence_number" value="<?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['sequence_number'])) echo $func->show_str($_SESSION['m_admin']['lc_cycle_steps']['sequence_number']);?>" />
                 </p>
                 <!--<p>
-                    <label><?php echo _IS_MUST_COMPLETE; ?> : </label>
+                    <label><?php echo _IS_MUST_COMPLETE;?> : </label>
                     <input type="radio" class="check" name="is_must_complete" value="true" <?php if (isset($_SESSION['m_admin']['docservers']['is_must_complete']) && $_SESSION['m_admin']['docservers']['is_must_complete']) {?> checked="checked"<?php } ?> /><?php echo _YES;?>
                     <input type="radio" class="check" name="is_must_complete" value="false" <?php if (isset($_SESSION['m_admin']['docservers']['is_must_complete']) && (!$_SESSION['m_admin']['docservers']['is_must_complete'] || $_SESSION['m_admin']['docservers']['is_must_complete']) == '') {?> checked="checked"<?php } elseif (!isset($_SESSION['m_admin']['docservers']['is_must_complete'])) {?> checked="checked"<?php }?> /><?php echo _NO;?>
                 </p>-->
                 <!--<p>
-                    <label for="preprocess_script"><?php echo _PREPROCESS_SCRIPT; ?> : </label>
-                    <input name="preprocess_script" type="text"  id="preprocess_script" value="<?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['preprocess_script'])) echo $func->show_str($_SESSION['m_admin']['lc_cycle_steps']['preprocess_script']); ?>" />
+                    <label for="preprocess_script"><?php echo _PREPROCESS_SCRIPT;?> : </label>
+                    <input name="preprocess_script" type="text"  id="preprocess_script" value="<?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['preprocess_script'])) echo $func->show_str($_SESSION['m_admin']['lc_cycle_steps']['preprocess_script']);?>" />
                 </p>-->
                 <!--<p>
-                    <label for="postprocess_script"><?php echo _POSTPROCESS_SCRIPT; ?> : </label>
-                    <input name="postprocess_script" type="text"  id="postprocess_script" value="<?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['postprocess_script'])) echo $func->show_str($_SESSION['m_admin']['lc_cycle_steps']['postprocess_script']); ?>" />
+                    <label for="postprocess_script"><?php echo _POSTPROCESS_SCRIPT;?> : </label>
+                    <input name="postprocess_script" type="text"  id="postprocess_script" value="<?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['postprocess_script'])) echo $func->show_str($_SESSION['m_admin']['lc_cycle_steps']['postprocess_script']);?>" />
                 </p>-->
                 <p class="buttons">
                     <?php
                     if ($mode == "up"){
                         ?>
-                        <input class="button" type="submit" name="submit" value="<?php echo _MODIFY; ?>" />
+                        <input class="button" type="submit" name="submit" value="<?php echo _MODIFY;?>" />
                         <?php
                     } elseif ($mode == "add") {
                         ?>
-                        <input type="submit" class="button"  name="submit" value="<?php echo _ADD; ?>" />
+                        <input type="submit" class="button"  name="submit" value="<?php echo _ADD;?>" />
                         <?php
                     }
                     ?>
-                   <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_cycle_steps_management_controler&amp;module=life_cycle&amp;mode=list';"/>
+                   <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL;?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_cycle_steps_management_controler&amp;module=life_cycle&amp;mode=list';"/>
                 </p>
             </form>
             </div>

@@ -71,30 +71,30 @@ if($mode == "list"){
                 <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])) echo $_REQUEST['what'];?>" />
                 <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])) echo $_REQUEST['start'];?>" />
                 <p>
-                    <label for="id"><?php echo _LC_POLICY_ID; ?> : </label>
-                    <input name="id" type="text"  id="id" value="<?php if(isset($_SESSION['m_admin']['lc_policies']['policy_id'])) echo $func->show_str($_SESSION['m_admin']['lc_policies']['policy_id']); ?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
+                    <label for="id"><?php echo _LC_POLICY_ID;?> : </label>
+                    <input name="id" type="text"  id="id" value="<?php if(isset($_SESSION['m_admin']['lc_policies']['policy_id'])) echo $func->show_str($_SESSION['m_admin']['lc_policies']['policy_id']);?>" <?php if($mode == "up") echo " readonly='readonly' class='readonly'";?>/>
                 </p>
                 <p>
-                    <label for="policy_name"><?php echo _LC_POLICY_NAME; ?> : </label>
-                    <input name="policy_name" type="text"  id="policy_name" value="<?php if(isset($_SESSION['m_admin']['lc_policies']['policy_name'])) echo $func->show_str($_SESSION['m_admin']['lc_policies']['policy_name']); ?>" />
+                    <label for="policy_name"><?php echo _LC_POLICY_NAME;?> : </label>
+                    <input name="policy_name" type="text"  id="policy_name" value="<?php if(isset($_SESSION['m_admin']['lc_policies']['policy_name'])) echo $func->show_str($_SESSION['m_admin']['lc_policies']['policy_name']);?>" />
                 </p>
                 <p>
-                    <label for="policy_desc"><?php echo _POLICY_DESC; ?> : </label>
-                    <textarea name="policy_desc" type="text"  id="policy_desc" value="<?php if(isset($_SESSION['m_admin']['lc_policies']['policy_desc'])) echo $func->show_str($_SESSION['m_admin']['lc_policies']['policy_desc']); ?>" /><?php if(isset($_SESSION['m_admin']['lc_policies']['policy_desc'])) echo $_SESSION['m_admin']['lc_policies']['policy_desc'] ?></textarea>
+                    <label for="policy_desc"><?php echo _POLICY_DESC;?> : </label>
+                    <textarea name="policy_desc" type="text"  id="policy_desc" value="<?php if(isset($_SESSION['m_admin']['lc_policies']['policy_desc'])) echo $func->show_str($_SESSION['m_admin']['lc_policies']['policy_desc']);?>" /><?php if(isset($_SESSION['m_admin']['lc_policies']['policy_desc'])) echo $_SESSION['m_admin']['lc_policies']['policy_desc'] ?></textarea>
                 </p>
                 <p class="buttons">
                     <?php
                     if($mode == "up") {
                         ?>
-                        <input class="button" type="submit" name="submit" value="<?php echo _MODIFY; ?>" />
+                        <input class="button" type="submit" name="submit" value="<?php echo _MODIFY;?>" />
                         <?php
                     } elseif($mode == "add") {
                         ?>
-                        <input type="submit" class="button"  name="submit" value="<?php echo _ADD; ?>" />
+                        <input type="submit" class="button"  name="submit" value="<?php echo _ADD;?>" />
                         <?php
                     }
                     ?>
-                   <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_policies_management_controler&amp;module=life_cycle&amp;mode=list';"/>
+                   <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL;?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=lc_policies_management_controler&amp;module=life_cycle&amp;mode=list';"/>
                 </p>
             </form>
             <?php
