@@ -76,13 +76,13 @@ echo _REPORTS;
 <h2>
     <i class="fa fa-file fa-2x"></i> <?php 
 echo _NB_TOTAL_DOC;
-?> : <b><?php echo $countPiece->total;?></b>
+?> : <b><?php functions::xecho($countPiece->total);?></b>
     <?php 
 if ($rep->is_module_loaded('folder')) {
 	?>
     &nbsp;&nbsp; <i class="fa fa-folder fa-2x"></i> <?php 
     echo _NB_TOTAL_FOLDER;
-    ?> : <b><?php echo $countFolder->total;?></b><?php
+    ?> : <b><?php functions::xecho($countFolder->total);?></b><?php
 }
 ?>
     </h2>

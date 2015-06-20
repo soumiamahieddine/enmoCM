@@ -126,14 +126,14 @@ class graphics
 		$nb_coll = count($data[0]);
 		$keys = array_keys($data[0]);
 		?><div align="center">
-			<div><b><?php echo $title;?></b></div>
+			<div><b><?php functions::xecho($title);?></b></div>
              <br/>
              <table  border="0" cellspacing="0" class="listing spec">
              	<thead>
 				<tr>
                 <?php for($i=0; $i< $nb_coll;$i++)
 				{?>
-                	<th><?php echo $data[0][$keys[$i]];?></th>
+                	<th><?php functions::xecho($data[0][$keys[$i]]);?></th>
                 <?php
 				}?>
                 </tr>
@@ -152,11 +152,11 @@ class graphics
 						{
 							$color = ' class="col"';
 						}?>
-                    	<tr <?php echo $color;?>>
+                    	<tr <?php functions::xecho($color);?>>
                         	<?php
 							for($j=0; $j< $nb_coll;$j++)
 							{?>
-								<td><?php echo $data[$i][$keys[$j]];?></td>
+								<td><?php functions::xecho($data[$i][$keys[$j]]);?></td>
 								<?php
 							}?>
                          </tr>

@@ -157,13 +157,13 @@ if(isset($_GET['id']) && !empty($_GET['id']))
                 if($_SESSION['m_admin']['all_groups'][$k]['id'] == $_SESSION['m_admin']['group'])
                 {
                     ?>
-                        <option value="<?php echo $_SESSION['m_admin']['all_groups'][$k]['id'];?>" selected="selected"><?php echo $_SESSION['m_admin']['all_groups'][$k]['label'];?></option>
+                        <option value="<?php functions::xecho($_SESSION['m_admin']['all_groups'][$k]['id']);?>" selected="selected"><?php echo $_SESSION['m_admin']['all_groups'][$k]['label'];?></option>
                     <?php
                 }
                 else
                 {
                     ?>
-                        <option value="<?php echo $_SESSION['m_admin']['all_groups'][$k]['id'];?>"><?php echo $_SESSION['m_admin']['all_groups'][$k]['label'];?></option>
+                        <option value="<?php functions::xecho($_SESSION['m_admin']['all_groups'][$k]['id']);?>"><?php echo $_SESSION['m_admin']['all_groups'][$k]['label'];?></option>
                     <?php
                 }
             }

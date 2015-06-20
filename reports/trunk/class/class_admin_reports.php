@@ -244,7 +244,7 @@ class admin_reports extends dbquery
                                 $color = ' class="col"';
                             }
                             ?>
-                            <tr <?php echo $color;?> >
+                            <tr <?php functions::xecho($color);?> >
                                <td style="width:25%;"><?php
                                    echo $users[$i]->__get('lastname');
                                 ?></td>
@@ -293,7 +293,7 @@ class admin_reports extends dbquery
                 ?>)" id="h2<?php
                 echo $_SESSION['cpt'];
                  ?>" class="categorie">
-                  <i class='fa fa-plus fa-2x'></i>&nbsp;<b><?php echo $enabled_reports_sort_by_parent[$value][0]['module_label'];?></b>
+                  <i class='fa fa-plus fa-2x'></i>&nbsp;<b><?php functions::xecho($enabled_reports_sort_by_parent[$value][0]['module_label']);?></b>
                 <span class="lb1-details">&nbsp;</span>
                 </h5><br/>
                 <div class="desc block_light admin" id="desc<?php
@@ -306,11 +306,11 @@ class admin_reports extends dbquery
                                 {
                                     ?>
                                     <tr>
-                                        <td width="800px" align="right" title="<?php echo $enabled_reports_sort_by_parent[$value][$i]['desc'];?>">
-                                            <?php echo $enabled_reports_sort_by_parent[$value][$i]['label'];?> :
+                                        <td width="800px" align="right" title="<?php functions::xecho($enabled_reports_sort_by_parent[$value][$i]['desc']);?>">
+                                            <?php functions::xecho($enabled_reports_sort_by_parent[$value][$i]['label']);?> :
                                         </td>
                                         <td width="50px" align="left">
-                                            <input type="checkbox" name="reports[]" value="<?php echo $enabled_reports_sort_by_parent[$value][$i]['id'];?>" <?php  if(in_array($enabled_reports_sort_by_parent[$value][$i]['id'],$_SESSION['m_admin']['reports']['groups'])){ echo 'checked="checked"';}?>  />
+                                            <input type="checkbox" name="reports[]" value="<?php functions::xecho($enabled_reports_sort_by_parent[$value][$i]['id']);?>" <?php  if(in_array($enabled_reports_sort_by_parent[$value][$i]['id'],$_SESSION['m_admin']['reports']['groups'])){ echo 'checked="checked"';}?>  />
                                         </td>
                                     </tr>
                                     <?php
