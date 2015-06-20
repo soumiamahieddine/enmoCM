@@ -250,7 +250,7 @@ if (count($fileplans_array) > 0)  {
 		<label ><?php echo _FILEPLAN_NAME;?> : </label>
 		<input name="fileplan_label" type="text" id="fileplan_label" class="fileplan_position" value="<?php  
 			echo _PERSONNAL_FILEPLAN.' ('.	$userInfo['FirstName'].' '.$userInfo['LastName']
-			.')'; ?>" /><span class="red_asterisk">*</span>
+			.')';?>" /><span class="red_asterisk">*</span>
 	</p>
 	<p>
 		<label ><?php echo _IS_SERIAL_ID;?> : </label>
