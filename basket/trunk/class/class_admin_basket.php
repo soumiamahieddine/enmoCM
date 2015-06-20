@@ -241,7 +241,7 @@ class admin_basket extends dbquery
                         <?php 
                         for($i=0; $i<count($_SESSION['collections']);$i++) {
                             ?>
-                            <option value="<?php echo $_SESSION['collections'][$i]['id'];?>" <?php if(count($_SESSION['collections']) == 1 || $_SESSION['collections'][$i]['id'] == $_SESSION['m_admin']['basket']['coll_id']) { echo 'selected="selected"';}?>><?php echo $_SESSION['collections'][$i]['label'];?></option>
+                            <option value="<?php functions::xecho($_SESSION['collections'][$i]['id']);?>" <?php if(count($_SESSION['collections']) == 1 || $_SESSION['collections'][$i]['id'] == $_SESSION['m_admin']['basket']['coll_id']) { echo 'selected="selected"';}?>><?php echo $_SESSION['collections'][$i]['label'];?></option>
                             <?php
                         }
                         ?>
@@ -250,16 +250,16 @@ class admin_basket extends dbquery
                 
                 <p>
                     <label><?php echo _ID;?> : </label>
-                    <input name="basketId" id="basketId" type="text" value="<?php echo $_SESSION['m_admin']['basket']['basketId'];?>" <?php if($mode == "up") { echo 'readonly="readonly" class="readonly"';} ?> />
-                <input type="hidden"  name="id" value="<?php echo $id;?>" />
+                    <input name="basketId" id="basketId" type="text" value="<?php functions::xecho($_SESSION['m_admin']['basket']['basketId']);?>" <?php if($mode == "up") { echo 'readonly="readonly" class="readonly"';} ?> />
+                <input type="hidden"  name="id" value="<?php functions::xecho($id);?>" />
                 </p>
                 <p>
                     <label><?php echo _BASKET;?> : </label>
-                    <input name="basketname"  type="text" id="basketname" value="<?php echo $_SESSION['m_admin']['basket']['name'];?>" />
+                    <input name="basketname"  type="text" id="basketname" value="<?php functions::xecho($_SESSION['m_admin']['basket']['name']);?>" />
                 </p>
                 <p>
                     <label><?php echo _DESC;?> : </label>
-                    <textarea  cols="30" rows="4"  name="basketdesc"  style="width:200px;" id="basketdesc" ><?php echo $_SESSION['m_admin']['basket']['desc'];?></textarea>
+                    <textarea  cols="30" rows="4"  name="basketdesc"  style="width:200px;" id="basketdesc" ><?php functions::xecho($_SESSION['m_admin']['basket']['desc']);?></textarea>
                 </p>
                 <?php if($_SESSION['m_admin']['basket']['is_generic'] == 'Y')
                 {
@@ -270,7 +270,7 @@ class admin_basket extends dbquery
                 <?php } ?>
                 <p>
                     <label><?php echo _BASKET_VIEW;?> : </label>
-                    <textarea  cols="30" rows="4" style="width:415px;" name="basketclause" id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause'];?></textarea> <a href="#" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=keywords_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><i class = "fa fa-question-circle fa-2x" title="<?php echo _HELP_KEYWORDS;?>" ></i></a>
+                    <textarea  cols="30" rows="4" style="width:415px;" name="basketclause" id="basketclause" ><?php functions::xecho($_SESSION['m_admin']['basket']['clause']);?></textarea> <a href="#" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=keywords_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><i class = "fa fa-question-circle fa-2x" title="<?php echo _HELP_KEYWORDS;?>" ></i></a>
                 </p>
                 <p>
                     <label><?php echo _BASKET_VISIBLE_ONLY_ON_SEARCH;?> : </label>

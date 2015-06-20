@@ -42,4 +42,4 @@ if(isset($_REQUEST['submit']))
 
 }
 ?>
-<script >window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=users_management_controler&mode=up&admin=users&id=<?php echo $_SESSION['m_admin']['users']['user_id'];?>&start=0&order=asc&order_field=&what=#top';</script>
+<script >window.top.location='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=users_management_controler&mode=up&admin=users&id=<?php functions::xecho($_SESSION['m_admin']['users']['user_id']);?>&start=0&order=asc&order_field=&what=#top';</script>

@@ -165,7 +165,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
 <script language="javascript">
     var basketsSpan = $('welcome_box_left_baskets').select('span');
     //console.log(basketsSpan);
-    var path_manage_script = '<?php echo $_SESSION["config"]["businessappurl"];?>'
+    var path_manage_script = '<?php functions::xecho($_SESSION["config"]["businessappurl"]);?>'
         + 'index.php?display=true&module=basket&page=ajaxNbResInBasket';
     for (i=0;i<basketsSpan.length;i++) {
         //console.log(basketsSpan[i]);

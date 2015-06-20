@@ -64,7 +64,7 @@ $core_tools->load_header('', true, false);
 		for($i=0; $i < count($_SESSION['m_admin']['basket']['groups'][$ind]['ACTIONS']); $i++)
 		{
 		?>
-			<li><input type="checkbox" class="check" name="actions[]" value="<?php echo $_SESSION['m_admin']['basket']['groups'][$ind]['ACTIONS'][$i]['ID_ACTION'];?>" class="check" />&nbsp;&nbsp;&nbsp;<a href="javascript://"  onclick="window.open('g<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=groupbasket_action_popup&id=<?php echo $_SESSION['m_admin']['basket']['groups'][$ind]['ACTIONS'][$i]['ID_ACTION'];?>', 'action','toolbar=no,status=yes,width=500,height=800,left=500,top=150,scrollbars=no,top=no,location=no,resize=yes,menubar=no');"><?php echo $_SESSION['m_admin']['basket']['groups'][$ind]['ACTIONS'][$i]['LABEL_ACTION'];?></a>
+			<li><input type="checkbox" class="check" name="actions[]" value="<?php functions::xecho($_SESSION['m_admin']['basket']['groups'][$ind]['ACTIONS'][$i]['ID_ACTION']);?>" class="check" />&nbsp;&nbsp;&nbsp;<a href="javascript://"  onclick="window.open('g<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=groupbasket_action_popup&id=<?php functions::xecho($_SESSION['m_admin']['basket']['groups'][$ind]['ACTIONS'][$i]['ID_ACTION']);?>', 'action','toolbar=no,status=yes,width=500,height=800,left=500,top=150,scrollbars=no,top=no,location=no,resize=yes,menubar=no');"><?php echo $_SESSION['m_admin']['basket']['groups'][$ind]['ACTIONS'][$i]['LABEL_ACTION'];?></a>
 			</li>
 		<?php
 		}

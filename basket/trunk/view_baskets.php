@@ -220,7 +220,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
             echo 'selected="selected"';
         }
         ?>>
-        <?php echo $_SESSION['user']['baskets'][$i]['name'];?>
+        <?php functions::xecho($_SESSION['user']['baskets'][$i]['name']);?>
         </option>
         <?php
         } 
