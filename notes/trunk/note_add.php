@@ -176,7 +176,7 @@ if(isset($_GET['redirect'])){
 }
 } else {
     ?>
-    <h2 class="tit" style="padding:10px;"><i class="fa fa-pencil fa-2x" title="<?php echo _ADD_NOTE; ?>"></i> <?php
+    <h2 class="tit" style="padding:10px;"><i class="fa fa-pencil fa-2x" title="<?php echo _ADD_NOTE;?>"></i> <?php
         echo _ADD_NOTE;
         ?> </h2>
         <?php if($redirect<>'' && isset($_GET['success'])){ ?><div class="error"><?php echo _NOTES_ADDED ?></div><?php } ?>
@@ -188,7 +188,7 @@ if(isset($_GET['redirect'])){
           ?>&table=<?php
           echo $table;
           ?>&coll_id=<?php
-          echo $collId;?>&<?php echo $redirect; ?>" >
+          echo $collId;?>&<?php echo $redirect;?>" >
           <input type="hidden" name="display" value="true" />
           <input type="hidden" name="modules" value="notes" />
           <input type="hidden" name="page" value="note_add" />
@@ -206,7 +206,7 @@ if(isset($_GET['redirect'])){
         </p>
     </br>
     <div>
-        <h3 class="sstit" style="color: red"><?php echo _THIS_NOTE_IS_VISIBLE_BY; ?></h3>
+        <h3 class="sstit" style="color: red"><?php echo _THIS_NOTE_IS_VISIBLE_BY;?></h3>
     </div>
     <div>
         <?php 

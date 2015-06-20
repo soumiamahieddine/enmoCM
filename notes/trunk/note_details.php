@@ -202,7 +202,7 @@ $core->load_html();
 $core->load_header(_NOTES);
 $time = $core->get_session_time_expire();
 ?>
-<body id="pop_up" onload="setTimeout(window.close, <?php echo $time; ?>*60*1000);">
+<body id="pop_up" onload="setTimeout(window.close, <?php echo $time;?>*60*1000);">
 <?php
 if (empty($table) && empty($collId)) {
     $error = _PB_TABLE_COLL;
@@ -257,7 +257,7 @@ if (! $canModify) {
 echo $text;
 ?></textarea>
 
-        <input type="hidden" name="id" id="id" value="<?php echo $sId; ?>"/>
+        <input type="hidden" name="id" id="id" value="<?php echo $sId;?>"/>
         <input type="hidden" name="identifier" id="identifier" value="<?php
 echo $identifier;
 ?>"/>
@@ -290,7 +290,7 @@ echo _CLOSE_WINDOW;
 if ($canModify) {
     ?>
     <div>
-        <h3 class="sstit" style="color: red"><?php echo _THIS_NOTE_IS_VISIBLE_BY; ?></h3>
+        <h3 class="sstit" style="color: red"><?php echo _THIS_NOTE_IS_VISIBLE_BY;?></h3>
     </div>
     <table>
         <tr>
