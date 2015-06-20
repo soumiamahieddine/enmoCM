@@ -294,7 +294,7 @@ if (isset($_POST['valid']) && $_POST['valid']) {
                     eleframe1.src = '<?php
                 echo $_SESSION['config']['businessappurl'];
                 ?>index.php?display=true&module=attachments&page=frame_list_attachments&mode=normal';
-                    var nb_attach = <?php echo $new_nb_attach; ?>;
+                    var nb_attach = <?php echo $new_nb_attach;?>;
                     window.opener.top.document.getElementById('nb_attach').innerHTML = nb_attach;
 
                     window.top.close();
