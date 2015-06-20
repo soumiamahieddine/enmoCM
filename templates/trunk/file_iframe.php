@@ -29,12 +29,12 @@ if (isset($_REQUEST['template_content']) && !empty($_REQUEST['template_content']
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $_SESSION['config']['lang'] ?>" lang="<?php echo $_SESSION['config']['lang'] ?>">
 <head>
-    <title><?php echo $_SESSION['config']['applicationname']; ?></title>
+    <title><?php echo $_SESSION['config']['applicationname'];?></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <meta http-equiv="Content-Language" content="<?php echo $_SESSION['config']['lang'] ?>" />
-    <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['css']; ?>" media="screen" />
-    <!--[if lt IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['css_IE']; ?>" media="screen" />  <![endif]-->
-    <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['css_IE7']; ?>" media="screen" />  <![endif]-->
+    <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['css'];?>" media="screen" />
+    <!--[if lt IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['css_IE'];?>" media="screen" />  <![endif]-->
+    <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['css_IE7'];?>" media="screen" />  <![endif]-->
     <script type="text/javascript" src="js/functions.js"></script>
     <?php
     $_SESSION['mode_editor'] = false;

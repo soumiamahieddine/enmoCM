@@ -94,7 +94,7 @@ if ($mode == 'list') {
                 if ($mode == 'up') {
                     ?>
                     <p>
-                        <label for="id"><?php echo _TEMPLATE_ID; ?> : </label>
+                        <label for="id"><?php echo _TEMPLATE_ID;?> : </label>
                         <input name="id" type="text" id="id" value="<?php
                             if (isset($_SESSION['m_admin']['templates']['template_id'])) {
                                 echo $func->show_str($_SESSION['m_admin']['templates']['template_id']);
@@ -105,7 +105,7 @@ if ($mode == 'list') {
                 }
                 ?>
                 <p>
-                    <label for="template_label"><?php echo _TEMPLATE_LABEL; ?> : </label>
+                    <label for="template_label"><?php echo _TEMPLATE_LABEL;?> : </label>
                     <input name="template_label" type="text" id="template_label" value="<?php
                         if (isset($_SESSION['m_admin']['templates']['template_label'])) {
                             echo $func->show_str($_SESSION['m_admin']['templates']['template_label']);
@@ -113,7 +113,7 @@ if ($mode == 'list') {
                         ?>" />
                 </p>
                 <p>
-                    <label for="template_comment"><?php echo _TEMPLATE_COMMENT; ?> : </label>
+                    <label for="template_comment"><?php echo _TEMPLATE_COMMENT;?> : </label>
                     <textarea name="template_comment" type="text"  id="template_comment" value="<?php
                         if (isset($_SESSION['m_admin']['templates']['template_comment'])) {
                             echo $func->show_str($_SESSION['m_admin']['templates']['template_comment']);
@@ -125,9 +125,9 @@ if ($mode == 'list') {
                     ?></textarea>
                 </p>
                 <p>
-                    <label for="template_target"><?php echo _TEMPLATE_TARGET; ?> : </label>
+                    <label for="template_target"><?php echo _TEMPLATE_TARGET;?> : </label>
                     <select name="template_target" id="template_target" onchange="setradiobutton(this.options[this.selectedIndex].value);">
-                        <option value="" ><?php echo _NO_TARGET; ?></option>
+                        <option value="" ><?php echo _NO_TARGET;?></option>
                         <?php
                         for (
                             $cptTarget = 0;
@@ -135,7 +135,7 @@ if ($mode == 'list') {
                             $cptTarget ++
                         ) {
                         ?>
-                            <option value="<?php echo $_SESSION['m_admin']['templatesTargets'][$cptTarget]['id']; ?>" <?php
+                            <option value="<?php echo $_SESSION['m_admin']['templatesTargets'][$cptTarget]['id'];?>" <?php
                             if (isset($_SESSION['m_admin']['templates']['template_target'])
                                 && $_SESSION['m_admin']['templates']['template_target']
                                     == $_SESSION['m_admin']['templatesTargets'][$cptTarget]['id']
@@ -151,9 +151,9 @@ if ($mode == 'list') {
                 </p>
                 <div id="template_attachment_type_tr" style="display:none">
                 <p>
-                    <label for="template_attachment_type"><?php echo _ATTACHMENT_TYPES; ?> : </label>
+                    <label for="template_attachment_type"><?php echo _ATTACHMENT_TYPES;?> : </label>
                     <select name="template_attachment_type" id="template_attachment_type">
-                        <option value="all" ><?php echo _ALL_ATTACHMENT_TYPES; ?></option>
+                        <option value="all" ><?php echo _ALL_ATTACHMENT_TYPES;?></option>
                         <?php
 		                    foreach(array_keys($_SESSION['attachment_types']) as $attachmentType) {
 		                        ?><option value="<?php echo $attachmentType;?>" <?php
@@ -185,9 +185,9 @@ if ($mode == 'list') {
                         echo $checkedTXT;?>/> <span id="span_txt"><?php echo _TXT;?></span>
                 </p>
                 <p>
-                    <label for="template_datasource"><?php echo _TEMPLATE_DATASOURCE; ?> : </label>
+                    <label for="template_datasource"><?php echo _TEMPLATE_DATASOURCE;?> : </label>
                     <select name="template_datasource" id="template_datasource">
-                        <option value="" ><?php echo _NO_DATASOURCE; ?></option>
+                        <option value="" ><?php echo _NO_DATASOURCE;?></option>
                         <?php
                         for (
                             $cptDatasource = 0;
@@ -195,7 +195,7 @@ if ($mode == 'list') {
                             $cptDatasource ++
                         ) {
                         ?>
-                            <option value="<?php echo $_SESSION['m_admin']['templatesDatasources'][$cptDatasource]['id']; ?>" <?php
+                            <option value="<?php echo $_SESSION['m_admin']['templatesDatasources'][$cptDatasource]['id'];?>" <?php
                             if (isset($_SESSION['m_admin']['templates']['template_datasource'])
                                 && $_SESSION['m_admin']['templates']['template_datasource']
                                     == $_SESSION['m_admin']['templatesDatasources'][$cptDatasource]['id']
@@ -212,7 +212,7 @@ if ($mode == 'list') {
                 <div id="html_div" name="html_div">
                     <p>
                         <label for="template_content">
-                            <?php echo _TEMPLATE_CONTENT; ?> HTML :
+                            <?php echo _TEMPLATE_CONTENT;?> HTML :
                         </label><br/><br/>
                         <textarea name="template_content" style="width:100%" rows="15" cols="60" id="template_content" value="<?php
                             if (isset($_SESSION['m_admin']['templates']['template_content'])) {
@@ -227,7 +227,7 @@ if ($mode == 'list') {
                 </div>
                 <div id="office_div" name="office_div">
                     <p>
-                        <label for="template_style"><?php echo _TEMPLATE_STYLE; ?> : </label>
+                        <label for="template_style"><?php echo _TEMPLATE_STYLE;?> : </label>
                         <?php
                         if ($mode == 'up') {
                             ?>
@@ -318,7 +318,7 @@ if ($mode == 'list') {
                 <div id="txt_div" name="txt_div">
                     <p>
                         <label for="template_content_txt">
-                            <?php echo _TEMPLATE_CONTENT; ?> TXT :
+                            <?php echo _TEMPLATE_CONTENT;?> TXT :
                         </label><br/><br/>
                         <textarea name="template_content_txt" style="width:100%" rows="15" cols="60" id="template_content_txt" value="<?php
                             if (isset($_SESSION['m_admin']['templates']['template_content'])) {
@@ -405,7 +405,7 @@ if ($mode == 'list') {
                             </select>
                             <br/>
                             <!--<em><a href="javascript:selectall($(entities_chosen));" >
-                            <?php echo _SELECT_ALL; ?></a></em>-->
+                            <?php echo _SELECT_ALL;?></a></em>-->
                         </td>
                     </tr>
                 </table>
