@@ -278,31 +278,31 @@ if ($mode == "up") {
 }
 ?></h2>
 <form method="post" name="frmstructure" id="frmstructure" class="forms" action="<?php
-	echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&page=structure_up">
+	echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=structure_up">
 	<input type="hidden" name="display" value="true" />
     <input type="hidden" name="page" value="structure_up" />
 	<?php
 	if ($mode == "up") {
 	?>
 		<p>
-	    	<label><?php echo _ID . ' ' . _STRUCTURE; ?> :</label>
-			<input type="text" class="readonly" name="ID_structure" value="<?php echo $id; ?>" readonly="readonly" />
+	    	<label><?php echo _ID . ' ' . _STRUCTURE;?> :</label>
+			<input type="text" class="readonly" name="ID_structure" value="<?php echo $id;?>" readonly="readonly" />
 	    </p>
 	    <p>&nbsp;</p>
 		<?php
 	} ?>
 
 	<p>
-    	<label><?php echo _DESC . ' ' . _STRUCTURE; ?> :</label>
-	   	<input type="text"  name="desc_structure" value="<?php echo $desc; ?>" />
+    	<label><?php echo _DESC . ' ' . _STRUCTURE;?> :</label>
+	   	<input type="text"  name="desc_structure" value="<?php echo $desc;?>" />
     </p>
     <p>&nbsp;</p>
     
     <p>
-    	<label><?php echo _CSS_STYLE; ?> :</label>
-	   <!-- <input type="text"  name="css_style" id="css_style" value="<?php echo $cssStyle; ?>" /> -->
+    	<label><?php echo _CSS_STYLE;?> :</label>
+	   <!-- <input type="text"  name="css_style" id="css_style" value="<?php echo $cssStyle;?>" /> -->
         <select name="css_style" id="css_style">
-            <option value=""><?php echo _CHOOSE_STYLE; ?></option>
+            <option value=""><?php echo _CHOOSE_STYLE;?></option>
             <?php
 				for ($i = 0; $i < count($fontColors); $i ++) {
 				    echo '<option value="' . $fontColors[$i]['id'] . '" ';
@@ -364,7 +364,7 @@ if ($folderModuleLoaded) {
    		</select>
 	<br/><br/>
 	<a href="javascript:selectall($('foldertypeslist'));" class="choice"><?php
-	    echo _SELECT_ALL; ?></a></td>
+	    echo _SELECT_ALL;?></a></td>
     <td width="10%" align="center">
 	<input type="button" class="button" value="<?php
 	echo _ADD;
@@ -403,7 +403,7 @@ if ($folderModuleLoaded) {
     </select>
 	<br/><br/>
 	<a href="javascript:selectall($('foldertypes'));" class="choice">
-	<?php echo _SELECT_ALL; ?></a></td>
+	<?php echo _SELECT_ALL;?></a></td>
 	</tr>
 	<tr> <td height="10">&nbsp;</td></tr>
 		</table>

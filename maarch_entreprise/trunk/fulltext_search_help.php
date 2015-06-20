@@ -20,7 +20,7 @@ function show_helper($mode)
 	<div class="block small_text" >
 
 
-	<h3><i class="fa fa-info-circle fa-2x"></i> <?php echo _TIPS_FULLTEXT; ?></h3>
+	<h3><i class="fa fa-info-circle fa-2x"></i> <?php echo _TIPS_FULLTEXT;?></h3>
 	<?php
 
 			echo "<p align='right'>";

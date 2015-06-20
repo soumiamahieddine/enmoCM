@@ -159,7 +159,7 @@ if ($core_tools2->test_admin('update_contacts', 'apps', false) && $mode <> "view
 	?>
 	    <div id="inner_content" class="clearfix" align="center" style="padding:0px;width:100% !important;">
 	    	<div class="block">
-	    	<h2><?php echo _CONTACT_CARD; ?></h2>
+	    	<h2><?php echo _CONTACT_CARD;?></h2>
 	<?php
 		$contact->get_contact_form();
 		$contact->get_address_form();

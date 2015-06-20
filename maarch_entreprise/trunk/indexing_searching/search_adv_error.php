@@ -74,7 +74,7 @@ elseif($mode == 'popup' || $mode == 'frame')
             </div><?php
 }
 ?>
-<h1><i class="fa fa-search fa-2x"></i> <?php echo _ADV_SEARCH_TITLE; ?></h1>
+<h1><i class="fa fa-search fa-2x"></i> <?php echo _ADV_SEARCH_TITLE;?></h1>
 <div id="inner_content">
     <p>&nbsp;</p>
     <p>&nbsp;</p>

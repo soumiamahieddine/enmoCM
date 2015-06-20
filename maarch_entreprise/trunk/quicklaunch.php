@@ -64,7 +64,7 @@ $core_tools->test_service('quicklaunch', "apps");
                         <input type="hidden" name="meta[]" value="baskets_clause#baskets_clause#select_simple" />
                         <input type="hidden" name="meta[]" value="welcome#welcome#welcome" />
                         <input type="hidden" name="baskets_clause" value="true" />
-                        <input class="button" type="submit"  value="<?php echo _SEARCH; ?>" title="<?php echo _HELP_GLOBAL_SEARCH; ?>" name ="Submit" >
+                        <input class="button" type="submit"  value="<?php echo _SEARCH;?>" title="<?php echo _HELP_GLOBAL_SEARCH;?>" name ="Submit" >
                     </td>
                 <tr/>
             </table>

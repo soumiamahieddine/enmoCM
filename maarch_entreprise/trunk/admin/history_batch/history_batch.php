@@ -234,7 +234,7 @@ for ($i = 0; $i < count($tab); $i ++) {
 $list = new list_show();
 $nb = count($tab);
 ?>
-<h1><i class="fa fa-history fa-2x"></i> <?php echo _HISTORY_BATCH_TITLE.' : '. $nb.' '._RESULTS; ?></h1>
+<h1><i class="fa fa-history fa-2x"></i> <?php echo _HISTORY_BATCH_TITLE.' : '. $nb.' '._RESULTS;?></h1>
 <div id="inner_content">
 <?php
 $list->admin_list(
@@ -279,7 +279,7 @@ $list->admin_list(
         </p>
         <p class="button">
             <input type="submit" name="search" value="<?php echo _SEARCH;?>" class="button"/>
-            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=admin';"/>
+            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL;?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=admin';"/>
         </p>
     </form>
 </div>

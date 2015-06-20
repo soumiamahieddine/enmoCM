@@ -239,7 +239,7 @@ if ($mode == "up") {
 	?>
 	<p>
     	<label><?php echo _ID.' '._SUBFOLDER;?>	</label>
-		<input type="text" name="ID_sd"  value="<?php echo $id; ?>" readonly="readonly" class="readonly" />
+		<input type="text" name="ID_sd"  value="<?php echo $id;?>" readonly="readonly" class="readonly" />
 	</p>
     <p>&nbsp;</p>
 	<?php  
@@ -247,14 +247,14 @@ if ($mode == "up") {
 ?>
 	<p>
     	<label><?php echo _DESC.' '._SUBFOLDER;?></label>
-		<input type="text" name="desc_sd" value="<?php echo $desc; ?>" />
+		<input type="text" name="desc_sd" value="<?php echo $desc;?>" />
 	</p>
     <p>&nbsp;</p>
     <p>
     	<label><?php echo _CSS_STYLE;?></label>
-		<!-- <input type="text" name="css_style" id="css_style" value="<?php echo $cssStyle; ?>" /> -->
+		<!-- <input type="text" name="css_style" id="css_style" value="<?php echo $cssStyle;?>" /> -->
         <select name="css_style" id="css_style">
-            <option value=""><?php echo _CHOOSE_STYLE; ?></option>
+            <option value=""><?php echo _CHOOSE_STYLE;?></option>
             <?php
 				for ($i = 0; $i < count($fontColors); $i ++) {
 				    echo '<option value="' . $fontColors[$i]['id'] . '" ';

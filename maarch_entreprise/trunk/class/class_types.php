@@ -130,7 +130,7 @@ class types extends dbquery
             echo $_REQUEST['start'];
             ?>" />
             <div class="block">
-                <input  type="hidden" name="mode" value="<?php echo $mode; ?>" />
+                <input  type="hidden" name="mode" value="<?php echo $mode;?>" />
                 <p>
                 <label><?php echo _ATTACH_SUBFOLDER;?> : </label>
                 <select name="sous_dossier" id="sous_dossier" class="listext" onchange="">
@@ -186,13 +186,13 @@ class types extends dbquery
                     <input type="text" class="readonly" name="idbis" value="<?php
                 echo $id;
                 ?>" readonly="readonly" />
-                    <input type="hidden" name="id" value="<?php echo $id; ?>" />
+                    <input type="hidden" name="id" value="<?php echo $id;?>" />
                 </p>
                 <?php
             }
             ?>
             <p>
-                <label for="label"><?php echo _WORDING; ?> : </label>
+                <label for="label"><?php echo _WORDING;?> : </label>
                 <input name="label" type="text" class="textbox" id="label" value="<?php
             if (isset($_SESSION['m_admin']['doctypes']['LABEL'])) {
                 echo $func->show_str($_SESSION['m_admin']['doctypes']['LABEL']);

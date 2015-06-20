@@ -258,7 +258,7 @@ for ($i=0;$i<count($tab);$i++) {
 }
 $nb =count($tab);
 ?>
-<h1><i class="fa fa-history fa-2x"> </i> <?php echo _HISTORY_TITLE.' : '.   $nb.' '._RESULTS; ?></h1>
+<h1><i class="fa fa-history fa-2x"> </i> <?php echo _HISTORY_TITLE.' : '.   $nb.' '._RESULTS;?></h1>
 <div id="inner_content">
 <?php
 $list->admin_list($tab, $nb, '&nbsp;', 'id','history','history','id', true, '', '', '', '', '', '', TRUE, FALSE, '', '', '', false, false);
@@ -320,12 +320,12 @@ $list->admin_list($tab, $nb, '&nbsp;', 'id','history','history','id', true, '', 
         <td colspan="2" align="left">
             <p>
             <input type="submit" name="search" value="<?php echo _SEARCH;?>" class="button" />
-            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=admin';"/>
+            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL;?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=admin';"/>
             </p>
         </td>
         <td align="center">
             <a href="#" onclick="clear_form('frm_search_hist');$('frm_search_hist').submit();">
-            <i class="fa fa-refresh fa-2x" title="<?php echo _CLEAR_FORM; ?>"></i>
+            <i class="fa fa-refresh fa-2x" title="<?php echo _CLEAR_FORM;?>"></i>
             </a>
         </td>
     </tr>

@@ -373,7 +373,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
         <div align="center">
                 <br />
                 <br />
-                <?php echo _NO_DOCUMENT_CORRESPOND_TO_IDENTIFIER; ?>.
+                <?php echo _NO_DOCUMENT_CORRESPOND_TO_IDENTIFIER;?>.
                 <br />
                 <br />
                 <br />
@@ -580,8 +580,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         </span>
                     </h2>
                     <br/>
-                <form method="post" name="index_doc" id="index_doc" action="index.php?page=details&dir=indexing_searching&id=<?php echo $s_id; ?>">
-                    <?php $detailsExport .= "<table cellpadding='2' cellspacing='0' border='1' class='block forms details' width='100%'>"; ?>
+                <form method="post" name="index_doc" id="index_doc" action="index.php?page=details&dir=indexing_searching&id=<?php echo $s_id;?>">
+                    <?php $detailsExport .= "<table cellpadding='2' cellspacing='0' border='1' class='block forms details' width='100%'>";?>
                     <table cellpadding="2" cellspacing="2" border="0" class="block forms details" width="100%">
                         <?php
                         $i=0;
@@ -630,7 +630,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 											?>
 											
 												<i class="fa fa-<?php echo $data[$key]['img'];?> fa-2x" title="<?php echo $data[$key]['label'];?>"
-													onclick = "previsualiseAdminRead(event, <?php echo $frameContacts; ?>);" style="cursor: pointer;"></i>
+													onclick = "previsualiseAdminRead(event, <?php echo $frameContacts;?>);" style="cursor: pointer;"></i>
 											</a>
 											<?php
 										}
@@ -678,14 +678,14 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 								if($key == 'is_multicontacts') {
 									if($data[$key]['show_value'] == 'Y'){
 									?>
-											<input type="hidden" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php echo $data[$key]['show_value']; ?>" alt="<?php echo $data[$key]['show_value']; ?>" />
+											<input type="hidden" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php echo $data[$key]['show_value'];?>" alt="<?php echo $data[$key]['show_value'];?>" />
 														
 											<div onClick="$('return_previsualise').style.display='none';" id="return_previsualise" style="cursor: pointer; display: none; border-radius: 10px; box-shadow: 10px 10px 15px rgba(0, 0, 0, 0.4); padding: 10px; width: auto; height: auto; position: absolute; top: 0; left: 0; z-index: 999; background-color: rgba(255, 255, 255, 0.9); border: 3px solid #459ed1;">';
 												<input type="hidden" id="identifierDetailFrame" value="" />
 											</div>
 											
-											<input type="text" value="<?php echo $nbContacts . ' ' ._CONTACTS;?>" readonly="readonly" class="readonly" size="40"  title="<?php echo _SHOW_MULTI_CONTACT; ?>" alt="<?php echo $data[$key]['show_value']; ?>" 
-														onclick = "previsualiseAdminRead(event, <?php echo $frameContacts; ?>);" style="cursor: pointer;"
+											<input type="text" value="<?php echo $nbContacts . ' ' ._CONTACTS;?>" readonly="readonly" class="readonly" size="40"  title="<?php echo _SHOW_MULTI_CONTACT;?>" alt="<?php echo $data[$key]['show_value'];?>" 
+														onclick = "previsualiseAdminRead(event, <?php echo $frameContacts;?>);" style="cursor: pointer;"
 														 
 											/>
 									<?php
@@ -694,7 +694,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 								}elseif ($data[$key]['display'] == 'textinput')
                                 {
                                     ?>
-                                    <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php echo $data[$key]['show_value']; ?>" alt="<?php echo $data[$key]['show_value']; ?>" />
+                                    <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40"  title="<?php echo $data[$key]['show_value'];?>" alt="<?php echo $data[$key]['show_value'];?>" />
                                     <?php
                                 }
                                 elseif ($data[$key]['display'] == 'textarea')
@@ -705,14 +705,14 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     .'</textarea>';								
                                 } else if ($data[$key]['field_type'] == 'radio') {
                                     for($k=0; $k<count($data[$key]['radio']);$k++) {
-                                        ?><input name ="<?php echo $key; ?>" <?php if ($data[$key]['value'] ==$data[$key]['radio'][$k]['ID']){ echo 'checked';}?> type="radio" id="<?php echo $key .'_' . $data[$key]['radio'][$k]['ID'];?>" value="<?php echo $data[$key]['radio'][$k]['ID'];?>" disabled ><?php echo $data[$key]['radio'][$k]['LABEL'];
+                                        ?><input name ="<?php echo $key;?>" <?php if ($data[$key]['value'] ==$data[$key]['radio'][$k]['ID']){ echo 'checked';}?> type="radio" id="<?php echo $key .'_' . $data[$key]['radio'][$k]['ID'];?>" value="<?php echo $data[$key]['radio'][$k]['ID'];?>" disabled ><?php echo $data[$key]['radio'][$k]['LABEL'];
                                     }
                                 }
                                 else
 								
                                 {
                                     ?>
-                                    <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40" title="<?php echo $data[$key]['show_value']; ?>" alt="<?php echo $data[$key]['show_value']; ?>" />
+                                    <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" readonly="readonly" class="readonly" size="40" title="<?php echo $data[$key]['show_value'];?>" alt="<?php echo $data[$key]['show_value'];?>" />
                                     <?php
                                     if (isset($data[$key]['addon']))
 									
@@ -729,7 +729,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     ?>
 									
 									
-                                    <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" size="40"  title="<?php echo $data[$key]['show_value']; ?>" alt="<?php echo $data[$key]['show_value']; ?>" />
+                                    <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" size="40"  title="<?php echo $data[$key]['show_value'];?>" alt="<?php echo $data[$key]['show_value'];?>" />
                                     <?php
                                 }
                                 elseif ($data[$key]['display'] == 'textarea') 
@@ -743,7 +743,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 								
 								
                                     ?>
-                                    <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" size="40"  title="<?php echo $data[$key]['show_value']; ?>" alt="<?php echo $data[$key]['show_value']; ?>" onclick="showCalender(this);" />
+                                    <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $data[$key]['show_value'];?>" size="40"  title="<?php echo $data[$key]['show_value'];?>" alt="<?php echo $data[$key]['show_value'];?>" onclick="showCalender(this);" />
                                     
 									
 									
@@ -796,7 +796,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     <?php
                                 } else if ($data[$key]['field_type'] == 'radio') {
                                     for($k=0; $k<count($data[$key]['radio']);$k++) {
-                                        ?><input name ="<?php echo $key; ?>" <?php if ($data[$key]['value'] ==$data[$key]['radio'][$k]['ID']){ echo 'checked';}?> type="radio" id="<?php echo $key .'_' . $data[$key]['radio'][$k]['ID'];?>" value="<?php echo $data[$key]['radio'][$k]['ID'];?>" ><?php echo $data[$key]['radio'][$k]['LABEL'];
+                                        ?><input name ="<?php echo $key;?>" <?php if ($data[$key]['value'] ==$data[$key]['radio'][$k]['ID']){ echo 'checked';}?> type="radio" id="<?php echo $key .'_' . $data[$key]['radio'][$k]['ID'];?>" value="<?php echo $data[$key]['radio'][$k]['ID'];?>" ><?php echo $data[$key]['radio'][$k]['LABEL'];
                                     }
                                 } 
                                 else if ($data[$key]['field_type'] == 'autocomplete')
@@ -852,47 +852,47 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         ?>
                         <tr class="col">
                             <th align="left" class="picto">
-                                <!--img alt="<?php echo _STATUS.' : '.$res_status['LABEL'];?>" src="<?php echo $res_status['IMG_SRC'];?>" title="<?php echo $res_status['LABEL']; ?>" alt="<?php echo $res_status['LABEL']; ?>"/-->
-                                <i class = "fm <?php echo $res_status['IMG_SRC']; ?> fm-2x" alt = "<?php echo $res_status['LABEL'];?>" title = "<?php echo $res_status['LABEL']; ?>"></i>
+                                <!--img alt="<?php echo _STATUS.' : '.$res_status['LABEL'];?>" src="<?php echo $res_status['IMG_SRC'];?>" title="<?php echo $res_status['LABEL'];?>" alt="<?php echo $res_status['LABEL'];?>"/-->
+                                <i class = "fm <?php echo $res_status['IMG_SRC'];?> fm-2x" alt = "<?php echo $res_status['LABEL'];?>" title = "<?php echo $res_status['LABEL'];?>"></i>
                             </th>
                             <td align="left" width="200px">
-                                <?php echo _STATUS; ?> :
+                                <?php echo _STATUS;?> :
                             </td>
                             <td>
-                                <input type="text" class="readonly" readonly="readonly" value="<?php echo $res_status['LABEL']; ?>" size="40"  />
+                                <input type="text" class="readonly" readonly="readonly" value="<?php echo $res_status['LABEL'];?>" size="40"  />
                             </td>
                         <!--</tr>
                         <tr class="col">-->
                             <th align="left" class="picto">
-                                <i class="fa fa-compass fa-2x" title="<?php echo _CHRONO_NUMBER; ?>" ></i>
+                                <i class="fa fa-compass fa-2x" title="<?php echo _CHRONO_NUMBER;?>" ></i>
                             </th>
                             <td align="left" width="200px">
-                                <?php echo _CHRONO_NUMBER; ?> :
+                                <?php echo _CHRONO_NUMBER;?> :
                             </td>
                             <td>
-                                <input type="text" class="readonly" readonly="readonly" value="<?php echo $chrono_number; ?>" size="40" title="<?php echo $chrono_number; ?>" alt="<?php echo $chrono_number; ?>" />
+                                <input type="text" class="readonly" readonly="readonly" value="<?php echo $chrono_number;?>" size="40" title="<?php echo $chrono_number;?>" alt="<?php echo $chrono_number;?>" />
                             </td>
                         </tr>
                         <tr class="col">
                             <th align="left" class="picto">
-                                <i class="fa fa-sitemap fa-2x" title="<?php echo _INITIATOR; ?>" ></i>
+                                <i class="fa fa-sitemap fa-2x" title="<?php echo _INITIATOR;?>" ></i>
                             </th>
                             <td align="left" width="200px">
-                                <?php echo _INITIATOR; ?> :
+                                <?php echo _INITIATOR;?> :
                             </td>
                             <td>
-                                <textarea rows="2" style="width: 200px; max-width: 200px;" class="readonly" readonly="readonly"><?php echo $entities; ?></textarea>
+                                <textarea rows="2" style="width: 200px; max-width: 200px;" class="readonly" readonly="readonly"><?php echo $entities;?></textarea>
                             </td>
                             <!-- typist -->
                             <th align="left" class="picto">
                                 <i class="fa fa-user fa-2x"></i>
                             </th>
                             <td align="left" width="200px">
-                                <?php echo _TYPIST; ?> :
+                                <?php echo _TYPIST;?> :
                             </td>
                             <td>
                                 <input type="text" class="readonly" readonly="readonly" value="<?php echo $typistLabel; 
-                                ?>" size="40" title="<?php echo $typistLabel; ?>" alt="<?php echo $typistLabel; ?>" />
+                                ?>" size="40" title="<?php echo $typistLabel;?>" alt="<?php echo $typistLabel;?>" />
                             </td>
                         </tr>
 
@@ -965,7 +965,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     if ($indexes[$key]['type_field'] == 'input')
                                     {
                                         ?>
-                                        <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $indexes[$key]['show_value'];?>" <?php if (!isset($indexes[$key]['readonly']) || $indexes[$key]['readonly'] == true){ echo 'readonly="readonly" class="readonly"';}else if ($indexes[$key]['type'] == 'date'){echo 'onclick="showCalender(this);"';}?> size="40"  title="<?php echo $indexes[$key]['show_value']; ?>" alt="<?php echo $indexes[$key]['show_value']; ?>"   />
+                                        <input type="text" name="<?php echo $key;?>" id="<?php echo $key;?>" value="<?php echo $indexes[$key]['show_value'];?>" <?php if (!isset($indexes[$key]['readonly']) || $indexes[$key]['readonly'] == true){ echo 'readonly="readonly" class="readonly"';}else if ($indexes[$key]['type'] == 'date'){echo 'onclick="showCalender(this);"';}?> size="40"  title="<?php echo $indexes[$key]['show_value'];?>" alt="<?php echo $indexes[$key]['show_value'];?>"   />
                                         <?php
                                     }
                                     else
@@ -1028,7 +1028,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 							<!-- OLD PRINT DETAILS VERSION -->
                             <!--<input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $path . "/tmp/export_details_".$_SESSION['user']['UserId']."_export.html";?>', '_blank');" />-->
 							<!-- NEW PRINT DETAILS VERSION -->
-                            <input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=print&id=<?php echo $s_id; ?>', '_blank');" />
+                            <input type="button" class="button" name="print_details" id="print_details" value="<?php echo _PRINT_DETAILS;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=print&id=<?php echo $s_id;?>', '_blank');" />
                             <?php
                             }
                         ?>
@@ -1077,18 +1077,18 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
              
 					<?php if ($core->is_module_loaded('fileplan') && ($core->test_service('put_doc_in_fileplan', 'fileplan', false) == 1) && $fileplanLabel <> "") { ?>
                     <div>
-                        <h2><?php echo _FILEPLAN; ?></h2><br>
+                        <h2><?php echo _FILEPLAN;?></h2><br>
                         <div class="block">                              
                             <table>
                                 <tr class="col">
                                     <th align="left" class="picto">
-                                        <i class="fa fa-bookmark fa-2x" title="<?php echo _FILEPLAN; ?>"></i>
+                                        <i class="fa fa-bookmark fa-2x" title="<?php echo _FILEPLAN;?>"></i>
                                     </th>
                                     <td align="left" width="200px">
-                                        <?php echo _FILEPLAN; ?> :
+                                        <?php echo _FILEPLAN;?> :
                                     </td>
                                     <td>
-                                        <input type="text" class="readonly" readonly="readonly" value="<?php echo $planClassement; ?>" size="110"  />
+                                        <input type="text" class="readonly" readonly="readonly" value="<?php echo $planClassement;?>" size="110"  />
                                     </td>
                                 </tr>
                             </table>
@@ -1192,7 +1192,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                             <br/>
                             <span class="diff_list_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor='pointer';" onclick="new Effect.toggle('diff_list_history_div', 'blind', {delay:0.2});whatIsTheDivStatus('diff_list_history_div', 'divStatus_diff_list_history_div');return false;">
                                 <span id="divStatus_diff_list_history_div" style="color:#1C99C5;"><<</span>
-                                <b>&nbsp;<small><?php echo _DIFF_LIST_HISTORY; ?></small></b>
+                                <b>&nbsp;<small><?php echo _DIFF_LIST_HISTORY;?></small></b>
                             </span>
                         </div>
                         
@@ -1209,8 +1209,8 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 					. "class" . DIRECTORY_SEPARATOR
 					. "class_modules_tools.php";
 					?>
-				<dt id="onglet_circuit"><?php echo _VISA_WORKFLOW; ?></dt><dd id="page_circuit" style="overflow-x: hidden;">
-				<h2><?php echo _VISA_WORKFLOW; ?></h2>
+				<dt id="onglet_circuit"><?php echo _VISA_WORKFLOW;?></dt><dd id="page_circuit" style="overflow-x: hidden;">
+				<h2><?php echo _VISA_WORKFLOW;?></h2>
 				<?php
 				$modifVisaWorkflow = false;
 				if ($core->test_service('config_visa_workflow', 'visa', false)) {
@@ -1230,7 +1230,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 					<br/>
 					<span class="diff_list_visa_history" style="width: 90%; cursor: pointer;" onmouseover="this.style.cursor='pointer';" onclick="new Effect.toggle('diff_list_visa_history_div', 'blind', {delay:0.2});whatIsTheDivStatus('diff_list_visa_history_div', 'divStatus_diff_list_visa_history_div');return false;">
 						<span id="divStatus_diff_list_visa_history_div" style="color:#1C99C5;"><<</span>
-						<b>&nbsp;<small><?php echo _DIFF_LIST_VISA_HISTORY; ?></small></b>
+						<b>&nbsp;<small><?php echo _DIFF_LIST_VISA_HISTORY;?></small></b>
 					</span>
 
 					<div id="diff_list_visa_history_div" style="display:none">
@@ -1473,7 +1473,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
               
                     <span style="cursor: pointer;" onmouseover="this.style.cursor='pointer';" onclick="new Effect.toggle('history_document', 'blind', {delay:0.2});whatIsTheDivStatus('history_document', 'divStatus_all_history_div');return false;">
                         <span id="divStatus_all_history_div" style="color:#1C99C5;"><<</span>
-                        <b>&nbsp;<?php echo _ALL_HISTORY; ?></b>
+                        <b>&nbsp;<?php echo _ALL_HISTORY;?></b>
                     </span>
                     <iframe src="<?php echo $_SESSION['config']['businessappurl'];
                     ?>index.php?display=true&dir=indexing_searching&page=document_history&id=<?php
@@ -1518,7 +1518,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         ?><div align="center">
                             <input type="button" class="button" name="back_welcome" id="back_welcome" value="<?php if ($res->case_id<>'') echo _MODIFY_CASE; else echo _JOIN_CASE;?>" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id&searched_value=<?php echo $s_id;?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/>
                             <?php if ($res->case_id<>''){ ?>
-                                <input type="button" class="button" name="unlink_case" id="unlink_case" value="<?php echo _UNLINK_CASE; ?>" onclick="if(confirm('<?php echo _UNLINK_CASE; ?> ?')){unlink_case('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=unlink_case','<?php echo $res->case_id ?>','<?php echo $res->res_id ?>');}"/>
+                                <input type="button" class="button" name="unlink_case" id="unlink_case" value="<?php echo _UNLINK_CASE;?>" onclick="if(confirm('<?php echo _UNLINK_CASE;?> ?')){unlink_case('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=unlink_case','<?php echo $res->case_id ?>','<?php echo $res->res_id ?>');}"/>
 
                             <?php } ?>
                             </div>

@@ -100,19 +100,19 @@ elseif(isset($_REQUEST['foldertypes']) && count($_REQUEST['foldertypes']) <= 0)
 			if($state_foldertypes == false)
 			{
 				?>
-				<option value="<?php echo $_SESSION['m_admin']['foldertypes'][$i]['id']; ?>" alt="<?php   echo $_SESSION['m_admin']['foldertypes'][$i]['label']; ?>" title="<?php   echo $_SESSION['m_admin']['foldertypes'][$i]['label']; ?>"><?php echo $_SESSION['m_admin']['foldertypes'][$i]['label']; ?></option>
+				<option value="<?php echo $_SESSION['m_admin']['foldertypes'][$i]['id'];?>" alt="<?php   echo $_SESSION['m_admin']['foldertypes'][$i]['label'];?>" title="<?php   echo $_SESSION['m_admin']['foldertypes'][$i]['label'];?>"><?php echo $_SESSION['m_admin']['foldertypes'][$i]['label'];?></option>
 				<?php
 			}
 		}
 		?>
     </select>
 	<br/><br/>
-	<a href='javascript:selectall(document.forms["choose_foldertypes"].elements["foldertypeslist[]"]);' class="choice"><?php echo _SELECT_ALL; ?></a></td>
+	<a href='javascript:selectall(document.forms["choose_foldertypes"].elements["foldertypeslist[]"]);' class="choice"><?php echo _SELECT_ALL;?></a></td>
     <td width="10%" align="center">
-	<input type="button" class="button" value="<?php echo _ADD; ?>" onclick='Move(document.choose_foldertypes.elements["foldertypeslist[]"],document.choose_foldertypes.elements["foldertypes[]"]);this.form.submit();' align="middle"/>
+	<input type="button" class="button" value="<?php echo _ADD;?>" onclick='Move(document.choose_foldertypes.elements["foldertypeslist[]"],document.choose_foldertypes.elements["foldertypes[]"]);this.form.submit();' align="middle"/>
 	<br />
 	<br />
-	<input type="button" class="button"  value="<?php echo _REMOVE; ?>" onclick='Move(document.choose_foldertypes.elements["foldertypes[]"],document.choose_foldertypes.elements["foldertypeslist[]"]);this.form.submit();' align="middle"/>
+	<input type="button" class="button"  value="<?php echo _REMOVE;?>" onclick='Move(document.choose_foldertypes.elements["foldertypes[]"],document.choose_foldertypes.elements["foldertypeslist[]"]);this.form.submit();' align="middle"/>
 	</td>
     <td width="45%" align="center" valign="top">
 	<select name="foldertypes[]" class="multiple_list" ondblclick='moveclick(document.choose_foldertypes.elements["foldertypes[]"],document.choose_foldertypes.elements["foldertypeslist"])this.form.submit();' multiple="multiple" >
@@ -133,7 +133,7 @@ elseif(isset($_REQUEST['foldertypes']) && count($_REQUEST['foldertypes']) <= 0)
 			if($state_foldertypes == true)
 			{
 				?>
-				<option value="<?php echo $_SESSION['m_admin']['foldertypes'][$i]['id']; ?>" ><?php echo $_SESSION['m_admin']['foldertypes'][$i]['label']; ?></option>
+				<option value="<?php echo $_SESSION['m_admin']['foldertypes'][$i]['id'];?>" ><?php echo $_SESSION['m_admin']['foldertypes'][$i]['label'];?></option>
 				<?php
 			}
 		}
@@ -141,7 +141,7 @@ elseif(isset($_REQUEST['foldertypes']) && count($_REQUEST['foldertypes']) <= 0)
     </select>
 	<br/><br/>
 	<a href='javascript:selectall(document.forms["choose_foldertypes"].elements["foldertypes[]"]);' class="choice">
-	<?php echo _SELECT_ALL; ?></a></td>
+	<?php echo _SELECT_ALL;?></a></td>
 	</tr>
 	<tr> <td height="10">&nbsp;</td></tr>
 		</table>

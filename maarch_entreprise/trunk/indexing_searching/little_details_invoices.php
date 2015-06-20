@@ -186,7 +186,7 @@ if (! empty($_SESSION['error']) ) {
             <div align="center">
                 <br />
                 <br />
-                <?php echo _NO_DOCUMENT_CORRESPOND_TO_IDENTIFIER; ?>.
+                <?php echo _NO_DOCUMENT_CORRESPOND_TO_IDENTIFIER;?>.
                 <br />
                 <br />
                 <br />
@@ -294,38 +294,38 @@ if (! empty($_SESSION['error']) ) {
             <div class="block">
                 <p align="left">
                     <h3 align="left" onclick="new Effect.toggle('desc3', 'blind');" onmouseover="document.body.style.cursor='pointer';" onmouseout="document.body.style.cursor='auto';" id="h23" class="categorie">
-                        <a href="#"><?php echo _SHOW_DETAILS_DOC; ?></a>
+                        <a href="#"><?php echo _SHOW_DETAILS_DOC;?></a>
                     </h3>
                 </p>
             </div>
             <div class="desc block_light admin" id="desc3" style="display:none">
                 <div class="ref-unit">
-                    <?php echo _MENU." : "; ?>
+                    <?php echo _MENU." : ";?>
                     <a href="<?php
          echo $_SESSION['config']['businessappurl'];
          ?>index.php?display=true&page=view_resource_controler&id=<?php
          echo $resId;
          ?>&dir=indexing_searching" target="_blank"><b><?php
-         echo _VIEW_DOC_FULL; ?></b> </a>
+         echo _VIEW_DOC_FULL;?></b> </a>
                                         |
 	<?php if($collId=='business_coll'){ ?>
 		 <a href="javascript://"  onClick="window.top.location.href='<?php
              echo $_SESSION['config']['businessappurl'];
              ?>index.php?page=details_business&dir=indexing_searching&id=<?php
              echo $resId;
-             ?>';"><b><?php echo _DETAILS_DOC_FULL; ?> </b></a>
+             ?>';"><b><?php echo _DETAILS_DOC_FULL;?> </b></a>
 	<?php }else{ ?>
  <a href="javascript://"  onClick="window.top.location.href='<?php
              echo $_SESSION['config']['businessappurl'];
              ?>index.php?page=details&dir=indexing_searching&id=<?php
              echo $resId;
-             ?>';"><b><?php echo _DETAILS_DOC_FULL; ?> </b></a>
+             ?>';"><b><?php echo _DETAILS_DOC_FULL;?> </b></a>
 	<?php } ?>
         
          <hr/>
 
          <p>
-            <label><?php echo _NUM_GED." : "; ?></label>
+            <label><?php echo _NUM_GED." : ";?></label>
             <input type="text" name="resId" id="resId" value="<?php echo $resId;?>" class="readonly" readonly="readonly" />
          </p>
          <?php
@@ -378,7 +378,7 @@ if (! empty($_SESSION['error']) ) {
                     echo $data[$key]['show_value'];
                     ?>" readonly="readonly" class="readonly" size="40" title="<?php
                     echo $data[$key]['show_value'];
-                    ?>" alt="<?php echo $data[$key]['show_value']; ?>" />
+                    ?>" alt="<?php echo $data[$key]['show_value'];?>" />
                     <?php
                 } else {
                      ?>
@@ -388,7 +388,7 @@ if (! empty($_SESSION['error']) ) {
                      echo $data[$key]['show_value'];
                      ?>" readonly="readonly" class="readonly" size="40" title="<?php
                      echo $data[$key]['show_value'];
-                     ?>" alt="<?php echo $data[$key]['show_value']; ?>" />
+                     ?>" alt="<?php echo $data[$key]['show_value'];?>" />
                      <?php
                 }
             } else {
@@ -400,7 +400,7 @@ if (! empty($_SESSION['error']) ) {
                     echo $data[$key]['show_value'];
                     ?>" size="40"  title="<?php
                     echo $data[$key]['show_value'];
-                    ?>" alt="<?php echo $data[$key]['show_value']; ?>" />
+                    ?>" alt="<?php echo $data[$key]['show_value'];?>" />
                     <?php
                 } else if ($data[$key]['field_type'] == 'date') {
                     ?>
@@ -503,7 +503,7 @@ if (! empty($_SESSION['error']) ) {
                     } else if ($key == 'market') {
                         ?><input type="text" name="market" id="market" onblur="fill_project('<?php
                         echo $_SESSION['config']['businessappurl'];
-                        ?>index.php?display=true&module=folder&page=ajax_get_project');return false;"  value="<?php echo $data['market']['show_value']; ?>"/><div id="show_market" class="autocomplete"></div>
+                        ?>index.php?display=true&module=folder&page=ajax_get_project');return false;"  value="<?php echo $data['market']['show_value'];?>"/><div id="show_market" class="autocomplete"></div>
                         <script type="text/javascript">launch_autocompleter_folders('<?php
                         echo $_SESSION['config']['businessappurl'];
                         ?>index.php?display=true&module=folder&page=autocomplete_folders&mode=market', 'market');</script>
@@ -537,7 +537,7 @@ if (! empty($_SESSION['error']) ) {
                 }
                 ?> size="40"  title="<?php
                 echo $indexes[$key]['show_value'];
-                ?>" alt="<?php echo $indexes[$key]['show_value']; ?>"   />
+                ?>" alt="<?php echo $indexes[$key]['show_value'];?>"   />
                 <?php
             } else {
                 ?>

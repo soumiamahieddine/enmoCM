@@ -71,7 +71,7 @@ if ($mode == "list") {
                         $color = ' class="col"';
                     }
                     ?>
-                    <tr <?php echo $color; ?> >
+                    <tr <?php echo $color;?> >
                         <td style="width:25%;"><?php
                     echo $docservers[$i]->__get('docserver_id');
                     ?></td>
@@ -139,7 +139,7 @@ if ($mode == "list") {
         }
         ?>" />
         <p>
-            <label for="id"><?php echo _DOCSERVER_LOCATION_ID; ?> : </label>
+            <label for="id"><?php echo _DOCSERVER_LOCATION_ID;?> : </label>
             <input name="id" type="text"  id="id" value="<?php
         if (isset(
             $_SESSION['m_admin']['docserver_locations']['docserver_location_id']
@@ -156,7 +156,7 @@ if ($mode == "list") {
         ?>/><span class="red_asterisk"><i class="fa fa-star"></i></span>
         </p>
         <p class = "bulle">
-            <label for="ipv4"><?php echo _IPV4; ?> <small>(e.g: 127.0.0.1)</small> : </label>
+            <label for="ipv4"><?php echo _IPV4;?> <small>(e.g: 127.0.0.1)</small> : </label>
             <input name="ipv4" type="text"  id="ipv4" value="<?php
         if (isset($_SESSION['m_admin']['docserver_locations']['ipv4'])) {
             echo $func->show_str(
@@ -168,7 +168,7 @@ if ($mode == "list") {
 
         </p>
         <p class="bulle">
-            <label for="ipv6"><?php echo _IPV6; ?> <small>(e.g: 2001:db8:0:85a3::ac1f:8001)</small> : </label>
+            <label for="ipv6"><?php echo _IPV6;?> <small>(e.g: 2001:db8:0:85a3::ac1f:8001)</small> : </label>
             <input name="ipv6" type="text"  id="ipv6" value="<?php
         if (isset($_SESSION['m_admin']['docserver_locations']['ipv6'])) {
             echo $func->show_str(
@@ -179,7 +179,7 @@ if ($mode == "list") {
             <span>&nbsp;</span>
         </p>
         <p>
-            <label for="net_domain"><?php echo _NET_DOMAIN; ?> : </label>
+            <label for="net_domain"><?php echo _NET_DOMAIN;?> : </label>
             <input name="net_domain" type="text"  id="net_domain" value="<?php
         if (isset($_SESSION['m_admin']['docserver_locations']['net_domain'])) {
             echo $func->show_str(
@@ -190,7 +190,7 @@ if ($mode == "list") {
             <span>&nbsp;</span>
         </p>
         <p class="bulle">
-            <label for="mask"><?php echo _MASK; ?> <small>(e.g: 255.255.255.0)</small> : </label>
+            <label for="mask"><?php echo _MASK;?> <small>(e.g: 255.255.255.0)</small> : </label>
             <input name="mask" type="text"  id="mask" value="<?php
         if (isset($_SESSION['m_admin']['docserver_locations']['mask'])) {
             echo $func->show_str(
@@ -201,7 +201,7 @@ if ($mode == "list") {
             <span>&nbsp;</span>
         </p>
         <p>
-            <label for="net_link"><?php echo _NET_LINK; ?> : </label>
+            <label for="net_link"><?php echo _NET_LINK;?> : </label>
             <input name="net_link" type="text"  id="net_link" value="<?php
         if (isset($_SESSION['m_admin']['docserver_locations']['net_link'])) {
             echo $func->show_str(

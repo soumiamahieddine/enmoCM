@@ -35,39 +35,39 @@ $time = $core_tools->get_session_time_expire();
 	<input type="hidden" name="display" value="true" />	
 	<input type="hidden" name="page" value="verif_pass" />
 	<p>
-		<label><?php echo _ID; ?> : </label>
-		<input type="text" readonly="readonly" class="readonly" value="<?php echo $_SESSION['user']['UserId']; ?>"/>
+		<label><?php echo _ID;?> : </label>
+		<input type="text" readonly="readonly" class="readonly" value="<?php echo $_SESSION['user']['UserId'];?>"/>
 	</p>
 	<p>
-		<label><?php echo _PASSWORD; ?> : </label>
+		<label><?php echo _PASSWORD;?> : </label>
 		<input name="pass1"  type="password" id="pass1" value="" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
 	</p>
 	<p>
-		<label><?php   echo _REENTER_PSW; ?> : </label>
+		<label><?php   echo _REENTER_PSW;?> : </label>
 		<input name="pass2"  type="password" id="pass2" value="" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
 	</p>
 	<p>
-		<label><?php echo _LASTNAME; ?> : </label>
-		<input name="LastName"  type="text" id="LastName"  value="<?php echo $_SESSION['user']['LastName']; ?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
+		<label><?php echo _LASTNAME;?> : </label>
+		<input name="LastName"  type="text" id="LastName"  value="<?php echo $_SESSION['user']['LastName'];?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
 	</p>
 	<p>
-		<label><?php echo _FIRSTNAME; ?> : </label>
-		<input name="FirstName" type="text" id="FirstName" value="<?php echo $_SESSION['user']['FirstName']; ?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
+		<label><?php echo _FIRSTNAME;?> : </label>
+		<input name="FirstName" type="text" id="FirstName" value="<?php echo $_SESSION['user']['FirstName'];?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
 	</p>
 	<?php if(!$core_tools->is_module_loaded("entities") )
 	{?>
 	<p>
 		<label ><?php echo _DEPARTMENT;?> : </label>
-		<input name="Department"  type="text" id="Department"  value="<?php echo $_SESSION['user']['department']; ?>" />
+		<input name="Department"  type="text" id="Department"  value="<?php echo $_SESSION['user']['department'];?>" />
 	</p>
 	<?php } ?>
 	<p>
-		<label><?php echo _PHONE_NUMBER; ?> : </label>
-		<input name="Phone"  type="text" id="Phone" value="<?php echo $_SESSION['user']['Phone']; ?>" />
+		<label><?php echo _PHONE_NUMBER;?> : </label>
+		<input name="Phone"  type="text" id="Phone" value="<?php echo $_SESSION['user']['Phone'];?>" />
 	</p>
 	<p>
 		<label ><?php echo _MAIL;?> : </label>
-		<input name="Mail"   type="text" id="Mail"  value="<?php echo $_SESSION['user']['Mail']; ?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
+		<input name="Mail"   type="text" id="Mail"  value="<?php echo $_SESSION['user']['Mail'];?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
 	</p>
 	<p class="buttons">
 		<input type="submit" name="Submit" value="<?php echo _VALIDATE;?>" class="button" />

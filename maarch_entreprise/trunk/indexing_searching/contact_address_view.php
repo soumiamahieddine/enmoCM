@@ -109,11 +109,11 @@ $_SESSION['m_admin']['address']['SALUTATION_FOOTER'] = $request->show_string($li
 
 $core_tools2->load_js();
 ?>
-	<h1><i class="fa fa-home fa-2x"></i>&nbsp;<?php echo _VIEW_ADDRESS; ?></h1>
+	<h1><i class="fa fa-home fa-2x"></i>&nbsp;<?php echo _VIEW_ADDRESS;?></h1>
     <div id="inner_content" class="clearfix" align="center">
 <?php
 	$contact->get_contact_form();
 	$contact->get_address_form();
 ?>
-	<input type="button" class="button"  name="cancel" value="<?php echo _BACK; ?>" onclick="history.go(-1);" />
+	<input type="button" class="button"  name="cancel" value="<?php echo _BACK;?>" onclick="history.go(-1);" />
 	</div>

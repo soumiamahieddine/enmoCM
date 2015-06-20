@@ -79,7 +79,7 @@ for($j=0; $j<count($res); $j++)
     if(isset($res[$j]) && !empty($desc))
     {
 ?>
-    <option value="<?php echo $res[$j]->__get('group_id') ?>"><?php   echo $res[$j]->__get('group_desc'); ?></option>
+    <option value="<?php echo $res[$j]->__get('group_id') ?>"><?php   echo $res[$j]->__get('group_desc');?></option>
 <?php
     }
 }

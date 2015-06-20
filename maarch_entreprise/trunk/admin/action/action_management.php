@@ -49,9 +49,9 @@ elseif($mode == 'up' || $mode == 'add'){
                 echo $_REQUEST['start'];?>" />
 
             <p>
-                <label for="label"><?php echo _DESC; ?> : </label>
+                <label for="label"><?php echo _DESC;?> : </label>
                 <input name="label" type="text"  id="label" value="<?php
-                    echo functions::show_str($_SESSION['m_admin']['action']['LABEL']); ?>"/>
+                    echo functions::show_str($_SESSION['m_admin']['action']['LABEL']);?>"/>
             </p>
             <?php
             if($_SESSION['m_admin']['action']['IS_SYSTEM']  == 'Y'){
@@ -59,7 +59,7 @@ elseif($mode == 'up' || $mode == 'add'){
                     . '</div><br/>';
             }?>
             <p>
-                <label for="status"><?php echo _ASSOCIATED_STATUS; ?> : </label>
+                <label for="status"><?php echo _ASSOCIATED_STATUS;?> : </label>
                 <select name="status" id="status">
                     <option value="_NOSTATUS_"><?php echo _CHOOSE_STATUS;?></option>
                     <option value="_NOSTATUS_"><?php echo _UNCHANGED;?></option>
@@ -96,15 +96,15 @@ elseif($mode == 'up' || $mode == 'add'){
             <p>
                 <label for="keyword"><?php echo _KEYWORD.' ('._SYSTEM_PARAMETERS.')';?>:</label>
                 <select name="keyword" id="keyword">
-                    <option value=" "><?php echo _NO_KEYWORD; ?></option>
-                    <option value="redirect" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'redirect'){ echo 'selected="selected"';}?>><?php echo _REDIRECT; ?></option>
-                    <option value="to_validate" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'to_validate'){ echo 'selected="selected"';}?>><?php echo _TO_VALIDATE; ?></option>
-                    <option value="indexing" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'indexing'){ echo 'selected="selected"';}?>><?php echo _INDEXING; ?></option>
-                    <option value="workflow" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'workflow'){ echo 'selected="selected"';}?>><?php echo _WF; ?></option>
+                    <option value=" "><?php echo _NO_KEYWORD;?></option>
+                    <option value="redirect" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'redirect'){ echo 'selected="selected"';}?>><?php echo _REDIRECT;?></option>
+                    <option value="to_validate" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'to_validate'){ echo 'selected="selected"';}?>><?php echo _TO_VALIDATE;?></option>
+                    <option value="indexing" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'indexing'){ echo 'selected="selected"';}?>><?php echo _INDEXING;?></option>
+                    <option value="workflow" <?php if($_SESSION['m_admin']['action']['KEYWORD'] == 'workflow'){ echo 'selected="selected"';}?>><?php echo _WF;?></option>
                 </select>
             </p>
             <p>
-                <label for="history"><?php echo _ACTION_HISTORY; ?> : </label>
+                <label for="history"><?php echo _ACTION_HISTORY;?> : </label>
                 <input type="radio"  class="check" name="history" value="Y" <?php
                 if($_SESSION['m_admin']['action']['HISTORY'] == 'Y'){
                     echo 'checked="checked"';
@@ -119,7 +119,7 @@ elseif($mode == 'up' || $mode == 'add'){
             if ($core_tools->is_module_loaded('folder')) {
             ?>
                 <p>
-                    <label ><?php echo _IS_FOLDER_ACTION; ?> : </label>
+                    <label ><?php echo _IS_FOLDER_ACTION;?> : </label>
                     <input type="radio"  class="check" name="is_folder_action" value="Y"
                     <?php
                     if ($_SESSION['m_admin']['action']['IS_FOLDER_ACTION'] == 'Y') {
@@ -137,7 +137,7 @@ elseif($mode == 'up' || $mode == 'add'){
                 } ?>
             <table align="center" width="100%" id="categories_association" >
                     <tr>
-                        <td colspan="3"><?php echo _CHOOSE_CATEGORY_ASSOCIATION; ?> : <br /> <small>(<?php echo _CHOOSE_CATEGORY_ASSOCIATION_HELP; ?>)<small></td>
+                        <td colspan="3"><?php echo _CHOOSE_CATEGORY_ASSOCIATION;?> : <br /> <small>(<?php echo _CHOOSE_CATEGORY_ASSOCIATION_HELP;?>)<small></td>
                     </tr>
                     <tr>
                         <td width="40%" align="center">
@@ -212,7 +212,7 @@ elseif($mode == 'up' || $mode == 'add'){
                             </select>
                             <br/>
                             <!--<em><a href="javascript:selectall($(categories_chosen));" >
-                            <?php echo _SELECT_ALL; ?></a></em>-->
+                            <?php echo _SELECT_ALL;?></a></em>-->
                         </td>
                     </tr>
                 </table>
@@ -220,10 +220,10 @@ elseif($mode == 'up' || $mode == 'add'){
             <p class="buttons">
 
                 <input type="submit" class="button" name="action_submit" onclick ="javascript:selectall($(categories_chosen));" value="<?php
-                echo _VALIDATE; ?>" />
+                echo _VALIDATE;?>" />
 
                 <input type="button" class="button"  name="cancel" value="<?php
-                echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php
+                echo _CANCEL;?>" onclick="javascript:window.location.href='<?php
                 echo $_SESSION['config']['businessappurl'];
                 ?>index.php?page=action_management_controler&amp;mode=list&amp;admin=action';"/>
             </p>

@@ -113,10 +113,10 @@ $core_tools->load_js();
 -->
 </script>
 
-<h1><i class="fa fa-search fa-2x"></i> <?php echo _SEARCH_CONTACTS; ?></h1>
+<h1><i class="fa fa-search fa-2x"></i> <?php echo _SEARCH_CONTACTS;?></h1>
 <div id="inner_content">
 
-<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_contacts_result';?>"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
+<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_contacts_result';?>"  id="frmsearch2" class="<?php echo $class_for_form;?>">
     <input type="hidden" name="dir" value="indexing_searching" />
     <input type="hidden" name="page" value="search_contacts_result" />
     <input type="hidden" name="mode" value="<?php echo $mode;?>" />
@@ -138,7 +138,7 @@ $core_tools->load_js();
         <tr >
             <td >
             <div class="block">
-                <h2><?php echo _SEARCH_CONTACTS; ?></h2>
+                <h2><?php echo _SEARCH_CONTACTS;?></h2>
                 <table border = "0" width="100%">
                     <tr>
                         <td width="70%">
@@ -158,25 +158,25 @@ $core_tools->load_js();
                     </tr>
                     <tr>
                         <td width="70%"><label for="society" class="bold" ><?php echo _STRUCTURE_ORGANISM;?> :</label>
-                            <input type="text" name="society" id="society" <?php echo $size; ?>  />
+                            <input type="text" name="society" id="society" <?php echo $size;?>  />
                             <input type="hidden" name="meta[]" value="society#society#input_text" />
                         </td>
                     </tr>
                     <tr>
                         <td width="70%"><label for="society_short" class="bold" ><?php echo _SOCIETY_SHORT;?> :</label>
-                            <input type="text" name="society_short" id="society_short" <?php echo $size; ?>  />
+                            <input type="text" name="society_short" id="society_short" <?php echo $size;?>  />
                             <input type="hidden" name="meta[]" value="society_short#society_short#input_text" />
                         </td>
                     </tr>
                     <tr>
                         <td width="70%"><label for="lastname" class="bold"><?php echo _LASTNAME;?> :</label>
-                            <input type="text" name="lastname" id="lastname" <?php echo $size; ?>  />
+                            <input type="text" name="lastname" id="lastname" <?php echo $size;?>  />
                             <input type="hidden" name="meta[]" value="lastname#lastname#input_text" />
                         </td>
                     </tr>
                     <tr>
                         <td width="70%"><label for="firstname" class="bold" ><?php echo _FIRSTNAME;?> :</label>
-                            <input type="text" name="firstname" id="firstname" <?php echo $size; ?>  />
+                            <input type="text" name="firstname" id="firstname" <?php echo $size;?>  />
                             <input type="hidden" name="meta[]" value="firstname#firstname#input_text" />
                         </td>
                     </tr>
@@ -191,7 +191,7 @@ $core_tools->load_js();
                             </script>
                             <input id="created_by_id" name="created_by_id" type="hidden" />
                         </td>
-                        <td><em><?php echo ""; ?></em></td>
+                        <td><em><?php echo "";?></em></td>
                     </tr>
 <!--                     <tr>
                         <td width="70%"><label for="contact_purpose" class="bold"><?php echo _CONTACT_PURPOSE;?> :</label>
@@ -199,12 +199,12 @@ $core_tools->load_js();
                             <input type="hidden" name="meta[]" value="contact_purpose#contact_purpose#input_text" />
                             <div id="show_contact" class="autocomplete">
                                 <script type="text/javascript">
-                                    initList_hidden_input('contact_purpose', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_purposes_list_by_name&id=<?php echo $id; ?>', 'what', '2', 'contact_purposes_id');
+                                    initList_hidden_input('contact_purpose', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_purposes_list_by_name&id=<?php echo $id;?>', 'what', '2', 'contact_purposes_id');
                                 </script>
                             </div>
                             <input type="hidden" id="contact_purposes_id" name="contact_purposes_id" />
                         </td>
-                        <td><em><?php echo ""; ?></em></td>
+                        <td><em><?php echo "";?></em></td>
                     </tr> -->
                 </table>
                 </div>
@@ -218,7 +218,7 @@ $core_tools->load_js();
         <tr>
             <td>
                 <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();">
-                    <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_FORM; ?>"></i>
+                    <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_FORM;?>"></i>
                 </a>
             </td>
             <td align="right">
@@ -226,7 +226,7 @@ $core_tools->load_js();
                     <input name="imageField" type="submit" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" />
                 </span>
                 <a href="#" onclick="valid_search_form('frmsearch2');$('frmsearch2').submit();">
-                    <i class="fa fa-search fa-4x" title="<?php echo _SEARCH; ?>"></i>
+                    <i class="fa fa-search fa-4x" title="<?php echo _SEARCH;?>"></i>
                 </a>
             </td>
         </tr>

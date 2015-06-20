@@ -100,24 +100,24 @@ if ($mode == 'list') {
         <input type="hidden" name="is_system" id="is_system" value="<?php
         echo $_SESSION['m_admin']['status']['is_system'];?>" />
         <p>
-            <label for="status_id"><?php echo _ID; ?> : </label>
+            <label for="status_id"><?php echo _ID;?> : </label>
             <input name="status_id" type="text"  id="status_id" value="<?php
             echo functions::show_str(
                 $_SESSION['m_admin']['status']['id']
-                ); ?>" <?php
+                );?>" <?php
 if ($mode == 'up') {
     echo 'readonly="readonly" class="readonly"';
 }?>/>
 </p>
 <p>
-    <label for="label"><?php echo _DESC; ?> : </label>
+    <label for="label"><?php echo _DESC;?> : </label>
     <input name="label" type="text"  id="label" value="<?php
     echo functions::show_str(
         $_SESSION['m_admin']['status']['label_status']
-        ); ?>"/>
+        );?>"/>
     </p>
     <p>
-        <label ><?php echo _CAN_BE_SEARCHED; ?> : </label>
+        <label ><?php echo _CAN_BE_SEARCHED;?> : </label>
         <input type="radio"  class="check" name="can_be_searched" value="Y"<?php
         if ($_SESSION['m_admin']['status']['can_be_searched'] == 'Y') {
            ?> checked="checked"<?php
@@ -129,7 +129,7 @@ if ($mode == 'up') {
      } ?> /><?php echo _NO;?>
  </p>
  <p>
-    <label ><?php echo _CAN_BE_MODIFIED; ?> : </label>
+    <label ><?php echo _CAN_BE_MODIFIED;?> : </label>
     <input type="radio"  class="check" name="can_be_modified" value="Y"
     <?php
     if ($_SESSION['m_admin']['status']['can_be_modified'] == 'Y') {
@@ -144,7 +144,7 @@ if ($mode == 'up') {
  <input name="img_filename" type="hidden"  id="img_filename" value="<?php
  echo functions::show_str(
     $_SESSION['m_admin']['status']['img_filename']
-    ); ?>" <?php
+    );?>" <?php
                 /* if ($mode == 'up') {
                     echo 'readonly="readonly" class="readonly"';
                 } */?>/>
@@ -154,7 +154,7 @@ if ($mode == 'up') {
             if ($core_tools->is_module_loaded('folder')) {
                 ?>
                 <p>
-                    <label ><?php echo _IS_FOLDER_STATUS; ?> : </label>
+                    <label ><?php echo _IS_FOLDER_STATUS;?> : </label>
                     <input type="radio"  class="check" name="is_folder_status" value="Y"
                     <?php
                     if ($_SESSION['m_admin']['status']['is_folder_status'] == 'Y') {
@@ -168,14 +168,14 @@ if ($mode == 'up') {
              </p>
              <?php } ?>
              <div>
-                <label ><?php echo _IMG_RELATED; ?> : </label>
+                <label ><?php echo _IMG_RELATED;?> : </label>
                 <ul style="  width: auto;text-align: left;float: left;margin-left: 40px;height: auto;overflow: auto;">
                     <?php 
                     $nb_status=count($status_img);
                     for ($i=0;$i<count($status_img);$i++) {  ?>  
-                    <li style="display:inline-block;width:50px;padding:5px;" title="fm <?php echo $status_img[$i]; ?>" onclick="check_status('<?php echo $nb_status; ?>', '<?php echo $i; ?>')"> 	
-                      <input type="radio" style="visibility:hidden;" id="radio_<?php echo $i; ?>" class="check" name="img_related" value="<?php echo $status_img[$i]?>" 
-                      <?php if ($_SESSION['m_admin']['status']['img_filename'] == $status_img[$i]) { ?> checked="checked" <?php } ?> onload="check_status('<?php echo $nb_status; ?>', '<?php echo $i; ?>')" /><?php
+                    <li style="display:inline-block;width:50px;padding:5px;" title="fm <?php echo $status_img[$i];?>" onclick="check_status('<?php echo $nb_status;?>', '<?php echo $i;?>')"> 	
+                      <input type="radio" style="visibility:hidden;" id="radio_<?php echo $i;?>" class="check" name="img_related" value="<?php echo $status_img[$i]?>" 
+                      <?php if ($_SESSION['m_admin']['status']['img_filename'] == $status_img[$i]) { ?> checked="checked" <?php } ?> onload="check_status('<?php echo $nb_status;?>', '<?php echo $i;?>')" /><?php
                       $img = "<label for='".$status_img[$i]."' ><i id='img_".$i."' class = 'fm ".$status_img[$i]."' style='font-size:20px;'></i></label>";
                       if ($_SESSION['m_admin']['status']['img_filename'] == $status_img[$i]) {
                         $img = "<label for='".$status_img[$i]."' ><i id='img_".$i."' class = 'fm ".$status_img[$i]."' style='font-size:20px;color:#009dc5;'></i></label>";
@@ -191,10 +191,10 @@ if ($mode == 'up') {
      
      <p class="buttons">
 
-        <input type="submit" class="button"  name="status_submit" value="<?php echo _VALIDATE; ?>" />
+        <input type="submit" class="button"  name="status_submit" value="<?php echo _VALIDATE;?>" />
 
         <input type="button" class="button"  name="cancel" value="<?php
-        echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php
+        echo _CANCEL;?>" onclick="javascript:window.location.href='<?php
         echo $_SESSION['config']['businessappurl'];
         ?>index.php?page=status_management_controler&amp;mode=list&amp;admin=status';"/>
     </p>

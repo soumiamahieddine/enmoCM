@@ -72,12 +72,12 @@ $_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] = $request->show_string($
 $_SESSION['m_admin']['contact']['CONTACT_TYPE'] = $line->contact_type;
 $_SESSION['m_admin']['contact']['OWNER'] = $line->user_id;
 ?>
-	<h1><i class="fa fa-users fa-2x"></i>&nbsp;<?php echo _VIEW_CONTACT; ?></h1>
+	<h1><i class="fa fa-users fa-2x"></i>&nbsp;<?php echo _VIEW_CONTACT;?></h1>
 	<div id="test" class="clearfix" align="center">
 <?php
 		$contact->get_contact_form();
 ?>
-		<input type="button" class="button"  name="cancel" value="<?php echo _BACK_TO_RESULTS_LIST; ?>" onclick="history.go(-1);" />
+		<input type="button" class="button"  name="cancel" value="<?php echo _BACK_TO_RESULTS_LIST;?>" onclick="history.go(-1);" />
 		<br/><br/><br/><br/>
 	</div>
 <?php

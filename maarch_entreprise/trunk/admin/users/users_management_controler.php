@@ -425,7 +425,7 @@ function display_del_check($user_id){
                     {
                         if($users->user_id != $user_id){
                          ?>
-                        <option value="<?php echo $users->user_id; ?>"><?php echo $users->lastname . " " . $users->firstname; ?></option>
+                        <option value="<?php echo $users->user_id;?>"><?php echo $users->lastname . " " . $users->firstname;?></option>
                         <?php
                         }
                        
@@ -433,7 +433,7 @@ function display_del_check($user_id){
                     ?>
                 </select>
                  <p class="buttons">
-                    <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick='if(document.getElementById("doc_type_id").options[document.getElementById("doc_type_id").selectedIndex].value == ""){alert("<?php echo _CHOOSE_REPLACEMENT_DOCTYPES ?> !");return false;}else{return(confirm("<?php echo _REALLY_DELETE.$s_id; ?> \n\r\n\r<?php echo _DEFINITIVE_ACTION?>"));}'/>
+                    <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick='if(document.getElementById("doc_type_id").options[document.getElementById("doc_type_id").selectedIndex].value == ""){alert("<?php echo _CHOOSE_REPLACEMENT_DOCTYPES ?> !");return false;}else{return(confirm("<?php echo _REALLY_DELETE.$s_id;?> \n\r\n\r<?php echo _DEFINITIVE_ACTION?>"));}'/>
                     <input type="button" value="<?php echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=usergroups_management_controler&mode=list&admin=groups&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>';"/>
                 </p>
             </form>

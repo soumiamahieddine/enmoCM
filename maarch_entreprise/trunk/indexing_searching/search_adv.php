@@ -466,7 +466,7 @@ function del_query_confirm()
 </script>
 <?php if($_GET['mode']!='popup'){ ?>
 <h1>
-    <i class="fa fa-search fa-2x"></i> <?php echo _ADV_SEARCH_MLB; ?>
+    <i class="fa fa-search fa-2x"></i> <?php echo _ADV_SEARCH_MLB;?>
 </h1>
 <?php } ?>
 <div id="inner_content">
@@ -488,7 +488,7 @@ function del_query_confirm()
 </div>
 </form>
 <?php } ?>
-<form name="frmsearch2" method="get" action="<?php if($mode == 'normal') {echo $_SESSION['config']['businessappurl'].'index.php'; } elseif($mode == 'frame' || $mode == 'popup'){ echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_result';}?>"  id="frmsearch2" class="<?php echo $class_for_form; ?>">
+<form name="frmsearch2" method="get" action="<?php if($mode == 'normal') {echo $_SESSION['config']['businessappurl'].'index.php'; } elseif($mode == 'frame' || $mode == 'popup'){ echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_result';}?>"  id="frmsearch2" class="<?php echo $class_for_form;?>">
 <input type="hidden" name="dir" value="indexing_searching" />
     <input type="hidden" name="page" value="search_adv_result" />
 <input type="hidden" name="mode" value="<?php echo $mode;?>" />
@@ -507,7 +507,7 @@ if(isset($_REQUEST['nodetails']))
     <tr>
         <td>
             <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');">
-                <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_SEARCH; ?>"></i>
+                <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_SEARCH;?>"></i>
             </a>
         </td>
         <td align="right">
@@ -515,7 +515,7 @@ if(isset($_REQUEST['nodetails']))
                 <input name="imageField" type="submit" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" />
             </span>
             <a href="#" onclick="valid_search_form('frmsearch2');$('frmsearch2').submit();">
-                <i class="fa fa-search fa-4x" title="<?php echo _SEARCH; ?>"></i>
+                <i class="fa fa-search fa-4x" title="<?php echo _SEARCH;?>"></i>
             </a>
         </td>
     </tr>
@@ -529,7 +529,7 @@ if(isset($_REQUEST['nodetails']))
             <tr>
                 <td>
                     <div class="block">
-                    <h2><?php echo _SEARCH_SCOPE; ?></h2>
+                    <h2><?php echo _SEARCH_SCOPE;?></h2>
                     <table border="0" width="100%" class="content">
                         <tr>
                             <td width="70%">
@@ -563,7 +563,7 @@ if(isset($_REQUEST['nodetails']))
                                     } ?>
                                 </select>
                             </td>
-                            <td><em><?php echo _SEARCH_SCOPE_HELP; ?></em></td>
+                            <td><em><?php echo _SEARCH_SCOPE_HELP;?></em></td>
                             <td>&nbsp;</td>
                         </tr>
                     </table>
@@ -585,31 +585,31 @@ if(isset($_REQUEST['nodetails']))
             <tr>
                 <td>
                     <div class="block">
-                    <h2><?php echo _CASE_INFO; ?></h2>
+                    <h2><?php echo _CASE_INFO;?></h2>
                     <table border="0" width="100%" class="content">
 
                         <tr>
                             <td width="70%"><label for="numcase" class="bold" ><?php echo _CASE_NUMBER;?>:</label>
-                                <input type="text" name="numcase" id="numcase" <?php echo $size; ?>  />
+                                <input type="text" name="numcase" id="numcase" <?php echo $size;?>  />
                                 <input type="hidden" name="meta[]" value="numcase#numcase#input_text" />
                             </td>
-                            <td><em><?php echo _CASE_NUMBER_HELP; ?></em></td>
+                            <td><em><?php echo _CASE_NUMBER_HELP;?></em></td>
                             <td>&nbsp;</td>
                         </tr>
                         <tr>
                             <td width="70%"><label for="labelcase" class="bold" ><?php echo _CASE_LABEL;?>:</label>
-                                <input type="text" name="labelcase" id="labelcase" <?php echo $size; ?>  />
+                                <input type="text" name="labelcase" id="labelcase" <?php echo $size;?>  />
                                 <input type="hidden" name="meta[]" value="labelcase#labelcase#input_text" />
                             </td>
-                            <td><em><?php echo _CASE_LABEL_HELP; ?></em></td>
+                            <td><em><?php echo _CASE_LABEL_HELP;?></em></td>
                             <td>&nbsp;</td>
                         </tr>
                         <tr>
                             <td width="70%"><label for="descriptioncase" class="bold" ><?php echo _CASE_DESCRIPTION;?>:</label>
-                                <input type="text" name="descriptioncase" id="descriptioncase" <?php echo $size; ?>  />
+                                <input type="text" name="descriptioncase" id="descriptioncase" <?php echo $size;?>  />
                                 <input type="hidden" name="meta[]" value="descriptioncase#descriptioncase#input_text" />
                             </td>
-                            <td><em><?php echo _CASE_DESCRIPTION_HELP; ?></em></td>
+                            <td><em><?php echo _CASE_DESCRIPTION_HELP;?></em></td>
                             <td>&nbsp;</td>
                         </tr>
                     </table>
@@ -632,22 +632,22 @@ if(isset($_REQUEST['nodetails']))
     <tr >
         <td >
         <div class="block">
-        <h2><?php echo _LETTER_INFO; ?></h2>
+        <h2><?php echo _LETTER_INFO;?></h2>
             <table border = "0" width="100%" class="content">
                 <tr>
                     <td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT;?>:</label>
-                        <input type="text" name="subject" id="subject" <?php echo $size; ?>  />
+                        <input type="text" name="subject" id="subject" <?php echo $size;?>  />
                         <input type="hidden" name="meta[]" value="subject#subject#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
                     </td>
-                    <td><em><?php echo _MAIL_OBJECT_HELP; ?></em></td>
+                    <td><em><?php echo _MAIL_OBJECT_HELP;?></em></td>
                 </tr>
                 <tr>
                     <td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT;?>:</label>
-                        <input type="text" name="fulltext" id="fulltext" <?php echo $size; ?>  />
+                        <input type="text" name="fulltext" id="fulltext" <?php echo $size;?>  />
                         <input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
-                        <a href="javascript::" onclick="new Effect.toggle('iframe_fulltext_help', 'blind', {delay:0.2})"><i class="fa fa-search" title="<?php echo _HELP_FULLTEXT_SEARCH; ?>"></i></a>
+                        <a href="javascript::" onclick="new Effect.toggle('iframe_fulltext_help', 'blind', {delay:0.2})"><i class="fa fa-search" title="<?php echo _HELP_FULLTEXT_SEARCH;?>"></i></a>
                     </td>
-                    <td><em><?php echo _FULLTEXT_HELP; ?></em></td>
+                    <td><em><?php echo _FULLTEXT_HELP;?></em></td>
                 </tr>
                 <tr id="iframe_fulltext_help" name="iframe_fulltext_help" style="display:none;">
                     <td width="70%" >
@@ -658,17 +658,17 @@ if(isset($_REQUEST['nodetails']))
                 </tr>
                 <tr>
                     <td width="70%"><label for="numged" class="bold"><?php echo _N_GED;?>:</label>
-                        <input type="text" name="numged" id="numged" <?php echo $size; ?>  />
+                        <input type="text" name="numged" id="numged" <?php echo $size;?>  />
                         <input type="hidden" name="meta[]" value="numged#numged#input_text" />
                     </td>
-                    <td><em><?php echo _N_GED_HELP; ?></em></td>
+                    <td><em><?php echo _N_GED_HELP;?></em></td>
                 </tr>
                 <tr>
                     <td width="70%"><label for="multifield" class="bold" ><?php echo _MULTI_FIELD;?>:</label>
-                        <input type="text" name="multifield" id="multifield" <?php echo $size; ?>  />
+                        <input type="text" name="multifield" id="multifield" <?php echo $size;?>  />
                         <input type="hidden" name="meta[]" value="multifield#multifield#input_text" />
                     </td>
-                    <td><em><?php echo _MULTI_FIELD_HELP; ?></em></td>
+                    <td><em><?php echo _MULTI_FIELD_HELP;?></em></td>
                 </tr>
                 <tr>
                     <td width="70%"><label for="contactid" class="bold"><?php echo _CONTACT_EXTERNAL;?>:</label>
@@ -681,7 +681,7 @@ if(isset($_REQUEST['nodetails']))
                         </script>
                         <input id="contactid_external" name="contactid_external" type="hidden" />
                     </td>
-                    <td><em><?php echo ""; ?></em></td>
+                    <td><em><?php echo "";?></em></td>
                 </tr>
                 <tr>
                     <td width="70%"><label for="contactid_internal" class="bold"><?php echo _CONTACT_INTERNAL;?>:</label>
@@ -694,7 +694,7 @@ if(isset($_REQUEST['nodetails']))
                         </script>
                         <input id="contact_internal_id" name="contact_internal_id" type="hidden" />
                     </td>
-                    <td><em><?php echo ""; ?></em></td>
+                    <td><em><?php echo "";?></em></td>
                 </tr>
             </table>
             </div>
@@ -707,13 +707,13 @@ if(isset($_REQUEST['nodetails']))
 <tr>
 <td >
 <div class="block">
-<h2><?php echo _ADD_PARAMETERS; ?>&nbsp;:&nbsp;<select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'parameters_tab', <?php 
+<h2><?php echo _ADD_PARAMETERS;?>&nbsp;:&nbsp;<select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'parameters_tab', <?php 
         echo $browser_ie;?>, '<?php echo _ERROR_IE_SEARCH;?>');window.location.href = '#bottom';">
-            <?php echo $src_tab; ?>
+            <?php echo $src_tab;?>
         </select></h2>
 <table border = "0" width="100%" class="content" id="parameters_tab">
        <tr>
-        <td width="100%" colspan="3" style="text-align:center;"><em><?php echo _ADD_PARAMETERS_HELP; ?></em></td>
+        <td width="100%" colspan="3" style="text-align:center;"><em><?php echo _ADD_PARAMETERS_HELP;?></em></td>
         </tr>
  </table>
  </div>
@@ -724,12 +724,12 @@ if(isset($_REQUEST['nodetails']))
     <tr>
         <td>
             <a href="#" onclick="clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id');">
-             <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_FORM; ?>"></i>
+             <i class="fa fa-refresh fa-4x" title="<?php echo _CLEAR_FORM;?>"></i>
             </a>
         </td>
         <td align="right">
             <a href="#" onclick="valid_search_form('frmsearch2');$('frmsearch2').submit();">
-                <i class="fa fa-search fa-4x" title="<?php echo _SEARCH; ?>"></i>
+                <i class="fa fa-search fa-4x" title="<?php echo _SEARCH;?>"></i>
             </a>
         </td>
     </tr>

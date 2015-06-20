@@ -53,7 +53,7 @@ if($db->nb_result() == 0)
 {
     $_SESSION['error'] = _DOCTYPE.' '._UNKNOWN;
     ?>
-        <script type="text/javascript">window.location.href="<?php echo $_SESSION['config']['businessappurl']; ?>index.php?page=types&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>";</script>
+        <script type="text/javascript">window.location.href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=types&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>";</script>
     <?php
     exit();
 }
@@ -175,7 +175,7 @@ else
                     {
                         if($doctypes->type_id != $s_id){
                          ?>
-                        <option value="<?php echo $doctypes->type_id; ?>"><?php echo $doctypes->description; ?></option>
+                        <option value="<?php echo $doctypes->type_id;?>"><?php echo $doctypes->description;?></option>
                         <?php
                         }
                        
@@ -183,7 +183,7 @@ else
                     ?>
                 </select>
                  <p class="buttons">
-                    <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick='if(document.getElementById("doc_type_id").options[document.getElementById("doc_type_id").selectedIndex].value == ""){alert("<?php echo _CHOOSE_REPLACEMENT_DOCTYPES ?> !");return false;}else{return(confirm("<?php echo _REALLY_DELETE.$s_id; ?> \n\r\n\r<?php echo _DEFINITIVE_ACTION?>"));}'/>
+                    <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick='if(document.getElementById("doc_type_id").options[document.getElementById("doc_type_id").selectedIndex].value == ""){alert("<?php echo _CHOOSE_REPLACEMENT_DOCTYPES ?> !");return false;}else{return(confirm("<?php echo _REALLY_DELETE.$s_id;?> \n\r\n\r<?php echo _DEFINITIVE_ACTION?>"));}'/>
                     <input type="button" value="<?php echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=types&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>';"/>
                 </p>
             </form>

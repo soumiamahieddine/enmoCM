@@ -760,7 +760,7 @@ class list_show extends functions
         <table width="100%" border="0" cellpadding="0" cellspacing="0" class="forms" summary="">
           <tr>
             <td >
-                <strong><?php echo $alpha_list_text; ?></strong> :
+                <strong><?php echo $alpha_list_text;?></strong> :
                 <?php  for($i=ord('A'); $i <= ord('Z');$i++)
                 {
                     ?>
@@ -768,7 +768,7 @@ class list_show extends functions
                     <?php
                 }
                 ?>
-                - <a href="<?php echo $link;?>&amp;<?php echo $whatinput ;?>="><?php echo $all_text; ?></a>
+                - <a href="<?php echo $link;?>&amp;<?php echo $whatinput ;?>="><?php echo $all_text;?></a>
             </td>
             <td  align="right">
             <?php
@@ -1057,7 +1057,7 @@ class list_show extends functions
                         <th <?php if(isset($result[0][$count_column]['size'])){?>style="width:<?php echo $result[0][$count_column]['size'];?>%;"<?php } if(isset($result[0][$count_column]['valign'])){?> valign="<?php echo $result[0][$count_column]['valign'];?>"<?php } if(isset($result[0][$count_column]['label_align'])){?> align="<?php echo $result[0][$count_column]['label_align'];?>"<?php } ?>
                          ><span>&nbsp;<?php echo $listcolumn[$count_column]?>
                          <?php  if($bool_order && !empty($ordercol[$count_column]))
-                        { ?> <br/> <a href="<?php echo $link; ?>&amp;start=<?php echo $start; ?>&amp;order=desc&amp;order_field=<?php echo $result['0'][$count_column]['column'];?>" title="<?php echo _DESC_SORT;?>"><i class="fa fa-angle-down fa-2x" title="<?php echo _DESC_SORT;?>" ></i> </a> <a href="<?php echo $link; ?>&amp;start=<?php echo $start; ?>&amp;order=asc&amp;order_field=<?php echo $result['0'][$count_column]['column'];?>" title="<?php echo _ASC_SORT;?>"> <i class="fa fa-angle-up fa-2x" title="<?php echo _ASC_SORT;?>" ></i></a> <?php  }
+                        { ?> <br/> <a href="<?php echo $link;?>&amp;start=<?php echo $start;?>&amp;order=desc&amp;order_field=<?php echo $result['0'][$count_column]['column'];?>" title="<?php echo _DESC_SORT;?>"><i class="fa fa-angle-down fa-2x" title="<?php echo _DESC_SORT;?>" ></i> </a> <a href="<?php echo $link;?>&amp;start=<?php echo $start;?>&amp;order=asc&amp;order_field=<?php echo $result['0'][$count_column]['column'];?>" title="<?php echo _ASC_SORT;?>"> <i class="fa fa-angle-up fa-2x" title="<?php echo _ASC_SORT;?>" ></i></a> <?php  }
 
                         ?></span></th>
                         <?php
@@ -1172,7 +1172,7 @@ class list_show extends functions
                                         ?>&amp;mode=add<?php
                                     } else { 
                                         echo  '&amp;page='.$page_name_add; 
-                                    }?>','add','height=<?php echo $height; ?>, width=<?php echo $width; ?>, resizable=yes, scrollbars=yes');" >
+                                    }?>','add','height=<?php echo $height;?>, width=<?php echo $width;?>, resizable=yes, scrollbars=yes');" >
                                     <i class="fa fa-plus-square fa-3x" title="<?php echo $label_add;?>"></i>
                                 </a>
                             </td>
@@ -1197,7 +1197,7 @@ class list_show extends functions
                 $color = ' class="col"';
             }
             ?>
-            <tr <?php echo $color; ?>>
+            <tr <?php echo $color;?>>
                     <?php
                     $enabled = "";
                     if(isset($page_name) && $page_name == "users")
@@ -1225,13 +1225,13 @@ class list_show extends functions
                                     if($result[$theline][$count_column]['enabled'] == "N")
                                      {
                                     ?>
-                                    <i class="fa fa-pause fa-2x" title="<?php echo _NOT_ENABLED; ?>"></i>
+                                    <i class="fa fa-pause fa-2x" title="<?php echo _NOT_ENABLED;?>"></i>
                                     <?php
                                      }
                                     elseif($result[$theline][$count_column]['enabled'] == "Y")
                                     {
                                     ?>
-                                    <i class="fa fa-check fa-2x" title="<?php echo _ENABLED; ?>"></i>
+                                    <i class="fa fa-check fa-2x" title="<?php echo _ENABLED;?>"></i>
                                     <?php
                                     }
                                 }
@@ -1313,7 +1313,7 @@ class list_show extends functions
                         {
                             $path_up = preg_replace("/(&(?!amp;))/", "&amp;", $path_up);
                         ?>
-                        <a href="<?php echo $path_up.$param_comp; ?>" class="actionList"><i class="fa fa-edit fa-2x" title="<?php echo _MODIFY;?>"></i><?php //echo _MODIFY;?></a>
+                        <a href="<?php echo $path_up.$param_comp;?>" class="actionList"><i class="fa fa-edit fa-2x" title="<?php echo _MODIFY;?>"></i><?php //echo _MODIFY;?></a>
                         <?php
 
                         }?>
@@ -1377,7 +1377,7 @@ class list_show extends functions
                                 {
                                     $path_ban = preg_replace("/(&(?!amp;))/", "&amp;", $path_ban);
                                 ?>
-                            <a href="<?php echo $path_ban.$param_comp; ?>" class="actionList" onclick="return(confirm('<?php echo _REALLY_SUSPEND." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} else { echo $admin_id; } ?> ?'));"><i class="fa fa-pause fa-2x" title="<?php echo _SUSPEND;?>"></i></a><?php  }
+                            <a href="<?php echo $path_ban.$param_comp;?>" class="actionList" onclick="return(confirm('<?php echo _REALLY_SUSPEND." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} else { echo $admin_id; } ?> ?'));"><i class="fa fa-pause fa-2x" title="<?php echo _SUSPEND;?>"></i></a><?php  }
                                 }
                             }
                             ?>
@@ -1425,7 +1425,7 @@ class list_show extends functions
                         ?>
                             <a href="<?php echo $path_del.$param_comp;?>"  class="actionList"
                         onclick="return(confirm('<?php echo _REALLY_DELETE." ";  if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
-                                 else { echo $admin_id; }?> ?\n\r\n\r<?php echo _DEFINITIVE_ACTION; ?>'));"><i class="fa fa-remove fa-2x" title="<?php echo _DELETE;?>"></i></a>
+                                 else { echo $admin_id; }?> ?\n\r\n\r<?php echo _DEFINITIVE_ACTION;?>'));"><i class="fa fa-remove fa-2x" title="<?php echo _DELETE;?>"></i></a>
                         <?php
                         }
                     }
@@ -1479,7 +1479,7 @@ class list_show extends functions
                     <td class="action" >
                         <a href="<?php echo $path_del2.$param_comp;?>" class="actionList"
                     onclick="return(confirm('<?php echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;}
-                             else { echo " ".$admin_id; }?> ?\n\r\n\r<?php echo _DEFINITIVE_ACTION; ?>'));"><i class="fa fa-remove fa-2x" title="<?php echo _DELETE;?>"></i></a>
+                             else { echo " ".$admin_id; }?> ?\n\r\n\r<?php echo _DEFINITIVE_ACTION;?>'));"><i class="fa fa-remove fa-2x" title="<?php echo _DELETE;?>"></i></a>
                     </td>
                     <?php  } ?>
               </tr>

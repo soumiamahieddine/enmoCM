@@ -352,7 +352,7 @@ function displayDel($groupId)
     //information users exists in groups
     $userExists = $ugc->getUsers($groupId);
     if(!empty($userExists)){
-        $usersGroups=implode(",", $ugc->getUsers($groupId)); ?>
+        $usersGroups=implode(",", $ugc->getUsers($groupId));?>
         <script type="text/javascript">window.top.location='<?php
         echo $_SESSION['config']['businessappurl'] . 'index.php?page='
             . 'usergroups_management_controler&mode=check_del&admin=groups&id=' . $groupId;
@@ -481,7 +481,7 @@ function displayDelCheck($groupId)
                     {
                         if($groups->group_id != $groupId){
                          ?>
-                        <option value="<?php echo $groups->group_id; ?>"><?php echo $groups->group_desc; ?></option>
+                        <option value="<?php echo $groups->group_id;?>"><?php echo $groups->group_desc;?></option>
                         <?php
                         }
                        
@@ -489,7 +489,7 @@ function displayDelCheck($groupId)
                     ?>
                 </select>
                  <p class="buttons">
-                    <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick='if(document.getElementById("doc_type_id").options[document.getElementById("doc_type_id").selectedIndex].value == ""){alert("<?php echo _CHOOSE_REPLACEMENT_DOCTYPES ?> !");return false;}else{return(confirm("<?php echo _REALLY_DELETE.$s_id; ?> \n\r\n\r<?php echo _DEFINITIVE_ACTION?>"));}'/>
+                    <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick='if(document.getElementById("doc_type_id").options[document.getElementById("doc_type_id").selectedIndex].value == ""){alert("<?php echo _CHOOSE_REPLACEMENT_DOCTYPES ?> !");return false;}else{return(confirm("<?php echo _REALLY_DELETE.$s_id;?> \n\r\n\r<?php echo _DEFINITIVE_ACTION?>"));}'/>
                     <input type="button" value="<?php echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=usergroups_management_controler&mode=list&admin=groups&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>';"/>
                 </p>
             </form>

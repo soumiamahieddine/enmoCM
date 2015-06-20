@@ -87,7 +87,7 @@ if ($mode == "list") {
         }
         ?>" id="actual_size_hidden"/>
         <p>
-            <label for="id"><?php echo _DOCSERVER_ID; ?> : </label>
+            <label for="id"><?php echo _DOCSERVER_ID;?> : </label>
             <input name="id" type="text"  id="id" value="<?php
         if (isset($_SESSION['m_admin']['docservers']['docserver_id'])) {
             echo $func->show_str(
@@ -107,7 +107,7 @@ if ($mode == "list") {
                     && $_SESSION['m_admin']['docservers']['docserver_type_id'] == 'TEMPLATES' */
             if($isModuleDocserver) {
                 ?>
-                <input name="docserver_type_id" type="text"  id="docserver_type_id" value="<?php echo $_SESSION['m_admin']['docservers']['docserver_type_id']; ?>" readonly="readonly" class="readonly" style="margin-left:7px;"/><i class="fa fa-star red_asterisk"></i>
+                <input name="docserver_type_id" type="text"  id="docserver_type_id" value="<?php echo $_SESSION['m_admin']['docservers']['docserver_type_id'];?>" readonly="readonly" class="readonly" style="margin-left:7px;"/><i class="fa fa-star red_asterisk"></i>
                 <?php
             } else {
                 for ($cptTypes = 0; $cptTypes < count($docserverTypesArray);
@@ -155,7 +155,7 @@ if ($mode == "list") {
             ?>
         </p>
         <p>
-            <label for="device_label"><?php echo _DEVICE_LABEL; ?> : </label>
+            <label for="device_label"><?php echo _DEVICE_LABEL;?> : </label>
             <input name="device_label" type="text"  id="device_label" value="<?php
         if (isset($_SESSION['m_admin']['docservers']['device_label'])) {
             echo $func->show_str(
@@ -165,7 +165,7 @@ if ($mode == "list") {
         ?>" style="margin-left:7px;"/><i class="fa fa-star red_asterisk"></i>
         </p>
         <p>
-            <label><?php echo _IS_READONLY; ?> : </label>
+            <label><?php echo _IS_READONLY;?> : </label>
             <input type="radio" class="check" name="is_readonly" value="true" <?php
         if (isset($_SESSION['m_admin']['docservers']['is_readonly'])
             && $_SESSION['m_admin']['docservers']['is_readonly'] == "Y"
@@ -183,7 +183,7 @@ if ($mode == "list") {
         ?> /><?php echo _NO;?>
         </p>
         <p>
-            <label for="size_format"><?php echo _SIZE_FORMAT; ?> : </label>
+            <label for="size_format"><?php echo _SIZE_FORMAT;?> : </label>
             <select name="size_format" id="size_format" onChange="javascript:convertSize();">
                 <option value="GB"><?php echo _GB;?></option>
                 <option value="TB"><?php echo _TB;?></option>
@@ -191,7 +191,7 @@ if ($mode == "list") {
             </select>
         </p>
         <p>
-            <label for="size_limit_number"><?php echo _SIZE_LIMIT; ?> : </label>
+            <label for="size_limit_number"><?php echo _SIZE_LIMIT;?> : </label>
             <input name="size_limit_number" type="text" id="size_limit_number" value="<?php
         if (isset($_SESSION['m_admin']['docservers']['size_limit_number'])) {
             echo $func->show_str(
@@ -235,7 +235,7 @@ if ($mode == "list") {
         }
         ?>
         <p>
-            <label for="path_template"><?php echo _PATH_TEMPLATE; ?> : </label>
+            <label for="path_template"><?php echo _PATH_TEMPLATE;?> : </label>
             <input name="path_template" type="text"  id="path_template" value="<?php
         if (isset($_SESSION['m_admin']['docservers']['path_template'])) {
             echo $_SESSION['m_admin']['docservers']['path_template'];
@@ -253,7 +253,7 @@ if ($mode == "list") {
         ?>"/>
         </p>
         <p>
-            <label for="chain_before"><?php echo _CHAIN_BEFORE; ?> : </label>
+            <label for="chain_before"><?php echo _CHAIN_BEFORE;?> : </label>
             <input name="chain_before" type="text"  id="chain_before" value="<?php
         if (isset($_SESSION['m_admin']['docservers']['chain_before'])) {
             echo $func->show_str($_SESSION['m_admin']['docservers']['chain_before']);
@@ -261,7 +261,7 @@ if ($mode == "list") {
         ?>"/>
         </p>
         <p>
-            <label for="chain_after"><?php echo _CHAIN_AFTER; ?> : </label>
+            <label for="chain_after"><?php echo _CHAIN_AFTER;?> : </label>
             <input name="chain_after" type="text"  id="chain_after" value="<?php
         if (isset($_SESSION['m_admin']['docservers']['chain_after'])) {
             echo $func->show_str(
@@ -271,7 +271,7 @@ if ($mode == "list") {
         ?>"/>
         </p>
         <p>
-            <label for="closing_date"><?php echo _CLOSING_DATE; ?> : </label>
+            <label for="closing_date"><?php echo _CLOSING_DATE;?> : </label>
             <input name="closing_date" type="text"  id="closing_date" value="<?php
         if (isset($_SESSION['m_admin']['docservers']['closing_date'])) {
             echo $func->show_str(
@@ -281,7 +281,7 @@ if ($mode == "list") {
         ?>"/>
         </p>-->
         <!--<p>
-            <label for="oais_mode"><?php echo _OAIS_MODE; ?> : </label>
+            <label for="oais_mode"><?php echo _OAIS_MODE;?> : </label>
             <select name="oais_mode" id="oais_mode">
                 <option value=""><?php echo _CHOOSE_OAIS_MODE;?></option>
         <?php
@@ -307,7 +307,7 @@ if ($mode == "list") {
             </select>
         </p>
         <p>
-            <label for="sign_mode"><?php echo _SIGN_MODE; ?> : </label>
+            <label for="sign_mode"><?php echo _SIGN_MODE;?> : </label>
             <select name="sign_mode" id="sign_mode">
                 <option value=""><?php echo _CHOOSE_SIGN_MODE;?></option>
         <?php
@@ -333,7 +333,7 @@ if ($mode == "list") {
             </select>
         </p>
         <p>
-            <label for="compress_mode"><?php echo _COMPRESS_MODE; ?> : </label>
+            <label for="compress_mode"><?php echo _COMPRESS_MODE;?> : </label>
             <select name="compress_mode" id="compress_mode">
                 <option value=""><?php echo _CHOOSE_COMPRESS_MODE;?></option>
         <?php
@@ -359,7 +359,7 @@ if ($mode == "list") {
             </select>
         </p>-->
         <p>
-            <label for="coll_id"><?php echo _COLLECTION; ?> : </label>
+            <label for="coll_id"><?php echo _COLLECTION;?> : </label>
             <?php
             for ($cptCollection = 0; $cptCollection < count(
                 $_SESSION['collections']
@@ -387,7 +387,7 @@ if ($mode == "list") {
                 //    && $_SESSION['m_admin']['docservers']['coll_id'] == 'templates'
                 if($isModuleDocserver) {
                     ?>
-                    <input name="coll_id" type="text"  id="coll_id" value="<?php echo $_SESSION['m_admin']['docservers']['coll_id']; ?>" readonly="readonly" class="readonly" style="margin-left:7px;"/><i class="fa fa-star red_asterisk"></i>
+                    <input name="coll_id" type="text"  id="coll_id" value="<?php echo $_SESSION['m_admin']['docservers']['coll_id'];?>" readonly="readonly" class="readonly" style="margin-left:7px;"/><i class="fa fa-star red_asterisk"></i>
                     <?php
                 } else {
                     ?>
@@ -421,7 +421,7 @@ if ($mode == "list") {
             ?>
         </p>
         <p>
-            <label for="priority_number"><?php echo _PRIORITY; ?> : </label>
+            <label for="priority_number"><?php echo _PRIORITY;?> : </label>
             <input name="priority_number" type="text"  id="priority_number" value="<?php
         if (isset($_SESSION['m_admin']['docservers']['priority_number'])) {
             echo $func->show_str(

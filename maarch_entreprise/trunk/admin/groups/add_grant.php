@@ -110,7 +110,7 @@ else
                 for($i=0; $i < count($_SESSION['collections']); $i++)
                 {
                     ?>
-                    <option value="<?php echo $_SESSION['collections'][$i]['id']; ?>" <?php  if ($coll_id == $_SESSION['collections'][$i]['id']) {echo 'selected="selected"'; }?>><?php echo $_SESSION['collections'][$i]['label']; ?></option>
+                    <option value="<?php echo $_SESSION['collections'][$i]['id'];?>" <?php  if ($coll_id == $_SESSION['collections'][$i]['id']) {echo 'selected="selected"'; }?>><?php echo $_SESSION['collections'][$i]['label'];?></option>
                     <?php
                 }
                 ?>
@@ -181,7 +181,7 @@ else
 
 <td width='400px'>
     <?php
-    include("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."keywords_help.php"); ?>
+    include("apps".DIRECTORY_SEPARATOR.$_SESSION['config']['app_id'].DIRECTORY_SEPARATOR."keywords_help.php");?>
 </td>
 </tr>
 </table>

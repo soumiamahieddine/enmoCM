@@ -349,10 +349,10 @@
 </script>
 <h1>
     <i class="fa fa-hdd-o fa-2x"></i>
-    <?php echo $titleText; ?>
+    <?php echo $titleText;?>
 </h1>
 <div class="<?php echo $params['objectName'] ?>">
     <div id="returnAjax"><br /><br /></div>
-    <?php echo $str_returnShow; ?>
+    <?php echo $str_returnShow;?>
 </div>
-<?php echo $str_defaultJs; ?>
+<?php echo $str_defaultJs;?>

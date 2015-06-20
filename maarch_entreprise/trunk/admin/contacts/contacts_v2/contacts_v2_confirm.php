@@ -200,7 +200,7 @@ $list = new list_show();
 
 ?>
 <div align="center">
-	<?php $list->list_simple($tab, $i, '', 'contact_id', 'contact_id', false, "", 'listing spec', '', 400, 500); ?>
+	<?php $list->list_simple($tab, $i, '', 'contact_id', 'contact_id', false, "", 'listing spec', '', 400, 500);?>
 </div>
 <br/>
 <br/>
