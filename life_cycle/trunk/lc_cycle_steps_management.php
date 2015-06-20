@@ -101,7 +101,7 @@ if ($mode == "list") {
             <?php
             for ($cptPolicies = 0;$cptPolicies < count($policiesArray);$cptPolicies++) {
                 ?>
-                <option value="<?php echo $policiesArray[$cptPolicies];?>" 
+                <option value="<?php functions::xecho($policiesArray[$cptPolicies]);?>" 
                 <?php 
                 if (isset($_SESSION['m_admin']['lc_cycle_steps']['policy_id']) 
                     && $_SESSION['m_admin']['lc_cycle_steps']
@@ -109,7 +109,7 @@ if ($mode == "list") {
                 ) {
                     echo 'selected="selected"';
                 }
-                ?>><?php echo $policiesArray[$cptPolicies];?></option>
+                ?>><?php functions::xecho($policiesArray[$cptPolicies]);?></option>
                 <?php
             }
             ?>
@@ -149,7 +149,7 @@ if ($mode == "list") {
                             <?php
                             for ($cptDocserverTypes = 0;$cptDocserverTypes < count($docserverTypesArray);$cptDocserverTypes++){
                                 ?>
-                                <option value="<?php echo $docserverTypesArray[$cptDocserverTypes];?>" <?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['docserver_type_id']) && $_SESSION['m_admin']['lc_cycle_steps']['docserver_type_id'] == $docserverTypesArray[$cptDocserverTypes]) { echo 'selected="selected"';}?>><?php echo $docserverTypesArray[$cptDocserverTypes];?></option>
+                                <option value="<?php functions::xecho($docserverTypesArray[$cptDocserverTypes]);?>" <?php if (isset($_SESSION['m_admin']['lc_cycle_steps']['docserver_type_id']) && $_SESSION['m_admin']['lc_cycle_steps']['docserver_type_id'] == $docserverTypesArray[$cptDocserverTypes]) { echo 'selected="selected"';}?>><?php functions::xecho($docserverTypesArray[$cptDocserverTypes]);?></option>
                                 <?php
                             }
                             ?>

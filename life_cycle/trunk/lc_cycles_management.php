@@ -80,7 +80,7 @@ if ($mode == "list") {
                             <?php
                             for ($cptPolicies=0;$cptPolicies<count($policiesArray);$cptPolicies++) {
                                 ?>
-                                <option value="<?php echo $policiesArray[$cptPolicies];?>" <?php if (isset($_SESSION['m_admin']['lc_cycles']['policy_id']) && $_SESSION['m_admin']['lc_cycles']['policy_id'] == $policiesArray[$cptPolicies]) { echo 'selected="selected"';}?>><?php if (isset($policiesArray[$cptPolicies])) echo $policiesArray[$cptPolicies];?></option>
+                                <option value="<?php functions::xecho($policiesArray[$cptPolicies]);?>" <?php if (isset($_SESSION['m_admin']['lc_cycles']['policy_id']) && $_SESSION['m_admin']['lc_cycles']['policy_id'] == $policiesArray[$cptPolicies]) { echo 'selected="selected"';}?>><?php if (isset($policiesArray[$cptPolicies])) echo $policiesArray[$cptPolicies];?></option>
                                 <?php
                             }
                             ?>
