@@ -199,11 +199,11 @@ if (count($_SESSION['user']['baskets']) > 0) {
         <form name="select_basket" method="get" id="select_basket" action="<?php
     echo $_SESSION['config']['businessappurl'];
     ?>index.php">
-        <i class ="fa fa-inbox fa-2x" title="" /></i> <?php echo _VIEW_BASKETS_TITLE; ?> :
+        <i class ="fa fa-inbox fa-2x" title="" /></i> <?php echo _VIEW_BASKETS_TITLE;?> :
             <input type="hidden" name="page" id="page" value="view_baskets" />
             <input type="hidden" name="module" id="module" value="basket" />
 
-            <select name="baskets"id="baskets" onchange="cleanSessionBasket('<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=basket&page=cleanSessionBasket','ok'); this.form.submit();" class="listext_big" >
+            <select name="baskets"id="baskets" onchange="cleanSessionBasket('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=basket&page=cleanSessionBasket','ok'); this.form.submit();" class="listext_big" >
                 <option value=""><?php echo _CHOOSE_BASKET;?></option>
                 <?php
     for ($i = 0; $i < count($_SESSION['user']['baskets']); $i ++) {

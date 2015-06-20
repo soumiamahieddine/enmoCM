@@ -73,7 +73,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
             //$core_tools->show_array($collWithUserBaskets);
             ?>
             <div class="block">
-                <h2><?php echo _MY_BASKETS; ?> : </h2>
+                <h2><?php echo _MY_BASKETS;?> : </h2>
             
             <?php
             $countColl = count($collWithUserBaskets);

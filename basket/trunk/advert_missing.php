@@ -56,16 +56,16 @@ if (isset($_POST['value']) && $_POST['value'] == "submit")
 	exit();
 }
 ?>
-<h1 ><i class="fa fa-question-circle"  align="middle" /></i><?php echo _MISSING_ADVERT_TITLE; ?></h1>
+<h1 ><i class="fa fa-question-circle"  align="middle" /></i><?php echo _MISSING_ADVERT_TITLE;?></h1>
 <div id="inner_content" class="clearfix">
-<h2 class="tit" align="center"><?php echo _MISSING_ADVERT_01; ?></h2>
-<p align="center"><?php echo _MISSING_ADVERT_02; ?> </p>
-<p align="center"><?php echo _MISSING_CHOOSE; ?></p>
+<h2 class="tit" align="center"><?php echo _MISSING_ADVERT_01;?></h2>
+<p align="center"><?php echo _MISSING_ADVERT_02;?> </p>
+<p align="center"><?php echo _MISSING_CHOOSE;?></p>
 
 <form name="redirect_form" method="post" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=advert_missing&module=basket">
 	<p align="center">
     <input name="value" type="hidden" value="submit">
-    <input name="cancel" type="submit"  value="<?php echo _CONTINUE; ?>" align="middle" class="button" />
+    <input name="cancel" type="submit"  value="<?php echo _CONTINUE;?>" align="middle" class="button" />
     <input name="cancel" type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=logout';" align="middle" class="button" />
     </p>
 </form>

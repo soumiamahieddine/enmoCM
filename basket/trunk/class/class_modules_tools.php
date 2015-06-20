@@ -1153,7 +1153,7 @@ class basket extends dbquery
             echo _REDIRECT_MY_BASKETS;
             ?></h2><div align="center"><form name="redirect_my_baskets_to" id="redirect_my_baskets_to" method="post" action="<?php
             echo $_SESSION['config']['businessappurl'];
-            ?>index.php?display=true&amp;module=basket&amp;page=manage_redirect_my_basket"><input type="hidden" name="display" id="display" value="true" /><input type="hidden" name="page" id="page" value="manage_redirect_my_basket" /><input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="baskets_owner" id="baskets_owner" value="<?php echo $userId;?>" /><table border="0" cellspacing="0" class="<?php echo $used_css;?>"><thead><tr><th><?php echo _ID; ?></th><th><?php echo _NAME; ?></th><th><?php echo _REDIRECT_TO; ?></th></tr></thead><tbody><?php
+            ?>index.php?display=true&amp;module=basket&amp;page=manage_redirect_my_basket"><input type="hidden" name="display" id="display" value="true" /><input type="hidden" name="page" id="page" value="manage_redirect_my_basket" /><input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="baskets_owner" id="baskets_owner" value="<?php echo $userId;?>" /><table border="0" cellspacing="0" class="<?php echo $used_css;?>"><thead><tr><th><?php echo _ID;?></th><th><?php echo _NAME;?></th><th><?php echo _REDIRECT_TO;?></th></tr></thead><tbody><?php
             $color = "";
             for ($theline = 0; $theline < $nbTotal ; $theline ++) {
                 if ($color == ' class="col"') {
@@ -1161,7 +1161,7 @@ class basket extends dbquery
                 } else {
                     $color = ' class="col"';
                 }
-                ?><tr <?php echo $color; ?>><td> <?php
+                ?><tr <?php echo $color;?>><td> <?php
                 echo $result[$theline]['id'];
                 ?></td><td><?php
                 echo $result[$theline]['name'];
@@ -1717,7 +1717,7 @@ class basket extends dbquery
             echo _MANAGE_SECONDARY_USER_BASKETS;
             ?></h2><div align="center"><form name="secondary_baskets" id="secondary_baskets" method="post" action="<?php
             echo $_SESSION['config']['businessappurl'];
-            ?>index.php?display=true&amp;module=basket&amp;page=manage_user_baskets_secondary"><input type="hidden" name="display" id="display" value="true" /><input type="hidden" name="page" id="page" value="manage_redirect_my_basket" /><input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="baskets_owner" id="baskets_owner" value="<?php echo $userId;?>" /><table border="0" cellspacing="0" class="<?php echo $used_css;?>"><thead><tr><th><?php echo _ID; ?></th><th><?php echo _NAME; ?></th><th><?php echo _GROUP; ?></th><th><?php echo _CHOOSE; ?></th></tr></thead><tbody><?php
+            ?>index.php?display=true&amp;module=basket&amp;page=manage_user_baskets_secondary"><input type="hidden" name="display" id="display" value="true" /><input type="hidden" name="page" id="page" value="manage_redirect_my_basket" /><input type="hidden" name="module" id="module" value="basket" /><input type="hidden" name="baskets_owner" id="baskets_owner" value="<?php echo $userId;?>" /><table border="0" cellspacing="0" class="<?php echo $used_css;?>"><thead><tr><th><?php echo _ID;?></th><th><?php echo _NAME;?></th><th><?php echo _GROUP;?></th><th><?php echo _CHOOSE;?></th></tr></thead><tbody><?php
             $color = "";
             for ($theline = 0; $theline < $nbTotal ; $theline ++) {
                 if ($color == ' class="col"') {
@@ -1725,7 +1725,7 @@ class basket extends dbquery
                 } else {
                     $color = ' class="col"';
                 }
-                ?><tr <?php echo $color; ?>><td> <?php
+                ?><tr <?php echo $color;?>><td> <?php
                 echo $result[$theline]['id'];
                 ?></td><td><?php
                 echo $result[$theline]['name'];

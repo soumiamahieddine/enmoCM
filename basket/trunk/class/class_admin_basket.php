@@ -250,16 +250,16 @@ class admin_basket extends dbquery
                 
                 <p>
                     <label><?php echo _ID;?> : </label>
-                    <input name="basketId" id="basketId" type="text" value="<?php echo $_SESSION['m_admin']['basket']['basketId']; ?>" <?php if($mode == "up") { echo 'readonly="readonly" class="readonly"';} ?> />
-                <input type="hidden"  name="id" value="<?php echo $id; ?>" />
+                    <input name="basketId" id="basketId" type="text" value="<?php echo $_SESSION['m_admin']['basket']['basketId'];?>" <?php if($mode == "up") { echo 'readonly="readonly" class="readonly"';} ?> />
+                <input type="hidden"  name="id" value="<?php echo $id;?>" />
                 </p>
                 <p>
-                    <label><?php echo _BASKET; ?> : </label>
-                    <input name="basketname"  type="text" id="basketname" value="<?php echo $_SESSION['m_admin']['basket']['name']; ?>" />
+                    <label><?php echo _BASKET;?> : </label>
+                    <input name="basketname"  type="text" id="basketname" value="<?php echo $_SESSION['m_admin']['basket']['name'];?>" />
                 </p>
                 <p>
-                    <label><?php echo _DESC; ?> : </label>
-                    <textarea  cols="30" rows="4"  name="basketdesc"  style="width:200px;" id="basketdesc" ><?php echo $_SESSION['m_admin']['basket']['desc']; ?></textarea>
+                    <label><?php echo _DESC;?> : </label>
+                    <textarea  cols="30" rows="4"  name="basketdesc"  style="width:200px;" id="basketdesc" ><?php echo $_SESSION['m_admin']['basket']['desc'];?></textarea>
                 </p>
                 <?php if($_SESSION['m_admin']['basket']['is_generic'] == 'Y')
                 {
@@ -270,7 +270,7 @@ class admin_basket extends dbquery
                 <?php } ?>
                 <p>
                     <label><?php echo _BASKET_VIEW;?> : </label>
-                    <textarea  cols="30" rows="4" style="width:415px;" name="basketclause" id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause']; ?></textarea> <a href="#" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=keywords_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><i class = "fa fa-question-circle fa-2x" title="<?php echo _HELP_KEYWORDS; ?>" ></i></a>
+                    <textarea  cols="30" rows="4" style="width:415px;" name="basketclause" id="basketclause" ><?php echo $_SESSION['m_admin']['basket']['clause'];?></textarea> <a href="#" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=keywords_help&mode=popup','modify','toolbar=no,status=no,width=500,height=550,left=500,top=300,scrollbars=auto,location=no,menubar=no,resizable=yes');"><i class = "fa fa-question-circle fa-2x" title="<?php echo _HELP_KEYWORDS;?>" ></i></a>
                 </p>
                 <p>
                     <label><?php echo _BASKET_VISIBLE_ONLY_ON_SEARCH;?> : </label>
@@ -300,22 +300,22 @@ class admin_basket extends dbquery
                 <br />
                 <!--<p>
                     <label><?php echo _BASKET_VISIBLE;?> : </label>
-                    <input type='checkbox' name="is_visible" id="is_visible" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_visible'] === 'Y' || $_SESSION['m_admin']['basket']['is_visible']=== '') echo 'checked="checked"'; ?>/>
+                    <input type='checkbox' name="is_visible" id="is_visible" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_visible'] === 'Y' || $_SESSION['m_admin']['basket']['is_visible']=== '') echo 'checked="checked"';?>/>
                 </p>-->
                 <?php
                 if ($core_tools->is_module_loaded('folder')) {
                 ?>
                 <p>
                     <label><?php echo _IS_FOLDER_BASKET;?> : </label>
-                    <input type='checkbox' name="is_folder_basket" id="is_folder_basket" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_folder_basket'] === 'Y') echo 'checked="checked"'; ?>/>
+                    <input type='checkbox' name="is_folder_basket" id="is_folder_basket" value="Y" <?php if ($_SESSION['m_admin']['basket']['is_folder_basket'] === 'Y') echo 'checked="checked"';?>/>
                 </p>
                 <?php
                 }
                 ?>
                 <p></p>
                 <p class="buttons" style="text-align:center;">
-                    &nbsp;<input type="submit" name="Submit" value="<?php echo _VALIDATE; ?>" class="button" />&nbsp;
-                    <input type="button" name="cancel" value="<?php echo _CANCEL; ?>" class="button"  onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=basket&amp;module=basket';"/>
+                    &nbsp;<input type="submit" name="Submit" value="<?php echo _VALIDATE;?>" class="button" />&nbsp;
+                    <input type="button" name="cancel" value="<?php echo _CANCEL;?>" class="button"  onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=basket&amp;module=basket';"/>
                 </p>
             </form>
             </div>

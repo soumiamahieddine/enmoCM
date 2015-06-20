@@ -76,7 +76,7 @@ if (!empty($arrBasketsSecondProfile)) {
                 ?> </a>
         </div>
         <p id="abs">
-            <?php echo _MANAGE_SECONDARY_USER_BASKETS_TEXT; ?>
+            <?php echo _MANAGE_SECONDARY_USER_BASKETS_TEXT;?>
         </p>
     </div>
     <?php
@@ -89,8 +89,8 @@ if (!empty($arrBasketsSecondProfile)) {
             ?>
         </div>
         <p id="abs">
-            <?php echo _MANAGE_SECONDARY_USER_BASKETS_HELP; ?><br />
-            <?php echo _MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL; ?><br />
+            <?php echo _MANAGE_SECONDARY_USER_BASKETS_HELP;?><br />
+            <?php echo _MANAGE_SECONDARY_USER_BASKETS_HELP_COMPL;?><br />
         </p>
     </div>
     <?php
