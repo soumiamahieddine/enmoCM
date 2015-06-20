@@ -173,9 +173,9 @@ if ($mode == 'up') {
                     <?php 
                     $nb_status=count($status_img);
                     for ($i=0;$i<count($status_img);$i++) {  ?>  
-                    <li style="display:inline-block;width:50px;padding:5px;" title="fm <?php echo $status_img[$i];?>" onclick="check_status('<?php echo $nb_status;?>', '<?php echo $i;?>')"> 	
-                      <input type="radio" style="visibility:hidden;" id="radio_<?php echo $i;?>" class="check" name="img_related" value="<?php echo $status_img[$i]?>" 
-                      <?php if ($_SESSION['m_admin']['status']['img_filename'] == $status_img[$i]) { ?> checked="checked" <?php } ?> onload="check_status('<?php echo $nb_status;?>', '<?php echo $i;?>')" /><?php
+                    <li style="display:inline-block;width:50px;padding:5px;" title="fm <?php functions::xecho($status_img[$i]);?>" onclick="check_status('<?php functions::xecho($nb_status);?>', '<?php functions::xecho($i);?>')"> 	
+                      <input type="radio" style="visibility:hidden;" id="radio_<?php functions::xecho($i);?>" class="check" name="img_related" value="<?php functions::xecho($status_img[$i])?>" 
+                      <?php if ($_SESSION['m_admin']['status']['img_filename'] == $status_img[$i]) { ?> checked="checked" <?php } ?> onload="check_status('<?php functions::xecho($nb_status);?>', '<?php functions::xecho($i);?>')" /><?php
                       $img = "<label for='".$status_img[$i]."' ><i id='img_".$i."' class = 'fm ".$status_img[$i]."' style='font-size:20px;'></i></label>";
                       if ($_SESSION['m_admin']['status']['img_filename'] == $status_img[$i]) {
                         $img = "<label for='".$status_img[$i]."' ><i id='img_".$i."' class = 'fm ".$status_img[$i]."' style='font-size:20px;color:#009dc5;'></i></label>";

@@ -460,7 +460,7 @@ function displayDelCheck($groupId)
         </div>
         <br/>
         <form name="entity_del" id="entity_del" style="width: 250px;margin:auto;" method="post" class="forms">
-            <input type="hidden" value="<?php echo $groupId;?>" name="id">
+            <input type="hidden" value="<?php functions::xecho($groupId);?>" name="id">
             <?php
 
                 echo "<h3>".count($userExists)." "._USERS_IN_GROUPS .":</h3>";
@@ -481,7 +481,7 @@ function displayDelCheck($groupId)
                     {
                         if($groups->group_id != $groupId){
                          ?>
-                        <option value="<?php echo $groups->group_id;?>"><?php echo $groups->group_desc;?></option>
+                        <option value="<?php functions::xecho($groups->group_id);?>"><?php functions::xecho($groups->group_desc);?></option>
                         <?php
                         }
                        
@@ -490,7 +490,7 @@ function displayDelCheck($groupId)
                 </select>
                  <p class="buttons">
                     <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick='if(document.getElementById("doc_type_id").options[document.getElementById("doc_type_id").selectedIndex].value == ""){alert("<?php echo _CHOOSE_REPLACEMENT_DOCTYPES ?> !");return false;}else{return(confirm("<?php echo _REALLY_DELETE.$s_id;?> \n\r\n\r<?php echo _DEFINITIVE_ACTION?>"));}'/>
-                    <input type="button" value="<?php echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=usergroups_management_controler&mode=list&admin=groups&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>';"/>
+                    <input type="button" value="<?php echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=usergroups_management_controler&mode=list&admin=groups&order=<?php functions::xecho($_REQUEST['order']);?>&order_field=<?php functions::xecho($_REQUEST['order_field']);?>&start=<?php functions::xecho($_REQUEST['start']);?>&what=<?php functions::xecho($_REQUEST['what']);?>';"/>
                 </p>
             </form>
             </div>
@@ -529,7 +529,7 @@ function displayEnable($groupId)
              . 'usergroups_management_controler&mode=list&admin=groups&order='
              . $_REQUEST['order'] . '&order_field=' . $_REQUEST['order_field']
              . '&start=' . $_REQUEST['start'] . '&what=' . $_REQUEST['what'];
-        ?><script type="text/javascript">window.top.location='<?php echo $url;?>';</script>
+        ?><script type="text/javascript">window.top.location='<?php functions::xecho($url);?>';</script>
         <?php
         exit();
     } else {
@@ -568,7 +568,7 @@ function displayDisable($groupId)
              . 'usergroups_management_controler&mode=list&admin=groups&order='
              . $order . '&order_field=' . $orderField . '&start=' . $start
              . '&what=' . $what;
-        ?><script type="text/javascript">window.top.location='<?php echo $url;?>';</script>
+        ?><script type="text/javascript">window.top.location='<?php functions::xecho($url);?>';</script>
         <?php
         exit();
     } else {

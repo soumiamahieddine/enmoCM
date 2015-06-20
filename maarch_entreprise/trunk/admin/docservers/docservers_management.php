@@ -107,7 +107,7 @@ if ($mode == "list") {
                     && $_SESSION['m_admin']['docservers']['docserver_type_id'] == 'TEMPLATES' */
             if($isModuleDocserver) {
                 ?>
-                <input name="docserver_type_id" type="text"  id="docserver_type_id" value="<?php echo $_SESSION['m_admin']['docservers']['docserver_type_id'];?>" readonly="readonly" class="readonly" style="margin-left:7px;"/><i class="fa fa-star red_asterisk"></i>
+                <input name="docserver_type_id" type="text"  id="docserver_type_id" value="<?php functions::xecho($_SESSION['m_admin']['docservers']['docserver_type_id']);?>" readonly="readonly" class="readonly" style="margin-left:7px;"/><i class="fa fa-star red_asterisk"></i>
                 <?php
             } else {
                 for ($cptTypes = 0; $cptTypes < count($docserverTypesArray);
@@ -138,13 +138,13 @@ if ($mode == "list") {
                         $cptTypes ++
                     ) {
                         ?>
-                        <option value="<?php echo $docserverTypesArray[$cptTypes];?>" <?php
+                        <option value="<?php functions::xecho($docserverTypesArray[$cptTypes]);?>" <?php
                         if (isset($_SESSION['m_admin']['docservers']['docserver_type_id'])
                             && $_SESSION['m_admin']['docservers']['docserver_type_id'] == $docserverTypesArray[$cptTypes]
                         ) {
                             echo 'selected="selected"';
                         }
-                        ?>><?php echo $docserverTypesArray[$cptTypes];?></option>
+                        ?>><?php functions::xecho($docserverTypesArray[$cptTypes]);?></option>
                         <?php
                     }
                     ?>
@@ -387,7 +387,7 @@ if ($mode == "list") {
                 //    && $_SESSION['m_admin']['docservers']['coll_id'] == 'templates'
                 if($isModuleDocserver) {
                     ?>
-                    <input name="coll_id" type="text"  id="coll_id" value="<?php echo $_SESSION['m_admin']['docservers']['coll_id'];?>" readonly="readonly" class="readonly" style="margin-left:7px;"/><i class="fa fa-star red_asterisk"></i>
+                    <input name="coll_id" type="text"  id="coll_id" value="<?php functions::xecho($_SESSION['m_admin']['docservers']['coll_id']);?>" readonly="readonly" class="readonly" style="margin-left:7px;"/><i class="fa fa-star red_asterisk"></i>
                     <?php
                 } else {
                     ?>
@@ -449,7 +449,7 @@ if ($mode == "list") {
             ) {
                 echo 'selected="selected"';
             }
-            ?>><?php echo $docserverLocationsArray[$cptLocation];?></option>
+            ?>><?php functions::xecho($docserverLocationsArray[$cptLocation]);?></option>
             <?php
         }
         ?>

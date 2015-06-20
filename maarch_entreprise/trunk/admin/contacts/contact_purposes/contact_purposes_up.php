@@ -201,7 +201,7 @@ if (isset($_REQUEST['valid'])) {
 			);
 			$res = $db->fetch_object();
 			?>
-				<script type="text/javascript">window.opener.$("new_id").value ="<?php echo utf8_decode($res->label);?>";window.opener.$("contact_purposes").value ='<?php echo $res->id;?>';self.close();</script> 
+				<script type="text/javascript">window.opener.$("new_id").value ="<?php echo utf8_decode($res->label);?>";window.opener.$("contact_purposes").value ='<?php functions::xecho($res->id);?>';self.close();</script> 
 			<?php
 		} else {
 			unset($_SESSION['m_admin']);
@@ -231,7 +231,8 @@ if (isset($_REQUEST['valid'])) {
 		                </p>
 		                <div id="menunav" style="display: none;">
 		                <?php
-		                echo '<div class="header_menu"><div class="user_name_menu">'.$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName'].'</div></div>';
+		                echo '<div class="header_menu"><div class="user_name_menu">'.functions::xecho($_SESSION['user']['FirstName'])
+		                	.' '.functions::xecho($_SESSION['user']['LastName']).'</div></div>';
 		                echo '<div class="header_menu_blank">&nbsp;</div>';?>
 		                <ul  >
 		                    <?php
@@ -320,7 +321,7 @@ if ($mode == "up") {
 	    		<?php echo _CONTACT_PURPOSE;?> :
 	    	</label>
 		   <input 
-		   		type="text"  name="desc_contact_purposes" value="<?php echo $_SESSION['CURRENT_DESC_CONTACT_PURPOSE'];?>" 
+		   		type="text"  name="desc_contact_purposes" value="<?php functions::xecho($_SESSION['CURRENT_DESC_CONTACT_PURPOSE']);?>" 
 			/>
 	     </p>
 

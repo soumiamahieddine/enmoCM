@@ -63,7 +63,7 @@ else
 				for($i=0;$i<count($_SESSION['tree_foldertypes']);$i++)
 				{
 					?>
-					<option value="<?php echo $_SESSION['tree_foldertypes'][$i]['ID'];?>" <?php  if($_SESSION['doctypes_chosen_tree'] == $_SESSION['tree_foldertypes'][$i]['ID'] ){ echo 'selected="selected"';}?>><?php echo $_SESSION['tree_foldertypes'][$i]['LABEL'];?></option>
+					<option value="<?php functions::xecho($_SESSION['tree_foldertypes'][$i]['ID']);?>" <?php  if($_SESSION['doctypes_chosen_tree'] == $_SESSION['tree_foldertypes'][$i]['ID'] ){ echo 'selected="selected"';}?>><?php echo $_SESSION['tree_foldertypes'][$i]['LABEL'];?></option>
 					<?php
 				}
 				?>

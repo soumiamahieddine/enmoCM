@@ -172,7 +172,7 @@ class indexing_searching_app extends dbquery
                 var error_div = $('main_error');
                 if (error_div)
                 {
-                    error_div.innerHTML = '<?php echo $error;?>';
+                    error_div.innerHTML = '<?php functions::xecho($error);?>';
                 }
             </script>
             <?php
@@ -425,7 +425,7 @@ class indexing_searching_app extends dbquery
             var error_div = $('main_error');
             if (error_div)
             {
-                error_div.innerHTML = '<?php echo $error;?>';
+                error_div.innerHTML = '<?php functions::xecho($error);?>';
             }
         </script>
         <?php*/
@@ -463,7 +463,7 @@ class indexing_searching_app extends dbquery
                 var error_div = $('main_error');
                 if (error_div)
                 {
-                    error_div.innerHTML = '<?php echo $error;?>';
+                    error_div.innerHTML = '<?php functions::xecho($error);?>';
                 }
             </script>
             <?php
@@ -684,7 +684,7 @@ class indexing_searching_app extends dbquery
             var error_div = $('main_error');
             if (error_div)
             {
-                error_div.innerHTML = '<?php echo $error;?>';
+                error_div.innerHTML = '<?php functions::xecho($error);?>';
             }
         </script>
         <?php
@@ -1130,7 +1130,7 @@ class indexing_searching_app extends dbquery
                 var error_div = $('main_error');
                 if (error_div)
                 {
-                    error_div.innerHTML = '<?php echo $error;?>';
+                    error_div.innerHTML = '<?php functions::xecho($error);?>';
                 }
             </script>
             <?php
@@ -1355,7 +1355,7 @@ class indexing_searching_app extends dbquery
             //window.opener.reload();
             var error_div = $('main_error');
             if (error_div) {
-                error_div.innerHTML = '<?php echo $error;?>';
+                error_div.innerHTML = '<?php functions::xecho($error);?>';
             }
         </script>
         <?php

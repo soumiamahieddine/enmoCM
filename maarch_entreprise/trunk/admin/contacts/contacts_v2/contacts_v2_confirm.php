@@ -212,15 +212,15 @@ $list = new list_show();
 	}
 
 	if($_GET['mycontact'] == 'N'){ ?> 
-		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _YES;?>" name="Submit" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contacts_v2_up_db&confirm=Y&mode=<?php echo $_GET['mode'];?>';"> 
+		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _YES;?>" name="Submit" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contacts_v2_up_db&confirm=Y&mode=<?php functions::xecho($_GET['mode']);?>';"> 
 		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _NO;?>" name="Cancel" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2';">
 <?php 
 	} else if($_GET['mycontact'] == 'iframe'){?>
-		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _YES;?>" name="Submit" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=my_contact_up_db&dir=my_contacts&confirm=Y&mode=<?php echo $_GET['mode'];?>&mycontact=iframe';"> 
+		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _YES;?>" name="Submit" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=my_contact_up_db&dir=my_contacts&confirm=Y&mode=<?php functions::xecho($_GET['mode']);?>&mycontact=iframe';"> 
 		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _NO;?>" name="Cancel" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=false&dir=my_contacts&page=create_contact_iframe';new Effect.toggle(parent.document.getElementById('create_contact_div'), 'blind', {delay:0.2});return false;">
 <?php	
 	}	else { ?>
-		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _YES;?>" name="Submit" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=my_contact_up_db&dir=my_contacts&confirm=Y&mode=<?php echo $_GET['mode'];?>';"> 
+		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _YES;?>" name="Submit" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=my_contact_up_db&dir=my_contacts&confirm=Y&mode=<?php functions::xecho($_GET['mode']);?>';"> 
 		&nbsp; &nbsp; &nbsp; &nbsp;<input class="button" type="button" value="<?php echo _NO;?>" name="Cancel" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=my_contacts&dir=my_contacts&load';">
 <?php 
 	} ?>

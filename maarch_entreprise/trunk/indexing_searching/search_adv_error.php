@@ -67,10 +67,10 @@ elseif($mode == 'popup' || $mode == 'frame')
     <div id="container">
 
             <div class="error" id="main_error">
-                <?php echo $_SESSION['error'];?>
+                <?php functions::xecho($_SESSION['error']);?>
             </div>
             <div class="info" id="main_info">
-                <?php echo $_SESSION['info'];?>
+                <?php functions::xecho($_SESSION['info']);?>
             </div><?php
 }
 ?>
@@ -82,7 +82,7 @@ elseif($mode == 'popup' || $mode == 'frame')
     <p>&nbsp;</p>
     <p>&nbsp;</p>
     <p>&nbsp;</p>
-    <?php echo $_SESSION['error_search'];
+    <?php functions::xecho($_SESSION['error_search']);
     $_SESSION['error_search'] = "";
     ?>
 </div>

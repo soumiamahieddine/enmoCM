@@ -35,11 +35,11 @@ if(!isset($_SESSION['config']['userdefaultpassword']) || empty($_SESSION['config
 ?>
 <h2 class="tit"><?php echo _PASSWORD_MODIFICATION;?></h2>
 <div id="frm_error"></div>
-<p ><?php echo _PASSWORD_FOR_USER;?> <b><?php echo $_SESSION['m_admin']['users']['user_id'] ;?></b> <?php echo _HAS_BEEN_RESET;?>.
+<p ><?php echo _PASSWORD_FOR_USER;?> <b><?php functions::xecho($_SESSION['m_admin']['users']['user_id'] );?></b> <?php echo _HAS_BEEN_RESET;?>.
 </p>
 <p><?php echo _NEW_PASW_IS." '".$_SESSION['config']['userdefaultpassword']."'";?></p>
 <p >
-<?php echo _DURING_NEXT_CONNEXION;?>, <?php echo $_SESSION['m_admin']['users']['user_id'] ;?> <?php echo _MUST_CHANGE_PSW;?>.
+<?php echo _DURING_NEXT_CONNEXION;?>, <?php functions::xecho($_SESSION['m_admin']['users']['user_id'] );?> <?php echo _MUST_CHANGE_PSW;?>.
 </p>
 <br/>
 <p class="buttons" ><input type="button" class="button" onclick="changePassword('<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&admin=users&page=manage_psw_changed';?>');" name="close" value="<?php echo _CLOSE_WINDOW;?>" /></p>

@@ -71,12 +71,12 @@ $func = new functions();
                     ?>
                     <tr>
                         <td>
-                            <div align="left" id="access_<?php echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID'];?>">
+                            <div align="left" id="access_<?php functions::xecho($_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID']);?>">
                                 <div style="float:left;">
-                                    <input type="checkbox"  class="check" name="security[]" value="<?php echo $i;?>" />
+                                    <input type="checkbox"  class="check" name="security[]" value="<?php functions::xecho($i);?>" />
                                 </div>
                                 <div>
-                                    <?php echo $func->show_string($_SESSION['m_admin']['groups']['security'][$i]['COMMENT']);?>
+                                    <?php functions::xecho($func->show_string($_SESSION['m_admin']['groups']['security'][$i]['COMMENT']));?>
                                 </div>
                                 <div align="left" style="margin-left:5%;">
 
@@ -95,10 +95,10 @@ $func = new functions();
                                     }?>
                                     </span>
                                 </div>
-                                <div align="right" onclick="new Effect.toggle('access_info_<?php echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID'];?>', 'blind', {delay:0.2});return false;">
+                                <div align="right" onclick="new Effect.toggle('access_info_<?php functions::xecho($_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID']);?>', 'blind', {delay:0.2});return false;">
                                  <i class="fa fa-plus-square fa-2x" title="<?php _MORE_INFOS;?>" onmouseover="this.style.cursor='pointer';"/></i><span class="lb1-details">&nbsp;</span>
                                 </div>
-                                <div style="display:none;" id="access_info_<?php echo $_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID'];?>" class="access_info desc">
+                                <div style="display:none;" id="access_info_<?php functions::xecho($_SESSION['m_admin']['groups']['security'][$i]['SECURITY_ID']);?>" class="access_info desc">
                                     <div class="ref-unit">
                                         <div>
                                         <?php echo _WHERE_CLAUSE_TARGET.' : ';

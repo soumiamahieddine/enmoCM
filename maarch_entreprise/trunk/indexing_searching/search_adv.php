@@ -96,10 +96,10 @@ elseif($mode == 'popup' || $mode == 'frame')
     <div id="container" style="height:auto;">
 
             <div class="error" id="main_error">
-                <?php echo $_SESSION['error'];?>
+                <?php functions::xecho($_SESSION['error']);?>
             </div>
             <div class="info" id="main_info">
-                <?php echo $_SESSION['info'];?>
+                <?php functions::xecho($_SESSION['info']);?>
             </div><?php
 }
 
@@ -450,7 +450,7 @@ $core_tools->load_js();
 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=search_adv.js" ></script>
 <script type="text/javascript">
 <!--
-var valeurs = { <?php echo $tab[1];?>};
+var valeurs = { <?php functions::xecho($tab[1]);?>};
 var loaded_query = <?php if(isset($_SESSION['current_search_query']) && !empty($_SESSION['current_search_query']))
 { echo $_SESSION['current_search_query'];}else{ echo '{}';}?>;
 
@@ -481,21 +481,21 @@ function del_query_confirm()
     <option id="default_query" value=""><?php echo _CHOOSE_SEARCH;?></option>
     <?php for($i=0; $i< count($queries);$i++)
     {
-    ?><option value="<?php echo $queries[$i]['ID'];?>" id="query_<?php echo $queries[$i]['ID'];?>"><?php echo $queries[$i]['LABEL'];?></option><?php }?>
+    ?><option value="<?php functions::xecho($queries[$i]['ID']);?>" id="query_<?php functions::xecho($queries[$i]['ID']);?>"><?php functions::xecho($queries[$i]['LABEL']);?></option><?php }?>
 </select>
 
 <input name="del_query" id="del_query" value="<?php echo _DELETE_QUERY;?>" type="button"  onclick="del_query_confirm();" class="button" style="display:none" />
 </div>
 </form>
 <?php } ?>
-<form name="frmsearch2" method="get" action="<?php if($mode == 'normal') {echo $_SESSION['config']['businessappurl'].'index.php'; } elseif($mode == 'frame' || $mode == 'popup'){ echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_result';}?>"  id="frmsearch2" class="<?php echo $class_for_form;?>">
+<form name="frmsearch2" method="get" action="<?php if($mode == 'normal') {echo $_SESSION['config']['businessappurl'].'index.php'; } elseif($mode == 'frame' || $mode == 'popup'){ echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_adv_result';}?>"  id="frmsearch2" class="<?php functions::xecho($class_for_form);?>">
 <input type="hidden" name="dir" value="indexing_searching" />
     <input type="hidden" name="page" value="search_adv_result" />
 <input type="hidden" name="mode" value="<?php echo $mode;?>" />
 <?php if($mode == 'frame' || $mode == 'popup'){?>
     <input type="hidden" name="display" value="true" />
-    <input type="hidden" name="action_form" value="<?php echo $_REQUEST['action_form'];?>" />
-    <input type="hidden" name="modulename" value="<?php echo $_REQUEST['modulename'];?>" />
+    <input type="hidden" name="action_form" value="<?php functions::xecho($_REQUEST['action_form']);?>" />
+    <input type="hidden" name="modulename" value="<?php functions::xecho($_REQUEST['modulename']);?>" />
 <?php
 }
 if(isset($_REQUEST['nodetails']))
@@ -590,7 +590,7 @@ if(isset($_REQUEST['nodetails']))
 
                         <tr>
                             <td width="70%"><label for="numcase" class="bold" ><?php echo _CASE_NUMBER;?>:</label>
-                                <input type="text" name="numcase" id="numcase" <?php echo $size;?>  />
+                                <input type="text" name="numcase" id="numcase" <?php functions::xecho($size);?>  />
                                 <input type="hidden" name="meta[]" value="numcase#numcase#input_text" />
                             </td>
                             <td><em><?php echo _CASE_NUMBER_HELP;?></em></td>
@@ -598,7 +598,7 @@ if(isset($_REQUEST['nodetails']))
                         </tr>
                         <tr>
                             <td width="70%"><label for="labelcase" class="bold" ><?php echo _CASE_LABEL;?>:</label>
-                                <input type="text" name="labelcase" id="labelcase" <?php echo $size;?>  />
+                                <input type="text" name="labelcase" id="labelcase" <?php functions::xecho($size);?>  />
                                 <input type="hidden" name="meta[]" value="labelcase#labelcase#input_text" />
                             </td>
                             <td><em><?php echo _CASE_LABEL_HELP;?></em></td>
@@ -606,7 +606,7 @@ if(isset($_REQUEST['nodetails']))
                         </tr>
                         <tr>
                             <td width="70%"><label for="descriptioncase" class="bold" ><?php echo _CASE_DESCRIPTION;?>:</label>
-                                <input type="text" name="descriptioncase" id="descriptioncase" <?php echo $size;?>  />
+                                <input type="text" name="descriptioncase" id="descriptioncase" <?php functions::xecho($size);?>  />
                                 <input type="hidden" name="meta[]" value="descriptioncase#descriptioncase#input_text" />
                             </td>
                             <td><em><?php echo _CASE_DESCRIPTION_HELP;?></em></td>
@@ -636,14 +636,14 @@ if(isset($_REQUEST['nodetails']))
             <table border = "0" width="100%" class="content">
                 <tr>
                     <td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT;?>:</label>
-                        <input type="text" name="subject" id="subject" <?php echo $size;?>  />
+                        <input type="text" name="subject" id="subject" <?php functions::xecho($size);?>  />
                         <input type="hidden" name="meta[]" value="subject#subject#input_text" /><span class="green_asterisk"><i class="fa fa-star"></i></span>
                     </td>
                     <td><em><?php echo _MAIL_OBJECT_HELP;?></em></td>
                 </tr>
                 <tr>
                     <td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT;?>:</label>
-                        <input type="text" name="fulltext" id="fulltext" <?php echo $size;?>  />
+                        <input type="text" name="fulltext" id="fulltext" <?php functions::xecho($size);?>  />
                         <input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
                         <a href="javascript::" onclick="new Effect.toggle('iframe_fulltext_help', 'blind', {delay:0.2})"><i class="fa fa-search" title="<?php echo _HELP_FULLTEXT_SEARCH;?>"></i></a>
                     </td>
@@ -658,14 +658,14 @@ if(isset($_REQUEST['nodetails']))
                 </tr>
                 <tr>
                     <td width="70%"><label for="numged" class="bold"><?php echo _N_GED;?>:</label>
-                        <input type="text" name="numged" id="numged" <?php echo $size;?>  />
+                        <input type="text" name="numged" id="numged" <?php functions::xecho($size);?>  />
                         <input type="hidden" name="meta[]" value="numged#numged#input_text" />
                     </td>
                     <td><em><?php echo _N_GED_HELP;?></em></td>
                 </tr>
                 <tr>
                     <td width="70%"><label for="multifield" class="bold" ><?php echo _MULTI_FIELD;?>:</label>
-                        <input type="text" name="multifield" id="multifield" <?php echo $size;?>  />
+                        <input type="text" name="multifield" id="multifield" <?php functions::xecho($size);?>  />
                         <input type="hidden" name="meta[]" value="multifield#multifield#input_text" />
                     </td>
                     <td><em><?php echo _MULTI_FIELD_HELP;?></em></td>
@@ -709,7 +709,7 @@ if(isset($_REQUEST['nodetails']))
 <div class="block">
 <h2><?php echo _ADD_PARAMETERS;?>&nbsp;:&nbsp;<select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'parameters_tab', <?php 
         echo $browser_ie;?>, '<?php echo _ERROR_IE_SEARCH;?>');window.location.href = '#bottom';">
-            <?php echo $src_tab;?>
+            <?php functions::xecho($src_tab);?>
         </select></h2>
 <table border = "0" width="100%" class="content" id="parameters_tab">
        <tr>
@@ -740,7 +740,7 @@ if(isset($_REQUEST['nodetails']))
 </div>
 
 <script type="text/javascript">
-load_query(valeurs, loaded_query, 'parameters_tab', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
+load_query(valeurs, loaded_query, 'parameters_tab', '<?php functions::xecho($browser_ie);?>, <?php echo _ERROR_IE_SEARCH;?>');
 <?php if(isset($_REQUEST['init_search']))
 {
     ?>clear_search_form('frmsearch2','select_criteria');clear_q_list();erase_contact_external_id('contactid', 'contactid_external');erase_contact_external_id('contactid_internal', 'contact_internal_id'); <?php

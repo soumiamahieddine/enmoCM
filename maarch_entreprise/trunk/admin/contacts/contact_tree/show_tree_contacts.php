@@ -189,9 +189,9 @@ if (file_exists(
                                         ?>
                                         {
                                             'id':'<?php echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_id']);?>',
-                                            'txt':'<a href="#" onclick="window.top.location.href=\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types_up&id=<?php echo $search_customer_results[$i]['content'][$j]['contact_type_id'];?>\'"><?php echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_label']);?></a>',
+                                            'txt':'<a href="#" onclick="window.top.location.href=\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contact_types_up&id=<?php functions::xecho($search_customer_results[$i]['content'][$j]['contact_type_id']);?>\'"><?php echo addslashes($search_customer_results[$i]['content'][$j]['contact_type_label']);?></a>',
                                             'onopenpopulate' : funcOpen,
-                                            'openlink' : '<?php echo $openlink;?>',
+                                            'openlink' : '<?php functions::xecho($openlink);?>',
                                             'canhavechildren' : true,
                                             'branch_level_id' : 1
                                         }

@@ -214,7 +214,7 @@ if (isset($_REQUEST['valid'])) {
                 </p>
                 <div id="menunav" style="display: none;">
 	                <?php
-	                echo '<div class="header_menu"><div class="user_name_menu">'.$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName'].'</div></div>';
+	                echo '<div class="header_menu"><div class="user_name_menu">'.functions::xecho($_SESSION['user']['FirstName']).' '.functions::xecho($_SESSION['user']['LastName']).'</div></div>';
 	                echo '<div class="header_menu_blank">&nbsp;</div>';?>
 	                <ul  >
 	                    <?php
@@ -305,7 +305,7 @@ if ($mode == "up") {
 	    		<?php echo _CONTACT_TYPE;?> :
 	    	</label>
 		   <input 
-		   		type="text"  name="desc_contact_types" value="<?php echo $_SESSION['CURRENT_DESC_CONTACT_TYPE'];?>" 
+		   		type="text"  name="desc_contact_types" value="<?php functions::xecho($_SESSION['CURRENT_DESC_CONTACT_TYPE']);?>" 
 			/>
 	     </p>
 

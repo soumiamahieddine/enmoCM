@@ -71,7 +71,7 @@ elseif($mode == "up" || $mode == "add")
                 <label for="user_id"><?php echo _ID;?> :</label>
                     <?php  if($mode == "up" && isset($_SESSION['m_admin']['users']['user_id'])) { echo functions::show_string($_SESSION['m_admin']['users']['user_id']); }else{ echo '<br/>'; } ?><input name="user_id"  type="<?php  if($mode == "up") { ?>hidden<?php  } elseif($mode == "add") { ?>text<?php  } ?>" id="user_id" value="<?php  if(isset($_SESSION['m_admin']['users']['user_id'])) {echo functions::show_string($_SESSION['m_admin']['users']['user_id']);} ?>" />
                     <span class="red_asterisk"><?php  if($mode != "up"){?>*<?php } ?></span>
-                    <!--<input type="hidden"  name="id" id="id" value="<?php echo $id;?>" />-->
+                    <!--<input type="hidden"  name="id" id="id" value="<?php functions::xecho($id);?>" />-->
             </p>
             <p>
                 <label for="LastName"><?php echo _LASTNAME;?> :</label><br/>

@@ -26,7 +26,7 @@ if($_SESSION['service_tag'] == 'group_basket')
     <table align="center" width="100%" id="index_status_baskets" >
         <tr>
             <td width="40%" align="center">
-                <select name="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuseslist[]" id="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuseslist" size="7" ondblclick='moveclick(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuseslist"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuses_chosen"));' multiple="multiple"  class="statuses_list" style="width:100%;">
+                <select name="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_statuseslist[]" id="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_statuseslist" size="7" ondblclick='moveclick(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_statuseslist"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_statuses_chosen"));' multiple="multiple"  class="statuses_list" style="width:100%;">
                 <?php
                 // Browse all the statuses
                 for ($cpt = 0; $cpt < count($_SESSION['m_admin']['statuses']); $cpt ++) {
@@ -53,23 +53,23 @@ if($_SESSION['service_tag'] == 'group_basket')
                     if($state_status == false)
                     {
                         ?>
-                        <option value="<?php echo $_SESSION['m_admin']['statuses'][$cpt]['id'];?>"><?php echo $_SESSION['m_admin']['statuses'][$cpt]['label'];?></option>
+                        <option value="<?php functions::xecho($_SESSION['m_admin']['statuses'][$cpt]['id']);?>"><?php echo $_SESSION['m_admin']['statuses'][$cpt]['label'];?></option>
                     <?php
                     }
                 }
                 ?>
                 </select>
                 <br/>
-                <em><a href='javascript:selectall(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuseslist"));' ><?php echo _SELECT_ALL;?></a></em>
+                <em><a href='javascript:selectall(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_statuseslist"));' ><?php echo _SELECT_ALL;?></a></em>
             </td>
             <td width="20%" align="center">
-                <input type="button" class="button" value="<?php echo _ADD;?> &gt;&gt;" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuseslist"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuses_chosen"));' />
+                <input type="button" class="button" value="<?php echo _ADD;?> &gt;&gt;" onclick='Move(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_statuseslist"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_statuses_chosen"));' />
                 <br />
                 <br />
-                <input type="button" class="button" value="&lt;&lt; <?php echo _REMOVE;?>" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuses_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuseslist"));' />
+                <input type="button" class="button" value="&lt;&lt; <?php echo _REMOVE;?>" onclick='Move(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_statuses_chosen"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_statuseslist"));' />
             </td>
             <td width="40%" align="center">
-                <select name="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuses_chosen[]" id="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuses_chosen" size="7" ondblclick='moveclick(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuses_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuseslist"));' multiple="multiple"   class="statuses_list" style="width:100%;">
+                <select name="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_statuses_chosen[]" id="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_statuses_chosen" size="7" ondblclick='moveclick(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_statuses_chosen"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_statuseslist"));' multiple="multiple"   class="statuses_list" style="width:100%;">
                 <?php
                 for ($cpt = 0; $cpt < count($_SESSION['m_admin']['statuses']); $cpt ++) {
                     $state_status = false;
@@ -100,14 +100,14 @@ if($_SESSION['service_tag'] == 'group_basket')
                     if($state_status == true)
                     {
                     ?>
-                        <option value="<?php echo $_SESSION['m_admin']['statuses'][$cpt]['id'];?>" selected="selected" ><?php echo $_SESSION['m_admin']['statuses'][$cpt]['label'];?></option>
+                        <option value="<?php functions::xecho($_SESSION['m_admin']['statuses'][$cpt]['id']);?>" selected="selected" ><?php echo $_SESSION['m_admin']['statuses'][$cpt]['label'];?></option>
                     <?php
                     }
                 }
                 ?>
                 </select>
                 <br/>
-                <em><a href="javascript:selectall(document.getElementById('<?php echo $_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID'];?>_statuses_chosen'));" >
+                <em><a href="javascript:selectall(document.getElementById('<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$current_compteur]['ID']);?>_statuses_chosen'));" >
                 <?php echo _SELECT_ALL;?></a></em>
             </td>
         </tr>

@@ -404,7 +404,7 @@ function display_del_check($user_id){
         </div>
         <br/>
         <form name="user_del" id="user_del" style="width: 350px;margin:auto;" method="post" class="forms">
-            <input type="hidden" value="<?php echo $user_id;?>" name="id">
+            <input type="hidden" value="<?php functions::xecho($user_id);?>" name="id">
             <?php
 
                 echo "<h3>".count($listDiffusion)." "._LISTE_DIFFUSION_IN_USER .":</h3>";
@@ -425,7 +425,7 @@ function display_del_check($user_id){
                     {
                         if($users->user_id != $user_id){
                          ?>
-                        <option value="<?php echo $users->user_id;?>"><?php echo $users->lastname . " " . $users->firstname;?></option>
+                        <option value="<?php functions::xecho($users->user_id);?>"><?php functions::xecho($users->lastname . " " . $users->firstname);?></option>
                         <?php
                         }
                        
@@ -434,7 +434,7 @@ function display_del_check($user_id){
                 </select>
                  <p class="buttons">
                     <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick='if(document.getElementById("doc_type_id").options[document.getElementById("doc_type_id").selectedIndex].value == ""){alert("<?php echo _CHOOSE_REPLACEMENT_DOCTYPES ?> !");return false;}else{return(confirm("<?php echo _REALLY_DELETE.$s_id;?> \n\r\n\r<?php echo _DEFINITIVE_ACTION?>"));}'/>
-                    <input type="button" value="<?php echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=usergroups_management_controler&mode=list&admin=groups&order=<?php echo $_REQUEST['order'];?>&order_field=<?php echo $_REQUEST['order_field'];?>&start=<?php echo $_REQUEST['start'];?>&what=<?php echo $_REQUEST['what'];?>';"/>
+                    <input type="button" value="<?php echo _CANCEL;?>" class="button" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'] ?>index.php?page=usergroups_management_controler&mode=list&admin=groups&order=<?php functions::xecho($_REQUEST['order']);?>&order_field=<?php functions::xecho($_REQUEST['order_field']);?>&start=<?php functions::xecho($_REQUEST['start']);?>&what=<?php functions::xecho($_REQUEST['what']);?>';"/>
                 </p>
             </form>
             </div>

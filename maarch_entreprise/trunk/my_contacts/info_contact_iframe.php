@@ -190,19 +190,19 @@ if (isset($_SESSION['AttachmentContact']) && $_SESSION['AttachmentContact'] =="1
 if ($_GET['created'] == "open") {
 	?>
 		<script type="text/javascript">
-			set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up';?>", "<?php echo $infoContactDiv ;?>", "false");
+			set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up';?>", "<?php functions::xecho($infoContactDiv );?>", "false");
 		</script>
 	<?php
 } else if(isset($_GET['created']) && $_GET['created'] == 'add'){
 ?>
 	<script type="text/javascript">
-		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address';?>", "<?php echo $infoContactDiv ;?>", "true");
+		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address';?>", "<?php functions::xecho($infoContactDiv );?>", "true");
 	</script>
 <?php
 } else if(isset($_GET['created']) && $_GET['created'] <> ''){
 ?>
 	<script type="text/javascript">
-		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up';?>", "<?php echo $infoContactDiv ;?>", "true");
+		set_new_contact_address("<?php echo $_SESSION['config']['businessappurl'] . 'index.php?display=false&dir=my_contacts&page=get_last_contact_address&mode=up';?>", "<?php functions::xecho($infoContactDiv );?>", "true");
 	</script>
 <?php
 }

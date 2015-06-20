@@ -42,7 +42,7 @@ $core_tools->test_service('quicklaunch', "apps");
     <?php
     if (count($_SESSION['user']['security']) > 0 || $_SESSION['user']['UserId'] == 'superadmin') {
         ?>
-        <form name="choose_query" id="choose_query"  method="post" action="" class="<?php echo $class_for_form;?>" >
+        <form name="choose_query" id="choose_query"  method="post" action="" class="<?php functions::xecho($class_for_form);?>" >
             <div class="block">
                 <h2><?php echo _QUICK_SEARCH;?> :</h2>
             <table>

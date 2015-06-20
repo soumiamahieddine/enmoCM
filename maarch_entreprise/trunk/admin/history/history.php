@@ -278,7 +278,7 @@ $list->admin_list($tab, $nb, '&nbsp;', 'id','history','history','id', true, '', 
                 <?php  
                 for ($i=0;$i<count($_SESSION['history_keywords']);$i++) {
                     ?>
-                    <option value="<?php echo $_SESSION['history_keywords'][$i]['id'];?>" <?php if ($history_action== $_SESSION['history_keywords'][$i]['id']) {echo 'selected="selected"';}?>><?php echo $_SESSION['history_keywords'][$i]['label'];?></option>
+                    <option value="<?php functions::xecho($_SESSION['history_keywords'][$i]['id']);?>" <?php if ($history_action== $_SESSION['history_keywords'][$i]['id']) {echo 'selected="selected"';}?>><?php echo $_SESSION['history_keywords'][$i]['label'];?></option>
                     <?php 
                 }
                 ?>
@@ -291,7 +291,7 @@ $list->admin_list($tab, $nb, '&nbsp;', 'id','history','history','id', true, '', 
                 <?php  
                 for ($i=0;$i<count($modules);$i++) {
                     ?>
-                    <option value="<?php echo $modules[$i]['id'];?>" <?php if ($history_module== $modules[$i]['id']) {echo 'selected="selected"';}?>><?php echo $modules[$i]['label'];?></option>
+                    <option value="<?php functions::xecho($modules[$i]['id']);?>" <?php if ($history_module== $modules[$i]['id']) {echo 'selected="selected"';}?>><?php functions::xecho($modules[$i]['label']);?></option>
                     <?php
                 }
                 ?>

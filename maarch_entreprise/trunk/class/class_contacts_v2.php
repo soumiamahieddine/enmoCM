@@ -475,7 +475,7 @@ class contacts_v2 extends dbquery
                     }
                 }
                 ?>
-                <form name="frmcontact" id="frmcontact" method="post" action="<?php echo $action;?>" class="forms">
+                <form name="frmcontact" id="frmcontact" method="post" action="<?php functions::xecho($action);?>" class="forms">
                     <input type="hidden" name="display"  value="true" />
                     <?php if(!$admin)
                     {?>
@@ -500,8 +500,8 @@ class contacts_v2 extends dbquery
                         <td><?php echo _IS_CORPORATE_PERSON;?> :</td>
                         <td>&nbsp;</td>
                         <td class="indexing_field">
-                            <input type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?>/ onclick="javascript:show_admin_contacts( true, '<?php echo $display_value;?>');"><?php echo _YES;?>
-                            <input type="radio"  class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts( false, '<?php echo $display_value;?>');"/><?php echo _NO;?>
+                            <input type="radio"  class="check" name="is_corporate"  value="Y" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'Y'){?> checked="checked"<?php } ?>/ onclick="javascript:show_admin_contacts( true, '<?php functions::xecho($display_value);?>');"><?php echo _YES;?>
+                            <input type="radio"  class="check" name="is_corporate" value="N" <?php if($_SESSION['m_admin']['contact']['IS_CORPORATE_PERSON'] == 'N'){?> checked="checked"<?php } ?> onclick="javascript:show_admin_contacts( false, '<?php functions::xecho($display_value);?>');"/><?php echo _NO;?>
                         </td>
                         <td>&nbsp;</td>
                     </tr>
@@ -513,7 +513,7 @@ class contacts_v2 extends dbquery
                             <label for="owner"><?php echo _CREATE_BY;?> : </label>
                         </td>
                         <td>&nbsp;</td>
-                        <td class="indexing_field"><input disabled name="owner" type="text"  id="owner" value="<?php echo $func->show_str($_SESSION['m_admin']['contact']['OWNER']);?>"/><div id="show_user" class="autocomplete"></div>
+                        <td class="indexing_field"><input disabled name="owner" type="text"  id="owner" value="<?php functions::xecho($func->show_str($_SESSION['m_admin']['contact']['OWNER']));?>"/><div id="show_user" class="autocomplete"></div>
                         </td>
                         <td>&nbsp;</td>
                     </tr>
@@ -531,13 +531,13 @@ class contacts_v2 extends dbquery
                                 <option value=""><?php echo _CHOOSE_CONTACT_TYPES;?></option>
                                 <?php
                                     foreach(array_keys($contact_types) as $key) {
-                                        ?><option value="<?php echo $key;?>" <?php
+                                        ?><option value="<?php functions::xecho($key);?>" <?php
 
                                         if(isset($_SESSION['m_admin']['contact']['CONTACT_TYPE']) && $key == $_SESSION['m_admin']['contact']['CONTACT_TYPE'] )
                                         {
                                             echo 'selected="selected"';
                                         }
-                                        ?>><?php echo $contact_types[$key];?>
+                                        ?>><?php functions::xecho($contact_types[$key]);?>
                                         </option><?php
                                     }?>
                             </select></td>
@@ -590,7 +590,7 @@ class contacts_v2 extends dbquery
                             <?php
                             foreach(array_keys($titles) as $key)
                             {
-                                ?><option value="<?php echo $key;?>" <?php
+                                ?><option value="<?php functions::xecho($key);?>" <?php
 
                                 if((!isset($_SESSION['m_admin']['contact']['TITLE']) || empty($_SESSION['m_admin']['contact']['TITLE']))&& $key == $_SESSION['default_mail_title'])
                                 {
@@ -600,7 +600,7 @@ class contacts_v2 extends dbquery
                                 {
                                     echo 'selected="selected"';
                                 }
-                                ?>><?php echo $titles[$key];?></option><?php
+                                ?>><?php functions::xecho($titles[$key]);?></option><?php
                             }?>
                         </select></td>
                         <td>&nbsp;</td>
@@ -665,7 +665,7 @@ class contacts_v2 extends dbquery
                                     ?><input type="button" class="button"  name="cancel" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=view_tree_contacts';" /><?php
                                     // $_SESSION['fromContactTree'] = "";
                                 } else {?>
-                                    <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL;?>" onclick="javascript:window.location.href='<?php echo $cancel_target;?>';" />                 
+                                    <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL;?>" onclick="javascript:window.location.href='<?php functions::xecho($cancel_target);?>';" />                 
                     <?php       }
                             }           
                     }
@@ -709,7 +709,7 @@ class contacts_v2 extends dbquery
                                     <?php
                                         $this->query("SELECT id, label FROM contact_types ORDER BY label");
                                         while ($res_label = $this->fetch_object()){
-                                            ?><option value="<?php echo $res_label->id;?>"><?php echo $res_label->label;?></option>
+                                            ?><option value="<?php functions::xecho($res_label->id);?>"><?php functions::xecho($res_label->label);?></option>
                                         <?php
                                         }
                                     ?>
@@ -724,7 +724,7 @@ class contacts_v2 extends dbquery
                                     <?php
                                         $this->query("SELECT contact_id, society, firstname, lastname, is_corporate_person FROM contacts_v2 WHERE enabled = 'Y' ORDER BY is_corporate_person desc, society, lastname");
                                         while ($res_contact = $this->fetch_object()){
-                                            ?><option value="<?php echo $res_contact->contact_id;?>"><?php
+                                            ?><option value="<?php functions::xecho($res_contact->contact_id);?>"><?php
                                             if ($res_contact->is_corporate_person == "Y") {
                                                 echo $res_contact->society;
                                             } else if ($res_contact->is_corporate_person == "N") {
@@ -853,7 +853,7 @@ class contacts_v2 extends dbquery
                 </h1>
                 
                 <form name="entity_del" id="entity_del" method="post" class="forms">
-                    <input type="hidden" value="<?php echo $id;?>" name="id">
+                    <input type="hidden" value="<?php functions::xecho($id);?>" name="id">
                     <h2 class="tit"><?php echo _CONTACT_REAFFECT." : <i>".$label."</i>";?></h2>
                     <?php
                     if($nb_docs > 0)
@@ -871,7 +871,7 @@ class contacts_v2 extends dbquery
                                 <input name="contact_list" type="text"  id="contact_list" value=""/>
                                 <div id="show_contact" class="autocomplete">
                                     <script type="text/javascript">
-                                        initList_hidden_input('contact_list', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contacts_v2_list_by_name&id=<?php echo $id;?>', 'what', '2', 'contact');
+                                        initList_hidden_input('contact_list', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contacts_v2_list_by_name&id=<?php functions::xecho($id);?>', 'what', '2', 'contact');
                                     </script>
                                 </div>
                                 <input type="hidden" id="contact" name="contact" />
@@ -895,7 +895,7 @@ class contacts_v2 extends dbquery
                         <br/>
                         <p class="buttons">
                             <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick="return(confirm('<?php echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php echo _DEFINITIVE_ACTION;?>'));"/>
-                            <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $path_contacts;?>';" class="button" />
+                            <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php functions::xecho($path_contacts);?>';" class="button" />
                         </p>
                       <?php
                     }
@@ -910,7 +910,7 @@ class contacts_v2 extends dbquery
         
         ?>
         <script type="text/javascript">
-            window.location.href="<?php echo $path_contacts;?>";
+            window.location.href="<?php functions::xecho($path_contacts);?>";
         </script>
         <?php
         exit;
@@ -1095,7 +1095,7 @@ class contacts_v2 extends dbquery
                     $action = $_SESSION['config']['businessappurl'].'index.php?display=true&page=contact_addresses_up_db&fromContactAddressesList';
                 }
                 ?>
-                <form name="frmcontact" id="frmcontact" method="post" action="<?php echo $action;?>" class="forms">
+                <form name="frmcontact" id="frmcontact" method="post" action="<?php functions::xecho($action);?>" class="forms">
                     <input type="hidden" name="display"  value="true" />
                     <?php if(!$admin)
                     {?>
@@ -1136,13 +1136,13 @@ class contacts_v2 extends dbquery
                                                             <?php
                                                             foreach(array_keys($contact_purposes) as $key)
                                                             {
-                                                                ?><option value="<?php echo $key;?>" <?php
+                                                                ?><option value="<?php functions::xecho($key);?>" <?php
 
                                                                 if(isset($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID']) && $key == $_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'] )
                                                                 {
                                                                     echo 'selected="selected"';
                                                                 }
-                                                                ?>><?php echo $contact_purposes[$key];?></option><?php
+                                                                ?>><?php functions::xecho($contact_purposes[$key]);?></option><?php
                                                             }?>
                                                         </select> -->
                                 <input name="new_id" id="new_id" onfocus="$('rule_purpose').style.display='table-row'" onblur="purposeCheck();$('rule_purpose').style.display='none'";
@@ -1156,7 +1156,7 @@ class contacts_v2 extends dbquery
                                 />
                                 <div id="show_contact" class="autocomplete">
                                     <script type="text/javascript">
-                                        initList_hidden_input('new_id', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_purposes_list_by_name&id=<?php echo $id;?>', 'what', '2', 'contact_purposes');
+                                        initList_hidden_input('new_id', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_purposes_list_by_name&id=<?php functions::xecho($id);?>', 'what', '2', 'contact_purposes');
                                     </script>
                                 </div>
                                 <input type="hidden" id="contact_purposes" name="contact_purposes"                             
@@ -1197,7 +1197,7 @@ class contacts_v2 extends dbquery
                                 <?php
                                 foreach(array_keys($titles) as $key)
                                 {
-                                    ?><option value="<?php echo $key;?>" <?php
+                                    ?><option value="<?php functions::xecho($key);?>" <?php
 
                                     if((!isset($_SESSION['m_admin']['address']['TITLE']) || empty($_SESSION['m_admin']['address']['TITLE']))&& $key == $_SESSION['default_mail_title'])
                                     {
@@ -1207,7 +1207,7 @@ class contacts_v2 extends dbquery
                                     {
                                         echo 'selected="selected"';
                                     }
-                                    ?>><?php echo $titles[$key];?></option><?php
+                                    ?>><?php functions::xecho($titles[$key]);?></option><?php
                                 }?>
                             </select></td>
                             <td>&nbsp;</td>
@@ -1269,7 +1269,7 @@ class contacts_v2 extends dbquery
                             <td class="indexing_field"><input name="cp" type="text" id="cp" value="<?php if(isset($_SESSION['m_admin']['address']['ADD_CP'])){echo $func->show_str($_SESSION['m_admin']['address']['ADD_CP']); }?>"/>
                                 <div id="show_town" class="autocomplete">
                                     <script type="text/javascript">
-                                        initList_hidden_input2('cp', 'show_town', '<?php $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=ajaxShowVille&id=<?php echo $id;?>', 'what', '2', 'town', 'cp');
+                                        initList_hidden_input2('cp', 'show_town', '<?php $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=ajaxShowVille&id=<?php functions::xecho($id);?>', 'what', '2', 'town', 'cp');
                                     </script>
                                 </div>
                             </td>
@@ -1281,7 +1281,7 @@ class contacts_v2 extends dbquery
                             <td class="indexing_field"><input name="town" type="text" id="town" onfocus="$('rule_town').style.display='table-row'" onblur="$('rule_town').style.display='none';"value="<?php if(isset($_SESSION['m_admin']['address']['ADD_TOWN'])){echo $func->show_str($_SESSION['m_admin']['address']['ADD_TOWN']); }?>"/></td>
                                 <div id="show_postal_code" class="autocomplete">
                                     <script type="text/javascript">
-                                        initList_hidden_input3('town', 'show_postal_code', '<?php $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=ajaxShowCodePostal&id=<?php echo $id;?>', 'what', '2', 'cp', 'town');
+                                        initList_hidden_input3('town', 'show_postal_code', '<?php $_SESSION['config']['businessappurl'];?>index.php?display=true&dir=indexing_searching&page=ajaxShowCodePostal&id=<?php functions::xecho($id);?>', 'what', '2', 'cp', 'town');
                                     </script>
                                 </div>
                             <td class="indexing_field"><span class="blue_asterisk" style="visibility:visible;">*</span></td>
@@ -1407,10 +1407,10 @@ class contacts_v2 extends dbquery
                             } ?>
                              /> 
                         <?php } ?>
-                        <input type="button" class="button"  name="cancel" value="<?php echo _SEE_ALL_ADDRESSES;?>" onclick="javascript:window.location.href='<?php echo $see_all_addresses;?>';" />
+                        <input type="button" class="button"  name="cancel" value="<?php echo _SEE_ALL_ADDRESSES;?>" onclick="javascript:window.location.href='<?php functions::xecho($see_all_addresses);?>';" />
                         <?php
                     } else {
-                        ?><input type="button" class="button"  name="cancel" value="<?php echo _CANCEL;?>" onclick="javascript:window.location.href='<?php echo $cancel_target;?>';" /><?php
+                        ?><input type="button" class="button"  name="cancel" value="<?php echo _CANCEL;?>" onclick="javascript:window.location.href='<?php functions::xecho($cancel_target);?>';" /><?php
                     }
                     ?>
                     </p>
@@ -1961,7 +1961,7 @@ class contacts_v2 extends dbquery
                 unset($_SESSION['m_admin']);
                 ?>
                     <script type="text/javascript">
-                        window.location.href="<?php echo $path;?>";
+                        window.location.href="<?php functions::xecho($path);?>";
                     </script>   
                 <?php
 
@@ -1975,9 +1975,9 @@ class contacts_v2 extends dbquery
                 <br>
                 <br>
                 
-                <form name="contact_type_del" id="contact_type_del" method="post" class="forms" action="<?php echo $path_del?>">
-                    <input type="hidden" value="<?php echo $id;?>" name="id">
-                    <h2 class="tit"><?php echo $reaffect_sentence; " : <i>".$label."</i>";?></h2>
+                <form name="contact_type_del" id="contact_type_del" method="post" class="forms" action="<?php functions::xecho($path_del);?>">
+                    <input type="hidden" value="<?php functions::xecho($id);?>" name="id">
+                    <h2 class="tit"><?php functions::xecho($reaffect_sentence) . " : <i>".$label."</i>";?></h2>
                     <?php
                     if($nb_elements > 0)
                     {
@@ -2019,13 +2019,13 @@ class contacts_v2 extends dbquery
                                 </td>
                                 
                                 <td class="indexing_field">
-                                    <input name="new_contact" id="new_contact" value="<?php echo $CurrentContact;?>" onchange="erase_contact_external_id('new_contact', 'new_contact_id')"/>
+                                    <input name="new_contact" id="new_contact" value="<?php functions::xecho($CurrentContact);?>" onchange="erase_contact_external_id('new_contact', 'new_contact_id')"/>
                                     <div id="show_contact_label" class="autocomplete">
                                         <script type="text/javascript">
                                             initList_hidden_input('new_contact', 'show_contact_label', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contacts_v2_list_by_name', 'what', '2', 'new_contact_id');
                                         </script>
                                     </div>
-                                    <input type="hidden" id="new_contact_id" name="new_contact_id" value="<?php echo $_SESSION['contact']['current_contact_id'];?>"/>
+                                    <input type="hidden" id="new_contact_id" name="new_contact_id" value="<?php functions::xecho($_SESSION['contact']['current_contact_id']);?>"/>
                                 </td>
                                 <br>
                                 <br>
@@ -2034,7 +2034,7 @@ class contacts_v2 extends dbquery
                             } ?>
 
                         <td>
-                            <label for="contact"><?php echo $new_sentence;?> : </label>
+                            <label for="contact"><?php functions::xecho($new_sentence);?> : </label>
                         </td>
                         <td class="indexing_field">
                             <?php 
@@ -2053,7 +2053,7 @@ class contacts_v2 extends dbquery
                                 ?> <input name="new_id" id="new_id" value=""/>
                                     <div id="show_contact" class="autocomplete">
                                         <script type="text/javascript">
-                                            initList_hidden_input('new_id', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_purposes_list_by_name&id=<?php echo $id;?>', 'what', '2', 'new');
+                                            initList_hidden_input('new_id', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_purposes_list_by_name&id=<?php functions::xecho($id);?>', 'what', '2', 'new');
                                         </script>
                                     </div>
                                     <input type="hidden" id="new" name="new" />
@@ -2066,11 +2066,11 @@ class contacts_v2 extends dbquery
                                 }
                             ?>
                                 <select name="new" id="new">
-                                    <option value=""><?php echo $choose_sentence;?></option>
+                                    <option value=""><?php functions::xecho($choose_sentence);?></option>
                                     <?php
                                     foreach($array as $key => $label){
-                                        ?><option value="<?php echo $key;?>">
-                                            <?php echo $label;
+                                        ?><option value="<?php functions::xecho($key);?>">
+                                            <?php functions::xecho($label);
                                         ?></option><?php
                                     }
                                     ?>
@@ -2083,7 +2083,7 @@ class contacts_v2 extends dbquery
                         <br/>
                     <p class="buttons">
                         <input type="submit" value="<?php echo _DEL_AND_REAFFECT;?>" name="valid" class="button" onclick="return(confirm('<?php echo _REALLY_DELETE;  if(isset($page_name) && $page_name == "users"){ echo $complete_name;} elseif(isset($admin_id)){ echo " ".$admin_id; }?> ?\n\r\n\r<?php echo _DEFINITIVE_ACTION;?>'));"/>
-                        <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $path;?>';" class="button" />
+                        <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php functions::xecho($path);?>';" class="button" />
                     </p>
                       <?php
                     }
@@ -2109,8 +2109,8 @@ class contacts_v2 extends dbquery
 
                     <br>
                     <br>
-                    <form name="contact_type_del" id="contact_type_del" method="post" class="forms" action="<?php echo $path_del?>">
-                        <input type="hidden" value="<?php echo $id;?>" name="id">
+                    <form name="contact_type_del" id="contact_type_del" method="post" class="forms" action="<?php functions::xecho($path_del);?>">
+                        <input type="hidden" value="<?php functions::xecho($id);?>" name="id">
                         <td>
                             <label for="new_contact_reaffect"><?php echo _NEW_CONTACT;?> : </label>
                         </td>
@@ -2119,7 +2119,7 @@ class contacts_v2 extends dbquery
                             <input name="new_contact_reaffect" id="new_contact_reaffect" value="" onchange="erase_contact_external_id('new_contact_reaffect', 'new_contact_id_reaffect')"/>
                             <div id="show_contact_label_reaffect" class="autocomplete">
                                 <script type="text/javascript">
-                                    initList_hidden_input('new_contact_reaffect', 'show_contact_label_reaffect', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contacts_v2_list_by_name&id=<?php echo $_SESSION['contact']['current_contact_id'];?>', 'what', '2', 'new_contact_id_reaffect');
+                                    initList_hidden_input('new_contact_reaffect', 'show_contact_label_reaffect', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contacts_v2_list_by_name&id=<?php functions::xecho($_SESSION['contact']['current_contact_id']);?>', 'what', '2', 'new_contact_id_reaffect');
                                 </script>
                             </div>
                             <input type="hidden" id="new_contact_id_reaffect" name="new_contact_id_reaffect"/>
@@ -2134,7 +2134,7 @@ class contacts_v2 extends dbquery
                                 <?php }
                             ?>
 
-                            <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php echo $path;?>';" class="button" />
+                            <input type="button" value="<?php echo _CANCEL;?>" onclick="window.location.href='<?php functions::xecho($path);?>';" class="button" />
                         </p>
                     </form>
                     <br>
@@ -2150,7 +2150,7 @@ class contacts_v2 extends dbquery
         
         ?>
         <script type="text/javascript">
-            window.location.href="<?php echo $path;?>";
+            window.location.href="<?php functions::xecho($path);?>";
         </script>
         <?php
         exit;        
@@ -2260,7 +2260,7 @@ class contacts_v2 extends dbquery
                         </td>
                         <td>&nbsp;</td>
                         <td class="indexing_field" align="right">
-                            <input disabled name="new_id" id="new_id" value="<?php echo $this->get_label_contact($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'], $_SESSION['tablename']['contact_purposes']);?>"/>
+                            <input disabled name="new_id" id="new_id" value="<?php functions::xecho($this->get_label_contact($_SESSION['m_admin']['address']['CONTACT_PURPOSE_ID'], $_SESSION['tablename']['contact_purposes']));?>"/>
                         </td>
                         <td>&nbsp;&nbsp;&nbsp;</td>
                     </tr>                    

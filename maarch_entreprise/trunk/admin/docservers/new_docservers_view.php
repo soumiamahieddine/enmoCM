@@ -310,7 +310,7 @@
             document.body ? document.body.scrollTop : 0
         );
         
-        var listHeight = $('<?php echo $params['objectName'] ?>_list').getHeight();
+        var listHeight = $('<?php functions::xecho($params['objectName'] ?>_list')).getHeight();
         
         var innerHeight = window.innerHeight;
         var innerWidth  = window.innerWidth;
@@ -349,10 +349,10 @@
 </script>
 <h1>
     <i class="fa fa-hdd-o fa-2x"></i>
-    <?php echo $titleText;?>
+    <?php functions::xecho($titleText);?>
 </h1>
 <div class="<?php echo $params['objectName'] ?>">
     <div id="returnAjax"><br /><br /></div>
-    <?php echo $str_returnShow;?>
+    <?php functions::xecho($str_returnShow);?>
 </div>
-<?php echo $str_defaultJs;?>
+<?php functions::xecho($str_defaultJs);?>

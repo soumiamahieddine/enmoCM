@@ -22,7 +22,7 @@ $time = $core_tools->get_session_time_expire();
 <body onload="setTimeout(window.close, <?php echo $time;?>*60*1000);">
 <div id="container">
 <div id="content" >
-<div class="error"><?php echo $_SESSION['error'];  $_SESSION['error'] = "";?></div>
+<div class="error"><?php functions::xecho($_SESSION['error']);  $_SESSION['error'] = "";?></div>
 
 <div id="inner_content" class="clearfix">
 
@@ -36,7 +36,7 @@ $time = $core_tools->get_session_time_expire();
 	<input type="hidden" name="page" value="verif_pass" />
 	<p>
 		<label><?php echo _ID;?> : </label>
-		<input type="text" readonly="readonly" class="readonly" value="<?php echo $_SESSION['user']['UserId'];?>"/>
+		<input type="text" readonly="readonly" class="readonly" value="<?php functions::xecho($_SESSION['user']['UserId']);?>"/>
 	</p>
 	<p>
 		<label><?php echo _PASSWORD;?> : </label>
@@ -48,26 +48,26 @@ $time = $core_tools->get_session_time_expire();
 	</p>
 	<p>
 		<label><?php echo _LASTNAME;?> : </label>
-		<input name="LastName"  type="text" id="LastName"  value="<?php echo $_SESSION['user']['LastName'];?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
+		<input name="LastName"  type="text" id="LastName"  value="<?php functions::xecho($_SESSION['user']['LastName']);?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
 	</p>
 	<p>
 		<label><?php echo _FIRSTNAME;?> : </label>
-		<input name="FirstName" type="text" id="FirstName" value="<?php echo $_SESSION['user']['FirstName'];?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
+		<input name="FirstName" type="text" id="FirstName" value="<?php functions::xecho($_SESSION['user']['FirstName']);?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
 	</p>
 	<?php if(!$core_tools->is_module_loaded("entities") )
 	{?>
 	<p>
 		<label ><?php echo _DEPARTMENT;?> : </label>
-		<input name="Department"  type="text" id="Department"  value="<?php echo $_SESSION['user']['department'];?>" />
+		<input name="Department"  type="text" id="Department"  value="<?php functions::xecho($_SESSION['user']['department']);?>" />
 	</p>
 	<?php } ?>
 	<p>
 		<label><?php echo _PHONE_NUMBER;?> : </label>
-		<input name="Phone"  type="text" id="Phone" value="<?php echo $_SESSION['user']['Phone'];?>" />
+		<input name="Phone"  type="text" id="Phone" value="<?php functions::xecho($_SESSION['user']['Phone']);?>" />
 	</p>
 	<p>
 		<label ><?php echo _MAIL;?> : </label>
-		<input name="Mail"   type="text" id="Mail"  value="<?php echo $_SESSION['user']['Mail'];?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
+		<input name="Mail"   type="text" id="Mail"  value="<?php functions::xecho($_SESSION['user']['Mail']);?>" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
 	</p>
 	<p class="buttons">
 		<input type="submit" name="Submit" value="<?php echo _VALIDATE;?>" class="button" />

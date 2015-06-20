@@ -111,8 +111,8 @@ if($mode == 'normal') {
     ?>
     <body>
     <div id="container">
-        <div class="error" id="main_error"><?php echo $_SESSION['error'];?></div>
-        <div class="info" id="main_info"><?php echo $_SESSION['info'];?></div>
+        <div class="error" id="main_error"><?php functions::xecho($_SESSION['error']);?></div>
+        <div class="info" id="main_info"><?php functions::xecho($_SESSION['info']);?></div>
     <?php
      $core_tools->load_js();
 }

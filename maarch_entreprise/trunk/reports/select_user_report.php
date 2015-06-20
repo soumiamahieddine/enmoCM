@@ -102,7 +102,7 @@ if(isset($_GET['what']) && !empty($_GET['what']))
 				var item = window.opener.$('user_id');
 				if(item)
 				{
-					item.value = '<?php echo $_REQUEST['field'];?>';
+					item.value = '<?php functions::xecho($_REQUEST['field']);?>';
 					self.close();
 				}
 			</script>

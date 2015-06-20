@@ -33,15 +33,15 @@ elseif($_SESSION['service_tag'] == 'frm_doctype')
     ?>
     <p>
         <label for="label"><?php echo _PROCESS_DELAY;?> : </label>
-        <input name="process_delay" type="text" class="textbox" id="label" maxlength="4" value="<?php echo $func->show_str($_SESSION['m_admin']['doctypes']['process_delay']);?>"/>
+        <input name="process_delay" type="text" class="textbox" id="label" maxlength="4" value="<?php functions::xecho($func->show_str($_SESSION['m_admin']['doctypes']['process_delay']));?>"/>
     </p>
     <p>
         <label for="label"><?php echo _ALARM1_DELAY;?> : </label>
-        <input name="delay1" type="text" class="textbox" id="label" maxlength="4" value="<?php echo $func->show_str($_SESSION['m_admin']['doctypes']['delay1']);?>"/>
+        <input name="delay1" type="text" class="textbox" id="label" maxlength="4" value="<?php functions::xecho($func->show_str($_SESSION['m_admin']['doctypes']['delay1']));?>"/>
     </p>
     <p>
         <label for="label"><?php echo _ALARM2_DELAY;?> : </label>
-        <input name="delay2" type="text" class="textbox" id="label" maxlength="4" value="<?php echo $func->show_str($_SESSION['m_admin']['doctypes']['delay2']);?>"/>
+        <input name="delay2" type="text" class="textbox" id="label" maxlength="4" value="<?php functions::xecho($func->show_str($_SESSION['m_admin']['doctypes']['delay2']));?>"/>
     </p>
     <?php
 }

@@ -57,7 +57,7 @@ if ($_GET['mode'] == "ban") {
 ?>
 
 <script>
-	window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2_up&id=<?php echo $_SESSION['contact']['current_contact_id'];?>';
+	window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=contacts_v2_up&id=<?php functions::xecho($_SESSION['contact']['current_contact_id']);?>';
 </script>
 
 <?php

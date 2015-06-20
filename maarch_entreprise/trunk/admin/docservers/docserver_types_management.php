@@ -75,10 +75,10 @@ if ($mode == "list") {
                                     $color = ' class="col"';
                                 }
                                 ?>
-                                 <tr <?php echo $color;?> >
-                                            <td style="width:25%;"><?php echo $docservers[$i]->__get('docserver_id');?></td>
-                                            <td style="width:25%;"><?php echo $docservers[$i]->__get('device_label');?></td>
-                                            <td style="width:25%;"><?php echo $docservers[$i]->__get('docserver_location_id');?></td>
+                                 <tr <?php functions::xecho($color);?> >
+                                            <td style="width:25%;"><?php functions::xecho($docservers[$i]->__get('docserver_id'));?></td>
+                                            <td style="width:25%;"><?php functions::xecho($docservers[$i]->__get('device_label'));?></td>
+                                            <td style="width:25%;"><?php functions::xecho($docservers[$i]->__get('docserver_location_id'));?></td>
                                            <td ><?php
                                             if ($coreTools->test_service('admin_docservers', 'apps', false)) {?>
                                            <a class="change" href="<?php echo $_SESSION['config']['businessappurl'].'index.php?page=docservers_management_controler&amp;mode=up&amp;admin=docservers&amp;id='.$docservers[$i]->__get('docserver_id');?>"  title="<?php echo _GO_MANAGE_DOCSERVER;?>"><i><?php echo _GO_MANAGE_DOCSERVER;?></i></a><?php }?></td>
@@ -125,12 +125,12 @@ if ($mode == "list") {
                         ?>
                         <label for="is_container_txt"><?php echo _IS_CONTAINER;?> : </label>
                         <input name="is_container_txt" type="text"  id="is_container_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_container'])) echo $rep;?>" readonly class="readonly"/>
-                        <input type="hidden" name="is_container" value="<?php echo $_SESSION['m_admin']['docserver_types']['is_container'];?>" />
+                        <input type="hidden" name="is_container" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['is_container']);?>" />
                     </p>
                     <p>
                         <label for="container_max_number_txt"><?php echo _CONTAINER_MAX_NUMBER;?> : </label>
                         <input name="container_max_number_txt" type="text"  id="container_max_number_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['container_max_number'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['container_max_number']);?>" readonly class="readonly"/>
-                        <input type="hidden" name="container_max_number" value="<?php echo $_SESSION['m_admin']['docserver_types']['container_max_number'];?>" />
+                        <input type="hidden" name="container_max_number" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['container_max_number']);?>" />
                     </p>
                     <p>
                         <?php 
@@ -142,12 +142,12 @@ if ($mode == "list") {
                         ?>
                         <label for="is_compressed_txt"><?php echo _IS_COMPRESSED;?> : </label>
                         <input name="is_compressed_txt" type="text"  id="is_compressed_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_compressed'])) echo $rep;?>" readonly class="readonly"/>
-                        <input type="hidden" name="is_compressed" value="<?php echo $_SESSION['m_admin']['docserver_types']['is_compressed'];?>" />
+                        <input type="hidden" name="is_compressed" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['is_compressed']);?>" />
                     </p>
                     <p>
                         <label for="compression_mode_txt"><?php echo _COMPRESS_MODE;?> : </label>
                         <input name="compression_mode_txt" type="text"  id="compression_mode_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['compression_mode'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['compression_mode']);?>" readonly class="readonly"/>
-                        <input type="hidden" name="compression_mode" value="<?php echo $_SESSION['m_admin']['docserver_types']['compression_mode'];?>" />
+                        <input type="hidden" name="compression_mode" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['compression_mode']);?>" />
                     </p>
                     <p>
                         <?php
@@ -159,12 +159,12 @@ if ($mode == "list") {
                         ?>
                         <label for="is_meta_txt"><?php echo _IS_META;?> : </label>
                         <input name="is_meta_txt" type="text"  id="is_meta_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_meta'])) echo $rep;?>" readonly class="readonly"/>
-                        <input type="hidden" name="is_meta" value="<?php echo $_SESSION['m_admin']['docserver_types']['is_meta'];?>" />
+                        <input type="hidden" name="is_meta" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['is_meta']);?>" />
                     </p>
                     <p>
                         <label for="meta_template_txt"><?php echo _META_TEMPLATE;?> : </label>
                         <input name="meta_template_txt" type="text"  id="meta_template_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['meta_template'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['meta_template']);?>" readonly class="readonly"/>
-                        <input type="hidden" name="meta_template" value="<?php echo $_SESSION['m_admin']['docserver_types']['meta_template'];?>" />
+                        <input type="hidden" name="meta_template" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['meta_template']);?>" />
                     </p>
                     <p>
                         <?php
@@ -176,12 +176,12 @@ if ($mode == "list") {
                         ?>
                         <label for="is_logged_txt"><?php echo _IS_LOGGED;?> : </label>
                         <input name="is_logged_txt" type="text"  id="is_logged_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_logged'])) echo $rep;?>" readonly class="readonly"/>
-                        <input type="hidden" name="is_logged" value="<?php echo $_SESSION['m_admin']['docserver_types']['is_logged'];?>" />
+                        <input type="hidden" name="is_logged" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['is_logged']);?>" />
                     </p>
                     <p>
                         <label for="log_template_txt"><?php echo _LOG_TEMPLATE;?> : </label>
                         <input name="log_template_txt" type="text"  id="log_template_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['log_template'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['log_template']);?>" readonly class="readonly"/>
-                        <input type="hidden" name="log_template" value="<?php echo $_SESSION['m_admin']['docserver_types']['log_template'];?>" />
+                        <input type="hidden" name="log_template" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['log_template']);?>" />
                     </p>
                     <p>
                         <?php
@@ -193,12 +193,12 @@ if ($mode == "list") {
                         ?>
                         <label for="is_signed_txt"><?php echo _IS_SIGNED;?> : </label>
                         <input name="is_signed_txt" type="text"  id="is_signed_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['is_signed'])) echo $rep;?>" readonly class="readonly"/>
-                        <input type="hidden" name="is_signed" value="<?php echo $_SESSION['m_admin']['docserver_types']['is_signed'];?>" />
+                        <input type="hidden" name="is_signed" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['is_signed']);?>" />
                     </p>
                     <p>
                         <label for="fingerprint_mode_txt"><?php echo _FINGERPRINT_MODE;?> : </label>
                         <input name="fingerprint_mode_txt" type="text"  id="fingerprint_mode_txt" value="<?php if (isset($_SESSION['m_admin']['docserver_types']['fingerprint_mode'])) echo $func->show_str($_SESSION['m_admin']['docserver_types']['fingerprint_mode']);?>" readonly class="readonly"/>
-                        <input type="hidden" name="fingerprint_mode" value="<?php echo $_SESSION['m_admin']['docserver_types']['fingerprint_mode'];?>" />
+                        <input type="hidden" name="fingerprint_mode" value="<?php functions::xecho($_SESSION['m_admin']['docserver_types']['fingerprint_mode']);?>" />
                     </p>
                     <?php
                     /*******************************************************/
@@ -227,7 +227,7 @@ if ($mode == "list") {
                             <?php
                             for($cptCompressMode=1;$cptCompressMode<count($_SESSION['docserversFeatures']['DOCSERVERS']['COMPRESS']['MODE']);$cptCompressMode++) {
                                 ?>
-                                <option value="<?php echo $_SESSION['docserversFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode];?>" <?php if (isset($_SESSION['m_admin']['docserver_types']['compression_mode']) && $_SESSION['m_admin']['docserver_types']['compression_mode'] == $_SESSION['docserversFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php echo $_SESSION['docserversFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode];?></option>
+                                <option value="<?php functions::xecho($_SESSION['docserversFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode]);?>" <?php if (isset($_SESSION['m_admin']['docserver_types']['compression_mode']) && $_SESSION['m_admin']['docserver_types']['compression_mode'] == $_SESSION['docserversFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php functions::xecho($_SESSION['docserversFeatures']['DOCSERVERS']['COMPRESS']['MODE'][$cptCompressMode]);?></option>
                                 <?php
                             }
                             ?>
@@ -246,7 +246,7 @@ if ($mode == "list") {
                             <?php
                             for($cptCompressMode=1;$cptCompressMode<count($_SESSION['docserversFeatures']['DOCSERVERS']['META_TEMPLATE']['MODE']);$cptCompressMode++) {
                                 ?>
-                                <option value="<?php echo $_SESSION['docserversFeatures']['DOCSERVERS']['META_TEMPLATE']['MODE'][$cptCompressMode];?>" <?php if (isset($_SESSION['m_admin']['docserver_types']['meta_template']) && $_SESSION['m_admin']['docserver_types']['meta_template'] == $_SESSION['docserversFeatures']['DOCSERVERS']['META_TEMPLATE']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php echo $_SESSION['docserversFeatures']['DOCSERVERS']['META_TEMPLATE']['MODE'][$cptCompressMode];?></option>
+                                <option value="<?php functions::xecho($_SESSION['docserversFeatures']['DOCSERVERS']['META_TEMPLATE']['MODE'][$cptCompressMode]);?>" <?php if (isset($_SESSION['m_admin']['docserver_types']['meta_template']) && $_SESSION['m_admin']['docserver_types']['meta_template'] == $_SESSION['docserversFeatures']['DOCSERVERS']['META_TEMPLATE']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php functions::xecho($_SESSION['docserversFeatures']['DOCSERVERS']['META_TEMPLATE']['MODE'][$cptCompressMode]);?></option>
                                 <?php
                             }
                             ?>
@@ -265,7 +265,7 @@ if ($mode == "list") {
                             <?php
                                 for($cptCompressMode=1;$cptCompressMode<count($_SESSION['docserversFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE']);$cptCompressMode++) {
                                     ?>
-                                    <option value="<?php echo $_SESSION['docserversFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE'][$cptCompressMode];?>" <?php if (isset($_SESSION['m_admin']['docserver_types']['log_template']) && $_SESSION['m_admin']['docserver_types']['log_template'] == $_SESSION['docserversFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php echo $_SESSION['docserversFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE'][$cptCompressMode];?></option>
+                                    <option value="<?php functions::xecho($_SESSION['docserversFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE'][$cptCompressMode]);?>" <?php if (isset($_SESSION['m_admin']['docserver_types']['log_template']) && $_SESSION['m_admin']['docserver_types']['log_template'] == $_SESSION['docserversFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php functions::xecho($_SESSION['docserversFeatures']['DOCSERVERS']['LOG_TEMPLATE']['MODE'][$cptCompressMode]);?></option>
                                     <?php
                                 }
                             ?>
@@ -284,7 +284,7 @@ if ($mode == "list") {
                             <?php
                             for($cptCompressMode=1;$cptCompressMode<count($_SESSION['docserversFeatures']['DOCSERVERS']['FINGERPRINT_MODE']['MODE']);$cptCompressMode++) {
                                 ?>
-                                <option value="<?php echo $_SESSION['docserversFeatures']['DOCSERVERS']['FINGERPRINT_MODE']['MODE'][$cptCompressMode];?>" <?php if (isset($_SESSION['m_admin']['docserver_types']['fingerprint_mode']) && $_SESSION['m_admin']['docserver_types']['fingerprint_mode'] == $_SESSION['docserversFeatures']['DOCSERVERS']['FINGERPRINT_MODE']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php echo $_SESSION['docserversFeatures']['DOCSERVERS']['FINGERPRINT_MODE']['MODE'][$cptCompressMode];?></option>
+                                <option value="<?php functions::xecho($_SESSION['docserversFeatures']['DOCSERVERS']['FINGERPRINT_MODE']['MODE'][$cptCompressMode]);?>" <?php if (isset($_SESSION['m_admin']['docserver_types']['fingerprint_mode']) && $_SESSION['m_admin']['docserver_types']['fingerprint_mode'] == $_SESSION['docserversFeatures']['DOCSERVERS']['FINGERPRINT_MODE']['MODE'][$cptCompressMode]) { echo 'selected="selected"';}?>><?php functions::xecho($_SESSION['docserversFeatures']['DOCSERVERS']['FINGERPRINT_MODE']['MODE'][$cptCompressMode]);?></option>
                             <?php
                             }
                             ?>

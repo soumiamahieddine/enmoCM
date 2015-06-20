@@ -8,7 +8,7 @@ if ($viewResourceArr['status'] <> 'ko') {
         <!--<body id="validation_page" 
         onload="javascript:moveTo(0,0);">
             <div id="template_content" style="width:100%;">-->
-            <?php echo $content;?>
+            <?php functions::xecho($content);?>
             <!--</div>
         </body>
         </html>-->

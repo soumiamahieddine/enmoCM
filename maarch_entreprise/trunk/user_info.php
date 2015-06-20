@@ -52,19 +52,19 @@ else
 
          <p id="lastname_p">
             <label for="lastname"><?php echo _LASTNAME;?> : </label>
-            <input name="lastname" type="text"  id="lastname" value="<?php echo $func->show_str($user_data['LASTNAME']);?>" readonly="readonly"/>
+            <input name="lastname" type="text"  id="lastname" value="<?php functions::xecho($func->show_str($user_data['LASTNAME']));?>" readonly="readonly"/>
          </p>
          <p id="firstname_p">
             <label for="firstname"><?php echo _FIRSTNAME;?> : </label>
-            <input name="firstname" type="text"  id="firstname" value="<?php echo $func->show_str($user_data['FIRSTNAME']);?>" readonly="readonly"/>
+            <input name="firstname" type="text"  id="firstname" value="<?php functions::xecho($func->show_str($user_data['FIRSTNAME']));?>" readonly="readonly"/>
          </p>
           <p>
             <label for="phone"><?php echo _PHONE;?> : </label>
-            <input name="phone" type="text"  id="phone" value="<?php echo $func->show_str($user_data['PHONE']);?>" readonly="readonly"/>
+            <input name="phone" type="text"  id="phone" value="<?php functions::xecho($func->show_str($user_data['PHONE']));?>" readonly="readonly"/>
          </p>
          <p>
             <label for="mail"><?php echo _MAIL;?> : </label>
-            <input name="mail" type="text" id="mail" value="<?php echo $func->show_str($user_data['MAIL']);?>" readonly="readonly"/>
+            <input name="mail" type="text" id="mail" value="<?php functions::xecho($func->show_str($user_data['MAIL']));?>" readonly="readonly"/>
          </p>
          <?php
         if($core_tools->is_module_loaded('entities'))

@@ -65,12 +65,12 @@ elseif($mode == 'up' || $mode == 'add'){
                     <option value="_NOSTATUS_"><?php echo _UNCHANGED;?></option>
                     <?php
                     for($i = 0; $i < count($statusArray); $i++){
-                        ?><option value="<?php echo $statusArray[$i]['id'];?>"
+                        ?><option value="<?php functions::xecho($statusArray[$i]['id']);?>"
                         <?php
                         if($_SESSION['m_admin']['action']['ID_STATUS']
                             == $statusArray[$i]['id']) {
                             echo 'selected="selected"';
-                        }?>><?php echo $statusArray[$i]['label'];
+                        }?>><?php functions::xecho($statusArray[$i]['label']);
                         ?></option><?php
                     }
                     ?>

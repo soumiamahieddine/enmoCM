@@ -106,7 +106,7 @@ $core_tools->load_js();
 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=search_adv.js" ></script>
 <script type="text/javascript">
 <!--
-    var valeurs = { <?php echo $tab[1];?>};
+    var valeurs = { <?php functions::xecho($tab[1]);?>};
     var loaded_query = <?php if(isset($_SESSION['current_search_query']) && !empty($_SESSION['current_search_query']))
     { echo $_SESSION['current_search_query'];}else{ echo '{}';}?>;
 
@@ -116,7 +116,7 @@ $core_tools->load_js();
 <h1><i class="fa fa-search fa-2x"></i> <?php echo _SEARCH_CONTACTS;?></h1>
 <div id="inner_content">
 
-<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_contacts_result';?>"  id="frmsearch2" class="<?php echo $class_for_form;?>">
+<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=search_contacts_result';?>"  id="frmsearch2" class="<?php functions::xecho($class_for_form);?>">
     <input type="hidden" name="dir" value="indexing_searching" />
     <input type="hidden" name="page" value="search_contacts_result" />
     <input type="hidden" name="mode" value="<?php echo $mode;?>" />
@@ -148,8 +148,8 @@ $core_tools->load_js();
                                 <?php
                                 foreach(array_keys($contact_types) as $key)
                                 {
-                                    ?><option value="<?php echo $key;?>">
-                                        <?php echo $contact_types[$key];?>
+                                    ?><option value="<?php functions::xecho($key);?>">
+                                        <?php functions::xecho($contact_types[$key]);?>
                                     </option><?php
                                 }?>
                             </select>
@@ -158,25 +158,25 @@ $core_tools->load_js();
                     </tr>
                     <tr>
                         <td width="70%"><label for="society" class="bold" ><?php echo _STRUCTURE_ORGANISM;?> :</label>
-                            <input type="text" name="society" id="society" <?php echo $size;?>  />
+                            <input type="text" name="society" id="society" <?php functions::xecho($size);?>  />
                             <input type="hidden" name="meta[]" value="society#society#input_text" />
                         </td>
                     </tr>
                     <tr>
                         <td width="70%"><label for="society_short" class="bold" ><?php echo _SOCIETY_SHORT;?> :</label>
-                            <input type="text" name="society_short" id="society_short" <?php echo $size;?>  />
+                            <input type="text" name="society_short" id="society_short" <?php functions::xecho($size);?>  />
                             <input type="hidden" name="meta[]" value="society_short#society_short#input_text" />
                         </td>
                     </tr>
                     <tr>
                         <td width="70%"><label for="lastname" class="bold"><?php echo _LASTNAME;?> :</label>
-                            <input type="text" name="lastname" id="lastname" <?php echo $size;?>  />
+                            <input type="text" name="lastname" id="lastname" <?php functions::xecho($size);?>  />
                             <input type="hidden" name="meta[]" value="lastname#lastname#input_text" />
                         </td>
                     </tr>
                     <tr>
                         <td width="70%"><label for="firstname" class="bold" ><?php echo _FIRSTNAME;?> :</label>
-                            <input type="text" name="firstname" id="firstname" <?php echo $size;?>  />
+                            <input type="text" name="firstname" id="firstname" <?php functions::xecho($size);?>  />
                             <input type="hidden" name="meta[]" value="firstname#firstname#input_text" />
                         </td>
                     </tr>
@@ -199,7 +199,7 @@ $core_tools->load_js();
                             <input type="hidden" name="meta[]" value="contact_purpose#contact_purpose#input_text" />
                             <div id="show_contact" class="autocomplete">
                                 <script type="text/javascript">
-                                    initList_hidden_input('contact_purpose', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_purposes_list_by_name&id=<?php echo $id;?>', 'what', '2', 'contact_purposes_id');
+                                    initList_hidden_input('contact_purpose', 'show_contact', '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&page=contact_purposes_list_by_name&id=<?php functions::xecho($id);?>', 'what', '2', 'contact_purposes_id');
                                 </script>
                             </div>
                             <input type="hidden" id="contact_purposes_id" name="contact_purposes_id" />
@@ -238,7 +238,7 @@ $core_tools->load_js();
 </div>
  </div>
 <script type="text/javascript">
-load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $browser_ie;?>, <?php echo _ERROR_IE_SEARCH;?>');
+load_query(valeurs, loaded_query, 'frmsearch2', '<?php functions::xecho($browser_ie);?>, <?php echo _ERROR_IE_SEARCH;?>');
 <?php if(isset($_REQUEST['init_search']))
 {
     ?>clear_search_form('frmsearch2','select_criteria');clear_q_list(); <?php

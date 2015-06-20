@@ -18,7 +18,7 @@ $actions_json = $bask->translates_actions_to_json($_SESSION['current_basket']['a
 <body>
 <script type="text/javascript">
 
-	var arr_actions = <?php echo $actions_json;?>;
+	var arr_actions = <?php functions::xecho($actions_json);?>;
 	//alert(arr_actions);
 	var arr_msg_error = {'confirm_title' : '<?php echo addslashes(_ACTION_CONFIRM);?>',
 							'validate' : '<?php echo addslashes(_VALIDATE);?>',
@@ -28,9 +28,9 @@ $actions_json = $bask->translates_actions_to_json($_SESSION['current_basket']['a
 						};
 
 	var val = 'none';
-	var action_id = '<?php echo $_SESSION['current_basket']['default_action'];?>';
-	var table = '<?php echo $_SESSION['current_basket']['table'];?>';
-	var coll_id = '<?php echo $_SESSION['current_basket']['coll_id'];?>';
+	var action_id = '<?php functions::xecho($_SESSION['current_basket']['default_action']);?>';
+	var table = '<?php functions::xecho($_SESSION['current_basket']['table']);?>';
+	var coll_id = '<?php functions::xecho($_SESSION['current_basket']['coll_id']);?>';
 	var module = 'apps';
 	var mode = 'page';
 	var val_frm = {'values' : val,  'action_id' : action_id, 'table' : table, 'coll_id' : coll_id, 'module' : module}

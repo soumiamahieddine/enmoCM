@@ -286,7 +286,7 @@ if ($mode == "up") {
 	?>
 		<p>
 	    	<label><?php echo _ID . ' ' . _STRUCTURE;?> :</label>
-			<input type="text" class="readonly" name="ID_structure" value="<?php echo $id;?>" readonly="readonly" />
+			<input type="text" class="readonly" name="ID_structure" value="<?php functions::xecho($id);?>" readonly="readonly" />
 	    </p>
 	    <p>&nbsp;</p>
 		<?php
@@ -294,13 +294,13 @@ if ($mode == "up") {
 
 	<p>
     	<label><?php echo _DESC . ' ' . _STRUCTURE;?> :</label>
-	   	<input type="text"  name="desc_structure" value="<?php echo $desc;?>" />
+	   	<input type="text"  name="desc_structure" value="<?php functions::xecho($desc);?>" />
     </p>
     <p>&nbsp;</p>
     
     <p>
     	<label><?php echo _CSS_STYLE;?> :</label>
-	   <!-- <input type="text"  name="css_style" id="css_style" value="<?php echo $cssStyle;?>" /> -->
+	   <!-- <input type="text"  name="css_style" id="css_style" value="<?php functions::xecho($cssStyle);?>" /> -->
         <select name="css_style" id="css_style">
             <option value=""><?php echo _CHOOSE_STYLE;?></option>
             <?php

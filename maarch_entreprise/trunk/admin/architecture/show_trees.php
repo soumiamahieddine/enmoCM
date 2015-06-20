@@ -237,7 +237,7 @@ else
                                                                                         {
                                                                                             <?php
                                                                                             ?>
-                                                                                            'txt':'<span style="font-style:italic;"><small><small><a href="#" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=types_up&id=<?php echo $search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id'];?>\');"><?php echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']);?></a></small></small></span>',
+                                                                                            'txt':'<span style="font-style:italic;"><small><small><a href="#" onclick="window.open(\'<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=types_up&id=<?php functions::xecho($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['type_id']);?>\');"><?php echo addslashes($search_customer_results[$i]['content'][$j]['second_level'][$k]['doctypes'][$l]['description']);?></a></small></small></span>',
                                                                                             'img':'empty.gif'
                                                                                         }
                                                                                         <?php
@@ -274,7 +274,7 @@ else
                     //'defaultImg' : 'page.gif',
                     'defaultImgOpen' : 'folderopen.gif',
                     'defaultImgClose' : 'folder.gif',
-                    'onOpenPopulate' : [funcOpen, 'get_tree_children.php?IdTree=<?php echo $_SESSION['doctypes_chosen_tree'];?>']
+                    'onOpenPopulate' : [funcOpen, 'get_tree_children.php?IdTree=<?php functions::xecho($_SESSION['doctypes_chosen_tree']);?>']
                 });
 
                 //open all branches

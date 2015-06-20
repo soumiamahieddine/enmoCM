@@ -257,7 +257,7 @@ $list->admin_list(
                 for ($i = 0; $i < count($modules); $i ++)
                 {
                     ?>
-                    <option value="<?php echo $modules[$i]['id'];?>"><?php
+                    <option value="<?php functions::xecho($modules[$i]['id']);?>"><?php
                         echo $modules[$i]['label'];?></option>
                     <?php
                 }

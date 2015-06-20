@@ -110,7 +110,7 @@ else
                 for($i=0; $i < count($_SESSION['collections']); $i++)
                 {
                     ?>
-                    <option value="<?php echo $_SESSION['collections'][$i]['id'];?>" <?php  if ($coll_id == $_SESSION['collections'][$i]['id']) {echo 'selected="selected"'; }?>><?php echo $_SESSION['collections'][$i]['label'];?></option>
+                    <option value="<?php functions::xecho($_SESSION['collections'][$i]['id']);?>" <?php  if ($coll_id == $_SESSION['collections'][$i]['id']) {echo 'selected="selected"'; }?>><?php echo $_SESSION['collections'][$i]['label'];?></option>
                     <?php
                 }
                 ?>
@@ -120,7 +120,7 @@ else
     <br/>
     <p>
         <label><?php echo _DESC;?> : </label>
-        <input type="text" name="comment" id="comment" value="<?php echo $comment;?>" />
+        <input type="text" name="comment" id="comment" value="<?php functions::xecho($comment);?>" />
         <span class="red_asterisk" ><i class="fa fa-star"></i></span>
     </p>
     <br/>
@@ -132,7 +132,7 @@ else
         <input type="radio"  class="check" name="target"  value="ALL" id="target_ALL" <?php if($target == 'ALL'){ echo 'checked="checked"';}?>  /><?php echo _ALL;?> <?php }
         foreach(array_keys($_ENV['targets']) as $key)
         {?>
-            <input type="radio"  class="check" name="target"  value="<?php echo $key;?>" id="target_<?php echo $key;?>"  <?php if($target == $key || (!$target_all && $key == 'DOC')){ echo 'checked="checked"';}?>  /><?php echo $_ENV['targets'][$key];?>
+            <input type="radio"  class="check" name="target"  value="<?php functions::xecho($key);?>" id="target_<?php functions::xecho($key);?>"  <?php if($target == $key || (!$target_all && $key == 'DOC')){ echo 'checked="checked"';}?>  /><?php functions::xecho($_ENV['targets'][$key]);?>
         <?php } ?>
             <span class="red_asterisk" ><i class="fa fa-star"></i></span>
             </div>
@@ -140,7 +140,7 @@ else
     <br/>
     <p>
         <label><?php echo _WHERE_CLAUSE;?> :</label><br/>
-        <textarea rows="6" style="width:80%" name="where" id="where" /><?php echo $clause;?></textarea>
+        <textarea rows="6" style="width:80%" name="where" id="where" /><?php functions::xecho($clause);?></textarea>
         <span class="red_asterisk" ><i class="fa fa-star"></i></span>
     </p>
     <br/>
@@ -150,8 +150,8 @@ else
         <?php  for($k=0;$k<count($_ENV['security_bitmask']); $k++)
         {
             ?>
-            <input type="checkbox"  class="check" name="rights_bitmask[]" id="<?php echo $_ENV['security_bitmask'][$k]['ID'];?>" value="true" <?php  if(check_right($rights_bitmask , $_ENV['security_bitmask'][$k]['ID'])){ echo 'checked="checked"'; } ?>  />
-        <?php echo $_ENV['security_bitmask'][$k]['LABEL'].'<br/>';
+            <input type="checkbox"  class="check" name="rights_bitmask[]" id="<?php functions::xecho($_ENV['security_bitmask'][$k]['ID']);?>" value="true" <?php  if(check_right($rights_bitmask , $_ENV['security_bitmask'][$k]['ID'])){ echo 'checked="checked"'; } ?>  />
+        <?php functions::xecho($_ENV['security_bitmask'][$k]['LABEL']).'<br/>';
         }?>
 
         </div>
@@ -161,12 +161,12 @@ else
         <label><?php echo _PERIOD;?> : </label>
         <p>
             <label><?php echo _SINCE;?></label>
-            <input type="text" id="start_date" name="start_date" value="<?php echo $start_date;?>" onclick="showCalender(this);"/>
+            <input type="text" id="start_date" name="start_date" value="<?php functions::xecho($start_date);?>" onclick="showCalender(this);"/>
         </p>
         <br/>
         <p>
             <label><?php echo _FOR;?></label>
-            <input type="text" id="stop_date" name="stop_date" value="<?php echo $stop_date;?>" onclick="showCalender(this);"/>
+            <input type="text" id="stop_date" name="stop_date" value="<?php functions::xecho($stop_date);?>" onclick="showCalender(this);"/>
         </p>
     </p>
     <br/>

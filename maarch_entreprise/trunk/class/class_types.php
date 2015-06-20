@@ -172,7 +172,7 @@ class types extends dbquery
                 ) {
                     echo 'selected="selected"';
                 }
-                ?> ><?php echo $arrayColl[$i]['label'];?></option>
+                ?> ><?php functions::xecho($arrayColl[$i]['label']);?></option>
                 <?php
             }
              ?>
@@ -186,7 +186,7 @@ class types extends dbquery
                     <input type="text" class="readonly" name="idbis" value="<?php
                 echo $id;
                 ?>" readonly="readonly" />
-                    <input type="hidden" name="id" value="<?php echo $id;?>" />
+                    <input type="hidden" name="id" value="<?php functions::xecho($id);?>" />
                 </p>
                 <?php
             }
