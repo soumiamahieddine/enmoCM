@@ -74,7 +74,7 @@ if ($db->nb_result() > 0) {
 ?>
 <script type="text/javascript">
     var eleframe1 =  window.top.document.getElementsByName('list_attach');
-    var nb_attach = '<?php echo $new_nb_attach;?>';
+    var nb_attach = '<?php functions::xecho($new_nb_attach);?>';
     <?php if (isset($_REQUEST['fromDetail']) && $_REQUEST['fromDetail'] == 'attachments') { ?>
         eleframe1[0].src = "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=attachments&page=frame_list_attachments&load&attach_type_exclude=response_project,outgoing_mail_signed&fromDetail=attachments';?>";
         window.parent.top.document.getElementById('nb_attach').innerHTML = " ("+nb_attach+")";
