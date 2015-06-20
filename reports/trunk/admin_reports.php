@@ -127,7 +127,7 @@ if(isset($_GET['id']) && !empty($_GET['id']))
                         evalMyScripts('listReports');
                     }
                 }
-                xhr.open("POST", "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=reports&page=list_reports'; ?>", true);
+                xhr.open("POST", "<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=reports&page=list_reports';?>", true);
                 xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
                 sendParam = '';
                 // ici, on recupère les arguments à poster
@@ -149,7 +149,7 @@ if(isset($_GET['id']) && !empty($_GET['id']))
         <form name="choose_a_group" id="choose_a_group" method="post">
             <label><?php echo ucwords( _GROUPS);?> :</label>
             <select name="group_id" id="group_id" onchange="listReportsUpdate();" class="listext_big">
-            <option value=""><?php echo _CHOOSE_GROUP; ?></option>
+            <option value=""><?php echo _CHOOSE_GROUP;?></option>
             <?php
 
             for($k=0;$k<count($_SESSION['m_admin']['all_groups']);$k++)
@@ -180,7 +180,7 @@ if(isset($_GET['id']) && !empty($_GET['id']))
 
     <div id="listReports">
 
-    <i><br><?php echo _HAVE_TO_SELECT_GROUP; ?><br></i>
+    <i><br><?php echo _HAVE_TO_SELECT_GROUP;?><br></i>
     </div>
 </div>
 </div>

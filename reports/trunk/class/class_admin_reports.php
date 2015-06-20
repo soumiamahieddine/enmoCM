@@ -244,7 +244,7 @@ class admin_reports extends dbquery
                                 $color = ' class="col"';
                             }
                             ?>
-                            <tr <?php echo $color; ?> >
+                            <tr <?php echo $color;?> >
                                <td style="width:25%;"><?php
                                    echo $users[$i]->__get('lastname');
                                 ?></td>
@@ -325,8 +325,8 @@ class admin_reports extends dbquery
                 ?>
                 <br/>
                 <p class="buttons">
-                    <input id="groupbutton" type="submit"  name="Submit" value="<?php echo _VALIDATE; ?>" class="button" />
-                    <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=admin&reinit=true';"/>
+                    <input id="groupbutton" type="submit"  name="Submit" value="<?php echo _VALIDATE;?>" class="button" />
+                    <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL;?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=admin&reinit=true';"/>
                 </p>
                 <p>&nbsp;</p>
                 <p>&nbsp;</p>
