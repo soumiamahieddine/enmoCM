@@ -109,7 +109,8 @@ if ($mode == 'add') {
     $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
     $content .= '<tr>';
     $content .= '<td colspan="3" nowrap><b>'._NEW_EMAIL.' '.strtolower(_FROM_SHORT).': </b>'
-        .$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName']
+        .functions::xecho($_SESSION['user']['FirstName']).' '
+        .functions::xecho($_SESSION['user']['LastName'])
         .' ('.$_SESSION['user']['Mail'].')<br/></td>';
     $content .= '</tr>';
     $content .= '<tr>';
@@ -392,7 +393,8 @@ if ($mode == 'add') {
             $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
             $content .= '<tr>';
 			$content .= '<td colspan="3" nowrap><b>'._EDIT_EMAIL.' '.strtolower(_FROM_SHORT).': </b>'
-                .$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName']
+                .functions::xecho($_SESSION['user']['FirstName']).' '
+                .functions::xecho($_SESSION['user']['LastName'])
                 .' ('.$_SESSION['user']['Mail'].')<br/></td>';
             $content .= '</tr>';
             $content .= '<tr>';
@@ -682,11 +684,7 @@ if ($mode == 'add') {
             $content .= '<div class="block">';
             $content .= '<table border="0" align="left" width="100%" cellspacing="5">';
             $content .= '<tr>';
-/*
-			$content .= '<td colspan="3" nowrap><b>'._READ_EMAIL.' '.strtolower(_FROM_SHORT).': </b>'
-                .$_SESSION['user']['FirstName'].' '.$_SESSION['user']['LastName']
-                .' ('.$_SESSION['user']['Mail'].')<br/></td>';
-*/
+
 			$content .= '<td colspan="3" nowrap><b>'._READ_EMAIL.' '.strtolower(_FROM_SHORT).': </b>'
                 .$usermailArray['firstname'].' '.$usermailArray['lastname']
                 .' ('.$usermailArray['mail'].')<br/></td>';
