@@ -45,11 +45,11 @@ while($line = $conn->fetch_object())
 }
 $_SESSION['separator']['entities'] = array();
 ?>
-<h1><i class='fa fa-print fa-2x'></i> <?php echo _PRINT_SEPS; ?></h1>
+<h1><i class='fa fa-print fa-2x'></i> <?php echo _PRINT_SEPS;?></h1>
 <div id="inner_content">
     <div class="block">
-    <?php $link = $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=print_sep_mlb&try=".(uniqid(md5(rand()), true)); ?>
-    <form name="print_sep" id="print_sep" action="<?php echo $link; ?>" target="sepwin" method="post" onSubmit="MM_openBrWindow('', 'sepwin', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,width=330,height=500');">
+    <?php $link = $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=print_sep_mlb&try=".(uniqid(md5(rand()), true));?>
+    <form name="print_sep" id="print_sep" action="<?php echo $link;?>" target="sepwin" method="post" onSubmit="MM_openBrWindow('', 'sepwin', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,width=330,height=500');">
         <table align="center" border="0" cellpadding="5">
             <tr>
                 <td colspan="3">
@@ -75,7 +75,7 @@ $_SESSION['separator']['entities'] = array();
                             if($state_entities == false)
                             {
                                 ?>
-                                <option value="<?php echo $_SESSION['entities'][$i]['ID']; ?>"><?php echo $func->show_str($_SESSION['entities'][$i]['LABEL']); ?></option>
+                                <option value="<?php echo $_SESSION['entities'][$i]['ID'];?>"><?php echo $func->show_str($_SESSION['entities'][$i]['LABEL']);?></option>
                                 <?php
                             }
                         }
@@ -85,7 +85,7 @@ $_SESSION['separator']['entities'] = array();
             </tr>
             <tr>
                 <td colspan="3">
-                    <em><a href='javascript:selectall(document.forms["print_sep"].elements["entitieslist[]"]);' ><?php echo _SELECT_ALL; ?></a></em></td>
+                    <em><a href='javascript:selectall(document.forms["print_sep"].elements["entitieslist[]"]);' ><?php echo _SELECT_ALL;?></a></em></td>
                 </td>
             </tr>
         </table>
@@ -100,7 +100,7 @@ $_SESSION['separator']['entities'] = array();
             <input class="button" name="print_generic" type="submit" value="<?php echo _ENTITIES_PRINT_SEP_MLB_GENERIC;?>" />
             <br><br>
             <input class="button" name="submit" type="submit" value="<?php echo _PRINT_SEPS_BUTTON;?>" />
-            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onClick="javascript:window.location.href='index.php';" />
+            <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL;?>" onClick="javascript:window.location.href='index.php';" />
         </div>
     </form>
     </div>

@@ -251,7 +251,7 @@ if($mode != 'del') { ?>
 <div id="listmodel_box" class="block" style="height:550px;">
 	<h2 class="tit"><?php echo _LINKED_DIFF_LIST;?> : </h2><?php
     $difflist = $_SESSION['m_admin']['entity']['listmodel'];
-    require_once 'modules/entities/difflist_display.php'; ?>
+    require_once 'modules/entities/difflist_display.php';?>
 	<p class="buttons" style="text-align:center;margin-top:5px;">
 		<input type="button" onclick="listmodel_open()" class="button" value="<?php echo _MODIFY_LIST;?>" />
 	</p>
@@ -260,30 +260,30 @@ if($mode != 'del') { ?>
     <table style="margin:auto;">
         <tr height="20px;">
             <td>
-                <input type="hidden" id="mode" value="<?php echo $_REQUEST['mode']; ?>" />
+                <input type="hidden" id="mode" value="<?php echo $_REQUEST['mode'];?>" />
             </td>
         </tr>
         <tr>
             <td width="33%">
-                <label for="objectType" ><?php echo _OBJECT_TYPE; ?>: </label>
+                <label for="objectType" ><?php echo _OBJECT_TYPE;?>: </label>
             </td>
             <td>
-                <select id="objectType" onChange="listmodel_setObjectType(); listmodel_setObjectId();" style="width:300px;" <?php if($mode == 'up') echo "disabled='true'"; ?>>
-                    <option value="" ><?php echo _SELECT_OBJECT_TYPE; ?></option><?php
+                <select id="objectType" onChange="listmodel_setObjectType(); listmodel_setObjectId();" style="width:300px;" <?php if($mode == 'up') echo "disabled='true'";?>>
+                    <option value="" ><?php echo _SELECT_OBJECT_TYPE;?></option><?php
                     foreach($difflistTypes as $difflistTypeId => $difflistTypeLabel) { ?>
-                    <option value="<?php echo $difflistTypeId; ?>" <?php if($objectType == $difflistTypeId) echo "selected='true'"; ?> ><?php echo $difflistTypeLabel; ?></option><?php
+                    <option value="<?php echo $difflistTypeId;?>" <?php if($objectType == $difflistTypeId) echo "selected='true'";?> ><?php echo $difflistTypeLabel;?></option><?php
                     } ?>
                 </select>
             </td>
         </tr>
         <tr>
             <td>
-                <label for="objectId" ><?php echo _ID; ?> : </label>
+                <label for="objectId" ><?php echo _ID;?> : </label>
             </td>
             <td>
                 <div id="objectId_input" ><?php 
                 if($mode == 'up') { ?>
-                    <input type="text" id="objectId" disabled='true' value="<?php echo $objectId; ?>" />
+                    <input type="text" id="objectId" disabled='true' value="<?php echo $objectId;?>" />
                 <?php 
                 } else { ?>
                     <script type="text/javascript">
@@ -296,26 +296,26 @@ if($mode != 'del') { ?>
         </tr>
         <tr>
             <td>
-                <label for="title" ><?php echo _TITLE; ?> : </label>
+                <label for="title" ><?php echo _TITLE;?> : </label>
             </td>
             <td>
-                <textarea id="title" style="width:294px;"><?php echo $title; ?></textarea>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <label for="description"  ><?php echo _DESCRIPTION; ?> : </label>
-            </td>
-            <td>
-                <textarea id="description" style="width:294px;"><?php echo $description; ?></textarea>
+                <textarea id="title" style="width:294px;"><?php echo $title;?></textarea>
             </td>
         </tr>
         <tr>
             <td>
-                <label for="objectType_info" ><?php echo _DIFFLIST_TYPE_ROLES; ?> : </label>
+                <label for="description"  ><?php echo _DESCRIPTION;?> : </label>
             </td>
             <td>
-                <span id="objectType_info"><?php echo trim($_SESSION['m_admin']['entity']['difflist_type']->difflist_type_roles); ?></span>
+                <textarea id="description" style="width:294px;"><?php echo $description;?></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label for="objectType_info" ><?php echo _DIFFLIST_TYPE_ROLES;?> : </label>
+            </td>
+            <td>
+                <span id="objectType_info"><?php echo trim($_SESSION['m_admin']['entity']['difflist_type']->difflist_type_roles);?></span>
             </td>
         </tr>
     </table>

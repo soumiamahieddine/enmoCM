@@ -173,7 +173,7 @@ unset($entities);
 			if(isset($res[$j]) && !empty($desc))
 			{
 		?>
-			<option value="<?php echo $res[$j]->__get('entity_id') ?>"><?php   echo $res[$j]->__get('short_label'); ?></option>
+			<option value="<?php echo $res[$j]->__get('entity_id') ?>"><?php   echo $res[$j]->__get('short_label');?></option>
 		<?php
 			}
 		}*/

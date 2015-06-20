@@ -23,19 +23,19 @@ if($_SESSION['service_tag'] == 'admin_templates')
                     if($state_entity == false)
                     {
                         ?>
-                        <option value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID']; ?>"><?php echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?></option>
+                        <option value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID'];?>"><?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?></option>
                     <?php
                     }
                 }
                 ?>
                 </select><br/>
-                <em><a href='javascript:selectall(document.forms["frmtemplate"].elements["entitieslist[]"]);' ><?php echo _SELECT_ALL; ?></a></em>
+                <em><a href='javascript:selectall(document.forms["frmtemplate"].elements["entitieslist[]"]);' ><?php echo _SELECT_ALL;?></a></em>
             </td>
             <td width="20%" align="center">
-                <input type="button" class="button" value="<?php echo _ADD; ?> &gt;&gt;" onclick='Move(document.frmtemplate.elements["entitieslist[]"],document.frmtemplate.elements["entities_chosen[]"]);' />
+                <input type="button" class="button" value="<?php echo _ADD;?> &gt;&gt;" onclick='Move(document.frmtemplate.elements["entitieslist[]"],document.frmtemplate.elements["entities_chosen[]"]);' />
                 <br />
                 <br />
-                <input type="button" class="button" value="&lt;&lt; <?php echo _REMOVE; ?>" onclick='Move(document.frmtemplate.elements["entities_chosen[]"],document.frmtemplate.elements["entitieslist[]"]);' />
+                <input type="button" class="button" value="&lt;&lt; <?php echo _REMOVE;?>" onclick='Move(document.frmtemplate.elements["entities_chosen[]"],document.frmtemplate.elements["entitieslist[]"]);' />
             </td>
             <td width="40%" align="center">
                 <select name="entities_chosen[]" id="entities_chosen" size="7" ondblclick='moveclick(document.frmtemplate.elements["entities_chosen[]"],document.frmtemplate.elements["entitieslist"]);' multiple="multiple" >
@@ -53,14 +53,14 @@ if($_SESSION['service_tag'] == 'admin_templates')
                     if($state_entity == true)
                     {
                     ?>
-                        <option value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID']; ?>" selected="selected" ><?php echo $_SESSION['m_admin']['entities'][$i]['LABEL']; ?></option>
+                        <option value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID'];?>" selected="selected" ><?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?></option>
                     <?php
                     }
                 }
                 ?>
                 </select><br/>
                 <em><a href="javascript:selectall(document.forms['frmtemplate'].elements['entities_chosen[]']);" >
-                <?php echo _SELECT_ALL; ?></a></em>
+                <?php echo _SELECT_ALL;?></a></em>
             </td>
         </tr>
     </table><?php

@@ -241,30 +241,30 @@ class users_entities extends dbquery
                 ?>
                 <form name="frmuserent" method="post" action="<?php  if($mode == "up") { echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=users_entities_up_db'; }  ?>" class="forms addforms" >
                                 <p>
-                    <label for="UserId"><?php echo _ID; ?> :</label>
+                    <label for="UserId"><?php echo _ID;?> :</label>
                     <?php  if($mode == "up") { echo $func->show_str($_SESSION['m_admin']['entity']['user_UserId']); } ?>
-                    <input type="hidden"  name="id" id="id" value="<?php echo $id; ?>" />
+                    <input type="hidden"  name="id" id="id" value="<?php echo $id;?>" />
                 </p>
 
                 <p>
-                    <label for="LastName"><?php echo _LASTNAME; ?> :</label>
-                    <?php echo $func->show_str($_SESSION['m_admin']['entity']['user_LastName']); ?>
+                    <label for="LastName"><?php echo _LASTNAME;?> :</label>
+                    <?php echo $func->show_str($_SESSION['m_admin']['entity']['user_LastName']);?>
                 </p>
                 <p>
-                    <label for="FirstName"><?php echo _FIRSTNAME; ?> :</label>
-                    <?php echo $func->show_str($_SESSION['m_admin']['entity']['user_FirstName']); ?>
+                    <label for="FirstName"><?php echo _FIRSTNAME;?> :</label>
+                    <?php echo $func->show_str($_SESSION['m_admin']['entity']['user_FirstName']);?>
                 </p>
                 <p>
-                    <label for="Phone"><?php echo _PHONE_NUMBER; ?> :</label>
-                    <?php echo $_SESSION['m_admin']['entity']['user_Phone']; ?>
+                    <label for="Phone"><?php echo _PHONE_NUMBER;?> :</label>
+                    <?php echo $_SESSION['m_admin']['entity']['user_Phone'];?>
                 </p>
                 <p>
-                    <label for="Mail"><?php echo _MAIL; ?> :</label>
-                    <?php echo $_SESSION['m_admin']['entity']['user_Mail']; ?>
+                    <label for="Mail"><?php echo _MAIL;?> :</label>
+                    <?php echo $_SESSION['m_admin']['entity']['user_Mail'];?>
                 </p>
                     <p class="buttons">
-                        <input type="submit" name="Submit" value="<?php echo _VALIDATE; ?>" class="button"/>
-                        <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=users_list&amp;module=entities';"/>
+                        <input type="submit" name="Submit" value="<?php echo _VALIDATE;?>" class="button"/>
+                        <input type="button" class="button"  name="cancel" value="<?php echo _CANCEL;?>" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=users_list&amp;module=entities';"/>
                     </p>
                 </form>
             </div>

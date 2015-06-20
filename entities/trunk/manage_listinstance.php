@@ -647,13 +647,13 @@ $linkwithwhat =
             var user_id = $('user_id_' + id).value;
             var role_select = $('user_role_' + id);
 			var role = role_select.options[role_select.selectedIndex].value;
-            goTo('<?php echo $linkwithwhat; ?>&action=add_user&id='+user_id+'&role='+role);        
+            goTo('<?php echo $linkwithwhat;?>&action=add_user&id='+user_id+'&role='+role);        
         }
         function add_entity(id) {
             var entity_id = $('entity_id_' + id).value;
             var role_select = $('entity_role_' + id);
 			var role = role_select.options[role_select.selectedIndex].value;
-            goTo('<?php echo $linkwithwhat; ?>&action=add_entity&id='+entity_id+'&role='+role);        
+            goTo('<?php echo $linkwithwhat;?>&action=add_entity&id='+entity_id+'&role='+role);        
         }
     </script>
     <br/>
@@ -684,11 +684,11 @@ $linkwithwhat =
 		<table cellpadding="0" cellspacing="0" border="0" class="listing spec">
 			<tr >
 				<td>
-					<i class="fa fa-user fa-2x" title="<?php echo _USER; ?>"></i> 
+					<i class="fa fa-user fa-2x" title="<?php echo _USER;?>"></i> 
 				</td>
 				<td><?php
 				if($_SESSION[$origin]['diff_list']['dest']['visible'] == 'Y') { ?>
-					<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE; ?>"></i> <?php
+					<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i> <?php
 				} ?>
 				</td>
 				<td><?php echo $_SESSION[$origin]['diff_list']['dest']['lastname'] . " " . $_SESSION[$origin]['diff_list']['dest']['firstname'];?></td>
@@ -697,7 +697,7 @@ $linkwithwhat =
 					<a href="<?php echo $linkwithwhat;?>&action=remove_dest"><!-- i class="fa fa-remove fa-2x"></i --><?php echo _DELETE;?></a>
 				</td>
 				<td class="action_entities"><!-- Move dest to copy -->
-					<a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down fa-2x"></i><?php echo _TO_CC;?></a>
+					<a href="<?php echo $linkwithwhat;?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down fa-2x"></i><?php echo _TO_CC;?></a>
 				</td>
 			</tr>
 		</table><?php
@@ -723,34 +723,34 @@ $linkwithwhat =
 					$user = $_SESSION[$origin]['diff_list'][$role_id]['users'][$i];
 					
 					if ($color == ' class="col"') $color = '';
-					else $color = ' class="col"'; ?>
-					<tr <?php echo $color; ?> >
+					else $color = ' class="col"';?>
+					<tr <?php echo $color;?> >
 						<td>
-							<i class="fa fa-user fa-2x" title="<?php echo _USER.' '.$role_label; ?>"></i> 
+							<i class="fa fa-user fa-2x" title="<?php echo _USER.' '.$role_label;?>"></i> 
 						</td>
 						<td><?php
 						if($user['visible'] == 'Y') { ?>
 							<a href="<?php echo $linkwithwhat;?>&action=make_user_unvisible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
-								<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE; ?>"></i>
+								<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i>
 							</a><?php
 						} else {?>
 							<a href="<?php echo $linkwithwhat;?>&action=make_user_visible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
-								<i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE; ?>"></i>
+								<i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE;?>"></i>
 							</a><?php
 						} ?>
 						</td>
 						<td ><?php echo $user['lastname'] ." ". $user['firstname'];?></td>
-						<td><?php echo $user['entity_label']; ?></td>
+						<td><?php echo $user['entity_label'];?></td>
 						<td class="action_entities"><?php 
 							/*if (!$noDelete && ($role_id != 'dest' && !$onlyCc)) { */
 							if (!$noDelete && !$onlyCc) { ?>
-								<a href="<?php echo $linkwithwhat; ?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $user['user_id'];?>"><!-- i class="fa fa-remove"></i --><?php echo _DELETE; ?></a><?php
+								<a href="<?php echo $linkwithwhat;?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i;?>&id=<?php echo $user['user_id'];?>"><!-- i class="fa fa-remove"></i --><?php echo _DELETE;?></a><?php
 							} ?>
 						</td>
 						<td class="action_entities"><!-- Switch copy to dest --><?php
 							//if($role_id == 'dest' && isset($roles['copy']) && ($role_id != 'dest' && $onlyCc)) { 
 							if($role_id == 'dest' && isset($roles['copy']) && !$onlyCc && $_SESSION[$origin]['diff_list']['copy']['users'][0]!='') {?>
-								<a href="<?php echo $linkwithwhat; ?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down"></i><?php echo _TO_CC;?></a><?php
+								<a href="<?php echo $linkwithwhat;?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down"></i><?php echo _TO_CC;?></a><?php
 							} elseif($role_id == 'copy' && !$onlyCc &&  isset($roles['dest'])) { ?>
 								<a href="<?php echo $linkwithwhat;?>&action=copy_to_dest&role=copy&rank=<?php echo $i;?>"><i class="fa fa-arrow-up"></i><?php echo _TO_DEST;?></a><?php
 							} else echo '&nbsp;'?>
@@ -777,28 +777,28 @@ $linkwithwhat =
 				) {
 					$entity = $_SESSION[$origin]['diff_list'][$role_id]['entities'][$i];
 					if ($color == ' class="col"') $color = '';
-					else $color = ' class="col"'; ?>
-					<tr <?php echo $color; ?> >
+					else $color = ' class="col"';?>
+					<tr <?php echo $color;?> >
 						<td>
-							<i class="fa fa-sitemap fa-2x" title="<?php echo _ENTITY.' '.$role_label; ?>"></i> 
+							<i class="fa fa-sitemap fa-2x" title="<?php echo _ENTITY.' '.$role_label;?>"></i> 
 						</td>
 						<td><?php
 						if($entity['visible'] == 'Y') { ?>
 							<a href="<?php echo $linkwithwhat;?>&action=make_entity_unvisible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
-								<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE; ?>"></i>
+								<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i>
 							</a><?php
 						} else {?>
 							<a href="<?php echo $linkwithwhat;?>&action=make_entity_visible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
-								<i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE; ?>"></i>
+								<i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE;?>"></i>
 							</a><?php
 						} ?>
 						</td>
-						<td ><?php echo $entity['entity_id']; ?></td>
-						<td ><?php echo $entity['entity_label']; ?></td>
+						<td ><?php echo $entity['entity_id'];?></td>
+						<td ><?php echo $entity['entity_label'];?></td>
 						<td class="action_entities"><?php 
 						if (!$noDelete && !$onlyCc) { ?>
-							<a href="<?php echo $linkwithwhat; ?>&action=remove_entity&role=<?php echo $role_id ?>&rank=<?php echo $i; ?>&id=<?php echo $entity['entity_id'];?>">
-								<!--i class="fa fa-remove"></i--><?php echo _DELETE; ?>
+							<a href="<?php echo $linkwithwhat;?>&action=remove_entity&role=<?php echo $role_id ?>&rank=<?php echo $i;?>&id=<?php echo $entity['entity_id'];?>">
+								<!--i class="fa fa-remove"></i--><?php echo _DELETE;?>
 							</a><?php
 						} ?>
 						</td>
@@ -824,7 +824,7 @@ $linkwithwhat =
 		#******************************************************************************?>
 		<form name="pop_diff" method="post" >
 			<div align="center">
-				<input align="middle" type="button" value="<?php echo _VALIDATE; ?>" class="button" name="valid" onclick="change_diff_list('<?php echo $origin; ?>', <?php echo "'" . $displayValue . "'";
+				<input align="middle" type="button" value="<?php echo _VALIDATE;?>" class="button" name="valid" onclick="change_diff_list('<?php echo $origin;?>', <?php echo "'" . $displayValue . "'";
 					if ($_REQUEST['origin'] == 'redirect') echo ",'diff_list_div_redirect'";
 				?>);" />
 				<input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>
@@ -841,22 +841,22 @@ $linkwithwhat =
 				<input type="hidden" name="display" value="true" />
 				<input type="hidden" name="module" value="entities" />
 				<input type="hidden" name="page" value="manage_listinstance" />
-				<input type="hidden" name="origin" id="origin" value="<?php echo $origin; ?>" />
+				<input type="hidden" name="origin" id="origin" value="<?php echo $origin;?>" />
 				<table cellpadding="2" cellspacing="2" border="0">
 					<tr>
 						<th>
 							<label for="what_users" class="bold"><?php echo _USER;?></label>
 						</th>
 						<th>
-							<input name="what_users" id="what_users" type="text" <?php if (isset($_GET["what_users"])) echo "value ='".$_GET["what_users"]."'"; ?> />
+							<input name="what_users" id="what_users" type="text" <?php if (isset($_GET["what_users"])) echo "value ='".$_GET["what_users"]."'";?> />
 						</th>
 					 </tr>
 					 <tr>
 						<th>
-							<label for="what_services" class="bold"><?php echo _DEPARTMENT; ?></label>
+							<label for="what_services" class="bold"><?php echo _DEPARTMENT;?></label>
 						</th>
 						<th>
-							<input name="what_services" id="what_services" type="text" <?php if (isset($_GET["what_services"])) echo "value ='".$_GET["what_services"]."'"; ?>/>
+							<input name="what_services" id="what_services" type="text" <?php if (isset($_GET["what_services"])) echo "value ='".$_GET["what_services"]."'";?>/>
 						</th>
 					</tr>
                     <tr>
@@ -868,11 +868,11 @@ $linkwithwhat =
                             if ($_SESSION[$origin]['difflist_object']['object_label'] <> '') {
                                 ?>
                                 <input class="button" name="auto_filter" id="auto_filter" type="button" onclick="$('what_services').value='<?php 
-                                    echo $_SESSION[$origin]['difflist_object']['object_label'];?>';$('what_users').value='';" value="<?php echo _AUTO_FILTER; ?>"/>
+                                    echo $_SESSION[$origin]['difflist_object']['object_label'];?>';$('what_users').value='';" value="<?php echo _AUTO_FILTER;?>"/>
                                 <?php
                             }
                             ?>
-							<input class="button" name="no_filter" id="no_filter" type="button" onclick="$('what_services').value='';$('what_users').value='';" value="<?php echo _NO_FILTER; ?>"/>
+							<input class="button" name="no_filter" id="no_filter" type="button" onclick="$('what_services').value='';$('what_users').value='';" value="<?php echo _NO_FILTER;?>"/>
 						</th>
 					</tr>
 				</table>
@@ -923,24 +923,24 @@ $linkwithwhat =
 						} 
 						
 						if ($color == ' class="col"') $color = '';
-						else $color = ' class="col"'; ?>
-						<tr <?php echo $color; ?> id="user_<?php echo $j; ?>">
-							<td><?php echo $users[$j]['NOM'] . " " .$users[$j]['PRENOM']; ?></td>
+						else $color = ' class="col"';?>
+						<tr <?php echo $color;?> id="user_<?php echo $j;?>">
+							<td><?php echo $users[$j]['NOM'] . " " .$users[$j]['PRENOM'];?></td>
 							<td><?php echo $users[$j]['DEP'];?></td>
 							<td class="action_entities"><?php
 							if(count($possible_roles) > 0) { ?>
-								<input type="hidden" id="user_id_<?php echo $j; ?>" value="<?php echo $users[$j]['ID'];?>" />
-								<select name="role" id="user_role_<?php echo $j; ?>"><?php
+								<input type="hidden" id="user_id_<?php echo $j;?>" value="<?php echo $users[$j]['ID'];?>" />
+								<select name="role" id="user_role_<?php echo $j;?>"><?php
 								foreach($possible_roles as $role_id => $role_label) {
 									if($role_id != 'dest' || ($role_id == 'dest' && !$onlyCc)) { ?>
-									<option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
+									<option value="<?php echo $role_id;?>"><?php echo $role_label;?></option><?php 
 									} 
 								}?>
 								</select>&nbsp;
-								<span onclick="add_user(<?php echo $j; ?>);" style="cursor: pointer"/> 
+								<span onclick="add_user(<?php echo $j;?>);" style="cursor: pointer"/> 
 									<!--i class="fa fa-plus fa-2x"></i--><?php echo _ADD;?>
 								</span> <?php 
-							} else echo _NO_AVAILABLE_ROLE; ?>
+							} else echo _NO_AVAILABLE_ROLE;?>
 							</td>
 						</tr> <?php
 					} ?>
@@ -979,21 +979,21 @@ $linkwithwhat =
                             
                             if ($color == ' class="col"') $color = '';
                             else $color = ' class="col"';?>
-                            <tr <?php echo $color; ?>>
+                            <tr <?php echo $color;?>>
                                 <td><?php echo $entities[$j]['ID'];?></td>
-                                <td><?php echo $entities[$j]['DEP']; ?></td>
+                                <td><?php echo $entities[$j]['DEP'];?></td>
                                 <td class="action_entities"><?php
                                 if(count($possible_roles) > 0) { ?>
-                                    <input type="hidden" id="entity_id_<?php echo $j; ?>" value="<?php echo $entities[$j]['ID'];?>" />
-                                    <select name="role" id="entity_role_<?php echo $j; ?>"><?php 
+                                    <input type="hidden" id="entity_id_<?php echo $j;?>" value="<?php echo $entities[$j]['ID'];?>" />
+                                    <select name="role" id="entity_role_<?php echo $j;?>"><?php 
                                     foreach($possible_roles as $role_id => $role_label) { ?>
-                                        <option value="<?php echo $role_id; ?>"><?php echo $role_label; ?></option><?php 
+                                        <option value="<?php echo $role_id;?>"><?php echo $role_label;?></option><?php 
                                     } ?>
                                     </select>&nbsp;
-                                    <span onclick="add_entity(<?php echo $j; ?>);" style="cursor: pointer"/> 
+                                    <span onclick="add_entity(<?php echo $j;?>);" style="cursor: pointer"/> 
                                         <!--i class="fa fa-plus fa-2x"--></i><?php echo _ADD;?>
                                     </span> <?php 
-                                } else echo _NO_AVAILABLE_ROLE; ?>  
+                                } else echo _NO_AVAILABLE_ROLE;?>  
                                 </td>
                             </tr> <?php
                         }?>
@@ -1005,7 +1005,7 @@ $linkwithwhat =
 		</div> <?php
 	/*} else { ?>
 		<div id="diff_list" align="center">
-			<input align="middle" type="button" value="<?php echo _CANCEL; ?>" class="button"  onclick="self.close();"/>
+			<input align="middle" type="button" value="<?php echo _CANCEL;?>" class="button"  onclick="self.close();"/>
 		</div> <?php
 	} */?>
 </body>
