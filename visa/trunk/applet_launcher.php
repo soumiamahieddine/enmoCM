@@ -120,9 +120,9 @@ $_SESSION['error'] = '';
         <param name="url" value="<?php 
             echo $_SESSION['config']['coreurl'].$path;
         ?>">
-        <param name="objectType" value="<?php echo $objectType;?>">
-        <param name="objectTable" value="<?php echo $objectTable;?>">
-        <param name="objectId" value="<?php echo $objectId;?>">
+        <param name="objectType" value="<?php functions::xecho($objectType);?>">
+        <param name="objectTable" value="<?php functions::xecho($objectTable);?>">
+        <param name="objectId" value="<?php functions::xecho($objectId);?>">
         
 		
 		<!--mis en commentaires par agnes 17 04 2015 -->
@@ -132,19 +132,19 @@ $_SESSION['error'] = '';
         <!--param name="userMaarchPwd" value="<!--?php 
             //echo $cMFeatures['CONFIG']['userPwdMaarchOnClient'];
         ?>"-->
-        <!--param name="psExecMode" value="<!--?php echo $cMFeatures['CONFIG']['psExecMode'];?>">
+        <!--param name="psExecMode" value="<!--?php functions::xecho($cMFeatures['CONFIG']['psExecMode']);?>">
         <param name="mayscript" value="mayscript" /-->
 		
 		<!--nouveaux paramètres pour la signature -->
-		<param name="thumbPrint" value="<?php echo $_SESSION['sign']['encoded_thumbprint'];?>">
-        <param name="thumprintkeyIdx" value="<?php echo $_SESSION['sign']['indexKey_thumbprint'];?>">
-        <param name="pinCode" value="<?php echo $pinCode;?>">
-		<param name="pinCodeIdx" value="<?php echo $index;?>">
+		<param name="thumbPrint" value="<?php functions::xecho($_SESSION['sign']['encoded_thumbprint']);?>">
+        <param name="thumprintkeyIdx" value="<?php functions::xecho($_SESSION['sign']['indexKey_thumbprint']);?>">
+        <param name="pinCode" value="<?php functions::xecho($pinCode);?>">
+		<param name="pinCodeIdx" value="<?php functions::xecho($index);?>">
 		<param name="timeStamp" value="0">
 		<param name="reason" value="<?php echo utf8_decode($_SESSION['modules_loaded']['visa']['reason']);?>">
-		<param name="location" value="<?php echo $_SESSION['modules_loaded']['visa']['location'];?>">
+		<param name="location" value="<?php functions::xecho($_SESSION['modules_loaded']['visa']['location']);?>">
 		
-		<param name="exeSign" value="<?php echo $_SESSION['modules_loaded']['visa']['exeSign'];?>">
+		<param name="exeSign" value="<?php functions::xecho($_SESSION['modules_loaded']['visa']['exeSign']);?>">
 		<param name="mode" value="<?php echo $modeSign;?>">
 		
     </applet>
