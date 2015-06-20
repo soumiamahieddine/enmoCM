@@ -98,21 +98,21 @@ if ($mode == 'list') {
                 echo $_REQUEST['start'];?>" />
 
             <p>
-                <label for="label"><?php echo _NAME_TAGS; ?> : </label>
+                <label for="label"><?php echo _NAME_TAGS;?> : </label>
                 <input name="tag_label" type="text"  id="tag_label_id" value="<?php
                     echo functions::show_str(
                         $_SESSION['m_admin']['tag']['tag_label']
-                    ); ?>"/>
+                    );?>"/>
             </p>
 
            <?php
             if ($mode == 'up') { ?>
                 <p>
-                    <label for="label"><?php echo _COLL_ID; ?> : </label>
+                    <label for="label"><?php echo _COLL_ID;?> : </label>
                     <span><?php
                         echo functions::show_str(
                             $_SESSION['m_admin']['tag']['tag_coll']
-                        ); ?>
+                        );?>
                     </span>
                 </p>
             <?php
@@ -146,11 +146,11 @@ if ($mode == 'list') {
 
             if ($mode == 'up') { ?>
                 <p>
-                    <label for="label"><?php echo _NB_DOCS_FOR_THIS_TAG; ?> : </label>
+                    <label for="label"><?php echo _NB_DOCS_FOR_THIS_TAG;?> : </label>
                     <span><?php
                         echo functions::show_str(
                             $_SESSION['m_admin']['tag']['tag_count']
-                        ); ?>
+                        );?>
                     </span>
                 </p>
             <?php
@@ -161,16 +161,16 @@ if ($mode == 'list') {
                 <?php
                 if ($mode == 'up') { ?>
                     <input class="button" type="submit" name="tag_submit" value=
-                    "<?php echo _MODIFY_TAG; ?>" />
+                    "<?php echo _MODIFY_TAG;?>" />
                     <?php
                 } elseif ($mode == 'add') { ?>
                     <input type="submit" class="button"  name="tag_submit" value=
-                    "<?php echo _ADD; ?>" />
+                    "<?php echo _ADD;?>" />
                     <?php
                 }
                 ?>
                 <input type="button" class="button"  name="cancel" value="<?php
-                 echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php
+                 echo _CANCEL;?>" onclick="javascript:window.location.href='<?php
                  echo $_SESSION['config']['businessappurl'];
                  ?>index.php?page=manage_tag_list_controller&amp;mode=list&amp;module=tags'"/>
 
@@ -178,14 +178,14 @@ if ($mode == 'list') {
                 if ($mode == 'up') {
                     ?>
                     <hr/>
-                    <h3><?php echo _TAGOTHER_OPTIONS; ?></h3>
+                    <h3><?php echo _TAGOTHER_OPTIONS;?></h3>
                     <p>
-                        <label for="label"><?php echo _TAG_FUSION_ACTIONLABEL; ?> : </label>
+                        <label for="label"><?php echo _TAG_FUSION_ACTIONLABEL;?> : </label>
                         <select name="tagfusion" id="tagfusion">
                         <?php
                             foreach ($_SESSION['tmp_all_tags'] as $tmp_selectvalue_tag) {
                                 ?>
-                                <option value="<?php echo $tmp_selectvalue_tag['tag_label'].",".$tmp_selectvalue_tag['coll_id']; ?>">
+                                <option value="<?php echo $tmp_selectvalue_tag['tag_label'].",".$tmp_selectvalue_tag['coll_id'];?>">
                                     <?php echo $tmp_selectvalue_tag['tag_label']." ::".$tmp_selectvalue_tag['coll_id'];?>
                                 </option>
                                 <?php
@@ -195,12 +195,12 @@ if ($mode == 'list') {
 
                        <input type="button" class="button"  name="cancel" style="border-radius:8px;font-size:8px;"
                        onclick = "tag_fusion('<?php echo addslashes($_SESSION['m_admin']['tag']['tag_label']).','
-                       .$_SESSION['m_admin']['tag']['tag_coll']; ?>',
+                       .$_SESSION['m_admin']['tag']['tag_coll'];?>',
                         $('tagfusion').value, <?php echo $route_tag_fusion_tags;?>,'<?php
-                        echo _TAGFUSION_GOODRESULT; ?>' , '<?php
+                        echo _TAGFUSION_GOODRESULT;?>' , '<?php
                         echo $_SESSION['config']['businessappurl'] . 'index.php?display=true'
                         . '&amp;module=tags&amp;page=manage_tag_list_controller&amp;mode=list'
-                       ?>');" value="<?php echo _TAGFUSION; ?> ">
+                       ?>');" value="<?php echo _TAGFUSION;?> ">
 
                     </p>
                     <?php
