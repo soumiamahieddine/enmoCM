@@ -67,21 +67,21 @@ if ($mode == 'list') {
 
 
         <p>
-            <label for="label"><?php echo _NOTIFICATION_ID; ?> : </label>
+            <label for="label"><?php echo _NOTIFICATION_ID;?> : </label>
             <input name="notification_id" type="text" id="notification_id" value="<?php
                 echo functions::show_str(
                     $_SESSION['m_admin']['notification']['notification_id']
-                ); ?>"/>
+                );?>"/>
         </p>
         <p>
-            <label for="label"><?php echo _DESC; ?> : </label>
+            <label for="label"><?php echo _DESC;?> : </label>
             <textarea name="description" cols="80" rows="2" id="description"><?php
                 echo functions::show_str(
                     $_SESSION['m_admin']['notification']['description']
-                ); ?></textarea>
+                );?></textarea>
         </p>
          <p>
-            <label><?php echo _ENABLED; ?> : </label>
+            <label><?php echo _ENABLED;?> : </label>
             <input type="radio" class="check" name="is_enabled" value="true" <?php
             if (isset($_SESSION['m_admin']['notification']['is_enabled'])
                 && $_SESSION['m_admin']['notification']['is_enabled'] == "Y"
@@ -99,10 +99,10 @@ if ($mode == 'list') {
             ?> /><?php echo _NO;?>
         </p>
         <p>
-            <label for="label"><?php echo _EVENT; ?> : </label>
+            <label for="label"><?php echo _EVENT;?> : </label>
             <select name="event_id" id="event_id">
 				<option value=""><?php echo _SELECT_EVENT_TYPE;?></option>
-                <optgroup label="<?php echo _ACTIONS; ?>">
+                <optgroup label="<?php echo _ACTIONS;?>">
                 <?php
                 foreach($actions_list as $this_action){
                     ?><option value="<?php echo $this_action->id;?>"
@@ -117,7 +117,7 @@ if ($mode == 'list') {
                 //Récupération des éléments systèmes
                 ?></optgroup><?php
                 $newarray = array_keys($_SESSION['notif_events']);
-                ?><optgroup label="<?php echo _SYSTEM; ?>"><?php
+                ?><optgroup label="<?php echo _SYSTEM;?>"><?php
                 foreach($_SESSION['notif_events'] as $event_type_id => $event_type_label){
                     ?><option value="<?php echo $event_type_id;?>"
                     <?php
@@ -151,7 +151,7 @@ if ($mode == 'list') {
         </p>
         <div id="template_div" name="template_div">
         <p>
-            <label for="label"><?php echo _TEMPLATE; ?> : </label>
+            <label for="label"><?php echo _TEMPLATE;?> : </label>
             <select name="template_id" id="template_id">
                 <option value=""><?php echo _SELECT_TEMPLATE;?></option>
                 <?php
@@ -172,7 +172,7 @@ if ($mode == 'list') {
         </div>
 		<div id="rss_url_div" name="rss_url_div" style="width:600px; align=left; display:none;" >
 			<p>
-            <label for="label"><?php echo _RSS_URL_TEMPLATE; ?> : </label>
+            <label for="label"><?php echo _RSS_URL_TEMPLATE;?> : </label>
             <textarea name="rss_url_template" type="text" id="rss_url_template" style="width:340px; height=60px">
 			<?php
                 echo functions::show_str(
@@ -183,12 +183,12 @@ if ($mode == 'list') {
 		</div>
        
         <p>
-            <label for="status"><?php echo _DIFFUSION_TYPE; ?> : </label>
+            <label for="status"><?php echo _DIFFUSION_TYPE;?> : </label>
             <select name="diffusion_type"
 					id="status" 
 					onchange="change_properties_box(
 						this.options[this.selectedIndex].value,
-						'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_diffusiontype_formcontent',
+						'<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notifications&page=load_diffusiontype_formcontent',
 						'diff_type_div',
 						'notifications',
 						'');">
@@ -216,13 +216,13 @@ if ($mode == 'list') {
         </div>
 		<p></p>
 		<p>
-            <label for="attach_for_type"><?php echo _ATTACH_MAIL_FILE; ?> : </label>
+            <label for="attach_for_type"><?php echo _ATTACH_MAIL_FILE;?> : </label>
 
             <select name="attach_for_type"
                     id="status" 
 					onchange="change_properties_box(
 						this.options[this.selectedIndex].value,
-						'<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_attachfortype_formcontent',
+						'<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notifications&page=load_attachfortype_formcontent',
 						'attach_for_div',
 						'notifications',
 						'');">
@@ -251,22 +251,22 @@ if ($mode == 'list') {
 
         <div id="attach_for_div" class="scroll_div" style="height:200px;width:600px;border:1px solid;">
 			<!-- div for attachment options -->
-			<p class="sstit"> <?php echo _NO_ATTACHMENT_WITH_NOTIFICATION; ?></p>
+			<p class="sstit"> <?php echo _NO_ATTACHMENT_WITH_NOTIFICATION;?></p>
         </div>
         <p class="buttons">
             <?php
         if ($mode == 'up') {?>
             <input type="submit" class="button" name="notif_submit" value=
-            "<?php echo _VALIDATE; ?>" />
+            "<?php echo _VALIDATE;?>" />
             <?php
         } elseif ($mode == 'add') {?>
             <input type="submit" class="button" name="notif_submit" value=
-            "<?php echo _ADD; ?>" />
+            "<?php echo _ADD;?>" />
             <?php
         }
         ?>
         <input type="button" class="button"  name="cancel" value="<?php
-         echo _CANCEL; ?>" onclick="javascript:window.location.href='<?php
+         echo _CANCEL;?>" onclick="javascript:window.location.href='<?php
          echo $_SESSION['config']['businessappurl'];
          ?>index.php?page=manage_notifications_controler&amp;mode=list&amp;module=notifications'"/>
             <?php
@@ -278,7 +278,7 @@ if ($mode == 'list') {
         $filename.="_".$notification_sid.".sh";
         
         if ($mode == 'up' && PHP_OS == "Linux" && !file_exists($_SESSION['config']['corepath'].'modules/notifications/batch/scripts/'.$filename)) {?>
-            <input class="button" type="button" name="create_notif_script" id="create_notif_script" value="<?php echo _CREATE_NOTIF_SCRIPT; ?>" 
+            <input class="button" type="button" name="create_notif_script" id="create_notif_script" value="<?php echo _CREATE_NOTIF_SCRIPT;?>" 
             onclick="createNotifScript('<?php echo $_SESSION['config']['businessappurl'];
          ?>index.php?display=true&amp;page=create_notif_script&amp;module=notifications', '<?php echo $_SESSION['m_admin']['notification']['notification_sid'];?>', '<?php echo $_SESSION['m_admin']['notification']['notification_id'];?>')"/>
             <?php
@@ -315,8 +315,8 @@ if ($mode == 'list') {
         ?>
         <script language="javascript">
         change_properties_box(
-            '<?php echo $_SESSION['m_admin']['notification']['diffusion_type']; ?>',
-            '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_diffusiontype_formcontent',
+            '<?php echo $_SESSION['m_admin']['notification']['diffusion_type'];?>',
+            '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notifications&page=load_diffusiontype_formcontent',
             'diff_type_div',
             'notifications',
             '');
@@ -332,8 +332,8 @@ if ($mode == 'list') {
             ?>
             <script language="javascript">
             setTimeout(function(){loadDiffusionProperties(
-                '<?php echo $_SESSION['m_admin']['notification']['diffusion_type']; ?>',
-                '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_diffusionproperties_formcontent'
+                '<?php echo $_SESSION['m_admin']['notification']['diffusion_type'];?>',
+                '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notifications&page=load_diffusionproperties_formcontent'
                 )},500);
             </script>
             <?php
@@ -347,8 +347,8 @@ if ($mode == 'list') {
         ?>
         <script language="javascript">
 		change_properties_box(
-            '<?php echo $_SESSION['m_admin']['notification']['attachfor_type']; ?>',
-            '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_attachfortype_formcontent',
+            '<?php echo $_SESSION['m_admin']['notification']['attachfor_type'];?>',
+            '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notifications&page=load_attachfortype_formcontent',
             'attach_for_div',
             'notifications',
             '');
@@ -366,8 +366,8 @@ if ($mode == 'list') {
             ?>
             <script language="javascript">
                 setTimeout(function () {loadAttachforProperties(
-                '<?php echo $_SESSION['m_admin']['notification']['attachfor_type']; ?>',
-                '<?php echo $_SESSION['config']['businessappurl']; ?>index.php?display=true&module=notifications&page=load_attachforproperties_formcontent',
+                '<?php echo $_SESSION['m_admin']['notification']['attachfor_type'];?>',
+                '<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=notifications&page=load_attachforproperties_formcontent',
 				'attach_for_div'
                 )},500);
             </script>

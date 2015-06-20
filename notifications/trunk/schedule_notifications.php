@@ -74,7 +74,7 @@ $flag_notif = false;
 ?>
 
 <script>
-	var linecount = <?php echo count($data); ?>;
+	var linecount = <?php echo count($data);?>;
 
 	function add_cronLine(){
 		$("cron").innerHTML += "<tr id='row-"+linecount+"'>\
@@ -196,27 +196,27 @@ $flag_notif = false;
 		<?php foreach ($data as $id => $e) { 
 
 				if ($e['state'] == "hidden") {?>
-					<tr id='row-<?php echo $id; ?>' style="display:none">
+					<tr id='row-<?php echo $id;?>' style="display:none">
 						<td>
-							<input name='data[<?php echo $id; ?>][h]' value="<?php echo $e['h']; ?>">
+							<input name='data[<?php echo $id;?>][h]' value="<?php echo $e['h'];?>">
 						</td>
 						<td width="10%">
-							<input name='data[<?php echo $id; ?>][m]' value="<?php echo $e['m']; ?>">
+							<input name='data[<?php echo $id;?>][m]' value="<?php echo $e['m'];?>">
 						</td>
 						<td width="10%">						
-							<input name='data[<?php echo $id; ?>][dom]' value="<?php echo $e['dom']; ?>">
+							<input name='data[<?php echo $id;?>][dom]' value="<?php echo $e['dom'];?>">
 						</td>
 						<td width="15%">
-							<input name='data[<?php echo $id; ?>][mon]' value="<?php echo $e['mon']; ?>">
+							<input name='data[<?php echo $id;?>][mon]' value="<?php echo $e['mon'];?>">
 						</td>
 						<td width="20%">
-							<input name='data[<?php echo $id; ?>][dow]' value="<?php echo $e['dow']; ?>">
+							<input name='data[<?php echo $id;?>][dow]' value="<?php echo $e['dow'];?>">
 						</td>
 						<td width="40%">
-							<input name='data[<?php echo $id; ?>][cmd]' value="<?php echo $e['cmd']; ?>">
+							<input name='data[<?php echo $id;?>][cmd]' value="<?php echo $e['cmd'];?>">
 						</td>
 						<td width="20px" align="center">
-							<input type='hidden' id='state-<?php echo $id; ?>' name='data[<?php echo $id; ?>][state]' value='hidden' />
+							<input type='hidden' id='state-<?php echo $id;?>' name='data[<?php echo $id;?>][state]' value='hidden' />
 						</td>
 					</tr>
 				<?php
@@ -224,9 +224,9 @@ $flag_notif = false;
 					$flag_notif = true;
 
 			?>
-				<tr id='row-<?php echo $id; ?>'>
+				<tr id='row-<?php echo $id;?>'>
 					<td>
-						<select name='data[<?php echo $id; ?>][h]'>
+						<select name='data[<?php echo $id;?>][h]'>
 							<option value="*">*</option>
 							<?php
 							for($iHours=0;$iHours<24;$iHours++){?>
@@ -241,7 +241,7 @@ $flag_notif = false;
 						</select>
 					</td>
 					<td width="10%">
-						<select name='data[<?php echo $id; ?>][m]'>
+						<select name='data[<?php echo $id;?>][m]'>
 							<option value="*">*</option>
 							<?php
 							for($iMinutes=0;$iMinutes<60;$iMinutes++){ ?>
@@ -256,7 +256,7 @@ $flag_notif = false;
 						</select>
 					</td>
 					<td width="10%">						
-						<select name='data[<?php echo $id; ?>][dom]'>
+						<select name='data[<?php echo $id;?>][dom]'>
 							<option value="*">*</option>
 							<?php
 							for($iDay=1;$iDay<32;$iDay++){ ?>
@@ -271,7 +271,7 @@ $flag_notif = false;
 						</select>
 					</td>
 					<td width="15%">
-						<select name='data[<?php echo $id; ?>][mon]'>
+						<select name='data[<?php echo $id;?>][mon]'>
 							<option value ="*">*</option>
 							<?php $month_array = array(1 => _JANUARY, _FEBRUARY, _MARCH, _APRIL, _MAY, _JUNE, _JULY, _AUGUST, _SEPTEMBER, _OCTOBER, _NOVEMBER, _DECEMBER);
 		                 	for($iMonth=1;$iMonth<13;$iMonth++) {
@@ -286,7 +286,7 @@ $flag_notif = false;
 						</select>
 					</td>
 					<td width="20%">
-						<select name='data[<?php echo $id; ?>][dow]'>
+						<select name='data[<?php echo $id;?>][dow]'>
 							<option value ="*">*</option>
 							<?php $weekday_array = array(1 => _MONDAY, _TUESDAY, _WEDNESDAY, _THURSDAY, _FRIDAY, _SATURDAY, _SUNDAY);
 		                 	for($iWeekDay=1;$iWeekDay<8;$iWeekDay++) {
@@ -301,7 +301,7 @@ $flag_notif = false;
 						</select>
 					</td>
 					<td width="40%">
-						<select style="width:100%" name='data[<?php echo $id; ?>][cmd]'>
+						<select style="width:100%" name='data[<?php echo $id;?>][cmd]'>
 							<option><?php echo _CHOOSE_NOTIF;?></option>
 						<?php foreach ($notifications as $key => $value) {
 								?><option value="<?php echo $key;?>"
@@ -315,8 +315,8 @@ $flag_notif = false;
 						</select>
 					</td>
 					<td width="20px" align="center">
-						<input type='hidden' id='state-<?php echo $id; ?>' name='data[<?php echo $id; ?>][state]' value='normal' />
-						<i class='fa fa-remove fa-2x' onclick='del(<?php echo $id; ?>);' onmouseover="this.style.cursor='pointer'"></i>
+						<input type='hidden' id='state-<?php echo $id;?>' name='data[<?php echo $id;?>][state]' value='normal' />
+						<i class='fa fa-remove fa-2x' onclick='del(<?php echo $id;?>);' onmouseover="this.style.cursor='pointer'"></i>
 					</td>
 				</tr>
 		<?php
@@ -329,8 +329,8 @@ $flag_notif = false;
 		<i class='fa fa-plus-square fa-2x' onclick='add_cronLine();' onmouseover="this.style.cursor='pointer'"></i>
 		<br />
 		<br />
-		<input type='submit' value='<?php echo _VALIDATE; ?>' name='save' class="button" />
-		<input type="button" class="button" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=manage_notifications_controler&mode=list&module=notifications'" value="<?php echo _CANCEL; ?>" name="cancel">
+		<input type='submit' value='<?php echo _VALIDATE;?>' name='save' class="button" />
+		<input type="button" class="button" onclick="javascript:window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=manage_notifications_controler&mode=list&module=notifications'" value="<?php echo _CANCEL;?>" name="cancel">
 	</form>
 </div>
 </div>
