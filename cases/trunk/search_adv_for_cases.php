@@ -530,7 +530,7 @@ $core->load_js();
 <script type="text/javascript" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=search_adv.js" ></script>
 <script type="text/javascript">
 <!--
-var valeurs = { <?php echo $tab[1];?>};
+var valeurs = { <?php functions::xecho($tab[1]);?>};
 var loaded_query = <?php if(isset($_SESSION['current_search_query']) && !empty($_SESSION['current_search_query']))
 { echo $_SESSION['current_search_query'];}else{ echo '{}';}?>;
 
@@ -563,11 +563,11 @@ function del_query_confirm()
                         <input type="hidden" name="display" value="true" />
                         <input type="hidden" name="module" value="cases" />
                         <input type="hidden" name="page" value="create_case" />
-                        <input type="hidden" name="searched_item" value="<?php echo $_GET['searched_item'];?>" />
-                        <input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value'];?>" />
+                        <input type="hidden" name="searched_item" value="<?php functions::xecho($_GET['searched_item']);?>" />
+                        <input type="hidden" name="searched_value" value="<?php functions::xecho($_GET['searched_value']);?>" />
 
                         <div align="center" style="display:block;" id="div_query" class="block">
-                            <table align="center" border="0" width="100%" class="<?php echo $formClass;?>">
+                            <table align="center" border="0" width="100%" class="<?php functions::xecho($formClass);?>">
 
                                 <tr >
                                     <td >
@@ -611,9 +611,9 @@ function del_query_confirm()
             $title_search = _ERROR
         ?>
 
-            <dt><?php echo $title_search ;?></dt>
+            <dt><?php functions::xecho($title_search );?></dt>
             <dd>
-                <h4><p align="center"><i class="fa fa-search fa-2x"></i> <?php echo $title_search ;?></h4></p>
+                <h4><p align="center"><i class="fa fa-search fa-2x"></i> <?php functions::xecho($title_search );?></h4></p>
                 <!-- <hr/> -->
                 <br/>
         <?php if (count($queries) > 0)
@@ -627,7 +627,7 @@ function del_query_confirm()
             <option id="default_query" value=""><?php echo _CHOOSE_SEARCH;?></option>
             <?php for($i=0; $i< count($queries);$i++)
             {
-            ?><option value="<?php echo $queries[$i]['ID'];?>" id="query_<?php echo $queries[$i]['ID'];?>"><?php echo $queries[$i]['LABEL'];?></option><?php }?>
+            ?><option value="<?php functions::xecho($queries[$i]['ID']);?>" id="query_<?php functions::xecho($queries[$i]['ID']);?>"><?php functions::xecho($queries[$i]['LABEL']);?></option><?php }?>
         </select>
 
         <input name="del_query" id="del_query" value="<?php echo _DELETE_QUERY;?>" type="button"  onclick="del_query_confirm();" class="button" style="display:none" />
@@ -635,8 +635,8 @@ function del_query_confirm()
         </form>
         -->
         <?php } ?>
-        <!--<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_result&dir=indexing_searching"  id="frmsearch2" class="<?php echo $formClass;?>">-->
-        <form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php"  id="frmsearch2" class="<?php echo $formClass;?>">
+        <!--<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_result&dir=indexing_searching"  id="frmsearch2" class="<?php functions::xecho($formClass);?>">-->
+        <form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php"  id="frmsearch2" class="<?php functions::xecho($formClass);?>">
         <input type="hidden" name="display" value="true" />
         <input type="hidden" name="dir" value="indexing_searching" />
         <input type="hidden" name="page" value="search_adv_result" />
@@ -644,14 +644,14 @@ function del_query_confirm()
         <?php
         if (isset($_GET['schema']) && $_GET['schema'] <> '') {
         ?>
-            <input type="hidden" name="schema" value="<?php echo $_GET['schema'];?>" />
+            <input type="hidden" name="schema" value="<?php functions::xecho($_GET['schema']);?>" />
         <?php
         }
         ?>
         <input type="hidden" name="specific_case" value="attach_to_case" />
         <!-- #########################To search a ressource for this res############################-->
-        <input type="hidden" name="searched_item" value="<?php echo $_GET['searched_item'];?>" />
-        <input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value'];?>" />
+        <input type="hidden" name="searched_item" value="<?php functions::xecho($_GET['searched_item']);?>" />
+        <input type="hidden" name="searched_value" value="<?php functions::xecho($_GET['searched_value']);?>" />
 
 
         <?php
@@ -680,7 +680,7 @@ function del_query_confirm()
 
                         <tr>
                             <td width="70%"><label for="numcase" class="bold" ><?php echo _CASE_NUMBER;?> :</label>
-                                <input type="text" name="numcase" id="numcase" <?php echo $size;?>  />
+                                <input type="text" name="numcase" id="numcase" <?php functions::xecho($size);?>  />
                                 <input type="hidden" name="meta[]" value="numcase#numcase#input_text" />
                             </td>
                             <td><em><?php echo _CASE_NUMBER_HELP;?></em></td>
@@ -688,7 +688,7 @@ function del_query_confirm()
                         </tr>
                         <tr>
                             <td width="70%"><label for="labelcase" class="bold" ><?php echo _CASE_LABEL;?> :</label>
-                                <input type="text" name="labelcase" id="labelcase" <?php echo $size;?>  />
+                                <input type="text" name="labelcase" id="labelcase" <?php functions::xecho($size);?>  />
                                 <input type="hidden" name="meta[]" value="labelcase#labelcase#input_text" />
                             </td>
                             <td><em><?php echo _CASE_LABEL_HELP;?></em></td>
@@ -696,7 +696,7 @@ function del_query_confirm()
                         </tr>
                         <tr>
                             <td width="70%"><label for="descriptioncase" class="bold" ><?php echo _CASE_DESCRIPTION;?> :</label>
-                                <input type="text" name="descriptioncase" id="descriptioncase" <?php echo $size;?>  />
+                                <input type="text" name="descriptioncase" id="descriptioncase" <?php functions::xecho($size);?>  />
                                 <input type="hidden" name="meta[]" value="descriptioncase#descriptioncase#input_text" />
                             </td>
                             <td><em><?php echo _CASE_DESCRIPTION_HELP;?></em></td>
@@ -723,28 +723,28 @@ function del_query_confirm()
                     <table border = "0" width="100%">
                     <tr>
                         <td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT;?>:</label>
-                            <input type="text" name="subject" id="subject" <?php echo $size;?>  />
+                            <input type="text" name="subject" id="subject" <?php functions::xecho($size);?>  />
                             <input type="hidden" name="meta[]" value="subject#subject#input_text" />
                         </td>
                         <td><em><?php echo _MAIL_OBJECT_HELP;?></em></td>
                     </tr>
                     <tr>
                         <td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT;?>:</label>
-                            <input type="text" name="fulltext" id="fulltext" <?php echo $size;?>  />
+                            <input type="text" name="fulltext" id="fulltext" <?php functions::xecho($size);?>  />
                             <input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
                         </td>
                         <td><em><?php echo _FULLTEXT_HELP;?></em></td>
                     </tr>
                     <tr>
                     <td width="70%"><label for="numged" class="bold"><?php echo _N_GED;?>:</label>
-                        <input type="text" name="numged" id="numged" <?php echo $size;?>  />
+                        <input type="text" name="numged" id="numged" <?php functions::xecho($size);?>  />
                         <input type="hidden" name="meta[]" value="numged#numged#input_text" />
                         </td>
                         <td><em><?php echo _N_GED_HELP;?></em></td>
                     </tr>
                     <tr>
                         <td width="70%"><label for="multifield" class="bold" ><?php echo _MULTI_FIELD;?>:</label>
-                            <input type="text" name="multifield" id="multifield" <?php echo $size;?>  />
+                            <input type="text" name="multifield" id="multifield" <?php functions::xecho($size);?>  />
                             <input type="hidden" name="meta[]" value="multifield#multifield#input_text" />
                         </td>
                         <td><em><?php echo _MULTI_FIELD_HELP;?></em></td>
@@ -764,8 +764,8 @@ function del_query_confirm()
                <tr>
              <td width="70%">
                 <label class="bold"><?php echo _ADD_PARAMETERS;?>:</label>
-                <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php echo $ieBrowser;?>, '<?php echo _ERROR_IE_SEARCH;?>');">
-                    <?php echo $srcTab;?>
+                <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php functions::xecho($ieBrowser);?>, '<?php echo _ERROR_IE_SEARCH;?>');">
+                    <?php functions::xecho($srcTab);?>
                 </select>
              </td>
 
@@ -792,7 +792,7 @@ function del_query_confirm()
         </div>
 
         <script type="text/javascript">
-        load_query(valeurs, loaded_query, 'frmsearch2', '<?php echo $ieBrowser;?>, <?php echo _ERROR_IE_SEARCH;?>');
+        load_query(valeurs, loaded_query, 'frmsearch2', '<?php functions::xecho($ieBrowser);?>, <?php echo _ERROR_IE_SEARCH;?>');
         </script>
 
     </dd>

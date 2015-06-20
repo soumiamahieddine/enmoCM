@@ -47,7 +47,7 @@ if (isset($_GET['id'])) {
 <div id="details_div" style="display:none;">
     <h1 class="titdetail">
         <i class="fa fa-info-circle fa-2x"></i>&nbsp;<?php echo _CASE_DETAIL." ".strtolower(_NUM);?>
-        <?php echo $_SESSION['cases']['actual_case_id'];?> <span></span>
+        <?php functions::xecho($_SESSION['cases']['actual_case_id']);?> <span></span>
     </h1>
     <div id="inner_content" class="clearfix">
         <dl id="tabricator1">

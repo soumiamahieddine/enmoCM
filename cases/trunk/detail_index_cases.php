@@ -79,7 +79,7 @@ else
                     <tr>
                         <td>
                             <h2 style="color:#1B99C4"><p align="center"><?php echo _NUM_CASE." ".$case_id;?></p></h2>
-                            <p style="color:#1B99C4" align="center"><?php echo $db->show_string($case_indexes['case_description']);?> </p>
+                            <p style="color:#1B99C4" align="center"><?php functions::xecho($db->show_string($case_indexes['case_description']));?> </p>
                         </td>
                     </tr>
                 </table>
@@ -98,7 +98,7 @@ else
                     <?php echo _CASE_ID;?> :
                 </td>
                 <td>
-                    <input type="text" class="readonly" readonly="readonly" value="<?php echo $case_indexes['case_id'];?>" size="40"  />
+                    <input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($case_indexes['case_id']);?>" size="40"  />
                 </td>
             </tr>
 
@@ -143,7 +143,7 @@ else
                     <?php echo _CASE_TYPIST;?> :
                 </td>
                 <td>
-                    <input type="text" class="readonly" readonly="readonly" value="<?php echo $case_indexes['case_typist'];?>" size="40"  />
+                    <input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($case_indexes['case_typist']);?>" size="40"  />
                 </td>
             </tr>
 
@@ -156,7 +156,7 @@ else
                     <?php echo _CASE_CREATION_DATE;?> :
                 </td>
                 <td>
-                    <input type="text" class="readonly" readonly="readonly" value="<?php echo $db->format_date_db($case_indexes['case_creation_date']);?>" size="40"  />
+                    <input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($db->format_date_db($case_indexes['case_creation_date']));?>" size="40"  />
                 </td>
             </tr>
 
@@ -169,7 +169,7 @@ else
                     <?php echo _CASE_LAST_UPDATE_DATE;?> :
                 </td>
                 <td>
-                    <input type="text" class="readonly" readonly="readonly" value="<?php echo $db->format_date_db($case_indexes['case_last_update_date']);?>" size="40"  />
+                    <input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($db->format_date_db($case_indexes['case_last_update_date']));?>" size="40"  />
                 </td>
             </tr>
 
@@ -182,7 +182,7 @@ else
                     <?php echo _CASE_CLOSING_DATE;?> :
                 </td>
                 <td>
-                    <input type="text" class="readonly" readonly="readonly" value="<?php echo $db->format_date_db($case_indexes['case_closing_date']);?>" size="40"  />
+                    <input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($db->format_date_db($case_indexes['case_closing_date']));?>" size="40"  />
                 </td>
             </tr>
 
@@ -211,7 +211,7 @@ else
         </table>
     </div>
     <input type="hidden" name="update" id="update" value="true" />
-    <input type="hidden" name="id" id="id" value="<?php echo $case_id;?>" />
+    <input type="hidden" name="id" id="id" value="<?php functions::xecho($case_id);?>" />
     <p align="center">
     <?php
     if ($core_tools->test_service('update_case', 'cases',false) == 1)
@@ -222,12 +222,12 @@ else
     <?php
     /*if ($core_tools->test_service('join_res_case', 'cases',false) == 1)
     { ?>
-        <input type="button" class="button"  value="<?php echo _JOIN_RES_ON_THIS_CASE;?>" name="join_res" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id&searched_value=<?php echo $case_indexes['case_id'];?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/>
+        <input type="button" class="button"  value="<?php echo _JOIN_RES_ON_THIS_CASE;?>" name="join_res" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=search_adv_for_cases&searched_item=res_id&searched_value=<?php functions::xecho($case_indexes['case_id']);?>','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=1020,height=710');"/>
     <?php
     }*/
     if ($core_tools->test_service('close_case', 'cases',false) == 1)
     { ?>
-        <input type="button" class="button"  value="<?php echo _CLOSE_THIS_CASE;?>" name="join_res" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=db_close_case&case_id=<?php echo $case_indexes['case_id'];?>' "/>
+        <input type="button" class="button"  value="<?php echo _CLOSE_THIS_CASE;?>" name="join_res" onclick="window.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=db_close_case&case_id=<?php functions::xecho($case_indexes['case_id']);?>' "/>
     <?php
     } ?>
     </p>

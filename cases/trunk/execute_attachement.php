@@ -32,7 +32,7 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
                 }
                 ?>
                 <script type="text/javascript">
-                window.opener.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=details_cases&module=cases&id=<?php echo $_GET['searched_value'];?>';
+                window.opener.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=details_cases&module=cases&id=<?php functions::xecho($_GET['searched_value']);?>';
                 //window.opener.top.location.reload();
                 //self.close();
                 window.top.close();
@@ -67,7 +67,7 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
                     /*var error_div = window.opener.$('main_error');
                     if(error_div)
                     {
-                        error_div.update('<?php echo $error ;?>');
+                        error_div.update('<?php functions::xecho($error );?>');
                     }*/
                 </script>
                 <?php
@@ -108,9 +108,9 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
                 
                 if(case_id)
                 {
-                    case_id.value = '<?php echo $return_description['case_id'] ;?>';
-                    case_label.value = '<?php echo $return_description['case_label'] ;?>';
-                    case_description.value = '<?php echo $return_description['case_description'] ;?>';
+                    case_id.value = '<?php functions::xecho($return_description['case_id'] );?>';
+                    case_label.value = '<?php functions::xecho($return_description['case_label'] );?>';
+                    case_description.value = '<?php functions::xecho($return_description['case_description'] );?>';
                     
                 }
                 //self.close();

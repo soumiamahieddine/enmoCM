@@ -56,7 +56,7 @@ echo "<p align='right'><b><a href = '"
 echo $case_properties['case_id'];
 ?>" size="40" title="<?php
 echo $case_properties['case_id'];
-?>" alt="<?php echo $case_properties['case_id'];?>" />
+?>" alt="<?php functions::xecho($case_properties['case_id']);?>" />
         </td>
 		<th align="left" class="picto">
 		  <!--<img alt="<?php echo _CASE;?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_infos.gif" />-->
@@ -69,7 +69,7 @@ echo $case_properties['case_id'];
 echo $case_properties['case_label'];
 ?>" size="40" title="<?php
 echo $case_properties['case_label'];
-?>" alt="<?php echo $case_properties['case_label'];?>" />
+?>" alt="<?php functions::xecho($case_properties['case_label']);?>" />
 		</td>
 	</tr>
 	<tr>
@@ -80,7 +80,7 @@ echo $case_properties['case_label'];
 		    <?php echo _CASE_DESCRIPTION;?> :
 		</td>
 		<td colspan="3">
-		  <input type="text" class="readonly" readonly="readonly" value="<?php echo $case_properties['case_description'];?>" size="40" title="<?php echo $case_properties['case_description'];?>" alt="<?php echo $case_properties['case_description'];?>" />
+		  <input type="text" class="readonly" readonly="readonly" value="<?php functions::xecho($case_properties['case_description']);?>" size="40" title="<?php functions::xecho($case_properties['case_description']);?>" alt="<?php functions::xecho($case_properties['case_description']);?>" />
 		</td>
     </tr>
 </table>

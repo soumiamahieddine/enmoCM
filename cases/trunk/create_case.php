@@ -51,7 +51,7 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
                 var case_description = window.opener.$('case_description');
                 if(case_id)
                 {
-                    case_id.value = '<?php echo $case_id_newest ;?>';
+                    case_id.value = '<?php functions::xecho($case_id_newest );?>';
                     case_label.value = '<?php echo str_replace('\'', ' ', $case_label);?>';
                     case_description.value = '<?php echo str_replace('\'', ' ', $case_description);?>';
                 }
@@ -68,7 +68,7 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
                 /*var error_div = window.opener.$('main_error');
                 if(error_div)
                 {
-                    error_div.update('<?php echo $error ;?>');
+                    error_div.update('<?php functions::xecho($error );?>');
                 }*/
                 self.close();
                 </script>
