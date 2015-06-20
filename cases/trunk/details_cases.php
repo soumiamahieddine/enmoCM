@@ -46,8 +46,8 @@ if (isset($_GET['id'])) {
 ?>
 <div id="details_div" style="display:none;">
     <h1 class="titdetail">
-        <i class="fa fa-info-circle fa-2x"></i>&nbsp;<?php echo _CASE_DETAIL." ".strtolower(_NUM); ?>
-        <?php echo $_SESSION['cases']['actual_case_id']; ?> <span></span>
+        <i class="fa fa-info-circle fa-2x"></i>&nbsp;<?php echo _CASE_DETAIL." ".strtolower(_NUM);?>
+        <?php echo $_SESSION['cases']['actual_case_id'];?> <span></span>
     </h1>
     <div id="inner_content" class="clearfix">
         <dl id="tabricator1">
@@ -59,17 +59,17 @@ if (isset($_GET['id'])) {
             </dd>
             <dt><?php echo _DOCUMENTS_LIST_IN_THIS_CASE;?></dt>
             <dd>
-                <h2><?php echo _DOCUMENTS_LIST_IN_THIS_CASE; ?></h2>
+                <h2><?php echo _DOCUMENTS_LIST_IN_THIS_CASE;?></h2>
                 <iframe name="list_document" id="list_document" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=cases_documents_list" frameborder="0" width="100%" height="520px"></iframe>
             </dd>
             <dt><?php echo _NOTES_FOR_THIS_CASES;?></dt>
             <dd>
-                    <h2><?php echo _NOTES_FOR_THIS_CASES; ?></h2>
+                    <h2><?php echo _NOTES_FOR_THIS_CASES;?></h2>
                     <iframe name="list_notes" id="list_notes" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=cases_notes_list&size=full" frameborder="0" width="100%" height="520px"></iframe>
             </dd>
             <dt><?php echo _HISTORY_CASES;?></dt>
             <dd>
-                    <h2><?php echo _HISTORY_CASES; ?></h2>
+                    <h2><?php echo _HISTORY_CASES;?></h2>
                     <iframe name="history_cases" id="history_cases" src="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=cases_history_list" frameborder="1" width="100%" height="520px"></iframe>
             </dd>
         </dl>

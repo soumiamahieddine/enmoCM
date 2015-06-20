@@ -32,7 +32,7 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
                 }
                 ?>
                 <script type="text/javascript">
-                window.opener.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=details_cases&module=cases&id=<?php echo $_GET['searched_value']; ?>';
+                window.opener.top.location.href='<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=details_cases&module=cases&id=<?php echo $_GET['searched_value'];?>';
                 //window.opener.top.location.reload();
                 //self.close();
                 window.top.close();

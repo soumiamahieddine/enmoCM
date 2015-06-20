@@ -553,9 +553,9 @@ function del_query_confirm()
             if($core->test_service('add_cases', 'cases', false) == 1)
             {
                 ?>
-                <dt><?php echo _CREATE_NEW_CASE; ?></dt>
+                <dt><?php echo _CREATE_NEW_CASE;?></dt>
                 <dd>
-                    <h4><p align="center"><i class="fa fa-plus fa-2x"></i> <?php echo _CREATE_NEW_CASE; ?><p></h4>
+                    <h4><p align="center"><i class="fa fa-plus fa-2x"></i> <?php echo _CREATE_NEW_CASE;?><p></h4>
                     <p class="error"><?php if (isset($_SESSION['cases_error'])){ echo $_SESSION['cases_error'];}$_SESSION['cases_error'] = "";?></p>
                     <div class="blank_space">&nbsp;</div>
                     <form name="create_case" id="create_case" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=cases&page=create_case" method="post" >
@@ -563,11 +563,11 @@ function del_query_confirm()
                         <input type="hidden" name="display" value="true" />
                         <input type="hidden" name="module" value="cases" />
                         <input type="hidden" name="page" value="create_case" />
-                        <input type="hidden" name="searched_item" value="<?php echo $_GET['searched_item']; ?>" />
-                        <input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value']; ?>" />
+                        <input type="hidden" name="searched_item" value="<?php echo $_GET['searched_item'];?>" />
+                        <input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value'];?>" />
 
                         <div align="center" style="display:block;" id="div_query" class="block">
-                            <table align="center" border="0" width="100%" class="<?php echo $formClass; ?>">
+                            <table align="center" border="0" width="100%" class="<?php echo $formClass;?>">
 
                                 <tr >
                                     <td >
@@ -584,7 +584,7 @@ function del_query_confirm()
                                             </td>
                                             <td>
                                                 <p align="center">
-                                                <input class="button" name="imageField" type="button" value="<?php echo _VALIDATE; ?>" onclick="this.form.submit();" /></p>
+                                                <input class="button" name="imageField" type="button" value="<?php echo _VALIDATE;?>" onclick="this.form.submit();" /></p>
                                              </td>
                                         </tr>
                                         </table>
@@ -611,9 +611,9 @@ function del_query_confirm()
             $title_search = _ERROR
         ?>
 
-            <dt><?php echo $title_search ; ?></dt>
+            <dt><?php echo $title_search ;?></dt>
             <dd>
-                <h4><p align="center"><i class="fa fa-search fa-2x"></i> <?php echo $title_search ; ?></h4></p>
+                <h4><p align="center"><i class="fa fa-search fa-2x"></i> <?php echo $title_search ;?></h4></p>
                 <!-- <hr/> -->
                 <br/>
         <?php if (count($queries) > 0)
@@ -635,8 +635,8 @@ function del_query_confirm()
         </form>
         -->
         <?php } ?>
-        <!--<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_result&dir=indexing_searching"  id="frmsearch2" class="<?php echo $formClass; ?>">-->
-        <form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php"  id="frmsearch2" class="<?php echo $formClass; ?>">
+        <!--<form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=search_adv_result&dir=indexing_searching"  id="frmsearch2" class="<?php echo $formClass;?>">-->
+        <form name="frmsearch2" method="get" action="<?php echo $_SESSION['config']['businessappurl'];?>index.php"  id="frmsearch2" class="<?php echo $formClass;?>">
         <input type="hidden" name="display" value="true" />
         <input type="hidden" name="dir" value="indexing_searching" />
         <input type="hidden" name="page" value="search_adv_result" />
@@ -644,14 +644,14 @@ function del_query_confirm()
         <?php
         if (isset($_GET['schema']) && $_GET['schema'] <> '') {
         ?>
-            <input type="hidden" name="schema" value="<?php echo $_GET['schema']; ?>" />
+            <input type="hidden" name="schema" value="<?php echo $_GET['schema'];?>" />
         <?php
         }
         ?>
         <input type="hidden" name="specific_case" value="attach_to_case" />
         <!-- #########################To search a ressource for this res############################-->
-        <input type="hidden" name="searched_item" value="<?php echo $_GET['searched_item']; ?>" />
-        <input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value']; ?>" />
+        <input type="hidden" name="searched_item" value="<?php echo $_GET['searched_item'];?>" />
+        <input type="hidden" name="searched_value" value="<?php echo $_GET['searched_value'];?>" />
 
 
         <?php
@@ -671,7 +671,7 @@ function del_query_confirm()
             if($core->is_module_loaded("cases") == true)
             { ?>
              <tr>
-                <td colspan="2" ><h2><?php echo _CASE_INFO; ?></h2></td>
+                <td colspan="2" ><h2><?php echo _CASE_INFO;?></h2></td>
             </tr>
             <tr>
                 <td>
@@ -680,26 +680,26 @@ function del_query_confirm()
 
                         <tr>
                             <td width="70%"><label for="numcase" class="bold" ><?php echo _CASE_NUMBER;?> :</label>
-                                <input type="text" name="numcase" id="numcase" <?php echo $size; ?>  />
+                                <input type="text" name="numcase" id="numcase" <?php echo $size;?>  />
                                 <input type="hidden" name="meta[]" value="numcase#numcase#input_text" />
                             </td>
-                            <td><em><?php echo _CASE_NUMBER_HELP; ?></em></td>
+                            <td><em><?php echo _CASE_NUMBER_HELP;?></em></td>
                             <td>&nbsp;</td>
                         </tr>
                         <tr>
                             <td width="70%"><label for="labelcase" class="bold" ><?php echo _CASE_LABEL;?> :</label>
-                                <input type="text" name="labelcase" id="labelcase" <?php echo $size; ?>  />
+                                <input type="text" name="labelcase" id="labelcase" <?php echo $size;?>  />
                                 <input type="hidden" name="meta[]" value="labelcase#labelcase#input_text" />
                             </td>
-                            <td><em><?php echo _CASE_LABEL_HELP; ?></em></td>
+                            <td><em><?php echo _CASE_LABEL_HELP;?></em></td>
                             <td>&nbsp;</td>
                         </tr>
                         <tr>
                             <td width="70%"><label for="descriptioncase" class="bold" ><?php echo _CASE_DESCRIPTION;?> :</label>
-                                <input type="text" name="descriptioncase" id="descriptioncase" <?php echo $size; ?>  />
+                                <input type="text" name="descriptioncase" id="descriptioncase" <?php echo $size;?>  />
                                 <input type="hidden" name="meta[]" value="descriptioncase#descriptioncase#input_text" />
                             </td>
-                            <td><em><?php echo _CASE_DESCRIPTION_HELP; ?></em></td>
+                            <td><em><?php echo _CASE_DESCRIPTION_HELP;?></em></td>
                             <td>&nbsp;</td>
                         </tr>
                     </table>
@@ -715,7 +715,7 @@ function del_query_confirm()
     }    ?>
 <!--
             <tr>
-                <td colspan="2" ><h2><?php echo _LETTER_INFO; ?></h2></td>
+                <td colspan="2" ><h2><?php echo _LETTER_INFO;?></h2></td>
             </tr>
             <tr >
                 <td >
@@ -723,31 +723,31 @@ function del_query_confirm()
                     <table border = "0" width="100%">
                     <tr>
                         <td width="70%"><label for="subject" class="bold" ><?php echo _MAIL_OBJECT;?>:</label>
-                            <input type="text" name="subject" id="subject" <?php echo $size; ?>  />
+                            <input type="text" name="subject" id="subject" <?php echo $size;?>  />
                             <input type="hidden" name="meta[]" value="subject#subject#input_text" />
                         </td>
-                        <td><em><?php echo _MAIL_OBJECT_HELP; ?></em></td>
+                        <td><em><?php echo _MAIL_OBJECT_HELP;?></em></td>
                     </tr>
                     <tr>
                         <td width="70%"><label for="fulltext" class="bold" ><?php echo _FULLTEXT;?>:</label>
-                            <input type="text" name="fulltext" id="fulltext" <?php echo $size; ?>  />
+                            <input type="text" name="fulltext" id="fulltext" <?php echo $size;?>  />
                             <input type="hidden" name="meta[]" value="fulltext#fulltext#input_text" />
                         </td>
-                        <td><em><?php echo _FULLTEXT_HELP; ?></em></td>
+                        <td><em><?php echo _FULLTEXT_HELP;?></em></td>
                     </tr>
                     <tr>
                     <td width="70%"><label for="numged" class="bold"><?php echo _N_GED;?>:</label>
-                        <input type="text" name="numged" id="numged" <?php echo $size; ?>  />
+                        <input type="text" name="numged" id="numged" <?php echo $size;?>  />
                         <input type="hidden" name="meta[]" value="numged#numged#input_text" />
                         </td>
-                        <td><em><?php echo _N_GED_HELP; ?></em></td>
+                        <td><em><?php echo _N_GED_HELP;?></em></td>
                     </tr>
                     <tr>
                         <td width="70%"><label for="multifield" class="bold" ><?php echo _MULTI_FIELD;?>:</label>
-                            <input type="text" name="multifield" id="multifield" <?php echo $size; ?>  />
+                            <input type="text" name="multifield" id="multifield" <?php echo $size;?>  />
                             <input type="hidden" name="meta[]" value="multifield#multifield#input_text" />
                         </td>
-                        <td><em><?php echo _MULTI_FIELD_HELP; ?></em></td>
+                        <td><em><?php echo _MULTI_FIELD_HELP;?></em></td>
                     </tr>
 
                     </table>
@@ -763,13 +763,13 @@ function del_query_confirm()
          <table border = "0" width="100%">
                <tr>
              <td width="70%">
-                <label class="bold"><?php echo _ADD_PARAMETERS; ?>:</label>
+                <label class="bold"><?php echo _ADD_PARAMETERS;?>:</label>
                 <select name="select_criteria" id="select_criteria" style="display:inline;" onchange="add_criteria(this.options[this.selectedIndex].id, 'frmsearch2', <?php echo $ieBrowser;?>, '<?php echo _ERROR_IE_SEARCH;?>');">
-                    <?php echo $srcTab; ?>
+                    <?php echo $srcTab;?>
                 </select>
              </td>
 
-                <td width="30%"><em><?php echo _ADD_PARAMETERS_HELP; ?></em></td>
+                <td width="30%"><em><?php echo _ADD_PARAMETERS_HELP;?></em></td>
                 </tr>
          </table>
          </div>
@@ -779,7 +779,7 @@ function del_query_confirm()
             <p align="right">
 <!--                         <input class="button_search_adv" name="imageField" type="button" value="" onclick="valid_search_form('frmsearch2');this.form.submit();" />
                 <br/>
-                <input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH; ?>" onclick="valid_search_form('frmsearch2');this.form.submit();" /> -->
+                <input class="button_search_adv_text" name="imageField" type="button" value="<?php echo _SEARCH;?>" onclick="valid_search_form('frmsearch2');this.form.submit();" /> -->
                 <a onclick="valid_search_form('frmsearch2');$('frmsearch2').submit();" href="#">
                     <i class="fa fa-search fa-5x" title="<?php echo _SEARCH;?>"></i>
                 </a>
