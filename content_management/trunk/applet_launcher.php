@@ -163,16 +163,16 @@ if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "false"){
         <param name="url" value="<?php 
             echo $_SESSION['config']['coreurl'].$path;
         ?>">
-        <param name="objectType" value="<?php echo $objectType;?>">
-        <param name="objectTable" value="<?php echo $objectTable;?>">
-        <param name="objectId" value="<?php echo $objectId;?>">
+        <param name="objectType" value="<?php functions::xecho($objectType);?>">
+        <param name="objectTable" value="<?php functions::xecho($objectTable);?>">
+        <param name="objectId" value="<?php functions::xecho($objectId);?>">
         <param name="userMaarch" value="<?php 
             echo $cMFeatures['CONFIG']['userMaarchOnClient'];
         ?>">
         <param name="userMaarchPwd" value="<?php 
             echo $cMFeatures['CONFIG']['userPwdMaarchOnClient'];
         ?>">
-        <param name="psExecMode" value="<?php echo $cMFeatures['CONFIG']['psExecMode'];?>">
+        <param name="psExecMode" value="<?php functions::xecho($cMFeatures['CONFIG']['psExecMode']);?>">
         <param name="mayscript" value="mayscript" />
     </applet>
 </div>
@@ -201,16 +201,16 @@ else if ($_SESSION['modules_loaded']['attachments']['convertPdf'] == "true"){
         <param name="url" value="<?php 
             echo $_SESSION['config']['coreurl'].$path;
         ?>">
-        <param name="objectType" value="<?php echo $objectType;?>">
-        <param name="objectTable" value="<?php echo $objectTable;?>">
-        <param name="objectId" value="<?php echo $objectId;?>">
+        <param name="objectType" value="<?php functions::xecho($objectType);?>">
+        <param name="objectTable" value="<?php functions::xecho($objectTable);?>">
+        <param name="objectId" value="<?php functions::xecho($objectId);?>">
         <param name="userMaarch" value="<?php 
             echo $cMFeatures['CONFIG']['userMaarchOnClient'];
         ?>">
         <param name="userMaarchPwd" value="<?php 
             echo $cMFeatures['CONFIG']['userPwdMaarchOnClient'];
         ?>">
-        <param name="psExecMode" value="<?php echo $cMFeatures['CONFIG']['psExecMode'];?>">
+        <param name="psExecMode" value="<?php functions::xecho($cMFeatures['CONFIG']['psExecMode']);?>">
         <param name="mayscript" value="mayscript" />
     </applet>
 </div>
