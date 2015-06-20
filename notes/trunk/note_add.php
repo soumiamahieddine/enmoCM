@@ -188,7 +188,7 @@ if(isset($_GET['redirect'])){
           ?>&table=<?php
           echo $table;
           ?>&coll_id=<?php
-          echo $collId;?>&<?php echo $redirect;?>" >
+          echo $collId;?>&<?php functions::xecho($redirect);?>" >
           <input type="hidden" name="display" value="true" />
           <input type="hidden" name="modules" value="notes" />
           <input type="hidden" name="page" value="note_add" />

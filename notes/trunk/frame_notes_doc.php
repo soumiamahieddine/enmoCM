@@ -206,7 +206,7 @@ $core->load_html();
 //here we building the header
 $core->load_header('', true, false);
 ?>
-<body id="<?php echo $body;?>">
+<body id="<?php functions::xecho($body);?>">
 <?php
 $title = '';
 $listNotes = new list_show();

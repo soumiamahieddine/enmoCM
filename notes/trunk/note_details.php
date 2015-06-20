@@ -257,7 +257,7 @@ if (! $canModify) {
 echo $text;
 ?></textarea>
 
-        <input type="hidden" name="id" id="id" value="<?php echo $sId;?>"/>
+        <input type="hidden" name="id" id="id" value="<?php functions::xecho($sId);?>"/>
         <input type="hidden" name="identifier" id="identifier" value="<?php
 echo $identifier;
 ?>"/>
