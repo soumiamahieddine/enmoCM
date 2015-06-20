@@ -86,7 +86,7 @@ if ($mode == 'list') {
             <input type="hidden" name="page" value="manage_tag_list_controler" />
             <input type="hidden" name="mode" value="<?php echo $mode;?>" />
 
-            <input type="hidden" name="tag_label" id="tag_label" value="<?php echo $_SESSION['m_admin']['tag']['tag_label'];?>" />
+            <input type="hidden" name="tag_label" id="tag_label" value="<?php functions::xecho($_SESSION['m_admin']['tag']['tag_label']);?>" />
 
             <input type="hidden" name="order" id="order" value="<?php
                 echo $_REQUEST['order'];?>" />
@@ -134,7 +134,7 @@ if ($mode == 'list') {
                         ) {
                             echo 'selected="selected"';
                         }
-                        ?> ><?php echo $arrayColl[$i]['label'];?></option>
+                        ?> ><?php functions::xecho($arrayColl[$i]['label']);?></option>
                         <?php
                     }
 
@@ -185,8 +185,8 @@ if ($mode == 'list') {
                         <?php
                             foreach ($_SESSION['tmp_all_tags'] as $tmp_selectvalue_tag) {
                                 ?>
-                                <option value="<?php echo $tmp_selectvalue_tag['tag_label'].",".$tmp_selectvalue_tag['coll_id'];?>">
-                                    <?php echo $tmp_selectvalue_tag['tag_label']." ::".$tmp_selectvalue_tag['coll_id'];?>
+                                <option value="<?php functions::xecho($tmp_selectvalue_tag['tag_label'].",".$tmp_selectvalue_tag['coll_id']);?>">
+                                    <?php functions::xecho($tmp_selectvalue_tag['tag_label']." ::".$tmp_selectvalue_tag['coll_id']);?>
                                 </option>
                                 <?php
                             }
@@ -196,7 +196,7 @@ if ($mode == 'list') {
                        <input type="button" class="button"  name="cancel" style="border-radius:8px;font-size:8px;"
                        onclick = "tag_fusion('<?php echo addslashes($_SESSION['m_admin']['tag']['tag_label']).','
                        .$_SESSION['m_admin']['tag']['tag_coll'];?>',
-                        $('tagfusion').value, <?php echo $route_tag_fusion_tags;?>,'<?php
+                        $('tagfusion').value, <?php functions::xecho($route_tag_fusion_tags);?>,'<?php
                         echo _TAGFUSION_GOODRESULT;?>' , '<?php
                         echo $_SESSION['config']['businessappurl'] . 'index.php?display=true'
                         . '&amp;module=tags&amp;page=manage_tag_list_controller&amp;mode=list'
