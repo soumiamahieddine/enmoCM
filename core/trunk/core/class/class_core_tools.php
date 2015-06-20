@@ -1433,7 +1433,7 @@ class core_tools extends functions
                                 $tmp  = constant($tmp);
                             }
                             ?>
-                            <input type="button" name="<?php echo $appServices[$i]['id'];?>" value="<?php echo $tmp;?>" onclick="window.open('<?php echo  $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$appServices[$i]['servicepage']; ?>', '<?php echo $appServices[$i]['id'];?>','width=<?php echo $appServices[$i]['whereamiused'][$k]['width'];?>,height=<?php echo $appServices[$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
+                            <input type="button" name="<?php echo $appServices[$i]['id'];?>" value="<?php echo $tmp;?>" onclick="window.open('<?php echo  $_SESSION['config']['businessappurl'].'index.php?display=true&page='.$appServices[$i]['servicepage'];?>', '<?php echo $appServices[$i]['id'];?>','width=<?php echo $appServices[$i]['whereamiused'][$k]['width'];?>,height=<?php echo $appServices[$i]['whereamiused'][$k]['height'];?>,scrollbars=yes,resizable=yes' );" class="button" /><br/>
                             <?php
                         } else if ($appServices[$i]['whereamiused'][$k]['nature'] == "include"
                             && isset($_SESSION['user']['services'][$appServices[$i]['id']])
@@ -1488,7 +1488,7 @@ class core_tools extends functions
         /*<?xml version="1.0" encoding="UTF-8"?>*/
         ?>
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $_SESSION['config']['lang']; ?>" lang="<?php echo $_SESSION['config']['lang']; ?>">
+        <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $_SESSION['config']['lang'];?>" lang="<?php echo $_SESSION['config']['lang'];?>">
         <?php
     }
 
@@ -1535,14 +1535,14 @@ class core_tools extends functions
     {
         ?>
         <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
-            . 'css/font-awesome/css/font-awesome.css'; ?>" media="screen" />
+            . 'css/font-awesome/css/font-awesome.css';?>" media="screen" />
         <link rel="stylesheet" href="<?php echo $_SESSION['config']['businessappurl'] 
-            . 'css/font-awesome/css/font-maarch.css'; ?>" media="screen" />
-        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php'; ?>" media="screen" />
-        <!--[if lt  IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie'; ?>" media="screen" />  <![endif]-->
-        <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie7'; ?>" media="screen" />  <![endif]-->
-        <!--[if IE 8.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie8'; ?>" media="screen" />  <![endif]-->
-        <!--[if gte IE 9.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie9'; ?>" media="screen" />  <![endif]-->
+            . 'css/font-awesome/css/font-maarch.css';?>" media="screen" />
+        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php';?>" media="screen" />
+        <!--[if lt  IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie';?>" media="screen" />  <![endif]-->
+        <!--[if gte IE 7.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie7';?>" media="screen" />  <![endif]-->
+        <!--[if IE 8.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie8';?>" media="screen" />  <![endif]-->
+        <!--[if gte IE 9.0]>  <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'merged_css.php?ie9';?>" media="screen" />  <![endif]-->
         <?php
     }
 
@@ -2280,10 +2280,10 @@ class core_tools extends functions
     {
         ?>
         <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
-        <!--<link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/style.css'; ?>" media="screen" />-->
-        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/iui-panel-list.css'; ?>" media="screen" />
-        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/iui.css'; ?>" media="screen" />
-        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/t/maarch/maarch-theme.css'; ?>" media="screen" />
+        <!--<link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/style.css';?>" media="screen" />-->
+        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/css/iui-panel-list.css';?>" media="screen" />
+        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/iui.css';?>" media="screen" />
+        <link rel="stylesheet" type="text/css" href="<?php echo $_SESSION['config']['businessappurl'].'smartphone/js/iui/t/maarch/maarch-theme.css';?>" media="screen" />
         <?php
     }
 }

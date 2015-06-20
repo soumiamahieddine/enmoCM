@@ -40,7 +40,7 @@
             }
 
             if (oneIsEmpty) {
-                $('#ajaxReturn_createDocservers_ko').html('<?php echo _MUST_CHOOSE_DOCSERVERS_ROOT; ?>');
+                $('#ajaxReturn_createDocservers_ko').html('<?php echo _MUST_CHOOSE_DOCSERVERS_ROOT;?>');
                 $('#ajaxReturn_createDocservers_button').css('display', 'block');
                 return;
             }
@@ -59,19 +59,19 @@
 <div class="blockWrapper">
     <div class="titleBlock">
         <h2 onClick="slide('docservers');" style="cursor: pointer;">
-            <?php echo _DOCSERVERS; ?>
+            <?php echo _DOCSERVERS;?>
         </h2>
     </div>
     <div class="contentBlock" id="docservers">
         <p>
             <h6>
-                <?php echo _DOCSERVERS_EXP; ?>
+                <?php echo _DOCSERVERS_EXP;?>
             </h6>
             <form>
                 <table>
                     <tr>
                         <td>
-                            <?php echo _DOCSERVER_ROOT; ?>
+                            <?php echo _DOCSERVER_ROOT;?>
                         </td>
                         <td>
                             :
@@ -89,7 +89,7 @@
                         <td></td>
                         <td></td>
                         <td>
-                            <input type="button" id="ajaxReturn_createDocservers_button" onClick="$(this).css('display', 'none');createDocservers($('#docserverRoot').val());"; value="<?php echo _CREATE_DOCSERVERS; ?>"/>
+                            <input type="button" id="ajaxReturn_createDocservers_button" onClick="$(this).css('display', 'none');createDocservers($('#docserverRoot').val());"; value="<?php echo _CREATE_DOCSERVERS;?>"/>
                         </td>
                     </tr>
                 </table>
@@ -106,12 +106,12 @@
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=database');" style="display:none;">
-                        <?php echo _PREVIOUS; ?>
+                        <?php echo _PREVIOUS;?>
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="next">
                     <a href="#" onClick="goTo('index.php?step=smtp');" id="ajaxReturn_createDocservers" style=" display: none;">
-                        <?php echo _NEXT; ?>
+                        <?php echo _NEXT;?>
                     </a>
                 </div>
             </div>

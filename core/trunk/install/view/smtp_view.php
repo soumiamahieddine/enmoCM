@@ -59,7 +59,7 @@
             }
 
             if (oneIsEmpty) {
-                $('#ajaxReturn_testConnect_ko').html('<?php echo _ONE_FIELD_EMPTY; ?>');
+                $('#ajaxReturn_testConnect_ko').html('<?php echo _ONE_FIELD_EMPTY;?>');
                 return;
              }
              $('.wait').css('display','block');
@@ -88,19 +88,19 @@
 <div class="blockWrapper">
     <div class="titleBlock">
         <h2 onClick="slide('configNotificationSendmail');" style="cursor: pointer;">
-            <?php echo _SMTP_INFO; ?>
+            <?php echo _SMTP_INFO;?>
         </h2>
     </div>
     <div class="contentBlock" id="docservers">
         <p>
             <h6>
-                <?php echo _SMTP_EXP; ?>
+                <?php echo _SMTP_EXP;?>
             </h6>
             <form>
                 <table>
                     <tr>
                         <td>
-                            <?php echo _SMTP_HOST; ?>
+                            <?php echo _SMTP_HOST;?>
                         </td>
                         <td>
                             :
@@ -110,32 +110,32 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><?php echo _SMTP_TYPE; ?></td>
+                        <td><?php echo _SMTP_TYPE;?></td>
                         <td>:</td>
                         <td><input type="text" name="smtpType" id="smtpType" value="smtp"/></td>
                     </tr>
                     <tr>
-                        <td><?php echo _SMTP_PORT; ?></td>
+                        <td><?php echo _SMTP_PORT;?></td>
                         <td>:</td>
                         <td><input type="text" name="smtpPort" id="smtpPort" value="25"/></td>
                     </tr>
                     <tr>
-                        <td><?php echo _SMTP_USER; ?></td>
+                        <td><?php echo _SMTP_USER;?></td>
                         <td>:</td>
                         <td><input type="text" name="smtpUser" id="smtpUser" value="notif@yourdomain.com"/></td>
                     </tr>
                     <tr>
-                        <td><?php echo _SMTP_PASSWORD; ?></td>
+                        <td><?php echo _SMTP_PASSWORD;?></td>
                         <td>:</td>
                         <td><input type="text" name="smtpPassword" id="smtpPassword" value="password"/></td>
                     </tr>
                     <!--tr>
-                        <td><?php echo _SMTP_AUTH; ?></td>
+                        <td><?php echo _SMTP_AUTH;?></td>
                         <td>:</td>
                         <td><input type="text" name="smtpAuth" id="smtpAuth" value="true or false"/></td>
                     </tr-->
                     <tr>
-                        <td><?php echo _SMTP_AUTH; ?></td>
+                        <td><?php echo _SMTP_AUTH;?></td>
                         <td>:</td>
                         <td>
                             <SELECT name="smtpAuth" id="smtpAuth">
@@ -145,22 +145,22 @@
                         </td>
                     </tr>
                     <!--tr>
-                        <td><?php echo _SMTP_CHARSET; ?></td>
+                        <td><?php echo _SMTP_CHARSET;?></td>
                         <td>:</td>
                         <td><input type="text" name="smtpCharset" id="smtpCharset" value="utf-8"/></td>
                     </tr-->
                     <!--tr>
-                        <td><?php echo _SMTP_SECURE; ?></td>
+                        <td><?php echo _SMTP_SECURE;?></td>
                         <td>:</td>
                         <td><input type="text" name="smtpSecure" id="smtpSecure" value="tls or ssl"/></td>
                     </tr-->
                     <!--tr>
-                        <td><?php echo _SMTP_MAILFROM; ?></td>
+                        <td><?php echo _SMTP_MAILFROM;?></td>
                         <td>:</td>
                         <td><input type="text" name="smtpMailFrom" id="smtpMailFrom" value="notifications@maarch.fr"/></td>
                     </tr-->
                     <tr>
-                        <td><?php echo _SMTP_MAILTO; ?></td>
+                        <td><?php echo _SMTP_MAILTO;?></td>
                         <td>:</td>
                         <td><input type="text" name="smtpMailTo" id="smtpMailTo" value="votreAdresse@domain.com"/></td>
                     </tr>
@@ -175,7 +175,7 @@
                                                                                                                 $('#smtpUser').val(),
                                                                                                                 $('#smtpPassword').val(),
                                                                                                                 $('#smtpAuth').val(),
-                                                                                                                $('#smtpMailTo').val())"; value="<?php echo _VERIF_SMTP; ?>"/>
+                                                                                                                $('#smtpMailTo').val())"; value="<?php echo _VERIF_SMTP;?>"/>
                         </td>
                     </tr>
                 </table>
@@ -192,12 +192,12 @@
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=docservers');" style="display:none;">
-                        <?php echo _PREVIOUS; ?>
+                        <?php echo _PREVIOUS;?>
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="next">
                     <a href="#" onClick="goTo('index.php?step=password');" id="ajaxReturn_testConnect" style=" display: none;">
-                        <?php echo _NEXT; ?>
+                        <?php echo _NEXT;?>
                     </a>
                 </div>
             </div>

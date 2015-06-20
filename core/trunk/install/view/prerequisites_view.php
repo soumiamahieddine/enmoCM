@@ -31,24 +31,24 @@
 <div class="blockWrapper">
     <div class="titleBlock">
         <h2 onClick="slide('prerequisites');" style="cursor: pointer;">
-            <?php echo _PREREQUISITES; ?>
+            <?php echo _PREREQUISITES;?>
         </h2>
     </div>
     <div class="contentBlock" id="prerequisites">
         <p>
             <h6>
-                <div id="titleLink"><?php echo _PREREQUISITES_EXP; ?></div>
+                <div id="titleLink"><?php echo _PREREQUISITES_EXP;?></div>
                 <br/>
-                <img src="img/green_light.png" width="10px"/><?php echo _ACTIVATED; ?>
-                <img src="img/orange_light.png"  width="10px"/><?php echo _OPTIONNAL; ?>
-                <img src="img/red_light.png"  width="10px"/><?php echo _NOT_ACTIVATED; ?>
+                <img src="img/green_light.png" width="10px"/><?php echo _ACTIVATED;?>
+                <img src="img/orange_light.png"  width="10px"/><?php echo _OPTIONNAL;?>
+                <img src="img/red_light.png"  width="10px"/><?php echo _NOT_ACTIVATED;?>
 
             </h6>
             <table>
                 <tr>
                     <td colspan="2">
                         <h2>
-                           <?php echo _GENERAL; ?>
+                           <?php echo _GENERAL;?>
                         </h2>
                     </td>
                 </tr>
@@ -56,20 +56,20 @@
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isPhpVersion()
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _PHP_VERSION . ' -> ' . PHP_VERSION; ?>
+                        <?php echo _PHP_VERSION . ' -> ' . PHP_VERSION;?>
                     </td>
                 </tr>
                 <tr>
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isMaarchPathWritable()
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _MAARCH_PATH_RIGHTS; ?>
+                        <?php echo _MAARCH_PATH_RIGHTS;?>
                     </td>
                 </tr>
                 <tr>
@@ -93,10 +93,10 @@
                             $Class_Install->isPhpRequirements(
                                 'pgsql'
                             )
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _PGSQL; ?>
+                        <?php echo _PGSQL;?>
                     </td>
                 </tr>
                 <tr>
@@ -105,10 +105,10 @@
                             $Class_Install->isPhpRequirements(
                                 'gd'
                             )
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _GD; ?>
+                        <?php echo _GD;?>
                     </td>
                 </tr>
                 <tr>
@@ -118,10 +118,10 @@
                                 'svn'
                             ),
                             true
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _SVN; ?>
+                        <?php echo _SVN;?>
                     </td>
                 </tr>
                 <tr>
@@ -131,10 +131,10 @@
                                 'imap'
                             ),
                             true
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _IMAP; ?>
+                        <?php echo _IMAP;?>
                     </td>
                 </tr>
                 <tr>
@@ -143,10 +143,10 @@
                             $Class_Install->isPhpRequirements(
                                 'mbstring'
                             )
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _MBSTRING; ?>
+                        <?php echo _MBSTRING;?>
                     </td>
                 </tr>
                 <tr>
@@ -155,10 +155,10 @@
                             $Class_Install->isPhpRequirements(
                                 'xsl'
                             )
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _XSL; ?>
+                        <?php echo _XSL;?>
                     </td>
                 </tr>
                 <tr>
@@ -167,10 +167,10 @@
                             $Class_Install->isPhpRequirements(
                                 'gettext'
                             ), true
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _GETTEXT; ?>
+                        <?php echo _GETTEXT;?>
                     </td>
                 </tr>
                 <tr>
@@ -179,10 +179,10 @@
                             $Class_Install->isPhpRequirements(
                                 'xmlrpc'
                             ), true
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _XMLRPC; ?>
+                        <?php echo _XMLRPC;?>
                     </td>
                 </tr>
                 <!--<tr>
@@ -191,10 +191,10 @@
                             $Class_Install->isPhpRequirements(
                                 'imagick'
                             ), false
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _IMAGICK; ?>
+                        <?php echo _IMAGICK;?>
                     </td>
                 </tr>-->
                 
@@ -205,10 +205,10 @@
                                 $Class_Install->isPhpRequirements(
                                     'fileinfo'
                                 )
-                            ); ?>
+                            );?>
                         </td>
                         <td>
-                            <?php echo _FILEINFO; ?>
+                            <?php echo _FILEINFO;?>
                         </td>
                     </tr>
                 <?php } ?>
@@ -232,10 +232,10 @@
                             $Class_Install->isPearRequirements(
                                 'System.php'
                             )
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _PEAR; ?>
+                        <?php echo _PEAR;?>
                     </td>
                 </tr>
                 <tr>
@@ -244,10 +244,10 @@
                             $Class_Install->isPearRequirements(
                                 'MIME/Type.php'
                             )
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _MIMETYPE; ?>
+                        <?php echo _MIMETYPE;?>
                     </td>
                 </tr>
                 <tr>
@@ -257,10 +257,10 @@
                                 'Maarch_CLITools/FileHandler.php'
                             ),
                             true
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _CLITOOLS; ?>
+                        <?php echo _CLITOOLS;?>
                     </td>
                 </tr>
                 <tr>
@@ -270,10 +270,10 @@
                                 'SOAP/Disco.php'
                             ),
                             true
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo 'SOAP'; ?>
+                        <?php echo 'SOAP';?>
                     </td>
                 </tr>
                 <tr>
@@ -295,40 +295,40 @@
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isIniErrorRepportingRequirements()
-                            , true); ?>
+                            , true);?>
                     </td>
                     <td>
-                        <?php echo _ERROR_REPORTING; ?>
+                        <?php echo _ERROR_REPORTING;?>
                     </td>
                 </tr>
                 <tr>
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isIniDisplayErrorRequirements()
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _DISPLAY_ERRORS; ?>
+                        <?php echo _DISPLAY_ERRORS;?>
                     </td>
                 </tr>
                 <tr>
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isIniShortOpenTagRequirements()
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _SHORT_OPEN_TAGS; ?>
+                        <?php echo _SHORT_OPEN_TAGS;?>
                     </td>
                 </tr>
                 <tr>
                     <td class="voyantPrerequisites">
                         <?php echo $Class_Install->checkPrerequisites(
                             $Class_Install->isIniMagicQuotesGpcRequirements()
-                        ); ?>
+                        );?>
                     </td>
                     <td>
-                        <?php echo _MAGIC_QUOTES_GPC; ?>
+                        <?php echo _MAGIC_QUOTES_GPC;?>
                     </td>
                 </tr>
             </table>
@@ -342,7 +342,7 @@
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=licence');">
-                        <?php echo _PREVIOUS; ?>
+                        <?php echo _PREVIOUS;?>
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="next">

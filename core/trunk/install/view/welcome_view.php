@@ -31,12 +31,12 @@
 <div class="blockWrapper">
     <div class="titleBlock">
         <h2 onClick="slide('welcome');" style="cursor: pointer;">
-            <?php echo _WELCOME; ?>
+            <?php echo _WELCOME;?>
         </h2>
     </div>
     <div class="contentBlock" id="welcome">
         <p>
-            <?php echo _DESC; ?>
+            <?php echo _DESC;?>
         </p>
     </div>
 </div>
@@ -47,12 +47,12 @@
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=language');">
-                        <?php echo _PREVIOUS; ?>
+                        <?php echo _PREVIOUS;?>
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="next">
                     <a href="#" onClick="goTo('index.php?step=licence');">
-                        <?php echo _NEXT; ?>
+                        <?php echo _NEXT;?>
                     </a>
                 </div>
             </div>

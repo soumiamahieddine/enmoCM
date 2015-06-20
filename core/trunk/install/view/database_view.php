@@ -60,7 +60,7 @@
             }
 
             if (oneIsEmpty) {
-                $('#ajaxReturn_testConnect_ko').html('<?php echo _ONE_FIELD_EMPTY; ?>');
+                $('#ajaxReturn_testConnect_ko').html('<?php echo _ONE_FIELD_EMPTY;?>');
                 return;
             }
             $('.wait').css('display','block');
@@ -96,7 +96,7 @@
             }
 
             if (oneIsEmpty) {
-                $('#ajaxReturn_createDB_ko').html('<?php echo _CHOOSE_A_NAME_FOR_DB; ?>');
+                $('#ajaxReturn_createDB_ko').html('<?php echo _CHOOSE_A_NAME_FOR_DB;?>');
                 $('.wait').css('display','none');
                 return;
             }
@@ -141,7 +141,7 @@
             }
 
             if (oneIsEmpty) {
-                $('#ajaxReturn_loadDatas_ko').html('<?php echo _CHOOSE_DATASET_TO_IMPORT; ?>');
+                $('#ajaxReturn_loadDatas_ko').html('<?php echo _CHOOSE_DATASET_TO_IMPORT;?>');
                 return;
             }
             $('.wait').css('display','block');
@@ -161,19 +161,19 @@
     <div class="blockWrapper">
         <div class="titleBlock">
             <h2 onClick="slide('database');" style="cursor: pointer;">
-                <?php echo _DATABASE_INFOS; ?>
+                <?php echo _DATABASE_INFOS;?>
             </h2>
         </div>
         <div class="contentBlock" id="database">
             <p>
                 <h6>
-                    <?php echo _DATABASE_EXP; ?>
+                    <?php echo _DATABASE_EXP;?>
                 </h6>
                 <form>
                     <table>
                         <tr>
                             <td>
-                                <?php echo _DATABASESERVER; ?>
+                                <?php echo _DATABASESERVER;?>
                             </td>
                             <td>
                                 :
@@ -184,7 +184,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <?php echo _DATABASESERVERPORT; ?>
+                                <?php echo _DATABASESERVERPORT;?>
                             </td>
                             <td>
                                 :
@@ -195,7 +195,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <?php echo _DATABASEUSER; ?>
+                                <?php echo _DATABASEUSER;?>
                             </td>
                             <td>
                                 :
@@ -206,7 +206,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <?php echo _DATABASEPASSWORD; ?>
+                                <?php echo _DATABASEPASSWORD;?>
                             </td>
                             <td>
                                 :
@@ -217,7 +217,7 @@
                         </tr>
                         <tr style="display: none;">
                             <td>
-                                <?php echo _DATABASETYPE; ?>
+                                <?php echo _DATABASETYPE;?>
                             </td>
                             <td>
                                 :
@@ -237,7 +237,7 @@
                             <td>
                                 <input
                                   type="button"
-                                  name="Submit"  value="<?php echo _SUBMIT; ?>"
+                                  name="Submit"  value="<?php echo _SUBMIT;?>"
                                   onClick="
                                     checkDatabaseInfo(
                                       $('#databaseserver').val(),
@@ -266,20 +266,20 @@
     <div class="blockWrapper" id="ajaxReturn_testConnect" style="display: none;">
         <div class="titleBlock">
             <h2 onClick="slide('createdatabase');" style="cursor: pointer;">
-                <?php echo _DATABASE_CREATE; ?>
+                <?php echo _DATABASE_CREATE;?>
             </h2>
         </div>
         <div class="contentBlock" id="createdatabase">
             <p>
                 <h6>
-                    <?php echo _DATABASE_ADD_INF; ?>
+                    <?php echo _DATABASE_ADD_INF;?>
                 </h6>
                 <div id="ajaxReturn_testConnect_ok"></div>
                 <form>
                     <table>
                         <tr>
                             <td>
-                                <?php echo _DATABASENAME; ?>
+                                <?php echo _DATABASENAME;?>
                             </td>
                             <td>
                                 :
@@ -315,27 +315,27 @@
     <div class="blockWrapper" id="ajaxReturn_createDB" style="display: none;">
         <div class="titleBlock">
             <h2 onClick="slide('database');" style="cursor: pointer;">
-                <?php echo _DATASET_CHOICE; ?>
+                <?php echo _DATASET_CHOICE;?>
             </h2>
         </div>
         <div class="contentBlock">
             <p>
                 <h6>
-                    <?php echo _DATASET_EXP; ?>
+                    <?php echo _DATASET_EXP;?>
                 </h6>
                 <div id="ajaxReturn_createDB_ok"></div>
                 <form>
                     <table>
                         <tr>
                             <td>
-                                <?php echo _DATASET; ?>
+                                <?php echo _DATASET;?>
                             </td>
                             <td>
                                 :
                             </td>
                             <td>
                                 <select onChange="checkDataDB($(this).val());" id="dataFilename">
-                                    <option value="default"><?php echo _CHOOSE; ?></option>
+                                    <option value="default"><?php echo _CHOOSE;?></option>
                                     <?php
                                         for($i=0; $i<count($listSql);$i++) {
                                             echo '<option ';
@@ -386,12 +386,12 @@
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=prerequisites');" style="display: none;">
-                        <?php echo _PREVIOUS; ?>
+                        <?php echo _PREVIOUS;?>
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="next">
                     <a href="#" onClick="goTo('index.php?step=docservers');" id="ajaxReturn_loadDatas" style=" display: none;">
-                        <?php echo _NEXT; ?>
+                        <?php echo _NEXT;?>
                     </a>
                 </div>
             </div>

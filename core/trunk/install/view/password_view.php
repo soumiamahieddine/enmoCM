@@ -45,7 +45,7 @@
 
             if (oneIsEmpty) {
                 $('#okAdminPass').css('display','none');
-                $('#koAdminPass').html('<?php echo _FILL_ALL_PASSWORD_FIELDS; ?>');
+                $('#koAdminPass').html('<?php echo _FILL_ALL_PASSWORD_FIELDS;?>');
                 return;
             }
 
@@ -53,7 +53,7 @@
 
             if (newSuperadminPass != newSuperadminPassTwo) {
                 $('#okAdminPass').css('display','none');
-                $('#koAdminPass').html('<?php echo _PASSWORDS_ARE_DIFFERENTS; ?>');
+                $('#koAdminPass').html('<?php echo _PASSWORDS_ARE_DIFFERENTS;?>');
                 return;
             }
 
@@ -66,19 +66,19 @@
 <div class="blockWrapper">
     <div class="titleBlock">
         <h2 onClick="slide('password');" style="cursor: pointer;">
-            <?php echo _PASSWORD; ?>
+            <?php echo _PASSWORD;?>
         </h2>
     </div>
     <div class="contentBlock" id="password">
         <p>
             <h6>
-                <?php echo _PASSWORD_EXP; ?>
+                <?php echo _PASSWORD_EXP;?>
             </h6>
             <form action="scripts/password.php" method="post">
                 <table>
                     <tr>
                         <td>
-                            <?php echo _NEW_ADMIN_PASS; ?>
+                            <?php echo _NEW_ADMIN_PASS;?>
                         </td>
                         <td>
                             :
@@ -89,7 +89,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <?php echo _NEW_ADMIN_PASS_AGAIN; ?>
+                            <?php echo _NEW_ADMIN_PASS_AGAIN;?>
                         </td>
                         <td>
                             :
@@ -116,12 +116,12 @@
             <div id="buttons">
                 <div style="float: left;" class="previousButton" id="previous">
                     <a href="#" onClick="goTo('index.php?step=docservers');" style="display:none;">
-                        <?php echo _PREVIOUS; ?>
+                        <?php echo _PREVIOUS;?>
                     </a>
                 </div>
                 <div style="float: right;" class="nextButton" id="next">
                     <a href="#" onClick="$('form').submit();" id="okAdminPass" style="display: none;">
-                        <?php echo _NEXT; ?>
+                        <?php echo _NEXT;?>
                     </a>
                 </div>
             </div>

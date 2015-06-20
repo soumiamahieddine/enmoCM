@@ -31,7 +31,7 @@
 <div class="blockWrapper">
     <div class="titleBlock">
         <h2 onClick="slide('chooseLanguage');" style="cursor: pointer;">
-            <?php echo _CHOOSE_LANGUAGE; ?>
+            <?php echo _CHOOSE_LANGUAGE;?>
         </h2>
     </div>
     <div class="contentBlock" id="chooseLanguage">
@@ -63,7 +63,7 @@
                 <div style="float: right;" class="nextButton" id="next">
                     <span id="returnCheckLanguage" style="display: none;">
                         <a href="#" onClick="$('form').submit();">
-                            <?php echo _NEXT; ?>
+                            <?php echo _NEXT;?>
                         </a>
                     </span>
                 </div>
