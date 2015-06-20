@@ -109,8 +109,8 @@ class entity extends dbquery
                         ?>
                         <p style="text-align:right;">
                             <label><?php echo _ID;?> : </label>
-                            <input name="entityId" id="entityId" type="text" value="<?php echo $_SESSION['m_admin']['entity']['entityId'];?>" readonly="readonly" class="readonly" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
-                            <input type="hidden"  name="id" value="<?php echo $id;?>" />
+                            <input name="entityId" id="entityId" type="text" value="<?php functions::xecho($_SESSION['m_admin']['entity']['entityId']);?>" readonly="readonly" class="readonly" /><span class="red_asterisk"><i class="fa fa-star"></i></span>
+                            <input type="hidden"  name="id" value="<?php functions::xecho($id);?>" />
                             <input type="hidden"  name="mode" value="<?php echo $mode;?>" />
                         </p>
                         <?php
@@ -188,7 +188,7 @@ class entity extends dbquery
                                 for ($i = 0; $i < count($typelist); $i++)
                                 {
                             ?>
-                                    <option value="<?php echo $typelist[$i]['id'];?>" <?php  if (isset($_SESSION['m_admin']['entity']['type']) &&$_SESSION['m_admin']['entity']['type'] == $typelist[$i]['id']){ echo 'selected="selected"'; } ?> ><?php echo $typelist[$i]['label'];?></option>
+                                    <option value="<?php functions::xecho($typelist[$i]['id']);?>" <?php  if (isset($_SESSION['m_admin']['entity']['type']) &&$_SESSION['m_admin']['entity']['type'] == $typelist[$i]['id']){ echo 'selected="selected"'; } ?> ><?php functions::xecho($typelist[$i]['label']);?></option>
                             <?php
                                 }
                             ?>
@@ -228,10 +228,10 @@ class entity extends dbquery
                                     if ($entities[$i]['ID'] <> $_SESSION['m_admin']['entity']['entityId']) {
                                         if (isset($_SESSION['m_admin']['entity']['parent']) && $entities[$i]['ID'] == $_SESSION['m_admin']['entity']['parent']) {
                                             echo 'style="font-size:14px;font-weight:bold;"'; 
-                                        } ?> value="<?php echo $entities[$i]['ID'];?>" <?php 
+                                        } ?> value="<?php functions::xecho($entities[$i]['ID']);?>" <?php 
                                         if (isset($_SESSION['m_admin']['entity']['parent']) && $entities[$i]['ID'] == $_SESSION['m_admin']['entity']['parent']) {
                                             echo 'selected="selected"';
-                                        } ?> ><?php echo $entities[$i]['LABEL'];?></option><?php
+                                        } ?> ><?php functions::xecho($entities[$i]['LABEL']);?></option><?php
                                     }
                             }
                             ?>
@@ -1451,7 +1451,7 @@ class entity extends dbquery
             </div>
             <br>
             <form name="entity_del" id="entity_del" method="post" class="forms">
-                <input type="hidden" value="<?php echo $s_id;?>" name="id">
+                <input type="hidden" value="<?php functions::xecho($s_id);?>" name="id">
                 <h2 class="tit"><?php echo _ENTITY_DELETION." : <i>".$label."</i>";?></h2>
                 <?php
                 if($element_found)
@@ -1484,7 +1484,7 @@ class entity extends dbquery
                         for($i=0; $i < count($entities); $i++)
                         {
                             ?>
-                            <option value="<?php echo $entities[$i]['ID'];?>"><?php echo $entities[$i]['LABEL'];?></option>
+                            <option value="<?php functions::xecho($entities[$i]['ID']);?>"><?php functions::xecho($entities[$i]['LABEL']);?></option>
                             <?php
                         }
                         ?>

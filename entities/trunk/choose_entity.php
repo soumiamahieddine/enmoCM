@@ -59,7 +59,7 @@ else
 			for($i=0; $i<count($entities);$i++)
 			{
 				?>
-				<option value="<?php echo $entities[$i]['ID'];?>" <?php  if($entities[$i]['ID']== $_SESSION['m_admin']['entity']['entityId']){ echo 'selected="selected"'; }?> ><?php echo $entities[$i]['LABEL'];?></option><?php
+				<option value="<?php functions::xecho($entities[$i]['ID']);?>" <?php  if($entities[$i]['ID']== $_SESSION['m_admin']['entity']['entityId']){ echo 'selected="selected"'; }?> ><?php functions::xecho($entities[$i]['LABEL']);?></option><?php
 			}
 			?>
 		</select><span class="red_asterisk"><i class="fa fa-star"></i></span>

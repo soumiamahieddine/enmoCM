@@ -8,10 +8,10 @@ if($_SESSION['service_tag'] == 'group_basket')
         <p>
             <label><?php echo _TO_ENTITIES;?> :</label>
         </p>
-        <table align="center" width="100%" id="redirect_entity_baskets_<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>" >
+        <table align="center" width="100%" id="redirect_entity_baskets_<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>" >
             <tr>
                 <td width="40%" align="center">
-                    <select name="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entitieslist[]" id="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entitieslist" size="6" ondblclick='moveclick(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entitieslist"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen"));' multiple="multiple"  class="entities_list" style="width:100%;">
+                    <select name="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entitieslist[]" id="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entitieslist" size="6" ondblclick='moveclick(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entitieslist"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen"));' multiple="multiple"  class="entities_list" style="width:100%;">
                         <?php
                         for($i=0;$i<count($_SESSION['m_admin']['entities']);$i++)
                         {
@@ -48,23 +48,23 @@ if($_SESSION['service_tag'] == 'group_basket')
                             if($state_entity == false)
                             {
                                 ?>
-                                <option title = "<?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?>" alt = "<?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?>" value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID'];?>"><?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?></option>
+                                <option title = "<?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?>" alt = "<?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?>" value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID'];?>"><?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?></option>
                                 <?php
                             }
                         }
                         ?>
                     </select>
                     <br/>
-                    <em><a href='javascript:selectall(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entitieslist"));' ><?php echo _SELECT_ALL;?></a></em>
+                    <em><a href='javascript:selectall(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entitieslist"));' ><?php echo _SELECT_ALL;?></a></em>
                 </td>
                 <td width="20%" align="center">
-                    <input type="button" class="button" value="<?php echo _ADD;?> &gt;&gt;" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entitieslist"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen"));' />
+                    <input type="button" class="button" value="<?php echo _ADD;?> &gt;&gt;" onclick='Move(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entitieslist"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen"));' />
                     <br />
                     <br />
-                    <input type="button" class="button" value="&lt;&lt; <?php echo _REMOVE;?>" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entitieslist"));' />
+                    <input type="button" class="button" value="&lt;&lt; <?php echo _REMOVE;?>" onclick='Move(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entitieslist"));' />
                 </td>
                 <td width="40%" align="center">
-                    <select name="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen[]" id="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen" size="6" ondblclick='moveclick(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entitieslist"));' multiple="multiple"   class="entities_list" style="width:100%;">
+                    <select name="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen[]" id="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen" size="6" ondblclick='moveclick(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entitieslist"));' multiple="multiple"   class="entities_list" style="width:100%;">
                         <?php
                         for($i=0;$i<count($_SESSION['m_admin']['entities']);$i++)
                         {
@@ -101,14 +101,14 @@ if($_SESSION['service_tag'] == 'group_basket')
                             if($state_entity == true)
                             {
                             ?>
-                                <option title = "<?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?>" alt = "<?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?>" value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID'];?>" selected="selected" ><?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?></option>
+                                <option title = "<?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?>" alt = "<?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?>" value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID'];?>" selected="selected" ><?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?></option>
                                 <?php
                             }
                         }
                         ?>
                     </select>
                     <br/>
-                    <em><a href="javascript:selectall(document.getElementById('<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_entities_chosen'));" >
+                    <em><a href="javascript:selectall(document.getElementById('<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_entities_chosen'));" >
                     <?php echo _SELECT_ALL;?></a></em>
                 </td>
             </tr>
@@ -120,7 +120,7 @@ if($_SESSION['service_tag'] == 'group_basket')
         <table align="center" width="100%" >
             <tr>
                 <td width="40%" align="center">
-                    <select name="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_usersentitieslist[]" id="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_usersentitieslist" size="6" ondblclick='moveclick(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_usersentitieslist"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_usersentities_chosen"));' multiple="multiple"  class="entities_list" style="width:100%;">
+                    <select name="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_usersentitieslist[]" id="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_usersentitieslist" size="6" ondblclick='moveclick(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_usersentitieslist"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_usersentities_chosen"));' multiple="multiple"  class="entities_list" style="width:100%;">
                         <?php
                         for($i=0;$i<count($_SESSION['m_admin']['entities']);$i++)
                         {
@@ -157,22 +157,22 @@ if($_SESSION['service_tag'] == 'group_basket')
                             if($state_usersentities == false)
                             {
                                 ?>
-                                <option title = "<?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?>" alt = "<?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?>" value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID'];?>"><?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?></option>
+                                <option title = "<?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?>" alt = "<?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?>" value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID'];?>"><?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?></option>
                                 <?php
                             }
                         }
                         ?>
                     </select><br/>
-                    <em><a href='javascript:selectall(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_usersentitieslist"));' ><?php echo _SELECT_ALL;?></a></em>
+                    <em><a href='javascript:selectall(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_usersentitieslist"));' ><?php echo _SELECT_ALL;?></a></em>
                 </td>
                 <td width="20%" align="center">
-                    <input class="button" type="button" value="<?php echo _ADD;?> &gt;&gt;" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_usersentitieslist"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_usersentities_chosen"));' />
+                    <input class="button" type="button" value="<?php echo _ADD;?> &gt;&gt;" onclick='Move(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_usersentitieslist"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_usersentities_chosen"));' />
                     <br />
                     <br />
-                    <input class="button" type="button" value="&lt;&lt; <?php echo _REMOVE;?>" onclick='Move(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_usersentities_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_usersentitieslist"));' />
+                    <input class="button" type="button" value="&lt;&lt; <?php echo _REMOVE;?>" onclick='Move(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_usersentities_chosen"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_usersentitieslist"));' />
                 </td>
                 <td width="40%" align="center">
-                    <select name="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_usersentities_chosen[]" id="<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_usersentities_chosen" size="6" ondblclick='moveclick(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_usersentities_chosen"),document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_usersentitieslist"));' multiple="multiple"  class="entities_list" style="width:100%;">
+                    <select name="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_usersentities_chosen[]" id="<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_usersentities_chosen" size="6" ondblclick='moveclick(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_usersentities_chosen"),document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_usersentitieslist"));' multiple="multiple"  class="entities_list" style="width:100%;">
                         <?php
                         for($i=0;$i<count($_SESSION['m_admin']['entities']);$i++)
                         {
@@ -209,14 +209,14 @@ if($_SESSION['service_tag'] == 'group_basket')
                             if($state_usersentities == true)
                             {
                                 ?>
-                                <option title = "<?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?>" alt = "<?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?>" value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID'];?>" selected="selected"><?php echo $_SESSION['m_admin']['entities'][$i]['LABEL'];?></option>
+                                <option title = "<?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?>" alt = "<?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?>" value="<?php echo $_SESSION['m_admin']['entities'][$i]['ID'];?>" selected="selected"><?php functions::xecho($_SESSION['m_admin']['entities'][$i]['LABEL']);?></option>
                                 <?php
                             }
                         }
                         ?>
                     </select>
                     <br/>
-                    <em><a href='javascript:selectall(document.getElementById("<?php echo $_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID'];?>_usersentities_chosen"));'>
+                    <em><a href='javascript:selectall(document.getElementById("<?php functions::xecho($_SESSION['m_admin']['basket']['all_actions'][$_SESSION['m_admin']['compteur']]['ID']);?>_usersentities_chosen"));'>
                     <?php echo _SELECT_ALL;?></a></em>
                 </td>
             </tr>

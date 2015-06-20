@@ -260,7 +260,7 @@ if($mode != 'del') { ?>
     <table style="margin:auto;">
         <tr height="20px;">
             <td>
-                <input type="hidden" id="mode" value="<?php echo $_REQUEST['mode'];?>" />
+                <input type="hidden" id="mode" value="<?php functions::xecho($_REQUEST['mode']);?>" />
             </td>
         </tr>
         <tr>
@@ -271,7 +271,7 @@ if($mode != 'del') { ?>
                 <select id="objectType" onChange="listmodel_setObjectType(); listmodel_setObjectId();" style="width:300px;" <?php if($mode == 'up') echo "disabled='true'";?>>
                     <option value="" ><?php echo _SELECT_OBJECT_TYPE;?></option><?php
                     foreach($difflistTypes as $difflistTypeId => $difflistTypeLabel) { ?>
-                    <option value="<?php echo $difflistTypeId;?>" <?php if($objectType == $difflistTypeId) echo "selected='true'";?> ><?php echo $difflistTypeLabel;?></option><?php
+                    <option value="<?php functions::xecho($difflistTypeId);?>" <?php if($objectType == $difflistTypeId) echo "selected='true'";?> ><?php functions::xecho($difflistTypeLabel);?></option><?php
                     } ?>
                 </select>
             </td>
@@ -283,12 +283,12 @@ if($mode != 'del') { ?>
             <td>
                 <div id="objectId_input" ><?php 
                 if($mode == 'up') { ?>
-                    <input type="text" id="objectId" disabled='true' value="<?php echo $objectId;?>" />
+                    <input type="text" id="objectId" disabled='true' value="<?php functions::xecho($objectId);?>" />
                 <?php 
                 } else { ?>
                     <script type="text/javascript">
                         // OnLoad : set object id and label
-                        listmodel_setObjectId('<?php echo $objectId?>');
+                        listmodel_setObjectId('<?php functions::xecho($objectId)?>');
                     </script><?php
                 } ?>
                 </div>
@@ -299,7 +299,7 @@ if($mode != 'del') { ?>
                 <label for="title" ><?php echo _TITLE;?> : </label>
             </td>
             <td>
-                <textarea id="title" style="width:294px;"><?php echo $title;?></textarea>
+                <textarea id="title" style="width:294px;"><?php functions::xecho($title);?></textarea>
             </td>
         </tr>
         <tr>
@@ -307,7 +307,7 @@ if($mode != 'del') { ?>
                 <label for="description"  ><?php echo _DESCRIPTION;?> : </label>
             </td>
             <td>
-                <textarea id="description" style="width:294px;"><?php echo $description;?></textarea>
+                <textarea id="description" style="width:294px;"><?php functions::xecho($description);?></textarea>
             </td>
         </tr>
         <tr>
@@ -337,7 +337,7 @@ if($_REQUEST['mode'] == 'del') {
     <script type="text/javascript">
         listmodel_del(
             '<?php echo $objectType?>',
-            '<?php echo $objectId?>'
+            '<?php functions::xecho($objectId)?>'
         );
     </script><?php
 }

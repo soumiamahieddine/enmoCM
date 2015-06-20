@@ -647,13 +647,13 @@ $linkwithwhat =
             var user_id = $('user_id_' + id).value;
             var role_select = $('user_role_' + id);
 			var role = role_select.options[role_select.selectedIndex].value;
-            goTo('<?php echo $linkwithwhat;?>&action=add_user&id='+user_id+'&role='+role);        
+            goTo('<?php functions::xecho($linkwithwhat);?>&action=add_user&id='+user_id+'&role='+role);        
         }
         function add_entity(id) {
             var entity_id = $('entity_id_' + id).value;
             var role_select = $('entity_role_' + id);
 			var role = role_select.options[role_select.selectedIndex].value;
-            goTo('<?php echo $linkwithwhat;?>&action=add_entity&id='+entity_id+'&role='+role);        
+            goTo('<?php functions::xecho($linkwithwhat);?>&action=add_entity&id='+entity_id+'&role='+role);        
         }
     </script>
     <br/>
@@ -691,13 +691,13 @@ $linkwithwhat =
 					<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i> <?php
 				} ?>
 				</td>
-				<td><?php echo $_SESSION[$origin]['diff_list']['dest']['lastname'] . " " . $_SESSION[$origin]['diff_list']['dest']['firstname'];?></td>
-				<td><?php echo $_SESSION[$origin]['diff_list']['dest']['entity_label'];?></td>
+				<td><?php functions::xecho($_SESSION[$origin]['diff_list']['dest']['lastname'] ). " " . $_SESSION[$origin]['diff_list']['dest']['firstname'];?></td>
+				<td><?php functions::xecho($_SESSION[$origin]['diff_list']['dest']['entity_label']);?></td>
 				<td class="action_entities"><!-- Remove dest -->
-					<a href="<?php echo $linkwithwhat;?>&action=remove_dest"><!-- i class="fa fa-remove fa-2x"></i --><?php echo _DELETE;?></a>
+					<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_dest"><!-- i class="fa fa-remove fa-2x"></i --><?php echo _DELETE;?></a>
 				</td>
 				<td class="action_entities"><!-- Move dest to copy -->
-					<a href="<?php echo $linkwithwhat;?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down fa-2x"></i><?php echo _TO_CC;?></a>
+					<a href="<?php functions::xecho($linkwithwhat);?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down fa-2x"></i><?php echo _TO_CC;?></a>
 				</td>
 			</tr>
 		</table><?php
@@ -710,7 +710,7 @@ $linkwithwhat =
 			if (count($_SESSION[$origin]['diff_list'][$role_id]['users']) > 0
 			 || count($_SESSION[$origin]['diff_list'][$role_id]['entities']) > 0
 			) { ?>
-				<h3 class="sstit" style="font-size:1.5em; text-align:left; margin-left:230px; margin-bottom: -10px"><?php echo $role_label;?></h3>
+				<h3 class="sstit" style="font-size:1.5em; text-align:left; margin-left:230px; margin-bottom: -10px"><?php functions::xecho($role_label);?></h3>
 				<table cellpadding="0" cellspacing="0" border="0" class="listing liste_diff spec"><?php
 				#**************************************************************************
 				# OTHER ROLE USERS
@@ -724,45 +724,45 @@ $linkwithwhat =
 					
 					if ($color == ' class="col"') $color = '';
 					else $color = ' class="col"';?>
-					<tr <?php echo $color;?> >
+					<tr <?php functions::xecho($color);?> >
 						<td>
 							<i class="fa fa-user fa-2x" title="<?php echo _USER.' '.$role_label;?>"></i> 
 						</td>
 						<td><?php
 						if($user['visible'] == 'Y') { ?>
-							<a href="<?php echo $linkwithwhat;?>&action=make_user_unvisible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_user_unvisible&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>">
 								<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i>
 							</a><?php
 						} else {?>
-							<a href="<?php echo $linkwithwhat;?>&action=make_user_visible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_user_visible&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>">
 								<i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE;?>"></i>
 							</a><?php
 						} ?>
 						</td>
-						<td ><?php echo $user['lastname'] ." ". $user['firstname'];?></td>
-						<td><?php echo $user['entity_label'];?></td>
+						<td ><?php functions::xecho($user['lastname'] ." ". $user['firstname']);?></td>
+						<td><?php functions::xecho($user['entity_label']);?></td>
 						<td class="action_entities"><?php 
 							/*if (!$noDelete && ($role_id != 'dest' && !$onlyCc)) { */
 							if (!$noDelete && !$onlyCc) { ?>
-								<a href="<?php echo $linkwithwhat;?>&action=remove_user&role=<?php echo $role_id ?>&rank=<?php echo $i;?>&id=<?php echo $user['user_id'];?>"><!-- i class="fa fa-remove"></i --><?php echo _DELETE;?></a><?php
+								<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_user&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>&id=<?php functions::xecho($user['user_id']);?>"><!-- i class="fa fa-remove"></i --><?php echo _DELETE;?></a><?php
 							} ?>
 						</td>
 						<td class="action_entities"><!-- Switch copy to dest --><?php
 							//if($role_id == 'dest' && isset($roles['copy']) && ($role_id != 'dest' && $onlyCc)) { 
 							if($role_id == 'dest' && isset($roles['copy']) && !$onlyCc && $_SESSION[$origin]['diff_list']['copy']['users'][0]!='') {?>
-								<a href="<?php echo $linkwithwhat;?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down"></i><?php echo _TO_CC;?></a><?php
+								<a href="<?php functions::xecho($linkwithwhat);?>&action=dest_to_copy&role=copy"><i class="fa fa-arrow-down"></i><?php echo _TO_CC;?></a><?php
 							} elseif($role_id == 'copy' && !$onlyCc &&  isset($roles['dest'])) { ?>
-								<a href="<?php echo $linkwithwhat;?>&action=copy_to_dest&role=copy&rank=<?php echo $i;?>"><i class="fa fa-arrow-up"></i><?php echo _TO_DEST;?></a><?php
+								<a href="<?php functions::xecho($linkwithwhat);?>&action=copy_to_dest&role=copy&rank=<?php functions::xecho($i);?>"><i class="fa fa-arrow-up"></i><?php echo _TO_DEST;?></a><?php
 							} else echo '&nbsp;'?>
 						</td>
 						<td class="action_entities"><!-- Move up in list --><?php 
 							if($i > 0) { ?>
-								<a href="<?php echo $linkwithwhat;?>&action=move_user_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>"><i class="fa fa-arrow-up"></i></a><?php 
+								<a href="<?php functions::xecho($linkwithwhat);?>&action=move_user_up&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>"><i class="fa fa-arrow-up"></i></a><?php 
 							} ?>
 						</td>
 						<td class="action_entities"><!-- Move down in list --><?php 
 							if($i < $l-1) { ?>
-								<a href="<?php echo $linkwithwhat;?>&action=move_user_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>"><i class="fa fa-arrow-down"></i></a><?php 
+								<a href="<?php functions::xecho($linkwithwhat);?>&action=move_user_down&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>"><i class="fa fa-arrow-down"></i></a><?php 
 							} ?>
 						</td>
 					</tr> <?php
@@ -778,26 +778,26 @@ $linkwithwhat =
 					$entity = $_SESSION[$origin]['diff_list'][$role_id]['entities'][$i];
 					if ($color == ' class="col"') $color = '';
 					else $color = ' class="col"';?>
-					<tr <?php echo $color;?> >
+					<tr <?php functions::xecho($color);?> >
 						<td>
 							<i class="fa fa-sitemap fa-2x" title="<?php echo _ENTITY.' '.$role_label;?>"></i> 
 						</td>
 						<td><?php
 						if($entity['visible'] == 'Y') { ?>
-							<a href="<?php echo $linkwithwhat;?>&action=make_entity_unvisible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_entity_unvisible&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>">
 								<i class="fa fa-check fa-2x" title="<?php echo _VISIBLE;?>"></i>
 							</a><?php
 						} else {?>
-							<a href="<?php echo $linkwithwhat;?>&action=make_entity_visible&role=<?php echo $role_id ?>&rank=<?php echo $i;?>">
+							<a href="<?php functions::xecho($linkwithwhat);?>&action=make_entity_visible&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>">
 								<i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE;?>"></i>
 							</a><?php
 						} ?>
 						</td>
-						<td ><?php echo $entity['entity_id'];?></td>
-						<td ><?php echo $entity['entity_label'];?></td>
+						<td ><?php functions::xecho($entity['entity_id']);?></td>
+						<td ><?php functions::xecho($entity['entity_label']);?></td>
 						<td class="action_entities"><?php 
 						if (!$noDelete && !$onlyCc) { ?>
-							<a href="<?php echo $linkwithwhat;?>&action=remove_entity&role=<?php echo $role_id ?>&rank=<?php echo $i;?>&id=<?php echo $entity['entity_id'];?>">
+							<a href="<?php functions::xecho($linkwithwhat);?>&action=remove_entity&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>&id=<?php functions::xecho($entity['entity_id']);?>">
 								<!--i class="fa fa-remove"></i--><?php echo _DELETE;?>
 							</a><?php
 						} ?>
@@ -805,12 +805,12 @@ $linkwithwhat =
 						<td class="action_entities">&nbsp;</td>
 						<td class="action_entities"><!-- Move up in list --><?php
 						if($i > 0) { ?>
-							<a href="<?php echo $linkwithwhat;?>&action=move_entity_up&role=<?php echo $role_id ?>&rank=<?php echo $i;?>"><i class="fa fa-arrow-up"></i></a><?php
+							<a href="<?php functions::xecho($linkwithwhat);?>&action=move_entity_up&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>"><i class="fa fa-arrow-up"></i></a><?php
 						} ?>
 						</td>
 						<td class="action_entities"><!-- Move down in list --><?php 
 						if($i < $l-1) { ?>
-							<a href="<?php echo $linkwithwhat;?>&action=move_entity_down&role=<?php echo $role_id ?>&rank=<?php echo $i;?>"><i class="fa fa-arrow-down"></i></a><?php
+							<a href="<?php functions::xecho($linkwithwhat);?>&action=move_entity_down&role=<?php functions::xecho($role_id ?>&rank=<?php functions::xecho($i));?>"><i class="fa fa-arrow-down"></i></a><?php
 						} ?>
 						</td>
 					</tr> <?php
@@ -824,7 +824,7 @@ $linkwithwhat =
 		#******************************************************************************?>
 		<form name="pop_diff" method="post" >
 			<div align="center">
-				<input align="middle" type="button" value="<?php echo _VALIDATE;?>" class="button" name="valid" onclick="change_diff_list('<?php echo $origin;?>', <?php echo "'" . $displayValue . "'";
+				<input align="middle" type="button" value="<?php echo _VALIDATE;?>" class="button" name="valid" onclick="change_diff_list('<?php functions::xecho($origin);?>', <?php echo "'" . $displayValue . "'";
 					if ($_REQUEST['origin'] == 'redirect') echo ",'diff_list_div_redirect'";
 				?>);" />
 				<input align="middle" type="button" value="<?php echo _CANCEL;?>"  onclick="self.close();" class="button"/>
@@ -841,7 +841,7 @@ $linkwithwhat =
 				<input type="hidden" name="display" value="true" />
 				<input type="hidden" name="module" value="entities" />
 				<input type="hidden" name="page" value="manage_listinstance" />
-				<input type="hidden" name="origin" id="origin" value="<?php echo $origin;?>" />
+				<input type="hidden" name="origin" id="origin" value="<?php functions::xecho($origin);?>" />
 				<table cellpadding="2" cellspacing="2" border="0">
 					<tr>
 						<th>
@@ -879,9 +879,9 @@ $linkwithwhat =
 			</form>
 		</div>
 		<script type="text/javascript">
-			repost('<?php echo $link;?>',new Array('diff_list_items'),new Array('what_users','what_services'),'keyup',250);
-            repost('<?php echo $link;?>',new Array('diff_list_items'),new Array('no_filter'), 'click',250);
-            repost('<?php echo $link;?>',new Array('diff_list_items'),new Array('auto_filter'), 'click',250);
+			repost('<?php functions::xecho($link);?>',new Array('diff_list_items'),new Array('what_users','what_services'),'keyup',250);
+            repost('<?php functions::xecho($link);?>',new Array('diff_list_items'),new Array('no_filter'), 'click',250);
+            repost('<?php functions::xecho($link);?>',new Array('diff_list_items'),new Array('auto_filter'), 'click',250);
 		</script>
 		<br/>
 		<div id="diff_list_items"> <?php
@@ -924,20 +924,20 @@ $linkwithwhat =
 						
 						if ($color == ' class="col"') $color = '';
 						else $color = ' class="col"';?>
-						<tr <?php echo $color;?> id="user_<?php echo $j;?>">
-							<td><?php echo $users[$j]['NOM'] . " " .$users[$j]['PRENOM'];?></td>
-							<td><?php echo $users[$j]['DEP'];?></td>
+						<tr <?php functions::xecho($color);?> id="user_<?php functions::xecho($j);?>">
+							<td><?php functions::xecho($users[$j]['NOM'] . " " .$users[$j]['PRENOM']);?></td>
+							<td><?php functions::xecho($users[$j]['DEP']);?></td>
 							<td class="action_entities"><?php
 							if(count($possible_roles) > 0) { ?>
-								<input type="hidden" id="user_id_<?php echo $j;?>" value="<?php echo $users[$j]['ID'];?>" />
-								<select name="role" id="user_role_<?php echo $j;?>"><?php
+								<input type="hidden" id="user_id_<?php functions::xecho($j);?>" value="<?php functions::xecho($users[$j]['ID']);?>" />
+								<select name="role" id="user_role_<?php functions::xecho($j);?>"><?php
 								foreach($possible_roles as $role_id => $role_label) {
 									if($role_id != 'dest' || ($role_id == 'dest' && !$onlyCc)) { ?>
-									<option value="<?php echo $role_id;?>"><?php echo $role_label;?></option><?php 
+									<option value="<?php functions::xecho($role_id);?>"><?php functions::xecho($role_label);?></option><?php 
 									} 
 								}?>
 								</select>&nbsp;
-								<span onclick="add_user(<?php echo $j;?>);" style="cursor: pointer"/> 
+								<span onclick="add_user(<?php functions::xecho($j);?>);" style="cursor: pointer"/> 
 									<!--i class="fa fa-plus fa-2x"></i--><?php echo _ADD;?>
 								</span> <?php 
 							} else echo _NO_AVAILABLE_ROLE;?>
@@ -979,18 +979,18 @@ $linkwithwhat =
                             
                             if ($color == ' class="col"') $color = '';
                             else $color = ' class="col"';?>
-                            <tr <?php echo $color;?>>
-                                <td><?php echo $entities[$j]['ID'];?></td>
-                                <td><?php echo $entities[$j]['DEP'];?></td>
+                            <tr <?php functions::xecho($color);?>>
+                                <td><?php functions::xecho($entities[$j]['ID']);?></td>
+                                <td><?php functions::xecho($entities[$j]['DEP']);?></td>
                                 <td class="action_entities"><?php
                                 if(count($possible_roles) > 0) { ?>
-                                    <input type="hidden" id="entity_id_<?php echo $j;?>" value="<?php echo $entities[$j]['ID'];?>" />
-                                    <select name="role" id="entity_role_<?php echo $j;?>"><?php 
+                                    <input type="hidden" id="entity_id_<?php functions::xecho($j);?>" value="<?php functions::xecho($entities[$j]['ID']);?>" />
+                                    <select name="role" id="entity_role_<?php functions::xecho($j);?>"><?php 
                                     foreach($possible_roles as $role_id => $role_label) { ?>
-                                        <option value="<?php echo $role_id;?>"><?php echo $role_label;?></option><?php 
+                                        <option value="<?php functions::xecho($role_id);?>"><?php functions::xecho($role_label);?></option><?php 
                                     } ?>
                                     </select>&nbsp;
-                                    <span onclick="add_entity(<?php echo $j;?>);" style="cursor: pointer"/> 
+                                    <span onclick="add_entity(<?php functions::xecho($j);?>);" style="cursor: pointer"/> 
                                         <!--i class="fa fa-plus fa-2x"--></i><?php echo _ADD;?>
                                     </span> <?php 
                                 } else echo _NO_AVAILABLE_ROLE;?>  

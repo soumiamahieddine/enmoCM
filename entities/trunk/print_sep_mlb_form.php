@@ -49,7 +49,7 @@ $_SESSION['separator']['entities'] = array();
 <div id="inner_content">
     <div class="block">
     <?php $link = $_SESSION['config']['businessappurl']."index.php?display=true&module=entities&page=print_sep_mlb&try=".(uniqid(md5(rand()), true));?>
-    <form name="print_sep" id="print_sep" action="<?php echo $link;?>" target="sepwin" method="post" onSubmit="MM_openBrWindow('', 'sepwin', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,width=330,height=500');">
+    <form name="print_sep" id="print_sep" action="<?php functions::xecho($link);?>" target="sepwin" method="post" onSubmit="MM_openBrWindow('', 'sepwin', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,width=330,height=500');">
         <table align="center" border="0" cellpadding="5">
             <tr>
                 <td colspan="3">
@@ -75,7 +75,7 @@ $_SESSION['separator']['entities'] = array();
                             if($state_entities == false)
                             {
                                 ?>
-                                <option value="<?php echo $_SESSION['entities'][$i]['ID'];?>"><?php echo $func->show_str($_SESSION['entities'][$i]['LABEL']);?></option>
+                                <option value="<?php functions::xecho($_SESSION['entities'][$i]['ID']);?>"><?php functions::xecho($func->show_str($_SESSION['entities'][$i]['LABEL']));?></option>
                                 <?php
                             }
                         }

@@ -243,24 +243,24 @@ class users_entities extends dbquery
                                 <p>
                     <label for="UserId"><?php echo _ID;?> :</label>
                     <?php  if($mode == "up") { echo $func->show_str($_SESSION['m_admin']['entity']['user_UserId']); } ?>
-                    <input type="hidden"  name="id" id="id" value="<?php echo $id;?>" />
+                    <input type="hidden"  name="id" id="id" value="<?php functions::xecho($id);?>" />
                 </p>
 
                 <p>
                     <label for="LastName"><?php echo _LASTNAME;?> :</label>
-                    <?php echo $func->show_str($_SESSION['m_admin']['entity']['user_LastName']);?>
+                    <?php functions::xecho($func->show_str($_SESSION['m_admin']['entity']['user_LastName']));?>
                 </p>
                 <p>
                     <label for="FirstName"><?php echo _FIRSTNAME;?> :</label>
-                    <?php echo $func->show_str($_SESSION['m_admin']['entity']['user_FirstName']);?>
+                    <?php functions::xecho($func->show_str($_SESSION['m_admin']['entity']['user_FirstName']));?>
                 </p>
                 <p>
                     <label for="Phone"><?php echo _PHONE_NUMBER;?> :</label>
-                    <?php echo $_SESSION['m_admin']['entity']['user_Phone'];?>
+                    <?php functions::xecho($_SESSION['m_admin']['entity']['user_Phone']);?>
                 </p>
                 <p>
                     <label for="Mail"><?php echo _MAIL;?> :</label>
-                    <?php echo $_SESSION['m_admin']['entity']['user_Mail'];?>
+                    <?php functions::xecho($_SESSION['m_admin']['entity']['user_Mail']);?>
                 </p>
                     <p class="buttons">
                         <input type="submit" name="Submit" value="<?php echo _VALIDATE;?>" class="button"/>

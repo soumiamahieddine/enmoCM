@@ -131,7 +131,7 @@ if (count($_SESSION['tree_entities']) < 1) {
             function TafelTreeInit () {
                 var struct = [
                                 {
-                                'id':'<?php echo $_SESSION['entities_chosen_tree'];?>',
+                                'id':'<?php functions::xecho($_SESSION['entities_chosen_tree']);?>',
                                 'txt':'<?php echo addslashes($label);?>',
                                 'items':[
                                 <?php
@@ -151,7 +151,7 @@ if (count($_SESSION['tree_entities']) < 1) {
                                             echo $level1[$i]['id'].'_'.$_SESSION['entities_chosen_tree'];
                                         }
                                         ?>',
-                                        <?php echo $canhavechildren;?>
+                                        <?php functions::xecho($canhavechildren);?>
                                         'txt':'<?php echo addslashes($level1[$i]['id'].' - '.$level1[$i]['label_value']);?>',
                                         'is_entity' : true
                                     },
@@ -171,7 +171,7 @@ if (count($_SESSION['tree_entities']) < 1) {
                                         echo $level1[$i]['id'].'_'.$_SESSION['entities_chosen_tree'];
                                     }
                                     ?>',
-                                    <?php echo $canhavechildren;?>
+                                    <?php functions::xecho($canhavechildren);?>
                                     'txt':'<?php echo addslashes($level1[$i]['id'].' - '.$level1[$i]['label_value']);?>',
                                     'is_entity' : true
                                 }

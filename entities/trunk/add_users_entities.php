@@ -148,7 +148,7 @@ unset($entities);
                 //    $entity_id = $entities[$i]->__get('entity_id');
                 //}
             ?>
-                <option value="<?php echo $entity_id;?>" ><?php  if(isset($short_label) && !empty($short_label)){ echo $short_label;}else{echo $entities[$i]->__get('entity_label');}?></option><?php
+                <option value="<?php functions::xecho($entity_id);?>" ><?php  if(isset($short_label) && !empty($short_label)){ echo $short_label;}else{echo $entities[$i]->__get('entity_label');}?></option><?php
 
         }*/
 		
@@ -173,7 +173,7 @@ unset($entities);
 			if(isset($res[$j]) && !empty($desc))
 			{
 		?>
-			<option value="<?php echo $res[$j]->__get('entity_id') ?>"><?php   echo $res[$j]->__get('short_label');?></option>
+			<option value="<?php functions::xecho($res[$j]->__get('entity_id') ?>"><?php   echo $res[$j]->__get('short_label'));?></option>
 		<?php
 			}
 		}*/

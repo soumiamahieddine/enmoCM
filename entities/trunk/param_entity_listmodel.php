@@ -100,13 +100,13 @@ if($_SESSION['service_tag_form'] == 'formentity') {
         require_once 'modules/entities/difflist_display.php';?>
         </div>
 		<p class="buttons" style="text-align:center;margin-top:5px;">
-			<input type="button" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=';?>manage_listmodel&what=A&objectType=entity_id&objectId=<?php echo $_SESSION['m_admin']['entity']['entityId'];?>', '', 'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no');" class="button" value="<?php echo _MODIFY_LIST;?>" />
+			<input type="button" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=';?>manage_listmodel&what=A&objectType=entity_id&objectId=<?php functions::xecho($_SESSION['m_admin']['entity']['entityId']);?>', '', 'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no');" class="button" value="<?php echo _MODIFY_LIST;?>" />
 		</p> <?php 
 	} else { ?>
 		<h2 class="tit"><?php echo _NO_LINKED_DIFF_LIST;?>.</h2>
 		<p class="buttons">
 			<p>
-				<input type="button" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=';?>manage_listmodel&objectType=entity_id&objectId=<?php echo $_SESSION['m_admin']['entity']['entityId'];?>', '', 'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no');" class="button" value="<?php echo _CREATE_LIST;?>" />
+				<input type="button" onclick="window.open('<?php echo $_SESSION['config']['businessappurl'].'index.php?display=true&module=entities&page=';?>manage_listmodel&objectType=entity_id&objectId=<?php functions::xecho($_SESSION['m_admin']['entity']['entityId']);?>', '', 'scrollbars=yes,menubar=no,toolbar=no,status=no,resizable=yes,width=1024,height=650,location=no');" class="button" value="<?php echo _CREATE_LIST;?>" />
 			</p>
 		</p> <?php 
 	} ?>

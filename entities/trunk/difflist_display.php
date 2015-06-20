@@ -13,7 +13,7 @@ foreach($roles as $role_id => $role_label) {
     if(count($difflist[$role_id]['users']) > 0
         || count($difflist[$role_id]['entities']) > 0
     ) { ?>
-        <h3 class="sstit" style="font-size: 1.2em;"><?php echo $role_label;?></h3><?php
+        <h3 class="sstit" style="font-size: 1.2em;"><?php functions::xecho($role_label);?></h3><?php
     if(count($difflist[$role_id]['users']) > 0) { ?>
         <table cellpadding="0" cellspacing="0" border="0" class="listingsmall liste_diff spec" style="width:100%;margin:0;"><?php
         $color = ' class="col"';
@@ -25,7 +25,7 @@ foreach($roles as $role_id => $role_label) {
             
             if ($color == ' class="col"') $color = ' ';
             else $color = ' class="col"';?>
-            <tr <?php echo $color;?> >
+            <tr <?php functions::xecho($color);?> >
                 <td style="width:15%;text-align:center;">
                     <i class="fa fa-user fa-2x" title="<?php echo _USER;?>"></i>
                 </td>
@@ -36,8 +36,8 @@ foreach($roles as $role_id => $role_label) {
                     <i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE;?>"></i><?php
                 } ?>
                 </td>
-                <td style="width:37%;"><?php echo $user['lastname'] . " " . $user['firstname'];?></td>
-                <td style="width:38%;"><?php echo $user['entity_label'];?></td>
+                <td style="width:37%;"><?php functions::xecho($user['lastname'] . " " . $user['firstname']);?></td>
+                <td style="width:38%;"><?php functions::xecho($user['entity_label']);?></td>
             </tr><?php
         } ?>
         </table><?php
@@ -52,7 +52,7 @@ foreach($roles as $role_id => $role_label) {
             $entity = $difflist[$role_id]['entities'][$i];
             if ($color == ' class="col"') $color = '';
             else $color = ' class="col"';?>
-            <tr <?php echo $color;?> >
+            <tr <?php functions::xecho($color);?> >
                 <td style="width:15%;text-align:center;">
                     <i class="fa fa-sitemap fa-2x" title="<?php echo _ENTITY . " " . $role_label ;?>" ></i>
                 </td>
@@ -63,8 +63,8 @@ foreach($roles as $role_id => $role_label) {
                     <i class="fa fa-times fa-2x" title="<?php echo _NOT_VISIBLE;?>"></i><?php
                 } ?>
                 </td>
-                <td style="width:37%;"><?php echo $entity['entity_id'];?></td>
-                <td style="width:38%;"><?php echo $entity['entity_label'];?></td>
+                <td style="width:37%;"><?php functions::xecho($entity['entity_id']);?></td>
+                <td style="width:38%;"><?php functions::xecho($entity['entity_label']);?></td>
             </tr> <?php
         } ?>
         </table><?php

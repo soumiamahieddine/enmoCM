@@ -34,7 +34,7 @@ else
 				for($i=0;$i<count($_SESSION['tree_entities']);$i++)
 				{
 					?>
-					<option value="<?php echo $_SESSION['tree_entities'][$i]['ID'];?>" <?php  if($_SESSION['entities_chosen_tree'] == $_SESSION['tree_entities'][$i]['ID'] ){ echo 'selected="selected"';}?>><?php echo $_SESSION['tree_entities'][$i]['LABEL'];?></option>
+					<option value="<?php functions::xecho($_SESSION['tree_entities'][$i]['ID']);?>" <?php  if($_SESSION['entities_chosen_tree'] == $_SESSION['tree_entities'][$i]['ID'] ){ echo 'selected="selected"';}?>><?php echo $_SESSION['tree_entities'][$i]['LABEL'];?></option>
 					<?php
 				}
 				?>
