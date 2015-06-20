@@ -38,7 +38,7 @@ if(isset($_REQUEST['foldertype']) && !empty($_REQUEST['foldertype']))
         	<option value=""><?php echo _CHOOSE_FOLDERTYPE;?></option>
         	<?php  for($i=0; $i<count($types);$i++)
 			{
-				?><option value="<?php echo $types[$i]['id'];?>" <?php  if(count($types) == 1 || $types[$i]['id'] == $_SESSION['current_foldertype']) { echo 'selected="selected"';}?>><?php echo $types[$i]['label'];?></option><?php 
+				?><option value="<?php functions::xecho($types[$i]['id']);?>" <?php  if(count($types) == 1 || $types[$i]['id'] == $_SESSION['current_foldertype']) { echo 'selected="selected"';}?>><?php functions::xecho($types[$i]['label']);?></option><?php 
 			}
         ?>
         </select>

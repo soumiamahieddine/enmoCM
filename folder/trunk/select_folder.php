@@ -120,15 +120,15 @@ if($_SESSION['current_folder_id'] <> "" && $folder->is_folder_exists($_SESSION['
 		<br/>
 		<p>
 			<label><?php echo _FOLDERTYPE;?> :</label>
-			<input type="text" value="<?php echo $folder_data['foldertype_label'];?>" name="foldertype" readonly="readonly" class="readonly"/>
+			<input type="text" value="<?php functions::xecho($folder_data['foldertype_label']);?>" name="foldertype" readonly="readonly" class="readonly"/>
 		</p>
 		<p>
 			<label><?php echo _FOLDERID;?> :</label>
-			<input type="text" value="<?php echo $folder_data['folder_name'];?>" name="nom_view" readonly="readonly" class="readonly "/>
+			<input type="text" value="<?php functions::xecho($folder_data['folder_name']);?>" name="nom_view" readonly="readonly" class="readonly "/>
 		</p>
 		<p>
 			<label><?php echo _FOLDERNAME;?> :</label>
-			<input type="text" value="<?php echo $folder_data['subject'];?>" name="nom_view" readonly="readonly" class="readonly "/>
+			<input type="text" value="<?php functions::xecho($folder_data['subject']);?>" name="nom_view" readonly="readonly" class="readonly "/>
 		</p>
 
 	</form>

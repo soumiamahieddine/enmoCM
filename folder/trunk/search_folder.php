@@ -53,7 +53,7 @@ if(isset($_REQUEST['search']))
 	?>
     <p>&nbsp;</p>
 	<p>
-   		<label><?php echo $label;?> : </label>
+   		<label><?php functions::xecho($label);?> : </label>
         <input type="text" name="custom_t1"  id="custom_t1" />
     </p>
     <?php 

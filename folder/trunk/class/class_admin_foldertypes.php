@@ -214,7 +214,7 @@ class foldertype extends dbquery
                 	echo 'readonly="readonly" class="readonly"';
                 } 
                 ?> />
-                    <input type="hidden"  name="id" value="<?php echo $id;?>" />
+                    <input type="hidden"  name="id" value="<?php functions::xecho($id);?>" />
                     <input type="hidden"  name="mode" value="<?php echo $mode;?>" />
                 </p>
                 <?php

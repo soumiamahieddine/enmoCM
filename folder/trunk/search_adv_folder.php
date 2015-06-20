@@ -124,7 +124,7 @@ if ($chooseColl) {
                     <option value=""><?php echo _CHOOSE_COLLECTION;?></option>
                     <?php
                     foreach (array_keys($_SESSION['user']['security']) as $coll) {
-                        ?><option value="<?php echo $coll;?>"><?php
+                        ?><option value="<?php functions::xecho($coll);?>"><?php
                         echo $_SESSION['user']['security'][$coll]['DOC']['label_coll'];
                         ?></option><?php
                     }
@@ -165,13 +165,13 @@ if ($chooseColl) {
                         <option value=""><?php echo _CHOOSE_FOLDERTYPE;?></option>
                         <?php
                         for ($i = 0; $i < count($foldertypes); $i ++) {
-                            ?><option value="<?php echo $foldertypes[$i]['id'];?>" <?php
+                            ?><option value="<?php functions::xecho($foldertypes[$i]['id']);?>" <?php
                             if (isset($_SESSION['folder_search']['foldertype_id'])
                                 && $foldertypes[$i]['id'] == $_SESSION['folder_search']['foldertype_id']
                             ) {
                                 echo 'selected="selected"';
                             }
-                            ?>><?php echo $foldertypes[$i]['label'];?></option><?php
+                            ?>><?php functions::xecho($foldertypes[$i]['label']);?></option><?php
                         }
                         ?>
                     </select>

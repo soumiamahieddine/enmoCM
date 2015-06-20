@@ -70,12 +70,12 @@ else
 						$color = ' class="col"';
 					}
 					?>
-					<tr <?php echo $color;?>>
+					<tr <?php functions::xecho($color);?>>
                    		 <td>
-							<?php echo $missing_res[$cpt_missing_res]['ID'];?>
+							<?php functions::xecho($missing_res[$cpt_missing_res]['ID']);?>
 						</td>
 						<td>
-							<?php echo $missing_res[$cpt_missing_res]['LABEL'];?>
+							<?php functions::xecho($missing_res[$cpt_missing_res]['LABEL']);?>
 						</td>
 					</tr>
 					<?php

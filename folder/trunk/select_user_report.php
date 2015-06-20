@@ -104,7 +104,7 @@ for ($i=0;$i<count($tab);$i++)
 				var item = window.opener.$('user_id');
 				if(item)
 				{
-					item.value = '<?php echo $_REQUEST['field'];?>';
+					item.value = '<?php functions::xecho($_REQUEST['field']);?>';
 					self.close();
 				}
 			</script>

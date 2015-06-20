@@ -38,7 +38,7 @@ if(isset($_REQUEST['collection']) && !empty($_REQUEST['collection']) )
 			for($i=0; $i<count($array_coll);$i++)
 			{
 				?>
-					<option value="<?php echo $array_coll[$i]['id'];?>" <?php  if($_SESSION['m_admin']['doctypes']['COLL_ID'] == $array_coll[$i]['id']){ echo 'selected="selected"';}?> ><?php echo $array_coll[$i]['label'];?></option>
+					<option value="<?php functions::xecho($array_coll[$i]['id']);?>" <?php  if($_SESSION['m_admin']['doctypes']['COLL_ID'] == $array_coll[$i]['id']){ echo 'selected="selected"';}?> ><?php functions::xecho($array_coll[$i]['label']);?></option>
 				<?php
 			}
 			?>

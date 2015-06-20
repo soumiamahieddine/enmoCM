@@ -95,7 +95,7 @@ elseif(isset($_REQUEST['doctypes']) && count($_REQUEST['doctypes']) <= 0)
 			if($state_doctypes == false)
 			{
 				?>
-				<option value="<?php echo $_SESSION['m_admin']['doctypes'][$i]['ID'];?>"><?php echo $_SESSION['m_admin']['doctypes'][$i]['COMMENT'];?></option>
+				<option value="<?php functions::xecho($_SESSION['m_admin']['doctypes'][$i]['ID']);?>"><?php echo $_SESSION['m_admin']['doctypes'][$i]['COMMENT'];?></option>
 				<?php
 			}
 		}
@@ -128,7 +128,7 @@ elseif(isset($_REQUEST['doctypes']) && count($_REQUEST['doctypes']) <= 0)
 			if($state_doctypes == true)
 			{
 				?>
-				<option value="<?php echo $_SESSION['m_admin']['doctypes'][$i]['ID'];?>" ><?php echo $_SESSION['m_admin']['doctypes'][$i]['COMMENT'];?></option>
+				<option value="<?php functions::xecho($_SESSION['m_admin']['doctypes'][$i]['ID']);?>" ><?php echo $_SESSION['m_admin']['doctypes'][$i]['COMMENT'];?></option>
 				<?php
 			}
 		}

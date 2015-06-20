@@ -50,7 +50,7 @@ class folders_show extends functions
 				{
 					?><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=dossiers2.gif" align="middle" alt="" />
 				<span class='selected'>
-					<?php echo $result[$i]['first_level_label'];?><br />
+					<?php functions::xecho($result[$i]['first_level_label']);?><br />
 					</span>
 					<div class='dir_second_level'>
                     <?php
@@ -59,13 +59,13 @@ class folders_show extends functions
 						if($_GET['second_level'] == $result[$i]['level2']['second_level_id'][$second_level])
 						{
 							?><span class="selected">
-							<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php echo $link;?>"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=dir_open.gif" border="0" align='middle' alt="" /> 		<?php echo $result[$i]['level2']['second_level_label'][$second_level];?></a><br/>
+							<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php functions::xecho($link);?>"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=dir_open.gif" border="0" align='middle' alt="" /> 		<?php functions::xecho($result[$i]['level2']['second_level_label'][$second_level]);?></a><br/>
 							</span>
 							<div class='dir_third_level'>
 							<?php  for($k=0;$k<count($result[$i]['level2'][$second_level]['level3']['type_id']);$k++)
 							{
 								?>
-								<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php echo $link;?>&amp;type_id=<?php echo $result[$i]['level2'][$second_level]['level3']['type_id'][$third_level];?>&amp;second_level=<?php echo $result[$i]['level2']['second_level_id'][$second_level];?>&amp;coll_id=<?php echo $result[$i]['level2'][$second_level]['level3']['coll_id'][$third_level] ?>"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=arrow_primary.gif" border="0" align="middle" alt="" /> <?php echo $result[$i]['level2'][$second_level]['level3']['type_label'][$third_level];?></a><br/> <?php
+								<a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php functions::xecho($link);?>&amp;type_id=<?php functions::xecho($result[$i]['level2'][$second_level]['level3']['type_id'][$third_level]);?>&amp;second_level=<?php functions::xecho($result[$i]['level2']['second_level_id'][$second_level]);?>&amp;coll_id=<?php functions::xecho($result[$i]['level2'][$second_level]['level3']['coll_id'][$third_level] ?>"><img src="<?php echo $_SESSION['config']['businessappurl']);?>static.php?filename=arrow_primary.gif" border="0" align="middle" alt="" /> <?php functions::xecho($result[$i]['level2'][$second_level]['level3']['type_label'][$third_level]);?></a><br/> <?php
 								$third_level++;
 							}
 							$second_level++;
@@ -77,7 +77,7 @@ class folders_show extends functions
 							{
 								$third_level++;
 							}
-							?><a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php echo $link;?>&amp;second_level=<?php echo $result[$i]['level2']['second_level_id'][$second_level];?>"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?module=folder&filename=dir_close.gif" align="top" border="0" alt="" /> <?php echo $result[$i]['level2']['second_level_label'][$second_level];?></a><br/><?php
+							?><a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=<?php functions::xecho($link);?>&amp;second_level=<?php functions::xecho($result[$i]['level2']['second_level_id'][$second_level]);?>"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?module=folder&filename=dir_close.gif" align="top" border="0" alt="" /> <?php functions::xecho($result[$i]['level2']['second_level_label'][$second_level]);?></a><br/><?php
 							$second_level++;
 						}
 					}
@@ -190,7 +190,7 @@ class folders_show extends functions
 		$db = new dbquery();
 		$db->connect();
 		 ?>
-         	<form name="view_folder_detail" method='post' action='<?php echo $link;?>' class="folder_forms" ><?php
+         	<form name="view_folder_detail" method='post' action='<?php functions::xecho($link);?>' class="folder_forms" ><?php
 		if($up)
 		{
 		?><input type="hidden" value="up" name="mode" />
@@ -211,14 +211,14 @@ class folders_show extends functions
                     <div align="center">
                     <span>
                     	<label><?php echo _MATRICULE;?> :</label>
-                        <input type="text" readonly="readonly" value="<?php echo $folder_array['folder_id'];?>" class="readonly" />
+                        <input type="text" readonly="readonly" value="<?php functions::xecho($folder_array['folder_id']);?>" class="readonly" />
                         &nbsp;&nbsp;&nbsp;
                           <label><?php echo _FOLDERTYPE;?> :</label>
-                        <input type="text" readonly="readonly" value="<?php echo $folder_array['foldertype_label'];?>" class="readonly" />
+                        <input type="text" readonly="readonly" value="<?php functions::xecho($folder_array['foldertype_label']);?>" class="readonly" />
                         </span>
                         <span >
                         <br/><small>(
-                        <?php echo $complete;?>)</small>
+                        <?php functions::xecho($complete);?>)</small>
                         </span>
 
 
@@ -226,7 +226,7 @@ class folders_show extends functions
                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     <span id="link_right" >
                     	<?php  if($_SESSION['origin'] == "view_folder")
-						{?><a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=show_folder&amp;module=folder&amp;field=<?php echo $_SESSION['current_folder_id'];?>"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?module=folder&filename=s_sheet_c.gif" width="20px" height="25px"
+						{?><a href="<?php echo $_SESSION['config']['businessappurl'];?>index.php?page=show_folder&amp;module=folder&amp;field=<?php functions::xecho($_SESSION['current_folder_id']);?>"><img src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?module=folder&filename=s_sheet_c.gif" width="20px" height="25px"
                     	alt="logo"/><?php echo _VIEW_SALARY_SHEET;?></a>
                         <?php  } ?>
                     </span>
@@ -266,7 +266,7 @@ class folders_show extends functions
 					if((isset($folder_array['index'][$i]['foreign_key']) && !empty($folder_array['index'][$i]['foreign_key']) && isset($folder_array['index'][$i]['foreign_label']) && !empty($folder_array['index'][$i]['foreign_label']) && isset($folder_array['index'][$i]['tablename']) && !empty($folder_array['index'][$i]['tablename'])) || (isset($folder_array['index'][$i]['values']) && count($folder_array['index'][$i]['values']) > 0))
 					{
 					?>
-                    	<select name="<?php echo $folder_array['index'][$i]['column'];?>" id="<?php echo $folder_array['index'][$i]['column'];?>">
+                    	<select name="<?php functions::xecho($folder_array['index'][$i]['column']);?>" id="<?php functions::xecho($folder_array['index'][$i]['column']);?>">
                         <option value=""><?php echo _CHOOSE;?></option>
                         <?php
 						if(isset($folder_array['index'][$i]['values']) && count($folder_array['index'][$i]['values']) > 0)
@@ -274,7 +274,7 @@ class folders_show extends functions
 							for($k=0; $k < count($folder_array['index'][$i]['values']); $k++)
 							{
 							?>
-                            	<option value="<?php echo $folder_array['index'][$i]['values'][$k]['label'];?>" <?php  if($folder_array['index'][$i]['values'][$k]['label'] == $folder_array['index'][$i]['value']){ echo 'selected="selected"'; } ?>><?php echo $folder_array['index'][$i]['values'][$k]['label'];?></option>
+                            	<option value="<?php functions::xecho($folder_array['index'][$i]['values'][$k]['label']);?>" <?php  if($folder_array['index'][$i]['values'][$k]['label'] == $folder_array['index'][$i]['value']){ echo 'selected="selected"'; } ?>><?php functions::xecho($folder_array['index'][$i]['values'][$k]['label']);?></option>
                             <?php
 							}
 						}
@@ -296,7 +296,7 @@ class folders_show extends functions
 							while($res = $db->fetch_object())
 							{
 							?>
-                            <option value="<?php echo $res->$folder_array['index'][$i]['foreign_key'];?>" <?php  if($res->$folder_array['index'][$i]['foreign_key'] == $folder_array['index'][$i]['value']){ echo 'selected="selected"';}?>><?php echo $res->$folder_array['index'][$i]['foreign_label'];?></option>
+                            <option value="<?php functions::xecho($res->$folder_array['index'][$i]['foreign_key']);?>" <?php  if($res->$folder_array['index'][$i]['foreign_key'] == $folder_array['index'][$i]['value']){ echo 'selected="selected"';}?>><?php functions::xecho($res->$folder_array['index'][$i]['foreign_label']);?></option>
                             <?php
 							}
 						}
@@ -307,7 +307,7 @@ class folders_show extends functions
 					else
 					{
 						?>
-						<input type="text" name="<?php echo $folder_array['index'][$i]['column'];?>" id="<?php echo $folder_array['index'][$i]['column'];?>" <?php  if($_SESSION['field_error'][$folder_array['index'][$i]['column']]){?>style="background-color:#FF0000"<?php  }?> <?php  if($folder_array['index'][$i]['date'])
+						<input type="text" name="<?php functions::xecho($folder_array['index'][$i]['column']);?>" id="<?php functions::xecho($folder_array['index'][$i]['column']);?>" <?php  if($_SESSION['field_error'][$folder_array['index'][$i]['column']]){?>style="background-color:#FF0000"<?php  }?> <?php  if($folder_array['index'][$i]['date'])
 						{ echo 'class="medium"'; } ?> value="<?php
 						if($folder_array['index'][$i]['date'])
 						{
@@ -329,14 +329,14 @@ class folders_show extends functions
 					if($folder_array['index'][$i]['mandatory'])
 					{
 						?>
-                        <input type="hidden" name="mandatory_<?php echo $folder_array['index'][$i]['column'];?>" id="mandatory_<?php echo $folder_array['index'][$i]['column'];?>" value="true" />
+                        <input type="hidden" name="mandatory_<?php functions::xecho($folder_array['index'][$i]['column']);?>" id="mandatory_<?php functions::xecho($folder_array['index'][$i]['column']);?>" value="true" />
                         <?php
 					}
 			}
 			else
 			{
-				?><input type="text" name="<?php echo $folder_array['index'][$i]['column'];?>" id="<?php echo $folder_array['index'][$i]['column'];?>" <?php  if($folder_array['index'][$i]['date'])
-						{ echo 'class="medium"'; } ?> value="<?php echo $folder_array['index'][$i]['value'] ?>" readonly="readonly" class="readonly" /><?php
+				?><input type="text" name="<?php functions::xecho($folder_array['index'][$i]['column']);?>" id="<?php functions::xecho($folder_array['index'][$i]['column']);?>" <?php  if($folder_array['index'][$i]['date'])
+						{ echo 'class="medium"'; } ?> value="<?php functions::xecho($folder_array['index'][$i]['value']) ?>" readonly="readonly" class="readonly" /><?php
 			}
 
 					?>
@@ -387,7 +387,7 @@ class folders_show extends functions
 		$db->connect();
 		?>
         <div id="folder_out_form">
-        <form class="forms2" method="post" action="<?php echo $link;?>" name="view_folder_out">
+        <form class="forms2" method="post" action="<?php functions::xecho($link);?>" name="view_folder_out">
 		<div class="leftpart2" >
 			<p><?php
 			 if(!empty($path_trombi))
@@ -403,17 +403,17 @@ class folders_show extends functions
 			?><img src='".$file_trombi."' alt="" />
         <?php  } ?>
             <label><?php echo _MATRICULE;?></label><span class="colon">: </span>
-            <input type="text" readonly="readonly" name="matricule" class="readonly" value="<?php echo $folder_array['FOLDER_ID'];?>" />
+            <input type="text" readonly="readonly" name="matricule" class="readonly" value="<?php functions::xecho($folder_array['FOLDER_ID']);?>" />
 			</p>
 
         </div>
         <div class="leftpart">
         	<p>
                 <label><?php echo _LASTNAME;?> </label><span class="colon">: </span>
-                <input type='text' name='ins_last_name' value="<?php echo $folder_array['NOM'];?>" readonly="readonly" class="readonly" />
+                <input type='text' name='ins_last_name' value="<?php functions::xecho($folder_array['NOM']);?>" readonly="readonly" class="readonly" />
                 <input type='hidden' name='flag_ins' value='true' />
-                            <input type='hidden' name='ins_folder_system_id' value="<?php echo $folder_array['SYSTEM_ID'];?>" />
-                            <input type='hidden' name='ins_folder_id' value="<?php echo $folder_array['FOLDER_ID'];?>"/>
+                            <input type='hidden' name='ins_folder_system_id' value="<?php functions::xecho($folder_array['SYSTEM_ID']);?>" />
+                            <input type='hidden' name='ins_folder_id' value="<?php functions::xecho($folder_array['FOLDER_ID']);?>"/>
 			</p>
 
         </div>
@@ -421,7 +421,7 @@ class folders_show extends functions
         <div class="rightpart">
             <p>
                 <label><?php echo _FIRSTNAME;?></label><span class="colon">: </span>
-                 <input type='text' name='ins_first_name' value="<?php echo $folder_array['PRENOM'];?>" readonly="readonly" class="readonly" />
+                 <input type='text' name='ins_first_name' value="<?php functions::xecho($folder_array['PRENOM']);?>" readonly="readonly" class="readonly" />
             </p>
         </div>
 		<p><em><?php echo _FOLDER_OUT_PERSON;?></em></p>
@@ -433,7 +433,7 @@ class folders_show extends functions
             </p>
              <p>
                 <label><?php echo _FILE_OUT_DATE2;?></label><span class="colon">: </span>
-                 <img src="<?php echo $_SESSION['config']['img'];?>/calendar.jpg" alt='' name='for_date' id='for_ins_retrait_date' onclick='showCalender(this);' />&nbsp;<input type='text' name='ins_retrait_date' size='15' id='ins_retrait_date' />
+                 <img src="<?php functions::xecho($_SESSION['config']['img']);?>/calendar.jpg" alt='' name='for_date' id='for_ins_retrait_date' onclick='showCalender(this);' />&nbsp;<input type='text' name='ins_retrait_date' size='15' id='ins_retrait_date' />
             </p>
 
 
@@ -445,7 +445,7 @@ class folders_show extends functions
             </p>
             <p>
                 <label><?php echo _FOLDER_OUT_RETURN_DATE;?></label><span class="colon">: </span>
-                 <img src="<?php echo $_SESSION['config']['img'];?>/calendar.jpg" alt='' name='for_date' id='for_ins_restitution_date' onclick='showCalender(this);' />&nbsp;<input type='text' name='ins_restitution_date' size='15' id='ins_restitution_date' />
+                 <img src="<?php functions::xecho($_SESSION['config']['img']);?>/calendar.jpg" alt='' name='for_date' id='for_ins_restitution_date' onclick='showCalender(this);' />&nbsp;<input type='text' name='ins_restitution_date' size='15' id='ins_restitution_date' />
             </p>
         </div>
         <div class="leftpart2" >

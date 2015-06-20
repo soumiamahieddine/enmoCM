@@ -158,18 +158,18 @@ if (empty($collIdTest)) {
 					}
 				}
 				?>
-				<div onclick="change2(<?php echo $level1;?>)" id="h2<?php echo $level1;?>" class="categorie">
+				<div onclick="change2(<?php functions::xecho($level1);?>)" id="h2<?php functions::xecho($level1);?>" class="categorie">
 					<?php
 					echo "<a href=javascript:view_doc('" . $res_id_list . "');>"
 					?><img src="<?php
 					echo $_SESSION['config']['businessappurl']
 					?>static.php?filename=folderopen.gif" alt="" />&nbsp;<b class="<?php
 					echo $arrayStruct['level1'][$level1]['style'];
-					?>"><?php echo $arrayStruct['level1'][$level1]['label'];?></b></a>
+					?>"><?php functions::xecho($arrayStruct['level1'][$level1]['label']);?></b></a>
 					<span class="lb1-details">&nbsp;</span>
 				</div>
 				<br>
-				<div class="desc" id="desc<?php echo $level1;?>" >
+				<div class="desc" id="desc<?php functions::xecho($level1);?>" >
 					<div class="ref-unit">
 						<?php
 						$res_id_list = "";
@@ -188,7 +188,7 @@ if (empty($collIdTest)) {
 							}
 							//echo $res_id_list;
 							?>
-							<div onclick="change2(<?php echo $level2;?>)" id="h2<?php echo $level2;?>" class="categorie">
+							<div onclick="change2(<?php functions::xecho($level2);?>)" id="h2<?php functions::xecho($level2);?>" class="categorie">
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<?php
 								echo "<a href=javascript:view_doc('".$res_id_list."');>"
 								?><img src="<?php
@@ -199,11 +199,11 @@ if (empty($collIdTest)) {
 								} else {
 								    echo 'default_style';
 								}
-								?>"><?php echo $arrayStruct['level1'][$level1]['level2'][$level2]['label'];?></b></a>
+								?>"><?php functions::xecho($arrayStruct['level1'][$level1]['level2'][$level2]['label']);?></b></a>
 								<span class="lb1-details">&nbsp;</span>
 							</div>
 							<br>
-							<div class="desc" id="desc<?php echo $level2;?>" >
+							<div class="desc" id="desc<?php functions::xecho($level2);?>" >
 								<div class="ref-unit">
 									<?php
 									$res_id_list = "";
