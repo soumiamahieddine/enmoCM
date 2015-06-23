@@ -768,7 +768,7 @@ class list_show extends functions
                     <?php
                 }
                 ?>
-                - <a href="<?php functions::xecho($link);?>&amp;<?php functions::xecho($whatinput );?>="><?php functions::xecho($all_text);?></a>
+                - <a href="<?php functions::xecho($link);?>&amp;<?php functions::xecho($whatinput );?>="><?php echo $all_text;?></a>
             </td>
             <td  align="right">
             <?php
