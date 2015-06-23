@@ -760,7 +760,7 @@ class list_show extends functions
         <table width="100%" border="0" cellpadding="0" cellspacing="0" class="forms" summary="">
           <tr>
             <td >
-                <strong><?php functions::xecho($alpha_list_text);?></strong> :
+                <strong><?php echo $alpha_list_text;?></strong> :
                 <?php  for($i=ord('A'); $i <= ord('Z');$i++)
                 {
                     ?>
@@ -1197,7 +1197,7 @@ class list_show extends functions
                 $color = ' class="col"';
             }
             ?>
-            <tr <?php functions::xecho($color);?>>
+            <tr <?php echo $color;?>>
                     <?php
                     $enabled = "";
                     if(isset($page_name) && $page_name == "users")
