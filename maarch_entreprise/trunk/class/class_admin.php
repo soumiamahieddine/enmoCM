@@ -78,7 +78,7 @@ class admin extends functions
 	                    <div><i class="<?php functions::xecho($app_services[$i]['style']);?> fa-4x"></i></div>
 	                    <div <?php functions::xecho($debug_style);?>>
 
-	                            <strong><?php functions::xecho($app_services[$i]['name']);?></strong>
+	                            <strong><?php echo $app_services[$i]['name'];?></strong>
 	                           <!-- <em><br/><?php functions::xecho($app_services[$i]['comment']);?></em>-->
 
 	                    </div>
@@ -123,7 +123,7 @@ class admin extends functions
 						<i class="<?php functions::xecho($modules_services[$value][$i]['style']);?> fa-4x"></i>
 						<div <?php functions::xecho($debug_style);?> >
 
-								<strong><?php functions::xecho($modules_services[$value][$i]['name']);?></strong><!--<br/>
+								<strong><?php echo $modules_services[$value][$i]['name'];?></strong><!--<br/>
                                 <em><?php functions::xecho($modules_services[$value][$i]['comment']);?></em>-->
 
 						</div>
