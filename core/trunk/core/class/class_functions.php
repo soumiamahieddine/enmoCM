@@ -855,6 +855,7 @@ class functions
         } else if(($databasetype  == "MYSQL")  && !get_magic_quotes_runtime()) {
             $string = addslashes($string);
         } else if(($databasetype  == "POSTGRESQL")  && !get_magic_quotes_runtime()) {
+            $string = str_replace("&#039;", "'", $string);
             $string = pg_escape_string($string);
         }
 
@@ -1328,7 +1329,7 @@ class functions
             && !strstr($data, 'static.php')
             && !strstr($data, 'http')
         ) {
-            return htmlspecialchars($data, ENT_HTML401, $encoding);
+            return htmlspecialchars($data, ENT_QUOTES | ENT_HTML401, $encoding);
         } else {
             return $data;
         }
