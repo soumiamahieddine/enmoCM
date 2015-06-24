@@ -1276,29 +1276,26 @@ class list_show extends functions
                     }
                     if(!$bool_history && !$bool_simple_list)
                     {
+
+                        $valeur = str_replace("&#039;", "'", $result[$theline][0][$key]);
+                        $valeur = str_replace('&','%26', $valeur);
+                        $valeur = str_replace('#','%23',$valeur);
+
                         if(!$is_part_of_module && !$flag_not_admin && !$is_in_apps_dir)
                         {
-                            $valeur = str_replace('&','%26', $result[$theline][0][$key]);
-                            $valeur = str_replace('#','%23',$valeur);
                             $path_up = $_SESSION['config']['businessappurl']."index.php?page=".$page_name_up."&amp;admin=".$admin."&amp;id=".$valeur;
                         }
                         elseif($flag_not_admin && !$is_in_apps_dir)
                         {
-                            $valeur = str_replace('&','%26', $result[$theline][0][$key]);
-                            $valeur = str_replace('#','%23',$valeur);
                             $path_up = $_SESSION['config']['businessappurl']."index.php?page=".$page_name_up."&amp;id=".$valeur;
                         }
 
                         elseif($is_in_apps_dir)
                         {
-                            $valeur = str_replace('&','%26', $result[$theline][0][$key]);
-                            $valeur = str_replace('#','%23',$valeur);
                             $path_up = $_SESSION['config']['businessappurl']."index.php?page=".$page_name_up."&amp;dir=".$admin."&amp;id=".$valeur;
                         }
                         else
                         {
-                            $valeur = str_replace('&','%26', $result[$theline][0][$key]);
-                            $valeur = str_replace('#','%23',$valeur);
                             $path_up = $_SESSION['config']['businessappurl']."index.php?page=".$page_name_up."&amp;module=".$admin."&amp;id=".$valeur;
                         }
                     ?>
