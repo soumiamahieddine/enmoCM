@@ -107,7 +107,6 @@ if (!defined('_ANSWER')) define( '_ANSWER','Answer');
 if (!defined('_ANSWER_TYPE')) define('_ANSWER_TYPE','Answer types');
 if (!defined('_ANSWER_TYPES_DONE')) define('_ANSWER_TYPES_DONE', 'Type of answer(s)');
 if (!defined('_APA_COLL')) define('_APA_COLL', 'Physical archives - Do not use');
-if (!defined('_APA_CONFIRM_IN_OUT')) define( '_APA_CONFIRM_IN_OUT', 'Confirm reintegration/reservation');
 if (!defined('_APPS_COMMENT')) define('_APPS_COMMENT', 'Maarch App');
 if (!defined('_APPS_SERVICES')) define('_APPS_SERVICES', 'Services defined by the application');
 if (!defined('_APRIL')) define('_APRIL', 'April');
@@ -251,7 +250,6 @@ if (!defined('_CONTACT_TYPE')) define( '_CONTACT_TYPE', 'Contact type');
 if (!defined('_CONTAINER'))  define('_CONTAINER', 'A Container');
 if (!defined('_CONTAINER_MAX_NUMBER'))  define('_CONTAINER_MAX_NUMBER', 'Container max number');
 if (!defined('_CONTINUE')) define('_CONTINUE', 'Continue');
-if (!defined('_CONTRACT_HISTORY')) define('_CONTRACT_HISTORY', 'Contracts history');
 if (!defined('_CORE_COMMENT')) define('_CORE_COMMENT', 'Maarch core');
 if (!defined('_COUNTRY')) define('_COUNTRY', 'Country');
 if (!defined('_COURIER')) define('_COURIER', 'Courier');
@@ -313,7 +311,6 @@ if (!defined('_DETAILS_PRINT'))    define( '_DETAILS_PRINT', 'Document memo');
 if (!defined('_DEVICE_LABEL'))  define('_DEVICE_LABEL', 'Device label ');
 if (!defined('_DIFFUSE')) define('_DIFFUSE', 'Diffuse');
 if (!defined('_DIFFUSION')) define('_DIFFUSION', 'Diffusion');
-if (!defined('_DIPLOMA_LEVEL')) define('_DIPLOMA_LEVEL', 'Degree of the dipoma');
 if (!defined('_DIRECT_CONTACT')) define('_DIRECT_CONTACT','Direct contact');
 if (!defined('_DISPLAY')) define('_DISPLAY', 'Display');
 if (!defined('_DOC')) define('_DOC', 'Document ');
@@ -539,7 +536,6 @@ if (!defined('_INTERNAL2')) define('_INTERNAL2', 'Internal');
 if (!defined('_INVOICES')) define('_INVOICES', 'Customer invoice');
 if (!defined('_INVOICE_NUMBER')) define( '_INVOICE_NUMBER', 'Invoice nb');
 if (!defined('_IN_PROGRESS')) define('_IN_PROGRESS','In progress');
-if (!defined('_IO_COLL')) define('_IO_COLL', 'IOS Collection');
 if (!defined('_IPV4'))  define('_IPV4', 'IPv4 Address');
 if (!defined('_IPV6'))  define('_IPV6', 'IPv6 Address');
 if (!defined('_IP_V4_ADRESS_NOT_VALID')) define('_IP_V4_ADRESS_NOT_VALID', 'IPV4 address not valid');
@@ -622,10 +618,6 @@ if (!defined('_MAIL_VOL_BY_CAT_REPORT_DESC')) define('_MAIL_VOL_BY_CAT_REPORT_DE
 if (!defined('_MAKE_NEW_SEARCH')) define( '_MAKE_NEW_SEARCH', 'Perform a new search');
 if (!defined('_MAKE_UPDATE'))     define( '_MAKE_UPDATE', 'update');
 if (!defined('_MANAGE_ARCHI_APP')) define('_MANAGE_ARCHI_APP', 'Manage documents types sorting tree');
-if (!defined('_MANAGE_CONTRACT')) define('_MANAGE_CONTRACT', 'Manage contracts types');
-if (!defined('_MANAGE_CONTRACT_APP')) define('_MANAGE_CONTRACT_APP', 'Manage types of contracts');
-if (!defined('_MANAGE_DIPLOMA')) define('_MANAGE_DIPLOMA', 'Manage diplomas');
-if (!defined('_MANAGE_DIPLOMA_APP')) define('_MANAGE_DIPLOMA_APP', 'Manage diplomas');
 if (!defined('_MANAGE_DOCSERVERS'))  define('_MANAGE_DOCSERVERS', 'Manage Storage zones');
 if (!defined('_MANAGE_DOCSERVERS_DESC'))  define('_MANAGE_DOCSERVERS_DESC', 'Add, update, delete storage zones ');
 if (!defined('_MANAGE_DOCSERVERS_LOCATIONS'))  define('_MANAGE_DOCSERVERS_LOCATIONS', 'Storage zone locations management ("docserver_locations")');
@@ -797,8 +789,6 @@ if (!defined('_PLEASE_CHANGE_PSW')) define('_PLEASE_CHANGE_PSW', ' Please modify
 if (!defined('_PLEASE_ENTER_YOUR_RA_CODE'))     define( '_PLEASE_ENTER_YOUR_RA_CODE', 'Please enter your remote access code.');
 if (!defined('_PLUS')) define( '_PLUS', 'Plus');
 if (!defined('_POSTAL_CODE')) define('_POSTAL_CODE','Zip code');
-if (!defined('_POSTINDEXING_FOLDER_PAGE')) define('_POSTINDEXING_FOLDER_PAGE', 'Postindexing folder form');
-if (!defined('_POSTINDEXING_PAGE')) define('_POSTINDEXING_PAGE', 'Postindexing fom');
 if (!defined('_POWERED_BY'))     define('_POWERED_BY', 'Powered by Maarch&trade;.');
 if (!defined('_PO_NUMBER')) define( '_PO_NUMBER', 'Invoice PO');
 if (!defined('_PREVIOUS')) define('_PREVIOUS', 'Previous');
@@ -965,7 +955,6 @@ if (!defined('_TECHNICAL_INFORMATIONS'))  define('_TECHNICAL_INFORMATIONS', 'Tec
 if (!defined('_THANKS_TO_COMMUNITY')) define('_THANKS_TO_COMMUNITY', 'And the whole Maarch community!');
 if (!defined('_THANKS_TO_EXT_DEV')) define('_THANKS_TO_EXT_DEV', 'Maarch Company uses a few external components. Thank you to their developers!');
 if (!defined('_THE_ACTION')) define('_THE_ACTION', 'The action ');
-if (!defined('_THE_DIPLOMA_LEVEL')) define('_THE_DIPLOMA_LEVEL', 'The Degree of the diploma');
 if (!defined('_THE_DOC')) define('_THE_DOC', 'The document');
 if (!defined('_THE_DOCTYPE')) define('_THE_DOCTYPE', 'the document type ');
 if (!defined('_THE_DOCUMENT_LINK'))     define('_THE_DOCUMENT_LINK', 'The document ');
@@ -1083,14 +1072,6 @@ if (!defined('_WARNING')) define('_WARNING', 'Warning ');
 if (!defined('_WARNING_MESSAGE_DEL_CONTACT'))  define('_WARNING_MESSAGE_DEL_CONTACT', 'Waring : contact deletion implies reaffectation of documents whatever their stauts');
 if (!defined('_WELCOME')) define('_WELCOME', 'Welcome to Maarch!');
 if (!defined('_WELCOME2')) define('_WELCOME2', 'Welcome');
-if (!defined('_WELCOME_COUNT')) define('_WELCOME_COUNT', 'Number of resources in the collection');
-if (!defined('_WELCOME_NOTES1')) define('_WELCOME_NOTES1', 'To access the different parts of the application');
-if (!defined('_WELCOME_NOTES2')) define('_WELCOME_NOTES2', 'use the <b>menu</b> above');
-if (!defined('_WELCOME_NOTES3')) define('_WELCOME_NOTES3', 'Maarch Team is very proud to present this new framework, which represents an important milestone in the development of the solution.<br><br>In this sample application, you can:<ul><li>o create archive boxes to store the original paper documents you scanned<b>(<i>Physical Archive</i> module)</b></li><li>o Print barcode separator <b>(<i>Physical Archive</i> module)</b></li><li>o Index new documents in two separate collections (production documents and customer invoices) <b>(<i>Indexing & Searching</i> module)</b></li><li>o Mass import customer invoices <b>(<i>Maarch AutoImport</i> add on)</b></li><li>o consult the two document collections <b>(<i> Indexing & Searching</i> module)</b></li><li>o Browse the invoice collection through dynamic trees<b>(<i> AutoFoldering</i> module)</b></li></ul>');
-if (!defined('_WELCOME_NOTES5')) define('_WELCOME_NOTES5', 'Refer to <u><a href="http://www.maarch.org/maarch_wiki/Maarch_Framework_3">maarch wiki</a></u> for more information.');
-if (!defined('_WELCOME_NOTES6')) define('_WELCOME_NOTES6', 'You can also visit our <u><a href="http://www.maarch.org/">community website</a></u> or Maarch <u><a href="http://www.maarch.org/maarch_forum/">forum</a></u>.');
-if (!defined('_WELCOME_NOTES7')) define('_WELCOME_NOTES7', 'If you need professional support or spefific integration, check <u><a href="http://www.maarch.fr/">our services offer</a></u>.');
-if (!defined('_WELCOME_ON')) define('_WELCOME_ON', 'Welcome to');
 if (!defined('_WELCOME_TEXT_LOAD'))    define('_WELCOME_TEXT_LOAD', 'Welcome text load');
 if (!defined('_WELCOME_TITLE')) define('_WELCOME_TITLE', 'Home');
 if (!defined('_WHERE_CLAUSE')) define('_WHERE_CLAUSE', 'WHERE clause');
@@ -1156,36 +1137,7 @@ if (!defined('_CLICK_ICON_TO_TOGGLE'))              define('_CLICK_ICON_TO_TOGGL
 if (!defined('_SHOW'))                              define('_SHOW', 'Afficher');
 if (!defined('_LINES'))                             define('_LINES', ' lignes');
 
-//BUSINESS CATEGORIES
-if (!defined('_PURCHASE')) define('_PURCHASE', 'Purchases');
-if (!defined('_SELL')) define('_SELL', 'Sales');
-if (!defined('_ENTERPRISE_DOCUMENT')) define('_ENTERPRISE_DOCUMENT', 'Enterprise documents');
-if (!defined('_HR')) define('_HR', 'human Resources');
 
-//PURCHASE/SELL CATEGORY
-if (!defined('_SUPPLIER')) define('_SUPPLIER', 'Supplier');
-if (!defined('_CURRENCY')) define('_CURRENCY', 'Currency');
-if (!defined('_NET_SUM')) define('_NET_SUM', 'Net sum');
-if (!defined('_TAX_SUM')) define('_TAX_SUM', 'Tax sum');
-if (!defined('_TOTAL_SUM')) define('_TOTAL_SUM', 'Total sum');
-if (!defined('_PURCHASER')) define('_PURCHASER', 'Purchaser');
-
-//HR CATEGORY
-if (!defined('_EMPLOYEE')) define('_EMPLOYEE', 'Employee');
-
-//INVOICE DOCTYPE
-if (!defined('_INVOICE_TYPE_ID')) define('_INVOICE_TYPE_ID', 'Invoice Type');
-if (!defined('_VOUCHER_IDENTIFIER')) define('_VOUCHER_IDENTIFIER', 'Voucher ID');
-if (!defined('_LAST_DATE')) define('_LAST_DATE', 'Last date');
-if (!defined('_ACCOUNTING_PERIOD')) define('_ACCOUNTING_PERIOD', 'Accounting period');
-if (!defined('_ORDER_IDENTIFIER')) define('_ORDER_IDENTIFIER', 'Order ID');
-if (!defined('_ACCOUNTIG_DATE')) define('_ACCOUNTIG_DATE', 'Accouting date');
-if (!defined('_REF_IDENTIFIER')) define('_REF_IDENTIFIER', 'Ref ID');
-if (!defined('_CONTRACT_IDENTIFIER')) define('_CONTRACT_IDENTIFIER', 'Contract ID');
-if (!defined('_PAYMENT_DATE')) define('_PAYMENT_DATE', 'Payment date');
-if (!defined('_DELIVERY_NOTE_IDENTIFIER')) define('_DELIVERY_NOTE_IDENTIFIER', 'Delivery note ID');
-
-if (!defined('_INDEX_BUSINESS_FILE')) define('_INDEX_BUSINESS_FILE', 'Index business collection file');
 if (!defined('_FILING')) define('_FILING', 'Filing');
 if (!defined('_QUALIF_BUSINESS')) define('_QUALIF_BUSINESS', 'Qualification of business documents');
 if (!defined('_PROCESS_BUSINESS')) define('_PROCESS_BUSINESS', 'Traitement des documents de la collection business');

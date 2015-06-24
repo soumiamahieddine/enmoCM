@@ -22,8 +22,7 @@
 if (!defined('_MEP_VERSION')) define('_MEP_VERSION', 'Maarch v1.5');
 
 /************** Administration **************/
-if (!defined('_VIEW_LAST_COURRIERS'))
-    define('_VIEW_LAST_COURRIERS', 'Mes derniers courriers');
+if (!defined('_VIEW_LAST_COURRIERS')) define('_VIEW_LAST_COURRIERS', 'Mes derniers courriers');
 if (!defined('_ADMIN_USERS'))    define( '_ADMIN_USERS', 'Utilisateurs');
 if (!defined('_ADMIN_DOCSERVERS'))    define( '_ADMIN_DOCSERVERS', 'Zones de stockage');
 if (!defined('_ADMIN_USERS_DESC'))    define( '_ADMIN_USERS_DESC', 'Ajouter, suspendre, ou modifier des profils utilisateurs. Placer les utilisateurs dans leurs groupes d&rsquo;appartenance et définir leur groupe primaire.');
@@ -242,8 +241,6 @@ if (!defined('_LOGOUT')) define( '_LOGOUT', 'D&eacute;connexion');
 if (!defined('_MENU')) define( '_MENU', 'Menu');
 if (!defined('_ADMIN')) define( '_ADMIN', 'Administration');
 if (!defined('_SUMMARY')) define( '_SUMMARY', 'Sommaire');
-if (!defined('_MANAGE_DIPLOMA')) define( '_MANAGE_DIPLOMA', 'G&eacute;rer les dipl&ocirc;mes');
-if (!defined('_MANAGE_CONTRACT')) define( '_MANAGE_CONTRACT', 'G&eacute;rer les types de contrats');
 if (!defined('_MANAGE_REL_MODEL')) define( '_MANAGE_REL_MODEL', 'G&eacute;rer le mod&egrave;le de relance');
 if (!defined('_MANAGE_DOCTYPES')) define( '_MANAGE_DOCTYPES', 'G&eacute;rer les types de documents');
 if (!defined('_MANAGE_DOCTYPES_DESC')) define( '_MANAGE_DOCTYPES_DESC', 'Administrer les types de documents. Les types de documents sont rattach&eacute;s &agrave; une collection documentaire. Pour chaque type, vous pouvez d&eacute;finir les index &agrave; saisir et ceux qui sont obligatoires.');
@@ -254,17 +251,14 @@ if (!defined('_WORDING')) define( '_WORDING', 'Libell&eacute;');
 if (!defined('_COLLECTION')) define( '_COLLECTION', 'Collection');
 if (!defined('_VIEW_TREE_DOCTYPES')) define( '_VIEW_TREE_DOCTYPES', 'Arborescence du plan de classement');
 if (!defined('_VIEW_TREE_DOCTYPES_DESC')) define( '_VIEW_TREE_DOCTYPES_DESC', 'Voir l&rsquo;arborescence du plan de classement (types de dossiers, chemises, sous-chemises et types de documents)');
-if (!defined('_WELCOME_ON')) define( '_WELCOME_ON', 'Bienvenue sur');
 
 /************************* Administration ***********************************/
 
 /**************Sommaire**************/
 if (!defined('_MANAGE_GROUPS_APP')) define( '_MANAGE_GROUPS_APP', 'G&eacute;rer les groupes de l&rsquo;application');
 if (!defined('_MANAGE_USERS_APP')) define( '_MANAGE_USERS_APP', 'G&eacute;rer les utilisateurs de l&rsquo;application');
-if (!defined('_MANAGE_DIPLOMA_APP')) define( '_MANAGE_DIPLOMA_APP', 'G&eacute;rer les dipl&ocirc;mes de l&rsquo;application');
 if (!defined('_MANAGE_DOCTYPES_APP')) define( '_MANAGE_DOCTYPES_APP', 'G&eacute;rer les types de document de l&rsquo;application');
 if (!defined('_MANAGE_ARCHI_APP')) define( '_MANAGE_ARCHI_APP', 'G&eacute;rer l&rsquo;architecture des types de document de l&rsquo;application');
-if (!defined('_MANAGE_CONTRACT_APP')) define( '_MANAGE_CONTRACT_APP', 'G&eacute;rer les types de contrat de l&rsquo;application');
 if (!defined('_HISTORY_EXPLANATION')) define( '_HISTORY_EXPLANATION', 'Surveiller les modifications, les suppressions et les ajouts dans l&rsquo;application');
 if (!defined('_ARCHI_EXP')) define( '_ARCHI_EXP', 'les chemises, les sous-chemises et les types de document');
 
@@ -362,8 +356,6 @@ if (!defined('_CHOOSE_SUBFOLDER')) define( '_CHOOSE_SUBFOLDER', 'Choisissez une 
 if (!defined('_MANDATORY_FOR_COMPLETE')) define( '_MANDATORY_FOR_COMPLETE', 'Obligatoire pour la compl&eacute;tude du dossier d&rsquo;embauche');
 if (!defined('_MORE_THAN_ONE')) define( '_MORE_THAN_ONE', 'Pi&egrave;ce it&eacute;rative');
 if (!defined('_MANDATORY_FIELDS_IN_INDEX')) define( '_MANDATORY_FIELDS_IN_INDEX', 'Champs obligatoires &agrave; l&rsquo;indexation');
-if (!defined('_DIPLOMA_LEVEL')) define( '_DIPLOMA_LEVEL', 'Niveau de dipl&ocirc;me');
-if (!defined('_THE_DIPLOMA_LEVEL')) define( '_THE_DIPLOMA_LEVEL', 'Le niveau de dipl&ocirc;me');
 if (!defined('_DATE_END_DETACH_TIME')) define( '_DATE_END_DETACH_TIME', 'Date de fin de p&eacute;riode de d&eacute;tachement');
 if (!defined('_START_DATE')) define( '_START_DATE', 'Date de d&eacute;but');
 if (!defined('_START_DATE_PROBATION')) define( '_START_DATE_PROBATION', 'Date de d&eacute;but de p&eacute;riode de probatoire');
@@ -626,17 +618,9 @@ if (!defined('_DECEMBER')) define( '_DECEMBER', 'D&eacute;cembre');
 
 
 
-
 if (!defined('_NOW_LOGOUT')) define( '_NOW_LOGOUT', 'Vous &ecirc;tes maintenant d&eacute;connect&eacute;.');
 
 if (!defined('_WELCOME2')) define( '_WELCOME2', 'Bienvenue');
-if (!defined('_WELCOME_NOTES1')) define( '_WELCOME_NOTES1', 'Pour naviguer dans l&rsquo;application');
-if (!defined('_WELCOME_NOTES2')) define( '_WELCOME_NOTES2', 'utilisez le <b>menu</b> ci-dessus');
-if (!defined('_WELCOME_NOTES3')) define( '_WELCOME_NOTES3', 'L&rsquo;&eacute;quipe Maarch est tr&egrave;s fi&egrave;re de vous pr&eacute;senter ce nouveau Framework marquant une &eacute;tape importante dans le d&eacute;veloppement de Maarch.<br><br>Dans cette application d&rsquo;exemple, vous pouvez :<ul><li>o Cr&eacute;er des boites d&rsquo;archives afin d&rsquo;y ranger les documents papier num&eacute;ris&eacute;s <b>(module <i> Physical Archive</i>)</b></li><li>o Imprimer des s&eacute;parateurs code-barre <b>(module <i> Physical Archive</i>)</b></li><li>o Indexer de nouveaux documents dans deux collections documentaires distinctes (documents de production et factures client) <b>(module <i> Indexing & Searching</i>)</b></li><li>o Importer en masse des factures clients <b>(utilitaire <i> Maarch AutoImport</i>)</b></li><li>o Consulter les deux fonds documentaires d&rsquo;exemple <b>(module <i> Indexing & Searching</i>)</b></li><li>o Parcourir la collection des factures au travers d&rsquo;arbres dynamiques <b>(module <i> AutoFoldering</i>)</b></li></ul><br><br>');
-if (!defined('_WELCOME_NOTES5')) define( '_WELCOME_NOTES5', 'Consultez le <u><a href="http://www.maarch.org/maarch_wiki/Maarch_Framework_v3">wiki maarch</a></u> pour plus d&rsquo;informations.');
-if (!defined('_WELCOME_NOTES6')) define( '_WELCOME_NOTES6', 'Acc&eacute;der au <u><a href="http://www.maarch.org/">site communautaire</a></u> ou au <u><a href="http://www.maarch.org/maarch_forum/">forum</a></u> Maarch.');
-if (!defined('_WELCOME_NOTES7')) define( '_WELCOME_NOTES7', '<b>Professionnels</b> : des <u><a href="http://www.maarch.fr/">solutions</a></u> adapt&eacute;es &agrave; vos besoins.');
-if (!defined('_WELCOME_COUNT')) define( '_WELCOME_COUNT', 'Nombre de ressources sur la collection');
 
 if (!defined('_CONTRACT_HISTORY')) define( '_CONTRACT_HISTORY', 'Historique des contrats');
 
@@ -653,45 +637,9 @@ if (!defined('_INVOICES')) define( '_INVOICES', 'Factures');
 if (!defined('_SAMPLE')) define( '_SAMPLE', 'Collection exemple');
 if (!defined('_CHOOSE_COLLECTION')) define( '_CHOOSE_COLLECTION', 'Choisir une collection');
 if (!defined('_COLLECTION')) define( '_COLLECTION', 'Collection');
-if (!defined('_RM_COLL')) define('_RM_COLL', 'Collection des archives');
 if (!defined('_EVENT')) define( '_EVENT', 'Ev&egrave;nement');
 if (!defined('_LINK')) define( '_LINK', 'Lien');
-if (!defined('_LOG_COLL')) define( '_LOG_COLL', 'Collection des logs');
-if (!defined('_IO_COLL')) define('_IO_COLL', 'Collection des bordereaux de versement');
-if (!defined('_BUSINESS')) define('_BUSINESS', 'Collection des documents business');
 
-//BUSINESS CATEGORIES
-if (!defined('_PURCHASE')) define('_PURCHASE', 'Achats');
-if (!defined('_SELL')) define('_SELL', 'Ventes');
-//if (!defined('_ENTERPRISE_DOCUMENT')) define('_ENTERPRISE_DOCUMENT', 'Documents de l&rsquo;Entreprise');
-if (!defined('_ENTERPRISE_DOCUMENT')) define('_ENTERPRISE_DOCUMENT', 'Documents de r&eacute;f&eacute;rence');
-if (!defined('_HR')) define('_HR', 'Ressources humaines');
-
-//PURCHASE/SELL CATEGORY
-if (!defined('_SUPPLIER')) define('_SUPPLIER', 'Fournisseur');
-if (!defined('_CURRENCY')) define('_CURRENCY', 'Devise');
-if (!defined('_NET_SUM')) define('_NET_SUM', 'Montant HT');
-if (!defined('_TAX_SUM')) define('_TAX_SUM', 'Montant TVA');
-if (!defined('_TOTAL_SUM')) define('_TOTAL_SUM', 'Montant TTC');
-if (!defined('_PURCHASER')) define('_PURCHASER', 'Acheteur');
-
-//HR CATEGORY
-if (!defined('_EMPLOYEE')) define('_EMPLOYEE', 'Employ&eacute;');
-
-//INVOICE DOCTYPE
-if (!defined('_INVOICE_TYPE_ID')) define('_INVOICE_TYPE_ID', 'Type de facture');
-if (!defined('_VOUCHER_IDENTIFIER')) define('_VOUCHER_IDENTIFIER', 'N&deg; de pi&egrave;ce comptable');
-if (!defined('_LAST_DATE')) define('_LAST_DATE', 'Date d&rsquo;&eacute;ch&eacute;ance');
-if (!defined('_ACCOUNTING_PERIOD')) define('_ACCOUNTING_PERIOD', 'P&eacute;riode de comptabilisation');
-if (!defined('_ORDER_IDENTIFIER')) define('_ORDER_IDENTIFIER', 'R&eacute;f&eacute;rence de commande');
-if (!defined('_ACCOUNTIG_DATE')) define('_ACCOUNTIG_DATE', 'Date comptabilisation');
-if (!defined('_REF_IDENTIFIER')) define('_REF_IDENTIFIER', 'Identifiant de r&eacute;f&eacute;rence');
-if (!defined('_CONTRACT_IDENTIFIER')) define('_CONTRACT_IDENTIFIER', 'N&deg; de contrat');
-if (!defined('_PAYMENT_DATE')) define('_PAYMENT_DATE', 'Date de paiement');
-if (!defined('_DELIVERY_NOTE_IDENTIFIER')) define('_DELIVERY_NOTE_IDENTIFIER', 'N&deg; de BL');
-
-if (!defined('_INDEX_BUSINESS_FILE')) define('_INDEX_BUSINESS_FILE', 'Enregistrement des documents de la collection business');
-//if (!defined('_FILING')) define('_FILING', 'Classement');
 if (!defined('_FILING')) define('_FILING', 'Typologie');
 
 if (!defined('_CHOOSE_DIFFUSION_LIST')) define('_CHOOSE_DIFFUSION_LIST', 'Choisissez une liste de diffusion');
@@ -740,13 +688,6 @@ if (!defined('_CHECK_INVOICE')) define( '_CHECK_INVOICE', 'V&eacute;rifier factu
 
 if (!defined('_REDIRECT_TO')) define( '_REDIRECT_TO', 'Rediriger vers');
 if (!defined('_NO_STRUCTURE_ATTACHED')) define( '_NO_STRUCTURE_ATTACHED', 'Ce type de document n&rsquo;est attach&eacute; &agrave; aucune chemise');
-
-//Postindexing action pages
-if (!defined('_POSTINDEXING_PAGE')) define('_POSTINDEXING_PAGE', 'Formulaire de vid&eacute;ocodage');
-if (!defined('_POSTINDEXING_FOLDER_PAGE')) define('_POSTINDEXING_FOLDER_PAGE', 'Formulaire de vid&eacute;ocodage (dossiers)');
-
-//Advanced Physical Archive action page
-if (!defined('_APA_CONFIRM_IN_OUT')) define( '_APA_CONFIRM_IN_OUT', 'Confirmation de R&eacute;servation / R&eacute;int&eacute;gration');
 
 ///// Credits
 if (!defined('_MAARCH_CREDITS')) define( '_MAARCH_CREDITS', 'A propos de Maarch&nbsp;');
@@ -807,16 +748,11 @@ if (!defined('_ADV_SEARCH_INVOICES')) define( '_ADV_SEARCH_INVOICES', '[cold] Re
 
 if (!defined('_ADV_SEARCH_TITLE')) define( '_ADV_SEARCH_TITLE', 'Recherche avanc&eacute;e de document');
 if (!defined('_MAIL_OBJECT')) define( '_MAIL_OBJECT', 'Objet du courrier');
-//if (!defined('_SHIPPER')) define( '_SHIPPER', 'Emetteur');
-//if (!defined('_SENDER')) define( '_SENDER', 'Exp&eacute;diteur');
-//if (!defined('_SOCIETY')) define( '_SOCIETY', 'Soci&eacute;t&eacute;');
-//if (!defined('_SHIPPER_SEARCH')) define( '_SHIPPER_SEARCH','Dans le champ &eacute;metteur, les recherches ne sont effectu&eacute;es ni sur les civilit&eacute;s, ni sur les pr&eacute;noms.');
-//if (!defined('_MAIL_IDENTIFIER')) define( '_MAIL_IDENTIFIER','R&eacute;f&eacute;rence de l&rsquo;affaire');
+
 if (!defined('_N_GED')) define( '_N_GED','Num&eacute;ro GED ');
 if (!defined('_GED_NUM')) define( '_GED_NUM', 'N&deg; GED');
 if (!defined('_CHOOSE_TYPE_MAIL')) define( '_CHOOSE_TYPE_MAIL','Choisissez un type de courrier');
-//if (!defined('_INVOICE_TYPE')) define( '_INVOICE_TYPE','Nature de l&rsquo;envoi');
-//if (!defined('_CHOOSE_INVOICE_TYPE')) define( '_CHOOSE_INVOICE_TYPE','Choisissez la nature de l&rsquo;envoi');
+
 if (!defined('_REG_DATE')) define( '_REG_DATE','Date d&rsquo;enregistrement');
 if (!defined('_PROCESS_DATE')) define( '_PROCESS_DATE','Date de traitement');
 if (!defined('_CHOOSE_STATUS')) define( '_CHOOSE_STATUS','Choisissez un statut');
@@ -826,7 +762,7 @@ if (!defined('_TO_CC')) define( '_TO_CC','En copie');
 if (!defined('_TO_SIGN')) define( '_TO_SIGN','Pour signature');
 if (!defined('_ADD_CC')) define( '_ADD_CC','En copie');
 if (!defined('_ADD_COPIES')) define( '_ADD_COPIES','Ajouter des personnes en copie');
-//if (!defined('_ANSWER_TYPE')) define( '_ANSWER_TYPE','Type(s) de r&eacute;ponse');
+
 if (!defined('_PROCESS_NOTES')) define( '_PROCESS_NOTES','Notes de traitement');
 if (!defined('_DIRECT_CONTACT')) define( '_DIRECT_CONTACT','Prise de contact direct');
 if (!defined('_NO_ANSWER')) define( '_NO_ANSWER','Pas de r&eacute;ponse');
@@ -834,7 +770,7 @@ if (!defined('_ANSWER')) define( '_ANSWER','R&eacute;ponse');
 if (!defined('_DETAILS')) define( '_DETAILS', 'Fiche d&eacute;taill&eacute;e');
 if (!defined('_DOWNLOAD')) define( '_DOWNLOAD', 'T&eacute;l&eacute;charger le courrier');
 if (!defined('_SEARCH_RESULTS')) define( '_SEARCH_RESULTS', 'R&eacute;sultat de la recherche');
-//if (!defined('_DOCUMENTS')) define( '_DOCUMENTS', 'documents');
+
 if (!defined('_THE_SEARCH')) define( '_THE_SEARCH', 'La recherche');
 if (!defined('_CHOOSE_TABLE')) define( '_CHOOSE_TABLE', 'Choisissez une collection');
 if (!defined('_SEARCH_COPY_MAIL')) define( '_SEARCH_COPY_MAIL','Chercher dans mes courriers en copie');
@@ -858,7 +794,6 @@ if (!defined('_QUERY_NAME')) define( '_QUERY_NAME', 'Nom de ma recherche');
 if (!defined('_QUERY_SAVED')) define( '_QUERY_SAVED', 'Recherche sauvegard&eacute;e');
 if (!defined('_VISA_USER'))    define('_VISA_USER', 'Pour visa');
 
-//if (!defined('_SQL_ERROR')) define( '_SQL_ERROR', 'Erreur SQL lors de l&acute;enregistrement de la recherche');
 if (!defined('_LOAD_QUERY')) define( '_LOAD_QUERY', 'Charger la recherche');
 if (!defined('_DELETE_QUERY')) define( '_DELETE_QUERY', 'Supprimer la recherche');
 if (!defined('_CHOOSE_SEARCH')) define( '_CHOOSE_SEARCH', 'Choisir une recherche');
@@ -867,9 +802,6 @@ if (!defined('_MY_SEARCHES')) define( '_MY_SEARCHES', 'Mes recherches');
 if (!defined('_CLEAR_SEARCH')) define( '_CLEAR_SEARCH', 'Effacer les crit&egrave;res');
 if (!defined('_CHOOSE_STATUS_SEARCH_TITLE')) define( '_CHOOSE_STATUS_SEARCH_TITLE', 'Ajoutez le/les statut(s) d&eacute;sir&eacute;(s) pour restreindre la recherche');
 if (!defined('_ERROR_IE_SEARCH')) define( '_ERROR_IE_SEARCH', 'Cet &eacute;l&eacute;ment est d&eacute;j&agrave; d&eacute;fini !');
-//if (!defined('_CIVILITIES')) define( '_CIVILITIES', 'Civilit&eacute;(s)');
-//if (!defined('_CIVILITY')) define( '_CIVILITY', 'Civilit&eacute;');
-//if (!defined('_CHOOSE_CIVILITY_SEARCH_TITLE')) define( '_CHOOSE_CIVILITY_SEARCH_TITLE', 'Ajoutez le/les civilit&eacute;(s) d&eacute;sir&eacute;(s) pour restreindre la recherche');
 
 if (!defined('_DEST_USER')) define( '_DEST_USER','Destinataire');
 if (!defined('_DOCTYPES')) define( '_DOCTYPES','Type(s) de document');
@@ -1187,7 +1119,8 @@ if (!defined('_INDEXING_STATUSES')) define( '_INDEXING_STATUSES', 'Indexer vers 
 if (!defined('_UNCHANGED')) define( '_UNCHANGED', 'Inchang&eacute;');
 if (!defined('_LOAD_STATUSES_SESSION')) define( '_LOAD_STATUSES_SESSION', 'Chargement des status en session');
 if (!defined('_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS')) define( '_PARAM_AVAILABLE_STATUS_ON_GROUP_BASKETS', 'Param&eacute;trage des status d\'indexation');
-/////////////////// Reports
+
+/************** Reports ***************/
 if (!defined('_USERS_LOGS')) define( '_USERS_LOGS', 'Liste des acc&egrave;s &agrave; l&rsquo;application par agent');
 if (!defined('_USERS_LOGS_DESC')) define( '_USERS_LOGS_DESC', 'Liste des acc&egrave;s &agrave; l&rsquo;application par agent');
 if (!defined('_PROCESS_DELAY_REPORT')) define( '_PROCESS_DELAY_REPORT', 'D&eacute;lai moyen de traitement par type de courrier');
@@ -1315,7 +1248,6 @@ if (!defined('_TITLE_STATS_CHOICE_PERIOD'))  define('_TITLE_STATS_CHOICE_PERIOD'
 
 
 /******************** Authentification method  ************/
-
 
 if (!defined('_STANDARD_LOGIN')) define( '_STANDARD_LOGIN', 'Authentification Maarch');
 if (!defined('_ACTIVEX_LOGIN')) define( '_ACTIVEX_LOGIN', 'Authentification Ms Internet Explorer - ActiveX');
@@ -1520,19 +1452,8 @@ if (!defined('_RA_CODE_1'))    define( '_RA_CODE_1', 'Code complémentaire');
 if (!defined('_CAN_T_CONNECT_WITH_THIS_IP'))    define( '_CAN_T_CONNECT_WITH_THIS_IP', 'Vous ne pouvez pas vous connecter depuis un emplacement non répertorié.');
 
 
-/*******************************************************************************
-* admin => svn_monitoring
-*******************************************************************************/
-if (!defined('_SVN_MONITORING'))    define( '_SVN_MONITORING', 'SVN Supervision');
 if (!defined('_LOADING_INFORMATIONS'))    define( '_LOADING_INFORMATIONS', 'Chargement des informations');
-if (!defined('_RELEASE_NUMBER'))    define( '_RELEASE_NUMBER', 'N&deg; de r&eacute;vision');
 if (!defined('_BY'))    define( '_BY', 'par');
-if (!defined('_UP_TO_DATE'))    define( '_UP_TO_DATE', '&agrave; jour');
-if (!defined('_ACTUAL_INSTALLATION'))    define( '_ACTUAL_INSTALLATION', 'version install&eacute;e');
-if (!defined('_MAKE_UPDATE'))    define( '_MAKE_UPDATE', 'mettre &agrave; jour');
-if (!defined('_TO_GET_LOG_PLEASE_CONNECT'))    define( '_TO_GET_LOG_PLEASE_CONNECT', 'Pour obtenir la liste des logs, vous devez &ecirc;tre connect&eacute;');
-if (!defined('_MANAGE_MEP_RELEASE'))    define( '_MANAGE_MEP_RELEASE', 'Gestion des r&eacute;visions de Maarch');
-if (!defined('_INSTALL_SVN_EXTENSION'))    define( '_INSTALL_SVN_EXTENSION', 'Vous devez installer la librairie PHP svn pour acc&eacute;der aux logs.');
 if (!defined('_REVERSE_CHECK'))    define( '_REVERSE_CHECK', 'Inverser la s&eacute;lection');
 if (!defined('_CHECK_ALL'))    define( '_CHECK_ALL', 'Tout cocher');
 if (!defined('_UNCHECK_ALL'))    define( '_UNCHECK_ALL', '/ d&eacute;cocher');
@@ -1652,21 +1573,8 @@ if (!defined('_DOCUMENT')) define('_DOCUMENT', 'document');
 if (!defined('_CATEGORY_HELP')) define('_CATEGORY_HELP', 'Modifier la cat&eacute;gorie modifiera le formulaire de recherche');
 if (!defined('_CONTACT_HELP')) define('_CONTACT_HELP', 'Champ disposant de l&rsquo;autocompl&eacute;tion, le type de contact d&eacute;pend de la cat&eacute;gorie choisie');
 if (!defined('_SUBJECT_HELP')) define('_SUBJECT_HELP', 'Sujet du document');
-if (!defined('_IDENTIFIER_HELP')) define('_IDENTIFIER_HELP', 'Identifiant du document, id&eacute;al pour une recherche pointue car g&eacute;n&eacute;ralement unique');
-if (!defined('_TOTAL_SUM_MIN_HELP')) define('_TOTAL_SUM_MIN_HELP', 'Total TTC minimal. Séparateur "."');
-if (!defined('_TOTAL_SUM_MIN')) define('_TOTAL_SUM_MIN', 'Total TTC minimal');
-if (!defined('_TOTAL_SUM_MAX')) define('_TOTAL_SUM_MAX', 'Total TTC maximal');
-if (!defined('_TOTAL_SUM_MAX_HELP')) define('_TOTAL_SUM_MAX_HELP', 'Total TTC maximal. Séparateur "."');
-
-/*************** COLD **************/
-if (!defined('_OUTGOING_INVOICE')) define('_OUTGOING_INVOICE', 'Collection COLD factures clients');
 
 if (!defined('_NOT_EXISTS')) define('_NOT_EXISTS', 'n&rsquo;existe pas');
-
-/*************** ARCHIVE **************/
-if (!defined('_INDEX_ARCHIVE')) define('_INDEX_ARCHIVE', '[archive] Verser une archive');
-if (!defined('_RM_ITEMS_TRANSFER')) define('_RM_ITEMS_TRANSFER', '[archive] Transfert des items');
-if (!defined('_RM_ARCHIVE')) define('_RM_ARCHIVE', 'Archives interm&eacute;diaires');
 
 /*************** FOLDER **************/
 if (!defined('_CONFIRM_FOLDER_STATUS')) define('_CONFIRM_FOLDER_STATUS', '[dossier] Confirmer le statut du dossier');
