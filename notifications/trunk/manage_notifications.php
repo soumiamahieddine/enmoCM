@@ -277,7 +277,13 @@ if ($mode == 'list') {
         }
         $filename.="_".$notification_sid.".sh";
         
-        if ($mode == 'up' && PHP_OS == "Linux" && !file_exists($_SESSION['config']['corepath'].'modules/notifications/batch/scripts/'.$filename)) {?>
+        if ($_SESSION['custom_override_id'] <> '') {
+            $pathToFolow = $_SESSION['config']['corepath'] . 'custom/'.$_SESSION['custom_override_id'] . '/';
+        } else {
+            $pathToFolow = $_SESSION['config']['corepath'];
+        }
+        
+        if ($mode == 'up' && PHP_OS == "Linux" && !file_exists($pathToFolow.'modules/notifications/batch/scripts/'.$filename)) {?>
             <input class="button" type="button" name="create_notif_script" id="create_notif_script" value="<?php echo _CREATE_NOTIF_SCRIPT;?>" 
             onclick="createNotifScript('<?php echo $_SESSION['config']['businessappurl'];
          ?>index.php?display=true&amp;page=create_notif_script&amp;module=notifications', '<?php functions::xecho($_SESSION['m_admin']['notification']['notification_sid']);?>', '<?php echo $_SESSION['m_admin']['notification']['notification_id'];?>')"/>

@@ -293,8 +293,15 @@ function display_del($notification_sid) {
                 $cronTab = $scheduleNotification->getCrontab();
 
                 $flagCron = false;
+
+                if ($_SESSION['custom_override_id'] <> '') {
+                    $pathToFolow = $_SESSION['config']['corepath'] . 'custom/'.$_SESSION['custom_override_id'] . '/';
+                } else {
+                    $pathToFolow = $_SESSION['config']['corepath'];
+                }
+
                 foreach ($cronTab as $key => $value) {
-                    if($value['cmd'] == $_SESSION['config']['corepath'].'modules/notifications/batch/scripts/'.$filename){
+                    if($value['cmd'] == $pathToFolow.'modules/notifications/batch/scripts/'.$filename){
                         $cronTab[$key]['state'] = 'deleted';
                         $flagCron = true;
                         break;
@@ -305,7 +312,7 @@ function display_del($notification_sid) {
                     $scheduleNotification->saveCrontab($cronTab, true);
                 }
                 
-                shell_exec("rm -f ".$_SESSION['config']['corepath'].'modules/notifications/batch/scripts/'.$filename);
+                shell_exec("rm -f ".$pathToFolow.'modules/notifications/batch/scripts/'.$filename);
             }
         }
         ?><script type="text/javascript">window.top.location='<?php

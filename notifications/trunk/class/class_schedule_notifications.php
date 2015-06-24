@@ -39,7 +39,13 @@ class ScheduleNotifications{
 				'cmd' => $cmd,
 			);
 
-			if ( strpos($data[$id]['cmd'], $_SESSION['config']['corepath'].'modules/notifications/batch/scripts/') !== 0 ) {
+	        if ($_SESSION['custom_override_id'] <> '') {
+	        	$pathToFolow = $_SESSION['config']['corepath'] . 'custom/'.$_SESSION['custom_override_id'] . '/';
+	        } else {
+	        	$pathToFolow = $_SESSION['config']['corepath'];
+	        }
+
+			if ( strpos($data[$id]['cmd'], $pathToFolow.'modules/notifications/batch/scripts/') !== 0 ) {
 				$data[$id]['state'] = 'hidden';
 			}
 		}
@@ -93,7 +99,13 @@ class ScheduleNotifications{
             }
             $filename.="_".$result->notification_sid.".sh";
 
-            $path = $_SESSION['config']['corepath'].'modules/notifications/batch/scripts/'.$filename;
+	        if ($_SESSION['custom_override_id'] <> '') {
+	        	$pathToFolow = $_SESSION['config']['corepath'] . 'custom/'.$_SESSION['custom_override_id'] . '/';
+	        } else {
+	        	$pathToFolow = $_SESSION['config']['corepath'];
+	        }
+
+            $path = $pathToFolow.'modules/notifications/batch/scripts/'.$filename;
 
 			if (file_exists($path)) {
 				$notificationsArray[$path] = $result->description;
@@ -121,7 +133,13 @@ class ScheduleNotifications{
             $ConfigNotif = $_SESSION['config']['corepath']. 'modules/notifications/batch/config/config.xml';
         }
         
-        $file_open = fopen($_SESSION['config']['corepath'].'modules/notifications/batch/scripts/'.$filename, 'w+');
+        if ($_SESSION['custom_override_id'] <> '') {
+        	$pathToFolow = $_SESSION['config']['corepath'] . 'custom/'.$_SESSION['custom_override_id'] . '/';
+        } else {
+        	$pathToFolow = $_SESSION['config']['corepath'];
+        }
+
+        $file_open = fopen($pathToFolow.'modules/notifications/batch/scripts/'.$filename, 'w+');
         fwrite($file_open, '#!/bin/sh');
         fwrite($file_open, "\n");
         fwrite($file_open, 'path=\''.$_SESSION['config']['corepath'].'modules/notifications/batch/\'');
@@ -135,7 +153,7 @@ class ScheduleNotifications{
         fwrite($file_open, 'php \'process_email_stack.php\' -c '.$ConfigNotif);
         fwrite($file_open, "\n");
         fclose($file_open);
-        shell_exec("chmod +x " . $_SESSION['config']['corepath'].'modules/notifications/batch/scripts/'.$filename);
+        shell_exec("chmod +x " . $pathToFolow.'modules/notifications/batch/scripts/'.$filename);
 	}
 
 	function checkCrontab($crontabToSave){
@@ -146,7 +164,13 @@ class ScheduleNotifications{
 			if ($e['state'] == "deleted"){
 				// nothing to do
 			} else if($e['state'] == "new" || $e['state'] == "normal"){
-				if(strpos($crontabToSave[$id]['cmd'], $_SESSION['config']['corepath'].'modules/notifications/batch/scripts/') !== 0) {
+				
+		        if ($_SESSION['custom_override_id'] <> '') {
+		        	$pathToFolow = $_SESSION['config']['corepath'] . 'custom/'.$_SESSION['custom_override_id'] . '/';
+		        } else {
+		        	$pathToFolow = $_SESSION['config']['corepath'];
+		        }
+				if(strpos($crontabToSave[$id]['cmd'], $pathToFolow.'modules/notifications/batch/scripts/') !== 0) {
 					$error = 1;
 					break;
 				}
