@@ -1157,9 +1157,6 @@ if (!defined('_DOC_DELETED')) define( '_DOC_DELETED', 'Document supprimé');
 if (!defined('_UPDATE_DOC_STATUS')) define( '_UPDATE_DOC_STATUS', 'Statut du document mis à jour');
 
 if (!defined('_DOCTYPE_MANDATORY')) define( '_DOCTYPE_MANDATORY', 'Le type de pi&egrave;ce est obligatoire');
-if (!defined('_INDEX_UPDATED')) define( '_INDEX_UPDATED', 'Index mis &agrave; jour');
-if (!defined('_DOC_DELETED')) define( '_DOC_DELETED', 'Document supprimé');
-if (!defined('_UPDATE_DOC_STATUS')) define( '_UPDATE_DOC_STATUS', 'Statut du document mis à jour');
 if (! defined('_CHECK_FORM_OK'))    define('_CHECK_FORM_OK', 'V&eacute;rification formulaire OK');
 if (! defined('_MISSING_FORMAT'))    define('_MISSING_FORMAT', 'Il manque le format');
 if (! defined('_ERROR_RES_ID'))    define('_ERROR_RES_ID', 'Probl&egrave;me lors du calcul du res_id');

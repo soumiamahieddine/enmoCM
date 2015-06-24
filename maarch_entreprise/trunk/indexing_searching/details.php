@@ -361,7 +361,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
         <br />
         <br />
         <br />
-        <?php functions::xecho($_SESSION['error']);  $_SESSION['error'] = "";?>
+        <?php echo $_SESSION['error'];  $_SESSION['error'] = "";?>
         <br />
         <br />
         <br />
@@ -382,7 +382,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
         } else {
             ?>
             <div id="info_detail" class="info" onclick="this.hide();">
-                <?php functions::xecho($_SESSION['info']);?>
+                <?php echo $_SESSION['info'] ;?>
                 <br />
                 <br />
             </div>
