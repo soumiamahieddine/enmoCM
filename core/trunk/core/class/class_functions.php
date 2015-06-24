@@ -1328,7 +1328,7 @@ class functions
             && !strstr($data, 'static.php')
             && !strstr($data, 'http')
         ) {
-            return htmlspecialchars($data, ENT_QUOTES | ENT_HTML401, $encoding);
+            return htmlspecialchars($data, ENT_HTML401, $encoding);
         } else {
             return $data;
         }
