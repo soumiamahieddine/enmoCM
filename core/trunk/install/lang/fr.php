@@ -184,7 +184,7 @@ if (!defined('_DATASET_CHOICE')) {
     define('_DATASET_CHOICE', "Choix du jeu de données d'exemple à importer");
 }
 if (!defined('_DATASET_EXP')) {
-    define('_DATASET_EXP', "L'installation propose deux jeux de données : l'un relativement simple mettant en avant les fonctionnalités SAE de base (data.sql), et l'autre plus complet illustrant un circuit courrier en collectivité (data_mlb.sql). Les deux jeux comprennent des utilisateurs, des types de documents, et l'ensemble du référentiel pour une compréhension globale de l'outil.");
+    define('_DATASET_EXP', "Le jeu de données illustre un circuit courrier en collectivité. Il comprend des utilisateurs, des types de documents, et l'ensemble du référentiel pour une compréhension globale de l'outil.");
 }
 if (!defined('_DATASET')) {
     define('_DATASET', "Jeu de données");

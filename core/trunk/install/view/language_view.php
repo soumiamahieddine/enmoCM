@@ -44,7 +44,13 @@
                             echo '<option ';
                               echo 'value="'.$listLang[$i].'"';
                             echo '>';
-                                echo $listLang[$i];
+                                if ($listLang[$i] == "fr") {
+                                    echo "French";
+                                } else if ($listLang[$i] == "en") {
+                                    echo "English";
+                                } else {
+                                    echo $listLang[$i];
+                                }
                             echo '</option>';
                         }
                     ?>
