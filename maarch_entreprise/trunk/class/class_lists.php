@@ -2620,12 +2620,12 @@ class lists extends dbquery
     
     private function _createExtraJavascript() {
         $str .= '<script type="text/javascript">';
-        $str .= ' var arr_msg_error = {\'confirm_title\' : \''._ACTION_CONFIRM.'\',';
-        $str .= ' \'validate\' : \''._VALIDATE.'\',';
-        $str .= ' \'cancel\' : \''._CANCEL.'\',';
-        $str .= ' \'choose_action\' : \''._CHOOSE_ACTION.'\',';
-        $str .= ' \'choose_one_doc\' : \''._CHOOSE_ONE_DOC.'\',';
-        $str .= ' \'choose_one_folder\' : \''._CHOOSE_ONE_FOLDER.'\'';
+        $str .= ' var arr_msg_error = {\'confirm_title\' : \''.addslashes(_ACTION_CONFIRM).'\',';
+        $str .= ' \'validate\' : \''.addslashes(_VALIDATE).'\',';
+        $str .= ' \'cancel\' : \''.addslashes(_CANCEL).'\',';
+        $str .= ' \'choose_action\' : \''.addslashes(_CHOOSE_ACTION).'\',';
+        $str .= ' \'choose_one_doc\' : \''.addslashes(_CHOOSE_ONE_DOC).'\',';
+        $str .= ' \'choose_one_folder\' : \''.addslashes(_CHOOSE_ONE_FOLDER).'\'';
         $str .= ' };';
         $str .= 'var validForm = function(mode, res_id, id_action) {';
         $str .= 'if(!isAlreadyClick) {';
@@ -2664,8 +2664,6 @@ class lists extends dbquery
         $str .= ' if(id_action && id_action != \'\') {';
         $str .= ' val_frm[\'action_id\'] = id_action;';
         $str .= ' }';
-        // $str .= ' alert(\'Mode:\' + mode + \'; Id:\' + val_frm[\'values\'] + \'; Action:\' + val_frm[\'action_id\'] '
-                // .'+ \'; Table:\' + val_frm[\'table\']+ \'; Module:\' + val_frm[\'module\']+ \'; Collection:\' + val_frm[\'coll_id\']);';
         $str .= ' action_send_first_request(\''.$_SESSION['config']['businessappurl']
                 .'index.php?display=true&page=manage_action&module=core\', mode,  val_frm[\'action_id\'], '
                 .'val_frm[\'values\'], val_frm[\'table\'], val_frm[\'module\'], val_frm[\'coll_id\']);';
