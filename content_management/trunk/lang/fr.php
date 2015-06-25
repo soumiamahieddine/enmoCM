@@ -21,17 +21,17 @@
 
  /******************** Content management  ************/
 
-if (!defined('_MAARCH_CM_APPLET'))
-    define('_MAARCH_CM_APPLET','Lancement &eacute;dition du contenu');
-if (!defined('_NO_UPDATE'))
-    define('_NO_UPDATE','Aucune mise à jour de contenu détectée');
-if (!defined('_UPDATE_OK'))
-    define('_UPDATE_OK','Mise à jour de contenu réalisée');
-if (!defined('_NEW_ATTACHMENT_VERSION'))
-    define('_NEW_ATTACHMENT_VERSION','R&eacute;ponse au courrier');
-if (!defined('_VERSION'))
-    define('_VERSION','Version');
-if (!defined('_NEW_VERSION_ADDED'))
-    define('_NEW_VERSION_ADDED','Nouvelle version ajout&eacute;e');
-if (!defined('_DONT_CLOSE'))
-    define('_DONT_CLOSE','Ne pas fermer cette fen&ecirc;tre !');
+if (!defined("_MAARCH_CM_APPLET"))
+    define("_MAARCH_CM_APPLET","Lancement édition du contenu");
+if (!defined("_NO_UPDATE"))
+    define("_NO_UPDATE","Aucune mise à jour de contenu détectée");
+if (!defined("_UPDATE_OK"))
+    define("_UPDATE_OK","Mise à jour de contenu réalisée");
+if (!defined("_NEW_ATTACHMENT_VERSION"))
+    define("_NEW_ATTACHMENT_VERSION","Réponse au courrier");
+if (!defined("_VERSION"))
+    define("_VERSION","Version");
+if (!defined("_NEW_VERSION_ADDED"))
+    define("_NEW_VERSION_ADDED","Nouvelle version ajoutée");
+if (!defined("_DONT_CLOSE"))
+    define("_DONT_CLOSE","Ne pas fermer cette fenêtre !");
