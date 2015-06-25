@@ -4,6 +4,7 @@ $error = '';
 
 function get_values_in_array($val)
 {
+    $val = str_replace("&#039;", "'", $val);
     $tab = explode('$$',$val);
     $values = array();
     for($i=0; $i<count($tab);$i++)
