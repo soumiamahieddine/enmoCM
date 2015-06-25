@@ -78,7 +78,7 @@ else
                     </tr>
                     <tr>
                         <td>
-                            <h2 style="color:#1B99C4"><p align="center"><?php echo _NUM_CASE." ".$case_id;?></p></h2>
+                            <h2 style="color:#1B99C4"><p align="center"><?php echo _NUM_CASE." ".functions::xssafe($case_id);?></p></h2>
                             <p style="color:#1B99C4" align="center"><?php functions::xecho($db->show_string($case_indexes['case_description']));?> </p>
                         </td>
                     </tr>
@@ -112,9 +112,9 @@ else
                 <td>
                     <?php
                     if ($core_tools->test_service('update_case', 'cases',false) == 0)
-                        echo '<input type="text"  class="readonly" readonly="readonly" value="'.$db->show_string($case_indexes['case_label']).'" size="40"  />';
+                        echo '<input type="text"  class="readonly" readonly="readonly" value="'.functions::xssafe($db->show_string($case_indexes['case_label'])).'" size="40"  />';
                     else
-                        echo '<input type="text" name="case_label" id="case_label" class=""  value="'.$db->show_string($case_indexes['case_label']).'" size="40"  />';  ?>
+                        echo '<input type="text" name="case_label" id="case_label" class=""  value="'.functions::xssafe($db->show_string($case_indexes['case_label'])).'" size="40"  />';  ?>
                 </td>
             </tr>
 
@@ -128,9 +128,9 @@ else
                 <td>
                 <?php
                 if ($core_tools->test_service('update_case', 'cases',false) == 0)
-                    echo '<input type="text"  class="readonly" readonly="readonly" value="'.$db->show_string($case_indexes['case_description']).'" size="40" />';
+                    echo '<input type="text"  class="readonly" readonly="readonly" value="'.functions::xssafe($db->show_string($case_indexes['case_description'])).'" size="40" />';
                 else
-                    echo '<input type="text" name="case_description" id="case_description" class=""  value="'.$db->show_string($case_indexes['case_description']).'" size="40" maxlength="255"/>';
+                    echo '<input type="text" name="case_description" id="case_description" class=""  value="'.functions::xssafe($db->show_string($case_indexes['case_description'])).'" size="40" maxlength="255"/>';
                 ?>
                 </td>
             </tr>
@@ -202,7 +202,7 @@ else
             {
                 $temp =  $status_obj->get_status_data($r['status']);
                 echo '<td><i class="fm '.$temp['IMG_SRC'].' fm-2x"></i></td>';
-                echo '<td>'.$temp['LABEL'].' : </td>';
+                echo '<td>'.functions::xssafe($temp['LABEL']).' : </td>';
                 echo '<td><b>'.$r['nb_docs'].'</b></td>';
                 echo '<td width="40px;">&nbsp;</td>';
             }

@@ -53,22 +53,22 @@ echo "<p align='right'><b><a href = '"
 		</td>
 		<td>
 		  <input type="text" class="readonly" readonly="readonly" value="<?php
-echo $case_properties['case_id'];
+functions::xecho($case_properties['case_id']);
 ?>" size="40" title="<?php
-echo $case_properties['case_id'];
+functions::xecho($case_properties['case_id']);
 ?>" alt="<?php functions::xecho($case_properties['case_id']);?>" />
         </td>
 		<th align="left" class="picto">
 		  <!--<img alt="<?php echo _CASE;?>" src="<?php echo $_SESSION['config']['businessappurl'];?>static.php?filename=picto_infos.gif" />-->
 		</th>
 		<td align="left" width="200px">
-		    <?php echo _CASE_LABEL;?> :
+		    <?php functions::xecho(_CASE_LABEL);?> :
 		</td>
 		<td>
 		    <input type="text" class="readonly" readonly="readonly" value="<?php
-echo $case_properties['case_label'];
+functions::xecho($case_properties['case_label']);
 ?>" size="40" title="<?php
-echo $case_properties['case_label'];
+functions::xecho($case_properties['case_label']);
 ?>" alt="<?php functions::xecho($case_properties['case_label']);?>" />
 		</td>
 	</tr>

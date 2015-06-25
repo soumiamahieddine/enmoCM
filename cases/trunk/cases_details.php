@@ -128,11 +128,11 @@ if ($db_external->nb_result() >0)
 					$external .='<td width="8%" >&nbsp;</td>';
 					$external .='<td width="40px"><img src="'.$res_status['IMG_SRC'].'" alt = "'.$res_status['LABEL'].'" title = "'.$res_status['LABEL'].'"></td>';
 					//$external .='<td width="40px"><p><img src="'. get_img_cat($ext_result->category_id,$extension_icon).'" title="'.$_SESSION['mail_categories'][$ext_result->category_id].'" alt="'.$_SESSION['mail_categories'][$ext_result->category_id].'"></p></td>';
-					$external .='<td width="40px" ><b><p align="center" title="'._GED_NUM.' : '.$ext_result->res_id.'" alt="'._GED_NUM.' : '.$ext_result->res_id.'">'.$func->cut_string($ext_result->res_id,50).'</td></b></p>';
-					$external .='<td ><p title="'._SUBJECT.' : '.$request->show_string($ext_result->subject).'" alt="'.SUBJECT.' : '.$request->show_string($ext_result->subject).'">'.$func->cut_string($request->show_string($ext_result->subject),70).'</p></td>';
+					$external .='<td width="40px" ><b><p align="center" title="'._GED_NUM.' : '.functions::xssafe($ext_result->res_id).'" alt="'._GED_NUM.' : '.functions::xssafe($ext_result->res_id).'">'.functions::xssafe($func->cut_string($ext_result->res_id,50)).'</td></b></p>';
+					$external .='<td ><p title="'._SUBJECT.' : '.functions::xssafe($request->show_string($ext_result->subject)).'" alt="'.SUBJECT.' : '.functions::xssafe($request->show_string($ext_result->subject)).'">'.functions::xssafe($func->cut_string($request->show_string($ext_result->subject),70)).'</p></td>';
 					//$external .='<td width="100px"><p>'.$ext_result->dest_user.'</td></p>';
-					$external .='<td  ><p title="'._TYPE.' : '.$request->show_string($ext_result->type_label).'" alt="'._TYPE.' : '.$request->show_string($ext_result->type_label).'">('.$request->show_string($ext_result->type_label).')</p></td>';
-					$external .='<td  ><p title="'._ENTITY.' : '.$request->show_string($ext_result->entity_label).'" alt="'._ENTITY.' : '.$request->show_string($ext_result->entity_label).'"><b>'.$request->show_string($ext_result->entity_label).'</b></p></td>';
+					$external .='<td  ><p title="'._TYPE.' : '.functions::xssafe($request->show_string($ext_result->type_label)).'" alt="'._TYPE.' : '.functions::xssafe($request->show_string($ext_result->type_label)).'">('.functions::xssafe($request->show_string($ext_result->type_label)).')</p></td>';
+					$external .='<td  ><p title="'._ENTITY.' : '.functions::xssafe($request->show_string($ext_result->entity_label)).'" alt="'._ENTITY.' : '.functions::xssafe($request->show_string($ext_result->entity_label)).'"><b>'.functions::xssafe($request->show_string($ext_result->entity_label)).'</b></p></td>';
 					$external .='<td ><p title="'._PROCESS_LIMIT_DATE.' : '.$request->format_date_db($ext_result->process_limit_date,false).'" alt="'._PROCESS_LIMIT_DATE.' : '.$request->format_date_db($ext_result->process_limit_date,false).'">'.$request->format_date_db($ext_result->process_limit_date,false).'</p></td>';
 					$external .='</a></tr>';
 	 }

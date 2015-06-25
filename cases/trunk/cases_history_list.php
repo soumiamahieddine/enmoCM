@@ -114,7 +114,7 @@ $db_hist->query($query);
             $nom = $res_hist2->lastname;
             $prenom = $res_hist2->firstname;
             ?>
-            <tr <?php functions::xecho($color);?>>
+            <tr <?php echo $color;?>>
                 <td><span><?php functions::xecho($func->dateformat($res_hist->event_date));?></span></td>
                 <td><span><?php functions::xecho($prenom." ".$nom." ");?></span></td>
                 <td><span><?php functions::xecho($res_hist->info);?></span></td>

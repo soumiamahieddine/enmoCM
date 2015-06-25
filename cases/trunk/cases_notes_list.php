@@ -152,7 +152,6 @@ for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
 				$tabNotes[$indNotes1][$indNotes2]["valign"] = "bottom";
 				$tabNotes[$indNotes1][$indNotes2]["show"] = true;
 				$indNotes1d = $tabNotes[$indNotes1][$indNotes2]['value'];
-				//echo $tabNotes[$indNotes1][$indNotes2]['value'] . '<br>';
 				if (!$notes_tools->isUserNote(
 					$tabNotes[$indNotes1][$indNotes2]['value'], 
 					$_SESSION['user']['UserId'], 
@@ -163,7 +162,7 @@ for ($indNotes1 = 0; $indNotes1 < count($tabNotes); $indNotes1 ++ ) {
 					//echo 'sort ' . $indNotes1 . '<br>';
 					array_push($arrayToUnset, $indNotes1);
 				} else {
-					//echo 'garde ' . $indNotes1 . '<br>';
+
 				}
 			}
 		}

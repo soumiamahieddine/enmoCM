@@ -52,8 +52,8 @@ if (($core_tools->test_service('join_res_case', 'cases', false) == 1) || ($core_
                 if(case_id)
                 {
                     case_id.value = '<?php functions::xecho($case_id_newest );?>';
-                    case_label.value = '<?php echo str_replace('\'', ' ', $case_label);?>';
-                    case_description.value = '<?php echo str_replace('\'', ' ', $case_description);?>';
+                    case_label.value = "<?php functions::xecho(str_replace('&#039;', ' ', $case_label));?>";
+                    case_description.value = "<?php functions::xecho(str_replace('&#039;', ' ', $case_description));?>";
                 }
                 self.close();
                 </script>

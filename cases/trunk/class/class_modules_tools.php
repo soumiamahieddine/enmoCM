@@ -81,16 +81,6 @@ class cases extends dbquery
 			echo "create_case ::arg2 error!</br>";
 
 		//########################
-		//Generate case label:
-		//$this_label = generate_label();
-		//$this_label = 1;
-		//Check the unity of this label
-		/*
-		$db->query("SELECT case_id FROM ".$_SESSION['tablename']['cases']." WHERE CASE_LABEL	= '".$this_label."' ";
-		if ($db->nb_result() >0)
-			echo "create_case ::case_label already exists!</br>";
-		*/
-		//########################
 
 		$request = new request();
 		$current_date = $request->current_datetime();
