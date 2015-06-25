@@ -1125,61 +1125,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                     $frm_str .= '<div class="ref-unit">';
                     $frm_str .= '<center>';
                     if ($core_tools->is_module_loaded('templates')) {
-/*                        $objectTable = $sec->retrieve_table_from_coll($coll_id);
 
-
-                        $frm_str .= _GENERATE_ATTACHMENT_FROM . ' <br><select name="templateOffice" id="templateOffice" style="width:250px" onchange="';
-                        //$frm_str .= 'loadApplet(\''
-                        $frm_str .= 'window.open(\''
-                            . $_SESSION['config']['businessappurl'] . 'index.php?display=true'
-                            . '&module=content_management&page=applet_popup_launcher&objectType=attachmentFromTemplate'
-                            . '&objectId='
-                            . '\' + $(\'templateOffice\').value + \''
-                            . '&objectTable='
-                            . $objectTable
-                            . '&resMaster='
-                            . $res_id
-                            //. '\', $(\'templateOffice\').value);">';
-                            . '\', \'\', \'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no\');">';
-                            $frm_str .= '<option value="">' . _OFFICE . '</option>';
-                                for ($i=0;$i<count($templates);$i++) {
-                                    if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
-                                        $frm_str .= '<option value="';
-                                            $frm_str .= $templates[$i]['ID'];
-                                            $frm_str .= '">';
-                                            //$frm_str .= $templates[$i]['TYPE'] . ' : ';
-                                            $frm_str .= $templates[$i]['LABEL'];
-                                        }
-                                    $frm_str .= '</option>';
-                                }
-                        $frm_str .= '</select>&nbsp;|&nbsp;';
-                        $frm_str .= '<select name="templateHtml" id="templateHtml" style="width:250px" '
-                            //. 'onchange="window.alert(\'\' + $(\'templateHtml\').value + \'\');">';
-                            . 'onchange="checkBeforeOpenBlank(\''
-                            . $_SESSION['config']['businessappurl']
-                            . 'index.php?display=true&module=templates&page=generate_attachment_html&mode=add&template='
-                            . '\' + $(\'templateHtml\').value + \''
-                            . '&res_id=' . $res_id
-                            . '&coll_id=' . $_REQUEST['coll_id']
-                            . '\', $(\'templateHtml\').value);">';
-                            $frm_str .= '<option value="">' . _HTML . '</option>';
-                                for ($i=0;$i<count($templates);$i++) {
-                                    if ($templates[$i]['TYPE'] == 'HTML' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
-                                        $frm_str .= '<option value="';
-                                            $frm_str .= $templates[$i]['ID'];
-                                            $frm_str .= '">';
-                                            //$frm_str .= $templates[$i]['TYPE'] . ' : ';
-                                            $frm_str .= $templates[$i]['LABEL'];
-                                        }
-                                    $frm_str .= '</option>';
-                                }
-                        $frm_str .= '</select><br>' . _OR . '&nbsp;';*/
                         $frm_str .= '<input type="button" name="attach" id="attach" class="button" value="'
 
                             . _CREATE_PJ
-/*                            . '" onclick="javascript:window.open(\'' . $_SESSION['config']['businessappurl']
-                            . 'index.php?display=true&module=attachments&page=join_file\',\'\', \'scrollbars=yes,'
-                            . 'menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=600\');" />';*/
+
                             .'" onclick="showAttachmentsForm(\'' . $_SESSION['config']['businessappurl']
                             . 'index.php?display=true&module=attachments&page=attachments_content\',\'98%\',\'auto\')" />';
                     }

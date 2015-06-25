@@ -1311,21 +1311,10 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                     <input name="answer_types" type="text" readonly="readonly" class="readonly" value="<?php functions::xecho($answer_type);?>" style="width:500px;" />
                                 </td>
                             </tr>
-                            <?php
-                            /*$detailsExport .= "<tr>";
-                            $detailsExport .= "<td><label for='process_notes'>"._PROCESS_NOTES." : </label></td>";
-                            $detailsExport .= $db->show_string($process_data['process_notes'])."</td></tr>";*/
-                            ?>
-                            <!--<tr>
-                                <td><label for="process_notes"><?php echo _PROCESS_NOTES;?> : </label></td>
-                                <td><textarea name="process_notes" id="process_notes" readonly="readonly" style="width:500px;"><?php functions::xecho($db->show_string($process_data['process_notes']));?></textarea></td>
-                            </tr>-->
+
                             <?php
                             if (isset($closing_date) && !empty($closing_date))
                             {
-                                /*$detailsExport .= "<tr>";
-                                $detailsExport .= "<td><label for='closing_date'>"._CLOSING_DATE." : </label></td>";
-                                $detailsExport .= $closing_date."</td></tr>";*/
                                 ?>
                                 <tr>
                                     <td><label for="closing_date"><?php echo _CLOSING_DATE;?> : </label></td>
@@ -1333,7 +1322,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                                 </tr>
                                 <?php
                             }
-                            //$detailsExport .= "</table>";
+
                             ?>
                         </table>
                     </div>
@@ -1351,23 +1340,7 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
                         $dbAttachments = new dbquery();
                         $dbAttachments->connect();
                         $dbAttachments->query($selectAttachments);
-                        /*$detailsExport .= "<table width='100%'>";
-                        $detailsExport .= "<tr>";
-                        $detailsExport .= "<td>"._ID."</td>";
-                        $detailsExport .= "<td>"._DATE."</td>";
-                        $detailsExport .= "<td>"._TITLE."</td>";
-                        $detailsExport .= "<td>"._FORMAT."</td>";
-                        $detailsExport .= "</tr>";
-                        while($resAttachments = $dbAttachments->fetch_object())
-                        {
-                            $detailsExport .= "<tr>";
-                            $detailsExport .= "<td>".$resAttachments->res_id."</td>";
-                            $detailsExport .= "<td>".$resAttachments->creation_date."</td>";
-                            $detailsExport .= "<td>".$resAttachments->title."</td>";
-                            $detailsExport .= "<td>".$resAttachments->format."</td>";
-                            $detailsExport .= "</tr>";
-                        }
-                        $detailsExport .= "</table>";*/
+
                         ?>
                         <div>
 					<br />
@@ -1375,45 +1348,11 @@ if ((!empty($_SESSION['error']) && ! ($_SESSION['indexation'] ))  )
 					<?php
                 /*if ($core->is_module_loaded('templates') && (!isset($_SESSION['current_basket']['id']) && $core->test_service('edit_attachments_from_detail', 'attachments', false)) || isset($_SESSION['current_basket']['id'])) { */
                 if ($core->is_module_loaded('templates') && ($core->test_service('edit_attachments_from_detail', 'attachments', false))) {
-					/*$objectTable = $security->retrieve_table_from_coll($coll_id);
-					echo _GENERATE_ATTACHMENT_FROM;?><br />
-					<select name="templateOffice" id="templateOffice" style="width:250px" 
-								onchange="window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=content_management&page=applet_popup_launcher'
-								+ '&objectType=attachmentFromTemplate&objectId=' + $('templateOffice').value + '&objectTable=<?php functions::xecho($objectTable);?>&resMaster=<?php functions::xecho($s_id);?>', '', 'height=301, width=301,scrollbars=no,resizable=no,directories=no,toolbar=no');">
-	                    <option value=""><?php echo _OFFICE ;?></option>
-	                        <?php for ($i=0;$i<count($templates);$i++) {
-                                if ($templates[$i]['TYPE'] == 'OFFICE' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
-	                                ?> <option value="
-	                                    <?php functions::xecho($templates[$i]['ID']);?>
-	                                    ">
-	                                    <?php functions::xecho($templates[$i]['LABEL']);?>
-	                                <?php } ?>
-	 								</option>
-	                        <?php } ?>
-                    </select>&nbsp;|&nbsp;*/
+
                         ?><input type="button" name="attach" id="attach" class="button" value="<?php echo _CREATE_PJ;?>"
                              onclick="showAttachmentsForm('<?php echo $_SESSION['config']['businessappurl']
                             . 'index.php?display=true&module=attachments&page=attachments_content&fromDetail=create';?>','98%','auto')" />
-
-					<!--<select name="templateHtml" id="templateHtml" style="width:250px"                                 
-								onchange="checkBeforeOpenBlank('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=templates&page=generate_attachment_html&mode=add'
-                                + '&template=' + $('templateHtml').value + '&res_id=<?php functions::xecho($s_id);?>&coll_id=<?php functions::xecho($coll_id);?>', $('templateHtml').value);">
-	                    <option value=""><?php echo _HTML;?></option>
-	                    <?php
-	                        for ($i=0;$i<count($templates);$i++) {
-                                if ($templates[$i]['TYPE'] == 'HTML' && ($templates[$i]['TARGET'] == 'attachments' || $templates[$i]['TARGET'] == '')) {
-	                                ?><option value="
-	                                    <?php functions::xecho($templates[$i]['ID']);?>
-	                                    ">
-	                                    <?php functions::xecho($templates[$i]['LABEL']);?>
-	                                <?php } ?>
-	                            </option>
-	                        <?php } ?>
-                    </select>
-                    <br>
-                    <?php echo _OR ;?>&nbsp;
-					<input type="button" name="attach" id="attach" class="button" value="<?php echo _ATTACH_FROM_HDD;?>" 
-						onclick="javascript:window.open('<?php echo $_SESSION['config']['businessappurl'];?>index.php?display=true&module=attachments&page=join_file','', 'scrollbars=yes,menubar=no,toolbar=no,resizable=yes,status=no,width=550,height=200');" />  -->                 
+             
                 <?php } ?>
                 </center>
                         <label><?php echo _ATTACHED_DOC;?> : </label>
