@@ -355,6 +355,8 @@ class SecurityControler
     public function process_security_where_clause($whereClause, $userId)
     {
         if (! empty($whereClause)) {
+
+            $whereClause = str_replace("&#039;", "'", $whereClause);
             $where = ' where ' . $whereClause;
             // Process with the core vars
             $where = $this->process_where_clause($where, $userId);
@@ -705,6 +707,7 @@ class SecurityControler
     */
     public function isUnsecureRequest($whereClause)
     {
+        $whereClause = str_replace("&#039;", "'", $whereClause);
         $search1 = '#\b(?:abort|alter|copy|create|delete|disgard|drop|'
                 . 'execute|grant|insert|load|lock|move|reset|truncate|update)\b#i';
         preg_match($search1, $whereClause, $out);
