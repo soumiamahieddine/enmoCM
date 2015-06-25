@@ -70,10 +70,10 @@
 
         $myChrono = $chronoX->generate_chrono('outgoing', $myVars);
 
-        echo "{status: 1, chronoNB: '".$myChrono."'}";
+        echo "{status: 1, chronoNB: '".functions::xssafe($myChrono)."'}";
 
     } else if ($category_id == "outgoing" && $nb_attachment == 0) {
         $db->query("SELECT alt_identifier FROM ".$view." WHERE res_id = " . $_SESSION['doc_id']);
         $chronoMaster = $db->fetch_object();
-        echo "{status: 1, chronoNB: '".$chronoMaster->alt_identifier."'}";
+        echo "{status: 1, chronoNB: '".functions::xssafe($chronoMaster->alt_identifier)."'}";
     }

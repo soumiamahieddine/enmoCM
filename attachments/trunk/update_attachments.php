@@ -62,7 +62,7 @@ if (!empty($_REQUEST['id']) && !empty($_REQUEST['collId'])) {
                             loadApplet('<?php 
 								echo $_SESSION['config']['coreurl'] .''.$path;
 								?>?objectType=attachment&objectId=<?php 
-                                echo $id;
+                                functions::xecho($id);
                                 ?>&objectTable=<?php 
                                 echo $tableName;
                                 ?>');

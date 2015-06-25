@@ -68,7 +68,8 @@ if (isset($_POST['add']) && $_POST['add']) {
     if (! isset($_REQUEST['title']) || empty($_REQUEST['title'])) {
         $_SESSION['error'] .= _OBJECT . ' ' . _MANDATORY . ". ";
     } else {
-        $title = $func->protect_string_db($_REQUEST['title']);
+        $title = functions::xssafe($func->protect_string_db($_REQUEST['title']));
+        $title = str_replace("&#039;", "'", $title);
     }
     
     if (empty($_SESSION['error'])) {
@@ -362,7 +363,7 @@ if (isset($_POST['add']) && $_POST['add']) {
         $status = 1;
     }
 	if (!isset($_SESSION['new_id'])) $_SESSION['new_id'] = 0;
-    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', majFrameId : ".$_SESSION['new_id'].", exec_js : '".addslashes($js)."'}";
+    echo "{status : " . $status . ", content : '" . addslashes(_parse($content)) . "', error : '" . addslashes($error) . "', majFrameId : ".functions::xssafe($_SESSION['new_id']).", exec_js : '".addslashes($js)."'}";
 	unset($_SESSION['new_id']);
     exit();
 } else if (isset($_POST['edit']) && $_POST['edit']) {
@@ -372,7 +373,8 @@ if (isset($_POST['add']) && $_POST['add']) {
         $_SESSION['error'] .= _OBJECT . ' ' . _MANDATORY . ". ";
         $status = 1;
     } else {
-        $title = $func->protect_string_db($_REQUEST['title']);
+        $title = functions::xssafe($func->protect_string_db($_REQUEST['title']));
+        $title = str_replace("&#039;", "'", $title);
     }
 
     if ($status <> 1) {

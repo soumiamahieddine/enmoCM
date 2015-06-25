@@ -60,7 +60,7 @@ if (isset($_REQUEST['res_id_version'])) {
                             $query = "SELECT label_status FROM status WHERE id ='".$return_db->status."'";
                             $db2->query($query);
                             while ($status_db = $db2->fetch_object()) {
-                                $return .= $status_db->label_status;
+                                $return .= functions::xssafe($status_db->label_status);
                             }
                         $return .= '</td>';
                         $return .= '<td>';
@@ -90,12 +90,12 @@ if (isset($_REQUEST['res_id_version'])) {
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
-                            $return .= $return_db->title;
+                            $return .= functions::xssafe($return_db->title);
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
                             $current_user = $users->get_user($return_db->typist);
-                            $return .= $current_user['firstname'] . ' ' . $current_user['lastname'];
+                            $return .= functions::xssafe($current_user['firstname']) . ' ' . functions::xssafe($current_user['lastname']);
                         $return .= '</td>';
                         $return .= '<td>';
                             $return .= '&nbsp;&nbsp;';
