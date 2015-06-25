@@ -1161,7 +1161,7 @@ class basket extends dbquery
                 } else {
                     $color = ' class="col"';
                 }
-                ?><tr <?php functions::xecho($color);?>><td> <?php
+                ?><tr <?php echo $color;?>><td> <?php
                 echo $result[$theline]['id'];
                 ?></td><td><?php
                 echo $result[$theline]['name'];
