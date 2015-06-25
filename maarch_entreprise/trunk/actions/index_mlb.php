@@ -146,27 +146,6 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
         $db = new dbquery();
         $db->connect();
 
-/*
-        if (count($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$actionId]['entities']) > 0) {
-            $db->query(
-                "select entity_id, entity_label, short_label from "
-                . ENT_ENTITIES . " where entity_id in ("
-                . $_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$actionId]['entities']
-                //. ") and enabled= 'Y' order by entity_label"
-                . ") and enabled= 'Y' order by short_label"
-            );
-            while ($res = $db->fetch_object()) {
-                array_push(
-                    $services,
-                    array(
-                        'ID' => $res->entity_id,
-                        'LABEL' => $db->show_string($res->entity_label),
-                        'SHORT_LABEL' => $db->show_string($res->short_label),
-                    )
-                );
-            }
-        }
-*/
         if (count($_SESSION['user']['redirect_groupbasket'][$_SESSION['current_basket']['id']][$actionId]['entities']) > 0) {
             $db->query(
                 "select entity_id from "
@@ -189,12 +168,6 @@ function get_form_txt($values, $pathManageAction,  $actionId, $table, $module, $
     $allEntitiesTree = $ent->getShortEntityTreeAdvanced(
         $allEntitiesTree, 'all', '', $EntitiesIdExclusion, 'all'
     );
-
-/*
-    echo '<pre>';
-    print_r($allEntitiesTree);
-    echo '</pre>';exit;
-*/
 
     // Select statuses from groupbasket
     $statuses = array();
@@ -400,22 +373,22 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         for ($i = 0; $i < count($doctypes); $i ++) {
             $frmStr .= '<optgroup value="" class="' //doctype_level1
                     . $doctypes[$i]['style'] . '" label="'
-                    . $doctypes[$i]['label'] . '" >';
+                    . functions::xssafe($doctypes[$i]['label']) . '" >';
             for ($j = 0; $j < count($doctypes[$i]['level2']); $j ++) {
                 $frmStr .= '<optgroup value="" class="' //doctype_level2
                         . $doctypes[$i]['level2'][$j]['style'] .'" label="&nbsp;&nbsp;'
-                        . $doctypes[$i]['level2'][$j]['label'] . '" >';
+                        . functions::xssafe($doctypes[$i]['level2'][$j]['label']) . '" >';
                 for ($k = 0; $k < count($doctypes[$i]['level2'][$j]['types']);
                     $k ++
                 ) {
                     $frmStr .= '<option style="color: #666;" value="'
-                            . $doctypes[$i]['level2'][$j]['types'][$k]['id']
+                            . functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['id'])
                             . '" title="'
-                            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
+                            . functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['label'])
                             . '" label="'
-                            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
+                            . functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['label'])
                             . '">&nbsp;&nbsp;&nbsp;&nbsp;'
-                            . $doctypes[$i]['level2'][$j]['types'][$k]['label']
+                            . functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['label'])
                             . '</option>';
                 }
                 $frmStr .= '</optgroup>'; 
@@ -424,8 +397,8 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
         }
     } else {
         for ($i = 0; $i < count($doctypes); $i ++) {
-            $frmStr .= '<option value="' . $doctypes[$i]['ID'] . '" >'
-                    . $doctypes[$i]['LABEL'] . '</option>';
+            $frmStr .= '<option value="' . functions::xssafe($doctypes[$i]['ID']) . '" >'
+                    . functions::xssafe($doctypes[$i]['LABEL']) . '</option>';
         }
     }
     $frmStr .= '</select></td>';
@@ -777,11 +750,11 @@ if ($_SESSION['features']['show_types_tree'] == 'true') {
                 . '\');">';
         //$frmStr .= '<option value="">' . _CHOOSE_STATUS . '</option>';
         for ($i = 0; $i < count($statuses); $i ++) {
-            $frmStr .= '<option value="' . $statuses[$i]['ID'] . '" ';
+            $frmStr .= '<option value="' . functions::xssafe($statuses[$i]['ID']) . '" ';
             if ($statuses[$i]['ID'] == 'NEW') {
                 $frmStr .= 'selected="selected"';
             }
-            $frmStr .= '>' . $statuses[$i]['LABEL'] . '</option>';
+            $frmStr .= '>' . functions::xssafe($statuses[$i]['LABEL']) . '</option>';
         }
         $frmStr .= '</select></td><td><span class="red_asterisk" id="market_mandatory" '
                 . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
@@ -1700,7 +1673,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         $_SESSION['indexing']['docserver_id'], $_SESSION['data'],
         $_SESSION['config']['databasetype']
     );
-    //echo 'load '.$resId. " ";
 	
     // Contact
     if (isset($_ENV['categories'][$catId]['other_cases']['contact'])) {
@@ -1721,7 +1693,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                 $formValues, 'type_multi_contact_external'
             );
         }
-        //echo 'contact '.$contact.', type '.$contactType;
 
 		$nb_multi_contact = count($_SESSION['adresses']['to']);
 		
@@ -1799,21 +1770,18 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         $queryExtFields .= 'alt_identifier,';
         $queryExtValues .= "'" . $db->protect_string_db($myChrono) . "',";
         //######
-        //echo $resId. " ";
         $queryExtFields = preg_replace('/,$/', ',res_id)', $queryExtFields);
         $queryExtValues = preg_replace(
             '/,$/', ',' . $resId . ')', $queryExtValues
         );
-        //echo $resId. " ";
         $queryExt = " insert into " . $tableExt . " " . $queryExtFields
                    . ' values ' . $queryExtValues ;
-        //echo $queryExt;
+
         $db->connect();
         $db->query($queryExt);
         if ($core->is_module_loaded('folder') && ! empty($folderId)
             && $_SESSION['history']['folderup']
         ) {
-            //  echo 'folder '.$resId. " ";
             $hist = new history();
             $hist->add(
                 $_SESSION['tablename']['fold_folders'], $folderId, "UP", 'folderup',
@@ -1823,7 +1791,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
         }
         //$db->show();
         if ($core->is_module_loaded('entities')) {
-            //  echo 'entities '.$resId. " ";
             if ($loadListDiff) {
                 require_once 'modules' . DIRECTORY_SEPARATOR . 'entities'
                     . DIRECTORY_SEPARATOR . 'class' . DIRECTORY_SEPARATOR
@@ -1840,7 +1807,6 @@ function manage_form($arrId, $history, $actionId, $label_action, $status, $collI
                     $_SESSION['indexing']['diff_list'], $params
                 );
             }
-            //  echo 'entities '.$resId. " ";
         }
         if ($core->is_module_loaded('tags')) {
                 include_once("modules".DIRECTORY_SEPARATOR."tags"

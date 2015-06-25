@@ -291,17 +291,13 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
     
     check_category($coll_id, $res_id);
     $data = get_general_data($coll_id, $res_id, 'minimal');
-/*
-    echo '<pre>';
-    print_r($data);
-    echo '</pre>';exit;
-*/
-    $frm_str .= '<h2 class="tit" id="action_title">'._VALIDATE_MAIL.' '._NUM.$res_id;
+
+    $frm_str .= '<h2 class="tit" id="action_title">'._VALIDATE_MAIL.' '._NUM.functions::xssafe($res_id);
     $frm_str .= '</h2>';
     $frm_str .='<i onmouseover="this.style.cursor=\'pointer\';" '
              .'onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] 
                 . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' 
-                . $res_id . '}, onSuccess: function(answer){window.location.href=\'' 
+                . functions::xssafe($res_id) . '}, onSuccess: function(answer){window.location.href=\'' 
                 . $_SESSION['config']['businessappurl']. 'index.php?page=view_baskets&module=basket&baskets=' 
                 . $_SESSION['current_basket']['id'] . '\';} });$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"'
              .' class="fa fa-undo fa-2x closeModale" title="'._BACK.'"/>';
@@ -373,22 +369,22 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                                 for ($i = 0; $i < count($doctypes); $i ++) {
                                     $frm_str .= '<optgroup value="" class="' //doctype_level1
                                             . $doctypes[$i]['style'] . '" label="'
-                                            . $doctypes[$i]['label'] . '" >';
+                                            . functions::xssafe($doctypes[$i]['label']) . '" >';
                                     for ($j = 0; $j < count($doctypes[$i]['level2']); $j ++) {
                                         $frm_str .= '<optgroup value="" class="' //doctype_level2
                                                 . $doctypes[$i]['level2'][$j]['style'] .'" label="&nbsp;&nbsp;'
-                                                . $doctypes[$i]['level2'][$j]['label'] . '" >';
+                                                . functions::xssafe($doctypes[$i]['level2'][$j]['label']) . '" >';
                                         for ($k = 0; $k < count($doctypes[$i]['level2'][$j]['types']);
                                             $k ++
                                         ) {
                                             if (!in_array($doctypes[$i]['level2'][$j]['types'][$k]['id'],$hidden_doctypes)) {
-                                                $frm_str .='<option style="color:#666;" value="'.$doctypes[$i]['level2'][$j]['types'][$k]['id'].'" ';
+                                                $frm_str .='<option style="color:#666;" value="'.functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['id']).'" ';
                                                 if (isset($data['type_id']) && !empty($data['type_id']) && $data['type_id'] == $doctypes[$i]['level2'][$j]['types'][$k]['id']) {
                                                     $frm_str .= ' selected="selected" ';
                                                 }
-                                                $frm_str .=' title="'.$doctypes[$i]['level2'][$j]['types'][$k]['label']
-                                                . '" label="'.$doctypes[$i]['level2'][$j]['types'][$k]['label']
-                                                . '">&nbsp;&nbsp;&nbsp;&nbsp;'.$doctypes[$i]['level2'][$j]['types'][$k]['label'].'</option>';
+                                                $frm_str .=' title="'.functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['label'])
+                                                . '" label="'.functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['label'])
+                                                . '">&nbsp;&nbsp;&nbsp;&nbsp;'.functions::xssafe($doctypes[$i]['level2'][$j]['types'][$k]['label']).'</option>';
                                             }
                                         }
                                         $frmStr .= '</optgroup>'; 
@@ -400,12 +396,12 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                             {
                                 for($i=0; $i<count($doctypes);$i++)
                                 {
-                                    $frm_str .='<option value="'.$doctypes[$i]['ID'].'" ';
+                                    $frm_str .='<option value="'.functions::xssafe($doctypes[$i]['ID']).'" ';
                                     if(isset($data['type_id']) && !empty($data['type_id']) && $data['type_id'] == $doctypes[$i]['ID'])
                                     {
                                         $frm_str .= ' selected="selected" ';
                                     }
-                                    $frm_str .=' >'.$doctypes[$i]['LABEL'].'</option>';
+                                    $frm_str .=' >'.functions::xssafe($doctypes[$i]['LABEL']).'</option>';
                                 }
                             }
                             $frm_str .='</select>';
@@ -822,11 +818,11 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
                 $frm_str .= '<option value="">' . _CHOOSE_CURRENT_STATUS . ')</option>';
             }
             for ($i = 0; $i < count($statuses); $i ++) {
-                $frm_str .= '<option value="' . $statuses[$i]['ID'] . '" ';
+                $frm_str .= '<option value="' . functions::xssafe($statuses[$i]['ID']) . '" ';
                 if ($statuses[$i]['ID'] == 'NEW') {
                     $frm_str .= 'selected="selected"';
                 }
-                $frm_str .= '>' . $statuses[$i]['LABEL'] . '</option>';
+                $frm_str .= '>' . functions::xssafe($statuses[$i]['LABEL']) . '</option>';
             }
             $frm_str .= '</select></td><td><span class="red_asterisk" id="market_mandatory" '
                 . 'style="display:inline;"><i class="fa fa-star"></i></span>&nbsp;</td>';
@@ -905,29 +901,6 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
         //GET ACTION LIST BY AJAX REQUEST
         $frm_str .= '<span id="actionSpan"></span>';
 
-        /*$actions  = $b->get_actions_from_current_basket($res_id, $coll_id, 'PAGE_USE');
-        if(count($actions) > 0)
-        {
-            $frm_str .='<select name="chosen_action" id="chosen_action">';
-                $frm_str .='<option value="">'._CHOOSE_ACTION.'</option>';
-                if (count($actions) > 1) {
-                    for($ind_act = 1; $ind_act < count($actions);$ind_act++)
-                    {
-                        $frm_str .='<option value="'.$actions[$ind_act]['VALUE'].'"';
-                        if($ind_act==1)
-                        {
-                            $frm_str .= 'selected="selected"';
-                        }
-                        $frm_str .= '>'.$actions[$ind_act]['LABEL'].'</option>';
-                    }
-                } else {
-                    $frm_str .= '<option value="' . $actions[0]['VALUE'] . '"';
-                        $frm_str .= 'selected="selected"';
-                    $frm_str .= '>' . $actions[0]['LABEL'] . '</option>';
-                }
-            $frm_str .='</select> ';
-            $frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');"/> ';
-        }*/
         $frm_str .= '<input type="button" name="send" id="send" value="'._VALIDATE.'" class="button" onclick="if(document.getElementById(\'contactcheck\').value!=\'success\'){if (confirm(\''. _CONTACT_CHECK .'\n\nContinuer ?\')){new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');}}else{new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '} });valid_action_form( \'index_file\', \''.$path_manage_action.'\', \''. $id_action.'\', \''.$res_id.'\', \''.$table.'\', \''.$module.'\', \''.$coll_id.'\', \''.$mode.'\');}"/> ';
         $frm_str .= '<input name="close" id="close" type="button" value="'._CANCEL.'" class="button" onclick="new Ajax.Request(\'' . $_SESSION['config']['businessappurl'] . 'index.php?display=true&dir=actions&page=docLocker\',{ method:\'post\', parameters: {\'AJAX_CALL\': true, \'unlock\': true, \'res_id\': ' . $res_id . '}, onSuccess: function(answer){window.location.href=\'' . $_SESSION['config']['businessappurl']. 'index.php?page=view_baskets&module=basket&baskets=' . $_SESSION['current_basket']['id'] . '\';} });$(\'baskets\').style.visibility=\'visible\';destroyModal(\'modal_'.$id_action.'\');reinit();"/>';
         $frm_str .= '</p>';
@@ -1268,9 +1241,9 @@ function get_form_txt($values, $path_manage_action,  $id_action, $table, $module
             $frm_str.="check_date_exp('".$path_to_script."','".$path_check_date_link."');";
         }
         $frm_str .='launch_autocompleter_contacts_v2(\''.$_SESSION['config']['businessappurl'].'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts\', \'\', \'\', \'\', \'contactid\', \'addressid\');update_contact_type_session(\''
-        .$_SESSION['config']['businessappurl']
-        .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');';
-         $frm_str .= 'affiche_reference();';
+            .$_SESSION['config']['businessappurl']
+            .'index.php?display=true&dir=indexing_searching&page=autocomplete_contacts_prepare_multi\');';
+        $frm_str .= 'affiche_reference();';
         $frm_str .='</script>';
 
 	// À la fin de la methode d’ouverture de la modale
@@ -1344,7 +1317,6 @@ function process_category_check($cat_id, $values)
     {
         if($_ENV['categories'][$cat_id][$values[$i]['ID']]['mandatory'] == true  && (empty($values[$i]['VALUE']) )) //&& ($values[$i]['VALUE'] == 0 && $_ENV['categories'][$cat_id][$values[$i]['ID']]['type_form'] <> 'integer')
         {
-
             $_SESSION['action_error'] = $_ENV['categories'][$cat_id][$values[$i]['ID']]['label'].' '._IS_EMPTY;
             return false;
         }
@@ -1714,7 +1686,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             );
         }
 		
-        //echo 'contact '.$contact.', type '.$contact_type;
 		
 		$nb_multi_contact = count($_SESSION['adresses']['to']);
 		$db->connect();
@@ -1871,7 +1842,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
             'chrono_out' => $cChronoOut,
         );
         $myChrono = $chronoX->generate_chrono($cat_id, $myVars, $myForm);
-        //echo $myChrono;exit;
         if ($myChrono <> '' && $cChronoOut <> '') {
             $db->query("update " . $table_ext ." set alt_identifier = '" 
                 . $db->protect_string_db($myChrono) . "' where res_id = " . $res_id);
@@ -1900,7 +1870,6 @@ function manage_form($arr_id, $history, $id_action, $label_action, $status,  $co
                 'chrono_out' => $cChronoOut,
             );
             $myChrono = $chronoX->generate_chrono($cat_id, $myVars, $myForm);
-            //echo $myChrono;exit;
             if ($myChrono <> '') {
                 $db->query("update " . $table_ext ." set alt_identifier = '" 
                     . $db->protect_string_db($myChrono) . "' where res_id = " . $res_id);
