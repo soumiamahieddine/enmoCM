@@ -135,6 +135,7 @@ class ScheduleNotifications{
         
         if ($_SESSION['custom_override_id'] <> '') {
         	$pathToFolow = $_SESSION['config']['corepath'] . 'custom/'.$_SESSION['custom_override_id'] . '/';
+        	shell_exec("mkdir " . $pathToFolow.'modules/notifications/batch/scripts/');
         } else {
         	$pathToFolow = $_SESSION['config']['corepath'];
         }
