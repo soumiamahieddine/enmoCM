@@ -229,10 +229,10 @@ class admin_basket extends dbquery
                     <?php
                 }
                 ?>
-                <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])){echo $_REQUEST['order'];}?>" />
-                <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])){echo $_REQUEST['order_field'];}?>" />
-                <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){echo $_REQUEST['what'];}?>" />
-                <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){echo $_REQUEST['start'];}?>" />
+                <input type="hidden" name="order" id="order" value="<?php if(isset($_REQUEST['order'])){functions::xecho($_REQUEST['order']);}?>" />
+                <input type="hidden" name="order_field" id="order_field" value="<?php if(isset($_REQUEST['order_field'])){functions::xecho($_REQUEST['order_field']);}?>" />
+                <input type="hidden" name="what" id="what" value="<?php if(isset($_REQUEST['what'])){functions::xecho($_REQUEST['what']);}?>" />
+                <input type="hidden" name="start" id="start" value="<?php if(isset($_REQUEST['start'])){functions::xecho($_REQUEST['start']);}?>" />
                 
                 <p>
                     <label><?php echo _COLLECTION;?> : </label>

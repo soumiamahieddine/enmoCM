@@ -66,7 +66,7 @@ if(
 	$_SESSION['error'] = _NO_CHOOSEN_BASKET;
 }
 if (!empty($_SESSION['error'])) {
-	echo $_SESSION['error'];
+	functions::xecho( $_SESSION['error']);
 } else {
 	$bask->query("delete from user_baskets_secondary where user_id = '" . $basketOwner . "'");	
 	for ($i=0;$i<count($arrayOfBaskets);$i++) {

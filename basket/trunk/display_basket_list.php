@@ -94,7 +94,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                         ) {
                             $currentGroup = $_SESSION['user']['baskets'][$i]['group_desc'];
                             echo '<li style="padding-top: 5px;padding-bottom: 5px;"><i class="fa-li fa fa-users" style="padding-top: 5px;padding-bottom: 5px;"></i>'
-                                . '<small>' . $currentGroup . '</small></li>';
+                                . '<small>' . functions::xssafe($currentGroup) . '</small></li>';
                         }
                         if (
                             $_SESSION['user']['baskets'][$i]['abs_basket'] == true
@@ -133,7 +133,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                                     . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']
                                     . '"><i class="fa-li fa fa-spinner fa-spin" style="margin-left: -10px;position: inherit;margin-right: -7px;"></i>'
                                     . '</span></b> <i class="fa-li fa fa-folder" style="padding-top: 5px;padding-bottom: 5px;"></i>'
-                                    . $_SESSION['user']['baskets'][$i]['name']
+                                    . functions::xssafe($_SESSION['user']['baskets'][$i]['name'])
                                     . ' </a></li>';
                             } else {
                                 echo '<li style="padding-top: 5px;padding-bottom: 5px;"><a href="'
@@ -144,7 +144,7 @@ if ($core_tools->test_service('display_basket_list','basket', false)) {
                                     . '" name="nb_' . $_SESSION['user']['baskets'][$i]['id']
                                     . '"><i class="fa-li fa fa-spinner fa-spin" style=";margin-left: -10px;position: inherit;margin-right: -7px;"></i>'
                                     . '</span></b> <i class="fa-li fa fa-tasks" style="padding-top: 5px;padding-bottom: 5px;"></i> '
-                                    . $_SESSION['user']['baskets'][$i]['name']
+                                    . functions::xssafe($_SESSION['user']['baskets'][$i]['name'])
                                     . ' </a></li>';
                             }
                         }

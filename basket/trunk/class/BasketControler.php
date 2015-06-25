@@ -78,7 +78,7 @@ class BasketControler
 		try {
 		    $db->query($query);
 		} catch (Exception $e) {
-			echo _NO_BASKET_WITH_ID . ' ' . $basketId . ' // ';
+			echo _NO_BASKET_WITH_ID . ' ' . functions::xssafe($basketId) . ' // ';
 		}
 		if ($db->nb_result() > 0) {
 			$basket = new Basket_obj();
@@ -132,7 +132,7 @@ class BasketControler
 			$db->query($query);
 			$ok = true;
 		} catch (Exception $e) {
-			echo _CANNOT_INSERT_BASKET . " " . $basket->toString() . ' // ';
+			echo _CANNOT_INSERT_BASKET . " " . functions::xssafe($basket->toString()) . ' // ';
 			$ok = false;
 		}
 
@@ -160,7 +160,7 @@ class BasketControler
 			$db->query($query);
 			$ok = true;
 		} catch (Exception $e) {
-			echo _CANNOT_UPDATE_BASKET . " " . $basket->toString() . ' // ';
+			echo _CANNOT_UPDATE_BASKET . " " . functions::xssafe($basket->toString()) . ' // ';
 			$ok = false;
 		}
 		return $ok;
@@ -189,7 +189,7 @@ class BasketControler
 			$db->query($query);
 			$ok = true;
 		} catch (Exception $e) {
-			echo _CANNOT_DELETE_BASKET_ID . " " . $basketId . ' // ';
+			echo _CANNOT_DELETE_BASKET_ID . " " . functions::xssafe($basketId) . ' // ';
 			$ok = false;
 		}
 
@@ -242,7 +242,7 @@ class BasketControler
 			$db->query($query);
 			$ok = true;
 		} catch (Exception $e) {
-			echo _CANNOT_DELETE . ' ' . $field . ' ' . $id . ' // ';
+			echo _CANNOT_DELETE . ' ' . functions::xssafe($field) . ' ' . functions::xssafe($id) . ' // ';
 			$ok = false;
 		}
 
@@ -269,7 +269,7 @@ class BasketControler
 			$db->query($query);
 			$ok = true;
 		} catch (Exception $e) {
-			echo _CANNOT_DELETE . ' ' . $field . ' ' . $id . ' // ';
+			echo _CANNOT_DELETE . ' ' . functions::xssafe($field) . ' ' . functions::xssafe($id) . ' // ';
 			$ok = false;
 		}
 
@@ -341,7 +341,7 @@ class BasketControler
 			$db->query($query);
 			$ok = true;
 		} catch (Exception $e) {
-			echo _CANNOT_DISABLE_BASKET . " " . $basketId . ' // ';
+			echo _CANNOT_DISABLE_BASKET . " " . functions::xssafe($basketId) . ' // ';
 			$ok = false;
 		}
 
@@ -372,7 +372,7 @@ class BasketControler
 			$db->query($query);
 			$ok = true;
 		} catch (Exception $e) {
-			echo _CANNOT_ENABLE_BASKET . " " . basket_id . ' // ';
+			echo _CANNOT_ENABLE_BASKET . " " . functions::xssafe($basketId) . ' // ';
 			$ok = false;
 		}
 
@@ -398,7 +398,7 @@ class BasketControler
 		try {
 			$db->query($query);
 		} catch (Exception $e) {
-			echo _UNKNOWN . ' ' . _BASKET . " " . $basketId . ' // ';
+			echo _UNKNOWN . ' ' . _BASKET . " " . functions::xssafe($basketId) . ' // ';
 		}
 
 		if ($db->nb_result() > 0) {

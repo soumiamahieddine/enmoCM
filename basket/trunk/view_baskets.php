@@ -211,7 +211,7 @@ if (count($_SESSION['user']['baskets']) > 0) {
         ?>
         <option value="<?php
         if (isset($_SESSION['user']['baskets'][$i]['id'])) {
-            echo $_SESSION['user']['baskets'][$i]['id'];
+            functions::xecho($_SESSION['user']['baskets'][$i]['id']);
         }
         ?>" <?php
         if (isset($_SESSION['current_basket']['id'])
@@ -303,7 +303,7 @@ if(isset($_SESSION['info_basket'])) {
     ?>
     <div class="infoBasket" id="mainInfoBasket" onclick="this.hide();">
         <?php
-        echo $_SESSION['info_basket'];
+        functions::xecho($_SESSION['info_basket']);
         ?>
     </div>
     <?php

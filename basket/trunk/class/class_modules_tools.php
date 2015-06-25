@@ -274,7 +274,6 @@ class basket extends dbquery
             $collections = array();
             $collectionsTag = $basketPage->COLLECTIONS;
             foreach ($collectionsTag->COLL_ID as $collection) {
-                //echo $collection . '<br />';
                 array_push($collections, (string) $collection);
             }
             $_SESSION['basket_page'][$i] = array(
@@ -1162,13 +1161,13 @@ class basket extends dbquery
                     $color = ' class="col"';
                 }
                 ?><tr <?php echo $color;?>><td> <?php
-                echo $result[$theline]['id'];
+                functions::xecho($result[$theline]['id']);
                 ?></td><td><?php
-                echo $result[$theline]['name'];
+                functions::xecho($result[$theline]['name']);
                 ?></td><td><input type="hidden" name="basket_<?php
                 echo $theline;
                 ?>" id="basket_<?php functions::xecho($theline);?>" value="<?php
-                echo $result[$theline]['id'];
+                functions::xecho($result[$theline]['id']);
                 ?>" /><input type="hidden" name="virtual_<?php
                 echo $theline;
                 ?>" id="virtual_<?php functions::xecho($theline);?>" value="<?php
@@ -1180,7 +1179,7 @@ class basket extends dbquery
                 ?>"/><input type="hidden" name="originalowner_<?php
                 echo $theline;
                 ?>" id="originalowner_<?php functions::xecho($theline);?>" value="<?php
-                echo $result[$theline]['basket_owner'];
+                functions::xecho($result[$theline]['basket_owner']);
                  ?>" /><input type="text" id="user_<?php
                  echo $theline;
                  ?>" name="user_<?php
@@ -1725,14 +1724,14 @@ class basket extends dbquery
                 } else {
                     $color = ' class="col"';
                 }
-                ?><tr <?php functions::xecho($color);?>><td> <?php
-                echo $result[$theline]['id'];
+                ?><tr <?php echo $color;?>><td> <?php
+                functions::xecho($result[$theline]['id']);
                 ?></td><td><?php
-                echo $result[$theline]['name'];
+                functions::xecho($result[$theline]['name']);
                 ?></td><td><?php
-                echo $result[$theline]['group_desc'];
+                functions::xecho($result[$theline]['group_desc']);
                 ?></td><td><input type="checkbox" value="<?php
-                echo $result[$theline]['id'] . "##" 
+                functions::xecho($result[$theline]['id']) . "##" 
                     . $result[$theline]['group_id'];
                 ?>" name="basketId[]" <?php
                 if ($result[$theline]['checked_basket']) { 

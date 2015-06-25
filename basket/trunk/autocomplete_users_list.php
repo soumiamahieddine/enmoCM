@@ -35,7 +35,11 @@ $req->connect();
 
 $select = array();
 $select[$_SESSION['tablename']['users']]= array('lastname', 'firstname', 'user_id');
-$where = " (lower(lastname) like lower('".$_REQUEST['UserInput']."%') or lower(firstname) like lower('".$_REQUEST['UserInput']."%') or user_id like '".$_REQUEST['UserInput']."%')  and user_id <> '".$_REQUEST['baskets_owner']."' and (status = 'OK' ) and enabled = 'Y'";
+
+$UserInput = str_replace("&#039;", "'", $_REQUEST['UserInput']);
+$BasketOwner = str_replace("&#039;", "'", $_REQUEST['baskets_owner']);
+
+$where = " (lower(lastname) like lower('".$req->protect_string_db($UserInput)."%') or lower(firstname) like lower('".$req->protect_string_db($UserInput)."%') or user_id like '".$req->protect_string_db($UserInput)."%')  and user_id <> '".$req->protect_string_db($BasketOwner)."' and (status = 'OK' ) and enabled = 'Y'";
 
 $other = 'order by lastname';
 
@@ -44,7 +48,10 @@ $res = $req->select($select, $where, $other, $_SESSION['config']['databasetype']
 echo "<ul>\n";
 for($i=0; $i< min(count($res), 10)  ;$i++)
 {
-	echo "<li>".$res[$i][0]['value'].', '.$res[$i][1]['value'].' ('.$res[$i][2]['value'].")</li>\n";
+	$Name = str_replace("&#039;", "'", $res[$i][0]['value']);
+	$Firstname = str_replace("&#039;", "'", $res[$i][1]['value']);
+	$IdUser = str_replace("&#039;", "'", $res[$i][2]['value']);
+	echo "<li>". functions::xssafe($Name).', '.functions::xssafe($Firstname).' ('.functions::xssafe($IdUser).")</li>\n";
 }
 if(count($res) == 11)
 {

@@ -48,7 +48,9 @@ foreach ($listArray as $what) {
     if ($basketViewList >= 10) {
         $flagBasketView = true;
     }
-    echo "<li>".$what."</li>\n";
+
+    $what = str_replace("&#039;", "'", $what);
+    echo "<li>".functions::xssafe($what)."</li>\n";
     if($flagBasketView) {
         echo "<li>...</li>\n";
         break;
