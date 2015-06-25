@@ -93,9 +93,9 @@ $core_tools->manage_location_bar($page_path, $page_label, $page_id, $init, $leve
             <li>Laurent GIOVANNONI</li>
             <li>Kader KANE</li>
             <li>Yves-Christian KPAKPO</li>
-            <li>S&eacute;bastien NANABONDJA</li>
-            <li>Fod&eacute; NDIAYE</li>
-            <li>C&eacute;dric NDOUMBA</li>
+            <li>Sébastien NANABONDJA</li>
+            <li>Fodé NDIAYE</li>
+            <li>Cédric NDOUMBA</li>
             <li>Alex ORLUC</li>
             <li>Thomas PENARUIZ</li>
             <li>Alexandre STEFANOVIC</li>

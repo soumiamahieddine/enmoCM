@@ -45,7 +45,7 @@
     $frmStr .= '<select name="selectContactAddress_'.$_POST['select'].'" id="selectContactAddress_'.$_POST['select'].'" > ';
 	
     $countsContactAddress = count($contactAddresses);
-	$frmStr .= '<option value="">S&eacute;lectionner une adresse</option>';  
+	$frmStr .= '<option value="">Sélectionner une adresse</option>';  
     for ($cptsContacts = 0;$cptsContacts< $countsContactAddress;$cptsContacts++) {
 	
             $frmStr .= '<option value="'.$contactAddresses[$cptsContacts]['contact_id'].'">'
