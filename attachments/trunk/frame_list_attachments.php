@@ -111,7 +111,7 @@ if (isset($_REQUEST['load'])) {
         .'index.php?module=attachments&page=frame_list_attachments'.$parameters;
     
     $listContent = $list->loadList($target);
-    echo $listContent;
+    functions::xecho($listContent);
 
     ?><div id="container" style="width:100%;min-height:0px;height:0px;"></div></body></html><?php
 } else {
